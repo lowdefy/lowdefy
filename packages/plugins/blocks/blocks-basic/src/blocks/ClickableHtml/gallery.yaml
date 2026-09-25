@@ -144,3 +144,37 @@
                 key: row_actions_last
                 default: 'none yet'
             - '</code></p>'
+
+- title: Confirm before an event
+  blocks:
+    - id: confirm_actions
+      type: ClickableHtml
+      properties:
+        html: '<p>INV-2026-0042 <i data-icon="delete" data-event="onDelete" data-id="42" data-tooltip="Delete" data-confirm="Delete invoice INV-2026-0042?" style="cursor: pointer; color: var(--ant-color-error)"></i> <span data-event="onArchive" data-id="42" data-confirm style="cursor: pointer; color: var(--ant-color-primary)">Archive</span></p>'
+      events:
+        onDelete:
+          - id: deleted
+            type: SetState
+            params:
+              confirm_last:
+                _string.concat:
+                  - 'deleted '
+                  - _event: id
+        onArchive:
+          - id: archived
+            type: SetState
+            params:
+              confirm_last:
+                _string.concat:
+                  - 'archived '
+                  - _event: id
+    - id: confirm_result
+      type: Html
+      properties:
+        html:
+          _string.concat:
+            - '<p>Last action: <code>'
+            - _state:
+                key: confirm_last
+                default: 'none yet'
+            - '</code></p>'

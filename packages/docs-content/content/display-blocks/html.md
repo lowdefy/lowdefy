@@ -341,9 +341,23 @@ Render raw HTML content safely.
       style="--lf-avatar-size: 32px"></p>'
 ```
 
+```yaml
+- id: html_truncate_tone
+  type: Html
+  properties:
+    html: '<div style="max-width: 320px"><div data-truncate><b>Quarterly report for
+      the northern region, including every branch and its targets</b></div><div
+      data-truncate="2" data-tone="secondary">The report covers revenue, costs
+      and headcount for each branch, compares them with the same quarter last
+      year, and lists the actions each branch manager agreed for the next
+      quarter.</div><div><span data-tone="tertiary">Updated 3 days ago</span> ·
+      <span data-tone="success">On track</span> · <span
+      data-tone="quaternary">—</span></div></div>'
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `html` | string | - | Content to be rendered as Html. It understands these attributes: data-icon="edit" renders an icon (a semantic name like edit, delete, warning, or a React Icons name); data-tooltip="Text" shows a tooltip on hover and focus; data-popover="id" toggles a popover showing the element with data-popover-content="id" (mark it hidden);  links to an app page without reloading (never hard-code href="/page"); data-link opts an existing app-relative  into the same navigation; data-new-tab opens a link in a new tab (target is stripped by sanitising); data-tag="success" renders a tinted status tag and data-status="success" a status dot (tones success, processing, info, warning, error, default, an antd preset colour, a CSS colour, or any other value to seed a stable colour);  renders a date as relative, date, datetime, time or a dayjs format; data-format="currency" data-currency="USD" formats the element's number as number, currency, percent, compact or bytes; data-avatar="Jane Doe" renders initials (on an , a fallback for a broken image; never use an avatar image service); data-copy adds a copy button for the element's text or the attribute's value. See the HTML attributes docs page. |
+| `html` | string | - | Content to be rendered as Html. It understands these attributes: data-icon="edit" renders an icon (a semantic name like edit, delete, warning, or a React Icons name); data-tooltip="Text" shows a tooltip on hover and focus; data-popover="id" toggles a popover showing the element with data-popover-content="id" (mark it hidden);  links to an app page without reloading (never hard-code href="/page"); data-link opts an existing app-relative  into the same navigation; data-new-tab opens a link in a new tab (target is stripped by sanitising); data-tag="success" renders a tinted status tag and data-status="success" a status dot (tones success, processing, info, warning, error, default, an antd preset colour, a CSS colour, or any other value to seed a stable colour);  renders a date as relative, date, datetime, time or a dayjs format; data-format="currency" data-currency="USD" formats the element's number as number, currency, percent, compact or bytes; data-avatar="Jane Doe" renders initials (on an , a fallback for a broken image; never use an avatar image service); data-copy adds a copy button for the element's text or the attribute's value; data-truncate="2" clamps block text to 1–6 lines with the full text in a tooltip when cut off; data-tone="secondary" colours text with a theme tone (secondary, tertiary, quaternary, success, warning, error, info). See the HTML attributes docs page. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |

@@ -27,7 +27,7 @@ _ref:
           - link-refs
         properties:
           content: |
-            Every block that renders HTML understands a small set of `data-*` attributes: `Html`, `ClickableHtml`, `DangerousHtml`, HTML properties such as Tooltip titles, Card titles and Alert messages, ag-grid cell HTML, and the `EventLog` block. They give HTML the icons, tooltips, links, status tags, dates, numbers, avatars and copy buttons that apps otherwise build by hand with inline styles and templates, and they look and behave the same in every app.
+            Every block that renders HTML understands a small set of `data-*` attributes: `Html`, `ClickableHtml`, `DangerousHtml`, HTML properties such as Tooltip titles, Card titles and Alert messages, ag-grid cell HTML, and the `EventLog` block. They give HTML the icons, tooltips, links, status tags, dates, numbers, avatars, copy buttons, truncation, text tones and confirmations that apps otherwise build by hand with inline styles and templates, and they look and behave the same in every app.
 
             The attributes work on HTML from anywhere: page config, `_nunjucks` templates, request results and messages that API endpoints build on the server.
 
@@ -47,6 +47,9 @@ _ref:
             | `data-format="currency"` | any element | The element's number as number, currency, percent, compact or bytes. |
             | `data-avatar="Jane Doe"` | any element, `<img>` | Initials in a theme colour; a fallback for a broken image. |
             | `data-copy` | any element | A copy button for the element's text or the attribute's value. |
+            | `data-truncate="2"` | block element | Clamps text to 1–6 lines, with the full text in a tooltip when it is cut off. |
+            | `data-tone="secondary"` | any element | Text in a theme tone: secondary, tertiary, quaternary, success, warning, error or info. |
+            | `data-confirm="Delete?"` | `data-event` element | `ClickableHtml` only: asks before the event fires. |
 
             Attribute values are plain text, names, numbers or colours. They are never read as HTML, templates or code, and HTML is sanitised before the attributes are applied.
 
@@ -207,7 +210,61 @@ _ref:
             <span data-copy="{{ ticket_id }}">Ticket #{{ ticket_id }}</span>
             ```
 
-            After a copy the icon shows a check and screen readers hear "Copied". When the copied value differs from the text, the button's label shows it ("Copy: 42"). A copy click only copies: it does not trigger a surrounding `data-event`, link or grid row click. Copying needs a secure (HTTPS or localhost) page. The button labels use the `client.copy`, `client.copyValue`, `client.copied` and `client.copyFailed` [translation keys](/i18n).
+            After a copy the icon shows a check, its tooltip says "Copied" and screen readers hear "Copied". When the copied value differs from the text, the button's label shows it ("Copy: 42"). A copy click only copies: it does not trigger a surrounding `data-event`, link or grid row click. Copying needs a secure (HTTPS or localhost) page. The button labels use the `client.copy`, `client.copyValue`, `client.copied` and `client.copyFailed` [translation keys](/i18n).
+
+            ## Truncation
+
+            `data-truncate` clamps text to a number of lines and ends it with an ellipsis. The full text shows in a tooltip, but only when the text is actually cut off:
+
+            ```html
+            <div data-truncate>{{ title }}</div>
+            <div data-truncate="3">{{ description }}</div>
+            ```
+
+            No value or `1` is one line; `2` to `6` clamp to that many lines. Truncation makes the element a block, so put it on block content such as a `div` or `p`, not on a word in a sentence. On a table cell or list item it breaks the table or list layout, so truncate a `<div>` inside the cell instead. A `data-copy` button on a truncated element is placed after it, so it is never cut off. Screen readers still read the full text. A `title` or `data-tooltip` on the element replaces the automatic tooltip.
+
+            ## Text tone
+
+            `data-tone` colours text with a theme tone, so it follows the theme and dark mode:
+
+            ```html
+            <span data-tone="secondary">Added {{ created }}</span>
+            <span data-tone="error">Failing</span>
+            ```
+
+            | Tone | Colour |
+            |---|---|
+            | `secondary` | Secondary text |
+            | `tertiary` | Tertiary text, for supplementary details such as timestamps |
+            | `quaternary` | Quaternary text, for placeholders such as an empty-value dash |
+            | `success`, `warning`, `error`, `info` | Ant Design's status text colours |
+
+            On the default light theme `tertiary`, `quaternary` and the status tones fall below WCAG AA contrast for body text. Use them for supplementary text and short labels whose words carry the meaning ("Failing"), never as the only way information is shown. On an element that also has `data-tag`, `data-tone` sets the text colour. In page config you can also use the Tailwind theme classes (`text-text-secondary`); in HTML built by templates, requests or API endpoints use `data-tone`, because Tailwind never sees those strings.
+
+            ## Confirm before an event
+
+            In `ClickableHtml`, `data-confirm` on a `data-event` element asks before the event fires:
+
+            ```yaml
+            - id: rows
+              type: ClickableHtml
+              properties:
+                html: >
+                  <i data-icon="delete" data-event="onDelete" data-id="42"
+                     data-tooltip="Delete" data-confirm="Delete this row?"></i>
+              events:
+                onDelete:
+                  - id: delete
+                    type: CallAPI
+                    params:
+                      endpointId: delete-row
+                      payload:
+                        id: { _event: id }
+            ```
+
+            A click, Enter or Space opens a confirmation with the message, OK and Cancel. Only OK fires the event, once. Cancel, Escape and a click outside close it without firing. Focus moves to Cancel when it opens, so a stray key press never confirms; Tab to OK and press Enter to confirm. Focus returns to the element afterwards; after OK inside a popover, it returns to the popover's trigger. Clicking the element again while its confirmation is open keeps it open.
+
+            With no value the message is "Are you sure?" (the `client.confirm` [translation key](/i18n)); OK and Cancel follow the app's locale. The event object includes `confirm` along with the element's other `data-*` attributes. A confirm inside a popover keeps the popover open until OK fires the event. `data-confirm` has no effect in `Html`, or on an element without `data-event`.
 
             ## Plugin blocks
 

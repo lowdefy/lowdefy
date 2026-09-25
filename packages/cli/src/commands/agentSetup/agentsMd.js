@@ -63,7 +63,10 @@ installed in this project (including local plugins).
 - Dates, numbers, people and copyable values in HTML: \`<time datetime="{{ iso }}" data-time="relative">\`
   (or \`date\`, \`datetime\`, \`time\`), \`data-format="currency" data-currency="USD"\` (or \`number\`,
   \`percent\`, \`compact\`, \`bytes\`) on the raw number, \`data-avatar="{{ name }}"\` (never an avatar image
-  service), and \`data-copy\` for a copy button. See the \`concepts/html-attributes\` doc.
+  service), and \`data-copy\` for a copy button.
+- \`data-truncate="2"\` clamps block text (full text in a tooltip when cut off), \`data-tone="secondary"\`
+  mutes text (never inline grey hex colours), and in ClickableHtml \`data-confirm="Delete this row?"\` on a
+  \`data-event\` element asks before a destructive event fires. See the \`concepts/html-attributes\` doc.
 
 ### Visual feedback
 
