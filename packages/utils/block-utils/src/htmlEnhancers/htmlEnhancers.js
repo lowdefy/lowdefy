@@ -18,6 +18,7 @@ import dataEventEnhancer from './dataEventEnhancer.js';
 import iconEnhancer from './iconEnhancer.js';
 import linkEnhancer from './linkEnhancer.js';
 import popoverEnhancer from './popoverEnhancer.js';
+import toneEnhancer from './toneEnhancer.js';
 import tooltipEnhancer from './tooltipEnhancer.js';
 
 // The HTML attribute vocabulary, in the order the pass runs. popover comes first
@@ -28,6 +29,7 @@ const HTML_ENHANCERS = [
   dataEventEnhancer,
   iconEnhancer,
   linkEnhancer,
+  toneEnhancer,
 ];
 
 export default HTML_ENHANCERS;

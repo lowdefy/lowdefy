@@ -184,6 +184,17 @@ test('writeGlobalsCss includes grid.css import', async () => {
   expect(css).toContain('@import "@lowdefy/layout/grid.css";');
 });
 
+test('writeGlobalsCss imports the HTML attribute stylesheet after grid.css', async () => {
+  const context = createContext();
+  await writeGlobalsCss({ components: {}, context });
+
+  const css = context.writeBuildArtifact.mock.calls[0][1];
+  const gridImport = css.indexOf('@import "@lowdefy/layout/grid.css";');
+  const htmlImport = css.indexOf('@import "@lowdefy/block-utils/html.css";');
+  expect(gridImport).toBeGreaterThan(-1);
+  expect(htmlImport).toBeGreaterThan(gridImport);
+});
+
 test('writeGlobalsCss writes initial tailwind-candidates.css', async () => {
   const context = createContext();
   await writeGlobalsCss({ components: {}, context });
