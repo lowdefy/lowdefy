@@ -989,3 +989,42 @@ test('Actions try catch arrays and debounce.immediate == false default ms (trail
     },
   ]);
 });
+
+test('_error in an event catch list reads the error that sent the event there', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    blocks: [
+      {
+        id: 'button',
+        type: 'Button',
+        events: {
+          onClick: {
+            try: [{ id: 'fail', type: 'Error', messages: { error: false } }],
+            catch: [
+              {
+                id: 'record',
+                type: 'SetState',
+                params: { caughtName: { _error: 'name' }, caughtActionId: { _error: 'actionId' } },
+              },
+            ],
+          },
+          onBlur: [{ id: 'other', type: 'SetState', params: { otherError: { _error: true } } }],
+        },
+      },
+    ],
+  };
+  const context = await testContext({
+    lowdefy,
+    pageConfig,
+  });
+  const { button } = context._internal.RootSlots.map;
+  await button.triggerEvent({ name: 'onClick' });
+  await button.triggerEvent({ name: 'onBlur' });
+  expect(button.Events.events.onClick.history[0].success).toBe(false);
+  expect(context.state).toEqual({
+    caughtName: 'ConfigError',
+    caughtActionId: 'fail',
+    otherError: null,
+  });
+});

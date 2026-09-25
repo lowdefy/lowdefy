@@ -23,6 +23,7 @@ export { default as _boolean } from './operators/shared/boolean.schema.js';
 export { default as _date } from './operators/shared/date.schema.js';
 export { default as _divide } from './operators/shared/divide.schema.js';
 export { default as _eq } from './operators/shared/eq.schema.js';
+export { default as _error } from './operators/shared/error.schema.js';
 export { default as _function } from './operators/shared/function.schema.js';
 export { default as _get } from './operators/shared/get.schema.js';
 export { default as _gt } from './operators/shared/gt.schema.js';

@@ -14,7 +14,10 @@
   limitations under the License.
 */
 
+import ActionError from './ActionError.js';
+import OperatorError from './OperatorError.js';
 import PluginError from './PluginError.js';
+import RequestError from './RequestError.js';
 
 test('PluginError wraps error with message via cause', () => {
   const original = new Error('Test error message');
@@ -144,4 +147,42 @@ test('PluginError works with no options', () => {
   expect(error.message).toBe('Direct message');
   expect(error.cause).toBeUndefined();
   expect(error.configKey).toBeNull();
+});
+
+test('PluginError lifts code and statusCode from an axios-shaped cause', () => {
+  const cause = new Error('Request failed with status code 404');
+  cause.code = 'ERR_BAD_REQUEST';
+  cause.response = { status: 404 };
+  const error = new RequestError(cause.message, { cause });
+  expect(error.code).toBe('ERR_BAD_REQUEST');
+  expect(error.statusCode).toBe(404);
+});
+
+test('PluginError lifts codes through every subclass', () => {
+  const cause = { message: 'duplicate key', code: 11000 };
+  expect(new OperatorError(undefined, { cause }).code).toBe(11000);
+  expect(new ActionError(undefined, { cause }).code).toBe(11000);
+  expect(new RequestError(undefined, { cause }).code).toBe(11000);
+});
+
+test('PluginError lifts codes one level only and does not read the cause of its cause', () => {
+  const inner = new Error('inner');
+  inner.code = 'ECONNREFUSED';
+  inner.statusCode = 503;
+  const cause = new Error('outer', { cause: inner });
+  const error = new RequestError(cause.message, { cause });
+  expect(error).not.toHaveProperty('code');
+  expect(error).not.toHaveProperty('statusCode');
+});
+
+test('PluginError does not set code or statusCode when the cause has neither', () => {
+  const error = new PluginError('Error', { cause: new Error('Error') });
+  expect(error).not.toHaveProperty('code');
+  expect(error).not.toHaveProperty('statusCode');
+});
+
+test('PluginError does not set code or statusCode without a cause', () => {
+  const error = new PluginError('Direct message');
+  expect(error).not.toHaveProperty('code');
+  expect(error).not.toHaveProperty('statusCode');
 });

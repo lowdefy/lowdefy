@@ -29,6 +29,7 @@ import joinPath from './joinPath.js';
 import LRUCache from './LRUCache.js';
 import mergeObjects from './mergeObjects.js';
 import omit from './omit.js';
+import projectCaughtError from './projectCaughtError.js';
 import serializer from './serializer.js';
 import set from './set.js';
 import setKey from './setKey.js';
@@ -58,6 +59,7 @@ export {
   LRUCache,
   mergeObjects,
   omit,
+  projectCaughtError,
   ReservedKeyError,
   serializer,
   set,

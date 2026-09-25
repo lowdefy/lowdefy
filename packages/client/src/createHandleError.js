@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { getDevError } from '@lowdefy/engine';
 import { UserError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
@@ -22,22 +23,27 @@ function createHandleError(lowdefy) {
   const logger = lowdefy._internal.logger;
 
   function logError(error) {
-    if (!(error instanceof UserError)) {
-      lowdefy._runtimeErrorCallback?.(error);
-    }
+    lowdefy._runtimeErrorCallback?.(error);
     logger.error(error);
   }
 
   return async function handleError(error) {
-    const errorKey = `${error.message}:${error.configKey || ''}`;
+    // The dev tools show the dev server's full error; every decision below stays on
+    // the error config sees. Keying on the shown message means two different dev
+    // failures of one action both display, while prod's generic server message
+    // still logs once per configKey.
+    const devError = getDevError(error);
+    const shown = devError ?? error;
+    const errorKey = `${shown.message}:${error.configKey || ''}`;
     if (loggedErrors.has(errorKey)) {
       return;
     }
     loggedErrors.add(errorKey);
 
-    // UserError is client-only — log to browser console, never send to server
+    // UserError is client-only — log to browser console, never send to server or
+    // the error bar
     if (error instanceof UserError) {
-      logError(error);
+      logger.error(shown);
       return;
     }
 
@@ -48,7 +54,7 @@ function createHandleError(lowdefy) {
       // but never gets a source (location resolution is skipped for it), so
       // keying on source POSTed it back and had it logged twice.
       if (error.handled) {
-        logError(error);
+        logError(shown);
         return;
       }
       // Client-originated errors — send to server for logging + location resolution
@@ -76,12 +82,12 @@ function createHandleError(lowdefy) {
       } catch {
         // Server logging failed - continue with local console
       }
-      logError(error);
+      logError(shown);
       return;
     }
 
     // Other errors - just log locally
-    logError(error);
+    logError(shown);
   };
 }
 

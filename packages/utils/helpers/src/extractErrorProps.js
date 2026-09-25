@@ -54,9 +54,18 @@ function symbolMarker(val) {
 const MAX_CAUSE_DEPTH = 3;
 const MAX_OBJECT_DEPTH = 5;
 
-const NO_OMIT = [];
+// Today's fields in today's order. The own `cause` key is skipped in the spread
+// so an assigned (and therefore enumerable) cause is not listed twice.
+function defaultProjection(err) {
+  const props = { message: err.message, name: err.name, stack: err.stack, cause: err.cause };
+  for (const key of Object.keys(err)) {
+    if (key === 'cause') continue;
+    props[key] = err[key];
+  }
+  return props;
+}
 
-function cleanValue(val, seen, objectDepth, causeDepth, omit) {
+function cleanValue(val, seen, objectDepth, causeDepth, project) {
   if (objectDepth > MAX_OBJECT_DEPTH) return '[Truncated]';
   if (typeof val === 'function') return functionMarker(val);
   if (typeof val === 'bigint') return bigintMarker(val);
@@ -65,84 +74,78 @@ function cleanValue(val, seen, objectDepth, causeDepth, omit) {
   if (seen.has(val)) return '[Circular]';
   seen.add(val);
   if (Array.isArray(val)) {
-    return val.map((item) => cleanValue(item, seen, objectDepth + 1, causeDepth, omit));
+    return val.map((item) => cleanValue(item, seen, objectDepth + 1, causeDepth, project));
   }
   if (val instanceof Date) return val;
-  if (val instanceof Error) return _extractErrorProps(val, seen, objectDepth, causeDepth, omit);
+  if (val instanceof Error) return _extractErrorProps(val, seen, objectDepth, causeDepth, project);
   if (!isPlainObject(val)) return classInstanceMarker(val);
   const cleaned = {};
   for (const [k, v] of Object.entries(val)) {
-    const cv = cleanValue(v, seen, objectDepth + 1, causeDepth, omit);
+    const cv = cleanValue(v, seen, objectDepth + 1, causeDepth, project);
     if (cv !== undefined) cleaned[k] = cv;
   }
   return cleaned;
 }
 
-function _extractErrorProps(err, seen, objectDepth, causeDepth, omit) {
+function cleanCause(cause, seen, objectDepth, causeDepth, project) {
+  if (!(cause instanceof Error)) {
+    return cleanValue(cause, seen, objectDepth + 1, causeDepth, project);
+  }
+  if (seen.has(cause)) return '[Circular]';
+  if (causeDepth >= MAX_CAUSE_DEPTH) return '[Truncated]';
+  return _extractErrorProps(cause, seen, objectDepth, causeDepth + 1, project);
+}
+
+function cleanPropValue(value, seen, objectDepth, causeDepth, project) {
+  if (typeof value === 'function') return functionMarker(value);
+  if (typeof value === 'bigint') return bigintMarker(value);
+  if (typeof value === 'symbol') return symbolMarker(value);
+  if (value === null || typeof value !== 'object') return value;
+  if (value instanceof Date) return value;
+  if (Array.isArray(value)) return cleanValue(value, seen, objectDepth + 1, causeDepth, project);
+  if (value instanceof Error) {
+    if (seen.has(value)) return '[Circular]';
+    return _extractErrorProps(value, seen, objectDepth, causeDepth, project);
+  }
+  if (isPlainObject(value)) return cleanValue(value, seen, objectDepth + 1, causeDepth, project);
+  // A class instance (Socket, Agent, ClientRequest, ...). Its internals are never exposed —
+  // only the type name — but the key must not vanish: an absent key is indistinguishable
+  // from "no such field", and this output is now read by `get` as app-visible config data.
+  return classInstanceMarker(value);
+}
+
+function _extractErrorProps(err, seen, objectDepth, causeDepth, project) {
   if (!err) return err;
   seen.add(err);
   // Called at every error node rather than once for the walk, so a caller's
   // policy can key on the node itself - its class, or its own cause value.
   // Which fields an audience may see is the caller's decision, never this
-  // walk's; this function only applies the keys it is handed. Omitted fields
-  // are skipped before they are built, so a dropped cause is never deep-copied
-  // and never marked in `seen`.
-  const omitted = omit?.(err) ?? NO_OMIT;
+  // walk's; this function only cleans the entries it is handed. An entry the
+  // projection leaves out is never built, so a dropped cause is never
+  // deep-copied and never marked in `seen`.
+  const projected = (project ?? defaultProjection)(err);
   const props = {};
-  if (!omitted.includes('message')) props.message = err.message;
-  if (!omitted.includes('name')) props.name = err.name;
-  if (!omitted.includes('stack')) props.stack = err.stack;
-  if (err.cause !== undefined && !omitted.includes('cause')) {
-    if (!(err.cause instanceof Error)) {
-      props.cause = cleanValue(err.cause, seen, objectDepth + 1, causeDepth, omit);
-    } else if (seen.has(err.cause)) {
-      props.cause = '[Circular]';
-    } else if (causeDepth >= MAX_CAUSE_DEPTH) {
-      props.cause = '[Truncated]';
+  for (const [key, value] of Object.entries(projected)) {
+    if (value === undefined) continue;
+    if (key === 'cause') {
+      props.cause = cleanCause(value, seen, objectDepth, causeDepth, project);
     } else {
-      props.cause = _extractErrorProps(err.cause, seen, objectDepth, causeDepth + 1, omit);
-    }
-  }
-  for (const key of Object.keys(err)) {
-    if (key === 'cause' || omitted.includes(key)) continue;
-    const value = err[key];
-    if (typeof value === 'function') {
-      props[key] = functionMarker(value);
-    } else if (typeof value === 'bigint') {
-      props[key] = bigintMarker(value);
-    } else if (typeof value === 'symbol') {
-      props[key] = symbolMarker(value);
-    } else if (value === null || typeof value !== 'object') {
-      props[key] = value;
-    } else if (value instanceof Date) {
-      props[key] = value;
-    } else if (Array.isArray(value)) {
-      props[key] = cleanValue(value, seen, objectDepth + 1, causeDepth, omit);
-    } else if (value instanceof Error) {
-      if (seen.has(value)) {
-        props[key] = '[Circular]';
-      } else {
-        props[key] = _extractErrorProps(value, seen, objectDepth, causeDepth, omit);
-      }
-    } else if (isPlainObject(value)) {
-      props[key] = cleanValue(value, seen, objectDepth + 1, causeDepth, omit);
-    } else {
-      // A class instance (Socket, Agent, ClientRequest, ...). Its internals are never exposed —
-      // only the type name — but the key must not vanish: an absent key is indistinguishable
-      // from "no such field", and this output is now read by `get` as app-visible config data.
-      props[key] = classInstanceMarker(value);
+      props[key] = cleanPropValue(value, seen, objectDepth, causeDepth, project);
     }
   }
   return props;
 }
 
-// omit: (err) => string[] - the field names to leave off THIS error node, called
-// once per node. Returning 'message' or 'name' is legal but degrades the wire
-// format rather than just trimming it: serializer's propsToError revives a cause
-// as an Error only when it has a `message`, and looks the Lowdefy error class up
-// by `name`. Omit either and a round-trip yields plain objects.
-function extractErrorProps(err, { omit } = {}) {
-  return _extractErrorProps(err, new Set(), 0, 0, omit);
+// project: (err) => object - the props to emit for THIS error node, called once
+// per node. Entries are cleaned as own properties are: Errors recurse through
+// the same `project`, the returned `cause` is walked in place of the original,
+// and `undefined` entries are dropped. Returning neither `message` nor `name` is
+// legal but degrades the wire format rather than just trimming it: serializer's
+// propsToError revives a cause as an Error only when it has a `message`, and
+// looks the Lowdefy error class up by `name`. Leave either out and a round-trip
+// yields plain objects.
+function extractErrorProps(err, { project } = {}) {
+  return _extractErrorProps(err, new Set(), 0, 0, project);
 }
 
 export default extractErrorProps;
