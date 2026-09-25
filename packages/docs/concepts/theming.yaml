@@ -493,43 +493,11 @@ _ref:
                       - LuFlag
                 ```
 
-                The build bundles only the icons your config names. An icon name that only exists at runtime — read from state or a request — is not in the config, so list it under `theme.icons.include` to bundle it. A name kept in config data, such as `icon: warning` on a status enum that a template turns into `data-icon="{{ status.icon }}"`, is already in the config and gets bundled.
+                The build bundles only the icons your config names. An icon name that only exists at runtime — read from state or a request — is not in the config, so list it under `theme.icons.include` to bundle it. A name kept in config data, such as `icon: warning` on a status enum that a template turns into `data-icon="{% raw %}{{ status.icon }}{% endraw %}"`, is already in the config and gets bundled.
 
-                ### Icons, tooltips and popovers in HTML
+                ### Icons in HTML
 
-                Every block that renders HTML (Html, ClickableHtml, DangerousHtml, and HTML properties like Tooltip titles and Card titles) understands these attributes:
-
-                | Attribute | Effect |
-                |---|---|
-                | `data-icon="edit"` | Renders the icon inside the element. It takes the element's font size and text colour. |
-                | `data-tooltip="Text"` | Shows a tooltip on hover and keyboard focus. |
-                | `data-popover="id"` | Toggles a popover on click, Enter or Space. The content is the element with `data-popover-content="id"` in the same HTML (give it the `hidden` attribute); without one, the attribute value is the popover text. `data-popover-title` sets a title. |
-                | `data-event="onName"` | ClickableHtml only: fires the block event `onName` with the element's other `data-*` attributes as the event object. |
-
-                ```yaml
-                - id: row_actions
-                  type: ClickableHtml
-                  properties:
-                    html: >
-                      <i data-icon="edit" data-event="onEdit" data-id="42" data-tooltip="Edit"></i>
-                      <span data-popover="more">More <i data-icon="chevron-down"></i></span>
-                      <div data-popover-content="more" hidden>
-                        <p data-event="onArchive" data-id="42"><i data-icon="folder"></i> Archive</p>
-                      </div>
-                  events:
-                    onEdit:
-                      - id: edit
-                        type: SetState
-                        params:
-                          editing: { _event: id }
-                    onArchive:
-                      - id: archive
-                        type: SetState
-                        params:
-                          archiving: { _event: id }
-                ```
-
-                Popovers close on a click outside, on Escape, on a second click on the trigger, and after a `data-event` inside them fires.
+                In any HTML string, `<i data-icon="edit"></i>` renders an icon. [HTML attributes](/html-attributes) describes it with the other attributes HTML understands: tooltips, popovers, links and status tags.
 
                 ## TLDR
                   - Configure app theme via `theme.antd` in `lowdefy.yaml`.
@@ -540,7 +508,7 @@ _ref:
                   - Override tokens per block via `properties.theme`.
                   - Use [ConfigProvider](/ConfigProvider) block for scoped theming of block groups.
                   - Access tokens in expressions with the `_theme` operator.
-                  - Use built-in semantic icon names (`icon: edit`) and `data-icon`, `data-tooltip`, `data-popover` in HTML; add names with `theme.icons.aliases`.
+                  - Use built-in semantic icon names (`icon: edit`), and `data-icon` in HTML; add names with `theme.icons.aliases`. See [HTML attributes](/html-attributes) for everything HTML understands.
                   - Access derived tokens in CSS via `var(--ant-color-primary-hover)`.
                   - Tailwind utility classes (`text-primary`, `bg-bg-container`, etc.) automatically reflect the antd theme.
                   - Add custom Tailwind tokens via `theme.tailwind` in `lowdefy.yaml`.

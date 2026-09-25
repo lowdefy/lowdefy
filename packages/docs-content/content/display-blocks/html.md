@@ -295,9 +295,41 @@ Render raw HTML content safely.
       mode.</p>'
 ```
 
+```yaml
+- id: html_icons
+  type: Html
+  properties:
+    html: '<p><i data-icon="success" style="color: var(--ant-color-success)"></i>
+      Saved <span data-tooltip="Saved to the cloud 2 minutes ago"
+      style="text-decoration: underline dotted">just now</span></p><p><i
+      data-icon="warning" style="color: var(--ant-color-warning)"></i> 3 fields
+      need attention. <span data-popover="fields" style="color:
+      var(--ant-color-primary); cursor: pointer">Which? <i
+      data-icon="chevron-down"></i></span></p><div data-popover-content="fields"
+      hidden><ul style="margin: 0; padding-left:
+      16px"><li>Email</li><li>Phone</li><li>Address</li></ul></div>'
+```
+
+```yaml
+- id: html_links_tags
+  type: Html
+  properties:
+    html: <p><a data-page-id="Button">Button</a> moved to <span
+      data-tag="success">Released</span> · <a data-page-id="theming"
+      data-url-query="section=icons">Theming</a> is <span data-tag="warning">In
+      review</span> · <a href="https://ant.design" data-new-tab>Ant Design</a>
+      <i data-icon="external-link"></i></p><p><span
+      data-status="success">Online</span> &nbsp; <span
+      data-status="processing">Syncing</span> &nbsp; <span
+      data-status="error">Offline</span></p><p><span data-tag>Design</span>
+      <span data-tag>Engineering</span> <span data-tag>Support</span> <span
+      data-tag="purple">Beta</span> <span data-tag="#0f766e">Custom
+      colour</span></p>
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `html` | string | - | Content to be rendered as Html. |
+| `html` | string | - | Content to be rendered as Html. It understands these attributes: data-icon="edit" renders an icon (a semantic name like edit, delete, warning, or a React Icons name); data-tooltip="Text" shows a tooltip on hover and focus; data-popover="id" toggles a popover showing the element with data-popover-content="id" (mark it hidden);  links to an app page without reloading (never hard-code href="/page"); data-link opts an existing app-relative  into the same navigation; data-new-tab opens a link in a new tab (target is stripped by sanitising); data-tag="success" renders a tinted status tag and data-status="success" a status dot (tones success, processing, info, warning, error, default, an antd preset colour, a CSS colour, or any other value to seed a stable colour). See the HTML attributes docs page. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |

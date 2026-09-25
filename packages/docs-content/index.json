@@ -164,6 +164,12 @@
       "path": "content/concepts/custom-styling.md"
     },
     {
+      "slug": "concepts/html-attributes",
+      "title": "HTML attributes",
+      "section": "Concepts",
+      "path": "content/concepts/html-attributes.md"
+    },
+    {
       "slug": "concepts/cli",
       "title": "The CLI",
       "section": "Concepts",
@@ -746,6 +752,14 @@
       "path": "content/display-blocks/calendar.md",
       "kind": "block",
       "typeName": "Calendar"
+    },
+    {
+      "slug": "display-blocks/clickablehtml",
+      "title": "ClickableHtml",
+      "section": "Display Blocks",
+      "path": "content/display-blocks/clickablehtml.md",
+      "kind": "block",
+      "typeName": "ClickableHtml"
     },
     {
       "slug": "display-blocks/dangeroushtml",

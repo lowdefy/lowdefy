@@ -55,6 +55,11 @@ installed in this project (including local plugins).
   help and \`data-popover="id"\` with a hidden \`data-popover-content="id"\` element for a popover.
 - For clicks inside HTML use ClickableHtml: \`data-event="onEdit"\` fires that block event, with the
   element's other \`data-*\` attributes as the event object.
+- Links in HTML: \`<a data-page-id="contacts" data-url-query="_id=42">\` — never a hard-coded
+  \`href="/contacts?..."\` (it reloads the app and ignores basePath). \`data-new-tab\` instead of
+  \`target="_blank"\` (sanitising strips \`target\`).
+- Statuses in HTML: \`<span data-tag="success">Approved</span>\` or \`<span data-status="warning">…</span>\`
+  — never inline-styled pills or hex status colours. See the \`concepts/html-attributes\` doc.
 
 ### Visual feedback
 

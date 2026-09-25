@@ -11,8 +11,10 @@ Provides browser-side utilities for:
 - Block schema defaults
 - Tailwind CSS class merging (`cn`)
 - Lazy-loading heavy block implementations (`createLazyBlock`)
+- The HTML attribute vocabulary and its stylesheet (`HtmlComponent`, `html.css`)
+- Formatting shared by ag-grid cells and HTML (tag colours, numbers, dates, initials)
 
-The package declares `"sideEffects": false`: no module runs code at import time and none imports CSS, so a bundler can drop every module a chunk does not use (a lazy block's wrapper chunk does not keep `HtmlComponent`'s DOMPurify).
+The package declares `"sideEffects": false`: no module runs code at import time and none imports CSS (the app's `globals.css` imports `html.css`), so a bundler can drop every module a chunk does not use (a lazy block's wrapper chunk does not keep `HtmlComponent`'s DOMPurify).
 
 ## Installation
 
@@ -83,7 +85,22 @@ Uses DOMPurify for sanitization, removing:
 
 The HTML is sanitized and assigned to `innerHTML` on mount and then only when the string (or the rendered element) changes. `renderHtml` sits behind most antd labels, titles and AgGrid cells, so re-sanitizing on every parent render was measurable, and it reset open `<details>`, media and text selection. DOMPurify has no hooks or config set, so the same string always sanitizes the same way.
 
-**Attribute enhancements.** After sanitising, `HtmlComponent` gives four attributes meaning: `data-icon` (renders the app's Icon component into the element through a React portal), `data-tooltip` and `data-popover` / `data-popover-content` (a themed antd overlay anchored on the element), and — when the caller passes `onDataEvent` — `data-event` (click delegation with the other `data-*` attributes as the payload; `ClickableHtml` uses this). The pass runs only when the string contains one of those attribute names. It needs the Icon component, the icon map and the overlay, which the client hands over once through `registerHtmlEnhancements` in `initLowdefyContext`: a module-level registration rather than React context, because antd mounts Message, Notification and ConfirmModal content outside the page tree. Unregistered (unit tests, standalone use) the HTML renders as plain sanitised markup. The root element's only React children are portals and the overlay, which renders nothing in place, so an `innerHTML` reset never removes a React-owned node. Plugins that render HTML should use `renderHtml` or `HtmlComponent` rather than their own DOMPurify + `innerHTML`, or they miss these attributes.
+**Attribute enhancements.** After sanitising, `HtmlComponent` runs an enhancement pass that gives `data-*` attributes meaning. The pass is a fixed, ordered list of **enhancers** in `src/htmlEnhancers/` (`htmlEnhancers.js` holds the order), so a new attribute is a new file, not new code in `HtmlComponent`. An enhancer is a plain object:
+
+- `name` and `attributes` (the whole attribute names it handles). `HtmlComponent` builds one gate regex from all of them (`createHtmlEnhancerGate`); HTML that names none of them, such as grid cells with only `data-testid`, stays on the plain path.
+- `prepare({ root, select, registration, dataEvents })`, run once per applied HTML string by `runHtmlEnhancers`. `select` skips `[data-popover-content]` subtrees, which the nested `HtmlComponent` inside the popover enhances. It may return `portals` (`[{ key, element, node }]`, rendered with `createPortal`), a `cleanup` (called before the next apply and on unmount), and other data kept as `host.prepared[name]`.
+- `activates`: a selector of elements that Enter/Space click when they are not native controls.
+- `onClick`, `onMouseOver`, `onMouseOut`, `onFocus`, `onBlur` handlers, each called with `{ event, host }`. `host` exposes `closestInRoot`, the current `overlay`, `openOverlay`, `closeOverlay`, `prepared`, `props` and `registration`.
+
+Enhancers use the cheapest tier that works: **CSS** (rules in the generated `html.css`, no per-element JS), **DOM** (`prepare` sets attributes, text or the `--lf-tone` custom property), or **portal** (React nodes portalled into elements, or the overlay). The current enhancers are `popover`, `tooltip`, `dataEvent`, `icon`, `link` (`data-page-id`, `data-link`, `data-new-tab`) and `tone` (`data-tag`, `data-status`). `data-event` clicks themselves stay in `HtmlComponent`, because `ClickableHtml` fires them with or without a registration; the `dataEvent` enhancer only makes targets focusable.
+
+`HtmlComponent` keeps what is not per-attribute: sanitising, the gate, one overlay at a time (tooltip or popover, rendered through the registered `HtmlOverlay`), portals and cleanups. When the pass runs, the root carries `data-lf-html`, which scopes the stylesheet.
+
+The client registers what the enhancers need once, through `registerHtmlEnhancements` in `initLowdefyContext`: `Icon`, the icon map, the lazy `HtmlOverlay`, `createHref` (the client's `createUrl` with `basePath`) and `link` (`lowdefy._internal.link`, what the `Link` action runs). It is a module-level registration rather than React context, because antd mounts Message, Notification and ConfirmModal content outside the page tree. Unregistered (unit tests, standalone use) the HTML renders as plain sanitised markup. The registry is internal: plugins get the vocabulary by rendering through `renderHtml` or `HtmlComponent`, not by adding enhancers. The root element's only React children are portals and the overlay, which renders nothing in place, so an `innerHTML` reset never removes a React-owned node. Plugins that render HTML should use `renderHtml` or `HtmlComponent` rather than their own DOMPurify + `innerHTML`, or they miss these attributes.
+
+**Stylesheet.** `src/createHtmlCss.js` returns the CSS for the attribute vocabulary; `scripts/writeHtmlCss.mjs` writes it to `dist/html.css` at package build, and the app build's `globals.css` imports `@lowdefy/block-utils/html.css`. Every rule is in `@layer components`, wrapped in `:where()` (no specificity, so app styles win) and scoped under `[data-lf-html]`. The tag look and tone rules are generated from `tagStyle` and `TONE_COLORS`, so HTML tags cannot drift from the grid's tag cells.
+
+**Formatting core.** `src/format/` holds the pure formatting functions that the ag-grid cell renderers and the HTML enhancers share: `TAG_COLORS` and `TONE_COLORS` (preset tag colours and status tones as antd CSS variables), `hashSeed`, `seededTagColor`, `resolveTagColor`, `tagStyle`, `initials`, `avatarColor`, `numberFormatOptions`, `formatNumber` and `formatDate`. `formatDate` extends dayjs with `relativeTime` when it formats a relative date, not at import, to keep the package free of import-time side effects.
 
 Props beyond `html`: `div` (render a `div` instead of a `span`), `onDataEvent({ name, event })`, `sanitizeOptions` (DOMPurify config, used by `DangerousHtml`), and the older `onClick`.
 
