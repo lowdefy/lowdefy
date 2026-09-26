@@ -326,7 +326,7 @@ class Block {
                 })
               );
             } else {
-              this.subSlots[i].reset(initWithState);
+              this.subSlots[i].resetBlocks(initWithState);
             }
           });
           this.subSlots.splice(blockValue.length);
@@ -345,7 +345,7 @@ class Block {
           this.newSlots({ arrayIndices: this.arrayIndices, initState: initWithState })
         );
       } else {
-        this.subSlots[0].reset(initWithState);
+        this.subSlots[0].resetBlocks(initWithState);
       }
     }
   };

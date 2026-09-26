@@ -35,6 +35,35 @@ function walkRefIds(obj, refIds) {
   }
 }
 
+// The refs of the files that hold a pages list: the app's pages (when
+// lowdefy.yaml has pages: { _ref: pages.yaml }) and each module's pages.
+function collectPagesListRefIds({ components, context }) {
+  const pagesLists = [
+    components.pages,
+    ...Object.values(context.modules ?? {}).map((moduleEntry) => moduleEntry.manifest?.pages),
+  ];
+  const listRefIds = new Set();
+  for (const pagesList of pagesLists) {
+    if (pagesList?.['~r'] !== undefined) {
+      listRefIds.add(pagesList['~r']);
+    }
+  }
+  return listRefIds;
+}
+
+// The refs between a page and the list that holds it: the page file and any
+// template it refs (a page file whose content is a _ref to a template with
+// vars carries no ~r marker of its own).
+function collectPageFileRefIds({ page, listRefIds, refMap, pageRefIds }) {
+  let current = page['~r'];
+  while (current != null && !listRefIds.has(current)) {
+    const entry = refMap[current];
+    if (!entry || entry.parent == null) return;
+    pageRefIds.add(current);
+    current = entry.parent;
+  }
+}
+
 // Collect file paths that contribute to skeleton (non-page) config.
 // Walks ~r markers on non-page components, traces each through the
 // refMap parent chain, and scans for scalar-resolving descendants.
@@ -55,6 +84,14 @@ function collectSkeletonSourceFiles({ components, context }) {
     walkRefIds(moduleEntry.consumerVars, refIds);
   }
 
+  // A file that holds a pages list decides which pages exist, so it shapes the
+  // page registry: adding a page to it needs a skeleton rebuild. The page
+  // files it references stay page content.
+  const listRefIds = collectPagesListRefIds({ components, context });
+  for (const listRefId of listRefIds) {
+    refIds.add(listRefId);
+  }
+
   // The walker only ~r-tags resolved _ref content, never the root file's own
   // objects — so a scalar ref parented directly on the root (e.g.
   // app.html.appendHead: {_ref: head.html}) has no collected ancestor and
@@ -67,7 +104,10 @@ function collectSkeletonSourceFiles({ components, context }) {
   // collected, a scalar ref'd inside a page file would otherwise reach the
   // root through its page ref and wrongly become a skeleton source.
   const pageRefIds = new Set();
-  walkRefIds(components.pages ?? [], pageRefIds);
+  for (const page of components.pages ?? []) {
+    walkRefIds(page, pageRefIds);
+    collectPageFileRefIds({ page, listRefIds, refMap: context.refMap, pageRefIds });
+  }
 
   const sourceFiles = new Set();
 

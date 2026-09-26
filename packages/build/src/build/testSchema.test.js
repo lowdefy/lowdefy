@@ -190,10 +190,7 @@ test('null item in blocks array emits warning', () => {
       {
         id: 'page_1',
         type: 'PageHeaderMenu',
-        blocks: [
-          { id: 'valid', type: 'Box' },
-          null,
-        ],
+        blocks: [{ id: 'valid', type: 'Box' }, null],
       },
     ],
   };
@@ -372,9 +369,7 @@ test('auth role entry missing id emits required warning', () => {
     },
   };
   testSchema({ components, context });
-  expect(mockLogWarn).toHaveBeenCalledWith(
-    'Auth role entries should have required property "id".'
-  );
+  expect(mockLogWarn).toHaveBeenCalledWith('Auth role entries should have required property "id".');
 });
 
 test('auth role entry with a non-string id emits type warning', () => {
@@ -688,4 +683,99 @@ test('missing lowdefy version schema warning', () => {
   expect(mockLogWarn).toHaveBeenCalledWith(
     'Lowdefy configuration should have required property "lowdefy".'
   );
+});
+
+function pageWithBlockClass(blockClass) {
+  return {
+    lowdefy: '1.0.0',
+    pages: [
+      {
+        id: 'page_1',
+        type: 'Box',
+        blocks: [{ id: 'box_1', type: 'Box', class: blockClass }],
+      },
+    ],
+  };
+}
+
+const ifOperator = {
+  _if: { test: { _state: 'toggle' }, then: 'bg-red-500', else: 'bg-blue-500' },
+};
+
+test('block class as a string, array of strings or slot object emits no warnings', () => {
+  testSchema({ components: pageWithBlockClass('p-4'), context });
+  testSchema({ components: pageWithBlockClass(['p-4', 'm-2']), context });
+  testSchema({
+    components: pageWithBlockClass({ '.element': 'p-4', '.icon': ['m-2', 'text-lg'] }),
+    context,
+  });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('block class as an operator emits no warnings', () => {
+  testSchema({ components: pageWithBlockClass(ifOperator), context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('block class slot value as an operator emits no warnings', () => {
+  testSchema({ components: pageWithBlockClass({ '.element': ifOperator }), context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('block class array item as an operator emits no warnings', () => {
+  testSchema({ components: pageWithBlockClass(['p-4', ifOperator]), context });
+  testSchema({ components: pageWithBlockClass({ '.element': ['p-4', ifOperator] }), context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('page class as an operator emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    pages: [{ id: 'page_1', type: 'Box', class: { '.menu': ifOperator } }],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
+});
+
+test('block class as a number emits type warning', () => {
+  testSchema({ components: pageWithBlockClass(42), context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Block "class" should be a string, array of strings, object, or operator.'
+  );
+});
+
+test('block class slot value as a number emits type warning', () => {
+  testSchema({ components: pageWithBlockClass({ '.element': 42 }), context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Block "class" slot values should be a string, array of strings, or operator.'
+  );
+});
+
+test('block class slot value as a non-operator object emits type warning', () => {
+  testSchema({ components: pageWithBlockClass({ '.element': { notAnOperator: 'p-4' } }), context });
+  expect(mockLogWarn).toHaveBeenCalledWith(
+    'Block "class" slot values should be a string, array of strings, or operator.'
+  );
+});
+
+test('menu item class as an operator or with operator slot values emits no warnings', () => {
+  const components = {
+    lowdefy: '1.0.0',
+    menus: [
+      {
+        id: 'default',
+        links: [
+          { id: 'link_1', type: 'MenuLink', pageId: 'page_1', class: ifOperator },
+          {
+            id: 'group_1',
+            type: 'MenuGroup',
+            class: { '.label': ifOperator },
+            links: [{ id: 'divider_1', type: 'MenuDivider', class: ifOperator }],
+          },
+        ],
+      },
+    ],
+  };
+  testSchema({ components, context });
+  expect(mockLogWarn).not.toHaveBeenCalled();
 });

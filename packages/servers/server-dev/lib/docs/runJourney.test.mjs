@@ -37,8 +37,14 @@ Object.defineProperty(globalThis, 'navigator', {
   configurable: true,
 });
 
-function createLowdefyWindow({ pageId = 'form', state = {}, requests = {} } = {}) {
+function createLowdefyWindow({
+  pageId = 'form',
+  state = {},
+  requests = {},
+  historyIndex = 0,
+} = {}) {
   return {
+    navigation: { currentEntry: { index: historyIndex } },
     lowdefy: {
       pageId,
       contexts: {
@@ -107,6 +113,9 @@ function createPage({ window = createLowdefyWindow(), url = 'http://localhost:32
       }
     }),
     url: jest.fn(() => url),
+    documentTitle: '',
+    title: jest.fn(async () => page.documentTitle),
+    goBack: jest.fn(async () => null),
     keyboard: { press: jest.fn(async (key) => page.presses.push(key)) },
     screenshot: jest.fn(async () => {
       page.screenshotCount += 1;
@@ -154,7 +163,7 @@ test('runJourney returns an error naming an unknown step key before opening a br
     steps: [{ click: 'ok' }, { tap: 'ok' }],
   });
   expect(result.error).toEqual(
-    'Step 1: Unknown journey step "tap". Steps are: click, fill, select, press, wait, screenshot, expect.'
+    'Step 1: Unknown journey step "tap". Steps are: click, fill, select, press, back, wait, screenshot, expect.'
   );
   expect(mockGetBrowser).not.toHaveBeenCalled();
   expect(mockOpenPage).not.toHaveBeenCalled();
@@ -251,12 +260,12 @@ test('runJourney clicks the interactive control inside a block when there is one
 
   expect(result.passed).toBe(true);
   expect(page.clicks).toEqual([
-    `#bl-submit button, [role="button"], a[href], input:not([type="hidden"]), textarea, select, [role="switch"], [role="checkbox"], [role="radio"], [role="tab"], [role="menuitem"]`,
+    `#bl-submit button, [role="button"], a[href], label:has(input[type="radio"]), label:has(input[type="checkbox"]), input:not([type="hidden"]):not(label input[type="radio"]):not(label input[type="checkbox"]), textarea, select, [role="switch"], [role="checkbox"], [role="radio"], [role="tab"], [role="menuitem"]`,
     '#bl-card',
   ]);
 });
 
-const CONTROLS = `button, [role="button"], a[href], input:not([type="hidden"]), textarea, select, [role="switch"], [role="checkbox"], [role="radio"], [role="tab"], [role="menuitem"]`;
+const CONTROLS = `button, [role="button"], a[href], label:has(input[type="radio"]), label:has(input[type="checkbox"]), input:not([type="hidden"]):not(label input[type="radio"]):not(label input[type="checkbox"]), textarea, select, [role="switch"], [role="checkbox"], [role="radio"], [role="tab"], [role="menuitem"]`;
 
 // Records every filter and nth applied to any locator, however deeply chained,
 // so a test can assert on the text and visibility filters a target resolves to.
@@ -279,6 +288,27 @@ function trackFilters(page) {
   page.locator.mockImplementation((selector) => instrument(createLocator({ selector, page })));
   return filters;
 }
+
+test('runJourney clicks an option of a segmented control by its label, not its hidden input', async () => {
+  const page = createPage();
+  page.nths = [];
+  openWith(page);
+  const filters = trackFilters(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'controls',
+    steps: [{ click: { blockId: 'period', text: 'Month' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  // The labels of radio and checkbox options are controls; an input inside
+  // such a label is not, since it can have no size (antd Segmented).
+  expect(CONTROLS).toContain('label:has(input[type="radio"])');
+  expect(CONTROLS).toContain(':not(label input[type="radio"])');
+  expect(page.clicks).toEqual([`#bl-period ${CONTROLS}`]);
+  expect(filters[0].filter.hasText.test('Month')).toBe(true);
+});
 
 test('runJourney clicks a cell button by row and exact text inside a grid block', async () => {
   const page = createPage();
@@ -813,6 +843,70 @@ test('runJourney selects a dropdown option by exact visible text', async () => {
   expect(filters[1]).toEqual({ visible: true });
 });
 
+test('runJourney selects a radio, button or segmented option in the block by its exact label', async () => {
+  const page = createPage();
+  openWith(page);
+  const filters = [];
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      if (child === 'label:has(input[type="radio"])') {
+        inner.count.mockResolvedValue(3);
+        inner.filter.mockImplementation((filter) => {
+          filters.push(filter);
+          return inner;
+        });
+      }
+      return inner;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'reports',
+    steps: [{ select: { blockId: 'period', value: 'Month' } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual(['#bl-period label:has(input[type="radio"])']);
+  expect(filters[0].hasText.test('Month')).toBe(true);
+  expect(filters[0].hasText.test('Months')).toBe(false);
+  expect(filters[1]).toEqual({ visible: true });
+});
+
+test('runJourney reports a radio option that is not in the block by its text', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      if (child === 'label:has(input[type="radio"])') {
+        inner.count.mockResolvedValue(3);
+        inner.click.mockRejectedValue(new Error('locator.click: Timeout 5000ms exceeded.'));
+      }
+      return inner;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'reports',
+    steps: [{ select: { blockId: 'period', value: 'Decade' } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 0,
+    expected: 'option "Decade" in block "period"',
+    actual: 'locator.click: Timeout 5000ms exceeded.',
+    message: 'No option with text "Decade" in block "period".',
+  });
+});
+
 test('runJourney reports a dropdown option that never appears by its text', async () => {
   const page = createPage();
   openWith(page);
@@ -872,6 +966,139 @@ test('runJourney checks expect.url against the page url', async () => {
 
   expect(result.steps.map((step) => step.status)).toEqual(['ok', 'failed']);
   expect(result.failure.actual).toEqual('http://localhost:3227/detail?id=1');
+});
+
+test('runJourney goes back one page and settles it', async () => {
+  const window = createLowdefyWindow({ pageId: 'detail', historyIndex: 1 });
+  const page = createPage({ window });
+  openWith(page);
+  page.goBack.mockImplementation(async () => {
+    window.lowdefy.pageId = 'form';
+    window.lowdefy.contexts['page:form'] = window.lowdefy.contexts['page:detail'];
+    return null;
+  });
+
+  const result = await runJourney({ origin, pageId: 'detail', steps: [{ back: true }] });
+
+  expect(result.passed).toBe(true);
+  expect(page.goBack).toHaveBeenCalledWith({ timeout: 5000 });
+  expect(page.waitForFunction).toHaveBeenLastCalledWith(expect.any(Function), 'form', {
+    timeout: 5000,
+  });
+});
+
+test('runJourney fails back on the first page instead of leaving the app', async () => {
+  const page = createPage({ window: createLowdefyWindow({ historyIndex: 0 }) });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ back: null }, { expect: { url: { contains: '/form' } } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(page.goBack).not.toHaveBeenCalled();
+  expect(result.failure).toMatchObject({
+    index: 0,
+    expected: 'the browser to go back one page',
+    actual: 'no earlier page than http://localhost:3227/form',
+  });
+  expect(result.failure.message).toMatch(/There is no earlier page in this journey to go back to/);
+  expect(result.steps.map((step) => step.status)).toEqual(['failed', 'skipped']);
+});
+
+test('runJourney checks expect.title by equals and contains', async () => {
+  const page = createPage();
+  page.documentTitle = 'Tasks | Acme';
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { expect: { title: { equals: 'Tasks | Acme' } } },
+      { expect: { title: { contains: 'Tasks' } } },
+    ],
+  });
+
+  expect(result.passed).toBe(true);
+});
+
+test('runJourney fails expect.title with the last title seen', async () => {
+  const page = createPage();
+  page.documentTitle = 'Lowdefy';
+  openWith(page);
+  // Each read of the clock moves it on a second, so the 5s wait runs out.
+  let clock = 0;
+  const spy = jest.spyOn(Date, 'now').mockImplementation(() => {
+    clock += 1000;
+    return clock;
+  });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { title: { equals: 'Tasks' } } }],
+  });
+  spy.mockRestore();
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    expected: 'title to equal "Tasks"',
+    actual: 'Lowdefy',
+    message: 'Timed out after 5000ms waiting for title to equal "Tasks".',
+  });
+});
+
+test('runJourney returns only the state paths asked for, null where undefined', async () => {
+  const page = createPage({
+    window: createLowdefyWindow({ state: { form: { name: 'Ada' }, rows: [1, 2], big: 'x' } }),
+  });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [],
+    state: ['form.name', 'rows', 'missing'],
+  });
+
+  expect(result.state).toEqual({ 'form.name': 'Ada', rows: [1, 2], missing: null });
+});
+
+test('runJourney leaves the state out when state is false', async () => {
+  const page = createPage({ window: createLowdefyWindow({ state: { a: 1 } }) });
+  openWith(page);
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [], state: false });
+
+  expect(result.passed).toBe(true);
+  expect('state' in result).toBe(false);
+  expect('stateOmitted' in result).toBe(false);
+});
+
+test('runJourney summarises a large final state by default and returns it whole with state true', async () => {
+  const state = { rows: 'x'.repeat(20000), period: 'Month' };
+  const page = createPage({ window: createLowdefyWindow({ state }) });
+  openWith(page);
+
+  const summarised = await runJourney({ origin, pageId: 'form', steps: [] });
+  expect(summarised.state).toBeUndefined();
+  expect(summarised.stateOmitted).toMatchObject({
+    characters: JSON.stringify(state).length,
+    keys: { rows: 20002, period: 7 },
+  });
+  expect(summarised.stateOmitted.note).toMatch(/Pass state: \["path", \.\.\.\]/);
+
+  const whole = await runJourney({ origin, pageId: 'form', steps: [], state: true });
+  expect(whole.state).toEqual(state);
+});
+
+test('runJourney returns an error for a malformed state option before opening a browser', async () => {
+  const result = await runJourney({ origin, pageId: 'form', steps: [], state: 'all' });
+  expect(result.error).toMatch(/The "state" option must be true, false or an array of state paths/);
+  expect(mockGetBrowser).not.toHaveBeenCalled();
 });
 
 test('runJourney waits for a request to finish loading and for a state path to be defined', async () => {

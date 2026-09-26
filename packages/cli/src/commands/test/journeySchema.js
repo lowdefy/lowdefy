@@ -21,6 +21,7 @@ export const JOURNEY_STEP_KEYS = [
   'fill',
   'select',
   'press',
+  'back',
   'wait',
   'screenshot',
   'expect',

@@ -127,6 +127,22 @@ test('triggerPageEvent triggers the event on the page root block', () => {
   expect(typeof triggerEvent.mock.calls[0][0].progress).toBe('function');
 });
 
+test('page class and style reach the root block', () => {
+  const resetContext = { reset: true, setReset: () => {} };
+  const lowdefy = getLowdefy();
+  const page = {
+    id: 'pageId',
+    type: 'Box',
+    class: { '.element': 'p-4', '.menu': ['w-64', 'shrink-0'] },
+    style: { '.element': { color: 'red' } },
+  };
+  const config = buildTestPage({ pageConfig: page });
+  const context = getContext({ config, lowdefy, resetContext });
+  const rootBlock = context._internal.RootSlots.slots.root.blocks[0];
+  expect(rootBlock.eval.class).toEqual({ element: 'p-4', menu: ['w-64', 'shrink-0'] });
+  expect(rootBlock.eval.style).toEqual({ element: { color: 'red' } });
+});
+
 test('create context, initialize input', () => {
   const resetContext = { reset: true, setReset: () => {} };
   const lowdefy = getLowdefy();

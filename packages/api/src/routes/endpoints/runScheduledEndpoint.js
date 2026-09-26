@@ -25,6 +25,7 @@ import getEnvironmentSchedules from './getEnvironmentSchedules.js';
 import resolveCronEnvironment from './resolveCronEnvironment.js';
 import runRoutine from './runRoutine.js';
 import scheduleBackground from './scheduleBackground.js';
+import validatePayload from './validatePayload.js';
 
 // Runs an endpoint routine on a schedule (cron). Unlike callEndpoint this does NOT check the
 // endpoint's `auth` config and does NOT block InternalApi: a cron run is authorized by the transport
@@ -59,9 +60,14 @@ async function runScheduledEndpoint(context, { endpointId, cron, environment }) 
   // produces for the hook path.
   applySystemTrust(context);
 
+  // An authored schedule.payload that breaks the endpoint's own contract fails
+  // the run.
+  const schedulePayload = schedule.payload ?? {};
+  validatePayload({ endpointConfig, payload: schedulePayload });
+
   const routineContext = {
     steps: {},
-    payload: schedule.payload ?? {},
+    payload: schedulePayload,
     arrayIndices: [],
     error: null,
     items: {},

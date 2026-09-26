@@ -23,6 +23,7 @@ import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
 import scheduleBackground from './scheduleBackground.js';
+import validatePayload from './validatePayload.js';
 
 async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   const { logger } = context;
@@ -40,9 +41,7 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   // endpoint is indistinguishable from one that does not exist on both paths.
   if (endpointConfig.type === 'InternalApi') {
     const unauthenticatedHuman =
-      type.isNone(context.user) &&
-      !type.isNone(context.authEnforcement) &&
-      context.system !== true;
+      type.isNone(context.user) && !type.isNone(context.authEnforcement) && context.system !== true;
     const err = unauthenticatedHuman
       ? new AuthenticationError(`Authentication required for API endpoint "${endpointId}".`)
       : new ConfigError(`API Endpoint "${endpointId}" does not exist.`);
@@ -52,9 +51,14 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
 
   authorizeApiEndpoint(context, { endpointConfig });
 
+  // Validated before the async fork, so a refused payload is answered to the
+  // caller rather than failing in the background.
+  const deserializedPayload = serializer.deserialize(payload);
+  validatePayload({ endpointConfig, payload: deserializedPayload });
+
   const routineContext = {
     steps: {},
-    payload: serializer.deserialize(payload),
+    payload: deserializedPayload,
     arrayIndices: [],
     error: null,
     items: {},

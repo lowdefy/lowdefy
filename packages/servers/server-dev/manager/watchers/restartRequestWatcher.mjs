@@ -42,7 +42,15 @@ function restartRequestWatcher(context) {
     const reason = readReason(sentinelPath);
     fs.rmSync(sentinelPath, { force: true });
     context.logger.info({ spin: 'start' }, `Restart requested by the dev tools: ${reason}.`);
-    context.restartServer();
+    // The config build reads the plugins' type lists afresh, so a block,
+    // request or operator type added to a plugin since the last build is
+    // defined once the server is back. The server restarts even when the
+    // build fails.
+    try {
+      await context.lowdefyBuild();
+    } finally {
+      context.restartServer();
+    }
   };
 
   // The sentinel does not exist until the first request, so watch the build

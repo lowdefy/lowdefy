@@ -95,6 +95,31 @@ test('buildMcp keeps serverInfo branding (title, websiteUrl, icons)', () => {
   });
 });
 
+test('buildMcp keeps server instructions', () => {
+  const context = testContext();
+  const components = {
+    api: [publicEndpoint],
+    mcp: {
+      instructions: 'Look up a customer before creating an order for them.',
+      endpoints: [{ id: 'get-customer', scope: 'mcp:read' }],
+    },
+  };
+  const res = buildMcp({ components, context });
+  expect(res.mcp.instructions).toEqual('Look up a customer before creating an order for them.');
+});
+
+test('buildMcp throws when instructions is not a string', () => {
+  const context = testContext();
+  const components = {
+    api: [publicEndpoint],
+    mcp: {
+      instructions: ['Look up a customer first.'],
+      endpoints: [{ id: 'get-customer', scope: 'mcp:read' }],
+    },
+  };
+  expect(() => buildMcp({ components, context })).toThrow('MCP "instructions" should be a string.');
+});
+
 test('buildMcp throws when an icon has no src', () => {
   const context = testContext();
   const components = {
