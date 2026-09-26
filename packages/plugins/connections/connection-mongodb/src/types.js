@@ -22,7 +22,18 @@ export default {
   // connection opts out only with tenant: shared. Declaring tenant: on a
   // connection whose type lacks this meta is a build error.
   connectionMetas: {
-    MongoDBCollection: { tenant: true },
+    MongoDBCollection: {
+      tenant: true,
+      // The properties naming the physical collection a connection reads and
+      // the one its change log writes into. The build uses them to refuse a
+      // tenant: shared connection whose change log writes into a collection a
+      // scoped connection reads.
+      tenantTarget: {
+        database: ['databaseUri', 'databaseName'],
+        collection: 'collection',
+        changeLogCollection: 'changeLog.collection',
+      },
+    },
   },
   requests: [
     'MongoDBAggregation',

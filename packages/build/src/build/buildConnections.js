@@ -23,6 +23,7 @@ import collectExceptions from '../utils/collectExceptions.js';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 import validateId from '../utils/validateId.js';
+import validateSharedChangeLog from './validateSharedChangeLog.js';
 
 function validateConnection(connection, context) {
   const configKey = connection?.['~k'];
@@ -173,8 +174,10 @@ function buildConnections({ components, context }) {
     message: 'Duplicate connectionId "{{ id }}".',
   });
 
+  const validConnections = [];
   (components.connections ?? []).forEach((connection) => {
     if (!validateConnection(connection, context)) return;
+    validConnections.push(connection);
 
     const configKey = connection['~k'];
 
@@ -218,6 +221,10 @@ function buildConnections({ components, context }) {
       counter: context.typeCounters.operators.server,
     });
   });
+
+  if (tenantPolicy) {
+    validateSharedChangeLog({ connections: validConnections, context });
+  }
 
   return components;
 }
