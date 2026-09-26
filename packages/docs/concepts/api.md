@@ -606,7 +606,7 @@ routine:
 
 ## Validating Dynamic Content As A Routine Step
 
-`ValidateDynamic` checks block config against a [dynamic policy](/dynamic-page-content#dynamic-policies) with the same function a Dynamic block runs at page get, so content that passes here renders there. `DescribeDynamicPolicy` returns what a policy allows. Both are built-in steps: no `connectionId`, no plugin install.
+`ValidateDynamic` checks block config against a [dynamic blocks policy](/dynamic-page-content#dynamic-blocks-policies) with the same function a Dynamic block runs at page get, so content that passes here renders there. `DescribeDynamicPolicy` returns what a policy allows. Both are built-in steps: no `connectionId`, no plugin install.
 
 A `ValidateDynamic` step has:
 

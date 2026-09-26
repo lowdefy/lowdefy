@@ -249,7 +249,7 @@ test('buildDynamicBlock throws when the policy does not exist', () => {
     properties: { endpointId: 'get_form', policy: 'nope' },
   };
   expect(() => buildDynamicBlock(block, makePolicyPageContext())).toThrow(
-    'Dynamic block "generated" on page "page1" references dynamic policy "nope" which does not exist.'
+    'Dynamic block "generated" on page "page1" references dynamic blocks policy "nope" which does not exist.'
   );
 });
 

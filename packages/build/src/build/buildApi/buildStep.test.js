@@ -1258,7 +1258,7 @@ test('ValidateDynamic step throws for an undeclared policy', () => {
       context: policyContext(),
     })
   ).toThrow(
-    'ValidateDynamic step "check" at endpoint "generate" references dynamic policy "nope" which does not exist.'
+    'ValidateDynamic step "check" at endpoint "generate" references dynamic blocks policy "nope" which does not exist.'
   );
 });
 

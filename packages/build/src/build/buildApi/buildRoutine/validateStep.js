@@ -152,7 +152,7 @@ function validateStep(step, { dynamicPolicies, endpointId, stepTypes, tenantConn
     }
     if (type.isUndefined(dynamicPolicies?.[step.properties.policy])) {
       throw new ConfigError(
-        `${step.type} step "${step.id}" at endpoint "${endpointId}" references dynamic policy "${step.properties.policy}" which does not exist.`,
+        `${step.type} step "${step.id}" at endpoint "${endpointId}" references dynamic blocks policy "${step.properties.policy}" which does not exist.`,
         { configKey }
       );
     }

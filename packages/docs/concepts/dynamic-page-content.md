@@ -181,33 +181,34 @@ The client bundle is fixed at build time — resolved content can only use block
 
 The build bundles declared types into the client. If a routine returns a type that is not in the bundle, resolution fails with a clear error instead of a silently broken page.
 
-## Dynamic Policies
+## Dynamic Blocks Policies
 
-A dynamic policy lets a Dynamic block render block config that is stored as data — a form built by a form builder, or config a model generated — within limits the app declares. The policy lists what the content may use. Anything unlisted fails, and the policy is checked twice with the same function: by a `ValidateDynamic` step before the content is stored, and on every page get before the content renders.
+A dynamic blocks policy, declared under `policies.dynamicBlocks` in `lowdefy.yaml`, lets a Dynamic block render block config that is stored as data — a form built by a form builder, or config a model generated — within limits the app declares. The policy lists what the content may use. Anything unlisted fails, and the policy is checked twice with the same function: by a `ValidateDynamic` step before the content is stored, and on every page get before the content renders.
 
 ```yaml
-dynamicPolicies:
-  - id: generated_form
-    blocks:
-      - Title
-      - Paragraph
-      - TextInput
-      - Selector
-    actions:
-      - SetState
-      - CallAPI
-    operators:
-      - _state
-      - _eq
-      - _if
-    endpoints:
-      - submit_form_response
-    links:
-      pages:
-        - form_submitted
-      origins:
-        - https://example.com
-    state: form
+policies:
+  dynamicBlocks:
+    - id: generated_form
+      blocks:
+        - Title
+        - Paragraph
+        - TextInput
+        - Selector
+      actions:
+        - SetState
+        - CallAPI
+      operators:
+        - _state
+        - _eq
+        - _if
+      endpoints:
+        - submit_form_response
+      links:
+        pages:
+          - form_submitted
+        origins:
+          - https://example.com
+      state: form
 ```
 
 | Key             | Default   | Meaning                                                                                                     |
@@ -290,5 +291,5 @@ A generator calls `ValidateDynamic` with `throwOnInvalid: false` and feeds the e
 - **Nesting is allowed** — resolved content may contain further `Dynamic` blocks, up to 5 levels deep.
 - **Page state resets per visit.** Dynamic pages build a fresh context on every navigation, since the server may resolve different content each time. Keep cross-navigation state in `_global` or `_url_query`.
 - **Endpoint auth always applies.** A public page pointing at a role-protected endpoint renders the fallback for users without the role — useful for role-gated sections.
-- **Data cannot carry operators.** Operators in step results, payload or state returned into `:return` fail resolution, except the blocks of a `ValidateDynamic` step under the block's policy. See [Data in the returned config is literal](#data-in-the-returned-config-is-literal) and [Dynamic Policies](#dynamic-policies).
+- **Data cannot carry operators.** Operators in step results, payload or state returned into `:return` fail resolution, except the blocks of a `ValidateDynamic` step under the block's policy. See [Data in the returned config is literal](#data-in-the-returned-config-is-literal) and [Dynamic Blocks Policies](#dynamic-blocks-policies).
 - **`blockId` namespace is shared.** Resolved blocks share the page's state namespace, so `_state` binds across static and dynamic blocks. Keep blockIds unique, as on any page.

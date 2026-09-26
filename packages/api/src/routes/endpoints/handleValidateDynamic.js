@@ -22,7 +22,7 @@ import loadDynamicArtifacts from '../page/dynamic/loadDynamicArtifacts.js';
 import addStepResult from './addStepResult.js';
 import evaluateRoutineOperators from './evaluateRoutineOperators.js';
 
-// Checks content against a dynamic policy with the same function page get
+// Checks content against a dynamic blocks policy with the same function page get
 // uses, so content that passes here renders. The result lists every violation
 // with its path into the content, for a generator to correct and retry.
 async function handleValidateDynamic(context, routineContext, { step }) {

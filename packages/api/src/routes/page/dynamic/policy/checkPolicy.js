@@ -86,7 +86,7 @@ function checkBlock({ block, path, depth, walk }) {
     errors.push({
       path,
       rule: 'limits.depth',
-      message: `Block nesting is deeper than ${policy.limits.depth}, the depth dynamic policy "${policy.id}" allows.`,
+      message: `Block nesting is deeper than ${policy.limits.depth}, the depth dynamic blocks policy "${policy.id}" allows.`,
     });
     return;
   }
@@ -94,7 +94,7 @@ function checkBlock({ block, path, depth, walk }) {
     errors.push({
       path: `${path}.type`,
       rule: 'policy.blocks',
-      message: `Block type "${block.type}" is not in dynamic policy "${policy.id}" blocks.`,
+      message: `Block type "${block.type}" is not in dynamic blocks policy "${policy.id}" blocks.`,
     });
   }
   if (bindsState({ block, blockMetas })) {
@@ -110,7 +110,7 @@ function checkBlock({ block, path, depth, walk }) {
       errors.push({
         path: `${path}.id`,
         rule: 'policy.state',
-        message: `Block id "${block.id}" binds state outside "${policy.state}", the state dynamic policy "${policy.id}" allows.`,
+        message: `Block id "${block.id}" binds state outside "${policy.state}", the state dynamic blocks policy "${policy.id}" allows.`,
       });
     }
   }
@@ -119,7 +119,7 @@ function checkBlock({ block, path, depth, walk }) {
       errors.push({
         path: `${path}.${key}`,
         rule: 'policy.literal',
-        message: `Block "${key}" must be literal under dynamic policy "${policy.id}", not an operator.`,
+        message: `Block "${key}" must be literal under dynamic blocks policy "${policy.id}", not an operator.`,
       });
     }
   });
@@ -152,7 +152,7 @@ function checkBlockList({ blocks, path, depth, walk }) {
   blocks.forEach((block, index) => checkBlock({ block, path: `${path}.${index}`, depth, walk }));
 }
 
-// Applies a dynamic policy to content as submitted (before buildBlock renames
+// Applies a dynamic blocks policy to content as submitted (before buildBlock renames
 // ids or moves areas to slots), so every error's path indexes that content.
 function checkPolicy({ blocks, policy, blockMetas, blockSchemas }) {
   const bytes = JSON.stringify(blocks).length;
@@ -161,7 +161,7 @@ function checkPolicy({ blocks, policy, blockMetas, blockSchemas }) {
       {
         path: 'blocks',
         rule: 'limits.bytes',
-        message: `Content is ${bytes} bytes. Dynamic policy "${policy.id}" allows ${policy.limits.bytes}.`,
+        message: `Content is ${bytes} bytes. Dynamic blocks policy "${policy.id}" allows ${policy.limits.bytes}.`,
       },
     ];
   }
@@ -179,7 +179,7 @@ function checkPolicy({ blocks, policy, blockMetas, blockSchemas }) {
     walk.errors.unshift({
       path: 'blocks',
       rule: 'limits.blocks',
-      message: `Content has ${walk.count} blocks. Dynamic policy "${policy.id}" allows ${policy.limits.blocks}.`,
+      message: `Content has ${walk.count} blocks. Dynamic blocks policy "${policy.id}" allows ${policy.limits.blocks}.`,
     });
   }
   return walk.errors;

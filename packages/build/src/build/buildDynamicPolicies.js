@@ -50,10 +50,13 @@ function readStringList({ policy, key, value }) {
     return [];
   }
   if (!type.isArray(value) || !value.every((item) => type.isString(item))) {
-    throw new ConfigError(`Dynamic policy "${policy.id}" "${key}" should be an array of strings.`, {
-      received: value,
-      configKey: policy['~k'],
-    });
+    throw new ConfigError(
+      `Dynamic blocks policy "${policy.id}" "${key}" should be an array of strings.`,
+      {
+        received: value,
+        configKey: policy['~k'],
+      }
+    );
   }
   return [...value];
 }
@@ -62,7 +65,7 @@ function checkTypesExist({ policy, key, names, definitions }) {
   names.forEach((name) => {
     if (type.isNone(definitions[name])) {
       throw new ConfigError(
-        `Dynamic policy "${policy.id}" "${key}" lists "${name}", which is not an installed type.`,
+        `Dynamic blocks policy "${policy.id}" "${key}" lists "${name}", which is not an installed type.`,
         { configKey: policy['~k'] }
       );
     }
@@ -73,7 +76,7 @@ function checkOperators({ policy, operators, definitions }) {
   operators.forEach((name) => {
     if (!name.startsWith('_') || name.includes('.')) {
       throw new ConfigError(
-        `Dynamic policy "${policy.id}" "operators" lists "${name}". List operator base names such as "_string", which allows every "_string" method.`,
+        `Dynamic blocks policy "${policy.id}" "operators" lists "${name}". List operator base names such as "_string", which allows every "_string" method.`,
         { configKey: policy['~k'] }
       );
     }
@@ -81,7 +84,7 @@ function checkOperators({ policy, operators, definitions }) {
     // allow every operator.
     if (name === '_operator') {
       throw new ConfigError(
-        `Dynamic policy "${policy.id}" cannot list "_operator": it calls any operator by name, which would defeat the operator list.`,
+        `Dynamic blocks policy "${policy.id}" cannot list "_operator": it calls any operator by name, which would defeat the operator list.`,
         { configKey: policy['~k'] }
       );
     }
@@ -99,7 +102,7 @@ function checkOrigins({ policy, origins }) {
     }
     if (type.isNone(parsed) || parsed.origin === 'null' || parsed.origin !== origin) {
       throw new ConfigError(
-        `Dynamic policy "${policy.id}" "links.origins" lists "${origin}". Origins are a scheme, host and optional port with no path, such as "https://example.com".`,
+        `Dynamic blocks policy "${policy.id}" "links.origins" lists "${origin}". Origins are a scheme, host and optional port with no path, such as "https://example.com".`,
         { configKey: policy['~k'] }
       );
     }
@@ -119,7 +122,7 @@ function buildPolicy({ policy, context }) {
   // policy checks.
   if (blocks.includes('Dynamic')) {
     throw new ConfigError(
-      `Dynamic policy "${policy.id}" cannot list "Dynamic" in "blocks": nested Dynamic content would escape the policy.`,
+      `Dynamic blocks policy "${policy.id}" cannot list "Dynamic" in "blocks": nested Dynamic content would escape the policy.`,
       { configKey: policy['~k'] }
     );
   }
@@ -128,13 +131,16 @@ function buildPolicy({ policy, context }) {
   checkOperators({ policy, operators, definitions: typesMap.operators.client });
   checkOrigins({ policy, origins });
   if (!type.isNone(policy.state) && (!type.isString(policy.state) || policy.state === '')) {
-    throw new ConfigError(`Dynamic policy "${policy.id}" "state" should be a non-empty string.`, {
-      received: policy.state,
-      configKey: policy['~k'],
-    });
+    throw new ConfigError(
+      `Dynamic blocks policy "${policy.id}" "state" should be a non-empty string.`,
+      {
+        received: policy.state,
+        configKey: policy['~k'],
+      }
+    );
   }
   if (!type.isNone(policy.html) && !type.isBoolean(policy.html)) {
-    throw new ConfigError(`Dynamic policy "${policy.id}" "html" should be a boolean.`, {
+    throw new ConfigError(`Dynamic blocks policy "${policy.id}" "html" should be a boolean.`, {
       received: policy.html,
       configKey: policy['~k'],
     });
@@ -143,7 +149,7 @@ function buildPolicy({ policy, context }) {
   if (policy.html !== true && stringOperators.length > 0) {
     context.handleWarning(
       new ConfigWarning(
-        `Dynamic policy "${policy.id}" does not allow HTML but lists ${stringOperators
+        `Dynamic blocks policy "${policy.id}" does not allow HTML but lists ${stringOperators
           .map((name) => `"${name}"`)
           .join(', ')}, which can build HTML at render time that the content check cannot see.`,
         { configKey: policy['~k'] }
@@ -156,7 +162,7 @@ function buildPolicy({ policy, context }) {
     const value = policy.limits[key];
     if (type.isUndefined(DEFAULT_LIMITS[key]) || !type.isInt(value) || value < 1) {
       throw new ConfigError(
-        `Dynamic policy "${policy.id}" "limits.${key}" should be one of depth, blocks, bytes or actionsPerEvent, with a positive integer value.`,
+        `Dynamic blocks policy "${policy.id}" "limits.${key}" should be one of depth, blocks, bytes or actionsPerEvent, with a positive integer value.`,
         { received: value, configKey: policy['~k'] }
       );
     }
@@ -176,20 +182,20 @@ function buildPolicy({ policy, context }) {
   };
 }
 
-// Policies are built before pages and api, so buildDynamicBlock and the
+// policies.dynamicBlocks is built before pages and api, so buildDynamicBlock and the
 // ValidateDynamic step checks can read context.dynamicPolicies.
 function buildDynamicPolicies({ components, context }) {
   context.dynamicPolicies = Object.create(null);
   const checkDuplicatePolicyId = createCheckDuplicateId({
-    message: 'Duplicate dynamic policy id "{{ id }}".',
+    message: 'Duplicate dynamic blocks policy id "{{ id }}".',
   });
-  (components.dynamicPolicies ?? []).forEach((policy) => {
+  (components.policies?.dynamicBlocks ?? []).forEach((policy) => {
     try {
       if (!type.isObject(policy)) {
-        throw new ConfigError('Dynamic policy should be an object.', { received: policy });
+        throw new ConfigError('Dynamic blocks policy should be an object.', { received: policy });
       }
       if (!type.isString(policy.id)) {
-        throw new ConfigError('Dynamic policy "id" should be a string.', {
+        throw new ConfigError('Dynamic blocks policy "id" should be a string.', {
           received: policy.id,
           configKey: policy['~k'],
         });

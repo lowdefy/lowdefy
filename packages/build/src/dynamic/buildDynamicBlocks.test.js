@@ -253,7 +253,7 @@ test('buildDynamicBlocks limits membership to the policy lists', () => {
       blocks: [{ id: 'box', type: 'Box' }],
     })
   ).toThrow(
-    'Dynamic block "section_1" on page "page1" resolved content uses block type "Box" which dynamic policy "form" does not allow.'
+    'Dynamic block "section_1" on page "page1" resolved content uses block type "Box" which dynamic blocks policy "form" does not allow.'
   );
 });
 

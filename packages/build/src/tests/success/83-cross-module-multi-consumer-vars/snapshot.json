@@ -2605,7 +2605,7 @@
             },
             "policy": {
               "type": "string",
-              "description": "Id of a dynamicPolicies entry in lowdefy.yaml. The resolved content must pass the policy on every page get. The endpoint returns stored content as config by reading the blocks of a ValidateDynamic step with the same policy. Replaces types: the policy lists are bundled."
+              "description": "Id of a policies.dynamicBlocks entry in lowdefy.yaml. The resolved content must pass the policy on every page get. The endpoint returns stored content as config by reading the blocks of a ValidateDynamic step with the same policy. Replaces types: the policy lists are bundled."
             },
             "required": {
               "type": "boolean",

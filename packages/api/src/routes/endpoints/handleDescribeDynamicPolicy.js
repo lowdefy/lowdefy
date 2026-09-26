@@ -18,7 +18,7 @@ import loadDynamicArtifacts from '../page/dynamic/loadDynamicArtifacts.js';
 import addStepResult from './addStepResult.js';
 import evaluateRoutineOperators from './evaluateRoutineOperators.js';
 
-// Returns what a dynamic policy allows, with the properties schema of each
+// Returns what a dynamic blocks policy allows, with the properties schema of each
 // allowed block and the params schema of each allowed action and operator, so a generator's prompt is derived from the policy
 // rather than written by hand and left to drift from it.
 async function handleDescribeDynamicPolicy(context, routineContext, { step }) {

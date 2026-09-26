@@ -27,7 +27,7 @@ function literalParamsError({ path, action, policy }) {
   return {
     path,
     rule: 'policy.literal',
-    message: `${action} params must be literal under dynamic policy "${policy.id}", so the policy can see their target.`,
+    message: `${action} params must be literal under dynamic blocks policy "${policy.id}", so the policy can see their target.`,
   };
 }
 
@@ -38,7 +38,7 @@ function checkLink({ params, path, policy, errors }) {
       errors.push({
         path,
         rule: 'policy.links',
-        message: `Page "${params}" is not in dynamic policy "${policy.id}" links.pages.`,
+        message: `Page "${params}" is not in dynamic blocks policy "${policy.id}" links.pages.`,
       });
     }
     return;
@@ -61,7 +61,7 @@ function checkCallApi({ params, path, policy, errors }) {
     errors.push({
       path: `${path}.endpointId`,
       rule: 'policy.endpoints',
-      message: `Endpoint "${params.endpointId}" is not in dynamic policy "${policy.id}" endpoints.`,
+      message: `Endpoint "${params.endpointId}" is not in dynamic blocks policy "${policy.id}" endpoints.`,
     });
   }
 }
@@ -82,7 +82,7 @@ function checkRequest({ params, path, policy, errors }) {
     errors.push({
       path,
       rule: 'policy.requests',
-      message: `Request params must be literal request ids under dynamic policy "${policy.id}". "all" is not allowed.`,
+      message: `Request params must be literal request ids under dynamic blocks policy "${policy.id}". "all" is not allowed.`,
     });
     return;
   }
@@ -91,7 +91,7 @@ function checkRequest({ params, path, policy, errors }) {
       errors.push({
         path,
         rule: 'policy.requests',
-        message: `Request "${requestId}" is not in dynamic policy "${policy.id}" requests.`,
+        message: `Request "${requestId}" is not in dynamic blocks policy "${policy.id}" requests.`,
       });
     }
   });
@@ -111,7 +111,7 @@ function checkSetState({ params, path, policy, errors }) {
       errors.push({
         path: `${path}.${key}`,
         rule: 'policy.state',
-        message: `SetState key "${key}" is outside "${policy.state}", the state dynamic policy "${policy.id}" allows.`,
+        message: `SetState key "${key}" is outside "${policy.state}", the state dynamic blocks policy "${policy.id}" allows.`,
       });
     }
   });
@@ -146,7 +146,7 @@ function checkAction({ action, path, walk }) {
     errors.push({
       path: `${path}.type`,
       rule: 'policy.actions',
-      message: `Action type "${action.type}" is not in dynamic policy "${policy.id}" actions.`,
+      message: `Action type "${action.type}" is not in dynamic blocks policy "${policy.id}" actions.`,
     });
   }
   ACTION_RULES[action.type]?.({ params: action.params, path: `${path}.params`, policy, errors });

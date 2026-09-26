@@ -50,14 +50,14 @@ function checkString({ value, key, path, policy, errors }) {
     errors.push({
       path,
       rule: 'policy.html',
-      message: `String contains HTML tag syntax. Dynamic policy "${policy.id}" does not allow HTML.`,
+      message: `String contains HTML tag syntax. Dynamic blocks policy "${policy.id}" does not allow HTML.`,
     });
   }
   if (key === 'pageId' && !policy.links.pages.includes(value)) {
     errors.push({
       path,
       rule: 'policy.links',
-      message: `Page "${value}" is not in dynamic policy "${policy.id}" links.pages.`,
+      message: `Page "${value}" is not in dynamic blocks policy "${policy.id}" links.pages.`,
     });
   }
   keyedUrls({ value, key }).forEach((url) => {
@@ -71,7 +71,7 @@ function checkString({ value, key, path, policy, errors }) {
       errors.push({
         path,
         rule: 'policy.urls',
-        message: `"${key}" value "${url}" is not a page or origin dynamic policy "${policy.id}" allows.`,
+        message: `"${key}" value "${url}" is not a page or origin dynamic blocks policy "${policy.id}" allows.`,
       });
     }
   });
@@ -82,7 +82,7 @@ function checkString({ value, key, path, policy, errors }) {
       errors.push({
         path,
         rule: 'policy.urls',
-        message: `URL "${url}" is not an origin dynamic policy "${policy.id}" allows.`,
+        message: `URL "${url}" is not an origin dynamic blocks policy "${policy.id}" allows.`,
       });
     }
   });
@@ -110,7 +110,7 @@ function checkValue({ value, key = null, path, policy, errors }) {
       errors.push({
         path,
         rule: 'policy.operators',
-        message: `Operator "${operator}" is not in dynamic policy "${policy.id}" operators.`,
+        message: `Operator "${operator}" is not in dynamic blocks policy "${policy.id}" operators.`,
       });
     }
     // The client would compute this value at render time, where the policy
@@ -119,7 +119,7 @@ function checkValue({ value, key = null, path, policy, errors }) {
       errors.push({
         path,
         rule: key === 'pageId' ? 'policy.links' : 'policy.urls',
-        message: `"${key}" must be a literal string under dynamic policy "${policy.id}", not an operator.`,
+        message: `"${key}" must be a literal string under dynamic blocks policy "${policy.id}", not an operator.`,
       });
     }
   }

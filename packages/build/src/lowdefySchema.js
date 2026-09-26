@@ -2468,7 +2468,7 @@ export default {
         id: {
           type: 'string',
           errorMessage: {
-            type: 'Dynamic policy "id" should be a string.',
+            type: 'Dynamic blocks policy "id" should be a string.',
           },
         },
         blocks: {
@@ -2476,11 +2476,11 @@ export default {
           items: {
             type: 'string',
             errorMessage: {
-              type: 'Dynamic policy "blocks" should only contain strings.',
+              type: 'Dynamic blocks policy "blocks" should only contain strings.',
             },
           },
           errorMessage: {
-            type: 'Dynamic policy "blocks" should be an array.',
+            type: 'Dynamic blocks policy "blocks" should be an array.',
           },
         },
         actions: {
@@ -2488,11 +2488,11 @@ export default {
           items: {
             type: 'string',
             errorMessage: {
-              type: 'Dynamic policy "actions" should only contain strings.',
+              type: 'Dynamic blocks policy "actions" should only contain strings.',
             },
           },
           errorMessage: {
-            type: 'Dynamic policy "actions" should be an array.',
+            type: 'Dynamic blocks policy "actions" should be an array.',
           },
         },
         operators: {
@@ -2500,11 +2500,11 @@ export default {
           items: {
             type: 'string',
             errorMessage: {
-              type: 'Dynamic policy "operators" should only contain strings.',
+              type: 'Dynamic blocks policy "operators" should only contain strings.',
             },
           },
           errorMessage: {
-            type: 'Dynamic policy "operators" should be an array.',
+            type: 'Dynamic blocks policy "operators" should be an array.',
           },
         },
         endpoints: {
@@ -2512,11 +2512,11 @@ export default {
           items: {
             type: 'string',
             errorMessage: {
-              type: 'Dynamic policy "endpoints" should only contain strings.',
+              type: 'Dynamic blocks policy "endpoints" should only contain strings.',
             },
           },
           errorMessage: {
-            type: 'Dynamic policy "endpoints" should be an array.',
+            type: 'Dynamic blocks policy "endpoints" should be an array.',
           },
         },
         requests: {
@@ -2524,11 +2524,11 @@ export default {
           items: {
             type: 'string',
             errorMessage: {
-              type: 'Dynamic policy "requests" should only contain strings.',
+              type: 'Dynamic blocks policy "requests" should only contain strings.',
             },
           },
           errorMessage: {
-            type: 'Dynamic policy "requests" should be an array.',
+            type: 'Dynamic blocks policy "requests" should be an array.',
           },
         },
         links: {
@@ -2543,11 +2543,11 @@ export default {
               items: {
                 type: 'string',
                 errorMessage: {
-                  type: 'Dynamic policy "links.pages" should only contain strings.',
+                  type: 'Dynamic blocks policy "links.pages" should only contain strings.',
                 },
               },
               errorMessage: {
-                type: 'Dynamic policy "links.pages" should be an array.',
+                type: 'Dynamic blocks policy "links.pages" should be an array.',
               },
             },
             origins: {
@@ -2555,31 +2555,32 @@ export default {
               items: {
                 type: 'string',
                 errorMessage: {
-                  type: 'Dynamic policy "links.origins" should only contain strings.',
+                  type: 'Dynamic blocks policy "links.origins" should only contain strings.',
                 },
               },
               errorMessage: {
-                type: 'Dynamic policy "links.origins" should be an array.',
+                type: 'Dynamic blocks policy "links.origins" should be an array.',
               },
             },
           },
           errorMessage: {
-            type: 'Dynamic policy "links" should be an object.',
-            additionalProperties: 'Dynamic policy "links" should only have "pages" and "origins".',
+            type: 'Dynamic blocks policy "links" should be an object.',
+            additionalProperties:
+              'Dynamic blocks policy "links" should only have "pages" and "origins".',
           },
         },
         state: {
           type: 'string',
           description: 'State path every content blockId and SetState key must sit under.',
           errorMessage: {
-            type: 'Dynamic policy "state" should be a string.',
+            type: 'Dynamic blocks policy "state" should be a string.',
           },
         },
         html: {
           type: 'boolean',
           description: 'Allow HTML tag syntax in content strings. Defaults to false.',
           errorMessage: {
-            type: 'Dynamic policy "html" should be a boolean.',
+            type: 'Dynamic blocks policy "html" should be a boolean.',
           },
         },
         limits: {
@@ -2594,8 +2595,8 @@ export default {
               minimum: 1,
               description: 'Maximum block nesting depth. Defaults to 10.',
               errorMessage: {
-                type: 'Dynamic policy "limits.depth" should be an integer.',
-                minimum: 'Dynamic policy "limits.depth" should be at least 1.',
+                type: 'Dynamic blocks policy "limits.depth" should be an integer.',
+                minimum: 'Dynamic blocks policy "limits.depth" should be at least 1.',
               },
             },
             blocks: {
@@ -2603,8 +2604,8 @@ export default {
               minimum: 1,
               description: 'Maximum total block count. Defaults to 500.',
               errorMessage: {
-                type: 'Dynamic policy "limits.blocks" should be an integer.',
-                minimum: 'Dynamic policy "limits.blocks" should be at least 1.',
+                type: 'Dynamic blocks policy "limits.blocks" should be an integer.',
+                minimum: 'Dynamic blocks policy "limits.blocks" should be at least 1.',
               },
             },
             bytes: {
@@ -2612,8 +2613,8 @@ export default {
               minimum: 1,
               description: 'Maximum JSON size of the content in bytes. Defaults to 262144.',
               errorMessage: {
-                type: 'Dynamic policy "limits.bytes" should be an integer.',
-                minimum: 'Dynamic policy "limits.bytes" should be at least 1.',
+                type: 'Dynamic blocks policy "limits.bytes" should be an integer.',
+                minimum: 'Dynamic blocks policy "limits.bytes" should be at least 1.',
               },
             },
             actionsPerEvent: {
@@ -2621,23 +2622,23 @@ export default {
               minimum: 1,
               description: 'Maximum actions in one event. Defaults to 20.',
               errorMessage: {
-                type: 'Dynamic policy "limits.actionsPerEvent" should be an integer.',
-                minimum: 'Dynamic policy "limits.actionsPerEvent" should be at least 1.',
+                type: 'Dynamic blocks policy "limits.actionsPerEvent" should be an integer.',
+                minimum: 'Dynamic blocks policy "limits.actionsPerEvent" should be at least 1.',
               },
             },
           },
           errorMessage: {
-            type: 'Dynamic policy "limits" should be an object.',
+            type: 'Dynamic blocks policy "limits" should be an object.',
             additionalProperties:
-              'Dynamic policy "limits" should only have "depth", "blocks", "bytes" and "actionsPerEvent".',
+              'Dynamic blocks policy "limits" should only have "depth", "blocks", "bytes" and "actionsPerEvent".',
           },
         },
       },
       errorMessage: {
-        type: 'Dynamic policy should be an object.',
+        type: 'Dynamic blocks policy should be an object.',
         required: {
-          id: 'Dynamic policy should have required property "id".',
-          blocks: 'Dynamic policy should have required property "blocks".',
+          id: 'Dynamic blocks policy should have required property "id".',
+          blocks: 'Dynamic blocks policy should have required property "blocks".',
         },
       },
     },
@@ -3611,13 +3612,28 @@ export default {
         type: 'App "agents" should be an array.',
       },
     },
-    dynamicPolicies: {
-      type: 'array',
-      items: {
-        $ref: '#/definitions/dynamicPolicy',
+    policies: {
+      type: 'object',
+      additionalProperties: false,
+      description:
+        'Named rule sets that other config references by id, grouped by kind. App-wide switches belong in config.security.',
+      properties: {
+        '~k': {},
+        '~r': {},
+        '~l': {},
+        dynamicBlocks: {
+          type: 'array',
+          items: {
+            $ref: '#/definitions/dynamicPolicy',
+          },
+          errorMessage: {
+            type: 'App "policies.dynamicBlocks" should be an array.',
+          },
+        },
       },
       errorMessage: {
-        type: 'App "dynamicPolicies" should be an array.',
+        type: 'App "policies" should be an object.',
+        additionalProperties: 'App "policies" should only have "dynamicBlocks".',
       },
     },
     connections: {

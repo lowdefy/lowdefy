@@ -97,7 +97,7 @@ function countPolicy(block, pageContext) {
   const policy = pageContext.context.dynamicPolicies[policyId];
   if (type.isUndefined(policy)) {
     throw new ConfigError(
-      `Dynamic block "${block.blockId}" on page "${pageId}" references dynamic policy "${policyId}" which does not exist.`,
+      `Dynamic block "${block.blockId}" on page "${pageId}" references dynamic blocks policy "${policyId}" which does not exist.`,
       { configKey }
     );
   }

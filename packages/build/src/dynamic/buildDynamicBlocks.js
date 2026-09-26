@@ -35,7 +35,7 @@ function createMembershipCounter({ category, allowed, dynamicBlockId, pageId, po
       }
       if (policy) {
         throw new ConfigError(
-          `Dynamic block "${dynamicBlockId}" on page "${pageId}" resolved content uses ${category} type "${typeName}" which dynamic policy "${policy.id}" does not allow.`
+          `Dynamic block "${dynamicBlockId}" on page "${pageId}" resolved content uses ${category} type "${typeName}" which dynamic blocks policy "${policy.id}" does not allow.`
         );
       }
       throw new ConfigError(

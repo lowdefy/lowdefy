@@ -23,7 +23,7 @@ function literalError({ path, what, policy }) {
   return {
     path,
     rule: 'policy.literal',
-    message: `${what} must be literal under dynamic policy "${policy.id}", not an operator.`,
+    message: `${what} must be literal under dynamic blocks policy "${policy.id}", not an operator.`,
   };
 }
 
@@ -102,7 +102,7 @@ function checkEvents({ events, path, walk }) {
       errors.push({
         path: eventPath,
         rule: 'limits.actionsPerEvent',
-        message: `Event "${eventName}" has ${count} actions. Dynamic policy "${policy.id}" allows ${policy.limits.actionsPerEvent}.`,
+        message: `Event "${eventName}" has ${count} actions. Dynamic blocks policy "${policy.id}" allows ${policy.limits.actionsPerEvent}.`,
       });
     }
   });

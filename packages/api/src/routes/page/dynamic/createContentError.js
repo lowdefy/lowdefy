@@ -27,9 +27,9 @@ function createContentError({ block, errors, pageId, policy }) {
   const contentError = new ConfigError(
     `Dynamic block "${
       block.blockId
-    }" on page "${pageId}" resolved content violates dynamic policy "${policy.id}":\n${lines.join(
-      '\n'
-    )}`,
+    }" on page "${pageId}" resolved content violates dynamic blocks policy "${
+      policy.id
+    }":\n${lines.join('\n')}`,
     { configKey: block['~k'] }
   );
   contentError.policyErrors = errors.map(({ path, rule, message }) => ({ path, rule, message }));

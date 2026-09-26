@@ -35,7 +35,7 @@ function createContext() {
 
 function build(dynamicPolicies) {
   const context = createContext();
-  buildDynamicPolicies({ components: { dynamicPolicies }, context });
+  buildDynamicPolicies({ components: { policies: { dynamicBlocks: dynamicPolicies } }, context });
   return context;
 }
 
@@ -76,7 +76,8 @@ test('buildDynamicPolicies keeps declared lists and limits', () => {
 });
 
 test('buildDynamicPolicies writes an empty map when no policies are declared', () => {
-  const context = build(undefined);
+  const context = createContext();
+  buildDynamicPolicies({ components: {}, context });
   expect(context.dynamicPolicies).toEqual({});
 });
 
@@ -86,20 +87,20 @@ test.each([
       { id: 'a', blocks: ['Box'] },
       { id: 'a', blocks: ['Box'] },
     ],
-    'Duplicate dynamic policy id "a".',
+    'Duplicate dynamic blocks policy id "a".',
   ],
-  [[{ blocks: ['Box'] }], 'Dynamic policy "id" should be a string.'],
+  [[{ blocks: ['Box'] }], 'Dynamic blocks policy "id" should be a string.'],
   [
     [{ id: 'a', blocks: ['Nope'] }],
-    'Dynamic policy "a" "blocks" lists "Nope", which is not an installed type.',
+    'Dynamic blocks policy "a" "blocks" lists "Nope", which is not an installed type.',
   ],
   [
     [{ id: 'a', blocks: ['Box'], actions: ['Logout'] }],
-    'Dynamic policy "a" "actions" lists "Logout", which is not an installed type.',
+    'Dynamic blocks policy "a" "actions" lists "Logout", which is not an installed type.',
   ],
   [
     [{ id: 'a', blocks: ['Box'], operators: ['_operator'] }],
-    'Dynamic policy "a" cannot list "_operator"',
+    'Dynamic blocks policy "a" cannot list "_operator"',
   ],
   [[{ id: 'a', blocks: ['Box'], operators: ['_string.concat'] }], 'List operator base names'],
   [
@@ -107,8 +108,11 @@ test.each([
     'Origins are a scheme, host and optional port',
   ],
   [[{ id: 'a', blocks: ['Box'], limits: { depth: 0 } }], '"limits.depth" should be one of'],
-  [[{ id: 'a', blocks: 'Box' }], 'Dynamic policy "a" "blocks" should be an array of strings.'],
-  [[{ id: 'a', blocks: ['Dynamic'] }], 'Dynamic policy "a" cannot list "Dynamic"'],
+  [
+    [{ id: 'a', blocks: 'Box' }],
+    'Dynamic blocks policy "a" "blocks" should be an array of strings.',
+  ],
+  [[{ id: 'a', blocks: ['Dynamic'] }], 'Dynamic blocks policy "a" cannot list "Dynamic"'],
 ])('buildDynamicPolicies rejects invalid policy %#', (dynamicPolicies, message) => {
   const context = build(dynamicPolicies);
   expect(context.errors[0].message).toContain(message);
@@ -118,7 +122,7 @@ test('buildDynamicPolicies warns when a policy without HTML lists string-produci
   const context = build([{ id: 'form', blocks: ['Box'], operators: ['_state', '_string'] }]);
   expect(context.errors).toEqual([]);
   expect(context.warnings[0].message).toContain(
-    'Dynamic policy "form" does not allow HTML but lists "_string"'
+    'Dynamic blocks policy "form" does not allow HTML but lists "_string"'
   );
   expect(
     build([{ id: 'form', blocks: ['Box'], operators: ['_string'], html: true }]).warnings
