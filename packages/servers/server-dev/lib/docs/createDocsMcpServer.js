@@ -219,7 +219,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
 
   registerDevTool(
     'lowdefy_screenshot_page',
-    async ({ pageId, fullPage, clip, scrollX, scrollY, user }) => {
+    async ({ pageId, fullPage, clip, scrollX, scrollY, user, width, height, colorScheme }) => {
       if (!origin) {
         return notFoundResult('Screenshot unavailable: server origin unknown for this transport.');
       }
@@ -231,6 +231,9 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
         scrollX,
         scrollY,
         user,
+        width,
+        height,
+        colorScheme,
       });
       if (result.error) {
         return notFoundResult(result.error);
@@ -239,11 +242,11 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     }
   );
 
-  registerDevTool('lowdefy_run_journey', async ({ pageId, steps, user, urlQuery }) => {
+  registerDevTool('lowdefy_run_journey', async ({ pageId, steps, user, urlQuery, state }) => {
     if (!origin) {
       return notFoundResult('Journey unavailable: server origin unknown for this transport.');
     }
-    const result = await runJourney({ origin, pageId, steps, user, urlQuery });
+    const result = await runJourney({ origin, pageId, steps, user, urlQuery, state });
     if (result.error) {
       return notFoundResult(result.error);
     }
