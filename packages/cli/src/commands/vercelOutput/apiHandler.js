@@ -20,7 +20,8 @@
 // template file) so it ships verbatim — a real source file would be transpiled by the CLI's swc
 // build, stripping these comments. Its `../src/app.js` import and the chdir to `..` resolve to the
 // server directory inside the function, where the assembly places src/, build/, lib/ and the traced
-// dependency closure.
+// dependency closure. Its `ws` and `@hono/node-server` imports resolve because the traced
+// src/index.js imports both.
 const apiHandler = `/*
   Vercel Serverless Function entry for a Lowdefy (Hono) app — generated into the Vercel Build Output
   by lowdefy vercel-output.
@@ -29,13 +30,21 @@ const apiHandler = `/*
   other request is routed here (config.json routes) and run through the Lowdefy Hono app (page
   rendering, /api/* requests, endpoints, cron, auth, agents).
 
-  Runs on the Node runtime (the app uses fs to read its build). The request body is buffered eagerly
-  and a Web Request is built from it: Vercel's Node runtime does not drain a lazily-read body stream
-  reliably, so a streaming adapter hangs on every request that has a body (POST).
+  Runs on the Node runtime (the app uses fs to read its build). The default export is a Node HTTP
+  server, which Vercel's Node runtime serves, WebSocket upgrades included. Ordinary requests go
+  through handleRequest: it buffers the request body eagerly and builds a Web Request from it, since
+  Vercel's Node runtime does not drain a lazily-read body stream reliably, so a streaming adapter
+  (@hono/node-server's request listener) hangs on every request that has a body (POST). Upgrade
+  requests (/api/websocket) are handled by @hono/node-server's WebSocket support, which listens for
+  the server's upgrade event and runs the Hono app's upgradeWebSocket route.
 */
 
+import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { createAdaptorServer } from '@hono/node-server';
+import { WebSocketServer } from 'ws';
 
 // The app reads its build artifacts relative to process.cwd(). On Vercel the function's cwd is the
 // lambda root (e.g. /var/task), not this directory, so point the cwd at the server directory (the
@@ -48,7 +57,7 @@ const app = createApp({ serveStaticAssets: false });
 
 export const config = { runtime: 'nodejs' };
 
-export default async function handler(req, res) {
+async function handleRequest(req, res) {
   const method = req.method || 'GET';
 
   // Buffer the body eagerly — see the note above.
@@ -81,6 +90,21 @@ export default async function handler(req, res) {
   }
   res.end();
 }
+
+// 256 KiB max frame, matching the Node server (src/index.js) and Vercel's documented default for
+// WebSocket functions.
+const wss = new WebSocketServer({ noServer: true, maxPayload: 256 * 1024 });
+
+// createAdaptorServer attaches the WebSocket upgrade handling to the server it creates. The
+// createServer option swaps its lazily-reading request listener for handleRequest, so only
+// upgrades go through @hono/node-server.
+const server = createAdaptorServer({
+  fetch: app.fetch,
+  websocket: { server: wss },
+  createServer: (serverOptions) => http.createServer(serverOptions, handleRequest),
+});
+
+export default server;
 `;
 
 export default apiHandler;
