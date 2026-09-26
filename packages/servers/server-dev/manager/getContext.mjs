@@ -44,6 +44,7 @@ async function getContext() {
     },
     directories: {
       build: path.resolve(process.cwd(), './build'),
+      buildStaging: path.resolve(process.cwd(), './build-staging'),
       config: path.resolve(argv.configDirectory ?? env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd()),
       server: process.cwd(),
     },

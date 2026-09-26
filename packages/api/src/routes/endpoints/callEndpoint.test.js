@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { AuthenticationError, ConfigError } from '@lowdefy/errors';
+import { AuthenticationError, ConfigError, UserError } from '@lowdefy/errors';
 
 import callEndpoint from './callEndpoint.js';
 import testContext from '../../test/testContext.js';
@@ -361,4 +361,78 @@ test('InternalApi endpoint error is identical to a missing endpoint error for an
   expect(missingErr.message).toBe(
     'Authentication required for API endpoint "internal_ep_missing".'
   );
+});
+
+function createOrderReadConfigFile({ async = false } = {}) {
+  return jest.fn((path) => {
+    if (path === 'api/create_order.json') {
+      return {
+        endpointId: 'create_order',
+        type: 'Api',
+        auth: { public: true },
+        async,
+        payloadSchema: {
+          type: 'object',
+          properties: { quantity: { type: 'number' } },
+          required: ['quantity'],
+        },
+        routine: { ':return': 'ran' },
+      };
+    }
+    return null;
+  });
+}
+
+test('callEndpoint rejects a payload that violates the payloadSchema with a UserError before the routine runs', async () => {
+  const context = testContext({
+    logger,
+    readConfigFile: createOrderReadConfigFile(),
+    user: { id: 'user_1' },
+  });
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'create_order',
+      pageId: 'pageId',
+      payload: { quantity: 'two' },
+    })
+  ).rejects.toThrow(
+    'Payload for endpoint "create_order" does not match its payloadSchema at /quantity: must be number.'
+  );
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'create_order',
+      pageId: 'pageId',
+      payload: {},
+    })
+  ).rejects.toThrow(UserError);
+
+  const result = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'create_order',
+    pageId: 'pageId',
+    payload: { quantity: 2 },
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toBe('ran');
+});
+
+test('callEndpoint rejects a payload that violates the payloadSchema of an async endpoint before accepting it', async () => {
+  const waitUntil = jest.fn();
+  const context = testContext({
+    logger,
+    readConfigFile: createOrderReadConfigFile({ async: true }),
+    user: { id: 'user_1' },
+  });
+  context.waitUntil = waitUntil;
+  await expect(
+    callEndpoint(context, {
+      blockId: 'blockId',
+      endpointId: 'create_order',
+      pageId: 'pageId',
+      payload: { quantity: 'two' },
+    })
+  ).rejects.toThrow(UserError);
+  expect(waitUntil).not.toHaveBeenCalled();
 });

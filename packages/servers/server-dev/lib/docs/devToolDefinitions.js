@@ -32,7 +32,7 @@ Feedback loop: after EVERY config edit, call lowdefy_build_status with wait: tru
 
 Live state: lowdefy_inspect_state reads the ACTUAL state, request results, and event log of a running page — when the developer has the page open in their browser it reads THEIR live tab (ask them to interact, then inspect), otherwise it runs the page headless. lowdefy_eval_operator evaluates any operator expression against that live state — use it to debug _state/_request bindings. lowdefy_run_request executes a request with a test payload to verify data shape (read-only unless the app opts into writes). A request or endpoint response too large to return inline is written in full to a file under .lowdefy/responses/ and the result gives its path as responseFile; pass saveResponse: true to always write it there. lowdefy_run_endpoint runs an Api endpoint routine headlessly with a test payload (always needs cli.agentTools.allowWriteRequests, since routines are not classified read-only); a :reject comes back as status "reject" with the routine's own error, not as a tool failure. Pass system: true to run a scheduled or detached-only InternalApi routine as a system context (no _user, auth not checked), exactly as cron would.
 
-Behaviour, not just layout: a screenshot shows what rendered, not what works. To verify behaviour, drive the page with lowdefy_run_journey — a declarative list of steps (click, fill, select, press, wait, screenshot, expect) addressed by blockId — and assert on state, visibility, text or url. A failing step stops the journey and comes back as data (passed: false, failure with expected/actual, the remaining steps skipped) together with the final page state, so you can read what the app actually did and write the next assertion. Pass user to act as a real member (e.g. {"roles":["admin"]}) when the flow is role-gated.
+Behaviour, not just layout: a screenshot shows what rendered, not what works. To verify behaviour, drive the page with lowdefy_run_journey — a declarative list of steps (click, fill, select, press, back, wait, screenshot, expect) addressed by blockId — and assert on state, visibility, text, url or title. A failing step stops the journey and comes back as data (passed: false, failure with expected/actual, the remaining steps skipped) together with the final page state, so you can read what the app actually did and write the next assertion. A large final state comes back as a summary of its keys; pass state with the paths you need. Pass user to act as a real member (e.g. {"roles":["admin"]}) when the flow is role-gated.
 
 Role-gated pages: the headless renderer signs in as a roleless user, so a page or request gated on a role renders empty or refused. Pass user to lowdefy_screenshot_page, lowdefy_run_journey, lowdefy_inspect_state, lowdefy_eval_operator, lowdefy_load_state, lowdefy_run_request or lowdefy_run_endpoint to act as a specific caller — e.g. user {"roles":["admin"]} — and vary it per call to compare what different roles see. A request run without user runs as a roleless anonymous caller, so a tenant-walled or role-gated request returns empty rather than an error.
 
@@ -229,7 +229,7 @@ const devToolDefinitions = {
 
   lowdefy_screenshot_page: {
     description:
-      'Screenshot a page of the running dev server (headless Chromium) to visually verify layout and rendering. Returns a PNG image.',
+      'Screenshot a page of the running dev server (headless Chromium) to visually verify layout and rendering. Returns a PNG image. Set width (and height) to check a narrow or phone layout, e.g. width 390, and colorScheme "dark" to check dark mode.',
     inputSchema: {
       pageId: z.string().describe('The page id to screenshot.'),
       fullPage: z.boolean().optional().describe('Capture the full scrollable page.'),
@@ -246,25 +246,49 @@ const devToolDefinitions = {
         ),
       scrollX: z.number().optional().describe('Scroll offset the clip was recorded at.'),
       scrollY: z.number().optional().describe('Scroll offset the clip was recorded at.'),
+      width: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe('Viewport width in CSS pixels. Default 1280; 390 is a phone.'),
+      height: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe('Viewport height in CSS pixels. Default 800.'),
+      colorScheme: z
+        .enum(['light', 'dark'])
+        .optional()
+        .describe(
+          'The colour scheme the page\'s prefers-color-scheme reports. Default "light". An app that follows the system theme renders dark with "dark"; a darkMode fixed in the app config wins.'
+        ),
       user: userSchema,
     },
   },
 
   lowdefy_run_journey: {
     description:
-      'Drive a page of the running dev server headless through declarative steps and assert what happens — the way to verify behaviour (a form submits, a modal opens, a filter works), not just layout. Blocks are addressed by blockId; a target object narrows to a grid row/cell ({"blockId": "grid", "row": 1, "column": "actions"}), to the control with exactly some text ({"blockId": "grid", "row": 1, "text": "Edit"}), or reaches portal-rendered controls page-wide by text alone ({"text": "OK"} for a confirm dialog or modal footer button, a menu item). A step that fails stops the journey and is returned as data (passed: false, failure with index/step/expected/actual/message, later steps "skipped") — never as a tool error. Always returns the final page state and any screenshots taken (as images after the JSON text).',
+      'Drive a page of the running dev server headless through declarative steps and assert what happens — the way to verify behaviour (a form submits, a modal opens, a filter works), not just layout. Blocks are addressed by blockId; a target object narrows to a grid row/cell ({"blockId": "grid", "row": 1, "column": "actions"}), to the control with exactly some text ({"blockId": "grid", "row": 1, "text": "Edit"}), or reaches portal-rendered controls page-wide by text alone ({"text": "OK"} for a confirm dialog or modal footer button, a menu item). A step that fails stops the journey and is returned as data (passed: false, failure with index/step/expected/actual/message, later steps "skipped") — never as a tool error. Returns the final page state (whole when small, otherwise stateOmitted with its size and top-level keys; see the state param) and any screenshots taken (as images after the JSON text).',
     inputSchema: {
       pageId: z.string().describe('The page id to open.'),
       steps: z
         .array(z.record(z.any()))
         .describe(
-          'Ordered steps, one key each: {"click": target} | {"fill": {...target, "value"}} | {"select": {...target, "value"}} (option by exact text) | {"press": "Enter" | "Mod+k"} (Mod is Meta/Control per platform) | {"wait": {"ms": n} | {"request": requestId} | {"state": path}} | {"screenshot": name?} | {"expect": {"state": {"path", "equals"}} | {"visible": target} | {"text": {...target, "contains"}} | {"url": {"contains"}}}. A target is a blockId string, or an object of {"blockId", "row" (zero-based grid row as displayed), "column" (grid col-id), "text" (exact text of the interactive control to use), "nth" (zero-based pick among several matches)}; "text" without "blockId" searches the whole page, which is how confirm dialog / modal footer buttons and dropdown menu items are reached. fill, select and expect.text need a blockId. Each step gets 5s; after an interaction the runner waits for the page\'s pending events and requests to settle.'
+          'Ordered steps, one key each: {"click": target} | {"fill": {...target, "value"}} | {"select": {...target, "value"}} (option by exact text: a dropdown option, or a radio, button or segmented option in the block) | {"press": "Enter" | "Mod+k"} (Mod is Meta/Control per platform) | {"back": true} (the browser Back button) | {"wait": {"ms": n} | {"request": requestId} | {"state": path}} | {"screenshot": name?} | {"expect": {"state": {"path", "equals"}} | {"visible": target} | {"text": {...target, "contains"}} | {"url": {"contains"}} | {"title": {"equals"} | {"contains"}}} (title is the document title). A target is a blockId string, or an object of {"blockId", "row" (zero-based grid row as displayed), "column" (grid col-id), "text" (exact text of the interactive control to use), "nth" (zero-based pick among several matches)}; "text" without "blockId" searches the whole page, which is how confirm dialog / modal footer buttons and dropdown menu items are reached. fill, select and expect.text need a blockId. Each step gets 5s; after an interaction the runner waits for the page\'s pending events and requests to settle.'
         ),
       user: userSchema,
       urlQuery: z
         .record(z.any())
         .optional()
         .describe('Query params to open the page with, read by _url_query, e.g. {"id": "1"}.'),
+      state: z
+        .union([z.boolean(), z.array(z.string().min(1))])
+        .optional()
+        .describe(
+          'What the result carries of the final page state. Omitted: the whole state when it is at most 10000 characters of JSON, otherwise stateOmitted (its size and each top-level key with its size). An array of state paths, e.g. ["form.name", "rows"]: state is {path: value} for each, null where undefined. true: the whole state, however large. false: no state.'
+        ),
     },
   },
 

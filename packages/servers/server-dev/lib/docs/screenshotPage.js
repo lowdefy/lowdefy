@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 import unsettledPageNote from './unsettledPageNote.js';
+import validateViewport from './validateViewport.js';
 
 // A feedback annotation's elementRect/shapes are captured in the developer's
 // live tab, viewport-relative at whatever scroll position they were at
@@ -53,7 +54,7 @@ async function resolveClip({ page, clip, scrollX, scrollY }) {
 }
 
 // screenshotPage lets an agent visually verify a page rendered by the
-// running dev server.
+// running dev server, at a given viewport size and colour scheme.
 async function screenshotPage({
   origin,
   pageId,
@@ -64,6 +65,7 @@ async function screenshotPage({
   user,
   width = 1280,
   height = 800,
+  colorScheme = 'light',
   timeout = 15000,
 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
@@ -75,6 +77,10 @@ async function screenshotPage({
     return {
       error: `screenshotPage requires a "pageId" string. Received ${JSON.stringify(pageId)}.`,
     };
+  }
+  const viewportError = validateViewport({ width, height, colorScheme });
+  if (!type.isUndefined(viewportError)) {
+    return { error: viewportError };
   }
 
   let browser;
@@ -90,7 +96,16 @@ async function screenshotPage({
 
   let context;
   try {
-    const opened = await openPage({ browser, origin, pageId, user, width, height, timeout });
+    const opened = await openPage({
+      browser,
+      origin,
+      pageId,
+      user,
+      width,
+      height,
+      colorScheme,
+      timeout,
+    });
     context = opened.context;
     // Let post-load rendering (fonts, transitions, client-side state) settle.
     await opened.page.waitForTimeout(300);

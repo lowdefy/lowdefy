@@ -24,8 +24,10 @@ import {
 
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 import isPageReady from './isPageReady.js';
+import selectFinalState from './selectFinalState.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneySteps, { getStepKey } from './validateJourneySteps.js';
+import validateStateSelection from './validateStateSelection.js';
 
 // Carries what a failed step expected and what it found, so the journey's
 // failure report can show both. Executors throw it for a failed `expect` and
@@ -90,11 +92,21 @@ function capitalise(text) {
 // wrapper's centre can land beside the control. The block's own e2e helpers
 // target the inner control for the same reason; a block with no interactive
 // descendant (a Box with its own onClick) is clicked directly.
+//
+// A radio or checkbox inside a <label> is reached through the label: the label
+// carries the option's text and is what a person clicks, while the input may
+// have no size at all (antd Segmented hides it at zero width and height), so
+// Playwright would never find it visible.
+const RADIO_OPTION = 'label:has(input[type="radio"])';
+const CHECKBOX_OPTION = 'label:has(input[type="checkbox"])';
+
 const INTERACTIVE_CONTROL = [
   'button',
   '[role="button"]',
   'a[href]',
-  'input:not([type="hidden"])',
+  RADIO_OPTION,
+  CHECKBOX_OPTION,
+  'input:not([type="hidden"]):not(label input[type="radio"]):not(label input[type="checkbox"])',
   'textarea',
   'select',
   '[role="switch"]',
@@ -254,12 +266,30 @@ async function runFill({ page, step, timeout }) {
   });
 }
 
+// The options of a radio group, a button selector or a segmented control are
+// all on the page already: the one labelled `text` is clicked, no dropdown.
+async function selectRadioOption({ options, target, text, timeout }) {
+  const option = options
+    .filter({ hasText: exactText(text) })
+    .filter({ visible: true })
+    .first();
+  try {
+    await option.click({ timeout });
+  } catch (error) {
+    const description = describeTarget(target);
+    throw new JourneyStepError(`No option with text "${text}" in ${description}.`, {
+      expected: `option "${text}" in ${description}`,
+      actual: cleanMessage(error),
+    });
+  }
+}
+
 // A native <select> inside the block is preferred when present (Playwright's
-// selectOption is exact and needs no open dropdown). Otherwise the block is
-// clicked to open its dropdown and the option with exactly `value` as text is
-// clicked — Ant Design renders options into a portal, so they are searched
-// page-wide, restricted to visible ones so the hidden accessibility list is
-// never matched.
+// selectOption is exact and needs no open dropdown), then radio options
+// labelled in the block. Otherwise the block is clicked to open its dropdown
+// and the option with exactly `value` as text is clicked — Ant Design renders
+// options into a portal, so they are searched page-wide, restricted to visible
+// ones so the hidden accessibility list is never matched.
 async function runSelect({ page, step, timeout }) {
   const { value, ...target } = step.select;
   const text = String(value);
@@ -270,6 +300,11 @@ async function runSelect({ page, step, timeout }) {
       target,
       action: () => native.first().selectOption({ label: text }, { timeout }),
     });
+    return;
+  }
+  const radioOptions = scope.locator(RADIO_OPTION);
+  if ((await radioOptions.count()) > 0) {
+    await selectRadioOption({ options: radioOptions, target, text, timeout });
     return;
   }
   await actOnTarget({
@@ -319,6 +354,28 @@ async function runPress({ page, step }) {
   } catch (error) {
     throw new JourneyStepError(`Could not press "${key}": ${cleanMessage(error)}`, {
       expected: `key "${key}" to be pressed`,
+      actual: cleanMessage(error),
+    });
+  }
+}
+
+// Goes back one entry in the browser history, the way the Back button does.
+// The headless tab opens on about:blank before the journey's page, which the
+// Navigation API leaves out of the app's entries, so an entry index of 0 means
+// the journey has not navigated anywhere it could go back from.
+async function runBack({ page, timeout }) {
+  const index = await page.evaluate(() => window.navigation.currentEntry.index);
+  if (index === 0) {
+    throw new JourneyStepError(
+      'There is no earlier page in this journey to go back to: back needs a page the journey navigated from.',
+      { expected: 'the browser to go back one page', actual: `no earlier page than ${page.url()}` }
+    );
+  }
+  try {
+    await page.goBack({ timeout });
+  } catch (error) {
+    throw new JourneyStepError(`Could not go back: ${cleanMessage(error)}`, {
+      expected: 'the browser to go back one page',
       actual: cleanMessage(error),
     });
   }
@@ -435,6 +492,28 @@ async function expectText({ page, params, timeout }) {
   }
 }
 
+// The document title is set by the page after it renders, so it is polled
+// rather than read once.
+async function expectTitle({ page, params, timeout }) {
+  if (!type.isUndefined(params.equals)) {
+    await pollUntil({
+      page,
+      read: () => page.title(),
+      check: (title) => title === params.equals,
+      timeout,
+      expected: `title to equal "${params.equals}"`,
+    });
+    return;
+  }
+  await pollUntil({
+    page,
+    read: () => page.title(),
+    check: (title) => title.includes(params.contains),
+    timeout,
+    expected: `title to contain "${params.contains}"`,
+  });
+}
+
 // Waits for the URL rather than reading it once, because a click that
 // navigates resolves before the new route is committed — page.waitForURL is
 // Playwright's own wait for exactly this.
@@ -467,6 +546,9 @@ async function runExpect({ page, step, timeout }) {
     case 'url':
       await expectUrl({ page, params, timeout });
       return;
+    case 'title':
+      await expectTitle({ page, params, timeout });
+      return;
     default:
       return;
   }
@@ -487,7 +569,7 @@ async function settlePage({ page, timeout }) {
   await page.waitForFunction(isPageReady, pageId, { timeout }).catch(() => {});
 }
 
-const INTERACTION_STEPS = ['click', 'fill', 'select', 'press'];
+const INTERACTION_STEPS = ['click', 'fill', 'select', 'press', 'back'];
 
 async function runStep({ page, step, index, timeout, screenshots }) {
   switch (getStepKey(step)) {
@@ -502,6 +584,9 @@ async function runStep({ page, step, index, timeout, screenshots }) {
       return;
     case 'press':
       await runPress({ page, step, timeout });
+      return;
+    case 'back':
+      await runBack({ page, timeout });
       return;
     case 'wait':
       await runWait({ page, step, timeout });
@@ -579,16 +664,18 @@ async function readFinalState({ page }) {
 }
 
 // runJourney drives a page of the running dev server through a declarative
-// list of steps — click, fill, select, press, wait, screenshot, expect — so
-// an agent can verify behaviour (a form submits, a modal opens, state
+// list of steps — click, fill, select, press, back, wait, screenshot, expect —
+// so an agent can verify behaviour (a form submits, a modal opens, state
 // changes) and not only layout. `timeout` bounds the page open; `stepTimeout`
-// bounds each step, matching Playwright's per-action timeout.
+// bounds each step, matching Playwright's per-action timeout. `state` picks
+// what the result carries of the final page state (see selectFinalState).
 async function runJourney({
   origin,
   pageId,
   steps,
   user,
   urlQuery,
+  state: stateSelection,
   width = 1280,
   height = 800,
   timeout = 15000,
@@ -614,6 +701,10 @@ async function runJourney({
   const { error: stepsError } = validateJourneySteps({ steps });
   if (!type.isUndefined(stepsError)) {
     return { error: stepsError };
+  }
+  const stateSelectionError = validateStateSelection({ state: stateSelection });
+  if (!type.isUndefined(stateSelectionError)) {
+    return { error: stateSelectionError };
   }
 
   let browser;
@@ -651,7 +742,7 @@ async function runJourney({
       passed: type.isUndefined(failure),
       steps: results,
       screenshots,
-      state,
+      ...selectFinalState({ state, selection: stateSelection }),
     };
     if (!type.isUndefined(failure)) {
       result.failure = failure;

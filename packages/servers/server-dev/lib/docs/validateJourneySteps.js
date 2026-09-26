@@ -16,8 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
-const STEP_KEYS = ['click', 'fill', 'select', 'press', 'wait', 'screenshot', 'expect'];
-const EXPECT_KEYS = ['state', 'visible', 'text', 'url'];
+const STEP_KEYS = ['click', 'fill', 'select', 'press', 'back', 'wait', 'screenshot', 'expect'];
+const EXPECT_KEYS = ['state', 'visible', 'text', 'url', 'title'];
 const WAIT_KEYS = ['ms', 'request', 'state'];
 
 function describe(value) {
@@ -146,7 +146,7 @@ function validateWait(params) {
 
 function validateExpect(params) {
   if (!type.isObject(params)) {
-    return `Step "expect" requires one of { state }, { visible }, { text }, { url }. Received ${describe(
+    return `Step "expect" requires one of { state }, { visible }, { text }, { url }, { title }. Received ${describe(
       params
     )}.`;
   }
@@ -180,6 +180,15 @@ function validateExpect(params) {
         return `Step "expect.url" requires { contains }. Received ${describe(value)}.`;
       }
       return undefined;
+    case 'title': {
+      const titleKey = type.isObject(value) ? getStepKey(value) : undefined;
+      if (!['equals', 'contains'].includes(titleKey) || !type.isString(value[titleKey])) {
+        return `Step "expect.title" requires { equals } or { contains } with a string. Received ${describe(
+          value
+        )}.`;
+      }
+      return undefined;
+    }
     default:
       return undefined;
   }
@@ -208,6 +217,11 @@ function validateStep(step) {
         return `Step "press" requires a key string such as "Enter" or "Mod+k". Received ${describe(
           params
         )}.`;
+      }
+      return undefined;
+    case 'back':
+      if (!type.isNone(params) && params !== true) {
+        return `Step "back" takes no value: write { "back": true }. Received ${describe(params)}.`;
       }
       return undefined;
     case 'wait':

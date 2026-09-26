@@ -112,7 +112,7 @@ test('docsJourneyHandler returns 400 naming an unknown step', async () => {
 
   expect(result.status).toBe(400);
   expect(result.data.error).toEqual(
-    'Step 0: Unknown journey step "hover". Steps are: click, fill, select, press, wait, screenshot, expect.'
+    'Step 0: Unknown journey step "hover". Steps are: click, fill, select, press, back, wait, screenshot, expect.'
   );
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
@@ -124,6 +124,26 @@ test('docsJourneyHandler returns 400 when urlQuery is not an object', async () =
 
   expect(result.status).toBe(400);
   expect(result.data.error).toMatch(/"urlQuery" param must be an object/);
+});
+
+test('docsJourneyHandler passes the state option through to the runner', async () => {
+  const c = createContext({ pageId: 'form', steps: [], state: ['form.name'] });
+
+  await docsJourneyHandler(c);
+
+  expect(mockRunJourney).toHaveBeenCalledWith(expect.objectContaining({ state: ['form.name'] }));
+});
+
+test('docsJourneyHandler returns 400 when the state option is malformed', async () => {
+  const c = createContext({ pageId: 'form', steps: [], state: 'form.name' });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(400);
+  expect(result.data.error).toMatch(
+    /"state" option must be true, false or an array of state paths/
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
 });
 
 test('docsJourneyHandler returns 400 when user is malformed', async () => {

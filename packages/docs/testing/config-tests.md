@@ -53,20 +53,22 @@ Files run in file-name order, and journeys run one at a time — each journey op
 
 Blocks are addressed by their `blockId`. Every step has a 5 second timeout by default; a step that does not complete in time fails the journey.
 
-| Step                                      | Meaning                                                                                                   |
-| ----------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `click: target`                           | Click the block, or the control a [target](#targets) narrows to.                                          |
-| `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names).                           |
-| `select: { blockId, value }`              | Open the selector block (or grid cell) and choose the option whose text is `value`.                       |
-| `press: Enter`                            | Press a key or chord. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.             |
-| `wait: { ms }`                            | Pause for `ms` milliseconds.                                                                              |
-| `wait: { request: requestId }`            | Wait until the request has finished loading.                                                              |
-| `wait: { state: path }`                   | Wait until the state value at `path` is defined.                                                          |
-| `screenshot: name`                        | Capture a screenshot. Screenshots are returned to agents using the MCP tool; the CLI runner ignores them. |
-| `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`.                                                            |
-| `expect: { visible: target }`             | The block, or the control a target narrows to, is visible.                                                |
-| `expect: { text: { blockId, contains } }` | The block's rendered text (or a grid row's or cell's) contains the string.                                |
-| `expect: { url: { contains } }`           | The browser URL contains the string.                                                                      |
+| Step                                      | Meaning                                                                                                                                                     |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `click: target`                           | Click the block, or the control a [target](#targets) narrows to.                                                                                            |
+| `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names).                                                                             |
+| `select: { blockId, value }`              | Open the selector block (or grid cell) and choose the option whose text is `value`. A radio, button or segmented selector's option is clicked by its label. |
+| `press: Enter`                            | Press a key or chord. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.                                                               |
+| `back: true`                              | Go back one page, like the browser's Back button. Fails when the journey has not navigated from an earlier page.                                            |
+| `wait: { ms }`                            | Pause for `ms` milliseconds.                                                                                                                                |
+| `wait: { request: requestId }`            | Wait until the request has finished loading.                                                                                                                |
+| `wait: { state: path }`                   | Wait until the state value at `path` is defined.                                                                                                            |
+| `screenshot: name`                        | Capture a screenshot. Screenshots are returned to agents using the MCP tool; the CLI runner ignores them.                                                   |
+| `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`.                                                                                                              |
+| `expect: { visible: target }`             | The block, or the control a target narrows to, is visible.                                                                                                  |
+| `expect: { text: { blockId, contains } }` | The block's rendered text (or a grid row's or cell's) contains the string.                                                                                  |
+| `expect: { url: { contains } }`           | The browser URL contains the string.                                                                                                                        |
+| `expect: { title: { equals } }`           | The document title (the browser tab's text) is exactly the string; `{ contains }` checks part of it.                                                        |
 
 The full grammar, including the failure shape the route returns, is documented with the [journey tool](/ai-agent-docs). The CLI and the MCP tool share one implementation, so a journey an agent verifies interactively can be committed as-is.
 

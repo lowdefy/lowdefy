@@ -61,6 +61,35 @@ function decodeUserCookie(addCookies) {
   return JSON.parse(Buffer.from(cookie.value, 'base64').toString());
 }
 
+test('openPage opens a 1280x800 light viewport by default', async () => {
+  const { browser } = createBrowser();
+
+  await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+
+  expect(browser.newContext).toHaveBeenCalledWith({
+    viewport: { width: 1280, height: 800 },
+    colorScheme: 'light',
+  });
+});
+
+test('openPage opens the viewport size and colour scheme it is given', async () => {
+  const { browser } = createBrowser();
+
+  await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    width: 390,
+    height: 844,
+    colorScheme: 'dark',
+  });
+
+  expect(browser.newContext).toHaveBeenCalledWith({
+    viewport: { width: 390, height: 844 },
+    colorScheme: 'dark',
+  });
+});
+
 test('openPage injects the default roleless user when no user is given', async () => {
   const { browser, addCookies } = createBrowser();
 

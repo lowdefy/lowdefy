@@ -118,7 +118,7 @@ server-dev/
 │   ├── getContext.mjs        # Context factory (stores JIT build state)
 │   ├── processes/
 │   │   ├── initialBuild.mjs
-│   │   ├── lowdefyBuild.mjs  # Calls shallowBuild, captures result
+│   │   ├── lowdefyBuild.mjs  # shallowBuild into build-staging, publish, one build at a time
 │   │   ├── installPlugins.mjs
 │   │   ├── checkMockUserWarning.mjs
 │   │   ├── startServer.mjs   # Spawns the Vite child process
@@ -127,12 +127,15 @@ server-dev/
 │   │   ├── readDotEnv.mjs
 │   │   └── reloadClients.mjs
 │   ├── utils/
+│   │   ├── createDotPathIgnore.mjs      # Dotfile ignore relative to the watched root
+│   │   ├── findBuildFilesOutsideWatch.mjs  # refMap files outside the watched directories
 │   │   ├── getViteBin.mjs    # Resolves the vite bin path
+│   │   ├── importFresh.mjs   # Import a module in a new worker (plugin type lists)
 │   │   ├── loadSkeletonSourceFiles.mjs  # Read skeletonSourceFiles.json as Set
+│   │   ├── publishBuildDirectory.mjs    # Move build-staging over build, file by file
 │   │   └── updatePageTailwindCss.mjs    # Refresh Tailwind candidates on page edits
 │   └── watchers/
-│       ├── lowdefyBuildWatcher.mjs   # Skeleton vs page change classification
-│       ├── moduleBuildWatcher.mjs    # Local module file change classification
+│       ├── lowdefyBuildWatcher.mjs   # Config, local modules and refMap files: skeleton vs page
 │       ├── envWatcher.mjs
 │       └── serverArtifactWatcher.mjs # Server-read artifacts → restart
 ├── vite.config.js
@@ -258,16 +261,45 @@ Cross-process communication uses files in the build directory:
 
 ```javascript
 function lowdefyBuild({ directories, logger, options }) {
-  return async () => {
-    logger.info({ spin: 'start' }, 'Building config...');
+  async function build() {
     const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
     const customMessagesMap = await createCustomPluginMessagesMap({ directories, logger });
-    const result = await shallowBuild({ customMessagesMap, customTypesMap, directories, ... });
-    logger.info({ spin: 'succeed' }, `Built config in ...`);
+    const result = await shallowBuild({
+      customMessagesMap,
+      customTypesMap,
+      directories: { ...directories, build: directories.buildStaging },
+      ...
+    });
+    await publishBuildDirectory({
+      buildDirectory: directories.build,
+      stagingDirectory: directories.buildStaging,
+    });
     return result; // { components, pageRegistry, context }
-  };
+  }
+  // One build at a time: every build writes the same staging directory.
+  let previousBuild = Promise.resolve();
+  return () => { /* chain build() after previousBuild */ };
 }
 ```
+
+The server reads build artifacts from disk on every request (endpoint and connection
+config, page artifacts), and the shallow build empties its output directory before writing.
+Building straight into `build/` would leave a window where a request finds an artifact
+missing (`API Endpoint "x" does not exist.`), and Vite's SSR graph can fail to resolve a
+`build/plugins/*.js` import. So the build writes into `build-staging/` (a sibling, so
+relative paths written into artifacts are the same), and `publishBuildDirectory` renames each
+staged file over its live counterpart, then removes live files the new build did not write,
+then moves `pageRegistry.json` last. A rename replaces a file in one step, so every artifact
+is always present, old or new. The JIT page builder rebuilds its cached build context and
+drops its built pages when the registry's mtime changes, so the registry landing last means
+that context is read from the complete new build. The
+live `build/` directory is never replaced, so the file watchers on it keep working. A failed
+build leaves the live build untouched. Vite does not watch `build-staging/`.
+
+Plugin type lists (`<plugin>/types`, `<plugin>/messages`) are read on every build with
+`importFresh`, which imports the file in a new worker thread: Node never drops an ES module
+from its cache, so a type added to a local plugin while the server runs would otherwise stay
+undefined until the manager process restarts.
 
 The manager wraps `lowdefyBuild` to capture and store the result on the manager context:
 
@@ -344,15 +376,18 @@ A single instance lives in the server process (`jitPageBuilder.js`). The manager
 
 When a file changes, the watcher classifies it using the `skeletonSourceFiles.json` artifact (produced by the build's `collectSkeletonSourceFiles`):
 
-| Condition                         | Action                                                           |
-| --------------------------------- | ---------------------------------------------------------------- |
-| `lowdefy.yaml` changed            | Full skeleton rebuild                                            |
-| File in `skeletonSourceFiles`     | Full skeleton rebuild                                            |
-| File not in `skeletonSourceFiles` | Page-only change: write `invalidatePages` signal, reload clients |
+| Condition                          | Action                                                           |
+| ---------------------------------- | ---------------------------------------------------------------- |
+| `lowdefy.yaml` changed             | Full skeleton rebuild                                            |
+| A `module.lowdefy.yaml` changed    | Full skeleton rebuild                                            |
+| File in `skeletonSourceFiles`      | Full skeleton rebuild                                            |
+| File not in `skeletonSourceFiles`  | Page-only change: write `invalidatePages` signal, reload clients |
 
 The `skeletonSourceFiles` set is derived from `~r` markers on non-page components during the shallow build. It includes every config file that contributes to non-page build artifacts (connections, API endpoints, auth, menus, etc.), traced through the refMap parent chain. This replaces the previous path-based heuristic (`!f.startsWith('pages/')`) which had false negatives for API files referenced from `pages/` and false positives for page templates outside `pages/`.
 
-Both `lowdefyBuildWatcher` and `moduleBuildWatcher` use the same `loadSkeletonSourceFiles` helper and the same classification logic. The set contains relative paths for main config refs and absolute paths for module refs — matching the path formats each watcher receives from chokidar.
+The set also includes the files that hold a pages list (`pages: { _ref: pages.yaml }` in the app, a module's pages list): they decide which pages exist, so adding a page needs a skeleton rebuild. The page files they reference, and templates those ref, stay page content.
+
+The set contains relative paths for main config refs and absolute paths for module refs, so the watcher checks each changed file in both forms.
 
 ### Cross-Process Cache Invalidation
 
@@ -454,8 +489,9 @@ function startWatchers(context) {
   return async () => {
     await Promise.all([
       envWatcher(context), // .env changes → rebuild + hard restart
-      lowdefyBuildWatcher(context), // Config changes → soft reload
-      moduleBuildWatcher(context), // Local module changes → soft reload
+      lowdefyBuildWatcher(context), // Config, local module and other read files → soft reload
+      pluginSourceWatcher(context), // Local plugin sources → restart
+      restartRequestWatcher(context), // build/.restart from the dev tools → rebuild + restart
       serverArtifactWatcher(context), // Server-read artifacts → restart
     ]);
   };
@@ -466,61 +502,23 @@ function startWatchers(context) {
 
 **File:** `manager/watchers/lowdefyBuildWatcher.mjs`
 
-Watches the config directory (plus `--watch` paths). Decides between page invalidation (fast) and full skeleton rebuild:
+Watches every file the build reads, through one chokidar watcher:
 
-```javascript
-const callback = async (filePaths) => {
-  const changedFiles = filePaths.map((f) => path.relative(configDir, f));
+- the config directory, the `--watch` paths, and local module roots (`isLocal: true` in
+  `buildContext.modules`), which may lie outside the config directory;
+- every other file in the build's `refMap.json` that lies outside those directories, such
+  as a file a local module refs with `../` from beside the module. `refMap.json` is rewritten
+  by the config build and by every JIT page build, so a second watcher on it adds new files
+  as they appear.
 
-  // Check for version change in lowdefy.yaml
-  if (lowdefyYamlModified) {
-    /* exit if version changed */
-  }
+Each batch of changes is classified with `skeletonSourceFiles.json` (see the table above):
+a skeleton change runs `lowdefyBuild()`, anything else writes the `invalidatePages` signal
+and refreshes Tailwind candidates. Either way the clients reload.
 
-  const skeletonSourceFiles = loadSkeletonSourceFiles(context.directories.build);
-  const isSkeletonChange =
-    lowdefyYamlModified || changedFiles.some((f) => skeletonSourceFiles.has(f));
-
-  if (isSkeletonChange) {
-    await context.lowdefyBuild(); // Full skeleton rebuild
-  } else {
-    // Page-only change: write signal file so server invalidates its page cache
-    fs.writeFileSync(invalidatePath, String(Date.now()));
-    await updatePageTailwindCss({ changedFiles, context });
-  }
-  await context.reloadClients();
-};
-```
-
-### Module Build Watcher
-
-**File:** `manager/watchers/moduleBuildWatcher.mjs`
-
-Watches local module directories (modules with `isLocal: true` in `buildContext.modules`). Uses the same `skeletonSourceFiles.json` artifact as the lowdefy build watcher to classify changes:
-
-```javascript
-const callback = async (filePaths) => {
-  const changedFiles = filePaths.flat(); // Absolute paths from chokidar
-
-  const moduleYamlChanged = changedFiles.some(
-    (filePath) => path.basename(filePath) === 'module.lowdefy.yaml'
-  );
-
-  const skeletonSourceFiles = loadSkeletonSourceFiles(context.directories.build);
-  const hasSkeletonChanges = changedFiles.some((f) => skeletonSourceFiles.has(f));
-
-  if (moduleYamlChanged || hasSkeletonChanges) {
-    await context.lowdefyBuild();
-  } else {
-    fs.writeFileSync(invalidatePath, String(Date.now()));
-  }
-  await context.reloadClients();
-};
-```
-
-Module refs in the `skeletonSourceFiles` set are absolute paths (the walker resolves them via `path.resolve`), matching chokidar's absolute output. No path normalization needed.
-
-The watcher only starts when local modules exist. If `buildContext.modules` is empty or has no local entries, `moduleBuildWatcher` returns immediately.
+Dotfiles and dot-folders are ignored relative to the watched directory a file is under
+(`createDotPathIgnore`), not by the absolute path, so an app that lives inside a dot-folder
+(a git worktree under `.claude/worktrees/`) is still watched, while `.lowdefy/` and `.git/`
+inside the app are not.
 
 ### Environment Watcher
 
@@ -578,9 +576,8 @@ async function reloadHandler(c) {
 
     watcher.on('add', () => stream.writeSSE({ event: 'reload', data: '{}' }));
     watcher.on('change', () => stream.writeSSE({ event: 'reload', data: '{}' }));
-    // No reload on unlink — cleanBuildDirectory deletes build/reload during
-    // skeleton rebuilds, which would send a premature event before the new
-    // artifacts are written.
+    // No reload on unlink — a skeleton rebuild removes build/reload when it
+    // publishes the new build; the reload comes from reloadClients() after.
 
     while (open) {
       await stream.sleep(15000);
@@ -906,11 +903,11 @@ export default defineConfig(({ mode }) => ({
 | `manager/run.mjs`                            | Entry point (signal handling, orchestration)      |
 | `manager/getContext.mjs`                     | Context factory with JIT build state              |
 | `manager/processes/startServer.mjs`          | Spawns the Vite child process                     |
-| `manager/processes/lowdefyBuild.mjs`         | Calls `shallowBuild`, captures result             |
+| `manager/processes/lowdefyBuild.mjs`         | `shallowBuild` into build-staging, then publish   |
+| `manager/utils/publishBuildDirectory.mjs`    | Move the staged build over the live one           |
 | `manager/utils/loadSkeletonSourceFiles.mjs`  | Load skeleton source file set from build artifact |
 | `manager/utils/updatePageTailwindCss.mjs`    | Refresh Tailwind candidates on page edits         |
 | `manager/watchers/lowdefyBuildWatcher.mjs`   | Skeleton vs page change classification            |
-| `manager/watchers/moduleBuildWatcher.mjs`    | Local module file change classification           |
 | `manager/watchers/serverArtifactWatcher.mjs` | Server-read artifact changes → restart            |
 | `lib/server/jitPageBuilder.js`               | JIT page build on API request                     |
 | `lib/server/pageCache.mjs`                   | PageCache class (compiled tracking, locks)        |
@@ -934,8 +931,9 @@ export default defineConfig(({ mode }) => ({
 | -------------------------------------------------------------------- | --------------------- | --------------------------------------- | ------------------------------------------------ |
 | Page-level config change                                             | lowdefyBuildWatcher   | Signal file + Tailwind candidates + SSE | Soft reload (all pages invalidated, rebuilt JIT) |
 | Skeleton-level config change                                         | lowdefyBuildWatcher   | Full skeleton rebuild + SSE             | Soft reload (all pages invalidated)              |
-| Module skeleton / `module.lowdefy.yaml` change                       | moduleBuildWatcher    | Full skeleton rebuild + SSE             | Soft reload                                      |
-| Module page content change                                           | moduleBuildWatcher    | Signal file + SSE                       | Soft reload (all pages invalidated, rebuilt JIT) |
+| Module skeleton / `module.lowdefy.yaml` change                       | lowdefyBuildWatcher   | Full skeleton rebuild + SSE             | Soft reload                                      |
+| Module page content change                                           | lowdefyBuildWatcher   | Signal file + SSE                       | Soft reload (all pages invalidated, rebuilt JIT) |
+| Restart from the dev tools (`build/.restart`)                        | restartRequestWatcher | Lowdefy build + restart                 | Hard restart                                     |
 | Client plugin code / CSS change                                      | Vite                  | HMR module replacement                  | In-place update (~hundreds of ms, no restart)    |
 | Server artifact change (auth, connections, server operators, config) | serverArtifactWatcher | Restart child                           | Hard restart                                     |
 | `package.json` change                                                | serverArtifactWatcher | Install + lowdefy build + restart       | Hard restart                                     |

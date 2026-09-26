@@ -33,12 +33,13 @@ class Slots {
     this.subSlots = {};
   }
 
+  // initState is a copy of the state the caller owns, shared by every block below these slots.
   init = (initState) => {
     this.initSlotBlocks();
     this.loopBlocks((block) => {
       this.context._internal.RootSlots.map[block.blockId] = block;
     });
-    this.reset(initState);
+    this.resetBlocks(initState);
   };
 
   // Replace Slot blocks array with Block instances
@@ -69,8 +70,13 @@ class Slots {
     });
   };
 
+  // One copy of the state for the whole tree: nested slots reset from it with resetBlocks, so a
+  // reset costs one state copy however many containers and list rows the page has.
   reset = (initWithState) => {
-    const initState = serializer.copy(initWithState || this.context.state);
+    this.resetBlocks(serializer.copy(initWithState ?? this.context.state));
+  };
+
+  resetBlocks = (initState) => {
     this.loopBlocks((block) => {
       block.reset(this.subSlots, initState);
     });

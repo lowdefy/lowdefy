@@ -57,7 +57,7 @@ async function requestHandler(c) {
 
   // Page artifacts (including pages/{pageId}/requests/{requestId}.json) are
   // built JIT by GET /api/page/* and thrown away on every page invalidation
-  // (lowdefyBuildWatcher / moduleBuildWatcher). A client that already holds
+  // (lowdefyBuildWatcher). A client that already holds
   // the page config keeps firing requests across that window — and a request
   // that arrived before the page was rebuilt failed with
   // `Request "x" does not exist.` Run the same idempotent build the page route

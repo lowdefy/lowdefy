@@ -44,6 +44,19 @@ test('fitResponse keeps a null response untouched', () => {
   expect(fitResponse({ result, name: 'home.get_rows' })).toBe(result);
 });
 
+test('fitResponse keeps a result with no response untouched', () => {
+  // A failed routine, or one that ends without :return, has no response.
+  const result = {
+    error: { '~e': { name: 'ServiceError', message: 'Something went wrong.' } },
+    response: undefined,
+    status: 'error',
+    success: false,
+  };
+
+  expect(fitResponse({ result, name: 'search' })).toBe(result);
+  expect(fs.existsSync(path.join(configDirectory, '.lowdefy'))).toBe(false);
+});
+
 test('fitResponse writes an oversized response to a file and returns its path in its place', () => {
   const rows = Array.from({ length: 500 }, (_, index) => ({ _id: index, title: 'x'.repeat(100) }));
   const result = { response: rows, status: 'success', error: null };
