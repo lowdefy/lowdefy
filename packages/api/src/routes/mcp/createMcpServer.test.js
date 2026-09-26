@@ -202,6 +202,32 @@ test('createMcpServer omits branding keys that are not configured', async () => 
   expect(client.getServerVersion()).toEqual({ name: 'test-tools', version: '1.0.0' });
 });
 
+async function initializeResult(context) {
+  const server = await createMcpServer({ context });
+  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+  const send = jest.spyOn(serverTransport, 'send');
+  const client = new Client({ name: 'test-client', version: '1.0.0' });
+  await Promise.all([client.connect(clientTransport), server.connect(serverTransport)]);
+  const [response] = send.mock.calls.find(([message]) => message.result?.protocolVersion);
+  return response.result;
+}
+
+test('createMcpServer sends configured instructions in the initialize result', async () => {
+  const context = createContext({
+    configs: {
+      'mcp.json': { ...mcpJson, instructions: 'Look up a customer before updating them.' },
+    },
+  });
+  const result = await initializeResult(context);
+  expect(result.instructions).toEqual('Look up a customer before updating them.');
+});
+
+test('createMcpServer sends no instructions key when instructions are not configured', async () => {
+  const context = createContext();
+  const result = await initializeResult(context);
+  expect(Object.keys(result)).not.toContain('instructions');
+});
+
 test('createMcpServer returns null when mcp is not configured', async () => {
   const context = createContext({
     configs: { 'mcp.json': { configured: false, endpoints: [] } },

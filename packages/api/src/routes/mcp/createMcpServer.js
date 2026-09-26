@@ -88,7 +88,11 @@ async function createMcpServer({ context }) {
   if (!type.isNone(mcpConfig.icons)) {
     serverInfo.icons = cleanBuildArtifact(mcpConfig.icons);
   }
-  const server = new Server(serverInfo, { capabilities: { tools: {} } });
+  const serverOptions = { capabilities: { tools: {} } };
+  if (!type.isNone(mcpConfig.instructions)) {
+    serverOptions.instructions = mcpConfig.instructions;
+  }
+  const server = new Server(serverInfo, serverOptions);
 
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     const tools = [];
