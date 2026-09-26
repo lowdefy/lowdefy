@@ -30,6 +30,7 @@ function createMockAuth({
   members = [],
   invitations = [],
   organization = pinnedOrg,
+  organizationMemberCounts = {},
   user = { id: 'user_1', email: 'User@Example.com', name: 'User One' },
 } = {}) {
   const adapter = {
@@ -50,6 +51,12 @@ function createMockAuth({
         return invitations;
       }
       throw new Error(`Unexpected findMany model ${model}.`);
+    }),
+    count: jest.fn(async ({ model, where }) => {
+      if (model === 'member') {
+        return organizationMemberCounts[where[0].value] ?? 0;
+      }
+      throw new Error(`Unexpected count model ${model}.`);
     }),
     create: jest.fn(async ({ model, data }) => ({ id: `${model}_new`, ...data })),
   };
@@ -193,6 +200,119 @@ test('tenant: a retried mint reuses an orphan org row left by a failed member wr
   });
   expect(result).toEqual({
     data: { userId: 'user_1', activeOrganizationId: 'org_orphan' },
+  });
+});
+
+test('tenant: the org slugged from the user id is reused only after checking it has no members', async () => {
+  const orphan = { id: 'org_orphan', slug: 'org-user_1' };
+  const { auth, adapter } = createMockAuth({ members: [], invitations: [], organization: orphan });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
+  await hook({ userId: 'user_1' });
+  expect(adapter.count).toHaveBeenCalledWith({
+    model: 'member',
+    where: [{ field: 'organizationId', value: 'org_orphan' }],
+  });
+});
+
+test('tenant: when the org slugged from the user id has members, a fresh org is minted on the next slug', async () => {
+  const handedOver = { id: 'org_handed_over', slug: 'org-user_1' };
+  const { auth, adapter } = createMockAuth({
+    members: [],
+    invitations: [],
+    organizationMemberCounts: { org_handed_over: 2 },
+  });
+  adapter.findOne.mockImplementation(async ({ model, where }) => {
+    if (model === 'organization' && where[0].value === 'org-user_1') {
+      return handedOver;
+    }
+    return null;
+  });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
+  const result = await hook({ userId: 'user_1' });
+  expect(adapter.create).toHaveBeenCalledWith({
+    model: 'organization',
+    data: expect.objectContaining({ name: 'User One', slug: 'org-user_1-2' }),
+    forceAllowId: true,
+  });
+  expect(adapter.create).toHaveBeenCalledWith({
+    model: 'member',
+    data: expect.objectContaining({
+      userId: 'user_1',
+      organizationId: 'organization_new',
+      role: 'owner',
+    }),
+  });
+  expect(result).toEqual({
+    data: { userId: 'user_1', activeOrganizationId: 'organization_new' },
+  });
+});
+
+test('tenant: the user is never added to an org that has members', async () => {
+  const orgs = {
+    'org-user_1': { id: 'org_first', slug: 'org-user_1' },
+    'org-user_1-2': { id: 'org_second', slug: 'org-user_1-2' },
+    'org-user_1-3': { id: 'org_third', slug: 'org-user_1-3' },
+  };
+  const { auth, adapter } = createMockAuth({
+    members: [],
+    invitations: [],
+    organizationMemberCounts: { org_first: 3, org_second: 1 },
+  });
+  adapter.findOne.mockImplementation(async ({ model, where }) => {
+    if (model === 'organization') {
+      return orgs[where[0].value] ?? null;
+    }
+    return null;
+  });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
+  const result = await hook({ userId: 'user_1' });
+  // org-user_1-3 has no members: the half-finished mint of an earlier fresh org.
+  expect(adapter.create).not.toHaveBeenCalledWith(
+    expect.objectContaining({ model: 'organization' })
+  );
+  const memberWrites = adapter.create.mock.calls.filter(([call]) => call.model === 'member');
+  expect(memberWrites).toHaveLength(1);
+  expect(memberWrites[0][0].data).toEqual(
+    expect.objectContaining({ userId: 'user_1', organizationId: 'org_third', role: 'owner' })
+  );
+  expect(result).toEqual({
+    data: { userId: 'user_1', activeOrganizationId: 'org_third' },
+  });
+});
+
+test('tenant: a fresh mint losing the unique slug race on the next slug reads and uses the winning org row', async () => {
+  const handedOver = { id: 'org_handed_over', slug: 'org-user_1' };
+  const winner = { id: 'org_winner', slug: 'org-user_1-2' };
+  const { auth, adapter } = createMockAuth({
+    members: [],
+    invitations: [],
+    organizationMemberCounts: { org_handed_over: 2 },
+  });
+  let nextSlugLookups = 0;
+  adapter.findOne.mockImplementation(async ({ model, where }) => {
+    if (model !== 'organization') {
+      return null;
+    }
+    if (where[0].value === 'org-user_1') {
+      return handedOver;
+    }
+    nextSlugLookups += 1;
+    return nextSlugLookups === 1 ? null : winner;
+  });
+  adapter.create.mockImplementation(async ({ model, data }) => {
+    if (model === 'organization') {
+      throw new Error('E11000 duplicate key error: slug');
+    }
+    return { id: `${model}_new`, ...data };
+  });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
+  const result = await hook({ userId: 'user_1' });
+  expect(result).toEqual({
+    data: { userId: 'user_1', activeOrganizationId: 'org_winner' },
+  });
+  expect(adapter.create).toHaveBeenCalledWith({
+    model: 'member',
+    data: expect.objectContaining({ organizationId: 'org_winner', role: 'owner' }),
   });
 });
 
