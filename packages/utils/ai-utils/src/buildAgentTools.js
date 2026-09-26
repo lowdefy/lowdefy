@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ToolLoopAgent, tool, jsonSchema, stepCountIs } from 'ai';
+import { ToolLoopAgent, tool, jsonSchema, isStepCount } from 'ai';
 import { createMCPClient } from '@ai-sdk/mcp';
 import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
@@ -45,8 +45,12 @@ function assertNotPlatformToolName(name, kind, i18n) {
   }
 }
 
-// autoApprove skips needsApproval on confirm tools — used by headless
-// run-to-completion agents, where no client exists to resolve an approval.
+// Confirm tools need a person's approval before they run. Since ai v7 approval
+// is a call-level setting rather than a tool property, so the builder returns
+// it beside the tools: `toolApproval` maps each confirm tool's name to
+// 'user-approval', for the ToolLoopAgent that owns the tools. autoApprove
+// leaves it empty — used by headless run-to-completion agents, where no client
+// exists to resolve an approval.
 async function buildAgentTools({ agent, context, depth = 0, autoApprove = false }) {
   const MAX_DEPTH = 5;
   if (depth > MAX_DEPTH) {
@@ -60,7 +64,9 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
   }
 
   const tools = {};
+  const toolApproval = {};
   const mcpClients = [];
+  const requireApproval = (name) => setKey(toolApproval, name, 'user-approval');
 
   // Build endpoint tools. The model-facing tool name is toolConfig.name
   // (assigned by buildAgents — endpoint id with '/' → '__' unless overridden);
@@ -84,7 +90,6 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
       tool({
         description: endpointConfig.description,
         inputSchema: jsonSchema(cleanBuildArtifact(endpointConfig.payloadSchema)),
-        ...(confirm && !autoApprove ? { needsApproval: true } : {}),
         execute: async (input, { abortSignal } = {}) => {
           const result = await context.callEndpoint(endpointId, { payload: input, abortSignal });
           if (!result.success) {
@@ -104,6 +109,7 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
         },
       })
     );
+    if (confirm && !autoApprove) requireApproval(toolName);
   }
 
   // Build MCP clients and merge their tools
@@ -165,8 +171,8 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
           );
           continue;
         }
-        const needsApproval = source.confirm && !autoApprove;
-        setKey(tools, name, needsApproval ? { ...mcpTool, needsApproval: true } : mcpTool);
+        setKey(tools, name, mcpTool);
+        if (source.confirm && !autoApprove) requireApproval(name);
       }
     } catch (err) {
       const label = source.transport === 'stdio' ? source.command : source.url;
@@ -190,7 +196,11 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
     subAgentConfig.mcp = await context.resolveMcpSources({ agentConfig: subAgentConfig });
 
     // Recursively build sub-agent's tools
-    const { tools: subTools, mcpClients: subMcpClients } = await buildAgentTools({
+    const {
+      tools: subTools,
+      mcpClients: subMcpClients,
+      toolApproval: subToolApproval,
+    } = await buildAgentTools({
       agent: subAgentConfig,
       context,
       depth: depth + 1,
@@ -203,7 +213,8 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
       model: subModel,
       instructions: subAgentConfig.properties.instructions,
       tools: subTools,
-      stopWhen: stepCountIs(subAgentConfig.properties.maxSteps ?? 10),
+      toolApproval: subToolApproval,
+      stopWhen: isStepCount(subAgentConfig.properties.maxSteps ?? 10),
       maxOutputTokens: subAgentConfig.properties.maxOutputTokens,
       temperature: subAgentConfig.properties.temperature,
       toolChoice: subAgentConfig.properties.toolChoice ?? 'auto',
@@ -312,7 +323,7 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
     });
   }
 
-  return { tools, mcpClients };
+  return { tools, mcpClients, toolApproval };
 }
 
 export default buildAgentTools;

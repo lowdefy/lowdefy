@@ -32,10 +32,10 @@ async function handleGenerateObject({ model, request }) {
   });
   return {
     object: result.output,
-    reasoningText: result.reasoningText,
+    reasoningText: result.finalStep?.reasoningText,
     finishReason: result.finishReason,
     usage: result.usage,
-    providerMetadata: result.providerMetadata,
+    providerMetadata: result.finalStep?.providerMetadata,
     warnings: result.warnings,
   };
 }

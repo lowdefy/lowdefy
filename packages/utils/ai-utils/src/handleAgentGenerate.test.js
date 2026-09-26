@@ -38,7 +38,7 @@ jest.unstable_mockModule('ai', () => ({
   ToolLoopAgent: MockToolLoopAgent,
   tool: mockTool,
   jsonSchema: mockJsonSchema,
-  stepCountIs: mockStepCountIs,
+  isStepCount: mockStepCountIs,
   hasToolCall: mockHasToolCall,
   generateText: mockGenerateText,
 }));
@@ -91,10 +91,10 @@ const GENERATE_RESULT = {
 };
 
 function mockGenerateSteps(result = GENERATE_RESULT) {
-  mockGenerate.mockImplementation(async ({ onStepFinish }) => {
-    if (onStepFinish) {
+  mockGenerate.mockImplementation(async ({ onStepEnd }) => {
+    if (onStepEnd) {
       for (const step of result.steps) {
-        onStepFinish(step);
+        onStepEnd(step);
       }
     }
     return result;
@@ -182,7 +182,7 @@ test('handleAgentGenerate does not build the update-page-state tool when sharedS
   expect(lastAgentConfig.tools['update-page-state']).toBeUndefined();
 });
 
-test('handleAgentGenerate builds confirm tools without needsApproval (autoApprove)', async () => {
+test('handleAgentGenerate asks no approval for confirm tools (autoApprove)', async () => {
   const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
   mockGenerateSteps();
 
@@ -196,7 +196,7 @@ test('handleAgentGenerate builds confirm tools without needsApproval (autoApprov
   });
 
   expect(mockTool).toHaveBeenCalledTimes(1);
-  expect(mockTool.mock.calls[0][0].needsApproval).toBeUndefined();
+  expect(lastAgentConfig.toolApproval).toEqual({});
   expect(lastAgentConfig.tools['lookup-data']).toBeDefined();
 });
 
@@ -213,8 +213,9 @@ test('handleAgentGenerate wires agent-level hook callbacks onto the ToolLoopAgen
     context: createTestContext(),
   });
 
-  expect(lastAgentConfig.experimental_onStart).toBeInstanceOf(Function);
-  expect(lastAgentConfig.onStepFinish).toBeInstanceOf(Function);
+  // The YAML hook names map onto ai v7's callbacks.
+  expect(lastAgentConfig.onStart).toBeInstanceOf(Function);
+  expect(lastAgentConfig.onStepEnd).toBeInstanceOf(Function);
 });
 
 test('handleAgentGenerate awaits onFinish hooks with the finish payload and ignores dataParts', async () => {

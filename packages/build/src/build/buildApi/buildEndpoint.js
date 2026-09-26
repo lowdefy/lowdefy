@@ -18,6 +18,7 @@
 
 import buildRoutine from './buildRoutine/buildRoutine.js';
 import resolveEndpointSchedules from './resolveEndpointSchedules.js';
+import validateDecideBranches from './validateDecideBranches.js';
 import validateEndpoint from './validateEndpoint.js';
 import validateStepReferences from './validateStepReferences.js';
 
@@ -35,6 +36,10 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, env
 
   // Validate that _step references point to defined step IDs
   validateStepReferences({ endpoint, context });
+
+  // Validate Decide answers read and compared by the routine against the
+  // questions the step declares
+  validateDecideBranches({ endpoint, context });
 
   endpoint.id = `endpoint:${endpoint.endpointId}`;
 }

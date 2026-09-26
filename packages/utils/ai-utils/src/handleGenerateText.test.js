@@ -30,10 +30,10 @@ test('handleGenerateText calls generateText with model and mapped options and re
   const { default: handleGenerateText } = await import('./handleGenerateText.js');
   mockGenerateText.mockResolvedValue({
     text: 'Generated response',
-    reasoningText: 'Some reasoning',
     finishReason: 'stop',
     usage: { inputTokens: 10, outputTokens: 20, totalTokens: 30 },
-    providerMetadata: { anthropic: {} },
+    // ai v7: final-step-only fields live on finalStep.
+    finalStep: { reasoningText: 'Some reasoning', providerMetadata: { anthropic: {} } },
     warnings: [],
     steps: [{ internal: true }],
   });

@@ -48,13 +48,13 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@ai-sdk/react": "3.0.178",
+    "@ai-sdk/react": "4.0.119",
     "@ant-design/x": "2.7.0",
     "@ant-design/x-markdown": "2.7.0",
     "@lowdefy/block-utils": "6.0.0",
     "@lowdefy/blocks-files": "6.0.0",
     "@lowdefy/helpers": "6.0.0",
-    "ai": "6.0.176"
+    "ai": "7.0.116"
   },
   "devDependencies": {
     "@lowdefy/block-dev-e2e": "6.0.0",

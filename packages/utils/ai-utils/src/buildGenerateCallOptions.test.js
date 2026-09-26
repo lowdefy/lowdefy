@@ -56,7 +56,20 @@ test('buildGenerateCallOptions copies all defined call settings and omits undefi
     maxRetries: 3,
     providerOptions: { anthropic: { thinking: { type: 'enabled' } } },
   };
-  expect(buildGenerateCallOptions({ request })).toEqual(request);
+  // `system` is the request's public name; ai v7 takes it as `instructions`.
+  const { system, ...rest } = request;
+  expect(buildGenerateCallOptions({ request })).toEqual({ ...rest, instructions: system });
+});
+
+test('buildGenerateCallOptions opts in to system messages written in the request', () => {
+  const messages = [
+    { role: 'system', content: 'Answer in French.' },
+    { role: 'user', content: 'Hello' },
+  ];
+  expect(buildGenerateCallOptions({ request: { messages } })).toEqual({
+    messages,
+    allowSystemInMessages: true,
+  });
 });
 
 test('buildGenerateCallOptions ignores unrelated request properties', () => {

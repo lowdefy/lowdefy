@@ -87,8 +87,9 @@ Request types:
 
 - GenerateText
 - GenerateObject
+- Decide
 
-All AI provider connections (`Anthropic`, `OpenAI`, `Google`, `AIGateway`) provide the same `GenerateText` and `GenerateObject` request types — the `connectionId` selects the provider. These make a single, one-shot model call and return the result. They can be used as page requests, or as steps in [API endpoint routines](/api) — useful for classify, extract, summarize, or decide steps where the surrounding logic stays in your routine.
+All AI provider connections (`Anthropic`, `OpenAI`, `Google`, `AIGateway`) provide the same `GenerateText`, `GenerateObject` and `Decide` request types — the `connectionId` selects the provider. These make a single, one-shot model call and return the result. They can be used as page requests, or as steps in [API endpoint routines](/api) — useful for classify, extract, summarize, or decide steps where the surrounding logic stays in your routine. For a closed-vocabulary decision — pick one of these options, yes or no, rate on this scale — use `Decide`.
 
 For multi-step tool use, see [agents](/agents-introduction) instead.
 
@@ -225,4 +226,139 @@ api:
               payload:
                 category:
                   _step: classify.object.category
+```
+
+### Decide
+
+Makes typed decisions about a piece of state: pick one of a set of options, judge a statement true or false, or place something on an ordered scale. Every answer comes back in the shape you declared, with a confidence, so a routine can branch on it — and send a low-confidence answer to a person instead.
+
+The build knows every option, so a routine branch that compares an answer with a name that is not one of its options — `_eq: [{ _step: triage.team.choice }, bil-ling]` — fails the build rather than silently never matching. A `_step` reference to a question the step does not ask, or to a field its answer does not have, fails the build the same way.
+
+`Decide` has two backends behind the same interface:
+
+- `evaluation` — an evaluation model, such as TypeSafe's Jev (`typesafe-ai/jev`) on the [AI Gateway](/AIGateway). It returns a probability for every option in one pass, in under a second, and bills input tokens only. The default, and only available, on the `AIGateway` connection.
+- `structured-output` — any language model, asked for the answers as schema-checked structured output. Available on every AI connection, and the default on `Anthropic`, `OpenAI` and `Google`. Its confidence is the model's own estimate, not a calibrated probability.
+
+Keep the state to what the questions need: an evaluation model reads the state literally, and accuracy drops as it grows. A `Decide` is never a security boundary — text in the state can argue for its own answer.
+
+#### Properties
+
+- `model: string`: **Required** - Model id to decide with, e.g. `typesafe-ai/jev`. Pin a version wherever a confidence threshold is tuned — a `latest` alias changes answers on release.
+- `state: string | object | array`: **Required** - What the questions are about.
+- `questions: object`: **Required** - Named questions, answered together against the state. Each question id becomes a key of the response (`usage` is reserved). A question is one of:
+  - `{ choice: string, options: object }` - Pick exactly one option. `options` maps option names (2 to 255) to what each one means (`null` for no description).
+  - `{ yesno: string, criteria?: { yes: string, no: string } }` - Judge a statement true or false. `criteria` optionally says what counts as yes and as no.
+  - `{ score: string, levels: string[] }` - Place the state on 2 to 10 ordered levels, lowest first.
+- `backend: enum`: `evaluation` or `structured-output`. Defaults to `evaluation` on `AIGateway` and `structured-output` elsewhere.
+- `maxRetries: number`: Maximum number of retries. Defaults to 2.
+- `providerOptions: object`: Provider-specific options, keyed by provider (e.g. `gateway: { zeroDataRetention: true }`).
+
+#### Response
+
+One key per question, plus `usage`:
+
+```yaml
+<choice question>:
+  choice: string # The chosen option.
+  confidence: number # 0 to 1.
+  probabilities: object # Probability per option (evaluation backend), else null.
+<yesno question>:
+  answer: boolean # true when the statement holds.
+  probability: number # Probability that it holds.
+  confidence: number # Probability of the given answer.
+<score question>:
+  level: string # The most likely level.
+  index: number # Its position, from 0.
+  score: number # Fractional position on the scale (evaluation backend).
+  confidence: number # 0 to 1.
+  probabilities: object # Probability per level (evaluation backend), else null.
+usage: object # Token usage ({ inputTokens, outputTokens, totalTokens }).
+```
+
+#### Examples
+
+###### Route a support ticket, and queue uncertain ones for a person:
+
+```yaml
+api:
+  - id: triage-ticket
+    type: Api
+    routine:
+      - id: triage
+        type: Decide
+        connectionId: gateway
+        properties:
+          model: typesafe-ai/jev
+          state:
+            subject:
+              _payload: subject
+            body:
+              _payload: body
+          questions:
+            team:
+              choice: Which team handles this ticket
+              options:
+                billing: Invoices, charges and refunds
+                tech: Outages and bugs
+                sales: Plans and quotes
+            down:
+              yesno: The customer says the service is down
+          providerOptions:
+            gateway:
+              zeroDataRetention: true
+      - ':if':
+          _lt:
+            - _step: triage.team.confidence
+            - 0.7
+        ':then':
+          - id: queue_review
+            type: MongoDBInsertOne
+            connectionId: review_queue
+            properties:
+              doc:
+                subject:
+                  _payload: subject
+                suggested_team:
+                  _step: triage.team.choice
+          - ':return':
+              status: review
+      - ':if':
+          _eq:
+            - _step: triage.team.choice
+            - billing
+        ':then':
+          - id: open_billing_case
+            type: CallApi
+            properties:
+              endpointId: open-billing-case
+      - ':return':
+          team:
+            _step: triage.team.choice
+          urgent:
+            _step: triage.down.answer
+```
+
+###### The same decision with any language model:
+
+```yaml
+requests:
+  - id: rate_review
+    type: Decide
+    connectionId: claude
+    payload:
+      review:
+        _state: review_text
+    properties:
+      model: claude-haiku-4-5
+      state:
+        _payload: review
+      questions:
+        sentiment:
+          score: How positive is this review
+          levels:
+            - Very negative
+            - Negative
+            - Neutral
+            - Positive
+            - Very positive
 ```
