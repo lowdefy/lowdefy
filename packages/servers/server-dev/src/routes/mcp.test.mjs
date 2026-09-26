@@ -128,6 +128,22 @@ test('mcpHandler tells a revoked grant to reconnect and choose an organization',
   expect(mockCreateMcpServer).not.toHaveBeenCalled();
 });
 
+test('mcpHandler gives a token without membership the same challenge as an invalid token', async () => {
+  contextOverrides.mcpAuth = {
+    clientId: 'client_1',
+    organizationId: 'org_1',
+    tokenStatus: 'invalid',
+    parseableJwt: true,
+    noMembership: true,
+  };
+  const res = await createApp().request('/api/mcp', { method: 'POST' });
+  expect(res.status).toEqual(401);
+  expect(res.headers.get('WWW-Authenticate')).toEqual(
+    'Bearer resource_metadata="https://app.test.com/.well-known/oauth-protected-resource/api/mcp"'
+  );
+  expect(mockCreateMcpServer).not.toHaveBeenCalled();
+});
+
 test('mcpHandler challenges an anonymous request when the surface has no public tool', async () => {
   mockReadConfigFile.mockResolvedValue({ configured: true, hasPublicTool: false, endpoints: [] });
   contextOverrides.mcpAuth = { tokenStatus: 'none', parseableJwt: true };
