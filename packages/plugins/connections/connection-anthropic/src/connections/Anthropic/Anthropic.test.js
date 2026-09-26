@@ -124,6 +124,7 @@ test('baseURL is not a string', async () => {
 test('All requests are present', async () => {
   const { default: Anthropic } = await import('./Anthropic.js');
 
+  expect(Anthropic.requests.Decide).toBeDefined();
   expect(Anthropic.requests.GenerateObject).toBeDefined();
   expect(Anthropic.requests.GenerateText).toBeDefined();
 });

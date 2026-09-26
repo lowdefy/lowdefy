@@ -124,6 +124,7 @@ test('baseURL is not a string', async () => {
 test('All requests are present', async () => {
   const { default: OpenAI } = await import('./OpenAI.js');
 
+  expect(OpenAI.requests.Decide).toBeDefined();
   expect(OpenAI.requests.GenerateObject).toBeDefined();
   expect(OpenAI.requests.GenerateText).toBeDefined();
 });

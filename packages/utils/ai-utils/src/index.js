@@ -14,7 +14,13 @@
   limitations under the License.
 */
 
+export { default as createDecide } from './createDecide.js';
 export { default as createGenerateObject } from './createGenerateObject.js';
+export {
+  ANSWER_FIELDS as DECIDE_ANSWER_FIELDS,
+  answerValues as decideAnswerValues,
+  questionKind as decideQuestionKind,
+} from './decideQuestions.js';
 export { default as createGenerateText } from './createGenerateText.js';
 export { default as handleAgentChat } from './handleAgentChat.js';
 export { default as handleAgentGenerate } from './handleAgentGenerate.js';
