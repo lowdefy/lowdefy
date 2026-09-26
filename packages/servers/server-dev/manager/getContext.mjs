@@ -74,6 +74,7 @@ async function getContext() {
     // JIT build state
     pageRegistry: null,
     buildContext: null,
+    lastBuildFailed: false,
   };
 
   context.packageManagerCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
@@ -84,7 +85,14 @@ async function getContext() {
   // Wrap lowdefyBuild to capture and store the shallow build result
   const buildFn = lowdefyBuild(context);
   context.lowdefyBuild = async () => {
-    const result = await buildFn();
+    let result;
+    try {
+      result = await buildFn();
+    } catch (error) {
+      context.lastBuildFailed = true;
+      throw error;
+    }
+    context.lastBuildFailed = false;
     if (result) {
       context.pageRegistry = result.pageRegistry;
       context.buildContext = result.context;

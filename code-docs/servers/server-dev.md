@@ -306,13 +306,23 @@ The manager wraps `lowdefyBuild` to capture and store the result on the manager 
 ```javascript
 // In getContext.mjs
 context.lowdefyBuild = async () => {
-  const result = await buildFn();
+  let result;
+  try {
+    result = await buildFn();
+  } catch (error) {
+    context.lastBuildFailed = true;
+    throw error;
+  }
+  context.lastBuildFailed = false;
   if (result) {
     context.pageRegistry = result.pageRegistry;
     context.buildContext = result.context;
   }
 };
 ```
+
+`lastBuildFailed` tells the config watcher that `skeletonSourceFiles.json` belongs to an
+older, successful build (see the build watcher below).
 
 ### JIT Page Build Flow
 
@@ -381,7 +391,13 @@ When a file changes, the watcher classifies it using the `skeletonSourceFiles.js
 | `lowdefy.yaml` changed             | Full skeleton rebuild                                            |
 | A `module.lowdefy.yaml` changed    | Full skeleton rebuild                                            |
 | File in `skeletonSourceFiles`      | Full skeleton rebuild                                            |
+| The last config build failed       | Full skeleton rebuild                                            |
 | File not in `skeletonSourceFiles`  | Page-only change: write `invalidatePages` signal, reload clients |
+
+A failed build publishes nothing, so `skeletonSourceFiles.json` is still the last successful
+build's list and misses any file only the failed build read (a new endpoint file whose error
+is being fixed). While the last build failed, every change rebuilds, so fixing the error
+clears the build status.
 
 The `skeletonSourceFiles` set is derived from `~r` markers on non-page components during the shallow build. It includes every config file that contributes to non-page build artifacts (connections, API endpoints, auth, menus, etc.), traced through the refMap parent chain. This replaces the previous path-based heuristic (`!f.startsWith('pages/')`) which had false negatives for API files referenced from `pages/` and false positives for page templates outside `pages/`.
 
