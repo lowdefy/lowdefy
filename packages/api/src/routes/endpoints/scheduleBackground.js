@@ -31,6 +31,12 @@ function scheduleBackground(context, { event, endpointId }, fn) {
       const result = await fn();
       logger.info({ event: `${event}_done`, endpointId, status: result?.status });
     } catch (err) {
+      // A UserError (a payload refused by its payloadSchema) is the caller's
+      // mistake, not a fault: warn level, as on every other call path.
+      if (err.name === 'UserError') {
+        logger.warn({ event: `${event}_failed`, endpointId, err }, err.message);
+        return;
+      }
       logger.error({ event: `${event}_failed`, endpointId, err }, err.message);
     }
   })();

@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, UserError } from '@lowdefy/errors';
 import { operatorsServer } from '@lowdefy/operators-js';
 import { serializer } from '@lowdefy/helpers';
 
@@ -58,6 +58,47 @@ test('scheduleBackground logs completion and failure, never rejects', async () =
     expect.objectContaining({ event: 'bg_failed', endpointId: 'ep' }),
     'boom'
   );
+});
+
+test('scheduleBackground logs a UserError at warn level, not error', async () => {
+  const context = { logger };
+  await scheduleBackground(context, { event: 'bg', endpointId: 'ep' }, async () => {
+    throw new UserError('Bad payload.');
+  });
+  expect(logger.warn).toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'bg_failed', endpointId: 'ep' }),
+    'Bad payload.'
+  );
+  expect(logger.error).not.toHaveBeenCalled();
+});
+
+test('acceptDetachedEndpoint logs a payload refused by the payloadSchema at warn level, not error', async () => {
+  const readConfigFile = jest.fn((path) => {
+    if (path === 'api/typed_child.json') {
+      return {
+        endpointId: 'typed_child',
+        type: 'Api',
+        auth: { public: false },
+        payloadSchema: { type: 'object', properties: { count: { type: 'number' } } },
+        routine: { ':return': 'ran' },
+      };
+    }
+    return null;
+  });
+  const waitUntil = jest.fn();
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  context.waitUntil = waitUntil;
+  acceptDetachedEndpoint(context, {
+    endpointId: 'typed_child',
+    payload: serializer.serialize({ count: 'three' }),
+    principal: { user: serializer.serialize(null), system: true },
+  });
+  await waitUntil.mock.calls[0][0];
+  expect(logger.warn).toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'detached_run_failed', endpointId: 'typed_child' }),
+    'Payload for endpoint "typed_child" does not match its payloadSchema at /count: must be number.'
+  );
+  expect(logger.error).not.toHaveBeenCalled();
 });
 
 test('scheduleBackground hands the promise to context.waitUntil when the server injects it', async () => {
@@ -755,4 +796,39 @@ test('detached rehydrates the carried principal - roles are present on context.u
   expect(result.success).toBe(true);
   expect(result.response).toEqual({ roles: ['admin'] });
   expect(context.user).toEqual({ id: 'user_1', roles: ['admin'], organizationId: 'org_1' });
+});
+
+test('detached run refuses a payload that violates the target payloadSchema before its routine runs', async () => {
+  const readConfigFile = jest.fn((path) => {
+    if (path === 'api/typed_child.json') {
+      return {
+        endpointId: 'typed_child',
+        type: 'Api',
+        auth: { public: false },
+        payloadSchema: {
+          type: 'object',
+          properties: { count: { type: 'number' } },
+          required: ['count'],
+        },
+        routine: { ':return': { _payload: 'count' } },
+      };
+    }
+    return null;
+  });
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  const principal = { user: serializer.serialize(null), system: true };
+  await expect(
+    runDetachedEndpoint(context, {
+      endpointId: 'typed_child',
+      payload: serializer.serialize({ count: 'three' }),
+      principal,
+    })
+  ).rejects.toThrow(UserError);
+  const result = await runDetachedEndpoint(context, {
+    endpointId: 'typed_child',
+    payload: serializer.serialize({ count: 3 }),
+    principal,
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toBe(3);
 });
