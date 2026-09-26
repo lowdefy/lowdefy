@@ -38,7 +38,7 @@ async function handleAgentGenerate({ connection, properties, context }) {
     result = await agentInstance.generate({
       prompt,
       ...timeoutConfig,
-      onStepFinish: (stepResult) => usageAccumulator.add(stepResult),
+      onStepEnd: (stepResult) => usageAccumulator.add(stepResult),
     });
   } finally {
     await Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {})));

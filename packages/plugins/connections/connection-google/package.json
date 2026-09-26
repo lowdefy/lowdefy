@@ -45,7 +45,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@ai-sdk/google": "3.0.70",
+    "@ai-sdk/google": "4.0.82",
     "@lowdefy/ai-utils": "6.0.0"
   },
   "devDependencies": {

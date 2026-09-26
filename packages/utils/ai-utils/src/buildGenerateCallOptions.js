@@ -17,7 +17,6 @@
 import { type } from '@lowdefy/helpers';
 
 const callSettings = [
-  'system',
   'maxOutputTokens',
   'temperature',
   'topP',
@@ -43,6 +42,16 @@ function buildGenerateCallOptions({ request }) {
   }
   if (!type.isNone(request.messages)) {
     options.messages = request.messages;
+    // ai v7 rejects system messages inside `messages` unless opted in (a
+    // guard against injected system turns). These messages are written in
+    // the app's own config, so a system turn there is the author's intent.
+    if (request.messages.some((message) => message?.role === 'system')) {
+      options.allowSystemInMessages = true;
+    }
+  }
+  // `system` is the request's public property; ai v7 calls it `instructions`.
+  if (!type.isNone(request.system)) {
+    options.instructions = request.system;
   }
   callSettings.forEach((setting) => {
     if (!type.isNone(request[setting])) {

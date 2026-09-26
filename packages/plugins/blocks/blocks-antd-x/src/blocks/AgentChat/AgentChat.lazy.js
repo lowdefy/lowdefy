@@ -139,7 +139,7 @@ function AgentChat({
     // compose with the swap unchanged.
     id: effectiveConversationId,
     transport,
-    experimental_throttle: 50,
+    throttle: 50,
     sendAutomaticallyWhen: (args) =>
       lastAssistantMessageIsCompleteWithToolCalls(args) ||
       lastAssistantMessageIsCompleteWithApprovalResponses(args),

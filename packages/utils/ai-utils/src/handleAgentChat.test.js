@@ -42,16 +42,17 @@ const mockWriter = {
   write: jest.fn(),
 };
 // The AI SDK delivers the full updated UI message list (input + this assistant
-// message) to the stream-level onFinish. The mocks below invoke onFinish with
-// that shape so tests can assert the onFinish hook payload includes the reply.
+// message) to the stream-level onEnd (ai v7's name for onFinish). The mocks
+// below invoke onEnd with that shape so tests can assert the onFinish hook
+// payload includes the reply.
 const MOCK_ASSISTANT_MESSAGE = {
   id: 'assistant-1',
   role: 'assistant',
   parts: [{ type: 'text', text: 'Hello there' }],
 };
 async function defaultCreateAgentUIStream(opts) {
-  if (opts?.onFinish) {
-    opts.onFinish({ messages: [...(opts.uiMessages ?? []), MOCK_ASSISTANT_MESSAGE] });
+  if (opts?.onEnd) {
+    opts.onEnd({ messages: [...(opts.uiMessages ?? []), MOCK_ASSISTANT_MESSAGE] });
   }
   return createMockReadableStream();
 }
@@ -66,9 +67,10 @@ const mockGenerateId = jest.fn(() => 'generated-id');
 
 let lastAgentConfig = null;
 let lastAgentInstance = null;
+const MOCK_PART_STREAM = { type: 'mock-part-stream' };
 const mockToUIMessageStream = jest.fn().mockImplementation((opts) => {
-  if (opts?.onFinish) {
-    opts.onFinish({ messages: [...(opts?.originalMessages ?? []), MOCK_ASSISTANT_MESSAGE] });
+  if (opts?.onEnd) {
+    opts.onEnd({ messages: [...(opts?.originalMessages ?? []), MOCK_ASSISTANT_MESSAGE] });
   }
   return createMockReadableStream();
 });
@@ -80,9 +82,7 @@ class MockToolLoopAgent {
     lastAgentInstance = this;
   }
 
-  stream = jest.fn().mockResolvedValue({
-    toUIMessageStream: mockToUIMessageStream,
-  });
+  stream = jest.fn().mockResolvedValue({ stream: MOCK_PART_STREAM });
 }
 
 const mockConvertToModelMessages = jest.fn().mockResolvedValue([]);
@@ -107,8 +107,9 @@ jest.unstable_mockModule('ai', () => ({
   pruneMessages: mockPruneMessages,
   tool: mockTool,
   jsonSchema: mockJsonSchema,
-  stepCountIs: mockStepCountIs,
+  isStepCount: mockStepCountIs,
   hasToolCall: mockHasToolCall,
+  toUIMessageStream: mockToUIMessageStream,
   validateUIMessages: mockValidateUIMessages,
 }));
 
@@ -539,8 +540,8 @@ test('hook callbacks are passed to ToolLoopAgent constructor', async () => {
     context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
-  expect(lastAgentConfig.experimental_onToolCallFinish).toEqual(expect.any(Function));
-  expect(lastAgentConfig.experimental_onStart).toBeUndefined();
+  expect(lastAgentConfig.onToolExecutionEnd).toEqual(expect.any(Function));
+  expect(lastAgentConfig.onStart).toBeUndefined();
 });
 
 test('hook callback calls callEndpoint with cleaned event payload', async () => {
@@ -564,7 +565,7 @@ test('hook callback calls callEndpoint with cleaned event payload', async () => 
     context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
-  const onStepFinish = lastAgentConfig.onStepFinish;
+  const onStepFinish = lastAgentConfig.onStepEnd;
   onStepFinish({
     stepType: 'tool-result',
     usage: { totalTokens: 100 },
@@ -601,7 +602,7 @@ test('non-onFinish hook callbacks strip messages from event payload', async () =
     context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
-  const onStepFinish = lastAgentConfig.onStepFinish;
+  const onStepFinish = lastAgentConfig.onStepEnd;
   onStepFinish({
     stepType: 'tool-result',
     messages: [{ role: 'user', content: 'hi' }],
@@ -634,7 +635,7 @@ test('hook callback errors do not propagate', async () => {
     context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
   });
 
-  const onStepFinish = lastAgentConfig.onStepFinish;
+  const onStepFinish = lastAgentConfig.onStepEnd;
   // Should not throw
   expect(() => onStepFinish({ stepType: 'tool-result' })).not.toThrow();
 });
@@ -657,9 +658,9 @@ test('no hooks produces no callbacks on ToolLoopAgent', async () => {
     context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
-  expect(lastAgentConfig.experimental_onStart).toBeUndefined();
-  expect(lastAgentConfig.experimental_onToolCallFinish).toBeUndefined();
-  expect(lastAgentConfig.onStepFinish).toBeUndefined();
+  expect(lastAgentConfig.onStart).toBeUndefined();
+  expect(lastAgentConfig.onToolExecutionEnd).toBeUndefined();
+  expect(lastAgentConfig.onStepEnd).toBeUndefined();
   expect(lastAgentConfig.onFinish).toBeUndefined();
 });
 
@@ -684,7 +685,7 @@ test('empty tools array produces empty tools object', async () => {
   expect(mockTool).not.toHaveBeenCalled();
 });
 
-test('tool with confirm true sets needsApproval', async () => {
+test('tool with confirm true asks for user approval', async () => {
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
@@ -703,10 +704,11 @@ test('tool with confirm true sets needsApproval', async () => {
     },
     context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig },
   });
-  expect(mockTool).toHaveBeenCalledWith(expect.objectContaining({ needsApproval: true }));
+  // ai v7: approval is set on the agent, by tool name.
+  expect(lastAgentConfig.toolApproval).toEqual({ dangerous: 'user-approval' });
 });
 
-test('tool without confirm does not set needsApproval', async () => {
+test('tool without confirm asks for no approval', async () => {
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
   const { default: handleAgentChat } = await import('./handleAgentChat.js');
@@ -725,9 +727,7 @@ test('tool without confirm does not set needsApproval', async () => {
     },
     context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig },
   });
-  expect(mockTool).toHaveBeenCalledWith(
-    expect.not.objectContaining({ needsApproval: expect.anything() })
-  );
+  expect(lastAgentConfig.toolApproval).toEqual({});
 });
 
 test('creates MCP clients from agent mcp config', async () => {
@@ -806,7 +806,7 @@ test('endpoint tools take precedence over MCP tools on name conflict', async () 
   expect(testLogger.warn).toHaveBeenCalledWith(expect.stringContaining('MCP tool "search"'));
 });
 
-test('MCP source with confirm applies needsApproval to all tools', async () => {
+test('MCP source with confirm asks approval for all its tools', async () => {
   mockJsonSchema.mockImplementation((schema) => schema);
   mockTool.mockImplementation((def) => def);
   const mockClient = {
@@ -838,9 +838,10 @@ test('MCP source with confirm applies needsApproval to all tools', async () => {
     },
   });
 
-  expect(lastAgentConfig.tools['mcp-tool-a']).toEqual(
-    expect.objectContaining({ needsApproval: true })
-  );
+  expect(lastAgentConfig.toolApproval).toEqual({
+    'mcp-tool-a': 'user-approval',
+    'mcp-tool-b': 'user-approval',
+  });
 });
 
 test('unreachable MCP server logs warning and continues', async () => {
@@ -1516,7 +1517,7 @@ test('repairToolCall is passed to ToolLoopAgent when enabled', async () => {
     context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
-  expect(lastAgentConfig.experimental_repairToolCall).toEqual(expect.any(Function));
+  expect(lastAgentConfig.repairToolCall).toEqual(expect.any(Function));
 });
 
 test('repairToolCall is not set when not configured', async () => {
@@ -1537,7 +1538,7 @@ test('repairToolCall is not set when not configured', async () => {
     context: { logger: testLogger, callEndpoint: jest.fn(), getEndpointConfig: jest.fn() },
   });
 
-  expect(lastAgentConfig.experimental_repairToolCall).toBeUndefined();
+  expect(lastAgentConfig.repairToolCall).toBeUndefined();
 });
 
 test('onFinish hook payload messages include the generated assistant reply', async () => {
@@ -1624,8 +1625,8 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
 
   // Mock createAgentUIStream to simulate multiple steps completing during execution
   mockCreateAgentUIStream.mockImplementation(async (opts) => {
-    if (opts.onStepFinish) {
-      opts.onStepFinish({
+    if (opts.onStepEnd) {
+      opts.onStepEnd({
         stepNumber: 0,
         text: 'Looking up products...',
         toolCalls: [{ toolCallId: 'tc1', toolName: 'search', input: { q: 'laptop' } }],
@@ -1646,7 +1647,7 @@ test('onFinish hook payload includes aggregated usage from multiple steps', asyn
           outputTokenDetails: { reasoningTokens: 5 },
         },
       });
-      opts.onStepFinish({
+      opts.onStepEnd({
         stepNumber: 1,
         text: 'Here are the results.',
         toolCalls: [],
@@ -1705,9 +1706,9 @@ test('usage accumulator handles missing usage gracefully', async () => {
   const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
 
   mockCreateAgentUIStream.mockImplementation(async (opts) => {
-    if (opts.onStepFinish) {
-      opts.onStepFinish({ usage: undefined });
-      opts.onStepFinish({ usage: { inputTokens: 50 } });
+    if (opts.onStepEnd) {
+      opts.onStepEnd({ usage: undefined });
+      opts.onStepEnd({ usage: { inputTokens: 50 } });
     }
     return createMockReadableStream();
   });
@@ -1979,8 +1980,8 @@ test('onFinish hook payload includes steps with toolCalls and toolResults', asyn
   const mockToolResult = { ...mockToolCall, output: { success: true } };
 
   mockCreateAgentUIStream.mockImplementation(async (opts) => {
-    if (opts.onStepFinish) {
-      opts.onStepFinish({
+    if (opts.onStepEnd) {
+      opts.onStepEnd({
         stepNumber: 0,
         text: 'Setting form fields.',
         toolCalls: [mockToolCall],
@@ -2032,8 +2033,8 @@ test('onFinish hook payload has empty toolResults when no tools called', async (
   const callEndpoint = jest.fn().mockResolvedValue({ success: true, response: {} });
 
   mockCreateAgentUIStream.mockImplementation(async (opts) => {
-    if (opts.onStepFinish) {
-      opts.onStepFinish({
+    if (opts.onStepEnd) {
+      opts.onStepEnd({
         stepNumber: 0,
         text: 'Hello!',
         toolCalls: [],
@@ -2118,12 +2119,14 @@ test('prune config triggers decomposed stream pipeline instead of createAgentUIS
   });
   expect(lastAgentInstance.stream).toHaveBeenCalledWith({
     prompt: mockPruned,
-    onStepFinish: expect.any(Function),
+    onStepEnd: expect.any(Function),
   });
   expect(mockToUIMessageStream).toHaveBeenCalledWith({
+    stream: MOCK_PART_STREAM,
+    tools: lastAgentInstance.tools,
     originalMessages: mockValidated,
     generateMessageId: mockGenerateId,
-    onFinish: expect.any(Function),
+    onEnd: expect.any(Function),
     onError: expect.any(Function),
   });
   expect(mockCreateAgentUIStream).not.toHaveBeenCalled();
@@ -2270,7 +2273,7 @@ test('prune branch passes timeout to agentInstance.stream', async () => {
   expect(lastAgentInstance.stream).toHaveBeenCalledWith({
     prompt: [],
     timeout: 30000,
-    onStepFinish: expect.any(Function),
+    onStepEnd: expect.any(Function),
   });
 });
 

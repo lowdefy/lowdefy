@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ToolLoopAgent, stepCountIs, hasToolCall } from 'ai';
+import { ToolLoopAgent, isStepCount, hasToolCall } from 'ai';
 
 import buildAgentTools from './buildAgentTools.js';
 import buildPrepareStep from './buildPrepareStep.js';
@@ -37,12 +37,14 @@ function cleanHookEvent(event) {
 // onFinish is intentionally excluded — it is handled by the callers (at the stream
 // level in handleAgentChat, after generate in handleAgentGenerate) so that hooks
 // are awaited.
+// The YAML names are Lowdefy's public hook API and stay as they are; ai v7
+// dropped the experimental_ prefixes and renamed tool-call/finish callbacks.
 const hookMapping = {
-  onStart: 'experimental_onStart',
-  onStepStart: 'experimental_onStepStart',
-  onToolCallStart: 'experimental_onToolCallStart',
-  onToolCallFinish: 'experimental_onToolCallFinish',
-  onStepFinish: 'onStepFinish',
+  onStart: 'onStart',
+  onStepStart: 'onStepStart',
+  onToolCallStart: 'onToolExecutionStart',
+  onToolCallFinish: 'onToolExecutionEnd',
+  onStepFinish: 'onStepEnd',
 };
 
 function createHookCallbacks({ callEndpoint, hooks, locale, logger }) {
@@ -69,7 +71,7 @@ function createHookCallbacks({ callEndpoint, hooks, locale, logger }) {
 // path: tools, model, hook callbacks, instructions, stop conditions, and the
 // ToolLoopAgent instance.
 async function createToolLoopAgent({ connection, agent, context, autoApprove = false }) {
-  const { tools, mcpClients } = await buildAgentTools({ agent, context, autoApprove });
+  const { tools, mcpClients, toolApproval } = await buildAgentTools({ agent, context, autoApprove });
 
   const sharedState = context.agentContext?.sharedState;
   const updatePageStateTool = buildUpdatePageStateTool({ sharedState });
@@ -106,7 +108,7 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
   }
 
   // Build stop conditions
-  const stopConditions = [stepCountIs(agent.properties.maxSteps ?? 10)];
+  const stopConditions = [isStepCount(agent.properties.maxSteps ?? 10)];
   const stopOnToolCall = agent.properties.stopOnToolCall;
   if (stopOnToolCall) {
     const toolNames = Array.isArray(stopOnToolCall) ? stopOnToolCall : [stopOnToolCall];
@@ -119,6 +121,7 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
     model,
     instructions,
     tools,
+    toolApproval,
     stopWhen: stopConditions.length === 1 ? stopConditions[0] : stopConditions,
     maxOutputTokens: agent.properties.maxOutputTokens,
     temperature: agent.properties.temperature,
@@ -138,7 +141,7 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
     ...hookCallbacks,
     ...(agent.properties.repairToolCall
       ? {
-          experimental_repairToolCall: async ({ toolCall }) => {
+          repairToolCall: async ({ toolCall }) => {
             return { ...toolCall };
           },
         }
