@@ -295,6 +295,42 @@ test('webhook endpoints: gated on webhook: true, payload is { body, query, heade
   ).rejects.toThrow('does not exist');
 });
 
+test('webhook endpoint response is the :return value exactly, without build markers', async () => {
+  // The route sends a webhook response verbatim to a third party, so a marker key
+  // or an { '~arr': [...] } wrapper breaks a handshake that needs an exact shape.
+  const artifact = serializer.deserializeFromString(
+    JSON.stringify({
+      endpointId: 'handshake_ep',
+      type: 'Api',
+      webhook: true,
+      '~k': 'k1',
+      routine: {
+        ':return': {
+          validationResponse: { _payload: 'body.code', '~k': 'k4' },
+          accepted: { '~arr': ['a'], '~k': 'k5' },
+          '~k': 'k3',
+          '~r': 'r1',
+          '~l': 7,
+        },
+        '~k': 'k2',
+      },
+    })
+  );
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    readConfigFile: jest.fn((path) => (path === 'api/handshake_ep.json' ? artifact : null)),
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'handshake_ep',
+    body: { code: 'c-1' },
+    query: {},
+    headers: {},
+  });
+  expect(result.success).toBe(true);
+  expect(JSON.stringify(result.response)).toBe('{"validationResponse":"c-1","accepted":["a"]}');
+});
+
 // Nested CallApi authorization in system contexts — a routine already running was
 // authorized at its entry point (CRON_SECRET / webhook token), so CallApi steps to
 // protected endpoints must not be re-gated on a (missing) user session.

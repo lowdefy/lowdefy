@@ -324,6 +324,38 @@ test('runEndpoint returns a :throw as data with status error', async () => {
   expect(result.error.message).toBe('Payment provider down.');
 });
 
+test('runEndpoint returns the routine error of a failed endpoint, which has no response', async () => {
+  // callEndpoint's result for a failed routine: the wire error with the full error
+  // beside it as devError, and response undefined.
+  const endpointError = {
+    '~e': { name: 'ServiceError', message: 'Something went wrong.', configKey: 'k9' },
+    devError: {
+      '~e': {
+        name: 'ServiceError',
+        message: 'MongoDB: MongoDB rejected the MongoDBFind on collection "docs" (code 27).',
+        source: 'api/search.yaml:40',
+        configKey: 'k9',
+      },
+    },
+  };
+  mockCallEndpoint.mockResolvedValue({
+    error: endpointError,
+    response: undefined,
+    status: 'error',
+    success: false,
+  });
+
+  const result = await runEndpoint({ endpointId: 'search', honoContext });
+
+  expect(result).toEqual({
+    refused: false,
+    error: endpointError,
+    response: undefined,
+    status: 'error',
+    success: false,
+  });
+});
+
 test('runEndpoint returns faults that escape callEndpoint as an error object', async () => {
   const fault = new ConfigError('API Endpoint "internal_only" does not exist.', {
     configKey: 'k1',
