@@ -19,6 +19,7 @@ export default {
   icons: ['AiOutlineMenuUnfold', 'AiOutlineMenuFold'],
   valueType: null,
   slots: {
+    drawerHeader: 'Content above the menu in the drawer.',
     drawerContent: 'Additional content below the menu in the drawer.',
     drawerFooter: 'Footer content in the drawer.',
   },

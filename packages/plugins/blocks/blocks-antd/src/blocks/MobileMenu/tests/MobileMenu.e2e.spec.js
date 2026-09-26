@@ -295,6 +295,21 @@ test.describe('MobileMenu Block', () => {
   // DRAWER CONTENT AND FOOTER SLOT TESTS
   // ============================================
 
+  test('renders drawerHeader above menu in drawer', async ({ page }) => {
+    const button = getMobileMenuButton(page, 'mm_with_slots');
+    await button.click();
+
+    const drawer = getDrawer(page);
+    await expect(drawer).toBeVisible();
+
+    const drawerHeader = getBlock(page, 'mm_drawer_header_text');
+    await expect(drawerHeader).toContainText('Drawer Header Above Menu');
+
+    const headerBox = await drawerHeader.boundingBox();
+    const menuBox = await getDrawerMenu(page).boundingBox();
+    expect(headerBox.y + headerBox.height).toBeLessThanOrEqual(menuBox.y);
+  });
+
   test('renders drawerContent below menu in drawer', async ({ page }) => {
     const button = getMobileMenuButton(page, 'mm_with_slots');
     await button.click();
