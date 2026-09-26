@@ -15,12 +15,13 @@
 */
 
 import getBuildStatus from '../../../lib/docs/getBuildStatus.js';
-import waitForBuild from '../../../lib/docs/waitForBuild.js';
+import getBuildStatusAfterEdits from '../../../lib/docs/getBuildStatusAfterEdits.js';
 
-// ?wait=true answers once the dev server has processed the latest edits.
+// ?wait=true answers once the dev server has processed the latest edits and
+// built the pages they touched.
 async function docsBuildStatusHandler(c) {
   if (c.req.query('wait') === 'true') {
-    return c.json({ ...(await waitForBuild()), ...getBuildStatus() });
+    return c.json(await getBuildStatusAfterEdits());
   }
   return c.json(getBuildStatus());
 }

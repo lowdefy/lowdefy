@@ -244,8 +244,15 @@ test('getBuildStatus returns the build artifact plus reported client and server 
   expect(result.build.status).toEqual('ok');
   expect(result.clientErrors.length).toEqual(50);
   expect(result.serverErrors).toEqual([
-    { name: 'RequestError', message: 'Bad filter.', source: 'pages/a.yaml:3' },
+    {
+      name: 'RequestError',
+      message: 'Bad filter.',
+      source: 'pages/a.yaml:3',
+      buildId: '2026-01-01T00:00:00.000Z',
+    },
   ]);
+  expect(result.earlierErrors).toBeUndefined();
+  expect(result.pages.unbuilt).toEqual(expect.any(Number));
 });
 
 test('getBuildStatus reports unknown status when buildStatus.json is missing', () => {
@@ -472,17 +479,56 @@ test('runRequest returns a structured error instead of throwing when callRequest
   expect(result.error).toEqual({ name: 'Error', message: 'boom' });
 });
 
-test('runRequest truncates responses larger than the size cap', async () => {
+test('runRequest writes a response larger than the inline limit to a file', async () => {
+  const rows = Array.from({ length: 500 }, (_, index) => ({ _id: index, title: 'x'.repeat(100) }));
   mockCallRequest.mockResolvedValueOnce({
     id: 'req-read',
     success: true,
     type: 'ReadOnlyRequest',
-    response: 'x'.repeat(200_000),
+    response: rows,
   });
   const result = await runRequest({ pageId: 'home', requestId: 'req-read', honoContext: {} });
-  expect(result.truncated).toBe(true);
-  expect(result.note).toContain('truncated');
-  expect(result.response.length).toEqual(100_000);
+  expect(result.response).toBeUndefined();
+  expect(result.responseItems).toEqual(500);
+  expect(path.dirname(result.responseFile)).toEqual(
+    path.join(fs.realpathSync(fixtureDir), '.lowdefy', 'responses')
+  );
+  expect(path.basename(result.responseFile).startsWith('home.req-read-')).toBe(true);
+  expect(JSON.parse(fs.readFileSync(result.responseFile, 'utf8'))).toEqual(rows);
+});
+
+test('runRequest builds the page before it reads the request', async () => {
+  mockBuildPageIfNeeded.mockClear();
+  mockCallRequest.mockClear();
+  await runRequest({ pageId: 'home', requestId: 'req-read', honoContext: {} });
+  expect(mockBuildPageIfNeeded).toHaveBeenCalledWith(expect.objectContaining({ pageId: 'home' }));
+  expect(mockBuildPageIfNeeded.mock.invocationCallOrder[0]).toBeLessThan(
+    mockCallRequest.mock.invocationCallOrder[0]
+  );
+});
+
+test('runRequest refuses with the build errors when the page fails to build', async () => {
+  const error = new Error('Page "home" build failed with 1 error(s).');
+  error.buildErrors = [
+    {
+      name: 'ConfigError',
+      message: 'Block type "Buton" was used but is not defined.',
+      source: 'pages/home.yaml:4',
+    },
+  ];
+  mockBuildPageIfNeeded.mockRejectedValueOnce(error);
+  mockCallRequest.mockClear();
+  const result = await runRequest({ pageId: 'home', requestId: 'req-read', honoContext: {} });
+  expect(result.refused).toBe(true);
+  expect(result.reason).toContain('fails to build');
+  expect(result.buildErrors).toEqual([
+    {
+      type: 'ConfigError',
+      message: 'Block type "Buton" was used but is not defined.',
+      source: 'pages/home.yaml:4',
+    },
+  ]);
+  expect(mockCallRequest).not.toHaveBeenCalled();
 });
 
 test('getAppMap includes built page detail and a note for unbuilt pages', () => {

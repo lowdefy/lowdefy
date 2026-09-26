@@ -14,13 +14,18 @@
   limitations under the License.
 */
 
+import path from 'node:path';
+
 import { callRequest } from '@lowdefy/api';
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
+import buildPageIfNeeded from '../server/jitPageBuilder.js';
+import fitResponse from './fitResponse.js';
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
+import mapPageBuildErrors from './mapPageBuildErrors.js';
 import readBuildArtifact from './readBuildArtifact.js';
-import truncateResponse from './truncateResponse.js';
+import reviewPage, { createModifiedAt } from './reviewPage.js';
 
 function getRequestType({ pageId, requestId }) {
   // The request's `type` is stripped from build/pages/<pageId>.json by the
@@ -41,7 +46,14 @@ function getRequestType({ pageId, requestId }) {
 // are refused unless the app opts in via lowdefy.yaml's
 // cli.agentTools.allowWriteRequests. Never throws — errors and refusals are
 // returned as data so an agent can reason about them.
-async function runRequest({ pageId, requestId, payload = {}, user, honoContext }) {
+async function runRequest({
+  pageId,
+  requestId,
+  payload = {},
+  user,
+  saveResponse = false,
+  honoContext,
+}) {
   if (type.isUndefined(pageId) || !type.isString(pageId)) {
     throw new ConfigError(
       `run_request requires a "pageId" string. Received ${JSON.stringify(pageId)}.`
@@ -61,25 +73,33 @@ async function runRequest({ pageId, requestId, payload = {}, user, honoContext }
     );
   }
 
-  let requestType = getRequestType({ pageId, requestId });
-  if (type.isNone(requestType)) {
-    // In dev, page content (including per-request artifacts) is built JIT on
-    // first page request — trigger the same build GET /api/page/* runs so a
-    // freshly added request is found without the page ever being opened.
-    try {
-      const { default: buildPageIfNeeded } = await import('../server/jitPageBuilder.js');
-      const path = await import('node:path');
-      await buildPageIfNeeded({
-        pageId,
-        buildDirectory: path.join(process.cwd(), 'build'),
-        configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),
-      });
-      requestType = getRequestType({ pageId, requestId });
-    } catch {
-      // JIT build failure surfaces through lowdefy_build_status — fall
-      // through to the not-found refusal below.
-    }
+  if (!type.isBoolean(saveResponse)) {
+    throw new ConfigError(
+      `run_request "saveResponse" must be a boolean. Received ${JSON.stringify(saveResponse)}.`
+    );
   }
+
+  // Page content, including the per-request artifacts, is built JIT, and a
+  // page edit only marks pages for rebuilding: the previous build's artifacts
+  // stay on disk until something requests the page. Run the build the page
+  // route runs (a no-op while the page is current) so the request that runs is
+  // the one in the config now.
+  const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
+  try {
+    await buildPageIfNeeded({
+      pageId,
+      buildDirectory: path.join(process.cwd(), 'build'),
+      configDirectory,
+    });
+  } catch (error) {
+    return {
+      refused: true,
+      reason: `Page "${pageId}" fails to build, so its requests cannot run until the errors are fixed.`,
+      buildErrors: mapPageBuildErrors(error),
+    };
+  }
+
+  const requestType = getRequestType({ pageId, requestId });
   if (type.isNone(requestType)) {
     return {
       refused: true,
@@ -114,6 +134,7 @@ async function runRequest({ pageId, requestId, payload = {}, user, honoContext }
   const context = await createLowdefyContext({ c: honoContext, user });
   context.logger.info({ event: 'agent_run_request', pageId, requestId, user });
 
+  let ran;
   try {
     const result = await callRequest(context, {
       blockId: undefined,
@@ -121,9 +142,12 @@ async function runRequest({ pageId, requestId, payload = {}, user, honoContext }
       payload,
       requestId,
     });
-    return { refused: false, ...truncateResponse(result) };
+    ran = {
+      refused: false,
+      ...fitResponse({ result, name: `${pageId}.${requestId}`, saveResponse }),
+    };
   } catch (error) {
-    return {
+    ran = {
       refused: false,
       error: {
         name: error.name,
@@ -131,6 +155,16 @@ async function runRequest({ pageId, requestId, payload = {}, user, honoContext }
       },
     };
   }
+  const review = reviewPage({
+    pageId,
+    entry: readBuildArtifact({ name: 'pageRegistry.json' })?.[pageId],
+    modifiedAt: createModifiedAt(),
+    configDirectory,
+  });
+  if (review === 'edited') {
+    ran.staleConfig = `Page "${pageId}" changed on disk after its last build, but the dev server has not rebuilt it yet, so this ran the previous config. Call lowdefy_build_status with wait: true, then run the request again.`;
+  }
+  return ran;
 }
 
 export default runRequest;
