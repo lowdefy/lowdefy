@@ -126,6 +126,15 @@ test('adding a page to the pages list rebuilds the config', async () => {
   expect(invalidated()).toBe(false);
 });
 
+test('after a failed config build, an edit to a file not in skeletonSourceFiles rebuilds the config', async () => {
+  context.lastBuildFailed = true;
+  watcher = await lowdefyBuildWatcher(context);
+  write(path.join(localModuleRoot, 'api', 'check-name.yaml'), 'id: check-name\n');
+
+  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1);
+  expect(invalidated()).toBe(false);
+});
+
 test('a skeleton file in a local module outside the config directory rebuilds the config', async () => {
   watcher = await lowdefyBuildWatcher(context);
   fs.appendFileSync(path.join(localModuleRoot, 'menus.yaml'), '- id: other\n');
