@@ -27,6 +27,7 @@ import {
 } from '@lowdefy/build/dev';
 
 import createLogger from './log/createLogger.js';
+import pageBuildRecords from './pageBuildRecords.js';
 import PageCache from './pageCache.mjs';
 import readBuildApiArtifacts from './readBuildApiArtifacts.mjs';
 
@@ -114,6 +115,7 @@ function getBuildContext(buildDirectory, configDirectory) {
     logger: jitLogger,
     stage: 'dev',
   });
+  pageBuildRecords.trackFileReads({ context: cachedBuildContext, configDirectory });
 
   // Restore refMap, keyMap, jsMap, connectionIds, and websocketIds from skeleton build
   Object.assign(cachedBuildContext.refMap, refMap);
@@ -194,10 +196,11 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
   const startTime = Date.now();
   try {
     const context = getBuildContext(buildDirectory, configDirectory);
-    const result = await buildPageJit({
+    const result = await pageBuildRecords.record({
       pageId,
-      pageRegistry: registry,
       context,
+      configDirectory,
+      build: () => buildPageJit({ pageId, pageRegistry: registry, context }),
     });
     if (result && result.installing) {
       jitLogger.info(

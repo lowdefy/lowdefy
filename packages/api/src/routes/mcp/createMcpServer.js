@@ -16,7 +16,7 @@
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
-import { serializer, type } from '@lowdefy/helpers';
+import { cleanBuildArtifact, serializer, type } from '@lowdefy/helpers';
 
 import formatErrorForAgent from '../../response/formatErrorForAgent.js';
 import callEndpoint from '../endpoints/callEndpoint.js';
@@ -40,15 +40,6 @@ function scopeCovers({ grantedScopes, endpointScope }) {
     return grantedScopes.includes('mcp:write');
   }
   return grantedScopes.includes('mcp:read') || grantedScopes.includes('mcp:write');
-}
-
-// Twin of cleanBuildArtifact in packages/utils/ai-utils/src/buildAgentTools.js -
-// duplicated here rather than shared, since pulling in @lowdefy/ai-utils would
-// add the ai SDK and MCP client deps to api just for this. Strips build-artifact
-// serializer markers (~k, ~r, ~l) and unwraps { '~arr': [...] } back to a plain
-// array, so payloadSchema reaches MCP clients as plain JSON Schema.
-function cleanBuildArtifact(obj) {
-  return JSON.parse(JSON.stringify(serializer.deserialize(obj)));
 }
 
 // A stateless per-request MCP server exposing the configured api endpoints
@@ -97,7 +88,11 @@ async function createMcpServer({ context }) {
   if (!type.isNone(mcpConfig.icons)) {
     serverInfo.icons = cleanBuildArtifact(mcpConfig.icons);
   }
-  const server = new Server(serverInfo, { capabilities: { tools: {} } });
+  const serverOptions = { capabilities: { tools: {} } };
+  if (!type.isNone(mcpConfig.instructions)) {
+    serverOptions.instructions = mcpConfig.instructions;
+  }
+  const server = new Server(serverInfo, serverOptions);
 
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     const tools = [];

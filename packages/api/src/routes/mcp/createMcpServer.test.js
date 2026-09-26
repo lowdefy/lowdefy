@@ -202,6 +202,32 @@ test('createMcpServer omits branding keys that are not configured', async () => 
   expect(client.getServerVersion()).toEqual({ name: 'test-tools', version: '1.0.0' });
 });
 
+async function initializeResult(context) {
+  const server = await createMcpServer({ context });
+  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+  const send = jest.spyOn(serverTransport, 'send');
+  const client = new Client({ name: 'test-client', version: '1.0.0' });
+  await Promise.all([client.connect(clientTransport), server.connect(serverTransport)]);
+  const [response] = send.mock.calls.find(([message]) => message.result?.protocolVersion);
+  return response.result;
+}
+
+test('createMcpServer sends configured instructions in the initialize result', async () => {
+  const context = createContext({
+    configs: {
+      'mcp.json': { ...mcpJson, instructions: 'Look up a customer before updating them.' },
+    },
+  });
+  const result = await initializeResult(context);
+  expect(result.instructions).toEqual('Look up a customer before updating them.');
+});
+
+test('createMcpServer sends no instructions key when instructions are not configured', async () => {
+  const context = createContext();
+  const result = await initializeResult(context);
+  expect(Object.keys(result)).not.toContain('instructions');
+});
+
 test('createMcpServer returns null when mcp is not configured', async () => {
   const context = createContext({
     configs: { 'mcp.json': { configured: false, endpoints: [] } },
@@ -560,4 +586,26 @@ test('tools/call keeps the raw message in dev for an error thrown outside the en
   const result = await client.callTool({ name: 'health', arguments: {} });
   expect(result.isError).toBe(true);
   expect(result.content[0].text).toBe('ENOENT: no such file api/health.json');
+});
+
+test('tools/call answers a payload that violates the payloadSchema with isError and one warning', async () => {
+  const context = createContext({
+    user: { id: 'user_1', roles: ['support'] },
+    mcpAuth: memberMcpAuth(['mcp:read']),
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({
+    name: 'get-customer',
+    arguments: { customerId: 42 },
+  });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toEqual(
+    'Payload for endpoint "get-customer" does not match its payloadSchema at /customerId: must be string.'
+  );
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(logger.warn).toHaveBeenCalledWith(
+    'Refused MCP tool call: get-customer - Payload for endpoint "get-customer" does not match its payloadSchema at /customerId: must be string.'
+  );
 });

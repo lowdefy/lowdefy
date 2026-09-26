@@ -24,6 +24,8 @@ test('validateJourneySteps accepts every step of the grammar', () => {
       { fill: { blockId: 'age', value: 0 } },
       { select: { blockId: 'country', value: 'Chile' } },
       { press: 'Mod+k' },
+      { back: true },
+      { back: null },
       { wait: { ms: 100 } },
       { wait: { request: 'get_rows' } },
       { wait: { state: 'rows' } },
@@ -35,6 +37,8 @@ test('validateJourneySteps accepts every step of the grammar', () => {
       { expect: { visible: 'modal' } },
       { expect: { text: { blockId: 'title', contains: 'Hello' } } },
       { expect: { url: { contains: '/detail' } } },
+      { expect: { title: { equals: 'Tasks' } } },
+      { expect: { title: { contains: 'Task' } } },
     ],
   });
   expect(result).toEqual({});
@@ -71,14 +75,14 @@ test('validateJourneySteps rejects steps that are not an array', () => {
 test('validateJourneySteps names the index and key of an unknown step', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a' }, { hover: 'b' }] });
   expect(result.error).toEqual(
-    'Step 1: Unknown journey step "hover". Steps are: click, fill, select, press, wait, screenshot, expect.'
+    'Step 1: Unknown journey step "hover". Steps are: click, fill, select, press, back, wait, screenshot, expect.'
   );
 });
 
 test('validateJourneySteps rejects a step with more than one key', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a', fill: { blockId: 'b' } }] });
   expect(result.error).toEqual(
-    'Step 0: Unknown journey step "click, fill". Steps are: click, fill, select, press, wait, screenshot, expect.'
+    'Step 0: Unknown journey step "click, fill". Steps are: click, fill, select, press, back, wait, screenshot, expect.'
   );
 });
 
@@ -150,11 +154,11 @@ test.each([
   [{ screenshot: 3 }, /Step "screenshot" takes an optional name string. Received 3/],
   [
     { expect: 'visible' },
-    /Step "expect" requires one of \{ state \}, \{ visible \}, \{ text \}, \{ url \}/,
+    /Step "expect" requires one of \{ state \}, \{ visible \}, \{ text \}, \{ url \}, \{ title \}/,
   ],
   [
     { expect: { count: 1 } },
-    /Step "expect" requires exactly one of "state", "visible", "text", "url"/,
+    /Step "expect" requires exactly one of "state", "visible", "text", "url", "title"/,
   ],
   [{ expect: { state: { path: 'a' } } }, /Step "expect.state" requires \{ path, equals \}/],
   [{ expect: { state: 'a' } }, /Step "expect.state" requires \{ path, equals \}/],
@@ -176,6 +180,15 @@ test.each([
     /Step "expect.text" has unknown key "equals". Keys are: blockId, text, row, column, nth, contains/,
   ],
   [{ expect: { url: '/detail' } }, /Step "expect.url" requires \{ contains \}/],
+  [{ back: 'home' }, /Step "back" takes no value: write \{ "back": true \}. Received "home"/],
+  [{ back: false }, /Step "back" takes no value/],
+  [{ expect: { title: 'Tasks' } }, /Step "expect.title" requires \{ equals \} or \{ contains \}/],
+  [
+    { expect: { title: { equals: 'Tasks', contains: 'T' } } },
+    /Step "expect.title" requires \{ equals \} or \{ contains \}/,
+  ],
+  [{ expect: { title: { equals: 7 } } }, /Step "expect.title" requires .* Received \{"equals":7\}/],
+  [{ expect: { title: { is: 'Tasks' } } }, /Step "expect.title" requires/],
 ])('validateJourneySteps rejects malformed step %j', (step, expected) => {
   const result = validateJourneySteps({ steps: [step] });
   expect(result.error).toMatch(/^Step 0: /);

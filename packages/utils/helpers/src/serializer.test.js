@@ -803,6 +803,22 @@ test('serializeToString with skipMarkers outputs plain array', () => {
   expect(res).toEqual('{"items":[1,2,3]}');
 });
 
+test('serialize with skipMarkers leaves hidden markers out and does not wrap arrays', () => {
+  const lines = [{ sku: 'a' }];
+  Object.defineProperty(lines, '~k', { value: 'k3', enumerable: false });
+  const order = { id: 'o_1', lines, placed: new Date(0) };
+  Object.defineProperty(order, '~k', { value: 'k2', enumerable: false });
+  Object.defineProperty(order, '~r', { value: 'r1', enumerable: false });
+  Object.defineProperty(order, '~l', { value: 4, enumerable: false });
+  const res = serializer.serialize({ order }, { skipMarkers: true });
+  expect(res).toEqual({ order: { id: 'o_1', lines: [{ sku: 'a' }], placed: { '~d': 0 } } });
+});
+
+test('serialize with skipMarkers still wraps errors', () => {
+  const res = serializer.serialize({ err: new Error('boom') }, { skipMarkers: true });
+  expect(res.err['~e'].message).toEqual('boom');
+});
+
 test('serialize and deserialize round-trip preserves ~l on nested arrays', () => {
   const inner = [{ id: 'a' }];
   Object.defineProperty(inner, '~l', {

@@ -89,6 +89,54 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
     });
   }
 
+  // The user's own organization under open + auto. The slugs derive from the
+  // user id - org-<userId>, then org-<userId>-2, -3 and on - so a racing login
+  // collides on the unique slug index instead of minting a second org. A slug
+  // whose org has no members is the half-finished mint the reuse exists for:
+  // the mint is not atomic, and an earlier attempt may have written the org
+  // row and failed before the member row, so the retry reuses it rather than
+  // tripping the index and locking the user out of login. A slug whose org
+  // has members belongs to the people who run it now (the user may have
+  // handed it over and later been removed), so it is never reused: the user
+  // moves on to the next slug and gets a fresh organization.
+  async function findOrMintOwnOrganization({ adapter, orgAdapter, session, user }) {
+    for (let suffix = 1; ; suffix += 1) {
+      const slug = suffix === 1 ? `org-${session.userId}` : `org-${session.userId}-${suffix}`;
+      let organization = await adapter.findOne({
+        model: 'organization',
+        where: [{ field: 'slug', value: slug }],
+      });
+      if (!organization) {
+        try {
+          return await orgAdapter.createOrganization({
+            organization: {
+              name: user?.name || user?.email || session.userId,
+              slug,
+              createdAt: new Date(),
+            },
+          });
+        } catch (error) {
+          // A racing login minted the org between the find and the create -
+          // the unique slug index rejected this write, so read the winner's row.
+          organization = await adapter.findOne({
+            model: 'organization',
+            where: [{ field: 'slug', value: slug }],
+          });
+          if (!organization) {
+            throw error;
+          }
+        }
+      }
+      const memberCount = await adapter.count({
+        model: 'member',
+        where: [{ field: 'organizationId', value: organization.id }],
+      });
+      if (memberCount === 0) {
+        return organization;
+      }
+    }
+  }
+
   async function applyTenantPolicy({ auth, adapter, internalAdapter, session }) {
     const members = await adapter.findMany({
       model: 'member',
@@ -135,35 +183,7 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
     // headers makes the endpoint demand a session that does not exist yet.
     const orgPlugin = auth.options.plugins.find((plugin) => plugin.id === 'organization');
     const orgAdapter = getOrgAdapter(await auth.$context, orgPlugin.options);
-    const slug = `org-${session.userId}`;
-    // The mint is not atomic - an earlier attempt may have written the org
-    // row and failed before the member row. Reuse the orphan so the retry
-    // does not trip the unique slug index and lock the user out of login.
-    let organization = await adapter.findOne({
-      model: 'organization',
-      where: [{ field: 'slug', value: slug }],
-    });
-    if (!organization) {
-      try {
-        organization = await orgAdapter.createOrganization({
-          organization: {
-            name: user?.name || user?.email || session.userId,
-            slug,
-            createdAt: new Date(),
-          },
-        });
-      } catch (error) {
-        // A racing login minted the org between the find and the create -
-        // the unique slug index rejected this write, so read the winner's row.
-        organization = await adapter.findOne({
-          model: 'organization',
-          where: [{ field: 'slug', value: slug }],
-        });
-        if (!organization) {
-          throw error;
-        }
-      }
-    }
+    const organization = await findOrMintOwnOrganization({ adapter, orgAdapter, session, user });
     await orgAdapter.createMember({
       userId: session.userId,
       organizationId: organization.id,

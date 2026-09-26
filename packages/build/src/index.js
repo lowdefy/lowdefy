@@ -16,9 +16,10 @@
   limitations under the License.
 */
 
-import { BuildError, ConfigError, LowdefyInternalError } from '@lowdefy/errors';
+import { BuildError, ConfigError } from '@lowdefy/errors';
 
 import createContext from './createContext.js';
+import createInternalBuildError from './utils/createInternalBuildError.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
 import logCollectedErrors from './utils/logCollectedErrors.js';
 import makeId from './utils/makeId.js';
@@ -246,17 +247,7 @@ async function build(options) {
     if (err instanceof BuildError) {
       throw err;
     }
-    // Unexpected internal error - preserve Lowdefy errors as-is, wrap plain errors
-    const lowdefyErr = err.isLowdefyError
-      ? err
-      : new LowdefyInternalError(err.message, { cause: err });
-    if (context) {
-      context.handleError(lowdefyErr);
-    } else {
-      const logger = options.logger ?? console;
-      logger.error(lowdefyErr);
-    }
-    throw new BuildError('Build failed due to internal error. See above for details.');
+    throw createInternalBuildError({ error: err, context, logger: options.logger ?? console });
   }
 }
 

@@ -61,6 +61,18 @@ slots:
         type: Span
         properties:
           content: Header Content Area
+  siderHeader:
+    blocks:
+      - id: sider_header_content
+        type: Span
+        properties:
+          content: Sider Header Content
+  siderHeaderClosed:
+    blocks:
+      - id: sider_header_closed_content
+        type: Span
+        properties:
+          content: Sider Header Closed Content
   siderOpen:
     blocks:
       - id: sider_open_content
@@ -79,6 +91,12 @@ slots:
         type: Span
         properties:
           content: Mobile Extra
+  mobileDrawerHeader:
+    blocks:
+      - id: mobile_drawer_header
+        type: Span
+        properties:
+          content: Mobile Drawer Header
   mobileDrawerContent:
     blocks:
       - id: mobile_drawer_content

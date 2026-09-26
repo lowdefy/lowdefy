@@ -14,6 +14,10 @@
   limitations under the License.
 */
 
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
 import { jest } from '@jest/globals';
 
 // runEndpoint reads lowdefy.yaml, builds a Lowdefy context and calls into
@@ -40,7 +44,7 @@ jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
 }));
 
 const { ConfigError } = await import('@lowdefy/errors');
-const { MAX_RESPONSE_CHARS } = await import('./truncateResponse.js');
+const { MAX_INLINE_RESPONSE_CHARS } = await import('./fitResponse.js');
 const { default: runEndpoint } = await import('./runEndpoint.js');
 
 const honoContext = { req: { path: '/lowdefy-docs/run-endpoint' } };
@@ -324,6 +328,38 @@ test('runEndpoint returns a :throw as data with status error', async () => {
   expect(result.error.message).toBe('Payment provider down.');
 });
 
+test('runEndpoint returns the routine error of a failed endpoint, which has no response', async () => {
+  // callEndpoint's result for a failed routine: the wire error with the full error
+  // beside it as devError, and response undefined.
+  const endpointError = {
+    '~e': { name: 'ServiceError', message: 'Something went wrong.', configKey: 'k9' },
+    devError: {
+      '~e': {
+        name: 'ServiceError',
+        message: 'MongoDB: MongoDB rejected the MongoDBFind on collection "docs" (code 27).',
+        source: 'api/search.yaml:40',
+        configKey: 'k9',
+      },
+    },
+  };
+  mockCallEndpoint.mockResolvedValue({
+    error: endpointError,
+    response: undefined,
+    status: 'error',
+    success: false,
+  });
+
+  const result = await runEndpoint({ endpointId: 'search', honoContext });
+
+  expect(result).toEqual({
+    refused: false,
+    error: endpointError,
+    response: undefined,
+    status: 'error',
+    success: false,
+  });
+});
+
 test('runEndpoint returns faults that escape callEndpoint as an error object', async () => {
   const fault = new ConfigError('API Endpoint "internal_only" does not exist.', {
     configKey: 'k1',
@@ -344,19 +380,35 @@ test('runEndpoint returns faults that escape callEndpoint as an error object', a
   });
 });
 
-test('runEndpoint truncates an oversized response', async () => {
+test('runEndpoint writes an oversized response to a file', async () => {
+  const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-run-endpoint-'));
+  process.env.LOWDEFY_DIRECTORY_CONFIG = configDirectory;
+  const response = 'x'.repeat(MAX_INLINE_RESPONSE_CHARS + 10);
   mockCallEndpoint.mockResolvedValue({
     error: null,
-    response: 'x'.repeat(MAX_RESPONSE_CHARS + 10),
+    response,
     status: 'success',
     success: true,
   });
 
-  const result = await runEndpoint({ endpointId: 'create_order', honoContext });
+  try {
+    const result = await runEndpoint({ endpointId: 'create_order', honoContext });
 
-  expect(result.refused).toBe(false);
-  expect(result.truncated).toBe(true);
-  expect(result.response).toHaveLength(MAX_RESPONSE_CHARS);
-  expect(result.note).toMatch(/Response truncated to/);
-  expect(result.status).toBe('success');
+    expect(result.refused).toBe(false);
+    expect(result.response).toBeUndefined();
+    expect(result.responseChars).toBe(MAX_INLINE_RESPONSE_CHARS + 12);
+    expect(path.dirname(result.responseFile)).toBe(
+      path.join(configDirectory, '.lowdefy', 'responses')
+    );
+    expect(JSON.parse(fs.readFileSync(result.responseFile, 'utf8'))).toBe(response);
+    expect(result.status).toBe('success');
+  } finally {
+    delete process.env.LOWDEFY_DIRECTORY_CONFIG;
+  }
+});
+
+test('runEndpoint throws a ConfigError when saveResponse is not a boolean', async () => {
+  await expect(
+    runEndpoint({ endpointId: 'create_order', saveResponse: 'yes', honoContext })
+  ).rejects.toThrow(ConfigError);
 });

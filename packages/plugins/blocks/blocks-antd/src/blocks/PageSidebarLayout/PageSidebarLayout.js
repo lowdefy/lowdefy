@@ -95,6 +95,7 @@ const PageSidebarLayout = ({
       writeSiderState({ properties, open });
     });
   });
+  const siderHeader = openSiderState ? content.siderHeader : content.siderHeaderClosed;
   const layout = (
     <Layout
       blockId={blockId}
@@ -178,6 +179,14 @@ const PageSidebarLayout = ({
                           },
                         }}
                       />
+                    )}
+                    {siderHeader && (
+                      <div
+                        className={classNames.siderHeader}
+                        style={mergeObjects([{ flex: '0 0 auto' }, styles.siderHeader])}
+                      >
+                        {siderHeader()}
+                      </div>
                     )}
                     {/* Menu scrolls here between the fixed toggle and footer so the last item
                         can't hide behind the footer; min-height:0 lets it shrink to scroll. */}
@@ -355,6 +364,7 @@ const PageSidebarLayout = ({
                                   properties.menuMd,
                                 ])}
                                 content={{
+                                  drawerHeader: content.mobileDrawerHeader,
                                   drawerContent: content.mobileDrawerContent,
                                   drawerFooter: content.mobileDrawerFooter,
                                 }}

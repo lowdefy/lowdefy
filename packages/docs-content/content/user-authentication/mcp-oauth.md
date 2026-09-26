@@ -47,6 +47,7 @@ mcp:
   version: '1.0.0'
   title: Acme
   websiteUrl: https://acme.example.com
+  instructions: Search for a customer before creating an invoice for them.
   icons:
     - src: https://acme.example.com/icon-512.png
       mimeType: image/png
@@ -59,6 +60,8 @@ mcp:
 ```
 
 `name`, `version`, `title`, `websiteUrl` and `icons` are the server branding a client shows the user in the `initialize` handshake. Each `endpoints` entry needs an `id` and a `scope`.
+
+`instructions` is an optional string sent in the `initialize` result. Clients such as Claude Code place it in the model's system prompt, so use it for a short note on how the tools fit together or when to reach for them. Clients may truncate long instructions, so keep it to a few lines. When it is not set, the server sends no instructions.
 
 **`scope` is a closed vocabulary — `mcp:read` or `mcp:write`, and nothing else.** Apps cannot mint their own scopes. `mcp:write` implies `mcp:read` at runtime, so a token granted write can call both. Tag a tool that only reads with `mcp:read` and one that mutates with `mcp:write`; the consent screen then lets a user grant an assistant read-only access to the whole surface if they choose.
 
@@ -129,7 +132,7 @@ The caller is then resolved as a member of that organization, exactly as a sessi
         else: ui
 ```
 
-A token that cannot be verified (for example, an opaque token minted because the client omitted the RFC 8707 `resource` parameter), or one whose grant has been revoked, gets a `401` with a `WWW-Authenticate` challenge that tells the client what to do — reconnect and re-run the authorization, including the organization choice.
+A token that cannot be verified (for example, an opaque token minted because the client omitted the RFC 8707 `resource` parameter), one whose grant has been revoked, or one whose user is no longer a member of the token's organization (removed, left, or the user deleted), gets a `401` with a `WWW-Authenticate` challenge that tells the client what to do — reconnect and re-run the authorization, including the organization choice.
 
 ## Building the consent and picker pages
 

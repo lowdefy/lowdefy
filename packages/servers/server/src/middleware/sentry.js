@@ -16,8 +16,7 @@
 
 import * as Sentry from '@sentry/node';
 
-// Replaces @sentry/nextjs route auto-instrumentation: every request becomes
-// an http.server transaction. Handler errors never propagate through
+// Every request becomes an http.server transaction. Handler errors never propagate through
 // middleware in Hono — captureException happens in the app error handler.
 function sentryMiddleware() {
   return async function sentry(c, next) {

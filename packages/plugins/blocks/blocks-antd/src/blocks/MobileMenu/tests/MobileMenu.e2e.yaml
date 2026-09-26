@@ -300,6 +300,12 @@ blocks:
           properties:
             title: Item 1
     slots:
+      drawerHeader:
+        blocks:
+          - id: mm_drawer_header_text
+            type: Span
+            properties:
+              content: Drawer Header Above Menu
       drawerContent:
         blocks:
           - id: mm_drawer_content_text

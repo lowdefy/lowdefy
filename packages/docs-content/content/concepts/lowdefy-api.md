@@ -33,6 +33,7 @@ The schema for a Lowdefy API is:
 - `type: string`: **Required** - Either `Api` (callable from client pages and other endpoints) or `InternalApi` (callable only from other endpoints, not from client pages).
 - `routine: array/object`: **Required** - The routine to execute. **Operators are evaluated**.
 - `async: boolean`: **Optional** - Respond with `{ accepted: true }` immediately and run the routine in the background. See [Async Endpoints](#async-endpoints).
+- `payloadSchema: object`: **Optional** - A JSON Schema every payload sent to this endpoint must match. Declaring it turns validation on for every caller, and it is required before an endpoint can be exposed as an MCP or agent tool. See [Payload Schema](#payload-schema).
 - `webhook: boolean`: **Optional** - Make this endpoint a third-party webhook receiver — it takes the HTTP request raw instead of the CallAPI envelope. See [Webhook Endpoints](#webhook-endpoints).
 - `schedules: array | object`: **Optional** - Cron schedules that run the routine on a timer. See [Scheduled Endpoints](#scheduled-endpoints-cron). Each item is an object with a `cron` expression and an optional `payload` object. With `config.environments` declared, `schedules` can instead be an object keyed by environment name (plus an optional `default`), see [Schedules per environment](#schedules-per-environment).
 
@@ -168,6 +169,55 @@ api:
 A plain array still works and applies to every environment. Environment names in `schedules` must be declared in `config.environments` (`default` is reserved). A build with no current environment runs the `default` schedules. This shape also works through module vars: a module endpoint with `schedules: { _module.var: tick_schedule }` needs no change — the app sets `tick_schedule: { default: [...], staging: [...] }` in its module vars (a module var that pins `type: array` for its schedule var must drop the pin to accept the keyed form).
 
 The production deployment needs one secret per forwarded environment: the environment variable `LOWDEFY_SECRET_<secret name>` (for example `LOWDEFY_SECRET_STAGING_CRON_SECRET`) set to that environment's `CRON_SECRET`. Forwarded requests carry the firing cron in `x-vercel-cron-schedule` and the environment name in `x-lowdefy-cron-environment`; the target resolves its own schedules from those. See [Deployment environments](/deployment-environments) for the other environment settings and [Deploy with Vercel](/vercel) for the routes involved.
+
+## Payload Schema
+
+An endpoint can declare a `payloadSchema` — a [JSON Schema](https://json-schema.org/) describing the payload it accepts. A declared schema is a contract, not documentation: **every** payload is validated against it before the routine starts, whatever the caller is — the [`CallAPI`](/CallAPI) action from a page, an MCP `tools/call`, an [agent tool call](/ai-agent-docs), a nested `CallApi` from another endpoint (including a [detached](#detached-endpoint-calls) one), or a scheduled run's `schedule.payload`. Every `_payload` read in the routine can then rely on the shape.
+
+```yaml
+api:
+  - id: create_order
+    type: Api
+    payloadSchema:
+      type: object
+      required: [sku, quantity]
+      properties:
+        sku: { type: string }
+        quantity: { type: number, minimum: 1 }
+    routine:
+      - id: insert
+        type: MongoDBInsertOne
+        connectionId: orders
+        properties:
+          doc:
+            sku:
+              _payload: sku
+            quantity:
+              _payload: quantity
+```
+
+A payload that does not match is refused before the routine runs, with a message naming the endpoint, the failing location and the reason, for example:
+
+```
+Payload for endpoint "create_order" does not match its payloadSchema at /quantity: must be number.
+```
+
+The reason says what would be accepted where the schema says it: an `enum` miss lists the allowed values, an `additionalProperties: false` miss names the unexpected properties, and a `pattern` miss quotes the pattern. When a location fails both its `type` and one of `enum`, `pattern`, `required` or `additionalProperties`, that keyword is reported. Further failures are counted at the end, e.g. `(and 2 more)`.
+
+```
+Payload for endpoint "create_order" does not match its payloadSchema at /status: must be equal to one of the allowed values (draft, placed).
+Payload for endpoint "create_order" does not match its payloadSchema at (root): must NOT have additional properties (colour).
+```
+
+- A REST call (`POST /api/endpoints/<endpointId>`) answers `400` with `{ name: 'UserError', message }`.
+- An MCP tool call answers `isError: true` carrying the same message, so the model can correct the arguments and retry.
+- An agent tool call surfaces the message to the model as a tool error.
+- A detached `CallApi` target fails its run with the message in the logs, as any other detached failure.
+- A scheduled run fails with the message — an authored `schedule.payload` that breaks its own endpoint's contract is a bug, not something to skip silently.
+
+A refused payload is the caller's mistake, not a fault: it is logged at warn level only and never reported as a server error.
+
+There is **no opt-out** — no `validate: false`, no strict mode, no per-caller exemption. If you do not want a payload validated, do not declare a `payloadSchema`. The schema cannot be combined with `webhook`: a webhook routine receives the raw `{ body, query, headers }` transport envelope, never the `payloadSchema` shape, so declaring both is a build error. Validate a webhook body with a [`ValidateSchema` step](#validating-data-as-a-routine-step) instead.
 
 ## Async Endpoints
 

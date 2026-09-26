@@ -43,13 +43,19 @@ export default {
     header: 'Additional header content.',
     mobileDrawerContent: 'Content in the mobile menu drawer.',
     mobileDrawerFooter: 'Footer in the mobile menu drawer.',
+    mobileDrawerHeader: 'Content above the menu in the mobile menu drawer.',
     mobileExtra: 'Extra content in the mobile header bar.',
     siderClosed: 'Content shown in the sider when collapsed.',
+    siderHeader:
+      'Content above the sider menu when expanded. It stays in place while the menu scrolls.',
+    siderHeaderClosed: 'Content above the sider menu when collapsed.',
     siderOpen: 'Content shown in the sider when expanded.',
   },
   cssKeys: {
     element: 'The PageSidebarLayout element.',
     sider: 'The PageSidebarLayout sider.',
+    siderHeader:
+      'The box above the sider menu that holds the siderHeader or siderHeaderClosed slot.',
     menu: 'The PageSidebarLayout menu.',
     mobileHeader: 'The PageSidebarLayout mobile header.',
     mobileMenu: 'The PageSidebarLayout mobile menu.',

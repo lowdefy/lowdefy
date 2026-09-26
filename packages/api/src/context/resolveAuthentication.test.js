@@ -1087,7 +1087,7 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     });
   });
 
-  test('a valid token whose member row is revoked degrades to the anonymous caller with tokenStatus valid', async () => {
+  test('a valid token whose subject is no longer a member resolves invalid and marks no membership', async () => {
     const { auth } = mockMcpAuth({ user: { id: 'user_1' }, member: null });
     const context = mcpContext();
     const token = await mintToken();
@@ -1098,13 +1098,13 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     expect(context.mcpAuth).toEqual({
       clientId: 'client_1',
       organizationId: 'org_1',
-      tokenStatus: 'valid',
+      tokenStatus: 'invalid',
       parseableJwt: true,
-      grantedScopes: ['mcp:read'],
+      noMembership: true,
     });
   });
 
-  test('a valid token whose subject has no user row degrades to the anonymous caller', async () => {
+  test('a valid token whose subject has no user row resolves invalid and marks no membership', async () => {
     const { auth } = mockMcpAuth({
       user: null,
       member: { id: 'member_1', role: 'member' },
@@ -1115,7 +1115,13 @@ describe('MCP bearer branch and the general-path audience invariant', () => {
     await resolveAuthentication(context, { auth, headers: bearerHeaders(token), mcp: true });
 
     expect(context.user).toBe(null);
-    expect(context.mcpAuth.tokenStatus).toBe('valid');
+    expect(context.mcpAuth).toEqual({
+      clientId: 'client_1',
+      organizationId: 'org_1',
+      tokenStatus: 'invalid',
+      parseableJwt: true,
+      noMembership: true,
+    });
   });
 
   test('a valid token for an org that is not the pinned org degrades to the anonymous caller', async () => {

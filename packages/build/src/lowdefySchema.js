@@ -43,6 +43,28 @@ const apiScheduleSchema = {
   },
 };
 
+// Runtime operators in class are evaluated by the client before the value
+// reaches the block, so an operator is accepted wherever a string is. Inlined
+// rather than $ref'd so the class errorMessages replace the branch errors.
+const operator = {
+  type: 'object',
+  minProperties: 1,
+  maxProperties: 1,
+  patternProperties: { '^_': {} },
+  additionalProperties: false,
+};
+
+const classValue = {
+  anyOf: [
+    { type: 'string' },
+    operator,
+    {
+      type: 'array',
+      items: { anyOf: [{ type: 'string' }, operator] },
+    },
+  ],
+};
+
 export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   $id: 'http://lowdefy.com/appSchema.json',
@@ -1715,6 +1737,14 @@ export default {
             type: 'MCP "websiteUrl" should be a string.',
           },
         },
+        // Sent as the initialize result's instructions; clients such as
+        // Claude Code place it in the model's system prompt.
+        instructions: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "instructions" should be a string.',
+          },
+        },
         icons: {
           type: 'array',
           items: {
@@ -1811,7 +1841,7 @@ export default {
       errorMessage: {
         type: 'App "mcp" should be an object.',
         additionalProperties:
-          'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons" and "endpoints".',
+          'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons", "instructions" and "endpoints".',
       },
     },
     block: {
@@ -1882,19 +1912,18 @@ export default {
           },
         },
         class: {
-          oneOf: [
-            { type: 'string' },
-            { type: 'array', items: { type: 'string' } },
+          anyOf: [
+            classValue,
             {
               type: 'object',
               additionalProperties: {
-                oneOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
+                ...classValue,
+                errorMessage:
+                  'Block "class" slot values should be a string, array of strings, or operator.',
               },
             },
           ],
-          errorMessage: {
-            type: 'Block "class" should be a string, array of strings, or object.',
-          },
+          errorMessage: 'Block "class" should be a string, array of strings, object, or operator.',
         },
         visible: {},
         loading: {},
@@ -2162,6 +2191,8 @@ export default {
         },
         payloadSchema: {
           type: 'object',
+          description:
+            'JSON Schema the request payload must satisfy. A payload that does not match is rejected before the routine runs, on every caller. Cannot be combined with "webhook", which receives the raw { body, query, headers } envelope instead.',
           errorMessage: {
             type: 'Api endpoint "payloadSchema" should be an object.',
           },

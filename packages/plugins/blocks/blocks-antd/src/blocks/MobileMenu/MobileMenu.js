@@ -110,6 +110,7 @@ const MobileMenu = ({
             : undefined,
           content: () => (
             <>
+              {content?.drawerHeader && content.drawerHeader()}
               <Menu
                 basePath={basePath}
                 components={components}

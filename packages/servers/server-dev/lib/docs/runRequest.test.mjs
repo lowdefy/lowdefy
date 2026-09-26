@@ -37,6 +37,15 @@ jest.unstable_mockModule('./isWriteRequestsAllowed.js', () => ({
 jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
   default: mockCreateLowdefyContext,
 }));
+const mockBuildPageIfNeeded = jest.fn();
+jest.unstable_mockModule('../server/jitPageBuilder.js', () => ({
+  default: mockBuildPageIfNeeded,
+}));
+const mockReviewPage = jest.fn();
+jest.unstable_mockModule('./reviewPage.js', () => ({
+  default: mockReviewPage,
+  createModifiedAt: () => () => null,
+}));
 
 const { ConfigError } = await import('@lowdefy/errors');
 const { default: runRequest } = await import('./runRequest.js');
@@ -49,11 +58,16 @@ beforeEach(() => {
     if (name === 'plugins/requestSchemas.json') {
       return { MongoDBFind: { meta: { checkRead: true, checkWrite: false } } };
     }
+    if (name === 'pageRegistry.json') {
+      return { home: { pageId: 'home', refPath: 'pages/home.yaml' }, other: { pageId: 'other' } };
+    }
     return { type: 'MongoDBFind' };
   });
   mockIsWriteRequestsAllowed.mockResolvedValue(false);
   mockCreateLowdefyContext.mockResolvedValue({ logger: { info: mockLoggerInfo } });
   mockCallRequest.mockResolvedValue({ id: 'requests', response: [{ _id: 1 }] });
+  mockBuildPageIfNeeded.mockResolvedValue(true);
+  mockReviewPage.mockReturnValue('current');
 });
 
 test('runRequest passes a user object to createLowdefyContext', async () => {
@@ -124,4 +138,48 @@ test('runRequest refuses a write request for an impersonated caller too', async 
 
   expect(result.refused).toBe(true);
   expect(mockCreateLowdefyContext).not.toHaveBeenCalled();
+});
+
+test('runRequest notes stale config when the page changed but the dev server has not rebuilt it', async () => {
+  mockReviewPage.mockReturnValue('edited');
+
+  const result = await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });
+
+  expect(result.response).toEqual([{ _id: 1 }]);
+  expect(result.staleConfig).toContain('has not rebuilt it yet');
+});
+
+test('runRequest does not note stale config for a page that is current', async () => {
+  const result = await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });
+
+  expect(result.staleConfig).toBeUndefined();
+});
+
+test('runRequest throws a ConfigError when saveResponse is not a boolean', async () => {
+  await expect(
+    runRequest({ pageId: 'home', requestId: 'get_rows', saveResponse: 1, honoContext })
+  ).rejects.toThrow(ConfigError);
+  expect(mockBuildPageIfNeeded).not.toHaveBeenCalled();
+});
+
+test('runRequest notes stale config on a request that fails', async () => {
+  mockReviewPage.mockReturnValue('edited');
+  mockCallRequest.mockRejectedValue(new Error('connect ECONNREFUSED'));
+
+  const result = await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });
+
+  expect(result.error.message).toBe('connect ECONNREFUSED');
+  expect(result.staleConfig).toContain('ran the previous config');
+});
+
+test('runRequest reviews only the page it ran', async () => {
+  await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });
+
+  expect(mockReviewPage).toHaveBeenCalledTimes(1);
+  expect(mockReviewPage).toHaveBeenCalledWith(
+    expect.objectContaining({
+      pageId: 'home',
+      entry: { pageId: 'home', refPath: 'pages/home.yaml' },
+    })
+  );
 });

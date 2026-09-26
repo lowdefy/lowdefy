@@ -29,10 +29,10 @@ const RECONNECT_CAP_MS = 15 * 1000;
 function createWebSocketClient(lowdefy) {
   const { window } = lowdefy._internal.globals;
 
-  // websocketId → { payload, handlers }
+  // websocketId → { websocketId, payload, handlers, ackTimer, pending }
+  // ackTimer runs while a subscribe frame waits for its ack. pending holds the
+  // subscribe promise's { resolve, reject } until the first ack, then is null.
   const subscriptions = new Map();
-  // websocketId → { resolve, reject, timer } for pending subscribe acks
-  const pendingSubscribes = new Map();
   // requestId → { resolve, reject, timer } for pending publish acks
   const pendingPublishes = new Map();
   // Frames queued while the socket is (re)connecting.
@@ -75,9 +75,13 @@ function createWebSocketClient(lowdefy) {
     }, IDLE_CLOSE_GRACE_MS);
   }
 
+  function isSocketOpen() {
+    return socket !== null && socket.readyState === window.WebSocket.OPEN;
+  }
+
   function send(frame) {
     const message = JSON.stringify(frame);
-    if (socket && socket.readyState === window.WebSocket.OPEN) {
+    if (isSocketOpen()) {
       socket.send(message);
       return;
     }
@@ -86,15 +90,56 @@ function createWebSocketClient(lowdefy) {
   }
 
   function flushQueue() {
-    while (sendQueue.length > 0 && socket && socket.readyState === window.WebSocket.OPEN) {
+    while (sendQueue.length > 0 && isSocketOpen()) {
       socket.send(sendQueue.shift());
     }
   }
 
-  function resubscribeAll() {
-    subscriptions.forEach(({ payload }, websocketId) => {
-      socket.send(JSON.stringify({ type: 'subscribe', websocketId, payload }));
+  function clearAckTimer(subscription) {
+    clearTimeout(subscription.ackTimer);
+    subscription.ackTimer = null;
+  }
+
+  function handleAckTimeout(subscription) {
+    subscription.ackTimer = null;
+    const error = new ServiceError(`Subscribe to "${subscription.websocketId}" timed out.`, {
+      service: 'WebSocket',
     });
+    if (subscription.pending) {
+      subscriptions.delete(subscription.websocketId);
+      subscription.pending.reject(error);
+      return;
+    }
+    subscription.handlers.onError(error.message);
+  }
+
+  // Every path that removes a subscription from the map or answers its
+  // subscribe clears this timer, so a timer that fires always belongs to the
+  // subscription currently in the map.
+  function startAckTimer(subscription) {
+    clearAckTimer(subscription);
+    subscription.ackTimer = setTimeout(() => handleAckTimeout(subscription), ACK_TIMEOUT_MS);
+  }
+
+  function sendSubscribe(subscription) {
+    const { payload, websocketId } = subscription;
+    startAckTimer(subscription);
+    socket.send(JSON.stringify({ type: 'subscribe', websocketId, payload }));
+  }
+
+  // A caller that unsubscribed, or whose subscribe was replaced by a newer one
+  // to the same feed, no longer wants this subscription, so its subscribe
+  // promise settles without an error.
+  function releaseSubscription(subscription) {
+    clearAckTimer(subscription);
+    if (subscription.pending) {
+      subscription.pending.resolve();
+      subscription.pending = null;
+    }
+  }
+
+  function resubscribeAll() {
+    subscriptions.forEach(sendSubscribe);
   }
 
   function handleFrame(frame) {
@@ -104,16 +149,17 @@ function createWebSocketClient(lowdefy) {
       case 'message':
         subscription?.handlers.onMessage(payload);
         return;
-      case 'subscribed': {
-        const pending = pendingSubscribes.get(websocketId);
-        if (pending) {
-          clearTimeout(pending.timer);
-          pendingSubscribes.delete(websocketId);
-          pending.resolve();
+      case 'subscribed':
+        if (!subscription) {
+          return;
         }
-        subscription?.handlers.onConnected();
+        clearAckTimer(subscription);
+        if (subscription.pending) {
+          subscription.pending.resolve();
+          subscription.pending = null;
+        }
+        subscription.handlers.onConnected();
         return;
-      }
       case 'unsubscribed':
         return;
       case 'published': {
@@ -138,15 +184,14 @@ function createWebSocketClient(lowdefy) {
           pending.reject(error);
           return;
         }
-        if (websocketId && pendingSubscribes.has(websocketId)) {
-          const pending = pendingSubscribes.get(websocketId);
-          clearTimeout(pending.timer);
-          pendingSubscribes.delete(websocketId);
-          subscriptions.delete(websocketId);
-          pending.reject(error);
-          return;
-        }
         if (subscription) {
+          // An error frame for a feed whose subscribe waits for an ack answers that subscribe.
+          clearAckTimer(subscription);
+          if (subscription.pending) {
+            subscriptions.delete(websocketId);
+            subscription.pending.reject(error);
+            return;
+          }
           subscription.handlers.onError(error.message);
           return;
         }
@@ -161,8 +206,14 @@ function createWebSocketClient(lowdefy) {
   function handleClose() {
     socket = null;
     openPromise = null;
-    subscriptions.forEach(({ handlers }) => {
-      handlers.onDisconnected();
+    subscriptions.forEach((subscription) => {
+      // A resubscribe lost with the connection is sent again, with a new ack
+      // timer, when the connection reopens. A subscribe whose caller still
+      // waits keeps its timer, so it fails if no connection opens in time.
+      if (!subscription.pending) {
+        clearAckTimer(subscription);
+      }
+      subscription.handlers.onDisconnected();
     });
     if (closedByClient) {
       closedByClient = false;
@@ -223,26 +274,39 @@ function createWebSocketClient(lowdefy) {
 
   function subscribe({ handlers, payload, websocketId }) {
     clearIdleTimer();
-    subscriptions.set(websocketId, { handlers, payload });
+    const previous = subscriptions.get(websocketId);
+    if (previous) {
+      releaseSubscription(previous);
+    }
     return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => {
-        pendingSubscribes.delete(websocketId);
-        subscriptions.delete(websocketId);
-        reject(
-          new ServiceError(`Subscribe to "${websocketId}" timed out.`, { service: 'WebSocket' })
-        );
-      }, ACK_TIMEOUT_MS);
-      pendingSubscribes.set(websocketId, { resolve, reject, timer });
-      send({ type: 'subscribe', websocketId, payload });
+      const subscription = {
+        websocketId,
+        payload,
+        handlers,
+        ackTimer: null,
+        pending: { resolve, reject },
+      };
+      subscriptions.set(websocketId, subscription);
+      if (isSocketOpen()) {
+        sendSubscribe(subscription);
+        return;
+      }
+      // The frame is sent by resubscribeAll when the connection opens, which
+      // restarts the ack timer. Until then the timer bounds the wait for a
+      // connection.
+      startAckTimer(subscription);
+      connect();
     });
   }
 
   function unsubscribe({ websocketId }) {
-    if (!subscriptions.has(websocketId)) {
+    const subscription = subscriptions.get(websocketId);
+    if (!subscription) {
       return;
     }
+    releaseSubscription(subscription);
     subscriptions.delete(websocketId);
-    if (socket && socket.readyState === window.WebSocket.OPEN) {
+    if (isSocketOpen()) {
       socket.send(JSON.stringify({ type: 'unsubscribe', websocketId }));
     }
     scheduleIdleClose();

@@ -55,9 +55,7 @@ test('walks parent chain to collect all contributing paths', () => {
     },
   };
   const result = collectSkeletonSourceFiles({ components, context });
-  expect(result).toEqual(
-    new Set(['steps/validate.yaml', 'api/my-endpoint.yaml', 'lowdefy.yaml'])
-  );
+  expect(result).toEqual(new Set(['steps/validate.yaml', 'api/my-endpoint.yaml', 'lowdefy.yaml']));
 });
 
 test('excludes refs under pages key', () => {
@@ -323,4 +321,56 @@ test('returns empty set when context has no modules key', () => {
   const context = { refMap: {} };
   const result = collectSkeletonSourceFiles({ components, context });
   expect(result.size).toBe(0);
+});
+
+test('collects the file that holds the app pages list, not the page files it references', () => {
+  const home = setRefMarker({ id: 'home' }, 'ref-home');
+  const pages = setRefMarker([home], 'ref-pages-list');
+  const components = { pages };
+  const context = {
+    refMap: {
+      'ref-root': { parent: null, path: 'lowdefy.yaml' },
+      'ref-pages-list': { parent: 'ref-root', path: 'pages.yaml' },
+      'ref-home': { parent: 'ref-pages-list', path: 'pages/home.yaml' },
+    },
+    rootRefDef: { id: 'ref-root' },
+  };
+  const result = collectSkeletonSourceFiles({ components, context });
+  expect(result).toEqual(new Set(['lowdefy.yaml', 'pages.yaml']));
+});
+
+test('a page file whose content is a template ref stays page content', () => {
+  // pages/home.yaml is `_ref: { path: templates/page.yaml, vars }`: the page
+  // object carries the template's ref id, and the page file's own ref has no
+  // marker in the tree.
+  const home = setRefMarker({ id: 'home' }, 'ref-template');
+  const pages = setRefMarker([home], 'ref-pages-list');
+  const components = { pages };
+  const context = {
+    refMap: {
+      'ref-root': { parent: null, path: 'lowdefy.yaml' },
+      'ref-pages-list': { parent: 'ref-root', path: 'pages.yaml' },
+      'ref-home': { parent: 'ref-pages-list', path: 'pages/home.yaml' },
+      'ref-template': { parent: 'ref-home', path: 'templates/page.yaml' },
+    },
+    rootRefDef: { id: 'ref-root' },
+  };
+  const result = collectSkeletonSourceFiles({ components, context });
+  expect(result).toEqual(new Set(['lowdefy.yaml', 'pages.yaml']));
+});
+
+test('collects the file that holds a module pages list', () => {
+  const settings = setRefMarker({ id: 'mod/settings' }, 'pages.0');
+  const modulePages = setRefMarker([settings], 'pages');
+  const components = { pages: [settings] };
+  const context = {
+    modules: { mod: { manifest: { pages: modulePages } } },
+    refMap: {
+      'ref-manifest': { parent: null },
+      pages: { parent: 'ref-manifest', path: '/app/modules/mod/pages.yaml' },
+      'pages.0': { parent: 'pages', path: '/app/modules/mod/pages/settings.yaml' },
+    },
+  };
+  const result = collectSkeletonSourceFiles({ components, context });
+  expect(result).toEqual(new Set(['/app/modules/mod/pages.yaml']));
 });

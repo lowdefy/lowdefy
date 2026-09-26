@@ -113,6 +113,93 @@ Optional desktop header with custom content. The header sits inside the content 
           content area, not above the sider.
 ```
 
+The siderHeader slot sits above the menu and stays in place while a long menu scrolls. siderHeaderClosed takes its place while the sider is collapsed, and mobileDrawerHeader puts content above the menu in the mobile drawer.
+
+Acme Inc
+
+```yaml
+- id: psl_sider_header
+  type: PageSidebarLayout
+  properties:
+    siderStorageKey: psl_sider_header
+    sider:
+      width: 240
+    menu:
+      links:
+        - id: psl_sider_header_general
+          type: MenuLink
+          properties:
+            title: General
+            icon: settings
+        - id: psl_sider_header_members
+          type: MenuLink
+          properties:
+            title: Members
+            icon: users
+        - id: psl_sider_header_billing
+          type: MenuLink
+          properties:
+            title: Billing
+            icon: CreditCard
+  slots:
+    siderHeader:
+      blocks:
+        - id: psl_sider_header_open
+          type: Box
+          style:
+            padding: 8px 16px
+          blocks:
+            - id: psl_sider_header_back
+              type: Button
+              properties:
+                title: Back to app
+                icon: arrow-left
+                type: link
+                size: small
+            - id: psl_sider_header_title
+              type: Title
+              properties:
+                content: Acme Inc
+                level: 5
+    siderHeaderClosed:
+      blocks:
+        - id: psl_sider_header_closed
+          type: Box
+          style:
+            padding: 8px
+            textAlign: center
+          blocks:
+            - id: psl_sider_header_back_icon
+              type: Button
+              properties:
+                hideTitle: true
+                title: Back to app
+                icon: arrow-left
+                type: link
+    mobileDrawerHeader:
+      blocks:
+        - id: psl_sider_header_drawer
+          type: Box
+          style:
+            padding: 0 24px
+          blocks:
+            - id: psl_sider_header_drawer_back
+              type: Button
+              properties:
+                title: Back to app
+                icon: arrow-left
+                type: link
+                size: small
+  blocks:
+    - id: psl_sider_header_content
+      type: Paragraph
+      properties:
+        content: The siderHeader slot sits above the menu and stays in place while a
+          long menu scrolls. siderHeaderClosed takes its place while the sider
+          is collapsed, and mobileDrawerHeader puts content above the menu in
+          the mobile drawer.
+```
+
 Custom logo with style overrides. The full logo (src) shows when the sider is expanded, and the square logo (srcMobile) shows when collapsed.
 
 ```yaml
@@ -451,6 +538,7 @@ Dashboard Overview
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The PageSidebarLayout element. |
 | `/sider` | The PageSidebarLayout sider. |
+| `/siderHeader` | The box above the sider menu that holds the siderHeader or siderHeaderClosed slot. |
 | `/menu` | The PageSidebarLayout menu. |
 | `/mobileHeader` | The PageSidebarLayout mobile header. |
 | `/mobileMenu` | The PageSidebarLayout mobile menu. |
@@ -479,6 +567,9 @@ Dashboard Overview
 | `header` | Additional header content. |
 | `mobileDrawerContent` | Content in the mobile menu drawer. |
 | `mobileDrawerFooter` | Footer in the mobile menu drawer. |
+| `mobileDrawerHeader` | Content above the menu in the mobile menu drawer. |
 | `mobileExtra` | Extra content in the mobile header bar. |
 | `siderClosed` | Content shown in the sider when collapsed. |
+| `siderHeader` | Content above the sider menu when expanded. It stays in place while the menu scrolls. |
+| `siderHeaderClosed` | Content above the sider menu when collapsed. |
 | `siderOpen` | Content shown in the sider when expanded. |

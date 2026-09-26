@@ -66,11 +66,12 @@ function describeNotReady({ label, status }) {
 async function fetchBuildSummary({ url }) {
   try {
     const response = await fetch(`${url}/lowdefy-docs/build-status`);
-    const { build, clientErrors = [], serverErrors = [] } = await response.json();
+    const { build, pages, clientErrors = [], serverErrors = [] } = await response.json();
     return {
       status: build?.status,
       errors: build?.errors?.length ?? 0,
       warnings: build?.warnings?.length ?? 0,
+      failedPages: pages?.failed?.length ?? 0,
       clientErrors: clientErrors.length,
       serverErrors: serverErrors.length,
     };
