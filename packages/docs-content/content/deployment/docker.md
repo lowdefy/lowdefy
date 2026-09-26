@@ -15,7 +15,7 @@ The generated Dockerfile:
 ```text
 # syntax=docker/dockerfile:1
 
-FROM node:22-slim AS builder
+FROM node:24-slim AS builder
 
 WORKDIR /lowdefy
 
@@ -41,7 +41,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
   && npx lowdefy@"$LOWDEFY_VERSION" build \
   && npx lowdefy@"$LOWDEFY_VERSION" docker-output
 
-FROM node:22-slim AS runner
+FROM node:24-slim AS runner
 
 ENV NODE_ENV=production
 ENV PORT=3000
@@ -93,7 +93,7 @@ Key properties of this setup:
 - **Fast rebuilds**: the pnpm store is kept in a BuildKit cache mount, so changing app config only re-downloads dependencies that actually changed.
 - **Small runtime image**: `docker-output` traces the server's real import graph and copies only what the server loads at runtime — a fraction of the installed `node_modules`, since the client-side block packages are already compiled into `dist/client` and never imported by the server.
 - **Non-root**: the server runs as the `node` user built into the official Node.js images.
-- For stronger supply-chain guarantees, pin the base images by digest (`node:22-slim@sha256:...`) and let a bot like Renovate or Dependabot keep the digest updated.
+- For stronger supply-chain guarantees, pin the base images by digest (`node:24-slim@sha256:...`) and let a bot like Renovate or Dependabot keep the digest updated.
 
 ### Health checks
 
@@ -188,7 +188,7 @@ The container inherits the Dockerfile `HEALTHCHECK`, so `docker compose ps` repo
 docker compose up --build
 ```
 
-If you set a container memory limit, Node.js 22+ sizes its heap from the container's cgroup limit automatically. To control it explicitly, set `NODE_OPTIONS=--max-old-space-size=<MiB>` a comfortable margin below the container limit.
+If you set a container memory limit, Node.js 24+ sizes its heap from the container's cgroup limit automatically. To control it explicitly, set `NODE_OPTIONS=--max-old-space-size=<MiB>` a comfortable margin below the container limit.
 
 ### Config files or plugins outside the config directory
 
@@ -199,7 +199,7 @@ Sometimes files outside of the config directory need to be accessed by the Lowde
 ```text
 # syntax=docker/dockerfile:1
 
-FROM node:22-slim AS builder
+FROM node:24-slim AS builder
 
 WORKDIR /lowdefy
 
@@ -217,7 +217,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
   && npx lowdefy@"$LOWDEFY_VERSION" build --config-directory ./app \
   && npx lowdefy@"$LOWDEFY_VERSION" docker-output --config-directory ./app
 
-FROM node:22-slim AS runner
+FROM node:24-slim AS runner
 
 ENV NODE_ENV=production
 ENV PORT=3000

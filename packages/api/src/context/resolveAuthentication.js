@@ -313,13 +313,11 @@ async function resolveMcpCaller(context, { auth, headers }) {
     };
     return;
   }
-  // The scope claim reduced to the closed MCP vocabulary. Recorded before the
-  // member wall on purpose: a caller with a valid token but no live member row
-  // degrades to the anonymous caller, not to an invalid-token challenge.
+  // The scope claim reduced to the closed MCP vocabulary.
   const grantedScopes = (type.isString(payload.scope) ? payload.scope : '')
     .split(' ')
     .filter((scope) => MCP_SCOPES.includes(scope));
-  context.mcpAuth = {
+  const validMcpAuth = {
     clientId,
     organizationId,
     tokenStatus: 'valid',
@@ -335,25 +333,49 @@ async function resolveMcpCaller(context, { auth, headers }) {
       `MCP token for organization "${organizationId}", which is not this app's pinned organization "${registered.slug}" - resolved unauthenticated.`
     );
     context.user = null;
+    context.mcpAuth = validMcpAuth;
     return;
   }
-  // The bearer carries only sub - the caller's user fields are read live, so a
-  // deleted user degrades to the anonymous caller exactly like a revoked member.
+  // A token whose subject is no longer a member of its organization - removed,
+  // left, or the user deleted - resolves invalid, not to the anonymous caller:
+  // the route answers invalid with the sign-in challenge, so the client
+  // re-runs authorization and its organization choice instead of holding a
+  // token that works for nothing.
+  const invalidNoMembership = {
+    clientId,
+    organizationId,
+    tokenStatus: 'invalid',
+    parseableJwt: true,
+    noMembership: true,
+  };
+  // The bearer carries only sub - the caller's user fields are read live.
   const user = await adapter.findOne({
     model: 'user',
     where: [{ field: 'id', value: payload.sub }],
   });
   if (type.isNone(user)) {
     context.logger.debug(
-      `MCP token subject "${payload.sub}" has no user row - resolved unauthenticated.`
+      { event: 'auth_mcp_no_membership', clientId, organizationId },
+      `MCP bearer token rejected: subject "${payload.sub}" has no user row.`
     );
     context.user = null;
+    context.mcpAuth = invalidNoMembership;
     return;
   }
   const member = await resolveMemberCaller(context, { adapter, auth, organizationId, user });
+  if (type.isNone(member)) {
+    context.logger.debug(
+      { event: 'auth_mcp_no_membership', clientId, organizationId },
+      `MCP bearer token rejected: user "${user.id}" is not a member of organization "${organizationId}".`
+    );
+    context.user = null;
+    context.mcpAuth = invalidNoMembership;
+    return;
+  }
+  context.mcpAuth = validMcpAuth;
   // auth_method names the surface the caller arrived on, symmetric with
   // strategy callers - app config reads it to label MCP-authored writes.
-  context.user = type.isNone(member) ? null : { ...member, auth_method: 'mcp' };
+  context.user = { ...member, auth_method: 'mcp' };
 }
 
 async function resolveAuthentication(context, { auth, headers, strategies, mcp }) {

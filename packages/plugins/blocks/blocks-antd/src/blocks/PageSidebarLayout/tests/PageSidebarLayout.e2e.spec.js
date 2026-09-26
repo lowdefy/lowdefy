@@ -127,6 +127,72 @@ test.describe('PageSidebarLayout Block', () => {
   });
 
   // ============================================
+  // SIDER HEADER SLOT TESTS
+  // ============================================
+
+  test('renders siderHeader above the menu when sider is expanded', async ({ page }) => {
+    const siderHeader = getBlock(page, 'sider_header_content');
+    await expect(siderHeader).toBeVisible();
+    await expect(siderHeader).toContainText('Sider Header Content');
+
+    const siderHeaderClosed = getBlock(page, 'sider_header_closed_content');
+    await expect(siderHeaderClosed).not.toBeVisible();
+
+    const headerBox = await siderHeader.boundingBox();
+    const menuBox = await page.locator('#pagesidebarlayout_menu').boundingBox();
+    expect(headerBox.y + headerBox.height).toBeLessThanOrEqual(menuBox.y);
+  });
+
+  test('renders siderHeaderClosed above the menu when sider is collapsed', async ({ page }) => {
+    const toggleBtn = getBlock(page, 'toggle_sider_btn').locator('.ant-btn');
+    await toggleBtn.click();
+
+    const sider = page.locator('.ant-layout-sider');
+    await expect(sider).toHaveClass(/ant-layout-sider-collapsed/);
+
+    const siderHeaderClosed = getBlock(page, 'sider_header_closed_content');
+    await expect(siderHeaderClosed).toBeVisible();
+
+    const siderHeader = getBlock(page, 'sider_header_content');
+    await expect(siderHeader).not.toBeVisible();
+
+    const headerBox = await siderHeaderClosed.boundingBox();
+    const menuBox = await page.locator('#pagesidebarlayout_menu').boundingBox();
+    expect(headerBox.y + headerBox.height).toBeLessThanOrEqual(menuBox.y);
+  });
+
+  test('siderHeader stays in place while a long menu scrolls', async ({ page }) => {
+    await page.setViewportSize({ width: 1200, height: 200 });
+
+    const siderHeader = getBlock(page, 'sider_header_content');
+    await expect(siderHeader).toBeVisible();
+
+    const menuScroller = page.locator('#pagesidebarlayout_menu').locator('xpath=..');
+    await expect(menuScroller).toHaveCSS('overflow-y', 'auto');
+    await expect
+      .poll(() =>
+        menuScroller.evaluate((scroller) => scroller.scrollHeight - scroller.clientHeight)
+      )
+      .toBeGreaterThan(0);
+    // Scroll and measure in one task, so the reading is taken against the
+    // scrolled layout.
+    const result = await menuScroller.evaluate((scroller) => {
+      const header = document.getElementById('bl-sider_header_content');
+      const headerTopBefore = header.getBoundingClientRect().top;
+      const menuTopBefore = scroller.firstElementChild.getBoundingClientRect().top;
+      scroller.scrollTop = scroller.scrollHeight;
+      return {
+        scrollTop: scroller.scrollTop,
+        headerMoved: header.getBoundingClientRect().top - headerTopBefore,
+        menuMoved: scroller.firstElementChild.getBoundingClientRect().top - menuTopBefore,
+      };
+    });
+    expect(result.scrollTop).toBeGreaterThan(0);
+    expect(result.menuMoved).toBeLessThan(0);
+    expect(result.headerMoved).toBe(0);
+  });
+
+  // ============================================
   // THEME TESTS
   // ============================================
 
@@ -292,6 +358,23 @@ test.describe('PageSidebarLayout Block', () => {
 
     const drawerContent = getBlock(page, 'mobile_drawer_content');
     await expect(drawerContent).toContainText('Mobile Drawer Content');
+  });
+
+  test('renders mobileDrawerHeader above the menu in mobile drawer', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 });
+
+    const mobileMenuButton = page.locator('#pagesidebarlayout_mobile_menu_button');
+    await mobileMenuButton.click();
+
+    const drawer = page.locator('.ant-drawer-content-wrapper');
+    await expect(drawer).toBeVisible();
+
+    const drawerHeader = getBlock(page, 'mobile_drawer_header');
+    await expect(drawerHeader).toContainText('Mobile Drawer Header');
+
+    const headerBox = await drawerHeader.boundingBox();
+    const menuBox = await page.locator('.ant-drawer .ant-menu').boundingBox();
+    expect(headerBox.y + headerBox.height).toBeLessThanOrEqual(menuBox.y);
   });
 
   test('renders mobileDrawerFooter in mobile drawer', async ({ page }) => {

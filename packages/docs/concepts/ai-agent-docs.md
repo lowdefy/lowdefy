@@ -111,10 +111,12 @@ Hold **Option** (macOS) or **Alt** (Windows/Linux) and click any element in your
 The dev server rebuilds automatically when config changes, so an agent works in a tight loop:
 
 1. Discover types and schemas, write or edit YAML.
-2. Call `lowdefy_build_status` with `wait: true` (`GET /lowdefy-docs/build-status?wait=true`) — it answers once the dev server has processed your edit, rather than with the build before it. Did the build succeed? Errors come back with the exact source file and location.
-3. Call `lowdefy_get_page_config` to confirm the page builds, and `lowdefy_screenshot_page` to see it rendered.
-4. Runtime errors from the browser (operator errors, block render errors) also appear in `lowdefy_build_status` under `clientErrors`, so problems that only show at runtime still reach the agent.
-5. Server-side failures appear beside them under `serverErrors` — a request whose database filter is malformed, an endpoint step that throws, an MCP tool call or an agent tool call that fails — each with the yaml `source` (`file:line`) and `config` path that produced it, plus the `endpointId`, `requestId` and `pageId` where known. The store holds the last 50 errors and is cleared on dev server restart.
+2. Call `lowdefy_build_status` with `wait: true` (`GET /lowdefy-docs/build-status?wait=true`) — it answers once the dev server has processed your edit, rather than with the build before it. Did the build succeed? Errors come back with the exact source file and location. A build that fails with an internal error carries its message, stack and the config file it was resolving.
+3. Pages are built when they are first requested, so the config build's status says nothing about page content. With `wait: true`, build status also builds every page your edit touched (a page whose files changed since its last build, or a page file changed since the dev server started) and reports under `pages`: `checked` lists the pages it built, `failed` the pages whose last build failed with their errors, `changedSinceBuild` pages changed on disk that the dev server has not rebuilt yet, and `unbuilt` how many pages nothing has built since the dev server started. `lowdefy_check` validates every page.
+4. Call `lowdefy_get_page_config` to confirm the page builds, and `lowdefy_screenshot_page` to see it rendered.
+5. Runtime errors from the browser (operator errors, block render errors) also appear in `lowdefy_build_status` under `clientErrors`, so problems that only show at runtime still reach the agent.
+6. Server-side failures appear beside them under `serverErrors` — a request whose database filter is malformed, an endpoint step that throws, an MCP tool call or an agent tool call that fails — each with the yaml `source` (`file:line`) and `config` path that produced it, plus the `endpointId`, `requestId` and `pageId` where known. The store holds the last 50 errors and is cleared on dev server restart.
+7. Each browser and server error carries the `buildId` it happened under: the time of the latest config build or page edit. Errors from before the current build are listed apart under `earlierErrors`, since they may already be fixed; `clientErrors` and `serverErrors` hold only errors under the current build.
 
 ### Events are pushed — no need to poll
 
@@ -192,7 +194,9 @@ Loading it back (`lowdefy_load_state`) serves the recorded request data from the
 
 ## Running requests safely
 
-`lowdefy_run_request` executes a request with a test payload so the agent can verify the data shape a page will receive. Read-only request types (like `MongoDBFind`) always run.
+`lowdefy_run_request` executes a request with a test payload so the agent can verify the data shape a page will receive. Read-only request types (like `MongoDBFind`) always run. The page is built first when it changed since its last build, so the request that runs is the one in the config now; a page that fails to build answers `refused: true` with its `buildErrors`.
+
+A response over 40,000 serialized characters is not returned inline: it is written in full to a JSON file under `.lowdefy/responses/` in the app directory, and the result carries `responseFile` (its path), `responseChars` and, for an array, `responseItems`. Pass `saveResponse: true` to always write the response there. `lowdefy_run_endpoint` does the same. Only the 20 most recent response files are kept.
 
 Pass `user` to run the request as a specific caller — `{ "pageId": "users", "requestId": "get_users", "user": { "roles": ["admin"] } }`. Without `user` the request runs as a roleless anonymous caller, so a tenant-walled or role-gated request returns empty rows rather than an error. Impersonation never unlocks writes: the write gate below applies to every caller. Write requests are refused unless you opt in:
 

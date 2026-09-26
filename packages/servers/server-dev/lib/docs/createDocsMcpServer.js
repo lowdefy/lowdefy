@@ -24,6 +24,7 @@ import evalOperator from './evalOperator.js';
 import findConfig from './findConfig.js';
 import getAppMap from './getAppMap.js';
 import getBuildStatus from './getBuildStatus.js';
+import getBuildStatusAfterEdits from './getBuildStatusAfterEdits.js';
 import getCoreDoc from './getCoreDoc.js';
 import getExamples from './getExamples.js';
 import getOverview from './getOverview.js';
@@ -50,7 +51,6 @@ import scaffoldPage from './scaffoldPage.js';
 import screenshotPage from './screenshotPage.js';
 import searchDocs from './searchDocs.js';
 import searchIcons from './searchIcons.js';
-import waitForBuild from './waitForBuild.js';
 
 const logger = createLogger({ server: 'lowdefy-dev-mcp' });
 
@@ -140,12 +140,18 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     return textResult(result);
   });
 
-  registerDevTool('lowdefy_run_request', async ({ pageId, requestId, payload, user }) =>
-    textResult(await runRequest({ pageId, requestId, payload, user, honoContext }))
+  registerDevTool(
+    'lowdefy_run_request',
+    async ({ pageId, requestId, payload, user, saveResponse }) =>
+      textResult(await runRequest({ pageId, requestId, payload, user, saveResponse, honoContext }))
   );
 
-  registerDevTool('lowdefy_run_endpoint', async ({ endpointId, payload, user, system }) =>
-    textResult(await runEndpoint({ endpointId, payload, user, system, honoContext }))
+  registerDevTool(
+    'lowdefy_run_endpoint',
+    async ({ endpointId, payload, user, system, saveResponse }) =>
+      textResult(
+        await runEndpoint({ endpointId, payload, user, system, saveResponse, honoContext })
+      )
   );
 
   registerDevTool('lowdefy_restart', ({ reason }) =>
@@ -198,7 +204,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
 
   registerDevTool('lowdefy_build_status', async ({ wait }) => {
     if (wait === true) {
-      return textResult({ ...(await waitForBuild()), ...getBuildStatus() });
+      return textResult(await getBuildStatusAfterEdits());
     }
     return textResult(getBuildStatus());
   });

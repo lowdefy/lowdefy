@@ -156,7 +156,7 @@ _ref:
                     else: ui
             ```
 
-            A token that cannot be verified (for example, an opaque token minted because the client omitted the RFC 8707 `resource` parameter), or one whose grant has been revoked, gets a `401` with a `WWW-Authenticate` challenge that tells the client what to do — reconnect and re-run the authorization, including the organization choice.
+            A token that cannot be verified (for example, an opaque token minted because the client omitted the RFC 8707 `resource` parameter), one whose grant has been revoked, or one whose user is no longer a member of the token's organization (removed, left, or the user deleted), gets a `401` with a `WWW-Authenticate` challenge that tells the client what to do — reconnect and re-run the authorization, including the organization choice.
 
             ## Building the consent and picker pages
 

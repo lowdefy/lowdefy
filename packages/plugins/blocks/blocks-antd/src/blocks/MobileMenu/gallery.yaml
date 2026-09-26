@@ -831,6 +831,34 @@
               title: Settings
               icon: AiOutlineSetting
 
+- title: Drawer Header Slot
+  blocks:
+    - id: mm_drawer_header_example
+      type: MobileMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        links:
+          - id: mdh_home
+            type: MenuLink
+            properties:
+              title: Home
+          - id: mdh_about
+            type: MenuLink
+            properties:
+              title: About
+      slots:
+        drawerHeader:
+          blocks:
+            - id: mdh_workspace
+              type: Paragraph
+              properties:
+                content: Content above the menu items.
+                style:
+                  padding: 0 24px
+                  margin: 0
+                  fontWeight: 600
+
 - title: Drawer Content Slot
   blocks:
     - id: mm_drawer_content_example
