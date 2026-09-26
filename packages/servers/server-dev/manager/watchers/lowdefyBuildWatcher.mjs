@@ -32,7 +32,8 @@ function findLocalModuleRoots(context) {
 // roots, and every other file the build reads (found in the build's refMap).
 // A change to a file that shapes the skeleton (lowdefy.yaml, a
 // module.lowdefy.yaml, or a file in skeletonSourceFiles.json) rebuilds the
-// config; any other change invalidates the JIT-built pages.
+// config, as does any change after a failed config build; any other change
+// invalidates the JIT-built pages.
 async function lowdefyBuildWatcher(context) {
   const configDirectory = context.directories.config;
   const fixRelativePathConfigDir = (item) =>
@@ -68,7 +69,16 @@ async function lowdefyBuildWatcher(context) {
           skeletonSourceFiles.has(filePath) || skeletonSourceFiles.has(relativeChangedFiles[index])
       );
 
-      if (lowdefyYamlModified || moduleYamlModified || skeletonFileModified) {
+      // skeletonSourceFiles.json comes from the last build that succeeded, so it
+      // cannot list a file only the failed build read, such as a new endpoint
+      // file whose error is being fixed. While the last build failed, any
+      // change rebuilds the config.
+      if (
+        context.lastBuildFailed ||
+        lowdefyYamlModified ||
+        moduleYamlModified ||
+        skeletonFileModified
+      ) {
         await context.lowdefyBuild();
       } else {
         const invalidatePath = path.join(context.directories.build, 'invalidatePages');
