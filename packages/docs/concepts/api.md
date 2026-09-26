@@ -654,6 +654,64 @@ routine:
         _step: load_profile
 ```
 
+## Validating Dynamic Content As A Routine Step
+
+`ValidateDynamic` checks block config against a [dynamic blocks policy](/dynamic-page-content#dynamic-blocks-policies) with the same function a Dynamic block runs at page get, so content that passes here renders there. `DescribeDynamicPolicy` returns what a policy allows. Both are built-in steps: no `connectionId`, no plugin install.
+
+A `ValidateDynamic` step has:
+
+- `id: string`: **Required** - A unique step id within the routine.
+- `type: ValidateDynamic`: **Required**
+- `properties.policy: string`: **Required** - The policy id, as a literal string.
+- `properties.blocks: object[]`: **Required** - The content to check. **Operators are evaluated**, so read it with `_step` or `_payload`.
+- `properties.throwOnInvalid: boolean`: Optional, default `true`. When `true`, invalid content ends the routine with an error. When `false`, the routine continues.
+
+The step result is `{ valid, errors, blocks }`. Each error has `path` (a dot path into the content, such as `blocks.2.properties.title`), `rule` (such as `policy.blocks`, `policy.urls`, `limits.depth` or `schema`) and `message`. In the endpoint a Dynamic block calls, `_step: <stepId>.blocks` of a passing step with the block's policy is returned as config.
+
+A `DescribeDynamicPolicy` step has `id`, `type: DescribeDynamicPolicy` and `properties.policy`. Its result lists the policy's `blocks` (each with its properties schema), `actions` and `operators` (each with its params schema), `endpoints`, `requests`, `links`, `state`, `html` and `limits`.
+
+###### Generate, check and store a form
+
+```yaml
+api:
+  - id: generate_form
+    type: Api
+    routine:
+      - id: vocabulary
+        type: DescribeDynamicPolicy
+        properties:
+          policy: generated_form
+      - id: attempt
+        type: GenerateObject
+        connectionId: model
+        properties:
+          # prompt built from _payload.description and _step.vocabulary
+      - id: check
+        type: ValidateDynamic
+        properties:
+          policy: generated_form
+          blocks:
+            _step: attempt.blocks
+          throwOnInvalid: false
+      - :if:
+          _step: check.valid
+        :then:
+          - id: store
+            type: MongoDBInsertOne
+            connectionId: forms
+            properties:
+              doc:
+                blocks:
+                  _step: check.blocks
+          - :return:
+              valid: true
+        :else:
+          - :return:
+              valid: false
+              errors:
+                _step: check.errors
+```
+
 ## Rendering Notifications As A Routine Step
 
 API routines render a [notification](/notifications) to an email with `RenderNotification` steps. The step renders one notification item against a template defined in the app's `notifications:` section and returns the rendered content — it does **not** store or send anything. Storing a record, sending the email, and tracking delivery are ordinary routine steps you compose around it (or that the [`modules-mongodb` notifications module](https://github.com/lowdefy/modules-mongodb) composes for you).

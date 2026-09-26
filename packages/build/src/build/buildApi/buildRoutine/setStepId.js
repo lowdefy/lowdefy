@@ -17,7 +17,9 @@
 const prefixByType = {
   CallAgent: 'agent',
   CallApi: 'endpoint',
+  DescribeDynamicPolicy: 'describeDynamic',
   RenderNotification: 'notification',
+  ValidateDynamic: 'validateDynamic',
   ValidateSchema: 'validate',
 };
 

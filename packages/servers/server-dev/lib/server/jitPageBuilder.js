@@ -128,6 +128,12 @@ function getBuildContext(buildDirectory, configDirectory) {
   for (const id of websocketIds) {
     cachedBuildContext.websocketIds.add(id);
   }
+  // Pages that host a policy-bound Dynamic block count the policy's types
+  // and validate its pages and endpoints.
+  Object.assign(
+    cachedBuildContext.dynamicPolicies,
+    readJsonFile(path.join(buildDirectory, 'dynamicPolicies.json')) ?? {}
+  );
 
   // Load installed packages snapshot from skeleton build for missing-package detection
   const installedPluginPackages =

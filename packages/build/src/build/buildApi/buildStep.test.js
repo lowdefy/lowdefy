@@ -1195,3 +1195,82 @@ test('RenderNotification step is not counted in typeCounters.requests', () => {
     MongoDBInsertOne: 1,
   });
 });
+
+function dynamicStepApi(step) {
+  return { api: [{ id: 'generate', type: 'Api', routine: [step] }] };
+}
+
+function policyContext() {
+  const context = testContext({ logger });
+  context.dynamicPolicies = { form: { id: 'form' } };
+  return context;
+}
+
+test('ValidateDynamic and DescribeDynamicPolicy steps build with their prefixes', () => {
+  const res = buildApi({
+    components: {
+      api: [
+        {
+          id: 'generate',
+          type: 'Api',
+          routine: [
+            { id: 'vocab', type: 'DescribeDynamicPolicy', properties: { policy: 'form' } },
+            {
+              id: 'check',
+              type: 'ValidateDynamic',
+              properties: { policy: 'form', blocks: { _step: 'model.blocks' } },
+            },
+          ],
+        },
+      ],
+    },
+    context: policyContext(),
+  });
+  expect(res.api[0].routine.map((step) => step.id)).toEqual([
+    'describeDynamic:generate:vocab',
+    'validateDynamic:generate:check',
+  ]);
+});
+
+test('ValidateDynamic step requires a literal policy id', () => {
+  expect(() =>
+    buildApi({
+      components: dynamicStepApi({
+        id: 'check',
+        type: 'ValidateDynamic',
+        properties: { policy: { _payload: 'policy' }, blocks: [] },
+      }),
+      context: policyContext(),
+    })
+  ).toThrow(
+    'ValidateDynamic step "check" at endpoint "generate" requires properties.policy as a literal policy id string.'
+  );
+});
+
+test('ValidateDynamic step throws for an undeclared policy', () => {
+  expect(() =>
+    buildApi({
+      components: dynamicStepApi({
+        id: 'check',
+        type: 'ValidateDynamic',
+        properties: { policy: 'nope', blocks: [] },
+      }),
+      context: policyContext(),
+    })
+  ).toThrow(
+    'ValidateDynamic step "check" at endpoint "generate" references dynamic blocks policy "nope" which does not exist.'
+  );
+});
+
+test('ValidateDynamic step requires properties.blocks', () => {
+  expect(() =>
+    buildApi({
+      components: dynamicStepApi({
+        id: 'check',
+        type: 'ValidateDynamic',
+        properties: { policy: 'form' },
+      }),
+      context: policyContext(),
+    })
+  ).toThrow('ValidateDynamic step "check" at endpoint "generate" requires properties.blocks.');
+});
