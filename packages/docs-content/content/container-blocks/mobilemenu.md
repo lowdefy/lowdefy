@@ -821,6 +821,36 @@ Responsive mobile navigation menu with drawer.
           icon: AiOutlineSetting
 ```
 
+Content above the menu items.
+
+```yaml
+- id: mm_drawer_header_example
+  type: MobileMenu
+  layout:
+    flex: 0 0 auto
+  properties:
+    links:
+      - id: mdh_home
+        type: MenuLink
+        properties:
+          title: Home
+      - id: mdh_about
+        type: MenuLink
+        properties:
+          title: About
+  slots:
+    drawerHeader:
+      blocks:
+        - id: mdh_workspace
+          type: Paragraph
+          properties:
+            content: Content above the menu items.
+            style:
+              padding: 0 24px
+              margin: 0
+              fontWeight: 600
+```
+
 Additional content below the menu items.
 
 ```yaml
@@ -1240,5 +1270,6 @@ Browse our latest collection across all categories.
 
 | Slot | Description |
 | --- | --- |
+| `drawerHeader` | Content above the menu in the drawer. |
 | `drawerContent` | Additional content below the menu in the drawer. |
 | `drawerFooter` | Footer content in the drawer. |
