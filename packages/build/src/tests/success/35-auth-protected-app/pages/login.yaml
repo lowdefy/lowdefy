@@ -12,7 +12,7 @@ areas:
         properties:
           title: Sign in with Google
           type: primary
-          icon: AiOutlineGoogle
+          icon: LogIn
         events:
           onClick:
             - id: login

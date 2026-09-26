@@ -18,7 +18,7 @@ import uploadTheme from '../../schemas/uploadTheme.js';
 
 export default {
   category: 'input',
-  icons: [],
+  icons: ['loading', 'attach', 'delete', 'download', 'view'],
   valueType: 'object',
   cssKeys: {
     element: 'The outer dragger box (height container, background, border, shadow).',

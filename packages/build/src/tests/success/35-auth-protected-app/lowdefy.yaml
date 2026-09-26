@@ -33,19 +33,19 @@ menus:
         pageId: dashboard
         properties:
           title: Dashboard
-          icon: AiOutlineDashboard
+          icon: Gauge
       - id: profile
         type: MenuLink
         pageId: profile
         properties:
           title: Profile
-          icon: AiOutlineUser
+          icon: user
       - id: settings
         type: MenuLink
         pageId: settings
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
 
 pages:
   - _ref: pages/login.yaml

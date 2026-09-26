@@ -55,7 +55,7 @@ test.describe('Notification Block', () => {
     await expect(notification).toBeVisible();
     await expect(notification.locator('.ant-notification-notice-title')).toHaveText('Success!');
     // Check for success icon
-    const icon = notification.locator('.anticon-check-circle');
+    const icon = notification.locator('.ant-notification-notice-icon-success svg');
     await expect(icon).toBeAttached();
   });
 
@@ -67,7 +67,7 @@ test.describe('Notification Block', () => {
     await expect(notification).toBeVisible();
     await expect(notification.locator('.ant-notification-notice-title')).toHaveText('Error');
     // Check for error icon
-    const icon = notification.locator('.anticon-close-circle');
+    const icon = notification.locator('.ant-notification-notice-icon-error svg');
     await expect(icon).toBeAttached();
   });
 
@@ -79,7 +79,7 @@ test.describe('Notification Block', () => {
     await expect(notification).toBeVisible();
     await expect(notification.locator('.ant-notification-notice-title')).toHaveText('Warning');
     // Check for warning icon
-    const icon = notification.locator('.anticon-exclamation-circle');
+    const icon = notification.locator('.ant-notification-notice-icon-warning svg');
     await expect(icon).toBeAttached();
   });
 
@@ -91,7 +91,7 @@ test.describe('Notification Block', () => {
     await expect(notification).toBeVisible();
     await expect(notification.locator('.ant-notification-notice-title')).toHaveText('Information');
     // Check for info icon
-    const icon = notification.locator('.anticon-info-circle');
+    const icon = notification.locator('.ant-notification-notice-icon-info svg');
     await expect(icon).toBeAttached();
   });
 
@@ -176,7 +176,7 @@ test.describe('Notification Block', () => {
     await expect(notification.locator('.ant-notification-notice-description')).toContainText(
       'Success message at runtime'
     );
-    const icon = notification.locator('.anticon-check-circle');
+    const icon = notification.locator('.ant-notification-notice-icon-success svg');
     await expect(icon).toBeAttached();
   });
 

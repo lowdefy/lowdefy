@@ -149,7 +149,7 @@ blocks:
     properties:
       content: Message with custom icon
       status: info
-      icon: AiOutlineSmile
+      icon: FaceSlightlySmiling
 
   - id: open_custom_icon
     type: Button

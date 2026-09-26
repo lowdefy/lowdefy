@@ -108,7 +108,7 @@ export default {
                     icon: {
                       type: ['string', 'object'],
                       description:
-                        'Icon name (a semantic name like edit, or a <a href="https://react-icons.github.io/react-icons/">React Icons</a> name like LuPencil) or properties of an Icon block to customize icon on menu item.',
+                        'Icon name (a semantic name like edit, otherwise a <a href="https://lucide.dev/icons/">Lucide</a> name in PascalCase like Pencil) or properties of an Icon block to customize icon on menu item.',
                     },
                     danger: {
                       type: 'boolean',

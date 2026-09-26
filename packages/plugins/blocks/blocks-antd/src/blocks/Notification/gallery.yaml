@@ -54,7 +54,7 @@
         title: Success
         color: primary
         variant: outlined
-        icon: AiOutlineCheckCircle
+        icon: check-circle
       events:
         onClick:
           - id: open_status_success
@@ -70,7 +70,7 @@
         title: Error
         color: danger
         variant: outlined
-        icon: AiOutlineCloseCircle
+        icon: close-circle
       events:
         onClick:
           - id: open_status_error
@@ -86,7 +86,7 @@
         title: Warning
         color: default
         variant: outlined
-        icon: AiOutlineWarning
+        icon: warning
       events:
         onClick:
           - id: open_status_warning
@@ -102,7 +102,7 @@
         title: Info
         color: primary
         variant: text
-        icon: AiOutlineInfoCircle
+        icon: info
       events:
         onClick:
           - id: open_status_info
@@ -318,7 +318,7 @@
         status: success
         title: Download Complete
         description: Your file has been downloaded successfully.
-        icon: AiOutlineDownload
+        icon: download
     - id: notif_icon_colored
       type: Notification
       layout:
@@ -328,7 +328,7 @@
         title: Starred Item
         description: Item has been added to your favorites.
         icon:
-          name: AiOutlineStar
+          name: star
           color: '#faad14'
     - id: notif_icon_sized
       type: Notification
@@ -339,7 +339,7 @@
         title: Session Expiring
         description: Your session will expire in 5 minutes.
         icon:
-          name: AiOutlineLock
+          name: lock
           color: '#fa8c16'
           size: 28
     - id: btn_icon_string
@@ -350,7 +350,7 @@
         title: String Icon
         color: primary
         variant: outlined
-        icon: AiOutlineDownload
+        icon: download
       events:
         onClick:
           - id: open_icon_string
@@ -366,7 +366,7 @@
         title: Colored Icon
         color: default
         variant: outlined
-        icon: AiOutlineStar
+        icon: star
       events:
         onClick:
           - id: open_icon_colored
@@ -382,7 +382,7 @@
         title: Sized Icon
         color: default
         variant: outlined
-        icon: AiOutlineLock
+        icon: lock
       events:
         onClick:
           - id: open_icon_sized
@@ -401,7 +401,7 @@
         status: info
         title: Custom Close
         description: This notification has a custom close icon.
-        closeIcon: AiOutlineCloseSquare
+        closeIcon: SquareX
         duration: 0
     - id: notif_close_icon_styled
       type: Notification
@@ -412,7 +412,7 @@
         title: Styled Close
         description: Close icon with custom color and size.
         closeIcon:
-          name: AiOutlineCloseCircle
+          name: close-circle
           color: '#ff4d4f'
           size: 18
         duration: 0
@@ -424,7 +424,7 @@
         status: success
         title: Arrow Close
         description: Uses an arrow icon instead of the default close.
-        closeIcon: AiOutlineArrowRight
+        closeIcon: arrow-right
         duration: 0
     - id: btn_close_icon_string
       type: Button
@@ -485,7 +485,7 @@
         duration: 0
         button:
           title: Confirm
-          icon: AiOutlineCheck
+          icon: check
           color: primary
           variant: solid
           size: small
@@ -500,7 +500,7 @@
         duration: 0
         button:
           title: Retry
-          icon: AiOutlineReload
+          icon: refresh
           color: danger
           variant: solid
           size: small
@@ -813,7 +813,7 @@
         title: Override as Success
         color: primary
         variant: solid
-        icon: AiOutlineCheckCircle
+        icon: check-circle
       events:
         onClick:
           - id: open_override_success
@@ -833,7 +833,7 @@
         title: Override as Error
         color: danger
         variant: solid
-        icon: AiOutlineCloseCircle
+        icon: close-circle
       events:
         onClick:
           - id: open_override_error
@@ -853,7 +853,7 @@
         title: Override Duration
         color: default
         variant: outlined
-        icon: AiOutlineClockCircle
+        icon: clock
       events:
         onClick:
           - id: open_override_duration
@@ -1180,7 +1180,7 @@
             status: success
             title: Order Shipped
             description: 'Order #12847 has been shipped. Tracking number: <b>1Z999AA10123456784</b>'
-            icon: AiOutlineRocket
+            icon: Rocket
             duration: 0
             button:
               title: View Tracking
@@ -1202,7 +1202,7 @@
             status: error
             title: Order Cancelled
             description: 'Order #12847 has been cancelled. Refund of $247.50 initiated.'
-            icon: AiOutlineStop
+            icon: Ban
             duration: 0
         - id: order_actions
           type: Box
@@ -1218,7 +1218,7 @@
                 title: Cancel Order
                 color: danger
                 variant: outlined
-                icon: AiOutlineStop
+                icon: Ban
               events:
                 onClick:
                   - id: order_cancel_notif
@@ -1234,7 +1234,7 @@
                 title: Mark as Shipped
                 color: primary
                 variant: solid
-                icon: AiOutlineRocket
+                icon: Rocket
               events:
                 onClick:
                   - id: order_ship_notif
@@ -1265,7 +1265,7 @@
             title: High CPU Usage
             description: 'CPU usage has exceeded <b>90%</b> on server <b>web-prod-03</b>. Consider scaling up or optimizing workloads.'
             icon:
-              name: AiOutlineDashboard
+              name: Gauge
               color: '#fa8c16'
             duration: 0
             placement: topRight
@@ -1289,7 +1289,7 @@
             status: success
             title: Deployment Successful
             description: 'Version <b>2.4.1</b> deployed to production. All health checks passing.'
-            icon: AiOutlineCheckCircle
+            icon: check-circle
             duration: 8
           events:
             onClose:
@@ -1307,7 +1307,7 @@
             title: Security Alert
             description: 'Multiple failed login attempts detected from IP <b>192.168.1.42</b>. Account temporarily locked.'
             icon:
-              name: AiOutlineLock
+              name: lock
               color: '#ff4d4f'
             duration: 0
             button:
@@ -1334,7 +1334,7 @@
                 title: CPU Warning
                 color: default
                 variant: outlined
-                icon: AiOutlineDashboard
+                icon: Gauge
               events:
                 onClick:
                   - id: trigger_alert_cpu
@@ -1350,7 +1350,7 @@
                 title: Deploy Success
                 color: primary
                 variant: outlined
-                icon: AiOutlineCheckCircle
+                icon: check-circle
               events:
                 onClick:
                   - id: trigger_alert_deploy
@@ -1366,7 +1366,7 @@
                 title: Security Alert
                 color: danger
                 variant: outlined
-                icon: AiOutlineLock
+                icon: lock
               events:
                 onClick:
                   - id: trigger_alert_security

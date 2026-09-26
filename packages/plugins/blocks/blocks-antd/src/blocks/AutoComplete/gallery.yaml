@@ -634,7 +634,7 @@
           type: Button
           properties:
             title: Search
-            icon: AiOutlineSearch
+            icon: search
             type: primary
             size: large
           events:
@@ -703,7 +703,7 @@
           properties:
             title: Save Profile
             type: primary
-            icon: AiOutlineSave
+            icon: save
           events:
             onClick:
               - id: save_action

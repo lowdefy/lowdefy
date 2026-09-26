@@ -46,7 +46,7 @@ test('addDefaultPages, no pages array', () => {
         properties: {
           icon: {
             color: 'var(--ant-color-primary)',
-            name: 'AiOutlineFileSearch',
+            name: 'FileSearch',
             size: 80,
           },
           status: 'info',
@@ -97,7 +97,7 @@ test('addDefaultPages, empty pages array', () => {
         properties: {
           icon: {
             color: 'var(--ant-color-primary)',
-            name: 'AiOutlineFileSearch',
+            name: 'FileSearch',
             size: 80,
           },
           status: 'info',
@@ -152,7 +152,7 @@ test('addDefaultPages, pages without 404 page', () => {
         properties: {
           icon: {
             color: 'var(--ant-color-primary)',
-            name: 'AiOutlineFileSearch',
+            name: 'FileSearch',
             size: 80,
           },
           status: 'info',

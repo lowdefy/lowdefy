@@ -70,8 +70,8 @@ blocks:
     type: Switch
     properties:
       title: With Icons
-      checkedIcon: AiOutlineCheck
-      uncheckedIcon: AiOutlineClose
+      checkedIcon: check
+      uncheckedIcon: close
 
   - id: switch_custom_color
     type: Switch

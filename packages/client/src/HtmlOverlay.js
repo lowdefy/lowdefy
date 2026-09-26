@@ -35,7 +35,7 @@ function isTop(entry) {
   return dismissable[dismissable.length - 1] === entry;
 }
 
-function ConfirmOverlay({ content, onClose, onConfirm, popupClassName, target }) {
+function ConfirmOverlay({ content, Icon, onClose, onConfirm, popupClassName, target }) {
   const messageId = `${useId().replace(/[^a-zA-Z0-9_-]/g, '')}-message`;
   const cancelRef = useRef(null);
   return (
@@ -46,6 +46,7 @@ function ConfirmOverlay({ content, onClose, onConfirm, popupClassName, target })
         if (open) cancelRef.current?.focus();
       }}
       cancelButtonProps={{ 'aria-describedby': messageId, ref: cancelRef }}
+      icon={<Icon properties={{ name: 'warning', title: '' }} />}
       okButtonProps={{ 'aria-describedby': messageId }}
       onCancel={() => onClose('cancel')}
       onConfirm={onConfirm}
@@ -60,7 +61,7 @@ function ConfirmOverlay({ content, onClose, onConfirm, popupClassName, target })
   );
 }
 
-function HtmlOverlay({ content, kind, onClose, onConfirm, target }) {
+function HtmlOverlay({ content, Icon, kind, onClose, onConfirm, target }) {
   const popupClassName = `lowdefy-html-${kind}-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
 
   useEffect(() => {
@@ -93,6 +94,7 @@ function HtmlOverlay({ content, kind, onClose, onConfirm, target }) {
     return (
       <ConfirmOverlay
         content={content}
+        Icon={Icon}
         onClose={onClose}
         onConfirm={onConfirm}
         popupClassName={popupClassName}

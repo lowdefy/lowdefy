@@ -18,13 +18,13 @@ menus:
         pageId: users
         properties:
           title: Users
-          icon: AiOutlineUser
+          icon: user
       - id: create
         type: MenuLink
         pageId: create-user
         properties:
           title: Add User
-          icon: AiOutlinePlus
+          icon: add
 
 pages:
   - _ref: pages/users.yaml

@@ -33,8 +33,8 @@ The preference is persisted to `localStorage` and triggers re-rendering of the r
       _if:
         test:
           _media: darkMode
-        then: AiOutlineSun
-        else: AiOutlineMoon
+        then: Sun
+        else: Moon
   events:
     onClick:
       - id: toggle

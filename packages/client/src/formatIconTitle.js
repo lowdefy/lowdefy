@@ -14,9 +14,20 @@
   limitations under the License.
 */
 
-// The icons data-copy buttons render. They are always bundled, because HTML
-// with data-copy can arrive at runtime (from state or a request) where no scan
-// sees it, and a copy button without its icon would be empty.
-const HTML_ICON_ALIASES = ['check', 'copy'];
+import { type } from '@lowdefy/helpers';
 
-export default HTML_ICON_ALIASES;
+// Pencil -> "Pencil", ArrowLeftRight -> "Arrow left right", more-vertical ->
+// "More vertical", lucide:Pencil -> "Pencil".
+function formatIconTitle(name) {
+  if (!type.isString(name)) {
+    return '';
+  }
+  const iconName = name.slice(name.indexOf(':') + 1);
+  const words = iconName
+    .replace(/-/g, ' ')
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .toLowerCase();
+  return words.charAt(0).toUpperCase() + words.slice(1);
+}
+
+export default formatIconTitle;

@@ -323,7 +323,7 @@ const TiptapMentionInput = ({
                 className={wrapperClass}
                 style={wrapperStyle}
               />
-              {!disabled && <PopoverMenu editor={editor} Icon={Icon} />}
+              {!disabled && <PopoverMenu blockId={blockId} editor={editor} Icon={Icon} />}
             </>
           );
         },

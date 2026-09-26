@@ -490,7 +490,7 @@ The footer slot replaces the default Ok/Cancel buttons with custom content. This
                 title: Delete
                 color: danger
                 variant: text
-                icon: AiOutlineDelete
+                icon: delete
             - id: modal_footer_actions
               type: Box
               layout:
@@ -522,7 +522,7 @@ The footer slot replaces the default Ok/Cancel buttons with custom content. This
                     title: Save
                     color: primary
                     variant: solid
-                    icon: AiOutlineSave
+                    icon: save
                   events:
                     onClick:
                       - id: modal_footer_save_close
@@ -620,7 +620,7 @@ This modal uses the toggleOpen method. Each click of the button alternates betwe
     title: Toggle Modal
     color: primary
     variant: solid
-    icon: AiOutlineSwap
+    icon: ArrowRightLeft
   events:
     onClick:
       - id: modal_toggle_call
@@ -902,7 +902,7 @@ Senior Product Designer
     title: Edit Profile
     color: primary
     variant: solid
-    icon: AiOutlineEdit
+    icon: edit
   events:
     onClick:
       - id: modal_profile_open
@@ -942,7 +942,7 @@ Senior Product Designer
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineUser
+            icon: user
             size: 72
             color: "#fff"
             backgroundColor: "#1677ff"
@@ -993,7 +993,7 @@ This action cannot be undone. All project data, files, and team assignments will
     title: Delete Project
     color: danger
     variant: solid
-    icon: AiOutlineDelete
+    icon: delete
   events:
     onClick:
       - id: modal_confirm_open
@@ -1061,7 +1061,7 @@ A serene mountain landscape captured at golden hour. Photography by John Doe.
     title: Preview Image
     color: primary
     variant: outlined
-    icon: AiOutlinePicture
+    icon: image
   events:
     onClick:
       - id: modal_image_open

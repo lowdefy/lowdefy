@@ -21,6 +21,7 @@ import jsMapParser from '../buildJs/jsMapParser.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import createPageRegistry from './createPageRegistry.js';
 import validatePageReferences from '../buildPages/validatePageReferences.js';
+import validateIconNames from '../icons/validateIconNames.js';
 import PAGE_CONTENT_KEYS from './pageContentKeys.js';
 
 function buildShallowPages({ components, context }) {
@@ -44,7 +45,7 @@ function buildShallowPages({ components, context }) {
   // Build sourceless pages: pages written inline in lowdefy.yaml and default
   // pages such as the 404. They have no source file to JIT-resolve from, so
   // this is their only build - and so the only place their link, CallAPI,
-  // websocket and state references can be checked.
+  // websocket and state references, and their icon names, can be checked.
   context.linkActionRefs = [];
   context.callApiActionRefs = [];
   context.websocketActionRefs = [];
@@ -58,6 +59,7 @@ function buildShallowPages({ components, context }) {
     if (!entry || entry.refPath !== null || entry.resolverOriginal) return;
 
     buildPage({ page, index, context });
+    validateIconNames({ config: page, icons: context.icons, context });
     sourcelessPages.push(page);
   });
 

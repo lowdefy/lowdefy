@@ -22,7 +22,6 @@ import {
 } from 'ai';
 import { FileCard, Prompts, Sender } from '@ant-design/x';
 import { Button, Skeleton } from 'antd';
-import { PaperClipOutlined } from '@ant-design/icons';
 
 import { isReserved, setKey, type } from '@lowdefy/helpers';
 import getLegacyObjectUrl from '@lowdefy/blocks-files/utils/getLegacyObjectUrl.js';
@@ -724,6 +723,7 @@ function AgentChat({
         ) : (
           <MessageList
             ref={bubbleListRef}
+            Icon={Icon}
             messages={messages}
             isStreaming={isBusy}
             config={messageDisplay}
@@ -847,7 +847,12 @@ function AgentChat({
             attachmentsConfig?.enabled ? (
               <Button
                 type="text"
-                icon={<PaperClipOutlined />}
+                icon={
+                  <Icon
+                    blockId={`${blockId}_attach_icon`}
+                    properties={{ name: 'attach', title: '' }}
+                  />
+                }
                 onClick={() => fileInputRef.current?.click()}
               />
             ) : undefined
@@ -894,7 +899,12 @@ function AgentChat({
   if (display === 'drawer') {
     // The launcher was clicked while this implementation was still loading.
     return (
-      <DrawerWrapper config={drawerConfig} defaultOpen={drawerOpenRequested === true}>
+      <DrawerWrapper
+        blockId={blockId}
+        config={drawerConfig}
+        defaultOpen={drawerOpenRequested === true}
+        Icon={Icon}
+      >
         {chatContent}
       </DrawerWrapper>
     );

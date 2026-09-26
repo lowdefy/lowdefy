@@ -79,7 +79,7 @@ blocks:
     type: Button
     properties:
       title: With Icon
-      icon: AiOutlineSave
+      icon: save
 
   - id: button_clickable
     type: Button
@@ -119,7 +119,7 @@ blocks:
   - id: button_shape_circle
     type: Button
     properties:
-      icon: AiOutlinePlus
+      icon: add
       shape: circle
       hideTitle: true
 
@@ -145,7 +145,7 @@ blocks:
   - id: button_hide_title
     type: Button
     properties:
-      icon: AiOutlineSearch
+      icon: search
       hideTitle: true
 
   - id: button_color
@@ -181,7 +181,7 @@ blocks:
   - id: button_shortcut_no_title
     type: Button
     properties:
-      icon: AiOutlineSearch
+      icon: search
       hideTitle: true
     events:
       onClick:

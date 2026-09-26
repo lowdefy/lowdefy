@@ -64,11 +64,11 @@ Navigation steps bar, guiding users through the steps of a task.
     current: 1
     items:
       - title: Login
-        icon: AiOutlineUser
+        icon: user
       - title: Verification
-        icon: AiOutlineSolution
+        icon: FileUser
       - title: Done
-        icon: AiOutlineSmile
+        icon: FaceSlightlySmiling
 - id: icon_custom_color
   type: Steps
   properties:
@@ -76,15 +76,15 @@ Navigation steps bar, guiding users through the steps of a task.
     items:
       - title: Upload
         icon:
-          name: AiOutlineCloudUpload
+          name: CloudUpload
           color: "#1677ff"
       - title: Process
         icon:
-          name: AiOutlineLoading
+          name: loading
           color: "#faad14"
       - title: Complete
         icon:
-          name: AiOutlineCheck
+          name: check
           color: "#52c41a"
 ```
 
@@ -202,13 +202,13 @@ Navigation steps bar, guiding users through the steps of a task.
     items:
       - title: Account
         description: Create your account
-        icon: AiOutlineUser
+        icon: user
       - title: Settings
         description: Configure preferences
-        icon: AiOutlineSetting
+        icon: settings
       - title: Review
         description: Review and submit
-        icon: AiOutlineCheck
+        icon: check
       - title: Done
         description: All finished
   events:
@@ -370,11 +370,11 @@ Navigation steps bar, guiding users through the steps of a task.
           _state: wizard_step
         items:
           - title: Account
-            icon: AiOutlineUser
+            icon: user
           - title: Profile
-            icon: AiOutlineIdcard
+            icon: IdCard
           - title: Confirm
-            icon: AiOutlineCheck
+            icon: check
       events:
         onChange:
           - id: wizard_set_step
@@ -499,16 +499,16 @@ Navigation steps bar, guiding users through the steps of a task.
         items:
           - title: Order Placed
             description: March 10, 2026 at 2:30 PM
-            icon: AiOutlineShoppingCart
+            icon: ShoppingCart
           - title: Payment Confirmed
             description: March 10, 2026 at 2:31 PM
-            icon: AiOutlineCreditCard
+            icon: CreditCard
           - title: Shipped
             description: March 12, 2026 - Tracking number available
-            icon: AiOutlineCar
+            icon: Car
           - title: Delivered
             description: Estimated March 15, 2026
-            icon: AiOutlineHome
+            icon: home
 ```
 
 ```yaml
@@ -553,7 +553,16 @@ Navigation steps bar, guiding users through the steps of a task.
 | `items.$.title` | string | - | Title of the step - supports html. |
 | `items.$.subTitle` | string | - | Subtitle of the step - supports html. |
 | `items.$.description` | string | - | Description of the step - supports html. |
-| `items.$.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) (See all icons) or properties of an Icon block to use as the step icon. |
+| `items.$.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use as the step icon. |
+| `items.$.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `items.$.icon.color` | string | - | Icon color. |
+| `items.$.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `items.$.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `items.$.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `items.$.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `items.$.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `items.$.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `items.$.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `items.$.status` | string | - | Status of this step, overrides the current step status. Enum: `wait`, `process`, `finish`, `error`. |
 | `items.$.disabled` | boolean | `false` | Disable click on this step. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design steps tokens](https://ant.design/components/steps#design-token). |

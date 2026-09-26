@@ -53,12 +53,16 @@ test('getPageJitEnrichment scopes string-form, object-form, and args-nested _js 
   expect(jsEntries).not.toContain("'hashAbsent'");
 });
 
+const zap = { node: [['path', { d: 'M4 14 14 3' }]] };
+const star = { node: [['path', { d: 'M12 2 15 9' }]] };
+const other = { node: [['path', { d: 'M0 0' }]] };
+
 test('getPageJitEnrichment discovers an icon name that appears only inside a _js source', () => {
   const client = {
-    // The icon name lives only in the function body, in double quotes — the
+    // The icon name lives only in the function body, single-quoted — the
     // served pageConfig has this replaced by the hash, so scanning the config
-    // alone would miss it. Only FiZap is a real dynamic icon.
-    hashIcon: 'return on ? "FiZap" : "FiZapOff";',
+    // alone would miss it. Only Zap is a dynamic icon.
+    hashIcon: "return on ? 'Zap' : 'ZapOff';",
   };
   const pageConfig = {
     id: 'p',
@@ -67,44 +71,37 @@ test('getPageJitEnrichment discovers an icon name that appears only inside a _js
 
   const { dynamicIcons } = getPageJitEnrichment({
     pageConfig,
-    buildContext: buildContext({ client, dynamicIconData: { FiZap: { tag: 'svg' } } }),
+    buildContext: buildContext({ client, dynamicIconData: { Zap: zap } }),
   });
 
-  expect(dynamicIcons).toEqual({ FiZap: { tag: 'svg' } });
+  expect(dynamicIcons).toEqual({ Zap: zap });
 });
 
 test('getPageJitEnrichment scopes icons referenced directly in the page config', () => {
-  const pageConfig = { id: 'p', blocks: [{ properties: { icon: 'FiStar' } }] };
+  const pageConfig = { id: 'p', blocks: [{ properties: { icon: 'Star' } }] };
 
   const { dynamicIcons } = getPageJitEnrichment({
     pageConfig,
-    buildContext: buildContext({
-      dynamicIconData: { FiStar: { tag: 'svg' }, FiOther: { tag: 'svg' } },
-    }),
+    buildContext: buildContext({ dynamicIconData: { Star: star, Other: other } }),
   });
 
-  expect(dynamicIcons).toEqual({ FiStar: { tag: 'svg' } });
+  expect(dynamicIcons).toEqual({ Star: star });
 });
 
 test('getPageJitEnrichment scopes icons named in data-icon attributes inside HTML', () => {
   const { dynamicIcons } = getPageJitEnrichment({
-    pageConfig: { id: 'p', blocks: [{ properties: { html: '<i data-icon="LuTrash2"></i>' } }] },
-    buildContext: buildContext({
-      dynamicIconData: { LuTrash2: { tag: 'svg' }, LuOther: { tag: 'svg' } },
-    }),
+    pageConfig: { id: 'p', blocks: [{ properties: { html: '<i data-icon="lucide:Star"></i>' } }] },
+    buildContext: buildContext({ dynamicIconData: { 'lucide:Star': star, Other: other } }),
   });
-  expect(dynamicIcons).toEqual({ LuTrash2: { tag: 'svg' } });
+  expect(dynamicIcons).toEqual({ 'lucide:Star': star });
 });
 
 test('getPageJitEnrichment scopes semantic icon names used on the page', () => {
   const { dynamicIcons } = getPageJitEnrichment({
     pageConfig: { id: 'p', blocks: [{ properties: { icon: 'edit' } }] },
-    buildContext: {
-      ...buildContext({ dynamicIconData: { edit: { tag: 'svg' }, delete: { tag: 'svg' } } }),
-      iconAliases: { delete: 'LuTrash2', edit: 'LuPencil' },
-    },
+    buildContext: buildContext({ dynamicIconData: { edit: star, delete: other } }),
   });
-  expect(dynamicIcons).toEqual({ edit: { tag: 'svg' } });
+  expect(dynamicIcons).toEqual({ edit: star });
 });
 
 test('getPageJitEnrichment returns {} when there is no build context', () => {
@@ -118,7 +115,7 @@ test('getPageJitEnrichment omits both fields when the page has no dynamic _js or
     pageConfig,
     buildContext: buildContext({
       client: { hashUnused: 'return 1;' },
-      dynamicIconData: { FiZap: {} },
+      dynamicIconData: { Zap: zap },
     }),
   });
 

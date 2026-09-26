@@ -39,7 +39,7 @@ test('fetchPageConfig compiles inlined _jsEntries module text into a { hash: fn 
     mockJsonResponse({
       id: 'p',
       _jsEntries: "export default { 'h1': ({ args }) => { return args.x + 1; } };",
-      _dynamicIcons: { FiZap: { tag: 'svg' } },
+      _dynamicIcons: { Zap: { node: [['path', { d: 'M0 0' }]] } },
     })
   );
 
@@ -48,7 +48,7 @@ test('fetchPageConfig compiles inlined _jsEntries module text into a { hash: fn 
   expect(typeof data._jsEntries.h1).toBe('function');
   expect(data._jsEntries.h1({ args: { x: 1 } })).toBe(2);
   // _dynamicIcons passes through untouched.
-  expect(data._dynamicIcons).toEqual({ FiZap: { tag: 'svg' } });
+  expect(data._dynamicIcons).toEqual({ Zap: { node: [['path', { d: 'M0 0' }]] } });
 });
 
 test('fetchPageConfig issues only the page-config request — no /api/js or /api/icons fetch', async () => {

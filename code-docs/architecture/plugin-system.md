@@ -20,6 +20,7 @@ The plugin system enables:
 | Operators   | Expression evaluators    | `lowdefy._internal.operators`       |
 | Actions     | Event handlers           | `lowdefy._internal.actions`         |
 | Auth        | Authentication providers | `context.authOptions`               |
+| Icon sets   | Icon data (build-time)   | `types.icons` via `plugins/icons.js` |
 
 ## Plugin Declaration
 
@@ -293,7 +294,7 @@ export { default as SetState } from './actions/SetState/SetState.js';
 | `plugins/operators/server.js`  | `writeOperatorImports.js`   | Server operators       |
 | `plugins/auth/*.js`            | `writeAuthImports.js`       | Auth components        |
 | `plugins/blockMetas.json`      | `writeBlockSchemaMap.js`    | Block runtime metadata |
-| `plugins/icons.js`             | `writeIconImports.js`       | Icon components        |
+| `plugins/icons.js`             | `writeIconImports.js`       | Icon data (`IconData`) |
 | `plugins/blockSchemas.json`    | `writeBlockSchemaMap.js`    | Block property schemas |
 | `plugins/actionSchemas.json`   | `writeActionSchemaMap.js`   | Action param schemas   |
 | `plugins/operatorSchemas.json` | `writeOperatorSchemaMap.js` | Operator param schemas |
@@ -411,6 +412,85 @@ plugins:
 | ------------- | ----------- | ---------------- |
 | `Button`      | `myButton`  | `type: myButton` |
 | `Table`       | `myTable`   | `type: myTable`  |
+
+## Icon Sets
+
+Icons are data, not components. `@lowdefy/client` renders every icon with lucide-react's generic `Icon`; the build decides which data each name draws.
+
+### IconData
+
+```javascript
+{
+  node: [['path', { d: 'M21.174 6.812…' }], ['path', { d: 'm15 5 4 4' }]], // [tag, attrs, children?]
+  size: 24,                                   // square viewBox; or width + height
+  attrs: { fill: 'currentColor', stroke: 'none' }, // optional root attributes
+}
+```
+
+Attribute names are React camelCase, the viewBox always starts at `0 0`, and root `attrs` never hold `strokeWidth` (an app setting, `theme.icons.strokeWidth`).
+
+### Declaring a set
+
+A plugin declares set ids in `types.js` under `iconSets` (`icons` is taken by block `meta.icons`), and exports the data from a Node-only `./iconSets` entry point that the build loads from the server directory, like `/metas`:
+
+```javascript
+// types.js
+export default { iconSets: ['tabler'] };
+
+// iconSets.js
+export default {
+  tabler: {
+    attrs: undefined,                    // root attrs baked into every icon of this layer
+    semantic: { edit: 'Pencil' },        // optional semantic-name overrides
+    listIcons: async () => ['Pencil', …], // for search and did-you-mean
+    loadIcons: async ({ names }) => ({ Pencil: IconData }), // only requested names it has
+  },
+};
+```
+
+`typePrefix` does not apply: a set id is a namespace, not a type name.
+
+### Layers
+
+`createPluginTypesMap` records `typesMap.iconSets[setId]` as an ordered array of `{ package, version }` layers, one per plugin in `plugins:` order. `typesMap.iconSets` always exists (`{}` when no plugin declares a set). The `lucide` set's bottom layer is the built-in vanilla `lucide` data, which implements the same `listIcons` / `loadIcons` interface inside `@lowdefy/build`.
+
+Per icon name, the topmost layer that has it wins; a partial layer falls through to the layers below. So a plugin declaring `lucide` with one icon adds that name, and one that defines `Pencil` replaces Lucide's `Pencil` everywhere, including the semantic `edit`. This matches blocks, where a later plugin with the same type name replaces an earlier one.
+
+### Name resolution
+
+`resolveIconName` is the only resolver. The build uses it to bundle and validate, dev JIT to deliver, and docs search to list.
+
+| Form      | Example         | Resolves in                                                               |
+| --------- | --------------- | ------------------------------------------------------------------------- |
+| Semantic  | `edit`          | The semantic map, then the target resolved as a set or qualified name     |
+| Set name  | `Pencil`        | The `theme.icons.set` layers (default `lucide`), then the `lucide` layers |
+| Qualified | `tabler:Pencil` | That set's layers only; no fallback                                       |
+
+The semantic map merges, lowest to highest: built-in names → the default set's layers' `semantic` maps in plugin order → `theme.icons.aliases`. Targets are set or qualified names, never another semantic name. Lucide alias names (`Home`) resolve to the same node data as their canonical name.
+
+### Build output
+
+Discovery scans config (`global`, `menus`, `pages`, `api`), `_js` sources, HTML `data-icon`, block `meta.icons` and `theme.icons.include` for whole-string values in any of the three forms, skipping `type` values (15 Lowdefy type names are also Lucide names). Literal names at icon positions (keys matching `/icon$/i`, their `name`, the Icon block `name`, `data-icon`, aliases, `include`) that resolve to nothing raise a `ConfigError`, with the react-icons migration table from `@lowdefy/codemods` for old names.
+
+`writeIconImports` writes `plugins/icons.js` as data, keyed by every name form the app uses, with each distinct node array emitted once as a `const`:
+
+```javascript
+const n0 = [
+  ['path', { d: 'M21.174 6.812…' }],
+  ['path', { d: 'm15 5 4 4' }],
+];
+export default {
+  Pencil: { node: n0 },
+  edit: { node: n0 },
+  'react-icons:AiOutlineUser': {
+    node: n1,
+    size: 1024,
+    attrs: { fill: 'currentColor', stroke: 'none' },
+  },
+};
+```
+
+The runtime does a plain `Icons[name]` lookup. A fixed set of semantic names is always bundled because the client uses them itself: `loading`, `icon-missing`, `success`, `info`, `warning`, `error`, `close`, `check`, `copy`. In dev, names the startup bundle lacks arrive as `_dynamicIcons` data on the page response (see [server-dev.md](../servers/server-dev.md)).
 
 ## Plugin Registration Flow
 
@@ -547,6 +627,7 @@ export default {
 | `packages/build/src/build/buildTypes.js`           | Type counting            |
 | `packages/build/src/build/buildImports/`           | Import routing           |
 | `packages/build/src/build/writePluginImports/`     | Import generation        |
+| `packages/build/src/build/icons/`                  | Icon resolution, sets    |
 | `packages/client/src/initLowdefyContext.js`        | Runtime initialization   |
 | `packages/client/src/block/CategorySwitch.js`      | Block resolution         |
 

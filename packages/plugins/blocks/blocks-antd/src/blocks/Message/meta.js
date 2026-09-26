@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'display',
-  icons: [],
+  icons: ['success', 'info', 'warning', 'error', 'loading'],
   valueType: null,
   cssKeys: {
     element: 'The Message element.',
@@ -39,12 +41,9 @@ export default {
         description: "Time(seconds) before auto-dismiss, don't dismiss if set to 0.",
       },
       icon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize message icon.",
-        docs: {
-          displayType: 'icon',
-        },
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize message icon.',
       },
       status: {
         type: 'string',

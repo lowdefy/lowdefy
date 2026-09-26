@@ -14,7 +14,7 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
   properties:
     uploadPolicyRequestId: upload_policy_request
     button:
-      icon: UploadOutlined
+      icon: upload
       title: Choose File
       type: default
 - id: basic_custom_icon
@@ -22,7 +22,7 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
   properties:
     uploadPolicyRequestId: upload_policy_request
     button:
-      icon: AiOutlineCloudUpload
+      icon: CloudUpload
       title: Upload to Cloud
       type: default
 ```
@@ -34,7 +34,7 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
     uploadPolicyRequestId: upload_policy_request
     accept: image/*
     button:
-      icon: AiOutlinePicture
+      icon: image
       title: Upload Image
       type: default
 - id: accept_pdf
@@ -43,7 +43,7 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
     uploadPolicyRequestId: upload_policy_request
     accept: .pdf
     button:
-      icon: AiOutlineFilePdf
+      icon: FileText
       title: Upload PDF
       type: default
 ```
@@ -55,7 +55,7 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
     uploadPolicyRequestId: upload_policy_request
     singleFile: true
     button:
-      icon: UploadOutlined
+      icon: upload
       title: Upload Single File
       type: default
 - id: limit_max_three
@@ -64,7 +64,7 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
     uploadPolicyRequestId: upload_policy_request
     maxCount: 3
     button:
-      icon: UploadOutlined
+      icon: upload
       title: Upload (Max 3)
       type: default
 ```
@@ -76,7 +76,7 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
     emitFileContent: true
     singleFile: true
     button:
-      icon: UploadOutlined
+      icon: upload
       title: Attach File
       type: default
 ```
@@ -107,7 +107,7 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `accept` | string | - | File types accepted by the input. See html file type input accept property at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept. |
-| `button` | object | `{"icon":"UploadOutlined","title":"Upload","type":"default"}` | Button block properties. See [Button](/Button) for all properties. |
+| `button` | object | `{"icon":"upload","title":"Upload","type":"default"}` | Button block properties. See [Button](/Button) for all properties. |
 | `button.title` | string | - | Button title text. |
 | `button.icon` | string \| object | - | Button icon name or Icon block properties. |
 | `button.type` | string | `"default"` | Button type. Enum: `default`, `primary`, `dashed`, `text`, `link`. |

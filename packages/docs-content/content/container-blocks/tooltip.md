@@ -689,7 +689,7 @@ Hover over this text to see the tooltip.
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineDelete
+        icon: delete
         hideTitle: true
         color: danger
         variant: text
@@ -1102,7 +1102,7 @@ $8,230
                   layout:
                     flex: 0 0 auto
                   properties:
-                    name: AiOutlineQuestionCircle
+                    name: help
                     size: 14
                     color: "#8c8c8c"
         placeholder: Enter your username
@@ -1126,7 +1126,7 @@ $8,230
                   layout:
                     flex: 0 0 auto
                   properties:
-                    name: AiOutlineQuestionCircle
+                    name: help
                     size: 14
                     color: "#8c8c8c"
         placeholder: Enter your email
@@ -1175,7 +1175,7 @@ Monthly Revenue
                   layout:
                     flex: 0 0 auto
                   properties:
-                    name: AiOutlineInfoCircle
+                    name: info
                     size: 14
                     color: "#8c8c8c"
         - id: tooltip_dashboard_users_stat
@@ -1220,7 +1220,7 @@ Monthly Revenue
                   layout:
                     flex: 0 0 auto
                   properties:
-                    name: AiOutlineInfoCircle
+                    name: info
                     size: 14
                     color: "#8c8c8c"
         - id: tooltip_dashboard_revenue_stat

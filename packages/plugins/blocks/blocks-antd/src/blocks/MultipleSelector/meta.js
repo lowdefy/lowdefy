@@ -29,7 +29,7 @@ import {
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons, 'AiOutlineCheck', 'AiOutlineCloseCircle', 'AiOutlineDown'],
+  icons: [...LabelMeta.icons, 'chevron-down', 'clear', 'check', 'close'],
   valueType: 'array',
   cssKeys: {
     element: 'The MultipleSelector element.',
@@ -76,9 +76,9 @@ export default {
       },
       clearIcon: {
         ...icon,
-        default: 'AiOutlineCloseCircle',
+        default: 'clear',
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.',
       },
       disabled,
       label,
@@ -188,12 +188,9 @@ export default {
                       description: 'Content title of tag - supports html.',
                     },
                     icon: {
-                      type: ['string', 'object'],
+                      ...icon,
                       description:
-                        'Name of an Ant Design Icon or properties of an Icon block to customize alert icon.',
-                      docs: {
-                        displayType: 'icon',
-                      },
+                        'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize alert icon.',
                     },
                   },
                 },
@@ -223,9 +220,9 @@ export default {
       },
       selectedIcon: {
         ...icon,
-        default: 'AiOutlineCheck',
+        default: 'check',
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon showing when a selection is made in the drop-down list.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon showing when a selection is made in the drop-down list.',
       },
       showArrow: {
         type: 'boolean',
@@ -236,9 +233,9 @@ export default {
       size: sizeSmallDefaultLarge,
       suffixIcon: {
         ...icon,
-        default: 'AiOutlineDown',
+        default: 'chevron-down',
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize at the drop-down position of the selector.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize at the drop-down position of the selector.',
       },
       title: {
         type: 'string',

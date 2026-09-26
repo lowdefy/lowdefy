@@ -1002,11 +1002,11 @@
               buttons:
                 - eventName: onEditClick
                   title: Edit
-                  icon: AiOutlineEdit
+                  icon: edit
                   type: primary
                 - eventName: onDeleteClick
                   title: Delete
-                  icon: AiOutlineDelete
+                  icon: delete
                   danger: true
                   disabledField: locked
                   hiddenField: archived

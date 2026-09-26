@@ -14,7 +14,7 @@ A visual reference of every input block available in Lowdefy. Each section shows
   properties:
     label:
       title: With prefix icon
-    prefixIcon: AiOutlineUser
+    prefixIcon: user
     placeholder: Username
 - id: ig_text_count
   type: TextInput
@@ -270,8 +270,8 @@ A visual reference of every input block available in Lowdefy. Each section shows
   properties:
     label:
       title: Switch (with icons)
-    checkedIcon: AiOutlineCheck
-    uncheckedIcon: AiOutlineClose
+    checkedIcon: check
+    uncheckedIcon: close
 - id: ig_checkbox_sw
   type: CheckboxSwitch
   properties:

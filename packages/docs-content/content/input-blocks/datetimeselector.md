@@ -294,14 +294,14 @@ Combined date and time picker.
   type: DateTimeSelector
   properties:
     title: Clock Icon
-    suffixIcon: AiOutlineClockCircle
+    suffixIcon: clock
     label:
       disabled: true
 - id: dts_icon_schedule
   type: DateTimeSelector
   properties:
     title: Schedule Icon
-    suffixIcon: AiOutlineSchedule
+    suffixIcon: CalendarDays
     label:
       disabled: true
 - id: dts_icon_custom_color
@@ -309,7 +309,7 @@ Combined date and time picker.
   properties:
     title: Custom Color Icon
     suffixIcon:
-      name: AiOutlineCalendar
+      name: calendar
       color: "#1677ff"
     label:
       disabled: true
@@ -318,7 +318,7 @@ Combined date and time picker.
   properties:
     title: Heart Icon
     suffixIcon:
-      name: AiOutlineHeart
+      name: heart
       color: "#ff4d4f"
     label:
       disabled: true
@@ -595,7 +595,7 @@ Combined date and time picker.
     placeholder: Select appointment date & time
     format: DD MMMM YYYY HH:mm
     size: large
-    suffixIcon: AiOutlineSchedule
+    suffixIcon: CalendarDays
     showToday: true
     showNow: true
     allowClear: true
@@ -625,7 +625,7 @@ Combined date and time picker.
     minuteStep: 30
     hourStep: 1
     suffixIcon:
-      name: AiOutlineCalendar
+      name: calendar
       color: "#1677ff"
     disabledDates:
       min: 2026-01-01
@@ -640,7 +640,7 @@ Combined date and time picker.
     selectUTC: true
     size: large
     variant: filled
-    suffixIcon: AiOutlineClockCircle
+    suffixIcon: clock
     label:
       extra: Time is recorded in UTC.
 - id: dts_combo_themed
@@ -653,7 +653,7 @@ Combined date and time picker.
     placeholder: Choose a special date & time...
     minuteStep: 15
     suffixIcon:
-      name: AiOutlineHeart
+      name: heart
       color: "#eb2f96"
     label:
       disabled: true
@@ -678,7 +678,7 @@ Combined date and time picker.
         format: DD MMMM YYYY HH:mm
         minuteStep: 15
         size: large
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         label:
           extra: Appointments are available in 15-minute slots.
         disabledDates:
@@ -708,7 +708,7 @@ Combined date and time picker.
       type: Button
       properties:
         title: Book Appointment
-        icon: AiOutlineCalendar
+        icon: calendar
         type: primary
         size: large
         block: true
@@ -739,7 +739,7 @@ Combined date and time picker.
         placeholder: Select meeting date and time
         format: DD MMMM YYYY HH:mm
         minuteStep: 15
-        suffixIcon: AiOutlineClockCircle
+        suffixIcon: clock
         label:
           extra: Meetings are scheduled in 15-minute increments.
         disabledDates:
@@ -754,7 +754,7 @@ Combined date and time picker.
       type: Button
       properties:
         title: Schedule Meeting
-        icon: AiOutlineSchedule
+        icon: CalendarDays
         type: primary
         size: large
         block: true
@@ -790,7 +790,7 @@ Combined date and time picker.
 | `label.title` | string | - | Label title - supports html. |
 | `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
-| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
 | `label.span` | number | - | Label inline span. |
 | `label.disabled` | boolean | `false` | Hide input label. |
@@ -806,7 +806,16 @@ Combined date and time picker.
 | `showToday` | boolean | `true` | Shows a button to easily select the current date if true. |
 | `showNow` | boolean | `true` | Shows a 'Now' button to set current time. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
-| `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon on right-hand side of the date picker. |
+| `suffixIcon` | string \| object | `"calendar"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on right-hand side of the date picker. |
+| `suffixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `suffixIcon.color` | string | - | Icon color. |
+| `suffixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `suffixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `suffixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `suffixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `suffixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `suffixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `suffixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `timeFormat` | string | `"HH:mm"` | Time format to show in the time selector. HH:mm:ss will show hours, minutes and seconds, HH:mm only hours and minutes and HH only hours. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design date-picker tokens](https://ant.design/components/date-picker#design-token). |

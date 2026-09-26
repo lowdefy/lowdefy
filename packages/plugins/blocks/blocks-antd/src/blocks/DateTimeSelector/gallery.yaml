@@ -305,14 +305,14 @@
       type: DateTimeSelector
       properties:
         title: Clock Icon
-        suffixIcon: AiOutlineClockCircle
+        suffixIcon: clock
         label:
           disabled: true
     - id: dts_icon_schedule
       type: DateTimeSelector
       properties:
         title: Schedule Icon
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         label:
           disabled: true
     - id: dts_icon_custom_color
@@ -320,7 +320,7 @@
       properties:
         title: Custom Color Icon
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         label:
           disabled: true
@@ -329,7 +329,7 @@
       properties:
         title: Heart Icon
         suffixIcon:
-          name: AiOutlineHeart
+          name: heart
           color: '#ff4d4f'
         label:
           disabled: true
@@ -598,7 +598,7 @@
         placeholder: Select appointment date & time
         format: DD MMMM YYYY HH:mm
         size: large
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         showToday: true
         showNow: true
         allowClear: true
@@ -628,7 +628,7 @@
         minuteStep: 30
         hourStep: 1
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         disabledDates:
           min: '2026-01-01'
@@ -643,7 +643,7 @@
         selectUTC: true
         size: large
         variant: filled
-        suffixIcon: AiOutlineClockCircle
+        suffixIcon: clock
         label:
           extra: Time is recorded in UTC.
     - id: dts_combo_themed
@@ -656,7 +656,7 @@
         placeholder: Choose a special date & time...
         minuteStep: 15
         suffixIcon:
-          name: AiOutlineHeart
+          name: heart
           color: '#eb2f96'
         label:
           disabled: true
@@ -681,7 +681,7 @@
             format: DD MMMM YYYY HH:mm
             minuteStep: 15
             size: large
-            suffixIcon: AiOutlineSchedule
+            suffixIcon: CalendarDays
             label:
               extra: Appointments are available in 15-minute slots.
             disabledDates:
@@ -711,7 +711,7 @@
           type: Button
           properties:
             title: Book Appointment
-            icon: AiOutlineCalendar
+            icon: calendar
             type: primary
             size: large
             block: true
@@ -742,7 +742,7 @@
             placeholder: Select meeting date and time
             format: DD MMMM YYYY HH:mm
             minuteStep: 15
-            suffixIcon: AiOutlineClockCircle
+            suffixIcon: clock
             label:
               extra: Meetings are scheduled in 15-minute increments.
             disabledDates:
@@ -757,7 +757,7 @@
           type: Button
           properties:
             title: Schedule Meeting
-            icon: AiOutlineSchedule
+            icon: CalendarDays
             type: primary
             size: large
             block: true

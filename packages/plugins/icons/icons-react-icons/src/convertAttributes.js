@@ -14,8 +14,18 @@
   limitations under the License.
 */
 
-const defaultIconsProd = {
-  'react-icons/ai': ['AiOutlineExclamationCircle', 'AiOutlineLoading3Quarters'],
-};
+function toReactAttributeName(name) {
+  if (name === 'class') return 'className';
+  if (name.startsWith('aria-') || name.startsWith('data-')) return name;
+  return name.replace(/[-:]([a-z])/g, (_, letter) => letter.toUpperCase());
+}
 
-export default defaultIconsProd;
+function convertAttributes({ attributes }) {
+  const converted = {};
+  Object.entries(attributes ?? {}).forEach(([name, value]) => {
+    converted[toReactAttributeName(name)] = value;
+  });
+  return converted;
+}
+
+export default convertAttributes;

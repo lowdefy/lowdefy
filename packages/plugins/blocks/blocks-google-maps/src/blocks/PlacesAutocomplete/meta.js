@@ -18,14 +18,7 @@ import AutoCompleteMeta from '@lowdefy/blocks-antd/blocks/AutoComplete/meta.js';
 
 export default {
   category: 'input',
-  icons: [
-    'AiFillCloseCircle',
-    'AiFillCheckCircle',
-    'AiOutlineLoading',
-    'AiFillExclamationCircle',
-    'AiOutlineQuestionCircle',
-    'MdLocationOn',
-  ],
+  icons: ['error', 'success', 'loading', 'warning', 'help', 'location', 'clear'],
   valueType: 'object',
   cssKeys: {
     element: 'The PlacesAutocomplete input element.',
@@ -175,8 +168,9 @@ export default {
                   },
                   icon: {
                     type: 'string',
-                    default: 'AiOutlineQuestionCircle',
-                    description: 'Name of the icon to show beside the label.',
+                    default: 'help',
+                    description:
+                      'Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`.',
                   },
                   color: {
                     type: 'string',
@@ -209,8 +203,9 @@ export default {
       },
       optionsIcon: {
         type: ['string', 'object'],
-        default: { name: 'MdLocationOn' },
-        description: 'Icon displayed before each suggestion in the dropdown.',
+        default: 'location',
+        description:
+          'Icon displayed before each suggestion in the dropdown: a semantic name like `location`, a Lucide icon name like `MapPin`, or a set-qualified name like `tabler:MapPin`, or properties of an Icon block.',
         docs: {
           displayType: 'icon',
         },

@@ -333,7 +333,7 @@ Password input with visibility toggle.
       properties:
         title: Username
         placeholder: Enter your username
-        prefixIcon: AiOutlineUser
+        prefixIcon: user
     - id: login_password
       type: PasswordInput
       required: true
@@ -347,7 +347,7 @@ Password input with visibility toggle.
       type: Button
       properties:
         title: Sign In
-        icon: AiOutlineLogin
+        icon: login
         type: primary
         size: large
         block: true
@@ -397,7 +397,7 @@ Password input with visibility toggle.
       type: Button
       properties:
         title: Update Password
-        icon: AiOutlineLock
+        icon: lock
         type: primary
         size: large
         block: true
@@ -423,7 +423,7 @@ Password input with visibility toggle.
 | `label.title` | string | - | Label title - supports html. |
 | `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
-| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
 | `label.span` | number | - | Label inline span. |
 | `label.disabled` | boolean | `false` | Hide input label. |

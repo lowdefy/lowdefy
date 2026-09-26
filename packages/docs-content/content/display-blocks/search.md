@@ -163,11 +163,11 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
       - label: Concepts
         match:
           section: Concepts
-        icon: AiOutlineBulb
+        icon: Lightbulb
       - label: Blocks
         match:
           section: Blocks
-        icon: AiOutlineLayout
+        icon: PanelsTopLeft
   events:
     onSelect:
       - id: navigate
@@ -221,15 +221,15 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
       - label: Admin
         match:
           category: Admin
-        icon: AiOutlineSetting
+        icon: settings
       - label: Finance
         match:
           category: Finance
-        icon: AiOutlineDollar
+        icon: DollarSign
       - label: Analytics
         match:
           category: Analytics
-        icon: AiOutlineBarChart
+        icon: chart
     placeholder: Search features...
     label: Find
     shortcut: mod+k
@@ -308,7 +308,16 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
 | `searchOptions.prefix` | boolean | `true` | Enable prefix matching. |
 | `searchOptions.combineWith` | string | `"OR"` | How to combine search terms. Enum: `OR`, `AND`. |
 | `label` | string | `"Search"` | Trigger button text. |
-| `icon` | string \| object | - | Trigger button icon name or Icon block properties. |
+| `icon` | string \| object | `"search"` | Trigger button icon: a semantic name like `search`, a Lucide icon name like `Search`, or a set-qualified name like `tabler:Search`, or properties of an Icon block. |
+| `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `icon.color` | string | - | Icon color. |
+| `icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `showShortcut` | boolean | `true` | Show keyboard shortcut badge on the trigger button. |
 | `placeholder` | string | `"Search..."` | Search input placeholder text. |
 | `shortcut` | string | `"mod+k"` | Keyboard shortcut to open the modal. Renders a shortcut badge on the trigger button (see showShortcut). Use "mod" for Cmd on Mac, Ctrl elsewhere. |

@@ -17,8 +17,50 @@
 export default {
   type: ['string', 'object'],
   description:
-    "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon.",
+    'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon.',
   docs: {
     displayType: 'icon',
+  },
+  properties: {
+    name: {
+      type: 'string',
+      description:
+        'Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`.',
+    },
+    color: {
+      type: 'string',
+      description: 'Icon color.',
+    },
+    size: {
+      type: ['string', 'number'],
+      description: 'Size of the icon. Defaults to `theme.icons.size`.',
+    },
+    rotate: {
+      type: 'number',
+      description: 'Number of degrees to rotate the icon.',
+    },
+    spin: {
+      type: 'boolean',
+      description: 'Continuously spin the icon with animation.',
+    },
+    strokeWidth: {
+      type: 'number',
+      description:
+        'Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2).',
+    },
+    nonScalingStroke: {
+      type: 'boolean',
+      description:
+        'Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`.',
+    },
+    title: {
+      type: 'string',
+      description:
+        'Icon hover title for accessibility. An empty string marks the icon as decorative.',
+    },
+    disableLoadingIcon: {
+      type: 'boolean',
+      description: "While loading after the icon has been clicked, don't render the loading icon.",
+    },
   },
 };

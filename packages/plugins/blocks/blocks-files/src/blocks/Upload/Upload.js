@@ -21,6 +21,8 @@ import { Button } from '@lowdefy/blocks-antd/blocks';
 import { Upload as AntdUpload } from 'antd';
 
 import useFileList from '../utils/useFileList.js';
+import createUploadIconRender from '../utils/createUploadIconRender.js';
+import getUploadListIcons from '../utils/getUploadListIcons.js';
 import getEmitFileContent from '../utils/getEmitFileContent.js';
 import getUploadRequest from '../utils/getUploadRequest.js';
 import withTheme from '../../withTheme.js';
@@ -85,7 +87,11 @@ const UploadBlock = ({
         maxCount={properties.maxCount}
         multiple={!properties.singleFile} // Allows selection of multiple files at once, does not block multiple uploads
         onRemove={removeFile}
-        showUploadList={properties.showUploadList}
+        iconRender={createUploadIconRender({ blockId, Icon: components.Icon })}
+        showUploadList={
+          properties.showUploadList !== false &&
+          getUploadListIcons({ blockId, Icon: components.Icon })
+        }
         onChange={() => {
           // emitFileContent triggers onChange itself once the content is read,
           // so the file object in the event payload carries the base64 content.
@@ -100,7 +106,7 @@ const UploadBlock = ({
           events={events}
           properties={{
             disabled: properties.disabled,
-            icon: 'AiOutlineUpload',
+            icon: { name: 'upload', title: '' },
             title: 'Upload',
             type: 'default',
             ...properties.button,

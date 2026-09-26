@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'container',
-  icons: [],
+  icons: ['success', 'info', 'warning', 'error', 'close', 'loading'],
   valueType: null,
   slots: {
     content: 'Content blocks in the confirm modal body.',
@@ -58,12 +60,9 @@ export default {
         description: 'Modal content. Overridden by the "content" content area - supports html.',
       },
       icon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize modal icon.",
-        docs: {
-          displayType: 'icon',
-        },
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize modal icon.',
       },
       mask: {
         type: 'boolean',

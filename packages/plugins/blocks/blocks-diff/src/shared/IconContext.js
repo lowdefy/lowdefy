@@ -14,17 +14,10 @@
   limitations under the License.
 */
 
-import { ConfigWarning } from '@lowdefy/errors';
+import { createContext } from 'react';
 
-import findSimilarString from '../../utils/findSimilarString.js';
+// The diff renderers nest several helper components deep; a context gives them the
+// app's Icon component without threading it through every one.
+const IconContext = createContext(null);
 
-function createUnknownDataIconWarning({ aliases, name }) {
-  let message = `data-icon="${name}" is not an icon alias or a react-icons name.`;
-  const suggestion = findSimilarString({ input: name, candidates: Object.keys(aliases) });
-  if (suggestion) {
-    message += ` Did you mean "${suggestion}"?`;
-  }
-  return new ConfigWarning(message, { checkSlug: 'icons' });
-}
-
-export default createUnknownDataIconWarning;
+export default IconContext;

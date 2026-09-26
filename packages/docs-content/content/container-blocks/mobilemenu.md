@@ -31,17 +31,17 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Dashboard
-          icon: AiOutlineDashboard
+          icon: Gauge
       - id: bi_users
         type: MenuLink
         properties:
           title: Users
-          icon: AiOutlineUser
+          icon: user
       - id: bi_settings
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
 - id: basic_page_links
   type: MobileMenu
   layout:
@@ -53,19 +53,19 @@ Responsive mobile navigation menu with drawer.
         pageId: docs
         properties:
           title: Documentation
-          icon: AiOutlineFileText
+          icon: document
       - id: bpl_api
         type: MenuLink
         pageId: api-reference
         properties:
           title: API Reference
-          icon: AiOutlineApi
+          icon: Plug
       - id: bpl_changelog
         type: MenuLink
         pageId: changelog
         properties:
           title: Changelog
-          icon: AiOutlineHistory
+          icon: history
 ```
 
 ```yaml
@@ -79,12 +79,12 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Overview
-          icon: AiOutlineHome
+          icon: home
       - id: gs_management
         type: MenuGroup
         properties:
           title: Management
-          icon: AiOutlineAppstore
+          icon: grid
         links:
           - id: gs_projects
             type: MenuLink
@@ -104,7 +104,7 @@ Responsive mobile navigation menu with drawer.
         type: MenuGroup
         properties:
           title: Content
-          icon: AiOutlineFileText
+          icon: document
         links:
           - id: gn_posts
             type: MenuLink
@@ -118,7 +118,7 @@ Responsive mobile navigation menu with drawer.
         type: MenuGroup
         properties:
           title: Users
-          icon: AiOutlineTeam
+          icon: users
         links:
           - id: gn_all
             type: MenuLink
@@ -138,7 +138,7 @@ Responsive mobile navigation menu with drawer.
         type: MenuGroup
         properties:
           title: Products
-          icon: AiOutlineShop
+          icon: Store
         links:
           - id: gd_electronics
             type: MenuGroup
@@ -166,14 +166,14 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: db_divider
         type: MenuDivider
       - id: db_settings
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
 - id: divider_dashed
   type: MobileMenu
   layout:
@@ -184,7 +184,7 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Profile
-          icon: AiOutlineUser
+          icon: user
       - id: dd_divider
         type: MenuDivider
         properties:
@@ -193,7 +193,7 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Help Center
-          icon: AiOutlineQuestionCircle
+          icon: help
 - id: divider_danger
   type: MobileMenu
   layout:
@@ -204,20 +204,20 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Account
-          icon: AiOutlineUser
+          icon: user
       - id: dg_divider
         type: MenuDivider
       - id: dg_delete
         type: MenuLink
         properties:
           title: Delete Account
-          icon: AiOutlineDelete
+          icon: delete
           danger: true
       - id: dg_logout
         type: MenuLink
         properties:
           title: Sign Out
-          icon: AiOutlineLogout
+          icon: logout
           danger: true
 ```
 
@@ -233,17 +233,17 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: tl_explore
         type: MenuLink
         properties:
           title: Explore
-          icon: AiOutlineCompass
+          icon: Compass
       - id: tl_settings
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
 - id: theme_dark
   type: MobileMenu
   layout:
@@ -255,17 +255,17 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: td_explore
         type: MenuLink
         properties:
           title: Explore
-          icon: AiOutlineCompass
+          icon: Compass
       - id: td_settings
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
 ```
 
 ```yaml
@@ -281,17 +281,17 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Dashboard
-          icon: AiOutlineDashboard
+          icon: Gauge
       - id: sk_users
         type: MenuLink
         properties:
           title: Users
-          icon: AiOutlineUser
+          icon: user
       - id: sk_reports
         type: MenuLink
         properties:
           title: Reports
-          icon: AiOutlineBarChart
+          icon: chart
 - id: selected_multiple
   type: MobileMenu
   layout:
@@ -305,17 +305,17 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Inbox
-          icon: AiOutlineInbox
+          icon: Inbox
       - id: sm_sent
         type: MenuLink
         properties:
           title: Sent
-          icon: AiOutlineSend
+          icon: send
       - id: sm_drafts
         type: MenuLink
         properties:
           title: Drafts
-          icon: AiOutlineEdit
+          icon: edit
 - id: selected_in_group
   type: MobileMenu
   layout:
@@ -328,12 +328,12 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Overview
-          icon: AiOutlineHome
+          icon: home
       - id: sig_project
         type: MenuGroup
         properties:
           title: Project
-          icon: AiOutlineProject
+          icon: SquareKanban
         links:
           - id: sig_tasks
             type: MenuLink
@@ -353,7 +353,7 @@ Responsive mobile navigation menu with drawer.
   properties:
     toggleMenuButton:
       type: default
-      icon: AiOutlineMenu
+      icon: menu
     links:
       - id: tdt_home
         type: MenuLink
@@ -370,7 +370,7 @@ Responsive mobile navigation menu with drawer.
   properties:
     toggleMenuButton:
       type: text
-      icon: AiOutlineUnorderedList
+      icon: list
     links:
       - id: ttv_home
         type: MenuLink
@@ -387,7 +387,7 @@ Responsive mobile navigation menu with drawer.
   properties:
     toggleMenuButton:
       type: primary
-      icon: AiOutlineBars
+      icon: menu
       danger: true
     links:
       - id: tds_home
@@ -414,12 +414,12 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: dt_profile
         type: MenuLink
         properties:
           title: Profile
-          icon: AiOutlineUser
+          icon: user
 - id: drawer_left
   type: MobileMenu
   layout:
@@ -434,12 +434,12 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: dl_search
         type: MenuLink
         properties:
           title: Search
-          icon: AiOutlineSearch
+          icon: search
 - id: drawer_wide
   type: MobileMenu
   layout:
@@ -456,7 +456,7 @@ Responsive mobile navigation menu with drawer.
         type: MenuGroup
         properties:
           title: Categories
-          icon: AiOutlineAppstore
+          icon: grid
         links:
           - id: dw_electronics
             type: MenuLink
@@ -481,7 +481,7 @@ Responsive mobile navigation menu with drawer.
         type: MenuGroup
         properties:
           title: Tools
-          icon: AiOutlineTool
+          icon: Wrench
         links:
           - id: df_editor
             type: MenuLink
@@ -503,7 +503,7 @@ Responsive mobile navigation menu with drawer.
         type: MenuGroup
         properties:
           title: Tools
-          icon: AiOutlineTool
+          icon: Wrench
         links:
           - id: ds_editor
             type: MenuLink
@@ -526,12 +526,12 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: et_about
         type: MenuLink
         properties:
           title: About
-          icon: AiOutlineInfoCircle
+          icon: info
   events:
     onToggleDrawer:
       - id: toggle_msg
@@ -549,12 +549,12 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: eoc_profile
         type: MenuLink
         properties:
           title: Profile
-          icon: AiOutlineUser
+          icon: user
   events:
     onOpen:
       - id: open_msg
@@ -578,12 +578,12 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Dashboard
-          icon: AiOutlineDashboard
+          icon: Gauge
       - id: eic_reports
         type: MenuLink
         properties:
           title: Reports
-          icon: AiOutlineBarChart
+          icon: chart
   events:
     onMenuItemClick:
       - id: click_msg
@@ -607,7 +607,7 @@ Responsive mobile navigation menu with drawer.
         type: MenuGroup
         properties:
           title: Tools
-          icon: AiOutlineTool
+          icon: Wrench
         links:
           - id: egt_editor
             type: MenuLink
@@ -640,12 +640,12 @@ Responsive mobile navigation menu with drawer.
           color: "#1677ff"
         properties:
           title: Featured
-          icon: AiOutlineStar
+          icon: star
       - id: lsc_regular
         type: MenuLink
         properties:
           title: Regular Item
-          icon: AiOutlineFile
+          icon: file
       - id: lsc_muted
         type: MenuLink
         style:
@@ -653,7 +653,7 @@ Responsive mobile navigation menu with drawer.
           fontStyle: italic
         properties:
           title: Archived
-          icon: AiOutlineFolder
+          icon: folder
 - id: link_style_icon_object
   type: MobileMenu
   layout:
@@ -665,21 +665,21 @@ Responsive mobile navigation menu with drawer.
         properties:
           title: Alerts
           icon:
-            name: AiOutlineBell
+            name: bell
             color: "#faad14"
       - id: lsi_success
         type: MenuLink
         properties:
           title: Completed
           icon:
-            name: AiOutlineCheckCircle
+            name: check-circle
             color: "#52c41a"
       - id: lsi_error
         type: MenuLink
         properties:
           title: Errors
           icon:
-            name: AiOutlineCloseCircle
+            name: close-circle
             color: "#ff4d4f"
 ```
 
@@ -695,12 +695,12 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: cts_settings
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
 - id: css_tailwind_bg
   type: MobileMenu
   layout:
@@ -712,12 +712,12 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: ctb_explore
         type: MenuLink
         properties:
           title: Explore
-          icon: AiOutlineCompass
+          icon: Compass
 - id: css_inline_style
   type: MobileMenu
   layout:
@@ -733,12 +733,12 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: cis_help
         type: MenuLink
         properties:
           title: Help
-          icon: AiOutlineQuestionCircle
+          icon: help
 - id: css_dark_context
   type: Box
   class: bg-gradient-to-r from-slate-900 to-slate-700 p-4 rounded-lg
@@ -754,18 +754,18 @@ Responsive mobile navigation menu with drawer.
         toggleMenuButton:
           type: primary
           ghost: true
-          icon: AiOutlineMenu
+          icon: menu
         links:
           - id: cod_home
             type: MenuLink
             properties:
               title: Home
-              icon: AiOutlineHome
+              icon: home
           - id: cod_settings
             type: MenuLink
             properties:
               title: Settings
-              icon: AiOutlineSetting
+              icon: settings
 ```
 
 ```yaml
@@ -781,19 +781,19 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
           shortcut: mod+1
       - id: ms_search
         type: MenuLink
         properties:
           title: Search
-          icon: AiOutlineSearch
+          icon: search
           shortcut: mod+k
       - id: ms_settings
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
           shortcut: mod+,
 ```
 
@@ -813,12 +813,12 @@ Responsive mobile navigation menu with drawer.
         type: MenuLink
         properties:
           title: Home
-          icon: AiOutlineHome
+          icon: home
       - id: ml_settings
         type: MenuLink
         properties:
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
 ```
 
 Content above the menu items.
@@ -937,7 +937,7 @@ Use the navigation menu to manage your application.
           properties:
             toggleMenuButton:
               type: text
-              icon: AiOutlineMenu
+              icon: menu
             drawer:
               title: Admin Panel
               width: 280
@@ -946,12 +946,12 @@ Use the navigation menu to manage your application.
                 type: MenuLink
                 properties:
                   title: Dashboard
-                  icon: AiOutlineDashboard
+                  icon: Gauge
               - id: an_content
                 type: MenuGroup
                 properties:
                   title: Content
-                  icon: AiOutlineFileText
+                  icon: document
                 links:
                   - id: an_posts
                     type: MenuLink
@@ -965,7 +965,7 @@ Use the navigation menu to manage your application.
                 type: MenuGroup
                 properties:
                   title: Users
-                  icon: AiOutlineTeam
+                  icon: users
                 links:
                   - id: an_all_users
                     type: MenuLink
@@ -981,7 +981,7 @@ Use the navigation menu to manage your application.
                 type: MenuLink
                 properties:
                   title: Settings
-                  icon: AiOutlineSetting
+                  icon: settings
               - id: an_divider2
                 type: MenuDivider
                 properties:
@@ -990,7 +990,7 @@ Use the navigation menu to manage your application.
                 type: MenuLink
                 properties:
                   title: Sign Out
-                  icon: AiOutlineLogout
+                  icon: logout
                   danger: true
           events:
             onMenuItemClick:
@@ -1018,7 +1018,7 @@ Use the navigation menu to manage your application.
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineBell
+            icon: bell
             hideTitle: true
             variant: text
             color: default
@@ -1027,7 +1027,7 @@ Use the navigation menu to manage your application.
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineUser
+            icon: user
             hideTitle: true
             shape: circle
             variant: filled
@@ -1080,7 +1080,7 @@ Browse our latest collection across all categories.
             toggleMenuButton:
               type: primary
               ghost: true
-              icon: AiOutlineMenu
+              icon: menu
             drawer:
               title: Shop Categories
               width: 300
@@ -1093,14 +1093,14 @@ Browse our latest collection across all categories.
                 url: /
                 properties:
                   title: Home
-                  icon: AiOutlineHome
+                  icon: home
               - id: sn_divider_top
                 type: MenuDivider
               - id: sn_clothing
                 type: MenuGroup
                 properties:
                   title: Clothing
-                  icon: AiOutlineSkin
+                  icon: Shirt
                 links:
                   - id: sn_mens
                     type: MenuLink
@@ -1118,7 +1118,7 @@ Browse our latest collection across all categories.
                 type: MenuGroup
                 properties:
                   title: Electronics
-                  icon: AiOutlineLaptop
+                  icon: Laptop
                 links:
                   - id: sn_phones
                     type: MenuLink
@@ -1136,13 +1136,13 @@ Browse our latest collection across all categories.
                 type: MenuLink
                 properties:
                   title: Today's Deals
-                  icon: AiOutlineThunderbolt
+                  icon: Zap
               - id: sn_orders
                 type: MenuLink
                 pageId: orders
                 properties:
                   title: My Orders
-                  icon: AiOutlineShoppingCart
+                  icon: ShoppingCart
           events:
             onMenuItemSelect:
               - id: shop_select_msg
@@ -1179,7 +1179,7 @@ Browse our latest collection across all categories.
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineSearch
+            icon: search
             hideTitle: true
             variant: text
             ghost: true
@@ -1189,7 +1189,7 @@ Browse our latest collection across all categories.
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineShoppingCart
+            icon: ShoppingCart
             hideTitle: true
             variant: text
             ghost: true
@@ -1232,7 +1232,16 @@ Browse our latest collection across all categories.
 | `links.$.style` | object | - | Css style to applied to link. |
 | `links.$.properties` | object | - | properties from menu item. |
 | `links.$.properties.title` | string | - | Menu item title. |
-| `links.$.properties.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon on menu item. |
+| `links.$.properties.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on menu item. |
+| `links.$.properties.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `links.$.properties.icon.color` | string | - | Icon color. |
+| `links.$.properties.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `links.$.properties.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `links.$.properties.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `links.$.properties.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `links.$.properties.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `links.$.properties.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `links.$.properties.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `links.$.properties.danger` | boolean | `false` | Apply danger style to menu item. |
 | `links.$.properties.dashed` | boolean | `false` | Whether the divider line is dashed. |
 | `links.$.links` | array | - |  |

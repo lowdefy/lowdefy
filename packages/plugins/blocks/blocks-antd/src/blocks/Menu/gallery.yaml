@@ -23,7 +23,7 @@
             type: MenuLink
             properties:
               title: Home
-              icon: AiOutlineHome
+              icon: home
           - id: mh_about
             type: MenuLink
             properties:
@@ -56,17 +56,17 @@
             type: MenuLink
             properties:
               title: Dashboard
-              icon: AiOutlineHome
+              icon: home
           - id: mv_users
             type: MenuLink
             properties:
               title: Users
-              icon: AiOutlineUser
+              icon: user
           - id: mv_settings
             type: MenuGroup
             properties:
               title: Settings
-              icon: AiOutlineSetting
+              icon: settings
             links:
               - id: mv_profile
                 type: MenuLink
@@ -89,7 +89,7 @@
             type: MenuGroup
             properties:
               title: Navigation
-              icon: AiOutlineAppstore
+              icon: grid
             links:
               - id: mi_option1
                 type: MenuLink
@@ -103,7 +103,7 @@
             type: MenuGroup
             properties:
               title: Tools
-              icon: AiOutlineTool
+              icon: Wrench
             links:
               - id: mi_option3
                 type: MenuLink
@@ -127,17 +127,17 @@
             type: MenuLink
             properties:
               title: Mail
-              icon: AiOutlineMail
+              icon: mail
           - id: lt_calendar
             type: MenuLink
             properties:
               title: Calendar
-              icon: AiOutlineCalendar
+              icon: calendar
           - id: lt_settings
             type: MenuLink
             properties:
               title: Settings
-              icon: AiOutlineSetting
+              icon: settings
     - id: lt_dividers_menu
       type: Menu
       style:
@@ -149,19 +149,19 @@
             type: MenuLink
             properties:
               title: General
-              icon: AiOutlineSetting
+              icon: settings
           - id: lt_profile
             type: MenuLink
             properties:
               title: Profile
-              icon: AiOutlineUser
+              icon: user
           - id: lt_solid_divider
             type: MenuDivider
           - id: lt_files
             type: MenuLink
             properties:
               title: Files
-              icon: AiOutlineFile
+              icon: file
           - id: lt_dashed_divider
             type: MenuDivider
             properties:
@@ -170,7 +170,7 @@
             type: MenuLink
             properties:
               title: Logout
-              icon: AiOutlineLogout
+              icon: logout
     - id: lt_nested_menu
       type: Menu
       style:
@@ -184,7 +184,7 @@
             type: MenuGroup
             properties:
               title: Navigation
-              icon: AiOutlineAppstore
+              icon: grid
             links:
               - id: lt_child_group
                 type: MenuGroup
@@ -214,19 +214,19 @@
             type: MenuLink
             properties:
               title: Edit
-              icon: AiOutlineEdit
+              icon: edit
           - id: lt_copy
             type: MenuLink
             properties:
               title: Copy
-              icon: AiOutlineCopy
+              icon: copy
           - id: lt_danger_divider
             type: MenuDivider
           - id: lt_delete
             type: MenuLink
             properties:
               title: Delete
-              icon: AiOutlineDelete
+              icon: delete
               danger: true
 
 - title: Selected Keys and Default Open Keys
@@ -264,7 +264,7 @@
             type: MenuGroup
             properties:
               title: Group 1
-              icon: AiOutlineFolder
+              icon: folder
             links:
               - id: dok_item1
                 type: MenuLink
@@ -278,7 +278,7 @@
             type: MenuGroup
             properties:
               title: Group 2
-              icon: AiOutlineFolderOpen
+              icon: FolderOpen
             links:
               - id: dok_item3
                 type: MenuLink
@@ -297,17 +297,17 @@
             type: MenuLink
             properties:
               title: Dashboard
-              icon: AiOutlineHome
+              icon: home
           - id: sk_multi_b
             type: MenuLink
             properties:
               title: Reports
-              icon: AiOutlineBarChart
+              icon: chart
           - id: sk_multi_c
             type: MenuLink
             properties:
               title: Settings
-              icon: AiOutlineSetting
+              icon: settings
 
 - title: Inline Options
   blocks:
@@ -323,17 +323,17 @@
             type: MenuLink
             properties:
               title: Home
-              icon: AiOutlineHome
+              icon: home
           - id: io_users
             type: MenuLink
             properties:
               title: Users
-              icon: AiOutlineUser
+              icon: user
           - id: io_settings
             type: MenuLink
             properties:
               title: Settings
-              icon: AiOutlineSetting
+              icon: settings
     - id: io_indent_menu
       type: Menu
       style:
@@ -348,7 +348,7 @@
             type: MenuGroup
             properties:
               title: Deep Indent
-              icon: AiOutlineMenuFold
+              icon: sidebar-collapse
             links:
               - id: io_ind_a
                 type: MenuLink
@@ -364,7 +364,7 @@
         width: 256
       properties:
         mode: inline
-        expandIcon: AiOutlineRight
+        expandIcon: chevron-right
         defaultOpenKeys:
           - io_exp_group
         links:
@@ -372,7 +372,7 @@
             type: MenuGroup
             properties:
               title: Custom Expand Icon
-              icon: AiOutlineAppstore
+              icon: grid
             links:
               - id: io_exp_a
                 type: MenuLink
@@ -398,7 +398,7 @@
             type: MenuGroup
             properties:
               title: Instant Open
-              icon: AiOutlineThunderbolt
+              icon: Zap
             links:
               - id: sd_fast_a
                 type: MenuLink
@@ -421,7 +421,7 @@
             type: MenuGroup
             properties:
               title: Slow Submenu
-              icon: AiOutlineClockCircle
+              icon: clock
             links:
               - id: sd_slow_a
                 type: MenuLink
@@ -443,7 +443,7 @@
             type: MenuGroup
             properties:
               title: Pre-rendered Submenu
-              icon: AiOutlineSync
+              icon: RefreshCw
             links:
               - id: sd_force_a
                 type: MenuLink
@@ -468,17 +468,17 @@
             type: MenuLink
             properties:
               title: Home
-              icon: AiOutlineHome
+              icon: home
           - id: css_tw_reports
             type: MenuLink
             properties:
               title: Reports
-              icon: AiOutlineBarChart
+              icon: chart
           - id: css_tw_settings
             type: MenuLink
             properties:
               title: Settings
-              icon: AiOutlineSetting
+              icon: settings
     - id: css_inline_menu
       type: Menu
       style:
@@ -493,12 +493,12 @@
             type: MenuLink
             properties:
               title: Dashboard
-              icon: AiOutlineDashboard
+              icon: Gauge
           - id: css_in_analytics
             type: MenuLink
             properties:
               title: Analytics
-              icon: AiOutlineLineChart
+              icon: ChartLine
     - id: css_dark_bg
       type: Box
       class: bg-gradient-to-b from-slate-900 to-slate-800 p-4 rounded-lg
@@ -513,17 +513,17 @@
                 type: MenuLink
                 properties:
                   title: Home
-                  icon: AiOutlineHome
+                  icon: home
               - id: css_dk_explore
                 type: MenuLink
                 properties:
                   title: Explore
-                  icon: AiOutlineCompass
+                  icon: Compass
               - id: css_dk_profile
                 type: MenuLink
                 properties:
                   title: Profile
-                  icon: AiOutlineUser
+                  icon: user
     - id: css_link_style_menu
       type: Menu
       style:
@@ -567,17 +567,17 @@
             type: MenuLink
             properties:
               title: Home
-              icon: AiOutlineHome
+              icon: home
           - id: tt_active
             type: MenuLink
             properties:
               title: Active
-              icon: AiOutlineStar
+              icon: star
           - id: tt_settings
             type: MenuLink
             properties:
               title: Settings
-              icon: AiOutlineSetting
+              icon: settings
     - id: tt_sizing_menu
       type: Menu
       style:
@@ -595,17 +595,17 @@
             type: MenuLink
             properties:
               title: Dashboard
-              icon: AiOutlineHome
+              icon: home
           - id: tt_sz_reports
             type: MenuLink
             properties:
               title: Reports
-              icon: AiOutlineBarChart
+              icon: chart
           - id: tt_sz_settings
             type: MenuLink
             properties:
               title: Settings
-              icon: AiOutlineSetting
+              icon: settings
     - id: tt_dark_custom_menu
       type: Menu
       style:
@@ -626,17 +626,17 @@
             type: MenuLink
             properties:
               title: Home
-              icon: AiOutlineHome
+              icon: home
           - id: tt_dc_analytics
             type: MenuLink
             properties:
               title: Analytics
-              icon: AiOutlineLineChart
+              icon: ChartLine
           - id: tt_dc_team
             type: MenuLink
             properties:
               title: Team
-              icon: AiOutlineTeam
+              icon: users
     - id: tt_danger_menu
       type: Menu
       style:
@@ -653,14 +653,14 @@
             type: MenuLink
             properties:
               title: My Files
-              icon: AiOutlineFile
+              icon: file
           - id: tt_dg_divider
             type: MenuDivider
           - id: tt_dg_delete
             type: MenuLink
             properties:
               title: Delete Account
-              icon: AiOutlineDelete
+              icon: delete
               danger: true
 
 - title: Menu in Admin Dashboard
@@ -696,12 +696,12 @@
                     type: MenuLink
                     properties:
                       title: Overview
-                      icon: AiOutlineDashboard
+                      icon: Gauge
                   - id: adm_content
                     type: MenuGroup
                     properties:
                       title: Content
-                      icon: AiOutlineFileText
+                      icon: document
                     links:
                       - id: adm_posts
                         type: MenuLink
@@ -719,7 +719,7 @@
                     type: MenuGroup
                     properties:
                       title: Users
-                      icon: AiOutlineTeam
+                      icon: users
                     links:
                       - id: adm_all_users
                         type: MenuLink
@@ -735,7 +735,7 @@
                     type: MenuLink
                     properties:
                       title: Danger Zone
-                      icon: AiOutlineWarning
+                      icon: warning
                       danger: true
               events:
                 onSelect:
@@ -787,12 +787,12 @@
                 type: MenuLink
                 properties:
                   title: Getting Started
-                  icon: AiOutlineRocket
+                  icon: Rocket
               - id: docs_guides
                 type: MenuLink
                 properties:
                   title: Guides
-                  icon: AiOutlineBook
+                  icon: Book
               - id: docs_api_ref
                 type: MenuGroup
                 properties:
@@ -816,7 +816,7 @@
                 type: MenuLink
                 properties:
                   title: Examples
-                  icon: AiOutlineCode
+                  icon: CodeXml
           events:
             onClick:
               - id: docs_click_msg
@@ -861,7 +861,7 @@
             class: rounded-lg
             properties:
               title: Dashboard
-              icon: AiOutlineDashboard
+              icon: Gauge
           - id: ip_reports
             type: MenuLink
             class:
@@ -870,7 +870,7 @@
               .label: font-semibold
             properties:
               title: Reports
-              icon: AiOutlineBarChart
+              icon: chart
           - id: ip_settings
             type: MenuLink
             style:
@@ -880,7 +880,7 @@
                 letterSpacing: 0.05em
             properties:
               title: Settings
-              icon: AiOutlineSetting
+              icon: settings
     - id: ip_disabled_tooltip_extra_menu
       type: Menu
       style:
@@ -892,14 +892,14 @@
             type: MenuLink
             properties:
               title: Search
-              icon: AiOutlineSearch
+              icon: search
               extra: ⌘K
               tooltip: Open command palette
           - id: ip_history
             type: MenuLink
             properties:
               title: History
-              icon: AiOutlineHistory
+              icon: history
               disabled: true
               tooltip: Coming soon
           - id: ip_divider
@@ -908,7 +908,7 @@
             type: MenuLink
             properties:
               title: Delete account
-              icon: AiOutlineDelete
+              icon: delete
               danger: true
               extra: irreversible
     - id: ip_popup_class_menu
@@ -924,7 +924,7 @@
               .popup: shadow-2xl rounded-lg
             properties:
               title: Settings
-              icon: AiOutlineSetting
+              icon: settings
             links:
               - id: ip_general
                 type: MenuLink
@@ -948,19 +948,19 @@
             type: MenuLink
             properties:
               title: Home
-              icon: AiOutlineHome
+              icon: home
               shortcut: mod+1
           - id: ks_search
             type: MenuLink
             properties:
               title: Search
-              icon: AiOutlineSearch
+              icon: search
               shortcut: mod+k
           - id: ks_settings
             type: MenuLink
             properties:
               title: Settings
-              icon: AiOutlineSetting
+              icon: settings
               shortcut: mod+,
       events:
         onSelect:

@@ -757,7 +757,7 @@
           properties:
             title: Submit Survey
             type: primary
-            icon: AiOutlineSend
+            icon: send
           events:
             onClick:
               - id: survey_submit_action
@@ -827,7 +827,7 @@
           properties:
             title: Save Settings
             type: primary
-            icon: AiOutlineSave
+            icon: save
           events:
             onClick:
               - id: settings_save_action

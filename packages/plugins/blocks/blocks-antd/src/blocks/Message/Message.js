@@ -19,6 +19,8 @@ import { App } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
+import statusIcons from '../statusIcons.js';
+
 const MessageBlock = ({
   blockId,
   classNames = {},
@@ -31,18 +33,20 @@ const MessageBlock = ({
   const { message } = App.useApp();
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
-      return message[args.status ?? properties.status ?? 'success']({
+      const status = args.status ?? properties.status ?? 'success';
+      const icon = args.icon ?? properties.icon ?? statusIcons[status];
+      return message[status]({
         id: `${blockId}_message`,
         content: renderHtml({ html: args.content ?? properties.content ?? blockId, methods }),
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
         onClose: () => methods.triggerEvent({ name: 'onClose' }),
-        icon: (args.icon ?? properties.icon) && (
+        icon: icon && (
           <ErrorBoundary onError={handleError}>
             <Icon
               blockId={`${blockId}_icon`}
               classNames={{ element: classNames.icon }}
               events={events}
-              properties={args.icon ?? properties.icon}
+              properties={icon}
               styles={{ element: styles.icon }}
             />
           </ErrorBoundary>

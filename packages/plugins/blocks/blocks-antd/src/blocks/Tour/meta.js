@@ -16,7 +16,7 @@
 
 export default {
   category: 'display',
-  icons: [],
+  icons: ['close'],
   valueType: null,
   cssKeys: {
     element: 'The Tour element.',

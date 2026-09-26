@@ -36,6 +36,7 @@ import buildApi from '../buildApi/buildApi.js';
 import validateApiHtmlLinks from '../buildApi/validateApiHtmlLinks.js';
 import buildLogger from '../buildLogger.js';
 import buildImports from '../buildImports/buildImports.js';
+import buildIconContext from '../icons/buildIconContext.js';
 import buildMcp from '../buildMcp.js';
 import buildMenu from '../buildMenu.js';
 import buildModuleDefs from '../buildModuleDefs.js';
@@ -186,6 +187,12 @@ async function shallowBuild(options) {
       components,
       context,
     });
+
+    // Icon sets load asynchronously; a bad theme.icons stops the build here.
+    // buildShallowPages validates the icon names of sourceless pages, and
+    // buildImports resolves every icon name, against context.icons.
+    await buildIconContext({ components, context });
+    logCollectedErrors(context);
 
     const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
     tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });

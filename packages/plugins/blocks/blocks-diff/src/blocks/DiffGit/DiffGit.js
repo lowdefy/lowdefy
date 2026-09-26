@@ -21,7 +21,14 @@ import DiffShell from '../../shared/DiffShell.js';
 import GitDiffRenderer from '../../shared/renderers/GitDiffRenderer.js';
 import withTheme from '../../shared/withTheme.js';
 
-const DiffGitBlock = ({ blockId, classNames = {}, properties, methods, styles = {} }) => {
+const DiffGitBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  properties,
+  methods,
+  styles = {},
+}) => {
   const { before, after, title, emptyText = 'No changes', hide, show } = properties;
 
   return (
@@ -32,6 +39,7 @@ const DiffGitBlock = ({ blockId, classNames = {}, properties, methods, styles = 
       title={title}
       emptyText={emptyText}
       empty={false}
+      Icon={Icon}
       methods={methods}
     >
       <GitDiffRenderer

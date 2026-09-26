@@ -416,14 +416,14 @@ links:
       _module.pageId: users-list
     properties:
       title: Users
-      icon: AiOutlineUser
+      icon: user
   - id: invite
     type: MenuLink
     pageId:
       _module.pageId: user-invite
     properties:
       title: Invite User
-      icon: AiOutlineUserAdd
+      icon: UserPlus
 ```
 
 The app wraps these in a MenuGroup:

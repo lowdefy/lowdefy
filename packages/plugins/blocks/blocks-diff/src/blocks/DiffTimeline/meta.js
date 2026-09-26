@@ -16,7 +16,7 @@
 
 export default {
   category: 'display',
-  icons: [],
+  icons: ['add-circle', 'remove', 'edit', 'unchanged', 'arrow-right', 'chevron-right'],
   valueType: null,
   cssKeys: {
     element: 'The DiffTimeline wrapper element.',

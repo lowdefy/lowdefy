@@ -237,7 +237,7 @@
     - id: custom_icon_collapse
       type: Collapse
       properties:
-        expandIcon: AiOutlinePlusCircle
+        expandIcon: add-circle
         panels:
           - key: ci_features
             title: Key Features
@@ -268,7 +268,7 @@
       type: Collapse
       properties:
         expandIcon:
-          name: AiOutlineArrowRight
+          name: arrow-right
           color: '#1677ff'
         panels:
           - key: cio_one
@@ -725,7 +725,7 @@
                     flex: 0 0 auto
                   properties:
                     title: View Logs
-                    icon: AiOutlineFileText
+                    icon: document
                     color: primary
                     variant: outlined
                     size: small
@@ -735,7 +735,7 @@
                     flex: 0 0 auto
                   properties:
                     title: Metrics
-                    icon: AiOutlineBarChart
+                    icon: chart
                     color: primary
                     variant: outlined
                     size: small

@@ -29,7 +29,7 @@ blocks:
         properties:
           title: Reset
           block: true
-          icon: AiOutlineClear
+          icon: Eraser
 ################ -------- Copy from here -------- ################
         events:
           onClick:
@@ -92,7 +92,7 @@ blocks:
           block: true
           color: primary
           variant: solid
-          icon: AiOutlineSave
+          icon: save
 ################ -------- Copy from here -------- ################
         events:
           onClick:

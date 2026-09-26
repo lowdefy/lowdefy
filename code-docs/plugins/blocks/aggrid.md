@@ -246,11 +246,11 @@ Renders a `<Space>` of antd `Button`s per cell. **Each button declares its own `
     buttons:
       - eventName: onEditClick       # required — block-level event name
         title: Edit                  # OR titleField: <row-data path>
-        icon: AiOutlineEdit          # OR iconField; antd react-icon name OR Icon block config
+        icon: edit                   # OR iconField; icon name OR Icon block config
         type: primary
       - eventName: onDeleteClick
         title: Delete
-        icon: AiOutlineDelete
+        icon: delete
         danger: true
         disabledField: locked        # row-data path → boolean
         hiddenField: archived        # row-data path → boolean
@@ -354,7 +354,7 @@ The same event-only model as the selector cells: each renders an antd input boun
 
 ## Components Plumbing
 
-Cell renderers need access to the framework's `Icon` component (the same one the standalone `Button` block uses) so that `icon: AiOutlineEdit` and full Icon-block config objects render consistently. The path:
+Cell renderers need access to the framework's `Icon` component (the same one the standalone `Button` block uses) so that `icon: edit` and full Icon-block config objects render consistently. The path:
 
 ```
 LowdefyContext (initLowdefyContext.js in @lowdefy/client)
@@ -376,7 +376,7 @@ processColDefs (src/processColDefs.js)
         ▼
 ButtonsCell / future renderers
   ─ const Icon = components?.Icon
-  ─ <Icon properties={iconConfig} />   (resolves react-icon name OR Icon block config)
+  ─ <Icon properties={iconConfig} />   (icon name OR Icon block config)
 ```
 
 Without this plumbing, `components.Icon` is `undefined` inside cell renderers and any icon prop renders nothing. `ButtonsCell` guards (`if (iconConfig && Icon)`) and falls back to label-only buttons rather than crashing — but the expected behavior is for icons to resolve.

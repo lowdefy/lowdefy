@@ -57,7 +57,7 @@ Hyperlink anchor for navigation.
   properties:
     title: Link with Icon
     url: https://lowdefy.com
-    icon: AiOutlineLink
+    icon: link
 - id: icon_download
   type: Anchor
   layout:
@@ -65,7 +65,7 @@ Hyperlink anchor for navigation.
   properties:
     title: Download
     url: https://lowdefy.com
-    icon: AiOutlineDownload
+    icon: download
 - id: icon_external
   type: Anchor
   layout:
@@ -73,7 +73,7 @@ Hyperlink anchor for navigation.
   properties:
     title: External Link
     url: https://lowdefy.com
-    icon: AiOutlineExport
+    icon: SquareArrowOutUpRight
 - id: icon_mail
   type: Anchor
   layout:
@@ -81,7 +81,7 @@ Hyperlink anchor for navigation.
   properties:
     title: Send Email
     url: https://lowdefy.com
-    icon: AiOutlineMail
+    icon: mail
 - id: icon_github
   type: Anchor
   layout:
@@ -89,7 +89,7 @@ Hyperlink anchor for navigation.
   properties:
     title: GitHub
     url: https://github.com/lowdefy/lowdefy
-    icon: AiOutlineGithub
+    icon: GitBranch
 - id: icon_object
   type: Anchor
   layout:
@@ -98,7 +98,7 @@ Hyperlink anchor for navigation.
     title: Colored Icon
     url: https://lowdefy.com
     icon:
-      name: AiOutlineHeart
+      name: heart
       color: "#ff4d4f"
 ```
 
@@ -119,7 +119,7 @@ Hyperlink anchor for navigation.
     title: External Docs
     url: https://docs.lowdefy.com
     newTab: true
-    icon: AiOutlineExport
+    icon: SquareArrowOutUpRight
 ```
 
 ```yaml
@@ -139,7 +139,7 @@ Hyperlink anchor for navigation.
     title: Disabled with Icon
     url: https://lowdefy.com
     disabled: true
-    icon: AiOutlineLock
+    icon: lock
 - id: enabled_link
   type: Anchor
   layout:
@@ -148,7 +148,7 @@ Hyperlink anchor for navigation.
     title: Enabled Link
     url: https://lowdefy.com
     disabled: false
-    icon: AiOutlineUnlock
+    icon: unlock
 ```
 
 ```yaml
@@ -166,7 +166,7 @@ Hyperlink anchor for navigation.
     flex: 0 0 auto
   properties:
     url: https://lowdefy.com
-    icon: AiOutlineHome
+    icon: home
     ariaLabel: Go to home page
 ```
 
@@ -198,7 +198,7 @@ Hyperlink anchor for navigation.
   properties:
     title: Go Back
     back: true
-    icon: AiOutlineArrowLeft
+    icon: arrow-left
 - id: nav_home
   type: Anchor
   layout:
@@ -206,7 +206,7 @@ Hyperlink anchor for navigation.
   properties:
     title: Go Home
     home: true
-    icon: AiOutlineHome
+    icon: home
 ```
 
 ```yaml
@@ -217,7 +217,7 @@ Hyperlink anchor for navigation.
   properties:
     title: Documentation
     url: https://docs.lowdefy.com
-    icon: AiOutlineBook
+    icon: Book
   events:
     onClick:
       shortcut: mod+shift+d
@@ -302,7 +302,7 @@ Hyperlink anchor for navigation.
   properties:
     title: Large Red Link
     url: https://lowdefy.com
-    icon: AiOutlineHeart
+    icon: heart
 ```
 
 | Property | Type | Default | Description |
@@ -313,7 +313,7 @@ Hyperlink anchor for navigation.
 | `input` | object | - | When the link is clicked, pass data as the input object to the next Lowdefy page.  Can only be used with pageId link and newTab false. |
 | `urlQuery` | object | - | When the link is clicked, pass data as a url query to the next page. |
 | `disabled` | boolean | `false` | Disable the anchor if true. |
-| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block for anchor icon. |
+| `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block for anchor icon. |
 | `pageId` | string | - | When the link is clicked, route to the provided Lowdefy page. |
 | `href` | string | - | The href to link to when the anchor link is clicked. |
 | `url` | string | - | External url to link to when the anchor link is clicked. |

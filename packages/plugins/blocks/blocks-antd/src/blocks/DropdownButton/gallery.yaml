@@ -23,14 +23,14 @@
         items:
           - title: Edit
             eventName: onEdit
-            icon: AiOutlineEdit
+            icon: edit
           - title: Duplicate
             eventName: onDuplicate
-            icon: AiOutlineCopy
+            icon: copy
           - type: divider
           - title: Delete
             eventName: onDelete
-            icon: AiOutlineDelete
+            icon: delete
             danger: true
       events:
         onEdit:
@@ -61,17 +61,17 @@
         flex: 0 0 auto
       properties:
         title: Save
-        icon: AiOutlineSave
+        icon: save
         color: primary
         variant: solid
         split: true
         items:
           - title: Save as Draft
             eventName: onSaveDraft
-            icon: AiOutlineFile
+            icon: file
           - title: Save & Publish
             eventName: onPublish
-            icon: AiOutlineSend
+            icon: send
       events:
         onClick:
           - id: db_split_save_msg
@@ -194,19 +194,19 @@
         flex: 0 0 auto
       properties:
         title: Export
-        icon: AiOutlineDownload
+        icon: download
         color: primary
         variant: outlined
         items:
           - title: Export as CSV
             eventName: onCSV
-            icon: AiOutlineFile
+            icon: file
           - title: Export as PDF
             eventName: onPDF
-            icon: AiOutlineFilePdf
+            icon: FileText
           - title: Export as Excel
             eventName: onExcel
-            icon: AiOutlineFileExcel
+            icon: FileSpreadsheet
       events:
         onCSV:
           - id: db_icon_csv_msg
@@ -238,15 +238,15 @@
         items:
           - title: View Details
             eventName: onView
-            icon: AiOutlineEye
+            icon: view
           - title: Edit (no permission)
             eventName: onEdit
-            icon: AiOutlineEdit
+            icon: edit
             disabled: true
           - type: divider
           - title: Archive
             eventName: onArchive
-            icon: AiOutlineDelete
+            icon: delete
             danger: true
       events:
         onView:
@@ -271,18 +271,18 @@
         flex: 0 0 auto
       properties:
         title: Edit
-        icon: AiOutlineEdit
+        icon: edit
         items:
           - title: Undo
             eventName: onUndo
-            icon: AiOutlineUndo
+            icon: Undo
           - title: Redo
             eventName: onRedo
-            icon: AiOutlineRedo
+            icon: Redo
           - type: divider
           - title: Delete
             eventName: onDelete
-            icon: AiOutlineDelete
+            icon: delete
             danger: true
       events:
         onUndo:
@@ -513,7 +513,7 @@
         flex: 0 0 auto
       properties:
         title: My Account
-        icon: AiOutlineUser
+        icon: user
         color: '#531dab'
         variant: solid
         theme:
@@ -527,14 +527,14 @@
         items:
           - title: Profile Settings
             eventName: onProfile
-            icon: AiOutlineSetting
+            icon: settings
           - title: Billing & Plans
             eventName: onBilling
-            icon: AiOutlineCreditCard
+            icon: CreditCard
           - type: divider
           - title: Sign Out
             eventName: onSignOut
-            icon: AiOutlineLogout
+            icon: logout
             danger: true
       events:
         onProfile:
@@ -565,7 +565,7 @@
         flex: 0 0 auto
       properties:
         title: Delete Account
-        icon: AiOutlineWarning
+        icon: warning
         color: danger
         variant: solid
         split: true
@@ -578,11 +578,11 @@
         items:
           - title: Delete All Data
             eventName: onDeleteData
-            icon: AiOutlineDelete
+            icon: delete
             danger: true
           - title: Export Data First
             eventName: onExportFirst
-            icon: AiOutlineDownload
+            icon: download
       events:
         onClick:
           - id: db_dz_click_msg

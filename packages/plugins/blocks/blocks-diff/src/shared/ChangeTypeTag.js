@@ -14,23 +14,12 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { Tag } from 'antd';
-import {
-  EditOutlined,
-  MinusCircleOutlined,
-  PauseCircleOutlined,
-  PlusCircleOutlined,
-} from '@ant-design/icons';
 
+import changeTypeIcons from './changeTypeIcons.js';
+import IconContext from './IconContext.js';
 import { CHANGE_TYPE_TAG_COLORS, CHANGE_TYPES, DEFAULT_CHANGE_TYPE_LABELS } from './constants.js';
-
-const ICONS = {
-  [CHANGE_TYPES.CREATE]: <PlusCircleOutlined />,
-  [CHANGE_TYPES.REMOVE]: <MinusCircleOutlined />,
-  [CHANGE_TYPES.CHANGE]: <EditOutlined />,
-  [CHANGE_TYPES.UNCHANGED]: <PauseCircleOutlined />,
-};
 
 const LABEL_KEYS = {
   [CHANGE_TYPES.CREATE]: 'added',
@@ -40,11 +29,17 @@ const LABEL_KEYS = {
 };
 
 function ChangeTypeTag({ type, labels, className }) {
+  const Icon = useContext(IconContext);
   const color = CHANGE_TYPE_TAG_COLORS[type] ?? 'default';
   const labelKey = LABEL_KEYS[type] ?? 'changed';
   const labelText = (labels && labels[labelKey]) ?? DEFAULT_CHANGE_TYPE_LABELS[labelKey];
   return (
-    <Tag color={color} icon={ICONS[type]} className={className} style={{ marginInlineEnd: 0 }}>
+    <Tag
+      color={color}
+      icon={<Icon properties={{ name: changeTypeIcons[type], title: '' }} />}
+      className={className}
+      style={{ marginInlineEnd: 0 }}
+    >
       {labelText}
     </Tag>
   );

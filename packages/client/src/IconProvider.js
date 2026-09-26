@@ -14,10 +14,19 @@
   limitations under the License.
 */
 
-async function writeIconsDynamic({ newIconData, context }) {
-  Object.assign(context.dynamicIconData, newIconData);
-  const content = `export default ${JSON.stringify(context.dynamicIconData)};\n`;
-  await context.writeBuildArtifact('plugins/iconsDynamic.js', content);
+import React from 'react';
+import { LucideProvider } from 'lucide-react/dist/esm/context.mjs';
+
+function IconProvider({ children, icons }) {
+  return (
+    <LucideProvider
+      nonScalingStroke={icons.nonScalingStroke}
+      size={icons.size}
+      strokeWidth={icons.strokeWidth}
+    >
+      {children}
+    </LucideProvider>
+  );
 }
 
-export default writeIconsDynamic;
+export default IconProvider;

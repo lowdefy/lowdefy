@@ -78,7 +78,7 @@ Statistic display with prefix, suffix, and formatting.
   properties:
     title: Feedback
     value: 1128
-    prefixIcon: AiOutlineLike
+    prefixIcon: ThumbsUp
 - id: prefixicon_arrow_up
   type: Statistic
   layout:
@@ -88,7 +88,7 @@ Statistic display with prefix, suffix, and formatting.
     value: 11.28
     suffix: "%"
     prefixIcon:
-      name: AiOutlineArrowUp
+      name: arrow-up
       color: "#3f8600"
 - id: prefixicon_arrow_down
   type: Statistic
@@ -99,7 +99,7 @@ Statistic display with prefix, suffix, and formatting.
     value: 9.3
     suffix: "%"
     prefixIcon:
-      name: AiOutlineArrowDown
+      name: arrow-down
       color: "#cf1322"
 - id: suffixicon_rise
   type: Statistic
@@ -110,7 +110,7 @@ Statistic display with prefix, suffix, and formatting.
     value: 12500
     prefix: $
     suffixIcon:
-      name: AiOutlineRise
+      name: TrendingUp
       color: "#3f8600"
 - id: suffixicon_info
   type: Statistic
@@ -119,7 +119,7 @@ Statistic display with prefix, suffix, and formatting.
   properties:
     title: Sessions
     value: 8920
-    suffixIcon: AiOutlineInfoCircle
+    suffixIcon: info
 ```
 
 ```yaml
@@ -251,7 +251,7 @@ Statistic display with prefix, suffix, and formatting.
   properties:
     title: Active Users
     value: 2847
-    prefixIcon: AiOutlineTeam
+    prefixIcon: users
 - id: css_tailwind_center
   type: Statistic
   layout:
@@ -337,7 +337,7 @@ _Last updated 2 minutes ago_
             prefix: $
             precision: 0
             prefixIcon:
-              name: AiOutlineDollarCircle
+              name: CircleDollarSign
               color: "#52c41a"
         - id: dash_users
           type: Statistic
@@ -348,7 +348,7 @@ _Last updated 2 minutes ago_
             title: Active Users
             value: 8920
             prefixIcon:
-              name: AiOutlineTeam
+              name: users
               color: "#1677ff"
         - id: dash_errors
           type: Statistic
@@ -361,7 +361,7 @@ _Last updated 2 minutes ago_
             suffix: "%"
             precision: 2
             prefixIcon:
-              name: AiOutlineBug
+              name: Bug
               color: "#ff4d4f"
     - id: dashboard_updated
       type: Markdown
@@ -391,7 +391,7 @@ _Last updated 2 minutes ago_
             prefix: $
             precision: 0
             prefixIcon:
-              name: AiOutlineArrowUp
+              name: arrow-up
               color: "#3f8600"
             theme:
               contentFontSize: 28
@@ -402,7 +402,7 @@ _Last updated 2 minutes ago_
           properties:
             title: Orders
             value: 1523
-            prefixIcon: AiOutlineShoppingCart
+            prefixIcon: ShoppingCart
         - id: sales_avg
           type: Statistic
           layout:
@@ -424,7 +424,7 @@ _Last updated 2 minutes ago_
             flex: 0 0 auto
           properties:
             title: Export Report
-            icon: AiOutlineDownload
+            icon: download
             color: primary
             variant: outlined
           events:
@@ -440,7 +440,7 @@ _Last updated 2 minutes ago_
             flex: 0 0 auto
           properties:
             title: Share
-            icon: AiOutlineShareAlt
+            icon: share
             color: primary
             variant: solid
           events:
@@ -459,9 +459,27 @@ _Last updated 2 minutes ago_
 | `loading` | boolean | `false` | Control the loading status of Statistic. |
 | `precision` | number | - | Number of decimals to display. |
 | `prefix` | string | - | Prefix text, priority over prefixIcon. |
-| `prefixIcon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon which prefix the statistic. |
+| `prefixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon which prefix the statistic. |
+| `prefixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `prefixIcon.color` | string | - | Icon color. |
+| `prefixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `prefixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `prefixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `prefixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `prefixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `prefixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `prefixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `suffix` | string | - | Suffix text, priority over suffixIcon. |
-| `suffixIcon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon which suffix the statistic. |
+| `suffixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon which suffix the statistic. |
+| `suffixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `suffixIcon.color` | string | - | Icon color. |
+| `suffixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `suffixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `suffixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `suffixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `suffixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `suffixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `suffixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `title` | string | - | Title to describe the component - supports html. |
 | `value` | number \| string | - | Value to display. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design statistic tokens](https://ant.design/components/statistic#design-token). |

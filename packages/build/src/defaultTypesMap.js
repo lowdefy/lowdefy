@@ -11,6 +11,7 @@ const defaultTypesMap = {
   blocks: {},
   connections: {},
   icons: {},
+  iconSets: {},
   notifications: {},
   operators: {
     client: {},

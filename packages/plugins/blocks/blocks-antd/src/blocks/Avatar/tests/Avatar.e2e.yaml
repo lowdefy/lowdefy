@@ -85,7 +85,7 @@ blocks:
   - id: avatar_with_icon
     type: Avatar
     properties:
-      icon: AiOutlineUser
+      icon: user
 
   # ============================================
   # COLOR TESTS

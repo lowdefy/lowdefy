@@ -17,7 +17,7 @@
 import React, { useCallback, useRef } from 'react';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
-import { useDarkMode, useLocale } from '@lowdefy/client';
+import { IconProvider, useDarkMode, useLocale } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { App as AntdApp, theme as antdTheme } from 'antd';
 import { XProvider } from '@ant-design/x';
@@ -123,23 +123,27 @@ function App({ config }) {
           algorithm,
         }}
       >
-        <AntdApp>
-          <ThemeTokenResolver lowdefyRef={lowdefyRef}>
-            <ErrorBoundary fullPage onError={handleError}>
-              <Auth user={user}>
-                {(auth) => {
-                  usageDataRef.current.user = auth.user?.id;
-                  // Set Sentry user context when auth changes
-                  setSentryUser({
-                    user: auth.user,
-                    sentryConfig: loggerConfig.sentry,
-                  });
-                  return <Page auth={auth} config={config} lowdefy={lowdefyRef.current} />;
-                }}
-              </Auth>
-            </ErrorBoundary>
-          </ThemeTokenResolver>
-        </AntdApp>
+        {/* Message, Notification and ConfirmModal render in the App.useApp()
+            holders here, above the Client's icon provider. */}
+        <IconProvider icons={rootConfig.theme.icons}>
+          <AntdApp>
+            <ThemeTokenResolver lowdefyRef={lowdefyRef}>
+              <ErrorBoundary fullPage onError={handleError}>
+                <Auth user={user}>
+                  {(auth) => {
+                    usageDataRef.current.user = auth.user?.id;
+                    // Set Sentry user context when auth changes
+                    setSentryUser({
+                      user: auth.user,
+                      sentryConfig: loggerConfig.sentry,
+                    });
+                    return <Page auth={auth} config={config} lowdefy={lowdefyRef.current} />;
+                  }}
+                </Auth>
+              </ErrorBoundary>
+            </ThemeTokenResolver>
+          </AntdApp>
+        </IconProvider>
       </XProvider>
     </StyleProvider>
   );

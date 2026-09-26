@@ -343,7 +343,7 @@
           properties:
             title: Username
             placeholder: Enter your username
-            prefixIcon: AiOutlineUser
+            prefixIcon: user
         - id: login_password
           type: PasswordInput
           required: true
@@ -357,7 +357,7 @@
           type: Button
           properties:
             title: Sign In
-            icon: AiOutlineLogin
+            icon: login
             type: primary
             size: large
             block: true
@@ -407,7 +407,7 @@
           type: Button
           properties:
             title: Update Password
-            icon: AiOutlineLock
+            icon: lock
             type: primary
             size: large
             block: true

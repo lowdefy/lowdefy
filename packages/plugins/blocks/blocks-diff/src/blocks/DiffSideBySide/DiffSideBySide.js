@@ -22,7 +22,14 @@ import SideBySideRenderer from '../../shared/renderers/SideBySideRenderer.js';
 import buildDiffModel from '../../shared/buildDiffModel.js';
 import withTheme from '../../shared/withTheme.js';
 
-const DiffSideBySideBlock = ({ blockId, classNames = {}, properties, methods, styles = {} }) => {
+const DiffSideBySideBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  properties,
+  methods,
+  styles = {},
+}) => {
   const {
     before,
     after,
@@ -57,6 +64,7 @@ const DiffSideBySideBlock = ({ blockId, classNames = {}, properties, methods, st
       title={title}
       emptyText={emptyText}
       empty={model.empty}
+      Icon={Icon}
       methods={methods}
     >
       <SideBySideRenderer

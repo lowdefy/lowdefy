@@ -55,7 +55,22 @@ const NumberInput = ({
             variant={properties.bordered === false ? 'borderless' : properties.variant}
             className={classNames.element}
             style={{ width: '100%', ...styles.element }}
-            controls={properties.controls}
+            controls={
+              properties.controls !== false && {
+                upIcon: (
+                  <components.Icon
+                    blockId={`${blockId}_upIcon`}
+                    properties={{ name: 'chevron-up', title: '' }}
+                  />
+                ),
+                downIcon: (
+                  <components.Icon
+                    blockId={`${blockId}_downIcon`}
+                    properties={{ name: 'chevron-down', title: '' }}
+                  />
+                ),
+              }
+            }
             decimalSeparator={
               properties.decimalSeparator ?? getLocaleDecimalSeparator(methods.getLocale?.()) ?? '.'
             }

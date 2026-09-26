@@ -501,7 +501,7 @@
           properties:
             title: Apply Settings
             type: primary
-            icon: AiOutlineSave
+            icon: save
           events:
             onClick:
               - id: audio_save_action
@@ -582,7 +582,7 @@
           properties:
             title: Apply Filters
             type: primary
-            icon: AiOutlineFilter
+            icon: filter
           events:
             onClick:
               - id: price_filter_action

@@ -74,25 +74,25 @@ Toggle switch with optional text and icon labels.
   type: Switch
   properties:
     title: Custom Checked Icon
-    checkedIcon: AiOutlineLike
-    uncheckedIcon: AiOutlineDislike
+    checkedIcon: ThumbsUp
+    uncheckedIcon: ThumbsDown
     label:
       disabled: true
 - id: icon_lock
   type: Switch
   properties:
     title: Lock / Unlock
-    checkedIcon: AiOutlineLock
-    uncheckedIcon: AiOutlineUnlock
+    checkedIcon: lock
+    uncheckedIcon: unlock
     label:
       disabled: true
 - id: icon_sound
   type: Switch
   properties:
     title: Sound On / Off
-    checkedIcon: AiOutlineSound
+    checkedIcon: Volume2
     uncheckedIcon:
-      name: AiOutlineStop
+      name: Ban
       color: "#999"
     label:
       disabled: true
@@ -100,16 +100,16 @@ Toggle switch with optional text and icon labels.
   type: Switch
   properties:
     title: Visibility Toggle
-    checkedIcon: AiOutlineEye
-    uncheckedIcon: AiOutlineEyeInvisible
+    checkedIcon: view
+    uncheckedIcon: hide
     label:
       disabled: true
 - id: icon_power
   type: Switch
   properties:
     title: Power Toggle
-    checkedIcon: AiOutlineThunderbolt
-    uncheckedIcon: AiOutlinePoweroff
+    checkedIcon: Zap
+    uncheckedIcon: Power
     label:
       disabled: true
 ```
@@ -220,8 +220,8 @@ Toggle switch with optional text and icon labels.
   properties:
     title: Disabled with Icons
     disabled: true
-    checkedIcon: AiOutlineLike
-    uncheckedIcon: AiOutlineDislike
+    checkedIcon: ThumbsUp
+    uncheckedIcon: ThumbsDown
     label:
       disabled: true
 ```
@@ -479,7 +479,7 @@ Toggle switch with optional text and icon labels.
       type: Button
       properties:
         title: Save Privacy Settings
-        icon: AiOutlineSave
+        icon: save
         type: primary
         block: true
       events:
@@ -494,7 +494,16 @@ Toggle switch with optional text and icon labels.
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
-| `checkedIcon` | string \| object | `"AiOutlineCheck"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon to shown when switch is checked (true). |
+| `checkedIcon` | string \| object | `"check"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to shown when switch is checked (true). |
+| `checkedIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `checkedIcon.color` | string | - | Icon color. |
+| `checkedIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `checkedIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `checkedIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `checkedIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `checkedIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `checkedIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `checkedIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `checkedText` | string | - | Text to shown when switch is checked (true). |
 | `color` | string | - | Switch checked color. |
 | `disabled` | boolean | `false` | Disable the block if true. |
@@ -505,7 +514,7 @@ Toggle switch with optional text and icon labels.
 | `label.title` | string | - | Label title - supports html. |
 | `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
-| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
 | `label.span` | number | - | Label inline span. |
 | `label.disabled` | boolean | `false` | Hide input label. |
@@ -513,7 +522,16 @@ Toggle switch with optional text and icon labels.
 | `label.inline` | boolean | `false` | Render input and label inline. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
-| `uncheckedIcon` | string \| object | `"AiOutlineClose"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon to shown when switch is unchecked (false). |
+| `uncheckedIcon` | string \| object | `"close"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to shown when switch is unchecked (false). |
+| `uncheckedIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `uncheckedIcon.color` | string | - | Icon color. |
+| `uncheckedIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `uncheckedIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `uncheckedIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `uncheckedIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `uncheckedIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `uncheckedIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `uncheckedIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `uncheckedText` | string | - | Text to shown when switch is not checked (false). |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design switch tokens](https://ant.design/components/switch#design-token). |
 | `theme.trackHeight` | number | `22` | Height of the switch track. |

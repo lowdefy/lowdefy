@@ -226,13 +226,13 @@ Segmented control for switching between options.
     options:
       - label: List
         value: list
-        icon: AiOutlineUnorderedList
+        icon: list
       - label: Grid
         value: grid
-        icon: AiOutlineAppstore
+        icon: grid
       - label: Calendar
         value: calendar
-        icon: AiOutlineCalendar
+        icon: calendar
 - id: icon_small
   type: SegmentedSelector
   properties:
@@ -241,13 +241,13 @@ Segmented control for switching between options.
     options:
       - label: Map
         value: map
-        icon: AiOutlineEnvironment
+        icon: location
       - label: Satellite
         value: satellite
-        icon: AiOutlineGlobal
+        icon: globe
       - label: Terrain
         value: terrain
-        icon: AiOutlineBlock
+        icon: Blocks
 - id: icon_block
   type: SegmentedSelector
   properties:
@@ -256,16 +256,16 @@ Segmented control for switching between options.
     options:
       - label: Home
         value: home
-        icon: AiOutlineHome
+        icon: home
       - label: Search
         value: search
-        icon: AiOutlineSearch
+        icon: search
       - label: Favorites
         value: favorites
-        icon: AiOutlineHeart
+        icon: heart
       - label: Profile
         value: profile
-        icon: AiOutlineUser
+        icon: user
 - id: icon_round
   type: SegmentedSelector
   properties:
@@ -274,13 +274,13 @@ Segmented control for switching between options.
     options:
       - label: Code
         value: code
-        icon: AiOutlineCode
+        icon: CodeXml
       - label: Preview
         value: preview
-        icon: AiOutlineEye
+        icon: view
       - label: Split
         value: split
-        icon: AiOutlineColumnWidth
+        icon: MoveHorizontal
 ```
 
 ```yaml
@@ -304,16 +304,16 @@ Segmented control for switching between options.
     options:
       - label: Dashboard
         value: dashboard
-        icon: AiOutlineDashboard
+        icon: Gauge
       - label: Analytics
         value: analytics
-        icon: AiOutlineBarChart
+        icon: chart
       - label: Reports
         value: reports
-        icon: AiOutlineFileText
+        icon: document
       - label: Settings
         value: settings
-        icon: AiOutlineSetting
+        icon: settings
 - id: vertical_large
   type: SegmentedSelector
   properties:
@@ -359,13 +359,13 @@ Segmented control for switching between options.
     options:
       - label: Edit
         value: edit
-        icon: AiOutlineEdit
+        icon: edit
       - label: View
         value: view
-        icon: AiOutlineEye
+        icon: view
       - label: Delete
         value: delete
-        icon: AiOutlineDelete
+        icon: delete
 ```
 
 ```yaml
@@ -584,13 +584,13 @@ Segmented control for switching between options.
         options:
           - label: Overview
             value: overview
-            icon: AiOutlineDashboard
+            icon: Gauge
           - label: Charts
             value: charts
-            icon: AiOutlineBarChart
+            icon: chart
           - label: Table
             value: table
-            icon: AiOutlineTable
+            icon: Table
       events:
         onChange:
           - id: view_changed_action
@@ -612,7 +612,7 @@ Segmented control for switching between options.
       type: Button
       properties:
         title: Refresh Data
-        icon: AiOutlineReload
+        icon: refresh
         type: primary
       events:
         onClick:
@@ -637,13 +637,13 @@ Segmented control for switching between options.
         options:
           - label: Light
             value: light
-            icon: AiOutlineBulb
+            icon: Lightbulb
           - label: Dark
             value: dark
-            icon: AiOutlineEyeInvisible
+            icon: hide
           - label: System
             value: system
-            icon: AiOutlineLaptop
+            icon: Laptop
       events:
         onChange:
           - id: theme_changed_action
@@ -691,7 +691,7 @@ Segmented control for switching between options.
       type: Button
       properties:
         title: Save Settings
-        icon: AiOutlineSave
+        icon: save
         type: primary
       events:
         onClick:
@@ -730,7 +730,7 @@ Segmented control for switching between options.
 | `options.$.label` | string | - | Value label shown to user - supports html. |
 | `options.$.value` | string \| number \| boolean \| object \| array | - | Value selected. Can be of any type. |
 | `options.$.disabled` | boolean | `false` | Disable the option if true. |
-| `options.$.icon` | string | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) (See [all icons](https://react-icons.github.io/react-icons/)) to display in the segment option. |
+| `options.$.icon` | string | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) to display in the segment option. |
 | `shape` | string | `"default"` | Shape of the segmented control. Enum: `default`, `round`. |
 | `size` | string | `"middle"` | Size of the block. Enum: `small`, `middle`, `large`. |
 | `vertical` | boolean | `false` | Display the segmented control vertically. |
@@ -741,7 +741,7 @@ Segmented control for switching between options.
 | `label.title` | string | - | Label title - supports html. |
 | `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
-| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
 | `label.span` | number | - | Label inline span. |
 | `label.disabled` | boolean | `false` | Hide input label. |

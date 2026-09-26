@@ -28,6 +28,7 @@ function createEmptyTypesMap() {
     steps: {},
     websockets: {},
     icons: {},
+    iconSets: {},
     blockMetas: {},
   };
 }
@@ -136,4 +137,39 @@ test('createPluginTypesMap does not initialize connectionMetas when packageTypes
     version: '1.0.0',
   });
   expect(typesMap.connectionMetas).toBe(undefined);
+});
+
+test('createPluginTypesMap records icon set layers in plugin order without typePrefix', () => {
+  const typesMap = createEmptyTypesMap();
+  createPluginTypesMap({
+    packageName: '@acme/icons-tabler',
+    packageTypes: { iconSets: ['tabler'] },
+    typePrefix: 'Acme',
+    typesMap,
+    version: '1.0.0',
+  });
+  createPluginTypesMap({
+    packageName: '@acme/icons-extra',
+    packageTypes: { iconSets: ['tabler', 'lucide'] },
+    typesMap,
+    version: '2.0.0',
+  });
+  expect(typesMap.iconSets).toEqual({
+    tabler: [
+      { package: '@acme/icons-tabler', version: '1.0.0' },
+      { package: '@acme/icons-extra', version: '2.0.0' },
+    ],
+    lucide: [{ package: '@acme/icons-extra', version: '2.0.0' }],
+  });
+});
+
+test('createPluginTypesMap leaves typesMap.iconSets empty when a plugin declares no sets', () => {
+  const typesMap = createEmptyTypesMap();
+  createPluginTypesMap({
+    packageName: '@lowdefy/actions-core',
+    packageTypes: { actions: ['Link'] },
+    typesMap,
+    version: '1.0.0',
+  });
+  expect(typesMap.iconSets).toEqual({});
 });

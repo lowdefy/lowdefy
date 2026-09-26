@@ -75,11 +75,11 @@
         current: 1
         items:
           - title: Login
-            icon: AiOutlineUser
+            icon: user
           - title: Verification
-            icon: AiOutlineSolution
+            icon: FileUser
           - title: Done
-            icon: AiOutlineSmile
+            icon: FaceSlightlySmiling
     - id: icon_custom_color
       type: Steps
       properties:
@@ -87,15 +87,15 @@
         items:
           - title: Upload
             icon:
-              name: AiOutlineCloudUpload
+              name: CloudUpload
               color: '#1677ff'
           - title: Process
             icon:
-              name: AiOutlineLoading
+              name: loading
               color: '#faad14'
           - title: Complete
             icon:
-              name: AiOutlineCheck
+              name: check
               color: '#52c41a'
 
 - title: Vertical Steps
@@ -215,13 +215,13 @@
         items:
           - title: Account
             description: Create your account
-            icon: AiOutlineUser
+            icon: user
           - title: Settings
             description: Configure preferences
-            icon: AiOutlineSetting
+            icon: settings
           - title: Review
             description: Review and submit
-            icon: AiOutlineCheck
+            icon: check
           - title: Done
             description: All finished
       events:
@@ -386,11 +386,11 @@
               _state: wizard_step
             items:
               - title: Account
-                icon: AiOutlineUser
+                icon: user
               - title: Profile
-                icon: AiOutlineIdcard
+                icon: IdCard
               - title: Confirm
-                icon: AiOutlineCheck
+                icon: check
           events:
             onChange:
               - id: wizard_set_step
@@ -513,16 +513,16 @@
             items:
               - title: Order Placed
                 description: March 10, 2026 at 2:30 PM
-                icon: AiOutlineShoppingCart
+                icon: ShoppingCart
               - title: Payment Confirmed
                 description: March 10, 2026 at 2:31 PM
-                icon: AiOutlineCreditCard
+                icon: CreditCard
               - title: Shipped
                 description: March 12, 2026 - Tracking number available
-                icon: AiOutlineCar
+                icon: Car
               - title: Delivered
                 description: Estimated March 15, 2026
-                icon: AiOutlineHome
+                icon: home
 
 - title: Style and CSS
   blocks:

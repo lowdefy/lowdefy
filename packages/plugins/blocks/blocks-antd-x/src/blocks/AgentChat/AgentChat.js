@@ -23,9 +23,16 @@ import meta from './meta.js';
 // Painted until the implementation loads. Drawer mode shows the same launcher button the
 // implementation renders, so first paint has it; inline mode holds the chat's box so the
 // page does not shift when the chat arrives.
-function AgentChatFallback({ onDrawerOpenRequest, properties }) {
+function AgentChatFallback({ blockId, components, onDrawerOpenRequest, properties }) {
   if (properties.display === 'drawer') {
-    return <DrawerLauncher config={properties.drawer} onClick={onDrawerOpenRequest} />;
+    return (
+      <DrawerLauncher
+        blockId={blockId}
+        config={properties.drawer}
+        Icon={components.Icon}
+        onClick={onDrawerOpenRequest}
+      />
+    );
   }
   return (
     <div

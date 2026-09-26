@@ -16,11 +16,11 @@
 
 import React, { useCallback } from 'react';
 import { Button, ConfigProvider, Dropdown, Space } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
 import { get, type } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import useItemShortcuts from '../useItemShortcuts.js';
+import getDropdownMenuIcons from '../getDropdownMenuIcons.js';
 
 const ANTD_COLOR_PRESETS = new Set([
   'default',
@@ -117,6 +117,7 @@ function DropdownButtonBlock({
 
   const dropdownProps = {
     menu: {
+      ...getDropdownMenuIcons({ blockId, Icon }),
       items,
       onClick: ({ key }) => methods.triggerEvent({ name: key }),
     },
@@ -181,7 +182,12 @@ function DropdownButtonBlock({
               ghost={properties.ghost}
               danger={properties.danger}
               disabled={properties.disabled}
-              icon={<DownOutlined />}
+              icon={
+                <Icon
+                  blockId={`${blockId}_dropdown_icon`}
+                  properties={{ name: 'chevron-down', title: '' }}
+                />
+              }
             />
           </Dropdown>
         </Space.Compact>

@@ -139,6 +139,17 @@ function createPluginTypesMap({ packageName, packageTypes, typePrefix = '', type
     });
   }
 
+  // Icon set ids are namespaces, not type names, so typePrefix does not apply.
+  // Each plugin declaring a set id adds a layer on top, in plugins: order.
+  if (type.isArray(packageTypes.iconSets)) {
+    packageTypes.iconSets.forEach((setId) => {
+      typesMap.iconSets[setId] = [
+        ...(typesMap.iconSets[setId] ?? []),
+        { package: packageName, version },
+      ];
+    });
+  }
+
   if (type.isObject(packageTypes.blockMetas)) {
     Object.entries(packageTypes.blockMetas).forEach(([blockType, meta]) => {
       typesMap.blockMetas[`${typePrefix}${blockType}`] = meta;

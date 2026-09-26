@@ -24,7 +24,7 @@ Notes
         flex: 0 0 auto
       properties:
         title: Add Note
-        icon: AiOutlinePlus
+        icon: add
         color: primary
         variant: solid
         size: small
@@ -53,7 +53,7 @@ Notes
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineClose
+        icon: close
         color: default
         variant: text
         shape: circle
@@ -119,7 +119,7 @@ Tasks
         flex: 0 0 auto
       properties:
         title: Add Task
-        icon: AiOutlinePlus
+        icon: add
         color: primary
         variant: solid
         size: small
@@ -193,7 +193,7 @@ Tasks
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineArrowUp
+        icon: arrow-up
         color: default
         variant: text
         size: small
@@ -212,7 +212,7 @@ Tasks
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineArrowDown
+        icon: arrow-down
         color: default
         variant: text
         size: small
@@ -231,7 +231,7 @@ Tasks
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineDelete
+        icon: delete
         color: danger
         variant: text
         size: small
@@ -256,7 +256,7 @@ Tasks
         flex: 0 0 auto
       properties:
         title: Save Tasks
-        icon: AiOutlineSave
+        icon: save
         color: primary
         variant: solid
       events:
@@ -300,7 +300,7 @@ User Directory
             flex: 0 0 auto
           properties:
             title: Load Users
-            icon: AiOutlineCloudDownload
+            icon: CloudDownload
             color: primary
             variant: solid
             size: small
@@ -394,7 +394,7 @@ Invoice #1042
         flex: 0 0 auto
       properties:
         title: Add Line
-        icon: AiOutlinePlus
+        icon: add
         color: primary
         variant: dashed
         size: small
@@ -453,7 +453,7 @@ Invoice #1042
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineMinusCircle
+        icon: remove
         color: danger
         variant: text
         size: small
@@ -493,7 +493,7 @@ Invoice #1042
         flex: 0 0 auto
       properties:
         title: Submit Invoice
-        icon: AiOutlineSend
+        icon: send
         color: primary
         variant: solid
       events:

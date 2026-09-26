@@ -49,7 +49,6 @@
   },
   "dependencies": {
     "@ai-sdk/react": "3.0.178",
-    "@ant-design/icons": "6.1.0",
     "@ant-design/x": "2.7.0",
     "@ant-design/x-markdown": "2.7.0",
     "@lowdefy/block-utils": "6.0.0",

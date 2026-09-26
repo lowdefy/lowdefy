@@ -48,11 +48,7 @@ const AnchorBlock = ({
               blockId={`${blockId}_icon`}
               classNames={{ element: classNames?.icon }}
               events={events}
-              properties={
-                get(events, 'onClick.loading')
-                  ? { name: 'AiOutlineLoading3Quarters', spin: true }
-                  : icon
-              }
+              properties={get(events, 'onClick.loading') ? { name: 'loading', spin: true } : icon}
               styles={{ element: { marginRight: 4, ...styles?.icon } }}
             />
           )}

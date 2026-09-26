@@ -167,12 +167,12 @@ blocks:
           type: MenuLink
           properties:
             title: Home
-            icon: AiOutlineHome
+            icon: home
         - id: icon_link2
           type: MenuLink
           properties:
             title: Settings
-            icon: AiOutlineSetting
+            icon: settings
 
   - id: menu_danger_item
     type: Menu

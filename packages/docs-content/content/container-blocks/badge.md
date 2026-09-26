@@ -104,7 +104,7 @@ U
     - id: dot_on_icon_avatar_child
       type: Avatar
       properties:
-        icon: AiOutlineBell
+        icon: bell
         shape: square
 - id: dot_on_button
   type: Badge
@@ -483,7 +483,7 @@ U
   layout:
     flex: 0 0 auto
   properties:
-    icon: AiOutlineBell
+    icon: bell
   blocks:
     - id: icon_bell_child
       type: Avatar
@@ -496,7 +496,7 @@ U
     flex: 0 0 auto
   properties:
     icon:
-      name: AiOutlineClockCircle
+      name: clock
       color: "#1677ff"
   blocks:
     - id: icon_clock_child
@@ -510,7 +510,7 @@ U
     flex: 0 0 auto
   properties:
     icon:
-      name: AiOutlineExclamation
+      name: CircleAlert
       color: "#faad14"
   blocks:
     - id: icon_exclamation_child
@@ -599,7 +599,7 @@ U
       type: Avatar
       properties:
         shape: square
-        icon: AiOutlineUser
+        icon: user
 ```
 
 JD
@@ -640,7 +640,7 @@ JD
     - id: wrap_icon_bell_child
       type: Icon
       properties:
-        name: AiOutlineBell
+        name: bell
         size: 24
 - id: wrap_icon_mail
   type: Badge
@@ -652,7 +652,7 @@ JD
     - id: wrap_icon_mail_child
       type: Icon
       properties:
-        name: AiOutlineMail
+        name: mail
         size: 24
 ```
 
@@ -888,7 +888,7 @@ JD
         flex: 1 1 0
       properties:
         placeholder: Search...
-        prefixIcon: AiOutlineSearch
+        prefixIcon: search
     - id: rw_notif_badge_mail
       type: Badge
       layout:
@@ -900,7 +900,7 @@ JD
         - id: rw_notif_mail_btn
           type: Button
           properties:
-            icon: AiOutlineMail
+            icon: mail
             color: default
             variant: text
             hideTitle: true
@@ -921,7 +921,7 @@ JD
         - id: rw_notif_bell_btn
           type: Button
           properties:
-            icon: AiOutlineBell
+            icon: bell
             color: default
             variant: text
             hideTitle: true
@@ -1102,7 +1102,7 @@ James Wilson
       class: justify-start w-full
       properties:
         title: Inbox
-        icon: AiOutlineInbox
+        icon: Inbox
         color: primary
         variant: text
       events:
@@ -1126,7 +1126,7 @@ James Wilson
       class: justify-start w-full
       properties:
         title: Alerts
-        icon: AiOutlineAlert
+        icon: Siren
         color: default
         variant: text
       events:
@@ -1149,7 +1149,7 @@ James Wilson
       class: justify-start w-full
       properties:
         title: Tasks
-        icon: AiOutlineCheckSquare
+        icon: SquareCheck
         color: default
         variant: text
       events:
@@ -1170,7 +1170,7 @@ James Wilson
       class: justify-start w-full
       properties:
         title: Settings
-        icon: AiOutlineSetting
+        icon: settings
         color: default
         variant: text
       events:
@@ -1187,7 +1187,16 @@ James Wilson
 | `count` | number \| string | - | Text to show in badge. |
 | `dot` | boolean | `false` | Whether to display a red dot instead of count. |
 | `size` | string | `"default"` | Sets the size of badge if count is set. Enum: `default`, `small`. |
-| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to use an icon in badge. |
+| `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use an icon in badge. |
+| `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `icon.color` | string | - | Icon color. |
+| `icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `offset` | array | - | Set offset of the badge dot, array of numbers for x and y offset ([x,y]). |
 | `overflowCount` | number | `99` | Max count to show |
 | `showZero` | boolean | `false` | Whether to show badge when count is zero. |

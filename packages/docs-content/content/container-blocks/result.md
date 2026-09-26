@@ -106,7 +106,7 @@ Result page with status icon, title, and extra actions.
                 title: Try Again
                 color: primary
                 variant: solid
-                icon: AiOutlineReload
+                icon: refresh
             - id: extra_error_support
               type: Button
               layout:
@@ -115,7 +115,7 @@ Result page with status icon, title, and extra actions.
                 title: Contact Support
                 color: default
                 variant: outlined
-                icon: AiOutlineCustomerService
+                icon: Headset
 - id: extra_404
   type: Result
   properties:
@@ -278,7 +278,7 @@ Result page with status icon, title, and extra actions.
     subTitle: Your application is being deployed to production. This usually takes
       2-5 minutes.
     icon:
-      name: AiOutlineRocket
+      name: Rocket
       color: "#1677ff"
       size: 72
 - id: icon_lock
@@ -289,7 +289,7 @@ Result page with status icon, title, and extra actions.
     subTitle: Your account has been temporarily locked due to multiple failed login
       attempts. Try again in 30 minutes.
     icon:
-      name: AiOutlineLock
+      name: lock
       color: "#faad14"
       size: 72
 - id: icon_mail
@@ -300,7 +300,7 @@ Result page with status icon, title, and extra actions.
     subTitle: Your email address has been successfully verified. You can now access
       all features.
     icon:
-      name: AiOutlineMail
+      name: mail
       color: "#52c41a"
       size: 72
 - id: icon_cloud
@@ -310,7 +310,7 @@ Result page with status icon, title, and extra actions.
     title: Upload Complete
     subTitle: All 24 files have been uploaded successfully to your cloud storage.
     icon:
-      name: AiOutlineCloudUpload
+      name: CloudUpload
       color: "#1677ff"
       size: 72
 ```
@@ -340,7 +340,7 @@ Result page with status icon, title, and extra actions.
                 title: Download Receipt
                 color: primary
                 variant: solid
-                icon: AiOutlineDownload
+                icon: download
             - id: scenario_payment_orders_btn
               type: Button
               layout:
@@ -392,7 +392,7 @@ Result page with status icon, title, and extra actions.
                 title: Try Different Card
                 color: primary
                 variant: solid
-                icon: AiOutlineCreditCard
+                icon: CreditCard
             - id: scenario_payment_failed_cancel_btn
               type: Button
               layout:
@@ -428,7 +428,7 @@ Result page with status icon, title, and extra actions.
                 title: Request Access
                 color: primary
                 variant: solid
-                icon: AiOutlineKey
+                icon: Key
             - id: scenario_perm_back_btn
               type: Button
               layout:
@@ -468,7 +468,7 @@ Result page with status icon, title, and extra actions.
                 title: Search
                 color: default
                 variant: outlined
-                icon: AiOutlineSearch
+                icon: search
 - id: scenario_server_error
   type: Result
   properties:
@@ -493,7 +493,7 @@ Result page with status icon, title, and extra actions.
                 title: Refresh Page
                 color: primary
                 variant: solid
-                icon: AiOutlineReload
+                icon: refresh
             - id: scenario_server_status_btn
               type: Button
               layout:
@@ -545,7 +545,7 @@ Result page with status icon, title, and extra actions.
     subTitle: Welcome aboard! A verification email has been sent to your inbox.
       Please verify within 24 hours.
     icon:
-      name: AiOutlineUserAdd
+      name: UserPlus
       color: "#52c41a"
       size: 72
   slots:
@@ -573,7 +573,7 @@ Result page with status icon, title, and extra actions.
                 title: Resend Verification
                 color: default
                 variant: outlined
-                icon: AiOutlineMail
+                icon: mail
 - id: scenario_subscription_expired
   type: Result
   properties:
@@ -598,7 +598,7 @@ Result page with status icon, title, and extra actions.
                 title: Renew Subscription
                 color: primary
                 variant: solid
-                icon: AiOutlineCreditCard
+                icon: CreditCard
             - id: scenario_sub_plans_btn
               type: Button
               layout:
@@ -715,7 +715,7 @@ Result page with status icon, title, and extra actions.
     title: Welcome to Your Workspace
     subTitle: Your team workspace has been created. Invite members to get started.
     icon:
-      name: AiOutlineTeam
+      name: users
       color: "#722ed1"
       size: 72
 - id: styled_dark
@@ -844,7 +844,7 @@ Result page with status icon, title, and extra actions.
                 color: primary
                 variant: solid
                 size: large
-                icon: AiOutlineHome
+                icon: home
             - id: fullpage_404_report_btn
               type: Button
               layout:
@@ -885,7 +885,7 @@ Result page with status icon, title, and extra actions.
                 color: primary
                 variant: solid
                 size: large
-                icon: AiOutlineReload
+                icon: refresh
             - id: fullpage_500_status_btn
               type: Button
               layout:
@@ -926,7 +926,7 @@ Result page with status icon, title, and extra actions.
                 color: primary
                 variant: solid
                 size: large
-                icon: AiOutlineUser
+                icon: user
             - id: fullpage_403_back_btn
               type: Button
               layout:
@@ -940,7 +940,16 @@ Result page with status icon, title, and extra actions.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon to use as result image. |
+| `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to use as result image. |
+| `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `icon.color` | string | - | Icon color. |
+| `icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `status` | string | `"info"` | Status of the result. Determines image and color. Enum: `success`, `error`, `info`, `warning`, `404`, `403`, `500`. |
 | `subTitle` | string | - | Result subtitle or secondary text - supports html. |
 | `title` | string | - | Result title or primary text - supports html. |

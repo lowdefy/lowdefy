@@ -25,13 +25,13 @@ The block does not manage data — you load conversations from your database and
       _state: activeConversationId
     creation:
       label: New Chat
-      icon: AiOutlinePlus
+      icon: add
     menu:
       - key: rename
         label: Rename
       - key: delete
         label: Delete
-        icon: AiOutlineDelete
+        icon: delete
         danger: true
     groupable:
       collapsible: true

@@ -14,11 +14,22 @@
   limitations under the License.
 */
 
-import defaultIconAliases from './defaultIconAliases.js';
+import React from 'react';
 
-// Built-in semantic names with the app's theme.icons.aliases on top.
-function getIconAliases({ components }) {
-  return { ...defaultIconAliases, ...(components.theme?.icons?.aliases ?? {}) };
+function createUploadIconRender({ blockId, Icon }) {
+  return function iconRender(file) {
+    if (file.status === 'uploading') {
+      return (
+        <Icon
+          blockId={`${blockId}_${file.uid}_icon`}
+          properties={{ name: 'loading', spin: true }}
+        />
+      );
+    }
+    return (
+      <Icon blockId={`${blockId}_${file.uid}_icon`} properties={{ name: 'attach', title: '' }} />
+    );
+  };
 }
 
-export default getIconAliases;
+export default createUploadIconRender;

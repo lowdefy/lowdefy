@@ -5,12 +5,12 @@
       pageId: dashboard
       properties:
         title: Dashboard
-        icon: AiOutlineDashboard
+        icon: Gauge
     - id: customers
       type: MenuGroup
       properties:
         title: Customers
-        icon: AiOutlineTeam
+        icon: users
       links:
         - id: all-customers
           type: MenuLink
@@ -27,16 +27,16 @@
       pageId: orders
       properties:
         title: Orders
-        icon: AiOutlineShoppingCart
+        icon: ShoppingCart
     - id: reports
       type: MenuLink
       pageId: reports
       properties:
         title: Reports
-        icon: AiOutlineBarChart
+        icon: chart
     - id: settings
       type: MenuLink
       pageId: settings
       properties:
         title: Settings
-        icon: AiOutlineSetting
+        icon: settings

@@ -96,30 +96,29 @@ const Selector = ({
                 placeholder={get(properties, 'placeholder', { default: 'Select item' })}
                 status={validation.status}
                 suffixIcon={
-                  properties.showArrow === false
-                    ? null
-                    : properties.suffixIcon && (
-                        <Icon
-                          blockId={`${blockId}_suffixIcon`}
-                          classNames={{ element: classNames.suffixIcon }}
-                          events={events}
-                          properties={properties.suffixIcon}
-                          styles={{ element: styles.suffixIcon }}
-                        />
-                      )
-                }
-                clearIcon={
-                  properties.clearIcon && (
+                  properties.showArrow === false ? null : (
                     <Icon
-                      blockId={`${blockId}_clearIcon`}
-                      classNames={{ element: classNames.clearIcon }}
+                      blockId={`${blockId}_suffixIcon`}
+                      classNames={{ element: classNames.suffixIcon }}
                       events={events}
-                      properties={properties.clearIcon}
-                      styles={{ element: styles.clearIcon }}
+                      properties={properties.suffixIcon ?? { name: 'chevron-down', title: '' }}
+                      styles={{ element: styles.suffixIcon }}
                     />
                   )
                 }
-                allowClear={properties.allowClear !== false}
+                allowClear={
+                  properties.allowClear !== false && {
+                    clearIcon: (
+                      <Icon
+                        blockId={`${blockId}_clearIcon`}
+                        classNames={{ element: classNames.clearIcon }}
+                        events={events}
+                        properties={properties.clearIcon ?? { name: 'clear', title: '' }}
+                        styles={{ element: styles.clearIcon }}
+                      />
+                    ),
+                  }
+                }
                 showSearch={get(properties, 'showSearch', { default: true })}
                 size={properties.size}
                 filterOption={(input, option) =>

@@ -25,7 +25,7 @@ blocks:
     type: Anchor
     properties:
       title: With Icon
-      icon: AiOutlineLink
+      icon: link
 
   - id: anchor_disabled
     type: Anchor

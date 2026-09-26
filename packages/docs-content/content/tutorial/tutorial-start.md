@@ -86,7 +86,7 @@ pages:
                   title: Welcome to your Lowdefy app
                   subTitle: We are excited to see what you are going to build
                   icon:
-                    name: AiOutlineHeart
+                    name: heart
                     color: '#f00'
                 slots:
                   extra:

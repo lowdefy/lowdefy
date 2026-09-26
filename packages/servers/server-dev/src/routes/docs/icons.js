@@ -16,7 +16,7 @@
 
 import searchIcons from '../../../lib/docs/searchIcons.js';
 
-function docsIconsHandler(c) {
+async function docsIconsHandler(c) {
   const query = c.req.query('q');
   if (!query || query.trim() === '') {
     return c.json(
@@ -24,7 +24,7 @@ function docsIconsHandler(c) {
       400
     );
   }
-  return c.json(searchIcons({ query }));
+  return c.json(await searchIcons({ query }));
 }
 
 export default docsIconsHandler;

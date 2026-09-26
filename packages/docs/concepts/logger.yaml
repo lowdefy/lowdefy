@@ -114,7 +114,7 @@ _ref:
         type: Alert
         properties:
           type: warning
-          icon: AiFillWarning
+          icon: warning
           description: Be careful not to include personally identifiable information (PII) like email addresses in userFields unless required and compliant with your privacy policy.
 
       - id: md2

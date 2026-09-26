@@ -41,7 +41,7 @@ Floating action button with tooltip, badge, and icon.
     title: Default
     color: default
     variant: outlined
-    icon: AiOutlineQuestionCircle
+    icon: help
   events:
     onClick:
       - id: set_type_default
@@ -50,7 +50,7 @@ Floating action button with tooltip, badge, and icon.
           float_active: true
           float_props:
             type: default
-            icon: AiOutlineQuestionCircle
+            icon: help
             tooltip: Default type
 - id: btn_type_primary
   type: Button
@@ -60,7 +60,7 @@ Floating action button with tooltip, badge, and icon.
     title: Primary
     color: primary
     variant: outlined
-    icon: AiOutlineQuestionCircle
+    icon: help
   events:
     onClick:
       - id: set_type_primary
@@ -69,7 +69,7 @@ Floating action button with tooltip, badge, and icon.
           float_active: true
           float_props:
             type: primary
-            icon: AiOutlineQuestionCircle
+            icon: help
             tooltip: Primary type
 - id: btn_type_support
   type: Button
@@ -79,7 +79,7 @@ Floating action button with tooltip, badge, and icon.
     title: Support
     color: primary
     variant: outlined
-    icon: AiOutlineCustomerService
+    icon: Headset
   events:
     onClick:
       - id: set_type_support
@@ -88,7 +88,7 @@ Floating action button with tooltip, badge, and icon.
           float_active: true
           float_props:
             type: primary
-            icon: AiOutlineCustomerService
+            icon: Headset
             tooltip: Contact support
 ```
 
@@ -109,7 +109,7 @@ Floating action button with tooltip, badge, and icon.
           float_active: true
           float_props:
             shape: circle
-            icon: AiOutlinePlus
+            icon: add
             tooltip: Circle (default)
 - id: btn_shape_square
   type: Button
@@ -127,7 +127,7 @@ Floating action button with tooltip, badge, and icon.
           float_active: true
           float_props:
             shape: square
-            icon: AiOutlineSetting
+            icon: settings
             tooltip: Square shape
 - id: btn_shape_square_primary
   type: Button
@@ -146,7 +146,7 @@ Floating action button with tooltip, badge, and icon.
           float_props:
             shape: square
             type: primary
-            icon: AiOutlineEdit
+            icon: edit
             tooltip: Square primary
 ```
 
@@ -159,7 +159,7 @@ Floating action button with tooltip, badge, and icon.
     title: String
     color: default
     variant: outlined
-    icon: AiOutlineQuestionCircle
+    icon: help
   events:
     onClick:
       - id: set_icon_string
@@ -167,7 +167,7 @@ Floating action button with tooltip, badge, and icon.
         params:
           float_active: true
           float_props:
-            icon: AiOutlineQuestionCircle
+            icon: help
             tooltip: String icon
 - id: btn_icon_object
   type: Button
@@ -177,7 +177,7 @@ Floating action button with tooltip, badge, and icon.
     title: Object
     color: default
     variant: outlined
-    icon: AiOutlineRocket
+    icon: Rocket
   events:
     onClick:
       - id: set_icon_object
@@ -186,7 +186,7 @@ Floating action button with tooltip, badge, and icon.
           float_active: true
           float_props:
             icon:
-              name: AiOutlineRocket
+              name: Rocket
             tooltip: Object icon
 - id: btn_icon_colored
   type: Button
@@ -196,7 +196,7 @@ Floating action button with tooltip, badge, and icon.
     title: Colored
     color: default
     variant: outlined
-    icon: AiOutlineHeart
+    icon: heart
   events:
     onClick:
       - id: set_icon_colored
@@ -205,7 +205,7 @@ Floating action button with tooltip, badge, and icon.
           float_active: true
           float_props:
             icon:
-              name: AiOutlineHeart
+              name: heart
               color: "#eb2f96"
             tooltip: Colored icon
 ```
@@ -226,7 +226,7 @@ Floating action button with tooltip, badge, and icon.
         params:
           float_active: true
           float_props:
-            icon: AiOutlineQuestionCircle
+            icon: help
             tooltip: Help
 - id: btn_tooltip_long
   type: Button
@@ -243,7 +243,7 @@ Floating action button with tooltip, badge, and icon.
         params:
           float_active: true
           float_props:
-            icon: AiOutlineCustomerService
+            icon: Headset
             tooltip: Click here to get help from our support team
 ```
 
@@ -256,7 +256,7 @@ Floating action button with tooltip, badge, and icon.
     title: With Icon
     color: primary
     variant: outlined
-    icon: AiOutlineQuestionCircle
+    icon: help
   events:
     onClick:
       - id: set_desc_icon
@@ -266,7 +266,7 @@ Floating action button with tooltip, badge, and icon.
           float_props:
             shape: square
             type: primary
-            icon: AiOutlineQuestionCircle
+            icon: help
             description: Help
 - id: btn_desc_docs
   type: Button
@@ -276,7 +276,7 @@ Floating action button with tooltip, badge, and icon.
     title: Docs
     color: primary
     variant: outlined
-    icon: AiOutlineFileText
+    icon: document
   events:
     onClick:
       - id: set_desc_docs
@@ -286,7 +286,7 @@ Floating action button with tooltip, badge, and icon.
           float_props:
             shape: square
             type: primary
-            icon: AiOutlineFileText
+            icon: document
             description: Docs
 - id: btn_desc_text
   type: Button
@@ -317,7 +317,7 @@ Floating action button with tooltip, badge, and icon.
     title: Count
     color: default
     variant: outlined
-    icon: AiOutlineBell
+    icon: bell
   events:
     onClick:
       - id: set_badge_count
@@ -325,7 +325,7 @@ Floating action button with tooltip, badge, and icon.
         params:
           float_active: true
           float_props:
-            icon: AiOutlineBell
+            icon: bell
             tooltip: Notifications
             badge:
               count: 5
@@ -337,7 +337,7 @@ Floating action button with tooltip, badge, and icon.
     title: Dot
     color: default
     variant: outlined
-    icon: AiOutlineMail
+    icon: mail
   events:
     onClick:
       - id: set_badge_dot
@@ -345,7 +345,7 @@ Floating action button with tooltip, badge, and icon.
         params:
           float_active: true
           float_props:
-            icon: AiOutlineMail
+            icon: mail
             tooltip: Messages
             badge:
               dot: true
@@ -357,7 +357,7 @@ Floating action button with tooltip, badge, and icon.
     title: Overflow
     color: default
     variant: outlined
-    icon: AiOutlineInbox
+    icon: Inbox
   events:
     onClick:
       - id: set_badge_overflow
@@ -365,7 +365,7 @@ Floating action button with tooltip, badge, and icon.
         params:
           float_active: true
           float_props:
-            icon: AiOutlineInbox
+            icon: Inbox
             tooltip: Inbox
             badge:
               count: 99
@@ -381,7 +381,7 @@ Floating action button with tooltip, badge, and icon.
     title: Link
     color: default
     variant: outlined
-    icon: AiOutlineLink
+    icon: link
   events:
     onClick:
       - id: set_href_link
@@ -389,7 +389,7 @@ Floating action button with tooltip, badge, and icon.
         params:
           float_active: true
           float_props:
-            icon: AiOutlineLink
+            icon: link
             tooltip: Open Lowdefy (new tab)
             href: https://lowdefy.com
             target: _blank
@@ -401,7 +401,7 @@ Floating action button with tooltip, badge, and icon.
     title: Docs Link
     color: primary
     variant: outlined
-    icon: AiOutlineFileText
+    icon: document
   events:
     onClick:
       - id: set_href_docs
@@ -410,7 +410,7 @@ Floating action button with tooltip, badge, and icon.
           float_active: true
           float_props:
             type: primary
-            icon: AiOutlineFileText
+            icon: document
             tooltip: View documentation (new tab)
             href: https://docs.lowdefy.com
             target: _blank
@@ -425,7 +425,7 @@ Floating action button with tooltip, badge, and icon.
     title: Green
     color: primary
     variant: outlined
-    icon: AiOutlineCheck
+    icon: check
   events:
     onClick:
       - id: set_theme_green
@@ -434,7 +434,7 @@ Floating action button with tooltip, badge, and icon.
           float_active: true
           float_props:
             type: primary
-            icon: AiOutlineCheck
+            icon: check
             tooltip: Green primary
             theme:
               colorPrimary: "#52c41a"
@@ -447,7 +447,7 @@ Floating action button with tooltip, badge, and icon.
     title: Dark
     color: default
     variant: outlined
-    icon: AiOutlineSetting
+    icon: settings
   events:
     onClick:
       - id: set_theme_dark
@@ -455,7 +455,7 @@ Floating action button with tooltip, badge, and icon.
         params:
           float_active: true
           float_props:
-            icon: AiOutlineSetting
+            icon: settings
             tooltip: Dark background
             theme:
               colorBgElevated: "#1f1f1f"
@@ -468,7 +468,7 @@ Floating action button with tooltip, badge, and icon.
     title: Large
     color: primary
     variant: outlined
-    icon: AiOutlinePlus
+    icon: add
   events:
     onClick:
       - id: set_theme_large
@@ -477,7 +477,7 @@ Floating action button with tooltip, badge, and icon.
           float_active: true
           float_props:
             type: primary
-            icon: AiOutlinePlus
+            icon: add
             tooltip: Large button
             theme:
               controlHeightLG: 56
@@ -490,7 +490,7 @@ Floating action button with tooltip, badge, and icon.
     title: Custom Badge
     color: default
     variant: outlined
-    icon: AiOutlineBell
+    icon: bell
   events:
     onClick:
       - id: set_theme_badge
@@ -498,7 +498,7 @@ Floating action button with tooltip, badge, and icon.
         params:
           float_active: true
           float_props:
-            icon: AiOutlineBell
+            icon: bell
             tooltip: Custom badge color
             badge:
               count: 3
@@ -514,6 +514,15 @@ Floating action button with tooltip, badge, and icon.
 | `description` | string | - | Text and other. |
 | `tooltip` | string | - | The text shown in the tooltip. |
 | `icon` | string \| object | - | Icon for the button. |
+| `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `icon.color` | string | - | Icon color. |
+| `icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `href` | string | - | The target of hyperlink. |
 | `htmlType` | string | `"button"` | HTML button type. Enum: `button`, `submit`, `reset`. |
 | `target` | string | - | Specifies where to display the linked URL. |

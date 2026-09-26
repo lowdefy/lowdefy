@@ -209,10 +209,10 @@ blocks:
       tabs:
         - key: home
           title: Home
-          icon: AiOutlineHome
+          icon: home
         - key: settings
           title: Settings
-          icon: AiOutlineSetting
+          icon: settings
     slots:
       home:
         blocks:

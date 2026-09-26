@@ -77,15 +77,15 @@
   type: MonthSelector
   properties:
     size: large
-- id: 'property.suffixIcon: CalendarFilled'
+- id: 'property.suffixIcon: calendar'
   type: MonthSelector
   properties:
-    suffixIcon: CalendarFilled
-- id: 'property.suffixIcon: CalendarFilled.blue'
+    suffixIcon: calendar
+- id: 'property.suffixIcon: calendar.blue'
   type: MonthSelector
   properties:
     suffixIcon:
-      name: CalendarFilled
+      name: calendar
       color: blue
 - id: 'properties.inputStyle: CSS style applied'
   type: MonthSelector

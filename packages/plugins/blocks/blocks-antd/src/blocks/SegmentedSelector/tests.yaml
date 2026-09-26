@@ -57,10 +57,10 @@
     options:
       - label: List
         value: list
-        icon: AiOutlineUnorderedList
+        icon: list
       - label: Grid
         value: grid
-        icon: AiOutlineAppstore
+        icon: grid
 - id: 'properties.size: small'
   type: SegmentedSelector
   properties:

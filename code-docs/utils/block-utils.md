@@ -161,7 +161,7 @@ export default extractBlockTypes(metas);
 // Returns:
 // {
 //   blocks: ['Anchor', 'Box', 'Icon'],
-//   icons: { Anchor: ['AiOutlineLoading3Quarters'], Box: [], Icon: [] },
+//   icons: { Anchor: ['loading'], Box: [], Icon: [] },
 //   blockMetas: {
 //     Anchor: { category: 'display', cssKeys: ['element'] },
 //     Box: { category: 'container', slots: ['content'] },

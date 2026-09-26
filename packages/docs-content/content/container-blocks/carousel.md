@@ -1110,7 +1110,7 @@ Integrate with databases, REST APIs, and GraphQL endpoints effortlessly.
             - id: rich_s1_icon
               type: Icon
               properties:
-                name: AiOutlineRocket
+                name: Rocket
                 size: 40
                 color: white
             - id: rich_s1_title
@@ -1147,7 +1147,7 @@ Integrate with databases, REST APIs, and GraphQL endpoints effortlessly.
             - id: rich_s2_icon
               type: Icon
               properties:
-                name: AiOutlineCheckCircle
+                name: check-circle
                 size: 40
                 color: white
             - id: rich_s2_title
@@ -1183,7 +1183,7 @@ Integrate with databases, REST APIs, and GraphQL endpoints effortlessly.
             - id: rich_s3_icon
               type: Icon
               properties:
-                name: AiOutlineApi
+                name: Plug
                 size: 40
                 color: white
             - id: rich_s3_title

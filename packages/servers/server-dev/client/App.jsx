@@ -18,18 +18,24 @@ import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react
 import useSWR from 'swr';
 
 import { ErrorBoundary } from '@lowdefy/block-utils';
-import { useDarkMode, useLocale } from '@lowdefy/client';
+import { IconProvider, useDarkMode, useLocale } from '@lowdefy/client';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { App as AntdApp, theme as antdTheme } from 'antd';
 import { XProvider } from '@ant-design/x';
+import { serializer } from '@lowdefy/helpers';
 
 import antdLocaleLoaders from '../build/i18n/antdLocales.js';
 import antdXLocaleLoaders from '../build/i18n/antdXLocales.js';
 import dayjsLocaleMap from '../build/i18n/dayjsLocales.js';
+import rawTheme from '../build/theme.json';
 import Auth from '../lib/client/auth/Auth.jsx';
 import ErrorBar from '../lib/client/ErrorBar.jsx';
 import request from '../lib/client/utils/request.js';
 import Routing from './Routing.jsx';
+
+// rootConfig arrives after the first render; the build-written theme gives
+// the icon provider its settings until then.
+const buildTheme = serializer.deserialize(rawTheme);
 
 function ThemeTokenResolver({ lowdefyRef, children }) {
   const { token } = antdTheme.useToken();
@@ -131,29 +137,33 @@ function App({ config, router }) {
           algorithm,
         }}
       >
-        <AntdApp>
-          <ThemeTokenResolver lowdefyRef={lowdefyRef}>
-            <ErrorBoundary fullPage onError={handleError}>
-              <Suspense
-                fallback={
-                  <div
-                    style={{
-                      minHeight: '100vh',
-                      background: 'var(--ant-color-bg-layout)',
+        {/* Message, Notification and ConfirmModal render in the App.useApp()
+            holders here, above the Client's icon provider. */}
+        <IconProvider icons={rootConfig?.theme.icons ?? buildTheme.icons}>
+          <AntdApp>
+            <ThemeTokenResolver lowdefyRef={lowdefyRef}>
+              <ErrorBoundary fullPage onError={handleError}>
+                <Suspense
+                  fallback={
+                    <div
+                      style={{
+                        minHeight: '100vh',
+                        background: 'var(--ant-color-bg-layout)',
+                      }}
+                    />
+                  }
+                >
+                  <Auth user={config?.user}>
+                    {(auth) => {
+                      return <Routing auth={auth} lowdefy={lowdefyRef.current} router={router} />;
                     }}
-                  />
-                }
-              >
-                <Auth user={config?.user}>
-                  {(auth) => {
-                    return <Routing auth={auth} lowdefy={lowdefyRef.current} router={router} />;
-                  }}
-                </Auth>
-              </Suspense>
-            </ErrorBoundary>
-            <ErrorBar errors={runtimeErrors} />
-          </ThemeTokenResolver>
-        </AntdApp>
+                  </Auth>
+                </Suspense>
+              </ErrorBoundary>
+              <ErrorBar errors={runtimeErrors} />
+            </ThemeTokenResolver>
+          </AntdApp>
+        </IconProvider>
       </XProvider>
     </StyleProvider>
   );

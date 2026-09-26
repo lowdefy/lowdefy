@@ -1306,28 +1306,28 @@ Overview
                   type: Button
                   properties:
                     title: Overview
-                    icon: AiOutlineDashboard
+                    icon: Gauge
                     variant: text
                     block: true
                 - id: dash_nav_item2
                   type: Button
                   properties:
                     title: Analytics
-                    icon: AiOutlineBarChart
+                    icon: chart
                     variant: text
                     block: true
                 - id: dash_nav_item3
                   type: Button
                   properties:
                     title: Users
-                    icon: AiOutlineTeam
+                    icon: users
                     variant: text
                     block: true
                 - id: dash_nav_item4
                   type: Button
                   properties:
                     title: Settings
-                    icon: AiOutlineSetting
+                    icon: settings
                     variant: text
                     block: true
     dash_content:
@@ -1502,7 +1502,7 @@ Please review the attached document and share any feedback by end of week. Our n
               type: Button
               properties:
                 title: Inbox (12)
-                icon: AiOutlineInbox
+                icon: Inbox
                 variant: text
                 block: true
                 size: small
@@ -1510,7 +1510,7 @@ Please review the attached document and share any feedback by end of week. Our n
               type: Button
               properties:
                 title: Sent
-                icon: AiOutlineSend
+                icon: send
                 variant: text
                 block: true
                 size: small
@@ -1518,7 +1518,7 @@ Please review the attached document and share any feedback by end of week. Our n
               type: Button
               properties:
                 title: Drafts (3)
-                icon: AiOutlineEdit
+                icon: edit
                 variant: text
                 block: true
                 size: small
@@ -1526,7 +1526,7 @@ Please review the attached document and share any feedback by end of week. Our n
               type: Button
               properties:
                 title: Trash
-                icon: AiOutlineDelete
+                icon: delete
                 variant: text
                 block: true
                 size: small
@@ -1640,7 +1640,7 @@ Please review the attached document and share any feedback by end of week. Our n
                   layout:
                     flex: 0 0 auto
                   properties:
-                    icon: AiOutlineUser
+                    icon: user
                     size: 32
                     color: "#fff"
                     backgroundColor: "#1677ff"

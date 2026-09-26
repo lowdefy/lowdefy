@@ -21,7 +21,7 @@ import { disabled, inputTitle, autoFocus } from '../../schemas/inputProperties.j
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons, 'AiOutlineCheck', 'AiOutlineClose'],
+  icons: [...LabelMeta.icons, 'check', 'close'],
   valueType: 'boolean',
   cssKeys: {
     element: 'The Switch element.',
@@ -45,9 +45,9 @@ export default {
       autoFocus,
       checkedIcon: {
         ...icon,
-        default: 'AiOutlineCheck',
+        default: 'check',
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon to shown when switch is checked (true).",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to shown when switch is checked (true).',
       },
       checkedText: {
         type: 'string',
@@ -71,9 +71,9 @@ export default {
       title: inputTitle,
       uncheckedIcon: {
         ...icon,
-        default: 'AiOutlineClose',
+        default: 'close',
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon to shown when switch is unchecked (false).",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to shown when switch is unchecked (false).',
       },
       uncheckedText: {
         type: 'string',

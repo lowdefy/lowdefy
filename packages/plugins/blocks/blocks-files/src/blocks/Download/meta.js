@@ -18,7 +18,7 @@ import uploadTheme from '../../schemas/uploadTheme.js';
 
 export default {
   category: 'display',
-  icons: [],
+  icons: ['loading', 'attach', 'delete', 'download', 'view'],
   valueType: null,
   cssKeys: {
     element: 'The Download element.',

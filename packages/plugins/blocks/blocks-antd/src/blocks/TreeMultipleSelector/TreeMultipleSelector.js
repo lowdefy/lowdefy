@@ -79,7 +79,6 @@ const TreeMultipleSelector = ({
               className={classNames.element}
               style={{ width: '100%', ...styles.element }}
               disabled={properties.disabled || loading}
-              allowClear={properties.allowClear !== false}
               placeholder={
                 properties.placeholder ??
                 methods.translate('blocks.treeMultipleSelector.placeholder')
@@ -99,29 +98,34 @@ const TreeMultipleSelector = ({
                 properties.notFoundContent ??
                 methods.translate('blocks.treeMultipleSelector.notFound')
               }
-              showCheckedStrategy={SHOW_STRATEGY[properties.showCheckedStrategy] ?? TreeSelect.SHOW_CHILD}
+              showCheckedStrategy={
+                SHOW_STRATEGY[properties.showCheckedStrategy] ?? TreeSelect.SHOW_CHILD
+              }
               {...(properties.checkable ? { treeCheckable: true } : { multiple: true })}
               suffixIcon={
-                properties.suffixIcon && (
-                  <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    classNames={{ element: classNames.suffixIcon }}
-                    events={events}
-                    properties={properties.suffixIcon}
-                    styles={{ element: styles.suffixIcon }}
-                  />
-                )
+                <Icon
+                  blockId={`${blockId}_suffixIcon`}
+                  classNames={{ element: classNames.suffixIcon }}
+                  events={events}
+                  properties={properties.suffixIcon ?? { name: 'chevron-down', title: '' }}
+                  styles={{ element: styles.suffixIcon }}
+                />
               }
-              clearIcon={
-                properties.clearIcon && (
-                  <Icon
-                    blockId={`${blockId}_clearIcon`}
-                    classNames={{ element: classNames.clearIcon }}
-                    events={events}
-                    properties={properties.clearIcon}
-                    styles={{ element: styles.clearIcon }}
-                  />
-                )
+              allowClear={
+                properties.allowClear !== false && {
+                  clearIcon: (
+                    <Icon
+                      blockId={`${blockId}_clearIcon`}
+                      classNames={{ element: classNames.clearIcon }}
+                      events={events}
+                      properties={properties.clearIcon ?? { name: 'clear', title: '' }}
+                      styles={{ element: styles.clearIcon }}
+                    />
+                  ),
+                }
+              }
+              removeIcon={
+                <Icon blockId={`${blockId}_removeIcon`} properties={{ name: 'close', title: '' }} />
               }
               value={selectedIndices}
               onChange={(idxArr) => {

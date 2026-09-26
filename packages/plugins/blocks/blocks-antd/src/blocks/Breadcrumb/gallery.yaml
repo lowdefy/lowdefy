@@ -118,28 +118,28 @@
       properties:
         list:
           - label: Home
-            icon: AiOutlineHome
+            icon: home
           - label: Users
-            icon: AiOutlineUser
+            icon: user
           - label: Profile
     - id: icons_multiple
       type: Breadcrumb
       properties:
         list:
           - label: Dashboard
-            icon: AiOutlineDashboard
+            icon: Gauge
           - label: Settings
-            icon: AiOutlineSetting
+            icon: settings
           - label: Security
-            icon: AiOutlineLock
+            icon: lock
     - id: icons_files
       type: Breadcrumb
       properties:
         list:
           - label: Files
-            icon: AiOutlineFolder
+            icon: folder
           - label: Documents
-            icon: AiOutlineFile
+            icon: file
           - label: report.pdf
     - id: icons_custom_object
       type: Breadcrumb
@@ -147,11 +147,11 @@
         list:
           - label: Admin
             icon:
-              name: AiOutlineCrown
+              name: Crown
               color: '#faad14'
           - label: Console
             icon:
-              name: AiOutlineCode
+              name: CodeXml
               color: '#1677ff'
           - label: Logs
 
@@ -314,9 +314,9 @@
       properties:
         list:
           - label: Home
-            icon: AiOutlineHome
+            icon: home
           - label: Users
-            icon: AiOutlineTeam
+            icon: users
           - label: Profile
         theme:
           iconFontSize: 20
@@ -326,7 +326,7 @@
         separator: '>'
         list:
           - label: Home
-            icon: AiOutlineHome
+            icon: home
           - label: Projects
           - label: Current
         theme:
@@ -350,12 +350,12 @@
             separator: '>'
             list:
               - label: Home
-                icon: AiOutlineHome
+                icon: home
                 pageId: introduction
               - label: Settings
-                icon: AiOutlineSetting
+                icon: settings
               - label: Security
-                icon: AiOutlineLock
+                icon: lock
           events:
             onClick:
               - id: settings_click_msg
@@ -404,7 +404,7 @@
                 title: Save Changes
                 color: primary
                 variant: solid
-                icon: AiOutlineSave
+                icon: save
               events:
                 onClick:
                   - id: settings_save_msg
@@ -421,7 +421,7 @@
       properties:
         list:
           - label: Shop
-            icon: AiOutlineHome
+            icon: home
             url: https://lowdefy.com
           - label: Electronics
           - label: Audio
@@ -458,7 +458,7 @@
                 title: Add to Cart
                 color: primary
                 variant: solid
-                icon: AiOutlineShoppingCart
+                icon: ShoppingCart
               events:
                 onClick:
                   - id: ecommerce_cart_msg
@@ -474,7 +474,7 @@
                 title: Wishlist
                 color: default
                 variant: outlined
-                icon: AiOutlineHeart
+                icon: heart
               events:
                 onClick:
                   - id: ecommerce_wishlist_msg

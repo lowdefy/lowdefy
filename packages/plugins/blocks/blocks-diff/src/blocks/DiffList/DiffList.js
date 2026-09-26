@@ -22,7 +22,14 @@ import ListRenderer from '../../shared/renderers/ListRenderer.js';
 import buildDiffModel from '../../shared/buildDiffModel.js';
 import withTheme from '../../shared/withTheme.js';
 
-const DiffListBlock = ({ blockId, classNames = {}, properties, methods, styles = {} }) => {
+const DiffListBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  properties,
+  methods,
+  styles = {},
+}) => {
   const {
     before,
     after,
@@ -57,6 +64,7 @@ const DiffListBlock = ({ blockId, classNames = {}, properties, methods, styles =
       title={title}
       emptyText={emptyText}
       empty={model.empty}
+      Icon={Icon}
       methods={methods}
     >
       <ListRenderer

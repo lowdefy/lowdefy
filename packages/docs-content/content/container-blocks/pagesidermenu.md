@@ -17,22 +17,22 @@ Dashboard
           type: MenuLink
           properties:
             title: Dashboard
-            icon: AiOutlineDashboard
+            icon: Gauge
         - id: psm_basic_orders
           type: MenuLink
           properties:
             title: Orders
-            icon: AiOutlineShoppingCart
+            icon: ShoppingCart
         - id: psm_basic_products
           type: MenuLink
           properties:
             title: Products
-            icon: AiOutlineAppstore
+            icon: grid
         - id: psm_basic_settings
           type: MenuLink
           properties:
             title: Settings
-            icon: AiOutlineSetting
+            icon: settings
   blocks:
     - id: psm_basic_title
       type: Title
@@ -88,7 +88,7 @@ Breadcrumb items support both simple strings and objects with label, icon, pageI
     breadcrumb:
       list:
         - label: Home
-          icon: AiOutlineHome
+          icon: home
         - label: Projects
         - label: Website Redesign
     menu:
@@ -97,22 +97,22 @@ Breadcrumb items support both simple strings and objects with label, icon, pageI
           type: MenuLink
           properties:
             title: Overview
-            icon: AiOutlineProject
+            icon: SquareKanban
         - id: psm_light_tasks
           type: MenuLink
           properties:
             title: Tasks
-            icon: AiOutlineCheckSquare
+            icon: SquareCheck
         - id: psm_light_files
           type: MenuLink
           properties:
             title: Files
-            icon: AiOutlineFile
+            icon: file
         - id: psm_light_team
           type: MenuLink
           properties:
             title: Team
-            icon: AiOutlineTeam
+            icon: users
   blocks:
     - id: psm_light_title
       type: Title
@@ -152,12 +152,12 @@ Tom Wilson
           type: MenuLink
           properties:
             title: Dashboard
-            icon: AiOutlineDashboard
+            icon: Gauge
         - id: psm_grp_users_group
           type: MenuGroup
           properties:
             title: User Management
-            icon: AiOutlineTeam
+            icon: users
           links:
             - id: psm_grp_all_users
               type: MenuLink
@@ -171,7 +171,7 @@ Tom Wilson
           type: MenuGroup
           properties:
             title: Content
-            icon: AiOutlineEdit
+            icon: edit
           links:
             - id: psm_grp_articles
               type: MenuLink
@@ -185,7 +185,7 @@ Tom Wilson
           type: MenuLink
           properties:
             title: Settings
-            icon: AiOutlineSetting
+            icon: settings
   blocks:
     - id: psm_grp_title
       type: Title
@@ -214,7 +214,7 @@ Tom Wilson
                 size: small
                 color: "#fff"
                 backgroundColor: "#1677ff"
-                icon: AiOutlineUser
+                icon: user
             - id: psm_grp_name_1
               type: Paragraph
               layout:
@@ -246,7 +246,7 @@ Tom Wilson
                 size: small
                 color: "#fff"
                 backgroundColor: "#52c41a"
-                icon: AiOutlineUser
+                icon: user
             - id: psm_grp_name_2
               type: Paragraph
               layout:
@@ -285,19 +285,19 @@ Admin Dashboard
           type: MenuLink
           properties:
             title: My Profile
-            icon: AiOutlineUser
+            icon: user
         - id: psm_prof_settings
           type: MenuLink
           properties:
             title: Account Settings
-            icon: AiOutlineSetting
+            icon: settings
         - id: psm_prof_divider
           type: MenuDivider
         - id: psm_prof_logout
           type: MenuLink
           properties:
             title: Sign Out
-            icon: AiOutlineLogout
+            icon: logout
             danger: true
     menu:
       links:
@@ -305,17 +305,17 @@ Admin Dashboard
           type: MenuLink
           properties:
             title: Dashboard
-            icon: AiOutlineDashboard
+            icon: Gauge
         - id: psm_prof_users
           type: MenuLink
           properties:
             title: Users
-            icon: AiOutlineTeam
+            icon: users
         - id: psm_prof_reports
           type: MenuLink
           properties:
             title: Reports
-            icon: AiOutlineBarChart
+            icon: chart
   blocks:
     - id: psm_prof_title
       type: Title
@@ -369,7 +369,7 @@ Sprint Progress
       dot: true
     profile:
       avatar:
-        icon: AiOutlineUser
+        icon: user
         color: "#1677ff"
     breadcrumb:
       separator: /
@@ -382,17 +382,17 @@ Sprint Progress
           type: MenuLink
           properties:
             title: Dashboard
-            icon: AiOutlineDashboard
+            icon: Gauge
         - id: psm_full_analytics
           type: MenuLink
           properties:
             title: Analytics
-            icon: AiOutlineBarChart
+            icon: chart
         - id: psm_full_settings
           type: MenuLink
           properties:
             title: Settings
-            icon: AiOutlineSetting
+            icon: settings
   slots:
     sider:
       blocks:
@@ -448,7 +448,7 @@ Sprint Progress
               properties:
                 title: Total Users
                 value: 2847
-                prefixIcon: AiOutlineUser
+                prefixIcon: user
         - id: psm_full_stat_revenue
           type: Card
           layout:
@@ -504,12 +504,12 @@ Profile from _menu
           type: MenuLink
           properties:
             title: Dashboard
-            icon: AiOutlineDashboard
+            icon: Gauge
         - id: psm_mo_users
           type: MenuLink
           properties:
             title: Users
-            icon: AiOutlineTeam
+            icon: users
   blocks:
     - id: psm_mo_title
       type: Title
@@ -552,14 +552,32 @@ Profile from _menu
 | `breadcrumb.list.$.pageId` | string | - | Page id to link to when clicked. |
 | `breadcrumb.list.$.url` | string | - | External url link. |
 | `breadcrumb.list.$.style` | object | - | Css style to apply to link. |
-| `breadcrumb.list.$.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to use an icon in breadcrumb link. |
+| `breadcrumb.list.$.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use an icon in breadcrumb link. |
+| `breadcrumb.list.$.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `breadcrumb.list.$.icon.color` | string | - | Icon color. |
+| `breadcrumb.list.$.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `breadcrumb.list.$.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `breadcrumb.list.$.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `breadcrumb.list.$.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `breadcrumb.list.$.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `breadcrumb.list.$.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `breadcrumb.list.$.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `menu` | object | - | Menu properties. |
 | `menu.links` | array | - |  |
 | `menu.links.$.id` | string | - | Menu item id. |
 | `menu.links.$.pageId` | string | - | Page to link to. |
 | `menu.links.$.properties` | object | - | properties from menu item. |
 | `menu.links.$.properties.title` | string | - | Menu item title. |
-| `menu.links.$.properties.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon on menu item. |
+| `menu.links.$.properties.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on menu item. |
+| `menu.links.$.properties.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `menu.links.$.properties.icon.color` | string | - | Icon color. |
+| `menu.links.$.properties.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `menu.links.$.properties.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `menu.links.$.properties.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `menu.links.$.properties.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `menu.links.$.properties.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `menu.links.$.properties.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `menu.links.$.properties.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `menuLg` | object | - | Menu large screen properties. Overwrites menu properties on desktop screen sizes. |
 | `menuMd` | object | - | Mobile menu properties. Overwrites menu properties on mobile screen sizes. |
 | `notifications` | object | - | Notification bell icon with badge in the header. Renders when configured. Use the link property to navigate when clicked. |
@@ -572,13 +590,31 @@ Profile from _menu
 | `notifications.showZero` | boolean | `false` | Show badge when count is zero. |
 | `notifications.overflowCount` | number | `99` | Max count to show. Values above this display as "N+". |
 | `notifications.color` | string | - | Badge color. |
-| `notifications.icon` | string \| object | - | Icon for the notification button. Defaults to AiOutlineBell. |
+| `notifications.icon` | string \| object | - | Icon for the notification button. Defaults to `bell`. |
+| `notifications.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `notifications.icon.color` | string | - | Icon color. |
+| `notifications.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `notifications.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `notifications.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `notifications.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `notifications.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `notifications.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `notifications.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `notifications.size` | string | `"small"` | Size of the notification button. Enum: `small`, `default`, `large`. |
 | `profile` | object | - | Profile avatar with optional dropdown menu in the header. Renders when configured. Use with the _user operator to populate from the authenticated user. |
 | `profile.avatar` | object | - | Avatar display properties. |
 | `profile.avatar.src` | string | - | Image URL for the avatar. Typically bound to _user: image. |
 | `profile.avatar.content` | string | - | Text content inside the avatar (e.g. user initials). Shown when no src is provided. |
-| `profile.avatar.icon` | string \| object | - | Icon to display in avatar when no src or content is set. Defaults to AiOutlineUser. |
+| `profile.avatar.icon` | string \| object | - | Icon to display in avatar when no src or content is set. Defaults to `user`. |
+| `profile.avatar.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `profile.avatar.icon.color` | string | - | Icon color. |
+| `profile.avatar.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `profile.avatar.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `profile.avatar.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `profile.avatar.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `profile.avatar.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `profile.avatar.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `profile.avatar.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `profile.avatar.color` | string | - | Background color of the avatar when not using src. |
 | `profile.avatar.size` | string \| number | `"small"` | Size of the avatar. Enum: `default`, `small`, `large`. |
 | `profile.avatar.shape` | string | `"circle"` | Shape of the avatar. Enum: `circle`, `square`. |
@@ -592,6 +628,15 @@ Profile from _menu
 | `profile.links.$.properties` | object | - | Properties for the menu item. |
 | `profile.links.$.properties.title` | string | - | Menu item title. |
 | `profile.links.$.properties.icon` | string \| object | - | Icon for the menu item. |
+| `profile.links.$.properties.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `profile.links.$.properties.icon.color` | string | - | Icon color. |
+| `profile.links.$.properties.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `profile.links.$.properties.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `profile.links.$.properties.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `profile.links.$.properties.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `profile.links.$.properties.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `profile.links.$.properties.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `profile.links.$.properties.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `profile.links.$.properties.danger` | boolean | `false` | Apply danger style to menu item. |
 | `profile.links.$.properties.disabled` | boolean | `false` | Disable the menu item. |
 | `profile.links.$.properties.dashed` | boolean | `false` | Whether the divider line is dashed. |

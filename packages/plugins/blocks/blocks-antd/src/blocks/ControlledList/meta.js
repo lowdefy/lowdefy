@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'list',
-  icons: ['AiOutlinePlus', 'AiOutlineMinusCircle'],
+  icons: ['add', 'remove', 'loading'],
   valueType: 'array',
   slots: {
     content: 'Blocks rendered for each list item.',
@@ -67,12 +69,9 @@ export default {
         },
       },
       removeItemIcon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          'Custom remove item icon properties. Defaults to `AiOutlineMinusCircle` at a standard size with the antd error color inherited from the icon wrapper — override via `class.removeIcon` / `style.removeIcon` for visual tweaks, or via this property to change the icon name itself.',
-        docs: {
-          displayType: 'icon',
-        },
+          'Custom remove item icon properties. Defaults to `remove` at a standard size with the antd error color inherited from the icon wrapper — override via `class.removeIcon` / `style.removeIcon` for visual tweaks, or via this property to change the icon name itself.',
       },
       hideRemoveButton: {
         type: 'boolean',

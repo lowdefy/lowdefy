@@ -128,7 +128,7 @@ Address input with place suggestions from the Google Places Autocomplete Data AP
   properties:
     title: Address
     optionsIcon:
-      name: MdOutlineHome
+      name: home
       color: "#1890ff"
     loadingPlaceholder: Searching addresses...
     notFoundContent: No matching address
@@ -213,7 +213,7 @@ Delivery details
   type: Button
   properties:
     title: Save address
-    icon: AiOutlineSave
+    icon: save
 ```
 
 | Property | Type | Default | Description |
@@ -237,12 +237,12 @@ Delivery details
 | `label.title` | string | - | Label title - supports html. |
 | `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
-| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
 | `labelField` | string | `"formattedAddress"` | The key in the block value, after `resultMapping` is applied, that is displayed in the input and written when the user types free text. Typing removes the keys the previous place wrote (the mapped `input`, `id`, `formattedAddress` and `fetchFields` keys), so typed text never carries another place's fields. |
 | `loadingPlaceholder` | string | `"Loading..."` | Text displayed in the dropdown while suggestions are being fetched. |
 | `notFoundContent` | string | `"No results found"` | Text displayed in the dropdown when the search returns no suggestions. |
-| `optionsIcon` | string \| object | `{"name":"MdLocationOn"}` | Icon displayed before each suggestion in the dropdown. |
+| `optionsIcon` | string \| object | `"location"` | Icon displayed before each suggestion in the dropdown: a semantic name like `location`, a Lucide icon name like `MapPin`, or a set-qualified name like `tabler:MapPin`, or properties of an Icon block. |
 | `placeholder` | string | `"Start typing to search"` | Placeholder text inside the block before the user types input. |
 | `requestOptions` | object | - | Additional options passed to the autocomplete request. See [AutocompleteRequest](https://developers.google.com/maps/documentation/javascript/reference/autocomplete-data#AutocompleteRequest). |
 | `requestOptions.includedPrimaryTypes` | array | - | Restrict suggestions to these place types, for example `street_address` or `locality`. |

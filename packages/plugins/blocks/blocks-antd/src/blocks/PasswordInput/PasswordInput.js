@@ -79,6 +79,12 @@ const PasswordInput = ({
               size={properties.size}
               status={validation.status}
               visibilityToggle={properties.visibilityToggle}
+              iconRender={(visible) => (
+                <components.Icon
+                  blockId={`${blockId}_visibility_icon`}
+                  properties={visible ? 'view' : 'hide'}
+                />
+              )}
             />
           );
         },

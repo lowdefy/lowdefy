@@ -50,6 +50,7 @@ async function createCustomPluginTypesMap({ directories }) {
     blocks: {},
     connections: {},
     icons: {},
+    iconSets: {},
     operators: {
       client: {},
       server: {},

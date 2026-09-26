@@ -15,14 +15,18 @@
 */
 
 import React from 'react';
+import { ConfigProvider } from 'antd';
 import { serializer } from '@lowdefy/helpers';
 
 import Block from './block/Block.js';
 import Context from './Context.js';
 import DisplayMessage from './DisplayMessage.js';
 import Head from './Head.js';
+import IconProvider from './IconProvider.js';
 import ProgressBarController from './ProgressBarController.js';
 
+import createAntdIconConfig from './createAntdIconConfig.js';
+import getMessageIcon from './getMessageIcon.js';
 import initLowdefyContext from './initLowdefyContext.js';
 
 const Client = ({
@@ -67,8 +71,11 @@ const Client = ({
     types,
     window,
   });
+  const Icon = lowdefy._internal.components.Icon;
+  const antdIconConfig = React.useMemo(() => createAntdIconConfig({ Icon }), [Icon]);
   return (
-    <>
+    // theme.icons is read at render: createIcon runs before the theme is set.
+    <IconProvider icons={lowdefy.theme.icons}>
       <ProgressBarController
         id="lowdefy-progress-bar"
         key={`${config.pageConfig.id}-progress-bar`}
@@ -82,39 +89,46 @@ const Client = ({
         components={lowdefy._internal.components}
         methods={{
           registerMethod: (_, method) => {
-            lowdefy._internal.displayMessage = method;
+            lowdefy._internal.displayMessage = (args) =>
+              method({
+                ...args,
+                icon: args.icon ?? getMessageIcon({ status: args.status ?? 'success' }),
+              });
           },
         }}
       />
-      <Context
-        key={contextKey}
-        config={config.pageConfig}
-        jsMap={jsMap}
-        lowdefy={lowdefy}
-        resetContext={resetContext}
-      >
-        {(context) => {
-          if (!context._internal.onInitDone) return '';
-          return (
-            <>
-              <Head
-                Component={Components.Head}
-                properties={
-                  context._internal.RootSlots.map[config.pageConfig.blockId].eval.properties
-                }
-              />
-              <Block
-                block={context._internal.RootSlots.map[config.pageConfig.blockId]}
-                Blocks={context._internal.RootSlots}
-                context={context}
-                lowdefy={lowdefy}
-                parentLoading={false}
-              />
-            </>
-          );
-        }}
-      </Context>
-    </>
+      {/* Nested inside the root provider, so antd merges it with the app's theme and locale. */}
+      <ConfigProvider {...antdIconConfig}>
+        <Context
+          key={contextKey}
+          config={config.pageConfig}
+          jsMap={jsMap}
+          lowdefy={lowdefy}
+          resetContext={resetContext}
+        >
+          {(context) => {
+            if (!context._internal.onInitDone) return '';
+            return (
+              <>
+                <Head
+                  Component={Components.Head}
+                  properties={
+                    context._internal.RootSlots.map[config.pageConfig.blockId].eval.properties
+                  }
+                />
+                <Block
+                  block={context._internal.RootSlots.map[config.pageConfig.blockId]}
+                  Blocks={context._internal.RootSlots}
+                  context={context}
+                  lowdefy={lowdefy}
+                  parentLoading={false}
+                />
+              </>
+            );
+          }}
+        </Context>
+      </ConfigProvider>
+    </IconProvider>
   );
 };
 

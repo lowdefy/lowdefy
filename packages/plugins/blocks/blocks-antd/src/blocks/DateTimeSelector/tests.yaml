@@ -99,10 +99,10 @@
   type: DateTimeSelector
   properties:
     size: small
-- id: 'properties.suffixIcon: CalendarTwoTone'
+- id: 'properties.suffixIcon: calendar'
   type: DateTimeSelector
   properties:
-    suffixIcon: CalendarTwoTone
+    suffixIcon: calendar
 - id: 'properties.inputStyle: CSS style applied'
   type: DateTimeSelector
   properties:

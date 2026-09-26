@@ -255,7 +255,7 @@ function hydrateContext({ buildDir, configDir }) {
 
   context.installedPluginPackages = installedPluginPackages;
   context.components = { api: readBuildApiArtifacts(buildDir) };
-  context.iconImports = readArtifact(buildDir, 'iconImports.json') ?? [];
+  context.bundledIcons = new Set(readArtifact(buildDir, 'iconImports.json') ?? []);
   context.dynamicIconData = {};
 
   const idCounter = readArtifact(buildDir, 'idCounter.json');

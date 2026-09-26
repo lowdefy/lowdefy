@@ -28,7 +28,7 @@ import {
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons],
+  icons: [...LabelMeta.icons, 'view', 'hide'],
   valueType: 'string',
   cssKeys: {
     element: 'The PasswordInput element.',

@@ -2,7 +2,7 @@
   "name": "@lowdefy/blocks-diff",
   "version": "6.0.0",
   "license": "Apache-2.0",
-  "description": "Lowdefy diff blocks — list, side-by-side, timeline, and git-diff views for before/after object comparisons.",
+  "description": "Lowdefy diff blocks \u2014 list, side-by-side, timeline, and git-diff views for before/after object comparisons.",
   "homepage": "https://lowdefy.com",
   "keywords": [
     "lowdefy",
@@ -50,7 +50,6 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@ant-design/icons": "6.1.0",
     "@lowdefy/block-utils": "6.0.0",
     "@lowdefy/helpers": "6.0.0",
     "dayjs": "1.11.20",

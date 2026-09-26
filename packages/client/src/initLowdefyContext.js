@@ -87,7 +87,15 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
       createHref: ({ pathname, query }) =>
         createUrl({ basePath: lowdefy.basePath, pathname, query }),
       getLocale: () => getActiveLocale(window),
-      HtmlOverlay: React.lazy(() => import('./HtmlOverlay.js')),
+      // The overlay is lazy, so the app's Icon is bound in when it loads.
+      HtmlOverlay: React.lazy(async () => {
+        const { default: HtmlOverlay } = await import('./HtmlOverlay.js');
+        const Icon = lowdefy._internal.components.Icon;
+        function HtmlOverlayWithIcon(props) {
+          return <HtmlOverlay {...props} Icon={Icon} />;
+        }
+        return { default: HtmlOverlayWithIcon };
+      }),
       Icon: lowdefy._internal.components.Icon,
       icons: types.icons,
       link: lowdefy._internal.link,

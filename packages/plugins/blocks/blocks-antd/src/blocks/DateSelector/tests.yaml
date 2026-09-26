@@ -81,10 +81,10 @@
   type: DateSelector
   properties:
     size: small
-- id: 'properties.suffixIcon: CalendarTwoTone'
+- id: 'properties.suffixIcon: calendar'
   type: DateSelector
   properties:
-    suffixIcon: CalendarTwoTone
+    suffixIcon: calendar
 - id: 'properties.label span: 12'
   type: DateSelector
   properties:

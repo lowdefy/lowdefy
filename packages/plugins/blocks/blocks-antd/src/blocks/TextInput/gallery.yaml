@@ -90,28 +90,28 @@
       properties:
         title: Email
         type: email
-        prefixIcon: AiOutlineMail
+        prefixIcon: mail
         placeholder: user@example.com
     - id: type_password
       type: TextInput
       properties:
         title: Password
         type: password
-        prefixIcon: AiOutlineLock
+        prefixIcon: lock
         placeholder: Enter password
     - id: type_tel
       type: TextInput
       properties:
         title: Telephone
         type: tel
-        prefixIcon: AiOutlinePhone
+        prefixIcon: phone
         placeholder: +1 (555) 123-4567
     - id: type_url
       type: TextInput
       properties:
         title: URL
         type: url
-        prefixIcon: AiOutlineGlobal
+        prefixIcon: globe
         placeholder: https://example.com
 
 - title: Prefix & Suffix
@@ -139,13 +139,13 @@
       type: TextInput
       properties:
         title: Prefix Icon
-        prefixIcon: AiOutlineUser
+        prefixIcon: user
         placeholder: Enter username
     - id: adorn_suffix_icon
       type: TextInput
       properties:
         title: Suffix Icon
-        suffixIcon: AiOutlineInfoCircle
+        suffixIcon: info
         placeholder: Enter value
 
 - title: Custom Icon Properties
@@ -155,21 +155,21 @@
       properties:
         title: Custom Color Icon
         prefixIcon:
-          name: AiOutlineUser
+          name: user
           color: '#1677ff'
         placeholder: Blue user icon
     - id: icon_both_custom
       type: TextInput
       properties:
         title: Both Icons
-        prefixIcon: AiOutlineLink
-        suffixIcon: AiOutlineArrowRight
+        prefixIcon: link
+        suffixIcon: arrow-right
         placeholder: Enter link
     - id: icon_mixed
       type: TextInput
       properties:
         title: Icon Prefix + Text Suffix
-        prefixIcon: AiOutlineGlobal
+        prefixIcon: globe
         suffix: .com
         placeholder: domain
 
@@ -191,7 +191,7 @@
       properties:
         title: Allow Clear + Prefix Icon
         allowClear: true
-        prefixIcon: AiOutlineUser
+        prefixIcon: user
       events:
         onMount:
           - id: set_default
@@ -319,7 +319,7 @@
       properties:
         title: Disabled (With Prefix)
         disabled: true
-        prefixIcon: AiOutlineUser
+        prefixIcon: user
       events:
         onMount:
           - id: set_default
@@ -360,7 +360,7 @@
         title: Fully Customized
         placeholder: Orange theme via style
         prefixIcon:
-          name: AiOutlineStar
+          name: star
           color: '#fa8c16'
 
 - title: Theme Token Overrides
@@ -377,7 +377,7 @@
       properties:
         title: Green Theme
         placeholder: Custom green colors
-        prefixIcon: AiOutlineCheck
+        prefixIcon: check
         theme:
           colorPrimary: '#52c41a'
           colorBorder: '#b7eb8f'
@@ -390,7 +390,7 @@
       properties:
         title: Purple Theme
         placeholder: Custom purple colors
-        prefixIcon: AiOutlineStar
+        prefixIcon: star
         theme:
           colorPrimary: '#722ed1'
           colorBorder: '#d3adf7'
@@ -416,7 +416,7 @@
       required: true
       properties:
         title: Full Name
-        prefixIcon: AiOutlineUser
+        prefixIcon: user
         placeholder: John Doe
         label:
           colon: false
@@ -426,7 +426,7 @@
       properties:
         title: Email Address
         type: email
-        prefixIcon: AiOutlineMail
+        prefixIcon: mail
         placeholder: john@example.com
         label:
           colon: false
@@ -437,7 +437,7 @@
       properties:
         title: Password
         type: password
-        prefixIcon: AiOutlineLock
+        prefixIcon: lock
         placeholder: At least 8 characters
         showCount: true
         maxLength: 64
@@ -489,7 +489,7 @@
             title: Create Account
             color: primary
             variant: solid
-            icon: AiOutlineArrowRight
+            icon: arrow-right
           events:
             onClick:
               - id: submit_validate
@@ -510,7 +510,7 @@
     - id: search_bar
       type: TextInput
       properties:
-        prefixIcon: AiOutlineSearch
+        prefixIcon: search
         allowClear: true
         placeholder: Search products, categories, or brands...
         size: large

@@ -161,14 +161,14 @@
       type: WeekSelector
       properties:
         title: Clock Icon
-        suffixIcon: AiOutlineClockCircle
+        suffixIcon: clock
         label:
           disabled: true
     - id: ws_icon_schedule
       type: WeekSelector
       properties:
         title: Schedule Icon
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         label:
           disabled: true
     - id: ws_icon_custom_color
@@ -176,7 +176,7 @@
       properties:
         title: Custom Color Icon
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         label:
           disabled: true
@@ -426,7 +426,7 @@
         placeholder: Select sprint week
         format: YYYY [Week] wo
         size: large
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         showToday: true
         allowClear: true
         label:
@@ -451,7 +451,7 @@
         placeholder: Select fiscal week
         format: YYYY [W]ww
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         disabledDates:
           min: '2026-01-01'
@@ -473,7 +473,7 @@
             placeholder: Select sprint week
             format: YYYY [Week] wo
             size: large
-            suffixIcon: AiOutlineSchedule
+            suffixIcon: CalendarDays
             label:
               extra: Choose the week this sprint begins.
         - id: applied_sprint_team
@@ -501,7 +501,7 @@
           type: Button
           properties:
             title: Start Sprint
-            icon: AiOutlineThunderbolt
+            icon: Zap
             type: primary
             block: true
           events:
@@ -572,7 +572,7 @@
           type: Button
           properties:
             title: Submit Timesheet
-            icon: AiOutlineCheck
+            icon: check
             type: primary
             block: true
           events:

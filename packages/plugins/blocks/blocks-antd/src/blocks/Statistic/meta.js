@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'display',
   icons: [],
@@ -52,24 +54,18 @@ export default {
         description: 'Prefix text, priority over prefixIcon.',
       },
       prefixIcon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon which prefix the statistic.",
-        docs: {
-          displayType: 'icon',
-        },
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon which prefix the statistic.',
       },
       suffix: {
         type: 'string',
         description: 'Suffix text, priority over suffixIcon.',
       },
       suffixIcon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon which suffix the statistic.",
-        docs: {
-          displayType: 'icon',
-        },
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon which suffix the statistic.',
       },
       title: {
         type: 'string',

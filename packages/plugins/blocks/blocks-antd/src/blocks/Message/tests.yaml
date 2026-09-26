@@ -22,7 +22,7 @@
   type: Message
   properties:
     content: Message content
-    icon: AiFillApple
+    icon: Smartphone
 - id: 'properties.status: error'
   type: Message
   properties:

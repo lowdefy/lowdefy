@@ -316,7 +316,7 @@ Edit Employee Record
                     flex: 0 0 auto
                   properties:
                     title: Save Changes
-                    icon: AiOutlineSave
+                    icon: save
                     color: primary
                     variant: solid
                     size: small
@@ -362,7 +362,7 @@ Edit Employee Record
                 flex: 0 0 auto
               properties:
                 title: Delete
-                icon: AiOutlineDelete
+                icon: delete
                 color: danger
                 variant: outlined
                 size: small
@@ -379,7 +379,7 @@ Edit Employee Record
                 flex: 0 0 auto
               properties:
                 title: Export
-                icon: AiOutlineDownload
+                icon: download
                 color: primary
                 variant: solid
                 size: small

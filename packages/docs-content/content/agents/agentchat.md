@@ -257,7 +257,7 @@ sender:
   switches:
     - key: deep_research
       label: Deep Research
-      icon: AiOutlineSearch
+      icon: search
       default: false
     - key: use_knowledge_base
       label: Use Knowledge Base
@@ -448,7 +448,7 @@ Control the chat programmatically using [`CallMethod`](/CallMethod):
   type: Button
   properties:
     title: New Chat
-    icon: AiOutlinePlus
+    icon: add
   events:
     onClick:
       - id: new_id

@@ -68,11 +68,11 @@ blocks:
     properties:
       list:
         - label: Home
-          icon: AiOutlineHome
+          icon: home
         - label: Settings
-          icon: AiOutlineSetting
+          icon: settings
         - label: Profile
-          icon: AiOutlineUser
+          icon: user
 
   # ============================================
   # LINK TESTS

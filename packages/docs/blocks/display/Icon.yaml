@@ -24,4 +24,6 @@ _ref:
     schema: ../plugins/blocks/blocks-basic/src/blocks/Icon/meta.js
     gallery: ../plugins/blocks/blocks-basic/src/blocks/Icon/gallery.yaml
     description: >
-      Display icons from the React Icons library.
+      Display a Lucide icon by semantic name (`edit`), Lucide name (`Pencil`) or qualified name (`lucide:Pencil`), with per-icon size, colour and stroke width.
+    guide:
+      _ref: blocks/display/IconGuide.md

@@ -17,7 +17,6 @@
 import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import Markdown from '@ant-design/x-markdown';
 import { Actions, FileCard, Sources, ThoughtChain, Think } from '@ant-design/x';
-import { DeleteOutlined, ReloadOutlined, RobotOutlined } from '@ant-design/icons';
 
 import { getFileCardType, getFileCardIcon, getFileName } from './fileCardUtils.js';
 import formatToolResult from './formatToolResult.js';
@@ -227,6 +226,7 @@ function normalizeActions(actions) {
 }
 
 function BubbleActions({
+  Icon,
   actions,
   textContent,
   messageId,
@@ -261,7 +261,12 @@ function BubbleActions({
   if (normalized.regenerate) {
     items.push({
       key: 'regenerate',
-      icon: <ReloadOutlined />,
+      icon: (
+        <Icon
+          blockId={`${messageId}_regenerate_icon`}
+          properties={{ name: 'refresh', title: '' }}
+        />
+      ),
       label: translate('agent.message.regenerate'),
       onItemClick: () => onRegenerate?.({ messageId }),
     });
@@ -269,7 +274,9 @@ function BubbleActions({
   if (normalized.delete) {
     items.push({
       key: 'delete',
-      icon: <DeleteOutlined />,
+      icon: (
+        <Icon blockId={`${messageId}_delete_icon`} properties={{ name: 'delete', title: '' }} />
+      ),
       label: translate('agent.message.delete'),
       danger: true,
       onItemClick: () => onDelete?.({ messageId }),
@@ -299,6 +306,7 @@ function SourcesDisplay({ sourceParts, config, translate }) {
 }
 
 function MessageBubble({
+  Icon,
   content,
   isStreaming,
   parts,
@@ -352,6 +360,7 @@ function MessageBubble({
         <SourcesDisplay sourceParts={sourceParts} config={config} translate={translate} />
         {showActions && (
           <BubbleActions
+            Icon={Icon}
             actions={normalizedActions}
             textContent={content}
             messageId={messageId}
@@ -540,7 +549,16 @@ function MessageBubble({
               description,
               ...(content != null ? { content } : {}),
               ...(collapsible ? { collapsible: true } : {}),
-              ...(isSubAgent ? { icon: <RobotOutlined /> } : {}),
+              ...(isSubAgent
+                ? {
+                    icon: (
+                      <Icon
+                        blockId={`${tool.toolCallId}_icon`}
+                        properties={{ name: 'bot', title: '' }}
+                      />
+                    ),
+                  }
+                : {}),
               ...(status === 'loading' ? { blink: true } : {}),
               status,
             };
@@ -608,6 +626,7 @@ function MessageBubble({
       <SourcesDisplay sourceParts={sourceParts} config={config} translate={translate} />
       {showActions && (
         <BubbleActions
+          Icon={Icon}
           actions={normalizedActions}
           textContent={allTextContent}
           messageId={messageId}

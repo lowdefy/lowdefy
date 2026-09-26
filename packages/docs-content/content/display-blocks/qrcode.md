@@ -473,7 +473,7 @@ Present this QR code at the entrance for check-in.
             title: Generate New Password
             color: primary
             variant: outlined
-            icon: AiOutlineReload
+            icon: refresh
           events:
             onClick:
               - id: wifi_refresh_msg

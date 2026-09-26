@@ -15,7 +15,6 @@
 */
 
 import buildIconImports from './buildIconImports.js';
-import defaultIconsDev from './defaultIconsDev.js';
 
 function getPluginPackages({ components }) {
   const pluginPackages = new Set();
@@ -54,12 +53,7 @@ function buildImportClassDev({ pluginPackages, map }) {
 function buildImportsDev({ components, context }) {
   const pluginPackages = getPluginPackages({ components });
   const blocks = buildImportClassDev({ pluginPackages, map: context.typesMap.blocks });
-  const { iconAliases, iconImports } = buildIconImports({
-    blocks,
-    components,
-    context,
-    defaults: defaultIconsDev,
-  });
+  const icons = buildIconImports({ blocks, components, context });
   return {
     actions: buildImportClassDev({ pluginPackages, map: context.typesMap.actions }),
     agents: buildImportClassDev({ pluginPackages, map: context.typesMap.agents }),
@@ -70,8 +64,7 @@ function buildImportsDev({ components, context }) {
     },
     blocks,
     connections: buildImportClassDev({ pluginPackages, map: context.typesMap.connections }),
-    icons: iconImports,
-    iconAliases,
+    icons,
     notifications: buildImportClassDev({ pluginPackages, map: context.typesMap.notifications }),
     requests: buildImportClassDev({ pluginPackages, map: context.typesMap.requests }),
     steps: buildImportClassDev({ pluginPackages, map: context.typesMap.steps }),

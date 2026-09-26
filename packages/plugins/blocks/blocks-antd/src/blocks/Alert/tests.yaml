@@ -30,13 +30,13 @@
 - id: 'properties.icon string'
   type: Info
   properties:
-    icon: AiOutlineCheckCircle
+    icon: check-circle
     message: Message with Icon!
 - id: 'properties.icon object'
   type: Info
   properties:
     icon: # FIX: color and style is not working, className is not passed to alert icon
-      name: AiOutlineSetting
+      name: settings
       spin: true
       color: red
     message: Message with Icon!
@@ -137,14 +137,14 @@
   type: Info
   properties:
     description: This is a description for the block.
-    icon: AiOutlineCheckCircle
+    icon: check-circle
     message: Message with Icon!
 - id: 'with description properties.icon object'
   type: Info
   properties:
     description: This is a description for the block.
     icon: # FIX: color and style is not working, className is not passed to alert icon
-      name: AiOutlineSetting
+      name: settings
       spin: true
       color: red
     message: Message with Icon!

@@ -97,7 +97,7 @@ Editable paragraph text with copyable and ellipsis support.
   type: ParagraphInput
   properties:
     editable:
-      icon: AiOutlineHighlight
+      icon: highlight
       tooltip: Highlight to edit
   events:
     onMount:
@@ -110,7 +110,7 @@ Editable paragraph text with copyable and ellipsis support.
   type: ParagraphInput
   properties:
     editable:
-      icon: AiOutlineForm
+      icon: SquarePen
       tooltip: Open editor
   events:
     onMount:
@@ -122,7 +122,7 @@ Editable paragraph text with copyable and ellipsis support.
   type: ParagraphInput
   properties:
     editable:
-      icon: AiOutlineEdit
+      icon: edit
       tooltip: Edit paragraph
   events:
     onMount:
@@ -135,7 +135,7 @@ Editable paragraph text with copyable and ellipsis support.
   properties:
     editable:
       icon:
-        name: AiOutlineEdit
+        name: edit
         color: "#1677ff"
       tooltip: Edit in blue
   events:
@@ -287,7 +287,7 @@ Editable paragraph text with copyable and ellipsis support.
   type: ParagraphInput
   properties:
     editable:
-      icon: AiOutlineEdit
+      icon: edit
       tooltip: Edit this paragraph
       maxLength: 150
       autoSize:
@@ -304,7 +304,7 @@ Editable paragraph text with copyable and ellipsis support.
   type: ParagraphInput
   properties:
     editable:
-      icon: AiOutlineHighlight
+      icon: highlight
       tooltip: Highlight to edit (max 100 chars)
       maxLength: 100
   events:
@@ -689,7 +689,7 @@ Editable paragraph text with copyable and ellipsis support.
   type: ParagraphInput
   properties:
     copyable:
-      icon: AiOutlineSnippets
+      icon: Files
       tooltips:
         - Copy snippet
         - Snippet copied!
@@ -705,8 +705,8 @@ Editable paragraph text with copyable and ellipsis support.
   properties:
     copyable:
       icon:
-        - AiOutlineCopy
-        - AiOutlineCheck
+        - copy
+        - check
       tooltips:
         - Copy text
         - Text copied!
@@ -722,7 +722,7 @@ Editable paragraph text with copyable and ellipsis support.
   properties:
     copyable:
       icon:
-        name: AiOutlineCopy
+        name: copy
         color: "#1677ff"
       tooltips:
         - Copy
@@ -743,8 +743,8 @@ Editable paragraph text with copyable and ellipsis support.
     copyable:
       text: Custom text for clipboard
       icon:
-        - AiOutlineCopy
-        - AiOutlineCheck
+        - copy
+        - check
       tooltips:
         - Copy custom text
         - Custom text copied!
@@ -1460,7 +1460,7 @@ Editable paragraph text with copyable and ellipsis support.
     type: success
     strong: true
     editable:
-      icon: AiOutlineEdit
+      icon: edit
       tooltip: Edit this paragraph
       maxLength: 300
       autoSize: true
@@ -1545,7 +1545,7 @@ Editable paragraph text with copyable and ellipsis support.
     type: danger
     strong: true
     editable:
-      icon: AiOutlineEdit
+      icon: edit
       tooltip: Edit error message
       maxLength: 500
       autoSize:
@@ -1553,8 +1553,8 @@ Editable paragraph text with copyable and ellipsis support.
         maxRows: 10
     copyable:
       icon:
-        - AiOutlineCopy
-        - AiOutlineCheck
+        - copy
+        - check
       tooltips:
         - Copy error details
         - Error details copied!
@@ -1613,6 +1613,15 @@ Editable paragraph text with copyable and ellipsis support.
 | `disabled` | boolean | `false` | Apply disabled style. |
 | `editable` | boolean \| object | `true` | Allow paragraph editing when true, editable settings can be provided with editable object. |
 | `editable.icon` | string \| object | - | Edit icon. |
+| `editable.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `editable.icon.color` | string | - | Icon color. |
+| `editable.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `editable.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `editable.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `editable.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `editable.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `editable.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `editable.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `editable.tooltip` | string | - | Edit tooltip text. |
 | `editable.editing` | boolean | - | Control editing state. |
 | `editable.maxLength` | number | - | Max length of text area input. |

@@ -26,17 +26,17 @@ The Sider block provides a sidebar within a Layout. It supports collapsing, them
                 type: MenuLink
                 properties:
                   title: Home
-                  icon: AiOutlineHome
+                  icon: home
               - id: basic_users
                 type: MenuLink
                 properties:
                   title: Users
-                  icon: AiOutlineUser
+                  icon: user
               - id: basic_settings
                 type: MenuLink
                 properties:
                   title: Settings
-                  icon: AiOutlineSetting
+                  icon: settings
     - id: basic_content
       type: Content
       style:
@@ -75,17 +75,17 @@ Setting theme to "dark" gives the sider a dark background with light text. Match
                 type: MenuLink
                 properties:
                   title: Dashboard
-                  icon: AiOutlineDashboard
+                  icon: Gauge
               - id: dark_analytics
                 type: MenuLink
                 properties:
                   title: Analytics
-                  icon: AiOutlineBarChart
+                  icon: chart
               - id: dark_files
                 type: MenuLink
                 properties:
                   title: Files
-                  icon: AiOutlineFile
+                  icon: file
     - id: dark_content
       type: Content
       style:
@@ -126,17 +126,17 @@ With collapsible set to true a collapse trigger appears at the bottom. Toggle be
                 type: MenuLink
                 properties:
                   title: Inbox
-                  icon: AiOutlineInbox
+                  icon: Inbox
               - id: col_starred
                 type: MenuLink
                 properties:
                   title: Starred
-                  icon: AiOutlineStar
+                  icon: star
               - id: col_sent
                 type: MenuLink
                 properties:
                   title: Sent
-                  icon: AiOutlineSend
+                  icon: send
     - id: collapsible_content
       type: Content
       style:
@@ -177,17 +177,17 @@ This sider starts collapsed with initialCollapsed set to true. Click the collaps
                 type: MenuLink
                 properties:
                   title: Overview
-                  icon: AiOutlineAppstore
+                  icon: grid
               - id: ic_reports
                 type: MenuLink
                 properties:
                   title: Reports
-                  icon: AiOutlineFileText
+                  icon: document
               - id: ic_config
                 type: MenuLink
                 properties:
                   title: Configuration
-                  icon: AiOutlineTool
+                  icon: Wrench
     - id: init_collapsed_content
       type: Content
       style:
@@ -228,12 +228,12 @@ Setting collapsedWidth to 0 completely hides the sider when collapsed and shows 
                 type: MenuLink
                 properties:
                   title: Projects
-                  icon: AiOutlineProject
+                  icon: SquareKanban
               - id: cw_tasks
                 type: MenuLink
                 properties:
                   title: Tasks
-                  icon: AiOutlineCheckSquare
+                  icon: SquareCheck
     - id: cw_content
       type: Content
       style:
@@ -289,12 +289,12 @@ The Sider is placed on the right side of the layout with reverseArrow set to tru
                 type: MenuLink
                 properties:
                   title: Details
-                  icon: AiOutlineInfoCircle
+                  icon: info
               - id: rev_history
                 type: MenuLink
                 properties:
                   title: History
-                  icon: AiOutlineHistory
+                  icon: history
 ```
 
 The breakpoint property controls when the sider automatically collapses on smaller screens. Set to "lg" here, so the sider collapses when the viewport is below the large breakpoint. Supported values are xs, sm, md, lg, xl, and xxl.
@@ -330,12 +330,12 @@ The breakpoint property controls when the sider automatically collapses on small
                 type: MenuLink
                 properties:
                   title: Home
-                  icon: AiOutlineHome
+                  icon: home
               - id: bp_search
                 type: MenuLink
                 properties:
                   title: Search
-                  icon: AiOutlineSearch
+                  icon: search
     - id: bp_content
       type: Content
       style:
@@ -377,17 +377,17 @@ The width property accepts a number (pixels) or string value. Here the sider is 
                 type: MenuLink
                 properties:
                   title: Getting Started
-                  icon: AiOutlineRocket
+                  icon: Rocket
               - id: width_nav2
                 type: MenuLink
                 properties:
                   title: Documentation
-                  icon: AiOutlineBook
+                  icon: Book
               - id: width_nav3
                 type: MenuLink
                 properties:
                   title: API Reference
-                  icon: AiOutlineCode
+                  icon: CodeXml
     - id: width_content
       type: Content
       style:
@@ -439,12 +439,12 @@ The Sider fires onOpen and onClose events when it expands or collapses. Use thes
                 type: MenuLink
                 properties:
                   title: Home
-                  icon: AiOutlineHome
+                  icon: home
               - id: events_nav_alerts
                 type: MenuLink
                 properties:
                   title: Alerts
-                  icon: AiOutlineBell
+                  icon: bell
     - id: events_content
       type: Content
       style:
@@ -498,17 +498,17 @@ Token overrides work with both light and dark themes. This dark sider uses a cus
                 type: MenuLink
                 properties:
                   title: Explore
-                  icon: AiOutlineCompass
+                  icon: Compass
               - id: token_nav_favorites
                 type: MenuLink
                 properties:
                   title: Favorites
-                  icon: AiOutlineHeart
+                  icon: heart
               - id: token_nav_settings
                 type: MenuLink
                 properties:
                   title: Settings
-                  icon: AiOutlineSetting
+                  icon: settings
     - id: token_content
       type: Content
       style:
@@ -548,17 +548,17 @@ Token overrides work with both light and dark themes. This dark sider uses a cus
                 type: MenuLink
                 properties:
                   title: Status
-                  icon: AiOutlineCheckCircle
+                  icon: check-circle
               - id: token_dark_nav_logs
                 type: MenuLink
                 properties:
                   title: Logs
-                  icon: AiOutlineFileText
+                  icon: document
               - id: token_dark_nav_deploy
                 type: MenuLink
                 properties:
                   title: Deploy
-                  icon: AiOutlineCloudUpload
+                  icon: CloudUpload
     - id: token_dark_content
       type: Content
       style:
@@ -603,17 +603,17 @@ A shadow-lg class on the element CSS key gives the sider an elevated appearance 
                 type: MenuLink
                 properties:
                   title: Workspace
-                  icon: AiOutlineAppstore
+                  icon: grid
               - id: css_nav_members
                 type: MenuLink
                 properties:
                   title: Members
-                  icon: AiOutlineTeam
+                  icon: users
               - id: css_nav_billing
                 type: MenuLink
                 properties:
                   title: Billing
-                  icon: AiOutlineCreditCard
+                  icon: CreditCard
     - id: css_content
       type: Content
       style:
@@ -651,12 +651,12 @@ A shadow-lg class on the element CSS key gives the sider an elevated appearance 
                 type: MenuLink
                 properties:
                   title: Dashboard
-                  icon: AiOutlineDashboard
+                  icon: Gauge
               - id: css_sh_analytics
                 type: MenuLink
                 properties:
                   title: Analytics
-                  icon: AiOutlineLineChart
+                  icon: ChartLine
     - id: css_shadow_content
       type: Content
       style:
@@ -721,12 +721,12 @@ Dashboard
                 type: MenuLink
                 properties:
                   title: Dashboard
-                  icon: AiOutlineDashboard
+                  icon: Gauge
               - id: admin_nav_users
                 type: MenuGroup
                 properties:
                   title: User Management
-                  icon: AiOutlineTeam
+                  icon: users
                 links:
                   - id: admin_nav_all_users
                     type: MenuLink
@@ -740,7 +740,7 @@ Dashboard
                 type: MenuGroup
                 properties:
                   title: Content
-                  icon: AiOutlineFileText
+                  icon: document
                 links:
                   - id: admin_nav_pages
                     type: MenuLink
@@ -754,7 +754,7 @@ Dashboard
                 type: MenuLink
                 properties:
                   title: Settings
-                  icon: AiOutlineSetting
+                  icon: settings
     - id: admin_content
       type: Content
       style:
@@ -786,7 +786,7 @@ Dashboard
                   layout:
                     flex: 0 0 auto
                   properties:
-                    icon: AiOutlineBell
+                    icon: bell
                     color: default
                     variant: text
                     hideTitle: true
@@ -795,7 +795,7 @@ Dashboard
                   layout:
                     flex: 0 0 auto
                   properties:
-                    icon: AiOutlineUser
+                    icon: user
                     color: default
                     variant: text
                     hideTitle: true
@@ -882,27 +882,27 @@ Manage your personal information and preferences.
                 type: MenuLink
                 properties:
                   title: Profile
-                  icon: AiOutlineUser
+                  icon: user
               - id: settings_nav_account
                 type: MenuLink
                 properties:
                   title: Account
-                  icon: AiOutlineSafety
+                  icon: Shield
               - id: settings_nav_notifications
                 type: MenuLink
                 properties:
                   title: Notifications
-                  icon: AiOutlineBell
+                  icon: bell
               - id: settings_nav_appearance
                 type: MenuLink
                 properties:
                   title: Appearance
-                  icon: AiOutlineBgColors
+                  icon: PaintBucket
               - id: settings_nav_integrations
                 type: MenuLink
                 properties:
                   title: Integrations
-                  icon: AiOutlineApi
+                  icon: Plug
     - id: settings_content
       type: Content
       style:
@@ -941,7 +941,7 @@ Manage your personal information and preferences.
             title: Save Changes
             color: primary
             variant: solid
-            icon: AiOutlineSave
+            icon: save
 ```
 
 Introduction
@@ -973,7 +973,7 @@ Use the sidebar on the left to browse through different sections. On smaller scr
             padding: 12px 16px
           properties:
             placeholder: Search docs...
-            prefixIcon: AiOutlineSearch
+            prefixIcon: search
         - id: docs_menu
           type: Menu
           properties:

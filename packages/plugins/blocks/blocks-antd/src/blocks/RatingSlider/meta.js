@@ -21,7 +21,7 @@ import { disabled, inputTitle, autoFocus } from '../../schemas/inputProperties.j
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons, 'AiOutlineFrown', 'AiOutlineSmile'],
+  icons: [...LabelMeta.icons, 'rating-low', 'rating-high'],
   valueType: 'any',
   cssKeys: {
     element: 'The RatingSlider element.',
@@ -63,15 +63,15 @@ export default {
       },
       minIcon: {
         ...icon,
-        default: 'AiOutlineFrown',
+        default: 'rating-low',
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize the icon to the left of the minimum side of the slider.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize the icon to the left of the minimum side of the slider.',
       },
       maxIcon: {
         ...icon,
-        default: 'AiOutlineSmile',
+        default: 'rating-high',
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize the icon to the right of the maximum side of the slider.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize the icon to the right of the maximum side of the slider.',
       },
       label,
       min: {

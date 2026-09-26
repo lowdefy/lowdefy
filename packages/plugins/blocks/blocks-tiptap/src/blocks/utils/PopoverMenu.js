@@ -17,12 +17,6 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { BubbleMenuPlugin } from '@tiptap/extension-bubble-menu';
-import {
-  AiOutlineBold,
-  AiOutlineItalic,
-  AiOutlineStrikethrough,
-  AiOutlineHighlight,
-} from 'react-icons/ai';
 import { isTextSelection } from '@tiptap/core';
 
 const HIGHLIGHT_SWATCHES = [
@@ -49,7 +43,7 @@ function hasExt(editor, name) {
 // with a portal. React only ever removes the buttons from our container (always
 // their parent), never the plugin-detached element, so the teardown race is
 // gone.
-const PopoverMenu = ({ editor }) => {
+const PopoverMenu = ({ blockId, editor, Icon }) => {
   const [container] = useState(() =>
     typeof document === 'undefined' ? null : document.createElement('div')
   );
@@ -99,30 +93,38 @@ const PopoverMenu = ({ editor }) => {
   return createPortal(
     <>
       {showBold && (
-        <AiOutlineBold
-          className="tiptap-icon"
+        <Icon
+          blockId={`${blockId}_bold_icon`}
+          classNames={{ element: 'tiptap-icon' }}
           onClick={() => editor.chain().focus().toggleBold().run()}
+          properties="bold"
         />
       )}
       {showItalic && (
-        <AiOutlineItalic
-          className="tiptap-icon"
+        <Icon
+          blockId={`${blockId}_italic_icon`}
+          classNames={{ element: 'tiptap-icon' }}
           onClick={() => editor.chain().focus().toggleItalic().run()}
+          properties="italic"
         />
       )}
       {showStrike && (
-        <AiOutlineStrikethrough
-          className="tiptap-icon"
+        <Icon
+          blockId={`${blockId}_strikethrough_icon`}
+          classNames={{ element: 'tiptap-icon' }}
           onClick={() => editor.chain().focus().toggleStrike().run()}
+          properties="strikethrough"
         />
       )}
       {showHighlight &&
-        HIGHLIGHT_SWATCHES.map(({ color, fill }) => (
-          <AiOutlineHighlight
+        HIGHLIGHT_SWATCHES.map(({ color, fill }, i) => (
+          <Icon
             key={color}
-            className="tiptap-icon"
-            style={{ color }}
+            blockId={`${blockId}_highlight_${i}_icon`}
+            classNames={{ element: 'tiptap-icon' }}
+            styles={{ element: { color } }}
             onClick={() => editor.chain().focus().toggleHighlight({ color: fill }).run()}
+            properties="highlight"
           />
         ))}
     </>,

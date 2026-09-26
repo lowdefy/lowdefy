@@ -247,7 +247,7 @@ Company
                   layout:
                     flex: 0 0 auto
                   properties:
-                    icon: AiOutlineGithub
+                    icon: GitBranch
                     color: default
                     variant: text
                     size: small
@@ -257,7 +257,7 @@ Company
                   layout:
                     flex: 0 0 auto
                   properties:
-                    icon: AiOutlineTwitter
+                    icon: Bird
                     color: default
                     variant: text
                     size: small
@@ -294,17 +294,17 @@ Admin Portal v2.4.1 - Powered by Lowdefy
                 type: MenuLink
                 properties:
                   title: Dashboard
-                  icon: AiOutlineDashboard
+                  icon: Gauge
               - id: footer_admin_menu_users
                 type: MenuLink
                 properties:
                   title: Users
-                  icon: AiOutlineUser
+                  icon: user
               - id: footer_admin_menu_settings
                 type: MenuLink
                 properties:
                   title: Settings
-                  icon: AiOutlineSetting
+                  icon: settings
     - id: footer_admin_inner_layout
       type: Layout
       layout:

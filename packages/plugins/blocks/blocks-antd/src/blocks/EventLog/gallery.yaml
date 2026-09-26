@@ -75,17 +75,17 @@
         eventTypeConfig:
           user_invited:
             title: Invited
-            icon: AiOutlineUserAdd
+            icon: UserPlus
             color: '#1677ff'
             level: info
           user_removed:
             title: Removed
-            icon: AiOutlineUserDelete
+            icon: UserMinus
             color: '#ff4d4f'
             level: error
           role_changed:
             title: Role changed
-            icon: AiOutlineSafety
+            icon: Shield
             color: '#faad14'
             level: warning
         data:

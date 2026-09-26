@@ -47,7 +47,7 @@
             flex: 0 0 auto
           properties:
             title: Home
-            icon: AiOutlineHome
+            icon: home
             color: default
             variant: link
         - id: header_nav_about
@@ -85,19 +85,19 @@
               type: MenuLink
               properties:
                 title: My Profile
-                icon: AiOutlineUser
+                icon: user
             - id: header_prof_settings
               type: MenuLink
               properties:
                 title: Settings
-                icon: AiOutlineSetting
+                icon: settings
             - id: header_prof_divider
               type: MenuDivider
             - id: header_prof_logout
               type: MenuLink
               properties:
                 title: Logout
-                icon: AiOutlineLogout
+                icon: logout
                 danger: true
       style:
         borderBottom: 1px solid var(--ant-color-border)
@@ -114,7 +114,7 @@
             flex: 0 0 auto
           properties:
             title: Overview
-            icon: AiOutlineDashboard
+            icon: Gauge
             color: default
             variant: link
         - id: header_profile_projects
@@ -123,7 +123,7 @@
             flex: 0 0 auto
           properties:
             title: Projects
-            icon: AiOutlineProject
+            icon: SquareKanban
             color: default
             variant: link
 

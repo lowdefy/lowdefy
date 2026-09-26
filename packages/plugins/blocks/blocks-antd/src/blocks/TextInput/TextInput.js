@@ -52,7 +52,16 @@ const TextInput = ({
           return (
             <Input
               id={`${blockId}_input`}
-              allowClear={properties.allowClear}
+              allowClear={
+                properties.allowClear && {
+                  clearIcon: (
+                    <Icon
+                      blockId={`${blockId}_clearIcon`}
+                      properties={{ name: 'clear', title: '' }}
+                    />
+                  ),
+                }
+              }
               autoFocus={properties.autoFocus}
               variant={properties.bordered === false ? 'borderless' : properties.variant}
               className={classNames.element}

@@ -236,7 +236,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineSearch
+        icon: search
         shape: circle
         color: primary
         variant: solid
@@ -246,7 +246,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlinePlus
+        icon: add
         shape: circle
         color: primary
         variant: outlined
@@ -260,7 +260,7 @@
         flex: 0 0 auto
       properties:
         title: Download
-        icon: AiOutlineDownload
+        icon: download
         color: primary
         variant: solid
     - id: icon_search
@@ -269,7 +269,7 @@
         flex: 0 0 auto
       properties:
         title: Search
-        icon: AiOutlineSearch
+        icon: search
         color: primary
         variant: outlined
     - id: icon_delete
@@ -278,7 +278,7 @@
         flex: 0 0 auto
       properties:
         title: Delete
-        icon: AiOutlineDelete
+        icon: delete
         color: danger
         variant: solid
     - id: icon_only
@@ -286,7 +286,7 @@
       layout:
         flex: 0 0 auto
       properties:
-        icon: AiOutlineStar
+        icon: star
         color: gold
         variant: filled
         hideTitle: true
@@ -297,7 +297,7 @@
       properties:
         title: Custom
         icon:
-          name: AiOutlineThunderbolt
+          name: Zap
           color: '#faad14'
         color: primary
         variant: outlined
@@ -347,7 +347,7 @@
         block: true
         color: primary
         variant: solid
-        icon: AiOutlineArrowRight
+        icon: arrow-right
     - id: block_outlined
       type: Button
       properties:
@@ -362,7 +362,7 @@
         block: true
         color: danger
         variant: solid
-        icon: AiOutlineWarning
+        icon: warning
 
 - title: Disabled State
   blocks:
@@ -414,7 +414,7 @@
         href: https://docs.lowdefy.com
         color: primary
         variant: solid
-        icon: AiOutlineLink
+        icon: link
     - id: href_text
       type: Button
       layout:
@@ -460,7 +460,7 @@
         flex: 0 0 auto
       properties:
         title: Save
-        icon: AiOutlineSave
+        icon: save
         color: primary
         variant: solid
       events:
@@ -478,7 +478,7 @@
         flex: 0 0 auto
       properties:
         title: New Item
-        icon: AiOutlinePlus
+        icon: add
         color: primary
         variant: outlined
       events:
@@ -496,7 +496,7 @@
         flex: 0 0 auto
       properties:
         title: Delete
-        icon: AiOutlineDelete
+        icon: delete
         color: danger
         variant: solid
       events:
@@ -649,7 +649,7 @@
                 title: Send Message
                 color: primary
                 variant: solid
-                icon: AiOutlineSend
+                icon: send
               events:
                 onClick:
                   - id: submit_validate
@@ -704,7 +704,7 @@
                 title: Delete Permanently
                 color: danger
                 variant: solid
-                icon: AiOutlineDelete
+                icon: delete
               events:
                 onClick:
                   - id: delete_msg

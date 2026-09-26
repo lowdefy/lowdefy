@@ -119,7 +119,7 @@ Searchable single-select tree dropdown. Driven by flat `data`/`options` with `pr
 | `label.title` | string | - | Label title - supports html. |
 | `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
-| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
 | `label.span` | number | - | Label inline span. |
 | `label.disabled` | boolean | `false` | Hide input label. |
@@ -136,8 +136,26 @@ Searchable single-select tree dropdown. Driven by flat `data`/`options` with `pr
 | `showSearch` | boolean | `true` | Make the tree searchable. |
 | `treeDefaultExpandAll` | boolean | `false` | Expand all tree nodes by default. |
 | `notFoundContent` | string | `"Not found"` | Content shown when no nodes match the search. |
-| `suffixIcon` | string \| object | `"AiOutlineDown"` | Dropdown suffix icon. |
-| `clearIcon` | string \| object | `"AiOutlineCloseCircle"` | Clear icon. |
+| `suffixIcon` | string \| object | `"chevron-down"` | Dropdown suffix icon. |
+| `suffixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `suffixIcon.color` | string | - | Icon color. |
+| `suffixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `suffixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `suffixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `suffixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `suffixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `suffixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `suffixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `clearIcon` | string \| object | `"clear"` | Clear icon. |
+| `clearIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `clearIcon.color` | string | - | Icon color. |
+| `clearIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `clearIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `clearIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `clearIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `clearIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `clearIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `clearIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design tree-select tokens](https://ant.design/components/tree-select#design-token). |
 | `theme.nodeSelectedBg` | string | - | Background color of selected tree node. |
 | `theme.nodeHoverBg` | string | - | Background color of hovered tree node. |

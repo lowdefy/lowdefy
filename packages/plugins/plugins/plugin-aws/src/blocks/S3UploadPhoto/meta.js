@@ -18,7 +18,7 @@ import uploadTheme from '../../schemas/uploadTheme.js';
 
 export default {
   category: 'input',
-  icons: ['AiOutlineLoading', 'AiOutlineCamera'],
+  icons: ['loading', 'camera'],
   valueType: 'object',
   cssKeys: {
     element: 'The outer block wrapper around the upload card and list.',

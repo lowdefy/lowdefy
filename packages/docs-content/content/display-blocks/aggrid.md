@@ -1070,11 +1070,11 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
           buttons:
             - eventName: onEditClick
               title: Edit
-              icon: AiOutlineEdit
+              icon: edit
               type: primary
             - eventName: onDeleteClick
               title: Delete
-              icon: AiOutlineDelete
+              icon: delete
               danger: true
               disabledField: locked
               hiddenField: archived
@@ -1374,7 +1374,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.buttons.$.eventName` | string | - | Block-level event name to trigger on click. |
 | `columnDefs.$.cell.buttons.$.title` | string | - | Title text on the button - supports html. |
 | `columnDefs.$.cell.buttons.$.titleField` | string | - | Row-data path for the title. |
-| `columnDefs.$.cell.buttons.$.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or Icon block config. |
+| `columnDefs.$.cell.buttons.$.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or Icon block config. |
 | `columnDefs.$.cell.buttons.$.iconField` | string | - | Row-data path for the icon name or config. |
 | `columnDefs.$.cell.buttons.$.type` | string | - | antd Button type. Enum: `primary`, `default`, `dashed`, `link`, `text`. |
 | `columnDefs.$.cell.buttons.$.variant` | string | - | antd Button variant. Takes precedence over `type` when set. Enum: `solid`, `outlined`, `dashed`, `filled`, `text`, `link`. |
@@ -1393,14 +1393,14 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.items.$.eventName` | string | - | Block-level event name to trigger on click. Event payload is `{ row, value, item: { eventName, title }, itemIndex }`. |
 | `columnDefs.$.cell.items.$.title` | string | - | Item label - supports html. |
 | `columnDefs.$.cell.items.$.titleField` | string | - | Row-data path for the label. |
-| `columnDefs.$.cell.items.$.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or Icon block config. |
+| `columnDefs.$.cell.items.$.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or Icon block config. |
 | `columnDefs.$.cell.items.$.iconField` | string | - | Row-data path for the icon name or config. |
 | `columnDefs.$.cell.items.$.danger` | boolean | `false` | Render the item in the danger colour. |
 | `columnDefs.$.cell.items.$.disabled` | boolean | `false` |  |
 | `columnDefs.$.cell.items.$.disabledField` | string | - | Row-data path → boolean. |
 | `columnDefs.$.cell.items.$.hidden` | boolean | `false` | Hide the item entirely. |
 | `columnDefs.$.cell.items.$.hiddenField` | string | - | Row-data path → boolean. |
-| `columnDefs.$.cell.icon` | string \| object | `"AiOutlineMore"` | Menu cell: the trigger icon. Icon name (a semantic name like edit, or a React Icons name like LuPencil) or Icon block config. The trigger is icon-only. |
+| `columnDefs.$.cell.icon` | string \| object | `"more-vertical"` | Menu cell: the trigger icon. Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or Icon block config. The trigger is icon-only. |
 | `columnDefs.$.cell.placement` | string | `"bottomRight"` | Menu cell: where the dropdown opens relative to its trigger. Enum: `bottomLeft`, `bottom`, `bottomRight`, `topLeft`, `top`, `topRight`. |
 | `columnDefs.$.cell.options` | array | - | Selector / Multiple selector cell: dropdown options. An array of primitives, or objects mirroring the `Selector` block options: `{ label, value, disabled, color, filterString, style }`. `label` supports html. |
 | `columnDefs.$.cell.valueKey` | string | - | Selector / Multiple selector: field on each option object to use as its value. Defaults to `value`. |
@@ -1419,8 +1419,8 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.autoClearSearchValue` | boolean | - | Multiple selector: clear the search box after each selection. |
 | `columnDefs.$.cell.checkedText` | string | - | Switch: label shown inside the switch when on. |
 | `columnDefs.$.cell.uncheckedText` | string | - | Switch: label shown inside the switch when off. |
-| `columnDefs.$.cell.checkedIcon` | string \| object | - | Switch: icon shown when on (icon name like edit or LuPencil, or Icon block config). |
-| `columnDefs.$.cell.uncheckedIcon` | string \| object | - | Switch: icon shown when off (icon name like edit or LuPencil, or Icon block config). |
+| `columnDefs.$.cell.checkedIcon` | string \| object | - | Switch: icon shown when on (icon name like `edit`, `Pencil` or `tabler:Pencil`, or Icon block config). |
+| `columnDefs.$.cell.uncheckedIcon` | string \| object | - | Switch: icon shown when off (icon name like `edit`, `Pencil` or `tabler:Pencil`, or Icon block config). |
 | `columnDefs.$.cell.inputType` | string | - | Text input: the HTML input type (e.g. `text`, `email`, `number`, `password`). Named `inputType` to avoid clashing with `cell.type`. |
 | `columnDefs.$.cell.maxLength` | number | - | Text input / Paragraph input: maximum number of characters. |
 | `columnDefs.$.cell.showCount` | boolean | - | Text input: show the character count. |

@@ -99,7 +99,7 @@
       type: ParagraphInput
       properties:
         editable:
-          icon: AiOutlineHighlight
+          icon: highlight
           tooltip: Highlight to edit
       events:
         onMount:
@@ -111,7 +111,7 @@
       type: ParagraphInput
       properties:
         editable:
-          icon: AiOutlineForm
+          icon: SquarePen
           tooltip: Open editor
       events:
         onMount:
@@ -123,7 +123,7 @@
       type: ParagraphInput
       properties:
         editable:
-          icon: AiOutlineEdit
+          icon: edit
           tooltip: Edit paragraph
       events:
         onMount:
@@ -136,7 +136,7 @@
       properties:
         editable:
           icon:
-            name: AiOutlineEdit
+            name: edit
             color: '#1677ff'
           tooltip: Edit in blue
       events:
@@ -279,7 +279,7 @@
       type: ParagraphInput
       properties:
         editable:
-          icon: AiOutlineEdit
+          icon: edit
           tooltip: Edit this paragraph
           maxLength: 150
           autoSize:
@@ -295,7 +295,7 @@
       type: ParagraphInput
       properties:
         editable:
-          icon: AiOutlineHighlight
+          icon: highlight
           tooltip: Highlight to edit (max 100 chars)
           maxLength: 100
       events:
@@ -668,7 +668,7 @@
       type: ParagraphInput
       properties:
         copyable:
-          icon: AiOutlineSnippets
+          icon: Files
           tooltips:
             - Copy snippet
             - Snippet copied!
@@ -684,8 +684,8 @@
       properties:
         copyable:
           icon:
-            - AiOutlineCopy
-            - AiOutlineCheck
+            - copy
+            - check
           tooltips:
             - Copy text
             - Text copied!
@@ -701,7 +701,7 @@
       properties:
         copyable:
           icon:
-            name: AiOutlineCopy
+            name: copy
             color: '#1677ff'
           tooltips:
             - Copy
@@ -721,8 +721,8 @@
         copyable:
           text: Custom text for clipboard
           icon:
-            - AiOutlineCopy
-            - AiOutlineCheck
+            - copy
+            - check
           tooltips:
             - Copy custom text
             - Custom text copied!
@@ -1357,7 +1357,7 @@
         type: success
         strong: true
         editable:
-          icon: AiOutlineEdit
+          icon: edit
           tooltip: Edit this paragraph
           maxLength: 300
           autoSize: true
@@ -1433,7 +1433,7 @@
         type: danger
         strong: true
         editable:
-          icon: AiOutlineEdit
+          icon: edit
           tooltip: Edit error message
           maxLength: 500
           autoSize:
@@ -1441,8 +1441,8 @@
             maxRows: 10
         copyable:
           icon:
-            - AiOutlineCopy
-            - AiOutlineCheck
+            - copy
+            - check
           tooltips:
             - Copy error details
             - Error details copied!

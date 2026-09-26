@@ -440,7 +440,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineFile
+                name: file
                 size: 20
                 color: '#1677ff'
             - id: upload_file_1_info
@@ -469,7 +469,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineFile
+                name: file
                 size: 20
                 color: '#1677ff'
             - id: upload_file_2_info
@@ -500,7 +500,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineFile
+                name: file
                 size: 20
                 color: '#ff4d4f'
             - id: upload_file_3_info
@@ -531,7 +531,7 @@
                 title: Retry Failed
                 color: danger
                 variant: outlined
-                icon: AiOutlineReload
+                icon: refresh
                 size: small
               events:
                 onClick:
@@ -548,7 +548,7 @@
                 title: Upload More
                 color: primary
                 variant: solid
-                icon: AiOutlineUpload
+                icon: upload
                 size: small
               events:
                 onClick:
@@ -604,7 +604,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineCheckCircle
+                name: check-circle
                 size: 18
                 color: '#52c41a'
             - id: onboarding_step_1_label
@@ -632,7 +632,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineCheckCircle
+                name: check-circle
                 size: 18
                 color: '#52c41a'
             - id: onboarding_step_2_label
@@ -660,7 +660,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineCheckCircle
+                name: check-circle
                 size: 18
                 color: '#52c41a'
             - id: onboarding_step_3_label
@@ -688,7 +688,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineClockCircle
+                name: clock
                 size: 18
                 color: '#1677ff'
             - id: onboarding_step_4_label
@@ -716,7 +716,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                name: AiOutlineClockCircle
+                name: clock
                 size: 18
                 color: '#d9d9d9'
             - id: onboarding_step_5_label
@@ -762,7 +762,7 @@
                 title: Continue Setup
                 color: primary
                 variant: solid
-                icon: AiOutlineArrowRight
+                icon: arrow-right
               events:
                 onClick:
                   - id: continue_msg

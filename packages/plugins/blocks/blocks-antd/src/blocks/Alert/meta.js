@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'container',
-  icons: [],
+  icons: ['success', 'info', 'warning', 'error', 'close'],
   valueType: null,
   slots: {
     action: 'Action area content.',
@@ -56,12 +58,9 @@ export default {
         description: 'Content description of alert - supports html.',
       },
       icon: {
-        type: ['string', 'object'],
+        ...icon,
         description:
-          'Name of an Ant Design Icon or properties of an Icon block to customize alert icon.',
-        docs: {
-          displayType: 'icon',
-        },
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize alert icon.',
       },
       message: {
         type: 'string',

@@ -30,7 +30,7 @@ import {
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons, 'AiOutlineCloseCircle', 'AiOutlineDown'],
+  icons: [...LabelMeta.icons, 'chevron-down', 'clear'],
   valueType: 'any',
   cssKeys: {
     element: 'The Selector element.',
@@ -73,9 +73,9 @@ export default {
       },
       clearIcon: {
         ...icon,
-        default: 'AiOutlineCloseCircle',
+        default: 'clear',
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input.',
       },
       label,
       disabled,
@@ -203,9 +203,9 @@ export default {
       size: sizeSmallDefaultLarge,
       suffixIcon: {
         ...icon,
-        default: 'AiOutlineDown',
+        default: 'chevron-down',
         description:
-          "Icon name (a semantic name like edit, or a <a href='https://react-icons.github.io/react-icons/'>React Icons</a> name like LuPencil) or properties of an Icon block to customize icon at the drop-down position of the selector.",
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon at the drop-down position of the selector.',
       },
       title: inputTitle,
       variant: {

@@ -107,28 +107,28 @@ Navigation breadcrumb showing the current location in a hierarchy.
   properties:
     list:
       - label: Home
-        icon: AiOutlineHome
+        icon: home
       - label: Users
-        icon: AiOutlineUser
+        icon: user
       - label: Profile
 - id: icons_multiple
   type: Breadcrumb
   properties:
     list:
       - label: Dashboard
-        icon: AiOutlineDashboard
+        icon: Gauge
       - label: Settings
-        icon: AiOutlineSetting
+        icon: settings
       - label: Security
-        icon: AiOutlineLock
+        icon: lock
 - id: icons_files
   type: Breadcrumb
   properties:
     list:
       - label: Files
-        icon: AiOutlineFolder
+        icon: folder
       - label: Documents
-        icon: AiOutlineFile
+        icon: file
       - label: report.pdf
 - id: icons_custom_object
   type: Breadcrumb
@@ -136,11 +136,11 @@ Navigation breadcrumb showing the current location in a hierarchy.
     list:
       - label: Admin
         icon:
-          name: AiOutlineCrown
+          name: Crown
           color: "#faad14"
       - label: Console
         icon:
-          name: AiOutlineCode
+          name: CodeXml
           color: "#1677ff"
       - label: Logs
 ```
@@ -303,9 +303,9 @@ Navigation breadcrumb showing the current location in a hierarchy.
   properties:
     list:
       - label: Home
-        icon: AiOutlineHome
+        icon: home
       - label: Users
-        icon: AiOutlineTeam
+        icon: users
       - label: Profile
     theme:
       iconFontSize: 20
@@ -315,7 +315,7 @@ Navigation breadcrumb showing the current location in a hierarchy.
     separator: ">"
     list:
       - label: Home
-        icon: AiOutlineHome
+        icon: home
       - label: Projects
       - label: Current
     theme:
@@ -343,12 +343,12 @@ Add an extra layer of security to your account by enabling two-factor authentica
         separator: ">"
         list:
           - label: Home
-            icon: AiOutlineHome
+            icon: home
             pageId: introduction
           - label: Settings
-            icon: AiOutlineSetting
+            icon: settings
           - label: Security
-            icon: AiOutlineLock
+            icon: lock
       events:
         onClick:
           - id: settings_click_msg
@@ -399,7 +399,7 @@ Add an extra layer of security to your account by enabling two-factor authentica
             title: Save Changes
             color: primary
             variant: solid
-            icon: AiOutlineSave
+            icon: save
           events:
             onClick:
               - id: settings_save_msg
@@ -420,7 +420,7 @@ Premium over-ear headphones with active noise cancellation, 30-hour battery life
   properties:
     list:
       - label: Shop
-        icon: AiOutlineHome
+        icon: home
         url: https://lowdefy.com
       - label: Electronics
       - label: Audio
@@ -460,7 +460,7 @@ Premium over-ear headphones with active noise cancellation, 30-hour battery life
             title: Add to Cart
             color: primary
             variant: solid
-            icon: AiOutlineShoppingCart
+            icon: ShoppingCart
           events:
             onClick:
               - id: ecommerce_cart_msg
@@ -476,7 +476,7 @@ Premium over-ear headphones with active noise cancellation, 30-hour battery life
             title: Wishlist
             color: default
             variant: outlined
-            icon: AiOutlineHeart
+            icon: heart
           events:
             onClick:
               - id: ecommerce_wishlist_msg
@@ -494,7 +494,16 @@ Premium over-ear headphones with active noise cancellation, 30-hour battery life
 | `list.$.pageId` | string | - | Page id to link to when clicked. |
 | `list.$.url` | string | - | External url link. |
 | `list.$.style` | object | - | Css style to apply to link. |
-| `list.$.icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to use an icon in breadcrumb link. |
+| `list.$.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use an icon in breadcrumb link. |
+| `list.$.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `list.$.icon.color` | string | - | Icon color. |
+| `list.$.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `list.$.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `list.$.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `list.$.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `list.$.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `list.$.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `list.$.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design breadcrumb tokens](https://ant.design/components/breadcrumb#design-token). |
 | `theme.itemColor` | string | `"rgba(0, 0, 0, 0.45)"` | Text color of breadcrumb item. |
 | `theme.iconFontSize` | number | `14` | Icon size of breadcrumb item. |

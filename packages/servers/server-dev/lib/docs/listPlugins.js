@@ -29,6 +29,15 @@ function addTypes({ plugins, store, kind }) {
   }
 }
 
+// Icon sets are keyed by set id, with one layer per plugin that declares it.
+function addIconSets({ plugins, iconSets }) {
+  for (const [setId, layers] of Object.entries(iconSets ?? {})) {
+    for (const layer of layers) {
+      addTypes({ plugins, store: { [setId]: layer }, kind: 'iconSets' });
+    }
+  }
+}
+
 function listPlugins() {
   const availableTypes = readBuildArtifact({ name: 'plugins/availableTypes.json' }) ?? {};
   const customTypesMap = readBuildArtifact({ name: 'customTypesMap.json' }) ?? {};
@@ -44,6 +53,7 @@ function listPlugins() {
   addTypes({ plugins, store: availableTypes.operators?.server, kind: 'operators' });
   addTypes({ plugins, store: availableTypes.requests, kind: 'requests' });
   addTypes({ plugins, store: availableTypes.websockets, kind: 'websockets' });
+  addIconSets({ plugins, iconSets: customTypesMap.iconSets });
 
   const customPackages = new Set();
   const customStores = [
@@ -59,6 +69,11 @@ function listPlugins() {
   for (const store of customStores) {
     for (const definition of Object.values(store ?? {})) {
       customPackages.add(definition.package);
+    }
+  }
+  for (const layers of Object.values(customTypesMap.iconSets ?? {})) {
+    for (const layer of layers) {
+      customPackages.add(layer.package);
     }
   }
 

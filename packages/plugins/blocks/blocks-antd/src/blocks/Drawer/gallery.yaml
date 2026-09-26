@@ -636,7 +636,7 @@
         title: Toggle Drawer
         color: primary
         variant: solid
-        icon: AiOutlineMenu
+        icon: menu
       events:
         onClick:
           - id: drawer_toggle_call
@@ -939,7 +939,7 @@
         title: Edit Record
         color: primary
         variant: solid
-        icon: AiOutlineEdit
+        icon: edit
       events:
         onClick:
           - id: drawer_edit_form_open
@@ -1049,7 +1049,7 @@
         title: Filters
         color: default
         variant: outlined
-        icon: AiOutlineFilter
+        icon: filter
       events:
         onClick:
           - id: drawer_filter_panel_open
@@ -1164,7 +1164,7 @@
         title: View Profile
         color: primary
         variant: solid
-        icon: AiOutlineUser
+        icon: user
       events:
         onClick:
           - id: drawer_profile_open
@@ -1191,7 +1191,7 @@
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineUser
+                icon: user
                 size: 64
                 color: '#fff'
                 backgroundColor: '#1677ff'
@@ -1245,7 +1245,7 @@
                 title: Edit Profile
                 color: primary
                 variant: outlined
-                icon: AiOutlineEdit
+                icon: edit
             - id: drawer_profile_message_btn
               type: Button
               layout:
@@ -1254,4 +1254,4 @@
                 title: Send Message
                 color: primary
                 variant: solid
-                icon: AiOutlineMail
+                icon: mail

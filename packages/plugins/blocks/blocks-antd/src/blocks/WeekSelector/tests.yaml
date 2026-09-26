@@ -75,15 +75,15 @@
   type: WeekSelector
   properties:
     size: large
-- id: 'property.suffixIcon: CalendarFilled'
+- id: 'property.suffixIcon: calendar'
   type: WeekSelector
   properties:
-    suffixIcon: CalendarFilled
-- id: 'property.suffixIcon: CalendarFilled.blue'
+    suffixIcon: calendar
+- id: 'property.suffixIcon: calendar.blue'
   type: WeekSelector
   properties:
     suffixIcon:
-      name: CalendarFilled
+      name: calendar
       color: blue
 - id: 'properties.inputStyle: CSS style applied'
   type: WeekSelector

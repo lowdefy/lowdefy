@@ -59,6 +59,7 @@
 - _ref: plugins/plugins-actions.yaml
 - _ref: plugins/plugins-connections.yaml
 - _ref: plugins/plugins-operators.yaml
+- _ref: plugins/plugins-icon-sets.yaml
 - _ref: plugins/PostHog.yaml
 
 - _ref: users/users-introduction.yaml
@@ -372,6 +373,7 @@
 
 - _ref: migration/upgrade-guide.yaml
 - _ref: migration/auth-upgrade.yaml
+- _ref: migration/v6-to-v7.yaml
 - _ref: migration/v3-to-v4.yaml
 - _ref: migration/v5-to-v6.yaml
 - _ref: migration/v4-to-v5.yaml

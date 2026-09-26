@@ -312,7 +312,7 @@ Dropdown selector with search, clear, and custom icons.
   type: Selector
   properties:
     title: Custom Suffix Icon
-    suffixIcon: AiOutlineSearch
+    suffixIcon: search
     placeholder: Search items...
     options:
       - label: Database
@@ -326,7 +326,7 @@ Dropdown selector with search, clear, and custom icons.
   properties:
     title: Styled Suffix Icon
     suffixIcon:
-      name: AiOutlineFilter
+      name: filter
       color: "#722ed1"
     placeholder: Filter options...
     options:
@@ -340,7 +340,7 @@ Dropdown selector with search, clear, and custom icons.
   type: Selector
   properties:
     title: Custom Clear Icon
-    clearIcon: AiOutlineDelete
+    clearIcon: delete
     placeholder: Select to see custom clear icon...
     options:
       - label: Item One
@@ -354,7 +354,7 @@ Dropdown selector with search, clear, and custom icons.
   properties:
     title: Styled Clear Icon
     clearIcon:
-      name: AiOutlineCloseCircle
+      name: close-circle
       color: "#f5222d"
     placeholder: Select then hover to clear...
     options:
@@ -746,7 +746,7 @@ Dropdown selector with search, clear, and custom icons.
     title: Searchable Styled Options
     showSearch: true
     placeholder: Search and select a status...
-    suffixIcon: AiOutlineSearch
+    suffixIcon: search
     options:
       - label: '<span style="color: #52c41a;">Active</span>'
         value: active
@@ -769,10 +769,10 @@ Dropdown selector with search, clear, and custom icons.
     showSearch: true
     placeholder: Choose a department...
     suffixIcon:
-      name: AiOutlineTeam
+      name: users
       color: "#1677ff"
     clearIcon:
-      name: AiOutlineClose
+      name: close
       color: "#ff4d4f"
     options:
       - label: <b>Engineering</b>
@@ -846,7 +846,7 @@ Dropdown selector with search, clear, and custom icons.
         title: Country
         showSearch: true
         placeholder: Select your country...
-        suffixIcon: AiOutlineGlobal
+        suffixIcon: globe
         options:
           - label: United States
             value: us
@@ -890,7 +890,7 @@ Dropdown selector with search, clear, and custom icons.
         title: Timezone
         showSearch: true
         placeholder: Select your timezone...
-        suffixIcon: AiOutlineClockCircle
+        suffixIcon: clock
         label:
           extra: Used for scheduling and notifications.
         options:
@@ -912,7 +912,7 @@ Dropdown selector with search, clear, and custom icons.
       type: Button
       properties:
         title: Save Preferences
-        icon: AiOutlineSave
+        icon: save
         type: primary
         size: large
         block: true
@@ -937,7 +937,7 @@ Dropdown selector with search, clear, and custom icons.
         title: Product
         showSearch: true
         placeholder: Select a product...
-        suffixIcon: AiOutlineShopping
+        suffixIcon: ShoppingBag
         options:
           - label: Laptop Pro 15"
             value: laptop_pro
@@ -997,7 +997,7 @@ Dropdown selector with search, clear, and custom icons.
       type: Button
       properties:
         title: Place Order
-        icon: AiOutlineCheckCircle
+        icon: check-circle
         type: primary
         size: large
         block: true
@@ -1065,7 +1065,16 @@ Dropdown selector with search, clear, and custom icons.
 | `allowClear` | boolean | `true` | Allow the user to clear the selected value, sets the value to null. |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
 | `bordered` | boolean | `true` | Whether or not the selector has a border style. Deprecated, use variant instead. |
-| `clearIcon` | string \| object | `"AiOutlineCloseCircle"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input. |
+| `clearIcon` | string \| object | `"clear"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input. |
+| `clearIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `clearIcon.color` | string | - | Icon color. |
+| `clearIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `clearIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `clearIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `clearIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `clearIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `clearIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `clearIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
@@ -1073,7 +1082,7 @@ Dropdown selector with search, clear, and custom icons.
 | `label.title` | string | - | Label title - supports html. |
 | `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
-| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
 | `label.span` | number | - | Label inline span. |
 | `label.disabled` | boolean | `false` | Hide input label. |
@@ -1097,7 +1106,16 @@ Dropdown selector with search, clear, and custom icons.
 | `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon. |
 | `showSearch` | boolean | `true` | Make the selector options searchable. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
-| `suffixIcon` | string \| object | `"AiOutlineDown"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon at the drop-down position of the selector. |
+| `suffixIcon` | string \| object | `"chevron-down"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon at the drop-down position of the selector. |
+| `suffixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `suffixIcon.color` | string | - | Icon color. |
+| `suffixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `suffixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `suffixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `suffixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `suffixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `suffixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `suffixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `variant` | string | - | Input variant. `solid` fills the whole input with the selected option color; `outlined` colors its border/text. `filled`/`borderless` are the antd input styles. Enum: `solid`, `outlined`, `filled`, `borderless`. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design select tokens](https://ant.design/components/select#design-token). |

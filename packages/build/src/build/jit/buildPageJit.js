@@ -44,9 +44,10 @@ import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
 import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import writeMaps from '../writeMaps.js';
-import createUnknownDataIconWarning from '../buildImports/createUnknownDataIconWarning.js';
+import validateIconNames from '../icons/validateIconNames.js';
 import detectMissingIcons from './detectMissingIcons.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
+import getJitIconContext from './getJitIconContext.js';
 import updateIconImportsJit from './updateIconImportsJit.js';
 import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
 import validatePageTypes from './validatePageTypes.js';
@@ -55,23 +56,23 @@ import writePageJit from './writePageJit.js';
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
 
-async function updateDynamicIcons({ page, context }) {
-  if (!context.iconImports) return;
-  const { missingIcons, unknownDataIcons } = detectMissingIcons({
+// A page resolved from source is validated like the full build validates
+// pages (literal names at icon positions must resolve); a prebuilt page (the
+// default 404) only needs its icons delivered.
+async function updateDynamicIcons({ page, context, validate }) {
+  if (!context.bundledIcons) return;
+  const icons = await getJitIconContext({ context });
+  if (validate) {
+    validateIconNames({ config: page, icons, context });
+  }
+  const names = detectMissingIcons({
     page,
-    iconImports: context.iconImports,
-    iconAliases: context.iconAliases,
+    bundledIcons: context.bundledIcons,
     dynamicIconData: context.dynamicIconData,
+    icons,
   });
-  unknownDataIcons.forEach((name) => {
-    context.handleWarning(createUnknownDataIconWarning({ aliases: context.iconAliases, name }));
-  });
-  if (missingIcons.length > 0) {
-    await updateIconImportsJit({
-      newIcons: missingIcons,
-      iconImports: context.iconImports,
-      context,
-    });
+  if (names.length > 0) {
+    await updateIconImportsJit({ names, icons, context });
   }
 }
 
@@ -129,7 +130,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         const content = await fs.promises.readFile(pagePath, 'utf8');
         const page = serializer.deserialize(JSON.parse(content));
 
-        await updateDynamicIcons({ page, context: buildContext });
+        await updateDynamicIcons({ page, context: buildContext, validate: false });
         return page;
       } catch (err) {
         if (err.code !== 'ENOENT') throw err;
@@ -322,7 +323,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // Detect icons in the JIT-resolved page that weren't discovered during skeleton build.
     // Placed after detectMissingPluginPackages so we skip this when packages are being
     // installed (the server restarts and icons will be discovered on the next build).
-    await updateDynamicIcons({ page: processed, context: buildContext });
+    await updateDynamicIcons({ page: processed, context: buildContext, validate: true });
 
     // Validate link, state, payload, and server-state references
     const pageIds = Object.keys(pageRegistry);

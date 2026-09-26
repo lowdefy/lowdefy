@@ -61,7 +61,8 @@ const SwitchBlock = ({
             classNames={{ element: classNames.checkedIcon }}
             events={events}
             properties={{
-              name: 'AiOutlineCheck',
+              name: 'check',
+              title: '',
               ...(propertiesIconChecked || {}),
             }}
             styles={{ element: styles.checkedIcon }}
@@ -77,7 +78,8 @@ const SwitchBlock = ({
             classNames={{ element: classNames.uncheckedIcon }}
             events={events}
             properties={{
-              name: 'AiOutlineClose',
+              name: 'close',
+              title: '',
               ...(propertiesIconUnchecked || {}),
             }}
             styles={{ element: styles.uncheckedIcon }}

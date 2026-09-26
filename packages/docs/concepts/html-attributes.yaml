@@ -55,13 +55,13 @@ _ref:
 
             ## Icons
 
-            `data-icon` renders an icon inside the element. Use a built-in semantic name such as `edit`, `delete`, `warning` or `external-link`, a name from `theme.icons.aliases`, or any React Icons name. The icon takes the element's font size and text colour. See [Theming](/theming) for the icon names and aliases.
+            `data-icon` renders an icon inside the element. Use a built-in semantic name such as `edit`, `delete`, `warning` or `external-link`, a name from `theme.icons.aliases`, or a [Lucide](https://lucide.dev/icons) name such as `Receipt`. The icon takes the element's font size and text colour. See [Theming](/theming) for the icon names and aliases.
 
             ```html
             <i data-icon="success" style="color: var(--ant-color-success)"></i> Saved
             ```
 
-            An icon on its own is decorative to screen readers unless the element has a `data-tooltip` or an `aria-label`. An unknown name renders nothing and logs a console warning.
+            An icon on its own is decorative to screen readers unless the element has a `data-tooltip` or an `aria-label`. An unknown name written in config fails the build. An unknown name that only appears at runtime renders nothing and logs a console warning.
 
             ## Tooltips and popovers
 

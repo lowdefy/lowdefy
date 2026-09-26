@@ -19,12 +19,12 @@ import { Drawer } from 'antd';
 
 import DrawerLauncher from './DrawerLauncher.js';
 
-function DrawerWrapper({ config, defaultOpen, children }) {
+function DrawerWrapper({ blockId, config, defaultOpen, children, Icon }) {
   const [open, setOpen] = useState(defaultOpen);
 
   return (
     <>
-      <DrawerLauncher config={config} onClick={() => setOpen(true)} />
+      <DrawerLauncher blockId={blockId} config={config} Icon={Icon} onClick={() => setOpen(true)} />
       <Drawer
         title={config?.title ?? 'Chat'}
         placement={config?.placement ?? 'right'}

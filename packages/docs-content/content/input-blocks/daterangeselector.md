@@ -175,14 +175,14 @@ Date range picker for selecting start and end dates.
   type: DateRangeSelector
   properties:
     title: Clock Icon
-    suffixIcon: AiOutlineClockCircle
+    suffixIcon: clock
     label:
       disabled: true
 - id: drs_icon_schedule
   type: DateRangeSelector
   properties:
     title: Schedule Icon
-    suffixIcon: AiOutlineSchedule
+    suffixIcon: CalendarDays
     label:
       disabled: true
 - id: drs_icon_custom_color
@@ -190,7 +190,7 @@ Date range picker for selecting start and end dates.
   properties:
     title: Custom Color Icon
     suffixIcon:
-      name: AiOutlineCalendar
+      name: calendar
       color: "#1677ff"
     label:
       disabled: true
@@ -199,7 +199,7 @@ Date range picker for selecting start and end dates.
   properties:
     title: Heart Icon
     suffixIcon:
-      name: AiOutlineHeart
+      name: heart
       color: "#ff4d4f"
     label:
       disabled: true
@@ -677,7 +677,7 @@ Date range picker for selecting start and end dates.
     format: DD MMMM YYYY
     size: large
     separator: →
-    suffixIcon: AiOutlineSchedule
+    suffixIcon: CalendarDays
     allowClear: true
     label:
       extra: Select your check-in and check-out dates.
@@ -705,7 +705,7 @@ Date range picker for selecting start and end dates.
       - Event end
     format: DD MMM YYYY
     suffixIcon:
-      name: AiOutlineCalendar
+      name: calendar
       color: "#1677ff"
     disabledDates:
       min: 2026-01-01
@@ -724,7 +724,7 @@ Date range picker for selecting start and end dates.
       - Start date
       - End date
     suffixIcon:
-      name: AiOutlineHeart
+      name: heart
       color: "#eb2f96"
     label:
       disabled: true
@@ -745,7 +745,7 @@ Date range picker for selecting start and end dates.
     variant: outlined
     size: large
     suffixIcon:
-      name: AiOutlineFlag
+      name: Flag
       color: "#722ed1"
     label:
       extra: Specify the <b>full duration</b> of the contract.
@@ -805,7 +805,7 @@ Date range picker for selecting start and end dates.
       type: Button
       properties:
         title: Generate Report
-        icon: AiOutlineFileText
+        icon: document
         type: primary
         size: large
         block: true
@@ -855,7 +855,7 @@ Date range picker for selecting start and end dates.
       type: Button
       properties:
         title: Submit Request
-        icon: AiOutlineSend
+        icon: send
         type: primary
         size: large
         block: true
@@ -893,7 +893,7 @@ Date range picker for selecting start and end dates.
 | `label.title` | string | - | Label title - supports html. |
 | `label.tooltip` | string \| object | - | Help tooltip shown via an icon beside the label. A string sets the tooltip text (supports html), or an object to also customize the icon and color. Use the block's onTooltipClick event to respond to clicks on the icon. |
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
-| `label.tooltip.icon` | string | `"AiOutlineQuestionCircle"` | Name of the icon to show beside the label. |
+| `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
 | `label.span` | number | - | Label inline span. |
 | `label.disabled` | boolean | `false` | Hide input label. |
@@ -905,7 +905,16 @@ Date range picker for selecting start and end dates.
 | `presets.$.value` | array | - | The start and end date of the range. A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value, so a fixed date like "2026-01-01" resolves to the same day in every timezone. A date relative to now is an instant, not a calendar date, so end a _dayjs chain with a format step to pin it to the local calendar: "_dayjs: [now, {subtract: [7, days]}, {format: YYYY-MM-DD}]". Without the format step the chain resolves to an instant, which can select the day before or after the current one, depending on the browser timezone and the time of day. |
 | `separator` | string | `"~"` | Separator symbol shown between start and end date inputs. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
-| `suffixIcon` | string \| object | `"AiOutlineCalendar"` | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to customize icon on right-hand side of the date picker. |
+| `suffixIcon` | string \| object | `"calendar"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on right-hand side of the date picker. |
+| `suffixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `suffixIcon.color` | string | - | Icon color. |
+| `suffixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `suffixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `suffixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `suffixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `suffixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `suffixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `suffixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design date-picker tokens](https://ant.design/components/date-picker#design-token). |
 | `theme.cellHeight` | number | `24` | Height of a calendar cell. |

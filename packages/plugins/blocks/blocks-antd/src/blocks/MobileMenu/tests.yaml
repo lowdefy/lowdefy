@@ -32,12 +32,12 @@
         type: MenuLink
         pageId: page_1
         properties:
-          icon: AiFillRocket
+          icon: Rocket
       - id: Menu Item two
         type: MenuLink
         pageId: page_2
         properties:
-          icon: AiFillVideoCamera
+          icon: Video
 - id: 'properties.title'
   type: MobileMenu
   properties:
@@ -47,13 +47,13 @@
         pageId: page_1
         properties:
           title: Title Menu Item 1
-          icon: AiFillRocket
+          icon: Rocket
       - id: Menu Item two
         type: MenuLink
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
 - id: 'properties.MenuGroup with MenuLInks'
   type: MobileMenu
   properties:
@@ -137,7 +137,7 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
           danger: true
 
 # mode inline
@@ -180,13 +180,13 @@
         pageId: page_2
         properties:
           title: Title Menu Item 2
-          icon: AiFillVideoCamera
+          icon: Video
       - id: menu_item_3
         type: MenuLink
         pageId: page_3
         properties:
           title: Title Menu Item 3
-          icon: AiFillVideoCamera
+          icon: Video
 
 - id: 'menus: links[0]'
   type: MobileMenu
@@ -209,7 +209,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: AiFillVideoCamera
+            icon: Video
 - id: 'menus: default'
   type: MobileMenu
   menus:
@@ -231,7 +231,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: AiFillVideoCamera
+            icon: Video
     - id: menu_one
       menuId: default
       links:
@@ -269,7 +269,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: AiFillVideoCamera
+            icon: Video
     - id: menu_one
       menuId: default
       links:
@@ -295,7 +295,7 @@
           pageId: page_2
           properties:
             title: Title Menu Item 2
-            icon: AiFillVideoCamera
+            icon: Video
 
 - id: 'menusTitle pageId'
   type: MobileMenu
@@ -307,7 +307,7 @@
           type: MenuLink
           pageId: pageId_page_2
           properties:
-            icon: AiFillVideoCamera
+            icon: Video
 
 - id: 'menusTitle url'
   type: MobileMenu
@@ -319,7 +319,7 @@
           type: MenuLink
           url: http://page.com
           properties:
-            icon: AiFillVideoCamera
+            icon: Video
 - id: 'properties.logo'
   type: MobileMenu
   properties:

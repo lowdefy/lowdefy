@@ -225,7 +225,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
   layout:
     flex: 0 0 auto
   properties:
-    icon: AiOutlineSearch
+    icon: search
     shape: circle
     color: primary
     variant: solid
@@ -235,7 +235,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
   layout:
     flex: 0 0 auto
   properties:
-    icon: AiOutlinePlus
+    icon: add
     shape: circle
     color: primary
     variant: outlined
@@ -249,7 +249,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
     flex: 0 0 auto
   properties:
     title: Download
-    icon: AiOutlineDownload
+    icon: download
     color: primary
     variant: solid
 - id: icon_search
@@ -258,7 +258,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
     flex: 0 0 auto
   properties:
     title: Search
-    icon: AiOutlineSearch
+    icon: search
     color: primary
     variant: outlined
 - id: icon_delete
@@ -267,7 +267,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
     flex: 0 0 auto
   properties:
     title: Delete
-    icon: AiOutlineDelete
+    icon: delete
     color: danger
     variant: solid
 - id: icon_only
@@ -275,7 +275,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
   layout:
     flex: 0 0 auto
   properties:
-    icon: AiOutlineStar
+    icon: star
     color: gold
     variant: filled
     hideTitle: true
@@ -286,7 +286,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
   properties:
     title: Custom
     icon:
-      name: AiOutlineThunderbolt
+      name: Zap
       color: "#faad14"
     color: primary
     variant: outlined
@@ -336,7 +336,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
     block: true
     color: primary
     variant: solid
-    icon: AiOutlineArrowRight
+    icon: arrow-right
 - id: block_outlined
   type: Button
   properties:
@@ -351,7 +351,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
     block: true
     color: danger
     variant: solid
-    icon: AiOutlineWarning
+    icon: warning
 ```
 
 ```yaml
@@ -403,7 +403,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
     href: https://docs.lowdefy.com
     color: primary
     variant: solid
-    icon: AiOutlineLink
+    icon: link
 - id: href_text
   type: Button
   layout:
@@ -449,7 +449,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
     flex: 0 0 auto
   properties:
     title: Save
-    icon: AiOutlineSave
+    icon: save
     color: primary
     variant: solid
   events:
@@ -467,7 +467,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
     flex: 0 0 auto
   properties:
     title: New Item
-    icon: AiOutlinePlus
+    icon: add
     color: primary
     variant: outlined
   events:
@@ -485,7 +485,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
     flex: 0 0 auto
   properties:
     title: Delete
-    icon: AiOutlineDelete
+    icon: delete
     color: danger
     variant: solid
   events:
@@ -638,7 +638,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
             title: Send Message
             color: primary
             variant: solid
-            icon: AiOutlineSend
+            icon: send
           events:
             onClick:
               - id: submit_validate
@@ -694,7 +694,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
             title: Delete Permanently
             color: danger
             variant: solid
-            icon: AiOutlineDelete
+            icon: delete
           events:
             onClick:
               - id: delete_msg
@@ -718,7 +718,16 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
 | `hideTitle` | boolean | `false` | Hide the button's title. |
 | `tooltip` | string | - | Hover text for the button. An icon-only button (`hideTitle: true`) shows its `title` as the tooltip when this is not set. |
 | `href` | string | - | The URL to redirect to when the button is clicked. Useful when used with a type link button. |
-| `icon` | string \| object | - | Icon name (a semantic name like edit, or a React Icons name like LuPencil) or properties of an Icon block to use icon in button. |
+| `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use icon in button. |
+| `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `icon.color` | string | - | Icon color. |
+| `icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `shape` | string | `"square"` | Shape of the button. Enum: `circle`, `round`, `square`. |
 | `size` | string | `"default"` | Size of the button. Enum: `small`, `default`, `large`. |
 | `title` | string | - | Title text on the button - supports html. |

@@ -53,7 +53,7 @@ build/
     ├── blocks.js         # Block components
     ├── actions.js        # Action handlers
     ├── connections.js    # Connection types
-    ├── icons.js          # Icon components
+    ├── icons.js          # Icon data (IconData per name)
     ├── agents.js         # Agent configs
     ├── blockMetas.json   # Block metadata
     ├── auth/             # adapters.js, callbacks.js, events.js, providers.js
@@ -87,8 +87,6 @@ Server-read artifacts (`config.json`, `auth.json`, `plugins/connections.js`, `pl
 | `/api/reload`        | SSE for hot reload                       |
 | `/api/ping`          | Health check                             |
 | `/api/root`          | Root config fetch                        |
-| `/api/js/:env`       | Serves clientJsMap.js / serverJsMap.js   |
-| `/api/icons/dynamic` | Serves JIT-discovered icon data          |
 | `/api/dev-tools`     | Dev tooling metadata (config directory)  |
 
 ## Page Routes

@@ -16,7 +16,7 @@
 
 export default {
   category: 'container',
-  icons: [],
+  icons: ['close'],
   valueType: null,
   slots: {
     content: 'Main Drawer body.',

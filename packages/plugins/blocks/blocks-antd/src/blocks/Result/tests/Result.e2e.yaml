@@ -92,7 +92,7 @@ blocks:
     type: Result
     properties:
       title: Custom Icon Result
-      icon: AiOutlineSmile
+      icon: FaceSlightlySmiling
 
   # ============================================
   # CONTENT AREA TESTS

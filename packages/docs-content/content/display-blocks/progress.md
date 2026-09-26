@@ -435,7 +435,7 @@ Progress indicator in line, circle, and dashboard styles.
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineFile
+            name: file
             size: 20
             color: "#1677ff"
         - id: upload_file_1_info
@@ -464,7 +464,7 @@ Progress indicator in line, circle, and dashboard styles.
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineFile
+            name: file
             size: 20
             color: "#1677ff"
         - id: upload_file_2_info
@@ -495,7 +495,7 @@ Progress indicator in line, circle, and dashboard styles.
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineFile
+            name: file
             size: 20
             color: "#ff4d4f"
         - id: upload_file_3_info
@@ -526,7 +526,7 @@ Progress indicator in line, circle, and dashboard styles.
             title: Retry Failed
             color: danger
             variant: outlined
-            icon: AiOutlineReload
+            icon: refresh
             size: small
           events:
             onClick:
@@ -543,7 +543,7 @@ Progress indicator in line, circle, and dashboard styles.
             title: Upload More
             color: primary
             variant: solid
-            icon: AiOutlineUpload
+            icon: upload
             size: small
           events:
             onClick:
@@ -613,7 +613,7 @@ Invite team members
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineCheckCircle
+            name: check-circle
             size: 18
             color: "#52c41a"
         - id: onboarding_step_1_label
@@ -641,7 +641,7 @@ Invite team members
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineCheckCircle
+            name: check-circle
             size: 18
             color: "#52c41a"
         - id: onboarding_step_2_label
@@ -669,7 +669,7 @@ Invite team members
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineCheckCircle
+            name: check-circle
             size: 18
             color: "#52c41a"
         - id: onboarding_step_3_label
@@ -697,7 +697,7 @@ Invite team members
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineClockCircle
+            name: clock
             size: 18
             color: "#1677ff"
         - id: onboarding_step_4_label
@@ -725,7 +725,7 @@ Invite team members
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineClockCircle
+            name: clock
             size: 18
             color: "#d9d9d9"
         - id: onboarding_step_5_label
@@ -771,7 +771,7 @@ Invite team members
             title: Continue Setup
             color: primary
             variant: solid
-            icon: AiOutlineArrowRight
+            icon: arrow-right
           events:
             onClick:
               - id: continue_msg

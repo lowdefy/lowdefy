@@ -87,12 +87,12 @@ Footer
                     type: MenuLink
                     properties:
                       title: Dashboard
-                      icon: AiOutlineDashboard
+                      icon: Gauge
                   - id: layout_sider_nav_2
                     type: MenuLink
                     properties:
                       title: Settings
-                      icon: AiOutlineSetting
+                      icon: settings
         - id: layout_sider_content
           type: Content
           layout:
@@ -305,7 +305,7 @@ Acme Corp Admin Panel - Version 3.2.1
           count: 5
         profile:
           avatar:
-            icon: AiOutlineUser
+            icon: user
       style:
         paddingInline: 24px
         borderBottom: 1px solid var(--ant-color-border)
@@ -340,27 +340,27 @@ Acme Corp Admin Panel - Version 3.2.1
                     type: MenuLink
                     properties:
                       title: Dashboard
-                      icon: AiOutlineDashboard
+                      icon: Gauge
                   - id: layout_admin_menu_users
                     type: MenuLink
                     properties:
                       title: Users
-                      icon: AiOutlineTeam
+                      icon: users
                   - id: layout_admin_menu_orders
                     type: MenuLink
                     properties:
                       title: Orders
-                      icon: AiOutlineShoppingCart
+                      icon: ShoppingCart
                   - id: layout_admin_menu_reports
                     type: MenuLink
                     properties:
                       title: Reports
-                      icon: AiOutlineBarChart
+                      icon: chart
                   - id: layout_admin_menu_settings
                     type: MenuLink
                     properties:
                       title: Settings
-                      icon: AiOutlineSetting
+                      icon: settings
         - id: layout_admin_content_area
           type: Content
           layout:
@@ -488,7 +488,7 @@ Welcome to DevDocs. This guide walks you through setting up your first project. 
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineSearch
+            icon: search
             title: Search docs...
             color: default
             variant: outlined
@@ -497,7 +497,7 @@ Welcome to DevDocs. This guide walks you through setting up your first project. 
           layout:
             flex: 0 0 auto
           properties:
-            icon: AiOutlineGithub
+            icon: GitBranch
             color: default
             variant: text
             hideTitle: true
@@ -534,22 +534,22 @@ Welcome to DevDocs. This guide walks you through setting up your first project. 
                     type: MenuLink
                     properties:
                       title: Introduction
-                      icon: AiOutlineRead
+                      icon: BookOpen
                   - id: layout_docs_nav_install
                     type: MenuLink
                     properties:
                       title: Installation
-                      icon: AiOutlineDownload
+                      icon: download
                   - id: layout_docs_nav_config
                     type: MenuLink
                     properties:
                       title: Configuration
-                      icon: AiOutlineTool
+                      icon: Wrench
                   - id: layout_docs_nav_deploy
                     type: MenuLink
                     properties:
                       title: Deployment
-                      icon: AiOutlineCloudUpload
+                      icon: CloudUpload
         - id: layout_docs_content_area
           type: Content
           layout:

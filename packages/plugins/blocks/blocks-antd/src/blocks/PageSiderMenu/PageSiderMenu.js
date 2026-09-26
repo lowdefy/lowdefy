@@ -281,8 +281,8 @@ const PageSiderMenu = ({
                                         block: true,
                                         icon: {
                                           name: openSiderState
-                                            ? 'AiOutlineMenuFold'
-                                            : 'AiOutlineMenuUnfold',
+                                            ? 'sidebar-collapse'
+                                            : 'sidebar-expand',
                                         },
                                         ...(properties.toggleSiderButton ?? {}),
                                       }}

@@ -79,13 +79,13 @@ menus:
       - id: new-ticket
         type: MenuLink
         properties:
-          icon: AiOutlineAlert
+          icon: Siren
           title: New ticket
         pageId: new-ticket
       - id: welcome
         type: MenuLink
         properties:
-          icon: AiOutlineHome
+          icon: home
           title: Home
         pageId: welcome
 ################ -------- Copy to here ---------- ################

@@ -15,7 +15,6 @@
 */
 
 import React, { useEffect, useRef } from 'react';
-import { GenIcon } from 'react-icons/lib';
 import Client from '@lowdefy/client';
 
 import BuildErrorPage from '../lib/client/BuildErrorPage.jsx';
@@ -79,15 +78,12 @@ const Page = ({
   // Merge dynamic JS entries fetched after JIT build with the static jsMap
   const mergedJsMap = pageConfig._jsEntries ? { ...jsMap, ...pageConfig._jsEntries } : jsMap;
 
-  // Merge JIT-discovered icon data into the static icons object.
-  // createIcon.js looks up Icons[name] on every render from the captured reference,
-  // so mutating the original object makes new icons available immediately.
+  // Merge JIT-delivered icon data into the static icons map. Icons are data
+  // (IconData), and createIcon looks up Icons[name] on every render from the
+  // captured reference, so mutating the original object makes them available
+  // immediately.
   if (pageConfig._dynamicIcons) {
-    for (const [name, data] of Object.entries(pageConfig._dynamicIcons)) {
-      if (!types.icons[name]) {
-        types.icons[name] = GenIcon(data);
-      }
-    }
+    Object.assign(types.icons, pageConfig._dynamicIcons);
   }
 
   return (

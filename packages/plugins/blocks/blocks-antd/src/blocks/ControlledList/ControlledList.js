@@ -90,7 +90,7 @@ const ControlledListBlock = ({
                 components={{ Icon, Link, ShortcutBadge }}
                 events={events}
                 properties={{
-                  icon: 'AiOutlinePlus',
+                  icon: 'add',
                   size: properties.size,
                   title: get(properties, 'addItemButton.title ') ?? 'Add Item',
                   type: 'default',
@@ -120,7 +120,7 @@ const ControlledListBlock = ({
               components={{ Icon, Link, ShortcutBadge }}
               events={events}
               properties={{
-                icon: 'AiOutlinePlus',
+                icon: 'add',
                 size: properties.size,
                 title: get(properties, 'addItemButton.title ') ?? 'Add Item',
                 type: 'dashed',
@@ -150,7 +150,7 @@ const ControlledListBlock = ({
                   blockId={`${blockId}_${i}_remove_icon`}
                   events={events}
                   properties={{
-                    name: 'AiOutlineMinusCircle',
+                    name: 'remove',
                     ...properties.removeItemIcon,
                   }}
                   onClick={() => removeItemAt(i)}

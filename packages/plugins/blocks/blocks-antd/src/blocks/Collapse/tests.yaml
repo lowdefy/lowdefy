@@ -183,10 +183,10 @@
       blocks:
         - id: ex_1_block_2
           type: Test
-- id: 'properties.expandIcon: AiOutlineArrowRight'
+- id: 'properties.expandIcon: arrow-right'
   type: Collapse
   properties:
-    expandIcon: AiOutlineArrowRight
+    expandIcon: arrow-right
     panels:
       - key: content_one
         title: Title One

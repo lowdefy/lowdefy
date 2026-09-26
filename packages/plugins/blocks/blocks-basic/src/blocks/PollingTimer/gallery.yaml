@@ -51,7 +51,7 @@
           type: Button
           properties:
             title: Start Job
-            icon: AiOutlinePlayCircle
+            icon: CirclePlay
           events:
             onClick:
               - id: job_timer_set_running
@@ -97,7 +97,7 @@
           type: Button
           properties:
             title: Start
-            icon: AiOutlinePlayCircle
+            icon: CirclePlay
           events:
             onClick:
               - id: manual_timer_call_start
@@ -109,7 +109,7 @@
           type: Button
           properties:
             title: Stop
-            icon: AiOutlinePauseCircle
+            icon: CirclePause
           events:
             onClick:
               - id: manual_timer_call_stop
@@ -121,7 +121,7 @@
           type: Button
           properties:
             title: Toggle
-            icon: AiOutlineSwap
+            icon: ArrowRightLeft
           events:
             onClick:
               - id: manual_timer_call_toggle

@@ -74,21 +74,19 @@ Renders raw HTML without sanitization:
 
 ## Icon Block
 
-Renders icons from icon libraries:
+Renders one icon through `components.Icon` (see [client.md](../../packages/client.md#icons-createiconjs)):
 
 ```yaml
 - id: icon
   type: Icon
   properties:
-    name: AiOutlineUser # Ant Design icon
+    name: user # semantic name; or a Lucide name (User) or qualified name (lucide:User)
     size: 24
     color: '#1890ff'
+    strokeWidth: 1.5
 ```
 
-Supported icon libraries:
-
-- Ant Design Icons (`AiOutline*`, `AiFilled*`)
-- Font Awesome (via configuration)
+Names resolve at build time: semantic names map to Lucide, PascalCase names resolve in the default icon set (`theme.icons.set`) then Lucide, and `set:Name` names resolve in that set only. Icon-set plugins add sets (see [plugin-system.md](../../architecture/plugin-system.md#icon-sets)).
 
 ## Img Block
 

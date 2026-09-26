@@ -48,7 +48,7 @@ test('button propertiesFormTransformer', () => {
               "allowClear": true,
               "label": Object {
                 "align": "right",
-                "extra": "Name of an React-Icon (See <a href=\\"https://react-icons.github.io/react-icons/\\">all icons</a>) or properties of an Icon block to use icon in button.",
+                "extra": "Icon name, such as the semantic name <code>edit</code> or the <a href=\\"https://lucide.dev/icons\\">Lucide</a> name <code>Pencil</code>, or properties of an Icon block to use as the button icon.",
                 "span": 8,
               },
               "options": Object {
@@ -146,7 +146,7 @@ test('button defaultValueTransformer', () => {
             displayType: 'button',
           },
           default: {
-            icon: 'AiOutlineUpload',
+            icon: 'upload',
             title: 'Upload',
             type: 'default',
           },
@@ -157,7 +157,7 @@ test('button defaultValueTransformer', () => {
   expect(defaultValueTransformer(schemaDV)).toMatchInlineSnapshot(`
     Object {
       "field": Object {
-        "icon": "AiOutlineUpload",
+        "icon": "upload",
         "title": "Upload",
         "type": "default",
       },

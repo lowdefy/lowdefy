@@ -3433,25 +3433,57 @@ export default {
           type: 'object',
           additionalProperties: false,
           description:
-            'Icon names for the app. Built-in semantic names like "edit" and "delete" map to Lucide icons; aliases override or extend them.',
+            'Icon settings for the app. Icons are Lucide icons; built-in semantic names like "edit" and "delete" map to them, and icon set plugins can add or replace icons.',
           properties: {
+            set: {
+              type: 'string',
+              description:
+                'Default icon set for PascalCase icon names. Defaults to "lucide". Names the set lacks still resolve in Lucide. Must be "lucide" or a set an installed plugin declares.',
+              errorMessage: {
+                type: 'App "theme.icons.set" should be an icon set id, like "lucide".',
+              },
+            },
+            size: {
+              type: ['string', 'number'],
+              description:
+                'Default icon size, as a CSS length or a number of pixels. Defaults to "1em", so icons follow the font size.',
+              errorMessage: {
+                type: 'App "theme.icons.size" should be a string or a number.',
+              },
+            },
+            strokeWidth: {
+              type: 'number',
+              exclusiveMinimum: 0,
+              description: 'Default icon stroke width. Defaults to 2.',
+              errorMessage: {
+                type: 'App "theme.icons.strokeWidth" should be a number.',
+                exclusiveMinimum: 'App "theme.icons.strokeWidth" should be greater than 0.',
+              },
+            },
+            nonScalingStroke: {
+              type: 'boolean',
+              description: 'Keep the stroke width constant at any icon size. Defaults to false.',
+              errorMessage: {
+                type: 'App "theme.icons.nonScalingStroke" should be a boolean.',
+              },
+            },
             aliases: {
               type: 'object',
               description:
-                'Semantic icon names (lowercase kebab-case) mapped to react-icons names, e.g. invoice: LuReceipt. Overrides a built-in name of the same key.',
+                'Semantic icon names (lowercase kebab-case) mapped to a Lucide name or a qualified set name, e.g. invoice: Receipt or edit: tabler:Pencil. Overrides a built-in name of the same key.',
               additionalProperties: {
                 type: 'string',
               },
               errorMessage: {
                 type: 'App "theme.icons.aliases" should be an object.',
                 additionalProperties:
-                  'App "theme.icons.aliases" values should be react-icons names, like "LuPencil".',
+                  'App "theme.icons.aliases" values should be icon names, like "Pencil".',
               },
             },
             include: {
               type: 'array',
               description:
-                'Icon names (semantic or react-icons) to bundle even though no config string names them, e.g. names that come from state or requests.',
+                'Icon names (semantic, Lucide or qualified) to bundle even though no config string names them, e.g. names that come from state or requests.',
               items: {
                 type: 'string',
               },
@@ -3463,7 +3495,7 @@ export default {
           errorMessage: {
             type: 'App "theme.icons" should be an object.',
             additionalProperties:
-              'App "theme.icons" contains an unknown property. The known properties are "aliases" and "include".',
+              'App "theme.icons" contains an unknown property. The known properties are "set", "size", "strokeWidth", "nonScalingStroke", "aliases" and "include".',
           },
         },
       },

@@ -160,7 +160,7 @@ const PageSidebarLayout = ({
                           type: 'link',
                           block: true,
                           icon: {
-                            name: openSiderState ? 'AiOutlineMenuFold' : 'AiOutlineMenuUnfold',
+                            name: openSiderState ? 'sidebar-collapse' : 'sidebar-expand',
                           },
                           ...(properties.toggleSiderButton ?? {}),
                         }}

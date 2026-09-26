@@ -28,7 +28,7 @@ The `PdfMake` action is used to generate and download a PDF file from a set of d
   type: Button
   properties:
     title: Download PDF
-    icon: AiOutlineDownload
+    icon: download
   events:
     onClick:
       - id: make_pdf
@@ -53,7 +53,7 @@ The `PdfMake` action is used to generate and download a PDF file from a set of d
     textAlign: center
   properties:
     title: Generate & Download PDF
-    icon: AiOutlineDownload
+    icon: download
     color: '#6293F8'
   events:
     onMount:

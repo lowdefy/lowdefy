@@ -51,10 +51,10 @@
   type: ConfirmModal
   properties:
     content: Content within the ConfirmModal
-- id: 'properties.icon: AndroidFilled'
+- id: 'properties.icon: Smartphone'
   type: ConfirmModal
   properties:
-    icon: AiFillAndroid
+    icon: Smartphone
 - id: 'properties.mask: false'
   type: ConfirmModal
   properties:

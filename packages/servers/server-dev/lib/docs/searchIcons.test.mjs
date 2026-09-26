@@ -16,42 +16,96 @@
 
 import { jest } from '@jest/globals';
 
-// searchIcons reads the dev build's iconAliases.json, which only exists in a
-// built server directory. The react-icons packages are real.
+// searchIcons reads the dev build's iconAliases.json and customTypesMap.json,
+// which only exist in a built server directory, and loads installed icon set
+// plugins through the build's loader. Lucide's names are real.
 const mockReadBuildArtifact = jest.fn();
 jest.unstable_mockModule('./readBuildArtifact.js', () => ({
   default: mockReadBuildArtifact,
 }));
 
+const buildDev = await import('@lowdefy/build/dev');
+const mockLoadIconSets = jest.fn();
+jest.unstable_mockModule('@lowdefy/build/dev', () => ({
+  ...buildDev,
+  loadIconSets: mockLoadIconSets,
+}));
+
 const { default: searchIcons } = await import('./searchIcons.js');
+
+function layer(names) {
+  return { names: new Set(names) };
+}
+
+function mockArtifacts({ aliases = null, iconSets = {} } = {}) {
+  mockReadBuildArtifact.mockImplementation(({ name }) => {
+    if (name === 'iconAliases.json') return aliases;
+    if (name === 'customTypesMap.json') return { iconSets };
+    return null;
+  });
+}
 
 beforeEach(() => {
   mockReadBuildArtifact.mockReset();
+  mockLoadIconSets.mockReset();
+  mockLoadIconSets.mockResolvedValue({ lucide: [layer([])] });
 });
 
-test('searchIcons lists matching semantic names before react-icons names', () => {
-  mockReadBuildArtifact.mockReturnValue({ delete: 'LuTrash2', edit: 'LuPencil' });
-  const result = searchIcons({ query: 'trash' });
-  expect(result.aliases).toEqual([{ name: 'delete', icon: 'LuTrash2' }]);
-  expect(result.icons[0]).toBe('LuTrash');
-  expect(result.icons).toContain('LuTrash2');
+test('searchIcons lists matching semantic names, then canonical Lucide names, then aliases', async () => {
+  mockArtifacts({ aliases: { delete: 'Trash', edit: 'Pencil' } });
+  const result = await searchIcons({ query: 'trash' });
+  expect(result.semantic).toEqual([{ name: 'delete', icon: 'Trash' }]);
+  expect(result.icons[0]).toBe('Trash');
+  expect(result.icons).toContain('Trash2');
+  // Trash2 is a canonical name in Lucide 1.x; aliases come after every canonical name.
+  const { canonical } = buildDev.getLucideIconNames();
+  const firstAlias = result.icons.findIndex((name) => !canonical.includes(name));
+  if (firstAlias !== -1) {
+    expect(result.icons.slice(firstAlias).every((name) => !canonical.includes(name))).toBe(true);
+  }
 });
 
-test('searchIcons includes theme aliases from the build', () => {
-  mockReadBuildArtifact.mockReturnValue({ invoice: 'LuReceipt' });
-  const result = searchIcons({ query: 'invoice' });
-  expect(result.aliases).toEqual([{ name: 'invoice', icon: 'LuReceipt' }]);
+test('searchIcons ranks canonical names before Lucide alias names', async () => {
+  mockArtifacts();
+  const result = await searchIcons({ query: 'house', limit: 100 });
+  expect(result.icons).toContain('House');
+  const home = await searchIcons({ query: 'home', limit: 100 });
+  // Home is an alias of House.
+  expect(home.icons).toContain('Home');
+  expect(home.icons.indexOf('Home')).toBeGreaterThan(home.icons.indexOf('HousePlus'));
 });
 
-test('searchIcons falls back to the built-in names before the first build', () => {
-  mockReadBuildArtifact.mockReturnValue(null);
-  const result = searchIcons({ query: 'external link' });
-  expect(result.aliases).toEqual([{ name: 'external-link', icon: 'LuExternalLink' }]);
+test('searchIcons includes theme aliases from the build', async () => {
+  mockArtifacts({ aliases: { invoice: 'Receipt' } });
+  const result = await searchIcons({ query: 'invoice' });
+  expect(result.semantic).toEqual([{ name: 'invoice', icon: 'Receipt' }]);
 });
 
-test('searchIcons requires every query word to match', () => {
-  mockReadBuildArtifact.mockReturnValue({});
-  const result = searchIcons({ query: 'arrow right circle', limit: 50 });
+test('searchIcons falls back to the built-in names before the first build', async () => {
+  mockArtifacts();
+  const result = await searchIcons({ query: 'external link' });
+  expect(result.semantic).toEqual([{ name: 'external-link', icon: 'ExternalLink' }]);
+});
+
+test('searchIcons lists installed set names qualified, after Lucide names', async () => {
+  const iconSets = { tabler: [{ package: '@acme/icons-tabler', version: '1.0.0' }] };
+  mockArtifacts({ iconSets });
+  mockLoadIconSets.mockResolvedValue({
+    lucide: [layer(['Pencil']), layer(['PencilInvoice'])],
+    tabler: [layer(['PencilBolt', 'Other'])],
+  });
+  const result = await searchIcons({ query: 'pencil', limit: 100 });
+  expect(result.icons[0]).toBe('Pencil');
+  // An icon a plugin adds to lucide is listed unqualified; other sets qualified.
+  expect(result.icons.slice(-2)).toEqual(['PencilInvoice', 'tabler:PencilBolt']);
+  expect(mockLoadIconSets).toHaveBeenCalledWith({
+    context: { directories: { server: process.cwd() }, typesMap: { iconSets } },
+  });
+});
+
+test('searchIcons requires every query word to match', async () => {
+  mockArtifacts();
+  const result = await searchIcons({ query: 'arrow right circle', limit: 50 });
   expect(result.icons.length).toBeGreaterThan(0);
   result.icons.forEach((name) => {
     const lower = name.toLowerCase();
@@ -61,21 +115,13 @@ test('searchIcons requires every query word to match', () => {
   });
 });
 
-test('searchIcons caps react-icons results at the limit', () => {
-  mockReadBuildArtifact.mockReturnValue({});
-  expect(searchIcons({ query: 'user', limit: 5 }).icons).toHaveLength(5);
+test('searchIcons caps icon names at the limit', async () => {
+  mockArtifacts();
+  expect((await searchIcons({ query: 'user', limit: 5 })).icons).toHaveLength(5);
 });
 
-test('searchIcons throws without a query', () => {
-  expect(() => searchIcons({ query: ' ' })).toThrow('searchIcons requires a "query" string.');
-});
-
-test('every built-in semantic icon name targets an icon react-icons exports', async () => {
-  // react-icons upgrades have renamed Lucide exports (LuHome → LuHouse); this
-  // catches a built-in name that would stop rendering.
-  const { defaultIconAliases } = await import('@lowdefy/build/dev');
-  const { createRequire } = await import('node:module');
-  const lucide = createRequire(import.meta.url)('react-icons/lu');
-  const missing = Object.entries(defaultIconAliases).filter(([, icon]) => !lucide[icon]);
-  expect(missing).toEqual([]);
+test('searchIcons throws without a query', async () => {
+  await expect(searchIcons({ query: ' ' })).rejects.toThrow(
+    'searchIcons requires a "query" string.'
+  );
 });

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'display',
   icons: [],
@@ -50,11 +52,8 @@ export default {
         description: 'The text shown in the tooltip.',
       },
       icon: {
-        type: ['string', 'object'],
+        ...icon,
         description: 'Icon for the button.',
-        docs: {
-          displayType: 'icon',
-        },
       },
       href: {
         type: 'string',

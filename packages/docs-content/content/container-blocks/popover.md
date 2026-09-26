@@ -669,7 +669,7 @@ This popover uses SetState to track that it was opened.
         title: Click to toggle
         color: primary
         variant: solid
-        icon: AiOutlineBell
+        icon: bell
 - id: popover_event_state
   type: Popover
   layout:
@@ -751,7 +751,7 @@ jane.doe@example.com
         title: View Profile
         color: primary
         variant: solid
-        icon: AiOutlineUser
+        icon: user
 - id: popover_rich_actions
   type: Popover
   layout:
@@ -772,7 +772,7 @@ jane.doe@example.com
               type: Button
               properties:
                 title: Edit
-                icon: AiOutlineEdit
+                icon: edit
                 color: primary
                 variant: text
                 block: true
@@ -780,7 +780,7 @@ jane.doe@example.com
               type: Button
               properties:
                 title: Duplicate
-                icon: AiOutlineCopy
+                icon: copy
                 color: default
                 variant: text
                 block: true
@@ -788,7 +788,7 @@ jane.doe@example.com
               type: Button
               properties:
                 title: Delete
-                icon: AiOutlineDelete
+                icon: delete
                 color: danger
                 variant: text
                 block: true
@@ -799,7 +799,7 @@ jane.doe@example.com
         flex: 0 0 auto
       properties:
         title: More
-        icon: AiOutlineEllipsis
+        icon: more
         color: default
         variant: outlined
 ```
@@ -1114,7 +1114,7 @@ Product Manager
               layout:
                 flex: 0 0 auto
               properties:
-                icon: AiOutlineUser
+                icon: user
                 size: 48
                 color: "#fff"
                 backgroundColor: "#1677ff"
@@ -1158,7 +1158,7 @@ Product Manager
                 flex: 1 1 0
               properties:
                 title: Message
-                icon: AiOutlineMail
+                icon: mail
                 color: primary
                 variant: solid
                 size: small
@@ -1175,7 +1175,7 @@ Product Manager
                 flex: 1 1 0
               properties:
                 title: View Profile
-                icon: AiOutlineUser
+                icon: user
                 color: default
                 variant: outlined
                 size: small
@@ -1239,7 +1239,7 @@ Product Manager
               type: Button
               properties:
                 title: New Document
-                icon: AiOutlineFileAdd
+                icon: FilePlus
                 color: primary
                 variant: text
                 block: true
@@ -1254,7 +1254,7 @@ Product Manager
               type: Button
               properties:
                 title: Upload File
-                icon: AiOutlineUpload
+                icon: upload
                 color: default
                 variant: text
                 block: true
@@ -1273,7 +1273,7 @@ Product Manager
               type: Button
               properties:
                 title: Import from URL
-                icon: AiOutlineLink
+                icon: link
                 color: default
                 variant: text
                 block: true
@@ -1288,7 +1288,7 @@ Product Manager
               type: Button
               properties:
                 title: Use Template
-                icon: AiOutlineAppstore
+                icon: grid
                 color: default
                 variant: text
                 block: true
@@ -1299,7 +1299,7 @@ Product Manager
         flex: 0 0 auto
       properties:
         title: Create New
-        icon: AiOutlinePlus
+        icon: add
         color: primary
         variant: solid
 ```
@@ -1367,7 +1367,7 @@ You will receive a warning notification when 80% of the budget is used.
           layout:
             flex: 0 0 auto
           properties:
-            name: AiOutlineQuestionCircle
+            name: help
             color: "#8c8c8c"
             size: 18
     - id: popover_help_input

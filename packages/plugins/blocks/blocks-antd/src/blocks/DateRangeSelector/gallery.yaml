@@ -186,14 +186,14 @@
       type: DateRangeSelector
       properties:
         title: Clock Icon
-        suffixIcon: AiOutlineClockCircle
+        suffixIcon: clock
         label:
           disabled: true
     - id: drs_icon_schedule
       type: DateRangeSelector
       properties:
         title: Schedule Icon
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         label:
           disabled: true
     - id: drs_icon_custom_color
@@ -201,7 +201,7 @@
       properties:
         title: Custom Color Icon
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         label:
           disabled: true
@@ -210,7 +210,7 @@
       properties:
         title: Heart Icon
         suffixIcon:
-          name: AiOutlineHeart
+          name: heart
           color: '#ff4d4f'
         label:
           disabled: true
@@ -664,7 +664,7 @@
         format: DD MMMM YYYY
         size: large
         separator: '→'
-        suffixIcon: AiOutlineSchedule
+        suffixIcon: CalendarDays
         allowClear: true
         label:
           extra: Select your check-in and check-out dates.
@@ -692,7 +692,7 @@
           - Event end
         format: DD MMM YYYY
         suffixIcon:
-          name: AiOutlineCalendar
+          name: calendar
           color: '#1677ff'
         disabledDates:
           min: '2026-01-01'
@@ -711,7 +711,7 @@
           - Start date
           - End date
         suffixIcon:
-          name: AiOutlineHeart
+          name: heart
           color: '#eb2f96'
         label:
           disabled: true
@@ -732,7 +732,7 @@
         variant: outlined
         size: large
         suffixIcon:
-          name: AiOutlineFlag
+          name: Flag
           color: '#722ed1'
         label:
           extra: 'Specify the <b>full duration</b> of the contract.'
@@ -792,7 +792,7 @@
           type: Button
           properties:
             title: Generate Report
-            icon: AiOutlineFileText
+            icon: document
             type: primary
             size: large
             block: true
@@ -842,7 +842,7 @@
           type: Button
           properties:
             title: Submit Request
-            icon: AiOutlineSend
+            icon: send
             type: primary
             size: large
             block: true

@@ -90,6 +90,8 @@ connections:
 
 `tenant` on a connection is either the string `shared` or `{ field: <name> }` (a non-empty name with no dots). The default scoping field is `organization_id`. There is deliberately **no `tenant: true`** — under `tenant` policy a capable connection is already scoped, so `true` would only restate the default; the build rejects it.
 
+**A shared connection's change log must not write into a walled collection.** A `tenant: shared` connection's writes belong to no organization, so its `changeLog` records carry no `organization_id`. In a collection a scoped connection reads, those records would be invisible to every walled read and would make the tenant preflight refuse to serve the app, so the build rejects a shared connection whose `changeLog.collection` is the collection of a scoped connection in the same database. Give shared connections their own change-log collection.
+
 **Under `tenant` policy every connection type must declare its capability.** A connection whose type does not declare tenant support (`connectionMetas.tenant`) fails the build — no connection is ever *silently* unscoped. Connection plugins declare this in their `types.js`; you do not set it.
 
 ### Exceptions at the point of use

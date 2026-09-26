@@ -33,7 +33,7 @@ import {
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons, 'AiOutlineCloseCircle', 'AiOutlineDown'],
+  icons: [...LabelMeta.icons, 'chevron-down', 'clear'],
   valueType: 'any',
   cssKeys: {
     element: 'The TreeSelector element.',
@@ -91,8 +91,8 @@ export default {
         default: 'Not found',
         description: 'Content shown when no nodes match the search.',
       },
-      suffixIcon: { ...icon, default: 'AiOutlineDown', description: 'Dropdown suffix icon.' },
-      clearIcon: { ...icon, default: 'AiOutlineCloseCircle', description: 'Clear icon.' },
+      suffixIcon: { ...icon, default: 'chevron-down', description: 'Dropdown suffix icon.' },
+      clearIcon: { ...icon, default: 'clear', description: 'Clear icon.' },
       theme: treeSelectTheme,
     },
   },

@@ -21,7 +21,7 @@
 function createDisplayMeta(blockName, { size = false } = {}) {
   return {
     category: 'display',
-    icons: [],
+    icons: ['more-vertical'],
     valueType: null,
     cssKeys: {
       element: `The ${blockName} element.`,
@@ -440,7 +440,7 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                         icon: {
                           type: ['string', 'object'],
                           description:
-                            'Icon name (a semantic name like edit, or a React Icons name like LuPencil) or Icon block config.',
+                            'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or Icon block config.',
                           docs: { displayType: 'icon' },
                         },
                         iconField: {
@@ -527,7 +527,7 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                         icon: {
                           type: ['string', 'object'],
                           description:
-                            'Icon name (a semantic name like edit, or a React Icons name like LuPencil) or Icon block config.',
+                            'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or Icon block config.',
                           docs: { displayType: 'icon' },
                         },
                         iconField: {
@@ -558,9 +558,9 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                   },
                   icon: {
                     type: ['string', 'object'],
-                    default: 'AiOutlineMore',
+                    default: 'more-vertical',
                     description:
-                      'Menu cell: the trigger icon. Icon name (a semantic name like edit, or a React Icons name like LuPencil) or Icon block config. The trigger is icon-only.',
+                      'Menu cell: the trigger icon. Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or Icon block config. The trigger is icon-only.',
                     docs: { displayType: 'icon' },
                   },
                   placement: {
@@ -655,13 +655,13 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                   checkedIcon: {
                     type: ['string', 'object'],
                     description:
-                      'Switch: icon shown when on (icon name like edit or LuPencil, or Icon block config).',
+                      'Switch: icon shown when on (icon name like `edit`, `Pencil` or `tabler:Pencil`, or Icon block config).',
                     docs: { displayType: 'icon' },
                   },
                   uncheckedIcon: {
                     type: ['string', 'object'],
                     description:
-                      'Switch: icon shown when off (icon name like edit or LuPencil, or Icon block config).',
+                      'Switch: icon shown when off (icon name like `edit`, `Pencil` or `tabler:Pencil`, or Icon block config).',
                     docs: { displayType: 'icon' },
                   },
                   inputType: {
