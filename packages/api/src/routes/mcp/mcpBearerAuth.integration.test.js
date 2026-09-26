@@ -313,6 +313,31 @@ test('an app-AS bearer whose grant was revoked resolves invalid and gets public 
   expect(tools.map((tool) => tool.name)).toEqual(['health']);
 });
 
+test('an app-AS bearer whose subject is no longer a member resolves invalid and gets public tools only', async () => {
+  const auth = mockAuth({
+    user: { id: 'user_1', email: 'user@example.com' },
+    member: null,
+  });
+  const token = await mintToken({ scope: 'mcp:read' });
+  const context = await createMcpContext({
+    auth,
+    headers: new Headers({ authorization: `Bearer ${token}` }),
+  });
+  const client = await connectClient(await createMcpServer({ context }));
+
+  expect(context.user).toBe(null);
+  expect(context.mcpAuth).toEqual({
+    clientId: 'client_1',
+    organizationId: 'org_1',
+    tokenStatus: 'invalid',
+    parseableJwt: true,
+    noMembership: true,
+  });
+
+  const { tools } = await client.listTools();
+  expect(tools.map((tool) => tool.name)).toEqual(['health']);
+});
+
 test('the organization a bearer acts in is its claim - the same subject resolves in another org', async () => {
   const auth = mockAuth({
     user: { id: 'user_1', email: 'user@example.com' },
