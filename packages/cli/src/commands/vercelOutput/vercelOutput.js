@@ -135,7 +135,7 @@ async function vercelOutput({ context }) {
     path.join(functionDirectory, '.vc-config.json'),
     JSON.stringify(
       {
-        runtime: 'nodejs22.x',
+        runtime: 'nodejs24.x',
         handler,
         launcherType: 'Nodejs',
         ...functionConfig,
