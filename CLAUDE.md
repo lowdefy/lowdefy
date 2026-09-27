@@ -365,6 +365,8 @@ See `code-docs/architecture/error-tracing.md` for the complete error system.
 
 ### Running Tests
 
+`code-docs/testing.md` covers worktree setup (`pnpm worktree <branch>`), MongoDB tests (`pnpm test:mongodb`), ports and e2e.
+
 ```bash
 # All tests (from repo root)
 pnpm test

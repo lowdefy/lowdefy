@@ -17,7 +17,10 @@
 import path from 'path';
 import { defineConfig, devices } from '@playwright/test';
 
-function createPlaywrightConfig({ packageDir, port = 3001 }) {
+function createPlaywrightConfig({ packageDir, port: defaultPort = 3001 }) {
+  // Worktrees share the machine, so a fixed port could reach another checkout's server.
+  // LOWDEFY_E2E_PORT moves the run, and an existing server is only reused on request.
+  const port = Number(process.env.LOWDEFY_E2E_PORT ?? defaultPort);
   const e2eDir = path.join(packageDir, 'e2e');
   const appDir = path.join(e2eDir, 'app');
 
@@ -25,7 +28,10 @@ function createPlaywrightConfig({ packageDir, port = 3001 }) {
   // packageDir is like: /path/to/lowdefy/packages/plugins/blocks/blocks-basic
   const monorepoRoot = path.resolve(packageDir, '../../../../');
   const cliPath = path.join(monorepoRoot, 'packages/cli/dist/index.js');
-  const serverDir = path.join(monorepoRoot, 'packages/servers/server');
+  const prepareServerPath = path.join(monorepoRoot, 'scripts/prepare-e2e-server.mjs');
+  // Each package builds into its own untracked copy of the server, so a run leaves the
+  // worktree clean and different packages can run at the same time.
+  const serverDir = path.join(monorepoRoot, '_server/e2e', path.basename(packageDir));
 
   return defineConfig({
     testDir: packageDir,
@@ -44,9 +50,13 @@ function createPlaywrightConfig({ packageDir, port = 3001 }) {
       },
     ],
     webServer: {
-      command: `node ${cliPath} build --config-directory ${appDir} --server-directory ${serverDir} && node ${cliPath} start --config-directory ${appDir} --server-directory ${serverDir} --port ${port} --log-level warn`,
+      command: [
+        `node ${prepareServerPath} --config-directory ${appDir} --server-directory ${serverDir} --log-level warn`,
+        `node ${cliPath} build --config-directory ${appDir} --server-directory ${serverDir}`,
+        `node ${cliPath} start --config-directory ${appDir} --server-directory ${serverDir} --port ${port} --log-level warn`,
+      ].join(' && '),
       url: `http://localhost:${port}`,
-      reuseExistingServer: true,
+      reuseExistingServer: process.env.LOWDEFY_E2E_REUSE_SERVER === 'true',
       timeout: 180000,
     },
   });
