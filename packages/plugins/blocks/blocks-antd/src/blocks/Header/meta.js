@@ -18,6 +18,7 @@ import icon from '../../schemas/icon.js';
 
 export default {
   category: 'container',
+  actions: ['SetDarkMode'],
   icons: [
     'bell',
     'user',

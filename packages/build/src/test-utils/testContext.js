@@ -27,6 +27,7 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
 
   const context = {
     stage: 'test',
+    blockMetas: {},
     directories: {
       config: configDirectory || '',
       server: '',

@@ -16,6 +16,8 @@
 
 export default {
   category: 'display',
+  actions: ['Request', 'SetState'],
+  operators: ['_event'],
   icons: ['refresh', 'delete', 'bot', 'message', 'user', 'attach', 'close'],
   valueType: null,
   events: {

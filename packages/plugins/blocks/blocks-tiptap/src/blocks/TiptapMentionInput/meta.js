@@ -16,6 +16,7 @@
 
 export default {
   category: 'input',
+  actions: ['Request'],
   icons: ['bold', 'italic', 'strikethrough', 'highlight'],
   valueType: 'object',
   initValue: {

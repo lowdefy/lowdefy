@@ -14,18 +14,20 @@
   limitations under the License.
 */
 
-export default {
-  blocks: ['AgentChat', 'AgentConversations'],
-  icons: {
-    AgentChat: ['refresh', 'delete', 'bot', 'message', 'user', 'attach', 'close'],
-    AgentConversations: [],
-  },
-  blockMetas: {
-    AgentChat: {
-      category: 'display',
-      actions: ['Request', 'SetState'],
-      operators: ['_event'],
-    },
-    AgentConversations: { category: 'display' },
-  },
-};
+// The client _js operator hands its function accessors (state(), request(),
+// urlQuery(), ...) that call these operators through the operator registry, so
+// a page that runs _js needs them whether or not its config names them.
+const jsAccessorOperators = [
+  '_actions',
+  '_app',
+  '_event',
+  '_global',
+  '_input',
+  '_location',
+  '_request',
+  '_state',
+  '_url_query',
+  '_user',
+];
+
+export default jsAccessorOperators;

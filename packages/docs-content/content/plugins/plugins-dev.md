@@ -115,6 +115,20 @@ export default extractBlockTypes(metas);
 
 The `extractBlockTypes` function returns `{ blocks, icons, blockMetas }` which the build pipeline uses to resolve plugin types without loading React components or heavy dependencies.
 
+A block that runs actions itself, through events it registers with `methods.registerEvent`, lists those action types in `meta.actions` and the operators their params use in `meta.operators`. Each page loads only the plugin code it uses, so the build adds these types to every page that uses the block:
+
+```js
+// src/blocks/MyUpload/meta.js
+export default {
+  category: 'input',
+  icons: [],
+  // Registers { id: 'policy', type: 'Request', params: { _event: 'requestId' } }
+  actions: ['Request'],
+  operators: ['_event'],
+  // ...events, properties
+};
+```
+
 See the [default Lowdefy block packages](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins/blocks) for full examples.
 
 ### Named export files

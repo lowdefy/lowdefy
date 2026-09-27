@@ -25,6 +25,7 @@ import collectExceptions from '../../utils/collectExceptions.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
 import validateId from '../../utils/validateId.js';
 import createCounter from '../../utils/createCounter.js';
+import countImpliedClientTypes from './countImpliedClientTypes.js';
 import createPageTypeCounters from './createPageTypeCounters.js';
 import validateRequestReferences from './validateRequestReferences.js';
 
@@ -97,6 +98,8 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     typeCounters,
     websocketActionRefs: context.websocketActionRefs ?? [],
   });
+
+  countImpliedClientTypes({ blockMetas: context.blockMetas, pageCounters, typeCounters });
 
   // Validate that all Request actions reference defined requests
   validateRequestReferences({

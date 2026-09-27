@@ -18,6 +18,7 @@ import uploadTheme from '../../schemas/uploadTheme.js';
 
 export default {
   category: 'input',
+  actions: ['Request'],
   icons: ['loading', 'attach', 'delete', 'download', 'view'],
   valueType: 'object',
   cssKeys: {
