@@ -111,6 +111,57 @@
         title: Dashed Start
         titlePlacement: start
 
+- title: Line Variants
+  fullWidth: true
+  blocks:
+    - id: variant_solid
+      type: Divider
+      properties:
+        title: Solid
+        variant: solid
+    - id: variant_dashed
+      type: Divider
+      properties:
+        title: Dashed
+        variant: dashed
+    - id: variant_dotted
+      type: Divider
+      properties:
+        title: Dotted
+        variant: dotted
+
+- title: Sizes
+  fullWidth: true
+  blocks:
+    - id: size_small_text
+      type: Paragraph
+      properties:
+        content: Small divider below.
+    - id: size_small
+      type: Divider
+      properties:
+        size: small
+    - id: size_medium_text
+      type: Paragraph
+      properties:
+        content: Medium divider below.
+    - id: size_medium
+      type: Divider
+      properties:
+        size: medium
+    - id: size_large_text
+      type: Paragraph
+      properties:
+        content: Large (default) divider below.
+    - id: size_large
+      type: Divider
+      properties:
+        size: large
+    - id: size_end_text
+      type: Paragraph
+      properties:
+        content: End of the size examples.
+
 - title: Plain Style
   fullWidth: true
   blocks:
