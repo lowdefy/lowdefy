@@ -275,10 +275,13 @@ blocks:
     class:
       .element: dm-css-element
       .menu: dm-css-menu
+      .item: dm-css-item
     style:
       .element:
         display: inline-block
         padding: 3px
+      .item:
+        color: rgb(255, 0, 0)
     properties:
       trigger: click
       placement: rightTop

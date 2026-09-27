@@ -38,6 +38,17 @@ blocks:
         - title: Done
           description: Order placed
 
+  - id: steps_description_width
+    type: Steps
+    properties:
+      current: 0
+      theme:
+        descriptionMaxWidth: 80
+      items:
+        - title: Draft
+          description: A description long enough to wrap
+        - title: Review
+
   # ============================================
   # DOT STYLE
   # ============================================

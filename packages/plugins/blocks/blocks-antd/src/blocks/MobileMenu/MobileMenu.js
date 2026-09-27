@@ -15,7 +15,7 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { mergeObjects, get } from '@lowdefy/helpers';
+import { get } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Button from '../Button/Button.js';
@@ -73,12 +73,7 @@ const MobileMenu = ({
       <Drawer
         blockId={`${blockId}_drawer`}
         components={components}
-        properties={mergeObjects([
-          {
-            bodyStyle: { padding: '3.1em 0 0 0' },
-          },
-          properties.drawer,
-        ])}
+        properties={properties.drawer ?? {}}
         rename={{
           events: {
             onToggle: 'onToggleDrawer',

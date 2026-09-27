@@ -89,7 +89,7 @@
     - id: show_total_bool_label
       type: Markdown
       properties:
-        content: '**Boolean (default format):**'
+        content: '**Default format:**'
     - id: show_total_bool
       type: Pagination
       properties:
@@ -104,6 +104,15 @@
       properties:
         total: 85
         showTotal: '85 results found'
+    - id: show_total_hidden_label
+      type: Markdown
+      properties:
+        content: '**Hidden:**'
+    - id: show_total_hidden
+      type: Pagination
+      properties:
+        total: 85
+        showTotal: false
     - id: show_total_small_label
       type: Markdown
       properties:

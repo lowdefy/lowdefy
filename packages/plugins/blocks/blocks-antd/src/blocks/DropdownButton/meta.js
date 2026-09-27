@@ -27,7 +27,7 @@ export default {
     menu: 'The floating menu container.',
     item: 'Individual menu items.',
     itemIcon: 'Icon within menu items.',
-    arrow: 'Dropdown arrow indicator.',
+    arrow: 'Has no effect: antd does not expose the dropdown arrow as a separately styled part.',
   },
   // Each menu item declares its own eventName, so the event names a
   // DropdownButton fires are authored in its properties.

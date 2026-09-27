@@ -187,8 +187,8 @@ export default {
           },
           descriptionMaxWidth: {
             type: 'number',
-            default: 140,
-            description: 'Deprecated in antd 6 and has no effect.',
+            description:
+              'Max width of each step description. Unset by default in antd 6, so descriptions take the width of their step.',
           },
           titleLineHeight: {
             type: 'number',

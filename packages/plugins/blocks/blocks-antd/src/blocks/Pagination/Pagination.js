@@ -70,17 +70,23 @@ const PaginationBlock = ({
       methods.setValue({ ...nextState });
     }
   }, [value]);
-  const showTotal = type.isFunction(properties.showTotal)
-    ? properties.showTotal
-    : (total, range) => {
-        if (type.isString(properties.showTotal)) {
-          return properties.showTotal;
-        }
-        if (total === 0) {
-          return 'No items';
-        }
-        return `${range[0]}-${range[1]} of ${total} items`;
-      };
+  function getShowTotal() {
+    if (properties.showTotal === false) {
+      return undefined;
+    }
+    if (type.isFunction(properties.showTotal)) {
+      return properties.showTotal;
+    }
+    return (total, range) => {
+      if (type.isString(properties.showTotal)) {
+        return properties.showTotal;
+      }
+      if (total === 0) {
+        return 'No items';
+      }
+      return `${range[0]}-${range[1]} of ${total} items`;
+    };
+  }
   // antd builds these wrappers around its own arrows; the same markup keeps its styles.
   function jumpIcon(name) {
     return (
@@ -140,7 +146,7 @@ const PaginationBlock = ({
       nextIcon={stepIcon('chevron-right')}
       jumpPrevIcon={jumpIcon('chevrons-left')}
       jumpNextIcon={jumpIcon('chevrons-right')}
-      showTotal={showTotal}
+      showTotal={getShowTotal()}
       simple={!!properties.simple}
       size={size}
       style={styles.element}

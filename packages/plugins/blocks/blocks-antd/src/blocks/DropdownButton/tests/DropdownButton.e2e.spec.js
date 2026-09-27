@@ -174,6 +174,12 @@ test.describe('DropdownButton split mode', () => {
   });
 });
 
+async function expectIconAfterTitle(button) {
+  const iconBox = await button.locator('.ant-btn-icon').boundingBox();
+  const titleBox = await button.locator(':scope > span:not(.ant-btn-icon)').first().boundingBox();
+  expect(iconBox.x).toBeGreaterThan(titleBox.x);
+}
+
 test.describe('DropdownButton icon placement and css keys', () => {
   test.beforeEach(async ({ page }) => {
     await navigateToTestPage(page, 'dropdown_button');
@@ -183,6 +189,7 @@ test.describe('DropdownButton icon placement and css keys', () => {
     const button = getBlock(page, 'db_icon_end').locator('.ant-btn');
     await button.scrollIntoViewIfNeeded();
     await expect(button).toHaveClass(/ant-btn-icon-end/);
+    await expectIconAfterTitle(button);
   });
 
   test('places the split main button icon at the end', async ({ page }) => {
@@ -190,6 +197,7 @@ test.describe('DropdownButton icon placement and css keys', () => {
     await block.scrollIntoViewIfNeeded();
     const mainButton = block.locator('.ant-space-compact button').first();
     await expect(mainButton).toHaveClass(/ant-btn-icon-end/);
+    await expectIconAfterTitle(mainButton);
     const arrowButton = block.locator('.ant-space-compact button').last();
     await expect(arrowButton).not.toHaveClass(/ant-btn-icon-end/);
   });
