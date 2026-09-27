@@ -311,3 +311,31 @@ test('HtmlComponent applies dataEvents to data events inside popover content', (
   fireEvent.click(screen.getByTestId('overlay-popover').querySelector('#archive'));
   expect(onDataEvent).toHaveBeenCalledWith({ name: 'onArchive', event: {} });
 });
+
+test('an open popover stays open on its trigger, with the new content, when the HTML changes', () => {
+  const html = (label) =>
+    `<p>${label}</p><span data-popover="menu">Actions</span><div data-popover-content="menu" hidden>${label} menu</div>`;
+  const { container, rerender } = render(<HtmlComponent html={html('First')} />);
+  fireEvent.click(container.querySelector('[data-popover]'));
+  expect(screen.getByTestId('overlay-popover').textContent).toContain('First menu');
+
+  rerender(<HtmlComponent html={html('Second')} />);
+  const trigger = container.querySelector('[data-popover]');
+  expect(screen.getByTestId('overlay-popover').textContent).toContain('Second menu');
+  expect(trigger.getAttribute('aria-expanded')).toBe('true');
+  fireEvent.click(trigger);
+  expect(screen.queryByTestId('overlay-popover')).toBeNull();
+  expect(trigger.getAttribute('aria-expanded')).toBe('false');
+});
+
+test('an open popover closes when the new HTML no longer has its trigger', () => {
+  const { container, rerender } = render(
+    <HtmlComponent html='<span data-popover="menu">Actions</span><div data-popover-content="menu" hidden>Menu</div>' />
+  );
+  fireEvent.click(container.querySelector('[data-popover]'));
+  expect(screen.getByTestId('overlay-popover')).toBeDefined();
+  rerender(
+    <HtmlComponent html='<span data-popover="other">Other</span><div data-popover-content="other" hidden>Other menu</div>' />
+  );
+  expect(screen.queryByTestId('overlay-popover')).toBeNull();
+});

@@ -17,6 +17,30 @@
 import makeFocusable from './makeFocusable.js';
 import NATIVE_INTERACTIVE from './nativeInteractive.js';
 
+function createPopoverOverlay({ host, target }) {
+  const id = target.getAttribute('data-popover');
+  const { popoverContents } = host.prepared.popover;
+  if (!Object.hasOwn(popoverContents, id)) return null;
+  target.setAttribute('aria-expanded', 'true');
+  return {
+    kind: 'popover',
+    target,
+    html: popoverContents[id],
+    onClose(reason) {
+      target.setAttribute('aria-expanded', 'false');
+      // Focus inside the closing popup would fall to the page; return it to
+      // the trigger, unless the user clicked somewhere else.
+      const focused = target.ownerDocument.activeElement;
+      const focusInPopup =
+        focused !== null && focused !== target.ownerDocument.body && !host.contains(focused);
+      if (reason !== 'outside' && target.isConnected && focusInPopup) {
+        target.focus();
+      }
+    },
+    retarget: (newTarget) => createPopoverOverlay({ host, target: newTarget }),
+  };
+}
+
 // data-popover="id" toggles a popover showing the element with
 // data-popover-content="id". The content's HTML is captured before any other
 // enhancer touches it; the nested HtmlComponent that shows it enhances it.
@@ -45,29 +69,13 @@ const popoverEnhancer = {
     const wasOpen = overlay?.kind === 'popover' && overlay.target === target;
     host.closeOverlay();
     if (wasOpen) return;
-    const id = target.getAttribute('data-popover');
-    const { popoverContents } = host.prepared.popover;
-    if (!Object.hasOwn(popoverContents, id)) {
+    const popover = createPopoverOverlay({ host, target });
+    if (popover === null) {
+      const id = target.getAttribute('data-popover');
       console.warn(`data-popover="${id}" has no element with data-popover-content="${id}".`);
       return;
     }
-    target.setAttribute('aria-expanded', 'true');
-    host.openOverlay({
-      kind: 'popover',
-      target,
-      html: popoverContents[id],
-      onClose(reason) {
-        target.setAttribute('aria-expanded', 'false');
-        // Focus inside the closing popup would fall to the page; return it to
-        // the trigger, unless the user clicked somewhere else.
-        const focused = target.ownerDocument.activeElement;
-        const focusInPopup =
-          focused !== null && focused !== target.ownerDocument.body && !host.contains(focused);
-        if (reason !== 'outside' && target.isConnected && focusInPopup) {
-          target.focus();
-        }
-      },
-    });
+    host.openOverlay(popover);
   },
 };
 

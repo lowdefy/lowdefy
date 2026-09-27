@@ -19,6 +19,7 @@ import { createPortal } from 'react-dom';
 import DOMPurify from 'dompurify';
 import { type } from '@lowdefy/helpers';
 
+import createElementFinder from './createElementFinder.js';
 import createHtmlEnhancerGate from './createHtmlEnhancerGate.js';
 import findDataEventRule from './findDataEventRule.js';
 import getDataEvent from './getDataEvent.js';
@@ -110,6 +111,7 @@ class HtmlComponent extends React.Component {
     if (this.div === this.appliedDiv && htmlString === this.appliedHtml) {
       return;
     }
+    const findOverlayTarget = this.createOverlayTargetFinder();
     this.runCleanups();
     this.div.innerHTML = DOMPurify.sanitize(htmlString, this.props.sanitizeOptions);
     this.appliedDiv = this.div;
@@ -120,7 +122,7 @@ class HtmlComponent extends React.Component {
     if (!enhanced) {
       this.prepared = {};
       if (this.state.enhanced || this.state.overlay !== null) {
-        this.setState({ enhanced: false, overlay: null, portals: NO_PORTALS });
+        this.setState({ enhanced: false, overlay: this.carryOverlay(null), portals: NO_PORTALS });
       }
       return;
     }
@@ -132,7 +134,28 @@ class HtmlComponent extends React.Component {
     });
     this.cleanups = cleanups;
     this.prepared = prepared;
-    this.setState({ enhanced: true, overlay: null, portals });
+    this.setState({ enhanced: true, overlay: this.carryOverlay(findOverlayTarget), portals });
+  }
+
+  // Read before the HTML is replaced: where the open popover's or confirm's element is.
+  createOverlayTargetFinder() {
+    const { overlay } = this.state;
+    if (overlay === null || !overlay.retarget || !this.div.contains(overlay.target)) return null;
+    return createElementFinder({ element: overlay.target, root: this.div });
+  }
+
+  // New HTML replaces the elements an open popover or confirm points at. It stays open on the
+  // same element in the new HTML, so a refresh does not dismiss a menu or a pending confirm; when
+  // the element is gone it closes the way a dismissal does.
+  carryOverlay(findOverlayTarget) {
+    const { overlay } = this.state;
+    if (overlay === null) return null;
+    const target = findOverlayTarget?.(this.div) ?? null;
+    const carried = target === null ? null : overlay.retarget(target);
+    if (carried === null && overlay.onClose) {
+      overlay.onClose('changed');
+    }
+    return carried;
   }
 
   // Only targets inside this element's own DOM count: events from portals

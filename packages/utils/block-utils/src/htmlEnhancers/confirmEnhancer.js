@@ -35,6 +35,7 @@ function createConfirmOverlay({ fire, host, message, target }) {
         target.focus();
       }
     },
+    retarget: (newTarget) => createConfirmOverlay({ fire, host, message, target: newTarget }),
   };
 }
 

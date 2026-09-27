@@ -102,6 +102,19 @@ test.describe('ClickableHtml Block', () => {
     await expect(page.locator('#removed_row')).toHaveText('3');
   });
 
+  test('an open confirm stays open when the HTML changes, and OK fires its event', async ({
+    page,
+  }) => {
+    const confirm = page.locator('.ant-popconfirm');
+    await page.locator('#refresh_soon').click();
+    await page.locator('#refresh_delete').click();
+    await expect(confirm).toContainText('Delete 5?');
+    await expect(page.locator('#refresh_count')).toHaveText('Refreshed 1');
+    await expect(confirm).toBeVisible();
+    await confirm.getByRole('button', { name: 'OK' }).click();
+    await expect(page.locator('#refresh_deleted')).toHaveText('5');
+  });
+
   test('a data-event naming an inherited property fires nothing', async ({ page }) => {
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));

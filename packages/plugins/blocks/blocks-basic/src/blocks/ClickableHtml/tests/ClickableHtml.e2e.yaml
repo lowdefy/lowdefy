@@ -134,6 +134,36 @@ blocks:
             removed_row:
               _event: row_id
 
+  - id: clickable_refresh
+    type: ClickableHtml
+    properties:
+      dataEvents:
+        - onRefreshSoon
+        - onRefreshDelete
+      html:
+        _string.concat:
+          - '<button id="refresh_soon" data-event="onRefreshSoon">Refresh soon</button><p id="refresh_count">Refreshed '
+          - _state:
+              key: refresh_count
+              default: 0
+          - '</p><button id="refresh_delete" data-event="onRefreshDelete" data-id="5" data-confirm="Delete 5?">Delete</button>'
+    events:
+      onRefreshSoon:
+        - id: wait
+          type: Wait
+          params:
+            ms: 1000
+        - id: refresh
+          type: SetState
+          params:
+            refresh_count: 1
+      onRefreshDelete:
+        - id: set_refresh_deleted
+          type: SetState
+          params:
+            refresh_deleted:
+              _event: id
+
   - id: clickable_events_result
     type: Html
     properties:
@@ -146,5 +176,9 @@ blocks:
           - '</span><span id="removed_row">'
           - _state:
               key: removed_row
+              default: ''
+          - '</span><span id="refresh_deleted">'
+          - _state:
+              key: refresh_deleted
               default: ''
           - '</span>'

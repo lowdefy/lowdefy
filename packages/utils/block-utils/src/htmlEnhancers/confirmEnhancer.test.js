@@ -287,3 +287,45 @@ test('without enhancements, an event that requires a confirm does not fire', () 
     'data-event="onDelete" did not fire: it requires a confirm.'
   );
 });
+
+test('an open confirm stays open on the same element when the HTML changes, and OK fires once', () => {
+  const html = (count) =>
+    `<p>${count} rows</p><i data-event="onDelete" data-id="7" data-confirm="Delete?">x</i><i data-event="onDelete" data-id="8" data-confirm="Delete?">y</i>`;
+  const onDataEvent = jest.fn();
+  const dataEvents = ['onDelete'];
+  const { container, rerender } = render(
+    <HtmlComponent dataEvents={dataEvents} html={html(2)} onDataEvent={onDataEvent} />
+  );
+  fireEvent.click(container.querySelector('[data-id="8"]'));
+  rerender(<HtmlComponent dataEvents={dataEvents} html={html(3)} onDataEvent={onDataEvent} />);
+  expect(screen.getByTestId('overlay-confirm')).toBeDefined();
+  fireEvent.click(screen.getByText('OK'));
+  expect(onDataEvent).toHaveBeenCalledTimes(1);
+  expect(onDataEvent).toHaveBeenCalledWith({
+    name: 'onDelete',
+    event: { id: '8', confirm: 'Delete?' },
+  });
+  expect(document.activeElement).toBe(container.querySelector('[data-id="8"]'));
+});
+
+test('an open confirm closes without firing when the new HTML no longer has its element', () => {
+  const onDataEvent = jest.fn();
+  const dataEvents = ['onDelete'];
+  const { container, rerender } = render(
+    <HtmlComponent
+      dataEvents={dataEvents}
+      html='<i data-event="onDelete" data-id="7" data-confirm="Delete?">x</i>'
+      onDataEvent={onDataEvent}
+    />
+  );
+  fireEvent.click(container.querySelector('[data-event]'));
+  rerender(
+    <HtmlComponent
+      dataEvents={dataEvents}
+      html='<i data-event="onDelete" data-id="9" data-confirm="Delete?">x</i>'
+      onDataEvent={onDataEvent}
+    />
+  );
+  expect(screen.queryByTestId('overlay-confirm')).toBeNull();
+  expect(onDataEvent).not.toHaveBeenCalled();
+});
