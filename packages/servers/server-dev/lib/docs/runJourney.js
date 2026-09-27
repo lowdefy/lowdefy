@@ -480,15 +480,38 @@ async function runScreenshot({ page, step, index, screenshots }) {
 // A path that does not exist reads as null: a journey is JSON, where null is
 // the only way to say "absent", and the failure report already shows a
 // missing value as null - so `equals: null` asserts the value is not there.
-async function expectState({ page, params }) {
+// A read while the page navigates fails and is retried.
+async function readStateValue({ page, path }) {
+  try {
+    return { value: get((await getState(page)) ?? {}, path) ?? null };
+  } catch (error) {
+    return { error };
+  }
+}
+
+// Polled like every other expectation: the value a click leads to often
+// lands once the request or endpoint it called has answered, which can be
+// after the page has settled on a busy machine.
+async function expectState({ page, params, timeout }) {
   const { path, equals } = params;
-  const actual = get((await getState(page)) ?? {}, path) ?? null;
-  if (!isDeepEqual(actual, equals)) {
+  const deadline = Date.now() + timeout;
+  let read = await readStateValue({ page, path });
+  while (
+    (!type.isUndefined(read.error) || !isDeepEqual(read.value, equals)) &&
+    Date.now() < deadline
+  ) {
+    await page.waitForTimeout(50);
+    read = await readStateValue({ page, path });
+  }
+  if (!type.isUndefined(read.error)) {
+    throw read.error;
+  }
+  if (!isDeepEqual(read.value, equals)) {
     throw new JourneyStepError(
       `Expected state "${path}" to equal ${JSON.stringify(equals)} but found ${JSON.stringify(
-        actual
+        read.value
       )}.`,
-      { expected: equals, actual }
+      { expected: equals, actual: read.value }
     );
   }
 }
@@ -605,7 +628,7 @@ async function runExpect({ page, step, timeout }) {
   const params = expectation[key];
   switch (key) {
     case 'state':
-      await expectState({ page, params });
+      await expectState({ page, params, timeout });
       return;
     case 'visible':
       await expectVisible({ page, params, timeout });
@@ -631,6 +654,11 @@ async function runExpect({ page, step, timeout }) {
 // hung request) simply moves on and lets the next expect report what it
 // finds. Reads the current pageId from the page because a click may have
 // navigated to another page.
+//
+// Never longer than SETTLE_TIMEOUT_MS, however long the steps may wait: an
+// event that ends in a Wait (a sign-in link's resend cooldown) keeps the page
+// unsettled for as long as it waits, and every step after it waits for what it
+// needs on its own.
 async function settlePage({ page, timeout }) {
   const pageId = await page.evaluate(() => window.lowdefy?.pageId);
   if (type.isNone(pageId)) {
@@ -640,6 +668,8 @@ async function settlePage({ page, timeout }) {
 }
 
 const INTERACTION_STEPS = ['click', 'fill', 'select', 'press', 'back'];
+
+const SETTLE_TIMEOUT_MS = 5000;
 
 function readsMail(step) {
   const key = getStepKey(step);
@@ -733,7 +763,10 @@ async function runSteps({ journey, steps }) {
     try {
       await runStep({ journey, step, index, screenshots });
       if (INTERACTION_STEPS.includes(getStepKey(step))) {
-        await settlePage({ page: journey.actors.current().page, timeout: journey.stepTimeout });
+        await settlePage({
+          page: journey.actors.current().page,
+          timeout: Math.min(journey.stepTimeout, SETTLE_TIMEOUT_MS),
+        });
       }
       results.push({ index, step, status: 'ok', durationMs: Date.now() - started });
     } catch (error) {

@@ -678,11 +678,13 @@ test('runJourney joins the text of every element a row target matches', async ()
 test('runJourney reports a missing expect.state value as actual null', async () => {
   const page = createPage({ window: createLowdefyWindow({ state: {} }) });
   openWith(page);
+  const spy = advanceClockOnEveryRead();
   const result = await runJourney({
     origin,
     pageId: 'form',
     steps: [{ expect: { state: { path: 'saved', equals: true } } }],
   });
+  spy.mockRestore();
   expect(result.failure.actual).toBeNull();
   expect(Object.keys(result.failure)).toContain('actual');
 });
@@ -690,6 +692,7 @@ test('runJourney reports a missing expect.state value as actual null', async () 
 test('runJourney matches a missing state path with equals null, as its failure report shows it', async () => {
   const page = createPage({ window: createLowdefyWindow({ state: { rows: [{ id: 1 }] } }) });
   openWith(page);
+  const spy = advanceClockOnEveryRead();
   const result = await runJourney({
     origin,
     pageId: 'form',
@@ -698,7 +701,35 @@ test('runJourney matches a missing state path with equals null, as its failure r
       { expect: { state: { path: 'rows.0', equals: null } } },
     ],
   });
+  spy.mockRestore();
   expect(result.failure).toMatchObject({ index: 1, expected: null, actual: { id: 1 } });
+});
+
+test('runJourney waits for expect.state until the value the click led to lands', async () => {
+  const window = createLowdefyWindow({ state: { invitations: [{ email: 'ada@example.test' }] } });
+  const page = createPage({ window });
+  page.waitForTimeout = jest.fn(async () => {
+    window.lowdefy.contexts['page:form'].state.invitations = [];
+  });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { state: { path: 'invitations', equals: [] } } }],
+  });
+
+  expect(result.failure).toBeUndefined();
+  expect(page.waitForTimeout).toHaveBeenCalledTimes(1);
+});
+
+test('runJourney settles a page for at most 5 seconds after an interaction, whatever the step timeout', async () => {
+  const page = createPage();
+  openWith(page);
+
+  await runJourney({ origin, pageId: 'form', stepTimeout: 30000, steps: [{ click: 'send' }] });
+
+  expect(page.waitForFunction.mock.calls.at(-1)[2]).toEqual({ timeout: 5000 });
 });
 
 test('runJourney fills a numeric value as a string', async () => {
@@ -711,6 +742,7 @@ test('runJourney fills a numeric value as a string', async () => {
 test('runJourney reports a failing expect.state with expected and actual and skips the rest', async () => {
   const page = createPage({ window: createLowdefyWindow({ state: { count: 1 } }) });
   openWith(page);
+  const spy = advanceClockOnEveryRead();
 
   const result = await runJourney({
     origin,
@@ -722,6 +754,7 @@ test('runJourney reports a failing expect.state with expected and actual and ski
     ],
   });
 
+  spy.mockRestore();
   expect(result.passed).toBe(false);
   expect(result.failure).toEqual({
     index: 0,

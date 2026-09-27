@@ -53,7 +53,7 @@ Files run in file-name order, and journeys run one at a time — each journey op
 
 ## Steps
 
-Blocks are addressed by their `blockId`. Every step has a 5 second timeout by default; a step that does not complete in time fails the journey.
+Blocks are addressed by their `blockId`. Every step has a 5 second timeout by default; a step that does not complete in time fails the journey. An `expect` step waits, up to that timeout, for what it checks to become true, so a value a click leads to can arrive a moment later.
 
 | Step                                      | Meaning                                                                                                                                                     |
 | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
