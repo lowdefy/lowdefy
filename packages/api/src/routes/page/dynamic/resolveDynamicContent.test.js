@@ -293,7 +293,26 @@ test('resolveDynamicContent falls back when the routine rejects', async () => {
   });
   await resolveDynamicContent(context, { pageConfig, urlQuery: {} });
   expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
-  expect(logger.error).toHaveBeenCalledTimes(1);
+  // The reject logged its own warning; the fallback does not log it again.
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.error).not.toHaveBeenCalled();
+});
+
+test('resolveDynamicContent logs a payload its endpoint refuses once, as a warning', async () => {
+  const dynamicBlock = await resolveWithRoutine(
+    { ':return': { blocks: [] } },
+    {
+      payloadSchema: {
+        type: 'object',
+        properties: { params: { type: 'object', properties: { area: { type: 'number' } } } },
+      },
+    }
+  );
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.warn.mock.calls[0][0].event).toBe('dynamic_block_error');
+  expect(logger.warn.mock.calls[0][1]).toContain('at /params/area: must be number.');
 });
 
 test('resolveDynamicContent falls back when resolved content uses an unbundled block type', async () => {
@@ -475,13 +494,13 @@ function dynamicBlockError() {
   return call?.[1];
 }
 
-function resolveWithRoutine(routine, { urlQuery = {}, extraEndpoints = {} } = {}) {
+function resolveWithRoutine(routine, { urlQuery = {}, extraEndpoints = {}, payloadSchema } = {}) {
   const dynamicBlock = makeDynamicBlock({
     fallbackBlocks: [{ id: 'fb', blockId: 'fb', type: 'Html', properties: { html: 'fallback' } }],
   });
   const pageConfig = makePageConfig(dynamicBlock);
   const context = createTestContext({
-    files: baseFiles({ resolve_section: { routine }, ...extraEndpoints }),
+    files: baseFiles({ resolve_section: { routine, payloadSchema }, ...extraEndpoints }),
   });
   return resolveDynamicContent(context, { pageConfig, urlQuery }).then(() => dynamicBlock);
 }

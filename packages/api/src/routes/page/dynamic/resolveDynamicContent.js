@@ -67,6 +67,9 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
   const policy = type.isNone(block.properties.policy)
     ? null
     : shared.artifacts.dynamicPolicies[block.properties.policy];
+  // A UserError the routine returns (a failed ValidateDynamic step, a :reject,
+  // a :throw) was logged as a warning where it was raised.
+  let loggedByRoutine = false;
   try {
     if (depth >= MAX_DYNAMIC_DEPTH) {
       throw new ConfigError(
@@ -86,6 +89,7 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
       literalData: { policyId: policy?.id ?? null },
     });
     if (['error', 'reject'].includes(status)) {
+      loggedByRoutine = error?.name === 'UserError';
       throw (
         error ??
         new ConfigError(
@@ -137,16 +141,23 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
         { configKey: block['~k'], cause: error }
       );
     }
-    logger.error(
-      {
+    if (!loggedByRoutine) {
+      const entry = {
         event: 'dynamic_block_error',
         blockId: block.blockId,
         endpointId,
         pageId: shared.pageId,
         err: error,
-      },
-      `Dynamic block "${block.blockId}" on page "${shared.pageId}" failed to resolve: ${error.message}`
-    );
+      };
+      const message = `Dynamic block "${block.blockId}" on page "${shared.pageId}" failed to resolve: ${error.message}`;
+      // A payload the endpoint's payloadSchema refuses is an expected outcome,
+      // not a fault.
+      if (error.name === 'UserError') {
+        logger.warn(entry, message);
+      } else {
+        logger.error(entry, message);
+      }
+    }
     const fallbackBlocks = block.slots?.fallback?.blocks ?? [];
     setResolvedContent(block, fallbackBlocks);
     await resolveBlocks(context, { blocks: fallbackBlocks, depth: depth + 1, shared });
