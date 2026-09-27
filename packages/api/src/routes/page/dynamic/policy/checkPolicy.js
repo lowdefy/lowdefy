@@ -15,12 +15,13 @@
 */
 
 import { serializer, type } from '@lowdefy/helpers';
+import { getPossibleOperators } from '@lowdefy/operators';
 
 import getPropertiesSchemaErrors from '../getPropertiesSchemaErrors.js';
 import checkEvents from './checkEvents.js';
 import checkValue from './checkValue.js';
+import collectUrlKinds from './collectUrlKinds.js';
 import findSerializerKeys from './findSerializerKeys.js';
-import getPossibleOperators from './getPossibleOperators.js';
 import isUnderState from './isUnderState.js';
 
 // Block keys walked by a dedicated rule rather than checkValue.
@@ -56,8 +57,13 @@ function bindsState({ block, blockMetas }) {
   return !type.isNone(meta.valueType) || meta.category === 'list';
 }
 
-function checkBlockShape({ block, path, errors }) {
-  if (!type.isObject(block) || getPossibleOperators(block).length > 0) {
+function hasPossibleOperators({ value, walk }) {
+  return getPossibleOperators({ value, operators: walk.clientOperators }).length > 0;
+}
+
+function checkBlockShape({ block, path, walk }) {
+  const { errors } = walk;
+  if (!type.isObject(block) || hasPossibleOperators({ value: block, walk })) {
     errors.push(structureError({ path, message: 'Blocks must be literal objects.' }));
     return false;
   }
@@ -80,7 +86,7 @@ function checkBlockShape({ block, path, errors }) {
 
 function checkBlock({ block, path, depth, walk }) {
   const { blockMetas, blockSchemas, errors, ids, policy } = walk;
-  if (!checkBlockShape({ block, path, errors })) {
+  if (!checkBlockShape({ block, path, walk })) {
     return;
   }
   walk.count += 1;
@@ -117,7 +123,7 @@ function checkBlock({ block, path, depth, walk }) {
     }
   }
   LITERAL_KEYS.forEach((key) => {
-    if (getPossibleOperators(block[key]).length > 0) {
+    if (hasPossibleOperators({ value: block[key], walk })) {
       errors.push({
         path: `${path}.${key}`,
         rule: 'policy.literal',
@@ -125,9 +131,15 @@ function checkBlock({ block, path, depth, walk }) {
       });
     }
   });
+  // The block schema marks which properties hold URLs.
+  const urlKinds = collectUrlKinds({
+    value: block.properties,
+    schema: blockSchemas[block.type]?.properties?.properties,
+    path: `${path}.properties`,
+  });
   Object.keys(block).forEach((key) => {
     if (key.startsWith('~') || STRUCTURAL_KEYS.has(key)) return;
-    checkValue({ value: block[key], key, path: `${path}.${key}`, policy, errors });
+    checkValue({ value: block[key], key, path: `${path}.${key}`, walk: { ...walk, urlKinds } });
   });
   if (!type.isUndefined(block.events)) {
     checkEvents({ events: block.events, path: `${path}.events`, walk });
@@ -156,7 +168,9 @@ function checkBlockList({ blocks, path, depth, walk }) {
 
 // Applies a dynamic blocks policy to content as submitted (before buildBlock renames
 // ids or moves areas to slots), so every error's path indexes that content.
-function checkPolicy({ blocks, policy, blockMetas, blockSchemas }) {
+// clientOperators is the app's set of client operator names: a key that names
+// none of them is data to the client.
+function checkPolicy({ blocks, policy, blockMetas, blockSchemas, clientOperators = null }) {
   // Checked as the page sends it to the client: an Error or Date in the content
   // is a "~e" or "~d" object there.
   const content = serializer.serialize(blocks, { skipMarkers: true });
@@ -174,6 +188,7 @@ function checkPolicy({ blocks, policy, blockMetas, blockSchemas }) {
     actionIds: new Set(),
     blockMetas,
     blockSchemas,
+    clientOperators,
     count: 0,
     errors: [],
     ids: new Set(),

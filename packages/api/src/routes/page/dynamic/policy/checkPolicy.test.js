@@ -115,7 +115,7 @@ test('checkPolicy checks link targets, origins and CSS urls', () => {
           { id: 'a', type: 'Link', params: 'admin' },
           { id: 'b', type: 'Link', params: { url: 'https://evil.test/?d=1' } },
         ],
-        onBlur: [{ id: 'c', type: 'Link', params: { pageId: { _state: 'next' } } }],
+        onBlur: [{ id: 'c', type: 'Link', params: { pageId: { _state: 'form.next' } } }],
       },
       blocks: [
         { id: 'a1', type: 'Anchor', properties: { href: 'javascript:alert(1)' } },
@@ -144,7 +144,7 @@ test('checkPolicy checks CallAPI endpoints and Request ids', () => {
           { id: 'a', type: 'CallAPI', params: { endpointId: 'delete_all' } },
           { id: 'b', type: 'Request', params: ['load', 'other'] },
         ],
-        onBlur: [{ id: 'c', type: 'CallAPI', params: { _state: 'call' } }],
+        onBlur: [{ id: 'c', type: 'CallAPI', params: { _state: 'form.call' } }],
       },
     },
   ]);
@@ -163,7 +163,7 @@ test('checkPolicy scopes input ids and SetState keys to the policy state', () =>
       events: {
         onChange: [
           { id: 's', type: 'SetState', params: { 'form.ok': 1, user: 2 } },
-          { id: 't', type: 'SetState', params: { _state: 'x' } },
+          { id: 't', type: 'SetState', params: { _state: 'form.x' } },
         ],
       },
     },
@@ -178,8 +178,8 @@ test('checkPolicy scopes input ids and SetState keys to the policy state', () =>
 
 test('checkPolicy requires literal properties, events and action lists', () => {
   const errors = check([
-    { id: 'a', type: 'Box', properties: { _state: 'props' } },
-    { id: 'b', type: 'Box', events: { onClick: { _state: 'actions' } } },
+    { id: 'a', type: 'Box', properties: { _state: 'form.props' } },
+    { id: 'b', type: 'Box', events: { onClick: { _state: 'form.actions' } } },
   ]);
   expect(rules(errors)).toEqual([
     'policy.literal blocks.0.properties',
@@ -458,4 +458,119 @@ test.each([
 
 test('checkPolicy allows a date', () => {
   expect(check([{ id: 'b', type: 'Box', properties: { record: new Date(0) } }])).toEqual([]);
+});
+
+test.each([
+  ['a key under the state', { _state: 'form.name' }, []],
+  ['a key object under the state', { _state: { key: 'form.name', default: '' } }, []],
+  ['a key outside the state', { _state: 'session_token' }, ['policy.state']],
+  ['the whole state', { _state: true }, ['policy.state']],
+  ['every key through all', { _state: { key: 'form.name', all: true } }, ['policy.state']],
+  [
+    'a computed key',
+    { _state: { key: { _if: { test: true, then: 'x', else: 'y' } } } },
+    ['policy.state'],
+  ],
+  ['an escaped read outside the state', { __state: 'session_token' }, ['policy.state']],
+])('checkPolicy scopes a _state read in a CallAPI payload: %s', (_, read, expected) => {
+  const errors = check([
+    {
+      id: 'box',
+      type: 'Box',
+      events: {
+        onClick: [
+          { id: 'send', type: 'CallAPI', params: { endpointId: 'submit', payload: { read } } },
+        ],
+      },
+    },
+  ]);
+  expect(errors.map(({ rule }) => rule)).toEqual(expected);
+});
+
+test('checkPolicy allows any _state read when the policy sets no state', () => {
+  const errors = check(
+    [{ id: 'p', type: 'Paragraph', properties: { content: { _state: 'anything' } } }],
+    { state: undefined }
+  );
+  expect(errors).toEqual([]);
+});
+
+// A block schema marks its URL-valued properties with urlKind, whatever they are called.
+const markedSchemas = {
+  Search: {
+    properties: {
+      properties: {
+        type: 'object',
+        properties: {
+          indexUrl: { type: ['string', 'array'], urlKind: 'src', items: { type: 'string' } },
+          result: { type: 'object', properties: { url: { type: 'string' } } },
+        },
+      },
+    },
+  },
+  Tile: {
+    properties: {
+      properties: {
+        type: 'object',
+        properties: {
+          links: {
+            type: 'array',
+            items: { type: 'object', properties: { target: { type: 'string', urlKind: 'href' } } },
+          },
+          logo: { oneOf: [{ type: 'string', urlKind: 'src' }, { type: 'object' }] },
+        },
+      },
+    },
+  },
+};
+
+function checkMarked(blocks) {
+  return checkPolicy({
+    blocks,
+    policy: { ...policy, blocks: ['Search', 'Tile'] },
+    blockMetas,
+    blockSchemas: markedSchemas,
+  });
+}
+
+test('checkPolicy checks URLs where the block schema marks them, whatever the key', () => {
+  const errors = checkMarked([
+    { id: 'a', type: 'Search', properties: { indexUrl: 'https://tracker.test/index.json' } },
+    { id: 'b', type: 'Search', properties: { indexUrl: ['/index.json', 'tracker.test/i.json'] } },
+    { id: 'c', type: 'Tile', properties: { links: [{ target: '/thanks' }, { target: '/admin' }] } },
+    { id: 'd', type: 'Tile', properties: { logo: 'https://example.com/logo.png' } },
+    { id: 'e', type: 'Tile', properties: { logo: '//tracker.test/p.gif' } },
+    { id: 'f', type: 'Search', properties: { indexUrl: { _state: 'form.index' } } },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.urls blocks.0.properties.indexUrl',
+    'policy.urls blocks.2.properties.links.1.target',
+    'policy.urls blocks.4.properties.logo',
+    'policy.urls blocks.5.properties.indexUrl',
+  ]);
+});
+
+test('checkPolicy leaves a property the schema does not mark as a URL to the text rules', () => {
+  expect(
+    checkMarked([{ id: 'a', type: 'Search', properties: { result: { url: 'link' } } }])
+  ).toEqual([]);
+});
+
+test('checkPolicy treats a key that names no client operator as data', () => {
+  const clientOperators = new Set(['_state', '_if', '_user']);
+  const errors = checkPolicy({
+    blocks: [
+      {
+        id: 'b',
+        type: 'Box',
+        properties: { hit: { _score: 0.5 }, source: { _source: { title: 'x' } } },
+        style: { record: { _user: 'email' } },
+      },
+    ],
+    policy,
+    blockMetas,
+    blockSchemas,
+    clientOperators,
+  });
+  expect(rules(errors)).toEqual(['policy.operators blocks.0.style.record']);
 });

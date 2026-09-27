@@ -59,11 +59,15 @@ function createTestContext({ files = {}, session } = {}) {
   });
 }
 
+// Every client operator name the app knows (installed, bundled or not).
+const clientOperators = ['_args', '_global', '_if', '_not', '_request', '_state', '_type', '_user'];
+
 function baseFiles(endpointConfigs = {}) {
   const files = {
     'types.json': types,
     'plugins/blockMetas.json': {},
     'plugins/blockSchemas.json': {},
+    'plugins/clientOperators.json': clientOperators,
   };
   Object.entries(endpointConfigs).forEach(([endpointId, config]) => {
     files[`api/${endpointId}.json`] = {
@@ -789,4 +793,209 @@ test('resolveDynamicContent rejects blocks built up in routine state', async () 
   ]);
   expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
   expect(dynamicBlockError()).toContain('Data returned by "_state"');
+});
+
+function dynamicBlockErrorMessage() {
+  return dynamicBlockError() ?? '';
+}
+
+const storedBlocks = [
+  {
+    id: 'stored',
+    type: 'Html',
+    properties: { html: 'Stored' },
+    events: { onClick: [{ id: 'go', type: 'Request', params: 'load' }] },
+  },
+];
+
+// Without a policy, data an operator returns fills values inside the blocks the
+// :return writes, but it is never a block or an action itself.
+test.each([
+  [
+    'returned by a nested endpoint',
+    [
+      {
+        id: 'endpoint:resolve_section:inner',
+        stepId: 'inner',
+        type: 'CallApi',
+        properties: { endpointId: 'inner_api' },
+      },
+      { ':return': { blocks: { _step: 'inner.blocks' } } },
+    ],
+    'Block at "blocks.0" is data returned by "_step"',
+  ],
+  [
+    'built up in routine state',
+    [{ ':set_state': { built: storedBlocks } }, { ':return': { blocks: { _state: 'built' } } }],
+    'Block at "blocks.0" is data returned by "_state"',
+  ],
+  [
+    'read with _get from data',
+    [
+      { ':set_state': { page: { blocks: storedBlocks } } },
+      { ':return': { blocks: { _get: { from: { _state: 'page' }, key: 'blocks' } } } },
+    ],
+    'Block at "blocks.0" is data returned by "_state"',
+  ],
+  [
+    'copied whole by a mapping function',
+    [
+      { ':set_state': { built: storedBlocks } },
+      {
+        ':return': {
+          blocks: {
+            '_array.map': { on: { _state: 'built' }, callback: { _function: { __args: 0 } } },
+          },
+        },
+      },
+    ],
+    'Block at "blocks.0" is data returned by "_state"',
+  ],
+  [
+    'merged into config by a mapping function',
+    [
+      { ':set_state': { built: storedBlocks } },
+      {
+        ':return': {
+          blocks: {
+            '_array.map': {
+              on: { _state: 'built' },
+              callback: {
+                _function: { '__object.assign': [{}, { __args: 0 }, { layout: { span: 12 } }] },
+              },
+            },
+          },
+        },
+      },
+    ],
+    'Block at "blocks.0" is data returned by "_state"',
+  ],
+  [
+    'nested in a written block',
+    [
+      { ':set_state': { built: storedBlocks } },
+      { ':return': { blocks: [{ id: 'wrapper', type: 'Box', blocks: { _state: 'built' } }] } },
+    ],
+    'Block at "blocks.0.blocks.0" is data returned by "_state"',
+  ],
+  [
+    'an action list read into a written block',
+    [
+      { ':set_state': { actions: [{ id: 'go', type: 'Request', params: 'load' }] } },
+      {
+        ':return': {
+          blocks: [{ id: 'button', type: 'Box', events: { onClick: { _state: 'actions' } } }],
+        },
+      },
+    ],
+    'Action at "blocks.0.events.onClick.0" is data returned by "_state"',
+  ],
+])(
+  'resolveDynamicContent falls back when a block or action is data %s',
+  async (_, routine, message) => {
+    const dynamicBlock = await resolveWithRoutine(routine, {
+      extraEndpoints: { inner_api: { routine: { ':return': { blocks: storedBlocks } } } },
+    });
+    expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+    expect(dynamicBlockErrorMessage()).toContain(message);
+  }
+);
+
+test('resolveDynamicContent maps data rows that carry a type into written blocks', async () => {
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { rows: [{ id: 'name', type: 'Html', label: 'Name' }] } },
+    {
+      ':return': {
+        blocks: {
+          '_array.map': {
+            on: { _state: 'rows' },
+            callback: {
+              _function: {
+                id: { __args: '0.id' },
+                type: { __args: '0.type' },
+                properties: { html: { __args: '0.label' } },
+              },
+            },
+          },
+        },
+      },
+    },
+  ]);
+  expect(dynamicBlockError()).toBe(undefined);
+  expect(dynamicBlock.slots.content.blocks[0].properties.html).toBe('Name');
+});
+
+test('resolveDynamicContent keeps written block config chosen from a literal map', async () => {
+  const dynamicBlock = await resolveWithRoutine({
+    ':return': {
+      blocks: {
+        _get: {
+          from: { admin: [{ id: 'admin_panel', type: 'Html', properties: { html: 'Admin' } }] },
+          key: 'admin',
+        },
+      },
+    },
+  });
+  expect(dynamicBlockError()).toBe(undefined);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('admin_panel');
+});
+
+// The client runs an object as an operator once its other keys evaluate to
+// undefined, so data merged next to such a key must not be left holding one.
+test.each([
+  ['a key the client evaluates to undefined', { note: { __if: { test: false, then: 1 } } }],
+  ['a function the server never sends', { note: { _function: { x: 1 } } }],
+])(
+  'resolveDynamicContent falls back when data merged with %s can run as an operator',
+  async (_, merged) => {
+    const dynamicBlock = await resolveWithRoutine(
+      {
+        ':return': {
+          blocks: [
+            {
+              id: 'field',
+              type: 'Html',
+              properties: {
+                html: { '_object.assign': [{ _payload: 'urlQuery.row' }, merged] },
+              },
+            },
+          ],
+        },
+      },
+      { urlQuery: { row: { _user: 'email', note: 'x' } } }
+    );
+    expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+    expect(dynamicBlockErrorMessage()).toContain(
+      'Data returned by "_payload" can run as the operator "_user" at "blocks.0.properties.html"'
+    );
+  }
+);
+
+test('resolveDynamicContent keeps data keys that name no client operator as data', async () => {
+  const hit = { _score: 0.5 };
+  const source = { _source: { title: 'Chair' } };
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { hit, source, typename: { __typename: 'Product' } } },
+    {
+      ':return': {
+        blocks: [
+          {
+            id: 'field',
+            type: 'Html',
+            properties: {
+              hit: { _state: 'hit' },
+              source: { _state: 'source' },
+              typename: { _state: 'typename' },
+            },
+          },
+        ],
+      },
+    },
+  ]);
+  expect(dynamicBlockError()).toBe(undefined);
+  expect(dynamicBlock.slots.content.blocks[0].properties).toEqual({
+    hit,
+    source,
+    typename: { __typename: 'Product' },
+  });
 });

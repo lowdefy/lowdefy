@@ -15,38 +15,49 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { getPossibleOperators } from '@lowdefy/operators';
 
 import findEmbeddedUrls from './findEmbeddedUrls.js';
-import getPossibleOperators from './getPossibleOperators.js';
 import isAllowedUrl from './isAllowedUrl.js';
+import isUnderState from './isUnderState.js';
 
-// Keys whose value the client uses as a URL. href and url navigate; the rest load.
-const NAVIGATION_KEYS = new Set(['href', 'url']);
-const URL_KEYS = new Set([
-  'action',
-  'cover',
-  'href',
-  'image',
-  'poster',
-  'src',
-  'srcMobile',
-  'srcSet',
-  'url',
-]);
+// How the client uses a URL value, for values no schema describes. A block
+// schema marks its URL-valued properties with urlKind (collectUrlKinds),
+// whatever they are called, and decides every property it describes; these
+// names cover everything else (action params, style, undescribed keys). url and
+// href navigate, and the engine's link resolver reads a colon-less url as https.
+const URL_KEY_KINDS = {
+  action: 'src',
+  cover: 'src',
+  href: 'href',
+  image: 'src',
+  poster: 'src',
+  src: 'src',
+  srcMobile: 'src',
+  srcSet: 'srcSet',
+  url: 'url',
+};
 const HTML_TAG = /<[a-zA-Z/!]/;
 
 function joinPath(path, key) {
   return path ? `${path}.${key}` : `${key}`;
 }
 
-function keyedUrls({ value, key }) {
-  if (!URL_KEYS.has(key)) return [];
+function getUrlKind({ key, path, walk }) {
+  if (walk.urlKinds?.has(path)) {
+    return walk.urlKinds.get(path);
+  }
+  return URL_KEY_KINDS[key] ?? null;
+}
+
+function listUrls({ value, urlKind }) {
   // srcSet lists "url descriptor" pairs.
-  if (key === 'srcSet') return value.split(',').map((entry) => entry.trim().split(/\s+/)[0]);
+  if (urlKind === 'srcSet') return value.split(',').map((entry) => entry.trim().split(/\s+/)[0]);
   return [value];
 }
 
-function checkString({ value, key, path, policy, errors }) {
+function checkString({ value, key, path, walk }) {
+  const { errors, policy } = walk;
   if (!policy.html && HTML_TAG.test(value)) {
     errors.push({
       path,
@@ -61,24 +72,27 @@ function checkString({ value, key, path, policy, errors }) {
       message: `Page "${value}" is not in dynamic blocks policy "${policy.id}" links.pages.`,
     });
   }
-  keyedUrls({ value, key }).forEach((url) => {
-    const allowed = isAllowedUrl({
-      value: url,
-      policy,
-      navigation: NAVIGATION_KEYS.has(key),
-      schemeless: key === 'url',
-    });
-    if (!allowed) {
-      errors.push({
-        path,
-        rule: 'policy.urls',
-        message: `"${key}" value "${url}" is not a page or origin dynamic blocks policy "${policy.id}" allows.`,
+  const urlKind = getUrlKind({ key, path, walk });
+  if (urlKind !== null) {
+    listUrls({ value, urlKind }).forEach((url) => {
+      const allowed = isAllowedUrl({
+        value: url,
+        policy,
+        navigation: urlKind === 'url' || urlKind === 'href',
+        schemeless: urlKind === 'url',
       });
-    }
-  });
-  // A URL key's value was judged whole above; other strings are searched.
-  const embeddedUrls = URL_KEYS.has(key) ? [] : findEmbeddedUrls(value);
-  embeddedUrls.forEach((url) => {
+      if (!allowed) {
+        errors.push({
+          path,
+          rule: 'policy.urls',
+          message: `"${key}" value "${url}" is not a page or origin dynamic blocks policy "${policy.id}" allows.`,
+        });
+      }
+    });
+    return;
+  }
+  // A URL value was judged whole above; other strings are searched.
+  findEmbeddedUrls(value).forEach((url) => {
     if (!isAllowedUrl({ value: url, policy, navigation: false, schemeless: false })) {
       errors.push({
         path,
@@ -89,24 +103,24 @@ function checkString({ value, key, path, policy, errors }) {
   });
 }
 
-// Walks any config value: every operator must be allowed, URL-valued and
-// pageId keys must be literal and allowed, and strings must obey the html rule.
-function checkValue({ value, key = null, path, policy, errors }) {
-  if (type.isString(value)) {
-    checkString({ value, key, path, policy, errors });
-    return;
+// A _state read may only name a literal key under the policy's state, so
+// content cannot read other page state and send it on (a CallAPI payload).
+function isAllowedStateRead({ params, state }) {
+  if (type.isString(params)) {
+    return isUnderState({ key: params, state });
   }
-  if (type.isArray(value)) {
-    value.forEach((item, index) =>
-      checkValue({ value: item, path: joinPath(path, index), policy, errors })
-    );
-    return;
-  }
-  if (!type.isObject(value)) {
-    return;
-  }
-  const operators = getPossibleOperators(value);
-  operators.forEach((operator) => {
+  return (
+    type.isObject(params) &&
+    params.all !== true &&
+    type.isString(params.key) &&
+    isUnderState({ key: params.key, state })
+  );
+}
+
+function checkOperators({ value, key, path, walk }) {
+  const { clientOperators, errors, policy } = walk;
+  const possible = getPossibleOperators({ value, operators: clientOperators });
+  possible.forEach(({ key: operatorKey, operator }) => {
     if (!policy.operators.includes(operator)) {
       errors.push({
         path,
@@ -114,25 +128,51 @@ function checkValue({ value, key = null, path, policy, errors }) {
         message: `Operator "${operator}" is not in dynamic blocks policy "${policy.id}" operators.`,
       });
     }
+    if (
+      operator === '_state' &&
+      !type.isNone(policy.state) &&
+      !isAllowedStateRead({ params: value[operatorKey], state: policy.state })
+    ) {
+      errors.push({
+        path,
+        rule: 'policy.state',
+        message: `_state must read a literal key under "${policy.state}", the state dynamic blocks policy "${policy.id}" allows.`,
+      });
+    }
   });
   // The client would compute this value at render time, where the policy
   // cannot see it.
-  if (operators.length > 0 && (URL_KEYS.has(key) || key === 'pageId')) {
+  const urlKind = getUrlKind({ key, path, walk });
+  if (possible.length > 0 && (urlKind !== null || key === 'pageId')) {
     errors.push({
       path,
       rule: key === 'pageId' ? 'policy.links' : 'policy.urls',
       message: `"${key}" must be a literal string under dynamic blocks policy "${policy.id}", not an operator.`,
     });
   }
+}
+
+// Walks any config value: every operator must be allowed, _state reads must stay
+// under the policy's state, URL-valued and pageId values must be literal and
+// allowed, and strings must obey the html rule. walk carries the policy, the
+// app's client operators, the error list and, inside block properties, the URL
+// kinds the block's schema marks (by path).
+function checkValue({ value, key = null, path, walk }) {
+  if (type.isString(value)) {
+    checkString({ value, key, path, walk });
+    return;
+  }
+  if (type.isArray(value)) {
+    value.forEach((item, index) => checkValue({ value: item, path: joinPath(path, index), walk }));
+    return;
+  }
+  if (!type.isObject(value)) {
+    return;
+  }
+  checkOperators({ value, key, path, walk });
   Object.keys(value).forEach((childKey) => {
     if (childKey.startsWith('~')) return;
-    checkValue({
-      value: value[childKey],
-      key: childKey,
-      path: joinPath(path, childKey),
-      policy,
-      errors,
-    });
+    checkValue({ value: value[childKey], key: childKey, path: joinPath(path, childKey), walk });
   });
 }
 

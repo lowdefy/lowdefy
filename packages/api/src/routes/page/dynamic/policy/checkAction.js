@@ -15,13 +15,16 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { getPossibleOperators } from '@lowdefy/operators';
 
 import checkValue from './checkValue.js';
-import getPossibleOperators from './getPossibleOperators.js';
 import isUnderState from './isUnderState.js';
 
-function isLiteralObject(value) {
-  return type.isObject(value) && getPossibleOperators(value).length === 0;
+function isLiteralObject({ value, walk }) {
+  return (
+    type.isObject(value) &&
+    getPossibleOperators({ value, operators: walk.clientOperators }).length === 0
+  );
 }
 
 function literalParamsError({ path, action, policy }) {
@@ -32,7 +35,8 @@ function literalParamsError({ path, action, policy }) {
   };
 }
 
-function checkLink({ params, path, policy, errors }) {
+function checkLink({ params, path, walk }) {
+  const { errors, policy } = walk;
   if (type.isString(params)) {
     // The string form is the pageId shorthand (actions-core Link).
     if (!policy.links.pages.includes(params)) {
@@ -44,17 +48,18 @@ function checkLink({ params, path, policy, errors }) {
     }
     return;
   }
-  if (!isLiteralObject(params)) {
+  if (!isLiteralObject({ value: params, walk })) {
     errors.push(literalParamsError({ path, action: 'Link', policy }));
     return;
   }
-  if (getPossibleOperators(params.home).length > 0) {
+  if (getPossibleOperators({ value: params.home, operators: walk.clientOperators }).length > 0) {
     errors.push(literalParamsError({ path: `${path}.home`, action: 'Link', policy }));
   }
 }
 
-function checkCallApi({ params, path, policy, errors }) {
-  if (!isLiteralObject(params) || !type.isString(params.endpointId)) {
+function checkCallApi({ params, path, walk }) {
+  const { errors, policy } = walk;
+  if (!isLiteralObject({ value: params, walk }) || !type.isString(params.endpointId)) {
     errors.push(literalParamsError({ path, action: 'CallAPI', policy }));
     return;
   }
@@ -69,16 +74,18 @@ function checkCallApi({ params, path, policy, errors }) {
 
 // Request params take the forms engine/src/Requests.js reads, except { all },
 // which would call every request on the page.
-function getRequestIds(params) {
+function getRequestIds({ params, walk }) {
   if (type.isString(params)) return [params];
   if (type.isArray(params)) return params;
-  if (isLiteralObject(params) && type.isString(params.requestId)) return [params.requestId];
-  if (isLiteralObject(params) && type.isArray(params.requestIds)) return params.requestIds;
+  const literal = isLiteralObject({ value: params, walk });
+  if (literal && type.isString(params.requestId)) return [params.requestId];
+  if (literal && type.isArray(params.requestIds)) return params.requestIds;
   return null;
 }
 
-function checkRequest({ params, path, policy, errors }) {
-  const requestIds = getRequestIds(params);
+function checkRequest({ params, path, walk }) {
+  const { errors, policy } = walk;
+  const requestIds = getRequestIds({ params, walk });
   if (requestIds === null || !requestIds.every((requestId) => type.isString(requestId))) {
     errors.push({
       path,
@@ -98,8 +105,9 @@ function checkRequest({ params, path, policy, errors }) {
   });
 }
 
-function checkSetState({ params, path, policy, errors }) {
-  if (!isLiteralObject(params)) {
+function checkSetState({ params, path, walk }) {
+  const { errors, policy } = walk;
+  if (!isLiteralObject({ value: params, walk })) {
     errors.push(literalParamsError({ path, action: 'SetState', policy }));
     return;
   }
@@ -127,7 +135,11 @@ const ACTION_RULES = {
 
 function checkAction({ action, path, walk }) {
   const { errors, policy } = walk;
-  if (!isLiteralObject(action) || !type.isString(action.id) || !type.isString(action.type)) {
+  if (
+    !isLiteralObject({ value: action, walk }) ||
+    !type.isString(action.id) ||
+    !type.isString(action.type)
+  ) {
     errors.push({
       path,
       rule: 'policy.structure',
@@ -150,8 +162,8 @@ function checkAction({ action, path, walk }) {
       message: `Action type "${action.type}" is not in dynamic blocks policy "${policy.id}" actions.`,
     });
   }
-  ACTION_RULES[action.type]?.({ params: action.params, path: `${path}.params`, policy, errors });
-  checkValue({ value: action, path, policy, errors });
+  ACTION_RULES[action.type]?.({ params: action.params, path: `${path}.params`, walk });
+  checkValue({ value: action, path, walk });
 }
 
 export default checkAction;

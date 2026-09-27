@@ -15,6 +15,7 @@
 */
 
 import { ConfigError } from '@lowdefy/errors';
+import { createLiteralData } from '@lowdefy/operators';
 
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import getEndpointConfig from './getEndpointConfig.js';
@@ -45,11 +46,9 @@ async function invokeEndpoint(context, { endpointId, payload, endpointDepth, lit
     // Set only for the endpoint a Dynamic block calls: its :return becomes page
     // config, so data read into it must not carry operators. Nested CallApi
     // endpoints get a fresh context without it; their result arrives through
-    // _step, which the outer :return checks. validatedStepIds collects the
-    // ValidateDynamic steps whose blocks the :return may read as config; the
-    // control spreads share the one object.
-    literalData:
-      literalData === null ? null : { policyId: literalData.policyId, validatedStepIds: new Set() },
+    // _step, which the outer :return checks. The control spreads share the one
+    // object, so a :return nested in a control sees the same state.
+    literalData: literalData === null ? null : createLiteralData(literalData),
   };
 
   return runRoutine(context, childRoutineContext, {
