@@ -16,7 +16,6 @@
 
 import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
-import icon from '../../schemas/icon.js';
 import {
   disabled,
   autoFocus,
@@ -25,6 +24,14 @@ import {
   allowClear,
   sizeSmallDefaultLarge,
 } from '../../schemas/inputProperties.js';
+import {
+  listHeight,
+  placement,
+  popupMatchSelectWidth,
+  prefix,
+  prefixIcon,
+  virtual,
+} from '../../schemas/selectProperties.js';
 
 export default {
   category: 'input',
@@ -48,6 +55,10 @@ export default {
     },
     onFocus: 'Trigger action when an selector gets focus.',
     onClear: 'Trigger action when selector gets cleared.',
+    onOpenChange: {
+      description: 'Trigger actions when the dropdown opens or closes.',
+      event: { open: 'Whether the dropdown is open.' },
+    },
     onSearch: {
       description: 'Called when searching items.',
       event: { value: 'The search input value.' },
@@ -82,6 +93,7 @@ export default {
       },
       disabled,
       label,
+      listHeight,
       options: {
         default: [],
         type: 'array',
@@ -95,15 +107,10 @@ export default {
         default: 'Type or select item',
         description: 'Placeholder text inside the block before user selects input.',
       },
-      prefix: {
-        type: 'string',
-        description: 'Prefix text for the block, priority over prefixIcon.',
-      },
-      prefixIcon: {
-        ...icon,
-        description:
-          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to prefix the input.',
-      },
+      placement,
+      popupMatchSelectWidth,
+      prefix,
+      prefixIcon,
       size: sizeSmallDefaultLarge,
       title: {
         type: 'string',
@@ -111,6 +118,7 @@ export default {
           'Title to describe the input component, if no title is specified the block id is displayed.',
       },
       variant,
+      virtual,
       theme: {
         type: 'object',
         description:

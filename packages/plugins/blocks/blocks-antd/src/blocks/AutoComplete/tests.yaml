@@ -138,6 +138,48 @@
       - '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
       - '<div style="color: green;">Option green</div>'
       - Option 3
+- id: 'properties.prefix: Fruit'
+  type: AutoComplete
+  properties:
+    prefix: 'Fruit:'
+    options:
+      - Apple
+      - Banana
+- id: 'properties.size: default'
+  type: AutoComplete
+  properties:
+    size: default
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.placement: topLeft'
+  type: AutoComplete
+  properties:
+    placement: topLeft
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.listHeight: 128'
+  type: AutoComplete
+  properties:
+    listHeight: 128
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.popupMatchSelectWidth: false'
+  type: AutoComplete
+  properties:
+    popupMatchSelectWidth: false
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.virtual: false'
+  type: AutoComplete
+  properties:
+    virtual: false
+    options:
+      - Option 1
+      - Option 2
 - id: 'properties.prefixIcon: search'
   type: AutoComplete
   properties:

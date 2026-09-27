@@ -411,3 +411,94 @@ blocks:
       options:
         - Apple
         - Banana
+
+  - id: ac_open_change
+    type: AutoComplete
+    properties:
+      options:
+        - Apple
+        - Banana
+    events:
+      onOpenChange:
+        - id: set_open_change
+          type: SetState
+          params:
+            ac_open_state:
+              _event: open
+
+  - id: ac_open_change_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'Open: '
+          - _json.stringify:
+              - _state: ac_open_state
+
+  - id: ac_size_default
+    type: AutoComplete
+    properties:
+      size: default
+      options:
+        - Apple
+        - Banana
+
+  - id: ac_prefix_priority
+    type: AutoComplete
+    properties:
+      prefix: Fruit
+      prefixIcon: search
+      options:
+        - Apple
+        - Banana
+
+  - id: ac_placement_top
+    type: AutoComplete
+    properties:
+      placement: topLeft
+      options:
+        - Apple
+        - Banana
+
+  - id: ac_list_height
+    type: AutoComplete
+    properties:
+      listHeight: 100
+      options:
+        - One
+        - Two
+        - Three
+        - Four
+        - Five
+        - Six
+        - Seven
+        - Eight
+
+  - id: ac_popup_width
+    type: AutoComplete
+    style:
+      .element:
+        width: 120px
+    properties:
+      popupMatchSelectWidth: 320
+      options:
+        - Apple
+        - Banana
+
+  - id: ac_not_virtual
+    type: AutoComplete
+    properties:
+      virtual: false
+      options:
+        - One
+        - Two
+        - Three
+        - Four
+        - Five
+        - Six
+        - Seven
+        - Eight
+        - Nine
+        - Ten
+        - Eleven
+        - Twelve

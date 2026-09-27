@@ -17,7 +17,7 @@
 import icon from './icon.js';
 
 // Properties shared by the dropdown selectors built on antd Select and TreeSelect (Selector,
-// MultipleSelector, TreeSelector, TreeMultipleSelector), so the four stay consistent.
+// MultipleSelector, TreeSelector, TreeMultipleSelector, AutoComplete), so they stay consistent.
 
 export const listHeight = {
   type: 'number',
