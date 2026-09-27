@@ -260,17 +260,19 @@ test.describe('ConfirmModal Block', () => {
     const okBtn = modal.locator('.ant-modal-confirm-btns .ant-btn-primary');
     await expect(okBtn).toHaveClass(/ant-btn-icon-end/);
     await expect(okBtn.locator('svg')).toBeAttached();
-    const okIconBox = await okBtn.locator('.ant-btn-icon').boundingBox();
-    const okTextBox = await okBtn.locator(':scope > span:not(.ant-btn-icon)').first().boundingBox();
-    expect(okIconBox.x).toBeGreaterThan(okTextBox.x);
+    // The modal zooms in, so both boxes are measured in one frame and polled until it settles.
+    const iconOffset = (button) =>
+      button.evaluate((element) => {
+        const icon = element.querySelector(':scope > .ant-btn-icon').getBoundingClientRect();
+        const text = element
+          .querySelector(':scope > span:not(.ant-btn-icon)')
+          .getBoundingClientRect();
+        return icon.x - text.x;
+      });
+    await expect.poll(() => iconOffset(okBtn)).toBeGreaterThan(0);
     const cancelBtn = modal.locator('.ant-modal-confirm-btns .ant-btn-default');
     await expect(cancelBtn).not.toHaveClass(/ant-btn-icon-end/);
-    const cancelIconBox = await cancelBtn.locator('.ant-btn-icon').boundingBox();
-    const cancelTextBox = await cancelBtn
-      .locator(':scope > span:not(.ant-btn-icon)')
-      .first()
-      .boundingBox();
-    expect(cancelIconBox.x).toBeLessThan(cancelTextBox.x);
+    await expect.poll(() => iconOffset(cancelBtn)).toBeLessThan(0);
   });
 
   test('mask blur adds the antd blur class to the mask', async ({ page }) => {
