@@ -716,7 +716,7 @@
     - id: tw_element_margin
       type: Badge
       class:
-        element: mr-8
+        .element: mr-8
       layout:
         flex: 0 0 auto
       properties:
@@ -730,7 +730,7 @@
     - id: tw_indicator_animate
       type: Badge
       class:
-        indicator: animate-bounce
+        .indicator: animate-bounce
       layout:
         flex: 0 0 auto
       properties:
@@ -744,7 +744,7 @@
     - id: tw_badge_in_box
       type: Badge
       class:
-        element: p-1
+        .element: p-1
       layout:
         flex: 0 0 auto
       properties:
@@ -920,8 +920,7 @@
             flex: 0 0 auto
           properties:
             content: JD
-            color: '#fff'
-            backgroundColor: '#1677ff'
+            color: '#1677ff'
 
 - title: Order Status Dashboard
   blocks:

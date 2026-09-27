@@ -136,16 +136,16 @@ test.describe('Statistic Block', () => {
 
   test('renders with custom value style', async ({ page }) => {
     const block = getStatistic(page, 'statistic_value_style');
-    // Value style is applied - just verify content is visible
     const value = block.locator('.ant-statistic-content-value');
-    await expect(value).toBeVisible();
     await expect(value).toContainText('11.28');
+    await expect(value).toHaveCSS('color', 'rgb(63, 134, 0)');
   });
 
   test('renders negative value with custom style', async ({ page }) => {
     const block = getStatistic(page, 'statistic_negative_style');
     const value = block.locator('.ant-statistic-content-value');
     await expect(value).toContainText('-9.26');
+    await expect(value).toHaveCSS('color', 'rgb(207, 19, 34)');
   });
 
   // ============================================
