@@ -44,7 +44,8 @@ New properties, events and CSS keys:
 Fixes:
 
 - `DropdownButton` and `DropdownMenu` applied the `menu` CSS key through props antd ignores,
-  so menu classes and styles never reached the popup. `DropdownButton` also dropped its
+  so menu classes and styles never reached the popup. The `profileMenu` and
+  `localeSelectorMenu` CSS keys of `Header` and the page layouts had the same problem. `DropdownButton` also dropped its
   `item` CSS key, and outside split mode, like `DropdownMenu`, its element id, class and style.
 - `Tabs` passed its `tabBar`, `tabPane` and `inkBar` CSS keys under names antd 6 does not use,
   so they had no effect.

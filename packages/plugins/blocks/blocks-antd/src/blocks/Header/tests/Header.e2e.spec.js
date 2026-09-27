@@ -52,4 +52,12 @@ test.describe('Header Block', () => {
     await expect(header).toBeVisible();
     await expect(header).toContainText('Styled header');
   });
+
+  test('applies the profileMenu class to the profile dropdown', async ({ page }) => {
+    const block = getBlock(page, 'header_profile');
+    await block.locator('.ant-avatar').click();
+    const dropdown = page.locator('.ant-dropdown.header-profile-menu');
+    await expect(dropdown).toBeVisible();
+    await expect(dropdown).toContainText('Account settings');
+  });
 });
