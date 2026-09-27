@@ -139,3 +139,40 @@ test('validateDecideBranches leaves questions built by an operator alone', () =>
   });
   expect(context.errors).toEqual([]);
 });
+
+test.each([
+  {
+    name: 'options',
+    question: { choice: 'Which team', options: { _payload: 'teams' } },
+    branch: { _eq: [{ _step: 'triage.team.choice' }, 'billing'] },
+  },
+  {
+    name: 'levels',
+    question: { score: 'How urgent', levels: { _payload: 'levels' } },
+    branch: { _eq: [{ _step: 'triage.team.level' }, 'high'] },
+  },
+])(
+  'validateDecideBranches leaves a branch alone when the $name are built by an operator',
+  ({ question, branch }) => {
+    const context = errorContext();
+    buildApi({
+      components: {
+        api: [
+          {
+            id: 'dynamic',
+            type: 'Api',
+            routine: [
+              {
+                ...triage(),
+                properties: { ...triage().properties, questions: { team: question } },
+              },
+              { ':if': branch, ':then': [{ ':return': {} }] },
+            ],
+          },
+        ],
+      },
+      context,
+    });
+    expect(context.errors).toEqual([]);
+  }
+);

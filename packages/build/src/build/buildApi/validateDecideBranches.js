@@ -46,6 +46,18 @@ function collectDecideSteps(routine) {
   return steps;
 }
 
+// The options or levels a branch may compare a field with, when the config
+// writes them out. Options or levels built by an operator are only known at
+// runtime, so there is nothing to check a branch against.
+function literalAnswerValues(question) {
+  if (isOperator(question.options) || isOperator(question.levels)) return null;
+  const allowed = decideAnswerValues(question);
+  if (!allowed || !type.isArray(allowed.values) || !allowed.values.every(type.isString)) {
+    return null;
+  }
+  return allowed;
+}
+
 function stepPath(operand) {
   if (!type.isObject(operand) || operand._step === undefined) return null;
   const value = type.isString(operand._step)
@@ -115,7 +127,7 @@ function validateDecideBranches({ endpoint, context }) {
           if (!sideRef || !type.isString(other)) continue;
           const target = resolve(sideRef);
           if (!target) continue;
-          const allowed = decideAnswerValues(target.question);
+          const allowed = literalAnswerValues(target.question);
           if (!allowed || allowed.field !== target.field) continue;
           // Build markers (~k, ~r) ride on the options object; they are not options.
           const values = allowed.values.filter((value) => !String(value).startsWith('~'));
