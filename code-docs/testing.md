@@ -79,6 +79,12 @@ consecutive free ports from `--port` (default 3200): app, internal, mail sink, M
 dev server log goes to `apps/auth-reference-tenant/.lowdefy/journeys-dev-server.log`. It
 needs no Docker MongoDB or Mailpit, only the shared MongoDB binaries and a Chromium.
 
+An app outside the monorepo runs its own auth journeys against a checkout the same way:
+`node scripts/dev.mjs --config-directory <app> --port <port> --no-open` for the server, and
+`node packages/cli/dist/index.js test --journeys-directory <dir> --url <url>` for the run.
+Keeping such journeys in their own directory (not `tests/journeys/`) keeps them out of the
+app's everyday `lowdefy test`, which may run against a shared database.
+
 Like the MongoDB suite, CI does not run it; run it when changing auth, tenancy, the
 journey runner or the dev server. It uses `_server/dev`, so run one at a time per
 worktree. To iterate on one journey, keep a dev server running with the same environment

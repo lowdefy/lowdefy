@@ -65,7 +65,7 @@ Both `server` and `server-dev` have `antd` and `@ant-design/cssinjs` as direct d
 
 **Symptoms of duplicate instances:** Dark mode toggle only partially works — some antd components (like Menu) respond while the rest of the page stays in light mode. No errors in console.
 
-`resolve.dedupe: ['react', 'react-dom']` in `vite.config.js` handles the same problem for React itself — linked plugin packages must share one React instance.
+`resolve.dedupe` in `vite.config.js` handles the same problem for React itself — linked plugin packages must share one React instance — and for every `@lowdefy/*` package in the server's `package.json` dependencies. A linked workspace plugin pinned to another Lowdefy release otherwise brings its own `@lowdefy/helpers` and `@lowdefy/block-utils`: the dependency optimizer pre-bundles one copy per package for every importer (whichever its scan meets first), so the server's own client could load a plugin's older copy and fail on a missing export, and the client's HTML enhancements, registered in `@lowdefy/block-utils`, would not reach blocks that import another copy.
 
 ## Scripts
 
@@ -888,8 +888,17 @@ export default defineConfig(({ mode }) => ({
     'process.env.NODE_ENV': JSON.stringify(mode === 'production' ? 'production' : 'development'),
   },
   resolve: {
-    // Linked plugin packages (pnpm link: / workspace) must share one React.
-    dedupe: ['react', 'react-dom'],
+    // Linked plugin packages share one React, antd, dayjs and the server's
+    // @lowdefy packages (lowdefyDependencies, read from package.json).
+    dedupe: [
+      'react',
+      'react-dom',
+      'antd',
+      '@ant-design/x',
+      '@ant-design/cssinjs',
+      'dayjs',
+      ...lowdefyDependencies,
+    ],
   },
 }));
 ```
