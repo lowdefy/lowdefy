@@ -188,8 +188,7 @@ class Block {
 
     this.removeItem = (index) => {
       this.context._internal.State.removeItem(this.blockId, index);
-      const lastSlot = this.subSlots[this.subSlots.length - 1];
-      lastSlot.recRemoveBlocksFromMap();
+      this.subSlots[index].recRemoveBlocksFromMap();
       const largerSlots = this.subSlots.slice(index + 1);
       largerSlots.forEach((slotsClass, i) => {
         slotsClass.recUpdateArrayIndices(
@@ -329,7 +328,9 @@ class Block {
               this.subSlots[i].resetBlocks(initWithState);
             }
           });
-          this.subSlots.splice(blockValue.length);
+          this.subSlots
+            .splice(blockValue.length)
+            .forEach((slotsClass) => slotsClass.recRemoveBlocksFromMap());
         }
       } else {
         this.value = blockValue;
@@ -625,6 +626,7 @@ class Block {
   // _regex default to), so its recorded reads name the wrong row until it evaluates again.
   updateArrayIndices = () => {
     this.forceEvaluate = true;
+    this.deleteFromMap();
     this.blockId = applyArrayIndices(this.arrayIndices, this.blockIdPattern);
     this.ownStateReadKey = `state:${this.blockId}`;
     this.context._internal.RootSlots.map[this.blockId] = this;
@@ -650,8 +652,13 @@ class Block {
     return null;
   };
 
+  // The key can already belong to another block: a duplicate id elsewhere on the page, or the
+  // block a row swap moved onto it.
   deleteFromMap = () => {
-    delete this.context._internal.RootSlots.map[this.blockId];
+    const { map } = this.context._internal.RootSlots;
+    if (map[this.blockId] === this) {
+      delete map[this.blockId];
+    }
   };
 
   resetValidation = (match) => {
