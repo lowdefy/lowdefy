@@ -18,34 +18,8 @@ import { type } from '@lowdefy/helpers';
 
 import getPossibleOperators from './getPossibleOperators.js';
 
-function findInValue({ value, path, operators }) {
-  if (type.isArray(value)) {
-    for (let index = 0; index < value.length; index += 1) {
-      const found = findInValue({
-        value: value[index],
-        path: path ? `${path}.${index}` : `${index}`,
-        operators,
-      });
-      if (found) return found;
-    }
-    return null;
-  }
-  if (!type.isObject(value)) {
-    return null;
-  }
-  const [possible] = getPossibleOperators({ value, operators });
-  if (possible) {
-    return { operator: possible.operator, path };
-  }
-  for (const key of Object.keys(value)) {
-    const found = findInValue({
-      value: value[key],
-      path: path ? `${path}.${key}` : key,
-      operators,
-    });
-    if (found) return found;
-  }
-  return null;
+function joinPath(path, key) {
+  return path ? `${path}.${key}` : `${key}`;
 }
 
 // Returns { operator, path } for the first object in a data value the client
@@ -54,8 +28,26 @@ function findInValue({ value, path, operators }) {
 // page sends (an Error or Date is a "~e" or "~d" object there), and the scan
 // walks into every such wrapper, whose contents the client evaluates before it
 // revives the wrapper. operators is the app's set of client operator names.
+// Walks depth first, in key order, with an explicit stack.
 function findOperatorInData({ value, operators = null }) {
-  return findInValue({ value, path: '', operators });
+  const pending = [{ node: value, path: '' }];
+  while (pending.length > 0) {
+    const { node, path } = pending.pop();
+    let children = [];
+    if (type.isArray(node)) {
+      children = node.map((item, index) => ({ node: item, path: joinPath(path, index) }));
+    } else if (type.isObject(node)) {
+      const [possible] = getPossibleOperators({ value: node, operators });
+      if (possible) {
+        return { operator: possible.operator, path };
+      }
+      children = Object.keys(node).map((key) => ({ node: node[key], path: joinPath(path, key) }));
+    }
+    for (let index = children.length - 1; index >= 0; index -= 1) {
+      pending.push(children[index]);
+    }
+  }
+  return null;
 }
 
 export default findOperatorInData;

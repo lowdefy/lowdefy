@@ -19,21 +19,20 @@ import { type } from '@lowdefy/helpers';
 // Marks each object in a copy whose counterpart, at the same position in the
 // value it was copied from, is marked as data.
 function transferDataMarks({ literalData, from, to }) {
-  if (type.isArray(from) && type.isArray(to)) {
-    for (let index = 0; index < to.length; index += 1) {
-      transferDataMarks({ literalData, from: from[index], to: to[index] });
+  const pending = [{ from, to }];
+  while (pending.length > 0) {
+    const pair = pending.pop();
+    if (type.isArray(pair.from) && type.isArray(pair.to)) {
+      pair.to.forEach((item, index) => pending.push({ from: pair.from[index], to: item }));
+    } else if (type.isObject(pair.from) && type.isObject(pair.to)) {
+      const origin = literalData.dataObjects.get(pair.from);
+      if (!type.isUndefined(origin)) {
+        literalData.dataObjects.set(pair.to, origin);
+      }
+      Object.keys(pair.to).forEach((key) =>
+        pending.push({ from: pair.from[key], to: pair.to[key] })
+      );
     }
-    return;
-  }
-  if (!type.isObject(from) || !type.isObject(to)) {
-    return;
-  }
-  const origin = literalData.dataObjects.get(from);
-  if (!type.isUndefined(origin)) {
-    literalData.dataObjects.set(to, origin);
-  }
-  for (const key of Object.keys(to)) {
-    transferDataMarks({ literalData, from: from[key], to: to[key] });
   }
 }
 

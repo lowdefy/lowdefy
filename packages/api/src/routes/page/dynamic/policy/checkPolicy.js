@@ -15,7 +15,7 @@
 */
 
 import { serializer, type } from '@lowdefy/helpers';
-import { getPossibleOperators } from '@lowdefy/operators';
+import { getPossibleOperators, isNestedDeeperThan, MAX_DATA_DEPTH } from '@lowdefy/operators';
 
 import getPropertiesSchemaErrors from '../getPropertiesSchemaErrors.js';
 import checkEvents from './checkEvents.js';
@@ -171,6 +171,17 @@ function checkBlockList({ blocks, path, depth, walk }) {
 // clientOperators is the app's set of client operator names: a key that names
 // none of them is data to the client.
 function checkPolicy({ blocks, policy, blockMetas, blockSchemas, clientOperators = null }) {
+  // The rules walk content by recursion, so content nested deeper than any
+  // Dynamic data may be is refused first, before it can exhaust the stack.
+  if (isNestedDeeperThan({ value: blocks, limit: MAX_DATA_DEPTH })) {
+    return [
+      {
+        path: 'blocks',
+        rule: 'limits.depth',
+        message: `Content is nested more than ${MAX_DATA_DEPTH} levels deep. Dynamic blocks policy "${policy.id}" content may nest at most ${MAX_DATA_DEPTH} levels.`,
+      },
+    ];
+  }
   // Checked as the page sends it to the client: an Error or Date in the content
   // is a "~e" or "~d" object there.
   const content = serializer.serialize(blocks, { skipMarkers: true });

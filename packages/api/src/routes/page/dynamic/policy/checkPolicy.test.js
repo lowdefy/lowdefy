@@ -636,3 +636,13 @@ test('checkPolicy treats a key that names no client operator as data', () => {
   });
   expect(rules(errors)).toEqual(['policy.operators blocks.0.style.record']);
 });
+
+test('checkPolicy refuses content nested deeper than the Dynamic data limit before walking it', () => {
+  let deep = { value: 'x' };
+  for (let level = 0; level < 100000; level += 1) {
+    deep = { child: deep };
+  }
+  expect(rules(check([{ id: 'b', type: 'Box', properties: { deep } }]))).toEqual([
+    'limits.depth blocks',
+  ]);
+});

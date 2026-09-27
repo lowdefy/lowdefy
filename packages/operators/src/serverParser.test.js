@@ -22,7 +22,10 @@ import { serializer, type } from '@lowdefy/helpers';
 
 import createLiteralData from './createLiteralData.js';
 import findDataOrigin from './findDataOrigin.js';
+import createContentHasher from './createContentHasher.js';
 import getFromObject from './getFromObject.js';
+import isNestedDeeperThan from './isNestedDeeperThan.js';
+import MAX_DATA_DEPTH from './maxDataDepth.js';
 import ServerParser from './serverParser.js';
 
 const args = [{ args: true }];
@@ -608,32 +611,33 @@ test('parse with literalData leaves a _function body built from config unmarked'
 
 function nestTyped(depth) {
   let nested = { type: 'leaf' };
-  for (let level = 0; level < depth; level += 1) {
+  for (let level = 1; level < depth; level += 1) {
     nested = { type: 'Box', child: nested };
   }
   return nested;
 }
 
-function parseDeepData(depth) {
-  const result = parseWithData(nestTyped(depth), {
-    a: { _data: true },
-    b: { _get: { from: { value: { _data: true } }, key: 'value' } },
-    fn: { _function: { _data: true } },
-  });
-  return { ...result, copy: result.output.fn() };
+// Data at the deepest nesting allowed, many times over.
+function deepRows() {
+  return Array.from({ length: 25 }, () => nestTyped(MAX_DATA_DEPTH - 1));
 }
 
 // Marking is linear in the data's size. Timing is not a stable measure on a
 // shared machine, so the test bounds the text serialized while parsing: a few
-// copies of the data, where serializing every nested object separately made it
-// grow with the square of the depth.
+// copies of the data, where serializing every nested object separately grew
+// with the data's size times its depth.
 test('parse with literalData marks deeply nested data in linear work', () => {
-  const once = JSON.stringify(nestTyped(2500)).length;
+  const once = JSON.stringify(deepRows()).length;
   const stringify = jest.spyOn(JSON, 'stringify');
   let result;
   let serialized = 0;
   try {
-    result = parseDeepData(2500);
+    result = parseWithData(deepRows(), {
+      a: { _data: true },
+      b: { _get: { from: { value: { _data: true } }, key: 'value' } },
+      fn: { _function: { _data: true } },
+    });
+    result.copy = result.output.fn();
     stringify.mock.results.forEach(({ value }) => {
       serialized += type.isString(value) ? value.length : 0;
     });
@@ -642,10 +646,49 @@ test('parse with literalData marks deeply nested data in linear work', () => {
   }
   const { copy, errors, literalData, output } = result;
   expect(errors.map((error) => error.message)).toEqual([]);
-  expect(findDataOrigin({ literalData, value: output.a.child.child })).toBe('_data');
-  expect(findDataOrigin({ literalData, value: output.b.child.child })).toBe('_data');
-  expect(findDataOrigin({ literalData, value: copy.child.child })).toBe('_data');
+  expect(findDataOrigin({ literalData, value: output.a[0].child.child })).toBe('_data');
+  expect(findDataOrigin({ literalData, value: output.b[3].child.child })).toBe('_data');
+  expect(findDataOrigin({ literalData, value: copy[24].child.child })).toBe('_data');
   expect(serialized).toBeLessThan(20 * once);
+});
+
+test('parse with literalData refuses data nested deeper than the Dynamic data limit', () => {
+  const { errors, output } = parseWithData(nestTyped(MAX_DATA_DEPTH + 1), { a: { _data: true } });
+  expect(output.a).toBe(null);
+  expect(errors[0]).toBeInstanceOf(ConfigError);
+  expect(errors[0].message).toBe(
+    `Data returned by "_data" is nested more than ${MAX_DATA_DEPTH} levels deep. Data read into Dynamic block content may nest at most ${MAX_DATA_DEPTH} levels.`
+  );
+});
+
+test('parse with literalData refuses data too deep for an operator to read', () => {
+  const operators = {
+    _data: () => {
+      throw new RangeError('Maximum call stack size exceeded');
+    },
+    _round: () => {
+      throw new RangeError('toFixed() digits argument must be between 0 and 100');
+    },
+  };
+  const parser = new ServerParser({ operators });
+  const res = parser.parse({
+    input: { a: { _data: true }, b: { _round: true } },
+    location,
+    literalData: createLiteralData({}),
+  });
+  expect(res.output).toEqual({ a: null, b: null });
+  expect(res.errors[0]).toBeInstanceOf(ConfigError);
+  expect(res.errors[0].message).toBe(
+    `Data read by "_data" is nested too deeply to check. Data read into Dynamic block content may nest at most ${MAX_DATA_DEPTH} levels.`
+  );
+  expect(res.errors[1]).toBeInstanceOf(OperatorError);
+});
+
+test('the depth check and the content digest stop on a cyclic value', () => {
+  const cyclic = { type: 'Box' };
+  cyclic.self = cyclic;
+  expect(isNestedDeeperThan({ value: cyclic, limit: MAX_DATA_DEPTH })).toBe(true);
+  expect(createContentHasher()(cyclic)).toEqual(expect.any(String));
 });
 
 test('parse with literalData treats an object _object.assign merges data into as data', () => {

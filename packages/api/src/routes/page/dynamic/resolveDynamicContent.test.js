@@ -1081,3 +1081,32 @@ test('resolveDynamicContent falls back when data used as a _function body names 
     'Data returned by "_payload" contains the operator "_payload" at "value".'
   );
 });
+
+function nestPayload(depth) {
+  let nested = { value: 'x' };
+  for (let level = 1; level < depth; level += 1) {
+    nested = { child: nested };
+  }
+  return nested;
+}
+
+// Data an outside caller controls (the query string here) can nest arbitrarily
+// deep. It fails closed with a clear error whether the depth limit or an
+// operator's own recursion catches it first.
+test.each([
+  ['past the Dynamic data depth limit', 201, 'is nested more than 200 levels deep'],
+  ['far deeper than the stack', 100000, 'is nested too deeply to check'],
+])('resolveDynamicContent falls back when payload data is nested %s', async (_, depth, message) => {
+  const dynamicBlock = await resolveWithRoutine(
+    {
+      ':return': {
+        blocks: [
+          { id: 'field', type: 'Html', properties: { html: { _payload: 'urlQuery.deep' } } },
+        ],
+      },
+    },
+    { urlQuery: { deep: nestPayload(depth) } }
+  );
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockErrorMessage()).toContain(message);
+});

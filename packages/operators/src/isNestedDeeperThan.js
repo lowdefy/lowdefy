@@ -16,22 +16,22 @@
 
 import { type } from '@lowdefy/helpers';
 
-import isTrackedObject from './isTrackedObject.js';
-
-// Marks every tracked object in an operator's result as data returned by it.
-function markDataObjects({ literalData, value, operator }) {
-  const pending = [value];
+// True when objects and arrays in value nest deeper than limit levels. Walks
+// with an explicit stack and stops at the limit, so the walk itself never runs
+// out of stack, however deep or cyclic the value is.
+function isNestedDeeperThan({ value, limit }) {
+  const pending = [{ node: value, depth: 0 }];
   while (pending.length > 0) {
-    const node = pending.pop();
-    if (type.isArray(node)) {
-      node.forEach((item) => pending.push(item));
-    } else if (type.isObject(node)) {
-      if (isTrackedObject({ value: node, operators: literalData.clientOperators })) {
-        literalData.dataObjects.set(node, operator);
+    const { node, depth } = pending.pop();
+    if (type.isArray(node) || type.isObject(node)) {
+      if (depth >= limit) {
+        return true;
       }
-      Object.values(node).forEach((child) => pending.push(child));
+      const children = type.isArray(node) ? node : Object.values(node);
+      children.forEach((child) => pending.push({ node: child, depth: depth + 1 }));
     }
   }
+  return false;
 }
 
-export default markDataObjects;
+export default isNestedDeeperThan;

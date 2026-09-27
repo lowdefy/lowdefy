@@ -17,17 +17,20 @@
 import { type } from '@lowdefy/helpers';
 
 // The schemas that can describe a value: the schema itself and its oneOf,
-// anyOf and allOf branches, recursively.
+// anyOf and allOf branches, however nested.
 function expandSchema(schema) {
-  if (!type.isObject(schema)) {
-    return [];
+  const schemas = [];
+  const pending = [schema];
+  while (pending.length > 0) {
+    const candidate = pending.pop();
+    if (type.isObject(candidate)) {
+      schemas.push(candidate);
+      [...(candidate.oneOf ?? []), ...(candidate.anyOf ?? []), ...(candidate.allOf ?? [])].forEach(
+        (branch) => pending.push(branch)
+      );
+    }
   }
-  return [
-    schema,
-    ...[...(schema.oneOf ?? []), ...(schema.anyOf ?? []), ...(schema.allOf ?? [])].flatMap(
-      expandSchema
-    ),
-  ];
+  return schemas;
 }
 
 function childSchemas({ schemas, key }) {
@@ -63,39 +66,38 @@ function findUrlKind(schemas) {
 // for a property whose name looks like a URL key but whose value is not a URL.
 // A value no schema marks either way is not recorded, so the policy falls back
 // to judging it by its key name.
-function collectUrlKinds({ value, schema, path, kinds = new Map() }) {
-  const schemas = expandSchema(schema);
-  const urlKind = findUrlKind(schemas);
-  if (urlKind === null) {
-    // Another schema branch may already have marked it as a URL.
-    if (!kinds.has(path)) {
-      kinds.set(path, null);
-    }
-    return kinds;
-  }
-  if (type.isString(urlKind)) {
-    if (type.isArray(value)) {
-      value.forEach((_, index) => kinds.set(`${path}.${index}`, urlKind));
-    } else {
-      kinds.set(path, urlKind);
-    }
-    return kinds;
-  }
-  if (type.isArray(value)) {
-    const itemSchemas = schemas.map((candidate) => candidate.items).filter(type.isObject);
-    value.forEach((item, index) =>
-      itemSchemas.forEach((itemSchema) =>
-        collectUrlKinds({ value: item, schema: itemSchema, path: `${path}.${index}`, kinds })
-      )
-    );
-    return kinds;
-  }
-  if (type.isObject(value)) {
-    Object.keys(value).forEach((key) => {
-      childSchemas({ schemas, key }).forEach((childSchema) =>
-        collectUrlKinds({ value: value[key], schema: childSchema, path: `${path}.${key}`, kinds })
+function collectUrlKinds({ value, schema, path }) {
+  const kinds = new Map();
+  const pending = [{ value, schema, path }];
+  while (pending.length > 0) {
+    const item = pending.pop();
+    const schemas = expandSchema(item.schema);
+    const urlKind = findUrlKind(schemas);
+    if (urlKind === null) {
+      // Another schema branch may already have marked it as a URL.
+      if (!kinds.has(item.path)) {
+        kinds.set(item.path, null);
+      }
+    } else if (type.isString(urlKind)) {
+      if (type.isArray(item.value)) {
+        item.value.forEach((_, index) => kinds.set(`${item.path}.${index}`, urlKind));
+      } else {
+        kinds.set(item.path, urlKind);
+      }
+    } else if (type.isArray(item.value)) {
+      const itemSchemas = schemas.map((candidate) => candidate.items).filter(type.isObject);
+      item.value.forEach((child, index) =>
+        itemSchemas.forEach((itemSchema) =>
+          pending.push({ value: child, schema: itemSchema, path: `${item.path}.${index}` })
+        )
       );
-    });
+    } else if (type.isObject(item.value)) {
+      Object.keys(item.value).forEach((key) => {
+        childSchemas({ schemas, key }).forEach((childSchema) =>
+          pending.push({ value: item.value[key], schema: childSchema, path: `${item.path}.${key}` })
+        );
+      });
+    }
   }
   return kinds;
 }

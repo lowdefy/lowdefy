@@ -23,9 +23,11 @@ import findOperatorInData from './findOperatorInData.js';
 import indexDataShapes from './indexDataShapes.js';
 import isCheckedContentRead from './isCheckedContentRead.js';
 import isLiteralPassThrough from './isLiteralPassThrough.js';
+import isNestedDeeperThan from './isNestedDeeperThan.js';
 import markCopiedData from './markCopiedData.js';
 import markDataObjects from './markDataObjects.js';
 import markDataShape from './markDataShape.js';
+import MAX_DATA_DEPTH from './maxDataDepth.js';
 
 // _object.assign is the one pass-through method that moves data keys into
 // another object, so an object it merges data into is data too.
@@ -40,6 +42,10 @@ function findMergedDataOrigin({ literalData, op, methodName, params }) {
     }
   }
   return null;
+}
+
+function isStackOverflow(error) {
+  return error instanceof RangeError && /call stack/i.test(error.message);
 }
 
 class ServerParser {
@@ -187,6 +193,11 @@ class ServerParser {
         // The result is replaced by its serialized form, the one scanned, so the
         // page sends exactly what was checked: a class instance's toJSON runs once,
         // here, and no later copy can read other keys or call it again.
+        if (isNestedDeeperThan({ value: res, limit: MAX_DATA_DEPTH })) {
+          throw new ConfigError(
+            `Data returned by "${operatorName}" is nested more than ${MAX_DATA_DEPTH} levels deep. Data read into Dynamic block content may nest at most ${MAX_DATA_DEPTH} levels.`
+          );
+        }
         const sent = serializer.serialize(res, { skipMarkers: true });
         const found = findOperatorInData({
           value: sent,
@@ -204,6 +215,20 @@ class ServerParser {
         markDataObjects({ literalData, value: sent, operator: operatorName });
         return sent;
       } catch (e) {
+        // An operator that walks data by recursion (a copy, a serialization) runs
+        // out of stack on data nested deeply enough; under literalData that data
+        // came from outside, so it fails like any other refused data.
+        if (literalData !== null && isStackOverflow(e)) {
+          errors.push(
+            new ConfigError(
+              `Data read by "${
+                methodName ? `${op}.${methodName}` : op
+              }" is nested too deeply to check. Data read into Dynamic block content may nest at most ${MAX_DATA_DEPTH} levels.`,
+              { configKey }
+            )
+          );
+          return null;
+        }
         if (e instanceof ConfigError) {
           if (!e.configKey) {
             e.configKey = configKey;

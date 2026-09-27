@@ -22,6 +22,8 @@ import getFromObject from './getFromObject.js';
 import getKeyOperator from './getKeyOperator.js';
 import getObjectReadKeys from './getObjectReadKeys.js';
 import getPossibleOperators from './getPossibleOperators.js';
+import isNestedDeeperThan from './isNestedDeeperThan.js';
+import MAX_DATA_DEPTH from './maxDataDepth.js';
 import ServerParser from './serverParser.js';
 import runClass from './runClass.js';
 import runInstance from './runInstance.js';
@@ -38,6 +40,8 @@ export {
   getKeyOperator,
   getObjectReadKeys,
   getPossibleOperators,
+  isNestedDeeperThan,
+  MAX_DATA_DEPTH,
   ServerParser,
   runClass,
   runInstance,

@@ -26,136 +26,122 @@ function joinPath(path, key) {
 // The per-result scan refuses operators in data as it is returned; data merged
 // with config afterwards (_object.assign, a key set to undefined) can still end
 // up with an operator key alone, so the finished content is checked here.
-function findDataOperator({ value, path, literalData }) {
-  if (type.isArray(value)) {
-    for (let index = 0; index < value.length; index += 1) {
-      const found = findDataOperator({
-        value: value[index],
-        path: joinPath(path, index),
-        literalData,
+function findDataOperator({ blocks, literalData }) {
+  const pending = [{ node: blocks, path: 'blocks' }];
+  while (pending.length > 0) {
+    const { node, path } = pending.pop();
+    if (type.isObject(node)) {
+      const [possible] = getPossibleOperators({
+        value: node,
+        operators: literalData.clientOperators,
       });
-      if (found) return found;
-    }
-    return null;
-  }
-  if (!type.isObject(value)) {
-    return null;
-  }
-  const [possible] = getPossibleOperators({ value, operators: literalData.clientOperators });
-  if (possible) {
-    const origin = findDataOrigin({ literalData, value });
-    if (origin !== null) {
-      return { operator: possible.operator, origin, path };
-    }
-  }
-  for (const key of Object.keys(value)) {
-    const found = findDataOperator({ value: value[key], path: joinPath(path, key), literalData });
-    if (found) return found;
-  }
-  return null;
-}
-
-function childBlockLists({ block, path }) {
-  const lists = [];
-  if (type.isArray(block.blocks)) {
-    lists.push({ blocks: block.blocks, path: joinPath(path, 'blocks') });
-  }
-  ['areas', 'slots'].forEach((containerKey) => {
-    if (!type.isObject(block[containerKey])) return;
-    Object.keys(block[containerKey]).forEach((name) => {
-      const list = block[containerKey][name]?.blocks;
-      if (type.isArray(list)) {
-        lists.push({ blocks: list, path: `${path}.${containerKey}.${name}.blocks` });
+      const origin = possible ? findDataOrigin({ literalData, value: node }) : null;
+      if (origin !== null) {
+        return { operator: possible.operator, origin, path };
       }
-    });
-  });
-  return lists;
-}
-
-// Control branches (:if, :switch) hold action lists of their own; a :return
-// item holds no action.
-function findDataInActionItem({ item, path, literalData }) {
-  if (!type.isObject(item) || ':return' in item) {
-    return null;
-  }
-  const branches = [];
-  if (':if' in item) {
-    branches.push([item[':then'], `${path}.:then`], [item[':else'], `${path}.:else`]);
-  } else if (':switch' in item) {
-    (type.isArray(item[':switch']) ? item[':switch'] : []).forEach((caseObject, caseIndex) => {
-      branches.push([caseObject?.[':then'], `${path}.:switch.${caseIndex}.:then`]);
-    });
-    branches.push([item[':default'], `${path}.:default`]);
-  } else {
-    const origin = findDataOrigin({ literalData, value: item });
-    return origin === null ? null : { what: 'Action', path, origin };
-  }
-  for (const [actions, branchPath] of branches) {
-    // eslint-disable-next-line no-use-before-define
-    const found = findDataAction({ actions, path: branchPath, literalData });
-    if (found) return found;
-  }
-  return null;
-}
-
-function findDataAction({ actions, path, literalData }) {
-  if (!type.isArray(actions)) {
-    return null;
-  }
-  for (let index = 0; index < actions.length; index += 1) {
-    const found = findDataInActionItem({
-      item: actions[index],
-      path: joinPath(path, index),
-      literalData,
-    });
-    if (found) return found;
-  }
-  return null;
-}
-
-function findDataEvent({ events, path, literalData }) {
-  if (!type.isObject(events)) {
-    return null;
-  }
-  for (const eventName of Object.keys(events)) {
-    const event = events[eventName];
-    const eventPath = joinPath(path, eventName);
-    const lists = type.isArray(event)
-      ? [[event, eventPath]]
-      : [
-          [event?.try, `${eventPath}.try`],
-          [event?.catch, `${eventPath}.catch`],
-        ];
-    for (const [actions, listPath] of lists) {
-      const found = findDataAction({ actions, path: listPath, literalData });
-      if (found) return found;
+    }
+    if (type.isObject(node) || type.isArray(node)) {
+      const keys = Object.keys(node);
+      for (let index = keys.length - 1; index >= 0; index -= 1) {
+        pending.push({ node: node[keys[index]], path: joinPath(path, keys[index]) });
+      }
     }
   }
   return null;
 }
 
-function findDataBlock({ block, path, literalData }) {
-  if (!type.isObject(block)) {
-    return null;
+// The items a block, an event map, an action list or an action holds, in the
+// order they are checked: a block's events, skeleton (rendered through
+// LoadingBlock, like content) and child block lists; control branches (:if,
+// :switch) of an action list. A :return item holds no action.
+function getStructureChildren({ kind, node, path }) {
+  if (kind === 'block') {
+    const children = [
+      { kind: 'events', node: node.events, path: `${path}.events` },
+      { kind: 'block', node: node.skeleton, path: `${path}.skeleton` },
+    ];
+    if (type.isArray(node.blocks)) {
+      children.push({ kind: 'blocks', node: node.blocks, path: `${path}.blocks` });
+    }
+    ['areas', 'slots'].forEach((containerKey) => {
+      if (!type.isObject(node[containerKey])) return;
+      Object.keys(node[containerKey]).forEach((name) => {
+        children.push({
+          kind: 'blocks',
+          node: node[containerKey][name]?.blocks,
+          path: `${path}.${containerKey}.${name}.blocks`,
+        });
+      });
+    });
+    return children;
   }
-  const origin = findDataOrigin({ literalData, value: block });
-  if (origin !== null) {
-    return { what: 'Block', path, origin };
+  if (kind === 'events') {
+    return Object.keys(node).flatMap((eventName) => {
+      const event = node[eventName];
+      const eventPath = joinPath(path, eventName);
+      if (type.isArray(event)) {
+        return [{ kind: 'actions', node: event, path: eventPath }];
+      }
+      return [
+        { kind: 'actions', node: event?.try, path: `${eventPath}.try` },
+        { kind: 'actions', node: event?.catch, path: `${eventPath}.catch` },
+      ];
+    });
   }
-  const found = findDataEvent({ events: block.events, path: `${path}.events`, literalData });
-  if (found) {
-    return found;
+  if (kind === 'blocks' || kind === 'actions') {
+    const itemKind = kind === 'blocks' ? 'block' : 'action';
+    return node.map((item, index) => ({ kind: itemKind, node: item, path: joinPath(path, index) }));
   }
-  // Skeletons render through LoadingBlock, like content.
-  const children = [{ block: block.skeleton, path: `${path}.skeleton` }];
-  childBlockLists({ block, path }).forEach((list) => {
-    list.blocks.forEach((child, index) =>
-      children.push({ block: child, path: joinPath(list.path, index) })
-    );
-  });
-  for (const child of children) {
-    const childFound = findDataBlock({ block: child.block, path: child.path, literalData });
-    if (childFound) return childFound;
+  if (':if' in node) {
+    return [
+      { kind: 'actions', node: node[':then'], path: `${path}.:then` },
+      { kind: 'actions', node: node[':else'], path: `${path}.:else` },
+    ];
+  }
+  if (':switch' in node) {
+    const cases = type.isArray(node[':switch']) ? node[':switch'] : [];
+    return [
+      ...cases.map((caseObject, caseIndex) => ({
+        kind: 'actions',
+        node: caseObject?.[':then'],
+        path: `${path}.:switch.${caseIndex}.:then`,
+      })),
+      { kind: 'actions', node: node[':default'], path: `${path}.:default` },
+    ];
+  }
+  return [];
+}
+
+function isStructureNode({ kind, node }) {
+  if (kind === 'blocks' || kind === 'actions') {
+    return type.isArray(node);
+  }
+  return type.isObject(node);
+}
+
+// The first block or action in the content that is data, walked with an
+// explicit stack.
+function findDataStructure({ blocks, literalData }) {
+  const pending = [{ kind: 'blocks', node: blocks, path: 'blocks' }];
+  while (pending.length > 0) {
+    const item = pending.pop();
+    if (isStructureNode(item)) {
+      const isAction =
+        item.kind === 'action' &&
+        !(':if' in item.node) &&
+        !(':switch' in item.node) &&
+        !(':return' in item.node);
+      if (item.kind === 'block' || isAction) {
+        const origin = findDataOrigin({ literalData, value: item.node });
+        if (origin !== null) {
+          return { what: item.kind === 'block' ? 'Block' : 'Action', path: item.path, origin };
+        }
+      }
+      const children = getStructureChildren(item);
+      for (let index = children.length - 1; index >= 0; index -= 1) {
+        pending.push(children[index]);
+      }
+    }
   }
   return null;
 }
@@ -172,11 +158,7 @@ function checkLiteralContent({ blocks, configKey, literalData }) {
     return;
   }
   if (type.isNone(literalData.policyId)) {
-    const structure = blocks.reduce(
-      (found, block, index) =>
-        found ?? findDataBlock({ block, path: joinPath('blocks', index), literalData }),
-      null
-    );
+    const structure = findDataStructure({ blocks, literalData });
     if (structure) {
       throw new ConfigError(
         `${structure.what} at "${structure.path}" is data returned by "${structure.origin}". A Dynamic block without a dynamic blocks policy renders only blocks and actions written in its endpoint's :return config. Map data into blocks inside :return, or check stored blocks with a ValidateDynamic step under a policy.`,
@@ -184,7 +166,7 @@ function checkLiteralContent({ blocks, configKey, literalData }) {
       );
     }
   }
-  const operator = findDataOperator({ value: blocks, path: 'blocks', literalData });
+  const operator = findDataOperator({ blocks, literalData });
   if (operator) {
     throw new ConfigError(
       `Data returned by "${operator.origin}" can run as the operator "${operator.operator}" at "${operator.path}" once it is merged with other config. Operators in endpoint data do not run in Dynamic block content.`,

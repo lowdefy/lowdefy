@@ -24,22 +24,19 @@ import createContentHasher from './createContentHasher.js';
 function indexDataShapes({ literalData, value }) {
   const digest = createContentHasher();
   const shapes = new Map();
-  // Children first, so each digest reads its children's from the hasher.
-  function visit(node) {
+  const pending = [value];
+  while (pending.length > 0) {
+    const node = pending.pop();
     if (type.isArray(node)) {
-      for (const item of node) visit(item);
-      return;
-    }
-    if (!type.isObject(node)) {
-      return;
-    }
-    for (const key of Object.keys(node)) visit(node[key]);
-    const origin = literalData.dataObjects.get(node);
-    if (!type.isUndefined(origin)) {
-      shapes.set(digest(node), origin);
+      node.forEach((item) => pending.push(item));
+    } else if (type.isObject(node)) {
+      const origin = literalData.dataObjects.get(node);
+      if (!type.isUndefined(origin)) {
+        shapes.set(digest(node), origin);
+      }
+      Object.values(node).forEach((child) => pending.push(child));
     }
   }
-  visit(value);
   return shapes.size === 0 ? null : shapes;
 }
 
