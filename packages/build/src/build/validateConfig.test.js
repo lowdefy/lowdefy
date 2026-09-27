@@ -89,3 +89,19 @@ test('validateConfig throws when config.dependencyTracking is not a boolean', ()
     'App "config.dependencyTracking" should be a boolean.'
   );
 });
+
+test('validateConfig accepts trustedProxies addresses and CIDR ranges', () => {
+  const components = { config: { trustedProxies: ['10.0.0.0/8', '127.0.0.1', 'fd00::/8'] } };
+  validateConfig({ components, context });
+  expect(components.config.trustedProxies).toEqual(['10.0.0.0/8', '127.0.0.1', 'fd00::/8']);
+});
+
+test.each([
+  ['not an array', '10.0.0.0/8', 'should be an array of IP address or CIDR range strings'],
+  ['a hostname entry', ['proxy.internal'], 'entries should be IP addresses'],
+  ['an out-of-range prefix', ['10.0.0.0/40'], 'entries should be IP addresses'],
+  ['a non-string entry', [10], 'entries should be IP addresses'],
+])('validateConfig throws when trustedProxies is %s', (_, trustedProxies, message) => {
+  const components = { config: { trustedProxies } };
+  expect(() => validateConfig({ components, context })).toThrow(message);
+});
