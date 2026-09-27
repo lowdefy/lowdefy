@@ -331,6 +331,44 @@ blocks:
           then: Open changed!
           else: ''
 
+  # Undocumented antd props that Popover passed through before it listed its props.
+  - id: popover_legacy_toggle
+    type: Button
+    properties:
+      title: Toggle legacy popover
+    events:
+      onClick:
+        - id: toggle_legacy
+          type: SetState
+          params:
+            popover_legacy_open:
+              _not:
+                _state: popover_legacy_open
+
+  - id: popover_legacy
+    type: Popover
+    properties:
+      title: Legacy popover
+      placement: bottom
+      open:
+        _state: popover_legacy_open
+      overlayClassName: popover-legacy-overlay
+      overlayStyle:
+        width: 300px
+    slots:
+      content:
+        blocks:
+          - id: popover_legacy_trigger
+            type: Span
+            properties:
+              content: Legacy trigger
+      popover:
+        blocks:
+          - id: popover_legacy_content
+            type: Span
+            properties:
+              content: Legacy content
+
   # ============================================
   # DEFAULT OPEN (at end to avoid blocking other elements)
   # ============================================
