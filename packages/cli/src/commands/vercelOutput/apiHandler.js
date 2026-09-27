@@ -37,6 +37,10 @@ const apiHandler = `/*
   (@hono/node-server's request listener) hangs on every request that has a body (POST). Upgrade
   requests (/api/websocket) are handled by @hono/node-server's WebSocket support, which listens for
   the server's upgrade event and runs the Hono app's upgradeWebSocket route.
+
+  Both build the request URL the app sees (and its context.origin) from Vercel's forwarding
+  headers: the function is reached over plain HTTP behind Vercel's edge, so the socket says http
+  where the client used https.
 */
 
 import http from 'node:http';
@@ -57,6 +61,12 @@ const app = createApp({ serveStaticAssets: false });
 
 export const config = { runtime: 'nodejs' };
 
+function requestUrl(req) {
+  const host = req.headers['x-forwarded-host'] ?? req.headers.host;
+  const protocol = req.headers['x-forwarded-proto'] ?? 'https';
+  return protocol + '://' + host + req.url;
+}
+
 async function handleRequest(req, res) {
   const method = req.method || 'GET';
 
@@ -68,9 +78,7 @@ async function handleRequest(req, res) {
     if (chunks.length > 0) body = Buffer.concat(chunks);
   }
 
-  const host = req.headers['x-forwarded-host'] ?? req.headers.host;
-  const protocol = req.headers['x-forwarded-proto'] ?? 'https';
-  const request = new Request(protocol + '://' + host + req.url, {
+  const request = new Request(requestUrl(req), {
     method,
     headers: req.headers,
     body,
@@ -84,6 +92,15 @@ async function handleRequest(req, res) {
   response.headers.forEach((value, key) => res.appendHeader(key, value));
   if (response.body) {
     const reader = response.body.getReader();
+    // A GET stream (the MCP notification stream, an SSE feed) exists only for its client, and
+    // would otherwise hold the function until maxDuration, so it stops when the client goes. The
+    // body of any other response is the tail of work that must finish (an agent run), so it is
+    // read to the end.
+    if (method === 'GET') {
+      res.once('close', () => {
+        if (!res.writableFinished) reader.cancel().catch(() => {});
+      });
+    }
     for (;;) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -112,11 +129,17 @@ function requestListener(req, res) {
 // WebSocket functions.
 const wss = new WebSocketServer({ noServer: true, maxPayload: 256 * 1024 });
 
+// @hono/node-server builds an upgrade request's URL from the socket (http on Vercel) and the Host
+// header, so it is rebuilt from the forwarding headers, as for every other request.
+function fetchUpgrade(request, env) {
+  return app.fetch(new Request(requestUrl(env.incoming), request), env);
+}
+
 // createAdaptorServer attaches the WebSocket upgrade handling to the server it creates. The
 // createServer option swaps its lazily-reading request listener for requestListener, so only
-// upgrades go through @hono/node-server.
+// upgrades go through @hono/node-server, and through fetchUpgrade.
 const server = createAdaptorServer({
-  fetch: app.fetch,
+  fetch: fetchUpgrade,
   websocket: { server: wss },
   createServer: (serverOptions) => http.createServer(serverOptions, requestListener),
 });

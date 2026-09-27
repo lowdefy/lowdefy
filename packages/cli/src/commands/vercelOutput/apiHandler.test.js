@@ -16,6 +16,7 @@
 
 import { spawn } from 'child_process';
 import fs from 'fs';
+import http from 'http';
 import net from 'net';
 import os from 'os';
 import path from 'path';
@@ -29,6 +30,7 @@ import apiHandler from './apiHandler.js';
 // which installs the same versions as the production server.
 const require = createRequire(import.meta.url);
 const serverDevDirectory = path.dirname(require.resolve('@lowdefy/server-dev/package.json'));
+const WebSocketClient = createRequire(path.join(serverDevDirectory, 'package.json'))('ws');
 
 const app = `
 import { Hono } from 'hono';
@@ -50,7 +52,64 @@ export default function createApp() {
       },
     }))
   );
+  app.get('/state', (c) => c.json(state));
+  app.get('/stream', () =>
+    new Response(
+      tickingStream({
+        chunks: Infinity,
+        onDone: () => {},
+        onCancel: () => {
+          state.streamCancelled = true;
+        },
+      })
+    )
+  );
+  app.post('/run', () =>
+    new Response(
+      tickingStream({
+        chunks: 10,
+        onDone: () => {
+          state.runFinished = true;
+        },
+        onCancel: () => {
+          state.runCancelled = true;
+        },
+      })
+    )
+  );
+  app.get(
+    '/api/origin',
+    upgradeWebSocket((c) => ({
+      onOpen(event, ws) {
+        ws.send(new URL(c.req.url).origin);
+      },
+    }))
+  );
   return app;
+}
+
+const state = { streamCancelled: false, runFinished: false, runCancelled: false };
+
+function tickingStream({ chunks, onDone, onCancel }) {
+  let timer;
+  let sent = 0;
+  return new ReadableStream({
+    start(controller) {
+      timer = setInterval(() => {
+        controller.enqueue(new TextEncoder().encode('tick\\n'));
+        sent += 1;
+        if (sent === chunks) {
+          clearInterval(timer);
+          onDone();
+          controller.close();
+        }
+      }, 30);
+    },
+    cancel() {
+      clearInterval(timer);
+      onCancel();
+    },
+  });
 }
 `;
 
@@ -150,4 +209,60 @@ test('the function entry keeps serving after a client drops a request mid-body',
     body: JSON.stringify({ after: 'drop' }),
   });
   expect(await response.json()).toEqual({ after: 'drop' });
+});
+
+async function readState() {
+  return (await fetch(`${baseUrl}/state`)).json();
+}
+
+async function dropAfterFirstChunk({ method, path: requestPath }) {
+  await new Promise((resolve, reject) => {
+    const request = http.request(`${baseUrl}${requestPath}`, { method }, (response) => {
+      response.once('data', () => {
+        request.destroy();
+        resolve();
+      });
+    });
+    request.on('error', () => {});
+    request.on('close', resolve);
+    request.end();
+    setTimeout(() => reject(new Error('No first chunk.')), 2000);
+  });
+}
+
+async function waitFor(predicate, timeout = 2000) {
+  const started = Date.now();
+  while (!(await predicate())) {
+    if (Date.now() - started > timeout) {
+      return false;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+  return true;
+}
+
+test('the function entry stops reading a GET stream when its client disconnects', async () => {
+  await dropAfterFirstChunk({ method: 'GET', path: '/stream' });
+
+  expect(await waitFor(async () => (await readState()).streamCancelled)).toBe(true);
+});
+
+test('the function entry reads a POST response to the end after its client disconnects', async () => {
+  await dropAfterFirstChunk({ method: 'POST', path: '/run' });
+
+  expect(await waitFor(async () => (await readState()).runFinished)).toBe(true);
+  expect((await readState()).runCancelled).toBe(false);
+});
+
+test('the function entry gives an upgrade request the forwarded protocol and host', async () => {
+  const socket = new WebSocketClient(`${baseUrl.replace('http', 'ws')}/api/origin`, {
+    headers: { 'x-forwarded-host': 'app.example.com', 'x-forwarded-proto': 'https' },
+  });
+  const origin = await new Promise((resolve, reject) => {
+    socket.once('message', (data) => resolve(String(data)));
+    socket.once('error', reject);
+  });
+  socket.close();
+
+  expect(origin).toBe('https://app.example.com');
 });
