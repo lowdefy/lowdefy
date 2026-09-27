@@ -144,6 +144,7 @@ A journey with `user: none` injects no user: it starts signed out, and the app's
 - name: a new user signs up, verifies by email and signs in
   pageId: signup
   user: none
+  timeout: 30000
   steps:
     - fill: { blockId: email, value: ada@example.test }
     - fill: { blockId: password, value: correct-horse-battery }
@@ -159,6 +160,8 @@ A journey with `user: none` injects no user: it starts signed out, and the app's
 ```
 
 A journey that opens a protected page signed out lands on the sign-in page, the way a visitor would; assert where it landed with `expect: { url: ... }`.
+
+Give journeys that sign people in a `timeout` of about 30000. They load many pages, reload the app after each sign-in and wait for real emails, so on a busy machine or a CI runner the 5 second default fails them at random steps.
 
 ### Emails
 

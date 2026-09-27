@@ -81,7 +81,9 @@ async function findPorts({ start }) {
 
 async function startDatabase({ port }) {
   const replSet = await MongoMemoryReplSet.create({
-    instanceOpts: [{ port, storageEngine: 'wiredTiger' }],
+    // A loaded machine or CI runner can take well over the 10 second default
+    // to start mongod.
+    instanceOpts: [{ port, storageEngine: 'wiredTiger', launchTimeout: 60000 }],
     replSet: { count: 1 },
   });
   const uri = replSet.getUri('auth-reference-tenant');

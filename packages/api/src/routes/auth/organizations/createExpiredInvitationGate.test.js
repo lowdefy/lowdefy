@@ -16,10 +16,22 @@
 
 import { jest } from '@jest/globals';
 
-import createExpiredInvitationGate from './createExpiredInvitationGate.js';
+const betterAuthApi = await import('better-auth/api');
+const mockGetSessionFromCtx = jest.fn();
+jest.unstable_mockModule('better-auth/api', () => ({
+  ...betterAuthApi,
+  getSessionFromCtx: mockGetSessionFromCtx,
+}));
+
+const { default: createExpiredInvitationGate } = await import('./createExpiredInvitationGate.js');
 
 const past = new Date(Date.now() - 1000).toISOString();
 const future = new Date(Date.now() + 3600 * 1000).toISOString();
+
+beforeEach(() => {
+  mockGetSessionFromCtx.mockReset();
+  mockGetSessionFromCtx.mockResolvedValue({ user: { id: 'user_1' }, session: { id: 'session_1' } });
+});
 
 function createGate(invitation) {
   const adapter = { findOne: jest.fn(async () => invitation) };
@@ -56,6 +68,31 @@ test.each([
   const { gate } = createGate(invitation);
 
   expect(await gate({ body: { invitationId: 'inv_1' } })).toBeUndefined();
+});
+
+// The route's session check runs after this hook: a signed-out caller must get
+// its 401 for an existing id exactly as for an unknown one.
+test('createExpiredInvitationGate lets the route answer a signed-out caller without reading the invitation', async () => {
+  mockGetSessionFromCtx.mockResolvedValue(null);
+  const { gate, adapter } = createGate({ id: 'inv_1', status: 'canceled', expiresAt: future });
+
+  expect(await gate({ body: { invitationId: 'inv_1' } })).toBeUndefined();
+  expect(adapter.findOne).not.toHaveBeenCalled();
+});
+
+// Expired strictly before now, as the accept route decides it.
+test('createExpiredInvitationGate lets BetterAuth answer an invitation expiring this instant', async () => {
+  const now = new Date('2026-09-27T12:00:00.000Z');
+  jest.useFakeTimers({
+    now,
+    doNotFake: ['nextTick', 'setImmediate', 'queueMicrotask', 'performance'],
+  });
+  try {
+    const { gate } = createGate({ id: 'inv_1', status: 'pending', expiresAt: now.toISOString() });
+    expect(await gate({ body: { invitationId: 'inv_1' } })).toBeUndefined();
+  } finally {
+    jest.useRealTimers();
+  }
 });
 
 test('createExpiredInvitationGate leaves a request without an invitation id to the route', async () => {
