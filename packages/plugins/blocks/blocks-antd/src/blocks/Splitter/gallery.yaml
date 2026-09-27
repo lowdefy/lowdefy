@@ -372,8 +372,7 @@
           - key: cse_left
             defaultSize: 30
             collapsible:
-              start: true
-              end: false
+              end: true
           - key: cse_center
             defaultSize: 40
             collapsible:
@@ -382,8 +381,7 @@
           - key: cse_right
             defaultSize: 30
             collapsible:
-              start: false
-              end: true
+              start: true
       slots:
         cse_left:
           blocks:
