@@ -94,6 +94,24 @@ blocks:
             properties:
               content: Top Dots 2
 
+  - id: carousel_dot_placement
+    type: Carousel
+    properties:
+      dotPlacement: end
+    slots:
+      slide1:
+        blocks:
+          - id: carousel_dot_placement_slide1
+            type: Span
+            properties:
+              content: End Dots
+      slide2:
+        blocks:
+          - id: carousel_dot_placement_slide2
+            type: Span
+            properties:
+              content: End Dots 2
+
   # ============================================
   # ARROWS
   # ============================================
