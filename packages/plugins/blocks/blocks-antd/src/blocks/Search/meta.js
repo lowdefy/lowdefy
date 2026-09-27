@@ -60,6 +60,7 @@ export default {
     properties: {
       indexUrl: {
         type: ['string', 'array'],
+        urlKind: 'src',
         description: 'URL or array of URLs to pre-built search index JSON files.',
         docs: {
           displayType: 'yaml',

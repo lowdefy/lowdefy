@@ -74,6 +74,7 @@ export default {
       },
       src: {
         type: 'string',
+        urlKind: 'src',
         description: 'The address of the image for an image avatar.',
       },
       group: {
@@ -154,6 +155,7 @@ export default {
                 },
                 src: {
                   type: 'string',
+                  urlKind: 'src',
                   description: 'Image URL.',
                 },
               },

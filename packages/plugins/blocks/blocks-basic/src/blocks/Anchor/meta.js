@@ -76,10 +76,12 @@ export default {
       },
       href: {
         type: 'string',
+        urlKind: 'href',
         description: 'The href to link to when the anchor link is clicked.',
       },
       url: {
         type: 'string',
+        urlKind: 'url',
         description: 'External url to link to when the anchor link is clicked.',
       },
       rel: {

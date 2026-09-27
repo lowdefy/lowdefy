@@ -57,6 +57,7 @@ export default {
       },
       href: {
         type: 'string',
+        urlKind: 'href',
         description: 'The target of hyperlink.',
       },
       htmlType: {
