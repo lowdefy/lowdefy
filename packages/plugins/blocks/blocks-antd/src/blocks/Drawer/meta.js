@@ -93,6 +93,11 @@ export default {
         description:
           'Render the blocks inside the Drawer before it is first opened, so their methods can be called and their onMount events run while it is still closed.',
       },
+      getContainer: {
+        type: ['string', 'boolean'],
+        description:
+          'Where the Drawer is mounted. By default it is mounted on the page body. Set to `false` to render it in place, inside the nearest positioned parent (give that parent `position: relative`), or to a CSS selector to mount it in the first matching element.',
+      },
       loading: {
         type: 'boolean',
         default: false,
@@ -157,7 +162,7 @@ export default {
       keyboard: {
         type: 'boolean',
         default: true,
-        description: 'Whether support press esc to close.',
+        description: 'Whether pressing Esc closes the Drawer.',
       },
       theme: {
         type: 'object',

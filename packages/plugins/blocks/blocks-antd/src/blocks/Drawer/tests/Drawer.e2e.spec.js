@@ -304,6 +304,30 @@ test.describe('Drawer Block features', () => {
     await expect(getBlock(page, 'drawer_resized_display')).toHaveText('resized larger');
   });
 
+  test('resizable drawer starts at the named size large', async ({ page }) => {
+    const section = await openDrawer(page, 'drawer_resizable_large');
+    const wrapper = page.locator('.ant-drawer-content-wrapper').filter({ has: section });
+    await expect.poll(async () => Math.round((await wrapper.boundingBox()).width)).toBe(736);
+  });
+
+  test('getContainer false renders the drawer in place', async ({ page }) => {
+    await getBlock(page, 'open_drawer_in_place').locator('.ant-btn').click();
+    const section = getBlock(page, 'drawer_in_place_box').locator('.ant-drawer-section');
+    await expect(section).toBeVisible();
+    await expect(section).toContainText('Content of drawer_in_place.');
+    await expect(getBlock(page, 'drawer_in_place_box').locator('.ant-drawer')).toHaveCSS(
+      'position',
+      'absolute'
+    );
+  });
+
+  test('getContainer selector mounts the drawer in the matching element', async ({ page }) => {
+    await getBlock(page, 'open_drawer_selector').locator('.ant-btn').click();
+    const section = page.locator('#drawer_selector_target .ant-drawer-section');
+    await expect(section).toBeVisible();
+    await expect(section).toContainText('Content of drawer_selector.');
+  });
+
   test('closable placement end moves the close button to the end', async ({ page }) => {
     const section = await openDrawer(page, 'drawer_close_end');
     await expect(section.locator('.ant-drawer-close.ant-drawer-close-end')).toBeVisible();

@@ -130,3 +130,8 @@
   type: Drawer
   properties:
     title: '<b>Bold</b> drawer title'
+- id: 'properties.getContainer: false'
+  type: Drawer
+  properties:
+    title: Rendered in place
+    getContainer: false
