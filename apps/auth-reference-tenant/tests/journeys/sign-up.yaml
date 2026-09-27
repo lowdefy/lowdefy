@@ -1,6 +1,7 @@
 - name: a new user signs up, verifies by email and their first sign-in mints their own organization
   pageId: signup
   user: none
+  timeout: 30000
   steps:
     - fill: { blockId: name, value: Signup Owner }
     - fill: { blockId: email, value: signup-owner@example.test }

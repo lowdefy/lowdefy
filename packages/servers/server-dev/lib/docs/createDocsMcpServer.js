@@ -248,25 +248,36 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
     }
   );
 
-  registerDevTool('lowdefy_run_journey', async ({ pageId, steps, user, urlQuery, state }) => {
-    if (!origin) {
-      return notFoundResult('Journey unavailable: server origin unknown for this transport.');
+  registerDevTool(
+    'lowdefy_run_journey',
+    async ({ pageId, steps, user, urlQuery, state, timeout }) => {
+      if (!origin) {
+        return notFoundResult('Journey unavailable: server origin unknown for this transport.');
+      }
+      const result = await runJourney({
+        origin,
+        pageId,
+        steps,
+        user,
+        urlQuery,
+        state,
+        stepTimeout: timeout,
+      });
+      if (result.error) {
+        return notFoundResult(result.error);
+      }
+      // The PNGs travel as image content blocks (the shape lowdefy_screenshot_page
+      // returns) so an MCP client renders them; the JSON keeps only their names.
+      const { screenshots, ...rest } = result;
+      const summary = { ...rest, screenshots: screenshots.map(({ name }) => ({ name })) };
+      return {
+        content: [
+          { type: 'text', text: JSON.stringify(summary, null, 2) },
+          ...screenshots.map(({ data, mimeType }) => ({ type: 'image', data, mimeType })),
+        ],
+      };
     }
-    const result = await runJourney({ origin, pageId, steps, user, urlQuery, state });
-    if (result.error) {
-      return notFoundResult(result.error);
-    }
-    // The PNGs travel as image content blocks (the shape lowdefy_screenshot_page
-    // returns) so an MCP client renders them; the JSON keeps only their names.
-    const { screenshots, ...rest } = result;
-    const summary = { ...rest, screenshots: screenshots.map(({ name }) => ({ name })) };
-    return {
-      content: [
-        { type: 'text', text: JSON.stringify(summary, null, 2) },
-        ...screenshots.map(({ data, mimeType }) => ({ type: 'image', data, mimeType })),
-      ],
-    };
-  });
+  );
 
   registerDevTool('lowdefy_scaffold_page', ({ pageId, title }) => {
     const result = scaffoldPage({ pageId, title });

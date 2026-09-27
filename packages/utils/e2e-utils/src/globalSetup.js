@@ -14,4 +14,15 @@
   limitations under the License.
 */
 
-export { default as ColorSelector } from './blocks/ColorSelector/e2e.js';
+import verifyServer from './core/verifyServer.js';
+
+// Playwright runs global setup after the webServer entries are up, whether it started
+// them or reused servers already running.
+async function globalSetup() {
+  const servers = JSON.parse(process.env.LOWDEFY_E2E_SERVERS ?? '[]');
+  for (const server of servers) {
+    await verifyServer(server);
+  }
+}
+
+export default globalSetup;

@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 
 import createAcceptExistingMemberHook from '../organizations/createAcceptExistingMemberHook.js';
 import createEmailSendGate from '../organizations/createEmailSendGate.js';
+import createExpiredInvitationGate from '../organizations/createExpiredInvitationGate.js';
 import createOauthPostLoginHook from './createOauthPostLoginHook.js';
 import createTwoFactorChallengeHook from './createTwoFactorChallengeHook.js';
 import dispatchRequestHooks from './dispatchRequestHooks.js';
@@ -90,6 +91,15 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
       }),
     });
   }
+
+  // Organizations are always on, so every app can accept invitations: an
+  // expired or cancelled one answers INVITATION_EXPIRED instead of BetterAuth's
+  // "Invitation not found".
+  before.push({
+    id: 'expiredInvitationGate',
+    matches: (path) => path === '/organization/accept-invitation',
+    handler: createExpiredInvitationGate({ getAuth }),
+  });
 
   // The post-login organization choice (buildOauthPostLogin): stamps the
   // request's cached session when /oauth2/continue confirms the choice, so the

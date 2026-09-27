@@ -16,6 +16,8 @@
   limitations under the License.
 */
 
+import { randomBytes } from 'crypto';
+
 import { serializer } from '@lowdefy/helpers';
 import { BuildError } from '@lowdefy/errors';
 
@@ -90,7 +92,7 @@ import collectSkeletonSourceFiles from './collectSkeletonSourceFiles.js';
 import writeSourcelessPages from './writeSourcelessPages.js';
 
 async function shallowBuild(options) {
-  makeId.reset();
+  makeId.reset({ prefix: `${randomBytes(2).toString('hex')}_` });
 
   let context;
   try {
@@ -261,7 +263,10 @@ async function shallowBuild(options) {
     await context.writeBuildArtifact('pageTypeSets.json', 'null');
     await writeJs({ context });
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
-    await context.writeBuildArtifact('idCounter.json', JSON.stringify(makeId.counter));
+    await context.writeBuildArtifact(
+      'idCounter.json',
+      JSON.stringify({ prefix: makeId.prefix, counter: makeId.counter })
+    );
     await context.writeBuildArtifact(
       'customTypesMap.json',
       JSON.stringify(options.customTypesMap ?? {})

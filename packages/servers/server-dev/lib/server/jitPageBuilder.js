@@ -31,6 +31,7 @@ import createLogger from './log/createLogger.js';
 import pageBuildRecords from './pageBuildRecords.js';
 import PageCache from './pageCache.mjs';
 import readBuildApiArtifacts from './readBuildApiArtifacts.mjs';
+import skipStaleMapWrites from './skipStaleMapWrites.js';
 
 const jitLogger = createLogger({ name: 'jit-build' });
 
@@ -179,11 +180,15 @@ export function getBuildContext(buildDirectory, configDirectory) {
   // changed; JIT re-resolves as pages are requested.
   cachedBuildContext.dynamicIconData = {};
 
-  // Advance makeId past all skeleton IDs to prevent collisions with JIT builds
+  // Continue the config build's keys, so JIT keys never repeat a key of that build, of
+  // an earlier page build, or of an earlier config build.
   const idCounter = readJsonFile(path.join(buildDirectory, 'idCounter.json'));
-  if (idCounter != null) {
-    makeId.setCounter(idCounter);
-  }
+  makeId.continueFrom(idCounter);
+  skipStaleMapWrites({
+    buildDirectory,
+    context: cachedBuildContext,
+    keyPrefix: idCounter.prefix,
+  });
 
   return cachedBuildContext;
 }

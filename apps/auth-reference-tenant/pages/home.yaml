@@ -18,6 +18,48 @@ blocks:
         first login lazily mints your own organization (you are its owner,
         it becomes your active org). Invite someone from the members page -
         they join <i>your</i> tenant and mint nothing.</p>
+  # Where a signed-in user without an organization lands: an invitee who
+  # signed up before accepting (or whose invitation has since expired or been
+  # cancelled). The caller carries awaiting_organization, and the pending
+  # invitation's id when one is still valid.
+  - id: org_less_notice
+    type: Html
+    visible:
+      _eq:
+        - _user: awaiting_organization
+        - true
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <p>You are signed in as {{ email }}, but you are not a member of an organization yet.</p>
+            {% if pending %}
+            <p>You have an invitation waiting - accept it to join.</p>
+            {% else %}
+            <p>Your invitation is no longer valid. Ask the person who invited you to send a new one.</p>
+            {% endif %}
+          on:
+            email:
+              _user: email
+            pending:
+              _user: has_pending_invitation
+  - id: accept_pending_invitation_button
+    type: Button
+    visible:
+      _eq:
+        - _user: has_pending_invitation
+        - true
+    properties:
+      title: Accept your invitation
+    events:
+      onClick:
+        - id: to_accept_invitation
+          type: Link
+          params:
+            pageId: accept-invitation
+            urlQuery:
+              invitationId:
+                _user: pending_invitation_id
   - id: to_login
     type: Button
     properties:

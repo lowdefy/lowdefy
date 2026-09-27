@@ -317,7 +317,9 @@ per-organization client endpoints are disabled for a pinned deployment`.
 Automation note: scenarios 17-25 are manual walkthroughs, like phases 1-2;
 they need three side-by-side dev servers. The tenant scenarios (26-28) run
 automated, together with sign-up, sign-in refusals, sign-out, magic link,
-tenant isolation and member removal, as the journeys in
+expired and cancelled invitations (the tenant counterpart of 24: the
+invitee is told the invitation expired, and a re-invite works), tenant
+isolation and member removal, as the journeys in
 `apps/auth-reference-tenant/tests/journeys/`: `pnpm test:journeys:auth`
 starts a memory MongoDB and the dev server's mail sink, so it needs neither
 Docker MongoDB nor Mailpit (see `code-docs/testing.md`).

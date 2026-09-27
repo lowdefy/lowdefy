@@ -43,6 +43,12 @@ blocks:
     events:
       onClick:
         try:
+          # A retried accept must not show the last attempt's outcome.
+          - id: clear_accept_outcome
+            type: SetState
+            params:
+              accept_error: null
+              accept_response: null
           - id: accept
             type: AcceptInvitation
             params:

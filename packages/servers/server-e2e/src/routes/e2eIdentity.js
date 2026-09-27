@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { createPlaywrightConfig } from '@lowdefy/block-dev-e2e';
+import fs from 'node:fs';
+import path from 'node:path';
 
-const packageDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+// @lowdefy/e2e-utils compares this with the build directory its config expects, so a
+// Playwright run reuses a running server only when it serves this app's e2e build.
+const buildDirectory = fs.realpathSync(path.join(process.cwd(), 'build'));
 
-export default createPlaywrightConfig({
-  packageDir,
-  port: 3006,
-});
+function e2eIdentityHandler(c) {
+  return c.json({ server: 'lowdefy-e2e', buildDirectory });
+}
+
+export default e2eIdentityHandler;

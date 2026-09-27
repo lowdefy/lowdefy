@@ -1,0 +1,29 @@
+# BetterAuth leaves an expired invitation "pending" past its expiresAt; the
+# list shows it as expired.
+id: set_invitations
+type: SetState
+params:
+  invitations:
+    _array.map:
+      on:
+        _actions: load_invitations.response
+      callback:
+        _function:
+          id:
+            __args: 0.id
+          email:
+            __args: 0.email
+          state:
+            __if:
+              test:
+                __and:
+                  - __eq:
+                      - __args: 0.status
+                      - pending
+                  - __lt:
+                      - __date:
+                          __args: 0.expiresAt
+                      - __date: now
+              then: expired
+              else:
+                __args: 0.status
