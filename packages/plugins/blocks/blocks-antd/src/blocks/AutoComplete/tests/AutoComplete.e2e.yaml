@@ -328,3 +328,83 @@ blocks:
         - A
         - B
         - C
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: ac_prefix_icon
+    type: AutoComplete
+    properties:
+      prefixIcon: search
+      options:
+        - Apple
+        - Banana
+
+  - id: ac_prefix_text
+    type: AutoComplete
+    properties:
+      prefix: Fruit
+      options:
+        - Apple
+        - Banana
+
+  - id: ac_underlined
+    type: AutoComplete
+    properties:
+      variant: underlined
+      options:
+        - Apple
+        - Banana
+
+  - id: ac_theme
+    type: AutoComplete
+    properties:
+      options:
+        - Apple
+        - Banana
+      theme:
+        selectorBg: 'rgb(255, 240, 200)'
+
+  - id: ac_onselect
+    type: AutoComplete
+    properties:
+      options:
+        - Apple
+        - Banana
+        - Cherry
+    events:
+      onSelect:
+        - id: set_onselect
+          type: SetState
+          params:
+            ac_onselect_value:
+              _event: value
+
+  - id: ac_onselect_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ac_onselect_value
+              - null
+          then:
+            _string.concat:
+              - 'Selected: '
+              - _json.stringify:
+                  - _state: ac_onselect_value
+          else: ''
+
+  - id: ac_popup
+    type: AutoComplete
+    class:
+      .popup: ac-custom-popup
+    style:
+      .popup:
+        backgroundColor: 'rgb(250, 250, 210)'
+    properties:
+      options:
+        - Apple
+        - Banana
