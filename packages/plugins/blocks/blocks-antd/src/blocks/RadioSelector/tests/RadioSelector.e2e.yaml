@@ -267,3 +267,20 @@ blocks:
         - B
         - C
         - D
+
+  # ============================================
+  # OPTIONS CSS KEY
+  # ============================================
+
+  - id: rs_options_css
+    type: RadioSelector
+    class:
+      .options: rs-option-tailwind
+    style:
+      .options:
+        fontStyle: italic
+    properties:
+      options:
+        - A
+        - label: B
+          value: b

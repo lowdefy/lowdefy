@@ -29,6 +29,7 @@ export default {
     label: 'The ButtonSelector label.',
     extra: 'The ButtonSelector extra content.',
     feedback: 'The ButtonSelector validation feedback.',
+    options: 'Each ButtonSelector option.',
   },
   events: {
     onChange: {
@@ -41,6 +42,17 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
+      block: {
+        type: 'boolean',
+        default: false,
+        description: 'Stretch the buttons to fill the width of the parent, sharing it equally.',
+      },
+      direction: {
+        type: 'string',
+        enum: ['horizontal', 'vertical'],
+        default: 'horizontal',
+        description: 'Lay the option buttons out in a row or stack them in a column.',
+      },
       variant: {
         type: 'string',
         enum: ['solid', 'outlined'],

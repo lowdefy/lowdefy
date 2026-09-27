@@ -55,8 +55,10 @@ const ButtonSelector = ({
   const radioGroup = (
     <Radio.Group
       id={`${blockId}_input`}
+      block={properties.block}
       className={classNames.element}
       disabled={properties.disabled || loading}
+      orientation={properties.direction}
       size={properties.size}
       buttonStyle={isOutline ? 'outline' : 'solid'}
       style={styles.element}
@@ -67,7 +69,9 @@ const ButtonSelector = ({
         methods.setValue(value);
         methods.triggerEvent({ name: 'onChange', event: { value } });
       }}
-      value={type.isNone(value) ? undefined : getSelectedIndex(value, uniqueValueOptions, { properties })}
+      value={
+        type.isNone(value) ? undefined : getSelectedIndex(value, uniqueValueOptions, { properties })
+      }
     >
       {uniqueValueOptions.map((opt, i) => {
         const isPrimitive = type.isPrimitive(opt);
@@ -91,7 +95,8 @@ const ButtonSelector = ({
             key={i}
             value={`${i}`}
             disabled={(isPrimitive ? undefined : opt.disabled) || properties.disabled || loading}
-            style={{ ...(isPrimitive ? {} : opt.style), ...selectedStyle }}
+            className={classNames.options}
+            style={{ ...styles.options, ...(isPrimitive ? {} : opt.style), ...selectedStyle }}
           >
             {renderHtml({ html, methods })}
           </Radio.Button>

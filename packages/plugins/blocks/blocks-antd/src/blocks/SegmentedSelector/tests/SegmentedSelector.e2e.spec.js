@@ -80,4 +80,26 @@ test.describe('SegmentedSelector Block', () => {
     await expect(large).toBeVisible();
     await expect(large).toHaveClass(/ant-segmented-lg/);
   });
+
+  test('shows an option tooltip on hover', async ({ page }) => {
+    const item = getSegmented(page, 'seg_tooltip')
+      .locator('.ant-segmented-item')
+      .filter({ hasText: 'List' });
+    await item.hover();
+    await expect(page.locator('.ant-tooltip').filter({ hasText: 'Show as a list' })).toBeVisible();
+  });
+
+  test('renders an option icon from an Icon properties object', async ({ page }) => {
+    const icon = getSegmented(page, 'seg_tooltip').locator('.ant-segmented-item-icon svg');
+    await expect(icon).toBeVisible();
+  });
+
+  test('class.options and style.options reach every segment', async ({ page }) => {
+    const items = getSegmented(page, 'seg_options_css').locator('.ant-segmented-item');
+    await expect(items).toHaveCount(2);
+    for (const item of await items.all()) {
+      await expect(item).toHaveClass(/seg-option-tailwind/);
+      await expect(item).toHaveCSS('font-style', 'italic');
+    }
+  });
 });

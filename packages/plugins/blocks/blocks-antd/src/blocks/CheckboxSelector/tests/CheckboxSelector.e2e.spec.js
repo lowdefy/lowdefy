@@ -311,4 +311,13 @@ test.describe('CheckboxSelector Block', () => {
     // Should still be unchecked
     await expect(disabledCheckbox).not.toBeChecked();
   });
+
+  test('class.options and style.options reach every checkbox option', async ({ page }) => {
+    const options = page.locator('#cs_options_css_input .ant-checkbox-wrapper');
+    await expect(options).toHaveCount(2);
+    for (const option of await options.all()) {
+      await expect(option).toHaveClass(/cs-option-tailwind/);
+      await expect(option).toHaveCSS('font-style', 'italic');
+    }
+  });
 });

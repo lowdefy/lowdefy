@@ -54,7 +54,9 @@ const SegmentedSelector = ({
           <Segmented
             id={`${blockId}_input`}
             className={classNames.element}
+            classNames={{ item: classNames.options }}
             style={styles.element}
+            styles={{ item: styles.options }}
             options={uniqueValueOptions.map((opt, i) =>
               type.isPrimitive(opt)
                 ? {
@@ -76,6 +78,7 @@ const SegmentedSelector = ({
                         styles={{ element: styles.icon }}
                       />
                     ) : undefined,
+                    tooltip: opt.tooltip,
                   }
             )}
             size={properties.size}
@@ -83,7 +86,11 @@ const SegmentedSelector = ({
             disabled={properties.disabled || loading}
             vertical={properties.vertical}
             shape={properties.shape}
-            value={type.isNone(value) ? undefined : getSelectedIndex(value, uniqueValueOptions, { properties })}
+            value={
+              type.isNone(value)
+                ? undefined
+                : getSelectedIndex(value, uniqueValueOptions, { properties })
+            }
             onChange={(index) => {
               const val = type.isPrimitive(uniqueValueOptions[index])
                 ? uniqueValueOptions[index]
