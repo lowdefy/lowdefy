@@ -50,6 +50,24 @@ class ServerParser {
     this.parse = this.parse.bind(this);
     this.secrets = secrets;
     this.user = user;
+    // clientOperators set -> the names the per-result scan counts (see getScanOperators).
+    this.scanOperatorSets = new WeakMap();
+  }
+
+  // The per-result scan counts this parser's own operators as well as the client's: a
+  // _function body read from data is evaluated here, where a key such as __secret runs.
+  // Keys that name neither (_score) stay data. null (no client list) counts every key.
+  getScanOperators(clientOperators) {
+    if (clientOperators === null) {
+      return null;
+    }
+    if (!this.scanOperatorSets.has(clientOperators)) {
+      this.scanOperatorSets.set(
+        clientOperators,
+        new Set([...clientOperators, ...Object.keys(this.operators)])
+      );
+    }
+    return this.scanOperatorSets.get(clientOperators);
   }
 
   parse({
@@ -148,7 +166,10 @@ class ServerParser {
         // page sends exactly what was checked: a class instance's toJSON runs once,
         // here, and no later copy can read other keys or call it again.
         const sent = serializer.serialize(res, { skipMarkers: true });
-        const found = findOperatorInData({ value: sent, operators: literalData.clientOperators });
+        const found = findOperatorInData({
+          value: sent,
+          operators: this.getScanOperators(literalData.clientOperators),
+        });
         if (found) {
           throw new ConfigError(
             `Data returned by "${operatorName}" contains the operator "${found.operator}"${

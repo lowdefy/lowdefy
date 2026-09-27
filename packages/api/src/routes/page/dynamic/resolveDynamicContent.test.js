@@ -999,3 +999,28 @@ test('resolveDynamicContent keeps data keys that name no client operator as data
     typename: { __typename: 'Product' },
   });
 });
+
+test('resolveDynamicContent falls back when data used as a _function body names a server operator', async () => {
+  const dynamicBlock = await resolveWithRoutine(
+    {
+      ':return': {
+        blocks: [
+          {
+            id: 'field',
+            type: 'Html',
+            properties: {
+              html: {
+                '_array.map': { on: [1], callback: { _function: { _payload: 'urlQuery.body' } } },
+              },
+            },
+          },
+        ],
+      },
+    },
+    { urlQuery: { body: { value: { __payload: 'blockId' } } } }
+  );
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockErrorMessage()).toContain(
+    'Data returned by "_payload" contains the operator "_payload" at "value".'
+  );
+});
