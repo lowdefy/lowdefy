@@ -355,16 +355,35 @@ test('a connection that closes while a subscribe is being prepared leaves no sub
   const subscribed = connection.handleMessage(
     JSON.stringify({ type: 'subscribe', websocketId: 'chat', requestId: 's1' })
   );
-  const afterClose = connection.handleMessage(
-    JSON.stringify({ type: 'subscribe', websocketId: 'news', requestId: 's2' })
+  const queuedBeforeClose = connection.handleMessage(
+    JSON.stringify({ type: 'subscribe', websocketId: 'chat', requestId: 's2' })
   );
   await Promise.resolve();
   connection.close();
+  const sentAfterClose = connection.handleMessage(
+    JSON.stringify({ type: 'subscribe', websocketId: 'news', requestId: 's3' })
+  );
   releases[0]();
-  await Promise.all([subscribed, afterClose]);
+  await Promise.all([subscribed, queuedBeforeClose, sentAfterClose]);
   await Promise.resolve();
 
   expect(releases).toHaveLength(1);
   expect(unsubscribeAll).toHaveBeenCalledTimes(2);
   expect(connection.subscriber.subscriptions.size).toBe(0);
+});
+
+test('a slow publish on one feed does not hold up a subscribe to another feed', async () => {
+  const { connection, registry, send } = setup();
+  registry.publish.mockImplementation(() => new Promise(() => {}));
+
+  connection.handleMessage(
+    JSON.stringify({ type: 'publish', websocketId: 'chat', payload: {}, requestId: 'p1' })
+  );
+  await connection.handleMessage(
+    JSON.stringify({ type: 'subscribe', websocketId: 'ticker', requestId: 's1' })
+  );
+
+  expect(sentFrames(send)).toEqual([
+    { type: 'subscribed', websocketId: 'ticker', requestId: 's1' },
+  ]);
 });
