@@ -122,6 +122,9 @@
     - fill: { blockId: password, value: switch-member-password }
     - click: login_button
     - expect: { url: { contains: /notes } }
+    # The sign-in navigates with a full reload, so the notes page may still be
+    # loading its notes when the url changes.
+    - wait: { state: note_texts }
     - expect: { state: { path: note_texts, equals: [] } }
     - goto: organizations
     - expect: { text: { blockId: organizations_list, contains: Member Business (active) } }
