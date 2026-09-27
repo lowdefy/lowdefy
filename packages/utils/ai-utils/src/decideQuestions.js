@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 // The question shapes a Decide request accepts, and the one place that knows
 // how each shape reads back. A question is exactly one of:
 //
@@ -61,6 +63,26 @@ function maxEntry(probabilities) {
   return best;
 }
 
+// An answer outside the question's own terms (an option or level the question
+// does not have, a yes/no that is not a boolean, no answer at all) is no
+// answer: every field is null, the confidence included, so a gate such as
+// `_lt: [{ _step: triage.team.confidence }, 0.7]` holds it back as it holds a
+// low-confidence one.
+function unanswered(kind) {
+  if (kind === 'choice') return { choice: null, confidence: null, probabilities: null };
+  if (kind === 'yesno') return { answer: null, probability: null, confidence: null };
+  return { level: null, index: null, score: null, confidence: null, probabilities: null };
+}
+
+function isOption({ question, choice }) {
+  return typeof choice === 'string' && Object.hasOwn(question.options ?? {}, choice);
+}
+
+function roundedScore(score) {
+  if (!Number.isFinite(score)) return null;
+  return Math.round(score);
+}
+
 // An evaluation model's answer (choice / score / boolean with probabilities)
 // as a Decide answer. `confidence` is the provider's calibrated confidence
 // when it reports one, otherwise the probability of the chosen answer.
@@ -68,71 +90,75 @@ export function fromEvaluationAnswer({ question, answer, providerConfidence }) {
   const kind = questionKind(question);
   const reported = clamp01(providerConfidence);
   if (kind === 'choice') {
-    const probabilities = answer?.probabilities ?? null;
+    if (!isOption({ question, choice: answer?.choice })) return unanswered(kind);
+    const probabilities = answer.probabilities ?? null;
     return {
-      choice: answer?.choice ?? null,
-      confidence: reported ?? clamp01(probabilities?.[answer?.choice]) ?? null,
+      choice: answer.choice,
+      confidence: reported ?? clamp01(probabilities?.[answer.choice]),
       probabilities,
     };
   }
   if (kind === 'yesno') {
     const probability = clamp01(answer?.probability);
+    if (probability === null) return unanswered(kind);
     return {
-      answer: probability === null ? null : probability >= 0.5,
+      answer: probability >= 0.5,
       probability,
-      confidence:
-        reported ?? (probability === null ? null : Math.max(probability, 1 - probability)),
+      confidence: reported ?? Math.max(probability, 1 - probability),
     };
   }
   const levels = question.levels ?? [];
   const byIndex = answer?.probabilities ?? null;
   const best = maxEntry(byIndex);
-  const index = best
-    ? Number(best[0])
-    : Number.isFinite(answer?.score)
-      ? Math.round(answer.score)
-      : null;
+  const index = best ? Number(best[0]) : roundedScore(answer?.score);
+  if (index === null || type.isUndefined(levels[index])) return unanswered(kind);
+  let bestConfidence = null;
+  if (best) bestConfidence = clamp01(best[1]);
+  let probabilities = null;
+  if (byIndex) {
+    probabilities = Object.fromEntries(
+      Object.entries(byIndex).map(([i, p]) => [levels[Number(i)] ?? i, p])
+    );
+  }
   return {
-    level: index === null ? null : levels[index] ?? null,
+    level: levels[index],
     index,
     score: Number.isFinite(answer?.score) ? answer.score : null,
-    confidence: reported ?? (best ? clamp01(best[1]) : null),
-    probabilities: byIndex
-      ? Object.fromEntries(Object.entries(byIndex).map(([i, p]) => [levels[Number(i)] ?? i, p]))
-      : null,
+    confidence: reported ?? bestConfidence,
+    probabilities,
   };
+}
+
+// The probability that a yes/no statement holds, from the model's confidence
+// in the answer it gave.
+function yesProbability({ answer, confidence }) {
+  if (confidence === null) return null;
+  if (answer) return confidence;
+  return 1 - confidence;
 }
 
 // A language model's structured-output answer ({ choice | answer | level,
 // confidence }) as a Decide answer. The confidence is the model's own
 // estimate — not calibrated the way an evaluation model's probabilities are.
+// The SDK parses the output without checking it against the answer schema,
+// so every answer is checked here.
 export function fromStructuredAnswer({ question, answer }) {
   const kind = questionKind(question);
   const confidence = clamp01(answer?.confidence);
   if (kind === 'choice') {
-    // The SDK parses the output without checking it against the answer
-    // schema, so an option the model made up reads as no choice, as an unknown
-    // score level does.
-    const known =
-      typeof answer?.choice === 'string' && Object.hasOwn(question.options, answer.choice);
-    return { choice: known ? answer.choice : null, confidence, probabilities: null };
+    if (!isOption({ question, choice: answer?.choice })) return unanswered(kind);
+    return { choice: answer.choice, confidence, probabilities: null };
   }
   if (kind === 'yesno') {
-    const value = typeof answer?.answer === 'boolean' ? answer.answer : null;
+    if (!type.isBoolean(answer?.answer)) return unanswered(kind);
     return {
-      answer: value,
-      probability:
-        value === null || confidence === null ? null : value ? confidence : 1 - confidence,
+      answer: answer.answer,
+      probability: yesProbability({ answer: answer.answer, confidence }),
       confidence,
     };
   }
   const levels = question.levels ?? [];
   const index = levels.indexOf(answer?.level);
-  return {
-    level: index === -1 ? null : levels[index],
-    index: index === -1 ? null : index,
-    score: index === -1 ? null : index,
-    confidence,
-    probabilities: null,
-  };
+  if (index === -1) return unanswered(kind);
+  return { level: levels[index], index, score: index, confidence, probabilities: null };
 }

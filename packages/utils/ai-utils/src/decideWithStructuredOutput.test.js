@@ -59,14 +59,17 @@ test('decideWithStructuredOutput sends the answer schema and reads back the answ
   });
 });
 
-test('decideWithStructuredOutput reads an answer outside the options or levels as null', async () => {
+test('decideWithStructuredOutput reads an answer outside the options, levels or booleans as null, confidence included', async () => {
   const model = modelReplying({
     team: { choice: 'sales', confidence: 0.95 },
     down: { answer: 'maybe', confidence: 0.5 },
     urgency: { level: 'critical', confidence: 0.7 },
   });
   const { answers } = await decideWithStructuredOutput({ model, request, options: {} });
-  expect(answers.team.choice).toBeNull();
-  expect(answers.down.answer).toBeNull();
-  expect(answers.urgency.level).toBeNull();
+  // The model's confidence goes with its answer, so a confidence gate holds these back.
+  expect(answers).toEqual({
+    team: { choice: null, confidence: null, probabilities: null },
+    down: { answer: null, probability: null, confidence: null },
+    urgency: { level: null, index: null, score: null, confidence: null, probabilities: null },
+  });
 });
