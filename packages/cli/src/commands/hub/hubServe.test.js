@@ -21,7 +21,6 @@ import os from 'os';
 import path from 'path';
 import { spawn, spawnSync } from 'child_process';
 import { fileURLToPath } from 'url';
-import { wait } from '@lowdefy/helpers';
 
 import createHubClient from './createHubClient.js';
 import getHubPaths from './getHubPaths.js';
@@ -81,6 +80,32 @@ afterEach(() => {
   fs.rmSync(home, { recursive: true, force: true });
 });
 
+// What a started hub decided, from its own log: it listens, or it found
+// another hub listening and leaves. Waiting on that, not on a clock, keeps the
+// test meaningful however slowly eight CLI processes start on a loaded machine.
+function decision(hub) {
+  return new Promise((resolve) => {
+    let output = '';
+    hub.stdout.setEncoding('utf8');
+    hub.stdout.on('data', (chunk) => {
+      output += chunk;
+      if (output.includes(' listening on ')) {
+        resolve('listening');
+      } else if (output.includes('Another hub is already running')) {
+        resolve('left');
+      }
+    });
+    hub.once('exit', () => resolve('exited'));
+  });
+}
+
+function exited(hub) {
+  if (hub.exitCode !== null || hub.signalCode !== null) {
+    return Promise.resolve();
+  }
+  return new Promise((resolve) => hub.once('exit', resolve));
+}
+
 test('hubs started together against a stale socket leave exactly one hub, the one the socket reaches', async () => {
   const env = { ...process.env, LOWDEFY_HOME: home };
   process.env.LOWDEFY_HOME = home;
@@ -90,14 +115,17 @@ test('hubs started together against a stale socket leave exactly one hub, the on
   expect(fs.existsSync(socketPath)).toBe(true);
 
   hubs = Array.from({ length: 8 }).map(() =>
-    spawn(process.execPath, [cliEntry, 'hub', 'serve'], { env, stdio: 'ignore' })
+    spawn(process.execPath, [cliEntry, 'hub', 'serve'], {
+      env,
+      stdio: ['ignore', 'pipe', 'ignore'],
+    })
   );
-  const deadline = Date.now() + 10000;
-  while (hubs.filter((hub) => isAlive(hub.pid)).length > 1 && Date.now() < deadline) {
-    await wait(100);
-  }
-  await wait(500);
-  const alive = hubs.filter((hub) => isAlive(hub.pid)).map((hub) => hub.pid);
-  expect(alive).toHaveLength(1);
-  expect(await helloPid(socketPath)).toEqual(alive[0]);
-});
+  const decisions = await Promise.all(hubs.map(decision));
+
+  expect(decisions.filter((outcome) => outcome === 'listening')).toHaveLength(1);
+  expect(decisions.filter((outcome) => outcome === 'left')).toHaveLength(7);
+  const listening = hubs[decisions.indexOf('listening')];
+  await Promise.all(hubs.filter((hub) => hub !== listening).map(exited));
+  expect(hubs.filter((hub) => isAlive(hub.pid)).map((hub) => hub.pid)).toEqual([listening.pid]);
+  expect(await helloPid(socketPath)).toEqual(listening.pid);
+}, 120000);

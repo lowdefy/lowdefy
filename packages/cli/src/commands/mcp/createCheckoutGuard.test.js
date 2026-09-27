@@ -23,6 +23,10 @@ import { jest } from '@jest/globals';
 import createCheckoutGuard from './createCheckoutGuard.js';
 import resolveApp from './resolveApp.js';
 
+// Each test runs git several times; on a loaded machine that alone can take
+// seconds. Timing is not under test.
+jest.setTimeout(60000);
+
 let base;
 
 function git(args, cwd) {
