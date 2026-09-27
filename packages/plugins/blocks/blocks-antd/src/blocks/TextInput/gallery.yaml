@@ -76,6 +76,12 @@
         title: Borderless
         variant: borderless
         placeholder: Borderless variant
+    - id: variant_underlined
+      type: TextInput
+      properties:
+        title: Underlined
+        variant: underlined
+        placeholder: Underlined variant
 
 - title: Input Types
   blocks:

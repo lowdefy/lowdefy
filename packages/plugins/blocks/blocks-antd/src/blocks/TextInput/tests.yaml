@@ -112,3 +112,17 @@
   type: TextInput
   properties:
     type: password
+- id: 'properties.variant: underlined'
+  type: TextInput
+  properties:
+    variant: underlined
+- id: 'events.onClear'
+  type: TextInput
+  properties:
+    allowClear: true
+  events:
+    onClear:
+      - id: clear_message
+        type: DisplayMessage
+        params:
+          content: Cleared

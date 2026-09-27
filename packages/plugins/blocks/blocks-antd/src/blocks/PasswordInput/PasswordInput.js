@@ -51,11 +51,22 @@ const PasswordInput = ({
           return (
             <Input.Password
               id={`${blockId}_input`}
+              allowClear={
+                properties.allowClear && {
+                  clearIcon: (
+                    <components.Icon
+                      blockId={`${blockId}_clearIcon`}
+                      properties={{ name: 'clear', title: '' }}
+                    />
+                  ),
+                }
+              }
               variant={properties.bordered === false ? 'borderless' : properties.variant}
               className={classNames.element}
               style={styles.element}
               autoFocus={properties.autoFocus}
               disabled={properties.disabled || loading}
+              maxLength={properties.maxLength}
               onChange={(event) => {
                 methods.setValue(event.target.value);
                 methods.triggerEvent({ name: 'onChange', event: { value: event.target.value } });
@@ -68,6 +79,9 @@ const PasswordInput = ({
               onPressEnter={() => {
                 methods.triggerEvent({ name: 'onPressEnter' });
               }}
+              onClear={() => {
+                methods.triggerEvent({ name: 'onClear' });
+              }}
               onFocus={() => {
                 methods.triggerEvent({ name: 'onFocus' });
               }}
@@ -75,6 +89,18 @@ const PasswordInput = ({
                 methods.triggerEvent({ name: 'onBlur' });
               }}
               placeholder={properties.placeholder}
+              prefix={
+                properties.prefix ||
+                (properties.prefixIcon && (
+                  <components.Icon
+                    blockId={`${blockId}_prefixIcon`}
+                    classNames={{ element: classNames.prefixIcon }}
+                    events={events}
+                    properties={properties.prefixIcon}
+                    styles={{ element: styles.prefixIcon }}
+                  />
+                ))
+              }
               value={value}
               size={properties.size}
               status={validation.status}
