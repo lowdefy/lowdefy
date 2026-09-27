@@ -24,8 +24,13 @@ import verifyServer from './verifyServer.js';
 const buildDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-e2e-build-'));
 const servers = [];
 
-async function startServer({ status, body, contentType = 'application/json' }) {
+async function startServer({ status, body, contentType = 'application/json', onlyPath }) {
   const server = http.createServer((req, res) => {
+    if (onlyPath && req.url !== onlyPath) {
+      res.writeHead(404, { 'content-type': 'text/html' });
+      res.end('<html></html>');
+      return;
+    }
     res.writeHead(status, { 'content-type': contentType });
     res.end(typeof body === 'string' ? body : JSON.stringify(body));
   });
@@ -45,6 +50,21 @@ test('verifyServer accepts the e2e server that serves this build directory', asy
     body: { server: 'lowdefy-e2e', buildDirectory: fs.realpathSync(buildDir) },
   });
   await expect(verifyServer({ buildDir, port })).resolves.toBeUndefined();
+});
+
+test('verifyServer asks for the identity under the basePath the build records', async () => {
+  const basePathBuildDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-e2e-build-'));
+  fs.writeFileSync(
+    path.join(basePathBuildDir, 'config.json'),
+    JSON.stringify({ basePath: '/shop' })
+  );
+  const port = await startServer({
+    status: 200,
+    body: { server: 'lowdefy-e2e', buildDirectory: fs.realpathSync(basePathBuildDir) },
+    onlyPath: '/shop/api/e2e/identity',
+  });
+  await expect(verifyServer({ buildDir: basePathBuildDir, port })).resolves.toBeUndefined();
+  fs.rmSync(basePathBuildDir, { recursive: true });
 });
 
 test('verifyServer rejects the e2e server of another app or checkout', async () => {
@@ -67,7 +87,7 @@ test.each([
 ])('verifyServer rejects a server that answers with %s', async (_, response) => {
   const port = await startServer(response);
   await expect(verifyServer({ buildDir, port })).rejects.toThrow(
-    `Port ${port} is in use by a server that is not a Lowdefy e2e server`
+    `Port ${port} is in use by a server that is not a Lowdefy e2e server (/api/e2e/identity did not answer as one)`
   );
 });
 
