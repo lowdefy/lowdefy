@@ -60,3 +60,30 @@
   type: ConfigProvider
   properties:
     variant: filled
+- id: 'properties.componentSize: medium'
+  type: ConfigProvider
+  properties:
+    componentSize: medium
+- id: properties.theme
+  type: ConfigProvider
+  properties:
+    theme:
+      colorPrimary: '#13c2c2'
+      borderRadius: 12
+- id: 'properties.virtual: false'
+  type: ConfigProvider
+  properties:
+    virtual: false
+- id: 'properties.popupMatchSelectWidth: false'
+  type: ConfigProvider
+  properties:
+    popupMatchSelectWidth: false
+- id: 'properties.popupOverflow: scroll'
+  type: ConfigProvider
+  properties:
+    popupOverflow: scroll
+- id: 'properties.wave: disabled: true'
+  type: ConfigProvider
+  properties:
+    wave:
+      disabled: true

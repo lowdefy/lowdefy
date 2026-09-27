@@ -83,8 +83,10 @@ pages:
   - _ref: ../../src/blocks/Affix/tests/Affix.e2e.yaml
   # Step 4.1: Modal Blocks
   - _ref: ../../src/blocks/Modal/tests/Modal.e2e.yaml
+  - _ref: ../../src/blocks/Modal/tests/ModalFeatures.e2e.yaml
   - _ref: ../../src/blocks/ConfirmModal/tests/ConfirmModal.e2e.yaml
   - _ref: ../../src/blocks/Drawer/tests/Drawer.e2e.yaml
+  - _ref: ../../src/blocks/Drawer/tests/DrawerFeatures.e2e.yaml
   # Step 4.2: Message Blocks
   - _ref: ../../src/blocks/Message/tests/Message.e2e.yaml
   - _ref: ../../src/blocks/Notification/tests/Notification.e2e.yaml
@@ -98,6 +100,7 @@ pages:
   - _ref: ../../src/blocks/Label/tests/Label.e2e.yaml
   # Step 7: New Blocks
   - _ref: ../../src/blocks/ColorSelector/tests/ColorSelector.e2e.yaml
+  - _ref: ../../src/blocks/ConfigProvider/tests/ConfigProvider.e2e.yaml
   - _ref: ../../src/blocks/DropdownButton/tests/DropdownButton.e2e.yaml
   - _ref: ../../src/blocks/DropdownMenu/tests/DropdownMenu.e2e.yaml
   - _ref: ../../src/blocks/Flex/tests/Flex.e2e.yaml

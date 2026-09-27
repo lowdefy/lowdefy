@@ -112,3 +112,82 @@ blocks:
               - true
           then: Resize fired
           else: ''
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: sp_orientation
+    type: Splitter
+    properties:
+      orientation: vertical
+      panels:
+        - key: one
+        - key: two
+    style:
+      height: 200px
+    slots:
+      one:
+        blocks:
+          - id: sp_orientation_one
+            type: Paragraph
+            properties:
+              content: Orientation one
+      two:
+        blocks:
+          - id: sp_orientation_two
+            type: Paragraph
+            properties:
+              content: Orientation two
+
+  - id: sp_features
+    type: Splitter
+    style:
+      minHeight: 200px
+      .panel:
+        backgroundColor: rgb(240, 248, 255)
+    properties:
+      destroyOnHidden: true
+      draggerIcon: GripVertical
+      collapsible:
+        motion: true
+        icon:
+          start: ChevronsLeft
+      panels:
+        - key: first
+          collapsible:
+            end: true
+            showCollapsibleIcon: true
+        - key: second
+    events:
+      onDraggerDoubleClick:
+        - id: set_double_click
+          type: SetState
+          params:
+            sp_double_click_index:
+              _event: index
+    slots:
+      first:
+        blocks:
+          - id: sp_features_first
+            type: Paragraph
+            properties:
+              content: First panel
+      second:
+        blocks:
+          - id: sp_features_second
+            type: Paragraph
+            properties:
+              content: Second panel
+
+  - id: sp_double_click_display
+    type: Paragraph
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: sp_double_click_index
+              - 0
+          then: Double click on 0
+          else: ''

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import showUploadList from '../../schemas/showUploadList.js';
 import uploadTheme from '../../schemas/uploadTheme.js';
 
 export default {
@@ -63,6 +64,23 @@ export default {
         description: "Title of the file input to be displayed instead of 'Upload image'.",
         default: 'Upload image',
       },
+      pastable: {
+        type: 'boolean',
+        default: false,
+        description: 'Upload files pasted anywhere on the page.',
+      },
+      capture: {
+        type: 'string',
+        enum: ['user', 'environment'],
+        description:
+          'On mobile devices, open the camera directly: `user` for the front camera, `environment` for the back camera.',
+      },
+      listType: {
+        type: 'string',
+        enum: ['picture-card', 'picture-circle'],
+        default: 'picture-card',
+        description: 'Shape of the photo tiles.',
+      },
       disabled: {
         type: 'boolean',
         description: 'Disable the file input.',
@@ -109,11 +127,7 @@ export default {
           },
         },
       },
-      showUploadList: {
-        type: 'boolean',
-        default: true,
-        description: 'Whether to show default upload list.',
-      },
+      showUploadList,
       singleFile: {
         type: 'boolean',
         default: false,

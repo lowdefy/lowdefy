@@ -16,19 +16,98 @@
 
 import React from 'react';
 import { Splitter } from 'antd';
+import { type } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
-const SplitterBlock = ({ blockId, classNames = {}, content, methods, properties, styles = {} }) => {
+function renderIcon({ blockId, classNames, events, Icon, properties, slot, styles }) {
+  if (type.isNone(properties)) {
+    return undefined;
+  }
+  return (
+    <Icon
+      blockId={`${blockId}_${slot}`}
+      classNames={{ element: classNames }}
+      events={events}
+      properties={properties}
+      styles={{ element: styles }}
+    />
+  );
+}
+
+function getCollapsible({ blockId, classNames, collapsible, events, Icon, styles }) {
+  if (type.isNone(collapsible)) {
+    return undefined;
+  }
+  const icon = collapsible.icon ?? {};
+  return {
+    motion: collapsible.motion,
+    icon: {
+      start: renderIcon({
+        blockId,
+        classNames: classNames.collapseIcon,
+        events,
+        Icon,
+        properties: icon.start,
+        slot: 'collapseIcon_start',
+        styles: styles.collapseIcon,
+      }),
+      end: renderIcon({
+        blockId,
+        classNames: classNames.collapseIcon,
+        events,
+        Icon,
+        properties: icon.end,
+        slot: 'collapseIcon_end',
+        styles: styles.collapseIcon,
+      }),
+    },
+  };
+}
+
+const SplitterBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  content,
+  events,
+  methods,
+  properties,
+  styles = {},
+}) => {
   const panels = properties.panels ?? [];
   return (
     <Splitter
       id={blockId}
       className={classNames.element}
+      classNames={{ panel: classNames.panel, dragger: classNames.dragger }}
       style={styles.element}
-      layout={properties.orientation ?? properties.layout}
+      styles={{ panel: styles.panel, dragger: styles.dragger }}
+      collapsible={getCollapsible({
+        blockId,
+        classNames,
+        collapsible: properties.collapsible,
+        events,
+        Icon,
+        styles,
+      })}
+      destroyOnHidden={properties.destroyOnHidden}
+      draggerIcon={renderIcon({
+        blockId,
+        classNames: classNames.draggerIcon,
+        events,
+        Icon,
+        properties: properties.draggerIcon,
+        slot: 'draggerIcon',
+        styles: styles.draggerIcon,
+      })}
+      // antd 6 renamed `layout` to `orientation`; Lowdefy keeps both properties.
+      orientation={properties.orientation ?? properties.layout}
       lazy={properties.lazy}
+      onDraggerDoubleClick={(index) => {
+        methods.triggerEvent({ name: 'onDraggerDoubleClick', event: { index } });
+      }}
       onResize={(sizes) => {
         methods.triggerEvent({ name: 'onResize', event: { sizes } });
       }}
@@ -50,6 +129,7 @@ const SplitterBlock = ({ blockId, classNames = {}, content, methods, properties,
           max={panel.max}
           defaultSize={panel.defaultSize}
           collapsible={panel.collapsible}
+          destroyOnHidden={panel.destroyOnHidden}
           resizable={panel.resizable}
         >
           {content[panel.key] && content[panel.key]()}

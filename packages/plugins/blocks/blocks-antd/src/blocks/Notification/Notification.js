@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { App } from 'antd';
 import { type } from '@lowdefy/helpers';
@@ -32,12 +32,16 @@ const NotificationBlock = ({
   styles = {},
 }) => {
   const { notification } = App.useApp();
+  const openCount = useRef(0);
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       const status = args.status || properties.status || 'success';
       const icon = properties.icon ?? statusIcons[status];
+      openCount.current += 1;
+      // The key lets the button close this notification; each open gets its own notification.
+      const key = `${blockId}_notification_${openCount.current}`;
       notification[status]({
-        id: `${blockId}_notification`,
+        key,
         bottom: properties.bottom,
         className: classNames.element,
         style: styles.element,
@@ -49,16 +53,31 @@ const NotificationBlock = ({
         }),
         onClick: () => methods.triggerEvent({ name: 'onClick' }),
         onClose: () => methods.triggerEvent({ name: 'onClose' }),
+        closable: properties.closable,
+        pauseOnHover: properties.pauseOnHover,
         placement: properties.placement,
+        role: properties.role,
+        showProgress: properties.showProgress,
         top: properties.top,
+        classNames: {
+          actions: classNames.actions,
+          description: classNames.description,
+          // antd colours its status icon through a class on the icon wrapper, and only adds it
+          // for its own icons; the Lowdefy status icon needs it too.
+          icon: type.isNone(properties.icon) ? `ant-notification-notice-icon-${status}` : undefined,
+          progress: classNames.progress,
+          title: classNames.title,
+        },
+        styles: {
+          actions: styles.actions,
+          description: styles.description,
+          progress: styles.progress,
+          title: styles.title,
+        },
         icon: icon && (
           <ErrorBoundary onError={handleError}>
             <Icon
               blockId={`${blockId}_icon`}
-              // antd colours its own status icons through this class; a replaced icon needs it too.
-              className={
-                type.isNone(properties.icon) ? `ant-notification-notice-icon-${status}` : undefined
-              }
               classNames={{ element: classNames.icon }}
               events={events}
               properties={icon}
@@ -66,14 +85,17 @@ const NotificationBlock = ({
             />
           </ErrorBoundary>
         ),
-        btn: properties.button && (
+        actions: properties.button && (
           <ErrorBoundary onError={handleError}>
             <Button
               blockId={`${blockId}_button`}
               components={{ Icon, ShortcutBadge }}
               events={events}
               properties={properties.button}
-              onClick={() => methods.triggerEvent({ name: 'onClose' })}
+              onClick={() => {
+                notification.destroy(key);
+                methods.triggerEvent({ name: 'onClose' });
+              }}
             />
           </ErrorBoundary>
         ),

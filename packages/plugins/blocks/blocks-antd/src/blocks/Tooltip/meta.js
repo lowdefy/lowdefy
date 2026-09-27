@@ -26,16 +26,37 @@ export default {
     inner: 'The Tooltip inner.',
   },
   events: {
-    onOpenChange: 'Trigger action when visibility of the tooltip card is changed.',
+    onOpenChange: {
+      description: 'Trigger action when visibility of the tooltip card is changed.',
+      event: { open: 'True when the tooltip opened, false when it closed.' },
+    },
   },
   properties: {
     type: 'object',
     additionalProperties: false,
     properties: {
+      arrow: {
+        type: ['boolean', 'object'],
+        default: true,
+        description:
+          'Whether to show the arrow. Set `{ pointAtCenter: true }` to point the arrow at the center of the target.',
+        docs: {
+          displayType: 'yaml',
+        },
+        additionalProperties: false,
+        properties: {
+          pointAtCenter: {
+            type: 'boolean',
+            default: false,
+            description: 'Whether the arrow is pointed at the center of target.',
+          },
+        },
+      },
       arrowPointAtCenter: {
         type: 'boolean',
         default: false,
-        description: 'Whether the arrow is pointed at the center of target.',
+        description:
+          'Whether the arrow is pointed at the center of target. Same as `arrow: { pointAtCenter: true }`.',
       },
       autoAdjustOverflow: {
         type: 'boolean',
@@ -67,7 +88,7 @@ export default {
       mouseLeaveDelay: {
         type: 'number',
         default: 0.1,
-        description: 'Delay in seconds, before tooltip is shown on mouse enter.',
+        description: 'Delay in seconds, before tooltip is hidden on mouse leave.',
       },
       placement: {
         type: 'string',
@@ -90,9 +111,9 @@ export default {
       },
       trigger: {
         type: 'string',
-        enum: ['hover', 'focus', 'click'],
+        enum: ['hover', 'focus', 'click', 'contextMenu'],
         default: 'hover',
-        description: 'Tooltip trigger mode.',
+        description: 'Tooltip trigger mode. `contextMenu` opens the tooltip on right click.',
       },
       title: {
         type: 'string',

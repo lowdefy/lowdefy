@@ -243,4 +243,61 @@ test.describe('ConfirmModal Block', () => {
     const display = getBlock(page, 'onopen_display');
     await expect(display).toHaveText('Open fired');
   });
+
+  // ============================================
+  // ANTD 6 FEATURES
+  // ============================================
+
+  const openConfirm = async (page, id) => {
+    await getBlock(page, `open_${id}`).locator('.ant-btn').click();
+    const modal = getConfirmModal(page);
+    await expect(modal).toBeVisible();
+    return modal;
+  };
+
+  test('okButton iconPlacement end places the icon after the text', async ({ page }) => {
+    const modal = await openConfirm(page, 'cm_icon_end');
+    const okBtn = modal.locator('.ant-modal-confirm-btns .ant-btn-primary');
+    await expect(okBtn).toHaveClass(/ant-btn-icon-end/);
+    await expect(okBtn.locator('svg')).toBeAttached();
+    const cancelBtn = modal.locator('.ant-modal-confirm-btns .ant-btn-default');
+    await expect(cancelBtn).not.toHaveClass(/ant-btn-icon-end/);
+  });
+
+  test('mask blur adds the antd blur class to the mask', async ({ page }) => {
+    await openConfirm(page, 'cm_blur');
+    await expect(page.locator('.ant-modal-mask.ant-modal-mask-blur')).toBeVisible();
+  });
+
+  test('closable disabled renders a disabled close button', async ({ page }) => {
+    const modal = await openConfirm(page, 'cm_close_disabled');
+    await expect(modal.locator('.ant-modal-close')).toBeDisabled();
+  });
+
+  test('keyboard false keeps the confirm modal open on Escape', async ({ page }) => {
+    const modal = await openConfirm(page, 'cm_no_keyboard');
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(500);
+    await expect(modal).toBeVisible();
+  });
+
+  test('focusable autoFocusButton cancel focuses the cancel button', async ({ page }) => {
+    const modal = await openConfirm(page, 'cm_focus_cancel');
+    await expect(modal.locator('.ant-modal-confirm-btns .ant-btn-default')).toBeFocused();
+  });
+
+  test('theme tokens reach the confirm modal', async ({ page }) => {
+    await openConfirm(page, 'cm_theme');
+    await expect(page.locator('.ant-modal-confirm .ant-modal-container')).toHaveCSS(
+      'background-color',
+      'rgb(0, 0, 255)'
+    );
+  });
+
+  test('onClose event fires after the confirm modal closes', async ({ page }) => {
+    const modal = await openConfirm(page, 'cm_onclose');
+    await modal.locator('.ant-modal-confirm-btns .ant-btn-primary').click();
+    await expect(modal).toBeHidden();
+    await expect(getBlock(page, 'cm_onclose_display')).toHaveText('Close fired');
+  });
 });

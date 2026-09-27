@@ -22,8 +22,8 @@ import { Upload as AntdUpload } from 'antd';
 
 import useFileList from '../utils/useFileList.js';
 import createUploadIconRender from '../utils/createUploadIconRender.js';
-import getUploadListIcons from '../utils/getUploadListIcons.js';
 import getEmitFileContent from '../utils/getEmitFileContent.js';
+import getShowUploadList from '../utils/getShowUploadList.js';
 import getUploadRequest from '../utils/getUploadRequest.js';
 import withTheme from '../../withTheme.js';
 
@@ -82,16 +82,20 @@ const UploadBlock = ({
           item: styles.item,
         }}
         customRequest={uploadRequest}
+        directory={properties.directory}
         disabled={properties.disabled}
         fileList={state.fileList}
+        listType={properties.listType}
         maxCount={properties.maxCount}
         multiple={!properties.singleFile} // Allows selection of multiple files at once, does not block multiple uploads
         onRemove={removeFile}
         iconRender={createUploadIconRender({ blockId, Icon: components.Icon })}
-        showUploadList={
-          properties.showUploadList !== false &&
-          getUploadListIcons({ blockId, Icon: components.Icon })
-        }
+        pastable={properties.pastable}
+        showUploadList={getShowUploadList({
+          blockId,
+          Icon: components.Icon,
+          showUploadList: properties.showUploadList,
+        })}
         onChange={() => {
           // emitFileContent triggers onChange itself once the content is read,
           // so the file object in the event payload carries the base64 content.

@@ -755,7 +755,8 @@
         flex: 0 0 auto
       properties:
         title: Tooltip with custom overlay style
-        overlayStyle:
+      style:
+        .inner:
           boxShadow: 0 4px 12px rgba(0, 0, 0, 0.3)
       blocks:
         - id: tooltip_overlay_style_btn

@@ -17,6 +17,98 @@ type: Box
 
 blocks:
   # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: tooltip_no_arrow
+    type: Tooltip
+    properties:
+      title: No arrow tooltip
+      arrow: false
+    blocks:
+      - id: tooltip_no_arrow_trigger
+        type: Button
+        properties:
+          title: No arrow
+
+  - id: tooltip_point_center
+    type: Tooltip
+    properties:
+      title: Point at center tooltip
+      arrowPointAtCenter: true
+      placement: topLeft
+    blocks:
+      - id: tooltip_point_center_trigger
+        type: Button
+        properties:
+          title: Point at center
+
+  - id: tooltip_inner_style
+    type: Tooltip
+    properties:
+      title: Inner styled tooltip
+    style:
+      .inner:
+        backgroundColor: rgb(0, 128, 0)
+    blocks:
+      - id: tooltip_inner_style_trigger
+        type: Button
+        properties:
+          title: Inner style
+
+  - id: tooltip_destroy
+    type: Tooltip
+    properties:
+      title: Destroyed tooltip
+      destroyTooltipOnHide: true
+    blocks:
+      - id: tooltip_destroy_trigger
+        type: Button
+        properties:
+          title: Destroy on hide
+
+  - id: tooltip_context_menu
+    type: Tooltip
+    properties:
+      title: Context menu tooltip
+      trigger: contextMenu
+    blocks:
+      - id: tooltip_context_menu_trigger
+        type: Button
+        properties:
+          title: Right click
+
+  - id: tooltip_open_payload
+    type: Tooltip
+    properties:
+      title: Open payload tooltip
+      trigger: click
+    events:
+      onOpenChange:
+        - id: set_open
+          type: SetState
+          params:
+            tooltip_open_payload:
+              _if:
+                test:
+                  _event: open
+                then: opened
+                else: closed
+    blocks:
+      - id: tooltip_open_payload_trigger
+        type: Button
+        properties:
+          title: Click for payload
+
+  - id: tooltip_open_payload_display
+    type: Span
+    properties:
+      content:
+        _if_none:
+          - _state: tooltip_open_payload
+          - ''
+
+  # ============================================
   # BASIC RENDERING
   # ============================================
 

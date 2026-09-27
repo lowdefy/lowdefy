@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Drawer } from 'antd';
-import { get } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import getMask from '../getMask.js';
 import withTheme from '../withTheme.js';
 
 const handleClose = async ({ methods, rename, setOpen }) => {
@@ -48,7 +49,7 @@ const handleToggle = ({ openState, methods, rename, setOpen }) => {
 const handleAfterOpenChange = ({ drawerOpen, methods, rename }) => {
   methods.triggerEvent({
     name: get(rename, 'events.afterOpenChange', { default: 'afterOpenChange' }),
-    event: { drawerOpen },
+    event: { drawerOpen, open: drawerOpen },
   });
   if (!drawerOpen) {
     methods.triggerEvent({
@@ -67,7 +68,10 @@ const setOpenState = ({ open, methods, rename, setOpen }) => {
 
 // antd v6 replaced the separate `width`/`height` Drawer props with a single `size` prop
 // whose meaning depends on `placement`: width for left/right, height for top/bottom.
-const getDrawerSize = ({ placement, width, height }) => {
+const getDrawerSize = ({ placement, size, width, height }) => {
+  if (!type.isNone(size)) {
+    return size;
+  }
   if (placement === 'top' || placement === 'bottom') {
     return height;
   }
@@ -85,6 +89,7 @@ const DrawerBlock = ({
   styles = {},
 }) => {
   const [openState, setOpen] = useState(false);
+  const resizedSize = useRef();
   useEffect(() => {
     methods.registerMethod(get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }), () =>
       handleToggle({ openState, methods, rename, setOpen })
@@ -94,21 +99,45 @@ const DrawerBlock = ({
     );
   });
 
+  const drawerSize = getDrawerSize({
+    placement: properties.placement,
+    size: properties.size,
+    width: properties.width,
+    height: properties.height,
+  });
+  // A controlled `size` would pin a resizable drawer, so it becomes the starting size instead.
+  const sizeProps = properties.resizable
+    ? {
+        defaultSize: drawerSize,
+        maxSize: properties.maxSize,
+        resizable: {
+          onResize: (size) => {
+            resizedSize.current = size;
+          },
+          onResizeEnd: () =>
+            methods.triggerEvent({
+              name: get(rename, 'events.onResizeEnd', { default: 'onResizeEnd' }),
+              event: { size: resizedSize.current },
+            }),
+        },
+      }
+    : { size: drawerSize };
+
   return (
     <Drawer
       id={blockId}
       closable={properties.closable}
+      destroyOnHidden={properties.destroyOnHidden}
       extra={content.extra && content.extra()}
+      focusable={properties.focusable}
       footer={content.footer && content.footer()}
+      forceRender={properties.forceRender}
       getContainer={properties.getContainer}
-      mask={properties.mask === false ? false : { closable: properties.maskClosable }}
-      title={properties.title}
+      loading={properties.loading}
+      mask={getMask({ mask: properties.mask, maskClosable: properties.maskClosable })}
+      title={renderHtml({ html: properties.title, methods })}
       open={openState}
-      size={getDrawerSize({
-        placement: properties.placement,
-        width: properties.width,
-        height: properties.height,
-      })}
+      {...sizeProps}
       zIndex={properties.zIndex}
       placement={properties.placement}
       keyboard={properties.keyboard}
@@ -125,6 +154,7 @@ const DrawerBlock = ({
       className={classNames.element}
       classNames={{
         header: classNames.header,
+        title: classNames.title,
         body: classNames.body,
         footer: classNames.footer,
         mask: classNames.mask,
@@ -135,6 +165,7 @@ const DrawerBlock = ({
       style={styles.element}
       styles={{
         header: styles.header,
+        title: styles.title,
         body: styles.body,
         footer: styles.footer,
         mask: styles.mask,

@@ -40,3 +40,17 @@
   type: MasonryList
   properties:
     sequential: true
+- id: 'properties.gutter: responsive'
+  type: MasonryList
+  properties:
+    columns:
+      xs: 1
+      md: 3
+    gutter:
+      xs: 8
+      md: 16
+- id: 'style: .item'
+  type: MasonryList
+  style:
+    .item:
+      borderRadius: 8px

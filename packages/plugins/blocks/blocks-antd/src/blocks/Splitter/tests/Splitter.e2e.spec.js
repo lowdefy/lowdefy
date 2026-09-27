@@ -83,4 +83,38 @@ test.describe('Splitter Block', () => {
     const display = getBlock(page, 'sp_resize_display');
     await expect(display).toHaveText('Resize fired');
   });
+
+  // ============================================
+  // ANTD 6 FEATURES
+  // ============================================
+
+  test('orientation vertical renders a vertical splitter', async ({ page }) => {
+    const splitter = getBlock(page, 'sp_orientation').locator('.ant-splitter');
+    await expect(splitter).toHaveClass(/ant-splitter-vertical/);
+  });
+
+  test('panel cssKey styles each panel', async ({ page }) => {
+    const panels = getBlock(page, 'sp_features').locator('.ant-splitter-panel');
+    await expect(panels.first()).toHaveCSS('background-color', 'rgb(240, 248, 255)');
+  });
+
+  test('draggerIcon renders an icon in the drag handle', async ({ page }) => {
+    const block = getBlock(page, 'sp_features');
+    await expect(block.locator('.ant-splitter-bar-dragger-icon svg')).toBeAttached();
+  });
+
+  test('collapsible icon and destroyOnHidden apply when a panel collapses', async ({ page }) => {
+    const block = getBlock(page, 'sp_features');
+    const collapseStart = block.locator('.ant-splitter-bar-collapse-start');
+    await expect(collapseStart.locator('svg.lucide')).toBeAttached();
+    await expect(block).toContainText('First panel');
+    await collapseStart.click();
+    await expect(page.locator('#bl-sp_features_first')).not.toBeAttached();
+  });
+
+  test('onDraggerDoubleClick fires with the handle index', async ({ page }) => {
+    const dragger = getBlock(page, 'sp_features').locator('.ant-splitter-bar-dragger');
+    await dragger.dblclick();
+    await expect(getBlock(page, 'sp_double_click_display')).toHaveText('Double click on 0');
+  });
 });

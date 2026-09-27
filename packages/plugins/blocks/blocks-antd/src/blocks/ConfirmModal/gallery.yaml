@@ -483,6 +483,7 @@
         okText: Export
         okButton:
           icon: download
+          iconPlacement: end
         cancelText: Cancel
         cancelButton:
           icon: close

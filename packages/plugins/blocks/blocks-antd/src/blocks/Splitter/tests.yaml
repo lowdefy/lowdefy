@@ -77,3 +77,40 @@
         defaultSize: 50%
       - key: bottom
         defaultSize: 50%
+- id: 'properties.orientation: vertical'
+  type: Splitter
+  properties:
+    orientation: vertical
+    panels:
+      - key: top
+      - key: bottom
+- id: 'properties.collapsible: motion and icons'
+  type: Splitter
+  properties:
+    collapsible:
+      motion: true
+      icon:
+        start: ChevronsLeft
+        end: ChevronsRight
+    panels:
+      - key: left
+        collapsible:
+          end: true
+          showCollapsibleIcon: true
+      - key: right
+- id: 'properties.destroyOnHidden: true'
+  type: Splitter
+  properties:
+    destroyOnHidden: true
+    panels:
+      - key: left
+        collapsible: true
+      - key: right
+        destroyOnHidden: false
+- id: 'properties.draggerIcon: GripVertical'
+  type: Splitter
+  properties:
+    draggerIcon: GripVertical
+    panels:
+      - key: left
+      - key: right
