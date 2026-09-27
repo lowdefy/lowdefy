@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
 
 import tenantTargetKey from './tenantTargetKey.js';
 
@@ -32,7 +32,7 @@ function collectWalledTargets({ connections, context }) {
     const key = tenantTargetKey({
       connection,
       tenantTarget,
-      collectionPath: tenantTarget.collection,
+      collection: get(connection.properties, tenantTarget.collection),
     });
     if (key === null || walledTargets.has(key)) return;
     walledTargets.set(key, {

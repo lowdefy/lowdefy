@@ -38,7 +38,7 @@ function validateSharedChangeLog({ connections, context, walledTargets }) {
     const key = tenantTargetKey({
       connection,
       tenantTarget,
-      collectionPath: tenantTarget.changeLogCollection,
+      collection: get(connection.properties, tenantTarget.changeLogCollection),
     });
     if (!walledTargets.has(key)) return;
     const logCollection = get(connection.properties, tenantTarget.changeLogCollection);

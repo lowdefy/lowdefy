@@ -22,13 +22,16 @@ import { get, type } from '@lowdefy/helpers';
 // match when their collection names are the same literal string and their
 // database properties are equal as authored. A name resolved at runtime
 // (_secret, _payload) can not be compared, so it has no key (null).
+//
+// The collection is passed in - the connection's own collection, its change-log
+// collection, or a collection an aggregation stage writes into - and resolved
+// against the connection's type and database.
 
 function comparable(value) {
   return JSON.stringify(value ?? null, (key, item) => (key.startsWith('~') ? undefined : item));
 }
 
-function tenantTargetKey({ connection, tenantTarget, collectionPath }) {
-  const collection = get(connection.properties, collectionPath);
+function tenantTargetKey({ connection, tenantTarget, collection }) {
   if (!type.isString(collection)) {
     return null;
   }

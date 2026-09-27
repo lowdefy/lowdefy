@@ -271,6 +271,43 @@ test('a literal $search step pipeline on a walled connection without tenant auth
   );
 });
 
+test('a literal $merge from a shared connection into a walled collection in a nested routine throws at build', () => {
+  const context = testContext({ logger });
+  const tenantTarget = { database: ['databaseUri'], collection: 'collection' };
+  context.walledTargets.set(JSON.stringify(['MongoDBCollection', ['uri'], 'totals']), {
+    connectionId: 'totals',
+    field: 'organization_id',
+  });
+  context.sharedTargets.set('orders_all', {
+    connection: { type: 'MongoDBCollection', properties: { databaseUri: 'uri' } },
+    tenantTarget,
+  });
+  const components = {
+    api: [
+      {
+        id: 'nightly',
+        type: 'Api',
+        routine: [
+          {
+            ':if': true,
+            ':then': [
+              {
+                id: 'rollup',
+                type: 'MongoDBAggregation',
+                connectionId: 'orders_all',
+                properties: { pipeline: [{ $merge: { into: 'totals' } }] },
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    'Step "rollup" at endpoint "nightly" writes into collection "totals" with "$merge" on tenant: shared connection "orders_all"'
+  );
+});
+
 test('a literal $graphLookup step on a walled connection with tenant authored passes the build check', () => {
   const context = testContext({ logger });
   context.tenantConnectionIds.add('walled');

@@ -23,6 +23,7 @@ import collectExceptions from '../utils/collectExceptions.js';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 import validateId from '../utils/validateId.js';
+import collectSharedTargets from './collectSharedTargets.js';
 import collectWalledTargets from './collectWalledTargets.js';
 import markWalledSharedConnections from './markWalledSharedConnections.js';
 import validateSharedChangeLog from './validateSharedChangeLog.js';
@@ -170,6 +171,11 @@ function buildConnections({ components, context }) {
   // the wall does not engage under pinned, so demanding an authored clause
   // there would be a false alarm for a filter that never runs.
   context.tenantConnectionIds = new Set();
+  // The walled collections and the shared connections that could write into
+  // them - read by validateSharedPipelineWrite for requests and steps. Empty
+  // under pinned, for the same reason as tenantConnectionIds.
+  context.walledTargets = new Map();
+  context.sharedTargets = new Map();
   const tenantPolicy = components.auth?.organizations?.policy === 'tenant';
 
   const checkDuplicateConnectionId = createCheckDuplicateId({
@@ -228,6 +234,8 @@ function buildConnections({ components, context }) {
     const walledTargets = collectWalledTargets({ connections: validConnections, context });
     validateSharedChangeLog({ connections: validConnections, context, walledTargets });
     markWalledSharedConnections({ connections: validConnections, context, walledTargets });
+    context.walledTargets = walledTargets;
+    context.sharedTargets = collectSharedTargets({ connections: validConnections, context });
   }
 
   return components;

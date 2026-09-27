@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { get } from '@lowdefy/helpers';
+
 import tenantTargetKey from './tenantTargetKey.js';
 
 // A tenant: shared connection reads and writes across organizations, but when
@@ -36,7 +38,7 @@ function markWalledSharedConnections({ connections, context, walledTargets }) {
     const key = tenantTargetKey({
       connection,
       tenantTarget,
-      collectionPath: tenantTarget.collection,
+      collection: get(connection.properties, tenantTarget.collection),
     });
     if (!walledTargets.has(key)) return;
     connection.walled = { ...walledTargets.get(key) };
