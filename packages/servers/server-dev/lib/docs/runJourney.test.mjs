@@ -662,6 +662,20 @@ test('runJourney reports a missing expect.state value as actual null', async () 
   expect(Object.keys(result.failure)).toContain('actual');
 });
 
+test('runJourney matches a missing state path with equals null, as its failure report shows it', async () => {
+  const page = createPage({ window: createLowdefyWindow({ state: { rows: [{ id: 1 }] } }) });
+  openWith(page);
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { expect: { state: { path: 'rows.1', equals: null } } },
+      { expect: { state: { path: 'rows.0', equals: null } } },
+    ],
+  });
+  expect(result.failure).toMatchObject({ index: 1, expected: null, actual: { id: 1 } });
+});
+
 test('runJourney fills a numeric value as a string', async () => {
   const page = createPage();
   openWith(page);

@@ -434,9 +434,12 @@ async function runScreenshot({ page, step, index, screenshots }) {
   screenshots.push({ name, data: buffer.toString('base64'), mimeType: 'image/png' });
 }
 
+// A path that does not exist reads as null: a journey is JSON, where null is
+// the only way to say "absent", and the failure report already shows a
+// missing value as null - so `equals: null` asserts the value is not there.
 async function expectState({ page, params }) {
   const { path, equals } = params;
-  const actual = get((await getState(page)) ?? {}, path);
+  const actual = get((await getState(page)) ?? {}, path) ?? null;
   if (!isDeepEqual(actual, equals)) {
     throw new JourneyStepError(
       `Expected state "${path}" to equal ${JSON.stringify(equals)} but found ${JSON.stringify(
