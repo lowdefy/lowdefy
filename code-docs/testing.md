@@ -60,6 +60,11 @@ Port 3000 is the default for a developer's own dev server; tests and agents neve
 - Unit tests that need a socket listen on port `0` or use `findAvailablePort` from
   `@lowdefy/node-utils`.
 - A dev app for manual or agent checks: `pnpm app:dev --no-open --port <free port>`.
+- A production build of any app (per-page plugin chunks, preloads and cache headers only
+  exist there): `node scripts/build.mjs --skip-build --config-directory <app>`, then
+  `node scripts/start.mjs --port <free port>`. It builds into the worktree's `_server/prod`.
+  Load pages cold (a fresh browser page per URL) as well as by navigation: a type missing
+  from a page's chunk only fails on a cold load.
 - Block e2e (`pnpm --filter=@lowdefy/blocks-basic e2e`) builds and starts the app from
   `e2e/app` on the package's port (3001–3014, one per package). Set `LOWDEFY_E2E_PORT` to
   run the same package from two worktrees at once. An already running server is reused only
