@@ -14,13 +14,18 @@
   limitations under the License.
 */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { App } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import Button from '../Button/Button.js';
 import statusIcons from '../statusIcons.js';
+
+// Notifications live in the app-wide holder and outlast the block that opened them, so keys
+// are counted per page load: a block that remounts, or a block with the same id on another
+// page, must not replace a notification that is still showing.
+let openCount = 0;
 
 const NotificationBlock = ({
   blockId,
@@ -32,14 +37,13 @@ const NotificationBlock = ({
   styles = {},
 }) => {
   const { notification } = App.useApp();
-  const openCount = useRef(0);
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       const status = args.status || properties.status || 'success';
       const icon = properties.icon ?? statusIcons[status];
-      openCount.current += 1;
+      openCount += 1;
       // The key lets the button close this notification; each open gets its own notification.
-      const key = `${blockId}_notification_${openCount.current}`;
+      const key = `${blockId}_notification_${openCount}`;
       notification[status]({
         key,
         bottom: properties.bottom,
