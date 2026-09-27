@@ -263,7 +263,7 @@ function hydrateContext({ buildDir, configDir }) {
   context.dynamicIconData = {};
 
   const idCounter = readArtifact(buildDir, 'idCounter.json');
-  if (idCounter != null) makeId.setCounter(idCounter);
+  makeId.continueFrom(idCounter);
 
   return context;
 }

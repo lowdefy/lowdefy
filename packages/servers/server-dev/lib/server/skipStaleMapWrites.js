@@ -1,0 +1,41 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import fs from 'fs';
+import path from 'path';
+
+const mapFiles = new Set(['keyMap.json', 'refMap.json']);
+
+function readLiveKeyPrefix({ buildDirectory }) {
+  return JSON.parse(fs.readFileSync(path.join(buildDirectory, 'idCounter.json'), 'utf8')).prefix;
+}
+
+// A config rebuild publishes new maps while a page build that started against the
+// previous build may still be running. That build's keyMap and refMap describe the
+// previous build, so writing them would replace the new maps, and errors would resolve
+// against the wrong build until the next rebuild. The build's key prefix names the build
+// a context was created from.
+function skipStaleMapWrites({ buildDirectory, context, keyPrefix }) {
+  const writeBuildArtifact = context.writeBuildArtifact;
+  context.writeBuildArtifact = async (filePath, content) => {
+    if (mapFiles.has(filePath) && readLiveKeyPrefix({ buildDirectory }) !== keyPrefix) {
+      return;
+    }
+    await writeBuildArtifact(filePath, content);
+  };
+}
+
+export default skipStaleMapWrites;

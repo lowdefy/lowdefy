@@ -360,7 +360,7 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
 }
 ```
 
-`getBuildContext` also restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), API endpoint configs (for JIT `CallAPI` validation), and advances the `makeId` counter past skeleton IDs. Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart.
+`getBuildContext` also restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), API endpoint configs (for JIT `CallAPI` validation), and continues the skeleton build's `~k` keys from `idCounter.json` (`makeId.continueFrom`: same key prefix, counter only moves forward). It also wraps the context's `writeBuildArtifact` with `skipStaleMapWrites`, so a page build that started before a skeleton rebuild does not write its `keyMap.json`/`refMap.json` over the new ones (see [Keys across dev rebuilds](../architecture/error-tracing.md#keys-across-dev-rebuilds)). Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart.
 
 ### PageCache
 
