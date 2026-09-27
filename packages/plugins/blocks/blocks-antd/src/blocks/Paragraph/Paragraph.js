@@ -15,10 +15,12 @@
 */
 
 import React from 'react';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 import { Typography } from 'antd';
 
+import getEllipsisConfig from '../getEllipsisConfig.js';
+import getTypographyContent from '../getTypographyContent.js';
 import withTheme from '../withTheme.js';
 
 const Paragraph = Typography.Paragraph;
@@ -34,7 +36,9 @@ const ParagraphBlock = ({
 }) => (
   <Paragraph
     id={blockId}
+    actions={properties.actions}
     className={classNames.element}
+    classNames={{ actions: classNames.actions }}
     code={properties.code}
     copyable={
       type.isObject(properties.copyable)
@@ -90,35 +94,17 @@ const ParagraphBlock = ({
     }
     delete={properties.delete}
     disabled={properties.disabled}
-    ellipsis={
-      type.isObject(properties.ellipsis)
-        ? {
-            rows: properties.ellipsis.rows,
-            expandable: properties.ellipsis.expandable,
-            suffix: properties.ellipsis.suffix,
-            // FIX: not working, might be and antd issue.
-            // symbol: properties.ellipsis.symbol && <span>{properties.ellipsis.symbol}</span>,
-            // "symbol": {
-            //   "type": "string",
-            //   "description": "Custom ... symbol of ellipsis content."
-            // }
-            onExpand: (ellipsis) => {
-              methods.triggerEvent({
-                name: 'onExpand',
-                event: { ellipsis },
-              });
-            },
-          }
-        : properties.ellipsis
-    }
+    ellipsis={getEllipsisConfig({ ellipsis: properties.ellipsis, methods })}
     italic={properties.italic}
+    keyboard={properties.keyboard}
     mark={properties.mark}
     strong={properties.strong}
     style={styles.element}
-    type={properties.type}
+    styles={{ actions: styles.actions }}
+    type={properties.type === 'default' ? undefined : properties.type}
     underline={properties.underline}
   >
-    {renderHtml({ html: properties.content, events, methods })}
+    {getTypographyContent({ events, methods, properties })}
   </Paragraph>
 );
 
