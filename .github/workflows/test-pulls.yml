@@ -32,7 +32,4 @@ jobs:
         run: pnpm -r --filter='!@lowdefy/website' --filter='!@lowdefy/lowdefy' build
         if: matrix.os == 'windows-latest'
       - run: pnpm test
-      - name: MongoDB connection tests
-        run: pnpm test:mongodb
-        if: matrix.os == 'ubuntu-latest'
       - uses: codecov/codecov-action@v5

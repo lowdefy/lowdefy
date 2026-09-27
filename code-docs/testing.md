@@ -45,8 +45,9 @@ with:
 pnpm test:mongodb
 ```
 
-CI runs it as a separate step on Linux. Each jest run starts its own `mongod` on a free
-port, so worktrees can run it at the same time.
+CI does not run it on every push. Start the `MongoDB Tests` workflow from the Actions tab,
+or add the `run-mongodb-tests` label to a pull request. Each jest run starts its own
+`mongod` on a free port, so worktrees can run it at the same time.
 
 ## Ports
 
