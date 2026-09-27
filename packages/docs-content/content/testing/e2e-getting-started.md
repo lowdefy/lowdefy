@@ -40,7 +40,7 @@ Run tests with the Playwright UI (useful for debugging):
 pnpm e2e:ui
 ```
 
-> The first run will take longer because Playwright needs to build and start your Lowdefy app. Subsequent runs reuse the server if it is still running.
+> The first run will take longer because Playwright needs to build and start your Lowdefy app. Later runs reuse the app's e2e server if it is still running (for example after `pnpm e2e:server`). If another server holds the port, such as `lowdefy dev`, the run stops with an error that names the port.
 
 ## Your first test
 

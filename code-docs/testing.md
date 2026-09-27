@@ -31,7 +31,7 @@ Git state that is _not_ per worktree: branches, tags, the stash and the `rerere`
 ## Unit tests
 
 ```bash
-pnpm test                                           # every package except the two below
+pnpm test                                           # every package except connection-mongodb
 pnpm --filter=@lowdefy/api test                     # one package
 pnpm --filter=@lowdefy/api test --testPathPattern=endpoint --no-coverage
 ```
@@ -42,6 +42,25 @@ they survive a loaded machine; don't tune timeouts down to what one idle run nee
 Never pass `--` before jest flags, and never call `pnpm jest` or `npx jest` directly.
 Packages import each other from `dist/`, so run `pnpm build` after changing more than one
 package.
+
+## Dependency check
+
+`pnpm test` starts with `pnpm test:dependencies` (one to three seconds). It parses every source
+file under `packages/` and fails when a file imports a package that its `package.json` does
+not declare. In the monorepo such an import still resolves through another package's
+install, so only the published package (or a later lockfile change) breaks.
+
+- Published files (`files` in `package.json`; `src/` counts as `dist/`) may import
+  `dependencies`, `peerDependencies` and `optionalDependencies`.
+- Tests (`*.test.js`, `test/`, `tests/`, `test-utils/`, `__mocks__/`), unpublished files,
+  block e2e helpers (reachable from a package's `./e2e` export) and private packages may
+  also import `devDependencies`. So do the servers' `lowdefy/` build scripts and the
+  webpack-bundled `@lowdefy/nunjucks`, listed in `scripts/lib/findUndeclaredImports.mjs`.
+- Tests that import `@jest/globals` declare it as a devDependency.
+
+The check reads what is declared, not what resolves: ESLint's
+`import/no-extraneous-dependencies` skips any import it cannot resolve, which in a pnpm
+workspace is most undeclared imports.
 
 ## MongoDB tests
 
@@ -128,6 +147,20 @@ The copy keeps its `node_modules` and lockfile between runs, and the CLI install
 when the copy's `package.json` changes, so a repeat run spends its time on the builds.
 Delete `_server/e2e/<package>` to force a fresh install. `packages/cli/dist` and the linked
 packages' `dist` must be built first (`pnpm build`).
+
+CI does not run block e2e on every push. Start the `Block E2E Tests` workflow from the
+Actions tab, or add the `run-block-e2e` label to a pull request; it runs each package's
+suite in its own job.
+
+## Before merging
+
+The root `pnpm test` in CI skips the MongoDB and block e2e suites, so a pull request that
+touches them runs them on request (the pull request template lists both):
+
+| Change touches                               | Run                                                  |
+| -------------------------------------------- | ---------------------------------------------------- |
+| `connection-mongodb`, tenancy, auth adapters | `pnpm test:mongodb` or the `run-mongodb-tests` label |
+| blocks, `block-utils`, the engine            | `pnpm e2e` or the `run-block-e2e` label              |
 
 ## Dev server and hub
 
