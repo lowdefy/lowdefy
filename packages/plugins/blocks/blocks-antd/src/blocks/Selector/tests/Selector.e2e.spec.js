@@ -351,7 +351,8 @@ test.describe('Selector Block', () => {
     const selector = getSelector(page, 'selector_loading');
     await expect(selector).toHaveClass(/ant-select-loading/);
     await expect(selector).toHaveClass(/ant-select-disabled/);
-    await expect(selector.locator('.ant-select-suffix svg')).toBeVisible();
+    await expect(selector.locator('#selector_loading_loadingIcon')).toBeVisible();
+    await expect(selector.locator('#selector_loading_suffixIcon')).toHaveCount(0);
   });
 
   test('class.popup and style.popup are applied to the dropdown', async ({ page }) => {

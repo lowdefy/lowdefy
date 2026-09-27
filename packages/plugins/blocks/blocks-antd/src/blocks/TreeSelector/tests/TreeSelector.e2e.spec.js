@@ -91,6 +91,8 @@ test.describe('TreeSelector Block', () => {
     const selector = getSelector(page, 'tsel_loading');
     await expect(selector).toHaveClass(/ant-select-loading/);
     await expect(selector).toHaveClass(/ant-select-disabled/);
+    await expect(selector.locator('#tsel_loading_loadingIcon')).toBeVisible();
+    await expect(selector.locator('#tsel_loading_suffixIcon')).toHaveCount(0);
   });
 
   test('applies selector and tree node tokens from theme', async ({ page }) => {
