@@ -38,11 +38,6 @@ export default {
       default: '0 0 0 2px rgba(5,145,255,0.1)',
       description: 'Shadow effect when the picker is active/focused.',
     },
-    addonBg: {
-      type: 'string',
-      default: 'rgba(0, 0, 0, 0.02)',
-      description: 'Background color of the footer addon area.',
-    },
     borderRadius: {
       type: 'number',
       default: 6,
