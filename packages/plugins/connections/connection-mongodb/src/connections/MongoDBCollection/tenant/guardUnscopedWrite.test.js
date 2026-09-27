@@ -21,7 +21,7 @@ import {
 } from './guardUnscopedWrite.js';
 
 const field = 'organization_id';
-const refusal = 'Unscoped write (tenant: none) on a tenant connection must leave "organization_id"';
+const refusal = 'must leave "organization_id" a non-empty organization id on every row it writes';
 
 describe('assertUnscopedDoc', () => {
   test('passes a document carrying an organization id', () => {

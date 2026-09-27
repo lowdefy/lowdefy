@@ -19,7 +19,7 @@ import getConsecutiveIdIndex from '../getConsecutiveIdIndex.js';
 import mapMongoError from '../mapMongoError.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
-import { assertUnscopedDoc } from '../tenant/guardUnscopedWrite.js';
+import { assertUnscopedDoc, changeLogOrganizationOfDocs } from '../tenant/guardUnscopedWrite.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -44,6 +44,10 @@ async function MongoDBInsertManyConsecutiveIds({
     docs.forEach((doc) => assertUnscopedDoc({ doc, field: tenantGuard.field }));
   }
   const { client, collection, logCollection } = await getCollection({ connection });
+  let logOrganizationId = null;
+  if (tenantGuard?.stampChangeLog && logCollection) {
+    logOrganizationId = changeLogOrganizationOfDocs({ docs, field: tenantGuard.field });
+  }
 
   // The id read and insert run in a transaction so concurrent requests cannot
   // claim the same ids. Transactions require MongoDB to run as a replica set.
@@ -77,6 +81,8 @@ async function MongoDBInsertManyConsecutiveIds({
               meta: connection.changeLog?.meta,
             },
             tenant,
+            tenantGuard,
+            organizationId: logOrganizationId,
           }),
           { session }
         );

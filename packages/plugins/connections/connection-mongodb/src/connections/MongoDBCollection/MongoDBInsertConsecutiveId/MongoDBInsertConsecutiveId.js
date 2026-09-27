@@ -75,6 +75,8 @@ async function MongoDBInsertConsecutiveId({
               meta: connection.changeLog?.meta,
             },
             tenant,
+            tenantGuard,
+            organizationId: tenantGuard && doc[tenantGuard.field],
           }),
           { session }
         );

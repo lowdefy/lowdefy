@@ -82,27 +82,33 @@ async function MongodbUpdateOne({
     if (!disableNoMatchError && !options?.upsert && matched === 0 && !upsertedId) {
       throw new Error('No matching record to update.');
     }
-    try {
-      await logCollection.insertOne(
-        stampTenantOnLogRecord({
-          record: {
-            args: { filter, update, options },
-            blockId,
-            connectionId,
-            pageId,
-            payload,
-            requestId,
-            before,
-            after,
-            timestamp: new Date(),
-            type: 'MongoDBUpdateOne',
-            meta: connection.changeLog?.meta,
-          },
-          tenant,
-        })
-      );
-    } catch (error) {
-      throw mapMongoError(error, { connection, requestType: 'MongoDBUpdateOne' });
+    // An unscoped record belongs to the organization of the row the update
+    // left behind; an update that matched no row has none, and records nothing.
+    if (!(tenantGuard?.stampChangeLog && after === null)) {
+      try {
+        await logCollection.insertOne(
+          stampTenantOnLogRecord({
+            record: {
+              args: { filter, update, options },
+              blockId,
+              connectionId,
+              pageId,
+              payload,
+              requestId,
+              before,
+              after,
+              timestamp: new Date(),
+              type: 'MongoDBUpdateOne',
+              meta: connection.changeLog?.meta,
+            },
+            tenant,
+            tenantGuard,
+            organizationId: tenantGuard && after?.[tenantGuard.field],
+          })
+        );
+      } catch (error) {
+        throw mapMongoError(error, { connection, requestType: 'MongoDBUpdateOne' });
+      }
     }
   } else {
     try {
