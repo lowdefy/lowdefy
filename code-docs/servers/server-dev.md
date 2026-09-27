@@ -57,9 +57,9 @@ Additional operators and connections:
 
 Both `server` and `server-dev` have `antd` and `@ant-design/cssinjs` as direct dependencies. This is correct — the published packages need them for pnpm strict mode resolution.
 
-**The singleton risk only exists in the local monorepo dev setup** (`scripts/dev.mjs`), where `rewriteDeps.mjs` rewrites `@lowdefy/*` deps to `link:` paths. Without overrides, pnpm would install a separate npm copy of antd for the dev server while linked `@lowdefy/client` uses the monorepo's copy — two instances.
+**The singleton risk only exists in the monorepo's isolated server copies** (`scripts/dev.mjs`, `scripts/build.mjs` and `scripts/prepare-e2e-server.mjs` for block e2e), where `rewriteDeps.mjs` rewrites `@lowdefy/*` deps to `link:` paths. Without overrides, pnpm would install a separate npm copy of antd for the server copy while linked `@lowdefy/client` uses the monorepo's copy — two instances.
 
-**Fix:** `rewriteDeps.mjs` has a `SINGLETON_PACKAGES` list (`antd`, `@ant-design/cssinjs`) that adds `pnpm.overrides` entries pointing to the monorepo's `node_modules/` copies. This forces a single instance across the dev server and all linked packages.
+**Fix:** `rewriteDeps.mjs` has a `SINGLETON_PACKAGES` list (`antd`, `@ant-design/cssinjs`, `@ant-design/x`) that adds `pnpm.overrides` entries linking to the source server's install in the monorepo (`packages/servers/server/node_modules/antd` or the `server-dev` one), which is the instance pnpm gives every linked package. This forces a single instance across the server copy and all linked packages. The monorepo root `node_modules/` does not hoist these packages, so it can't be the source.
 
 **If you add a new package that uses React context across components** (like a UI library), add it to `SINGLETON_PACKAGES` in `scripts/lib/rewriteDeps.mjs`.
 
