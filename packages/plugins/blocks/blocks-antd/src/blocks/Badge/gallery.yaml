@@ -671,7 +671,7 @@
         count: 5
       style:
         .indicator:
-          boxShadow: 0 0 0 2px #1677ff
+          boxShadow: '0 0 0 2px #1677ff'
       blocks:
         - id: css_indicator_shadow_child
           type: Avatar

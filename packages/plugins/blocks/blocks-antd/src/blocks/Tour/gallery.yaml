@@ -715,7 +715,7 @@
       type: Tour
       style:
         .mask:
-          boxShadow: inset 0 0 15px #333
+          boxShadow: 'inset 0 0 15px #333'
       properties:
         open:
           _state: mask_custom_tour_open

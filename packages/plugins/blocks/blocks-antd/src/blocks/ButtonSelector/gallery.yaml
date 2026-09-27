@@ -603,6 +603,7 @@
   blocks:
     - id: class_padding
       type: ButtonSelector
+      class: p-4
       properties:
         title: Tailwind Padding
         variant: solid
@@ -613,9 +614,9 @@
             value: b
           - label: Option C
             value: c
-        class: p-4
     - id: class_shadow_rounded
       type: ButtonSelector
+      class: shadow-md rounded-lg p-2
       properties:
         title: Shadow and Rounded
         variant: solid
@@ -626,9 +627,9 @@
             value: b
           - label: Option C
             value: c
-        class: shadow-md rounded-lg p-2
     - id: class_background
       type: ButtonSelector
+      class: bg-bg-layout p-3 rounded
       properties:
         title: Background Color
         variant: solid
@@ -639,7 +640,6 @@
             value: b
           - label: Option C
             value: c
-        class: bg-bg-layout p-3 rounded
 
 - title: Theme Token Overrides
   blocks:

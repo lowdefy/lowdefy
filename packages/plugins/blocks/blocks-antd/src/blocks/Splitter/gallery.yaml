@@ -18,7 +18,7 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -55,7 +55,7 @@
       type: Splitter
       style:
         height: 300px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: vertical
@@ -92,7 +92,7 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -139,7 +139,7 @@
       type: Splitter
       style:
         height: 180px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -175,7 +175,7 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -220,7 +220,7 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -273,7 +273,7 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -313,7 +313,7 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -364,7 +364,7 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -420,7 +420,7 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         destroyOnHidden: true
@@ -457,7 +457,7 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -507,7 +507,7 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -546,7 +546,7 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -609,7 +609,7 @@
       type: Splitter
       style:
         height: 220px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -677,7 +677,7 @@
       type: Splitter
       style:
         height: 350px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -762,7 +762,7 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -801,7 +801,7 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -843,7 +843,7 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -882,7 +882,7 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -923,7 +923,7 @@
     - id: css_rounded
       type: Splitter
       class:
-        element: rounded-2xl shadow-lg overflow-hidden
+        .element: rounded-2xl shadow-lg overflow-hidden
       style:
         height: 200px
       properties:
@@ -958,7 +958,7 @@
     - id: css_border
       type: Splitter
       class:
-        element: border-2 border-dashed border-blue-300 rounded-xl
+        .element: border-2 border-dashed border-blue-300 rounded-xl
       style:
         height: 180px
       properties:
@@ -996,7 +996,7 @@
       type: Splitter
       style:
         height: 420px
-        border: 1px solid #d9d9d9
+        border: '1px solid #d9d9d9'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -1100,7 +1100,7 @@
                           style:
                             color: '#64748b'
                             fontSize: 12px
-                            borderBottom: 1px solid #334155
+                            borderBottom: '1px solid #334155'
                             paddingBottom: 8px
                           properties:
                             content: 'App.js'
@@ -1126,7 +1126,7 @@
                             fontSize: 11px
                             textTransform: uppercase
                             letterSpacing: 1px
-                            borderBottom: 1px solid #1e293b
+                            borderBottom: '1px solid #1e293b'
                             paddingBottom: 6px
                           properties:
                             content: Terminal
@@ -1153,7 +1153,7 @@
       type: Splitter
       style:
         height: 400px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
         orientation: horizontal
@@ -1310,7 +1310,7 @@
     - id: email_outer
       type: Splitter
       class:
-        element: rounded-lg shadow-md overflow-hidden
+        .element: rounded-lg shadow-md overflow-hidden
       style:
         height: 420px
       properties:
@@ -1498,8 +1498,7 @@
                       properties:
                         icon: user
                         size: 32
-                        color: '#fff'
-                        backgroundColor: '#1677ff'
+                        color: '#1677ff'
                     - id: email_preview_sender
                       type: Box
                       layout:

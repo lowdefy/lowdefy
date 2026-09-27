@@ -266,7 +266,7 @@
         .element:
           padding: 16px 24px
           borderRadius: 8px
-          border: 1px solid #b7eb8f
+          border: '1px solid #b7eb8f'
       properties:
         data:
           - title: Deployment started

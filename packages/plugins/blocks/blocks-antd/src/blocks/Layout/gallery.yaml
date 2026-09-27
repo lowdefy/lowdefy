@@ -153,7 +153,7 @@
                 width: 250
                 reverseArrow: true
               style:
-                borderLeft: 1px solid #f0f0f0
+                borderLeft: '1px solid #f0f0f0'
               blocks:
                 - id: layout_right_sider_side_text
                   type: Paragraph
@@ -440,7 +440,8 @@
               properties:
                 content: DevDocs
                 level: 4
-                style:
+              style:
+                .element:
                   margin: 0
             - id: layout_docs_version_tag
               type: Tag
@@ -485,7 +486,7 @@
                 width: 260
                 breakpoint: md
               style:
-                borderRight: 1px solid #f0f0f0
+                borderRight: '1px solid #f0f0f0'
               blocks:
                 - id: layout_docs_nav_title
                   type: Paragraph

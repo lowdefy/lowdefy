@@ -731,7 +731,7 @@
         subTitle: Please verify your identity to continue. Check your email for the verification code.
       style:
         .element:
-          border: 2px solid #1677ff
+          border: '2px solid #1677ff'
           borderRadius: 12px
           padding: 32px
     - id: inline_shadow
@@ -755,7 +755,7 @@
         .element:
           maxWidth: 480px
           margin: 0 auto
-          border: 1px solid #faad14
+          border: '1px solid #faad14'
           borderRadius: 8px
           padding: 24px
 

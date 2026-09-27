@@ -525,14 +525,14 @@
     - id: css_shadow_msg
       type: Message
       class:
-        element: shadow-lg
+        .element: shadow-lg
       properties:
         status: success
         content: Message with shadow via Tailwind class
     - id: css_rounded_msg
       type: Message
       class:
-        element: rounded-full
+        .element: rounded-full
       properties:
         status: info
         content: Message with rounded corners via Tailwind class

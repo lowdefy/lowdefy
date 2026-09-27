@@ -391,19 +391,26 @@
 - title: With Label
   blocks:
     - id: with_label_default
-      type: Pagination
+      type: Label
       properties:
         title: Page Navigation
-        total: 100
+      blocks:
+        - id: with_label_default_pagination
+          type: Pagination
+          properties:
+            total: 100
     - id: with_label_inline
-      type: Pagination
+      type: Label
       properties:
         title: Results
-        total: 200
-        showTotal: true
-        label:
-          inline: true
-          span: 6
+        inline: true
+        span: 6
+      blocks:
+        - id: with_label_inline_pagination
+          type: Pagination
+          properties:
+            total: 200
+            showTotal: true
 
 - title: With Style
   blocks:
@@ -428,7 +435,7 @@
       type: Pagination
       style:
         .element:
-          border: 1px solid #d9d9d9
+          border: '1px solid #d9d9d9'
           borderRadius: 8
           padding: 12
           display: flex

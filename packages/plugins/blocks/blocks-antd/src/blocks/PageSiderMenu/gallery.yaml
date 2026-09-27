@@ -210,8 +210,7 @@
                     flex: 0 0 auto
                   properties:
                     size: small
-                    color: '#fff'
-                    backgroundColor: '#1677ff'
+                    color: '#1677ff'
                     icon: user
                 - id: psm_grp_name_1
                   type: Paragraph
@@ -219,7 +218,8 @@
                     flex: 1 1 0
                   properties:
                     content: Jane Cooper
-                    style:
+                  style:
+                    .element:
                       margin: 0
                 - id: psm_grp_tag_1
                   type: Tag
@@ -242,8 +242,7 @@
                     flex: 0 0 auto
                   properties:
                     size: small
-                    color: '#fff'
-                    backgroundColor: '#52c41a'
+                    color: '#52c41a'
                     icon: user
                 - id: psm_grp_name_2
                   type: Paragraph
@@ -251,7 +250,8 @@
                     flex: 1 1 0
                   properties:
                     content: Tom Wilson
-                    style:
+                  style:
+                    .element:
                       margin: 0
                 - id: psm_grp_tag_2
                   type: Tag
@@ -399,7 +399,8 @@
                   type: Paragraph
                   properties:
                     content: Sprint Progress
-                    style:
+                  style:
+                    .element:
                       margin: 0 0 8px 0
                       fontSize: 12
                       color: '#999'
@@ -414,7 +415,8 @@
               type: Paragraph
               properties:
                 content: Admin Panel v2.4.1
-                style:
+              style:
+                .element:
                   textAlign: center
                   margin: 0
                   color: '#999'

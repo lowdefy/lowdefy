@@ -95,7 +95,8 @@
               type: Paragraph
               properties:
                 content: Made with Lowdefy
-                style:
+              style:
+                .element:
                   marginTop: 8px
                   color: '#999'
 
@@ -119,7 +120,7 @@
         - id: footer_corp_el
           type: Footer
           class:
-            element: bg-bg-layout
+            .element: bg-bg-layout
           style:
             padding: 40px 50px 24px
           blocks:
@@ -145,7 +146,8 @@
                       type: Paragraph
                       properties:
                         content: Building better tools for modern teams since 2020.
-                        style:
+                      style:
+                        .element:
                           color: '#666'
                 - id: footer_corp_col2
                   type: Box
@@ -227,7 +229,8 @@
                     flex: 0 0 auto
                   properties:
                     content: '© 2026 Acme Corp. All rights reserved.'
-                    style:
+                  style:
+                    .element:
                       color: '#999'
                       margin: 0
                 - id: footer_corp_social
@@ -349,7 +352,8 @@
                   type: Paragraph
                   properties:
                     content: Admin Portal v2.4.1 - Powered by Lowdefy
-                    style:
+                  style:
+                    .element:
                       color: '#999'
                       margin: 0
                       fontSize: 12px

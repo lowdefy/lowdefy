@@ -899,8 +899,10 @@
         title: Colored Header
       style:
         .header:
-          borderBottom: 1px solid #91caff
+          backgroundColor: var(--ant-color-primary-bg)
+          borderBottom: 1px solid var(--ant-color-primary-border)
         .body:
+          backgroundColor: var(--ant-color-fill-quaternary)
       blocks:
         - id: style_header_bg_p
           type: Paragraph
@@ -917,7 +919,7 @@
         .header:
           backgroundColor: '#1f1f1f'
           color: '#ffffff'
-          borderBottom: 1px solid #333
+          borderBottom: '1px solid #333'
         .body:
           backgroundColor: '#2a2a2a'
       blocks:

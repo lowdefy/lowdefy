@@ -459,7 +459,7 @@
         flex: 0 0 auto
       style:
         .element:
-          border: 2px solid #1677ff
+          border: '2px solid #1677ff'
           borderRadius: 8px
       properties:
         showText: true

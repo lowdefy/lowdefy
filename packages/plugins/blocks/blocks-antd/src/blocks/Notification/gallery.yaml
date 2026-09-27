@@ -677,7 +677,7 @@
         description: This notification has a left green border.
       style:
         .element:
-          borderLeft: 4px solid #52c41a
+          borderLeft: '4px solid #52c41a'
     - id: notif_style_bg
       type: Notification
       layout:
@@ -951,7 +951,7 @@
       style:
         .element:
           borderRadius: 12
-          border: 2px solid #1890ff
+          border: '2px solid #1890ff'
       properties:
         status: info
         title: Inline Style
@@ -1007,7 +1007,7 @@
     - id: order_card
       type: Card
       properties:
-        title: Order #12847
+        title: 'Order #12847'
         size: small
       blocks:
         - id: order_status_text

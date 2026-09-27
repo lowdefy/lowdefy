@@ -366,7 +366,7 @@
         italic: true
       style:
         .element:
-          borderLeft: 3px solid #1677ff
+          borderLeft: '3px solid #1677ff'
           paddingLeft: 12px
 
 - title: Theme Token Overrides

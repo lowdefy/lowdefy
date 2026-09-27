@@ -305,7 +305,7 @@
       style:
         .element:
           padding: 8px 16px
-          border: 1px solid #d9d9d9
+          border: '1px solid #d9d9d9'
           borderRadius: 6
     - id: css_inline_background
       type: Breadcrumb

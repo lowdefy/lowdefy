@@ -320,7 +320,7 @@
         level: 4
       style:
         .element:
-          borderBottom: 2px solid #1677ff
+          borderBottom: '2px solid #1677ff'
           paddingBottom: 8px
     - id: css_inline_shadow
       type: Title

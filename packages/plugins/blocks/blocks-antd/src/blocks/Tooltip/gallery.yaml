@@ -922,7 +922,7 @@
       properties:
         title: Tailwind on element wrapper
       class:
-        element: cursor-help
+        .element: cursor-help
       blocks:
         - id: tooltip_class_element_text
           type: Paragraph
@@ -935,7 +935,7 @@
       properties:
         title: Tailwind on inner popup
       class:
-        inner: text-lg font-bold
+        .inner: text-lg font-bold
       blocks:
         - id: tooltip_class_inner_btn
           type: Button
@@ -1072,46 +1072,18 @@
           properties:
             label:
               title: Username
-              extra:
-                - id: tooltip_form_username_help
-                  type: Tooltip
-                  layout:
-                    flex: 0 0 auto
-                  properties:
-                    title: Your unique username. Must be 3-20 characters, letters and numbers only.
-                    placement: right
-                  blocks:
-                    - id: tooltip_form_username_icon
-                      type: Icon
-                      layout:
-                        flex: 0 0 auto
-                      properties:
-                        name: help
-                        size: 14
-                        color: '#8c8c8c'
+              tooltip:
+                title: Your unique username. Must be 3-20 characters, letters and numbers only.
+                color: '#8c8c8c'
             placeholder: Enter your username
         - id: tooltip_form_email
           type: TextInput
           properties:
             label:
               title: Email Address
-              extra:
-                - id: tooltip_form_email_help
-                  type: Tooltip
-                  layout:
-                    flex: 0 0 auto
-                  properties:
-                    title: We will send account notifications to this address. You can change it at any time.
-                    placement: right
-                  blocks:
-                    - id: tooltip_form_email_icon
-                      type: Icon
-                      layout:
-                        flex: 0 0 auto
-                      properties:
-                        name: help
-                        size: 14
-                        color: '#8c8c8c'
+              tooltip:
+                title: We will send account notifications to this address. You can change it at any time.
+                color: '#8c8c8c'
             placeholder: Enter your email
 
 - title: Tooltip on Dashboard Metrics
