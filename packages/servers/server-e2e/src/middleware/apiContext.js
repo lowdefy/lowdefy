@@ -15,7 +15,7 @@
 */
 
 import path from 'node:path';
-import { createApiContext, normalizeInjectedCaller } from '@lowdefy/api';
+import { createApiContext, createRequestSignal, normalizeInjectedCaller } from '@lowdefy/api';
 import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
@@ -72,6 +72,8 @@ function apiContext() {
       },
       scrubSecrets,
       secrets,
+      // Aborts when the client disconnects before the response is sent.
+      signal: createRequestSignal({ clientSignal: c.req.raw.signal }),
       steps,
       websockets,
     };

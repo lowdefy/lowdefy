@@ -45,7 +45,6 @@ test('buildGenerateCallOptions copies all defined call settings and omits undefi
   const request = {
     prompt: 'Hello',
     system: 'You are helpful.',
-    maxOutputTokens: 100,
     temperature: 0.5,
     topP: 0.9,
     topK: 40,

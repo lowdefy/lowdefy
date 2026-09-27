@@ -64,6 +64,31 @@ test('OpenAI create handles undefined connection', async () => {
   expect(result).toEqual({ provider: mockProvider });
 });
 
+test('OpenAI create returns the connection maxOutputTokens and timeout for its agents', async () => {
+  const mockProvider = jest.fn();
+  mockCreateOpenAI.mockReturnValue(mockProvider);
+
+  const { default: OpenAI } = await import('./OpenAI.js');
+
+  const result = OpenAI.create({
+    connection: { apiKey: 'test-api-key', maxOutputTokens: 1024, timeout: 30000 },
+  });
+
+  expect(result).toEqual({ provider: mockProvider, maxOutputTokens: 1024, timeout: 30000 });
+});
+
+test.each([
+  ['maxOutputTokens', 1.5, 'should be an integer.'],
+  ['maxOutputTokens', 0, 'should be at least 1.'],
+  ['timeout', '30s', 'should be an integer.'],
+  ['timeout', 0, 'should be at least 1.'],
+])('OpenAI connection schema rejects %s %p', async (property, value, message) => {
+  const { default: OpenAI } = await import('./OpenAI.js');
+  expect(() =>
+    validate({ schema: OpenAI.schema, data: { apiKey: 'k', [property]: value } })
+  ).toThrow(`OpenAI connection property "${property}" ${message}`);
+});
+
 test('OpenAI has schema', async () => {
   const { default: OpenAI } = await import('./OpenAI.js');
   expect(OpenAI.schema).toBeDefined();
@@ -81,7 +106,12 @@ test('valid connection schema with all properties', async () => {
   const { default: OpenAI } = await import('./OpenAI.js');
   const schema = OpenAI.schema;
 
-  const connection = { apiKey: 'sk-test', baseURL: 'https://custom.openai.com' };
+  const connection = {
+    apiKey: 'sk-test',
+    baseURL: 'https://custom.openai.com',
+    maxOutputTokens: 1024,
+    timeout: 30000,
+  };
   expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 

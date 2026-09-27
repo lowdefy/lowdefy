@@ -75,6 +75,9 @@ async function prepareAgent(context, { agentId, agentContext, endpointDepth = 0,
     i18n: context.i18n,
     logger: context.logger,
     mode,
+    // Cancels a headless (CallAgent) run when the request that started it closes;
+    // undefined for chat runs and background routines (see callAgent).
+    signal: context.signal,
     // The agent stream's error text reaches the end user and AgentChat config, so it takes
     // the wire policy. Built here because the agent plugins cannot import @lowdefy/api.
     wireErrorMessage: (error) => createWireProjection(context)(error).message,

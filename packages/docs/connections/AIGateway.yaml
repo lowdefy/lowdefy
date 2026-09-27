@@ -36,6 +36,8 @@ _ref:
             - `apiKey: string`: AI Gateway API key. Use [`_secret`](/_secret) to reference this securely. Optional — falls back to the `AI_GATEWAY_API_KEY` environment variable, or Vercel OIDC when deployed on Vercel.
             - `baseURL: string`: Optional base URL for the AI Gateway API.
             - `headers: object`: Optional custom headers to include in gateway requests.
+            - `maxOutputTokens: number`: Default maximum number of tokens a model call generates, for the requests and agents on this connection that do not set their own.
+            - `timeout: number`: Default milliseconds a model call may take, retries included, before it is cancelled, for the requests and agents on this connection that do not set their own. See _Limits and cancellation_ below.
 
             Model ids name the creator and the model, e.g. `anthropic/claude-sonnet-5`, `google/gemini-3.8-flash` or `typesafe-ai/jev`.
 

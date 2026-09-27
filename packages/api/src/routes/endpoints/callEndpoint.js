@@ -71,6 +71,8 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   // Auth was already checked above; the outcome lands in logs (scheduleBackground)
   // and in whatever the routine itself records.
   if (endpointConfig.async === true) {
+    // The run outlives this request, so the request closing must not cancel it.
+    context.signal = undefined;
     scheduleBackground(context, { event: 'background_endpoint', endpointId }, () =>
       runRoutine(context, routineContext, { routine: endpointConfig.routine })
     );

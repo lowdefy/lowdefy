@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import buildCallLimits from './buildCallLimits.js';
 import handleGenerateText from './handleGenerateText.js';
 import schema from './GenerateTextSchema.js';
 
@@ -22,9 +23,13 @@ import schema from './GenerateTextSchema.js';
 // receive evaluated connection properties (not a provider instance) from the
 // request interface layer, so the resolver constructs the provider itself.
 function createGenerateText({ createProvider }) {
-  async function GenerateText({ connection, request }) {
+  async function GenerateText({ connection, request, signal }) {
     const provider = createProvider({ connection });
-    return handleGenerateText({ model: provider(request.model), request });
+    return handleGenerateText({
+      model: provider(request.model),
+      request,
+      limits: buildCallLimits({ connection, request, signal }),
+    });
   }
 
   GenerateText.schema = schema;

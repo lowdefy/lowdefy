@@ -123,7 +123,7 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
     tools,
     toolApproval,
     stopWhen: stopConditions.length === 1 ? stopConditions[0] : stopConditions,
-    maxOutputTokens: agent.properties.maxOutputTokens,
+    maxOutputTokens: agent.properties.maxOutputTokens ?? connection.maxOutputTokens,
     temperature: agent.properties.temperature,
     toolChoice: agent.properties.toolChoice ?? 'auto',
     providerOptions: agent.properties.providerOptions,
@@ -148,8 +148,9 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
       : {}),
   });
 
-  const timeoutConfig =
-    agent.properties.timeout != null ? { timeout: agent.properties.timeout } : {};
+  // The agent's own timeout, else the connection's default for every call on it.
+  const timeout = agent.properties.timeout ?? connection.timeout;
+  const timeoutConfig = timeout != null ? { timeout } : {};
 
   return { agentInstance, mcpClients, model, timeoutConfig, locale };
 }

@@ -26,6 +26,9 @@ process.env.LOWDEFY_SECRET_TEST = secret;
 
 jest.unstable_mockModule('@lowdefy/api', () => ({
   createApiContext: jest.fn(),
+  createRequestSignal: jest.fn(({ clientSignal, timeoutSignal }) =>
+    AbortSignal.any([clientSignal, timeoutSignal].filter(Boolean))
+  ),
   // Returns what the server passes, so the test reads the auth-hook system context inputs.
   createSystemContext: jest.fn((options) => options),
   ensureMcpOauthResource: jest.fn(async () => {}),
@@ -103,6 +106,7 @@ afterAll(() => {
 });
 
 const { default: apiContext } = await import('./apiContext.js');
+const { default: requestTimeout } = await import('./requestTimeout.js');
 const { default: createSystemContext } = await import(
   '../../lib/server/auth/createSystemContext.js'
 );
@@ -138,4 +142,37 @@ test('the auth-hook system context is built with mode prod and a scrubSecrets th
   const context = createSystemContext({ auth: null });
   expect(context.mode).toEqual('prod');
   expect(context.scrubSecrets(`token ${secret} end`)).toEqual('token [REDACTED] end');
+});
+
+test('the request timeout answers 504 and cancels the work the request left running', async () => {
+  const app = new Hono();
+  app.use('*', requestTimeout({ timeoutMs: 20 }));
+  app.use('*', apiContext());
+  let reason;
+  app.get('/api/slow', async (c) => {
+    const { signal } = c.get('lowdefyContext');
+    reason = await new Promise((resolve) => {
+      signal.addEventListener('abort', () => resolve(signal.reason), { once: true });
+    });
+    return c.json({ finished: true });
+  });
+  const res = await app.request('/api/slow');
+  expect(res.status).toEqual(504);
+  expect(reason.name).toEqual('TimeoutError');
+  expect(reason.message).toEqual('The request timeout of 20ms was exceeded.');
+});
+
+test('a request that answers within the timeout leaves its signal unaborted', async () => {
+  const app = new Hono();
+  app.use('*', requestTimeout({ timeoutMs: 20 }));
+  app.use('*', apiContext());
+  let signal;
+  app.get('/api/fast', (c) => {
+    signal = c.get('lowdefyContext').signal;
+    return c.json({ finished: true });
+  });
+  const res = await app.request('/api/fast');
+  expect(res.status).toEqual(200);
+  await new Promise((resolve) => setTimeout(resolve, 40));
+  expect(signal.aborted).toBe(false);
 });

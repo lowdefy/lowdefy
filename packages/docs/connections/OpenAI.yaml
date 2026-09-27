@@ -35,6 +35,8 @@ _ref:
             #### Properties
             - `apiKey: string`: __Required__ - OpenAI API key. Use [`_secret`](/_secret) to reference this securely.
             - `baseURL: string`: Optional base URL. Use this to connect to Azure OpenAI or any OpenAI-compatible endpoint.
+            - `maxOutputTokens: number`: Default maximum number of tokens a model call generates, for the requests and agents on this connection that do not set their own.
+            - `timeout: number`: Default milliseconds a model call may take, retries included, before it is cancelled, for the requests and agents on this connection that do not set their own. See _Limits and cancellation_ below.
 
             ###### Connection example:
             ```yaml
