@@ -16,6 +16,7 @@
 
 import { APIError } from 'better-auth/api';
 import { getOrgAdapter } from 'better-auth/plugins';
+import { type } from '@lowdefy/helpers';
 
 import ensureOrganization from './ensureOrganization.js';
 import findPendingInvitation from './findPendingInvitation.js';
@@ -98,7 +99,8 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
   // tripping the index and locking the user out of login. A slug whose org
   // has members belongs to the people who run it now (the user may have
   // handed it over and later been removed), so it is never reused: the user
-  // moves on to the next slug and gets a fresh organization.
+  // moves on to the next slug and gets a fresh organization. Returns the
+  // user's member row alongside when they already hold one there.
   async function findOrMintOwnOrganization({ adapter, orgAdapter, session, user }) {
     for (let suffix = 1; ; suffix += 1) {
       const slug = suffix === 1 ? `org-${session.userId}` : `org-${session.userId}-${suffix}`;
@@ -108,13 +110,14 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
       });
       if (!organization) {
         try {
-          return await orgAdapter.createOrganization({
+          const minted = await orgAdapter.createOrganization({
             organization: {
               name: user?.name || user?.email || session.userId,
               slug,
               createdAt: new Date(),
             },
           });
+          return { organization: minted, member: null };
         } catch (error) {
           // A racing login minted the org between the find and the create -
           // the unique slug index rejected this write, so read the winner's row.
@@ -132,7 +135,21 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
         where: [{ field: 'organizationId', value: organization.id }],
       });
       if (memberCount === 0) {
-        return organization;
+        return { organization, member: null };
+      }
+      // A concurrent session for the same user (a double submit, two tabs)
+      // can mint this org and join it after this hook read the user's
+      // memberships. Its members are then the user, not people it was handed
+      // to - moving on would mint the user a second organization.
+      const member = await adapter.findOne({
+        model: 'member',
+        where: [
+          { field: 'userId', value: session.userId },
+          { field: 'organizationId', value: organization.id },
+        ],
+      });
+      if (!type.isNone(member)) {
+        return { organization, member };
       }
     }
   }
@@ -183,12 +200,19 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
     // headers makes the endpoint demand a session that does not exist yet.
     const orgPlugin = auth.options.plugins.find((plugin) => plugin.id === 'organization');
     const orgAdapter = getOrgAdapter(await auth.$context, orgPlugin.options);
-    const organization = await findOrMintOwnOrganization({ adapter, orgAdapter, session, user });
-    await orgAdapter.createMember({
-      userId: session.userId,
-      organizationId: organization.id,
-      role: 'owner',
+    const { organization, member } = await findOrMintOwnOrganization({
+      adapter,
+      orgAdapter,
+      session,
+      user,
     });
+    if (type.isNone(member)) {
+      await orgAdapter.createMember({
+        userId: session.userId,
+        organizationId: organization.id,
+        role: 'owner',
+      });
+    }
     return { data: { ...session, activeOrganizationId: organization.id } };
   }
 

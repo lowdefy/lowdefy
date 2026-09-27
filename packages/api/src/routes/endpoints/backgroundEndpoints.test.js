@@ -611,10 +611,12 @@ test('webhook whose verify gate passes blanket-passes a nested protected CallApi
 
 // A verifier connection whose type implements the tenant scoping contract -
 // under policy: tenant the wall engages for it like for any connection.
+const walledStubVerify = jest.fn(({ request }) => request.token === 'good');
 const walledVerifierConnections = {
   StubVerifyConnection: {
     ...verifierConnections.StubVerifyConnection,
     meta: { tenant: true },
+    requests: { StubVerify: walledStubVerify },
   },
 };
 
@@ -649,7 +651,7 @@ test('webhook verifier on a walled connection fails closed to unauthorized, neve
   expect(readConfigFile).not.toHaveBeenCalledWith('api/child_ep.json');
 });
 
-test('webhook verifier on a walled connection with tenant none opts out and passes', async () => {
+test('webhook verifier on a walled connection with tenant none opts out, carries the write guard and passes', async () => {
   const readConfigFile = createWebhookReadConfigFile({
     parent: {
       endpointId: 'parent_hook',
@@ -674,6 +676,11 @@ test('webhook verifier on a walled connection with tenant none opts out and pass
   });
   expect(result.success).toBe(true);
   expect(result.response).toEqual({ child: 'child_ran' });
+  // Unscoped like any tenant: none request, so a verifier that writes (a
+  // replay nonce, say) must be held to the same organization-id guard.
+  expect(walledStubVerify).toHaveBeenCalledWith(
+    expect.objectContaining({ tenant: null, tenantGuard: { field: 'organization_id' } })
+  );
 });
 
 // Detached carries the dispatcher's identity (Decision 4). The child endpoint
