@@ -20,6 +20,7 @@ import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 import lowdefyConfig from '../build/config.js';
 import isPageReady from './isPageReady.js';
 import { HEADLESS_USER_COOKIE } from '../server/auth/headlessUser.js';
+import { JOURNEY_ACTOR_COOKIE, journeyActorToken } from '../server/auth/journeyActor.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
 
 // playwright-core does not bundle a browser (unlike @playwright/test) — it
@@ -100,13 +101,7 @@ async function openPage({
   const injectedUser = user === 'none' ? null : resolveHeadlessUser({ user });
   // colorScheme is what the page's `prefers-color-scheme` media query reports,
   // so an app following the system theme renders light or dark accordingly.
-  // clientAddress is the address the context's requests come from, as far as
-  // the app can tell (X-Forwarded-For) - see createJourneyActors.
-  const contextOptions = { viewport: { width, height }, colorScheme };
-  if (!type.isUndefined(clientAddress)) {
-    contextOptions.extraHTTPHeaders = { 'x-forwarded-for': clientAddress };
-  }
-  const context = await browser.newContext(contextOptions);
+  const context = await browser.newContext({ viewport: { width, height }, colorScheme });
   // From here a failure must close the context before rethrowing: callers only
   // learn about the context from the return value, so an error thrown mid-open
   // (a navigation that times out, a crashed page) would otherwise
@@ -120,6 +115,18 @@ async function openPage({
         {
           name: HEADLESS_USER_COOKIE,
           value: Buffer.from(JSON.stringify(injectedUser)).toString('base64'),
+          url: origin,
+        },
+      ]);
+    }
+    // clientAddress is the address the context's requests come from, as far
+    // as the dev server's auth rate limits can tell - see createJourneyActors
+    // and journeyActor.js. A cookie, not a header, so it only reaches the app.
+    if (!type.isUndefined(clientAddress)) {
+      await context.addCookies([
+        {
+          name: JOURNEY_ACTOR_COOKIE,
+          value: `${journeyActorToken}.${clientAddress}`,
           url: origin,
         },
       ]);

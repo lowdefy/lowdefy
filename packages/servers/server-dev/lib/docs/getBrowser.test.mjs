@@ -17,6 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import { Hono } from 'hono';
 import { jest } from '@jest/globals';
 
 // openPage takes its browser as a parameter, so a fake one covers the cookie
@@ -31,6 +32,7 @@ process.chdir(fixtureDir);
 
 const { openPage, buildPageUrl } = await import('./getBrowser.js');
 const { default: isPageReady } = await import('./isPageReady.js');
+const { default: getClientAddress } = await import('../server/getClientAddress.js');
 
 afterAll(() => {
   process.chdir(originalCwd);
@@ -116,21 +118,32 @@ test('openPage injects no user for user none, so the app resolves its own sessio
   expect(opened.ready).toBe(true);
 });
 
-test('openPage sends requests from the client address it is given', async () => {
-  const { browser } = createBrowser();
+test('openPage gives the context the client address it is given, which the dev server resolves', async () => {
+  const { browser, addCookies } = createBrowser();
 
   await openPage({
     browser,
     origin: 'http://localhost:3001',
     pageId: 'login',
+    user: 'none',
     clientAddress: '203.0.113.7',
   });
 
   expect(browser.newContext).toHaveBeenCalledWith({
     viewport: { width: 1280, height: 800 },
     colorScheme: 'light',
-    extraHTTPHeaders: { 'x-forwarded-for': '203.0.113.7' },
   });
+  const [[[cookie]]] = addCookies.mock.calls;
+  expect(cookie).toMatchObject({ name: 'lowdefy_journey_actor', url: 'http://localhost:3001' });
+  const app = new Hono();
+  app.get('/', (c) => c.text(getClientAddress(c)));
+  const env = { incoming: { socket: { remoteAddress: '127.0.0.1' } } };
+  const response = await app.request(
+    '/',
+    { headers: { cookie: `${cookie.name}=${cookie.value}` } },
+    env
+  );
+  expect(await response.text()).toBe('203.0.113.7');
 });
 
 test('openPage injects a per-call user with roles', async () => {
