@@ -37,7 +37,9 @@ beforeEach(() => {
   jest.spyOn(Date, 'now').mockImplementation(() => now);
   mockGetProcessStartTime.mockReset();
   mockGetProcessStartTime.mockReturnValue(START_TIME);
-  configDirectory = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-instance-')));
+  configDirectory = fs.realpathSync.native(
+    fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-instance-'))
+  );
   fs.mkdirSync(path.join(configDirectory, '.lowdefy'));
 });
 
@@ -58,6 +60,17 @@ test('readDevInstance returns the record when it names this directory and its pi
   const record = { pid: process.pid, configDirectory, port: 4100 };
   writeRecord(record);
   expect(readDevInstance({ configDirectory })).toEqual(record);
+});
+
+// Case variants name one directory only where the file system ignores case.
+const tmpReal = fs.realpathSync.native(os.tmpdir());
+const onCaseInsensitiveFs =
+  tmpReal !== tmpReal.toUpperCase() && fs.existsSync(tmpReal.toUpperCase()) ? test : test.skip;
+
+onCaseInsensitiveFs('readDevInstance finds the record from a case variant of its directory', () => {
+  const record = { pid: process.pid, configDirectory, port: 4100 };
+  writeRecord(record);
+  expect(readDevInstance({ configDirectory: configDirectory.toUpperCase() })).toEqual(record);
 });
 
 test('readDevInstance ignores a record copied from another checkout', () => {

@@ -78,7 +78,9 @@ function readDevInstance({ configDirectory }) {
   }
   let realConfigDirectory;
   try {
-    realConfigDirectory = fs.realpathSync(configDirectory);
+    // The path as stored on disk, as the manager records it, so a case
+    // variant of the directory (macOS) still finds its record.
+    realConfigDirectory = fs.realpathSync.native(configDirectory);
   } catch {
     return null;
   }

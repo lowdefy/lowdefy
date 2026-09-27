@@ -56,7 +56,9 @@ function acquireDevInstance({ configDirectory, owner, version }) {
     // Readers check it against the pid's process, so a record left by a
     // killed manager never passes for a live one on a reused pid.
     processStartTime: getProcessStartTime({ pid: process.pid }),
-    configDirectory: fs.realpathSync(configDirectory),
+    // The path as stored on disk, whatever case the terminal's working
+    // directory was typed in (macOS), so lowdefy mcp and the hub match it.
+    configDirectory: fs.realpathSync.native(configDirectory),
     owner,
     state: 'starting',
     building: false,
