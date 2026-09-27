@@ -503,7 +503,7 @@ const markedSchemas = {
         type: 'object',
         properties: {
           indexUrl: { type: ['string', 'array'], urlKind: 'src', items: { type: 'string' } },
-          result: { type: 'object', properties: { url: { type: 'string' } } },
+          result: { type: 'object', properties: { url: { type: 'string', urlKind: false } } },
         },
       },
     },
@@ -550,10 +550,72 @@ test('checkPolicy checks URLs where the block schema marks them, whatever the ke
   ]);
 });
 
-test('checkPolicy leaves a property the schema does not mark as a URL to the text rules', () => {
+test('checkPolicy leaves a property the schema opts out with urlKind false to the text rules', () => {
   expect(
     checkMarked([{ id: 'a', type: 'Search', properties: { result: { url: 'link' } } }])
   ).toEqual([]);
+});
+
+// A block that marks nothing (any block without urlKind marks) is judged by key name.
+const unmarkedSchemas = {
+  Card: {
+    properties: {
+      properties: {
+        type: 'object',
+        properties: {
+          href: { type: 'string' },
+          image: { type: 'string' },
+          note: { type: 'string' },
+        },
+      },
+    },
+  },
+};
+
+test.each([
+  ['a leading space', { href: ' https://tracker.test/' }],
+  ['a script scheme', { href: 'javascript: alert(1)' }],
+  ['a leading tab', { href: '\tjavascript:alert(1)' }],
+  ['a newline inside the scheme', { href: 'java\nscript:alert(1)' }],
+  ['an off-site image', { image: '//tracker.test/p.gif' }],
+])(
+  'checkPolicy judges a described but unmarked URL property with %s by its key',
+  (_, properties) => {
+    const errors = checkPolicy({
+      blocks: [{ id: 'a', type: 'Card', properties }],
+      policy: { ...policy, blocks: ['Card'] },
+      blockMetas,
+      blockSchemas: unmarkedSchemas,
+    });
+    expect(rules(errors)).toEqual([
+      `policy.urls blocks.0.properties.${Object.keys(properties)[0]}`,
+    ]);
+  }
+);
+
+test.each([
+  ['a leading space', ' https://tracker.test/p.gif'],
+  ['a leading tab', '\t//tracker.test/p.gif'],
+  ['a script scheme with a space', 'javascript: alert(1)'],
+  ['a newline inside a script scheme', 'java\nscript:alert(1)'],
+])('checkPolicy finds a URL in text with %s', (_, note) => {
+  const errors = checkPolicy({
+    blocks: [{ id: 'a', type: 'Card', properties: { note } }],
+    policy: { ...policy, blocks: ['Card'] },
+    blockMetas,
+    blockSchemas: unmarkedSchemas,
+  });
+  expect(rules(errors)).toEqual(['policy.urls blocks.0.properties.note']);
+});
+
+test('checkPolicy allows an app path with surrounding whitespace where a page is listed', () => {
+  const errors = checkPolicy({
+    blocks: [{ id: 'a', type: 'Card', properties: { href: ' /thanks\n' } }],
+    policy: { ...policy, blocks: ['Card'] },
+    blockMetas,
+    blockSchemas: unmarkedSchemas,
+  });
+  expect(errors).toEqual([]);
 });
 
 test('checkPolicy treats a key that names no client operator as data', () => {

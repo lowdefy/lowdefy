@@ -185,6 +185,7 @@ export default {
           },
           url: {
             type: 'string',
+            urlKind: false,
             description: 'Field name for external URL navigation.',
           },
         },

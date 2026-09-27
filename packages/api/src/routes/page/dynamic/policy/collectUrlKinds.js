@@ -42,28 +42,42 @@ function childSchemas({ schemas, key }) {
   });
 }
 
-// Records, by path, the urlKind a block schema marks on the value there, or
-// null where the schema describes the value without marking it. A block marks
-// each URL-valued property with urlKind ('url' and 'href' navigate, 'url' the
-// way the engine's link resolver does; 'src' loads; 'srcSet' lists sources), so
-// the policy judges URLs by what a property is, not by what it is called. A
-// marked array holds one URL per item.
+// The urlKind the schemas give a value: a string when one marks it as a URL,
+// null when one opts it out with urlKind: false, undefined when none says.
+function findUrlKind(schemas) {
+  const marked = schemas.find((candidate) => type.isString(candidate.urlKind));
+  if (marked) {
+    return marked.urlKind;
+  }
+  if (schemas.some((candidate) => candidate.urlKind === false)) {
+    return null;
+  }
+  return undefined;
+}
+
+// Records, by path, the urlKind a block schema gives the value there. A block
+// marks each URL-valued property with urlKind ('url' and 'href' navigate, 'url'
+// the way the engine's link resolver does; 'src' loads; 'srcSet' lists
+// sources), so the policy judges URLs by what a property is, not by what it is
+// called; a marked array holds one URL per item. urlKind: false records null,
+// for a property whose name looks like a URL key but whose value is not a URL.
+// A value no schema marks either way is not recorded, so the policy falls back
+// to judging it by its key name.
 function collectUrlKinds({ value, schema, path, kinds = new Map() }) {
   const schemas = expandSchema(schema);
-  if (schemas.length === 0) {
-    return kinds;
-  }
-  const marked = schemas.find((candidate) => type.isString(candidate.urlKind));
-  if (!marked) {
-    // Another schema branch may already have marked it.
+  const urlKind = findUrlKind(schemas);
+  if (urlKind === null) {
+    // Another schema branch may already have marked it as a URL.
     if (!kinds.has(path)) {
       kinds.set(path, null);
     }
-  } else {
+    return kinds;
+  }
+  if (type.isString(urlKind)) {
     if (type.isArray(value)) {
-      value.forEach((_, index) => kinds.set(`${path}.${index}`, marked.urlKind));
+      value.forEach((_, index) => kinds.set(`${path}.${index}`, urlKind));
     } else {
-      kinds.set(path, marked.urlKind);
+      kinds.set(path, urlKind);
     }
     return kinds;
   }

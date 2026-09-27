@@ -21,10 +21,11 @@ import findEmbeddedUrls from './findEmbeddedUrls.js';
 import isAllowedUrl from './isAllowedUrl.js';
 import isUnderState from './isUnderState.js';
 
-// How the client uses a URL value, for values no schema describes. A block
-// schema marks its URL-valued properties with urlKind (collectUrlKinds),
-// whatever they are called, and decides every property it describes; these
-// names cover everything else (action params, style, undescribed keys). url and
+// How the client uses a URL value, for values no schema marks. A block schema
+// marks its URL-valued properties with urlKind (collectUrlKinds), whatever they
+// are called, and opts a URL-named property out with urlKind: false; every
+// other value (action params, style, unmarked properties, including every
+// property of a block that marks none) is judged by these key names. url and
 // href navigate, and the engine's link resolver reads a colon-less url as https.
 const URL_KEY_KINDS = {
   action: 'src',
