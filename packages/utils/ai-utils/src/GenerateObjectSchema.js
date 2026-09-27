@@ -73,6 +73,15 @@ export default {
         type: 'GenerateObject request property "system" should be a string.',
       },
     },
+    allowSystemInMessages: {
+      type: 'boolean',
+      default: false,
+      description:
+        'Allow "system" role messages in "messages". Off by default, since a system message instructs the model as the app: only enable it when the messages come from the app, never from a user.',
+      errorMessage: {
+        type: 'GenerateObject request property "allowSystemInMessages" should be a boolean.',
+      },
+    },
     maxOutputTokens: {
       type: 'integer',
       minimum: 1,

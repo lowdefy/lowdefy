@@ -107,6 +107,7 @@ Generates text from a prompt.
 - `prompt: string`: Text prompt. Use either `prompt` or `messages`, not both.
 - `messages: object[]`: Model messages (`{ role, content }`). Use either `prompt` or `messages`, not both.
 - `system: string`: System prompt.
+- `allowSystemInMessages: boolean`: Default: `false` - Allow `system` role messages in `messages`. A system message instructs the model as the app itself, so without this a request whose `messages` include one fails. Only set it when the messages come from the app, never from a user (for example a message list built from `_payload`). Use `system` for the system prompt.
 - `maxOutputTokens: number`: Maximum number of tokens to generate.
 - `temperature: number`: Sampling temperature (0 to 2).
 - `topP: number`: Nucleus sampling.

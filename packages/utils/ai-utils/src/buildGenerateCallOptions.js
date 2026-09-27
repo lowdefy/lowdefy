@@ -42,12 +42,16 @@ function buildGenerateCallOptions({ request }) {
   }
   if (!type.isNone(request.messages)) {
     options.messages = request.messages;
-    // ai v7 rejects system messages inside `messages` unless opted in (a
-    // guard against injected system turns). These messages are written in
-    // the app's own config, so a system turn there is the author's intent.
-    if (request.messages.some((message) => message?.role === 'system')) {
-      options.allowSystemInMessages = true;
-    }
+  }
+  // A system turn instructs the model as the app itself, and `messages` is
+  // often built from a user's input (`_payload`, `_state`), so ai v7 rejects
+  // one unless the call opts in. The request opts in explicitly.
+  if (request.allowSystemInMessages === true) {
+    options.allowSystemInMessages = true;
+  } else if ((request.messages ?? []).some((message) => message?.role === 'system')) {
+    throw new Error(
+      '"messages" includes a system message. Use the "system" property for the system prompt, or set "allowSystemInMessages: true" if the system message comes from the app, never from a user.'
+    );
   }
   // `system` is the request's public property; ai v7 calls it `instructions`.
   if (!type.isNone(request.system)) {
