@@ -18,6 +18,7 @@ import React, { useRef, useState } from 'react';
 import { AutoComplete } from 'antd';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import { get, mergeObjects, set, type } from '@lowdefy/helpers';
+import getDisabled from '@lowdefy/blocks-antd/getDisabled.js';
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
 import withTheme from '@lowdefy/blocks-antd/blocks/withTheme.js';
 
@@ -180,7 +181,7 @@ const PlacesAutocomplete = ({
             autoFocus={properties.autoFocus}
             backfill={properties.backfill}
             defaultOpen={properties.defaultOpen}
-            disabled={properties.disabled || loading}
+            disabled={getDisabled({ loading, properties })}
             filterOption={() => true}
             notFoundContent={getNotFoundContent({
               input,

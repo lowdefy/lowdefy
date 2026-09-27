@@ -2,6 +2,7 @@
 '@lowdefy/blocks-antd': minor
 '@lowdefy/blocks-aggrid': patch
 '@lowdefy/blocks-files': patch
+'@lowdefy/blocks-google-maps': patch
 ---
 
 fix: ConfigProvider `componentDisabled` now disables the Lowdefy blocks inside it.
