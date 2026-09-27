@@ -21,9 +21,16 @@ import { type, wait } from '@lowdefy/helpers';
 import { getProcessStartTime, readDevInstance } from '@lowdefy/node-utils';
 
 import allocatePorts from './allocatePorts.js';
+import hasLowdefyYaml from '../../utils/hasLowdefyYaml.js';
 import fetchOpenTabs from './fetchOpenTabs.js';
-import { HUB_PROTOCOL, IDLE_STOP_MS, PORT_RANGE, READY_TIMEOUT_MS } from './hubProtocol.js';
-import readLogTail, { MAX_LINES } from './readLogTail.js';
+import {
+  HUB_PROTOCOL,
+  IDLE_STOP_MS,
+  MAX_LOG_LINES,
+  PORT_RANGE,
+  READY_TIMEOUT_MS,
+} from './hubProtocol.js';
+import readLogTail from './readLogTail.js';
 import resolveDevCommand from './resolveDevCommand.js';
 import stopProcessGroup from './stopProcessGroup.js';
 
@@ -55,15 +62,6 @@ function loadRegistry({ registryPath }) {
   } catch {
     return { ports: {}, instances: {} };
   }
-}
-
-// Whether the app still exists. Not the directory: a running dev server
-// recreates <app>/.lowdefy (its instance record, its build) after its git
-// worktree is removed, so only the app's own config shows it is gone.
-function hasAppConfig(configDirectory) {
-  return ['lowdefy.yaml', 'lowdefy.yml'].some((name) =>
-    fs.existsSync(path.join(configDirectory, name))
-  );
 }
 
 function realDirectory(configDirectory) {
@@ -315,7 +313,7 @@ function createHub({
   function logs({ lines = 100, grep, ...params }) {
     if (!type.isInt(lines) || lines < 1) {
       throw new Error(
-        `"lines" must be a positive integer (at most ${MAX_LINES} are returned). Received ${JSON.stringify(
+        `"lines" must be a positive integer (at most ${MAX_LOG_LINES} are returned). Received ${JSON.stringify(
           lines
         )}.`
       );
@@ -363,6 +361,31 @@ function createHub({
     });
   }
 
+  // Whether an app was removed. Not its directory: a running dev server
+  // recreates <app>/.lowdefy after its git worktree is deleted, so the app's
+  // own lowdefy.yaml decides. A checkout or rebase can take the file away for
+  // a moment, so the app counts as removed only after two reap passes in a row
+  // found it missing.
+  const appMisses = new Map();
+
+  function countAppMisses() {
+    const directories = new Set([
+      ...Object.keys(registry.instances),
+      ...Object.keys(registry.ports),
+    ]);
+    directories.forEach((configDirectory) => {
+      if (hasLowdefyYaml({ directory: configDirectory })) {
+        appMisses.delete(configDirectory);
+        return;
+      }
+      appMisses.set(configDirectory, (appMisses.get(configDirectory) ?? 0) + 1);
+    });
+  }
+
+  function isAppRemoved(configDirectory) {
+    return (appMisses.get(configDirectory) ?? 0) >= 2;
+  }
+
   // Ports stick to an app between runs, but a removed app - a deleted git
   // worktree, most often - never runs again. Kept, every worktree ever used
   // would hold a pair until the range ran out.
@@ -370,10 +393,11 @@ function createHub({
     Object.keys(registry.ports)
       .filter(
         (configDirectory) =>
-          type.isUndefined(registry.instances[configDirectory]) && !hasAppConfig(configDirectory)
+          type.isUndefined(registry.instances[configDirectory]) && isAppRemoved(configDirectory)
       )
       .forEach((configDirectory) => {
         delete registry.ports[configDirectory];
+        appMisses.delete(configDirectory);
       });
     saveRegistry();
   }
@@ -382,8 +406,9 @@ function createHub({
   // has been attached and no browser tab open for IDLE_STOP_MS.
   async function reapOnce() {
     forgetDeadServers();
+    countAppMisses();
     for (const [configDirectory, managed] of Object.entries(registry.instances)) {
-      if (!hasAppConfig(configDirectory)) {
+      if (isAppRemoved(configDirectory)) {
         if (isManagedAlive(managed)) {
           await stopProcessGroup({ pid: managed.pid });
         }

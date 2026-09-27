@@ -217,7 +217,7 @@ process.exit(1);`
   expect(survived).toBe(false);
 });
 
-test('hub reap stops a server whose worktree was removed, though the server recreates its .lowdefy', async () => {
+test('hub reap stops a server whose worktree was removed on the second pass that finds it gone', async () => {
   fs.appendFileSync(
     path.join(configDirectory, 'fake-dev.cjs'),
     `setInterval(() => {
@@ -231,16 +231,32 @@ test('hub reap stops a server whose worktree was removed, though the server recr
   await wait(200);
   expect(fs.existsSync(configDirectory)).toBe(true);
 
+  // The server recreates .lowdefy, and one pass may see a checkout switching
+  // branches: the first pass that finds lowdefy.yaml gone keeps the server.
+  await hub.reap();
+  expect(isAlive(grandchild)).toBe(true);
   await hub.reap();
   await wait(200);
   expect(isAlive(grandchild)).toBe(false);
   expect(hub.list().instances).toEqual([]);
 });
 
+test('hub reap keeps a server whose lowdefy.yaml was missing for one pass only', async () => {
+  await hub.start({ configDirectory });
+  const lowdefyYaml = path.join(configDirectory, 'lowdefy.yaml');
+  fs.renameSync(lowdefyYaml, `${lowdefyYaml}.moved`);
+  await hub.reap();
+  fs.renameSync(`${lowdefyYaml}.moved`, lowdefyYaml);
+  await hub.reap();
+  await hub.reap();
+  expect(hub.list().instances).toEqual([expect.objectContaining({ state: 'ready' })]);
+});
+
 test('hub reap releases the ports of an app that was removed after it stopped', async () => {
   await hub.start({ configDirectory });
   await hub.stop({ configDirectory });
   fs.rmSync(configDirectory, { recursive: true, force: true });
+  await hub.reap();
   await hub.reap();
   const registry = JSON.parse(fs.readFileSync(path.join(home, 'hub', 'registry.json'), 'utf8'));
   expect(registry.ports).toEqual({});
