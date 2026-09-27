@@ -217,6 +217,7 @@
 - _ref: blocks/list/MasonryList.yaml
 # - _ref: blocks/list/TimelineList.yaml # TODO:
 
+- _ref: connections/AIGateway.yaml
 - _ref: connections/Anthropic.yaml
 - _ref: connections/Google.yaml
 - _ref: connections/Mcp.yaml

@@ -1,85 +1,65 @@
-# Google
+# AI Gateway
 
-The Google connection connects to the [Google Gemini API](https://ai.google.dev/docs) and provides the `GeminiAgent` agent type for use with [Lowdefy agents](/agents-introduction).
+The AIGateway connection connects to the [Vercel AI Gateway](https://vercel.com/docs/ai-gateway), one API for models from many providers. It provides the `AIGatewayAgent` agent type for use with [Lowdefy agents](/agents-introduction), the one-shot `GenerateText` and `GenerateObject` requests, and `Decide` on evaluation models such as TypeSafe's Jev.
 
-> The Google connection is provided by the `@lowdefy/connection-google` package, which is included by default.
+> The AIGateway connection is provided by the `@lowdefy/connection-ai-gateway` package, which is included by default.
 
 ## Connections
 
-### Google
+### AIGateway
 
 #### Properties
-- `apiKey: string`: __Required__ - Google API key. Use [`_secret`](/_secret) to reference this securely.
-- `baseURL: string`: Optional base URL for the Google API.
+- `apiKey: string`: AI Gateway API key. Use [`_secret`](/_secret) to reference this securely. Optional — falls back to the `AI_GATEWAY_API_KEY` environment variable, or Vercel OIDC when deployed on Vercel.
+- `baseURL: string`: Optional base URL for the AI Gateway API.
+- `headers: object`: Optional custom headers to include in gateway requests.
+
+Model ids name the creator and the model, e.g. `anthropic/claude-sonnet-5`, `google/gemini-3.8-flash` or `typesafe-ai/jev`.
 
 ###### Connection example:
 ```yaml
 connections:
-  - id: google
-    type: Google
+  - id: gateway
+    type: AIGateway
     properties:
       apiKey:
-        _secret: GOOGLE_API_KEY
+        _secret: AI_GATEWAY_API_KEY
 ```
 
 ## Agent Types
 
-### GeminiAgent
+### AIGatewayAgent
 
-The `GeminiAgent` supports all [common agent properties](/agents-introduction) plus the following:
+The `AIGatewayAgent` supports all [common agent properties](/agents-introduction) plus the gateway's routing options:
 
 | Property | Type | Description |
 | --- | --- | --- |
-| `thinkingConfig` | object | Configuration for the model's thinking process. |
-| `thinkingConfig.thinkingBudget` | integer | Maximum thinking tokens (Gemini 2.5 models). Set to `0` to disable. |
-| `thinkingConfig.thinkingLevel` | string | Thinking depth (Gemini 3 models): `'minimal'`, `'low'`, `'medium'`, or `'high'`. |
-| `thinkingConfig.includeThoughts` | boolean | Return thought summaries in the response. |
-| `safetySettings` | object[] | Safety filter settings. |
-| `safetySettings[].category` | string | Safety category (e.g. `'HARM_CATEGORY_DANGEROUS_CONTENT'`). |
-| `safetySettings[].threshold` | string | Block threshold (e.g. `'BLOCK_ONLY_HIGH'`, `'BLOCK_NONE'`). |
+| `order` | string[] | Provider slugs to try in order (e.g. `["vertex", "anthropic"]`). The gateway tries each until one succeeds. |
+| `only` | string[] | Restrict routing to these provider slugs. |
+| `fallbackModels` | string[] | Model ids tried in order when the primary model fails. |
+| `user` | string | End-user identifier for spend attribution in gateway analytics. |
+| `tags` | string[] | Tags to categorize and filter usage in gateway reports. |
 
-###### Agent with thinking enabled:
+###### Agent with a fallback model:
 ```yaml
-connections:
-  - id: google
-    type: Google
-    properties:
-      apiKey:
-        _secret: GOOGLE_API_KEY
-
 agents:
-  - id: research_agent
-    type: GeminiAgent
-    connectionId: google
+  - id: support_agent
+    type: AIGatewayAgent
+    connectionId: gateway
     properties:
-      model: gemini-2.5-pro
-      thinkingConfig:
-        thinkingBudget: 8000
-        includeThoughts: true
+      model: anthropic/claude-sonnet-5
+      fallbackModels:
+        - google/gemini-3.8-flash
       instructions: |
-        You are a research assistant. Search for information
-        and provide well-sourced answers. Think through
-        complex questions step by step.
-      maxSteps: 8
+        You are a customer support agent. Search the knowledge
+        base before answering questions.
+      maxSteps: 5
     tools:
       - search-knowledge-base
-      - get-document
 ```
 
-###### Agent with safety settings:
-```yaml
-agents:
-  - id: creative_writer
-    type: GeminiAgent
-    connectionId: google
-    properties:
-      model: gemini-2.5-pro
-      temperature: 0.9
-      safetySettings:
-        - category: HARM_CATEGORY_DANGEROUS_CONTENT
-          threshold: BLOCK_ONLY_HIGH
-      instructions: You are a creative writing assistant.
-```
+## Evaluation models
+
+Evaluation models return typed decisions — choices, yes/no probabilities and scores — instead of text, answer every question in one pass, and bill input tokens only. On the AI Gateway, `Decide` asks an evaluation model by default (`backend: evaluation`); set `backend: structured-output` to ask a language model on the gateway instead. See [`Decide`](#decide) below.
 
 ## Requests
 

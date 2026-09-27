@@ -881,6 +881,11 @@
         title: Connections
         icon: Plug
       links:
+        - id: AIGateway
+          type: MenuLink
+          pageId: AIGateway
+          properties:
+            title: AI Gateway
         - id: Anthropic
           type: MenuLink
           pageId: Anthropic

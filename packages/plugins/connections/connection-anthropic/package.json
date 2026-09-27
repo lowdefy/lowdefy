@@ -45,7 +45,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "3.0.76",
+    "@ai-sdk/anthropic": "4.0.65",
     "@lowdefy/ai-utils": "6.0.0"
   },
   "devDependencies": {

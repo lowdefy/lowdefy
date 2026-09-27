@@ -26,7 +26,11 @@ jest.unstable_mockModule('@ai-sdk/gateway', () => ({
 // Prevent the real 'ai' package (imported via @lowdefy/ai-utils in the request
 // resolver factories) from loading — it imports more from '@ai-sdk/gateway'
 // than the mock above provides.
+// Tags each resolver with the factory's arguments, so a test can read them
+// after the module (imported once) built its requests.
+const mockCreateDecide = (args) => Object.assign(jest.fn(), { factoryArgs: args });
 jest.unstable_mockModule('@lowdefy/ai-utils', () => ({
+  createDecide: mockCreateDecide,
   createGenerateObject: jest.fn(() => jest.fn()),
   createGenerateText: jest.fn(() => jest.fn()),
 }));
@@ -156,6 +160,15 @@ test('headers is not an object', async () => {
 test('All requests are present', async () => {
   const { default: AIGateway } = await import('./AIGateway.js');
 
+  expect(AIGateway.requests.Decide).toBeDefined();
   expect(AIGateway.requests.GenerateObject).toBeDefined();
   expect(AIGateway.requests.GenerateText).toBeDefined();
+});
+
+test('Decide on the gateway offers evaluation models first, then structured output', async () => {
+  const { default: AIGateway } = await import('./AIGateway.js');
+  expect(AIGateway.requests.Decide.factoryArgs).toEqual({
+    createProvider: expect.any(Function),
+    backends: ['evaluation', 'structured-output'],
+  });
 });

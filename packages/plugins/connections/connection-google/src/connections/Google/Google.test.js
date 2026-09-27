@@ -17,27 +17,27 @@
 import { jest } from '@jest/globals';
 import { validate } from '@lowdefy/ajv';
 
-const mockCreateGoogleGenerativeAI = jest.fn();
+const mockCreateGoogle = jest.fn();
 
 jest.unstable_mockModule('@ai-sdk/google', () => ({
-  createGoogleGenerativeAI: mockCreateGoogleGenerativeAI,
+  createGoogle: mockCreateGoogle,
 }));
 
 test('Google create returns provider with apiKey', async () => {
   const mockProvider = jest.fn();
-  mockCreateGoogleGenerativeAI.mockReturnValue(mockProvider);
+  mockCreateGoogle.mockReturnValue(mockProvider);
 
   const { default: Google } = await import('./Google.js');
 
   const result = Google.create({ connection: { apiKey: 'test-api-key' } });
 
-  expect(mockCreateGoogleGenerativeAI).toHaveBeenCalledWith({ apiKey: 'test-api-key', baseURL: undefined });
+  expect(mockCreateGoogle).toHaveBeenCalledWith({ apiKey: 'test-api-key', baseURL: undefined });
   expect(result).toEqual({ provider: mockProvider });
 });
 
 test('Google create passes baseURL when provided', async () => {
   const mockProvider = jest.fn();
-  mockCreateGoogleGenerativeAI.mockReturnValue(mockProvider);
+  mockCreateGoogle.mockReturnValue(mockProvider);
 
   const { default: Google } = await import('./Google.js');
 
@@ -45,7 +45,7 @@ test('Google create passes baseURL when provided', async () => {
     connection: { apiKey: 'test-api-key', baseURL: 'https://custom.google.com' },
   });
 
-  expect(mockCreateGoogleGenerativeAI).toHaveBeenCalledWith({
+  expect(mockCreateGoogle).toHaveBeenCalledWith({
     apiKey: 'test-api-key',
     baseURL: 'https://custom.google.com',
   });
@@ -54,13 +54,13 @@ test('Google create passes baseURL when provided', async () => {
 
 test('Google create handles undefined connection', async () => {
   const mockProvider = jest.fn();
-  mockCreateGoogleGenerativeAI.mockReturnValue(mockProvider);
+  mockCreateGoogle.mockReturnValue(mockProvider);
 
   const { default: Google } = await import('./Google.js');
 
   const result = Google.create({ connection: undefined });
 
-  expect(mockCreateGoogleGenerativeAI).toHaveBeenCalledWith({ apiKey: undefined, baseURL: undefined });
+  expect(mockCreateGoogle).toHaveBeenCalledWith({ apiKey: undefined, baseURL: undefined });
   expect(result).toEqual({ provider: mockProvider });
 });
 
@@ -124,6 +124,7 @@ test('baseURL is not a string', async () => {
 test('All requests are present', async () => {
   const { default: Google } = await import('./Google.js');
 
+  expect(Google.requests.Decide).toBeDefined();
   expect(Google.requests.GenerateObject).toBeDefined();
   expect(Google.requests.GenerateText).toBeDefined();
 });

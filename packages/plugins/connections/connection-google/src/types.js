@@ -22,5 +22,5 @@ export default {
     Google: { tenant: false },
   },
   agents: ['GeminiAgent'],
-  requests: ['GenerateObject', 'GenerateText'],
+  requests: ['Decide', 'GenerateObject', 'GenerateText'],
 };

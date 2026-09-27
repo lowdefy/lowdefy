@@ -22,10 +22,10 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@ai-sdk/mcp": "1.0.41",
+    "@ai-sdk/mcp": "2.0.60",
     "@lowdefy/errors": "6.0.0",
     "@lowdefy/helpers": "6.0.0",
-    "ai": "6.0.176",
+    "ai": "7.0.116",
     "glob": "13.0.6"
   },
   "devDependencies": {

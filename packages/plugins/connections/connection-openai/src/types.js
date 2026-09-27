@@ -22,5 +22,5 @@ export default {
     OpenAI: { tenant: false },
   },
   agents: ['OpenAIAgent'],
-  requests: ['GenerateObject', 'GenerateText'],
+  requests: ['Decide', 'GenerateObject', 'GenerateText'],
 };

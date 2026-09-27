@@ -22,5 +22,5 @@ export default {
     Anthropic: { tenant: false },
   },
   agents: ['ClaudeAgent'],
-  requests: ['GenerateObject', 'GenerateText'],
+  requests: ['Decide', 'GenerateObject', 'GenerateText'],
 };

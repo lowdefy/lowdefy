@@ -1484,6 +1484,14 @@
       "typeName": "MasonryList"
     },
     {
+      "slug": "connections/aigateway",
+      "title": "AI Gateway",
+      "section": "Connections",
+      "path": "content/connections/aigateway.md",
+      "kind": "connection",
+      "typeName": "AI Gateway"
+    },
+    {
       "slug": "connections/anthropic",
       "title": "Anthropic",
       "section": "Connections",

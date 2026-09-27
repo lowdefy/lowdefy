@@ -36,7 +36,7 @@ jest.unstable_mockModule('ai', () => ({
   ToolLoopAgent: MockToolLoopAgent,
   tool: mockTool,
   jsonSchema: mockJsonSchema,
-  stepCountIs: jest.fn((n) => ({ type: 'stepCount', count: n })),
+  isStepCount: jest.fn((n) => ({ type: 'stepCount', count: n })),
   hasToolCall: jest.fn((name) => ({ type: 'hasToolCall', toolName: name })),
 }));
 
@@ -592,7 +592,7 @@ test('endpoint tool unwraps a marker-wrapped array nested under an object key', 
   expect(Array.isArray(result.items)).toBe(true);
 });
 
-test('buildAgentTools sets needsApproval on confirm endpoint tools by default', async () => {
+test('buildAgentTools asks for user approval of confirm endpoint tools by default', async () => {
   const { default: buildAgentTools } = await import('./buildAgentTools.js');
 
   const agent = {
@@ -607,32 +607,34 @@ test('buildAgentTools sets needsApproval on confirm endpoint tools by default', 
     callEndpoint: jest.fn(),
   };
 
-  await buildAgentTools({ agent, context });
+  const { toolApproval } = await buildAgentTools({ agent, context });
 
-  expect(mockTool.mock.calls[0][0].needsApproval).toBe(true);
-});
-
-test('buildAgentTools autoApprove strips needsApproval from confirm endpoint tools', async () => {
-  const { default: buildAgentTools } = await import('./buildAgentTools.js');
-
-  const agent = {
-    tools: [{ endpointId: 'create-ticket', confirm: true }],
-  };
-  const context = {
-    logger: testLogger,
-    getEndpointConfig: jest.fn().mockResolvedValue({
-      description: 'Create a ticket',
-      payloadSchema: { type: 'object' },
-    }),
-    callEndpoint: jest.fn(),
-  };
-
-  await buildAgentTools({ agent, context, autoApprove: true });
-
+  // ai v7: approval is a call-level setting, not a tool property.
+  expect(toolApproval).toEqual({ 'create-ticket': 'user-approval' });
   expect(mockTool.mock.calls[0][0].needsApproval).toBeUndefined();
 });
 
-test('buildAgentTools autoApprove strips needsApproval from confirm MCP tools', async () => {
+test('buildAgentTools autoApprove asks no approval for confirm endpoint tools', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  const agent = {
+    tools: [{ endpointId: 'create-ticket', confirm: true }],
+  };
+  const context = {
+    logger: testLogger,
+    getEndpointConfig: jest.fn().mockResolvedValue({
+      description: 'Create a ticket',
+      payloadSchema: { type: 'object' },
+    }),
+    callEndpoint: jest.fn(),
+  };
+
+  const { toolApproval } = await buildAgentTools({ agent, context, autoApprove: true });
+
+  expect(toolApproval).toEqual({});
+});
+
+test('buildAgentTools asks approval for confirm MCP tools unless autoApprove', async () => {
   const { default: buildAgentTools } = await import('./buildAgentTools.js');
 
   const mcpTool = { description: 'External tool', execute: jest.fn() };
@@ -652,10 +654,11 @@ test('buildAgentTools autoApprove strips needsApproval from confirm MCP tools', 
   };
 
   const withApproval = await buildAgentTools({ agent, context });
-  expect(withApproval.tools['ext-tool'].needsApproval).toBe(true);
+  expect(withApproval.tools['ext-tool']).toBe(mcpTool);
+  expect(withApproval.toolApproval).toEqual({ 'ext-tool': 'user-approval' });
 
   const autoApproved = await buildAgentTools({ agent, context, autoApprove: true });
-  expect(autoApproved.tools['ext-tool'].needsApproval).toBeUndefined();
+  expect(autoApproved.toolApproval).toEqual({});
 });
 
 test('buildAgentTools propagates autoApprove into recursive sub-agent tool builds', async () => {
@@ -687,8 +690,8 @@ test('buildAgentTools propagates autoApprove into recursive sub-agent tool build
 
   await buildAgentTools({ agent, context, autoApprove: true });
 
-  // First tool() call is the sub-agent's confirm endpoint tool.
-  expect(mockTool.mock.calls[0][0].needsApproval).toBeUndefined();
+  // The sub-agent's ToolLoopAgent carries its own (empty) approval map.
+  expect(lastAgentConfig.toolApproval).toEqual({});
 });
 
 test('buildAgentTools throws a LowdefyInternalError for an endpoint tool named with a reserved key', async () => {

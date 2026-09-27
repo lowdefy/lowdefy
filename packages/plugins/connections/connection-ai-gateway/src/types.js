@@ -22,5 +22,5 @@ export default {
     AIGateway: { tenant: false },
   },
   agents: ['AIGatewayAgent'],
-  requests: ['GenerateObject', 'GenerateText'],
+  requests: ['Decide', 'GenerateObject', 'GenerateText'],
 };

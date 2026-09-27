@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { createGenerateObject, createGenerateText } from '@lowdefy/ai-utils';
+import { createDecide, createGenerateObject, createGenerateText } from '@lowdefy/ai-utils';
 
 import createProvider from './createProvider.js';
 import schema from './schema.js';
@@ -27,6 +27,7 @@ const Anthropic = {
   schema,
   create,
   requests: {
+    Decide: createDecide({ createProvider }),
     GenerateObject: createGenerateObject({ createProvider }),
     GenerateText: createGenerateText({ createProvider }),
   },

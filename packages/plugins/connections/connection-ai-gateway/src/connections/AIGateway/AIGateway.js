@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { createGenerateObject, createGenerateText } from '@lowdefy/ai-utils';
+import { createDecide, createGenerateObject, createGenerateText } from '@lowdefy/ai-utils';
 
 import createProvider from './createProvider.js';
 import schema from './schema.js';
@@ -27,6 +27,9 @@ const AIGateway = {
   schema,
   create,
   requests: {
+    // Evaluation models (TypeSafe's Jev) answer by default; any language model
+    // on the gateway can with backend: structured-output.
+    Decide: createDecide({ createProvider, backends: ['evaluation', 'structured-output'] }),
     GenerateObject: createGenerateObject({ createProvider }),
     GenerateText: createGenerateText({ createProvider }),
   },

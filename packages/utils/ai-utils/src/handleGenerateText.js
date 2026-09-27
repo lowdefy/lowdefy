@@ -25,10 +25,10 @@ async function handleGenerateText({ model, request }) {
   });
   return {
     text: result.text,
-    reasoningText: result.reasoningText,
+    reasoningText: result.finalStep?.reasoningText,
     finishReason: result.finishReason,
     usage: result.usage,
-    providerMetadata: result.providerMetadata,
+    providerMetadata: result.finalStep?.providerMetadata,
     warnings: result.warnings,
   };
 }

@@ -1,0 +1,91 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/general.yaml.njk
+  vars:
+    pageId: AIGateway
+    pageTitle: AI Gateway
+    section: Connections
+    filePath: connections/AIGateway.yaml
+    content:
+      - id: md1
+        type: MarkdownWithCode
+        properties:
+          content: |
+            The AIGateway connection connects to the [Vercel AI Gateway](https://vercel.com/docs/ai-gateway), one API for models from many providers. It provides the `AIGatewayAgent` agent type for use with [Lowdefy agents](/agents-introduction), the one-shot `GenerateText` and `GenerateObject` requests, and `Decide` on evaluation models such as TypeSafe's Jev.
+
+            > The AIGateway connection is provided by the `@lowdefy/connection-ai-gateway` package, which is included by default.
+
+            ## Connections
+
+            ### AIGateway
+
+            #### Properties
+            - `apiKey: string`: AI Gateway API key. Use [`_secret`](/_secret) to reference this securely. Optional — falls back to the `AI_GATEWAY_API_KEY` environment variable, or Vercel OIDC when deployed on Vercel.
+            - `baseURL: string`: Optional base URL for the AI Gateway API.
+            - `headers: object`: Optional custom headers to include in gateway requests.
+
+            Model ids name the creator and the model, e.g. `anthropic/claude-sonnet-5`, `google/gemini-3.8-flash` or `typesafe-ai/jev`.
+
+            ###### Connection example:
+            ```yaml
+            connections:
+              - id: gateway
+                type: AIGateway
+                properties:
+                  apiKey:
+                    _secret: AI_GATEWAY_API_KEY
+            ```
+
+            ## Agent Types
+
+            ### AIGatewayAgent
+
+            The `AIGatewayAgent` supports all [common agent properties](/agents-introduction) plus the gateway's routing options:
+
+            | Property | Type | Description |
+            | --- | --- | --- |
+            | `order` | string[] | Provider slugs to try in order (e.g. `["vertex", "anthropic"]`). The gateway tries each until one succeeds. |
+            | `only` | string[] | Restrict routing to these provider slugs. |
+            | `fallbackModels` | string[] | Model ids tried in order when the primary model fails. |
+            | `user` | string | End-user identifier for spend attribution in gateway analytics. |
+            | `tags` | string[] | Tags to categorize and filter usage in gateway reports. |
+
+            ###### Agent with a fallback model:
+            ```yaml
+            agents:
+              - id: support_agent
+                type: AIGatewayAgent
+                connectionId: gateway
+                properties:
+                  model: anthropic/claude-sonnet-5
+                  fallbackModels:
+                    - google/gemini-3.8-flash
+                  instructions: |
+                    You are a customer support agent. Search the knowledge
+                    base before answering questions.
+                  maxSteps: 5
+                tools:
+                  - search-knowledge-base
+            ```
+
+            ## Evaluation models
+
+            Evaluation models return typed decisions — choices, yes/no probabilities and scores — instead of text, answer every question in one pass, and bill input tokens only. On the AI Gateway, `Decide` asks an evaluation model by default (`backend: evaluation`); set `backend: structured-output` to ask a language model on the gateway instead. See [`Decide`](#decide) below.
+      - id: markdown_requests
+        type: MarkdownWithCode
+        properties:
+          content:
+            _ref: connections/AIGenerateRequests.md
