@@ -1,9 +1,9 @@
 ---
-'@lowdefy/ai-utils': patch
-'@lowdefy/connection-ai-gateway': patch
-'@lowdefy/connection-anthropic': patch
-'@lowdefy/connection-google': patch
-'@lowdefy/connection-openai': patch
+'@lowdefy/ai-utils': major
+'@lowdefy/connection-ai-gateway': major
+'@lowdefy/connection-anthropic': major
+'@lowdefy/connection-google': major
+'@lowdefy/connection-openai': major
 ---
 
 **Behaviour change:** `GenerateText` and `GenerateObject` no longer accept a `system` role message in `messages` unless the request sets `allowSystemInMessages: true`.
