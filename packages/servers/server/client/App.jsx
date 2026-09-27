@@ -57,7 +57,9 @@ function App({ config }) {
   });
 
   const usageDataRef = useRef({});
-  const lowdefyRef = useRef({ eventCallback: createLogUsage({ usageDataRef }) });
+  const lowdefyRef = useRef({
+    eventCallback: createLogUsage({ basePath: config.basePath ?? '', usageDataRef }),
+  });
   if (rootConfig?.theme) {
     lowdefyRef.current.theme = rootConfig.theme;
   }
