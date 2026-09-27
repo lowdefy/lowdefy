@@ -62,6 +62,7 @@ export default {
     'CreateOrganization',
     'DeleteUser',
     'InviteMember',
+    'LeaveOrganization',
     'ListMembers',
     'ListUsers',
     'RemoveMember',
