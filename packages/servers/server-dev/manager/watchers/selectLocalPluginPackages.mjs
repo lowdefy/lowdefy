@@ -16,59 +16,33 @@
 
 import fs from 'fs';
 import path from 'path';
-import { get, type } from '@lowdefy/helpers';
 
-// Only these kinds are loaded by the server process and cached in its ESM
-// module cache. blocks, actions and operators.client are bundled by Vite,
-// which rebuilds and hot-reloads them itself.
-const serverSideKinds = [
-  'agents',
-  'connections',
-  'notifications',
-  'operators.server',
-  'requests',
-  'websockets',
-  'auth.adapters',
-  'auth.providers',
-  'auth.strategies',
-];
-
-function collectServerSidePackages(customTypesMap) {
-  const packages = new Set();
-  for (const kind of serverSideKinds) {
-    const store = get(customTypesMap, kind, { default: {} });
-    for (const definition of Object.values(store ?? {})) {
-      if (type.isString(definition?.package)) {
-        packages.add(definition.package);
-      }
+// The build imports plugins from the server directory; an app in a pnpm
+// workspace also links them into its own node_modules. A published package
+// lives inside node_modules and cannot change under a running dev server;
+// only a linked local plugin resolves outside it.
+function resolveLocalPluginDir({ directories, packageName }) {
+  for (const base of [directories.server, directories.config]) {
+    const linked = path.join(base, 'node_modules', packageName);
+    if (fs.existsSync(linked)) {
+      const realPath = fs.realpathSync(linked);
+      return realPath.split(path.sep).includes('node_modules') ? null : realPath;
     }
   }
-  return [...packages];
+  return null;
 }
 
-function resolveLocalPluginDir({ configDirectory, packageName }) {
-  const linked = path.join(configDirectory, 'node_modules', packageName);
-  if (!fs.existsSync(linked)) {
-    return null;
-  }
-  const realPath = fs.realpathSync(linked);
-  // A published package lives inside node_modules and cannot change under a
-  // running dev server; only linked local plugins resolve outside it.
-  if (realPath.split(path.sep).includes('node_modules')) {
-    return null;
-  }
-  return realPath;
+// The plugins lowdefy.yaml lists that are local packages, whatever kinds of
+// types they hold: a block-only plugin's type list is read by the config
+// build too, so an edit to it - or a fix to one that broke the build - must
+// rebuild.
+function selectLocalPluginPackages({ directories, packageNames }) {
+  return [...new Set(packageNames)]
+    .map((packageName) => ({
+      package: packageName,
+      dir: resolveLocalPluginDir({ directories, packageName }),
+    }))
+    .filter(({ dir }) => dir !== null);
 }
 
-function selectWatchedPluginPackages({ configDirectory, customTypesMap }) {
-  const watched = [];
-  for (const packageName of collectServerSidePackages(customTypesMap ?? {})) {
-    const dir = resolveLocalPluginDir({ configDirectory, packageName });
-    if (dir !== null) {
-      watched.push({ package: packageName, dir });
-    }
-  }
-  return watched;
-}
-
-export default selectWatchedPluginPackages;
+export default selectLocalPluginPackages;

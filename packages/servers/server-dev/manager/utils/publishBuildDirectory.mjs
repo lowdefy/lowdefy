@@ -44,10 +44,32 @@ const pageRegistryFile = 'pageRegistry.json';
 // build, or the build status the dev tools read.
 const controlFiles = new Set(['.restart', 'buildStatus.json', 'invalidatePages', 'reload']);
 
+// On Windows a rename over a file another process has open (the dev server
+// reading it, a virus scanner, the search indexer) fails for a moment with
+// EPERM, EBUSY or EACCES, so each rename is retried for a few seconds before
+// the publish fails.
+const LOCKED_CODES = new Set(['EACCES', 'EBUSY', 'EPERM']);
+const RENAME_DELAYS_MS = [25, 50, 100, 200, 400, 500, 500, 500, 500, 500];
+const RM_OPTIONS = { force: true, recursive: true, maxRetries: 5 };
+
+async function renameWithRetry({ from, to }) {
+  for (let attempt = 0; ; attempt += 1) {
+    try {
+      await fs.rename(from, to);
+      return;
+    } catch (error) {
+      if (!LOCKED_CODES.has(error.code) || attempt === RENAME_DELAYS_MS.length) {
+        throw error;
+      }
+      await new Promise((resolve) => setTimeout(resolve, RENAME_DELAYS_MS[attempt]));
+    }
+  }
+}
+
 async function moveFile({ buildDirectory, stagingDirectory, file }) {
   const target = path.join(buildDirectory, file);
   await fs.mkdir(path.dirname(target), { recursive: true });
-  await fs.rename(path.join(stagingDirectory, file), target);
+  await renameWithRetry({ from: path.join(stagingDirectory, file), to: target });
 }
 
 async function publishBuildDirectory({ buildDirectory, stagingDirectory }) {
@@ -61,12 +83,10 @@ async function publishBuildDirectory({ buildDirectory, stagingDirectory }) {
 
   const staged = new Set(stagedFiles);
   const staleFiles = liveFiles.filter((file) => !staged.has(file) && !controlFiles.has(file));
-  await Promise.all(
-    staleFiles.map((file) => fs.rm(path.join(buildDirectory, file), { force: true }))
-  );
+  await Promise.all(staleFiles.map((file) => fs.rm(path.join(buildDirectory, file), RM_OPTIONS)));
 
   await moveFile({ buildDirectory, stagingDirectory, file: pageRegistryFile });
-  await fs.rm(stagingDirectory, { recursive: true, force: true });
+  await fs.rm(stagingDirectory, RM_OPTIONS);
 }
 
 export default publishBuildDirectory;

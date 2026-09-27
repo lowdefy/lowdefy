@@ -18,95 +18,56 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-const { default: selectWatchedPluginPackages } = await import('./selectWatchedPluginPackages.mjs');
+import selectLocalPluginPackages from './selectLocalPluginPackages.mjs';
 
 let root;
-let configDirectory;
+let directories;
 
-function addLinkedPackage(name) {
+function addLinkedPackage({ name, base }) {
   const dir = path.join(root, 'plugins', name);
-  fs.mkdirSync(path.join(dir, 'src'), { recursive: true });
-  fs.mkdirSync(path.dirname(path.join(configDirectory, 'node_modules', name)), {
-    recursive: true,
-  });
-  fs.symlinkSync(dir, path.join(configDirectory, 'node_modules', name), 'dir');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.mkdirSync(path.dirname(path.join(base, 'node_modules', name)), { recursive: true });
+  fs.symlinkSync(dir, path.join(base, 'node_modules', name), 'dir');
   return fs.realpathSync(dir);
-}
-
-function addInstalledPackage(name) {
-  fs.mkdirSync(path.join(configDirectory, 'node_modules', name), { recursive: true });
 }
 
 beforeEach(() => {
   root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-plugin-select-test-'));
-  configDirectory = path.join(root, 'app');
-  fs.mkdirSync(path.join(configDirectory, 'node_modules'), { recursive: true });
+  directories = {
+    config: path.join(root, 'app'),
+    server: path.join(root, 'app', '.lowdefy', 'dev'),
+  };
+  fs.mkdirSync(path.join(directories.server, 'node_modules'), { recursive: true });
 });
 
 afterEach(() => {
   fs.rmSync(root, { recursive: true, force: true });
 });
 
-test('a linked connections-only package is watched', () => {
-  const dir = addLinkedPackage('@app/db-plugin');
-  const customTypesMap = {
-    connections: { MyDb: { package: '@app/db-plugin', version: '1.0.0' } },
-  };
+test('selectLocalPluginPackages selects every linked plugin, block-only plugins included', () => {
+  const ui = addLinkedPackage({ name: '@app/ui-plugin', base: directories.server });
+  const db = addLinkedPackage({ name: '@app/db-plugin', base: directories.config });
 
-  expect(selectWatchedPluginPackages({ configDirectory, customTypesMap })).toEqual([
-    { package: '@app/db-plugin', dir },
+  expect(
+    selectLocalPluginPackages({
+      directories,
+      packageNames: ['@app/ui-plugin', '@app/db-plugin', '@app/ui-plugin'],
+    })
+  ).toEqual([
+    { package: '@app/ui-plugin', dir: ui },
+    { package: '@app/db-plugin', dir: db },
   ]);
 });
 
-test('a linked blocks-only package is not watched because Vite hot-reloads it', () => {
-  addLinkedPackage('@app/ui-plugin');
-  const customTypesMap = {
-    blocks: { Fancy: { package: '@app/ui-plugin', version: '1.0.0' } },
-    actions: { Do: { package: '@app/ui-plugin', version: '1.0.0' } },
-    operators: { client: { _ui: { package: '@app/ui-plugin', version: '1.0.0' } } },
-  };
+test('selectLocalPluginPackages skips installed and missing packages', () => {
+  fs.mkdirSync(path.join(directories.server, 'node_modules', '@lowdefy', 'connection-mongodb'), {
+    recursive: true,
+  });
 
-  expect(selectWatchedPluginPackages({ configDirectory, customTypesMap })).toEqual([]);
-});
-
-test('a linked package with both blocks and requests is watched once', () => {
-  const dir = addLinkedPackage('@app/mixed-plugin');
-  const customTypesMap = {
-    blocks: { Fancy: { package: '@app/mixed-plugin', version: '1.0.0' } },
-    requests: {
-      Find: { package: '@app/mixed-plugin', version: '1.0.0' },
-      Insert: { package: '@app/mixed-plugin', version: '1.0.0' },
-    },
-    operators: { server: { _srv: { package: '@app/mixed-plugin', version: '1.0.0' } } },
-  };
-
-  expect(selectWatchedPluginPackages({ configDirectory, customTypesMap })).toEqual([
-    { package: '@app/mixed-plugin', dir },
-  ]);
-});
-
-test('a server-side package resolving inside node_modules is not watched', () => {
-  addInstalledPackage('@lowdefy/connection-mongodb');
-  const customTypesMap = {
-    connections: { MongoDB: { package: '@lowdefy/connection-mongodb', version: '4.0.0' } },
-  };
-
-  expect(selectWatchedPluginPackages({ configDirectory, customTypesMap })).toEqual([]);
-});
-
-test('auth kinds count as server-side and a missing package is skipped', () => {
-  const dir = addLinkedPackage('@app/auth-plugin');
-  const customTypesMap = {
-    auth: { providers: { Corp: { package: '@app/auth-plugin', version: '1.0.0' } } },
-    agents: { Bot: { package: '@app/not-installed', version: '1.0.0' } },
-  };
-
-  expect(selectWatchedPluginPackages({ configDirectory, customTypesMap })).toEqual([
-    { package: '@app/auth-plugin', dir },
-  ]);
-});
-
-test('an empty or missing customTypesMap watches nothing', () => {
-  expect(selectWatchedPluginPackages({ configDirectory, customTypesMap: {} })).toEqual([]);
-  expect(selectWatchedPluginPackages({ configDirectory, customTypesMap: null })).toEqual([]);
+  expect(
+    selectLocalPluginPackages({
+      directories,
+      packageNames: ['@lowdefy/connection-mongodb', '@app/not-installed'],
+    })
+  ).toEqual([]);
 });

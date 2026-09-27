@@ -93,10 +93,11 @@ beforeEach(() => {
       server: path.join(configDir, '.lowdefy', 'server'),
     },
     logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
+    buildActivity: { setBusy: jest.fn() },
     lowdefyBuild: jest.fn(async () => {}),
-    onConfigWatcherBusy: jest.fn(),
     options: { watch: [], watchIgnore: [] },
     reloadClients: jest.fn(async () => {}),
+    syncServer: jest.fn(async () => {}),
     version: 'local',
   };
 });
@@ -116,6 +117,7 @@ test('a page file edit in an app under a dot-folder invalidates pages', async ()
   await waitFor(invalidated);
   await waitFor(() => context.reloadClients.mock.calls.length > 0);
   expect(context.lowdefyBuild).not.toHaveBeenCalled();
+  expect(context.syncServer).not.toHaveBeenCalled();
 });
 
 test('adding a page to the pages list rebuilds the config', async () => {
@@ -124,6 +126,24 @@ test('adding a page to the pages list rebuilds the config', async () => {
 
   await waitFor(() => context.lowdefyBuild.mock.calls.length === 1);
   expect(invalidated()).toBe(false);
+});
+
+test('a config rebuild stays busy until the server has caught up with the build', async () => {
+  let finishSync;
+  context.syncServer.mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        finishSync = resolve;
+      })
+  );
+  watcher = await lowdefyBuildWatcher(context);
+  fs.appendFileSync(path.join(configDir, 'pages.yaml'), '- _ref: pages/about.yaml\n');
+
+  await waitFor(() => context.syncServer.mock.calls.length === 1);
+  expect(context.buildActivity.setBusy.mock.calls).toEqual([[true]]);
+  finishSync();
+  await waitFor(() => context.buildActivity.setBusy.mock.calls.length === 2);
+  expect(context.buildActivity.setBusy.mock.calls).toEqual([[true], [false]]);
 });
 
 test('a lowdefy.yaml edit that breaks its YAML syntax still rebuilds the config', async () => {

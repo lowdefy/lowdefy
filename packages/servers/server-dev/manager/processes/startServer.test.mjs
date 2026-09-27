@@ -33,6 +33,7 @@ function createContext({ mailSink }) {
     logger: { debug: jest.fn(), error: jest.fn() },
     mailSink,
     options: { port: 3210 },
+    serverArtifacts: { record: jest.fn() },
     shutdownServer: jest.fn(),
   };
 }

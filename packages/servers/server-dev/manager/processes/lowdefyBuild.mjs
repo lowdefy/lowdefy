@@ -32,7 +32,9 @@ function lowdefyBuild({ directories, logger, options }) {
 
     // Reading the plugin maps parses lowdefy.yaml and imports each plugin's
     // types, so a YAML syntax error or a broken plugin fails the build there,
-    // and the build status has to report it like any other build error.
+    // and the build status has to report it like any other build error. So
+    // does a publish that fails part way: the live build is then a mix of two
+    // builds, and the next change must rebuild and publish it whole.
     let result;
     try {
       const [customTypesMap, customMessagesMap] = await Promise.all([
@@ -47,6 +49,14 @@ function lowdefyBuild({ directories, logger, options }) {
         refResolver: options.refResolver,
         stage: 'dev',
       });
+      await publishBuildDirectory({
+        buildDirectory: directories.build,
+        stagingDirectory: directories.buildStaging,
+      }).catch((error) => {
+        throw new Error(`Publishing the build to ${directories.build} failed: ${error.message}`, {
+          cause: error,
+        });
+      });
     } catch (error) {
       await writeBuildStatus({
         directories,
@@ -56,11 +66,6 @@ function lowdefyBuild({ directories, logger, options }) {
       });
       throw error;
     }
-
-    await publishBuildDirectory({
-      buildDirectory: directories.build,
-      stagingDirectory: directories.buildStaging,
-    });
 
     await writeBuildStatus({
       directories,

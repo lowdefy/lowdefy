@@ -18,6 +18,7 @@
 import opener from 'opener';
 import getContext from './getContext.mjs';
 import acquireDevInstance from './utils/acquireDevInstance.mjs';
+import createBuildActivity from './utils/createBuildActivity.mjs';
 import startMailSink from './processes/startMailSink.mjs';
 import startProxy from './processes/startProxy.mjs';
 import startServer from './processes/startServer.mjs';
@@ -27,12 +28,12 @@ import waitForServer from './utils/waitForServer.mjs';
 
 /*
 The run script does the following:
-  - Run the initial Lowdefy build, install plugins, and next build and read .env
+  - Read .env, run the initial Lowdefy build and install plugins
   - Start file watchers to reload config and restart server if necessary
   - Start the server
   - Open a browser window.
 
-  Three watchers are started:
+  Watchers (see processes/startWatchers.mjs):
 
   ## Lowdefy build watcher
   Watches:
@@ -50,25 +51,14 @@ The run script does the following:
   If the .env file is changed, the new file is parsed, and the server restarted with the new env
   and the server hard reloads.
 
-  ## Next build watcher
+  ## Local plugin, restart request and server package.json watchers
 
-  The Next build watcher watches for any files where the app should be rebuilt and restarted.
-  It watches:
-  - <build-dir>/plugins/**
-  - <build-dir>/config.json
-  - <server-dir>/package.json
+  A local plugin change rebuilds (and restarts when the plugin has server-side types), a restart
+  requested by the dev tools rebuilds and restarts, and a plugin package a page build added to
+  the server's package.json is installed.
 
-  If app config changes:
-    - <build-dir>/config.json changes, rebuild and restart server.
-
-  If user styles change:
-    - <public-dir>/styles.css changes, rebuild and restart server.
-
-  If new plugin type in an existing plugin package is used:
-    - <build-dir>/plugins/** changes,  rebuild next and restart server.
-
-  If new plugin type in a new plugin package is used:
-    - <server-dir>/package.json changes,  run npm install, rebuild next and restart server.
+  After every build, syncServer restarts the server when a file it read at start changed (config,
+  auth, connections, server operators), installing new plugin packages first.
 
   # Reload mechanism
 
@@ -101,14 +91,12 @@ if (instance.acquired === false) {
 }
 process.on('exit', () => instance.release());
 
-// `building` is true while a config or module change is queued or being
-// processed. lowdefy_build_status({ wait: true }) waits on it, so an agent
+// `building` is true while a change is queued or being processed, restarts
+// included. lowdefy_build_status({ wait: true }) waits on it, so an agent
 // reads the build that includes its last edit instead of the one before.
-let busyConfigWatchers = 0;
-context.onConfigWatcherBusy = (busy) => {
-  busyConfigWatchers += busy ? 1 : -1;
-  instance.update({ building: busyConfigWatchers > 0 });
-};
+context.buildActivity = createBuildActivity({
+  onChange: (building) => instance.update({ building }),
+});
 
 // Shut the Vite child down on direct signals (process managers, scripts/dev.mjs
 // signal forwarding) — terminal Ctrl+C signals the whole process group, but a
@@ -145,7 +133,13 @@ try {
   context.mailSink = await startMailSink(context);
 
   startServer(context);
-  if (await waitForServer({ port: context.internalPort, basePath: context.basePath })) {
+  if (
+    await waitForServer({
+      basePath: context.basePath,
+      child: context.devServer,
+      port: context.internalPort,
+    })
+  ) {
     instance.update({ state: 'ready' });
   } else {
     context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');

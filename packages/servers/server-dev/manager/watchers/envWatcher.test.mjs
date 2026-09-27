@@ -44,8 +44,9 @@ beforeEach(() => {
     directories: { config: configDir },
     logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
     lowdefyBuild: jest.fn(async () => {}),
+    buildActivity: { setBusy: jest.fn() },
     readDotEnv: jest.fn(),
-    restartServer: jest.fn(),
+    syncServer: jest.fn(async () => {}),
   };
 });
 
@@ -72,12 +73,15 @@ test.each([
     watcher = await envWatcher(context);
 
     fs.writeFileSync(path.join(configDir, '.env'), 'LOWDEFY_SECRET_A=two\n');
-    await waitFor(() => context.restartServer.mock.calls.length > 0);
+    await waitFor(() => context.syncServer.mock.calls.length > 0);
 
     expect(context.readDotEnv).toHaveBeenCalledTimes(1);
     expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
     expect(context.readDotEnv.mock.invocationCallOrder[0]).toBeLessThan(
       context.lowdefyBuild.mock.invocationCallOrder[0]
     );
+    expect(context.syncServer).toHaveBeenCalledWith({ restart: true });
+    await waitFor(() => context.buildActivity.setBusy.mock.calls.length === 2);
+    expect(context.buildActivity.setBusy.mock.calls).toEqual([[true], [false]]);
   }
 );

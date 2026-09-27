@@ -14,105 +14,25 @@
   limitations under the License.
 */
 
-import crypto from 'crypto';
 import path from 'path';
-import { readFile } from '@lowdefy/node-utils';
-import { type } from '@lowdefy/helpers';
 import setupWatcher from '../utils/setupWatcher.mjs';
 
-const hashes = {};
-
-// Replaces nextBuildWatcher. Only files the server reads at startup are
-// tracked — a change requires a server restart for a fresh ESM module cache.
-// Client-side artifacts (blocks.js, operators/client.js, globals.css, ...)
-// are watched by Vite itself and hot-replaced without a restart.
-const trackedFiles = [
-  'build/app.json',
-  'build/auth.json',
-  'build/config.json',
-  'build/plugins/auth/adapters.js',
-  'build/plugins/auth/providers.js',
-  'build/plugins/connections.js',
-  'build/plugins/operators/server.js',
-  'package.json',
-];
-
-async function sha1(filePath) {
-  let content = await readFile(filePath);
-  if (filePath.endsWith('.json')) {
-    content = JSON.stringify(
-      JSON.parse(content, (_, value) => {
-        if (!type.isObject(value)) return value;
-        delete value['~k'];
-        return value;
-      })
-    );
-  }
-  return crypto
-    .createHash('sha1')
-    .update(content || '')
-    .digest('base64');
-}
-
-async function serverArtifactWatcher(context) {
-  // Initialize hashes so that the server does not restart the first time
-  // Lowdefy build is run.
-  await Promise.all(
-    trackedFiles.map(async (filePath) => {
-      hashes[filePath] = await sha1(filePath);
-    })
-  );
-
+// A page build in the dev server that finds a plugin package missing adds it
+// to the server's package.json (the page answers "installing"). Installing it,
+// rebuilding and restarting is syncServer's work, as it is after a config
+// build that adds one. Config builds sync the server themselves, so this
+// watcher only has work when the change came from the dev server.
+function serverPackageWatcher(context) {
   const callback = async () => {
-    let install = false;
-    let restart = false;
-    await Promise.all(
-      trackedFiles.map(async (filePath) => {
-        const hash = await sha1(filePath);
-        if (hashes[filePath] === hash) {
-          return;
-        }
-        restart = true;
-        if (filePath.endsWith('package.json')) {
-          install = true;
-        }
-        hashes[filePath] = hash;
-      })
-    );
-    if (!restart) {
-      context.logger.info({ spin: 'succeed' }, 'Reloaded app.');
-      return;
-    }
-
-    context.shutdownServer();
-    if (install) {
-      context.logger.warn('Plugin dependencies have changed and will be reinstalled.');
-      await context.installPlugins();
-      // Rebuild Lowdefy artifacts (blocks.js, icons.js, connections.js, etc.)
-      // so newly installed packages are included in the plugin imports.
-      await context.lowdefyBuild();
-      // Re-hash all tracked files to avoid detecting our own build output
-      // changes as new changes on the next watcher callback.
-      await Promise.all(
-        trackedFiles.map(async (filePath) => {
-          hashes[filePath] = await sha1(filePath);
-        })
-      );
-    }
-    context.restartServer();
+    await context.syncServer();
   };
-
   return setupWatcher({
     callback,
     context,
+    onBusy: context.buildActivity.setBusy,
     watchDotfiles: true,
-    watchPaths: [
-      path.join(context.directories.server, 'package.json'),
-      ...trackedFiles
-        .filter((filePath) => filePath.startsWith('build/'))
-        .map((filePath) => path.join(context.directories.server, filePath)),
-    ],
+    watchPaths: [path.join(context.directories.server, 'package.json')],
   });
 }
 
-export default serverArtifactWatcher;
+export default serverPackageWatcher;

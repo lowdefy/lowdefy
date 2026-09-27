@@ -49,7 +49,7 @@ function restartRequestWatcher(context) {
     try {
       await context.lowdefyBuild();
     } finally {
-      context.restartServer();
+      await context.syncServer({ restart: true });
     }
   };
 
@@ -58,6 +58,7 @@ function restartRequestWatcher(context) {
   return setupWatcher({
     callback,
     context,
+    onBusy: context.buildActivity.setBusy,
     watchDotfiles: true,
     watchPaths: [context.directories.build],
     ignorePaths: [

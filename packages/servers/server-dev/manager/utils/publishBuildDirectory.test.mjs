@@ -15,8 +15,10 @@
 */
 
 import fs from 'fs';
+import fsPromises from 'fs/promises';
 import os from 'os';
 import path from 'path';
+import { jest } from '@jest/globals';
 
 import publishBuildDirectory from './publishBuildDirectory.mjs';
 
@@ -42,8 +44,13 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  jest.restoreAllMocks();
   fs.rmSync(root, { recursive: true, force: true });
 });
+
+function lockedError(code) {
+  return Object.assign(new Error(`${code}: resource busy or locked, rename`), { code });
+}
 
 test('publishBuildDirectory replaces live files with the staged build', async () => {
   write(buildDirectory, 'app.json', 'old');
@@ -167,4 +174,28 @@ test('publishBuildDirectory keeps the control files the manager and dev tools wr
   expect(read('buildStatus.json')).toBe('{"status":"ok"}');
   expect(read('invalidatePages')).toBe('1');
   expect(read('reload')).toBe('1');
+});
+
+test('publishBuildDirectory retries a rename while another process holds the file', async () => {
+  write(buildDirectory, 'app.json', 'old');
+  write(stagingDirectory, 'app.json', 'new');
+  jest
+    .spyOn(fsPromises, 'rename')
+    .mockRejectedValueOnce(lockedError('EPERM'))
+    .mockRejectedValueOnce(lockedError('EBUSY'));
+
+  await publishBuildDirectory({ buildDirectory, stagingDirectory });
+
+  expect(read('app.json')).toBe('new');
+  expect(read('pageRegistry.json')).toBe('new');
+});
+
+test('publishBuildDirectory fails with the rename error when a file stays locked', async () => {
+  write(stagingDirectory, 'app.json', 'new');
+  const rename = jest.spyOn(fsPromises, 'rename').mockRejectedValue(lockedError('EPERM'));
+
+  await expect(publishBuildDirectory({ buildDirectory, stagingDirectory })).rejects.toThrow(
+    'EPERM: resource busy or locked, rename'
+  );
+  expect(rename).toHaveBeenCalledTimes(11);
 });

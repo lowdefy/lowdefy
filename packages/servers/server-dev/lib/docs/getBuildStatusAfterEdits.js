@@ -20,9 +20,11 @@ import waitForBuild from './waitForBuild.js';
 
 // Build status for wait: true. Waits until the dev server has processed the
 // latest edits, then builds the pages they touched, so the answer covers
-// those pages whether or not anything has requested them since.
-async function getBuildStatusAfterEdits() {
-  const waited = await waitForBuild();
+// those pages whether or not anything has requested them since. A request
+// through the manager's proxy has been held there until the edits - and any
+// restart they caused - were processed (proxyWait), so it does not wait again.
+async function getBuildStatusAfterEdits({ proxyWait } = {}) {
+  const waited = proxyWait ?? (await waitForBuild());
   if (!waited.settled) {
     return { ...waited, ...getBuildStatus() };
   }

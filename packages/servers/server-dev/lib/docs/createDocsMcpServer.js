@@ -25,6 +25,7 @@ import findConfig from './findConfig.js';
 import getAppMap from './getAppMap.js';
 import getBuildStatus from './getBuildStatus.js';
 import getBuildStatusAfterEdits from './getBuildStatusAfterEdits.js';
+import readProxyBuildWait from './readProxyBuildWait.js';
 import getCoreDoc from './getCoreDoc.js';
 import getExamples from './getExamples.js';
 import getOverview from './getOverview.js';
@@ -204,7 +205,10 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
 
   registerDevTool('lowdefy_build_status', async ({ wait }) => {
     if (wait === true) {
-      return textResult(await getBuildStatusAfterEdits());
+      const proxyWait = readProxyBuildWait({
+        getHeader: (name) => honoContext?.req.header(name),
+      });
+      return textResult(await getBuildStatusAfterEdits({ proxyWait }));
     }
     return textResult(getBuildStatus());
   });

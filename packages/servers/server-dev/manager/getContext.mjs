@@ -30,7 +30,9 @@ import reloadClients from './processes/reloadClients.mjs';
 import restartServer from './processes/restartServer.mjs';
 import shutdownServer from './processes/shutdownServer.mjs';
 import startWatchers from './processes/startWatchers.mjs';
+import syncServer from './processes/syncServer.mjs';
 
+import createServerArtifactTracker from './utils/createServerArtifactTracker.mjs';
 import getViteBin from './utils/getViteBin.mjs';
 
 const argv = yargs(hideBin(process.argv)).array('watch').array('watchIgnore').argv;
@@ -102,8 +104,10 @@ async function getContext() {
   context.readDotEnv = readDotEnv(context);
   context.reloadClients = reloadClients(context);
   context.restartServer = restartServer(context);
+  context.serverArtifacts = createServerArtifactTracker(context);
   context.shutdownServer = shutdownServer(context);
   context.startWatchers = startWatchers(context);
+  context.syncServer = syncServer(context);
 
   return context;
 }

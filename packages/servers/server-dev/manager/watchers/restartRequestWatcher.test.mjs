@@ -43,8 +43,9 @@ beforeEach(() => {
   context = {
     directories: { build: path.join(fixtureDir, 'build') },
     logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
+    buildActivity: { setBusy: jest.fn() },
     lowdefyBuild: jest.fn(async () => {}),
-    restartServer: jest.fn(),
+    syncServer: jest.fn(async () => {}),
   };
 });
 
@@ -64,11 +65,11 @@ test('writing build/.restart restarts the server once and removes the sentinel',
     sentinelPath,
     JSON.stringify({ requestedAt: new Date().toISOString(), reason: 'Edited a request plugin' })
   );
-  await waitFor(() => context.restartServer.mock.calls.length > 0);
+  await waitFor(() => context.syncServer.mock.calls.length > 0);
   // Give the batch window a chance to fire a second time if it were going to.
   await new Promise((resolve) => setTimeout(resolve, 300));
 
-  expect(context.restartServer).toHaveBeenCalledTimes(1);
+  expect(context.syncServer).toHaveBeenCalledTimes(1);
   expect(fs.existsSync(sentinelPath)).toBe(false);
   expect(context.logger.info).toHaveBeenCalledWith(
     { spin: 'start' },
@@ -81,11 +82,11 @@ test('a restart request rebuilds the config before restarting the server', async
   const sentinelPath = path.join(fixtureDir, 'build', '.restart');
 
   fs.writeFileSync(sentinelPath, JSON.stringify({ reason: 'Added a block type' }));
-  await waitFor(() => context.restartServer.mock.calls.length > 0);
+  await waitFor(() => context.syncServer.mock.calls.length > 0);
 
   expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
   expect(context.lowdefyBuild.mock.invocationCallOrder[0]).toBeLessThan(
-    context.restartServer.mock.invocationCallOrder[0]
+    context.syncServer.mock.invocationCallOrder[0]
   );
 });
 
@@ -95,7 +96,7 @@ test('a restart request restarts the server when the config build fails', async 
   const sentinelPath = path.join(fixtureDir, 'build', '.restart');
 
   fs.writeFileSync(sentinelPath, JSON.stringify({ reason: 'Added a block type' }));
-  await waitFor(() => context.restartServer.mock.calls.length > 0);
+  await waitFor(() => context.syncServer.mock.calls.length > 0);
 
-  expect(context.restartServer).toHaveBeenCalledTimes(1);
+  expect(context.syncServer).toHaveBeenCalledTimes(1);
 });
