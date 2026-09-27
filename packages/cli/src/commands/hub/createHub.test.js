@@ -261,3 +261,7 @@ test('overlapping reaps share one pass, so a slow open-tabs check is not repeate
   await Promise.all([adopting.reap(), adopting.reap()]);
   expect(openTabs).toHaveBeenCalledTimes(1);
 });
+
+test.each([[0], [-5], [2.5], ['10'], [null]])('hub logs refuses lines %p', (lines) => {
+  expect(() => hub.logs({ configDirectory, lines })).toThrow('"lines" must be a positive integer');
+});

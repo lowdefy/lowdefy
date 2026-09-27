@@ -24,7 +24,7 @@ import allocatePorts from './allocatePorts.js';
 import fetchOpenTabs from './fetchOpenTabs.js';
 import getProcessStartTime from './getProcessStartTime.js';
 import { HUB_PROTOCOL, IDLE_STOP_MS, PORT_RANGE, READY_TIMEOUT_MS } from './hubProtocol.js';
-import readLogTail from './readLogTail.js';
+import readLogTail, { MAX_LINES } from './readLogTail.js';
 import resolveDevCommand from './resolveDevCommand.js';
 import stopProcessGroup from './stopProcessGroup.js';
 
@@ -313,7 +313,14 @@ function createHub({
     return describe(realDirectory(configDirectory));
   }
 
-  function logs({ lines, grep, ...params }) {
+  function logs({ lines = 100, grep, ...params }) {
+    if (!type.isInt(lines) || lines < 1) {
+      throw new Error(
+        `"lines" must be a positive integer (at most ${MAX_LINES} are returned). Received ${JSON.stringify(
+          lines
+        )}.`
+      );
+    }
     const configDirectory = realDirectory(params.configDirectory);
     const record = readDevInstance({ configDirectory });
     if (record !== null && record.owner !== 'hub') {
