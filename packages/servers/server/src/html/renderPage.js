@@ -21,6 +21,7 @@ import authJson from '../../lib/build/auth.js';
 import lowdefyConfig from '../../lib/build/config.js';
 import themeConfig from '../../lib/build/theme.js';
 import getAssets from './getAssets.js';
+import getPageAssets from './getPageAssets.js';
 import template from './template.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
@@ -96,7 +97,7 @@ async function renderPage(c, { pageId, status = 200 }) {
     appendBody: appJson.html?.appendBody ?? '',
     appendHead: appJson.html?.appendHead ?? '',
     assets,
-    pageAssets: assets.pageTypes[pageConfig.typesKey],
+    pageAssets: getPageAssets({ assets, pageConfig }),
     basePath,
     config: {
       basePath,

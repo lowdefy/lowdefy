@@ -144,6 +144,32 @@ test('resolveDynamicContent splices resolved blocks into the Dynamic block conte
   expect(dynamicBlock.slots.fallback).toBe(undefined);
 });
 
+test('resolveDynamicContent asks for every icon when resolved content names one outside the page', async () => {
+  const pageConfig = makePageConfig(makeDynamicBlock());
+  const context = createTestContext({
+    files: {
+      ...baseFiles({
+        resolve_section: {
+          routine: {
+            ':return': {
+              blocks: [
+                { id: 'note', type: 'Html', properties: { html: '<i data-icon="Rocket"></i>' } },
+              ],
+            },
+          },
+        },
+      }),
+      'iconImports.json': ['close', 'Rocket'],
+      'pageTypeSets.json': {
+        page1: { actions: ['Request'], blocks: ['Box', 'Dynamic', 'Html'], icons: ['close'] },
+      },
+    },
+  });
+  await resolveDynamicContent(context, { pageConfig, urlQuery: {} });
+  expect(pageConfig.loadAllIcons).toBe(true);
+  expect(pageConfig.loadAllTypes).toBe(undefined);
+});
+
 test('resolveDynamicContent passes pageId, blockId and urlQuery in the payload', async () => {
   const dynamicBlock = makeDynamicBlock();
   const pageConfig = makePageConfig(dynamicBlock);

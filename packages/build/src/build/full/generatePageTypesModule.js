@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import generateIconEntries from '../icons/generateIconEntries.js';
+
 const IMPORT_PATHS = {
   actions: 'actions',
   blocks: 'blocks',
@@ -23,7 +25,9 @@ const IMPORT_PATHS = {
 // Import aliases are generated (a0, b0, o0) rather than taken from type names:
 // a block and an action can share a name (Throw), and no identifier in emitted
 // code comes from config. Keys and specifiers are emitted through JSON.stringify.
-function generatePageTypesModule({ imports }) {
+// Icons are data, inlined in the module: its page's icons arrive with its code
+// in one chunk, and icon node constants (n0) never clash with import aliases.
+function generatePageTypesModule({ iconData, imports }) {
   const lines = [];
   const exports = [];
   Object.entries(IMPORT_PATHS).forEach(([category, importPath]) => {
@@ -38,6 +42,10 @@ function generatePageTypesModule({ imports }) {
     });
     exports.push(`  ${category}: {\n${entries.join('\n')}\n  },`);
   });
+  const pageIconData = Object.fromEntries(imports.icons.map((name) => [name, iconData[name]]));
+  const { constants, entries } = generateIconEntries({ iconData: pageIconData });
+  lines.push(...constants);
+  exports.push(`  icons: {\n${entries.map((entry) => `    ${entry}`).join('\n')}\n  },`);
   return `${lines.join('\n')}\nexport default {\n${exports.join('\n')}\n};\n`;
 }
 

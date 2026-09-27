@@ -21,6 +21,7 @@ import createEvaluateOperators from '../../../context/createEvaluateOperators.js
 import invokeEndpoint from '../../endpoints/invokeEndpoint.js';
 import checkDynamicContent from './checkDynamicContent.js';
 import createContentError from './createContentError.js';
+import flagIconsOutsidePage from './flagIconsOutsidePage.js';
 import flagTypesOutsidePage from './flagTypesOutsidePage.js';
 import loadDynamicArtifacts from './loadDynamicArtifacts.js';
 import unescapeOperators from './unescapeOperators.js';
@@ -172,9 +173,11 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
 }
 
 async function resolveDynamicContent(context, { pageConfig, urlQuery }) {
-  const [artifacts, pageTypeSets] = await Promise.all([
+  const [artifacts, pageTypeSets, iconImports, { default: collectIconNames }] = await Promise.all([
     loadDynamicArtifacts(context),
     context.readConfigFile('pageTypeSets.json'),
+    context.readConfigFile('iconImports.json'),
+    import('@lowdefy/build/collectIconNames'),
   ]);
   context.evaluateOperators = createEvaluateOperators(context);
   const shared = {
@@ -191,6 +194,7 @@ async function resolveDynamicContent(context, { pageConfig, urlQuery }) {
     pageTypeSets,
     usedTypes: shared.usedTypes,
   });
+  flagIconsOutsidePage({ collectIconNames, iconImports, pageConfig, pageTypeSets });
   return pageConfig;
 }
 

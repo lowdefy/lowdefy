@@ -42,14 +42,49 @@ const lowdefyProps = [
   'validation',
 ];
 
-function createIcon(Icons) {
-  // Icons is the live icon map: page loads and dev JIT add names to it, so
-  // every lookup happens at render.
+// Drawn while every icon loads: an empty svg keeps the icon's box, so nothing
+// shifts and no fallback flashes before the icon arrives.
+const PENDING_ICON = { node: [] };
+
+function createIcon({ icons, loadAllIcons }) {
+  // Without a loader the map already holds every icon the app bundles.
+  let allIconsLoaded = type.isNone(loadAllIcons);
+
+  // icons is the live icon map: page loads, dev JIT and loadAllIcons add names
+  // to it, so every lookup happens at render.
   function getIconData(name) {
-    if (type.isString(name) && Object.hasOwn(Icons, name)) {
-      return Icons[name];
+    if (type.isString(name) && Object.hasOwn(icons, name)) {
+      return icons[name];
     }
     return null;
+  }
+
+  // A name missing from the page's icons may be one of the app's, so the first
+  // miss waits for every icon to load before it draws the fallback. After a
+  // load, a missing name is unknown. A failed load (logged by the loader)
+  // draws the fallback, and a later miss tries again.
+  function useIconData(name) {
+    const data = getIconData(name);
+    const [settledName, setSettledName] = React.useState(null);
+    const pending = data === null && type.isString(name) && !allIconsLoaded && settledName !== name;
+    React.useEffect(() => {
+      if (!pending) return undefined;
+      let mounted = true;
+      loadAllIcons()
+        .then(
+          () => {
+            allIconsLoaded = true;
+          },
+          () => undefined
+        )
+        .then(() => {
+          if (mounted) setSettledName(name);
+        });
+      return () => {
+        mounted = false;
+      };
+    }, [pending, name]);
+    return { data, pending };
   }
 
   function IconSvg({ data, nonScalingStroke, svgProps, title }) {
@@ -79,6 +114,7 @@ function createIcon(Icons) {
   }) {
     const lucideContext = useLucideContext();
     const propertiesObj = type.isString(properties) ? { name: properties } : properties;
+    const { data, pending } = useIconData(propertiesObj.name);
     const spin =
       (propertiesObj.spin || events.onClick?.loading) && !propertiesObj.disableLoadingIcon;
     const title = propertiesObj.title ?? formatIconTitle(propertiesObj.name);
@@ -121,7 +157,16 @@ function createIcon(Icons) {
         />
       );
     }
-    const data = getIconData(propertiesObj.name);
+    if (pending) {
+      return (
+        <IconSvg
+          data={PENDING_ICON}
+          nonScalingStroke={nonScalingStroke}
+          svgProps={svgProps}
+          title={title}
+        />
+      );
+    }
     if (!data) {
       return missingIcon;
     }
