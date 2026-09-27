@@ -16,8 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+// maxOutputTokens is a limit with a connection default, so buildCallLimits sets it.
 const callSettings = [
-  'maxOutputTokens',
   'temperature',
   'topP',
   'topK',

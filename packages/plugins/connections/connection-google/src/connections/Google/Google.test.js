@@ -64,6 +64,31 @@ test('Google create handles undefined connection', async () => {
   expect(result).toEqual({ provider: mockProvider });
 });
 
+test('Google create returns the connection maxOutputTokens and timeout for its agents', async () => {
+  const mockProvider = jest.fn();
+  mockCreateGoogle.mockReturnValue(mockProvider);
+
+  const { default: Google } = await import('./Google.js');
+
+  const result = Google.create({
+    connection: { apiKey: 'test-api-key', maxOutputTokens: 1024, timeout: 30000 },
+  });
+
+  expect(result).toEqual({ provider: mockProvider, maxOutputTokens: 1024, timeout: 30000 });
+});
+
+test.each([
+  ['maxOutputTokens', 1.5, 'should be an integer.'],
+  ['maxOutputTokens', 0, 'should be at least 1.'],
+  ['timeout', '30s', 'should be an integer.'],
+  ['timeout', 0, 'should be at least 1.'],
+])('Google connection schema rejects %s %p', async (property, value, message) => {
+  const { default: Google } = await import('./Google.js');
+  expect(() =>
+    validate({ schema: Google.schema, data: { apiKey: 'k', [property]: value } })
+  ).toThrow(`Google connection property "${property}" ${message}`);
+});
+
 test('Google has schema', async () => {
   const { default: Google } = await import('./Google.js');
   expect(Google.schema).toBeDefined();
@@ -81,7 +106,12 @@ test('valid connection schema with all properties', async () => {
   const { default: Google } = await import('./Google.js');
   const schema = Google.schema;
 
-  const connection = { apiKey: 'AIza-test', baseURL: 'https://custom.google.com' };
+  const connection = {
+    apiKey: 'AIza-test',
+    baseURL: 'https://custom.google.com',
+    maxOutputTokens: 1024,
+    timeout: 30000,
+  };
   expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 

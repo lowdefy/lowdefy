@@ -11,6 +11,8 @@ The OpenAI connection connects to the [OpenAI API](https://platform.openai.com/d
 #### Properties
 - `apiKey: string`: __Required__ - OpenAI API key. Use [`_secret`](/_secret) to reference this securely.
 - `baseURL: string`: Optional base URL. Use this to connect to Azure OpenAI or any OpenAI-compatible endpoint.
+- `maxOutputTokens: number`: Default maximum number of tokens a model call generates, for the requests and agents on this connection that do not set their own.
+- `timeout: number`: Default milliseconds a model call may take, retries included, before it is cancelled, for the requests and agents on this connection that do not set their own. See _Limits and cancellation_ below.
 
 ###### Connection example:
 ```yaml
@@ -93,6 +95,21 @@ All AI provider connections (`Anthropic`, `OpenAI`, `Google`, `AIGateway`) provi
 
 For multi-step tool use, see [agents](/agents-introduction) instead.
 
+### Limits and cancellation
+
+Two limits bound every AI request. Set them on the request, or on the connection as the default for every request and agent that uses it:
+
+- `maxOutputTokens` caps the tokens one call generates. Without it, the provider's default applies.
+- `timeout` cancels a call, retries included, that runs longer than this many milliseconds. The request fails with a `ServiceError`.
+
+A call is also cancelled when the request that started it closes, so a provider call that nobody is waiting for stops instead of running, and billing, to its end:
+
+- A page request, or an API endpoint called over HTTP, is cancelled when the server's request timeout (`config.requestTimeout`, default 30 seconds) answers first, which fails it with a `ServiceError`. On the Node server it is also cancelled when the client disconnects; that is logged as a warning, not an error.
+- Endpoints with `async: true`, `detached: true` calls, and scheduled runs answer at once and then run to their end: the closing request does not cancel them.
+- An agent chat turn runs to its end after the client disconnects, so its `onFinish` hooks still save the conversation. Bound it with the agent's `timeout` and `maxSteps`. A `CallAgent` step is cancelled with the routine that runs it.
+
+When a provider rate-limits a call (HTTP 429), the model client retries it (`maxRetries`), waiting as long as the provider's `Retry-After` asks, up to a minute. If the retries run out, the request fails with a `ServiceError`, as a 429 does on every connection, and the server log records the `Retry-After` value.
+
 ### GenerateText
 
 Generates text from a prompt.
@@ -104,7 +121,8 @@ Generates text from a prompt.
 - `messages: object[]`: Model messages (`{ role, content }`). Use either `prompt` or `messages`, not both.
 - `system: string`: System prompt.
 - `allowSystemInMessages: boolean`: Default: `false` - Allow `system` role messages in `messages`. A system message instructs the model as the app itself, so without this a request whose `messages` include one fails. Only set it when the messages come from the app, never from a user (for example a message list built from `_payload`). Use `system` for the system prompt.
-- `maxOutputTokens: number`: Maximum number of tokens to generate.
+- `maxOutputTokens: number`: Maximum number of tokens to generate. Defaults to the connection's `maxOutputTokens`.
+- `timeout: number`: Milliseconds the model call may take, retries included, before it is cancelled. Defaults to the connection's `timeout`.
 - `temperature: number`: Sampling temperature (0 to 2).
 - `topP: number`: Nucleus sampling.
 - `topK: number`: Only sample from the top K options for each subsequent token.
@@ -251,6 +269,8 @@ Keep the state to what the questions need: an evaluation model reads the state l
   - `{ yesno: string, criteria?: { yes: string, no: string } }` - Judge a statement true or false. `criteria` optionally says what counts as yes and as no.
   - `{ score: string, levels: string[] }` - Place the state on 2 to 10 ordered levels, lowest first.
 - `backend: enum`: `evaluation` or `structured-output`. Defaults to `evaluation` on `AIGateway` and `structured-output` elsewhere.
+- `maxOutputTokens: number`: Maximum number of tokens to generate, on the `structured-output` backend (an evaluation model generates no text). Defaults to the connection's `maxOutputTokens`.
+- `timeout: number`: Milliseconds the model call may take, retries included, before it is cancelled. Defaults to the connection's `timeout`.
 - `maxRetries: number`: Maximum number of retries. Defaults to 2.
 - `providerOptions: object`: Provider-specific options, keyed by provider (e.g. `gateway: { zeroDataRetention: true }`).
 
