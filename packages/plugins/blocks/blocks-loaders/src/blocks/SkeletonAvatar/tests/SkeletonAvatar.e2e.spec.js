@@ -43,7 +43,7 @@ test.describe('SkeletonAvatar Block', () => {
     await expect(skeleton).toHaveCSS('height', '40px');
   });
 
-  test('renders square shape with the theme large border radius', async ({ page }) => {
+  test('renders square shape with the large border radius', async ({ page }) => {
     const skeleton = getSkeleton(page, 'skeletonavatar_square');
     await expect(skeleton).toHaveCSS('border-radius', '8px');
   });
