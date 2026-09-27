@@ -69,6 +69,17 @@ test.describe('Pagination Block', () => {
     await expect(total).toContainText('85');
   });
 
+  test('shows the total by default', async ({ page }) => {
+    const pagination = getPagination(page, 'pagination_basic');
+    await expect(pagination.locator('.ant-pagination-total-text')).toHaveText('1-10 of 100 items');
+  });
+
+  test('hides the total with showTotal false', async ({ page }) => {
+    const pagination = getPagination(page, 'pagination_hide_total');
+    await expect(pagination.locator('.ant-pagination-item')).not.toHaveCount(0);
+    await expect(pagination.locator('.ant-pagination-total-text')).toHaveCount(0);
+  });
+
   test('renders with size changer', async ({ page }) => {
     const pagination = getPagination(page, 'pagination_size_changer');
     await expect(pagination).toBeVisible();

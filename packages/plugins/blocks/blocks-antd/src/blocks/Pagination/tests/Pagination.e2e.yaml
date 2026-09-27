@@ -65,6 +65,12 @@ blocks:
       total: 85
       showTotal: true
 
+  - id: pagination_hide_total
+    type: Pagination
+    properties:
+      total: 85
+      showTotal: false
+
   # ============================================
   # CONTROLS
   # ============================================

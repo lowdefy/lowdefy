@@ -82,9 +82,9 @@ export default {
       },
       showTotal: {
         type: ['boolean', 'string', 'object'],
-        default: false,
+        default: true,
         description:
-          'Show pagination total number and range if boolean, or define a custom string or function to display.',
+          'Show the item range and total, such as "1-10 of 100 items". Set false to hide it, a string to show custom text, or a function that receives the total and the range.',
         docs: {
           displayType: 'string',
         },
