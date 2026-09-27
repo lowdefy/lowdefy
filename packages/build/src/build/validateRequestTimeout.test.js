@@ -16,7 +16,7 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
-import validateConfig from './validateConfig.js';
+import validateRequestTimeout from './validateRequestTimeout.js';
 import testContext from '../test-utils/testContext.js';
 
 const vercelEnv = process.env.VERCEL;
@@ -37,7 +37,7 @@ function warningsFor({ config, env }) {
   }
   const context = testContext();
   context.warnings = [];
-  validateConfig({ components: { config: { '~k': 'config_key', ...config } }, context });
+  validateRequestTimeout({ components: { config: { '~k': 'config_key', ...config } }, context });
   return context.warnings;
 }
 
@@ -45,14 +45,14 @@ test.each([
   ['exceeds config.vercel.maxDuration', { requestTimeout: 90000, vercel: { maxDuration: 60 } }],
   ['equals config.vercel.maxDuration', { requestTimeout: 60000, vercel: { maxDuration: 60 } }],
   ['is the 30 s default over a shorter maxDuration', { vercel: { maxDuration: 20 } }],
-])('validateConfig warns when config.requestTimeout %s', (_, config) => {
+])('validateRequestTimeout warns when config.requestTimeout %s', (_, config) => {
   const warnings = warningsFor({ config });
   expect(warnings).toHaveLength(1);
   expect(warnings[0].name).toBe('ConfigWarning');
   expect(warnings[0].configKey).toBe('config_key');
 });
 
-test('validateConfig warns against the 60 s Vercel default when the build runs on Vercel', () => {
+test('validateRequestTimeout warns against the 60 s Vercel default when the build runs on Vercel', () => {
   const warnings = warningsFor({ config: { requestTimeout: 90000 }, env: '1' });
   expect(warnings.map((warning) => warning.message)).toEqual([
     `App "config.requestTimeout" (90000 ms) is not shorter than the Vercel function's maxDuration (60 s). Vercel stops the function first, so the request timeout never answers and the calls a request left running are not cancelled. Set "config.requestTimeout" below 60000 ms, or raise "config.vercel.maxDuration".`,
@@ -64,6 +64,6 @@ test.each([
   ['is the default under the Vercel default', {}, '1'],
   ['is disabled', { requestTimeout: 0, vercel: { maxDuration: 10 } }, undefined],
   ['is long but the app does not target Vercel', { requestTimeout: 900000 }, undefined],
-])('validateConfig does not warn when config.requestTimeout %s', (_, config, env) => {
+])('validateRequestTimeout does not warn when config.requestTimeout %s', (_, config, env) => {
   expect(warningsFor({ config, env })).toEqual([]);
 });

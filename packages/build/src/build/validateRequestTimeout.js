@@ -33,15 +33,15 @@ function validateRequestTimeout({ components, context }) {
   const { requestTimeout = DEFAULT_REQUEST_TIMEOUT_MS, vercel } = components.config;
   const targetsVercel = !type.isNone(vercel) || !type.isNone(process.env.VERCEL);
   if (!targetsVercel) {
-    return;
+    return components;
   }
   const maxDuration = vercel?.maxDuration ?? DEFAULT_VERCEL_MAX_DURATION_S;
   // testSchema has already warned about a value of the wrong type, and 0 turns the timeout off.
   if (!type.isNumber(requestTimeout) || !type.isNumber(maxDuration) || requestTimeout === 0) {
-    return;
+    return components;
   }
   if (requestTimeout < maxDuration * 1000) {
-    return;
+    return components;
   }
   context.handleWarning(
     new ConfigWarning(
@@ -51,6 +51,7 @@ function validateRequestTimeout({ components, context }) {
       { configKey: components.config['~k'] }
     )
   );
+  return components;
 }
 
 export default validateRequestTimeout;

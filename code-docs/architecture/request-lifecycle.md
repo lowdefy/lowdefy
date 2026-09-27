@@ -269,7 +269,7 @@ async function callRequestResolver(
 | `CallAgent` step                                                                       | The routine's signal, passed to `agent.generate({ abortSignal })`                                                   |
 | Auth hooks (`createSystemContext`), dev server                                         | Hooks: none. Dev server: client disconnect only (no request timeout)                                                |
 
-The Vercel entry builds its `Request` without a signal, so on Vercel only the request timeout cancels. The platform stops the function at `maxDuration`, so a request timeout that is not shorter never fires; the build warns about that (`build/src/build/validateRequestTimeout.js`, run from `validateConfig`) when the app sets `config.vercel` or the build runs on Vercel (`VERCEL` is set), against `config.vercel.maxDuration` or its 60-second default.
+The Vercel entry builds its `Request` without a signal, so on Vercel only the request timeout cancels. The platform stops the function at `maxDuration`, so a request timeout that is not shorter never fires; the build warns about that (`build/src/build/validateRequestTimeout.js`, the build step after `validateConfig`) when the app sets `config.vercel` or the build runs on Vercel (`VERCEL` is set), against `config.vercel.maxDuration` or its 60-second default.
 
 `callApi` is constructed at this chokepoint so it picks up the caller's `endpointDepth` (`0` for page-level requests via `callRequest.js`, the routine frame's depth for routine `request:` steps via `handleRequest.js`). All Lowdefy errors (`isLowdefyError === true`) pass through the catch block unchanged — only raw errors wrap into `RequestError` / `ServiceError`.
 
