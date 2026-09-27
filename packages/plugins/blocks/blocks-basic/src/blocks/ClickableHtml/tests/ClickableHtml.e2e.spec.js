@@ -102,17 +102,26 @@ test.describe('ClickableHtml Block', () => {
     await expect(page.locator('#removed_row')).toHaveText('3');
   });
 
-  test('an open confirm stays open when the HTML changes, and OK fires its event', async ({
-    page,
-  }) => {
+  test('an open confirm closes without firing when the HTML changes', async ({ page }) => {
     const confirm = page.locator('.ant-popconfirm');
     await page.locator('#refresh_soon').click();
     await page.locator('#refresh_delete').click();
     await expect(confirm).toContainText('Delete 5?');
     await expect(page.locator('#refresh_count')).toHaveText('Refreshed 1');
-    await expect(confirm).toBeVisible();
-    await confirm.getByRole('button', { name: 'OK' }).click();
-    await expect(page.locator('#refresh_deleted')).toHaveText('5');
+    await expect(confirm).toBeHidden();
+    await expect(page.locator('#refresh_deleted')).toHaveText('');
+  });
+
+  test('an open popover stays open with its new content when the HTML changes', async ({
+    page,
+  }) => {
+    const menu = page.locator('.ant-popover .refresh-menu');
+    await page.locator('#refresh_soon').click();
+    await page.locator('#refresh_more').click();
+    await expect(menu).toHaveText('Menu after 0');
+    await expect(page.locator('#refresh_count')).toHaveText('Refreshed 1');
+    await expect(menu).toHaveText('Menu after 1');
+    await expect(page.locator('#refresh_more')).toHaveAttribute('aria-expanded', 'true');
   });
 
   test('a data-event naming an inherited property fires nothing', async ({ page }) => {

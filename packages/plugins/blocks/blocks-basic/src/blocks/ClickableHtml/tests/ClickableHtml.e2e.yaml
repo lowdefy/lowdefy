@@ -146,7 +146,11 @@ blocks:
           - _state:
               key: refresh_count
               default: 0
-          - '</p><button id="refresh_delete" data-event="onRefreshDelete" data-id="5" data-confirm="Delete 5?">Delete</button>'
+          - '</p><button id="refresh_delete" data-event="onRefreshDelete" data-id="5" data-confirm="Delete 5?">Delete</button> <span id="refresh_more" data-popover="more">More</span><div data-popover-content="more" hidden><span class="refresh-menu">Menu after '
+          - _state:
+              key: refresh_count
+              default: 0
+          - '</span></div>'
     events:
       onRefreshSoon:
         - id: wait

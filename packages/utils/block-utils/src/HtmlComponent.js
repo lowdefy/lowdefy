@@ -144,9 +144,10 @@ class HtmlComponent extends React.Component {
     return createElementFinder({ element: overlay.target, root: this.div });
   }
 
-  // New HTML replaces the elements an open popover or confirm points at. It stays open on the
-  // same element in the new HTML, so a refresh does not dismiss a menu or a pending confirm; when
-  // the element is gone it closes the way a dismissal does.
+  // New HTML replaces the element an open overlay points at. An overlay that can move (a popover,
+  // which re-reads its content from the new HTML) stays open on the same element in the new HTML,
+  // so a refresh does not dismiss a menu. Any other overlay, or one whose element is gone, closes
+  // the way a dismissal does.
   carryOverlay(findOverlayTarget) {
     const { overlay } = this.state;
     if (overlay === null) return null;

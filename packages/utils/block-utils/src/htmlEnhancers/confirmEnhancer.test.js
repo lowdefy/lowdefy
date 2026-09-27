@@ -288,43 +288,35 @@ test('without enhancements, an event that requires a confirm does not fire', () 
   );
 });
 
-test('an open confirm stays open on the same element when the HTML changes, and OK fires once', () => {
-  const html = (count) =>
-    `<p>${count} rows</p><i data-event="onDelete" data-id="7" data-confirm="Delete?">x</i><i data-event="onDelete" data-id="8" data-confirm="Delete?">y</i>`;
-  const onDataEvent = jest.fn();
-  const dataEvents = ['onDelete'];
-  const { container, rerender } = render(
-    <HtmlComponent dataEvents={dataEvents} html={html(2)} onDataEvent={onDataEvent} />
-  );
-  fireEvent.click(container.querySelector('[data-id="8"]'));
-  rerender(<HtmlComponent dataEvents={dataEvents} html={html(3)} onDataEvent={onDataEvent} />);
-  expect(screen.getByTestId('overlay-confirm')).toBeDefined();
-  fireEvent.click(screen.getByText('OK'));
-  expect(onDataEvent).toHaveBeenCalledTimes(1);
-  expect(onDataEvent).toHaveBeenCalledWith({
-    name: 'onDelete',
-    event: { id: '8', confirm: 'Delete?' },
-  });
-  expect(document.activeElement).toBe(container.querySelector('[data-id="8"]'));
-});
+// Rows whose delete buttons carry their position, as a template loop writes them.
+function rowsHtml({ names, note = '' }) {
+  const rows = names
+    .map(
+      (name, index) =>
+        `<p>${name} <button data-event="onDelete" data-index="${index}" data-confirm="Delete?">Delete</button></p>`
+    )
+    .join('');
+  return `${note}${rows}`;
+}
 
-test('an open confirm closes without firing when the new HTML no longer has its element', () => {
+test.each([
+  ['the rows are reordered', { names: ['Bob', 'Alice'] }],
+  ['other text in the HTML changes', { names: ['Alice', 'Bob'], note: '<p>2 rows</p>' }],
+  ['the element is gone', { names: [] }],
+])('an open confirm closes without firing when %s', (_, next) => {
   const onDataEvent = jest.fn();
   const dataEvents = ['onDelete'];
   const { container, rerender } = render(
     <HtmlComponent
       dataEvents={dataEvents}
-      html='<i data-event="onDelete" data-id="7" data-confirm="Delete?">x</i>'
+      html={rowsHtml({ names: ['Alice', 'Bob'] })}
       onDataEvent={onDataEvent}
     />
   );
-  fireEvent.click(container.querySelector('[data-event]'));
+  fireEvent.click(container.querySelector('[data-index="0"]'));
+  expect(screen.getByTestId('overlay-confirm')).toBeDefined();
   rerender(
-    <HtmlComponent
-      dataEvents={dataEvents}
-      html='<i data-event="onDelete" data-id="9" data-confirm="Delete?">x</i>'
-      onDataEvent={onDataEvent}
-    />
+    <HtmlComponent dataEvents={dataEvents} html={rowsHtml(next)} onDataEvent={onDataEvent} />
   );
   expect(screen.queryByTestId('overlay-confirm')).toBeNull();
   expect(onDataEvent).not.toHaveBeenCalled();

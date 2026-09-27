@@ -35,7 +35,6 @@ function createConfirmOverlay({ fire, host, message, target }) {
         target.focus();
       }
     },
-    retarget: (newTarget) => createConfirmOverlay({ fire, host, message, target: newTarget }),
   };
 }
 
@@ -43,6 +42,9 @@ function createConfirmOverlay({ fire, host, message, target }) {
 // before the event fires. The overlay shows the message with OK and Cancel;
 // only OK fires, and only once. An event the block's dataEvents lists with
 // confirm always asks: with its confirm message, or the target's data-confirm.
+// A confirm is never carried to new HTML (it has no retarget): the event's
+// data-* values can name a row by position, and new HTML can put another row
+// there, so an open confirm closes when the HTML changes.
 const confirmEnhancer = {
   name: 'confirm',
   attributes: ['data-confirm'],
