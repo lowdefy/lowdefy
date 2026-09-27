@@ -75,10 +75,6 @@ and style keys are additive; existing properties keep their names and defaults.
 - Selector and MultipleSelector build antd `options` instead of `Select.Option` children. The
   search props (`filterOption`, `onSearch`, `autoClearSearchValue`, `treeNodeFilterProp`) now go
   inside `showSearch`, where antd 6 expects them.
-- A ConfigProvider block's `virtual: false` reaches the Selector, MultipleSelector, TreeSelector
-  and TreeMultipleSelector dropdowns again.
-- TreeMultipleSelector with `checkStrictly` no longer logs antd's "Invalid prop `value`" warning
-  when it has a value.
 - ControlledList: the `addItemButton.title` lookup had a stray trailing space in its path. Items
   added for `minItems` are now pushed after render instead of during it, before the list paints.
   The remove icon no longer causes a React key warning.
