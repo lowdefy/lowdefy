@@ -14,11 +14,16 @@
   limitations under the License.
 */
 
-// A URL string as the browser's URL parser reads it: leading and trailing
-// control characters and spaces are dropped, and tabs and newlines anywhere are
-// removed, so " https://x" and "java\tscript:" are what they look like to it.
+// Leading and trailing C0 control characters and spaces, and tabs and newlines
+// anywhere: what the browser's URL parser drops before it reads a URL.
+// eslint-disable-next-line no-control-regex
+const EDGE_CONTROLS = /^[\x00-\x20]+|[\x00-\x20]+$/g;
+const TABS_AND_NEWLINES = /[\t\n\r]/g;
+
+// A URL string as the browser's URL parser reads it, so " https://x" and
+// "java\tscript:" are judged as what they are to it.
 function normalizeUrlText(value) {
-  return value.replace(/^[\u0000- ]+|[\u0000- ]+$/g, '').replace(/[\t\n\r]/g, '');
+  return value.replace(EDGE_CONTROLS, '').replace(TABS_AND_NEWLINES, '');
 }
 
 export default normalizeUrlText;
