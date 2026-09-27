@@ -282,7 +282,7 @@ const devToolDefinitions = {
         .union([z.literal('none'), z.object({}).passthrough()])
         .optional()
         .describe(
-          'Who the journey acts as. Omitted: the default roleless headless user. An object: that injected caller, e.g. {"roles":["user-admin"]}, merged over the default. "none": no injected caller - the journey starts signed out and the app\'s own auth decides who it is, so sign-up, sign-in, invitations and session cookies run for real (every actor opened with "as" starts signed out too). Start a "none" journey on a public page such as the sign-in page.'
+          'Who the journey acts as. Omitted: the default roleless headless user. An object: that injected caller, e.g. {"roles":["user-admin"]}, merged over the default. "none": no injected caller - the journey starts signed out and the app\'s own auth decides who it is, so sign-up, sign-in, invitations and session cookies run for real (every actor opened with "as" starts signed out too); a protected page opened signed out lands on the sign-in page.'
         ),
       urlQuery: z
         .record(z.any())

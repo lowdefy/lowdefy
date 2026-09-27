@@ -131,7 +131,7 @@ A journey with `user: none` injects no user: it starts signed out, and the app's
     - expect: { text: { blockId: user_details, contains: ada@example.test } }
 ```
 
-Start a `user: none` journey on a public page, such as the sign-up or sign-in page.
+A journey that opens a protected page signed out lands on the sign-in page, the way a visitor would; assert where it landed with `expect: { url: ... }`.
 
 ### Emails
 

@@ -362,7 +362,7 @@ Screenshots taken before the failure are kept: over MCP they arrive as image con
 
 Malformed steps are answered before a browser opens — an unknown key returns `Unknown journey step "hover". Steps are: click, fill, select, press, back, goto, email, as, wait, screenshot, expect.` (a `400` on the HTTP route), distinct from the `502` a render that could not run returns.
 
-To test auth itself — sign-up, email verification, sign-in, invitations, organization switching — pass `"user": "none"`: no caller is injected, the journey starts signed out on a public page, and the app's own sessions carry through its steps. [Config Tests](/config-tests#testing-sign-up-and-sign-in) covers the mail sink and the database these journeys need.
+To test auth itself — sign-up, email verification, sign-in, invitations, organization switching — pass `"user": "none"`: no caller is injected, the journey starts signed out, and the app's own sessions carry through its steps. [Config Tests](/config-tests#testing-sign-up-and-sign-in) covers the mail sink and the database these journeys need.
 
 Journeys are also the file format of `tests/journeys/*.yaml`, which `lowdefy test` runs through this same route — write the journey the agent used to verify a change, and it becomes the regression test for it.
 
