@@ -131,16 +131,44 @@ test('startProxy sends requests back through the hold once a confirmed child goe
     }, 300);
   }
 
-  // Gone before the manager has seen it exit: the forward fails once, and the
-  // next request waits for the child instead of failing too.
+  // Gone before the manager has seen it exit: a GET never reached the child,
+  // so it is replayed through the hold and answered by the next child.
   await stopChildAndRestartSoon();
-  expect((await fetch(`http://localhost:${port}/b.js`)).status).toBe(502);
+  expect(await (await fetch(`http://localhost:${port}/b.js`)).text()).toBe('ok');
+
+  // A POST's body was consumed by the failed forward, so it fails once, and
+  // the next request waits for the child instead of failing too.
+  await stopChildAndRestartSoon();
+  expect(
+    (await fetch(`http://localhost:${port}/save`, { method: 'POST', body: '{}' })).status
+  ).toBe(502);
   expect(await (await fetch(`http://localhost:${port}/c.js`)).text()).toBe('ok');
 
   // An exit the manager has seen sends the very next request through the hold.
   await stopChildAndRestartSoon();
   context.devServer.exitCode = 1;
   expect(await (await fetch(`http://localhost:${port}/d.js`)).text()).toBe('ok');
+});
+
+test('startProxy waits for a stopped child to exit before probing its replacement', async () => {
+  const port = await startChildAndProxy((req, res) => res.end('old'));
+  context.devServer = { exitCode: null, signalCode: null };
+  expect(await (await fetch(`http://localhost:${port}/a.js`)).text()).toBe('old');
+
+  // A restart: the old child is signalled but answers until it exits.
+  let markExited;
+  context.devServerExited = new Promise((resolve) => {
+    markExited = resolve;
+  });
+  context.devServer = { exitCode: null, signalCode: null };
+  const pending = fetch(`http://localhost:${port}/b.js`).then((response) => response.text());
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  await close(child);
+  child = http.createServer((req, res) => res.end('new'));
+  await new Promise((resolve) => child.listen(context.internalPort, '127.0.0.1', resolve));
+  markExited();
+
+  expect(await pending).toBe('new');
 });
 
 test('startProxy aborts the child request when the client drops a streaming response', async () => {
