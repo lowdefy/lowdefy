@@ -28,8 +28,9 @@ export default {
     menu: 'The floating menu container.',
     item: 'Individual menu items.',
     itemIcon: 'Icon within menu items.',
-    subMenu: 'Submenu/group containers.',
-    arrow: 'Dropdown arrow indicator.',
+    subMenu:
+      'Has no effect: antd does not expose submenu containers as a separately styled part. The item key also applies to submenu items.',
+    arrow: 'Has no effect: antd does not expose the dropdown arrow as a separately styled part.',
   },
   events: {
     onClick: {
