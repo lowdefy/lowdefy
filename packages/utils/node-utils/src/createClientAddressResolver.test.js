@@ -77,6 +77,21 @@ test.each([
     '2001:db8::7',
   ],
   [
+    'an IPv4-mapped hop as its IPv4 address',
+    { peerAddress: '10.1.2.3', forwardedFor: '::ffff:203.0.113.9' },
+    '203.0.113.9',
+  ],
+  [
+    'a bracketed IPv4-mapped hop as its IPv4 address',
+    { peerAddress: '10.1.2.3', forwardedFor: '[::ffff:203.0.113.9]:443' },
+    '203.0.113.9',
+  ],
+  [
+    'past an IPv4-mapped hop inside a trusted IPv4 range',
+    { peerAddress: '10.1.2.3', forwardedFor: '203.0.113.9, ::ffff:10.4.4.4' },
+    '203.0.113.9',
+  ],
+  [
     'a hop written with its port',
     { peerAddress: '10.1.2.3', forwardedFor: '203.0.113.9:51234' },
     '203.0.113.9',

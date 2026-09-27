@@ -19,7 +19,9 @@ import { type } from '@lowdefy/helpers';
 
 import parseIpRange from './parseIpRange.js';
 
-// A dual-stack socket reports an IPv4 peer as "::ffff:203.0.113.7".
+// A dual-stack socket reports an IPv4 peer as "::ffff:203.0.113.7", and a
+// proxy on one may forward it that way. Both come out in the IPv4 form, so
+// logs and the session record carry one spelling of an address.
 function unmapIpv4(address) {
   const mapped = /^::ffff:([\d.]+)$/i.exec(address);
   if (mapped !== null && net.isIP(mapped[1]) === 4) {
@@ -32,10 +34,10 @@ function unmapIpv4(address) {
 function parseForwardedHop(hop) {
   const bracketed = /^\[([^\]]+)\](?::\d+)?$/.exec(hop);
   if (bracketed !== null) {
-    return net.isIP(bracketed[1]) === 6 ? bracketed[1] : null;
+    return net.isIP(bracketed[1]) === 6 ? unmapIpv4(bracketed[1]) : null;
   }
   if (net.isIP(hop) !== 0) {
-    return hop;
+    return unmapIpv4(hop);
   }
   const withPort = /^([\d.]+):\d+$/.exec(hop);
   if (withPort !== null && net.isIP(withPort[1]) === 4) {
