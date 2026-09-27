@@ -342,3 +342,31 @@ test('resolveTarget resolves a fragment without a window', () => {
     href: '#top',
   });
 });
+
+test.each([
+  ['a tab', '/\t/example.com/x'],
+  ['a newline', '/\n/example.com/x'],
+  ['a carriage return', '/\r/example.com/x'],
+  ['a leading space', ' //example.com/x'],
+  ['a leading control character', '\u0001//example.com/x'],
+])('resolveTarget reads a url with %s the way the URL parser does, as another host', (_, url) => {
+  expect(resolveTarget({ lowdefy: createLowdefy(), target: { url } })).toEqual({
+    kind: 'external',
+    href: 'https://example.com/x',
+  });
+});
+
+test('resolveTarget trims spaces around an app path', () => {
+  expect(resolveTarget({ lowdefy: createLowdefy(), target: { url: ' /page\n' } })).toEqual({
+    kind: 'page',
+    pathname: '/page',
+    query: '',
+  });
+});
+
+test.each(['not a url', 'http://', 'https://exa mple.com', ' \t '])(
+  'resolveTarget resolves no target for the unparseable url %j',
+  (url) => {
+    expect(resolveTarget({ lowdefy: createLowdefy(), target: { url } })).toBeUndefined();
+  }
+);

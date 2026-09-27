@@ -34,9 +34,36 @@ const relativePattern = /^(\?|\.|\/)/;
 // Schemes that run script when navigated to.
 const scriptProtocols = new Set(['javascript:', 'vbscript:', 'data:']);
 
+// The URL parser removes tabs and newlines anywhere, and strips leading and
+// trailing C0 controls and spaces, before it reads a url. Classifying the string
+// it reads keeps "/\t/host" (a link to another host) from passing as an app path.
+function normalizeUrl(url) {
+  const value = url.replace(/[\t\n\r]/g, '');
+  let start = 0;
+  let end = value.length;
+  while (start < end && value.charCodeAt(start) <= 0x20) start += 1;
+  while (end > start && value.charCodeAt(end - 1) <= 0x20) end -= 1;
+  return value.slice(start, end);
+}
+
+// A url is data an app may take from the query string or a database, and the
+// URL parser is the only complete check of it, so a value it rejects resolves
+// to no target instead of throwing while a link renders.
+function parseUrl(value, base) {
+  try {
+    return new URL(value, base);
+  } catch (error) {
+    return null;
+  }
+}
+
 // Classifies a `url` grammar value into a page or external target. basePath is
 // stripped here, never applied - the single application boundary is createUrl.
-function classifyUrl({ lowdefy, url, query }) {
+function classifyUrl({ lowdefy, url: rawUrl, query }) {
+  const url = normalizeUrl(rawUrl);
+  if (url === '') {
+    return undefined;
+  }
   // The leading-slash test runs before the colon-less test: `/2fa` is an
   // app-relative page and colon-less, and the colon-less branch would wrongly
   // give it an `https://` scheme and parse it as an off-app origin.
@@ -68,9 +95,9 @@ function classifyUrl({ lowdefy, url, query }) {
   // reaches it.
   const relative = relativePattern.test(url);
   const value = relative || url.includes(':') ? url : `https://${url}`;
-  const parsed = new URL(value, relative ? location.href : origin);
+  const parsed = parseUrl(value, relative ? location.href : origin);
 
-  if (scriptProtocols.has(parsed.protocol)) {
+  if (parsed === null || scriptProtocols.has(parsed.protocol)) {
     return undefined;
   }
   // mailto:, tel: and app schemes have no origin; they are whole URLs.
