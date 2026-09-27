@@ -43,8 +43,8 @@ const TooltipBlock = ({ blockId, classNames = {}, content, properties, methods, 
     autoAdjustOverflow={properties.autoAdjustOverflow}
     color={properties.color}
     defaultOpen={properties.defaultOpen}
-    // antd 6 renamed `destroyTooltipOnHide` to `destroyOnHidden`.
-    destroyOnHidden={properties.destroyTooltipOnHide}
+    // antd 6 renamed `destroyTooltipOnHide` to `destroyOnHidden`; Lowdefy accepts both.
+    destroyOnHidden={properties.destroyOnHidden ?? properties.destroyTooltipOnHide}
     mouseEnterDelay={properties.mouseEnterDelay}
     mouseLeaveDelay={properties.mouseLeaveDelay}
     placement={properties.placement}
