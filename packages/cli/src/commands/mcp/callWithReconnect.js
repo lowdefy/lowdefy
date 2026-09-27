@@ -14,17 +14,25 @@
   limitations under the License.
 */
 
-import { ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
+import { StreamableHTTPError } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
+
+// Errors raised before the dev server ran the call: the HTTP request was
+// refused (a stale session after a restart, the manager proxy's 502/503 while
+// the server comes back) or never reached it (fetch's network TypeError).
+// An error the server answered with, or a timeout, may follow partial work.
+function isConnectionError(error) {
+  return error instanceof StreamableHTTPError || error instanceof TypeError;
+}
 
 // Calls a dev tool, and once more on a fresh connection when the first call
-// fails: the dev server restarts under a cached connection. A call that timed
-// out is not repeated - the server took it and ran out of time (a long
-// journey), and running it again would only double the wait.
+// could not reach the dev server - it restarts under a cached connection.
+// Any other failure is returned as it is: repeating a call the server took
+// (a journey that timed out, a tool that failed halfway) would run it twice.
 async function callWithReconnect({ call, reconnect }) {
   try {
     return await call();
   } catch (error) {
-    if (error instanceof McpError && error.code === ErrorCode.RequestTimeout) {
+    if (!isConnectionError(error)) {
       throw error;
     }
     await reconnect();

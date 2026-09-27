@@ -15,27 +15,29 @@
 */
 
 import { jest } from '@jest/globals';
+import { StreamableHTTPError } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
 
 import callWithReconnect from './callWithReconnect.js';
 
-test('callWithReconnect calls once more on a fresh connection when the call fails', async () => {
-  const call = jest
-    .fn()
-    .mockRejectedValueOnce(new Error('fetch failed'))
-    .mockResolvedValueOnce({ content: [] });
+test.each([
+  ['the session is gone after a restart', new StreamableHTTPError(404, 'Session not found')],
+  ['the dev server could not be reached', new TypeError('fetch failed')],
+])('callWithReconnect calls once more on a fresh connection when %s', async (_, error) => {
+  const call = jest.fn().mockRejectedValueOnce(error).mockResolvedValueOnce({ content: [] });
   const reconnect = jest.fn(async () => {});
   await expect(callWithReconnect({ call, reconnect })).resolves.toEqual({ content: [] });
   expect(reconnect).toHaveBeenCalledTimes(1);
   expect(call).toHaveBeenCalledTimes(2);
 });
 
-test('callWithReconnect does not repeat a call that timed out', async () => {
-  const call = jest
-    .fn()
-    .mockRejectedValue(new McpError(ErrorCode.RequestTimeout, 'Request timed out'));
+test.each([
+  ['timed out', new McpError(ErrorCode.RequestTimeout, 'Request timed out')],
+  ['failed in the server', new McpError(ErrorCode.InternalError, 'Journey step failed')],
+])('callWithReconnect does not repeat a call that %s', async (_, error) => {
+  const call = jest.fn().mockRejectedValue(error);
   const reconnect = jest.fn(async () => {});
-  await expect(callWithReconnect({ call, reconnect })).rejects.toThrow('Request timed out');
+  await expect(callWithReconnect({ call, reconnect })).rejects.toBe(error);
   expect(call).toHaveBeenCalledTimes(1);
   expect(reconnect).not.toHaveBeenCalled();
 });
