@@ -1864,6 +1864,50 @@ test('repeated server errors from the same action each call handleError', async 
   expect(handleError.mock.calls[0][0]).not.toBe(handleError.mock.calls[1][0]);
 });
 
+test.each(['error', 'success'])(
+  'an action result stands when its %s message fails to display',
+  async (status) => {
+    const handleError = jest.fn();
+    const displayFailure = new TypeError('message.error is not a function');
+    const actionError = new Error('Test error');
+    const context = await testContext({
+      lowdefy: {
+        _internal: {
+          displayMessage: (args) => {
+            if (args.status === status) throw displayFailure;
+            return () => undefined;
+          },
+          handleError,
+          actions: {
+            Fails: jest.fn(() => {
+              throw actionError;
+            }),
+            Succeeds: jest.fn(() => 'ok'),
+          },
+        },
+        pageId,
+      },
+      pageConfig: { id: 'root', type: 'Box' },
+    });
+    const type = status === 'error' ? 'Fails' : 'Succeeds';
+    const res = await context._internal.Actions.callActions({
+      actions: [{ id: 'act', type, messages: { success: 'Done' } }],
+      arrayIndices,
+      block: { blockId: 'blockId' },
+      catchActions: [],
+      event: {},
+      eventName,
+    });
+
+    expect(res.success).toBe(status === 'success');
+    expect(handleError.mock.calls.map(([error]) => error.message)).toEqual(
+      status === 'error'
+        ? ['message.error is not a function', 'Test error at blockId.']
+        : ['message.error is not a function']
+    );
+  }
+);
+
 describe('_error in catch lists', () => {
   const wire = {
     name: 'RequestError',

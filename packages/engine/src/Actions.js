@@ -529,11 +529,18 @@ class Actions {
   displayMessage({ defaultMessage, duration, hideExplicitly, message, status }) {
     let close = () => undefined;
     if ((hideExplicitly && message !== false) || (!hideExplicitly && !type.isNone(message))) {
-      close = this.context._internal.lowdefy._internal.displayMessage({
-        content: type.isString(message) ? message : defaultMessage,
-        duration,
-        status,
-      });
+      // The message is shown by the app's Message block, a plugin. A message it fails to show is
+      // reported on its own: thrown from here it would replace the action's own result, and
+      // callActions would lose the { error, action } shape of a failed action.
+      try {
+        close = this.context._internal.lowdefy._internal.displayMessage({
+          content: type.isString(message) ? message : defaultMessage,
+          duration,
+          status,
+        });
+      } catch (error) {
+        this.context._internal.lowdefy._internal.handleError?.(error);
+      }
     }
     return close;
   }
