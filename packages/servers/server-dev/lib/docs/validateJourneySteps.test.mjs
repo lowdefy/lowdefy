@@ -31,6 +31,13 @@ test('validateJourneySteps accepts every step of the grammar', () => {
       { goto: { pageId: 'invoice', urlQuery: { id: 'inv-1' } } },
       { email: { to: 'ada@example.test' } },
       { email: { to: 'ada@example.test', subject: 'Verify' } },
+      { fill: { blockId: 'otp', fromEmail: { to: 'ada@example.test', match: '\\b\\d{6}\\b' } } },
+      {
+        fill: {
+          blockId: 'otp',
+          fromEmail: { to: 'ada@example.test', subject: 'Your sign-in link', match: 'code (\\d+)' },
+        },
+      },
       { as: 'invitee' },
       { wait: { ms: 100 } },
       { wait: { request: 'get_rows' } },
@@ -58,6 +65,9 @@ test('validateJourneySteps accepts target objects on click, fill, select, expect
       { click: { blockId: 'grid', row: 0, column: 'actions' } },
       { click: { blockId: 'grid', row: 0, column: 'actions', nth: 1 } },
       { click: { blockId: 'tabs', text: 'Settings' } },
+      { click: { blockId: 'members_list', containing: 'ada@example.test' } },
+      { click: { containing: 'Invitation sent' } },
+      { expect: { visible: { blockId: 'members_list', containing: 'Owner' } } },
       { click: { text: 'OK' } },
       { click: { text: 'Delete', nth: 0 } },
       { fill: { blockId: 'grid', row: 2, column: 'name', value: 'Ada' } },
@@ -100,7 +110,7 @@ test('validateJourneySteps rejects a step that is not an object', () => {
 
 test.each([
   [{ click: 7 }, /Step "click" requires a blockId string or a target object .*Received 7/],
-  [{ click: {} }, /Step "click" requires a "blockId" or a "text" to target/],
+  [{ click: {} }, /Step "click" requires a "blockId", a "text" or a "containing" to target/],
   [{ click: { blockId: 7 } }, /Step "click" requires "blockId" to be a string. Received 7/],
   [{ click: { text: 7 } }, /Step "click" requires "text" to be a string. Received 7/],
   [
@@ -129,7 +139,7 @@ test.each([
   ],
   [
     { click: { blockId: 'grid', colum: 'actions' } },
-    /Step "click" has unknown key "colum". Keys are: blockId, text, row, column, nth/,
+    /Step "click" has unknown key "colum". Keys are: blockId, text, containing, row, column, nth/,
   ],
   [
     { click: { blockId: 'grid', colum: 'a', rows: 1 } },
@@ -144,7 +154,7 @@ test.each([
   [{ fill: { text: 'Name', value: 'x' } }, /Step "fill" requires a "blockId" string/],
   [
     { fill: { blockId: 'grid', row: 0, column: 'name', value: 'x', selector: 'input' } },
-    /Step "fill" has unknown key "selector". Keys are: blockId, text, row, column, nth, value/,
+    /Step "fill" has unknown key "selector". Keys are: blockId, text, containing, row, column, nth, value/,
   ],
   [{ fill: { blockId: 'name' } }, /Step "fill" requires a "value"/],
   [{ select: { value: 'x' } }, /Step "select" requires a "blockId" string/],
@@ -174,7 +184,7 @@ test.each([
   ],
   [
     { expect: { visible: { row: 0 } } },
-    /Step "expect.visible" requires a "blockId" or a "text" to target/,
+    /Step "expect.visible" requires a "blockId", a "text" or a "containing" to target/,
   ],
   [{ expect: { text: { blockId: 'a' } } }, /Step "expect.text" requires \{ blockId, contains \}/],
   [
@@ -183,7 +193,7 @@ test.each([
   ],
   [
     { expect: { text: { blockId: 'grid', row: 0, contains: 'a', equals: 'a' } } },
-    /Step "expect.text" has unknown key "equals". Keys are: blockId, text, row, column, nth, contains/,
+    /Step "expect.text" has unknown key "equals". Keys are: blockId, text, containing, row, column, nth, contains/,
   ],
   [{ expect: { url: '/detail' } }, /Step "expect.url" requires \{ contains \}/],
   [{ back: 'home' }, /Step "back" takes no value: write \{ "back": true \}. Received "home"/],
@@ -216,6 +226,46 @@ test.each([
   [
     { email: { to: 'ada@example.test', subjet: 'Verify' } },
     /Step "email" has unknown key "subjet". Keys are: to, subject/,
+  ],
+  [
+    { fill: { blockId: 'otp', value: '1', fromEmail: { to: 'ada@example.test', match: '\\d' } } },
+    /Step "fill" takes a "value" or a "fromEmail", not both/,
+  ],
+  [
+    { fill: { fromEmail: { to: 'ada@example.test', match: '\\d' } } },
+    /Step "fill" requires a "blockId" string/,
+  ],
+  [
+    { fill: { blockId: 'otp', fromEmail: 'ada@example.test' } },
+    /Step "fill" requires "fromEmail" to be \{ to, subject, match \}/,
+  ],
+  [
+    { fill: { blockId: 'otp', fromEmail: { match: '\\d' } } },
+    /Step "fill.fromEmail" requires a "to" address string. Received undefined/,
+  ],
+  [
+    { fill: { blockId: 'otp', fromEmail: { to: 'ada@example.test' } } },
+    /Step "fill.fromEmail" requires a "match" regular expression string/,
+  ],
+  [
+    { fill: { blockId: 'otp', fromEmail: { to: 'ada@example.test', match: '(' } } },
+    /Step "fill.fromEmail" requires "match" to be a valid regular expression/,
+  ],
+  [
+    { fill: { blockId: 'otp', fromEmail: { to: 'ada@example.test', match: '\\d', subject: 1 } } },
+    /Step "fill.fromEmail" requires "subject" to be a string. Received 1/,
+  ],
+  [
+    { fill: { blockId: 'otp', fromEmail: { to: 'ada@example.test', pattern: '\\d' } } },
+    /Step "fill.fromEmail" has unknown key "pattern". Keys are: to, subject, match/,
+  ],
+  [
+    { click: { blockId: 'members_list', containing: '' } },
+    /Step "click" requires "containing" to be a non-empty string. Received ""/,
+  ],
+  [
+    { click: { blockId: 'members_list', text: 'Edit', containing: 'ada' } },
+    /Step "click" takes "text" \(a control's exact text\) or "containing"/,
   ],
   [{ as: '' }, /Step "as" requires an actor name string/],
   [{ as: { name: 'invitee' } }, /Step "as" requires an actor name string/],

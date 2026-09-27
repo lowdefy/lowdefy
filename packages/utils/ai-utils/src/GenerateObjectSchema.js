@@ -85,7 +85,8 @@ export default {
     maxOutputTokens: {
       type: 'integer',
       minimum: 1,
-      description: 'Maximum number of tokens to generate.',
+      description:
+        "Maximum number of tokens to generate. Defaults to the connection's maxOutputTokens.",
       errorMessage: {
         type: 'GenerateObject request property "maxOutputTokens" should be an integer.',
         minimum: 'GenerateObject request property "maxOutputTokens" should be at least 1.',
@@ -144,6 +145,16 @@ export default {
       errorMessage: {
         type: 'GenerateObject request property "maxRetries" should be an integer.',
         minimum: 'GenerateObject request property "maxRetries" should be at least 0.',
+      },
+    },
+    timeout: {
+      type: 'integer',
+      minimum: 1,
+      description:
+        "Milliseconds the model call may take, retries included, before it is cancelled. Defaults to the connection's timeout.",
+      errorMessage: {
+        type: 'GenerateObject request property "timeout" should be an integer.',
+        minimum: 'GenerateObject request property "timeout" should be at least 1.',
       },
     },
     providerOptions: {

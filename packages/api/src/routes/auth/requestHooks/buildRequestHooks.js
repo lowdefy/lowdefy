@@ -17,6 +17,7 @@
 import { createAuthMiddleware } from 'better-auth/api';
 import { type } from '@lowdefy/helpers';
 
+import createAcceptExistingMemberHook from '../organizations/createAcceptExistingMemberHook.js';
 import createEmailSendGate from '../organizations/createEmailSendGate.js';
 import createExpiredInvitationGate from '../organizations/createExpiredInvitationGate.js';
 import createOauthPostLoginHook from './createOauthPostLoginHook.js';
@@ -48,6 +49,16 @@ function buildRequestHooks({ authConfig, basePath = '', baseUrlOrigin, getAuth }
   // does on the password path. Leaving it at the 30-day default here would let
   // those paths keep re-extending a pre-existing trust the deployment disabled.
   const trustDeviceMaxAge = authConfig.twoFactor?.trustDevice === false ? 0 : 2592000;
+
+  // Accepting an invitation into an organization the caller already belongs
+  // to: the route would write a second member row, which the unique index
+  // refuses. Registered under both policies - an existing member can hold a
+  // pending invitation under either.
+  before.push({
+    id: 'acceptExistingMember',
+    matches: (path) => path === '/organization/accept-invitation',
+    handler: createAcceptExistingMemberHook(),
+  });
 
   if (authConfig.magicLink?.enabled === true) {
     before.push({

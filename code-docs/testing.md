@@ -73,6 +73,14 @@ with:
 pnpm test:mongodb
 ```
 
+`pnpm test:mongodb` also runs `@lowdefy/api`'s `*.mongodb.test.js` suites
+(`pnpm --filter=@lowdefy/api test:mongodb`, `jest.mongodb.config.js`), which drive engine code
+through a real BetterAuth instance and the MongoDB auth adapter, for example the tenant signup
+mint under concurrent sessions. Name an api test `*.mongodb.test.js` when it needs a real
+server; the plain `pnpm test` run ignores those files. To reproduce a race deterministically,
+pause one session inside the real adapter (wrap `adapter.create` from `auth.$context`) and
+run the other to completion before releasing it.
+
 CI does not run it on every push. Start the `MongoDB Tests` workflow from the Actions tab,
 or add the `run-mongodb-tests` label to a pull request. Each jest run starts its own
 `mongod` on a free port, so worktrees can run it at the same time.
@@ -88,7 +96,10 @@ switching and member removal (`tests/journeys/*.yaml`, all `user: none`). Run th
 pnpm test:journeys:auth                      # builds first, like pnpm dev
 pnpm test:journeys:auth --skip-build         # reuse the current build
 pnpm test:journeys:auth --filter invitation  # journeys whose name matches
+pnpm test:journeys:auth --app auth-reference # another app (default auth-reference-tenant)
 ```
+
+The pinned-organization app (`apps/auth-reference`) carries the password reset journey.
 
 `scripts/test-journeys-auth.mjs` starts a single-node memory replica set (fresh every run,
 auth indexes provisioned), then this checkout's dev server (`scripts/dev.mjs`) with the
@@ -97,8 +108,14 @@ app's secrets, a pinned `BETTER_AUTH_URL`, the dev mail sink (`LOWDEFY_DEV_SMTP_
 60 second minimum and the expiry journey can wait one out, about a minute of the run),
 runs this checkout's `lowdefy test --url` against it, and stops everything. It uses four
 consecutive free ports from `--port` (default 3200): app, internal, mail sink, MongoDB. The
-dev server log goes to `apps/auth-reference-tenant/.lowdefy/journeys-dev-server.log`. It
+dev server log goes to `apps/<app>/.lowdefy/journeys-dev-server.log`. It
 needs no Docker MongoDB or Mailpit, only the shared MongoDB binaries and a Chromium.
+
+An app outside the monorepo runs its own auth journeys against a checkout the same way:
+`node scripts/dev.mjs --config-directory <app> --port <port> --no-open` for the server, and
+`node packages/cli/dist/index.js test --journeys-directory <dir> --url <url>` for the run.
+Keeping such journeys in their own directory (not `tests/journeys/`) keeps them out of the
+app's everyday `lowdefy test`, which may run against a shared database.
 
 Like the MongoDB suite, CI does not run it; run it when changing auth, tenancy, the
 journey runner or the dev server. It uses `_server/dev`, so run one at a time per

@@ -16,13 +16,16 @@
 
 import path from 'path';
 
+import getDirectories from '../../utils/getDirectories.js';
 import selectTests from '../test/selectTests.js';
 
 // Runs the app's tests (tests/journeys/*.yaml) against its running dev server
 // - the same selection and runner as `lowdefy test` - and returns the
-// results as data: a failing journey is an answer, not a tool error.
+// results as data: a failing journey is an answer, not a tool error. Always
+// the default directory: journeys an app keeps elsewhere (--journeys-directory)
+// may need a server set up for them, which the running dev server is not.
 async function runAppTests({ configDirectory, url, filter }) {
-  const context = { directories: { config: configDirectory } };
+  const context = { directories: getDirectories({ configDirectory, options: {} }) };
   const selected = selectTests({ context, filter });
   if (selected.length === 0) {
     return {

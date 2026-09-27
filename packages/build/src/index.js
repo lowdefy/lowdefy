@@ -63,6 +63,7 @@ import validateCallAgentSteps from './build/validateCallAgentSteps.js';
 import validateConfig from './build/validateConfig.js';
 import validateDeprecatedStyles from './build/validateDeprecatedStyles.js';
 import validateRenderNotificationSteps from './build/validateRenderNotificationSteps.js';
+import validateRequestTimeout from './build/validateRequestTimeout.js';
 import writeAgents from './build/writeAgents.js';
 import writeApp from './build/writeApp.js';
 import writeAppMeta from './build/writeAppMeta.js';
@@ -164,6 +165,7 @@ async function build(options) {
     components.appMeta = context.appMeta;
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
     tryBuildStep(validateConfig, 'validateConfig', { components, context });
+    tryBuildStep(validateRequestTimeout, 'validateRequestTimeout', { components, context });
     tryBuildStep(validateDeprecatedStyles, 'validateDeprecatedStyles', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
     // addKeys runs again to add keys to any new objects created by earlier build steps

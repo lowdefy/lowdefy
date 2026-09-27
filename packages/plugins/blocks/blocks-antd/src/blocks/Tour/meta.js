@@ -117,6 +117,7 @@ export default {
             },
             cover: {
               type: 'string',
+              urlKind: 'src',
               description: 'Cover image URL for the step.',
             },
             description: {

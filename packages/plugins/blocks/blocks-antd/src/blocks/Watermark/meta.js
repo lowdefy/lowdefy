@@ -76,6 +76,7 @@ export default {
       },
       image: {
         type: 'string',
+        urlKind: 'src',
         description: 'Image URL to use as watermark. If set, text content is ignored.',
       },
       inherit: {

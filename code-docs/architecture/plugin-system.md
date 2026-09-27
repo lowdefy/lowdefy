@@ -294,11 +294,11 @@ export { default as SetState } from './actions/SetState/SetState.js';
 | `plugins/operators/server.js`  | `writeOperatorImports.js`   | Server operators       |
 | `plugins/auth/*.js`            | `writeAuthImports.js`       | Auth components        |
 | `plugins/blockMetas.json`      | `writeBlockSchemaMap.js`    | Block runtime metadata |
-| `plugins/icons.js`             | `writeIconImports.js`       | Icon data (`IconData`) |
+| `plugins/icons.js`             | `writeIconImports.js`       | Icon data (`IconData`), every icon the app bundles |
 | `plugins/blockSchemas.json`    | `writeBlockSchemaMap.js`    | Block property schemas |
 | `plugins/actionSchemas.json`   | `writeActionSchemaMap.js`   | Action param schemas   |
 | `plugins/operatorSchemas.json` | `writeOperatorSchemaMap.js` | Operator param schemas |
-| `plugins/pageTypes/<hash>.js`  | `full/writePageTypes.js`    | One page type set (prod client) |
+| `plugins/pageTypes/<hash>.js`  | `full/writePageTypes.js`    | One page type set, with its icons as data (prod client) |
 | `plugins/pageTypes.js`         | `full/writePageTypes.js`    | Type-set chunk registry (prod client) |
 
 ### Import Template
@@ -491,6 +491,8 @@ export default {
 ```
 
 The runtime does a plain `Icons[name]` lookup. A fixed set of semantic names is always bundled because the client uses them itself: `loading`, `icon-missing`, `success`, `info`, `warning`, `error`, `close`, `check`, `copy`. In dev, names the startup bundle lacks arrive as `_dynamicIcons` data on the page response (see [server-dev.md](../servers/server-dev.md)).
+
+In production each page's types module carries only that page's icons (`full/createGetPageIcons.js`, the same scan restricted to the page), written by the same `icons/generateIconEntries.js`. `plugins/icons.js` is loaded on demand when a name outside the page's set is drawn, and `iconImports.json` lists its names for the server's Dynamic content check (see [server.md](../servers/server.md#per-page-plugin-chunks)).
 
 ## Plugin Registration Flow
 

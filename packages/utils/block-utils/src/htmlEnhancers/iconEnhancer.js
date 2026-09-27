@@ -15,44 +15,47 @@
 */
 
 import React from 'react';
+import { type } from '@lowdefy/helpers';
 
-// An icon placeholder with no text is decorative unless it is a control. A
-// tooltip names an icon-only element for screen readers too.
-function labelIcon(element) {
-  if (element.hasAttribute('aria-label') || element.textContent.trim() !== '') return;
-  const tooltip = element.getAttribute('data-tooltip');
-  if (tooltip) {
-    element.setAttribute('aria-label', tooltip);
-    if (!element.hasAttribute('role')) {
-      element.setAttribute('role', 'img');
-    }
-    return;
-  }
-  if (element.matches('[data-event], [data-popover]')) return;
-  element.setAttribute('aria-hidden', 'true');
-}
+import labelIcon from './labelIcon.js';
+import PendingDataIcon from './PendingDataIcon.js';
 
-// data-icon="edit" renders the app's Icon component into the element.
+// data-icon="edit" renders the app's Icon component into the element. The
+// client registers loadAllIcons when a page holds only its own icons, so a
+// name outside them - HTML built from data at runtime - waits for the rest.
 const iconEnhancer = {
   name: 'icon',
   attributes: ['data-icon'],
   prepare({ registration, select }) {
-    const { Icon, icons } = registration;
+    const { Icon, icons, loadAllIcons } = registration;
     const portals = [];
     select('[data-icon]').forEach((element, index) => {
       const name = element.getAttribute('data-icon');
-      // Existing markup may use data-icon for something else; an unknown name
-      // renders nothing rather than the fallback icon.
-      if (!Object.hasOwn(icons, name)) {
-        console.warn(`data-icon="${name}" is not a known icon, so nothing was rendered.`);
+      const key = `${index}:${name}`;
+      if (Object.hasOwn(icons, name)) {
+        labelIcon(element);
+        portals.push({ element, key, node: <Icon properties={{ name, title: '' }} /> });
         return;
       }
-      labelIcon(element);
-      portals.push({
-        element,
-        key: `${index}:${name}`,
-        node: <Icon properties={{ name, title: '' }} />,
-      });
+      if (!type.isNone(loadAllIcons)) {
+        portals.push({
+          element,
+          key,
+          node: (
+            <PendingDataIcon
+              element={element}
+              Icon={Icon}
+              icons={icons}
+              loadAllIcons={loadAllIcons}
+              name={name}
+            />
+          ),
+        });
+        return;
+      }
+      // Existing markup may use data-icon for something else; an unknown name
+      // renders nothing rather than the fallback icon.
+      console.warn(`data-icon="${name}" is not a known icon, so nothing was rendered.`);
     });
     return { portals };
   },

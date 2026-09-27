@@ -252,6 +252,45 @@ properties:
       _user: id
 ```
 
+## Tenant Wall
+
+Under `auth.organizations.policy: tenant`, `MongoDBCollection` implements the scoping contract
+(`types.js` `connectionMetas.MongoDBCollection.tenant: true`). The api resolves, per request,
+`tenant` (the verdict: filter every read and stamp every write with `{ field, value }`) and
+`tenantGuard` (`resolveTenancy`), and passes both to the resolver. Helpers live in
+`src/connections/MongoDBCollection/tenant/`.
+
+**Unscoped write guard** (`guardUnscopedWrite.js`). Given to `tenant: none` requests on a scoped
+connection and to `tenant: shared` connections whose collection a scoped connection reads (the
+build marks those `walled`, reusing `validateSharedChangeLog`'s target matching). Every row the
+write leaves behind must carry a non-empty string organization id: insert and replacement
+documents are checked, updates are walked as a state machine over the tenant field, and
+aggregations may not contain `$out`/`$merge` (return the rows and write them with
+`MongoDBInsertMany`/`MongoDBBulkWrite`). The build also refuses a literal `$out`/`$merge` from any
+shared connection into a walled collection of the same database (`validateSharedPipelineWrite`,
+best effort: operator-built targets and `{ db, coll }` targets are not resolved).
+
+**Change-log records** (`stampTenantOnLogRecord.js`). Scoped writes stamp the verdict. Under
+`tenant: none` (`tenantGuard.stampChangeLog`), the record carries the organization of the rows it
+records: the inserted, updated (after) or deleted (before) row for single-document writes, with
+no record when nothing matched; for multi-document writes the one organization the write was
+held to before running (`changeLogOrganizationOfDocs` / `changeLogOrganizationOfFilter`) —
+otherwise the write is refused. Shared connections keep unstamped records, since the build keeps
+their change log out of walled collections.
+
+**Preflight** (`tenantPreflight.js`). Probes a walled collection for rows missing the field; the
+api refuses to serve while any exist.
+
+## Auth Adapter
+
+`MongoDBAuthAdapter` wraps the vendored BetterAuth MongoDB adapter (`src/auth/adapters/`). It
+supports standalone MongoDB, so it uses no transactions. The constructed adapter exposes
+`options.ensureUniqueIndexes({ indexes: [{ model, fields }] })` (`createEnsureUniqueIndexes.js`):
+it maps BetterAuth model and field names to the physical collections and snake*case fields,
+accepts any existing equivalent unique non-partial index, and otherwise creates
+`lowdefy_unique*<fields>`. The engine uses it for the organization slug and member
+`(userId, organizationId)` indexes that make concurrent organization writes safe.
+
 ## Design Notes
 
 ### Connection Pooling

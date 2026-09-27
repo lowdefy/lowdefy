@@ -16,6 +16,7 @@
 
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
+import { changeLogOrganizationOfFilter } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
@@ -30,6 +31,7 @@ async function MongodbDeleteMany({
   request,
   requestId,
   tenant,
+  tenantGuard,
 }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
@@ -38,6 +40,10 @@ async function MongodbDeleteMany({
     filter = applyTenantToFilter({ filter, tenant, position: 'a filter' });
   }
   const { collection, logCollection } = await getCollection({ connection });
+  let logOrganizationId = null;
+  if (tenantGuard?.stampChangeLog && logCollection) {
+    logOrganizationId = changeLogOrganizationOfFilter({ filter, field: tenantGuard.field });
+  }
   let response;
   try {
     response = await collection.deleteMany(filter, options);
@@ -57,6 +63,8 @@ async function MongodbDeleteMany({
             meta: connection.changeLog?.meta,
           },
           tenant,
+          tenantGuard,
+          organizationId: logOrganizationId,
         })
       );
     }

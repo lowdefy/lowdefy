@@ -31,6 +31,11 @@ jest.unstable_mockModule('./getBrowser.js', () => ({
 const mockOpenJourneyEmail = jest.fn();
 jest.unstable_mockModule('./openJourneyEmail.js', () => ({ default: mockOpenJourneyEmail }));
 
+const mockReadJourneyEmailMatch = jest.fn();
+jest.unstable_mockModule('./readJourneyEmailMatch.js', () => ({
+  default: mockReadJourneyEmailMatch,
+}));
+
 const { default: runJourney } = await import('./runJourney.js');
 
 // Node ships a read-only navigator; the page's platform decides Mod, so it is
@@ -77,6 +82,7 @@ function createLocator({ selector, page }) {
       page.fills.push({ selector, value });
     }),
     locator: jest.fn((child) => createLocator({ selector: `${selector} ${child}`, page })),
+    getByText: jest.fn((text) => createLocator({ selector: `${selector} >> text=${text}`, page })),
     first: jest.fn(() => locator),
     last: jest.fn(() => locator),
     nth: jest.fn(() => locator),
@@ -127,7 +133,18 @@ function createPage({ window = createLowdefyWindow(), url = 'http://localhost:32
     }),
   };
   page.locator = jest.fn((selector) => createLocator({ selector, page }));
+  page.getByText = jest.fn((text) => createLocator({ selector: `text=${text}`, page }));
   return page;
+}
+
+// Each read of the clock moves it on a second, so a polled step's wait runs
+// out after a few reads instead of in real time.
+function advanceClockOnEveryRead() {
+  let clock = 0;
+  return jest.spyOn(Date, 'now').mockImplementation(() => {
+    clock += 1000;
+    return clock;
+  });
 }
 
 function openWith(page, { ready = true } = {}) {
@@ -613,6 +630,7 @@ test('runJourney checks visibility and text of a grid row and cell', async () =>
   page.texts['#bl-grid .ag-row[row-index="0"] .ag-cell[col-id="title"]'] = 'Access reviews';
   page.texts['#bl-grid .ag-row[row-index="0"]'] = 'Access reviews open Edit';
   openWith(page);
+  const spy = advanceClockOnEveryRead();
 
   const result = await runJourney({
     origin,
@@ -624,6 +642,8 @@ test('runJourney checks visibility and text of a grid row and cell', async () =>
       { expect: { text: { blockId: 'grid', row: 0, column: 'title', contains: 'Closed' } } },
     ],
   });
+
+  spy.mockRestore();
 
   expect(result.steps.map((step) => step.status)).toEqual(['ok', 'ok', 'ok', 'failed']);
   expect(result.failure.expected).toEqual(
@@ -658,11 +678,13 @@ test('runJourney joins the text of every element a row target matches', async ()
 test('runJourney reports a missing expect.state value as actual null', async () => {
   const page = createPage({ window: createLowdefyWindow({ state: {} }) });
   openWith(page);
+  const spy = advanceClockOnEveryRead();
   const result = await runJourney({
     origin,
     pageId: 'form',
     steps: [{ expect: { state: { path: 'saved', equals: true } } }],
   });
+  spy.mockRestore();
   expect(result.failure.actual).toBeNull();
   expect(Object.keys(result.failure)).toContain('actual');
 });
@@ -670,6 +692,7 @@ test('runJourney reports a missing expect.state value as actual null', async () 
 test('runJourney matches a missing state path with equals null, as its failure report shows it', async () => {
   const page = createPage({ window: createLowdefyWindow({ state: { rows: [{ id: 1 }] } }) });
   openWith(page);
+  const spy = advanceClockOnEveryRead();
   const result = await runJourney({
     origin,
     pageId: 'form',
@@ -678,7 +701,35 @@ test('runJourney matches a missing state path with equals null, as its failure r
       { expect: { state: { path: 'rows.0', equals: null } } },
     ],
   });
+  spy.mockRestore();
   expect(result.failure).toMatchObject({ index: 1, expected: null, actual: { id: 1 } });
+});
+
+test('runJourney waits for expect.state until the value the click led to lands', async () => {
+  const window = createLowdefyWindow({ state: { invitations: [{ email: 'ada@example.test' }] } });
+  const page = createPage({ window });
+  page.waitForTimeout = jest.fn(async () => {
+    window.lowdefy.contexts['page:form'].state.invitations = [];
+  });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { state: { path: 'invitations', equals: [] } } }],
+  });
+
+  expect(result.failure).toBeUndefined();
+  expect(page.waitForTimeout).toHaveBeenCalledTimes(1);
+});
+
+test('runJourney settles a page for at most 5 seconds after an interaction, whatever the step timeout', async () => {
+  const page = createPage();
+  openWith(page);
+
+  await runJourney({ origin, pageId: 'form', stepTimeout: 30000, steps: [{ click: 'send' }] });
+
+  expect(page.waitForFunction.mock.calls.at(-1)[2]).toEqual({ timeout: 5000 });
 });
 
 test('runJourney fills a numeric value as a string', async () => {
@@ -691,6 +742,7 @@ test('runJourney fills a numeric value as a string', async () => {
 test('runJourney reports a failing expect.state with expected and actual and skips the rest', async () => {
   const page = createPage({ window: createLowdefyWindow({ state: { count: 1 } }) });
   openWith(page);
+  const spy = advanceClockOnEveryRead();
 
   const result = await runJourney({
     origin,
@@ -702,6 +754,7 @@ test('runJourney reports a failing expect.state with expected and actual and ski
     ],
   });
 
+  spy.mockRestore();
   expect(result.passed).toBe(false);
   expect(result.failure).toEqual({
     index: 0,
@@ -955,6 +1008,7 @@ test('runJourney fails expect.text with the actual text when it does not contain
   const page = createPage();
   page.texts['#bl-title'] = 'Hello world';
   openWith(page);
+  const spy = advanceClockOnEveryRead();
 
   const result = await runJourney({
     origin,
@@ -965,9 +1019,56 @@ test('runJourney fails expect.text with the actual text when it does not contain
     ],
   });
 
+  spy.mockRestore();
+
   expect(result.steps.map((step) => step.status)).toEqual(['ok', 'failed']);
   expect(result.failure.expected).toEqual('block "title" text to contain "Goodbye"');
   expect(result.failure.actual).toEqual('Hello world');
+});
+
+test('runJourney waits for expect.text until the block renders the text', async () => {
+  const page = createPage();
+  page.texts['#bl-members'] = '';
+  let reads = 0;
+  page.waitForTimeout = jest.fn(async () => {
+    reads += 1;
+    if (reads === 2) {
+      page.texts['#bl-members'] = 'ada@example.test Owner';
+    }
+  });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'members',
+    steps: [{ expect: { text: { blockId: 'members', contains: 'Owner' } } }],
+  });
+
+  expect(result.failure).toBeUndefined();
+  expect(page.waitForTimeout).toHaveBeenCalledTimes(2);
+});
+
+test('runJourney retries expect.text when the page navigates during a read', async () => {
+  const page = createPage();
+  page.texts['#bl-notice'] = "You're signed out";
+  const locator = page.locator('#bl-notice');
+  locator.allInnerTexts
+    .mockRejectedValueOnce(
+      new Error(
+        'locator.allInnerTexts: Execution context was destroyed, most likely because of a navigation'
+      )
+    )
+    .mockResolvedValue(["You're signed out"]);
+  page.locator = jest.fn(() => locator);
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'logout',
+    steps: [{ expect: { text: { blockId: 'notice', contains: 'signed out' } } }],
+  });
+
+  expect(result.failure).toBeUndefined();
 });
 
 test('runJourney checks expect.url against the page url', async () => {
@@ -1313,23 +1414,63 @@ test('runJourney reports a goto that fails to load', async () => {
   });
 });
 
-test('runJourney refuses an email step before opening a browser when no mail sink listens, even with the port set', async () => {
-  // A port added to .env after start: the child sees it, but no sink started.
-  process.env.LOWDEFY_DEV_SMTP_PORT = '2525';
+test.each([
+  ['an email step', { email: { to: 'ada@example.test' } }],
+  [
+    'a fill from an email',
+    { fill: { blockId: 'otp', fromEmail: { to: 'ada@example.test', match: '\\d{6}' } } },
+  ],
+])(
+  'runJourney refuses %s before opening a browser when no mail sink listens, even with the port set',
+  async (_, step) => {
+    // A port added to .env after start: the child sees it, but no sink started.
+    process.env.LOWDEFY_DEV_SMTP_PORT = '2525';
+    try {
+      const result = await runJourney({
+        origin,
+        pageId: 'signup',
+        user: 'none',
+        steps: [step],
+      });
+
+      expect(result.error).toMatch(
+        /captures no mail. Start \(or restart\) it with LOWDEFY_DEV_SMTP_PORT/
+      );
+      expect(mockGetBrowser).not.toHaveBeenCalled();
+    } finally {
+      delete process.env.LOWDEFY_DEV_SMTP_PORT;
+    }
+  }
+);
+
+test('runJourney fills the text read from an email into the block, staying on the page', async () => {
+  process.env.LOWDEFY_SERVER_DEV_MAIL_SINK = 'true';
+  process.env.LOWDEFY_DIRECTORY_CONFIG = '/apps/tenant';
+  const page = createPage();
+  openWith(page);
+  mockReadJourneyEmailMatch.mockResolvedValue('482913');
+  const fromEmail = { to: 'ada@example.test', subject: 'Your sign-in link', match: '\\d{6}' };
   try {
     const result = await runJourney({
       origin,
-      pageId: 'signup',
+      pageId: 'login',
       user: 'none',
-      steps: [{ email: { to: 'ada@example.test' } }],
+      steps: [{ fill: { blockId: 'otp', fromEmail } }],
     });
 
-    expect(result.error).toMatch(
-      /captures no mail. Start \(or restart\) it with LOWDEFY_DEV_SMTP_PORT/
-    );
-    expect(mockGetBrowser).not.toHaveBeenCalled();
+    expect(result.failure).toBeUndefined();
+    expect(mockReadJourneyEmailMatch).toHaveBeenCalledWith({
+      page,
+      params: fromEmail,
+      since: expect.any(Number),
+      configDirectory: '/apps/tenant',
+      timeout: 5000,
+    });
+    expect(page.fills).toEqual([{ selector: '#bl-otp input, textarea', value: '482913' }]);
+    expect(page.goto).not.toHaveBeenCalled();
   } finally {
-    delete process.env.LOWDEFY_DEV_SMTP_PORT;
+    delete process.env.LOWDEFY_SERVER_DEV_MAIL_SINK;
+    delete process.env.LOWDEFY_DIRECTORY_CONFIG;
   }
 });
 
@@ -1361,3 +1502,23 @@ test('runJourney hands an email step the current tab, the journey start and the 
     delete process.env.LOWDEFY_DIRECTORY_CONFIG;
   }
 });
+
+test.each([
+  [
+    'inside a block',
+    { blockId: 'members_list', containing: 'ada@example.test' },
+    '#bl-members_list >> text=ada@example.test',
+  ],
+  ['on the whole page', { containing: 'Invitation sent' }, 'text=Invitation sent'],
+])(
+  'runJourney clicks the element showing the text %s, not the first control in it',
+  async (_, target, selector) => {
+    const page = createPage();
+    openWith(page);
+
+    const result = await runJourney({ origin, pageId: 'members', steps: [{ click: target }] });
+
+    expect(result.passed).toBe(true);
+    expect(page.clicks).toEqual([selector]);
+  }
+);

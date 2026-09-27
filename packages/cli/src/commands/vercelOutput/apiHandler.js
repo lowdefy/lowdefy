@@ -57,7 +57,10 @@ import { WebSocketServer } from 'ws';
 process.chdir(path.join(path.dirname(fileURLToPath(import.meta.url)), '..'));
 
 const { default: createApp } = await import('../src/app.js');
-const app = createApp({ serveStaticAssets: false });
+// Vercel's edge sets x-real-ip to the client address on every request, replacing any value the
+// client sent, so the app takes the address from it instead of the connection (which is Vercel's
+// own proxy).
+const app = createApp({ serveStaticAssets: false, clientAddressHeader: 'x-real-ip' });
 
 export const config = { runtime: 'nodejs' };
 

@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import buildCallLimits from './buildCallLimits.js';
 import decideSchema from './DecideSchema.js';
 import decideWithEvaluation from './decideWithEvaluation.js';
 import decideWithStructuredOutput from './decideWithStructuredOutput.js';
@@ -29,10 +30,10 @@ import decideWithStructuredOutput from './decideWithStructuredOutput.js';
 //                      evaluation models (TypeSafe's Jev);
 //   structured-output  provider(id) — any language model.
 function createDecide({ createProvider, backends = ['structured-output'] }) {
-  async function Decide({ connection, request }) {
+  async function Decide({ connection, request, signal }) {
     const provider = createProvider({ connection });
     const backend = request.backend ?? backends[0];
-    const options = {};
+    const options = buildCallLimits({ connection, request, signal });
     if (!type.isNone(request.maxRetries)) options.maxRetries = request.maxRetries;
     if (!type.isNone(request.providerOptions)) options.providerOptions = request.providerOptions;
     const { answers, usage } =

@@ -18,8 +18,14 @@
 import { jest } from '@jest/globals';
 
 import { ConfigError, OperatorError } from '@lowdefy/errors';
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
+import createLiteralData from './createLiteralData.js';
+import findDataOrigin from './findDataOrigin.js';
+import createContentHasher from './createContentHasher.js';
+import getFromObject from './getFromObject.js';
+import isNestedDeeperThan from './isNestedDeeperThan.js';
+import MAX_DATA_DEPTH from './maxDataDepth.js';
 import ServerParser from './serverParser.js';
 
 const args = [{ args: true }];
@@ -367,7 +373,7 @@ test('parse with literalData rejects an operator result that carries an operator
   const res = parser.parse({
     input: { a: { _data: true } },
     location,
-    literalData: { validatedStepIds: new Set() },
+    literalData: createLiteralData({}),
   });
   expect(res.output).toEqual({ a: null });
   expect(res.errors[0]).toBeInstanceOf(ConfigError);
@@ -382,7 +388,7 @@ test('parse with literalData allows an operator result without operators', () =>
   const res = parser.parse({
     input: { a: { _data: true } },
     location,
-    literalData: { validatedStepIds: new Set() },
+    literalData: createLiteralData({}),
   });
   expect(res.errors).toEqual([]);
   expect(res.output).toEqual({ a: data });
@@ -393,7 +399,7 @@ test('parse with literalData leaves results of pass-through operators unchecked'
   const res = parser.parse({
     input: { a: { _get: true }, b: { '_object.assign': [] } },
     location,
-    literalData: { validatedStepIds: new Set() },
+    literalData: createLiteralData({}),
   });
   expect(res.errors).toEqual([]);
   expect(res.output).toEqual({ a: { __state: 'x' }, b: { __state: 'x' } });
@@ -404,7 +410,7 @@ test('parse with literalData checks _object methods that build keys from data', 
   const res = parser.parse({
     input: { a: { '_object.fromEntries': [] } },
     location,
-    literalData: { validatedStepIds: new Set() },
+    literalData: createLiteralData({}),
   });
   expect(res.errors[0].message).toContain('Data returned by "_object.fromEntries"');
 });
@@ -423,10 +429,12 @@ test("parse with literalData lets a validated step's blocks through as config", 
   };
   const operators = { _step: ({ params }) => steps[params.split('.')[0]][params.split('.')[1]] };
   const parser = new ServerParser({ operators });
+  const literalData = createLiteralData({});
+  literalData.validatedStepIds.add('check');
   const res = parser.parse({
     input: { a: { _step: 'check.blocks' }, b: { _step: 'raw.blocks' } },
     location,
-    literalData: { validatedStepIds: new Set(['check']) },
+    literalData,
   });
   expect(res.output.a).toEqual([{ html: { _state: 'x' } }]);
   expect(res.errors[0].message).toContain('Data returned by "_step"');
@@ -444,7 +452,7 @@ test.each([
   const res = parser.parse({
     input: { a: { _data: true } },
     location,
-    literalData: { validatedStepIds: new Set() },
+    literalData: createLiteralData({}),
   });
   expect(res.errors[0].message).toContain(`contains the operator "_request" at "${path}"`);
 });
@@ -478,9 +486,228 @@ test.each([
   const res = parser.parse({
     input: { a: { _data: true } },
     location,
-    literalData: { validatedStepIds: new Set() },
+    literalData: createLiteralData({}),
   });
   expect(res.errors).toEqual([]);
   expect(res.output.a).toEqual({ safe: true });
   expect(JSON.stringify(res.output)).toBe('{"a":{"safe":true}}');
+});
+
+test('parse with literalData treats keys that name no client operator as data', () => {
+  const data = [{ _score: 0.5 }, { _source: { title: 'x' } }];
+  const parser = new ServerParser({ operators: createDataOperators(data) });
+  const res = parser.parse({
+    input: { a: { _data: true } },
+    location,
+    literalData: createLiteralData({ clientOperators: new Set(['_request', '_state']) }),
+  });
+  expect(res.errors).toEqual([]);
+  expect(res.output.a).toEqual(data);
+});
+
+test('parse with literalData still refuses a key that names a client operator', () => {
+  const parser = new ServerParser({
+    operators: createDataOperators([{ _score: 0.5 }, { title: { _state: 'secret' } }]),
+  });
+  const res = parser.parse({
+    input: { a: { _data: true } },
+    location,
+    literalData: createLiteralData({ clientOperators: new Set(['_state']) }),
+  });
+  expect(res.errors[0].message).toContain('contains the operator "_state" at "1.title"');
+});
+
+// The copying reads, as operators-js implements them.
+const copyingOperators = {
+  _args: ({ args, arrayIndices, params }) =>
+    getFromObject({ arrayIndices, location, object: args, operator: '_args', params }),
+  _function:
+    ({ operatorPrefix, params, parser }) =>
+    (...args) => {
+      const { output, errors } = parser.parse({
+        args,
+        input: serializer.copy(params),
+        operatorPrefix: `_${operatorPrefix}`,
+      });
+      if (errors.length > 0) throw errors[0];
+      return output;
+    },
+  _get: ({ arrayIndices, params }) =>
+    getFromObject({ arrayIndices, location, object: params.from, operator: '_get', params }),
+  _object: ({ params }) => Object.assign(...params),
+};
+
+function parseWithData(data, input) {
+  const operators = { ...copyingOperators, _data: () => serializer.copy(data) };
+  const parser = new ServerParser({ operators });
+  const literalData = createLiteralData({});
+  const res = parser.parse({ input, location, literalData });
+  return { literalData, output: res.output, errors: res.errors };
+}
+
+const row = { id: 'raw', type: 'Html', properties: { html: 'x' } };
+
+test('parse with literalData marks data an operator returned, not config equal to it', () => {
+  const { literalData, output } = parseWithData(row, { a: { _data: true }, b: row });
+  expect(findDataOrigin({ literalData, value: output.a })).toBe('_data');
+  expect(findDataOrigin({ literalData, value: output.b })).toBe(null);
+  expect(findDataOrigin({ literalData, value: serializer.copy(output.a) })).toBe(null);
+});
+
+test.each([
+  ['_get by key', { _get: { from: { rows: [{ _data: true }] }, key: 'rows.0' } }],
+  ['_get of all', { _get: { from: [{ _data: true }], key: '0' } }],
+  ['_get default', { _get: { from: {}, key: 'missing', default: { _data: true } } }],
+])('parse with literalData marks a copy that %s makes of data', (_, input) => {
+  const { literalData, output, errors } = parseWithData(row, { a: input });
+  expect(errors).toEqual([]);
+  expect(output.a).toEqual(row);
+  expect(findDataOrigin({ literalData, value: output.a })).toBe('_data');
+});
+
+test('parse with literalData marks a copy _args makes of data in a function call', () => {
+  const { literalData, output } = parseWithData(row, {
+    fn: { _function: { __args: 0 } },
+  });
+  const copy = output.fn(serializer.copy(row));
+  expect(findDataOrigin({ literalData, value: copy })).toBe(null);
+  const { literalData: data, output: mapped } = parseWithData(row, {
+    fn: { _function: { __args: 0 } },
+    row: { _data: true },
+  });
+  expect(findDataOrigin({ literalData: data, value: mapped.fn(mapped.row) })).toBe('_data');
+});
+
+const withError = { ...row, properties: { html: 'x', error: { '~e': { message: 'm' } } } };
+
+test.each([
+  ['data', row, { _function: { _data: true } }],
+  ['data holding a serialized error', withError, { _function: { _data: true } }],
+  [
+    'data merged with config',
+    row,
+    { _function: { '__object.assign': [{ _data: true }, { x: 1 }] } },
+  ],
+])('parse with literalData marks the copies a _function body holding %s makes', (_, data, fn) => {
+  const { literalData, output } = parseWithData(data, { fn });
+  expect(findDataOrigin({ literalData, value: output.fn() })).toBe('_data');
+});
+
+test('parse with literalData leaves a _function body built from config unmarked', () => {
+  const { literalData, output } = parseWithData(row, {
+    fn: {
+      _function: {
+        id: { __args: '0.id' },
+        type: { __args: '0.type' },
+        properties: { __args: '0.properties' },
+      },
+    },
+    row: { _data: true },
+  });
+  const block = output.fn(output.row);
+  expect(block).toEqual(row);
+  expect(findDataOrigin({ literalData, value: block })).toBe(null);
+});
+
+function nestTyped(depth) {
+  let nested = { type: 'leaf' };
+  for (let level = 1; level < depth; level += 1) {
+    nested = { type: 'Box', child: nested };
+  }
+  return nested;
+}
+
+// Data at the deepest nesting allowed, many times over.
+function deepRows() {
+  return Array.from({ length: 25 }, () => nestTyped(MAX_DATA_DEPTH - 1));
+}
+
+// Marking is linear in the data's size. Timing is not a stable measure on a
+// shared machine, so the test bounds the text serialized while parsing: a few
+// copies of the data, where serializing every nested object separately grew
+// with the data's size times its depth.
+test('parse with literalData marks deeply nested data in linear work', () => {
+  const once = JSON.stringify(deepRows()).length;
+  const stringify = jest.spyOn(JSON, 'stringify');
+  let result;
+  let serialized = 0;
+  try {
+    result = parseWithData(deepRows(), {
+      a: { _data: true },
+      b: { _get: { from: { value: { _data: true } }, key: 'value' } },
+      fn: { _function: { _data: true } },
+    });
+    result.copy = result.output.fn();
+    stringify.mock.results.forEach(({ value }) => {
+      serialized += type.isString(value) ? value.length : 0;
+    });
+  } finally {
+    stringify.mockRestore();
+  }
+  const { copy, errors, literalData, output } = result;
+  expect(errors.map((error) => error.message)).toEqual([]);
+  expect(findDataOrigin({ literalData, value: output.a[0].child.child })).toBe('_data');
+  expect(findDataOrigin({ literalData, value: output.b[3].child.child })).toBe('_data');
+  expect(findDataOrigin({ literalData, value: copy[24].child.child })).toBe('_data');
+  expect(serialized).toBeLessThan(20 * once);
+});
+
+test('parse with literalData refuses data nested deeper than the Dynamic data limit', () => {
+  const { errors, output } = parseWithData(nestTyped(MAX_DATA_DEPTH + 1), { a: { _data: true } });
+  expect(output.a).toBe(null);
+  expect(errors[0]).toBeInstanceOf(ConfigError);
+  expect(errors[0].message).toBe(
+    `Data returned by "_data" is nested more than ${MAX_DATA_DEPTH} levels deep. Data read into Dynamic block content may nest at most ${MAX_DATA_DEPTH} levels.`
+  );
+});
+
+test('parse with literalData refuses data too deep for an operator to read', () => {
+  const operators = {
+    _data: () => {
+      throw new RangeError('Maximum call stack size exceeded');
+    },
+    _round: () => {
+      throw new RangeError('toFixed() digits argument must be between 0 and 100');
+    },
+  };
+  const parser = new ServerParser({ operators });
+  const res = parser.parse({
+    input: { a: { _data: true }, b: { _round: true } },
+    location,
+    literalData: createLiteralData({}),
+  });
+  expect(res.output).toEqual({ a: null, b: null });
+  expect(res.errors[0]).toBeInstanceOf(ConfigError);
+  expect(res.errors[0].message).toBe(
+    `Data read by "_data" is nested too deeply to check. Data read into Dynamic block content may nest at most ${MAX_DATA_DEPTH} levels.`
+  );
+  expect(res.errors[1]).toBeInstanceOf(OperatorError);
+});
+
+test('the depth check and the content digest stop on a cyclic value', () => {
+  const cyclic = { type: 'Box' };
+  cyclic.self = cyclic;
+  expect(isNestedDeeperThan({ value: cyclic, limit: MAX_DATA_DEPTH })).toBe(true);
+  expect(createContentHasher()(cyclic)).toEqual(expect.any(String));
+});
+
+test('parse with literalData treats an object _object.assign merges data into as data', () => {
+  const row = { _user: 'email', note: 'x' };
+  const operators = {
+    _data: () => serializer.copy(row),
+    _object: ({ params }) => Object.assign(...params),
+  };
+  const parser = new ServerParser({ operators });
+  const literalData = createLiteralData({});
+  const res = parser.parse({
+    input: {
+      merged: { '_object.assign': [{}, { _data: true }, { note: 'y' }] },
+      written: { '_object.assign': [{}, { type: 'Html' }] },
+    },
+    location,
+    literalData,
+  });
+  expect(res.errors).toEqual([]);
+  expect(findDataOrigin({ literalData, value: res.output.merged })).toBe('_data');
+  expect(findDataOrigin({ literalData, value: res.output.written })).toBe(null);
 });

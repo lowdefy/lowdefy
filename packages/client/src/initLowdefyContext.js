@@ -31,14 +31,27 @@ import { createBrowserLogger } from '@lowdefy/logger/browser';
 import setupLink from './setupLink.js';
 import { createUrl } from './adapters/url.js';
 
-function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, types, window }) {
+// loadAllIcons (production server only) loads every icon the app bundles into
+// types.icons; a page loads only its own icons, so a name that arrives at
+// runtime may need it. Dev and e2e bundle every icon.
+function initLowdefyContext({
+  auth,
+  Components,
+  config,
+  loadAllIcons,
+  lowdefy,
+  router,
+  stage,
+  types,
+  window,
+}) {
   if (!lowdefy._internal?.initialised) {
     lowdefy._internal = {
       actions: types.actions,
       blockComponents: types.blocks,
       blockMetas: types.blockMetas ?? {},
       components: {
-        Icon: createIcon(types.icons),
+        Icon: createIcon({ icons: types.icons, loadAllIcons }),
         ShortcutBadge: createShortcutBadge(lowdefy),
       },
       displayMessage: ({ content }) => {
@@ -99,6 +112,7 @@ function initLowdefyContext({ auth, Components, config, lowdefy, router, stage, 
       Icon: lowdefy._internal.components.Icon,
       icons: types.icons,
       link: lowdefy._internal.link,
+      loadAllIcons,
       translate: lowdefy._internal.translate,
     });
 

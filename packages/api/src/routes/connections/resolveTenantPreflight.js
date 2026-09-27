@@ -74,7 +74,7 @@ async function collectTargets(context, { tenantConnections }) {
   for (const entry of tenantConnections) {
     const plugin = context.connections[entry.type];
     if (plugin?.meta?.tenant !== true) {
-      // The contract violation is a build error and a resolveTenant error -
+      // The contract violation is a build error and a resolveTenancy error -
       // the preflight does not repeat the refusal, it just can not probe.
       continue;
     }

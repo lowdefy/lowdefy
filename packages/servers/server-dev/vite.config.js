@@ -64,6 +64,18 @@ function lowdefyWebSocket() {
   };
 }
 
+// The @lowdefy packages this server depends on. A linked plugin pinned to
+// another release brings its own copies, and the client would then mix
+// versions: the dev server pre-bundles one copy per package for every
+// importer (whichever its scan meets first, so the server's own code can get
+// a plugin's older @lowdefy/helpers without an export it imports), and a
+// production build bundles both, so blocks read module state the client never
+// filled (the HTML enhancements it registers in @lowdefy/block-utils). The
+// server's copies are the ones its client and blocks were released with.
+const lowdefyDependencies = Object.keys(
+  JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8')).dependencies ?? {}
+).filter((name) => name.startsWith('@lowdefy/'));
+
 export default defineConfig(({ mode }) => ({
   base: `${basePath}/`,
   plugins: [
@@ -94,8 +106,17 @@ export default defineConfig(({ mode }) => ({
     // Linked plugin packages (pnpm link: / workspace) resolve their own copies of
     // shared libraries. They must share one React, the antd/X/cssinjs copies
     // whose context providers (App, ConfigProvider, StyleProvider) the client
-    // renders, and the dayjs whose global locale the client sets.
-    dedupe: ['react', 'react-dom', 'antd', '@ant-design/x', '@ant-design/cssinjs', 'dayjs'],
+    // renders, the dayjs whose global locale the client sets, and the server's
+    // @lowdefy packages (see lowdefyDependencies).
+    dedupe: [
+      'react',
+      'react-dom',
+      'antd',
+      '@ant-design/x',
+      '@ant-design/cssinjs',
+      'dayjs',
+      ...lowdefyDependencies,
+    ],
   },
   server: {
     watch: {

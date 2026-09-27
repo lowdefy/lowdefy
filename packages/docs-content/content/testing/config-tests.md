@@ -53,16 +53,34 @@ Files run in file-name order, and journeys run one at a time — each journey op
 
 `user: none` injects no user at all, so the journey signs in through the app's own auth — see [Testing sign-up and sign-in](#testing-sign-up-and-sign-in).
 
-`timeout` sets how long each step may wait, in milliseconds (a whole number from 1 to 60000, default 5000). Raise it on a slow machine or CI runner rather than adding `wait: { ms }` steps: it applies to every step of the journey, and page opens get at least 15 seconds.
+`timeout` sets how long each step may wait, in milliseconds (a whole number from 1 to 60000, default 5000). Raise it on a slow machine or CI runner rather than adding `wait: { ms }` steps.
+
+### Timeouts
+
+The journey's `timeout` (the step timeout) bounds every wait a step makes for something to happen, and a step moves on as soon as it has:
+
+| Wait                                                                       | Bound                                      |
+| -------------------------------------------------------------------------- | ------------------------------------------ |
+| A control becoming actionable for `click`, `fill`, `select`                | The step timeout.                          |
+| `expect` (`state`, `visible`, `text`, `url`, `title`) matching             | The step timeout.                          |
+| `wait: { request }` and `wait: { state }`                                  | The step timeout.                          |
+| `back` loading the previous page                                           | The step timeout.                          |
+| An email arriving for `email` or `fill.fromEmail`                          | The step timeout.                          |
+| Opening a page: the journey's page, `goto`, the first `as` for a name      | The step timeout, but at least 15 seconds. |
+| Settling after an interaction (`click`, `fill`, `select`, `press`, `back`) | The step timeout, but at most 5 seconds.   |
+| `wait: { ms }`                                                             | Exactly `ms`; the timeout does not apply.  |
+
+The settle after an interaction lets the page's own events and requests finish before the next step. It never fails a step: a page still busy after 5 seconds (an event that ends in a resend cooldown, for example) moves on, and the next step waits for what it needs itself. So raising `timeout` makes a slow journey pass without making a passing one slower.
 
 ## Steps
 
-Blocks are addressed by their `blockId`. Every step has a 5 second timeout by default (the journey's `timeout` changes it); a step that does not complete in time fails the journey.
+Blocks are addressed by their `blockId`. A step that does not complete within the step timeout (5 seconds, or the journey's [`timeout`](#timeouts)) fails the journey. An `expect` step waits, up to that timeout, for what it checks to become true, so a value a click leads to can arrive a moment later.
 
 | Step                                      | Meaning                                                                                                                                                     |
 | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `click: target`                           | Click the block, or the control a [target](#targets) narrows to.                                                                                            |
 | `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names).                                                                             |
+| `fill: { blockId, fromEmail }`            | Type text read from an [email](#emails) instead of a fixed value, such as a one-time sign-in code. The actor stays on the page.                             |
 | `select: { blockId, value }`              | Open the selector block (or grid cell) and choose the option whose text is `value`. A radio, button or segmented selector's option is clicked by its label. |
 | `press: Enter`                            | Press a key or chord. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.                                                               |
 | `back: true`                              | Go back one page, like the browser's Back button. Fails when the journey has not navigated from an earlier page.                                            |
@@ -85,13 +103,14 @@ The full grammar, including the failure shape the route returns, is documented w
 
 A `blockId` reaches a block's own control — its button, input or link. Some controls are not blocks: the Edit and Delete buttons a grid renders in every row, the OK and Cancel of a confirm dialog, the items of a dropdown menu. Wherever a step takes a `blockId`, it also takes a target object that narrows the search:
 
-| Key       | Meaning                                                                                          |
-| --------- | ------------------------------------------------------------------------------------------------ |
-| `blockId` | The block to search inside.                                                                      |
-| `row`     | A grid row, zero-based as displayed (`AgGrid*` blocks). Needs `blockId`.                         |
-| `column`  | A grid cell in that row, by the column's `field` or `colId`. Needs `blockId`.                    |
-| `text`    | The interactive control whose visible text is exactly this (a button label, a tab, a menu item). |
-| `nth`     | When several controls match, the zero-based one to use.                                          |
+| Key          | Meaning                                                                                                     |
+| ------------ | ----------------------------------------------------------------------------------------------------------- |
+| `blockId`    | The block to search inside.                                                                                 |
+| `row`        | A grid row, zero-based as displayed (`AgGrid*` blocks). Needs `blockId`.                                    |
+| `column`     | A grid cell in that row, by the column's `field` or `colId`. Needs `blockId`.                               |
+| `text`       | The interactive control whose visible text is exactly this (a button label, a tab, a menu item).            |
+| `containing` | The element whose visible text contains this: a row of a list a person picks by the name or email it shows. |
+| `nth`        | When several controls match, the zero-based one to use.                                                     |
 
 `text` on its own, with no `blockId`, searches the whole page — front-most layer first: an open dropdown menu, then an open dialog, then the page. That is how a confirm dialog's button is clicked while the grid behind its mask has a button with the same label.
 
@@ -108,6 +127,12 @@ A `blockId` reaches a block's own control — its button, input or link. Some co
     - click: { blockId: controls_grid, row: 0, column: actions } # the cell's first control
     - click: { blockId: controls_grid, row: 0, column: more, nth: 0 } # an icon-only menu trigger
     - click: { text: Archive } # the open menu's item
+```
+
+Some rows are neither a block nor a control, such as the cards of a `ListSelector`. `containing` clicks the text a person would click on, and the click reaches the row's own handler:
+
+```yaml
+- click: { blockId: members_list, containing: ada@example.test } # opens Ada's row
 ```
 
 `fill`, `select` and `expect.text` always need a `blockId`; a value is typed into a block's input, never into a page-wide control. A target with a key the grammar does not know (`colum`) is rejected before the browser opens, so a typo cannot pass as a step that happened to find nothing.
@@ -160,6 +185,19 @@ connections:
 
 `email` opens the newest matching message that arrived since the journey started, waiting up to the step timeout for one to arrive. The email is shown in the actor's tab, so `click: { text: Verify email address }` follows its button the way a person does, and `expect: { visible: { text: ... } }` checks its content. Opening the same email again (following an invitation link a second time after signing up) opens the same message. When nothing matches, the step fails with the messages that did arrive.
 
+A one-time code is typed, not clicked. `fill` with `fromEmail: { to, subject, match }` reads the same newest matching message, waiting for it the same way, and types the first match of the regular expression `match` (or its first capture group, when it has one) into the block. The actor stays on the page they are on, as a person reads the code on their phone and types it into the tab they started from. The match runs on the email's text, not its HTML markup. Anchor the pattern with `\b`, since the text can also hold the sign-in link, whose address may contain digits.
+
+```yaml
+- click: login_magic_send
+- fill:
+    blockId: otp
+    fromEmail:
+      to: ada@example.test
+      subject: Your sign-in link
+      match: '\b\d{6}\b'
+- click: login_code_verify
+```
+
 ### Several people
 
 `as: invitee` switches the journey to another person with their own browser and cookies: an owner and the person they invite, or a member whose session stays open while the owner removes them. The journey starts as `main`. The first `as` for a name opens the journey's page in a new browser, as the journey's `user`; switching back returns to that person's tab as they left it.
@@ -169,6 +207,14 @@ Each person also sends requests from their own client address, so auth rate limi
 ### The database
 
 Journeys perform real sign-ups, so they need a database that starts empty and is never a real one. Run them against a fresh test database each time: a sign-up journey run a second time finds its address already registered, and no verification email is sent. Give each journey its own addresses, so journeys in one run do not collide.
+
+Keep journeys that write, like these, out of `tests/journeys/` when your everyday `lowdefy test` runs against a shared database. Put them in their own directory, such as `tests/auth-journeys/`, and run them only from a script that starts the test database, the mail sink and the server they need:
+
+```
+lowdefy test --journeys-directory tests/auth-journeys --url http://localhost:3290
+```
+
+A plain `lowdefy test`, and the `lowdefy_run_tests` agent tool, never read that directory.
 
 ## Running
 
@@ -193,16 +239,17 @@ A failing journey stops at its first failing step and prints the step's index, t
 ### Options
 
 - `--filter <name>`: Only run journeys whose `name` contains the string (case-insensitive). `lowdefy test --filter control` runs every journey with "control" in its name.
+- `--journeys-directory <path>`: Read journeys from this directory instead of `tests/journeys/`, for journeys that need a server set up for them, such as [auth journeys](#the-database). A relative path is resolved from the current directory. The run fails when the directory holds no journeys.
 - `--url <url>`: Run against a development server that is already running instead of starting one, for example `lowdefy test --url http://localhost:3000` while `lowdefy dev` is open in another terminal. This is the fastest way to iterate on a journey.
 - `--port <port>`: The port to start the development server on. If it is in use the next free port is taken. The default is `3000`.
 - `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for [`lowdefy dev`](/cli#dev).
 
 ### Exit codes
 
-| Exit code | Meaning                                                                                                |
-| --------- | ------------------------------------------------------------------------------------------------------ |
-| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                        |
-| `1`       | At least one journey failed, a journey file was invalid, or an explicit `--filter` matched no journey. |
+| Exit code | Meaning                                                                                                                                           |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                                                                   |
+| `1`       | At least one journey failed, a journey file was invalid, an explicit `--filter` matched no journey, or a `--journeys-directory` held no journeys. |
 
 A journey file that is not valid YAML, or does not match the journey format (a missing `name`, a step with two keys, an unknown step key) is reported as a failed journey with the validation message and the file path. It never aborts the run, so one broken file cannot hide the results of the others.
 

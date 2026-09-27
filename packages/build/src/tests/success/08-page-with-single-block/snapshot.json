@@ -172,6 +172,19 @@
     "highlight": "Highlighter",
     "icon-missing": "CircleAlert"
   },
+  "iconImports.json": [
+    "FileSearch",
+    "check",
+    "close",
+    "copy",
+    "error",
+    "home",
+    "icon-missing",
+    "info",
+    "loading",
+    "success",
+    "warning"
+  ],
   "keyMap.json": {
     "4": {
       "key": "root",
@@ -834,6 +847,19 @@
       "operators": [
         "_not",
         "_type"
+      ],
+      "icons": [
+        "FileSearch",
+        "check",
+        "close",
+        "copy",
+        "error",
+        "home",
+        "icon-missing",
+        "info",
+        "loading",
+        "success",
+        "warning"
       ]
     },
     "home": {
@@ -866,6 +892,18 @@
       "operators": [
         "_not",
         "_type"
+      ],
+      "icons": [
+        "check",
+        "close",
+        "copy",
+        "error",
+        "home",
+        "icon-missing",
+        "info",
+        "loading",
+        "success",
+        "warning"
       ]
     }
   },
@@ -951,7 +989,7 @@
       "~arr": [],
       "~k": "1a"
     },
-    "typesKey": "0e388e693c89",
+    "typesKey": "4cc5216e0717",
     "~k": "13"
   },
   "pages/home.json": {
@@ -992,7 +1030,7 @@
       "~arr": [],
       "~k": "12"
     },
-    "typesKey": "af97c9e4d464",
+    "typesKey": "65015b2a1622",
     "~k": "x"
   },
   "plugins/actionSchemas.json": {
@@ -1554,10 +1592,12 @@
             },
             "href": {
               "type": "string",
+              "urlKind": "href",
               "description": "The href to link to when the anchor link is clicked."
             },
             "url": {
               "type": "string",
+              "urlKind": "url",
               "description": "External url to link to when the anchor link is clicked."
             },
             "rel": {
@@ -3017,6 +3057,7 @@
           "properties": {
             "src": {
               "type": "string",
+              "urlKind": "src",
               "description": "The image URL."
             },
             "alt": {
@@ -3058,6 +3099,7 @@
             },
             "srcSet": {
               "type": "string",
+              "urlKind": "srcSet",
               "description": "Possible image sources for the user agent to use, strings separated by commas.",
               "docs": {
                 "displayType": "text-area"
@@ -6344,6 +6386,59 @@
     }
   },
   "plugins/blocks.js": "import { Box as Box } from '@lowdefy/blocks-basic/blocks';\nimport { Title as Title } from '@lowdefy/blocks-basic/blocks';\nimport { Result as Result } from '@lowdefy/blocks-antd/blocks';\nimport { Button as Button } from '@lowdefy/blocks-basic/blocks';\nimport { Anchor as Anchor } from '@lowdefy/blocks-basic/blocks';\nimport { ClickableHtml as ClickableHtml } from '@lowdefy/blocks-basic/blocks';\nimport { DangerousHtml as DangerousHtml } from '@lowdefy/blocks-basic/blocks';\nimport { Dynamic as Dynamic } from '@lowdefy/blocks-basic/blocks';\nimport { Html as Html } from '@lowdefy/blocks-basic/blocks';\nimport { Icon as Icon } from '@lowdefy/blocks-basic/blocks';\nimport { Img as Img } from '@lowdefy/blocks-basic/blocks';\nimport { List as List } from '@lowdefy/blocks-basic/blocks';\nimport { PollingTimer as PollingTimer } from '@lowdefy/blocks-basic/blocks';\nimport { Span as Span } from '@lowdefy/blocks-basic/blocks';\nimport { Throw as Throw } from '@lowdefy/blocks-basic/blocks';\nimport { ProgressBar as ProgressBar } from '@lowdefy/blocks-loaders/blocks';\nimport { Skeleton as Skeleton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonAvatar as SkeletonAvatar } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonButton as SkeletonButton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonInput as SkeletonInput } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonParagraph as SkeletonParagraph } from '@lowdefy/blocks-loaders/blocks';\nimport { Spinner as Spinner } from '@lowdefy/blocks-loaders/blocks';\nimport { Message as Message } from '@lowdefy/blocks-antd/blocks';\nexport default {\n  Box,\n  Title,\n  Result,\n  Button,\n  Anchor,\n  ClickableHtml,\n  DangerousHtml,\n  Dynamic,\n  Html,\n  Icon,\n  Img,\n  List,\n  PollingTimer,\n  Span,\n  Throw,\n  ProgressBar,\n  Skeleton,\n  SkeletonAvatar,\n  SkeletonButton,\n  SkeletonInput,\n  SkeletonParagraph,\n  Spinner,\n  Message,\n  };",
+  "plugins/clientOperators.json": [
+    "_actions",
+    "_and",
+    "_args",
+    "_array",
+    "_base64",
+    "_change_case",
+    "_date",
+    "_dayjs",
+    "_diff",
+    "_divide",
+    "_eq",
+    "_event",
+    "_function",
+    "_get",
+    "_global",
+    "_gt",
+    "_gte",
+    "_hash",
+    "_if",
+    "_if_none",
+    "_input",
+    "_intl",
+    "_js",
+    "_json",
+    "_location",
+    "_lt",
+    "_lte",
+    "_media",
+    "_menu",
+    "_mql",
+    "_ne",
+    "_not",
+    "_nunjucks",
+    "_object",
+    "_or",
+    "_payload",
+    "_product",
+    "_random",
+    "_regex",
+    "_request",
+    "_state",
+    "_string",
+    "_subtract",
+    "_sum",
+    "_switch",
+    "_type",
+    "_uri",
+    "_url_query",
+    "_user",
+    "_uuid",
+    "_yaml"
+  ],
   "plugins/connections.js": "export default {\n  };",
   "plugins/icons.js": "const n0 = [[\"path\",{\"d\":\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\"}],[\"path\",{\"d\":\"M14 2v5a1 1 0 0 0 1 1h5\"}],[\"circle\",{\"cx\":\"11.5\",\"cy\":\"14.5\",\"r\":\"2.5\"}],[\"path\",{\"d\":\"M13.3 16.3 15 18\"}]];\nconst n1 = [[\"path\",{\"d\":\"M20 6 9 17l-5-5\"}]];\nconst n2 = [[\"path\",{\"d\":\"M18 6 6 18\"}],[\"path\",{\"d\":\"m6 6 12 12\"}]];\nconst n3 = [[\"rect\",{\"width\":\"14\",\"height\":\"14\",\"x\":\"8\",\"y\":\"8\",\"rx\":\"2\",\"ry\":\"2\"}],[\"path\",{\"d\":\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\"}]];\nconst n4 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"path\",{\"d\":\"m15 9-6 6\"}],[\"path\",{\"d\":\"m9 9 6 6\"}]];\nconst n5 = [[\"path\",{\"d\":\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"}],[\"path\",{\"d\":\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"}]];\nconst n6 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"line\",{\"x1\":\"12\",\"x2\":\"12\",\"y1\":\"8\",\"y2\":\"12\"}],[\"line\",{\"x1\":\"12\",\"x2\":\"12.01\",\"y1\":\"16\",\"y2\":\"16\"}]];\nconst n7 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"path\",{\"d\":\"M12 16v-4\"}],[\"path\",{\"d\":\"M12 8h.01\"}]];\nconst n8 = [[\"path\",{\"d\":\"M21 12a9 9 0 1 1-6.219-8.56\"}]];\nconst n9 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"path\",{\"d\":\"m16 9-5.5 5.5L8 12\"}]];\nconst n10 = [[\"path\",{\"d\":\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"}],[\"path\",{\"d\":\"M12 9v4\"}],[\"path\",{\"d\":\"M12 17h.01\"}]];\nexport default {\n  \"FileSearch\": { node: n0 },\n  \"check\": { node: n1 },\n  \"close\": { node: n2 },\n  \"copy\": { node: n3 },\n  \"error\": { node: n4 },\n  \"home\": { node: n5 },\n  \"icon-missing\": { node: n6 },\n  \"info\": { node: n7 },\n  \"loading\": { node: n8 },\n  \"success\": { node: n9 },\n  \"warning\": { node: n10 },\n};\n",
   "plugins/notifications.js": "export default {\n  };\nexport const renderEmail = undefined;\nexport const interpolateProperties = undefined;\n",
@@ -6420,9 +6515,9 @@
   "plugins/operators/clientJsMap.js": "\nexport default {\n  };",
   "plugins/operators/server.js": "export default {\n  };",
   "plugins/operators/serverJsMap.js": "\nexport default {\n  };",
-  "plugins/pageTypes.js": "export const icons = () => import('./icons.js');\n\nexport const allTypes = () =>\n  Promise.all([import('./actions.js'), import('./blocks.js'), import('./operators/client.js')]).then(\n    ([actions, blocks, operators]) => ({\n      actions: actions.default,\n      blocks: blocks.default,\n      operators: operators.default,\n    })\n  );\n\nexport default {\n  \"0e388e693c89\": () => import(\"./pageTypes/0e388e693c89.js\"),\n  \"af97c9e4d464\": () => import(\"./pageTypes/af97c9e4d464.js\"),\n};\n",
-  "plugins/pageTypes/0e388e693c89.js": "import { Link as a0 } from \"@lowdefy/actions-core/actions\";\nimport { SetDarkMode as a1 } from \"@lowdefy/actions-core/actions\";\nimport { Anchor as b0 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Box as b1 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Button as b2 } from \"@lowdefy/blocks-basic/blocks\";\nimport { ClickableHtml as b3 } from \"@lowdefy/blocks-basic/blocks\";\nimport { DangerousHtml as b4 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Dynamic as b5 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Html as b6 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Icon as b7 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Img as b8 } from \"@lowdefy/blocks-basic/blocks\";\nimport { List as b9 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Message as b10 } from \"@lowdefy/blocks-antd/blocks\";\nimport { PollingTimer as b11 } from \"@lowdefy/blocks-basic/blocks\";\nimport { ProgressBar as b12 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Result as b13 } from \"@lowdefy/blocks-antd/blocks\";\nimport { Skeleton as b14 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonAvatar as b15 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonButton as b16 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonInput as b17 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonParagraph as b18 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Span as b19 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Spinner as b20 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Throw as b21 } from \"@lowdefy/blocks-basic/blocks\";\nimport { _not as o0 } from \"@lowdefy/operators-js/operators/client\";\nimport { _type as o1 } from \"@lowdefy/operators-js/operators/client\";\nexport default {\n  actions: {\n    \"Link\": a0,\n    \"SetDarkMode\": a1,\n  },\n  blocks: {\n    \"Anchor\": b0,\n    \"Box\": b1,\n    \"Button\": b2,\n    \"ClickableHtml\": b3,\n    \"DangerousHtml\": b4,\n    \"Dynamic\": b5,\n    \"Html\": b6,\n    \"Icon\": b7,\n    \"Img\": b8,\n    \"List\": b9,\n    \"Message\": b10,\n    \"PollingTimer\": b11,\n    \"ProgressBar\": b12,\n    \"Result\": b13,\n    \"Skeleton\": b14,\n    \"SkeletonAvatar\": b15,\n    \"SkeletonButton\": b16,\n    \"SkeletonInput\": b17,\n    \"SkeletonParagraph\": b18,\n    \"Span\": b19,\n    \"Spinner\": b20,\n    \"Throw\": b21,\n  },\n  operators: {\n    \"_not\": o0,\n    \"_type\": o1,\n  },\n};\n",
-  "plugins/pageTypes/af97c9e4d464.js": "import { SetDarkMode as a0 } from \"@lowdefy/actions-core/actions\";\nimport { Anchor as b0 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Box as b1 } from \"@lowdefy/blocks-basic/blocks\";\nimport { ClickableHtml as b2 } from \"@lowdefy/blocks-basic/blocks\";\nimport { DangerousHtml as b3 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Dynamic as b4 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Html as b5 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Icon as b6 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Img as b7 } from \"@lowdefy/blocks-basic/blocks\";\nimport { List as b8 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Message as b9 } from \"@lowdefy/blocks-antd/blocks\";\nimport { PollingTimer as b10 } from \"@lowdefy/blocks-basic/blocks\";\nimport { ProgressBar as b11 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Skeleton as b12 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonAvatar as b13 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonButton as b14 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonInput as b15 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonParagraph as b16 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Span as b17 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Spinner as b18 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Throw as b19 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Title as b20 } from \"@lowdefy/blocks-basic/blocks\";\nimport { _not as o0 } from \"@lowdefy/operators-js/operators/client\";\nimport { _type as o1 } from \"@lowdefy/operators-js/operators/client\";\nexport default {\n  actions: {\n    \"SetDarkMode\": a0,\n  },\n  blocks: {\n    \"Anchor\": b0,\n    \"Box\": b1,\n    \"ClickableHtml\": b2,\n    \"DangerousHtml\": b3,\n    \"Dynamic\": b4,\n    \"Html\": b5,\n    \"Icon\": b6,\n    \"Img\": b7,\n    \"List\": b8,\n    \"Message\": b9,\n    \"PollingTimer\": b10,\n    \"ProgressBar\": b11,\n    \"Skeleton\": b12,\n    \"SkeletonAvatar\": b13,\n    \"SkeletonButton\": b14,\n    \"SkeletonInput\": b15,\n    \"SkeletonParagraph\": b16,\n    \"Span\": b17,\n    \"Spinner\": b18,\n    \"Throw\": b19,\n    \"Title\": b20,\n  },\n  operators: {\n    \"_not\": o0,\n    \"_type\": o1,\n  },\n};\n",
+  "plugins/pageTypes.js": "export const icons = () => import('./icons.js');\n\nexport const allTypes = () =>\n  Promise.all([import('./actions.js'), import('./blocks.js'), import('./operators/client.js')]).then(\n    ([actions, blocks, operators]) => ({\n      actions: actions.default,\n      blocks: blocks.default,\n      operators: operators.default,\n    })\n  );\n\nexport default {\n  \"4cc5216e0717\": () => import(\"./pageTypes/4cc5216e0717.js\"),\n  \"65015b2a1622\": () => import(\"./pageTypes/65015b2a1622.js\"),\n};\n",
+  "plugins/pageTypes/4cc5216e0717.js": "import { Link as a0 } from \"@lowdefy/actions-core/actions\";\nimport { SetDarkMode as a1 } from \"@lowdefy/actions-core/actions\";\nimport { Anchor as b0 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Box as b1 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Button as b2 } from \"@lowdefy/blocks-basic/blocks\";\nimport { ClickableHtml as b3 } from \"@lowdefy/blocks-basic/blocks\";\nimport { DangerousHtml as b4 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Dynamic as b5 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Html as b6 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Icon as b7 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Img as b8 } from \"@lowdefy/blocks-basic/blocks\";\nimport { List as b9 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Message as b10 } from \"@lowdefy/blocks-antd/blocks\";\nimport { PollingTimer as b11 } from \"@lowdefy/blocks-basic/blocks\";\nimport { ProgressBar as b12 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Result as b13 } from \"@lowdefy/blocks-antd/blocks\";\nimport { Skeleton as b14 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonAvatar as b15 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonButton as b16 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonInput as b17 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonParagraph as b18 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Span as b19 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Spinner as b20 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Throw as b21 } from \"@lowdefy/blocks-basic/blocks\";\nimport { _not as o0 } from \"@lowdefy/operators-js/operators/client\";\nimport { _type as o1 } from \"@lowdefy/operators-js/operators/client\";\nconst n0 = [[\"path\",{\"d\":\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\"}],[\"path\",{\"d\":\"M14 2v5a1 1 0 0 0 1 1h5\"}],[\"circle\",{\"cx\":\"11.5\",\"cy\":\"14.5\",\"r\":\"2.5\"}],[\"path\",{\"d\":\"M13.3 16.3 15 18\"}]];\nconst n1 = [[\"path\",{\"d\":\"M20 6 9 17l-5-5\"}]];\nconst n2 = [[\"path\",{\"d\":\"M18 6 6 18\"}],[\"path\",{\"d\":\"m6 6 12 12\"}]];\nconst n3 = [[\"rect\",{\"width\":\"14\",\"height\":\"14\",\"x\":\"8\",\"y\":\"8\",\"rx\":\"2\",\"ry\":\"2\"}],[\"path\",{\"d\":\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\"}]];\nconst n4 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"path\",{\"d\":\"m15 9-6 6\"}],[\"path\",{\"d\":\"m9 9 6 6\"}]];\nconst n5 = [[\"path\",{\"d\":\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"}],[\"path\",{\"d\":\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"}]];\nconst n6 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"line\",{\"x1\":\"12\",\"x2\":\"12\",\"y1\":\"8\",\"y2\":\"12\"}],[\"line\",{\"x1\":\"12\",\"x2\":\"12.01\",\"y1\":\"16\",\"y2\":\"16\"}]];\nconst n7 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"path\",{\"d\":\"M12 16v-4\"}],[\"path\",{\"d\":\"M12 8h.01\"}]];\nconst n8 = [[\"path\",{\"d\":\"M21 12a9 9 0 1 1-6.219-8.56\"}]];\nconst n9 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"path\",{\"d\":\"m16 9-5.5 5.5L8 12\"}]];\nconst n10 = [[\"path\",{\"d\":\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"}],[\"path\",{\"d\":\"M12 9v4\"}],[\"path\",{\"d\":\"M12 17h.01\"}]];\nexport default {\n  actions: {\n    \"Link\": a0,\n    \"SetDarkMode\": a1,\n  },\n  blocks: {\n    \"Anchor\": b0,\n    \"Box\": b1,\n    \"Button\": b2,\n    \"ClickableHtml\": b3,\n    \"DangerousHtml\": b4,\n    \"Dynamic\": b5,\n    \"Html\": b6,\n    \"Icon\": b7,\n    \"Img\": b8,\n    \"List\": b9,\n    \"Message\": b10,\n    \"PollingTimer\": b11,\n    \"ProgressBar\": b12,\n    \"Result\": b13,\n    \"Skeleton\": b14,\n    \"SkeletonAvatar\": b15,\n    \"SkeletonButton\": b16,\n    \"SkeletonInput\": b17,\n    \"SkeletonParagraph\": b18,\n    \"Span\": b19,\n    \"Spinner\": b20,\n    \"Throw\": b21,\n  },\n  operators: {\n    \"_not\": o0,\n    \"_type\": o1,\n  },\n  icons: {\n    \"FileSearch\": { node: n0 },\n    \"check\": { node: n1 },\n    \"close\": { node: n2 },\n    \"copy\": { node: n3 },\n    \"error\": { node: n4 },\n    \"home\": { node: n5 },\n    \"icon-missing\": { node: n6 },\n    \"info\": { node: n7 },\n    \"loading\": { node: n8 },\n    \"success\": { node: n9 },\n    \"warning\": { node: n10 },\n  },\n};\n",
+  "plugins/pageTypes/65015b2a1622.js": "import { SetDarkMode as a0 } from \"@lowdefy/actions-core/actions\";\nimport { Anchor as b0 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Box as b1 } from \"@lowdefy/blocks-basic/blocks\";\nimport { ClickableHtml as b2 } from \"@lowdefy/blocks-basic/blocks\";\nimport { DangerousHtml as b3 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Dynamic as b4 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Html as b5 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Icon as b6 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Img as b7 } from \"@lowdefy/blocks-basic/blocks\";\nimport { List as b8 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Message as b9 } from \"@lowdefy/blocks-antd/blocks\";\nimport { PollingTimer as b10 } from \"@lowdefy/blocks-basic/blocks\";\nimport { ProgressBar as b11 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Skeleton as b12 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonAvatar as b13 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonButton as b14 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonInput as b15 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { SkeletonParagraph as b16 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Span as b17 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Spinner as b18 } from \"@lowdefy/blocks-loaders/blocks\";\nimport { Throw as b19 } from \"@lowdefy/blocks-basic/blocks\";\nimport { Title as b20 } from \"@lowdefy/blocks-basic/blocks\";\nimport { _not as o0 } from \"@lowdefy/operators-js/operators/client\";\nimport { _type as o1 } from \"@lowdefy/operators-js/operators/client\";\nconst n0 = [[\"path\",{\"d\":\"M20 6 9 17l-5-5\"}]];\nconst n1 = [[\"path\",{\"d\":\"M18 6 6 18\"}],[\"path\",{\"d\":\"m6 6 12 12\"}]];\nconst n2 = [[\"rect\",{\"width\":\"14\",\"height\":\"14\",\"x\":\"8\",\"y\":\"8\",\"rx\":\"2\",\"ry\":\"2\"}],[\"path\",{\"d\":\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\"}]];\nconst n3 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"path\",{\"d\":\"m15 9-6 6\"}],[\"path\",{\"d\":\"m9 9 6 6\"}]];\nconst n4 = [[\"path\",{\"d\":\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"}],[\"path\",{\"d\":\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"}]];\nconst n5 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"line\",{\"x1\":\"12\",\"x2\":\"12\",\"y1\":\"8\",\"y2\":\"12\"}],[\"line\",{\"x1\":\"12\",\"x2\":\"12.01\",\"y1\":\"16\",\"y2\":\"16\"}]];\nconst n6 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"path\",{\"d\":\"M12 16v-4\"}],[\"path\",{\"d\":\"M12 8h.01\"}]];\nconst n7 = [[\"path\",{\"d\":\"M21 12a9 9 0 1 1-6.219-8.56\"}]];\nconst n8 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"path\",{\"d\":\"m16 9-5.5 5.5L8 12\"}]];\nconst n9 = [[\"path\",{\"d\":\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"}],[\"path\",{\"d\":\"M12 9v4\"}],[\"path\",{\"d\":\"M12 17h.01\"}]];\nexport default {\n  actions: {\n    \"SetDarkMode\": a0,\n  },\n  blocks: {\n    \"Anchor\": b0,\n    \"Box\": b1,\n    \"ClickableHtml\": b2,\n    \"DangerousHtml\": b3,\n    \"Dynamic\": b4,\n    \"Html\": b5,\n    \"Icon\": b6,\n    \"Img\": b7,\n    \"List\": b8,\n    \"Message\": b9,\n    \"PollingTimer\": b10,\n    \"ProgressBar\": b11,\n    \"Skeleton\": b12,\n    \"SkeletonAvatar\": b13,\n    \"SkeletonButton\": b14,\n    \"SkeletonInput\": b15,\n    \"SkeletonParagraph\": b16,\n    \"Span\": b17,\n    \"Spinner\": b18,\n    \"Throw\": b19,\n    \"Title\": b20,\n  },\n  operators: {\n    \"_not\": o0,\n    \"_type\": o1,\n  },\n  icons: {\n    \"check\": { node: n0 },\n    \"close\": { node: n1 },\n    \"copy\": { node: n2 },\n    \"error\": { node: n3 },\n    \"home\": { node: n4 },\n    \"icon-missing\": { node: n5 },\n    \"info\": { node: n6 },\n    \"loading\": { node: n7 },\n    \"success\": { node: n8 },\n    \"warning\": { node: n9 },\n  },\n};\n",
   "plugins/steps.js": "export default {\n  };",
   "plugins/websockets.js": "export default {\n  };",
   "refMap.json": {

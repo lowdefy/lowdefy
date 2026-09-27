@@ -34,6 +34,7 @@ async function checkDynamicContent(
       policy,
       blockMetas: artifacts.blockMetas,
       blockSchemas: artifacts.blockSchemas,
+      clientOperators: artifacts.clientOperators,
     });
     if (errors.length > 0) {
       return { errors };
@@ -47,6 +48,7 @@ async function checkDynamicContent(
       idPrefix,
       types: artifacts.types,
       blockMetas: artifacts.blockMetas,
+      clientOperators: artifacts.clientOperators,
       dynamicPolicies: artifacts.dynamicPolicies,
       policy,
       usedTypes,

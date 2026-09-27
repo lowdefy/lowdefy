@@ -276,6 +276,12 @@ program
       'Only run tests whose name contains this string (case-insensitive).'
     )
   )
+  .addOption(
+    new Option(
+      '--journeys-directory <journeys-directory>',
+      'Change the directory journeys are read from. Default is "<config-directory>/tests/journeys". Fails when the directory holds no journeys.'
+    )
+  )
   .addOption(options.logLevel)
   .addOption(options.port)
   .addOption(options.refResolver)

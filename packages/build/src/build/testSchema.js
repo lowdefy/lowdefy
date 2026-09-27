@@ -35,9 +35,12 @@ function getValueAtPath(obj, pathParts) {
 // provide better error messages with full context (pageId, blockId, etc.).
 // Schema warnings still surface useful hints like typos caught by
 // additionalProperties and property type mismatches.
-function testSchema({ components, context }) {
+//
+// The full build validates the whole app. The dev server builds page content
+// per page, so buildPageJit passes one page as components with the page schema.
+function testSchema({ components, context, schema = lowdefySchema }) {
   const { valid, errors } = validate({
-    schema: lowdefySchema,
+    schema,
     data: components,
     returnErrors: true,
   });

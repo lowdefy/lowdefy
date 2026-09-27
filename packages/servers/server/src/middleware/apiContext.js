@@ -17,6 +17,7 @@
 import path from 'node:path';
 import {
   createApiContext,
+  createRequestSignal,
   ensureMcpOauthResource,
   resolveAuthentication,
   resolvePinnedOrganization,
@@ -33,6 +34,7 @@ import createHandleError from '../../lib/server/log/createHandleError.js';
 import createLogger from '../../lib/server/log/createLogger.js';
 import fileCache from '../../lib/server/fileCache.js';
 import getAuth from '../../lib/server/auth/getAuth.js';
+import getClientAddress from '../../lib/server/getClientAddress.js';
 import getStrategies from '../../lib/server/auth/getStrategies.js';
 import i18nConfig from '../../lib/build/i18n.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
@@ -73,8 +75,9 @@ function isMcpPath(path) {
 // Replaces lib/server/apiWrapper.js. Builds the request context consumed by
 // @lowdefy/api functions. Errors thrown by handlers are routed by Hono to the
 // app-level error handler (src/middleware/errorHandler.js), which reads this
-// context back from the Hono context.
-function apiContext() {
+// context back from the Hono context. clientAddressHeader is set by a platform
+// entry whose edge supplies the client address (see getClientAddress).
+function apiContext({ clientAddressHeader } = {}) {
   return async function apiContextMiddleware(c, next) {
     // The page-route mount ('/*') also matches /api/* paths that already
     // built a context — never build twice for one request.
@@ -109,6 +112,12 @@ function apiContext() {
       },
       scrubSecrets,
       secrets,
+      // Aborts when the client disconnects before the response is sent, or when the
+      // request timeout (src/middleware/requestTimeout.js) answers first.
+      signal: createRequestSignal({
+        clientSignal: c.req.raw.signal,
+        timeoutSignal: c.get('requestTimeoutSignal'),
+      }),
       steps,
       // On Vercel (fluid compute) the platform request context keeps the
       // invocation alive until waitUntil promises settle; on long-lived hosts
@@ -118,6 +127,13 @@ function apiContext() {
       websockets,
     };
     context.handleError = createHandleError({ context });
+    // Resolved once per request: the auth route hands it to BetterAuth, and the
+    // request log records it.
+    context.clientAddress = getClientAddress({
+      c,
+      clientAddressHeader,
+      logger: context.logger,
+    });
     // Hoisted once per request - resolveAuthentication also needs it, and
     // getBetterAuth memoizes the instance, but this keeps the auth engine
     // construction to a single call site per request.

@@ -62,6 +62,8 @@ async function MongodbInsertOne({
             meta: connection.changeLog?.meta,
           },
           tenant,
+          tenantGuard,
+          organizationId: tenantGuard && doc[tenantGuard.field],
         })
       );
     }

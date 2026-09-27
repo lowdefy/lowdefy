@@ -37,6 +37,7 @@ async function handleAgentGenerate({ connection, properties, context }) {
   try {
     result = await agentInstance.generate({
       prompt,
+      abortSignal: context.signal,
       ...timeoutConfig,
       onStepEnd: (stepResult) => usageAccumulator.add(stepResult),
     });

@@ -18,10 +18,10 @@ import { ConfigError } from '@lowdefy/errors';
 
 import getCollectionWriteStage from './getCollectionWriteStage.js';
 
-// The write half of the tenant: none opt-out (the guard is computed by the
-// api's resolveTenantGuard). An unscoped request is neither filtered nor
-// stamped, so the app authors the tenant field itself - and this checks that
-// it did. Every row an unscoped write leaves behind must carry a non-empty
+// The write half of the tenant: none opt-out, and of a tenant: shared
+// connection over a walled collection (the guard is computed by the api's
+// resolveTenancy). An unscoped request is neither filtered nor stamped, so the
+// app authors the tenant field itself - and this checks that it did. Every row an unscoped write leaves behind must carry a non-empty
 // string organization id: a row with a null or missing field is invisible to
 // every walled read, and the tenant preflight refuses to serve the whole app
 // once one exists. Refusing the write turns that outage into one failed
@@ -57,7 +57,7 @@ function isPipelineOrganizationId(value) {
 
 function refuse({ field, detail }) {
   throw new ConfigError(
-    `Unscoped write (tenant: none) on a tenant connection must leave "${field}" a non-empty organization id on every row it writes - ${detail}. A row without it is invisible to every walled read and makes the tenant preflight refuse to serve the app. Author the organization id explicitly, or keep data that belongs to no organization on a tenant: shared connection.`
+    `Unscoped write to a walled collection (tenant: none, or a tenant: shared connection over a collection a scoped connection reads) must leave "${field}" a non-empty organization id on every row it writes - ${detail}. A row without it is invisible to every walled read and makes the tenant preflight refuse to serve the app. Author the organization id explicitly, or keep data that belongs to no organization in a collection no scoped connection reads.`
   );
 }
 
@@ -65,20 +65,25 @@ function isDottedPath({ path, field }) {
   return path.startsWith(`${field}.`);
 }
 
-function filterSetsOrganizationId({ filter, field }) {
+// The organization id a filter pins the tenant field to by equality
+// ({ field: 'org' } or { field: { $eq: 'org' } }), or null.
+function filterOrganizationId({ filter, field }) {
   const clause = filter?.[field];
-  if (isOrganizationId(clause)) return true;
-  return (
+  if (isOrganizationId(clause)) return clause;
+  if (
     typeof clause === 'object' &&
     clause !== null &&
     Object.keys(clause).length === 1 &&
     isOrganizationId(clause.$eq)
-  );
+  ) {
+    return clause.$eq;
+  }
+  return null;
 }
 
 function initialState({ filter, field, upsert }) {
   if (!upsert) return 'kept';
-  return filterSetsOrganizationId({ filter, field }) ? 'set' : 'missing';
+  return filterOrganizationId({ filter, field }) === null ? 'missing' : 'set';
 }
 
 function assertEndState({ state, field, position }) {
@@ -225,12 +230,61 @@ function pipelineUpdateState({ update, field, state }) {
   }, state);
 }
 
-function assertUnscopedUpdate({ update, filter, field, upsert = false, position = 'an update' }) {
-  const state = initialState({ filter, field, upsert });
-  const end = Array.isArray(update)
+function updateEndState({ update, field, state }) {
+  return Array.isArray(update)
     ? pipelineUpdateState({ update, field, state })
     : objectUpdateState({ update, field, state });
-  assertEndState({ state: end, field, position });
+}
+
+function assertUnscopedUpdate({ update, filter, field, upsert = false, position = 'an update' }) {
+  const state = initialState({ filter, field, upsert });
+  assertEndState({ state: updateEndState({ update, field, state }), field, position });
+}
+
+// A change-log record copies the rows it records (documents, filter, update),
+// so on a change-logged connection an unscoped write is stamped with the one
+// organization it writes (stampTenantOnLogRecord) - otherwise the record would
+// be an organization-less row in the log collection, which is usually walled
+// itself. A single-document write takes the organization from the row it
+// wrote or deleted. A multi-document write must name it up front: every
+// inserted document carries the same organization id, or the filter matches
+// the tenant field by equality and the update leaves it alone. Anything that
+// can touch rows of several organizations is refused before it writes.
+function refuseChangeLog({ field, detail, remedy }) {
+  throw new ConfigError(
+    `Unscoped write (tenant: none) on a change-logged tenant connection must write rows of one organization - ${detail}. The change-log record is stamped with the organization of the rows it records, and a write that can reach several organizations has no single "${field}" to stamp. ${remedy}`
+  );
+}
+
+function changeLogOrganizationOfDocs({ docs, field }) {
+  const organizationIds = [...new Set((docs ?? []).map((doc) => doc?.[field]))];
+  if (organizationIds.length !== 1) {
+    refuseChangeLog({
+      field,
+      detail: `the documents carry ${JSON.stringify(organizationIds)}`,
+      remedy: 'Write the documents of each organization in a request of their own.',
+    });
+  }
+  return organizationIds[0];
+}
+
+function changeLogOrganizationOfFilter({ filter, update, field }) {
+  const organizationId = filterOrganizationId({ filter, field });
+  if (organizationId === null) {
+    refuseChangeLog({
+      field,
+      detail: `the filter does not match "${field}" by equality to one organization id`,
+      remedy: `Match it in the filter (for example { ${field}: <organization id> }), and run the write once per organization.`,
+    });
+  }
+  if (update !== undefined && updateEndState({ update, field, state: 'kept' }) !== 'kept') {
+    refuseChangeLog({
+      field,
+      detail: `the update writes "${field}", so the rows can move to another organization`,
+      remedy: `Leave "${field}" out of the update, or move rows between organizations one document at a time.`,
+    });
+  }
+  return organizationId;
 }
 
 function assertUnscopedBulkOperations({ operations, field }) {
@@ -274,7 +328,7 @@ function assertUnscopedBulkOperations({ operations, field }) {
   });
 }
 
-// An aggregation reads unscoped under tenant: none, which is the point of the
+// An aggregation reads unscoped under the guard, which is the point of the
 // opt-out, but $out and $merge write the pipeline's output as rows no check
 // can see - refused like on the scoped path (injectTenantIntoPipeline).
 // MongoDB only runs them as the final root stage; the walk still covers every
@@ -286,7 +340,7 @@ function assertUnscopedPipeline({ pipeline, field }) {
     const writeStage = getCollectionWriteStage({ stage });
     if (writeStage !== null) {
       throw new ConfigError(
-        `Unscoped aggregation (tenant: none) on a tenant connection can not contain "${writeStage}" - it writes rows the tenant guard can not check for a non-empty "${field}", and a row without it makes the tenant preflight refuse to serve the app. Return the documents and write them with MongoDBInsertMany or MongoDBBulkWrite, which check every row, or run the aggregation on a tenant: shared connection if it writes into a collection no scoped connection reads.`
+        `Unscoped aggregation on a walled collection (tenant: none, or a tenant: shared connection over a collection a scoped connection reads) can not contain "${writeStage}" - it writes rows the tenant guard can not check for a non-empty "${field}", and a row without it makes the tenant preflight refuse to serve the app. Return the documents and write them with MongoDBInsertMany or MongoDBBulkWrite, which check every row. An aggregation that neither reads nor writes a walled collection can run on a tenant: shared connection.`
       );
     }
     assertUnscopedPipeline({ pipeline: stage.$lookup?.pipeline, field });
@@ -304,4 +358,6 @@ export {
   assertUnscopedDoc,
   assertUnscopedPipeline,
   assertUnscopedUpdate,
+  changeLogOrganizationOfDocs,
+  changeLogOrganizationOfFilter,
 };

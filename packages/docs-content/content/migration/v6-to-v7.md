@@ -10,6 +10,8 @@ Lowdefy v7 draws every icon with [Lucide](https://lucide.dev) instead of [react-
 | ---------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------ |
 | react-icons names are not built in             | Almost every app                       | Run `lowdefy upgrade`, or install the compatibility set                  |
 | An unknown icon name fails the build           | Apps with old or misspelled names      | Fix the name the error names                                             |
+| `_operator` names read at runtime need a list  | Apps with a runtime `_operator` name   | List the operators it may call in `operators`                            |
+| Dynamic blocks render only written blocks      | Apps returning stored blocks as data   | Use a policy with `ValidateDynamic`                                      |
 | Block and Ant Design icons are Lucide          | All apps                               | None; check screens that depend on the old look                          |
 | `theme.icons.aliases` targets are Lucide names | Apps with aliases                      | Drop the `Lu` prefix: `LuReceipt` becomes `Receipt`                      |
 | Icon hover titles come from the new names      | Apps that show Icon block hover titles | Set `title` where the text matters                                       |
@@ -131,6 +133,47 @@ theme:
 
 `theme.icons` also has new keys: `set`, `size`, `strokeWidth` and `nonScalingStroke`. See [Theming](/theming).
 
+## `_operator` names read at runtime
+
+An `_operator` whose `name` is read at runtime (from state, a request, a payload or `__args`) must list the operators it may call in `operators`, or the build fails. The build loads exactly those operators with the page, so the call works on a direct page load, and `_operator` refuses any other name. A literal `name`, and the literal branches an `_if` or `_switch` returns, need no list.
+
+```yaml
+# v6
+_operator:
+  name:
+    _state: aggregation
+  params:
+    _state: values
+
+# v7
+_operator:
+  name:
+    _state: aggregation
+  operators:
+    - _sum
+    - _product
+  params:
+    _state: values
+```
+
+## Blocks returned as data by a Dynamic endpoint
+
+A `Dynamic` block without a dynamic blocks policy renders only the blocks and actions its endpoint writes in its `:return` config. Block config the endpoint reads as data (a database record, routine state, a nested endpoint's result) and returns as it is now renders the block's fallback, even when it holds no operators. Data can still fill values in written blocks, for example by mapping stored fields into blocks with `_array.map`.
+
+To render stored or generated block config, declare a [dynamic blocks policy](/dynamic-page-content#dynamic-blocks-policies) that lists what the content may use, put it on the `Dynamic` block, and return the content through a `ValidateDynamic` step with the same policy:
+
+```yaml
+- id: check
+  type: ValidateDynamic
+  properties:
+    policy: stored_content
+    blocks:
+      _step: get_record.blocks
+- :return:
+    blocks:
+      _step: check.blocks
+```
+
 ## Plugins
 
 Blocks no longer import icons from `react-icons` or `@ant-design/icons`, and the Lowdefy server no longer installs `react-icons`. A local block plugin should render icons by name with `components.Icon`, and list the names it uses in its `meta.icons`, so apps can restyle them:
@@ -145,3 +188,11 @@ import { AiOutlineDelete } from 'react-icons/ai';
 ```
 
 A plugin that must keep importing `react-icons` adds it to its own `dependencies`.
+
+## Auth links and client addresses
+
+These changes affect apps with auth. See [Auth Upgrade](/auth-upgrade), [Auth configuration](/auth-configuration) and [Deploy with Docker](/docker#behind-a-reverse-proxy).
+
+- **Pinned auth URL.** With `auth.email` configured, the production server refuses to start unless `BETTER_AUTH_URL` or the current environment's `url` in `config.environments` is set, so emailed auth links cannot take their host from a request. The dev server is unchanged.
+- **Client address.** The server takes the client address for auth rate limits, sessions and request logs from the connection, and reads `X-Forwarded-For` only from the proxies listed in `config.trustedProxies`. Behind a reverse proxy or load balancer, list it there; otherwise every client shares the proxy's rate limits. On Vercel nothing changes.
+- **Email link pages.** `SignUp` and `SendVerificationEmail` without a `callbackUrl` send the verification link to `auth.authPages.verifyEmail` (default `/verify-email`), not the home page. `RequestPasswordReset` without `redirectTo` sends the reset link to `auth.authPages.resetPassword` (default `/reset-password`). The build warns when the app sends these emails and the page does not exist.

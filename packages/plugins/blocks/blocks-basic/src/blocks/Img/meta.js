@@ -28,6 +28,7 @@ export default {
     properties: {
       src: {
         type: 'string',
+        urlKind: 'src',
         description: 'The image URL.',
       },
       alt: {
@@ -61,6 +62,7 @@ export default {
       },
       srcSet: {
         type: 'string',
+        urlKind: 'srcSet',
         description:
           'Possible image sources for the user agent to use, strings separated by commas.',
         docs: {
