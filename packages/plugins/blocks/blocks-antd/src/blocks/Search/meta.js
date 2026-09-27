@@ -240,7 +240,7 @@ export default {
       theme: {
         type: 'object',
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Antd design token overrides for the trigger Button, the search Modal and its Input, e.g. `borderRadius`, `colorPrimary`, `colorBgElevated` or `fontSize`. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
         },

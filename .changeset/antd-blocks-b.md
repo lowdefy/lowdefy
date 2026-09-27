@@ -81,6 +81,7 @@ apps see; they are listed under **Behaviour changes**.
   `showToday` is passed to antd as `showNow` on `DateSelector` and `DateTimeSelector`.
 - `Switch` passes `size: medium` to antd for the `default` size, which antd 6 deprecates.
 - `Search` passes `destroyOnHidden` to its modal instead of the deprecated `destroyOnClose`.
+- `Search` `theme` now applies. It targeted an antd component that doesn't exist; the tokens now style the trigger Button, the search Modal and its Input.
 - `RatingSlider` no longer passes Lowdefy's `components` and `events` to the antd Slider.
 - `DateTimeSelector` documents the `secondStep` default (30) and description correctly, and
   `MonthSelector` and `WeekSelector` document that `showToday` has no effect.
