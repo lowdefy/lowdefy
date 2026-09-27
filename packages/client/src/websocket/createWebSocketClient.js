@@ -33,17 +33,16 @@ function createWebSocketClient(lowdefy) {
   // ackTimer runs while a subscribe frame waits for its ack. pending holds the
   // subscribe promise's { resolve, reject } until the first ack, then is null.
   const subscriptions = new Map();
-  // requestId → { resolve, reject, timer } for pending publish acks
+  // requestId → { frame, sent, resolve, reject, timer } for publishes waiting
+  // for their ack. A publish made while disconnected is sent when the
+  // connection opens, unless it timed out first.
   const pendingPublishes = new Map();
-  // Frames queued while the socket is (re)connecting.
-  const sendQueue = [];
 
   let socket = null;
   let openPromise = null;
   let reconnectAttempt = 0;
   let reconnectTimer = null;
   let idleTimer = null;
-  let closedByClient = false;
   let publishCounter = 0;
 
   function url() {
@@ -67,7 +66,12 @@ function createWebSocketClient(lowdefy) {
     // Grace period so rapid page navigation doesn't thrash connections.
     idleTimer = setTimeout(() => {
       if (subscriptions.size === 0 && socket) {
-        closedByClient = true;
+        // The close event arrives after the closing handshake, when a new
+        // socket may already be connecting or open. This socket is finished
+        // with, so its events must not reach the client state that now
+        // belongs to the new socket.
+        socket.onclose = null;
+        socket.onmessage = null;
         socket.close();
         socket = null;
         openPromise = null;
@@ -79,20 +83,21 @@ function createWebSocketClient(lowdefy) {
     return socket !== null && socket.readyState === window.WebSocket.OPEN;
   }
 
-  function send(frame) {
-    const message = JSON.stringify(frame);
-    if (isSocketOpen()) {
-      socket.send(message);
-      return;
-    }
-    sendQueue.push(message);
-    connect();
+  function sendPublish(pending) {
+    pending.sent = true;
+    socket.send(JSON.stringify(pending.frame));
   }
 
-  function flushQueue() {
-    while (sendQueue.length > 0 && isSocketOpen()) {
-      socket.send(sendQueue.shift());
-    }
+  function hasUnsentPublishes() {
+    return [...pendingPublishes.values()].some((pending) => !pending.sent);
+  }
+
+  function sendUnsentPublishes() {
+    pendingPublishes.forEach((pending) => {
+      if (!pending.sent) {
+        sendPublish(pending);
+      }
+    });
   }
 
   function clearAckTimer(subscription) {
@@ -215,11 +220,7 @@ function createWebSocketClient(lowdefy) {
       }
       subscription.handlers.onDisconnected();
     });
-    if (closedByClient) {
-      closedByClient = false;
-      return;
-    }
-    if (subscriptions.size === 0 && sendQueue.length === 0) {
+    if (subscriptions.size === 0 && !hasUnsentPublishes()) {
       return;
     }
     // Capped exponential backoff with full jitter.
@@ -243,7 +244,7 @@ function createWebSocketClient(lowdefy) {
         socket = ws;
         reconnectAttempt = 0;
         resubscribeAll();
-        flushQueue();
+        sendUnsentPublishes();
         resolve();
       };
       ws.onmessage = (event) => {
@@ -322,8 +323,19 @@ function createWebSocketClient(lowdefy) {
           new ServiceError(`Publish to "${websocketId}" timed out.`, { service: 'WebSocket' })
         );
       }, ACK_TIMEOUT_MS);
-      pendingPublishes.set(requestId, { resolve, reject, timer });
-      send({ type: 'publish', websocketId, requestId, payload });
+      const pending = {
+        frame: { type: 'publish', websocketId, requestId, payload },
+        sent: false,
+        resolve,
+        reject,
+        timer,
+      };
+      pendingPublishes.set(requestId, pending);
+      if (isSocketOpen()) {
+        sendPublish(pending);
+        return;
+      }
+      connect();
     });
   }
 
