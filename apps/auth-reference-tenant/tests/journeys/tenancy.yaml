@@ -111,6 +111,8 @@
     - expect: { text: { blockId: members_list, contains: switch-member@example.test (member) } }
     - fill: { blockId: remove_member_email, value: switch-member@example.test }
     - click: remove_member_button
+    # A missing path reads as null, so the list is checked to be there first.
+    - expect: { state: { path: members.members.0.user.email, equals: switch-owner@example.test } }
     - expect: { state: { path: members.members.1, equals: null } }
     - as: member
     - goto: notes
