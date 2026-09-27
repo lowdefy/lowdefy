@@ -16,6 +16,7 @@ Lowdefy v7 draws every icon with [Lucide](https://lucide.dev) instead of [react-
 | `theme.icons.aliases` targets are Lucide names | Apps with aliases                      | Drop the `Lu` prefix: `LuReceipt` becomes `Receipt`                      |
 | Icon hover titles come from the new names      | Apps that show Icon block hover titles | Set `title` where the text matters                                       |
 | `react-icons` is not a server dependency       | Plugins that import `react-icons`      | Render `components.Icon` with a name, or add `react-icons` to the plugin |
+| `ClickableHtml` fires only listed data events  | Apps that use `data-event`             | Run `lowdefy upgrade`, or list the events in `dataEvents`                |
 
 ## Icon names
 
@@ -196,3 +197,26 @@ These changes affect apps with auth. See [Auth Upgrade](/auth-upgrade), [Auth co
 - **Pinned auth URL.** With `auth.email` configured, the production server refuses to start unless `BETTER_AUTH_URL` or the current environment's `url` in `config.environments` is set, so emailed auth links cannot take their host from a request. The dev server is unchanged.
 - **Client address.** The server takes the client address for auth rate limits, sessions and request logs from the connection, and reads `X-Forwarded-For` only from the proxies listed in `config.trustedProxies`. Behind a reverse proxy or load balancer, list it there; otherwise every client shares the proxy's rate limits. On Vercel nothing changes.
 - **Email link pages.** `SignUp` and `SendVerificationEmail` without a `callbackUrl` send the verification link to `auth.authPages.verifyEmail` (default `/verify-email`), not the home page. `RequestPasswordReset` without `redirectTo` sends the reset link to `auth.authPages.resetPassword` (default `/reset-password`). The build warns when the app sends these emails and the page does not exist.
+
+## `ClickableHtml` data events
+
+A `ClickableHtml` block now fires only the events its `dataEvents` property lists. A `data-event` whose name is not listed does nothing and logs a console warning, and a block without `dataEvents` fires no events from its HTML. HTML is often built from request or user data, and sanitising keeps `data-*` attributes, so in v6 markup inside that data could fire any event the block declared.
+
+```yaml
+# v6
+- id: rows
+  type: ClickableHtml
+  properties:
+    html: '<i data-icon="delete" data-event="onDelete" data-id="42" data-confirm="Delete?"></i>'
+
+# v7
+- id: rows
+  type: ClickableHtml
+  properties:
+    dataEvents:
+      - name: onDelete
+        confirm: true
+    html: '<i data-icon="delete" data-event="onDelete" data-id="42" data-confirm="Delete?"></i>'
+```
+
+An entry is an event name, or `{ name, confirm }`: with `confirm`, every click on the event asks first, whatever the markup says. The `clickable-html-data-events` codemod in `lowdefy upgrade` adds `dataEvents` to each block and reports HTML built from data that inserts values without escaping them. It only reaches the app's files: add `dataEvents` yourself to `ClickableHtml` blocks that [dynamic page content](/dynamic-page-content) builds at page load, for example from config stored in a database. See [HTML attributes](/html-attributes).

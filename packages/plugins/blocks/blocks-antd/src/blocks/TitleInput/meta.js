@@ -18,7 +18,7 @@ import icon from '../../schemas/icon.js';
 
 export default {
   category: 'input',
-  icons: [],
+  icons: ['copy', 'check'],
   valueType: 'string',
   cssKeys: {
     element: 'The TitleInput element.',
@@ -133,7 +133,7 @@ export default {
           {
             type: 'boolean',
             description:
-              'Allow paragraph editing when true, editable settings can be provided with editable object.',
+              'Allow editing the title in place. Click the text, or focus it and press Enter, to edit. Enter saves, Escape cancels. Provide an object for editable settings.',
           },
           {
             type: 'object',
@@ -141,11 +141,13 @@ export default {
             properties: {
               icon: {
                 ...icon,
-                description: 'Edit icon.',
+                description:
+                  'Show an edit icon button after the text, like `edit`. No icon is shown by default, since clicking the text edits it.',
               },
               tooltip: {
                 type: 'string',
-                description: 'Edit tooltip text.',
+                description:
+                  'Tooltip text, shown on the edit icon, or on the text when no icon is set.',
               },
               editing: {
                 type: 'boolean',
@@ -175,6 +177,11 @@ export default {
         type: 'boolean',
         default: false,
         description: 'Apply marked (highlighted) style.',
+      },
+      placeholder: {
+        type: 'string',
+        default: 'Untitled',
+        description: 'Muted text shown when the title is empty and editable.',
       },
       type: {
         type: 'string',

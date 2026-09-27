@@ -18,7 +18,7 @@ import icon from '../../schemas/icon.js';
 
 export default {
   category: 'input',
-  icons: [],
+  icons: ['copy', 'check'],
   valueType: 'string',
   cssKeys: {
     element: 'The ParagraphInput element.',
@@ -96,7 +96,7 @@ export default {
           {
             type: 'boolean',
             description:
-              'Allow paragraph editing when true, editable settings can be provided with editable object.',
+              'Allow editing the paragraph in place. Click the text, or focus it and press Enter, to edit. Enter saves, Escape cancels. Provide an object for editable settings.',
           },
           {
             type: 'object',
@@ -104,11 +104,13 @@ export default {
             properties: {
               icon: {
                 ...icon,
-                description: 'Edit icon.',
+                description:
+                  'Show an edit icon button after the text, like `edit`. No icon is shown by default, since clicking the text edits it.',
               },
               tooltip: {
                 type: 'string',
-                description: 'Edit tooltip text.',
+                description:
+                  'Tooltip text, shown on the edit icon, or on the text when no icon is set.',
               },
               editing: {
                 type: 'boolean',
@@ -119,11 +121,12 @@ export default {
                 description: 'Max length of text area input.',
               },
               autoSize: {
-                default: false,
+                default: true,
                 oneOf: [
                   {
                     type: 'boolean',
-                    description: 'Auto size the text area height when editing.',
+                    description:
+                      'Grow the text area with its content when editing. Set false for a single scrolling line.',
                   },
                   {
                     type: 'object',
@@ -181,6 +184,11 @@ export default {
         type: 'boolean',
         default: false,
         description: 'Apply marked (highlighted) style.',
+      },
+      placeholder: {
+        type: 'string',
+        default: 'Empty',
+        description: 'Muted text shown when the paragraph is empty and editable.',
       },
       strong: {
         type: 'boolean',

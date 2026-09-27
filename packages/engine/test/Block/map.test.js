@@ -84,23 +84,25 @@ test('all nested blocks present in map', async () => {
     lowdefy,
     pageConfig,
   });
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual([
-    'root',
-    'y',
-    'a',
-    'a.0.b',
-    'a.0.col',
-    'a.0.t',
-    'a.0.c',
-    'a.1.b',
-    'a.1.col',
-    'a.1.t',
-    'a.1.c',
-    'a.1.c.0.d',
-    'a.1.c.0.d.0',
-    'a.1.c.0.d.1',
-    'a.1.c.0.d.2',
-  ]);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(
+    new Set([
+      'root',
+      'y',
+      'a',
+      'a.0.b',
+      'a.0.col',
+      'a.0.t',
+      'a.0.c',
+      'a.1.b',
+      'a.1.col',
+      'a.1.t',
+      'a.1.c',
+      'a.1.c.0.d',
+      'a.1.c.0.d.0',
+      'a.1.c.0.d.1',
+      'a.1.c.0.d.2',
+    ])
+  );
   Object.keys(context._internal.RootSlots.map).forEach((key) => {
     expect(context._internal.RootSlots.map[key].blockId).toEqual(key);
   });
@@ -139,25 +141,18 @@ test('unshiftItem item in list updates map', async () => {
     pageConfig,
   });
 
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual([
-    'root',
-    'list',
-    'list.0',
-    'list.1',
-  ]);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(
+    new Set(['root', 'list', 'list.0', 'list.1'])
+  );
   const { list } = context._internal.RootSlots.map;
   const originalL0 = context._internal.RootSlots.map['list.0'];
   const originalL1 = context._internal.RootSlots.map['list.1'];
 
   list.unshiftItem();
 
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual([
-    'root',
-    'list',
-    'list.0',
-    'list.1',
-    'list.2',
-  ]);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(
+    new Set(['root', 'list', 'list.0', 'list.1', 'list.2'])
+  );
   const newL1 = context._internal.RootSlots.map['list.1'];
   const newL2 = context._internal.RootSlots.map['list.2'];
 
@@ -198,17 +193,16 @@ test('pushItem item in list updates map', async () => {
     pageConfig,
   });
   const { list } = context._internal.RootSlots.map;
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual(['root', 'list', 'list.0']);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(
+    new Set(['root', 'list', 'list.0'])
+  );
   const originalL0 = context._internal.RootSlots.map['list.0'];
 
   list.pushItem();
 
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual([
-    'root',
-    'list',
-    'list.0',
-    'list.1',
-  ]);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(
+    new Set(['root', 'list', 'list.0', 'list.1'])
+  );
   const newL0 = context._internal.RootSlots.map['list.0'];
   expect(originalL0).toBe(newL0);
   expect(context._internal.RootSlots.map['list.1'].blockId).toEqual('list.1');
@@ -246,14 +240,9 @@ test('removeItem in list updates map', async () => {
     lowdefy,
     pageConfig,
   });
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual([
-    'root',
-    'list',
-    'list.0',
-    'list.1',
-    'list.2',
-    'list.3',
-  ]);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(
+    new Set(['root', 'list', 'list.0', 'list.1', 'list.2', 'list.3'])
+  );
   const { list } = context._internal.RootSlots.map;
   const L0 = context._internal.RootSlots.map['list.0'];
   const L2 = context._internal.RootSlots.map['list.2'];
@@ -261,36 +250,31 @@ test('removeItem in list updates map', async () => {
 
   list.removeItem(1);
 
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual([
-    'root',
-    'list',
-    'list.0',
-    'list.1',
-    'list.2',
-  ]);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(
+    new Set(['root', 'list', 'list.0', 'list.1', 'list.2'])
+  );
   expect(context._internal.RootSlots.map['list.0']).toBe(L0);
   expect(context._internal.RootSlots.map['list.1']).toBe(L2);
   expect(context._internal.RootSlots.map['list.2']).toBe(L3);
 
   list.removeItem(0);
 
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual([
-    'root',
-    'list',
-    'list.0',
-    'list.1',
-  ]);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(
+    new Set(['root', 'list', 'list.0', 'list.1'])
+  );
   expect(context._internal.RootSlots.map['list.0']).toBe(L2);
   expect(context._internal.RootSlots.map['list.1']).toBe(L3);
 
   list.removeItem(1);
 
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual(['root', 'list', 'list.0']);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(
+    new Set(['root', 'list', 'list.0'])
+  );
   expect(context._internal.RootSlots.map['list.0']).toBe(L2);
 
   list.removeItem(0);
 
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual(['root', 'list']);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(new Set(['root', 'list']));
 });
 
 test('moveItemUp in list updates map', async () => {
@@ -331,25 +315,15 @@ test('moveItemUp in list updates map', async () => {
   const L1 = context._internal.RootSlots.map['list.1'];
   const L2 = context._internal.RootSlots.map['list.2'];
   const L3 = context._internal.RootSlots.map['list.3'];
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual([
-    'root',
-    'list',
-    'list.0',
-    'list.1',
-    'list.2',
-    'list.3',
-  ]);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(
+    new Set(['root', 'list', 'list.0', 'list.1', 'list.2', 'list.3'])
+  );
 
   list.moveItemUp(1);
 
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual([
-    'root',
-    'list',
-    'list.0',
-    'list.1',
-    'list.2',
-    'list.3',
-  ]);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(
+    new Set(['root', 'list', 'list.0', 'list.1', 'list.2', 'list.3'])
+  );
   expect(context._internal.RootSlots.map['list.0']).toBe(L1);
   expect(context._internal.RootSlots.map['list.1']).toBe(L0);
   expect(context._internal.RootSlots.map['list.2']).toBe(L2);
@@ -357,14 +331,9 @@ test('moveItemUp in list updates map', async () => {
 
   list.moveItemUp(0);
 
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual([
-    'root',
-    'list',
-    'list.0',
-    'list.1',
-    'list.2',
-    'list.3',
-  ]);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(
+    new Set(['root', 'list', 'list.0', 'list.1', 'list.2', 'list.3'])
+  );
   expect(context._internal.RootSlots.map['list.0']).toBe(L1);
   expect(context._internal.RootSlots.map['list.1']).toBe(L0);
   expect(context._internal.RootSlots.map['list.2']).toBe(L2);
@@ -410,24 +379,14 @@ test('moveItemDown in list updates map', async () => {
   const L2 = context._internal.RootSlots.map['list.2'];
   const L3 = context._internal.RootSlots.map['list.3'];
 
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual([
-    'root',
-    'list',
-    'list.0',
-    'list.1',
-    'list.2',
-    'list.3',
-  ]);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(
+    new Set(['root', 'list', 'list.0', 'list.1', 'list.2', 'list.3'])
+  );
   list.moveItemDown(1);
 
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual([
-    'root',
-    'list',
-    'list.0',
-    'list.1',
-    'list.2',
-    'list.3',
-  ]);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(
+    new Set(['root', 'list', 'list.0', 'list.1', 'list.2', 'list.3'])
+  );
   expect(context._internal.RootSlots.map['list.0']).toBe(L0);
   expect(context._internal.RootSlots.map['list.1']).toBe(L2);
   expect(context._internal.RootSlots.map['list.2']).toBe(L1);
@@ -435,16 +394,101 @@ test('moveItemDown in list updates map', async () => {
 
   list.moveItemDown(3);
 
-  expect(Object.keys(context._internal.RootSlots.map)).toEqual([
-    'root',
-    'list',
-    'list.0',
-    'list.1',
-    'list.2',
-    'list.3',
-  ]);
+  expect(new Set(Object.keys(context._internal.RootSlots.map))).toEqual(
+    new Set(['root', 'list', 'list.0', 'list.1', 'list.2', 'list.3'])
+  );
   expect(context._internal.RootSlots.map['list.0']).toBe(L0);
   expect(context._internal.RootSlots.map['list.1']).toBe(L2);
   expect(context._internal.RootSlots.map['list.2']).toBe(L1);
   expect(context._internal.RootSlots.map['list.3']).toBe(L3);
+});
+
+// Rows whose nested lists differ in length, so a row move changes which nested keys exist.
+function createNestedListPage() {
+  return {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { list: [{ sub: [1, 2, 3] }, { sub: [4] }] },
+        },
+      ],
+    },
+    blocks: [
+      {
+        type: 'List',
+        id: 'list',
+        blocks: [
+          {
+            type: 'List',
+            id: 'list.$.sub',
+            blocks: [{ type: 'NumberInput', id: 'list.$.sub.$' }],
+          },
+        ],
+      },
+      {
+        type: 'Button',
+        id: 'shorten',
+        events: {
+          onClick: [{ id: 'shorten', type: 'SetState', params: { list: [{ sub: [1] }] } }],
+        },
+      },
+    ],
+  };
+}
+
+function expectMapToHoldOnlyLiveBlocks(context, keys) {
+  const { map } = context._internal.RootSlots;
+  expect(Object.keys(map).sort()).toEqual([...keys].sort());
+  Object.keys(map).forEach((key) => {
+    expect(map[key].blockId).toEqual(key);
+  });
+}
+
+test.each([
+  ['moveItemDown', (list) => list.moveItemDown(0)],
+  ['moveItemUp', (list) => list.moveItemUp(1)],
+])('%s of rows with nested lists of different lengths leaves no stale keys', async (_, move) => {
+  const context = await testContext({ lowdefy, pageConfig: createNestedListPage() });
+  const { list } = context._internal.RootSlots.map;
+  const firstRowLastItem = context._internal.RootSlots.map['list.0.sub.2'];
+
+  move(list);
+
+  expect(context.state.list).toEqual([{ sub: [4] }, { sub: [1, 2, 3] }]);
+  expectMapToHoldOnlyLiveBlocks(context, [
+    'root',
+    'list',
+    'shorten',
+    'list.0.sub',
+    'list.0.sub.0',
+    'list.1.sub',
+    'list.1.sub.0',
+    'list.1.sub.1',
+    'list.1.sub.2',
+  ]);
+  expect(context._internal.RootSlots.map['list.1.sub.2']).toBe(firstRowLastItem);
+});
+
+test('removeItem of a row with a longer nested list removes its nested blocks from the map', async () => {
+  const context = await testContext({ lowdefy, pageConfig: createNestedListPage() });
+  const { list } = context._internal.RootSlots.map;
+
+  list.removeItem(0);
+
+  expect(context.state.list).toEqual([{ sub: [4] }]);
+  expectMapToHoldOnlyLiveBlocks(context, ['root', 'list', 'shorten', 'list.0.sub', 'list.0.sub.0']);
+});
+
+test('SetState that shortens a list removes the dropped rows from the map', async () => {
+  const context = await testContext({ lowdefy, pageConfig: createNestedListPage() });
+  const { shorten } = context._internal.RootSlots.map;
+
+  await shorten.triggerEvent({ name: 'onClick' });
+
+  expect(context.state.list).toEqual([{ sub: [1] }]);
+  expectMapToHoldOnlyLiveBlocks(context, ['root', 'list', 'shorten', 'list.0.sub', 'list.0.sub.0']);
 });

@@ -19,7 +19,9 @@ import { createPortal } from 'react-dom';
 import DOMPurify from 'dompurify';
 import { type } from '@lowdefy/helpers';
 
+import createElementFinder from './createElementFinder.js';
 import createHtmlEnhancerGate from './createHtmlEnhancerGate.js';
+import findDataEventRule from './findDataEventRule.js';
 import getDataEvent from './getDataEvent.js';
 import HTML_ENHANCERS from './htmlEnhancers/htmlEnhancers.js';
 import NATIVE_INTERACTIVE from './htmlEnhancers/nativeInteractive.js';
@@ -109,6 +111,7 @@ class HtmlComponent extends React.Component {
     if (this.div === this.appliedDiv && htmlString === this.appliedHtml) {
       return;
     }
+    const findOverlayTarget = this.createOverlayTargetFinder();
     this.runCleanups();
     this.div.innerHTML = DOMPurify.sanitize(htmlString, this.props.sanitizeOptions);
     this.appliedDiv = this.div;
@@ -119,19 +122,41 @@ class HtmlComponent extends React.Component {
     if (!enhanced) {
       this.prepared = {};
       if (this.state.enhanced || this.state.overlay !== null) {
-        this.setState({ enhanced: false, overlay: null, portals: NO_PORTALS });
+        this.setState({ enhanced: false, overlay: this.carryOverlay(null), portals: NO_PORTALS });
       }
       return;
     }
     const { cleanups, portals, prepared } = runHtmlEnhancers({
-      dataEvents: !type.isNone(this.props.onDataEvent),
+      dataEvents: type.isNone(this.props.onDataEvent) ? null : this.props.dataEvents ?? [],
       enhancers: HTML_ENHANCERS,
       registration,
       root: this.div,
     });
     this.cleanups = cleanups;
     this.prepared = prepared;
-    this.setState({ enhanced: true, overlay: null, portals });
+    this.setState({ enhanced: true, overlay: this.carryOverlay(findOverlayTarget), portals });
+  }
+
+  // Read before the HTML is replaced: where the open popover's or confirm's element is.
+  createOverlayTargetFinder() {
+    const { overlay } = this.state;
+    if (overlay === null || !overlay.retarget || !this.div.contains(overlay.target)) return null;
+    return createElementFinder({ element: overlay.target, root: this.div });
+  }
+
+  // New HTML replaces the element an open overlay points at. An overlay that can move (a popover,
+  // which re-reads its content from the new HTML) stays open on the same element in the new HTML,
+  // so a refresh does not dismiss a menu. Any other overlay, or one whose element is gone, closes
+  // the way a dismissal does.
+  carryOverlay(findOverlayTarget) {
+    const { overlay } = this.state;
+    if (overlay === null) return null;
+    const target = findOverlayTarget?.(this.div) ?? null;
+    const carried = target === null ? null : overlay.retarget(target);
+    if (carried === null && overlay.onClose) {
+      overlay.onClose('changed');
+    }
+    return carried;
   }
 
   // Only targets inside this element's own DOM count: events from portals
@@ -187,17 +212,38 @@ class HtmlComponent extends React.Component {
     }
   }
 
-  // An enhancer can take over firing a data-event (data-confirm asks first).
-  // Without the enhancement pass there is nothing to ask, as before.
+  // Only the events the block lists in dataEvents fire, so markup that reaches the HTML from
+  // data cannot fire the block's other events, and a listed event that requires a confirm asks
+  // whatever the markup says. An enhancer can take over firing (data-confirm asks first).
   fireDataEvent({ dataEvent, target }) {
+    const rule = findDataEventRule({ dataEvents: this.props.dataEvents, name: dataEvent.name });
+    if (rule === null) {
+      console.warn(
+        `data-event="${dataEvent.name}" did not fire: the block's dataEvents does not list it.`
+      );
+      return false;
+    }
     const fire = () => this.props.onDataEvent(dataEvent);
     if (this.state.enhanced) {
       const gated = HTML_ENHANCERS.some(
         (enhancer) =>
           enhancer.gateDataEvent &&
-          enhancer.gateDataEvent({ dataEvent, fire, host: this.host, target })
+          enhancer.gateDataEvent({
+            confirm: rule.confirm,
+            confirmMessage: rule.message,
+            dataEvent,
+            fire,
+            host: this.host,
+            target,
+          })
       );
       if (gated) return true;
+    }
+    // Without the enhancement pass there is no overlay to ask with, so a required confirm
+    // cannot be given.
+    if (rule.confirm) {
+      console.warn(`data-event="${dataEvent.name}" did not fire: it requires a confirm.`);
+      return true;
     }
     fire();
     return false;
@@ -276,6 +322,7 @@ class HtmlComponent extends React.Component {
     if (overlay.kind === 'popover') {
       content = (
         <HtmlComponent
+          dataEvents={this.props.dataEvents}
           div={true}
           html={overlay.html}
           methods={this.props.methods}

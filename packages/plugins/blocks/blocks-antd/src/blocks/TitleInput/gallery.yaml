@@ -393,7 +393,7 @@
           - id: set_default
             type: SetState
             params:
-              editable_boolean_true: Editable with boolean true
+              editable_boolean_true: Click this title to edit it in place
     - id: editable_boolean_false
       type: TitleInput
       properties:
@@ -405,6 +405,18 @@
             type: SetState
             params:
               editable_boolean_false: Not editable (editable false)
+    - id: editable_with_icon
+      type: TitleInput
+      properties:
+        level: 3
+        editable:
+          icon: edit
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              editable_with_icon: Edit with the text or the icon
     - id: editable_custom_tooltip
       type: TitleInput
       properties:
@@ -416,7 +428,12 @@
           - id: set_default
             type: SetState
             params:
-              editable_custom_tooltip: Click the pencil to edit
+              editable_custom_tooltip: Hover for a tooltip, click to edit
+    - id: editable_placeholder
+      type: TitleInput
+      properties:
+        level: 3
+        placeholder: Name this document
     - id: editable_max_length
       type: TitleInput
       properties:

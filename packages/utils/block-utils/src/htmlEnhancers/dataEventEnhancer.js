@@ -14,18 +14,25 @@
   limitations under the License.
 */
 
+import findDataEventRule from '../findDataEventRule.js';
 import makeFocusable from './makeFocusable.js';
 
 // HtmlComponent fires data-event clicks itself (they work without a
-// registration). This makes the targets keyboard reachable when the HTML fires
-// events: existing targets gain focus, not a new role.
+// registration). This makes the targets of listed events keyboard reachable:
+// existing targets gain focus, not a new role. A target the block's dataEvents
+// does not list does nothing, so it stays out of the tab order.
 const dataEventEnhancer = {
   name: 'dataEvent',
   attributes: ['data-event'],
   activates: '[data-event]',
   prepare({ dataEvents, select }) {
     if (!dataEvents) return;
-    select('[data-event]').forEach(makeFocusable);
+    select('[data-event]').forEach((element) => {
+      const name = element.getAttribute('data-event');
+      if (findDataEventRule({ dataEvents, name }) !== null) {
+        makeFocusable(element);
+      }
+    });
   },
 };
 

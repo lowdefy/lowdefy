@@ -18,6 +18,7 @@
 
 import { serializer, type } from '@lowdefy/helpers';
 import Block from './Block.js';
+import getFieldsAndParents from './getFieldsAndParents.js';
 
 class Slots {
   constructor({ arrayIndices = [], slots, context }) {
@@ -72,8 +73,8 @@ class Slots {
 
   // One copy of the state for the whole tree: nested slots reset from it with resetBlocks, so a
   // reset costs one state copy however many containers and list rows the page has.
-  reset = (initWithState) => {
-    this.resetBlocks(serializer.copy(initWithState ?? this.context.state));
+  reset = () => {
+    this.resetBlocks(serializer.copy(this.context.state));
   };
 
   resetBlocks = (initState) => {
@@ -96,9 +97,21 @@ class Slots {
     return repeat.value;
   };
 
+  // Hidden blocks' fields are deleted once the whole tree is walked: a block with the same id, or
+  // one whose field sits inside a hidden block's field, can be visible in another container or list
+  // row, and a visible block's field is never deleted.
   updateState = () => {
     const toDelete = new Set();
-    const toSet = new Set(); // If block with duplicate blockId is visible, we preserve the state for it.
+    const toSet = new Set();
+    this.collectState({ toDelete, toSet });
+    if (toDelete.size === 0) return;
+    const kept = getFieldsAndParents(toSet);
+    toDelete.forEach((field) => {
+      if (!kept.has(field)) this.context._internal.State.del(field);
+    });
+  };
+
+  collectState = ({ toDelete, toSet }) => {
     this.loopBlocks((block) => {
       if (!block.isVisible()) {
         if (block.isContainer()) {
@@ -106,11 +119,8 @@ class Slots {
         }
         toDelete.add(block.blockId);
       } else {
-        block.updateState(toSet);
+        block.updateState({ toDelete, toSet });
       }
-    });
-    toDelete.forEach((field) => {
-      if (!toSet.has(field)) this.context._internal.State.del(field);
     });
   };
 

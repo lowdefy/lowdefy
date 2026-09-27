@@ -20,6 +20,7 @@ import Events from './Events.js';
 import Slots from './Slots.js';
 import inputContainsOperator from './tracking/inputContainsOperator.js';
 import readsIntersectChanges from './tracking/readsIntersectChanges.js';
+import validateClassEval from './validateClassEval.js';
 
 const noReads = new Set();
 
@@ -188,8 +189,7 @@ class Block {
 
     this.removeItem = (index) => {
       this.context._internal.State.removeItem(this.blockId, index);
-      const lastSlot = this.subSlots[this.subSlots.length - 1];
-      lastSlot.recRemoveBlocksFromMap();
+      this.subSlots[index].recRemoveBlocksFromMap();
       const largerSlots = this.subSlots.slice(index + 1);
       largerSlots.forEach((slotsClass, i) => {
         slotsClass.recUpdateArrayIndices(
@@ -329,7 +329,9 @@ class Block {
               this.subSlots[i].resetBlocks(initWithState);
             }
           });
-          this.subSlots.splice(blockValue.length);
+          this.subSlots
+            .splice(blockValue.length)
+            .forEach((slotsClass) => slotsClass.recRemoveBlocksFromMap());
         }
       } else {
         this.value = blockValue;
@@ -446,7 +448,11 @@ class Block {
 
       this.validateEval();
 
-      this.classEval = this.parse(this.class);
+      this.classEval = validateClassEval({
+        blockId: this.blockId,
+        classEval: this.parse(this.class),
+        configKey: this.configKey,
+      });
       this.styleEval = this.parse(this.style);
       this.layoutEval = this.parse(this.layout);
       this.loadingEval = this.parse(this.loading);
@@ -594,28 +600,27 @@ class Block {
     this.hiddenValue = undefined;
   };
 
-  updateState = (toSet) => {
+  updateState = ({ toDelete, toSet }) => {
     if (!this.isVisible()) return;
 
     if (this.isList()) {
       this.restoreHiddenValue();
     }
+    toSet.add(this.blockId);
 
     if (this.isContainer() || this.isList()) {
       if (this.subSlots && this.subSlots.length > 0) {
-        this.loopSubSlots((subSlotsClass) => subSlotsClass.updateState());
-        return; // Don't add to set
-      } else {
-        this.context._internal.State.republish(
-          this.blockId,
-          type.enforceType(this.meta.valueType, null)
-        );
+        this.loopSubSlots((subSlotsClass) => subSlotsClass.collectState({ toDelete, toSet }));
+        return;
       }
+      this.context._internal.State.republish(
+        this.blockId,
+        type.enforceType(this.meta.valueType, null)
+      );
     }
     if (this.isInput()) {
       this.context._internal.State.republish(this.blockId, this.value);
     }
-    toSet.add(this.blockId);
   };
 
   isVisible = () => {
@@ -626,6 +631,7 @@ class Block {
   // _regex default to), so its recorded reads name the wrong row until it evaluates again.
   updateArrayIndices = () => {
     this.forceEvaluate = true;
+    this.deleteFromMap();
     this.blockId = applyArrayIndices(this.arrayIndices, this.blockIdPattern);
     this.ownStateReadKey = `state:${this.blockId}`;
     this.context._internal.RootSlots.map[this.blockId] = this;
@@ -651,8 +657,13 @@ class Block {
     return null;
   };
 
+  // The key can already belong to another block: a duplicate id elsewhere on the page, or the
+  // block a row swap moved onto it.
   deleteFromMap = () => {
-    delete this.context._internal.RootSlots.map[this.blockId];
+    const { map } = this.context._internal.RootSlots;
+    if (map[this.blockId] === this) {
+      delete map[this.blockId];
+    }
   };
 
   resetValidation = (match) => {

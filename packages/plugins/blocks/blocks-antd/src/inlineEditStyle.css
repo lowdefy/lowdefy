@@ -1,0 +1,127 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/* Click-to-edit text for TitleInput and ParagraphInput. The hover fill and the editing ring are
+   drawn on a pseudo-element that bleeds past the text, so neither changes the element's box and
+   the text never moves between reading and editing. */
+@layer components {
+  .lf-inline-edit-enabled,
+  .lf-inline-edit-editing {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .lf-inline-edit-enabled::before,
+  .lf-inline-edit-editing::before {
+    content: '';
+    position: absolute;
+    inset: -4px -8px;
+    z-index: -1;
+    border: 1px solid transparent;
+    border-radius: var(--ant-border-radius);
+    pointer-events: none;
+    transition:
+      background-color 0.2s,
+      border-color 0.2s,
+      box-shadow 0.2s;
+  }
+
+  .lf-inline-edit-enabled {
+    cursor: text;
+  }
+
+  .lf-inline-edit-enabled:hover::before {
+    background-color: var(--ant-color-bg-text-hover);
+  }
+
+  .lf-inline-edit-enabled:focus-visible {
+    outline: none;
+  }
+
+  .lf-inline-edit-enabled:focus-visible::before,
+  .lf-inline-edit-editing::before {
+    border-color: var(--ant-color-primary);
+    box-shadow: 0 0 0 2px var(--ant-control-outline);
+  }
+
+  .lf-inline-edit-editing::before {
+    background-color: var(--ant-color-bg-container);
+  }
+
+  .lf-inline-edit-textarea {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    word-spacing: inherit;
+    text-transform: inherit;
+    overflow-wrap: break-word;
+    resize: none;
+    overflow: hidden;
+  }
+
+  .lf-inline-edit-placeholder,
+  .lf-inline-edit-textarea::placeholder {
+    color: var(--ant-color-text-placeholder);
+    opacity: 1;
+  }
+
+  /* Centred on the line box of the last text line: vertical-align: middle sits on the x-height,
+     which leaves a small icon visibly low next to a large heading. */
+  .lf-inline-edit .ant-typography-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    height: 1lh;
+    margin-inline-start: 0.3em;
+    vertical-align: top;
+  }
+
+  /* Edit and copy icons are secondary to the text: muted, and capped so a heading does not get a
+     heading-sized icon. */
+  .lf-inline-edit .ant-typography-edit,
+  .lf-inline-edit .ant-typography-copy {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 3px;
+    border-radius: var(--ant-border-radius-sm);
+    font-size: clamp(14px, 0.5em, 18px);
+    line-height: 1;
+    color: var(--ant-color-text-tertiary);
+    cursor: pointer;
+    transition:
+      color 0.2s,
+      background-color 0.2s;
+  }
+
+  .lf-inline-edit .ant-typography-edit:hover,
+  .lf-inline-edit .ant-typography-copy:hover {
+    color: var(--ant-color-text);
+    background-color: var(--ant-color-bg-text-hover);
+  }
+
+  .lf-inline-edit .ant-typography-copy.ant-typography-copy-success {
+    color: var(--ant-color-success);
+  }
+}

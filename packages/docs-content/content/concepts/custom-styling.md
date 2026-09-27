@@ -79,7 +79,7 @@ An operator at the root of `class` computes the classes of the block wrapper. To
         else: bg-gray-100
 ```
 
-> **Note:** An operator's result is never expanded into a map of CSS keys — a root operator always sets the block wrapper's classes.
+> **Note:** An operator's result is never expanded into a map of CSS keys — a root operator always sets the block wrapper's classes. A result with dot-prefixed keys (`{ .element: p-4 }`) is reported as a config error, and those keys are not applied as classes.
 
 Tailwind responsive prefixes work as expected:
 

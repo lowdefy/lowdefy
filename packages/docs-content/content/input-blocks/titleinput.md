@@ -388,7 +388,7 @@ Editable title heading with levels, copyable, and text styles.
       - id: set_default
         type: SetState
         params:
-          editable_boolean_true: Editable with boolean true
+          editable_boolean_true: Click this title to edit it in place
 - id: editable_boolean_false
   type: TitleInput
   properties:
@@ -400,6 +400,18 @@ Editable title heading with levels, copyable, and text styles.
         type: SetState
         params:
           editable_boolean_false: Not editable (editable false)
+- id: editable_with_icon
+  type: TitleInput
+  properties:
+    level: 3
+    editable:
+      icon: edit
+  events:
+    onMount:
+      - id: set_default
+        type: SetState
+        params:
+          editable_with_icon: Edit with the text or the icon
 - id: editable_custom_tooltip
   type: TitleInput
   properties:
@@ -411,7 +423,12 @@ Editable title heading with levels, copyable, and text styles.
       - id: set_default
         type: SetState
         params:
-          editable_custom_tooltip: Click the pencil to edit
+          editable_custom_tooltip: Hover for a tooltip, click to edit
+- id: editable_placeholder
+  type: TitleInput
+  properties:
+    level: 3
+    placeholder: Name this document
 - id: editable_max_length
   type: TitleInput
   properties:
@@ -1040,8 +1057,8 @@ Editable title heading with levels, copyable, and text styles.
 | `ellipsis.rows` | number | - | Max rows of content. |
 | `ellipsis.expandable` | boolean | - | Expand hidden content when clicked. |
 | `ellipsis.suffix` | string | - | Suffix of ellipses content. |
-| `editable` | boolean \| object | `true` | Allow paragraph editing when true, editable settings can be provided with editable object. |
-| `editable.icon` | string \| object | - | Edit icon. |
+| `editable` | boolean \| object | `true` | Allow editing the title in place. Click the text, or focus it and press Enter, to edit. Enter saves, Escape cancels. Provide an object for editable settings. |
+| `editable.icon` | string \| object | - | Show an edit icon button after the text, like `edit`. No icon is shown by default, since clicking the text edits it. |
 | `editable.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
 | `editable.icon.color` | string | - | Icon color. |
 | `editable.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
@@ -1051,12 +1068,13 @@ Editable title heading with levels, copyable, and text styles.
 | `editable.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
 | `editable.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `editable.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
-| `editable.tooltip` | string | - | Edit tooltip text. |
+| `editable.tooltip` | string | - | Tooltip text, shown on the edit icon, or on the text when no icon is set. |
 | `editable.editing` | boolean | `false` | Control editing state. |
 | `editable.maxLength` | number | - | Max length of text area input. |
 | `italic` | boolean | `false` | Apply italic style. |
 | `level` | number | `1` | Set title type. Matches with h1, h2, h3 and h4. Enum: `1`, `2`, `3`, `4`, `5`. |
 | `mark` | boolean | `false` | Apply marked (highlighted) style. |
+| `placeholder` | string | `"Untitled"` | Muted text shown when the title is empty and editable. |
 | `type` | string | `"default"` | Additional types. Don't specify for default. Enum: `default`, `secondary`, `warning`, `danger`, `success`. |
 | `underline` | boolean | `false` | Apply underline style. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design typography tokens](https://ant.design/components/typography#design-token). |
