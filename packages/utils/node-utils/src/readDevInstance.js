@@ -15,8 +15,10 @@
 */
 
 import fs from 'fs';
+import { type } from '@lowdefy/helpers';
 
 import getDevInstancePath from './getDevInstancePath.js';
+import getProcessStartTime from './getProcessStartTime.js';
 import isPidAlive from './isPidAlive.js';
 
 function readRecord(instancePath) {
@@ -26,6 +28,20 @@ function readRecord(instancePath) {
     // No record, or one mid-write - either way no live instance to report.
     return null;
   }
+}
+
+// A pid alone does not name a process: after a crash (kill -9 skips the
+// manager's cleanup) or a reboot, the record's pid can belong to something
+// else. The manager records its start time too; a record from a manager that
+// predates it is checked by pid only.
+function isRecordProcess(record) {
+  if (!isPidAlive(record.pid)) {
+    return false;
+  }
+  if (type.isNone(record.processStartTime)) {
+    return true;
+  }
+  return getProcessStartTime({ pid: record.pid }) === record.processStartTime;
 }
 
 // A record is live only when it was written for this exact directory and its
@@ -43,7 +59,7 @@ function readDevInstance({ configDirectory }) {
   } catch {
     return null;
   }
-  if (record.configDirectory !== realConfigDirectory || !isPidAlive(record.pid)) {
+  if (record.configDirectory !== realConfigDirectory || !isRecordProcess(record)) {
     return null;
   }
   return record;

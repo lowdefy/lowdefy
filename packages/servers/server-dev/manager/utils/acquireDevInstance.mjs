@@ -17,7 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { getDevInstancePath, readDevInstance } from '@lowdefy/node-utils';
+import { getDevInstancePath, getProcessStartTime, readDevInstance } from '@lowdefy/node-utils';
 
 function writeRecord({ instancePath, record }) {
   // Written whole and renamed into place so readers never see half a record.
@@ -53,6 +53,9 @@ function acquireDevInstance({ configDirectory, owner, version }) {
   const instancePath = getDevInstancePath({ configDirectory });
   let record = {
     pid: process.pid,
+    // Readers check it against the pid's process, so a record left by a
+    // killed manager never passes for a live one on a reused pid.
+    processStartTime: getProcessStartTime({ pid: process.pid }),
     configDirectory: fs.realpathSync(configDirectory),
     owner,
     state: 'starting',

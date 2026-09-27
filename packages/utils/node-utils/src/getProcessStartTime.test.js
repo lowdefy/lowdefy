@@ -18,8 +18,9 @@ import { spawnSync } from 'child_process';
 
 import getProcessStartTime from './getProcessStartTime.js';
 
-// Each hub runs with the environment of the session that started it.
-function readInHub({ pid, env }) {
+// Hubs, shims and CLIs each run with the environment of the session that
+// started them.
+function readInProcess({ pid, env }) {
   const moduleUrl = new URL('./getProcessStartTime.js', import.meta.url).href;
   const result = spawnSync(
     process.execPath,
@@ -33,9 +34,9 @@ function readInHub({ pid, env }) {
   return result.stdout.trim();
 }
 
-test('getProcessStartTime reads the same start time whatever time zone and locale the hub runs with', () => {
-  const first = readInHub({ pid: process.pid, env: { TZ: 'UTC', LC_ALL: 'C' } });
-  const second = readInHub({
+test('getProcessStartTime reads the same start time whatever time zone and locale its reader runs with', () => {
+  const first = readInProcess({ pid: process.pid, env: { TZ: 'UTC', LC_ALL: 'C' } });
+  const second = readInProcess({
     pid: process.pid,
     env: { TZ: 'Pacific/Auckland', LC_ALL: 'de_DE.UTF-8', LANG: 'de_DE.UTF-8' },
   });

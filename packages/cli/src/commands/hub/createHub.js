@@ -18,11 +18,10 @@ import fs from 'fs';
 import path from 'path';
 import { spawn } from 'child_process';
 import { type, wait } from '@lowdefy/helpers';
-import { readDevInstance } from '@lowdefy/node-utils';
+import { getProcessStartTime, readDevInstance } from '@lowdefy/node-utils';
 
 import allocatePorts from './allocatePorts.js';
 import fetchOpenTabs from './fetchOpenTabs.js';
-import getProcessStartTime from './getProcessStartTime.js';
 import { HUB_PROTOCOL, IDLE_STOP_MS, PORT_RANGE, READY_TIMEOUT_MS } from './hubProtocol.js';
 import readLogTail, { MAX_LINES } from './readLogTail.js';
 import resolveDevCommand from './resolveDevCommand.js';

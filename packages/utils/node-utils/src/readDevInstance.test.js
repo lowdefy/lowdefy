@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 
 import getDevInstancePath from './getDevInstancePath.js';
+import getProcessStartTime from './getProcessStartTime.js';
 import readDevInstance from './readDevInstance.js';
 
 let configDirectory;
@@ -58,5 +59,21 @@ test('readDevInstance ignores a record whose process has exited', () => {
 
 test('readDevInstance returns null for an unreadable record', () => {
   fs.writeFileSync(getDevInstancePath({ configDirectory }), '{ not json');
+  expect(readDevInstance({ configDirectory })).toBe(null);
+});
+
+test('readDevInstance returns a record whose pid is still the process that wrote it', () => {
+  const processStartTime = getProcessStartTime({ pid: process.pid });
+  writeRecord({ pid: process.pid, processStartTime, configDirectory, port: 4100 });
+  expect(readDevInstance({ configDirectory })).toMatchObject({ pid: process.pid, port: 4100 });
+});
+
+test('readDevInstance ignores a record whose pid now belongs to another process', () => {
+  writeRecord({
+    pid: process.pid,
+    processStartTime: 'Thu Jan  1 00:00:00 1970',
+    configDirectory,
+    port: 4100,
+  });
   expect(readDevInstance({ configDirectory })).toBe(null);
 });
