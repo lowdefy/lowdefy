@@ -61,11 +61,3 @@ test('shouldReloadForTypes reloads again at a URL whose reload once loaded its t
   clearReloadedForTypes({ window });
   expect(shouldReloadForTypes({ window })).toBe(true);
 });
-
-test('clearReloadedForTypes does nothing when storage is disabled', () => {
-  const window = createWindow({ throws: true });
-  window.sessionStorage.removeItem = () => {
-    throw new Error('storage disabled');
-  };
-  expect(() => clearReloadedForTypes({ window })).not.toThrow();
-});

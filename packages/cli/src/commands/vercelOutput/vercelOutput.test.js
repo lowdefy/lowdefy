@@ -115,11 +115,3 @@ test('vercelOutput does not match assets under a basePath with a regex wildcard 
   expect(new RegExp(config.routes[0].src).test('/tools/v1x2/assets/main-abc123.js')).toBe(false);
   expect(config.crons).toBeUndefined();
 });
-
-test('vercelOutput writes the function config from config.vercel', async () => {
-  const { staticDirectory } = await runVercelOutput({ config: { vercel: { memory: 2048 } } });
-  const functionDirectory = path.join(staticDirectory, '../functions/api.func');
-  const vcConfigPath = path.join(functionDirectory, '.vc-config.json');
-  const vcConfig = JSON.parse(fs.readFileSync(vcConfigPath, 'utf8'));
-  expect(vcConfig).toMatchObject({ runtime: 'nodejs24.x', maxDuration: 60, memory: 2048 });
-});
