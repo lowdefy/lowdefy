@@ -4279,9 +4279,45 @@
               "type": "string",
               "description": "If status is set, text sets the display text of the status dot."
             },
+            "ribbon": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "Render a ribbon on the corner of the content area instead of a count badge. Count, dot and status properties are ignored when ribbon is set.",
+              "docs": {
+                "displayType": "yaml"
+              },
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "description": "Text inside the ribbon."
+                },
+                "color": {
+                  "type": "string",
+                  "description": "Ribbon color. A preset color name or any css color.",
+                  "docs": {
+                    "displayType": "color"
+                  }
+                },
+                "placement": {
+                  "type": "string",
+                  "enum": [
+                    "start",
+                    "end"
+                  ],
+                  "default": "end",
+                  "description": "Corner of the content the ribbon is placed on. `start` and `end` follow the text direction."
+                }
+              }
+            },
             "title": {
-              "type": "string",
-              "description": "Text to show when hovering over the badge."
+              "type": [
+                "string",
+                "boolean"
+              ],
+              "description": "Text to show when hovering over the badge. Set to false to remove the native tooltip.",
+              "docs": {
+                "displayType": "string"
+              }
             },
             "theme": {
               "type": "object",
@@ -4320,6 +4356,14 @@
                   "type": "string",
                   "default": "normal",
                   "description": "Font weight for badge count text."
+                },
+                "paddingInline": {
+                  "type": [
+                    "number",
+                    "string"
+                  ],
+                  "default": 8,
+                  "description": "Inline padding of a badge count with several characters."
                 },
                 "textLineHeight": {
                   "type": "number",
@@ -4422,7 +4466,7 @@
                       "maxProperties": 1
                     }
                   ],
-                  "description": "The Badge element."
+                  "description": "The Badge element, or the ribbon wrapper when ribbon is set."
                 },
                 ".icon": {
                   "oneOf": [
@@ -4468,7 +4512,7 @@
                       "maxProperties": 1
                     }
                   ],
-                  "description": "The Badge indicator."
+                  "description": "The Badge count or dot indicator, or the ribbon when ribbon is set."
                 }
               }
             }
@@ -4495,7 +4539,7 @@
                 },
                 ".element": {
                   "type": "object",
-                  "description": "The Badge element."
+                  "description": "The Badge element, or the ribbon wrapper when ribbon is set."
                 },
                 ".icon": {
                   "type": "object",
@@ -4503,7 +4547,7 @@
                 },
                 ".indicator": {
                   "type": "object",
-                  "description": "The Badge indicator."
+                  "description": "The Badge count or dot indicator, or the ribbon when ribbon is set."
                 }
               }
             },
@@ -4843,6 +4887,52 @@
                     }
                   ],
                   "description": "The icon in the Result."
+                },
+                ".title": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Result title."
+                },
+                ".subTitle": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Result subtitle."
                 }
               }
             }
@@ -4874,6 +4964,14 @@
                 ".icon": {
                   "type": "object",
                   "description": "The icon in the Result."
+                },
+                ".title": {
+                  "type": "object",
+                  "description": "The Result title."
+                },
+                ".subTitle": {
+                  "type": "object",
+                  "description": "The Result subtitle."
                 }
               }
             },
@@ -4988,8 +5086,13 @@
             },
             "duration": {
               "type": "number",
-              "default": 4.5,
+              "default": 3,
               "description": "Time(seconds) before auto-dismiss, don't dismiss if set to 0."
+            },
+            "pauseOnHover": {
+              "type": "boolean",
+              "default": true,
+              "description": "Pause the auto-dismiss timer while the mouse is over the message."
             },
             "icon": {
               "type": [
@@ -5051,12 +5154,12 @@
                 "warning",
                 "loading"
               ],
-              "default": "info",
+              "default": "success",
               "description": "Message status type."
             },
             "theme": {
               "type": "object",
-              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+              "description": "Has no effect: messages render in the app-wide message holder, outside the block. Set these Message design tokens for the whole app in `lowdefy.yaml` under `theme.antd.components.Message`.",
               "docs": {
                 "displayType": "yaml",
                 "link": "https://ant.design/components/message#design-token"
@@ -5230,6 +5333,23 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the message is clicked."
+                },
                 "onClose": {
                   "oneOf": [
                     {

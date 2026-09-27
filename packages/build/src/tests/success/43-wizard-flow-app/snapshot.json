@@ -5222,6 +5222,7 @@
               "default": "round",
               "enum": [
                 "round",
+                "butt",
                 "square"
               ],
               "description": "Set the style of the progress linecap."
@@ -5229,9 +5230,10 @@
             "strokeColor": {
               "type": [
                 "string",
+                "array",
                 "object"
               ],
-              "description": "Color of progress bar.",
+              "description": "Color of progress bar. An object like `{ from: \"#108ee9\", to: \"#87d068\" }` or `{ \"0%\": \"#108ee9\", \"100%\": \"#87d068\" }` renders a gradient, and an array colors each step when steps is set.",
               "docs": {
                 "displayType": "color"
               }
@@ -5263,12 +5265,50 @@
             },
             "strokeWidth": {
               "type": "number",
-              "description": "Set the width of the progress bar."
+              "description": "Thickness of the progress bar. In pixels for line progress, and as a percentage of the canvas width for circle and dashboard progress."
             },
             "width": {
               "type": "number",
-              "default": 132,
-              "description": "Set the canvas width of the circular progress."
+              "default": 120,
+              "description": "Set the canvas width of the circular progress. Same as a number size."
+            },
+            "size": {
+              "type": [
+                "number",
+                "string",
+                "array",
+                "object"
+              ],
+              "description": "Size of the progress. 'small' or 'medium', a number (the circle diameter, or both the width and the height of a line or of each step), or `[width, height]` or `{ width, height }` for line progress.",
+              "docs": {
+                "displayType": "yaml"
+              }
+            },
+            "percentPosition": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "Position of the progress value on line progress.",
+              "properties": {
+                "align": {
+                  "type": "string",
+                  "enum": [
+                    "start",
+                    "center",
+                    "end"
+                  ],
+                  "default": "end",
+                  "description": "Horizontal position of the value."
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "inner",
+                    "outer"
+                  ],
+                  "default": "outer",
+                  "description": "Show the value inside or outside the bar."
+                }
+              }
             },
             "gapDegree": {
               "type": "number",
@@ -5283,12 +5323,29 @@
                 "left",
                 "right"
               ],
-              "default": "top",
-              "description": "The gap position."
+              "default": "bottom",
+              "description": "The gap position of circle and dashboard progress."
             },
             "steps": {
-              "type": "number",
-              "description": "Number of steps for a segmented progress bar (line type only)."
+              "type": [
+                "number",
+                "object"
+              ],
+              "description": "Number of steps for a segmented progress bar. For circle and dashboard progress, an object `{ count, gap }` also sets the gap between steps.",
+              "docs": {
+                "displayType": "yaml"
+              },
+              "properties": {
+                "count": {
+                  "type": "number",
+                  "description": "Number of steps."
+                },
+                "gap": {
+                  "type": "number",
+                  "default": 2,
+                  "description": "Gap between steps of circle and dashboard progress."
+                }
+              }
             },
             "theme": {
               "type": "object",
@@ -5409,6 +5466,75 @@
                     }
                   ],
                   "description": "The Progress element."
+                },
+                ".rail": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The unfilled part of the progress bar."
+                },
+                ".track": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The filled part of the progress bar."
+                },
+                ".indicator": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The progress value text or status icon."
                 }
               }
             }
@@ -5436,6 +5562,18 @@
                 ".element": {
                   "type": "object",
                   "description": "The Progress element."
+                },
+                ".rail": {
+                  "type": "object",
+                  "description": "The unfilled part of the progress bar."
+                },
+                ".track": {
+                  "type": "object",
+                  "description": "The filled part of the progress bar."
+                },
+                ".indicator": {
+                  "type": "object",
+                  "description": "The progress value text or status icon."
                 }
               }
             },
@@ -5538,12 +5676,17 @@
             "bordered": {
               "type": "boolean",
               "default": true,
-              "description": "Toggles rendering of the border around the card."
+              "description": "Toggles rendering of the border around the card. `bordered: false` is the same as `variant: borderless`."
             },
             "hoverable": {
               "type": "boolean",
               "default": false,
               "description": "Lift up when hovering card."
+            },
+            "loading": {
+              "type": "boolean",
+              "default": false,
+              "description": "Show a loading skeleton in place of the card content."
             },
             "inner": {
               "type": "boolean",
@@ -5562,6 +5705,15 @@
             "title": {
               "type": "string",
               "description": "Title to show in the title area - supports html. Overwritten by blocks in the title content area."
+            },
+            "variant": {
+              "type": "string",
+              "enum": [
+                "outlined",
+                "borderless"
+              ],
+              "default": "outlined",
+              "description": "Card style variant."
             },
             "theme": {
               "type": "object",
@@ -5758,6 +5910,29 @@
                   ],
                   "description": "The Card header."
                 },
+                ".title": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Card title."
+                },
                 ".body": {
                   "oneOf": [
                     {
@@ -5880,6 +6055,10 @@
                 ".header": {
                   "type": "object",
                   "description": "The Card header."
+                },
+                ".title": {
+                  "type": "object",
+                  "description": "The Card title."
                 },
                 ".body": {
                   "type": "object",
@@ -6065,7 +6244,7 @@
             },
             "prefix": {
               "type": "string",
-              "description": "Prefix text for the block, priority over $prefix_con."
+              "description": "Prefix text for the block, priority over prefixIcon."
             },
             "prefixIcon": {
               "type": [
@@ -6123,6 +6302,78 @@
               "description": "Label properties.",
               "additionalProperties": false,
               "properties": {
+                "xs": {
+                  "type": "object",
+                  "description": "Label width on extra small screens (below 576px) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "sm": {
+                  "type": "object",
+                  "description": "Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "md": {
+                  "type": "object",
+                  "description": "Label width on medium screens (768px and up) when the label is not inline. Overrides `span`.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "lg": {
+                  "type": "object",
+                  "description": "Label width on large screens (992px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xl": {
+                  "type": "object",
+                  "description": "Label width on extra large screens (1200px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xxl": {
+                  "type": "object",
+                  "description": "Label width on extra extra large screens (1600px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
                 "align": {
                   "type": "string",
                   "enum": [
@@ -6177,7 +6428,7 @@
                 },
                 "span": {
                   "type": "number",
-                  "description": "Label inline span."
+                  "description": "Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns."
                 },
                 "disabled": {
                   "type": "boolean",
@@ -6193,6 +6444,11 @@
                   "type": "boolean",
                   "default": false,
                   "description": "Render input and label inline."
+                },
+                "wrap": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap."
                 }
               }
             },
@@ -6230,11 +6486,11 @@
             "showCount": {
               "type": "boolean",
               "default": false,
-              "description": "Show text character count"
+              "description": "Show text character count."
             },
             "suffix": {
               "type": "string",
-              "description": "Suffix text for the block, priority over suffixIcon."
+              "description": "Suffix text for the block, shown before suffixIcon."
             },
             "suffixIcon": {
               "type": [
@@ -6296,9 +6552,10 @@
               "enum": [
                 "outlined",
                 "filled",
-                "borderless"
+                "borderless",
+                "underlined"
               ],
-              "description": "Input visual variant. When set, takes precedence over bordered."
+              "description": "Input visual variant. The deprecated bordered: false takes precedence and renders the input as 'borderless'."
             },
             "theme": {
               "type": "object",
@@ -6418,6 +6675,21 @@
                 "activeBg": {
                   "type": "string",
                   "description": "Background color when the input is focused."
+                },
+                "inputFontSize": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Font size of the input text."
+                },
+                "inputFontSizeLG": {
+                  "type": "number",
+                  "default": 16,
+                  "description": "Font size of the input text for large inputs."
+                },
+                "inputFontSizeSM": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Font size of the input text for small inputs."
                 },
                 "lineWidth": {
                   "type": "number",
@@ -6761,6 +7033,23 @@
                     }
                   }
                 },
+                "onClear": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger action when the clear button is clicked."
+                },
                 "onFocus": {
                   "oneOf": [
                     {
@@ -6923,6 +7212,14 @@
                     "xl": {
                       "type": "integer",
                       "description": "The number of description items in a row for 'xl' media size."
+                    },
+                    "xxl": {
+                      "type": "integer",
+                      "description": "The number of description items in a row for 'xxl' media size."
+                    },
+                    "xxxl": {
+                      "type": "integer",
+                      "description": "The number of description items in a row for 'xxxl' media size."
                     }
                   }
                 }
@@ -6943,9 +7240,10 @@
                   "span": {
                     "type": [
                       "number",
+                      "string",
                       "object"
                     ],
-                    "description": "Item span for this key. Can also be a function that receives item and index.",
+                    "description": "Item span for this key, or 'filled' to fill the rest of the row. Can also be a function that receives item and index.",
                     "docs": {
                       "displayType": "number"
                     }
@@ -7016,8 +7314,15 @@
                         ]
                       },
                       "span": {
-                        "type": "integer",
-                        "description": "Number of columns for this item to span."
+                        "type": [
+                          "integer",
+                          "string",
+                          "object"
+                        ],
+                        "description": "Number of columns for this item to span. Set to 'filled' to fill the rest of the row, or an object of breakpoint spans like `{ xs: 1, md: 2 }`.",
+                        "docs": {
+                          "displayType": "yaml"
+                        }
                       },
                       "style": {
                         "type": "object",
@@ -7049,9 +7354,10 @@
             },
             "size": {
               "type": "string",
-              "description": "Size of the block.",
+              "description": "Size of the block. `default` is the largest size.",
               "enum": [
                 "default",
+                "medium",
                 "small"
               ],
               "default": "default"
@@ -7192,6 +7498,52 @@
                   ],
                   "description": "The Descriptions element."
                 },
+                ".header": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The header row with the title and extra content."
+                },
+                ".title": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Descriptions title."
+                },
                 ".content": {
                   "oneOf": [
                     {
@@ -7264,6 +7616,14 @@
                 ".element": {
                   "type": "object",
                   "description": "The Descriptions element."
+                },
+                ".header": {
+                  "type": "object",
+                  "description": "The header row with the title and extra content."
+                },
+                ".title": {
+                  "type": "object",
+                  "description": "The Descriptions title."
                 },
                 ".content": {
                   "type": "object",
@@ -7611,6 +7971,52 @@
                     }
                   ],
                   "description": "The icon in the Result."
+                },
+                ".title": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Result title."
+                },
+                ".subTitle": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Result subtitle."
                 }
               }
             }
@@ -7642,6 +8048,14 @@
                 ".icon": {
                   "type": "object",
                   "description": "The icon in the Result."
+                },
+                ".title": {
+                  "type": "object",
+                  "description": "The Result title."
+                },
+                ".subTitle": {
+                  "type": "object",
+                  "description": "The Result subtitle."
                 }
               }
             },
@@ -7756,8 +8170,13 @@
             },
             "duration": {
               "type": "number",
-              "default": 4.5,
+              "default": 3,
               "description": "Time(seconds) before auto-dismiss, don't dismiss if set to 0."
+            },
+            "pauseOnHover": {
+              "type": "boolean",
+              "default": true,
+              "description": "Pause the auto-dismiss timer while the mouse is over the message."
             },
             "icon": {
               "type": [
@@ -7819,12 +8238,12 @@
                 "warning",
                 "loading"
               ],
-              "default": "info",
+              "default": "success",
               "description": "Message status type."
             },
             "theme": {
               "type": "object",
-              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+              "description": "Has no effect: messages render in the app-wide message holder, outside the block. Set these Message design tokens for the whole app in `lowdefy.yaml` under `theme.antd.components.Message`.",
               "docs": {
                 "displayType": "yaml",
                 "link": "https://ant.design/components/message#design-token"
@@ -7998,6 +8417,23 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the message is clicked."
+                },
                 "onClose": {
                   "oneOf": [
                     {

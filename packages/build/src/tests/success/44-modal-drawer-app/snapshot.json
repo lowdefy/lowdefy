@@ -4901,9 +4901,68 @@
               "description": "Center the modal vertically."
             },
             "closable": {
+              "type": [
+                "boolean",
+                "object"
+              ],
+              "default": true,
+              "description": "Whether a close (x) button is visible on top right of the modal dialog or not. Set `{ disabled: true }` to show the button disabled.",
+              "docs": {
+                "displayType": "yaml"
+              },
+              "additionalProperties": false,
+              "properties": {
+                "disabled": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show the close button, but disabled."
+                }
+              }
+            },
+            "destroyOnHidden": {
+              "type": "boolean",
+              "default": false,
+              "description": "Unmount the blocks inside the modal when it closes, so they mount again (and their onMount events run) each time it opens. Their state is kept."
+            },
+            "focusable": {
+              "type": "object",
+              "description": "Focus management of the dialog.",
+              "docs": {
+                "displayType": "yaml"
+              },
+              "additionalProperties": false,
+              "properties": {
+                "trap": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Keep keyboard focus inside the dialog while it is open."
+                },
+                "focusTriggerAfterClose": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Return focus to the element that opened the dialog after it closes."
+                }
+              }
+            },
+            "forceRender": {
+              "type": "boolean",
+              "default": false,
+              "description": "Render the blocks inside the modal before it is first opened, so their methods can be called and their onMount events run while it is still closed."
+            },
+            "keyboard": {
               "type": "boolean",
               "default": true,
-              "description": "Whether a close (x) button is visible on top right of the modal dialog or not."
+              "description": "Whether pressing Esc closes the modal."
+            },
+            "loading": {
+              "type": "boolean",
+              "default": false,
+              "description": "Show a loading skeleton in place of the modal body."
+            },
+            "scrollLock": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to lock page scrolling while the modal is open."
             },
             "title": {
               "type": "string",
@@ -4915,14 +4974,37 @@
               "description": "Show footer area."
             },
             "mask": {
-              "type": "boolean",
+              "type": [
+                "boolean",
+                "object"
+              ],
               "default": true,
-              "description": "Whether show mask or not."
+              "description": "Whether to show the mask. Set an object to configure the mask with `enabled`, `blur` and `closable`.",
+              "docs": {
+                "displayType": "yaml"
+              },
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Whether to show the mask."
+                },
+                "blur": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Blur the page behind the mask."
+                },
+                "closable": {
+                  "type": "boolean",
+                  "description": "Whether clicking the mask closes the dialog. Takes precedence over `maskClosable`."
+                }
+              }
             },
             "maskClosable": {
               "type": "boolean",
               "default": true,
-              "description": "Whether to close the modal dialog when the mask (area outside the modal) is clicked."
+              "description": "Whether to close the modal dialog when the mask (area outside the modal) is clicked. `mask.closable` takes precedence."
             },
             "okText": {
               "type": "string",
@@ -4949,12 +5031,58 @@
             "width": {
               "type": [
                 "string",
-                "number"
+                "number",
+                "object"
               ],
-              "default": "520px",
-              "description": "Width of the modal dialog.",
+              "default": 520,
+              "description": "Width of the modal dialog. Set an object of breakpoints (`xs`, `sm`, `md`, `lg`, `xl`, `xxl`) for a responsive width.",
               "docs": {
-                "displayType": "string"
+                "displayType": "yaml"
+              },
+              "additionalProperties": false,
+              "properties": {
+                "xs": {
+                  "type": [
+                    "string",
+                    "number"
+                  ],
+                  "description": "Width on extra small screens."
+                },
+                "sm": {
+                  "type": [
+                    "string",
+                    "number"
+                  ],
+                  "description": "Width on small screens."
+                },
+                "md": {
+                  "type": [
+                    "string",
+                    "number"
+                  ],
+                  "description": "Width on medium screens."
+                },
+                "lg": {
+                  "type": [
+                    "string",
+                    "number"
+                  ],
+                  "description": "Width on large screens."
+                },
+                "xl": {
+                  "type": [
+                    "string",
+                    "number"
+                  ],
+                  "description": "Width on extra large screens."
+                },
+                "xxl": {
+                  "type": [
+                    "string",
+                    "number"
+                  ],
+                  "description": "Width on extra extra large screens."
+                }
               }
             },
             "zIndex": {
@@ -5178,6 +5306,29 @@
                   ],
                   "description": "The Modal header."
                 },
+                ".title": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Modal title."
+                },
                 ".body": {
                   "oneOf": [
                     {
@@ -5324,6 +5475,10 @@
                   "type": "object",
                   "description": "The Modal header."
                 },
+                ".title": {
+                  "type": "object",
+                  "description": "The Modal title."
+                },
                 ".body": {
                   "type": "object",
                   "description": "The Modal body."
@@ -5438,6 +5593,45 @@
                     }
                   ],
                   "description": "Trigger actions after onOk or onCancel is completed."
+                },
+                "afterClose": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions after the modal has closed and its close animation has finished."
+                },
+                "afterOpenChange": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": {
+                    "description": "Trigger actions after the open or close animation of the modal has finished.",
+                    "event": {
+                      "open": "True when the modal opened, false when it closed."
+                    }
+                  }
                 }
               }
             }
@@ -5563,7 +5757,7 @@
             },
             "prefix": {
               "type": "string",
-              "description": "Prefix text for the block, priority over $prefix_con."
+              "description": "Prefix text for the block, priority over prefixIcon."
             },
             "prefixIcon": {
               "type": [
@@ -5621,6 +5815,78 @@
               "description": "Label properties.",
               "additionalProperties": false,
               "properties": {
+                "xs": {
+                  "type": "object",
+                  "description": "Label width on extra small screens (below 576px) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "sm": {
+                  "type": "object",
+                  "description": "Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "md": {
+                  "type": "object",
+                  "description": "Label width on medium screens (768px and up) when the label is not inline. Overrides `span`.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "lg": {
+                  "type": "object",
+                  "description": "Label width on large screens (992px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xl": {
+                  "type": "object",
+                  "description": "Label width on extra large screens (1200px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xxl": {
+                  "type": "object",
+                  "description": "Label width on extra extra large screens (1600px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
                 "align": {
                   "type": "string",
                   "enum": [
@@ -5675,7 +5941,7 @@
                 },
                 "span": {
                   "type": "number",
-                  "description": "Label inline span."
+                  "description": "Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns."
                 },
                 "disabled": {
                   "type": "boolean",
@@ -5691,6 +5957,11 @@
                   "type": "boolean",
                   "default": false,
                   "description": "Render input and label inline."
+                },
+                "wrap": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap."
                 }
               }
             },
@@ -5728,11 +5999,11 @@
             "showCount": {
               "type": "boolean",
               "default": false,
-              "description": "Show text character count"
+              "description": "Show text character count."
             },
             "suffix": {
               "type": "string",
-              "description": "Suffix text for the block, priority over suffixIcon."
+              "description": "Suffix text for the block, shown before suffixIcon."
             },
             "suffixIcon": {
               "type": [
@@ -5794,9 +6065,10 @@
               "enum": [
                 "outlined",
                 "filled",
-                "borderless"
+                "borderless",
+                "underlined"
               ],
-              "description": "Input visual variant. When set, takes precedence over bordered."
+              "description": "Input visual variant. The deprecated bordered: false takes precedence and renders the input as 'borderless'."
             },
             "theme": {
               "type": "object",
@@ -5916,6 +6188,21 @@
                 "activeBg": {
                   "type": "string",
                   "description": "Background color when the input is focused."
+                },
+                "inputFontSize": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Font size of the input text."
+                },
+                "inputFontSizeLG": {
+                  "type": "number",
+                  "default": 16,
+                  "description": "Font size of the input text for large inputs."
+                },
+                "inputFontSizeSM": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Font size of the input text for small inputs."
                 },
                 "lineWidth": {
                   "type": "number",
@@ -6259,6 +6546,23 @@
                     }
                   }
                 },
+                "onClear": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger action when the clear button is clicked."
+                },
                 "onFocus": {
                   "oneOf": [
                     {
@@ -6460,6 +6764,78 @@
               "description": "Label properties.",
               "additionalProperties": false,
               "properties": {
+                "xs": {
+                  "type": "object",
+                  "description": "Label width on extra small screens (below 576px) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "sm": {
+                  "type": "object",
+                  "description": "Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "md": {
+                  "type": "object",
+                  "description": "Label width on medium screens (768px and up) when the label is not inline. Overrides `span`.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "lg": {
+                  "type": "object",
+                  "description": "Label width on large screens (992px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xl": {
+                  "type": "object",
+                  "description": "Label width on extra large screens (1200px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xxl": {
+                  "type": "object",
+                  "description": "Label width on extra extra large screens (1600px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
                 "align": {
                   "type": "string",
                   "enum": [
@@ -6514,7 +6890,7 @@
                 },
                 "span": {
                   "type": "number",
-                  "description": "Label inline span."
+                  "description": "Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns."
                 },
                 "disabled": {
                   "type": "boolean",
@@ -6530,8 +6906,18 @@
                   "type": "boolean",
                   "default": false,
                   "description": "Render input and label inline."
+                },
+                "wrap": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap."
                 }
               }
+            },
+            "loading": {
+              "type": "boolean",
+              "default": false,
+              "description": "Show a loading indicator in the switch handle and block changes, eg. while a request saves the new value."
             },
             "size": {
               "type": "string",
@@ -7066,30 +7452,137 @@
           "additionalProperties": false,
           "properties": {
             "closable": {
-              "type": "boolean",
+              "type": [
+                "boolean",
+                "object"
+              ],
               "default": true,
-              "description": "Whether a close (x) button is visible on top right of the Drawer dialog or not."
+              "description": "Whether a close (x) button is visible in the Drawer header or not. Set an object to disable the button or to move it to the end of the header.",
+              "docs": {
+                "displayType": "yaml"
+              },
+              "additionalProperties": false,
+              "properties": {
+                "disabled": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show the close button, but disabled."
+                },
+                "placement": {
+                  "type": "string",
+                  "enum": [
+                    "start",
+                    "end"
+                  ],
+                  "default": "start",
+                  "description": "Place the close button at the start or the end of the header."
+                }
+              }
+            },
+            "destroyOnHidden": {
+              "type": "boolean",
+              "default": false,
+              "description": "Unmount the blocks inside the Drawer when it closes, so they mount again (and their onMount events run) each time it opens. Their state is kept."
+            },
+            "focusable": {
+              "type": "object",
+              "description": "Focus management of the dialog.",
+              "docs": {
+                "displayType": "yaml"
+              },
+              "additionalProperties": false,
+              "properties": {
+                "trap": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Keep keyboard focus inside the dialog while it is open."
+                },
+                "focusTriggerAfterClose": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Return focus to the element that opened the dialog after it closes."
+                }
+              }
+            },
+            "forceRender": {
+              "type": "boolean",
+              "default": false,
+              "description": "Render the blocks inside the Drawer before it is first opened, so their methods can be called and their onMount events run while it is still closed."
+            },
+            "getContainer": {
+              "type": [
+                "string",
+                "boolean"
+              ],
+              "description": "Where the Drawer is mounted. By default it is mounted on the page body. Set to `false` to render it in place, inside the nearest positioned parent (give that parent `position: relative`), or to a CSS selector to mount it in the first matching element."
+            },
+            "loading": {
+              "type": "boolean",
+              "default": false,
+              "description": "Show a loading skeleton in place of the Drawer body."
             },
             "mask": {
-              "type": "boolean",
+              "type": [
+                "boolean",
+                "object"
+              ],
               "default": true,
-              "description": "Whether to show mask or not."
+              "description": "Whether to show the mask. Set an object to configure the mask with `enabled`, `blur` and `closable`.",
+              "docs": {
+                "displayType": "yaml"
+              },
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Whether to show the mask."
+                },
+                "blur": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Blur the page behind the mask."
+                },
+                "closable": {
+                  "type": "boolean",
+                  "description": "Whether clicking the mask closes the dialog. Takes precedence over `maskClosable`."
+                }
+              }
             },
             "maskClosable": {
               "type": "boolean",
               "default": true,
-              "description": "Clicking on the mask (area outside the Drawer) to close the Drawer or not."
+              "description": "Clicking on the mask (area outside the Drawer) to close the Drawer or not. `mask.closable` takes precedence."
+            },
+            "maxSize": {
+              "type": "number",
+              "description": "Maximum size in pixels a resizable Drawer can be dragged to."
+            },
+            "resizable": {
+              "type": "boolean",
+              "default": false,
+              "description": "Let the user resize the Drawer by dragging its edge. The configured size is the starting size."
+            },
+            "size": {
+              "type": [
+                "string",
+                "number"
+              ],
+              "description": "Size of the Drawer: width for left and right placements, height for top and bottom. `default` (378px), `large` (736px), a number of pixels or a CSS length. Takes precedence over width and height.",
+              "docs": {
+                "displayType": "string"
+              }
             },
             "title": {
               "type": "string",
-              "description": "The title of the Drawer."
+              "description": "The title of the Drawer - supports html."
             },
             "width": {
               "type": [
                 "string",
                 "number"
               ],
-              "default": "256px",
+              "default": 378,
               "description": "Width of the Drawer dialog.",
               "docs": {
                 "displayType": "string"
@@ -7100,7 +7593,7 @@
                 "string",
                 "number"
               ],
-              "default": "256px",
+              "default": 378,
               "description": "When placement is top or bottom, height of the Drawer dialog.",
               "docs": {
                 "displayType": "string"
@@ -7125,7 +7618,7 @@
             "keyboard": {
               "type": "boolean",
               "default": true,
-              "description": "Whether support press esc to close."
+              "description": "Whether pressing Esc closes the Drawer."
             },
             "theme": {
               "type": "object",
@@ -7260,6 +7753,29 @@
                     }
                   ],
                   "description": "The Drawer header."
+                },
+                ".title": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Drawer title."
                 },
                 ".body": {
                   "oneOf": [
@@ -7407,6 +7923,10 @@
                   "type": "object",
                   "description": "The Drawer header."
                 },
+                ".title": {
+                  "type": "object",
+                  "description": "The Drawer title."
+                },
                 ".body": {
                   "type": "object",
                   "description": "The Drawer body."
@@ -7537,7 +8057,35 @@
                       "maxProperties": 1
                     }
                   ],
-                  "description": "Trigger actions after drawer is opened."
+                  "description": {
+                    "description": "Trigger actions after the open or close animation of the drawer has finished.",
+                    "event": {
+                      "open": "True when the drawer opened, false when it closed.",
+                      "drawerOpen": "Same as open, kept for existing apps."
+                    }
+                  }
+                },
+                "onResizeEnd": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": {
+                    "description": "Trigger actions when the user finishes resizing a resizable drawer. Not triggered when the resize handle is clicked without dragging.",
+                    "event": {
+                      "size": "The new size of the drawer in pixels."
+                    }
+                  }
                 }
               }
             }
@@ -7851,6 +8399,52 @@
                     }
                   ],
                   "description": "The icon in the Result."
+                },
+                ".title": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Result title."
+                },
+                ".subTitle": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Result subtitle."
                 }
               }
             }
@@ -7882,6 +8476,14 @@
                 ".icon": {
                   "type": "object",
                   "description": "The icon in the Result."
+                },
+                ".title": {
+                  "type": "object",
+                  "description": "The Result title."
+                },
+                ".subTitle": {
+                  "type": "object",
+                  "description": "The Result subtitle."
                 }
               }
             },
@@ -7996,8 +8598,13 @@
             },
             "duration": {
               "type": "number",
-              "default": 4.5,
+              "default": 3,
               "description": "Time(seconds) before auto-dismiss, don't dismiss if set to 0."
+            },
+            "pauseOnHover": {
+              "type": "boolean",
+              "default": true,
+              "description": "Pause the auto-dismiss timer while the mouse is over the message."
             },
             "icon": {
               "type": [
@@ -8059,12 +8666,12 @@
                 "warning",
                 "loading"
               ],
-              "default": "info",
+              "default": "success",
               "description": "Message status type."
             },
             "theme": {
               "type": "object",
-              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+              "description": "Has no effect: messages render in the app-wide message holder, outside the block. Set these Message design tokens for the whole app in `lowdefy.yaml` under `theme.antd.components.Message`.",
               "docs": {
                 "displayType": "yaml",
                 "link": "https://ant.design/components/message#design-token"
@@ -8238,6 +8845,23 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the message is clicked."
+                },
                 "onClose": {
                   "oneOf": [
                     {

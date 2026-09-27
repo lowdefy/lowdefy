@@ -4627,7 +4627,7 @@
             },
             "prefix": {
               "type": "string",
-              "description": "Prefix text for the block, priority over $prefix_con."
+              "description": "Prefix text for the block, priority over prefixIcon."
             },
             "prefixIcon": {
               "type": [
@@ -4685,6 +4685,78 @@
               "description": "Label properties.",
               "additionalProperties": false,
               "properties": {
+                "xs": {
+                  "type": "object",
+                  "description": "Label width on extra small screens (below 576px) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "sm": {
+                  "type": "object",
+                  "description": "Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "md": {
+                  "type": "object",
+                  "description": "Label width on medium screens (768px and up) when the label is not inline. Overrides `span`.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "lg": {
+                  "type": "object",
+                  "description": "Label width on large screens (992px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xl": {
+                  "type": "object",
+                  "description": "Label width on extra large screens (1200px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xxl": {
+                  "type": "object",
+                  "description": "Label width on extra extra large screens (1600px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
                 "align": {
                   "type": "string",
                   "enum": [
@@ -4739,7 +4811,7 @@
                 },
                 "span": {
                   "type": "number",
-                  "description": "Label inline span."
+                  "description": "Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns."
                 },
                 "disabled": {
                   "type": "boolean",
@@ -4755,6 +4827,11 @@
                   "type": "boolean",
                   "default": false,
                   "description": "Render input and label inline."
+                },
+                "wrap": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap."
                 }
               }
             },
@@ -4792,11 +4869,11 @@
             "showCount": {
               "type": "boolean",
               "default": false,
-              "description": "Show text character count"
+              "description": "Show text character count."
             },
             "suffix": {
               "type": "string",
-              "description": "Suffix text for the block, priority over suffixIcon."
+              "description": "Suffix text for the block, shown before suffixIcon."
             },
             "suffixIcon": {
               "type": [
@@ -4858,9 +4935,10 @@
               "enum": [
                 "outlined",
                 "filled",
-                "borderless"
+                "borderless",
+                "underlined"
               ],
-              "description": "Input visual variant. When set, takes precedence over bordered."
+              "description": "Input visual variant. The deprecated bordered: false takes precedence and renders the input as 'borderless'."
             },
             "theme": {
               "type": "object",
@@ -4980,6 +5058,21 @@
                 "activeBg": {
                   "type": "string",
                   "description": "Background color when the input is focused."
+                },
+                "inputFontSize": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Font size of the input text."
+                },
+                "inputFontSizeLG": {
+                  "type": "number",
+                  "default": 16,
+                  "description": "Font size of the input text for large inputs."
+                },
+                "inputFontSizeSM": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Font size of the input text for small inputs."
                 },
                 "lineWidth": {
                   "type": "number",
@@ -5323,6 +5416,23 @@
                     }
                   }
                 },
+                "onClear": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger action when the clear button is clicked."
+                },
                 "onFocus": {
                   "oneOf": [
                     {
@@ -5495,6 +5605,78 @@
               "description": "Label properties.",
               "additionalProperties": false,
               "properties": {
+                "xs": {
+                  "type": "object",
+                  "description": "Label width on extra small screens (below 576px) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "sm": {
+                  "type": "object",
+                  "description": "Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "md": {
+                  "type": "object",
+                  "description": "Label width on medium screens (768px and up) when the label is not inline. Overrides `span`.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "lg": {
+                  "type": "object",
+                  "description": "Label width on large screens (992px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xl": {
+                  "type": "object",
+                  "description": "Label width on extra large screens (1200px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xxl": {
+                  "type": "object",
+                  "description": "Label width on extra extra large screens (1600px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
                 "align": {
                   "type": "string",
                   "enum": [
@@ -5549,7 +5731,7 @@
                 },
                 "span": {
                   "type": "number",
-                  "description": "Label inline span."
+                  "description": "Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns."
                 },
                 "disabled": {
                   "type": "boolean",
@@ -5565,6 +5747,11 @@
                   "type": "boolean",
                   "default": false,
                   "description": "Render input and label inline."
+                },
+                "wrap": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap."
                 }
               }
             },
@@ -5611,9 +5798,10 @@
               "enum": [
                 "outlined",
                 "filled",
-                "borderless"
+                "borderless",
+                "underlined"
               ],
-              "description": "Input visual variant. When set, takes precedence over bordered."
+              "description": "Input visual variant. The deprecated bordered: false takes precedence and renders the input as 'borderless'."
             },
             "theme": {
               "type": "object",
@@ -6010,6 +6198,23 @@
                     }
                   }
                 },
+                "onClear": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger action when the clear button is clicked."
+                },
                 "onFocus": {
                   "oneOf": [
                     {
@@ -6364,6 +6569,52 @@
                     }
                   ],
                   "description": "The icon in the Result."
+                },
+                ".title": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Result title."
+                },
+                ".subTitle": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Result subtitle."
                 }
               }
             }
@@ -6395,6 +6646,14 @@
                 ".icon": {
                   "type": "object",
                   "description": "The icon in the Result."
+                },
+                ".title": {
+                  "type": "object",
+                  "description": "The Result title."
+                },
+                ".subTitle": {
+                  "type": "object",
+                  "description": "The Result subtitle."
                 }
               }
             },
@@ -6509,8 +6768,13 @@
             },
             "duration": {
               "type": "number",
-              "default": 4.5,
+              "default": 3,
               "description": "Time(seconds) before auto-dismiss, don't dismiss if set to 0."
+            },
+            "pauseOnHover": {
+              "type": "boolean",
+              "default": true,
+              "description": "Pause the auto-dismiss timer while the mouse is over the message."
             },
             "icon": {
               "type": [
@@ -6572,12 +6836,12 @@
                 "warning",
                 "loading"
               ],
-              "default": "info",
+              "default": "success",
               "description": "Message status type."
             },
             "theme": {
               "type": "object",
-              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+              "description": "Has no effect: messages render in the app-wide message holder, outside the block. Set these Message design tokens for the whole app in `lowdefy.yaml` under `theme.antd.components.Message`.",
               "docs": {
                 "displayType": "yaml",
                 "link": "https://ant.design/components/message#design-token"
@@ -6751,6 +7015,23 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the message is clicked."
+                },
                 "onClose": {
                   "oneOf": [
                     {

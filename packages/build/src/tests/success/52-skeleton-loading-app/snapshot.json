@@ -4564,6 +4564,78 @@
               "description": "Label properties.",
               "additionalProperties": false,
               "properties": {
+                "xs": {
+                  "type": "object",
+                  "description": "Label width on extra small screens (below 576px) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "sm": {
+                  "type": "object",
+                  "description": "Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "md": {
+                  "type": "object",
+                  "description": "Label width on medium screens (768px and up) when the label is not inline. Overrides `span`.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "lg": {
+                  "type": "object",
+                  "description": "Label width on large screens (992px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xl": {
+                  "type": "object",
+                  "description": "Label width on extra large screens (1200px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xxl": {
+                  "type": "object",
+                  "description": "Label width on extra extra large screens (1600px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
                 "align": {
                   "type": "string",
                   "enum": [
@@ -4618,7 +4690,7 @@
                 },
                 "span": {
                   "type": "number",
-                  "description": "Label inline span."
+                  "description": "Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns."
                 },
                 "disabled": {
                   "type": "boolean",
@@ -4634,8 +4706,18 @@
                   "type": "boolean",
                   "default": false,
                   "description": "Render input and label inline."
+                },
+                "wrap": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap."
                 }
               }
+            },
+            "loading": {
+              "type": "boolean",
+              "default": false,
+              "description": "Show a loading indicator in the switch handle and block changes, eg. while a request saves the new value."
             },
             "size": {
               "type": "string",
@@ -5172,12 +5254,17 @@
             "bordered": {
               "type": "boolean",
               "default": true,
-              "description": "Toggles rendering of the border around the card."
+              "description": "Toggles rendering of the border around the card. `bordered: false` is the same as `variant: borderless`."
             },
             "hoverable": {
               "type": "boolean",
               "default": false,
               "description": "Lift up when hovering card."
+            },
+            "loading": {
+              "type": "boolean",
+              "default": false,
+              "description": "Show a loading skeleton in place of the card content."
             },
             "inner": {
               "type": "boolean",
@@ -5196,6 +5283,15 @@
             "title": {
               "type": "string",
               "description": "Title to show in the title area - supports html. Overwritten by blocks in the title content area."
+            },
+            "variant": {
+              "type": "string",
+              "enum": [
+                "outlined",
+                "borderless"
+              ],
+              "default": "outlined",
+              "description": "Card style variant."
             },
             "theme": {
               "type": "object",
@@ -5392,6 +5488,29 @@
                   ],
                   "description": "The Card header."
                 },
+                ".title": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Card title."
+                },
                 ".body": {
                   "oneOf": [
                     {
@@ -5514,6 +5633,10 @@
                 ".header": {
                   "type": "object",
                   "description": "The Card header."
+                },
+                ".title": {
+                  "type": "object",
+                  "description": "The Card title."
                 },
                 ".body": {
                   "type": "object",
@@ -5751,6 +5874,10 @@
               "type": "string",
               "description": "The address of the image for an image avatar."
             },
+            "srcSet": {
+              "type": "string",
+              "description": "A list of image sources for different screen resolutions, as in the img srcset attribute."
+            },
             "group": {
               "type": "object",
               "description": "Render as an avatar group with multiple avatars. When set, the block renders Avatar.Group wrapping data-driven avatars.",
@@ -5775,6 +5902,7 @@
                   "type": "string",
                   "enum": [
                     "hover",
+                    "focus",
                     "click"
                   ],
                   "default": "hover",
@@ -5884,12 +6012,7 @@
                           "string",
                           "number"
                         ],
-                        "enum": [
-                          "default",
-                          "small",
-                          "large"
-                        ],
-                        "description": "Override size for this avatar.",
+                        "description": "Override size for this avatar: default, small, large or a pixel number.",
                         "docs": {
                           "displayType": "string"
                         }
@@ -5897,6 +6020,10 @@
                       "src": {
                         "type": "string",
                         "description": "Image URL."
+                      },
+                      "srcSet": {
+                        "type": "string",
+                        "description": "Image sources for different screen resolutions."
                       }
                     }
                   }
@@ -6168,7 +6295,12 @@
                       "maxProperties": 1
                     }
                   ],
-                  "description": "Triggered when avatar item is clicked."
+                  "description": {
+                    "description": "Triggered when the avatar, or an avatar in a group, is clicked.",
+                    "event": {
+                      "index": "In group mode, the index of the clicked avatar in group.avatars."
+                    }
+                  }
                 }
               }
             }
@@ -6473,6 +6605,52 @@
                     }
                   ],
                   "description": "The icon in the Result."
+                },
+                ".title": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Result title."
+                },
+                ".subTitle": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Result subtitle."
                 }
               }
             }
@@ -6504,6 +6682,14 @@
                 ".icon": {
                   "type": "object",
                   "description": "The icon in the Result."
+                },
+                ".title": {
+                  "type": "object",
+                  "description": "The Result title."
+                },
+                ".subTitle": {
+                  "type": "object",
+                  "description": "The Result subtitle."
                 }
               }
             },
@@ -6618,8 +6804,13 @@
             },
             "duration": {
               "type": "number",
-              "default": 4.5,
+              "default": 3,
               "description": "Time(seconds) before auto-dismiss, don't dismiss if set to 0."
+            },
+            "pauseOnHover": {
+              "type": "boolean",
+              "default": true,
+              "description": "Pause the auto-dismiss timer while the mouse is over the message."
             },
             "icon": {
               "type": [
@@ -6681,12 +6872,12 @@
                 "warning",
                 "loading"
               ],
-              "default": "info",
+              "default": "success",
               "description": "Message status type."
             },
             "theme": {
               "type": "object",
-              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+              "description": "Has no effect: messages render in the app-wide message holder, outside the block. Set these Message design tokens for the whole app in `lowdefy.yaml` under `theme.antd.components.Message`.",
               "docs": {
                 "displayType": "yaml",
                 "link": "https://ant.design/components/message#design-token"
@@ -6860,6 +7051,23 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the message is clicked."
+                },
                 "onClose": {
                   "oneOf": [
                     {
