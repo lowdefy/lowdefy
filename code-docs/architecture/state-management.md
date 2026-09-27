@@ -332,10 +332,27 @@ events:
 function createReset({ context }) {
   return function reset() {
     context._internal.State.resetState();
-    context._internal.RootAreas.reset(deserializeFromString(context._internal.State.frozenState));
+    context._internal.RootSlots.reset();
   };
 }
 ```
+
+`resetState` writes the frozen state back into page state, so `Slots.reset()` resets the blocks
+from one copy of page state, as SetState does: a Reset clones the frozen state once for page state
+and once for the blocks.
+
+### Hidden fields and the block map
+
+After each evaluation pass, `Slots.updateState` walks the whole tree, collecting the fields of
+hidden blocks (to delete) and of visible blocks (to keep), and deletes once at the root. A field is
+kept when a visible block publishes it or a field inside it, so a hidden block that shares an id
+with a visible block in another container, list row or slot never deletes the visible one's field.
+Visible lists and containers count as visible fields.
+
+`RootSlots.map` maps each `blockId` to its `Block`. A list row move re-registers the row's blocks
+under their new ids and drops each old key while it still names the block; `removeItem` and a
+reset that shortens a list remove the dropped rows' blocks. `CallMethod` and keyboard shortcuts read
+this map.
 
 ### List Block Operations
 
