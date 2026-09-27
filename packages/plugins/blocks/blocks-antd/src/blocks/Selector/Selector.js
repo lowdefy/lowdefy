@@ -192,7 +192,8 @@ const Selector = ({
                   styles,
                 })}
                 value={selectedIndex}
-                virtual={properties.virtual}
+                // An undefined `virtual` would override ConfigProvider's, so pass it only when set.
+                {...(type.isNone(properties.virtual) ? {} : { virtual: properties.virtual })}
               />
             </ConfigProvider>
           </div>

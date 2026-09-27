@@ -152,7 +152,8 @@ const TreeSelector = ({
               onOpenChange={(open) =>
                 methods.triggerEvent({ name: 'onOpenChange', event: { open } })
               }
-              virtual={properties.virtual}
+              // An undefined `virtual` would override ConfigProvider's, so pass it only when set.
+              {...(type.isNone(properties.virtual) ? {} : { virtual: properties.virtual })}
             />
           </div>
         ),

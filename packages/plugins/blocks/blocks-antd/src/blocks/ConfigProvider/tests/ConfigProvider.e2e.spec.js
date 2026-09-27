@@ -41,4 +41,14 @@ test.describe('ConfigProvider Block', () => {
     await getBlock(page, 'cp_not_virtual_selector').locator('.ant-select').click();
     await expect(page.locator('.ant-select-item-option')).toHaveCount(30);
   });
+
+  test('virtual false renders every multiple selector option', async ({ page }) => {
+    await getBlock(page, 'cp_not_virtual_multiple_selector').locator('.ant-select').click();
+    await expect(page.locator('.ant-select-item-option')).toHaveCount(20);
+  });
+
+  test('virtual false renders every tree selector node', async ({ page }) => {
+    await getBlock(page, 'cp_not_virtual_tree_selector').locator('.ant-select').click();
+    await expect(page.locator('.ant-select-tree-title')).toHaveCount(20);
+  });
 });
