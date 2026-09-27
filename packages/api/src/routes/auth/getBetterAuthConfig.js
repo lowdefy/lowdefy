@@ -46,6 +46,7 @@ import createAuthLogger from './createAuthLogger.js';
 import createMcpAccessTokenClaims from './createMcpAccessTokenClaims.js';
 import createOnAPIError from './createOnAPIError.js';
 import createSendEmail from './createSendEmail.js';
+import { CLIENT_ADDRESS_HEADER } from './handleAuthRequest.js';
 import modelNames from './modelNames.js';
 import renderAuthEmail from '../../email/renderAuthEmail.js';
 import resolveCookiePrefix from './resolveCookiePrefix.js';
@@ -316,6 +317,11 @@ function getBetterAuthConfig({
     },
     advanced: {
       cookiePrefix: resolveCookiePrefix({ appMeta, dev }),
+      // The server resolves the client address from the connection and the
+      // app's trusted proxies, and handleAuthRequest passes it in this header.
+      // BetterAuth reads no other, so X-Forwarded-For sent by a client never
+      // picks its rate-limit bucket.
+      ipAddress: { ipAddressHeaders: [CLIENT_ADDRESS_HEADER] },
       // Decision 7: function-form generateId. The vendored adapter stores a
       // function result verbatim as a plain string (no ObjectId/UUID-binary
       // coercion), so all ids are plain UUID strings that native reads match.

@@ -57,7 +57,10 @@ const requestTimeoutMs = lowdefyConfig.requestTimeout ?? 30000;
 // `serveStaticAssets` is true for the Node server (it serves `dist/client` itself). On a
 // platform that serves the built client + public files from a CDN (e.g. Vercel), pass false so
 // the request handler skips the Node-only static middleware and only owns the dynamic routes.
-function createApp({ serveStaticAssets = true } = {}) {
+// `clientAddressHeader` names the header a platform's edge sets to the client address on every
+// request (Vercel's x-real-ip). Without it the Node server resolves the address from the
+// connection and config.trustedProxies.
+function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   const app = basePath ? new Hono().basePath(basePath) : new Hono();
   const logger = createLogger({ server: 'lowdefy' });
 
@@ -111,7 +114,7 @@ function createApp({ serveStaticAssets = true } = {}) {
   });
   app.all('/.well-known/*', wellKnownFallbackHandler);
 
-  app.use('/api/*', apiContext());
+  app.use('/api/*', apiContext({ clientAddressHeader }));
   app.use('/api/auth/*', authMiddleware({ logger }));
   app.all('/api/request/*', requestHandler);
   // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);
@@ -150,7 +153,7 @@ function createApp({ serveStaticAssets = true } = {}) {
     );
   }
 
-  app.use('/*', apiContext());
+  app.use('/*', apiContext({ clientAddressHeader }));
   mountPageRoutes({ app, renderPage });
 
   app.onError(createErrorHandler({ basePath, logger }));
