@@ -19,26 +19,39 @@ import { type } from '@lowdefy/helpers';
 import collectExceptions from '../../utils/collectExceptions.js';
 import { dataIconRegex } from '../buildImports/collectIconNames.js';
 import createUnresolvedIconError from './createUnresolvedIconError.js';
-import { qualifiedNamePattern, semanticNamePattern, setNamePattern } from './iconNamePatterns.js';
+import {
+  qualifiedAttemptPattern,
+  qualifiedNamePattern,
+  semanticNamePattern,
+  setNamePattern,
+} from './iconNamePatterns.js';
 import resolveIconName from './resolveIconName.js';
 
 const iconKeyRegex = /icon$/i;
 
 // Style slots named after an icon (class['.icon'], classNames.icon, styles.icon) hold CSS,
-// not icon names.
-const styleKeys = new Set(['class', 'classNames', 'style', 'styles']);
+// and antd theme tokens named after one (theme.colorIcon: white) hold colours, not icon names.
+const styleKeys = new Set(['class', 'classNames', 'style', 'styles', 'theme']);
 
 function isOperator(node) {
   const keys = Object.keys(node).filter((key) => !key.startsWith('~'));
   return keys.length === 1 && keys[0].startsWith('_');
 }
 
-function isIconNameForm(value) {
-  return (
+// A value that starts with an installed set id and a colon (lucide:pencil) is
+// meant as a qualified name even when its icon part is malformed, so it fails
+// the build instead of rendering the missing icon. URLs and other colon values
+// name no set.
+function isIconNameForm({ value, sets }) {
+  if (
     semanticNamePattern.test(value) ||
     setNamePattern.test(value) ||
     qualifiedNamePattern.test(value)
-  );
+  ) {
+    return true;
+  }
+  const attempt = qualifiedAttemptPattern.exec(value);
+  return attempt !== null && Object.hasOwn(sets, attempt[1]);
 }
 
 // Raises a ConfigError for a literal icon name that resolves to nothing, but
@@ -46,13 +59,13 @@ function isIconNameForm(value) {
 // name), an Icon block's properties.name, and data-icon attributes. Strings
 // elsewhere are free data and never errors. Operator subtrees are skipped:
 // their arguments hold non-icon strings, and discovery still bundles the icon
-// names inside them. Request properties are data sent to connections, and
-// style subtrees hold CSS.
+// names inside them. Request properties are data sent to connections, style
+// subtrees hold CSS, and theme subtrees hold antd tokens.
 function validateIconNames({ config, icons, context }) {
   const reported = new Set();
 
   function checkName({ name, configKey }) {
-    if (!isIconNameForm(name)) {
+    if (!isIconNameForm({ value: name, sets: icons.sets })) {
       return;
     }
     if (resolveIconName({ name, ...icons }) !== null) {

@@ -19,6 +19,13 @@ import isOn from './isOn.js';
 // The page id pattern the build enforces (validateId).
 const PAGE_ID_PATTERN = /^[A-Za-z0-9\-_/:]+$/;
 
+// Without a basePath, a pathname that starts with "//" (a page id with a
+// leading slash, or "/.//host" once its dot segments resolve) would be written
+// as a protocol-relative href to another host.
+function isSameOrigin(href) {
+  return new URL(href, window.location.origin).origin === window.location.origin;
+}
+
 function preparePageLink({ element, registration, targets }) {
   const pageId = element.getAttribute('data-page-id');
   if (!PAGE_ID_PATTERN.test(pageId)) {
@@ -30,10 +37,12 @@ function preparePageLink({ element, registration, targets }) {
   const urlQuery = Object.fromEntries(
     new URLSearchParams(element.getAttribute('data-url-query') ?? '')
   );
-  element.setAttribute(
-    'href',
-    registration.createHref({ pathname: `/${pageId}`, query: urlQuery })
-  );
+  const href = registration.createHref({ pathname: `/${pageId}`, query: urlQuery });
+  if (!isSameOrigin(href)) {
+    console.warn(`data-page-id="${pageId}" links to another site, so the link was not set.`);
+    return;
+  }
+  element.setAttribute('href', href);
   targets.set(element, { pageId, urlQuery });
 }
 
@@ -45,8 +54,9 @@ function prepareAppLink({ element, registration, targets }) {
   if (!href.startsWith('/')) return;
   const url = new URL(href, window.location.origin);
   if (url.origin !== window.location.origin || url.hash !== '') return;
-  const query = url.search.slice(1);
-  element.setAttribute('href', registration.createHref({ pathname: url.pathname, query }));
+  const appHref = registration.createHref({ pathname: url.pathname, query: url.search.slice(1) });
+  if (!isSameOrigin(appHref)) return;
+  element.setAttribute('href', appHref);
   targets.set(element, { url: `${url.pathname}${url.search}` });
 }
 

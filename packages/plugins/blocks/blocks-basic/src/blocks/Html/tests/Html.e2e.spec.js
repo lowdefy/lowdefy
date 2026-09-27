@@ -63,4 +63,42 @@ test.describe('Html Block', () => {
     // The selection event handler is present and functional
     await expect(paragraph).toContainText('Select this text');
   });
+
+  test('data-icon renders the named icon', async ({ page }) => {
+    await expect(page.locator('#enh_icon svg')).toHaveCount(1);
+  });
+
+  test('data-tooltip shows its value as text, never as markup', async ({ page }) => {
+    await page.locator('#enh_tooltip').hover();
+    const tooltip = page.getByRole('tooltip');
+    await expect(tooltip).toHaveText('<img src=x onerror="window.tooltipXss=1">');
+    await expect(tooltip.locator('img')).toHaveCount(0);
+    expect(await page.evaluate(() => window.tooltipXss)).toBeUndefined();
+  });
+
+  test('data-popover opens its content and Escape closes it', async ({ page }) => {
+    await page.locator('#enh_popover').click();
+    const body = page.locator('.ant-popover .enh-popover-body');
+    await expect(body).toHaveText('Popover body');
+    await page.keyboard.press('Escape');
+    await expect(body).toBeHidden();
+  });
+
+  test('data-page-id navigates to the page without reloading the app', async ({ page }) => {
+    const link = page.locator('#enh_page_link');
+    await expect(link).toHaveAttribute('href', '/clickablehtml?tab=a');
+    await page.evaluate(() => {
+      window.sameDocument = true;
+    });
+    await link.click();
+    await expect(page).toHaveURL(/\/clickablehtml\?tab=a$/);
+    await expect(getBlock(page, 'clickable_basic')).toBeAttached();
+    expect(await page.evaluate(() => window.sameDocument)).toBe(true);
+  });
+
+  test('data-link leaves a path that resolves to another host as a plain link', async ({
+    page,
+  }) => {
+    await expect(page.locator('#enh_dot_link')).toHaveAttribute('href', '/.//evil.example/x');
+  });
 });

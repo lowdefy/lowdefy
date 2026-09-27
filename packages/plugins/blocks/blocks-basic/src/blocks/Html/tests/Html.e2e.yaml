@@ -54,3 +54,14 @@ blocks:
           params:
             selected_text:
               _event: selectedText
+
+  - id: html_enhanced
+    type: Html
+    properties:
+      html: >-
+        <i id="enh_icon" data-icon="edit"></i>
+        <span id="enh_tooltip" data-tooltip="&lt;img src=x onerror=&quot;window.tooltipXss=1&quot;&gt;">Hover</span>
+        <span id="enh_popover" data-popover="more">More</span>
+        <div data-popover-content="more" hidden><b class="enh-popover-body">Popover body</b></div>
+        <a id="enh_page_link" data-page-id="clickablehtml" data-url-query="tab=a">Clickable</a>
+        <a id="enh_dot_link" href="/.//evil.example/x" data-link>Dot link</a>

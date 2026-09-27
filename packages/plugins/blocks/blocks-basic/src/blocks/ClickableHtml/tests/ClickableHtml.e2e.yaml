@@ -67,3 +67,31 @@ blocks:
     type: ClickableHtml
     properties:
       html: <p>Safe content</p><script>alert('xss')</script>
+
+  - id: clickable_confirm
+    type: ClickableHtml
+    properties:
+      html: '<button id="confirm_delete" data-event="onDelete" data-row-id="7" data-confirm="Delete row 7?">Delete</button> <button id="proto_event" data-event="__proto__">Proto</button>'
+    events:
+      onDelete:
+        - id: count_delete
+          type: SetState
+          params:
+            delete_count:
+              _sum:
+                - _state:
+                    key: delete_count
+                    default: 0
+                - 1
+
+  - id: clickable_confirm_result
+    type: Html
+    properties:
+      html:
+        _string.concat:
+          - '<span id="delete_count">'
+          - _json.stringify:
+              - _state:
+                  key: delete_count
+                  default: 0
+          - '</span>'

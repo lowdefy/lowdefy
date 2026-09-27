@@ -16,9 +16,14 @@
 
 import resolveTarget from '../src/resolveTarget.js';
 
-function createLowdefy({ basePath, home, origin = 'https://app.lowdefy.test' } = {}) {
+function createLowdefy({
+  basePath,
+  home,
+  origin = 'https://app.lowdefy.test',
+  href = `${origin}${basePath ?? ''}/admin/current?tab=1`,
+} = {}) {
   const lowdefy = {
-    _internal: { globals: { window: { location: { origin } } } },
+    _internal: { globals: { window: { location: { href, origin } } } },
   };
   if (basePath !== undefined) {
     lowdefy.basePath = basePath;
@@ -247,3 +252,121 @@ test('resolveTarget folds urlQuery into an absolute same-origin page url', () =>
     query: 'theme=dark&a=1',
   });
 });
+
+test.each([
+  [
+    'a fragment moves within the current page',
+    '#products',
+    undefined,
+    { kind: 'external', href: '#products' },
+  ],
+  [
+    'a fragment keeps the urlQuery',
+    '#products',
+    { a: 1 },
+    { kind: 'external', href: '?a=1#products' },
+  ],
+  [
+    'a query alone is the current page with that query',
+    '?q=1',
+    { a: 1 },
+    { kind: 'page', pathname: '/admin/current', query: 'q=1&a=1' },
+  ],
+  [
+    'a dot path is relative to the current page',
+    './reports?x=1',
+    undefined,
+    { kind: 'page', pathname: '/admin/reports', query: 'x=1' },
+  ],
+  [
+    'a parent path is relative to the current page',
+    '../reports',
+    undefined,
+    { kind: 'page', pathname: '/reports', query: '' },
+  ],
+  [
+    'mailto keeps its address',
+    'mailto:help@example.com',
+    { subject: 'Hi there' },
+    { kind: 'external', href: 'mailto:help@example.com?subject=Hi+there' },
+  ],
+  [
+    'tel keeps its number',
+    'tel:+27123456789',
+    undefined,
+    { kind: 'external', href: 'tel:+27123456789' },
+  ],
+  [
+    'an app scheme keeps its host',
+    'myapp://open/item?id=4',
+    undefined,
+    { kind: 'external', href: 'myapp://open/item?id=4' },
+  ],
+  [
+    'a protocol-relative url to another host is external',
+    '//example.com/x',
+    undefined,
+    { kind: 'external', href: 'https://example.com/x' },
+  ],
+  [
+    'a backslash url to another host is external',
+    '/\\example.com/x',
+    undefined,
+    { kind: 'external', href: 'https://example.com/x' },
+  ],
+  [
+    'a protocol-relative url to this origin is a page',
+    '//app.lowdefy.test/app/reports',
+    undefined,
+    { kind: 'page', pathname: '/reports', query: '' },
+  ],
+])('resolveTarget url: %s', (_, url, urlQuery, expected) => {
+  const lowdefy = createLowdefy({ basePath: '/app' });
+  expect(resolveTarget({ lowdefy, target: { url, urlQuery } })).toEqual(expected);
+});
+
+test.each([
+  'javascript:alert(1)',
+  'JavaScript:alert(1)',
+  'java\tscript:alert(1)',
+  'vbscript:msgbox(1)',
+  'data:text/html,<script>alert(1)</script>',
+])('resolveTarget resolves no target for the script url %s', (url) => {
+  expect(resolveTarget({ lowdefy: createLowdefy(), target: { url } })).toBeUndefined();
+});
+
+test('resolveTarget resolves a fragment without a window', () => {
+  const lowdefy = { _internal: { globals: {} } };
+  expect(resolveTarget({ lowdefy, target: { url: '#top' } })).toEqual({
+    kind: 'external',
+    href: '#top',
+  });
+});
+
+test.each([
+  ['a tab', '/\t/example.com/x'],
+  ['a newline', '/\n/example.com/x'],
+  ['a carriage return', '/\r/example.com/x'],
+  ['a leading space', ' //example.com/x'],
+  ['a leading control character', '\u0001//example.com/x'],
+])('resolveTarget reads a url with %s the way the URL parser does, as another host', (_, url) => {
+  expect(resolveTarget({ lowdefy: createLowdefy(), target: { url } })).toEqual({
+    kind: 'external',
+    href: 'https://example.com/x',
+  });
+});
+
+test('resolveTarget trims spaces around an app path', () => {
+  expect(resolveTarget({ lowdefy: createLowdefy(), target: { url: ' /page\n' } })).toEqual({
+    kind: 'page',
+    pathname: '/page',
+    query: '',
+  });
+});
+
+test.each(['not a url', 'http://', 'https://exa mple.com', ' \t '])(
+  'resolveTarget resolves no target for the unparseable url %j',
+  (url) => {
+    expect(resolveTarget({ lowdefy: createLowdefy(), target: { url } })).toBeUndefined();
+  }
+);

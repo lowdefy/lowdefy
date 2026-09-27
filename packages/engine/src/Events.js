@@ -56,7 +56,9 @@ class Events {
 
   triggerEvent({ name, event, progress }) {
     this.context._internal.lowdefy.eventCallback?.({ name, blockId: this.block.blockId });
-    const eventDescription = this.events[name];
+    // Own events only: a name like __proto__ from HTML data-event must not
+    // reach Object.prototype.
+    const eventDescription = Object.hasOwn(this.events, name) ? this.events[name] : undefined;
     const result = {
       blockId: this.block.blockId,
       event,
