@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import fs from 'fs';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { readDevInstance } from '@lowdefy/node-utils';
@@ -21,6 +22,7 @@ import { readDevInstance } from '@lowdefy/node-utils';
 import createHubConnection from './createHubConnection.js';
 import createInstanceConnections from './createInstanceConnections.js';
 import findApps from './findApps.js';
+import findGitRoot from './findGitRoot.js';
 import formatInstanceLabel from './formatInstanceLabel.js';
 import lifecycleTools, { DIRECTORY_PROPERTY } from './lifecycleTools.js';
 import resolveApp from './resolveApp.js';
@@ -253,8 +255,10 @@ function createShim({ cliVersion, cwd, devTools }) {
     return { app: app.label, url: instance.url, ...result };
   }
 
+  // Lists the checkout, not one app: resolving an app from a monorepo root
+  // fails with "several apps" - the case this tool is for.
   async function list() {
-    const root = resolveApp({ directory: '.', cwd }).root;
+    const root = findGitRoot({ directory: fs.realpathSync(cwd) });
     const apps = findApps({ root }).map((configDirectory) => {
       const record = readDevInstance({ configDirectory });
       return {

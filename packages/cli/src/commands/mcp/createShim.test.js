@@ -167,3 +167,16 @@ test('lowdefy_dev_stop refuses a dev server the user runs in a terminal', async 
   expect(result.stopped).toBe(false);
   expect(result.reason).toContain("runs in the user's terminal");
 });
+
+test('lowdefy_dev_list lists every app of a multi-app checkout without starting a hub', async () => {
+  makeApp('apps/main');
+  makeApp('apps/second');
+  await connect({ cwd: root });
+  const result = await client.callTool({ name: 'lowdefy_dev_list', arguments: {} });
+  expect(result.isError).toBeUndefined();
+  expect(JSON.parse(text(result)).apps).toEqual([
+    expect.objectContaining({ app: `apps/main @ ${path.basename(root)}`, state: 'stopped' }),
+    expect.objectContaining({ app: `apps/second @ ${path.basename(root)}`, state: 'stopped' }),
+  ]);
+  expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
+});
