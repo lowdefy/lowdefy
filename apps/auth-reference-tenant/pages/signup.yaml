@@ -30,10 +30,13 @@ blocks:
     events:
       onClick:
         # With requireEmailVerification the response carries no session -
-        # verification precedes sign-in.
+        # verification precedes sign-in. callbackUrl is where the emailed
+        # verification link lands (without it, the home page).
         - id: sign_up
           type: SignUp
           params:
+            callbackUrl:
+              pageId: verify-email
             name:
               _state: name
             email:

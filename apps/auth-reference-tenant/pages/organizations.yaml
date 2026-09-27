@@ -1,7 +1,7 @@
 # Organization switching: SetActiveOrganization is session-scoped; roles and
 # attributes resolve from the new active member row server-side, so
-# UpdateSession is chained after to re-sync the client - the roles shown
-# below change without a reload.
+# UpdateSession is chained after to re-sync the client - the roles and the
+# active marker below change without a reload.
 id: organizations
 type: Box
 properties:
@@ -32,7 +32,8 @@ blocks:
       html:
         _nunjucks:
           template: |
-            <p><b>roles:</b> {{ user.roles | dump }}<br/>
+            <p><b>org_roles:</b> {{ user.org_roles | dump }}<br/>
+            <b>roles:</b> {{ user.roles | dump }}<br/>
             <b>attributes:</b> {{ user.attributes | dump }}</p>
           on:
             user:
@@ -45,16 +46,28 @@ blocks:
           template: |
             <ul>
             {% for org in orgs %}
-              <li><b>{{ org.name }}</b> (slug: {{ org.slug }}, id: {{ org.id }})</li>
+              <li><b>{{ org.name }}</b>{% if org.id == activeId %} (active){% endif %} - slug: {{ org.slug }}, id: {{ org.id }}</li>
             {% endfor %}
             </ul>
           on:
             orgs:
               _state: my_organizations
+            activeId:
+              _user: organization_id
   - id: org_slug
-    type: TextInput
+    type: Selector
     properties:
-      title: Organization slug to activate
+      title: Organization to activate
+      options:
+        _array.map:
+          on:
+            _state: my_organizations
+          callback:
+            _function:
+              label:
+                __args: 0.name
+              value:
+                __args: 0.slug
   - id: switch_button
     type: Button
     properties:

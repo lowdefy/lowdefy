@@ -20,6 +20,14 @@ function shutdownServer(context) {
       context.logger.debug(
         `Existing dev server with pid ${context.devServer.pid}, killed: ${context.devServer.killed}`
       );
+      const child = context.devServer;
+      // A signalled child keeps answering on the internal port until it
+      // exits; the proxy waits for this before probing for its replacement,
+      // or the probe would reach the old child and confirm the new one.
+      context.devServerExited =
+        child.exitCode !== null || child.signalCode !== null
+          ? Promise.resolve()
+          : new Promise((resolve) => child.once('exit', resolve));
       if (!context.devServer.killed) {
         context.logger.info({ spin: 'start' }, 'Shutting down server...');
         context.devServer.kill();

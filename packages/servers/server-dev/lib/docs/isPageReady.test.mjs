@@ -42,6 +42,16 @@ test('isPageReady returns false when the page context does not exist', () => {
   expect(isPageReady('home')).toBe(false);
 });
 
+test('isPageReady with a null pageId waits for the page the app shows', () => {
+  global.window = { lowdefy: { contexts: { 'page:login': settledContext() } } };
+  expect(isPageReady(null)).toBe(false);
+
+  // A protected page redirected to sign in: the login page is what mounted.
+  global.window.lowdefy.pageId = 'login';
+  expect(isPageReady(null)).toBe(true);
+  expect(isPageReady('dashboard')).toBe(false);
+});
+
 test('isPageReady returns false when window.lowdefy is not defined', () => {
   global.window = {};
 

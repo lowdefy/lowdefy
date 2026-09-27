@@ -58,6 +58,34 @@ CI does not run it on every push. Start the `MongoDB Tests` workflow from the Ac
 or add the `run-mongodb-tests` label to a pull request. Each jest run starts its own
 `mongod` on a free port, so worktrees can run it at the same time.
 
+## Auth journeys
+
+The tenant auth reference app (`apps/auth-reference-tenant`) carries config tests for the
+real auth path: sign-up with email verification, sign-in refusals, sign-out, magic link,
+invitations, tenant isolation, organization switching and member removal
+(`tests/journeys/*.yaml`, all `user: none`). Run them with:
+
+```bash
+pnpm test:journeys:auth                      # builds first, like pnpm dev
+pnpm test:journeys:auth --skip-build         # reuse the current build
+pnpm test:journeys:auth --filter invitation  # journeys whose name matches
+```
+
+`scripts/test-journeys-auth.mjs` starts a single-node memory replica set (fresh every run,
+auth indexes provisioned), then this checkout's dev server (`scripts/dev.mjs`) with the
+app's secrets, a pinned `BETTER_AUTH_URL` and the dev mail sink (`LOWDEFY_DEV_SMTP_PORT`),
+runs this checkout's `lowdefy test --url` against it, and stops everything. It uses four
+consecutive free ports from `--port` (default 3200): app, internal, mail sink, MongoDB. The
+dev server log goes to `apps/auth-reference-tenant/.lowdefy/journeys-dev-server.log`. It
+needs no Docker MongoDB or Mailpit, only the shared MongoDB binaries and a Chromium.
+
+Like the MongoDB suite, CI does not run it; run it when changing auth, tenancy, the
+journey runner or the dev server. It uses `_server/dev`, so run one at a time per
+worktree. To iterate on one journey, keep a dev server running with the same environment
+and use `node packages/cli/dist/index.js test --config-directory apps/auth-reference-tenant
+--url http://localhost:<port> --filter <name>`; a journey that signs up needs an empty
+database, since signing up an existing address sends no email.
+
 ## Ports
 
 Port 3000 is the default for a developer's own dev server; tests and agents never bind it.

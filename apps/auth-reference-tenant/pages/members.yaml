@@ -35,8 +35,8 @@ blocks:
           template: |
             <ul>
             {% for member in members.members %}
-              <li><b>{{ member.user.email }}</b> - member id: {{ member.id }},
-              role: <code>{{ member.role }}</code></li>
+              <li><b>{{ member.user.email }}</b> ({{ member.role }}) - member id:
+              {{ member.id }}</li>
             {% endfor %}
             </ul>
           on:
@@ -172,3 +172,45 @@ blocks:
           on:
             response:
               _state: update_response
+  - id: remove_title
+    type: Title
+    properties:
+      content: Remove a member
+      level: 4
+  # The member loses access on their next request: with no member row in the
+  # session's active organization, every protected page treats them as
+  # logged out, even though their session row survives.
+  - id: remove_member_email
+    type: TextInput
+    properties:
+      title: Member email
+  - id: remove_member_button
+    type: Button
+    properties:
+      title: Remove member
+      block: true
+    events:
+      onClick:
+        - id: remove_member
+          type: Fetch
+          params:
+            url: /api/auth/organization/remove-member
+            responseFunction: json
+            options:
+              method: POST
+              headers:
+                Content-Type: application/json
+              body:
+                _json.stringify:
+                  - memberIdOrEmail:
+                      _state: remove_member_email
+        - id: reload_members
+          type: Fetch
+          params:
+            url: /api/auth/organization/list-members
+            responseFunction: json
+        - id: set_members_after_remove
+          type: SetState
+          params:
+            members:
+              _actions: reload_members.response

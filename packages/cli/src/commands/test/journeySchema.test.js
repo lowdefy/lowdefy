@@ -32,6 +32,9 @@ test('journeySchema exports the step key list shared with the runner', () => {
     'select',
     'press',
     'back',
+    'goto',
+    'email',
+    'as',
     'wait',
     'screenshot',
     'expect',
@@ -54,6 +57,9 @@ test('journeySchema accepts every step key, an inline user and urlQuery', () => 
       { fill: { blockId: 'title', value: 'Access reviews' } },
       { select: { blockId: 'owner', value: 'Alice' } },
       { press: 'Mod+k' },
+      { goto: 'controls' },
+      { email: { to: 'alice@example.test', subject: 'Invited' } },
+      { as: 'reviewer' },
       { wait: { request: 'get_controls' } },
       { screenshot: 'after-submit' },
       { expect: { state: { path: 'controls.0.title', equals: 'Access reviews' } } },
@@ -65,10 +71,18 @@ test('journeySchema accepts every step key, an inline user and urlQuery', () => 
   ).toEqual({ valid: true });
 });
 
-test('journeySchema rejects a user that is not an object', () => {
-  const result = validateJourney({ journey: { ...minimalJourney, user: 'admin' } });
+test('journeySchema accepts user none for a journey that signs in through the app', () => {
+  expect(validateJourney({ journey: { ...minimalJourney, user: 'none' } })).toEqual({
+    valid: true,
+  });
+});
+
+test.each(['admin', ['admin'], true])('journeySchema rejects user %j', (user) => {
+  const result = validateJourney({ journey: { ...minimalJourney, user } });
   expect(result.valid).toBe(false);
-  expect(result.message).toContain('user');
+  expect(result.message).toContain(
+    'Journey "user" should be an inline user object, e.g. {roles: [admin]}, or "none" to sign in through the app.'
+  );
 });
 
 test('journeySchema rejects a step with two keys', () => {
@@ -83,7 +97,7 @@ test('journeySchema rejects an unknown step key', () => {
   const result = validateJourney({ journey });
   expect(result.valid).toBe(false);
   expect(result.message).toContain(
-    'Unknown journey step key. Steps are: click, fill, select, press, back, wait, screenshot, expect.'
+    'Unknown journey step key. Steps are: click, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
   );
 });
 

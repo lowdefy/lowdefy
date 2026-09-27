@@ -1,0 +1,32 @@
+- name: a new user signs up, verifies by email and their first sign-in mints their own organization
+  pageId: signup
+  user: none
+  steps:
+    - fill: { blockId: name, value: Signup Owner }
+    - fill: { blockId: email, value: signup-owner@example.test }
+    - fill: { blockId: password, value: signup-owner-password }
+    - click: signup_button
+    - expect: { url: { contains: /check-email } }
+    - email: { to: signup-owner@example.test, subject: Verify your email address }
+    - click: { text: Verify email address }
+    - expect: { visible: verify_email_result }
+    - click: to_login_button
+    - fill: { blockId: email, value: signup-owner@example.test }
+    - fill: { blockId: password, value: signup-owner-password }
+    - click: login_button
+    - expect: { url: { contains: /home } }
+    - goto: dashboard
+    - expect: { text: { blockId: user_details, contains: 'org_roles: ["owner"]' } }
+    - goto: organizations
+    - expect: { text: { blockId: organizations_list, contains: Signup Owner (active) } }
+    # A second session, on another device, joins the same organization and
+    # mints no second one.
+    - as: second_device
+    - goto: login
+    - fill: { blockId: email, value: signup-owner@example.test }
+    - fill: { blockId: password, value: signup-owner-password }
+    - click: login_button
+    - expect: { url: { contains: /home } }
+    - goto: organizations
+    - expect: { state: { path: my_organizations.0.name, equals: Signup Owner } }
+    - expect: { state: { path: my_organizations.1, equals: null } }

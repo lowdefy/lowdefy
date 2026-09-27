@@ -112,7 +112,7 @@ test('docsJourneyHandler returns 400 naming an unknown step', async () => {
 
   expect(result.status).toBe(400);
   expect(result.data.error).toEqual(
-    'Step 0: Unknown journey step "hover". Steps are: click, fill, select, press, back, wait, screenshot, expect.'
+    'Step 0: Unknown journey step "hover". Steps are: click, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
   );
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
@@ -154,6 +154,15 @@ test('docsJourneyHandler returns 400 when user is malformed', async () => {
   expect(result.status).toBe(400);
   expect(result.data.error).toMatch(/must be JSON/);
   expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
+test('docsJourneyHandler passes user none through so the journey signs in through the app', async () => {
+  const c = createContext({ pageId: 'login', steps: [{ goto: 'dashboard' }], user: 'none' });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(200);
+  expect(mockRunJourney).toHaveBeenCalledWith(expect.objectContaining({ user: 'none' }));
 });
 
 test('docsJourneyHandler returns 502 when the journey could not run', async () => {

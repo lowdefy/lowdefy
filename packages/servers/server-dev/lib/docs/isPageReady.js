@@ -22,8 +22,13 @@
 // Checks are ordered cheapest-first and return false on the first failure.
 // A missing key always means "not configured", never "not finished" —
 // iterating only the entries that exist gives that for free.
+//
+// A null pageId means the page the app is showing, so a caller waits out a
+// redirect (a protected page sending a signed-out caller to sign in) instead
+// of waiting for a page that will never mount.
 function isPageReady(pageId) {
-  const context = window.lowdefy?.contexts?.['page:' + pageId];
+  const shownPageId = pageId ?? window.lowdefy?.pageId;
+  const context = window.lowdefy?.contexts?.['page:' + shownPageId];
   if (!context) return false;
 
   if (context._internal?.onInitDone !== true) return false;

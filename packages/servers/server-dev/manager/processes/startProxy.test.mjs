@@ -76,6 +76,101 @@ test('startProxy forwards a request to the child and relays its response', async
   expect(await response.json()).toEqual({ path: '/api/ping?x=1' });
 });
 
+test('startProxy probes a running child once instead of opening a connection per request', async () => {
+  let childConnections = 0;
+  const port = await startChildAndProxy((req, res) => {
+    res.writeHead(200, { 'content-type': 'text/plain' });
+    res.end('ok');
+  });
+  child.on('connection', () => {
+    childConnections += 1;
+  });
+  context.devServer = { exitCode: null, signalCode: null };
+
+  for (let i = 0; i < 20; i += 1) {
+    const response = await fetch(`http://localhost:${port}/module-${i}.js`);
+    expect(await response.text()).toBe('ok');
+  }
+
+  // One probe, then the keep-alive agent's socket - not a probe per request.
+  expect(childConnections).toBeLessThanOrEqual(2);
+});
+
+test('startProxy probes a new child after a restart before forwarding to it', async () => {
+  let childConnections = 0;
+  const port = await startChildAndProxy((req, res) => {
+    res.writeHead(200, { 'content-type': 'text/plain' });
+    res.end('ok');
+  });
+  child.on('connection', () => {
+    childConnections += 1;
+  });
+  context.devServer = { exitCode: null, signalCode: null };
+  await fetch(`http://localhost:${port}/a.js`).then((response) => response.text());
+  const afterFirstChild = childConnections;
+
+  context.devServer = { exitCode: null, signalCode: null };
+  await fetch(`http://localhost:${port}/b.js`).then((response) => response.text());
+
+  expect(childConnections).toBe(afterFirstChild + 1);
+});
+
+test('startProxy sends requests back through the hold once a confirmed child goes away', async () => {
+  function handler(req, res) {
+    res.end('ok');
+  }
+  const port = await startChildAndProxy(handler);
+  context.devServer = { exitCode: null, signalCode: null };
+  expect(await (await fetch(`http://localhost:${port}/a.js`)).text()).toBe('ok');
+
+  async function stopChildAndRestartSoon() {
+    await close(child);
+    setTimeout(() => {
+      child = http.createServer(handler);
+      child.listen(context.internalPort, '127.0.0.1');
+    }, 300);
+  }
+
+  // Gone before the manager has seen it exit: a GET never reached the child,
+  // so it is replayed through the hold and answered by the next child.
+  await stopChildAndRestartSoon();
+  expect(await (await fetch(`http://localhost:${port}/b.js`)).text()).toBe('ok');
+
+  // A POST's body was consumed by the failed forward, so it fails once, and
+  // the next request waits for the child instead of failing too.
+  await stopChildAndRestartSoon();
+  expect(
+    (await fetch(`http://localhost:${port}/save`, { method: 'POST', body: '{}' })).status
+  ).toBe(502);
+  expect(await (await fetch(`http://localhost:${port}/c.js`)).text()).toBe('ok');
+
+  // An exit the manager has seen sends the very next request through the hold.
+  await stopChildAndRestartSoon();
+  context.devServer.exitCode = 1;
+  expect(await (await fetch(`http://localhost:${port}/d.js`)).text()).toBe('ok');
+});
+
+test('startProxy waits for a stopped child to exit before probing its replacement', async () => {
+  const port = await startChildAndProxy((req, res) => res.end('old'));
+  context.devServer = { exitCode: null, signalCode: null };
+  expect(await (await fetch(`http://localhost:${port}/a.js`)).text()).toBe('old');
+
+  // A restart: the old child is signalled but answers until it exits.
+  let markExited;
+  context.devServerExited = new Promise((resolve) => {
+    markExited = resolve;
+  });
+  context.devServer = { exitCode: null, signalCode: null };
+  const pending = fetch(`http://localhost:${port}/b.js`).then((response) => response.text());
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  await close(child);
+  child = http.createServer((req, res) => res.end('new'));
+  await new Promise((resolve) => child.listen(context.internalPort, '127.0.0.1', resolve));
+  markExited();
+
+  expect(await pending).toBe('new');
+});
+
 test('startProxy aborts the child request when the client drops a streaming response', async () => {
   let upstreamClosed;
   const upstreamClosedPromise = new Promise((resolve) => {
