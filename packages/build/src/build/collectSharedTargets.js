@@ -25,7 +25,12 @@ function collectSharedTargets({ connections, context }) {
     if (connection.tenant !== 'shared') return;
     const tenantTarget = connectionMetas[connection.type]?.tenantTarget;
     if (!tenantTarget) return;
-    sharedTargets.set(connection.connectionId, { connection, tenantTarget });
+    // Only what tenantTargetKey reads - the entries are also written to the
+    // tenantTargets.json skeleton artifact for dev page builds.
+    sharedTargets.set(connection.connectionId, {
+      connection: { type: connection.type, properties: connection.properties },
+      tenantTarget,
+    });
   });
   return sharedTargets;
 }
