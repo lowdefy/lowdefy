@@ -146,9 +146,10 @@ import { AiOutlineDelete } from 'react-icons/ai';
 
 A plugin that must keep importing `react-icons` adds it to its own `dependencies`.
 
-## Deployment
+## Auth links and client addresses
 
-Two changes affect self-hosted production servers. See [Auth Upgrade](/auth-upgrade) and [Deploy with Docker](/docker#behind-a-reverse-proxy).
+These changes affect apps with auth. See [Auth Upgrade](/auth-upgrade), [Auth configuration](/auth-configuration) and [Deploy with Docker](/docker#behind-a-reverse-proxy).
 
 - **Pinned auth URL.** With `auth.email` configured, the production server refuses to start unless `BETTER_AUTH_URL` or the current environment's `url` in `config.environments` is set, so emailed auth links cannot take their host from a request. The dev server is unchanged.
 - **Client address.** The server takes the client address for auth rate limits, sessions and request logs from the connection, and reads `X-Forwarded-For` only from the proxies listed in `config.trustedProxies`. Behind a reverse proxy or load balancer, list it there; otherwise every client shares the proxy's rate limits. On Vercel nothing changes.
+- **Email link pages.** `SignUp` and `SendVerificationEmail` without a `callbackUrl` send the verification link to `auth.authPages.verifyEmail` (default `/verify-email`), not the home page. `RequestPasswordReset` without `redirectTo` sends the reset link to `auth.authPages.resetPassword` (default `/reset-password`). The build warns when the app sends these emails and the page does not exist.
