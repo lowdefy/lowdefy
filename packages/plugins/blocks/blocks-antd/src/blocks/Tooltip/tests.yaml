@@ -78,15 +78,17 @@
   style:
     .inner:
       border: 5px solid blue
-- id: 'areas.content:'
+- id: 'slots.content:'
   type: Tooltip
   properties:
     title: Tooltip block
-  areas:
+  slots:
     content:
       blocks:
-        - id: test
-          type: Test
+        - id: tooltip_trigger_button
+          type: Button
+          properties:
+            title: Hover me
 - id: 'properties.title with html'
   type: Tooltip
   properties:

@@ -64,20 +64,24 @@
   style:
     .wrapper:
       border: 10px solid green
-- id: 'areas.extra:'
+- id: 'slots.extra:'
   type: Drawer
-  areas:
+  slots:
     extra:
       blocks:
-        - id: one
-          type: Test
-- id: 'areas.footer:'
+        - id: drawer_extra_button
+          type: Button
+          properties:
+            title: Save
+- id: 'slots.footer:'
   type: Drawer
-  areas:
+  slots:
     footer:
       blocks:
-        - id: one
-          type: Test
+        - id: drawer_footer_text
+          type: Paragraph
+          properties:
+            content: Drawer footer
 - id: 'properties.size: large'
   type: Drawer
   properties:

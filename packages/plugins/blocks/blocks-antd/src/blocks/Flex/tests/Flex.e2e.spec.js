@@ -70,4 +70,10 @@ test.describe('Flex Block', () => {
     await expect(flex).toHaveCSS('align-items', 'end');
     await expect(flex).toHaveCSS('justify-content', 'end');
   });
+
+  test('gap middle reaches antd as the medium preset', async ({ page }) => {
+    const flex = getBlock(page, 'flex_gap_middle').locator('.ant-flex');
+    await expect(flex).toHaveClass(/ant-flex-gap-medium/);
+    await expect(flex).not.toHaveClass(/ant-flex-gap-middle/);
+  });
 });

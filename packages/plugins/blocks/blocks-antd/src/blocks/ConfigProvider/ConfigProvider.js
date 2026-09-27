@@ -19,6 +19,11 @@ import { ConfigProvider as AntdConfigProvider, theme } from 'antd';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
+// antd 6 deprecates the `middle` size in favour of `medium`.
+const sizeMap = {
+  middle: 'medium',
+};
+
 const algorithmMap = {
   default: theme.defaultAlgorithm,
   dark: theme.darkAlgorithm,
@@ -49,7 +54,7 @@ const ConfigProviderBlock = ({ blockId, content, properties }) => {
   return (
     <AntdConfigProvider
       componentDisabled={properties.componentDisabled}
-      componentSize={properties.componentSize}
+      componentSize={sizeMap[properties.componentSize] ?? properties.componentSize}
       direction={properties.direction}
       locale={properties.locale}
       popupMatchSelectWidth={properties.popupMatchSelectWidth}

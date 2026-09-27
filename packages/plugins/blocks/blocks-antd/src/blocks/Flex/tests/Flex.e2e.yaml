@@ -138,3 +138,17 @@ blocks:
         type: Button
         properties:
           title: End
+
+  - id: flex_gap_middle
+    type: Flex
+    properties:
+      gap: middle
+    blocks:
+      - id: flex_gmid_btn_1
+        type: Button
+        properties:
+          title: Middle 1
+      - id: flex_gmid_btn_2
+        type: Button
+        properties:
+          title: Middle 2

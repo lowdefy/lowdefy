@@ -20,6 +20,11 @@ import { Flex } from 'antd';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
+// antd 6 deprecates the `middle` gap preset in favour of `medium`.
+const gapMap = {
+  middle: 'medium',
+};
+
 const FlexBlock = ({ blockId, classNames = {}, content, properties, styles = {} }) => (
   <Flex
     id={blockId}
@@ -30,7 +35,7 @@ const FlexBlock = ({ blockId, classNames = {}, content, properties, styles = {} 
     wrap={properties.wrap}
     justify={properties.justify}
     align={properties.align}
-    gap={properties.gap}
+    gap={gapMap[properties.gap] ?? properties.gap}
     flex={properties.flex}
     component={properties.component}
   >
