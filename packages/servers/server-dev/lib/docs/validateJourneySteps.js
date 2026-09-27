@@ -49,11 +49,13 @@ function getStepKey(step) {
 // A step's target is a blockId string or an object that narrows the search:
 // `blockId` scopes to the block's #bl- wrapper, `row` and `column` to a grid
 // row (zero-based, as displayed) and cell (by col-id) inside it, `text` to the
-// interactive control with exactly that text, `nth` picks among several
-// matches. `text` alone, with no blockId, searches the whole page — that is
-// how portal-rendered controls (confirm dialog buttons, modal footers,
-// dropdown menu items) are reached, since they render outside every block.
-const TARGET_KEYS = ['blockId', 'text', 'row', 'column', 'nth'];
+// interactive control with exactly that text, `containing` to the element
+// whose text contains the string (a list row that shows an email address),
+// `nth` picks among several matches. `text` alone, with no blockId, searches
+// the whole page — that is how portal-rendered controls (confirm dialog
+// buttons, modal footers, dropdown menu items) are reached, since they render
+// outside every block.
+const TARGET_KEYS = ['blockId', 'text', 'containing', 'row', 'column', 'nth'];
 
 function isIndex(value) {
   return type.isInt(value) && value >= 0;
@@ -85,11 +87,28 @@ function validateTargetObject({ key, params, extraKeys = [], requireBlockId = fa
   if (!type.isUndefined(params.text) && !type.isString(params.text)) {
     return `Step "${key}" requires "text" to be a string. Received ${describe(params.text)}.`;
   }
+  if (
+    !type.isUndefined(params.containing) &&
+    (!type.isString(params.containing) || params.containing === '')
+  ) {
+    return `Step "${key}" requires "containing" to be a non-empty string. Received ${describe(
+      params.containing
+    )}.`;
+  }
+  if (!type.isUndefined(params.text) && !type.isUndefined(params.containing)) {
+    return `Step "${key}" takes "text" (a control's exact text) or "containing" (text an element contains), not both. Received ${describe(
+      params
+    )}.`;
+  }
   if (requireBlockId && type.isUndefined(params.blockId)) {
     return `Step "${key}" requires a "blockId" string. Received ${describe(params)}.`;
   }
-  if (type.isUndefined(params.blockId) && type.isUndefined(params.text)) {
-    return `Step "${key}" requires a "blockId" or a "text" to target. Received ${describe(
+  if (
+    type.isUndefined(params.blockId) &&
+    type.isUndefined(params.text) &&
+    type.isUndefined(params.containing)
+  ) {
+    return `Step "${key}" requires a "blockId", a "text" or a "containing" to target. Received ${describe(
       params
     )}.`;
   }
@@ -125,7 +144,7 @@ function validateTarget({ key, params }) {
     return undefined;
   }
   if (!type.isObject(params)) {
-    return `Step "${key}" requires a blockId string or a target object { blockId, text, row, column, nth }. Received ${describe(
+    return `Step "${key}" requires a blockId string or a target object { blockId, text, containing, row, column, nth }. Received ${describe(
       params
     )}.`;
   }
@@ -187,6 +206,64 @@ function validateGoto(params) {
     return `Step "goto" requires "urlQuery" to be an object. Received ${describe(
       params.urlQuery
     )}.`;
+  }
+  return undefined;
+}
+
+// fill takes { blockId, value }, or { blockId, fromEmail } to type text read
+// from an email - a one-time code - instead of a literal value.
+function validateFill(params) {
+  if (!type.isObject(params) || type.isUndefined(params.fromEmail)) {
+    return validateBlockValue({ key: 'fill', params });
+  }
+  if (!type.isUndefined(params.value)) {
+    return `Step "fill" takes a "value" or a "fromEmail", not both. Received ${describe(params)}.`;
+  }
+  const fromEmailError = validateFromEmail(params.fromEmail);
+  if (!type.isUndefined(fromEmailError)) {
+    return fromEmailError;
+  }
+  return validateTargetObject({
+    key: 'fill',
+    params,
+    extraKeys: ['fromEmail'],
+    requireBlockId: true,
+  });
+}
+
+// fill.fromEmail reads the newest message to `to` (optionally narrowed by
+// subject) and takes the first match of the regular expression `match`.
+function validateFromEmail(params) {
+  if (!type.isObject(params)) {
+    return `Step "fill" requires "fromEmail" to be { to, subject, match }. Received ${describe(
+      params
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'fill.fromEmail',
+    params,
+    allowed: ['to', 'subject', 'match'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  if (!type.isString(params.to) || params.to === '') {
+    return `Step "fill.fromEmail" requires a "to" address string. Received ${describe(params.to)}.`;
+  }
+  if (!type.isUndefined(params.subject) && !type.isString(params.subject)) {
+    return `Step "fill.fromEmail" requires "subject" to be a string. Received ${describe(
+      params.subject
+    )}.`;
+  }
+  if (!type.isString(params.match) || params.match === '') {
+    return `Step "fill.fromEmail" requires a "match" regular expression string, e.g. "\\b\\d{6}\\b" for a six-digit code. Received ${describe(
+      params.match
+    )}.`;
+  }
+  try {
+    new RegExp(params.match);
+  } catch (error) {
+    return `Step "fill.fromEmail" requires "match" to be a valid regular expression: ${error.message}.`;
   }
   return undefined;
 }
@@ -275,6 +352,7 @@ function validateStep(step) {
     case 'click':
       return validateTarget({ key: 'click', params });
     case 'fill':
+      return validateFill(params);
     case 'select':
       return validateBlockValue({ key, params });
     case 'press':

@@ -27,6 +27,7 @@ import { getBrowser, buildPageUrl } from './getBrowser.js';
 import isPageReady from './isPageReady.js';
 import JourneyStepError from './JourneyStepError.js';
 import openJourneyEmail from './openJourneyEmail.js';
+import readJourneyEmailMatch from './readJourneyEmailMatch.js';
 import selectFinalState from './selectFinalState.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneySteps, { getStepKey } from './validateJourneySteps.js';
@@ -149,6 +150,9 @@ function describeTarget(target) {
   if (!type.isUndefined(target.text)) {
     parts.push(`control "${target.text}"`);
   }
+  if (!type.isUndefined(target.containing)) {
+    parts.push(`text containing "${target.containing}"`);
+  }
   if (!type.isUndefined(target.nth)) {
     parts.push(`nth ${target.nth}`);
   }
@@ -206,7 +210,10 @@ async function resolvePageWideText({ page, target }) {
   return controlsWithText({ root: page, text: target.text, nth: target.nth });
 }
 
-// The element a step acts on or asserts about. With `text` it is the visible
+// The element a step acts on or asserts about. With `containing` it is the
+// visible element whose text contains the string, inside the scope or on the
+// page: a list row a person picks by the name or address it shows, which is
+// neither a block nor an interactive control. With `text` it is the visible
 // interactive control with exactly that text (a cell button, a confirm
 // dialog's OK, a menu item) inside the scope, or in the front-most open layer
 // of the page when there is no blockId — portal-rendered controls live
@@ -215,6 +222,12 @@ async function resolvePageWideText({ page, target }) {
 // control the way a plain blockId click does.
 async function resolveTarget({ page, target }) {
   const scope = resolveScope({ page, target });
+  if (!type.isUndefined(target.containing)) {
+    return (scope ?? page)
+      .getByText(target.containing)
+      .filter({ visible: true })
+      .nth(target.nth ?? 0);
+  }
   if (!type.isUndefined(target.text)) {
     if (type.isUndefined(scope)) {
       return resolvePageWideText({ page, target });
@@ -227,12 +240,18 @@ async function resolveTarget({ page, target }) {
   return scope;
 }
 
-// A target that names a control (`text`, `nth`) is clicked as is; a target that
+// A target that names a control (`text`, `nth`) or the words shown
+// (`containing`) is clicked as is - a click on a list row's text reaches the
+// row's own click handler, the way a person clicks the row; a target that
 // names a container (block, row, cell) is clicked on the first control inside
 // it, or on itself when it has none.
 async function resolveClickLocator({ page, target }) {
   const located = await resolveTarget({ page, target });
-  if (!type.isUndefined(target.text) || !type.isUndefined(target.nth)) {
+  if (
+    !type.isUndefined(target.text) ||
+    !type.isUndefined(target.containing) ||
+    !type.isUndefined(target.nth)
+  ) {
     return located;
   }
   return resolveClickTarget(located);
@@ -249,8 +268,20 @@ async function runClick({ page, step, timeout }) {
   });
 }
 
-async function runFill({ page, step, timeout }) {
-  const { value, ...target } = step.fill;
+// A fill types `value`, or text read from an email (`fromEmail`) - the way a
+// person types a one-time code from their inbox into the tab they started in.
+async function runFill({ journey, page, step, timeout }) {
+  const { value: literal, fromEmail, ...target } = step.fill;
+  let value = literal;
+  if (!type.isUndefined(fromEmail)) {
+    value = await readJourneyEmailMatch({
+      page,
+      params: fromEmail,
+      since: journey.startedAt,
+      configDirectory: journey.configDirectory,
+      timeout,
+    });
+  }
   await actOnTarget({
     target,
     action: async () => {
@@ -450,15 +481,38 @@ async function runScreenshot({ page, step, index, screenshots }) {
 // A path that does not exist reads as null: a journey is JSON, where null is
 // the only way to say "absent", and the failure report already shows a
 // missing value as null - so `equals: null` asserts the value is not there.
-async function expectState({ page, params }) {
+// A read while the page navigates fails and is retried.
+async function readStateValue({ page, path }) {
+  try {
+    return { value: get((await getState(page)) ?? {}, path) ?? null };
+  } catch (error) {
+    return { error };
+  }
+}
+
+// Polled like every other expectation: the value a click leads to often
+// lands once the request or endpoint it called has answered, which can be
+// after the page has settled on a busy machine.
+async function expectState({ page, params, timeout }) {
   const { path, equals } = params;
-  const actual = get((await getState(page)) ?? {}, path) ?? null;
-  if (!isDeepEqual(actual, equals)) {
+  const deadline = Date.now() + timeout;
+  let read = await readStateValue({ page, path });
+  while (
+    (!type.isUndefined(read.error) || !isDeepEqual(read.value, equals)) &&
+    Date.now() < deadline
+  ) {
+    await page.waitForTimeout(50);
+    read = await readStateValue({ page, path });
+  }
+  if (!type.isUndefined(read.error)) {
+    throw read.error;
+  }
+  if (!isDeepEqual(read.value, equals)) {
     throw new JourneyStepError(
       `Expected state "${path}" to equal ${JSON.stringify(equals)} but found ${JSON.stringify(
-        actual
+        read.value
       )}.`,
-      { expected: equals, actual }
+      { expected: equals, actual: read.value }
     );
   }
 }
@@ -488,22 +542,46 @@ async function readTargetText({ page, target, timeout }) {
   return texts.join('\n');
 }
 
+// One read of the target's text: { text } or, when the target is not in the
+// page yet or the page navigated mid-read, { error }.
+async function tryReadTargetText({ page, target, timeout }) {
+  try {
+    return { text: await readTargetText({ page, target, timeout }) };
+  } catch (error) {
+    return { error };
+  }
+}
+
+// Polled rather than read once, like the url and the title: a block often
+// renders its text only once the request it shows has answered (a list hidden
+// until its data arrives reads as ""), and a sign-in or sign-out may still be
+// reloading the page when the step starts.
 async function expectText({ page, params, timeout }) {
   const { contains, ...target } = params;
   const description = describeTarget(target);
-  let text;
-  try {
-    text = await readTargetText({ page, target, timeout });
-  } catch (error) {
-    throw new JourneyStepError(`Expected ${description} to contain text "${contains}".`, {
-      expected: `${description} text to contain "${contains}"`,
-      actual: cleanMessage(error),
+  const expected = `${description} text to contain "${contains}"`;
+  const deadline = Date.now() + timeout;
+  let read = await tryReadTargetText({ page, target, timeout });
+  while (read.text?.includes(contains) !== true && Date.now() < deadline) {
+    await page.waitForTimeout(50);
+    read = await tryReadTargetText({
+      page,
+      target,
+      timeout: Math.max(deadline - Date.now(), 1),
     });
   }
-  if (!text.includes(contains)) {
+  if (!type.isUndefined(read.error)) {
+    throw new JourneyStepError(`Expected ${description} to contain text "${contains}".`, {
+      expected,
+      actual: cleanMessage(read.error),
+    });
+  }
+  if (!read.text.includes(contains)) {
     throw new JourneyStepError(
-      `Expected ${description} text to contain "${contains}" but found ${JSON.stringify(text)}.`,
-      { expected: `${description} text to contain "${contains}"`, actual: text }
+      `Expected ${description} text to contain "${contains}" but found ${JSON.stringify(
+        read.text
+      )}.`,
+      { expected, actual: read.text }
     );
   }
 }
@@ -551,7 +629,7 @@ async function runExpect({ page, step, timeout }) {
   const params = expectation[key];
   switch (key) {
     case 'state':
-      await expectState({ page, params });
+      await expectState({ page, params, timeout });
       return;
     case 'visible':
       await expectVisible({ page, params, timeout });
@@ -577,6 +655,11 @@ async function runExpect({ page, step, timeout }) {
 // hung request) simply moves on and lets the next expect report what it
 // finds. Reads the current pageId from the page because a click may have
 // navigated to another page.
+//
+// Never longer than SETTLE_TIMEOUT_MS, however long the steps may wait: an
+// event that ends in a Wait (a sign-in link's resend cooldown) keeps the page
+// unsettled for as long as it waits, and every step after it waits for what it
+// needs on its own.
 async function settlePage({ page, timeout }) {
   const pageId = await page.evaluate(() => window.lowdefy?.pageId);
   if (type.isNone(pageId)) {
@@ -587,6 +670,13 @@ async function settlePage({ page, timeout }) {
 
 const INTERACTION_STEPS = ['click', 'fill', 'select', 'press', 'back'];
 
+const SETTLE_TIMEOUT_MS = 5000;
+
+function readsMail(step) {
+  const key = getStepKey(step);
+  return key === 'email' || (key === 'fill' && !type.isUndefined(step.fill.fromEmail));
+}
+
 async function runStep({ journey, step, index, screenshots }) {
   const page = journey.actors.current().page;
   const timeout = journey.stepTimeout;
@@ -595,7 +685,7 @@ async function runStep({ journey, step, index, screenshots }) {
       await runClick({ page, step, timeout });
       return;
     case 'fill':
-      await runFill({ page, step, timeout });
+      await runFill({ journey, page, step, timeout });
       return;
     case 'select':
       await runSelect({ page, step, timeout });
@@ -674,7 +764,10 @@ async function runSteps({ journey, steps }) {
     try {
       await runStep({ journey, step, index, screenshots });
       if (INTERACTION_STEPS.includes(getStepKey(step))) {
-        await settlePage({ page: journey.actors.current().page, timeout: journey.stepTimeout });
+        await settlePage({
+          page: journey.actors.current().page,
+          timeout: Math.min(journey.stepTimeout, SETTLE_TIMEOUT_MS),
+        });
       }
       results.push({ index, step, status: 'ok', durationMs: Date.now() - started });
     } catch (error) {
@@ -700,11 +793,14 @@ async function readFinalState({ page }) {
 // list of steps — click, fill, select, press, back, goto, email, as, wait,
 // screenshot, expect — so an agent can verify behaviour (a form submits, a
 // modal opens, state changes, a sign-up email arrives) and not only layout.
-// `stepTimeout` (the journey's `timeout`) bounds each step, matching
-// Playwright's per-action timeout; `timeout` bounds each page open, raised to
-// `stepTimeout` when that is longer, so one journey setting raises every wait. `state` picks what the result carries of
-// the final page state (see selectFinalState). `user: 'none'` injects no
-// caller, so the app's own auth decides who each actor is.
+// `stepTimeout` (the journey's `timeout`) bounds each step's wait for
+// something to happen, matching Playwright's per-action timeout; `timeout`
+// bounds each page open, raised to `stepTimeout` when that is longer, so one
+// journey setting raises every such wait. The settle after an interaction is
+// the exception: it stays capped (see settlePage), since it never fails a
+// step. `state` picks what the result carries of the final page state (see
+// selectFinalState). `user: 'none'` injects no caller, so the app's own auth
+// decides who each actor is.
 async function runJourney({
   origin,
   pageId,
@@ -748,10 +844,10 @@ async function runJourney({
   }
   const openTimeout = Math.max(timeout, stepTimeout);
   const capturesMail = process.env.LOWDEFY_SERVER_DEV_MAIL_SINK === 'true';
-  if (steps.some((step) => getStepKey(step) === 'email') && !capturesMail) {
+  if (steps.some(readsMail) && !capturesMail) {
     return {
       error:
-        'The journey has an "email" step, but this dev server captures no mail. Start (or restart) it with LOWDEFY_DEV_SMTP_PORT set to a free port, and point the app\'s SMTP connection at 127.0.0.1 on that port.',
+        'The journey reads email (an "email" step or a "fill" with "fromEmail"), but this dev server captures no mail. Start (or restart) it with LOWDEFY_DEV_SMTP_PORT set to a free port, and point the app\'s SMTP connection at 127.0.0.1 on that port.',
     };
   }
   // Taken before any page opens: mail the journey causes arrives after it.

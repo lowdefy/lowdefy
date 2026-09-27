@@ -205,7 +205,7 @@ The Hono server runs as plain Node ESM — server-side imports from `build/plugi
 
 - `base` from `build/config.json` `basePath`; `build.outDir: 'dist/client'`; `build.manifest: true`; input `client/main.jsx`.
 - `define: { 'process.env.NODE_ENV': ... }` — Vite does not replace it inside dependencies.
-- `resolve.dedupe: ['react', 'react-dom']` for linked plugin packages.
+- `resolve.dedupe` for linked plugin packages: React, antd, dayjs and every `@lowdefy/*` package in the server's dependencies, so a plugin pinned to another release cannot bundle a second copy of the libraries whose module state the client and blocks share.
 - `sentryVitePlugin` (source map upload) gated on `SENTRY_AUTH_TOKEN`.
 - PostCSS (`@tailwindcss/postcss`) is read automatically from `postcss.config.cjs` — `client/main.jsx` imports `build/layer-order.css` **first**, then `build/globals.css`.
 
