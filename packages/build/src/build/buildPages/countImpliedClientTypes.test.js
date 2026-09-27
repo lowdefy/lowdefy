@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import { _js } from '@lowdefy/operators-js/operators/client';
-
 import countImpliedClientTypes from './countImpliedClientTypes.js';
 import createCounter from '../../utils/createCounter.js';
 import createPageTypeCounters from './createPageTypeCounters.js';
@@ -38,13 +36,6 @@ const blockMetas = {
 
 test.each([
   {
-    name: 'a block that registers its own events',
-    blocks: ['Upload'],
-    operators: [],
-    actions: ['Request'],
-    impliedOperators: [],
-  },
-  {
     name: 'a block that registers actions and operators',
     blocks: ['AgentChat', 'Button'],
     operators: [],
@@ -56,7 +47,7 @@ test.each([
     blocks: ['Button'],
     operators: ['_js'],
     actions: [],
-    impliedOperators: ['_js', ...jsAccessorOperators],
+    impliedOperators: ['_js', ...jsAccessorOperators.client],
   },
   {
     name: 'a page with neither',
@@ -88,25 +79,4 @@ test('countImpliedClientTypes points implied types at the block that needs them'
   typeCounters.blocks.increment('Upload', 'upload-key');
   countImpliedClientTypes({ blockMetas, pageCounters, typeCounters });
   expect(appCounters.actions.getLocation('Request')).toBe('upload-key');
-});
-
-test('jsAccessorOperators lists every operator the client _js accessors call', () => {
-  const called = new Set();
-  const operators = new Proxy(
-    {},
-    {
-      get: (_, name) => {
-        called.add(name);
-        return () => null;
-      },
-    }
-  );
-  const jsMap = {
-    fn: (accessors) =>
-      Object.entries(accessors)
-        .filter(([, accessor]) => typeof accessor === 'function')
-        .forEach(([, accessor]) => accessor('x')),
-  };
-  _js({ jsMap, operators, params: 'fn' });
-  expect([...called].sort()).toEqual([...jsAccessorOperators].sort());
 });

@@ -17,6 +17,7 @@
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 
 import findSimilarString from '../utils/findSimilarString.js';
+import jsAccessorOperators from './jsAccessorOperators.js';
 import mandatoryClientTypes from './mandatoryClientTypes.js';
 
 function buildTypeClass(
@@ -57,6 +58,15 @@ function buildTypes({ components, context }) {
   mandatoryClientTypes.operators.forEach((operator) =>
     typeCounters.operators.client.increment(operator)
   );
+  // Server operators are bundled app-wide, so the server _js accessors are
+  // counted once here; the client ones are counted per page
+  // (countImpliedClientTypes).
+  if (typeCounters.operators.server.getCount('_js') > 0) {
+    const configKey = typeCounters.operators.server.getLocation('_js');
+    jsAccessorOperators.server.forEach((operator) =>
+      typeCounters.operators.server.increment(operator, configKey)
+    );
+  }
 
   components.types = {
     actions: {},

@@ -35,7 +35,7 @@ function countImpliedClientTypes({ blockMetas, pageCounters, typeCounters }) {
   });
   if (pageCounters.operators.getCount('_js') > 0) {
     const configKey = pageCounters.operators.getLocation('_js');
-    jsAccessorOperators.forEach((operator) =>
+    jsAccessorOperators.client.forEach((operator) =>
       typeCounters.operators.client.increment(operator, configKey)
     );
   }

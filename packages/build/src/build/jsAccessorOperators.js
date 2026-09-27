@@ -14,20 +14,23 @@
   limitations under the License.
 */
 
-// The client _js operator hands its function accessors (state(), request(),
-// urlQuery(), ...) that call these operators through the operator registry, so
-// a page that runs _js needs them whether or not its config names them.
-const jsAccessorOperators = [
-  '_actions',
-  '_app',
-  '_event',
-  '_global',
-  '_input',
-  '_location',
-  '_request',
-  '_state',
-  '_url_query',
-  '_user',
-];
+// The _js operator hands its function accessors (state(), payload(), ...) that
+// call these operators through the operator registry, so config that runs _js
+// needs them whether or not it names them.
+const jsAccessorOperators = {
+  client: [
+    '_actions',
+    '_app',
+    '_event',
+    '_global',
+    '_input',
+    '_location',
+    '_request',
+    '_state',
+    '_url_query',
+    '_user',
+  ],
+  server: ['_app', '_item', '_payload', '_secret', '_state', '_step', '_user'],
+};
 
 export default jsAccessorOperators;
