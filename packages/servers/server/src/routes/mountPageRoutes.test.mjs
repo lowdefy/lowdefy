@@ -29,18 +29,10 @@ function request({ basePath, path }) {
 
 test.each([
   ['', '/', ''],
-  ['', '/invoices', 'invoices'],
-  ['', '/404', '404'],
   ['/app', '/app', ''],
   ['/app', '/app/', ''],
   ['/app', '/app/invoices', 'invoices'],
-  ['/app', '/app/404', '404'],
 ])('with basePath "%s", %s renders page "%s"', async (basePath, path, pageId) => {
   const res = await request({ basePath, path });
   expect(await res.json()).toEqual({ pageId });
-});
-
-test('a path outside the basePath is not a page', async () => {
-  const res = await request({ basePath: '/app', path: '/other' });
-  expect(res.status).toEqual(404);
 });

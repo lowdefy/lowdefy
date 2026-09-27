@@ -14,17 +14,13 @@
   limitations under the License.
 */
 
-import { Hono } from 'hono';
+// Every page path renders the app shell with its page id. `.*`, not `.+`: under
+// a basePath, `<basePath>/` arrives with an empty rest, and is the app root
+// like `<basePath>` itself.
+function mountPageRoutes({ app, renderPage }) {
+  app.get('/', (c) => renderPage(c, { pageId: '' }));
+  app.get('/404', (c) => renderPage(c, { pageId: '404', status: 404 }));
+  app.get('/:rest{.*}', (c) => renderPage(c, { pageId: c.req.param('rest') }));
+}
 
-import mountDevPageRoutes from './mountDevPageRoutes.js';
-
-test.each([
-  ['/app', '/app'],
-  ['/app', '/app/'],
-  ['/app', '/app/invoices'],
-])('with basePath "%s", %s renders the dev shell', async (basePath, path) => {
-  const app = basePath === '' ? new Hono() : new Hono().basePath(basePath);
-  mountDevPageRoutes({ app, renderPage: (c) => c.text('shell') });
-  const res = await app.request(path);
-  expect(await res.text()).toEqual('shell');
-});
+export default mountPageRoutes;

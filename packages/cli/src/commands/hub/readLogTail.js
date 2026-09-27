@@ -16,15 +16,16 @@
 
 import fs from 'fs';
 
+import { MAX_LOG_LINES } from './hubProtocol.js';
+
 // Dev logs carry ANSI colour codes and spinner redraws; agents read plain text.
 // eslint-disable-next-line no-control-regex
 const ANSI = /\u001b\[[0-9;?]*[ -/]*[@-~]/g;
 
 // A long-lived dev server's log grows for its whole life; only its end is ever
-// read, so only its end is loaded. The window holds MAX_LINES lines of any
+// read, so only its end is loaded. The window holds MAX_LOG_LINES lines of any
 // reasonable length.
 const TAIL_BYTES = 1024 * 1024;
-const MAX_LINES = 1000;
 
 function readTailText({ logPath }) {
   const fd = fs.openSync(logPath, 'r');
@@ -53,8 +54,7 @@ function readLogTail({ logPath, lines = 100, grep }) {
     const needle = grep.toLowerCase();
     logLines = logLines.filter((line) => line.toLowerCase().includes(needle));
   }
-  return logLines.slice(-Math.min(lines, MAX_LINES));
+  return logLines.slice(-Math.min(lines, MAX_LOG_LINES));
 }
 
-export { MAX_LINES };
 export default readLogTail;
