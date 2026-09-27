@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { getOperatorType, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
+import { getKeyOperator } from '@lowdefy/operators';
 
 // One extra leading underscore defers operator evaluation by one level — the
 // same convention _function bodies use for __args. Shared operators like
@@ -23,22 +24,23 @@ import { getOperatorType, type } from '@lowdefy/helpers';
 // `__state` instead: it survives the server evaluation untouched, and this
 // unescape strips one underscore so the client evaluates the real operator.
 //
-// Only the key of an operator-shaped object is unescaped. Data read into the
-// :return cannot carry operators (the parser rejects them under literalData),
-// so every such object here was written by the developer, and data keys like
-// `__typename` in an ordinary object pass through unchanged.
-function unescapeOperators(value) {
+// Only the key of an operator-shaped object that names a client operator is
+// unescaped. Data read into the :return cannot carry operators (the parser
+// rejects them under literalData), so every such object here was written by
+// the developer, and data keys like `__typename` pass through unchanged.
+function unescapeOperators({ value, operators }) {
   if (type.isArray(value)) {
-    return value.map(unescapeOperators);
+    return value.map((item) => unescapeOperators({ value: item, operators }));
   }
   if (!type.isObject(value)) {
     return value;
   }
-  const isOperator = getOperatorType(value) !== null;
+  const keys = Object.keys(value).filter((key) => !key.startsWith('~'));
+  const isOperator = keys.length === 1 && getKeyOperator({ key: keys[0], operators }) !== null;
   const result = {};
   Object.keys(value).forEach((key) => {
     const unescapedKey = isOperator && key.startsWith('__') ? key.slice(1) : key;
-    result[unescapedKey] = unescapeOperators(value[key]);
+    result[unescapedKey] = unescapeOperators({ value: value[key], operators });
   });
   return result;
 }

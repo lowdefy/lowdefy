@@ -21,6 +21,7 @@ import writeAuthImports from './writeAuthImports.js';
 import writeAvailableTypes from './writeAvailableTypes.js';
 import writeBlockImports from './writeBlockImports.js';
 import writeBlockSchemaMap from './writeBlockSchemaMap.js';
+import writeClientOperators from './writeClientOperators.js';
 import writeConnectionImports from './writeConnectionImports.js';
 import writeConnectionSchemaMap from './writeConnectionSchemaMap.js';
 import writeIconImports from './writeIconImports.js';
@@ -38,6 +39,7 @@ async function writePluginImports({ components, context }) {
   await writeAuthImports({ components, context });
   await writeBlockImports({ components, context });
   await writeBlockSchemaMap({ components, context });
+  await writeClientOperators({ context });
   await writeConnectionImports({ components, context });
   await writeConnectionSchemaMap({ context });
   await writeIconImports({ components, context });
@@ -51,9 +53,7 @@ async function writePluginImports({ components, context }) {
 
   // Write block package names — available as a vite.config.js escape hatch
   // (optimizeDeps/noExternal lists) for packages that don't resolve cleanly.
-  const blockPackages = [
-    ...new Set((components.imports.blocks ?? []).map((b) => b.package)),
-  ];
+  const blockPackages = [...new Set((components.imports.blocks ?? []).map((b) => b.package))];
   await context.writeBuildArtifact('blockPackages.json', JSON.stringify(blockPackages));
 }
 

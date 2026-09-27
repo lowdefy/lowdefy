@@ -6504,10 +6504,12 @@
               "properties": {
                 "src": {
                   "type": "string",
+                  "urlKind": "src",
                   "description": "Logo image URL for desktop. Defaults to logo-light-theme.png or logo-dark-theme.png from the public folder (~250x72px), auto-selected based on dark mode."
                 },
                 "srcMobile": {
                   "type": "string",
+                  "urlKind": "src",
                   "description": "Logo image URL for mobile. Defaults to logo-square-light-theme.png or logo-square-dark-theme.png from the public folder (~125x125px), auto-selected based on dark mode."
                 },
                 "breakpoint": {
@@ -6574,6 +6576,7 @@
                           },
                           "url": {
                             "type": "string",
+                            "urlKind": "url",
                             "description": "External url link."
                           },
                           "style": {
@@ -6758,6 +6761,7 @@
                     },
                     "url": {
                       "type": "string",
+                      "urlKind": "url",
                       "description": "External URL to link to."
                     },
                     "newTab": {
@@ -6867,6 +6871,7 @@
                   "properties": {
                     "src": {
                       "type": "string",
+                      "urlKind": "src",
                       "description": "Image URL for the avatar. Typically bound to _user: image."
                     },
                     "content": {
@@ -6988,6 +6993,7 @@
                       },
                       "url": {
                         "type": "string",
+                        "urlKind": "url",
                         "description": "External URL to link to."
                       },
                       "newTab": {
@@ -15373,10 +15379,12 @@
             },
             "href": {
               "type": "string",
+              "urlKind": "href",
               "description": "The href to link to when the anchor link is clicked."
             },
             "url": {
               "type": "string",
+              "urlKind": "url",
               "description": "External url to link to when the anchor link is clicked."
             },
             "rel": {
@@ -16836,6 +16844,7 @@
           "properties": {
             "src": {
               "type": "string",
+              "urlKind": "src",
               "description": "The image URL."
             },
             "alt": {
@@ -16877,6 +16886,7 @@
             },
             "srcSet": {
               "type": "string",
+              "urlKind": "srcSet",
               "description": "Possible image sources for the user agent to use, strings separated by commas.",
               "docs": {
                 "displayType": "text-area"
@@ -19218,6 +19228,59 @@
     }
   },
   "plugins/blocks.js": "import { PageHeaderMenu as PageHeaderMenu } from '@lowdefy/blocks-antd/blocks';\nimport { Title as Title } from '@lowdefy/blocks-basic/blocks';\nimport { Box as Box } from '@lowdefy/blocks-basic/blocks';\nimport { Card as Card } from '@lowdefy/blocks-antd/blocks';\nimport { Statistic as Statistic } from '@lowdefy/blocks-antd/blocks';\nimport { TextInput as TextInput } from '@lowdefy/blocks-antd/blocks';\nimport { Selector as Selector } from '@lowdefy/blocks-antd/blocks';\nimport { Button as Button } from '@lowdefy/blocks-basic/blocks';\nimport { List as List } from '@lowdefy/blocks-basic/blocks';\nimport { Paragraph as Paragraph } from '@lowdefy/blocks-basic/blocks';\nimport { Tag as Tag } from '@lowdefy/blocks-antd/blocks';\nimport { TextArea as TextArea } from '@lowdefy/blocks-antd/blocks';\nimport { NumberInput as NumberInput } from '@lowdefy/blocks-antd/blocks';\nimport { Switch as Switch } from '@lowdefy/blocks-antd/blocks';\nimport { Result as Result } from '@lowdefy/blocks-antd/blocks';\nimport { Divider as Divider } from '@lowdefy/blocks-antd/blocks';\nimport { PasswordInput as PasswordInput } from '@lowdefy/blocks-antd/blocks';\nimport { Anchor as Anchor } from '@lowdefy/blocks-basic/blocks';\nimport { ClickableHtml as ClickableHtml } from '@lowdefy/blocks-basic/blocks';\nimport { DangerousHtml as DangerousHtml } from '@lowdefy/blocks-basic/blocks';\nimport { Dynamic as Dynamic } from '@lowdefy/blocks-basic/blocks';\nimport { Html as Html } from '@lowdefy/blocks-basic/blocks';\nimport { Icon as Icon } from '@lowdefy/blocks-basic/blocks';\nimport { Img as Img } from '@lowdefy/blocks-basic/blocks';\nimport { PollingTimer as PollingTimer } from '@lowdefy/blocks-basic/blocks';\nimport { Span as Span } from '@lowdefy/blocks-basic/blocks';\nimport { Throw as Throw } from '@lowdefy/blocks-basic/blocks';\nimport { ProgressBar as ProgressBar } from '@lowdefy/blocks-loaders/blocks';\nimport { Skeleton as Skeleton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonAvatar as SkeletonAvatar } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonButton as SkeletonButton } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonInput as SkeletonInput } from '@lowdefy/blocks-loaders/blocks';\nimport { SkeletonParagraph as SkeletonParagraph } from '@lowdefy/blocks-loaders/blocks';\nimport { Spinner as Spinner } from '@lowdefy/blocks-loaders/blocks';\nimport { Message as Message } from '@lowdefy/blocks-antd/blocks';\nexport default {\n  PageHeaderMenu,\n  Title,\n  Box,\n  Card,\n  Statistic,\n  TextInput,\n  Selector,\n  Button,\n  List,\n  Paragraph,\n  Tag,\n  TextArea,\n  NumberInput,\n  Switch,\n  Result,\n  Divider,\n  PasswordInput,\n  Anchor,\n  ClickableHtml,\n  DangerousHtml,\n  Dynamic,\n  Html,\n  Icon,\n  Img,\n  PollingTimer,\n  Span,\n  Throw,\n  ProgressBar,\n  Skeleton,\n  SkeletonAvatar,\n  SkeletonButton,\n  SkeletonInput,\n  SkeletonParagraph,\n  Spinner,\n  Message,\n  };",
+  "plugins/clientOperators.json": [
+    "_actions",
+    "_and",
+    "_args",
+    "_array",
+    "_base64",
+    "_change_case",
+    "_date",
+    "_dayjs",
+    "_diff",
+    "_divide",
+    "_eq",
+    "_event",
+    "_function",
+    "_get",
+    "_global",
+    "_gt",
+    "_gte",
+    "_hash",
+    "_if",
+    "_if_none",
+    "_input",
+    "_intl",
+    "_js",
+    "_json",
+    "_location",
+    "_lt",
+    "_lte",
+    "_media",
+    "_menu",
+    "_mql",
+    "_ne",
+    "_not",
+    "_nunjucks",
+    "_object",
+    "_or",
+    "_payload",
+    "_product",
+    "_random",
+    "_regex",
+    "_request",
+    "_state",
+    "_string",
+    "_subtract",
+    "_sum",
+    "_switch",
+    "_type",
+    "_uri",
+    "_url_query",
+    "_user",
+    "_uuid",
+    "_yaml"
+  ],
   "plugins/connections.js": "import { AxiosHttp as AxiosHttp } from '@lowdefy/connection-axios-http/connections';\nimport { MongoDBCollection as MongoDBCollection } from '@lowdefy/connection-mongodb/connections';\nexport default {\n  AxiosHttp,\n  MongoDBCollection,\n  };",
   "plugins/icons.js": "const n0 = [[\"path\",{\"d\":\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\"}],[\"path\",{\"d\":\"M14 2v5a1 1 0 0 0 1 1h5\"}],[\"circle\",{\"cx\":\"11.5\",\"cy\":\"14.5\",\"r\":\"2.5\"}],[\"path\",{\"d\":\"M13.3 16.3 15 18\"}]];\nconst n1 = [[\"path\",{\"d\":\"m12 14 4-4\"}],[\"path\",{\"d\":\"M3.34 19a10 10 0 1 1 17.32 0\"}]];\nconst n2 = [[\"path\",{\"d\":\"m10 17 5-5-5-5\"}],[\"path\",{\"d\":\"M15 12H3\"}],[\"path\",{\"d\":\"M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4\"}]];\nconst n3 = [[\"path\",{\"d\":\"M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384\"}]];\nconst n4 = [[\"path\",{\"d\":\"M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z\"}],[\"path\",{\"d\":\"M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7\"}],[\"path\",{\"d\":\"M7 3v4a1 1 0 0 0 1 1h7\"}]];\nconst n5 = [[\"path\",{\"d\":\"M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915\"}],[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"3\"}]];\nconst n6 = [[\"path\",{\"d\":\"m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18\"}],[\"path\",{\"d\":\"M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25\"}],[\"circle\",{\"cx\":\"18\",\"cy\":\"20\",\"r\":\"2\"}],[\"circle\",{\"cx\":\"8\",\"cy\":\"20\",\"r\":\"2\"}]];\nconst n7 = [[\"path\",{\"d\":\"M5 12h14\"}],[\"path\",{\"d\":\"M12 5v14\"}]];\nconst n8 = [[\"path\",{\"d\":\"M3 3v16a2 2 0 0 0 2 2h16\"}],[\"path\",{\"d\":\"M18 17V9\"}],[\"path\",{\"d\":\"M13 17V5\"}],[\"path\",{\"d\":\"M8 17v-3\"}]];\nconst n9 = [[\"path\",{\"d\":\"M20 6 9 17l-5-5\"}]];\nconst n10 = [[\"path\",{\"d\":\"M18 6 6 18\"}],[\"path\",{\"d\":\"m6 6 12 12\"}]];\nconst n11 = [[\"rect\",{\"width\":\"14\",\"height\":\"14\",\"x\":\"8\",\"y\":\"8\",\"rx\":\"2\",\"ry\":\"2\"}],[\"path\",{\"d\":\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\"}]];\nconst n12 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"path\",{\"d\":\"m15 9-6 6\"}],[\"path\",{\"d\":\"m9 9 6 6\"}]];\nconst n13 = [[\"path\",{\"d\":\"M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z\"}]];\nconst n14 = [[\"path\",{\"d\":\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"}],[\"path\",{\"d\":\"M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"}]];\nconst n15 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"line\",{\"x1\":\"12\",\"x2\":\"12\",\"y1\":\"8\",\"y2\":\"12\"}],[\"line\",{\"x1\":\"12\",\"x2\":\"12.01\",\"y1\":\"16\",\"y2\":\"16\"}]];\nconst n16 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"path\",{\"d\":\"M12 16v-4\"}],[\"path\",{\"d\":\"M12 8h.01\"}]];\nconst n17 = [[\"path\",{\"d\":\"M21 12a9 9 0 1 1-6.219-8.56\"}]];\nconst n18 = [[\"path\",{\"d\":\"m21 21-4.34-4.34\"}],[\"circle\",{\"cx\":\"11\",\"cy\":\"11\",\"r\":\"8\"}]];\nconst n19 = [[\"circle\",{\"cx\":\"12\",\"cy\":\"12\",\"r\":\"10\"}],[\"path\",{\"d\":\"m16 9-5.5 5.5L8 12\"}]];\nconst n20 = [[\"path\",{\"d\":\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"}],[\"path\",{\"d\":\"M16 3.128a4 4 0 0 1 0 7.744\"}],[\"path\",{\"d\":\"M22 21v-2a4 4 0 0 0-3-3.87\"}],[\"circle\",{\"cx\":\"9\",\"cy\":\"7\",\"r\":\"4\"}]];\nconst n21 = [[\"path\",{\"d\":\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"}],[\"path\",{\"d\":\"M12 9v4\"}],[\"path\",{\"d\":\"M12 17h.01\"}]];\nexport default {\n  \"FileSearch\": { node: n0 },\n  \"Gauge\": { node: n1 },\n  \"LogIn\": { node: n2 },\n  \"Phone\": { node: n3 },\n  \"Save\": { node: n4 },\n  \"Settings\": { node: n5 },\n  \"ShoppingCart\": { node: n6 },\n  \"add\": { node: n7 },\n  \"chart\": { node: n8 },\n  \"check\": { node: n9 },\n  \"close\": { node: n10 },\n  \"copy\": { node: n11 },\n  \"error\": { node: n12 },\n  \"filter\": { node: n13 },\n  \"home\": { node: n14 },\n  \"icon-missing\": { node: n15 },\n  \"info\": { node: n16 },\n  \"loading\": { node: n17 },\n  \"login\": { node: n2 },\n  \"phone\": { node: n3 },\n  \"save\": { node: n4 },\n  \"search\": { node: n18 },\n  \"settings\": { node: n5 },\n  \"success\": { node: n19 },\n  \"users\": { node: n20 },\n  \"warning\": { node: n21 },\n};\n",
   "plugins/notifications.js": "export default {\n  };\nexport const renderEmail = undefined;\nexport const interpolateProperties = undefined;\n",

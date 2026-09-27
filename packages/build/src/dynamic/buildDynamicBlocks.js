@@ -26,9 +26,21 @@ import createCounter from '../utils/createCounter.js';
 // membership checks against the bundled types instead.
 // Each type is also recorded in `used`, so the caller can tell whether the
 // fragment stays within its page's own client types.
-function createMembershipCounter({ category, allowed, dynamicBlockId, pageId, policy, used }) {
+function createMembershipCounter({
+  category,
+  allowed,
+  dynamicBlockId,
+  known = null,
+  pageId,
+  policy,
+  used,
+}) {
   return {
     increment: (typeName) => {
+      // A key that names no client operator the app knows is data to the client.
+      if (known !== null && !known.has(typeName)) {
+        return;
+      }
       used.add(typeName);
       if (allowed.has(typeName)) {
         return;
@@ -88,6 +100,7 @@ function buildDynamicBlocks({
   idPrefix,
   types,
   blockMetas,
+  clientOperators = null,
   dynamicPolicies,
   policy = null,
   usedTypes,
@@ -153,6 +166,7 @@ function buildDynamicBlocks({
           category: 'operator',
           allowed: allowed.operators,
           dynamicBlockId,
+          known: clientOperators,
           pageId,
           policy,
           used: usedTypes.operators,

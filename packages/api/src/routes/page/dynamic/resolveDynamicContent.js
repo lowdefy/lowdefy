@@ -87,7 +87,10 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
         urlQuery: shared.urlQuery ?? {},
       },
       endpointDepth: 0,
-      literalData: { policyId: policy?.id ?? null },
+      literalData: {
+        clientOperators: shared.artifacts.clientOperators,
+        policyId: policy?.id ?? null,
+      },
     });
     if (['error', 'reject'].includes(status)) {
       loggedByRoutine = error?.name === 'UserError' && error.handled === true;
@@ -109,7 +112,10 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
     // (client-evaluated) operators against the bundle.
     const result = await checkDynamicContent(context, {
       artifacts: shared.artifacts,
-      blocks: unescapeOperators(response.blocks),
+      blocks: unescapeOperators({
+        value: response.blocks,
+        operators: shared.artifacts.clientOperators,
+      }),
       dynamicBlockId: block.blockId,
       idPrefix: block.id,
       pageId: shared.pageId,

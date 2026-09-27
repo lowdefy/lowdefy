@@ -235,6 +235,12 @@ Handles Auth.js configuration retrieval.
 
 Serves page configuration to the client.
 
+**Dynamic content (`routes/page/dynamic/`).** `resolveDynamicContent` calls each `Dynamic` block's endpoint in-process with `literalData` (`@lowdefy/operators` `createLiteralData`: the block's policy id, the app's client operator names from `plugins/clientOperators.json`, and the data-tracking state). The endpoint's `:return` is the trust boundary between data and page config:
+
+- `ServerParser` scans every non-pass-through operator result for anything the client would run as an operator (`getPossibleOperators`, the one rule every check shares: vanishing siblings count, keys that name no client or server operator, such as `_score`, are data) and marks the result's tracked objects (a string `type` or a client operator key) as data by identity (`markDataObjects`). The copying reads carry the marks to their copies: `_get` and `_args` by position in what they read (`markCopiedData`), and a `_function` body that holds data by content digest as each call parses its copy (`indexDataShapes`, `markDataShape`). An object `_object.assign` merges data into becomes data too. Nothing else is matched by content, so an object built from `:return` config is never data, whatever it equals.
+- `controlReturn` then runs `checkLiteralContent` on the finished `:return`: without a policy, a block or action (walked through slots, areas, skeletons, events and control branches) that is data is refused; under any policy, data that the client could run as an operator after a merge is refused.
+- `checkDynamicContent` applies the policy (`policy/checkPolicy.js`) and builds the fragment. The policy judges URLs by the block schema's `urlKind` marks (`policy/collectUrlKinds.js`) (`urlKind: false` opts a URL-named property out) and falls back to key names for every value no schema marks; `_state` reads must name a literal key under `policy.state`.
+
 ### `/routes/rootConfig/`
 
 Serves app configuration, menus, and home page info.

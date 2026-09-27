@@ -17,9 +17,36 @@
 import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
+import createContentHasher from './createContentHasher.js';
+import findDataOrigin from './findDataOrigin.js';
 import findOperatorInData from './findOperatorInData.js';
+import indexDataShapes from './indexDataShapes.js';
 import isCheckedContentRead from './isCheckedContentRead.js';
 import isLiteralPassThrough from './isLiteralPassThrough.js';
+import isNestedDeeperThan from './isNestedDeeperThan.js';
+import markCopiedData from './markCopiedData.js';
+import markDataObjects from './markDataObjects.js';
+import markDataShape from './markDataShape.js';
+import MAX_DATA_DEPTH from './maxDataDepth.js';
+
+// _object.assign is the one pass-through method that moves data keys into
+// another object, so an object it merges data into is data too.
+function findMergedDataOrigin({ literalData, op, methodName, params }) {
+  if (op !== '_object' || methodName !== 'assign' || !type.isArray(params)) {
+    return null;
+  }
+  for (const source of params) {
+    const origin = findDataOrigin({ literalData, value: source });
+    if (origin !== null) {
+      return origin;
+    }
+  }
+  return null;
+}
+
+function isStackOverflow(error) {
+  return error instanceof RangeError && /call stack/i.test(error.message);
+}
 
 class ServerParser {
   constructor({ env, i18n, jsMap, lowdefyApp, operators, organization, secrets, user }) {
@@ -32,11 +59,30 @@ class ServerParser {
     this.parse = this.parse.bind(this);
     this.secrets = secrets;
     this.user = user;
+    // clientOperators set -> the names the per-result scan counts (see getScanOperators).
+    this.scanOperatorSets = new WeakMap();
+  }
+
+  // The per-result scan counts this parser's own operators as well as the client's: a
+  // _function body read from data is evaluated here, where a key such as __secret runs.
+  // Keys that name neither (_score) stay data. null (no client list) counts every key.
+  getScanOperators(clientOperators) {
+    if (clientOperators === null) {
+      return null;
+    }
+    if (!this.scanOperatorSets.has(clientOperators)) {
+      this.scanOperatorSets.set(
+        clientOperators,
+        new Set([...clientOperators, ...Object.keys(this.operators)])
+      );
+    }
+    return this.scanOperatorSets.get(clientOperators);
   }
 
   parse({
     args,
     arrayIndices = [],
+    dataShapes = null,
     error,
     input,
     items,
@@ -73,7 +119,12 @@ class ServerParser {
           ...callOptions,
         }),
     };
+    // Set while a _function body that holds data is parsed (see below).
+    const digest = dataShapes === null ? null : createContentHasher();
     const reviver = (_, value) => {
+      if (dataShapes !== null) {
+        markDataShape({ literalData, dataShapes, digest, value });
+      }
       if (!type.isObject(value)) return value;
       if (Object.keys(value).length !== 1) return value;
 
@@ -85,6 +136,23 @@ class ServerParser {
       const configKey = value['~k'];
       const params = value[key];
       try {
+        // Read before the call: the merge changes the target it would match.
+        const mergedFrom =
+          literalData === null
+            ? null
+            : findMergedDataOrigin({ literalData, op, methodName, params });
+        // A _function body is copied and parsed each time the function runs. When
+        // the body holds data, its copies are recognised by content as they are
+        // parsed, before any operator in the body reads them.
+        let operatorParser = parser;
+        if (literalData !== null && op === '_function') {
+          const bodyShapes = indexDataShapes({ literalData, value: params });
+          if (bodyShapes !== null) {
+            operatorParser = {
+              parse: (callOptions) => parser.parse({ ...callOptions, dataShapes: bodyShapes }),
+            };
+          }
+        }
         const res = this.operators[op]({
           args,
           arrayIndices,
@@ -100,7 +168,7 @@ class ServerParser {
           operators: this.operators,
           organization: this.organization,
           params,
-          parser,
+          parser: operatorParser,
           payload,
           runtime: 'node',
           secrets: this.secrets,
@@ -108,31 +176,59 @@ class ServerParser {
           steps,
           user: this.user,
         });
+        if (literalData === null || isCheckedContentRead({ literalData, op, params })) {
+          return res;
+        }
+        const operatorName = methodName ? `${op}.${methodName}` : op;
+        if (isLiteralPassThrough({ op, methodName })) {
+          if (mergedFrom !== null && type.isObject(res)) {
+            literalData.dataObjects.set(res, mergedFrom);
+          }
+          markCopiedData({ literalData, op, params, args, arrayIndices, copy: res });
+          return res;
+        }
         // Under literalData the output is sent to a client that evaluates every
         // operator-shaped object, so no operator result may carry one unless
         // the operator only passes through params the reviver already checked.
-        if (
-          literalData !== null &&
-          !isLiteralPassThrough({ op, methodName }) &&
-          !isCheckedContentRead({ literalData, op, params })
-        ) {
-          // The result is replaced by its serialized form, the one scanned, so the
-          // page sends exactly what was checked: a class instance's toJSON runs once,
-          // here, and no later copy can read other keys or call it again.
-          const sent = serializer.serialize(res, { skipMarkers: true });
-          const found = findOperatorInData(sent);
-          if (found) {
-            const operatorName = methodName ? `${op}.${methodName}` : op;
-            throw new ConfigError(
-              `Data returned by "${operatorName}" contains the operator "${found.operator}"${
-                found.path ? ` at "${found.path}"` : ''
-              }. Operators in endpoint data do not run in Dynamic block content. Write client operators in the endpoint's :return config instead.`
-            );
-          }
-          return sent;
+        // The result is replaced by its serialized form, the one scanned, so the
+        // page sends exactly what was checked: a class instance's toJSON runs once,
+        // here, and no later copy can read other keys or call it again.
+        if (isNestedDeeperThan({ value: res, limit: MAX_DATA_DEPTH })) {
+          throw new ConfigError(
+            `Data returned by "${operatorName}" is nested more than ${MAX_DATA_DEPTH} levels deep. Data read into Dynamic block content may nest at most ${MAX_DATA_DEPTH} levels.`
+          );
         }
-        return res;
+        const sent = serializer.serialize(res, { skipMarkers: true });
+        const found = findOperatorInData({
+          value: sent,
+          operators: this.getScanOperators(literalData.clientOperators),
+        });
+        if (found) {
+          throw new ConfigError(
+            `Data returned by "${operatorName}" contains the operator "${found.operator}"${
+              found.path ? ` at "${found.path}"` : ''
+            }. Operators in endpoint data do not run in Dynamic block content. Write client operators in the endpoint's :return config instead.`
+          );
+        }
+        // Marked so the finished :return can refuse this data, or a copy of it,
+        // where it would become a block, an action or an operator.
+        markDataObjects({ literalData, value: sent, operator: operatorName });
+        return sent;
       } catch (e) {
+        // An operator that walks data by recursion (a copy, a serialization) runs
+        // out of stack on data nested deeply enough; under literalData that data
+        // came from outside, so it fails like any other refused data.
+        if (literalData !== null && isStackOverflow(e)) {
+          errors.push(
+            new ConfigError(
+              `Data read by "${
+                methodName ? `${op}.${methodName}` : op
+              }" is nested too deeply to check. Data read into Dynamic block content may nest at most ${MAX_DATA_DEPTH} levels.`,
+              { configKey }
+            )
+          );
+          return null;
+        }
         if (e instanceof ConfigError) {
           if (!e.configKey) {
             e.configKey = configKey;
