@@ -243,11 +243,6 @@ export default {
             type: 'string',
             description: 'Background color when the input is focused.',
           },
-          inputAffixPadding: {
-            type: 'number',
-            default: 4,
-            description: 'Gap between the prefix or suffix and the input text.',
-          },
           inputFontSize: {
             type: 'number',
             default: 14,

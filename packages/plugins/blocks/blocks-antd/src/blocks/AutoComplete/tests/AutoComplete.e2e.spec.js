@@ -348,6 +348,14 @@ test.describe('AutoComplete antd 6 features', () => {
     await expect(popup).toHaveCSS('background-color', 'rgb(250, 250, 210)');
   });
 
+  test('applies the options cssKey to each option', async ({ page }) => {
+    await getInput(page, 'ac_popup').click();
+    const option = getOption(page, 'ac_popup', 1);
+    await expect(option).toHaveText('Banana');
+    await expect(option).toHaveClass(/ac-custom-option/);
+    await expect(option).toHaveCSS('color', 'rgb(0, 128, 0)');
+  });
+
   test('onSelect fires with the value of the selected option', async ({ page }) => {
     await getInput(page, 'ac_onselect').click();
     await getOption(page, 'ac_onselect', 1).click();

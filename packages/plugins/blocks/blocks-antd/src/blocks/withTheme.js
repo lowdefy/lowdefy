@@ -19,7 +19,8 @@ import { ConfigProvider } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 // `antdComponentName` may be an array when a block renders several antd components styled from
-// the same tokens, e.g. TreeSelect draws its selector with the Select styles.
+// the same tokens, e.g. TreeSelect draws its selector with the Select styles, and PhoneNumberInput
+// sets a Select next to an Input.
 function withTheme(antdComponentName, BlockComponent) {
   const componentNames = type.isArray(antdComponentName) ? antdComponentName : [antdComponentName];
   const Wrapped = (props) => {
