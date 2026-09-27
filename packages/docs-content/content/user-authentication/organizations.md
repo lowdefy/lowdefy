@@ -49,6 +49,10 @@ db['user-members'].createIndex({ user_id: 1, organization_id: 1 }, { unique: tru
 
 An equivalent unique index you created yourself, under any name, is accepted. If the auth database user may not create indexes, or the collections already hold duplicate rows, the server logs a warning at startup and a sign-in that needs a new organization fails with an error naming the index, until you remove the duplicates or create the indexes by hand.
 
+### Invitations for existing members
+
+An invitation is how someone joins an organization, never how a membership changes. Accepting an invitation into an organization you already belong to (you joined another way after it was sent) succeeds and marks the invitation accepted, but leaves your membership exactly as it is: the invitation's role, app roles and attributes are not applied, and no second membership is written. If your session had no active organization, the accepted organization becomes active. To change an existing membership, use the [auth steps](/auth-steps) (`UpdateMemberOrgRole`, `UpdateMemberRoles`, `UpdateMemberAttributes`), which check the caller's authority at the time of the change.
+
 ## The `owner` / `admin` / `member` tier vs app roles
 
 A membership carries **two** independent role authorities, and keeping them apart is the whole point:
@@ -106,6 +110,8 @@ connections:
 **A shared connection's change log must not write into a walled collection.** A `tenant: shared` connection's writes belong to no organization, so its `changeLog` records carry no `organization_id`. In a collection a scoped connection reads, those records would be invisible to every walled read and would make the tenant preflight refuse to serve the app, so the build rejects a shared connection whose `changeLog.collection` is the collection of a scoped connection in the same database. Give shared connections their own change-log collection.
 
 **A shared connection over a walled collection has its writes checked.** When a `tenant: shared` connection names the same collection, in the same database, as a scoped connection, the build marks it, and every row it inserts, replaces, upserts or updates must keep a non-empty `organization_id` — the same check a [`tenant: none` write](#writing-with-tenant-none) gets. Its reads stay unscoped, which is what `shared` is for. A collection name resolved at runtime (`_secret`, `_payload`) can not be compared at build time, so such a connection is not marked.
+
+**A shared connection's aggregation may not `$out` or `$merge` into a walled collection.** The rows an aggregation writes are not checked, so the build rejects a request or step on a `tenant: shared` connection whose literal pipeline writes, with `$out` or `$merge`, into a collection a scoped connection reads in the same database. Write the rows with a checked request instead (see the rollup example below). A target named by an operator, or in another database, is not checked at build time.
 
 **Under `tenant` policy every connection type must declare its capability.** A connection whose type does not declare tenant support (`connectionMetas.tenant`) fails the build — no connection is ever *silently* unscoped. Connection plugins declare this in their `types.js`; you do not set it.
 

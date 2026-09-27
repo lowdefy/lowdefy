@@ -239,6 +239,7 @@ Handles Auth.js configuration retrieval.
 | `createActiveOrgPolicyHook.js`  | `session.create` hook applying the active-organization policy, including the tenant signup mint under `create: auto`. The mint writes the organization with a server-only `mintPending` marker, writes the owner member row, then clears the marker; only a marked organization is ever joined as owner. Lost races on the unique slug or member index are recovered by reading the winner's row. |
 | `ensureAuthIndexes.js`          | Ensures the unique indexes the organization writes rely on (organization `slug`, member `(userId, organizationId)`) through the auth adapter's `adapter.options.ensureUniqueIndexes` capability. Run at startup by `getBetterAuth` and awaited by the mint, which refuses without them; memoized per auth instance, retried after a failure. Startup rather than build/CLI because only the running server reliably reaches the database it serves. |
 | `ensureOrganization.js`         | Ensure-by-slug seeding of the pinned organization (id = slug). |
+| `createAcceptExistingMemberHook.js` | Request `hooks.before` on `/organization/accept-invitation` (registered in `requestHooks/buildRequestHooks.js`). When the caller already holds a member row in the invitation's organization, it marks the invitation accepted (compare-and-set on `pending`), sets the organization active only if the session has none, and answers `{ invitation, member }` without touching the membership. Everything the route would refuse first falls through to the route. |
 
 ### `/routes/page/`
 

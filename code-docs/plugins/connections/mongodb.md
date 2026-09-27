@@ -266,7 +266,9 @@ build marks those `walled`, reusing `validateSharedChangeLog`'s target matching)
 write leaves behind must carry a non-empty string organization id: insert and replacement
 documents are checked, updates are walked as a state machine over the tenant field, and
 aggregations may not contain `$out`/`$merge` (return the rows and write them with
-`MongoDBInsertMany`/`MongoDBBulkWrite`).
+`MongoDBInsertMany`/`MongoDBBulkWrite`). The build also refuses a literal `$out`/`$merge` from any
+shared connection into a walled collection of the same database (`validateSharedPipelineWrite`,
+best effort: operator-built targets and `{ db, coll }` targets are not resolved).
 
 **Change-log records** (`stampTenantOnLogRecord.js`). Scoped writes stamp the verdict. Under
 `tenant: none` (`tenantGuard.stampChangeLog`), the record carries the organization of the rows it
