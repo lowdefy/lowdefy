@@ -28,6 +28,7 @@ export default {
   },
   requests: [
     'AwsS3GetObject',
+    'AwsS3HeadObject',
     'AwsS3PresignedGetObject',
     'AwsS3PresignedPostPolicy',
     'AwsS3PutObject',
