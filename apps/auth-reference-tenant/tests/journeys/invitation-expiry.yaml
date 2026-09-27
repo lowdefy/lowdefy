@@ -1,0 +1,156 @@
+# Invitations expire after 60 seconds in this run (INVITATION_EXPIRES_IN, set
+# by pnpm test:journeys:auth), so the first journey waits one out.
+- name: an expired invitation tells the invitee it expired, and a new invitation works
+  pageId: signup
+  user: none
+  steps:
+    - fill: { blockId: name, value: Expiry Owner }
+    - fill: { blockId: email, value: expiry-owner@example.test }
+    - fill: { blockId: password, value: expiry-owner-password }
+    - click: signup_button
+    - email: { to: expiry-owner@example.test, subject: Verify your email address }
+    - click: { text: Verify email address }
+    - click: to_login_button
+    - fill: { blockId: email, value: expiry-owner@example.test }
+    - fill: { blockId: password, value: expiry-owner-password }
+    - click: login_button
+    - expect: { url: { contains: /home } }
+    - goto: members
+    - fill: { blockId: invite_email, value: expiry-invitee@example.test }
+    - fill: { blockId: invite_role, value: member }
+    - click: invite_button
+    - expect:
+        { text: { blockId: invitations_list, contains: expiry-invitee@example.test (pending) } }
+    # The invitee signs up while the invitation is still pending, so they are
+    # signed in without an organization, and do not accept yet.
+    - as: invitee
+    - email: { to: expiry-invitee@example.test, subject: You've been invited to Expiry Owner }
+    - click: { text: Accept invitation }
+    - expect: { visible: accept_button }
+    - goto: signup
+    - fill: { blockId: name, value: Expiry Invitee }
+    - fill: { blockId: email, value: expiry-invitee@example.test }
+    - fill: { blockId: password, value: expiry-invitee-password }
+    - click: signup_button
+    - email: { to: expiry-invitee@example.test, subject: Verify your email address }
+    - click: { text: Verify email address }
+    - click: to_login_button
+    - fill: { blockId: email, value: expiry-invitee@example.test }
+    - fill: { blockId: password, value: expiry-invitee-password }
+    - click: login_button
+    - expect: { url: { contains: /home } }
+    - expect: { text: { blockId: org_less_notice, contains: You have an invitation waiting } }
+    # Someone else, signed in to their own organization, will open the same
+    # link once it has expired.
+    - as: stranger
+    - fill: { blockId: name, value: Expiry Stranger }
+    - fill: { blockId: email, value: expiry-stranger@example.test }
+    - fill: { blockId: password, value: expiry-stranger-password }
+    - click: signup_button
+    - email: { to: expiry-stranger@example.test, subject: Verify your email address }
+    - click: { text: Verify email address }
+    - click: to_login_button
+    - fill: { blockId: email, value: expiry-stranger@example.test }
+    - fill: { blockId: password, value: expiry-stranger-password }
+    - click: login_button
+    - expect: { url: { contains: /home } }
+    - as: main
+    - wait: { ms: 61000 }
+    - goto: members
+    - expect:
+        { text: { blockId: invitations_list, contains: expiry-invitee@example.test (expired) } }
+    # The invitee follows the link: told it expired, and not let in.
+    - as: invitee
+    - email: { to: expiry-invitee@example.test, subject: You've been invited to Expiry Owner }
+    - click: { text: Accept invitation }
+    - click: accept_button
+    - expect: { text: { blockId: accept_error_html, contains: This invitation has expired } }
+    - goto: dashboard
+    - expect: { url: { contains: /404 } }
+    - goto: home
+    - expect: { text: { blockId: org_less_notice, contains: Your invitation is no longer valid } }
+    # Opened while signed in as a different user, the link says the same.
+    - as: stranger
+    - email: { to: expiry-invitee@example.test, subject: You've been invited to Expiry Owner }
+    - click: { text: Accept invitation }
+    - click: accept_button
+    - expect: { text: { blockId: accept_error_html, contains: This invitation has expired } }
+    # The owner invites the same address again.
+    - as: invitee
+    - email: { to: expiry-invitee@example.test, subject: You've been invited to Expiry Owner }
+    - click: { text: Accept invitation }
+    - as: main
+    - fill: { blockId: invite_email, value: expiry-invitee@example.test }
+    - fill: { blockId: invite_role, value: member }
+    - click: invite_button
+    - expect:
+        { text: { blockId: invitations_list, contains: expiry-invitee@example.test (pending) } }
+    # The old link stays unusable; the new one works end to end.
+    - as: invitee
+    - click: accept_button
+    - expect: { text: { blockId: accept_error_html, contains: This invitation has expired } }
+    - expect: { state: { path: accept_response, equals: null } }
+    - email: { to: expiry-invitee@example.test, subject: You've been invited to Expiry Owner }
+    - click: { text: Accept invitation }
+    - click: accept_button
+    - expect: { visible: accept_result_html }
+    - goto: dashboard
+    - expect: { text: { blockId: user_details, contains: 'org_roles: ["member"]' } }
+    - goto: organizations
+    - expect: { state: { path: my_organizations.0.name, equals: Expiry Owner } }
+    - expect: { state: { path: my_organizations.1, equals: null } }
+    - as: main
+    - goto: members
+    - expect: { text: { blockId: members_list, contains: expiry-invitee@example.test (member) } }
+
+- name: a cancelled invitation tells the invitee it expired
+  pageId: signup
+  user: none
+  steps:
+    - fill: { blockId: name, value: Cancel Owner }
+    - fill: { blockId: email, value: cancel-owner@example.test }
+    - fill: { blockId: password, value: cancel-owner-password }
+    - click: signup_button
+    - email: { to: cancel-owner@example.test, subject: Verify your email address }
+    - click: { text: Verify email address }
+    - click: to_login_button
+    - fill: { blockId: email, value: cancel-owner@example.test }
+    - fill: { blockId: password, value: cancel-owner-password }
+    - click: login_button
+    - expect: { url: { contains: /home } }
+    - goto: members
+    - fill: { blockId: invite_email, value: cancel-invitee@example.test }
+    - fill: { blockId: invite_role, value: member }
+    - click: invite_button
+    - expect:
+        { text: { blockId: invitations_list, contains: cancel-invitee@example.test (pending) } }
+    - as: invitee
+    - email: { to: cancel-invitee@example.test, subject: You've been invited to Cancel Owner }
+    - click: { text: Accept invitation }
+    - goto: signup
+    - fill: { blockId: name, value: Cancel Invitee }
+    - fill: { blockId: email, value: cancel-invitee@example.test }
+    - fill: { blockId: password, value: cancel-invitee-password }
+    - click: signup_button
+    - email: { to: cancel-invitee@example.test, subject: Verify your email address }
+    - click: { text: Verify email address }
+    - click: to_login_button
+    - fill: { blockId: email, value: cancel-invitee@example.test }
+    - fill: { blockId: password, value: cancel-invitee-password }
+    - click: login_button
+    - expect: { url: { contains: /home } }
+    - expect: { text: { blockId: org_less_notice, contains: You have an invitation waiting } }
+    - as: main
+    - select: { blockId: cancel_invitation_id, value: cancel-invitee@example.test }
+    - click: cancel_invitation_button
+    - expect:
+        { text: { blockId: invitations_list, contains: cancel-invitee@example.test (canceled) } }
+    - as: invitee
+    - email: { to: cancel-invitee@example.test, subject: You've been invited to Cancel Owner }
+    - click: { text: Accept invitation }
+    - click: accept_button
+    - expect: { text: { blockId: accept_error_html, contains: This invitation has expired } }
+    - goto: home
+    - expect: { text: { blockId: org_less_notice, contains: Your invitation is no longer valid } }
+    - goto: dashboard
+    - expect: { url: { contains: /404 } }

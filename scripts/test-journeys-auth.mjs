@@ -119,6 +119,9 @@ function startDevServer({ ports, uri }) {
     env: {
       ...process.env,
       BETTER_AUTH_URL: `http://localhost:${ports.app}`,
+      // Read by the app's build: invitations expire after the 60 second
+      // minimum, so the expiry journeys can wait one out.
+      INVITATION_EXPIRES_IN: '60',
       LOWDEFY_DEV_SMTP_PORT: String(ports.smtp),
       LOWDEFY_SECRET_BETTER_AUTH_SECRET: crypto.randomBytes(32).toString('base64'),
       LOWDEFY_SECRET_SMTP_HOST: '127.0.0.1',
