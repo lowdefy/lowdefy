@@ -90,3 +90,20 @@
   type: Tooltip
   properties:
     title: '<div style="background-color:orange;">Tooltip Html</div>'
+- id: 'properties.arrow: false'
+  type: Tooltip
+  properties:
+    title: Tooltip without an arrow
+    arrow: false
+- id: 'properties.arrow: pointAtCenter: true'
+  type: Tooltip
+  properties:
+    title: Arrow points at the center
+    placement: topLeft
+    arrow:
+      pointAtCenter: true
+- id: 'properties.trigger: contextMenu'
+  type: Tooltip
+  properties:
+    title: Opens on right click
+    trigger: contextMenu
