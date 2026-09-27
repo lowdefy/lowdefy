@@ -130,7 +130,7 @@ function getOverview() {
     '| `GET /lowdefy-docs/app-map` | Whole-app graph: pages, menus, connections, endpoints, agents |',
     '| `GET/POST /lowdefy-docs/checkpoints` + `/revert` | Config-file checkpoints: list, create, revert |',
     '| `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints: capture/restore live app state |',
-    '| `POST /lowdefy-docs/restart` | Restart the dev server process (answers before the restart lands; poll build-status) |',
+    '| `POST /lowdefy-docs/restart` | Restart the dev server process (answers before the restart lands; then `build-status?wait=true` answers once it is back) |',
     '| `POST /lowdefy-feedback` | Annotation helper: enrich + format a feedback batch (overlay → clipboard) |',
     '| `ALL /lowdefy-docs/mcp` | MCP endpoint (streamable HTTP) exposing all of the above as tools |',
   ];

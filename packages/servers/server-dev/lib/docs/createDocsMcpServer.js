@@ -158,7 +158,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
   registerDevTool('lowdefy_restart', ({ reason }) =>
     textResult({
       ...requestRestart({ reason }),
-      note: 'The dev server is restarting. Wait ~2s, then poll GET /lowdefy-docs/build-status before your next call.',
+      note: 'The dev server is restarting. Call GET /lowdefy-docs/build-status?wait=true (lowdefy_build_status with wait: true) before your next call; it answers once the server is back.',
     })
   );
 

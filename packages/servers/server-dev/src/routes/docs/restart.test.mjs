@@ -48,7 +48,7 @@ test('POST /lowdefy-docs/restart writes the sentinel and answers with the pollin
   expect(await res.json()).toEqual({
     requested: true,
     reason: 'stale cache',
-    note: 'The dev server is restarting. Wait ~2s, then poll GET /lowdefy-docs/build-status before your next call.',
+    note: 'The dev server is restarting. Call GET /lowdefy-docs/build-status?wait=true (lowdefy_build_status with wait: true) before your next call; it answers once the server is back.',
   });
   const sentinel = JSON.parse(fs.readFileSync(path.join(fixtureDir, 'build', '.restart'), 'utf8'));
   expect(sentinel.reason).toBe('stale cache');
