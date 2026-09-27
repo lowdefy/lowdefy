@@ -25,33 +25,58 @@ function combineQuery(ownQuery, query) {
   return [ownQuery, query].filter((part) => part !== '').join('&');
 }
 
+// "/reports" is an app page. "//host" and "/\host" start with a slash too, but
+// the URL parser reads both as a link to another host.
+const appPathPattern = /^\/(?![/\\])/;
+// Relative to the current page: a query alone ("?tab=2"), a dot path
+// ("./reports", "../reports"), or a protocol-relative url ("//host/x").
+const relativePattern = /^(\?|\.|\/)/;
+// Schemes that run script when navigated to.
+const scriptProtocols = new Set(['javascript:', 'vbscript:', 'data:']);
+
 // Classifies a `url` grammar value into a page or external target. basePath is
 // stripped here, never applied - the single application boundary is createUrl.
 function classifyUrl({ lowdefy, url, query }) {
   // The leading-slash test runs before the colon-less test: `/2fa` is an
   // app-relative page and colon-less, and the colon-less branch would wrongly
   // give it an `https://` scheme and parse it as an off-app origin.
-  if (url.startsWith('/')) {
+  if (appPathPattern.test(url)) {
     const questionMark = url.indexOf('?');
     const pathname = questionMark === -1 ? url : url.slice(0, questionMark);
     const ownQuery = questionMark === -1 ? '' : url.slice(questionMark + 1);
     return { kind: 'page', pathname, query: combineQuery(ownQuery, query) };
   }
 
-  // A colon-less value like `example.com` is a schemeless hostname, not a path -
-  // prepend `https://` so the URL parser reads it as an absolute URL rather than
-  // the app-relative path `/example.com`. Confined to here by the leading-slash
-  // test above, so a colon-bearing path like `/path:1` never reaches it.
-  const value = url.includes(':') ? url : `https://${url}`;
-
-  const origin = lowdefy._internal?.globals?.window?.location?.origin;
-  // No window (SSR, tests): a `url` that reaches origin classification cannot be
-  // placed, so it resolves to nothing rather than dereferencing a missing window.
-  if (type.isNone(origin)) {
-    return undefined;
+  // A fragment moves within the current document, which only the browser can
+  // do: the router has no fragment, and a push re-renders and scrolls to the top.
+  if (url.startsWith('#')) {
+    return { kind: 'external', href: query === '' ? url : `?${query}${url}` };
   }
 
-  const parsed = new URL(value, origin);
+  const location = lowdefy._internal?.globals?.window?.location;
+  // No window (SSR, tests): a `url` that reaches origin classification cannot be
+  // placed, so it resolves to nothing rather than dereferencing a missing window.
+  if (type.isNone(location?.origin)) {
+    return undefined;
+  }
+  const { origin } = location;
+
+  // Any other colon-less value like `example.com` is a schemeless hostname, not
+  // a path - prepend `https://` so the URL parser reads it as an absolute URL
+  // rather than the app-relative path `/example.com`. Confined to here by the
+  // leading-slash test above, so a colon-bearing path like `/path:1` never
+  // reaches it.
+  const relative = relativePattern.test(url);
+  const value = relative || url.includes(':') ? url : `https://${url}`;
+  const parsed = new URL(value, relative ? location.href : origin);
+
+  if (scriptProtocols.has(parsed.protocol)) {
+    return undefined;
+  }
+  // mailto:, tel: and app schemes have no origin; they are whole URLs.
+  if (parsed.origin === 'null') {
+    return externalTarget({ parsed, query });
+  }
   const basePath = lowdefy.basePath ?? '';
   if (parsed.origin === origin) {
     const insideBasePath = basePath === '' || parsed.pathname.startsWith(basePath);
@@ -77,13 +102,12 @@ function classifyUrl({ lowdefy, url, query }) {
 
 // An external target is handed on as one finished href, so the target's own
 // urlQuery has to be folded in here - the consumer has no separate query to
-// append once the value is a whole URL.
+// append once the value is a whole URL. The URL object writes it back, so a
+// scheme without an origin (mailto:) keeps its own shape.
 function externalTarget({ parsed, query }) {
-  const search = combineQuery(parsed.search.replace(/^\?/, ''), query);
-  const href = `${parsed.origin}${parsed.pathname}${search === '' ? '' : `?${search}`}${
-    parsed.hash
-  }`;
-  return { kind: 'external', href };
+  const target = new URL(parsed.href);
+  target.search = combineQuery(parsed.search.replace(/^\?/, ''), query);
+  return { kind: 'external', href: target.href };
 }
 
 // The single resolver of the navigation grammar { home, pageId, url, urlQuery }
