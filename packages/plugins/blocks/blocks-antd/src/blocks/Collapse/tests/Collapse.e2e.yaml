@@ -204,3 +204,87 @@ blocks:
               - true
           then: Collapse changed!
           else: ''
+
+  # ============================================
+  # GHOST, SIZE, COLLAPSIBLE, EXTRA, SEMANTIC KEYS
+  # ============================================
+
+  - id: collapse_ghost_large
+    type: Collapse
+    properties:
+      ghost: true
+      size: large
+      panels:
+        - key: ghost_panel
+          title: Ghost Panel
+    slots:
+      ghost_panel:
+        blocks:
+          - id: collapse_ghost_content
+            type: Span
+            properties:
+              content: Ghost content
+
+  - id: collapse_icon_only
+    type: Collapse
+    properties:
+      collapsible: icon
+      defaultActiveKey: []
+      panels:
+        - key: icon_panel
+          title: Toggle with the icon only
+    slots:
+      icon_panel:
+        blocks:
+          - id: collapse_icon_only_content
+            type: Span
+            properties:
+              content: Icon toggled content
+
+  - id: collapse_hidden_arrow_extra
+    type: Collapse
+    properties:
+      showArrow: false
+      panels:
+        - key: extra_panel
+          title: Panel With Extra
+          extraKey: extra_panel_extra
+    slots:
+      extra_panel:
+        blocks:
+          - id: collapse_extra_content
+            type: Span
+            properties:
+              content: Panel content
+      extra_panel_extra:
+        blocks:
+          - id: collapse_extra_tag
+            type: Tag
+            properties:
+              title: Extra tag
+
+  - id: collapse_css_keys
+    type: Collapse
+    class:
+      .header: collapse-header-class
+      .title: collapse-title-class
+      .content: collapse-content-class
+    style:
+      .content:
+        backgroundColor: 'rgb(255, 250, 230)'
+    properties:
+      panels:
+        - key: css_panel
+          title: Styled Panel
+    slots:
+      css_panel:
+        blocks:
+          - id: collapse_css_content
+            type: Span
+            properties:
+              content: Styled content
+
+  - id: collapse_empty_panels
+    type: Collapse
+    properties:
+      panels: []
