@@ -134,7 +134,12 @@ test('openPage gives the context the client address it is given, which the dev s
     colorScheme: 'light',
   });
   const [[[cookie]]] = addCookies.mock.calls;
-  expect(cookie).toMatchObject({ name: 'lowdefy_journey_actor', url: 'http://localhost:3001' });
+  expect(cookie).toMatchObject({
+    name: 'lowdefy_journey_actor',
+    url: 'http://localhost:3001',
+    httpOnly: true,
+    sameSite: 'Lax',
+  });
   const app = new Hono();
   app.get('/', (c) => c.text(getClientAddress(c)));
   const env = { incoming: { socket: { remoteAddress: '127.0.0.1' } } };

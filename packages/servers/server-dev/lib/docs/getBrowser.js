@@ -121,13 +121,20 @@ async function openPage({
     }
     // clientAddress is the address the context's requests come from, as far
     // as the dev server's auth rate limits can tell - see createJourneyActors
-    // and journeyActor.js. A cookie, not a header, so it only reaches the app.
+    // and journeyActor.js. A cookie, not a header, so it only reaches the app;
+    // httpOnly, so page JavaScript cannot read the token. Lax, not Strict: a
+    // journey opens an emailed link from a data: URL, a cross-site navigation
+    // that a Strict cookie does not ride, and that one verify request would
+    // then fall back to the shared loopback address (magic-link verify allows
+    // 5 per minute per address).
     if (!type.isUndefined(clientAddress)) {
       await context.addCookies([
         {
           name: JOURNEY_ACTOR_COOKIE,
           value: `${journeyActorToken}.${clientAddress}`,
           url: origin,
+          httpOnly: true,
+          sameSite: 'Lax',
         },
       ]);
     }
