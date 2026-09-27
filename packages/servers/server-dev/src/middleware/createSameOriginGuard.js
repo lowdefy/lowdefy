@@ -14,54 +14,21 @@
   limitations under the License.
 */
 
-// The one cross-site defence for the routes only this app's own pages call:
-// /api/client-error and /api/feedback. Each of them acts on the word of the
-// browser, so a page on another site must not be able to post to them with the
-// user's cookies attached.
-//
-// Two headers decide it, both set by the browser and neither settable by page
-// script. `Sec-Fetch-Site` is the browser's own answer to "where did this come
-// from": only `same-origin` and `none` (a user-initiated request, no initiator
-// document) pass - `cross-site` and `same-site` are refused, so a sibling
-// subdomain is refused too, which is what the Origin host comparison below has
-// always done. `Origin` is then compared to the `Host` the request arrived on.
-//
-// A caller that sends no Origin is not a browser doing a cross-site post. Such
-// a caller passes only where the route asks for it with `allowNoOrigin` - the
-// three routes above do not, because nothing but a page has business calling
-// them.
-const ALLOWED_FETCH_SITES = new Set(['same-origin', 'none']);
+import { isSameOriginRequest } from '@lowdefy/api';
 
-function isSameOrigin({ host, origin }) {
-  try {
-    return new URL(origin).host === host;
-  } catch {
-    return false;
-  }
-}
-
+// The cross-site defence for the routes only this app's own pages call
+// (/api/client-error, /api/feedback, /api/websocket) and for the dev tools.
+// The rule itself - Sec-Fetch-Site, then Origin against Host - is
+// isSameOriginRequest in @lowdefy/api, which every server shares.
 function createSameOriginGuard({ allowNoOrigin = false } = {}) {
   // Returns the 403 response to answer with, or null when the request may
   // proceed. A guard, not Hono middleware, so a route keeps one entry point
   // and the refusal is visible at the top of the handler that owns it.
   return function guardSameOrigin(c) {
-    const fetchSite = c.req.header('sec-fetch-site');
-    if (fetchSite && !ALLOWED_FETCH_SITES.has(fetchSite)) {
-      return c.json({ error: 'Forbidden' }, 403);
+    if (isSameOriginRequest({ getHeader: (name) => c.req.header(name), allowNoOrigin })) {
+      return null;
     }
-
-    const origin = c.req.header('origin');
-    if (!origin) {
-      if (allowNoOrigin) {
-        return null;
-      }
-      return c.json({ error: 'Forbidden' }, 403);
-    }
-
-    if (!isSameOrigin({ host: c.req.header('host'), origin })) {
-      return c.json({ error: 'Forbidden' }, 403);
-    }
-    return null;
+    return c.json({ error: 'Forbidden' }, 403);
   };
 }
 

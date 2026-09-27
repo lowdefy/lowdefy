@@ -17,11 +17,13 @@
 import { upgradeWebSocket } from '@hono/node-server';
 import { createChannelRegistry, createWebSocketConnection } from '@lowdefy/api';
 
+import createSameOriginGuard from '../middleware/createSameOriginGuard.js';
+
 // One registry per server process — channels and their running source
 // resolvers are shared across all websocket connections on this instance.
 const registry = createChannelRegistry();
 
-const websocketHandler = upgradeWebSocket((c) => {
+const upgrade = upgradeWebSocket((c) => {
   const context = c.get('lowdefyContext');
   let connection;
   return {
@@ -44,5 +46,19 @@ const websocketHandler = upgradeWebSocket((c) => {
     },
   };
 });
+
+// Browsers let any page open a websocket to any host, with the user's cookies,
+// so an upgrade whose Origin is another site is refused before it opens. A
+// client that sends no Origin (a server, a script) is not a browser acting for
+// another site and connects as before.
+const guardSameOrigin = createSameOriginGuard({ allowNoOrigin: true });
+
+function websocketHandler(c, next) {
+  const refusal = guardSameOrigin(c);
+  if (refusal !== null) {
+    return refusal;
+  }
+  return upgrade(c, next);
+}
 
 export default websocketHandler;

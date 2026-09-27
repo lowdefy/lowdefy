@@ -41,6 +41,7 @@ import { ensureMcpOauthResource } from './routes/mcp/oauthResourceLifecycle.js';
 import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
+import isSameOriginRequest from './context/isSameOriginRequest.js';
 import logClientError from './routes/log/logClientError.js';
 import normalizeInjectedCaller from './context/normalizeInjectedCaller.js';
 import redactErrorResponse from './response/redactErrorResponse.js';
@@ -79,6 +80,7 @@ export {
   registerMcpResourceBinding,
   getPageConfig,
   getRootConfig,
+  isSameOriginRequest,
   logClientError,
   normalizeInjectedCaller,
   redactErrorResponse,
