@@ -72,6 +72,7 @@ test.describe('Slider Block', () => {
   test('renders vertical slider', async ({ page }) => {
     const slider = getSlider(page, 'slider_vertical');
     await expect(slider).toHaveClass(/ant-slider-vertical/);
+    await expect(slider).toHaveCSS('height', '200px');
   });
 
   test('renders range slider with two handles', async ({ page }) => {
