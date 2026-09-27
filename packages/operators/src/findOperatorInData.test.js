@@ -39,3 +39,14 @@ test('findOperatorInData normalises escaped operators and methods', () => {
 test('findOperatorInData reports an empty path when the value itself is an operator', () => {
   expect(findOperatorInData({ _request: 'x' })).toEqual({ operator: '_request', path: '' });
 });
+
+test('findOperatorInData finds an operator beside keys the client never receives', () => {
+  expect(findOperatorInData({ rows: [{ _request: 'secret', note: undefined }] })).toEqual({
+    operator: '_request',
+    path: 'rows.0',
+  });
+  expect(findOperatorInData(JSON.parse('[{ "_user": "email", "__proto__": {} }]'))).toEqual({
+    operator: '_user',
+    path: '0',
+  });
+});

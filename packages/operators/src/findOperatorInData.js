@@ -29,7 +29,14 @@ function findOperatorInData(value, path = '') {
   if (!type.isObject(value)) {
     return null;
   }
-  const operator = getOperatorType(value);
+  // Keys the client may never see: JSON drops an undefined value, and a
+  // "__proto__" key parsed from JSON becomes a prototype, not a key, once the
+  // object is copied by assignment. Without them { _request: 'x', note: undefined }
+  // reaches the client as an operator.
+  const sent = Object.fromEntries(
+    Object.entries(value).filter(([key, item]) => key !== '__proto__' && !type.isUndefined(item))
+  );
+  const operator = getOperatorType(sent);
   if (operator) {
     return { operator, path };
   }

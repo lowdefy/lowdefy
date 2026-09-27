@@ -637,6 +637,27 @@ test('resolveDynamicContent falls back when parsed data text carries an operator
   );
 });
 
+test('resolveDynamicContent falls back when a __proto__ key in parsed data text hides an operator', async () => {
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { stored: '{"_request":"secret","__proto__":{}}' } },
+    {
+      ':return': {
+        blocks: [
+          {
+            id: 'field',
+            type: 'Html',
+            properties: { html: { '_json.parse': { _state: 'stored' } } },
+          },
+        ],
+      },
+    },
+  ]);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockError()).toContain(
+    'Data returned by "_json.parse" contains the operator "_request".'
+  );
+});
+
 test('resolveDynamicContent rejects blocks built up in routine state', async () => {
   const dynamicBlock = await resolveWithRoutine([
     {
