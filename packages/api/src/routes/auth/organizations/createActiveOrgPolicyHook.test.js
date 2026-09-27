@@ -160,215 +160,281 @@ test('tenant: a pending invitation admits the session and mints nothing', async 
   expect(adapter.create).not.toHaveBeenCalled();
 });
 
-test('tenant: a fresh signup lazily mints its own organization as owner and sets it active', async () => {
-  const { auth, adapter } = createMockAuth({ members: [], invitations: [], organization: null });
-  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
-  const result = await hook({ userId: 'user_1' });
-  expect(adapter.create).toHaveBeenCalledWith({
-    model: 'organization',
-    data: expect.objectContaining({ name: 'User One', slug: 'org-user_1' }),
-    forceAllowId: true,
-  });
-  expect(adapter.create).toHaveBeenCalledWith({
-    model: 'member',
-    data: expect.objectContaining({
-      userId: 'user_1',
-      organizationId: 'organization_new',
-      role: 'owner',
-    }),
-  });
-  expect(result).toEqual({
-    data: { userId: 'user_1', activeOrganizationId: 'organization_new' },
-  });
-});
-
-test('tenant: a retried mint reuses an orphan org row left by a failed member write', async () => {
-  const orphan = { id: 'org_orphan', slug: 'org-user_1' };
-  const { auth, adapter } = createMockAuth({ members: [], invitations: [], organization: orphan });
-  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
-  const result = await hook({ userId: 'user_1' });
-  expect(adapter.create).not.toHaveBeenCalledWith(
-    expect.objectContaining({ model: 'organization' })
-  );
-  expect(adapter.create).toHaveBeenCalledWith({
-    model: 'member',
-    data: expect.objectContaining({
-      userId: 'user_1',
-      organizationId: 'org_orphan',
-      role: 'owner',
-    }),
-  });
-  expect(result).toEqual({
-    data: { userId: 'user_1', activeOrganizationId: 'org_orphan' },
-  });
-});
-
-test('tenant: the org slugged from the user id is reused only after checking it has no members', async () => {
-  const orphan = { id: 'org_orphan', slug: 'org-user_1' };
-  const { auth, adapter } = createMockAuth({ members: [], invitations: [], organization: orphan });
-  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
-  await hook({ userId: 'user_1' });
-  expect(adapter.count).toHaveBeenCalledWith({
-    model: 'member',
-    where: [{ field: 'organizationId', value: 'org_orphan' }],
-  });
-});
-
-test('tenant: when the org slugged from the user id has members, a fresh org is minted on the next slug', async () => {
-  const handedOver = { id: 'org_handed_over', slug: 'org-user_1' };
-  const { auth, adapter } = createMockAuth({
-    members: [],
-    invitations: [],
-    organizationMemberCounts: { org_handed_over: 2 },
-  });
-  adapter.findOne.mockImplementation(async ({ model, where }) => {
-    if (model === 'organization' && where[0].value === 'org-user_1') {
-      return handedOver;
+// An in-memory auth database holding the unique indexes ensureAuthIndexes
+// creates - one organization per slug, one member row per (user, org) - so the
+// mint's recovery from a lost race runs against the same rejection a real
+// database gives. `before` pauses an operation until the test releases it,
+// which fixes the interleaving of two concurrent sessions.
+function createMemoryAuth({ organizations = [], members = [], ensureUniqueIndexes } = {}) {
+  const db = { organization: [...organizations], member: [...members] };
+  const pauses = [];
+  let ids = 0;
+  function matches(row, where) {
+    return where.every(({ field, value, operator }) =>
+      operator === 'ne' ? row[field] !== value : row[field] === value
+    );
+  }
+  async function pause(operation, args) {
+    const found = pauses.find((entry) => entry.match(operation, args));
+    if (found) {
+      pauses.splice(pauses.indexOf(found), 1);
+      found.reached();
+      await found.released;
     }
-    return null;
-  });
-  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
-  const result = await hook({ userId: 'user_1' });
-  expect(adapter.create).toHaveBeenCalledWith({
-    model: 'organization',
-    data: expect.objectContaining({ name: 'User One', slug: 'org-user_1-2' }),
-    forceAllowId: true,
-  });
-  expect(adapter.create).toHaveBeenCalledWith({
-    model: 'member',
-    data: expect.objectContaining({
-      userId: 'user_1',
-      organizationId: 'organization_new',
-      role: 'owner',
+  }
+  const adapter = {
+    options: {
+      ensureUniqueIndexes: ensureUniqueIndexes ?? jest.fn(async () => {}),
+    },
+    findOne: jest.fn(async ({ model, where }) => {
+      await pause('findOne', { model, where });
+      return db[model].find((row) => matches(row, where)) ?? null;
     }),
-  });
-  expect(result).toEqual({
-    data: { userId: 'user_1', activeOrganizationId: 'organization_new' },
-  });
-});
-
-test('tenant: the user is never added to an org that has members', async () => {
-  const orgs = {
-    'org-user_1': { id: 'org_first', slug: 'org-user_1' },
-    'org-user_1-2': { id: 'org_second', slug: 'org-user_1-2' },
-    'org-user_1-3': { id: 'org_third', slug: 'org-user_1-3' },
+    findMany: jest.fn(async ({ model, where }) => {
+      if (model === 'invitation') return [];
+      return db[model].filter((row) => matches(row, where));
+    }),
+    create: jest.fn(async ({ model, data }) => {
+      await pause('create', { model, data });
+      const duplicate =
+        model === 'organization'
+          ? db.organization.some((row) => row.slug === data.slug)
+          : db.member.some(
+              (row) => row.userId === data.userId && row.organizationId === data.organizationId
+            );
+      if (duplicate) {
+        throw new Error(`E11000 duplicate key error collection: ${model}`);
+      }
+      ids += 1;
+      const row = { id: `${model}_${ids}`, ...data };
+      db[model].push(row);
+      return { ...row };
+    }),
+    count: jest.fn(
+      async ({ model, where }) => db[model].filter((row) => matches(row, where)).length
+    ),
+    update: jest.fn(async ({ model, where, update }) => {
+      const row = db[model].find((candidate) => matches(candidate, where));
+      Object.assign(row, update);
+      return { ...row };
+    }),
   };
-  const { auth, adapter } = createMockAuth({
-    members: [],
-    invitations: [],
-    organizationMemberCounts: { org_first: 3, org_second: 1 },
+  const internalAdapter = {
+    findUserById: jest.fn(async (id) => ({ id, email: `${id}@example.com`, name: 'User One' })),
+  };
+  const auth = { $context: Promise.resolve({ adapter, internalAdapter }) };
+  // Pause the next operation matching `match` until release() is called;
+  // reached resolves once a session is waiting there.
+  function before(match) {
+    const entry = { match };
+    const reached = new Promise((resolve) => {
+      entry.reached = resolve;
+    });
+    let release;
+    entry.released = new Promise((resolve) => {
+      release = resolve;
+    });
+    pauses.push(entry);
+    return { reached, release };
+  }
+  return { auth, adapter, db, before };
+}
+
+function mintHook(auth) {
+  return createActiveOrgPolicyHook({
+    getAuth: () => auth,
+    logger: { error: jest.fn(), warn: jest.fn() },
+    organizations: tenant,
   });
-  adapter.findOne.mockImplementation(async ({ model, where }) => {
-    if (model === 'organization') {
-      return orgs[where[0].value] ?? null;
-    }
-    return null;
-  });
-  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
-  const result = await hook({ userId: 'user_1' });
-  // org-user_1-3 has no members: the half-finished mint of an earlier fresh org.
-  expect(adapter.create).not.toHaveBeenCalledWith(
-    expect.objectContaining({ model: 'organization' })
-  );
-  const memberWrites = adapter.create.mock.calls.filter(([call]) => call.model === 'member');
-  expect(memberWrites).toHaveLength(1);
-  expect(memberWrites[0][0].data).toEqual(
-    expect.objectContaining({ userId: 'user_1', organizationId: 'org_third', role: 'owner' })
-  );
+}
+
+test('tenant: a fresh signup mints its own organization as owner and clears the mint marker', async () => {
+  const { auth, db } = createMemoryAuth();
+  const result = await mintHook(auth)({ userId: 'user_1' });
+  expect(db.organization).toEqual([
+    expect.objectContaining({ name: 'User One', slug: 'org-user_1', mintPending: false }),
+  ]);
+  expect(db.member).toEqual([
+    expect.objectContaining({
+      userId: 'user_1',
+      organizationId: db.organization[0].id,
+      role: 'owner',
+    }),
+  ]);
   expect(result).toEqual({
-    data: { userId: 'user_1', activeOrganizationId: 'org_third' },
+    data: { userId: 'user_1', activeOrganizationId: db.organization[0].id },
   });
 });
 
-test('tenant: an org a concurrent session minted and joined after the membership read is reused without a second org or member row', async () => {
-  const own = { id: 'org_own', slug: 'org-user_1' };
-  const { auth, adapter } = createMockAuth({
-    members: [],
-    invitations: [],
-    organizationMemberCounts: { org_own: 1 },
-  });
-  adapter.findOne.mockImplementation(async ({ model, where }) => {
-    if (model === 'organization') {
-      return where[0].value === 'org-user_1' ? own : null;
+test('tenant: a retried mint joins the marked organization a failed member write left behind', async () => {
+  const orphan = { id: 'org_orphan', slug: 'org-user_1', mintPending: true, createdAt: new Date() };
+  const { auth, db } = createMemoryAuth({ organizations: [orphan] });
+  const result = await mintHook(auth)({ userId: 'user_1' });
+  expect(db.organization).toEqual([{ ...orphan, mintPending: false }]);
+  expect(db.member).toEqual([
+    expect.objectContaining({ userId: 'user_1', organizationId: 'org_orphan', role: 'owner' }),
+  ]);
+  expect(result.data.activeOrganizationId).toBe('org_orphan');
+});
+
+test.each([
+  ['everyone has left', { id: 'org_left', slug: 'org-user_1', mintPending: false }, []],
+  ['was never marked', { id: 'org_unmarked', slug: 'org-user_1' }, []],
+  [
+    'has other members',
+    { id: 'org_handed_over', slug: 'org-user_1', mintPending: false },
+    [{ id: 'm_other', userId: 'user_2', organizationId: 'org_handed_over', role: 'owner' }],
+  ],
+])(
+  'tenant: an organization on the user slug that %s is never joined - a fresh one is minted on the next slug',
+  async (_, organization, members) => {
+    const { auth, db } = createMemoryAuth({ organizations: [organization], members });
+    const result = await mintHook(auth)({ userId: 'user_1' });
+    const fresh = db.organization.find((row) => row.slug === 'org-user_1-2');
+    expect(fresh).toEqual(expect.objectContaining({ mintPending: false }));
+    expect(db.member.filter((row) => row.userId === 'user_1')).toEqual([
+      expect.objectContaining({ organizationId: fresh.id, role: 'owner' }),
+    ]);
+    expect(result.data.activeOrganizationId).toBe(fresh.id);
+  }
+);
+
+test('tenant: a user already holding the owner row of a marked organization clears the marker without a second row', async () => {
+  const organization = {
+    id: 'org_own',
+    slug: 'org-user_1',
+    mintPending: true,
+    createdAt: new Date(),
+  };
+  const member = { id: 'm_1', userId: 'user_1', organizationId: 'org_own', role: 'owner' };
+  const { auth, adapter, db } = createMemoryAuth({ organizations: [organization] });
+  // The membership read at the top of the hook ran before the concurrent
+  // session wrote this row.
+  adapter.findMany.mockResolvedValueOnce([]);
+  db.member.push(member);
+  const result = await mintHook(auth)({ userId: 'user_1' });
+  expect(db.member).toEqual([member]);
+  expect(db.organization).toEqual([{ ...organization, mintPending: false }]);
+  expect(result.data.activeOrganizationId).toBe('org_own');
+});
+
+test('tenant: two sessions that both see no members and both write the owner row end with one row', async () => {
+  const { auth, db, before } = createMemoryAuth();
+  const hook = mintHook(auth);
+  const isMemberWrite = (operation, { model }) => operation === 'create' && model === 'member';
+  // Both sessions pass the member read and stop right before the member write.
+  const aMemberWrite = before(isMemberWrite);
+  const a = hook({ userId: 'user_1' });
+  await aMemberWrite.reached;
+  const bMemberWrite = before(isMemberWrite);
+  const b = hook({ userId: 'user_1' });
+  await bMemberWrite.reached;
+  aMemberWrite.release();
+  await a;
+  bMemberWrite.release();
+  expect(await b).toEqual(await a);
+  expect(db.organization).toEqual([expect.objectContaining({ mintPending: false })]);
+  expect(db.member).toEqual([expect.objectContaining({ userId: 'user_1', role: 'owner' })]);
+});
+
+test('tenant: a session reading members between the other session organization and member writes joins the same organization', async () => {
+  const { auth, db, before } = createMemoryAuth();
+  const hook = mintHook(auth);
+  // A has written the organization and stops before its member write. B finds
+  // the marked organization with no member, writes the owner row, and A's
+  // member write then loses on the unique index and reads B's row.
+  const aMemberWrite = before(
+    (operation, { model }) => operation === 'create' && model === 'member'
+  );
+  const a = hook({ userId: 'user_1' });
+  await aMemberWrite.reached;
+  const b = await hook({ userId: 'user_1' });
+  expect(db.member).toHaveLength(1);
+  aMemberWrite.release();
+  expect(await a).toEqual(b);
+  expect(db.organization).toEqual([expect.objectContaining({ mintPending: false })]);
+  expect(db.member).toEqual([expect.objectContaining({ userId: 'user_1', role: 'owner' })]);
+});
+
+test('tenant: a mint losing the unique slug race joins the winning organization', async () => {
+  const { auth, db, before } = createMemoryAuth();
+  const hook = mintHook(auth);
+  // Both sessions find no organization; A's create then loses to B's.
+  const aOrganizationWrite = before(
+    (operation, { model }) => operation === 'create' && model === 'organization'
+  );
+  const a = hook({ userId: 'user_1' });
+  await aOrganizationWrite.reached;
+  const b = await hook({ userId: 'user_1' });
+  aOrganizationWrite.release();
+  expect(await a).toEqual(b);
+  expect(db.organization).toHaveLength(1);
+  expect(db.member).toHaveLength(1);
+});
+
+test('tenant: while the unique indexes can not be ensured, repeated sign-ins are refused without retrying the index build until the cool-down passes', async () => {
+  const now = jest.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-01-01T00:00:00Z'));
+  try {
+    const ensureUniqueIndexes = jest.fn(async () => {
+      throw new Error('E11000 duplicate key error collection: user-members');
+    });
+    const { auth, db } = createMemoryAuth({ ensureUniqueIndexes });
+    const hook = mintHook(auth);
+    for (const userId of ['user_1', 'user_2', 'user_3', 'user_4']) {
+      await expect(hook({ userId })).rejects.toMatchObject({
+        statusCode: 503,
+        body: { code: 'ORGANIZATION_SETUP_UNAVAILABLE' },
+      });
     }
-    return { id: 'member_concurrent', userId: 'user_1', organizationId: 'org_own' };
-  });
-  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
-  const result = await hook({ userId: 'user_1' });
-  expect(adapter.findOne).toHaveBeenCalledWith({
-    model: 'member',
-    where: [
-      { field: 'userId', value: 'user_1' },
-      { field: 'organizationId', value: 'org_own' },
+    expect(ensureUniqueIndexes).toHaveBeenCalledTimes(1);
+    expect(db.organization).toEqual([]);
+    now.mockReturnValue(Date.parse('2026-01-01T00:00:31Z'));
+    await expect(hook({ userId: 'user_5' })).rejects.toMatchObject({ statusCode: 503 });
+    expect(ensureUniqueIndexes).toHaveBeenCalledTimes(2);
+  } finally {
+    now.mockRestore();
+  }
+});
+
+test.each([
+  [
+    'minted long ago - its owner row was written and everyone later left',
+    { createdAt: new Date(Date.now() - 60 * 60 * 1000) },
+    [],
+  ],
+  [
+    'that other people belong to',
+    { createdAt: new Date() },
+    [{ id: 'm_other', userId: 'user_2', organizationId: 'org_stale', role: 'owner' }],
+  ],
+])(
+  'tenant: a stale mint marker on an organization %s is cleared and the organization is not joined',
+  async (_, organizationFields, members) => {
+    const organization = {
+      id: 'org_stale',
+      slug: 'org-user_1',
+      mintPending: true,
+      ...organizationFields,
+    };
+    const { auth, db } = createMemoryAuth({ organizations: [organization], members });
+    const result = await mintHook(auth)({ userId: 'user_1' });
+    expect(db.organization.find((row) => row.id === 'org_stale').mintPending).toBe(false);
+    const fresh = db.organization.find((row) => row.slug === 'org-user_1-2');
+    expect(result.data.activeOrganizationId).toBe(fresh.id);
+    expect(db.member.filter((row) => row.userId === 'user_1')).toEqual([
+      expect.objectContaining({ organizationId: fresh.id, role: 'owner' }),
+    ]);
+  }
+);
+
+test('tenant: the mint ensures the unique indexes in model terms before writing', async () => {
+  const { auth, adapter } = createMemoryAuth();
+  await mintHook(auth)({ userId: 'user_1' });
+  expect(adapter.options.ensureUniqueIndexes).toHaveBeenCalledWith({
+    indexes: [
+      { model: 'organization', fields: ['slug'] },
+      { model: 'member', fields: ['userId', 'organizationId'] },
     ],
-  });
-  expect(adapter.create).not.toHaveBeenCalled();
-  expect(result).toEqual({
-    data: { userId: 'user_1', activeOrganizationId: 'org_own' },
-  });
-});
-
-test('tenant: a fresh mint losing the unique slug race on the next slug reads and uses the winning org row', async () => {
-  const handedOver = { id: 'org_handed_over', slug: 'org-user_1' };
-  const winner = { id: 'org_winner', slug: 'org-user_1-2' };
-  const { auth, adapter } = createMockAuth({
-    members: [],
-    invitations: [],
-    organizationMemberCounts: { org_handed_over: 2 },
-  });
-  let nextSlugLookups = 0;
-  adapter.findOne.mockImplementation(async ({ model, where }) => {
-    if (model !== 'organization') {
-      return null;
-    }
-    if (where[0].value === 'org-user_1') {
-      return handedOver;
-    }
-    nextSlugLookups += 1;
-    return nextSlugLookups === 1 ? null : winner;
-  });
-  adapter.create.mockImplementation(async ({ model, data }) => {
-    if (model === 'organization') {
-      throw new Error('E11000 duplicate key error: slug');
-    }
-    return { id: `${model}_new`, ...data };
-  });
-  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
-  const result = await hook({ userId: 'user_1' });
-  expect(result).toEqual({
-    data: { userId: 'user_1', activeOrganizationId: 'org_winner' },
-  });
-  expect(adapter.create).toHaveBeenCalledWith({
-    model: 'member',
-    data: expect.objectContaining({ organizationId: 'org_winner', role: 'owner' }),
-  });
-});
-
-test('tenant: a mint losing the unique slug race reads and uses the winning org row', async () => {
-  const winner = { id: 'org_winner', slug: 'org-user_1' };
-  const { auth, adapter } = createMockAuth({ members: [], invitations: [], organization: null });
-  let organizationLookups = 0;
-  adapter.findOne.mockImplementation(async ({ model }) => {
-    if (model === 'organization') {
-      organizationLookups += 1;
-      return organizationLookups === 1 ? null : winner;
-    }
-    return null;
-  });
-  adapter.create.mockImplementation(async ({ model, data }) => {
-    if (model === 'organization') {
-      throw new Error('E11000 duplicate key error: slug');
-    }
-    return { id: `${model}_new`, ...data };
-  });
-  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
-  const result = await hook({ userId: 'user_1' });
-  expect(result).toEqual({
-    data: { userId: 'user_1', activeOrganizationId: 'org_winner' },
-  });
-  expect(adapter.create).toHaveBeenCalledWith({
-    model: 'member',
-    data: expect.objectContaining({ organizationId: 'org_winner', role: 'owner' }),
   });
 });
 

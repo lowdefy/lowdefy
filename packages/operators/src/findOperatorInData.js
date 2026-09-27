@@ -14,44 +14,40 @@
   limitations under the License.
 */
 
-import { getOperatorType, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
-function findInValue({ value, path }) {
-  if (type.isArray(value)) {
-    for (let index = 0; index < value.length; index += 1) {
-      const found = findInValue({
-        value: value[index],
-        path: path ? `${path}.${index}` : `${index}`,
-      });
-      if (found) return found;
-    }
-    return null;
-  }
-  if (!type.isObject(value)) {
-    return null;
-  }
-  // A "__proto__" key parsed from JSON becomes a prototype, not a key, once the
-  // object is copied by assignment, so { _request: 'x', __proto__: {} } reaches
-  // the client as an operator.
-  const sent = Object.fromEntries(Object.entries(value).filter(([key]) => key !== '__proto__'));
-  const operator = getOperatorType(sent);
-  if (operator) {
-    return { operator, path };
-  }
-  for (const key of Object.keys(value)) {
-    const found = findInValue({ value: value[key], path: path ? `${path}.${key}` : key });
-    if (found) return found;
-  }
-  return null;
+import getPossibleOperators from './getPossibleOperators.js';
+
+function joinPath(path, key) {
+  return path ? `${path}.${key}` : `${key}`;
 }
 
-// Returns { operator, path } for the first operator-shaped object in a data value,
-// or null. The path is relative to the value, dot-separated ('' for the value itself).
-// The value is the serialized form the page sends (an Error or Date is a "~e" or
-// "~d" object there), and the scan walks into every such wrapper, whose contents
-// the client evaluates before it revives the wrapper.
-function findOperatorInData(value) {
-  return findInValue({ value, path: '' });
+// Returns { operator, path } for the first object in a data value the client
+// could run as one of its operators, or null. The path is relative to the value,
+// dot-separated ('' for the value itself). The value is the serialized form the
+// page sends (an Error or Date is a "~e" or "~d" object there), and the scan
+// walks into every such wrapper, whose contents the client evaluates before it
+// revives the wrapper. operators is the app's set of client operator names.
+// Walks depth first, in key order, with an explicit stack.
+function findOperatorInData({ value, operators = null }) {
+  const pending = [{ node: value, path: '' }];
+  while (pending.length > 0) {
+    const { node, path } = pending.pop();
+    let children = [];
+    if (type.isArray(node)) {
+      children = node.map((item, index) => ({ node: item, path: joinPath(path, index) }));
+    } else if (type.isObject(node)) {
+      const [possible] = getPossibleOperators({ value: node, operators });
+      if (possible) {
+        return { operator: possible.operator, path };
+      }
+      children = Object.keys(node).map((key) => ({ node: node[key], path: joinPath(path, key) }));
+    }
+    for (let index = children.length - 1; index >= 0; index -= 1) {
+      pending.push(children[index]);
+    }
+  }
+  return null;
 }
 
 export default findOperatorInData;

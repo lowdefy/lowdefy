@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 import parseUserParam from './parseUserParam.js';
 import runJourney from '../../../lib/docs/runJourney.js';
 import validateJourneySteps from '../../../lib/docs/validateJourneySteps.js';
+import validateJourneyTimeout from '../../../lib/docs/validateJourneyTimeout.js';
 import validateStateSelection from '../../../lib/docs/validateStateSelection.js';
 
 // A failed journey is a 200 with passed: false — it is the result the caller
@@ -27,7 +28,7 @@ import validateStateSelection from '../../../lib/docs/validateStateSelection.js'
 // mistaken for a journey that failed on an assertion.
 async function docsJourneyHandler(c) {
   const body = await c.req.json().catch(() => ({}));
-  const { pageId, steps, urlQuery, state } = body;
+  const { pageId, steps, urlQuery, state, timeout } = body;
   if (type.isNone(pageId) || !type.isString(pageId)) {
     return c.json(
       {
@@ -52,6 +53,10 @@ async function docsJourneyHandler(c) {
   if (stateSelectionError) {
     return c.json({ error: stateSelectionError }, 400);
   }
+  const timeoutError = validateJourneyTimeout({ timeout });
+  if (timeoutError) {
+    return c.json({ error: timeoutError }, 400);
+  }
   // `none` is the journey's own third value: no injected caller, so the app's
   // auth decides who the journey is. Every other value is a headless caller.
   const { user, error: userError } =
@@ -64,7 +69,15 @@ async function docsJourneyHandler(c) {
   // just connected to), regardless of how the server is bound.
   const origin = new URL(c.req.url).origin;
 
-  const result = await runJourney({ origin, pageId, steps, user, urlQuery, state });
+  const result = await runJourney({
+    origin,
+    pageId,
+    steps,
+    user,
+    urlQuery,
+    state,
+    stepTimeout: timeout,
+  });
   if (result.error) {
     return c.json({ error: result.error }, 502);
   }

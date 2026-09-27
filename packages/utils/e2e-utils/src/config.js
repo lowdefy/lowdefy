@@ -16,7 +16,11 @@
 
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { defineConfig, devices } from '@playwright/test';
+
+// Checks each reused or started server is this app's e2e build (see core/verifyServer.js).
+const globalSetup = fileURLToPath(new URL('./globalSetup.js', import.meta.url));
 
 function createConfig({
   appDir = './',
@@ -48,12 +52,15 @@ function createConfig({
     process.env.LOWDEFY_E2E_MOCKS_FILE = absoluteMocksFile;
   }
 
+  process.env.LOWDEFY_E2E_SERVERS = JSON.stringify([{ buildDir: absoluteBuildDir, port }]);
+
   return defineConfig({
     testDir,
     testMatch,
     fullyParallel: true,
     reporter: 'list',
     outputDir,
+    globalSetup,
     use: {
       baseURL: `http://localhost:${port}`,
       trace: 'on-first-retry',
@@ -71,8 +78,9 @@ function createConfig({
     webServer: {
       // Build with e2e server and start
       command: `${cliCommand} build --server e2e && ${cliCommand} start --port ${port} --log-level warn`,
-      // Use session API for health check — page URLs may redirect when auth is configured
-      url: `http://localhost:${port}/api/auth/session`,
+      // A server already on the port is reused only if globalSetup finds it serves this
+      // app's e2e build.
+      port,
       reuseExistingServer: true,
       timeout,
       cwd: absoluteAppDir,
@@ -108,6 +116,13 @@ function createMultiAppConfig({
     };
   });
 
+  process.env.LOWDEFY_E2E_SERVERS = JSON.stringify(
+    apps.map((app) => ({
+      buildDir: path.resolve(app.appDir, app.buildDir ?? '.lowdefy/server/build'),
+      port: app.port,
+    }))
+  );
+
   // Set up webServers for each app
   const webServer = apps.map((app) => {
     const appLocalBin = path.join(app.appDir, 'node_modules', '.bin', 'lowdefy');
@@ -115,8 +130,7 @@ function createMultiAppConfig({
     const appCliCommand = `${commandPrefix ? `${commandPrefix} ` : ''}${appLowdefyCmd}`;
     return {
       command: `${appCliCommand} build --server e2e && ${appCliCommand} start --port ${app.port} --log-level warn`,
-      // Use session API for health check — page URLs may redirect when auth is configured
-      url: `http://localhost:${app.port}/api/auth/session`,
+      port: app.port,
       reuseExistingServer: true,
       timeout,
       cwd: app.appDir,
@@ -128,6 +142,7 @@ function createMultiAppConfig({
     fullyParallel: true,
     reporter: 'list',
     outputDir,
+    globalSetup,
     use: {
       trace: 'on-first-retry',
       screenshot,

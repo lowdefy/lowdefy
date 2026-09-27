@@ -87,13 +87,18 @@ test('writeIconImports output is a module that evaluates to IconData', async () 
   });
 });
 
+test('writeIconImports writes the icon names it bundles for server-side checks', async () => {
+  const writeBuildArtifact = await write({ names: ['check', 'close'] });
+  expect(writeBuildArtifact.mock.calls[1]).toEqual(['iconImports.json', '["check","close"]']);
+});
+
 test('writeIconImports writes the full semantic map for icon search', async () => {
   const icons = await createIconContext({
     context: { typesMap: { iconSets: {} } },
     iconsConfig: { aliases: { invoice: 'Receipt' } },
   });
   const writeBuildArtifact = await write({ names: ['check'], icons });
-  const [name, content] = writeBuildArtifact.mock.calls[1];
+  const [name, content] = writeBuildArtifact.mock.calls[2];
   expect(name).toBe('iconAliases.json');
   expect(JSON.parse(content)).toMatchObject({ edit: 'Pencil', invoice: 'Receipt' });
 });

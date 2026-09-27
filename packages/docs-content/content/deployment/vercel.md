@@ -35,7 +35,9 @@ Files in your app's `public/` directory (favicon, icons, images, `manifest.webma
 
 ###### Secrets and environment variables
 
-Secrets can be set in the Environment Variables settings section by creating environment variables prefixed with `LOWDEFY_SECRET_`. Pin the auth canonical URL with the current environment's `url` (see [Deployment environments](/deployment-environments)) or `BETTER_AUTH_URL`. Different secrets can be set for production and preview deployments.
+Secrets can be set in the Environment Variables settings section by creating environment variables prefixed with `LOWDEFY_SECRET_`. Pin the auth canonical URL with the current environment's `url` (see [Deployment environments](/deployment-environments)) or `BETTER_AUTH_URL`; with `auth.email` configured the app refuses to start without it. Different secrets can be set for production and preview deployments.
+
+On Vercel the client address used by auth rate limits, sessions and request logs comes from the platform (`x-real-ip`), which Vercel sets on every request. `config.trustedProxies` is not used.
 
 ###### Function settings
 
@@ -108,8 +110,12 @@ See [Async Endpoints](/lowdefy-api) and [Detached Endpoint Calls](/lowdefy-api) 
 
 Vercel Fluid bills by execution duration, so a request that hangs (a stuck database, SMTP or external API call) is a real cost risk. Two guardrails apply:
 
-- **`config.requestTimeout`** (in `lowdefy.yaml`, default `30000` ms) — the server returns a timeout instead of letting a request run on. Set to `0` to disable. Agent streaming routes are exempt.
+- **`config.requestTimeout`** (in `lowdefy.yaml`, default `30000` ms) — the server returns a timeout instead of letting a request run on, and cancels the AI model calls the request was waiting on. Set to `0` to disable. Agent streaming routes are exempt.
 - **`config.vercel.maxDuration`** (default `60`) — a hard platform cap; Vercel stops the function at this many seconds. See Function settings above.
+
+Keep `config.requestTimeout` below `maxDuration`: when it is not, Vercel stops the function before the request timeout answers, so the upstream calls the request left running are not cancelled and the request ends without a logged timeout. The build warns when `config.requestTimeout` is not shorter than `maxDuration` (or than the 60-second default, when it runs on Vercel).
+
+On Vercel, only the request timeout cancels an AI model call a request is waiting on. A client that disconnects does not: the call runs until it finishes, reaches its own `timeout`, or hits the request timeout. On the Node server a disconnect cancels it too.
 
 > The function runs on Vercel's Node.js runtime. Streaming agent responses (`/api/agent/*`) are exempt from `config.requestTimeout` and are bounded only by `maxDuration` — for heavy streaming or agent workloads, a long-lived Node host (Docker, Fly.io, Railway, Render) may suit better.
 

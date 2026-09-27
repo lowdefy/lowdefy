@@ -89,6 +89,31 @@ test('AIGateway create handles undefined connection (OIDC / env fallback)', asyn
   expect(result).toEqual({ provider: mockProvider });
 });
 
+test('AIGateway create returns the connection maxOutputTokens and timeout for its agents', async () => {
+  const mockProvider = jest.fn();
+  mockCreateGateway.mockReturnValue(mockProvider);
+
+  const { default: AIGateway } = await import('./AIGateway.js');
+
+  const result = AIGateway.create({
+    connection: { apiKey: 'test-api-key', maxOutputTokens: 1024, timeout: 30000 },
+  });
+
+  expect(result).toEqual({ provider: mockProvider, maxOutputTokens: 1024, timeout: 30000 });
+});
+
+test.each([
+  ['maxOutputTokens', 1.5, 'should be an integer.'],
+  ['maxOutputTokens', 0, 'should be at least 1.'],
+  ['timeout', '30s', 'should be an integer.'],
+  ['timeout', 0, 'should be at least 1.'],
+])('AIGateway connection schema rejects %s %p', async (property, value, message) => {
+  const { default: AIGateway } = await import('./AIGateway.js');
+  expect(() =>
+    validate({ schema: AIGateway.schema, data: { apiKey: 'k', [property]: value } })
+  ).toThrow(`AIGateway connection property "${property}" ${message}`);
+});
+
 test('AIGateway has schema', async () => {
   const { default: AIGateway } = await import('./AIGateway.js');
   expect(AIGateway.schema).toBeDefined();
@@ -117,6 +142,8 @@ test('valid connection schema with all properties', async () => {
     apiKey: 'vck-test',
     baseURL: 'https://custom.gateway.example',
     headers: { 'x-org': 'lowdefy' },
+    maxOutputTokens: 1024,
+    timeout: 30000,
   };
   expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });

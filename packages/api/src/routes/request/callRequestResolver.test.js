@@ -452,3 +452,66 @@ test('configKey attached when missing', async () => {
   }
   expect(caught.configKey).toBe('request_key');
 });
+
+// A resolver that runs until its signal aborts, then rejects with the abort reason,
+// as fetch and the AI SDK do.
+function resolverUntilAborted() {
+  return ({ signal }) =>
+    new Promise((resolve, reject) => {
+      signal.addEventListener('abort', () => reject(signal.reason), { once: true });
+    });
+}
+
+test('the resolver receives the request signal from the context', async () => {
+  const context = createTestContext();
+  context.signal = new AbortController().signal;
+  const requestResolver = jest.fn(() => 'ok');
+  await callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver,
+  });
+  expect(requestResolver.mock.calls[0][0].signal).toBe(context.signal);
+});
+
+test('a resolver stopped because the client left fails with a UserError, not a RequestError', async () => {
+  const context = createTestContext();
+  const controller = new AbortController();
+  context.signal = controller.signal;
+  const pending = callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver: resolverUntilAborted(),
+  });
+  controller.abort(
+    new DOMException('The client closed the connection before the response was sent.', 'AbortError')
+  );
+  const error = await pending.catch((e) => e);
+  expect(error).toBeInstanceOf(UserError);
+  expect(error.message).toBe('The client closed the connection before the response was sent.');
+  expect(error.cause.name).toBe('AbortError');
+});
+
+test('a resolver stopped by the request timeout fails with a ServiceError', async () => {
+  const context = createTestContext();
+  const controller = new AbortController();
+  context.signal = controller.signal;
+  const pending = callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver: resolverUntilAborted(),
+  });
+  controller.abort(
+    new DOMException('The request timeout of 30000ms was exceeded.', 'TimeoutError')
+  );
+  const error = await pending.catch((e) => e);
+  expect(error).toBeInstanceOf(ServiceError);
+  expect(error.message).toBe('conn1: The request timeout of 30000ms was exceeded.');
+  expect(error.configKey).toBe('request_key');
+});

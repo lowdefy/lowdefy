@@ -25,6 +25,10 @@ async function callAgent(
 
   context.pageId = pageId;
   context.evaluateOperators = createEvaluateOperators(context);
+  // A chat run is not cancelled when the client disconnects: it runs to its end so the
+  // onFinish hooks still persist the whole conversation, bounded by the agent's timeout
+  // and maxSteps. Its tool endpoints' requests are not cancelled either.
+  context.signal = undefined;
 
   logger.debug({ event: 'debug_agent', agentId, pageId });
 

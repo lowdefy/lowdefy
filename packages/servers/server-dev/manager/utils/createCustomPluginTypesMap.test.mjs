@@ -22,7 +22,12 @@ const mockCreatePluginTypesMap = jest.fn();
 jest.unstable_mockModule('@lowdefy/build', () => ({
   createPluginTypesMap: mockCreatePluginTypesMap,
 }));
+// The module under test imports @lowdefy/build, which links against every
+// export it uses, so the real module passes through and only readFile is
+// replaced.
+const realNodeUtils = await import('@lowdefy/node-utils');
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+  ...realNodeUtils,
   readFile: jest.fn(async () => 'plugins:\n  - name: plugin-a\n  - name: plugin-b\n'),
 }));
 jest.unstable_mockModule('node:module', () => ({

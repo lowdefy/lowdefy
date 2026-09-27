@@ -795,3 +795,61 @@ test('buildConnections skips a shared change log whose collection resolves at ru
   };
   expect(() => buildConnections({ components, context: sharedChangeLogContext() })).not.toThrow();
 });
+
+function walledMarks({ policy = 'tenant', connections }) {
+  const components = { auth: { organizations: { policy } }, connections };
+  buildConnections({ components, context: sharedChangeLogContext() });
+  return Object.fromEntries(
+    components.connections.map((connection) => [connection.connectionId, connection.walled])
+  );
+}
+
+const scopedContacts = {
+  id: 'contacts',
+  type: 'MongoDBCollection',
+  properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'contacts' },
+};
+
+test('buildConnections marks a shared connection whose collection a scoped connection reads', () => {
+  expect(
+    walledMarks({
+      connections: [
+        { ...scopedContacts, tenant: { field: 'tenant_id' } },
+        {
+          id: 'contacts-admin',
+          type: 'MongoDBCollection',
+          tenant: 'shared',
+          properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'contacts' },
+        },
+      ],
+    })
+  ).toEqual({
+    contacts: undefined,
+    'contacts-admin': { connectionId: 'contacts', field: 'tenant_id' },
+  });
+});
+
+test.each([
+  ['a collection no scoped connection reads', { collection: 'countries' }, 'tenant'],
+  [
+    'a same-named collection in another database',
+    { collection: 'contacts', databaseName: 'x' },
+    'tenant',
+  ],
+  ['a collection named at runtime', { collection: { _secret: 'COLLECTION' } }, 'tenant'],
+  ['any collection under the pinned policy', { collection: 'contacts' }, 'pinned'],
+])('buildConnections does not mark a shared connection over %s', (_, properties, policy) => {
+  const marks = walledMarks({
+    policy,
+    connections: [
+      scopedContacts,
+      {
+        id: 'shared',
+        type: 'MongoDBCollection',
+        tenant: 'shared',
+        properties: { databaseUri: { _secret: 'MONGODB_URI' }, ...properties },
+      },
+    ],
+  });
+  expect(marks.shared).toBe(undefined);
+});

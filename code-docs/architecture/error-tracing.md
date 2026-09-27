@@ -38,6 +38,12 @@ The build pipeline tracks the origin of every config value:
 - `~l` (line): Line number in the source file
 - `~r` (ref): Reference ID linking to the source file
 
+#### Keys across dev rebuilds
+
+`~k` values come from the `makeId` counter. The dev server rebuilds config without restarting, and a page loaded, or a request started, before a rebuild still reports errors with the earlier build's keys, while `keyMap.json` already holds the new build. If every build numbered its keys from 1, an old key would name some other node of the new build and the error would point at the wrong config.
+
+So each dev skeleton build (`shallowBuild`) resets `makeId` with a fresh random prefix (`a1b2_1`, `a1b2_2`, ...) and writes `{ prefix, counter }` to `idCounter.json`. JIT page builds continue from it (`makeId.continueFrom`), keeping the prefix and never moving the counter back, so every key in a dev session names one node. A key from an earlier build is simply absent from the live `keyMap.json`, and its location resolves to nothing rather than to the wrong node. The JIT page builder also skips writing `keyMap.json`/`refMap.json` when the live `idCounter.json` prefix is no longer the one its build context was created from, so a page build that outlives a rebuild cannot replace the new maps (`server-dev/lib/server/skipStaleMapWrites.js`). For that check to hold, the manager's `publishBuildDirectory` moves `idCounter.json` into the live build directory before any other file, so the new prefix is live before the new maps are. Production builds (`build()`) keep unprefixed keys: they run once per server start.
+
 ### Location Resolution
 
 Three functions handle different resolution contexts (all in `@lowdefy/errors`):
@@ -79,7 +85,7 @@ All error classes in `@lowdefy/errors` with single flat entry point:
 | `ActionError`                     | Action failures                                           | Action runner (engine)                                   | No (use received) |
 | `RequestError`                    | Request/connection failures                               | Request handler (API)                                    | No (use received) |
 | `BlockError`                      | Block rendering failures                                  | ErrorBoundary (client)                                   | No (use received) |
-| `ServiceError`                    | External service failures                                 | Plugin interface layer                                   | No (use service)  |
+| `ServiceError`                    | External service failures (network, timeout, 5xx, 429)    | Plugin interface layer                                   | No (use service)  |
 | `AuthenticationError`             | Unauthenticated request (401)                             | API authorization gates                                  | No (warn line)    |
 | `TwoFactorEnrolmentRequiredError` | Unenrolled caller under `twoFactor.required` (403)        | Authorization gate                                       | No (warn line)    |
 | `AuthorizationError`              | Authenticated caller refused by a gate (wrong roles, 403) | Request/endpoint/agent/websocket/auth-step gates         | No (warn line)    |
@@ -481,11 +487,16 @@ try {
 
 ```javascript
 try {
-  return await requestResolver({ ... });
+  return await requestResolver({ ..., signal: context.signal });
 } catch (error) {
   if (!error.configKey) error.configKey = requestConfig['~k'];
 
-  if (error instanceof ConfigError) throw error;
+  if (error.isLowdefyError) throw error;
+
+  // The client left and the resolver stopped on the request signal: not a fault.
+  if (signal?.reason?.name === 'AbortError' && error.name === 'AbortError') {
+    throw new UserError(signal.reason.message, { cause: error });
+  }
 
   if (ServiceError.isServiceError(error)) {
     throw new ServiceError(undefined, {
@@ -503,6 +514,10 @@ try {
   });
 }
 ```
+
+**What is a ServiceError.** `ServiceError.isServiceError` decides it, for every connection: network error codes, a `TimeoutError`, HTTP 5xx and HTTP 429 (from `statusCode`, `status`, `response.status`, `$metadata.httpStatusCode` or a numeric `code`), AWS SDK throttling exceptions (`$retryable.throttling`), and service-sounding messages, following a retrying client's `lastError` and the `cause` chain. 429 counts because throttling is an external condition that passes with time; a developer cannot fix it in config. The wrapped `ServiceError` keeps the service's Retry-After as `retryAfter` (`ServiceError.readRetryAfter`), which the server log projection (`logErrorProjection.js`) keeps.
+
+**Cancelled requests.** Request resolvers receive `signal` (`context.signal`, built by `createRequestSignal` in the server's apiContext). It aborts with an `AbortError` when the client closes the connection before the response is sent, and with a `TimeoutError` when the server's request timeout (`src/middleware/requestTimeout.js`, `config.requestTimeout`) answers first. A resolver that stopped because the client left fails with a `UserError` (warn level, no Sentry: nobody is left to answer, and nothing needs fixing). One stopped by the request timeout fails with a `ServiceError` at the request's config location, which is how a timed-out provider call shows up in the log. Work that outlives its request (`async: true` endpoints, detached runs, agent chat turns) runs with no signal.
 
 ### Operator Key Extraction
 

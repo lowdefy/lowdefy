@@ -3531,6 +3531,20 @@ export default {
             type: 'App "config.requestTimeout" should be a number.',
           },
         },
+        trustedProxies: {
+          type: 'array',
+          items: {
+            type: 'string',
+            errorMessage: {
+              type: 'App "config.trustedProxies" entries should be IP address or CIDR range strings.',
+            },
+          },
+          description:
+            'IP addresses and CIDR ranges (e.g. "10.0.0.0/8") of the reverse proxies and load balancers in front of a self-hosted server. The server takes the client address from the connection, and reads X-Forwarded-For only when the connection comes from one of these, skipping trusted hops from the right. Auth rate limits, sessions and request logs use this address. Defaults to none, so a client cannot choose its own address. Not used on Vercel, where the platform supplies the client address.',
+          errorMessage: {
+            type: 'App "config.trustedProxies" should be an array of IP address or CIDR range strings.',
+          },
+        },
         homePageId: {
           type: 'string',
           description:

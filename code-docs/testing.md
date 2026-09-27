@@ -31,7 +31,7 @@ Git state that is _not_ per worktree: branches, tags, the stash and the `rerere`
 ## Unit tests
 
 ```bash
-pnpm test                                           # every package except the two below
+pnpm test                                           # every package except connection-mongodb
 pnpm --filter=@lowdefy/api test                     # one package
 pnpm --filter=@lowdefy/api test --testPathPattern=endpoint --no-coverage
 ```
@@ -42,6 +42,25 @@ they survive a loaded machine; don't tune timeouts down to what one idle run nee
 Never pass `--` before jest flags, and never call `pnpm jest` or `npx jest` directly.
 Packages import each other from `dist/`, so run `pnpm build` after changing more than one
 package.
+
+## Dependency check
+
+`pnpm test` starts with `pnpm test:dependencies` (one to three seconds). It parses every source
+file under `packages/` and fails when a file imports a package that its `package.json` does
+not declare. In the monorepo such an import still resolves through another package's
+install, so only the published package (or a later lockfile change) breaks.
+
+- Published files (`files` in `package.json`; `src/` counts as `dist/`) may import
+  `dependencies`, `peerDependencies` and `optionalDependencies`.
+- Tests (`*.test.js`, `test/`, `tests/`, `test-utils/`, `__mocks__/`), unpublished files,
+  block e2e helpers (reachable from a package's `./e2e` export) and private packages may
+  also import `devDependencies`. So do the servers' `lowdefy/` build scripts and the
+  webpack-bundled `@lowdefy/nunjucks`, listed in `scripts/lib/findUndeclaredImports.mjs`.
+- Tests that import `@jest/globals` declare it as a devDependency.
+
+The check reads what is declared, not what resolves: ESLint's
+`import/no-extraneous-dependencies` skips any import it cannot resolve, which in a pnpm
+workspace is most undeclared imports.
 
 ## MongoDB tests
 
@@ -54,6 +73,14 @@ with:
 pnpm test:mongodb
 ```
 
+`pnpm test:mongodb` also runs `@lowdefy/api`'s `*.mongodb.test.js` suites
+(`pnpm --filter=@lowdefy/api test:mongodb`, `jest.mongodb.config.js`), which drive engine code
+through a real BetterAuth instance and the MongoDB auth adapter, for example the tenant signup
+mint under concurrent sessions. Name an api test `*.mongodb.test.js` when it needs a real
+server; the plain `pnpm test` run ignores those files. To reproduce a race deterministically,
+pause one session inside the real adapter (wrap `adapter.create` from `auth.$context`) and
+run the other to completion before releasing it.
+
 CI does not run it on every push. Start the `MongoDB Tests` workflow from the Actions tab,
 or add the `run-mongodb-tests` label to a pull request. Each jest run starts its own
 `mongod` on a free port, so worktrees can run it at the same time.
@@ -62,22 +89,33 @@ or add the `run-mongodb-tests` label to a pull request. Each jest run starts its
 
 The tenant auth reference app (`apps/auth-reference-tenant`) carries config tests for the
 real auth path: sign-up with email verification, sign-in refusals, sign-out, magic link,
-invitations, tenant isolation, organization switching and member removal
-(`tests/journeys/*.yaml`, all `user: none`). Run them with:
+invitations (including expired and cancelled ones), tenant isolation, organization
+switching and member removal (`tests/journeys/*.yaml`, all `user: none`). Run them with:
 
 ```bash
 pnpm test:journeys:auth                      # builds first, like pnpm dev
 pnpm test:journeys:auth --skip-build         # reuse the current build
 pnpm test:journeys:auth --filter invitation  # journeys whose name matches
+pnpm test:journeys:auth --app auth-reference # another app (default auth-reference-tenant)
 ```
+
+The pinned-organization app (`apps/auth-reference`) carries the password reset journey.
 
 `scripts/test-journeys-auth.mjs` starts a single-node memory replica set (fresh every run,
 auth indexes provisioned), then this checkout's dev server (`scripts/dev.mjs`) with the
-app's secrets, a pinned `BETTER_AUTH_URL` and the dev mail sink (`LOWDEFY_DEV_SMTP_PORT`),
+app's secrets, a pinned `BETTER_AUTH_URL`, the dev mail sink (`LOWDEFY_DEV_SMTP_PORT`) and
+`INVITATION_EXPIRES_IN=60` (read by the app's build, so invitations expire after the
+60 second minimum and the expiry journey can wait one out, about a minute of the run),
 runs this checkout's `lowdefy test --url` against it, and stops everything. It uses four
 consecutive free ports from `--port` (default 3200): app, internal, mail sink, MongoDB. The
-dev server log goes to `apps/auth-reference-tenant/.lowdefy/journeys-dev-server.log`. It
+dev server log goes to `apps/<app>/.lowdefy/journeys-dev-server.log`. It
 needs no Docker MongoDB or Mailpit, only the shared MongoDB binaries and a Chromium.
+
+An app outside the monorepo runs its own auth journeys against a checkout the same way:
+`node scripts/dev.mjs --config-directory <app> --port <port> --no-open` for the server, and
+`node packages/cli/dist/index.js test --journeys-directory <dir> --url <url>` for the run.
+Keeping such journeys in their own directory (not `tests/journeys/`) keeps them out of the
+app's everyday `lowdefy test`, which may run against a shared database.
 
 Like the MongoDB suite, CI does not run it; run it when changing auth, tenancy, the
 journey runner or the dev server. It uses `_server/dev`, so run one at a time per
@@ -126,6 +164,20 @@ The copy keeps its `node_modules` and lockfile between runs, and the CLI install
 when the copy's `package.json` changes, so a repeat run spends its time on the builds.
 Delete `_server/e2e/<package>` to force a fresh install. `packages/cli/dist` and the linked
 packages' `dist` must be built first (`pnpm build`).
+
+CI does not run block e2e on every push. Start the `Block E2E Tests` workflow from the
+Actions tab, or add the `run-block-e2e` label to a pull request; it runs each package's
+suite in its own job.
+
+## Before merging
+
+The root `pnpm test` in CI skips the MongoDB and block e2e suites, so a pull request that
+touches them runs them on request (the pull request template lists both):
+
+| Change touches                               | Run                                                  |
+| -------------------------------------------- | ---------------------------------------------------- |
+| `connection-mongodb`, tenancy, auth adapters | `pnpm test:mongodb` or the `run-mongodb-tests` label |
+| blocks, `block-utils`, the engine            | `pnpm e2e` or the `run-block-e2e` label              |
 
 ## Dev server and hub
 

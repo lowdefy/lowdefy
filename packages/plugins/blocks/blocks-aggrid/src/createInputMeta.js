@@ -289,7 +289,11 @@ function createInputMeta(blockName, { size = false } = {}) {
                       'Avatar/Link: navigation config. Emits `onCellLink` on click. `pageId`/`href`/`back`/`home`/`newTab` are literal; `urlQuery` values are row-data paths.',
                   },
                   pageId: { type: 'string', description: 'Link: target page id (literal).' },
-                  href: { type: 'string', description: 'Link: literal href (overrides `pageId`).' },
+                  href: {
+                    type: 'string',
+                    urlKind: 'href',
+                    description: 'Link: literal href (overrides `pageId`).',
+                  },
                   back: { type: 'boolean', description: 'Link: navigate back.' },
                   home: { type: 'boolean', description: 'Link: navigate home.' },
                   newTab: { type: 'boolean', description: 'Link: open in a new tab.' },

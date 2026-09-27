@@ -204,6 +204,29 @@ function createAuthMethods(lowdefy, auth) {
     });
   }
 
+  // The target of an authPages role (verifyEmail, resetPassword), or undefined
+  // when the app has not set it.
+  function resolveAuthPageTarget(role) {
+    const page = auth.authConfig?.authPages?.[role];
+    if (!type.isString(page)) {
+      return undefined;
+    }
+    return resolveTarget({ lowdefy, target: { url: page }, name: `authPages.${role}` });
+  }
+
+  // Where an emailed verification link lands once BetterAuth has verified the
+  // address: the action's own callbackUrl, else the app's authPages.verifyEmail
+  // page. BetterAuth appends ?error= to it when the link is invalid or has
+  // expired, so that page can say so. Undefined when neither is set, leaving the
+  // caller's own destination.
+  function resolveVerifyEmailTarget({ callbackUrl }) {
+    const explicit = resolveTarget({ lowdefy, target: callbackUrl, name: 'callbackUrl' });
+    if (!type.isNone(explicit)) {
+      return explicit;
+    }
+    return resolveAuthPageTarget('verifyEmail');
+  }
+
   // The engine owns the two-factor challenge destination on every sign-in path,
   // so every method that can receive a challenge instead of a session navigates
   // through here. Leaving it to the login page makes correctness opt-in: a page
@@ -402,17 +425,19 @@ function createAuthMethods(lowdefy, auth) {
   // created on first sign-in via login - so SignUp is email/password only.
   async function signUp({ callbackUrl, captchaToken, email, name, password, ...rest } = {}) {
     // signUp is the case where the two consumers diverge: Lowdefy navigates on
-    // the session-bearing success, and BetterAuth puts the same value in the
-    // verification email. A value with two consumers cannot be suppressed for
-    // one of them alone.
+    // the session-bearing success, and BetterAuth puts the callbackURL in the
+    // verification email. An explicit callbackUrl serves both, so it cannot be
+    // suppressed for one of them alone. Without one, Lowdefy navigates down the
+    // callback ladder and the email lands on authPages.verifyEmail.
     assertCallbackUrlNavigable({ callbackUrl, method: 'SignUp' });
     const callbackTarget = resolveCallbackURL({ lowdefy, callbackUrl });
+    const verifyEmailTarget = resolveVerifyEmailTarget({ callbackUrl }) ?? callbackTarget;
     const data = await unwrap(
       auth.signUpEmail({
         email,
         password,
         name,
-        callbackURL: serializeTarget(callbackTarget),
+        callbackURL: serializeTarget(verifyEmailTarget),
         ...rest,
         ...captchaFetchOptions(captchaToken),
       })
@@ -600,7 +625,9 @@ function createAuthMethods(lowdefy, auth) {
 
   // Dispatches by parameter, matching login: a phoneNumber param requests the
   // reset code over SMS (the "phone.passwordReset.send" hook), otherwise
-  // email carries the reset link.
+  // email carries the reset link. BetterAuth sends that link to redirectTo
+  // with ?token= (or ?error=INVALID_TOKEN) appended, and without one the link
+  // fails, so it defaults to the app's authPages.resetPassword page.
   async function requestPasswordReset({
     captchaToken,
     email,
@@ -617,7 +644,14 @@ function createAuthMethods(lowdefy, auth) {
     if (!type.isString(email)) {
       throw new Error('RequestPasswordReset requires an "email" or "phoneNumber" param.');
     }
-    return unwrap(auth.requestPasswordReset({ email, redirectTo, ...rest, ...captchaOptions }));
+    return unwrap(
+      auth.requestPasswordReset({
+        email,
+        redirectTo: redirectTo ?? serializeTarget(resolveAuthPageTarget('resetPassword')),
+        ...rest,
+        ...captchaOptions,
+      })
+    );
   }
 
   // Dispatches by parameter: a phoneNumber param resets with the SMS otp,
@@ -645,17 +679,18 @@ function createAuthMethods(lowdefy, auth) {
   // Resends the verification email for an unverified account - an unverified
   // user holds no session, so this is a public call. The callbackUrl is
   // where the emailed verification link lands after verifying, matching the
-  // signUp param of the same name.
+  // signUp param of the same name, and authPages.verifyEmail without one.
   async function sendVerificationEmail({ callbackUrl, captchaToken, email, ...rest } = {}) {
     if (!type.isString(email)) {
       throw new Error('SendVerificationEmail requires an "email" param.');
     }
     assertCallbackUrlNavigable({ callbackUrl, method: 'SendVerificationEmail' });
-    const callbackTarget = resolveCallbackURL({ lowdefy, callbackUrl });
+    const verifyEmailTarget =
+      resolveVerifyEmailTarget({ callbackUrl }) ?? resolveCallbackURL({ lowdefy, callbackUrl });
     return unwrap(
       auth.sendVerificationEmail({
         email,
-        callbackURL: serializeTarget(callbackTarget),
+        callbackURL: serializeTarget(verifyEmailTarget),
         ...rest,
         ...captchaFetchOptions(captchaToken),
       })

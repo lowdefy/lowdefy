@@ -77,6 +77,18 @@ test('journeySchema accepts user none for a journey that signs in through the ap
   });
 });
 
+test.each([1, 5000, 60000])('journeySchema accepts a timeout of %j ms', (timeout) => {
+  expect(validateJourney({ journey: { ...minimalJourney, timeout } })).toEqual({ valid: true });
+});
+
+test.each([0, 60001, 2.5, '5000'])('journeySchema rejects a timeout of %j', (timeout) => {
+  const result = validateJourney({ journey: { ...minimalJourney, timeout } });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain(
+    'Journey "timeout" should be a whole number of milliseconds from 1 to 60000 - how long each step may wait.'
+  );
+});
+
 test.each(['admin', ['admin'], true])('journeySchema rejects user %j', (user) => {
   const result = validateJourney({ journey: { ...minimalJourney, user } });
   expect(result.valid).toBe(false);

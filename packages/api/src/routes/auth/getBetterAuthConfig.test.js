@@ -267,6 +267,78 @@ describe('base URL resolution', () => {
     expect(options.baseURL).toBeUndefined();
     expect(logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('base URL is not pinned'));
   });
+
+  test.each([
+    ['email verification and password reset', {}, 'email verification, password reset'],
+    [
+      'magic link',
+      { emailAndPassword: undefined, magicLink: { enabled: true, expiresIn: 300 } },
+      'email verification, magic link',
+    ],
+    [
+      'invitation',
+      {
+        emailAndPassword: undefined,
+        authPages: { signIn: '/login', acceptInvitation: '/accept-invitation' },
+      },
+      'email verification, invitation',
+    ],
+  ])(
+    'refuses to start in production when auth emails %s links and the base URL is unpinned',
+    (_, overrides, flows) => {
+      delete process.env.BETTER_AUTH_URL;
+      const email = { ...emailConfig, '~k': 'auth-email-key' };
+      let error;
+      try {
+        getBetterAuthConfig({
+          appMeta,
+          authJson: createAuthJson({ email, ...overrides }),
+          getAuth,
+          logger: createLogger(),
+          plugins: createPlugins(),
+          secrets: baseSecrets,
+        });
+      } catch (caught) {
+        error = caught;
+      }
+      expect(error).toBeInstanceOf(ConfigError);
+      expect(error.message).toContain(`auth emails links (${flows})`);
+      expect(error.message).toContain('BETTER_AUTH_URL');
+      expect(error.configKey).toBe('auth-email-key');
+    }
+  );
+
+  test('starts in production with auth email when the environment url pins the base URL', () => {
+    delete process.env.BETTER_AUTH_URL;
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({ email: emailConfig }),
+      config: {
+        environments: { production: { url: 'https://app.example.com' } },
+        environment: 'production',
+      },
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.baseURL).toBe('https://app.example.com');
+  });
+
+  test('starts with auth email and an unpinned base URL on the dev server', () => {
+    delete process.env.BETTER_AUTH_URL;
+    const options = getBetterAuthConfig({
+      appMeta,
+      authJson: createAuthJson({ email: emailConfig }),
+      dev: true,
+      getAuth,
+      logger: createLogger(),
+      plugins: createPlugins(),
+      secrets: baseSecrets,
+    });
+    expect(options.baseURL).toBeUndefined();
+    expect(options.emailVerification.sendVerificationEmail).toBeInstanceOf(Function);
+  });
 });
 
 test('resolves the database adapter using the matching plugin and resolved secrets', () => {
@@ -500,6 +572,7 @@ test('adds sendResetPassword and emailVerification when email is configured', ()
   const logger = createLogger();
   const options = getBetterAuthConfig({
     appMeta,
+    dev: true,
     authJson: createAuthJson({
       email: {
         connectionId: 'auth_email',
@@ -529,6 +602,9 @@ test('does not add emailVerification when email is not configured', () => {
   expect(options.emailVerification).toBeUndefined();
 });
 
+// Production refuses to start when auth emails links from an unpinned base URL
+// (see "base URL resolution"), so tests of the email flows that leave
+// BETTER_AUTH_URL unset construct the options as the dev server does.
 describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
   const sentinelContext = { system: true };
@@ -550,6 +626,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   test('constructs sendEmail from the resolved auth.email.connectionId', () => {
     getBetterAuthConfig({
       appMeta,
+      dev: true,
       authJson: createAuthJson({ email: emailConfig }),
       createSystemContext,
       getAuth,
@@ -563,6 +640,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   test('sendResetPassword renders the resetPassword flow and sends to the user email', async () => {
     const options = getBetterAuthConfig({
       appMeta,
+      dev: true,
       authJson: createAuthJson({ email: emailConfig }),
       createSystemContext,
       getAuth,
@@ -594,6 +672,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   test('sendVerificationEmail renders the verifyEmail flow and sends to the user email', async () => {
     const options = getBetterAuthConfig({
       appMeta,
+      dev: true,
       authJson: createAuthJson({ email: emailConfig }),
       createSystemContext,
       getAuth,
@@ -620,6 +699,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   test('sendMagicLink renders the magicLink flow and sends to the provided email', async () => {
     const options = getBetterAuthConfig({
       appMeta,
+      dev: true,
       authJson: createAuthJson({
         email: emailConfig,
         magicLink: { enabled: true, expiresIn: 300, disableSignUp: false },
@@ -650,6 +730,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   test('sendMagicLink links at the verify endpoint when authPages.magicLink is unset', async () => {
     const options = getBetterAuthConfig({
       appMeta,
+      dev: true,
       authJson: createAuthJson({
         email: emailConfig,
         authPages: { signIn: '/login', error: '/auth/error' },
@@ -682,6 +763,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   test('sendMagicLink links at the landing page, carrying the whole verify query', async () => {
     const options = getBetterAuthConfig({
       appMeta,
+      dev: true,
       authJson: createAuthJson({
         email: emailConfig,
         authPages: { signIn: '/login', error: '/auth/error', magicLink: '/magic-link' },
@@ -715,6 +797,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   test('sendMagicLink takes the landing origin from the verify url, not the pinned base url', async () => {
     const options = getBetterAuthConfig({
       appMeta,
+      dev: true,
       authJson: createAuthJson({
         email: emailConfig,
         authPages: { signIn: '/login', error: '/auth/error', magicLink: '/magic-link' },
@@ -741,6 +824,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   test('sendVerificationOTP renders the emailOTP flow for a sign-in code and sends it', async () => {
     const options = getBetterAuthConfig({
       appMeta,
+      dev: true,
       authJson: createAuthJson({
         email: emailConfig,
         emailOTP: {
@@ -780,6 +864,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
   test('sendVerificationOTP throws a ConfigError for an OTP type other than sign-in', async () => {
     const options = getBetterAuthConfig({
       appMeta,
+      dev: true,
       authJson: createAuthJson({
         email: emailConfig,
         emailOTP: {
@@ -813,6 +898,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
     const createVerificationOTP = jest.fn(async () => '482913');
     const options = getBetterAuthConfig({
       appMeta,
+      dev: true,
       authJson: createAuthJson({
         email: emailConfig,
         magicLink: { enabled: true, expiresIn: 300, disableSignUp: false },
@@ -893,6 +979,7 @@ describe('auth email flows route through renderAuthEmail and sendEmail', () => {
     delete process.env.BETTER_AUTH_URL;
     const options = getBetterAuthConfig({
       appMeta,
+      dev: true,
       authJson: createAuthJson({
         email: emailConfig,
         authPages: { acceptInvitation: '/accept-invitation' },
@@ -1021,6 +1108,7 @@ test('does not push the generic-oauth plugin when no GenericOAuth provider is co
 test('pushes the magic-link plugin when magicLink is enabled', () => {
   const options = getBetterAuthConfig({
     appMeta,
+    dev: true,
     authJson: createAuthJson({
       email: {
         connectionId: 'auth_email',
@@ -1050,6 +1138,7 @@ test('does not push the magic-link plugin when magicLink is not enabled', () => 
 test('pushes the email-otp plugin when emailOTP is enabled', () => {
   const options = getBetterAuthConfig({
     appMeta,
+    dev: true,
     authJson: createAuthJson({
       email: emailConfig,
       emailOTP: {
@@ -1276,6 +1365,7 @@ test('always sets the engine session.create.before and user.create.before slots 
 test('an email.verified hook sets emailVerification.afterEmailVerification and preserves sendVerificationEmail', () => {
   const options = getBetterAuthConfig({
     appMeta,
+    dev: true,
     authJson: createAuthJson({
       email: {
         connectionId: 'auth_email',
@@ -1752,6 +1842,7 @@ describe('two factor challenge on the magic link path', () => {
 test('assembles both request hook slots when magicLink is enabled', () => {
   const options = getBetterAuthConfig({
     appMeta,
+    dev: true,
     authJson: createAuthJson({
       email: {
         connectionId: 'auth_email',

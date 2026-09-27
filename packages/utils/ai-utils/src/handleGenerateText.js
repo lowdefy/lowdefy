@@ -18,10 +18,11 @@ import { generateText } from 'ai';
 
 import buildGenerateCallOptions from './buildGenerateCallOptions.js';
 
-async function handleGenerateText({ model, request }) {
+async function handleGenerateText({ model, request, limits }) {
   const result = await generateText({
     model,
     ...buildGenerateCallOptions({ request }),
+    ...limits,
   });
   return {
     text: result.text,

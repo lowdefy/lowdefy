@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 
 import buildDependencyTracking from './buildDependencyTracking.js';
 import buildEnvironments from './buildEnvironments.js';
+import validateTrustedProxies from './validateTrustedProxies.js';
 
 function validateConfig({ components, context }) {
   if (type.isNone(components.config)) {
@@ -37,6 +38,7 @@ function validateConfig({ components, context }) {
     // trailing slash would double up and break them: "/app/" is "/app".
     components.config.basePath = components.config.basePath.replace(/\/+$/, '');
   }
+  validateTrustedProxies({ components, context });
   buildEnvironments({ components, context });
   buildDependencyTracking({ components });
   return components;

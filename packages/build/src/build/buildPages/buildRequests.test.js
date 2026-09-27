@@ -547,14 +547,45 @@ test('request tenant with a field object throws naming the connection position',
         id: 'page_1',
         auth,
         type: 'Container',
-        requests: [
-          { id: 'my_request', type: 'Request', tenant: { field: 'organization_id' } },
-        ],
+        requests: [{ id: 'my_request', type: 'Request', tenant: { field: 'organization_id' } }],
       },
     ],
   };
   expect(() => buildPages({ components, context })).toThrow(
     'Request "my_request" at page "page_1" "tenant" only accepts "none" or "authored" — the tenant wall is declared on the connection.'
+  );
+});
+
+test('a literal $out from a shared connection into a walled collection throws at build', () => {
+  const contextWithTenant = testContext({ logger });
+  contextWithTenant.connectionIds.add('orders_all');
+  contextWithTenant.walledTargets.set(JSON.stringify(['MongoDBCollection', ['uri'], 'totals']), {
+    connectionId: 'totals',
+    field: 'organization_id',
+  });
+  contextWithTenant.sharedTargets.set('orders_all', {
+    connection: { type: 'MongoDBCollection', properties: { databaseUri: 'uri' } },
+    tenantTarget: { database: ['databaseUri'], collection: 'collection' },
+  });
+  const components = {
+    pages: [
+      {
+        id: 'page_1',
+        auth,
+        type: 'Container',
+        requests: [
+          {
+            id: 'my_request',
+            type: 'Request',
+            connectionId: 'orders_all',
+            properties: { pipeline: [{ $out: 'totals' }] },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildPages({ components, context: contextWithTenant })).toThrow(
+    'Request "my_request" at page "page_1" writes into collection "totals" with "$out" on tenant: shared connection "orders_all"'
   );
 });
 

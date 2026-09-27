@@ -17,7 +17,6 @@
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { compress } from 'hono/compress';
-import { timeout } from 'hono/timeout';
 import { serveStatic } from '@hono/node-server/serve-static';
 
 import agentHandler from './routes/agent.js';
@@ -41,6 +40,7 @@ import mountPageRoutes from './routes/mountPageRoutes.js';
 import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
+import requestTimeout from './middleware/requestTimeout.js';
 import sentryMiddleware from './middleware/sentry.js';
 import usageHandler from './routes/usage.js';
 import userHandler from './routes/user.js';
@@ -57,7 +57,10 @@ const requestTimeoutMs = lowdefyConfig.requestTimeout ?? 30000;
 // `serveStaticAssets` is true for the Node server (it serves `dist/client` itself). On a
 // platform that serves the built client + public files from a CDN (e.g. Vercel), pass false so
 // the request handler skips the Node-only static middleware and only owns the dynamic routes.
-function createApp({ serveStaticAssets = true } = {}) {
+// `clientAddressHeader` names the header a platform's edge sets to the client address on every
+// request (Vercel's x-real-ip). Without it the Node server resolves the address from the
+// connection and config.trustedProxies.
+function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   const app = basePath ? new Hono().basePath(basePath) : new Hono();
   const logger = createLogger({ server: 'lowdefy' });
 
@@ -71,6 +74,7 @@ function createApp({ serveStaticAssets = true } = {}) {
   // function limit (cost protection on serverless). Agent streaming is long-lived by design, so it
   // is exempt. Configured via `config.requestTimeout` in lowdefy.yaml (0 disables).
   if (requestTimeoutMs > 0) {
+    const timeoutMiddleware = requestTimeout({ timeoutMs: requestTimeoutMs });
     app.use('*', async (c, next) => {
       if (
         c.req.path.includes('/api/agent/') ||
@@ -79,7 +83,7 @@ function createApp({ serveStaticAssets = true } = {}) {
       ) {
         return next();
       }
-      return timeout(requestTimeoutMs)(c, next);
+      return timeoutMiddleware(c, next);
     });
   }
 
@@ -111,7 +115,7 @@ function createApp({ serveStaticAssets = true } = {}) {
   });
   app.all('/.well-known/*', wellKnownFallbackHandler);
 
-  app.use('/api/*', apiContext());
+  app.use('/api/*', apiContext({ clientAddressHeader }));
   app.use('/api/auth/*', authMiddleware({ logger }));
   app.all('/api/request/*', requestHandler);
   // Endpoint payloads may carry base64 file content (emitFileContent + CallAPI);
@@ -150,7 +154,7 @@ function createApp({ serveStaticAssets = true } = {}) {
     );
   }
 
-  app.use('/*', apiContext());
+  app.use('/*', apiContext({ clientAddressHeader }));
   mountPageRoutes({ app, renderPage });
 
   app.onError(createErrorHandler({ basePath, logger }));

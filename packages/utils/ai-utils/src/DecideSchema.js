@@ -133,6 +133,26 @@ function decideSchema({ backends }) {
           minimum: 'Decide request property "maxRetries" should be at least 0.',
         },
       },
+      maxOutputTokens: {
+        type: 'integer',
+        minimum: 1,
+        description:
+          "Maximum number of tokens to generate, on the structured-output backend (an evaluation model generates no text). Defaults to the connection's maxOutputTokens.",
+        errorMessage: {
+          type: 'Decide request property "maxOutputTokens" should be an integer.',
+          minimum: 'Decide request property "maxOutputTokens" should be at least 1.',
+        },
+      },
+      timeout: {
+        type: 'integer',
+        minimum: 1,
+        description:
+          "Milliseconds the model call may take, retries included, before it is cancelled. Defaults to the connection's timeout.",
+        errorMessage: {
+          type: 'Decide request property "timeout" should be an integer.',
+          minimum: 'Decide request property "timeout" should be at least 1.',
+        },
+      },
       providerOptions: {
         type: 'object',
         description:

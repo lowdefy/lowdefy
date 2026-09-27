@@ -18,10 +18,9 @@ import collectChunkClosure from './collectChunkClosure.js';
 import collectLazyImports from './collectLazyImports.js';
 
 const PAGE_TYPES_PREFIX = 'build/plugins/pageTypes/';
-const ICONS_KEY = 'build/plugins/icons.js';
 
-// Preloads per page types key: the key's chunk, the app-wide icons chunk, and
-// their imports, less what the main entry already loads. Prefetches: the lazy
+// Preloads per page types key: the key's chunk (its types and icons) and its
+// imports, less what the main entry already loads. Prefetches: the lazy
 // block implementations the key's chunks import on mount, with their imports,
 // less anything already preloaded or in the main entry. Prefetch is low
 // priority, so a lazy block that mounts at first paint finds its code in the
@@ -35,7 +34,6 @@ function collectPageTypesAssets({ manifest, entryFiles }) {
       const js = new Set();
       const css = new Set();
       collectChunkClosure({ manifest, key, js, css });
-      collectChunkClosure({ manifest, key: ICONS_KEY, js, css });
 
       const lazyKeys = new Set();
       collectLazyImports({ manifest, key, entryFiles, visited: new Set(), lazyKeys });

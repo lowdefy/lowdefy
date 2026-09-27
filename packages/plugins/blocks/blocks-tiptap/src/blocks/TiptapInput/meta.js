@@ -94,6 +94,7 @@ export default {
       },
       image: {
         type: 'object',
+        urlKind: false,
         description: 'Image extension settings.',
         additionalProperties: false,
         properties: {

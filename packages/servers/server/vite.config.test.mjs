@@ -73,3 +73,44 @@ test('production client build keeps light-dark() colours as written', async () =
   expect(css).toContain('color:light-dark(#111,#eee)');
   expect(css).not.toContain('--lightningcss-');
 }, 30000);
+
+// The same build, printing the JavaScript bundle instead of the CSS.
+const jsBuildScript = buildScript.replace(
+  "filter((name) => name.endsWith('.css'))",
+  "filter((name) => name.endsWith('.js'))"
+);
+
+function writePackage({ directory, name, marker }) {
+  const packageDirectory = path.join(directory, 'node_modules', ...name.split('/'));
+  fs.mkdirSync(packageDirectory, { recursive: true });
+  fs.writeFileSync(
+    path.join(packageDirectory, 'package.json'),
+    JSON.stringify({ name, version: '1.0.0', type: 'module', main: 'index.js' })
+  );
+  fs.writeFileSync(path.join(packageDirectory, 'index.js'), `export default '${marker}';`);
+}
+
+test.each(['@lowdefy/block-utils', '@lowdefy/helpers'])(
+  'production client build gives a linked plugin the server copy of %s',
+  async (name) => {
+    writePackage({ directory: root, name, marker: 'server-copy' });
+    const pluginDirectory = path.join(root, 'plugin');
+    writePackage({ directory: pluginDirectory, name, marker: 'plugin-copy' });
+    fs.writeFileSync(
+      path.join(pluginDirectory, 'index.js'),
+      `import shared from '${name}';\nexport default shared;`
+    );
+    fs.writeFileSync(
+      path.join(root, 'main.js'),
+      "import pluginShared from './plugin/index.js';\nconsole.log(pluginShared);"
+    );
+    const { stdout: js } = await promisify(execFile)(
+      process.execPath,
+      ['--input-type=module', '--eval', jsBuildScript],
+      { cwd: serverDir, env: { ...process.env, FIXTURE_ROOT: root } }
+    );
+    expect(js).toContain('server-copy');
+    expect(js).not.toContain('plugin-copy');
+  },
+  30000
+);

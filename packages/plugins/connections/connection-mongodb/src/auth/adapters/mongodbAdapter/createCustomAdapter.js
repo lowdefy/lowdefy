@@ -17,18 +17,20 @@
 import { snakeCase } from 'change-case';
 
 import createConvertWhereClause from './createConvertWhereClause.js';
+import createEnsureUniqueIndexes from './createEnsureUniqueIndexes.js';
 import createSerializeId from './createSerializeId.js';
 
 // Returns the CustomAdapter creator consumed by BetterAuth's
 // createAdapterFactory. The creator signature ({ getFieldAttributes,
-// getFieldName, schema, getDefaultModelName, options }) is fixed by the
-// BetterAuth adapter API.
+// getFieldName, getModelName, schema, getDefaultModelName, options }) is fixed
+// by the BetterAuth adapter API.
 // Adapted from @better-auth/mongo-adapter@1.6.23 - see mongodbAdapter.js for
 // provenance.
 function createCustomAdapter({ db }) {
   return function customAdapter({
     getFieldAttributes,
     getFieldName,
+    getModelName,
     schema,
     getDefaultModelName,
     options,
@@ -119,6 +121,12 @@ function createCustomAdapter({ db }) {
     }
 
     return {
+      // The factory passes options through onto the constructed adapter
+      // (adapter.options), the one place a capability beyond BetterAuth's
+      // adapter interface reaches the engine - see ensureAuthIndexes.
+      options: {
+        ensureUniqueIndexes: createEnsureUniqueIndexes({ db, getFieldName, getModelName }),
+      },
       async create({ model, data }) {
         const result = await db.collection(model).insertOne(data);
         return { _id: result.insertedId.toString(), ...data };

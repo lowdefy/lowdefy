@@ -363,14 +363,21 @@ modules:
 # extra infrastructure is needed for the walkthrough. user-contacts is the
 # app-owned CRM contact collection the merge-on-signup hooks match against.
 connections:
-  # The transport auth.email sends through - Mailpit for the walkthrough.
+  # The transport auth.email sends through - Mailpit for the walkthrough, or
+  # the dev server's mail sink for the journeys (pnpm test:journeys:auth sets
+  # SMTP_PORT to it).
   - id: auth_email
     type: SMTP
     properties:
       from: auth-reference@localhost
       host:
         _secret: SMTP_HOST
-      port: 1025
+      port:
+        _number.parseInt:
+          on:
+            _if_none:
+              - _secret: SMTP_PORT
+              - '1025'
       secure: false
   - id: audit_db
     type: MongoDBCollection

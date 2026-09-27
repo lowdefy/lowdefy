@@ -25,7 +25,12 @@ let context;
 
 beforeEach(() => {
   configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-journeys-'));
-  context = { directories: { config: configDirectory } };
+  context = {
+    directories: {
+      config: configDirectory,
+      journeys: path.join(configDirectory, 'tests', 'journeys'),
+    },
+  };
 });
 
 afterEach(() => {
@@ -100,4 +105,21 @@ test('discoverJourneys reports a file with invalid YAML as an entry with an erro
   expect(journeys[0].journey).toBeUndefined();
   expect(journeys[0].error).toMatch(/^Invalid YAML: /);
   expect(journeys[1].journey.name).toEqual('ok');
+});
+
+test('discoverJourneys reads the journeys directory and not tests/journeys when another is set', () => {
+  writeJourneyFile('default.yaml', 'name: default\npageId: p\nsteps: [{ click: x }]\n');
+  const directory = path.join(configDirectory, 'tests', 'auth-journeys');
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(
+    path.join(directory, 'sign-up.yaml'),
+    'name: sign up\npageId: p\nsteps: [{ click: x }]\n'
+  );
+  context.directories.journeys = directory;
+  expect(discoverJourneys({ context })).toEqual([
+    {
+      filePath: path.join(directory, 'sign-up.yaml'),
+      journey: { name: 'sign up', pageId: 'p', steps: [{ click: 'x' }] },
+    },
+  ]);
 });

@@ -96,6 +96,7 @@ export default {
               },
               url: {
                 type: 'string',
+                urlKind: 'url',
                 description: 'External URL to link to.',
               },
               newTab: {
@@ -156,6 +157,7 @@ export default {
             properties: {
               src: {
                 type: 'string',
+                urlKind: 'src',
                 description: 'Image URL for the avatar. Typically bound to _user: image.',
               },
               content: {
@@ -216,6 +218,7 @@ export default {
                 },
                 url: {
                   type: 'string',
+                  urlKind: 'url',
                   description: 'External URL to link to.',
                 },
                 newTab: {

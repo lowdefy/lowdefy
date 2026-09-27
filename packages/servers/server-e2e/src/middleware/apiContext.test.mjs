@@ -26,6 +26,7 @@ process.env.LOWDEFY_SECRET_TEST = secret;
 
 jest.unstable_mockModule('@lowdefy/api', () => ({
   createApiContext: jest.fn(),
+  createRequestSignal: jest.fn(({ clientSignal }) => clientSignal),
   normalizeInjectedCaller: jest.fn((user) => user),
 }));
 jest.unstable_mockModule('../../lib/build/appMeta.js', () => ({ default: {} }));
