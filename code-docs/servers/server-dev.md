@@ -399,6 +399,11 @@ build's list and misses any file only the failed build read (a new endpoint file
 is being fixed). While the last build failed, every change rebuilds, so fixing the error
 clears the build status.
 
+A `lowdefy.yaml` change first compares the Lowdefy version with the running one. A
+`lowdefy.yaml` that cannot be parsed has no version to compare, so the config build still runs
+and reports the parse error in the build status (reading the plugin list from `lowdefy.yaml` is
+part of the build attempt).
+
 The `skeletonSourceFiles` set is derived from `~r` markers on non-page components during the shallow build. It includes every config file that contributes to non-page build artifacts (connections, API endpoints, auth, menus, etc.), traced through the refMap parent chain. This replaces the previous path-based heuristic (`!f.startsWith('pages/')`) which had false negatives for API files referenced from `pages/` and false positives for page templates outside `pages/`.
 
 The set also includes the files that hold a pages list (`pages: { _ref: pages.yaml }` in the app, a module's pages list): they decide which pages exist, so adding a page needs a skeleton rebuild. The page files they reference, and templates those ref, stay page content.

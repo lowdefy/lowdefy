@@ -105,6 +105,23 @@ test('lowdefyBuild falls back to the raw error message when the thrown error has
   });
 });
 
+test('lowdefyBuild writes an error buildStatus.json when lowdefy.yaml cannot be read for its plugins', async () => {
+  const context = createContext();
+  const parseError = new Error('All sequence items must start at the same column at line 7');
+  mockCreateCustomPluginTypesMap.mockRejectedValueOnce(parseError);
+
+  const build = lowdefyBuild(context);
+  await expect(build()).rejects.toBe(parseError);
+
+  expect(mockShallowBuild).not.toHaveBeenCalled();
+  expect(mockWriteBuildStatus).toHaveBeenCalledWith({
+    directories: context.directories,
+    status: 'error',
+    errors: [{ message: 'All sequence items must start at the same column at line 7' }],
+    warnings: [],
+  });
+});
+
 test('lowdefyBuild builds into the staging directory and then publishes it', async () => {
   const context = createContext();
   mockShallowBuild.mockResolvedValue({ components: {}, pageRegistry: {}, context: {} });
