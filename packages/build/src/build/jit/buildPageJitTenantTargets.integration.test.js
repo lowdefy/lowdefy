@@ -192,7 +192,7 @@ function devContext() {
   context.components = { api: [] };
   context.bundledIcons = new Set();
   context.dynamicIconData = {};
-  makeId.setCounter(readArtifact(buildDir, 'idCounter.json'));
+  makeId.continueFrom(readArtifact(buildDir, 'idCounter.json'));
   return context;
 }
 

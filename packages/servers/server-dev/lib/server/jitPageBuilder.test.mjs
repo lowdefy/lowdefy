@@ -33,6 +33,10 @@ test('getBuildContext restores the scoped connections, walled collections and sh
     tenantTarget: { database: ['databaseUri'], collection: 'collection' },
   };
   fs.writeFileSync(
+    path.join(buildDirectory, 'idCounter.json'),
+    JSON.stringify({ prefix: 'test_', counter: 0 })
+  );
+  fs.writeFileSync(
     path.join(buildDirectory, 'tenantTargets.json'),
     serializer.serializeToString({
       tenantConnectionIds: ['totals'],
