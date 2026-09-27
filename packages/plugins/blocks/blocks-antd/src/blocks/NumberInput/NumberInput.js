@@ -35,6 +35,7 @@ const NumberInput = ({
   validation,
   value,
 }) => {
+  const isSpinner = properties.mode === 'spinner';
   return (
     <Label
       blockId={blockId}
@@ -52,6 +53,7 @@ const NumberInput = ({
             id={`${blockId}_input`}
             autoComplete="off"
             autoFocus={properties.autoFocus}
+            changeOnWheel={properties.changeOnWheel}
             variant={properties.bordered === false ? 'borderless' : properties.variant}
             className={classNames.element}
             style={{ width: '100%', ...styles.element }}
@@ -60,13 +62,13 @@ const NumberInput = ({
                 upIcon: (
                   <components.Icon
                     blockId={`${blockId}_upIcon`}
-                    properties={{ name: 'chevron-up', title: '' }}
+                    properties={{ name: isSpinner ? 'add' : 'chevron-up', title: '' }}
                   />
                 ),
                 downIcon: (
                   <components.Icon
                     blockId={`${blockId}_downIcon`}
-                    properties={{ name: 'chevron-down', title: '' }}
+                    properties={{ name: isSpinner ? 'minus' : 'chevron-down', title: '' }}
                   />
                 ),
               }
@@ -79,12 +81,41 @@ const NumberInput = ({
             keyboard={properties.keyboard}
             max={properties.max}
             min={properties.min}
+            mode={properties.mode}
             parser={properties.parser}
             placeholder={properties.placeholder}
             precision={properties.precision}
+            prefix={
+              properties.prefix ||
+              (properties.prefixIcon && (
+                <components.Icon
+                  blockId={`${blockId}_prefixIcon`}
+                  classNames={{ element: classNames.prefixIcon }}
+                  events={events}
+                  properties={properties.prefixIcon}
+                  styles={{ element: styles.prefixIcon }}
+                />
+              ))
+            }
             size={properties.size}
             status={validation.status}
             step={properties.step}
+            suffix={
+              (properties.suffix || properties.suffixIcon) && (
+                <>
+                  {properties.suffix && properties.suffix}
+                  {properties.suffixIcon && (
+                    <components.Icon
+                      blockId={`${blockId}_suffixIcon`}
+                      classNames={{ element: classNames.suffixIcon }}
+                      events={events}
+                      properties={properties.suffixIcon}
+                      styles={{ element: styles.suffixIcon }}
+                    />
+                  )}
+                </>
+              )
+            }
             onChange={(newVal) => {
               methods.setValue(newVal);
               methods.triggerEvent({ name: 'onChange', event: { value: newVal } });

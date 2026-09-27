@@ -89,3 +89,34 @@
   properties:
     size: 'small'
     count: 11
+- id: 'properties.title: false'
+  type: Badge
+  properties:
+    count: 4
+    title: false
+- id: 'properties.ribbon'
+  type: Badge
+  properties:
+    ribbon:
+      text: New
+      color: green
+  slots:
+    content:
+      blocks:
+        - id: ribbon_card
+          type: Card
+          properties:
+            title: Card with a ribbon
+- id: 'properties.ribbon placement: start'
+  type: Badge
+  properties:
+    ribbon:
+      text: Sale
+      placement: start
+  slots:
+    content:
+      blocks:
+        - id: ribbon_start_card
+          type: Card
+          properties:
+            title: Ribbon on the start corner

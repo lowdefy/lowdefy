@@ -151,3 +151,84 @@ blocks:
         rows: 2
       style:
         width: 300px
+
+  # ============================================
+  # KEYBOARD, TYPE DEFAULT, ACTIONS AND ELLIPSIS OPTIONS
+  # ============================================
+
+  - id: para_keyboard
+    type: Paragraph
+    properties:
+      content: Ctrl
+      keyboard: true
+
+  - id: para_type_default
+    type: Paragraph
+    properties:
+      content: Default type
+      type: default
+
+  - id: para_actions_start
+    type: Paragraph
+    class:
+      .actions: para-actions-class
+    properties:
+      content: Actions before the text
+      copyable: true
+      actions:
+        placement: start
+
+  - id: para_ellipsis_collapsible
+    type: Paragraph
+    style:
+      .element:
+        width: 300
+    properties:
+      content: This is a long piece of text that is truncated to a single row until the reader expands it, and it keeps going so that it is always longer than the box it sits in.
+      ellipsis:
+        rows: 1
+        expandable: collapsible
+        symbol:
+          - Show more
+          - Show less
+    events:
+      onExpand:
+        - id: set_para_expanded
+          type: SetState
+          params:
+            para_expanded:
+              _event: expanded
+
+  - id: para_expanded_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: para_expanded
+              - true
+          then: Expanded
+          else: Collapsed
+
+  - id: para_ellipsis_default_expanded
+    type: Paragraph
+    style:
+      .element:
+        width: 300
+    properties:
+      content: This is a long piece of text that is truncated to a single row until the reader expands it, and it keeps going so that it is always longer than the box it sits in.
+      ellipsis:
+        rows: 1
+        expandable: collapsible
+        defaultExpanded: true
+
+  - id: para_ellipsis_tooltip
+    type: Paragraph
+    style:
+      .element:
+        width: 200
+    properties:
+      content: This is a long piece of text that is truncated to a single row until the reader expands it, and it keeps going so that it is always longer than the box it sits in.
+      ellipsis:
+        tooltip: Full text in a tooltip

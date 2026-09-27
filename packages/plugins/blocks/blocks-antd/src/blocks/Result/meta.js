@@ -27,6 +27,8 @@ export default {
   cssKeys: {
     element: 'The Result element.',
     icon: 'The icon in the Result.',
+    title: 'The Result title.',
+    subTitle: 'The Result subtitle.',
   },
   properties: {
     type: 'object',

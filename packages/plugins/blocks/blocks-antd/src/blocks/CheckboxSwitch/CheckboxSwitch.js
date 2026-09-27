@@ -37,9 +37,11 @@ const CheckboxSwitch = ({
   const checkbox = (
     <Checkbox
       id={`${blockId}_input`}
+      autoFocus={properties.autoFocus}
       checked={value}
       className={classNames.element}
       disabled={properties.disabled || loading}
+      indeterminate={properties.indeterminate}
       style={{
         marginRight: properties.description ? '30px' : undefined,
         ...styles.element,

@@ -110,8 +110,9 @@ test.describe('NumberInput Block', () => {
     const input = getInput(page, 'numberinput_onblur');
 
     await input.click();
-    // Click elsewhere to blur
-    await page.click('body');
+    // Click an empty corner of the page to blur. The centre of the body can land on a label, which
+    // focuses an input again.
+    await page.mouse.click(1, 1);
 
     const display = getBlock(page, 'onblur_display');
     await expect(display).toHaveText('Blur fired');
@@ -186,5 +187,51 @@ test.describe('NumberInput Block', () => {
 
     // Value should be decremented
     await expect(input).toHaveValue('9');
+  });
+});
+
+test.describe('NumberInput antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'numberinput');
+  });
+
+  test('renders prefix and suffix text', async ({ page }) => {
+    const block = getBlock(page, 'numberinput_prefix_suffix');
+    await expect(block.locator('.ant-input-number-prefix')).toHaveText('$');
+    await expect(block.locator('.ant-input-number-suffix')).toHaveText('USD');
+  });
+
+  test('renders prefix and suffix icons', async ({ page }) => {
+    const block = getBlock(page, 'numberinput_prefix_suffix_icons');
+    await expect(block.locator('.ant-input-number-prefix svg')).toBeAttached();
+    await expect(block.locator('.ant-input-number-suffix svg')).toBeAttached();
+  });
+
+  test('renders the underlined variant', async ({ page }) => {
+    const block = getBlock(page, 'numberinput_underlined');
+    await expect(block.locator('.ant-input-number')).toHaveClass(/ant-input-number-underlined/);
+  });
+
+  test('spinner mode renders minus and plus buttons around the input', async ({ page }) => {
+    const block = getBlock(page, 'numberinput_spinner');
+    const root = block.locator('.ant-input-number');
+    await expect(root).toHaveClass(/ant-input-number-mode-spinner/);
+    const input = getInput(page, 'numberinput_spinner');
+    await expect(input).toHaveValue('5');
+
+    await root.locator('.ant-input-number-action-up').click();
+    await expect(input).toHaveValue('6');
+    await root.locator('.ant-input-number-action-down').click();
+    await root.locator('.ant-input-number-action-down').click();
+    await expect(input).toHaveValue('4');
+  });
+
+  test('changeOnWheel changes the value with the mouse wheel', async ({ page }) => {
+    const input = getInput(page, 'numberinput_wheel');
+    await expect(input).toHaveValue('5');
+    await input.focus();
+    await input.hover();
+    await page.mouse.wheel(0, -100);
+    await expect(input).toHaveValue('6');
   });
 });

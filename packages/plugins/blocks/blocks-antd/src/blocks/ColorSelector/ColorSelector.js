@@ -16,11 +16,12 @@
 
 import React from 'react';
 import { ColorPicker } from 'antd';
-import { type } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
+import getColorValue from './getColorValue.js';
+import toPickerColor from './toPickerColor.js';
 
 const ColorSelectorInput = ({
   blockId,
@@ -51,8 +52,10 @@ const ColorSelectorInput = ({
           <ColorPicker
             id={`${blockId}_input`}
             className={classNames.element}
+            classNames={{ popup: { root: classNames.popup } }}
             style={styles.element}
-            value={type.isNone(value) ? undefined : value}
+            styles={{ popup: { root: styles.popup } }}
+            value={toPickerColor(value)}
             format={properties.format}
             showText={properties.showText}
             size={properties.size}
@@ -67,14 +70,14 @@ const ColorSelectorInput = ({
             presets={properties.presets}
             trigger={properties.trigger}
             onChange={(color) => {
-              const hexValue = color.toHexString();
-              methods.setValue(hexValue);
-              methods.triggerEvent({ name: 'onChange', event: { value: hexValue } });
+              const colorValue = getColorValue(color);
+              methods.setValue(colorValue);
+              methods.triggerEvent({ name: 'onChange', event: { value: colorValue } });
             }}
             onChangeComplete={(color) => {
               methods.triggerEvent({
                 name: 'onChangeComplete',
-                event: { value: color.toHexString() },
+                event: { value: getColorValue(color) },
               });
             }}
             onClear={() => {
@@ -93,4 +96,4 @@ const ColorSelectorInput = ({
   );
 };
 
-export default withTheme('ColorSelector', withBlockDefaults(ColorSelectorInput));
+export default withTheme('ColorPicker', withBlockDefaults(ColorSelectorInput));

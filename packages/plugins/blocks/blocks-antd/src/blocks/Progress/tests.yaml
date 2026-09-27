@@ -112,3 +112,49 @@
     gapDegree: 60
     type: circle
     percent: 30
+- id: 'properties.size: small'
+  type: Progress
+  properties:
+    size: small
+    percent: 30
+- id: 'properties.size: [300, 20]'
+  type: Progress
+  properties:
+    size:
+      - 300
+      - 20
+    percent: 30
+- id: 'properties.percentPosition inner center'
+  type: Progress
+  properties:
+    size:
+      - 300
+      - 20
+    percentPosition:
+      align: center
+      type: inner
+    percent: 30
+- id: 'properties.strokeColor gradient'
+  type: Progress
+  properties:
+    strokeColor:
+      from: '#108ee9'
+      to: '#87d068'
+    percent: 60
+- id: 'properties.steps object on circle'
+  type: Progress
+  properties:
+    type: circle
+    steps:
+      count: 5
+      gap: 7
+    percent: 60
+- id: 'properties.steps with strokeColor array'
+  type: Progress
+  properties:
+    steps: 3
+    strokeColor:
+      - '#52c41a'
+      - '#faad14'
+      - '#ff4d4f'
+    percent: 100

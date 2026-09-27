@@ -21,6 +21,9 @@ import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
+// antd 6 renamed the left and right mode and position values to start and end.
+const placements = { left: 'start', right: 'end' };
+
 // TODO: need to pass value to list blocks to render item level settings.
 const TimelineList = ({
   blockId,
@@ -34,63 +37,65 @@ const TimelineList = ({
 }) => {
   // Temporary fix until list blocks get value from state
   const value = properties.data;
-  const other = {};
-  if (properties.mode) {
-    other.mode = properties.mode;
+  const items = (list || []).map((child, i) => {
+    let icon = serializer.copy(get(value, `${i}.${properties.iconField ?? 'icon'}`));
+    let style = get(value, `${i}.${properties.styleField ?? 'style'}`);
+    if (type.isString(icon)) {
+      icon = { name: icon };
+    }
+    if (!type.isObject(style)) {
+      style = {};
+    }
+    const color = get(value, `${i}.${properties.colorField ?? 'color'}`);
+    const position = get(value, `${i}.${properties.positionField ?? 'position'}`);
+    return {
+      key: `${blockId}_${i}`,
+      color,
+      placement: placements[position] ?? position,
+      title: get(value, `${i}.${properties.labelField ?? 'label'}`),
+      icon: icon && (
+        <Icon
+          blockId={`${blockId}_${i}_icon`}
+          classNames={{ element: classNames.icon }}
+          events={events}
+          properties={mergeObjects([{ color }, icon])}
+          styles={{ element: { ...style, ...styles.icon } }}
+        />
+      ),
+      content: child.content && child.content(),
+    };
+  });
+  // antd 6 dropped pending in favour of a loading item at the end of items.
+  if (properties.pending) {
+    items.push({
+      key: `${blockId}_pending`,
+      loading: true,
+      content: type.isString(properties.pending) ? properties.pending : undefined,
+      icon: properties.pendingDotIcon && (
+        <Icon
+          blockId={`${blockId}_pendingDotIcon`}
+          classNames={{ element: classNames.pendingDotIcon }}
+          events={events}
+          properties={properties.pendingDotIcon}
+          styles={{ element: { fontSize: 16, ...styles.pendingDotIcon } }}
+        />
+      ),
+    });
   }
   return (
     <Timeline
       id={blockId}
       className={classNames.element}
-      pending={properties.pending}
-      pendingDot={
-        properties.pendingDotIcon && (
-          <Icon
-            blockId={`${blockId}_pendingDotIcon`}
-            classNames={{ element: classNames.pendingDotIcon }}
-            events={events}
-            properties={properties.pendingDotIcon}
-            styles={{ element: { fontSize: 16, ...styles.pendingDotIcon } }}
-          />
-        )
-      }
+      classNames={{ itemTitle: classNames.label }}
+      items={items}
+      mode={placements[properties.mode] ?? properties.mode}
+      orientation={properties.orientation}
       reverse={properties.reverse}
       style={{ padding: '5px 0px 0px 5px', ...styles.element }}
-      {...other}
-    >
-      {(list || []).map((child, i) => {
-        let icon = serializer.copy(get(value, `${i}.${properties.iconField ?? 'icon'}`));
-        let style = get(value, `${i}.${properties.styleField ?? 'style'}`);
-        if (type.isString(icon)) {
-          icon = { name: icon };
-        }
-        if (!type.isObject(style)) {
-          style = {};
-        }
-        const color = get(value, `${i}.${properties.colorField ?? 'color'}`);
-        return (
-          <Timeline.Item
-            key={`${blockId}_${i}`}
-            color={color}
-            position={get(value, `${i}.${properties.positionField ?? 'position'}`)}
-            label={get(value, `${i}.${properties.labelField ?? 'label'}`)}
-            dot={
-              icon && (
-                <Icon
-                  blockId={`${blockId}_${i}_icon`}
-                  classNames={{ element: classNames.icon }}
-                  events={events}
-                  properties={mergeObjects([{ color }, icon])}
-                  styles={{ element: { ...style, ...styles.icon } }}
-                />
-              )
-            }
-          >
-            {child.content && child.content()}
-          </Timeline.Item>
-        );
-      })}
-    </Timeline>
+      styles={{ itemTitle: styles.label }}
+      titleSpan={properties.titleSpan}
+      variant={properties.variant}
+    />
   );
 };
 

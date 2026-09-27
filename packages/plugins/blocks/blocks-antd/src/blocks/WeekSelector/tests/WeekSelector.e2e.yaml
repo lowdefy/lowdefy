@@ -24,6 +24,8 @@ events:
           _date: '2024-06-10'
         ws_clearable:
           _date: '2024-01-08'
+        ws_onclear:
+          _date: '2024-03-04'
 
 blocks:
   # ============================================
@@ -152,3 +154,132 @@ blocks:
             _date: '2024-06-15'
         - label: Week of 15 January 2024
           value: '2024-01-15'
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: ws_underlined
+    type: WeekSelector
+    properties:
+      title: Underlined
+      variant: underlined
+
+  - id: ws_prefix_text
+    type: WeekSelector
+    properties:
+      title: Prefix Text
+      prefix: From
+
+  - id: ws_prefix_icon
+    type: WeekSelector
+    properties:
+      title: Prefix Icon
+      prefixIcon: clock
+
+  - id: ws_readonly
+    type: WeekSelector
+    properties:
+      title: Read-only Input
+      inputReadOnly: true
+
+  - id: ws_placement
+    type: WeekSelector
+    class:
+      .popup: ws-custom-popup
+    properties:
+      title: Placement and Popup Class
+      placement: bottomRight
+
+  - id: ws_events
+    type: WeekSelector
+    properties:
+      title: Focus, Blur and Open Events
+    events:
+      onFocus:
+        - id: set_focus
+          type: SetState
+          params:
+            ws_focus_event: true
+      onBlur:
+        - id: set_blur
+          type: SetState
+          params:
+            ws_blur_event: true
+      onOpenChange:
+        - id: set_open
+          type: SetState
+          params:
+            ws_open_event:
+              _event: open
+
+  - id: ws_focus_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ws_focus_event
+              - null
+          then:
+            _string.concat:
+              - 'Focus: '
+              - _json.stringify:
+                  - _state: ws_focus_event
+          else: ''
+
+  - id: ws_blur_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ws_blur_event
+              - null
+          then:
+            _string.concat:
+              - 'Blur: '
+              - _json.stringify:
+                  - _state: ws_blur_event
+          else: ''
+
+  - id: ws_open_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ws_open_event
+              - null
+          then:
+            _string.concat:
+              - 'Open: '
+              - _json.stringify:
+                  - _state: ws_open_event
+          else: ''
+
+  - id: ws_onclear
+    type: WeekSelector
+    properties:
+      title: OnClear Test
+    events:
+      onClear:
+        - id: set_onclear
+          type: SetState
+          params:
+            ws_onclear_fired: true
+
+  - id: ws_onclear_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: ws_onclear_fired
+              - true
+          then: Clear fired
+          else: ''

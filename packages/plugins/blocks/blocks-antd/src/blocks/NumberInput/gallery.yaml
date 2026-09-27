@@ -159,6 +159,52 @@
         min: 0
         max: 100
         placeholder: Click +/- by 5
+- title: Spinner Mode
+  blocks:
+    - id: spinner_mode
+      type: NumberInput
+      properties:
+        title: Quantity
+        mode: spinner
+        min: 1
+        max: 10
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              spinner_mode: 1
+    - id: spinner_mouse_wheel
+      type: NumberInput
+      properties:
+        title: Change With Mouse Wheel
+        changeOnWheel: true
+        placeholder: Focus and scroll
+
+- title: Prefix & Suffix
+  blocks:
+    - id: prefix_suffix_text
+      type: NumberInput
+      properties:
+        title: Price
+        prefix: $
+        suffix: USD
+        precision: 2
+    - id: suffix_unit
+      type: NumberInput
+      properties:
+        title: Weight
+        suffix: kg
+        min: 0
+    - id: prefix_suffix_icons
+      type: NumberInput
+      properties:
+        title: Discount
+        prefixIcon: tag
+        suffix: '%'
+        min: 0
+        max: 100
+
 - title: Keyboard Navigation
   blocks:
     - id: keyboard_enabled

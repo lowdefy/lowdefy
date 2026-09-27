@@ -21,6 +21,9 @@ import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
+// expandIconPosition is the pre-v5 name, with left and right values.
+const legacyIconPlacements = { left: 'start', right: 'end' };
+
 const CollapseBlock = ({
   blockId,
   classNames = {},
@@ -32,7 +35,7 @@ const CollapseBlock = ({
   styles = {},
 }) => {
   const panels =
-    properties.panels ||
+    properties.panels ??
     Object.keys(content)
       .sort()
       .map((key) => ({ key, title: key }));
@@ -47,9 +50,12 @@ const CollapseBlock = ({
   return (
     <Collapse
       id={blockId}
-      defaultActiveKey={properties.defaultActiveKey || panels[0].key}
+      // Panels can come from a request that has not loaded yet.
+      defaultActiveKey={properties.defaultActiveKey ?? panels[0]?.key}
       bordered={properties.bordered}
       accordion={properties.accordion}
+      collapsible={properties.collapsible}
+      ghost={properties.ghost}
       onChange={(activeKey) => methods.triggerEvent({ name: 'onChange', event: { activeKey } })}
       expandIcon={
         propertiesIconExpand &&
@@ -63,28 +69,29 @@ const CollapseBlock = ({
           />
         ))
       }
-      expandIconPlacement={properties.expandIconPlacement ?? properties.expandIconPosition}
+      expandIconPlacement={
+        properties.expandIconPlacement ??
+        legacyIconPlacements[properties.expandIconPosition] ??
+        properties.expandIconPosition
+      }
       destroyOnHidden={properties.destroyInactivePanel}
+      size={properties.size}
       className={classNames.element}
-      classNames={{ header: classNames.header, content: classNames.content }}
+      classNames={{ header: classNames.header, title: classNames.title, body: classNames.content }}
       style={styles.element}
-      styles={{ header: styles.header, content: styles.content }}
+      styles={{ header: styles.header, title: styles.title, body: styles.content }}
+      items={panels.map((panel) => ({
+        key: panel.key,
+        label: renderHtml({ html: panel.title, methods }),
+        extra: content[panel.extraKey] && content[panel.extraKey](),
+        collapsible: panel.disabled ? 'disabled' : undefined,
+        forceRender: properties.forceRender,
+        showArrow: properties.showArrow,
+        children: content[panel.key] && content[panel.key](),
+      }))}
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...additionalProps}
-    >
-      {panels.map((panel) => (
-        <Collapse.Panel
-          extra={content[panel.extraKey] && content[panel.extraKey]()}
-          collapsible={panel.disabled && 'disabled'}
-          forceRender={properties.forceRender}
-          header={renderHtml({ html: panel.title, methods })}
-          key={panel.key}
-          showArrow={properties.showArrow}
-        >
-          {content[panel.key] && content[panel.key]()}
-        </Collapse.Panel>
-      ))}
-    </Collapse>
+    />
   );
 };
 

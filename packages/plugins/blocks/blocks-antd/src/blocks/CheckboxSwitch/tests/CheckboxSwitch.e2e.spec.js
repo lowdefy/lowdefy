@@ -164,3 +164,14 @@ test.describe('CheckboxSwitch Block', () => {
     await expect(checkbox).not.toBeChecked();
   });
 });
+
+test.describe('CheckboxSwitch antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'checkboxswitch');
+  });
+
+  test('indeterminate shows the checkbox as partly checked', async ({ page }) => {
+    const block = getBlock(page, 'checkboxswitch_indeterminate');
+    await expect(block.locator('.ant-checkbox')).toHaveClass(/ant-checkbox-indeterminate/);
+  });
+});

@@ -71,6 +71,29 @@
       properties:
         title: No Placeholder
 
+- title: Prefix, Clear and Max Length
+  blocks:
+    - id: password_prefix_icon
+      type: PasswordInput
+      properties:
+        title: Prefix Icon
+        prefixIcon: lock
+        placeholder: Password
+    - id: password_allow_clear
+      type: PasswordInput
+      properties:
+        title: Allow Clear
+        allowClear: true
+        prefixIcon: lock
+        maxLength: 32
+        placeholder: Up to 32 characters
+    - id: password_underlined
+      type: PasswordInput
+      properties:
+        title: Underlined
+        variant: underlined
+        prefix: PIN
+
 - title: Disabled State
   blocks:
     - id: disabled_empty

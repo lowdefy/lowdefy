@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Input, Select } from 'antd';
+import { Input, Select, Space } from 'antd';
 import regions from './regions.js';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
@@ -24,8 +24,6 @@ import withTheme from '../withTheme.js';
 import getValueIndex from '../../getValueIndex.js';
 import getUniqueValues from '../../getUniqueValues.js';
 import formatPhoneNumber from './formatPhoneNumber.js';
-
-const Option = Select.Option;
 
 function getAllowedRegions({ allowedRegions, regions }) {
   if (!allowedRegions || allowedRegions.length === 0) {
@@ -57,6 +55,7 @@ function AddOnSelect({
   loading,
   methods,
   properties,
+  status,
   styles,
   uniqueValueOptions,
   value,
@@ -69,10 +68,6 @@ function AddOnSelect({
       defaultValue={defaultValue}
       disabled={properties.disabled || loading}
       popupMatchSelectWidth={false}
-      filterOption={(input, option) =>
-        option.filterString.toLowerCase().indexOf(input.toLowerCase()) >= 0
-      }
-      mode="single"
       notFoundContent={'Not found'}
       onChange={(newVal) => {
         const input = value?.input ?? '';
@@ -97,8 +92,23 @@ function AddOnSelect({
       onFocus={() => {
         methods.triggerEvent({ name: 'onFocus' });
       }}
-      optionFilterProp="filterString"
-      optionLabelProp="label"
+      optionLabelProp="selectedLabel"
+      options={uniqueValueOptions.map((opt, i) => {
+        const displayLabel =
+          properties.showFlags === false
+            ? `${opt.value.name} ${opt.value.dial_code}`
+            : `${opt.value.flag} ${opt.value.name} ${opt.value.dial_code}`;
+        return {
+          className: classNames.options,
+          filterString: displayLabel,
+          id: `${blockId}_${i}`,
+          key: `${i}`,
+          label: displayLabel,
+          selectedLabel: opt.label,
+          style: styles.options,
+          value: `${i}`,
+        };
+      })}
       placeholder={'Select item'}
       suffixIcon={
         properties.showArrow === false ? null : (
@@ -108,30 +118,14 @@ function AddOnSelect({
           />
         )
       }
-      showSearch={true}
+      showSearch={{
+        filterOption: (input, option) =>
+          option.filterString.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+      }}
       size={properties.size}
+      status={status}
       value={getValueIndex(value?.region, uniqueValueOptions)}
-    >
-      {uniqueValueOptions.map((opt, i) => {
-        const displayLabel =
-          properties.showFlags === false
-            ? `${opt.value.name} ${opt.value.dial_code}`
-            : `${opt.value.flag} ${opt.value.name} ${opt.value.dial_code}`;
-        return (
-          <Option
-            style={styles.options}
-            className={classNames.options}
-            filterString={displayLabel}
-            id={`${blockId}_${i}`}
-            key={`${i}`}
-            value={`${i}`}
-            label={opt.label}
-          >
-            {displayLabel}
-          </Option>
-        );
-      })}
-    </Select>
+    />
   );
 }
 
@@ -190,108 +184,114 @@ const PhoneNumberInput = ({
       content={{
         content: () => {
           return (
-            <Input
-              id={`${blockId}_input`}
-              addonBefore={
-                <AddOnSelect
-                  blockId={blockId}
-                  classNames={classNames}
-                  components={{ Icon }}
-                  defaultValue={defaultValue}
-                  loading={loading}
-                  methods={methods}
-                  properties={properties}
-                  styles={styles}
-                  uniqueValueOptions={uniqueValueOptions}
-                  value={value}
-                />
-              }
-              allowClear={
-                properties.allowClear && {
-                  clearIcon: (
-                    <Icon
-                      blockId={`${blockId}_clearIcon`}
-                      properties={{ name: 'clear', title: '' }}
-                    />
-                  ),
-                }
-              }
-              autoFocus={properties.autoFocus}
-              variant={properties.bordered === false ? 'borderless' : properties.variant}
+            <Space.Compact
+              block
               className={`ldf-phone-number-input${
                 classNames.element ? ` ${classNames.element}` : ''
               }`}
               style={styles.element}
-              disabled={properties.disabled || loading}
-              maxLength={properties.maxLength}
-              placeholder={properties.placeholder}
-              size={properties.size}
-              status={validation.status}
-              value={value?.input}
-              onChange={(event) => {
-                let input = event.target.value;
-
-                if (properties.replaceInput) {
-                  const regex = new RegExp(
-                    properties.replaceInput.pattern,
-                    properties.replaceInput.flags ?? 'gm'
-                  );
-                  input = input.replace(regex, properties.replaceInput.replacement ?? '');
-                }
-
-                const region = value?.region ?? {};
-                const phone_number = formatPhoneNumber(region?.dial_code, input);
-
-                methods.setValue({
-                  input,
-                  region,
-                  phone_number,
-                });
-
-                methods.triggerEvent({ name: 'onInputChange' });
-                methods.triggerEvent({
-                  name: 'onChange',
-                  event: { value: { input, region, phone_number } },
-                });
-              }}
-              onPressEnter={() => {
-                methods.triggerEvent({ name: 'onPressEnter' });
-              }}
-              onBlur={() => {
-                methods.triggerEvent({ name: 'onBlur' });
-              }}
-              onFocus={() => {
-                methods.triggerEvent({ name: 'onFocus' });
-              }}
-              prefix={
-                properties.prefix ||
-                (properties.prefixIcon && (
-                  <Icon
-                    blockId={`${blockId}_prefixIcon`}
-                    classNames={{ element: classNames.prefixIcon }}
-                    events={events}
-                    properties={properties.prefixIcon}
-                    styles={{ element: styles.prefixIcon }}
-                  />
-                ))
-              }
-              suffix={
-                (properties.suffix || properties.suffixIcon) && (
-                  <>
-                    {properties.suffix && properties.suffix}
-                    {properties.suffixIcon && (
+            >
+              <AddOnSelect
+                blockId={blockId}
+                classNames={classNames}
+                components={{ Icon }}
+                defaultValue={defaultValue}
+                loading={loading}
+                methods={methods}
+                properties={properties}
+                status={validation.status}
+                styles={styles}
+                uniqueValueOptions={uniqueValueOptions}
+                value={value}
+              />
+              <Input
+                id={`${blockId}_input`}
+                allowClear={
+                  properties.allowClear && {
+                    clearIcon: (
                       <Icon
-                        blockId={`${blockId}_suffixIcon`}
-                        classNames={{ element: classNames.suffixIcon }}
-                        events={events}
-                        properties={properties.suffixIcon}
-                        styles={{ element: styles.suffixIcon }}
+                        blockId={`${blockId}_clearIcon`}
+                        properties={{ name: 'clear', title: '' }}
                       />
-                    )}
-                  </>
-                )
-              }
-            />
+                    ),
+                  }
+                }
+                autoFocus={properties.autoFocus}
+                variant={properties.bordered === false ? 'borderless' : properties.variant}
+                disabled={properties.disabled || loading}
+                maxLength={properties.maxLength}
+                placeholder={properties.placeholder}
+                size={properties.size}
+                status={validation.status}
+                value={value?.input}
+                onChange={(event) => {
+                  let input = event.target.value;
+
+                  if (properties.replaceInput) {
+                    const regex = new RegExp(
+                      properties.replaceInput.pattern,
+                      properties.replaceInput.flags ?? 'gm'
+                    );
+                    input = input.replace(regex, properties.replaceInput.replacement ?? '');
+                  }
+
+                  const region = value?.region ?? {};
+                  const phone_number = formatPhoneNumber(region?.dial_code, input);
+
+                  methods.setValue({
+                    input,
+                    region,
+                    phone_number,
+                  });
+
+                  methods.triggerEvent({ name: 'onInputChange' });
+                  methods.triggerEvent({
+                    name: 'onChange',
+                    event: { value: { input, region, phone_number } },
+                  });
+                }}
+                onPressEnter={() => {
+                  methods.triggerEvent({ name: 'onPressEnter' });
+                }}
+                onClear={() => {
+                  methods.triggerEvent({ name: 'onClear' });
+                }}
+                onBlur={() => {
+                  methods.triggerEvent({ name: 'onBlur' });
+                }}
+                onFocus={() => {
+                  methods.triggerEvent({ name: 'onFocus' });
+                }}
+                prefix={
+                  properties.prefix ||
+                  (properties.prefixIcon && (
+                    <Icon
+                      blockId={`${blockId}_prefixIcon`}
+                      classNames={{ element: classNames.prefixIcon }}
+                      events={events}
+                      properties={properties.prefixIcon}
+                      styles={{ element: styles.prefixIcon }}
+                    />
+                  ))
+                }
+                suffix={
+                  (properties.suffix || properties.suffixIcon) && (
+                    <>
+                      {properties.suffix && properties.suffix}
+                      {properties.suffixIcon && (
+                        <Icon
+                          blockId={`${blockId}_suffixIcon`}
+                          classNames={{ element: classNames.suffixIcon }}
+                          events={events}
+                          properties={properties.suffixIcon}
+                          styles={{ element: styles.suffixIcon }}
+                        />
+                      )}
+                    </>
+                  )
+                }
+              />
+            </Space.Compact>
           );
         },
       }}

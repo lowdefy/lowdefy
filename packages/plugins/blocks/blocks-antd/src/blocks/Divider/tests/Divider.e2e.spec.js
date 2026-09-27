@@ -104,4 +104,27 @@ test.describe('Divider Block', () => {
     const bold = divider.locator('strong');
     await expect(bold).toHaveText('Bold');
   });
+
+  // ============================================
+  // VARIANT, SIZE AND SEMANTIC KEYS
+  // ============================================
+
+  test('renders the dotted variant', async ({ page }) => {
+    await expect(getDivider(page, 'divider_dotted')).toHaveClass(/ant-divider-dotted/);
+  });
+
+  test('renders the small and medium sizes', async ({ page }) => {
+    await expect(getDivider(page, 'divider_small')).toHaveClass(/ant-divider-sm/);
+    await expect(getDivider(page, 'divider_medium')).toHaveClass(/ant-divider-md/);
+    await expect(getDivider(page, 'divider_basic')).not.toHaveClass(/ant-divider-(sm|md)/);
+  });
+
+  test('applies class and style to the title and rails', async ({ page }) => {
+    const divider = getDivider(page, 'divider_css_keys');
+    const title = divider.locator('.ant-divider-inner-text');
+    await expect(title).toHaveClass(/divider-title-class/);
+    await expect(title).toHaveCSS('color', 'rgb(255, 0, 0)');
+    await expect(divider.locator('.ant-divider-rail-start')).toHaveClass(/divider-rail-class/);
+    await expect(divider.locator('.ant-divider-rail-end')).toHaveClass(/divider-rail-class/);
+  });
 });

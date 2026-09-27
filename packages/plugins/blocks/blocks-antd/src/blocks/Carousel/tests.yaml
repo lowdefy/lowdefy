@@ -23,7 +23,7 @@
       - key: slide_one
       - key: slide_two
       - key: slide_three
-  areas:
+  slots:
     slide_one:
       blocks:
         - id: side_1
@@ -78,7 +78,7 @@
         settings:
           slidesToShow: 1
           slidesToScroll: 1
-  areas:
+  slots:
     slide_one:
       blocks:
         - id: side_1
@@ -115,3 +115,39 @@
               type: Title
               properties:
                 content: Slide 4
+- id: 'properties.autoplay.dotDuration: true'
+  type: Carousel
+  properties:
+    autoplay:
+      dotDuration: true
+    autoplaySpeed: 4000
+  slots:
+    slide_one:
+      blocks:
+        - id: dot_duration_title_1
+          type: Title
+          properties:
+            content: Slide 1
+    slide_two:
+      blocks:
+        - id: dot_duration_title_2
+          type: Title
+          properties:
+            content: Slide 2
+- id: 'properties.initialSlide: 1'
+  type: Carousel
+  properties:
+    initialSlide: 1
+  slots:
+    slide_one:
+      blocks:
+        - id: initial_slide_title_1
+          type: Title
+          properties:
+            content: Slide 1
+    slide_two:
+      blocks:
+        - id: initial_slide_title_2
+          type: Title
+          properties:
+            content: Slide 2 opens first

@@ -74,3 +74,19 @@
     content: Avatar
     style:
       border: 1px solid red
+- id: properties.srcSet
+  type: Avatar
+  properties:
+    src: https://docs.lowdefy.com/images/favicon.png
+    srcSet: https://docs.lowdefy.com/images/favicon.png 2x
+- id: 'properties.group maxCount maxPopoverTrigger: click'
+  type: Avatar
+  properties:
+    group:
+      maxCount: 2
+      maxPopoverTrigger: click
+      avatars:
+        - content: AB
+        - content: CD
+        - content: EF
+        - content: GH

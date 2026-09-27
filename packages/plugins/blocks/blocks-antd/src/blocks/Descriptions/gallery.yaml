@@ -105,6 +105,25 @@
             value: 0.5 kg
           - label: In Stock
             value: 1,250 units
+    - id: size_medium
+      type: Descriptions
+      properties:
+        title: Medium Size
+        size: medium
+        bordered: true
+        items:
+          - label: Product
+            value: Widget Plus
+          - label: SKU
+            value: WGT-PLS-003
+          - label: Price
+            value: $34.99
+          - label: Category
+            value: Electronics
+          - label: Weight
+            value: 0.4 kg
+          - label: In Stock
+            value: 2,015 units
     - id: size_small
       type: Descriptions
       properties:
@@ -316,6 +335,24 @@
           - label: Resolution
             value: Database connection pool exhausted. Increased max_connections from 100 to 250 and implemented connection retry logic with exponential backoff.
             span: 3
+    - id: spanning_filled
+      type: Descriptions
+      properties:
+        title: Shipment
+        bordered: true
+        column: 3
+        items:
+          - label: Carrier
+            value: Road freight
+          - label: Tracking
+            value: Use span filled to take the rest of the row, whatever the column count.
+            span: filled
+          - label: Weight
+            value: 12 kg
+          - label: Pieces
+            value: 3
+          - label: Insured
+            value: 'Yes'
 
 - title: Colon Control
   fullWidth: true

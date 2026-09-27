@@ -77,12 +77,28 @@ const WeekSelector = ({
               autoFocus={properties.autoFocus}
               variant={properties.bordered === false ? 'borderless' : properties.variant}
               className={classNames.element}
+              classNames={{ popup: { root: classNames.popup } }}
               style={{ width: '100%', ...styles.element }}
+              styles={{ popup: { root: styles.popup } }}
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
               format={properties.format ?? 'YYYY-wo'}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
+              inputReadOnly={properties.inputReadOnly}
               placeholder={properties.placeholder}
+              placement={properties.placement}
+              prefix={
+                properties.prefix ||
+                (properties.prefixIcon && (
+                  <Icon
+                    blockId={`${blockId}_prefixIcon`}
+                    classNames={{ element: classNames.prefixIcon }}
+                    events={events}
+                    properties={properties.prefixIcon}
+                    styles={{ element: styles.prefixIcon }}
+                  />
+                ))
+              }
               presets={getPresets({
                 disabledDates: properties.disabledDates,
                 methods,
@@ -99,6 +115,18 @@ const WeekSelector = ({
                   styles={{ element: styles.suffixIcon }}
                 />
               }
+              onBlur={() => {
+                methods.triggerEvent({ name: 'onBlur' });
+              }}
+              onClear={() => {
+                methods.triggerEvent({ name: 'onClear' });
+              }}
+              onFocus={() => {
+                methods.triggerEvent({ name: 'onFocus' });
+              }}
+              onOpenChange={(open) => {
+                methods.triggerEvent({ name: 'onOpenChange', event: { open } });
+              }}
               onChange={(newVal) => {
                 // Wrap with our dayjs — antd v6's internal dayjs may lack the utc plugin.
                 const d = newVal ? dayjs(newVal) : null;
