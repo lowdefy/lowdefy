@@ -15,12 +15,15 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import { parseIpRange } from '@lowdefy/node-utils';
 
 // The server builds its trusted-proxy list from these entries at startup, so an
-// entry that is not an address or CIDR range fails the build here instead.
-function validateTrustedProxies({ components }) {
+// entry that is not an address or CIDR range fails the build here instead. A
+// range with prefix 0 (0.0.0.0/0, ::/0) trusts every peer, so any client could
+// choose its own address through X-Forwarded-For - valid, but almost never
+// meant, so it warns.
+function validateTrustedProxies({ components, context }) {
   const { trustedProxies } = components.config;
   if (type.isUndefined(trustedProxies)) {
     return;
@@ -33,10 +36,19 @@ function validateTrustedProxies({ components }) {
     );
   }
   trustedProxies.forEach((entry) => {
-    if (parseIpRange(entry) === null) {
+    const range = parseIpRange(entry);
+    if (range === null) {
       throw new ConfigError(
         'App "config.trustedProxies" entries should be IP addresses (e.g. "10.0.0.7") or CIDR ranges (e.g. "10.0.0.0/8").',
         { received: entry, configKey }
+      );
+    }
+    if (range.prefix === 0) {
+      context.handleWarning(
+        new ConfigWarning(
+          `App "config.trustedProxies" entry "${entry}" trusts every address, so any client can choose the address auth rate limits and sessions record by sending X-Forwarded-For. List only the addresses or ranges of your proxies.`,
+          { configKey }
+        )
       );
     }
   });

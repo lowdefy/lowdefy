@@ -38,7 +38,7 @@ function validateConfig({ components, context }) {
     // trailing slash would double up and break them: "/app/" is "/app".
     components.config.basePath = components.config.basePath.replace(/\/+$/, '');
   }
-  validateTrustedProxies({ components });
+  validateTrustedProxies({ components, context });
   buildEnvironments({ components, context });
   buildDependencyTracking({ components });
   return components;

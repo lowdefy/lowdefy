@@ -105,3 +105,24 @@ test.each([
   const components = { config: { trustedProxies } };
   expect(() => validateConfig({ components, context })).toThrow(message);
 });
+
+test.each([['0.0.0.0/0'], ['::/0']])(
+  'validateConfig warns that trustedProxies range %s trusts every address',
+  (range) => {
+    const warnings = [];
+    const warnContext = { ...context, handleWarning: (warning) => warnings.push(warning) };
+    const components = { config: { trustedProxies: ['10.0.0.0/8', range] } };
+    validateConfig({ components, context: warnContext });
+    expect(warnings.map((warning) => warning.message)).toEqual([
+      `App "config.trustedProxies" entry "${range}" trusts every address, so any client can choose the address auth rate limits and sessions record by sending X-Forwarded-For. List only the addresses or ranges of your proxies.`,
+    ]);
+  }
+);
+
+test('validateConfig does not warn for trustedProxies ranges narrower than every address', () => {
+  const warnings = [];
+  const warnContext = { ...context, handleWarning: (warning) => warnings.push(warning) };
+  const components = { config: { trustedProxies: ['10.0.0.0/8', '0.0.0.0/1', '127.0.0.1'] } };
+  validateConfig({ components, context: warnContext });
+  expect(warnings).toEqual([]);
+});

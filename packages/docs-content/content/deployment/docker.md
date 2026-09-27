@@ -161,7 +161,7 @@ config:
     - 172.16.0.0/12
 ```
 
-When a request's connection comes from a trusted proxy, the server reads `X-Forwarded-For` from the right, skips every trusted hop, and takes the first address that is not trusted. Entries further left were written by the client and are ignored. The proxy must append to `X-Forwarded-For` (nginx: `proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;`). The server logs a warning the first time a request carries `X-Forwarded-For` while `trustedProxies` is not set.
+When a request's connection comes from a trusted proxy, the server reads `X-Forwarded-For` from the right, skips every trusted hop, and takes the first address that is not trusted. Entries further left were written by the client and are ignored. Do not list `0.0.0.0/0` or `::/0`: they trust every address, so any client could choose its own, and the build warns about them. The proxy must append to `X-Forwarded-For` (nginx: `proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;`). The server logs a warning the first time a request carries `X-Forwarded-For` while `trustedProxies` is not set.
 
 ### Logging
 
