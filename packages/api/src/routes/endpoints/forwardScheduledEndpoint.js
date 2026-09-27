@@ -24,7 +24,7 @@ import scheduleBackground from './scheduleBackground.js';
 
 // Vercel fires cron jobs only on the production deployment, so the schedules of every environment
 // with a cron.secret are registered there as /api/cron-forward/<environment>/<endpointId> jobs. When
-// one fires, this pings the environment's own /api/cron/<endpointId> at its url with that
+// one fires, this pings the environment's own <basePath>/api/cron/<endpointId> at its url with that
 // environment's CRON_SECRET (the Lowdefy secret named by config.environments.<env>.cron.secret) so
 // the environment runs its own code, and answers Vercel immediately: the ping is fire-and-forget,
 // kept alive by scheduleBackground and bounded by the function duration, and its outcome exists only
@@ -70,7 +70,8 @@ async function forwardScheduledEndpoint(context, { environment, endpointId, cron
   while (origin.endsWith('/')) {
     origin = origin.slice(0, -1);
   }
-  const url = `${origin}/api/cron/${endpointId}`;
+  // The environment's url is its origin; the app mounts its routes under config.basePath.
+  const url = `${origin}${config.basePath ?? ''}/api/cron/${endpointId}`;
   const timeoutMs = (config?.vercel?.maxDuration ?? 60) * 1000;
   const headers = { authorization: `Bearer ${secret}` };
   if (cron) headers['x-vercel-cron-schedule'] = cron;
