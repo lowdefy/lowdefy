@@ -26,6 +26,9 @@ and style keys are additive; existing properties keep their names and defaults.
 **TreeSelector and TreeMultipleSelector**
 
 - New `treeLine` and `treeExpandAction` properties.
+- TreeSelector opens its dropdown with the selected node's parents expanded (unless
+  `treeDefaultExpandAll` is set), so a nested value is visible instead of hidden under a collapsed
+  parent.
 - `theme` now also applies the selector tokens (`selectorBg`, `hoverBorderColor`,
   `activeBorderColor`, the `multipleItem*` tokens and so on). They were documented but had no
   effect, because antd styles the TreeSelect input with the Select tokens. New tree node tokens:
@@ -47,9 +50,18 @@ and style keys are additive; existing properties keep their names and defaults.
   can stack them vertically.
 - SegmentedSelector options accept a `tooltip`, and `icon` can be an Icon properties object.
 
+**ControlledList**
+
+- No longer renders antd's `List`, which antd 6.6 deprecates. ControlledList renders the same markup
+  and `ant-list-*` class names itself and ships the List styles it uses, so it looks the same and
+  existing CSS and tests keep matching. Its `theme` tokens, List tokens from the app theme or a
+  ConfigProvider block, and a ConfigProvider `componentSize` still apply.
+
 **Label**
 
 - New `wrap` property (also on every input's `label`), for wrapping long inline labels.
+- The per-breakpoint label widths `xs`, `sm`, `md`, `lg`, `xl` and `xxl` (each `{ span }`), which
+  already worked, are now documented on the Label block and on every input's `label`.
 - Fixed: the Label block's `theme` tokens (`labelColor`, `labelFontSize`,
   `labelRequiredMarkColor`, colon margins, feedback colors) had no effect and now apply.
 - Fixed: `class.element` and `style.element` now reach the Label block's row.
@@ -60,12 +72,16 @@ and style keys are additive; existing properties keep their names and defaults.
 - ListSelector no longer passes the deprecated Card `size="default"`. It and the Select-based
   blocks now pass antd's `medium` for the default size, and SegmentedSelector maps `middle` to
   `medium`.
-- Selector and MultipleSelector build antd `options` instead of the deprecated `Select.Option`
-  children. The search props (`filterOption`, `onSearch`, `autoClearSearchValue`,
-  `treeNodeFilterProp`) now go inside `showSearch`, where antd 6 expects them.
+- Selector and MultipleSelector build antd `options` instead of `Select.Option` children. The
+  search props (`filterOption`, `onSearch`, `autoClearSearchValue`, `treeNodeFilterProp`) now go
+  inside `showSearch`, where antd 6 expects them.
+- A ConfigProvider block's `virtual: false` reaches the Selector, MultipleSelector, TreeSelector
+  and TreeMultipleSelector dropdowns again.
+- TreeMultipleSelector with `checkStrictly` no longer logs antd's "Invalid prop `value`" warning
+  when it has a value.
 - ControlledList: the `addItemButton.title` lookup had a stray trailing space in its path. Items
-  added for `minItems` are now pushed after render instead of during it. The remove icon no longer
-  causes a React key warning.
+  added for `minItems` are now pushed after render instead of during it, before the list paints.
+  The remove icon no longer causes a React key warning.
 - Tree dropdown nodes no longer log antd's "`key` or `value` must be the same" warning.
 - The Selector and TreeSelector e2e helpers `value` and `placeholder` read antd 6's class names.
 - TreeInput examples use the flat `primaryKey`/`parentKey` data model instead of nested
