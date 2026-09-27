@@ -263,6 +263,76 @@
         steps: 5
         strokeColor: '#52c41a'
 
+- title: Gradient Stroke
+  blocks:
+    - id: gradient_line
+      type: Progress
+      properties:
+        percent: 80
+        strokeColor:
+          from: '#108ee9'
+          to: '#87d068'
+    - id: gradient_circle
+      type: Progress
+      properties:
+        type: circle
+        percent: 90
+        strokeColor:
+          '0%': '#108ee9'
+          '100%': '#87d068'
+
+- title: Value Position
+  blocks:
+    - id: percent_inner_start
+      type: Progress
+      properties:
+        percent: 45
+        size:
+          - -1
+          - 20
+        percentPosition:
+          align: start
+          type: inner
+    - id: percent_inner_center
+      type: Progress
+      properties:
+        percent: 65
+        size:
+          - -1
+          - 20
+        percentPosition:
+          align: center
+          type: inner
+    - id: percent_outer_center
+      type: Progress
+      properties:
+        percent: 30
+        percentPosition:
+          align: center
+          type: outer
+
+- title: Sizes and Circle Steps
+  blocks:
+    - id: size_small_line
+      type: Progress
+      properties:
+        percent: 50
+        size: small
+    - id: size_circle_small
+      type: Progress
+      properties:
+        type: circle
+        percent: 50
+        size: small
+    - id: circle_steps
+      type: Progress
+      properties:
+        type: dashboard
+        percent: 60
+        steps:
+          count: 8
+          gap: 4
+
 - title: Circle Width
   blocks:
     - id: width_small
