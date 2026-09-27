@@ -34,6 +34,9 @@ pnpm --filter=@lowdefy/api test                     # one package
 pnpm --filter=@lowdefy/api test --testPathPattern=endpoint --no-coverage
 ```
 
+Tests that do real work (build fixtures, child processes) set a generous `testTimeout` so
+they survive a loaded machine; don't tune timeouts down to what one idle run needs.
+
 Never pass `--` before jest flags, and never call `pnpm jest` or `npx jest` directly.
 Packages import each other from `dist/`, so run `pnpm build` after changing more than one
 package.
