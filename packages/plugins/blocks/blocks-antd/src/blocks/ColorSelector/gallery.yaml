@@ -215,12 +215,13 @@
       layout:
         flex: 1 1 auto
       style:
-        height: 32
-        borderRadius: 6
-        background:
-          _if_none:
-            - _state: mode_gradient
-            - '#f0f0f0'
+        .element:
+          height: 32
+          borderRadius: 6
+          background:
+            _if_none:
+              - _state: mode_gradient
+              - '#f0f0f0'
 
 - title: Placement Options
   blocks:
