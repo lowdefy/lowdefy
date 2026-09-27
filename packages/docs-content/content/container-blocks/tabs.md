@@ -341,6 +341,39 @@ Free standard shipping (3-5 business days). Express shipping available for $9.99
               for $9.99 (1-2 business days).
 ```
 
+Billed every month. Cancel any time.
+
+Billed once a year with two months free.
+
+```yaml
+- id: centered_tabs
+  type: Tabs
+  properties:
+    centered: true
+    tabBarGutter: 40
+    indicator:
+      size: 24
+      align: center
+    tabs:
+      - key: centered_monthly
+        title: Monthly
+      - key: centered_yearly
+        title: Yearly
+  slots:
+    centered_monthly:
+      blocks:
+        - id: centered_monthly_content
+          type: Paragraph
+          properties:
+            content: Billed every month. Cancel any time.
+    centered_yearly:
+      blocks:
+        - id: centered_yearly_content
+          type: Paragraph
+          properties:
+            content: Billed once a year with two months free.
+```
+
 **Small:**
 
 Compact tabs for dense interfaces where screen space is at a premium. Ideal for side panels and secondary navigation.
@@ -1664,7 +1697,13 @@ Press Cmd+3 (Mac) or Ctrl+3 (Windows) to jump to this tab.
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `animated` | boolean | `true` | Whether to change tabs with animation. Only works while tabPlacement is top or bottom. |
+| `centered` | boolean | `false` | Center the tabs in the tab bar. |
 | `defaultActiveKey` | string | - | Initial active TabPane's key, if activeKey is not set. |
+| `destroyOnHidden` | boolean | `false` | Unmount the content of inactive tabs. Blocks in a hidden tab keep their state values. |
+| `indicator` | object | - | Size and alignment of the active tab indicator (ink bar). |
+| `indicator.size` | number | - | Length of the indicator in pixels. Defaults to the width of the tab. |
+| `indicator.align` | string | `"center"` | Alignment of the indicator along the tab when size is set. Enum: `start`, `center`, `end`. |
+| `tabBarGutter` | number | - | Gap between tabs in pixels. |
 | `size` | string | `"default"` | Size of the tabs. Enum: `default`, `small`, `large`. |
 | `tabPlacement` | string | `"top"` | Position of the tabs. Enum: `top`, `end`, `bottom`, `start`. |
 | `tabType` | string | `"line"` | Type of tabs. Enum: `line`, `card`. |
@@ -1689,6 +1728,8 @@ Press Cmd+3 (Mac) or Ctrl+3 (Windows) to jump to this tab.
 | `theme.cardBg` | string | `"rgba(0, 0, 0, 0.02)"` | Background color of card-type tab. |
 | `theme.cardGutter` | number | `2` | Gap between card-type tabs. |
 | `theme.cardHeight` | number | `40` | Height of card-type tab. |
+| `theme.cardHeightSM` | number | `32` | Height of small card-type tab. |
+| `theme.cardHeightLG` | number | `48` | Height of large card-type tab. |
 | `theme.cardPadding` | string | `"8px 16px"` | Padding of card-type tab. |
 | `theme.cardPaddingLG` | string | `"11px 16px"` | Padding of large card-type tab. |
 | `theme.cardPaddingSM` | string | `"4px 8px"` | Padding of small card-type tab. |
@@ -1723,5 +1764,7 @@ Press Cmd+3 (Mac) or Ctrl+3 (Windows) to jump to this tab.
 | `/tabBar` | The Tabs tab bar. |
 | `/tabPane` | The Tabs tab pane. |
 | `/inkBar` | The Tabs ink bar. |
+| `/item` | Each tab in the tab bar. |
+| `/popup` | The dropdown that lists tabs that overflow the tab bar. |
 
 Slot keys are user-defined in your config and resolved at build time — not generated at runtime. The block typically pairs slots with an array property (`tabs`, `panels`, `slides`) listed in the Properties table; see the examples above for the expected shape.

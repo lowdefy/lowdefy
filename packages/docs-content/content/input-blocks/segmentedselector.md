@@ -284,6 +284,22 @@ Segmented control for switching between options.
 ```
 
 ```yaml
+- id: segmented_tooltips
+  type: SegmentedSelector
+  properties:
+    title: View
+    options:
+      - label: List
+        value: list
+        icon: list
+        tooltip: Show items as a list
+      - label: Grid
+        value: grid
+        icon: grid
+        tooltip: Show items as a grid
+```
+
+```yaml
 - id: vertical_basic
   type: SegmentedSelector
   properties:
@@ -730,11 +746,33 @@ Segmented control for switching between options.
 | `options.$.label` | string | - | Value label shown to user - supports html. |
 | `options.$.value` | string \| number \| boolean \| object \| array | - | Value selected. Can be of any type. |
 | `options.$.disabled` | boolean | `false` | Disable the option if true. |
-| `options.$.icon` | string | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) to display in the segment option. |
+| `options.$.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to display in the segment option. |
+| `options.$.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `options.$.icon.color` | string | - | Icon color. |
+| `options.$.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `options.$.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `options.$.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `options.$.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `options.$.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `options.$.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `options.$.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `options.$.tooltip` | string | - | Tooltip shown when hovering the segment option. |
 | `shape` | string | `"default"` | Shape of the segmented control. Enum: `default`, `round`. |
 | `size` | string | `"middle"` | Size of the block. Enum: `small`, `middle`, `large`. |
 | `vertical` | boolean | `false` | Display the segmented control vertically. |
 | `label` | object | - | Label properties. |
+| `label.xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |
+| `label.xs.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.sm` | object | - | Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set. |
+| `label.sm.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.md` | object | - | Label width on medium screens (768px and up) when the label is not inline. Overrides `span`. |
+| `label.md.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.lg` | object | - | Label width on large screens (992px and up) when the label is not inline. |
+| `label.lg.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xl` | object | - | Label width on extra large screens (1200px and up) when the label is not inline. |
+| `label.xl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xxl` | object | - | Label width on extra extra large screens (1600px and up) when the label is not inline. |
+| `label.xxl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
 | `label.extra` | string | - | Extra text to display beneath the content - supports html. |
@@ -743,10 +781,11 @@ Segmented control for switching between options.
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
 | `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
-| `label.span` | number | - | Label inline span. |
+| `label.span` | number | - | Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns. |
 | `label.disabled` | boolean | `false` | Hide input label. |
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
+| `label.wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design segmented tokens](https://ant.design/components/segmented#design-token). |
 | `theme.trackBg` | string | - | Background color of the segmented track container. |
@@ -775,6 +814,7 @@ Segmented control for switching between options.
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The SegmentedSelector element. |
 | `/icon` | The icon in the SegmentedSelector. |
+| `/options` | Each SegmentedSelector option. |
 | `/label` | The SegmentedSelector label. |
 | `/extra` | The SegmentedSelector extra content. |
 | `/feedback` | The SegmentedSelector validation feedback. |

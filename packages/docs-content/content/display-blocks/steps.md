@@ -259,6 +259,23 @@ Navigation steps bar, guiding users through the steps of a task.
 ```
 
 ```yaml
+- id: max_count_steps
+  type: Steps
+  properties:
+    current: 5
+    maxCount: 5
+    items:
+      - title: Draft
+      - title: Review
+      - title: Legal
+      - title: Finance
+      - title: Approval
+      - title: Signed
+      - title: Filed
+      - title: Archived
+```
+
+```yaml
 - id: progress_steps
   type: Steps
   properties:
@@ -532,7 +549,7 @@ Navigation steps bar, guiding users through the steps of a task.
   style:
     .element:
       padding: 16px
-      border: 1px solid
+      border: "1px solid #d9d9d9"
       borderRadius: 8
 ```
 
@@ -545,8 +562,9 @@ Navigation steps bar, guiding users through the steps of a task.
 | `type` | string | `"default"` | Type of steps. Enum: `default`, `dot`, `inline`, `navigation`, `panel`. |
 | `orientation` | string | `"horizontal"` | Orientation of the step bar. Enum: `horizontal`, `vertical`. |
 | `titlePlacement` | string | `"horizontal"` | Place title and description horizontal or vertical. Enum: `horizontal`, `vertical`. |
+| `maxCount` | integer | - | Maximum number of steps to show, at least 3. Hidden steps collapse into disabled ellipsis steps around the current step. |
 | `percent` | number | - | Progress circle percentage of current step in process status (only works with type default). |
-| `progressDot` | boolean | `false` | Steps with progress dot style. |
+| `progressDot` | boolean | `false` | Steps with progress dot style. Same as `type: dot`. |
 | `variant` | string | `"filled"` | Style variant of the steps. Enum: `filled`, `outlined`. |
 | `responsive` | boolean | `true` | Change to vertical direction when screen width smaller than 532px. |
 | `items` | array | - | List of step items. |
@@ -573,13 +591,15 @@ Navigation steps bar, guiding users through the steps of a task.
 | `theme.iconSize` | number | `32` | Size of the step icon. |
 | `theme.iconSizeSM` | number | `24` | Size of the small step icon. |
 | `theme.iconTop` | number | `-0.5` | Top position of the step icon. |
-| `theme.descriptionMaxWidth` | number | `140` | Max width of the step description. |
-| `theme.titleLineHeight` | number | `32` | Line height of the step title. |
+| `theme.descriptionMaxWidth` | number | - | Max width of each step description. Unset by default in antd 6, so descriptions take the width of their step. |
+| `theme.titleLineHeight` | number | `32` | Deprecated in antd 6 and has no effect. |
+| `theme.customIconSize` | number | `32` | Size of the container of a custom step icon. |
+| `theme.customIconFontSize` | number | `24` | Font size of a custom step icon. |
 | `theme.navArrowColor` | string | `"rgba(0, 0, 0, 0.25)"` | Color of the navigation arrow. |
-| `theme.navContentMaxWidth` | string | `"auto"` | Max width of navigation step content. |
-| `theme.finishIconBorderColor` | string | `"#1677ff"` | Border color of finished step icon. |
-| `theme.waitIconBorderColor` | string | `"rgba(0, 0, 0, 0.25)"` | Border color of waiting step icon. |
-| `theme.waitIconColor` | string | `"rgba(0, 0, 0, 0.25)"` | Color of waiting step icon. |
+| `theme.navContentMaxWidth` | string | `"unset"` | Max width of navigation step content. |
+| `theme.finishIconBorderColor` | string | `"#e6f4ff"` | Border color of finished step icon. |
+| `theme.waitIconBorderColor` | string | `"transparent"` | Border color of waiting step icon. |
+| `theme.waitIconColor` | string | `"rgba(0, 0, 0, 0.65)"` | Color of waiting step icon. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
@@ -590,5 +610,9 @@ Navigation steps bar, guiding users through the steps of a task.
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Steps element. |
 | `/icon` | The icon in the Steps. |
+| `/item` | Each step. |
+| `/itemTitle` | The title of each step. |
+| `/itemSubtitle` | The subtitle of each step. |
+| `/itemContent` | The description of each step. |
 
 No slots defined.

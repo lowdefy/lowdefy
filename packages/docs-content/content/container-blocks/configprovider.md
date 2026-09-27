@@ -328,7 +328,7 @@ Multiple algorithms can be combined by passing an array. Here dark and compact a
               disabled: true
 ```
 
-Setting componentDisabled to true disables all interactive child components at once, without needing to set disabled on each individual component.
+Setting componentDisabled to true disables all interactive child components at once, without needing to set disabled on each individual component. A block that sets disabled to false stays enabled.
 
 ```yaml
 - id: cp_disabled
@@ -370,12 +370,30 @@ Setting componentDisabled to true disables all interactive child components at o
         label:
           title: Disabled input
           colon: false
+    - id: cp_disabled_selector
+      type: Selector
+      properties:
+        placeholder: Disabled selector
+        options:
+          - Option 1
+          - Option 2
+        label:
+          title: Disabled selector
+          colon: false
+    - id: cp_enabled_input
+      type: TextInput
+      properties:
+        placeholder: Still enabled
+        disabled: false
+        label:
+          title: "Re-enabled with disabled: false"
+          colon: false
     - id: cp_disabled_text
       type: Paragraph
       properties:
         content: Setting componentDisabled to true disables all interactive child
           components at once, without needing to set disabled on each individual
-          component.
+          component. A block that sets disabled to false stays enabled.
 ```
 
 Setting direction to rtl enables right-to-left layout for all child components. This is essential for languages like Arabic and Hebrew.
@@ -753,8 +771,7 @@ This demonstrates using ConfigProvider to apply a brand theme across an entire s
               properties:
                 icon: Store
                 size: 48
-                color: "#fff"
-                backgroundColor: "#e11d48"
+                color: "#e11d48"
             - id: cp_brand_title
               type: Title
               layout:
@@ -1052,14 +1069,19 @@ A dark-themed admin panel using ConfigProvider to apply the dark algorithm with 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `algorithm` | string \| array | - | Theme algorithm. Can be "default", "dark", "compact", or an array of these values. |
-| `componentDisabled` | boolean | `false` | Set disabled state for all child components. |
-| `componentSize` | string | - | Set size for all child components. Enum: `small`, `middle`, `large`. |
+| `componentDisabled` | boolean | `false` | Disable every input and button inside the ConfigProvider. A block that sets its own `disabled` property keeps that value, so `disabled: false` re-enables it. |
+| `componentSize` | string | - | Set size for all child components. `middle` is the older name for `medium`. Enum: `small`, `medium`, `middle`, `large`. |
 | `components` | object | - | Component-level token overrides. Keys are component names, values are token objects. |
 | `direction` | string | `"ltr"` | Direction of layout. Enum: `ltr`, `rtl`. |
 | `locale` | object | - | Antd locale object to localize built-in component strings (date pickers, pagination, modal, form validation). Pair with the _locale operator and config.i18n to keep the whole subtree in one language. |
+| `popupMatchSelectWidth` | boolean \| number | - | Whether dropdowns of select-like components match the width of their input. A number sets a minimum dropdown width in pixels. `false` also turns off virtual scrolling. |
+| `popupOverflow` | string | `"viewport"` | Keep dropdowns of select-like components inside the viewport, or let them follow the page scroll. Enum: `viewport`, `scroll`. |
 | `token` | object | - | Theme token configuration. Customize design tokens like colorPrimary, fontSize, etc. |
+| `virtual` | boolean | `true` | Set to false to turn off virtual scrolling in selectors, trees and tables, so every option renders. |
+| `wave` | object | - | Click wave effect of buttons and other clickable components. |
+| `wave.disabled` | boolean | `false` | Turn off the click wave effect. |
 | `variant` | string | - | Global input variant style for all child components. Enum: `outlined`, `filled`, `borderless`, `underlined`. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | object | - | Antd design token overrides for this block and its descendants. Merged with token, which takes precedence. See [antd design tokens](https://ant.design/components/overview#design-token). |
 
 No events defined.
 

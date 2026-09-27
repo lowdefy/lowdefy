@@ -561,14 +561,14 @@ Message with inline border style
 - id: css_shadow_msg
   type: Message
   class:
-    element: shadow-lg
+    .element: shadow-lg
   properties:
     status: success
     content: Message with shadow via Tailwind class
 - id: css_rounded_msg
   type: Message
   class:
-    element: rounded-full
+    .element: rounded-full
   properties:
     status: info
     content: Message with rounded corners via Tailwind class
@@ -625,103 +625,6 @@ Message with inline border style
         type: CallMethod
         params:
           blockId: css_custom_msg
-          method: open
-```
-
-Custom background via theme token
-
-Extra padding via theme token
-
-Custom z-index via theme token
-
-Combined theme overrides
-
-```yaml
-- id: theme_bg_msg
-  type: Message
-  properties:
-    status: success
-    content: Custom background via theme token
-- id: theme_padding_msg
-  type: Message
-  properties:
-    status: info
-    content: Extra padding via theme token
-    theme:
-      contentPadding: 14px 20px
-- id: theme_zindex_msg
-  type: Message
-  properties:
-    status: warning
-    content: Custom z-index via theme token
-    theme:
-      zIndexPopup: 2000
-- id: theme_combined_msg
-  type: Message
-  properties:
-    status: info
-    content: Combined theme overrides
-    theme:
-      contentPadding: 16px 24px
-- id: btn_theme_bg
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Custom Background
-    color: primary
-    variant: outlined
-  events:
-    onClick:
-      - id: call_theme_bg
-        type: CallMethod
-        params:
-          blockId: theme_bg_msg
-          method: open
-- id: btn_theme_padding
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Extra Padding
-    color: primary
-    variant: outlined
-  events:
-    onClick:
-      - id: call_theme_padding
-        type: CallMethod
-        params:
-          blockId: theme_padding_msg
-          method: open
-- id: btn_theme_zindex
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Custom Z-Index
-    color: primary
-    variant: outlined
-  events:
-    onClick:
-      - id: call_theme_zindex
-        type: CallMethod
-        params:
-          blockId: theme_zindex_msg
-          method: open
-- id: btn_theme_combined
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Combined Tokens
-    color: primary
-    variant: outlined
-  events:
-    onClick:
-      - id: call_theme_combined
-        type: CallMethod
-        params:
-          blockId: theme_combined_msg
           method: open
 ```
 
@@ -920,7 +823,8 @@ Upload failed. Please try again.
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `content` | string | - | The content of the message - supports html. |
-| `duration` | number | `4.5` | Time(seconds) before auto-dismiss, don't dismiss if set to 0. |
+| `duration` | number | `3` | Time(seconds) before auto-dismiss, don't dismiss if set to 0. |
+| `pauseOnHover` | boolean | `true` | Pause the auto-dismiss timer while the mouse is over the message. |
 | `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize message icon. |
 | `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
 | `icon.color` | string | - | Icon color. |
@@ -931,14 +835,15 @@ Upload failed. Please try again.
 | `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
 | `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
-| `status` | string | `"info"` | Message status type. Enum: `success`, `error`, `info`, `warning`, `loading`. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design message tokens](https://ant.design/components/message#design-token). |
+| `status` | string | `"success"` | Message status type. Enum: `success`, `error`, `info`, `warning`, `loading`. |
+| `theme` | object | - | Has no effect: messages render in the app-wide message holder, outside the block. Set these Message design tokens for the whole app in `lowdefy.yaml` under `theme.antd.components.Message`. See [Ant Design message tokens](https://ant.design/components/message#design-token). |
 | `theme.zIndexPopup` | number | `1080` | Z-index of the message popup. |
 | `theme.contentBg` | string | - | Background color of the message content. |
 | `theme.contentPadding` | string | - | Padding of the message content. Calculated from controlHeightLG, fontSize, lineHeight, and paddingSM. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
+| `onClick` | \- | Trigger actions when the message is clicked. |
 | `onClose` | \- | Trigger actions when message is closed. |
 
 | Key | Target |

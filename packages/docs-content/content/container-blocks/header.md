@@ -198,43 +198,51 @@ A Header for marketing pages with button navigation and call-to-action buttons.
 ```
 
 ```yaml
-- id: header_token_branded
-  type: Header
+- id: header_token_branded_layout
+  type: Layout
   properties:
     theme:
-      headerBg: "#0958d9"
       headerHeight: 56
       headerPadding: 0 24px
   blocks:
-    - id: header_token_branded_title
-      type: Html
-      layout:
-        flex: 0 0 auto
+    - id: header_token_branded
+      type: Header
       properties:
-        html: <span class="text-white text-lg font-bold">Branded Header</span>
-    - id: header_token_branded_spacer
-      type: Box
-      layout:
-        flex: 1 1 0
-    - id: header_token_branded_subtitle
-      type: Html
-      layout:
-        flex: 0 0 auto
-      properties:
-        html: <span style="color:#bae0ff">Using headerBg token</span>
-- id: header_token_compact
-  type: Header
+        color: "#0958d9"
+      blocks:
+        - id: header_token_branded_title
+          type: Html
+          layout:
+            flex: 0 0 auto
+          properties:
+            html: <span class="text-white text-lg font-bold">Branded Header</span>
+        - id: header_token_branded_spacer
+          type: Box
+          layout:
+            flex: 1 1 0
+        - id: header_token_branded_subtitle
+          type: Html
+          layout:
+            flex: 0 0 auto
+          properties:
+            html: <span style="color:#bae0ff">color property with Layout headerHeight and
+              headerPadding tokens</span>
+- id: header_token_compact_layout
+  type: Layout
   properties:
     theme:
       headerHeight: 40
       headerPadding: 0 16px
-  style:
-    borderBottom: 1px solid var(--ant-color-border)
   blocks:
-    - id: header_token_compact_title
-      type: Html
-      properties:
-        html: <span class="text-sm">Compact Header (40px height)</span>
+    - id: header_token_compact
+      type: Header
+      style:
+        borderBottom: 1px solid var(--ant-color-border)
+      blocks:
+        - id: header_token_compact_title
+          type: Html
+          properties:
+            html: <span class="text-sm">Compact Header (40px height)</span>
 ```
 
 | Property | Type | Default | Description |
@@ -277,7 +285,7 @@ A Header for marketing pages with button navigation and call-to-action buttons.
 | `profile.avatar.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `profile.avatar.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `profile.avatar.color` | string | - | Background color of the avatar when not using src. |
-| `profile.avatar.size` | string \| number | `"small"` | Size of the avatar. Enum: `default`, `small`, `large`. |
+| `profile.avatar.size` | string \| number | `"small"` | Size of the avatar: default, small, large or a pixel number. |
 | `profile.avatar.shape` | string | `"circle"` | Shape of the avatar. Enum: `circle`, `square`. |
 | `profile.links` | array | - | Dropdown menu items. Uses the same MenuLink/MenuGroup/MenuDivider pattern as DropdownMenu. When links are provided, clicking the avatar opens a dropdown menu. |
 | `profile.links.$.id` | string | - | Menu item id. |
@@ -304,7 +312,7 @@ A Header for marketing pages with button navigation and call-to-action buttons.
 | `profile.arrow` | boolean \| object | `false` | Show arrow on the dropdown. |
 | `profile.arrow.pointAtCenter` | boolean | - |  |
 | `darkModeToggle` | boolean | `false` | Show a dark mode toggle icon in the header. Toggles the Ant Design dark theme for the entire page. Preference is persisted to localStorage. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | object | - | Not applied: antd scopes Layout design tokens to the Layout element, so set tokens such as headerHeight or footerBg on the parent Layout block theme. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |

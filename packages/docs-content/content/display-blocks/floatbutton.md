@@ -24,6 +24,14 @@ Floating action button with tooltip, badge, and icon.
       _state: float_props.href
     target:
       _state: float_props.target
+    disabled:
+      _state: float_props.disabled
+    backTop:
+      _state: float_props.backTop
+    visibilityHeight:
+      _state: float_props.visibilityHeight
+    showProgress:
+      _state: float_props.showProgress
     theme:
       _state: float_props.theme
   events:
@@ -417,6 +425,71 @@ Floating action button with tooltip, badge, and icon.
 ```
 
 ```yaml
+- id: btn_back_top
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Back to top
+    color: default
+    variant: outlined
+    icon: arrow-up
+  events:
+    onClick:
+      - id: set_back_top
+        type: SetState
+        params:
+          float_active: true
+          float_props:
+            backTop: true
+            visibilityHeight: 0
+            tooltip: Back to top
+- id: btn_back_top_progress
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: With scroll progress
+    color: primary
+    variant: outlined
+    icon: arrow-up
+  events:
+    onClick:
+      - id: set_back_top_progress
+        type: SetState
+        params:
+          float_active: true
+          float_props:
+            type: primary
+            backTop: true
+            showProgress: true
+            visibilityHeight: 0
+            tooltip: Back to top
+```
+
+```yaml
+- id: btn_disabled
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Disabled
+    color: default
+    variant: outlined
+    icon: lock
+  events:
+    onClick:
+      - id: set_disabled
+        type: SetState
+        params:
+          float_active: true
+          float_props:
+            icon: add
+            disabled: true
+            tooltip: Adding is disabled
+```
+
+```yaml
 - id: btn_theme_green
   type: Button
   layout:
@@ -511,7 +584,12 @@ Floating action button with tooltip, badge, and icon.
 | --- | --- | --- | --- |
 | `type` | string | `"default"` | Setting button type. Enum: `default`, `primary`. |
 | `shape` | string | `"circle"` | Setting button shape. Enum: `circle`, `square`. |
-| `description` | string | - | Text and other. |
+| `description` | string | - | Text shown below the icon. Use a square shape for room to show it. |
+| `disabled` | boolean | `false` | Disable the button. |
+| `backTop` | boolean | `false` | Render a back to top button. It shows once the page scrolls past `visibilityHeight` and scrolls the page to the top when clicked. |
+| `visibilityHeight` | number | `400` | Scroll height in pixels after which the back to top button shows. Only applies with `backTop`. |
+| `duration` | number | `450` | Time in milliseconds to scroll back to the top. Only applies with `backTop`. Ignored when the user prefers reduced motion. |
+| `showProgress` | boolean | `false` | Show the scroll progress as a ring around the back to top button. Only applies with `backTop`. |
 | `tooltip` | string | - | The text shown in the tooltip. |
 | `icon` | string \| object | - | Icon for the button. |
 | `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
@@ -523,7 +601,7 @@ Floating action button with tooltip, badge, and icon.
 | `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
 | `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
-| `href` | string | - | The target of hyperlink. |
+| `href` | string | - | The target of hyperlink. Not used with `backTop`. |
 | `htmlType` | string | `"button"` | HTML button type. Enum: `button`, `submit`, `reset`. |
 | `target` | string | - | Specifies where to display the linked URL. |
 | `badge` | object | - | Badge configuration for the button. |
@@ -543,7 +621,7 @@ Floating action button with tooltip, badge, and icon.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onClick` | \- | Trigger action when button is clicked. |
+| `onClick` | \- | Trigger action when button is clicked. With `backTop`, fires after the page starts scrolling to the top. |
 
 | Key | Target |
 | --- | --- |

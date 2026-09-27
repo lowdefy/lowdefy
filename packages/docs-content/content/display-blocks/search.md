@@ -339,7 +339,7 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
 | `recentSearches` | boolean | `true` | Show recent searches when input is empty. |
 | `recentSearchesKey` | string | `"search"` | localStorage key prefix for recent searches. |
 | `recentSearchesCount` | number | `5` | Maximum number of recent searches stored. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | object | - | Antd design token overrides for the trigger Button, the search Modal and its Input, e.g. `borderRadius`, `colorPrimary`, `colorBgElevated` or `fontSize`. See [antd design tokens](https://ant.design/components/overview#design-token). |
 
 | Event | Event Data | Description |
 | --- | --- | --- |

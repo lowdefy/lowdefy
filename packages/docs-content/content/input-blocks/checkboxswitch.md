@@ -20,6 +20,34 @@ Single checkbox for boolean input.
 ```
 
 ```yaml
+- id: select_all
+  type: CheckboxSwitch
+  properties:
+    title: Recipients
+    description: Select all
+    indeterminate:
+      _ne:
+        - _if_none:
+            - _state: recipient_alice
+            - false
+        - _if_none:
+            - _state: recipient_bob
+            - false
+- id: recipient_alice
+  type: CheckboxSwitch
+  properties:
+    description: Alice
+    label:
+      disabled: true
+- id: recipient_bob
+  type: CheckboxSwitch
+  properties:
+    description: Bob
+    label:
+      disabled: true
+```
+
+```yaml
 - id: desc_terms
   type: CheckboxSwitch
   properties:
@@ -448,9 +476,11 @@ Single checkbox for boolean input.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
 | `color` | string | - | Selected checkbox color. |
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `description` | string | - | Text to display next to the checkbox - supports html. |
+| `indeterminate` | boolean | `false` | Show the checkbox as partly checked, eg. for a select all checkbox when only some items are selected. Only changes how the checkbox looks, not its value. |
 | `label` | object | - | Label properties. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |

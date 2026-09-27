@@ -89,6 +89,41 @@ Inline tree with nested options and checkboxes. (Renamed from `TreeSelector`.)
         label: Operations
 ```
 
+```yaml
+- id: tree_block_node
+  type: TreeInput
+  properties:
+    blockNode: true
+    height: 160
+    defaultExpandAll: true
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: "{{ item.label }}"
+    data:
+      - id: 1
+        label: Documents
+      - id: 2
+        label: Invoices
+        parentId: 1
+      - id: 3
+        label: Receipts
+        parentId: 1
+      - id: 4
+        label: Contracts
+        parentId: 1
+      - id: 5
+        label: Photos
+      - id: 6
+        label: Holidays
+        parentId: 5
+      - id: 7
+        label: Events
+        parentId: 5
+      - id: 8
+        label: Music
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `data` | array | - | Alternative to `options`: an array of raw rows. Each row is rendered to a label with the `html` template, and `valueKey` selects which field becomes the value. Use this to drive a selector directly from data without building label/value pairs in your request. |
@@ -103,34 +138,20 @@ Inline tree with nested options and checkboxes. (Renamed from `TreeSelector`.)
 | `options.$.style` | object | - | Css style to apply to the option. |
 | `options.$.color` | string | - | Color applied to this option when it is selected. Falls back to the block-level color when not set. |
 | `disabled` | boolean | `false` | Disable the block if true. |
+| `blockNode` | boolean | `false` | Make each tree node fill the remaining width of the row, so the whole row is clickable and highlighted. |
 | `checkable` | boolean | `false` | Show checkboxes on the tree nodes. |
 | `showLine` | boolean | `false` | Show a connecting line if true. |
 | `selectable` | boolean | `true` | Selectable if true. |
 | `defaultExpandAll` | boolean | `false` | Expand all tree nodes by default. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design tree-select tokens](https://ant.design/components/tree-select#design-token). |
-| `theme.nodeSelectedBg` | string | - | Background color of selected tree node. |
-| `theme.nodeHoverBg` | string | - | Background color of hovered tree node. |
-| `theme.titleHeight` | number | `24` | Height of tree node title. |
-| `theme.clearBg` | string | - | Background color of clear button. |
-| `theme.selectorBg` | string | - | Background color of the selector. |
-| `theme.hoverBorderColor` | string | - | Border color when hovered. |
-| `theme.activeBorderColor` | string | - | Border color when active/focused. |
-| `theme.activeOutlineColor` | string | - | Outline color when active/focused. |
-| `theme.optionSelectedBg` | string | - | Background of selected option. |
-| `theme.optionSelectedColor` | string | - | Text color of selected option. |
-| `theme.optionSelectedFontWeight` | string | - | Font weight of selected option. |
-| `theme.optionActiveBg` | string | - | Background of active (hovered) option. |
-| `theme.optionFontSize` | number | `14` | Font size of options. |
-| `theme.optionHeight` | number | `32` | Height of each option. |
-| `theme.optionLineHeight` | string | - | Line height of options. |
-| `theme.optionPadding` | string | - | Padding of options. |
-| `theme.multipleSelectorBgDisabled` | string | - | Background when disabled in multiple mode. |
-| `theme.multipleItemBg` | string | - | Background of tag items in multiple mode. |
-| `theme.multipleItemBorderColor` | string | - | Border color of tag items. |
-| `theme.multipleItemHeight` | number | `24` | Height of tag items. |
-| `theme.multipleItemHeightSM` | number | `16` | Height of tag items (small). |
-| `theme.multipleItemHeightLG` | number | `32` | Height of tag items (large). |
-| `theme.zIndexPopup` | number | `1050` | z-index of the dropdown. |
+| `height` | number | - | Height of the tree in pixels. When set, the tree scrolls and only renders the nodes in view, for large trees. |
+| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design tree tokens](https://ant.design/components/tree#design-token). |
+| `theme.indentSize` | number | `24` | Indent width of each tree level. |
+| `theme.nodeHoverBg` | string | `"rgba(0, 0, 0, 0.04)"` | Background color of a hovered tree node. |
+| `theme.nodeHoverColor` | string | `"rgba(0, 0, 0, 0.88)"` | Text color of a hovered tree node. |
+| `theme.nodeSelectedBg` | string | `"#e6f4ff"` | Background color of the selected tree node. |
+| `theme.nodeSelectedColor` | string | `"rgba(0, 0, 0, 0.88)"` | Text color of the selected tree node. |
+| `theme.switcherSize` | number | `24` | Width of the expand/collapse switcher. |
+| `theme.titleHeight` | number | `24` | Height of a tree node title. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
@@ -140,5 +161,8 @@ Inline tree with nested options and checkboxes. (Renamed from `TreeSelector`.)
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The TreeInput element. |
+| `/item` | Each tree node row. |
+| `/itemSwitcher` | The expand/collapse switcher of each tree node. |
+| `/itemTitle` | The title of each tree node. |
 
 No slots defined.

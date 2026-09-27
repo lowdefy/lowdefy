@@ -67,6 +67,45 @@ An Affix block makes its content stick to the viewport when scrolling.
         size: small
 ```
 
+Scroll this panel. The toolbar sticks to the top of the panel instead of the page, because `target` names the panel's id. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+```yaml
+- id: affix_panel
+  type: Box
+  class:
+    .element: h-48 overflow-y-auto rounded border border-gray-200 p-3
+  blocks:
+    - id: affix_panel_toolbar
+      type: Affix
+      properties:
+        offsetTop: 0
+        target: affix_panel
+      blocks:
+        - id: affix_panel_toolbar_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Save changes
+            icon: save
+            size: small
+    - id: affix_panel_text
+      type: Paragraph
+      properties:
+        content: Scroll this panel. The toolbar sticks to the top of the panel instead
+          of the page, because `target` names the panel's id. Lorem ipsum dolor
+          sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+          incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+          commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+          velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+          occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+          mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur
+          adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+          magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+          ullamco laboris nisi ut aliquip ex ea commodo consequat.
+```
+
 ```yaml
 - id: affix_offset_bottom_0
   type: Affix
@@ -209,7 +248,7 @@ An Affix block makes its content stick to the viewport when scrolling.
   layout:
     flex: 0 0 auto
   class:
-    element: shadow-lg rounded-lg
+    .element: shadow-lg rounded-lg
   properties:
     offsetTop: 10
   blocks:
@@ -227,7 +266,7 @@ An Affix block makes its content stick to the viewport when scrolling.
   layout:
     flex: 0 0 auto
   class:
-    element: ring-2 ring-green-400 rounded-lg
+    .element: ring-2 ring-green-400 rounded-lg
   properties:
     offsetTop: 10
   blocks:
@@ -395,13 +434,14 @@ Edit Employee Record
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `offsetBottom` | number | - | Offset from the bottom of the viewport (in pixels). |
-| `offsetTop` | number | - | Offset from the top of the viewport (in pixels). |
+| `offsetTop` | number | `0` | Offset from the top of the viewport (in pixels). |
+| `target` | string | - | Id of the scrollable element the content sticks to, for example a scrolling panel. Defaults to the page window. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design affix tokens](https://ant.design/components/affix#design-token). |
 | `theme.zIndexPopup` | number | `10` | Z-index of the affix element when fixed. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onChange` | \- | Triggered when container affix status changes. |
+| `onChange` | `{ affixed }` | Triggered when container affix status changes. |
 
 | Key | Target |
 | --- | --- |

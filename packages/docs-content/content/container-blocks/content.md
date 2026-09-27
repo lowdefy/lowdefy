@@ -70,7 +70,8 @@ Content works within a Layout alongside Header and Footer blocks to form a compl
           properties:
             content: My Application
             level: 4
-            style:
+          style:
+            .element:
               margin: 0
     - id: content_full_page_main
       type: Content
@@ -124,7 +125,8 @@ When used alongside a Sider block, Content fills the remaining horizontal space.
           properties:
             content: App with Sidebar
             level: 4
-            style:
+          style:
+            .element:
               margin: 0
     - id: content_sider_inner
       type: Layout
@@ -145,16 +147,22 @@ When used alongside a Sider block, Content fills the remaining horizontal space.
               type: Menu
               properties:
                 mode: inline
-                options:
-                  - id: dashboard
-                    title: Dashboard
-                    icon: Gauge
-                  - id: users
-                    title: Users
-                    icon: user
-                  - id: settings
-                    title: Settings
-                    icon: settings
+                links:
+                  - id: cs_dashboard
+                    type: MenuLink
+                    properties:
+                      title: Dashboard
+                      icon: Gauge
+                  - id: cs_users
+                    type: MenuLink
+                    properties:
+                      title: Users
+                      icon: user
+                  - id: cs_settings
+                    type: MenuLink
+                    properties:
+                      title: Settings
+                      icon: settings
         - id: content_sider_main
           type: Content
           layout:
@@ -178,94 +186,40 @@ When used alongside a Sider block, Content fills the remaining horizontal space.
                   admin dashboards and applications with navigation sidebars.
 ```
 
-Themed Content Area
-
-Use the theme property to override antd design tokens. The colorBgLayout token changes the background of the Content block, and colorText adjusts the default text color within it.
-
-Warm Color Scheme
-
-A warm-toned content area using orange theme tokens. Theme tokens cascade through the antd design system and affect all child blocks within this Content.
-
-Dark Content Area
-
-Dark-themed content using colorBgLayout and colorText tokens. For app-wide dark themes, prefer using a global ConfigProvider rather than per-block overrides.
-
 ```yaml
 - id: content_theme_layout
   type: Layout
+  properties:
+    theme:
+      bodyBg: "#e6f4ff"
   blocks:
     - id: content_theme_custom
       type: Content
       style:
         padding: 24px
         minHeight: 150px
-      properties:
-        theme:
-          colorText: "#003a8c"
       blocks:
-        - id: content_theme_title
-          type: Title
-          properties:
-            content: Themed Content Area
-            level: 4
         - id: content_theme_text
-          type: Paragraph
+          type: Html
           properties:
-            content: >
-              Use the theme property to override antd design tokens. The
-              colorBgLayout token changes the background of the Content block,
-              and colorText adjusts the default text color within it.
+            html: The parent Layout theme sets the background behind the Content area with
+              the bodyBg token.
 - id: content_theme_warm_layout
   type: Layout
+  properties:
+    theme:
+      bodyBg: "#fff7e6"
   blocks:
     - id: content_theme_warm
       type: Content
       style:
         padding: 24px
         minHeight: 150px
-      properties:
-        theme:
-          colorText: "#874d00"
       blocks:
-        - id: content_theme_warm_title
-          type: Title
-          properties:
-            content: Warm Color Scheme
-            level: 4
         - id: content_theme_warm_text
-          type: Paragraph
+          type: Html
           properties:
-            content: >
-              A warm-toned content area using orange theme tokens. Theme tokens
-              cascade through the antd design system and affect all child blocks
-              within this Content.
-- id: content_theme_dark_layout
-  type: Layout
-  blocks:
-    - id: content_theme_dark
-      type: Content
-      style:
-        padding: 24px
-        minHeight: 150px
-      properties:
-        theme:
-          colorBgLayout: "#1f1f1f"
-          colorText: "#e0e0e0"
-      blocks:
-        - id: content_theme_dark_title
-          type: Title
-          class: text-text-secondary
-          properties:
-            content: Dark Content Area
-            level: 4
-        - id: content_theme_dark_text
-          type: Paragraph
-          class: text-text-secondary
-          properties:
-            content: >
-              Dark-themed content using colorBgLayout and colorText tokens. For
-              app-wide dark themes, prefer using a global ConfigProvider rather
-              than per-block overrides.
+            html: A warm-toned content area from the same Layout token.
 ```
 
 Rounded Content with Tailwind
@@ -287,7 +241,7 @@ A left accent border highlights the content area. Combine Tailwind border utilit
     - id: content_css_rounded
       type: Content
       class:
-        element: bg-bg-layout rounded-xl p-6 m-4
+        .element: bg-bg-layout rounded-xl p-6 m-4
       style:
         minHeight: 150px
       blocks:
@@ -308,7 +262,7 @@ A left accent border highlights the content area. Combine Tailwind border utilit
     - id: content_css_gradient
       type: Content
       class:
-        element: bg-gradient-to-br from-primary/10 to-primary/5 p-8 m-4 rounded-lg
+        .element: bg-gradient-to-br from-primary/10 to-primary/5 p-8 m-4 rounded-lg
           shadow-inner
       style:
         minHeight: 150px
@@ -331,7 +285,7 @@ A left accent border highlights the content area. Combine Tailwind border utilit
     - id: content_css_border
       type: Content
       class:
-        element: border-l-4 border-l-green-500 bg-bg-layout p-6 m-4
+        .element: border-l-4 border-l-green-500 bg-bg-layout p-6 m-4
       style:
         minHeight: 150px
       blocks:
@@ -377,7 +331,8 @@ New team member Sarah joined — 1 hour ago
           properties:
             content: Analytics Dashboard
             level: 4
-            style:
+          style:
+            .element:
               margin: 0
         - id: content_dashboard_header_btn
           type: Button
@@ -408,19 +363,27 @@ New team member Sarah joined — 1 hour ago
               type: Menu
               properties:
                 mode: inline
-                options:
-                  - id: overview
-                    title: Overview
-                    icon: home
-                  - id: analytics
-                    title: Analytics
-                    icon: chart
-                  - id: reports
-                    title: Reports
-                    icon: document
-                  - id: team
-                    title: Team
-                    icon: users
+                links:
+                  - id: cd_overview
+                    type: MenuLink
+                    properties:
+                      title: Overview
+                      icon: home
+                  - id: cd_analytics
+                    type: MenuLink
+                    properties:
+                      title: Analytics
+                      icon: chart
+                  - id: cd_reports
+                    type: MenuLink
+                    properties:
+                      title: Reports
+                      icon: document
+                  - id: cd_team
+                    type: MenuLink
+                    properties:
+                      title: Team
+                      icon: users
         - id: content_dashboard_main
           type: Content
           layout:
@@ -514,7 +477,8 @@ Update your personal details and preferences below.
           properties:
             content: Account Settings
             level: 4
-            style:
+          style:
+            .element:
               margin: 0
     - id: content_settings_main
       type: Content
@@ -583,7 +547,7 @@ Update your personal details and preferences below.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | object | - | Not applied: antd scopes Layout design tokens to the Layout element, so set tokens such as headerHeight or footerBg on the parent Layout block theme. |
 
 No events defined.
 

@@ -440,7 +440,7 @@ SH
         color: "#1677ff"
       style:
         .element:
-          border: 2px solid
+          border: "2px solid #1677ff"
     - id: css_box_shadow
       type: Avatar
       layout:
@@ -460,7 +460,7 @@ SH
         size: large
       style:
         .element:
-          background: linear-gradient(135deg,
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
     - id: css_dashed_outline
       type: Avatar
       layout:
@@ -471,7 +471,7 @@ SH
       style:
         .element:
           color: "#1677ff"
-          border: 2px dashed
+          border: "2px dashed #1677ff"
 ```
 
 Hi
@@ -696,7 +696,7 @@ Senior Engineer at Acme Corp
             alt: Sarah Chen
           style:
             .element:
-              border: 2px solid
+              border: "2px solid #1677ff"
           events:
             onClick:
               - id: profile_click_msg
@@ -847,7 +847,7 @@ I've started on the date picker component. Quick question — should it default 
             src: https://api.dicebear.com/7.x/miniavs/svg?seed=sarah
           style:
             .element:
-              border: 2px solid
+              border: "2px solid #1677ff"
           events:
             onClick:
               - id: c1_profile
@@ -1120,10 +1120,11 @@ I've started on the date picker component. Quick question — should it default 
 | `shape` | string | `"circle"` | Shape of the avatar. Enum: `circle`, `square`. |
 | `size` | string \| number \| object | `"default"` | Size of the avatar: default, small, large, a pixel number, or a responsive object of breakpoint sizes. |
 | `src` | string | - | The address of the image for an image avatar. |
+| `srcSet` | string | - | A list of image sources for different screen resolutions, as in the img srcset attribute. |
 | `group` | object | - | Render as an avatar group with multiple avatars. When set, the block renders Avatar.Group wrapping data-driven avatars. |
 | `group.maxCount` | number | - | Max avatars to show. Excess shows as "+N". |
 | `group.maxPopoverPlacement` | string | `"top"` | Placement of the overflow popover. Enum: `top`, `bottom`. |
-| `group.maxPopoverTrigger` | string | `"hover"` | Trigger mode for the overflow popover. Enum: `hover`, `click`. |
+| `group.maxPopoverTrigger` | string | `"hover"` | Trigger mode for the overflow popover. Enum: `hover`, `focus`, `click`. |
 | `group.shape` | string | - | Default shape for all avatars in the group. Enum: `circle`, `square`. |
 | `group.size` | string \| number | - | Default size for all avatars in the group: default, small, large or a pixel number. |
 | `group.avatars` | array | - | Array of avatar configurations. |
@@ -1142,8 +1143,9 @@ I've started on the date picker component. Quick question — should it default 
 | `group.avatars.$.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `group.avatars.$.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `group.avatars.$.shape` | string | - | Override shape for this avatar. Enum: `circle`, `square`. |
-| `group.avatars.$.size` | string \| number | - | Override size for this avatar. Enum: `default`, `small`, `large`. |
+| `group.avatars.$.size` | string \| number | - | Override size for this avatar: default, small, large or a pixel number. |
 | `group.avatars.$.src` | string | - | Image URL. |
+| `group.avatars.$.srcSet` | string | - | Image sources for different screen resolutions. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design avatar tokens](https://ant.design/components/avatar#design-token). |
 | `theme.containerSize` | number | `32` | Size of the avatar. |
 | `theme.containerSizeLG` | number | `40` | Size of the large avatar. |
@@ -1160,7 +1162,7 @@ I've started on the date picker component. Quick question — should it default 
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onClick` | \- | Triggered when avatar item is clicked. |
+| `onClick` | `{ index }` | Triggered when the avatar, or an avatar in a group, is clicked. |
 
 | Key | Target |
 | --- | --- |

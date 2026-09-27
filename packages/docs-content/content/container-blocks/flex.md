@@ -44,7 +44,7 @@ Below the second card.
 - id: flex_vertical
   type: Flex
   properties:
-    vertical: true
+    orientation: vertical
     gap: 12
   blocks:
     - id: flex_vert_card1
@@ -81,7 +81,7 @@ Below the second card.
 
 **gap: small (8px)**
 
-**gap: middle (16px)**
+**gap: medium (16px)**
 
 **gap: large (24px)**
 
@@ -121,11 +121,11 @@ Below the second card.
 - id: flex_gap_middle_label
   type: Markdown
   properties:
-    content: "**gap: middle (16px)**"
+    content: "**gap: medium (16px)**"
 - id: flex_gap_middle
   type: Flex
   properties:
-    gap: middle
+    gap: medium
   blocks:
     - id: flex_gm_1
       type: Tag
@@ -853,75 +853,53 @@ flex 2 (grows 2x)
         variant: link
 ```
 
-All Theme Tokens
-
-Combining padding, margin, and colorBgContainer tokens for a fully themed Flex container.
-
 ```yaml
-- id: flex_theme_padding
+- id: flex_theme_medium
   type: Flex
   properties:
-    gap: 12
+    gap: medium
     theme:
-      padding: 24
-      margin: 8
+      padding: 32
   blocks:
-    - id: flex_theme_padding_btn1
+    - id: flex_theme_medium_btn1
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: Custom Padding
+        title: Wider medium gap
         color: primary
         variant: solid
-    - id: flex_theme_padding_btn2
+    - id: flex_theme_medium_btn2
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: And Margin
+        title: padding token 32
         color: primary
         variant: outlined
-- id: flex_theme_bg
+- id: flex_theme_small
   type: Flex
   properties:
-    gap: 12
+    gap: small
+    theme:
+      paddingXS: 2
   blocks:
-    - id: flex_theme_bg_btn1
+    - id: flex_theme_small_btn1
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: Token A
+        title: Tighter small gap
         color: green
         variant: solid
-    - id: flex_theme_bg_btn2
+    - id: flex_theme_small_btn2
       type: Button
       layout:
         flex: 0 0 auto
       properties:
-        title: Token B
+        title: paddingXS token 2
         color: green
         variant: outlined
-- id: flex_theme_combined
-  type: Flex
-  properties:
-    gap: 16
-    vertical: true
-    theme:
-      padding: 20
-      margin: 4
-  blocks:
-    - id: flex_theme_combined_title
-      type: Title
-      properties:
-        content: All Theme Tokens
-        level: 5
-    - id: flex_theme_combined_p
-      type: Paragraph
-      properties:
-        content: Combining padding, margin, and colorBgContainer tokens for a fully
-          themed Flex container.
 ```
 
 Dark Panel
@@ -933,7 +911,7 @@ Dark Panel
     .element:
       padding: 16px
       borderRadius: 8px
-      border: 1px dashed
+      border: "1px dashed #91caff"
   properties:
     gap: 12
     justify: center
@@ -993,7 +971,7 @@ Ring utility applied to the element CSS key.
 - id: flex_tw_gradient
   type: Flex
   class:
-    element: bg-gradient-to-r from-primary/100 to-purple-600 p-6 rounded-xl shadow-lg
+    .element: bg-gradient-to-r from-primary/100 to-purple-600 p-6 rounded-xl shadow-lg
   properties:
     gap: 16
     align: center
@@ -1019,7 +997,7 @@ Ring utility applied to the element CSS key.
 - id: flex_tw_bordered
   type: Flex
   class:
-    element: border-2 border-dashed border-border p-4 rounded-lg
+    .element: border-2 border-dashed border-border p-4 rounded-lg
       hover:border-blue-400 transition-colors duration-200
   properties:
     gap: 12
@@ -1050,7 +1028,7 @@ Ring utility applied to the element CSS key.
 - id: flex_tw_ring
   type: Flex
   class:
-    element: ring-2 ring-green-400 ring-offset-2 p-4 rounded-lg bg-bg-layout
+    .element: ring-2 ring-green-400 ring-offset-2 p-4 rounded-lg bg-bg-layout
   properties:
     gap: 8
     align: center
@@ -1230,8 +1208,7 @@ Senior Product Designer at Acme Corp
       properties:
         icon: user
         size: 72
-        color: "#fff"
-        backgroundColor: "#1677ff"
+        color: "#1677ff"
     - id: flex_profile_info
       type: Flex
       layout:
@@ -1486,17 +1463,18 @@ Custom plugins for blocks, connections, operators, and actions let you extend fu
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `orientation` | string | `"horizontal"` | Direction of the main axis. Takes precedence over vertical. Enum: `horizontal`, `vertical`. |
 | `vertical` | boolean | `false` | Whether the main axis direction is vertical. |
 | `wrap` | boolean \| string | - | Set whether the element is displayed in a single line or in multiple lines. |
-| `justify` | string | - | Set the alignment of elements on the main axis. Enum: `flex-start`, `center`, `flex-end`, `space-between`, `space-around`, `space-evenly`. |
-| `align` | string | - | Set the alignment of elements on the cross axis. Enum: `flex-start`, `center`, `flex-end`, `stretch`, `baseline`. |
-| `gap` | string \| number | - | Set the gap between items. Can be "small", "middle", "large", or a number. |
+| `justify` | string | - | Set the alignment of elements on the main axis. Enum: `flex-start`, `center`, `flex-end`, `space-between`, `space-around`, `space-evenly`, `start`, `end`, `left`, `right`, `stretch`, `normal`. |
+| `align` | string | - | Set the alignment of elements on the cross axis. Enum: `flex-start`, `center`, `flex-end`, `stretch`, `baseline`, `start`, `end`, `self-start`, `self-end`, `normal`. |
+| `gap` | string \| number | - | Set the gap between items. Can be "small", "medium" ("middle" is an alias), "large", a number of pixels or a CSS length. |
 | `flex` | string \| number | - | Flex CSS shorthand property. |
 | `component` | string | - | Custom element type. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design flex tokens](https://ant.design/components/flex#design-token). |
-| `theme.padding` | number | - | Base padding value. |
-| `theme.margin` | number | - | Base margin value. |
-| `theme.colorBgContainer` | string | - | Background color when used with a custom component wrapper. |
+| `theme.paddingXS` | number | `8` | Gap of the "small" gap preset. |
+| `theme.padding` | number | `16` | Gap of the "medium" gap preset. |
+| `theme.paddingLG` | number | `24` | Gap of the "large" gap preset. |
 
 No events defined.
 

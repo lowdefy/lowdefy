@@ -749,7 +749,8 @@ Hover over this text to see the tooltip.
     flex: 0 0 auto
   properties:
     title: Tooltip with custom overlay style
-    overlayStyle:
+  style:
+    .inner:
       boxShadow: 0 4px 12px rgba(0, 0, 0, 0.3)
   blocks:
     - id: tooltip_overlay_style_btn
@@ -920,7 +921,7 @@ Hover me (Tailwind element class)
   properties:
     title: Tailwind on element wrapper
   class:
-    element: cursor-help
+    .element: cursor-help
   blocks:
     - id: tooltip_class_element_text
       type: Paragraph
@@ -933,7 +934,7 @@ Hover me (Tailwind element class)
   properties:
     title: Tailwind on inner popup
   class:
-    inner: text-lg font-bold
+    .inner: text-lg font-bold
   blocks:
     - id: tooltip_class_inner_btn
       type: Button
@@ -1088,47 +1089,19 @@ $8,230
       properties:
         label:
           title: Username
-          extra:
-            - id: tooltip_form_username_help
-              type: Tooltip
-              layout:
-                flex: 0 0 auto
-              properties:
-                title: Your unique username. Must be 3-20 characters, letters and numbers only.
-                placement: right
-              blocks:
-                - id: tooltip_form_username_icon
-                  type: Icon
-                  layout:
-                    flex: 0 0 auto
-                  properties:
-                    name: help
-                    size: 14
-                    color: "#8c8c8c"
+          tooltip:
+            title: Your unique username. Must be 3-20 characters, letters and numbers only.
+            color: "#8c8c8c"
         placeholder: Enter your username
     - id: tooltip_form_email
       type: TextInput
       properties:
         label:
           title: Email Address
-          extra:
-            - id: tooltip_form_email_help
-              type: Tooltip
-              layout:
-                flex: 0 0 auto
-              properties:
-                title: We will send account notifications to this address. You can change it at
-                  any time.
-                placement: right
-              blocks:
-                - id: tooltip_form_email_icon
-                  type: Icon
-                  layout:
-                    flex: 0 0 auto
-                  properties:
-                    name: help
-                    size: 14
-                    color: "#8c8c8c"
+          tooltip:
+            title: We will send account notifications to this address. You can change it at
+              any time.
+            color: "#8c8c8c"
         placeholder: Enter your email
 ```
 
@@ -1237,15 +1210,18 @@ Monthly Revenue
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `arrowPointAtCenter` | boolean | `false` | Whether the arrow is pointed at the center of target. |
+| `arrow` | boolean \| object | `true` | Whether to show the arrow. Set `{ pointAtCenter: true }` to point the arrow at the center of the target. |
+| `arrow.pointAtCenter` | boolean | `false` | Whether the arrow is pointed at the center of target. |
+| `arrowPointAtCenter` | boolean | `false` | Whether the arrow is pointed at the center of target. Same as `arrow: { pointAtCenter: true }`. |
 | `autoAdjustOverflow` | boolean | `true` | Whether to adjust popup placement automatically when popup is off screen. |
 | `color` | string | - | The background color. |
 | `defaultOpen` | boolean | `false` | Whether the floating tooltip card is visible by default. |
-| `destroyTooltipOnHide` | boolean | `false` | Whether to destroy the tooltip DOM when hidden. |
+| `destroyOnHidden` | boolean | `false` | Whether to destroy the tooltip DOM when hidden. |
+| `destroyTooltipOnHide` | boolean | `false` | Same as destroyOnHidden, which takes precedence. |
 | `mouseEnterDelay` | number | `0.1` | Delay in seconds, before tooltip is shown on mouse enter. |
-| `mouseLeaveDelay` | number | `0.1` | Delay in seconds, before tooltip is shown on mouse enter. |
+| `mouseLeaveDelay` | number | `0.1` | Delay in seconds, before tooltip is hidden on mouse leave. |
 | `placement` | string | `"top"` | The position of the tooltip relative to the target. Enum: `top`, `left`, `right`, `bottom`, `topLeft`, `topRight`, `bottomLeft`, `bottomRight`, `leftTop`, `leftBottom`, `rightTop`, `rightBottom`. |
-| `trigger` | string | `"hover"` | Tooltip trigger mode. Enum: `hover`, `focus`, `click`. |
+| `trigger` | string | `"hover"` | Tooltip trigger mode. `contextMenu` opens the tooltip on right click. Enum: `hover`, `focus`, `click`, `contextMenu`. |
 | `title` | string | - | Title to show in the title area - supports html. Overwritten by blocks in the title content area. |
 | `zIndex` | integer | - | The z-index of the Tooltip. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design tooltip tokens](https://ant.design/components/tooltip#design-token). |
@@ -1261,7 +1237,7 @@ Monthly Revenue
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onOpenChange` | \- | Trigger action when visibility of the tooltip card is changed. |
+| `onOpenChange` | `{ open }` | Trigger action when visibility of the tooltip card is changed. |
 
 | Key | Target |
 | --- | --- |

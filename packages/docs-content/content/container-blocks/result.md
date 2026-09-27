@@ -740,7 +740,7 @@ Result page with status icon, title, and extra actions.
       verification code.
   style:
     .element:
-      border: 2px solid
+      border: "2px solid #1677ff"
       borderRadius: 12px
       padding: 32px
 - id: inline_shadow
@@ -765,7 +765,7 @@ Result page with status icon, title, and extra actions.
     .element:
       maxWidth: 480px
       margin: 0 auto
-      border: 1px solid
+      border: "1px solid #faad14"
       borderRadius: 8px
       padding: 24px
 ```
@@ -974,6 +974,8 @@ No events defined.
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Result element. |
 | `/icon` | The icon in the Result. |
+| `/title` | The Result title. |
+| `/subTitle` | The Result subtitle. |
 
 | Slot | Description |
 | --- | --- |

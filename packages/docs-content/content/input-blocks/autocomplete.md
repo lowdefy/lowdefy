@@ -192,6 +192,45 @@ Text input with auto-complete suggestions from a list of options.
       - Option A
       - Option B
       - Option C
+- id: variant_underlined
+  type: AutoComplete
+  properties:
+    title: Underlined
+    variant: underlined
+    options:
+      - Apple
+      - Banana
+      - Cherry
+```
+
+```yaml
+- id: prefix_search
+  type: AutoComplete
+  properties:
+    title: Search Fruit
+    prefixIcon: search
+    options:
+      - Apple
+      - Apricot
+      - Banana
+      - Cherry
+  events:
+    onSelect:
+      - id: selected_message
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Picked "
+              - _event: value
+- id: prefix_text
+  type: AutoComplete
+  properties:
+    title: Email Domain
+    prefix: "@"
+    options:
+      - example.com
+      - example.org
 ```
 
 ```yaml
@@ -396,10 +435,11 @@ Text input with auto-complete suggestions from a list of options.
 - id: style_background
   type: AutoComplete
   style:
-    .element: null
+    .element:
+      backgroundColor: var(--ant-color-success-bg)
   properties:
     title: Custom Background
-    placeholder: Light green background
+    placeholder: Green tinted background
     options:
       - Option A
       - Option B
@@ -423,7 +463,7 @@ Text input with auto-complete suggestions from a list of options.
 - id: class_element
   type: AutoComplete
   class:
-    element: rounded-lg shadow-sm
+    .element: rounded-lg shadow-sm
   properties:
     title: Custom Class
     placeholder: Tailwind classes applied
@@ -707,10 +747,22 @@ Text input with auto-complete suggestions from a list of options.
 | `allowClear` | boolean | `true` | Allow the user to clear the selected value, sets the value to null. |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
 | `bordered` | boolean | `true` | Whether or not the input has a border style. Deprecated, use variant instead. |
-| `backfill` | boolean | `false` | Backfill selected item the input when using keyboard |
+| `backfill` | boolean | `false` | Backfill the selected item into the input when using the keyboard. |
 | `defaultOpen` | boolean | `false` | Initial open state of dropdown. |
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `label` | object | - | Label properties. |
+| `label.xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |
+| `label.xs.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.sm` | object | - | Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set. |
+| `label.sm.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.md` | object | - | Label width on medium screens (768px and up) when the label is not inline. Overrides `span`. |
+| `label.md.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.lg` | object | - | Label width on large screens (992px and up) when the label is not inline. |
+| `label.lg.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xl` | object | - | Label width on extra large screens (1200px and up) when the label is not inline. |
+| `label.xl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xxl` | object | - | Label width on extra extra large screens (1600px and up) when the label is not inline. |
+| `label.xxl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
 | `label.extra` | string | - | Extra text to display beneath the content - supports html. |
@@ -719,15 +771,31 @@ Text input with auto-complete suggestions from a list of options.
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
 | `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
-| `label.span` | number | - | Label inline span. |
+| `label.span` | number | - | Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns. |
 | `label.disabled` | boolean | `false` | Hide input label. |
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
+| `label.wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap. |
+| `listHeight` | number | `256` | Height of the dropdown list in pixels. |
 | `options` | array | `[]` | Options can either be an array of string values. |
 | `placeholder` | string | `"Type or select item"` | Placeholder text inside the block before user selects input. |
+| `placement` | string | `"bottomLeft"` | Position of the dropdown relative to the selector. Enum: `bottomLeft`, `bottomRight`, `topLeft`, `topRight`. |
+| `popupMatchSelectWidth` | boolean \| number | `true` | Make the dropdown the same width as the selector. Set a number of pixels for a fixed dropdown width, or false to size the dropdown to its options (this also turns off virtual scrolling). |
+| `prefix` | string | - | Text shown inside the selector before the selected value. |
+| `prefixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to show inside the selector before the selected value. Ignored when `prefix` is set. |
+| `prefixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `prefixIcon.color` | string | - | Icon color. |
+| `prefixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `prefixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `prefixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `prefixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `prefixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `prefixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `prefixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed. |
-| `variant` | string | - | Input visual variant. When set, takes precedence over bordered. Enum: `outlined`, `filled`, `borderless`. |
+| `variant` | string | - | Input visual variant. The deprecated bordered: false takes precedence and renders the input as 'borderless'. Enum: `outlined`, `filled`, `borderless`, `underlined`. |
+| `virtual` | boolean | `true` | Only render the dropdown options in view. Set to false when options have very different heights, or so screen readers can reach every option. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design select tokens](https://ant.design/components/select#design-token). |
 | `theme.borderRadius` | number | `6` | Border radius of the input. |
 | `theme.borderRadiusLG` | number | `8` | Border radius for large size. |
@@ -770,7 +838,9 @@ Text input with auto-complete suggestions from a list of options.
 | `onChange` | `{ value }` | Trigger actions when selection is changed. |
 | `onFocus` | \- | Trigger action when an selector gets focus. |
 | `onClear` | \- | Trigger action when selector gets cleared. |
+| `onOpenChange` | `{ open }` | Trigger actions when the dropdown opens or closes. |
 | `onSearch` | `{ value }` | Called when searching items. |
+| `onSelect` | `{ value }` | Trigger actions when an option is selected from the dropdown, as opposed to typed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
 | Key | Target |
@@ -782,5 +852,7 @@ Text input with auto-complete suggestions from a list of options.
 | `/extra` | The AutoComplete extra content. |
 | `/feedback` | The AutoComplete validation feedback. |
 | `/options` | The AutoComplete options. |
+| `/popup` | The AutoComplete dropdown popup. |
+| `/prefixIcon` | The prefix icon in the AutoComplete. |
 
 No slots defined.

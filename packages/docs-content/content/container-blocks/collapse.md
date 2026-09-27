@@ -221,6 +221,67 @@ Our mission is to democratize application development through low-code and open-
               and open-source technologies.
 ```
 
+Orders ship within two business days.
+
+Unused items can be returned within 30 days.
+
+Compact header and content padding.
+
+Roomy header and content padding.
+
+```yaml
+- id: ghost_collapse
+  type: Collapse
+  properties:
+    ghost: true
+    panels:
+      - key: ghost_shipping
+        title: Shipping (ghost)
+      - key: ghost_returns
+        title: Returns
+  slots:
+    ghost_shipping:
+      blocks:
+        - id: ghost_shipping_text
+          type: Paragraph
+          properties:
+            content: Orders ship within two business days.
+    ghost_returns:
+      blocks:
+        - id: ghost_returns_text
+          type: Paragraph
+          properties:
+            content: Unused items can be returned within 30 days.
+- id: small_collapse
+  type: Collapse
+  properties:
+    size: small
+    panels:
+      - key: small_panel
+        title: Small size
+  slots:
+    small_panel:
+      blocks:
+        - id: small_panel_text
+          type: Paragraph
+          properties:
+            content: Compact header and content padding.
+- id: large_collapse
+  type: Collapse
+  properties:
+    size: large
+    panels:
+      - key: large_panel
+        title: Large size
+  slots:
+    large_panel:
+      blocks:
+        - id: large_panel_text
+          type: Paragraph
+          properties:
+            content: Roomy header and content padding.
+```
+
 **Start (default):**
 
 Premium wireless headphones with active noise cancellation, 30-hour battery life, and multipoint connection.
@@ -1294,8 +1355,9 @@ Full platform access with dedicated infrastructure, custom integrations, and whi
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `accordion` | boolean | `false` | If true, only one panel is open at a time. |
-| `activeKey` | string | - | Current panel's key. |
+| `activeKey` | string \| array | - | Current panel's key, or a list of keys of the open panels. |
 | `bordered` | boolean | `true` | Toggles rendering of the border around the collapse block. |
+| `collapsible` | string | - | How panels are toggled: by clicking anywhere in the `header` (default), only the expand `icon`, or `disabled` to stop all panels from toggling. Enum: `header`, `icon`, `disabled`. |
 | `defaultActiveKey` | string \| array | - | Initial active panel key, or a list of keys, if activeKey is not set. |
 | `destroyInactivePanel` | boolean | `false` | Destroy inactive panel. Maps to antd's `destroyOnHidden`. |
 | `expandIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block for expand icon on the right of selector. |
@@ -1309,17 +1371,23 @@ Full platform access with dedicated infrastructure, custom integrations, and whi
 | `expandIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `expandIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `expandIconPlacement` | string | `"start"` | Set placement of the expand icon. Enum: `start`, `end`. |
-| `forceRender` | boolean | `"false"` | Force render for all panels. |
+| `forceRender` | boolean | `false` | Force render for all panels. |
+| `ghost` | boolean | `false` | Make the collapse borderless with a transparent background. |
 | `panels` | array | - |  |
 | `panels.$.title` | string | - | Title of the panel - supports html. |
 | `panels.$.key` | string | - | Key of the panel. |
 | `panels.$.extraKey` | string | - | Key for the extra area of the panel. |
 | `panels.$.disabled` | boolean | `false` | Disable the panel if true. |
 | `showArrow` | boolean | `true` | Show expand icon. |
+| `size` | string | `"medium"` | Size of the panel headers and content padding. Enum: `small`, `medium`, `large`. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design collapse tokens](https://ant.design/components/collapse#design-token). |
 | `theme.headerPadding` | string | `"12px 16px"` | Padding of the collapse header. |
+| `theme.headerPaddingSM` | string | `"8px 12px 8px 8px"` | Padding of the collapse header when size is small. |
+| `theme.headerPaddingLG` | string | `"16px 24px 16px 16px"` | Padding of the collapse header when size is large. |
 | `theme.headerBg` | string | `"rgba(0, 0, 0, 0.02)"` | Background color of the collapse header. |
 | `theme.contentPadding` | string | `"16px 16px"` | Padding of the collapse content area. |
+| `theme.contentPaddingSM` | number \| string | `12` | Padding of the collapse content area when size is small. |
+| `theme.contentPaddingLG` | number \| string | `24` | Padding of the collapse content area when size is large. |
 | `theme.contentBg` | string | `"#ffffff"` | Background color of the collapse content area. |
 | `theme.borderlessContentPadding` | string | `"4px 16px 16px"` | Padding of the content area in borderless (ghost) style. |
 | `theme.borderlessContentBg` | string | `"transparent"` | Background color of the content area in borderless (ghost) style. |
@@ -1339,6 +1407,7 @@ Full platform access with dedicated infrastructure, custom integrations, and whi
 | `/element` | The Collapse element. |
 | `/expandIcon` | The expand icon in the Collapse. |
 | `/header` | The Collapse header. |
+| `/title` | The panel title text in the Collapse header. |
 | `/content` | The Collapse content. |
 
 Slot keys are user-defined in your config and resolved at build time — not generated at runtime. The block typically pairs slots with an array property (`tabs`, `panels`, `slides`) listed in the Properties table; see the examples above for the expected shape.

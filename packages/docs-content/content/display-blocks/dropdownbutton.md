@@ -218,6 +218,38 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
 ```
 
 ```yaml
+- id: db_icon_end
+  type: DropdownButton
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Options
+    icon: chevron-down
+    iconPlacement: end
+    items:
+      - title: Rename
+        eventName: onRename
+        icon: edit
+      - title: Archive
+        eventName: onArchive
+- id: db_split_icon_end
+  type: DropdownButton
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Send
+    icon: send
+    iconPlacement: end
+    split: true
+    color: primary
+    variant: solid
+    items:
+      - title: Schedule send
+        eventName: onSchedule
+        icon: clock
+```
+
+```yaml
 - id: db_disabled_items
   type: DropdownButton
   layout:
@@ -608,6 +640,7 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
 | `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
 | `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `iconPlacement` | string | `"start"` | Place the button icon before (start) or after (end) the title. Enum: `start`, `end`. |
 | `type` | string | `"default"` | Deprecated - use color and variant instead. The button type. Enum: `primary`, `default`, `dashed`, `text`, `link`. |
 | `color` | string | - | Button color. Preset values: default, primary, danger, blue, purple, cyan, green, magenta, pink, red, orange, yellow, volcano, geekblue, lime, gold. Also accepts custom hex color strings. |
 | `variant` | string | - | Button visual variant. When set, takes precedence over type. Enum: `solid`, `outlined`, `dashed`, `filled`, `text`, `link`. |
@@ -617,7 +650,7 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
 | `ghost` | boolean | `false` | Make the button's background transparent. |
 | `disabled` | boolean | `false` | Disable the entire dropdown. |
 | `trigger` | string | `"click"` | How the dropdown opens. Enum: `click`, `hover`. |
-| `placement` | string | `"bottomRight"` | Dropdown position. Enum: `bottomLeft`, `bottom`, `bottomRight`, `topLeft`, `top`, `topRight`. |
+| `placement` | string | `"bottomRight"` | Dropdown position. Enum: `bottomLeft`, `bottom`, `bottomRight`, `topLeft`, `top`, `topRight`, `left`, `leftTop`, `leftBottom`, `right`, `rightTop`, `rightBottom`. |
 | `arrow` | boolean \| object | `false` | Show arrow pointing to trigger. |
 | `arrow.pointAtCenter` | boolean | - |  |
 | `split` | boolean | `false` | Split button mode. Left button fires onClick, right arrow opens dropdown. |
@@ -668,12 +701,12 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
 | Key | Target |
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
-| `/element` | The outer container. |
+| `/element` | The outer element: the button group in split mode, otherwise the button. |
 | `/button` | The trigger button. |
 | `/icon` | The icon in the button. |
 | `/menu` | The floating menu container. |
 | `/item` | Individual menu items. |
 | `/itemIcon` | Icon within menu items. |
-| `/arrow` | Dropdown arrow indicator. |
+| `/arrow` | Has no effect: antd does not expose the dropdown arrow as a separately styled part. |
 
 No slots defined.

@@ -154,6 +154,8 @@ Deleted Title
 
 Italic & Underlined
 
+Esc
+
 ```yaml
 - id: deco_italic
   type: Title
@@ -186,6 +188,12 @@ Italic & Underlined
     level: 4
     italic: true
     underline: true
+- id: deco_keyboard
+  type: Title
+  properties:
+    content: Esc
+    level: 4
+    keyboard: true
 ```
 
 Disabled Section Heading
@@ -302,6 +310,10 @@ This long title can be expanded by clicking the expand control. It demonstrates 
 
 This title has a custom suffix appended after the ellipsis truncation point so readers know more content exists.
 
+This long title can be expanded and collapsed again. The expand and collapse buttons use custom text set with the symbol option.
+
+Hover this truncated title to see the full heading in a tooltip, which helps when titles come from user data.
+
 ```yaml
 - id: ellipsis_single
   type: Title
@@ -339,6 +351,26 @@ This title has a custom suffix appended after the ellipsis truncation point so r
     ellipsis:
       rows: 1
       suffix: " /Read More"
+- id: ellipsis_collapsible
+  type: Title
+  properties:
+    content: This long title can be expanded and collapsed again. The expand and
+      collapse buttons use custom text set with the symbol option.
+    level: 5
+    ellipsis:
+      rows: 1
+      expandable: collapsible
+      symbol:
+        - more
+        - less
+- id: ellipsis_tooltip
+  type: Title
+  properties:
+    content: Hover this truncated title to see the full heading in a tooltip, which
+      helps when titles come from user data.
+    level: 4
+    ellipsis:
+      tooltip: true
 ```
 
 Tailwind Background
@@ -377,7 +409,7 @@ Inline Text Shadow
     level: 4
   style:
     .element:
-      borderBottom: 2px solid
+      borderBottom: "2px solid #1677ff"
       paddingBottom: 8px
 - id: css_inline_shadow
   type: Title
@@ -599,6 +631,8 @@ Recent Activity
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `actions` | object | - | Configure the bar of action buttons, such as copy and expand. |
+| `actions.placement` | string | `"end"` | Place the action buttons before or after the text. Enum: `start`, `end`. |
 | `code` | boolean | `false` | Apply code style. |
 | `color` | string | - | Title color. |
 | `content` | string | - | Title text content - supports html. |
@@ -610,16 +644,20 @@ Recent Activity
 | `disabled` | boolean | `false` | Apply disabled style. |
 | `ellipsis` | boolean \| object | `false` | Display ellipsis when text overflows a single line. |
 | `ellipsis.rows` | number | - | Max rows of content. |
-| `ellipsis.expandable` | boolean | - | Expand hidden content when clicked. |
+| `ellipsis.expandable` | boolean \| string | - | Show a button that expands the hidden content. Set to 'collapsible' to also allow collapsing it again. Enum: `true`, `false`, `collapsible`. |
+| `ellipsis.defaultExpanded` | boolean | `false` | Start with the content expanded. |
 | `ellipsis.suffix` | string | - | Suffix of ellipses content. |
+| `ellipsis.symbol` | string \| array | - | Text of the expand button, or an array of two strings for the expand and collapse buttons. |
+| `ellipsis.tooltip` | boolean \| string | - | Show a tooltip when the text is truncated. true shows the full text, a string shows that text. |
 | `italic` | boolean | `false` | Apply italic style. |
+| `keyboard` | boolean | `false` | Apply keyboard key style. |
 | `level` | number | `1` | Set title type. Matches with h1, h2, h3 and h4. Enum: `1`, `2`, `3`, `4`, `5`. |
 | `mark` | boolean | `false` | Apply marked (highlighted) style. |
-| `type` | string | `"default"` | Additional types. Don't specify for default. Enum: `secondary`, `warning`, `danger`, `success`. |
+| `type` | string | `"default"` | Additional types. Don't specify for default. Enum: `default`, `secondary`, `warning`, `danger`, `success`. |
 | `underline` | boolean | `false` | Apply underline style. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design typography tokens](https://ant.design/components/typography#design-token). |
-| `theme.titleMarginBottom` | string | `"0.5em"` | Margin bottom of title. |
-| `theme.titleMarginTop` | string | `"1.2em"` | Margin top of title. |
+| `theme.titleMarginBottom` | string \| number | `"0.5em"` | Margin bottom of title, as a CSS length or a number of pixels. |
+| `theme.titleMarginTop` | string \| number | `"1.2em"` | Margin top of title, as a CSS length or a number of pixels. |
 | `theme.fontSizeHeading1` | number | `38` | Font size of h1 heading. |
 | `theme.fontSizeHeading2` | number | `30` | Font size of h2 heading. |
 | `theme.fontSizeHeading3` | number | `24` | Font size of h3 heading. |
@@ -642,7 +680,7 @@ Recent Activity
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onExpand` | \- | Trigger action when ellipse expand is clicked. |
+| `onExpand` | `{ expanded }` | Trigger action when the ellipsis expand or collapse button is clicked. |
 | `onCopy` | \- | Trigger action when copy text is clicked. |
 
 | Key | Target |
@@ -650,5 +688,6 @@ Recent Activity
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Title element. |
 | `/copyableIcon` | The copyable icon in the Title. |
+| `/actions` | The bar of action buttons, such as copy and expand, next to the text. |
 
 No slots defined.

@@ -62,6 +62,29 @@ Password input with visibility toggle.
 ```
 
 ```yaml
+- id: password_prefix_icon
+  type: PasswordInput
+  properties:
+    title: Prefix Icon
+    prefixIcon: lock
+    placeholder: Password
+- id: password_allow_clear
+  type: PasswordInput
+  properties:
+    title: Allow Clear
+    allowClear: true
+    prefixIcon: lock
+    maxLength: 32
+    placeholder: Up to 32 characters
+- id: password_underlined
+  type: PasswordInput
+  properties:
+    title: Underlined
+    variant: underlined
+    prefix: PIN
+```
+
+```yaml
 - id: disabled_empty
   type: PasswordInput
   properties:
@@ -412,11 +435,36 @@ Password input with visibility toggle.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `allowClear` | boolean | `false` | Allow the user to clear their input. |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
 | `bordered` | boolean | `true` | Whether or not the input has a border style. Deprecated, use variant instead. |
 | `disabled` | boolean | `false` | Disable the block if true. |
+| `maxLength` | integer | - | The max number of input characters. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
+| `prefix` | string | - | Prefix text for the block, priority over prefixIcon. |
+| `prefixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to prefix the password input. |
+| `prefixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `prefixIcon.color` | string | - | Icon color. |
+| `prefixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `prefixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `prefixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `prefixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `prefixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `prefixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `prefixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `label` | object | - | Label properties. |
+| `label.xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |
+| `label.xs.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.sm` | object | - | Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set. |
+| `label.sm.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.md` | object | - | Label width on medium screens (768px and up) when the label is not inline. Overrides `span`. |
+| `label.md.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.lg` | object | - | Label width on large screens (992px and up) when the label is not inline. |
+| `label.lg.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xl` | object | - | Label width on extra large screens (1200px and up) when the label is not inline. |
+| `label.xl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xxl` | object | - | Label width on extra extra large screens (1600px and up) when the label is not inline. |
+| `label.xxl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
 | `label.extra` | string | - | Extra text to display beneath the content - supports html. |
@@ -425,13 +473,14 @@ Password input with visibility toggle.
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
 | `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
-| `label.span` | number | - | Label inline span. |
+| `label.span` | number | - | Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns. |
 | `label.disabled` | boolean | `false` | Hide input label. |
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
+| `label.wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
-| `variant` | string | - | Input visual variant. When set, takes precedence over bordered. Enum: `outlined`, `filled`, `borderless`. |
+| `variant` | string | - | Input visual variant. The deprecated bordered: false takes precedence and renders the input as 'borderless'. Enum: `outlined`, `filled`, `borderless`, `underlined`. |
 | `visibilityToggle` | boolean | `true` | Show password visibility toggle button. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design input tokens](https://ant.design/components/input#design-token). |
 | `theme.activeBorderColor` | string | `"#1677ff"` | Border color when the input is active (focused). |
@@ -453,6 +502,9 @@ Password input with visibility toggle.
 | `theme.hoverBorderColor` | string | `"#4096ff"` | Border color when hovering over the input. |
 | `theme.hoverBg` | string | `"#ffffff"` | Background color when hovering over the input. |
 | `theme.activeBg` | string | `"#ffffff"` | Background color when the input is active (focused). |
+| `theme.inputFontSize` | number | `14` | Font size of the input text. |
+| `theme.inputFontSizeLG` | number | `16` | Font size of the input text for large inputs. |
+| `theme.inputFontSizeSM` | number | `14` | Font size of the input text for small inputs. |
 | `theme.paddingBlock` | number | `4` | Vertical padding of the input. |
 | `theme.paddingBlockLG` | number | `7` | Vertical padding for large inputs. |
 | `theme.paddingBlockSM` | number | `0` | Vertical padding for small inputs. |
@@ -465,6 +517,7 @@ Password input with visibility toggle.
 | --- | --- | --- |
 | `onBlur` | \- | Trigger action event occurs when text input loses focus. |
 | `onChange` | `{ value }` | Trigger action when text input is changed. |
+| `onClear` | \- | Trigger action when the clear button is clicked. |
 | `onFocus` | \- | Trigger action when text input gets focus. |
 | `onPressEnter` | \- | Trigger action when enter is pressed while text input is focused. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
@@ -476,5 +529,6 @@ Password input with visibility toggle.
 | `/label` | The PasswordInput label. |
 | `/extra` | The PasswordInput extra content. |
 | `/feedback` | The PasswordInput validation feedback. |
+| `/prefixIcon` | The prefix icon in the PasswordInput. |
 
 No slots defined.

@@ -169,7 +169,7 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
       layout:
         flex: 0 0 auto
       properties:
-        label: Needs supervision
+        title: Needs supervision
         size: small
     - id: attendees.$.wheelchair
       type: Switch
@@ -180,7 +180,7 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
       layout:
         flex: 0 0 auto
       properties:
-        label: Wheelchair access
+        title: Wheelchair access
         size: small
     - id: attendees.$.dietary
       type: TextInput
@@ -379,7 +379,7 @@ Dynamic list with built-in add and remove controls. Supports custom add/remove b
           layout:
             flex: 0 0 auto
           properties:
-            label: Done
+            title: Done
             size: small
 - id: projects_footer
   type: Box

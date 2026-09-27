@@ -514,6 +514,7 @@ Your data will be exported to a CSV file and downloaded.
     okText: Export
     okButton:
       icon: download
+      iconPlacement: end
     cancelText: Cancel
     cancelButton:
       icon: close
@@ -718,7 +719,7 @@ The body CSS key targets the modal body area. This modal uses bg-bg-layout and p
 - id: confirm_css_element
   type: ConfirmModal
   class:
-    element: rounded-2xl shadow-2xl
+    .element: rounded-2xl shadow-2xl
   properties:
     title: Styled Element
     content: The element CSS key applies Tailwind classes to the modal wrapper. This
@@ -726,7 +727,7 @@ The body CSS key targets the modal body area. This modal uses bg-bg-layout and p
 - id: confirm_css_body
   type: ConfirmModal
   class:
-    body: bg-bg-layout p-6
+    .body: bg-bg-layout p-6
   properties:
     title: Styled Body
     content: The body CSS key targets the modal body area. This modal uses
@@ -841,8 +842,7 @@ James Park - Engineering Lead
           properties:
             icon: user
             size: 32
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: delete_flow_name_1
           type: Paragraph
           layout:
@@ -885,8 +885,7 @@ James Park - Engineering Lead
           properties:
             icon: user
             size: 32
-            color: "#fff"
-            backgroundColor: "#52c41a"
+            color: "#52c41a"
         - id: delete_flow_name_2
           type: Paragraph
           layout:
@@ -1112,7 +1111,8 @@ You have unsaved changes that will be lost if you leave this page. Do you want t
 | --- | --- | --- | --- |
 | `title` | string | - | Modal title - supports html. |
 | `centered` | boolean | `false` | Centered Modal. |
-| `closable` | boolean | `false` | Whether a close (x) button is visible on top right of the confirm dialog or not. |
+| `closable` | boolean \| object | `false` | Whether a close (x) button is visible on top right of the confirm dialog or not. Set `{ disabled: true }` to show the button disabled. |
+| `closable.disabled` | boolean | `false` | Show the close button, but disabled. |
 | `content` | string | - | Modal content. Overridden by the "content" content area - supports html. |
 | `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize modal icon. |
 | `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
@@ -1124,12 +1124,49 @@ You have unsaved changes that will be lost if you leave this page. Do you want t
 | `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
 | `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
-| `mask` | boolean | `true` | Whether show mask or not. |
-| `maskClosable` | boolean | `false` | Whether to close the modal dialog when the mask (area outside the modal) is clicked. |
+| `focusable` | object | - | Focus management of the dialog. |
+| `focusable.trap` | boolean | `true` | Keep keyboard focus inside the dialog while it is open. |
+| `focusable.focusTriggerAfterClose` | boolean | `true` | Return focus to the element that opened the dialog after it closes. |
+| `focusable.autoFocusButton` | string \| null | `"ok"` | The button that receives focus when the confirm modal opens. Set to null to focus neither. Enum: `ok`, `cancel`, `null`. |
+| `keyboard` | boolean | `true` | Whether pressing Esc closes the confirm modal. |
+| `mask` | boolean \| object | `true` | Whether to show the mask. Set an object to configure the mask with `enabled`, `blur` and `closable`. |
+| `mask.enabled` | boolean | `true` | Whether to show the mask. |
+| `mask.blur` | boolean | `false` | Blur the page behind the mask. |
+| `mask.closable` | boolean | - | Whether clicking the mask closes the dialog. Takes precedence over `maskClosable`. |
+| `maskClosable` | boolean | `false` | Whether to close the modal dialog when the mask (area outside the modal) is clicked. `mask.closable` takes precedence. |
+| `scrollLock` | boolean | `true` | Whether to lock page scrolling while the confirm modal is open. |
 | `okText` | string | - | Text of the Ok button. When unset, antd uses the localized default from ConfigProvider locale. |
 | `cancelText` | string | - | Text of the Cancel button. When unset, antd uses the localized default from ConfigProvider locale. |
 | `okButton` | object | - | Ok button properties. |
+| `okButton.type` | string | - | The button type. Enum: `default`, `primary`, `dashed`, `text`, `link`. |
+| `okButton.danger` | boolean | `false` | Set the danger status of the button. |
+| `okButton.disabled` | boolean | `false` | Disable the button. |
+| `okButton.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to show in the button. |
+| `okButton.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `okButton.icon.color` | string | - | Icon color. |
+| `okButton.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `okButton.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `okButton.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `okButton.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `okButton.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `okButton.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `okButton.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `okButton.iconPlacement` | string | `"start"` | Place the icon before (`start`) or after (`end`) the button text. Enum: `start`, `end`. |
 | `cancelButton` | object | - | Cancel button properties. |
+| `cancelButton.type` | string | - | The button type. Enum: `default`, `primary`, `dashed`, `text`, `link`. |
+| `cancelButton.danger` | boolean | `false` | Set the danger status of the button. |
+| `cancelButton.disabled` | boolean | `false` | Disable the button. |
+| `cancelButton.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to show in the button. |
+| `cancelButton.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `cancelButton.icon.color` | string | - | Icon color. |
+| `cancelButton.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `cancelButton.icon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `cancelButton.icon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `cancelButton.icon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `cancelButton.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `cancelButton.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `cancelButton.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `cancelButton.iconPlacement` | string | `"start"` | Place the icon before (`start`) or after (`end`) the button text. Enum: `start`, `end`. |
 | `width` | number \| string | `416` | Width of the modal dialog. |
 | `zIndex` | number | `1000` | The z-index of the Modal. |
 | `status` | string | `"confirm"` | Modal status type. Enum: `success`, `error`, `info`, `warning`, `confirm`. |
@@ -1152,7 +1189,7 @@ You have unsaved changes that will be lost if you leave this page. Do you want t
 | `onOk` | \- | Trigger actions when Ok button is clicked. |
 | `onOpen` | \- | Trigger actions when confirm modal is opened. |
 | `onCancel` | \- | Trigger actions when Cancel button is clicked. |
-| `onClose` | \- | Triggered after onOk or onCancel actions are completed. |
+| `onClose` | \- | Trigger actions after the confirm modal has closed, once the onOk or onCancel actions are completed. |
 
 | Key | Target |
 | --- | --- |

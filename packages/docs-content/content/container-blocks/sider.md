@@ -277,7 +277,7 @@ The Sider is placed on the right side of the layout with reverseArrow set to tru
         initialCollapsed: false
         reverseArrow: true
       style:
-        borderLeft: 1px solid
+        borderLeft: "1px solid #f0f0f0"
       blocks:
         - id: reverse_menu
           type: Menu
@@ -297,7 +297,7 @@ The Sider is placed on the right side of the layout with reverseArrow set to tru
                   icon: history
 ```
 
-The breakpoint property controls when the sider automatically collapses on smaller screens. Set to "lg" here, so the sider collapses when the viewport is below the large breakpoint. Supported values are xs, sm, md, lg, xl, and xxl.
+The onBreakpoint event fires when the viewport crosses the breakpoint, with `broken` true below it. Here it calls the sider's setOpen method, so the sider collapses below the large (lg) breakpoint. Supported values are xs, sm, md, lg, xl, xxl and xxxl.
 
 ```yaml
 - id: bp_layout
@@ -315,10 +315,15 @@ The breakpoint property controls when the sider automatically collapses on small
         breakpoint: lg
       events:
         onBreakpoint:
-          - id: bp_sider_set_state
-            type: SetState
+          - id: bp_sider_set_open
+            type: CallMethod
             params:
-              breakpointTriggered: true
+              blockId: bp_sider
+              method: setOpen
+              args:
+                - open:
+                    _not:
+                      _event: broken
       blocks:
         - id: bp_menu
           type: Menu
@@ -345,10 +350,10 @@ The breakpoint property controls when the sider automatically collapses on small
         - id: bp_content_text
           type: Paragraph
           properties:
-            content: The breakpoint property controls when the sider automatically collapses
-              on smaller screens. Set to "lg" here, so the sider collapses when
-              the viewport is below the large breakpoint. Supported values are
-              xs, sm, md, lg, xl, and xxl.
+            content: The onBreakpoint event fires when the viewport crosses the breakpoint,
+              with `broken` true below it. Here it calls the sider's setOpen
+              method, so the sider collapses below the large (lg) breakpoint.
+              Supported values are xs, sm, md, lg, xl, xxl and xxxl.
 ```
 
 The width property accepts a number (pixels) or string value. Here the sider is set to 300px wide, providing more room for longer menu labels or nested navigation.
@@ -467,9 +472,7 @@ The Sider fires onOpen and onClose events when it expands or collapses. Use thes
               state changes. Toggle the sider to see the state update above.
 ```
 
-Use designTokens to override antd theme tokens on the Sider. Here colorBgContainer changes the sidebar background, colorPrimary affects the selected item highlight, and colorText changes the menu text color.
-
-Token overrides work with both light and dark themes. This dark sider uses a custom navy background and green primary color for the active menu item highlight.
+The Sider theme takes antd Layout design tokens. Here lightTriggerBg, lightTriggerColor and triggerHeight style the collapse trigger, and the Menu theme styles the selected item.
 
 ```yaml
 - id: token_layout
@@ -480,19 +483,21 @@ Token overrides work with both light and dark themes. This dark sider uses a cus
     - id: token_sider
       type: Sider
       properties:
-        theme: light
         width: 220
         collapsible: true
         initialCollapsed: false
-        designTokens:
-          colorPrimary: "#722ed1"
-          colorText: "#531dab"
+        theme:
+          lightTriggerBg: "#f9f0ff"
+          lightTriggerColor: "#722ed1"
+          triggerHeight: 40
       blocks:
         - id: token_menu
           type: Menu
           properties:
             mode: inline
-            theme: light
+            theme:
+              itemSelectedBg: "#f9f0ff"
+              itemSelectedColor: "#722ed1"
             links:
               - id: token_nav_explore
                 type: MenuLink
@@ -518,59 +523,9 @@ Token overrides work with both light and dark themes. This dark sider uses a cus
         - id: token_content_text
           type: Paragraph
           properties:
-            content: Use designTokens to override antd theme tokens on the Sider. Here
-              colorBgContainer changes the sidebar background, colorPrimary
-              affects the selected item highlight, and colorText changes the
-              menu text color.
-- id: token_dark_layout
-  type: Layout
-  style:
-    minHeight: 300px
-  blocks:
-    - id: token_dark_sider
-      type: Sider
-      properties:
-        theme: dark
-        width: 220
-        collapsible: true
-        initialCollapsed: false
-        designTokens:
-          colorPrimary: "#52c41a"
-          colorBgContainer: "#1a1a2e"
-      blocks:
-        - id: token_dark_menu
-          type: Menu
-          properties:
-            mode: inline
-            theme: dark
-            links:
-              - id: token_dark_nav_status
-                type: MenuLink
-                properties:
-                  title: Status
-                  icon: check-circle
-              - id: token_dark_nav_logs
-                type: MenuLink
-                properties:
-                  title: Logs
-                  icon: document
-              - id: token_dark_nav_deploy
-                type: MenuLink
-                properties:
-                  title: Deploy
-                  icon: CloudUpload
-    - id: token_dark_content
-      type: Content
-      style:
-        padding: 24px
-        background: var(--ant-color-bg-container)
-      blocks:
-        - id: token_dark_content_text
-          type: Paragraph
-          properties:
-            content: Token overrides work with both light and dark themes. This dark sider
-              uses a custom navy background and green primary color for the
-              active menu item highlight.
+            content: The Sider theme takes antd Layout design tokens. Here lightTriggerBg,
+              lightTriggerColor and triggerHeight style the collapse trigger,
+              and the Menu theme styles the selected item.
 ```
 
 The Sider has a single CSS key called "element" which targets the entire sider container. Use it with Tailwind classes for gradients, borders, shadows, and other visual effects.
@@ -591,7 +546,7 @@ A shadow-lg class on the element CSS key gives the sider an elevated appearance 
         collapsible: false
         initialCollapsed: false
       class:
-        element: bg-gradient-to-b from-primary/10 to-bg-container border-r border-border
+        .element: bg-gradient-to-b from-primary/10 to-bg-container border-r border-border
       blocks:
         - id: css_menu
           type: Menu
@@ -639,7 +594,7 @@ A shadow-lg class on the element CSS key gives the sider an elevated appearance 
         collapsible: false
         initialCollapsed: false
       class:
-        element: shadow-lg bg-bg-container
+        .element: shadow-lg bg-bg-container
       blocks:
         - id: css_shadow_menu
           type: Menu
@@ -863,7 +818,7 @@ Manage your personal information and preferences.
         collapsible: false
         initialCollapsed: false
       style:
-        borderRight: 1px solid
+        borderRight: "1px solid #f0f0f0"
       blocks:
         - id: settings_heading
           type: Title
@@ -965,7 +920,7 @@ Use the sidebar on the left to browse through different sections. On smaller scr
         initialCollapsed: false
         breakpoint: md
       class:
-        element: border-r border-border
+        .element: border-r border-border
       blocks:
         - id: docs_search
           type: TextInput
@@ -1040,24 +995,32 @@ Use the sidebar on the left to browse through different sections. On smaller scr
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `breakpoint` | string | `"sm"` | Breakpoint of the responsive layout Enum: `xs`, `sm`, `md`, `lg`, `xl`, `xxl`. |
+| `breakpoint` | string | - | Breakpoint of the responsive layout. Crossing it fires onBreakpoint. Enum: `xs`, `sm`, `md`, `lg`, `xl`, `xxl`, `xxxl`. |
 | `collapsedWidth` | integer | - | Width of the collapsed sidebar, by setting to 0 a special trigger will appear |
-| `collapsible` | boolean | - | Whether can be collapsed |
+| `collapsible` | boolean | `false` | Show a trigger at the bottom of the sider that collapses and expands it. |
 | `initialCollapsed` | boolean | `true` | Set the initial collapsed state |
 | `reverseArrow` | boolean | `false` | Direction of arrow, for a sider that expands from the right |
 | `width` | string \| number | - | width of the sidebar |
-| `theme` | string \| object | - | The Sider color theme, light or dark, or antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | string \| object | - | The Sider color theme, light or dark, or antd Layout design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design layout tokens](https://ant.design/components/layout#design-token). |
+| `theme.triggerHeight` | number | `48` | Height of the collapse trigger of a collapsible Sider. |
+| `theme.triggerBg` | string | `"#002140"` | Background color of the collapse trigger of a dark Sider. |
+| `theme.triggerColor` | string | `"#fff"` | Color of the collapse trigger of a dark Sider. |
+| `theme.lightTriggerBg` | string | `"#ffffff"` | Background color of the collapse trigger of a light Sider. |
+| `theme.lightTriggerColor` | string | `"rgba(0, 0, 0, 0.88)"` | Color of the collapse trigger of a light Sider. |
+| `theme.zeroTriggerWidth` | number | `40` | Width of the trigger shown when collapsedWidth is 0. |
+| `theme.zeroTriggerHeight` | number | `40` | Height of the trigger shown when collapsedWidth is 0. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onClose` | \- | Trigger actions when sider is closed. |
 | `onOpen` | \- | Trigger actions when sider is opened. |
-| `onBreakpoint` | \- | Trigger actions on breakpoint change. |
+| `onBreakpoint` | `{ broken }` | Trigger actions when the screen width crosses the breakpoint. Use it with the setOpen method to collapse the sider on small screens. |
 
 | Key | Target |
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Sider element. |
+| `/body` | The box inside the Sider that holds its child blocks. |
 
 | Slot | Description |
 | --- | --- |

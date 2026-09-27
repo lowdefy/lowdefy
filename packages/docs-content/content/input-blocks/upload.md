@@ -25,6 +25,15 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
       icon: CloudUpload
       title: Upload to Cloud
       type: default
+- id: basic_icon_end
+  type: Upload
+  properties:
+    uploadPolicyRequestId: upload_policy_request
+    button:
+      icon: upload
+      iconPlacement: end
+      title: Attach
+      type: default
 ```
 
 ```yaml
@@ -82,6 +91,32 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
 ```
 
 ```yaml
+- id: list_picture
+  type: Upload
+  properties:
+    uploadPolicyRequestId: upload_policy_request
+    accept: image/*
+    listType: picture
+    showUploadList:
+      showRemoveIcon: true
+      showDownloadIcon: false
+    button:
+      icon: image
+      title: Upload Images
+      type: default
+- id: upload_directory
+  type: Upload
+  properties:
+    uploadPolicyRequestId: upload_policy_request
+    directory: true
+    pastable: true
+    button:
+      icon: folder
+      title: Upload Folder
+      type: default
+```
+
+```yaml
 - id: disabled_default
   type: Upload
   properties:
@@ -91,17 +126,24 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
 
 ```yaml
 - id: label_default
-  type: Upload
+  type: Label
   properties:
     title: Upload Attachment
-    uploadPolicyRequestId: upload_policy_request
+  blocks:
+    - id: label_default_upload
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
 - id: label_extra
-  type: Upload
+  type: Label
   properties:
     title: Upload Document
-    uploadPolicyRequestId: upload_policy_request
-    label:
-      extra: Accepted formats are PDF, DOCX, and PNG. Max size 10MB.
+    extra: Accepted formats are PDF, DOCX, and PNG. Max size 10MB.
+  blocks:
+    - id: label_extra_upload
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
 ```
 
 | Property | Type | Default | Description |
@@ -110,15 +152,22 @@ Upload files to any storage provider with a button trigger — AWS S3 (and S3-co
 | `button` | object | `{"icon":"upload","title":"Upload","type":"default"}` | Button block properties. See [Button](/Button) for all properties. |
 | `button.title` | string | - | Button title text. |
 | `button.icon` | string \| object | - | Button icon name or Icon block properties. |
+| `button.iconPlacement` | string | `"start"` | Place the icon before (`start`) or after (`end`) the button title. Enum: `start`, `end`. |
 | `button.type` | string | `"default"` | Button type. Enum: `default`, `primary`, `dashed`, `text`, `link`. |
 | `button.danger` | boolean | `false` | Set button style to danger. |
 | `button.disabled` | boolean | `false` | Disable the button. |
 | `button.size` | string | `"default"` | Button size. Enum: `small`, `default`, `large`. |
+| `directory` | boolean | `false` | Select a whole folder instead of files. Every file in the folder is uploaded. |
+| `listType` | string | `"text"` | Style of the file list. `picture` shows a thumbnail for each image. Enum: `text`, `picture`. |
+| `pastable` | boolean | `false` | Upload files pasted anywhere on the page. |
 | `disabled` | boolean | - | Disable the file input. |
 | `emitFileContent` | boolean | `false` | Instead of uploading, read the file and emit { name, size, type, content } — content a base64 string — as the block value and onChange event. Use with a CallAPI action to store the file with a server-side write request (e.g. AwsS3PutObject). Replaces uploadPolicyRequestId. |
 | `maxCount` | number | - | Maximum number of files that can be uploaded. |
 | `uploadPolicyRequestId` | string | - | Id of an upload-policy request (e.g. AwsS3PresignedPostPolicy, GcsSignedPostPolicy, AzureBlobUploadSas) that defines to which storage bucket and how the file should be uploaded. Required unless emitFileContent is true. |
-| `showUploadList` | boolean | `true` | Whether to show default upload list. |
+| `showUploadList` | boolean \| object | `true` | Whether to show the uploaded file list. Set an object to choose which actions each file shows. |
+| `showUploadList.showPreviewIcon` | boolean | `true` | Show the preview action on picture list items. |
+| `showUploadList.showRemoveIcon` | boolean | `true` | Show the remove action, so files can be removed from the list. |
+| `showUploadList.showDownloadIcon` | boolean | `false` | Show the download action. |
 | `singleFile` | boolean | `false` | Only allow a single file to be uploaded. Only one file can be selected in the prompt. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/upload#design-token). See [Ant Design upload tokens](https://ant.design/components/upload#design-token). |
 | `theme.actionsColor` | string | - | Color of action icons (download, preview, remove). |

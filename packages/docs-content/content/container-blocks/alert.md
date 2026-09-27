@@ -33,6 +33,26 @@ Alert banner with type, description, icon, and closable options.
     type: error
 ```
 
+> Backup completed
+
+> Two invoices are overdue
+
+```yaml
+- id: filled_success
+  type: Alert
+  properties:
+    message: Backup completed
+    type: success
+    variant: filled
+- id: filled_warning
+  type: Alert
+  properties:
+    message: Two invoices are overdue
+    description: Send a reminder to the customer or mark the invoices as paid.
+    type: warning
+    variant: filled
+```
+
 > Payment Received
 
 > Scheduled Maintenance
@@ -184,6 +204,18 @@ Alert banner with type, description, icon, and closable options.
       been preserved. Please check your connection and try again.
     type: error
     closable: true
+```
+
+> Your session will expire in 5 minutes
+
+```yaml
+- id: close_icon_circle
+  type: Alert
+  properties:
+    message: Your session will expire in 5 minutes
+    type: warning
+    closable: true
+    closeIcon: close-circle
 ```
 
 > Cookie consent notice
@@ -889,7 +921,17 @@ Alert banner with type, description, icon, and closable options.
 | --- | --- | --- | --- |
 | `banner` | boolean | `false` | Style as banner at top of application window. |
 | `closable` | boolean | `false` | Allow alert to be closed. |
-| `closeText` | string | - | Close text to show. |
+| `closeIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize the close icon of a closable alert. |
+| `closeIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `closeIcon.color` | string | - | Icon color. |
+| `closeIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `closeIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `closeIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `closeIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `closeIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `closeIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `closeIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `closeText` | string | - | Close text to show instead of the close icon. Makes the alert closable. |
 | `description` | string | - | Content description of alert - supports html. |
 | `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize alert icon. |
 | `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
@@ -904,6 +946,7 @@ Alert banner with type, description, icon, and closable options.
 | `message` | string | - | Content message of alert - supports html. |
 | `showIcon` | boolean | `true` | Show type default icon. |
 | `type` | string | `"info"` | Alert style type. Enum: `success`, `info`, `warning`, `error`. |
+| `variant` | string | `"outlined"` | Alert style variant. `filled` hides the border and keeps the background tint. Enum: `outlined`, `filled`. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design alert tokens](https://ant.design/components/alert#design-token). |
 | `theme.defaultPadding` | string | `"8px 12px"` | Default padding for the alert without description. |
 | `theme.withDescriptionPadding` | string | `"20px 24px"` | Padding for the alert when a description is present. |

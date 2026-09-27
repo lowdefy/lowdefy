@@ -195,6 +195,33 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
   properties:
     mode: gradient
     showText: true
+  events:
+    onMount:
+      - id: set_default
+        type: SetState
+        params:
+          mode_gradient: linear-gradient(90deg, rgb(22,119,255) 0%, rgb(114,46,209) 100%)
+- id: mode_both
+  type: ColorSelector
+  layout:
+    flex: 0 0 auto
+  properties:
+    mode:
+      - single
+      - gradient
+    showText: true
+- id: mode_gradient_preview
+  type: Box
+  layout:
+    flex: 1 1 auto
+  style:
+    .element:
+      height: 32
+      borderRadius: 6
+      background:
+        _if_none:
+          - _state: mode_gradient
+          - "#f0f0f0"
 ```
 
 **Top:**
@@ -446,7 +473,7 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
     flex: 0 0 auto
   style:
     .element:
-      border: 2px solid
+      border: "2px solid #1677ff"
       borderRadius: 8px
   properties:
     showText: true
@@ -464,9 +491,9 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
   type: ColorSelector
   layout:
     flex: 0 0 auto
+  class: rounded-lg shadow-sm
   properties:
     showText: true
-    class: rounded-lg shadow-sm
 - id: style_large_swatch
   type: ColorSelector
   layout:
@@ -835,6 +862,18 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
 | `showText` | boolean | - | Show color text. |
 | `size` | string | - | Size of the color picker. Enum: `small`, `middle`, `large`. |
 | `label` | object | - | Label properties. |
+| `label.xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |
+| `label.xs.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.sm` | object | - | Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set. |
+| `label.sm.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.md` | object | - | Label width on medium screens (768px and up) when the label is not inline. Overrides `span`. |
+| `label.md.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.lg` | object | - | Label width on large screens (992px and up) when the label is not inline. |
+| `label.lg.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xl` | object | - | Label width on extra large screens (1200px and up) when the label is not inline. |
+| `label.xl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xxl` | object | - | Label width on extra extra large screens (1600px and up) when the label is not inline. |
+| `label.xxl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
 | `label.extra` | string | - | Extra text to display beneath the content - supports html. |
@@ -843,31 +882,26 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
 | `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
-| `label.span` | number | - | Label inline span. |
+| `label.span` | number | - | Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns. |
 | `label.disabled` | boolean | `false` | Hide input label. |
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
+| `label.wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `disabled` | boolean | `false` | Disable the color picker. |
 | `allowClear` | boolean | `false` | Allow the user to clear their input. |
 | `arrow` | boolean | `true` | Show arrow on the color picker popup. |
 | `disabledAlpha` | boolean | `false` | Disable the alpha channel slider. |
 | `disabledFormat` | boolean | `false` | Disable the format selector. |
-| `mode` | string | `"single"` | Color picker mode. Enum: `single`, `gradient`. |
+| `mode` | string \| array | - | Pick a single color, a gradient, or both with a switch in the panel when set to [single, gradient]. A gradient is stored as a linear-gradient CSS string, eg. "linear-gradient(90deg, rgb(22,119,255) 0%, rgb(114,46,209) 100%)", which can be used directly as a CSS background. |
 | `open` | boolean | - | Controlled open state of the color picker popup. |
 | `placement` | string | - | Placement of the color picker popup. Enum: `top`, `topLeft`, `topRight`, `bottom`, `bottomLeft`, `bottomRight`, `left`, `leftTop`, `leftBottom`, `right`, `rightTop`, `rightBottom`. |
 | `presets` | array | - | Preset color palettes. |
+| `presets.$.label` | string | - | Title of the palette. |
+| `presets.$.colors` | array | - | Colors in the palette. |
+| `presets.$.defaultOpen` | boolean | `true` | Whether the palette is expanded when the popup opens. |
 | `trigger` | string | `"click"` | Trigger mode for the color picker popup. Enum: `hover`, `click`. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design color-picker tokens](https://ant.design/components/color-picker#design-token). |
-| `theme.colorPickerWidth` | number | `234` | Width of the color picker panel. |
-| `theme.colorPickerHandlerSize` | number | `16` | Size of the color picker handler (drag handle). |
-| `theme.colorPickerHandlerSizeSM` | number | `12` | Size of the color picker handler for small size. |
-| `theme.colorPickerSliderHeight` | number | `8` | Height of the color slider bar. |
-| `theme.colorPickerPreviewSize` | number | - | Size of the color preview circle. Defaults to a calculated value based on slider height. |
-| `theme.colorPickerAlphaInputWidth` | number | `44` | Width of the alpha input field. |
-| `theme.colorPickerInputNumberHandleWidth` | number | `16` | Width of the input number handle in the color picker. |
-| `theme.colorPickerPresetColorSize` | number | `24` | Size of preset color swatches. |
-| `theme.colorPickerInsetShadow` | string | - | Inset shadow style for the color picker. |
 | `theme.borderRadius` | number | `6` | Border radius of the color picker trigger. |
 | `theme.colorPrimary` | string | - | Primary color used in the color picker panel. |
 | `theme.colorText` | string | - | Text color in the color picker panel. |
@@ -894,5 +928,6 @@ ColorSelector is externally controlled — use an `onMount` event with `SetState
 | `/label` | The ColorSelector label. |
 | `/extra` | The ColorSelector extra content. |
 | `/feedback` | The ColorSelector validation feedback. |
+| `/popup` | The ColorSelector popup. |
 
 No slots defined.

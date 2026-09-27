@@ -212,8 +212,7 @@ Tom Wilson
                 flex: 0 0 auto
               properties:
                 size: small
-                color: "#fff"
-                backgroundColor: "#1677ff"
+                color: "#1677ff"
                 icon: user
             - id: psm_grp_name_1
               type: Paragraph
@@ -221,7 +220,8 @@ Tom Wilson
                 flex: 1 1 0
               properties:
                 content: Jane Cooper
-                style:
+              style:
+                .element:
                   margin: 0
             - id: psm_grp_tag_1
               type: Tag
@@ -244,8 +244,7 @@ Tom Wilson
                 flex: 0 0 auto
               properties:
                 size: small
-                color: "#fff"
-                backgroundColor: "#52c41a"
+                color: "#52c41a"
                 icon: user
             - id: psm_grp_name_2
               type: Paragraph
@@ -253,7 +252,8 @@ Tom Wilson
                 flex: 1 1 0
               properties:
                 content: Tom Wilson
-                style:
+              style:
+                .element:
                   margin: 0
             - id: psm_grp_tag_2
               type: Tag
@@ -405,7 +405,8 @@ Sprint Progress
               type: Paragraph
               properties:
                 content: Sprint Progress
-                style:
+              style:
+                .element:
                   margin: 0 0 8px 0
                   fontSize: 12
                   color: "#999"
@@ -420,7 +421,8 @@ Sprint Progress
           type: Paragraph
           properties:
             content: Admin Panel v2.4.1
-            style:
+          style:
+            .element:
               textAlign: center
               margin: 0
               color: "#999"
@@ -537,6 +539,7 @@ Profile from _menu
 | `sider` | object | - | Sider properties. |
 | `sider.breakpoint` | string | `"sm"` | Breakpoint of the responsive layout. Enum: `xs`, `sm`, `md`, `lg`, `xl`. |
 | `sider.collapsedWidth` | integer | - | Width of the collapsed sidebar, by setting to 0 a special trigger will appear. |
+| `sider.collapsible` | boolean | `false` | Show a trigger at the bottom of the sider that collapses and expands it, like the toggle button. |
 | `sider.initialCollapsed` | boolean | `false` | Set the initial collapsed state. Used as the fallback when no persisted preference exists in localStorage. |
 | `sider.reverseArrow` | boolean | `false` | Direction of arrow, for a sider that expands from the right. |
 | `sider.width` | string \| number | - | Width of the sidebar. |
@@ -562,6 +565,10 @@ Profile from _menu
 | `breadcrumb.list.$.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
 | `breadcrumb.list.$.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `breadcrumb.list.$.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `breadcrumb.list.$.links` | array | - | Links shown in a dropdown menu on the breadcrumb item. |
+| `breadcrumb.list.$.links.$.label` | string | - | Label of the dropdown link. |
+| `breadcrumb.list.$.links.$.pageId` | string | - | Page id to link to when clicked. |
+| `breadcrumb.list.$.links.$.url` | string | - | External url link. |
 | `menu` | object | - | Menu properties. |
 | `menu.links` | array | - |  |
 | `menu.links.$.id` | string | - | Menu item id. |
@@ -616,7 +623,7 @@ Profile from _menu
 | `profile.avatar.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `profile.avatar.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `profile.avatar.color` | string | - | Background color of the avatar when not using src. |
-| `profile.avatar.size` | string \| number | `"small"` | Size of the avatar. Enum: `default`, `small`, `large`. |
+| `profile.avatar.size` | string \| number | `"small"` | Size of the avatar: default, small, large or a pixel number. |
 | `profile.avatar.shape` | string | `"circle"` | Shape of the avatar. Enum: `circle`, `square`. |
 | `profile.links` | array | - | Dropdown menu items. Uses the same MenuLink/MenuGroup/MenuDivider schema as Menu. Compatible with _menu operator output for access-filtered menus. |
 | `profile.links.$.id` | string | - | Menu item id. |
@@ -648,7 +655,7 @@ Profile from _menu
 | `profile.arrow.pointAtCenter` | boolean | - |  |
 | `darkModeToggle` | boolean | `false` | Show a dark mode toggle button in the header. Toggles the Ant Design dark theme for the entire page. Preference is persisted to localStorage. |
 | `localeSelector` | boolean | `false` | Show a locale picker dropdown in the header. Lists locales declared in `config.i18n.locales` and dispatches `SetLocale` on selection. Renders nothing when `config.i18n` is not configured. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | object | - | Antd global design token overrides, such as colorPrimary or borderRadius, applied to everything in the page layout. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design component tokens](https://ant.design/docs/react/customize-theme#seedtoken). |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
@@ -683,6 +690,7 @@ Profile from _menu
 | `/mobileMenu` | The PageSiderMenu mobile menu. |
 | `/layout` | The PageSiderMenu inner layout. |
 | `/sider` | The PageSiderMenu sider. |
+| `/siderBody` | The box inside the sider that holds the menu, sider slot and toggle button. |
 | `/menu` | The PageSiderMenu menu. |
 | `/content` | The PageSiderMenu content. |
 | `/breadcrumb` | The PageSiderMenu breadcrumb. |

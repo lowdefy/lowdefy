@@ -311,7 +311,8 @@ View Expense Reports
           type: Paragraph
           properties:
             content: Acme Corp Intranet - Internal Use Only
-            style:
+          style:
+            .element:
               margin: 0
               color: "#888"
               textAlign: center
@@ -529,6 +530,10 @@ Profile from _menu
 | `breadcrumb.list.$.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
 | `breadcrumb.list.$.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `breadcrumb.list.$.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `breadcrumb.list.$.links` | array | - | Links shown in a dropdown menu on the breadcrumb item. |
+| `breadcrumb.list.$.links.$.label` | string | - | Label of the dropdown link. |
+| `breadcrumb.list.$.links.$.pageId` | string | - | Page id to link to when clicked. |
+| `breadcrumb.list.$.links.$.url` | string | - | External url link. |
 | `menu` | object | - | Menu properties. |
 | `menu.links` | array | - |  |
 | `menu.links.$.id` | string | - | Menu item id. |
@@ -583,7 +588,7 @@ Profile from _menu
 | `profile.avatar.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `profile.avatar.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `profile.avatar.color` | string | - | Background color of the avatar when not using src. |
-| `profile.avatar.size` | string \| number | `"small"` | Size of the avatar. Enum: `default`, `small`, `large`. |
+| `profile.avatar.size` | string \| number | `"small"` | Size of the avatar: default, small, large or a pixel number. |
 | `profile.avatar.shape` | string | `"circle"` | Shape of the avatar. Enum: `circle`, `square`. |
 | `profile.links` | array | - | Dropdown menu items. Uses the same MenuLink/MenuGroup/MenuDivider schema as Menu. Compatible with _menu operator output for access-filtered menus. |
 | `profile.links.$.id` | string | - | Menu item id. |
@@ -615,7 +620,7 @@ Profile from _menu
 | `profile.arrow.pointAtCenter` | boolean | - |  |
 | `darkModeToggle` | boolean | `false` | Show a dark mode toggle button in the header. Toggles the Ant Design dark theme for the entire page. Preference is persisted to localStorage. |
 | `localeSelector` | boolean | `false` | Show a locale picker dropdown in the header. Lists locales declared in `config.i18n.locales` and dispatches `SetLocale` on selection. Renders nothing when `config.i18n` is not configured. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | object | - | Antd global design token overrides, such as colorPrimary or borderRadius, applied to everything in the page layout. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design component tokens](https://ant.design/docs/react/customize-theme#seedtoken). |
 
 | Event | Event Data | Description |
 | --- | --- | --- |

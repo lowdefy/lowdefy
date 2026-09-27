@@ -189,6 +189,76 @@ Right-click anywhere in this card to open the context menu.
         color: default
         variant: outlined
         size: small
+- id: dropdown_menu_pl_right
+  type: DropdownMenu
+  layout:
+    flex: 0 0 auto
+  properties:
+    trigger: click
+    placement: right
+    links:
+      - id: dm_pl_right_1
+        type: MenuLink
+        properties:
+          title: Item 1
+      - id: dm_pl_right_2
+        type: MenuLink
+        properties:
+          title: Item 2
+  blocks:
+    - id: dropdown_menu_pl_right_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: right
+        color: default
+        variant: outlined
+        size: small
+```
+
+```yaml
+- id: dropdown_menu_selectable
+  type: DropdownMenu
+  layout:
+    flex: 0 0 auto
+  properties:
+    trigger: click
+    selectable: true
+    selectedKeys:
+      _if_none:
+        - _state: dm_sort_keys
+        - - dm_sort_newest
+    links:
+      - id: dm_sort_newest
+        type: MenuLink
+        properties:
+          title: Newest first
+      - id: dm_sort_oldest
+        type: MenuLink
+        properties:
+          title: Oldest first
+      - id: dm_sort_name
+        type: MenuLink
+        properties:
+          title: Name
+  events:
+    onSelect:
+      - id: dm_sort_set
+        type: SetState
+        params:
+          dm_sort_keys:
+            _event: selectedKeys
+  blocks:
+    - id: dropdown_menu_selectable_btn
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Sort
+        icon: sort
+        color: default
+        variant: outlined
 ```
 
 ```yaml
@@ -547,8 +617,7 @@ Jane Doe
             flex: 0 0 auto
           properties:
             content: JD
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: dropdown_menu_user_name
           type: Paragraph
           layout:
@@ -627,11 +696,12 @@ Jane Doe
 | `links.$.links.$.properties.dashed` | boolean | `false` | Dashed divider line. |
 | `links.$.links.$.properties.shortcut` | string | - | Keyboard shortcut. Renders a kbd badge floated to the far right and wires the key handler. Use "mod" for Cmd/Ctrl. |
 | `trigger` | string | `"hover"` | How the dropdown opens. Enum: `click`, `hover`, `contextMenu`. |
-| `placement` | string | `"bottomLeft"` | Position relative to trigger. Enum: `bottomLeft`, `bottom`, `bottomRight`, `topLeft`, `top`, `topRight`. |
+| `placement` | string | `"bottomLeft"` | Position relative to trigger. Enum: `bottomLeft`, `bottom`, `bottomRight`, `topLeft`, `top`, `topRight`, `left`, `leftTop`, `leftBottom`, `right`, `rightTop`, `rightBottom`. |
 | `arrow` | boolean \| object | `false` | Show arrow pointing to trigger. |
 | `arrow.pointAtCenter` | boolean | - |  |
 | `disabled` | boolean | `false` | Disable the dropdown. |
 | `destroyOnClose` | boolean | `false` | Unmount menu DOM when closed. |
+| `selectable` | boolean | `false` | Allow menu items to be selected. Selecting an item highlights it and fires onSelect. |
 | `selectedKeys` | array | - | Highlighted menu items. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design dropdown tokens](https://ant.design/components/dropdown#design-token). |
 | `theme.zIndexPopup` | number | `1050` | Z-index of the dropdown popup. |
@@ -643,7 +713,7 @@ Jane Doe
 | Event | Event Data | Description |
 | --- | --- | --- |
 | `onClick` | `{ key, keyPath, pageId, url }` | Trigger action when a menu item is clicked. |
-| `onSelect` | `{ key, selectedKeys, pageId, url }` | Trigger action when a menu item is selected. |
+| `onSelect` | `{ key, selectedKeys, pageId, url }` | Trigger action when a menu item is selected. Requires `selectable: true`. |
 | `onOpenChange` | `{ open }` | Trigger action when dropdown opens or closes. |
 
 | Key | Target |
@@ -653,8 +723,8 @@ Jane Doe
 | `/menu` | The floating menu container. |
 | `/item` | Individual menu items. |
 | `/itemIcon` | Icon within menu items. |
-| `/subMenu` | Submenu/group containers. |
-| `/arrow` | Dropdown arrow indicator. |
+| `/subMenu` | Has no effect: antd does not expose submenu containers as a separately styled part. The item key also applies to submenu items. |
+| `/arrow` | Has no effect: antd does not expose the dropdown arrow as a separately styled part. |
 
 | Slot | Description |
 | --- | --- |
