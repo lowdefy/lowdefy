@@ -137,6 +137,16 @@ function createPage({ window = createLowdefyWindow(), url = 'http://localhost:32
   return page;
 }
 
+// Each read of the clock moves it on a second, so a polled step's wait runs
+// out after a few reads instead of in real time.
+function advanceClockOnEveryRead() {
+  let clock = 0;
+  return jest.spyOn(Date, 'now').mockImplementation(() => {
+    clock += 1000;
+    return clock;
+  });
+}
+
 function openWith(page, { ready = true } = {}) {
   const context = { close: jest.fn(async () => {}) };
   mockOpenPage.mockResolvedValue({ context, page, ready, url: page.url() });
@@ -620,6 +630,7 @@ test('runJourney checks visibility and text of a grid row and cell', async () =>
   page.texts['#bl-grid .ag-row[row-index="0"] .ag-cell[col-id="title"]'] = 'Access reviews';
   page.texts['#bl-grid .ag-row[row-index="0"]'] = 'Access reviews open Edit';
   openWith(page);
+  const spy = advanceClockOnEveryRead();
 
   const result = await runJourney({
     origin,
@@ -631,6 +642,8 @@ test('runJourney checks visibility and text of a grid row and cell', async () =>
       { expect: { text: { blockId: 'grid', row: 0, column: 'title', contains: 'Closed' } } },
     ],
   });
+
+  spy.mockRestore();
 
   expect(result.steps.map((step) => step.status)).toEqual(['ok', 'ok', 'ok', 'failed']);
   expect(result.failure.expected).toEqual(
@@ -962,6 +975,7 @@ test('runJourney fails expect.text with the actual text when it does not contain
   const page = createPage();
   page.texts['#bl-title'] = 'Hello world';
   openWith(page);
+  const spy = advanceClockOnEveryRead();
 
   const result = await runJourney({
     origin,
@@ -972,9 +986,56 @@ test('runJourney fails expect.text with the actual text when it does not contain
     ],
   });
 
+  spy.mockRestore();
+
   expect(result.steps.map((step) => step.status)).toEqual(['ok', 'failed']);
   expect(result.failure.expected).toEqual('block "title" text to contain "Goodbye"');
   expect(result.failure.actual).toEqual('Hello world');
+});
+
+test('runJourney waits for expect.text until the block renders the text', async () => {
+  const page = createPage();
+  page.texts['#bl-members'] = '';
+  let reads = 0;
+  page.waitForTimeout = jest.fn(async () => {
+    reads += 1;
+    if (reads === 2) {
+      page.texts['#bl-members'] = 'ada@example.test Owner';
+    }
+  });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'members',
+    steps: [{ expect: { text: { blockId: 'members', contains: 'Owner' } } }],
+  });
+
+  expect(result.failure).toBeUndefined();
+  expect(page.waitForTimeout).toHaveBeenCalledTimes(2);
+});
+
+test('runJourney retries expect.text when the page navigates during a read', async () => {
+  const page = createPage();
+  page.texts['#bl-notice'] = "You're signed out";
+  const locator = page.locator('#bl-notice');
+  locator.allInnerTexts
+    .mockRejectedValueOnce(
+      new Error(
+        'locator.allInnerTexts: Execution context was destroyed, most likely because of a navigation'
+      )
+    )
+    .mockResolvedValue(["You're signed out"]);
+  page.locator = jest.fn(() => locator);
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'logout',
+    steps: [{ expect: { text: { blockId: 'notice', contains: 'signed out' } } }],
+  });
+
+  expect(result.failure).toBeUndefined();
 });
 
 test('runJourney checks expect.url against the page url', async () => {

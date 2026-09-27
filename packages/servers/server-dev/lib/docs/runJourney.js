@@ -518,22 +518,46 @@ async function readTargetText({ page, target, timeout }) {
   return texts.join('\n');
 }
 
+// One read of the target's text: { text } or, when the target is not in the
+// page yet or the page navigated mid-read, { error }.
+async function tryReadTargetText({ page, target, timeout }) {
+  try {
+    return { text: await readTargetText({ page, target, timeout }) };
+  } catch (error) {
+    return { error };
+  }
+}
+
+// Polled rather than read once, like the url and the title: a block often
+// renders its text only once the request it shows has answered (a list hidden
+// until its data arrives reads as ""), and a sign-in or sign-out may still be
+// reloading the page when the step starts.
 async function expectText({ page, params, timeout }) {
   const { contains, ...target } = params;
   const description = describeTarget(target);
-  let text;
-  try {
-    text = await readTargetText({ page, target, timeout });
-  } catch (error) {
-    throw new JourneyStepError(`Expected ${description} to contain text "${contains}".`, {
-      expected: `${description} text to contain "${contains}"`,
-      actual: cleanMessage(error),
+  const expected = `${description} text to contain "${contains}"`;
+  const deadline = Date.now() + timeout;
+  let read = await tryReadTargetText({ page, target, timeout });
+  while (read.text?.includes(contains) !== true && Date.now() < deadline) {
+    await page.waitForTimeout(50);
+    read = await tryReadTargetText({
+      page,
+      target,
+      timeout: Math.max(deadline - Date.now(), 1),
     });
   }
-  if (!text.includes(contains)) {
+  if (!type.isUndefined(read.error)) {
+    throw new JourneyStepError(`Expected ${description} to contain text "${contains}".`, {
+      expected,
+      actual: cleanMessage(read.error),
+    });
+  }
+  if (!read.text.includes(contains)) {
     throw new JourneyStepError(
-      `Expected ${description} text to contain "${contains}" but found ${JSON.stringify(text)}.`,
-      { expected: `${description} text to contain "${contains}"`, actual: text }
+      `Expected ${description} text to contain "${contains}" but found ${JSON.stringify(
+        read.text
+      )}.`,
+      { expected, actual: read.text }
     );
   }
 }
