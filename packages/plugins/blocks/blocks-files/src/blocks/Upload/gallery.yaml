@@ -34,6 +34,15 @@
           icon: CloudUpload
           title: Upload to Cloud
           type: default
+    - id: basic_icon_end
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        button:
+          icon: upload
+          iconPlacement: end
+          title: Attach
+          type: default
 
 - title: File Type Restrictions
   blocks:
@@ -87,6 +96,32 @@
         button:
           icon: upload
           title: Attach File
+          type: default
+
+- title: Picture List and Folder Upload
+  blocks:
+    - id: list_picture
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        accept: 'image/*'
+        listType: picture
+        showUploadList:
+          showRemoveIcon: true
+          showDownloadIcon: false
+        button:
+          icon: image
+          title: Upload Images
+          type: default
+    - id: upload_directory
+      type: Upload
+      properties:
+        uploadPolicyRequestId: upload_policy_request
+        directory: true
+        pastable: true
+        button:
+          icon: folder
+          title: Upload Folder
           type: default
 
 - title: Disabled State

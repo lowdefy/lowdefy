@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import showUploadList from '../../schemas/showUploadList.js';
 import uploadTheme from '../../schemas/uploadTheme.js';
 
 export default {
@@ -75,6 +76,24 @@ export default {
         description:
           'File types accepted by the input. See html file type input accept property at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept.',
       },
+      directory: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Select a whole folder instead of files. Every file in the folder is uploaded.',
+      },
+      listType: {
+        type: 'string',
+        enum: ['text', 'picture'],
+        default: 'text',
+        description: 'Style of the file list. `picture` shows a thumbnail for each image.',
+      },
+      openFileDialogOnClick: {
+        type: 'boolean',
+        default: true,
+        description:
+          'Whether clicking the drop area opens the file dialog. Set to false for a drop or paste only area.',
+      },
       disabled: {
         type: 'boolean',
         description: 'Disable the file input.',
@@ -121,11 +140,7 @@ export default {
           },
         },
       },
-      showUploadList: {
-        type: 'boolean',
-        default: true,
-        description: 'Whether to show default upload list.',
-      },
+      showUploadList,
       singleFile: {
         type: 'boolean',
         default: false,

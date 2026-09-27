@@ -58,4 +58,10 @@ test.describe('UploadPhoto Block', () => {
     });
     await expect(getBlock(page, 'emit_photo_display')).toHaveText('Name: pixel.png');
   });
+
+  test('capture and listType picture-circle reach antd', async ({ page }) => {
+    const block = getBlock(page, 'uploadphoto_capture');
+    await expect(block.locator('input[type="file"]')).toHaveAttribute('capture', 'environment');
+    await expect(block.locator('.ant-upload-list-picture-circle')).toBeAttached();
+  });
 });
