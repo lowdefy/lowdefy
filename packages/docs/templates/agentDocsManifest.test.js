@@ -16,15 +16,18 @@
 
 // @lowdefy/docs-content is generated from this docs app by `pnpm docs:content`
 // (a full docs build) and committed, so nothing regenerates it when a page is
-// added, removed or moved between menu sections. This test catches that drift
-// without a docs build: every page linked from menus.yaml must have a doc in
-// the manifest under its menu section, and every manifest doc filed under a
-// menu section must still be linked from that section. Edits to the text of
-// an existing page are not caught - that needs the full build.
+// added, removed, moved between menu sections or edited. This test catches
+// that drift without a docs build: every page linked from menus.yaml must have
+// a doc in the manifest under its menu section, every manifest doc filed under
+// a menu section must still be linked from that section, and the files each
+// doc was extracted from (recorded with their hash at extraction) must hash
+// the same today.
 
 import fs from 'fs';
 import path from 'path';
 import YAML from 'yaml';
+
+import hashDocSources from '@lowdefy/docs-content/scripts/hashDocSources.js';
 
 // Must match toSlugSegment in @lowdefy/docs-content/scripts/extractAgentDocs.js.
 function toSlugSegment(value) {
@@ -79,4 +82,20 @@ test('every @lowdefy/docs-content doc in a menu section is still in the docs men
     .filter((doc) => !menuSlugs.has(doc.slug))
     .map((doc) => doc.slug);
   expect(removed).toEqual([]);
+});
+
+test('every @lowdefy/docs-content doc matches the page files it was extracted from - run `pnpm docs:content` when this fails', () => {
+  const stale = manifest.docs
+    .filter((doc) => {
+      const recorded = manifest.sources?.[doc.slug];
+      if (recorded?.hash === undefined) {
+        return true;
+      }
+      return (
+        hashDocSources({ configDirectory: path.resolve('.'), files: recorded.files }) !==
+        recorded.hash
+      );
+    })
+    .map((doc) => doc.slug);
+  expect(stale).toEqual([]);
 });

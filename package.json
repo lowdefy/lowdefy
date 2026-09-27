@@ -41,7 +41,7 @@
     "docs:dev": "node scripts/dev.mjs --config-directory packages/docs",
     "docs:dev:log": "pnpm docs:dev 2>&1 | tee log.txt",
     "docs:build": "node scripts/build.mjs --config-directory packages/docs",
-    "docs:content": "LOWDEFY_EXTRACT_AGENT_DOCS=true node scripts/build.mjs --config-directory packages/docs",
+    "docs:content": "LOWDEFY_EXTRACT_AGENT_DOCS=true node scripts/build.mjs --config-directory packages/docs && node packages/docs-content/scripts/recordSourceHashes.js --config-directory packages/docs --ref-map _server/prod/build/refMap.json",
     "docs:start": "node scripts/start.mjs",
     "cli": "pnpm build:turbo && pnpm -r --filter=lowdefy start",
     "web:build": "pnpm --filter=@lowdefy/website build",
