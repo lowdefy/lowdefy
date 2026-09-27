@@ -40,7 +40,8 @@ export const autoFocus = {
 export const variant = {
   type: 'string',
   enum: ['outlined', 'filled', 'borderless', 'underlined'],
-  description: 'Input visual variant. When set, takes precedence over bordered.',
+  description:
+    "Input visual variant. The deprecated bordered: false takes precedence and renders the input as 'borderless'.",
 };
 
 export const bordered = {
