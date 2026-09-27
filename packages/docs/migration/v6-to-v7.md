@@ -12,6 +12,7 @@ Lowdefy v7 draws every icon with [Lucide](https://lucide.dev) instead of [react-
 | `theme.icons.aliases` targets are Lucide names | Apps with aliases                      | Drop the `Lu` prefix: `LuReceipt` becomes `Receipt`                      |
 | Icon hover titles come from the new names      | Apps that show Icon block hover titles | Set `title` where the text matters                                       |
 | `react-icons` is not a server dependency       | Plugins that import `react-icons`      | Render `components.Icon` with a name, or add `react-icons` to the plugin |
+| `ClickableHtml` fires only listed data events  | Apps that use `data-event`             | Run `lowdefy upgrade`, or list the events in `dataEvents`                |
 
 ## Icon names
 
@@ -143,3 +144,26 @@ import { AiOutlineDelete } from 'react-icons/ai';
 ```
 
 A plugin that must keep importing `react-icons` adds it to its own `dependencies`.
+
+## `ClickableHtml` data events
+
+A `ClickableHtml` block now fires only the events its `dataEvents` property lists. A `data-event` whose name is not listed does nothing and logs a console warning, and a block without `dataEvents` fires no events from its HTML. HTML is often built from request or user data, and sanitising keeps `data-*` attributes, so in v6 markup inside that data could fire any event the block declared.
+
+```yaml
+# v6
+- id: rows
+  type: ClickableHtml
+  properties:
+    html: '<i data-icon="delete" data-event="onDelete" data-id="42" data-confirm="Delete?"></i>'
+
+# v7
+- id: rows
+  type: ClickableHtml
+  properties:
+    dataEvents:
+      - name: onDelete
+        confirm: true
+    html: '<i data-icon="delete" data-event="onDelete" data-id="42" data-confirm="Delete?"></i>'
+```
+
+An entry is an event name, or `{ name, confirm }`: with `confirm`, every click on the event asks first, whatever the markup says. The `clickable-html-data-events` codemod in `lowdefy upgrade` adds `dataEvents` to each block and reports HTML built from data that inserts values without escaping them. See [HTML attributes](/html-attributes).

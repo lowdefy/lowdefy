@@ -56,7 +56,9 @@ installed in this project (including local plugins).
   write \`<i data-icon="edit"></i>\` — never paste inline SVG. Add \`data-tooltip="Text"\` for hover
   help and \`data-popover="id"\` with a hidden \`data-popover-content="id"\` element for a popover.
 - For clicks inside HTML use ClickableHtml: \`data-event="onEdit"\` fires that block event, with the
-  element's other \`data-*\` attributes as the event object.
+  element's other \`data-*\` attributes as the event object, when the block lists it in
+  \`properties.dataEvents\` (unlisted events do nothing). Escape data in HTML built from requests or
+  users: \`_nunjucks\` escapes \`{{ values }}\`; \`_string.concat\` and \`_js\` do not.
 - Links in HTML: \`<a data-page-id="contacts" data-url-query="_id=42">\` — never a hard-coded
   \`href="/contacts?..."\` (it reloads the app and ignores basePath). \`data-new-tab\` instead of
   \`target="_blank"\` (sanitising strips \`target\`).
@@ -67,8 +69,8 @@ installed in this project (including local plugins).
   \`percent\`, \`compact\`, \`bytes\`) on the raw number, \`data-avatar="{{ name }}"\` (never an avatar image
   service), and \`data-copy\` for a copy button.
 - \`data-truncate="2"\` clamps block text (full text in a tooltip when cut off), \`data-tone="secondary"\`
-  mutes text (never inline grey hex colours), and in ClickableHtml \`data-confirm="Delete this row?"\` on a
-  \`data-event\` element asks before a destructive event fires. See the \`concepts/html-attributes\` doc.
+  mutes text (never inline grey hex colours), and in ClickableHtml a destructive event is listed as
+  \`{ name: onDelete, confirm: "Delete this row?" }\` in \`dataEvents\` so every click asks first. See the \`concepts/html-attributes\` doc.
 
 ### Visual feedback
 
