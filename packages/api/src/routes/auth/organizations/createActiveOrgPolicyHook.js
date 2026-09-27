@@ -23,6 +23,11 @@ import findPendingInvitation from './findPendingInvitation.js';
 import getHookRequestHeaders from './getHookRequestHeaders.js';
 import isEmailAdmitted from './isEmailAdmitted.js';
 
+// How long a minted organization's owner row may take to follow it. A mint
+// writes both rows within one request, so a marker older than this is left
+// over from a mint that failed between its writes.
+const mintPendingMs = 10 * 60 * 1000;
+
 // The engine-tier session.create hook that applies the active-org policy.
 // session.create is the one provider-agnostic choke point - it fires for
 // email/password, magic link and OAuth alike.
@@ -97,13 +102,14 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
   // marker:
   //
   // - The organization row is written with mintPending: true. Only a marked
-  //   organization is ever joined as its owner here: one minted for this
-  //   user whose owner row was never written - a mint that failed between
-  //   its two writes, or one a concurrent session of the same user (a double
-  //   submit, two tabs) is finishing right now. The marker is cleared once
-  //   the owner row exists, so an organization everyone later left - with its
-  //   data and pending invitations - is never handed back; the user moves on
-  //   to the next slug and gets a fresh organization.
+  //   organization whose mint is still in progress (isMintInProgress) is ever
+  //   joined as its owner here: one minted for this user moments ago whose
+  //   owner row was never written - a mint that failed between its two
+  //   writes, or one a concurrent session of the same user (a double submit,
+  //   two tabs) is finishing right now. The marker is cleared once the owner
+  //   row exists, so an organization everyone later left - with its data and
+  //   pending invitations - is never handed back; the user moves on to the
+  //   next slug and gets a fresh organization.
   // - Two sessions creating the same slug: the unique slug index rejects the
   //   second, which reads the winner's row.
   // - Two sessions writing the owner row, in any order around each other's
@@ -171,6 +177,29 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
     });
   }
 
+  // A marked organization is joined as owner only while its mint is in
+  // progress: minted within mintPendingMs and with no member other than the
+  // user. A marker older than that, or on an organization other people belong
+  // to, is left over from a mint that wrote the owner row and failed before
+  // clearing it - the organization has had an owner, so it is never handed
+  // back. The stale marker is cleared and the user moves on to the next slug.
+  async function isMintInProgress({ adapter, organization, userId }) {
+    if (organization.mintPending !== true) {
+      return false;
+    }
+    if (Date.now() - new Date(organization.createdAt).getTime() > mintPendingMs) {
+      return false;
+    }
+    const otherMembers = await adapter.count({
+      model: 'member',
+      where: [
+        { field: 'organizationId', value: organization.id },
+        { field: 'userId', value: userId, operator: 'ne' },
+      ],
+    });
+    return otherMembers === 0;
+  }
+
   async function findOrMintOwnOrganization({ adapter, session, user }) {
     const name = user?.name || user?.email || session.userId;
     for (let suffix = 1; ; suffix += 1) {
@@ -181,14 +210,16 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
         userId: session.userId,
         organizationId: organization.id,
       });
-      if (type.isNone(member) && organization.mintPending !== true) {
-        continue;
+      if (!type.isNone(member)) {
+        await clearMintPending({ adapter, organization });
+        return organization;
       }
-      if (type.isNone(member)) {
+      if (await isMintInProgress({ adapter, organization, userId: session.userId })) {
         await joinAsOwner({ adapter, userId: session.userId, organizationId: organization.id });
+        await clearMintPending({ adapter, organization });
+        return organization;
       }
       await clearMintPending({ adapter, organization });
-      return organization;
     }
   }
 
@@ -236,7 +267,15 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
     // dynamic baseURL at 1.7.0, and forwarding the firing request's headers
     // makes the endpoint demand a session that does not exist yet. The mint
     // is only safe behind the unique indexes, so it refuses without them.
-    await ensureAuthIndexes({ auth, logger });
+    try {
+      await ensureAuthIndexes({ auth, logger });
+    } catch {
+      // Logged once per attempt by ensureAuthIndexes, with the cause.
+      throw new APIError('SERVICE_UNAVAILABLE', {
+        message: 'Your workspace can not be created right now. Try again in a minute.',
+        code: 'ORGANIZATION_SETUP_UNAVAILABLE',
+      });
+    }
     const organization = await findOrMintOwnOrganization({ adapter, session, user });
     return { data: { ...session, activeOrganizationId: organization.id } };
   }

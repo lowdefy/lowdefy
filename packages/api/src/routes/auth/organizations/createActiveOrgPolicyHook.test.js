@@ -170,7 +170,9 @@ function createMemoryAuth({ organizations = [], members = [], ensureUniqueIndexe
   const pauses = [];
   let ids = 0;
   function matches(row, where) {
-    return where.every(({ field, value }) => row[field] === value);
+    return where.every(({ field, value, operator }) =>
+      operator === 'ne' ? row[field] !== value : row[field] === value
+    );
   }
   async function pause(operation, args) {
     const found = pauses.find((entry) => entry.match(operation, args));
@@ -208,6 +210,9 @@ function createMemoryAuth({ organizations = [], members = [], ensureUniqueIndexe
       db[model].push(row);
       return { ...row };
     }),
+    count: jest.fn(
+      async ({ model, where }) => db[model].filter((row) => matches(row, where)).length
+    ),
     update: jest.fn(async ({ model, where, update }) => {
       const row = db[model].find((candidate) => matches(candidate, where));
       Object.assign(row, update);
@@ -238,7 +243,7 @@ function createMemoryAuth({ organizations = [], members = [], ensureUniqueIndexe
 function mintHook(auth) {
   return createActiveOrgPolicyHook({
     getAuth: () => auth,
-    logger: { warn: jest.fn() },
+    logger: { error: jest.fn(), warn: jest.fn() },
     organizations: tenant,
   });
 }
@@ -262,7 +267,7 @@ test('tenant: a fresh signup mints its own organization as owner and clears the 
 });
 
 test('tenant: a retried mint joins the marked organization a failed member write left behind', async () => {
-  const orphan = { id: 'org_orphan', slug: 'org-user_1', mintPending: true };
+  const orphan = { id: 'org_orphan', slug: 'org-user_1', mintPending: true, createdAt: new Date() };
   const { auth, db } = createMemoryAuth({ organizations: [orphan] });
   const result = await mintHook(auth)({ userId: 'user_1' });
   expect(db.organization).toEqual([{ ...orphan, mintPending: false }]);
@@ -295,7 +300,12 @@ test.each([
 );
 
 test('tenant: a user already holding the owner row of a marked organization clears the marker without a second row', async () => {
-  const organization = { id: 'org_own', slug: 'org-user_1', mintPending: true };
+  const organization = {
+    id: 'org_own',
+    slug: 'org-user_1',
+    mintPending: true,
+    createdAt: new Date(),
+  };
   const member = { id: 'm_1', userId: 'user_1', organizationId: 'org_own', role: 'owner' };
   const { auth, adapter, db } = createMemoryAuth({ organizations: [organization] });
   // The membership read at the top of the hook ran before the concurrent
@@ -362,17 +372,60 @@ test('tenant: a mint losing the unique slug race joins the winning organization'
   expect(db.member).toHaveLength(1);
 });
 
-test('tenant: the mint refuses when the unique indexes can not be ensured', async () => {
-  const { auth, db } = createMemoryAuth({
-    ensureUniqueIndexes: jest.fn(async () => {
+test('tenant: while the unique indexes can not be ensured, repeated sign-ins are refused without retrying the index build until the cool-down passes', async () => {
+  const now = jest.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-01-01T00:00:00Z'));
+  try {
+    const ensureUniqueIndexes = jest.fn(async () => {
       throw new Error('E11000 duplicate key error collection: user-members');
-    }),
-  });
-  await expect(mintHook(auth)({ userId: 'user_1' })).rejects.toThrow(
-    'The auth database is missing a unique index Lowdefy needs'
-  );
-  expect(db.organization).toEqual([]);
+    });
+    const { auth, db } = createMemoryAuth({ ensureUniqueIndexes });
+    const hook = mintHook(auth);
+    for (const userId of ['user_1', 'user_2', 'user_3', 'user_4']) {
+      await expect(hook({ userId })).rejects.toMatchObject({
+        statusCode: 503,
+        body: { code: 'ORGANIZATION_SETUP_UNAVAILABLE' },
+      });
+    }
+    expect(ensureUniqueIndexes).toHaveBeenCalledTimes(1);
+    expect(db.organization).toEqual([]);
+    now.mockReturnValue(Date.parse('2026-01-01T00:00:31Z'));
+    await expect(hook({ userId: 'user_5' })).rejects.toMatchObject({ statusCode: 503 });
+    expect(ensureUniqueIndexes).toHaveBeenCalledTimes(2);
+  } finally {
+    now.mockRestore();
+  }
 });
+
+test.each([
+  [
+    'minted long ago - its owner row was written and everyone later left',
+    { createdAt: new Date(Date.now() - 60 * 60 * 1000) },
+    [],
+  ],
+  [
+    'that other people belong to',
+    { createdAt: new Date() },
+    [{ id: 'm_other', userId: 'user_2', organizationId: 'org_stale', role: 'owner' }],
+  ],
+])(
+  'tenant: a stale mint marker on an organization %s is cleared and the organization is not joined',
+  async (_, organizationFields, members) => {
+    const organization = {
+      id: 'org_stale',
+      slug: 'org-user_1',
+      mintPending: true,
+      ...organizationFields,
+    };
+    const { auth, db } = createMemoryAuth({ organizations: [organization], members });
+    const result = await mintHook(auth)({ userId: 'user_1' });
+    expect(db.organization.find((row) => row.id === 'org_stale').mintPending).toBe(false);
+    const fresh = db.organization.find((row) => row.slug === 'org-user_1-2');
+    expect(result.data.activeOrganizationId).toBe(fresh.id);
+    expect(db.member.filter((row) => row.userId === 'user_1')).toEqual([
+      expect.objectContaining({ organizationId: fresh.id, role: 'owner' }),
+    ]);
+  }
+);
 
 test('tenant: the mint ensures the unique indexes in model terms before writing', async () => {
   const { auth, adapter } = createMemoryAuth();

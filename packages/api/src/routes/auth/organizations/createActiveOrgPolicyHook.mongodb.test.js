@@ -69,7 +69,7 @@ async function setup() {
   const context = await auth.$context;
   const hook = createActiveOrgPolicyHook({
     getAuth: () => auth,
-    logger: { warn: jest.fn() },
+    logger: { error: jest.fn(), warn: jest.fn() },
     organizations: tenant,
   });
   async function createUser(name) {
@@ -207,4 +207,51 @@ test('the first mint leaves the unique indexes in place', async () => {
       .map((index) => index.key);
   expect(await unique('user-organizations')).toEqual([{ slug: 1 }]);
   expect(await unique('user-members')).toEqual([{ user_id: 1, organization_id: 1 }]);
+});
+
+test('while duplicate member rows block the unique index, repeated sign-ins are refused and the index build is not repeated', async () => {
+  const { adapter, createUser, db, hook } = await setup();
+  await db.collection('user-members').insertMany([
+    { user_id: 'someone', organization_id: 'somewhere', role: 'owner' },
+    { user_id: 'someone', organization_id: 'somewhere', role: 'owner' },
+  ]);
+  const ensureUniqueIndexes = jest.fn(adapter.options.ensureUniqueIndexes);
+  adapter.options.ensureUniqueIndexes = ensureUniqueIndexes;
+  const users = await Promise.all(Array.from({ length: 5 }, (_, n) => createUser(`blocked${n}`)));
+  for (const user of users) {
+    await expect(hook({ userId: user.id })).rejects.toMatchObject({
+      statusCode: 503,
+      body: { code: 'ORGANIZATION_SETUP_UNAVAILABLE' },
+    });
+  }
+  expect(ensureUniqueIndexes).toHaveBeenCalledTimes(1);
+  expect(await db.collection('user-organizations').countDocuments()).toBe(0);
+});
+
+test('a marker left by a mint that wrote its owner row is cleared, and the organization everyone left is not handed back', async () => {
+  const { adapter, createUser, db, hook } = await setup();
+  const user = await createUser('stale');
+  // The owner row was written and the marker never cleared; later everyone
+  // left, so the organization has no members and an old marker.
+  const stale = await adapter.create({
+    model: 'organization',
+    data: {
+      name: 'stale',
+      slug: `org-${user.id}`,
+      mintPending: true,
+      createdAt: new Date(Date.now() - 60 * 60 * 1000),
+    },
+  });
+  const result = await hook({ userId: user.id });
+  expect(result.data.activeOrganizationId).not.toBe(stale.id);
+  const { organizations, members } = await stateOf({ db, userId: user.id });
+  expect(
+    organizations.map((organization) => [organization.slug, organization.mint_pending]).sort()
+  ).toEqual([
+    [`org-${user.id}`, false],
+    [`org-${user.id}-2`, false],
+  ]);
+  expect(members).toEqual([
+    expect.objectContaining({ organization_id: result.data.activeOrganizationId, role: 'owner' }),
+  ]);
 });

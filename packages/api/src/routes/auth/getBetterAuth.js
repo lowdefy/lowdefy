@@ -80,12 +80,11 @@ function getBetterAuth({
   }
 
   // Ensure the unique indexes the organization writes rely on at startup. The
-  // tenant signup mint awaits the same memoized ensure and refuses to mint
-  // without them, so a failure here is logged and retried there.
+  // tenant signup mint awaits the same ensure and refuses to mint without
+  // them. A failure is logged by ensureAuthIndexes and retried after its
+  // cool-down, so nothing is left to handle here.
   if (authJson.database) {
-    ensureAuthIndexes({ auth: instance, logger }).catch((error) => {
-      logger.warn({ err: error }, 'Failed to ensure the auth database indexes at startup.');
-    });
+    ensureAuthIndexes({ auth: instance, logger }).catch(() => {});
   }
 
   // Ensure the pinned organization exists at startup - created if missing,

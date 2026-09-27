@@ -26,35 +26,45 @@ function createAuth(options) {
 test('ensureAuthIndexes asks the adapter once per auth instance', async () => {
   const ensureUniqueIndexes = jest.fn(async () => {});
   const auth = createAuth({ ensureUniqueIndexes });
-  const logger = { warn: jest.fn() };
+  const logger = { error: jest.fn(), warn: jest.fn() };
   await ensureAuthIndexes({ auth, logger });
   await ensureAuthIndexes({ auth, logger });
   expect(ensureUniqueIndexes).toHaveBeenCalledTimes(1);
 });
 
-test('ensureAuthIndexes retries on the next call after a failure', async () => {
-  const ensureUniqueIndexes = jest
-    .fn()
-    .mockRejectedValueOnce(new Error('duplicate key'))
-    .mockResolvedValueOnce();
-  const auth = createAuth({ ensureUniqueIndexes });
-  const logger = { warn: jest.fn() };
-  await expect(ensureAuthIndexes({ auth, logger })).rejects.toThrow(ConfigError);
-  await ensureAuthIndexes({ auth, logger });
-  expect(ensureUniqueIndexes).toHaveBeenCalledTimes(2);
+test('ensureAuthIndexes refuses at once during the cool-down after a failure and retries after it', async () => {
+  const now = jest.spyOn(Date, 'now').mockReturnValue(Date.parse('2026-01-01T00:00:00Z'));
+  try {
+    const ensureUniqueIndexes = jest
+      .fn()
+      .mockRejectedValueOnce(new Error('duplicate key'))
+      .mockResolvedValueOnce();
+    const auth = createAuth({ ensureUniqueIndexes });
+    const logger = { error: jest.fn(), warn: jest.fn() };
+    await expect(ensureAuthIndexes({ auth, logger })).rejects.toThrow(ConfigError);
+    await expect(ensureAuthIndexes({ auth, logger })).rejects.toThrow(ConfigError);
+    expect(ensureUniqueIndexes).toHaveBeenCalledTimes(1);
+    expect(logger.error).toHaveBeenCalledTimes(1);
+    now.mockReturnValue(Date.parse('2026-01-01T00:00:31Z'));
+    await ensureAuthIndexes({ auth, logger });
+    await ensureAuthIndexes({ auth, logger });
+    expect(ensureUniqueIndexes).toHaveBeenCalledTimes(2);
+  } finally {
+    now.mockRestore();
+  }
 });
 
 test('ensureAuthIndexes reports an unreachable database as a service error', async () => {
   const outage = Object.assign(new Error('connect ECONNREFUSED'), { code: 'ECONNREFUSED' });
   const auth = createAuth({ ensureUniqueIndexes: jest.fn().mockRejectedValue(outage) });
-  await expect(ensureAuthIndexes({ auth, logger: { warn: jest.fn() } })).rejects.toThrow(
-    ServiceError
-  );
+  await expect(
+    ensureAuthIndexes({ auth, logger: { error: jest.fn(), warn: jest.fn() } })
+  ).rejects.toThrow(ServiceError);
 });
 
 test('ensureAuthIndexes warns once when the adapter can not create indexes', async () => {
   const auth = createAuth({ adapterConfig: {} });
-  const logger = { warn: jest.fn() };
+  const logger = { error: jest.fn(), warn: jest.fn() };
   await ensureAuthIndexes({ auth, logger });
   await ensureAuthIndexes({ auth, logger });
   expect(logger.warn).toHaveBeenCalledTimes(1);
