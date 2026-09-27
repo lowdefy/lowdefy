@@ -123,3 +123,37 @@ test('_operator, _json.parse with params', () => {
   });
   expect(res.errors).toEqual([]);
 });
+
+test.each([
+  ['a listed operator', { name: { _payload: 'op' }, params: 'string', operators: ['_payload'] }],
+  ['a listed method', { name: '_json.stringify', params: [1], operators: ['_json.stringify'] }],
+  [
+    'any method of a listed operator',
+    { name: '_json.stringify', params: [1], operators: ['_json'] },
+  ],
+])('_operator calls %s', (_, params) => {
+  const parser = new ServerParser({ operators });
+  const res = parser.parse({
+    input: { a: { _operator: params } },
+    location,
+    payload: { ...payload, op: '_payload' },
+  });
+  expect(res.errors).toEqual([]);
+});
+
+test.each([
+  ['an operator it does not list', { name: { _payload: 'op' }, params: 'x', operators: ['_not'] }],
+  [
+    'a method it does not list',
+    { name: '_json.parse', params: '1', operators: ['_json.stringify'] },
+  ],
+])('_operator refuses %s', (_, params) => {
+  const parser = new ServerParser({ operators });
+  const res = parser.parse({
+    input: { a: { _operator: params } },
+    location,
+    payload: { ...payload, op: '_state' },
+  });
+  expect(res.output).toEqual({ a: null });
+  expect(res.errors[0].message).toContain('is not in _operator.operators.');
+});

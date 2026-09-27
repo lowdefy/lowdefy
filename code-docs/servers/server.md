@@ -165,6 +165,8 @@ The production client does not import the app-wide plugin barrels. The full buil
 
 `client/loadPageTypes.js` loads a page's chunk plus the app-wide icons chunk and merges them in place into the long-lived registries in `client/types.js`, which `initLowdefyContext` holds by reference. `main.jsx` awaits the first page's types before rendering (reloading once on failure, `shouldReloadForTypes.js`); `Page.jsx` awaits them on navigation before `setPageConfig`.
 
+`_operator` calls an operator by name at runtime. `countOperators` counts the names its config fixes (a literal, the literal branches of an `_if` or `_switch`); a name read at runtime must come with an `operators` list, which is counted instead (the build fails without one) and which `_operator` enforces when it runs, so a page never calls an operator its chunk does not hold.
+
 Dynamic content may use any type the app bundles. `resolveDynamicContent` records fragment types and, when one falls outside the page's set (`build/pageTypeSets.json`, server-only), sets `pageConfig.loadAllTypes` so the client also loads the app-wide barrels, and logs a warning naming the type to declare.
 
 Plugin packages declare `"sideEffects": ["**/*.css"]` so a page importing one block from a package barrel does not keep the whole package. Hashed assets under `/assets/` are served `Cache-Control: public, max-age=31536000, immutable` (`app.js`, and a route in `lowdefy vercel-output`).
