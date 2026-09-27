@@ -332,12 +332,13 @@ The antd 6.6.5 audit (every block compared against its antd component's API) set
 **antd behaviours that bite**
 
 - antd's deprecation checks test key presence (`'x' in props`), so `x={undefined}` still warns. Spread conditional props instead.
+- An `undefined` prop also overrides ConfigProvider context: Select builds `{ virtual: contextVirtual, ...props }`, so `virtual={undefined}` switched virtual scrolling back on. The same applies to `disabled`: blocks pass `disabled={properties.disabled || loading}`, and the resulting `false` means ConfigProvider `componentDisabled` doesn't reach Lowdefy blocks (a known gap).
 - `e2e/tests/no-antd-deprecations.e2e.spec.js` runs against a production build, where antd strips its warnings. It is a backstop; find deprecated usage by reading the component source for `warning.deprecated`.
 - Use the `items`/`options` APIs, never child components: `Collapse.Panel`, `Descriptions.Item`, `Timeline.Item`, `Select.Option` and the top-level Select search props (`filterOption`, `onSearch`, now inside `showSearch`) are deprecated.
 - antd's `List` is deprecated in 6.6 (use `Listy`, which has no header, footer or bordered mode). ControlledList renders its own markup with the `ant-list-*` class names.
 - antd `Dropdown` renders no element of its own, and rc-dropdown overwrites `popupClassName`/`popupStyle`. Style the popup through `classNames.root`/`styles.root`, and put the block's id, class and style on the trigger.
 - Typography can only measure and cut string children, so an ellipsis with `expandable`, `suffix` or `copyable` gets plain text (`getTypographyContent.js`); content with markup still goes through `renderHtml`.
-- When antd falls back to its own icon (FloatButton, BackTop, Sider trigger, Menu overflow, Splitter arrows), blocks pass an app `Icon` instead so the icon set applies. Every icon name hardcoded in block code must be listed in `meta.icons`, or the build doesn't bundle it.
+- When antd falls back to its own icon (FloatButton, BackTop, Sider trigger, Menu overflow, Splitter arrows), blocks pass an app `Icon` instead so the icon set applies. antd sometimes drops its own styling once a custom icon is passed (the Splitter collapse button loses its background), so `Splitter/style.css` restores it. Every icon name hardcoded in block code must be listed in `meta.icons`, or the build doesn't bundle it.
 
 **Shared schemas and helpers**
 
