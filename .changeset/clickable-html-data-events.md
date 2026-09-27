@@ -30,11 +30,15 @@ say which events its HTML may fire.
 
 An entry is an event name, or `{ name, confirm }`. With `confirm`, every click on the event asks
 first whatever the markup says: `confirm: true` uses the element's `data-confirm` message or "Are
-you sure?", and a string is the message. Unlisted targets are no longer made keyboard focusable.
+you sure?", and a string is the message. Any `confirm` other than `false` asks, so an empty or
+missing message still asks, with the default message. Unlisted targets are no longer made keyboard
+focusable.
 
 To migrate, run `lowdefy upgrade`: the `clickable-html-data-events` codemod adds `dataEvents` to
 each `ClickableHtml` block and reports HTML built from data that inserts values without escaping
-them. The docs now state that HTML built from user or request data must escape that data.
+them. `ClickableHtml` blocks that `Dynamic` content builds at page load, from config stored outside
+the app's files, need `dataEvents` added where that config lives. The docs now state that HTML
+built from user or request data must escape that data.
 
 `HtmlComponent` in `@lowdefy/block-utils` takes the list as its `dataEvents` prop, next to
 `onDataEvent`, and applies it inside popover content too.

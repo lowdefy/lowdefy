@@ -16,14 +16,27 @@
 
 import { type } from '@lowdefy/helpers';
 
+// A declared confirm fails closed: only false, or no confirm key, lets the event fire without
+// asking. A string is the message; an empty one (an operator that found no text) still asks,
+// with the element's or the default message.
+function toRule(confirm) {
+  if (type.isUndefined(confirm) || confirm === false) {
+    return { confirm: false, message: null };
+  }
+  if (type.isString(confirm) && confirm !== '') {
+    return { confirm: true, message: confirm };
+  }
+  return { confirm: true, message: null };
+}
+
 // dataEvents lists the events a block's HTML may fire, as names or { name, confirm }. Returns
 // the listed event's rule, or null when the HTML may not fire it.
 function findDataEventRule({ dataEvents, name }) {
   if (!type.isArray(dataEvents)) return null;
   for (const entry of dataEvents) {
-    if (entry === name) return { confirm: false };
+    if (entry === name) return toRule(undefined);
     if (type.isObject(entry) && entry.name === name) {
-      return { confirm: entry.confirm ?? false };
+      return toRule(entry.confirm);
     }
   }
   return null;

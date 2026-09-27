@@ -79,6 +79,7 @@ export default {
                     },
                     {
                       type: 'string',
+                      minLength: 1,
                       description:
                         'Ask before the event fires, whatever the HTML says, with this message.',
                     },

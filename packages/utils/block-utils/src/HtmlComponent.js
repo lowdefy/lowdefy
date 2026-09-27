@@ -230,6 +230,7 @@ class HtmlComponent extends React.Component {
           enhancer.gateDataEvent &&
           enhancer.gateDataEvent({
             confirm: rule.confirm,
+            confirmMessage: rule.message,
             dataEvent,
             fire,
             host: this.host,

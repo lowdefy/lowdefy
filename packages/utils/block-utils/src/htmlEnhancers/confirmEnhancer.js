@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
 function createConfirmOverlay({ fire, host, message, target }) {
   let fired = false;
   return {
@@ -59,15 +57,13 @@ const confirmEnhancer = {
       }
     });
   },
-  gateDataEvent({ confirm, fire, host, target }) {
+  gateDataEvent({ confirm, confirmMessage, fire, host, target }) {
     if (!confirm && !target.hasAttribute('data-confirm')) return false;
     // A second click on the target keeps its open confirm.
     if (host.overlay?.kind === 'confirm' && host.overlay.target === target) return true;
-    let message =
-      target.getAttribute('data-confirm') || host.registration.translate('client.confirm');
-    if (type.isString(confirm) && confirm !== '') {
-      message = confirm;
-    }
+    const message =
+      confirmMessage ??
+      (target.getAttribute('data-confirm') || host.registration.translate('client.confirm'));
     host.openOverlay(createConfirmOverlay({ fire, host, message, target }));
     return true;
   },

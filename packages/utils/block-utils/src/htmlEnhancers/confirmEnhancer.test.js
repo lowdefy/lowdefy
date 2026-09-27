@@ -321,3 +321,24 @@ test.each([
   expect(screen.queryByTestId('overlay-confirm')).toBeNull();
   expect(onDataEvent).not.toHaveBeenCalled();
 });
+
+test.each([
+  ['an empty confirm message', ''],
+  ['a confirm an operator left null', null],
+])('%s in dataEvents still asks, with the default message', (_, confirm) => {
+  const { container, onDataEvent } = renderConfirm('<i data-event="onDelete">x</i>', [
+    { name: 'onDelete', confirm },
+  ]);
+  fireEvent.click(container.querySelector('[data-event]'));
+  expect(onDataEvent).not.toHaveBeenCalled();
+  expect(screen.getByTestId('overlay-confirm').textContent).toContain('Are you sure?');
+});
+
+test('confirm: false in dataEvents fires without asking', () => {
+  const { container, onDataEvent } = renderConfirm('<i data-event="onDelete">x</i>', [
+    { name: 'onDelete', confirm: false },
+  ]);
+  fireEvent.click(container.querySelector('[data-event]'));
+  expect(onDataEvent).toHaveBeenCalledTimes(1);
+  expect(screen.queryByTestId('overlay-confirm')).toBeNull();
+});
