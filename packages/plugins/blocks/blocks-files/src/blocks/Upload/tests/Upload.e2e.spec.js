@@ -38,6 +38,14 @@ test.describe('Upload Block', () => {
     await expect(button).toHaveClass(/ant-btn-primary/);
   });
 
+  test('button iconPlacement end places the upload icon after the title', async ({ page }) => {
+    const button = getButton(page, 'upload_button_icon_end');
+    await expect(button).toHaveClass(/ant-btn-icon-end/);
+    const iconBox = await button.locator('.ant-btn-icon').boundingBox();
+    const titleBox = await button.locator(':scope > span:not(.ant-btn-icon)').first().boundingBox();
+    expect(iconBox.x).toBeGreaterThan(titleBox.x);
+  });
+
   test('renders disabled state', async ({ page }) => {
     const button = getButton(page, 'upload_disabled');
     await expect(button).toBeDisabled();

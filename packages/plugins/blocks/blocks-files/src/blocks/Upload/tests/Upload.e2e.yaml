@@ -33,6 +33,14 @@ blocks:
         title: Choose File
         type: primary
 
+  - id: upload_button_icon_end
+    type: Upload
+    properties:
+      uploadPolicyRequestId: upload_policy_request
+      button:
+        title: Attach
+        iconPlacement: end
+
   # ============================================
   # PROPERTY TESTS
   # ============================================
