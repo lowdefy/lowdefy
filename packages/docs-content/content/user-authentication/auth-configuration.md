@@ -86,7 +86,7 @@ BetterAuth ships no UI — your app owns its auth pages, and `auth.authPages` po
 | `signUp` | `/signup` | |
 | `error` | `/auth/error` | receives `?error=` code |
 | `forgotPassword` | `/forgot-password` | |
-| `resetPassword` | `/reset-password` | |
+| `resetPassword` | `/reset-password` | where the emailed reset link lands, with `?token=` (or `?error=INVALID_TOKEN`); the default `redirectTo` of `RequestPasswordReset` |
 | `verifyEmail` | `/verify-email` | where the emailed verification link lands; receives `?error=` code when the link is invalid or expired |
 | `twoFactor` | — | **required** when `twoFactor.enabled` |
 | `twoFactorEnrol` | — | **required** when `twoFactor.required` |
