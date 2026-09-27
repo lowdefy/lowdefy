@@ -49,9 +49,14 @@ export default {
         default: false,
         description: 'Allow alert to be closed.',
       },
+      closeIcon: {
+        ...icon,
+        description:
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize the close icon of a closable alert.',
+      },
       closeText: {
         type: 'string',
-        description: 'Close text to show.',
+        description: 'Close text to show instead of the close icon. Makes the alert closable.',
       },
       description: {
         type: 'string',
@@ -76,6 +81,13 @@ export default {
         enum: ['success', 'info', 'warning', 'error'],
         default: 'info',
         description: 'Alert style type.',
+      },
+      variant: {
+        type: 'string',
+        enum: ['outlined', 'filled'],
+        default: 'outlined',
+        description:
+          'Alert style variant. `filled` hides the border and keeps the background tint.',
       },
       theme: {
         type: 'object',
