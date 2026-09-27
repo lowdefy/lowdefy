@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { serializer } from '@lowdefy/helpers';
+
 import findOperatorInData from './findOperatorInData.js';
 
 test('findOperatorInData returns null for data without operators', () => {
@@ -48,5 +50,13 @@ test('findOperatorInData finds an operator beside keys the client never receives
   expect(findOperatorInData(JSON.parse('[{ "_user": "email", "__proto__": {} }]'))).toEqual({
     operator: '_user',
     path: '0',
+  });
+});
+
+test('findOperatorInData finds an operator inside an error, as the page sends it', () => {
+  const error = serializer.deserialize({ '~e': { name: 'Error', message: { _request: 'x' } } });
+  expect(findOperatorInData({ html: error })).toEqual({
+    operator: '_request',
+    path: 'html.~e.message',
   });
 });

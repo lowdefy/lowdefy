@@ -705,6 +705,59 @@ test('resolveDynamicContent falls back when a __proto__ key in parsed data text 
   );
 });
 
+// Serializer wrappers: the server revives { "~e": ... } as an Error, which the page
+// writes back as "~e" and the client revives only after evaluating what is inside.
+test.each([
+  ['an error message', { '~e': { name: 'Error', message: { _request: 'secret' } } }],
+  ['an error cause', { '~e': { name: 'Error', message: 'x', cause: { _request: 'secret' } } }],
+  [
+    'an error inside an error',
+    { '~e': { name: 'Error', message: { '~e': { name: 'Error', message: { _request: 's' } } } } },
+  ],
+  ['an error in a list', [{ '~e': { name: 'Error', message: { _request: 'secret' } } }]],
+  ['a date wrapper', { '~d': { _request: 'secret' } }],
+  ['an array wrapper', { '~arr': [{ _request: 'secret' }] }],
+])(
+  'resolveDynamicContent falls back when payload data hides an operator in %s',
+  async (_, html) => {
+    const dynamicBlock = await resolveWithRoutine(
+      {
+        ':return': {
+          blocks: [
+            { id: 'field', type: 'Html', properties: { html: { _payload: 'urlQuery.html' } } },
+          ],
+        },
+      },
+      { urlQuery: { html } }
+    );
+    expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+    expect(dynamicBlockError()).toContain(
+      'Data returned by "_payload" contains the operator "_request"'
+    );
+  }
+);
+
+test('resolveDynamicContent falls back when parsed data text hides an operator in an error', async () => {
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { stored: '{"~e":{"name":"Error","message":{"_request":"secret"}}}' } },
+    {
+      ':return': {
+        blocks: [
+          {
+            id: 'field',
+            type: 'Html',
+            properties: { html: { '_json.parse': { _state: 'stored' } } },
+          },
+        ],
+      },
+    },
+  ]);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockError()).toContain(
+    'Data returned by "_json.parse" contains the operator "_request"'
+  );
+});
+
 test('resolveDynamicContent rejects blocks built up in routine state', async () => {
   const dynamicBlock = await resolveWithRoutine([
     {

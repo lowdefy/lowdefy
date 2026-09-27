@@ -131,6 +131,31 @@ test('ValidateDynamic records every violation with its path and rule', async () 
   ]);
 });
 
+test('ValidateDynamic refuses an operator the policy does not list inside an error wrapper', async () => {
+  const context = createTestContext(createFiles());
+  const routineContext = createRoutineContext();
+  const content = [
+    {
+      id: 'form.name',
+      type: 'TextInput',
+      events: {
+        onChange: [
+          {
+            id: 'set',
+            type: 'SetState',
+            params: { 'form.x': { '~e': { name: 'Error', message: { _global: 'x' } } } },
+          },
+        ],
+      },
+    },
+  ];
+  await runStep(context, routineContext, validateStep(content));
+  expect(routineContext.steps.check.valid).toBe(false);
+  expect(routineContext.steps.check.errors.map(({ path, rule }) => `${rule} ${path}`)).toEqual([
+    'policy.structure blocks.0.events.onChange.0.params.form.x.~e',
+  ]);
+});
+
 test('ValidateDynamic throws a UserError by default when content is invalid', async () => {
   const context = createTestContext(createFiles());
   const res = await runStep(

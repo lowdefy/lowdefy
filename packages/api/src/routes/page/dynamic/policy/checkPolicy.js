@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 import getPropertiesSchemaErrors from '../getPropertiesSchemaErrors.js';
 import checkEvents from './checkEvents.js';
 import checkValue from './checkValue.js';
+import findSerializerKeys from './findSerializerKeys.js';
 import getPossibleOperators from './getPossibleOperators.js';
 import isUnderState from './isUnderState.js';
 
@@ -156,7 +157,10 @@ function checkBlockList({ blocks, path, depth, walk }) {
 // Applies a dynamic blocks policy to content as submitted (before buildBlock renames
 // ids or moves areas to slots), so every error's path indexes that content.
 function checkPolicy({ blocks, policy, blockMetas, blockSchemas }) {
-  const bytes = JSON.stringify(blocks).length;
+  // Checked as the page sends it to the client: an Error or Date in the content
+  // is a "~e" or "~d" object there.
+  const content = serializer.serialize(blocks, { skipMarkers: true });
+  const bytes = JSON.stringify(content).length;
   if (bytes > policy.limits.bytes) {
     return [
       {
@@ -175,7 +179,15 @@ function checkPolicy({ blocks, policy, blockMetas, blockSchemas }) {
     ids: new Set(),
     policy,
   };
-  checkBlockList({ blocks, path: 'blocks', depth: 1, walk });
+  checkBlockList({ blocks: content, path: 'blocks', depth: 1, walk });
+  findSerializerKeys({ value: content, path: 'blocks' }).forEach((path) => {
+    walk.errors.push(
+      structureError({
+        path,
+        message: 'Keys starting with "~" are reserved for serialized values such as dates.',
+      })
+    );
+  });
   if (walk.count > policy.limits.blocks) {
     walk.errors.unshift({
       path: 'blocks',
