@@ -125,7 +125,8 @@
 - id: 'properties.ellipsis: true'
   type: Title
   style:
-    width: 300
+    .element:
+      width: 300
   properties:
     ellipsis: true
     content: |
@@ -133,7 +134,8 @@
 - id: 'properties.ellipsis: rows'
   type: Title
   style:
-    width: 300
+    .element:
+      width: 300
   properties:
     ellipsis:
       rows: 3
@@ -142,7 +144,8 @@
 - id: 'properties.ellipsis: expandable, rows'
   type: Title
   style:
-    width: 300
+    .element:
+      width: 300
   properties:
     ellipsis:
       rows: 3
@@ -152,24 +155,60 @@
 - id: 'properties.ellipsis: rows, suffix'
   type: Title
   style:
-    width: 300
+    .element:
+      width: 300
   properties:
     ellipsis:
       rows: 3
       suffix: and other
     content: |
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-# FIX: not working, might be and antd issue.
-# - id: 'properties.ellipsis: rows, symbol'
-#   type: Title
-#   style:
-#     width: 300
-#   properties:
-#     ellipsis:
-#       symbol: '???'
-#     content: |
-#       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+- id: 'properties.ellipsis: expandable collapsible, symbol'
+  type: Title
+  style:
+    .element:
+      width: 300
+  properties:
+    ellipsis:
+      rows: 2
+      expandable: collapsible
+      symbol:
+        - Read more
+        - Show less
+    content: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+- id: 'properties.ellipsis: defaultExpanded'
+  type: Title
+  style:
+    .element:
+      width: 300
+  properties:
+    ellipsis:
+      rows: 2
+      expandable: collapsible
+      defaultExpanded: true
+    content: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+- id: 'properties.ellipsis: tooltip'
+  type: Title
+  style:
+    .element:
+      width: 300
+  properties:
+    ellipsis:
+      tooltip: true
+    content: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 - id: 'properties.content with html'
   type: Title
   properties:
     content: '<div style="background-color:blue;">Html Title</div>'
+- id: 'properties.keyboard: true'
+  type: Title
+  properties:
+    keyboard: true
+    content: Ctrl
+- id: 'properties.actions.placement: start'
+  type: Title
+  properties:
+    copyable: true
+    actions:
+      placement: start
+    content: Copy button before the text

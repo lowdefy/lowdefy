@@ -65,4 +65,23 @@ test.describe('QRCode Block', () => {
     const display = getBlock(page, 'qr_refresh_display');
     await expect(display).toHaveText('Refresh fired');
   });
+
+  // ============================================
+  // ICON SIZE AND SEMANTIC KEYS
+  // ============================================
+
+  test('renders the icon with an object iconSize', async ({ page }) => {
+    const image = getBlock(page, 'qr_icon_size').locator('svg image');
+    await expect(image).toBeAttached();
+    // The svg draws in module units, so the 60 x 30 icon keeps its 2:1 ratio.
+    const width = Number(await image.getAttribute('width'));
+    const height = Number(await image.getAttribute('height'));
+    expect(width / height).toBeCloseTo(2);
+  });
+
+  test('applies class and style to the status cover', async ({ page }) => {
+    const cover = getBlock(page, 'qr_cover_style').locator('.ant-qrcode-cover');
+    await expect(cover).toHaveClass(/qr-cover-class/);
+    await expect(cover).toHaveCSS('background-color', 'rgb(255, 255, 0)');
+  });
 });

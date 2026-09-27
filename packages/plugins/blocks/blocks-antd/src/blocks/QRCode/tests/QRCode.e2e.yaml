@@ -64,3 +64,29 @@ blocks:
               - true
           then: Refresh fired
           else: ''
+
+  # ============================================
+  # ICON SIZE AND SEMANTIC KEYS
+  # ============================================
+
+  - id: qr_icon_size
+    type: QRCode
+    properties:
+      type: svg
+      errorLevel: H
+      value: 'icon-size'
+      icon: "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='60'%20height='30'%3E%3Crect%20width='60'%20height='30'%20fill='%231677ff'/%3E%3C/svg%3E"
+      iconSize:
+        width: 60
+        height: 30
+
+  - id: qr_cover_style
+    type: QRCode
+    class:
+      .cover: qr-cover-class
+    style:
+      .cover:
+        backgroundColor: 'rgb(255, 255, 0)'
+    properties:
+      status: loading
+      value: 'cover'

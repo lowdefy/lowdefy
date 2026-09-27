@@ -24,9 +24,9 @@ export default {
     content: 'Child blocks wrapped by the Badge.',
   },
   cssKeys: {
-    element: 'The Badge element.',
+    element: 'The Badge element, or the ribbon wrapper when ribbon is set.',
     icon: 'The icon in the Badge.',
-    indicator: 'The Badge indicator.',
+    indicator: 'The Badge count or dot indicator, or the ribbon when ribbon is set.',
   },
   properties: {
     type: 'object',
@@ -89,9 +89,42 @@ export default {
         type: 'string',
         description: 'If status is set, text sets the display text of the status dot.',
       },
+      ribbon: {
+        type: 'object',
+        additionalProperties: false,
+        description:
+          'Render a ribbon on the corner of the content area instead of a count badge. Count, dot and status properties are ignored when ribbon is set.',
+        docs: {
+          displayType: 'yaml',
+        },
+        properties: {
+          text: {
+            type: 'string',
+            description: 'Text inside the ribbon.',
+          },
+          color: {
+            type: 'string',
+            description: 'Ribbon color. A preset color name or any css color.',
+            docs: {
+              displayType: 'color',
+            },
+          },
+          placement: {
+            type: 'string',
+            enum: ['start', 'end'],
+            default: 'end',
+            description:
+              'Corner of the content the ribbon is placed on. `start` and `end` follow the text direction.',
+          },
+        },
+      },
       title: {
-        type: 'string',
-        description: 'Text to show when hovering over the badge.',
+        type: ['string', 'boolean'],
+        description:
+          'Text to show when hovering over the badge. Set to false to remove the native tooltip.',
+        docs: {
+          displayType: 'string',
+        },
       },
       theme: {
         type: 'object',
@@ -131,6 +164,11 @@ export default {
             type: 'string',
             default: 'normal',
             description: 'Font weight for badge count text.',
+          },
+          paddingInline: {
+            type: ['number', 'string'],
+            default: 8,
+            description: 'Inline padding of a badge count with several characters.',
           },
           textLineHeight: {
             type: 'number',

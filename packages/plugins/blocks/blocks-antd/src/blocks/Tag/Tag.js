@@ -47,7 +47,11 @@ const TagBlock = ({
   // antd treats any closeIcon as closable, so it is only passed to closable tags.
   if (properties.closable) {
     additionalProps.closeIcon = (
-      <Icon blockId={`${blockId}_closeIcon`} properties={{ name: 'close', title: '' }} />
+      <Icon
+        blockId={`${blockId}_closeIcon`}
+        events={events}
+        properties={properties.closeIcon ?? { name: 'close', title: '' }}
+      />
     );
   }
   if (onClick || events.onClick) {
@@ -62,7 +66,13 @@ const TagBlock = ({
       closable={properties.closable}
       color={properties.color}
       className={classNames.element}
+      classNames={{ close: classNames.closeIcon }}
+      disabled={properties.disabled}
+      href={properties.href}
       style={styles.element}
+      styles={{ close: styles.closeIcon }}
+      target={properties.target}
+      variant={properties.variant}
       {...additionalProps}
     >
       <>

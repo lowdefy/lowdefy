@@ -40,7 +40,6 @@
 - id: 'properties.orientation: vertical'
   type: Divider
   properties:
-    title: Divider title
     orientation: vertical
 - id: 'properties.orientation: horizontal'
   type: Divider
@@ -56,3 +55,29 @@
   type: Divider
   properties:
     title: '<div style="background-color:yellow">Html Title</div>'
+- id: 'properties.variant: dotted'
+  type: Divider
+  properties:
+    variant: dotted
+- id: 'properties.variant: dashed with title'
+  type: Divider
+  properties:
+    title: Divider title
+    variant: dashed
+- id: 'properties.size: small'
+  type: Divider
+  properties:
+    size: small
+- id: 'properties.size: medium'
+  type: Divider
+  properties:
+    size: medium
+- id: 'class and style semantic keys'
+  type: Divider
+  class:
+    .title: text-sm
+  style:
+    .rail:
+      borderColor: '#1677ff'
+  properties:
+    title: Divider title

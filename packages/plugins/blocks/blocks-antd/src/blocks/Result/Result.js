@@ -37,10 +37,12 @@ const ResultBlock = ({
     <Result
       id={blockId}
       className={classNames.element}
+      classNames={{ title: classNames.title, subTitle: classNames.subTitle }}
       title={renderHtml({ html: properties.title, methods })}
       subTitle={renderHtml({ html: properties.subTitle, methods })}
       status={properties.status}
       style={styles.element}
+      styles={{ title: styles.title, subTitle: styles.subTitle }}
       icon={
         icon && (
           <Icon

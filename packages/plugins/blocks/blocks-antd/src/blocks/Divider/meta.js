@@ -20,6 +20,8 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The Divider element.',
+    rail: 'The Divider line.',
+    title: 'The Divider title text.',
   },
   properties: {
     type: 'object',
@@ -28,7 +30,7 @@ export default {
       dashed: {
         type: 'boolean',
         default: false,
-        description: 'Whether line is dashed.',
+        description: 'Whether line is dashed. Same as `variant: dashed`.',
       },
       orientation: {
         type: 'string',
@@ -50,6 +52,18 @@ export default {
         type: 'boolean',
         default: false,
         description: 'Show text as plain style.',
+      },
+      size: {
+        type: 'string',
+        enum: ['small', 'medium', 'large'],
+        default: 'large',
+        description: 'Vertical margin around a horizontal divider.',
+      },
+      variant: {
+        type: 'string',
+        enum: ['solid', 'dashed', 'dotted'],
+        default: 'solid',
+        description: 'Line style of the divider.',
       },
       theme: {
         type: 'object',

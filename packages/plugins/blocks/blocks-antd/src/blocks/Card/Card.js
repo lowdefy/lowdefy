@@ -33,22 +33,33 @@ const CardBlock = ({
     id={blockId}
     title={content.title ? content.title() : renderHtml({ html: properties.title, methods })}
     variant={properties.bordered === false ? 'borderless' : properties.variant}
+    actions={content.actions && [content.actions()]}
     cover={content.cover && content.cover()}
     extra={content.extra && content.extra()}
     hoverable={properties.hoverable}
-    size={properties.size}
+    loading={properties.loading}
+    // antd 6 renamed the `default` size to `medium`.
+    size={properties.size === 'default' ? 'medium' : properties.size}
     type={properties.inner ? 'inner' : null}
     onClick={() => methods.triggerEvent({ name: 'onClick' })}
     className={classNames.element}
     classNames={{
       header: classNames.header,
+      title: classNames.title,
       body: classNames.body,
       cover: classNames.cover,
       actions: classNames.actions,
       extra: classNames.extra,
     }}
     style={{ outline: 'none', cursor: events.onClick && 'pointer', ...styles.element }}
-    styles={{ header: styles.header, body: styles.body }}
+    styles={{
+      header: styles.header,
+      title: styles.title,
+      body: styles.body,
+      cover: styles.cover,
+      actions: styles.actions,
+      extra: styles.extra,
+    }}
   >
     {content.content && content.content()}
   </Card>

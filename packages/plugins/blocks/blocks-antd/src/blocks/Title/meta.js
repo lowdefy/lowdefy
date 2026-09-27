@@ -21,15 +21,34 @@ export default {
   cssKeys: {
     element: 'The Title element.',
     copyableIcon: 'The copyable icon in the Title.',
+    actions: 'The bar of action buttons, such as copy and expand, next to the text.',
   },
   events: {
-    onExpand: 'Trigger action when ellipse expand is clicked.',
+    onExpand: {
+      description: 'Trigger action when the ellipsis expand or collapse button is clicked.',
+      event: {
+        expanded: 'True when the text was expanded, false when it was collapsed.',
+      },
+    },
     onCopy: 'Trigger action when copy text is clicked.',
   },
   properties: {
     type: 'object',
     additionalProperties: false,
     properties: {
+      actions: {
+        type: 'object',
+        additionalProperties: false,
+        description: 'Configure the bar of action buttons, such as copy and expand.',
+        properties: {
+          placement: {
+            type: 'string',
+            enum: ['start', 'end'],
+            default: 'end',
+            description: 'Place the action buttons before or after the text.',
+          },
+        },
+      },
       code: {
         type: 'boolean',
         default: false,
@@ -107,12 +126,38 @@ export default {
                 description: 'Max rows of content.',
               },
               expandable: {
+                type: ['boolean', 'string'],
+                enum: [true, false, 'collapsible'],
+                description:
+                  "Show a button that expands the hidden content. Set to 'collapsible' to also allow collapsing it again.",
+              },
+              defaultExpanded: {
                 type: 'boolean',
-                description: 'Expand hidden content when clicked.',
+                default: false,
+                description: 'Start with the content expanded.',
               },
               suffix: {
                 type: 'string',
                 description: 'Suffix of ellipses content.',
+              },
+              symbol: {
+                type: ['string', 'array'],
+                items: {
+                  type: 'string',
+                },
+                description:
+                  'Text of the expand button, or an array of two strings for the expand and collapse buttons.',
+                docs: {
+                  displayType: 'string',
+                },
+              },
+              tooltip: {
+                type: ['boolean', 'string'],
+                description:
+                  'Show a tooltip when the text is truncated. true shows the full text, a string shows that text.',
+                docs: {
+                  displayType: 'string',
+                },
               },
             },
           },
@@ -122,6 +167,11 @@ export default {
         type: 'boolean',
         default: false,
         description: 'Apply italic style.',
+      },
+      keyboard: {
+        type: 'boolean',
+        default: false,
+        description: 'Apply keyboard key style.',
       },
       level: {
         type: 'number',
@@ -137,7 +187,7 @@ export default {
       type: {
         type: 'string',
         default: 'default',
-        enum: ['secondary', 'warning', 'danger', 'success'],
+        enum: ['default', 'secondary', 'warning', 'danger', 'success'],
         description: "Additional types. Don't specify for default.",
       },
       underline: {

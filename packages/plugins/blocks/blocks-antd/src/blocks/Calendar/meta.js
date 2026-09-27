@@ -22,6 +22,9 @@ export default {
   valueType: 'date',
   cssKeys: {
     element: 'The Calendar element.',
+    header: 'The Calendar header with the year, month and mode selectors.',
+    item: 'Each date or month cell of the Calendar.',
+    itemContent: 'The content area inside each cell, where dateCellData renders.',
   },
   events: {
     onChange: {
@@ -63,6 +66,11 @@ export default {
         enum: ['month', 'year'],
         default: 'month',
         description: 'The display mode of the calendar panel.',
+      },
+      showWeek: {
+        type: 'boolean',
+        default: false,
+        description: 'Show the week number column.',
       },
       disabledDates,
       validRange: {

@@ -98,6 +98,51 @@ blocks:
       closable: true
       closeText: Dismiss
 
+  - id: alert_close_icon
+    type: Alert
+    properties:
+      message: Alert with a custom close icon
+      closable: true
+      closeIcon: close-circle
+
+  - id: alert_close_text_only
+    type: Alert
+    properties:
+      message: Close text without closable
+      closeText: Hide
+
+  # ============================================
+  # VARIANT AND SEMANTIC KEY TESTS
+  # ============================================
+
+  - id: alert_filled
+    type: Alert
+    properties:
+      message: Filled Alert
+      variant: filled
+
+  - id: alert_css_keys
+    type: Alert
+    class:
+      .message: alert-message-class
+      .description: alert-description-class
+      .closeIcon: alert-close-class
+      .action: alert-action-class
+    style:
+      .message:
+        color: 'rgb(255, 0, 0)'
+    properties:
+      message: Styled message
+      description: Styled description
+      closable: true
+    slots:
+      action:
+        blocks:
+          - id: alert_css_keys_button
+            type: Button
+            properties:
+              title: Act
+
   # ============================================
   # BANNER TESTS
   # ============================================
