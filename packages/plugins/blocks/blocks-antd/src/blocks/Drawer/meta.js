@@ -49,7 +49,8 @@ export default {
       },
     },
     onResizeEnd: {
-      description: 'Trigger actions when the user finishes resizing a resizable drawer.',
+      description:
+        'Trigger actions when the user finishes resizing a resizable drawer. Not triggered when the resize handle is clicked without dragging.',
       event: { size: 'The new size of the drawer in pixels.' },
     },
   },

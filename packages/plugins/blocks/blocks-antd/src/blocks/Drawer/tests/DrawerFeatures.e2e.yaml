@@ -57,6 +57,7 @@ blocks:
           params:
             drawer_resized_size:
               _event: size
+            drawer_resize_end_fired: true
     slots:
       content:
         blocks:
@@ -92,6 +93,18 @@ blocks:
               - 400
           then: resized larger
           else: ''
+
+  - id: drawer_resize_end_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: drawer_resize_end_fired
+              - true
+          then: resize end fired
+          else: no resize end
 
   - id: drawer_close_end
     type: Drawer
