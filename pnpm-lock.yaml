@@ -48,6 +48,9 @@ importers:
       eslint-plugin-react-hooks:
         specifier: 4.6.0
         version: 4.6.0(eslint@8.54.0)
+      espree:
+        specifier: 9.6.1
+        version: 9.6.1
       node-gyp:
         specifier: 13.0.0
         version: 13.0.0
