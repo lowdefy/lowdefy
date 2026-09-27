@@ -43,6 +43,7 @@ import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
 import logClientError from './routes/log/logClientError.js';
 import normalizeInjectedCaller from './context/normalizeInjectedCaller.js';
+import parseRequestBody from './context/parseRequestBody.js';
 import redactErrorResponse from './response/redactErrorResponse.js';
 import redactResponse from './response/redactResponse.js';
 import resolveAuthentication from './context/resolveAuthentication.js';
@@ -81,6 +82,7 @@ export {
   getRootConfig,
   logClientError,
   normalizeInjectedCaller,
+  parseRequestBody,
   redactErrorResponse,
   redactResponse,
   resolveAuthentication,

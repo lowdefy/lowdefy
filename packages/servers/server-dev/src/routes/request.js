@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { callRequest, redactErrorResponse } from '@lowdefy/api';
+import { callRequest, parseRequestBody, redactErrorResponse } from '@lowdefy/api';
 import { serializer } from '@lowdefy/helpers';
 
 import buildPageIfNeeded from '../../lib/server/jitPageBuilder.js';
@@ -34,7 +34,7 @@ async function requestHandler(c) {
   }
   const requestId = segments[segments.length - 1];
   const pageId = segments.slice(0, -1).join('/');
-  const { actionId, blockId, payload } = await c.req.json();
+  const { actionId, blockId, payload } = parseRequestBody({ text: await c.req.text() });
 
   // Dev-only agent tooling: once a state checkpoint has been loaded
   // (lib/docs/loadState.js), its recorded request/response pairs live in
