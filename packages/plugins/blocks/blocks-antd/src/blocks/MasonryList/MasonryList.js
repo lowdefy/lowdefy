@@ -42,7 +42,6 @@ const MasonryListBlock = ({ blockId, classNames = {}, list, methods, properties,
       columns={properties.columns}
       fresh={properties.fresh}
       gutter={properties.gutter}
-      sequential={properties.sequential}
       items={items}
     />
   );
