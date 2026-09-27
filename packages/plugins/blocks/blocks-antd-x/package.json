@@ -49,8 +49,8 @@
   },
   "dependencies": {
     "@ai-sdk/react": "4.0.119",
-    "@ant-design/x": "2.7.0",
-    "@ant-design/x-markdown": "2.7.0",
+    "@ant-design/x": "2.9.0",
+    "@ant-design/x-markdown": "2.9.0",
     "@lowdefy/block-utils": "6.0.0",
     "@lowdefy/blocks-files": "6.0.0",
     "@lowdefy/helpers": "6.0.0",
@@ -65,7 +65,7 @@
     "copyfiles": "2.4.1"
   },
   "peerDependencies": {
-    "antd": "6.3.1",
+    "antd": "6.6.5",
     "react": "18.2.0"
   },
   "publishConfig": {
