@@ -23,6 +23,7 @@ import apiPageHandler from './routes/apiPage.js';
 import clientErrorHandler from './routes/clientError.js';
 import createErrorHandler from './middleware/errorHandler.js';
 import createLogger from '../lib/server/log/createLogger.js';
+import e2eIdentityHandler from './routes/e2eIdentity.js';
 import endpointsHandler from './routes/endpoints.js';
 import lowdefyConfig from '../lib/build/config.js';
 import renderPage from './html/renderPage.js';
@@ -46,9 +47,9 @@ function createApp() {
   });
 
   app.use('/api/*', apiContext());
-  // Mock session endpoint — reads the lowdefy_e2e_user cookie; also the
-  // e2e harness health check (e2e-utils polls /api/auth/session).
+  // Mock session endpoint — reads the lowdefy_e2e_user cookie.
   app.get('/api/auth/session', sessionMockHandler);
+  app.get('/api/e2e/identity', e2eIdentityHandler);
   app.all('/api/request/*', requestHandler);
   app.all('/api/endpoints/*', endpointsHandler);
   app.all('/api/client-error', clientErrorHandler);

@@ -40,6 +40,8 @@ npx lowdefy build --server e2e && npx lowdefy start
 
 The e2e server variant (`--server e2e`) exposes `window.lowdefy` in the browser for state/validation access (the client passes `stage="e2e"`).
 
+**Server reuse.** The webServer entry waits on the `port` (not a URL) with `reuseExistingServer: true`, so Playwright reuses whatever already listens there. `globalSetup` (`src/globalSetup.js` → `core/verifyServer.js`) then fetches `GET /api/e2e/identity`, which only server-e2e serves, and compares its `buildDirectory` with the real path of the config's `buildDir` (passed in `LOWDEFY_E2E_SERVERS`). A server without the route (`lowdefy dev`, a production build) or one serving another build directory (another app or worktree) fails the run before any test, with an error naming the port. A URL readiness check could not do this: Playwright treats any 2xx, 3xx or 400–403 answer as ready, so a dev server that redirects or a fallback page would pass it.
+
 **Manifest Generation** (lazy, first worker):
 
 - Reads `types.json` for block type → package mapping
@@ -92,15 +94,16 @@ ldf.mock.request('id', { response }); // Inline mocking
 
 ### Core (`src/core/`)
 
-| File            | Purpose                                                               |
-| --------------- | --------------------------------------------------------------------- |
-| `navigation.js` | `goto()`, `waitForPage()` - navigation with Lowdefy ready detection   |
-| `requests.js`   | Request state access, `toFinish()`, `toHavePayload()` assertions      |
-| `state.js`      | State access via `page.evaluate()` into `window.lowdefy`              |
-| `url.js`        | URL and query parameter assertions                                    |
-| `validation.js` | Block validation state access                                         |
-| `locators.js`   | Common locator patterns                                               |
-| `userCookie.js` | Set/clear `lowdefy_e2e_user` cookie via `browserContext.addCookies()` |
+| File              | Purpose                                                               |
+| ----------------- | --------------------------------------------------------------------- |
+| `navigation.js`   | `goto()`, `waitForPage()` - navigation with Lowdefy ready detection   |
+| `requests.js`     | Request state access, `toFinish()`, `toHavePayload()` assertions      |
+| `state.js`        | State access via `page.evaluate()` into `window.lowdefy`              |
+| `url.js`          | URL and query parameter assertions                                    |
+| `validation.js`   | Block validation state access                                         |
+| `locators.js`     | Common locator patterns                                               |
+| `verifyServer.js` | Checks the server on a port is this app's e2e build (`globalSetup`)   |
+| `userCookie.js`   | Set/clear `lowdefy_e2e_user` cookie via `browserContext.addCookies()` |
 
 ### Proxy (`src/proxy/`)
 
@@ -469,11 +472,12 @@ await ldf.state('key').expect.toBe(value, { timeout: 10000 });
 
 ## Environment Variables
 
-| Variable                  | Set By                                    | Used By        | Purpose                                                         |
-| ------------------------- | ----------------------------------------- | -------------- | --------------------------------------------------------------- |
-| `LOWDEFY_BUILD_DIR`       | `createConfig()`                          | Fixtures       | Absolute path to build artifacts for manifest/helper resolution |
-| `LOWDEFY_E2E_MOCKS_FILE`  | `createConfig()`                          | Fixtures       | Absolute path to static mocks YAML file                         |
-| `LOWDEFY_E2E_MONGODB_URI` | User (.env.e2e.local) or `configureMdb()` | mdb fixture    | MongoDB test database connection string                         |
+| Variable                  | Set By                                     | Used By       | Purpose                                                           |
+| ------------------------- | ------------------------------------------ | ------------- | ----------------------------------------------------------------- |
+| `LOWDEFY_BUILD_DIR`       | `createConfig()`                           | Fixtures      | Absolute path to build artifacts for manifest/helper resolution   |
+| `LOWDEFY_E2E_MOCKS_FILE`  | `createConfig()`                           | Fixtures      | Absolute path to static mocks YAML file                           |
+| `LOWDEFY_E2E_SERVERS`     | `createConfig()`, `createMultiAppConfig()` | `globalSetup` | JSON list of `{ port, buildDir }` to check reused servers against |
+| `LOWDEFY_E2E_MONGODB_URI` | User (.env.e2e.local) or `configureMdb()`  | mdb fixture   | MongoDB test database connection string                           |
 
 Building with `--server e2e` is critical: without the e2e server variant, `window.lowdefy` is not exposed and all state/request/validation assertions fail.
 
@@ -483,6 +487,7 @@ Building with `--server e2e` is critical: without the e2e server variant, `windo
 src/
 ├── index.js                    # Main exports
 ├── config.js                   # createConfig, createMultiAppConfig
+├── globalSetup.js              # Runs verifyServer for every app server
 ├── core/
 │   ├── index.js
 │   ├── locators.js
@@ -490,7 +495,8 @@ src/
 │   ├── requests.js
 │   ├── state.js
 │   ├── url.js
-│   └── validation.js
+│   ├── validation.js
+│   └── verifyServer.js
 ├── fixtures/
 │   └── index.js                # Playwright test.extend()
 ├── init/
