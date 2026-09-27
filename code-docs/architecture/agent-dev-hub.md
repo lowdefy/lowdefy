@@ -30,7 +30,7 @@ Discovery, for every reader: <app>/.lowdefy/instance.json
 
 The dev manager (`server-dev/manager/utils/acquireDevInstance.mjs`) creates it exclusively (`wx`) at start-up. It holds `pid`, the real `configDirectory`, `owner` (`hub` or `terminal`), `state` (`starting`, then `ready` once the child answers `<basePath>/api/ping`), `port`, `internalPort`, `url`, `version`, `startedAt` and `processStartTime`. `url` is the app's base URL, `http://localhost:<port><basePath>`: the dev server mounts every route under `config.basePath` (the app, `/api/*`, `/lowdefy-docs/*`), so readers append paths to `url` and never rebuild it from `port`. `startServer` rewrites it on every child start, because a config change can edit `basePath`. It is written with mode `0600` and removed on exit.
 
-`readDevInstance` (`@lowdefy/node-utils`) returns a record only when its `configDirectory` is this directory **and** its pid is alive and still the process that wrote it: the manager records `processStartTime` (`getProcessStartTime`, `ps -o lstart=`), so a record left by a killed manager never passes for a live one on a reused pid. The directory check makes a record copied into another git worktree harmless. The record is keyed on the config directory, not the dev directory, so every launch path (CLI, `--dev-directory`, `scripts/dev.mjs`) shares it.
+`readDevInstance` (`@lowdefy/node-utils`) returns a record only when its `configDirectory` is this directory **and** its pid is alive and still the process that wrote it: the manager records `processStartTime` (`getProcessStartTime`, `ps -o lstart=`), so a record left by a killed manager never passes for a live one on a reused pid. A start time `ps` cannot read leaves the pid to decide, and each pid's start time is read at most every 5 s. The directory check makes a record copied into another git worktree harmless. The record is keyed on the config directory, not the dev directory, so every launch path (CLI, `--dev-directory`, `scripts/dev.mjs`) shares it.
 
 It replaces the old `.lowdefy/dev/.manager.lock`. It is used in four places:
 
@@ -70,12 +70,12 @@ A low-level MCP `Server` over stdio (`createShim.js`). Nothing else may write to
 - **Leader exit.** When the group leader exits, the hub stops the rest of its group: a manager killed outright otherwise leaves Vite running on the internal port.
 - **Reaping.** Every minute, the hub stops managed servers in two cases:
 
-  - Their app is gone: no `lowdefy.yaml` (a running server recreates `.lowdefy/` after its worktree is deleted, so the directory itself is no signal). The port pairs of removed apps are released too.
+  - Their app is gone: two reap passes in a row found no `lowdefy.yaml` (a running server recreates `.lowdefy/` after its worktree is deleted, so the directory itself is no signal, and a checkout or rebase can hide the file for one pass). The port pairs of removed apps are released too.
   - No shim is attached, 30 minutes have passed, and `GET /api/dev-inspect` reports no open tabs.
 
   The hub exits after 10 idle minutes with no servers and no clients.
 
-- **Timeouts.** The open-tabs check (`fetchOpenTabs`, 5 s), `lowdefy_dev_status`'s build summary (10 s) and the shim's MCP connect to a dev server (15 s) give up on a server that stops answering. A reap pass still running is shared, not started again. A forwarded call that timed out is not retried (`callWithReconnect`).
+- **Timeouts.** The open-tabs check (`fetchOpenTabs`, 5 s), `lowdefy_dev_status`'s build summary (10 s) and the shim's MCP connect to a dev server (15 s) give up on a server that stops answering. A reap pass still running is shared, not started again. A forwarded call is retried once on a new connection only when it never reached the server (an HTTP refusal such as a stale session, or a network error); a timeout or a server error is not retried (`callWithReconnect`).
 - **Logs.** `readLogTail` loads only the last MiB of `dev.log` and returns at most 1000 lines.
 - **Protocol.** `hello` returns `{ protocol, version, pid }`. On a mismatch, the client errors and asks for the old hub to be stopped; servers survive that and the next hub adopts them.
 
