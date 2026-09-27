@@ -110,7 +110,12 @@ export function fromStructuredAnswer({ question, answer }) {
   const kind = questionKind(question);
   const confidence = clamp01(answer?.confidence);
   if (kind === 'choice') {
-    return { choice: answer?.choice ?? null, confidence, probabilities: null };
+    // The SDK parses the output without checking it against the answer
+    // schema, so an option the model made up reads as no choice, as an unknown
+    // score level does.
+    const known =
+      typeof answer?.choice === 'string' && Object.hasOwn(question.options, answer.choice);
+    return { choice: known ? answer.choice : null, confidence, probabilities: null };
   }
   if (kind === 'yesno') {
     const value = typeof answer?.answer === 'boolean' ? answer.answer : null;
