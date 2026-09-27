@@ -17,7 +17,7 @@
 import http from 'node:http';
 import net from 'node:net';
 
-import { BUILD_WAIT_HEADER } from '../../lib/docs/readProxyBuildWait.js';
+import buildWaitHeader from '../../lib/docs/buildWaitHeader.js';
 import readBuildStatusWait from '../utils/readBuildStatusWait.mjs';
 
 /*
@@ -188,11 +188,11 @@ function forwardRequest({ body, context, proxyState }, req, res, deadline = Date
 // the dev server process, and any wait running in it. The header tells the
 // dev server what this wait saw, so it does not wait again.
 async function handleRequest({ context, proxyState }, req, res) {
-  delete req.headers[BUILD_WAIT_HEADER];
+  delete req.headers[buildWaitHeader];
   const { wait, body } = await readBuildStatusWait({ basePath: context.basePath, req });
   if (wait) {
     const waited = await context.buildActivity.waitForIdle();
-    req.headers[BUILD_WAIT_HEADER] = new URLSearchParams({
+    req.headers[buildWaitHeader] = new URLSearchParams({
       settled: String(waited.settled),
       sawBuild: String(waited.sawBuild),
       waitedMs: String(waited.waitedMs),

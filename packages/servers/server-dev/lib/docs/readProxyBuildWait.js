@@ -16,14 +16,14 @@
 
 import { type } from '@lowdefy/helpers';
 
-const BUILD_WAIT_HEADER = 'x-lowdefy-build-wait';
+import buildWaitHeader from './buildWaitHeader.js';
 
 // A build can restart this process, which ends any wait running in it, so
 // the manager's proxy waits for builds and restarts before it forwards a
 // build-status wait, and passes what it saw in this header. Null when the
 // request did not come through that wait.
 function readProxyBuildWait({ getHeader }) {
-  const header = getHeader(BUILD_WAIT_HEADER);
+  const header = getHeader(buildWaitHeader);
   if (type.isNone(header)) {
     return null;
   }
@@ -35,5 +35,4 @@ function readProxyBuildWait({ getHeader }) {
   };
 }
 
-export { BUILD_WAIT_HEADER };
 export default readProxyBuildWait;
