@@ -26,6 +26,7 @@ export default {
   cssKeys: {
     element: 'The TimelineList element.',
     icon: 'The icon in the TimelineList items.',
+    label: 'The label of each timeline item.',
     pendingDotIcon: 'The pending dot icon in the TimelineList.',
   },
   properties: {
@@ -66,7 +67,8 @@ export default {
       },
       positionField: {
         type: 'string',
-        description: "Use a custom position field. Defaults to 'position'.",
+        description:
+          "Use a custom position field. Defaults to 'position'. Item positions are left or right.",
       },
       labelField: {
         type: 'string',
@@ -78,6 +80,27 @@ export default {
         default: 'left',
         description:
           'By sending alternate the timeline will distribute the nodes to the left and right.',
+      },
+      orientation: {
+        type: 'string',
+        enum: ['vertical', 'horizontal'],
+        default: 'vertical',
+        description: 'Direction of the timeline.',
+      },
+      titleSpan: {
+        type: ['number', 'string'],
+        default: 12,
+        description:
+          "Space reserved for the item labels, measured to the center of the dot. A number of pixels or a percentage like '30%'.",
+        docs: {
+          displayType: 'string',
+        },
+      },
+      variant: {
+        type: 'string',
+        enum: ['outlined', 'filled'],
+        default: 'outlined',
+        description: 'Style of the timeline dots.',
       },
       theme: {
         type: 'object',
@@ -102,6 +125,10 @@ export default {
             type: 'number',
             default: 2,
             description: 'Border width of the timeline dot.',
+          },
+          dotSize: {
+            type: ['number', 'string'],
+            description: 'Size of the timeline dot.',
           },
           dotBg: {
             type: 'string',

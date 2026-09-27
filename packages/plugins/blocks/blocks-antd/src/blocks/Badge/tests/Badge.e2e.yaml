@@ -193,3 +193,56 @@ blocks:
             type: Avatar
             properties:
               content: T
+
+  # ============================================
+  # TITLE, INDICATOR AND RIBBON TESTS
+  # ============================================
+
+  - id: badge_title_false
+    type: Badge
+    properties:
+      count: 8
+      title: false
+    slots:
+      content:
+        blocks:
+          - id: badge_title_false_avatar
+            type: Avatar
+            properties:
+              content: TF
+
+  - id: badge_indicator_style
+    type: Badge
+    class:
+      .indicator: badge-indicator-class
+    style:
+      .indicator:
+        backgroundColor: 'rgb(0, 128, 0)'
+    properties:
+      count: 3
+    slots:
+      content:
+        blocks:
+          - id: badge_indicator_avatar
+            type: Avatar
+            properties:
+              content: IS
+
+  - id: badge_ribbon
+    type: Badge
+    class:
+      .element: badge-ribbon-wrapper-class
+    style:
+      .indicator:
+        backgroundColor: 'rgb(114, 46, 209)'
+    properties:
+      ribbon:
+        text: Recommended
+        placement: start
+    slots:
+      content:
+        blocks:
+          - id: badge_ribbon_card
+            type: Card
+            properties:
+              title: Pro plan

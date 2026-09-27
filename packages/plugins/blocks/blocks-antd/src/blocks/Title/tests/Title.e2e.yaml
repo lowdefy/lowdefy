@@ -178,3 +178,84 @@ blocks:
       ellipsis: true
       style:
         width: 200px
+
+  # ============================================
+  # KEYBOARD, TYPE DEFAULT, ACTIONS AND ELLIPSIS OPTIONS
+  # ============================================
+
+  - id: title_keyboard
+    type: Title
+    properties:
+      content: Ctrl
+      keyboard: true
+
+  - id: title_type_default
+    type: Title
+    properties:
+      content: Default type
+      type: default
+
+  - id: title_actions_start
+    type: Title
+    class:
+      .actions: title-actions-class
+    properties:
+      content: Actions before the text
+      copyable: true
+      actions:
+        placement: start
+
+  - id: title_ellipsis_collapsible
+    type: Title
+    style:
+      .element:
+        width: 300
+    properties:
+      content: This is a long piece of text that is truncated to a single row until the reader expands it, and it keeps going so that it is always longer than the box it sits in.
+      ellipsis:
+        rows: 1
+        expandable: collapsible
+        symbol:
+          - Show more
+          - Show less
+    events:
+      onExpand:
+        - id: set_title_expanded
+          type: SetState
+          params:
+            title_expanded:
+              _event: expanded
+
+  - id: title_expanded_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: title_expanded
+              - true
+          then: Expanded
+          else: Collapsed
+
+  - id: title_ellipsis_default_expanded
+    type: Title
+    style:
+      .element:
+        width: 300
+    properties:
+      content: This is a long piece of text that is truncated to a single row until the reader expands it, and it keeps going so that it is always longer than the box it sits in.
+      ellipsis:
+        rows: 1
+        expandable: collapsible
+        defaultExpanded: true
+
+  - id: title_ellipsis_tooltip
+    type: Title
+    style:
+      .element:
+        width: 200
+    properties:
+      content: This is a long piece of text that is truncated to a single row until the reader expands it, and it keeps going so that it is always longer than the box it sits in.
+      ellipsis:
+        tooltip: Full text in a tooltip

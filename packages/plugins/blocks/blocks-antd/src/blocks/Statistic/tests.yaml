@@ -75,3 +75,33 @@
     title: '<div style="color:blue;">Very Html</div>'
     value: 100
     suffix: '%'
+- id: 'properties.timer countdown'
+  type: Statistic
+  properties:
+    title: Sale ends in
+    value:
+      _date: '2030-01-01T00:00:00.000Z'
+    timer:
+      type: countdown
+      format: 'D [days] HH:mm:ss'
+- id: 'properties.timer countup'
+  type: Statistic
+  properties:
+    title: Open since
+    value:
+      _date: '2026-01-01T00:00:00.000Z'
+    timer:
+      type: countup
+      format: 'D [days] HH:mm'
+- id: 'class and style semantic keys'
+  type: Statistic
+  style:
+    .content:
+      color: '#3f8600'
+    .suffix:
+      fontSize: 14
+  properties:
+    title: Active users
+    value: 11.28
+    precision: 2
+    suffix: '%'

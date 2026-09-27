@@ -153,4 +153,36 @@ test.describe('Badge Block', () => {
     const count = block.locator('.ant-badge-count');
     await expect(count).toHaveAttribute('title', 'Custom tooltip title');
   });
+
+  // ============================================
+  // TITLE, INDICATOR AND RIBBON TESTS
+  // ============================================
+
+  test('renders the count as the default native title', async ({ page }) => {
+    const count = getBadge(page, 'badge_basic').locator('.ant-badge-count');
+    await expect(count).toHaveAttribute('title', '5');
+  });
+
+  test('title false removes the native tooltip', async ({ page }) => {
+    const count = getBadge(page, 'badge_title_false').locator('.ant-badge-count');
+    await expect(count).toBeVisible();
+    await expect(count).not.toHaveAttribute('title');
+  });
+
+  test('applies class and style to the indicator', async ({ page }) => {
+    const count = getBadge(page, 'badge_indicator_style').locator('.ant-badge-count');
+    await expect(count).toHaveClass(/badge-indicator-class/);
+    await expect(count).toHaveCSS('background-color', 'rgb(0, 128, 0)');
+  });
+
+  test('renders a ribbon around the content', async ({ page }) => {
+    const block = getBadge(page, 'badge_ribbon');
+    const wrapper = block.locator('.ant-ribbon-wrapper');
+    await expect(wrapper).toHaveClass(/badge-ribbon-wrapper-class/);
+    await expect(wrapper.locator('.ant-card')).toBeVisible();
+    const ribbon = wrapper.locator('.ant-ribbon');
+    await expect(ribbon).toHaveClass(/ant-ribbon-placement-start/);
+    await expect(ribbon).toHaveCSS('background-color', 'rgb(114, 46, 209)');
+    await expect(ribbon.locator('.ant-ribbon-content')).toHaveText('Recommended');
+  });
 });

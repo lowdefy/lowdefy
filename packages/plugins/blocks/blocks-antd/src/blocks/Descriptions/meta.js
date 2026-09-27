@@ -23,6 +23,8 @@ export default {
   },
   cssKeys: {
     element: 'The Descriptions element.',
+    header: 'The header row with the title and extra content.',
+    title: 'The Descriptions title.',
     content: 'The Descriptions content.',
     label: 'The Descriptions label.',
   },
@@ -70,6 +72,14 @@ export default {
                 type: 'integer',
                 description: "The number of description items in a row for 'xl' media size.",
               },
+              xxl: {
+                type: 'integer',
+                description: "The number of description items in a row for 'xxl' media size.",
+              },
+              xxxl: {
+                type: 'integer',
+                description: "The number of description items in a row for 'xxxl' media size.",
+              },
             },
           },
         ],
@@ -85,9 +95,9 @@ export default {
               description: 'Item key to which these settings should apply.',
             },
             span: {
-              type: ['number', 'object'],
+              type: ['number', 'string', 'object'],
               description:
-                'Item span for this key. Can also be a function that receives item and index.',
+                "Item span for this key, or 'filled' to fill the rest of the row. Can also be a function that receives item and index.",
               docs: {
                 displayType: 'number',
               },
@@ -159,8 +169,12 @@ export default {
                   ],
                 },
                 span: {
-                  type: 'integer',
-                  description: 'Number of columns for this item to span.',
+                  type: ['integer', 'string', 'object'],
+                  description:
+                    "Number of columns for this item to span. Set to 'filled' to fill the rest of the row, or an object of breakpoint spans like `{ xs: 1, md: 2 }`.",
+                  docs: {
+                    displayType: 'yaml',
+                  },
                 },
                 style: {
                   type: 'object',
@@ -189,8 +203,8 @@ export default {
       },
       size: {
         type: 'string',
-        description: 'Size of the block.',
-        enum: ['default', 'small'],
+        description: 'Size of the block. `default` is the largest size.',
+        enum: ['default', 'medium', 'small'],
         default: 'default',
       },
       title: {

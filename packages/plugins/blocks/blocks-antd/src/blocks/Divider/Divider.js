@@ -24,11 +24,15 @@ const DividerBlock = ({ blockId, classNames = {}, properties, styles = {}, metho
   <Divider
     id={blockId}
     className={classNames.element}
+    classNames={{ content: classNames.title, rail: classNames.rail }}
     dashed={properties.dashed}
     titlePlacement={properties.titlePlacement}
     plain={properties.plain}
+    size={properties.size}
     style={styles.element}
+    styles={{ content: styles.title, rail: styles.rail }}
     orientation={properties.orientation}
+    variant={properties.variant}
   >
     {renderHtml({ html: properties.title, methods })}
   </Divider>

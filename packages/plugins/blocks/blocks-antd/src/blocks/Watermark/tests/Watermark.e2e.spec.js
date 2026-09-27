@@ -53,4 +53,22 @@ test.describe('Watermark Block', () => {
     // Verify child content is rendered
     await expect(block).toContainText('Multi-line watermark content');
   });
+
+  // ============================================
+  // PER-LINE FONT
+  // ============================================
+
+  test('draws a line with its own font style', async ({ page }) => {
+    const getWatermarkImage = (blockId) =>
+      getBlock(page, blockId)
+        .locator('div[style*="background-image"]')
+        .first()
+        .evaluate((el) => el.style.backgroundImage);
+    await expect(getBlock(page, 'wm_lines_font')).toContainText('Styled first line');
+    const plainImage = await getWatermarkImage('wm_lines_plain');
+    const fontImage = await getWatermarkImage('wm_lines_font');
+    expect(plainImage).toContain('data:image');
+    expect(fontImage).toContain('data:image');
+    expect(fontImage).not.toEqual(plainImage);
+  });
 });

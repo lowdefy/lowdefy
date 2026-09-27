@@ -29,35 +29,53 @@ const BadgeBlock = ({
   components: { Icon },
   properties,
   styles = {},
-}) => (
-  <Badge
-    id={blockId}
-    className={classNames.element}
-    color={properties.color}
-    dot={properties.dot}
-    offset={properties.offset}
-    overflowCount={type.isNumber(properties.overflowCount) ? properties.overflowCount : 100}
-    showZero={properties.showZero}
-    size={properties.size}
-    status={properties.status}
-    style={styles.element}
-    text={properties.text}
-    title={properties.title}
-    count={
-      (properties.icon && (
-        <Icon
-          blockId={`${blockId}_icon`}
-          classNames={{ element: classNames.icon }}
-          events={events}
-          properties={properties.icon}
-          styles={{ element: styles.icon }}
-        />
-      )) ||
-      properties.count
-    }
-  >
-    {content.content && content.content()}
-  </Badge>
-);
+}) => {
+  if (type.isObject(properties.ribbon)) {
+    return (
+      <Badge.Ribbon
+        classNames={{ root: classNames.element, indicator: classNames.indicator }}
+        color={properties.ribbon.color}
+        placement={properties.ribbon.placement}
+        styles={{ root: styles.element, indicator: styles.indicator }}
+        text={properties.ribbon.text}
+      >
+        {content.content && content.content()}
+      </Badge.Ribbon>
+    );
+  }
+  return (
+    <Badge
+      id={blockId}
+      className={classNames.element}
+      classNames={{ indicator: classNames.indicator }}
+      color={properties.color}
+      dot={properties.dot}
+      offset={properties.offset}
+      overflowCount={type.isNumber(properties.overflowCount) ? properties.overflowCount : 100}
+      showZero={properties.showZero}
+      // antd 6 renamed the `default` size to `medium`.
+      size={properties.size === 'default' ? 'medium' : properties.size}
+      status={properties.status}
+      style={styles.element}
+      styles={{ indicator: styles.indicator }}
+      text={properties.text}
+      title={properties.title}
+      count={
+        (properties.icon && (
+          <Icon
+            blockId={`${blockId}_icon`}
+            classNames={{ element: classNames.icon }}
+            events={events}
+            properties={properties.icon}
+            styles={{ element: styles.icon }}
+          />
+        )) ||
+        properties.count
+      }
+    >
+      {content.content && content.content()}
+    </Badge>
+  );
+};
 
 export default withTheme('Badge', withBlockDefaults(BadgeBlock));

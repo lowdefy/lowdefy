@@ -551,6 +551,19 @@
           properties:
             shape: square
             icon: user
+    - id: title_tooltip_off
+      type: Badge
+      layout:
+        flex: 0 0 auto
+      properties:
+        count: 3
+        title: false
+      blocks:
+        - id: title_tooltip_off_child
+          type: Avatar
+          properties:
+            shape: square
+            content: 'N'
 
 - title: Badge Wrapping Different Blocks
   blocks:
@@ -603,6 +616,50 @@
           properties:
             name: mail
             size: 24
+
+- title: Ribbon
+  blocks:
+    - id: ribbon_row
+      type: Box
+      layout:
+        gap: 24
+      blocks:
+        - id: ribbon_recommended
+          type: Badge
+          layout:
+            span: 12
+          properties:
+            ribbon:
+              text: Recommended
+          blocks:
+            - id: ribbon_recommended_card
+              type: Card
+              properties:
+                title: Team plan
+              blocks:
+                - id: ribbon_recommended_text
+                  type: Paragraph
+                  properties:
+                    content: Up to 20 members, shared workspaces and priority support.
+        - id: ribbon_sale
+          type: Badge
+          layout:
+            span: 12
+          properties:
+            ribbon:
+              text: 20% off
+              color: volcano
+              placement: start
+          blocks:
+            - id: ribbon_sale_card
+              type: Card
+              properties:
+                title: Annual billing
+              blocks:
+                - id: ribbon_sale_text
+                  type: Paragraph
+                  properties:
+                    content: Pay yearly and save on every seat.
 
 - title: Style and CSS Examples
   blocks:

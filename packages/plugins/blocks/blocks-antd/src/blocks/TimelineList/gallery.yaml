@@ -191,6 +191,43 @@
           properties:
             content: Timeline item
 
+- title: Horizontal and Filled
+  fullWidth: true
+  blocks:
+    - id: tl_horizontal
+      type: TimelineList
+      properties:
+        orientation: horizontal
+        data:
+          - label: Ordered
+            color: green
+          - label: Packed
+            color: green
+          - label: Shipped
+            color: blue
+      blocks:
+        - id: tl_horizontal_content
+          type: Paragraph
+          properties:
+            content: Order step
+    - id: tl_filled
+      type: TimelineList
+      properties:
+        variant: filled
+        titleSpan: '20%'
+        data:
+          - label: '08:00'
+            color: green
+          - label: '12:30'
+            color: blue
+          - label: '17:00'
+            color: gray
+      blocks:
+        - id: tl_filled_content
+          type: Paragraph
+          properties:
+            content: Shift event
+
 - title: Style and CSS
   fullWidth: true
   blocks:
