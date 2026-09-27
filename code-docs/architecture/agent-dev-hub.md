@@ -43,7 +43,7 @@ It replaces the old `.lowdefy/dev/.manager.lock`. It is used in four places:
 
 - An explicit port is strict: `--port`, `PORT` and `cli.port` all fail if the port is taken. The CLI passes `LOWDEFY_SERVER_DEV_STRICT_PORT` to the manager, which binds the port. Only the unrequested default of 3000 moves to the next free port.
 - The hub sets `LOWDEFY_DEV_PORT`, which outranks `--port`, because dev scripts often hard-code one. It also sets `LOWDEFY_SERVER_DEV_INTERNAL_PORT` for the Vite child, bound strictly.
-- Hub ports come from 4100–4999 in public/internal pairs. They stick to the app's path across restarts, in `registry.json`.
+- Hub ports come from 4100–4999 in public/internal pairs. They stick to the app's path across restarts, in `registry.json`, until the app is removed.
 
 ### `lowdefy mcp`
 
@@ -56,7 +56,7 @@ A low-level MCP `Server` over stdio (`createShim.js`). Nothing else may write to
 
 ### The hub
 
-`lowdefy hub serve` (`hubServe.js` + `createHub.js`) speaks newline-delimited JSON-RPC over a Unix socket at `~/.lowdefy/hub/hub.sock`, or a named pipe on Windows. The socket falls back to the temp directory when the path is too long. `connectHub` starts the hub detached when none answers.
+`lowdefy hub serve` (`hubServe.js` + `createHub.js`) speaks newline-delimited JSON-RPC over a Unix socket at `~/.lowdefy/hub/hub.sock`, or a named pipe on Windows. The socket falls back to the temp directory when the path is too long. `connectHub` starts the hub detached when none answers; a shim shares one connect between parallel tool calls. Hubs that start together against a stale socket take it over under a start lock (`withStartLock.js`, `hub/start.lock`), so exactly one keeps listening.
 
 - **Start.**
   - `resolveDevCommand` picks the app's dev script: `cli.devScript`, else the one `package.json` script containing `lowdefy dev`, else `npx --no-install lowdefy dev`. Several matching scripts is an error, because one is often a production-secrets variant.
@@ -64,11 +64,13 @@ A low-level MCP `Server` over stdio (`createShim.js`). Nothing else may write to
   - Output goes to `<app>/.lowdefy/dev.log`.
   - A hub-owned manager never opens a browser.
 - **Stop.** `stopProcessGroup` sends SIGTERM to the group, then SIGKILL after 5 s; on Windows it runs `taskkill /T /F`. The hub only stops what is in its registry. It never kills by port or name.
-- **Pid reuse.** `registry.json` survives crashes and reboots. Each entry records the leader's start time (`ps -o lstart=`). An entry whose pid is alive but whose start time differs is dropped, never signalled.
+- **Pid reuse.** `registry.json` survives crashes and reboots. Each entry records the leader's start time (`ps -o lstart=`, run with `LC_ALL=C` and `TZ=UTC` so hubs started from different sessions read the same string). An entry whose pid is alive but whose start time differs is dropped, never signalled.
 - **Adoption.** A new hub reads the registry and keeps the live entries. It can stop those servers, but has no exit events for them.
+- **One at a time.** `start` and `stop` decide and act one at a time (waiting for ready does not), so parallel starts of one app share one server and two apps never get the same port pair.
+- **Leader exit.** When the group leader exits, the hub stops the rest of its group: a manager killed outright otherwise leaves Vite running on the internal port.
 - **Reaping.** Every minute, the hub stops managed servers in two cases:
 
-  - Their directory is gone.
+  - Their app is gone: no `lowdefy.yaml` (a running server recreates `.lowdefy/` after its worktree is deleted, so the directory itself is no signal). The port pairs of removed apps are released too.
   - No shim is attached, 30 minutes have passed, and `GET /api/dev-inspect` reports no open tabs.
 
   The hub exits after 10 idle minutes with no servers and no clients.

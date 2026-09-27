@@ -22,9 +22,11 @@ setting up twice:
 
 Per worktree state stays per worktree: `node_modules`, `dist`, `_server/`, `.lowdefy/`.
 
-Git state that is _not_ per worktree: branches, tags and the stash. Avoid `git stash` when
-several worktrees (or agents) work at once, since one worktree's `git stash pop` can apply
-another's entry. Compare against the base with `git diff` or `git show HEAD:<file>` instead.
+Git state that is _not_ per worktree: branches, tags, the stash and the `rerere` cache. Avoid
+`git stash` when several worktrees (or agents) work at once, since one worktree's
+`git stash pop` can apply another's entry, and a conflict resolved during it is recorded by
+`rerere` and replayed on the owner's later pop. Compare against the base with `git diff` or
+`git show HEAD:<file>` instead.
 
 ## Unit tests
 
@@ -78,6 +80,9 @@ suites one at a time within a worktree (`pnpm e2e` already does).
   `LOWDEFY_HOME` at a temporary directory in tests so they never touch the real hub.
 - A running dev server records itself in `<app>/.lowdefy/instance.json`; tests that start
   one should stop it and remove the file.
+- Hub tests pass a port range of their own (`portRange` to `createHub`, `range` to
+  `allocatePorts`), away from the real hub's 4100–4999, which hubs started by agents in other
+  worktrees bind.
 
 ## Block tests
 
