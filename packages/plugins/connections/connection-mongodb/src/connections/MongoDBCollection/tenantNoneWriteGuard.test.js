@@ -19,6 +19,7 @@
 // must leave the collection exactly as it was. A write the guard lets through
 // must never leave a row the tenant preflight would refuse.
 
+import MongoDBAggregation from './MongoDBAggregation/MongoDBAggregation.js';
 import MongoDBBulkWrite from './MongoDBBulkWrite/MongoDBBulkWrite.js';
 import MongoDBInsertOne from './MongoDBInsertOne/MongoDBInsertOne.js';
 import MongoDBUpdateMany from './MongoDBUpdateMany/MongoDBUpdateMany.js';
@@ -32,6 +33,8 @@ const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
 const tenantGuard = { field: 'organization_id' };
 const refusal = 'Unscoped write (tenant: none) on a tenant connection must leave "organization_id"';
+const aggregationRefusal =
+  'Unscoped aggregation (tenant: none) on a tenant connection can not contain';
 const seed = [
   { _id: 'a1', doc_id: 'da', organization_id: 'org_a', v: 'before' },
   { _id: 'b1', doc_id: 'db', organization_id: 'org_b', v: 'before' },
@@ -85,6 +88,39 @@ test.each([
     },
     `${refusal} a non-empty organization id on every row it writes - the version copy carries null`,
   ],
+  [
+    'an aggregation that $merges org-less rows over its own collection',
+    MongoDBAggregation,
+    {
+      pipeline: [
+        { $project: { v: 1 } },
+        { $merge: { into: 'tenantNoneWriteGuardRefused', whenMatched: 'replace' } },
+      ],
+    },
+    `${aggregationRefusal} "$merge"`,
+  ],
+  [
+    'an aggregation that $outs org-less rows over its own collection',
+    MongoDBAggregation,
+    { pipeline: [{ $project: { v: 1 } }, { $out: 'tenantNoneWriteGuardRefused' }] },
+    `${aggregationRefusal} "$out"`,
+  ],
+  [
+    'an aggregation with a $merge in a $lookup sub-pipeline',
+    MongoDBAggregation,
+    {
+      pipeline: [
+        {
+          $lookup: {
+            from: 'tenantNoneWriteGuardRefused',
+            pipeline: [{ $merge: { into: 'tenantNoneWriteGuardRefused' } }],
+            as: 'joined',
+          },
+        },
+      ],
+    },
+    `${aggregationRefusal} "$merge"`,
+  ],
 ])(
   'tenant: none refuses %s and leaves the collection unchanged',
   async (_, resolver, request, error) => {
@@ -130,4 +166,37 @@ test('tenant: none writes that keep every row stamped reach rows of every organi
   await expect(tenantPreflight({ connection, field: 'organization_id' })).resolves.toEqual({
     ok: true,
   });
+});
+
+test('tenant: none aggregations that only read still reach rows of every organization', async () => {
+  const collection = 'tenantNoneWriteGuardAggregationRead';
+  await populateTestMongoDb({ collection, documents: seed });
+  const res = await MongoDBAggregation({
+    request: { pipeline: [{ $sort: { _id: 1 } }, { $project: { organization_id: 1 } }] },
+    connection: makeConnection(collection),
+    tenant: null,
+    tenantGuard,
+  });
+  expect(res).toEqual([
+    { _id: 'a1', organization_id: 'org_a' },
+    { _id: 'b1', organization_id: 'org_b' },
+  ]);
+});
+
+test('an aggregation without the tenant guard still runs its $merge', async () => {
+  const collection = 'tenantNoneWriteGuardUnguardedMerge';
+  const into = 'tenantNoneWriteGuardUnguardedMergeTarget';
+  await populateTestMongoDb({ collection, documents: seed });
+  await populateTestMongoDb({ collection: into, documents: [{ _id: 'old' }] });
+  await MongoDBAggregation({
+    request: { pipeline: [{ $project: { v: 1 } }, { $merge: { into } }] },
+    connection: makeConnection(collection),
+    tenant: null,
+    tenantGuard: null,
+  });
+  expect(await readAll(into)).toEqual([
+    { _id: 'a1', v: 'before' },
+    { _id: 'b1', v: 'before' },
+    { _id: 'old' },
+  ]);
 });

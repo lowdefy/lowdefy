@@ -16,6 +16,8 @@
 
 import { ConfigError } from '@lowdefy/errors';
 
+import getCollectionWriteStage from './getCollectionWriteStage.js';
+
 // The write half of the tenant: none opt-out (the guard is computed by the
 // api's resolveTenantGuard). An unscoped request is neither filtered nor
 // stamped, so the app authors the tenant field itself - and this checks that
@@ -272,4 +274,34 @@ function assertUnscopedBulkOperations({ operations, field }) {
   });
 }
 
-export { assertUnscopedBulkOperations, assertUnscopedDoc, assertUnscopedUpdate };
+// An aggregation reads unscoped under tenant: none, which is the point of the
+// opt-out, but $out and $merge write the pipeline's output as rows no check
+// can see - refused like on the scoped path (injectTenantIntoPipeline).
+// MongoDB only runs them as the final root stage; the walk still covers every
+// sub-pipeline the scoped path walks, so the guard does not rest on the
+// server's placement rule.
+function assertUnscopedPipeline({ pipeline, field }) {
+  (Array.isArray(pipeline) ? pipeline : []).forEach((stage) => {
+    if (stage === null || typeof stage !== 'object') return;
+    const writeStage = getCollectionWriteStage({ stage });
+    if (writeStage !== null) {
+      throw new ConfigError(
+        `Unscoped aggregation (tenant: none) on a tenant connection can not contain "${writeStage}" - it writes rows the tenant guard can not check for a non-empty "${field}", and a row without it makes the tenant preflight refuse to serve the app. Return the documents and write them with MongoDBInsertMany or MongoDBBulkWrite, which check every row, or run the aggregation on a tenant: shared connection if it writes into a collection no scoped connection reads.`
+      );
+    }
+    assertUnscopedPipeline({ pipeline: stage.$lookup?.pipeline, field });
+    assertUnscopedPipeline({ pipeline: stage.$unionWith?.pipeline, field });
+    if (stage.$facet !== null && typeof stage.$facet === 'object') {
+      Object.values(stage.$facet).forEach((branch) =>
+        assertUnscopedPipeline({ pipeline: branch, field })
+      );
+    }
+  });
+}
+
+export {
+  assertUnscopedBulkOperations,
+  assertUnscopedDoc,
+  assertUnscopedPipeline,
+  assertUnscopedUpdate,
+};
