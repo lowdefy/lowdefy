@@ -14,23 +14,22 @@
   limitations under the License.
 */
 
-/* eslint-disable no-unused-vars */
+import crypto from 'node:crypto';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 
 import { jest } from '@jest/globals';
+import { create } from 'tar';
 
-// TODO: not testing decompress
+const tarballs = {};
+const integrities = {};
+let root;
+let directory;
 
-jest.mock('decompress');
-jest.mock('decompress-targz');
-
-const directory = 'directory';
-
-jest.unstable_mockModule('decompress', () => {
-  const mockDecompress = jest.fn();
-  return {
-    default: mockDecompress,
-  };
-});
+function sri(data) {
+  return `sha512-${crypto.createHash('sha512').update(data).digest('base64')}`;
+}
 
 jest.unstable_mockModule('axios', () => {
   return {
@@ -41,9 +40,16 @@ jest.unstable_mockModule('axios', () => {
             data: {
               versions: {
                 '1.0.0': {
-                  dist: {
-                    tarball: 'tarball-url',
-                  },
+                  dist: { tarball: 'tarball-valid', integrity: integrities.valid },
+                },
+                tampered: {
+                  dist: { tarball: 'tarball-traversal', integrity: integrities.valid },
+                },
+                traversal: {
+                  dist: { tarball: 'tarball-traversal', integrity: integrities.traversal },
+                },
+                noIntegrity: {
+                  dist: { tarball: 'tarball-valid' },
                 },
                 v404: {
                   dist: {
@@ -69,10 +75,11 @@ jest.unstable_mockModule('axios', () => {
             },
           });
         }
-        if (url === 'tarball-url') {
-          return {
-            data: Buffer.from('tarball data'),
-          };
+        if (url === 'tarball-valid') {
+          return { data: tarballs.valid };
+        }
+        if (url === 'tarball-traversal') {
+          return { data: tarballs.traversal };
         }
         if (url === 'https://registry.npmjs.org/404') {
           const error = new Error('Test 404');
@@ -95,40 +102,82 @@ jest.unstable_mockModule('axios', () => {
   };
 });
 
-test('valid package and version', async () => {
+// npm tarballs keep every file under a top-level package/ directory.
+async function packTarball({ cwd, entries, name, preservePaths = false }) {
+  const file = path.join(root, `${name}.tgz`);
+  await create({ cwd, file, gzip: true, preservePaths }, entries);
+  tarballs[name] = fs.readFileSync(file);
+  integrities[name] = sri(tarballs[name]);
+}
+
+beforeAll(async () => {
+  root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-cli-tarball-'));
+  const source = path.join(root, 'source');
+  fs.mkdirSync(path.join(source, 'package', 'lib'), { recursive: true });
+  fs.writeFileSync(path.join(source, 'package', 'package.json'), '{"name":"valid-package"}');
+  fs.writeFileSync(path.join(source, 'package', 'lib', 'index.js'), 'export default 1;');
+  fs.writeFileSync(path.join(root, 'escaped.txt'), 'outside');
+  await packTarball({ cwd: source, entries: ['package'], name: 'valid' });
+  // After the package/ prefix is stripped, the second entry is ../escaped.txt.
+  await packTarball({
+    cwd: source,
+    entries: ['package/package.json', 'package/../../escaped.txt'],
+    name: 'traversal',
+    preservePaths: true,
+  });
+});
+
+beforeEach(() => {
+  directory = path.join(fs.mkdtempSync(path.join(root, 'install-')), 'server');
+});
+
+afterAll(() => {
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+test('valid package and version extracts the tarball without its package directory', async () => {
   const { default: fetchNpmTarball } = await import('./fetchNpmTarball.js');
-  const { default: decompress } = await import('decompress');
   await fetchNpmTarball({ packageName: 'valid-package', version: '1.0.0', directory });
-  expect(decompress.mock.calls).toMatchInlineSnapshot(`
-    Array [
-      Array [
-        Object {
-          "data": Array [
-            116,
-            97,
-            114,
-            98,
-            97,
-            108,
-            108,
-            32,
-            100,
-            97,
-            116,
-            97,
-          ],
-          "type": "Buffer",
-        },
-        "directory",
-        Object {
-          "plugins": Array [
-            undefined,
-          ],
-          "strip": 1,
-        },
-      ],
-    ]
-  `);
+  expect(fs.readFileSync(path.join(directory, 'package.json'), 'utf8')).toBe(
+    '{"name":"valid-package"}'
+  );
+  expect(fs.readFileSync(path.join(directory, 'lib', 'index.js'), 'utf8')).toBe(
+    'export default 1;'
+  );
+});
+
+test.each([
+  ['does not match the registry integrity', 'tampered', 'does not match the sha512 integrity hash'],
+  ['has no registry integrity', 'noIntegrity', 'has no sha512, sha384 or sha256 integrity hash'],
+])('a tarball that %s is not extracted', async (_, version, message) => {
+  const { default: fetchNpmTarball } = await import('./fetchNpmTarball.js');
+  await expect(
+    fetchNpmTarball({ packageName: 'valid-package', version, directory })
+  ).rejects.toThrow(`Package "valid-package@${version}" tarball ${message}`);
+  expect(fs.existsSync(directory)).toBe(false);
+});
+
+test('a tarball with an entry outside the directory fails and leaves nothing behind', async () => {
+  const { default: fetchNpmTarball } = await import('./fetchNpmTarball.js');
+  await expect(
+    fetchNpmTarball({ packageName: 'valid-package', version: 'traversal', directory })
+  ).rejects.toThrow();
+  // The valid package.json entry comes before the bad one, but a partial
+  // server would stop getServer from fetching again.
+  expect(fs.readdirSync(path.dirname(directory))).toEqual([]);
+});
+
+test('a failed extraction over an earlier download can be retried', async () => {
+  const { default: fetchNpmTarball } = await import('./fetchNpmTarball.js');
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(path.join(directory, 'stale.txt'), 'stale');
+  await expect(
+    fetchNpmTarball({ packageName: 'valid-package', version: 'traversal', directory })
+  ).rejects.toThrow();
+  expect(fs.existsSync(path.join(directory, 'package.json'))).toBe(false);
+
+  await fetchNpmTarball({ packageName: 'valid-package', version: '1.0.0', directory });
+  expect(fs.readdirSync(directory).sort()).toEqual(['lib', 'package.json']);
 });
 
 test('version does not exist', async () => {
