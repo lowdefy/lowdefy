@@ -359,8 +359,9 @@ test.describe('Modal Block features', () => {
 
   test('responsive width applies the matching breakpoint', async ({ page }) => {
     const container = await openModal(page, 'modal_responsive_width');
-    const box = await page.locator('.ant-modal').filter({ has: container }).boundingBox();
-    expect(Math.round(box.width)).toBe(640);
+    const modal = page.locator('.ant-modal').filter({ has: container });
+    // Polled, because the modal zooms in from a smaller scale as it opens.
+    await expect.poll(async () => Math.round((await modal.boundingBox()).width)).toBe(640);
   });
 
   test('scrollLock false leaves page scrolling on', async ({ page }) => {
