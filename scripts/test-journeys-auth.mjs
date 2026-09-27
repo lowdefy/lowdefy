@@ -81,7 +81,9 @@ async function findPorts({ start }) {
 
 async function startDatabase({ port }) {
   const replSet = await MongoMemoryReplSet.create({
-    instanceOpts: [{ port, storageEngine: 'wiredTiger' }],
+    // A loaded machine or CI runner can take well over the 10 second default
+    // to start mongod.
+    instanceOpts: [{ port, storageEngine: 'wiredTiger', launchTimeout: 60000 }],
     replSet: { count: 1 },
   });
   const uri = replSet.getUri('auth-reference-tenant');
@@ -119,6 +121,9 @@ function startDevServer({ ports, uri }) {
     env: {
       ...process.env,
       BETTER_AUTH_URL: `http://localhost:${ports.app}`,
+      // Read by the app's build: invitations expire after the 60 second
+      // minimum, so the expiry journeys can wait one out.
+      INVITATION_EXPIRES_IN: '60',
       LOWDEFY_DEV_SMTP_PORT: String(ports.smtp),
       LOWDEFY_SECRET_BETTER_AUTH_SECRET: crypto.randomBytes(32).toString('base64'),
       LOWDEFY_SECRET_SMTP_HOST: '127.0.0.1',

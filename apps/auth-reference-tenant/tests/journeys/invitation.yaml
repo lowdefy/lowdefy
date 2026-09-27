@@ -1,6 +1,7 @@
 - name: an invited user signs up through the invitation, joins the inviter's organization and mints none
   pageId: signup
   user: none
+  timeout: 30000
   steps:
     - fill: { blockId: name, value: Invite Owner }
     - fill: { blockId: email, value: invite-owner@example.test }

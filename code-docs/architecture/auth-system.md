@@ -708,7 +708,7 @@ The e2e server (`@lowdefy/server-e2e`) provides a separate auth mechanism for Pl
 
 ### Client Auth
 
-`lib/client/auth/Auth.jsx` replaces the `@hono/auth-js/react` integration — there is no Auth.js engine in server-e2e. `getSession` fetches `/api/auth/session` (served by `src/routes/sessionMock.js`, which returns `context.session ?? {}` and doubles as the e2e harness health check). The `signIn` and `signOut` methods throw:
+`lib/client/auth/Auth.jsx` replaces the `@hono/auth-js/react` integration — there is no Auth.js engine in server-e2e. `getSession` fetches `/api/auth/session` (served by `src/routes/sessionMock.js`, which returns `context.session ?? {}`). The `signIn` and `signOut` methods throw:
 
 ```javascript
 function e2eNotSupported() {

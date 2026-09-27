@@ -14,7 +14,7 @@ export default createConfig();
 
 This will:
 - Look for your Lowdefy app in the current directory
-- Build and start on port 3000
+- Build and start the app's e2e server on port 3000, or reuse it if it is already running there
 - Run tests from the `e2e/` directory matching `**/*.spec.js`
 - Take screenshots only on failure
 
@@ -41,6 +41,10 @@ export default createConfig({
   timeout: 300000, // 5 minutes for slow builds
 });
 ```
+
+## Reusing a running server
+
+Playwright reuses a server that is already listening on the configured port, so starting it once with `pnpm e2e:server` in another terminal skips the build on later runs. Before any test runs, the config asks that server which build it serves. Any other server on the port, such as `lowdefy dev`, a production build, or the e2e server of another app or git worktree, stops the run with an error that names the port, instead of the tests running against it. Stop that server, or give each app or worktree its own `port`.
 
 ## Multi-app configuration
 
@@ -81,6 +85,8 @@ export default {
 };
 ```
 
+Keep `globalSetup` from the base configuration (spreading `base` does), since it runs the server check. To add your own global setup, pass both: `globalSetup: [base.globalSetup, './global-setup.js']`.
+
 ## Environment variables
 
 The configuration sets these environment variables automatically:
@@ -89,6 +95,7 @@ The configuration sets these environment variables automatically:
 |----------|---------|
 | `LOWDEFY_BUILD_DIR` | Absolute path to build artifacts — used by test fixtures to generate the block manifest |
 | `LOWDEFY_E2E_MOCKS_FILE` | Absolute path to `mocks.yaml` — used by test fixtures to load static mocks |
+| `LOWDEFY_E2E_SERVERS` | Port and build directory of each app server — used by the global setup to check a reused server |
 
 ## Assertion timeouts
 

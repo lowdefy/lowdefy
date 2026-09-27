@@ -48,6 +48,9 @@ importers:
       eslint-plugin-react-hooks:
         specifier: 4.6.0
         version: 4.6.0(eslint@8.54.0)
+      espree:
+        specifier: 11.2.0
+        version: 11.2.0
       mongodb:
         specifier: 7.2.0
         version: 7.2.0
@@ -1639,6 +1642,9 @@ importers:
         specifier: 1.0.3
         version: 1.0.3
     devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
       '@lowdefy/ajv':
         specifier: 6.0.0
         version: link:../../../utils/ajv
@@ -2202,6 +2208,9 @@ importers:
         specifier: '>=18'
         version: 18.2.0(react@18.2.0)
     devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
       '@lowdefy/ajv':
         specifier: 6.0.0
         version: link:../../../utils/ajv
@@ -2543,9 +2552,6 @@ importers:
       lightningcss:
         specifier: 1.32.0
         version: 1.32.0
-      pino:
-        specifier: 10.3.1
-        version: 10.3.1
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2565,6 +2571,9 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
     devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
       '@lowdefy/build':
         specifier: 6.0.0
         version: link:../../build
@@ -2655,9 +2664,6 @@ importers:
       '@lowdefy/e2e-utils':
         specifier: 6.0.0
         version: link:../../utils/e2e-utils
-      '@lowdefy/engine':
-        specifier: 6.0.0
-        version: link:../../engine
       '@lowdefy/errors':
         specifier: 6.0.0
         version: link:../../utils/errors
@@ -2748,12 +2754,6 @@ importers:
       postal-mime:
         specifier: 3.0.0
         version: 3.0.0
-      postcss:
-        specifier: 8.5.23
-        version: 8.5.23
-      process:
-        specifier: 0.11.10
-        version: 0.11.10
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2791,6 +2791,9 @@ importers:
         specifier: 3.25.76
         version: 3.25.76
     devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.3)
@@ -2899,9 +2902,6 @@ importers:
       lightningcss:
         specifier: 1.32.0
         version: 1.32.0
-      pino:
-        specifier: 10.3.1
-        version: 10.3.1
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -3097,6 +3097,9 @@ importers:
       '@babel/core':
         specifier: 7.29.6
         version: 7.29.6
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
       '@lowdefy/ajv':
         specifier: 6.0.0
         version: link:../ajv
@@ -3146,6 +3149,9 @@ importers:
         specifier: 2.4.2
         version: 2.4.2
     devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)
@@ -3312,6 +3318,9 @@ importers:
         specifier: 11.3.4
         version: 11.3.4
     devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)
@@ -9046,6 +9055,10 @@ packages:
   esm@3.2.25:
     resolution: {integrity: sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==}
     engines: {node: '>=6'}
+
+  espree@11.2.0:
+    resolution: {integrity: sha512-7p3DrVEIopW1B1avAGLuCSh1jubc01H2JHc8B4qqGblmg5gI9yumBgACjWo4JlIc04ufug4xJ3SQI8HkS/Rgzw==}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   espree@9.6.1:
     resolution: {integrity: sha512-oruZaFkjorTpF32kDSI5/75ViwGeZginGGy2NoOSg3Q9bnwlnmDm4HLnkl0RE3n+njDXR037aY1+x58Z/zFdwQ==}
@@ -20877,6 +20890,12 @@ snapshots:
       - supports-color
 
   esm@3.2.25: {}
+
+  espree@11.2.0:
+    dependencies:
+      acorn: 8.16.0
+      acorn-jsx: 5.3.2(acorn@8.16.0)
+      eslint-visitor-keys: 5.0.1
 
   espree@9.6.1:
     dependencies:

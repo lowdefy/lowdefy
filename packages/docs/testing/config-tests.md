@@ -51,9 +51,11 @@ Files run in file-name order, and journeys run one at a time — each journey op
 
 `user: none` injects no user at all, so the journey signs in through the app's own auth — see [Testing sign-up and sign-in](#testing-sign-up-and-sign-in).
 
+`timeout` sets how long each step may wait, in milliseconds (a whole number from 1 to 60000, default 5000). Raise it on a slow machine or CI runner rather than adding `wait: { ms }` steps: it applies to every step of the journey, and page opens get at least 15 seconds.
+
 ## Steps
 
-Blocks are addressed by their `blockId`. Every step has a 5 second timeout by default; a step that does not complete in time fails the journey.
+Blocks are addressed by their `blockId`. Every step has a 5 second timeout by default (the journey's `timeout` changes it); a step that does not complete in time fails the journey.
 
 | Step                                      | Meaning                                                                                                                                                     |
 | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -117,6 +119,7 @@ A journey with `user: none` injects no user: it starts signed out, and the app's
 - name: a new user signs up, verifies by email and signs in
   pageId: signup
   user: none
+  timeout: 30000
   steps:
     - fill: { blockId: email, value: ada@example.test }
     - fill: { blockId: password, value: correct-horse-battery }
@@ -132,6 +135,8 @@ A journey with `user: none` injects no user: it starts signed out, and the app's
 ```
 
 A journey that opens a protected page signed out lands on the sign-in page, the way a visitor would; assert where it landed with `expect: { url: ... }`.
+
+Give journeys that sign people in a `timeout` of about 30000. They load many pages, reload the app after each sign-in and wait for real emails, so on a busy machine or a CI runner the 5 second default fails them at random steps.
 
 ### Emails
 

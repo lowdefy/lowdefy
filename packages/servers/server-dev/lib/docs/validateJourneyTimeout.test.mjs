@@ -14,4 +14,16 @@
   limitations under the License.
 */
 
-export { default as DocSearch } from './blocks/DocSearch/e2e.js';
+import validateJourneyTimeout from './validateJourneyTimeout.js';
+
+test.each([undefined, 1, 5000, 60000])('validateJourneyTimeout accepts %j', (timeout) => {
+  expect(validateJourneyTimeout({ timeout })).toBeUndefined();
+});
+
+test.each([0, -1, 60001, 1500.5, '5000', null])('validateJourneyTimeout rejects %j', (timeout) => {
+  expect(validateJourneyTimeout({ timeout })).toEqual(
+    `The journey "timeout" must be a whole number of milliseconds from 1 to 60000. Received ${JSON.stringify(
+      timeout
+    )}.`
+  );
+});
