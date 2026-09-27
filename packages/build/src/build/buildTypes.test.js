@@ -18,6 +18,7 @@ import basicTypes from '@lowdefy/blocks-basic/types';
 import loaderTypes from '@lowdefy/blocks-loaders/types';
 
 import buildTypes from './buildTypes.js';
+import jsAccessorOperators from './jsAccessorOperators.js';
 import testContext from '../test-utils/testContext.js';
 
 // buildTypes always registers mandatory framework types (form validation
@@ -98,4 +99,26 @@ test('buildTypes resolves the organization step types that no action type shares
   stepTypeNames.forEach((typeName) => {
     expect(components.types.actions[typeName]).toBeUndefined();
   });
+});
+
+test('buildTypes bundles the server operators the _js accessors call when server config runs _js', () => {
+  const context = createTypesMapContext({
+    operators: {
+      client: createDefinitions(['_not', '_type']),
+      server: createDefinitions(['_js', ...jsAccessorOperators.server]),
+    },
+  });
+  context.typeCounters.operators.server.increment('_js', 'step-key');
+  const components = {};
+  buildTypes({ components, context });
+  expect(Object.keys(components.types.operators.server).sort()).toEqual(
+    ['_js', ...jsAccessorOperators.server].sort()
+  );
+});
+
+test('buildTypes adds no server accessor operators when no server config runs _js', () => {
+  const context = createTypesMapContext();
+  const components = {};
+  buildTypes({ components, context });
+  expect(components.types.operators.server).toEqual({});
 });

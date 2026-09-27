@@ -20,6 +20,8 @@ import breadcrumbList from '../../schemas/breadcrumbList.js';
 
 export default {
   category: 'container',
+  actions: ['SetDarkMode', 'SetLocale'],
+  operators: ['_event'],
   icons: [
     'bell',
     'user',

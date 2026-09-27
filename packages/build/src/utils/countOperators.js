@@ -16,6 +16,29 @@
 
 import { getOperatorType, type } from '@lowdefy/helpers';
 
+const OPERATOR_NAME = /^_[A-Za-z]\w*$/;
+
+// _operator calls the operator it names through the operator registry, so the
+// names written in its `name` config (a literal, or the names an _if returns
+// from `then` and `else`) are counted like operators the config uses directly.
+// A name read from state or a request, and anything an _if only compares in its
+// `test`, is not a name the call can take.
+function countNamedOperators(name, counter, configKey) {
+  if (type.isString(name)) {
+    const [operator] = name.split('.');
+    if (OPERATOR_NAME.test(operator)) {
+      counter.increment(operator, configKey);
+    }
+    return;
+  }
+  if (getOperatorType(name) !== '_if') {
+    return;
+  }
+  const [ifKey] = Object.keys(name).filter((key) => !key.startsWith('~'));
+  countNamedOperators(name[ifKey]?.then, counter, configKey);
+  countNamedOperators(name[ifKey]?.else, counter, configKey);
+}
+
 function walkAndCount(value, counter, parentConfigKey) {
   if (type.isArray(value)) {
     value.forEach((item) => walkAndCount(item, counter, parentConfigKey));
@@ -31,6 +54,10 @@ function walkAndCount(value, counter, parentConfigKey) {
   const operator = getOperatorType(value);
   if (operator) {
     counter.increment(operator, configKey);
+  }
+  if (operator === '_operator') {
+    const [operatorKey] = Object.keys(value).filter((key) => !key.startsWith('~'));
+    countNamedOperators(value[operatorKey]?.name, counter, configKey);
   }
 
   // Recurse into all values

@@ -55,7 +55,7 @@ _ref:
 
             ###### Public files
 
-            Files in your app's `public/` directory (favicon, icons, images, `manifest.webmanifest`, etc.) are copied into `dist/client` by Vite during the build, placed in `.vercel/output/static`, and served by the Vercel CDN — no extra configuration needed.
+            Files in your app's `public/` directory (favicon, icons, images, `manifest.webmanifest`, etc.) are copied into `dist/client` by Vite during the build, placed in `.vercel/output/static`, and served by the Vercel CDN — no extra configuration needed. With `config.basePath` set, they are placed and served under the base path, as are the generated cron paths below.
 
             ###### Secrets and environment variables
 
@@ -111,7 +111,7 @@ _ref:
 
             ###### Crons for staging and other environments
 
-            Vercel fires cron jobs only on the **production** deployment — a staging or preview deployment never runs its schedules on its own. Give an environment a `cron.secret` and the environment Vercel fires crons on registers that environment's schedules too; when one fires, production forwards it to that environment's own `/api/cron/<endpointId>` at its `url` and answers Vercel immediately (the ping is fire-and-forget, kept alive via the request context and bounded by `maxDuration`; its outcome is logged as `forward_scheduled_endpoint_done` / `_failed`).
+            Vercel fires cron jobs only on the **production** deployment — a staging or preview deployment never runs its schedules on its own. Give an environment a `cron.secret` and the environment Vercel fires crons on registers that environment's schedules too; when one fires, production forwards it to that environment's own `/api/cron/<endpointId>` at its `url` (under `config.basePath` when one is set) and answers Vercel immediately (the ping is fire-and-forget, kept alive via the request context and bounded by `maxDuration`; its outcome is logged as `forward_scheduled_endpoint_done` / `_failed`).
 
             - **Forwarded environments:** an environment with a `cron.secret` is forwarded to, so it must have a `url`. `cron.secret` is the **name** of the Lowdefy secret holding that environment's own `CRON_SECRET` — a plain string such as `STAGING_CRON_SECRET`, not `{ _secret: ... }`: environment settings are resolved at build time, and the forward route reads the value at runtime from `LOWDEFY_SECRET_<name>`. Set `cron.enabled: false` on an environment to register no crons for it.
             - **Secrets on production:** for each forwarded environment add an Environment Variable `LOWDEFY_SECRET_<secret name>` (for example `LOWDEFY_SECRET_STAGING_CRON_SECRET`) to the production deployment, with that environment's `CRON_SECRET` as value. The forward route `/api/cron-forward/*` itself is secured by production's own `CRON_SECRET` like every cron route, and fails closed when the environment's secret is missing.

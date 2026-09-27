@@ -54,4 +54,11 @@ export default defineConfig(({ mode }) => ({
       input: 'client/main.jsx',
     },
   },
+  resolve: {
+    // Linked plugin packages (pnpm link: / workspace) resolve their own copies of
+    // shared libraries. They must share one React, the antd/X/cssinjs copies
+    // whose context providers (App, ConfigProvider, StyleProvider) the client
+    // renders, and the dayjs whose global locale the client sets.
+    dedupe: ['react', 'react-dom', 'antd', '@ant-design/x', '@ant-design/cssinjs', 'dayjs'],
+  },
 }));

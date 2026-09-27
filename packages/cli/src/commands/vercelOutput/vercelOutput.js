@@ -22,16 +22,24 @@ import apiHandler from './apiHandler.js';
 import copyTracedFiles from '../../utils/copyTracedFiles.js';
 import findTraceBase from '../../utils/findTraceBase.js';
 
-// Function settings come from lowdefy.yaml `config.vercel` (written to build/config.json by
-// @lowdefy/build). maxDuration defaults to 60; plan limits are enforced by Vercel at deploy time.
-async function readFunctionConfig({ buildDirectory }) {
+// lowdefy.yaml `config`, as @lowdefy/build writes it to build/config.json.
+async function readAppConfig({ buildDirectory }) {
   const raw = await readFile(path.join(buildDirectory, 'config.json'));
-  const config = raw ? JSON.parse(raw) : {};
-  const vercel = config.vercel ?? {};
+  return raw ? JSON.parse(raw) : {};
+}
+
+// Function settings come from `config.vercel`. maxDuration defaults to 60; plan limits are enforced
+// by Vercel at deploy time.
+function getFunctionConfig({ appConfig }) {
+  const vercel = appConfig.vercel ?? {};
   return {
     maxDuration: vercel.maxDuration ?? 60,
     ...(vercel.memory ? { memory: vercel.memory } : {}),
   };
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 // The crons array is generated from build/schedules.json (written by @lowdefy/build for endpoints
@@ -39,15 +47,16 @@ async function readFunctionConfig({ buildDirectory }) {
 // on the production deployment, so with config.environments the schedules of every other
 // environment are registered here too, as cron-forward jobs the production deployment relays to
 // that environment's own /api/cron route.
-async function readCrons({ buildDirectory }) {
+// The app mounts every route under config.basePath, so the cron paths carry it too.
+async function readCrons({ basePath, buildDirectory }) {
   const raw = await readFile(path.join(buildDirectory, 'schedules.json'));
   if (!raw) return [];
   const schedules = JSON.parse(raw);
   return schedules.map(({ endpointId, cron, environment, forward }) => ({
     path:
       forward === true
-        ? `/api/cron-forward/${environment}/${endpointId}`
-        : `/api/cron/${endpointId}`,
+        ? `${basePath}/api/cron-forward/${environment}/${endpointId}`
+        : `${basePath}/api/cron/${endpointId}`,
     schedule: cron,
   }));
 }
@@ -92,8 +101,12 @@ async function vercelOutput({ context }) {
   // Start clean so artifacts from a previous build do not leak into the deployment.
   await cleanDirectory(outputDirectory);
 
-  // 1. Static assets + public files served by the Vercel CDN.
-  await copyFileOrDirectory(clientDirectory, staticDirectory);
+  // 1. Static assets + public files served by the Vercel CDN. The client is built with
+  //    config.basePath as its base, so the HTML asks for <basePath>/assets/*: the files are served
+  //    from there.
+  const appConfig = await readAppConfig({ buildDirectory });
+  const basePath = appConfig.basePath ?? '';
+  await copyFileOrDirectory(clientDirectory, path.join(staticDirectory, basePath));
 
   // 2. The runtime file closure of the Hono server, traced with @vercel/nft — the app source, the
   //    build-generated plugin import files, and exactly the node_modules files they resolve to
@@ -129,7 +142,7 @@ async function vercelOutput({ context }) {
 
   // 4. The function entry and its config. The handler path is relative to the api.func root.
   const handler = path.posix.join(...relServer.split(path.sep), 'api', 'index.js');
-  const functionConfig = await readFunctionConfig({ buildDirectory });
+  const functionConfig = getFunctionConfig({ appConfig });
   await writeFile(path.join(functionServerDirectory, 'api', 'index.js'), apiHandler);
   await writeFile(
     path.join(functionDirectory, '.vc-config.json'),
@@ -149,12 +162,12 @@ async function vercelOutput({ context }) {
   //    register the cron jobs. Vite content-hashes everything under assets/, so those files are
   //    cached for good; Vercel's static default (max-age=0, must-revalidate) would revalidate
   //    each of a page's chunks on every visit.
-  const crons = await readCrons({ buildDirectory });
+  const crons = await readCrons({ basePath, buildDirectory });
   const config = {
     version: 3,
     routes: [
       {
-        src: '^/assets/(.*)$',
+        src: `^${escapeRegExp(basePath)}/assets/(.*)$`,
         headers: { 'cache-control': 'public, max-age=31536000, immutable' },
         continue: true,
       },

@@ -176,7 +176,7 @@ export default extractBlockTypes(metas);
 
 - `blocks` — array of block type names
 - `icons` — map of block name → icon name arrays
-- `blockMetas` — map of block name → `{ category, valueType?, initValue?, slots?, cssKeys? }` (cssKeys are reduced to an array of key names)
+- `blockMetas` — map of block name → `{ category, valueType?, initValue?, slots?, cssKeys?, actions?, operators? }` (cssKeys are reduced to an array of key names). `actions` and `operators` list the types a block runs through events it registers itself (`methods.registerEvent`, such as a file block's `Request`); the build adds them to every page that uses the block (`countImpliedClientTypes`), since each page loads only its own plugin code.
 
 ### buildBlockSchema(meta)
 

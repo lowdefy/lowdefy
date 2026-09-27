@@ -61,16 +61,25 @@ test('buildGenerateCallOptions copies all defined call settings and omits undefi
   expect(buildGenerateCallOptions({ request })).toEqual({ ...rest, instructions: system });
 });
 
-test('buildGenerateCallOptions opts in to system messages written in the request', () => {
-  const messages = [
-    { role: 'system', content: 'Answer in French.' },
-    { role: 'user', content: 'Hello' },
-  ];
-  expect(buildGenerateCallOptions({ request: { messages } })).toEqual({
-    messages,
-    allowSystemInMessages: true,
-  });
+const systemMessages = [
+  { role: 'system', content: 'Answer in French.' },
+  { role: 'user', content: 'Hello' },
+];
+
+test('buildGenerateCallOptions passes system messages when the request allows them', () => {
+  expect(
+    buildGenerateCallOptions({ request: { messages: systemMessages, allowSystemInMessages: true } })
+  ).toEqual({ messages: systemMessages, allowSystemInMessages: true });
 });
+
+test.each([undefined, false])(
+  'buildGenerateCallOptions rejects a system message when allowSystemInMessages is %s',
+  (allowSystemInMessages) => {
+    expect(() =>
+      buildGenerateCallOptions({ request: { messages: systemMessages, allowSystemInMessages } })
+    ).toThrow('"messages" includes a system message.');
+  }
+);
 
 test('buildGenerateCallOptions ignores unrelated request properties', () => {
   expect(

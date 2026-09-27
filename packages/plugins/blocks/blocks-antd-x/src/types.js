@@ -14,11 +14,8 @@
   limitations under the License.
 */
 
-export default {
-  blocks: ['AgentChat', 'AgentConversations'],
-  icons: {
-    AgentChat: ['refresh', 'delete', 'bot', 'message', 'user', 'attach', 'close'],
-    AgentConversations: [],
-  },
-  blockMetas: { AgentChat: { category: 'display' }, AgentConversations: { category: 'display' } },
-};
+import { extractBlockTypes } from '@lowdefy/block-utils';
+
+import * as metas from './metas.js';
+
+export default extractBlockTypes(metas);

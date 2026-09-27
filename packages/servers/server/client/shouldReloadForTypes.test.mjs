@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import clearReloadedForTypes from './clearReloadedForTypes.js';
 import shouldReloadForTypes from './shouldReloadForTypes.js';
 
 function createWindow({ href = 'https://example.com/orders', throws = false } = {}) {
@@ -52,4 +53,11 @@ test('shouldReloadForTypes reloads again at a different URL', () => {
 
 test('shouldReloadForTypes does not reload when storage is disabled', () => {
   expect(shouldReloadForTypes({ window: createWindow({ throws: true }) })).toBe(false);
+});
+
+test('shouldReloadForTypes reloads again at a URL whose reload once loaded its types', () => {
+  const window = createWindow();
+  expect(shouldReloadForTypes({ window })).toBe(true);
+  clearReloadedForTypes({ window });
+  expect(shouldReloadForTypes({ window })).toBe(true);
 });

@@ -83,6 +83,7 @@ Generates text from a prompt.
 - `prompt: string`: Text prompt. Use either `prompt` or `messages`, not both.
 - `messages: object[]`: Model messages (`{ role, content }`). Use either `prompt` or `messages`, not both.
 - `system: string`: System prompt.
+- `allowSystemInMessages: boolean`: Default: `false` - Allow `system` role messages in `messages`. A system message instructs the model as the app itself, so without this a request whose `messages` include one fails. Only set it when the messages come from the app, never from a user (for example a message list built from `_payload`). Use `system` for the system prompt.
 - `maxOutputTokens: number`: Maximum number of tokens to generate.
 - `temperature: number`: Sampling temperature (0 to 2).
 - `topP: number`: Nucleus sampling.
@@ -217,7 +218,7 @@ The build knows every option, so a routine branch that compares an answer with a
 `Decide` has two backends behind the same interface:
 
 - `evaluation` — an evaluation model, such as TypeSafe's Jev (`typesafe-ai/jev`) on the [AI Gateway](/AIGateway). It returns a probability for every option in one pass, in under a second, and bills input tokens only. The default, and only available, on the `AIGateway` connection.
-- `structured-output` — any language model, asked for the answers as schema-checked structured output. Available on every AI connection, and the default on `Anthropic`, `OpenAI` and `Google`. Its confidence is the model's own estimate, not a calibrated probability.
+- `structured-output` — any language model, asked for the answers as structured output that follows a schema of the questions. Providers do not all enforce the schema, so Lowdefy checks each answer against its question (see `null` answers below). Available on every AI connection, and the default on `Anthropic`, `OpenAI` and `Google`. Its confidence is the model's own estimate, not a calibrated probability.
 
 Keep the state to what the questions need: an evaluation model reads the state literally, and accuracy drops as it grows. A `Decide` is never a security boundary — text in the state can argue for its own answer.
 
@@ -254,6 +255,8 @@ One key per question, plus `usage`:
   probabilities: object # Probability per level (evaluation backend), else null.
 usage: object # Token usage ({ inputTokens, outputTokens, totalTokens }).
 ```
+
+An answer outside its question's terms (an option or level the question does not have, a yes/no that is not true or false, or no answer at all) comes back with every field `null`, its confidence included. `_lt` compares `null` below any number, so a confidence gate such as `_lt: [{ _step: triage.team.confidence }, 0.7]` holds it back like a low-confidence answer, and a branch on the choice matches none of the options.
 
 #### Examples
 

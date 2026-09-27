@@ -57,3 +57,32 @@ test('buildPages records the client types each page uses, including subscription
     'Card',
   ]);
 });
+
+test('buildPages adds the types a page runs without naming them to its own set', () => {
+  const context = testContext({ logger: { warn: () => {}, log: () => {} } });
+  context.blockMetas = { Upload: { category: 'input', actions: ['Request'] } };
+  const components = {
+    pages: [
+      {
+        id: 'files',
+        type: 'Box',
+        auth: { public: true },
+        blocks: [{ id: 'upload', type: 'Upload' }],
+      },
+      {
+        id: 'script',
+        type: 'Box',
+        auth: { public: true },
+        properties: { title: { _js: 'return state("name");' } },
+      },
+    ],
+  };
+  buildPages({ components, context });
+  const files = context.pageTypeCounters.get('files');
+  const script = context.pageTypeCounters.get('script');
+  expect(Object.keys(files.actions.getCounts())).toEqual(['Request']);
+  expect(Object.keys(script.operators.getCounts())).toEqual(
+    expect.arrayContaining(['_js', '_state', '_request', '_url_query'])
+  );
+  expect(Object.keys(script.actions.getCounts())).toEqual([]);
+});
