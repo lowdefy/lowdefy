@@ -147,8 +147,8 @@ test('valid package and version extracts the tarball without its package directo
 });
 
 test.each([
-  ['does not match the registry integrity', 'tampered', 'does not match the integrity hash'],
-  ['has no registry integrity', 'noIntegrity', 'has no integrity hash'],
+  ['does not match the registry integrity', 'tampered', 'does not match the sha512 integrity hash'],
+  ['has no registry integrity', 'noIntegrity', 'has no sha512, sha384 or sha256 integrity hash'],
 ])('a tarball that %s is not extracted', async (_, version, message) => {
   const { default: fetchNpmTarball } = await import('./fetchNpmTarball.js');
   await expect(

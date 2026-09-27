@@ -16,22 +16,32 @@
 
 import crypto from 'node:crypto';
 
+// Strongest first. Like ssri, only the strongest algorithm listed is checked,
+// so a weaker hash next to it cannot vouch for the data.
+const ALGORITHMS = ['sha512', 'sha384', 'sha256'];
+
 // integrity is a Subresource Integrity string, as npm registries publish it
-// in dist.integrity: one or more "<algorithm>-<base64 digest>" entries.
+// in dist.integrity: one or more "<algorithm>-<base64 digest>[?options]"
+// entries separated by whitespace.
 function verifyIntegrity({ data, integrity, name }) {
-  const entries = (integrity ?? '').split(/\s+/).filter(Boolean);
-  if (entries.length === 0) {
-    throw new Error(`${name} has no integrity hash in the registry.`);
-  }
-  const matches = entries.some((entry) => {
+  const digests = {};
+  (integrity ?? '').split(/\s+/).forEach((entry) => {
     const separator = entry.indexOf('-');
     const algorithm = entry.slice(0, separator);
-    const digest = entry.slice(separator + 1);
-    return crypto.createHash(algorithm).update(data).digest('base64') === digest;
+    if (separator === -1 || !ALGORITHMS.includes(algorithm)) {
+      return;
+    }
+    const [digest] = entry.slice(separator + 1).split('?');
+    digests[algorithm] = [...(digests[algorithm] ?? []), digest];
   });
-  if (!matches) {
+  const algorithm = ALGORITHMS.find((candidate) => digests[candidate]);
+  if (!algorithm) {
+    throw new Error(`${name} has no sha512, sha384 or sha256 integrity hash in the registry.`);
+  }
+  const actual = crypto.createHash(algorithm).update(data).digest('base64');
+  if (!digests[algorithm].includes(actual)) {
     throw new Error(
-      `${name} does not match the integrity hash in the registry. The download may be corrupted or tampered with.`
+      `${name} does not match the ${algorithm} integrity hash in the registry. The download may be corrupted or tampered with.`
     );
   }
 }
