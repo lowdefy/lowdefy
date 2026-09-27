@@ -16,6 +16,14 @@
 
 import { type } from '@lowdefy/helpers';
 
+import createSameOriginGuard from '../middleware/createSameOriginGuard.js';
+import isRebindingSafeHost from '../middleware/isRebindingSafeHost.js';
+
+// Browsers let any page open a websocket to any host, so an upgrade whose
+// Origin is another site is refused. A client with no Origin (a script, an
+// agent) connects as before.
+const guardSameOrigin = createSameOriginGuard({ allowNoOrigin: true });
+
 // In dev, Vite owns the HTTP server, so websocket upgrades can't flow through
 // @hono/node-server. The upgrade handler (src/websocket/devWebSocket.js) runs
 // this route with the upgrade request's headers so the full middleware chain
@@ -26,6 +34,17 @@ function websocketHandler(c) {
   const websocketUpgrade = c.env?.websocketUpgrade;
   if (type.isNone(websocketUpgrade)) {
     return c.json({ message: 'WebSocket upgrade required.' }, 400);
+  }
+  // Vite's host check guards HTTP requests against DNS rebinding, but upgrades
+  // reach this route through a plugin's upgrade listener, past that check - and
+  // a rebound page's Origin matches its Host. So the Host must be one no DNS
+  // answer can rebind, as Vite requires of every HTTP request.
+  if (!isRebindingSafeHost({ host: c.req.header('host') })) {
+    return c.json({ error: 'Forbidden' }, 403);
+  }
+  const refusal = guardSameOrigin(c);
+  if (refusal !== null) {
+    return refusal;
   }
   websocketUpgrade.context = c.get('lowdefyContext');
   return c.json({ ok: true });
