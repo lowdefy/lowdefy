@@ -308,6 +308,34 @@
               blockId: notif_dur_sticky
               method: open
 
+- title: Progress Bar
+  blocks:
+    - id: notif_progress
+      type: Notification
+      layout:
+        span: 0
+      properties:
+        status: info
+        title: Export started
+        description: The progress bar counts down to when this notification closes. Hover to pause it.
+        duration: 8
+        showProgress: true
+    - id: btn_progress
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Show Progress Bar
+        color: default
+        variant: outlined
+      events:
+        onClick:
+          - id: open_progress
+            type: CallMethod
+            params:
+              blockId: notif_progress
+              method: open
+
 - title: Custom Icon
   blocks:
     - id: notif_icon_string

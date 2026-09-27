@@ -370,6 +370,67 @@
           type: Paragraph
           properties:
             content: No mask overlay is shown behind the modal. The page content remains fully visible.
+    - id: modal_blur_mask_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Blurred Mask
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: modal_blur_mask_open
+            type: CallMethod
+            params:
+              blockId: modal_blur_mask
+              method: setOpen
+              args:
+                - open: true
+    - id: modal_blur_mask
+      type: Modal
+      properties:
+        title: Blurred Mask
+        mask:
+          blur: true
+      blocks:
+        - id: modal_blur_mask_content
+          type: Paragraph
+          properties:
+            content: The page behind the mask is blurred, which keeps attention on the dialog.
+
+- title: Loading and Responsive Width
+  blocks:
+    - id: modal_loading_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Loading Modal
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: modal_loading_open
+            type: CallMethod
+            params:
+              blockId: modal_loading
+              method: setOpen
+              args:
+                - open: true
+    - id: modal_loading
+      type: Modal
+      properties:
+        title: Customer Details
+        loading: true
+        width:
+          xs: 90%
+          md: 600
+      blocks:
+        - id: modal_loading_content
+          type: Paragraph
+          properties:
+            content: The body shows a skeleton while loading is true, for example while a request that fills the modal is running.
 
 - title: No Footer
   blocks:
@@ -528,13 +589,14 @@
       type: Modal
       properties:
         title: Wrapper Style Modal
-        wrapperStyle:
+      style:
+        .wrapper:
           overflow: hidden
       blocks:
         - id: modal_wrapper_style_content
           type: Paragraph
           properties:
-            content: The wrapperStyle property applies CSS to the modal wrapper element. This can control overflow, positioning, and other layout aspects of the wrapper container.
+            content: The style .wrapper key applies CSS to the modal wrapper element. This can control overflow, positioning, and other layout aspects of the wrapper container.
 
 - title: Custom Z-Index
   blocks:

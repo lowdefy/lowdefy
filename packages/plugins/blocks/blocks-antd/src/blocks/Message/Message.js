@@ -39,6 +39,8 @@ const MessageBlock = ({
         id: `${blockId}_message`,
         content: renderHtml({ html: args.content ?? properties.content ?? blockId, methods }),
         duration: type.isNone(args.duration) ? properties.duration : args.duration,
+        pauseOnHover: properties.pauseOnHover,
+        onClick: () => methods.triggerEvent({ name: 'onClick' }),
         onClose: () => methods.triggerEvent({ name: 'onClose' }),
         icon: icon && (
           <ErrorBoundary onError={handleError}>

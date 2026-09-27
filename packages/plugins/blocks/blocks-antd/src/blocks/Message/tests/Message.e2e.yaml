@@ -244,3 +244,62 @@ blocks:
               - true
           then: Close fired
           else: ''
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: msg_onclick
+    type: Message
+    properties:
+      content: Click this message
+      duration: 0
+    events:
+      onClick:
+        - id: set_click_fired
+          type: SetState
+          params:
+            msg_click_fired: true
+
+  - id: open_onclick
+    type: Button
+    properties:
+      title: Show OnClick Test
+    events:
+      onClick:
+        - id: open_message
+          type: CallMethod
+          params:
+            blockId: msg_onclick
+            method: open
+
+  - id: onclick_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: msg_click_fired
+              - true
+          then: Click fired
+          else: ''
+
+  - id: msg_no_pause
+    type: Message
+    properties:
+      content: Does not pause on hover
+      duration: 1
+      pauseOnHover: false
+
+  - id: open_no_pause
+    type: Button
+    properties:
+      title: Show No Pause Message
+    events:
+      onClick:
+        - id: open_message
+          type: CallMethod
+          params:
+            blockId: msg_no_pause
+            method: open

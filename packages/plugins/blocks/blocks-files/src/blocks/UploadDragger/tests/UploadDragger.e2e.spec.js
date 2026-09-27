@@ -50,4 +50,19 @@ test.describe('UploadDragger Block', () => {
     });
     await expect(getBlock(page, 'emit_drop_display')).toHaveText('Name: dropped.txt');
   });
+
+  test('openFileDialogOnClick false does not open the file dialog on click', async ({ page }) => {
+    const block = getBlock(page, 'uploaddragger_drop_only');
+    let chooserOpened = false;
+    page.on('filechooser', () => {
+      chooserOpened = true;
+    });
+    await block.locator('.ant-upload-drag').click();
+    await page.waitForTimeout(500);
+    expect(chooserOpened).toBe(false);
+    await expect(block.locator('input[type="file"]')).toHaveAttribute(
+      'webkitdirectory',
+      'webkitdirectory'
+    );
+  });
 });
