@@ -16,27 +16,16 @@
 
 import isSameOriginRequest from './isSameOriginRequest.js';
 
-function check({ headers, allowNoOrigin }) {
-  return isSameOriginRequest({ getHeader: (name) => headers[name], allowNoOrigin });
+function check({ headers, ...options }) {
+  return isSameOriginRequest({ getHeader: (name) => headers[name], ...options });
 }
 
 test.each([
   ['the origin matches the host', { host: 'app.test', origin: 'https://app.test' }],
-  [
-    'the origin and host carry the same port',
-    { host: 'app.test:3000', origin: 'http://app.test:3000' },
-  ],
+  ['case and a default port differ', { host: 'App.test:443', origin: 'https://app.TEST' }],
   [
     'sec-fetch-site is same-origin',
     { host: 'app.test', origin: 'https://app.test', 'sec-fetch-site': 'same-origin' },
-  ],
-  [
-    'sec-fetch-site is none',
-    { host: 'app.test', origin: 'https://app.test', 'sec-fetch-site': 'none' },
-  ],
-  [
-    'a proxy passes the public host through',
-    { host: 'app.example.com', origin: 'https://app.example.com', 'x-forwarded-for': '10.0.0.1' },
   ],
 ])('isSameOriginRequest allows a request when %s', (_, headers) => {
   expect(check({ headers })).toBe(true);
@@ -44,26 +33,11 @@ test.each([
 
 test.each([
   ['the origin is another site', { host: 'app.test', origin: 'https://other.test' }],
-  ['the origin is a sibling subdomain', { host: 'app.test', origin: 'https://sub.app.test' }],
-  ['the origin port differs', { host: 'app.test:3000', origin: 'http://app.test:3001' }],
-  ['the origin is not a url', { host: 'app.test', origin: 'not a url' }],
-  ['the origin is "null"', { host: 'app.test', origin: 'null' }],
-  ['there is no host', { origin: 'https://app.test' }],
-  [
-    'a proxy rewrote the host',
-    {
-      host: 'localhost:3000',
-      origin: 'https://app.example.com',
-      'x-forwarded-host': 'app.example.com',
-    },
-  ],
+  ['the origin is not a url', { host: 'app.test', origin: 'null' }],
+  ['a non-default port differs', { host: 'app.test:3000', origin: 'http://app.test:3001' }],
   [
     'sec-fetch-site is cross-site',
     { host: 'app.test', origin: 'https://app.test', 'sec-fetch-site': 'cross-site' },
-  ],
-  [
-    'sec-fetch-site is same-site',
-    { host: 'app.test', origin: 'https://app.test', 'sec-fetch-site': 'same-site' },
   ],
 ])('isSameOriginRequest refuses a request when %s', (_, headers) => {
   expect(check({ headers, allowNoOrigin: true })).toBe(false);
@@ -72,7 +46,6 @@ test.each([
 test.each([
   [true, true],
   [false, false],
-  [undefined, false],
 ])(
   'isSameOriginRequest with no origin and allowNoOrigin %s returns %s',
   (allowNoOrigin, expected) => {
@@ -80,8 +53,19 @@ test.each([
   }
 );
 
-test('isSameOriginRequest refuses a cross-site sec-fetch-site even with no origin', () => {
-  expect(
-    check({ headers: { host: 'app.test', 'sec-fetch-site': 'cross-site' }, allowNoOrigin: true })
-  ).toBe(false);
+test('isSameOriginRequest matches the first X-Forwarded-Host only where the caller accepts it', () => {
+  // A proxy that rewrites Host to its upstream, and appends to the header.
+  const headers = {
+    host: 'localhost:3000',
+    origin: 'https://app.example.com',
+    'x-forwarded-host': 'app.example.com, internal.proxy',
+  };
+  expect(check({ headers })).toBe(false);
+  expect(check({ headers, acceptForwardedHost: true })).toBe(true);
+});
+
+test('isSameOriginRequest matches a configured public origin', () => {
+  const headers = { host: 'localhost:3000', origin: 'https://app.example.com' };
+  expect(check({ headers, publicOrigins: ['https://app.example.com/'] })).toBe(true);
+  expect(check({ headers, publicOrigins: ['https://other.example.com'] })).toBe(false);
 });

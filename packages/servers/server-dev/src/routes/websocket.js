@@ -14,15 +14,10 @@
   limitations under the License.
 */
 
+import { isWebSocketOriginAllowed } from '@lowdefy/api';
 import { type } from '@lowdefy/helpers';
 
-import createSameOriginGuard from '../middleware/createSameOriginGuard.js';
 import isRebindingSafeHost from '../middleware/isRebindingSafeHost.js';
-
-// Browsers let any page open a websocket to any host, so an upgrade whose
-// Origin is another site is refused. A client with no Origin (a script, an
-// agent) connects as before.
-const guardSameOrigin = createSameOriginGuard({ allowNoOrigin: true });
 
 // In dev, Vite owns the HTTP server, so websocket upgrades can't flow through
 // @hono/node-server. The upgrade handler (src/websocket/devWebSocket.js) runs
@@ -42,11 +37,13 @@ function websocketHandler(c) {
   if (!isRebindingSafeHost({ host: c.req.header('host') })) {
     return c.json({ error: 'Forbidden' }, 403);
   }
-  const refusal = guardSameOrigin(c);
-  if (refusal !== null) {
-    return refusal;
+  const context = c.get('lowdefyContext');
+  // Upgrades are accepted from the app's own pages and from clients that send
+  // no Origin; isWebSocketOriginAllowed holds the rule and logs a refusal.
+  if (!isWebSocketOriginAllowed({ context, getHeader: (name) => c.req.header(name) })) {
+    return c.json({ error: 'Forbidden' }, 403);
   }
-  websocketUpgrade.context = c.get('lowdefyContext');
+  websocketUpgrade.context = context;
   return c.json({ ok: true });
 }
 

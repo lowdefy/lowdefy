@@ -17,9 +17,11 @@
 import { isSameOriginRequest } from '@lowdefy/api';
 
 // The cross-site defence for the routes only this app's own pages call
-// (/api/client-error, /api/feedback, /api/websocket) and for the dev tools.
-// The rule itself - Sec-Fetch-Site, then Origin against Host - is
-// isSameOriginRequest in @lowdefy/api, which every server shares.
+// (/api/client-error, /api/feedback) and for the dev tools. The rule itself -
+// Sec-Fetch-Site, then Origin against Host - is isSameOriginRequest in
+// @lowdefy/api, which every server shares. Unlike a websocket handshake, a
+// fetch can carry X-Forwarded-Host where a CORS preflight allows it (Vite's
+// dev CORS allows localhost origins), so HTTP routes compare with Host only.
 function createSameOriginGuard({ allowNoOrigin = false } = {}) {
   // Returns the 403 response to answer with, or null when the request may
   // proceed. A guard, not Hono middleware, so a route keeps one entry point

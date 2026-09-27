@@ -24,6 +24,7 @@ const mockCreateWebSocketConnection = jest.fn(() => ({
 jest.unstable_mockModule('@lowdefy/api', () => ({
   createChannelRegistry: jest.fn(() => ({})),
   createWebSocketConnection: mockCreateWebSocketConnection,
+  isWebSocketOriginAllowed: () => true,
 }));
 const mockLogger = { warn: jest.fn(), debug: jest.fn() };
 jest.unstable_mockModule('../../lib/server/log/createLogger.js', () => ({

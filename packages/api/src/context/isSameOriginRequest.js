@@ -20,35 +20,71 @@ import { type } from '@lowdefy/helpers';
 // pages made: `same-origin`, or `none` (user initiated, no initiator document).
 const ALLOWED_FETCH_SITES = new Set(['same-origin', 'none']);
 
-function getOriginHost(origin) {
+// URL.origin lowercases the host and drops a default port, so
+// `https://App.test:443` and `https://app.test` compare equal.
+function normaliseOrigin(value) {
   try {
-    return new URL(origin).host;
+    const { origin } = new URL(value);
+    return origin === 'null' ? null : origin;
   } catch {
     return null;
   }
 }
 
+// A Host header names the host and port only; the scheme is the Origin's.
+function hostOrigin({ host, scheme }) {
+  if (type.isNone(host) || host.trim() === '') {
+    return null;
+  }
+  return normaliseOrigin(`${scheme}//${host.trim()}`);
+}
+
+// A proxy chain appends to X-Forwarded-Host; the first entry is the host the
+// browser asked for.
+function firstForwardedHost(value) {
+  if (type.isNone(value)) {
+    return null;
+  }
+  return value.split(',')[0];
+}
+
 // The one rule every server applies to routes only the app's own pages call:
-// the cookie-bearing browser routes and websocket upgrades. Two headers decide
-// it, both set by the browser and neither settable by page script.
-// Sec-Fetch-Site is the browser's own answer to "where did this come from":
-// `cross-site` and `same-site` are refused, so a sibling subdomain is too.
-// Origin must then name the host the request arrived on (the Host header, so a
-// reverse proxy must pass the original Host through).
+// the cookie-bearing browser routes and websocket upgrades. Sec-Fetch-Site and
+// Origin are set by the browser and cannot be set by page script.
+// Sec-Fetch-Site `cross-site` and `same-site` are refused. The Origin must then
+// be the one the request arrived on: the Host header, and where the caller
+// allows them, the first X-Forwarded-Host (for a proxy that rewrites Host) or
+// one of the app's configured public origins.
 //
 // A caller that sends no Origin is not a browser acting for another site - a
 // server, curl, an agent. It passes only where the route allows it.
-function isSameOriginRequest({ getHeader, allowNoOrigin = false }) {
+function isSameOriginRequest({
+  getHeader,
+  allowNoOrigin = false,
+  acceptForwardedHost = false,
+  publicOrigins = [],
+}) {
   const fetchSite = getHeader('sec-fetch-site');
   if (!type.isNone(fetchSite) && !ALLOWED_FETCH_SITES.has(fetchSite)) {
     return false;
   }
-  const origin = getHeader('origin');
-  if (type.isNone(origin) || origin === '') {
+  const rawOrigin = getHeader('origin');
+  if (type.isNone(rawOrigin) || rawOrigin === '') {
     return allowNoOrigin;
   }
-  const host = getHeader('host');
-  return !type.isNone(host) && getOriginHost(origin) === host;
+  const origin = normaliseOrigin(rawOrigin);
+  if (origin === null) {
+    return false;
+  }
+  const { protocol: scheme } = new URL(origin);
+  const hosts = [getHeader('host')];
+  if (acceptForwardedHost) {
+    hosts.push(firstForwardedHost(getHeader('x-forwarded-host')));
+  }
+  if (hosts.some((host) => hostOrigin({ host, scheme }) === origin)) {
+    return true;
+  }
+  return publicOrigins.some((publicOrigin) => normaliseOrigin(publicOrigin) === origin);
 }
 
 export default isSameOriginRequest;

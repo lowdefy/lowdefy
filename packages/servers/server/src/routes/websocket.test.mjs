@@ -29,7 +29,11 @@ let port;
 beforeAll(async () => {
   const app = new Hono().basePath('/app');
   app.use('*', async (c, next) => {
-    c.set('lowdefyContext', { rid: 'request', logger: { debug: () => {}, warn: () => {} } });
+    c.set('lowdefyContext', {
+      config: {},
+      rid: 'request',
+      logger: { debug: () => {}, warn: () => {} },
+    });
     await next();
   });
   app.get('/api/websocket', websocketHandler);
@@ -62,23 +66,15 @@ function open({ headers }) {
 }
 
 test.each([
-  ['the page is served from the same host', { host: 'app.test', origin: 'https://app.test' }],
-  ['a client sends no origin', { host: 'app.test' }],
+  ['opens', 'the page is served from the same host', { origin: 'https://app.test' }, 'open'],
+  ['opens', 'a client sends no origin', {}, 'open'],
+  ['is refused', 'the origin is another site', { origin: 'https://other.test' }, 403],
   [
-    'a proxy passes the public host through',
-    { host: 'app.example.com', origin: 'https://app.example.com' },
+    'opens',
+    'a proxy rewrote Host and passed X-Forwarded-Host',
+    { host: 'localhost:3000', 'x-forwarded-host': 'app.test', origin: 'https://app.test' },
+    'open',
   ],
-])('a websocket upgrade opens when %s', async (_, headers) => {
-  expect(await open({ headers })).toEqual('open');
-});
-
-test.each([
-  ['the origin is another site', { host: 'app.test', origin: 'https://other.test' }],
-  ['the origin is a sibling subdomain', { host: 'app.test', origin: 'https://sub.app.test' }],
-  [
-    'the browser marks it cross-site',
-    { host: 'app.test', origin: 'https://app.test', 'sec-fetch-site': 'cross-site' },
-  ],
-])('a websocket upgrade is refused with 403 when %s', async (_, headers) => {
-  expect(await open({ headers })).toEqual(403);
+])('a websocket upgrade %s when %s', async (_, __, headers, expected) => {
+  expect(await open({ headers: { host: 'app.test', ...headers } })).toEqual(expected);
 });

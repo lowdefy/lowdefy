@@ -28,7 +28,11 @@ let port;
 beforeAll(async () => {
   const app = new Hono().basePath('/app');
   app.use('*', async (c, next) => {
-    c.set('lowdefyContext', { rid: 'request', logger: { debug: () => {}, warn: () => {} } });
+    c.set('lowdefyContext', {
+      config: {},
+      rid: 'request',
+      logger: { debug: () => {}, warn: () => {} },
+    });
     await next();
   });
   app.get('/api/websocket', websocketHandler);
