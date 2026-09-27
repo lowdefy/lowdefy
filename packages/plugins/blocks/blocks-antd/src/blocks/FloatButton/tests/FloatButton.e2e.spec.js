@@ -50,4 +50,32 @@ test.describe('FloatButton Block', () => {
     await expect(page.locator('.ant-tooltip')).toBeVisible();
     await expect(page.locator('.ant-tooltip')).toContainText('Help');
   });
+
+  test('renders description as the button content', async ({ page }) => {
+    const floatBtn = getBlock(page, 'fb_description').locator('.ant-float-btn');
+    await expect(floatBtn.locator('span.ant-float-btn-content', { hasText: 'HELP' })).toBeVisible();
+  });
+
+  test('renders the app document icon when no icon or description is set', async ({ page }) => {
+    const floatBtn = getBlock(page, 'fb_default_icon').locator('.ant-float-btn');
+    await expect(floatBtn.locator('svg.lucide')).toBeAttached();
+    await expect(floatBtn.locator('.anticon-file-text')).toHaveCount(0);
+  });
+
+  test('disables the button', async ({ page }) => {
+    const floatBtn = getBlock(page, 'fb_disabled').locator('.ant-float-btn');
+    await expect(floatBtn).toBeDisabled();
+    await floatBtn.dispatchEvent('click');
+    await expect(getBlock(page, 'fb_disabled_display')).toHaveText('disabled:idle');
+  });
+
+  test('renders a back to top button with scroll progress', async ({ page }) => {
+    const floatBtn = getBlock(page, 'fb_back_top').locator('.ant-float-btn');
+    await expect(floatBtn).toBeVisible();
+    await expect(floatBtn).toHaveClass(/ant-float-btn-progress/);
+    await expect(floatBtn.locator('svg.lucide')).toBeAttached();
+    await expect(floatBtn.locator('.anticon-vertical-align-top')).toHaveCount(0);
+    await floatBtn.dispatchEvent('click');
+    await expect(getBlock(page, 'fb_back_top_display')).toHaveText('backtop:clicked');
+  });
 });

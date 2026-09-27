@@ -57,3 +57,20 @@
   type: FloatButton
   properties:
     htmlType: submit
+- id: 'properties.disabled: true'
+  type: FloatButton
+  properties:
+    icon: add
+    disabled: true
+- id: 'properties.backTop: true'
+  type: FloatButton
+  properties:
+    backTop: true
+    tooltip: Back to top
+- id: 'properties.showProgress: true'
+  type: FloatButton
+  properties:
+    backTop: true
+    showProgress: true
+    visibilityHeight: 200
+    duration: 300

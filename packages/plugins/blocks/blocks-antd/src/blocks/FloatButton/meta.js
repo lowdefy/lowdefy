@@ -18,14 +18,15 @@ import icon from '../../schemas/icon.js';
 
 export default {
   category: 'display',
-  icons: [],
+  icons: ['arrow-up', 'document'],
   valueType: null,
   cssKeys: {
     element: 'The FloatButton element.',
     icon: 'The icon in the FloatButton.',
   },
   events: {
-    onClick: 'Trigger action when button is clicked.',
+    onClick:
+      'Trigger action when button is clicked. With `backTop`, fires after the page starts scrolling to the top.',
   },
   properties: {
     type: 'object',
@@ -45,7 +46,36 @@ export default {
       },
       description: {
         type: 'string',
-        description: 'Text and other.',
+        description: 'Text shown below the icon. Use a square shape for room to show it.',
+      },
+      disabled: {
+        type: 'boolean',
+        default: false,
+        description: 'Disable the button.',
+      },
+      backTop: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Render a back to top button. It shows once the page scrolls past `visibilityHeight` and scrolls the page to the top when clicked.',
+      },
+      visibilityHeight: {
+        type: 'number',
+        default: 400,
+        description:
+          'Scroll height in pixels after which the back to top button shows. Only applies with `backTop`.',
+      },
+      duration: {
+        type: 'number',
+        default: 450,
+        description:
+          'Time in milliseconds to scroll back to the top. Only applies with `backTop`. Ignored when the user prefers reduced motion.',
+      },
+      showProgress: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Show the scroll progress as a ring around the back to top button. Only applies with `backTop`.',
       },
       tooltip: {
         type: 'string',
@@ -57,7 +87,7 @@ export default {
       },
       href: {
         type: 'string',
-        description: 'The target of hyperlink.',
+        description: 'The target of hyperlink. Not used with `backTop`.',
       },
       htmlType: {
         type: 'string',
