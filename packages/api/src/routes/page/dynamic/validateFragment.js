@@ -14,66 +14,13 @@
   limitations under the License.
 */
 
-import { validate } from '@lowdefy/ajv';
-import { getOperatorType, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-function isOperatorObject(value) {
-  return getOperatorType(value) !== null;
-}
+import getPropertiesSchemaErrors from './getPropertiesSchemaErrors.js';
 
-function escapePointerSegment(segment) {
-  return segment.replace(/~/g, '~0').replace(/\//g, '~1');
-}
-
-function collectOperatorPaths(value, path, paths) {
-  if (type.isArray(value)) {
-    value.forEach((item, index) => collectOperatorPaths(item, `${path}/${index}`, paths));
-    return;
-  }
-  if (!type.isObject(value)) {
-    return;
-  }
-  if (isOperatorObject(value)) {
-    paths.push(path);
-    return;
-  }
-  Object.keys(value).forEach((key) => {
-    if (key.startsWith('~')) return;
-    collectOperatorPaths(value[key], `${path}/${escapePointerSegment(key)}`, paths);
-  });
-}
-
-// A schema violation at or under an operator node cannot be judged before the
-// operator evaluates on the client — { _state: columns } may legitimately sit
-// where the schema wants an array. Violations on operator-free paths stand.
 function validateBlockProperties(block, { blockSchemas, dynamicBlockId, pageId }) {
-  const properties = block.properties;
-  if (!type.isObject(properties) || isOperatorObject(properties)) {
-    return;
-  }
-  // Block schemas validate the whole pre-build block shape; the plugin's
-  // properties schema sits at schema.properties.properties.
-  const propertiesSchema = blockSchemas[block.type]?.properties?.properties;
-  if (type.isNone(propertiesSchema)) {
-    return;
-  }
-  const result = validate({ schema: propertiesSchema, data: properties, returnErrors: true });
-  if (result.valid) {
-    return;
-  }
-  const operatorPaths = [];
-  collectOperatorPaths(properties, '', operatorPaths);
-  const errors = result.errors.filter(
-    (error) =>
-      !operatorPaths.some(
-        (path) => error.instancePath === path || error.instancePath.startsWith(`${path}/`)
-      )
-  );
-  if (errors.length > 0) {
-    const messages = errors.map(
-      (error) => `properties${error.instancePath || ''} ${error.message}`
-    );
+  const messages = getPropertiesSchemaErrors({ block, blockSchemas });
+  if (messages.length > 0) {
     throw new ConfigError(
       `Dynamic block "${dynamicBlockId}" on page "${pageId}" resolved block "${block.blockId}" (${
         block.type
@@ -108,15 +55,19 @@ async function validateFragment(
   });
 
   // Request actions can only reference requests defined statically on the page —
-  // request artifacts are written at build time.
-  const pageRequestIds = new Set(pageRequests.map((request) => request.requestId));
-  requestActionRefs.forEach(({ requestId, blockId, eventId }) => {
-    if (!pageRequestIds.has(requestId)) {
-      throw new ConfigError(
-        `Dynamic block "${dynamicBlockId}" on page "${pageId}" resolved content references request "${requestId}" on event "${eventId}" on block "${blockId}" which is not defined on the page.`
-      );
-    }
-  });
+  // request artifacts are written at build time. A ValidateDynamic step checks
+  // content with no page (pageRequests null); the policy's requests list is
+  // its check, and page get repeats this one.
+  if (pageRequests !== null) {
+    const pageRequestIds = new Set(pageRequests.map((request) => request.requestId));
+    requestActionRefs.forEach(({ requestId, blockId, eventId }) => {
+      if (!pageRequestIds.has(requestId)) {
+        throw new ConfigError(
+          `Dynamic block "${dynamicBlockId}" on page "${pageId}" resolved content references request "${requestId}" on event "${eventId}" on block "${blockId}" which is not defined on the page.`
+        );
+      }
+    });
+  }
 
   // CallAPI refs fail resolution instead of the user's click — same checks the
   // HTTP endpoint route applies.

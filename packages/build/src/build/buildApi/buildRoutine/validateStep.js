@@ -20,7 +20,7 @@ import { ConfigError } from '@lowdefy/errors';
 import validateId from '../../../utils/validateId.js';
 import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
 
-function validateStep(step, { endpointId, stepTypes, tenantConnectionIds }) {
+function validateStep(step, { dynamicPolicies, endpointId, stepTypes, tenantConnectionIds }) {
   const configKey = step['~k'];
   if (Object.keys(step).length === 0) {
     throw new ConfigError(`Step is not defined at endpoint "${endpointId}".`, { configKey });
@@ -36,10 +36,9 @@ function validateStep(step, { endpointId, stepTypes, tenantConnectionIds }) {
   }
   validateId({ id: step.id, field: 'Step id', location: `endpoint "${endpointId}"`, configKey });
   if (type.isNone(step.type)) {
-    throw new ConfigError(
-      `Step type is not defined at "${step.id}" on endpoint "${endpointId}".`,
-      { configKey }
-    );
+    throw new ConfigError(`Step type is not defined at "${step.id}" on endpoint "${endpointId}".`, {
+      configKey,
+    });
   }
   if (!type.isString(step.type)) {
     throw new ConfigError(
@@ -136,6 +135,36 @@ function validateStep(step, { endpointId, stepTypes, tenantConnectionIds }) {
     if (!type.isNone(step.connectionId)) {
       throw new ConfigError(
         `RenderNotification step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
+        { configKey }
+      );
+    }
+    return;
+  }
+
+  if (step.type === 'ValidateDynamic' || step.type === 'DescribeDynamicPolicy') {
+    // The policy is read from the build artifact at runtime, so the id must be
+    // known now: a literal string naming a declared policy.
+    if (!type.isString(step.properties?.policy)) {
+      throw new ConfigError(
+        `${step.type} step "${step.id}" at endpoint "${endpointId}" requires properties.policy as a literal policy id string.`,
+        { received: step.properties?.policy, configKey }
+      );
+    }
+    if (type.isUndefined(dynamicPolicies?.[step.properties.policy])) {
+      throw new ConfigError(
+        `${step.type} step "${step.id}" at endpoint "${endpointId}" references dynamic blocks policy "${step.properties.policy}" which does not exist.`,
+        { configKey }
+      );
+    }
+    if (step.type === 'ValidateDynamic' && type.isUndefined(step.properties.blocks)) {
+      throw new ConfigError(
+        `ValidateDynamic step "${step.id}" at endpoint "${endpointId}" requires properties.blocks.`,
+        { configKey }
+      );
+    }
+    if (!type.isNone(step.connectionId)) {
+      throw new ConfigError(
+        `${step.type} step "${step.id}" at endpoint "${endpointId}" should not have a connectionId.`,
         { configKey }
       );
     }

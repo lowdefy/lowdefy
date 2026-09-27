@@ -73,6 +73,69 @@ function countDeclaredTypes(block, { pageId, typeCounters }) {
   });
 }
 
+// A policy's lists feed the client bundle the way properties.types does, so
+// policy-bound content never fails on "not bundled" and lands in this page's
+// per-page type set. Its pages and endpoints join the page's action refs, so
+// the existing link, CallAPI and request validators check them in full and
+// JIT builds.
+function countPolicy(block, pageContext) {
+  const { pageId, typeCounters } = pageContext;
+  const configKey = block['~k'];
+  const policyId = block.properties.policy;
+  if (!type.isString(policyId)) {
+    throw new ConfigError(
+      `Dynamic block "${block.blockId}" on page "${pageId}" properties.policy should be a policy id string.`,
+      { received: policyId, configKey }
+    );
+  }
+  if (!type.isNone(block.properties.types)) {
+    throw new ConfigError(
+      `Dynamic block "${block.blockId}" on page "${pageId}" declares both properties.policy and properties.types. The policy's lists are the types; remove properties.types.`,
+      { configKey }
+    );
+  }
+  const policy = pageContext.context.dynamicPolicies[policyId];
+  if (type.isUndefined(policy)) {
+    throw new ConfigError(
+      `Dynamic block "${block.blockId}" on page "${pageId}" references dynamic blocks policy "${policyId}" which does not exist.`,
+      { configKey }
+    );
+  }
+  policy.blocks.forEach((typeName) => typeCounters.blocks.increment(typeName, configKey));
+  policy.actions.forEach((typeName) => typeCounters.actions.increment(typeName, configKey));
+  policy.operators.forEach((operator) =>
+    typeCounters.operators.client.increment(operator, configKey)
+  );
+  const source = { '~k': configKey };
+  policy.links.pages.forEach((linkPageId) => {
+    pageContext.linkActionRefs.push({
+      pageId: linkPageId,
+      action: source,
+      blockId: block.blockId,
+      eventId: `policy:${policyId}`,
+      sourcePageId: pageId,
+    });
+  });
+  // The content's Request actions run against this page's requests.
+  policy.requests.forEach((requestId) => {
+    pageContext.requestActionRefs.push({
+      requestId,
+      action: source,
+      blockId: block.blockId,
+      eventId: `policy:${policyId}`,
+    });
+  });
+  policy.endpoints.forEach((endpointId) => {
+    pageContext.callApiActionRefs.push({
+      endpointId,
+      action: source,
+      blockId: block.blockId,
+      eventId: `policy:${policyId}`,
+      sourcePageId: pageId,
+    });
+  });
+}
+
 function buildDynamicBlock(block, pageContext) {
   if (block.type !== 'Dynamic') {
     return;
@@ -124,7 +187,9 @@ function buildDynamicBlock(block, pageContext) {
       { received: block.properties.required, configKey }
     );
   }
-  if (!type.isNone(block.properties.types)) {
+  if (!type.isNone(block.properties.policy)) {
+    countPolicy(block, pageContext);
+  } else if (!type.isNone(block.properties.types)) {
     countDeclaredTypes(block, pageContext);
   }
   pageContext.hasDynamicBlocks = true;

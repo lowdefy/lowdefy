@@ -19,9 +19,11 @@ import { ConfigError } from '@lowdefy/errors';
 
 import createEvaluateOperators from '../../../context/createEvaluateOperators.js';
 import invokeEndpoint from '../../endpoints/invokeEndpoint.js';
-import unescapeOperators from './unescapeOperators.js';
+import checkDynamicContent from './checkDynamicContent.js';
+import createContentError from './createContentError.js';
 import flagTypesOutsidePage from './flagTypesOutsidePage.js';
-import validateFragment from './validateFragment.js';
+import loadDynamicArtifacts from './loadDynamicArtifacts.js';
+import unescapeOperators from './unescapeOperators.js';
 
 const MAX_DYNAMIC_DEPTH = 5;
 
@@ -45,6 +47,7 @@ function setResolvedContent(block, blocks) {
   delete block.slots.fallback;
   delete block.properties.endpointId;
   delete block.properties.params;
+  delete block.properties.policy;
   delete block.properties.required;
   delete block.properties.types;
 }
@@ -58,6 +61,12 @@ async function resolveBlocks(context, { blocks, depth, shared }) {
 async function resolveDynamicBlock(context, { block, depth, shared }) {
   const { logger } = context;
   const { endpointId, params, required } = block.properties;
+  // Build validated the policy id. The endpoint's data stays literal; only the
+  // blocks of a ValidateDynamic step that passed with this policy may come
+  // back as config, and the policy is checked again on the final content.
+  const policy = type.isNone(block.properties.policy)
+    ? null
+    : shared.artifacts.dynamicPolicies[block.properties.policy];
   try {
     if (depth >= MAX_DYNAMIC_DEPTH) {
       throw new ConfigError(
@@ -74,7 +83,7 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
         urlQuery: shared.urlQuery ?? {},
       },
       endpointDepth: 0,
-      literalData: true,
+      literalData: { policyId: policy?.id ?? null },
     });
     if (['error', 'reject'].includes(status)) {
       throw (
@@ -91,31 +100,27 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
         { received: response, configKey: block['~k'] }
       );
     }
-    // Unescape before building so operator counting validates the real
+    // Unescape before checking so operator counting validates the real
     // (client-evaluated) operators against the bundle.
-    const { blocks, callApiActionRefs, requestActionRefs, warnings } = shared.buildDynamicBlocks({
+    const result = await checkDynamicContent(context, {
+      artifacts: shared.artifacts,
       blocks: unescapeOperators(response.blocks),
-      pageId: shared.pageId,
       dynamicBlockId: block.blockId,
       idPrefix: block.id,
-      types: shared.types,
-      blockMetas: shared.blockMetas,
+      pageId: shared.pageId,
+      pageRequests: shared.pageRequests,
+      policy,
       usedTypes: shared.usedTypes,
     });
+    if (result.errors.length > 0) {
+      throw createContentError({ block, errors: result.errors, pageId: shared.pageId, policy });
+    }
+    const { blocks, warnings } = result;
     warnings.forEach((warning) => {
       logger.warn(
         { event: 'dynamic_block_warning', blockId: block.blockId, pageId: shared.pageId },
         warning.message
       );
-    });
-    await validateFragment(context, {
-      blocks,
-      blockSchemas: shared.blockSchemas,
-      callApiActionRefs,
-      dynamicBlockId: block.blockId,
-      pageId: shared.pageId,
-      pageRequests: shared.pageRequests,
-      requestActionRefs,
     });
     await resolveBlocks(context, { blocks, depth: depth + 1, shared });
     setResolvedContent(block, blocks);
@@ -149,22 +154,15 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
 }
 
 async function resolveDynamicContent(context, { pageConfig, urlQuery }) {
-  // Loaded lazily so apps without dynamic pages never load the build package.
-  const { default: buildDynamicBlocks } = await import('@lowdefy/build/dynamic');
-  const [types, blockMetas, blockSchemas, pageTypeSets] = await Promise.all([
-    context.readConfigFile('types.json'),
-    context.readConfigFile('plugins/blockMetas.json'),
-    context.readConfigFile('plugins/blockSchemas.json'),
+  const [artifacts, pageTypeSets] = await Promise.all([
+    loadDynamicArtifacts(context),
     context.readConfigFile('pageTypeSets.json'),
   ]);
   context.evaluateOperators = createEvaluateOperators(context);
   const shared = {
-    blockMetas: blockMetas ?? {},
-    blockSchemas: blockSchemas ?? {},
-    buildDynamicBlocks,
+    artifacts,
     pageId: pageConfig.pageId,
     pageRequests: pageConfig.requests ?? [],
-    types: types ?? {},
     urlQuery,
     usedTypes: { actions: new Set(), blocks: new Set(), operators: new Set() },
   };

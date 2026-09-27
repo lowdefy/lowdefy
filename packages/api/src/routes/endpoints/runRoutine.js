@@ -19,10 +19,12 @@ import { type } from '@lowdefy/helpers';
 
 import handleAgentCall from './handleAgentCall.js';
 import handleAuthStep from './handleAuthStep.js';
+import handleDescribeDynamicPolicy from './handleDescribeDynamicPolicy.js';
 import handleControl from './control/handleControl.js';
 import handleEndpointCall from './handleEndpointCall.js';
 import handleRenderNotification from './handleRenderNotification.js';
 import handleRequest from './handleRequest.js';
+import handleValidateDynamic from './handleValidateDynamic.js';
 import handleValidateSchema from './handleValidateSchema.js';
 
 async function runRoutine(context, routineContext, { routine }) {
@@ -35,6 +37,16 @@ async function runRoutine(context, routineContext, { routine }) {
       }
       if (routine.id?.startsWith?.('endpoint:')) {
         return await handleEndpointCall(context, routineContext, {
+          step: routine,
+        });
+      }
+      if (routine.id?.startsWith?.('validateDynamic:')) {
+        return await handleValidateDynamic(context, routineContext, {
+          step: routine,
+        });
+      }
+      if (routine.id?.startsWith?.('describeDynamic:')) {
+        return await handleDescribeDynamicPolicy(context, routineContext, {
           step: routine,
         });
       }
