@@ -116,6 +116,20 @@ describe('ServiceError.isServiceError', () => {
     expect(ServiceError.isServiceError(new Error('service unavailable'))).toBe(true);
   });
 
+  // The AI SDK retries 5xx and 429 responses, then throws a RetryError whose
+  // own message and fields carry no status; the attempt it gave up on does.
+  test.each([
+    [500, true],
+    [502, true],
+    [400, false],
+  ])('classifies a retry wrapper by its last error: status %i', (statusCode, expected) => {
+    const lastError = new Error('Internal Server Error');
+    lastError.statusCode = statusCode;
+    const error = new Error('Failed after 3 attempts. Last error: Internal Server Error');
+    error.lastError = lastError;
+    expect(ServiceError.isServiceError(error)).toBe(expected);
+  });
+
   test('returns false for regular errors', () => {
     expect(ServiceError.isServiceError(new Error('Invalid parameter'))).toBe(false);
     expect(ServiceError.isServiceError(new Error('undefined is not a function'))).toBe(false);

@@ -100,6 +100,12 @@ class ServiceError extends Error {
   static isServiceError(error) {
     if (!error) return false;
 
+    // A client that retried and gave up (the AI SDK's RetryError) carries the
+    // failure it retried on; its own message and fields hold no status.
+    if (error.lastError) {
+      return ServiceError.isServiceError(error.lastError);
+    }
+
     // Check error code
     if (error.code && SERVICE_ERROR_CODES.has(error.code)) {
       return true;
