@@ -259,4 +259,14 @@ test.describe('PhoneNumberInput antd 6 features', () => {
     await expect(input).toHaveValue('');
     await expect(getBlock(page, 'phone_onclear_display')).toHaveText('Clear fired');
   });
+
+  test('applies the theme to the region selector and the input', async ({ page }) => {
+    const select = getCodeSelector(page, 'phone_theme');
+    const input = getInput(page, 'phone_theme');
+    await expect(input).toHaveCSS('height', '44px');
+    await expect(select).toHaveCSS('height', '44px');
+    await expect(input).toHaveCSS('border-top-color', 'rgb(255, 0, 0)');
+    await expect(select).toHaveCSS('border-top-color', 'rgb(255, 0, 0)');
+    await expect(select).toHaveCSS('background-color', 'rgb(255, 240, 200)');
+  });
 });

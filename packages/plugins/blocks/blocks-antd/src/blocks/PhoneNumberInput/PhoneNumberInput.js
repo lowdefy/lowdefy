@@ -299,4 +299,4 @@ const PhoneNumberInput = ({
   );
 };
 
-export default withTheme('Input', withBlockDefaults(PhoneNumberInput));
+export default withTheme(['Input', 'Select'], withBlockDefaults(PhoneNumberInput));

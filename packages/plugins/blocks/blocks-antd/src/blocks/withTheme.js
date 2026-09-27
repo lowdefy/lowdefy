@@ -18,7 +18,12 @@ import React from 'react';
 import { ConfigProvider } from 'antd';
 import { type } from '@lowdefy/helpers';
 
-function withTheme(antdComponentName, BlockComponent) {
+// A block that renders several antd components side by side, eg. a select next to an input, passes
+// an array of names so the theme styles all of them alike.
+function withTheme(antdComponentNames, BlockComponent) {
+  const componentNames = type.isArray(antdComponentNames)
+    ? antdComponentNames
+    : [antdComponentNames];
   const Wrapped = (props) => {
     const { theme, ...restProperties } = props.properties;
     // Only intercept object themes (design tokens for ConfigProvider).
@@ -26,8 +31,12 @@ function withTheme(antdComponentName, BlockComponent) {
     if (!type.isObject(theme)) {
       return <BlockComponent {...props} />;
     }
+    const components = {};
+    componentNames.forEach((name) => {
+      components[name] = theme;
+    });
     return (
-      <ConfigProvider theme={{ components: { [antdComponentName]: theme } }}>
+      <ConfigProvider theme={{ components }}>
         <BlockComponent {...props} properties={restProperties} />
       </ConfigProvider>
     );
