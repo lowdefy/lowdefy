@@ -75,6 +75,8 @@ declarative config, and several properties that silently did nothing now work.
 - ConfirmModal ignored `theme` and never fired its `onClose` event.
 - ConfigProvider ignored its `theme` property; it is now merged into the design tokens, with
   `token` taking precedence.
+- ConfigProvider `componentSize: middle` and Flex `gap: middle` now reach antd as `medium`, the
+  name antd 6 uses.
 - Corrected documented defaults and descriptions: Drawer size (378px), Message duration (3s) and
   status (`success`), Popover placement (`top`) and hover delays (seconds), Masonry `fresh`, and
   the Flex theme tokens (the gap preset tokens `paddingXS`, `padding` and `paddingLG`).
