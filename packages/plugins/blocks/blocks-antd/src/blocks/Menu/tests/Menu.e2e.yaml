@@ -39,6 +39,21 @@ blocks:
           properties:
             title: Contact
 
+  - id: menu_item_css
+    type: Menu
+    class:
+      .item: menu-custom-item
+    style:
+      .item:
+        color: rgb(255, 0, 0)
+    properties:
+      mode: vertical
+      links:
+        - id: menu_item_css_link
+          type: MenuLink
+          properties:
+            title: Styled item
+
   # ============================================
   # MODE TESTS
   # ============================================

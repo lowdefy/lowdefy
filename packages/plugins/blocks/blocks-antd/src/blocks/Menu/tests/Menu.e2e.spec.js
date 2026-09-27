@@ -45,6 +45,12 @@ test.describe('Menu Block', () => {
     await expect(menu).toContainText('Contact');
   });
 
+  test('applies the item class and style to menu items', async ({ page }) => {
+    const item = getMenu(page, 'menu_item_css').locator('.ant-menu-item');
+    await expect(item).toHaveClass(/menu-custom-item/);
+    await expect(item).toHaveCSS('color', 'rgb(255, 0, 0)');
+  });
+
   // ============================================
   // MODE TESTS
   // ============================================

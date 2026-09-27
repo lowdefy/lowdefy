@@ -167,6 +167,13 @@ test.describe('DropdownMenu css keys, placement and selection', () => {
     await expect(dropdown).toHaveClass(/ant-dropdown-placement-rightTop/);
   });
 
+  test('applies the item class and style to menu items', async ({ page }) => {
+    await getBlock(page, 'dm_css_trigger').locator('.ant-btn').click();
+    const item = page.locator('.ant-dropdown.dm-css-menu .ant-dropdown-menu-item');
+    await expect(item).toHaveClass(/dm-css-item/);
+    await expect(item).toHaveCSS('color', 'rgb(255, 0, 0)');
+  });
+
   test('fires onSelect with the selected keys when selectable', async ({ page }) => {
     await getBlock(page, 'dm_selectable_trigger').locator('.ant-btn').click();
     await page.locator('.ant-dropdown-menu-item').filter({ hasText: 'Second Choice' }).click();
