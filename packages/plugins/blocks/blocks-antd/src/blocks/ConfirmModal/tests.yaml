@@ -83,15 +83,15 @@
   type: ConfirmModal
   properties:
     title: '<div style="color:purple">Html Title</div>'
-- id: 'properties.modalStyle: background: yellow'
+- id: 'style: .element: background: yellow'
   type: ConfirmModal
-  properties:
-    modalStyle:
+  style:
+    .element:
       background: yellow
-- id: 'properties.bodyStyle: background: green'
+- id: 'style: .body: background: green'
   type: ConfirmModal
-  properties:
-    bodyStyle:
+  style:
+    .body:
       background: green
 - id: 'properties.okButton: iconPlacement: end'
   type: ConfirmModal

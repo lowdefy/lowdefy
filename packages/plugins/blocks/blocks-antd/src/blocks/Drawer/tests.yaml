@@ -59,10 +59,10 @@
   type: Drawer
   properties:
     keyboard: false
-- id: 'properties.contentWrapperStyle: border: 10px solid green'
+- id: 'style: .wrapper: border: 10px solid green'
   type: Drawer
-  properties:
-    contentWrapperStyle:
+  style:
+    .wrapper:
       border: 10px solid green
 - id: 'areas.extra:'
   type: Drawer

@@ -71,11 +71,12 @@
   properties:
     title: zIndex 1000
     zIndex: 1000
-- id: 'properties.overlayStyle: border: 5px solid blue'
+- id: 'style: .inner: border: 5px solid blue'
   type: Tooltip
   properties:
     title: Tooltip block
-    overlayStyle:
+  style:
+    .inner:
       border: 5px solid blue
 - id: 'areas.content:'
   type: Tooltip
