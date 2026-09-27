@@ -403,3 +403,11 @@ test.each([
 ])('checkPolicy rejects %s', (_, block, expected) => {
   expect(rules(check([block]))).toEqual(expected);
 });
+
+test.each([
+  ['a search score beside a title', { _score: 0.5, title: 'x' }],
+  ['a document version key beside a name', { __v: 0, name: 'x' }],
+  ['an operator name beside an object that cannot vanish', { _user: 'x', y: { _if: 1, b: 2 } }],
+])('checkPolicy allows %s as data', (_, record) => {
+  expect(check([{ id: 'b', type: 'Box', properties: { record }, style: { record } }])).toEqual([]);
+});
