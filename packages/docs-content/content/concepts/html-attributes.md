@@ -102,6 +102,8 @@ The block's `dataEvents` property lists the events its HTML may fire. A `data-ev
 
 An event's `data-*` attributes come from the HTML, so treat them as user input: the event's actions should check that the user may act on the record they name, as they would for any other input. HTML built from user or request data must escape that data (see above), so the data cannot add `data-event` elements of its own.
 
+A `ClickableHtml` block in [dynamic page content](/dynamic-page-content) comes from an API endpoint at page load, often from config stored in a database, so it needs `dataEvents` there too: `lowdefy upgrade` cannot reach config that is not in the app's files.
+
 ## Links
 
 Use `data-page-id` for links to pages of your app, instead of writing the href:
@@ -274,7 +276,9 @@ With no value the message is "Are you sure?" (the `client.confirm` [translation 
 
 `data-confirm` only asks where the markup says so. For an event that deletes or changes data, list it in `dataEvents` with `confirm`, so every click on it asks whatever the markup says: `confirm: true` asks with the element's `data-confirm` message or "Are you sure?", and a string is the message, in place of the element's.
 
-When the block's HTML changes while a confirmation is open, it stays open on the same element in the new HTML (the same tag and `data-*` attributes), and OK fires the event it was opened for. When the new HTML no longer has the element, the confirmation closes without firing.
+`confirm` asks whenever it is set to anything but `false`, so an empty message or one an operator could not find (`null`) still asks, with the element's or the default message.
+
+When the block's HTML changes while a confirmation is open, the confirmation closes without firing. An event's `data-*` values can name a record by its position (`data-index="{{ loop.index0 }}"`), and new HTML can put another record there, so OK could otherwise act on a record the user did not choose. Click the element again to confirm against the new HTML.
 
 ## Plugin blocks
 

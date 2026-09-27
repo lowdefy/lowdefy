@@ -168,4 +168,4 @@ A `ClickableHtml` block now fires only the events its `dataEvents` property list
     html: '<i data-icon="delete" data-event="onDelete" data-id="42" data-confirm="Delete?"></i>'
 ```
 
-An entry is an event name, or `{ name, confirm }`: with `confirm`, every click on the event asks first, whatever the markup says. The `clickable-html-data-events` codemod in `lowdefy upgrade` adds `dataEvents` to each block and reports HTML built from data that inserts values without escaping them. See [HTML attributes](/html-attributes).
+An entry is an event name, or `{ name, confirm }`: with `confirm`, every click on the event asks first, whatever the markup says. The `clickable-html-data-events` codemod in `lowdefy upgrade` adds `dataEvents` to each block and reports HTML built from data that inserts values without escaping them. It only reaches the app's files: add `dataEvents` yourself to `ClickableHtml` blocks that [dynamic page content](/dynamic-page-content) builds at page load, for example from config stored in a database. See [HTML attributes](/html-attributes).

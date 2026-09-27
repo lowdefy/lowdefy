@@ -44,6 +44,11 @@ grep -rn 'type:\s*ClickableHtml' --include='*.yaml' --include='*.yml' --include=
 
 Also check local plugin code and `_js` code that builds block config at runtime.
 
+`Dynamic` blocks get their content from an API endpoint at page load. Check those endpoints'
+routines for `ClickableHtml` block config they return, and give it `dataEvents` there too. Config the
+routine reads from a database or another store is out of reach of this codemod: list every such
+endpoint in the report so the author can update the stored config.
+
 ### Step 2: Add `dataEvents` to each block
 
 For each block, skip it when it already sets `properties.dataEvents`. Otherwise work out the
@@ -80,6 +85,8 @@ Produce a report with one entry per block:
   `events` keys (HTML built at runtime).
 - Events given `confirm: true`.
 - Unescaped data found in Step 3.
+- Endpoints behind `Dynamic` blocks that return `ClickableHtml` config from a database or another
+  store, which the author must update.
 
 Share the report with the app author, who should remove any listed event the HTML is not meant to
 fire.
