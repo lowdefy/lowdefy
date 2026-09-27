@@ -114,7 +114,13 @@ The server strips one leading underscore from `__`-prefixed keys in the returned
 
 ### Data in the returned config is literal
 
-While a Dynamic block's endpoint evaluates its `:return`, no operator may return a value that contains operators. That covers data read at runtime — step results, the payload, routine state, `:for` items — and values built from data, such as `_json.parse` of a stored string. A record holding `{ _request: ... }` or `{ __state: ... }` fails resolution, and the block renders its fallback. The error names the operator and where in its result the operator was found.
+While a Dynamic block's endpoint evaluates its `:return`, data read at runtime stays data. That covers step results, the payload, routine state, `:for` items, and values built from data, such as `_json.parse` of a stored string. Three rules apply:
+
+- **Data cannot carry operators.** No operator may return a value that contains operators. A record holding `{ _request: ... }` or `{ __state: ... }` fails resolution, and the block renders its fallback. The error names the operator and where in its result the operator was found.
+- **Data cannot be a block or an action.** Without a [dynamic blocks policy](#dynamic-blocks-policies), every block and action in the returned content must be written in the `:return` config. Data may fill values inside those blocks (an id, a title, a type, a list of options), but a block or action that is itself data an operator returned, or a copy of it, fails resolution. To render stored block config, check it with a `ValidateDynamic` step under a policy.
+- **Data cannot become an operator by merging.** An object from data that `_object.assign` merges with other config must not be left with an operator key alone, for example next to a key whose value is a function or evaluates to undefined on the client.
+
+Only keys that name one of the app's client operators count as operators. Data such as a search hit's `{ _score: 0.5 }` or `{ _source: { ... } }` stays data.
 
 Write client operators in the `:return` config itself. Only operators that pass their own already-checked params through — `_if`, `_switch`, `_if_none`, `_get`, `_args`, `_function`, `_log`, `_array` and `_object` (except `_object.fromEntries` and `_object.defineProperty`) — may return them, so mapping data rows into blocks with `_array.map` and `_function` works as shown above.
 
@@ -124,6 +130,7 @@ These patterns return config through data and fail resolution:
 - **Blocks returned by a nested endpoint** and read with `_step`. Share block config with `_ref` instead.
 - **A `:for` over a literal list of block configs**, read with `_item`. Map the list inside `:return`.
 - **Blocks built by `_js` or `_jsonata`.** Return the data from them and map it into blocks inside `:return`.
+- **Stored block config returned as it is**, whether read directly, picked out with `_get`, or copied or extended by an `_array.map` callback (`__args: 0`, `__object.assign`). Put the Dynamic block under a policy and return the content through `ValidateDynamic` (see [Rendering stored content under a policy](#rendering-stored-content-under-a-policy)).
 
 ## Using urlQuery in the Routine
 
@@ -223,11 +230,11 @@ policies:
 | `requests`      | `[]`      | Page requests a `Request` action may call. The build checks every page that hosts the policy defines them.  |
 | `links.pages`   | `[]`      | Pages the content may navigate to, by `pageId` or by an app path such as `/form_submitted`.                 |
 | `links.origins` | `[]`      | Exact origins (`https://example.com`) the content may link to or load from.                                 |
-| `state`         | none      | When set, every input block id and every `SetState` key must sit under this state path.                     |
+| `state`         | none      | When set, input block ids, `SetState` keys and `_state` reads must sit under this state path.               |
 | `html`          | `false`   | When `false`, no string in the content may contain HTML tag syntax.                                         |
 | `limits`        | see below | `depth` (10), `blocks` (500), `bytes` (262144) and `actionsPerEvent` (20). They can be raised, not removed. |
 
-Besides the lists, a policy requires literal values wherever the content names a target: `properties`, `style`, events and action lists; the params of `Link`, `CallAPI`, `Request` and `SetState`; and every `pageId` and URL. URLs must be app paths or use a listed origin — including image sources, markdown links and CSS `url()`.
+Besides the lists, a policy requires literal values wherever the content names a target: `properties`, `style`, events and action lists; the params of `Link`, `CallAPI`, `Request` and `SetState`; every `_state` key; and every `pageId` and URL. URLs must be app paths or use a listed origin — including image sources, markdown links and CSS `url()`. A block's properties schema marks which properties hold a URL (see [Plugins](/plugins-introduction)), so a URL property is checked whatever it is called, such as `Search` `indexUrl` or `QRCode` `icon`; action params and properties no schema describes are checked by their key (`url`, `href`, `src`, ...).
 
 > With `html: false`, an operator that builds strings (`_string`, `_uri`, `_base64`, `_json`) can still assemble HTML at render time from content that passed the check. The build warns when a policy lists one. Leave them out of policies for generated content.
 
@@ -293,5 +300,5 @@ A generator calls `ValidateDynamic` with `throwOnInvalid: false` and feeds the e
 - **Nesting is allowed** — resolved content may contain further `Dynamic` blocks, up to 5 levels deep.
 - **Page state resets per visit.** Dynamic pages build a fresh context on every navigation, since the server may resolve different content each time. Keep cross-navigation state in `_global` or `_url_query`.
 - **Endpoint auth always applies.** A public page pointing at a role-protected endpoint renders the fallback for users without the role — useful for role-gated sections.
-- **Data cannot carry operators.** Operators in step results, payload or state returned into `:return` fail resolution, except the blocks of a `ValidateDynamic` step under the block's policy. See [Data in the returned config is literal](#data-in-the-returned-config-is-literal) and [Dynamic Blocks Policies](#dynamic-blocks-policies).
+- **Data cannot carry operators or be blocks.** Operators in step results, payload or state returned into `:return` fail resolution, and so do blocks and actions that are data, except the blocks of a `ValidateDynamic` step under the block's policy. See [Data in the returned config is literal](#data-in-the-returned-config-is-literal) and [Dynamic Blocks Policies](#dynamic-blocks-policies).
 - **`blockId` namespace is shared.** Resolved blocks share the page's state namespace, so `_state` binds across static and dynamic blocks. Keep blockIds unique, as on any page.

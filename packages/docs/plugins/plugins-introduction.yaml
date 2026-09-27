@@ -67,6 +67,17 @@ _ref:
 
             The `message` is one or two plain sentences saying what happens and what to do instead. Only add a hazard for a behaviour that is verified in the plugin's code — an agent will rely on it.
 
+            A block marks each property that holds a URL with `urlKind` in its `properties` schema: `url` for a link the engine opens (a colon-less value is read as `https://`), `href` for a link the browser opens, `src` for a resource the block loads, and `srcSet` for a list of sources. A [dynamic blocks policy](/dynamic-page-content#dynamic-blocks-policies) checks marked properties against its pages and origins whatever they are called, and does not treat a property the schema describes without a mark as a URL.
+
+            ```js
+            properties: {
+              type: 'object',
+              properties: {
+                indexUrl: { type: 'string', urlKind: 'src', description: 'URL of the search index.' },
+              },
+            },
+            ```
+
       - _ref:
           path: templates/navigation_buttons.yaml
           vars:
