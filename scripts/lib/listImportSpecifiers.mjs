@@ -16,8 +16,15 @@
 
 import { parse } from 'espree';
 
-function isStringLiteral(node) {
-  return node?.type === 'Literal' && typeof node.value === 'string';
+// A string literal, or a template literal with nothing interpolated: import(`pkg`).
+function readStaticSpecifier(node) {
+  if (node?.type === 'Literal' && typeof node.value === 'string') {
+    return node.value;
+  }
+  if (node?.type === 'TemplateLiteral' && node.expressions.length === 0) {
+    return node.quasis[0].value.cooked;
+  }
+  return null;
 }
 
 function isRequireCall(callee) {
@@ -42,20 +49,21 @@ function listImportSpecifiers({ source }) {
   });
   const specifiers = [];
 
+  function addSpecifier(node) {
+    const specifier = readStaticSpecifier(node);
+    if (specifier !== null) specifiers.push(specifier);
+  }
+
   function visit(node) {
     switch (node.type) {
       case 'ImportDeclaration':
       case 'ExportAllDeclaration':
       case 'ExportNamedDeclaration':
-        if (isStringLiteral(node.source)) specifiers.push(node.source.value);
-        break;
       case 'ImportExpression':
-        if (isStringLiteral(node.source)) specifiers.push(node.source.value);
+        addSpecifier(node.source);
         break;
       case 'CallExpression':
-        if (isRequireCall(node.callee) && isStringLiteral(node.arguments[0])) {
-          specifiers.push(node.arguments[0].value);
-        }
+        if (isRequireCall(node.callee)) addSpecifier(node.arguments[0]);
         break;
       default:
         break;

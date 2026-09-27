@@ -65,6 +65,9 @@ const cases = [
         "const c = await import('undeclared-c');",
         "const d = require('undeclared-d');",
         "const e = require.resolve('undeclared-e/package.json');",
+        'const f = await import(`undeclared-f`);',
+        'const g = require(`undeclared-g`);',
+        'const h = await import(`undeclared-h/${name}`);',
       ].join('\n'),
     },
     expected: [
@@ -73,6 +76,8 @@ const cases = [
       ['src/index.js', 'undeclared-c', 'undeclared'],
       ['src/index.js', 'undeclared-d', 'undeclared'],
       ['src/index.js', 'undeclared-e', 'undeclared'],
+      ['src/index.js', 'undeclared-f', 'undeclared'],
+      ['src/index.js', 'undeclared-g', 'undeclared'],
     ],
   },
   {
