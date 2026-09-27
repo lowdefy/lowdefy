@@ -23,6 +23,8 @@ export default {
   cssKeys: {
     element: 'The Breadcrumb element.',
     icon: 'The icon in the Breadcrumb.',
+    item: 'Each breadcrumb item.',
+    separator: 'The separator between items.',
   },
   events: {
     onClick: {
