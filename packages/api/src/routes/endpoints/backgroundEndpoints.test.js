@@ -331,6 +331,30 @@ test('webhook endpoint response is the :return value exactly, without build mark
   expect(JSON.stringify(result.response)).toBe('{"validationResponse":"c-1","accepted":["a"]}');
 });
 
+test('webhook endpoint response sends a date as an ISO string, not the serializer form', async () => {
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    readConfigFile: jest.fn((path) =>
+      path === 'api/dated_ep.json'
+        ? {
+            endpointId: 'dated_ep',
+            type: 'Api',
+            webhook: true,
+            routine: { ':return': { receivedAt: { _date: '2026-01-02T03:04:05.000Z' } } },
+          }
+        : null
+    ),
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'dated_ep',
+    body: {},
+    query: {},
+    headers: {},
+  });
+  expect(JSON.stringify(result.response)).toBe('{"receivedAt":"2026-01-02T03:04:05.000Z"}');
+});
+
 // Nested CallApi authorization in system contexts — a routine already running was
 // authorized at its entry point (CRON_SECRET / webhook token), so CallApi steps to
 // protected endpoints must not be re-gated on a (missing) user session.

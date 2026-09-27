@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
-import { getOperatorType, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
 import checkValue from './checkValue.js';
+import getPossibleOperators from './getPossibleOperators.js';
 import isUnderState from './isUnderState.js';
 
 function isLiteralObject(value) {
-  return type.isObject(value) && getOperatorType(value) === null;
+  return type.isObject(value) && getPossibleOperators(value).length === 0;
 }
 
 function literalParamsError({ path, action, policy }) {
@@ -47,7 +48,7 @@ function checkLink({ params, path, policy, errors }) {
     errors.push(literalParamsError({ path, action: 'Link', policy }));
     return;
   }
-  if (getOperatorType(params.home) !== null) {
+  if (getPossibleOperators(params.home).length > 0) {
     errors.push(literalParamsError({ path: `${path}.home`, action: 'Link', policy }));
   }
 }

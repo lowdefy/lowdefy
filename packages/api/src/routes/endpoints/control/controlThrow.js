@@ -45,6 +45,7 @@ async function controlThrow(context, routineContext, { control }) {
     event: 'warn_control_throw',
     err: error,
   });
+  error.handled = true;
 
   return {
     status: 'error',

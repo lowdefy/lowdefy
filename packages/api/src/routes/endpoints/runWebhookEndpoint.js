@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import applySystemTrust from '../../context/applySystemTrust.js';
@@ -96,7 +96,11 @@ async function runWebhookEndpoint(context, { endpointId, body, query, headers })
     routine: endpointConfig.routine,
   });
 
-  return buildEndpointResult(context, { error, response, status });
+  const result = buildEndpointResult(context, { error, response, status });
+  // The route sends the response to a third party, not the Lowdefy client, as
+  // plain JSON: a date arrives as an ISO string, not the serializer's
+  // { "~d": ... } form.
+  return { ...result, response: serializer.deserialize(result.response) };
 }
 
 export default runWebhookEndpoint;

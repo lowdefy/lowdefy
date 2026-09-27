@@ -131,6 +131,31 @@ test('ValidateDynamic records every violation with its path and rule', async () 
   ]);
 });
 
+test('ValidateDynamic refuses an operator the policy does not list inside an error wrapper', async () => {
+  const context = createTestContext(createFiles());
+  const routineContext = createRoutineContext();
+  const content = [
+    {
+      id: 'form.name',
+      type: 'TextInput',
+      events: {
+        onChange: [
+          {
+            id: 'set',
+            type: 'SetState',
+            params: { 'form.x': { '~e': { name: 'Error', message: { _global: 'x' } } } },
+          },
+        ],
+      },
+    },
+  ];
+  await runStep(context, routineContext, validateStep(content));
+  expect(routineContext.steps.check.valid).toBe(false);
+  expect(routineContext.steps.check.errors.map(({ path, rule }) => `${rule} ${path}`)).toEqual([
+    'policy.structure blocks.0.events.onChange.0.params.form.x.~e',
+  ]);
+});
+
 test('ValidateDynamic throws a UserError by default when content is invalid', async () => {
   const context = createTestContext(createFiles());
   const res = await runStep(
@@ -271,4 +296,49 @@ test('A policy-bound Dynamic block keeps endpoint data literal without a Validat
     urlQuery: {},
   });
   expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+});
+
+test('A stored content policy failure at page get is logged once, as a warning', async () => {
+  const context = createTestContext(
+    createFiles({
+      'api/get_form.json': {
+        endpointId: 'get_form',
+        type: 'InternalApi',
+        auth: { public: true },
+        routine: [
+          {
+            id: 'validateDynamic:get_form:check',
+            stepId: 'check',
+            endpointId: 'get_form',
+            type: 'ValidateDynamic',
+            properties: { policy: 'form', blocks: { _payload: 'params.content' } },
+          },
+          { ':return': { blocks: { _step: 'check.blocks' } } },
+        ],
+      },
+    })
+  );
+  const dynamicBlock = {
+    id: 'block:page1:generated:0',
+    blockId: 'generated',
+    type: 'Dynamic',
+    properties: { endpointId: 'get_form', params: { content: invalidContent }, policy: 'form' },
+    slots: { fallback: { blocks: [{ id: 'fb', blockId: 'fb', type: 'Html' }] } },
+  };
+  await resolveDynamicContent(context, {
+    pageConfig: {
+      id: 'page:page1',
+      pageId: 'page1',
+      blockId: 'page1',
+      type: 'Box',
+      dynamic: true,
+      requests: [],
+      slots: { content: { blocks: [dynamicBlock] } },
+    },
+    urlQuery: {},
+  });
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.warn.mock.calls[0][0].event).toBe('warn_validate_dynamic');
 });

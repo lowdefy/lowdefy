@@ -250,7 +250,7 @@ test('handleAgentGenerate awaits onFinish hooks with the finish payload and igno
   expect(result.text).toBe('Final answer');
 });
 
-test('handleAgentGenerate warns and continues when an onFinish hook fails', async () => {
+test('handleAgentGenerate logs an error and continues when an onFinish hook fails', async () => {
   const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
   mockGenerateSteps();
 

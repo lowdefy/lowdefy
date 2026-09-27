@@ -17,6 +17,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { parseRequestBody } from '@lowdefy/api';
+
 const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
 
 async function usageHandler(c) {
@@ -26,7 +28,7 @@ async function usageHandler(c) {
     return c.json({ error: 'Method not allowed.' }, 405);
   }
   const context = c.get('lowdefyContext');
-  const { user, machine } = await c.req.json();
+  const { user, machine } = parseRequestBody({ text: await c.req.text() });
   const host = c.req.header('host');
   context.logger.info({ event: 'log_usage', user, machine });
 

@@ -376,26 +376,35 @@ test('an invalid routine throws a LowdefyInternalError', async () => {
   expect(res.error.message).toBe('Invalid routine.');
 });
 
-test('a UserError is returned as an error status without going through handleError', async () => {
-  const { default: runRoutine } = await import('./runRoutine.js');
-  const { UserError } = await import('@lowdefy/errors');
-  const handleError = jest.fn();
-  const error = new UserError('Nested throw.');
-  const routine = {
-    id: 'endpoint:nested',
-    stepId: 'call_nested',
-  };
-  const context = {
-    handleError,
-    logger: { debug: jest.fn() },
-    evaluateOperators: () => {
-      throw error;
-    },
-  };
-  const res = await runRoutine(context, {}, { routine });
-  expect(res).toEqual({ status: 'error', error });
-  expect(handleError).not.toHaveBeenCalled();
-});
+test.each([
+  ['a thrown UserError nobody logged is logged here as a warning', false, 1],
+  ['a UserError already logged where it was raised is not logged again', true, 0],
+])(
+  '%s and returned as an error status, never through handleError',
+  async (_, handled, warnings) => {
+    const { default: runRoutine } = await import('./runRoutine.js');
+    const { UserError } = await import('@lowdefy/errors');
+    const handleError = jest.fn();
+    const error = new UserError('Nested payload refused.');
+    error.handled = handled || undefined;
+    const routine = {
+      id: 'endpoint:nested',
+      stepId: 'call_nested',
+    };
+    const context = {
+      handleError,
+      logger: { debug: jest.fn(), warn: jest.fn() },
+      evaluateOperators: () => {
+        throw error;
+      },
+    };
+    const res = await runRoutine(context, {}, { routine });
+    expect(res).toEqual({ status: 'error', error });
+    expect(handleError).not.toHaveBeenCalled();
+    expect(context.logger.warn).toHaveBeenCalledTimes(warnings);
+    expect(error.handled).toBe(true);
+  }
+);
 
 test('combined operators in request properties', async () => {
   const routine = {

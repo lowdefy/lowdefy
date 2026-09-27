@@ -80,6 +80,7 @@ async function handleValidateDynamic(context, routineContext, { step }) {
       { cause: errors }
     );
     logger.warn({ event: 'warn_validate_dynamic', stepId: step.stepId, err: error });
+    error.handled = true;
     return { status: 'error', error };
   }
 

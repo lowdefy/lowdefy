@@ -20,6 +20,7 @@ import { jest } from '@jest/globals';
 const mockCallRequest = jest.fn();
 jest.unstable_mockModule('@lowdefy/api', () => ({
   callRequest: mockCallRequest,
+  parseRequestBody: ({ text }) => JSON.parse(text),
   redactErrorResponse: jest.fn((context, error) => ({ error: error.message })),
 }));
 

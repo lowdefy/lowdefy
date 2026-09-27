@@ -1123,7 +1123,7 @@ test('onFinish hook dataParts are written to the stream writer', async () => {
   expect(localWriter.write).toHaveBeenNthCalledWith(2, dataParts[1]);
 });
 
-test('onFinish hook failure logs warning and continues to next hook', async () => {
+test('onFinish hook failure logs an error and continues to the next hook', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
   testLogger.warn.mockClear();

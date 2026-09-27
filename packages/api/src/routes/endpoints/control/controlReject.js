@@ -44,6 +44,7 @@ async function controlReject(context, routineContext, { control }) {
     event: 'warn_control_reject',
     err: error,
   });
+  error.handled = true;
   return {
     status: 'reject',
     error,

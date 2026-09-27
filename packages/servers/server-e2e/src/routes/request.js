@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { callRequest } from '@lowdefy/api';
+import { callRequest, parseRequestBody } from '@lowdefy/api';
 
 import getPathSegments from '../lib/getPathSegments.js';
 
@@ -31,7 +31,7 @@ async function requestHandler(c) {
   }
   const requestId = segments[segments.length - 1];
   const pageId = segments.slice(0, -1).join('/');
-  const { actionId, blockId, payload } = await c.req.json();
+  const { actionId, blockId, payload } = parseRequestBody({ text: await c.req.text() });
   context.logger.info({ event: 'call_request', pageId, requestId, blockId, actionId });
   const response = await callRequest(context, { blockId, pageId, payload, requestId });
   return c.json(response);
