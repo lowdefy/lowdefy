@@ -63,12 +63,14 @@ or add the `run-mongodb-tests` label to a pull request. Each jest run starts its
 The tenant auth reference app (`apps/auth-reference-tenant`) carries config tests for the
 real auth path: sign-up with email verification, sign-in refusals, sign-out, magic link,
 invitations, tenant isolation, organization switching and member removal
-(`tests/journeys/*.yaml`, all `user: none`). Run them with:
+(`tests/journeys/*.yaml`, all `user: none`). The pinned-organization app
+(`apps/auth-reference`) carries the password reset journey. Run them with:
 
 ```bash
 pnpm test:journeys:auth                      # builds first, like pnpm dev
 pnpm test:journeys:auth --skip-build         # reuse the current build
 pnpm test:journeys:auth --filter invitation  # journeys whose name matches
+pnpm test:journeys:auth --app auth-reference # another app (default auth-reference-tenant)
 ```
 
 `scripts/test-journeys-auth.mjs` starts a single-node memory replica set (fresh every run,
@@ -76,7 +78,7 @@ auth indexes provisioned), then this checkout's dev server (`scripts/dev.mjs`) w
 app's secrets, a pinned `BETTER_AUTH_URL` and the dev mail sink (`LOWDEFY_DEV_SMTP_PORT`),
 runs this checkout's `lowdefy test --url` against it, and stops everything. It uses four
 consecutive free ports from `--port` (default 3200): app, internal, mail sink, MongoDB. The
-dev server log goes to `apps/auth-reference-tenant/.lowdefy/journeys-dev-server.log`. It
+dev server log goes to `apps/<app>/.lowdefy/journeys-dev-server.log`. It
 needs no Docker MongoDB or Mailpit, only the shared MongoDB binaries and a Chromium.
 
 Like the MongoDB suite, CI does not run it; run it when changing auth, tenancy, the

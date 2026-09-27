@@ -16,14 +16,15 @@
 */
 
 /*
-  Run the tenant auth journeys (apps/auth-reference-tenant/tests/journeys)
-  end to end against this checkout, with nothing to install or run first.
+  Run the auth journeys of a reference app (apps/<app>/tests/journeys) end to
+  end against this checkout, with nothing to install or run first.
 
   Usage:
     pnpm test:journeys:auth                      # build, then run every journey
     pnpm test:journeys:auth --skip-build         # reuse the current build
     pnpm test:journeys:auth --filter invitation  # only journeys whose name matches
     pnpm test:journeys:auth --port 3210          # first port to try (default 3200)
+    pnpm test:journeys:auth --app auth-reference # another app (default auth-reference-tenant)
 
   How it works:
     1. Starts a single-node MongoDB replica set in memory (fresh every run) and
@@ -36,7 +37,7 @@
 
   Four consecutive free ports from --port are used: the app, the dev server's
   internal port, the mail sink and MongoDB. The dev server log is written to
-  apps/auth-reference-tenant/.lowdefy/journeys-dev-server.log.
+  apps/<app>/.lowdefy/journeys-dev-server.log.
 */
 
 import { spawn } from 'node:child_process';
@@ -48,17 +49,19 @@ import { parseArgs } from 'node:util';
 import { MongoMemoryReplSet } from 'mongodb-memory-server';
 
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
-const APP_DIRECTORY = path.join(REPO_ROOT, 'apps', 'auth-reference-tenant');
-const LOG_PATH = path.join(APP_DIRECTORY, '.lowdefy', 'journeys-dev-server.log');
 const BOOT_TIMEOUT_MS = 600000;
 
 const { values: args } = parseArgs({
   options: {
+    app: { type: 'string', default: 'auth-reference-tenant' },
     filter: { type: 'string' },
     port: { type: 'string', default: '3200' },
     'skip-build': { type: 'boolean', default: false },
   },
 });
+
+const APP_DIRECTORY = path.join(REPO_ROOT, 'apps', args.app);
+const LOG_PATH = path.join(APP_DIRECTORY, '.lowdefy', 'journeys-dev-server.log');
 
 function run({ command, commandArgs, env, stdio = 'inherit' }) {
   return new Promise((resolve, reject) => {
@@ -84,7 +87,7 @@ async function startDatabase({ port }) {
     instanceOpts: [{ port, storageEngine: 'wiredTiger' }],
     replSet: { count: 1 },
   });
-  const uri = replSet.getUri('auth-reference-tenant');
+  const uri = replSet.getUri(args.app);
   const code = await run({
     command: process.execPath,
     commandArgs: ['apps/auth-reference/scripts/provision-indexes.mjs'],
@@ -124,6 +127,13 @@ function startDevServer({ ports, uri }) {
       LOWDEFY_SECRET_SMTP_HOST: '127.0.0.1',
       LOWDEFY_SECRET_SMTP_PORT: String(ports.smtp),
       LOWDEFY_SECRET_TENANT_DATABASE_URI: uri,
+      // The pinned reference apps (apps/auth-reference): the database under
+      // its own name, and the test values its README documents.
+      LOWDEFY_SECRET_AUTH_DATABASE_URI: uri,
+      LOWDEFY_SECRET_HOOK_AUDIT_KEY: 'audit-secret-value',
+      LOWDEFY_SECRET_JWT_SIGNING_SECRET: 'jwt-shared-secret-0123456789abcdef',
+      LOWDEFY_SECRET_PARTNER_KEY_ACME: 'partner-key-acme-0123456789abcdef',
+      LOWDEFY_SECRET_TURNSTILE_SECRET_KEY: '1x0000000000000000000000000000000AA',
       LOWDEFY_SERVER_DEV_INTERNAL_PORT: String(ports.internal),
       LOWDEFY_SERVER_DEV_STRICT_PORT: 'true',
     },
