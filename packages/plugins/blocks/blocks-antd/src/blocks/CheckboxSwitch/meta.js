@@ -38,6 +38,11 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
+      autoFocus: {
+        type: 'boolean',
+        default: false,
+        description: 'Autofocus to the block on page load.',
+      },
       color: {
         type: 'string',
         description: 'Selected checkbox color.',
@@ -53,6 +58,12 @@ export default {
       description: {
         type: 'string',
         description: 'Text to display next to the checkbox - supports html.',
+      },
+      indeterminate: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Show the checkbox as partly checked, eg. for a select all checkbox when only some items are selected. Only changes how the checkbox looks, not its value.',
       },
       label: {
         type: 'object',

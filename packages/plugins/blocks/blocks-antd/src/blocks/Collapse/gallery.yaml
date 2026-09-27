@@ -177,6 +177,59 @@
               properties:
                 content: Our mission is to democratize application development through low-code and open-source technologies.
 
+- title: Ghost and Sizes
+  blocks:
+    - id: ghost_collapse
+      type: Collapse
+      properties:
+        ghost: true
+        panels:
+          - key: ghost_shipping
+            title: Shipping (ghost)
+          - key: ghost_returns
+            title: Returns
+      slots:
+        ghost_shipping:
+          blocks:
+            - id: ghost_shipping_text
+              type: Paragraph
+              properties:
+                content: Orders ship within two business days.
+        ghost_returns:
+          blocks:
+            - id: ghost_returns_text
+              type: Paragraph
+              properties:
+                content: Unused items can be returned within 30 days.
+    - id: small_collapse
+      type: Collapse
+      properties:
+        size: small
+        panels:
+          - key: small_panel
+            title: Small size
+      slots:
+        small_panel:
+          blocks:
+            - id: small_panel_text
+              type: Paragraph
+              properties:
+                content: Compact header and content padding.
+    - id: large_collapse
+      type: Collapse
+      properties:
+        size: large
+        panels:
+          - key: large_panel
+            title: Large size
+      slots:
+        large_panel:
+          blocks:
+            - id: large_panel_text
+              type: Paragraph
+              properties:
+                content: Roomy header and content padding.
+
 - title: Expand Icon Placement
   blocks:
     - id: icon_start_label

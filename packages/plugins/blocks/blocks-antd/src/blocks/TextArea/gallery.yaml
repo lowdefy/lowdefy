@@ -240,6 +240,21 @@
         bordered: false
         rows: 6
         placeholder: Larger borderless textarea
+- title: Variants
+  blocks:
+    - id: variant_filled
+      type: TextArea
+      properties:
+        title: Filled
+        variant: filled
+        placeholder: Filled variant
+    - id: variant_underlined
+      type: TextArea
+      properties:
+        title: Underlined
+        variant: underlined
+        placeholder: Underlined variant
+
 - title: Disabled State
   blocks:
     - id: disabled_empty

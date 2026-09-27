@@ -35,30 +35,24 @@
       - Option 1
       - Option 2
     allowClear: false
-- id: 'properties.inputStyle: CSS style applied'
+- id: 'style.element: CSS style applied'
   type: AutoComplete
-  properties:
-    options:
-      - Option 1
-      - Option 2
-    inputStyle:
+  style:
+    .element:
       border: 1px solid red
-- id: 'properties.optionsStyle: CSS style applied'
-  type: AutoComplete
   properties:
     options:
       - Option 1
       - Option 2
-    optionsStyle:
-      color: blue
-- id: 'properties.options-object'
+- id: 'style.options: CSS style applied'
   type: AutoComplete
+  style:
+    .options:
+      color: blue
   properties:
     options:
-      - label: one
-        value: 'abc'
-      - label: two
-        value: 'def'
+      - Option 1
+      - Option 2
 - id: 'properties.autoFocus: true'
   type: AutoComplete
   properties:
@@ -144,35 +138,30 @@
       - '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
       - '<div style="color: green;">Option green</div>'
       - Option 3
-- id: 'properties.options.label: html'
+- id: 'properties.prefixIcon: search'
+  type: AutoComplete
+  properties:
+    prefixIcon: search
+    options:
+      - Apple
+      - Banana
+- id: 'properties.variant: underlined'
+  type: AutoComplete
+  properties:
+    variant: underlined
+    options:
+      - Apple
+      - Banana
+- id: 'events.onSelect'
   type: AutoComplete
   properties:
     options:
-      - label: '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
-        value: 'one value'
-      - label: '<div style="color: green;">Option green</div>'
-        value: 'two value'
-      - label: Option 3
-        value: 'three'
-- id: 'properties.options-style'
-  type: AutoComplete
-  properties:
-    options:
-      - label: one
-        value: 'one value'
-        style:
-          color: red
-      - label: two
-        value: 'two value'
-- id: 'properties.options.label: html and properties.options.filterString'
-  type: AutoComplete
-  properties:
-    options:
-      - label: '<div>Some main text</div><div style="font-size: 6px;">Some small subtext</div>'
-        filterString: 'Some main text'
-        value: 'one value'
-      - label: '<div style="color: green;">Option green</div>'
-        filterString: 'Option green'
-        value: 'two value'
-      - label: Option 3
-        value: 'three value'
+      - Apple
+      - Banana
+  events:
+    onSelect:
+      - id: selected_message
+        type: DisplayMessage
+        params:
+          content:
+            _event: value

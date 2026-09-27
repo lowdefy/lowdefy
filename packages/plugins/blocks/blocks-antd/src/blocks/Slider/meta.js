@@ -25,22 +25,48 @@ export default {
     label: 'The Slider label.',
     extra: 'The Slider extra content.',
     feedback: 'The Slider validation feedback.',
+    handle: 'The Slider handles.',
+    rail: 'The Slider rail, the full length of the slider behind the track.',
+    track: 'The Slider track, the highlighted part of the rail.',
   },
   events: {
+    onBlur: 'Trigger action when the slider loses focus.',
     onChange: {
       description: 'Trigger action when the slider value changes.',
       event: { value: 'The current slider value.' },
     },
+    onChangeComplete: {
+      description:
+        'Trigger action when the user finishes changing the value, on mouseup or keyup. Unlike onChange, this does not fire for every step while dragging.',
+      event: { value: 'The slider value.' },
+    },
+    onFocus: 'Trigger action when the slider gets focus.',
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
   properties: {
     type: 'object',
     additionalProperties: false,
     properties: {
-      disabled: {
+      autoFocus: {
         type: 'boolean',
         default: false,
-        description: 'Disable the slider if true.',
+        description: 'Autofocus to the block on page load.',
+      },
+      disabled: {
+        oneOf: [
+          {
+            type: 'boolean',
+            default: false,
+            description: 'Disable the slider if true.',
+          },
+          {
+            type: 'array',
+            description: 'Disable individual handles of a range slider, eg. [true, false].',
+            items: { type: 'boolean' },
+          },
+        ],
+        description:
+          'Disable the slider if true. In range mode, an array of booleans disables individual handles, eg. [true, false] fixes the first handle.',
       },
       dots: {
         type: 'boolean',
@@ -61,6 +87,11 @@ export default {
           displayType: 'yaml',
         },
       },
+      keyboard: {
+        type: 'boolean',
+        default: true,
+        description: 'Allow moving the handles with the keyboard arrow keys.',
+      },
       max: {
         type: 'number',
         default: 100,
@@ -72,9 +103,42 @@ export default {
         description: 'Minimum value of the slider.',
       },
       range: {
-        type: 'boolean',
-        default: false,
-        description: 'Enable dual thumb mode for selecting a range.',
+        oneOf: [
+          {
+            type: 'boolean',
+            default: false,
+            description: 'Enable dual thumb mode for selecting a range.',
+          },
+          {
+            type: 'object',
+            description: 'Enable range mode with extra range options.',
+            properties: {
+              draggableTrack: {
+                type: 'boolean',
+                default: false,
+                description:
+                  'Allow dragging the track between the handles to move the whole range.',
+              },
+              editable: {
+                type: 'boolean',
+                default: false,
+                description:
+                  'Allow adding handles by clicking the track and removing them by dragging them off. Cannot be used with draggableTrack.',
+              },
+              minCount: {
+                type: 'integer',
+                default: 0,
+                description: 'Minimum number of handles when editable.',
+              },
+              maxCount: {
+                type: 'integer',
+                description: 'Maximum number of handles when editable.',
+              },
+            },
+          },
+        ],
+        description:
+          'Enable dual thumb mode for selecting a range. The value is an array of numbers. Use an object to set range options.',
       },
       reverse: {
         type: 'boolean',
@@ -82,8 +146,11 @@ export default {
         description: 'Reverse the direction of the slider.',
       },
       step: {
-        type: 'number',
+        type: ['number', 'null'],
         default: 1,
+        docs: {
+          displayType: 'number',
+        },
         description:
           'The granularity the slider can step through values. Must be greater than 0. Set to null for marks only.',
       },
@@ -97,6 +164,39 @@ export default {
           'Tooltip configuration for the slider handle. Example: { open: true } to always show, or { formatter: null } to hide.',
         docs: {
           displayType: 'yaml',
+        },
+        properties: {
+          autoAdjustOverflow: {
+            type: 'boolean',
+            default: true,
+            description: 'Move the tooltip to stay inside the window.',
+          },
+          formatter: {
+            description: 'Set to null to hide the tooltip.',
+          },
+          open: {
+            type: 'boolean',
+            description:
+              'Always show the tooltip when true, never show it when false. By default it shows while hovering or dragging.',
+          },
+          placement: {
+            type: 'string',
+            enum: [
+              'top',
+              'left',
+              'right',
+              'bottom',
+              'topLeft',
+              'topRight',
+              'bottomLeft',
+              'bottomRight',
+              'leftTop',
+              'leftBottom',
+              'rightTop',
+              'rightBottom',
+            ],
+            description: 'Position of the tooltip relative to the handle.',
+          },
         },
       },
       vertical: {

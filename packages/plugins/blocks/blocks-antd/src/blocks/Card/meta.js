@@ -19,6 +19,7 @@ export default {
   icons: [],
   valueType: null,
   slots: {
+    actions: 'Action bar at the bottom of the card.',
     content: 'Main Card body.',
     cover: 'Image or content above the body.',
     extra: 'Extra content in the top-right header.',
@@ -27,6 +28,7 @@ export default {
   cssKeys: {
     element: 'The Card element.',
     header: 'The Card header.',
+    title: 'The Card title.',
     body: 'The Card body.',
     cover: 'The Card cover.',
     actions: 'The Card actions.',
@@ -42,12 +44,18 @@ export default {
       bordered: {
         type: 'boolean',
         default: true,
-        description: 'Toggles rendering of the border around the card.',
+        description:
+          'Toggles rendering of the border around the card. `bordered: false` is the same as `variant: borderless`.',
       },
       hoverable: {
         type: 'boolean',
         default: false,
         description: 'Lift up when hovering card.',
+      },
+      loading: {
+        type: 'boolean',
+        default: false,
+        description: 'Show a loading skeleton in place of the card content.',
       },
       inner: {
         type: 'boolean',
@@ -64,6 +72,12 @@ export default {
         type: 'string',
         description:
           'Title to show in the title area - supports html. Overwritten by blocks in the title content area.',
+      },
+      variant: {
+        type: 'string',
+        enum: ['outlined', 'borderless'],
+        default: 'outlined',
+        description: 'Card style variant.',
       },
       theme: {
         type: 'object',

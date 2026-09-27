@@ -52,6 +52,13 @@
         variant: borderless
         label:
           disabled: true
+    - id: drs_variant_underlined
+      type: DateRangeSelector
+      properties:
+        title: Underlined
+        variant: underlined
+        label:
+          disabled: true
 
 - title: Format Variations
   blocks:
@@ -214,6 +221,66 @@
           color: '#ff4d4f'
         label:
           disabled: true
+
+- title: Prefix, Placement and Read-only Input
+  blocks:
+    - id: drs_prefix_icon
+      type: DateRangeSelector
+      properties:
+        title: Prefix Icon
+        prefixIcon: clock
+        suffixIcon:
+          name: calendar
+          color: '#8c8c8c'
+    - id: drs_prefix_text
+      type: DateRangeSelector
+      properties:
+        title: Prefix Text
+        prefix: 'From:'
+    - id: drs_placement
+      type: DateRangeSelector
+      properties:
+        title: Popup Opens Top Right
+        placement: topRight
+    - id: drs_read_only
+      type: DateRangeSelector
+      properties:
+        title: Pick From Calendar Only
+        inputReadOnly: true
+        label:
+          extra: The input is read-only, so touch devices do not open the keyboard.
+
+- title: Open-ended and Fixed Ranges
+  blocks:
+    - id: drs_open_end
+      type: DateRangeSelector
+      properties:
+        title: Start Date, Optional End
+        allowEmpty:
+          - false
+          - true
+        label:
+          extra: Leave the end date empty for an ongoing range.
+    - id: drs_fixed_start
+      type: DateRangeSelector
+      properties:
+        title: Fixed Start Date
+        disabled:
+          - true
+          - false
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              drs_fixed_start:
+                - _date: '2026-01-01'
+                - _date: '2026-01-31'
+    - id: drs_show_week
+      type: DateRangeSelector
+      properties:
+        title: Show Week Numbers
+        showWeek: true
 
 - title: Disabled State
   blocks:

@@ -20,12 +20,21 @@ import icon from '../../schemas/icon.js';
 import disabledDates from '../../schemas/disabledDates.js';
 import { dateRangePresets } from '../../schemas/presets.js';
 import {
-  disabled,
   inputTitle,
   autoFocus,
   allowClear,
   sizeSmallDefaultLarge,
 } from '../../schemas/inputProperties.js';
+import {
+  inputReadOnly,
+  pickerEvents,
+  pickerVariant,
+  placement,
+  prefix,
+  prefixIcon,
+  showWeek,
+} from '../../schemas/pickerProperties.js';
+import pickerTheme from '../../schemas/pickerTheme.js';
 
 export default {
   category: 'input',
@@ -37,9 +46,19 @@ export default {
     extra: 'The DateRangeSelector extra content.',
     feedback: 'The DateRangeSelector validation feedback.',
     popup: 'The DateRangeSelector popup.',
+    prefixIcon: 'The prefix icon in the DateRangeSelector.',
     suffixIcon: 'The suffix icon in the DateRangeSelector.',
   },
   events: {
+    ...pickerEvents,
+    onBlur: {
+      description: 'Trigger actions when the picker loses focus.',
+      event: { range: 'The input that lost focus, "start" or "end".' },
+    },
+    onFocus: {
+      description: 'Trigger actions when the picker gets focus.',
+      event: { range: 'The input that got focus, "start" or "end".' },
+    },
     onChange: {
       description: 'Trigger actions when selection is changed.',
       event: { value: 'The selected date range value.' },
@@ -51,6 +70,18 @@ export default {
     additionalProperties: false,
     properties: {
       allowClear: { ...allowClear, default: true },
+      allowEmpty: {
+        type: 'array',
+        items: { type: 'boolean' },
+        minItems: 2,
+        maxItems: 2,
+        default: [false, false],
+        description:
+          'Allow the start or the end date to be left empty, for an open-ended range. An empty date is null in the block value.',
+        docs: {
+          displayType: 'yaml',
+        },
+      },
       autoFocus,
       bordered: {
         type: 'boolean',
@@ -58,19 +89,33 @@ export default {
         description:
           "Deprecated - use variant: 'borderless'. Whether or not the input has a border style.",
       },
-      disabled,
-      variant: {
-        type: 'string',
-        enum: ['outlined', 'filled', 'borderless'],
-        default: 'outlined',
-        description: "Variant style of the input. Use 'borderless' instead of bordered: false.",
+      disabled: {
+        oneOf: [
+          {
+            type: 'boolean',
+            default: false,
+            description: 'Disable the block if true.',
+          },
+          {
+            type: 'array',
+            description:
+              'Disable only the start or the end input, eg. [true, false] to fix the start date.',
+            items: { type: 'boolean' },
+            minItems: 2,
+            maxItems: 2,
+          },
+        ],
+        description:
+          'Disable the block if true. An array of two booleans disables only the start or the end input, eg. [true, false] to fix the start date. A disabled input needs a value, or allowEmpty for that input.',
       },
+      variant: pickerVariant,
       disabledDates,
       format: {
         type: 'string',
         description:
           'Format in which to parse the date value, eg. "DD MMMM YYYY" will parse a date value of 1999-12-31 as "31 December 1999". The format has to conform to dayjs formats. Defaults to the active locale\'s date format, or "YYYY-MM-DD" when no locale is configured.',
       },
+      inputReadOnly,
       label,
       placeholder: {
         type: 'array',
@@ -121,12 +166,16 @@ export default {
           },
         },
       },
+      placement,
+      prefix,
+      prefixIcon,
       presets: dateRangePresets,
       separator: {
         type: 'string',
         default: '~',
         description: 'Separator symbol shown between start and end date inputs.',
       },
+      showWeek,
       size: sizeSmallDefaultLarge,
       suffixIcon: {
         ...icon,
@@ -135,163 +184,7 @@ export default {
           'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on right-hand side of the date picker.',
       },
       title: inputTitle,
-      theme: {
-        type: 'object',
-        description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
-        docs: {
-          displayType: 'yaml',
-          link: 'https://ant.design/components/date-picker#design-token',
-        },
-        properties: {
-          cellHeight: {
-            type: 'number',
-            default: 24,
-            description: 'Height of a calendar cell.',
-          },
-          cellWidth: {
-            type: 'number',
-            default: 36,
-            description: 'Width of a calendar cell.',
-          },
-          cellHoverBg: {
-            type: 'string',
-            description: 'Background color of a calendar cell on hover.',
-          },
-          cellActiveWithRangeBg: {
-            type: 'string',
-            description: 'Background color of cells within the selected range.',
-          },
-          cellHoverWithRangeBg: {
-            type: 'string',
-            description: 'Background color of cells within range on hover.',
-          },
-          cellBgDisabled: {
-            type: 'string',
-            description: 'Background color of disabled cells.',
-          },
-          cellRangeBorderColor: {
-            type: 'string',
-            description: 'Border color of range selection cells.',
-          },
-          timeColumnWidth: {
-            type: 'number',
-            default: 56,
-            description: 'Width of the time panel column.',
-          },
-          timeColumnHeight: {
-            type: 'number',
-            default: 224,
-            description: 'Height of the time panel column.',
-          },
-          timeCellHeight: {
-            type: 'number',
-            default: 28,
-            description: 'Height of a time cell in the time panel.',
-          },
-          addonBg: {
-            type: 'string',
-            description: 'Background color for the addon area.',
-          },
-          hoverBorderColor: {
-            type: 'string',
-            description: 'Border color on hover.',
-          },
-          activeBorderColor: {
-            type: 'string',
-            description: 'Border color when active.',
-          },
-          activeShadow: {
-            type: 'string',
-            description: 'Shadow effect when active.',
-          },
-          paddingBlock: {
-            type: 'number',
-            default: 4,
-            description: 'Vertical padding of the input.',
-          },
-          paddingBlockSM: {
-            type: 'number',
-            default: 0,
-            description: 'Vertical padding for small size.',
-          },
-          paddingBlockLG: {
-            type: 'number',
-            default: 7,
-            description: 'Vertical padding for large size.',
-          },
-          paddingInline: {
-            type: 'number',
-            default: 11,
-            description: 'Horizontal padding of the input.',
-          },
-          paddingInlineSM: {
-            type: 'number',
-            default: 7,
-            description: 'Horizontal padding for small size.',
-          },
-          paddingInlineLG: {
-            type: 'number',
-            default: 11,
-            description: 'Horizontal padding for large size.',
-          },
-          zIndexPopup: {
-            type: 'number',
-            default: 1050,
-            description: 'Z-index of the picker popup.',
-          },
-          borderRadius: {
-            type: 'number',
-            default: 6,
-            description: 'Border radius of the input.',
-          },
-          controlHeight: {
-            type: 'number',
-            default: 32,
-            description: 'Height of the input.',
-          },
-          controlHeightLG: {
-            type: 'number',
-            default: 40,
-            description: 'Height for large size.',
-          },
-          controlHeightSM: {
-            type: 'number',
-            default: 24,
-            description: 'Height for small size.',
-          },
-          fontSize: {
-            type: 'number',
-            default: 14,
-            description: 'Font size.',
-          },
-          lineWidth: {
-            type: 'number',
-            default: 1,
-            description: 'Border width.',
-          },
-          colorPrimary: {
-            type: 'string',
-            description: 'Primary color override.',
-          },
-          colorBgContainer: {
-            type: 'string',
-            description: 'Background color of the input.',
-          },
-          colorText: {
-            type: 'string',
-            description: 'Text color.',
-          },
-          colorBorder: {
-            type: 'string',
-            description: 'Border color.',
-          },
-          colorTextPlaceholder: {
-            type: 'string',
-            description: 'Placeholder text color.',
-          },
-        },
-      },
+      theme: pickerTheme,
     },
   },
 };

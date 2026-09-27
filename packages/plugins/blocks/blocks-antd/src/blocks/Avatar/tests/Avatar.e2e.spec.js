@@ -122,4 +122,35 @@ test.describe('Avatar Block', () => {
     const display = getBlock(page, 'onclick_display');
     await expect(display).toHaveText('Avatar clicked');
   });
+
+  // ============================================
+  // SRCSET AND GROUP TESTS
+  // ============================================
+
+  test('passes srcSet to the image', async ({ page }) => {
+    const img = getAvatar(page, 'avatar_src_set').locator('img');
+    await expect(img).toHaveAttribute('srcset', /2x$/);
+  });
+
+  test('group shows maxCount avatars and an overflow avatar', async ({ page }) => {
+    const group = getBlock(page, 'avatar_group').locator('.ant-avatar-group');
+    await expect(group.locator(':scope > .ant-avatar')).toHaveCount(3);
+    const overflow = group.locator(':scope > .ant-avatar').last();
+    await expect(overflow).toHaveText('+2');
+    await expect(overflow).toHaveCSS('background-color', 'rgb(255, 0, 0)');
+  });
+
+  test('group overflow popover opens on the configured trigger', async ({ page }) => {
+    const group = getBlock(page, 'avatar_group').locator('.ant-avatar-group');
+    await group.locator(':scope > .ant-avatar').last().click();
+    const popover = page.locator('.ant-avatar-group-popover');
+    await expect(popover).toBeVisible();
+    await expect(popover.locator('.ant-avatar')).toHaveCount(2);
+  });
+
+  test('group onClick passes the clicked avatar index', async ({ page }) => {
+    const group = getBlock(page, 'avatar_group').locator('.ant-avatar-group');
+    await group.locator(':scope > .ant-avatar').nth(1).click();
+    await expect(getBlock(page, 'group_index_display')).toHaveText('Clicked 1');
+  });
 });

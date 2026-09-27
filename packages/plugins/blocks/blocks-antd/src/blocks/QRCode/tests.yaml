@@ -111,3 +111,12 @@
   properties:
     value: https://lowdefy.com
     status: scanned
+- id: 'properties.iconSize object'
+  type: QRCode
+  properties:
+    value: https://lowdefy.com
+    errorLevel: H
+    icon: https://lowdefy.com/icon.png
+    iconSize:
+      width: 60
+      height: 30

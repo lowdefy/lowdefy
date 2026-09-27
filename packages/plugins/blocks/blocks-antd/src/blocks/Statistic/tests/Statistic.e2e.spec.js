@@ -147,4 +147,29 @@ test.describe('Statistic Block', () => {
     const value = block.locator('.ant-statistic-content-value');
     await expect(value).toContainText('-9.26');
   });
+
+  // ============================================
+  // TIMER AND SEMANTIC KEYS
+  // ============================================
+
+  test('countdown timer past its target shows zero and fires onFinish', async ({ page }) => {
+    const block = getStatistic(page, 'statistic_countdown_finished');
+    await expect(block.locator('.ant-statistic-content-value')).toHaveText('00:00:00');
+    await expect(getBlock(page, 'countdown_finished_display')).toHaveText('Countdown finished');
+  });
+
+  test('count up timer formats the elapsed time', async ({ page }) => {
+    const value = getStatistic(page, 'statistic_countup').locator('.ant-statistic-content-value');
+    await expect(value).toHaveText(/^\d{4,} days$/);
+  });
+
+  test('applies class and style to the semantic parts', async ({ page }) => {
+    const block = getStatistic(page, 'statistic_css_keys');
+    await expect(block.locator('.ant-statistic-title')).toHaveClass(/statistic-title-class/);
+    await expect(block.locator('.ant-statistic-content')).toHaveCSS('color', 'rgb(0, 128, 0)');
+    await expect(block.locator('.ant-statistic-content-prefix')).toHaveCSS('font-size', '12px');
+    await expect(block.locator('.ant-statistic-content-suffix')).toHaveClass(
+      /statistic-suffix-class/
+    );
+  });
 });

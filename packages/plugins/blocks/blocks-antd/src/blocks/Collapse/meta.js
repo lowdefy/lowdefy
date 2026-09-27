@@ -25,6 +25,7 @@ export default {
     element: 'The Collapse element.',
     expandIcon: 'The expand icon in the Collapse.',
     header: 'The Collapse header.',
+    title: 'The panel title text in the Collapse header.',
     content: 'The Collapse content.',
   },
   events: {
@@ -43,13 +44,20 @@ export default {
         description: 'If true, only one panel is open at a time.',
       },
       activeKey: {
-        type: 'string',
-        description: "Current panel's key.",
+        type: ['string', 'array'],
+        items: { type: 'string' },
+        description: "Current panel's key, or a list of keys of the open panels.",
       },
       bordered: {
         type: 'boolean',
         default: true,
         description: 'Toggles rendering of the border around the collapse block.',
+      },
+      collapsible: {
+        type: 'string',
+        enum: ['header', 'icon', 'disabled'],
+        description:
+          'How panels are toggled: by clicking anywhere in the `header` (default), only the expand `icon`, or `disabled` to stop all panels from toggling.',
       },
       defaultActiveKey: {
         type: ['string', 'array'],
@@ -74,8 +82,13 @@ export default {
       },
       forceRender: {
         type: 'boolean',
-        default: 'false',
+        default: false,
         description: 'Force render for all panels.',
+      },
+      ghost: {
+        type: 'boolean',
+        default: false,
+        description: 'Make the collapse borderless with a transparent background.',
       },
       panels: {
         type: 'array',
@@ -107,6 +120,12 @@ export default {
         default: true,
         description: 'Show expand icon.',
       },
+      size: {
+        type: 'string',
+        enum: ['small', 'medium', 'large'],
+        default: 'medium',
+        description: 'Size of the panel headers and content padding.',
+      },
       theme: {
         type: 'object',
         description:
@@ -121,6 +140,16 @@ export default {
             default: '12px 16px',
             description: 'Padding of the collapse header.',
           },
+          headerPaddingSM: {
+            type: 'string',
+            default: '8px 12px 8px 8px',
+            description: 'Padding of the collapse header when size is small.',
+          },
+          headerPaddingLG: {
+            type: 'string',
+            default: '16px 24px 16px 16px',
+            description: 'Padding of the collapse header when size is large.',
+          },
           headerBg: {
             type: 'string',
             default: 'rgba(0, 0, 0, 0.02)',
@@ -130,6 +159,16 @@ export default {
             type: 'string',
             default: '16px 16px',
             description: 'Padding of the collapse content area.',
+          },
+          contentPaddingSM: {
+            type: ['number', 'string'],
+            default: 12,
+            description: 'Padding of the collapse content area when size is small.',
+          },
+          contentPaddingLG: {
+            type: ['number', 'string'],
+            default: 24,
+            description: 'Padding of the collapse content area when size is large.',
           },
           contentBg: {
             type: 'string',

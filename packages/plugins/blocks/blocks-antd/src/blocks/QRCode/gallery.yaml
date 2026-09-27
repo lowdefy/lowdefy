@@ -184,6 +184,18 @@
         errorLevel: H
         icon: https://lowdefy.com/favicon-32x32.png
         iconSize: 48
+    - id: qr_icon_wide
+      type: QRCode
+      layout:
+        flex: 0 0 auto
+      properties:
+        value: https://lowdefy.com
+        size: 200
+        errorLevel: H
+        icon: https://lowdefy.com/favicon-32x32.png
+        iconSize:
+          width: 48
+          height: 32
 
 - title: Bordered
   blocks:

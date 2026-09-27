@@ -35,6 +35,22 @@
         message: An error occurred during processing
         type: error
 
+- title: Filled Variant
+  blocks:
+    - id: filled_success
+      type: Alert
+      properties:
+        message: Backup completed
+        type: success
+        variant: filled
+    - id: filled_warning
+      type: Alert
+      properties:
+        message: Two invoices are overdue
+        description: Send a reminder to the customer or mark the invoices as paid.
+        type: warning
+        variant: filled
+
 - title: With Description
   blocks:
     - id: desc_success
@@ -147,6 +163,16 @@
         description: The last synchronization attempt failed. Your local changes have been preserved. Please check your connection and try again.
         type: error
         closable: true
+
+- title: Custom Close Icon
+  blocks:
+    - id: close_icon_circle
+      type: Alert
+      properties:
+        message: Your session will expire in 5 minutes
+        type: warning
+        closable: true
+        closeIcon: close-circle
 
 - title: Custom Close Text
   blocks:

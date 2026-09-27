@@ -61,6 +61,16 @@ events:
         timeline_custom_fields:
           - Custom item 1
           - Custom item 2
+        timeline_horizontal:
+          - Step 1
+          - Step 2
+        timeline_positions:
+          - Start item
+          - End item
+        timeline_pending_icon:
+          - Done
+        timeline_css_keys:
+          - Styled
 
 blocks:
   # ============================================
@@ -242,3 +252,62 @@ blocks:
         type: Span
         properties:
           content: Custom item
+
+  # ============================================
+  # ORIENTATION, VARIANT, POSITIONS, PENDING ICON, SEMANTIC KEYS
+  # ============================================
+
+  - id: timeline_horizontal
+    type: TimelineList
+    properties:
+      orientation: horizontal
+      variant: filled
+    blocks:
+      - id: timeline_horizontal_item
+        type: Span
+        properties:
+          content:
+            _state: timeline_horizontal.$
+
+  - id: timeline_positions
+    type: TimelineList
+    properties:
+      data:
+        - position: left
+        - position: right
+    blocks:
+      - id: timeline_positions_item
+        type: Span
+        properties:
+          content:
+            _state: timeline_positions.$
+
+  - id: timeline_pending_icon
+    type: TimelineList
+    properties:
+      pending: Waiting
+      pendingDotIcon: clock
+    blocks:
+      - id: timeline_pending_icon_item
+        type: Span
+        properties:
+          content:
+            _state: timeline_pending_icon.$
+
+  - id: timeline_css_keys
+    type: TimelineList
+    class:
+      .label: timeline-label-class
+    style:
+      .label:
+        color: 'rgb(255, 0, 0)'
+    properties:
+      titleSpan: 100
+      data:
+        - label: '09:00'
+    blocks:
+      - id: timeline_css_keys_item
+        type: Span
+        properties:
+          content:
+            _state: timeline_css_keys.$

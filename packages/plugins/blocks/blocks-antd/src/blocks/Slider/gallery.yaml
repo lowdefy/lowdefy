@@ -44,6 +44,54 @@
           65: '65'
           100: '100'
 
+- title: Range Options
+  fullWidth: true
+  blocks:
+    - id: slider_range_draggable
+      type: Slider
+      properties:
+        title: Drag the Track to Move the Range
+        range:
+          draggableTrack: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              slider_range_draggable:
+                - 20
+                - 50
+    - id: slider_range_fixed_start
+      type: Slider
+      properties:
+        title: Fixed Minimum
+        range: true
+        disabled:
+          - true
+          - false
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              slider_range_fixed_start:
+                - 10
+                - 60
+    - id: slider_change_complete
+      type: Slider
+      properties:
+        title: Save When the Drag Ends
+      events:
+        onChangeComplete:
+          - id: complete_message
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Saved '
+                  - _json.stringify:
+                      - _event: value
+
 - title: Min, Max, and Step
   fullWidth: true
   blocks:

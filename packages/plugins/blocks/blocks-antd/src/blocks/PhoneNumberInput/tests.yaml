@@ -23,3 +23,11 @@
   type: PhoneNumberInput
   properties:
     defaultRegion: 'US'
+- id: 'properties.allowClear: true'
+  type: PhoneNumberInput
+  properties:
+    allowClear: true
+- id: 'properties.variant: underlined'
+  type: PhoneNumberInput
+  properties:
+    variant: underlined

@@ -158,4 +158,31 @@ test.describe('Carousel Block', () => {
     const display = getBlock(page, 'afterchange_display');
     await expect(display).toHaveText('Current: slide2', { timeout: 5000 });
   });
+
+  test('autoplay dotDuration sets the dot progress duration', async ({ page }) => {
+    const carousel = getCarousel(page, 'carousel_dot_duration');
+    await expect(carousel).toHaveAttribute('style', /--dot-duration:\s*5000ms/);
+  });
+
+  test('initialSlide opens on the given slide', async ({ page }) => {
+    const carousel = getCarousel(page, 'carousel_initial_slide');
+    await expect(carousel.locator('.slick-slide.slick-current')).toContainText('Initial 2');
+    await expect(getDots(carousel).locator('li').nth(1)).toHaveClass(/slick-active/);
+  });
+
+  test('onSwipe passes the swipe direction', async ({ page }) => {
+    const carousel = getCarousel(page, 'carousel_swipe');
+    const track = carousel.locator('.slick-list');
+    await expect(track).toBeVisible();
+    // Drags are ignored while the initial slide animation runs.
+    await page.waitForTimeout(1000);
+    const box = await track.boundingBox();
+    const y = box.y + box.height / 2;
+    await page.mouse.move(box.x + box.width * 0.8, y);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width * 0.5, y, { steps: 10 });
+    await page.mouse.move(box.x + box.width * 0.2, y, { steps: 10 });
+    await page.mouse.up();
+    await expect(getBlock(page, 'swipe_display')).toHaveText('Swiped left');
+  });
 });

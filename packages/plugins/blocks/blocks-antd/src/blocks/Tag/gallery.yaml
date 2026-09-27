@@ -120,6 +120,40 @@
             title: volcano
             color: volcano
 
+- title: Variants
+  blocks:
+    - id: variant_filled
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Filled
+        color: blue
+    - id: variant_outlined
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Outlined
+        color: blue
+        variant: outlined
+    - id: variant_solid
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Solid
+        color: blue
+        variant: solid
+    - id: variant_solid_success
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Paid
+        color: success
+        variant: solid
+
 - title: Custom Hex Colors
   blocks:
     - id: hex_coral
@@ -224,6 +258,14 @@
         title: Starred
         closable: true
         icon: star
+    - id: closable_custom_icon
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Custom close icon
+        closable: true
+        closeIcon: close-circle
         color: gold
     - id: closable_with_event
       type: Tag
@@ -240,6 +282,25 @@
             params:
               content: Tag closed!
               status: info
+
+- title: Links and Disabled Tags
+  blocks:
+    - id: link_tag
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open the docs
+        icon: external-link
+        href: https://docs.lowdefy.com
+        target: _blank
+    - id: disabled_tag
+      type: Tag
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Archived
+        disabled: true
 
 - title: onClick Event
   blocks:

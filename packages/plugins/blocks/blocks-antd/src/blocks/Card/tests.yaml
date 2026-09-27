@@ -38,23 +38,25 @@
   properties:
     title: Card block
     inner: true
-- id: 'properties.bodyStyle: border: 5px solid blue'
+- id: 'style.body: border: 5px solid blue'
   type: Card
-  properties:
-    title: Card block
-    bodyStyle:
+  style:
+    .body:
       border: 5px solid blue
-- id: 'properties.headerStyle: border: 5px solid blue'
-  type: Card
   properties:
     title: Card block
-    headerStyle:
+- id: 'style.header: border: 5px solid blue'
+  type: Card
+  style:
+    .header:
       border: 5px solid blue
-- id: 'areas.extra:'
+  properties:
+    title: Card block
+- id: 'slots.extra:'
   type: Card
   properties:
     title: Card block
-  areas:
+  slots:
     extra:
       blocks:
         - id: test
@@ -70,6 +72,28 @@
   events:
     onClick:
       - id: message
-        type: message
+        type: DisplayMessage
         params:
           content: Success
+- id: 'properties.variant: borderless'
+  type: Card
+  properties:
+    title: Card block
+    variant: borderless
+- id: 'properties.loading: true'
+  type: Card
+  properties:
+    title: Card block
+    loading: true
+- id: 'slots.actions'
+  type: Card
+  properties:
+    title: Card block
+  slots:
+    actions:
+      blocks:
+        - id: card_action_edit
+          type: Button
+          properties:
+            title: Edit
+            type: link

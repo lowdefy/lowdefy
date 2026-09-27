@@ -43,6 +43,8 @@ const SwitchBlock = ({
   if (type.isString(propertiesIconUnchecked)) {
     propertiesIconUnchecked = { name: propertiesIconUnchecked };
   }
+  // antd 6 renamed the default size to medium and warns on size="default".
+  const size = properties.size === 'default' ? 'medium' : properties.size;
   const switchEl = (
     <Switch
       autoFocus={properties.autoFocus}
@@ -50,7 +52,8 @@ const SwitchBlock = ({
       className={classNames.element}
       disabled={properties.disabled || loading}
       id={`${blockId}_input`}
-      size={properties.size}
+      loading={properties.loading}
+      size={size}
       style={styles.element}
       checkedChildren={
         properties.checkedText ? (

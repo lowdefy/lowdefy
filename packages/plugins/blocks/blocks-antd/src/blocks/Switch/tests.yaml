@@ -26,10 +26,10 @@
   type: Switch
   properties:
     color: '#f44336'
-- id: 'properties.inputStyle: CSS style applied'
+- id: 'style.element: CSS style applied'
   type: Switch
-  properties:
-    inputStyle:
+  style:
+    .element:
       border: 2px solid red
 - id: 'properties.disabled: true'
   type: Switch
@@ -85,3 +85,7 @@
   properties:
     label:
       extra: showing extra
+- id: 'properties.loading: true'
+  type: Switch
+  properties:
+    loading: true

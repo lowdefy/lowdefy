@@ -45,6 +45,7 @@ export default {
       description: 'Trigger action when text input is changed.',
       event: { value: 'The current input value.' },
     },
+    onClear: 'Trigger action when the clear button is clicked.',
     onFocus: 'Trigger action when text input gets focus.',
     onPressEnter: 'Trigger action when enter is pressed while text input is focused.',
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
@@ -75,7 +76,7 @@ export default {
       placeholder,
       prefix: {
         type: 'string',
-        description: 'Prefix text for the block, priority over $prefix_con.',
+        description: 'Prefix text for the block, priority over prefixIcon.',
       },
       prefixIcon: {
         ...icon,
@@ -109,11 +110,11 @@ export default {
       showCount: {
         type: 'boolean',
         default: false,
-        description: 'Show text character count',
+        description: 'Show text character count.',
       },
       suffix: {
         type: 'string',
-        description: 'Suffix text for the block, priority over suffixIcon.',
+        description: 'Suffix text for the block, shown before suffixIcon.',
       },
       suffixIcon: {
         ...icon,
@@ -241,6 +242,26 @@ export default {
           activeBg: {
             type: 'string',
             description: 'Background color when the input is focused.',
+          },
+          inputAffixPadding: {
+            type: 'number',
+            default: 4,
+            description: 'Gap between the prefix or suffix and the input text.',
+          },
+          inputFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the input text.',
+          },
+          inputFontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Font size of the input text for large inputs.',
+          },
+          inputFontSizeSM: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the input text for small inputs.',
           },
           lineWidth: {
             type: 'number',

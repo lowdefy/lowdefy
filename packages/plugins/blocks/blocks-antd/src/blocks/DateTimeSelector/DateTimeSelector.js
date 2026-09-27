@@ -91,7 +91,9 @@ const DateTimeSelector = ({
               autoFocus={properties.autoFocus}
               variant={properties.bordered === false ? 'borderless' : properties.variant}
               className={classNames.element}
+              classNames={{ popup: { root: classNames.popup } }}
               style={{ width: '100%', ...styles.element }}
+              styles={{ popup: { root: styles.popup } }}
               disabled={properties.disabled || loading}
               disabledDate={disabledDate(properties.disabledDates)}
               format={
@@ -100,15 +102,30 @@ const DateTimeSelector = ({
                 'YYYY-MM-DD HH:mm'
               }
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
+              inputReadOnly={properties.inputReadOnly}
               placeholder={properties.placeholder}
+              placement={properties.placement}
+              prefix={
+                properties.prefix ||
+                (properties.prefixIcon && (
+                  <Icon
+                    blockId={`${blockId}_prefixIcon`}
+                    classNames={{ element: classNames.prefixIcon }}
+                    events={events}
+                    properties={properties.prefixIcon}
+                    styles={{ element: styles.prefixIcon }}
+                  />
+                ))
+              }
               presets={getPresets({
                 disabledDates: properties.disabledDates,
                 local: !properties.selectUTC,
                 methods,
                 presets: properties.presets,
               })}
-              showNow={properties.showNow}
-              showToday={properties.showToday}
+              needConfirm={properties.needConfirm}
+              showNow={properties.showNow ?? properties.showToday}
+              showWeek={properties.showWeek}
               size={properties.size}
               status={validation.status}
               suffixIcon={
@@ -126,12 +143,19 @@ const DateTimeSelector = ({
                 minuteStep: properties.minuteStep ?? 5,
                 secondStep: properties.secondStep ?? 30,
               }}
+              onBlur={() => {
+                methods.triggerEvent({ name: 'onBlur' });
+              }}
+              onClear={() => {
+                methods.triggerEvent({ name: 'onClear' });
+              }}
+              onFocus={() => {
+                methods.triggerEvent({ name: 'onFocus' });
+              }}
+              onOpenChange={(open) => {
+                methods.triggerEvent({ name: 'onOpenChange', event: { open } });
+              }}
               onChange={onChange}
-              onSelect={
-                // NOTE: we use on select instead of onChange to make the block UX
-                // more like the DataSelector which changes date on click and not on ok.
-                onChange
-              }
               value={
                 !type.isDate(value) ? null : properties.selectUTC ? dayjs.utc(value) : dayjs(value)
               }

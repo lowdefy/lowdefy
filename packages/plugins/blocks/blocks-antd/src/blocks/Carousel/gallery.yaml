@@ -23,7 +23,7 @@
               type: Box
               style:
                 height: 160
-                background: "#364d79"
+                background: '#364d79'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -41,7 +41,7 @@
               type: Box
               style:
                 height: 160
-                background: "#263c5a"
+                background: '#263c5a'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -59,7 +59,7 @@
               type: Box
               style:
                 height: 160
-                background: "#1a2d45"
+                background: '#1a2d45'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -77,7 +77,7 @@
               type: Box
               style:
                 height: 160
-                background: "#0d1e30"
+                background: '#0d1e30'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -100,7 +100,7 @@
               type: Box
               style:
                 height: 180
-                background: "#1677ff"
+                background: '#1677ff'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -118,7 +118,7 @@
               type: Box
               style:
                 height: 180
-                background: "#52c41a"
+                background: '#52c41a'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -136,7 +136,7 @@
               type: Box
               style:
                 height: 180
-                background: "#722ed1"
+                background: '#722ed1'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -154,7 +154,7 @@
               type: Box
               style:
                 height: 180
-                background: "#fa541c"
+                background: '#fa541c'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -172,7 +172,7 @@
               type: Box
               style:
                 height: 180
-                background: "#eb2f96"
+                background: '#eb2f96'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -198,7 +198,7 @@
               type: Box
               style:
                 height: 160
-                background: "#13c2c2"
+                background: '#13c2c2'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -216,7 +216,7 @@
               type: Box
               style:
                 height: 160
-                background: "#1677ff"
+                background: '#1677ff'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -234,7 +234,7 @@
               type: Box
               style:
                 height: 160
-                background: "#722ed1"
+                background: '#722ed1'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -252,7 +252,7 @@
               type: Box
               style:
                 height: 160
-                background: "#eb2f96"
+                background: '#eb2f96'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -262,6 +262,51 @@
                   properties:
                     content: Auto Slide 4
                     level: 3
+                  style:
+                    color: white
+- title: Autoplay Progress Dots
+  blocks:
+    - id: dot_duration_carousel
+      type: Carousel
+      properties:
+        autoplay:
+          dotDuration: true
+        autoplaySpeed: 4000
+      slots:
+        progress_s1:
+          blocks:
+            - id: progress_s1
+              type: Box
+              style:
+                height: 160
+                background: '#1677ff'
+                display: flex
+                alignItems: center
+                justifyContent: center
+              blocks:
+                - id: progress_s1_text
+                  type: Title
+                  properties:
+                    content: The active dot fills until the next slide
+                    level: 4
+                  style:
+                    color: white
+        progress_s2:
+          blocks:
+            - id: progress_s2
+              type: Box
+              style:
+                height: 160
+                background: '#722ed1'
+                display: flex
+                alignItems: center
+                justifyContent: center
+              blocks:
+                - id: progress_s2_text
+                  type: Title
+                  properties:
+                    content: Second slide
+                    level: 4
                   style:
                     color: white
 - title: Autoplay with Pause on Hover
@@ -280,7 +325,7 @@
               type: Box
               style:
                 height: 160
-                background: "#389e0d"
+                background: '#389e0d'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -298,7 +343,7 @@
               type: Box
               style:
                 height: 160
-                background: "#08979c"
+                background: '#08979c'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -316,7 +361,7 @@
               type: Box
               style:
                 height: 160
-                background: "#531dab"
+                background: '#531dab'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -341,7 +386,7 @@
               type: Box
               style:
                 height: 160
-                background: "#fa8c16"
+                background: '#fa8c16'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -359,7 +404,7 @@
               type: Box
               style:
                 height: 160
-                background: "#d46b08"
+                background: '#d46b08'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -377,7 +422,7 @@
               type: Box
               style:
                 height: 160
-                background: "#ad4e00"
+                background: '#ad4e00'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -402,7 +447,7 @@
               type: Box
               style:
                 height: 200
-                background: "#13c2c2"
+                background: '#13c2c2'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -420,7 +465,7 @@
               type: Box
               style:
                 height: 200
-                background: "#006d75"
+                background: '#006d75'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -438,7 +483,7 @@
               type: Box
               style:
                 height: 200
-                background: "#00474f"
+                background: '#00474f'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -463,7 +508,7 @@
               type: Box
               style:
                 height: 200
-                background: "#eb2f96"
+                background: '#eb2f96'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -481,7 +526,7 @@
               type: Box
               style:
                 height: 200
-                background: "#c41d7f"
+                background: '#c41d7f'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -499,7 +544,7 @@
               type: Box
               style:
                 height: 200
-                background: "#9e1068"
+                background: '#9e1068'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -524,7 +569,7 @@
               type: Box
               style:
                 height: 180
-                background: "#531dab"
+                background: '#531dab'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -542,7 +587,7 @@
               type: Box
               style:
                 height: 180
-                background: "#08979c"
+                background: '#08979c'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -560,7 +605,7 @@
               type: Box
               style:
                 height: 180
-                background: "#d4380d"
+                background: '#d4380d'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -666,7 +711,7 @@
               type: Box
               style:
                 height: 180
-                background: "#389e0d"
+                background: '#389e0d'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -684,7 +729,7 @@
               type: Box
               style:
                 height: 180
-                background: "#1d39c4"
+                background: '#1d39c4'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -702,7 +747,7 @@
               type: Box
               style:
                 height: 180
-                background: "#c41d7f"
+                background: '#c41d7f'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -720,7 +765,7 @@
               type: Box
               style:
                 height: 180
-                background: "#d4380d"
+                background: '#d4380d'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -746,7 +791,7 @@
               type: Box
               style:
                 height: 160
-                background: "#faad14"
+                background: '#faad14'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -764,7 +809,7 @@
               type: Box
               style:
                 height: 160
-                background: "#d48806"
+                background: '#d48806'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -782,7 +827,7 @@
               type: Box
               style:
                 height: 160
-                background: "#ad6800"
+                background: '#ad6800'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -808,7 +853,7 @@
               type: Box
               style:
                 height: 140
-                background: "#1677ff"
+                background: '#1677ff'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -817,7 +862,7 @@
                 - id: multi_s1_text
                   type: Title
                   properties:
-                    content: "1"
+                    content: '1'
                     level: 3
                   style:
                     color: white
@@ -827,7 +872,7 @@
               type: Box
               style:
                 height: 140
-                background: "#4096ff"
+                background: '#4096ff'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -836,7 +881,7 @@
                 - id: multi_s2_text
                   type: Title
                   properties:
-                    content: "2"
+                    content: '2'
                     level: 3
                   style:
                     color: white
@@ -846,7 +891,7 @@
               type: Box
               style:
                 height: 140
-                background: "#69b1ff"
+                background: '#69b1ff'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -855,7 +900,7 @@
                 - id: multi_s3_text
                   type: Title
                   properties:
-                    content: "3"
+                    content: '3'
                     level: 3
                   style:
                     color: white
@@ -865,7 +910,7 @@
               type: Box
               style:
                 height: 140
-                background: "#91caff"
+                background: '#91caff'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -874,7 +919,7 @@
                 - id: multi_s4_text
                   type: Title
                   properties:
-                    content: "4"
+                    content: '4'
                     level: 3
                   style:
                     color: white
@@ -892,10 +937,10 @@
                 - id: multi_s5_text
                   type: Title
                   properties:
-                    content: "5"
+                    content: '5'
                     level: 3
                   style:
-                    color: "#1677ff"
+                    color: '#1677ff'
         multi_s6:
           blocks:
             - id: multi_s6
@@ -910,10 +955,10 @@
                 - id: multi_s6_text
                   type: Title
                   properties:
-                    content: "6"
+                    content: '6'
                     level: 3
                   style:
-                    color: "#1677ff"
+                    color: '#1677ff'
 - title: Infinite Loop Disabled
   blocks:
     - id: finite_carousel
@@ -928,7 +973,7 @@
               type: Box
               style:
                 height: 160
-                background: "#cf1322"
+                background: '#cf1322'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -946,7 +991,7 @@
               type: Box
               style:
                 height: 160
-                background: "#a8071a"
+                background: '#a8071a'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -964,7 +1009,7 @@
               type: Box
               style:
                 height: 160
-                background: "#820014"
+                background: '#820014'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1215,7 +1260,7 @@
                     content: Soft Blue
                     level: 2
                   style:
-                    color: "#1d39c4"
+                    color: '#1d39c4'
         grad_s2:
           blocks:
             - id: grad_s2
@@ -1233,7 +1278,7 @@
                     content: Fresh Lime
                     level: 2
                   style:
-                    color: "#135200"
+                    color: '#135200'
         grad_s3:
           blocks:
             - id: grad_s3
@@ -1251,7 +1296,7 @@
                     content: Warm Sunset
                     level: 2
                   style:
-                    color: "#610b00"
+                    color: '#610b00'
         grad_s4:
           blocks:
             - id: grad_s4
@@ -1269,7 +1314,7 @@
                     content: Lavender Mist
                     level: 2
                   style:
-                    color: "#391085"
+                    color: '#391085'
         grad_s5:
           blocks:
             - id: grad_s5
@@ -1302,7 +1347,7 @@
               type: Box
               style:
                 height: 160
-                background: "#2f54eb"
+                background: '#2f54eb'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1320,7 +1365,7 @@
               type: Box
               style:
                 height: 160
-                background: "#597ef7"
+                background: '#597ef7'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1338,7 +1383,7 @@
               type: Box
               style:
                 height: 160
-                background: "#85a5ff"
+                background: '#85a5ff'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1366,7 +1411,7 @@
                     content: Swipe on Mobile
                     level: 3
                   style:
-                    color: "#2f54eb"
+                    color: '#2f54eb'
 - title: Center Mode
   blocks:
     - id: center_carousel
@@ -1382,7 +1427,7 @@
               type: Box
               style:
                 height: 160
-                background: "#faad14"
+                background: '#faad14'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1402,7 +1447,7 @@
               type: Box
               style:
                 height: 160
-                background: "#d48806"
+                background: '#d48806'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1422,7 +1467,7 @@
               type: Box
               style:
                 height: 160
-                background: "#ad6800"
+                background: '#ad6800'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1442,7 +1487,7 @@
               type: Box
               style:
                 height: 160
-                background: "#874d00"
+                background: '#874d00'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1570,7 +1615,7 @@
     - id: speed_label
       type: Markdown
       properties:
-        content: "**Slow transition (1500ms):**"
+        content: '**Slow transition (1500ms):**'
     - id: slow_carousel
       type: Carousel
       properties:
@@ -1583,7 +1628,7 @@
               type: Box
               style:
                 height: 140
-                background: "#595959"
+                background: '#595959'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1601,7 +1646,7 @@
               type: Box
               style:
                 height: 140
-                background: "#434343"
+                background: '#434343'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1619,7 +1664,7 @@
               type: Box
               style:
                 height: 140
-                background: "#262626"
+                background: '#262626'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1634,7 +1679,7 @@
     - id: fast_label
       type: Markdown
       properties:
-        content: "**Fast transition (200ms):**"
+        content: '**Fast transition (200ms):**'
     - id: fast_carousel
       type: Carousel
       properties:
@@ -1646,7 +1691,7 @@
               type: Box
               style:
                 height: 140
-                background: "#ff4d4f"
+                background: '#ff4d4f'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1664,7 +1709,7 @@
               type: Box
               style:
                 height: 140
-                background: "#ff7875"
+                background: '#ff7875'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1682,7 +1727,7 @@
               type: Box
               style:
                 height: 140
-                background: "#ffa39e"
+                background: '#ffa39e'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1693,7 +1738,7 @@
                     content: Instant Feel
                     level: 3
                   style:
-                    color: "#cf1322"
+                    color: '#cf1322'
 - title: Theme Token Overrides - Large Dots
   blocks:
     - id: theme_large_dots_carousel
@@ -1710,7 +1755,7 @@
               type: Box
               style:
                 height: 160
-                background: "#1677ff"
+                background: '#1677ff'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1728,7 +1773,7 @@
               type: Box
               style:
                 height: 160
-                background: "#4096ff"
+                background: '#4096ff'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1746,7 +1791,7 @@
               type: Box
               style:
                 height: 160
-                background: "#69b1ff"
+                background: '#69b1ff'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1774,7 +1819,7 @@
               type: Box
               style:
                 height: 160
-                background: "#52c41a"
+                background: '#52c41a'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1792,7 +1837,7 @@
               type: Box
               style:
                 height: 160
-                background: "#73d13d"
+                background: '#73d13d'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1810,7 +1855,7 @@
               type: Box
               style:
                 height: 160
-                background: "#95de64"
+                background: '#95de64'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1821,7 +1866,7 @@
                     content: Same Width Active
                     level: 3
                   style:
-                    color: "#135200"
+                    color: '#135200'
 - title: Theme Token Overrides - Large Arrows
   blocks:
     - id: theme_large_arrows_carousel
@@ -1838,7 +1883,7 @@
               type: Box
               style:
                 height: 180
-                background: "#722ed1"
+                background: '#722ed1'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1856,7 +1901,7 @@
               type: Box
               style:
                 height: 180
-                background: "#9254de"
+                background: '#9254de'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1874,7 +1919,7 @@
               type: Box
               style:
                 height: 180
-                background: "#b37feb"
+                background: '#b37feb'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1904,7 +1949,7 @@
               type: Box
               style:
                 height: 160
-                background: "#eb2f96"
+                background: '#eb2f96'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1922,7 +1967,7 @@
               type: Box
               style:
                 height: 160
-                background: "#f759ab"
+                background: '#f759ab'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1940,7 +1985,7 @@
               type: Box
               style:
                 height: 160
-                background: "#ff85c0"
+                background: '#ff85c0'
                 display: flex
                 alignItems: center
                 justifyContent: center
@@ -1968,4 +2013,4 @@
                     content: Custom Spacing
                     level: 3
                   style:
-                    color: "#c41d7f"
+                    color: '#c41d7f'

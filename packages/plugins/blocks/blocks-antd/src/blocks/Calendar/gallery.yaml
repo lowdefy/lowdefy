@@ -24,6 +24,14 @@
       properties:
         fullscreen: false
 
+- title: Week Numbers
+  blocks:
+    - id: week_numbers
+      type: Calendar
+      properties:
+        fullscreen: false
+        showWeek: true
+
 - title: Year Panel Mode
   blocks:
     - id: year_mode
