@@ -55,4 +55,31 @@ test.describe('ClickableHtml Block', () => {
     const scripts = await html.locator('script').count();
     expect(scripts).toBe(0);
   });
+
+  test('data-confirm fires the event only after OK, and only once', async ({ page }) => {
+    const target = page.locator('#confirm_delete');
+    const confirm = page.locator('.ant-popconfirm');
+    await target.click();
+    await expect(confirm).toContainText('Delete row 7?');
+    await confirm.getByRole('button', { name: 'Cancel' }).click();
+    await expect(confirm).toBeHidden();
+    await expect(page.locator('#delete_count')).toHaveText('0');
+    await target.click();
+    await confirm.getByRole('button', { name: 'OK' }).dblclick();
+    await expect(page.locator('#delete_count')).toHaveText('1');
+    await expect(confirm).toBeHidden();
+    await expect(page.locator('#delete_count')).toHaveText('1');
+  });
+
+  test('a data-event naming an inherited property fires nothing', async ({ page }) => {
+    const errors = [];
+    page.on('pageerror', (error) => errors.push(error.message));
+    await page.locator('#proto_event').click();
+    await getHtmlElement(page, 'clickable_basic')
+      .locator('button[data-event="onGreetClick"]')
+      .click();
+    await expect(page.locator('#clicked_event')).toHaveText('greet');
+    expect(await page.evaluate(() => Object.hasOwn(Object.prototype, 'loading'))).toBe(false);
+    expect(errors).toEqual([]);
+  });
 });
