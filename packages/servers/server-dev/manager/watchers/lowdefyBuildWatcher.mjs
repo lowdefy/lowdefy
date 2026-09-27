@@ -16,6 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { type } from '@lowdefy/helpers';
 import findBuildFilesOutsideWatch from '../utils/findBuildFilesOutsideWatch.mjs';
 import getLowdefyVersion from '../utils/getLowdefyVersion.mjs';
 import loadSkeletonSourceFiles from '../utils/loadSkeletonSourceFiles.mjs';
@@ -51,8 +52,15 @@ async function lowdefyBuildWatcher(context) {
       (filePath) => filePath === 'lowdefy.yaml' || filePath === 'lowdefy.yml'
     );
     if (lowdefyYamlModified) {
-      const lowdefyVersion = await getLowdefyVersion(context);
-      if (lowdefyVersion !== context.version && lowdefyVersion !== 'local') {
+      // A lowdefy.yaml that cannot be read, such as one with a YAML syntax
+      // error, has no version to compare. The config build still runs, so the
+      // build status reports the error instead of the last build's result.
+      const lowdefyVersion = await getLowdefyVersion(context).catch(() => null);
+      if (
+        !type.isNone(lowdefyVersion) &&
+        lowdefyVersion !== context.version &&
+        lowdefyVersion !== 'local'
+      ) {
         context.shutdownServer();
         context.logger.warn('Lowdefy version changed. You should restart your development server.');
         process.exit();

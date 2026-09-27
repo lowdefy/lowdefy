@@ -125,6 +125,14 @@ test('adding a page to the pages list rebuilds the config', async () => {
   expect(invalidated()).toBe(false);
 });
 
+test('a lowdefy.yaml edit that breaks its YAML syntax still rebuilds the config', async () => {
+  watcher = await lowdefyBuildWatcher(context);
+  write(path.join(configDir, 'lowdefy.yaml'), 'lowdefy: local\npages:\n  - id: a\n   - id: b\n');
+
+  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1);
+  expect(context.logger.error).not.toHaveBeenCalled();
+});
+
 test('after a failed config build, an edit to a file not in skeletonSourceFiles rebuilds the config', async () => {
   context.lastBuildFailed = true;
   watcher = await lowdefyBuildWatcher(context);
