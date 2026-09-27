@@ -34,15 +34,15 @@ const manifest = {
 
 const entryFiles = new Set(['assets/main.js', 'assets/main.css', 'assets/react.js']);
 
-test('collectPageTypesAssets preloads each key chunk, the icons, and every import, less main', () => {
+test('collectPageTypesAssets preloads each key chunk and every import, less main and the app-wide icons', () => {
   expect(collectPageTypesAssets({ manifest, entryFiles })).toEqual({
     aaaaaaaaaaaa: {
-      js: ['assets/aaaa.js', 'assets/antd.js', 'assets/icons.js', 'assets/ai.js'],
+      js: ['assets/aaaa.js', 'assets/antd.js'],
       css: ['assets/antd.css'],
       prefetch: [],
     },
     bbbbbbbbbbbb: {
-      js: ['assets/bbbb.js', 'assets/icons.js', 'assets/ai.js'],
+      js: ['assets/bbbb.js'],
       css: [],
       prefetch: [],
     },
@@ -104,7 +104,7 @@ const lazyManifest = {
 test('collectPageTypesAssets prefetches the lazy block implementations a page imports, with their imports', () => {
   const pageTypes = collectPageTypesAssets({ manifest: lazyManifest, entryFiles });
   expect(pageTypes.cccccccccccc).toEqual({
-    js: ['assets/cccc.js', 'assets/blocks.js', 'assets/antd.js', 'assets/icons.js'],
+    js: ['assets/cccc.js', 'assets/blocks.js', 'assets/antd.js'],
     css: ['assets/antd.css'],
     prefetch: [
       'assets/AgentChat.lazy.js',

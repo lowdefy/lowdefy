@@ -42,14 +42,21 @@ function getAssets() {
   const entryJs = new Set();
   const entryCss = new Set();
   collectChunkClosure({ manifest, key: 'client/main.jsx', js: entryJs, css: entryCss });
+  const entryFiles = new Set([...entryJs, ...entryCss]);
+  // Every icon the app bundles: preloaded only for a page whose Dynamic
+  // content loads them all before its first render.
+  const iconsJs = new Set();
+  const iconsCss = new Set();
+  collectChunkClosure({ manifest, key: 'build/plugins/icons.js', js: iconsJs, css: iconsCss });
   assets = {
     js: entry.file,
     css: entry.css ?? [],
+    icons: {
+      js: [...iconsJs].filter((file) => !entryFiles.has(file)),
+      css: [...iconsCss].filter((file) => !entryFiles.has(file)),
+    },
     imports: (entry.imports ?? []).map((key) => manifest[key]?.file).filter(Boolean),
-    pageTypes: collectPageTypesAssets({
-      manifest,
-      entryFiles: new Set([...entryJs, ...entryCss]),
-    }),
+    pageTypes: collectPageTypesAssets({ manifest, entryFiles }),
   };
   return assets;
 }
