@@ -38,6 +38,12 @@ The build pipeline tracks the origin of every config value:
 - `~l` (line): Line number in the source file
 - `~r` (ref): Reference ID linking to the source file
 
+#### Keys across dev rebuilds
+
+`~k` values come from the `makeId` counter. The dev server rebuilds config without restarting, and a page loaded, or a request started, before a rebuild still reports errors with the earlier build's keys, while `keyMap.json` already holds the new build. If every build numbered its keys from 1, an old key would name some other node of the new build and the error would point at the wrong config.
+
+So each dev skeleton build (`shallowBuild`) resets `makeId` with a fresh random prefix (`a1b2_1`, `a1b2_2`, ...) and writes `{ prefix, counter }` to `idCounter.json`. JIT page builds continue from it (`makeId.continueFrom`), keeping the prefix and never moving the counter back, so every key in a dev session names one node. A key from an earlier build is simply absent from the live `keyMap.json`, and its location resolves to nothing rather than to the wrong node. The JIT page builder also skips writing `keyMap.json`/`refMap.json` when the live `idCounter.json` prefix is no longer the one its build context was created from, so a page build that outlives a rebuild cannot replace the new maps (`server-dev/lib/server/skipStaleMapWrites.js`). For that check to hold, the manager's `publishBuildDirectory` moves `idCounter.json` into the live build directory before any other file, so the new prefix is live before the new maps are. Production builds (`build()`) keep unprefixed keys: they run once per server start.
+
 ### Location Resolution
 
 Three functions handle different resolution contexts (all in `@lowdefy/errors`):

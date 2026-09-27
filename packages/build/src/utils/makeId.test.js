@@ -27,7 +27,7 @@ test('next returns sequential base-36 ids starting from 1', () => {
 });
 
 test('next returns base-36 ids for larger numbers', () => {
-  makeId.setCounter(35);
+  makeId.continueFrom({ prefix: '', counter: 35 });
   expect(makeId.next()).toBe('10');
   expect(makeId.next()).toBe('11');
 });
@@ -39,16 +39,23 @@ test('reset sets counter back to 0', () => {
   expect(makeId.next()).toBe('1');
 });
 
-test('setCounter advances counter so next ids do not collide with prior ids', () => {
-  makeId.next(); // '1'
-  makeId.next(); // '2'
-  makeId.setCounter(100);
-  expect(makeId.next()).toBe('2t');
-  expect(makeId.next()).toBe('2u');
+test('reset with a prefix starts every id with it, and a plain reset drops it', () => {
+  makeId.reset({ prefix: 'a1b2_' });
+  expect(makeId.next()).toBe('a1b2_1');
+  expect(makeId.next()).toBe('a1b2_2');
+  makeId.reset();
+  expect(makeId.next()).toBe('1');
 });
 
-test('setCounter to 0 is equivalent to reset', () => {
-  makeId.next();
-  makeId.setCounter(0);
-  expect(makeId.next()).toBe('1');
+test('continueFrom takes the prefix and counter of a new config build', () => {
+  makeId.reset({ prefix: 'a1b2_' });
+  makeId.continueFrom({ prefix: 'c3d4_', counter: 100 });
+  expect(makeId.next()).toBe('c3d4_2t');
+});
+
+test('continueFrom never moves the counter back within one config build', () => {
+  makeId.continueFrom({ prefix: 'a1b2_', counter: 100 });
+  makeId.next(); // 'a1b2_2t', a key of an earlier page build
+  makeId.continueFrom({ prefix: 'a1b2_', counter: 100 });
+  expect(makeId.next()).toBe('a1b2_2u');
 });
