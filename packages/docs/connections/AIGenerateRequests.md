@@ -20,6 +20,7 @@ Two limits bound every AI request. Set them on the request, or on the connection
 A call is also cancelled when the request that started it closes, so a provider call that nobody is waiting for stops instead of running, and billing, to its end:
 
 - A page request, or an API endpoint called over HTTP, is cancelled when the server's request timeout (`config.requestTimeout`, default 30 seconds) answers first, which fails it with a `ServiceError`. On the Node server it is also cancelled when the client disconnects; that is logged as a warning, not an error.
+- On [Vercel](/vercel), only the request timeout cancels a call: a client disconnect does not, and the call runs until it finishes, times out, or the function reaches `config.vercel.maxDuration`. Keep `config.requestTimeout` below `maxDuration`, or Vercel stops the function before the timeout can cancel anything (the build warns when it is not).
 - Endpoints with `async: true`, `detached: true` calls, and scheduled runs answer at once and then run to their end: the closing request does not cancel them.
 - An agent chat turn runs to its end after the client disconnects, so its `onFinish` hooks still save the conversation. Bound it with the agent's `timeout` and `maxSteps`. A `CallAgent` step is cancelled with the routine that runs it.
 

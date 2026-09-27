@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 
 import buildDependencyTracking from './buildDependencyTracking.js';
 import buildEnvironments from './buildEnvironments.js';
+import validateRequestTimeout from './validateRequestTimeout.js';
 
 function validateConfig({ components, context }) {
   if (type.isNone(components.config)) {
@@ -39,6 +40,7 @@ function validateConfig({ components, context }) {
   }
   buildEnvironments({ components, context });
   buildDependencyTracking({ components });
+  validateRequestTimeout({ components, context });
   return components;
 }
 
