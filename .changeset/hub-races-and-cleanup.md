@@ -13,3 +13,4 @@ fix: the Lowdefy hub no longer starts duplicate dev servers or leaves processes 
 - A malformed line on the hub socket no longer crashes the hub.
 - `lowdefy_dev_list` works from the root of a repository that holds several apps.
 - `lowdefy dev` rebuilt pages with the action references of every page built before them in the session, and kept adding a failing page's references on every request.
+- A `config.basePath` with a trailing slash (`/app/`) is now read as `/app`. With the slash, `lowdefy dev` served the page HTML for the Vite client again, and `lowdefy mcp` reached `/app//lowdefy-docs`, which is not the docs endpoint.
