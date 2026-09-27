@@ -36,7 +36,7 @@ function isInside({ directory, parent }) {
 // directory outside is put to the user as an MCP elicitation when the client
 // supports one, and refused otherwise. The answer holds for the session.
 function createCheckoutGuard({ cwd, server }) {
-  const sessionRoot = findGitRoot({ directory: fs.realpathSync(cwd) });
+  const sessionRoot = findGitRoot({ directory: fs.realpathSync.native(cwd) });
   const answers = new Map();
 
   async function isSessionCheckout({ configDirectory, root }) {
@@ -56,7 +56,15 @@ function createCheckoutGuard({ cwd, server }) {
     try {
       const result = await server.elicitInput(
         {
-          message: `An agent asked lowdefy mcp to use the Lowdefy app at ${configDirectory}. It is outside this session's checkout (${sessionRoot}) and its git worktrees. Allowing it lets the agent start that app's dev server, which runs the dev script in its package.json. Allow ${root} for this session?`,
+          // The paths come from the agent, so they are quoted: a directory
+          // name cannot pass for part of the question.
+          message: `An agent asked lowdefy mcp to use the Lowdefy app at ${JSON.stringify(
+            configDirectory
+          )}. It is outside this session's checkout (${JSON.stringify(
+            sessionRoot
+          )}) and its git worktrees. Allowing it lets the agent start that app's dev server, which runs the dev script in its package.json. Allow ${JSON.stringify(
+            root
+          )} for this session?`,
           requestedSchema: { type: 'object', properties: {} },
         },
         { timeout: ASK_TIMEOUT_MS }

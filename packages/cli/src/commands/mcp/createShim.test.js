@@ -210,7 +210,9 @@ test('lowdefy mcp refuses a directory in another checkout and asks the user when
     expect(text(result)).toEqual(
       `${other} is outside this session's checkout (${root}) and its git worktrees. The user declined to allow it for this session.`
     );
-    expect(questions).toEqual([expect.stringContaining(`Allow ${other} for this session?`)]);
+    expect(questions).toEqual([
+      expect.stringContaining(`Allow ${JSON.stringify(other)} for this session?`),
+    ]);
     expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
   } finally {
     fs.rmSync(other, { recursive: true, force: true });

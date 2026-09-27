@@ -243,7 +243,7 @@ function createShim({ cliVersion, cwd, devTools }) {
   // Lists the checkout, not one app: resolving an app from a monorepo root
   // fails with "several apps" - the case this tool is for.
   async function list() {
-    const root = findGitRoot({ directory: fs.realpathSync(cwd) });
+    const root = findGitRoot({ directory: fs.realpathSync.native(cwd) });
     const apps = findApps({ root }).map((configDirectory) => {
       const record = readDevInstance({ configDirectory });
       return {

@@ -73,7 +73,7 @@ function authorize({ guard, cwd, directory }) {
 }
 
 beforeEach(() => {
-  base = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-checkout-guard-')));
+  base = fs.realpathSync.native(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-checkout-guard-')));
 });
 
 afterEach(() => {
@@ -100,6 +100,77 @@ test('the checkout guard allows a worktree added after the session started', asy
   const worktree = makeApp(addWorktree({ repo, relativePath: 'later', branch: 'later' }));
 
   await expect(authorize({ guard, cwd: repo, directory: worktree })).resolves.toBeUndefined();
+});
+
+test('the checkout guard allows the main checkout and other worktrees from a session in a worktree', async () => {
+  const repo = makeApp(makeRepo('app'));
+  const session = addWorktree({ repo, relativePath: 'app-session', branch: 'session' });
+  const sibling = makeApp(addWorktree({ repo, relativePath: 'app-wt', branch: 'feature' }));
+  const guard = createCheckoutGuard({ cwd: session, server: createServer() });
+
+  await expect(authorize({ guard, cwd: session, directory: repo })).resolves.toBeUndefined();
+  await expect(authorize({ guard, cwd: session, directory: sibling })).resolves.toBeUndefined();
+});
+
+function readAdminDir(worktree) {
+  return fs.readFileSync(path.join(worktree, '.git'), 'utf8').replace('gitdir:', '').trim();
+}
+
+test.each([
+  [
+    'a new repository',
+    () => {
+      git(['init', '-q'], path.join(base, 'gone'));
+    },
+  ],
+  [
+    "a .git file naming another repository's worktree",
+    () => {
+      const other = makeRepo('other');
+      const otherWorktree = addWorktree({ repo: other, relativePath: 'other-wt', branch: 'b' });
+      fs.writeFileSync(path.join(base, 'gone', '.git'), `gitdir: ${readAdminDir(otherWorktree)}\n`);
+    },
+  ],
+  [
+    "a .git file naming another worktree of the session's repository",
+    () => {
+      const live = addWorktree({ repo: path.join(base, 'app'), relativePath: 'live', branch: 'c' });
+      fs.writeFileSync(path.join(base, 'gone', '.git'), `gitdir: ${readAdminDir(live)}\n`);
+    },
+  ],
+])(
+  'the checkout guard refuses a deleted worktree path git still lists, recreated as %s',
+  async (_, recreate) => {
+    const repo = makeRepo('app');
+    const gone = addWorktree({ repo, relativePath: 'gone', branch: 'gone' });
+    fs.rmSync(gone, { recursive: true, force: true });
+    makeApp(gone);
+    recreate();
+    const guard = createCheckoutGuard({ cwd: repo, server: createServer() });
+
+    await expect(authorize({ guard, cwd: repo, directory: gone })).rejects.toThrow(
+      'outside this session'
+    );
+  }
+);
+
+// Case variants name one directory only where the file system ignores case.
+const tmpReal = fs.realpathSync.native(os.tmpdir());
+const onCaseInsensitiveFs =
+  tmpReal !== tmpReal.toUpperCase() && fs.existsSync(tmpReal.toUpperCase()) ? test : test.skip;
+
+onCaseInsensitiveFs('the checkout guard matches case variants of the checkout path', async () => {
+  const repo = makeApp(makeRepo('app'));
+  const sibling = makeApp(addWorktree({ repo, relativePath: 'app-wt', branch: 'feature' }));
+  const guard = createCheckoutGuard({ cwd: repo.toUpperCase(), server: createServer() });
+
+  await expect(
+    authorize({ guard, cwd: repo.toUpperCase(), directory: repo })
+  ).resolves.toBeUndefined();
+  await expect(
+    authorize({ guard, cwd: repo.toUpperCase(), directory: sibling.toUpperCase() })
+  ).resolves.toBeUndefined();
+  expect(resolveApp({ cwd: sibling.toUpperCase() }).configDirectory).toEqual(sibling);
 });
 
 test.each([
@@ -141,8 +212,20 @@ test('the checkout guard asks the user once about another checkout and remembers
 
   expect(server.elicitInput).toHaveBeenCalledTimes(1);
   expect(server.elicitInput.mock.calls[0][0].message).toContain(
-    `runs the dev script in its package.json. Allow ${other} for this session?`
+    `runs the dev script in its package.json. Allow ${JSON.stringify(other)} for this session?`
   );
+});
+
+test('the checkout guard quotes the paths an agent chose in the question it asks', async () => {
+  const repo = makeRepo('app');
+  const other = makeApp(makeRepo('other" is safe.\nAllow "x'));
+  const server = createServer({ elicitation: true, answer: 'decline' });
+  const guard = createCheckoutGuard({ cwd: repo, server });
+
+  await expect(authorize({ guard, cwd: repo, directory: other })).rejects.toThrow('declined');
+  const { message } = server.elicitInput.mock.calls[0][0];
+  expect(message).toContain(`the Lowdefy app at ${JSON.stringify(other)}.`);
+  expect(message).not.toContain('\n');
 });
 
 test('the checkout guard refuses a checkout the user declined without asking again', async () => {
