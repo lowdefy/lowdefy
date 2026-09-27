@@ -61,6 +61,7 @@ test('docsJourneyHandler runs the journey against the request origin and returns
     steps: [{ click: 'submit' }],
     user: { roles: ['admin'] },
     urlQuery: { id: '1' },
+    stepTimeout: undefined,
   });
   expect(result.status).toBe(200);
   expect(result.data.passed).toBe(true);
@@ -163,6 +164,24 @@ test('docsJourneyHandler passes user none through so the journey signs in throug
 
   expect(result.status).toBe(200);
   expect(mockRunJourney).toHaveBeenCalledWith(expect.objectContaining({ user: 'none' }));
+});
+
+test('docsJourneyHandler passes the journey timeout to the runner as the step timeout', async () => {
+  const c = createContext({ pageId: 'form', steps: [], timeout: 20000 });
+
+  await docsJourneyHandler(c);
+
+  expect(mockRunJourney).toHaveBeenCalledWith(expect.objectContaining({ stepTimeout: 20000 }));
+});
+
+test('docsJourneyHandler returns 400 for a timeout outside 1 to 60000 ms', async () => {
+  const c = createContext({ pageId: 'form', steps: [], timeout: 120000 });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(400);
+  expect(result.data.error).toMatch(/"timeout" must be a whole number of milliseconds/);
+  expect(mockRunJourney).not.toHaveBeenCalled();
 });
 
 test('docsJourneyHandler returns 502 when the journey could not run', async () => {
