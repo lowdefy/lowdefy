@@ -80,7 +80,33 @@ _ref:
 
             ### `caller` — acts on the caller's own records
 
-            A `caller`-scoped step (`RevokeMcpGrant`) acts only on rows the caller owns, so it needs no organization authority — but it is meaningless without a caller, and the system has no rows of its own. It requires a real caller and refuses `system: true`.
+            A `caller`-scoped step (`RevokeMcpGrant`, `LeaveOrganization`) acts only on rows the caller owns, so it needs no organization authority — but it is meaningless without a caller, and the system has no rows of its own. It requires a real caller and refuses `system: true`.
+
+            ### Leaving an organization from a routine
+
+            `LeaveOrganization` ends the caller's own membership of the organization named by `organizationId`. The property is required: the step has no org scope, so nothing defaults it. The organization plugin's own checks run, so a caller who is not a member there, or who is its only owner, is refused. The refusal throws with the plugin's message, which the routine catches with `:try` to branch on:
+
+            ```yaml
+            id: leave
+            type: Api
+            routine:
+              - :try:
+                  - id: leave
+                    type: LeaveOrganization
+                    properties:
+                      organizationId:
+                        _payload: organization_id
+                :catch:
+                  - :return:
+                      refused:
+                        message:
+                          _error: message
+              # Runs only when the leave went through.
+              - :return:
+                  success: true
+            ```
+
+            On success the step returns the member row it removed. The caller's session still names the organization they left as active, so their next request resolves unauthenticated: follow the call on the page with `SetActiveOrganization` for another organization, or with `Logout`. The `LeaveOrganization` client action leaves the session's active organization from the browser and clears it; use it when nothing else has to happen in the same request as the leave. Step and action types resolve from separate maps, so the shared name is never ambiguous.
 
             ## `system: true` — the two doors to a caller-less run
 
@@ -130,6 +156,7 @@ _ref:
             | `RevokeUserPasskeys` | org | `user: [revoke-passkeys]` | `userId` | Remove a user's passkeys (`passkeyId` to target one). |
             | `CreateOrganization` | system | — | — | Create an organization (tenant provisioning). Needs `userId`, or `name`+`slug` for creator-less provisioning. |
             | `ListUsers` | system | — | — | List every user in the deployment. |
+            | `LeaveOrganization` | caller | — | — | End the caller's own membership of the named organization (`organizationId`, required). [Leaving from a routine](#leaving-an-organization-from-a-routine). |
             | `RevokeMcpGrant` | caller | — | — | Revoke the calling assistant's own [MCP grant](/mcp-oauth#switching-organization-from-the-assistant). |
 
             The two role tiers a member carries — the `owner`/`admin`/`member` org tier and the app's own role strings — are explained in [Organizations & Multi-Tenancy](/organizations#the-owner-admin-member-tier-vs-app-roles). Recovering a user who lost their second factor is a worked routine on the [Two-Factor Authentication](/two-factor#recovering-a-user-who-has-lost-their-factor) page.

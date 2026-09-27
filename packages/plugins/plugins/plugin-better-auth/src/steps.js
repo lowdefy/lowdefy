@@ -20,6 +20,7 @@ export { default as CreateOrganization } from './steps/CreateOrganization.js';
 export { default as DeleteUser } from './steps/DeleteUser.js';
 export { default as InviteMember } from './steps/InviteMember.js';
 export { default as ListMembers } from './steps/ListMembers.js';
+export { default as LeaveOrganization } from './steps/LeaveOrganization.js';
 export { default as ListUsers } from './steps/ListUsers.js';
 export { default as RemoveMember } from './steps/RemoveMember.js';
 export { default as ResetUserTwoFactor } from './steps/ResetUserTwoFactor.js';
