@@ -28,6 +28,7 @@
     "prettier": "prettier --config .prettierrc --write **/*.js",
     "test": "pnpm -r --filter='!@lowdefy/plugin-aws' --filter='!@lowdefy/connection-mongodb' test",
     "test:mongodb": "pnpm --filter=@lowdefy/connection-mongodb test",
+    "test:journeys:auth": "node scripts/test-journeys-auth.mjs",
     "test:build:u": "UPDATE_SNAPSHOTS=true pnpm --filter=@lowdefy/build test",
     "e2e": "pnpm -r --workspace-concurrency=1 e2e",
     "update-packages": "pnpm up -i -r --latest",

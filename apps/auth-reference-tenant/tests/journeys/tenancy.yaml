@@ -1,0 +1,126 @@
+- name: a note one organization adds is invisible to another organization
+  pageId: signup
+  user: none
+  steps:
+    - fill: { blockId: name, value: Alpha Owner }
+    - fill: { blockId: email, value: alpha-owner@example.test }
+    - fill: { blockId: password, value: alpha-owner-password }
+    - click: signup_button
+    - email: { to: alpha-owner@example.test, subject: Verify your email address }
+    - click: { text: Verify email address }
+    - click: to_login_button
+    - fill: { blockId: email, value: alpha-owner@example.test }
+    - fill: { blockId: password, value: alpha-owner-password }
+    - click: login_button
+    - expect: { url: { contains: /home } }
+    - goto: notes
+    - fill: { blockId: note_text, value: Alpha launch plan }
+    - click: add_note_button
+    - expect: { state: { path: note_texts, equals: [Alpha launch plan] } }
+    # A second business signs up in its own browser and gets its own tenant.
+    - as: beta
+    - fill: { blockId: name, value: Beta Owner }
+    - fill: { blockId: email, value: beta-owner@example.test }
+    - fill: { blockId: password, value: beta-owner-password }
+    - click: signup_button
+    - email: { to: beta-owner@example.test, subject: Verify your email address }
+    - click: { text: Verify email address }
+    - click: to_login_button
+    - fill: { blockId: email, value: beta-owner@example.test }
+    - fill: { blockId: password, value: beta-owner-password }
+    - click: login_button
+    - expect: { url: { contains: /home } }
+    - goto: notes
+    - expect: { state: { path: note_texts, equals: [] } }
+    - fill: { blockId: note_text, value: Beta pricing }
+    - click: add_note_button
+    - expect: { state: { path: note_texts, equals: [Beta pricing] } }
+    - as: main
+    - goto: notes
+    - expect: { state: { path: note_texts, equals: [Alpha launch plan] } }
+
+- name: a member of two organizations switches between them, and loses access on the next request once removed
+  pageId: signup
+  user: none
+  steps:
+    - fill: { blockId: name, value: Switch Owner }
+    - fill: { blockId: email, value: switch-owner@example.test }
+    - fill: { blockId: password, value: switch-owner-password }
+    - click: signup_button
+    - email: { to: switch-owner@example.test, subject: Verify your email address }
+    - click: { text: Verify email address }
+    - click: to_login_button
+    - fill: { blockId: email, value: switch-owner@example.test }
+    - fill: { blockId: password, value: switch-owner-password }
+    - click: login_button
+    - expect: { url: { contains: /home } }
+    - goto: notes
+    - fill: { blockId: note_text, value: Switch roadmap }
+    - click: add_note_button
+    - expect: { state: { path: note_texts, equals: [Switch roadmap] } }
+    # The member runs their own business first, so they already own one
+    # organization when the invitation arrives.
+    - as: member
+    - fill: { blockId: name, value: Member Business }
+    - fill: { blockId: email, value: switch-member@example.test }
+    - fill: { blockId: password, value: switch-member-password }
+    - click: signup_button
+    - email: { to: switch-member@example.test, subject: Verify your email address }
+    - click: { text: Verify email address }
+    - click: to_login_button
+    - fill: { blockId: email, value: switch-member@example.test }
+    - fill: { blockId: password, value: switch-member-password }
+    - click: login_button
+    - expect: { url: { contains: /home } }
+    - as: main
+    - goto: members
+    - fill: { blockId: invite_email, value: switch-member@example.test }
+    - fill: { blockId: invite_role, value: member }
+    - click: invite_button
+    - expect: { text: { blockId: invite_response_html, contains: switch-member@example.test } }
+    - as: member
+    - email: { to: switch-member@example.test, subject: You've been invited to Switch Owner }
+    - click: { text: Accept invitation }
+    - click: accept_button
+    - expect: { visible: accept_result_html }
+    # Accepting joins the organization without moving a session that is
+    # already active in another one; switching is the member's own act.
+    - goto: organizations
+    - expect: { text: { blockId: organizations_list, contains: Member Business (active) } }
+    - expect: { text: { blockId: organizations_list, contains: Switch Owner } }
+    - select: { blockId: org_slug, value: Switch Owner }
+    - click: switch_button
+    - expect: { text: { blockId: organizations_list, contains: Switch Owner (active) } }
+    - expect: { text: { blockId: current_user, contains: 'org_roles: ["member"]' } }
+    - goto: notes
+    - expect: { state: { path: note_texts, equals: [Switch roadmap] } }
+    - goto: organizations
+    - select: { blockId: org_slug, value: Member Business }
+    - click: switch_button
+    - expect: { text: { blockId: organizations_list, contains: Member Business (active) } }
+    - expect: { text: { blockId: current_user, contains: 'org_roles: ["owner"]' } }
+    - goto: notes
+    - expect: { state: { path: note_texts, equals: [] } }
+    - goto: organizations
+    - select: { blockId: org_slug, value: Switch Owner }
+    - click: switch_button
+    - expect: { text: { blockId: organizations_list, contains: Switch Owner (active) } }
+    # The owner removes them while their session is still open.
+    - as: main
+    - goto: members
+    - expect: { text: { blockId: members_list, contains: switch-member@example.test (member) } }
+    - fill: { blockId: remove_member_email, value: switch-member@example.test }
+    - click: remove_member_button
+    - expect: { state: { path: members.members.1, equals: null } }
+    - as: member
+    - goto: notes
+    - expect: { url: { contains: /login } }
+    # Signing in again lands them in the organization they still belong to.
+    - fill: { blockId: email, value: switch-member@example.test }
+    - fill: { blockId: password, value: switch-member-password }
+    - click: login_button
+    - expect: { url: { contains: /notes } }
+    - expect: { state: { path: note_texts, equals: [] } }
+    - goto: organizations
+    - expect: { text: { blockId: organizations_list, contains: Member Business (active) } }
+    - expect: { state: { path: my_organizations.1, equals: null } }

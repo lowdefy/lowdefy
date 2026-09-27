@@ -1,0 +1,40 @@
+- name: sign-in refuses an unverified email and a wrong password, signs out, and signs back in by magic link
+  pageId: signup
+  user: none
+  steps:
+    - fill: { blockId: name, value: Signin Member }
+    - fill: { blockId: email, value: signin-member@example.test }
+    - fill: { blockId: password, value: signin-member-password }
+    - click: signup_button
+    - expect: { url: { contains: /check-email } }
+    # Until the address is verified, even the right password is refused.
+    - goto: login
+    - fill: { blockId: email, value: signin-member@example.test }
+    - fill: { blockId: password, value: signin-member-password }
+    - click: login_button
+    - expect: { text: { blockId: login_error_html, contains: Email not verified } }
+    - email: { to: signin-member@example.test, subject: Verify your email address }
+    - click: { text: Verify email address }
+    - expect: { visible: verify_email_result }
+    - click: to_login_button
+    - fill: { blockId: email, value: signin-member@example.test }
+    - fill: { blockId: password, value: not-the-password }
+    - click: login_button
+    - expect: { text: { blockId: login_error_html, contains: Invalid email or password } }
+    - fill: { blockId: password, value: signin-member-password }
+    - click: login_button
+    - expect: { url: { contains: /home } }
+    - goto: dashboard
+    - expect: { text: { blockId: user_details, contains: signin-member@example.test } }
+    - click: logout_button
+    - expect: { url: { contains: /login } }
+    # Signed out, a protected page sends the visitor to sign in and back.
+    - goto: dashboard
+    - expect: { url: { contains: /login?callbackUrl=%2Fdashboard } }
+    - fill: { blockId: email, value: signin-member@example.test }
+    - click: magic_link_button
+    - expect: { url: { contains: /check-email } }
+    - email: { to: signin-member@example.test, subject: Your sign-in link }
+    - click: { text: Sign in }
+    - expect: { url: { contains: /dashboard } }
+    - expect: { text: { blockId: user_details, contains: signin-member@example.test } }
