@@ -70,7 +70,8 @@ function createApp() {
   app.use('/*', apiContext());
   app.get('/', (c) => renderPage(c, { pageId: '' }));
   app.get('/404', (c) => renderPage(c, { pageId: '404', status: 404 }));
-  app.get('/:rest{.+}', (c) => renderPage(c, { pageId: c.req.param('rest') }));
+  // `.*`: under a basePath, `<basePath>/` arrives with an empty rest - the root.
+  app.get('/:rest{.*}', (c) => renderPage(c, { pageId: c.req.param('rest') }));
 
   app.onError(createErrorHandler({ basePath, logger }));
 
