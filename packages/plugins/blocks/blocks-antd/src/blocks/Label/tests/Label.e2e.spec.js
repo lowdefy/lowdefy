@@ -246,4 +246,15 @@ test.describe('Label Block', () => {
     expect(box.height).toBeGreaterThan(30);
     await expect(label.locator('..')).toHaveCSS('white-space', 'normal');
   });
+
+  test('sets the label and content widths per breakpoint', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    const row = getLabel(page, 'label_breakpoints');
+    const labelCol = row.locator('.ant-form-item-label');
+    await expect(labelCol).toHaveClass(/ant-col-sm-12/);
+    await expect(labelCol).toHaveClass(/ant-col-lg-6/);
+    const contentCol = row.locator('.ant-form-item-control');
+    await expect(contentCol).toHaveClass(/ant-col-sm-12/);
+    await expect(contentCol).toHaveClass(/ant-col-lg-18/);
+  });
 });
