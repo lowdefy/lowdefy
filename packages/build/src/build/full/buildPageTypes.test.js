@@ -15,6 +15,7 @@
 */
 
 import createCounter from '../../utils/createCounter.js';
+import alwaysBundledIcons from '../icons/alwaysBundledIcons.js';
 import mandatoryClientTypes from '../mandatoryClientTypes.js';
 import buildPageTypes from './buildPageTypes.js';
 
@@ -38,7 +39,9 @@ function pageCounters({ actions = [], blocks = [], operators = [] }) {
 
 function setup(pages) {
   const components = {
-    pages: pages.map(({ pageId }) => ({ pageId })),
+    // buildIconImports always bundles the icons the client draws itself.
+    imports: { icons: [...alwaysBundledIcons, 'edit'] },
+    pages: pages.map(({ pageId, config }) => ({ pageId, ...config })),
     types: {
       actions: definitions([...mandatoryClientTypes.actions, 'SetState'], '@lowdefy/actions-core'),
       blocks: definitions(
@@ -52,7 +55,9 @@ function setup(pages) {
     },
   };
   const context = {
+    jsMap: {},
     pageTypeCounters: new Map(pages.map(({ pageId, used }) => [pageId, pageCounters(used)])),
+    typesMap: { icons: {} },
   };
   buildPageTypes({ components, context });
   return components;
@@ -63,6 +68,7 @@ test('buildPageTypes adds the mandatory client types to every page', () => {
   expect(components.pageTypeSets.home).toEqual({
     actions: [...mandatoryClientTypes.actions].sort(),
     blocks: [...mandatoryClientTypes.blocks].sort(),
+    icons: [...alwaysBundledIcons].sort(),
     operators: [...mandatoryClientTypes.operators].sort(),
   });
 });
@@ -102,4 +108,15 @@ test('buildPageTypes skips counted operators that are not installed, like the ap
 test('buildPageTypes keys never contain page ids', () => {
   const components = setup([{ pageId: 'secret-admin-page', used: {} }]);
   expect(JSON.stringify(Object.keys(components.pageTypes))).not.toContain('secret-admin-page');
+});
+
+test('buildPageTypes gives pages with the same types but different icons different keys', () => {
+  const components = setup([
+    { pageId: 'a', used: { blocks: ['Button'] }, config: { properties: { icon: 'edit' } } },
+    { pageId: 'b', used: { blocks: ['Button'] } },
+  ]);
+  const [a, b] = components.pages;
+  expect(a.typesKey).not.toEqual(b.typesKey);
+  expect(components.pageTypes[a.typesKey].icons).toContain('edit');
+  expect(components.pageTypes[b.typesKey].icons).not.toContain('edit');
 });

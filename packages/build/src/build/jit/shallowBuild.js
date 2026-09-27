@@ -288,11 +288,9 @@ async function shallowBuild(options) {
     // Deferred-record bodies referenced by placeholders in modules.json.
     // JIT hydrates the registry from this artifact (hydrateDeferredRecords).
     await context.writeBuildArtifact('deferredRecords.json', serializeRegistry(context));
+    // Also writes iconImports.json, the icon names snapshot JIT page builds
+    // compare discovered icons against.
     await writePluginImports({ components, context });
-    // Persist icon imports snapshot for JIT icon detection.
-    // When buildPageJit resolves a page, it compares discovered icons against
-    // this snapshot and regenerates plugins/icons.js if new icons are found.
-    await context.writeBuildArtifact('iconImports.json', JSON.stringify(components.imports.icons));
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
     await copyAgentFileSystems({ components, context });

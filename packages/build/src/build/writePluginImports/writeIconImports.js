@@ -14,42 +14,25 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
+import generateIconEntries from '../icons/generateIconEntries.js';
 import loadIconData from '../icons/loadIconData.js';
 
-const optionalFields = ['size', 'width', 'height', 'attrs'];
-
-// plugins/icons.js is data: { name: IconData }. A semantic name and the set
-// name it points at (and Lucide alias names) share one node array, which is
-// written once as a constant.
+// plugins/icons.js is data: { name: IconData }, every icon the app bundles.
+// Dev imports it; the production client loads it on demand, when a name that
+// is not in the page's own set reaches an icon at runtime.
 function generateIconsModule({ iconData }) {
-  const nodeConstants = new Map();
-  const entries = Object.keys(iconData)
-    .sort()
-    .map((name) => {
-      const data = iconData[name];
-      const nodeJson = JSON.stringify(data.node);
-      if (!nodeConstants.has(nodeJson)) {
-        nodeConstants.set(nodeJson, `n${nodeConstants.size}`);
-      }
-      const fields = [`node: ${nodeConstants.get(nodeJson)}`];
-      optionalFields.forEach((field) => {
-        if (!type.isUndefined(data[field])) {
-          fields.push(`${field}: ${JSON.stringify(data[field])}`);
-        }
-      });
-      return `  ${JSON.stringify(name)}: { ${fields.join(', ')} },`;
-    });
-  const constants = [...nodeConstants.entries()].map(
-    ([nodeJson, constant]) => `const ${constant} = ${nodeJson};`
+  const { constants, entries } = generateIconEntries({ iconData });
+  return [...constants, 'export default {', ...entries.map((entry) => `  ${entry}`), '};', ''].join(
+    '\n'
   );
-  return [...constants, 'export default {', ...entries, '};', ''].join('\n');
 }
 
 async function writeIconImports({ components, context }) {
   const iconData = await loadIconData({ names: components.imports.icons, icons: context.icons });
   await context.writeBuildArtifact('plugins/icons.js', generateIconsModule({ iconData }));
+  // Server-only: the names plugins/icons.js carries. Dynamic content checks its
+  // icons against them, and dev JIT delivers the names the dev bundle lacks.
+  await context.writeBuildArtifact('iconImports.json', JSON.stringify(components.imports.icons));
   // The full semantic map (built-in, the default set's, and theme.icons.aliases),
   // used or not: the dev docs server's icon search lists it.
   await context.writeBuildArtifact('iconAliases.json', JSON.stringify(context.icons.semantic));
