@@ -125,7 +125,7 @@ const devToolDefinitions = {
 
   lowdefy_restart: {
     description:
-      "Restart the dev server process. Use after editing a local plugin's server-side implementation, or when build_status looks stale. The connection drops: wait about two seconds, then call lowdefy_build_status before continuing.",
+      "Restart the dev server process. Use after editing a local plugin's server-side implementation, or when build_status looks stale. The connection drops: call lowdefy_build_status with wait: true, which answers once the restarted server is ready.",
     inputSchema: {
       reason: z.string().optional().describe('Why the restart is needed (logged by the manager).'),
     },
@@ -196,7 +196,7 @@ const devToolDefinitions = {
         .boolean()
         .optional()
         .describe(
-          'Wait until the dev server has processed your latest edits (the rebuild or page invalidation they trigger), then build every page they touched, before answering, instead of returning the status of the build before them. pages.checked lists the pages it built. Use it right after an edit. Waits up to a minute; `settled: false` in the result means it gave up.'
+          'Wait until the dev server has processed your latest edits (the rebuild or page invalidation they trigger, and any server restart or plugin install the rebuild needs), then build every page they touched, before answering, instead of returning the status of the build before them. pages.checked lists the pages it built. Use it right after an edit. Waits up to two minutes; `settled: false` in the result means it gave up.'
         ),
     },
   },

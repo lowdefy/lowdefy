@@ -15,7 +15,7 @@
 */
 
 import path from 'path';
-import { readFile, writeFile } from '@lowdefy/node-utils';
+import { readFile, writeFileIfChanged } from '@lowdefy/node-utils';
 
 async function updateServerPackageJson({ components, context }) {
   const filePath = path.join(context.directories.server, 'package.json');
@@ -72,7 +72,9 @@ async function updateServerPackageJson({ components, context }) {
 
   const newPackageJsonContent = JSON.stringify(packageJson, null, 2).concat('\n');
 
-  await writeFile(filePath, newPackageJsonContent);
+  // Every dev config build runs this, and the dev server installs plugins
+  // when package.json changes, so an unchanged file is left untouched.
+  await writeFileIfChanged(filePath, newPackageJsonContent);
 }
 
 export default updateServerPackageJson;

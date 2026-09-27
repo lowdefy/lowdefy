@@ -22,7 +22,10 @@ import { wait } from '@lowdefy/helpers';
 
 import createHub from './createHub.js';
 
-jest.setTimeout(30000);
+// Longer than the hub's own 120 s wait for a server to be ready, so a dev
+// script that starts slowly on a loaded machine gets the hub's answer, not a
+// test timeout. How long anything takes is not under test here.
+jest.setTimeout(150000);
 
 // Stands in for `lowdefy dev`: writes the instance record the dev manager
 // writes, spawns a grandchild (as the manager spawns Vite), and runs until
@@ -79,6 +82,19 @@ function isAlive(pid) {
   }
 }
 
+// Processes stop, and files appear, some time after the call that causes
+// them: poll for the outcome instead of sleeping a fixed time.
+async function waitUntil(predicate, timeoutMs = 20000) {
+  const deadline = Date.now() + timeoutMs;
+  while (!predicate()) {
+    if (Date.now() > deadline) {
+      return false;
+    }
+    await wait(50);
+  }
+  return true;
+}
+
 beforeEach(() => {
   home = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-hub-home-')));
   configDirectory = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-hub-app-')));
@@ -120,8 +136,7 @@ test('hub stop stops the whole process group, grandchildren included', async () 
   expect(isAlive(grandchild)).toBe(true);
 
   expect(await hub.stop({ configDirectory })).toEqual({ stopped: true });
-  await wait(200);
-  expect(isAlive(grandchild)).toBe(false);
+  expect(await waitUntil(() => !isAlive(grandchild))).toBe(true);
 });
 
 test('hub restart keeps the port the app had', async () => {
@@ -206,11 +221,7 @@ process.exit(1);`
   const status = await hub.start({ configDirectory });
   expect(status.state).toEqual('exited');
   const grandchild = Number(fs.readFileSync(path.join(configDirectory, 'grandchild.pid'), 'utf8'));
-  const deadline = Date.now() + 7000;
-  while (isAlive(grandchild) && Date.now() < deadline) {
-    await wait(100);
-  }
-  const survived = isAlive(grandchild);
+  const survived = !(await waitUntil(() => !isAlive(grandchild)));
   if (survived) {
     process.kill(grandchild, 'SIGKILL');
   }
@@ -228,16 +239,14 @@ test('hub reap stops a server whose worktree was removed on the second pass that
   await hub.start({ configDirectory });
   const grandchild = Number(fs.readFileSync(path.join(configDirectory, 'grandchild.pid'), 'utf8'));
   fs.rmSync(configDirectory, { recursive: true, force: true });
-  await wait(200);
-  expect(fs.existsSync(configDirectory)).toBe(true);
+  expect(await waitUntil(() => fs.existsSync(configDirectory))).toBe(true);
 
   // The server recreates .lowdefy, and one pass may see a checkout switching
   // branches: the first pass that finds lowdefy.yaml gone keeps the server.
   await hub.reap();
   expect(isAlive(grandchild)).toBe(true);
   await hub.reap();
-  await wait(200);
-  expect(isAlive(grandchild)).toBe(false);
+  expect(await waitUntil(() => !isAlive(grandchild))).toBe(true);
   expect(hub.list().instances).toEqual([]);
 });
 

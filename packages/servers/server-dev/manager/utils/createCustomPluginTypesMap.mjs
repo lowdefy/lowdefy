@@ -16,26 +16,11 @@
 */
 
 import { createRequire } from 'node:module';
-import path from 'path';
-import { get } from '@lowdefy/helpers';
-import { readFile } from '@lowdefy/node-utils';
 import { createPluginTypesMap } from '@lowdefy/build';
-import YAML from 'yaml';
 import importFresh from './importFresh.mjs';
+import readPluginDefinitions from './readPluginDefinitions.mjs';
 
 const require = createRequire(import.meta.url);
-
-async function getPluginDefinitions({ directories }) {
-  let lowdefyYaml = await readFile(path.join(directories.config, 'lowdefy.yaml'));
-  if (!lowdefyYaml) {
-    lowdefyYaml = await readFile(path.join(directories.config, 'lowdefy.yml'));
-  }
-  if (!lowdefyYaml) {
-    return [];
-  }
-  const lowdefy = YAML.parse(lowdefyYaml);
-  return get(lowdefy, 'plugins', { default: [] });
-}
 
 async function createCustomPluginTypesMap({ directories, logger }) {
   const customTypesMap = {
@@ -60,7 +45,7 @@ async function createCustomPluginTypesMap({ directories, logger }) {
     websockets: {},
   };
 
-  const pluginDefinitions = await getPluginDefinitions({ directories });
+  const pluginDefinitions = await readPluginDefinitions({ directories });
 
   // Each import starts a worker, so the plugins are imported in parallel and
   // added to the map in the order lowdefy.yaml lists them.

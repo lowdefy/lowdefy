@@ -42,7 +42,7 @@ It replaces the old `.lowdefy/dev/.manager.lock`. It is used in four places:
 ### Ports
 
 - An explicit port is strict: `--port`, `PORT` and `cli.port` all fail if the port is taken. The CLI passes `LOWDEFY_SERVER_DEV_STRICT_PORT` to the manager, which binds the port. Only the unrequested default of 3000 moves to the next free port.
-- The hub sets `LOWDEFY_DEV_PORT`, which outranks `--port`, because dev scripts often hard-code one. It also sets `LOWDEFY_SERVER_DEV_INTERNAL_PORT` for the Vite child, bound strictly.
+- The hub sets `LOWDEFY_DEV_PORT`, which outranks `--port`, because dev scripts often hard-code one. It also sets `LOWDEFY_SERVER_DEV_INTERNAL_PORT` for the Vite child, bound strictly. The monorepo's `scripts/dev.mjs` honours `LOWDEFY_DEV_PORT` the same way, so an app in this repository can name a `package.json` script that runs it (for example `node ../../scripts/dev.mjs --config-directory .`) in `cli.devScript` and be run by the hub.
 - Hub ports come from 4100–4999 in public/internal pairs. They stick to the app's path across restarts, in `registry.json`, until the app is removed.
 
 ### `lowdefy mcp`
@@ -51,6 +51,7 @@ A low-level MCP `Server` over stdio (`createShim.js`). Nothing else may write to
 
 - **Tool list.** It lists five lifecycle tools, plus every dev server tool with an added `directory` argument. The dev tool list is `dist/commands/mcp/devTools.json`, which `packages/cli/scripts/generateDevTools.mjs` generates at CLI build time from `server-dev/lib/docs/devToolDefinitions.js`, through the same `McpServer` the dev server uses. The schemas therefore match exactly and the list exists before any dev server runs. `lowdefy_restart` is hidden; restart is `lowdefy_dev_start({ restart: true })`.
 - **Resolution.** `resolveApp.js` takes `directory`, else the session's working directory. It walks up to the checkout root looking for `lowdefy.yaml`, then falls back to the only app under the root, else errors with the list of apps. The app scan (`findApps.js`) skips directories that hold their own `.git` entry, which are nested worktrees.
+- **Checkout guard.** Starting a server runs the app's dev script, and the user approved the tools once, for the checkout they opened the session in. `createCheckoutGuard.js` therefore allows an app only when its checkout root is the session's (the git root of the shim's working directory) or one of that repository's worktrees (`git worktree list`, run in the session checkout on each call, since agents add worktrees mid-session; `listSessionCheckouts.js`). Outside git, the session directory and anything inside it are allowed. A clone inside the session checkout has its own root and is refused. Anything else is put to the user as an MCP form elicitation when the client supports it; an accept or decline holds for the session (a dismissed question is asked again), and a client without elicitation gets a refusal naming the session checkout. `lowdefy_dev_list` is not affected: it lists, and runs nothing.
 - **Forwarding.** A ready instance is used as it is, including a terminal-owned one. Anything else goes to the hub (`start`), which waits for `ready`. Calls go through an SDK `Client` cached per instance (`createInstanceConnections.js`). The instance's push stream is relayed as `notifications/message` with the app label added.
 - **Results.** Every forwarded result starts with `<app> @ <checkout> · <url>`.
 
@@ -95,7 +96,7 @@ A low-level MCP `Server` over stdio (`createShim.js`). Nothing else may write to
 | Instance record | `utils/node-utils/src/{getDevInstancePath,readDevInstance,isPidAlive}.js`, `server-dev/manager/utils/{acquireDevInstance,resolvePorts,waitForServer}.mjs`, `manager/run.mjs` |
 | CLI dev         | `cli/src/commands/dev/{checkNoRunningInstance,resolveDevPort,isPortExplicit}.js`                                                                                             |
 | Tool contract   | `server-dev/lib/docs/devToolDefinitions.js` (definitions), `createDocsMcpServer.js` (handlers; `registerDevTool` enforces the pairing), `cli/scripts/generateDevTools.mjs`   |
-| Shim            | `cli/src/commands/mcp/*`                                                                                                                                                     |
+| Shim            | `cli/src/commands/mcp/*` (checkout guard: `createCheckoutGuard.js`, `listSessionCheckouts.js`)                                                                               |
 | Hub             | `cli/src/commands/hub/*`, `cli/src/utils/runHubCommand.js`, `cli/src/utils/findDevScripts.js`                                                                                |
 | agent-setup     | `cli/src/commands/agentSetup/{resolveMcpCommand,upsertMcpServer,devServerRules}.js`                                                                                          |
 

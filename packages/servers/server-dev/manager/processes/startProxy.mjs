@@ -17,6 +17,9 @@
 import http from 'node:http';
 import net from 'node:net';
 
+import buildWaitHeader from '../../lib/docs/buildWaitHeader.js';
+import readBuildStatusWait from '../utils/readBuildStatusWait.mjs';
+
 /*
 The manager owns the public port; the Vite child listens on an internal
 loopback port and every restart replaces only the child. Before this proxy the
@@ -112,7 +115,7 @@ function isUnsentError({ error, proxyReq }) {
   );
 }
 
-function forwardRequest({ context, proxyState }, req, res, deadline = Date.now() + HOLD_MS) {
+function forwardRequest({ body, context, proxyState }, req, res, deadline = Date.now() + HOLD_MS) {
   // Wait for a live child BEFORE piping the request body — the body stream can
   // only be consumed once, so retrying after a failed proxy request would need
   // full-body buffering. Only a bodiless GET or HEAD that never reached the
@@ -149,7 +152,7 @@ function forwardRequest({ context, proxyState }, req, res, deadline = Date.now()
         REPLAYABLE_METHODS.includes(req.method) &&
         isUnsentError({ error, proxyReq })
       ) {
-        forwardRequest({ context, proxyState }, req, res, deadline);
+        forwardRequest({ body, context, proxyState }, req, res, deadline);
         return;
       }
       if (res.headersSent) {
@@ -159,9 +162,12 @@ function forwardRequest({ context, proxyState }, req, res, deadline = Date.now()
       res.writeHead(502, { 'content-type': 'application/json' });
       res.end(JSON.stringify({ message: 'Lowdefy dev server connection dropped.' }));
     });
-    // A replayed GET's request stream has already ended, so there is nothing
+    // A body read to recognise a build-status wait is sent as read. A
+    // replayed GET's request stream has already ended, so there is nothing
     // left to pipe.
-    if (req.readableEnded) {
+    if (body !== undefined) {
+      proxyReq.end(body);
+    } else if (req.readableEnded) {
       proxyReq.end();
     } else {
       req.pipe(proxyReq);
@@ -175,6 +181,24 @@ function forwardRequest({ context, proxyState }, req, res, deadline = Date.now()
       if (!res.writableFinished) proxyReq.destroy();
     });
   });
+}
+
+// A build-status wait is held here until the manager has processed the
+// latest edits, restarts included, and only then forwarded: a restart ends
+// the dev server process, and any wait running in it. The header tells the
+// dev server what this wait saw, so it does not wait again.
+async function handleRequest({ context, proxyState }, req, res) {
+  delete req.headers[buildWaitHeader];
+  const { wait, body } = await readBuildStatusWait({ basePath: context.basePath, req });
+  if (wait) {
+    const waited = await context.buildActivity.waitForIdle();
+    req.headers[buildWaitHeader] = new URLSearchParams({
+      settled: String(waited.settled),
+      sawBuild: String(waited.sawBuild),
+      waitedMs: String(waited.waitedMs),
+    }).toString();
+  }
+  forwardRequest({ body, context, proxyState }, req, res);
 }
 
 function forwardUpgrade(context, req, socket, head) {
@@ -207,7 +231,10 @@ function forwardUpgrade(context, req, socket, head) {
 function startProxy(context) {
   if (context.proxyServer) return Promise.resolve();
   const proxyState = { confirmedChild: null };
-  const proxy = http.createServer((req, res) => forwardRequest({ context, proxyState }, req, res));
+  const proxy = http.createServer((req, res) => {
+    // A client that drops an MCP request while its body is read.
+    handleRequest({ context, proxyState }, req, res).catch(() => res.destroy());
+  });
   proxy.on('upgrade', (req, socket, head) => forwardUpgrade(context, req, socket, head));
   // Long-lived streams (SSE, MCP) must not be reaped by the default 5-minute
   // request timeout; keep the proxy transparent.

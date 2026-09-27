@@ -20,6 +20,7 @@ import net from 'node:net';
 import { jest } from '@jest/globals';
 
 const { default: startProxy } = await import('./startProxy.mjs');
+const { default: createBuildActivity } = await import('../utils/createBuildActivity.mjs');
 
 function listen(server) {
   return new Promise((resolve) => {
@@ -194,4 +195,115 @@ test('startProxy aborts the child request when the client drops a streaming resp
     new Promise((resolve) => setTimeout(() => resolve('still open'), 2000)),
   ]);
   expect(outcome).toBe('closed');
+});
+
+function echoRequest(label) {
+  return async (req, res) => {
+    const chunks = [];
+    for await (const chunk of req) chunks.push(chunk);
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(
+      JSON.stringify({
+        label,
+        body: Buffer.concat(chunks).toString('utf8'),
+        buildWait: req.headers['x-lowdefy-build-wait'] ?? null,
+      })
+    );
+  };
+}
+
+function mcpCall(name, args) {
+  return JSON.stringify({
+    jsonrpc: '2.0',
+    id: 1,
+    method: 'tools/call',
+    params: { name, arguments: args },
+  });
+}
+
+test.each([
+  ['GET build-status?wait=true', () => ({ path: '/lowdefy-docs/build-status?wait=true' })],
+  [
+    'the lowdefy_build_status MCP tool with wait: true',
+    () => ({
+      path: '/lowdefy-docs/mcp',
+      init: { method: 'POST', body: mcpCall('lowdefy_build_status', { wait: true }) },
+    }),
+  ],
+])(
+  'startProxy holds %s through a restart and forwards it to the new server',
+  async (_, makeRequest) => {
+    const port = await startChildAndProxy(echoRequest('old'));
+    context.basePath = '';
+    context.buildActivity = createBuildActivity({ onChange: () => {} });
+    context.devServer = { exitCode: null, signalCode: null };
+    context.buildActivity.setBusy(true);
+
+    const { path: requestPath, init } = makeRequest();
+    const pending = fetch(`http://localhost:${port}${requestPath}`, {
+      ...init,
+      headers: { 'x-lowdefy-build-wait': 'settled=true&sawBuild=false&waitedMs=0' },
+    }).then((response) => response.json());
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    // The restart the build needed: the old server stops, a new one answers.
+    context.devServerExited = Promise.resolve();
+    context.devServer = { exitCode: null, signalCode: null };
+    await close(child);
+    child = http.createServer(echoRequest('new'));
+    await new Promise((resolve) => child.listen(context.internalPort, '127.0.0.1', resolve));
+    context.buildActivity.setBusy(false);
+
+    const result = await pending;
+    expect(result.label).toBe('new');
+    expect(result.body).toBe(init?.body ?? '');
+    const wait = new URLSearchParams(result.buildWait);
+    expect(wait.get('settled')).toBe('true');
+    expect(wait.get('sawBuild')).toBe('true');
+    expect(Number(wait.get('waitedMs'))).toBeGreaterThanOrEqual(200);
+  }
+);
+
+test('startProxy forwards other MCP calls and build-status reads at once, with their body', async () => {
+  const port = await startChildAndProxy(echoRequest('child'));
+  context.basePath = '';
+  context.buildActivity = createBuildActivity({ onChange: () => {} });
+  context.buildActivity.setBusy(true);
+  const body = mcpCall('lowdefy_build_status', {});
+
+  const [call, read] = await Promise.all([
+    fetch(`http://localhost:${port}/lowdefy-docs/mcp`, {
+      method: 'POST',
+      body,
+      headers: { 'x-lowdefy-build-wait': 'settled=true' },
+    }).then((response) => response.json()),
+    fetch(`http://localhost:${port}/lowdefy-docs/build-status`).then((response) => response.json()),
+  ]);
+
+  expect(call).toEqual({ label: 'child', body, buildWait: null });
+  expect(read).toEqual({ label: 'child', body: '', buildWait: null });
+});
+
+const paddedWaitCall = mcpCall('lowdefy_build_status', { wait: true, pad: 'x'.repeat(70 * 1024) });
+const waitCall = mcpCall('lowdefy_build_status', { wait: true });
+
+test.each([
+  ['a body larger than 64 KiB', { body: paddedWaitCall }, paddedWaitCall],
+  [
+    'a streamed body without a length',
+    { body: new Blob([waitCall]).stream(), duplex: 'half' },
+    waitCall,
+  ],
+])('startProxy forwards an MCP POST with %s unread, without holding it', async (_, init, sent) => {
+  const port = await startChildAndProxy(echoRequest('child'));
+  context.basePath = '';
+  context.buildActivity = createBuildActivity({ onChange: () => {} });
+  context.buildActivity.setBusy(true);
+
+  const call = await fetch(`http://localhost:${port}/lowdefy-docs/mcp`, {
+    method: 'POST',
+    ...init,
+  }).then((response) => response.json());
+
+  expect(call).toEqual({ label: 'child', body: sent, buildWait: null });
 });

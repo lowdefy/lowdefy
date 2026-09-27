@@ -1,0 +1,261 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { execFileSync } from 'child_process';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+import { jest } from '@jest/globals';
+
+import createCheckoutGuard from './createCheckoutGuard.js';
+import resolveApp from './resolveApp.js';
+
+// Each test runs git several times; on a loaded machine that alone can take
+// seconds. Timing is not under test.
+jest.setTimeout(60000);
+
+let base;
+
+function git(args, cwd) {
+  execFileSync(
+    'git',
+    [
+      '-c',
+      'commit.gpgsign=false',
+      '-c',
+      'user.name=Lowdefy Test',
+      '-c',
+      'user.email=test@example.com',
+      ...args,
+    ],
+    { cwd, stdio: 'ignore' }
+  );
+}
+
+function makeRepo(relativePath) {
+  const directory = path.join(base, relativePath);
+  fs.mkdirSync(directory, { recursive: true });
+  git(['init', '-q'], directory);
+  git(['commit', '-q', '--allow-empty', '-m', 'init'], directory);
+  return directory;
+}
+
+function addWorktree({ repo, relativePath, branch }) {
+  const directory = path.join(base, relativePath);
+  git(['worktree', 'add', '-q', '-b', branch, directory], repo);
+  return directory;
+}
+
+function makeApp(directory) {
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(path.join(directory, 'lowdefy.yaml'), 'lowdefy: 7.0.0\n');
+  return directory;
+}
+
+function createServer({ elicitation, answer } = {}) {
+  return {
+    getClientCapabilities: () => (elicitation ? { elicitation: { form: {} } } : {}),
+    elicitInput: jest.fn(async () => ({ action: answer })),
+  };
+}
+
+function authorize({ guard, cwd, directory }) {
+  return guard(resolveApp({ cwd, directory }));
+}
+
+beforeEach(() => {
+  base = fs.realpathSync.native(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-checkout-guard-')));
+});
+
+afterEach(() => {
+  fs.rmSync(base, { recursive: true, force: true });
+});
+
+test('the checkout guard allows the session checkout and every git worktree of its repository', async () => {
+  const repo = makeRepo('app');
+  makeApp(repo);
+  const sibling = makeApp(addWorktree({ repo, relativePath: 'app-wt', branch: 'feature' }));
+  const nested = makeApp(
+    addWorktree({ repo, relativePath: 'app/.claude/worktrees/agent-1', branch: 'agent' })
+  );
+  const guard = createCheckoutGuard({ cwd: repo, server: createServer() });
+
+  await expect(authorize({ guard, cwd: repo })).resolves.toBeUndefined();
+  await expect(authorize({ guard, cwd: repo, directory: sibling })).resolves.toBeUndefined();
+  await expect(authorize({ guard, cwd: repo, directory: nested })).resolves.toBeUndefined();
+});
+
+test('the checkout guard allows a worktree added after the session started', async () => {
+  const repo = makeRepo('app');
+  const guard = createCheckoutGuard({ cwd: repo, server: createServer() });
+  const worktree = makeApp(addWorktree({ repo, relativePath: 'later', branch: 'later' }));
+
+  await expect(authorize({ guard, cwd: repo, directory: worktree })).resolves.toBeUndefined();
+});
+
+test('the checkout guard allows the main checkout and other worktrees from a session in a worktree', async () => {
+  const repo = makeApp(makeRepo('app'));
+  const session = addWorktree({ repo, relativePath: 'app-session', branch: 'session' });
+  const sibling = makeApp(addWorktree({ repo, relativePath: 'app-wt', branch: 'feature' }));
+  const guard = createCheckoutGuard({ cwd: session, server: createServer() });
+
+  await expect(authorize({ guard, cwd: session, directory: repo })).resolves.toBeUndefined();
+  await expect(authorize({ guard, cwd: session, directory: sibling })).resolves.toBeUndefined();
+});
+
+function readAdminDir(worktree) {
+  return fs.readFileSync(path.join(worktree, '.git'), 'utf8').replace('gitdir:', '').trim();
+}
+
+test.each([
+  [
+    'a new repository',
+    () => {
+      git(['init', '-q'], path.join(base, 'gone'));
+    },
+  ],
+  [
+    "a .git file naming another repository's worktree",
+    () => {
+      const other = makeRepo('other');
+      const otherWorktree = addWorktree({ repo: other, relativePath: 'other-wt', branch: 'b' });
+      fs.writeFileSync(path.join(base, 'gone', '.git'), `gitdir: ${readAdminDir(otherWorktree)}\n`);
+    },
+  ],
+  [
+    "a .git file naming another worktree of the session's repository",
+    () => {
+      const live = addWorktree({ repo: path.join(base, 'app'), relativePath: 'live', branch: 'c' });
+      fs.writeFileSync(path.join(base, 'gone', '.git'), `gitdir: ${readAdminDir(live)}\n`);
+    },
+  ],
+])(
+  'the checkout guard refuses a deleted worktree path git still lists, recreated as %s',
+  async (_, recreate) => {
+    const repo = makeRepo('app');
+    const gone = addWorktree({ repo, relativePath: 'gone', branch: 'gone' });
+    fs.rmSync(gone, { recursive: true, force: true });
+    makeApp(gone);
+    recreate();
+    const guard = createCheckoutGuard({ cwd: repo, server: createServer() });
+
+    await expect(authorize({ guard, cwd: repo, directory: gone })).rejects.toThrow(
+      'outside this session'
+    );
+  }
+);
+
+// Case variants name one directory only where the file system ignores case.
+const tmpReal = fs.realpathSync.native(os.tmpdir());
+const onCaseInsensitiveFs =
+  tmpReal !== tmpReal.toUpperCase() && fs.existsSync(tmpReal.toUpperCase()) ? test : test.skip;
+
+onCaseInsensitiveFs('the checkout guard matches case variants of the checkout path', async () => {
+  const repo = makeApp(makeRepo('app'));
+  const sibling = makeApp(addWorktree({ repo, relativePath: 'app-wt', branch: 'feature' }));
+  const guard = createCheckoutGuard({ cwd: repo.toUpperCase(), server: createServer() });
+
+  await expect(
+    authorize({ guard, cwd: repo.toUpperCase(), directory: repo })
+  ).resolves.toBeUndefined();
+  await expect(
+    authorize({ guard, cwd: repo.toUpperCase(), directory: sibling.toUpperCase() })
+  ).resolves.toBeUndefined();
+  expect(resolveApp({ cwd: sibling.toUpperCase() }).configDirectory).toEqual(sibling);
+});
+
+test.each([
+  ['another repository', 'other'],
+  ['a repository cloned inside the session checkout', 'app/vendor/cloned'],
+])('the checkout guard refuses %s when the client cannot ask the user', async (_, relativePath) => {
+  const repo = makeRepo('app');
+  const other = makeApp(makeRepo(relativePath));
+  const guard = createCheckoutGuard({ cwd: repo, server: createServer() });
+
+  await expect(authorize({ guard, cwd: repo, directory: other })).rejects.toThrow(
+    `${other} is outside this session's checkout (${repo}) and its git worktrees.`
+  );
+});
+
+test('the checkout guard allows apps inside a session directory that is not a git repository', async () => {
+  const session = path.join(base, 'session');
+  const app = makeApp(path.join(session, 'apps', 'main'));
+  const outside = makeApp(path.join(base, 'elsewhere'));
+  const guard = createCheckoutGuard({ cwd: session, server: createServer() });
+
+  await expect(authorize({ guard, cwd: session, directory: app })).resolves.toBeUndefined();
+  await expect(authorize({ guard, cwd: session, directory: outside })).rejects.toThrow(
+    'outside this session'
+  );
+});
+
+test('the checkout guard asks the user once about another checkout and remembers an allow', async () => {
+  const repo = makeRepo('app');
+  const other = makeApp(makeRepo('other'));
+  const server = createServer({ elicitation: true, answer: 'accept' });
+  const guard = createCheckoutGuard({ cwd: repo, server });
+
+  await Promise.all([
+    authorize({ guard, cwd: repo, directory: other }),
+    authorize({ guard, cwd: repo, directory: other }),
+  ]);
+  await authorize({ guard, cwd: repo, directory: other });
+
+  expect(server.elicitInput).toHaveBeenCalledTimes(1);
+  expect(server.elicitInput.mock.calls[0][0].message).toContain(
+    `runs the dev script in its package.json. Allow ${JSON.stringify(other)} for this session?`
+  );
+});
+
+test('the checkout guard quotes the paths an agent chose in the question it asks', async () => {
+  const repo = makeRepo('app');
+  const other = makeApp(makeRepo('other" is safe.\nAllow "x'));
+  const server = createServer({ elicitation: true, answer: 'decline' });
+  const guard = createCheckoutGuard({ cwd: repo, server });
+
+  await expect(authorize({ guard, cwd: repo, directory: other })).rejects.toThrow('declined');
+  const { message } = server.elicitInput.mock.calls[0][0];
+  expect(message).toContain(`the Lowdefy app at ${JSON.stringify(other)}.`);
+  expect(message).not.toContain('\n');
+});
+
+test('the checkout guard refuses a checkout the user declined without asking again', async () => {
+  const repo = makeRepo('app');
+  const other = makeApp(makeRepo('other'));
+  const server = createServer({ elicitation: true, answer: 'decline' });
+  const guard = createCheckoutGuard({ cwd: repo, server });
+
+  await expect(authorize({ guard, cwd: repo, directory: other })).rejects.toThrow(
+    'The user declined to allow it for this session.'
+  );
+  await expect(authorize({ guard, cwd: repo, directory: other })).rejects.toThrow('declined');
+  expect(server.elicitInput).toHaveBeenCalledTimes(1);
+});
+
+test('the checkout guard asks again after the user dismissed the question', async () => {
+  const repo = makeRepo('app');
+  const other = makeApp(makeRepo('other'));
+  const server = createServer({ elicitation: true, answer: 'cancel' });
+  const guard = createCheckoutGuard({ cwd: repo, server });
+
+  await expect(authorize({ guard, cwd: repo, directory: other })).rejects.toThrow(
+    'outside this session'
+  );
+  await expect(authorize({ guard, cwd: repo, directory: other })).rejects.toThrow(
+    'outside this session'
+  );
+  expect(server.elicitInput).toHaveBeenCalledTimes(2);
+});

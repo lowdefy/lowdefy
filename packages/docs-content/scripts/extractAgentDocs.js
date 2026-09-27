@@ -126,6 +126,10 @@ function extractAgentDocs({ pages, menus, outputDir }) {
   fs.rmSync(contentDir, { recursive: true, force: true });
 
   const docs = [];
+  // The ref each page was resolved from (a non-enumerable build marker).
+  // recordSourceHashes, which runs after the build, maps it to the page's
+  // source files through the build's refMap.
+  const sources = {};
   pages.filter(Boolean).forEach((page) => {
     const title = page.properties?.title ?? page.id;
     const section = sectionMap.get(page.id)?.label ?? 'Other';
@@ -146,11 +150,12 @@ function extractAgentDocs({ pages, menus, outputDir }) {
       doc.typeName = title;
     }
     docs.push(doc);
+    sources[slug] = { refId: page['~r'] };
   });
 
   fs.writeFileSync(
     path.join(outputDir, 'index.json'),
-    JSON.stringify({ version: packageJson.version, docs }, null, 2)
+    JSON.stringify({ version: packageJson.version, docs, sources }, null, 2)
   );
 }
 

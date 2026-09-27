@@ -16,12 +16,17 @@
 
 import { wait } from '@lowdefy/helpers';
 
+function hasExited(child) {
+  return child.exitCode !== null || child.signalCode !== null;
+}
+
 // The child answers <basePath>/api/ping once Vite and the Hono app are both up, so this
 // is the moment the server is really usable - the instance record flips to
-// "ready" here, which is what the hub and the MCP shim wait on.
-async function waitForServer({ port, basePath, timeoutMs = 120000, intervalMs = 250 }) {
+// "ready" here, which is what the hub and the MCP shim wait on. A child that
+// exits (a plugin that fails to load) will never answer, so the wait ends.
+async function waitForServer({ port, basePath, child, timeoutMs = 120000, intervalMs = 250 }) {
   const deadline = Date.now() + timeoutMs;
-  while (Date.now() < deadline) {
+  while (Date.now() < deadline && !hasExited(child)) {
     try {
       const response = await fetch(`http://127.0.0.1:${port}${basePath}/api/ping`);
       if (response.ok) {

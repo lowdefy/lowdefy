@@ -117,6 +117,6 @@ Keep `config.requestTimeout` below `maxDuration`: when it is not, Vercel stops t
 
 On Vercel, only the request timeout cancels an AI model call a request is waiting on. A client that disconnects does not: the call runs until it finishes, reaches its own `timeout`, or hits the request timeout. On the Node server a disconnect cancels it too.
 
-> The function runs on Vercel's Node.js runtime. Streaming agent responses (`/api/agent/*`) are exempt from `config.requestTimeout` and are bounded only by `maxDuration` — for heavy streaming or agent workloads, a long-lived Node host (Docker, Fly.io, Railway, Render) may suit better.
+> The function runs on Vercel's Node.js runtime. Streaming agent responses (`/api/agent/*`) are exempt from `config.requestTimeout` and are bounded only by `maxDuration` — for heavy streaming or agent workloads, a long-lived Node host (Docker, Fly.io, Railway, Render) may suit better. An agent run keeps running to the end when its client disconnects, so its work completes; a `GET` stream (such as an MCP client's notification stream) stops when its client goes, instead of holding the function until `maxDuration`.
 
 All other Vercel configuration like domain names, preview deploy branches, serverless regions and redirects can be configured as desired.

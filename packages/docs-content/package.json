@@ -22,6 +22,7 @@
     "./index.json": "./index.json",
     "./hazards.json": "./hazards.json",
     "./scripts/extractAgentDocs.js": "./scripts/extractAgentDocs.js",
+    "./scripts/hashDocSources.js": "./scripts/hashDocSources.js",
     "./content/*": "./content/*"
   },
   "files": [

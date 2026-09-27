@@ -21,7 +21,7 @@ const mockSerializeBuildException = jest.fn((exception) => ({ message: exception
 const mockWriteBuildStatus = jest.fn();
 const mockCreateCustomPluginTypesMap = jest.fn().mockResolvedValue({});
 const mockCreateCustomPluginMessagesMap = jest.fn().mockResolvedValue({});
-const mockPublishBuildDirectory = jest.fn();
+const mockPublishBuildDirectory = jest.fn(async () => {});
 
 jest.unstable_mockModule('@lowdefy/build/dev', () => ({
   shallowBuild: mockShallowBuild,
@@ -150,6 +150,31 @@ test('lowdefyBuild leaves the live build in place when the build fails', async (
   await expect(build()).rejects.toThrow('Build failed');
 
   expect(mockPublishBuildDirectory).not.toHaveBeenCalled();
+});
+
+test('lowdefyBuild writes an error buildStatus.json and rethrows when publishing the build fails', async () => {
+  const context = createContext();
+  mockShallowBuild.mockResolvedValue({ components: {}, pageRegistry: {}, context: {} });
+  const renameError = new Error("EPERM: operation not permitted, rename 'a' -> 'b'");
+  mockPublishBuildDirectory.mockRejectedValueOnce(renameError);
+
+  const build = lowdefyBuild(context);
+  await expect(build()).rejects.toThrow(
+    "Publishing the build to /app/build failed: EPERM: operation not permitted, rename 'a' -> 'b'"
+  );
+
+  expect(mockWriteBuildStatus).toHaveBeenCalledTimes(1);
+  expect(mockWriteBuildStatus).toHaveBeenCalledWith({
+    directories: context.directories,
+    status: 'error',
+    errors: [
+      {
+        message:
+          "Publishing the build to /app/build failed: EPERM: operation not permitted, rename 'a' -> 'b'",
+      },
+    ],
+    warnings: [],
+  });
 });
 
 test('lowdefyBuild starts a build only after the previous one has finished', async () => {

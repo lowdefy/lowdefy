@@ -19,6 +19,7 @@ import os from 'os';
 import path from 'path';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
+import { ElicitRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 
 import createShim from './createShim.js';
 
@@ -44,11 +45,17 @@ let client;
 let shim;
 const originalHome = process.env.LOWDEFY_HOME;
 
-async function connect({ cwd }) {
+async function connect({ cwd, onElicit }) {
   shim = createShim({ cliVersion: '6.0.0', cwd, devTools });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   await shim.server.connect(serverTransport);
-  client = new Client({ name: 'test', version: '1.0.0' });
+  client = new Client(
+    { name: 'test', version: '1.0.0' },
+    { capabilities: onElicit ? { elicitation: {} } : {} }
+  );
+  if (onElicit) {
+    client.setRequestHandler(ElicitRequestSchema, onElicit);
+  }
   await client.connect(clientTransport);
 }
 
@@ -179,4 +186,35 @@ test('lowdefy_dev_list lists every app of a multi-app checkout without starting 
     expect.objectContaining({ app: `apps/second @ ${path.basename(root)}`, state: 'stopped' }),
   ]);
   expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
+});
+
+test('lowdefy mcp refuses a directory in another checkout and asks the user when the client can', async () => {
+  makeApp('.');
+  const other = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-shim-other-')));
+  fs.mkdirSync(path.join(other, '.git'));
+  fs.writeFileSync(path.join(other, 'lowdefy.yaml'), 'lowdefy: 6.0.0\n');
+  const questions = [];
+  try {
+    await connect({
+      cwd: root,
+      onElicit: (request) => {
+        questions.push(request.params.message);
+        return { action: 'decline' };
+      },
+    });
+    const result = await client.callTool({
+      name: 'lowdefy_build_status',
+      arguments: { directory: other },
+    });
+    expect(result.isError).toBe(true);
+    expect(text(result)).toEqual(
+      `${other} is outside this session's checkout (${root}) and its git worktrees. The user declined to allow it for this session.`
+    );
+    expect(questions).toEqual([
+      expect.stringContaining(`Allow ${JSON.stringify(other)} for this session?`),
+    ]);
+    expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
+  } finally {
+    fs.rmSync(other, { recursive: true, force: true });
+  }
 });

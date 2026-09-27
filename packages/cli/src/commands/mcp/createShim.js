@@ -20,6 +20,7 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprot
 import { readDevInstance } from '@lowdefy/node-utils';
 
 import callWithReconnect from './callWithReconnect.js';
+import createCheckoutGuard from './createCheckoutGuard.js';
 import createHubConnection from './createHubConnection.js';
 import createInstanceConnections from './createInstanceConnections.js';
 import fetchBuildSummary from './fetchBuildSummary.js';
@@ -37,7 +38,7 @@ const TOOL_CALL_TIMEOUT_MS = 10 * 60 * 1000;
 // a full process restart when the hub owns the server.
 const HIDDEN_DEV_TOOLS = new Set(['lowdefy_restart']);
 
-const SHIM_INSTRUCTIONS = `This is \`lowdefy mcp\`. It routes every lowdefy_ tool to the dev server of the app you are working in and starts that server when it is not running - never run \`lowdefy dev\` yourself, never choose ports, and never kill processes by port or name; use lowdefy_dev_start (restart: true after local plugin or .env changes) and lowdefy_dev_stop. Pass "directory" when you work in a different git worktree from the session (for example as a subagent) or when the repository holds several apps. Every result starts with the app and checkout it came from.`;
+const SHIM_INSTRUCTIONS = `This is \`lowdefy mcp\`. It routes every lowdefy_ tool to the dev server of the app you are working in and starts that server when it is not running - never run \`lowdefy dev\` yourself, never choose ports, and never kill processes by port or name; use lowdefy_dev_start (restart: true after local plugin or .env changes) and lowdefy_dev_stop. Pass "directory" when you work in a different git worktree from the session (for example as a subagent) or when the repository holds several apps; it must be in this checkout or one of its git worktrees. Every result starts with the app and checkout it came from.`;
 
 function textResult(value) {
   const text = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
@@ -85,8 +86,11 @@ function createShim({ cliVersion, cwd, devTools }) {
   const forwardedNames = new Set(forwardedTools.map((tool) => tool.name));
   const tools = [...lifecycleTools, ...forwardedTools.map(withDirectory)];
 
-  function resolve({ directory }) {
+  const authorizeApp = createCheckoutGuard({ cwd, server });
+
+  async function resolve({ directory }) {
     const app = resolveApp({ directory, cwd });
+    await authorizeApp(app);
     return { ...app, label: formatInstanceLabel(app) };
   }
 
@@ -113,7 +117,7 @@ function createShim({ cliVersion, cwd, devTools }) {
 
   async function callDevTool({ name, args }) {
     const { directory, ...toolArgs } = args;
-    const app = resolve({ directory });
+    const app = await resolve({ directory });
     const instance = await ensureRunning(app);
     const call = async () => {
       const client = await instances.get({
@@ -147,7 +151,7 @@ function createShim({ cliVersion, cwd, devTools }) {
   }
 
   async function status({ directory }) {
-    const app = resolve({ directory });
+    const app = await resolve({ directory });
     const hubStatus = await hub.request(
       'status',
       { configDirectory: app.configDirectory },
@@ -167,7 +171,7 @@ function createShim({ cliVersion, cwd, devTools }) {
   }
 
   async function start({ directory, restart = false, clean = false }) {
-    const app = resolve({ directory });
+    const app = await resolve({ directory });
     const running = readDevInstance({ configDirectory: app.configDirectory });
     if (running !== null && running.owner !== 'hub') {
       if (!restart && !clean) {
@@ -205,7 +209,7 @@ function createShim({ cliVersion, cwd, devTools }) {
   }
 
   async function stop({ directory }) {
-    const app = resolve({ directory });
+    const app = await resolve({ directory });
     const running = readDevInstance({ configDirectory: app.configDirectory });
     if (running !== null && running.owner !== 'hub') {
       return {
@@ -220,13 +224,13 @@ function createShim({ cliVersion, cwd, devTools }) {
   }
 
   async function logs({ directory, lines = 100, grep }) {
-    const app = resolve({ directory });
+    const app = await resolve({ directory });
     const result = await hub.request('logs', { configDirectory: app.configDirectory, lines, grep });
     return { app: app.label, ...result };
   }
 
   async function runTests({ directory, filter }) {
-    const app = resolve({ directory });
+    const app = await resolve({ directory });
     const instance = await ensureRunning(app);
     const result = await runAppTests({
       configDirectory: app.configDirectory,
@@ -239,7 +243,7 @@ function createShim({ cliVersion, cwd, devTools }) {
   // Lists the checkout, not one app: resolving an app from a monorepo root
   // fails with "several apps" - the case this tool is for.
   async function list() {
-    const root = findGitRoot({ directory: fs.realpathSync(cwd) });
+    const root = findGitRoot({ directory: fs.realpathSync.native(cwd) });
     const apps = findApps({ root }).map((configDirectory) => {
       const record = readDevInstance({ configDirectory });
       return {

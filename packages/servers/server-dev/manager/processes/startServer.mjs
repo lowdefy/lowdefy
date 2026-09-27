@@ -42,6 +42,9 @@ function startServer(context) {
   context.basePath = readBasePath(context);
   context.url = `http://localhost:${context.options.port}${context.basePath}`;
   context.instance.update({ url: context.url });
+  // What this server reads at start, so a later build restarts it only when
+  // one of those files changed.
+  context.serverArtifacts.record();
 
   // The child binds context.internalPort on loopback; the manager's proxy owns
   // the public context.options.port (see startProxy.mjs) so a restart never

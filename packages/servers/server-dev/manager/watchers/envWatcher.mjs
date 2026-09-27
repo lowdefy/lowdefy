@@ -27,12 +27,13 @@ function envWatcher(context) {
     try {
       await context.lowdefyBuild();
     } finally {
-      context.restartServer();
+      await context.syncServer({ restart: true });
     }
   };
   return setupWatcher({
     callback,
     context,
+    onBusy: context.buildActivity.setBusy,
     watchDotfiles: true,
     watchPaths: [path.join(context.directories.config, '.env')],
   });

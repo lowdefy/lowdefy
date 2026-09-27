@@ -16,41 +16,59 @@
 
 import fs from 'fs';
 import path from 'path';
-import selectWatchedPluginPackages from './selectWatchedPluginPackages.mjs';
+import listServerSidePackages from './listServerSidePackages.mjs';
+import readPluginDefinitions from '../utils/readPluginDefinitions.mjs';
+import selectLocalPluginPackages from './selectLocalPluginPackages.mjs';
 import setupWatcher from '../utils/setupWatcher.mjs';
 
-function readCustomTypesMap(buildDirectory) {
-  const filePath = path.join(buildDirectory, 'customTypesMap.json');
-  if (!fs.existsSync(filePath)) {
-    return {};
-  }
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+function isInside({ filePath, dir }) {
+  const relative = path.relative(dir, filePath);
+  return !relative.startsWith('..') && !path.isAbsolute(relative);
 }
 
-// serverArtifactWatcher restarts when the registered type list changes. A local
-// plugin whose implementation changes without changing that list touches no
-// tracked artifact, so the server keeps serving the stale module from its ESM
-// cache. Watch the linked plugin's sources directly.
-function pluginSourceWatcher(context) {
-  const watched = selectWatchedPluginPackages({
-    configDirectory: context.directories.config,
-    customTypesMap: readCustomTypesMap(context.directories.build),
+// A local plugin's code can change while the dev server runs, and nothing
+// else watches it when it lives outside the config directory. The config
+// build reads each plugin's type list, so any change rebuilds - which also
+// clears a build a broken plugin failed. The server process caches the
+// modules of server-side types (requests, connections, operators, ...), so a
+// change to a plugin that has them also restarts the server; client code
+// is Vite's to hot-replace. The package is watched whole: a plugin may be
+// imported from its sources or from a build output its own watcher writes.
+async function pluginSourceWatcher(context) {
+  const plugins = await readPluginDefinitions({ directories: context.directories });
+  const packages = selectLocalPluginPackages({
+    directories: context.directories,
+    packageNames: plugins.map((plugin) => plugin.name),
   });
-
-  if (watched.length === 0) {
-    return Promise.resolve();
+  if (packages.length === 0) {
+    return undefined;
   }
 
-  const callback = async () => {
-    context.logger.info({ spin: 'start' }, 'Local plugin source changed, restarting server.');
-    context.restartServer();
+  const callback = async (filePaths) => {
+    const changedFiles = filePaths.flat();
+    const customTypesMap = JSON.parse(
+      fs.readFileSync(path.join(context.directories.build, 'customTypesMap.json'), 'utf8')
+    );
+    const serverSide = listServerSidePackages({ customTypesMap });
+    const restart = packages.some(
+      ({ package: packageName, dir }) =>
+        serverSide.has(packageName) && changedFiles.some((filePath) => isInside({ filePath, dir }))
+    );
+    context.logger.info({ spin: 'start' }, 'Local plugin source changed, rebuilding.');
+    try {
+      await context.lowdefyBuild();
+    } finally {
+      await context.syncServer({ restart });
+      await context.reloadClients();
+    }
   };
 
   return setupWatcher({
     callback,
     context,
-    ignorePaths: ['**/node_modules/**', '**/dist/**'],
-    watchPaths: watched.map(({ dir }) => path.join(dir, 'src')),
+    onBusy: context.buildActivity.setBusy,
+    ignorePaths: ['**/node_modules/**'],
+    watchPaths: packages.map(({ dir }) => dir),
   });
 }
 

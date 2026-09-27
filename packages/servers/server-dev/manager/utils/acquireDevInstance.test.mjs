@@ -19,12 +19,14 @@ import os from 'os';
 import path from 'path';
 import { spawnSync } from 'child_process';
 
+import { readDevInstance } from '@lowdefy/node-utils';
+
 import acquireDevInstance from './acquireDevInstance.mjs';
 
 let configDirectory;
 
 beforeEach(() => {
-  configDirectory = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'dev-instance-')));
+  configDirectory = fs.realpathSync.native(fs.mkdtempSync(path.join(os.tmpdir(), 'dev-instance-')));
 });
 
 afterEach(() => {
@@ -113,3 +115,27 @@ test('acquireDevInstance takes over a record left on a pid another process now h
   expect(instance.acquired).toBe(true);
   expect(readRecord().processStartTime).toEqual(expect.any(String));
 });
+
+// Case variants name one directory only where the file system ignores case.
+const tmpReal = fs.realpathSync.native(os.tmpdir());
+const onCaseInsensitiveFs =
+  tmpReal !== tmpReal.toUpperCase() && fs.existsSync(tmpReal.toUpperCase()) ? test : test.skip;
+
+onCaseInsensitiveFs(
+  'acquireDevInstance records the path as stored on disk when started from a case variant of it',
+  () => {
+    const variant = configDirectory.toUpperCase();
+    const instance = acquireDevInstance({
+      configDirectory: variant,
+      owner: 'terminal',
+      version: '6.0.0',
+    });
+    try {
+      expect(readRecord().configDirectory).toEqual(configDirectory);
+      expect(readDevInstance({ configDirectory })).toMatchObject({ pid: process.pid });
+      expect(readDevInstance({ configDirectory: variant })).toMatchObject({ pid: process.pid });
+    } finally {
+      instance.release();
+    }
+  }
+);

@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import fs from 'fs';
-import path from 'path';
 import { get, type } from '@lowdefy/helpers';
 
 // Only these kinds are loaded by the server process and cached in its ESM
@@ -33,7 +31,7 @@ const serverSideKinds = [
   'auth.strategies',
 ];
 
-function collectServerSidePackages(customTypesMap) {
+function listServerSidePackages({ customTypesMap }) {
   const packages = new Set();
   for (const kind of serverSideKinds) {
     const store = get(customTypesMap, kind, { default: {} });
@@ -43,32 +41,7 @@ function collectServerSidePackages(customTypesMap) {
       }
     }
   }
-  return [...packages];
+  return packages;
 }
 
-function resolveLocalPluginDir({ configDirectory, packageName }) {
-  const linked = path.join(configDirectory, 'node_modules', packageName);
-  if (!fs.existsSync(linked)) {
-    return null;
-  }
-  const realPath = fs.realpathSync(linked);
-  // A published package lives inside node_modules and cannot change under a
-  // running dev server; only linked local plugins resolve outside it.
-  if (realPath.split(path.sep).includes('node_modules')) {
-    return null;
-  }
-  return realPath;
-}
-
-function selectWatchedPluginPackages({ configDirectory, customTypesMap }) {
-  const watched = [];
-  for (const packageName of collectServerSidePackages(customTypesMap ?? {})) {
-    const dir = resolveLocalPluginDir({ configDirectory, packageName });
-    if (dir !== null) {
-      watched.push({ package: packageName, dir });
-    }
-  }
-  return watched;
-}
-
-export default selectWatchedPluginPackages;
+export default listServerSidePackages;

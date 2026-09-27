@@ -88,6 +88,9 @@ async function lowdefyBuildWatcher(context) {
         skeletonFileModified
       ) {
         await context.lowdefyBuild();
+        // In this batch, so a build-status wait also waits for the restart
+        // the build needs (a new connection type, a new plugin package).
+        await context.syncServer();
       } else {
         const invalidatePath = path.join(context.directories.build, 'invalidatePages');
         fs.writeFileSync(invalidatePath, String(Date.now()));
@@ -109,7 +112,7 @@ async function lowdefyBuildWatcher(context) {
   const configWatcher = await setupWatcher({
     callback,
     context,
-    onBusy: context.onConfigWatcherBusy,
+    onBusy: context.buildActivity.setBusy,
     ignorePaths: [
       '**/node_modules/**',
       ...context.options.watchIgnore.map(fixRelativePathConfigDir),

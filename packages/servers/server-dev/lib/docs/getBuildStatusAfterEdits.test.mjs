@@ -24,6 +24,7 @@ const mockGetBuildStatus = jest.fn(({ checked } = {}) => ({ build: { status: 'ok
 jest.unstable_mockModule('./getBuildStatus.js', () => ({ default: mockGetBuildStatus }));
 
 const { default: getBuildStatusAfterEdits } = await import('./getBuildStatusAfterEdits.js');
+const { default: readProxyBuildWait } = await import('./readProxyBuildWait.js');
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -55,4 +56,21 @@ test('getBuildStatusAfterEdits builds no pages when the wait gave up', async () 
   expect(mockBuildEditedPages).not.toHaveBeenCalled();
   expect(result.settled).toBe(false);
   expect(result.checked).toBeUndefined();
+});
+
+test('getBuildStatusAfterEdits uses the wait the manager proxy made instead of waiting again', async () => {
+  mockBuildEditedPages.mockResolvedValue([]);
+
+  const result = await getBuildStatusAfterEdits({
+    proxyWait: readProxyBuildWait({
+      getHeader: () => 'settled=true&sawBuild=true&waitedMs=4200',
+    }),
+  });
+
+  expect(mockWaitForBuild).not.toHaveBeenCalled();
+  expect(result).toMatchObject({ settled: true, sawBuild: true, waitedMs: 4200, checked: [] });
+});
+
+test('readProxyBuildWait returns null for a request that did not come through the proxy wait', () => {
+  expect(readProxyBuildWait({ getHeader: () => undefined })).toBe(null);
 });

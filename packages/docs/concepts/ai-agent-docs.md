@@ -25,6 +25,7 @@ Your agent client starts `lowdefy mcp` itself at the start of each session, so t
 `lowdefy mcp` sends each tool call to the dev server of the app and checkout the agent is working in:
 
 - **It works out the app** from the session's working directory. Every tool also takes an optional `directory` argument — pass it when the repository holds several apps, or when an agent works in a different git worktree from the session (a subagent in its own worktree, for example).
+- **It only acts on the session's checkout and its git worktrees.** Starting a dev server runs the app's `package.json` dev script, so a `directory` outside the checkout the session started in (and outside `git worktree list` of that repository) is refused. When the agent client supports MCP elicitation, `lowdefy mcp` asks you first instead; your answer holds for the session.
 - **It starts the dev server when needed**, through the [Lowdefy hub](/cli#hub): a small per-user background process that gives each app its own port, runs the app's own dev script (so a secrets-manager wrapper still applies — set `cli.devScript` if several scripts run `lowdefy dev`), and stops servers nobody uses. A dev server you started yourself with `lowdefy dev` is used as it is, and never stopped by an agent.
 - **Every result starts with the app and checkout it came from**, for example `apps/main @ app-wt-invoices · http://localhost:4102`, so an agent never mistakes another worktree's answer for its own.
 
@@ -74,7 +75,7 @@ The dev server provides these tools:
 | `lowdefy_load_state`             | Restore a state checkpoint — headless, or a `?_checkpoint=` URL for manual testing                                                                                                                                     |
 | `lowdefy_list_state_checkpoints` | List saved state checkpoints                                                                                                                                                                                           |
 | `lowdefy_checkpoint_to_mocks`    | Convert a state checkpoint into e2e `mocks.yaml` fixtures                                                                                                                                                              |
-| `lowdefy_restart`                | Restart the dev server process — after editing a local plugin's server-side code, or when `build_status` looks stale. Wait ~2s, then call `lowdefy_build_status`                                                       |
+| `lowdefy_restart`                | Restart the dev server process — after editing a local plugin's server-side code, or when `build_status` looks stale. Then call `lowdefy_build_status` with `wait: true`, which answers once the server is back        |
 | `lowdefy_checkpoint`             | Snapshot all config files before risky changes                                                                                                                                                                         |
 | `lowdefy_revert_checkpoint`      | Restore config files from a checkpoint                                                                                                                                                                                 |
 
@@ -112,7 +113,7 @@ Hold **Option** (macOS) or **Alt** (Windows/Linux) and click any element in your
 The dev server rebuilds automatically when config changes, so an agent works in a tight loop:
 
 1. Discover types and schemas, write or edit YAML.
-2. Call `lowdefy_build_status` with `wait: true` (`GET /lowdefy-docs/build-status?wait=true`) — it answers once the dev server has processed your edit, rather than with the build before it. Did the build succeed? Errors come back with the exact source file and location. A build that fails with an internal error carries its message, stack and the config file it was resolving.
+2. Call `lowdefy_build_status` with `wait: true` (`GET /lowdefy-docs/build-status?wait=true`) — it answers once the dev server has processed your edit, rather than with the build before it. That includes a server restart or plugin install the edit needs (a new connection type, a new plugin package, a `.env` change), so the next call reaches a ready server. Did the build succeed? Errors come back with the exact source file and location. A build that fails with an internal error carries its message, stack and the config file it was resolving.
 3. Pages are built when they are first requested, so the config build's status says nothing about page content. With `wait: true`, build status also builds every page your edit touched (a page whose files changed since its last build, a page built before the latest config build, or a page file changed since the dev server started) and reports under `pages`: `checked` lists the pages it built, `failed` the pages whose last build failed with their errors, `changedSinceBuild` pages changed on disk that the dev server has not rebuilt yet, and `unbuilt` how many pages nothing has built since the dev server started. `lowdefy_check` validates every page.
 4. Call `lowdefy_get_page_config` to confirm the page builds, and `lowdefy_screenshot_page` to see it rendered.
 5. Runtime errors from the browser (operator errors, block render errors) also appear in `lowdefy_build_status` under `clientErrors`, so problems that only show at runtime still reach the agent.
@@ -419,7 +420,7 @@ Everything the MCP tools serve is also available as plain GET routes — useful 
 | `POST /lowdefy-docs/run-endpoint`                                 | Execute an Api endpoint routine with a test payload and caller (needs `allowWriteRequests`; rejects return as data)               |
 | `GET/POST /lowdefy-docs/checkpoints` + `/revert`                  | Config-file checkpoints                                                                                                           |
 | `GET/POST /lowdefy-docs/state-checkpoints` + `/snapshot`, `/load` | State & data checkpoints                                                                                                          |
-| `POST /lowdefy-docs/restart`                                      | Restart the dev server process (`{reason}` optional; poll `build-status` after ~2s)                                               |
+| `POST /lowdefy-docs/restart`                                      | Restart the dev server process (`{reason}` optional; then `build-status?wait=true` answers once it is back)                       |
 
 ## Local plugins
 
@@ -429,7 +430,7 @@ Your project's own plugins (declared under `plugins:` in `lowdefy.yaml`) are inc
 - Block schemas are derived from each block's `meta`, and connection/request schemas from the `schema` property on your connection and request definitions.
 - Ship a `gallery.yaml` or `examples.yaml` next to a block in your plugin's `dist/blocks/{BlockName}/` and it is served by `lowdefy_get_examples`.
 - A `README.md` or `docs/*.md` files in your plugin package are served by `lowdefy_get_plugin_doc`.
-- Editing a local plugin's server-side source (connections, requests, server operators, agents, websockets, notifications, auth) under its `src/` restarts the dev server automatically, so the new implementation is what runs. Block, action and client-operator edits hot-reload through Vite without a restart. If the server still looks stale, call `lowdefy_restart` or `POST /lowdefy-docs/restart`.
+- Editing a local plugin (a package linked from your workspace) rebuilds the config, so a new or renamed type is defined and a build the plugin broke clears once it is fixed. When the plugin has server-side types (connections, requests, server operators, agents, websockets, notifications, auth) the dev server also restarts, so the new implementation is what runs; block, action and client-operator edits hot-reload through Vite without a restart. If the server still looks stale, call `lowdefy_restart` or `POST /lowdefy-docs/restart`.
 
 ## Docs for crawling agents
 

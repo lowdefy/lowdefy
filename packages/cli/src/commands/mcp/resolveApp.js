@@ -35,7 +35,9 @@ function resolveApp({ directory, cwd }) {
   if (!fs.existsSync(start)) {
     throw new Error(`Directory ${start} does not exist.`);
   }
-  const startReal = fs.realpathSync(start);
+  // The native realpath returns the path as stored on disk, so case variants
+  // of one path on a case-insensitive file system (macOS) compare equal.
+  const startReal = fs.realpathSync.native(start);
   const root = findGitRoot({ directory: startReal });
 
   // Walk up to the checkout root, never past it.
