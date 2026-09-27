@@ -23,6 +23,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import App from './App.jsx';
+import clearReloadedForTypes from './clearReloadedForTypes.js';
 import loadPageTypes from './loadPageTypes.js';
 import shouldReloadForTypes from './shouldReloadForTypes.js';
 
@@ -43,6 +44,7 @@ if (import.meta.hot) {
 async function render() {
   try {
     await loadPageTypes({ pageConfig: config.pageConfig });
+    clearReloadedForTypes({ window });
   } catch (error) {
     if (shouldReloadForTypes({ window })) {
       window.location.reload();

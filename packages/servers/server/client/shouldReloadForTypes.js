@@ -14,14 +14,13 @@
   limitations under the License.
 */
 
-// sessionStorage key holding the URL this tab last reloaded after the first
-// page's types failed to load.
-const RELOADED_FOR_TYPES_KEY = 'lowdefy.reloadedForTypes';
+import RELOADED_FOR_TYPES_KEY from './reloadedForTypesKey.js';
 
 // True the first time the first page's type chunks fail to load at a URL — a
 // network blip, or HTML served from an older deploy whose chunks are gone — so
 // the tab reloads once. A second failure at the same URL renders instead of
-// looping, and clears the record so a later visit may retry.
+// looping, and clears the record so a later visit may retry, as does a load
+// that succeeds (clearReloadedForTypes).
 function shouldReloadForTypes({ window }) {
   try {
     if (window.sessionStorage.getItem(RELOADED_FOR_TYPES_KEY) === window.location.href) {
