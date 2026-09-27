@@ -415,6 +415,13 @@ test.describe('AgGridLowdefy Block', () => {
     await expect(buttons.first()).not.toHaveClass(/ant-btn-icon-end/);
     await expect(buttons.nth(1)).toContainText('Open');
     await expect(buttons.nth(1)).toHaveClass(/ant-btn-icon-end/);
+    const iconBox = await buttons.nth(1).locator('.ant-btn-icon').boundingBox();
+    const titleBox = await buttons
+      .nth(1)
+      .locator(':scope > span:not(.ant-btn-icon)')
+      .first()
+      .boundingBox();
+    expect(iconBox.x).toBeGreaterThan(titleBox.x);
   });
 
   test('cell.type: buttons click triggers the named block event', async ({ page }) => {
