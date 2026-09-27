@@ -130,6 +130,23 @@ describe('ServiceError.isServiceError', () => {
     expect(ServiceError.isServiceError(error)).toBe(expected);
   });
 
+  test('classifies a retry wrapper by the network failure under its last error', () => {
+    const refused = new Error('connect ECONNREFUSED 127.0.0.1:443');
+    refused.code = 'ECONNREFUSED';
+    const apiCallError = new Error('Cannot connect to API: fetch failed', {
+      cause: new TypeError('fetch failed', { cause: refused }),
+    });
+    const error = new Error('Failed after 3 attempts. Last error: Cannot connect to API');
+    error.lastError = apiCallError;
+    expect(ServiceError.isServiceError(error)).toBe(true);
+  });
+
+  test('returns false for a cyclic cause chain without a service failure', () => {
+    const error = new Error('Invalid parameter');
+    error.cause = error;
+    expect(ServiceError.isServiceError(error)).toBe(false);
+  });
+
   test('returns false for regular errors', () => {
     expect(ServiceError.isServiceError(new Error('Invalid parameter'))).toBe(false);
     expect(ServiceError.isServiceError(new Error('undefined is not a function'))).toBe(false);
@@ -149,6 +166,14 @@ describe('ServiceError constructor with cause parameter', () => {
     expect(serviceError.cause).toBe(original);
     expect(serviceError.message).toContain('MongoDB:');
     expect(serviceError.message).toContain('Connection refused');
+  });
+
+  test('takes the status of a retry wrapper from its last error', () => {
+    const lastError = new Error('Service Unavailable');
+    lastError.statusCode = 503;
+    const retryError = new Error('Failed after 3 attempts. Last error: Service Unavailable');
+    retryError.lastError = lastError;
+    expect(new ServiceError(undefined, { cause: retryError }).statusCode).toBe(503);
   });
 
   test('creates ServiceError without service name', () => {

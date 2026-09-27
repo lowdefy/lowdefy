@@ -70,7 +70,11 @@ class ServiceError extends Error {
     // Extract info from wrapped error if provided
     const errorCode = code ?? cause?.code;
     const errorStatusCode =
-      statusCode ?? cause?.statusCode ?? cause?.status ?? cause?.response?.status;
+      statusCode ??
+      cause?.statusCode ??
+      cause?.status ??
+      cause?.response?.status ??
+      cause?.lastError?.statusCode;
 
     // Use provided message, or enhance wrapped error's message
     const baseMessage = message ?? (cause ? ServiceError.enhanceMessage(cause) : 'Service error');
@@ -95,15 +99,17 @@ class ServiceError extends Error {
   /**
    * Checks if an error is a service error (network issues, timeouts, 5xx).
    * @param {Error} error - The error to check
+   * @param {Set} [seen] - Errors already checked, so a cyclic cause chain ends
    * @returns {boolean} True if this is a service error
    */
-  static isServiceError(error) {
-    if (!error) return false;
+  static isServiceError(error, seen = new Set()) {
+    if (!error || seen.has(error)) return false;
+    seen.add(error);
 
     // A client that retried and gave up (the AI SDK's RetryError) carries the
     // failure it retried on; its own message and fields hold no status.
     if (error.lastError) {
-      return ServiceError.isServiceError(error.lastError);
+      return ServiceError.isServiceError(error.lastError, seen);
     }
 
     // Check error code
@@ -138,7 +144,9 @@ class ServiceError extends Error {
       return true;
     }
 
-    return false;
+    // A client error that wraps the network failure underneath it (the AI
+    // SDK's "Cannot connect to API" around a refused or timed-out fetch).
+    return ServiceError.isServiceError(error.cause, seen);
   }
 
   /**
