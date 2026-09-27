@@ -96,6 +96,15 @@ test.describe('Html Block', () => {
     expect(await page.evaluate(() => window.sameDocument)).toBe(true);
   });
 
+  test('a data-copy value that differs from the text is shown in full in the label', async ({
+    page,
+  }) => {
+    await expect(page.locator('#enh_copy_long button')).toHaveAttribute(
+      'aria-label',
+      'Copy: npm install lowdefy-package-with-a-long-name --save-dev'
+    );
+  });
+
   test('data-link leaves a path that resolves to another host as a plain link', async ({
     page,
   }) => {

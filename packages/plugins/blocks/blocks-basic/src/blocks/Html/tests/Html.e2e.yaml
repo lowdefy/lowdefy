@@ -65,3 +65,4 @@ blocks:
         <div data-popover-content="more" hidden><b class="enh-popover-body">Popover body</b></div>
         <a id="enh_page_link" data-page-id="clickablehtml" data-url-query="tab=a">Clickable</a>
         <a id="enh_dot_link" href="/.//evil.example/x" data-link>Dot link</a>
+        <span id="enh_copy_long" data-copy="npm install lowdefy-package-with-a-long-name --save-dev">Install</span>

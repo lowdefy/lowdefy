@@ -16,6 +16,9 @@
     - id: buttons_basic
       type: ClickableHtml
       properties:
+        dataEvents:
+          - onSmallClick
+          - onLargeClick
         html: '<p>Pick a size: <button data-event="onSmallClick">Small</button> <button data-event="onLargeClick">Large</button></p>'
       events:
         onSmallClick:
@@ -44,6 +47,8 @@
     - id: list_rows
       type: ClickableHtml
       properties:
+        dataEvents:
+          - onRowClick
         html: '<ul style="list-style: none; padding: 0; margin: 0;"><li data-event="onRowClick" data-record-id="rec_1" style="padding: 8px; cursor: pointer; border-bottom: 1px solid var(--ant-color-border);">First record</li><li data-event="onRowClick" data-record-id="rec_2" style="padding: 8px; cursor: pointer; border-bottom: 1px solid var(--ant-color-border);">Second record</li><li data-event="onRowClick" data-record-id="rec_3" style="padding: 8px; cursor: pointer;">Third record</li></ul>'
       events:
         onRowClick:
@@ -69,6 +74,8 @@
     - id: mixed_content
       type: ClickableHtml
       properties:
+        dataEvents:
+          - onCommentClick
         html: '<p>This <a href="https://lowdefy.com" target="_blank">link</a> navigates normally, but <a href="#" data-event="onCommentClick" data-thread-id="t_9">this one</a> fires onCommentClick instead.</p>'
       events:
         onCommentClick:
@@ -99,6 +106,9 @@
           border: 1px solid var(--ant-color-border)
           background: var(--ant-color-bg-container)
       properties:
+        dataEvents:
+          - onEditClick
+          - onRemoveClick
         html: '<h4 style="margin: 0 0 8px 0;">Card</h4><p style="margin: 0 0 8px 0; color: var(--ant-color-text-secondary);">Yours to change or remove until tomorrow.</p><button data-event="onEditClick">Edit</button> <button data-event="onRemoveClick">Remove</button>'
       events:
         onEditClick:
@@ -117,6 +127,11 @@
     - id: row_actions
       type: ClickableHtml
       properties:
+        dataEvents:
+          - onEdit
+          - onDuplicate
+          - name: onDelete
+            confirm: Delete invoice INV-042?
         html: '<p>Invoice INV-042 <i data-icon="edit" data-event="onEdit" data-id="42" data-tooltip="Edit" style="cursor: pointer"></i> <span data-popover="more" style="cursor: pointer"><i data-icon="more-vertical"></i></span></p><div data-popover-content="more" hidden><p data-event="onDuplicate" data-id="42" style="cursor: pointer; margin: 0 0 8px"><i data-icon="copy"></i> Duplicate</p><p data-event="onDelete" data-id="42" style="cursor: pointer; margin: 0; color: var(--ant-color-error)"><i data-icon="delete"></i> Delete</p></div>'
       events:
         onEdit:
@@ -150,6 +165,10 @@
     - id: confirm_actions
       type: ClickableHtml
       properties:
+        dataEvents:
+          - name: onDelete
+            confirm: true
+          - onArchive
         html: '<p>INV-2026-0042 <i data-icon="delete" data-event="onDelete" data-id="42" data-tooltip="Delete" data-confirm="Delete invoice INV-2026-0042?" style="cursor: pointer; color: var(--ant-color-error)"></i> <span data-event="onArchive" data-id="42" data-confirm style="cursor: pointer; color: var(--ant-color-primary)">Archive</span></p>'
       events:
         onDelete:

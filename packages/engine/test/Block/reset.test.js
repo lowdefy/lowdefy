@@ -121,6 +121,23 @@ test('Reset copies the page state once, not once per container and list row', as
   expect(countStateCopies(copySpy)).toBe(1);
 });
 
+test('Reset clones the frozen state once for page state and once for the blocks', async () => {
+  const context = await testContext({ lowdefy, pageConfig: createPageConfig() });
+  const { reset } = context._internal.RootSlots.map;
+  const copySpy = jest.spyOn(serializer, 'copy');
+  const deserializeSpy = jest.spyOn(serializer, 'deserializeFromString');
+
+  await reset.triggerEvent({ name: 'onClick' });
+
+  expect(deserializeSpy).toHaveBeenCalledTimes(1);
+  expect(countStateCopies(copySpy)).toBe(1);
+  expect(context.state).toEqual({
+    marker: 'a',
+    text: 'hello',
+    list: [{ name: 'one' }, { name: 'two' }, { name: 'three' }],
+  });
+});
+
 test('Blocks in nested containers and list rows keep their values through SetState', async () => {
   const context = await testContext({ lowdefy, pageConfig: createPageConfig() });
   const { setState, text } = context._internal.RootSlots.map;

@@ -152,6 +152,7 @@ test('a data-event on a data-page-id link fires the event and does not navigate'
   const onDataEvent = jest.fn();
   const { container } = render(
     <HtmlComponent
+      dataEvents={['onOpen']}
       html='<a data-page-id="contacts" data-event="onOpen" data-id="1">Jane</a>'
       onDataEvent={onDataEvent}
     />

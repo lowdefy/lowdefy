@@ -14,14 +14,11 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
-
+// resetState writes the frozen state back into page state, so the blocks reset from that.
 function createReset({ context }) {
   return function reset() {
     context._internal.State.resetState();
-    context._internal.RootSlots.reset(
-      serializer.deserializeFromString(context._internal.State.frozenState)
-    );
+    context._internal.RootSlots.reset();
   };
 }
 

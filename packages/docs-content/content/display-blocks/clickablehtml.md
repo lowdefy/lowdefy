@@ -1,11 +1,14 @@
 # ClickableHtml
 
-Render raw HTML content safely, and fire a named event when an element carrying a `data-event` attribute is clicked: `data-event="onEditClick"` fires the block's `onEditClick` event, so every clickable target in one block of markup gets its own action chain without a block per button. The event object holds the element's other `data-*` attributes with snake_case keys (`data-record-id` becomes `record_id`).
+Render raw HTML content safely, and fire a named event when an element carrying a `data-event` attribute is clicked: `data-event="onEditClick"` fires the block's `onEditClick` event, so every clickable target in one block of markup gets its own action chain without a block per button. The event object holds the element's other `data-*` attributes with snake_case keys (`data-record-id` becomes `record_id`). Only the events listed in `dataEvents` fire, and each can require a confirmation. HTML built from user or request data must escape that data, so it cannot add `data-event` elements of its own: `_nunjucks` escapes `{{ values }}` unless they are marked `safe`, while `_string.concat` and `_js` do not.
 
 ```yaml
 - id: buttons_basic
   type: ClickableHtml
   properties:
+    dataEvents:
+      - onSmallClick
+      - onLargeClick
     html: '<p>Pick a size: <button data-event="onSmallClick">Small</button> <button
       data-event="onLargeClick">Large</button></p>'
   events:
@@ -35,6 +38,8 @@ Render raw HTML content safely, and fire a named event when an element carrying 
 - id: list_rows
   type: ClickableHtml
   properties:
+    dataEvents:
+      - onRowClick
     html: '<ul style="list-style: none; padding: 0; margin: 0;"><li
       data-event="onRowClick" data-record-id="rec_1" style="padding: 8px;
       cursor: pointer; border-bottom: 1px solid var(--ant-color-border);">First
@@ -67,6 +72,8 @@ Render raw HTML content safely, and fire a named event when an element carrying 
 - id: mixed_content
   type: ClickableHtml
   properties:
+    dataEvents:
+      - onCommentClick
     html: <p>This <a href="https://lowdefy.com" target="_blank">link</a> navigates
       normally, but <a href="#" data-event="onCommentClick"
       data-thread-id="t_9">this one</a> fires onCommentClick instead.</p>
@@ -99,6 +106,9 @@ Render raw HTML content safely, and fire a named event when an element carrying 
       border: 1px solid var(--ant-color-border)
       background: var(--ant-color-bg-container)
   properties:
+    dataEvents:
+      - onEditClick
+      - onRemoveClick
     html: '<h4 style="margin: 0 0 8px 0;">Card</h4><p style="margin: 0 0 8px 0;
       color: var(--ant-color-text-secondary);">Yours to change or remove until
       tomorrow.</p><button data-event="onEditClick">Edit</button> <button
@@ -120,6 +130,11 @@ Render raw HTML content safely, and fire a named event when an element carrying 
 - id: row_actions
   type: ClickableHtml
   properties:
+    dataEvents:
+      - onEdit
+      - onDuplicate
+      - name: onDelete
+        confirm: Delete invoice INV-042?
     html: '<p>Invoice INV-042 <i data-icon="edit" data-event="onEdit" data-id="42"
       data-tooltip="Edit" style="cursor: pointer"></i> <span data-popover="more"
       style="cursor: pointer"><i data-icon="more-vertical"></i></span></p><div
@@ -169,6 +184,10 @@ Render raw HTML content safely, and fire a named event when an element carrying 
 - id: confirm_actions
   type: ClickableHtml
   properties:
+    dataEvents:
+      - name: onDelete
+        confirm: true
+      - onArchive
     html: '<p>INV-2026-0042 <i data-icon="delete" data-event="onDelete" data-id="42"
       data-tooltip="Delete" data-confirm="Delete invoice INV-2026-0042?"
       style="cursor: pointer; color: var(--ant-color-error)"></i> <span
@@ -205,7 +224,8 @@ Render raw HTML content safely, and fire a named event when an element carrying 
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `html` | string | - | Content to be rendered as Html. An element with a data-event attribute fires the event it names when clicked (data-event="onEditClick" fires events.onEditClick), and its default browser action is prevented. The event object holds the element's other data-* attributes with snake_case keys, so data-event="onEditClick" data-record-id="42" gives { record_id: "42" }. Targets that are not links or buttons become keyboard focusable, and Enter or Space clicks them. A data-event inside popover content fires too, then closes the popover. A link with data-event fires the event and does not navigate. data-confirm="Delete this row?" on a data-event element asks first: only OK fires the event (bare data-confirm asks "Are you sure?"). All Html block attributes work too: data-icon, data-tooltip, data-popover, data-page-id links, data-new-tab, data-tag, data-status, data-time, data-format, data-avatar, data-copy, data-truncate and data-tone. See the HTML attributes docs page. |
+| `dataEvents` | array | - | The events the HTML may fire. A data-event whose name is not listed does nothing, and a click on it logs a console warning; with no dataEvents the HTML fires no events. List an event by name, or as { name, confirm } to make every click on it ask first. |
+| `html` | string | - | Content to be rendered as Html. An element with a data-event attribute fires the event it names when clicked (data-event="onEditClick" fires events.onEditClick), if dataEvents lists it, and its default browser action is prevented. The event object holds the element's other data-* attributes with snake_case keys, so data-event="onEditClick" data-record-id="42" gives { record_id: "42" }. Targets that are not links or buttons become keyboard focusable, and Enter or Space clicks them. A data-event inside popover content fires too, then closes the popover. A link with data-event fires the event and does not navigate. data-confirm="Delete this row?" on a data-event element asks first: only OK fires the event (bare data-confirm asks "Are you sure?"). Escape user and request data in the HTML, so it cannot add data-event elements of its own. All Html block attributes work too: data-icon, data-tooltip, data-popover, data-page-id links, data-new-tab, data-tag, data-status, data-time, data-format, data-avatar, data-copy, data-truncate and data-tone. See the HTML attributes docs page. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |

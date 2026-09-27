@@ -3,12 +3,17 @@
     {
       "version": "7.0.0",
       "from": ">=6.0.0 <7.0.0",
-      "description": "Lucide icons replace react-icons",
+      "description": "Lucide icons replace react-icons; ClickableHtml lists its data events",
       "codemods": [
         {
           "id": "react-icons-to-lucide",
           "description": "Rewrite react-icons and stale Ant Design icon names to semantic or Lucide names using the v7-0-0/react-icons-to-lucide.json table, and report glyph judgement calls, unmapped names and runtime-only icon sources (the @lowdefy/icons-react-icons compatibility set covers stored names and brand icons).",
           "path": "v7-0-0/01-react-icons-to-lucide.md"
+        },
+        {
+          "id": "clickable-html-data-events",
+          "description": "List the events each ClickableHtml block's HTML fires in its new dataEvents property (from data-event attributes and the block's events), mark data-changing events that use data-confirm as confirm: true, and report HTML built from data that inserts values unescaped.",
+          "path": "v7-0-0/02-clickable-html-data-events.md"
         }
       ]
     },

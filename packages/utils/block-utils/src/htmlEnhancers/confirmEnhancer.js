@@ -14,9 +14,35 @@
   limitations under the License.
 */
 
+function createConfirmOverlay({ fire, host, message, target }) {
+  let fired = false;
+  return {
+    kind: 'confirm',
+    target,
+    content: message,
+    onConfirm() {
+      // A second click on OK can already be queued when the first one closes it.
+      if (fired) return;
+      fired = true;
+      host.closeOverlay('confirm');
+      fire();
+    },
+    onClose(reason) {
+      // After an outside click, focus stays where the user put it.
+      if (reason !== 'outside' && target.isConnected) {
+        target.focus();
+      }
+    },
+  };
+}
+
 // data-confirm="Delete this row?" on a ClickableHtml data-event target asks
 // before the event fires. The overlay shows the message with OK and Cancel;
-// only OK fires, and only once.
+// only OK fires, and only once. An event the block's dataEvents lists with
+// confirm always asks: with its confirm message, or the target's data-confirm.
+// A confirm is never carried to new HTML (it has no retarget): the event's
+// data-* values can name a row by position, and new HTML can put another row
+// there, so an open confirm closes when the HTML changes.
 const confirmEnhancer = {
   name: 'confirm',
   attributes: ['data-confirm'],
@@ -31,31 +57,14 @@ const confirmEnhancer = {
       }
     });
   },
-  gateDataEvent({ fire, host, target }) {
-    if (!target.hasAttribute('data-confirm')) return false;
+  gateDataEvent({ confirm, confirmMessage, fire, host, target }) {
+    if (!confirm && !target.hasAttribute('data-confirm')) return false;
     // A second click on the target keeps its open confirm.
     if (host.overlay?.kind === 'confirm' && host.overlay.target === target) return true;
     const message =
-      target.getAttribute('data-confirm') || host.registration.translate('client.confirm');
-    let fired = false;
-    host.openOverlay({
-      kind: 'confirm',
-      target,
-      content: message,
-      onConfirm() {
-        // A second click on OK can already be queued when the first one closes it.
-        if (fired) return;
-        fired = true;
-        host.closeOverlay('confirm');
-        fire();
-      },
-      onClose(reason) {
-        // After an outside click, focus stays where the user put it.
-        if (reason !== 'outside' && target.isConnected) {
-          target.focus();
-        }
-      },
-    });
+      confirmMessage ??
+      (target.getAttribute('data-confirm') || host.registration.translate('client.confirm'));
+    host.openOverlay(createConfirmOverlay({ fire, host, message, target }));
     return true;
   },
 };

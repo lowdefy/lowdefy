@@ -60,9 +60,11 @@ afterEach(() => {
   console.warn.mockRestore();
 });
 
-function renderConfirm(html) {
+function renderConfirm(html, dataEvents = ['onArchive', 'onDelete', 'onOpen']) {
   const onDataEvent = jest.fn();
-  const utils = render(<HtmlComponent html={html} onDataEvent={onDataEvent} />);
+  const utils = render(
+    <HtmlComponent dataEvents={dataEvents} html={html} onDataEvent={onDataEvent} />
+  );
   return { ...utils, onDataEvent };
 }
 
@@ -231,4 +233,112 @@ test('a copy button inside a confirm-gated element only copies', async () => {
   expect(writeText).toHaveBeenCalledWith('abc');
   expect(screen.queryByTestId('overlay-confirm')).toBeNull();
   expect(onDataEvent).not.toHaveBeenCalled();
+});
+
+test.each([
+  ['its declared message', { name: 'onDelete', confirm: 'Delete it?' }, 'Delete it?'],
+  ['the default message', { name: 'onDelete', confirm: true }, 'Are you sure?'],
+])(
+  'an event dataEvents lists with confirm asks without data-confirm, with %s',
+  (_, entry, message) => {
+    const { container, onDataEvent } = renderConfirm('<i data-event="onDelete">x</i>', [entry]);
+    fireEvent.click(container.querySelector('[data-event]'));
+    expect(onDataEvent).not.toHaveBeenCalled();
+    expect(screen.getByTestId('overlay-confirm').textContent).toContain(message);
+    fireEvent.click(screen.getByText('OK'));
+    expect(onDataEvent).toHaveBeenCalledTimes(1);
+  }
+);
+
+test('a declared confirm message replaces the data-confirm message, and confirm: true keeps it', () => {
+  const html = '<i data-event="onDelete" data-confirm="Markup says">x</i>';
+  const declared = renderConfirm(html, [{ name: 'onDelete', confirm: 'Config says' }]);
+  fireEvent.click(declared.container.querySelector('[data-event]'));
+  expect(screen.getByTestId('overlay-confirm').textContent).toContain('Config says');
+  fireEvent.click(screen.getByText('Cancel'));
+  declared.unmount();
+
+  const kept = renderConfirm(html, [{ name: 'onDelete', confirm: true }]);
+  fireEvent.click(kept.container.querySelector('[data-event]'));
+  expect(screen.getByTestId('overlay-confirm').textContent).toContain('Markup says');
+});
+
+test('a declared confirm inside popover content asks before the event fires', () => {
+  const { container, onDataEvent } = renderConfirm(
+    '<span data-popover="menu">Actions</span><div data-popover-content="menu" hidden><p data-event="onDelete">Delete</p></div>',
+    [{ name: 'onDelete', confirm: 'Delete?' }]
+  );
+  fireEvent.click(container.querySelector('[data-popover]'));
+  fireEvent.click(screen.getByTestId('overlay-popover').querySelector('[data-event]'));
+  expect(onDataEvent).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByText('OK'));
+  expect(onDataEvent).toHaveBeenCalledTimes(1);
+});
+
+test('without enhancements, an event that requires a confirm does not fire', () => {
+  registerHtmlEnhancements(null);
+  const { container, onDataEvent } = renderConfirm('<i data-event="onDelete">x</i>', [
+    { name: 'onDelete', confirm: true },
+    'onOpen',
+  ]);
+  fireEvent.click(container.querySelector('[data-event]'));
+  expect(onDataEvent).not.toHaveBeenCalled();
+  expect(console.warn).toHaveBeenCalledWith(
+    'data-event="onDelete" did not fire: it requires a confirm.'
+  );
+});
+
+// Rows whose delete buttons carry their position, as a template loop writes them.
+function rowsHtml({ names, note = '' }) {
+  const rows = names
+    .map(
+      (name, index) =>
+        `<p>${name} <button data-event="onDelete" data-index="${index}" data-confirm="Delete?">Delete</button></p>`
+    )
+    .join('');
+  return `${note}${rows}`;
+}
+
+test.each([
+  ['the rows are reordered', { names: ['Bob', 'Alice'] }],
+  ['other text in the HTML changes', { names: ['Alice', 'Bob'], note: '<p>2 rows</p>' }],
+  ['the element is gone', { names: [] }],
+])('an open confirm closes without firing when %s', (_, next) => {
+  const onDataEvent = jest.fn();
+  const dataEvents = ['onDelete'];
+  const { container, rerender } = render(
+    <HtmlComponent
+      dataEvents={dataEvents}
+      html={rowsHtml({ names: ['Alice', 'Bob'] })}
+      onDataEvent={onDataEvent}
+    />
+  );
+  fireEvent.click(container.querySelector('[data-index="0"]'));
+  expect(screen.getByTestId('overlay-confirm')).toBeDefined();
+  rerender(
+    <HtmlComponent dataEvents={dataEvents} html={rowsHtml(next)} onDataEvent={onDataEvent} />
+  );
+  expect(screen.queryByTestId('overlay-confirm')).toBeNull();
+  expect(onDataEvent).not.toHaveBeenCalled();
+});
+
+test.each([
+  ['an empty confirm message', ''],
+  ['a confirm an operator left null', null],
+])('%s in dataEvents still asks, with the default message', (_, confirm) => {
+  const { container, onDataEvent } = renderConfirm('<i data-event="onDelete">x</i>', [
+    { name: 'onDelete', confirm },
+  ]);
+  fireEvent.click(container.querySelector('[data-event]'));
+  expect(onDataEvent).not.toHaveBeenCalled();
+  expect(screen.getByTestId('overlay-confirm').textContent).toContain('Are you sure?');
+});
+
+test('confirm: false in dataEvents fires without asking', () => {
+  const { container, onDataEvent } = renderConfirm('<i data-event="onDelete">x</i>', [
+    { name: 'onDelete', confirm: false },
+  ]);
+  fireEvent.click(container.querySelector('[data-event]'));
+  expect(onDataEvent).toHaveBeenCalledTimes(1);
+  expect(screen.queryByTestId('overlay-confirm')).toBeNull();
 });

@@ -9,7 +9,7 @@ The attributes work on HTML from anywhere: page config, `_nunjucks` templates, r
 | `data-icon="edit"` | any element | Renders the icon inside the element. |
 | `data-tooltip="Text"` | any element | Shows a tooltip on hover and keyboard focus. |
 | `data-popover="id"` | any element | Click, Enter or Space toggles a popover showing the element with `data-popover-content="id"`. |
-| `data-event="onName"` | any element | `ClickableHtml` only: fires the block event `onName`. |
+| `data-event="onName"` | any element | `ClickableHtml` only: fires the block event `onName`, when the block's `dataEvents` lists it. |
 | `data-page-id="page"` | `<a>` | A link to a page of the app, opened without reloading the app. |
 | `data-url-query="key=value"` | `<a data-page-id>` | The link's query string. |
 | `data-link` | `<a href="/path">` | Opens an app path without reloading the app. |
@@ -25,6 +25,8 @@ The attributes work on HTML from anywhere: page config, `_nunjucks` templates, r
 | `data-confirm="Delete?"` | `data-event` element | `ClickableHtml` only: asks before the event fires. |
 
 Attribute values are plain text, names, numbers or colours. They are never read as HTML, templates or code, and HTML is sanitised before the attributes are applied.
+
+Sanitising keeps every `data-*` attribute, so markup that reaches the HTML from user or request data can use these attributes too. Escape that data when you build the HTML: `_nunjucks` escapes `{{ values }}` unless they are marked `safe`, while `_string.concat` and `_js` do not escape.
 
 ## Icons
 
@@ -46,6 +48,9 @@ An icon on its own is decorative to screen readers unless the element has a `dat
 - id: row_actions
   type: ClickableHtml
   properties:
+    dataEvents:
+      - onEdit
+      - onArchive
     html: >
       <i data-icon="edit" data-event="onEdit" data-id="42" data-tooltip="Edit"></i>
       <span data-popover="more">More <i data-icon="chevron-down"></i></span>
@@ -65,11 +70,39 @@ An icon on its own is decorative to screen readers unless the element has a `dat
           archiving: { _event: id }
 ```
 
-Popovers close on a click outside, on Escape, on a second click on the trigger, and after a `data-event` inside them fires.
+Popovers close on a click outside, on Escape, on a second click on the trigger, and after a `data-event` inside them fires. When the block's HTML changes while a popover is open, for example when a request refreshes the data it is built from, the popover stays open, showing the new content, as long as the new HTML still has the trigger: an element with the same tag and the same `data-*` attributes. Otherwise it closes.
 
 ## Events
 
 In `ClickableHtml`, an element with `data-event="onName"` fires the block event `onName` when clicked, and its default browser action is prevented. The event object holds the element's other `data-*` attributes with snake_case keys, so `data-event="onEdit" data-record-id="42"` gives `{ record_id: "42" }`. Targets that are not links or buttons become keyboard focusable, and Enter or Space clicks them. `Html` fires no events.
+
+The block's `dataEvents` property lists the events its HTML may fire. A `data-event` whose name is not listed does nothing, and a click on it logs a console warning; with no `dataEvents` the HTML fires no events. List an event by name, or as `{ name, confirm }` to make every click on it ask first (see [Confirm before an event](#confirm-before-an-event)):
+
+```yaml
+- id: rows
+  type: ClickableHtml
+  properties:
+    dataEvents:
+      - onEdit
+      - name: onDelete
+        confirm: Delete this row?
+    html:
+      _nunjucks:
+        template: |
+          {% for row in rows %}
+            <p>{{ row.name }}
+              <i data-icon="edit" data-event="onEdit" data-id="{{ row._id }}"></i>
+              <i data-icon="delete" data-event="onDelete" data-id="{{ row._id }}"></i>
+            </p>
+          {% endfor %}
+        on:
+          rows:
+            _request: get_rows
+```
+
+An event's `data-*` attributes come from the HTML, so treat them as user input: the event's actions should check that the user may act on the record they name, as they would for any other input. HTML built from user or request data must escape that data (see above), so the data cannot add `data-event` elements of its own.
+
+A `ClickableHtml` block in [dynamic page content](/dynamic-page-content) comes from an API endpoint at page load, often from config stored in a database, so it needs `dataEvents` there too: `lowdefy upgrade` cannot reach config that is not in the app's files.
 
 ## Links
 
@@ -183,7 +216,7 @@ On an `<img>`, the initials replace the image when it has no `src` or fails to l
 <span data-copy="{{ ticket_id }}">Ticket #{{ ticket_id }}</span>
 ```
 
-After a copy the icon shows a check, its tooltip says "Copied" and screen readers hear "Copied". When the copied value differs from the text, the button's label shows it ("Copy: 42"). A copy click only copies: it does not trigger a surrounding `data-event`, link or grid row click. Copying needs a secure (HTTPS or localhost) page. The button labels use the `client.copy`, `client.copyValue`, `client.copied` and `client.copyFailed` [translation keys](/i18n).
+After a copy the icon shows a check, its tooltip says "Copied" and screen readers hear "Copied". When the copied value differs from the text, the button's label shows it in full ("Copy: 42"), with invisible characters such as zero-width spaces and direction marks spelled out as `[U+200B]`, so the HTML cannot show one text and copy another unnoticed. A copy click only copies: it does not trigger a surrounding `data-event`, link or grid row click. Copying needs a secure (HTTPS or localhost) page. The button labels use the `client.copy`, `client.copyValue`, `client.copied` and `client.copyFailed` [translation keys](/i18n).
 
 ## Truncation
 
@@ -222,6 +255,8 @@ In `ClickableHtml`, `data-confirm` on a `data-event` element asks before the eve
 - id: rows
   type: ClickableHtml
   properties:
+    dataEvents:
+      - onDelete
     html: >
       <i data-icon="delete" data-event="onDelete" data-id="42"
          data-tooltip="Delete" data-confirm="Delete this row?"></i>
@@ -238,6 +273,12 @@ In `ClickableHtml`, `data-confirm` on a `data-event` element asks before the eve
 A click, Enter or Space opens a confirmation with the message, OK and Cancel. Only OK fires the event, once. Cancel, Escape and a click outside close it without firing. Focus moves to Cancel when it opens, so a stray key press never confirms; Tab to OK and press Enter to confirm. Focus returns to the element afterwards; after OK inside a popover, it returns to the popover's trigger. Clicking the element again while its confirmation is open keeps it open.
 
 With no value the message is "Are you sure?" (the `client.confirm` [translation key](/i18n)); OK and Cancel follow the app's locale. The event object includes `confirm` along with the element's other `data-*` attributes. A confirm inside a popover keeps the popover open until OK fires the event. `data-confirm` has no effect in `Html`, or on an element without `data-event`.
+
+`data-confirm` only asks where the markup says so. For an event that deletes or changes data, list it in `dataEvents` with `confirm`, so every click on it asks whatever the markup says: `confirm: true` asks with the element's `data-confirm` message or "Are you sure?", and a string is the message, in place of the element's.
+
+`confirm` asks whenever it is set to anything but `false`, so an empty message or one an operator could not find (`null`) still asks, with the element's or the default message.
+
+When the block's HTML changes while a confirmation is open, the confirmation closes without firing. An event's `data-*` values can name a record by its position (`data-index="{{ loop.index0 }}"`), and new HTML can put another record there, so OK could otherwise act on a record the user did not choose. Click the element again to confirm against the new HTML.
 
 ## Plugin blocks
 

@@ -18,6 +18,9 @@ blocks:
   - id: clickable_basic
     type: ClickableHtml
     properties:
+      dataEvents:
+        - onGreetClick
+        - onWaveClick
       html: '<p>Hello <button data-event="onGreetClick" data-user-id="u_1">World</button> <button data-event="onWaveClick" data-user-id="u_2">Wave</button></p>'
     events:
       onGreetClick:
@@ -71,6 +74,8 @@ blocks:
   - id: clickable_confirm
     type: ClickableHtml
     properties:
+      dataEvents:
+        - onDelete
       html: '<button id="confirm_delete" data-event="onDelete" data-row-id="7" data-confirm="Delete row 7?">Delete</button> <button id="proto_event" data-event="__proto__">Proto</button>'
     events:
       onDelete:
@@ -94,4 +99,90 @@ blocks:
               - _state:
                   key: delete_count
                   default: 0
+          - '</span>'
+
+  - id: clickable_allowlist
+    type: ClickableHtml
+    properties:
+      dataEvents:
+        - onListedClick
+      html: '<span id="listed_target" data-event="onListedClick">Listed</span> <span id="unlisted_target" data-event="onUnlistedClick">Unlisted</span>'
+    events:
+      onListedClick:
+        - id: set_listed
+          type: SetState
+          params:
+            allowlist_fired: listed
+      onUnlistedClick:
+        - id: set_unlisted
+          type: SetState
+          params:
+            allowlist_fired: unlisted
+
+  - id: clickable_declared_confirm
+    type: ClickableHtml
+    properties:
+      dataEvents:
+        - name: onRemove
+          confirm: Remove row 3?
+      html: '<button id="declared_remove" data-event="onRemove" data-row-id="3">Remove</button>'
+    events:
+      onRemove:
+        - id: set_removed
+          type: SetState
+          params:
+            removed_row:
+              _event: row_id
+
+  - id: clickable_refresh
+    type: ClickableHtml
+    properties:
+      dataEvents:
+        - onRefreshSoon
+        - onRefreshDelete
+      html:
+        _string.concat:
+          - '<button id="refresh_soon" data-event="onRefreshSoon">Refresh soon</button><p id="refresh_count">Refreshed '
+          - _state:
+              key: refresh_count
+              default: 0
+          - '</p><button id="refresh_delete" data-event="onRefreshDelete" data-id="5" data-confirm="Delete 5?">Delete</button> <span id="refresh_more" data-popover="more">More</span><div data-popover-content="more" hidden><span class="refresh-menu">Menu after '
+          - _state:
+              key: refresh_count
+              default: 0
+          - '</span></div>'
+    events:
+      onRefreshSoon:
+        - id: wait
+          type: Wait
+          params:
+            ms: 1000
+        - id: refresh
+          type: SetState
+          params:
+            refresh_count: 1
+      onRefreshDelete:
+        - id: set_refresh_deleted
+          type: SetState
+          params:
+            refresh_deleted:
+              _event: id
+
+  - id: clickable_events_result
+    type: Html
+    properties:
+      html:
+        _string.concat:
+          - '<span id="allowlist_fired">'
+          - _state:
+              key: allowlist_fired
+              default: ''
+          - '</span><span id="removed_row">'
+          - _state:
+              key: removed_row
+              default: ''
+          - '</span><span id="refresh_deleted">'
+          - _state:
+              key: refresh_deleted
+              default: ''
           - '</span>'

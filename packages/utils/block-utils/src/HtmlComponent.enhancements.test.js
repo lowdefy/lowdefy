@@ -161,6 +161,7 @@ test('HtmlComponent fires onDataEvent with the other data attributes as snake_ca
   const onDataEvent = jest.fn();
   const { container } = render(
     <HtmlComponent
+      dataEvents={['onEditClick']}
       html='<a href="/x" data-event="onEditClick" data-record-id="42">Edit</a>'
       onDataEvent={onDataEvent}
     />
@@ -176,7 +177,11 @@ test('HtmlComponent fires onDataEvent with the other data attributes as snake_ca
 test('HtmlComponent makes data-event targets focusable without changing their role', async () => {
   const onDataEvent = jest.fn();
   const { container } = render(
-    <HtmlComponent html='<span data-event="onSave">Save</span>' onDataEvent={onDataEvent} />
+    <HtmlComponent
+      dataEvents={['onSave']}
+      html='<span data-event="onSave">Save</span>'
+      onDataEvent={onDataEvent}
+    />
   );
   const target = container.querySelector('[data-event]');
   expect(target.getAttribute('tabindex')).toBe('0');
@@ -191,6 +196,7 @@ test('HtmlComponent fires a data-event inside a popover and closes the popover',
   const onDataEvent = jest.fn();
   const { container } = render(
     <HtmlComponent
+      dataEvents={['onArchive']}
       html='<span data-popover="menu">Actions</span><div data-popover-content="menu" hidden><p data-event="onArchive" data-id="7">Archive</p></div>'
       onDataEvent={onDataEvent}
     />
@@ -244,4 +250,92 @@ test('HtmlComponent leaves HTML with only other data attributes on the plain pat
     <HtmlComponent html='<span data-testid="cell" title="Native">x</span>' />
   );
   expect(container.querySelector('[data-testid="cell"]').getAttribute('title')).toBe('Native');
+});
+
+test('HtmlComponent fires only the data events dataEvents lists, and warns about the others', () => {
+  const onDataEvent = jest.fn();
+  const { container } = render(
+    <HtmlComponent
+      dataEvents={['onEdit', { name: 'onView' }]}
+      html='<span id="edit" data-event="onEdit">E</span><span id="view" data-event="onView">V</span><span id="drop" data-event="onDrop">D</span>'
+      onDataEvent={onDataEvent}
+    />
+  );
+  fireEvent.click(container.querySelector('#drop'));
+  expect(onDataEvent).not.toHaveBeenCalled();
+  expect(console.warn).toHaveBeenCalledWith(
+    `data-event="onDrop" did not fire: the block's dataEvents does not list it.`
+  );
+  fireEvent.click(container.querySelector('#edit'));
+  fireEvent.click(container.querySelector('#view'));
+  expect(onDataEvent.mock.calls.map(([dataEvent]) => dataEvent.name)).toEqual(['onEdit', 'onView']);
+  expect(container.querySelector('#edit').getAttribute('tabindex')).toBe('0');
+  expect(container.querySelector('#drop').hasAttribute('tabindex')).toBe(false);
+});
+
+test.each([
+  ['no dataEvents', undefined, false],
+  ['an empty dataEvents', [], false],
+  ['no enhancements registered', undefined, true],
+])('HtmlComponent with %s fires no data events', (_, dataEvents, unregistered) => {
+  if (unregistered) registerHtmlEnhancements(null);
+  const onDataEvent = jest.fn();
+  const { container } = render(
+    <HtmlComponent
+      dataEvents={dataEvents}
+      html='<button data-event="onDelete" data-id="1">Delete</button>'
+      onDataEvent={onDataEvent}
+    />
+  );
+  const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
+  act(() => {
+    container.querySelector('button').dispatchEvent(clickEvent);
+  });
+  expect(onDataEvent).not.toHaveBeenCalled();
+  expect(clickEvent.defaultPrevented).toBe(true);
+});
+
+test('HtmlComponent applies dataEvents to data events inside popover content', () => {
+  const onDataEvent = jest.fn();
+  const { container } = render(
+    <HtmlComponent
+      dataEvents={['onArchive']}
+      html='<span data-popover="menu">Actions</span><div data-popover-content="menu" hidden><p id="purge" data-event="onPurge">Purge</p><p id="archive" data-event="onArchive">Archive</p></div>'
+      onDataEvent={onDataEvent}
+    />
+  );
+  fireEvent.click(container.querySelector('[data-popover]'));
+  fireEvent.click(screen.getByTestId('overlay-popover').querySelector('#purge'));
+  expect(onDataEvent).not.toHaveBeenCalled();
+  expect(screen.getByTestId('overlay-popover')).toBeDefined();
+  fireEvent.click(screen.getByTestId('overlay-popover').querySelector('#archive'));
+  expect(onDataEvent).toHaveBeenCalledWith({ name: 'onArchive', event: {} });
+});
+
+test('an open popover stays open on its trigger, with the new content, when the HTML changes', () => {
+  const html = (label) =>
+    `<p>${label}</p><span data-popover="menu">Actions</span><div data-popover-content="menu" hidden>${label} menu</div>`;
+  const { container, rerender } = render(<HtmlComponent html={html('First')} />);
+  fireEvent.click(container.querySelector('[data-popover]'));
+  expect(screen.getByTestId('overlay-popover').textContent).toContain('First menu');
+
+  rerender(<HtmlComponent html={html('Second')} />);
+  const trigger = container.querySelector('[data-popover]');
+  expect(screen.getByTestId('overlay-popover').textContent).toContain('Second menu');
+  expect(trigger.getAttribute('aria-expanded')).toBe('true');
+  fireEvent.click(trigger);
+  expect(screen.queryByTestId('overlay-popover')).toBeNull();
+  expect(trigger.getAttribute('aria-expanded')).toBe('false');
+});
+
+test('an open popover closes when the new HTML no longer has its trigger', () => {
+  const { container, rerender } = render(
+    <HtmlComponent html='<span data-popover="menu">Actions</span><div data-popover-content="menu" hidden>Menu</div>' />
+  );
+  fireEvent.click(container.querySelector('[data-popover]'));
+  expect(screen.getByTestId('overlay-popover')).toBeDefined();
+  rerender(
+    <HtmlComponent html='<span data-popover="other">Other</span><div data-popover-content="other" hidden>Other menu</div>' />
+  );
+  expect(screen.queryByTestId('overlay-popover')).toBeNull();
 });
