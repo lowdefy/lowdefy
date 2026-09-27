@@ -2883,7 +2883,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "85184971b7ffa6cdcbdaad10f9d35fd710e44c5dd2f3bed5ec49653580ff5da3"
+      "hash": "883e778e3a89605df2e63871130c2857b98cde60599eae3b88b5c13ef9b80360"
     },
     "concepts/menus": {
       "files": [
@@ -3180,7 +3180,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "f94f422b5c34b6ca2f5118dc5ab7554dc65d1ffd42a4aa16fac5746a1ed8f54a"
+      "hash": "ee7a4e19f9272c3f412443d1bbd1963e3c293940510b52bdd3729df21e293510"
     },
     "concepts/html-attributes": {
       "files": [
@@ -3256,7 +3256,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "c0ab2c9a1cc9cf956c94dad8dab13517fa2c746959b74c05d7c3ae047b6664c1"
+      "hash": "f1c57f2018d44f58fee4a24dc0d5bf5e78d9093031790099b37de97263820e65"
     },
     "concepts/ai-agent-docs": {
       "files": [
@@ -3302,7 +3302,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "762df22c9c1107983e1946c92358e3b24996d375a6af9ebfeab8b9415f6fb806"
+      "hash": "0ff48aecda89b2b5213eb9cfe03edbced3e0ac45a2c2f60987fb78a8e8f8afbe"
     },
     "agents/agent-endpoint-tools": {
       "files": [
@@ -3451,7 +3451,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "f60839d65bc1cf567af6768a2836336e57d7c585df6f160a30aa0607437bf0a0"
+      "hash": "a70bafae2b77996a695c710f57712e99d18912ccf27468ae698bead0000d2c24"
     },
     "deployment/node-server": {
       "files": [
@@ -3465,7 +3465,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "a007f0d8f15a9ec7995a26af316492833a7bb9528fd31e7c1fadea291aaf9e3e"
+      "hash": "ecabbb75ee33addd531e276817e493b59f7d4e92ba6843a81858d2c0eed98693"
     },
     "deployment/vercel": {
       "files": [
@@ -3479,7 +3479,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "96e4576402ceaaee43a8779b0d593bf3309c47c4d88c45c6a1404cdb59efb96b"
+      "hash": "37c8e282969571cb13e99b5021a700a776a40b93d00a1c3f1906ce68ea2160ef"
     },
     "deployment/deployment-environments": {
       "files": [
@@ -3493,7 +3493,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "ba009df0084befcb00aada36c6669042fd5d8519ae8b847c5a903cdd053b5e41"
+      "hash": "c29057864562642118ebcc71ea01582b6471c33ca75f7b3167211e28ea324af7"
     },
     "plugins/plugins-introduction": {
       "files": [
@@ -3508,7 +3508,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "6d0c3b3f74e997c94e5c55a2d08ebb247e56e64160c3b56b65b58d853a0c74ee"
+      "hash": "e2cca20f20579089d1cc80734fad4fc0d46ec6c3a9e7cf830aab406f41a1de52"
     },
     "plugins/plugins-dev": {
       "files": [
@@ -3655,7 +3655,7 @@
         "users/two-factor.yaml",
         "version.yaml"
       ],
-      "hash": "c406f4c0109abc22b40fc4da1c0024d26ee546b978fe31f2d02f2bb24cb54f58"
+      "hash": "dcffec640d07d012044cc1caf756e06e7be25a6fe4bb9ad7de39b7a2b53ed86b"
     },
     "user-authentication/protected-pages-apis": {
       "files": [
@@ -3699,7 +3699,7 @@
         "users/organizations.yaml",
         "version.yaml"
       ],
-      "hash": "5ff08c4351bc1fa796fbe1010fed694c975c44e30fa1c46af6bcc6abe8ee57d7"
+      "hash": "147bf3fb2f89d217f6291085ab0784d3e89d730c812d0c160ae81066e89941aa"
     },
     "user-authentication/auth-steps": {
       "files": [
@@ -3757,7 +3757,7 @@
         "users/auth-configuration.yaml",
         "version.yaml"
       ],
-      "hash": "34c68de65430196bf0dab9e17a1c2ab2e777efcf1c1879915db2c3c7e1d0c35e"
+      "hash": "dd713266552cf5e56d9541e5fc3150dda534da420c0b0763694c3df02f51ec24"
     },
     "provider-reference/auth-js-providers": {
       "files": [
@@ -3840,7 +3840,7 @@
         "testing/config-tests.yaml",
         "version.yaml"
       ],
-      "hash": "48d74df79e0ffeda4060f117fa836429926420af41a80c80701ebe1ae0e18b33"
+      "hash": "5603674d73ea45d19b043f4a30bf6a14d1bdadd00bb07772e0a4c6b7b11beecf"
     },
     "testing/e2e-introduction": {
       "files": [
@@ -4507,7 +4507,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "f0abffa86e047b827380fa40bf3da5d015a5fa809a4f1f9566fbe06287e1f267"
+      "hash": "65038ab92d868ede1204c76757d53d9789698693b118dceb10b3fe14a166be49"
     },
     "input-blocks/tiptapmentioninput": {
       "files": [
@@ -4525,7 +4525,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "4921999938af3c01f930bcd526ca858a70a1cba7f3616f7a4511580ec6ebdc14"
+      "hash": "9a0aa21594db4211aac0362d133c693a08e29429b93d6d75353f4b24cbbbb1c4"
     },
     "input-blocks/titleinput": {
       "files": [
@@ -4645,7 +4645,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "b9bb9e3efc231df597713386fed92dd94cb56eb28c8a0d9e00a77a7785f6e851"
+      "hash": "b95cbdfc8256700ed04756069d4c39199ef1c8d4fe4d459af4b9ef20e26d269f"
     },
     "display-blocks/avatar": {
       "files": [
@@ -4662,7 +4662,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "ef87ad7423913d639babf16442c39d96edc482fb449462aebd4cd6522e8281e7"
+      "hash": "8720375baace3aeca0650f5ae3ccf07aa3f6a464b7984b223e444a49135ac624"
     },
     "display-blocks/breadcrumb": {
       "files": [
@@ -4696,7 +4696,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "dd6439bfdf2858b77910712d2b1f57ea2b7ea0732e50d34f64f67f33cc4afbcf"
+      "hash": "ef2efda17ef6eceb1d60185d7ba620ee08b07423695ec6ae6aba31e49e9d2c99"
     },
     "display-blocks/calendar": {
       "files": [
@@ -4917,7 +4917,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "94a523abe557e1889ad4096477421f8e48ec9045eb4b8a776d7a39875f355afd"
+      "hash": "6dd18c8a677eb30ddfea23bd20babf39247d3435041beca294d837b3e65086f8"
     },
     "display-blocks/html": {
       "files": [
@@ -4952,7 +4952,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "6d647768a1912fcb475ff6695dd406219197aec5a6a2ed206527168d76c0ca80"
+      "hash": "d909a5767ce987d8cd2823d6b1a1691f5aa0edd9cc37e0e066502bad9edd6edf"
     },
     "display-blocks/img": {
       "files": [
@@ -4969,7 +4969,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "0c5dbd880030f1831eab0790be52666a8a407bdec404efa52a8734d830694ffa"
+      "hash": "b94d7db05ffa116380231668e3fb61af969c5421be3fef631e7f61b6d88e0312"
     },
     "display-blocks/markdown": {
       "files": [
@@ -5122,7 +5122,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "326923fbe90397b25cd00f4434b6ef12cf5d8b6a798622791e6645c8b75417d6"
+      "hash": "adc0628af720c052df907e33e481ca573189100d1c6f291fb1a40c9182de157c"
     },
     "display-blocks/s3download": {
       "files": [
@@ -5174,7 +5174,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "1949469a974d3098928d27b1c25717a2f2a1be98d6550006d3062a3ec96d2577"
+      "hash": "ee45e35d4a2abbf7da2cc100eca2cc9be111f51e90c267035f77d24d599c0170"
     },
     "display-blocks/skeleton": {
       "files": [
@@ -5344,7 +5344,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "0468ab0c90ea83aa7ae828c77d0d939a8cdba9719caa05ddc8bbf33b1ae8f349"
+      "hash": "db455b0bfb060f0c7e5055ac583de75b1a03b3cacf9641bbc9b7fbfed5ac4bee"
     },
     "container-blocks/alert": {
       "files": [
@@ -5565,7 +5565,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "5012657ab27a40817c4aec377a610dab01b449e7f3fcb2a5bec7312d37178f64"
+      "hash": "5e7fbdf36ad8a80b7d3fdb98f7174ba0dc4da3e6479c451bfa98d630fadfdc2d"
     },
     "container-blocks/flex": {
       "files": [
@@ -5667,7 +5667,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "bbc8e804e5a049f20f46bdf38c36f2d09df1b98ff76937d611c1b3d9e25285be"
+      "hash": "9d71ce8dc35ae0488810a18b5b52117db8f2269a0a4c3c816719c6d5b1b93570"
     },
     "container-blocks/label": {
       "files": [
@@ -5735,7 +5735,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "c79ec11dc1c58aac969e67a3d0368f12e7c909b5927ead48f4bf4bf869871837"
+      "hash": "bbe3512ce2cc919f9dcd7200eca3650f58cc0035aa2d5003dc286eacc38236e4"
     },
     "container-blocks/modal": {
       "files": [
@@ -5769,7 +5769,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "30c017963672e0dbffe5bd336dd76aab24047b2277c339543884b46191493917"
+      "hash": "2d865eec3a0413492225fa89f8d94a47a84291bfdda716380c612f54e537fe85"
     },
     "container-blocks/pagesidebarlayout": {
       "files": [
@@ -5786,7 +5786,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "08872f0eb816566aefb8bba06ddd98b79dc56cff635bbb8734b2a7751061adf1"
+      "hash": "48b039c3892c8ce7657370041a1620de4209e5bb3d606496a2aff3bd536702fc"
     },
     "container-blocks/pagesidermenu": {
       "files": [
@@ -5803,7 +5803,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "4a05daa5c9c58536dffb5b74deb74a44fdb7915b34999c785ca0e2aeaea2f2cf"
+      "hash": "e21ff633208213377e7ee3b05ebb120ac82e45d74eae4adca7c6e7ef860fe800"
     },
     "container-blocks/popover": {
       "files": [
@@ -5956,7 +5956,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "3221c8445c0f135609c20b98e36f4d852a4d528aa49fa0fb429c8489ccbac5ce"
+      "hash": "a30a234c339cf341e7bcefb49519e0971977ee2f46dff1482c203ae7ca28adae"
     },
     "list-blocks/controlledlist": {
       "files": [
@@ -6039,7 +6039,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "540740ddc80eee6fe0176c3ec82921b78127705aa9a40e4734b6af036170728c"
+      "hash": "9de3a091e91e79a58847af829dd2fa6b4f334cce5317c0dfca4d8258d7a333d7"
     },
     "connections/anthropic": {
       "files": [
@@ -6054,7 +6054,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "012d6fa4e9f4be1b829a4513c50d5551d61366688f3d9183d8e38a81581c7ba3"
+      "hash": "b6e5f093191b330e916742a5140c64fa7b42341d4b2fd0c9b338bf5603765a93"
     },
     "connections/google": {
       "files": [
@@ -6069,7 +6069,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "c9949dd80a828c241177762606455f0f9290703ba8e2c3ac108bd960c49aca36"
+      "hash": "8adfc2c472f9d8d3a4ead032834a75264a05732c8337f71f59629464db96b727"
     },
     "connections/mcp": {
       "files": [
@@ -6098,7 +6098,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "597ee02c2037e8c29d964d5c2964011a9eac1a80d1be65b1ca4859dea4dda061"
+      "hash": "d3813df273d93c50a1f4e05b084e8382f714374c9257c27cd8c6ae54ef963313"
     },
     "connections/amazonredshift": {
       "files": [
@@ -7242,7 +7242,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "3d33fe6c7630224ac82ee092551d9f84a5e15e38357e753bab889c892c861aa5"
+      "hash": "1d090eacbdf9acaa3d824fe644de34eb4c5a7c55fa22fbb15f1716d6cf451da7"
     },
     "operators/_event": {
       "files": [
@@ -7737,7 +7737,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "ecf06ab4ed5e0e1d8452f44115159eedf48f8142806676979d9525d6ea229a4c"
+      "hash": "3eb043b0e90813f0bea8273adfbe320046322d02860c3b2d2e9de4a59b0bd954"
     },
     "operators/_or": {
       "files": [
@@ -8292,7 +8292,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "fe017cdeae93d9f2e9d8b3272765ab9843dc91e57bf0e7ee4ae8643ab68ea22a"
+      "hash": "5ca9957c737e75709570d35a4dbb9aedd6563f2d381e9364d0761e9a49bc4fd8"
     },
     "migration/v6-to-v7": {
       "files": [
@@ -8308,7 +8308,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "66339ce859114fad526a08e75f8fb21ce42fe002b3166da9d2b5cb22d028c1de"
+      "hash": "860d9d44ad273e00234a40897de72f322d7070b0724b2f923f7134f6b15e3658"
     },
     "migration/v3-to-v4": {
       "files": [
