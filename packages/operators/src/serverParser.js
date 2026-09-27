@@ -116,7 +116,11 @@ class ServerParser {
           !isLiteralPassThrough({ op, methodName }) &&
           !isCheckedContentRead({ literalData, op, params })
         ) {
-          const found = findOperatorInData(res);
+          // The result is replaced by its serialized form, the one scanned, so the
+          // page sends exactly what was checked: a class instance's toJSON runs once,
+          // here, and no later copy can read other keys or call it again.
+          const sent = serializer.serialize(res, { skipMarkers: true });
+          const found = findOperatorInData(sent);
           if (found) {
             const operatorName = methodName ? `${op}.${methodName}` : op;
             throw new ConfigError(
@@ -125,6 +129,7 @@ class ServerParser {
               }. Operators in endpoint data do not run in Dynamic block content. Write client operators in the endpoint's :return config instead.`
             );
           }
+          return sent;
         }
         return res;
       } catch (e) {

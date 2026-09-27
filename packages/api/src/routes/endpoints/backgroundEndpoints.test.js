@@ -331,6 +331,30 @@ test('webhook endpoint response is the :return value exactly, without build mark
   expect(JSON.stringify(result.response)).toBe('{"validationResponse":"c-1","accepted":["a"]}');
 });
 
+test('webhook endpoint response sends a date as an ISO string, not the serializer form', async () => {
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    readConfigFile: jest.fn((path) =>
+      path === 'api/dated_ep.json'
+        ? {
+            endpointId: 'dated_ep',
+            type: 'Api',
+            webhook: true,
+            routine: { ':return': { receivedAt: { _date: '2026-01-02T03:04:05.000Z' } } },
+          }
+        : null
+    ),
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'dated_ep',
+    body: {},
+    query: {},
+    headers: {},
+  });
+  expect(JSON.stringify(result.response)).toBe('{"receivedAt":"2026-01-02T03:04:05.000Z"}');
+});
+
 // Nested CallApi authorization in system contexts — a routine already running was
 // authorized at its entry point (CRON_SECRET / webhook token), so CallApi steps to
 // protected endpoints must not be re-gated on a (missing) user session.
@@ -611,10 +635,12 @@ test('webhook whose verify gate passes blanket-passes a nested protected CallApi
 
 // A verifier connection whose type implements the tenant scoping contract -
 // under policy: tenant the wall engages for it like for any connection.
+const walledStubVerify = jest.fn(({ request }) => request.token === 'good');
 const walledVerifierConnections = {
   StubVerifyConnection: {
     ...verifierConnections.StubVerifyConnection,
     meta: { tenant: true },
+    requests: { StubVerify: walledStubVerify },
   },
 };
 
@@ -649,7 +675,7 @@ test('webhook verifier on a walled connection fails closed to unauthorized, neve
   expect(readConfigFile).not.toHaveBeenCalledWith('api/child_ep.json');
 });
 
-test('webhook verifier on a walled connection with tenant none opts out and passes', async () => {
+test('webhook verifier on a walled connection with tenant none opts out, carries the write guard and passes', async () => {
   const readConfigFile = createWebhookReadConfigFile({
     parent: {
       endpointId: 'parent_hook',
@@ -674,6 +700,11 @@ test('webhook verifier on a walled connection with tenant none opts out and pass
   });
   expect(result.success).toBe(true);
   expect(result.response).toEqual({ child: 'child_ran' });
+  // Unscoped like any tenant: none request, so a verifier that writes (a
+  // replay nonce, say) must be held to the same organization-id guard.
+  expect(walledStubVerify).toHaveBeenCalledWith(
+    expect.objectContaining({ tenant: null, tenantGuard: { field: 'organization_id' } })
+  );
 });
 
 // Detached carries the dispatcher's identity (Decision 4). The child endpoint
@@ -752,6 +783,40 @@ test('detached run dispatched by a user is re-checked against their roles - a fo
   expect(result.success).toBe(false);
   expect(serializer.deserialize(result.error).message).toContain('does not exist');
 });
+
+test.each([
+  ['a system dispatcher', { user: null, system: true }, true],
+  [
+    'a user with the target roles',
+    { user: { id: 'user_1', roles: ['admin'] }, system: false },
+    true,
+  ],
+  [
+    'a user without the target roles',
+    { user: { id: 'user_1', roles: ['viewer'] }, system: false },
+    false,
+  ],
+  ['a dispatcher with no user', { user: null, system: false }, false],
+])(
+  'detached run authorizes its target endpoint for %s as a synchronous CallApi would',
+  async (_, { user, system }, allowed) => {
+    const context = testContext({
+      logger,
+      operators: operatorsServer,
+      readConfigFile: createDetachedReadConfigFile({ childRoles: ['admin'] }),
+    });
+    const run = runDetachedEndpoint(context, {
+      endpointId: 'child_ep',
+      payload: {},
+      principal: { user: serializer.serialize(user), system },
+    });
+    if (allowed) {
+      await expect(run).resolves.toMatchObject({ success: true, response: 'child_ran' });
+    } else {
+      await expect(run).rejects.toThrow(user ? 'does not exist' : 'Authentication required');
+    }
+  }
+);
 
 test('acceptDetachedEndpoint accepts at once and runs the routine after, under waitUntil', async () => {
   const readConfigFile = jest.fn((path) => {

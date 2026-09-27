@@ -43,6 +43,7 @@ import buildPhoneNumberPlugin from './buildPhoneNumberPlugin.js';
 import buildProviders from './buildProviders.js';
 import buildRequestHooks from './requestHooks/buildRequestHooks.js';
 import createAuthLogger from './createAuthLogger.js';
+import createMcpAccessTokenClaims from './createMcpAccessTokenClaims.js';
 import createOnAPIError from './createOnAPIError.js';
 import createSendEmail from './createSendEmail.js';
 import modelNames from './modelNames.js';
@@ -514,13 +515,14 @@ function getBetterAuthConfig({
         // buildOauthPostLogin. Every access token carries it as the
         // organization_id claim the /api/mcp route resolves the member from;
         // the refresh grant re-stamps the same reference, so a refreshed
-        // token keeps its organization.
+        // token keeps its organization - while the user is still a member of
+        // it (createMcpAccessTokenClaims).
         postLogin: buildOauthPostLogin({
           authConfig,
           baseUrlOrigin,
           basePath: oauthPagesBasePath,
         }),
-        customAccessTokenClaims: ({ referenceId }) => ({ organization_id: referenceId }),
+        customAccessTokenClaims: createMcpAccessTokenClaims({ getAuth }),
         // The closed MCP scope vocabulary. Without "openid" the OIDC surface
         // (id tokens, /oauth2/userinfo, /.well-known/openid-configuration)
         // stays dormant. "offline_access" is the OAuth-standard opt-in for a

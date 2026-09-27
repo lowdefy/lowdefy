@@ -14,16 +14,37 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { compile } from '@lowdefy/ajv';
+import { cleanBuildArtifact, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import validateId from '../../utils/validateId.js';
 import validateCronExpression from '../../utils/validateCronExpression.js';
 import getEnvironmentNames from '../../utils/getEnvironmentNames.js';
 
+// A schedule's payload is authored config, so one that breaks the endpoint's own
+// payloadSchema fails the build instead of every scheduled run.
+function validateSchedulePayload({
+  schedule,
+  scheduleIndex,
+  where,
+  endpoint,
+  configKey,
+  validatePayload,
+}) {
+  const { valid, errors } = validatePayload(schedule.payload ?? {});
+  if (valid) return;
+  throw new ConfigError(
+    `Endpoint schedule ${scheduleIndex}${where} payload does not match the payloadSchema of "${
+      endpoint.id
+    }" at ${errors[0].instancePath || '(root)'}: ${errors[0].message}.`,
+    { received: schedule.payload, configKey }
+  );
+}
+
 // `where` names the schedules list in messages: "" for the endpoint's own schedules, or
 // ` for environment "staging"` for an override.
-function validateSchedules({ schedules, endpoint, configKey, where = '' }) {
+function validateSchedules({ schedules, endpoint, configKey, validatePayload, where = '' }) {
   if (type.isUndefined(schedules)) return;
   if (!type.isArray(schedules)) {
     throw new ConfigError(
@@ -69,13 +90,23 @@ function validateSchedules({ schedules, endpoint, configKey, where = '' }) {
         { received: schedule.payload, configKey }
       );
     }
+    if (!type.isNull(validatePayload)) {
+      validateSchedulePayload({
+        schedule,
+        scheduleIndex,
+        where,
+        endpoint,
+        configKey,
+        validatePayload,
+      });
+    }
   });
 }
 
 // The object form of `schedules`: lists keyed by environment name plus an optional `default` the
 // other environments inherit. Every key must be declared in config.environments, so a typo
 // cannot silently leave an environment on the defaults.
-function validateEnvironmentSchedules({ endpoint, configKey, environments }) {
+function validateEnvironmentSchedules({ endpoint, configKey, environments, validatePayload }) {
   const declared = getEnvironmentNames(environments);
   if (declared.length === 0) {
     throw new ConfigError(
@@ -100,8 +131,22 @@ function validateEnvironmentSchedules({ endpoint, configKey, environments }) {
         configKey,
       });
     }
-    validateSchedules({ schedules, endpoint, configKey, where });
+    validateSchedules({ schedules, endpoint, configKey, validatePayload, where });
   });
+}
+
+// The runtime compiles the schema on an endpoint's first call; one ajv cannot
+// compile would fail every call, so it fails the build here.
+function compilePayloadSchema({ endpoint, configKey }) {
+  if (type.isNone(endpoint.payloadSchema)) return null;
+  try {
+    return compile({ schema: cleanBuildArtifact(endpoint.payloadSchema) });
+  } catch (error) {
+    throw new ConfigError(
+      `Endpoint "${endpoint.id}" payloadSchema is not a valid JSON Schema: ${error.message}`,
+      { configKey }
+    );
+  }
 }
 
 function validateEndpoint({ endpoint, index, checkDuplicateEndpointId, environments }) {
@@ -144,10 +189,11 @@ function validateEndpoint({ endpoint, index, checkDuplicateEndpointId, environme
       { configKey }
     );
   }
+  const validatePayload = compilePayloadSchema({ endpoint, configKey });
   if (type.isObject(endpoint.schedules)) {
-    validateEnvironmentSchedules({ endpoint, configKey, environments });
+    validateEnvironmentSchedules({ endpoint, configKey, environments, validatePayload });
   } else {
-    validateSchedules({ schedules: endpoint.schedules, endpoint, configKey });
+    validateSchedules({ schedules: endpoint.schedules, endpoint, configKey, validatePayload });
   }
 }
 

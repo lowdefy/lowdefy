@@ -20,6 +20,9 @@
 const semanticNamePattern = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/;
 const setNamePattern = /^[A-Z][A-Za-z0-9]*$/;
 const qualifiedNamePattern = /^([a-z][a-z0-9]*(?:-[a-z0-9]+)*):([A-Z][A-Za-z0-9]*)$/;
+// A set id and a colon before any icon part, so "lucide:pencil" reads as an
+// attempt at a qualified name, for errors only.
+const qualifiedAttemptPattern = /^([a-z][a-z0-9]*(?:-[a-z0-9]+)*):(.+)$/;
 
 // Detection only, for migration messages: the pack prefixes of every
 // react-icons 5.6.0 pack Lowdefy 6 bundled, and stale Ant Design icon names.
@@ -29,6 +32,7 @@ const antDesignNamePattern = /^[A-Z][A-Za-z0-9]*(Outlined|Filled|TwoTone)$/;
 
 export {
   antDesignNamePattern,
+  qualifiedAttemptPattern,
   qualifiedNamePattern,
   reactIconsNamePattern,
   semanticNamePattern,

@@ -18,13 +18,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 // Packages that use React context for cross-component coordination (e.g., antd's
-// CSS-in-JS StyleProvider/ConfigProvider). These MUST resolve to a single instance
-// across the isolated dev server and all linked @lowdefy/* packages. Without these
-// overrides, pnpm installs a separate npm copy for the dev server while linked
-// packages use the monorepo's copy — two instances = broken theming/dark mode.
-const SINGLETON_PACKAGES = ['antd', '@ant-design/cssinjs'];
+// CSS-in-JS StyleProvider/ConfigProvider, XProvider). These MUST resolve to a single
+// instance across the isolated server and all linked @lowdefy/* packages. Without these
+// overrides, pnpm installs a separate npm copy for the server while linked packages use
+// the monorepo's copy — two instances = broken theming/dark mode.
+const SINGLETON_PACKAGES = ['antd', '@ant-design/cssinjs', '@ant-design/x'];
 
-function rewritePackageJson({ filePath, targetDir, packageMap, repoRoot }) {
+function rewritePackageJson({ filePath, targetDir, packageMap, sourceDir }) {
   const pkg = JSON.parse(fs.readFileSync(filePath, 'utf8'));
   const overrides = {};
 
@@ -44,13 +44,15 @@ function rewritePackageJson({ filePath, targetDir, packageMap, repoRoot }) {
     overrides[name] = `link:${relPath}`;
   }
 
-  // Force singleton packages to resolve from the monorepo's node_modules.
+  // Link singletons to the source server's install in the monorepo: pnpm resolves the
+  // linked @lowdefy/* packages to that same instance. The monorepo root node_modules
+  // does not hoist them, so it can't be the source.
   for (const name of SINGLETON_PACKAGES) {
-    const pkgDir = path.join(repoRoot, 'node_modules', name);
-    if (fs.existsSync(pkgDir)) {
-      const relPath = path.relative(targetDir, pkgDir);
-      overrides[name] = `link:${relPath}`;
+    const pkgDir = path.join(sourceDir, 'node_modules', name);
+    if (!fs.existsSync(pkgDir)) {
+      throw new Error(`${name} is not installed in ${sourceDir}. Run pnpm install first.`);
     }
+    overrides[name] = `link:${path.relative(targetDir, pkgDir)}`;
   }
 
   pkg.pnpm = pkg.pnpm ?? {};
@@ -59,18 +61,18 @@ function rewritePackageJson({ filePath, targetDir, packageMap, repoRoot }) {
   fs.writeFileSync(filePath, JSON.stringify(pkg, null, 2) + '\n');
 }
 
-function rewriteDeps({ targetDir, packageMap, repoRoot }) {
+function rewriteDeps({ sourceDir, targetDir, packageMap }) {
   rewritePackageJson({
     filePath: path.join(targetDir, 'package.json'),
     targetDir,
     packageMap,
-    repoRoot,
+    sourceDir,
   });
   rewritePackageJson({
     filePath: path.join(targetDir, 'package.original.json'),
     targetDir,
     packageMap,
-    repoRoot,
+    sourceDir,
   });
 }
 

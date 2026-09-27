@@ -21,8 +21,14 @@ function envWatcher(context) {
   const callback = async () => {
     context.logger.warn('.env file changed.');
     context.readDotEnv();
-    await context.lowdefyBuild();
-    context.restartServer();
+    // The server reads the environment only when it starts, and a later
+    // successful config build does not restart it, so it restarts with the
+    // new environment even when this build fails.
+    try {
+      await context.lowdefyBuild();
+    } finally {
+      context.restartServer();
+    }
   };
   return setupWatcher({
     callback,

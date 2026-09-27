@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { callAgent } from '@lowdefy/api';
+import { callAgent, parseRequestBody } from '@lowdefy/api';
 import { translate, type } from '@lowdefy/helpers';
 
 import getPathSegments from '../lib/getPathSegments.js';
@@ -35,7 +35,7 @@ async function agentHandler(c) {
   const pageId = segments.slice(0, -1).join('/');
   context.logger.info({ event: 'call_agent', agentId, pageId });
   const { conversationId } = c.req.query();
-  const { messages, urlQuery, sharedState } = await c.req.json();
+  const { messages, urlQuery, sharedState } = parseRequestBody({ text: await c.req.text() });
   if (!Array.isArray(messages)) {
     return c.json({ error: t('agent.runtime.messagesMustBeArray') }, 400);
   }

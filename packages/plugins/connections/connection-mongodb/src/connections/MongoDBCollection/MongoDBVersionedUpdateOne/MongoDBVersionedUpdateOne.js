@@ -17,7 +17,7 @@
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
-import { assertUnscopedUpdate } from '../tenant/guardUnscopedWrite.js';
+import { assertUnscopedDoc, assertUnscopedUpdate } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
@@ -71,6 +71,11 @@ async function MongoDBVersionedUpdateOne({
       // scan, which would reject the field the document legitimately holds)
       // keeps the version copy stamped by construction rather than by trust.
       document[tenant.field] = tenant.value;
+    }
+    if (tenantGuard) {
+      // The copy is a new row this write inserts, read with the caller's find
+      // options - a projection can leave the field behind.
+      assertUnscopedDoc({ doc: document, field: tenantGuard.field, position: 'the version copy' });
     }
     try {
       insertedDocument = await collection.insertOne(document, { ...insertOptions });

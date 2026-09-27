@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import { getOperatorType, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
 import findEmbeddedUrls from './findEmbeddedUrls.js';
+import getPossibleOperators from './getPossibleOperators.js';
 import isAllowedUrl from './isAllowedUrl.js';
 
 // Keys whose value the client uses as a URL. href and url navigate; the rest load.
@@ -104,8 +105,8 @@ function checkValue({ value, key = null, path, policy, errors }) {
   if (!type.isObject(value)) {
     return;
   }
-  const operator = getOperatorType(value);
-  if (operator !== null) {
+  const operators = getPossibleOperators(value);
+  operators.forEach((operator) => {
     if (!policy.operators.includes(operator)) {
       errors.push({
         path,
@@ -113,15 +114,15 @@ function checkValue({ value, key = null, path, policy, errors }) {
         message: `Operator "${operator}" is not in dynamic blocks policy "${policy.id}" operators.`,
       });
     }
-    // The client would compute this value at render time, where the policy
-    // cannot see it.
-    if (URL_KEYS.has(key) || key === 'pageId') {
-      errors.push({
-        path,
-        rule: key === 'pageId' ? 'policy.links' : 'policy.urls',
-        message: `"${key}" must be a literal string under dynamic blocks policy "${policy.id}", not an operator.`,
-      });
-    }
+  });
+  // The client would compute this value at render time, where the policy
+  // cannot see it.
+  if (operators.length > 0 && (URL_KEYS.has(key) || key === 'pageId')) {
+    errors.push({
+      path,
+      rule: key === 'pageId' ? 'policy.links' : 'policy.urls',
+      message: `"${key}" must be a literal string under dynamic blocks policy "${policy.id}", not an operator.`,
+    });
   }
   Object.keys(value).forEach((childKey) => {
     if (childKey.startsWith('~')) return;

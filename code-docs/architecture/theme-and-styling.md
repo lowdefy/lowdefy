@@ -159,9 +159,9 @@ The production server reads `theme.json` once at startup via `lib/build/theme.js
 
 Both `server` and `server-dev` have `antd` and `@ant-design/cssinjs` as direct dependencies. This is correct — the published packages need them for pnpm strict mode resolution.
 
-**The singleton risk only exists in the local monorepo dev setup** (`scripts/dev.mjs`), where `rewriteDeps.mjs` rewrites `@lowdefy/*` deps to `link:` paths. Without overrides, pnpm would install a separate npm copy of antd for the dev server while linked `@lowdefy/client` uses the monorepo's copy — two instances.
+**The singleton risk only exists in the monorepo's isolated server copies** (`scripts/dev.mjs`, `scripts/build.mjs` and `scripts/prepare-e2e-server.mjs` for block e2e), where `rewriteDeps.mjs` rewrites `@lowdefy/*` deps to `link:` paths. Without overrides, pnpm would install a separate npm copy of antd for the server copy while linked `@lowdefy/client` uses the monorepo's copy — two instances.
 
-**Fix:** `rewriteDeps.mjs` has a `SINGLETON_PACKAGES` list (`antd`, `@ant-design/cssinjs`) that adds `pnpm.overrides` entries pointing to the monorepo's `node_modules/` copies. This forces a single instance across the dev server and all linked packages.
+**Fix:** `rewriteDeps.mjs` has a `SINGLETON_PACKAGES` list (`antd`, `@ant-design/cssinjs`, `@ant-design/x`) that adds `pnpm.overrides` entries linking to the source server's install in the monorepo (`packages/servers/server/node_modules/antd` or the `server-dev` one), which is the instance pnpm gives every linked package. This forces a single instance across the server copy and all linked packages. The monorepo root `node_modules/` does not hoist these packages, so it can't be the source.
 
 **If you add a new package that uses React context across components** (like a UI library), add it to `SINGLETON_PACKAGES` in `scripts/lib/rewriteDeps.mjs`.
 
@@ -822,7 +822,7 @@ ls -la node_modules/.pnpm/@lowdefy+client*/node_modules/antd
 ls -la node_modules/.pnpm/@lowdefy+blocks-antd*/node_modules/antd
 ```
 
-**Dev vs Prod:** The monorepo dev server uses `SINGLETON_PACKAGES` in `scripts/lib/rewriteDeps.mjs` to force `pnpm.overrides` for antd. Production CLI builds do NOT apply this — they rely on exact version pinning (all packages pin `antd@6.3.1`) for natural deduplication.
+**Dev vs Prod:** The monorepo's server copies (`pnpm dev`, `pnpm app:build`, block e2e) use `SINGLETON_PACKAGES` in `scripts/lib/rewriteDeps.mjs` to force `pnpm.overrides` for antd. Production CLI builds do NOT apply this — they rely on exact version pinning (all packages pin `antd@6.3.1`) for natural deduplication.
 
 **Risk:** Custom plugins with different antd version specs can introduce duplicates. The production build has no `pnpm.overrides` safety net.
 

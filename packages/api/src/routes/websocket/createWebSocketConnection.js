@@ -23,6 +23,14 @@ import redactErrorResponse from '../../response/redactErrorResponse.js';
 // frame with an ack or an error so client actions never hang.
 function createWebSocketConnection(context, { registry, send }) {
   const { logger } = context;
+  // websocketId → the tail of that feed's frame queue. A feed's frames are
+  // handled one at a time, in the order they arrive. A subscribe awaits its
+  // channel preparation, so without this an unsubscribe sent right after it
+  // would run first, find nothing to remove, and leave the subscription
+  // running for a client that no longer wants it. Feeds have separate queues,
+  // so a slow publish routine on one feed does not hold up the others.
+  const feedQueues = new Map();
+  let closed = false;
   const subscriber = {
     id: context.rid,
     subscriptions: new Map(),
@@ -49,14 +57,10 @@ function createWebSocketConnection(context, { registry, send }) {
 
   async function handleFrame(frame) {
     const { payload, requestId, websocketId } = frame;
-    if (!type.isString(websocketId)) {
-      sendError({ message: 'Frame "websocketId" should be a string.', requestId });
-      return;
-    }
     switch (frame.type) {
       case 'subscribe':
         await registry.subscribe(context, { websocketId, payload, subscriber });
-        send(JSON.stringify({ type: 'subscribed', websocketId }));
+        send(JSON.stringify({ type: 'subscribed', websocketId, requestId }));
         return;
       case 'unsubscribe':
         registry.unsubscribe({ websocketId, subscriber });
@@ -72,16 +76,8 @@ function createWebSocketConnection(context, { registry, send }) {
     }
   }
 
-  async function handleMessage(raw) {
-    let frame;
-    try {
-      frame = JSON.parse(raw);
-    } catch (error) {
-      sendError({ message: 'Invalid frame — expected JSON.' });
-      return;
-    }
-    if (!type.isObject(frame)) {
-      sendError({ message: 'Invalid frame — expected an object.' });
+  async function processFrame(frame) {
+    if (closed) {
       return;
     }
     try {
@@ -107,8 +103,47 @@ function createWebSocketConnection(context, { registry, send }) {
     }
   }
 
+  function enqueue(websocketId, task) {
+    const handled = (feedQueues.get(websocketId) ?? Promise.resolve()).then(task);
+    const tail = handled.catch(() => {});
+    feedQueues.set(websocketId, tail);
+    tail.then(() => {
+      if (feedQueues.get(websocketId) === tail) {
+        feedQueues.delete(websocketId);
+      }
+    });
+    return handled;
+  }
+
+  async function handleMessage(raw) {
+    if (closed) {
+      return;
+    }
+    let frame;
+    try {
+      frame = JSON.parse(raw);
+    } catch (error) {
+      sendError({ message: 'Invalid frame — expected JSON.' });
+      return;
+    }
+    if (!type.isObject(frame)) {
+      sendError({ message: 'Invalid frame — expected an object.' });
+      return;
+    }
+    if (!type.isString(frame.websocketId)) {
+      sendError({ message: 'Frame "websocketId" should be a string.', requestId: frame.requestId });
+      return;
+    }
+    await enqueue(frame.websocketId, () => processFrame(frame));
+  }
+
   function close() {
+    closed = true;
     registry.unsubscribeAll({ subscriber });
+    // A subscribe still being prepared registers after this point.
+    Promise.all(feedQueues.values())
+      .then(() => registry.unsubscribeAll({ subscriber }))
+      .catch((error) => context.handleError(error));
     logger.debug({ event: 'ws_disconnect' });
   }
 

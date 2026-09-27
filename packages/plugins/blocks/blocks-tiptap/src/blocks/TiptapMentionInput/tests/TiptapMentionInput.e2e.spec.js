@@ -172,7 +172,8 @@ test.describe('TiptapMentionInput Block', () => {
       await expect(chip).toHaveText('@Finance');
       await expect(chip).toHaveClass(/tiptap-mention\b/);
       await expect(chip).toHaveAttribute('data-mention-group', 'finance');
-      await expect(chip).toHaveAttribute('style', /color:\s*#722ed1/);
+      // ProseMirror sets style through cssText, so the browser writes the colour as rgb().
+      await expect(chip).toHaveCSS('color', 'rgb(114, 46, 209)');
       // getHref returns nothing for groups → plain span, never <a href="null">.
       expect(await chip.evaluate((n) => n.tagName.toLowerCase())).toBe('span');
     });
@@ -222,7 +223,7 @@ test.describe('TiptapMentionInput Block', () => {
         .click();
       const html = await editor.evaluate((n) => n.innerHTML);
       expect(html).toContain('data-mention-group="devs"');
-      expect(html.toLowerCase()).toContain('#13c2c2');
+      expect(html).toContain('color: rgb(19, 194, 194)');
     });
   });
 });

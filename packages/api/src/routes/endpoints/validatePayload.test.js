@@ -145,6 +145,17 @@ test('validatePayload recompiles when the endpoint carries a new schema object',
   expect(compileCalls).toHaveLength(2);
 });
 
+test('validatePayload checks an endpoint read again whose payloadSchema declares an $id', () => {
+  const read = () => ({
+    endpointId: 'with_id',
+    payloadSchema: { $id: 'https://example.com/with_id.json', ...schema },
+  });
+  validatePayload({ endpointConfig: read(), payload: { quantity: 1 } });
+  expect(() => validatePayload({ endpointConfig: read(), payload: {} })).toThrow(
+    "at (root): must have required property 'quantity'."
+  );
+});
+
 test('validatePayload surfaces a schema ajv cannot compile as the thrown compile error', () => {
   expect(() =>
     validatePayload({

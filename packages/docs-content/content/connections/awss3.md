@@ -70,6 +70,7 @@ The same connection and requests work against any S3-compatible service — set 
 
 Request types:
   - AwsS3GetObject
+  - AwsS3HeadObject
   - AwsS3PresignedGetObject
   - AwsS3PresignedPostPolicy
   - AwsS3PutObject
@@ -194,6 +195,59 @@ api:
       - ':return':
           key:
             _step: put_copy.key
+```
+
+### AwsS3HeadObject
+
+The `AwsS3HeadObject` request checks on the server whether an object exists in the bucket and
+returns its metadata without reading its content. Use it in an [API endpoint](/lowdefy-api) routine
+to confirm a file uploaded from the browser with an `AwsS3PresignedPostPolicy` actually arrived, and
+to take its size and content type from S3 rather than from the caller. The connection must allow
+reads (`read` is `true` by default).
+
+#### Properties
+- `key: string`: __Required__ - Key under which the object is stored.
+- `versionId: string`: VersionId used to reference a specific version of the object.
+
+Returns `{ exists: true, bucket, key, size, contentType, etag, lastModified, versionId }` for an
+object that exists (`size` in bytes, `lastModified` a date, `contentType` and `versionId` only when
+S3 returns them), and `{ exists: false, bucket, key }` when S3 answers not found. Any other S3 error
+throws. S3 answers not found only when the credentials may list the bucket (`s3:ListBucket`);
+without that permission a missing object is a 403 error, which throws.
+
+#### Examples
+
+###### Record an upload only once it is in the bucket:
+```yaml
+api:
+  - id: record_upload
+    type: Api
+    routine:
+      - id: head_object
+        type: AwsS3HeadObject
+        connectionId: my_bucket
+        properties:
+          key:
+            _payload: key
+      - :if:
+          _not:
+            _step: head_object.exists
+        :then:
+          - :reject: The upload did not arrive.
+      - id: insert_file
+        type: MongoDBInsertOne
+        connectionId: files
+        properties:
+          doc:
+            key:
+              _step: head_object.key
+            size:
+              _step: head_object.size
+            contentType:
+              _step: head_object.contentType
+      - ':return':
+          size:
+            _step: head_object.size
 ```
 
 ### AwsS3PutObject

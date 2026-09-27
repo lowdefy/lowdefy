@@ -17,6 +17,7 @@
 import { serializer } from '@lowdefy/helpers';
 
 import applySystemTrust from '../../context/applySystemTrust.js';
+import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
@@ -31,8 +32,9 @@ import validatePayload from './validatePayload.js';
 // originated from the deployment (an ORIGIN proof, not an identity). A detached
 // call is a fresh invocation, not a fresh principal (Decision 4): it runs with
 // the SAME identity the dispatching run had, carried across the hop and
-// rehydrated here. There is no detached-specific authorization rule - nested
-// calls flow through the normal `authorizeOutcome` path against the carried identity.
+// rehydrated here. There is no detached-specific authorization rule - the target
+// and its nested calls flow through the normal `authorizeOutcome` path against the
+// carried identity, exactly as a synchronous CallApi would.
 // Payload arrives serialized (dates etc. survive the HTTP hop via
 // @lowdefy/helpers serializer).
 async function runDetachedEndpoint(context, { endpointId, payload, principal }) {
@@ -64,6 +66,7 @@ async function runDetachedEndpoint(context, { endpointId, payload, principal }) 
 
   logger.debug({ event: 'debug_detached_endpoint', endpointId });
   const endpointConfig = await getEndpointConfig(context, { endpointId });
+  authorizeApiEndpoint(context, { endpointConfig });
 
   const deserializedPayload = serializer.deserialize(payload ?? {});
   validatePayload({ endpointConfig, payload: deserializedPayload });

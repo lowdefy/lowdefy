@@ -18,6 +18,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import assertTenantFieldNotAuthored from './assertTenantFieldNotAuthored.js';
+import getCollectionWriteStage from './getCollectionWriteStage.js';
 import { auditSearchCompound, auditMqlEquality } from './auditAuthoredClause.js';
 
 // Recursive tenant injection over the whole pipeline tree - not a pass over
@@ -85,7 +86,7 @@ function injectTenantIntoPipeline({ pipeline, tenant }) {
     if (!type.isObject(stage)) {
       return stage;
     }
-    if (stage.$out !== undefined || stage.$merge !== undefined) {
+    if (getCollectionWriteStage({ stage }) !== null) {
       throw new ConfigError(
         'Aggregation pipelines on a tenant connection can not contain "$out" or "$merge" - they write whole collections outside the tenant stamp path.'
       );

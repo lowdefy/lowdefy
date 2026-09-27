@@ -25,6 +25,7 @@ const authorities = {
   CreateOrganization: { scope: 'system' },
   DeleteUser: { scope: 'org', permissions: { user: ['delete'] }, targetUser: 'userId' },
   InviteMember: { scope: 'org', permissions: { invitation: ['create'] } },
+  LeaveOrganization: { scope: 'caller' },
   ListMembers: { scope: 'org', permissions: { member: ['list'] } },
   ListUsers: { scope: 'system' },
   RemoveMember: { scope: 'org', permissions: { member: ['delete'] } },

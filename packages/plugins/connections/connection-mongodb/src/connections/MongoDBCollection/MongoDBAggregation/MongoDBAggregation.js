@@ -19,6 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import injectTenantIntoPipeline from '../tenant/injectTenantIntoPipeline.js';
+import { assertUnscopedPipeline } from '../tenant/guardUnscopedWrite.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -34,7 +35,7 @@ function checkOutAndMerge({ pipeline, connection }) {
   }
 }
 
-async function MongodbAggregation({ request, connection, tenant }) {
+async function MongodbAggregation({ request, connection, tenant, tenantGuard }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { pipeline } = deserializedRequest;
@@ -48,6 +49,9 @@ async function MongodbAggregation({ request, connection, tenant }) {
     // $out/$merge outright on tenant connections (they write whole
     // collections outside the stamp path, even when write is allowed).
     pipeline = injectTenantIntoPipeline({ pipeline, tenant });
+  }
+  if (tenantGuard) {
+    assertUnscopedPipeline({ pipeline, field: tenantGuard.field });
   }
   const { collection } = await getCollection({ connection });
   let res;

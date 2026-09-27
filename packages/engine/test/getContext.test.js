@@ -127,20 +127,25 @@ test('triggerPageEvent triggers the event on the page root block', () => {
   expect(typeof triggerEvent.mock.calls[0][0].progress).toBe('function');
 });
 
-test('page class and style reach the root block', () => {
+test('page class, style, loading and skeleton reach the root block', () => {
   const resetContext = { reset: true, setReset: () => {} };
   const lowdefy = getLowdefy();
+  const skeleton = { id: 'pageSkeleton', type: 'Paragraph', properties: { content: 'Loading' } };
   const page = {
     id: 'pageId',
     type: 'Box',
     class: { '.element': 'p-4', '.menu': ['w-64', 'shrink-0'] },
     style: { '.element': { color: 'red' } },
+    loading: true,
+    skeleton,
   };
   const config = buildTestPage({ pageConfig: page });
   const context = getContext({ config, lowdefy, resetContext });
   const rootBlock = context._internal.RootSlots.slots.root.blocks[0];
   expect(rootBlock.eval.class).toEqual({ element: 'p-4', menu: ['w-64', 'shrink-0'] });
   expect(rootBlock.eval.style).toEqual({ element: { color: 'red' } });
+  expect(rootBlock.eval.loading).toBe(true);
+  expect(rootBlock.eval.skeleton).toEqual(skeleton);
 });
 
 test('create context, initialize input', () => {

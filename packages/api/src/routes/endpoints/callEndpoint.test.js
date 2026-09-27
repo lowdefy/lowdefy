@@ -436,3 +436,24 @@ test('callEndpoint rejects a payload that violates the payloadSchema of an async
   ).rejects.toThrow(UserError);
   expect(waitUntil).not.toHaveBeenCalled();
 });
+
+test('callEndpoint checks a call without a payload as an empty object, as every other caller does', async () => {
+  const context = testContext({
+    logger,
+    readConfigFile: jest.fn(() => ({
+      endpointId: 'list_orders',
+      type: 'Api',
+      auth: { public: true },
+      payloadSchema: { type: 'object', properties: { status: { type: 'string' } } },
+      routine: { ':return': 'listed' },
+    })),
+    user: { id: 'user_1' },
+  });
+  const result = await callEndpoint(context, {
+    blockId: 'blockId',
+    endpointId: 'list_orders',
+    pageId: 'pageId',
+  });
+  expect(result.success).toBe(true);
+  expect(result.response).toBe('listed');
+});

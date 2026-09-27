@@ -280,6 +280,34 @@ test('tenant: the user is never added to an org that has members', async () => {
   });
 });
 
+test('tenant: an org a concurrent session minted and joined after the membership read is reused without a second org or member row', async () => {
+  const own = { id: 'org_own', slug: 'org-user_1' };
+  const { auth, adapter } = createMockAuth({
+    members: [],
+    invitations: [],
+    organizationMemberCounts: { org_own: 1 },
+  });
+  adapter.findOne.mockImplementation(async ({ model, where }) => {
+    if (model === 'organization') {
+      return where[0].value === 'org-user_1' ? own : null;
+    }
+    return { id: 'member_concurrent', userId: 'user_1', organizationId: 'org_own' };
+  });
+  const hook = createActiveOrgPolicyHook({ getAuth: () => auth, organizations: tenant });
+  const result = await hook({ userId: 'user_1' });
+  expect(adapter.findOne).toHaveBeenCalledWith({
+    model: 'member',
+    where: [
+      { field: 'userId', value: 'user_1' },
+      { field: 'organizationId', value: 'org_own' },
+    ],
+  });
+  expect(adapter.create).not.toHaveBeenCalled();
+  expect(result).toEqual({
+    data: { userId: 'user_1', activeOrganizationId: 'org_own' },
+  });
+});
+
 test('tenant: a fresh mint losing the unique slug race on the next slug reads and uses the winning org row', async () => {
   const handedOver = { id: 'org_handed_over', slug: 'org-user_1' };
   const winner = { id: 'org_winner', slug: 'org-user_1-2' };

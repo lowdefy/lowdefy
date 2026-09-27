@@ -57,9 +57,9 @@ Additional operators and connections:
 
 Both `server` and `server-dev` have `antd` and `@ant-design/cssinjs` as direct dependencies. This is correct — the published packages need them for pnpm strict mode resolution.
 
-**The singleton risk only exists in the local monorepo dev setup** (`scripts/dev.mjs`), where `rewriteDeps.mjs` rewrites `@lowdefy/*` deps to `link:` paths. Without overrides, pnpm would install a separate npm copy of antd for the dev server while linked `@lowdefy/client` uses the monorepo's copy — two instances.
+**The singleton risk only exists in the monorepo's isolated server copies** (`scripts/dev.mjs`, `scripts/build.mjs` and `scripts/prepare-e2e-server.mjs` for block e2e), where `rewriteDeps.mjs` rewrites `@lowdefy/*` deps to `link:` paths. Without overrides, pnpm would install a separate npm copy of antd for the server copy while linked `@lowdefy/client` uses the monorepo's copy — two instances.
 
-**Fix:** `rewriteDeps.mjs` has a `SINGLETON_PACKAGES` list (`antd`, `@ant-design/cssinjs`) that adds `pnpm.overrides` entries pointing to the monorepo's `node_modules/` copies. This forces a single instance across the dev server and all linked packages.
+**Fix:** `rewriteDeps.mjs` has a `SINGLETON_PACKAGES` list (`antd`, `@ant-design/cssinjs`, `@ant-design/x`) that adds `pnpm.overrides` entries linking to the source server's install in the monorepo (`packages/servers/server/node_modules/antd` or the `server-dev` one), which is the instance pnpm gives every linked package. This forces a single instance across the server copy and all linked packages. The monorepo root `node_modules/` does not hoist these packages, so it can't be the source.
 
 **If you add a new package that uses React context across components** (like a UI library), add it to `SINGLETON_PACKAGES` in `scripts/lib/rewriteDeps.mjs`.
 
@@ -399,6 +399,11 @@ build's list and misses any file only the failed build read (a new endpoint file
 is being fixed). While the last build failed, every change rebuilds, so fixing the error
 clears the build status.
 
+A `lowdefy.yaml` change first compares the Lowdefy version with the running one. A
+`lowdefy.yaml` that cannot be parsed has no version to compare, so the config build still runs
+and reports the parse error in the build status (reading the plugin list from `lowdefy.yaml` is
+part of the build attempt).
+
 The `skeletonSourceFiles` set is derived from `~r` markers on non-page components during the shallow build. It includes every config file that contributes to non-page build artifacts (connections, API endpoints, auth, menus, etc.), traced through the refMap parent chain. This replaces the previous path-based heuristic (`!f.startsWith('pages/')`) which had false negatives for API files referenced from `pages/` and false positives for page templates outside `pages/`.
 
 The set also includes the files that hold a pages list (`pages: { _ref: pages.yaml }` in the app, a module's pages list): they decide which pages exist, so adding a page needs a skeleton rebuild. The page files they reference, and templates those ref, stay page content.
@@ -545,10 +550,17 @@ Watches the `.env` file in the config directory:
 ```javascript
 const callback = async () => {
   context.readDotEnv();
-  await context.lowdefyBuild();
-  context.restartServer();
+  try {
+    await context.lowdefyBuild();
+  } finally {
+    context.restartServer();
+  }
 };
 ```
+
+The server reads the environment only when it starts, and a later successful config build
+does not restart it, so the server restarts with the new environment even when this build
+fails.
 
 ### Server Artifact Watcher
 

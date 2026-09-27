@@ -80,10 +80,10 @@ async function callPluginEndpoint({ acting, auth, body, endpointKey, pluginId, q
     session: {
       id: 'lowdefy:system-session',
       // Synthetic under both branches - context.user carries no session token. The org
-      // plugin's self-removal paths are the only readers: removeMember (the one a step
-      // can reach) calls adapter.setActiveOrganization(token, null) when a caller
-      // removes their own membership from their active organization, and with a
-      // synthetic token that update matches no session row - so the caller's active
+      // plugin's self-removal paths are the only readers: removeMember and
+      // leaveOrganization call adapter.setActiveOrganization(token, null) when a caller
+      // ends their own membership of their active organization, and with a synthetic
+      // token that update matches no session row - so the caller's active
       // organization keeps naming the organization they just left.
       token: 'lowdefy:system-session',
       userId: actingUser.id,

@@ -19,7 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 import findSimilarString from '../../utils/findSimilarString.js';
 import {
   antDesignNamePattern,
-  qualifiedNamePattern,
+  qualifiedAttemptPattern,
   reactIconsNamePattern,
   semanticNamePattern,
 } from './iconNamePatterns.js';
@@ -92,7 +92,7 @@ function qualifiedMessage({ setId, iconName, sets }) {
 // names and the names of the default set and Lucide.
 function createUnresolvedIconError({ name, icons, configKey }) {
   const { sets, defaultSet, semantic } = icons;
-  const qualified = qualifiedNamePattern.exec(name);
+  const qualified = qualifiedAttemptPattern.exec(name);
   let message;
   if (qualified) {
     message = qualifiedMessage({ setId: qualified[1], iconName: qualified[2], sets });

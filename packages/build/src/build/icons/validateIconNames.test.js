@@ -82,6 +82,23 @@ test('validateIconNames ignores strings outside icon positions', () => {
   expect(validate({ properties: { title: 'AiOutlineDelete', label: 'nope-nope' } })).toEqual([]);
 });
 
+test('validateIconNames raises for a malformed name qualified with an installed set', () => {
+  expect(
+    validate({
+      properties: { icon: 'lucide:pencil', content: '<i data-icon="lucide:trash-2"></i>' },
+    })
+  ).toEqual([
+    'Icon "lucide:pencil" is not in the "lucide" icon set. Did you mean "lucide:Pencil"?',
+    expect.stringMatching(/^Icon "lucide:trash-2" is not in the "lucide" icon set\./),
+  ]);
+});
+
+test('validateIconNames ignores colon values that do not name an installed set', () => {
+  expect(
+    validate({ icon: 'https://example.com/logo.png', prefixIcon: 'mailto:a', suffixIcon: 'x:y' })
+  ).toEqual([]);
+});
+
 test('validateIconNames ignores values that are not a name form', () => {
   expect(validate({ favicon: '/favicon.ico', icon: '$icon', maxIcon: '', minIcon: true })).toEqual(
     []
@@ -112,6 +129,20 @@ test('validateIconNames skips classNames and styles slots named after an icon', 
       classNames: { icon: 'text-blue-500', '.icon': 'text-blue-500' },
       styles: { icon: 'text-blue-500' },
       style: { '.icon': 'text-blue-500' },
+    })
+  ).toEqual([]);
+});
+
+test('validateIconNames skips antd theme tokens named after an icon', () => {
+  expect(
+    validate({
+      blocks: [
+        {
+          id: 'alert',
+          type: 'Alert',
+          properties: { theme: { colorIcon: 'white', colorIconHover: 'gray' } },
+        },
+      ],
     })
   ).toEqual([]);
 });

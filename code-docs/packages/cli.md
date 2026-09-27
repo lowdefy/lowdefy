@@ -302,10 +302,10 @@ The build package (`@lowdefy/build`) is also downloaded:
 
 ### Node.js Version Check
 
-The CLI enforces Node.js >= 18:
+The CLI enforces Node.js >= 24, matching `engines.node` in its `package.json`:
 
 ```javascript
-if (Number(nodeMajorVersion) < 18) {
+if (Number(nodeMajorVersion) < 24) {
   throw new Error('...');
 }
 ```

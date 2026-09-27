@@ -113,6 +113,10 @@ surrounding text exactly (quotes, indentation, YAML style).
   `lowdefy_search_icons`; or search https://lucide.dev/icons) and use its PascalCase name.
   If nothing fits, leave the name and list it in the report — it can keep working through the
   compatibility set.
+- **Qualified names stay as they are.** A name after a set id and a colon
+  (`react-icons:FaWhatsapp`) was chosen on purpose to keep that glyph through the compatibility
+  set. The patterns above also match the part after the colon; never rewrite it, so running the
+  migration again changes nothing.
 
 Semantic names and their Lucide targets (needed for `theme.icons.aliases` targets):
 
@@ -296,6 +300,9 @@ theme:
 - **Block `type:` values are not icons.** Lucide has icons named like some block types
   (`Anchor`, `Badge`, `Calendar`, `Menu`, `Tag`, …). Only rewrite names that match the patterns
   above; never touch `type:` values.
+- **`PiSquare` is also a Lucide name.** In react-icons it is the Phosphor square; in Lucide it
+  is a pi sign in a square, and v7 resolves it to Lucide with no build error. It is not in the
+  table. Where the app meant the square, rewrite it to `Square`, and list it in the report.
 - **Names inside prose** (descriptions, markdown, help text) that mention an icon for a human
   reader can be rewritten too, but list them in the report rather than assuming.
 - **Duplicate meaning after rewrite.** Different old names can map to the same new name

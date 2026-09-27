@@ -42,9 +42,9 @@ function createTestClient() {
       this.url = url;
       this.readyState = 0;
       this.send = jest.fn();
+      this.close = jest.fn();
       sockets.push(this);
     }
-    close() {}
   }
   MockWebSocket.OPEN = 1;
   MockWebSocket.CLOSED = 3;
@@ -66,10 +66,13 @@ function createTestClient() {
     socket.onopen();
     return socket;
   }
-  function close() {
-    const socket = currentSocket();
+  // Like a browser, a socket whose onclose handler was removed fires nothing.
+  function closeSocket(socket) {
     socket.readyState = MockWebSocket.CLOSED;
-    socket.onclose();
+    socket.onclose?.();
+  }
+  function close() {
+    closeSocket(currentSocket());
   }
   function receive(frame) {
     currentSocket().onmessage({ data: JSON.stringify(frame) });
@@ -77,7 +80,17 @@ function createTestClient() {
   function sentFrames(socket) {
     return socket.send.mock.calls.map(([message]) => JSON.parse(message));
   }
-  return { client, close, currentSocket, lowdefy, open, receive, sentFrames, sockets };
+  return {
+    client,
+    close,
+    closeSocket,
+    currentSocket,
+    lowdefy,
+    open,
+    receive,
+    sentFrames,
+    sockets,
+  };
 }
 
 function track(promise) {
@@ -140,7 +153,7 @@ test('a failed subscribe rejects with the decoded wire error', async () => {
   };
   const promise = client.subscribe({ handlers, payload: {}, websocketId: 'chat' });
   open();
-  receive({ type: 'error', websocketId: 'chat', error: { '~e': wireError } });
+  receive({ type: 'error', websocketId: 'chat', requestId: 's1', error: { '~e': wireError } });
   const error = await promise.catch((e) => e);
   expect(error.message).toBe('Something went wrong.');
   expect(error.requestId).toBe('rid-1');
@@ -209,7 +222,9 @@ describe('subscribe ack timers', () => {
     jest.advanceTimersByTime(0);
     expect(sockets).toHaveLength(2);
     const reopened = open();
-    expect(sentFrames(reopened)).toEqual([{ type: 'subscribe', websocketId: 'chat', payload: {} }]);
+    expect(sentFrames(reopened)).toEqual([
+      { type: 'subscribe', websocketId: 'chat', payload: {}, requestId: 's2' },
+    ]);
     receive({ type: 'message', websocketId: 'chat', payload: 'hello' });
     expect(secondHandlers.onMessage).toHaveBeenCalledWith('hello');
     expect(first.state).toBe('resolved');
@@ -258,7 +273,7 @@ describe('subscribe ack timers', () => {
     client.subscribe({ handlers: createHandlers(), payload: { a: 1 }, websocketId: 'chat' });
     const socket = open();
     expect(sentFrames(socket)).toEqual([
-      { type: 'subscribe', websocketId: 'chat', payload: { a: 1 } },
+      { type: 'subscribe', websocketId: 'chat', payload: { a: 1 }, requestId: 's1' },
     ]);
   });
 
@@ -285,7 +300,9 @@ describe('subscribe ack timers', () => {
     jest.advanceTimersByTime(2000);
     expect(sockets).toHaveLength(2);
     const reopened = open();
-    expect(sentFrames(reopened)).toEqual([{ type: 'subscribe', websocketId: 'chat', payload: {} }]);
+    expect(sentFrames(reopened)).toEqual([
+      { type: 'subscribe', websocketId: 'chat', payload: {}, requestId: 's2' },
+    ]);
 
     // Past the first send's ack deadline, inside the resend's.
     jest.advanceTimersByTime(5000);
@@ -344,5 +361,145 @@ describe('subscribe ack timers', () => {
     await flushPromises();
     expect(subscribed.state).toBe('resolved');
     expect(handlers.onError).not.toHaveBeenCalled();
+  });
+
+  test('the close event of a socket closed for idleness does not disconnect the socket that replaced it', async () => {
+    const { client, closeSocket, open, receive, sentFrames, sockets } = createTestClient();
+    const handlers = createHandlers();
+    client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
+    const idle = open();
+    receive({ type: 'subscribed', websocketId: 'chat' });
+    client.unsubscribe({ websocketId: 'chat' });
+    jest.advanceTimersByTime(5000);
+
+    const subscribed = track(client.subscribe({ handlers, payload: {}, websocketId: 'chat' }));
+    const replacement = open();
+    receive({ type: 'subscribed', websocketId: 'chat' });
+    await flushPromises();
+    expect(subscribed.state).toBe('resolved');
+
+    closeSocket(idle);
+    client.publish({ payload: {}, websocketId: 'chat' });
+    client.unsubscribe({ websocketId: 'chat' });
+    expect(sockets).toHaveLength(2);
+    expect(handlers.onDisconnected).not.toHaveBeenCalled();
+    expect(sentFrames(replacement).map((frame) => frame.type)).toEqual([
+      'subscribe',
+      'publish',
+      'unsubscribe',
+    ]);
+  });
+
+  test('a socket closed for idleness that finishes closing while its replacement connects leaves one connection', () => {
+    const { client, closeSocket, open, sentFrames, sockets } = createTestClient();
+    client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
+    const idle = open();
+    client.unsubscribe({ websocketId: 'chat' });
+    jest.advanceTimersByTime(5000);
+
+    client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
+    closeSocket(idle);
+    client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'news' });
+    expect(sockets).toHaveLength(2);
+    const replacement = open();
+    expect(sentFrames(replacement)).toEqual([
+      { type: 'subscribe', websocketId: 'chat', payload: {}, requestId: 's2' },
+      { type: 'subscribe', websocketId: 'news', payload: {}, requestId: 's3' },
+    ]);
+  });
+
+  test('a publish that timed out before a connection opened is not sent when one opens', async () => {
+    const { client, close, open, receive, sentFrames } = createTestClient();
+    const timedOut = track(client.publish({ payload: { n: 1 }, websocketId: 'chat' }));
+    close();
+    jest.advanceTimersByTime(10000);
+    await flushPromises();
+    expect(timedOut.state).toBe('rejected');
+    expect(timedOut.error.message).toBe('WebSocket: Publish to "chat" timed out.');
+
+    const retried = track(client.publish({ payload: { n: 2 }, websocketId: 'chat' }));
+    const socket = open();
+    expect(sentFrames(socket)).toEqual([
+      { type: 'publish', websocketId: 'chat', requestId: 'p2', payload: { n: 2 } },
+    ]);
+    receive({ type: 'published', websocketId: 'chat', requestId: 'p2' });
+    await flushPromises();
+    expect(retried.state).toBe('resolved');
+  });
+
+  test('a reply to a subscribe that a newer subscribe replaced does not answer the newer one', async () => {
+    const { client, open, receive } = createTestClient();
+    client.connect();
+    open();
+    const handlers = createHandlers();
+    client.subscribe({ handlers: createHandlers(), payload: { room: 1 }, websocketId: 'chat' });
+    client.unsubscribe({ websocketId: 'chat' });
+    const replacement = track(
+      client.subscribe({ handlers, payload: { room: 2 }, websocketId: 'chat' })
+    );
+
+    receive({ type: 'error', websocketId: 'chat', requestId: 's1', error: { '~e': wireError } });
+    receive({ type: 'subscribed', websocketId: 'chat', requestId: 's1' });
+    await flushPromises();
+    expect(replacement.state).toBe('pending');
+    expect(handlers.onConnected).not.toHaveBeenCalled();
+    expect(handlers.onError).not.toHaveBeenCalled();
+
+    receive({ type: 'subscribed', websocketId: 'chat', requestId: 's2' });
+    await flushPromises();
+    expect(replacement.state).toBe('resolved');
+    expect(handlers.onConnected).toHaveBeenCalledTimes(1);
+  });
+
+  test('an idle socket stays open until its pending publishes are answered', async () => {
+    const { client, open, receive } = createTestClient();
+    client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
+    const socket = open();
+    receive({ type: 'subscribed', websocketId: 'chat', requestId: 's1' });
+    const published = track(client.publish({ payload: {}, websocketId: 'chat' }));
+    client.unsubscribe({ websocketId: 'chat' });
+    jest.advanceTimersByTime(5000);
+    expect(socket.close).not.toHaveBeenCalled();
+
+    receive({ type: 'published', websocketId: 'chat', requestId: 'p1' });
+    await flushPromises();
+    expect(published.state).toBe('resolved');
+    jest.advanceTimersByTime(5000);
+    expect(socket.close).toHaveBeenCalledTimes(1);
+  });
+
+  test('a connection that opens after the last feed was unsubscribed closes once idle', () => {
+    const { client, open } = createTestClient();
+    client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
+    client.unsubscribe({ websocketId: 'chat' });
+    jest.advanceTimersByTime(5000);
+    const socket = open();
+    expect(socket.close).not.toHaveBeenCalled();
+    jest.advanceTimersByTime(5000);
+    expect(socket.close).toHaveBeenCalledTimes(1);
+  });
+
+  test('the reconnect backoff resets only after a connection has stayed open', () => {
+    Math.random.mockReturnValue(0.99);
+    const { client, close, open, receive, sockets } = createTestClient();
+    client.subscribe({ handlers: createHandlers(), payload: {}, websocketId: 'chat' });
+    open();
+    receive({ type: 'subscribed', websocketId: 'chat', requestId: 's1' });
+    close();
+    // First retry: up to 500 ms.
+    jest.advanceTimersByTime(500);
+    expect(sockets).toHaveLength(2);
+    open();
+    close();
+    // A connection dropped straight after opening does not reset the backoff: up to 1000 ms.
+    jest.advanceTimersByTime(500);
+    expect(sockets).toHaveLength(2);
+    jest.advanceTimersByTime(500);
+    expect(sockets).toHaveLength(3);
+    open();
+    jest.advanceTimersByTime(10000);
+    close();
+    jest.advanceTimersByTime(500);
+    expect(sockets).toHaveLength(4);
   });
 });

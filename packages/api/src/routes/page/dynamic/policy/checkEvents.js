@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-import { getOperatorType, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
 import checkAction from './checkAction.js';
 import checkValue from './checkValue.js';
+import getPossibleOperators from './getPossibleOperators.js';
 
 function literalError({ path, what, policy }) {
   return {
@@ -79,7 +80,7 @@ function checkActionList({ actions, path, walk }) {
 // An event is an action list or { try, catch, debounce }.
 function checkEvents({ events, path, walk }) {
   const { errors, policy } = walk;
-  if (!type.isObject(events) || getOperatorType(events) !== null) {
+  if (!type.isObject(events) || getPossibleOperators(events).length > 0) {
     errors.push(literalError({ path, what: 'Block "events"', policy }));
     return;
   }
@@ -92,7 +93,7 @@ function checkEvents({ events, path, walk }) {
     let count = 0;
     if (type.isArray(event)) {
       count = checkActionList({ actions: event, path: eventPath, walk });
-    } else if (type.isObject(event) && getOperatorType(event) === null) {
+    } else if (type.isObject(event) && getPossibleOperators(event).length === 0) {
       count += checkActionList({ actions: event.try ?? [], path: `${eventPath}.try`, walk });
       count += checkActionList({ actions: event.catch ?? [], path: `${eventPath}.catch`, walk });
     } else {

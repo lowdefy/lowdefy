@@ -183,3 +183,28 @@ test('a link inside popover content navigates through the nested HtmlComponent',
   click(anchor);
   expect(link).toHaveBeenCalledWith({ pageId: 'report', urlQuery: {} });
 });
+
+// Without a basePath (the default), a path that starts with "//" once dot
+// segments resolve would become a protocol-relative link to another host.
+test.each([
+  ['data-link with a dot segment', '<a href="/.//evil.example/x" data-link>x</a>'],
+  ['data-link with an encoded dot segment', '<a href="/%2e//evil.example/x" data-link>x</a>'],
+  ['data-link with a parent segment', '<a href="/a/..//evil.example/x" data-link>x</a>'],
+  ['data-page-id with a leading slash', '<a data-page-id="/intranet-host">x</a>'],
+])('%s never becomes a link to another origin', (_, html) => {
+  registerHtmlEnhancements({
+    createHref: ({ pathname }) => pathname,
+    HtmlOverlay: () => null,
+    Icon: () => null,
+    icons: {},
+    link,
+  });
+  const { container } = render(<HtmlComponent html={html} />);
+  const anchor = container.querySelector('a');
+  const href = anchor.getAttribute('href');
+  if (href !== null) {
+    expect(new URL(href, window.location.origin).origin).toBe(window.location.origin);
+  }
+  click(anchor);
+  expect(link).not.toHaveBeenCalled();
+});

@@ -34,7 +34,7 @@ function getPageBuildStatus({ checked } = {}) {
     status.changedSinceBuild = edited;
     status.changedSinceBuildNote = checked
       ? 'These pages changed on disk after their last build, but the dev server has not rebuilt them: it has not seen the change yet. Call again; if they stay here, the file watcher missed the edit.'
-      : 'These pages changed on disk after their last build and have not been rebuilt, so their errors are not known yet. Call with wait: true to build them.';
+      : 'These pages, or the config build they build against, changed after their last build and have not been rebuilt, so their errors are not known yet. Call with wait: true to build them.';
   }
   status.unbuilt = unbuilt.length;
   if (unbuilt.length > 0) {

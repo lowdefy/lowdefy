@@ -27,6 +27,7 @@ In the Vercel project:
     - Eg: if `lowdefy.yaml` is at the top level of the repository, set the root directory to `deploy`; if it is in `apps/app_name`, set it to `apps/app_name/deploy`.
 - **Install Command:** `bash vercel.install.sh`. Leave the **Build Command** to `vercel.json` (do not override it in the dashboard). There is no **Output Directory** setting — the build emits `.vercel/output`, which Vercel detects automatically.
 - Enable **"Include files outside the root directory in the Build Step"** — the Lowdefy config usually lives in the parent of `deploy/`.
+- **Node.js Version:** `24.x` or newer. The install and build steps run the Lowdefy CLI, which requires Node.js 24; the function itself runs on the `nodejs24.x` runtime set in the generated Build Output.
 
 ###### Public files
 

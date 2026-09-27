@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { logClientError } from '@lowdefy/api';
+import { logClientError, parseRequestBody } from '@lowdefy/api';
 
 import clientErrorStore from '../../lib/docs/clientErrorStore.js';
 import createSameOriginGuard from '../middleware/createSameOriginGuard.js';
@@ -35,7 +35,7 @@ async function clientErrorHandler(c) {
   }
 
   // Dev keeps `received` in the payload — it powers error tracing in dev tools.
-  const body = await c.req.json();
+  const body = parseRequestBody({ text: await c.req.text() });
   const { error, ...response } = await logClientError(context, body);
 
   // Feed the agent-facing feedback loop (GET /lowdefy-docs/build-status) with a

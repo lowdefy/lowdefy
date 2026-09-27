@@ -115,8 +115,9 @@ async function handleAuthStep(context, routineContext, { step }) {
   }
 
   // A caller-scoped step acts only on rows the caller owns (their own MCP
-  // grant), so it needs no organization authority - but it has no meaning
-  // without a caller, and the system has no rows of its own to act on.
+  // grant, their own membership), so it needs no organization authority - but
+  // it has no meaning without a caller, and the system has no rows of its own
+  // to act on.
   if (authority.scope === 'caller' && acting.system === true) {
     throw new ConfigError(
       `Auth step "${step.stepId}" acts on the caller's own records and cannot run as the system. Remove system: true, or run it from a caller's routine.`,

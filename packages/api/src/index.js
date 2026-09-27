@@ -45,6 +45,7 @@ import isSameOriginRequest from './context/isSameOriginRequest.js';
 import isWebSocketOriginAllowed from './context/isWebSocketOriginAllowed.js';
 import logClientError from './routes/log/logClientError.js';
 import normalizeInjectedCaller from './context/normalizeInjectedCaller.js';
+import parseRequestBody from './context/parseRequestBody.js';
 import redactErrorResponse from './response/redactErrorResponse.js';
 import redactResponse from './response/redactResponse.js';
 import resolveAuthentication from './context/resolveAuthentication.js';
@@ -85,6 +86,7 @@ export {
   isWebSocketOriginAllowed,
   logClientError,
   normalizeInjectedCaller,
+  parseRequestBody,
   redactErrorResponse,
   redactResponse,
   resolveAuthentication,

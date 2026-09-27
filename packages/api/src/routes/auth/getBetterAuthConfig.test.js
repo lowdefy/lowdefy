@@ -1879,9 +1879,7 @@ describe('oauthProvider authorization server plugins', () => {
     // disableJwtPlugin false is the JWT access-token mode - opaque tokens off.
     expect(plugin.options.disableJwtPlugin).toBe(false);
     expect(plugin.options.enforcePerClientResources).toBe(false);
-    expect(plugin.options.customAccessTokenClaims({ referenceId: 'org_1' })).toEqual({
-      organization_id: 'org_1',
-    });
+    expect(plugin.options.customAccessTokenClaims).toEqual(expect.any(Function));
     expect(plugin.options.resources).toBeUndefined();
     expect(plugin.options.dpop).toBeUndefined();
   });

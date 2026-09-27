@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { parseRequestBody } from '@lowdefy/api';
 import { serializer } from '@lowdefy/helpers';
 
 import { readCheckpoint } from '../../lib/docs/checkpointStore.js';
@@ -66,7 +67,7 @@ function handleCheckpointBootstrap(c, { name }) {
 // the tab registry (lib/docs/tabChannel.js) knows which page each connected
 // tab is on without the tab reconnecting its event stream.
 async function handleTabPage(c) {
-  const { tabId, pageId } = await c.req.json();
+  const { tabId, pageId } = parseRequestBody({ text: await c.req.text() });
   if (!tabId) {
     return c.json({ error: 'Missing "tabId".' }, 400);
   }
@@ -102,7 +103,7 @@ async function devInspectHandler(c) {
     return handleTabPage(c);
   }
 
-  const { requestId, result } = await c.req.json();
+  const { requestId, result } = parseRequestBody({ text: await c.req.text() });
   if (!requestId) {
     return c.json({ error: 'Missing "requestId".' }, 400);
   }

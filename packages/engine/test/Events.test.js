@@ -143,6 +143,45 @@ test('triggerEvent no event defined', async () => {
   });
 });
 
+// ClickableHtml fires the event an HTML attribute names (data-event), so the
+// name can come from data.
+test.each(['__proto__', 'constructor', 'toString', 'hasOwnProperty'])(
+  'triggerEvent treats the inherited name %s as an undeclared event',
+  async (name) => {
+    const pageConfig = {
+      id: 'root',
+      type: 'Box',
+      blocks: [
+        {
+          id: 'button',
+          type: 'Button',
+          events: {
+            onClick: [{ id: 'a', type: 'SetState', params: { a: 'a' } }],
+          },
+        },
+      ],
+    };
+    const context = await testContext({
+      lowdefy,
+      pageConfig,
+    });
+    const { button } = context._internal.RootSlots.map;
+    const res = await button.triggerEvent({ name });
+    expect(res).toEqual({
+      blockId: 'button',
+      bounced: false,
+      endTimestamp: { date: 0 },
+      event: undefined,
+      eventName: name,
+      responses: {},
+      startTimestamp: { date: 0 },
+      success: true,
+    });
+    expect(Object.hasOwn(Object.prototype, 'loading')).toBe(false);
+    expect(context.eventLog).toEqual([]);
+  }
+);
+
 test('triggerEvent x1', async () => {
   const pageConfig = {
     id: 'root',

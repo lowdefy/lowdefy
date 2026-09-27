@@ -39,3 +39,16 @@ test('findOperatorInData normalises escaped operators and methods', () => {
 test('findOperatorInData reports an empty path when the value itself is an operator', () => {
   expect(findOperatorInData({ _request: 'x' })).toEqual({ operator: '_request', path: '' });
 });
+
+test('findOperatorInData finds an operator beside a __proto__ key parsed from JSON', () => {
+  expect(findOperatorInData(JSON.parse('[{ "_user": "email", "__proto__": {} }]'))).toEqual({
+    operator: '_user',
+    path: '0',
+  });
+});
+
+test('findOperatorInData walks into serialized wrappers', () => {
+  expect(
+    findOperatorInData({ html: { '~e': { name: 'Error', message: { _request: 'x' } } } })
+  ).toEqual({ operator: '_request', path: 'html.~e.message' });
+});

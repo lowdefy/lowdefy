@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { serializer } from '@lowdefy/helpers';
+
 import checkPolicy from './checkPolicy.js';
 
 const policy = {
@@ -332,4 +334,128 @@ test('checkPolicy reports structure errors with their paths', () => {
     'policy.structure blocks.2',
     'policy.structure blocks.3.blocks',
   ]);
+});
+
+// The client runs an object as an operator once its other keys evaluate to
+// undefined, so { _user: 'email', x: { _if: { test: false } } } runs _user.
+const vanishes = { _if: { test: false } };
+
+test.each([
+  [
+    'an unlisted operator beside a key that evaluates to undefined',
+    { id: 'p', type: 'Paragraph', properties: { content: { _user: 'email', x: vanishes } } },
+    ['policy.operators blocks.0.properties.content'],
+  ],
+  [
+    'an unlisted operator beside an undefined value',
+    { id: 'b', type: 'Box', style: { color: { _user: 'email', x: undefined } } },
+    ['policy.operators blocks.0.style.color'],
+  ],
+  [
+    'a URL an operator computes once its sibling vanishes',
+    { id: 'a', type: 'Anchor', properties: { href: { _state: 'form.url', x: vanishes } } },
+    ['policy.urls blocks.0.properties.href'],
+  ],
+  [
+    'CallAPI payload read by an unlisted operator once its sibling vanishes',
+    {
+      id: 'b',
+      type: 'Box',
+      events: {
+        onClick: [
+          {
+            id: 'a',
+            type: 'CallAPI',
+            params: { endpointId: 'submit', payload: { leak: { _user: true, x: vanishes } } },
+          },
+        ],
+      },
+    },
+    ['policy.operators blocks.0.events.onClick.0.params.payload.leak'],
+  ],
+  [
+    'Link params an operator computes once its sibling vanishes',
+    {
+      id: 'b',
+      type: 'Box',
+      events: {
+        onClick: [{ id: 'a', type: 'Link', params: { _state: 'form.link', x: vanishes } }],
+      },
+    },
+    ['policy.literal blocks.0.events.onClick.0.params'],
+  ],
+  [
+    'SetState params an operator computes once its sibling vanishes',
+    {
+      id: 'b',
+      type: 'Box',
+      events: {
+        onClick: [
+          { id: 'a', type: 'SetState', params: { _state: 'form.values', 'form.x': vanishes } },
+        ],
+      },
+    },
+    ['policy.literal blocks.0.events.onClick.0.params'],
+  ],
+  [
+    'an operator that surfaces once a nested object vanishes',
+    {
+      id: 'p',
+      type: 'Paragraph',
+      properties: { content: { _user: 'email', y: { a: vanishes, _state: 'form.z' } } },
+    },
+    ['policy.operators blocks.0.properties.content'],
+  ],
+  [
+    'properties an operator computes once its sibling vanishes',
+    { id: 'b', type: 'Box', properties: { _state: 'form.props', x: vanishes } },
+    ['policy.literal blocks.0.properties'],
+  ],
+])('checkPolicy rejects %s', (_, block, expected) => {
+  expect(rules(check([block]))).toEqual(expected);
+});
+
+test.each([
+  ['a search score beside a title', { _score: 0.5, title: 'x' }],
+  ['a document version key beside a name', { __v: 0, name: 'x' }],
+  ['an operator name beside an object that cannot vanish', { _user: 'x', y: { _if: 1, b: 2 } }],
+])('checkPolicy allows %s as data', (_, record) => {
+  expect(check([{ id: 'b', type: 'Box', properties: { record }, style: { record } }])).toEqual([]);
+});
+
+// Content arrives as the server holds it: a { "~e": ... } value revived as an Error,
+// which the page writes back as "~e" for the client to revive.
+test.each([
+  [
+    'an error',
+    { '~e': { name: 'Error', message: { _global: 'x' } } },
+    ['policy.structure blocks.0.properties.record.~e'],
+  ],
+  [
+    'an error in a list',
+    [{ '~e': { name: 'Error', message: 'x' } }],
+    ['policy.structure blocks.0.properties.record.0.~e'],
+  ],
+  [
+    'a date wrapper that is not a date',
+    { '~d': { _global: 'x' } },
+    ['policy.structure blocks.0.properties.record.~d'],
+  ],
+  [
+    'an array wrapper, revived as an array',
+    { '~arr': [{ _global: 'x' }] },
+    ['policy.operators blocks.0.properties.record.0'],
+  ],
+  [
+    'any other reserved key',
+    { '~foo': { _global: 'x' } },
+    ['policy.structure blocks.0.properties.record.~foo'],
+  ],
+])('checkPolicy checks content holding %s as the client receives it', (_, record, expected) => {
+  const properties = serializer.deserialize({ record });
+  expect(rules(check([{ id: 'b', type: 'Box', properties }]))).toEqual(expected);
+});
+
+test('checkPolicy allows a date', () => {
+  expect(check([{ id: 'b', type: 'Box', properties: { record: new Date(0) } }])).toEqual([]);
 });
