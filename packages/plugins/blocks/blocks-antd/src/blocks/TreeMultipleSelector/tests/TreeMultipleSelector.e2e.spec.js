@@ -60,6 +60,22 @@ test.describe('TreeMultipleSelector Block', () => {
     ).not.toHaveClass(/ant-select-tree-checkbox-checked/);
   });
 
+  test('renders a checkStrictly value and adds to it', async ({ page }) => {
+    const selector = getSelector(page, 'tms_strict_value');
+    await expect(selector.locator('.ant-select-selection-item')).toHaveText(['Fruit']);
+    await selector.click();
+    await expect(
+      getTreeNode(page, 'Fruit').locator('.ant-select-tree-checkbox').first()
+    ).toHaveClass(/ant-select-tree-checkbox-checked/);
+    await expect(
+      getTreeNode(page, 'Apple').locator('.ant-select-tree-checkbox').first()
+    ).not.toHaveClass(/ant-select-tree-checkbox-checked/);
+    await getTreeNode(page, 'Apple').locator('.ant-select-tree-checkbox').first().click();
+    await expect(getBlock(page, 'tms_strict_value_display')).toHaveText(
+      /Strict value: \[\s*"fruit",\s*"apple"\s*\]/
+    );
+  });
+
   test('renders a custom removeIcon on each tag', async ({ page }) => {
     const selector = getSelector(page, 'tms_remove_icon');
     const remove = selector.locator('.ant-select-selection-item-remove');

@@ -28,6 +28,8 @@ events:
           - echo
         tms_remove_icon:
           - apple
+        tms_strict_value:
+          - fruit
 
 blocks:
   - id: tms_basic
@@ -118,6 +120,30 @@ blocks:
           - 'Strict: '
           - _json.stringify:
               - _state: tms_strict_event
+
+  - id: tms_strict_value
+    type: TreeMultipleSelector
+    properties:
+      checkable: true
+      checkStrictly: true
+      treeDefaultExpandAll: true
+      primaryKey: id
+      parentKey: parentId
+      valueKey: id
+      html: '{{ item.label }}'
+      data:
+        - { id: fruit, label: Fruit }
+        - { id: apple, label: Apple, parentId: fruit }
+        - { id: banana, label: Banana, parentId: fruit }
+
+  - id: tms_strict_value_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'Strict value: '
+          - _json.stringify:
+              - _state: tms_strict_value
 
   - id: tms_remove_icon
     type: TreeMultipleSelector
