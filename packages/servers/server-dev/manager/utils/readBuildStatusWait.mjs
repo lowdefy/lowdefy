@@ -14,6 +14,11 @@
   limitations under the License.
 */
 
+// A lowdefy_build_status call is a small JSON-RPC message. A body of unknown length,
+// or larger than this, is forwarded unread, so the proxy never holds a large body in
+// memory before the dev server has checked the request.
+const MAX_WAIT_BODY_BYTES = 64 * 1024;
+
 function parseJson(body) {
   try {
     return JSON.parse(body.toString('utf8'));
@@ -49,6 +54,10 @@ async function readBuildStatusWait({ basePath, req }) {
     return { wait: searchParams.get('wait') === 'true', body: undefined };
   }
   if (req.method !== 'POST' || pathname !== `${basePath}/lowdefy-docs/mcp`) {
+    return { wait: false, body: undefined };
+  }
+  const contentLength = Number(req.headers['content-length']);
+  if (!Number.isInteger(contentLength) || contentLength > MAX_WAIT_BODY_BYTES) {
     return { wait: false, body: undefined };
   }
   const body = await readBody(req);

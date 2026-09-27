@@ -283,3 +283,27 @@ test('startProxy forwards other MCP calls and build-status reads at once, with t
   expect(call).toEqual({ label: 'child', body, buildWait: null });
   expect(read).toEqual({ label: 'child', body: '', buildWait: null });
 });
+
+const paddedWaitCall = mcpCall('lowdefy_build_status', { wait: true, pad: 'x'.repeat(70 * 1024) });
+const waitCall = mcpCall('lowdefy_build_status', { wait: true });
+
+test.each([
+  ['a body larger than 64 KiB', { body: paddedWaitCall }, paddedWaitCall],
+  [
+    'a streamed body without a length',
+    { body: new Blob([waitCall]).stream(), duplex: 'half' },
+    waitCall,
+  ],
+])('startProxy forwards an MCP POST with %s unread, without holding it', async (_, init, sent) => {
+  const port = await startChildAndProxy(echoRequest('child'));
+  context.basePath = '';
+  context.buildActivity = createBuildActivity({ onChange: () => {} });
+  context.buildActivity.setBusy(true);
+
+  const call = await fetch(`http://localhost:${port}/lowdefy-docs/mcp`, {
+    method: 'POST',
+    ...init,
+  }).then((response) => response.json());
+
+  expect(call).toEqual({ label: 'child', body: sent, buildWait: null });
+});
