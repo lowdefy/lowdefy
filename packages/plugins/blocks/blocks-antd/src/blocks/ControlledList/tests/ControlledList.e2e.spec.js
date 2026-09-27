@@ -168,6 +168,17 @@ test.describe('ControlledList Block', () => {
     await expect(getListItems(list).last()).toHaveCSS('border-bottom-style', 'none');
   });
 
+  test('borders the last item of a list nested in a list with a footer', async ({ page }) => {
+    // antd's rule matches any list inside a list that has something after its items
+    const inner = getBlock(page, 'controlledlist_nested').locator('.ant-list .ant-list');
+    await expect(inner).not.toHaveClass(/ant-list-something-after-last-item/);
+    await expect(getListItems(inner)).toHaveCount(2);
+    await expect(getListItems(inner).last()).toHaveCSS(
+      'border-bottom',
+      '1px solid rgba(5, 5, 5, 0.06)'
+    );
+  });
+
   test('pads items for the small and large sizes', async ({ page }) => {
     const small = getList(page, 'controlledlist_small_items');
     await expect(getListItems(small).first()).toHaveCSS('padding', '8px 16px');

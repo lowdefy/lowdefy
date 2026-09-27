@@ -98,7 +98,8 @@
     border-block-end: var(--ant-line-width) var(--ant-line-type) var(--ant-color-split);
   }
 
-  .ant-list-split.ant-list-something-after-last-item > .ant-list-items > .ant-list-item:last-child {
+  /* A descendant selector, as in antd, so a list nested in a list with a footer matches too. */
+  .ant-list-split.ant-list-something-after-last-item .ant-list-items > .ant-list-item:last-child {
     border-block-end: var(--ant-line-width) var(--ant-line-type) var(--ant-color-split);
   }
 

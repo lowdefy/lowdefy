@@ -45,6 +45,10 @@ events:
         controlledlist_theme_small:
           - name: Item 1
           - name: Item 2
+        controlledlist_nested:
+          - inner:
+              - name: Inner 1
+              - name: Inner 2
 
 blocks:
   # ============================================
@@ -264,3 +268,24 @@ blocks:
       hideAddButton: true
       theme:
         emptyTextPadding: 4
+
+  - id: controlledlist_nested
+    type: ControlledList
+    properties:
+      title: Outer List
+    slots:
+      content:
+        blocks:
+          - id: controlledlist_nested.$.inner
+            type: ControlledList
+            properties:
+              title: Inner List
+              addToFront: true
+            slots:
+              content:
+                blocks:
+                  - id: controlledlist_nested_inner_text
+                    type: Span
+                    properties:
+                      content:
+                        _state: controlledlist_nested.$.inner.$.name
