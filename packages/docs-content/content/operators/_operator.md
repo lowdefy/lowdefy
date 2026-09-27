@@ -11,7 +11,7 @@ The `_operator` operator evaluates an operator with the given params. This is us
 #### Arguments
 
 ###### object
-  - `operator: string`: The name of the operator to evaluate.
+  - `name: string`: The name of the operator to evaluate, such as `_sum` or `_number.round`. Names written in `name`, including the names an `_if` chooses between, are loaded with the page. A name read at runtime, from state or a request, must be an operator the page also uses elsewhere in its config.
   - `params: any`: The params to give to the operator.
 
 #### Examples
@@ -19,7 +19,7 @@ The `_operator` operator evaluates an operator with the given params. This is us
 ###### Get a value from `urlQuery` if specified, else use the value in `state`:
 ```yaml
 _operator:
-  operator:
+  name:
     _if:
       test:
         _eq:

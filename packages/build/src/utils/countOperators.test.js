@@ -92,3 +92,35 @@ test('operator should be object with just one key', () => {
   );
   expect(counter.getCounts()).toEqual({});
 });
+
+test.each([
+  {
+    name: 'a literal name',
+    params: { name: '_sum', params: [1, 2] },
+    counts: ['_operator', '_sum'],
+  },
+  {
+    name: 'a literal method name',
+    params: { name: '_number.round', params: 1.5 },
+    counts: ['_number', '_operator'],
+  },
+  {
+    name: 'the names an _if chooses between',
+    params: { name: { _if: { test: { _state: 'use_sum' }, then: '_sum', else: '_product' } } },
+    counts: ['_if', '_operator', '_product', '_state', '_sum'],
+  },
+  {
+    name: 'a name read at runtime',
+    params: { name: { _state: 'op' } },
+    counts: ['_operator', '_state'],
+  },
+  {
+    name: 'names that are not operators',
+    params: { name: ['sum', '_', '_ x'] },
+    counts: ['_operator'],
+  },
+])('countOperators counts the operator _operator dispatches to: $name', ({ params, counts }) => {
+  const counter = createCounter();
+  countOperators({ value: { _operator: params } }, { counter });
+  expect(Object.keys(counter.getCounts()).sort()).toEqual(counts);
+});
