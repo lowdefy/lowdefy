@@ -67,8 +67,9 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
   const policy = type.isNone(block.properties.policy)
     ? null
     : shared.artifacts.dynamicPolicies[block.properties.policy];
-  // A UserError the routine returns (a failed ValidateDynamic step, a :reject,
-  // a :throw) was logged as a warning where it was raised.
+  // A UserError the routine returns was logged as a warning and marked handled
+  // where it was raised (a failed ValidateDynamic step, a :reject, a :throw) or
+  // by runRoutine (a refused nested CallApi payload).
   let loggedByRoutine = false;
   try {
     if (depth >= MAX_DYNAMIC_DEPTH) {
@@ -89,7 +90,7 @@ async function resolveDynamicBlock(context, { block, depth, shared }) {
       literalData: { policyId: policy?.id ?? null },
     });
     if (['error', 'reject'].includes(status)) {
-      loggedByRoutine = error?.name === 'UserError';
+      loggedByRoutine = error?.name === 'UserError' && error.handled === true;
       throw (
         error ??
         new ConfigError(

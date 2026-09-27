@@ -88,14 +88,19 @@ async function runRoutine(context, routineContext, { routine }) {
     if (error.isReject) {
       return { status: 'reject', error };
     }
-    // A UserError raised by a nested :throw is an expected author outcome that
-    // the calling routine already logged as a warning - it is not a fault.
+    // A UserError is an expected outcome, not a fault: it is logged once, as a
+    // warning. A step or control that logs one marks it handled; one thrown
+    // without being logged, such as a nested CallApi whose payload the target's
+    // payloadSchema refuses, is logged here.
     if (error.name === 'UserError') {
+      if (!error.handled) {
+        context.logger.warn({ event: 'warn_routine_user_error', err: error }, error.message);
+        error.handled = true;
+      }
       return { status: 'error', error };
     }
-    // handleError sets error.handled once it has logged - it is the single sink
-    // that owns the flag, so a nested runRoutine re-throwing this error does not
-    // log it again.
+    // handleError sets error.handled once it has logged, so a nested runRoutine
+    // re-throwing this error does not log it again.
     if (!error.handled) {
       await context.handleError(error);
     }

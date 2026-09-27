@@ -315,6 +315,34 @@ test('resolveDynamicContent logs a payload its endpoint refuses once, as a warni
   expect(logger.warn.mock.calls[0][1]).toContain('at /params/area: must be number.');
 });
 
+test('resolveDynamicContent logs a nested CallApi payload its target refuses once, as a warning', async () => {
+  const dynamicBlock = await resolveWithRoutine(
+    [
+      {
+        id: 'endpoint:resolve_section:inner',
+        stepId: 'inner',
+        type: 'CallApi',
+        properties: { endpointId: 'inner_api', payload: { quantity: 'two' } },
+      },
+      { ':return': { blocks: [] } },
+    ],
+    {
+      extraEndpoints: {
+        inner_api: {
+          payloadSchema: { type: 'object', properties: { quantity: { type: 'number' } } },
+          routine: { ':return': { ok: true } },
+        },
+      },
+    }
+  );
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.warn.mock.calls[0][1]).toContain(
+    'Payload for endpoint "inner_api" does not match its payloadSchema at /quantity'
+  );
+});
+
 test('resolveDynamicContent falls back when resolved content uses an unbundled block type', async () => {
   const dynamicBlock = makeDynamicBlock({
     fallbackBlocks: [{ id: 'fb', blockId: 'fb', type: 'Html' }],

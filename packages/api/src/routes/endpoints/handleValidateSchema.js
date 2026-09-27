@@ -62,6 +62,7 @@ async function handleValidateSchema(context, routineContext, { step }) {
       stepId: step.stepId,
       err: error,
     });
+    error.handled = true;
     return { status: 'error', error };
   }
 
