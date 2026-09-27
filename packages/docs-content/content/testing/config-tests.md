@@ -61,6 +61,7 @@ Blocks are addressed by their `blockId`. Every step has a 5 second timeout by de
 | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `click: target`                           | Click the block, or the control a [target](#targets) narrows to.                                                                                            |
 | `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names).                                                                             |
+| `fill: { blockId, fromEmail }`            | Type text read from an [email](#emails) instead of a fixed value, such as a one-time sign-in code. The actor stays on the page.                             |
 | `select: { blockId, value }`              | Open the selector block (or grid cell) and choose the option whose text is `value`. A radio, button or segmented selector's option is clicked by its label. |
 | `press: Enter`                            | Press a key or chord. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.                                                               |
 | `back: true`                              | Go back one page, like the browser's Back button. Fails when the journey has not navigated from an earlier page.                                            |
@@ -155,6 +156,19 @@ connections:
 
 `email` opens the newest matching message that arrived since the journey started, waiting up to the step timeout for one to arrive. The email is shown in the actor's tab, so `click: { text: Verify email address }` follows its button the way a person does, and `expect: { visible: { text: ... } }` checks its content. Opening the same email again (following an invitation link a second time after signing up) opens the same message. When nothing matches, the step fails with the messages that did arrive.
 
+A one-time code is typed, not clicked. `fill` with `fromEmail: { to, subject, match }` reads the same newest matching message, waiting for it the same way, and types the first match of the regular expression `match` (or its first capture group, when it has one) into the block. The actor stays on the page they are on, as a person reads the code on their phone and types it into the tab they started from. The match runs on the email's text, not its HTML markup. Anchor the pattern with `\b`, since the text can also hold the sign-in link, whose address may contain digits.
+
+```yaml
+- click: login_magic_send
+- fill:
+    blockId: otp
+    fromEmail:
+      to: ada@example.test
+      subject: Your sign-in link
+      match: '\b\d{6}\b'
+- click: login_code_verify
+```
+
 ### Several people
 
 `as: invitee` switches the journey to another person with their own browser and cookies: an owner and the person they invite, or a member whose session stays open while the owner removes them. The journey starts as `main`. The first `as` for a name opens the journey's page in a new browser, as the journey's `user`; switching back returns to that person's tab as they left it.
@@ -164,6 +178,14 @@ Each person also sends requests from their own client address, so auth rate limi
 ### The database
 
 Journeys perform real sign-ups, so they need a database that starts empty and is never a real one. Run them against a fresh test database each time: a sign-up journey run a second time finds its address already registered, and no verification email is sent. Give each journey its own addresses, so journeys in one run do not collide.
+
+Keep journeys that write, like these, out of `tests/journeys/` when your everyday `lowdefy test` runs against a shared database. Put them in their own directory, such as `tests/auth-journeys/`, and run them only from a script that starts the test database, the mail sink and the server they need:
+
+```
+lowdefy test --journeys-directory tests/auth-journeys --url http://localhost:3290
+```
+
+A plain `lowdefy test`, and the `lowdefy_run_tests` agent tool, never read that directory.
 
 ## Running
 
@@ -188,16 +210,17 @@ A failing journey stops at its first failing step and prints the step's index, t
 ### Options
 
 - `--filter <name>`: Only run journeys whose `name` contains the string (case-insensitive). `lowdefy test --filter control` runs every journey with "control" in its name.
+- `--journeys-directory <path>`: Read journeys from this directory instead of `tests/journeys/`, for journeys that need a server set up for them, such as [auth journeys](#the-database). A relative path is resolved from the current directory. The run fails when the directory holds no journeys.
 - `--url <url>`: Run against a development server that is already running instead of starting one, for example `lowdefy test --url http://localhost:3000` while `lowdefy dev` is open in another terminal. This is the fastest way to iterate on a journey.
 - `--port <port>`: The port to start the development server on. If it is in use the next free port is taken. The default is `3000`.
 - `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for [`lowdefy dev`](/cli#dev).
 
 ### Exit codes
 
-| Exit code | Meaning                                                                                                |
-| --------- | ------------------------------------------------------------------------------------------------------ |
-| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                        |
-| `1`       | At least one journey failed, a journey file was invalid, or an explicit `--filter` matched no journey. |
+| Exit code | Meaning                                                                                                                                           |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                                                                   |
+| `1`       | At least one journey failed, a journey file was invalid, an explicit `--filter` matched no journey, or a `--journeys-directory` held no journeys. |
 
 A journey file that is not valid YAML, or does not match the journey format (a missing `name`, a step with two keys, an unknown step key) is reported as a failed journey with the validation message and the file path. It never aborts the run, so one broken file cannot hide the results of the others.
 
