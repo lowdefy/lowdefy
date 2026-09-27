@@ -199,7 +199,9 @@ api:
 
 function readArtifact(buildDir, fileName) {
   try {
-    return serializer.deserialize(JSON.parse(fs.readFileSync(path.join(buildDir, fileName), 'utf8')));
+    return serializer.deserialize(
+      JSON.parse(fs.readFileSync(path.join(buildDir, fileName), 'utf8'))
+    );
   } catch {
     return null;
   }
@@ -298,7 +300,9 @@ beforeAll(async () => {
 async function buildAndCollectWarnings(pageId) {
   const context = hydrateContext({ buildDir, configDir });
   const result = await buildPageJit({ pageId, pageRegistry, context });
-  const warnings = (result?._warnings ?? []).filter((w) => w.message.includes('non-existent endpoint'));
+  const warnings = (result?._warnings ?? []).filter((w) =>
+    w.message.includes('non-existent endpoint')
+  );
   return { result, warnings };
 }
 
@@ -337,4 +341,22 @@ test('JIT build still warns when a CallAPI targets a genuinely missing endpoint'
     'CallAPI action on page "missing" references non-existent endpoint "does_not_exist". ' +
       'Check the endpointId for typos, or add an Api endpoint with id "does_not_exist".'
   );
+});
+
+test('JIT builds sharing one dev context collect and check only the built page references', async () => {
+  // The dev server keeps one context across page builds until the next
+  // skeleton rebuild, and rebuilds a page that failed on every request.
+  const context = hydrateContext({ buildDir, configDir });
+  const endpointWarnings = (result) =>
+    (result?._warnings ?? []).filter((w) => w.message.includes('non-existent endpoint'));
+  expect(
+    endpointWarnings(await buildPageJit({ pageId: 'missing', pageRegistry, context }))
+  ).toHaveLength(1);
+  expect(endpointWarnings(await buildPageJit({ pageId: 'home', pageRegistry, context }))).toEqual(
+    []
+  );
+  await buildPageJit({ pageId: 'missing', pageRegistry, context });
+  await buildPageJit({ pageId: 'missing', pageRegistry, context });
+  expect(context.callApiActionRefs).toHaveLength(1);
+  expect(context.linkActionRefs).toEqual([]);
 });
