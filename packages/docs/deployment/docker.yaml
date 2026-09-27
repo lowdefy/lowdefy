@@ -148,7 +148,7 @@ _ref:
             | `LOWDEFY_SECRET_*`  | App secrets, accessed with the [`_secret`](/_secret) operator.           |
             | `AUTH_SECRET`       | Required when using [Lowdefy Auth](/users-introduction).                 |
             | `LOWDEFY_ENVIRONMENT` | Read at build time: the environment this image is built for, one of `config.environments`. |
-            | `BETTER_AUTH_URL`   | The app's canonical origin for auth links and the MCP resource URIs. Defaults to the `url` of the current environment in `config.environments`. Set it when a proxy terminates TLS in front of the container: without it, auth trusts only the origin the request reached the server on (`http://…`), and refuses sign-in from the `https://` page. |
+            | `BETTER_AUTH_URL`   | The app's canonical origin for auth links and the MCP resource URIs. Defaults to the `url` of the current environment in `config.environments`. The server refuses to start without one of the two when `auth.email` is configured. Set it when a proxy terminates TLS in front of the container: without it, auth trusts only the origin the request reached the server on (`http://…`), and refuses sign-in from the `https://` page. |
             | `CRON_SECRET`       | Bearer token protecting `/api/cron/*` and `/api/detached/*` endpoints.   |
             | `LOWDEFY_LOG_LEVEL` | Server log level: `debug`, `info` (default), `warn`, `error`.            |
             | `SENTRY_DSN`        | Enables Sentry error reporting when set.                                 |
@@ -171,6 +171,21 @@ _ref:
             RUN --mount=type=secret,id=sentry,env=SENTRY_AUTH_TOKEN \
               npx lowdefy@"$LOWDEFY_VERSION" build
             ```
+
+            ### Behind a reverse proxy
+
+            The server takes each request's client address from its connection. Auth rate limits count attempts per client address (for example 3 sign-in attempts per 10 seconds), sessions record it, and the request log writes it as `client_address`. `X-Forwarded-For` is not read by default, because any client can send it.
+
+            Behind a reverse proxy, load balancer or ingress, every connection comes from the proxy, so every client would share its address and its rate limits. List the proxy addresses, or CIDR ranges, in `config.trustedProxies`:
+
+            ```yaml
+            config:
+              trustedProxies:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+            ```
+
+            When a request's connection comes from a trusted proxy, the server reads `X-Forwarded-For` from the right, skips every trusted hop, and takes the first address that is not trusted. Entries further left were written by the client and are ignored. The proxy must append to `X-Forwarded-For` (nginx: `proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;`). The server logs a warning the first time a request carries `X-Forwarded-For` while `trustedProxies` is not set.
 
             ### Logging
 

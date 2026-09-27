@@ -504,33 +504,27 @@ visible:
 
 ## Auth Routes
 
-**File:** `packages/servers/server/src/routes/auth.js`
+**Files:** `packages/servers/server/src/routes/auth.js`, `packages/servers/server-dev/src/routes/auth.js`
 
-A Hono middleware mounted at `/api/auth/*` (replaces `pages/api/auth/[...nextauth].js`). The `initAuthConfig(() => getAuthConfig({ logger }))` middleware is mounted app-wide in `src/app.js` when auth is configured; the route itself delegates to `authHandler()` from `@hono/auth-js`. The corporate-email HEAD pre-check branches **inside** the middleware because Hono routes HEAD requests through GET handlers — a separate HEAD route would never match:
+A Hono middleware mounted at `/api/auth/*` hands every request to BetterAuth's Web Standard handler through `handleAuthRequest` (`packages/api/src/routes/auth/handleAuthRequest.js`). HEAD short-circuits with a 200 **inside** the middleware, because Hono routes HEAD through GET handlers and corporate mail link-checkers pre-fetch one-time links with HEAD.
 
-```javascript
-function authMiddleware() {
-  const handler = authJson.configured === true ? authHandler() : null;
-  return async function auth(c, next) {
-    if (authJson.configured !== true) {
-      return c.json({ message: 'Auth not configured' }, 404);
-    }
-    // Corporate email link check
-    if (c.req.method === 'HEAD') {
-      return c.body(null, 200);
-    }
-    return handler(c, next);
-  };
-}
-```
+### Client address
 
-Handles:
+BetterAuth keys its rate limits (sign-in and sign-up: 3 per 10 s per address), the session's `ipAddress` and the captcha `remoteip` on the client address, which it reads only from request headers (`advanced.ipAddress.ipAddressHeaders`). `getBetterAuthConfig` names one header, `x-lowdefy-client-address`, and `handleAuthRequest` rebuilds the request with the address the server resolved in it, replacing any copy the client sent. The request is rebuilt from its parts (url, method, headers, body) rather than cloned, because `@hono/node-server`'s lightweight request is not accepted by another copy's `Request` constructor (the dev server loads two).
 
-- `/api/auth/signin` - Login
-- `/api/auth/signout` - Logout
-- `/api/auth/callback/[provider]` - OAuth callbacks
-- `/api/auth/session` - Session retrieval
-- `/api/auth/csrf` - CSRF protection
+The address is resolved once per request:
+
+| Server                      | Source                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@lowdefy/server` on Node   | `apiContext` calls `lib/server/getClientAddress.js`: the socket peer (`c.env.incoming.socket.remoteAddress`), or, when the peer is in `config.trustedProxies`, the first untrusted hop of `X-Forwarded-For` read from the right (`createClientAddressResolver` in `@lowdefy/node-utils`). Stored as `context.clientAddress`; the request and error logs write it as `client_address`. Warns once when `X-Forwarded-For` arrives and `trustedProxies` is unset. |
+| `@lowdefy/server` on Vercel | The generated function entry (`lowdefy vercel-output`, `apiHandler.js`) creates the app with `clientAddressHeader: 'x-real-ip'`, which Vercel's edge sets on every request.                                                                                                                                                                                                                                                                                    |
+| `@lowdefy/server-dev`       | `lib/server/getClientAddress.js`: the same resolver (the peer is the manager proxy on loopback), except that a journey actor's headless browser context carries a `lowdefy_journey_actor` cookie holding a per-process token and an address from `203.0.113.0/24` (`lib/server/auth/journeyActor.js`, set in `lib/docs/getBrowser.js`). Only the dev server reads it, and only with its own token.                                                             |
+
+`config.trustedProxies` is validated at build (`validateTrustedProxies`, each entry an IP or CIDR range via `parseIpRange`).
+
+### Base URL
+
+`getCanonicalUrl` pins BetterAuth's `baseURL` to `BETTER_AUTH_URL`, else the current environment's `url`. Unpinned, BetterAuth derives links and trusted origins from each request's host, so outside dev `getBetterAuthConfig` throws a `ConfigError` at startup when `auth.email` is configured (every emailed flow — verification, password reset, magic link, invitations — needs it), and only warns otherwise. The dev server keeps the request origin.
 
 ## Auth Events
 

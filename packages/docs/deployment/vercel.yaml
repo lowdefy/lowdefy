@@ -59,7 +59,9 @@ _ref:
 
             ###### Secrets and environment variables
 
-            Secrets can be set in the Environment Variables settings section by creating environment variables prefixed with `LOWDEFY_SECRET_`. Pin the auth canonical URL with the current environment's `url` (see [Deployment environments](/deployment-environments)) or `BETTER_AUTH_URL`. Different secrets can be set for production and preview deployments.
+            Secrets can be set in the Environment Variables settings section by creating environment variables prefixed with `LOWDEFY_SECRET_`. Pin the auth canonical URL with the current environment's `url` (see [Deployment environments](/deployment-environments)) or `BETTER_AUTH_URL`; with `auth.email` configured the app refuses to start without it. Different secrets can be set for production and preview deployments.
+
+            On Vercel the client address used by auth rate limits, sessions and request logs comes from the platform (`x-real-ip`), which Vercel sets on every request. `config.trustedProxies` is not used.
 
             ###### Function settings
 
