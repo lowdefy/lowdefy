@@ -37,6 +37,12 @@ async function listFiles(directory) {
 // working.
 const pageRegistryFile = 'pageRegistry.json';
 
+// idCounter.json is moved first. A JIT page build writes keyMap.json and refMap.json
+// only while the live idCounter.json still names the config build it started from
+// (skipStaleMapWrites), so the new idCounter.json must be live before the new maps
+// arrive, or a page build of the old config could write its maps over them.
+const idCounterFile = 'idCounter.json';
+
 // Files the manager and the dev tools write into the build directory to
 // signal each other. The build does not write them, so they are never in the
 // staged build, and removing them as stale would drop the signal: a restart
@@ -55,7 +61,11 @@ async function publishBuildDirectory({ buildDirectory, stagingDirectory }) {
   const stagedFiles = await listFiles(stagingDirectory);
   const liveFiles = await listFiles(buildDirectory);
 
-  for (const file of stagedFiles.filter((stagedFile) => stagedFile !== pageRegistryFile)) {
+  const firstFiles = stagedFiles.filter((file) => file === idCounterFile);
+  const otherFiles = stagedFiles.filter(
+    (file) => file !== idCounterFile && file !== pageRegistryFile
+  );
+  for (const file of [...firstFiles, ...otherFiles]) {
     await moveFile({ buildDirectory, stagingDirectory, file });
   }
 
