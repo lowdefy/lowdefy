@@ -32,6 +32,15 @@ While the child is down, requests and upgrades wait for it to come back
 covers a Vite respawn with headroom; a child that stays down longer than that
 answers 503 so callers are not held forever. In-flight streams cannot survive
 a child exit — those sockets close and the client reconnects into the hold.
+
+A child is probed until it answers once; after that, requests go straight to
+it for as long as that child process lives. Probing every request opened (and
+closed) one extra TCP connection per request, and a Vite page load is hundreds
+of module requests: each closed probe sits in TIME_WAIT, and a few dozen page
+loads within half a minute ran the machine out of ephemeral ports, failing
+unrelated connections. A proxied request that cannot reach the child, a child
+that exits, or a new child after a restart sends requests back through the
+probe and its hold.
 */
 
 const RETRY_MS = 250;
@@ -60,13 +69,35 @@ async function waitForChild({ port }) {
   }
 }
 
-function forwardRequest(context, req, res) {
+function isConfirmedChild({ context, proxyState }) {
+  const child = context.devServer;
+  return (
+    Boolean(child) &&
+    child === proxyState.confirmedChild &&
+    child.exitCode === null &&
+    child.signalCode === null
+  );
+}
+
+async function waitForConfirmedChild({ context, proxyState }) {
+  if (isConfirmedChild({ context, proxyState })) {
+    return true;
+  }
+  const child = context.devServer;
+  const up = await waitForChild({ port: context.internalPort });
+  if (up) {
+    proxyState.confirmedChild = child;
+  }
+  return up;
+}
+
+function forwardRequest({ context, proxyState }, req, res) {
   // Wait for a live child BEFORE piping the request body — the body stream can
   // only be consumed once, so retrying after a failed proxy request would need
   // full-body buffering. A probe-then-forward race (child dies between the
   // probe and the connect) surfaces as one 502, which the client's next
   // attempt resolves through the hold.
-  waitForChild({ port: context.internalPort }).then((up) => {
+  waitForConfirmedChild({ context, proxyState }).then((up) => {
     if (req.destroyed) return;
     if (!up) {
       res.writeHead(503, { 'content-type': 'application/json' });
@@ -88,6 +119,7 @@ function forwardRequest(context, req, res) {
       proxyRes.pipe(res);
     });
     proxyReq.on('error', () => {
+      proxyState.confirmedChild = null;
       if (res.headersSent) {
         res.destroy();
         return;
@@ -136,7 +168,8 @@ function forwardUpgrade(context, req, socket, head) {
 
 function startProxy(context) {
   if (context.proxyServer) return Promise.resolve();
-  const proxy = http.createServer((req, res) => forwardRequest(context, req, res));
+  const proxyState = { confirmedChild: null };
+  const proxy = http.createServer((req, res) => forwardRequest({ context, proxyState }, req, res));
   proxy.on('upgrade', (req, socket, head) => forwardUpgrade(context, req, socket, head));
   // Long-lived streams (SSE, MCP) must not be reaped by the default 5-minute
   // request timeout; keep the proxy transparent.

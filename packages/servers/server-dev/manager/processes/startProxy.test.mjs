@@ -76,6 +76,45 @@ test('startProxy forwards a request to the child and relays its response', async
   expect(await response.json()).toEqual({ path: '/api/ping?x=1' });
 });
 
+test('startProxy probes a running child once instead of opening a connection per request', async () => {
+  let childConnections = 0;
+  const port = await startChildAndProxy((req, res) => {
+    res.writeHead(200, { 'content-type': 'text/plain' });
+    res.end('ok');
+  });
+  child.on('connection', () => {
+    childConnections += 1;
+  });
+  context.devServer = { exitCode: null, signalCode: null };
+
+  for (let i = 0; i < 20; i += 1) {
+    const response = await fetch(`http://localhost:${port}/module-${i}.js`);
+    expect(await response.text()).toBe('ok');
+  }
+
+  // One probe, then the keep-alive agent's socket - not a probe per request.
+  expect(childConnections).toBeLessThanOrEqual(2);
+});
+
+test('startProxy probes a new child after a restart before forwarding to it', async () => {
+  let childConnections = 0;
+  const port = await startChildAndProxy((req, res) => {
+    res.writeHead(200, { 'content-type': 'text/plain' });
+    res.end('ok');
+  });
+  child.on('connection', () => {
+    childConnections += 1;
+  });
+  context.devServer = { exitCode: null, signalCode: null };
+  await fetch(`http://localhost:${port}/a.js`).then((response) => response.text());
+  const afterFirstChild = childConnections;
+
+  context.devServer = { exitCode: null, signalCode: null };
+  await fetch(`http://localhost:${port}/b.js`).then((response) => response.text());
+
+  expect(childConnections).toBe(afterFirstChild + 1);
+});
+
 test('startProxy aborts the child request when the client drops a streaming response', async () => {
   let upstreamClosed;
   const upstreamClosedPromise = new Promise((resolve) => {
