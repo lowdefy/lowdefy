@@ -32,6 +32,19 @@ While the child is down, requests and upgrades wait for it to come back
 covers a Vite respawn with headroom; a child that stays down longer than that
 answers 503 so callers are not held forever. In-flight streams cannot survive
 a child exit — those sockets close and the client reconnects into the hold.
+
+A child is probed until it answers once; after that, requests go straight to
+it for as long as that child process lives. Probing every request opened (and
+closed) one extra TCP connection per request, and a Vite page load is hundreds
+of module requests: each closed probe sits in TIME_WAIT, and a few dozen page
+loads within half a minute ran the machine out of ephemeral ports, failing
+unrelated connections. A proxied request that cannot reach the child, a child
+that exits, or a new child after a restart sends requests back through the
+probe and its hold. A restart first waits for the stopped child to exit, since
+until then it still answers the probe. A GET or HEAD that never reached the
+child (a refused connect, or a keep-alive socket the dying child had closed)
+is replayed through the hold rather than answered 502: a child can close its
+sockets before the manager sees it exit.
 */
 
 const RETRY_MS = 250;
@@ -51,8 +64,7 @@ function probeChild(port) {
   });
 }
 
-async function waitForChild({ port }) {
-  const deadline = Date.now() + HOLD_MS;
+async function waitForChild({ port, deadline }) {
   for (;;) {
     if (await probeChild(port)) return true;
     if (Date.now() > deadline) return false;
@@ -60,14 +72,57 @@ async function waitForChild({ port }) {
   }
 }
 
-function forwardRequest(context, req, res) {
+function isConfirmedChild({ context, proxyState }) {
+  const child = context.devServer;
+  return (
+    Boolean(child) &&
+    child === proxyState.confirmedChild &&
+    child.exitCode === null &&
+    child.signalCode === null
+  );
+}
+
+function waitUntil({ promise, deadline }) {
+  return Promise.race([
+    promise,
+    new Promise((resolve) => setTimeout(resolve, Math.max(0, deadline - Date.now()))),
+  ]);
+}
+
+async function waitForConfirmedChild({ context, proxyState, deadline }) {
+  if (isConfirmedChild({ context, proxyState })) {
+    return true;
+  }
+  await waitUntil({ promise: context.devServerExited, deadline });
+  const child = context.devServer;
+  const up = await waitForChild({ port: context.internalPort, deadline });
+  if (up) {
+    proxyState.confirmedChild = child;
+  }
+  return up;
+}
+
+const REPLAYABLE_METHODS = ['GET', 'HEAD'];
+
+// Nothing reached the child: the connect was refused, or the keep-alive socket
+// the agent reused had already been closed by a child that is going away.
+function isUnsentError({ error, proxyReq }) {
+  return (
+    error.code === 'ECONNREFUSED' || (proxyReq.reusedSocket === true && error.code === 'ECONNRESET')
+  );
+}
+
+function forwardRequest({ context, proxyState }, req, res, deadline = Date.now() + HOLD_MS) {
   // Wait for a live child BEFORE piping the request body — the body stream can
   // only be consumed once, so retrying after a failed proxy request would need
-  // full-body buffering. A probe-then-forward race (child dies between the
-  // probe and the connect) surfaces as one 502, which the client's next
-  // attempt resolves through the hold.
-  waitForChild({ port: context.internalPort }).then((up) => {
-    if (req.destroyed) return;
+  // full-body buffering. Only a bodiless GET or HEAD that never reached the
+  // child is replayed; any other request that loses the child mid-forward
+  // surfaces as one 502, which the client's next attempt resolves through the
+  // hold.
+  waitForConfirmedChild({ context, proxyState, deadline }).then((up) => {
+    // The response, not the request: an incoming request reads as destroyed
+    // once its body has been read, which a replayed GET's has.
+    if (res.destroyed) return;
     if (!up) {
       res.writeHead(503, { 'content-type': 'application/json' });
       res.end(JSON.stringify({ message: 'Lowdefy dev server is restarting.' }));
@@ -87,7 +142,16 @@ function forwardRequest(context, req, res) {
       res.flushHeaders?.();
       proxyRes.pipe(res);
     });
-    proxyReq.on('error', () => {
+    proxyReq.on('error', (error) => {
+      proxyState.confirmedChild = null;
+      if (
+        !res.headersSent &&
+        REPLAYABLE_METHODS.includes(req.method) &&
+        isUnsentError({ error, proxyReq })
+      ) {
+        forwardRequest({ context, proxyState }, req, res, deadline);
+        return;
+      }
       if (res.headersSent) {
         res.destroy();
         return;
@@ -95,7 +159,13 @@ function forwardRequest(context, req, res) {
       res.writeHead(502, { 'content-type': 'application/json' });
       res.end(JSON.stringify({ message: 'Lowdefy dev server connection dropped.' }));
     });
-    req.pipe(proxyReq);
+    // A replayed GET's request stream has already ended, so there is nothing
+    // left to pipe.
+    if (req.readableEnded) {
+      proxyReq.end();
+    } else {
+      req.pipe(proxyReq);
+    }
     req.on('error', () => proxyReq.destroy());
     // A client that goes away mid-response (a closed browser tab holding the
     // reload SSE stream, an agent dropping its MCP stream) must reach the
@@ -108,7 +178,7 @@ function forwardRequest(context, req, res) {
 }
 
 function forwardUpgrade(context, req, socket, head) {
-  waitForChild({ port: context.internalPort }).then((up) => {
+  waitForChild({ port: context.internalPort, deadline: Date.now() + HOLD_MS }).then((up) => {
     if (socket.destroyed) return;
     if (!up) {
       socket.end('HTTP/1.1 503 Service Unavailable\r\nconnection: close\r\n\r\n');
@@ -136,7 +206,8 @@ function forwardUpgrade(context, req, socket, head) {
 
 function startProxy(context) {
   if (context.proxyServer) return Promise.resolve();
-  const proxy = http.createServer((req, res) => forwardRequest(context, req, res));
+  const proxyState = { confirmedChild: null };
+  const proxy = http.createServer((req, res) => forwardRequest({ context, proxyState }, req, res));
   proxy.on('upgrade', (req, socket, head) => forwardUpgrade(context, req, socket, head));
   // Long-lived streams (SSE, MCP) must not be reaped by the default 5-minute
   // request timeout; keep the proxy transparent.

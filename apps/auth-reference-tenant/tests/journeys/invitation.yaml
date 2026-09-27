@@ -1,0 +1,54 @@
+- name: an invited user signs up through the invitation, joins the inviter's organization and mints none
+  pageId: signup
+  user: none
+  steps:
+    - fill: { blockId: name, value: Invite Owner }
+    - fill: { blockId: email, value: invite-owner@example.test }
+    - fill: { blockId: password, value: invite-owner-password }
+    - click: signup_button
+    - email: { to: invite-owner@example.test, subject: Verify your email address }
+    - click: { text: Verify email address }
+    - click: to_login_button
+    - fill: { blockId: email, value: invite-owner@example.test }
+    - fill: { blockId: password, value: invite-owner-password }
+    - click: login_button
+    - expect: { url: { contains: /home } }
+    - goto: members
+    - fill: { blockId: invite_email, value: invitee@example.test }
+    - fill: { blockId: invite_role, value: member }
+    - click: invite_button
+    - expect: { text: { blockId: invite_response_html, contains: invitee@example.test } }
+    # The invitee, in their own browser, follows the emailed invitation and
+    # signs up with the invited address.
+    - as: invitee
+    - email: { to: invitee@example.test, subject: You've been invited to Invite Owner }
+    - click: { text: Accept invitation }
+    - expect: { visible: accept_button }
+    - goto: signup
+    - fill: { blockId: name, value: Invitee }
+    - fill: { blockId: email, value: invitee@example.test }
+    - fill: { blockId: password, value: invitee-password }
+    - click: signup_button
+    - email: { to: invitee@example.test, subject: Verify your email address }
+    - click: { text: Verify email address }
+    - click: to_login_button
+    - fill: { blockId: email, value: invitee@example.test }
+    - fill: { blockId: password, value: invitee-password }
+    - click: login_button
+    - expect: { url: { contains: /home } }
+    # A pending invitation mints no organization: until they accept, the
+    # invitee is signed in with no membership, and protected pages refuse them.
+    - goto: dashboard
+    - expect: { url: { contains: /404 } }
+    - email: { to: invitee@example.test, subject: You've been invited }
+    - click: { text: Accept invitation }
+    - click: accept_button
+    - expect: { visible: accept_result_html }
+    - goto: organizations
+    - expect: { state: { path: my_organizations.0.name, equals: Invite Owner } }
+    - expect: { state: { path: my_organizations.1, equals: null } }
+    - expect: { text: { blockId: current_user, contains: 'org_roles: ["member"]' } }
+    - as: main
+    - goto: members
+    - expect: { text: { blockId: members_list, contains: invite-owner@example.test (owner) } }
+    - expect: { text: { blockId: members_list, contains: invitee@example.test (member) } }

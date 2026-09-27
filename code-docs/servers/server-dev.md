@@ -663,6 +663,8 @@ Before this, the inspector opened a second stream per tab and reconnected it on 
 
 The manager's proxy (`manager/processes/startProxy.mjs`) holds the public port and forwards to the Vite child. It destroys the upstream request when the client closes mid-response, so a closed tab reaches `stream.onAbort` in the child and its tab registration and file watcher are released. Without that the child never saw the disconnect: the SSE loop kept writing to a dead socket and closed tabs stayed in the registry, shadowing live ones in `findTab`.
 
+The proxy probes a child once and then forwards straight to it until a forward fails or the child is replaced: a probe per request left one TIME_WAIT socket per Vite module request, and headless page loads (journeys, screenshots) exhausted the ephemeral ports within a minute. After a restart it waits for the stopped child to exit (`context.devServerExited`, set by `shutdownServer`) before probing, since until then the old child still answers. A GET or HEAD that never reached a child that was going away (a refused connect, or a keep-alive socket the child had closed) is replayed through the hold; any other request forwarded in the moment between a child dying and the manager seeing it exit answers 502 once, and that failure sends every later request back through the probe.
+
 ### Reload Trigger
 
 **File:** `manager/processes/reloadClients.mjs`
@@ -966,6 +968,12 @@ auth:
 
 Auth itself is Auth.js v5 (`@auth/core` via `@hono/auth-js`), wired the same way as production: `initAuthConfig` mounted app-wide when configured, `/api/auth/*` delegating to `authHandler()`, and `SessionProvider`/`useSession` from `@hono/auth-js/react` on the client. See [Auth System Architecture](../architecture/auth-system.md#mock-user-for-testing-dev-server-only) for full details.
 
+## Mail Sink for Journeys
+
+With `LOWDEFY_DEV_SMTP_PORT` set, the manager (`manager/processes/startMailSink.mjs`, `smtp-server` + `postal-mime`) listens for SMTP on `127.0.0.1:<port>` and writes every message it receives as `<config>/.lowdefy/mail/<sequence>.json` (envelope recipients, subject, html, text, receive time) instead of delivering it. The directory is emptied at start. The app's own SMTP connection is pointed at the port through its secrets, so the real send path runs unchanged. The manager owns the listener so it survives child restarts, and `startServer` passes each child `LOWDEFY_SERVER_DEV_MAIL_SINK=true` only while it listens (a port added to `.env` later starts no sink); the journey `email` step (`lib/docs/openJourneyEmail.js`) checks that flag and reads the files from the server child. `smtp-server` and `postal-mime` load only when the port is set. Nothing in `@lowdefy/server` captures mail.
+
+Journeys that test auth run with `user: 'none'` (no injected caller) and one browser context per actor (`lib/docs/createJourneyActors.js`). Each actor sends `X-Forwarded-For` from `203.0.113.0/24`, so BetterAuth's per-address rate limits count each actor apart instead of one budget for the whole run. See the config tests docs (`packages/docs/testing/config-tests.md`) and `code-docs/testing.md`.
+
 ## Plugin Strategy
 
 The dev server uses a different plugin strategy than production to optimize for fast iteration.
@@ -1022,5 +1030,6 @@ If a user configures a plugin package that isn't installed in the dev server:
 | `LOWDEFY_LOG_LEVEL`               | Log level (default: info)                  |
 | `LOWDEFY_BUILD_REF_RESOLVER`      | Custom ref resolver                        |
 | `LOWDEFY_DEV_USER`                | Mock user JSON for testing                 |
+| `LOWDEFY_DEV_SMTP_PORT`           | Capture app mail over SMTP (journeys)      |
 | `LOWDEFY_SERVER_DEV_WATCH`        | Extra watch paths (JSON array)             |
 | `LOWDEFY_SERVER_DEV_WATCH_IGNORE` | Watch ignore paths (JSON array)            |

@@ -32,4 +32,14 @@ const HUB_IDLE_EXIT_MS = 10 * 60 * 1000;
 
 const READY_TIMEOUT_MS = 120 * 1000;
 
-export { HUB_IDLE_EXIT_MS, HUB_PROTOCOL, IDLE_STOP_MS, PORT_RANGE, READY_TIMEOUT_MS };
+// The most dev server log lines a logs call returns.
+const MAX_LOG_LINES = 1000;
+
+export {
+  HUB_IDLE_EXIT_MS,
+  HUB_PROTOCOL,
+  IDLE_STOP_MS,
+  MAX_LOG_LINES,
+  PORT_RANGE,
+  READY_TIMEOUT_MS,
+};

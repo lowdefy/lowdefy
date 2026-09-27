@@ -51,6 +51,8 @@ Files run in file-name order, and journeys run one at a time — each journey op
 | `urlQuery` | No       | An object appended to the page URL as a query string, for pages that read `_url_query`.                                                        |
 | `steps`    | Yes      | At least one step. Each step is an object with exactly one key from the step grammar below.                                                    |
 
+`user: none` injects no user at all, so the journey signs in through the app's own auth — see [Testing sign-up and sign-in](#testing-sign-up-and-sign-in).
+
 ## Steps
 
 Blocks are addressed by their `blockId`. Every step has a 5 second timeout by default; a step that does not complete in time fails the journey.
@@ -62,11 +64,14 @@ Blocks are addressed by their `blockId`. Every step has a 5 second timeout by de
 | `select: { blockId, value }`              | Open the selector block (or grid cell) and choose the option whose text is `value`. A radio, button or segmented selector's option is clicked by its label. |
 | `press: Enter`                            | Press a key or chord. `Mod` in a chord (`Mod+k`) resolves to Cmd on macOS and Ctrl elsewhere.                                                               |
 | `back: true`                              | Go back one page, like the browser's Back button. Fails when the journey has not navigated from an earlier page.                                            |
+| `goto: pageId`                            | Load a page the way a typed URL does; `{ pageId, urlQuery }` adds a query string. A protected page may redirect (to sign in), so assert where it landed.    |
+| `email: { to, subject }`                  | Open the newest [email](#emails) to `to` — with a subject containing `subject`, when given — that arrived during the journey, waiting for it if needed.     |
+| `as: name`                                | Act as [another person](#several-people), each in their own browser. The journey starts as `main`.                                                          |
 | `wait: { ms }`                            | Pause for `ms` milliseconds.                                                                                                                                |
 | `wait: { request: requestId }`            | Wait until the request has finished loading.                                                                                                                |
 | `wait: { state: path }`                   | Wait until the state value at `path` is defined.                                                                                                            |
 | `screenshot: name`                        | Capture a screenshot. Screenshots are returned to agents using the MCP tool; the CLI runner ignores them.                                                   |
-| `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`.                                                                                                              |
+| `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`. A path that does not exist reads as `null`, so `equals: null` also passes for a misspelt path.               |
 | `expect: { visible: target }`             | The block, or the control a target narrows to, is visible.                                                                                                  |
 | `expect: { text: { blockId, contains } }` | The block's rendered text (or a grid row's or cell's) contains the string.                                                                                  |
 | `expect: { url: { contains } }`           | The browser URL contains the string.                                                                                                                        |
@@ -104,6 +109,61 @@ A `blockId` reaches a block's own control — its button, input or link. Some co
 ```
 
 `fill`, `select` and `expect.text` always need a `blockId`; a value is typed into a block's input, never into a page-wide control. A target with a key the grammar does not know (`colum`) is rejected before the browser opens, so a typo cannot pass as a step that happened to find nothing.
+
+## Testing sign-up and sign-in
+
+A journey with `user: none` injects no user: it starts signed out, and the app's own auth decides who it is, exactly as in a real browser. Sign-up, email verification, sign-in, sign-out and organization switching all run for real, and the session cookie a sign-in sets carries through every later step.
+
+```yaml
+# tests/journeys/sign-up.yaml
+- name: a new user signs up, verifies by email and signs in
+  pageId: signup
+  user: none
+  steps:
+    - fill: { blockId: email, value: ada@example.test }
+    - fill: { blockId: password, value: correct-horse-battery }
+    - click: signup_button
+    - email: { to: ada@example.test, subject: Verify your email address }
+    - click: { text: Verify email address }
+    - goto: login
+    - fill: { blockId: email, value: ada@example.test }
+    - fill: { blockId: password, value: correct-horse-battery }
+    - click: login_button
+    - goto: dashboard
+    - expect: { text: { blockId: user_details, contains: ada@example.test } }
+```
+
+A journey that opens a protected page signed out lands on the sign-in page, the way a visitor would; assert where it landed with `expect: { url: ... }`.
+
+### Emails
+
+The `email` step reads the mail the development server captured. Start the server with `LOWDEFY_DEV_SMTP_PORT` set to a free port (in the shell or the app's `.env`; the mail sink starts with the server, so restart it after adding the variable), and point the app's SMTP connection at `127.0.0.1` on that port through its secrets. The server then receives the app's mail over SMTP and keeps it instead of delivering it: every message the app sends — verification, magic link, invitation, your own `SMTPMailSend` requests — is written to `.lowdefy/mail/` in the app directory, and the directory is emptied each time the server starts. Only the development server does this, and only with the variable set; nothing in a production build captures mail.
+
+```yaml
+connections:
+  - id: email
+    type: SMTP
+    properties:
+      from: app@example.com
+      host:
+        _secret: SMTP_HOST # 127.0.0.1 for tests
+      port:
+        _number.parseInt:
+          on:
+            _secret: SMTP_PORT # the LOWDEFY_DEV_SMTP_PORT value for tests
+```
+
+`email` opens the newest matching message that arrived since the journey started, waiting up to the step timeout for one to arrive. The email is shown in the actor's tab, so `click: { text: Verify email address }` follows its button the way a person does, and `expect: { visible: { text: ... } }` checks its content. Opening the same email again (following an invitation link a second time after signing up) opens the same message. When nothing matches, the step fails with the messages that did arrive.
+
+### Several people
+
+`as: invitee` switches the journey to another person with their own browser and cookies: an owner and the person they invite, or a member whose session stays open while the owner removes them. The journey starts as `main`. The first `as` for a name opens the journey's page in a new browser, as the journey's `user`; switching back returns to that person's tab as they left it.
+
+Each person also sends requests from their own client address, so auth rate limits (a few sign-in attempts per address every few seconds) count each person's attempts apart, as they would for people on different devices, instead of one budget for the whole run.
+
+### The database
+
+Journeys perform real sign-ups, so they need a database that starts empty and is never a real one. Run them against a fresh test database each time: a sign-up journey run a second time finds its address already registered, and no verification email is sent. Give each journey its own addresses, so journeys in one run do not collide.
 
 ## Running
 

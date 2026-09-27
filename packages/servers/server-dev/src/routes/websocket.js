@@ -14,7 +14,10 @@
   limitations under the License.
 */
 
+import { isWebSocketOriginAllowed } from '@lowdefy/api';
 import { type } from '@lowdefy/helpers';
+
+import isRebindingSafeHost from '../middleware/isRebindingSafeHost.js';
 
 // In dev, Vite owns the HTTP server, so websocket upgrades can't flow through
 // @hono/node-server. The upgrade handler (src/websocket/devWebSocket.js) runs
@@ -27,7 +30,20 @@ function websocketHandler(c) {
   if (type.isNone(websocketUpgrade)) {
     return c.json({ message: 'WebSocket upgrade required.' }, 400);
   }
-  websocketUpgrade.context = c.get('lowdefyContext');
+  // Vite's host check guards HTTP requests against DNS rebinding, but upgrades
+  // reach this route through a plugin's upgrade listener, past that check - and
+  // a rebound page's Origin matches its Host. So the Host must be one no DNS
+  // answer can rebind, as Vite requires of every HTTP request.
+  if (!isRebindingSafeHost({ host: c.req.header('host') })) {
+    return c.json({ error: 'Forbidden' }, 403);
+  }
+  const context = c.get('lowdefyContext');
+  // Upgrades are accepted from the app's own pages and from clients that send
+  // no Origin; isWebSocketOriginAllowed holds the rule and logs a refusal.
+  if (!isWebSocketOriginAllowed({ context, getHeader: (name) => c.req.header(name) })) {
+    return c.json({ error: 'Forbidden' }, 403);
+  }
+  websocketUpgrade.context = context;
   return c.json({ ok: true });
 }
 

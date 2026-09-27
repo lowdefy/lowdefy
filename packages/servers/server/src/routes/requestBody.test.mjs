@@ -17,7 +17,7 @@
 import { Hono } from 'hono';
 import { jest } from '@jest/globals';
 
-import { parseRequestBody } from '@lowdefy/api';
+import { isSameOriginRequest, parseRequestBody } from '@lowdefy/api';
 
 const mockCallEndpoint = jest.fn();
 jest.unstable_mockModule('@sentry/node', () => ({ captureException: jest.fn() }));
@@ -28,6 +28,7 @@ jest.unstable_mockModule('@lowdefy/api', () => ({
   callRequest: jest.fn(),
   getEndpointConfig: jest.fn().mockRejectedValue(new Error('not found')),
   logClientError: jest.fn(),
+  isSameOriginRequest,
   parseRequestBody,
   redactErrorResponse: jest.fn(),
   runWebhookEndpoint: jest.fn(),

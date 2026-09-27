@@ -26,19 +26,19 @@ async function isPairFree({ port, internalPort }) {
 // tool results keep pointing at the right server - and move only when
 // something else took them. reserved holds the pairs other managed apps own,
 // running or not, so two apps never trade ports between restarts.
-async function allocatePorts({ previous, reserved }) {
+async function allocatePorts({ previous, reserved, range = PORT_RANGE }) {
   if (previous && (await isPairFree(previous))) {
     return previous;
   }
   const taken = new Set(reserved.flatMap((pair) => [pair.port, pair.internalPort]));
-  for (let port = PORT_RANGE.first; port < PORT_RANGE.last; port += 2) {
+  for (let port = range.first; port < range.last; port += 2) {
     const pair = { port, internalPort: port + 1 };
     if (!taken.has(pair.port) && !taken.has(pair.internalPort) && (await isPairFree(pair))) {
       return pair;
     }
   }
   throw new Error(
-    `No free port pair in ${PORT_RANGE.first}-${PORT_RANGE.last}. Stop some dev servers with: lowdefy hub stop --all`
+    `No free port pair in ${range.first}-${range.last}. Stop some dev servers with: lowdefy hub stop --all`
   );
 }
 

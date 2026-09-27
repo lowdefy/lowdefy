@@ -306,12 +306,18 @@ per-organization client endpoints are disabled for a pinned deployment`.
     your `activeOrganizationId`, `roles` and `org_roles` in it. To exercise
     switching, use `auth-reference-tenant`'s own copy of the page, where the
     endpoints are enabled - give a user membership in two tenant orgs
-    (invite or `set-member.mjs`), switch by slug, and the page's roles line
-    updates after the chained UpdateSession without a reload.
+    (invite or `set-member.mjs`), pick one in the organization selector, and
+    the page's org roles line and active marker update after the chained
+    UpdateSession without a reload. Accepting an invitation while already
+    active in another organization joins it without switching to it.
 
-Automation note: these scenarios are manual walkthroughs, like phases 1-2;
-they need live email verification loops and three side-by-side dev servers.
-Automate with the repo's e2e tooling as it grows.
+Automation note: scenarios 17-25 are manual walkthroughs, like phases 1-2;
+they need three side-by-side dev servers. The tenant scenarios (26-28) run
+automated, together with sign-up, sign-in refusals, sign-out, magic link,
+tenant isolation and member removal, as the journeys in
+`apps/auth-reference-tenant/tests/journeys/`: `pnpm test:journeys:auth`
+starts a memory MongoDB and the dev server's mail sink, so it needs neither
+Docker MongoDB nor Mailpit (see `code-docs/testing.md`).
 
 ## Walkthrough (phase-4 gate - API strategies)
 

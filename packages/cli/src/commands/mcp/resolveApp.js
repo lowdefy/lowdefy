@@ -19,10 +19,7 @@ import path from 'path';
 
 import findApps from './findApps.js';
 import findGitRoot from './findGitRoot.js';
-
-function hasLowdefyYaml(directory) {
-  return ['lowdefy.yaml', 'lowdefy.yml'].some((name) => fs.existsSync(path.join(directory, name)));
-}
+import hasLowdefyYaml from '../../utils/hasLowdefyYaml.js';
 
 // Which app a tool call means. The shim's working directory is the agent
 // session's checkout, but a subagent working in another git worktree shares
@@ -43,7 +40,7 @@ function resolveApp({ directory, cwd }) {
 
   // Walk up to the checkout root, never past it.
   for (let current = startReal; ; current = path.dirname(current)) {
-    if (hasLowdefyYaml(current)) {
+    if (hasLowdefyYaml({ directory: current })) {
       return { configDirectory: current, root };
     }
     if (current === root || current === path.dirname(current)) {

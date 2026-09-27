@@ -17,12 +17,13 @@
 import { Hono } from 'hono';
 import { jest } from '@jest/globals';
 
-import { parseRequestBody } from '@lowdefy/api';
+import { isSameOriginRequest, parseRequestBody } from '@lowdefy/api';
 
 jest.unstable_mockModule('@lowdefy/api', () => ({
   callEndpoint: jest.fn(),
   callRequest: jest.fn(),
   logClientError: jest.fn(),
+  isSameOriginRequest,
   parseRequestBody,
   redactErrorResponse: jest.fn(),
 }));

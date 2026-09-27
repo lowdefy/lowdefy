@@ -29,12 +29,12 @@ blocks:
       html: |
         <p>Sign in (or sign up) with the invited email address first, then
         accept. Until you accept, protected pages treat you as logged out.</p>
-  - id: invitation_id_input
+  # The block id IS the state key, so the onInit write from the url query
+  # fills this input.
+  - id: invitationId
     type: TextInput
     properties:
       title: Invitation id
-    value:
-      _state: invitationId
   - id: accept_button
     type: Button
     properties:
@@ -47,7 +47,7 @@ blocks:
             type: AcceptInvitation
             params:
               invitationId:
-                _state: invitation_id_input
+                _state: invitationId
           - id: refresh_after_accept
             type: UpdateSession
           - id: accept_result

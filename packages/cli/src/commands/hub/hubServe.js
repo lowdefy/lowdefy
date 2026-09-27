@@ -21,6 +21,7 @@ import createHub from './createHub.js';
 import createLineReader from './createLineReader.js';
 import getHubPaths from './getHubPaths.js';
 import { HUB_IDLE_EXIT_MS } from './hubProtocol.js';
+import listenHubSocket from './listenHubSocket.js';
 
 const REAP_INTERVAL_MS = 60 * 1000;
 
@@ -32,42 +33,6 @@ function createLogger() {
     error: (message) => log('error', message),
     info: (message) => log('info', message),
   };
-}
-
-function isHubListening(socketPath) {
-  return new Promise((resolve) => {
-    const socket = net.connect(socketPath);
-    socket.once('connect', () => {
-      socket.end();
-      resolve(true);
-    });
-    socket.once('error', () => resolve(false));
-  });
-}
-
-async function listen({ server, socketPath }) {
-  try {
-    await new Promise((resolve, reject) => {
-      server.once('error', reject);
-      server.listen(socketPath, resolve);
-    });
-    return true;
-  } catch (error) {
-    if (error.code !== 'EADDRINUSE') {
-      throw error;
-    }
-  }
-  // A socket file with no hub behind it is left over from a crash. One with a
-  // live hub means another hub won the start-up race - this one steps aside.
-  if (await isHubListening(socketPath)) {
-    return false;
-  }
-  fs.rmSync(socketPath, { force: true });
-  await new Promise((resolve, reject) => {
-    server.once('error', reject);
-    server.listen(socketPath, resolve);
-  });
-  return true;
 }
 
 // `lowdefy hub serve` - the per-user daemon behind `lowdefy mcp` and the
@@ -132,12 +97,15 @@ async function hubServe({ cliVersion }) {
     });
   });
 
-  if (!(await listen({ server, socketPath: paths.socketPath }))) {
+  if (
+    !(await listenHubSocket({
+      server,
+      socketPath: paths.socketPath,
+      lockPath: paths.startLockPath,
+    }))
+  ) {
     logger.info('Another hub is already running - exiting.');
     return;
-  }
-  if (process.platform !== 'win32') {
-    fs.chmodSync(paths.socketPath, 0o600);
   }
   logger.info(`Lowdefy hub ${cliVersion} listening on ${paths.socketPath} (pid ${process.pid}).`);
 

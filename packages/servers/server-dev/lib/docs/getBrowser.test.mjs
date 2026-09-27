@@ -102,6 +102,37 @@ test('openPage injects the default roleless user when no user is given', async (
   });
 });
 
+test('openPage injects no user for user none, so the app resolves its own sessions', async () => {
+  const { browser, addCookies } = createBrowser();
+
+  const opened = await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'login',
+    user: 'none',
+  });
+
+  expect(addCookies).not.toHaveBeenCalled();
+  expect(opened.ready).toBe(true);
+});
+
+test('openPage sends requests from the client address it is given', async () => {
+  const { browser } = createBrowser();
+
+  await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'login',
+    clientAddress: '203.0.113.7',
+  });
+
+  expect(browser.newContext).toHaveBeenCalledWith({
+    viewport: { width: 1280, height: 800 },
+    colorScheme: 'light',
+    extraHTTPHeaders: { 'x-forwarded-for': '203.0.113.7' },
+  });
+});
+
 test('openPage injects a per-call user with roles', async () => {
   const { browser, addCookies } = createBrowser();
 
@@ -151,18 +182,50 @@ test('openPage rejects an invalid user before opening a browser context', async 
   expect(browser.newContext).not.toHaveBeenCalled();
 });
 
-test('openPage waits on the isPageReady predicate for the page it opened', async () => {
+test('openPage loads the page and waits on isPageReady for the page the app shows', async () => {
   const { browser } = createBrowser();
 
   const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
 
-  expect(opened.page.waitForFunction).toHaveBeenCalledWith(isPageReady, 'home', { timeout: 15000 });
+  // Not networkidle: the dev reload event stream keeps the network busy for the
+  // life of the page, so that wait only ever ran out its timeout.
+  expect(opened.page.goto).toHaveBeenCalledTimes(1);
+  expect(opened.page.goto).toHaveBeenCalledWith('http://localhost:3001/home', {
+    waitUntil: 'load',
+    timeout: 15000,
+  });
+  // null: the page shown, so a redirect to the sign-in page settles too.
+  expect(opened.page.waitForFunction).toHaveBeenCalledWith(isPageReady, null, { timeout: 15000 });
   expect(opened.ready).toBe(true);
+});
+
+test.each([
+  ['every image has loaded', [{ complete: true }], true],
+  ['an image is still loading', [{ complete: true }, { complete: false, loading: 'eager' }], false],
+  // Below the fold a lazy image never loads, so waiting on it would always
+  // run out the timeout.
+  [
+    'the only one loading is lazy',
+    [{ complete: true }, { complete: false, loading: 'lazy' }],
+    true,
+  ],
+])('openPage treats the page images as loaded when %s', async (_, images, loaded) => {
+  const { browser, page } = createBrowser();
+
+  await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+
+  const imagesLoaded = page.waitForFunction.mock.calls[1][0];
+  global.document = { images };
+  try {
+    expect(imagesLoaded()).toBe(loaded);
+  } finally {
+    delete global.document;
+  }
 });
 
 test('openPage resolves with ready false when the readiness wait times out', async () => {
   const { browser, page } = createBrowser();
-  page.waitForFunction.mockRejectedValue(new Error('Timeout 15000ms exceeded.'));
+  page.waitForFunction.mockRejectedValueOnce(new Error('Timeout 15000ms exceeded.'));
 
   const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
 
@@ -170,14 +233,13 @@ test('openPage resolves with ready false when the readiness wait times out', asy
   expect(opened.page).toBe(page);
 });
 
-test('openPage closes the context it created when both navigation attempts fail', async () => {
+test('openPage closes the context it created when the navigation fails', async () => {
   const { browser, context, page } = createBrowser();
   page.goto.mockRejectedValue(new Error('Timeout 15000ms exceeded.'));
 
   await expect(
     openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' })
   ).rejects.toThrow('Timeout 15000ms exceeded.');
-  expect(page.goto).toHaveBeenCalledTimes(2);
   expect(context.close).toHaveBeenCalledTimes(1);
 });
 

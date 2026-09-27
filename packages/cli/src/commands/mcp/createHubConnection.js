@@ -22,12 +22,10 @@ import connectHub from '../hub/connectHub.js';
 // re-attaches everything the old one had.
 function createHubConnection() {
   let client = null;
+  let connecting = null;
   const attached = new Set();
 
-  async function get({ autoStart = true } = {}) {
-    if (client !== null) {
-      return client;
-    }
+  async function connect({ autoStart }) {
     const next = await connectHub({ autoStart });
     if (next === null) {
       return null;
@@ -42,6 +40,25 @@ function createHubConnection() {
       [...attached].map((configDirectory) => client.request('attach', { configDirectory }))
     );
     return client;
+  }
+
+  // An agent's parallel tool calls all find no connection at first. They share
+  // one connect, so they never start a hub each.
+  async function get({ autoStart = true } = {}) {
+    if (client !== null) {
+      return client;
+    }
+    if (connecting === null) {
+      connecting = connect({ autoStart }).finally(() => {
+        connecting = null;
+      });
+    }
+    const connected = await connecting;
+    // The shared attempt may have been a status check that does not start a hub.
+    if (connected === null && autoStart) {
+      return get({ autoStart });
+    }
+    return connected;
   }
 
   async function request(method, params, options) {

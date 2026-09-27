@@ -61,6 +61,10 @@ function startServer(context) {
       env: {
         ...process.env,
         LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+        // Set only while the manager's mail sink listens: the child cannot
+        // tell from LOWDEFY_DEV_SMTP_PORT alone, which a later .env edit can
+        // add without a sink (it starts once, with the manager).
+        LOWDEFY_SERVER_DEV_MAIL_SINK: context.mailSink ? 'true' : undefined,
         PORT: context.internalPort,
       },
     }
