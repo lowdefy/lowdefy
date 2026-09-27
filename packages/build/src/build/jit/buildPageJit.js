@@ -38,11 +38,13 @@ import createContext from '../../createContext.js';
 import precomputeRuntimeOperators from '../buildRefs/precomputeRuntimeOperators.js';
 import getRefContent from '../buildRefs/getRefContent.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
+import lowdefySchema from '../../lowdefySchema.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
 import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
 import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
+import testSchema from '../testSchema.js';
 import writeMaps from '../writeMaps.js';
 import validateIconNames from '../icons/validateIconNames.js';
 import detectMissingIcons from './detectMissingIcons.js';
@@ -55,6 +57,11 @@ import writePageJit from './writePageJit.js';
 
 validateOperatorsDynamic({ operators });
 const dynamicIdentifiers = collectDynamicIdentifiers({ operators });
+
+// A page is a block, so its content is checked against the block definition -
+// the part of the app schema the skeleton build skips, since it strips page
+// content. One object, so the compiled validator is reused across builds.
+const pageSchema = { definitions: lowdefySchema.definitions, $ref: '#/definitions/block' };
 
 // A page resolved from source is validated like the full build validates
 // pages (literal names at icon positions must resolve); a prebuilt page (the
@@ -260,11 +267,15 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // resolution by the walker; JIT resolves the page file directly).
     tagRefDeep(processed, refDef.id);
 
-    // Apply skeleton-computed auth (buildAuth ran during skeleton build)
-    processed.auth = pageEntry.auth;
-
     // Add keys to the resolved page
     addKeys({ components: processed, context: buildContext });
+
+    // Warn on unknown block keys and mistyped block fields, as the full
+    // build's testSchema does. Before auth is attached: it is not page config.
+    testSchema({ components: processed, context: buildContext, schema: pageSchema });
+
+    // Apply skeleton-computed auth (buildAuth ran during skeleton build)
+    processed.auth = pageEntry.auth;
 
     // Write keyMap/refMap so the error handler reads JIT entries from disk.
     // JIT addKeys assigns fresh ~k values that aren't in the skeleton keyMap.
