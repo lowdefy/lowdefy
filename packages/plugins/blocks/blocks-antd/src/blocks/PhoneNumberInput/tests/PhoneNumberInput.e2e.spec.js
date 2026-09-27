@@ -269,4 +269,14 @@ test.describe('PhoneNumberInput antd 6 features', () => {
     await expect(select).toHaveCSS('border-top-color', 'rgb(255, 0, 0)');
     await expect(select).toHaveCSS('background-color', 'rgb(255, 240, 200)');
   });
+
+  test('applies the element and options cssKeys', async ({ page }) => {
+    const compact = getBlock(page, 'phone_theme').locator('.ant-space-compact');
+    await expect(compact).toHaveClass(/ldf-phone-number-input/);
+    await expect(compact).toHaveClass(/phone-custom-element/);
+    await expect(compact).toHaveCSS('max-width', '400px');
+    await getCodeSelector(page, 'phone_theme').click();
+    const option = page.locator('.ant-select-dropdown:visible .ant-select-item-option').first();
+    await expect(option).toHaveClass(/phone-custom-option/);
+  });
 });
