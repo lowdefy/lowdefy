@@ -101,6 +101,27 @@
           - label: '&#x274C; Rejected'
             value: rejected
 
+- title: Full Width and Vertical
+  blocks:
+    - id: block_button_selector
+      type: ButtonSelector
+      properties:
+        title: Billing Period
+        block: true
+        options:
+          - Monthly
+          - Quarterly
+          - Yearly
+    - id: vertical_button_selector
+      type: ButtonSelector
+      properties:
+        title: Plan
+        direction: vertical
+        options:
+          - Starter
+          - Team
+          - Enterprise
+
 - title: Sizes
   blocks:
     - id: size_small

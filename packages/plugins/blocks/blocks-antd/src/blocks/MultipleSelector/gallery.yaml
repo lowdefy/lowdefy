@@ -227,6 +227,36 @@
           - label: Africa
             value: af
 
+- title: Max Count and Responsive Tags
+  blocks:
+    - id: max_count_selector
+      type: MultipleSelector
+      properties:
+        title: Pick Up to 2 Toppings
+        maxCount: 2
+        options:
+          - Cheese
+          - Mushrooms
+          - Olives
+          - Peppers
+          - Onions
+    - id: responsive_tags_selector
+      type: MultipleSelector
+      properties:
+        title: Responsive Tag Count
+        maxTagCount: responsive
+        options:
+          - label: Engineering
+            value: engineering
+          - label: Design
+            value: design
+          - label: Marketing
+            value: marketing
+          - label: Operations
+            value: operations
+          - label: Customer Success
+            value: success
+
 - title: Custom Placeholder & Not Found
   blocks:
     - id: custom_placeholder

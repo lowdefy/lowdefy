@@ -55,7 +55,13 @@ const RadioSelector = ({
   const renderOption = (opt, i) => {
     if (type.isPrimitive(opt)) {
       return (
-        <Radio id={`${blockId}_${opt}`} key={i} value={`${i}`}>
+        <Radio
+          id={`${blockId}_${opt}`}
+          key={i}
+          value={`${i}`}
+          className={classNames.options}
+          style={styles.options}
+        >
           {renderHtml({ html: `${opt}`, methods })}
         </Radio>
       );
@@ -67,7 +73,12 @@ const RadioSelector = ({
         key={i}
         value={`${i}`}
         disabled={opt.disabled}
-        style={{ ...opt.style, ...(isSelected && opt.color ? { color: opt.color } : {}) }}
+        className={classNames.options}
+        style={{
+          ...styles.options,
+          ...opt.style,
+          ...(isSelected && opt.color ? { color: opt.color } : {}),
+        }}
       >
         {type.isNone(opt.label)
           ? renderHtml({ html: `${opt.value}`, methods })
@@ -109,7 +120,7 @@ const RadioSelector = ({
         </Row>
       ) : (
         <Space
-          direction={properties.direction}
+          orientation={properties.direction}
           wrap={type.isNone(properties.wrap) ? true : properties.wrap}
           align={type.isNone(properties.align) ? 'start' : properties.align}
         >

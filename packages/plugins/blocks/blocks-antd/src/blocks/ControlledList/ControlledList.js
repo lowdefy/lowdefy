@@ -42,11 +42,13 @@ const ControlledListBlock = ({
     methods.registerMethod('removeItem', methods.removeItem);
     methods.registerMethod('unshiftItem', methods.unshiftItem);
   });
-  if (list.length < (properties.minItems ?? 0)) {
-    for (let i = 0; i < (properties.minItems ?? 0) - list.length; i++) {
+  const minItems = properties.minItems ?? 0;
+  // Pushing items updates page state, so it runs after render rather than during it.
+  useEffect(() => {
+    for (let i = list.length; i < minItems; i++) {
       methods.pushItem({});
     }
-  }
+  }, [list.length, minItems]);
 
   const addItemToFront = () => {
     methods.unshiftItem();
@@ -92,7 +94,7 @@ const ControlledListBlock = ({
                 properties={{
                   icon: 'add',
                   size: properties.size,
-                  title: get(properties, 'addItemButton.title ') ?? 'Add Item',
+                  title: get(properties, 'addItemButton.title', { default: 'Add Item' }),
                   type: 'default',
                   ...properties.addItemButton,
                 }}
@@ -122,7 +124,7 @@ const ControlledListBlock = ({
               properties={{
                 icon: 'add',
                 size: properties.size,
-                title: get(properties, 'addItemButton.title ') ?? 'Add Item',
+                title: get(properties, 'addItemButton.title', { default: 'Add Item' }),
                 type: 'dashed',
                 ...properties.addItemButton,
               }}
@@ -140,8 +142,7 @@ const ControlledListBlock = ({
           style={{ width: '100%', ...styles.item }}
           extra={
             !properties.hideRemoveButton &&
-            list.length > (properties.minItems ?? 0) && [
-              // eslint-disable-next-line react/jsx-key
+            list.length > minItems && (
               <span
                 className={cn('lf-controlled-list-remove', classNames.removeIcon)}
                 style={styles.removeIcon}
@@ -155,8 +156,8 @@ const ControlledListBlock = ({
                   }}
                   onClick={() => removeItemAt(i)}
                 />
-              </span>,
-            ]
+              </span>
+            )
           }
         >
           {item.content && item.content({ width: '100%' })}

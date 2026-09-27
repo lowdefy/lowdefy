@@ -210,3 +210,16 @@
   properties:
     title: label title
     extra: <span style="background:yellow;">html in extra</span>
+- id: 'properties.wrap: true'
+  type: Label
+  properties:
+    inline: true
+    wrap: true
+    title: A long inline label that wraps onto a second line when space runs out
+- id: 'properties.theme: labelColor'
+  type: Label
+  properties:
+    title: Themed label
+    theme:
+      labelColor: '#722ed1'
+      labelFontSize: 16

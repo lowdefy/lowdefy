@@ -57,6 +57,21 @@ const TreeMultipleSelector = ({
 
   let antdVariant = properties.variant;
   if (properties.bordered === false) antdVariant = 'borderless';
+  // antd only shows its loading indicator when no suffixIcon is passed, so swap ours for a spinner.
+  const suffixIcon = loading ? (
+    <Icon
+      blockId={`${blockId}_loadingIcon`}
+      properties={{ name: 'loading', spin: true, title: '' }}
+    />
+  ) : (
+    <Icon
+      blockId={`${blockId}_suffixIcon`}
+      classNames={{ element: classNames.suffixIcon }}
+      events={events}
+      properties={properties.suffixIcon ?? { name: 'chevron-down', title: '' }}
+      styles={{ element: styles.suffixIcon }}
+    />
+  );
 
   return (
     <Label
@@ -77,22 +92,50 @@ const TreeMultipleSelector = ({
               id={`${blockId}_input`}
               variant={antdVariant}
               className={classNames.element}
+              classNames={{ content: classNames.selector, popup: { root: classNames.popup } }}
               style={{ width: '100%', ...styles.element }}
+              styles={{ content: styles.selector, popup: { root: styles.popup } }}
               disabled={properties.disabled || loading}
               placeholder={
                 properties.placeholder ??
                 methods.translate('blocks.treeMultipleSelector.placeholder')
               }
               status={validation.status}
-              size={properties.size}
+              // antd 6 names the default size `medium`; `default` is not an antd size.
+              size={properties.size === 'default' ? 'medium' : properties.size}
               autoFocus={properties.autoFocus}
+              listHeight={properties.listHeight}
+              loading={loading}
+              maxCount={properties.maxCount}
               maxTagCount={properties.maxTagCount}
+              placement={properties.placement}
+              popupMatchSelectWidth={properties.popupMatchSelectWidth}
+              prefix={
+                properties.prefix ??
+                (properties.prefixIcon && (
+                  <Icon
+                    blockId={`${blockId}_prefixIcon`}
+                    classNames={{ element: classNames.prefixIcon }}
+                    events={events}
+                    properties={properties.prefixIcon}
+                    styles={{ element: styles.prefixIcon }}
+                  />
+                ))
+              }
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               treeDataSimpleMode={{ id: 'id', pId: 'pId', rootPId: ROOT_PID }}
               treeData={treeData}
               treeDefaultExpandAll={properties.treeDefaultExpandAll}
-              showSearch={properties.showSearch !== false}
-              treeNodeFilterProp="title"
+              treeExpandAction={properties.treeExpandAction}
+              treeLine={properties.treeLine}
+              showSearch={
+                properties.showSearch !== false && {
+                  autoClearSearchValue: properties.autoClearSearchValue,
+                  treeNodeFilterProp: 'title',
+                  onSearch: (searchValue) =>
+                    methods.triggerEvent({ name: 'onSearch', event: { value: searchValue } }),
+                }
+              }
               treeTitleRender={(node) => renderHtml({ html: `${node.title}`, methods })}
               notFoundContent={
                 properties.notFoundContent ??
@@ -101,16 +144,10 @@ const TreeMultipleSelector = ({
               showCheckedStrategy={
                 SHOW_STRATEGY[properties.showCheckedStrategy] ?? TreeSelect.SHOW_CHILD
               }
-              {...(properties.checkable ? { treeCheckable: true } : { multiple: true })}
-              suffixIcon={
-                <Icon
-                  blockId={`${blockId}_suffixIcon`}
-                  classNames={{ element: classNames.suffixIcon }}
-                  events={events}
-                  properties={properties.suffixIcon ?? { name: 'chevron-down', title: '' }}
-                  styles={{ element: styles.suffixIcon }}
-                />
-              }
+              {...(properties.checkable
+                ? { treeCheckable: true, treeCheckStrictly: properties.checkStrictly }
+                : { multiple: true })}
+              suffixIcon={suffixIcon}
               allowClear={
                 properties.allowClear !== false && {
                   clearIcon: (
@@ -125,18 +162,30 @@ const TreeMultipleSelector = ({
                 }
               }
               removeIcon={
-                <Icon blockId={`${blockId}_removeIcon`} properties={{ name: 'close', title: '' }} />
+                <Icon
+                  blockId={`${blockId}_removeIcon`}
+                  classNames={{ element: classNames.removeIcon }}
+                  events={events}
+                  properties={properties.removeIcon ?? { name: 'close', title: '' }}
+                  styles={{ element: styles.removeIcon }}
+                />
               }
               value={selectedIndices}
               onChange={(idxArr) => {
-                const val = (idxArr ?? []).map((i) => entries[i].value);
+                // checkStrictly makes antd report { label, value } objects instead of values.
+                const val = (idxArr ?? []).map(
+                  (i) => entries[type.isObject(i) ? i.value : i].value
+                );
                 methods.setValue(val);
                 methods.triggerEvent({ name: 'onChange', event: { value: val } });
               }}
               onBlur={() => methods.triggerEvent({ name: 'onBlur' })}
               onFocus={() => methods.triggerEvent({ name: 'onFocus' })}
               onClear={() => methods.triggerEvent({ name: 'onClear' })}
-              onSearch={(v) => methods.triggerEvent({ name: 'onSearch', event: { value: v } })}
+              onOpenChange={(open) =>
+                methods.triggerEvent({ name: 'onOpenChange', event: { open } })
+              }
+              virtual={properties.virtual}
             />
           </div>
         ),
@@ -145,4 +194,4 @@ const TreeMultipleSelector = ({
   );
 };
 
-export default withTheme('TreeSelect', withBlockDefaults(TreeMultipleSelector));
+export default withTheme(['TreeSelect', 'Select'], withBlockDefaults(TreeMultipleSelector));

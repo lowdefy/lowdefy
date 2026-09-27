@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { treeNodeTokens } from './treeTheme.js';
+
 // Antd design-token overrides shared by the TreeSelect-based selectors (TreeSelector,
 // TreeMultipleSelector). Covers both the dropdown tree node tokens and the selector tokens.
 export default {
@@ -25,9 +27,7 @@ export default {
     link: 'https://ant.design/components/tree-select#design-token',
   },
   properties: {
-    nodeSelectedBg: { type: 'string', description: 'Background color of selected tree node.' },
-    nodeHoverBg: { type: 'string', description: 'Background color of hovered tree node.' },
-    titleHeight: { type: 'number', default: 24, description: 'Height of tree node title.' },
+    ...treeNodeTokens,
     clearBg: { type: 'string', description: 'Background color of clear button.' },
     selectorBg: { type: 'string', description: 'Background color of the selector.' },
     hoverBorderColor: { type: 'string', description: 'Border color when hovered.' },
@@ -48,8 +48,16 @@ export default {
     multipleItemBg: { type: 'string', description: 'Background of tag items in multiple mode.' },
     multipleItemBorderColor: { type: 'string', description: 'Border color of tag items.' },
     multipleItemHeight: { type: 'number', default: 24, description: 'Height of tag items.' },
-    multipleItemHeightSM: { type: 'number', default: 16, description: 'Height of tag items (small).' },
-    multipleItemHeightLG: { type: 'number', default: 32, description: 'Height of tag items (large).' },
+    multipleItemHeightSM: {
+      type: 'number',
+      default: 16,
+      description: 'Height of tag items (small).',
+    },
+    multipleItemHeightLG: {
+      type: 'number',
+      default: 32,
+      description: 'Height of tag items (large).',
+    },
     zIndexPopup: { type: 'number', default: 1050, description: 'z-index of the dropdown.' },
   },
 };

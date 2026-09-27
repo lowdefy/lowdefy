@@ -113,3 +113,36 @@ blocks:
         - S
         - M
         - L
+
+  # ============================================
+  # OPTION TOOLTIP, ICON AND CSS KEY
+  # ============================================
+
+  - id: seg_tooltip
+    type: SegmentedSelector
+    properties:
+      label:
+        disabled: true
+      options:
+        - label: List
+          value: list
+          tooltip: Show as a list
+          icon:
+            name: list
+            color: 'rgb(22, 119, 255)'
+        - label: Grid
+          value: grid
+
+  - id: seg_options_css
+    type: SegmentedSelector
+    class:
+      .options: seg-option-tailwind
+    style:
+      .options:
+        fontStyle: italic
+    properties:
+      label:
+        disabled: true
+      options:
+        - A
+        - B
