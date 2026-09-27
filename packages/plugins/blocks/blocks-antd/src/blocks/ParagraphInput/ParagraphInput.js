@@ -14,12 +14,16 @@
   limitations under the License.
 */
 
-import React, { useState } from 'react';
-import { Typography } from 'antd';
+import React from 'react';
+import { Tooltip, Typography } from 'antd';
 import { type } from '@lowdefy/helpers';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { cn, withBlockDefaults } from '@lowdefy/block-utils';
+import getCopyableConfig from '../../getCopyableConfig.js';
+import InlineEditTextArea from '../../InlineEditTextArea.js';
+import useInlineEdit from '../../useInlineEdit.js';
 import withTheme from '../withTheme.js';
+import '../../inlineEditStyle.css';
 
 const Paragraph = Typography.Paragraph;
 
@@ -34,69 +38,58 @@ const ParagraphInput = ({
   styles = {},
   value,
 }) => {
-  const [editing, setEdit] = useState(false);
-  const editableEvents = {
-    onStart: () => {
-      setEdit(true);
-      methods.triggerEvent({
-        name: 'onStart',
-      });
-    },
-    onChange: (val) => {
-      setEdit(false);
-      methods.setValue(val);
-      methods.triggerEvent({ name: 'onChange', event: { value: val } });
-    },
-  };
-  return (
+  const editable = properties.editable !== false;
+  const editConfig = type.isObject(properties.editable) ? properties.editable : {};
+  const enabled = editable && !properties.disabled && !loading;
+  const text = type.isNone(value) ? '' : value.toString();
+  const placeholder = properties.placeholder ?? 'Empty';
+  const inlineEdit = useInlineEdit({
+    enabled,
+    forceEditing: editConfig.editing,
+    methods,
+    text,
+  });
+
+  if (inlineEdit.editing) {
+    return (
+      <Paragraph
+        id={blockId}
+        ref={inlineEdit.elementRef}
+        className={cn('lf-inline-edit lf-inline-edit-editing', classNames.element)}
+        italic={properties.italic}
+        strong={properties.strong}
+        style={styles.element}
+        type={properties.type}
+      >
+        <InlineEditTextArea
+          autoSize={editConfig.autoSize}
+          caretOffset={inlineEdit.caretOffset}
+          maxLength={editConfig.maxLength}
+          onCancel={inlineEdit.cancel}
+          onCommit={inlineEdit.commit}
+          placeholder={placeholder}
+          value={text}
+        />
+      </Paragraph>
+    );
+  }
+
+  const showPlaceholder = editable && text === '';
+  const paragraphEl = (
     <Paragraph
       id={blockId}
-      className={classNames.element}
+      className={cn('lf-inline-edit', { 'lf-inline-edit-enabled': enabled }, classNames.element)}
       code={properties.code}
-      copyable={
-        type.isObject(properties.copyable)
-          ? {
-              text: properties.copyable.text || value,
-              onCopy: () => {
-                methods.triggerEvent({
-                  name: 'onCopy',
-                  event: { value: properties.copyable.text || value },
-                });
-              },
-              icon:
-                properties.copyable.icon &&
-                (type.isArray(properties.copyable.icon) ? (
-                  [
-                    <Icon
-                      key="copy-icon"
-                      blockId={`${blockId}_copyable_before_icon`}
-                      classNames={{ element: classNames.copyableIcon }}
-                      events={events}
-                      properties={properties.copyable.icon[0]}
-                      styles={{ element: styles.copyableIcon }}
-                    />,
-                    <Icon
-                      key="copied-icon"
-                      blockId={`${blockId}_copyable_after_icon`}
-                      classNames={{ element: classNames.copyableIcon }}
-                      events={events}
-                      properties={properties.copyable.icon[1]}
-                      styles={{ element: styles.copyableIcon }}
-                    />,
-                  ]
-                ) : (
-                  <Icon
-                    blockId={`${blockId}_copyable_icon`}
-                    classNames={{ element: classNames.copyableIcon }}
-                    events={events}
-                    properties={properties.copyable.icon}
-                    styles={{ element: styles.copyableIcon }}
-                  />
-                )),
-              tooltips: properties.copyable.tooltips,
-            }
-          : properties.copyable
-      }
+      copyable={getCopyableConfig({
+        blockId,
+        classNames,
+        copyable: properties.copyable,
+        events,
+        Icon,
+        methods,
+        styles,
+        text,
+      })}
       delete={properties.delete}
       disabled={properties.disabled || loading}
       ellipsis={
@@ -107,38 +100,32 @@ const ParagraphInput = ({
               suffix: properties.ellipsis.suffix,
               onExpand: (ellipsis) => {
                 methods.triggerEvent({
-                  name: 'onCopy',
-                  event: { ellipsis },
-                });
-              },
-              onEllipsis: (ellipsis) => {
-                methods.triggerEvent({
-                  name: 'onCopy',
+                  name: 'onExpand',
                   event: { ellipsis },
                 });
               },
             }
           : properties.ellipsis
       }
+      // Clicking the text edits it. antd only renders the edit icon, and only when one is set.
       editable={
-        type.isObject(properties.editable)
+        enabled && !type.isNone(editConfig.icon)
           ? {
-              icon: properties.editable.icon && (
+              editing: false,
+              icon: (
                 <Icon
                   blockId={`${blockId}_editable_icon`}
                   classNames={{ element: classNames.editableIcon }}
                   events={events}
-                  properties={properties.editable.icon}
+                  properties={editConfig.icon}
                   styles={{ element: styles.editableIcon }}
                 />
               ),
-              tooltip: properties.editable.tooltip,
-              editing: properties.editable.editing || editing,
-              maxLength: properties.editable.maxLength,
-              autoSize: properties.editable.autoSize,
-              ...editableEvents,
+              onStart: () => inlineEdit.start(),
+              tooltip: editConfig.tooltip,
+              triggerType: ['icon'],
             }
-          : properties.editable !== false && editableEvents
+          : false
       }
       italic={properties.italic}
       mark={properties.mark}
@@ -146,10 +133,19 @@ const ParagraphInput = ({
       style={styles.element}
       type={properties.type}
       underline={properties.underline}
+      onClick={inlineEdit.onClick}
+      onKeyDown={inlineEdit.onKeyDown}
+      ref={inlineEdit.elementRef}
+      tabIndex={inlineEdit.tabIndex}
     >
-      {!type.isNone(value) ? value.toString() : ''}
+      {showPlaceholder ? <span className="lf-inline-edit-placeholder">{placeholder}</span> : text}
     </Paragraph>
   );
+  // Without an icon the tooltip belongs on the text, which is now what the user clicks.
+  if (enabled && type.isString(editConfig.tooltip) && type.isNone(editConfig.icon)) {
+    return <Tooltip title={editConfig.tooltip}>{paragraphEl}</Tooltip>;
+  }
+  return paragraphEl;
 };
 
 export default withTheme('Typography', withBlockDefaults(ParagraphInput));

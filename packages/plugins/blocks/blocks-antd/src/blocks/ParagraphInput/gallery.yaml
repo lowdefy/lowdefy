@@ -23,7 +23,7 @@
           - id: set_default
             type: SetState
             params:
-              basic_default: Click the edit icon to start editing this paragraph. Changes are saved when you press Enter or click away.
+              basic_default: Click anywhere in this paragraph to edit it in place. Press Enter or click away to save, or Escape to cancel.
     - id: basic_editable_object
       type: ParagraphInput
       properties:
@@ -48,6 +48,10 @@
       type: ParagraphInput
       properties:
         editable: true
+    - id: basic_placeholder
+      type: ParagraphInput
+      properties:
+        placeholder: Add a description
     - id: basic_long
       type: ParagraphInput
       properties:
@@ -57,7 +61,7 @@
           - id: set_default
             type: SetState
             params:
-              basic_long: This is a longer paragraph to demonstrate how ParagraphInput handles multi-line content. When you click the edit icon, a text area appears allowing you to modify all of the text. The editable paragraph is useful for inline content editing scenarios where users should be able to quickly update descriptive text without navigating to a separate form.
+              basic_long: This is a longer paragraph to demonstrate how ParagraphInput handles multi-line content. When you click the text, it becomes editable in place, with the caret where you clicked. The editable paragraph is useful for inline content editing scenarios where users should be able to quickly update descriptive text without navigating to a separate form.
 - title: Editable Options - Tooltip
   blocks:
     - id: tooltip_short
@@ -70,7 +74,7 @@
           - id: set_default
             type: SetState
             params:
-              tooltip_short: Hover over the edit icon to see a short tooltip.
+              tooltip_short: Hover over this paragraph to see a short tooltip.
     - id: tooltip_descriptive
       type: ParagraphInput
       properties:
@@ -81,7 +85,7 @@
           - id: set_default
             type: SetState
             params:
-              tooltip_descriptive: Hover over the edit icon to see a descriptive tooltip.
+              tooltip_descriptive: Hover over this paragraph to see a descriptive tooltip.
     - id: tooltip_instructional
       type: ParagraphInput
       properties:
@@ -93,7 +97,7 @@
             type: SetState
             params:
               tooltip_instructional: Tooltip with editing instructions.
-- title: Editable Options - Custom Icon
+- title: Editable Options - Edit Icon
   blocks:
     - id: icon_highlight
       type: ParagraphInput
@@ -106,7 +110,7 @@
           - id: set_default
             type: SetState
             params:
-              icon_highlight: This paragraph uses a highlight icon instead of the default edit icon.
+              icon_highlight: An edit icon is shown only when one is set. This one uses the highlight icon.
     - id: icon_form
       type: ParagraphInput
       properties:
@@ -207,7 +211,7 @@
           - id: set_default
             type: SetState
             params:
-              autosize_true: This paragraph uses autoSize true so the text area automatically grows to fit the content when editing. Try clicking the edit icon to see the text area expand.
+              autosize_true: This paragraph uses autoSize true so the text area automatically grows to fit the content when editing. Click the text to see the text area expand.
     - id: autosize_min_max
       type: ParagraphInput
       properties:
@@ -985,7 +989,7 @@
           - id: set_default
             type: SetState
             params:
-              default_long: This is a longer default value that spans multiple words and demonstrates how ParagraphInput handles pre-populated content. Users can click the edit icon to modify this text. The paragraph displays the full content by default.
+              default_long: This is a longer default value that spans multiple words and demonstrates how ParagraphInput handles pre-populated content. Users can click the text to modify it. The paragraph displays the full content by default.
     - id: default_with_styles
       type: ParagraphInput
       properties:

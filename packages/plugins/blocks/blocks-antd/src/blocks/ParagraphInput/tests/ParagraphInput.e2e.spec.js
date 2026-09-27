@@ -134,40 +134,58 @@ test.describe('ParagraphInput Block', () => {
   // EDITABLE TESTS
   // ============================================
 
-  test('renders edit button when editable', async ({ page }) => {
+  test('does not render an edit icon by default', async ({ page }) => {
     const block = getBlock(page, 'paragraphinput_editable');
-    const editBtn = block.getByRole('button', { name: 'Edit' }).first();
-    await expect(editBtn).toBeVisible();
+    await expect(block).toContainText('Click to edit this paragraph');
+    await expect(block.getByRole('button', { name: 'Edit' })).toHaveCount(0);
   });
 
-  test('hides edit button when editable is false', async ({ page }) => {
+  test('renders an edit icon that starts editing when editable.icon is set', async ({ page }) => {
+    const block = getBlock(page, 'paragraphinput_edit_icon');
+    const editBtn = block.getByRole('button', { name: 'Edit' });
+    await expect(editBtn).toBeVisible();
+    await editBtn.click();
+    await expect(block.locator('textarea')).toBeFocused();
+  });
+
+  test('clicking the text does not edit when editable is false', async ({ page }) => {
     const block = getBlock(page, 'paragraphinput_not_editable');
-    const editBtn = block.getByRole('button', { name: 'Edit' }).first();
-    await expect(editBtn).toBeHidden();
+    await block.getByText('Read only paragraph').click();
+    await expect(block.locator('textarea')).toHaveCount(0);
+  });
+
+  test('shows the placeholder when the value is empty', async ({ page }) => {
+    const block = getBlock(page, 'paragraphinput_empty');
+    await expect(block).toHaveText('Add a description');
   });
 
   // ============================================
   // EDIT INTERACTION TESTS
   // ============================================
 
-  test('can edit paragraph and onChange fires', async ({ page }) => {
+  test('can edit paragraph by clicking the text and onChange fires', async ({ page }) => {
     const block = getBlock(page, 'paragraphinput_onchange');
+    await block.getByText('Change me').click();
 
-    // Click the edit button
-    const editBtn = block.getByRole('button', { name: 'Edit' }).first();
-    await editBtn.click();
-
-    // After clicking, the paragraph is replaced with an editable div containing a textarea
-    // The textarea appears inside the .ant-typography-edit-content wrapper
-    const textarea = page.locator('.ant-typography-edit-content textarea');
-    await expect(textarea).toBeVisible();
+    // The paragraph is edited in place: a textarea replaces the text inside the same element.
+    const textarea = block.locator('textarea');
+    await expect(textarea).toBeFocused();
     await textarea.fill('New Paragraph Value');
-
-    // Press Enter to confirm
     await textarea.press('Enter');
 
-    // Verify the onChange event fired
     const display = getBlock(page, 'onchange_display');
     await expect(display).toHaveText('Value: New Paragraph Value');
+    await expect(block).toContainText('New Paragraph Value');
+  });
+
+  test('Escape cancels the edit and keeps the value', async ({ page }) => {
+    const block = getBlock(page, 'paragraphinput_editable');
+    await block.getByText('Click to edit this paragraph').click();
+    const textarea = block.locator('textarea');
+    await textarea.fill('Discarded');
+    await textarea.press('Escape');
+
+    await expect(textarea).toHaveCount(0);
+    await expect(block).toContainText('Click to edit this paragraph');
   });
 });
