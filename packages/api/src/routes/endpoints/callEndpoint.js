@@ -52,8 +52,9 @@ async function callEndpoint(context, { blockId, endpointId, pageId, payload }) {
   authorizeApiEndpoint(context, { endpointConfig });
 
   // Validated before the async fork, so a refused payload is answered to the
-  // caller rather than failing in the background.
-  const deserializedPayload = serializer.deserialize(payload);
+  // caller rather than failing in the background. A page CallAPI without a
+  // payload sends none; it is an empty object here as on every other caller.
+  const deserializedPayload = serializer.deserialize(payload ?? {});
   validatePayload({ endpointConfig, payload: deserializedPayload });
 
   const routineContext = {
