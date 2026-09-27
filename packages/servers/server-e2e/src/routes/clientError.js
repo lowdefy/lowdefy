@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { logClientError } from '@lowdefy/api';
+import { logClientError, parseRequestBody } from '@lowdefy/api';
 
 async function clientErrorHandler(c) {
   if (c.req.method !== 'POST') {
@@ -36,7 +36,7 @@ async function clientErrorHandler(c) {
     return c.json({ error: 'Forbidden' }, 403);
   }
 
-  const body = await c.req.json();
+  const body = parseRequestBody({ text: await c.req.text() });
   // Strip received from payload — prod doesn't need it for schema validation
   if (body?.['~e']) {
     delete body['~e'].received;

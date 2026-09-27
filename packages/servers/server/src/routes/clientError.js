@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { logClientError } from '@lowdefy/api';
+import { logClientError, parseRequestBody } from '@lowdefy/api';
 
 import captureSentryError from '../../lib/server/sentry/captureSentryError.js';
 import createSameOriginGuard from '../middleware/createSameOriginGuard.js';
@@ -34,7 +34,7 @@ async function clientErrorHandler(c) {
     return forbidden;
   }
 
-  const body = await c.req.json();
+  const body = parseRequestBody({ text: await c.req.text() });
   // Strip received from payload — prod doesn't need it for schema validation
   if (body?.['~e']) {
     delete body['~e'].received;

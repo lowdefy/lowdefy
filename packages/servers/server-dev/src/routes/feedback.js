@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { parseRequestBody } from '@lowdefy/api';
+
 import enrichFeedback from '../../lib/docs/enrichFeedback.js';
 import formatFeedback from '../../lib/docs/formatFeedback.js';
 import createLogger from '../../lib/server/log/createLogger.js';
@@ -36,7 +38,7 @@ async function feedbackHandler(c) {
     return forbidden;
   }
 
-  const batch = await c.req.json();
+  const batch = parseRequestBody({ text: await c.req.text() });
   if (!Array.isArray(batch?.annotations)) {
     return c.json(
       {

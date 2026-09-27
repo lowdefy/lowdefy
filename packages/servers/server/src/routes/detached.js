@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { acceptDetachedEndpoint } from '@lowdefy/api';
+import { acceptDetachedEndpoint, parseRequestBody } from '@lowdefy/api';
 
 import getPathSegments from '../lib/getPathSegments.js';
 
@@ -49,7 +49,7 @@ async function detachedHandler(c) {
   }
 
   const endpointId = getPathSegments(c, '/api/detached/').join('/');
-  const { payload, principal } = await c.req.json();
+  const { payload, principal } = parseRequestBody({ text: await c.req.text() });
   context.logger.info({ event: 'call_detached_endpoint', endpointId });
   return c.json(acceptDetachedEndpoint(context, { endpointId, payload, principal }), 202);
 }

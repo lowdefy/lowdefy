@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { parseRequestBody } from '@lowdefy/api';
+
 import loadState from '../../../lib/docs/loadState.js';
 import parseUserParam from './parseUserParam.js';
 
@@ -23,7 +25,7 @@ import parseUserParam from './parseUserParam.js';
 // devMockRegistry and returns a URL for a human to open in a real browser
 // tab (client/Inspector.jsx does the state injection there).
 async function docsLoadStateHandler(c) {
-  const body = await c.req.json();
+  const body = parseRequestBody({ text: await c.req.text() });
   const { name, mode } = body;
   // Derived from the incoming request rather than a config value — this is
   // the origin an agent can actually reach the dev server on (host/port it

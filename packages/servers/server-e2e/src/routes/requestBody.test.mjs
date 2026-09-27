@@ -19,20 +19,21 @@ import { jest } from '@jest/globals';
 
 import parseRequestBody from '../../../../api/dist/context/parseRequestBody.js';
 
-const mockCallEndpoint = jest.fn();
-const mockCallRequest = jest.fn();
 jest.unstable_mockModule('@lowdefy/api', () => ({
-  callEndpoint: mockCallEndpoint,
-  callRequest: mockCallRequest,
-  getEndpointConfig: jest.fn().mockRejectedValue(new Error('not found')),
+  callEndpoint: jest.fn(),
+  callRequest: jest.fn(),
+  logClientError: jest.fn(),
   parseRequestBody,
   redactErrorResponse: jest.fn(),
-  runWebhookEndpoint: jest.fn(),
 }));
 
 const { default: createErrorHandler } = await import('../middleware/errorHandler.js');
-const { default: endpointsHandler } = await import('./endpoints.js');
-const { default: requestHandler } = await import('./request.js');
+const routes = {
+  '/api/client-error': (await import('./clientError.js')).default,
+  '/api/endpoints/*': (await import('./endpoints.js')).default,
+  '/api/request/*': (await import('./request.js')).default,
+  '/api/usage': (await import('./usage.js')).default,
+};
 
 const logger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
 
@@ -42,18 +43,24 @@ function createApp() {
     c.set('lowdefyContext', { logger, handleError: jest.fn() });
     await next();
   });
-  app.all('/api/endpoints/*', endpointsHandler);
-  app.all('/api/request/*', requestHandler);
+  Object.entries(routes).forEach(([path, handler]) => app.all(path, handler));
   app.onError(createErrorHandler({ logger }));
   return app;
 }
 
 test.each([
-  ['/api/endpoints/save', 'nope', 'Request body is not valid JSON.'],
-  ['/api/request/orders/load', 'nope', 'Request body is not valid JSON.'],
-  ['/api/endpoints/save', 'null', 'Request body must be a JSON object.'],
-])('POST %s with body %s answers 400 and logs a warning', async (path, body, message) => {
-  const res = await createApp().request(path, { method: 'POST', body });
+  ['/api/endpoints/save', 'nope', {}, 'Request body is not valid JSON.'],
+  ['/api/endpoints/save', 'null', {}, 'Request body must be a JSON object.'],
+  ['/api/request/orders/load', 'nope', {}, 'Request body is not valid JSON.'],
+  ['/api/usage', 'nope', {}, 'Request body is not valid JSON.'],
+  [
+    '/api/client-error',
+    'nope',
+    { host: 'localhost', origin: 'http://localhost' },
+    'Request body is not valid JSON.',
+  ],
+])('POST %s with body %s answers 400 and logs a warning', async (path, body, headers, message) => {
+  const res = await createApp().request(path, { method: 'POST', body, headers });
   expect(res.status).toBe(400);
   expect(await res.json()).toEqual({ name: 'UserError', message });
   expect(logger.warn).toHaveBeenCalledTimes(1);
