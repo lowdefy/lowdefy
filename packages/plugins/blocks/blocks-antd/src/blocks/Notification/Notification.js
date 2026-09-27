@@ -51,14 +51,15 @@ const NotificationBlock = ({
         onClose: () => methods.triggerEvent({ name: 'onClose' }),
         placement: properties.placement,
         top: properties.top,
+        // antd colours its status icon through a class on the icon wrapper, and only adds it
+        // for its own icons; the Lowdefy status icon needs it too.
+        classNames: {
+          icon: type.isNone(properties.icon) ? `ant-notification-notice-icon-${status}` : undefined,
+        },
         icon: icon && (
           <ErrorBoundary onError={handleError}>
             <Icon
               blockId={`${blockId}_icon`}
-              // antd colours its own status icons through this class; a replaced icon needs it too.
-              className={
-                type.isNone(properties.icon) ? `ant-notification-notice-icon-${status}` : undefined
-              }
               classNames={{ element: classNames.icon }}
               events={events}
               properties={icon}
@@ -66,7 +67,7 @@ const NotificationBlock = ({
             />
           </ErrorBoundary>
         ),
-        btn: properties.button && (
+        actions: properties.button && (
           <ErrorBoundary onError={handleError}>
             <Button
               blockId={`${blockId}_button`}

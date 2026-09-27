@@ -57,6 +57,11 @@ test.describe('Notification Block', () => {
     // Check for success icon
     const icon = notification.locator('.ant-notification-notice-icon-success svg');
     await expect(icon).toBeAttached();
+    // antd colours status icons through a class on the icon wrapper, not on the svg.
+    await expect(notification.locator('.ant-notification-notice-icon')).toHaveCSS(
+      'color',
+      'rgb(82, 196, 26)'
+    );
   });
 
   test('renders error notification', async ({ page }) => {
@@ -154,8 +159,7 @@ test.describe('Notification Block', () => {
 
     const notification = getNotification(page);
     await expect(notification).toBeVisible();
-    // Check for action button
-    const actionBtn = notification.locator('.ant-btn');
+    const actionBtn = notification.locator('.ant-notification-notice-actions .ant-btn');
     await expect(actionBtn).toBeVisible();
     await expect(actionBtn).toHaveText('Action');
   });
@@ -224,8 +228,7 @@ test.describe('Notification Block', () => {
     const notification = getNotification(page);
     await expect(notification).toBeVisible();
 
-    // Click on the notification content
-    await notification.locator('.ant-notification-notice-content').click();
+    await notification.locator('.ant-notification-notice-title').click();
 
     // onClick event should have fired
     const display = getBlock(page, 'onclick_display');
