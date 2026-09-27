@@ -248,7 +248,8 @@ const MultipleSelector = ({
                 methods,
                 styles,
               })}
-              virtual={properties.virtual}
+              // antd lets even an undefined `virtual` prop override the ConfigProvider `virtual`.
+              {...(type.isNone(properties.virtual) ? {} : { virtual: properties.virtual })}
             />
           </div>
         ),
