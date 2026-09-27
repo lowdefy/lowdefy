@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import getThemeCssVariables from '../../getThemeCssVariables.js';
 
 const formComponentTokens = new Set([
   'labelColonMarginInlineEnd',
@@ -24,27 +24,15 @@ const formComponentTokens = new Set([
   'labelRequiredMarkColor',
 ]);
 
-// Same naming as antd's token2CSSVar, e.g. labelColor -> label-color.
-function toKebabCase(token) {
-  return token
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/([A-Z]+)([A-Z][a-z0-9]+)/g, '$1-$2')
-    .replace(/([a-z])([A-Z0-9])/g, '$1-$2')
-    .toLowerCase();
-}
-
-// Label reuses antd's Form.Item class names without rendering an antd Form, so antd never emits
-// the Form CSS variables that style.css reads, and a ConfigProvider theme has nothing to apply to.
-// Set those variables directly instead. The caller scopes them to the Label's own elements so, as
+// Label reuses antd's Form.Item class names without rendering an antd Form, so its theme is set as
+// the Form CSS variables style.css reads. The caller scopes them to the Label's own elements so, as
 // with an antd component theme, a token such as colorError does not restyle the wrapped input.
 function getLabelThemeStyle(theme) {
-  if (!type.isObject(theme)) return {};
-  const style = {};
-  Object.entries(theme).forEach(([token, value]) => {
-    const prefix = formComponentTokens.has(token) ? '--ant-form-' : '--ant-';
-    style[`${prefix}${toKebabCase(token)}`] = type.isNumber(value) ? `${value}px` : value;
+  return getThemeCssVariables({
+    componentName: 'form',
+    componentTokens: formComponentTokens,
+    theme,
   });
-  return style;
 }
 
 export default getLabelThemeStyle;
