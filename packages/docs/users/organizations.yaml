@@ -71,7 +71,7 @@ _ref:
             db['user-members'].createIndex({ user_id: 1, organization_id: 1 }, { unique: true })
             ```
 
-            An equivalent unique index you created yourself, under any name, is accepted. If the auth database user may not create indexes, or the collections already hold duplicate rows, the server logs a warning at startup and a sign-in that needs a new organization fails with an error naming the index, until you remove the duplicates or create the indexes by hand.
+            An equivalent unique index you created yourself, under any name, is accepted. If the auth database user may not create indexes, or the collections already hold duplicate rows, the server logs an error naming the index, and a sign-in that needs a new organization is refused with status 503 and the code `ORGANIZATION_SETUP_UNAVAILABLE` (existing members sign in as usual). The server tries again at most every 30 seconds while such sign-ins arrive, so removing the duplicates or creating the indexes by hand recovers without a restart.
 
             ### Invitations for existing members
 

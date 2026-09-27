@@ -93,7 +93,11 @@ If you are enabling multi-factor authentication to satisfy an auditor, know abou
 
 Two `TwoFactorEnable` calls that run concurrently for the same user can write two rows to the two-factor collection. Sign-in may then read the unverified row, find no methods to offer, and leave the user unable to complete a challenge — a silent lockout. Tracked upstream at [#10561](https://github.com/better-auth/better-auth/issues/10561).
 
-The mitigation is a unique index on `userId` in the two-factor collection (`user-two-factors`), applied by the host app — no layer in Lowdefy provisions indexes. For MongoDB, see the `modules-mongodb` `user-account` index reference for how that module declares its auth indexes, rather than writing the command by hand.
+The mitigation is a unique index on the user id in the two-factor collection (`user-two-factors`), applied by the host app. Lowdefy creates only the organization and membership indexes itself ([Organizations](/organizations)); this one is the deployment's. For MongoDB, see the `modules-mongodb` `user-account` index reference for how that module declares its auth indexes, or apply it directly — the adapter stores fields in snake_case, so the key is `user_id`:
+
+```js
+db['user-two-factors'].createIndex({ user_id: 1 }, { unique: true });
+```
 
 Be clear about what the index buys: it converts an unrecoverable silent lockout into a visible, retryable duplicate-key error. It does not fix the race.
 
@@ -217,9 +221,9 @@ That administrator can then sign in and recover the others through the app.
 Under `required`, the engine counts a caller's passkeys on every request from anyone not yet enrolled, to decide whether they clear the floor. That read needs an index on the passkey collection:
 
 ```js
-db['user-passkeys'].createIndex({ userId: 1 });
+db['user-passkeys'].createIndex({ user_id: 1 });
 ```
 
-This index is **platform-owned but host-applied.** The engine reads it per request for any unenrolled caller under `required`; without it, that read is a full collection scan on every such request. But no layer in Lowdefy provisions indexes — the deployment applies this one, exactly as it applies the `user-two-factors` index above. (This example follows the `userId` field convention: the auth adapter maps its collections with camelCase field names, so the key is `{ userId: 1 }`, not `{ user_id: 1 }`.)
+This index is **platform-owned but host-applied.** The engine reads it per request for any unenrolled caller under `required`; without it, that read is a full collection scan on every such request. But Lowdefy creates only the organization and membership indexes itself — the deployment applies this one, exactly as it applies the `user-two-factors` index above. (The auth adapter stores fields in snake_case, so the key is `{ user_id: 1 }`, not the logical `{ userId: 1 }`.)
 
 An **enrolled** caller never reaches the passkey read: the floor short-circuits on `twoFactorEnabled`, which rides the session, so an enrolled member pays nothing. Once `required` has been on for a while, that is the overwhelming majority of traffic.
