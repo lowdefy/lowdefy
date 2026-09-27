@@ -124,3 +124,14 @@ blocks:
               - true
           then: Checkbox is CHECKED
           else: Checkbox is UNCHECKED
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: checkboxswitch_indeterminate
+    type: CheckboxSwitch
+    properties:
+      title: Indeterminate
+      description: Select all
+      indeterminate: true
