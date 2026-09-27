@@ -21,6 +21,7 @@ import { type, wait } from '@lowdefy/helpers';
 import { readDevInstance } from '@lowdefy/node-utils';
 
 import allocatePorts from './allocatePorts.js';
+import fetchOpenTabs from './fetchOpenTabs.js';
 import getProcessStartTime from './getProcessStartTime.js';
 import { HUB_PROTOCOL, IDLE_STOP_MS, PORT_RANGE, READY_TIMEOUT_MS } from './hubProtocol.js';
 import readLogTail from './readLogTail.js';
@@ -71,16 +72,6 @@ function realDirectory(configDirectory) {
     return fs.realpathSync(configDirectory);
   } catch {
     throw new Error(`App directory ${configDirectory} does not exist.`);
-  }
-}
-
-async function fetchOpenTabs({ url }) {
-  try {
-    const response = await fetch(`${url}/api/dev-inspect`);
-    const { tabs } = await response.json();
-    return tabs.length;
-  } catch {
-    return 0;
   }
 }
 
@@ -383,7 +374,7 @@ function createHub({
 
   // Stops servers nobody uses: the app was removed, or no agent session
   // has been attached and no browser tab open for IDLE_STOP_MS.
-  async function reap() {
+  async function reapOnce() {
     forgetDeadServers();
     for (const [configDirectory, managed] of Object.entries(registry.instances)) {
       if (!hasAppConfig(configDirectory)) {
@@ -410,6 +401,19 @@ function createHub({
       logger.info(`Stopped ${configDirectory}: idle.`);
     }
     forgetRemovedApps();
+  }
+
+  // The hub reaps on a timer, and a pass can outlast the interval (a slow dev
+  // server answering the open-tabs check), so a pass still running is shared
+  // rather than started again beside it.
+  let reaping = null;
+  function reap() {
+    if (reaping === null) {
+      reaping = reapOnce().finally(() => {
+        reaping = null;
+      });
+    }
+    return reaping;
   }
 
   function hasManagedServers() {

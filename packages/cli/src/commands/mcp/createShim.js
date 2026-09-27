@@ -19,8 +19,10 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { readDevInstance } from '@lowdefy/node-utils';
 
+import callWithReconnect from './callWithReconnect.js';
 import createHubConnection from './createHubConnection.js';
 import createInstanceConnections from './createInstanceConnections.js';
+import fetchBuildSummary from './fetchBuildSummary.js';
 import findApps from './findApps.js';
 import findGitRoot from './findGitRoot.js';
 import formatInstanceLabel from './formatInstanceLabel.js';
@@ -63,23 +65,6 @@ function describeNotReady({ label, status }) {
   }
   const tail = (status.logTail ?? []).join('\n');
   return `${label}: the dev server is still ${status.state}. ${status.note ?? ''}\n${tail}`.trim();
-}
-
-async function fetchBuildSummary({ url }) {
-  try {
-    const response = await fetch(`${url}/lowdefy-docs/build-status`);
-    const { build, pages, clientErrors = [], serverErrors = [] } = await response.json();
-    return {
-      status: build?.status,
-      errors: build?.errors?.length ?? 0,
-      warnings: build?.warnings?.length ?? 0,
-      failedPages: pages?.failed?.length ?? 0,
-      clientErrors: clientErrors.length,
-      serverErrors: serverErrors.length,
-    };
-  } catch {
-    return null;
-  }
 }
 
 function createShim({ cliVersion, cwd, devTools }) {
@@ -141,14 +126,10 @@ function createShim({ cliVersion, cwd, devTools }) {
         resetTimeoutOnProgress: true,
       });
     };
-    let result;
-    try {
-      result = await call();
-    } catch (error) {
-      // The server restarted under a cached connection - reconnect once.
-      await instances.drop({ configDirectory: app.configDirectory });
-      result = await call();
-    }
+    const result = await callWithReconnect({
+      call,
+      reconnect: () => instances.drop({ configDirectory: app.configDirectory }),
+    });
     const content = [
       { type: 'text', text: `${app.label} · ${instance.url}` },
       ...(result.content ?? []),

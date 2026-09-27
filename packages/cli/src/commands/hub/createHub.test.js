@@ -60,12 +60,12 @@ function randomPortRange() {
   return { first, last: first + 40 };
 }
 
-function createTestHub() {
+function createTestHub({ openTabs = async () => 0 } = {}) {
   return createHub({
     paths: { registryPath: path.join(home, 'hub', 'registry.json') },
     cliVersion: '6.0.0',
     logger: { info: () => {}, error: () => {} },
-    openTabs: async () => 0,
+    openTabs,
     portRange,
   });
 }
@@ -244,4 +244,20 @@ test('hub reap releases the ports of an app that was removed after it stopped', 
   await hub.reap();
   const registry = JSON.parse(fs.readFileSync(path.join(home, 'hub', 'registry.json'), 'utf8'));
   expect(registry.ports).toEqual({});
+});
+
+test('overlapping reaps share one pass, so a slow open-tabs check is not repeated', async () => {
+  await hub.start({ configDirectory });
+  // Make the server look idle past the reap limit, then adopt it.
+  const registryPath = path.join(home, 'hub', 'registry.json');
+  const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
+  registry.instances[configDirectory].startedAt = new Date(0).toISOString();
+  fs.writeFileSync(registryPath, JSON.stringify(registry));
+  const openTabs = jest.fn(async () => {
+    await wait(200);
+    return 1;
+  });
+  const adopting = createTestHub({ openTabs });
+  await Promise.all([adopting.reap(), adopting.reap()]);
+  expect(openTabs).toHaveBeenCalledTimes(1);
 });

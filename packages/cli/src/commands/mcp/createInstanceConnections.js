@@ -22,7 +22,15 @@ import { LoggingMessageNotificationSchema } from '@modelcontextprotocol/sdk/type
 // Opening it also opens the server's push stream (build results, restarts,
 // browser and server errors), which is relayed to the agent labelled with the
 // app it came from.
-function createInstanceConnections({ cliVersion, onNotification }) {
+// A dev server that accepts the connection but never answers must fail the
+// tool call, not hang it.
+const CONNECT_TIMEOUT_MS = 15000;
+
+function createInstanceConnections({
+  cliVersion,
+  onNotification,
+  connectTimeoutMs = CONNECT_TIMEOUT_MS,
+}) {
   const connections = new Map();
 
   async function open({ instance, label }) {
@@ -34,7 +42,8 @@ function createInstanceConnections({ cliVersion, onNotification }) {
     // over a dropped push channel.
     client.onerror = () => {};
     await client.connect(
-      new StreamableHTTPClientTransport(new URL(`${instance.url}/lowdefy-docs/mcp`))
+      new StreamableHTTPClientTransport(new URL(`${instance.url}/lowdefy-docs/mcp`)),
+      { timeout: connectTimeoutMs }
     );
     return client;
   }
