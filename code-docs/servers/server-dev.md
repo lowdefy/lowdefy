@@ -550,10 +550,17 @@ Watches the `.env` file in the config directory:
 ```javascript
 const callback = async () => {
   context.readDotEnv();
-  await context.lowdefyBuild();
-  context.restartServer();
+  try {
+    await context.lowdefyBuild();
+  } finally {
+    context.restartServer();
+  }
 };
 ```
+
+The server reads the environment only when it starts, and a later successful config build
+does not restart it, so the server restarts with the new environment even when this build
+fails.
 
 ### Server Artifact Watcher
 
