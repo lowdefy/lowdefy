@@ -20,6 +20,7 @@ import Events from './Events.js';
 import Slots from './Slots.js';
 import inputContainsOperator from './tracking/inputContainsOperator.js';
 import readsIntersectChanges from './tracking/readsIntersectChanges.js';
+import validateClassEval from './validateClassEval.js';
 
 const noReads = new Set();
 
@@ -447,7 +448,11 @@ class Block {
 
       this.validateEval();
 
-      this.classEval = this.parse(this.class);
+      this.classEval = validateClassEval({
+        blockId: this.blockId,
+        classEval: this.parse(this.class),
+        configKey: this.configKey,
+      });
       this.styleEval = this.parse(this.style);
       this.layoutEval = this.parse(this.layout);
       this.loadingEval = this.parse(this.loading);
