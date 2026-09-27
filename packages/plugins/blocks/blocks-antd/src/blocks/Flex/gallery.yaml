@@ -49,7 +49,7 @@
     - id: flex_vertical
       type: Flex
       properties:
-        vertical: true
+        orientation: vertical
         gap: 12
       blocks:
         - id: flex_vert_card1
@@ -118,11 +118,11 @@
     - id: flex_gap_middle_label
       type: Markdown
       properties:
-        content: '**gap: middle (16px)**'
+        content: '**gap: medium (16px)**'
     - id: flex_gap_middle
       type: Flex
       properties:
-        gap: middle
+        gap: medium
       blocks:
         - id: flex_gm_1
           type: Tag
@@ -812,71 +812,53 @@
 
 - title: Theme Token Overrides
   blocks:
-    - id: flex_theme_padding
+    - id: flex_theme_medium
       type: Flex
       properties:
-        gap: 12
+        gap: medium
         theme:
-          padding: 24
-          margin: 8
+          padding: 32
       blocks:
-        - id: flex_theme_padding_btn1
+        - id: flex_theme_medium_btn1
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: Custom Padding
+            title: Wider medium gap
             color: primary
             variant: solid
-        - id: flex_theme_padding_btn2
+        - id: flex_theme_medium_btn2
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: And Margin
+            title: padding token 32
             color: primary
             variant: outlined
 
-    - id: flex_theme_bg
+    - id: flex_theme_small
       type: Flex
       properties:
-        gap: 12
+        gap: small
+        theme:
+          paddingXS: 2
       blocks:
-        - id: flex_theme_bg_btn1
+        - id: flex_theme_small_btn1
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: Token A
+            title: Tighter small gap
             color: green
             variant: solid
-        - id: flex_theme_bg_btn2
+        - id: flex_theme_small_btn2
           type: Button
           layout:
             flex: 0 0 auto
           properties:
-            title: Token B
+            title: paddingXS token 2
             color: green
             variant: outlined
-
-    - id: flex_theme_combined
-      type: Flex
-      properties:
-        gap: 16
-        vertical: true
-        theme:
-          padding: 20
-          margin: 4
-      blocks:
-        - id: flex_theme_combined_title
-          type: Title
-          properties:
-            content: All Theme Tokens
-            level: 5
-        - id: flex_theme_combined_p
-          type: Paragraph
-          properties:
-            content: Combining padding, margin, and colorBgContainer tokens for a fully themed Flex container.
 
 - title: Styled with CSS Keys
   blocks:

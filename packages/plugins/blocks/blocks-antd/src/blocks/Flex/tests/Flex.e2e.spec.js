@@ -52,4 +52,22 @@ test.describe('Flex Block', () => {
     const justifyContent = await flex.evaluate((el) => getComputedStyle(el).justifyContent);
     expect(justifyContent).toBe('space-between');
   });
+
+  test('orientation vertical renders a vertical flex', async ({ page }) => {
+    const flex = getBlock(page, 'flex_orientation').locator('.ant-flex');
+    await expect(flex).toHaveClass(/ant-flex-vertical/);
+  });
+
+  test('gap medium uses the padding theme token', async ({ page }) => {
+    const flex = getBlock(page, 'flex_gap_medium_theme').locator('.ant-flex');
+    await expect(flex).toHaveClass(/ant-flex-gap-medium/);
+    const gap = await flex.evaluate((el) => getComputedStyle(el).gap);
+    expect(gap).toBe('40px');
+  });
+
+  test('align and justify accept start and end values', async ({ page }) => {
+    const flex = getBlock(page, 'flex_align_end').locator('.ant-flex');
+    await expect(flex).toHaveCSS('align-items', 'end');
+    await expect(flex).toHaveCSS('justify-content', 'end');
+  });
 });

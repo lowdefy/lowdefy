@@ -27,6 +27,9 @@ events:
             ml_test_desc: Longer description text here
           - ml_test_title: Item C
             ml_test_desc: Medium text
+        ml_styled:
+          - ml_styled_text: one
+          - ml_styled_text: two
 
 blocks:
   # ============================================
@@ -53,3 +56,16 @@ blocks:
             properties:
               content:
                 _state: ml_test.$.ml_test_desc
+
+  - id: ml_styled
+    type: MasonryList
+    properties:
+      columns: 2
+    style:
+      .item:
+        outline: 2px solid rgb(255, 0, 0)
+    blocks:
+      - id: ml_styled.$.ml_styled_text
+        type: Paragraph
+        properties:
+          content: Styled list item.

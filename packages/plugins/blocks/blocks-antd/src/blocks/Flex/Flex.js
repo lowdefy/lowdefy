@@ -25,6 +25,7 @@ const FlexBlock = ({ blockId, classNames = {}, content, properties, styles = {} 
     id={blockId}
     className={classNames.element}
     style={styles.element}
+    orientation={properties.orientation}
     vertical={properties.vertical}
     wrap={properties.wrap}
     justify={properties.justify}

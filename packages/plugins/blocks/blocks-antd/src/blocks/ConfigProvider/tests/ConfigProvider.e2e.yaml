@@ -1,0 +1,94 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: config_provider
+type: Box
+
+blocks:
+  - id: cp_theme
+    type: ConfigProvider
+    properties:
+      theme:
+        colorPrimary: 'rgb(255, 0, 0)'
+    blocks:
+      - id: cp_theme_btn
+        type: Button
+        properties:
+          title: Theme button
+          type: primary
+
+  - id: cp_token_wins
+    type: ConfigProvider
+    properties:
+      theme:
+        colorPrimary: 'rgb(255, 0, 0)'
+      token:
+        colorPrimary: 'rgb(0, 0, 255)'
+    blocks:
+      - id: cp_token_wins_btn
+        type: Button
+        properties:
+          title: Token button
+          type: primary
+
+  - id: cp_size
+    type: ConfigProvider
+    properties:
+      componentSize: small
+    blocks:
+      - id: cp_size_btn
+        type: Button
+        properties:
+          title: Small button
+
+  - id: cp_not_virtual
+    type: ConfigProvider
+    properties:
+      virtual: false
+    blocks:
+      - id: cp_not_virtual_selector
+        type: Selector
+        properties:
+          title: Not virtual
+          options:
+            - Option 1
+            - Option 2
+            - Option 3
+            - Option 4
+            - Option 5
+            - Option 6
+            - Option 7
+            - Option 8
+            - Option 9
+            - Option 10
+            - Option 11
+            - Option 12
+            - Option 13
+            - Option 14
+            - Option 15
+            - Option 16
+            - Option 17
+            - Option 18
+            - Option 19
+            - Option 20
+            - Option 21
+            - Option 22
+            - Option 23
+            - Option 24
+            - Option 25
+            - Option 26
+            - Option 27
+            - Option 28
+            - Option 29
+            - Option 30

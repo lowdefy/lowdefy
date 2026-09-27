@@ -93,3 +93,48 @@ blocks:
         type: Button
         properties:
           title: Right
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: flex_orientation
+    type: Flex
+    properties:
+      orientation: vertical
+    blocks:
+      - id: flex_o_btn_1
+        type: Button
+        properties:
+          title: Orientation A
+      - id: flex_o_btn_2
+        type: Button
+        properties:
+          title: Orientation B
+
+  - id: flex_gap_medium_theme
+    type: Flex
+    properties:
+      gap: medium
+      theme:
+        padding: 40
+    blocks:
+      - id: flex_gm_btn_1
+        type: Button
+        properties:
+          title: Medium 1
+      - id: flex_gm_btn_2
+        type: Button
+        properties:
+          title: Medium 2
+
+  - id: flex_align_end
+    type: Flex
+    properties:
+      align: end
+      justify: end
+    blocks:
+      - id: flex_ae_btn_1
+        type: Button
+        properties:
+          title: End
