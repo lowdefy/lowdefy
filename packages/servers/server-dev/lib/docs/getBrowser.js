@@ -114,24 +114,32 @@ async function openPage({
       },
     ]);
     const page = await context.newPage();
-    try {
-      await page.goto(url, { waitUntil: 'networkidle', timeout });
-    } catch {
-      // Pages with long-polling/SSE connections (reload, websockets) never
-      // go network-idle — fall back to 'load' rather than failing outright.
-      await page.goto(url, { waitUntil: 'load', timeout });
-    }
+    // 'load', not 'networkidle': every dev page holds the /api/reload event
+    // stream open, so the network never goes idle and a networkidle wait
+    // always ran to its full timeout before anything else happened.
+    await page.goto(url, { waitUntil: 'load', timeout });
     // The engine builds the page context (and runs onInit + initial requests)
-    // after the bundle loads — 'load'/'networkidle' fire before that. Every
-    // caller (screenshot, inspect, eval, checkpoint load) needs the app's async
-    // lifecycle to have settled, not just the bundle to have loaded, so wait on
-    // isPageReady. Tolerant: on timeout proceed with ready: false and let the
-    // caller surface what it finds — a snapshot of a hung page is still useful
-    // signal, and a far better answer than a tool failure.
+    // after the bundle loads — 'load' fires before that. Every caller
+    // (screenshot, inspect, eval, checkpoint load, journeys) needs the app's
+    // async lifecycle to have settled, not just the bundle to have loaded, so
+    // wait on isPageReady - for the page the app shows (a null pageId), which
+    // is not the one asked for when the app redirects, as a protected page
+    // does for a signed-out caller. Tolerant: on timeout proceed with ready:
+    // false and let the caller surface what it finds — a snapshot of a hung
+    // page is still useful signal, and a far better answer than a tool failure.
     let ready = true;
-    await page.waitForFunction(isPageReady, pageId, { timeout }).catch(() => {
+    await page.waitForFunction(isPageReady, null, { timeout }).catch(() => {
       ready = false;
     });
+    // Images blocks render start loading only once the page is ready; a
+    // screenshot taken before they arrive shows empty frames.
+    await page
+      .waitForFunction(
+        () => Array.from(document.images).every((image) => image.complete),
+        undefined,
+        { timeout }
+      )
+      .catch(() => {});
     return { context, page, ready, url };
   } catch (error) {
     await context.close().catch(() => {});

@@ -151,18 +151,26 @@ test('openPage rejects an invalid user before opening a browser context', async 
   expect(browser.newContext).not.toHaveBeenCalled();
 });
 
-test('openPage waits on the isPageReady predicate for the page it opened', async () => {
+test('openPage loads the page and waits on isPageReady for the page the app shows', async () => {
   const { browser } = createBrowser();
 
   const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
 
-  expect(opened.page.waitForFunction).toHaveBeenCalledWith(isPageReady, 'home', { timeout: 15000 });
+  // Not networkidle: the dev reload event stream keeps the network busy for the
+  // life of the page, so that wait only ever ran out its timeout.
+  expect(opened.page.goto).toHaveBeenCalledTimes(1);
+  expect(opened.page.goto).toHaveBeenCalledWith('http://localhost:3001/home', {
+    waitUntil: 'load',
+    timeout: 15000,
+  });
+  // null: the page shown, so a redirect to the sign-in page settles too.
+  expect(opened.page.waitForFunction).toHaveBeenCalledWith(isPageReady, null, { timeout: 15000 });
   expect(opened.ready).toBe(true);
 });
 
 test('openPage resolves with ready false when the readiness wait times out', async () => {
   const { browser, page } = createBrowser();
-  page.waitForFunction.mockRejectedValue(new Error('Timeout 15000ms exceeded.'));
+  page.waitForFunction.mockRejectedValueOnce(new Error('Timeout 15000ms exceeded.'));
 
   const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
 
@@ -170,14 +178,13 @@ test('openPage resolves with ready false when the readiness wait times out', asy
   expect(opened.page).toBe(page);
 });
 
-test('openPage closes the context it created when both navigation attempts fail', async () => {
+test('openPage closes the context it created when the navigation fails', async () => {
   const { browser, context, page } = createBrowser();
   page.goto.mockRejectedValue(new Error('Timeout 15000ms exceeded.'));
 
   await expect(
     openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' })
   ).rejects.toThrow('Timeout 15000ms exceeded.');
-  expect(page.goto).toHaveBeenCalledTimes(2);
   expect(context.close).toHaveBeenCalledTimes(1);
 });
 
