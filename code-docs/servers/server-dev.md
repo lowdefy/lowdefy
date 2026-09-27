@@ -649,7 +649,9 @@ Dev serves over HTTP/1.1, where browsers allow six connections per host, and an 
 
 Before this, the inspector opened a second stream per tab and reconnected it on every navigation; three tabs of one app saturated the browser's connection pool and the next fetch on any of them queued forever — the page sat on its skeleton with a request pending and no server error.
 
-The manager's proxy (`manager/processes/startProxy.mjs`) holds the public port and forwards to the Vite child. It destroys the upstream request when the client closes mid-response, so a closed tab reaches `stream.onAbort` in the child and its tab registration and file watcher are released. It probes a child once and then forwards straight to it until a forward fails or the child is replaced: a probe per request left one TIME_WAIT socket per Vite module request, and headless page loads (journeys, screenshots) exhausted the ephemeral ports within a minute. Without that the child never saw the disconnect: the SSE loop kept writing to a dead socket and closed tabs stayed in the registry, shadowing live ones in `findTab`.
+The manager's proxy (`manager/processes/startProxy.mjs`) holds the public port and forwards to the Vite child. It destroys the upstream request when the client closes mid-response, so a closed tab reaches `stream.onAbort` in the child and its tab registration and file watcher are released. Without that the child never saw the disconnect: the SSE loop kept writing to a dead socket and closed tabs stayed in the registry, shadowing live ones in `findTab`.
+
+The proxy probes a child once and then forwards straight to it until a forward fails or the child is replaced: a probe per request left one TIME_WAIT socket per Vite module request, and headless page loads (journeys, screenshots) exhausted the ephemeral ports within a minute. The cost is that requests already forwarded in the moment between a child dying and the manager seeing it exit answer 502 instead of waiting in the hold; the first failure sends every later request back through the probe.
 
 ### Reload Trigger
 

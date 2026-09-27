@@ -71,7 +71,7 @@ Blocks are addressed by their `blockId`. Every step has a 5 second timeout by de
 | `wait: { request: requestId }`            | Wait until the request has finished loading.                                                                                                                |
 | `wait: { state: path }`                   | Wait until the state value at `path` is defined.                                                                                                            |
 | `screenshot: name`                        | Capture a screenshot. Screenshots are returned to agents using the MCP tool; the CLI runner ignores them.                                                   |
-| `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`.                                                                                                              |
+| `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`. A path that does not exist reads as `null`, so `equals: null` also passes for a misspelt path.               |
 | `expect: { visible: target }`             | The block, or the control a target narrows to, is visible.                                                                                                  |
 | `expect: { text: { blockId, contains } }` | The block's rendered text (or a grid row's or cell's) contains the string.                                                                                  |
 | `expect: { url: { contains } }`           | The browser URL contains the string.                                                                                                                        |
