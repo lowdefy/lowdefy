@@ -16,7 +16,19 @@
 
 import { type } from '@lowdefy/helpers';
 
-const STEP_KEYS = ['click', 'fill', 'select', 'press', 'back', 'wait', 'screenshot', 'expect'];
+const STEP_KEYS = [
+  'click',
+  'fill',
+  'select',
+  'press',
+  'back',
+  'goto',
+  'email',
+  'as',
+  'wait',
+  'screenshot',
+  'expect',
+];
 const EXPECT_KEYS = ['state', 'visible', 'text', 'url', 'title'];
 const WAIT_KEYS = ['ms', 'request', 'state'];
 
@@ -47,16 +59,25 @@ function isIndex(value) {
   return type.isInt(value) && value >= 0;
 }
 
+// Names the keys outside `allowed`, so a typo (`colum`, `subjet`) fails before
+// the browser opens instead of being ignored.
+function findUnknownKeys({ key, params, allowed }) {
+  const unknown = Object.keys(params).filter((k) => !allowed.includes(k));
+  if (unknown.length === 0) {
+    return undefined;
+  }
+  return `Step "${key}" has unknown key${unknown.length > 1 ? 's' : ''} ${unknown
+    .map((k) => `"${k}"`)
+    .join(', ')}. Keys are: ${allowed.join(', ')}.`;
+}
+
 // Validates the target keys of a step object; `extraKeys` are the step's own
 // keys (`value`, `contains`) that may sit beside them. Returns an error
 // message, or undefined when the target is well-formed.
 function validateTargetObject({ key, params, extraKeys = [], requireBlockId = false }) {
-  const allowed = [...TARGET_KEYS, ...extraKeys];
-  const unknown = Object.keys(params).filter((k) => !allowed.includes(k));
-  if (unknown.length > 0) {
-    return `Step "${key}" has unknown key${unknown.length > 1 ? 's' : ''} ${unknown
-      .map((k) => `"${k}"`)
-      .join(', ')}. Keys are: ${allowed.join(', ')}.`;
+  const unknownKeys = findUnknownKeys({ key, params, allowed: [...TARGET_KEYS, ...extraKeys] });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
   }
   if (!type.isUndefined(params.blockId) && !type.isString(params.blockId)) {
     return `Step "${key}" requires "blockId" to be a string. Received ${describe(params.blockId)}.`;
@@ -144,6 +165,50 @@ function validateWait(params) {
   return undefined;
 }
 
+// goto takes a pageId string, or { pageId, urlQuery } for a page that reads
+// _url_query.
+function validateGoto(params) {
+  if (type.isString(params) && params !== '') {
+    return undefined;
+  }
+  if (!type.isObject(params)) {
+    return `Step "goto" requires a pageId string or { pageId, urlQuery }. Received ${describe(
+      params
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({ key: 'goto', params, allowed: ['pageId', 'urlQuery'] });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  if (!type.isString(params.pageId) || params.pageId === '') {
+    return `Step "goto" requires a "pageId" string. Received ${describe(params.pageId)}.`;
+  }
+  if (!type.isUndefined(params.urlQuery) && !type.isObject(params.urlQuery)) {
+    return `Step "goto" requires "urlQuery" to be an object. Received ${describe(
+      params.urlQuery
+    )}.`;
+  }
+  return undefined;
+}
+
+// email opens the newest message to `to`, optionally narrowed by subject.
+function validateEmail(params) {
+  if (!type.isObject(params)) {
+    return `Step "email" requires { to, subject }. Received ${describe(params)}.`;
+  }
+  const unknownKeys = findUnknownKeys({ key: 'email', params, allowed: ['to', 'subject'] });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  if (!type.isString(params.to) || params.to === '') {
+    return `Step "email" requires a "to" address string. Received ${describe(params.to)}.`;
+  }
+  if (!type.isUndefined(params.subject) && !type.isString(params.subject)) {
+    return `Step "email" requires "subject" to be a string. Received ${describe(params.subject)}.`;
+  }
+  return undefined;
+}
+
 function validateExpect(params) {
   if (!type.isObject(params)) {
     return `Step "expect" requires one of { state }, { visible }, { text }, { url }, { title }. Received ${describe(
@@ -222,6 +287,17 @@ function validateStep(step) {
     case 'back':
       if (!type.isNone(params) && params !== true) {
         return `Step "back" takes no value: write { "back": true }. Received ${describe(params)}.`;
+      }
+      return undefined;
+    case 'goto':
+      return validateGoto(params);
+    case 'email':
+      return validateEmail(params);
+    case 'as':
+      if (!type.isString(params) || params === '') {
+        return `Step "as" requires an actor name string, e.g. "invitee". Received ${describe(
+          params
+        )}.`;
       }
       return undefined;
     case 'wait':

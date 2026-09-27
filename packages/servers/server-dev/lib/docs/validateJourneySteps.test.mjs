@@ -26,6 +26,12 @@ test('validateJourneySteps accepts every step of the grammar', () => {
       { press: 'Mod+k' },
       { back: true },
       { back: null },
+      { goto: 'dashboard' },
+      { goto: { pageId: 'invoice' } },
+      { goto: { pageId: 'invoice', urlQuery: { id: 'inv-1' } } },
+      { email: { to: 'ada@example.test' } },
+      { email: { to: 'ada@example.test', subject: 'Verify' } },
+      { as: 'invitee' },
       { wait: { ms: 100 } },
       { wait: { request: 'get_rows' } },
       { wait: { state: 'rows' } },
@@ -75,14 +81,14 @@ test('validateJourneySteps rejects steps that are not an array', () => {
 test('validateJourneySteps names the index and key of an unknown step', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a' }, { hover: 'b' }] });
   expect(result.error).toEqual(
-    'Step 1: Unknown journey step "hover". Steps are: click, fill, select, press, back, wait, screenshot, expect.'
+    'Step 1: Unknown journey step "hover". Steps are: click, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
   );
 });
 
 test('validateJourneySteps rejects a step with more than one key', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a', fill: { blockId: 'b' } }] });
   expect(result.error).toEqual(
-    'Step 0: Unknown journey step "click, fill". Steps are: click, fill, select, press, back, wait, screenshot, expect.'
+    'Step 0: Unknown journey step "click, fill". Steps are: click, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
   );
 });
 
@@ -189,6 +195,30 @@ test.each([
   ],
   [{ expect: { title: { equals: 7 } } }, /Step "expect.title" requires .* Received \{"equals":7\}/],
   [{ expect: { title: { is: 'Tasks' } } }, /Step "expect.title" requires/],
+  [{ goto: '' }, /Step "goto" requires a pageId string or \{ pageId, urlQuery \}. Received ""/],
+  [{ goto: 7 }, /Step "goto" requires a pageId string or \{ pageId, urlQuery \}. Received 7/],
+  [{ goto: { urlQuery: { id: 1 } } }, /Step "goto" requires a "pageId" string. Received undefined/],
+  [
+    { goto: { pageId: 'invoice', urlQuery: 'id=1' } },
+    /Step "goto" requires "urlQuery" to be an object. Received "id=1"/,
+  ],
+  [
+    { goto: { pageId: 'invoice', url: '/invoice' } },
+    /Step "goto" has unknown key "url". Keys are: pageId, urlQuery/,
+  ],
+  [{ email: 'ada@example.test' }, /Step "email" requires \{ to, subject \}/],
+  [{ email: { subject: 'Verify' } }, /Step "email" requires a "to" address string/],
+  [{ email: { to: '' } }, /Step "email" requires a "to" address string. Received ""/],
+  [
+    { email: { to: 'ada@example.test', subject: 7 } },
+    /Step "email" requires "subject" to be a string. Received 7/,
+  ],
+  [
+    { email: { to: 'ada@example.test', subjet: 'Verify' } },
+    /Step "email" has unknown key "subjet". Keys are: to, subject/,
+  ],
+  [{ as: '' }, /Step "as" requires an actor name string/],
+  [{ as: { name: 'invitee' } }, /Step "as" requires an actor name string/],
 ])('validateJourneySteps rejects malformed step %j', (step, expected) => {
   const result = validateJourneySteps({ steps: [step] });
   expect(result.error).toMatch(/^Step 0: /);

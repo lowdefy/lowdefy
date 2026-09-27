@@ -102,6 +102,37 @@ test('openPage injects the default roleless user when no user is given', async (
   });
 });
 
+test('openPage injects no user for user none, so the app resolves its own sessions', async () => {
+  const { browser, addCookies } = createBrowser();
+
+  const opened = await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'login',
+    user: 'none',
+  });
+
+  expect(addCookies).not.toHaveBeenCalled();
+  expect(opened.ready).toBe(true);
+});
+
+test('openPage sends requests from the client address it is given', async () => {
+  const { browser } = createBrowser();
+
+  await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'login',
+    clientAddress: '203.0.113.7',
+  });
+
+  expect(browser.newContext).toHaveBeenCalledWith({
+    viewport: { width: 1280, height: 800 },
+    colorScheme: 'light',
+    extraHTTPHeaders: { 'x-forwarded-for': '203.0.113.7' },
+  });
+});
+
 test('openPage injects a per-call user with roles', async () => {
   const { browser, addCookies } = createBrowser();
 

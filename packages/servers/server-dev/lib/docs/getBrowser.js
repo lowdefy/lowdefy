@@ -89,30 +89,41 @@ async function openPage({
   width = 1280,
   height = 800,
   colorScheme = 'light',
+  clientAddress,
   timeout = 15000,
 }) {
   const url = buildPageUrl({ origin, pageId, urlQuery });
-  // Resolved before the context is created so an invalid `user` can't leave an
-  // orphaned context behind.
-  const injectedUser = resolveHeadlessUser({ user });
+  // `none` injects no caller: the context starts signed out and the app's own
+  // auth resolves every request from the session cookies it sets. Otherwise
+  // the user is resolved before the context is created so an invalid `user`
+  // can't leave an orphaned context behind.
+  const injectedUser = user === 'none' ? null : resolveHeadlessUser({ user });
   // colorScheme is what the page's `prefers-color-scheme` media query reports,
   // so an app following the system theme renders light or dark accordingly.
-  const context = await browser.newContext({ viewport: { width, height }, colorScheme });
+  // clientAddress is the address the context's requests come from, as far as
+  // the app can tell (X-Forwarded-For) - see createJourneyActors.
+  const contextOptions = { viewport: { width, height }, colorScheme };
+  if (!type.isUndefined(clientAddress)) {
+    contextOptions.extraHTTPHeaders = { 'x-forwarded-for': clientAddress };
+  }
+  const context = await browser.newContext(contextOptions);
   // From here a failure must close the context before rethrowing: callers only
   // learn about the context from the return value, so an error thrown mid-open
-  // (a navigation that times out on both waits, a crashed page) would otherwise
+  // (a navigation that times out, a crashed page) would otherwise
   // leak a browser context — and its renderer process — on every failed call.
   try {
     // Inject an authenticated user so auth-protected pages don't 404 for the
     // cookieless headless context. Mirrors the e2e user-cookie pattern; scoped to
     // `origin` so it rides along on the same-origin /api/* fetches.
-    await context.addCookies([
-      {
-        name: HEADLESS_USER_COOKIE,
-        value: Buffer.from(JSON.stringify(injectedUser)).toString('base64'),
-        url: origin,
-      },
-    ]);
+    if (injectedUser !== null) {
+      await context.addCookies([
+        {
+          name: HEADLESS_USER_COOKIE,
+          value: Buffer.from(JSON.stringify(injectedUser)).toString('base64'),
+          url: origin,
+        },
+      ]);
+    }
     const page = await context.newPage();
     // 'load', not 'networkidle': every dev page holds the /api/reload event
     // stream open, so the network never goes idle and a networkidle wait

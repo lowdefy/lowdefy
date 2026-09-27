@@ -52,7 +52,10 @@ async function docsJourneyHandler(c) {
   if (stateSelectionError) {
     return c.json({ error: stateSelectionError }, 400);
   }
-  const { user, error: userError } = parseUserParam({ value: body.user });
+  // `none` is the journey's own third value: no injected caller, so the app's
+  // auth decides who the journey is. Every other value is a headless caller.
+  const { user, error: userError } =
+    body.user === 'none' ? { user: 'none' } : parseUserParam({ value: body.user });
   if (userError) {
     return c.json({ error: userError }, 400);
   }

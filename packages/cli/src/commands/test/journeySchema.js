@@ -22,6 +22,9 @@ export const JOURNEY_STEP_KEYS = [
   'select',
   'press',
   'back',
+  'goto',
+  'email',
+  'as',
   'wait',
   'screenshot',
   'expect',
@@ -40,10 +43,9 @@ const journeySchema = {
       errorMessage: { type: 'Journey "pageId" should be a string.' },
     },
     user: {
-      type: 'object',
-      errorMessage: {
-        type: 'Journey "user" should be an inline user object, e.g. {roles: [admin]}.',
-      },
+      anyOf: [{ type: 'object' }, { const: 'none' }],
+      errorMessage:
+        'Journey "user" should be an inline user object, e.g. {roles: [admin]}, or "none" to sign in through the app.',
     },
     urlQuery: {
       type: 'object',
