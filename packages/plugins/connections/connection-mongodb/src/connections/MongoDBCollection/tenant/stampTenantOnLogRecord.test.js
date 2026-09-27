@@ -43,3 +43,22 @@ test('stampTenantOnLogRecord overrides a colliding record key with the verdict v
     meta: 'org_a',
   });
 });
+
+test.each([
+  [
+    'stamps the organization of the recorded rows under tenant: none',
+    true,
+    { organization_id: 'org_b' },
+  ],
+  ['leaves a shared connection record unstamped', false, {}],
+])('stampTenantOnLogRecord %s', (_, stampChangeLog, stamp) => {
+  const record = { requestId: 'r1' };
+  expect(
+    stampTenantOnLogRecord({
+      record,
+      tenant: null,
+      tenantGuard: { field: 'organization_id', stampChangeLog },
+      organizationId: 'org_b',
+    })
+  ).toEqual({ requestId: 'r1', ...stamp });
+});

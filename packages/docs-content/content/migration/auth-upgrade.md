@@ -278,7 +278,7 @@ Nothing grants organization authority implicitly. On a fresh `policy: pinned` + 
 
 **Email verification is required before accepting.** Lowdefy sets a function-form `advanced.database.generateId`, which makes the organization plugin require a verified email for the accept-by-invitation-id action. Normal flow, not a workaround: verify the address, then open the link.
 
-**Under `signup: open` this route does not work.** The auto-join hooks mint a `role: 'member'` member row before the accept, so accepting fails as already-a-member. There the single write is the other one: the person signs up normally, and the operator sets `member.role: 'owner'` on the row they already have. That one field is the whole grant — no second write and no denormalized copy to leave stale, because nothing writes `user.role`.
+**Under `signup: open` this route does not grant the role.** The auto-join hooks mint a `role: 'member'` member row before the accept, and accepting an invitation into an organization you already belong to only marks the invitation accepted — it never changes an existing membership. There the single write is the other one: the person signs up normally, and the operator sets `member.role: 'owner'` on the row they already have. That one field is the whole grant — no second write and no denormalized copy to leave stale, because nothing writes `user.role`.
 
 **Bootstrap is per-organization, not per-deployment.** An `admin` of the team organization holds no authority in the customer organization, so that organization's first `admin` needs its own inserted invitation. After the first one, each organization is self-sustaining: its owner can invite and promote from inside the app.
 

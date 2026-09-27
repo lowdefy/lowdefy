@@ -16,8 +16,10 @@
 
 /*
   Provisions the documented auth index requirements (mongodb/design.md
-  Decision 3). The Lowdefy server never creates indexes - the deployment
-  applies them; this script is that step for the reference app.
+  Decision 3). The deployment applies them; this script is that step for the
+  reference app. The Lowdefy server itself only ensures the unique
+  organization slug and member (user_id, organization_id) indexes at startup,
+  and accepts the equivalent ones created here.
 
   Usage: AUTH_DATABASE_URI='mongodb://...' node scripts/provision-indexes.mjs
 */

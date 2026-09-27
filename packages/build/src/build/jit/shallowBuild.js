@@ -65,6 +65,7 @@ import writeAuth from '../writeAuth.js';
 import writeConfig from '../writeConfig.js';
 import writeConnections from '../writeConnections.js';
 import writeDynamicPolicies from '../writeDynamicPolicies.js';
+import writeTenantTargets from '../writeTenantTargets.js';
 import writeAgents from '../writeAgents.js';
 import writeApi from '../writeApi.js';
 import writeMcp from '../writeMcp.js';
@@ -243,6 +244,7 @@ async function shallowBuild(options) {
       'connectionIds.json',
       JSON.stringify([...context.connectionIds].sort())
     );
+    await writeTenantTargets({ context });
     await context.writeBuildArtifact(
       'websocketIds.json',
       JSON.stringify([...context.websocketIds].sort())

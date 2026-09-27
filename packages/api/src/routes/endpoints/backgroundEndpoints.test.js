@@ -740,7 +740,10 @@ test('webhook verifier on a walled connection with tenant none opts out, carries
   // Unscoped like any tenant: none request, so a verifier that writes (a
   // replay nonce, say) must be held to the same organization-id guard.
   expect(walledStubVerify).toHaveBeenCalledWith(
-    expect.objectContaining({ tenant: null, tenantGuard: { field: 'organization_id' } })
+    expect.objectContaining({
+      tenant: null,
+      tenantGuard: { field: 'organization_id', stampChangeLog: true },
+    })
   );
 });
 

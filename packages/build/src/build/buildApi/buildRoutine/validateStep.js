@@ -18,9 +18,13 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import validateId from '../../../utils/validateId.js';
+import validateSharedPipelineWrite from '../../validateSharedPipelineWrite.js';
 import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
 
-function validateStep(step, { dynamicPolicies, endpointId, stepTypes, tenantConnectionIds }) {
+function validateStep(
+  step,
+  { dynamicPolicies, endpointId, sharedTargets, stepTypes, tenantConnectionIds, walledTargets }
+) {
   const configKey = step['~k'];
   if (Object.keys(step).length === 0) {
     throw new ConfigError(`Step is not defined at endpoint "${endpointId}".`, { configKey });
@@ -244,6 +248,13 @@ function validateStep(step, { dynamicPolicies, endpointId, stepTypes, tenantConn
     config: step,
     location: `Step "${step.id}" at endpoint "${endpointId}"`,
     tenantConnectionIds,
+    configKey,
+  });
+  validateSharedPipelineWrite({
+    config: step,
+    location: `Step "${step.id}" at endpoint "${endpointId}"`,
+    sharedTargets,
+    walledTargets,
     configKey,
   });
 }

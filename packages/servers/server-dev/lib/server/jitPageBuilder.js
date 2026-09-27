@@ -24,6 +24,7 @@ import {
   generateClientJsModule,
   hydrateDeferredRecords,
   makeId,
+  restoreTenantTargets,
 } from '@lowdefy/build/dev';
 
 import createLogger from './log/createLogger.js';
@@ -93,7 +94,7 @@ function loadPageRegistry(buildDirectory) {
   }
 }
 
-function getBuildContext(buildDirectory, configDirectory) {
+export function getBuildContext(buildDirectory, configDirectory) {
   if (cachedBuildContext) return cachedBuildContext;
 
   const refMap = readJsonFile(path.join(buildDirectory, 'refMap.json')) ?? {};
@@ -128,6 +129,12 @@ function getBuildContext(buildDirectory, configDirectory) {
   }
   for (const id of websocketIds) {
     cachedBuildContext.websocketIds.add(id);
+  }
+  // The scoped connections, walled collections and shared connections, so a
+  // page's requests get the same tenant pipeline checks as in a full build.
+  const tenantTargets = readJsonFile(path.join(buildDirectory, 'tenantTargets.json'));
+  if (tenantTargets) {
+    restoreTenantTargets({ context: cachedBuildContext, tenantTargets });
   }
   // Pages that host a policy-bound Dynamic block count the policy's types
   // and validate its pages and endpoints.

@@ -62,8 +62,11 @@ write lands. Each later phase grows this suite with a scenario.
   LOWDEFY_SECRET_GOOGLE_CLIENT_SECRET=<from Google Cloud console>
   ```
 
-- **Indexes** — the server never creates indexes; the deployment provisions
-  them ([mongodb design](../../../lowdefy-design/designs/auth-upgrade/mongodb/design.md) Decision 3):
+- **Indexes** — the deployment provisions them
+  ([mongodb design](../../../lowdefy-design/designs/auth-upgrade/mongodb/design.md) Decision 3).
+  The server only creates the two unique indexes organization writes rely on
+  (organization `slug`, member `user_id` + `organization_id`) at startup, and
+  accepts the ones this script creates:
 
   ```sh
   AUTH_DATABASE_URI='mongodb://localhost:27017/auth-reference' \

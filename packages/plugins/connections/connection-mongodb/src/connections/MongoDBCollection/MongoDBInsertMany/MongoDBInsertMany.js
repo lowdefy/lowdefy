@@ -18,7 +18,7 @@ import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
-import { assertUnscopedDoc } from '../tenant/guardUnscopedWrite.js';
+import { assertUnscopedDoc, changeLogOrganizationOfDocs } from '../tenant/guardUnscopedWrite.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -43,6 +43,10 @@ async function MongodbInsertMany({
     docs.forEach((doc) => assertUnscopedDoc({ doc, field: tenantGuard.field }));
   }
   const { collection, logCollection } = await getCollection({ connection });
+  let logOrganizationId = null;
+  if (tenantGuard?.stampChangeLog && logCollection) {
+    logOrganizationId = changeLogOrganizationOfDocs({ docs, field: tenantGuard.field });
+  }
   let response;
   try {
     response = await collection.insertMany(docs, options);
@@ -62,6 +66,8 @@ async function MongodbInsertMany({
             meta: connection.changeLog?.meta,
           },
           tenant,
+          tenantGuard,
+          organizationId: logOrganizationId,
         })
       );
     }
