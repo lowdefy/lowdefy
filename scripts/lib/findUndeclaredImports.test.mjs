@@ -68,6 +68,7 @@ const cases = [
         'const f = await import(`undeclared-f`);',
         'const g = require(`undeclared-g`);',
         'const h = await import(`undeclared-h/${name}`);',
+        "const k = import.meta.resolve('undeclared-k');",
       ].join('\n'),
     },
     expected: [
@@ -78,6 +79,21 @@ const cases = [
       ['src/index.js', 'undeclared-e', 'undeclared'],
       ['src/index.js', 'undeclared-f', 'undeclared'],
       ['src/index.js', 'undeclared-g', 'undeclared'],
+      ['src/index.js', 'undeclared-k', 'undeclared'],
+    ],
+  },
+  {
+    name: 'reads static imports and re-exports with import attributes',
+    files: {
+      'src/data.js': [
+        "import data from 'undeclared-i/data.json' with { type: 'json' };",
+        "export * from 'undeclared-j' with { type: 'json' };",
+        "import local from './local.json' with { type: 'json' };",
+      ].join('\n'),
+    },
+    expected: [
+      ['src/data.js', 'undeclared-i', 'undeclared'],
+      ['src/data.js', 'undeclared-j', 'undeclared'],
     ],
   },
   {
