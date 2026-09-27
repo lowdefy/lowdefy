@@ -1,6 +1,6 @@
-# Public page (like login): the pending-invitation carve-out admits an
-# invitee's session, but with no member row every protected page treats them
-# as logged out - this page is where they land to accept. The accept runs
+# Public page (like login): under the tenant policy an invitee signs in with
+# no organization (awaiting one), and every protected page refuses them until
+# they accept - this page is where they land to accept. The accept runs
 # through the AcceptInvitation catalog action (phase 9; this page posted to
 # the endpoint directly before) - BetterAuth still gates it itself: the
 # session email must match the invitation.
@@ -28,13 +28,13 @@ blocks:
     properties:
       html: |
         <p>Sign in (or sign up) with the invited email address first, then
-        accept. Until you accept, protected pages treat you as logged out.</p>
-  - id: invitation_id_input
+        accept. Until you accept, protected pages refuse you.</p>
+  # The block id IS the state key, so the onInit write from the url query
+  # fills this input.
+  - id: invitationId
     type: TextInput
     properties:
       title: Invitation id
-    value:
-      _state: invitationId
   - id: accept_button
     type: Button
     properties:
@@ -47,7 +47,7 @@ blocks:
             type: AcceptInvitation
             params:
               invitationId:
-                _state: invitation_id_input
+                _state: invitationId
           - id: refresh_after_accept
             type: UpdateSession
           - id: accept_result
