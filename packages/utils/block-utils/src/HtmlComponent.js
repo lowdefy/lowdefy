@@ -20,6 +20,7 @@ import DOMPurify from 'dompurify';
 import { type } from '@lowdefy/helpers';
 
 import createHtmlEnhancerGate from './createHtmlEnhancerGate.js';
+import findDataEventRule from './findDataEventRule.js';
 import getDataEvent from './getDataEvent.js';
 import HTML_ENHANCERS from './htmlEnhancers/htmlEnhancers.js';
 import NATIVE_INTERACTIVE from './htmlEnhancers/nativeInteractive.js';
@@ -124,7 +125,7 @@ class HtmlComponent extends React.Component {
       return;
     }
     const { cleanups, portals, prepared } = runHtmlEnhancers({
-      dataEvents: !type.isNone(this.props.onDataEvent),
+      dataEvents: type.isNone(this.props.onDataEvent) ? null : this.props.dataEvents ?? [],
       enhancers: HTML_ENHANCERS,
       registration,
       root: this.div,
@@ -187,17 +188,37 @@ class HtmlComponent extends React.Component {
     }
   }
 
-  // An enhancer can take over firing a data-event (data-confirm asks first).
-  // Without the enhancement pass there is nothing to ask, as before.
+  // Only the events the block lists in dataEvents fire, so markup that reaches the HTML from
+  // data cannot fire the block's other events, and a listed event that requires a confirm asks
+  // whatever the markup says. An enhancer can take over firing (data-confirm asks first).
   fireDataEvent({ dataEvent, target }) {
+    const rule = findDataEventRule({ dataEvents: this.props.dataEvents, name: dataEvent.name });
+    if (rule === null) {
+      console.warn(
+        `data-event="${dataEvent.name}" did not fire: the block's dataEvents does not list it.`
+      );
+      return false;
+    }
     const fire = () => this.props.onDataEvent(dataEvent);
     if (this.state.enhanced) {
       const gated = HTML_ENHANCERS.some(
         (enhancer) =>
           enhancer.gateDataEvent &&
-          enhancer.gateDataEvent({ dataEvent, fire, host: this.host, target })
+          enhancer.gateDataEvent({
+            confirm: rule.confirm,
+            dataEvent,
+            fire,
+            host: this.host,
+            target,
+          })
       );
       if (gated) return true;
+    }
+    // Without the enhancement pass there is no overlay to ask with, so a required confirm
+    // cannot be given.
+    if (rule.confirm) {
+      console.warn(`data-event="${dataEvent.name}" did not fire: it requires a confirm.`);
+      return true;
     }
     fire();
     return false;
@@ -276,6 +297,7 @@ class HtmlComponent extends React.Component {
     if (overlay.kind === 'popover') {
       content = (
         <HtmlComponent
+          dataEvents={this.props.dataEvents}
           div={true}
           html={overlay.html}
           methods={this.props.methods}

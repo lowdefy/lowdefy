@@ -94,6 +94,7 @@ test('a copy click does not reach data-event, links or row handlers around it', 
   const { container } = render(
     <div onClick={onRowClick}>
       <HtmlComponent
+        dataEvents={['onRow']}
         html='<span data-event="onRow"><code data-copy>abc</code></span>'
         onDataEvent={onDataEvent}
       />
