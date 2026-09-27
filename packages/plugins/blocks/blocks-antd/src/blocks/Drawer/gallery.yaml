@@ -39,7 +39,7 @@
         - id: drawer_basic_p1
           type: Paragraph
           properties:
-            content: This is a basic drawer with a title and default settings. It opens from the right side with a width of 256px.
+            content: This is a basic drawer with a title and default settings. It opens from the right side with the default width of 378px.
         - id: drawer_basic_p2
           type: Paragraph
           properties:
@@ -402,6 +402,49 @@
           type: Paragraph
           properties:
             content: The mask is visible but clicking it does not close the drawer. Users must use the close button or Escape key.
+
+- title: Resizable Drawer
+  blocks:
+    - id: drawer_resizable_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Resizable Drawer
+        color: primary
+        variant: outlined
+      events:
+        onClick:
+          - id: drawer_resizable_open
+            type: CallMethod
+            params:
+              blockId: drawer_resizable
+              method: setOpen
+              args:
+                - open: true
+    - id: drawer_resizable
+      type: Drawer
+      properties:
+        title: Resizable Drawer
+        size: 480
+        resizable: true
+        maxSize: 900
+        closable:
+          placement: end
+        mask:
+          blur: true
+      events:
+        onResizeEnd:
+          - id: drawer_resizable_save_size
+            type: SetState
+            params:
+              drawer_size:
+                _event: size
+      blocks:
+        - id: drawer_resizable_p1
+          type: Paragraph
+          properties:
+            content: Drag the left edge to resize the drawer. The onResizeEnd event receives the new size, so it can be saved as a user preference.
 
 - title: Keyboard Close
   blocks:

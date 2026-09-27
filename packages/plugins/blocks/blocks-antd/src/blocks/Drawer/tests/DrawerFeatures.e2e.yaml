@@ -1,0 +1,330 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: drawer_features
+type: Box
+
+blocks:
+  - id: drawer_large
+    type: Drawer
+    properties:
+      title: Large
+      size: large
+    slots:
+      content:
+        blocks:
+          - id: drawer_large_text
+            type: Paragraph
+            properties:
+              content: Content of drawer_large.
+
+  - id: open_drawer_large
+    type: Button
+    properties:
+      title: Open drawer_large
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_large
+            method: setOpen
+            args:
+              - open: true
+
+  - id: drawer_resizable
+    type: Drawer
+    properties:
+      title: Resizable
+      size: 400
+      resizable: true
+      maxSize: 700
+    events:
+      onResizeEnd:
+        - id: set_size
+          type: SetState
+          params:
+            drawer_resized_size:
+              _event: size
+    slots:
+      content:
+        blocks:
+          - id: drawer_resizable_text
+            type: Paragraph
+            properties:
+              content: Content of drawer_resizable.
+
+  - id: open_drawer_resizable
+    type: Button
+    properties:
+      title: Open drawer_resizable
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_resizable
+            method: setOpen
+            args:
+              - open: true
+
+  - id: drawer_resized_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _gt:
+              - _if_none:
+                  - _state: drawer_resized_size
+                  - 0
+              - 400
+          then: resized larger
+          else: ''
+
+  - id: drawer_close_end
+    type: Drawer
+    properties:
+      title: Close end
+      closable:
+        placement: end
+    slots:
+      content:
+        blocks:
+          - id: drawer_close_end_text
+            type: Paragraph
+            properties:
+              content: Content of drawer_close_end.
+
+  - id: open_drawer_close_end
+    type: Button
+    properties:
+      title: Open drawer_close_end
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_close_end
+            method: setOpen
+            args:
+              - open: true
+
+  - id: drawer_close_disabled
+    type: Drawer
+    properties:
+      title: Close disabled
+      closable:
+        disabled: true
+    slots:
+      content:
+        blocks:
+          - id: drawer_close_disabled_text
+            type: Paragraph
+            properties:
+              content: Content of drawer_close_disabled.
+
+  - id: open_drawer_close_disabled
+    type: Button
+    properties:
+      title: Open drawer_close_disabled
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_close_disabled
+            method: setOpen
+            args:
+              - open: true
+
+  - id: drawer_blur
+    type: Drawer
+    properties:
+      title: Blur
+      mask:
+        blur: true
+    slots:
+      content:
+        blocks:
+          - id: drawer_blur_text
+            type: Paragraph
+            properties:
+              content: Content of drawer_blur.
+
+  - id: open_drawer_blur
+    type: Button
+    properties:
+      title: Open drawer_blur
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_blur
+            method: setOpen
+            args:
+              - open: true
+
+  - id: drawer_loading
+    type: Drawer
+    properties:
+      title: Loading
+      loading: true
+    slots:
+      content:
+        blocks:
+          - id: drawer_loading_text
+            type: Paragraph
+            properties:
+              content: Content of drawer_loading.
+
+  - id: open_drawer_loading
+    type: Button
+    properties:
+      title: Open drawer_loading
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_loading
+            method: setOpen
+            args:
+              - open: true
+
+  - id: drawer_html_title
+    type: Drawer
+    properties:
+      title: '<b>Bold</b> title'
+    slots:
+      content:
+        blocks:
+          - id: drawer_html_title_text
+            type: Paragraph
+            properties:
+              content: Content of drawer_html_title.
+
+  - id: open_drawer_html_title
+    type: Button
+    properties:
+      title: Open drawer_html_title
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_html_title
+            method: setOpen
+            args:
+              - open: true
+
+  - id: drawer_after_open_change
+    type: Drawer
+    properties:
+      title: After open change
+    events:
+      afterOpenChange:
+        - id: set_open
+          type: SetState
+          params:
+            drawer_after_open:
+              _if:
+                test:
+                  _event: open
+                then: opened
+                else: closed
+    slots:
+      content:
+        blocks:
+          - id: drawer_after_open_change_text
+            type: Paragraph
+            properties:
+              content: Content of drawer_after_open_change.
+
+  - id: open_drawer_after_open_change
+    type: Button
+    properties:
+      title: Open drawer_after_open_change
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_after_open_change
+            method: setOpen
+            args:
+              - open: true
+
+  - id: drawer_after_open_display
+    type: Span
+    properties:
+      content:
+        _if_none:
+          - _state: drawer_after_open
+          - ''
+
+  - id: drawer_force_render
+    type: Drawer
+    properties:
+      title: Force render
+      forceRender: true
+    slots:
+      content:
+        blocks:
+          - id: drawer_force_render_text
+            type: Paragraph
+            properties:
+              content: Content of drawer_force_render.
+
+  - id: open_drawer_force_render
+    type: Button
+    properties:
+      title: Open drawer_force_render
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_force_render
+            method: setOpen
+            args:
+              - open: true
+
+  - id: drawer_destroy_on_hidden
+    type: Drawer
+    properties:
+      title: Destroy on hidden
+      destroyOnHidden: true
+    slots:
+      content:
+        blocks:
+          - id: drawer_destroy_on_hidden_text
+            type: Paragraph
+            properties:
+              content: Content of drawer_destroy_on_hidden.
+
+  - id: open_drawer_destroy_on_hidden
+    type: Button
+    properties:
+      title: Open drawer_destroy_on_hidden
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_destroy_on_hidden
+            method: setOpen
+            args:
+              - open: true

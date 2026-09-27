@@ -54,22 +54,70 @@
   type: Modal
   properties:
     zIndex: 1200
-- id: 'properties: bodyStyle: border: 10px solid blue'
+- id: 'style: .body: border: 10px solid blue'
   type: Modal
-  properties:
-    bodyStyle:
+  style:
+    .body:
       border: 10px solid blue
-- id: 'properties: maskStyle: border: 10px solid blue'
+- id: 'style: .mask: border: 10px solid blue'
   type: Modal
-  properties:
-    maskStyle:
+  style:
+    .mask:
       border: 10px solid blue
-- id: 'properties: wrapperStyle: border: 10px solid blue'
+- id: 'style: .wrapper: border: 10px solid blue'
   type: Modal
-  properties:
-    wrapperStyle:
+  style:
+    .wrapper:
       border: 10px solid blue
 - id: 'with html in title'
   type: Modal
   properties:
     title: '<div style="color:green;">Modal Html Title</div>'
+- id: 'properties.mask: blur: true'
+  type: Modal
+  properties:
+    title: Blurred mask
+    mask:
+      blur: true
+- id: 'properties.mask: closable: false'
+  type: Modal
+  properties:
+    mask:
+      closable: false
+- id: 'properties.closable: disabled: true'
+  type: Modal
+  properties:
+    closable:
+      disabled: true
+- id: 'properties.keyboard: false'
+  type: Modal
+  properties:
+    keyboard: false
+- id: 'properties.loading: true'
+  type: Modal
+  properties:
+    loading: true
+- id: 'properties.destroyOnHidden: true'
+  type: Modal
+  properties:
+    destroyOnHidden: true
+- id: 'properties.forceRender: true'
+  type: Modal
+  properties:
+    forceRender: true
+- id: 'properties.scrollLock: false'
+  type: Modal
+  properties:
+    scrollLock: false
+- id: 'properties.focusable: focusTriggerAfterClose: false'
+  type: Modal
+  properties:
+    focusable:
+      focusTriggerAfterClose: false
+- id: 'properties.width: responsive'
+  type: Modal
+  properties:
+    width:
+      xs: 90%
+      md: 600
+      xl: 800
