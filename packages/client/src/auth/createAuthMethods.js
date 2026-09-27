@@ -58,12 +58,14 @@ function resolveCallbackURL({ lowdefy, callbackUrl }) {
   }
   const window = lowdefy._internal?.globals?.window;
   const fromQuery = new URLSearchParams(window?.location?.search ?? '').get('callbackUrl');
-  if (isAppRelativePath(fromQuery)) {
+  // The parser drops tabs and newlines the path test above cannot see, so
+  // "/\t/evil.com/x" reads as another host; only a same-origin result counts.
+  const parsed = isAppRelativePath(fromQuery) ? new URL(fromQuery, window.location.origin) : null;
+  if (parsed !== null && parsed.origin === window.location.origin) {
     // The query value is a finished, basePath-prefixed URL string - both
     // producers bake basePath in (renderPage.js, apiPage.js). This is the one
     // boundary that parses it back to an un-prefixed page target: strip basePath
     // conditionally so router.push does not re-apply it into /app/app/reports.
-    const parsed = new URL(fromQuery, window.location.origin);
     const basePath = lowdefy.basePath ?? '';
     const pathname =
       basePath && parsed.pathname.startsWith(basePath)

@@ -426,6 +426,14 @@ test('a protocol-relative ?callbackUrl= query never leaves the challenge page (o
   expect(assign.mock.calls).toEqual([['/home-page']]);
 });
 
+test('a ?callbackUrl= query hiding another host behind a tab falls back to the home page', async () => {
+  const { auth, lowdefy, assign } = setup();
+  lowdefy._internal.globals.window.location.search = '?callbackUrl=%2F%09%2Fevil.com%2Fsteal';
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  await twoFactorVerify({ code: '012345' });
+  expect(assign.mock.calls).toEqual([['/home-page']]);
+});
+
 // The magic-link landing page: the engine put the verify query on this page's
 // URL, so the defaults come from there and the action only has to walk to the
 // verify endpoint on a real click.
