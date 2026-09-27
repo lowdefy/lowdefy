@@ -140,6 +140,43 @@ test('async: true returns immediately and runs the routine in the background', a
   );
 });
 
+// A background run outlives the request that started it: the request's signal (client
+// gone, request timeout) must not cancel the requests the run makes.
+test.each([
+  ['an async endpoint', (context) => callEndpoint(context, { endpointId: 'bg_ep', payload: {} })],
+  [
+    'an async scheduled endpoint',
+    (context) => runScheduledEndpoint(context, { endpointId: 'bg_ep', cron: '0 6 * * *' }),
+  ],
+  [
+    'a detached run',
+    (context) =>
+      acceptDetachedEndpoint(context, {
+        endpointId: 'bg_ep',
+        payload: {},
+        principal: { user: serializer.serialize(null), system: true },
+      }),
+  ],
+])('%s runs without the request signal', async (_, start) => {
+  const readConfigFile = jest.fn((path) =>
+    path === 'api/bg_ep.json'
+      ? {
+          endpointId: 'bg_ep',
+          type: 'Api',
+          auth: { public: true },
+          async: true,
+          schedules: [{ cron: '0 6 * * *' }],
+          routine: { ':return': 'done' },
+        }
+      : null
+  );
+  const context = testContext({ logger, operators: operatorsServer, readConfigFile });
+  const request = new AbortController();
+  context.signal = request.signal;
+  await start(context);
+  expect(context.signal).toBeUndefined();
+});
+
 test('detached: true dispatches to /api/detached with CRON_SECRET and continues', async () => {
   process.env.CRON_SECRET = 'shhh';
   const fetchMock = jest.fn(async () => ({ status: 200 }));

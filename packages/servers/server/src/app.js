@@ -17,7 +17,6 @@
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { compress } from 'hono/compress';
-import { timeout } from 'hono/timeout';
 import { serveStatic } from '@hono/node-server/serve-static';
 
 import agentHandler from './routes/agent.js';
@@ -41,6 +40,7 @@ import mountPageRoutes from './routes/mountPageRoutes.js';
 import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
+import requestTimeout from './middleware/requestTimeout.js';
 import sentryMiddleware from './middleware/sentry.js';
 import usageHandler from './routes/usage.js';
 import userHandler from './routes/user.js';
@@ -71,6 +71,7 @@ function createApp({ serveStaticAssets = true } = {}) {
   // function limit (cost protection on serverless). Agent streaming is long-lived by design, so it
   // is exempt. Configured via `config.requestTimeout` in lowdefy.yaml (0 disables).
   if (requestTimeoutMs > 0) {
+    const timeoutMiddleware = requestTimeout({ timeoutMs: requestTimeoutMs });
     app.use('*', async (c, next) => {
       if (
         c.req.path.includes('/api/agent/') ||
@@ -79,7 +80,7 @@ function createApp({ serveStaticAssets = true } = {}) {
       ) {
         return next();
       }
-      return timeout(requestTimeoutMs)(c, next);
+      return timeoutMiddleware(c, next);
     });
   }
 

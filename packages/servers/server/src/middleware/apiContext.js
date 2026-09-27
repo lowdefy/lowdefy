@@ -17,6 +17,7 @@
 import path from 'node:path';
 import {
   createApiContext,
+  createRequestSignal,
   ensureMcpOauthResource,
   resolveAuthentication,
   resolvePinnedOrganization,
@@ -109,6 +110,12 @@ function apiContext() {
       },
       scrubSecrets,
       secrets,
+      // Aborts when the client disconnects before the response is sent, or when the
+      // request timeout (src/middleware/requestTimeout.js) answers first.
+      signal: createRequestSignal({
+        clientSignal: c.req.raw.signal,
+        timeoutSignal: c.get('requestTimeoutSignal'),
+      }),
       steps,
       // On Vercel (fluid compute) the platform request context keeps the
       // invocation alive until waitUntil promises settle; on long-lived hosts

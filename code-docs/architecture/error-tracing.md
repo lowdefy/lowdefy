@@ -481,11 +481,16 @@ try {
 
 ```javascript
 try {
-  return await requestResolver({ ... });
+  return await requestResolver({ ..., signal: context.signal });
 } catch (error) {
   if (!error.configKey) error.configKey = requestConfig['~k'];
 
-  if (error instanceof ConfigError) throw error;
+  if (error.isLowdefyError) throw error;
+
+  // The client left and the resolver stopped on the request signal: not a fault.
+  if (signal?.reason?.name === 'AbortError' && error.name === 'AbortError') {
+    throw new UserError(signal.reason.message, { cause: error });
+  }
 
   if (ServiceError.isServiceError(error)) {
     throw new ServiceError(undefined, {
@@ -505,6 +510,8 @@ try {
 ```
 
 **What is a ServiceError.** `ServiceError.isServiceError` decides it, for every connection: network error codes, a `TimeoutError`, HTTP 5xx and HTTP 429 (from `statusCode`, `status`, `response.status`, `$metadata.httpStatusCode` or a numeric `code`), AWS SDK throttling exceptions (`$retryable.throttling`), and service-sounding messages, following a retrying client's `lastError` and the `cause` chain. 429 counts because throttling is an external condition that passes with time; a developer cannot fix it in config. The wrapped `ServiceError` keeps the service's Retry-After as `retryAfter` (`ServiceError.readRetryAfter`), which the server log projection (`logErrorProjection.js`) keeps.
+
+**Cancelled requests.** Request resolvers receive `signal` (`context.signal`, built by `createRequestSignal` in the server's apiContext). It aborts with an `AbortError` when the client closes the connection before the response is sent, and with a `TimeoutError` when the server's request timeout (`src/middleware/requestTimeout.js`, `config.requestTimeout`) answers first. A resolver that stopped because the client left fails with a `UserError` (warn level, no Sentry: nobody is left to answer, and nothing needs fixing). One stopped by the request timeout fails with a `ServiceError` at the request's config location, which is how a timed-out provider call shows up in the log. Work that outlives its request (`async: true` endpoints, detached runs, agent chat turns) runs with no signal.
 
 ### Operator Key Extraction
 

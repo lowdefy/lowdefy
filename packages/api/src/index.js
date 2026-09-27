@@ -23,6 +23,7 @@ import createApiContext from './context/createApiContext.js';
 import createAsMetadataHandler from './routes/auth/createAsMetadataHandler.js';
 import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
 import createMcpServer from './routes/mcp/createMcpServer.js';
+import createRequestSignal from './context/createRequestSignal.js';
 import createSystemContext from './context/createSystemContext.js';
 import createWebSocketConnection from './routes/websocket/createWebSocketConnection.js';
 import createWireProjection from './response/createWireProjection.js';
@@ -67,6 +68,7 @@ export {
   createAsMetadataHandler,
   createChannelRegistry,
   createMcpServer,
+  createRequestSignal,
   createSystemContext,
   createWebSocketConnection,
   createWireProjection,

@@ -246,15 +246,30 @@ async function callRequestResolver(
       payload,
       request: requestProperties,
       requestId: requestConfig.stepId ?? requestConfig.requestId,
+      signal: context.signal,
     });
   } catch (error) {
     if (!error.configKey) error.configKey = requestConfig['~k'];
     if (error.isLowdefyError) throw error; // pass-through — no redundant wrapping
+    if (signal?.reason?.name === 'AbortError' && error.name === 'AbortError') throw new UserError(...);
     if (ServiceError.isServiceError(error)) throw new ServiceError(...);
     throw new RequestError(error.message, { cause: error, ... });
   }
 }
 ```
+
+**The request signal.** `signal` is `context.signal`: an `AbortSignal` for "nobody is waiting for this work any more". The servers build it per request with `createRequestSignal({ clientSignal, timeoutSignal })` (`@lowdefy/api`): it aborts with an `AbortError` when the client closes the connection before the response is sent (the Node adapter's `c.req.raw.signal`, re-raised as a DOMException because the adapter aborts with a plain string), and with a `TimeoutError` when `requestTimeout` (`servers/server/src/middleware/requestTimeout.js`) answers 504 first. Connection types hand it to their upstream calls; the AI connections pass it to the AI SDK with the request's `maxOutputTokens` and `timeout` (defaults from the connection, `buildCallLimits` in `@lowdefy/ai-utils`). What "closed" means per caller:
+
+| Caller                                                                                 | Signal                                                                                                              |
+| -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Page request (`/api/request`), endpoint over HTTP, webhook, MCP tool call, cron (sync) | Client disconnect (Node server) + request timeout (not on `/api/agent`, `/api/mcp`, `/api/websocket`)               |
+| Routine step, nested `CallApi`, agent tool endpoint                                    | Inherited from the context of the run it belongs to                                                                 |
+| `async: true` endpoint, async scheduled endpoint, detached run                         | None: `context.signal` is cleared before the run is scheduled, since it outlives the request                        |
+| Agent chat turn (`callAgent`)                                                          | None: the turn runs to its end so `onFinish` persists the conversation; bounded by the agent's `timeout`/`maxSteps` |
+| `CallAgent` step                                                                       | The routine's signal, passed to `agent.generate({ abortSignal })`                                                   |
+| Auth hooks (`createSystemContext`), dev server                                         | Hooks: none. Dev server: client disconnect only (no request timeout)                                                |
+
+The Vercel entry builds its `Request` without a signal, so on Vercel only the request timeout cancels.
 
 `callApi` is constructed at this chokepoint so it picks up the caller's `endpointDepth` (`0` for page-level requests via `callRequest.js`, the routine frame's depth for routine `request:` steps via `handleRequest.js`). All Lowdefy errors (`isLowdefyError === true`) pass through the catch block unchanged — only raw errors wrap into `RequestError` / `ServiceError`.
 

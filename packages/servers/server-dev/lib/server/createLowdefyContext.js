@@ -17,6 +17,7 @@
 import path from 'node:path';
 import {
   createApiContext,
+  createRequestSignal,
   normalizeInjectedCaller,
   ensureMcpOauthResource,
   resolveAuthentication,
@@ -105,6 +106,9 @@ async function createLowdefyContext({ c, user }) {
     },
     scrubSecrets,
     secrets,
+    // Aborts when the client disconnects before the response is sent. The dev server
+    // has no request timeout.
+    signal: createRequestSignal({ clientSignal: c.req.raw.signal }),
     steps,
     websockets,
   };
