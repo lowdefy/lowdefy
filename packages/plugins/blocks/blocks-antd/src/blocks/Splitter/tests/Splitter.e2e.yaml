@@ -146,6 +146,8 @@ blocks:
       minHeight: 200px
       .panel:
         backgroundColor: rgb(240, 248, 255)
+      .dragger:
+        backgroundColor: rgb(255, 228, 225)
     properties:
       destroyOnHidden: true
       draggerIcon: GripVertical
@@ -191,3 +193,60 @@ blocks:
               - 0
           then: Double click on 0
           else: ''
+
+  - id: sp_default_icons
+    type: Splitter
+    style:
+      minHeight: 120px
+    properties:
+      panels:
+        - key: first
+          collapsible:
+            end: true
+            showCollapsibleIcon: true
+        - key: second
+          collapsible:
+            start: true
+            showCollapsibleIcon: true
+    slots:
+      first:
+        blocks:
+          - id: sp_default_icons_first
+            type: Paragraph
+            properties:
+              content: Default icons first
+      second:
+        blocks:
+          - id: sp_default_icons_second
+            type: Paragraph
+            properties:
+              content: Default icons second
+
+  - id: sp_vertical_default_icons
+    type: Splitter
+    style:
+      height: 200px
+    properties:
+      orientation: vertical
+      panels:
+        - key: top
+          collapsible:
+            end: true
+            showCollapsibleIcon: true
+        - key: bottom
+          collapsible:
+            start: true
+            showCollapsibleIcon: true
+    slots:
+      top:
+        blocks:
+          - id: sp_vertical_default_icons_top
+            type: Paragraph
+            properties:
+              content: Vertical default icons top
+      bottom:
+        blocks:
+          - id: sp_vertical_default_icons_bottom
+            type: Paragraph
+            properties:
+              content: Vertical default icons bottom
