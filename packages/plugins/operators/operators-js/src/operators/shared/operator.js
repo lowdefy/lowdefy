@@ -21,13 +21,13 @@ function _operator(options) {
   if (!type.isString(params.name)) {
     throw new Error(`_operator.name must be a valid operator name as string.`);
   }
-  if (params.name === '_operator') {
+  const [operator, methodName] = params.name.split('.');
+  if (operator === '_operator') {
     throw new Error(`_operator.name cannot be set to _operator to avoid infinite loop reference.`);
   }
   if (params.name.includes('experimental')) {
     throw new Error(`Experimental operators cannot be used with _operator.`);
   }
-  const [operator, methodName] = params.name.split('.');
   // A name read at runtime comes with the operators it may call (the build
   // requires the list and bundles exactly those). A listed operator allows
   // every method; a listed method allows only itself.

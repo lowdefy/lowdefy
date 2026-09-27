@@ -95,10 +95,13 @@ test('_operator with value not a object', () => {
   );
 });
 
-test('_operator cannot be set to _operator', () => {
-  const input = { a: { _operator: { name: '_operator' } } };
+// A method name on _operator would call it again with a name read at runtime and no list.
+test.each(['_operator', '_operator.any'])('_operator cannot be set to %s', (name) => {
+  const input = {
+    a: { _operator: { name, params: { name: { _payload: 'op' }, params: 'string' } } },
+  };
   const parser = new ServerParser({ operators });
-  const res = parser.parse({ input, location, payload });
+  const res = parser.parse({ input, location, payload: { ...payload, op: '_payload' } });
   expect(res.output).toEqual({ a: null });
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].message).toBe(
