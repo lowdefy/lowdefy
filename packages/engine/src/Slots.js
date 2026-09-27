@@ -73,8 +73,8 @@ class Slots {
 
   // One copy of the state for the whole tree: nested slots reset from it with resetBlocks, so a
   // reset costs one state copy however many containers and list rows the page has.
-  reset = (initWithState) => {
-    this.resetBlocks(serializer.copy(initWithState ?? this.context.state));
+  reset = () => {
+    this.resetBlocks(serializer.copy(this.context.state));
   };
 
   resetBlocks = (initState) => {
