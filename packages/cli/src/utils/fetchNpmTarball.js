@@ -15,6 +15,7 @@
 */
 
 import fs from 'node:fs';
+import path from 'node:path';
 import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 
@@ -64,18 +65,28 @@ async function fetchNpmTarball({ packageName, version, directory }) {
     integrity: dist.integrity,
     name: `Package "${packageName}@${version}" tarball`,
   });
-  await fs.promises.mkdir(directory, { recursive: true });
-  // strict turns tar's warnings into errors, so an entry that would land
-  // outside the directory (a "../" path, an absolute path or a link out)
-  // fails the extraction instead of being skipped.
-  await pipeline(
-    Readable.from([tarball.data]),
-    new Unpack({
-      cwd: directory,
-      strict: true,
-      strip: 1, // Removes the leading package/ directory from each path
-    })
-  );
+  // The tarball extracts next to the target and moves into place only once
+  // every entry is written. getServer takes a directory with a package.json
+  // for a complete server, so a failed extraction must leave nothing behind.
+  await fs.promises.mkdir(path.dirname(directory), { recursive: true });
+  const staging = await fs.promises.mkdtemp(`${directory}-download-`);
+  try {
+    // strict turns tar's warnings into errors, so an entry that would land
+    // outside the directory (a "../" path, an absolute path or a link out)
+    // fails the extraction instead of being skipped.
+    await pipeline(
+      Readable.from([tarball.data]),
+      new Unpack({
+        cwd: staging,
+        strict: true,
+        strip: 1, // Removes the leading package/ directory from each path
+      })
+    );
+    await fs.promises.rm(directory, { recursive: true, force: true });
+    await fs.promises.rename(staging, directory);
+  } finally {
+    await fs.promises.rm(staging, { recursive: true, force: true });
+  }
 }
 
 export default fetchNpmTarball;

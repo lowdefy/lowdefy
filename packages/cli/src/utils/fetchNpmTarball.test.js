@@ -157,12 +157,27 @@ test.each([
   expect(fs.existsSync(directory)).toBe(false);
 });
 
-test('a tarball with an entry outside the directory fails without writing it', async () => {
+test('a tarball with an entry outside the directory fails and leaves nothing behind', async () => {
   const { default: fetchNpmTarball } = await import('./fetchNpmTarball.js');
   await expect(
     fetchNpmTarball({ packageName: 'valid-package', version: 'traversal', directory })
   ).rejects.toThrow();
-  expect(fs.existsSync(path.join(directory, '..', 'escaped.txt'))).toBe(false);
+  // The valid package.json entry comes before the bad one, but a partial
+  // server would stop getServer from fetching again.
+  expect(fs.readdirSync(path.dirname(directory))).toEqual([]);
+});
+
+test('a failed extraction over an earlier download can be retried', async () => {
+  const { default: fetchNpmTarball } = await import('./fetchNpmTarball.js');
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(path.join(directory, 'stale.txt'), 'stale');
+  await expect(
+    fetchNpmTarball({ packageName: 'valid-package', version: 'traversal', directory })
+  ).rejects.toThrow();
+  expect(fs.existsSync(path.join(directory, 'package.json'))).toBe(false);
+
+  await fetchNpmTarball({ packageName: 'valid-package', version: '1.0.0', directory });
+  expect(fs.readdirSync(directory).sort()).toEqual(['lib', 'package.json']);
 });
 
 test('version does not exist', async () => {
