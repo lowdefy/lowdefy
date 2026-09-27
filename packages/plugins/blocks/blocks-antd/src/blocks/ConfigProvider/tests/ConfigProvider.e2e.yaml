@@ -92,3 +92,53 @@ blocks:
             - Option 28
             - Option 29
             - Option 30
+      - id: cp_not_virtual_multiple_selector
+        type: MultipleSelector
+        properties:
+          title: Not virtual multiple
+          options:
+            - Option 1
+            - Option 2
+            - Option 3
+            - Option 4
+            - Option 5
+            - Option 6
+            - Option 7
+            - Option 8
+            - Option 9
+            - Option 10
+            - Option 11
+            - Option 12
+            - Option 13
+            - Option 14
+            - Option 15
+            - Option 16
+            - Option 17
+            - Option 18
+            - Option 19
+            - Option 20
+      - id: cp_not_virtual_tree_selector
+        type: TreeSelector
+        properties:
+          title: Not virtual tree
+          options:
+            - Node 1
+            - Node 2
+            - Node 3
+            - Node 4
+            - Node 5
+            - Node 6
+            - Node 7
+            - Node 8
+            - Node 9
+            - Node 10
+            - Node 11
+            - Node 12
+            - Node 13
+            - Node 14
+            - Node 15
+            - Node 16
+            - Node 17
+            - Node 18
+            - Node 19
+            - Node 20

@@ -14,6 +14,155 @@
   limitations under the License.
 */
 
+/*
+  antd List styles used by ControlledList.
+
+  ControlledList renders antd List's markup and ant-list-* class names without the deprecated
+  antd List component, so antd never generates these styles. They follow antd 6.6's List
+  CSS-in-JS output and sit in @layer antd, at the cascade priority antd's own styles have. The
+  List component tokens fall back to the values antd derives from the global tokens, and the
+  block's `theme` sets them on the list root.
+*/
+
+@layer antd {
+  .ant-list {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: var(--ant-color-text);
+    font-size: var(--ant-font-size);
+    line-height: var(--ant-line-height);
+    list-style: none;
+    font-family: var(--ant-font-family);
+    position: relative;
+  }
+
+  .ant-list::before,
+  .ant-list::after,
+  .ant-list [class^='ant-list'],
+  .ant-list [class*=' ant-list'],
+  .ant-list [class^='ant-list']::before,
+  .ant-list [class*=' ant-list']::before,
+  .ant-list [class^='ant-list']::after,
+  .ant-list [class*=' ant-list']::after {
+    box-sizing: border-box;
+  }
+
+  .ant-list * {
+    outline: none;
+  }
+
+  .ant-list .ant-list-header {
+    background: var(--ant-list-header-bg, transparent);
+  }
+
+  .ant-list .ant-list-footer {
+    background: var(--ant-list-footer-bg, transparent);
+  }
+
+  .ant-list .ant-list-header,
+  .ant-list .ant-list-footer {
+    padding-block: var(--ant-padding-sm);
+  }
+
+  .ant-list .ant-list-items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ant-list .ant-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--ant-list-item-padding, var(--ant-padding-content-vertical) 0);
+    color: var(--ant-color-text);
+  }
+
+  .ant-list .ant-list-empty-text {
+    padding: var(--ant-list-empty-text-padding, var(--ant-padding));
+    color: var(--ant-color-text-disabled);
+    font-size: var(--ant-font-size);
+    text-align: center;
+  }
+
+  .ant-list-split .ant-list-item {
+    border-block-end: var(--ant-line-width) var(--ant-line-type) var(--ant-color-split);
+  }
+
+  .ant-list-split .ant-list-item:last-child {
+    border-block-end: none;
+  }
+
+  .ant-list-split .ant-list-header {
+    border-block-end: var(--ant-line-width) var(--ant-line-type) var(--ant-color-split);
+  }
+
+  /* A descendant selector, as in antd, so a list nested in a list with a footer matches too. */
+  .ant-list-split.ant-list-something-after-last-item .ant-list-items > .ant-list-item:last-child {
+    border-block-end: var(--ant-line-width) var(--ant-line-type) var(--ant-color-split);
+  }
+
+  .ant-list-lg .ant-list-item {
+    padding: var(
+      --ant-list-item-padding-lg,
+      var(--ant-padding-content-vertical-lg) var(--ant-padding-content-horizontal-lg)
+    );
+  }
+
+  .ant-list-sm .ant-list-item {
+    padding: var(
+      --ant-list-item-padding-sm,
+      var(--ant-padding-content-vertical-sm) var(--ant-padding-content-horizontal)
+    );
+  }
+
+  .ant-list-bordered {
+    border: var(--ant-line-width) var(--ant-line-type) var(--ant-color-border);
+    border-radius: var(--ant-border-radius-lg);
+  }
+
+  .ant-list-bordered .ant-list-header {
+    border-radius: calc(var(--ant-border-radius-lg) - var(--ant-line-width))
+      calc(var(--ant-border-radius-lg) - var(--ant-line-width)) 0 0;
+  }
+
+  .ant-list-bordered .ant-list-footer {
+    border-radius: 0 0 calc(var(--ant-border-radius-lg) - var(--ant-line-width))
+      calc(var(--ant-border-radius-lg) - var(--ant-line-width));
+  }
+
+  .ant-list-bordered .ant-list-header,
+  .ant-list-bordered .ant-list-footer,
+  .ant-list-bordered .ant-list-item {
+    padding-inline: var(--ant-padding-lg);
+  }
+
+  .ant-list-bordered.ant-list-sm .ant-list-item,
+  .ant-list-bordered.ant-list-sm .ant-list-header,
+  .ant-list-bordered.ant-list-sm .ant-list-footer {
+    padding: var(
+      --ant-list-item-padding-sm,
+      var(--ant-padding-content-vertical-sm) var(--ant-padding-content-horizontal)
+    );
+  }
+
+  .ant-list-bordered.ant-list-lg .ant-list-item,
+  .ant-list-bordered.ant-list-lg .ant-list-header,
+  .ant-list-bordered.ant-list-lg .ant-list-footer {
+    padding: var(
+      --ant-list-item-padding-lg,
+      var(--ant-padding-content-vertical-lg) var(--ant-padding-content-horizontal-lg)
+    );
+  }
+
+  @media screen and (max-width: 576px) {
+    .ant-list .ant-list-item {
+      flex-wrap: wrap;
+    }
+  }
+}
+
 @layer components {
   .lf-controlled-list-remove {
     display: inline-flex;

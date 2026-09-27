@@ -117,6 +117,14 @@
   properties:
     span: 2
     title: Thisisthelonglabeltitlea
+- id: 'properties.sm, lg: label widths per breakpoint'
+  type: Label
+  properties:
+    title: Wide label on small screens, narrow on large screens
+    sm:
+      span: 12
+    lg:
+      span: 4
 - id: inline and long extra default size
   type: Label
   properties:

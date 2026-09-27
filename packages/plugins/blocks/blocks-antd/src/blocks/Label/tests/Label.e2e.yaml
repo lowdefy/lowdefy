@@ -293,3 +293,17 @@ blocks:
         type: Span
         properties:
           content: Wrapped
+
+  - id: label_breakpoints
+    type: Label
+    properties:
+      title: Breakpoint widths
+      sm:
+        span: 12
+      lg:
+        span: 6
+    blocks:
+      - id: label_breakpoints_content
+        type: Span
+        properties:
+          content: Breakpoint content

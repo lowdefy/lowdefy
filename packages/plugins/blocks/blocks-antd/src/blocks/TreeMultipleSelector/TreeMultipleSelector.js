@@ -54,6 +54,12 @@ const TreeMultipleSelector = ({
     : getSelectedIndex(value, entries, { properties: matchProps, multiple: true }).filter(
         (i) => i !== undefined
       );
+  // checkStrictly puts antd in labelInValue mode, which takes { value } objects and warns on plain
+  // values. antd fills in each label from the tree node.
+  const checkStrictly = properties.checkable && properties.checkStrictly;
+  const antdValue = checkStrictly
+    ? selectedIndices.map((index) => ({ value: index }))
+    : selectedIndices;
 
   let antdVariant = properties.variant;
   if (properties.bordered === false) antdVariant = 'borderless';
@@ -145,7 +151,7 @@ const TreeMultipleSelector = ({
                 SHOW_STRATEGY[properties.showCheckedStrategy] ?? TreeSelect.SHOW_CHILD
               }
               {...(properties.checkable
-                ? { treeCheckable: true, treeCheckStrictly: properties.checkStrictly }
+                ? { treeCheckable: true, treeCheckStrictly: checkStrictly }
                 : { multiple: true })}
               suffixIcon={suffixIcon}
               allowClear={
@@ -170,12 +176,10 @@ const TreeMultipleSelector = ({
                   styles={{ element: styles.removeIcon }}
                 />
               }
-              value={selectedIndices}
+              value={antdValue}
               onChange={(idxArr) => {
-                // checkStrictly makes antd report { label, value } objects instead of values.
-                const val = (idxArr ?? []).map(
-                  (i) => entries[type.isObject(i) ? i.value : i].value
-                );
+                // In labelInValue mode antd reports { label, value } objects instead of values.
+                const val = (idxArr ?? []).map((i) => entries[checkStrictly ? i.value : i].value);
                 methods.setValue(val);
                 methods.triggerEvent({ name: 'onChange', event: { value: val } });
               }}

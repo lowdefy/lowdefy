@@ -45,6 +45,13 @@ test.describe('TreeSelector Block', () => {
     );
   });
 
+  test('opens with the parents of a nested value expanded', async ({ page }) => {
+    await getSelector(page, 'tsel_with_value').click();
+    const selected = getPopup(page).locator('.ant-select-tree-node-selected');
+    await expect(selected).toHaveText('Apple');
+    await expect(selected).toBeVisible();
+  });
+
   test('filters nodes by title and fires onSearch', async ({ page }) => {
     await getSelector(page, 'tsel_search').click();
     await page.keyboard.type('Ban');
@@ -84,6 +91,8 @@ test.describe('TreeSelector Block', () => {
     const selector = getSelector(page, 'tsel_loading');
     await expect(selector).toHaveClass(/ant-select-loading/);
     await expect(selector).toHaveClass(/ant-select-disabled/);
+    await expect(selector.locator('#tsel_loading_loadingIcon')).toBeVisible();
+    await expect(selector.locator('#tsel_loading_suffixIcon')).toHaveCount(0);
   });
 
   test('applies selector and tree node tokens from theme', async ({ page }) => {

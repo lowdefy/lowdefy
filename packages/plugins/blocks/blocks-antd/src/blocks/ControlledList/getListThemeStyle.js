@@ -16,23 +16,28 @@
 
 import getThemeCssVariables from '../../getThemeCssVariables.js';
 
-const formComponentTokens = new Set([
-  'labelColonMarginInlineEnd',
-  'labelColonMarginInlineStart',
-  'labelColor',
-  'labelFontSize',
-  'labelRequiredMarkColor',
+const listComponentTokens = new Set([
+  'avatarMarginRight',
+  'contentWidth',
+  'descriptionFontSize',
+  'emptyTextPadding',
+  'footerBg',
+  'headerBg',
+  'itemPadding',
+  'itemPaddingLG',
+  'itemPaddingSM',
+  'metaMarginBottom',
+  'titleMarginBottom',
 ]);
 
-// Label reuses antd's Form.Item class names without rendering an antd Form, so its theme is set as
-// the Form CSS variables style.css reads. The caller scopes them to the Label's own elements so, as
-// with an antd component theme, a token such as colorError does not restyle the wrapped input.
-function getLabelThemeStyle(theme) {
+// ControlledList renders antd's List markup without the deprecated antd List component, so its
+// theme is set as the List CSS variables style.css reads, on the list root.
+function getListThemeStyle(theme) {
   return getThemeCssVariables({
-    componentName: 'form',
-    componentTokens: formComponentTokens,
+    componentName: 'list',
+    componentTokens: listComponentTokens,
     theme,
   });
 }
 
-export default getLabelThemeStyle;
+export default getListThemeStyle;
