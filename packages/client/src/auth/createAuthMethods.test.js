@@ -177,6 +177,37 @@ test('signUp navigates to callbackURL when the response carries a session', asyn
   expect(assign.mock.calls).toEqual([['/verified']]);
 });
 
+test('signUp lands the verification link on authPages.verifyEmail without a callbackUrl', async () => {
+  const { auth, lowdefy, assign } = setup({ signUpResult: { token: 'session-token', user: {} } });
+  lowdefy.basePath = '/base';
+  lowdefy._internal.router.basePath = '/base';
+  auth.authConfig.authPages = { verifyEmail: '/verify-email' };
+  const { signUp } = createAuthMethods(lowdefy, auth);
+  await signUp({ email: 'user@example.com', password: 'password123' });
+  expect(auth.signUpEmail.mock.calls[0][0].callbackURL).toBe('/base/verify-email');
+  // A session-bearing sign-up still navigates down the callback ladder.
+  expect(assign.mock.calls).toEqual([['/base/home-page']]);
+});
+
+test('signUp lands the verification link on its explicit callbackUrl over authPages.verifyEmail', async () => {
+  const { auth, lowdefy } = setup();
+  auth.authConfig.authPages = { verifyEmail: '/verify-email' };
+  const { signUp } = createAuthMethods(lowdefy, auth);
+  await signUp({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { pageId: 'welcome' },
+  });
+  expect(auth.signUpEmail.mock.calls[0][0].callbackURL).toBe('/welcome');
+});
+
+test('signUp lands the verification link on the callback ladder without authPages.verifyEmail', async () => {
+  const { auth, lowdefy } = setup();
+  const { signUp } = createAuthMethods(lowdefy, auth);
+  await signUp({ email: 'user@example.com', password: 'password123' });
+  expect(auth.signUpEmail.mock.calls[0][0].callbackURL).toBe('/home-page');
+});
+
 test('signUp passes through rest params to signUpEmail', async () => {
   const { auth, lowdefy } = setup();
   const { signUp } = createAuthMethods(lowdefy, auth);
@@ -316,6 +347,16 @@ test('sendVerificationEmail resolves the callbackUrl and calls auth.sendVerifica
   await sendVerificationEmail({ email: 'user@example.com', callbackUrl: { url: '/verified' } });
   expect(auth.sendVerificationEmail.mock.calls).toEqual([
     [{ email: 'user@example.com', callbackURL: '/verified' }],
+  ]);
+});
+
+test('sendVerificationEmail lands the link on authPages.verifyEmail without a callbackUrl', async () => {
+  const { auth, lowdefy } = setup();
+  auth.authConfig.authPages = { verifyEmail: '/verify-email' };
+  const { sendVerificationEmail } = createAuthMethods(lowdefy, auth);
+  await sendVerificationEmail({ email: 'user@example.com' });
+  expect(auth.sendVerificationEmail.mock.calls).toEqual([
+    [{ email: 'user@example.com', callbackURL: '/verify-email' }],
   ]);
 });
 

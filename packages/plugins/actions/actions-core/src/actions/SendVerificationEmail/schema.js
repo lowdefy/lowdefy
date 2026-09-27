@@ -12,7 +12,7 @@ export default {
       callbackUrl: {
         type: 'object',
         description:
-          'Structured callback target for where the emailed verification link lands after verifying, basePath-prefixed. Defaults to the home page when omitted and no ?callbackUrl= query is present. A false value is not valid here: the destination belongs to a redirect hop this action cannot suppress.',
+          'Structured callback target for where the emailed verification link lands after verifying, basePath-prefixed. Defaults to the auth.authPages.verifyEmail page, which receives ?error= when the link is invalid or expired. A false value is not valid here: the destination belongs to a redirect hop this action cannot suppress.',
         properties: {
           home: {
             type: 'boolean',
