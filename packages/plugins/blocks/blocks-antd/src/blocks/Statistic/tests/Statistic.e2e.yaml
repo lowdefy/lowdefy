@@ -179,6 +179,13 @@ blocks:
         type: countup
         format: D [days]
 
+  - id: statistic_timer_no_value
+    type: Statistic
+    properties:
+      title: Waiting for a target
+      timer:
+        type: countdown
+
   - id: statistic_css_keys
     type: Statistic
     class:

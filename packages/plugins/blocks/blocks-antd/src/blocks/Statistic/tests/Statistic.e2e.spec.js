@@ -163,6 +163,12 @@ test.describe('Statistic Block', () => {
     await expect(value).toHaveText(/^\d{4,} days$/);
   });
 
+  test('timer without a value renders an empty statistic, not NaN', async ({ page }) => {
+    const block = getStatistic(page, 'statistic_timer_no_value');
+    await expect(block.locator('.ant-statistic-title')).toHaveText('Waiting for a target');
+    await expect(block).not.toContainText('NaN');
+  });
+
   test('applies class and style to the semantic parts', async ({ page }) => {
     const block = getStatistic(page, 'statistic_css_keys');
     await expect(block.locator('.ant-statistic-title')).toHaveClass(/statistic-title-class/);
