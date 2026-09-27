@@ -280,6 +280,15 @@ test.describe('Notification Block', () => {
     );
   });
 
+  test('button iconPlacement end places the icon after the button title', async ({ page }) => {
+    await getBlock(page, 'open_notif_button_icon_end').locator('.ant-btn').click();
+    const button = getNotification(page).locator('.ant-notification-notice-actions .ant-btn');
+    await expect(button).toHaveClass(/ant-btn-icon-end/);
+    const iconBox = await button.locator('.ant-btn-icon').boundingBox();
+    const titleBox = await button.locator(':scope > span:not(.ant-btn-icon)').first().boundingBox();
+    expect(iconBox.x).toBeGreaterThan(titleBox.x);
+  });
+
   test('clicking the notification button closes the notification', async ({ page }) => {
     await getBlock(page, 'open_notif_styled').locator('.ant-btn').click();
     const notification = getNotification(page);

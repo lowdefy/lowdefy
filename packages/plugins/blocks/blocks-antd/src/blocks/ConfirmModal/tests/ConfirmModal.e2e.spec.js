@@ -260,8 +260,17 @@ test.describe('ConfirmModal Block', () => {
     const okBtn = modal.locator('.ant-modal-confirm-btns .ant-btn-primary');
     await expect(okBtn).toHaveClass(/ant-btn-icon-end/);
     await expect(okBtn.locator('svg')).toBeAttached();
+    const okIconBox = await okBtn.locator('.ant-btn-icon').boundingBox();
+    const okTextBox = await okBtn.locator(':scope > span:not(.ant-btn-icon)').first().boundingBox();
+    expect(okIconBox.x).toBeGreaterThan(okTextBox.x);
     const cancelBtn = modal.locator('.ant-modal-confirm-btns .ant-btn-default');
     await expect(cancelBtn).not.toHaveClass(/ant-btn-icon-end/);
+    const cancelIconBox = await cancelBtn.locator('.ant-btn-icon').boundingBox();
+    const cancelTextBox = await cancelBtn
+      .locator(':scope > span:not(.ant-btn-icon)')
+      .first()
+      .boundingBox();
+    expect(cancelIconBox.x).toBeLessThan(cancelTextBox.x);
   });
 
   test('mask blur adds the antd blur class to the mask', async ({ page }) => {
