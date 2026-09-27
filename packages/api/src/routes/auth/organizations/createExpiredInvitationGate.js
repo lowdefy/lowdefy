@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { APIError } from 'better-auth/api';
+import { APIError, getSessionFromCtx } from 'better-auth/api';
 import { type } from '@lowdefy/helpers';
 
 const NO_LONGER_ACCEPTABLE_STATUSES = ['canceled', 'rejected'];
@@ -23,7 +23,8 @@ function isNoLongerAcceptable(invitation) {
   if (NO_LONGER_ACCEPTABLE_STATUSES.includes(invitation.status)) {
     return true;
   }
-  return invitation.status === 'pending' && new Date(invitation.expiresAt) <= new Date();
+  // Strictly before now, the same boundary as the accept route's own check.
+  return invitation.status === 'pending' && new Date(invitation.expiresAt) < new Date();
 }
 
 // The engine-tier request hooks.before on /organization/accept-invitation.
@@ -36,7 +37,9 @@ function isNoLongerAcceptable(invitation) {
 // theirs to know. An unknown id and an accepted invitation fall through to
 // BetterAuth's own answer. Expiry is checked before the recipient, as
 // BetterAuth itself does, so holding the id - the invitee's credential - is the
-// only way to learn it expired.
+// only way to learn it expired. This hook runs before the route's own session
+// check, so it answers signed-in callers only: a signed-out caller gets the
+// route's 401 whether the id exists or not, and learns nothing about it.
 //
 // A bare handler: the request-hook assembler matches the path and owns the
 // createAuthMiddleware wrapper.
@@ -45,6 +48,12 @@ function createExpiredInvitationGate({ getAuth }) {
     const invitationId = ctx.body?.invitationId;
     // A missing id is the route's own validation error - let it answer.
     if (!type.isString(invitationId)) {
+      return undefined;
+    }
+    // getSessionFromCtx memoizes on ctx.context, so the route's own session
+    // check reads the same session without a second lookup.
+    const session = await getSessionFromCtx(ctx);
+    if (type.isNone(session?.user)) {
       return undefined;
     }
     const { adapter } = await getAuth().$context;

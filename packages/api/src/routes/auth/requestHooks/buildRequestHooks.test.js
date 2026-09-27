@@ -18,13 +18,14 @@ import { jest } from '@jest/globals';
 
 // Each slot is wrapped in createAuthMiddleware; mock it to identity so the unit
 // test can invoke a slot with a plain endpoint context.
+const mockGetSessionFromCtx = jest.fn();
 jest.unstable_mockModule('better-auth/api', () => ({
   // The post-login hook's module graph reaches buildOauthPostLogin, which
-  // imports APIError; the hook itself reads the session through
-  // getSessionFromCtx. Neither is exercised here.
+  // imports APIError; the post-login and expired-invitation hooks read the
+  // session through getSessionFromCtx.
   APIError: class APIError extends Error {},
   createAuthMiddleware: (handler) => handler,
-  getSessionFromCtx: jest.fn(),
+  getSessionFromCtx: mockGetSessionFromCtx,
 }));
 
 // beginTwoFactorChallenge is exercised against a fake endpoint context in its
@@ -102,6 +103,7 @@ test('buildRequestHooks routes /organization/accept-invitation into the expired 
   };
   const auth = { $context: Promise.resolve({ adapter }) };
   const hooks = buildRequestHooks({ authConfig: { organizations }, getAuth: () => auth });
+  mockGetSessionFromCtx.mockResolvedValue({ user: { id: 'user_1' } });
 
   await expect(
     hooks.before({ path: '/organization/accept-invitation', body: { invitationId: 'inv_1' } })
