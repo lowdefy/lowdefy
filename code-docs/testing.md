@@ -29,7 +29,7 @@ another's entry. Compare against the base with `git diff` or `git show HEAD:<fil
 ## Unit tests
 
 ```bash
-pnpm test                                           # every package except the two below
+pnpm test                                           # every package except connection-mongodb
 pnpm --filter=@lowdefy/api test                     # one package
 pnpm --filter=@lowdefy/api test --testPathPattern=endpoint --no-coverage
 ```
