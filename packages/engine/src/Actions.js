@@ -526,23 +526,31 @@ class Actions {
     return { type: action.type, response, index };
   }
 
+  // Returns a function that closes the message. The message is shown by the app's Message block, a
+  // plugin: a message it fails to show is reported on its own, since thrown from here it would
+  // replace the action's own result, and callActions would lose the { error, action } shape of a
+  // failed action.
   displayMessage({ defaultMessage, duration, hideExplicitly, message, status }) {
-    let close = () => undefined;
-    if ((hideExplicitly && message !== false) || (!hideExplicitly && !type.isNone(message))) {
-      // The message is shown by the app's Message block, a plugin. A message it fails to show is
-      // reported on its own: thrown from here it would replace the action's own result, and
-      // callActions would lose the { error, action } shape of a failed action.
-      try {
-        close = this.context._internal.lowdefy._internal.displayMessage({
-          content: type.isString(message) ? message : defaultMessage,
-          duration,
-          status,
-        });
-      } catch (error) {
-        this.context._internal.lowdefy._internal.handleError?.(error);
-      }
+    const noClose = () => undefined;
+    const shown =
+      (hideExplicitly && message !== false) || (!hideExplicitly && !type.isNone(message));
+    if (!shown) {
+      return noClose;
     }
-    return close;
+    const { displayMessage, handleError, logger } = this.context._internal.lowdefy._internal;
+    try {
+      const close = displayMessage({
+        content: type.isString(message) ? message : defaultMessage,
+        duration,
+        status,
+      });
+      return type.isFunction(close) ? close : noClose;
+    } catch (error) {
+      // handleError is async in the client; its own failure must not surface as an unhandled
+      // rejection either.
+      Promise.resolve(handleError?.(error)).catch((reportError) => logger?.error(reportError));
+      return noClose;
+    }
   }
 }
 

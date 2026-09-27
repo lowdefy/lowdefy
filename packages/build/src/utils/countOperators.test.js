@@ -105,20 +105,24 @@ test.each([
     counts: ['_number', '_operator'],
   },
   {
-    name: 'the names an _if chooses between',
-    params: { name: { _if: { test: { _state: 'use_sum' }, then: '_sum', else: '_product' } } },
-    counts: ['_if', '_operator', '_product', '_state', '_sum'],
+    name: 'the names an _if returns',
+    params: {
+      name: {
+        _if: {
+          test: { _eq: [{ _state: 'op' }, '_divide'] },
+          then: '_sum',
+          else: { _if: { test: true, then: '_product', else: '_subtract' } },
+        },
+      },
+    },
+    counts: ['_eq', '_if', '_operator', '_product', '_state', '_subtract', '_sum'],
   },
   {
     name: 'a name read at runtime',
     params: { name: { _state: 'op' } },
     counts: ['_operator', '_state'],
   },
-  {
-    name: 'names that are not operators',
-    params: { name: ['sum', '_', '_ x'] },
-    counts: ['_operator'],
-  },
+  { name: 'a name that is not an operator', params: { name: 'sum' }, counts: ['_operator'] },
 ])('countOperators counts the operator _operator dispatches to: $name', ({ params, counts }) => {
   const counter = createCounter();
   countOperators({ value: { _operator: params } }, { counter });

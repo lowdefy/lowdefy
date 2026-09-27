@@ -1908,6 +1908,55 @@ test.each(['error', 'success'])(
   }
 );
 
+test('an action succeeds when its loading message returns no close function', async () => {
+  const context = await testContext({
+    lowdefy: {
+      _internal: { displayMessage: () => undefined, actions: { Succeeds: jest.fn(() => 'ok') } },
+      pageId,
+    },
+    pageConfig: { id: 'root', type: 'Box' },
+  });
+  const res = await context._internal.Actions.callActions({
+    actions: [{ id: 'act', type: 'Succeeds', messages: { loading: 'Working', success: 'Done' } }],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  expect(res.success).toBe(true);
+});
+
+test('a failure to report a message that did not display is logged', async () => {
+  const reportFailure = new Error('client-error route unreachable');
+  const logger = { error: jest.fn(), warn: () => {}, log: () => {}, debug: () => {} };
+  const context = await testContext({
+    lowdefy: {
+      _internal: {
+        displayMessage: () => {
+          throw new TypeError('message.success is not a function');
+        },
+        handleError: jest.fn(() => Promise.reject(reportFailure)),
+        logger,
+        actions: { Succeeds: jest.fn(() => 'ok') },
+      },
+      pageId,
+    },
+    pageConfig: { id: 'root', type: 'Box' },
+  });
+  const res = await context._internal.Actions.callActions({
+    actions: [{ id: 'act', type: 'Succeeds', messages: { success: 'Done' } }],
+    arrayIndices,
+    block: { blockId: 'blockId' },
+    catchActions: [],
+    event: {},
+    eventName,
+  });
+  await Promise.resolve();
+  expect(res.success).toBe(true);
+  expect(logger.error).toHaveBeenCalledWith(reportFailure);
+});
+
 describe('_error in catch lists', () => {
   const wire = {
     name: 'RequestError',
