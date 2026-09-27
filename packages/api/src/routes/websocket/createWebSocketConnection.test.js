@@ -290,6 +290,22 @@ test('close unsubscribes the subscriber from all channels', () => {
   expect(registry.unsubscribeAll).toHaveBeenCalledWith({ subscriber: connection.subscriber });
 });
 
+test('close reports a failure of the unsubscribe that runs after frames in progress finish', async () => {
+  const { connection, context, registry } = setup();
+  const error = new Error('Channel cleanup failed.');
+  registry.unsubscribeAll
+    .mockImplementationOnce(() => {})
+    .mockImplementationOnce(() => {
+      throw error;
+    });
+
+  connection.close();
+  await Promise.resolve();
+  await Promise.resolve();
+
+  expect(context.handleError).toHaveBeenCalledWith(error);
+});
+
 test('subscriber is created with the connection rid, the context i18n and an empty subscriptions map', () => {
   const { connection, context } = setup();
 

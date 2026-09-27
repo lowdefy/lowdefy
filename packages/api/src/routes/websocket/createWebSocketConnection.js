@@ -141,7 +141,9 @@ function createWebSocketConnection(context, { registry, send }) {
     closed = true;
     registry.unsubscribeAll({ subscriber });
     // A subscribe still being prepared registers after this point.
-    Promise.all(feedQueues.values()).then(() => registry.unsubscribeAll({ subscriber }));
+    Promise.all(feedQueues.values())
+      .then(() => registry.unsubscribeAll({ subscriber }))
+      .catch((error) => context.handleError(error));
     logger.debug({ event: 'ws_disconnect' });
   }
 
