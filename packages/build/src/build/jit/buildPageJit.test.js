@@ -1024,6 +1024,64 @@ test('buildPageJit attaches prodError to _warnings entries for prod-gated warnin
   expect(warning).toMatchObject({ type: 'ConfigWarning', prodError: true });
 });
 
+test('buildPageJit warns on an unknown block key, as the full build does, and not on the attached auth', async () => {
+  const context = createTestContext();
+  const warnings = [];
+  context.handleWarning = (warning) => warnings.push(warning);
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+blocks:
+  - id: title
+    type: Title
+    propertys:
+      content: Hello
+`,
+    },
+  ]);
+
+  const result = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: callApiPageRegistry(),
+    context,
+  });
+
+  expect(result.id).toBe('page:home');
+  const schemaWarnings = warnings.filter((warning) => warning.checkSlug === 'schema');
+  expect(schemaWarnings.map((warning) => warning.message)).toEqual([
+    'must NOT have additional properties - "propertys"',
+  ]);
+});
+
+test('buildPageJit honours ~ignoreBuildChecks schema on a block with an unknown key', async () => {
+  const context = createTestContext();
+  const warnings = [];
+  context.handleWarning = (warning) => warnings.push(warning);
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+blocks:
+  - id: title
+    type: Title
+    ~ignoreBuildChecks:
+      - schema
+    propertys:
+      content: Hello
+`,
+    },
+  ]);
+
+  await buildPageJit({ pageId: 'home', pageRegistry: callApiPageRegistry(), context });
+
+  expect(warnings.filter((warning) => warning.checkSlug === 'schema')).toEqual([]);
+});
+
 const authConfigPageYaml = `
 id: home
 type: PageHeaderMenu

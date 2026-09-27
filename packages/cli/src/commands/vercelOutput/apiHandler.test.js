@@ -34,8 +34,9 @@ const app = `
 import { Hono } from 'hono';
 import { upgradeWebSocket } from '@hono/node-server';
 
-export default function createApp() {
+export default function createApp(options) {
   const app = new Hono();
+  app.get('/options', (c) => c.json(options));
   app.post('/echo', async (c) => c.json(await c.req.json()));
   app.get('/sign-in', (c) => {
     c.header('set-cookie', 'session=abc; Path=/; HttpOnly', { append: true });
@@ -96,6 +97,15 @@ afterAll(async () => {
     await exited;
   }
   fs.rmSync(serverDirectory, { recursive: true, force: true });
+});
+
+test('the function entry creates the app without static assets, taking the client address from x-real-ip', async () => {
+  const response = await fetch(`${baseUrl}/options`);
+
+  expect(await response.json()).toEqual({
+    serveStaticAssets: false,
+    clientAddressHeader: 'x-real-ip',
+  });
 });
 
 test('the function entry runs a POST with its body', async () => {

@@ -14,15 +14,19 @@
   limitations under the License.
 */
 
+import { handleAuthRequest } from '@lowdefy/api';
+
 import authJson from '../../lib/build/auth.js';
 import getAuth from '../../lib/server/auth/getAuth.js';
+import getClientAddress from '../../lib/server/getClientAddress.js';
 import getMockUser from '../../lib/server/auth/getMockUser.js';
 
 // Mounts BetterAuth's Web Standard handler on /api/auth/*. Hono routes HEAD
 // requests through GET handlers, so HEAD short-circuits before the handler -
 // corporate email link-checkers pre-fetch magic-link and verification URLs
 // with HEAD, and letting those reach the handler would consume the one-time
-// token before the user clicks.
+// token before the user clicks. BetterAuth rate-limits by the client address
+// getClientAddress resolves.
 function authMiddleware({ logger }) {
   return async function auth(c) {
     if (authJson.configured !== true) {
@@ -36,7 +40,11 @@ function authMiddleware({ logger }) {
     if (c.req.method === 'HEAD') {
       return c.body(null, 200);
     }
-    return getAuth({ logger }).handler(c.req.raw);
+    return handleAuthRequest({
+      auth: getAuth({ logger }),
+      request: c.req.raw,
+      clientAddress: getClientAddress(c),
+    });
   };
 }
 

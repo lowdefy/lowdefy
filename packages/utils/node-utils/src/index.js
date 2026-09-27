@@ -16,6 +16,7 @@
 
 import cleanDirectory from './cleanDirectory.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
+import createClientAddressResolver from './createClientAddressResolver.js';
 import createSecretScrubber from './createSecretScrubber.js';
 import findAvailablePort from './findAvailablePort.js';
 import getDevInstancePath from './getDevInstancePath.js';
@@ -25,6 +26,7 @@ import getSecretsFromEnv from './getSecretsFromEnv.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPidAlive from './isPidAlive.js';
 import isPortAvailable from './isPortAvailable.js';
+import parseIpRange from './parseIpRange.js';
 import readDevInstance from './readDevInstance.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
@@ -34,6 +36,7 @@ import writeFileIfChanged from './writeFileIfChanged.js';
 export {
   cleanDirectory,
   copyFileOrDirectory,
+  createClientAddressResolver,
   createSecretScrubber,
   findAvailablePort,
   getDevInstancePath,
@@ -44,6 +47,7 @@ export {
   installIfPackageJsonChanged,
   isPidAlive,
   isPortAvailable,
+  parseIpRange,
   readDevInstance,
   spawnProcess,
   readFile,

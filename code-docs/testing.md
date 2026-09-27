@@ -88,7 +88,10 @@ switching and member removal (`tests/journeys/*.yaml`, all `user: none`). Run th
 pnpm test:journeys:auth                      # builds first, like pnpm dev
 pnpm test:journeys:auth --skip-build         # reuse the current build
 pnpm test:journeys:auth --filter invitation  # journeys whose name matches
+pnpm test:journeys:auth --app auth-reference # another app (default auth-reference-tenant)
 ```
+
+The pinned-organization app (`apps/auth-reference`) carries the password reset journey.
 
 `scripts/test-journeys-auth.mjs` starts a single-node memory replica set (fresh every run,
 auth indexes provisioned), then this checkout's dev server (`scripts/dev.mjs`) with the
@@ -97,7 +100,7 @@ app's secrets, a pinned `BETTER_AUTH_URL`, the dev mail sink (`LOWDEFY_DEV_SMTP_
 60 second minimum and the expiry journey can wait one out, about a minute of the run),
 runs this checkout's `lowdefy test --url` against it, and stops everything. It uses four
 consecutive free ports from `--port` (default 3200): app, internal, mail sink, MongoDB. The
-dev server log goes to `apps/auth-reference-tenant/.lowdefy/journeys-dev-server.log`. It
+dev server log goes to `apps/<app>/.lowdefy/journeys-dev-server.log`. It
 needs no Docker MongoDB or Mailpit, only the shared MongoDB binaries and a Chromium.
 
 Like the MongoDB suite, CI does not run it; run it when changing auth, tenancy, the

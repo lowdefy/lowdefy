@@ -121,6 +121,7 @@ function createHandleError({ context }) {
           method: context.req.method,
           resolvedUrl: context.nextContext?.resolvedUrl,
           hostname: context.req.hostname,
+          client_address: context.clientAddress,
           headers: {
             'accept-language': headers['accept-language'],
             'sec-ch-ua-mobile': headers['sec-ch-ua-mobile'],

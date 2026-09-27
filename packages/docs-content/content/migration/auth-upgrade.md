@@ -55,7 +55,19 @@ Set `LOWDEFY_SECRET_BETTER_AUTH_SECRET` to a secure random string (`openssl rand
 
 ### 3. Pin the canonical URL with `BETTER_AUTH_URL`
 
-Set the `BETTER_AUTH_URL` environment variable to your app's canonical origin (e.g. `https://app.example.com`), or declare it once as the current environment's `url` in [`config.environments`](/lowdefy-schema). Auth builds password-reset, magic-link and email-verification links — and the origins it trusts for the CSRF check and for `callbackURL` / `redirectTo` targets — from this value. When it is pinned, those links and origins are fixed. When it is unset, both come from each incoming request: auth trusts only the origin the request arrived on, and a spoofed `Host` / `X-Forwarded-Host` header can still steer the link in a reset email. Pinning it is strongly recommended for any production deployment, and needed behind a proxy that terminates TLS and forwards plain `http` (see [Deploy with Docker](/docker)). This replaces the old `NEXTAUTH_URL` variable.
+Set the `BETTER_AUTH_URL` environment variable to your app's canonical origin (e.g. `https://app.example.com`), or declare it once as the current environment's `url` in [`config.environments`](/lowdefy-schema). Auth builds password-reset, magic-link and email-verification links — and the origins it trusts for the CSRF check and for `callbackURL` / `redirectTo` targets — from this value. When it is pinned, those links and origins are fixed. When it is unset, both come from each incoming request, so the host in an emailed link would come from the request too. A production server therefore refuses to start when it is unset and auth sends emails with links: any app with `auth.email` configured, since it sends verification, password-reset, magic-link and invitation emails. The error names the flows. Without `auth.email` the server starts and logs a warning, and auth trusts only the origin each request arrived on. The dev server (`lowdefy dev`) still uses the request origin. Pinning it is also needed behind a proxy that terminates TLS and forwards plain `http` (see [Deploy with Docker](/docker)). This replaces the old `NEXTAUTH_URL` variable.
+
+### 3b. Declare trusted proxies
+
+Auth rate limits (for example 3 sign-in attempts per 10 seconds) count attempts per client address, and sessions record it. A self-hosted server takes the client address from the connection and does not read `X-Forwarded-For`, which any client can set. Behind a reverse proxy or load balancer, every request then comes from the proxy, so list its addresses in [`config.trustedProxies`](/lowdefy-schema) and the server reads the client address the proxy forwarded:
+
+```yaml
+config:
+  trustedProxies:
+    - 10.0.0.0/8
+```
+
+On Vercel nothing is needed: the platform supplies the client address. See [Deploy with Docker](/docker#behind-a-reverse-proxy).
 
 ### 4. Add `auth.database`
 

@@ -29,6 +29,7 @@ import createWireProjection from './response/createWireProjection.js';
 import getAuthStrategies from './routes/auth/strategies/getAuthStrategies.js';
 import getBetterAuth from './routes/auth/getBetterAuth.js';
 import { MCP_OAUTH_SCOPES } from './routes/auth/getBetterAuthConfig.js';
+import handleAuthRequest from './routes/auth/handleAuthRequest.js';
 import {
   getAsIssuer,
   getMcpResourceMetadataUri,
@@ -76,6 +77,7 @@ export {
   getBetterAuth,
   MCP_OAUTH_SCOPES,
   getHomeAndMenus,
+  handleAuthRequest,
   getMcpResourceBinding,
   getMcpResourceMetadataUri,
   getMcpResourceUri,

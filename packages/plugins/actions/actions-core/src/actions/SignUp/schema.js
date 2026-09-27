@@ -19,7 +19,7 @@ export default {
       callbackUrl: {
         type: 'object',
         description:
-          'Structured callback target for where the new account lands - both where the emailed verification link goes and, when the response carries a session, where the browser navigates. basePath-prefixed. Defaults to the home page when omitted and no ?callbackUrl= query is present. A false value is not valid here: the same value is the emailed link destination, which SignUp cannot suppress.',
+          'Structured callback target for where the new account lands - both where the emailed verification link goes and, when the response carries a session, where the browser navigates. basePath-prefixed. When omitted, the verification link lands on the auth.authPages.verifyEmail page (with ?error= when the link is invalid or expired), and a session-bearing response navigates to the ?callbackUrl= query, else the home page. A false value is not valid here: the same value is the emailed link destination, which SignUp cannot suppress.',
         properties: {
           home: {
             type: 'boolean',
