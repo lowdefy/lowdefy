@@ -8656,9 +8656,6 @@ packages:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
     engines: {node: '>= 4'}
 
-  dompurify@3.3.1:
-    resolution: {integrity: sha512-qkdCKzLNtrgPFP1Vo+98FRzJnBRGe4ffyCea9IwHB1fyxPOeNTHpLKYGd4Uk9xvNoH0ZoOjwZxNptyMwqrId1Q==}
-
   dompurify@3.4.13:
     resolution: {integrity: sha512-2vmYIoqjze2d+kakP8S/nS5shfsl587kzwEjcGlTdiksUVgFHnFCsLYDVj/JNqJVOQZGSYBTmuycv0PodwmnMQ==}
 
@@ -14028,7 +14025,7 @@ snapshots:
   '@ant-design/x-markdown@2.7.0(@types/react@18.2.38)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       clsx: 2.1.1
-      dompurify: 3.3.1
+      dompurify: 3.4.13
       html-react-parser: 5.2.17(@types/react@18.2.38)(react@18.2.0)
       katex: 0.16.45
       marked: 15.0.12
@@ -20287,10 +20284,6 @@ snapshots:
   domhandler@5.0.3:
     dependencies:
       domelementtype: 2.3.0
-
-  dompurify@3.3.1:
-    optionalDependencies:
-      '@types/trusted-types': 2.0.7
 
   dompurify@3.4.13:
     optionalDependencies:
