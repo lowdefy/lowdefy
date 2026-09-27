@@ -216,4 +216,34 @@ test.describe('Label Block', () => {
     // The outer Label's label element points to the nested input
     await expect(label).toHaveAttribute('for', 'label_basic_input');
   });
+
+  // ============================================
+  // THEME AND CSS KEYS
+  // ============================================
+
+  test('applies Form label tokens from theme', async ({ page }) => {
+    const label = getLabelTitle(page, 'label_theme');
+    await expect(label).toHaveCSS('color', 'rgb(114, 46, 209)');
+    await expect(label).toHaveCSS('font-size', '18px');
+    const markColor = await label.evaluate((el) => getComputedStyle(el, '::before').color);
+    expect(markColor).toBe('rgb(82, 196, 26)');
+  });
+
+  test('keeps theme tokens off the labelled content', async ({ page }) => {
+    const content = getBlock(page, 'label_theme_content');
+    await expect(content).not.toHaveCSS('color', 'rgb(114, 46, 209)');
+  });
+
+  test('class.element and style.element reach the Label row', async ({ page }) => {
+    const row = getLabel(page, 'label_element_css');
+    await expect(row).toHaveClass(/label-element-tailwind/);
+    await expect(row).toHaveCSS('padding', '12px');
+  });
+
+  test('wraps a long inline label with wrap', async ({ page }) => {
+    const label = getLabelTitle(page, 'label_wrap');
+    const box = await label.boundingBox();
+    expect(box.height).toBeGreaterThan(30);
+    await expect(label.locator('..')).toHaveCSS('white-space', 'normal');
+  });
 });

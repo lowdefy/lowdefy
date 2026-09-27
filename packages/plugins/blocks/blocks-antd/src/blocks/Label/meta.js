@@ -76,6 +76,12 @@ export default {
         default: false,
         description: 'Render input and label inline.',
       },
+      wrap: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Wrap long label text onto multiple lines when the label is inline. Labels above their content always wrap.',
+      },
       theme: {
         type: 'object',
         description:

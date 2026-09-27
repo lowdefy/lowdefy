@@ -236,6 +236,21 @@
         - id: label_inline_extra_input
           type: TextInput
 
+- title: Wrapped Inline Label
+  fullWidth: true
+  blocks:
+    - id: label_wrap_inline
+      type: Label
+      layout:
+        span: 12
+      properties:
+        title: A long inline label that wraps onto a second line when space runs out
+        inline: true
+        wrap: true
+      blocks:
+        - id: label_wrap_inline_input
+          type: TextInput
+
 - title: Inline Sizes
   fullWidth: true
   blocks:

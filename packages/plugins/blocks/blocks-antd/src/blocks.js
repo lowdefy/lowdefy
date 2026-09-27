@@ -46,7 +46,7 @@ export { default as Flex } from './blocks/Flex/Flex.js';
 export { default as FloatButton } from './blocks/FloatButton/FloatButton.js';
 export { default as Footer } from './blocks/Footer/Footer.js';
 export { default as Header } from './blocks/Header/Header.js';
-export { default as Label } from './blocks/Label/Label.js';
+export { default as Label } from './blocks/Label/LabelBlock.js';
 export { default as Layout } from './blocks/Layout/Layout.js';
 export { default as ListSelector } from './blocks/ListSelector/ListSelector.js';
 export { default as Masonry } from './blocks/Masonry/Masonry.js';
