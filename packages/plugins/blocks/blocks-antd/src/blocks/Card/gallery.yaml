@@ -542,8 +542,7 @@
               properties:
                 icon: user
                 size: 64
-                color: '#fff'
-                backgroundColor: '#1677ff'
+                color: '#1677ff'
             - id: rich_profile_info
               type: Box
               layout:
@@ -953,9 +952,9 @@
       layout:
         flex: 1 1 0
       class:
-        element: shadow-lg rounded-xl
-        header: bg-bg-layout
-        body: bg-bg-container
+        .element: shadow-lg rounded-xl
+        .header: bg-bg-layout
+        .body: bg-bg-container
       properties:
         title: Element + Header + Body
       blocks:
@@ -969,7 +968,7 @@
       layout:
         flex: 1 1 0
       class:
-        element: hover:ring-2 hover:ring-blue-400 transition-all duration-200 rounded-lg
+        .element: hover:ring-2 hover:ring-blue-400 transition-all duration-200 rounded-lg
       properties:
         title: Hover Ring Effect
         hoverable: true
@@ -984,7 +983,7 @@
       layout:
         flex: 1 1 0
       class:
-        extra: bg-bg-layout px-3 py-1 rounded-full
+        .extra: bg-bg-layout px-3 py-1 rounded-full
       properties:
         title: Styled Extra Area
       slots:

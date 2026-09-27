@@ -120,21 +120,23 @@ blocks:
 
   - id: statistic_value_style
     type: Statistic
+    style:
+      .value:
+        color: '#3f8600'
     properties:
       title: Positive Change
       value: 11.28
       suffix: '%'
-      valueStyle:
-        color: '#3f8600'
 
   - id: statistic_negative_style
     type: Statistic
+    style:
+      .value:
+        color: '#cf1322'
     properties:
       title: Negative Change
       value: -9.26
       suffix: '%'
-      valueStyle:
-        color: '#cf1322'
 
   # ============================================
   # TIMER AND SEMANTIC KEYS

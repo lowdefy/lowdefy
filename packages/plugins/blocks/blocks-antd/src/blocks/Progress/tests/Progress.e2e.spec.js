@@ -199,6 +199,16 @@ test.describe('Progress Block', () => {
     expect(leftTransform).not.toEqual(bottomTransform);
   });
 
+  test('gapPlacement is still passed to antd', async ({ page }) => {
+    const leftRail = getProgress(page, 'progress_dashboard_gap_left').locator('circle').first();
+    const startRail = getProgress(page, 'progress_dashboard_gap_placement')
+      .locator('circle')
+      .first();
+    const leftTransform = await leftRail.evaluate((el) => el.style.transform);
+    const startTransform = await startRail.evaluate((el) => el.style.transform);
+    expect(startTransform).toEqual(leftTransform);
+  });
+
   test('renders the small size', async ({ page }) => {
     const progress = getProgress(page, 'progress_size_small').locator('.ant-progress');
     await expect(progress).toHaveClass(/ant-progress-small/);

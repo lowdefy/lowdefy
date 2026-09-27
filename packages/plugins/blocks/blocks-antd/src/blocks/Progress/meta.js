@@ -102,7 +102,7 @@ export default {
       size: {
         type: ['number', 'string', 'array', 'object'],
         description:
-          "Size of the progress. 'small' or 'medium', a number (circle diameter, or line height), `[width, height]` for line progress, or `{ width, height }` for line progress.",
+          "Size of the progress. 'small' or 'medium', a number (the circle diameter, or both the width and the height of a line or of each step), or `[width, height]` or `{ width, height }` for line progress.",
         docs: {
           displayType: 'yaml',
         },

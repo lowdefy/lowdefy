@@ -178,6 +178,14 @@ blocks:
       gapDegree: 90
       gapPosition: left
 
+  - id: progress_dashboard_gap_placement
+    type: Progress
+    properties:
+      type: dashboard
+      percent: 75
+      gapDegree: 90
+      gapPlacement: start
+
   - id: progress_size_small
     type: Progress
     properties:
