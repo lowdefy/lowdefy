@@ -115,6 +115,9 @@ const TextInput = ({
               onPressEnter={() => {
                 methods.triggerEvent({ name: 'onPressEnter' });
               }}
+              onClear={() => {
+                methods.triggerEvent({ name: 'onClear' });
+              }}
               onBlur={() => {
                 methods.triggerEvent({ name: 'onBlur' });
               }}

@@ -94,7 +94,7 @@
                 title: 12px padding
                 color: default
 
-- title: Bordered vs Borderless
+- title: Outlined vs Borderless
   blocks:
     - id: border_wrapper
       type: Box
@@ -107,8 +107,8 @@
           layout:
             flex: 1 1 0
           properties:
-            title: Bordered (default)
-            bordered: true
+            title: Outlined (default)
+            variant: outlined
           blocks:
             - id: bordered_content
               type: Paragraph
@@ -121,7 +121,7 @@
             flex: 1 1 0
           properties:
             title: Borderless
-            bordered: false
+            variant: borderless
           blocks:
             - id: borderless_content
               type: Paragraph
@@ -333,6 +333,52 @@
               properties:
                 title: Featured
                 color: gold
+
+- title: Card with Actions Slot
+  blocks:
+    - id: actions_card
+      type: Card
+      properties:
+        title: Quarterly report
+      slots:
+        content:
+          blocks:
+            - id: actions_card_text
+              type: Paragraph
+              properties:
+                content: Revenue grew 12% over the previous quarter.
+        actions:
+          blocks:
+            - id: actions_card_buttons
+              type: Flex
+              properties:
+                justify: space-around
+              blocks:
+                - id: actions_card_view
+                  type: Button
+                  properties:
+                    title: View
+                    type: link
+                    icon: view
+                - id: actions_card_share
+                  type: Button
+                  properties:
+                    title: Share
+                    type: link
+                    icon: share
+
+- title: Loading Card
+  blocks:
+    - id: loading_card
+      type: Card
+      properties:
+        title: Customer details
+        loading: true
+      blocks:
+        - id: loading_card_text
+          type: Paragraph
+          properties:
+            content: Shown once loading is false.
 
 - title: Inner Cards
   blocks:

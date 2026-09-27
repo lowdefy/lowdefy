@@ -23,6 +23,7 @@ events:
         textinput_with_value: Initial Value
         textinput_allowclear: Clear me
         textinput_maxlength: abc
+        textinput_onclear: Clear me too
 
 blocks:
   # ============================================
@@ -284,4 +285,38 @@ blocks:
             _string.concat:
               - 'Typed: '
               - _state: textinput_typing
+          else: ''
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: textinput_underlined
+    type: TextInput
+    properties:
+      title: Underlined
+      variant: underlined
+
+  - id: textinput_onclear
+    type: TextInput
+    properties:
+      title: OnClear Test
+      allowClear: true
+    events:
+      onClear:
+        - id: set_onclear
+          type: SetState
+          params:
+            textinput_onclear_fired: true
+
+  - id: onclear_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: textinput_onclear_fired
+              - true
+          then: Clear fired
           else: ''

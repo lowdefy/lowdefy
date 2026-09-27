@@ -100,4 +100,35 @@ test.describe('Descriptions Block', () => {
     await expect(extra).toBeVisible();
     await expect(extra).toContainText('Edit');
   });
+
+  test('size default renders the largest size and medium the medium size', async ({ page }) => {
+    const defaultSize = getDescriptions(page, 'descriptions_default_size');
+    await expect(defaultSize).not.toHaveClass(/ant-descriptions-medium|ant-descriptions-small/);
+    const medium = getDescriptions(page, 'descriptions_medium_size');
+    await expect(medium).toHaveClass(/ant-descriptions-medium/);
+  });
+
+  test('span filled fills the rest of the row', async ({ page }) => {
+    const descriptions = getDescriptions(page, 'descriptions_filled_span');
+    const rows = descriptions.locator('tr.ant-descriptions-row');
+    await expect(rows).toHaveCount(2);
+    const filledContent = rows.nth(0).locator('td.ant-descriptions-item-content').nth(1);
+    await expect(filledContent).toHaveText('Fills the rest of the row');
+    await expect(filledContent).toHaveAttribute('colspan', '3');
+  });
+
+  test('applies block and item label and content styles', async ({ page }) => {
+    const descriptions = getDescriptions(page, 'descriptions_item_styles');
+    await expect(descriptions.locator('.ant-descriptions-header')).toHaveClass(
+      /descriptions-header-class/
+    );
+    await expect(descriptions.locator('.ant-descriptions-title')).toHaveClass(
+      /descriptions-title-class/
+    );
+    const labels = descriptions.locator('.ant-descriptions-item-label');
+    await expect(labels.nth(0)).toHaveCSS('color', 'rgb(0, 0, 255)');
+    await expect(labels.nth(1)).toHaveCSS('color', 'rgb(255, 0, 0)');
+    const contents = descriptions.locator('.ant-descriptions-item-content');
+    await expect(contents.nth(1)).toHaveCSS('font-weight', '700');
+  });
 });

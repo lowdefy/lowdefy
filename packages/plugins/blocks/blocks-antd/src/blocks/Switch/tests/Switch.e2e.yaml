@@ -21,6 +21,7 @@ events:
       type: SetState
       params:
         switch_checked: true
+        switch_loading: true
 
 blocks:
   # ============================================
@@ -130,3 +131,19 @@ blocks:
               - true
           then: Switch is ON
           else: Switch is OFF
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: switch_loading
+    type: Switch
+    properties:
+      title: Loading
+      loading: true
+
+  - id: switch_default_size
+    type: Switch
+    properties:
+      title: Default Size
+      size: default

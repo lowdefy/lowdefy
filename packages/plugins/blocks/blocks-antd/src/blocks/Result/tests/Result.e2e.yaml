@@ -124,3 +124,20 @@ blocks:
             type: Button
             properties:
               title: Go Home
+
+  # ============================================
+  # SEMANTIC KEYS
+  # ============================================
+
+  - id: result_css_keys
+    type: Result
+    class:
+      .title: result-title-class
+      .subTitle: result-subtitle-class
+    style:
+      .title:
+        color: 'rgb(255, 0, 0)'
+    properties:
+      status: info
+      title: Styled Title
+      subTitle: Styled subtitle

@@ -98,3 +98,17 @@
   type: TextArea
   properties:
     size: 'large'
+- id: 'properties.variant: underlined'
+  type: TextArea
+  properties:
+    variant: underlined
+- id: 'events.onClear'
+  type: TextArea
+  properties:
+    allowClear: true
+  events:
+    onClear:
+      - id: clear_message
+        type: DisplayMessage
+        params:
+          content: Cleared

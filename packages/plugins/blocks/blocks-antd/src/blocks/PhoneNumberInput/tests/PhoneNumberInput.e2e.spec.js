@@ -230,3 +230,33 @@ test.describe('PhoneNumberInput Block', () => {
     await expect(display).not.toContainText('+27');
   });
 });
+
+test.describe('PhoneNumberInput antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'phonenumberinput');
+  });
+
+  test('renders the region selector and the input in a compact group', async ({ page }) => {
+    const compact = getBlock(page, 'phone_basic').locator('.ant-space-compact');
+    await expect(compact).toHaveClass(/ldf-phone-number-input/);
+    await expect(compact.locator('#phone_basic_select_input')).toBeAttached();
+    await expect(compact.locator('#phone_basic_input')).toBeAttached();
+    await expect(getBlock(page, 'phone_basic').locator('.ant-input-group-addon')).toHaveCount(0);
+  });
+
+  test('renders the underlined variant on the selector and the input', async ({ page }) => {
+    const block = getBlock(page, 'phone_underlined');
+    await expect(block.locator('.ant-select')).toHaveClass(/ant-select-underlined/);
+    await expect(getInput(page, 'phone_underlined')).toHaveClass(/ant-input-underlined/);
+  });
+
+  test('onClear fires when the clear button is clicked', async ({ page }) => {
+    const block = getBlock(page, 'phone_onclear');
+    const input = getInput(page, 'phone_onclear');
+    await input.fill('123456');
+    await block.hover();
+    await block.locator('.ant-input-clear-icon').click();
+    await expect(input).toHaveValue('');
+    await expect(getBlock(page, 'phone_onclear_display')).toHaveText('Clear fired');
+  });
+});

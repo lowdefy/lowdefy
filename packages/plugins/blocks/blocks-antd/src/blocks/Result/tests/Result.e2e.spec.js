@@ -140,4 +140,16 @@ test.describe('Result Block', () => {
     const button = getBlock(page, 'result_extra_button');
     await expect(button).toBeVisible();
   });
+
+  // ============================================
+  // SEMANTIC KEYS
+  // ============================================
+
+  test('applies class and style to the title and subtitle', async ({ page }) => {
+    const block = getResult(page, 'result_css_keys');
+    const title = block.locator('.ant-result-title');
+    await expect(title).toHaveClass(/result-title-class/);
+    await expect(title).toHaveCSS('color', 'rgb(255, 0, 0)');
+    await expect(block.locator('.ant-result-subtitle')).toHaveClass(/result-subtitle-class/);
+  });
 });

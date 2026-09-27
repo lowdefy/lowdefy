@@ -22,9 +22,9 @@
   type: Result
   properties:
     subTitle: subTitle text
-- id: 'areas.extra'
+- id: 'slots.extra'
   type: Result
-  areas:
+  slots:
     content:
       blocks:
         - id: test
@@ -73,3 +73,15 @@
   type: Result
   properties:
     subTitle: '<div style="color:green;">Html Subtitle</div>'
+- id: 'class and style semantic keys'
+  type: Result
+  class:
+    .title: text-2xl
+  style:
+    .subTitle:
+      maxWidth: 480
+      margin: 0 auto
+  properties:
+    status: success
+    title: Payment received
+    subTitle: A receipt was sent to your email address.

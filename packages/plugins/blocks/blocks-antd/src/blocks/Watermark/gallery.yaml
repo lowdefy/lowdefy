@@ -105,6 +105,24 @@
           style:
             height: 200px
 
+- title: Per-Line Font
+  blocks:
+    - id: per_line_font
+      type: Watermark
+      properties:
+        text:
+          - text: CONFIDENTIAL
+            font:
+              fontSize: 22
+              fontWeight: bold
+              color: rgba(255, 0, 0, 0.12)
+          - Prepared for the finance team
+      blocks:
+        - id: per_line_font_child
+          type: Box
+          style:
+            height: 200px
+
 - title: Text Alignment
   blocks:
     - id: align_left

@@ -22,8 +22,6 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 
-const Option = AutoComplete.Option;
-
 const AutoCompleteInput = ({
   blockId,
   classNames = {},
@@ -56,9 +54,9 @@ const AutoCompleteInput = ({
             backfill={properties.backfill}
             variant={properties.bordered === false ? 'borderless' : properties.variant}
             className={classNames.element}
-            classNames={{ content: classNames.selector }}
+            classNames={{ content: classNames.selector, popup: { root: classNames.popup } }}
             style={{ width: '100%', ...styles.element }}
-            styles={{ content: styles.selector }}
+            styles={{ content: styles.selector, popup: { root: styles.popup } }}
             defaultOpen={properties.defaultOpen}
             disabled={properties.disabled || loading}
             placeholder={properties.placeholder ?? 'Type or select item'}
@@ -74,9 +72,33 @@ const AutoCompleteInput = ({
             }
             size={properties.size}
             status={validation.status}
-            filterOption={(input, option) =>
-              `${option.value}`.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            options={(properties.options ?? []).map((opt, i) => ({
+              className: classNames.options,
+              id: `${blockId}_${i}`,
+              key: i,
+              label: `${opt}`,
+              style: styles.options,
+              value: `${opt}`,
+            }))}
+            prefix={
+              properties.prefix ||
+              (properties.prefixIcon && (
+                <components.Icon
+                  blockId={`${blockId}_prefixIcon`}
+                  classNames={{ element: classNames.prefixIcon }}
+                  events={events}
+                  properties={properties.prefixIcon}
+                  styles={{ element: styles.prefixIcon }}
+                />
+              ))
             }
+            showSearch={{
+              filterOption: (input, option) =>
+                `${option.value}`.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+              onSearch: (newVal) => {
+                methods.triggerEvent({ name: 'onSearch', event: { value: newVal } });
+              },
+            }}
             onChange={(newVal) => {
               methods.setValue(newVal);
               methods.triggerEvent({ name: 'onChange', event: { value: newVal } });
@@ -90,27 +112,15 @@ const AutoCompleteInput = ({
             onClear={() => {
               methods.triggerEvent({ name: 'onClear' });
             }}
-            onSearch={(newVal) => {
-              methods.triggerEvent({ name: 'onSearch', event: { value: newVal } });
+            onSelect={(newVal) => {
+              methods.triggerEvent({ name: 'onSelect', event: { value: newVal } });
             }}
             value={type.isNone(value) ? undefined : `${value}`}
-          >
-            {(properties.options || []).map((opt, i) => (
-              <Option
-                style={styles.options}
-                className={classNames.options}
-                id={`${blockId}_${i}`}
-                key={i}
-                value={`${opt}`}
-              >
-                {`${opt}`}
-              </Option>
-            ))}
-          </AutoComplete>
+          />
         ),
       }}
     />
   );
 };
 
-export default withTheme('AutoComplete', withBlockDefaults(AutoCompleteInput));
+export default withTheme('Select', withBlockDefaults(AutoCompleteInput));

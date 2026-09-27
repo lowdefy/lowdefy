@@ -249,3 +249,36 @@
       properties:
         content: >
           Text 3
+- id: 'properties.orientation: horizontal'
+  type: TimelineList
+  properties:
+    orientation: horizontal
+  blocks:
+    - id: horizontal_step
+      type: Paragraph
+      properties:
+        content: Step
+- id: 'properties.variant: filled'
+  type: TimelineList
+  properties:
+    variant: filled
+    data:
+      - color: green
+      - color: blue
+  blocks:
+    - id: filled_step
+      type: Paragraph
+      properties:
+        content: Step
+- id: 'properties.titleSpan with labels'
+  type: TimelineList
+  properties:
+    titleSpan: '25%'
+    data:
+      - label: '09:00'
+      - label: '10:30'
+  blocks:
+    - id: labelled_step
+      type: Paragraph
+      properties:
+        content: Meeting

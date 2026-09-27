@@ -203,6 +203,45 @@
           - Option A
           - Option B
           - Option C
+    - id: variant_underlined
+      type: AutoComplete
+      properties:
+        title: Underlined
+        variant: underlined
+        options:
+          - Apple
+          - Banana
+          - Cherry
+
+- title: Prefix and Select Event
+  blocks:
+    - id: prefix_search
+      type: AutoComplete
+      properties:
+        title: Search Fruit
+        prefixIcon: search
+        options:
+          - Apple
+          - Apricot
+          - Banana
+          - Cherry
+      events:
+        onSelect:
+          - id: selected_message
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Picked '
+                  - _event: value
+    - id: prefix_text
+      type: AutoComplete
+      properties:
+        title: Email Domain
+        prefix: '@'
+        options:
+          - example.com
+          - example.org
 
 - title: Disabled
   blocks:

@@ -190,6 +190,37 @@
         groupSeparator: '.'
         decimalSeparator: ','
 
+- title: Countdown and Count Up Timers
+  blocks:
+    - id: timer_countdown
+      type: Statistic
+      layout:
+        span: 12
+      properties:
+        title: Launch in
+        value:
+          _date: '2030-01-01T00:00:00.000Z'
+        timer:
+          type: countdown
+          format: 'D [days] HH:mm:ss'
+      events:
+        onFinish:
+          - id: timer_countdown_finished
+            type: DisplayMessage
+            params:
+              content: We have launched.
+    - id: timer_countup
+      type: Statistic
+      layout:
+        span: 12
+      properties:
+        title: Incident open for
+        value:
+          _date: '2026-01-01T00:00:00.000Z'
+        timer:
+          type: countup
+          format: 'D [days] HH:mm'
+
 - title: Loading State
   blocks:
     - id: loading_true

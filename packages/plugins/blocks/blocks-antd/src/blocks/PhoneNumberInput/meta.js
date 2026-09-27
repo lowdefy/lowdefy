@@ -52,6 +52,7 @@ export default {
       },
     },
     onBlur: 'Trigger action event occurs when input loses focus.',
+    onClear: 'Trigger action when the clear button is clicked.',
     onFocus: 'Trigger action when input gets focus.',
     onPressEnter: 'Trigger action when enter is pressed while text input is focused.',
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
@@ -92,7 +93,7 @@ export default {
       placeholder,
       prefix: {
         type: 'string',
-        description: 'Prefix text for the block, priority over $prefix_con.',
+        description: 'Prefix text for the block, priority over prefixIcon.',
       },
       prefixIcon: {
         ...icon,
@@ -131,7 +132,7 @@ export default {
       size: sizeSmallMiddleLarge,
       suffix: {
         type: 'string',
-        description: 'Suffix text for the block, priority over suffixIcon.',
+        description: 'Suffix text for the block, shown before suffixIcon.',
       },
       suffixIcon: {
         ...icon,

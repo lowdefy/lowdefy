@@ -27,6 +27,16 @@ import {
   allowClear,
   sizeSmallDefaultLarge,
 } from '../../schemas/inputProperties.js';
+import {
+  inputReadOnly,
+  pickerEvents,
+  pickerVariant,
+  placement,
+  prefix,
+  prefixIcon,
+  showWeek,
+} from '../../schemas/pickerProperties.js';
+import pickerTheme from '../../schemas/pickerTheme.js';
 
 export default {
   category: 'input',
@@ -38,9 +48,11 @@ export default {
     extra: 'The DateTimeSelector extra content.',
     feedback: 'The DateTimeSelector validation feedback.',
     popup: 'The DateTimeSelector popup.',
+    prefixIcon: 'The prefix icon in the DateTimeSelector.',
     suffixIcon: 'The suffix icon in the DateTimeSelector.',
   },
   events: {
+    ...pickerEvents,
     onChange: {
       description: 'Trigger actions when selection is changed.',
       event: { value: 'The selected date-time value.' },
@@ -60,12 +72,7 @@ export default {
           "Deprecated - use variant: 'borderless'. Whether or not the input has a border style.",
       },
       disabled,
-      variant: {
-        type: 'string',
-        enum: ['outlined', 'filled', 'borderless'],
-        default: 'outlined',
-        description: "Variant style of the input. Use 'borderless' instead of bordered: false.",
-      },
+      variant: pickerVariant,
       disabledDates,
       format: {
         type: 'string',
@@ -78,6 +85,7 @@ export default {
         minimum: 1,
         description: 'Hour intervals to show in the time selector.',
       },
+      inputReadOnly,
       label,
       minuteStep: {
         type: 'integer',
@@ -85,13 +93,22 @@ export default {
         minimum: 1,
         description: 'Minute intervals to show in the time selector.',
       },
+      needConfirm: {
+        type: 'boolean',
+        default: true,
+        description:
+          'Require the OK button to confirm the selection. When false, the popup has no OK button and the selection is saved when the popup closes, eg. when the user clicks outside it or presses Enter.',
+      },
       placeholder: { ...placeholder },
+      placement,
+      prefix,
+      prefixIcon,
       presets: dateTimePresets,
       secondStep: {
         type: 'integer',
-        default: 5,
+        default: 30,
         minimum: 1,
-        description: 'Minute intervals to show in the time selector.',
+        description: 'Second intervals to show in the time selector.',
       },
       selectUTC: {
         type: 'boolean',
@@ -101,13 +118,14 @@ export default {
       showToday: {
         type: 'boolean',
         default: true,
-        description: 'Shows a button to easily select the current date if true.',
+        description: 'Deprecated - use showNow. Used for showNow when showNow is not set.',
       },
       showNow: {
         type: 'boolean',
         default: true,
         description: "Shows a 'Now' button to set current time.",
       },
+      showWeek,
       size: sizeSmallDefaultLarge,
       suffixIcon: {
         ...icon,
@@ -119,166 +137,10 @@ export default {
         type: 'string',
         default: 'HH:mm',
         description:
-          'Time format to show in the time selector. HH:mm:ss will show hours, minutes and seconds, HH:mm only hours and minutes and HH only hours.',
+          'Time format to show in the time selector. HH:mm:ss will show hours, minutes and seconds, HH:mm only hours and minutes and HH only hours. A 12 hour format like "hh:mm a" adds an AM/PM column; use a matching format, eg. "YYYY-MM-DD hh:mm a", to show the time in the input.',
       },
       title: inputTitle,
-      theme: {
-        type: 'object',
-        description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
-        docs: {
-          displayType: 'yaml',
-          link: 'https://ant.design/components/date-picker#design-token',
-        },
-        properties: {
-          cellHeight: {
-            type: 'number',
-            default: 24,
-            description: 'Height of a calendar cell.',
-          },
-          cellWidth: {
-            type: 'number',
-            default: 36,
-            description: 'Width of a calendar cell.',
-          },
-          cellHoverBg: {
-            type: 'string',
-            description: 'Background color of a calendar cell on hover.',
-          },
-          cellActiveWithRangeBg: {
-            type: 'string',
-            description: 'Background color of cells within the selected range.',
-          },
-          cellHoverWithRangeBg: {
-            type: 'string',
-            description: 'Background color of cells within range on hover.',
-          },
-          cellBgDisabled: {
-            type: 'string',
-            description: 'Background color of disabled cells.',
-          },
-          cellRangeBorderColor: {
-            type: 'string',
-            description: 'Border color of range selection cells.',
-          },
-          timeColumnWidth: {
-            type: 'number',
-            default: 56,
-            description: 'Width of the time panel column.',
-          },
-          timeColumnHeight: {
-            type: 'number',
-            default: 224,
-            description: 'Height of the time panel column.',
-          },
-          timeCellHeight: {
-            type: 'number',
-            default: 28,
-            description: 'Height of a time cell in the time panel.',
-          },
-          addonBg: {
-            type: 'string',
-            description: 'Background color for the addon area.',
-          },
-          hoverBorderColor: {
-            type: 'string',
-            description: 'Border color on hover.',
-          },
-          activeBorderColor: {
-            type: 'string',
-            description: 'Border color when active.',
-          },
-          activeShadow: {
-            type: 'string',
-            description: 'Shadow effect when active.',
-          },
-          paddingBlock: {
-            type: 'number',
-            default: 4,
-            description: 'Vertical padding of the input.',
-          },
-          paddingBlockSM: {
-            type: 'number',
-            default: 0,
-            description: 'Vertical padding for small size.',
-          },
-          paddingBlockLG: {
-            type: 'number',
-            default: 7,
-            description: 'Vertical padding for large size.',
-          },
-          paddingInline: {
-            type: 'number',
-            default: 11,
-            description: 'Horizontal padding of the input.',
-          },
-          paddingInlineSM: {
-            type: 'number',
-            default: 7,
-            description: 'Horizontal padding for small size.',
-          },
-          paddingInlineLG: {
-            type: 'number',
-            default: 11,
-            description: 'Horizontal padding for large size.',
-          },
-          zIndexPopup: {
-            type: 'number',
-            default: 1050,
-            description: 'Z-index of the picker popup.',
-          },
-          borderRadius: {
-            type: 'number',
-            default: 6,
-            description: 'Border radius of the input.',
-          },
-          controlHeight: {
-            type: 'number',
-            default: 32,
-            description: 'Height of the input.',
-          },
-          controlHeightLG: {
-            type: 'number',
-            default: 40,
-            description: 'Height for large size.',
-          },
-          controlHeightSM: {
-            type: 'number',
-            default: 24,
-            description: 'Height for small size.',
-          },
-          fontSize: {
-            type: 'number',
-            default: 14,
-            description: 'Font size.',
-          },
-          lineWidth: {
-            type: 'number',
-            default: 1,
-            description: 'Border width.',
-          },
-          colorPrimary: {
-            type: 'string',
-            description: 'Primary color override.',
-          },
-          colorBgContainer: {
-            type: 'string',
-            description: 'Background color of the input.',
-          },
-          colorText: {
-            type: 'string',
-            description: 'Text color.',
-          },
-          colorBorder: {
-            type: 'string',
-            description: 'Border color.',
-          },
-          colorTextPlaceholder: {
-            type: 'string',
-            description: 'Placeholder text color.',
-          },
-        },
-      },
+      theme: pickerTheme,
     },
   },
 };

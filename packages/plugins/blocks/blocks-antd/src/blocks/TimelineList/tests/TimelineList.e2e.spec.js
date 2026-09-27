@@ -134,4 +134,33 @@ test.describe('TimelineList Block', () => {
     await expect(items.nth(0).locator('.ant-timeline-item-title')).toHaveText('Jan 1');
     await expect(items.nth(1).locator('.ant-timeline-item-title')).toHaveText('Jan 2');
   });
+
+  test('renders a horizontal timeline with the filled variant', async ({ page }) => {
+    const timeline = getTimeline(page, 'timeline_horizontal');
+    await expect(timeline).toHaveClass(/ant-timeline-horizontal/);
+    await expect(timeline).toHaveClass(/ant-steps-filled/);
+    await expect(getTimelineItems(page, 'timeline_horizontal')).toHaveCount(2);
+  });
+
+  test('maps item positions to placements', async ({ page }) => {
+    const items = getTimelineItems(page, 'timeline_positions');
+    await expect(items.nth(0)).toHaveClass(/ant-timeline-item-placement-start/);
+    await expect(items.nth(1)).toHaveClass(/ant-timeline-item-placement-end/);
+  });
+
+  test('renders the pending item with a custom icon', async ({ page }) => {
+    const items = getTimelineItems(page, 'timeline_pending_icon');
+    await expect(items).toHaveCount(2);
+    await expect(items.last()).toContainText('Waiting');
+    await expect(items.last()).toHaveClass(/ant-steps-item-process/);
+    await expect(items.last().locator('#timeline_pending_icon_pendingDotIcon')).toBeAttached();
+  });
+
+  test('applies class and style to the item labels', async ({ page }) => {
+    const title = getTimelineItems(page, 'timeline_css_keys')
+      .first()
+      .locator('.ant-timeline-item-title');
+    await expect(title).toHaveClass(/timeline-label-class/);
+    await expect(title).toHaveCSS('color', 'rgb(255, 0, 0)');
+  });
 });

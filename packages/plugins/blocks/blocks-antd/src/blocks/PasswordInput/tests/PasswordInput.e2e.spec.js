@@ -149,3 +149,42 @@ test.describe('PasswordInput Block', () => {
     await expect(input).toHaveAttribute('type', 'password');
   });
 });
+
+test.describe('PasswordInput antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'passwordinput');
+  });
+
+  test('renders a prefix icon', async ({ page }) => {
+    const block = getBlock(page, 'passwordinput_prefix_icon');
+    await expect(block.locator('.ant-input-prefix svg')).toBeAttached();
+    // The visibility toggle stays in the suffix.
+    await expect(block.locator('.ant-input-suffix .ant-input-password-icon')).toBeAttached();
+  });
+
+  test('renders prefix text', async ({ page }) => {
+    const block = getBlock(page, 'passwordinput_prefix_text');
+    await expect(block.locator('.ant-input-prefix')).toHaveText('PIN');
+  });
+
+  test('sets maxLength on the input', async ({ page }) => {
+    await expect(getInput(page, 'passwordinput_maxlength')).toHaveAttribute('maxlength', '8');
+  });
+
+  test('renders the underlined variant', async ({ page }) => {
+    const block = getBlock(page, 'passwordinput_underlined');
+    await expect(block.locator('.ant-input-affix-wrapper')).toHaveClass(/ant-input-underlined/);
+  });
+
+  test('clears the value and fires onClear', async ({ page }) => {
+    const block = getBlock(page, 'passwordinput_allowclear');
+    const input = getInput(page, 'passwordinput_allowclear');
+    await expect(input).toHaveValue('secret456');
+
+    await block.hover();
+    await block.locator('.ant-input-clear-icon').click();
+
+    await expect(input).toHaveValue('');
+    await expect(getBlock(page, 'onclear_display')).toHaveText('Clear fired');
+  });
+});

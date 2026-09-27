@@ -52,6 +52,13 @@
         variant: borderless
         label:
           disabled: true
+    - id: dts_variant_underlined
+      type: DateTimeSelector
+      properties:
+        title: Underlined
+        variant: underlined
+        label:
+          disabled: true
 
 - title: Time Format Options
   blocks:
@@ -260,6 +267,55 @@
         selectUTC: true
         label:
           disabled: true
+
+- title: Prefix, Placement and Read-only Input
+  blocks:
+    - id: dts_prefix_icon
+      type: DateTimeSelector
+      properties:
+        title: Prefix Icon
+        prefixIcon: clock
+        suffixIcon:
+          name: calendar
+          color: '#8c8c8c'
+    - id: dts_prefix_text
+      type: DateTimeSelector
+      properties:
+        title: Prefix Text
+        prefix: 'From:'
+    - id: dts_placement
+      type: DateTimeSelector
+      properties:
+        title: Popup Opens Top Right
+        placement: topRight
+    - id: dts_read_only
+      type: DateTimeSelector
+      properties:
+        title: Pick From Calendar Only
+        inputReadOnly: true
+        label:
+          extra: The input is read-only, so touch devices do not open the keyboard.
+
+- title: Confirm and 12 Hour Clock
+  blocks:
+    - id: dts_no_confirm
+      type: DateTimeSelector
+      properties:
+        title: No OK Button
+        needConfirm: false
+        label:
+          extra: No OK button, the selection is saved when the popup closes.
+    - id: dts_twelve_hour
+      type: DateTimeSelector
+      properties:
+        title: 12 Hour Clock
+        format: YYYY-MM-DD hh:mm a
+        timeFormat: hh:mm a
+    - id: dts_show_week
+      type: DateTimeSelector
+      properties:
+        title: Show Week Numbers
+        showWeek: true
 
 - title: Disabled State
   blocks:
