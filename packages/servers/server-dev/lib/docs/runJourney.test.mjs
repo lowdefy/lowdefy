@@ -82,6 +82,7 @@ function createLocator({ selector, page }) {
       page.fills.push({ selector, value });
     }),
     locator: jest.fn((child) => createLocator({ selector: `${selector} ${child}`, page })),
+    getByText: jest.fn((text) => createLocator({ selector: `${selector} >> text=${text}`, page })),
     first: jest.fn(() => locator),
     last: jest.fn(() => locator),
     nth: jest.fn(() => locator),
@@ -132,6 +133,7 @@ function createPage({ window = createLowdefyWindow(), url = 'http://localhost:32
     }),
   };
   page.locator = jest.fn((selector) => createLocator({ selector, page }));
+  page.getByText = jest.fn((text) => createLocator({ selector: `text=${text}`, page }));
   return page;
 }
 
@@ -1385,3 +1387,23 @@ test('runJourney hands an email step the current tab, the journey start and the 
     delete process.env.LOWDEFY_DIRECTORY_CONFIG;
   }
 });
+
+test.each([
+  [
+    'inside a block',
+    { blockId: 'members_list', containing: 'ada@example.test' },
+    '#bl-members_list >> text=ada@example.test',
+  ],
+  ['on the whole page', { containing: 'Invitation sent' }, 'text=Invitation sent'],
+])(
+  'runJourney clicks the element showing the text %s, not the first control in it',
+  async (_, target, selector) => {
+    const page = createPage();
+    openWith(page);
+
+    const result = await runJourney({ origin, pageId: 'members', steps: [{ click: target }] });
+
+    expect(result.passed).toBe(true);
+    expect(page.clicks).toEqual([selector]);
+  }
+);

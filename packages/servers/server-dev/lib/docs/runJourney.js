@@ -149,6 +149,9 @@ function describeTarget(target) {
   if (!type.isUndefined(target.text)) {
     parts.push(`control "${target.text}"`);
   }
+  if (!type.isUndefined(target.containing)) {
+    parts.push(`text containing "${target.containing}"`);
+  }
   if (!type.isUndefined(target.nth)) {
     parts.push(`nth ${target.nth}`);
   }
@@ -206,7 +209,10 @@ async function resolvePageWideText({ page, target }) {
   return controlsWithText({ root: page, text: target.text, nth: target.nth });
 }
 
-// The element a step acts on or asserts about. With `text` it is the visible
+// The element a step acts on or asserts about. With `containing` it is the
+// visible element whose text contains the string, inside the scope or on the
+// page: a list row a person picks by the name or address it shows, which is
+// neither a block nor an interactive control. With `text` it is the visible
 // interactive control with exactly that text (a cell button, a confirm
 // dialog's OK, a menu item) inside the scope, or in the front-most open layer
 // of the page when there is no blockId — portal-rendered controls live
@@ -215,6 +221,12 @@ async function resolvePageWideText({ page, target }) {
 // control the way a plain blockId click does.
 async function resolveTarget({ page, target }) {
   const scope = resolveScope({ page, target });
+  if (!type.isUndefined(target.containing)) {
+    return (scope ?? page)
+      .getByText(target.containing)
+      .filter({ visible: true })
+      .nth(target.nth ?? 0);
+  }
   if (!type.isUndefined(target.text)) {
     if (type.isUndefined(scope)) {
       return resolvePageWideText({ page, target });
@@ -227,12 +239,18 @@ async function resolveTarget({ page, target }) {
   return scope;
 }
 
-// A target that names a control (`text`, `nth`) is clicked as is; a target that
+// A target that names a control (`text`, `nth`) or the words shown
+// (`containing`) is clicked as is - a click on a list row's text reaches the
+// row's own click handler, the way a person clicks the row; a target that
 // names a container (block, row, cell) is clicked on the first control inside
 // it, or on itself when it has none.
 async function resolveClickLocator({ page, target }) {
   const located = await resolveTarget({ page, target });
-  if (!type.isUndefined(target.text) || !type.isUndefined(target.nth)) {
+  if (
+    !type.isUndefined(target.text) ||
+    !type.isUndefined(target.containing) ||
+    !type.isUndefined(target.nth)
+  ) {
     return located;
   }
   return resolveClickTarget(located);
