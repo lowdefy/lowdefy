@@ -27,6 +27,16 @@ import {
   allowClear,
   sizeSmallDefaultLarge,
 } from '../../schemas/inputProperties.js';
+import {
+  inputReadOnly,
+  pickerEvents,
+  pickerVariant,
+  placement,
+  prefix,
+  prefixIcon,
+  showWeek,
+} from '../../schemas/pickerProperties.js';
+import pickerTheme from '../../schemas/pickerTheme.js';
 
 export default {
   category: 'input',
@@ -38,9 +48,11 @@ export default {
     extra: 'The DateSelector extra content.',
     feedback: 'The DateSelector validation feedback.',
     popup: 'The DateSelector popup.',
+    prefixIcon: 'The prefix icon in the DateSelector.',
     suffixIcon: 'The suffix icon in the DateSelector.',
   },
   events: {
+    ...pickerEvents,
     onChange: {
       description: 'Trigger actions when selection is changed.',
       event: { value: 'The selected date value.' },
@@ -60,12 +72,7 @@ export default {
           "Deprecated - use variant: 'borderless'. Whether or not the input has a border style.",
       },
       disabled,
-      variant: {
-        type: 'string',
-        enum: ['outlined', 'filled', 'borderless'],
-        default: 'outlined',
-        description: "Variant style of the input. Use 'borderless' instead of bordered: false.",
-      },
+      variant: pickerVariant,
       disabledDates,
       label,
       format: {
@@ -73,7 +80,11 @@ export default {
         description:
           'Format in which to parse the date value, eg. "DD MMMM YYYY" will parse a date value of 1999-12-31 as "31 December 1999". The format has to conform to dayjs formats. Defaults to the active locale\'s date format, or "YYYY-MM-DD" when no locale is configured.',
       },
+      inputReadOnly,
       placeholder: { ...placeholder },
+      placement,
+      prefix,
+      prefixIcon,
       presets: datePresets({
         example: '_dayjs: [now, {format: YYYY-MM-DD}]',
         selects: 'a date',
@@ -84,6 +95,7 @@ export default {
         default: true,
         description: 'Shows a button to easily select the current date if true.',
       },
+      showWeek,
       size: sizeSmallDefaultLarge,
       suffixIcon: {
         ...icon,
@@ -92,155 +104,7 @@ export default {
           'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on right-hand side of the date picker.',
       },
       title: inputTitle,
-      theme: {
-        type: 'object',
-        description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
-        docs: {
-          displayType: 'yaml',
-          link: 'https://ant.design/components/date-picker#design-token',
-        },
-        properties: {
-          activeBorderColor: {
-            type: 'string',
-            description: 'Border color when the picker is active/focused.',
-          },
-          hoverBorderColor: {
-            type: 'string',
-            description: 'Border color when hovering over the picker.',
-          },
-          cellHoverBg: {
-            type: 'string',
-            default: 'rgba(0, 0, 0, 0.04)',
-            description: 'Background color of calendar cell on hover.',
-          },
-          cellActiveWithRangeBg: {
-            type: 'string',
-            default: '#e6f4ff',
-            description: 'Background color of active cell within a range selection.',
-          },
-          addonBg: {
-            type: 'string',
-            default: 'rgba(0, 0, 0, 0.02)',
-            description: 'Background color of the footer addon area.',
-          },
-          zIndexPopup: {
-            type: 'number',
-            default: 1050,
-            description: 'Z-index of the date picker popup layer.',
-          },
-          timeColumnHeight: {
-            type: 'number',
-            default: 224,
-            description: 'Height of the time picker column.',
-          },
-          timeCellHeight: {
-            type: 'number',
-            default: 28,
-            description: 'Height of each cell in the time picker column.',
-          },
-          paddingBlock: {
-            type: 'number',
-            default: 4,
-            description: 'Vertical padding for the default size picker.',
-          },
-          paddingBlockSM: {
-            type: 'number',
-            default: 0,
-            description: 'Vertical padding for the small size picker.',
-          },
-          paddingBlockLG: {
-            type: 'number',
-            default: 7,
-            description: 'Vertical padding for the large size picker.',
-          },
-          paddingInline: {
-            type: 'number',
-            default: 11,
-            description: 'Horizontal padding for the default size picker.',
-          },
-          paddingInlineSM: {
-            type: 'number',
-            default: 7,
-            description: 'Horizontal padding for the small size picker.',
-          },
-          paddingInlineLG: {
-            type: 'number',
-            default: 11,
-            description: 'Horizontal padding for the large size picker.',
-          },
-          borderRadius: {
-            type: 'number',
-            default: 6,
-            description: 'Border radius of the picker input.',
-          },
-          borderRadiusSM: {
-            type: 'number',
-            default: 4,
-            description: 'Border radius for the small picker.',
-          },
-          borderRadiusLG: {
-            type: 'number',
-            default: 8,
-            description: 'Border radius for the large picker and popup panel.',
-          },
-          controlHeight: {
-            type: 'number',
-            default: 32,
-            description: 'Height of the picker input.',
-          },
-          controlHeightSM: {
-            type: 'number',
-            default: 24,
-            description: 'Height of the small picker input.',
-          },
-          controlHeightLG: {
-            type: 'number',
-            default: 40,
-            description: 'Height of the large picker input.',
-          },
-          fontSize: {
-            type: 'number',
-            default: 14,
-            description: 'Font size of the picker input.',
-          },
-          fontSizeSM: {
-            type: 'number',
-            default: 14,
-            description: 'Font size for the small picker.',
-          },
-          fontSizeLG: {
-            type: 'number',
-            default: 16,
-            description: 'Font size for the large picker.',
-          },
-          lineWidth: {
-            type: 'number',
-            default: 1,
-            description: 'Border width of the picker input.',
-          },
-          colorPrimary: {
-            type: 'string',
-            description: 'Primary color used for selected date and active states.',
-          },
-          colorBgContainer: {
-            type: 'string',
-            description: 'Background color of the picker input.',
-          },
-          colorText: {
-            type: 'string',
-            description: 'Text color of the picker input and calendar cells.',
-          },
-          colorBorder: {
-            type: 'string',
-            description: 'Border color of the picker input.',
-          },
-          colorTextPlaceholder: {
-            type: 'string',
-            description: 'Color of the placeholder text.',
-          },
-        },
-      },
+      theme: pickerTheme,
     },
   },
 };

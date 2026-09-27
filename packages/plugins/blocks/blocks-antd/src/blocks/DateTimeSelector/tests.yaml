@@ -103,10 +103,10 @@
   type: DateTimeSelector
   properties:
     suffixIcon: calendar
-- id: 'properties.inputStyle: CSS style applied'
+- id: 'style.element: CSS style applied'
   type: DateTimeSelector
-  properties:
-    inputStyle:
+  style:
+    .element:
       border: 1px solid red
 - id: 'properties.label span: 5'
   type: DateTimeSelector
@@ -138,3 +138,32 @@
   properties:
     label:
       extra: extra text added
+- id: 'properties.variant: underlined'
+  type: DateTimeSelector
+  properties:
+    variant: underlined
+- id: 'properties.prefixIcon: clock'
+  type: DateTimeSelector
+  properties:
+    prefixIcon: clock
+- id: 'properties.inputReadOnly: true'
+  type: DateTimeSelector
+  properties:
+    inputReadOnly: true
+- id: 'properties.placement: bottomRight'
+  type: DateTimeSelector
+  properties:
+    placement: bottomRight
+- id: 'properties.showWeek: true'
+  type: DateTimeSelector
+  properties:
+    showWeek: true
+- id: 'properties.needConfirm: false'
+  type: DateTimeSelector
+  properties:
+    needConfirm: false
+- id: 'properties.timeFormat: hh:mm a'
+  type: DateTimeSelector
+  properties:
+    format: YYYY-MM-DD hh:mm a
+    timeFormat: hh:mm a

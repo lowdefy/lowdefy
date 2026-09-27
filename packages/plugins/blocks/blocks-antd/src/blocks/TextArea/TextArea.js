@@ -101,6 +101,9 @@ const TextAreaBlock = ({
               onPressEnter={() => {
                 methods.triggerEvent({ name: 'onPressEnter' });
               }}
+              onClear={() => {
+                methods.triggerEvent({ name: 'onClear' });
+              }}
             />
           );
         },

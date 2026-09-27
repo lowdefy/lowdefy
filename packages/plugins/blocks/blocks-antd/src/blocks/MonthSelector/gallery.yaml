@@ -52,6 +52,13 @@
         variant: borderless
         label:
           disabled: true
+    - id: month_variant_underlined
+      type: MonthSelector
+      properties:
+        title: Underlined
+        variant: underlined
+        label:
+          disabled: true
 
 - title: Format Variations
   blocks:
@@ -139,22 +146,33 @@
         label:
           disabled: true
 
-- title: Show Today Button
+- title: Prefix, Placement and Read-only Input
   blocks:
-    - id: month_today_enabled
+    - id: month_prefix_icon
       type: MonthSelector
       properties:
-        title: Show Today (default)
-        showToday: true
-        label:
-          disabled: true
-    - id: month_today_disabled
+        title: Prefix Icon
+        prefixIcon: clock
+        suffixIcon:
+          name: calendar
+          color: '#8c8c8c'
+    - id: month_prefix_text
       type: MonthSelector
       properties:
-        title: No Today Button
-        showToday: false
+        title: Prefix Text
+        prefix: 'From:'
+    - id: month_placement
+      type: MonthSelector
+      properties:
+        title: Popup Opens Top Right
+        placement: topRight
+    - id: month_read_only
+      type: MonthSelector
+      properties:
+        title: Pick From Calendar Only
+        inputReadOnly: true
         label:
-          disabled: true
+          extra: The input is read-only, so touch devices do not open the keyboard.
 
 - title: Suffix Icon
   blocks:

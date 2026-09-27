@@ -16,6 +16,7 @@
 
 import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
+import icon from '../../schemas/icon.js';
 import {
   disabled,
   autoFocus,
@@ -26,13 +27,15 @@ import {
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons, 'chevron-up', 'chevron-down'],
+  icons: [...LabelMeta.icons, 'chevron-up', 'chevron-down', 'add', 'minus'],
   valueType: 'number',
   cssKeys: {
     element: 'The NumberInput element.',
     label: 'The NumberInput label.',
     extra: 'The NumberInput extra content.',
     feedback: 'The NumberInput validation feedback.',
+    prefixIcon: 'The prefix icon in the NumberInput.',
+    suffixIcon: 'The suffix icon in the NumberInput.',
   },
   events: {
     onBlur: 'Trigger action event occurs when number input loses focus.',
@@ -49,6 +52,11 @@ export default {
     additionalProperties: false,
     properties: {
       autoFocus,
+      changeOnWheel: {
+        type: 'boolean',
+        default: false,
+        description: 'Allow changing the value with the mouse wheel while the input is focused.',
+      },
       bordered: {
         ...bordered,
         description:
@@ -73,6 +81,13 @@ export default {
         description: 'If enabled, control input with keyboard up and down.',
       },
       label,
+      mode: {
+        type: 'string',
+        enum: ['input', 'spinner'],
+        default: 'input',
+        description:
+          'Show the controls as up and down arrows inside the input, or as minus and plus buttons on either side of it.',
+      },
       min: {
         type: 'number',
         description: 'Minimum value allowed by the block.',
@@ -101,12 +116,30 @@ export default {
         type: 'integer',
         description: 'Precision (number of decimal places) allowed by the block.',
       },
+      prefix: {
+        type: 'string',
+        description: 'Prefix text for the block, priority over prefixIcon.',
+      },
+      prefixIcon: {
+        ...icon,
+        description:
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to prefix the number input.',
+      },
       size: sizeSmallDefaultLarge,
       step: {
         type: 'number',
         default: 1,
         description:
           'The number to which the current value is increased or decreased. It can be an integer or decimal.',
+      },
+      suffix: {
+        type: 'string',
+        description: 'Suffix text for the block, shown before suffixIcon.',
+      },
+      suffixIcon: {
+        ...icon,
+        description:
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to suffix the number input.',
       },
       title: {
         type: 'string',

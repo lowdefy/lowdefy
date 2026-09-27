@@ -62,6 +62,12 @@ export default {
       },
       disabled,
       label,
+      loading: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Show a loading indicator in the switch handle and block changes, eg. while a request saves the new value.',
+      },
       size: {
         type: 'string',
         enum: ['small', 'default'],

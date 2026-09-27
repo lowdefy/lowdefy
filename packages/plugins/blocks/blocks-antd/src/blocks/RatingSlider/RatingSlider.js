@@ -93,8 +93,6 @@ const RatingSlider = ({
     <Slider
       id={`${blockId}_input`}
       className={classNames.element}
-      components={{ Icon, Link }}
-      events={events}
       autoFocus={properties.autoFocus}
       disabled={
         properties.disabled || (check === true && !properties.disableNotApplicable) || loading

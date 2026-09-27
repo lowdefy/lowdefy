@@ -35,6 +35,22 @@
         label:
           disabled: true
 
+- title: Loading
+  blocks:
+    - id: loading_switch
+      type: Switch
+      properties:
+        title: Saving
+        loading: true
+        label:
+          extra: Shows a spinner and ignores clicks, eg. while a request saves the value.
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              loading_switch: true
+
 - title: With Text Labels
   blocks:
     - id: text_on_off

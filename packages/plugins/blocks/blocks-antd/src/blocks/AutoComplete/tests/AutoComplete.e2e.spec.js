@@ -303,3 +303,55 @@ test.describe('AutoComplete Block', () => {
     await expect(content).toHaveClass(/ac-selector-tailwind/);
   });
 });
+
+test.describe('AutoComplete antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'auto_complete');
+  });
+
+  test('renders a prefix icon', async ({ page }) => {
+    const wrapper = getAutoComplete(page, 'ac_prefix_icon');
+    await expect(wrapper.locator('.ant-select-prefix svg')).toBeAttached();
+  });
+
+  test('renders prefix text', async ({ page }) => {
+    const wrapper = getAutoComplete(page, 'ac_prefix_text');
+    await expect(wrapper.locator('.ant-select-prefix')).toHaveText('Fruit');
+  });
+
+  test('renders the underlined variant', async ({ page }) => {
+    const wrapper = getAutoComplete(page, 'ac_underlined');
+    await expect(wrapper).toHaveClass(/ant-select-underlined/);
+  });
+
+  test('applies Select design tokens from theme', async ({ page }) => {
+    const wrapper = getAutoComplete(page, 'ac_theme');
+    await expect(wrapper).toHaveCSS('background-color', 'rgb(255, 240, 200)');
+  });
+
+  test('renders options with their ids', async ({ page }) => {
+    await getInput(page, 'ac_onselect').click();
+    await expect(getOption(page, 'ac_onselect', 0)).toHaveText('Apple');
+    await expect(getOption(page, 'ac_onselect', 2)).toHaveText('Cherry');
+  });
+
+  test('filters options by the typed text', async ({ page }) => {
+    await getInput(page, 'ac_onselect').fill('an');
+    const dropdown = page.locator('.ant-select-dropdown:visible');
+    await expect(dropdown.locator('.ant-select-item-option')).toHaveText(['Banana']);
+  });
+
+  test('applies the popup cssKey to the dropdown', async ({ page }) => {
+    await getInput(page, 'ac_popup').click();
+    const popup = page.locator('.ant-select-dropdown.ac-custom-popup');
+    await expect(popup).toBeVisible();
+    await expect(popup).toHaveCSS('background-color', 'rgb(250, 250, 210)');
+  });
+
+  test('onSelect fires with the value of the selected option', async ({ page }) => {
+    await getInput(page, 'ac_onselect').click();
+    await getOption(page, 'ac_onselect', 1).click();
+    await expect(getInput(page, 'ac_onselect')).toHaveValue('Banana');
+    await expect(getBlock(page, 'ac_onselect_display')).toHaveText('Selected: "Banana"');
+  });
+});

@@ -16,6 +16,7 @@
 
 import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
+import icon from '../../schemas/icon.js';
 import {
   disabled,
   autoFocus,
@@ -36,6 +37,8 @@ export default {
     extra: 'The AutoComplete extra content.',
     feedback: 'The AutoComplete validation feedback.',
     options: 'The AutoComplete options.',
+    popup: 'The AutoComplete dropdown popup.',
+    prefixIcon: 'The prefix icon in the AutoComplete.',
   },
   events: {
     onBlur: 'Trigger action event occurs when selector loses focus.',
@@ -48,6 +51,11 @@ export default {
     onSearch: {
       description: 'Called when searching items.',
       event: { value: 'The search input value.' },
+    },
+    onSelect: {
+      description:
+        'Trigger actions when an option is selected from the dropdown, as opposed to typed.',
+      event: { value: 'The selected option value.' },
     },
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
@@ -65,7 +73,7 @@ export default {
       backfill: {
         type: 'boolean',
         default: false,
-        description: 'Backfill selected item the input when using keyboard',
+        description: 'Backfill the selected item into the input when using the keyboard.',
       },
       defaultOpen: {
         type: 'boolean',
@@ -86,6 +94,15 @@ export default {
         type: 'string',
         default: 'Type or select item',
         description: 'Placeholder text inside the block before user selects input.',
+      },
+      prefix: {
+        type: 'string',
+        description: 'Prefix text for the block, priority over prefixIcon.',
+      },
+      prefixIcon: {
+        ...icon,
+        description:
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to prefix the input.',
       },
       size: sizeSmallDefaultLarge,
       title: {

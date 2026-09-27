@@ -24,6 +24,8 @@ events:
           _date: '2024-06-15'
         ds_clearable:
           _date: '2024-01-01'
+        ds_onclear:
+          _date: '2024-03-01'
 
 blocks:
   # ============================================
@@ -227,3 +229,144 @@ blocks:
       disabledDates:
         ranges:
           - ['2026-03-10', '2026-03-14']
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: ds_underlined
+    type: DateSelector
+    properties:
+      title: Underlined
+      variant: underlined
+
+  - id: ds_prefix_text
+    type: DateSelector
+    properties:
+      title: Prefix Text
+      prefix: From
+
+  - id: ds_prefix_icon
+    type: DateSelector
+    properties:
+      title: Prefix Icon
+      prefixIcon: clock
+
+  - id: ds_readonly
+    type: DateSelector
+    properties:
+      title: Read-only Input
+      inputReadOnly: true
+
+  - id: ds_placement
+    type: DateSelector
+    class:
+      .popup: ds-custom-popup
+    properties:
+      title: Placement and Popup Class
+      placement: bottomRight
+
+  - id: ds_events
+    type: DateSelector
+    properties:
+      title: Focus, Blur and Open Events
+    events:
+      onFocus:
+        - id: set_focus
+          type: SetState
+          params:
+            ds_focus_event: true
+      onBlur:
+        - id: set_blur
+          type: SetState
+          params:
+            ds_blur_event: true
+      onOpenChange:
+        - id: set_open
+          type: SetState
+          params:
+            ds_open_event:
+              _event: open
+
+  - id: ds_focus_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ds_focus_event
+              - null
+          then:
+            _string.concat:
+              - 'Focus: '
+              - _json.stringify:
+                  - _state: ds_focus_event
+          else: ''
+
+  - id: ds_blur_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ds_blur_event
+              - null
+          then:
+            _string.concat:
+              - 'Blur: '
+              - _json.stringify:
+                  - _state: ds_blur_event
+          else: ''
+
+  - id: ds_open_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: ds_open_event
+              - null
+          then:
+            _string.concat:
+              - 'Open: '
+              - _json.stringify:
+                  - _state: ds_open_event
+          else: ''
+
+  - id: ds_onclear
+    type: DateSelector
+    properties:
+      title: OnClear Test
+    events:
+      onClear:
+        - id: set_onclear
+          type: SetState
+          params:
+            ds_onclear_fired: true
+
+  - id: ds_onclear_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: ds_onclear_fired
+              - true
+          then: Clear fired
+          else: ''
+
+  - id: ds_show_week
+    type: DateSelector
+    properties:
+      title: Show Week
+      showWeek: true
+
+  - id: ds_show_today_false
+    type: DateSelector
+    properties:
+      title: No Today Button
+      showToday: false

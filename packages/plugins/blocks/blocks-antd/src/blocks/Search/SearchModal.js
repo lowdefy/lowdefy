@@ -147,7 +147,7 @@ function SearchModal({
       onCancel={onClose}
       className={cn(classNames.modal)}
       style={styles.modal}
-      destroyOnClose
+      destroyOnHidden
     >
       <Input
         ref={inputRef}
