@@ -155,9 +155,15 @@ function projectState({ projection, field, state }) {
     if (value === 0 || value === false) return 'dropped';
     return isPipelineOrganizationId(value) ? 'set' : 'unknown';
   }
-  const inclusion = Object.entries(projection).some(
-    ([path, value]) => path !== '_id' && value !== 0 && value !== false
-  );
+  // _id may be included or excluded in either mode, so it decides the mode
+  // only when it is the one path: { _id: 1 } keeps _id and nothing else.
+  const paths = Object.keys(projection).filter((path) => path !== '_id');
+  const inclusion =
+    paths.length > 0
+      ? paths.some((path) => projection[path] !== 0 && projection[path] !== false)
+      : Object.prototype.hasOwnProperty.call(projection, '_id') &&
+        projection._id !== 0 &&
+        projection._id !== false;
   return inclusion ? 'dropped' : state;
 }
 
@@ -227,7 +233,18 @@ function assertUnscopedUpdate({ update, filter, field, upsert = false, position 
 
 function assertUnscopedBulkOperations({ operations, field }) {
   (operations ?? []).forEach((operation, index) => {
-    const [kind, op] = Object.entries(operation ?? {})[0] ?? [];
+    const entries = Object.entries(operation ?? {});
+    // The driver picks the kind it runs by its own precedence (insertOne
+    // first), so an operation naming several kinds could run one this guard
+    // never checked.
+    if (entries.length !== 1) {
+      throw new ConfigError(
+        `bulkWrite operation ${index} on a tenant connection must name exactly one operation kind - received ${JSON.stringify(
+          entries.map(([kind]) => kind)
+        )}.`
+      );
+    }
+    const [kind, op] = entries[0];
     const position = `bulkWrite operation ${index} (${kind})`;
     switch (kind) {
       case 'insertOne':

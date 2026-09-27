@@ -24,6 +24,7 @@ import getConnectionConfig from '../connections/getConnectionConfig.js';
 import getRequestResolver from '../request/getRequestResolver.js';
 import operatorScope from './operatorScope.js';
 import resolveTenant from '../request/resolveTenant.js';
+import resolveTenantGuard from '../request/resolveTenantGuard.js';
 
 // Runs the endpoint's declared `webhook.verify` request plugin as a gate,
 // against the RAW request (body, query, headers), before the routine body
@@ -74,6 +75,7 @@ async function runWebhookVerify(context, { verify, body, query, headers }) {
     context.logger.debug({ event: 'debug_webhook_verify_error', err: error }, error.message);
     return false;
   }
+  const tenantGuard = resolveTenantGuard(context, { connection, connectionConfig, requestConfig });
 
   // The verifier runs before the routine, so it evaluates against a frame of its
   // own: the webhook payload, with no routine state or step results yet.
@@ -91,6 +93,7 @@ async function runWebhookVerify(context, { verify, body, query, headers }) {
       requestProperties,
       requestResolver,
       tenant,
+      tenantGuard,
     });
     return response === true || (type.isObject(response) && response.verified === true);
   } catch (error) {

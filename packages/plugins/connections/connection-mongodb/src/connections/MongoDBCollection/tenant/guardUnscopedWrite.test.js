@@ -208,6 +208,18 @@ describe('assertUnscopedUpdate - pipeline form', () => {
       assertUnscopedUpdate({ update: [{ $project: { secret: 0 } }], filter: {}, field })
     ).not.toThrow();
   });
+
+  test('treats a $project of only _id: 1 as dropping the field, but not an _id beside exclusions', () => {
+    expect(() =>
+      assertUnscopedUpdate({ update: [{ $project: { _id: 1 } }], filter: {}, field })
+    ).toThrow('an update removes it');
+    expect(() =>
+      assertUnscopedUpdate({ update: [{ $project: { _id: 1, secret: 0 } }], filter: {}, field })
+    ).not.toThrow();
+    expect(() =>
+      assertUnscopedUpdate({ update: [{ $project: { _id: 0 } }], filter: {}, field })
+    ).not.toThrow();
+  });
 });
 
 describe('assertUnscopedBulkOperations', () => {
