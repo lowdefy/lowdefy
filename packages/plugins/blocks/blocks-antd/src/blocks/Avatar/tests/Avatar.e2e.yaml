@@ -75,7 +75,7 @@ blocks:
   - id: avatar_number_size
     type: Avatar
     properties:
-      content: 64
+      content: '64'
       size: 64
 
   # ============================================
@@ -122,4 +122,49 @@ blocks:
               - _state: avatar_onclick_fired
               - true
           then: Avatar clicked
+          else: ''
+
+  # ============================================
+  # SRCSET AND GROUP TESTS
+  # ============================================
+
+  - id: avatar_src_set
+    type: Avatar
+    properties:
+      src: "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='40'%20height='40'%3E%3Crect%20width='40'%20height='40'%20fill='%231677ff'/%3E%3C/svg%3E"
+      srcSet: "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='40'%20height='40'%3E%3Crect%20width='40'%20height='40'%20fill='%231677ff'/%3E%3C/svg%3E 2x"
+      alt: Square
+
+  - id: avatar_group
+    type: Avatar
+    style:
+      .max:
+        backgroundColor: 'rgb(255, 0, 0)'
+    properties:
+      group:
+        maxCount: 2
+        maxPopoverTrigger: click
+        avatars:
+          - content: A
+          - content: B
+          - content: C
+          - content: D
+    events:
+      onClick:
+        - id: set_group_index
+          type: SetState
+          params:
+            avatar_group_index:
+              _event: index
+
+  - id: group_index_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: avatar_group_index
+              - 1
+          then: Clicked 1
           else: ''

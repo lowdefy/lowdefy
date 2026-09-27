@@ -366,10 +366,28 @@
             label:
               title: Disabled input
               colon: false
+        - id: cp_disabled_selector
+          type: Selector
+          properties:
+            placeholder: Disabled selector
+            options:
+              - Option 1
+              - Option 2
+            label:
+              title: Disabled selector
+              colon: false
+        - id: cp_enabled_input
+          type: TextInput
+          properties:
+            placeholder: Still enabled
+            disabled: false
+            label:
+              title: 'Re-enabled with disabled: false'
+              colon: false
         - id: cp_disabled_text
           type: Paragraph
           properties:
-            content: Setting componentDisabled to true disables all interactive child components at once, without needing to set disabled on each individual component.
+            content: Setting componentDisabled to true disables all interactive child components at once, without needing to set disabled on each individual component. A block that sets disabled to false stays enabled.
 
 - title: RTL Direction
   fullWidth: true
@@ -716,8 +734,7 @@
                   properties:
                     icon: Store
                     size: 48
-                    color: '#fff'
-                    backgroundColor: '#e11d48'
+                    color: '#e11d48'
                 - id: cp_brand_title
                   type: Title
                   layout:

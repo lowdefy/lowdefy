@@ -57,6 +57,9 @@ test.describe('no antd deprecation warnings', () => {
           antdMessages.push(text);
         }
       });
+      // The app posts usage telemetry to api.lowdefy.net. A slow response held networkidle past
+      // the timeout on random pages, and a test run shouldn't report usage anyway.
+      await page.route('https://api.lowdefy.net/**', (route) => route.abort());
 
       await navigateToTestPage(page, pageId);
       await page.waitForLoadState('networkidle');

@@ -195,6 +195,33 @@
       properties:
         mode: gradient
         showText: true
+      events:
+        onMount:
+          - id: set_default
+            type: SetState
+            params:
+              mode_gradient: linear-gradient(90deg, rgb(22,119,255) 0%, rgb(114,46,209) 100%)
+    - id: mode_both
+      type: ColorSelector
+      layout:
+        flex: 0 0 auto
+      properties:
+        mode:
+          - single
+          - gradient
+        showText: true
+    - id: mode_gradient_preview
+      type: Box
+      layout:
+        flex: 1 1 auto
+      style:
+        .element:
+          height: 32
+          borderRadius: 6
+          background:
+            _if_none:
+              - _state: mode_gradient
+              - '#f0f0f0'
 
 - title: Placement Options
   blocks:
@@ -432,7 +459,7 @@
         flex: 0 0 auto
       style:
         .element:
-          border: 2px solid #1677ff
+          border: '2px solid #1677ff'
           borderRadius: 8px
       properties:
         showText: true
@@ -450,9 +477,9 @@
       type: ColorSelector
       layout:
         flex: 0 0 auto
+      class: rounded-lg shadow-sm
       properties:
         showText: true
-        class: rounded-lg shadow-sm
     - id: style_large_swatch
       type: ColorSelector
       layout:

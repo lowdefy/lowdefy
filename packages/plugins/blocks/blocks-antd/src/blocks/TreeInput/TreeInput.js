@@ -50,14 +50,26 @@ const TreeInput = ({ blockId, classNames = {}, properties, methods, styles = {},
   return (
     <Tree
       id={blockId}
+      blockNode={properties.blockNode}
       className={classNames.element}
+      classNames={{
+        item: classNames.item,
+        itemSwitcher: classNames.itemSwitcher,
+        itemTitle: classNames.itemTitle,
+      }}
       checkable={properties.checkable}
       disabled={properties.disabled}
       defaultExpandAll={properties.defaultExpandAll}
+      height={properties.height}
       showLine={properties.showLine}
       selectable={properties.selectable}
       multiple={false}
       style={styles.element}
+      styles={{
+        item: styles.item,
+        itemSwitcher: styles.itemSwitcher,
+        itemTitle: styles.itemTitle,
+      }}
       treeData={treeData}
       onSelect={onSelect}
       onExpand={(keys) => setExpandedKeys(keys)}

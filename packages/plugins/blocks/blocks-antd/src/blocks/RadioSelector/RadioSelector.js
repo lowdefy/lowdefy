@@ -19,6 +19,7 @@ import { Col, ConfigProvider, Radio, Row, Space, theme } from 'antd';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import getSelectedIndex from '../../getSelectedIndex.js';
 import useSelectorOptions from '../../useSelectorOptions.js';
@@ -55,7 +56,13 @@ const RadioSelector = ({
   const renderOption = (opt, i) => {
     if (type.isPrimitive(opt)) {
       return (
-        <Radio id={`${blockId}_${opt}`} key={i} value={`${i}`}>
+        <Radio
+          id={`${blockId}_${opt}`}
+          key={i}
+          value={`${i}`}
+          className={classNames.options}
+          style={styles.options}
+        >
           {renderHtml({ html: `${opt}`, methods })}
         </Radio>
       );
@@ -67,7 +74,12 @@ const RadioSelector = ({
         key={i}
         value={`${i}`}
         disabled={opt.disabled}
-        style={{ ...opt.style, ...(isSelected && opt.color ? { color: opt.color } : {}) }}
+        className={classNames.options}
+        style={{
+          ...styles.options,
+          ...opt.style,
+          ...(isSelected && opt.color ? { color: opt.color } : {}),
+        }}
       >
         {type.isNone(opt.label)
           ? renderHtml({ html: `${opt.value}`, methods })
@@ -86,7 +98,7 @@ const RadioSelector = ({
     <RadioGroup
       id={`${blockId}_input`}
       className={classNames.element}
-      disabled={properties.disabled || loading}
+      disabled={getDisabled({ loading, properties })}
       // Radio.Group is inline-block and shrink-wraps, so the Row inside it can
       // only fill a group that has been given a width.
       style={grid ? { width: '100%', ...styles.element } : styles.element}
@@ -109,7 +121,7 @@ const RadioSelector = ({
         </Row>
       ) : (
         <Space
-          direction={properties.direction}
+          orientation={properties.direction}
           wrap={type.isNone(properties.wrap) ? true : properties.wrap}
           align={type.isNone(properties.align) ? 'start' : properties.align}
         >

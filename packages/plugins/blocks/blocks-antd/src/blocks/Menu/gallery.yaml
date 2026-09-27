@@ -454,6 +454,37 @@
                 properties:
                   title: Before Visible
 
+- title: Click to Open Submenus
+  blocks:
+    - id: tsa_click_menu
+      type: Menu
+      style:
+        .element:
+          width: 256px
+      properties:
+        mode: vertical
+        triggerSubMenuAction: click
+        links:
+          - id: tsa_reports
+            type: MenuGroup
+            properties:
+              title: Reports
+              icon: chart
+            links:
+              - id: tsa_sales
+                type: MenuLink
+                properties:
+                  title: Sales
+              - id: tsa_stock
+                type: MenuLink
+                properties:
+                  title: Stock
+          - id: tsa_settings
+            type: MenuLink
+            properties:
+              title: Settings
+              icon: settings
+
 - title: Style and CSS
   blocks:
     - id: css_tailwind_menu
@@ -483,7 +514,7 @@
       type: Menu
       style:
         width: 256
-        border: 1px solid #d9d9d9
+        border: '1px solid #d9d9d9'
         borderRadius: 8
         padding: 4
       properties:
@@ -875,7 +906,7 @@
             type: MenuLink
             style:
               .element:
-                borderLeft: 3px solid '#1677ff'
+                borderLeft: '3px solid #1677ff'
               .label:
                 letterSpacing: 0.05em
             properties:

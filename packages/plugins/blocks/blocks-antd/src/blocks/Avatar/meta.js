@@ -26,7 +26,12 @@ export default {
     max: 'The Avatar max overflow style.',
   },
   events: {
-    onClick: 'Triggered when avatar item is clicked.',
+    onClick: {
+      description: 'Triggered when the avatar, or an avatar in a group, is clicked.',
+      event: {
+        index: 'In group mode, the index of the clicked avatar in group.avatars.',
+      },
+    },
   },
   properties: {
     type: 'object',
@@ -77,6 +82,12 @@ export default {
         urlKind: 'src',
         description: 'The address of the image for an image avatar.',
       },
+      srcSet: {
+        type: 'string',
+        urlKind: 'srcSet',
+        description:
+          'A list of image sources for different screen resolutions, as in the img srcset attribute.',
+      },
       group: {
         type: 'object',
         description:
@@ -97,7 +108,7 @@ export default {
           },
           maxPopoverTrigger: {
             type: 'string',
-            enum: ['hover', 'click'],
+            enum: ['hover', 'focus', 'click'],
             default: 'hover',
             description: 'Trigger mode for the overflow popover.',
           },
@@ -147,8 +158,8 @@ export default {
                 },
                 size: {
                   type: ['string', 'number'],
-                  enum: ['default', 'small', 'large'],
-                  description: 'Override size for this avatar.',
+                  description:
+                    'Override size for this avatar: default, small, large or a pixel number.',
                   docs: {
                     displayType: 'string',
                   },
@@ -157,6 +168,11 @@ export default {
                   type: 'string',
                   urlKind: 'src',
                   description: 'Image URL.',
+                },
+                srcSet: {
+                  type: 'string',
+                  urlKind: 'srcSet',
+                  description: 'Image sources for different screen resolutions.',
                 },
               },
             },

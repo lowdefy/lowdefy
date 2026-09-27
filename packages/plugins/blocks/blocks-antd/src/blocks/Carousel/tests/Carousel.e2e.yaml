@@ -94,6 +94,24 @@ blocks:
             properties:
               content: Top Dots 2
 
+  - id: carousel_dot_placement
+    type: Carousel
+    properties:
+      dotPlacement: end
+    slots:
+      slide1:
+        blocks:
+          - id: carousel_dot_placement_slide1
+            type: Span
+            properties:
+              content: End Dots
+      slide2:
+        blocks:
+          - id: carousel_dot_placement_slide2
+            type: Span
+            properties:
+              content: End Dots 2
+
   # ============================================
   # ARROWS
   # ============================================
@@ -208,4 +226,93 @@ blocks:
             _string.concat:
               - 'Current: '
               - _state: carousel_current_slide
+          else: ''
+
+  # ============================================
+  # AUTOPLAY DOT DURATION, INITIAL SLIDE AND SWIPE
+  # ============================================
+
+  - id: carousel_dot_duration
+    type: Carousel
+    properties:
+      autoplay:
+        dotDuration: true
+      autoplaySpeed: 5000
+    slots:
+      slide1:
+        blocks:
+          - id: carousel_dot_duration_slide1
+            type: Span
+            properties:
+              content: Duration 1
+      slide2:
+        blocks:
+          - id: carousel_dot_duration_slide2
+            type: Span
+            properties:
+              content: Duration 2
+
+  - id: carousel_initial_slide
+    type: Carousel
+    properties:
+      initialSlide: 1
+    slots:
+      slide1:
+        blocks:
+          - id: carousel_initial_slide1
+            type: Span
+            properties:
+              content: Initial 1
+      slide2:
+        blocks:
+          - id: carousel_initial_slide2
+            type: Span
+            properties:
+              content: Initial 2
+
+  - id: carousel_swipe
+    type: Carousel
+    properties:
+      draggable: true
+    events:
+      onSwipe:
+        - id: set_swipe_direction
+          type: SetState
+          params:
+            carousel_swipe_direction:
+              _event: direction
+    slots:
+      slide1:
+        blocks:
+          - id: carousel_swipe_slide1
+            type: Box
+            style:
+              height: 120
+            blocks:
+              - id: carousel_swipe_text1
+                type: Span
+                properties:
+                  content: Swipe 1
+      slide2:
+        blocks:
+          - id: carousel_swipe_slide2
+            type: Box
+            style:
+              height: 120
+            blocks:
+              - id: carousel_swipe_text2
+                type: Span
+                properties:
+                  content: Swipe 2
+
+  - id: swipe_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: carousel_swipe_direction
+              - left
+          then: Swiped left
           else: ''

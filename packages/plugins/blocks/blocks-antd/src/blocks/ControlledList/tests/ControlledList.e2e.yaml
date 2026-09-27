@@ -30,6 +30,25 @@ events:
           - name: Item A
           - name: Item B
           - name: Item C
+        controlledlist_small_items:
+          - name: Item 1
+          - name: Item 2
+        controlledlist_large_items:
+          - name: Item 1
+          - name: Item 2
+        controlledlist_front_items:
+          - name: Item 1
+          - name: Item 2
+        controlledlist_theme:
+          - name: Item 1
+          - name: Item 2
+        controlledlist_theme_small:
+          - name: Item 1
+          - name: Item 2
+        controlledlist_nested:
+          - inner:
+              - name: Inner 1
+              - name: Inner 2
 
 blocks:
   # ============================================
@@ -159,3 +178,114 @@ blocks:
                 _string.concat:
                   - 'Item: '
                   - _state: controlledlist_remove.$.name
+
+  # ============================================
+  # LOOK: sizes, header-only lists and theme tokens
+  # ============================================
+
+  - id: controlledlist_small_items
+    type: ControlledList
+    properties:
+      title: Small List With Items
+      size: small
+    slots:
+      content:
+        blocks:
+          - id: controlledlist_small_items_text
+            type: Span
+            properties:
+              content:
+                _state: controlledlist_small_items.$.name
+
+  - id: controlledlist_large_items
+    type: ControlledList
+    properties:
+      title: Large List With Items
+      size: large
+    slots:
+      content:
+        blocks:
+          - id: controlledlist_large_items_text
+            type: Span
+            properties:
+              content:
+                _state: controlledlist_large_items.$.name
+
+  - id: controlledlist_front_items
+    type: ControlledList
+    properties:
+      title: Add To Front With Items
+      addToFront: true
+    slots:
+      content:
+        blocks:
+          - id: controlledlist_front_items_text
+            type: Span
+            properties:
+              content:
+                _state: controlledlist_front_items.$.name
+
+  - id: controlledlist_theme
+    type: ControlledList
+    properties:
+      title: Themed List
+      theme:
+        headerBg: 'rgb(230, 244, 255)'
+        footerBg: 'rgb(246, 255, 237)'
+        itemPadding: 20px 0
+        colorSplit: 'rgb(255, 77, 79)'
+        colorBorder: 'rgb(114, 46, 209)'
+        borderRadiusLG: 2
+    slots:
+      content:
+        blocks:
+          - id: controlledlist_theme_text
+            type: Span
+            properties:
+              content:
+                _state: controlledlist_theme.$.name
+
+  - id: controlledlist_theme_small
+    type: ControlledList
+    properties:
+      title: Themed Small List
+      size: small
+      theme:
+        itemPaddingSM: 2px 40px
+    slots:
+      content:
+        blocks:
+          - id: controlledlist_theme_small_text
+            type: Span
+            properties:
+              content:
+                _state: controlledlist_theme_small.$.name
+
+  - id: controlledlist_theme_empty
+    type: ControlledList
+    properties:
+      title: Themed Empty List
+      hideAddButton: true
+      theme:
+        emptyTextPadding: 4
+
+  - id: controlledlist_nested
+    type: ControlledList
+    properties:
+      title: Outer List
+    slots:
+      content:
+        blocks:
+          - id: controlledlist_nested.$.inner
+            type: ControlledList
+            properties:
+              title: Inner List
+              addToFront: true
+            slots:
+              content:
+                blocks:
+                  - id: controlledlist_nested_inner_text
+                    type: Span
+                    properties:
+                      content:
+                        _state: controlledlist_nested.$.inner.$.name

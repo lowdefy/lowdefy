@@ -171,4 +171,90 @@ test.describe('Progress Block', () => {
     const steps = block.locator('.ant-progress-steps-item');
     await expect(steps).toHaveCount(5);
   });
+
+  // ============================================
+  // SIZE, TRANSLATED PROPS, PERCENT POSITION, SEMANTIC KEYS
+  // ============================================
+
+  test('strokeWidth sets the line height', async ({ page }) => {
+    const rail = getProgress(page, 'progress_custom_stroke_width').locator('.ant-progress-rail');
+    await expect(rail).toHaveCSS('height', '20px');
+  });
+
+  test('trailColor sets the rail color', async ({ page }) => {
+    const rail = getProgress(page, 'progress_custom_trail_color').locator('.ant-progress-rail');
+    await expect(rail).toHaveCSS('background-color', 'rgb(224, 224, 224)');
+  });
+
+  test('width sets the circle size', async ({ page }) => {
+    const body = getProgress(page, 'progress_circle_width').locator('.ant-progress-body');
+    await expect(body).toHaveCSS('width', '80px');
+  });
+
+  test('gapPosition moves the dashboard gap', async ({ page }) => {
+    const bottomRail = getProgress(page, 'progress_dashboard_gap').locator('circle').first();
+    const leftRail = getProgress(page, 'progress_dashboard_gap_left').locator('circle').first();
+    const bottomTransform = await bottomRail.evaluate((el) => el.style.transform);
+    const leftTransform = await leftRail.evaluate((el) => el.style.transform);
+    expect(leftTransform).not.toEqual(bottomTransform);
+  });
+
+  test('gapPlacement is still passed to antd', async ({ page }) => {
+    const leftRail = getProgress(page, 'progress_dashboard_gap_left').locator('circle').first();
+    const startRail = getProgress(page, 'progress_dashboard_gap_placement')
+      .locator('circle')
+      .first();
+    const leftTransform = await leftRail.evaluate((el) => el.style.transform);
+    const startTransform = await startRail.evaluate((el) => el.style.transform);
+    expect(startTransform).toEqual(leftTransform);
+  });
+
+  test('renders the small size', async ({ page }) => {
+    const progress = getProgress(page, 'progress_size_small').locator('.ant-progress');
+    await expect(progress).toHaveClass(/ant-progress-small/);
+  });
+
+  test('renders a line with an array size', async ({ page }) => {
+    const block = getProgress(page, 'progress_size_array');
+    await expect(block.locator('.ant-progress-body')).toHaveCSS('width', '200px');
+    await expect(block.locator('.ant-progress-rail')).toHaveCSS('height', '12px');
+  });
+
+  test('renders a circle with a number size', async ({ page }) => {
+    const body = getProgress(page, 'progress_circle_size').locator('.ant-progress-body');
+    await expect(body).toHaveCSS('width', '60px');
+  });
+
+  test('renders circle steps from a steps object', async ({ page }) => {
+    const block = getProgress(page, 'progress_circle_steps');
+    await expect(block.locator('svg.ant-progress-circle')).toBeVisible();
+    await expect(block.locator('circle')).toHaveCount(4);
+  });
+
+  test('renders the value inside the bar', async ({ page }) => {
+    const indicator = getProgress(page, 'progress_percent_inner').locator(
+      '.ant-progress-indicator'
+    );
+    await expect(indicator).toHaveClass(/ant-progress-indicator-inner/);
+    await expect(indicator).toHaveClass(/ant-progress-indicator-center/);
+    await expect(indicator).toHaveText('60%');
+  });
+
+  test('renders a gradient stroke color', async ({ page }) => {
+    const track = getProgress(page, 'progress_gradient').locator('.ant-progress-track').first();
+    await expect(track).toHaveCSS('background-image', /linear-gradient/);
+  });
+
+  test('applies class and style to the semantic parts', async ({ page }) => {
+    const block = getProgress(page, 'progress_css_keys');
+    await expect(block.locator('.ant-progress-indicator')).toHaveClass(/progress-indicator-class/);
+    await expect(block.locator('.ant-progress-track').first()).toHaveCSS(
+      'background-color',
+      'rgb(255, 0, 0)'
+    );
+    await expect(block.locator('.ant-progress-rail')).toHaveCSS(
+      'background-color',
+      'rgb(0, 0, 255)'
+    );
+  });
 });

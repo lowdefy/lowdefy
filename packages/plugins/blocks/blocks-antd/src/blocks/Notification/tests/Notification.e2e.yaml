@@ -360,3 +360,128 @@ blocks:
               - true
           then: Click fired
           else: ''
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: notif_not_closable
+    type: Notification
+    properties:
+      title: Not closable
+      closable: false
+
+  - id: open_notif_not_closable
+    type: Button
+    properties:
+      title: Open notif_not_closable
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_not_closable
+            method: open
+
+  - id: notif_progress
+    type: Notification
+    properties:
+      title: With progress
+      showProgress: true
+      duration: 10
+
+  - id: open_notif_progress
+    type: Button
+    properties:
+      title: Open notif_progress
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_progress
+            method: open
+
+  - id: notif_top
+    type: Notification
+    properties:
+      title: Top placement
+      placement: top
+
+  - id: open_notif_top
+    type: Button
+    properties:
+      title: Open notif_top
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_top
+            method: open
+
+  - id: notif_status_role
+    type: Notification
+    properties:
+      title: Status role
+      role: status
+
+  - id: open_notif_status_role
+    type: Button
+    properties:
+      title: Open notif_status_role
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_status_role
+            method: open
+
+  - id: notif_styled
+    type: Notification
+    properties:
+      title: Styled title
+      description: Styled description
+      button:
+        title: Undo
+    class:
+      .title: notif-styled-title
+    style:
+      .description:
+        color: rgb(255, 0, 0)
+      .actions:
+        marginTop: 20px
+
+  - id: open_notif_styled
+    type: Button
+    properties:
+      title: Open notif_styled
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_styled
+            method: open
+
+  - id: notif_button_icon_end
+    type: Notification
+    properties:
+      title: Message sent
+      button:
+        title: Open
+        icon: arrow-right
+        iconPlacement: end
+
+  - id: open_notif_button_icon_end
+    type: Button
+    properties:
+      title: Open notif_button_icon_end
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_button_icon_end
+            method: open

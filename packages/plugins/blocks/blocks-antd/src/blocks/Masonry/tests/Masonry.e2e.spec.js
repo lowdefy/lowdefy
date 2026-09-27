@@ -39,4 +39,15 @@ test.describe('Masonry Block', () => {
     const cards = block.locator('.ant-card');
     await expect(cards).toHaveCount(4);
   });
+
+  test('item cssKey styles each item and a responsive gutter applies', async ({ page }) => {
+    const block = getBlock(page, 'masonry_item_styled');
+    const items = block.locator('.ant-masonry-item');
+    await expect(items).toHaveCount(2);
+    await expect(items.first()).toHaveCSS('outline-color', 'rgb(255, 0, 0)');
+    // Desktop viewport matches the md breakpoint: 20px between the two columns.
+    const first = await items.nth(0).boundingBox();
+    const second = await items.nth(1).boundingBox();
+    expect(Math.round(second.x - (first.x + first.width))).toBe(20);
+  });
 });

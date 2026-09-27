@@ -922,7 +922,7 @@ The zIndexPopup theme token sets the popover z-index at the theme level (default
   properties:
     title: Title Border
     theme:
-      titleBorderBottom: 1px solid
+      titleBorderBottom: "1px solid #d9d9d9"
       titleMarginBottom: 12
       innerContentPadding: 8px 0
   slots:
@@ -983,7 +983,7 @@ The content CSS key targets the popover content area. Here it adds a gray backgr
   layout:
     flex: 0 0 auto
   class:
-    element: cursor-pointer
+    .element: cursor-pointer
   properties:
     title: Element CSS Key
     trigger: click
@@ -1009,7 +1009,7 @@ The content CSS key targets the popover content area. Here it adds a gray backgr
   layout:
     flex: 0 0 auto
   class:
-    inner: shadow-xl rounded-xl
+    .inner: shadow-xl rounded-xl
   properties:
     title: Inner CSS Key
   slots:
@@ -1034,7 +1034,7 @@ The content CSS key targets the popover content area. Here it adds a gray backgr
   layout:
     flex: 0 0 auto
   class:
-    title: font-bold text-blue-600 border-b border-border pb-2
+    .title: font-bold text-blue-600 border-b border-border pb-2
   properties:
     title: Title CSS Key
   slots:
@@ -1059,7 +1059,7 @@ The content CSS key targets the popover content area. Here it adds a gray backgr
   layout:
     flex: 0 0 auto
   class:
-    content: bg-bg-layout p-4 rounded-md
+    .content: bg-bg-layout p-4 rounded-md
   properties:
     title: Content CSS Key
   slots:
@@ -1116,8 +1116,7 @@ Product Manager
               properties:
                 icon: user
                 size: 48
-                color: "#fff"
-                backgroundColor: "#1677ff"
+                color: "#1677ff"
             - id: popover_usercard_info
               type: Box
               layout:
@@ -1199,8 +1198,7 @@ Product Manager
             flex: 0 0 auto
           properties:
             content: SC
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: popover_usercard_trigger_name
           type: Paragraph
           layout:
@@ -1382,17 +1380,22 @@ You will receive a warning notification when 80% of the budget is used.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | string | - | Title of the card. |
+| `arrow` | boolean \| object | `true` | Whether to show the arrow. Set `{ pointAtCenter: true }` to point the arrow at the center of the target. |
+| `arrow.pointAtCenter` | boolean | `false` | Whether the arrow is pointed at the center of target. |
+| `destroyOnHidden` | boolean | `false` | Unmount the blocks inside the popover when it closes, so they mount again each time it opens. |
+| `title` | string | - | Title of the card - supports html. |
 | `color` | string | - | Popover background color. |
 | `defaultOpen` | boolean | `false` | Whether the popover is open by default. |
 | `autoAdjustOverflow` | boolean | `true` | Whether to adjust popup placement automatically when popup is off screen |
-| `placement` | string | `"bottom"` | Placement of the popover. Enum: `top`, `topLeft`, `topRight`, `left`, `leftTop`, `leftBottom`, `right`, `rightTop`, `rightBottom`, `bottom`, `bottomLeft`, `bottomRight`. |
-| `trigger` | string | `"hover"` | Trigger mode which executes the popover. Enum: `hover`, `click`, `focus`. |
+| `placement` | string | `"top"` | Placement of the popover. Enum: `top`, `topLeft`, `topRight`, `left`, `leftTop`, `leftBottom`, `right`, `rightTop`, `rightBottom`, `bottom`, `bottomLeft`, `bottomRight`. |
+| `trigger` | string | `"hover"` | Trigger mode which executes the popover. `contextMenu` opens the popover on right click. Enum: `hover`, `click`, `focus`, `contextMenu`. |
 | `zIndex` | number | - | Z-index of the popover. |
-| `overlayInnerStyle` | object | - | Style of overlay inner div. |
-| `mouseEnterDelay` | number | `0.1` | Delay in milliseconds, before tooltip is shown on mouse enter. |
-| `mouseLeaveDelay` | number | `0.1` | Delay in milliseconds, before tooltip is hidden on mouse leave. |
+| `overlayInnerStyle` | object | - | Style of overlay inner div. Prefer `style.inner`. |
+| `mouseEnterDelay` | number | `0.1` | Delay in seconds, before the popover is shown on mouse enter. |
+| `mouseLeaveDelay` | number | `0.1` | Delay in seconds, before the popover is hidden on mouse leave. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design popover tokens](https://ant.design/components/popover#design-token). |
+| `theme.width` | number \| string | - | Width of the popover. |
+| `theme.minWidth` | number \| string | - | Minimum width of the popover. |
 | `theme.titleMinWidth` | number \| string | `177` | Minimum width of the popover when it has a title. |
 | `theme.zIndexPopup` | number | `1030` | Z-index of the popover. |
 | `theme.innerPadding` | number \| string | `12` | Padding inside the popover content area. |
@@ -1405,7 +1408,7 @@ You will receive a warning notification when 80% of the budget is used.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onOpenChange` | \- | Trigger actions when visibility of the tooltip card is changed. |
+| `onOpenChange` | `{ open }` | Trigger actions when visibility of the popover card is changed. |
 
 | Key | Target |
 | --- | --- |

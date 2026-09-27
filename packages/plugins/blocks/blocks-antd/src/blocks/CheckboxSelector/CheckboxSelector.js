@@ -19,6 +19,7 @@ import { Checkbox, Col, ConfigProvider, Row, Space, theme } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import getSelectedIndex from '../../getSelectedIndex.js';
 import useSelectorOptions from '../../useSelectorOptions.js';
@@ -40,7 +41,9 @@ const CheckboxSelector = ({
   const { token } = theme.useToken();
   const uniqueValueOptions = useSelectorOptions({ properties, methods });
   const selectedIndexes = new Set(
-    type.isNone(value) ? [] : getSelectedIndex(value, uniqueValueOptions, { properties, multiple: true })
+    type.isNone(value)
+      ? []
+      : getSelectedIndex(value, uniqueValueOptions, { properties, multiple: true })
   );
   const grid = !type.isNone(properties.columns);
   // Col takes spans, not counts, so a breakpoint map of counts converts per key.
@@ -55,7 +58,13 @@ const CheckboxSelector = ({
   const renderOption = (opt, i) => {
     if (type.isPrimitive(opt)) {
       return (
-        <Checkbox id={`${blockId}_${i}`} key={i} value={`${i}`}>
+        <Checkbox
+          id={`${blockId}_${i}`}
+          key={i}
+          value={`${i}`}
+          className={classNames.options}
+          style={styles.options}
+        >
           {renderHtml({ html: `${opt}`, methods })}
         </Checkbox>
       );
@@ -67,7 +76,12 @@ const CheckboxSelector = ({
         key={i}
         value={`${i}`}
         disabled={opt.disabled}
-        style={{ ...opt.style, ...(isSelected && opt.color ? { color: opt.color } : {}) }}
+        className={classNames.options}
+        style={{
+          ...styles.options,
+          ...opt.style,
+          ...(isSelected && opt.color ? { color: opt.color } : {}),
+        }}
       >
         {type.isNone(opt.label)
           ? renderHtml({ html: `${opt.value}`, methods })
@@ -86,7 +100,7 @@ const CheckboxSelector = ({
     <Checkbox.Group
       id={`${blockId}_input`}
       className={classNames.element}
-      disabled={properties.disabled || loading}
+      disabled={getDisabled({ loading, properties })}
       // Checkbox.Group is inline-flex and shrink-wraps, so the Row inside it can
       // only fill a group that has been given a width.
       style={grid ? { width: '100%', ...styles.element } : styles.element}
@@ -114,7 +128,7 @@ const CheckboxSelector = ({
         </Row>
       ) : (
         <Space
-          direction={properties.direction}
+          orientation={properties.direction}
           wrap={type.isNone(properties.wrap) ? true : properties.wrap}
           align={type.isNone(properties.align) ? 'start' : properties.align}
         >

@@ -38,6 +38,17 @@ Upload images to any storage provider with a picture-card interface — AWS S3 (
 ```
 
 ```yaml
+- id: photo_capture
+  type: UploadPhoto
+  properties:
+    uploadPolicyRequestId: upload_policy_request
+    title: Take photo
+    capture: environment
+    listType: picture-circle
+    singleFile: true
+```
+
+```yaml
 - id: disabled_default
   type: UploadPhoto
   properties:
@@ -48,11 +59,17 @@ Upload images to any storage provider with a picture-card interface — AWS S3 (
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `title` | string | `"Upload image"` | Title of the file input to be displayed instead of 'Upload image'. |
+| `pastable` | boolean | `false` | Upload files pasted anywhere on the page. |
+| `capture` | string | - | On mobile devices, open the camera directly: `user` for the front camera, `environment` for the back camera. Enum: `user`, `environment`. |
+| `listType` | string | `"picture-card"` | Shape of the photo tiles. Enum: `picture-card`, `picture-circle`. |
 | `disabled` | boolean | - | Disable the file input. |
 | `emitFileContent` | boolean | `false` | Instead of uploading, read the file and emit { name, size, type, content } — content a base64 string — as the block value and onChange event. Use with a CallAPI action to store the file with a server-side write request (e.g. AwsS3PutObject). Replaces uploadPolicyRequestId. |
 | `maxCount` | number | - | Maximum number of files that can be uploaded. |
 | `uploadPolicyRequestId` | string | - | Id of an upload-policy request (e.g. AwsS3PresignedPostPolicy, GcsSignedPostPolicy, AzureBlobUploadSas) that defines to which storage bucket and how the file should be uploaded. Required unless emitFileContent is true. |
-| `showUploadList` | boolean | `true` | Whether to show default upload list. |
+| `showUploadList` | boolean \| object | `true` | Whether to show the uploaded file list. Set an object to choose which actions each file shows. |
+| `showUploadList.showPreviewIcon` | boolean | `true` | Show the preview action on picture list items. |
+| `showUploadList.showRemoveIcon` | boolean | `true` | Show the remove action, so files can be removed from the list. |
+| `showUploadList.showDownloadIcon` | boolean | `false` | Show the download action. |
 | `singleFile` | boolean | `false` | Only allow a single file to be uploaded. Only one file can be selected in the prompt. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/upload#design-token). See [Ant Design upload tokens](https://ant.design/components/upload#design-token). |
 | `theme.actionsColor` | string | - | Color of action icons (download, preview, remove). |

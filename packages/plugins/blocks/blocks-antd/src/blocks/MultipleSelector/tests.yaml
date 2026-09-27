@@ -52,18 +52,19 @@
     options:
       - Option 1
       - Option 2
-- id: 'properties.inputStyle: CSS style applied'
+- id: 'style.element: CSS style applied'
   type: MultipleSelector
-  properties:
-    inputStyle:
+  style:
+    .element:
       border: 1px solid red
-- id: 'properties.optionsStyle: CSS style applied'
+- id: 'style.options: CSS style applied'
   type: MultipleSelector
   properties:
     options:
       - Option 1
       - Option 2
-    optionsStyle:
+  style:
+    .options:
       color: blue
 - id: 'properties.allowClear: false'
   type: MultipleSelector
@@ -199,3 +200,80 @@
         value: 2
       - label: Option 3
         value: 3
+- id: 'properties.variant: underlined'
+  type: MultipleSelector
+  properties:
+    variant: underlined
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.placement: topLeft'
+  type: MultipleSelector
+  properties:
+    placement: topLeft
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.listHeight: 128'
+  type: MultipleSelector
+  properties:
+    listHeight: 128
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.popupMatchSelectWidth: false'
+  type: MultipleSelector
+  properties:
+    popupMatchSelectWidth: false
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.virtual: false'
+  type: MultipleSelector
+  properties:
+    virtual: false
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.prefix: Fruit'
+  type: MultipleSelector
+  properties:
+    prefix: 'Fruit:'
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.prefixIcon: search'
+  type: MultipleSelector
+  properties:
+    prefixIcon: search
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.maxCount: 2'
+  type: MultipleSelector
+  properties:
+    maxCount: 2
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.maxTagCount: responsive'
+  type: MultipleSelector
+  properties:
+    maxTagCount: responsive
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.showSearch: false'
+  type: MultipleSelector
+  properties:
+    showSearch: false
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.removeIcon: delete'
+  type: MultipleSelector
+  properties:
+    removeIcon: delete
+    options:
+      - Option 1
+      - Option 2

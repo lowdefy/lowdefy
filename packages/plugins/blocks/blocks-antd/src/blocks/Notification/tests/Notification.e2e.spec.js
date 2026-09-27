@@ -57,6 +57,11 @@ test.describe('Notification Block', () => {
     // Check for success icon
     const icon = notification.locator('.ant-notification-notice-icon-success svg');
     await expect(icon).toBeAttached();
+    // antd colours status icons through a class on the icon wrapper, not on the svg.
+    await expect(notification.locator('.ant-notification-notice-icon')).toHaveCSS(
+      'color',
+      'rgb(82, 196, 26)'
+    );
   });
 
   test('renders error notification', async ({ page }) => {
@@ -154,8 +159,7 @@ test.describe('Notification Block', () => {
 
     const notification = getNotification(page);
     await expect(notification).toBeVisible();
-    // Check for action button
-    const actionBtn = notification.locator('.ant-btn');
+    const actionBtn = notification.locator('.ant-notification-notice-actions .ant-btn');
     await expect(actionBtn).toBeVisible();
     await expect(actionBtn).toHaveText('Action');
   });
@@ -224,11 +228,92 @@ test.describe('Notification Block', () => {
     const notification = getNotification(page);
     await expect(notification).toBeVisible();
 
-    // Click on the notification content
-    await notification.locator('.ant-notification-notice-content').click();
+    await notification.locator('.ant-notification-notice-title').click();
 
     // onClick event should have fired
     const display = getBlock(page, 'onclick_display');
     await expect(display).toHaveText('Click fired');
+  });
+
+  // ============================================
+  // ANTD 6 FEATURES
+  // ============================================
+
+  test('closable false hides the close button', async ({ page }) => {
+    await getBlock(page, 'open_notif_not_closable').locator('.ant-btn').click();
+    const notification = getNotification(page);
+    await expect(notification).toBeVisible();
+    await expect(notification.locator('.ant-notification-notice-close')).toHaveCount(0);
+  });
+
+  test('showProgress renders the auto-close progress bar', async ({ page }) => {
+    await getBlock(page, 'open_notif_progress').locator('.ant-btn').click();
+    const notification = getNotification(page);
+    await expect(notification.locator('.ant-notification-notice-progress')).toBeVisible();
+  });
+
+  test('placement top renders the notification at the top centre', async ({ page }) => {
+    await getBlock(page, 'open_notif_top').locator('.ant-btn').click();
+    await expect(page.locator('.ant-notification-top .ant-notification-notice')).toBeVisible();
+  });
+
+  test('role status is set on the notification', async ({ page }) => {
+    await getBlock(page, 'open_notif_status_role').locator('.ant-btn').click();
+    await expect(getNotification(page)).toHaveAttribute('role', 'status');
+  });
+
+  test('title, description and actions cssKeys reach the antd semantic elements', async ({
+    page,
+  }) => {
+    await getBlock(page, 'open_notif_styled').locator('.ant-btn').click();
+    const notification = getNotification(page);
+    await expect(notification.locator('.ant-notification-notice-title')).toHaveClass(
+      /notif-styled-title/
+    );
+    await expect(notification.locator('.ant-notification-notice-description')).toHaveCSS(
+      'color',
+      'rgb(255, 0, 0)'
+    );
+    await expect(notification.locator('.ant-notification-notice-actions')).toHaveCSS(
+      'margin-top',
+      '20px'
+    );
+  });
+
+  test('button iconPlacement end places the icon after the button title', async ({ page }) => {
+    await getBlock(page, 'open_notif_button_icon_end').locator('.ant-btn').click();
+    const button = getNotification(page).locator('.ant-notification-notice-actions .ant-btn');
+    await expect(button).toHaveClass(/ant-btn-icon-end/);
+    const iconBox = await button.locator('.ant-btn-icon').boundingBox();
+    const titleBox = await button.locator(':scope > span:not(.ant-btn-icon)').first().boundingBox();
+    expect(iconBox.x).toBeGreaterThan(titleBox.x);
+  });
+
+  test('each open shows its own notification, and its button closes only that one', async ({
+    page,
+  }) => {
+    const openBtn = getBlock(page, 'open_with_button').locator('.ant-btn');
+    await openBtn.click();
+    await openBtn.click();
+    const notices = page.locator('.ant-notification-notice').filter({ hasText: 'With Button' });
+    await expect(notices).toHaveCount(2);
+    await notices.first().locator('.ant-notification-notice-actions .ant-btn').click();
+    await expect(notices).toHaveCount(1);
+  });
+
+  test('the --notification-top CSS variable moves top notifications', async ({ page }) => {
+    // The documented way to offset notifications, since the top property has no effect.
+    await page.addStyleTag({ content: '.ant-notification { --notification-top: 120px; }' });
+    await getBlock(page, 'open_basic').locator('.ant-btn').click();
+    const notification = getNotification(page);
+    await expect(notification).toBeVisible();
+    await expect.poll(async () => Math.round((await notification.boundingBox()).y)).toBe(120);
+  });
+
+  test('clicking the notification button closes the notification', async ({ page }) => {
+    await getBlock(page, 'open_notif_styled').locator('.ant-btn').click();
+    const notification = getNotification(page);
+    await notification.locator('.ant-notification-notice-actions .ant-btn').click();
+    await expect(notification).toBeHidden();
   });
 });

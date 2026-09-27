@@ -31,11 +31,12 @@ const MasonryBlock = ({ blockId, classNames = {}, content, properties, styles = 
     <Masonry
       id={blockId}
       className={classNames.element}
+      classNames={{ item: classNames.item }}
       style={styles.element}
+      styles={{ item: styles.item }}
       columns={properties.columns}
       fresh={properties.fresh}
       gutter={properties.gutter}
-      sequential={properties.sequential}
       items={items}
     />
   );

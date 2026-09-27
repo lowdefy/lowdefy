@@ -90,7 +90,8 @@ Made with Lowdefy
           type: Paragraph
           properties:
             content: Made with Lowdefy
-            style:
+          style:
+            .element:
               marginTop: 8px
               color: "#999"
 ```
@@ -125,7 +126,7 @@ Company
     - id: footer_corp_el
       type: Footer
       class:
-        element: bg-bg-layout
+        .element: bg-bg-layout
       style:
         padding: 40px 50px 24px
       blocks:
@@ -151,7 +152,8 @@ Company
                   type: Paragraph
                   properties:
                     content: Building better tools for modern teams since 2020.
-                    style:
+                  style:
+                    .element:
                       color: "#666"
             - id: footer_corp_col2
               type: Box
@@ -233,7 +235,8 @@ Company
                 flex: 0 0 auto
               properties:
                 content: © 2026 Acme Corp. All rights reserved.
-                style:
+              style:
+                .element:
                   color: "#999"
                   margin: 0
             - id: footer_corp_social
@@ -358,7 +361,8 @@ Admin Portal v2.4.1 - Powered by Lowdefy
               type: Paragraph
               properties:
                 content: Admin Portal v2.4.1 - Powered by Lowdefy
-                style:
+              style:
+                .element:
                   color: "#999"
                   margin: 0
                   fontSize: 12px
@@ -366,7 +370,7 @@ Admin Portal v2.4.1 - Powered by Lowdefy
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | object | - | Not applied: antd scopes Layout design tokens to the Layout element, so set tokens such as headerHeight or footerBg on the parent Layout block theme. |
 
 No events defined.
 

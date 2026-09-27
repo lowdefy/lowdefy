@@ -23,6 +23,7 @@ export default {
   },
   cssKeys: {
     element: 'The MasonryList element.',
+    item: 'Each item in the masonry grid.',
   },
   properties: {
     type: 'object',
@@ -30,6 +31,7 @@ export default {
     properties: {
       columns: {
         type: ['integer', 'object'],
+        default: 3,
         description:
           'Number of columns, or responsive breakpoint object (e.g. { xs: 1, sm: 2, md: 3 }).',
         docs: {
@@ -39,11 +41,14 @@ export default {
       fresh: {
         type: 'boolean',
         default: false,
-        description: 'Force refresh the masonry layout.',
+        description:
+          'Keep watching the size of each item and re-layout when it changes, for items whose height changes after they render (images loading, expanding content).',
       },
       gutter: {
-        type: ['number', 'array'],
-        description: 'Gap between items in pixels. Number or [horizontal, vertical] array.',
+        type: ['number', 'array', 'object'],
+        default: 0,
+        description:
+          'Gap between items in pixels. A number, a responsive breakpoint object (e.g. { xs: 8, md: 16 }), or a [horizontal, vertical] array of either.',
         docs: {
           displayType: 'yaml',
         },
@@ -52,7 +57,7 @@ export default {
         type: 'boolean',
         default: false,
         description:
-          'Render items sequentially (top to bottom, then next column). Default is balanced column-fill.',
+          'Has no effect: antd Masonry always places each item in the shortest column. Kept so existing configs stay valid.',
       },
       theme: {
         type: 'object',

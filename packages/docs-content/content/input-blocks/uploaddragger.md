@@ -38,6 +38,16 @@ Upload files to any storage provider with a drag-and-drop (and paste) area — A
 ```
 
 ```yaml
+- id: dragger_drop_only
+  type: UploadDragger
+  properties:
+    uploadPolicyRequestId: upload_policy_request
+    title: Drop files here, or paste them with Ctrl+V.
+    openFileDialogOnClick: false
+    listType: picture
+```
+
+```yaml
 - id: disabled_default
   type: UploadDragger
   properties:
@@ -50,11 +60,17 @@ Upload files to any storage provider with a drag-and-drop (and paste) area — A
 | `height` | number \| string | - | Height of the dragger area. A number is applied in pixels; a string is passed through as a CSS length (e.g. "300px", "50vh"). Defaults to the antd `controlHeight` theme token. If `style.element.height` is set, it overrides this. |
 | `title` | string | - | Title of the file input to be displayed on the draggable area. |
 | `accept` | string | - | File types accepted by the input. See html file type input accept property at https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept. |
+| `directory` | boolean | `false` | Select a whole folder instead of files. Every file in the folder is uploaded. |
+| `listType` | string | `"text"` | Style of the file list. `picture` shows a thumbnail for each image. Enum: `text`, `picture`. |
+| `openFileDialogOnClick` | boolean | `true` | Whether clicking the drop area opens the file dialog. Set to false for a drop or paste only area. |
 | `disabled` | boolean | - | Disable the file input. |
 | `emitFileContent` | boolean | `false` | Instead of uploading, read the file and emit { name, size, type, content } — content a base64 string — as the block value and onChange event. Use with a CallAPI action to store the file with a server-side write request (e.g. AwsS3PutObject). Replaces uploadPolicyRequestId. |
 | `maxCount` | number | - | Maximum number of files that can be uploaded. |
 | `uploadPolicyRequestId` | string | - | Id of an upload-policy request (e.g. AwsS3PresignedPostPolicy, GcsSignedPostPolicy, AzureBlobUploadSas) that defines to which storage bucket and how the file should be uploaded. Required unless emitFileContent is true. |
-| `showUploadList` | boolean | `true` | Whether to show default upload list. |
+| `showUploadList` | boolean \| object | `true` | Whether to show the uploaded file list. Set an object to choose which actions each file shows. |
+| `showUploadList.showPreviewIcon` | boolean | `true` | Show the preview action on picture list items. |
+| `showUploadList.showRemoveIcon` | boolean | `true` | Show the remove action, so files can be removed from the list. |
+| `showUploadList.showDownloadIcon` | boolean | `false` | Show the download action. |
 | `singleFile` | boolean | `false` | Only allow a single file to be uploaded. Only one file can be selected in the prompt. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/upload#design-token). See [Ant Design upload tokens](https://ant.design/components/upload#design-token). |
 | `theme.actionsColor` | string | - | Color of action icons (download, preview, remove). |

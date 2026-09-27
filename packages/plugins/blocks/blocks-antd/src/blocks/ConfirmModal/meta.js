@@ -14,7 +14,44 @@
   limitations under the License.
 */
 
+import focusable from '../../schemas/focusable.js';
 import icon from '../../schemas/icon.js';
+import mask from '../../schemas/mask.js';
+
+const buttonProperties = {
+  type: 'object',
+  docs: {
+    displayType: 'button',
+  },
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['default', 'primary', 'dashed', 'text', 'link'],
+      description: 'The button type.',
+    },
+    danger: {
+      type: 'boolean',
+      default: false,
+      description: 'Set the danger status of the button.',
+    },
+    disabled: {
+      type: 'boolean',
+      default: false,
+      description: 'Disable the button.',
+    },
+    icon: {
+      ...icon,
+      description:
+        'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to show in the button.',
+    },
+    iconPlacement: {
+      type: 'string',
+      enum: ['start', 'end'],
+      default: 'start',
+      description: 'Place the icon before (`start`) or after (`end`) the button text.',
+    },
+  },
+};
 
 export default {
   category: 'container',
@@ -34,7 +71,8 @@ export default {
     onOk: 'Trigger actions when Ok button is clicked.',
     onOpen: 'Trigger actions when confirm modal is opened.',
     onCancel: 'Trigger actions when Cancel button is clicked.',
-    onClose: 'Triggered after onOk or onCancel actions are completed.',
+    onClose:
+      'Trigger actions after the confirm modal has closed, once the onOk or onCancel actions are completed.',
   },
   properties: {
     type: 'object',
@@ -50,10 +88,21 @@ export default {
         description: 'Centered Modal.',
       },
       closable: {
-        type: 'boolean',
+        type: ['boolean', 'object'],
         default: false,
         description:
-          'Whether a close (x) button is visible on top right of the confirm dialog or not.',
+          'Whether a close (x) button is visible on top right of the confirm dialog or not. Set `{ disabled: true }` to show the button disabled.',
+        docs: {
+          displayType: 'yaml',
+        },
+        additionalProperties: false,
+        properties: {
+          disabled: {
+            type: 'boolean',
+            default: false,
+            description: 'Show the close button, but disabled.',
+          },
+        },
       },
       content: {
         type: 'string',
@@ -64,16 +113,35 @@ export default {
         description:
           'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize modal icon.',
       },
-      mask: {
+      focusable: {
+        ...focusable,
+        properties: {
+          ...focusable.properties,
+          autoFocusButton: {
+            type: ['string', 'null'],
+            enum: ['ok', 'cancel', null],
+            default: 'ok',
+            description:
+              'The button that receives focus when the confirm modal opens. Set to null to focus neither.',
+          },
+        },
+      },
+      keyboard: {
         type: 'boolean',
         default: true,
-        description: 'Whether show mask or not.',
+        description: 'Whether pressing Esc closes the confirm modal.',
       },
+      mask,
       maskClosable: {
         type: 'boolean',
         default: false,
         description:
-          'Whether to close the modal dialog when the mask (area outside the modal) is clicked.',
+          'Whether to close the modal dialog when the mask (area outside the modal) is clicked. `mask.closable` takes precedence.',
+      },
+      scrollLock: {
+        type: 'boolean',
+        default: true,
+        description: 'Whether to lock page scrolling while the confirm modal is open.',
       },
       okText: {
         type: 'string',
@@ -86,18 +154,12 @@ export default {
           'Text of the Cancel button. When unset, antd uses the localized default from ConfigProvider locale.',
       },
       okButton: {
-        type: 'object',
+        ...buttonProperties,
         description: 'Ok button properties.',
-        docs: {
-          displayType: 'button',
-        },
       },
       cancelButton: {
-        type: 'object',
+        ...buttonProperties,
         description: 'Cancel button properties.',
-        docs: {
-          displayType: 'button',
-        },
       },
       width: {
         type: ['number', 'string'],

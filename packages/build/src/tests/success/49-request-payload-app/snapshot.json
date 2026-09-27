@@ -5904,12 +5904,17 @@
             "bordered": {
               "type": "boolean",
               "default": true,
-              "description": "Toggles rendering of the border around the card."
+              "description": "Toggles rendering of the border around the card. `bordered: false` is the same as `variant: borderless`."
             },
             "hoverable": {
               "type": "boolean",
               "default": false,
               "description": "Lift up when hovering card."
+            },
+            "loading": {
+              "type": "boolean",
+              "default": false,
+              "description": "Show a loading skeleton in place of the card content."
             },
             "inner": {
               "type": "boolean",
@@ -5928,6 +5933,15 @@
             "title": {
               "type": "string",
               "description": "Title to show in the title area - supports html. Overwritten by blocks in the title content area."
+            },
+            "variant": {
+              "type": "string",
+              "enum": [
+                "outlined",
+                "borderless"
+              ],
+              "default": "outlined",
+              "description": "Card style variant."
             },
             "theme": {
               "type": "object",
@@ -6124,6 +6138,29 @@
                   ],
                   "description": "The Card header."
                 },
+                ".title": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Card title."
+                },
                 ".body": {
                   "oneOf": [
                     {
@@ -6246,6 +6283,10 @@
                 ".header": {
                   "type": "object",
                   "description": "The Card header."
+                },
+                ".title": {
+                  "type": "object",
+                  "description": "The Card title."
                 },
                 ".body": {
                   "type": "object",
@@ -6431,7 +6472,7 @@
             },
             "prefix": {
               "type": "string",
-              "description": "Prefix text for the block, priority over $prefix_con."
+              "description": "Prefix text for the block, priority over prefixIcon."
             },
             "prefixIcon": {
               "type": [
@@ -6489,6 +6530,78 @@
               "description": "Label properties.",
               "additionalProperties": false,
               "properties": {
+                "xs": {
+                  "type": "object",
+                  "description": "Label width on extra small screens (below 576px) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "sm": {
+                  "type": "object",
+                  "description": "Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "md": {
+                  "type": "object",
+                  "description": "Label width on medium screens (768px and up) when the label is not inline. Overrides `span`.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "lg": {
+                  "type": "object",
+                  "description": "Label width on large screens (992px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xl": {
+                  "type": "object",
+                  "description": "Label width on extra large screens (1200px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xxl": {
+                  "type": "object",
+                  "description": "Label width on extra extra large screens (1600px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
                 "align": {
                   "type": "string",
                   "enum": [
@@ -6543,7 +6656,7 @@
                 },
                 "span": {
                   "type": "number",
-                  "description": "Label inline span."
+                  "description": "Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns."
                 },
                 "disabled": {
                   "type": "boolean",
@@ -6559,6 +6672,11 @@
                   "type": "boolean",
                   "default": false,
                   "description": "Render input and label inline."
+                },
+                "wrap": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap."
                 }
               }
             },
@@ -6596,11 +6714,11 @@
             "showCount": {
               "type": "boolean",
               "default": false,
-              "description": "Show text character count"
+              "description": "Show text character count."
             },
             "suffix": {
               "type": "string",
-              "description": "Suffix text for the block, priority over suffixIcon."
+              "description": "Suffix text for the block, shown before suffixIcon."
             },
             "suffixIcon": {
               "type": [
@@ -6662,9 +6780,10 @@
               "enum": [
                 "outlined",
                 "filled",
-                "borderless"
+                "borderless",
+                "underlined"
               ],
-              "description": "Input visual variant. When set, takes precedence over bordered."
+              "description": "Input visual variant. The deprecated bordered: false takes precedence and renders the input as 'borderless'."
             },
             "theme": {
               "type": "object",
@@ -6784,6 +6903,21 @@
                 "activeBg": {
                   "type": "string",
                   "description": "Background color when the input is focused."
+                },
+                "inputFontSize": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Font size of the input text."
+                },
+                "inputFontSizeLG": {
+                  "type": "number",
+                  "default": 16,
+                  "description": "Font size of the input text for large inputs."
+                },
+                "inputFontSizeSM": {
+                  "type": "number",
+                  "default": 14,
+                  "description": "Font size of the input text for small inputs."
                 },
                 "lineWidth": {
                   "type": "number",
@@ -7127,6 +7261,23 @@
                     }
                   }
                 },
+                "onClear": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger action when the clear button is clicked."
+                },
                 "onFocus": {
                   "oneOf": [
                     {
@@ -7255,6 +7406,11 @@
               "default": false,
               "description": "Autofocus to the block on page load."
             },
+            "changeOnWheel": {
+              "type": "boolean",
+              "default": false,
+              "description": "Allow changing the value with the mouse wheel while the input is focused."
+            },
             "bordered": {
               "type": "boolean",
               "default": true,
@@ -7287,6 +7443,78 @@
               "description": "Label properties.",
               "additionalProperties": false,
               "properties": {
+                "xs": {
+                  "type": "object",
+                  "description": "Label width on extra small screens (below 576px) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "sm": {
+                  "type": "object",
+                  "description": "Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "md": {
+                  "type": "object",
+                  "description": "Label width on medium screens (768px and up) when the label is not inline. Overrides `span`.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "lg": {
+                  "type": "object",
+                  "description": "Label width on large screens (992px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xl": {
+                  "type": "object",
+                  "description": "Label width on extra large screens (1200px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xxl": {
+                  "type": "object",
+                  "description": "Label width on extra extra large screens (1600px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
                 "align": {
                   "type": "string",
                   "enum": [
@@ -7341,7 +7569,7 @@
                 },
                 "span": {
                   "type": "number",
-                  "description": "Label inline span."
+                  "description": "Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns."
                 },
                 "disabled": {
                   "type": "boolean",
@@ -7357,8 +7585,22 @@
                   "type": "boolean",
                   "default": false,
                   "description": "Render input and label inline."
+                },
+                "wrap": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap."
                 }
               }
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "input",
+                "spinner"
+              ],
+              "default": "input",
+              "description": "Show the controls as up and down arrows inside the input, or as minus and plus buttons on either side of it."
             },
             "min": {
               "type": "number",
@@ -7387,6 +7629,61 @@
               "type": "integer",
               "description": "Precision (number of decimal places) allowed by the block."
             },
+            "prefix": {
+              "type": "string",
+              "description": "Prefix text for the block, priority over prefixIcon."
+            },
+            "prefixIcon": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to prefix the number input.",
+              "docs": {
+                "displayType": "icon"
+              },
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`."
+                },
+                "color": {
+                  "type": "string",
+                  "description": "Icon color."
+                },
+                "size": {
+                  "type": [
+                    "string",
+                    "number"
+                  ],
+                  "description": "Size of the icon. Defaults to `theme.icons.size`."
+                },
+                "rotate": {
+                  "type": "number",
+                  "description": "Number of degrees to rotate the icon."
+                },
+                "spin": {
+                  "type": "boolean",
+                  "description": "Continuously spin the icon with animation."
+                },
+                "strokeWidth": {
+                  "type": "number",
+                  "description": "Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2)."
+                },
+                "nonScalingStroke": {
+                  "type": "boolean",
+                  "description": "Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Icon hover title for accessibility. An empty string marks the icon as decorative."
+                },
+                "disableLoadingIcon": {
+                  "type": "boolean",
+                  "description": "While loading after the icon has been clicked, don't render the loading icon."
+                }
+              }
+            },
             "size": {
               "type": "string",
               "enum": [
@@ -7402,6 +7699,61 @@
               "default": 1,
               "description": "The number to which the current value is increased or decreased. It can be an integer or decimal."
             },
+            "suffix": {
+              "type": "string",
+              "description": "Suffix text for the block, shown before suffixIcon."
+            },
+            "suffixIcon": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to suffix the number input.",
+              "docs": {
+                "displayType": "icon"
+              },
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`."
+                },
+                "color": {
+                  "type": "string",
+                  "description": "Icon color."
+                },
+                "size": {
+                  "type": [
+                    "string",
+                    "number"
+                  ],
+                  "description": "Size of the icon. Defaults to `theme.icons.size`."
+                },
+                "rotate": {
+                  "type": "number",
+                  "description": "Number of degrees to rotate the icon."
+                },
+                "spin": {
+                  "type": "boolean",
+                  "description": "Continuously spin the icon with animation."
+                },
+                "strokeWidth": {
+                  "type": "number",
+                  "description": "Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2)."
+                },
+                "nonScalingStroke": {
+                  "type": "boolean",
+                  "description": "Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Icon hover title for accessibility. An empty string marks the icon as decorative."
+                },
+                "disableLoadingIcon": {
+                  "type": "boolean",
+                  "description": "While loading after the icon has been clicked, don't render the loading icon."
+                }
+              }
+            },
             "title": {
               "type": "string",
               "description": "Number input label title - supports html."
@@ -7411,9 +7763,10 @@
               "enum": [
                 "outlined",
                 "filled",
-                "borderless"
+                "borderless",
+                "underlined"
               ],
-              "description": "Input visual variant. When set, takes precedence over bordered."
+              "description": "Input visual variant. The deprecated bordered: false takes precedence and renders the input as 'borderless'."
             },
             "theme": {
               "type": "object",
@@ -7695,6 +8048,52 @@
                     }
                   ],
                   "description": "The NumberInput validation feedback."
+                },
+                ".prefixIcon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The prefix icon in the NumberInput."
+                },
+                ".suffixIcon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The suffix icon in the NumberInput."
                 }
               }
             }
@@ -7734,6 +8133,14 @@
                 ".feedback": {
                   "type": "object",
                   "description": "The NumberInput validation feedback."
+                },
+                ".prefixIcon": {
+                  "type": "object",
+                  "description": "The prefix icon in the NumberInput."
+                },
+                ".suffixIcon": {
+                  "type": "object",
+                  "description": "The suffix icon in the NumberInput."
                 }
               }
             },
@@ -7996,6 +8403,78 @@
               "description": "Label properties.",
               "additionalProperties": false,
               "properties": {
+                "xs": {
+                  "type": "object",
+                  "description": "Label width on extra small screens (below 576px) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "sm": {
+                  "type": "object",
+                  "description": "Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "md": {
+                  "type": "object",
+                  "description": "Label width on medium screens (768px and up) when the label is not inline. Overrides `span`.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "lg": {
+                  "type": "object",
+                  "description": "Label width on large screens (992px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xl": {
+                  "type": "object",
+                  "description": "Label width on extra large screens (1200px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xxl": {
+                  "type": "object",
+                  "description": "Label width on extra extra large screens (1600px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
                 "align": {
                   "type": "string",
                   "enum": [
@@ -8050,7 +8529,7 @@
                 },
                 "span": {
                   "type": "number",
-                  "description": "Label inline span."
+                  "description": "Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns."
                 },
                 "disabled": {
                   "type": "boolean",
@@ -8066,6 +8545,11 @@
                   "type": "boolean",
                   "default": false,
                   "description": "Render input and label inline."
+                },
+                "wrap": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap."
                 }
               }
             },
@@ -8089,6 +8573,11 @@
             "primaryKey": {
               "type": "string",
               "description": "Field used to match the current value (e.g. set with SetState) back to an option for highlighting. Defaults to `valueKey`. Set this when the stored value is the whole row but a single field (e.g. \"id\") uniquely identifies it. In the tree selectors it also serves as each node’s id, referenced by `parentKey`. Supports dotted paths."
+            },
+            "listHeight": {
+              "type": "number",
+              "default": 256,
+              "description": "Height of the dropdown list in pixels."
             },
             "options": {
               "default": [],
@@ -8180,6 +8669,80 @@
               "default": "Select item",
               "description": "Placeholder text inside the block before user selects input."
             },
+            "placement": {
+              "type": "string",
+              "enum": [
+                "bottomLeft",
+                "bottomRight",
+                "topLeft",
+                "topRight"
+              ],
+              "default": "bottomLeft",
+              "description": "Position of the dropdown relative to the selector."
+            },
+            "popupMatchSelectWidth": {
+              "type": [
+                "boolean",
+                "number"
+              ],
+              "default": true,
+              "description": "Make the dropdown the same width as the selector. Set a number of pixels for a fixed dropdown width, or false to size the dropdown to its options (this also turns off virtual scrolling)."
+            },
+            "prefix": {
+              "type": "string",
+              "description": "Text shown inside the selector before the selected value."
+            },
+            "prefixIcon": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to show inside the selector before the selected value. Ignored when `prefix` is set.",
+              "docs": {
+                "displayType": "icon"
+              },
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`."
+                },
+                "color": {
+                  "type": "string",
+                  "description": "Icon color."
+                },
+                "size": {
+                  "type": [
+                    "string",
+                    "number"
+                  ],
+                  "description": "Size of the icon. Defaults to `theme.icons.size`."
+                },
+                "rotate": {
+                  "type": "number",
+                  "description": "Number of degrees to rotate the icon."
+                },
+                "spin": {
+                  "type": "boolean",
+                  "description": "Continuously spin the icon with animation."
+                },
+                "strokeWidth": {
+                  "type": "number",
+                  "description": "Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2)."
+                },
+                "nonScalingStroke": {
+                  "type": "boolean",
+                  "description": "Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Icon hover title for accessibility. An empty string marks the icon as decorative."
+                },
+                "disableLoadingIcon": {
+                  "type": "boolean",
+                  "description": "While loading after the icon has been clicked, don't render the loading icon."
+                }
+              }
+            },
             "loadingPlaceholder": {
               "type": "string",
               "default": "Loading",
@@ -8187,7 +8750,7 @@
             },
             "notFoundContent": {
               "type": "string",
-              "default": "not Found",
+              "default": "Not found",
               "description": "Placeholder text to show when list of options are empty."
             },
             "showArrow": {
@@ -8272,9 +8835,15 @@
                 "solid",
                 "outlined",
                 "filled",
-                "borderless"
+                "borderless",
+                "underlined"
               ],
-              "description": "Input variant. `solid` fills the whole input with the selected option color; `outlined` colors its border/text. `filled`/`borderless` are the antd input styles."
+              "description": "Input variant. `solid` fills the whole input with the selected option color; `outlined` colors its border/text. `filled`/`borderless`/`underlined` are the antd input styles."
+            },
+            "virtual": {
+              "type": "boolean",
+              "default": true,
+              "description": "Only render the dropdown options in view. Set to false when options have very different heights, or so screen readers can reach every option."
             },
             "theme": {
               "type": "object",
@@ -8675,6 +9244,52 @@
                   ],
                   "description": "The Selector options."
                 },
+                ".popup": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Selector dropdown popup."
+                },
+                ".prefixIcon": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The prefix icon in the Selector."
+                },
                 ".suffixIcon": {
                   "oneOf": [
                     {
@@ -8748,6 +9363,14 @@
                 ".options": {
                   "type": "object",
                   "description": "The Selector options."
+                },
+                ".popup": {
+                  "type": "object",
+                  "description": "The Selector dropdown popup."
+                },
+                ".prefixIcon": {
+                  "type": "object",
+                  "description": "The prefix icon in the Selector."
                 },
                 ".suffixIcon": {
                   "type": "object",
@@ -8852,6 +9475,28 @@
                     }
                   ],
                   "description": "Trigger action when selector is cleared."
+                },
+                "onOpenChange": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": {
+                    "description": "Trigger actions when the dropdown opens or closes.",
+                    "event": {
+                      "open": "Whether the dropdown is open."
+                    }
+                  }
                 },
                 "onSearch": {
                   "oneOf": [
@@ -9013,6 +9658,78 @@
               "description": "Label properties.",
               "additionalProperties": false,
               "properties": {
+                "xs": {
+                  "type": "object",
+                  "description": "Label width on extra small screens (below 576px) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "sm": {
+                  "type": "object",
+                  "description": "Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "md": {
+                  "type": "object",
+                  "description": "Label width on medium screens (768px and up) when the label is not inline. Overrides `span`.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "lg": {
+                  "type": "object",
+                  "description": "Label width on large screens (992px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xl": {
+                  "type": "object",
+                  "description": "Label width on extra large screens (1200px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
+                "xxl": {
+                  "type": "object",
+                  "description": "Label width on extra extra large screens (1600px and up) when the label is not inline.",
+                  "properties": {
+                    "span": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 24,
+                      "description": "Label width in columns, out of 24. The content takes the remaining columns."
+                    }
+                  }
+                },
                 "align": {
                   "type": "string",
                   "enum": [
@@ -9067,7 +9784,7 @@
                 },
                 "span": {
                   "type": "number",
-                  "description": "Label inline span."
+                  "description": "Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns."
                 },
                 "disabled": {
                   "type": "boolean",
@@ -9083,6 +9800,11 @@
                   "type": "boolean",
                   "default": false,
                   "description": "Render input and label inline."
+                },
+                "wrap": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap."
                 }
               }
             },
@@ -9129,9 +9851,10 @@
               "enum": [
                 "outlined",
                 "filled",
-                "borderless"
+                "borderless",
+                "underlined"
               ],
-              "description": "Input visual variant. When set, takes precedence over bordered."
+              "description": "Input visual variant. The deprecated bordered: false takes precedence and renders the input as 'borderless'."
             },
             "theme": {
               "type": "object",
@@ -9528,6 +10251,23 @@
                     }
                   }
                 },
+                "onClear": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger action when the clear button is clicked."
+                },
                 "onFocus": {
                   "oneOf": [
                     {
@@ -9882,6 +10622,52 @@
                     }
                   ],
                   "description": "The icon in the Result."
+                },
+                ".title": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Result title."
+                },
+                ".subTitle": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "The Result subtitle."
                 }
               }
             }
@@ -9913,6 +10699,14 @@
                 ".icon": {
                   "type": "object",
                   "description": "The icon in the Result."
+                },
+                ".title": {
+                  "type": "object",
+                  "description": "The Result title."
+                },
+                ".subTitle": {
+                  "type": "object",
+                  "description": "The Result subtitle."
                 }
               }
             },
@@ -10027,8 +10821,13 @@
             },
             "duration": {
               "type": "number",
-              "default": 4.5,
+              "default": 3,
               "description": "Time(seconds) before auto-dismiss, don't dismiss if set to 0."
+            },
+            "pauseOnHover": {
+              "type": "boolean",
+              "default": true,
+              "description": "Pause the auto-dismiss timer while the mouse is over the message."
             },
             "icon": {
               "type": [
@@ -10090,12 +10889,12 @@
                 "warning",
                 "loading"
               ],
-              "default": "info",
+              "default": "success",
               "description": "Message status type."
             },
             "theme": {
               "type": "object",
-              "description": "Antd design token overrides for this block. See <a href=\"https://ant.design/components/overview#design-token\">antd design tokens</a>.",
+              "description": "Has no effect: messages render in the app-wide message holder, outside the block. Set these Message design tokens for the whole app in `lowdefy.yaml` under `theme.antd.components.Message`.",
               "docs": {
                 "displayType": "yaml",
                 "link": "https://ant.design/components/message#design-token"
@@ -10269,6 +11068,23 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
+                "onClick": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": "Trigger actions when the message is clicked."
+                },
                 "onClose": {
                   "oneOf": [
                     {

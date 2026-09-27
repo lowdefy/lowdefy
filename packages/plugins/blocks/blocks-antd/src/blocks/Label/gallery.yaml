@@ -236,6 +236,21 @@
         - id: label_inline_extra_input
           type: TextInput
 
+- title: Wrapped Inline Label
+  fullWidth: true
+  blocks:
+    - id: label_wrap_inline
+      type: Label
+      layout:
+        span: 12
+      properties:
+        title: A long inline label that wraps onto a second line when space runs out
+        inline: true
+        wrap: true
+      blocks:
+        - id: label_wrap_inline_input
+          type: TextInput
+
 - title: Inline Sizes
   fullWidth: true
   blocks:
@@ -386,8 +401,8 @@
         title: Styled Label Text
         extra: Styled extra text
       class:
-        label: text-purple-600 font-bold
-        extra: text-purple-400 italic
+        .label: text-purple-600 font-bold
+        .extra: text-purple-400 italic
       blocks:
         - id: label_css_label_input
           type: TextInput
@@ -397,7 +412,7 @@
       properties:
         title: Bordered Container
       class:
-        element: border border-border p-3 rounded-lg
+        .element: border border-border p-3 rounded-lg
       blocks:
         - id: label_css_element_input
           type: TextInput
@@ -407,7 +422,7 @@
       properties:
         title: Feedback Styling
       class:
-        feedback: font-semibold text-xs
+        .feedback: font-semibold text-xs
       blocks:
         - id: label_css_feedback_input
           type: TextInput
@@ -426,7 +441,7 @@
           color: '#d48806'
           fontStyle: italic
         .element:
-          border: 1px solid #ffd591
+          border: '1px solid #ffd591'
           padding: 12px
           borderRadius: 8px
       blocks:

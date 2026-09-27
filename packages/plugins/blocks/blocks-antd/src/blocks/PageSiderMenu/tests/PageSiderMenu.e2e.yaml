@@ -14,11 +14,12 @@
 
 id: pagesidermenu
 type: PageSiderMenu
+class:
+  .siderBody: psm-sider-body
 properties:
-  header:
-    theme: dark
+  theme:
+    colorBgLayout: rgb(250, 240, 255)
   sider:
-    theme: light
     initialCollapsed: false
     collapsible: true
   menu:

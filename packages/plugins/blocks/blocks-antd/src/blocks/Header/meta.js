@@ -180,8 +180,7 @@ export default {
               size: {
                 type: ['string', 'number'],
                 default: 'small',
-                enum: ['default', 'small', 'large'],
-                description: 'Size of the avatar.',
+                description: 'Size of the avatar: default, small, large or a pixel number.',
                 docs: {
                   displayType: 'string',
                 },
@@ -289,7 +288,7 @@ export default {
       theme: {
         type: 'object',
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Not applied: antd scopes Layout design tokens to the Layout element, so set tokens such as headerHeight or footerBg on the parent Layout block theme.',
         docs: {
           displayType: 'yaml',
         },

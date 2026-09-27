@@ -36,8 +36,10 @@ const BreadcrumbBlock = ({
     <Breadcrumb
       id={blockId}
       className={classNames.element}
+      classNames={{ item: classNames.item, separator: classNames.separator }}
       separator={properties.separator}
       style={styles.element}
+      styles={{ item: styles.item, separator: styles.separator }}
       items={(properties.list ?? []).map((link, index) => ({
         key: index,
         title: (
@@ -70,6 +72,18 @@ const BreadcrumbBlock = ({
             )}
           </Link>
         ),
+        menu: type.isArray(link.links)
+          ? {
+              items: link.links.map((subLink, subIndex) => ({
+                key: subIndex,
+                label: (
+                  <Link id={`${blockId}_${index}_${subIndex}`} {...subLink}>
+                    {subLink.label}
+                  </Link>
+                ),
+              })),
+            }
+          : undefined,
         onClick:
           events[onClickActionName] &&
           (() => methods.triggerEvent({ name: onClickActionName, event: { link, index } })),

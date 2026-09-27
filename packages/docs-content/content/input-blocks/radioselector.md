@@ -492,7 +492,7 @@ Radio group for selecting a single option.
   type: RadioSelector
   style:
     .element:
-      border: 1px solid
+      border: "1px solid #d9d9d9"
       borderRadius: 8
       padding: 16
   properties:
@@ -822,6 +822,18 @@ Radio group for selecting a single option.
 | `gutter` | number \| array | - | Gap between options in the grid. Number or [horizontal, vertical] array. Applies when 'columns' is set. |
 | `wrap` | boolean | `true` | Specifies wrapping of options. Applies when 'direction' is 'horizontal'. Ignored when 'columns' is set. |
 | `label` | object | - | Label properties. |
+| `label.xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |
+| `label.xs.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.sm` | object | - | Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set. |
+| `label.sm.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.md` | object | - | Label width on medium screens (768px and up) when the label is not inline. Overrides `span`. |
+| `label.md.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.lg` | object | - | Label width on large screens (992px and up) when the label is not inline. |
+| `label.lg.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xl` | object | - | Label width on extra large screens (1200px and up) when the label is not inline. |
+| `label.xl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xxl` | object | - | Label width on extra extra large screens (1600px and up) when the label is not inline. |
+| `label.xxl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
 | `label.extra` | string | - | Extra text to display beneath the content - supports html. |
@@ -830,10 +842,11 @@ Radio group for selecting a single option.
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
 | `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
-| `label.span` | number | - | Label inline span. |
+| `label.span` | number | - | Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns. |
 | `label.disabled` | boolean | `false` | Hide input label. |
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
+| `label.wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap. |
 | `options` | array | `[]` | Options can either be an array of primitive values, on an array of label, value pairs - supports html. |
 | `options.$.label` | string | - | Value label shown to user - supports html. |
 | `options.$.value` | - | - | Option value. Can be of any type. |
@@ -878,5 +891,6 @@ Radio group for selecting a single option.
 | `/label` | The RadioSelector label. |
 | `/extra` | The RadioSelector extra content. |
 | `/feedback` | The RadioSelector validation feedback. |
+| `/options` | Each RadioSelector option. |
 
 No slots defined.

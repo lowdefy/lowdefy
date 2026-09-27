@@ -111,6 +111,40 @@
             pageId: introduction
           - label: General
 
+- title: Dropdown Links
+  blocks:
+    - id: dropdown_links
+      type: Breadcrumb
+      properties:
+        list:
+          - label: Home
+            pageId: introduction
+            icon: home
+          - label: Components
+            links:
+              - label: Buttons
+                pageId: introduction
+              - label: Menus
+                pageId: introduction
+              - label: Layouts
+                pageId: introduction
+          - label: Breadcrumb
+
+- title: Item and Separator Styles
+  blocks:
+    - id: semantic_styles
+      type: Breadcrumb
+      class:
+        .item: font-medium
+      style:
+        .separator:
+          color: '#1677ff'
+      properties:
+        list:
+          - Home
+          - Library
+          - Data
+
 - title: Icons
   blocks:
     - id: icons_string
@@ -271,7 +305,7 @@
       style:
         .element:
           padding: 8px 16px
-          border: 1px solid #d9d9d9
+          border: '1px solid #d9d9d9'
           borderRadius: 6
     - id: css_inline_background
       type: Breadcrumb

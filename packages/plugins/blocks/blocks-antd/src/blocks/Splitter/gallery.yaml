@@ -18,10 +18,10 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: left
             defaultSize: 50
@@ -55,10 +55,10 @@
       type: Splitter
       style:
         height: 300px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: vertical
+        orientation: vertical
         panels:
           - key: top
             defaultSize: 50
@@ -92,10 +92,10 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: first
             defaultSize: 25
@@ -139,10 +139,10 @@
       type: Splitter
       style:
         height: 180px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: px_fixed
             defaultSize: '200px'
@@ -175,10 +175,10 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: nav
             defaultSize: 30
@@ -220,10 +220,10 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: cpx_left
             defaultSize: 30
@@ -273,10 +273,10 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: col_sidebar
             defaultSize: 30
@@ -313,10 +313,10 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: cb_left
             defaultSize: 25
@@ -364,16 +364,15 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: cse_left
             defaultSize: 30
             collapsible:
-              start: true
-              end: false
+              end: true
           - key: cse_center
             defaultSize: 40
             collapsible:
@@ -382,8 +381,7 @@
           - key: cse_right
             defaultSize: 30
             collapsible:
-              start: false
-              end: true
+              start: true
       slots:
         cse_left:
           blocks:
@@ -416,16 +414,53 @@
                   properties:
                     content: Collapse right only
 
+- title: Animated Collapse with Custom Icons
+  blocks:
+    - id: col_motion
+      type: Splitter
+      style:
+        height: 200px
+        border: '1px solid #e8e8e8'
+        borderRadius: 8px
+      properties:
+        destroyOnHidden: true
+        draggerIcon: GripVertical
+        collapsible:
+          motion: true
+          icon:
+            start: ChevronsLeft
+            end: ChevronsRight
+        panels:
+          - key: col_motion_nav
+            defaultSize: 30
+            collapsible:
+              end: true
+              showCollapsibleIcon: true
+          - key: col_motion_main
+      slots:
+        col_motion_nav:
+          blocks:
+            - id: col_motion_nav_text
+              type: Paragraph
+              properties:
+                content: The panel animates as it collapses, and its blocks unmount while it is collapsed.
+        col_motion_main:
+          blocks:
+            - id: col_motion_main_text
+              type: Paragraph
+              properties:
+                content: Double-click the drag handle to trigger onDraggerDoubleClick.
+
 - title: Non-resizable Panel
   blocks:
     - id: nonresizable
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: nr_fixed
             defaultSize: 30
@@ -472,10 +507,10 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         lazy: true
         panels:
           - key: lazy_left
@@ -511,10 +546,10 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: evt_left
             defaultSize: 50
@@ -574,10 +609,10 @@
       type: Splitter
       style:
         height: 220px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: es_left
             defaultSize: 40
@@ -642,10 +677,10 @@
       type: Splitter
       style:
         height: 350px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: n_sidebar
             defaultSize: 25
@@ -683,7 +718,7 @@
               style:
                 height: 100%
               properties:
-                layout: vertical
+                orientation: vertical
                 panels:
                   - key: n_content
                     defaultSize: 70
@@ -727,10 +762,10 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: ttb_left
             defaultSize: 50
@@ -766,10 +801,10 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: tg_left
             defaultSize: 50
@@ -808,10 +843,10 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: tm_left
             defaultSize: 50
@@ -847,10 +882,10 @@
       type: Splitter
       style:
         height: 200px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: tch_left
             defaultSize: 50
@@ -888,11 +923,11 @@
     - id: css_rounded
       type: Splitter
       class:
-        element: rounded-2xl shadow-lg overflow-hidden
+        .element: rounded-2xl shadow-lg overflow-hidden
       style:
         height: 200px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: css_r_left
             defaultSize: 50
@@ -923,11 +958,11 @@
     - id: css_border
       type: Splitter
       class:
-        element: border-2 border-dashed border-blue-300 rounded-xl
+        .element: border-2 border-dashed border-blue-300 rounded-xl
       style:
         height: 180px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: css_b_left
             defaultSize: 40
@@ -961,10 +996,10 @@
       type: Splitter
       style:
         height: 420px
-        border: 1px solid #d9d9d9
+        border: '1px solid #d9d9d9'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: editor_files
             defaultSize: 18
@@ -1045,7 +1080,7 @@
               style:
                 height: 100%
               properties:
-                layout: vertical
+                orientation: vertical
                 panels:
                   - key: editor_code
                     defaultSize: 65
@@ -1065,7 +1100,7 @@
                           style:
                             color: '#64748b'
                             fontSize: 12px
-                            borderBottom: 1px solid #334155
+                            borderBottom: '1px solid #334155'
                             paddingBottom: 8px
                           properties:
                             content: 'App.js'
@@ -1091,7 +1126,7 @@
                             fontSize: 11px
                             textTransform: uppercase
                             letterSpacing: 1px
-                            borderBottom: 1px solid #1e293b
+                            borderBottom: '1px solid #1e293b'
                             paddingBottom: 6px
                           properties:
                             content: Terminal
@@ -1118,10 +1153,10 @@
       type: Splitter
       style:
         height: 400px
-        border: 1px solid #e8e8e8
+        border: '1px solid #e8e8e8'
         borderRadius: 8px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: dash_nav
             defaultSize: 22
@@ -1275,11 +1310,11 @@
     - id: email_outer
       type: Splitter
       class:
-        element: rounded-lg shadow-md overflow-hidden
+        .element: rounded-lg shadow-md overflow-hidden
       style:
         height: 420px
       properties:
-        layout: horizontal
+        orientation: horizontal
         panels:
           - key: email_folders
             defaultSize: 20
@@ -1463,8 +1498,7 @@
                       properties:
                         icon: user
                         size: 32
-                        color: '#fff'
-                        backgroundColor: '#1677ff'
+                        color: '#1677ff'
                     - id: email_preview_sender
                       type: Box
                       layout:

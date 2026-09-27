@@ -20,6 +20,7 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The QRCode element.',
+    cover: 'The overlay shown over the QR code when status is expired, loading or scanned.',
   },
   events: {
     onRefresh: 'Trigger action when expired QR code refresh button is clicked.',
@@ -41,11 +42,17 @@ export default {
         type: 'string',
         default: '#000000',
         description: 'QRCode color.',
+        docs: {
+          displayType: 'color',
+        },
       },
       bgColor: {
         type: 'string',
         default: 'transparent',
         description: 'QRCode background color.',
+        docs: {
+          displayType: 'color',
+        },
       },
       errorLevel: {
         type: 'string',
@@ -59,9 +66,22 @@ export default {
         description: 'Icon URL in the center of the QR code.',
       },
       iconSize: {
-        type: 'integer',
+        type: ['integer', 'object'],
         default: 40,
-        description: 'Icon size in pixels.',
+        description: 'Icon size in pixels, or `{ width, height }` for an icon that is not square.',
+        docs: {
+          displayType: 'yaml',
+        },
+        properties: {
+          width: {
+            type: 'integer',
+            description: 'Icon width in pixels.',
+          },
+          height: {
+            type: 'integer',
+            description: 'Icon height in pixels.',
+          },
+        },
       },
       marginSize: {
         type: 'number',

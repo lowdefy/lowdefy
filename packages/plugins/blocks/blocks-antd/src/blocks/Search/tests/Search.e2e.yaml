@@ -123,3 +123,18 @@ blocks:
       documents: []
       fields:
         - title
+
+  # ============================================
+  # THEME
+  # ============================================
+
+  - id: search_theme
+    type: Search
+    properties:
+      label: Themed search
+      showShortcut: false
+      documents: []
+      fields:
+        - title
+      theme:
+        borderRadius: 2

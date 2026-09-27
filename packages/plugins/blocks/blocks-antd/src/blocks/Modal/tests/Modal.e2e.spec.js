@@ -276,3 +276,97 @@ test.describe('Modal Block', () => {
     await expect(display).toHaveText('Close fired');
   });
 });
+
+test.describe('Modal Block features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'modal_features');
+  });
+
+  const openModal = async (page, id) => {
+    await getBlock(page, `open_${id}`).locator('.ant-btn').click();
+    const container = page.locator('.ant-modal-container').filter({ hasText: `Content of ${id}.` });
+    await expect(container).toBeVisible();
+    return container;
+  };
+
+  test('mask blur adds the antd blur class to the mask', async ({ page }) => {
+    await openModal(page, 'modal_blur');
+    await expect(page.locator('.ant-modal-mask.ant-modal-mask-blur')).toBeVisible();
+  });
+
+  test('mask.closable false wins over maskClosable true', async ({ page }) => {
+    const container = await openModal(page, 'modal_mask_object_not_closable');
+    await page
+      .locator('.ant-modal-wrap')
+      .filter({ has: container })
+      .click({ position: { x: 10, y: 10 } });
+    await expect(container).toBeVisible();
+  });
+
+  test('closable disabled renders a disabled close button', async ({ page }) => {
+    const container = await openModal(page, 'modal_close_disabled');
+    const close = container.locator('.ant-modal-close');
+    await expect(close).toBeVisible();
+    await expect(close).toBeDisabled();
+    // The close icon still comes from the app icon set.
+    await expect(close.locator('svg.lucide')).toBeAttached();
+  });
+
+  test('keyboard false keeps the modal open on Escape', async ({ page }) => {
+    const container = await openModal(page, 'modal_no_keyboard');
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(500);
+    await expect(container).toBeVisible();
+  });
+
+  test('loading shows a skeleton in place of the body', async ({ page }) => {
+    await getBlock(page, 'open_modal_loading').locator('.ant-btn').click();
+    const container = page.locator('.ant-modal-container').filter({ hasText: 'Loading' });
+    await expect(container.locator('.ant-skeleton')).toBeVisible();
+    await expect(container).not.toContainText('Content of modal_loading.');
+  });
+
+  test('content, title and header cssKeys reach the antd semantic elements', async ({ page }) => {
+    const container = await openModal(page, 'modal_styled');
+    await expect(container).toHaveClass(/modal-styled-content/);
+    await expect(container).toHaveCSS('border-top-width', '3px');
+    await expect(container.locator('.ant-modal-title')).toHaveClass(/modal-styled-title/);
+    await expect(container.locator('.ant-modal-header')).toHaveCSS(
+      'background-color',
+      'rgb(255, 0, 0)'
+    );
+  });
+
+  test('afterOpenChange fires with the open state', async ({ page }) => {
+    const container = await openModal(page, 'modal_after_open_change');
+    const display = getBlock(page, 'after_open_change_display');
+    await expect(display).toHaveText('opened');
+    await container.locator('.ant-modal-footer .ant-btn-primary').click();
+    await expect(display).toHaveText('closed');
+  });
+
+  test('forceRender renders the modal content before it opens', async ({ page }) => {
+    await expect(page.locator('#bl-modal_force_render_text')).toBeAttached();
+    await expect(page.locator('#bl-modal_force_render_text')).toBeHidden();
+  });
+
+  test('destroyOnHidden unmounts the content when the modal closes', async ({ page }) => {
+    const container = await openModal(page, 'modal_destroy_on_hidden');
+    await expect(page.locator('#bl-modal_destroy_on_hidden_text')).toBeAttached();
+    await container.locator('.ant-modal-footer .ant-btn-primary').click();
+    await expect(page.locator('#bl-modal_destroy_on_hidden_text')).not.toBeAttached();
+  });
+
+  test('responsive width applies the matching breakpoint', async ({ page }) => {
+    const container = await openModal(page, 'modal_responsive_width');
+    const modal = page.locator('.ant-modal').filter({ has: container });
+    // Polled, because the modal zooms in from a smaller scale as it opens.
+    await expect.poll(async () => Math.round((await modal.boundingBox()).width)).toBe(640);
+  });
+
+  test('scrollLock false leaves page scrolling on', async ({ page }) => {
+    await openModal(page, 'modal_no_scroll_lock');
+    const overflow = await page.evaluate(() => getComputedStyle(document.body).overflowY);
+    expect(overflow).not.toBe('hidden');
+  });
+});

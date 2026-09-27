@@ -16,19 +16,60 @@
 
 import React from 'react';
 import { Splitter } from 'antd';
+import { type } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getCollapsible from './getCollapsible.js';
 import withTheme from '../withTheme.js';
+import './style.css';
 
-const SplitterBlock = ({ blockId, classNames = {}, content, methods, properties, styles = {} }) => {
+const SplitterBlock = ({
+  blockId,
+  classNames = {},
+  components: { Icon },
+  content,
+  events,
+  methods,
+  properties,
+  styles = {},
+}) => {
   const panels = properties.panels ?? [];
+  // antd 6 renamed `layout` to `orientation`; Lowdefy keeps both properties.
+  const orientation = properties.orientation ?? properties.layout;
   return (
     <Splitter
       id={blockId}
       className={classNames.element}
+      classNames={{ panel: classNames.panel, dragger: classNames.dragger }}
       style={styles.element}
-      layout={properties.orientation ?? properties.layout}
+      // antd reads the dragger style from `default` and `active` keys, and only applies `default`.
+      styles={{ panel: styles.panel, dragger: { default: styles.dragger } }}
+      collapsible={getCollapsible({
+        blockId,
+        classNames,
+        collapsible: properties.collapsible,
+        events,
+        Icon,
+        orientation,
+        styles,
+      })}
+      destroyOnHidden={properties.destroyOnHidden}
+      draggerIcon={
+        type.isNone(properties.draggerIcon) ? undefined : (
+          <Icon
+            blockId={`${blockId}_draggerIcon`}
+            classNames={{ element: classNames.draggerIcon }}
+            events={events}
+            properties={properties.draggerIcon}
+            styles={{ element: styles.draggerIcon }}
+          />
+        )
+      }
+      orientation={orientation}
       lazy={properties.lazy}
+      onDraggerDoubleClick={(index) => {
+        methods.triggerEvent({ name: 'onDraggerDoubleClick', event: { index } });
+      }}
       onResize={(sizes) => {
         methods.triggerEvent({ name: 'onResize', event: { sizes } });
       }}
@@ -50,6 +91,7 @@ const SplitterBlock = ({ blockId, classNames = {}, content, methods, properties,
           max={panel.max}
           defaultSize={panel.defaultSize}
           collapsible={panel.collapsible}
+          destroyOnHidden={panel.destroyOnHidden}
           resizable={panel.resizable}
         >
           {content[panel.key] && content[panel.key]()}

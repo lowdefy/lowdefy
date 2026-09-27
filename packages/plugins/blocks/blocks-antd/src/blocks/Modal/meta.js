@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import focusable from '../../schemas/focusable.js';
+import mask from '../../schemas/mask.js';
+
 export default {
   category: 'container',
   icons: ['close', 'loading'],
@@ -25,6 +28,7 @@ export default {
   cssKeys: {
     element: 'The Modal element.',
     header: 'The Modal header.',
+    title: 'The Modal title.',
     body: 'The Modal body.',
     footer: 'The Modal footer.',
     mask: 'The Modal mask.',
@@ -44,6 +48,11 @@ export default {
     onOpen: 'Trigger actions when modal is opened.',
     onCancel: 'Trigger actions when Cancel button is clicked.',
     onClose: 'Trigger actions after onOk or onCancel is completed.',
+    afterClose: 'Trigger actions after the modal has closed and its close animation has finished.',
+    afterOpenChange: {
+      description: 'Trigger actions after the open or close animation of the modal has finished.',
+      event: { open: 'True when the modal opened, false when it closed.' },
+    },
   },
   properties: {
     type: 'object',
@@ -55,10 +64,49 @@ export default {
         description: 'Center the modal vertically.',
       },
       closable: {
-        type: 'boolean',
+        type: ['boolean', 'object'],
         default: true,
         description:
-          'Whether a close (x) button is visible on top right of the modal dialog or not.',
+          'Whether a close (x) button is visible on top right of the modal dialog or not. Set `{ disabled: true }` to show the button disabled.',
+        docs: {
+          displayType: 'yaml',
+        },
+        additionalProperties: false,
+        properties: {
+          disabled: {
+            type: 'boolean',
+            default: false,
+            description: 'Show the close button, but disabled.',
+          },
+        },
+      },
+      destroyOnHidden: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Unmount the blocks inside the modal when it closes, so they mount again (and their onMount events run) each time it opens. Their state is kept.',
+      },
+      focusable,
+      forceRender: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Render the blocks inside the modal before it is first opened, so their methods can be called and their onMount events run while it is still closed.',
+      },
+      keyboard: {
+        type: 'boolean',
+        default: true,
+        description: 'Whether pressing Esc closes the modal.',
+      },
+      loading: {
+        type: 'boolean',
+        default: false,
+        description: 'Show a loading skeleton in place of the modal body.',
+      },
+      scrollLock: {
+        type: 'boolean',
+        default: true,
+        description: 'Whether to lock page scrolling while the modal is open.',
       },
       title: {
         type: 'string',
@@ -69,16 +117,12 @@ export default {
         default: true,
         description: 'Show footer area.',
       },
-      mask: {
-        type: 'boolean',
-        default: true,
-        description: 'Whether show mask or not.',
-      },
+      mask,
       maskClosable: {
         type: 'boolean',
         default: true,
         description:
-          'Whether to close the modal dialog when the mask (area outside the modal) is clicked.',
+          'Whether to close the modal dialog when the mask (area outside the modal) is clicked. `mask.closable` takes precedence.',
       },
       okText: {
         type: 'string',
@@ -105,11 +149,21 @@ export default {
         },
       },
       width: {
-        type: ['string', 'number'],
-        default: '520px',
-        description: 'Width of the modal dialog.',
+        type: ['string', 'number', 'object'],
+        default: 520,
+        description:
+          'Width of the modal dialog. Set an object of breakpoints (`xs`, `sm`, `md`, `lg`, `xl`, `xxl`) for a responsive width.',
         docs: {
-          displayType: 'string',
+          displayType: 'yaml',
+        },
+        additionalProperties: false,
+        properties: {
+          xs: { type: ['string', 'number'], description: 'Width on extra small screens.' },
+          sm: { type: ['string', 'number'], description: 'Width on small screens.' },
+          md: { type: ['string', 'number'], description: 'Width on medium screens.' },
+          lg: { type: ['string', 'number'], description: 'Width on large screens.' },
+          xl: { type: ['string', 'number'], description: 'Width on extra large screens.' },
+          xxl: { type: ['string', 'number'], description: 'Width on extra extra large screens.' },
         },
       },
       zIndex: {

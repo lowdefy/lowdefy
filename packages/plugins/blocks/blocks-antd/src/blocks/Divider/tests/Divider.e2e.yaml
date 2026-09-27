@@ -39,8 +39,8 @@ blocks:
 
   - id: divider_vertical_container
     type: Box
-    properties:
-      style:
+    style:
+      .element:
         display: flex
         alignItems: center
         height: 50px
@@ -105,3 +105,33 @@ blocks:
     type: Divider
     properties:
       title: '<strong>Bold</strong> Title'
+
+  # ============================================
+  # VARIANT, SIZE AND SEMANTIC KEYS
+  # ============================================
+
+  - id: divider_dotted
+    type: Divider
+    properties:
+      variant: dotted
+
+  - id: divider_small
+    type: Divider
+    properties:
+      size: small
+
+  - id: divider_medium
+    type: Divider
+    properties:
+      size: medium
+
+  - id: divider_css_keys
+    type: Divider
+    class:
+      .title: divider-title-class
+      .rail: divider-rail-class
+    style:
+      .title:
+        color: 'rgb(255, 0, 0)'
+    properties:
+      title: Styled Title

@@ -340,6 +340,8 @@ The mask is visible but clicking it does not close the modal. Users must use the
 
 No mask overlay is shown behind the modal. The page content remains fully visible.
 
+The page behind the mask is blurred, which keeps attention on the dialog.
+
 ```yaml
 - id: modal_mask_not_closable_trigger
   type: Button
@@ -397,6 +399,71 @@ No mask overlay is shown behind the modal. The page content remains fully visibl
       properties:
         content: No mask overlay is shown behind the modal. The page content remains
           fully visible.
+- id: modal_blur_mask_trigger
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Blurred Mask
+    color: primary
+    variant: outlined
+  events:
+    onClick:
+      - id: modal_blur_mask_open
+        type: CallMethod
+        params:
+          blockId: modal_blur_mask
+          method: setOpen
+          args:
+            - open: true
+- id: modal_blur_mask
+  type: Modal
+  properties:
+    title: Blurred Mask
+    mask:
+      blur: true
+  blocks:
+    - id: modal_blur_mask_content
+      type: Paragraph
+      properties:
+        content: The page behind the mask is blurred, which keeps attention on the
+          dialog.
+```
+
+The body shows a skeleton while loading is true, for example while a request that fills the modal is running.
+
+```yaml
+- id: modal_loading_trigger
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Open Loading Modal
+    color: primary
+    variant: outlined
+  events:
+    onClick:
+      - id: modal_loading_open
+        type: CallMethod
+        params:
+          blockId: modal_loading
+          method: setOpen
+          args:
+            - open: true
+- id: modal_loading
+  type: Modal
+  properties:
+    title: Customer Details
+    loading: true
+    width:
+      xs: 90%
+      md: 600
+  blocks:
+    - id: modal_loading_content
+      type: Paragraph
+      properties:
+        content: The body shows a skeleton while loading is true, for example while a
+          request that fills the modal is running.
 ```
 
 Setting footer to false removes the Ok and Cancel buttons entirely. This is useful for informational dialogs or when you provide your own action buttons in the content area.
@@ -541,7 +608,7 @@ The footer slot replaces the default Ok/Cancel buttons with custom content. This
           Save/Cancel on the right.
 ```
 
-The wrapperStyle property applies CSS to the modal wrapper element. This can control overflow, positioning, and other layout aspects of the wrapper container.
+The style .wrapper key applies CSS to the modal wrapper element. This can control overflow, positioning, and other layout aspects of the wrapper container.
 
 ```yaml
 - id: modal_wrapper_style_trigger
@@ -565,15 +632,16 @@ The wrapperStyle property applies CSS to the modal wrapper element. This can con
   type: Modal
   properties:
     title: Wrapper Style Modal
-    wrapperStyle:
+  style:
+    .wrapper:
       overflow: hidden
   blocks:
     - id: modal_wrapper_style_content
       type: Paragraph
       properties:
-        content: The wrapperStyle property applies CSS to the modal wrapper element.
-          This can control overflow, positioning, and other layout aspects of
-          the wrapper container.
+        content: The style .wrapper key applies CSS to the modal wrapper element. This
+          can control overflow, positioning, and other layout aspects of the
+          wrapper container.
 ```
 
 This modal uses a custom z-index of 2000 to ensure it appears above other overlays. The default is 1000.
@@ -761,8 +829,8 @@ A warm-toned modal using an extensive set of theme tokens including headerBg, co
       titleColor: "#d46b08"
       colorBgMask: rgba(250, 173, 20, 0.1)
       borderRadiusLG: 20
-      headerBorderBottom: 1px solid
-      footerBorderTop: 1px solid
+      headerBorderBottom: "1px solid #ffd591"
+      footerBorderTop: "1px solid #ffd591"
       headerMarginBottom: 0
       footerMarginTop: 0
       headerPadding: 16px 24px
@@ -876,10 +944,10 @@ Modal supports these CSS keys for Tailwind class targeting: element, header, bod
   properties:
     title: Tailwind Styled Modal
   class:
-    header: bg-bg-layout
-    body: bg-bg-layout p-8
-    footer: bg-bg-layout
-    content: rounded-2xl overflow-hidden
+    .header: bg-bg-layout
+    .body: bg-bg-layout p-8
+    .footer: bg-bg-layout
+    .content: rounded-2xl overflow-hidden
   blocks:
     - id: modal_css_keys_content
       type: Paragraph
@@ -921,7 +989,7 @@ Senior Product Designer
     cancelText: Cancel
     centered: true
     theme:
-      headerBorderBottom: 1px solid
+      headerBorderBottom: "1px solid #f0f0f0"
       headerMarginBottom: 0
   events:
     onOk:
@@ -944,8 +1012,7 @@ Senior Product Designer
           properties:
             icon: user
             size: 72
-            color: "#fff"
-            backgroundColor: "#1677ff"
+            color: "#1677ff"
         - id: modal_profile_info
           type: Box
           layout:
@@ -1123,16 +1190,34 @@ A serene mountain landscape captured at golden hour. Photography by John Doe.
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `centered` | boolean | `false` | Center the modal vertically. |
-| `closable` | boolean | `true` | Whether a close (x) button is visible on top right of the modal dialog or not. |
+| `closable` | boolean \| object | `true` | Whether a close (x) button is visible on top right of the modal dialog or not. Set `{ disabled: true }` to show the button disabled. |
+| `closable.disabled` | boolean | `false` | Show the close button, but disabled. |
+| `destroyOnHidden` | boolean | `false` | Unmount the blocks inside the modal when it closes, so they mount again (and their onMount events run) each time it opens. Their state is kept. |
+| `focusable` | object | - | Focus management of the dialog. |
+| `focusable.trap` | boolean | `true` | Keep keyboard focus inside the dialog while it is open. |
+| `focusable.focusTriggerAfterClose` | boolean | `true` | Return focus to the element that opened the dialog after it closes. |
+| `forceRender` | boolean | `false` | Render the blocks inside the modal before it is first opened, so their methods can be called and their onMount events run while it is still closed. |
+| `keyboard` | boolean | `true` | Whether pressing Esc closes the modal. |
+| `loading` | boolean | `false` | Show a loading skeleton in place of the modal body. |
+| `scrollLock` | boolean | `true` | Whether to lock page scrolling while the modal is open. |
 | `title` | string | - | The modal dialog's title - supports html. |
 | `footer` | boolean | `true` | Show footer area. |
-| `mask` | boolean | `true` | Whether show mask or not. |
-| `maskClosable` | boolean | `true` | Whether to close the modal dialog when the mask (area outside the modal) is clicked. |
+| `mask` | boolean \| object | `true` | Whether to show the mask. Set an object to configure the mask with `enabled`, `blur` and `closable`. |
+| `mask.enabled` | boolean | `true` | Whether to show the mask. |
+| `mask.blur` | boolean | `false` | Blur the page behind the mask. |
+| `mask.closable` | boolean | - | Whether clicking the mask closes the dialog. Takes precedence over `maskClosable`. |
+| `maskClosable` | boolean | `true` | Whether to close the modal dialog when the mask (area outside the modal) is clicked. `mask.closable` takes precedence. |
 | `okText` | string | - | Text of the Ok button. When unset, antd uses the localized default from ConfigProvider locale. |
 | `okButtonProps` | object | - | Set additional properties for the ok button. |
 | `cancelText` | string | - | Text of the Cancel button. When unset, antd uses the localized default from ConfigProvider locale. |
 | `cancelButtonProps` | object | - | Set additional properties for the cancel button. |
-| `width` | string \| number | `"520px"` | Width of the modal dialog. |
+| `width` | string \| number \| object | `520` | Width of the modal dialog. Set an object of breakpoints (`xs`, `sm`, `md`, `lg`, `xl`, `xxl`) for a responsive width. |
+| `width.xs` | string \| number | - | Width on extra small screens. |
+| `width.sm` | string \| number | - | Width on small screens. |
+| `width.md` | string \| number | - | Width on medium screens. |
+| `width.lg` | string \| number | - | Width on large screens. |
+| `width.xl` | string \| number | - | Width on extra large screens. |
+| `width.xxl` | string \| number | - | Width on extra extra large screens. |
 | `zIndex` | integer | `1000` | The z-index of the modal. Useful when displaying two modals simultaneously. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design modal tokens](https://ant.design/components/modal#design-token). |
 | `theme.headerBg` | string | - | Background color of the modal header. |
@@ -1162,12 +1247,15 @@ A serene mountain landscape captured at golden hour. Photography by John Doe.
 | `onOpen` | \- | Trigger actions when modal is opened. |
 | `onCancel` | \- | Trigger actions when Cancel button is clicked. |
 | `onClose` | \- | Trigger actions after onOk or onCancel is completed. |
+| `afterClose` | \- | Trigger actions after the modal has closed and its close animation has finished. |
+| `afterOpenChange` | `{ open }` | Trigger actions after the open or close animation of the modal has finished. |
 
 | Key | Target |
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Modal element. |
 | `/header` | The Modal header. |
+| `/title` | The Modal title. |
 | `/body` | The Modal body. |
 | `/footer` | The Modal footer. |
 | `/mask` | The Modal mask. |

@@ -407,6 +407,23 @@ test.describe('AgGridLowdefy Block', () => {
     await expect(button.locator('svg').first()).toBeVisible();
   });
 
+  test('cell.type: buttons places a button icon at the end with iconPlacement', async ({
+    page,
+  }) => {
+    const block = getBlock(page, 'aggridlowdefy_cell_buttons');
+    const buttons = block.locator('.ag-row[row-index="0"] button');
+    await expect(buttons.first()).not.toHaveClass(/ant-btn-icon-end/);
+    await expect(buttons.nth(1)).toContainText('Open');
+    await expect(buttons.nth(1)).toHaveClass(/ant-btn-icon-end/);
+    const iconBox = await buttons.nth(1).locator('.ant-btn-icon').boundingBox();
+    const titleBox = await buttons
+      .nth(1)
+      .locator(':scope > span:not(.ant-btn-icon)')
+      .first()
+      .boundingBox();
+    expect(iconBox.x).toBeGreaterThan(titleBox.x);
+  });
+
   test('cell.type: buttons click triggers the named block event', async ({ page }) => {
     const block = getBlock(page, 'aggridlowdefy_cell_buttons');
     await block.locator('.ag-row[row-index="0"] button').first().click();
@@ -456,5 +473,18 @@ test.describe('AgGridLowdefy Block', () => {
     // Toggle again → loading false → overlay hides.
     await toggle.click();
     await expect(overlay).toBeHidden();
+  });
+
+  test('ConfigProvider componentDisabled disables the antd cells', async ({ page }) => {
+    const row = getBlock(page, 'aggridlowdefy_component_disabled_grid').locator(
+      '.ag-row[row-index="0"]'
+    );
+    await expect(row.locator('input.ant-input')).toBeDisabled();
+    await expect(row.locator('.ant-switch')).toBeDisabled();
+    const buttons = row.locator('.ant-btn');
+    await expect(buttons).toHaveCount(2);
+    await expect(buttons.nth(0)).toBeDisabled();
+    // A button's own `disabled: false` still re-enables it.
+    await expect(buttons.nth(1)).toBeEnabled();
   });
 });

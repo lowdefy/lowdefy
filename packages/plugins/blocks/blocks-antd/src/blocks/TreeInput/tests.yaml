@@ -15,126 +15,134 @@
 - id: default
   type: TreeInput
   properties:
-    options:
-      - label: Node 1
-        value: '1'
-        children:
-          - label: Node 1.1
-            value: '1.1'
-          - label: Node 1.2
-            value: '1.2'
-      - label: Node 2
-        value: '2'
-- id: 'properties.title: My Tree'
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+- id: 'properties.options'
   type: TreeInput
   properties:
-    title: My Tree
+    primaryKey: value
+    parentKey: parent
+    defaultExpandAll: true
     options:
-      - label: Node 1
-        value: '1'
+      - { value: eng, label: Engineering }
+      - { value: fe, label: Frontend, parent: eng }
+      - { value: be, label: Backend, parent: eng }
+      - { value: ops, label: Operations }
 - id: 'properties.showLine: true'
   type: TreeInput
   properties:
     showLine: true
-    options:
-      - label: Node 1
-        value: '1'
-        children:
-          - label: Node 1.1
-            value: '1.1'
-      - label: Node 2
-        value: '2'
+    defaultExpandAll: true
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
 - id: 'properties.defaultExpandAll: true'
   type: TreeInput
   properties:
     defaultExpandAll: true
-    options:
-      - label: Parent
-        value: parent
-        children:
-          - label: Child 1
-            value: child1
-          - label: Child 2
-            value: child2
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
 - id: 'properties.checkable: true'
   type: TreeInput
   properties:
     checkable: true
-    options:
-      - label: Node 1
-        value: '1'
-        children:
-          - label: Node 1.1
-            value: '1.1'
-      - label: Node 2
-        value: '2'
+    defaultExpandAll: true
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
 - id: 'properties.disabled: true'
   type: TreeInput
   properties:
     disabled: true
-    options:
-      - label: Node 1
-        value: '1'
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
 - id: 'properties.selectable: false'
   type: TreeInput
   properties:
     selectable: false
-    options:
-      - label: Node 1
-        value: '1'
-- id: 'properties.label title: My Tree Title'
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+- id: 'properties.blockNode: true'
   type: TreeInput
   properties:
-    label:
-      title: My Tree Title
-    options:
-      - label: Node 1
-        value: '1'
-- id: 'properties.label span: 12'
+    blockNode: true
+    defaultExpandAll: true
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+- id: 'properties.height: 60'
   type: TreeInput
   properties:
-    label:
-      span: 12
-    options:
-      - label: Node 1
-        value: '1'
-- id: 'properties.label align: right'
+    height: 60
+    defaultExpandAll: true
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+- id: 'properties.theme: indentSize'
   type: TreeInput
   properties:
-    label:
-      align: right
-    options:
-      - label: Node 1
-        value: '1'
-- id: 'properties.label inline: true'
-  type: TreeInput
-  properties:
-    label:
-      inline: true
-    options:
-      - label: Node 1
-        value: '1'
-- id: 'properties.label disabled: true'
-  type: TreeInput
-  properties:
-    label:
-      disabled: true
-    options:
-      - label: Node 1
-        value: '1'
-- id: 'properties.label colon: false'
-  type: TreeInput
-  properties:
-    label:
-      colon: false
-    options:
-      - label: Node 1
-        value: '1'
-- id: 'properties.label extra: showing extra'
-  type: TreeInput
-  properties:
-    label:
-      extra: showing extra
-    options:
-      - label: Node 1
-        value: '1'
+    theme:
+      indentSize: 40
+      nodeSelectedBg: '#fff1b8'
+    defaultExpandAll: true
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }

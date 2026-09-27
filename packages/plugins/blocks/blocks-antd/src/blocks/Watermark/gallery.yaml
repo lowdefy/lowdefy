@@ -105,6 +105,24 @@
           style:
             height: 200px
 
+- title: Per-Line Font
+  blocks:
+    - id: per_line_font
+      type: Watermark
+      properties:
+        text:
+          - text: CONFIDENTIAL
+            font:
+              fontSize: 22
+              fontWeight: bold
+              color: rgba(255, 0, 0, 0.12)
+          - Prepared for the finance team
+      blocks:
+        - id: per_line_font_child
+          type: Box
+          style:
+            height: 200px
+
 - title: Text Alignment
   blocks:
     - id: align_left
@@ -294,7 +312,7 @@
     - id: css_gradient_bg
       type: Watermark
       class:
-        element: bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-4
+        .element: bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg p-4
       properties:
         text: Preview
         font:
@@ -311,7 +329,7 @@
     - id: css_dark_surface
       type: Watermark
       class:
-        element: bg-bg-layout rounded-lg p-4
+        .element: bg-bg-layout rounded-lg p-4
       properties:
         text: Dark Theme
         font:
@@ -337,7 +355,7 @@
     - id: css_bordered_area
       type: Watermark
       class:
-        element: border-2 border-dashed border-border rounded-xl p-6
+        .element: border-2 border-dashed border-border rounded-xl p-6
       properties:
         text: Upload Area
         font:

@@ -17,6 +17,113 @@ type: Box
 
 blocks:
   # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: popover_no_arrow
+    type: Popover
+    properties:
+      title: No arrow popover
+      arrow: false
+    slots:
+      content:
+        blocks:
+          - id: popover_no_arrow_trigger
+            type: Button
+            properties:
+              title: No arrow
+      popover:
+        blocks:
+          - id: popover_no_arrow_content
+            type: Span
+            properties:
+              content: No arrow content
+
+  - id: popover_styled
+    type: Popover
+    properties:
+      title: <b>Styled</b> popover
+      overlayInnerStyle:
+        padding: 30px
+    class:
+      .title: popover-styled-title
+    style:
+      .inner:
+        backgroundColor: rgb(0, 128, 0)
+      .content:
+        color: rgb(255, 0, 0)
+    slots:
+      content:
+        blocks:
+          - id: popover_styled_trigger
+            type: Button
+            properties:
+              title: Styled
+      popover:
+        blocks:
+          - id: popover_styled_content
+            type: Span
+            properties:
+              content: Styled content
+
+  - id: popover_destroy
+    type: Popover
+    properties:
+      title: Destroyed popover
+      destroyOnHidden: true
+    slots:
+      content:
+        blocks:
+          - id: popover_destroy_trigger
+            type: Button
+            properties:
+              title: Destroy on hidden
+      popover:
+        blocks:
+          - id: popover_destroy_content
+            type: Span
+            properties:
+              content: Destroyed content
+
+  - id: popover_open_payload
+    type: Popover
+    properties:
+      title: Open payload popover
+      trigger: click
+    events:
+      onOpenChange:
+        - id: set_open
+          type: SetState
+          params:
+            popover_open_payload:
+              _if:
+                test:
+                  _event: open
+                then: opened
+                else: closed
+    slots:
+      content:
+        blocks:
+          - id: popover_open_payload_trigger
+            type: Button
+            properties:
+              title: Click for payload
+      popover:
+        blocks:
+          - id: popover_open_payload_content
+            type: Span
+            properties:
+              content: Payload content
+
+  - id: popover_open_payload_display
+    type: Span
+    properties:
+      content:
+        _if_none:
+          - _state: popover_open_payload
+          - ''
+
+  # ============================================
   # BASIC RENDERING
   # ============================================
 
@@ -223,6 +330,44 @@ blocks:
               - true
           then: Open changed!
           else: ''
+
+  # Undocumented antd props that Popover passed through before it listed its props.
+  - id: popover_legacy_toggle
+    type: Button
+    properties:
+      title: Toggle legacy popover
+    events:
+      onClick:
+        - id: toggle_legacy
+          type: SetState
+          params:
+            popover_legacy_open:
+              _not:
+                _state: popover_legacy_open
+
+  - id: popover_legacy
+    type: Popover
+    properties:
+      title: Legacy popover
+      placement: bottom
+      open:
+        _state: popover_legacy_open
+      overlayClassName: popover-legacy-overlay
+      overlayStyle:
+        width: 300px
+    slots:
+      content:
+        blocks:
+          - id: popover_legacy_trigger
+            type: Span
+            properties:
+              content: Legacy trigger
+      popover:
+        blocks:
+          - id: popover_legacy_content
+            type: Span
+            properties:
+              content: Legacy content
 
   # ============================================
   # DEFAULT OPEN (at end to avoid blocking other elements)

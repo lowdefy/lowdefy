@@ -156,6 +156,52 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 ```
 
 ```yaml
+- id: spinner_mode
+  type: NumberInput
+  properties:
+    title: Quantity
+    mode: spinner
+    min: 1
+    max: 10
+  events:
+    onMount:
+      - id: set_default
+        type: SetState
+        params:
+          spinner_mode: 1
+- id: spinner_mouse_wheel
+  type: NumberInput
+  properties:
+    title: Change With Mouse Wheel
+    changeOnWheel: true
+    placeholder: Focus and scroll
+```
+
+```yaml
+- id: prefix_suffix_text
+  type: NumberInput
+  properties:
+    title: Price
+    prefix: $
+    suffix: USD
+    precision: 2
+- id: suffix_unit
+  type: NumberInput
+  properties:
+    title: Weight
+    suffix: kg
+    min: 0
+- id: prefix_suffix_icons
+  type: NumberInput
+  properties:
+    title: Discount
+    prefixIcon: tag
+    suffix: "%"
+    min: 0
+    max: 100
+```
+
+```yaml
 - id: keyboard_enabled
   type: NumberInput
   properties:
@@ -238,7 +284,7 @@ Numeric input with step controls, min/max limits, precision, and formatting.
   type: NumberInput
   properties:
     title: Price
-    placeholder: 0
+    placeholder: "0"
     precision: 2
     min: 0
 - id: placeholder_percentage
@@ -396,7 +442,7 @@ Numeric input with step controls, min/max limits, precision, and formatting.
     max: 99999
     step: 0.01
     precision: 2
-    placeholder: 0
+    placeholder: "0"
     label:
       extra: Enter the product price in USD.
 - id: combined_quantity
@@ -417,7 +463,7 @@ Numeric input with step controls, min/max limits, precision, and formatting.
     max: 100
     step: 0.5
     precision: 1
-    placeholder: 0
+    placeholder: "0"
     size: small
     label:
       extra: Percentage discount to apply.
@@ -497,10 +543,11 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 - id: style_background
   type: NumberInput
   style:
-    .element: null
+    .element:
+      backgroundColor: var(--ant-color-primary-bg)
   properties:
     title: Custom Background
-    placeholder: Light blue background
+    placeholder: Blue tinted background
 - id: style_border
   type: NumberInput
   style:
@@ -534,14 +581,14 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 - id: class_element
   type: NumberInput
   class:
-    element: rounded-lg shadow-md
+    .element: rounded-lg shadow-md
   properties:
     title: Rounded with Shadow
     placeholder: Tailwind classes
 - id: class_label
   type: NumberInput
   class:
-    label: text-blue-600 font-semibold
+    .label: text-blue-600 font-semibold
   properties:
     title: Blue Bold Label
     placeholder: Label class override
@@ -704,7 +751,7 @@ Numeric input with step controls, min/max limits, precision, and formatting.
         title: Min Price
         min: 0
         precision: 2
-        placeholder: 0
+        placeholder: "0"
     - id: form_max_price
       type: NumberInput
       layout:
@@ -713,7 +760,7 @@ Numeric input with step controls, min/max limits, precision, and formatting.
         title: Max Price
         min: 0
         precision: 2
-        placeholder: 0
+        placeholder: "0"
 - id: form_no_label_label
   type: Markdown
   properties:
@@ -779,12 +826,25 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
+| `changeOnWheel` | boolean | `false` | Allow changing the value with the mouse wheel while the input is focused. |
 | `bordered` | boolean | `true` | Whether or not the number input has a border style. Deprecated, use variant instead. |
 | `controls` | boolean | `true` | Whether or not to show the +- controls. |
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `formatter` | object | - | A function specifying the format of the value presented. |
 | `keyboard` | boolean | `true` | If enabled, control input with keyboard up and down. |
 | `label` | object | - | Label properties. |
+| `label.xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |
+| `label.xs.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.sm` | object | - | Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set. |
+| `label.sm.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.md` | object | - | Label width on medium screens (768px and up) when the label is not inline. Overrides `span`. |
+| `label.md.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.lg` | object | - | Label width on large screens (992px and up) when the label is not inline. |
+| `label.lg.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xl` | object | - | Label width on extra large screens (1200px and up) when the label is not inline. |
+| `label.xl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xxl` | object | - | Label width on extra extra large screens (1600px and up) when the label is not inline. |
+| `label.xxl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
 | `label.extra` | string | - | Extra text to display beneath the content - supports html. |
@@ -793,20 +853,44 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
 | `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
-| `label.span` | number | - | Label inline span. |
+| `label.span` | number | - | Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns. |
 | `label.disabled` | boolean | `false` | Hide input label. |
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
+| `label.wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap. |
+| `mode` | string | `"input"` | Show the controls as up and down arrows inside the input, or as minus and plus buttons on either side of it. Enum: `input`, `spinner`. |
 | `min` | number | - | Minimum value allowed by the block. |
 | `max` | number | - | Maximum value allowed by the block. |
 | `parser` | object | - | A function specifying the value extracted from the formatter. |
 | `placeholder` | string | - | Placeholder text inside the block to show message before user types input. |
 | `decimalSeparator` | string | - | Separator between number and decimal places. Defaults to the active locale's decimal separator (e.g. "," for de-DE, "." for en-US), or "." when no locale is configured. |
 | `precision` | integer | - | Precision (number of decimal places) allowed by the block. |
+| `prefix` | string | - | Prefix text for the block, priority over prefixIcon. |
+| `prefixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to prefix the number input. |
+| `prefixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `prefixIcon.color` | string | - | Icon color. |
+| `prefixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `prefixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `prefixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `prefixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `prefixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `prefixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `prefixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `step` | number | `1` | The number to which the current value is increased or decreased. It can be an integer or decimal. |
+| `suffix` | string | - | Suffix text for the block, shown before suffixIcon. |
+| `suffixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to suffix the number input. |
+| `suffixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `suffixIcon.color` | string | - | Icon color. |
+| `suffixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `suffixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `suffixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `suffixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `suffixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `suffixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `suffixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `title` | string | - | Number input label title - supports html. |
-| `variant` | string | - | Input visual variant. When set, takes precedence over bordered. Enum: `outlined`, `filled`, `borderless`. |
+| `variant` | string | - | Input visual variant. The deprecated bordered: false takes precedence and renders the input as 'borderless'. Enum: `outlined`, `filled`, `borderless`, `underlined`. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design input-number tokens](https://ant.design/components/input-number#design-token). |
 | `theme.activeBorderColor` | string | - | Border color when the input is active (focused). |
 | `theme.activeShadow` | string | - | Box shadow when the input is active. |
@@ -851,5 +935,7 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 | `/label` | The NumberInput label. |
 | `/extra` | The NumberInput extra content. |
 | `/feedback` | The NumberInput validation feedback. |
+| `/prefixIcon` | The prefix icon in the NumberInput. |
+| `/suffixIcon` | The suffix icon in the NumberInput. |
 
 No slots defined.

@@ -78,10 +78,10 @@
   type: NumberInput
   properties:
     size: large
-- id: 'properties.inputStyle: CSS style applied'
+- id: 'style.element: CSS style applied'
   type: NumberInput
-  properties:
-    inputStyle:
+  style:
+    .element:
       border: 1px solid red
       fontSize: 25px
 - id: 'properties.label span: 5'
@@ -114,3 +114,31 @@
   properties:
     label:
       extra: showing extra
+- id: 'properties.prefix: $'
+  type: NumberInput
+  properties:
+    prefix: $
+- id: 'properties.suffix: kg'
+  type: NumberInput
+  properties:
+    suffix: kg
+- id: 'properties.prefixIcon: tag'
+  type: NumberInput
+  properties:
+    prefixIcon: tag
+- id: 'properties.suffixIcon: info'
+  type: NumberInput
+  properties:
+    suffixIcon: info
+- id: 'properties.mode: spinner'
+  type: NumberInput
+  properties:
+    mode: spinner
+- id: 'properties.changeOnWheel: true'
+  type: NumberInput
+  properties:
+    changeOnWheel: true
+- id: 'properties.variant: underlined'
+  type: NumberInput
+  properties:
+    variant: underlined

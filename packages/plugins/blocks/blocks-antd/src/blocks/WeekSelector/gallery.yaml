@@ -60,6 +60,13 @@
       properties:
         title: Borderless
         variant: borderless
+    - id: ws_variant_underlined
+      type: WeekSelector
+      properties:
+        title: Underlined
+        variant: underlined
+        label:
+          disabled: true
 
 - title: Format Variations
   blocks:
@@ -132,22 +139,33 @@
         label:
           disabled: true
 
-- title: Show Today Button
+- title: Prefix, Placement and Read-only Input
   blocks:
-    - id: ws_today_enabled
+    - id: ws_prefix_icon
       type: WeekSelector
       properties:
-        title: Show Today (default)
-        showToday: true
-        label:
-          disabled: true
-    - id: ws_today_disabled
+        title: Prefix Icon
+        prefixIcon: clock
+        suffixIcon:
+          name: calendar
+          color: '#8c8c8c'
+    - id: ws_prefix_text
       type: WeekSelector
       properties:
-        title: No Today Button
-        showToday: false
+        title: Prefix Text
+        prefix: 'From:'
+    - id: ws_placement
+      type: WeekSelector
+      properties:
+        title: Popup Opens Top Right
+        placement: topRight
+    - id: ws_read_only
+      type: WeekSelector
+      properties:
+        title: Pick From Calendar Only
+        inputReadOnly: true
         label:
-          disabled: true
+          extra: The input is read-only, so touch devices do not open the keyboard.
 
 - title: Suffix Icon
   blocks:
@@ -340,6 +358,7 @@
       type: WeekSelector
       style:
         .element:
+          backgroundColor: var(--ant-color-primary-bg)
       properties:
         title: Custom Background
         label:

@@ -104,6 +104,63 @@ Profile
 ```
 
 ```yaml
+- id: variant_solid
+  type: Divider
+  properties:
+    title: Solid
+    variant: solid
+- id: variant_dashed
+  type: Divider
+  properties:
+    title: Dashed
+    variant: dashed
+- id: variant_dotted
+  type: Divider
+  properties:
+    title: Dotted
+    variant: dotted
+```
+
+Small divider below.
+
+Medium divider below.
+
+Large (default) divider below.
+
+End of the size examples.
+
+```yaml
+- id: size_small_text
+  type: Paragraph
+  properties:
+    content: Small divider below.
+- id: size_small
+  type: Divider
+  properties:
+    size: small
+- id: size_medium_text
+  type: Paragraph
+  properties:
+    content: Medium divider below.
+- id: size_medium
+  type: Divider
+  properties:
+    size: medium
+- id: size_large_text
+  type: Paragraph
+  properties:
+    content: Large (default) divider below.
+- id: size_large
+  type: Divider
+  properties:
+    size: large
+- id: size_end_text
+  type: Paragraph
+  properties:
+    content: End of the size examples.
+```
+
+```yaml
 - id: plain_center
   type: Divider
   properties:
@@ -386,11 +443,13 @@ Instead of writing repetitive UI code, developers describe what they want in YAM
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `dashed` | boolean | `false` | Whether line is dashed. |
+| `dashed` | boolean | `false` | Whether line is dashed. Same as `variant: dashed`. |
 | `orientation` | string | `"horizontal"` | Direction of the divider line. Enum: `horizontal`, `vertical`. |
 | `title` | string | - | Divider title - supports html. |
 | `titlePlacement` | string | `"center"` | Position of title text within the divider. Enum: `start`, `end`, `center`. |
 | `plain` | boolean | `false` | Show text as plain style. |
+| `size` | string | `"large"` | Vertical margin around a horizontal divider. Enum: `small`, `medium`, `large`. |
+| `variant` | string | `"solid"` | Line style of the divider. Enum: `solid`, `dashed`, `dotted`. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design divider tokens](https://ant.design/components/divider#design-token). |
 | `theme.textPaddingInline` | string | `"1em"` | Horizontal padding of text content in the divider. |
 | `theme.orientationMargin` | number | `0.05` | Distance between text and edge when orientation is left or right. Value between 0 and 1 representing a percentage. |
@@ -402,5 +461,7 @@ No events defined.
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Divider element. |
+| `/rail` | The Divider line. |
+| `/title` | The Divider title text. |
 
 No slots defined.

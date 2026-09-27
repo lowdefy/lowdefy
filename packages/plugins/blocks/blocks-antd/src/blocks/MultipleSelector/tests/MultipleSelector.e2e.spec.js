@@ -367,7 +367,9 @@ test.describe('MultipleSelector Block', () => {
     await expect(selectedItems.first()).toHaveText('Bob');
   });
 
-  test('selecting an object-valued option renders a tag and stores the object', async ({ page }) => {
+  test('selecting an object-valued option renders a tag and stores the object', async ({
+    page,
+  }) => {
     const selector = getSelector(page, 'ms_object_select');
     await selector.click();
 
@@ -389,5 +391,62 @@ test.describe('MultipleSelector Block', () => {
     const selectedItems = selector.locator('.ant-select-selection-item-content');
     await expect(selectedItems).toHaveCount(1);
     await expect(selectedItems.first()).toHaveText('Bob');
+  });
+
+  // ============================================
+  // ANTD 6.6 FEATURES
+  // ============================================
+
+  test('disables the remaining options once maxCount is reached', async ({ page }) => {
+    const selector = getSelector(page, 'ms_max_count');
+    await selector.click();
+    await expect(getOption(page, 'ms_max_count', 2)).toHaveClass(/ant-select-item-option-disabled/);
+    await expect(getOption(page, 'ms_max_count', 0)).not.toHaveClass(
+      /ant-select-item-option-disabled/
+    );
+  });
+
+  test('collapses overflowing tags with maxTagCount responsive', async ({ page }) => {
+    const selector = getSelector(page, 'ms_responsive');
+    const rest = selector.locator('.ant-select-content-item-rest');
+    await expect(rest).toBeVisible();
+    await expect(rest).toContainText('+');
+  });
+
+  test('does not search when showSearch is false', async ({ page }) => {
+    const selector = getSelector(page, 'ms_no_search');
+    await expect(page.locator('#ms_no_search_input')).toHaveAttribute('readonly', '');
+    await selector.click();
+    await expect(getOption(page, 'ms_no_search', 0)).toBeVisible();
+  });
+
+  test('renders a custom removeIcon on each tag', async ({ page }) => {
+    const selector = getSelector(page, 'ms_remove_icon');
+    const remove = selector.locator('.ant-select-selection-item-remove');
+    await expect(remove).toHaveCount(1);
+    await expect(remove.locator('svg')).toBeVisible();
+    await remove.click();
+    await expect(selector.locator('.ant-select-selection-item')).toHaveCount(0);
+  });
+
+  test('onChange passes the selected values in the event', async ({ page }) => {
+    const selector = getSelector(page, 'ms_event_value');
+    await selector.click();
+    await getOption(page, 'ms_event_value', 1).click();
+    await expect(getBlock(page, 'ms_event_value_display')).toHaveText(/Event: \[\s*"Banana"\s*\]/);
+  });
+
+  test('renders the underlined variant', async ({ page }) => {
+    await expect(getSelector(page, 'ms_underlined')).toHaveClass(/ant-select-underlined/);
+  });
+
+  test('class.popup is applied to the dropdown', async ({ page }) => {
+    await getSelector(page, 'ms_popup_css').click();
+    await expect(page.locator('.ant-select-dropdown.ms-popup-tailwind')).toBeVisible();
+  });
+
+  test('renders a prefix icon inside the selector', async ({ page }) => {
+    const selector = getSelector(page, 'ms_prefix_icon');
+    await expect(selector.locator('.ant-select-prefix svg')).toBeVisible();
   });
 });

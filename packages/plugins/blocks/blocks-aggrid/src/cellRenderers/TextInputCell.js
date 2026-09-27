@@ -55,7 +55,7 @@ function TextInputCell(params) {
         showCount={cellConfig.showCount}
         variant={cellConfig.bordered === false ? 'borderless' : cellConfig.variant}
         type={cellConfig.inputType}
-        disabled={cellConfig.disabled === true}
+        disabled={cellConfig.disabled}
       />
     </div>
   );

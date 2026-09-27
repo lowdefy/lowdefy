@@ -136,15 +136,46 @@ test.describe('Statistic Block', () => {
 
   test('renders with custom value style', async ({ page }) => {
     const block = getStatistic(page, 'statistic_value_style');
-    // Value style is applied - just verify content is visible
     const value = block.locator('.ant-statistic-content-value');
-    await expect(value).toBeVisible();
     await expect(value).toContainText('11.28');
+    await expect(value).toHaveCSS('color', 'rgb(63, 134, 0)');
   });
 
   test('renders negative value with custom style', async ({ page }) => {
     const block = getStatistic(page, 'statistic_negative_style');
     const value = block.locator('.ant-statistic-content-value');
     await expect(value).toContainText('-9.26');
+    await expect(value).toHaveCSS('color', 'rgb(207, 19, 34)');
+  });
+
+  // ============================================
+  // TIMER AND SEMANTIC KEYS
+  // ============================================
+
+  test('countdown timer past its target shows zero and fires onFinish', async ({ page }) => {
+    const block = getStatistic(page, 'statistic_countdown_finished');
+    await expect(block.locator('.ant-statistic-content-value')).toHaveText('00:00:00');
+    await expect(getBlock(page, 'countdown_finished_display')).toHaveText('Countdown finished');
+  });
+
+  test('count up timer formats the elapsed time', async ({ page }) => {
+    const value = getStatistic(page, 'statistic_countup').locator('.ant-statistic-content-value');
+    await expect(value).toHaveText(/^\d{4,} days$/);
+  });
+
+  test('timer without a value renders an empty statistic, not NaN', async ({ page }) => {
+    const block = getStatistic(page, 'statistic_timer_no_value');
+    await expect(block.locator('.ant-statistic-title')).toHaveText('Waiting for a target');
+    await expect(block).not.toContainText('NaN');
+  });
+
+  test('applies class and style to the semantic parts', async ({ page }) => {
+    const block = getStatistic(page, 'statistic_css_keys');
+    await expect(block.locator('.ant-statistic-title')).toHaveClass(/statistic-title-class/);
+    await expect(block.locator('.ant-statistic-content')).toHaveCSS('color', 'rgb(0, 128, 0)');
+    await expect(block.locator('.ant-statistic-content-prefix')).toHaveCSS('font-size', '12px');
+    await expect(block.locator('.ant-statistic-content-suffix')).toHaveClass(
+      /statistic-suffix-class/
+    );
   });
 });

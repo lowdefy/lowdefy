@@ -17,10 +17,26 @@
 import React from 'react';
 import { FloatButton } from 'antd';
 
+import { type } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
-const FloatButtonBlock = ({
+// antd falls back to its own icons (a document, or an arrow for back to top),
+// so the block names the app's equivalents instead.
+function getIconProperties(properties) {
+  if (!type.isNone(properties.icon)) {
+    return properties.icon;
+  }
+  if (properties.backTop) {
+    return 'arrow-up';
+  }
+  if (type.isNone(properties.description)) {
+    return 'document';
+  }
+  return undefined;
+}
+
+function FloatButtonBlock({
   blockId,
   classNames = {},
   components: { Icon },
@@ -28,32 +44,49 @@ const FloatButtonBlock = ({
   methods,
   properties,
   styles = {},
-}) => (
-  <FloatButton
-    id={blockId}
-    className={classNames.element}
-    style={styles.element}
-    type={properties.type}
-    shape={properties.shape}
-    description={properties.description}
-    tooltip={properties.tooltip}
-    icon={
-      properties.icon && (
-        <Icon
-          blockId={`${blockId}_icon`}
-          classNames={{ element: classNames.icon }}
-          events={events}
-          properties={properties.icon}
-          styles={{ element: styles.icon }}
-        />
-      )
-    }
-    htmlType={properties.htmlType}
-    href={properties.href}
-    target={properties.target}
-    badge={properties.badge}
-    onClick={() => methods.triggerEvent({ name: 'onClick' })}
-  />
-);
+}) {
+  const iconProperties = getIconProperties(properties);
+  const buttonProps = {
+    id: blockId,
+    className: classNames.element,
+    style: styles.element,
+    type: properties.type,
+    shape: properties.shape,
+    content: properties.description,
+    tooltip: properties.tooltip,
+    disabled: properties.disabled,
+    // antd renders an empty badge element for any badge key, even undefined.
+    ...(type.isNone(properties.badge) ? {} : { badge: properties.badge }),
+    icon: iconProperties && (
+      <Icon
+        blockId={`${blockId}_icon`}
+        classNames={{ element: classNames.icon }}
+        events={events}
+        properties={iconProperties}
+        styles={{ element: styles.icon }}
+      />
+    ),
+    onClick: () => methods.triggerEvent({ name: 'onClick' }),
+  };
+
+  if (properties.backTop) {
+    return (
+      <FloatButton.BackTop
+        {...buttonProps}
+        duration={properties.duration}
+        showProgress={properties.showProgress}
+        visibilityHeight={properties.visibilityHeight}
+      />
+    );
+  }
+  return (
+    <FloatButton
+      {...buttonProps}
+      htmlType={properties.htmlType}
+      href={properties.href}
+      target={properties.target}
+    />
+  );
+}
 
 export default withTheme('FloatButton', withBlockDefaults(FloatButtonBlock));

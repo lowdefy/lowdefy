@@ -25,6 +25,7 @@ export default {
     icon: 'The icon in the Message.',
   },
   events: {
+    onClick: 'Trigger actions when the message is clicked.',
     onClose: 'Trigger actions when message is closed.',
   },
   properties: {
@@ -37,8 +38,13 @@ export default {
       },
       duration: {
         type: 'number',
-        default: 4.5,
+        default: 3,
         description: "Time(seconds) before auto-dismiss, don't dismiss if set to 0.",
+      },
+      pauseOnHover: {
+        type: 'boolean',
+        default: true,
+        description: 'Pause the auto-dismiss timer while the mouse is over the message.',
       },
       icon: {
         ...icon,
@@ -48,13 +54,13 @@ export default {
       status: {
         type: 'string',
         enum: ['success', 'error', 'info', 'warning', 'loading'],
-        default: 'info',
+        default: 'success',
         description: 'Message status type.',
       },
       theme: {
         type: 'object',
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Has no effect: messages render in the app-wide message holder, outside the block. Set these Message design tokens for the whole app in `lowdefy.yaml` under `theme.antd.components.Message`.',
         docs: {
           displayType: 'yaml',
           link: 'https://ant.design/components/message#design-token',

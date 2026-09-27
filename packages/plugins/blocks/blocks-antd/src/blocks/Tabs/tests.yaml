@@ -21,7 +21,7 @@
       - key: content_one
       - key: content_two
       - key: content_three
-  areas:
+  slots:
     content_one:
       blocks:
         - id: ex_1_block_1
@@ -44,7 +44,7 @@
         title: Title Two
       - key: content_three
         title: Title Three
-  areas:
+  slots:
     content_one:
       blocks:
         - id: ex_1_block_1
@@ -68,7 +68,7 @@
         title: Title Two
       - key: content_three
         title: Title Three
-  areas:
+  slots:
     content_one:
       blocks:
         - id: ex_1_block_1
@@ -93,7 +93,7 @@
       - key: content_three
         title: Title Three
         disabled: true
-  areas:
+  slots:
     content_one:
       blocks:
         - id: ex_1_block_1
@@ -118,31 +118,7 @@
       - key: content_three
         title: Title Three
         icon: save
-  areas:
-    content_one:
-      blocks:
-        - id: ex_1_block_1
-          type: Test
-    content_two:
-      blocks:
-        - id: ex_1_block_2
-          type: Test
-    content_three:
-      blocks:
-        - id: ex_1_block_3
-          type: Test
-- id: 'properties.activeKey: content_two'
-  type: Tabs
-  properties:
-    activeKey: content_two
-    tabs:
-      - key: content_one
-        title: Title One
-      - key: content_two
-        title: Title Two
-      - key: content_three
-        title: Title Three
-  areas:
+  slots:
     content_one:
       blocks:
         - id: ex_1_block_1
@@ -166,7 +142,7 @@
         title: Title Two
       - key: content_three
         title: Title Three
-  areas:
+  slots:
     content_one:
       blocks:
         - id: ex_1_block_1
@@ -190,7 +166,7 @@
         title: Title Two
       - key: content_three
         title: Title Three
-  areas:
+  slots:
     content_one:
       blocks:
         - id: ex_1_block_1
@@ -214,7 +190,7 @@
         title: Title Two
       - key: content_three
         title: Title Three
-  areas:
+  slots:
     content_one:
       blocks:
         - id: ex_1_block_1
@@ -238,7 +214,7 @@
         title: Title Two
       - key: content_three
         title: Title Three
-  areas:
+  slots:
     content_one:
       blocks:
         - id: ex_1_block_1
@@ -262,7 +238,7 @@
         title: Title Two
       - key: content_three
         title: Title Three
-  areas:
+  slots:
     content_one:
       blocks:
         - id: ex_1_block_1
@@ -286,7 +262,7 @@
         title: Title Two
       - key: content_three
         title: Title Three
-  areas:
+  slots:
     content_one:
       blocks:
         - id: ex_1_block_1
@@ -310,7 +286,7 @@
         title: Title Two
       - key: content_three
         title: Title Three
-  areas:
+  slots:
     content_one:
       blocks:
         - id: ex_1_block_1
@@ -334,7 +310,7 @@
         title: Title Two
       - key: content_three
         title: Title Three
-  areas:
+  slots:
     content_one:
       blocks:
         - id: ex_1_block_1
@@ -346,4 +322,61 @@
     content_three:
       blocks:
         - id: ex_1_block_3
+          type: Test
+- id: 'properties.centered: true'
+  type: Tabs
+  properties:
+    centered: true
+    tabs:
+      - key: content_one
+        title: Title One
+      - key: content_two
+        title: Title Two
+  slots:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
+- id: 'properties.indicator: { size: 24 }'
+  type: Tabs
+  properties:
+    tabBarGutter: 40
+    indicator:
+      size: 24
+      align: center
+    tabs:
+      - key: content_one
+        title: Title One
+      - key: content_two
+        title: Title Two
+  slots:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
+- id: 'properties.destroyOnHidden: true'
+  type: Tabs
+  properties:
+    destroyOnHidden: true
+    tabs:
+      - key: content_one
+        title: Title One
+      - key: content_two
+        title: Title Two
+  slots:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
           type: Test

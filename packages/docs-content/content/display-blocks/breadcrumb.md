@@ -102,6 +102,40 @@ Navigation breadcrumb showing the current location in a hierarchy.
 ```
 
 ```yaml
+- id: dropdown_links
+  type: Breadcrumb
+  properties:
+    list:
+      - label: Home
+        pageId: introduction
+        icon: home
+      - label: Components
+        links:
+          - label: Buttons
+            pageId: introduction
+          - label: Menus
+            pageId: introduction
+          - label: Layouts
+            pageId: introduction
+      - label: Breadcrumb
+```
+
+```yaml
+- id: semantic_styles
+  type: Breadcrumb
+  class:
+    .item: font-medium
+  style:
+    .separator:
+      color: "#1677ff"
+  properties:
+    list:
+      - Home
+      - Library
+      - Data
+```
+
+```yaml
 - id: icons_string
   type: Breadcrumb
   properties:
@@ -260,7 +294,7 @@ Navigation breadcrumb showing the current location in a hierarchy.
   style:
     .element:
       padding: 8px 16px
-      border: 1px solid
+      border: "1px solid #d9d9d9"
       borderRadius: 6
 - id: css_inline_background
   type: Breadcrumb
@@ -504,6 +538,10 @@ Premium over-ear headphones with active noise cancellation, 30-hour battery life
 | `list.$.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
 | `list.$.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `list.$.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `list.$.links` | array | - | Links shown in a dropdown menu on the breadcrumb item. |
+| `list.$.links.$.label` | string | - | Label of the dropdown link. |
+| `list.$.links.$.pageId` | string | - | Page id to link to when clicked. |
+| `list.$.links.$.url` | string | - | External url link. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design breadcrumb tokens](https://ant.design/components/breadcrumb#design-token). |
 | `theme.itemColor` | string | `"rgba(0, 0, 0, 0.45)"` | Text color of breadcrumb item. |
 | `theme.iconFontSize` | number | `14` | Icon size of breadcrumb item. |
@@ -522,5 +560,7 @@ Premium over-ear headphones with active noise cancellation, 30-hour battery life
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Breadcrumb element. |
 | `/icon` | The icon in the Breadcrumb. |
+| `/item` | Each breadcrumb item. |
+| `/separator` | The separator between items. |
 
 No slots defined.

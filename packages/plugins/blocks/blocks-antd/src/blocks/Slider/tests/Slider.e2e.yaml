@@ -24,6 +24,15 @@ events:
         slider_range_value:
           - 20
           - 80
+        slider_range_disabled:
+          - 20
+          - 60
+        slider_draggable:
+          - 20
+          - 40
+        slider_complete: 50
+        slider_no_keyboard: 50
+        slider_semantic: 40
 
 blocks:
   # ============================================
@@ -89,13 +98,14 @@ blocks:
 
   - id: slider_vertical
     type: Slider
+    style:
+      .element:
+        height: 200px
     properties:
       title: Vertical Slider
       vertical: true
       min: 0
       max: 100
-      inputStyle:
-        height: 200px
 
   - id: slider_range
     type: Slider
@@ -188,3 +198,85 @@ blocks:
               - 'Slider: '
               - _state: slider_interaction
           else: ''
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: slider_range_disabled
+    type: Slider
+    properties:
+      title: Disabled First Handle
+      range: true
+      disabled:
+        - true
+        - false
+
+  - id: slider_draggable
+    type: Slider
+    properties:
+      title: Draggable Track
+      range:
+        draggableTrack: true
+
+  - id: slider_complete
+    type: Slider
+    properties:
+      title: Change Complete
+    events:
+      onFocus:
+        - id: set_focus
+          type: SetState
+          params:
+            slider_focus_fired: true
+      onChangeComplete:
+        - id: set_complete
+          type: SetState
+          params:
+            slider_complete_value:
+              _event: value
+
+  - id: slider_focus_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: slider_focus_fired
+              - true
+          then: Focus fired
+          else: ''
+
+  - id: slider_complete_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _ne:
+              - _state: slider_complete_value
+              - null
+          then:
+            _string.concat:
+              - 'Complete: '
+              - _json.stringify:
+                  - _state: slider_complete_value
+          else: ''
+
+  - id: slider_no_keyboard
+    type: Slider
+    properties:
+      title: No Keyboard
+      keyboard: false
+
+  - id: slider_semantic
+    type: Slider
+    class:
+      .track: slider-custom-track
+      .handle: slider-custom-handle
+    style:
+      .rail:
+        backgroundColor: 'rgb(255, 0, 0)'
+    properties:
+      title: Semantic Styles

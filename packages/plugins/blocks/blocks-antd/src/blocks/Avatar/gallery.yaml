@@ -401,7 +401,7 @@
             color: '#1677ff'
           style:
             .element:
-              border: 2px solid #1677ff
+              border: '2px solid #1677ff'
         - id: css_box_shadow
           type: Avatar
           layout:
@@ -421,7 +421,7 @@
             size: large
           style:
             .element:
-              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
         - id: css_dashed_outline
           type: Avatar
           layout:
@@ -432,7 +432,7 @@
           style:
             .element:
               color: '#1677ff'
-              border: 2px dashed #1677ff
+              border: '2px dashed #1677ff'
 
 - title: Theme Token Overrides
   blocks:
@@ -649,7 +649,7 @@
                 alt: Sarah Chen
               style:
                 .element:
-                  border: 2px solid #1677ff
+                  border: '2px solid #1677ff'
               events:
                 onClick:
                   - id: profile_click_msg
@@ -788,7 +788,7 @@
                 src: https://api.dicebear.com/7.x/miniavs/svg?seed=sarah
               style:
                 .element:
-                  border: 2px solid #1677ff
+                  border: '2px solid #1677ff'
               events:
                 onClick:
                   - id: c1_profile

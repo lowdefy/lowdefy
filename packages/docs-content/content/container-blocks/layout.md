@@ -155,7 +155,7 @@ Right side panel for supplementary content, filters, or navigation.
             width: 250
             reverseArrow: true
           style:
-            borderLeft: 1px solid
+            borderLeft: "1px solid #f0f0f0"
           blocks:
             - id: layout_right_sider_side_text
               type: Paragraph
@@ -165,11 +165,11 @@ Right side panel for supplementary content, filters, or navigation.
                 content: Right side panel for supplementary content, filters, or navigation.
 ```
 
-Sider with custom background color set via the siderBg token. The trigger bar uses triggerBg and triggerColor tokens.
+The collapse trigger uses the lightTriggerBg and lightTriggerColor tokens.
 
-The Layout theme property accepts antd design tokens like headerBg, footerBg, siderBg, bodyBg, triggerBg, triggerColor, and triggerHeight. These cascade to child Header, Footer, Sider, and Content blocks.
+The Layout theme property accepts antd Layout design tokens like bodyBg, headerHeight, footerBg and the Sider trigger tokens. They apply to the Header, Footer and Sider blocks inside the layout.
 
-Footer styled with footerBg token
+Footer styled with the footerBg and footerPadding tokens
 
 ```yaml
 - id: layout_theme_outer
@@ -178,10 +178,13 @@ Footer styled with footerBg token
     minHeight: 280px
   properties:
     theme:
-      headerBg: "#1d39c4"
-      triggerBg: "#597ef7"
-      triggerColor: "#ffffff"
-      triggerHeight: 48
+      bodyBg: "#f0f5ff"
+      headerHeight: 48
+      headerColor: "#1d39c4"
+      footerBg: "#d6e4ff"
+      footerPadding: 12px 24px
+      lightTriggerBg: "#adc6ff"
+      lightTriggerColor: "#1d39c4"
   blocks:
     - id: layout_theme_header
       type: Header
@@ -191,8 +194,8 @@ Footer styled with footerBg token
         - id: layout_theme_header_text
           type: Html
           properties:
-            html: <span class="text-base font-semibold">Custom themed header via Layout
-              design tokens</span>
+            html: <span class="text-base font-semibold">48px header from the headerHeight
+              token</span>
     - id: layout_theme_inner
       type: Layout
       properties:
@@ -205,14 +208,16 @@ Footer styled with footerBg token
           properties:
             theme: light
             width: 180
+            collapsible: true
+            initialCollapsed: false
           blocks:
             - id: layout_theme_sider_text
               type: Paragraph
               style:
                 padding: 16px
               properties:
-                content: Sider with custom background color set via the siderBg token. The
-                  trigger bar uses triggerBg and triggerColor tokens.
+                content: The collapse trigger uses the lightTriggerBg and lightTriggerColor
+                  tokens.
         - id: layout_theme_content
           type: Content
           layout:
@@ -223,10 +228,10 @@ Footer styled with footerBg token
             - id: layout_theme_content_text
               type: Paragraph
               properties:
-                content: The Layout theme property accepts antd design tokens like headerBg,
-                  footerBg, siderBg, bodyBg, triggerBg, triggerColor, and
-                  triggerHeight. These cascade to child Header, Footer, Sider,
-                  and Content blocks.
+                content: The Layout theme property accepts antd Layout design tokens like
+                  bodyBg, headerHeight, footerBg and the Sider trigger tokens.
+                  They apply to the Header, Footer and Sider blocks inside the
+                  layout.
     - id: layout_theme_footer
       type: Footer
       style:
@@ -235,7 +240,7 @@ Footer styled with footerBg token
         - id: layout_theme_footer_text
           type: Paragraph
           properties:
-            content: Footer styled with footerBg token
+            content: Footer styled with the footerBg and footerPadding tokens
 ```
 
 The Layout block has a single cssKey called "element". Use the class property to apply Tailwind utility classes directly to the Layout wrapper. Here the outer Layout uses rounded corners, shadow, and a border. Child blocks like Header, Content, and Footer can each have their own class applied.
@@ -470,7 +475,8 @@ Welcome to DevDocs. This guide walks you through setting up your first project. 
           properties:
             content: DevDocs
             level: 4
-            style:
+          style:
+            .element:
               margin: 0
         - id: layout_docs_version_tag
           type: Tag
@@ -515,7 +521,7 @@ Welcome to DevDocs. This guide walks you through setting up your first project. 
             width: 260
             breakpoint: md
           style:
-            borderRight: 1px solid
+            borderRight: "1px solid #f0f0f0"
           blocks:
             - id: layout_docs_nav_title
               type: Paragraph
@@ -591,7 +597,18 @@ Welcome to DevDocs. This guide walks you through setting up your first project. 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `hasSider` | boolean | `false` | Lay the child blocks out in a row when the layout contains a Sider. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | object | - | Antd Layout design token overrides for this block. Header, Footer and Sider blocks inside the layout use them too. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design layout tokens](https://ant.design/components/layout#design-token). |
+| `theme.bodyBg` | string | `"#f5f5f5"` | Background color of the layout. |
+| `theme.headerHeight` | number | `64` | Height of Header blocks. |
+| `theme.headerPadding` | string | `"0 50px"` | Padding of Header blocks. |
+| `theme.headerColor` | string | `"rgba(0, 0, 0, 0.88)"` | Text color of Header blocks. |
+| `theme.footerBg` | string | `"#f5f5f5"` | Background color of Footer blocks. |
+| `theme.footerPadding` | string | `"24px 50px"` | Padding of Footer blocks. |
+| `theme.triggerHeight` | number | `48` | Height of the collapse trigger of a collapsible Sider. |
+| `theme.triggerBg` | string | `"#002140"` | Background color of the collapse trigger of a dark Sider. |
+| `theme.triggerColor` | string | `"#fff"` | Color of the collapse trigger of a dark Sider. |
+| `theme.lightTriggerBg` | string | `"#ffffff"` | Background color of the collapse trigger of a light Sider. |
+| `theme.lightTriggerColor` | string | `"rgba(0, 0, 0, 0.88)"` | Color of the collapse trigger of a light Sider. |
 
 No events defined.
 

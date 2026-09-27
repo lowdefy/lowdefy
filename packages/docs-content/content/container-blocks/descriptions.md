@@ -91,6 +91,25 @@ Description list with configurable layout and columns.
         value: 0.5 kg
       - label: In Stock
         value: 1,250 units
+- id: size_medium
+  type: Descriptions
+  properties:
+    title: Medium Size
+    size: medium
+    bordered: true
+    items:
+      - label: Product
+        value: Widget Plus
+      - label: SKU
+        value: WGT-PLS-003
+      - label: Price
+        value: $34.99
+      - label: Category
+        value: Electronics
+      - label: Weight
+        value: 0.4 kg
+      - label: In Stock
+        value: 2,015 units
 - id: size_small
   type: Descriptions
   properties:
@@ -304,6 +323,24 @@ Description list with configurable layout and columns.
         value: Database connection pool exhausted. Increased max_connections from 100 to
           250 and implemented connection retry logic with exponential backoff.
         span: 3
+- id: spanning_filled
+  type: Descriptions
+  properties:
+    title: Shipment
+    bordered: true
+    column: 3
+    items:
+      - label: Carrier
+        value: Road freight
+      - label: Tracking
+        value: Use span filled to take the rest of the row, whatever the column count.
+        span: filled
+      - label: Weight
+        value: 12 kg
+      - label: Pieces
+        value: 3
+      - label: Insured
+        value: Yes
 ```
 
 ```yaml
@@ -585,7 +622,7 @@ Description list with configurable layout and columns.
         value: +1 (555) 444-7890
   style:
     .element:
-      border: 2px solid
+      border: "2px solid #1677ff"
       borderRadius: 8px
       padding: 4px
 - id: css_label_content
@@ -828,9 +865,11 @@ Description list with configurable layout and columns.
 | `column.md` | integer | - | The number of description items in a row for 'md' media size. |
 | `column.lg` | integer | - | The number of description items in a row for 'lg' media size. |
 | `column.xl` | integer | - | The number of description items in a row for 'xl' media size. |
+| `column.xxl` | integer | - | The number of description items in a row for 'xxl' media size. |
+| `column.xxxl` | integer | - | The number of description items in a row for 'xxxl' media size. |
 | `itemOptions` | array | - |  |
 | `itemOptions.$.key` | string | - | Item key to which these settings should apply. |
-| `itemOptions.$.span` | number \| object | - | Item span for this key. Can also be a function that receives item and index. |
+| `itemOptions.$.span` | number \| string \| object | - | Item span for this key, or 'filled' to fill the rest of the row. Can also be a function that receives item and index. |
 | `itemOptions.$.style` | object | - | Item css style for this key. Can also be a function that receives item and index. |
 | `itemOptions.$.transformLabel` | object | - | Function to transform item key or label. Function receives arguments label, item and index. |
 | `itemOptions.$.transformValue` | object | - | Function to transform item value. Function receives arguments value, item and index. |
@@ -839,10 +878,10 @@ Description list with configurable layout and columns.
 | `items.$.labelStyle` | object | - | Customize label style. |
 | `items.$.label` | string | - | Item label - supports html. |
 | `items.$.value` | string \| number | - | Value of item - supports html. |
-| `items.$.span` | integer | - | Number of columns for this item to span. |
+| `items.$.span` | integer \| string \| object | - | Number of columns for this item to span. Set to 'filled' to fill the rest of the row, or an object of breakpoint spans like `{ xs: 1, md: 2 }`. |
 | `items.$.style` | object | - | Css style object to applied to item. |
 | `layout` | string | `"horizontal"` | Put values next to or below their labels. Enum: `horizontal`, `vertical`. |
-| `size` | string | `"default"` | Size of the block. Enum: `default`, `small`. |
+| `size` | string | `"default"` | Size of the block. `default` is the largest size. Enum: `default`, `medium`, `small`. |
 | `title` | string | - | The title of the description block, placed at the top - supports html. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design descriptions tokens](https://ant.design/components/descriptions#design-token). |
 | `theme.labelBg` | string | `"rgba(0, 0, 0, 0.02)"` | Background color for labels in bordered mode. |
@@ -862,6 +901,8 @@ No events defined.
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Descriptions element. |
+| `/header` | The header row with the title and extra content. |
+| `/title` | The Descriptions title. |
 | `/content` | The Descriptions content. |
 | `/label` | The Descriptions label. |
 

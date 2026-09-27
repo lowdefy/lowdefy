@@ -408,3 +408,158 @@ blocks:
           params:
             blockId: cm_with_content_area
             method: open
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: cm_icon_end
+    type: ConfirmModal
+    properties:
+      title: Icon placement
+      okButton:
+        icon: download
+        iconPlacement: end
+      cancelButton:
+        icon: close
+
+  - id: open_cm_icon_end
+    type: Button
+    properties:
+      title: Open cm_icon_end
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_icon_end
+            method: open
+
+  - id: cm_blur
+    type: ConfirmModal
+    properties:
+      title: Blurred mask
+      mask:
+        blur: true
+
+  - id: open_cm_blur
+    type: Button
+    properties:
+      title: Open cm_blur
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_blur
+            method: open
+
+  - id: cm_close_disabled
+    type: ConfirmModal
+    properties:
+      title: Close disabled
+      closable:
+        disabled: true
+
+  - id: open_cm_close_disabled
+    type: Button
+    properties:
+      title: Open cm_close_disabled
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_close_disabled
+            method: open
+
+  - id: cm_no_keyboard
+    type: ConfirmModal
+    properties:
+      title: No keyboard
+      keyboard: false
+
+  - id: open_cm_no_keyboard
+    type: Button
+    properties:
+      title: Open cm_no_keyboard
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_no_keyboard
+            method: open
+
+  - id: cm_focus_cancel
+    type: ConfirmModal
+    properties:
+      title: Focus cancel
+      focusable:
+        autoFocusButton: cancel
+
+  - id: open_cm_focus_cancel
+    type: Button
+    properties:
+      title: Open cm_focus_cancel
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_focus_cancel
+            method: open
+
+  - id: cm_theme
+    type: ConfirmModal
+    properties:
+      title: Themed
+      theme:
+        contentBg: 'rgb(0, 0, 255)'
+
+  - id: open_cm_theme
+    type: Button
+    properties:
+      title: Open cm_theme
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_theme
+            method: open
+
+  - id: cm_onclose
+    type: ConfirmModal
+    properties:
+      title: OnClose
+    events:
+      onClose:
+        - id: set_close
+          type: SetState
+          params:
+            cm_close_fired: true
+
+  - id: open_cm_onclose
+    type: Button
+    properties:
+      title: Open cm_onclose
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: cm_onclose
+            method: open
+
+  - id: cm_onclose_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: cm_close_fired
+              - true
+          then: Close fired
+          else: ''

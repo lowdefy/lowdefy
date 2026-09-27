@@ -293,6 +293,22 @@
             value: split
             icon: MoveHorizontal
 
+- title: Option Tooltips
+  blocks:
+    - id: segmented_tooltips
+      type: SegmentedSelector
+      properties:
+        title: View
+        options:
+          - label: List
+            value: list
+            icon: list
+            tooltip: Show items as a list
+          - label: Grid
+            value: grid
+            icon: grid
+            tooltip: Show items as a grid
+
 - title: Vertical Layout
   blocks:
     - id: vertical_basic

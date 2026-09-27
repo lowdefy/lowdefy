@@ -15,14 +15,14 @@
 */
 
 import React, { useEffect } from 'react';
-import { Upload as AntdUpload, theme as antdTheme } from 'antd';
+import { ConfigProvider, Upload as AntdUpload, theme as antdTheme } from 'antd';
 import { cn, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import useFileList from '../utils/useFileList.js';
 import createUploadIconRender from '../utils/createUploadIconRender.js';
-import getUploadListIcons from '../utils/getUploadListIcons.js';
 import getEmitFileContent from '../utils/getEmitFileContent.js';
+import getShowUploadList from '../utils/getShowUploadList.js';
 import getUploadRequest from '../utils/getUploadRequest.js';
 import getOnPaste from '../utils/getOnPaste.js';
 import withTheme from '../../withTheme.js';
@@ -49,7 +49,13 @@ const UploadDragger = ({
   const uploadRequest = emitFileContent
     ? getEmitFileContent({ methods, setFileList })
     : getUploadRequest({ methods, setFileList });
-  const onPaste = getOnPaste({ uploadRequest, properties });
+  // The Dragger follows ConfigProvider componentDisabled itself; pasting has to follow it too.
+  const { componentDisabled } = ConfigProvider.useConfig();
+  const onPaste = getOnPaste({
+    disabled: properties.disabled ?? componentDisabled,
+    properties,
+    uploadRequest,
+  });
   useEffect(() => {
     if (!emitFileContent) {
       methods.registerEvent({
@@ -101,15 +107,20 @@ const UploadDragger = ({
           item: styles.item,
         }}
         customRequest={uploadRequest}
+        directory={properties.directory}
         disabled={properties.disabled}
         fileList={state.fileList}
+        listType={properties.listType}
         maxCount={properties.maxCount}
         multiple={!properties.singleFile} // Allows selection of multiple files at once, does not block multiple uploads
         onRemove={removeFile}
         iconRender={createUploadIconRender({ blockId, Icon })}
-        showUploadList={
-          properties.showUploadList !== false && getUploadListIcons({ blockId, Icon })
-        }
+        openFileDialogOnClick={properties.openFileDialogOnClick}
+        showUploadList={getShowUploadList({
+          blockId,
+          Icon,
+          showUploadList: properties.showUploadList,
+        })}
         onChange={() => {
           // emitFileContent triggers onChange itself once the content is read,
           // so the file object in the event payload carries the base64 content.

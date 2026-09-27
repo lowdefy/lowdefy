@@ -445,6 +445,37 @@ Horizontal or vertical navigation menu with nested items.
 ```
 
 ```yaml
+- id: tsa_click_menu
+  type: Menu
+  style:
+    .element:
+      width: 256px
+  properties:
+    mode: vertical
+    triggerSubMenuAction: click
+    links:
+      - id: tsa_reports
+        type: MenuGroup
+        properties:
+          title: Reports
+          icon: chart
+        links:
+          - id: tsa_sales
+            type: MenuLink
+            properties:
+              title: Sales
+          - id: tsa_stock
+            type: MenuLink
+            properties:
+              title: Stock
+      - id: tsa_settings
+        type: MenuLink
+        properties:
+          title: Settings
+          icon: settings
+```
+
+```yaml
 - id: css_tailwind_menu
   type: Menu
   class: shadow-md rounded-lg
@@ -472,7 +503,7 @@ Horizontal or vertical navigation menu with nested items.
   type: Menu
   style:
     width: 256
-    border: 1px solid
+    border: "1px solid #d9d9d9"
     borderRadius: 8
     padding: 4
   properties:
@@ -895,7 +926,7 @@ Learn how to configure your Lowdefy application with YAML configuration files.
         type: MenuLink
         style:
           .element:
-            borderLeft: 3px solid '#1677ff'
+            borderLeft: "3px solid #1677ff"
           .label:
             letterSpacing: 0.05em
         properties:
@@ -1015,6 +1046,10 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 | `forceSubMenuRender` | boolean | `false` | Render submenu into DOM before it becomes visible. |
 | `subMenuCloseDelay` | number | - | Delay time to hide submenu when mouse leaves (in seconds). |
 | `subMenuOpenDelay` | number | - | Delay time to show submenu when mouse enters (in seconds). |
+| `triggerSubMenuAction` | string | `"hover"` | Open and close submenus on hover or on click. Enum: `hover`, `click`. |
+| `tooltip` | boolean \| object | `true` | Tooltip of menu items in a collapsed inline menu. Set false to hide it, or an object to configure it. |
+| `tooltip.placement` | string | `"right"` | Position of the tooltip relative to the menu item. Enum: `top`, `left`, `right`, `bottom`, `topLeft`, `topRight`, `bottomLeft`, `bottomRight`, `leftTop`, `leftBottom`, `rightTop`, `rightBottom`. |
+| `tooltip.color` | string | - | Background color of the tooltip. |
 | `theme` | string \| object | - | The Menu color theme, light or dark, or antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design menu tokens](https://ant.design/components/menu#design-token). |
 | `theme.dropdownWidth` | number | `160` | Width of dropdown submenus. |
 | `theme.zIndexPopup` | number | `1050` | Z-index for popup submenus. |
@@ -1143,8 +1178,8 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onSelect` | `{ key }` | Trigger action when menu item is selected. |
-| `onClick` | `{ key }` | Trigger action when menu item is clicked. |
+| `onSelect` | `{ key, keyPath }` | Trigger action when menu item is selected. |
+| `onClick` | `{ key, keyPath }` | Trigger action when menu item is clicked. |
 | `onToggleMenuGroup` | `{ openKeys }` | Trigger action when mobile menu group is opened. |
 
 | Key | Target |
@@ -1155,5 +1190,6 @@ Learn how to configure your Lowdefy application with YAML configuration files.
 | `/icon` | Deprecated alias for `itemIcon`. |
 | `/itemIcon` | The icon shown in each menu item. |
 | `/item` | The Menu item wrapper (li). |
+| `/popup` | The floating popup of a submenu in vertical and horizontal modes. |
 
 No slots defined.

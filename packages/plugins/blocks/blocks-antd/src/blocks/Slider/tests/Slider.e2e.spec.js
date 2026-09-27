@@ -72,6 +72,7 @@ test.describe('Slider Block', () => {
   test('renders vertical slider', async ({ page }) => {
     const slider = getSlider(page, 'slider_vertical');
     await expect(slider).toHaveClass(/ant-slider-vertical/);
+    await expect(slider).toHaveCSS('height', '200px');
   });
 
   test('renders range slider with two handles', async ({ page }) => {
@@ -168,5 +169,48 @@ test.describe('Slider Block', () => {
 
     // Disabled state should still be applied
     await expect(slider).toHaveClass(/ant-slider-disabled/);
+  });
+});
+
+test.describe('Slider antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'slider');
+  });
+
+  test('an array of disabled flags disables individual range handles', async ({ page }) => {
+    const handles = getHandle(page, 'slider_range_disabled');
+    await expect(handles).toHaveCount(2);
+    await expect(handles.nth(0)).toHaveClass(/ant-slider-handle-disabled/);
+    await expect(handles.nth(1)).not.toHaveClass(/ant-slider-handle-disabled/);
+  });
+
+  test('range options make the track draggable', async ({ page }) => {
+    const track = page.locator('#bl-slider_draggable .ant-slider-track');
+    await expect(track).toHaveClass(/ant-slider-track-draggable/);
+  });
+
+  test('onChangeComplete fires with the value after a keyboard change', async ({ page }) => {
+    const handle = getHandle(page, 'slider_complete');
+    await handle.focus();
+    await expect(getBlock(page, 'slider_focus_display')).toHaveText('Focus fired');
+    await page.keyboard.press('ArrowRight');
+    await expect(getBlock(page, 'slider_complete_display')).toHaveText('Complete: 51');
+  });
+
+  test('keyboard false ignores the arrow keys', async ({ page }) => {
+    const handle = getHandle(page, 'slider_no_keyboard');
+    await handle.focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(handle).toHaveAttribute('aria-valuenow', '50');
+  });
+
+  test('applies the rail, track and handle cssKeys', async ({ page }) => {
+    const slider = getSlider(page, 'slider_semantic');
+    await expect(slider.locator('.ant-slider-rail')).toHaveCSS(
+      'background-color',
+      'rgb(255, 0, 0)'
+    );
+    await expect(slider.locator('.ant-slider-track')).toHaveClass(/slider-custom-track/);
+    await expect(slider.locator('.ant-slider-handle')).toHaveClass(/slider-custom-handle/);
   });
 });

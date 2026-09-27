@@ -265,3 +265,72 @@ blocks:
               - 'clicked:'
               - _state: dm_shortcut_result
           else: ''
+
+  # ============================================
+  # CSS KEYS, PLACEMENT AND SELECTABLE
+  # ============================================
+
+  - id: dm_css
+    type: DropdownMenu
+    class:
+      .element: dm-css-element
+      .menu: dm-css-menu
+      .item: dm-css-item
+    style:
+      .element:
+        display: inline-block
+        padding: 3px
+      .item:
+        color: rgb(255, 0, 0)
+    properties:
+      trigger: click
+      placement: rightTop
+      links:
+        - id: dm_css_item
+          type: MenuLink
+          properties:
+            title: Styled Item
+    blocks:
+      - id: dm_css_trigger
+        type: Button
+        properties:
+          title: Styled Menu
+
+  - id: dm_selectable
+    type: DropdownMenu
+    properties:
+      trigger: click
+      selectable: true
+      links:
+        - id: dm_sel_first
+          type: MenuLink
+          properties:
+            title: First Choice
+        - id: dm_sel_second
+          type: MenuLink
+          properties:
+            title: Second Choice
+    events:
+      onSelect:
+        - id: dm_sel_set
+          type: SetState
+          params:
+            dm_selected:
+              _event: selectedKeys
+    blocks:
+      - id: dm_selectable_trigger
+        type: Button
+        properties:
+          title: Select Menu
+
+  - id: dm_selectable_display
+    type: Paragraph
+    properties:
+      content:
+        _string.concat:
+          - 'selected:'
+          - _if_none:
+              - _array.join:
+                  - _state: dm_selected
+                  - ','
+              - ''

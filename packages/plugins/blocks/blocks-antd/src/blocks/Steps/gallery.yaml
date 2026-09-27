@@ -270,6 +270,23 @@
           - title: In Progress
           - title: Waiting
 
+- title: Max Count
+  blocks:
+    - id: max_count_steps
+      type: Steps
+      properties:
+        current: 5
+        maxCount: 5
+        items:
+          - title: Draft
+          - title: Review
+          - title: Legal
+          - title: Finance
+          - title: Approval
+          - title: Signed
+          - title: Filed
+          - title: Archived
+
 - title: With Progress
   blocks:
     - id: progress_steps
@@ -546,5 +563,5 @@
       style:
         .element:
           padding: 16px
-          border: 1px solid #d9d9d9
+          border: '1px solid #d9d9d9'
           borderRadius: 8

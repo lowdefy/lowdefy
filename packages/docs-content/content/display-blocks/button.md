@@ -293,6 +293,50 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
 ```
 
 ```yaml
+- id: placement_back
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Back
+    icon: arrow-left
+    color: default
+    variant: outlined
+- id: placement_next
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Next
+    icon: arrow-right
+    iconPlacement: end
+    color: primary
+    variant: outlined
+- id: placement_send
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Send
+    icon: send
+    iconPlacement: end
+    color: primary
+    variant: solid
+- id: placement_docs
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Open docs
+    icon: external-link
+    iconPlacement: end
+    href: https://docs.lowdefy.com
+    target: _blank
+    color: primary
+    variant: link
+```
+
+```yaml
 - id: ghost_bg
   type: Box
   class: bg-gradient-to-br from-teal-300 to-purple-400 p-4 rounded-lg
@@ -718,6 +762,7 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
 | `hideTitle` | boolean | `false` | Hide the button's title. |
 | `tooltip` | string | - | Hover text for the button. An icon-only button (`hideTitle: true`) shows its `title` as the tooltip when this is not set. |
 | `href` | string | - | The URL to redirect to when the button is clicked. Useful when used with a type link button. |
+| `target` | string | - | Where to open the `href` link, the anchor target attribute. For example `_blank` opens it in a new tab. |
 | `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use icon in button. |
 | `icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
 | `icon.color` | string | - | Icon color. |
@@ -728,10 +773,11 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
 | `icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
 | `icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `iconPlacement` | string | `"start"` | Place the icon before (start) or after (end) the title. Enum: `start`, `end`. |
 | `shape` | string | `"square"` | Shape of the button. Enum: `circle`, `round`, `square`. |
 | `size` | string | `"default"` | Size of the button. Enum: `small`, `default`, `large`. |
 | `title` | string | - | Title text on the button - supports html. |
-| `type` | string | `"primary"` | Deprecated - use color and variant instead. The button type. Enum: `primary`, `default`, `dashed`, `link`, `text`. |
+| `type` | string | `"primary"` | Deprecated - use color and variant instead. The button type. Enum: `primary`, `default`, `dashed`, `link`, `text`, `danger`. |
 | `variant` | string | - | Button visual variant. When set, takes precedence over type. Enum: `solid`, `outlined`, `dashed`, `filled`, `text`, `link`. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design button tokens](https://ant.design/components/button#design-token). |
 | `theme.borderRadius` | number | `6` | Border radius of the button. |
@@ -747,13 +793,31 @@ Button with colors, variants, sizes, shapes, icons, ghost, and block modes.
 | `theme.paddingInline` | number | `15` | Horizontal padding. |
 | `theme.paddingInlineLG` | number | `15` | Horizontal padding for large buttons. |
 | `theme.paddingInlineSM` | number | `7` | Horizontal padding for small buttons. |
-| `theme.paddingBlock` | number | `0` | Vertical padding. |
+| `theme.paddingBlock` | number | `0` | Deprecated in antd 6 and has no effect. Use controlHeight instead. |
 | `theme.colorPrimary` | string | - | Primary color override. |
 | `theme.colorPrimaryHover` | string | - | Primary hover color. |
 | `theme.colorPrimaryActive` | string | - | Primary active color. |
 | `theme.colorBgContainer` | string | - | Background color for default buttons. |
 | `theme.colorText` | string | - | Text color for default buttons. |
 | `theme.colorBorder` | string | - | Border color for outlined and dashed buttons. |
+| `theme.fontWeight` | number \| string | `400` | Font weight of the button text. |
+| `theme.iconGap` | number | `8` | Gap between the icon and the title. |
+| `theme.contentFontSize` | number | `14` | Font size of the button content. |
+| `theme.contentFontSizeLG` | number | `16` | Font size of the content of large buttons. |
+| `theme.contentFontSizeSM` | number | `14` | Font size of the content of small buttons. |
+| `theme.onlyIconSize` | number \| string | `"inherit"` | Icon size of a button that only contains an icon. |
+| `theme.primaryColor` | string | `"#fff"` | Text color of primary buttons. |
+| `theme.dangerColor` | string | `"#fff"` | Text color of danger buttons. |
+| `theme.defaultBg` | string | `"#ffffff"` | Background color of default buttons. |
+| `theme.defaultColor` | string | `"rgba(0, 0, 0, 0.88)"` | Text color of default buttons. |
+| `theme.defaultBorderColor` | string | `"#d9d9d9"` | Border color of default buttons. |
+| `theme.defaultHoverBg` | string | `"#ffffff"` | Background color of default buttons on hover. |
+| `theme.defaultHoverColor` | string | `"#4096ff"` | Text color of default buttons on hover. |
+| `theme.defaultHoverBorderColor` | string | `"#4096ff"` | Border color of default buttons on hover. |
+| `theme.textHoverBg` | string | `"rgba(0, 0, 0, 0.04)"` | Background color of text buttons on hover. |
+| `theme.defaultShadow` | string | `"0 2px 0 rgba(0, 0, 0, 0.02)"` | Box shadow of default buttons. |
+| `theme.primaryShadow` | string | `"0 2px 0 rgba(5, 145, 255, 0.1)"` | Box shadow of primary buttons. |
+| `theme.dangerShadow` | string | `"0 2px 0 rgba(255, 38, 5, 0.06)"` | Box shadow of danger buttons. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |

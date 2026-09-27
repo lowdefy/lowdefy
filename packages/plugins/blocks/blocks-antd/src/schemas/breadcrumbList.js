@@ -57,6 +57,28 @@ export default {
             description:
               'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use an icon in breadcrumb link.',
           },
+          links: {
+            type: 'array',
+            description: 'Links shown in a dropdown menu on the breadcrumb item.',
+            items: {
+              type: 'object',
+              properties: {
+                label: {
+                  type: 'string',
+                  description: 'Label of the dropdown link.',
+                },
+                pageId: {
+                  type: 'string',
+                  description: 'Page id to link to when clicked.',
+                },
+                url: {
+                  type: 'string',
+                  urlKind: 'url',
+                  description: 'External url link.',
+                },
+              },
+            },
+          },
         },
       },
     },

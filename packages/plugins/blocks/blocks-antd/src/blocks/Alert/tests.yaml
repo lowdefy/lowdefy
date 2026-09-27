@@ -18,24 +18,24 @@
   type: Alert
   properties:
     message: Alert message - Completed!
-- id: areas.action and properties.message
+- id: slots.action and properties.message
   type: Alert
   properties:
     message: Alert message - Completed!
-  areas:
+  slots:
     action:
       blocks:
         - id: ex_1_block_1
           type: Test
 - id: 'properties.icon string'
-  type: Info
+  type: Alert
   properties:
     icon: check-circle
     message: Message with Icon!
 - id: 'properties.icon object'
-  type: Info
+  type: Alert
   properties:
-    icon: # FIX: color and style is not working, className is not passed to alert icon
+    icon:
       name: settings
       spin: true
       color: red
@@ -109,12 +109,12 @@
     message: Alert message - error!
     type: error
 - id: 'properties.closable: true'
-  type: info
+  type: Alert
   properties:
     closable: true
     message: Message closable true
 - id: 'properties.closeText: Close Text'
-  type: info
+  type: Alert
   properties:
     closable: true
     closeText: Close Text
@@ -134,16 +134,16 @@
     message: Alert message - Completed!
     description: This is a description for the block.
 - id: 'with description properties.icon string'
-  type: Info
+  type: Alert
   properties:
     description: This is a description for the block.
     icon: check-circle
     message: Message with Icon!
 - id: 'with description properties.icon object'
-  type: Info
+  type: Alert
   properties:
     description: This is a description for the block.
-    icon: # FIX: color and style is not working, className is not passed to alert icon
+    icon:
       name: settings
       spin: true
       color: red
@@ -172,12 +172,12 @@
     description: This is a description for the block.
     message: Alert message - error!
     type: error
-- id: areas.action and properties.description
+- id: slots.action and properties.description
   type: Alert
   properties:
     message: Alert message - Completed!
     description: This is a description for the block.
-  areas:
+  slots:
     action:
       blocks:
         - id: ex_1_block_1
@@ -239,13 +239,13 @@
     message: Alert message - error!
     type: error
 - id: 'with description properties.closable: true'
-  type: info
+  type: Alert
   properties:
     description: This is a description for the block.
     closable: true
     message: Message closable true
 - id: 'with description properties.closeText: Close Text'
-  type: info
+  type: Alert
   properties:
     description: This is a description for the block.
     closable: true
@@ -259,3 +259,25 @@
   type: Alert
   properties:
     description: <div style="background:red;">Alert Description</div>
+- id: 'properties.variant: filled'
+  type: Alert
+  properties:
+    message: Filled alert without a border.
+    type: success
+    variant: filled
+- id: 'properties.closeIcon'
+  type: Alert
+  properties:
+    closable: true
+    closeIcon: close-circle
+    message: Closable alert with a custom close icon.
+- id: 'class and style semantic keys'
+  type: Alert
+  class:
+    .message: font-semibold
+  style:
+    .description:
+      color: '#595959'
+  properties:
+    message: Alert message
+    description: Alert description

@@ -51,7 +51,7 @@ function SwitchCell(params) {
     <Switch
       checked={!!value}
       size={cellConfig.size ?? 'small'}
-      disabled={cellConfig.disabled === true}
+      disabled={cellConfig.disabled}
       autoFocus={cellConfig.autoFocus}
       checkedChildren={children(cellConfig.checkedText, checkedIcon, 'checked')}
       unCheckedChildren={children(cellConfig.uncheckedText, uncheckedIcon, 'unchecked')}

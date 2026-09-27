@@ -21,6 +21,7 @@ import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
 import getSelectedIndex from '../../getSelectedIndex.js';
+import useDisabled from '../../useDisabled.js';
 import useSelectorOptions from '../../useSelectorOptions.js';
 import withTheme from '../withTheme.js';
 
@@ -38,6 +39,8 @@ const SegmentedSelector = ({
   value,
 }) => {
   const uniqueValueOptions = useSelectorOptions({ properties, methods });
+  // antd Segmented doesn't read ConfigProvider componentDisabled itself.
+  const disabled = useDisabled({ loading, properties });
   return (
     <Label
       blockId={blockId}
@@ -54,7 +57,9 @@ const SegmentedSelector = ({
           <Segmented
             id={`${blockId}_input`}
             className={classNames.element}
+            classNames={{ item: classNames.options }}
             style={styles.element}
+            styles={{ item: styles.options }}
             options={uniqueValueOptions.map((opt, i) =>
               type.isPrimitive(opt)
                 ? {
@@ -66,7 +71,7 @@ const SegmentedSelector = ({
                       ? renderHtml({ html: `${opt.value}`, methods })
                       : renderHtml({ html: opt.label, methods }),
                     value: `${i}`,
-                    disabled: opt.disabled || properties.disabled || loading,
+                    disabled: opt.disabled || disabled,
                     icon: opt.icon ? (
                       <Icon
                         blockId={`${blockId}_${i}_icon`}
@@ -76,14 +81,20 @@ const SegmentedSelector = ({
                         styles={{ element: styles.icon }}
                       />
                     ) : undefined,
+                    tooltip: opt.tooltip,
                   }
             )}
-            size={properties.size}
+            // antd 6 renamed the `middle` size to `medium`.
+            size={properties.size === 'middle' ? 'medium' : properties.size}
             block={properties.block}
-            disabled={properties.disabled || loading}
+            disabled={disabled}
             vertical={properties.vertical}
             shape={properties.shape}
-            value={type.isNone(value) ? undefined : getSelectedIndex(value, uniqueValueOptions, { properties })}
+            value={
+              type.isNone(value)
+                ? undefined
+                : getSelectedIndex(value, uniqueValueOptions, { properties })
+            }
             onChange={(index) => {
               const val = type.isPrimitive(uniqueValueOptions[index])
                 ? uniqueValueOptions[index]

@@ -22,8 +22,13 @@
   type: Affix
   properties:
     offsetBottom: 15
-- id: 'properties.style'
+- id: 'style.element'
+  type: Affix
+  style:
+    .element:
+      border: 5px solid blue
+- id: 'properties.target'
   type: Affix
   properties:
-    style:
-      border: 5px solid blue
+    offsetTop: 0
+    target: scroll_panel

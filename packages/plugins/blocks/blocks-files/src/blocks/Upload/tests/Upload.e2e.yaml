@@ -33,6 +33,14 @@ blocks:
         title: Choose File
         type: primary
 
+  - id: upload_button_icon_end
+    type: Upload
+    properties:
+      uploadPolicyRequestId: upload_policy_request
+      button:
+        title: Attach
+        iconPlacement: end
+
   # ============================================
   # PROPERTY TESTS
   # ============================================
@@ -110,3 +118,34 @@ blocks:
               - 'Type: '
               - _state: emitted_file.type
           else: ''
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: upload_picture_list
+    type: Upload
+    properties:
+      emitFileContent: true
+      listType: picture
+      showUploadList:
+        showRemoveIcon: false
+        showDownloadIcon: true
+
+  - id: upload_directory
+    type: Upload
+    properties:
+      emitFileContent: true
+      directory: true
+
+  - id: upload_pastable
+    type: Upload
+    properties:
+      emitFileContent: true
+      pastable: true
+
+  - id: upload_hidden_list
+    type: Upload
+    properties:
+      emitFileContent: true
+      showUploadList: false

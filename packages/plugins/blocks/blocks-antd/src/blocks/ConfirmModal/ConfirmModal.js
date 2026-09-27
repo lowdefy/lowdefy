@@ -17,7 +17,9 @@
 import React, { useEffect } from 'react';
 import { App } from 'antd';
 import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { type } from '@lowdefy/helpers';
 
+import getMask from '../getMask.js';
 import statusIcons from '../statusIcons.js';
 
 const ConfirmModal = ({
@@ -42,9 +44,18 @@ const ConfirmModal = ({
           (content.content && content.content()) ??
           renderHtml({ html: properties.content, methods }),
         className: classNames.element,
+        classNames: { body: classNames.body },
         style: styles.element,
         styles: { body: styles.body },
+        // antd renders confirm dialogs in the App holder, outside the block, so the theme is
+        // passed to the ConfigProvider antd wraps each confirm dialog in.
+        theme: type.isObject(properties.theme)
+          ? { components: { Modal: properties.theme } }
+          : undefined,
         closable: properties.closable,
+        focusable: properties.focusable,
+        keyboard: properties.keyboard,
+        scrollLock: properties.scrollLock,
         okText: properties.okText,
         okButtonProps: properties.okButton?.icon
           ? {
@@ -80,10 +91,10 @@ const ConfirmModal = ({
           : properties.cancelButton,
         cancelText: properties.cancelText,
         centered: properties.centered ?? false,
-        mask: properties.mask !== undefined ? properties.mask : true,
-        maskClosable: properties.maskClosable ?? false,
+        mask: getMask({ mask: properties.mask, maskClosable: properties.maskClosable }),
         width: properties.width,
         zIndex: properties.zIndex,
+        afterClose: () => methods.triggerEvent({ name: 'onClose' }),
         onOk: async () => {
           const response = await methods.triggerEvent({ name: 'onOk' });
           if (response.success === false && response.bounced !== true) throw response;

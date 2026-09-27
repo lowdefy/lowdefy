@@ -80,14 +80,15 @@
     list:
       - label: Page One
       - label: Page two
-- id: 'properties.style: fontSize: 18'
+- id: 'style.element: fontSize: 18'
   type: Breadcrumb
   properties:
-    style:
-      fontSize: 18
     list:
       - label: Page One
       - label: Page two
+  style:
+    .element:
+      fontSize: 18
 - id: properties.theme
   type: Breadcrumb
   properties:
@@ -104,3 +105,16 @@
       - label: Settings
         pageId: settings
       - label: Profile
+- id: properties.list.links
+  type: Breadcrumb
+  properties:
+    list:
+      - label: Home
+        pageId: home
+      - label: Products
+        links:
+          - label: Laptops
+            pageId: laptops
+          - label: Phones
+            pageId: phones
+      - label: Details

@@ -1,0 +1,117 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: steps
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: steps_basic
+    type: Steps
+    class:
+      .item: steps-custom-item
+      .itemTitle: steps-custom-title
+      .itemContent: steps-custom-content
+    properties:
+      current: 1
+      size: default
+      items:
+        - title: Cart
+          description: Review items
+        - title: Payment
+          subTitle: Card or EFT
+          description: Pay securely
+        - title: Done
+          description: Order placed
+
+  - id: steps_description_width
+    type: Steps
+    properties:
+      current: 0
+      theme:
+        descriptionMaxWidth: 80
+      items:
+        - title: Draft
+          description: A description long enough to wrap
+        - title: Review
+
+  # ============================================
+  # DOT STYLE
+  # ============================================
+
+  - id: steps_progress_dot
+    type: Steps
+    properties:
+      current: 1
+      progressDot: true
+      items:
+        - title: One
+        - title: Two
+        - title: Three
+
+  # ============================================
+  # MAX COUNT
+  # ============================================
+
+  - id: steps_max_count
+    type: Steps
+    properties:
+      current: 4
+      maxCount: 5
+      items:
+        - title: Step 1
+        - title: Step 2
+        - title: Step 3
+        - title: Step 4
+        - title: Step 5
+        - title: Step 6
+        - title: Step 7
+        - title: Step 8
+        - title: Step 9
+
+  # ============================================
+  # CLICKABLE STEPS
+  # ============================================
+
+  - id: steps_clickable
+    type: Steps
+    properties:
+      current:
+        _if_none:
+          - _state: steps_current
+          - 0
+      items:
+        - title: First
+        - title: Second
+        - title: Third
+    events:
+      onChange:
+        - id: set_steps_current
+          type: SetState
+          params:
+            steps_current:
+              _event: current
+
+  - id: steps_clickable_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'current:'
+          - _if_none:
+              - _state: steps_current
+              - 0

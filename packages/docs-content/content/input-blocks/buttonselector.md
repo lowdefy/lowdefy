@@ -92,6 +92,27 @@ Radio group styled as toggle buttons.
 ```
 
 ```yaml
+- id: block_button_selector
+  type: ButtonSelector
+  properties:
+    title: Billing Period
+    block: true
+    options:
+      - Monthly
+      - Quarterly
+      - Yearly
+- id: vertical_button_selector
+  type: ButtonSelector
+  properties:
+    title: Plan
+    direction: vertical
+    options:
+      - Starter
+      - Team
+      - Enterprise
+```
+
+```yaml
 - id: size_small
   type: ButtonSelector
   properties:
@@ -571,6 +592,7 @@ Radio group styled as toggle buttons.
 ```yaml
 - id: class_padding
   type: ButtonSelector
+  class: p-4
   properties:
     title: Tailwind Padding
     variant: solid
@@ -581,9 +603,9 @@ Radio group styled as toggle buttons.
         value: b
       - label: Option C
         value: c
-    class: p-4
 - id: class_shadow_rounded
   type: ButtonSelector
+  class: shadow-md rounded-lg p-2
   properties:
     title: Shadow and Rounded
     variant: solid
@@ -594,9 +616,9 @@ Radio group styled as toggle buttons.
         value: b
       - label: Option C
         value: c
-    class: shadow-md rounded-lg p-2
 - id: class_background
   type: ButtonSelector
+  class: bg-bg-layout p-3 rounded
   properties:
     title: Background Color
     variant: solid
@@ -607,7 +629,6 @@ Radio group styled as toggle buttons.
         value: b
       - label: Option C
         value: c
-    class: bg-bg-layout p-3 rounded
 ```
 
 ```yaml
@@ -886,6 +907,8 @@ Radio group styled as toggle buttons.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `block` | boolean | `false` | Stretch the buttons to fill the width of the parent, sharing it equally. |
+| `direction` | string | `"horizontal"` | Lay the option buttons out in a row or stack them in a column. Enum: `horizontal`, `vertical`. |
 | `variant` | string | `"solid"` | Visual variant of the selected option button, matching the Button block. Enum: `solid`, `outlined`. |
 | `buttonStyle` | string | - | Deprecated — use `variant` (solid \| outlined) instead. Enum: `solid`, `outline`. |
 | `color` | string | - | Color applied to the selected button. Fills the background in solid mode (with auto-contrasting text) and the border/text in outline mode. |
@@ -902,6 +925,18 @@ Radio group styled as toggle buttons.
 | `primaryKey` | string | - | Field used to match the current value (e.g. set with SetState) back to an option for highlighting. Defaults to `valueKey`. Set this when the stored value is the whole row but a single field (e.g. "id") uniquely identifies it. In the tree selectors it also serves as each node’s id, referenced by `parentKey`. Supports dotted paths. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `label` | object | - | Label properties. |
+| `label.xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |
+| `label.xs.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.sm` | object | - | Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set. |
+| `label.sm.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.md` | object | - | Label width on medium screens (768px and up) when the label is not inline. Overrides `span`. |
+| `label.md.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.lg` | object | - | Label width on large screens (992px and up) when the label is not inline. |
+| `label.lg.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xl` | object | - | Label width on extra large screens (1200px and up) when the label is not inline. |
+| `label.xl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xxl` | object | - | Label width on extra extra large screens (1600px and up) when the label is not inline. |
+| `label.xxl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
 | `label.extra` | string | - | Extra text to display beneath the content - supports html. |
@@ -910,10 +945,11 @@ Radio group styled as toggle buttons.
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
 | `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
-| `label.span` | number | - | Label inline span. |
+| `label.span` | number | - | Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns. |
 | `label.disabled` | boolean | `false` | Hide input label. |
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
+| `label.wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design radio tokens](https://ant.design/components/radio#design-token). |
 | `theme.radioSize` | number | `16` | Size of the radio dot element. |
@@ -960,5 +996,6 @@ Radio group styled as toggle buttons.
 | `/label` | The ButtonSelector label. |
 | `/extra` | The ButtonSelector extra content. |
 | `/feedback` | The ButtonSelector validation feedback. |
+| `/options` | Each ButtonSelector option. |
 
 No slots defined.

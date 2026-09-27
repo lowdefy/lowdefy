@@ -334,7 +334,8 @@ Dashboard Overview
           type: Paragraph
           properties:
             content: Admin Panel v2.4.1
-            style:
+          style:
+            .element:
               textAlign: center
               margin: 0
               color: "#999"
@@ -393,7 +394,7 @@ Dashboard Overview
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `title` | string | - | Page title. Accepted for compatibility. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). |
+| `theme` | object | - | Antd global design token overrides, such as colorPrimary or borderRadius, applied to everything in the page layout. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design component tokens](https://ant.design/docs/react/customize-theme#seedtoken). |
 | `logo` | object | - | Header logo settings. By default, images are served from the app public folder and auto-swap between light and dark variants based on dark mode. See [Hosting Files](/hosting-files) for details. |
 | `logo.src` | string | - | Logo image URL for desktop. Defaults to logo-light-theme.png or logo-dark-theme.png from the public folder (~250x72px), auto-selected based on dark mode. |
 | `logo.srcMobile` | string | - | Logo image URL for mobile. Defaults to logo-square-light-theme.png or logo-square-dark-theme.png from the public folder (~125x125px), auto-selected based on dark mode. |
@@ -401,7 +402,7 @@ Dashboard Overview
 | `logo.style` | object | - | Css style object to apply to logo. |
 | `sider` | object | - | Sider properties. |
 | `sider.collapsedWidth` | integer | - | Width of the collapsed sidebar, by setting to 0 a special trigger will appear. |
-| `sider.collapsible` | boolean | `true` | Whether can be collapsed. |
+| `sider.collapsible` | boolean | `false` | Show a trigger at the bottom of the sider that collapses and expands it, like the toggle button. |
 | `sider.initialCollapsed` | boolean | `false` | Set the initial collapsed state. |
 | `sider.width` | string \| number | - | Width of the sidebar. |
 | `sider.hideToggleButton` | boolean | `false` | Hide toggle button in sider. |
@@ -430,6 +431,10 @@ Dashboard Overview
 | `breadcrumb.list.$.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
 | `breadcrumb.list.$.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `breadcrumb.list.$.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `breadcrumb.list.$.links` | array | - | Links shown in a dropdown menu on the breadcrumb item. |
+| `breadcrumb.list.$.links.$.label` | string | - | Label of the dropdown link. |
+| `breadcrumb.list.$.links.$.pageId` | string | - | Page id to link to when clicked. |
+| `breadcrumb.list.$.links.$.url` | string | - | External url link. |
 | `menu` | object | - | Menu properties. |
 | `menu.links` | array | - |  |
 | `menu.links.$.id` | string | - | Menu item id. |
@@ -486,7 +491,7 @@ Dashboard Overview
 | `profile.avatar.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `profile.avatar.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `profile.avatar.color` | string | - | Background color of the avatar when not using src. |
-| `profile.avatar.size` | string \| number | `"small"` | Size of the avatar. Enum: `default`, `small`, `large`. |
+| `profile.avatar.size` | string \| number | `"small"` | Size of the avatar: default, small, large or a pixel number. |
 | `profile.avatar.shape` | string | `"circle"` | Shape of the avatar. Enum: `circle`, `square`. |
 | `profile.links` | array | - | Dropdown menu items. Uses the same MenuLink/MenuGroup/MenuDivider schema as Menu. Compatible with _menu operator output for access-filtered menus. |
 | `profile.links.$.id` | string | - | Menu item id. |
@@ -538,6 +543,7 @@ Dashboard Overview
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The PageSidebarLayout element. |
 | `/sider` | The PageSidebarLayout sider. |
+| `/siderBody` | The box inside the sider that holds the toggle button, menu and sider slots. |
 | `/siderHeader` | The box above the sider menu that holds the siderHeader or siderHeaderClosed slot. |
 | `/menu` | The PageSidebarLayout menu. |
 | `/mobileHeader` | The PageSidebarLayout mobile header. |

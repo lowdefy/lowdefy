@@ -245,3 +245,65 @@ blocks:
         type: Span
         properties:
           content: Nested content block
+
+  # ============================================
+  # THEME AND CSS KEYS
+  # ============================================
+
+  - id: label_theme
+    type: Label
+    required: true
+    properties:
+      title: Themed Label
+      theme:
+        labelColor: 'rgb(114, 46, 209)'
+        labelFontSize: 18
+        labelRequiredMarkColor: 'rgb(82, 196, 26)'
+    blocks:
+      - id: label_theme_content
+        type: Span
+        properties:
+          content: Themed content
+
+  - id: label_element_css
+    type: Label
+    class:
+      .element: label-element-tailwind
+    style:
+      .element:
+        padding: 12px
+    properties:
+      title: Element CSS
+    blocks:
+      - id: label_element_css_content
+        type: Span
+        properties:
+          content: Element content
+
+  - id: label_wrap
+    type: Label
+    layout:
+      span: 6
+    properties:
+      title: A very long inline label that needs more than one line to fit
+      inline: true
+      wrap: true
+    blocks:
+      - id: label_wrap_content
+        type: Span
+        properties:
+          content: Wrapped
+
+  - id: label_breakpoints
+    type: Label
+    properties:
+      title: Breakpoint widths
+      sm:
+        span: 12
+      lg:
+        span: 6
+    blocks:
+      - id: label_breakpoints_content
+        type: Span
+        properties:
+          content: Breakpoint content

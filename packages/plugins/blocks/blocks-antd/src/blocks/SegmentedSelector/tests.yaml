@@ -139,3 +139,17 @@
       - Option B
     label:
       extra: showing extra
+- id: 'properties.options.tooltip and icon'
+  type: SegmentedSelector
+  properties:
+    options:
+      - label: List
+        value: list
+        icon: list
+        tooltip: Show as a list
+      - label: Grid
+        value: grid
+        icon:
+          name: grid
+          color: '#1677ff'
+        tooltip: Show as a grid

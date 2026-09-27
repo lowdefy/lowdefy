@@ -19,10 +19,12 @@ import { TreeSelect } from 'antd';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import useSelectorOptions from '../../useSelectorOptions.js';
 import getSelectedIndex from '../../getSelectedIndex.js';
+import getTreeAncestorKeys from '../../getTreeAncestorKeys.js';
 import getTreeData, { ROOT_PID } from '../../getTreeData.js';
 
 const TreeSelector = ({
@@ -44,9 +46,31 @@ const TreeSelector = ({
   // primaryKey / parentKey are structural (node id + parent ref); the stored value is the valueKey
   // value, so selection is matched on valueKey — hide primaryKey from getSelectedIndex.
   const matchProps = { ...properties, primaryKey: undefined };
+  const selectedIndex = getSelectedIndex(value, entries, { properties: matchProps });
+  // antd scrolls the opened dropdown to the selected node, which fails with a console warning
+  // while a collapsed parent hides it, so the dropdown first opens with its parents expanded.
+  const treeDefaultExpandedKeys =
+    properties.treeDefaultExpandAll || type.isNone(selectedIndex)
+      ? undefined
+      : getTreeAncestorKeys({ key: selectedIndex, treeData });
 
   let antdVariant = properties.variant;
   if (properties.bordered === false) antdVariant = 'borderless';
+  // antd only shows its loading indicator when no suffixIcon is passed, so swap ours for a spinner.
+  const suffixIcon = loading ? (
+    <Icon
+      blockId={`${blockId}_loadingIcon`}
+      properties={{ name: 'loading', spin: true, title: '' }}
+    />
+  ) : (
+    <Icon
+      blockId={`${blockId}_suffixIcon`}
+      classNames={{ element: classNames.suffixIcon }}
+      events={events}
+      properties={properties.suffixIcon ?? { name: 'chevron-down', title: '' }}
+      styles={{ element: styles.suffixIcon }}
+    />
+  );
 
   return (
     <Label
@@ -67,33 +91,52 @@ const TreeSelector = ({
               id={`${blockId}_input`}
               variant={antdVariant}
               className={classNames.element}
+              classNames={{ content: classNames.selector, popup: { root: classNames.popup } }}
               style={{ width: '100%', ...styles.element }}
-              disabled={properties.disabled || loading}
+              styles={{ content: styles.selector, popup: { root: styles.popup } }}
+              disabled={getDisabled({ loading, properties })}
               placeholder={
                 properties.placeholder ?? methods.translate('blocks.treeSelector.placeholder')
               }
               status={validation.status}
-              size={properties.size}
+              // antd 6 names the default size `medium`; `default` is not an antd size.
+              size={properties.size === 'default' ? 'medium' : properties.size}
               autoFocus={properties.autoFocus}
+              listHeight={properties.listHeight}
+              loading={loading}
+              placement={properties.placement}
+              popupMatchSelectWidth={properties.popupMatchSelectWidth}
+              prefix={
+                properties.prefix ??
+                (properties.prefixIcon && (
+                  <Icon
+                    blockId={`${blockId}_prefixIcon`}
+                    classNames={{ element: classNames.prefixIcon }}
+                    events={events}
+                    properties={properties.prefixIcon}
+                    styles={{ element: styles.prefixIcon }}
+                  />
+                ))
+              }
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               treeDataSimpleMode={{ id: 'id', pId: 'pId', rootPId: ROOT_PID }}
               treeData={treeData}
               treeDefaultExpandAll={properties.treeDefaultExpandAll}
-              showSearch={properties.showSearch !== false}
-              treeNodeFilterProp="title"
+              treeDefaultExpandedKeys={treeDefaultExpandedKeys}
+              treeExpandAction={properties.treeExpandAction}
+              treeLine={properties.treeLine}
+              showSearch={
+                properties.showSearch !== false && {
+                  treeNodeFilterProp: 'title',
+                  onSearch: (searchValue) =>
+                    methods.triggerEvent({ name: 'onSearch', event: { value: searchValue } }),
+                }
+              }
               treeTitleRender={(node) => renderHtml({ html: `${node.title}`, methods })}
               notFoundContent={
                 properties.notFoundContent ?? methods.translate('blocks.treeSelector.notFound')
               }
-              suffixIcon={
-                <Icon
-                  blockId={`${blockId}_suffixIcon`}
-                  classNames={{ element: classNames.suffixIcon }}
-                  events={events}
-                  properties={properties.suffixIcon ?? { name: 'chevron-down', title: '' }}
-                  styles={{ element: styles.suffixIcon }}
-                />
-              }
+              suffixIcon={suffixIcon}
               allowClear={
                 properties.allowClear !== false && {
                   clearIcon: (
@@ -107,7 +150,7 @@ const TreeSelector = ({
                   ),
                 }
               }
-              value={getSelectedIndex(value, entries, { properties: matchProps })}
+              value={selectedIndex}
               onChange={(idx) => {
                 const val = type.isNone(idx) ? null : entries[idx].value;
                 methods.setValue(val);
@@ -116,7 +159,11 @@ const TreeSelector = ({
               onBlur={() => methods.triggerEvent({ name: 'onBlur' })}
               onFocus={() => methods.triggerEvent({ name: 'onFocus' })}
               onClear={() => methods.triggerEvent({ name: 'onClear' })}
-              onSearch={(v) => methods.triggerEvent({ name: 'onSearch', event: { value: v } })}
+              onOpenChange={(open) =>
+                methods.triggerEvent({ name: 'onOpenChange', event: { open } })
+              }
+              // antd lets even an undefined `virtual` prop override the ConfigProvider `virtual`.
+              {...(type.isNone(properties.virtual) ? {} : { virtual: properties.virtual })}
             />
           </div>
         ),
@@ -125,4 +172,4 @@ const TreeSelector = ({
   );
 };
 
-export default withTheme('TreeSelect', withBlockDefaults(TreeSelector));
+export default withTheme(['TreeSelect', 'Select'], withBlockDefaults(TreeSelector));

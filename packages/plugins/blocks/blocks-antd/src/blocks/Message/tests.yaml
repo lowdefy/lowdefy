@@ -52,3 +52,8 @@
   type: Message
   properties:
     content: '<div style="color:pink;"><strong>Message Content Html</strong></div>'
+- id: 'properties.pauseOnHover: false'
+  type: Message
+  properties:
+    content: Closes on time even while hovered
+    pauseOnHover: false

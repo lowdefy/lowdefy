@@ -869,7 +869,7 @@
       properties:
         title: Title Border
         theme:
-          titleBorderBottom: 1px solid #d9d9d9
+          titleBorderBottom: '1px solid #d9d9d9'
           titleMarginBottom: 12
           innerContentPadding: '8px 0'
       slots:
@@ -921,7 +921,7 @@
       layout:
         flex: 0 0 auto
       class:
-        element: cursor-pointer
+        .element: cursor-pointer
       properties:
         title: Element CSS Key
         trigger: click
@@ -947,7 +947,7 @@
       layout:
         flex: 0 0 auto
       class:
-        inner: shadow-xl rounded-xl
+        .inner: shadow-xl rounded-xl
       properties:
         title: Inner CSS Key
       slots:
@@ -972,7 +972,7 @@
       layout:
         flex: 0 0 auto
       class:
-        title: font-bold text-blue-600 border-b border-border pb-2
+        .title: font-bold text-blue-600 border-b border-border pb-2
       properties:
         title: Title CSS Key
       slots:
@@ -997,7 +997,7 @@
       layout:
         flex: 0 0 auto
       class:
-        content: bg-bg-layout p-4 rounded-md
+        .content: bg-bg-layout p-4 rounded-md
       properties:
         title: Content CSS Key
       slots:
@@ -1045,8 +1045,7 @@
                   properties:
                     icon: user
                     size: 48
-                    color: '#fff'
-                    backgroundColor: '#1677ff'
+                    color: '#1677ff'
                 - id: popover_usercard_info
                   type: Box
                   layout:
@@ -1128,8 +1127,7 @@
                 flex: 0 0 auto
               properties:
                 content: SC
-                color: '#fff'
-                backgroundColor: '#1677ff'
+                color: '#1677ff'
             - id: popover_usercard_trigger_name
               type: Paragraph
               layout:

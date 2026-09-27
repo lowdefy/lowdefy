@@ -83,13 +83,45 @@
   type: ConfirmModal
   properties:
     title: '<div style="color:purple">Html Title</div>'
-- id: 'properties.modalStyle: background: yellow'
+- id: 'style: .element: background: yellow'
   type: ConfirmModal
-  properties:
-    modalStyle:
+  style:
+    .element:
       background: yellow
-- id: 'properties.bodyStyle: background: green'
+- id: 'style: .body: background: green'
+  type: ConfirmModal
+  style:
+    .body:
+      background: green
+- id: 'properties.okButton: iconPlacement: end'
   type: ConfirmModal
   properties:
-    bodyStyle:
-      background: green
+    title: Export data?
+    okButton:
+      icon: download
+      iconPlacement: end
+- id: 'properties.mask: blur: true'
+  type: ConfirmModal
+  properties:
+    title: Blurred mask
+    mask:
+      blur: true
+- id: 'properties.closable: disabled: true'
+  type: ConfirmModal
+  properties:
+    closable:
+      disabled: true
+- id: 'properties.keyboard: false'
+  type: ConfirmModal
+  properties:
+    keyboard: false
+- id: 'properties.focusable: autoFocusButton: cancel'
+  type: ConfirmModal
+  properties:
+    title: Delete record?
+    focusable:
+      autoFocusButton: cancel
+- id: 'properties.scrollLock: false'
+  type: ConfirmModal
+  properties:
+    scrollLock: false

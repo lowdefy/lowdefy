@@ -15,6 +15,14 @@ Full-size or compact calendar for date display and selection, with support for d
 ```
 
 ```yaml
+- id: week_numbers
+  type: Calendar
+  properties:
+    fullscreen: false
+    showWeek: true
+```
+
+```yaml
 - id: year_mode
   type: Calendar
   properties:
@@ -121,6 +129,7 @@ Full-size or compact calendar for date display and selection, with support for d
 | --- | --- | --- | --- |
 | `fullscreen` | boolean | `true` | Whether to display the calendar in full size. Set to false for a compact card-style calendar. |
 | `mode` | string | `"month"` | The display mode of the calendar panel. Enum: `month`, `year`. |
+| `showWeek` | boolean | `false` | Show the week number column. |
 | `disabledDates` | object | - | Disable specific dates so that they can not be chosen. |
 | `disabledDates.min` | string \| object | - | Disable all dates less than the minimum date. Can be a date string or a _date object. |
 | `disabledDates.max` | string \| object | - | Disable all dates greater than the maximum date. Can be a date string or a _date object. |
@@ -152,5 +161,8 @@ Full-size or compact calendar for date display and selection, with support for d
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Calendar element. |
+| `/header` | The Calendar header with the year, month and mode selectors. |
+| `/item` | Each date or month cell of the Calendar. |
+| `/itemContent` | The content area inside each cell, where dateCellData renders. |
 
 No slots defined.

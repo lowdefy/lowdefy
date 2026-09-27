@@ -11,10 +11,10 @@ Right Panel
   type: Splitter
   style:
     height: 200px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: left
         defaultSize: 50
@@ -52,10 +52,10 @@ Bottom Panel
   type: Splitter
   style:
     height: 300px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: vertical
+    orientation: vertical
     panels:
       - key: top
         defaultSize: 50
@@ -99,10 +99,10 @@ Flexible remainder
   type: Splitter
   style:
     height: 200px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: first
         defaultSize: 25
@@ -145,10 +145,10 @@ Flexible remainder
   type: Splitter
   style:
     height: 180px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: px_fixed
         defaultSize: 200px
@@ -195,10 +195,10 @@ Min: 100px / Max: 300px
   type: Splitter
   style:
     height: 200px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: nav
         defaultSize: 30
@@ -239,10 +239,10 @@ Min: 100px / Max: 300px
   type: Splitter
   style:
     height: 200px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: cpx_left
         defaultSize: 30
@@ -304,10 +304,10 @@ Right (collapsible)
   type: Splitter
   style:
     height: 200px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: col_sidebar
         defaultSize: 30
@@ -343,10 +343,10 @@ Right (collapsible)
   type: Splitter
   style:
     height: 200px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: cb_left
         defaultSize: 25
@@ -400,16 +400,15 @@ Collapse right only
   type: Splitter
   style:
     height: 200px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: cse_left
         defaultSize: 30
         collapsible:
-          start: true
-          end: false
+          end: true
       - key: cse_center
         defaultSize: 40
         collapsible:
@@ -418,8 +417,7 @@ Collapse right only
       - key: cse_right
         defaultSize: 30
         collapsible:
-          start: false
-          end: true
+          start: true
   slots:
     cse_left:
       blocks:
@@ -453,6 +451,48 @@ Collapse right only
                 content: Collapse right only
 ```
 
+The panel animates as it collapses, and its blocks unmount while it is collapsed.
+
+Double-click the drag handle to trigger onDraggerDoubleClick.
+
+```yaml
+- id: col_motion
+  type: Splitter
+  style:
+    height: 200px
+    border: "1px solid #e8e8e8"
+    borderRadius: 8px
+  properties:
+    destroyOnHidden: true
+    draggerIcon: GripVertical
+    collapsible:
+      motion: true
+      icon:
+        start: ChevronsLeft
+        end: ChevronsRight
+    panels:
+      - key: col_motion_nav
+        defaultSize: 30
+        collapsible:
+          end: true
+          showCollapsibleIcon: true
+      - key: col_motion_main
+  slots:
+    col_motion_nav:
+      blocks:
+        - id: col_motion_nav_text
+          type: Paragraph
+          properties:
+            content: The panel animates as it collapses, and its blocks unmount while it is
+              collapsed.
+    col_motion_main:
+      blocks:
+        - id: col_motion_main_text
+          type: Paragraph
+          properties:
+            content: Double-click the drag handle to trigger onDraggerDoubleClick.
+```
+
 Fixed (resizable: false)
 
 Resizable
@@ -464,10 +504,10 @@ Resizable
   type: Splitter
   style:
     height: 200px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: nr_fixed
         defaultSize: 30
@@ -518,10 +558,10 @@ This panel content is also lazily rendered.
   type: Splitter
   style:
     height: 200px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     lazy: true
     panels:
       - key: lazy_left
@@ -570,10 +610,10 @@ Resize the panels. The onResizeStart fires a message and onResizeEnd saves panel
   type: Splitter
   style:
     height: 200px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: evt_left
         defaultSize: 50
@@ -633,10 +673,10 @@ Resize the panels. The onResizeStart fires a message and onResizeEnd saves panel
   type: Splitter
   style:
     height: 220px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: es_left
         defaultSize: 40
@@ -718,10 +758,10 @@ Collapsible bottom panel inside the nested vertical splitter.
   type: Splitter
   style:
     height: 350px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: n_sidebar
         defaultSize: 25
@@ -759,7 +799,7 @@ Collapsible bottom panel inside the nested vertical splitter.
           style:
             height: 100%
           properties:
-            layout: vertical
+            orientation: vertical
             panels:
               - key: n_content
                 defaultSize: 70
@@ -821,10 +861,10 @@ splitBarDraggableSize: 40, borderRadius: 12
   type: Splitter
   style:
     height: 200px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: ttb_left
         defaultSize: 50
@@ -859,10 +899,10 @@ splitBarDraggableSize: 40, borderRadius: 12
   type: Splitter
   style:
     height: 200px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: tg_left
         defaultSize: 50
@@ -900,10 +940,10 @@ splitBarDraggableSize: 40, borderRadius: 12
   type: Splitter
   style:
     height: 200px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: tm_left
         defaultSize: 50
@@ -938,10 +978,10 @@ splitBarDraggableSize: 40, borderRadius: 12
   type: Splitter
   style:
     height: 200px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: tch_left
         defaultSize: 50
@@ -987,11 +1027,11 @@ class.element: border-2 border-dashed border-blue-300 rounded-xl
 - id: css_rounded
   type: Splitter
   class:
-    element: rounded-2xl shadow-lg overflow-hidden
+    .element: rounded-2xl shadow-lg overflow-hidden
   style:
     height: 200px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: css_r_left
         defaultSize: 50
@@ -1024,11 +1064,11 @@ class.element: border-2 border-dashed border-blue-300 rounded-xl
 - id: css_border
   type: Splitter
   class:
-    element: border-2 border-dashed border-blue-300 rounded-xl
+    .element: border-2 border-dashed border-blue-300 rounded-xl
   style:
     height: 180px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: css_b_left
         defaultSize: 40
@@ -1084,10 +1124,10 @@ Compiled successfully!
   type: Splitter
   style:
     height: 420px
-    border: 1px solid
+    border: "1px solid #d9d9d9"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: editor_files
         defaultSize: 18
@@ -1168,7 +1208,7 @@ Compiled successfully!
           style:
             height: 100%
           properties:
-            layout: vertical
+            orientation: vertical
             panels:
               - key: editor_code
                 defaultSize: 65
@@ -1188,7 +1228,7 @@ Compiled successfully!
                       style:
                         color: "#64748b"
                         fontSize: 12px
-                        borderBottom: 1px solid
+                        borderBottom: "1px solid #334155"
                         paddingBottom: 8px
                       properties:
                         content: App.js
@@ -1228,7 +1268,7 @@ Compiled successfully!
                         fontSize: 11px
                         textTransform: uppercase
                         letterSpacing: 1px
-                        borderBottom: 1px solid
+                        borderBottom: "1px solid #1e293b"
                         paddingBottom: 6px
                       properties:
                         content: Terminal
@@ -1265,10 +1305,10 @@ Overview
   type: Splitter
   style:
     height: 400px
-    border: 1px solid
+    border: "1px solid #e8e8e8"
     borderRadius: 8px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: dash_nav
         defaultSize: 22
@@ -1454,11 +1494,11 @@ Please review the attached document and share any feedback by end of week. Our n
 - id: email_outer
   type: Splitter
   class:
-    element: rounded-lg shadow-md overflow-hidden
+    .element: rounded-lg shadow-md overflow-hidden
   style:
     height: 420px
   properties:
-    layout: horizontal
+    orientation: horizontal
     panels:
       - key: email_folders
         defaultSize: 20
@@ -1642,8 +1682,7 @@ Please review the attached document and share any feedback by end of week. Our n
                   properties:
                     icon: user
                     size: 32
-                    color: "#fff"
-                    backgroundColor: "#1677ff"
+                    color: "#1677ff"
                 - id: email_preview_sender
                   type: Box
                   layout:
@@ -1696,16 +1735,54 @@ Please review the attached document and share any feedback by end of week. Our n
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `collapsible` | object | - | Collapse behaviour shared by all panels. Which panels collapse is set per panel with panels[].collapsible. |
+| `collapsible.motion` | boolean | `false` | Animate panels as they collapse and expand. |
+| `collapsible.icon` | object | - | Custom collapse icons. By default the collapse buttons show `chevron-left` and `chevron-right` arrows, or `chevron-up` and `chevron-down` arrows on a vertical Splitter. |
+| `collapsible.icon.start` | string \| object | - | Icon name or properties of an Icon block for the collapse button that moves the bar towards the start. |
+| `collapsible.icon.start.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `collapsible.icon.start.color` | string | - | Icon color. |
+| `collapsible.icon.start.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `collapsible.icon.start.rotate` | number | - | Number of degrees to rotate the icon. |
+| `collapsible.icon.start.spin` | boolean | - | Continuously spin the icon with animation. |
+| `collapsible.icon.start.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `collapsible.icon.start.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `collapsible.icon.start.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `collapsible.icon.start.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `collapsible.icon.end` | string \| object | - | Icon name or properties of an Icon block for the collapse button that moves the bar towards the end. |
+| `collapsible.icon.end.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `collapsible.icon.end.color` | string | - | Icon color. |
+| `collapsible.icon.end.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `collapsible.icon.end.rotate` | number | - | Number of degrees to rotate the icon. |
+| `collapsible.icon.end.spin` | boolean | - | Continuously spin the icon with animation. |
+| `collapsible.icon.end.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `collapsible.icon.end.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `collapsible.icon.end.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `collapsible.icon.end.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `destroyOnHidden` | boolean | `false` | Unmount the blocks in a panel while it is collapsed. Can be overridden per panel. |
+| `draggerIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to show in the drag handle. |
+| `draggerIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `draggerIcon.color` | string | - | Icon color. |
+| `draggerIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `draggerIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `draggerIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `draggerIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `draggerIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `draggerIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `draggerIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `lazy` | boolean | `false` | Lazy render panel content. |
-| `layout` | string | `"horizontal"` | Layout direction of the splitter. Enum: `horizontal`, `vertical`. |
+| `layout` | string | `"horizontal"` | Layout direction of the splitter. Prefer orientation. Enum: `horizontal`, `vertical`. |
 | `orientation` | string | - | Layout direction of the splitter. Alias for layout, takes precedence if both are set. Enum: `horizontal`, `vertical`. |
-| `panels` | array | - | Panel configuration array. Each panel has key, size, min, max, defaultSize, collapsible, resizable. |
+| `panels` | array | - | Panel configuration array. Each panel has key, size, min, max, defaultSize, collapsible, resizable and destroyOnHidden. |
 | `panels.$.key` | string | - | Unique panel key, used to match content slots. |
 | `panels.$.size` | number \| string | - | Controlled panel size. |
 | `panels.$.min` | number \| string | - | Minimum size threshold. |
 | `panels.$.max` | number \| string | - | Maximum size threshold. |
 | `panels.$.defaultSize` | number \| string | - | Default panel size. |
-| `panels.$.collapsible` | boolean \| object | - | Whether the panel is collapsible. |
+| `panels.$.collapsible` | boolean \| object | `false` | Whether the panel is collapsible. Set an object to choose the collapse directions and when the collapse buttons show. |
+| `panels.$.collapsible.start` | boolean | - | Show a collapse button on the bar at the start edge of the panel. |
+| `panels.$.collapsible.end` | boolean | - | Show a collapse button on the bar at the end edge of the panel. |
+| `panels.$.collapsible.showCollapsibleIcon` | boolean \| string | `"auto"` | When to show the collapse buttons: always (true), never (false) or on hover (auto). Enum: `true`, `false`, `auto`. |
+| `panels.$.destroyOnHidden` | boolean | - | Unmount the blocks in this panel while it is collapsed. Overrides the Splitter destroyOnHidden. |
 | `panels.$.resizable` | boolean | `true` | Whether the panel is resizable. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design splitter tokens](https://ant.design/components/splitter#design-token). |
 | `theme.splitBarSize` | number | `1` | Thickness of the divider bar between panels in pixels. |
@@ -1726,10 +1803,15 @@ Please review the attached document and share any feedback by end of week. Our n
 | `onResize` | `{ sizes }` | Trigger action when panel sizes change during resize. |
 | `onResizeEnd` | `{ sizes }` | Trigger action when resize ends. |
 | `onResizeStart` | `{ sizes }` | Trigger action when resize starts. |
+| `onDraggerDoubleClick` | `{ index }` | Trigger action when a drag handle is double-clicked. |
 
 | Key | Target |
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Splitter element. |
+| `/panel` | Each Splitter panel. |
+| `/dragger` | The drag handle between panels. |
+| `/draggerIcon` | The custom icon in the drag handle, set with draggerIcon. |
+| `/collapseIcon` | The collapse icons on the drag handles of collapsible panels. |
 
 Slot keys are user-defined in your config and resolved at build time — not generated at runtime. The block typically pairs slots with an array property (`tabs`, `panels`, `slides`) listed in the Properties table; see the examples above for the expected shape.

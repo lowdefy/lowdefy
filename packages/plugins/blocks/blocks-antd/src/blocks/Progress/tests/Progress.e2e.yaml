@@ -165,3 +165,84 @@ blocks:
     properties:
       percent: 60
       steps: 5
+
+  # ============================================
+  # SIZE, TRANSLATED PROPS, PERCENT POSITION, SEMANTIC KEYS
+  # ============================================
+
+  - id: progress_dashboard_gap_left
+    type: Progress
+    properties:
+      type: dashboard
+      percent: 75
+      gapDegree: 90
+      gapPosition: left
+
+  - id: progress_dashboard_gap_placement
+    type: Progress
+    properties:
+      type: dashboard
+      percent: 75
+      gapDegree: 90
+      gapPlacement: start
+
+  - id: progress_size_small
+    type: Progress
+    properties:
+      percent: 40
+      size: small
+
+  - id: progress_size_array
+    type: Progress
+    properties:
+      percent: 40
+      size:
+        - 200
+        - 12
+
+  - id: progress_circle_size
+    type: Progress
+    properties:
+      type: circle
+      percent: 40
+      size: 60
+
+  - id: progress_circle_steps
+    type: Progress
+    properties:
+      type: circle
+      percent: 50
+      steps:
+        count: 4
+        gap: 6
+
+  - id: progress_percent_inner
+    type: Progress
+    properties:
+      percent: 60
+      size:
+        - 300
+        - 20
+      percentPosition:
+        align: center
+        type: inner
+
+  - id: progress_gradient
+    type: Progress
+    properties:
+      percent: 80
+      strokeColor:
+        from: '#108ee9'
+        to: '#87d068'
+
+  - id: progress_css_keys
+    type: Progress
+    class:
+      .indicator: progress-indicator-class
+    style:
+      .track:
+        backgroundColor: 'rgb(255, 0, 0)'
+      .rail:
+        backgroundColor: 'rgb(0, 0, 255)'
+    properties:
+      percent: 30

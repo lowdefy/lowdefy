@@ -38,8 +38,8 @@
     color: '#afb'
 - id: style
   type: Tag
-  properties:
-    style:
+  style:
+    .element:
       fontSize: 1.3em
 - id: closable
   type: Tag
@@ -49,3 +49,32 @@
   type: Tag
   properties:
     icon: save
+- id: 'properties.variant: solid'
+  type: Tag
+  properties:
+    title: Solid
+    color: blue
+    variant: solid
+- id: 'properties.variant: outlined'
+  type: Tag
+  properties:
+    title: Outlined
+    color: green
+    variant: outlined
+- id: 'properties.disabled: true'
+  type: Tag
+  properties:
+    title: Disabled
+    disabled: true
+- id: 'properties.href'
+  type: Tag
+  properties:
+    title: Lowdefy docs
+    href: https://docs.lowdefy.com
+    target: _blank
+- id: 'properties.closeIcon'
+  type: Tag
+  properties:
+    title: Custom close icon
+    closable: true
+    closeIcon: close-circle

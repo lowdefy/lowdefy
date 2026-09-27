@@ -86,6 +86,36 @@ test.describe('Calendar Block', () => {
     await expect(badges.first()).toBeVisible();
   });
 
+  test('month cells in year mode do not repeat the month name', async ({ page }) => {
+    const cal = getCalendar(page, 'cal_year_cell_data');
+    const firstMonth = cal.locator('td.ant-picker-cell').first();
+    await expect(firstMonth.locator('.ant-picker-calendar-date-value')).toHaveText('Jan');
+    await expect(firstMonth.locator('.ant-picker-calendar-date-content')).toHaveText('');
+  });
+
+  // ============================================
+  // SHOW WEEK AND SEMANTIC KEYS
+  // ============================================
+
+  test('renders week numbers when showWeek is true', async ({ page }) => {
+    const cal = getCalendar(page, 'cal_show_week');
+    await expect(cal.locator('.ant-picker-date-panel')).toHaveClass(
+      /ant-picker-date-panel-show-week/
+    );
+    await expect(cal.locator('.ant-picker-cell-week').first()).toBeVisible();
+  });
+
+  test('applies class and style to the semantic parts', async ({ page }) => {
+    const cal = getCalendar(page, 'cal_css_keys');
+    const header = cal.locator('.ant-picker-calendar-header');
+    await expect(header).toHaveClass(/cal-header-class/);
+    await expect(header).toHaveCSS('background-color', 'rgb(240, 248, 255)');
+    await expect(cal.locator('td.ant-picker-cell').first()).toHaveClass(/cal-item-class/);
+    await expect(cal.locator('.ant-picker-calendar-date-content').first()).toHaveClass(
+      /cal-item-content-class/
+    );
+  });
+
   // ============================================
   // EVENTS
   // ============================================

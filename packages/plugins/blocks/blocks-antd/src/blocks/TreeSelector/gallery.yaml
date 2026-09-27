@@ -79,3 +79,23 @@
           - { value: fe, label: Frontend, parent: eng }
           - { value: be, label: Backend, parent: eng }
           - { value: ops, label: Operations }
+
+- title: Tree Lines and Click to Expand
+  blocks:
+    - id: tree_line_selector
+      type: TreeSelector
+      properties:
+        title: Location
+        treeLine: true
+        treeExpandAction: click
+        primaryKey: id
+        parentKey: parentId
+        valueKey: id
+        html: '{{ item.label }}'
+        data:
+          - { id: eu, label: Europe, selectable: false }
+          - { id: de, label: Germany, parentId: eu }
+          - { id: fr, label: France, parentId: eu }
+          - { id: am, label: Americas, selectable: false }
+          - { id: us, label: United States, parentId: am }
+          - { id: br, label: Brazil, parentId: am }

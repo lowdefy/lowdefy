@@ -19,6 +19,7 @@ import { ConfigProvider, Switch } from 'antd';
 import { type, serializer } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 
@@ -43,14 +44,17 @@ const SwitchBlock = ({
   if (type.isString(propertiesIconUnchecked)) {
     propertiesIconUnchecked = { name: propertiesIconUnchecked };
   }
+  // antd 6 renamed the default size to medium and warns on size="default".
+  const size = properties.size === 'default' ? 'medium' : properties.size;
   const switchEl = (
     <Switch
       autoFocus={properties.autoFocus}
       checked={!!value}
       className={classNames.element}
-      disabled={properties.disabled || loading}
+      disabled={getDisabled({ loading, properties })}
       id={`${blockId}_input`}
-      size={properties.size}
+      loading={properties.loading}
+      size={size}
       style={styles.element}
       checkedChildren={
         properties.checkedText ? (

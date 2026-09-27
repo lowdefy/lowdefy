@@ -20,6 +20,9 @@ export default {
   valueType: null,
   cssKeys: {
     element: 'The Progress element.',
+    rail: 'The unfilled part of the progress bar.',
+    track: 'The filled part of the progress bar.',
+    indicator: 'The progress value text or status icon.',
   },
   properties: {
     type: 'object',
@@ -50,12 +53,13 @@ export default {
       strokeLinecap: {
         type: 'string',
         default: 'round',
-        enum: ['round', 'square'],
+        enum: ['round', 'butt', 'square'],
         description: 'Set the style of the progress linecap.',
       },
       strokeColor: {
-        type: ['string', 'object'],
-        description: 'Color of progress bar.',
+        type: ['string', 'array', 'object'],
+        description:
+          'Color of progress bar. An object like `{ from: "#108ee9", to: "#87d068" }` or `{ "0%": "#108ee9", "100%": "#87d068" }` renders a gradient, and an array colors each step when steps is set.',
         docs: {
           displayType: 'color',
         },
@@ -87,12 +91,40 @@ export default {
       },
       strokeWidth: {
         type: 'number',
-        description: 'Set the width of the progress bar.',
+        description:
+          'Thickness of the progress bar. In pixels for line progress, and as a percentage of the canvas width for circle and dashboard progress.',
       },
       width: {
         type: 'number',
-        default: 132,
-        description: 'Set the canvas width of the circular progress.',
+        default: 120,
+        description: 'Set the canvas width of the circular progress. Same as a number size.',
+      },
+      size: {
+        type: ['number', 'string', 'array', 'object'],
+        description:
+          "Size of the progress. 'small' or 'medium', a number (the circle diameter, or both the width and the height of a line or of each step), or `[width, height]` or `{ width, height }` for line progress.",
+        docs: {
+          displayType: 'yaml',
+        },
+      },
+      percentPosition: {
+        type: 'object',
+        additionalProperties: false,
+        description: 'Position of the progress value on line progress.',
+        properties: {
+          align: {
+            type: 'string',
+            enum: ['start', 'center', 'end'],
+            default: 'end',
+            description: 'Horizontal position of the value.',
+          },
+          type: {
+            type: 'string',
+            enum: ['inner', 'outer'],
+            default: 'outer',
+            description: 'Show the value inside or outside the bar.',
+          },
+        },
       },
       gapDegree: {
         type: 'number',
@@ -102,12 +134,27 @@ export default {
       gapPosition: {
         type: 'string',
         enum: ['top', 'bottom', 'left', 'right'],
-        default: 'top',
-        description: 'The gap position.',
+        default: 'bottom',
+        description: 'The gap position of circle and dashboard progress.',
       },
       steps: {
-        type: 'number',
-        description: 'Number of steps for a segmented progress bar (line type only).',
+        type: ['number', 'object'],
+        description:
+          'Number of steps for a segmented progress bar. For circle and dashboard progress, an object `{ count, gap }` also sets the gap between steps.',
+        docs: {
+          displayType: 'yaml',
+        },
+        properties: {
+          count: {
+            type: 'number',
+            description: 'Number of steps.',
+          },
+          gap: {
+            type: 'number',
+            default: 2,
+            description: 'Gap between steps of circle and dashboard progress.',
+          },
+        },
       },
       theme: {
         type: 'object',

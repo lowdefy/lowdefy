@@ -845,7 +845,8 @@ Content above the menu items.
           type: Paragraph
           properties:
             content: Content above the menu items.
-            style:
+          style:
+            .element:
               padding: 0 24px
               margin: 0
               fontWeight: 600
@@ -875,7 +876,8 @@ Additional content below the menu items.
           type: Paragraph
           properties:
             content: Additional content below the menu items.
-            style:
+          style:
+            .element:
               padding: 16px
               color: "#999"
 ```
@@ -900,7 +902,8 @@ App v2.1.0
           type: Paragraph
           properties:
             content: App v2.1.0
-            style:
+          style:
+            .element:
               textAlign: center
               margin: 0
               color: "#aaa"

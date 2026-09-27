@@ -20,8 +20,8 @@ import { cn, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { Upload as AntdUpload } from 'antd';
 
 import useFileList from '../utils/useFileList.js';
-import getUploadListIcons from '../utils/getUploadListIcons.js';
 import getEmitFileContent from '../utils/getEmitFileContent.js';
+import getShowUploadList from '../utils/getShowUploadList.js';
 import getUploadRequest from '../utils/getUploadRequest.js';
 import withTheme from '../../withTheme.js';
 
@@ -81,16 +81,20 @@ const UploadPhoto = ({
           list: styles.list,
           item: styles.item,
         }}
+        capture={properties.capture}
         customRequest={uploadRequest}
         disabled={properties.disabled}
         fileList={state.fileList}
-        listType="picture-card"
+        listType={properties.listType ?? 'picture-card'}
         maxCount={properties.maxCount}
         multiple={!properties.singleFile}
         onRemove={removeFile}
-        showUploadList={
-          properties.showUploadList !== false && getUploadListIcons({ blockId, Icon })
-        }
+        pastable={properties.pastable}
+        showUploadList={getShowUploadList({
+          blockId,
+          Icon,
+          showUploadList: properties.showUploadList,
+        })}
         onChange={() => {
           // emitFileContent triggers onChange itself once the content is read,
           // so the file object in the event payload carries the base64 content.

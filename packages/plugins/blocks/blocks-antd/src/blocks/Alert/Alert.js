@@ -43,31 +43,59 @@ const AlertBlock = ({
       />
     );
   }
-  const { element: elementClass, ...subClasses } = classNames;
-  const { element: elementStyle, ...subStyles } = styles;
+  // antd shows a close button whenever a close text is set, so closeText keeps implying closable.
+  // antd ignores an empty close text, so '' neither makes the alert closable nor replaces the icon.
+  const hasCloseText = !type.isNone(properties.closeText) && properties.closeText !== '';
+  const closable = properties.closable === true || hasCloseText;
+  let closeIcon;
+  if (hasCloseText) {
+    closeIcon = properties.closeText;
+  } else if (!type.isNone(properties.closeIcon)) {
+    closeIcon = (
+      <Icon blockId={`${blockId}_closeIcon`} events={events} properties={properties.closeIcon} />
+    );
+  }
   return (
     <Alert
       action={content.action && content.action()}
-      afterClose={() => methods.triggerEvent({ name: 'afterClose' })}
       banner={properties.banner}
-      closable={properties.closable}
-      closeText={properties.closeText}
-      className={elementClass}
-      classNames={subClasses}
+      closable={
+        closable
+          ? {
+              closeIcon,
+              onClose: () => methods.triggerEvent({ name: 'onClose' }),
+              afterClose: () => methods.triggerEvent({ name: 'afterClose' }),
+            }
+          : false
+      }
+      className={classNames.element}
+      classNames={{
+        actions: classNames.action,
+        close: classNames.closeIcon,
+        description: classNames.description,
+        icon: classNames.icon,
+        title: classNames.message,
+      }}
       description={renderHtml({ html: properties.description, methods })}
       id={blockId}
-      message={
+      showIcon={properties.showIcon === false ? false : true}
+      style={styles.element}
+      styles={{
+        actions: styles.action,
+        close: styles.closeIcon,
+        description: styles.description,
+        icon: styles.icon,
+        title: styles.message,
+      }}
+      title={
         type.isNone(properties.message) ? (
           <div style={{ marginBottom: -4 }} />
         ) : (
           renderHtml({ html: properties.message, methods })
         )
       }
-      onClose={() => methods.triggerEvent({ name: 'onClose' })}
-      showIcon={properties.showIcon === false ? false : true}
-      style={elementStyle}
-      styles={subStyles}
       type={properties.type}
+      variant={properties.variant}
       {...additionalProps}
     />
   );

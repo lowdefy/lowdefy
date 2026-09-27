@@ -1,0 +1,272 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- id: default
+  type: TreeMultipleSelector
+  properties:
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.treeDefaultExpandAll: true'
+  type: TreeMultipleSelector
+  properties:
+    treeDefaultExpandAll: true
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.treeLine: true'
+  type: TreeMultipleSelector
+  properties:
+    treeLine: true
+    treeDefaultExpandAll: true
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.treeExpandAction: click'
+  type: TreeMultipleSelector
+  properties:
+    treeExpandAction: click
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.showSearch: false'
+  type: TreeMultipleSelector
+  properties:
+    showSearch: false
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.variant: underlined'
+  type: TreeMultipleSelector
+  properties:
+    variant: underlined
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.placement: topLeft'
+  type: TreeMultipleSelector
+  properties:
+    placement: topLeft
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.listHeight: 128'
+  type: TreeMultipleSelector
+  properties:
+    listHeight: 128
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.popupMatchSelectWidth: false'
+  type: TreeMultipleSelector
+  properties:
+    popupMatchSelectWidth: false
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.virtual: false'
+  type: TreeMultipleSelector
+  properties:
+    virtual: false
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.prefixIcon: search'
+  type: TreeMultipleSelector
+  properties:
+    prefixIcon: search
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.theme: selectorBg'
+  type: TreeMultipleSelector
+  properties:
+    theme:
+      selectorBg: '#f9f0ff'
+      nodeSelectedBg: '#efdbff'
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.checkable: true'
+  type: TreeMultipleSelector
+  properties:
+    checkable: true
+    treeDefaultExpandAll: true
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.checkStrictly: true'
+  type: TreeMultipleSelector
+  properties:
+    checkable: true
+    checkStrictly: true
+    treeDefaultExpandAll: true
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.showCheckedStrategy: SHOW_PARENT'
+  type: TreeMultipleSelector
+  properties:
+    checkable: true
+    showCheckedStrategy: SHOW_PARENT
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.maxCount: 2'
+  type: TreeMultipleSelector
+  properties:
+    maxCount: 2
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.maxTagCount: responsive'
+  type: TreeMultipleSelector
+  properties:
+    maxTagCount: responsive
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }
+- id: 'properties.removeIcon: delete'
+  type: TreeMultipleSelector
+  properties:
+    removeIcon: delete
+    primaryKey: id
+    parentKey: parentId
+    valueKey: id
+    html: '{{ item.label }}'
+    data:
+      - { id: fruit, label: Fruit }
+      - { id: apple, label: Apple, parentId: fruit }
+      - { id: banana, label: Banana, parentId: fruit }
+      - { id: veg, label: Vegetables }
+      - { id: carrot, label: Carrot, parentId: veg }

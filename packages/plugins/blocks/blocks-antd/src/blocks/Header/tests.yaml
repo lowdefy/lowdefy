@@ -14,22 +14,18 @@
 
 - id: default
   type: Header
-- id: properties.style
+- id: style.element
   type: Header
-  properties:
-    style:
+  style:
+    .element:
       border: '1px solid blue'
-- id: properties.theme-dark
+- id: properties.color
   type: Header
   properties:
-    theme: dark
-- id: properties.theme-light
-  type: Header
-  properties:
-    theme: light
+    color: '#001529'
 - id: areas.content
   type: Header
-  areas:
+  slots:
     content:
       blocks:
         - id: testArea

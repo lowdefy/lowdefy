@@ -173,6 +173,18 @@ QR code generator with customizable size, color, and error level.
     errorLevel: H
     icon: https://lowdefy.com/favicon-32x32.png
     iconSize: 48
+- id: qr_icon_wide
+  type: QRCode
+  layout:
+    flex: 0 0 auto
+  properties:
+    value: https://lowdefy.com
+    size: 200
+    errorLevel: H
+    icon: https://lowdefy.com/favicon-32x32.png
+    iconSize:
+      width: 48
+      height: 32
 ```
 
 ```yaml
@@ -491,7 +503,9 @@ Present this QR code at the entrance for check-in.
 | `bgColor` | string | `"transparent"` | QRCode background color. |
 | `errorLevel` | string | `"M"` | Error correction level. Enum: `L`, `M`, `Q`, `H`. |
 | `icon` | string | - | Icon URL in the center of the QR code. |
-| `iconSize` | integer | `40` | Icon size in pixels. |
+| `iconSize` | integer \| object | `40` | Icon size in pixels, or `{ width, height }` for an icon that is not square. |
+| `iconSize.width` | integer | - | Icon width in pixels. |
+| `iconSize.height` | integer | - | Icon height in pixels. |
 | `marginSize` | number | `0` | Margin size of the QR code in modules. |
 | `minVersion` | integer | `1` | Minimum QR code version (1-40). Higher versions support more data. |
 | `type` | string | `"canvas"` | Render type. Enum: `canvas`, `svg`. |
@@ -515,5 +529,6 @@ Present this QR code at the entrance for check-in.
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The QRCode element. |
+| `/cover` | The overlay shown over the QR code when status is expired, loading or scanned. |
 
 No slots defined.

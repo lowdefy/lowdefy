@@ -24,7 +24,9 @@ const QRCodeBlock = ({ blockId, classNames = {}, methods, properties, styles = {
   <QRCode
     id={blockId}
     className={classNames.element}
+    classNames={{ cover: classNames.cover }}
     style={styles.element}
+    styles={{ cover: styles.cover }}
     value={properties.value ?? ''}
     size={properties.size}
     color={properties.color}

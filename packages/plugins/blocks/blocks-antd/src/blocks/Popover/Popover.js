@@ -17,7 +17,7 @@
 import React, { useState } from 'react';
 import { Popover } from 'antd';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
 const PopoverBlock = ({ blockId, classNames = {}, content, methods, properties, styles = {} }) => {
@@ -25,12 +25,39 @@ const PopoverBlock = ({ blockId, classNames = {}, content, methods, properties, 
   return (
     <Popover
       id={blockId}
-      {...properties}
+      arrow={properties.arrow}
+      autoAdjustOverflow={properties.autoAdjustOverflow}
+      color={properties.color}
+      defaultOpen={properties.defaultOpen}
+      // Popover used to pass every property to antd, so the undocumented `open`,
+      // `destroyTooltipOnHide`, `overlayClassName` and `overlayStyle` keep working.
+      destroyOnHidden={properties.destroyOnHidden ?? properties.destroyTooltipOnHide}
+      mouseEnterDelay={properties.mouseEnterDelay}
+      mouseLeaveDelay={properties.mouseLeaveDelay}
+      open={properties.open}
+      placement={properties.placement}
+      title={renderHtml({ html: properties.title, methods })}
+      trigger={properties.trigger}
+      zIndex={properties.zIndex}
       className={classNames.element}
-      content={content.popover && content.popover()}
-      onOpenChange={() => methods.triggerEvent({ name: 'onOpenChange' })}
-      getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
+      // antd 6 renamed the Popover inner element from `inner` to `container`.
+      classNames={{
+        root: properties.overlayClassName,
+        container: classNames.inner,
+        title: classNames.title,
+        content: classNames.content,
+      }}
       style={styles.element}
+      styles={{
+        root: properties.overlayStyle,
+        // antd 6 deprecated `overlayInnerStyle` in favour of `styles.container`.
+        container: { ...properties.overlayInnerStyle, ...styles.inner },
+        title: styles.title,
+        content: styles.content,
+      }}
+      content={content.popover && content.popover()}
+      onOpenChange={(open) => methods.triggerEvent({ name: 'onOpenChange', event: { open } })}
+      getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
     >
       {content.content && content.content()}
       <div id={`${blockId}_${elementId}_popup`} />

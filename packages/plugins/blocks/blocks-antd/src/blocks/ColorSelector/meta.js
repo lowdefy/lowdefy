@@ -27,15 +27,22 @@ export default {
     label: 'The ColorSelector label.',
     extra: 'The ColorSelector extra content.',
     feedback: 'The ColorSelector validation feedback.',
+    popup: 'The ColorSelector popup.',
   },
   events: {
     onChange: {
       description: 'Trigger actions when the color is changed.',
-      event: { value: 'The selected color hex value.' },
+      event: {
+        value:
+          'The selected color as a hex string, a linear-gradient CSS string in gradient mode, or null when cleared.',
+      },
     },
     onChangeComplete: {
       description: 'Trigger actions when the color change is complete.',
-      event: { value: 'The final color hex value.' },
+      event: {
+        value:
+          'The final color as a hex string, a linear-gradient CSS string in gradient mode, or null when cleared.',
+      },
     },
     onClear: 'Trigger actions when the color is cleared.',
     onFormatChange: {
@@ -90,10 +97,24 @@ export default {
         description: 'Disable the format selector.',
       },
       mode: {
-        type: 'string',
-        enum: ['single', 'gradient'],
-        default: 'single',
-        description: 'Color picker mode.',
+        oneOf: [
+          {
+            type: 'string',
+            enum: ['single', 'gradient'],
+            default: 'single',
+            description: 'Pick a single color or a gradient.',
+          },
+          {
+            type: 'array',
+            description: 'Offer both modes with a switch in the panel, eg. [single, gradient].',
+            items: {
+              type: 'string',
+              enum: ['single', 'gradient'],
+            },
+          },
+        ],
+        description:
+          'Pick a single color, a gradient, or both with a switch in the panel when set to [single, gradient]. A gradient is stored as a linear-gradient CSS string, eg. "linear-gradient(90deg, rgb(22,119,255) 0%, rgb(114,46,209) 100%)", which can be used directly as a CSS background.',
       },
       open: {
         type: 'boolean',
@@ -123,6 +144,29 @@ export default {
         docs: {
           displayType: 'yaml',
         },
+        items: {
+          type: 'object',
+          required: ['label', 'colors'],
+          properties: {
+            label: {
+              type: 'string',
+              description: 'Title of the palette.',
+            },
+            colors: {
+              type: 'array',
+              description: 'Colors in the palette.',
+              items: {
+                type: 'string',
+                description: 'A CSS color, eg. "#1677ff" or "rgb(22, 119, 255)".',
+              },
+            },
+            defaultOpen: {
+              type: 'boolean',
+              default: true,
+              description: 'Whether the palette is expanded when the popup opens.',
+            },
+          },
+        },
       },
       trigger: {
         type: 'string',
@@ -139,50 +183,6 @@ export default {
           link: 'https://ant.design/components/color-picker#design-token',
         },
         properties: {
-          colorPickerWidth: {
-            type: 'number',
-            default: 234,
-            description: 'Width of the color picker panel.',
-          },
-          colorPickerHandlerSize: {
-            type: 'number',
-            default: 16,
-            description: 'Size of the color picker handler (drag handle).',
-          },
-          colorPickerHandlerSizeSM: {
-            type: 'number',
-            default: 12,
-            description: 'Size of the color picker handler for small size.',
-          },
-          colorPickerSliderHeight: {
-            type: 'number',
-            default: 8,
-            description: 'Height of the color slider bar.',
-          },
-          colorPickerPreviewSize: {
-            type: 'number',
-            description:
-              'Size of the color preview circle. Defaults to a calculated value based on slider height.',
-          },
-          colorPickerAlphaInputWidth: {
-            type: 'number',
-            default: 44,
-            description: 'Width of the alpha input field.',
-          },
-          colorPickerInputNumberHandleWidth: {
-            type: 'number',
-            default: 16,
-            description: 'Width of the input number handle in the color picker.',
-          },
-          colorPickerPresetColorSize: {
-            type: 'number',
-            default: 24,
-            description: 'Size of preset color swatches.',
-          },
-          colorPickerInsetShadow: {
-            type: 'string',
-            description: 'Inset shadow style for the color picker.',
-          },
           borderRadius: {
             type: 'number',
             default: 6,

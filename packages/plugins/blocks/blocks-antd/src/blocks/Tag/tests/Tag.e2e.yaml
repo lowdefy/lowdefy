@@ -171,3 +171,62 @@ blocks:
                 _state: tag_shortcut_fired
           then: 'shortcut:fired'
           else: ''
+
+  # ============================================
+  # VARIANT, DISABLED, LINK AND CLOSE ICON
+  # ============================================
+
+  - id: tag_variant_solid
+    type: Tag
+    properties:
+      title: Solid
+      color: blue
+      variant: solid
+
+  - id: tag_variant_outlined
+    type: Tag
+    properties:
+      title: Outlined
+      color: green
+      variant: outlined
+
+  - id: tag_disabled
+    type: Tag
+    properties:
+      title: Disabled
+      disabled: true
+      closable: true
+    events:
+      onClick:
+        - id: set_disabled_clicked
+          type: SetState
+          params:
+            tag_disabled_clicked: true
+
+  - id: disabled_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: tag_disabled_clicked
+              - true
+          then: Disabled tag clicked
+          else: Not clicked
+
+  - id: tag_link
+    type: Tag
+    properties:
+      title: Docs
+      href: https://docs.lowdefy.com
+      target: _blank
+
+  - id: tag_close_icon
+    type: Tag
+    class:
+      .closeIcon: tag-close-class
+    properties:
+      title: Custom close
+      closable: true
+      closeIcon: close-circle

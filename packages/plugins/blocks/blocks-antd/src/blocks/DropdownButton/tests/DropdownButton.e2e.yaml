@@ -241,3 +241,44 @@ blocks:
               - 'result:'
               - _state: db_shortcut_result
           else: ''
+
+  # ============================================
+  # ICON PLACEMENT, SIZE AND CSS KEYS
+  # ============================================
+
+  - id: db_icon_end
+    type: DropdownButton
+    class:
+      .menu: db-icon-end-menu
+      .item: db-icon-end-item
+    style:
+      .element:
+        color: rgb(255, 0, 0)
+    properties:
+      title: Options
+      icon: chevron-down
+      iconPlacement: end
+      size: middle
+      items:
+        - title: Rename
+          eventName: onRename
+
+  - id: db_split_icon_end
+    type: DropdownButton
+    properties:
+      title: Send
+      icon: send
+      iconPlacement: end
+      split: true
+      items:
+        - title: Schedule send
+          eventName: onSchedule
+
+  - id: db_placement_right
+    type: DropdownButton
+    properties:
+      title: Right
+      placement: right
+      items:
+        - title: Right item
+          eventName: onRightItem

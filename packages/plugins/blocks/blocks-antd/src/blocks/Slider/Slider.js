@@ -18,6 +18,7 @@ import React from 'react';
 import { Slider } from 'antd';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 
@@ -49,10 +50,17 @@ const SliderBlock = ({
         content: () => (
           <Slider
             id={`${blockId}_input`}
+            autoFocus={properties.autoFocus}
             className={classNames.element}
-            disabled={properties.disabled || loading}
+            classNames={{
+              handle: classNames.handle,
+              rail: classNames.rail,
+              track: classNames.track,
+            }}
+            disabled={getDisabled({ loading, properties })}
             dots={properties.dots}
             included={properties.included}
+            keyboard={properties.keyboard}
             marks={properties.marks}
             max={properties.max}
             min={properties.min}
@@ -60,11 +68,25 @@ const SliderBlock = ({
             reverse={properties.reverse}
             step={properties.step}
             style={styles.element}
+            styles={{
+              handle: styles.handle,
+              rail: styles.rail,
+              track: styles.track,
+            }}
             tooltip={properties.tooltip}
             vertical={properties.vertical}
+            onBlur={() => {
+              methods.triggerEvent({ name: 'onBlur' });
+            }}
             onChange={(val) => {
               methods.setValue(val);
               methods.triggerEvent({ name: 'onChange', event: { value: val } });
+            }}
+            onChangeComplete={(val) => {
+              methods.triggerEvent({ name: 'onChangeComplete', event: { value: val } });
+            }}
+            onFocus={() => {
+              methods.triggerEvent({ name: 'onFocus' });
             }}
             value={value}
           />

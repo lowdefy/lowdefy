@@ -52,6 +52,7 @@ export default {
       },
     },
     onBlur: 'Trigger action event occurs when input loses focus.',
+    onClear: 'Trigger action when the clear button is clicked.',
     onFocus: 'Trigger action when input gets focus.',
     onPressEnter: 'Trigger action when enter is pressed while text input is focused.',
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
@@ -92,7 +93,7 @@ export default {
       placeholder,
       prefix: {
         type: 'string',
-        description: 'Prefix text for the block, priority over $prefix_con.',
+        description: 'Prefix text for the block, priority over prefixIcon.',
       },
       prefixIcon: {
         ...icon,
@@ -131,7 +132,7 @@ export default {
       size: sizeSmallMiddleLarge,
       suffix: {
         type: 'string',
-        description: 'Suffix text for the block, priority over suffixIcon.',
+        description: 'Suffix text for the block, shown before suffixIcon.',
       },
       suffixIcon: {
         ...icon,
@@ -143,7 +144,7 @@ export default {
       theme: {
         type: 'object',
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Antd design token overrides for this block, applied to both the region selector (antd Select) and the phone number input (antd Input). See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
           link: 'https://ant.design/components/input#design-token',
@@ -156,11 +157,6 @@ export default {
           activeShadow: {
             type: 'string',
             description: 'Box shadow when the input is focused.',
-          },
-          addonBg: {
-            type: 'string',
-            default: 'rgba(0, 0, 0, 0.02)',
-            description: 'Background color of addon elements.',
           },
           colorBgContainer: {
             type: 'string',
@@ -232,6 +228,11 @@ export default {
             type: 'number',
             default: 11,
             description: 'Horizontal padding.',
+          },
+          selectorBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color of the region selector.',
           },
           warningActiveShadow: {
             type: 'string',

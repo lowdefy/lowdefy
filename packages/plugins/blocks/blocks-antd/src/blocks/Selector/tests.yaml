@@ -194,3 +194,52 @@
         value: 2
       - label: Option 3
         value: 3
+- id: 'properties.variant: underlined'
+  type: Selector
+  properties:
+    variant: underlined
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.placement: topLeft'
+  type: Selector
+  properties:
+    placement: topLeft
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.listHeight: 128'
+  type: Selector
+  properties:
+    listHeight: 128
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.popupMatchSelectWidth: false'
+  type: Selector
+  properties:
+    popupMatchSelectWidth: false
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.virtual: false'
+  type: Selector
+  properties:
+    virtual: false
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.prefix: Fruit'
+  type: Selector
+  properties:
+    prefix: 'Fruit:'
+    options:
+      - Option 1
+      - Option 2
+- id: 'properties.prefixIcon: search'
+  type: Selector
+  properties:
+    prefixIcon: search
+    options:
+      - Option 1
+      - Option 2

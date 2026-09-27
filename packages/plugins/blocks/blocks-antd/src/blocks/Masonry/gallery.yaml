@@ -256,50 +256,6 @@
               properties:
                 content: Notice the asymmetric spacing.
 
-- title: Sequential Rendering
-  blocks:
-    - id: mas_seq
-      type: Masonry
-      properties:
-        columns: 3
-        gutter: 12
-        sequential: true
-      blocks:
-        - id: mas_seq_c1
-          type: Card
-          properties:
-            size: small
-            title: '1'
-          blocks:
-            - id: mas_seq_c1_p
-              type: Paragraph
-              properties:
-                content: Items fill left-to-right in source order instead of shortest column.
-        - id: mas_seq_c2
-          type: Card
-          properties:
-            size: small
-            title: '2'
-          blocks:
-            - id: mas_seq_c2_p
-              type: Paragraph
-              properties:
-                content: Second item.
-        - id: mas_seq_c3
-          type: Card
-          properties:
-            size: small
-            title: '3'
-          blocks:
-            - id: mas_seq_c3_p
-              type: Paragraph
-              properties:
-                content: Third item.
-            - id: mas_seq_c3_p2
-              type: Paragraph
-              properties:
-                content: Taller card — order still preserved.
-
 - title: Blue Theme Tokens
   blocks:
     - id: mas_blue
@@ -371,7 +327,7 @@
     - id: mas_tw
       type: Masonry
       class:
-        element: bg-bg-layout p-6 rounded-xl
+        .element: bg-bg-layout p-6 rounded-xl
       properties:
         columns: 2
         gutter: 12
@@ -602,8 +558,7 @@
                   properties:
                     icon: user
                     size: 48
-                    color: '#fff'
-                    backgroundColor: '#1677ff'
+                    color: '#1677ff'
                 - id: mas_team_c1_info
                   type: Box
                   layout:
@@ -668,8 +623,7 @@
                   properties:
                     icon: user
                     size: 48
-                    color: '#fff'
-                    backgroundColor: '#52c41a'
+                    color: '#52c41a'
                 - id: mas_team_c2_info
                   type: Box
                   layout:
@@ -732,8 +686,7 @@
                   properties:
                     icon: user
                     size: 48
-                    color: '#fff'
-                    backgroundColor: '#722ed1'
+                    color: '#722ed1'
                 - id: mas_team_c3_info
                   type: Box
                   layout:
@@ -788,7 +741,7 @@
     - id: mas_products
       type: Masonry
       class:
-        element: bg-bg-layout p-6 rounded-xl
+        .element: bg-bg-layout p-6 rounded-xl
       properties:
         columns:
           xs: 1

@@ -279,6 +279,35 @@
               properties:
                 content: Free standard shipping (3-5 business days). Express shipping available for $9.99 (1-2 business days).
 
+- title: Centered with Short Indicator
+  blocks:
+    - id: centered_tabs
+      type: Tabs
+      properties:
+        centered: true
+        tabBarGutter: 40
+        indicator:
+          size: 24
+          align: center
+        tabs:
+          - key: centered_monthly
+            title: Monthly
+          - key: centered_yearly
+            title: Yearly
+      slots:
+        centered_monthly:
+          blocks:
+            - id: centered_monthly_content
+              type: Paragraph
+              properties:
+                content: Billed every month. Cancel any time.
+        centered_yearly:
+          blocks:
+            - id: centered_yearly_content
+              type: Paragraph
+              properties:
+                content: Billed once a year with two months free.
+
 - title: Sizes
   blocks:
     - id: size_small_label

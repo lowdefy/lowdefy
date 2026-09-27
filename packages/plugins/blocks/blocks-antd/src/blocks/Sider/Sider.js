@@ -20,8 +20,20 @@ import { Layout } from 'antd';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import { getDarkMode } from '../headerActions.js';
+import withTheme from '../withTheme.js';
 
 const Sider = Layout.Sider;
+
+// Mirrors antd's own trigger arrows so the collapse trigger draws with the app's icons.
+function getTriggerIconName({ collapsed, collapsedWidth, reverseArrow }) {
+  if (Number.parseFloat(String(collapsedWidth)) === 0) {
+    return 'menu';
+  }
+  if (collapsed !== Boolean(reverseArrow)) {
+    return 'chevron-right';
+  }
+  return 'chevron-left';
+}
 
 const triggerSetOpen = async ({ state, setOpen, methods, rename }) => {
   if (!state) {
@@ -36,9 +48,11 @@ const triggerSetOpen = async ({ state, setOpen, methods, rename }) => {
 const SiderBlock = ({
   blockId,
   classNames = {},
+  components: { Icon },
   properties,
   content,
   methods,
+  onCollapse,
   rename,
   styles = {},
 }) => {
@@ -61,6 +75,7 @@ const SiderBlock = ({
     <Sider
       id={blockId}
       className={classNames.element ? `${classNames.element} hide-on-print` : 'hide-on-print'}
+      classNames={{ body: classNames.body }}
       breakpoint={properties.breakpoint}
       collapsed={!openState}
       collapsedWidth={properties.collapsedWidth}
@@ -72,12 +87,39 @@ const SiderBlock = ({
         background: 'var(--ant-color-bg-container)',
         ...styles.element,
       }}
+      styles={{ body: styles.body }}
+      trigger={
+        <Icon
+          blockId={`${blockId}_trigger_icon`}
+          properties={{
+            name: getTriggerIconName({
+              collapsed: !openState,
+              collapsedWidth: properties.collapsedWidth ?? 80,
+              reverseArrow: properties.reverseArrow,
+            }),
+            title: '',
+          }}
+        />
+      }
       width={properties.width}
-      onBreakpoint={() => methods.triggerEvent({ name: 'onBreakpoint' })}
+      onBreakpoint={(broken) => methods.triggerEvent({ name: 'onBreakpoint', event: { broken } })}
+      onCollapse={(collapsed, collapseType) => {
+        // Only the trigger toggles the sider here. A responsive collapse would override the
+        // open state page layouts restore on mount, so breakpoints only fire onBreakpoint.
+        if (collapseType !== 'clickTrigger') {
+          return;
+        }
+        // Page layouts own the open state, so they toggle the sider through their own method.
+        if (onCollapse) {
+          onCollapse();
+          return;
+        }
+        triggerSetOpen({ state: !collapsed, setOpen, methods, rename });
+      }}
     >
       {content.content && content.content()}
     </Sider>
   );
 };
 
-export default withBlockDefaults(SiderBlock);
+export default withTheme('Layout', withBlockDefaults(SiderBlock));

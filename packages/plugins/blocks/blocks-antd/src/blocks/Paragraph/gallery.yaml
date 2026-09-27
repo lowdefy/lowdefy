@@ -81,6 +81,11 @@
       properties:
         content: Marked (highlighted) text to call out key information.
         mark: true
+    - id: deco_keyboard
+      type: Paragraph
+      properties:
+        content: Ctrl + K
+        keyboard: true
 
 - title: Combined Decorations
   blocks:
@@ -182,6 +187,13 @@
         content: npm install lowdefy
         code: true
         copyable: true
+    - id: copyable_actions_start
+      type: Paragraph
+      properties:
+        content: The copy button sits before this text.
+        copyable: true
+        actions:
+          placement: start
 
 - title: Copyable with onCopy Event
   blocks:
@@ -247,6 +259,25 @@
           rows: 3
           expandable: true
           suffix: ' /Read More'
+
+- title: Collapsible Ellipsis and Tooltip
+  blocks:
+    - id: ellipsis_collapsible
+      type: Paragraph
+      properties:
+        content: Collapsible ellipsis lets readers expand the full text and fold it back. Lowdefy apps are defined in YAML with blocks, operators, actions and connections, and the framework handles rendering, state and server-side logic.
+        ellipsis:
+          rows: 2
+          expandable: collapsible
+          symbol:
+            - Read more
+            - Show less
+    - id: ellipsis_tooltip
+      type: Paragraph
+      properties:
+        content: Hover over this single line to read the full text in a tooltip. The rest of the sentence is cut off with an ellipsis when it does not fit.
+        ellipsis:
+          tooltip: true
 
 - title: Ellipsis with onExpand Event
   blocks:
@@ -335,7 +366,7 @@
         italic: true
       style:
         .element:
-          borderLeft: 3px solid #1677ff
+          borderLeft: '3px solid #1677ff'
           paddingLeft: 12px
 
 - title: Theme Token Overrides

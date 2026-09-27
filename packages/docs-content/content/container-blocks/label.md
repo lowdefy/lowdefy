@@ -206,6 +206,20 @@ Form label wrapper with title, description, and validation feedback.
 ```
 
 ```yaml
+- id: label_wrap_inline
+  type: Label
+  layout:
+    span: 12
+  properties:
+    title: A long inline label that wraps onto a second line when space runs out
+    inline: true
+    wrap: true
+  blocks:
+    - id: label_wrap_inline_input
+      type: TextInput
+```
+
+```yaml
 - id: label_inline_small
   type: Label
   properties:
@@ -342,8 +356,8 @@ Form label wrapper with title, description, and validation feedback.
     title: Styled Label Text
     extra: Styled extra text
   class:
-    label: text-purple-600 font-bold
-    extra: text-purple-400 italic
+    .label: text-purple-600 font-bold
+    .extra: text-purple-400 italic
   blocks:
     - id: label_css_label_input
       type: TextInput
@@ -352,7 +366,7 @@ Form label wrapper with title, description, and validation feedback.
   properties:
     title: Bordered Container
   class:
-    element: border border-border p-3 rounded-lg
+    .element: border border-border p-3 rounded-lg
   blocks:
     - id: label_css_element_input
       type: TextInput
@@ -361,7 +375,7 @@ Form label wrapper with title, description, and validation feedback.
   properties:
     title: Feedback Styling
   class:
-    feedback: font-semibold text-xs
+    .feedback: font-semibold text-xs
   blocks:
     - id: label_css_feedback_input
       type: TextInput
@@ -379,7 +393,7 @@ Form label wrapper with title, description, and validation feedback.
       color: "#d48806"
       fontStyle: italic
     .element:
-      border: 1px solid
+      border: "1px solid #ffd591"
       padding: 12px
       borderRadius: 8px
   blocks:
@@ -697,6 +711,18 @@ Form label wrapper with title, description, and validation feedback.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |
+| `xs.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `sm` | object | - | Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set. |
+| `sm.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `md` | object | - | Label width on medium screens (768px and up) when the label is not inline. Overrides `span`. |
+| `md.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `lg` | object | - | Label width on large screens (992px and up) when the label is not inline. |
+| `lg.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `xl` | object | - | Label width on extra large screens (1200px and up) when the label is not inline. |
+| `xl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `xxl` | object | - | Label width on extra extra large screens (1600px and up) when the label is not inline. |
+| `xxl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
 | `align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `colon` | boolean | `true` | Append label with colon. |
 | `disabled` | boolean | `false` | Disable to not render a label title. |
@@ -707,8 +733,9 @@ Form label wrapper with title, description, and validation feedback.
 | `tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
 | `tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `tooltip.color` | string | - | Color of the tooltip icon. |
-| `span` | number | - | Label inline span. |
+| `span` | number | - | Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns. |
 | `inline` | boolean | `false` | Render input and label inline. |
+| `wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their content always wrap. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design form tokens](https://ant.design/components/form#design-token). |
 | `theme.labelFontSize` | number | `14` | Font size of the label text. |
 | `theme.labelColor` | string | `"rgba(0,0,0,0.88)"` | Text color of the label. |

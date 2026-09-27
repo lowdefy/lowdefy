@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 
 import { cn, withBlockDefaults } from '@lowdefy/block-utils';
 import getCopyableConfig from '../../getCopyableConfig.js';
+import getDisabled from '../../getDisabled.js';
 import InlineEditTextArea from '../../InlineEditTextArea.js';
 import useInlineEdit from '../../useInlineEdit.js';
 import withTheme from '../withTheme.js';
@@ -97,7 +98,7 @@ const TitleInput = ({
         text,
       })}
       delete={properties.delete}
-      disabled={properties.disabled || loading}
+      disabled={getDisabled({ loading, properties })}
       ellipsis={
         type.isObject(properties.ellipsis)
           ? {

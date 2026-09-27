@@ -705,7 +705,7 @@ Guided tour with steps, masks, and keyboard navigation.
   type: Tour
   style:
     .mask:
-      boxShadow: inset 0 0 15px
+      boxShadow: "inset 0 0 15px #333"
   properties:
     open:
       _state: mask_custom_tour_open
@@ -1470,8 +1470,8 @@ Guided tour with steps, masks, and keyboard navigation.
     open:
       _state: gap_large_tour_open
     gap:
-      x: 20
-      y: 20
+      offset: 20
+      radius: 8
     steps:
       - title: Large Gap
         description: Increased gap (20px) around the target for more breathing room.
@@ -1493,8 +1493,8 @@ Guided tour with steps, masks, and keyboard navigation.
     open:
       _state: gap_tight_tour_open
     gap:
-      x: 0
-      y: 0
+      offset: 0
+      radius: 0
     steps:
       - title: No Gap
         description: The highlight fits tightly around the target with zero spacing.
@@ -2308,20 +2308,26 @@ Welcome to the application. Click the button below to take a guided tour of the 
 | `closable` | boolean | `true` | Whether the close button is visible. |
 | `current` | integer | - | Current step index. |
 | `disabledInteraction` | boolean | `false` | Whether to disable interaction with the page while the tour is active. |
-| `gap` | object | - | Gap offset between highlighted area and target element. |
-| `gap.x` | number | - | Horizontal gap offset. |
-| `gap.y` | number | - | Vertical gap offset. |
+| `gap` | object | - | Gap between the highlighted area and the target element, and its radius. |
+| `gap.offset` | number \| array | `6` | Gap in pixels around the target, or a [horizontal, vertical] pair of gaps. |
+| `gap.radius` | number | `2` | Border radius of the highlighted area in pixels. |
+| `gap.x` | number | - | Horizontal gap offset. Same as the first value of `offset`. |
+| `gap.y` | number | - | Vertical gap offset. Same as the second value of `offset`. |
 | `keyboard` | boolean | `true` | Whether to enable keyboard navigation. |
 | `mask` | boolean \| object | `true` | Whether to enable mask. |
 | `open` | boolean | `false` | Whether to show the tour. |
-| `placement` | string | - | Position of the guide card relative to the target element. |
-| `scrollIntoViewOptions` | boolean | `true` | Whether to scroll the step target element into view. |
+| `placement` | string | `"bottom"` | Position of the guide card relative to the target element: center, left, leftTop, leftBottom, right, rightTop, rightBottom, top, topLeft, topRight, bottom, bottomLeft or bottomRight. |
+| `scrollIntoViewOptions` | boolean \| object | `true` | Whether to scroll the step target element into view, or scrollIntoView options such as `{ block: center }`. |
 | `steps` | array | - | Tour steps. Each step has title, description, target (blockId string), placement, etc. |
 | `steps.$.arrow` | boolean \| object | - | Whether to show the arrow for this step, or object with pointAtCenter. |
 | `steps.$.closable` | boolean | - | Whether the close button is visible for this step. |
 | `steps.$.cover` | string | - | Cover image URL for the step. |
 | `steps.$.description` | string | - | Description of the step. |
 | `steps.$.mask` | boolean \| object | - | Whether to enable mask for this step, or object with style and color properties. |
+| `steps.$.nextButtonProps` | object | - | Next button settings for this step. |
+| `steps.$.nextButtonProps.children` | string | - | Text of the next button, for example "Got it". |
+| `steps.$.prevButtonProps` | object | - | Previous button settings for this step. |
+| `steps.$.prevButtonProps.children` | string | - | Text of the previous button. |
 | `steps.$.placement` | string | - | Position of the guide card relative to the target element. |
 | `steps.$.target` | string | - | The blockId of the target element for this step. |
 | `steps.$.title` | string | - | Title of the step. |
@@ -2355,5 +2361,9 @@ Welcome to the application. Click the button below to take a guided tour of the 
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Tour element. |
 | `/mask` | The Tour mask. |
+| `/title` | The title of the step card. |
+| `/description` | The description of the step card. |
+| `/cover` | The cover image area of the step card. |
+| `/footer` | The footer of the step card with the indicators and buttons. |
 
 No slots defined.

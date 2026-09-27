@@ -23,6 +23,7 @@ export default {
   cssKeys: {
     element: 'The Tag element.',
     icon: 'The icon in the Tag.',
+    closeIcon: 'The close icon of a closable Tag.',
   },
   events: {
     onClick: 'Called when Tag is clicked. Renders a shortcut badge when a shortcut is configured.',
@@ -37,6 +38,11 @@ export default {
         default: false,
         description: 'Allow tag to be closed.',
       },
+      closeIcon: {
+        ...icon,
+        description:
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize the close icon of a closable tag.',
+      },
       color: {
         type: 'string',
         description:
@@ -45,14 +51,35 @@ export default {
           displayType: 'color',
         },
       },
+      disabled: {
+        type: 'boolean',
+        default: false,
+        description: 'Disable the tag. A disabled tag cannot be clicked or closed.',
+      },
+      href: {
+        type: 'string',
+        urlKind: 'href',
+        description: 'Render the tag as a link to this URL.',
+      },
+      target: {
+        type: 'string',
+        description: 'Where to open the href link, like `_blank` for a new tab.',
+      },
       title: {
         type: 'string',
         description: 'Content title of tag - supports html.',
       },
+      variant: {
+        type: 'string',
+        enum: ['filled', 'solid', 'outlined'],
+        default: 'filled',
+        description:
+          'Tag style variant. `filled` shows a tinted background, `outlined` adds a border and `solid` fills the tag with its color.',
+      },
       icon: {
         ...icon,
         description:
-          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize alert icon.',
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize tag icon.',
       },
       theme: {
         type: 'object',

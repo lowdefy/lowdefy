@@ -302,6 +302,50 @@
         color: primary
         variant: outlined
 
+- title: Icon Placement
+  blocks:
+    - id: placement_back
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Back
+        icon: arrow-left
+        color: default
+        variant: outlined
+    - id: placement_next
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Next
+        icon: arrow-right
+        iconPlacement: end
+        color: primary
+        variant: outlined
+    - id: placement_send
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Send
+        icon: send
+        iconPlacement: end
+        color: primary
+        variant: solid
+    - id: placement_docs
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open docs
+        icon: external-link
+        iconPlacement: end
+        href: https://docs.lowdefy.com
+        target: _blank
+        color: primary
+        variant: link
+
 - title: Ghost Buttons
   blocks:
     - id: ghost_bg

@@ -16,18 +16,23 @@
 
 export default {
   category: 'container',
-  icons: [],
+  icons: ['chevron-left', 'chevron-right', 'menu'],
   valueType: null,
   slots: {
     content: 'Child blocks in the sider panel.',
   },
   cssKeys: {
     element: 'The Sider element.',
+    body: 'The box inside the Sider that holds its child blocks.',
   },
   events: {
     onClose: 'Trigger actions when sider is closed.',
     onOpen: 'Trigger actions when sider is opened.',
-    onBreakpoint: 'Trigger actions on breakpoint change.',
+    onBreakpoint: {
+      description:
+        'Trigger actions when the screen width crosses the breakpoint. Use it with the setOpen method to collapse the sider on small screens.',
+      event: { broken: 'Whether the screen is narrower than the breakpoint.' },
+    },
   },
   properties: {
     type: 'object',
@@ -35,9 +40,8 @@ export default {
     properties: {
       breakpoint: {
         type: 'string',
-        enum: ['xs', 'sm', 'md', 'lg', 'xl', 'xxl'],
-        default: 'sm',
-        description: 'Breakpoint of the responsive layout',
+        enum: ['xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'xxxl'],
+        description: 'Breakpoint of the responsive layout. Crossing it fires onBreakpoint.',
       },
       collapsedWidth: {
         type: 'integer',
@@ -46,7 +50,8 @@ export default {
       },
       collapsible: {
         type: 'boolean',
-        description: 'Whether can be collapsed',
+        default: false,
+        description: 'Show a trigger at the bottom of the sider that collapses and expands it.',
       },
       initialCollapsed: {
         type: 'boolean',
@@ -68,9 +73,47 @@ export default {
       theme: {
         type: ['string', 'object'],
         description:
-          'The Sider color theme, light or dark, or antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'The Sider color theme, light or dark, or antd Layout design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/layout#design-token',
+        },
+        properties: {
+          triggerHeight: {
+            type: 'number',
+            default: 48,
+            description: 'Height of the collapse trigger of a collapsible Sider.',
+          },
+          triggerBg: {
+            type: 'string',
+            default: '#002140',
+            description: 'Background color of the collapse trigger of a dark Sider.',
+          },
+          triggerColor: {
+            type: 'string',
+            default: '#fff',
+            description: 'Color of the collapse trigger of a dark Sider.',
+          },
+          lightTriggerBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color of the collapse trigger of a light Sider.',
+          },
+          lightTriggerColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.88)',
+            description: 'Color of the collapse trigger of a light Sider.',
+          },
+          zeroTriggerWidth: {
+            type: 'number',
+            default: 40,
+            description: 'Width of the trigger shown when collapsedWidth is 0.',
+          },
+          zeroTriggerHeight: {
+            type: 'number',
+            default: 40,
+            description: 'Height of the trigger shown when collapsedWidth is 0.',
+          },
         },
       },
     },

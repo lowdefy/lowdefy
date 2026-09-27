@@ -1,6 +1,6 @@
 # @lowdefy/blocks-antd
 
-Primary UI component library for Lowdefy, built on [Ant Design v5](https://ant.design/components/overview) with CSS-in-JS (CSS variables mode). Contains 70 blocks covering most UI needs.
+Primary UI component library for Lowdefy, built on [Ant Design v6](https://ant.design/components/overview) (antd 6.6.5, pinned exactly across packages) with CSS-in-JS (CSS variables mode). Contains 84 blocks covering most UI needs.
 
 ## Overview
 
@@ -21,7 +21,7 @@ Ant Design runs in CSS variables mode (`cssVar: { key: 'lowdefy' }`, `hashed: fa
 
 ### `withTheme` HOC
 
-Every block is wrapped with the `withTheme(antdComponentName, BlockComponent)` higher-order component (defined in `src/blocks/withTheme.js`). It intercepts `properties.theme` and, when present, wraps the block in a scoped `<ConfigProvider>` that applies per-block Ant Design token overrides:
+Most blocks are wrapped with the `withTheme(antdComponentName, BlockComponent)` higher-order component (defined in `src/blocks/withTheme.js`). It intercepts an object `properties.theme` and wraps the block in a scoped `<ConfigProvider>` that applies per-block Ant Design token overrides. `antdComponentName` may be an array when a block renders several antd components styled from the same tokens (TreeSelector and TreeMultipleSelector pass `['TreeSelect', 'Select']`, because antd draws the TreeSelect input with Select styles):
 
 ```javascript
 // withTheme strips `theme` from properties and scopes a ConfigProvider
@@ -43,29 +43,45 @@ function withTheme(antdComponentName, BlockComponent) {
 export default withTheme('Badge', BadgeBlock);
 ```
 
-The first argument (`antdComponentName`) must match the Ant Design component name so the theme tokens target the correct component.
+The first argument (`antdComponentName`) must match the Ant Design component name so the theme tokens target the correct component. A name antd doesn't have (for example `'ColorSelector'` instead of `'ColorPicker'`) silently does nothing.
+
+Where a component-level `ConfigProvider` can't reach the rendered DOM, blocks theme differently:
+
+| Case                                                                                                                    | Blocks                                                   | How `theme` is applied                                                                                                     |
+| ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Page layouts render many antd components                                                                                | PageHeaderMenu, PageSiderMenu, PageSidebarLayout         | `withPageTheme` (`src/blocks/withPageTheme.js`) applies `theme` as global design tokens scoped to the page                 |
+| Lowdefy markup that reuses antd class names without rendering the antd component, so antd never emits its CSS variables | Label (Form.Item classes), ControlledList (List classes) | The block sets the component CSS variables itself (`Label/getLabelThemeStyle.js`)                                          |
+| antd scopes Layout component variables to `.ant-layout` elements                                                        | Header, Footer, Content                                  | Not themable per block; set the tokens on the parent `Layout`                                                              |
+| Notices and confirm dialogs render in the App-level holder, outside the block                                           | Message, Notification                                    | Per-block `theme` has no effect; use the app's antd theme. ConfirmModal passes `theme` in antd's per-dialog config instead |
 
 ### `cssKeys` in Block Meta
 
-Each block declares `cssKeys` in its `meta`, listing which style targets the block supports:
+Each block declares `cssKeys` in its `meta.js`, mapping each style target the block supports to a description:
 
 ```javascript
-BadgeBlock.meta = {
+export default {
   category: 'display',
-  icons: [...],
-  styles: [...],
-  cssKeys: ['element', 'indicator'],
+  icons: [],
+  cssKeys: {
+    element: 'The Badge element.',
+    indicator: 'The Badge count or dot.',
+  },
+  // ...
 };
 ```
 
+Most keys other than `element` map to an antd 6 semantic DOM part and are wired to both the class and the style side of the component: `classNames={{ indicator: classNames.indicator }} styles={{ indicator: styles.indicator }}`. antd 6 renamed several semantic parts; the Lowdefy key keeps its name and is mapped (Tabs `tabBar` → `header`, `tabPane` → `content`, `inkBar` → `indicator`; Tooltip/Popover `inner` → `container`; Modal `content` → `container`; Collapse `content` → `body`; Alert `message` → `title`).
+
 These keys define valid targets for the `class` (object form) and `styles` config properties. Common keys:
 
-| Key         | Purpose                                           |
-| ----------- | ------------------------------------------------- |
-| `element`   | The primary antd component element                |
-| `popup`     | Popup/dropdown overlays (selectors, date pickers) |
-| `indicator` | Status indicators (Badge)                         |
-| `header`    | Header sections (Card, Collapse)                  |
+| Key                       | Purpose                                                                         |
+| ------------------------- | ------------------------------------------------------------------------------- |
+| `element`                 | The primary antd component element                                              |
+| `popup`                   | Popup/dropdown overlays, wired to `classNames.popup.root` / `styles.popup.root` |
+| `options`                 | Each option of a choice selector (Radio, Checkbox, Button, Segmented)           |
+| `<slot>Icon`              | An icon slot rendered through `components.Icon` (`prefixIcon`, `closeIcon`)     |
+| `indicator`               | Status indicators (Badge)                                                       |
+| `header`, `title`, `body` | Sections of containers (Card, Collapse, Modal, Drawer)                          |
 
 ### `classNames` and `styles` Prop Flow
 
@@ -116,31 +132,31 @@ Full page structure:
 
 Form input components:
 
-| Block               | Type         | Purpose                         |
-| ------------------- | ------------ | ------------------------------- |
-| `TextInput`         | String       | Single line text                |
-| `TextArea`          | String       | Multi-line text                 |
-| `PasswordInput`     | String       | Password with visibility toggle |
-| `NumberInput`       | Number       | Numeric input with controls     |
-| `Selector`          | Single       | Dropdown selection              |
-| `MultipleSelector`  | Array        | Multi-select dropdown           |
-| `RadioSelector`     | Single       | Radio button group              |
-| `CheckboxSelector`  | Array        | Checkbox group                  |
-| `ButtonSelector`    | Single/Array | Button-style selection          |
-| `TreeInput`         | Array        | Inline hierarchical tree        |
-| `TreeSelector`      | Single       | Tree dropdown (single)          |
-| `TreeMultipleSelector` | Array     | Tree dropdown (multiple)        |
-| `DateSelector`      | Date         | Date picker                     |
-| `DateTimeSelector`  | Date         | Date and time picker            |
-| `DateRangeSelector` | Array        | Date range picker               |
-| `MonthSelector`     | Date         | Month picker                    |
-| `WeekSelector`      | Date         | Week picker                     |
-| `Switch`            | Boolean      | Toggle switch                   |
-| `CheckboxSwitch`    | Boolean      | Checkbox input                  |
-| `Slider`            | Number       | Slider input                    |
-| `RatingSlider`      | Number       | Star rating                     |
-| `AutoComplete`      | String       | Autocomplete text               |
-| `PhoneNumberInput`  | String       | Phone number with country code  |
+| Block                  | Type         | Purpose                         |
+| ---------------------- | ------------ | ------------------------------- |
+| `TextInput`            | String       | Single line text                |
+| `TextArea`             | String       | Multi-line text                 |
+| `PasswordInput`        | String       | Password with visibility toggle |
+| `NumberInput`          | Number       | Numeric input with controls     |
+| `Selector`             | Single       | Dropdown selection              |
+| `MultipleSelector`     | Array        | Multi-select dropdown           |
+| `RadioSelector`        | Single       | Radio button group              |
+| `CheckboxSelector`     | Array        | Checkbox group                  |
+| `ButtonSelector`       | Single/Array | Button-style selection          |
+| `TreeInput`            | Array        | Inline hierarchical tree        |
+| `TreeSelector`         | Single       | Tree dropdown (single)          |
+| `TreeMultipleSelector` | Array        | Tree dropdown (multiple)        |
+| `DateSelector`         | Date         | Date picker                     |
+| `DateTimeSelector`     | Date         | Date and time picker            |
+| `DateRangeSelector`    | Array        | Date range picker               |
+| `MonthSelector`        | Date         | Month picker                    |
+| `WeekSelector`         | Date         | Week picker                     |
+| `Switch`               | Boolean      | Toggle switch                   |
+| `CheckboxSwitch`       | Boolean      | Checkbox input                  |
+| `Slider`               | Number       | Slider input                    |
+| `RatingSlider`         | Number       | Star rating                     |
+| `AutoComplete`         | String       | Autocomplete text               |
+| `PhoneNumberInput`     | String       | Phone number with country code  |
 
 ### Display Blocks
 
@@ -300,6 +316,43 @@ areas:
         properties:
           title: Statistics
 ```
+
+## Wrapping antd 6: conventions and pitfalls
+
+The antd 6.6.5 audit (every block compared against its antd component's API) settled these rules.
+
+**Properties**
+
+- A new property uses the antd prop name when the concept maps 1:1 (`iconPlacement`, `maxCount`, `placement`), with the same enum and wording as sibling blocks.
+- Existing Lowdefy names never change. When antd renames a prop or value, the block translates it with a small constant map: `dotPosition` → `dotPlacement`, `left`/`right` → `start`/`end`, `showToday` → `showNow`, `destroyOnClose` → `destroyOnHidden`, `maskClosable` → `mask.closable` (`getMask.js`).
+- Sizes: Lowdefy size enums are unchanged, but antd 6 deprecates `middle` for `medium` and warns on `size="default"`, so blocks pass `medium` for `default`/`middle`. New size properties use antd's `small`/`medium`/`large`.
+- ReactNode props become an html string (`renderHtml`), a content slot, or an icon property (the shared `icon` schema, rendered through `components.Icon`, with a matching cssKey). Callbacks become events with a serializable payload; open-state events carry `{ open }`.
+- Render and function props (`render`, `formatter`, `popupRender`, `filterOption` as a function) are left out.
+
+**antd behaviours that bite**
+
+- antd's deprecation checks test key presence (`'x' in props`), so `x={undefined}` still warns. Spread conditional props instead.
+- An `undefined` prop also overrides ConfigProvider context: Select builds `{ virtual: contextVirtual, ...props }`, so `virtual={undefined}` switched virtual scrolling back on.
+- `disabled` goes the other way: antd resolves it as `disabled ?? contextDisabled`, so an explicit `false` beats ConfigProvider `componentDisabled`. Blocks pass `getDisabled({ loading, properties })`, which is `true` while loading and otherwise `properties.disabled` unchanged: unset lets `componentDisabled` apply, `false` re-enables the block. Never write `properties.disabled || loading` (that yields `false`). Custom markup (TagSelector pills) and antd components that ignore the context (Segmented, Dropdown) use `useDisabled`, which falls back to `ConfigProvider.useConfig().componentDisabled`. Typography (ParagraphInput, TitleInput) and Pagination ignore `componentDisabled`, as in antd.
+- `e2e/tests/no-antd-deprecations.e2e.spec.js` runs against a production build, where antd strips its warnings. It is a backstop; find deprecated usage by reading the component source for `warning.deprecated`.
+- Use the `items`/`options` APIs, never child components: `Collapse.Panel`, `Descriptions.Item`, `Timeline.Item`, `Select.Option` and the top-level Select search props (`filterOption`, `onSearch`, now inside `showSearch`) are deprecated.
+- antd's `List` is deprecated in 6.6 (use `Listy`, which has no header, footer or bordered mode). ControlledList renders its own markup with the `ant-list-*` class names.
+- antd `Dropdown` renders no element of its own, and rc-dropdown overwrites `popupClassName`/`popupStyle`. Style the popup through `classNames.root`/`styles.root`, and put the block's id, class and style on the trigger.
+- Typography can only measure and cut string children, so an ellipsis with `expandable`, `suffix` or `copyable` gets plain text (`getTypographyContent.js`); content with markup still goes through `renderHtml`.
+- When antd falls back to its own icon (FloatButton, BackTop, Sider trigger, Menu overflow, Splitter arrows), blocks pass an app `Icon` instead so the icon set applies. antd sometimes drops its own styling once a custom icon is passed (the Splitter collapse button loses its background), so `Splitter/style.css` restores it. Every icon name hardcoded in block code must be listed in `meta.icons`, or the build doesn't bundle it.
+
+**Shared schemas and helpers**
+
+| File                                                            | Used by                                                                                          |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `schemas/inputProperties.js`                                    | Text inputs and selectors (`variant` includes `underlined`, `size`, `allowClear`, ...)           |
+| `schemas/pickerProperties.js`, `schemas/pickerTheme.js`         | The five date selectors (one property and token set)                                             |
+| `schemas/selectProperties.js`                                   | Selector, MultipleSelector, TreeSelector, TreeMultipleSelector, AutoComplete dropdown properties |
+| `schemas/treeTheme.js`, `schemas/treeSelectTheme.js`            | TreeInput and the tree selectors                                                                 |
+| `schemas/mask.js`, `schemas/focusable.js`, `blocks/getMask.js`  | Modal, ConfirmModal, Drawer                                                                      |
+| `blocks/getEllipsisConfig.js`, `blocks/getTypographyContent.js` | Title, Paragraph                                                                                 |
+| `getSelectOptions.js`, `filterSelectorOption.js`                | Select-based blocks                                                                              |
+| `getDisabled.js`, `useDisabled.js`                              | Every block with a `disabled` property (ConfigProvider `componentDisabled`)                      |
 
 ## Design Decisions
 

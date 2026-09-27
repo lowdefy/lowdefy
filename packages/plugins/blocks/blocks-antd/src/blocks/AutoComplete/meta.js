@@ -24,6 +24,14 @@ import {
   allowClear,
   sizeSmallDefaultLarge,
 } from '../../schemas/inputProperties.js';
+import {
+  listHeight,
+  placement,
+  popupMatchSelectWidth,
+  prefix,
+  prefixIcon,
+  virtual,
+} from '../../schemas/selectProperties.js';
 
 export default {
   category: 'input',
@@ -36,6 +44,8 @@ export default {
     extra: 'The AutoComplete extra content.',
     feedback: 'The AutoComplete validation feedback.',
     options: 'The AutoComplete options.',
+    popup: 'The AutoComplete dropdown popup.',
+    prefixIcon: 'The prefix icon in the AutoComplete.',
   },
   events: {
     onBlur: 'Trigger action event occurs when selector loses focus.',
@@ -45,9 +55,18 @@ export default {
     },
     onFocus: 'Trigger action when an selector gets focus.',
     onClear: 'Trigger action when selector gets cleared.',
+    onOpenChange: {
+      description: 'Trigger actions when the dropdown opens or closes.',
+      event: { open: 'Whether the dropdown is open.' },
+    },
     onSearch: {
       description: 'Called when searching items.',
       event: { value: 'The search input value.' },
+    },
+    onSelect: {
+      description:
+        'Trigger actions when an option is selected from the dropdown, as opposed to typed.',
+      event: { value: 'The selected option value.' },
     },
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
   },
@@ -65,7 +84,7 @@ export default {
       backfill: {
         type: 'boolean',
         default: false,
-        description: 'Backfill selected item the input when using keyboard',
+        description: 'Backfill the selected item into the input when using the keyboard.',
       },
       defaultOpen: {
         type: 'boolean',
@@ -74,6 +93,7 @@ export default {
       },
       disabled,
       label,
+      listHeight,
       options: {
         default: [],
         type: 'array',
@@ -87,6 +107,10 @@ export default {
         default: 'Type or select item',
         description: 'Placeholder text inside the block before user selects input.',
       },
+      placement,
+      popupMatchSelectWidth,
+      prefix,
+      prefixIcon,
       size: sizeSmallDefaultLarge,
       title: {
         type: 'string',
@@ -94,6 +118,7 @@ export default {
           'Title to describe the input component, if no title is specified the block id is displayed.',
       },
       variant,
+      virtual,
       theme: {
         type: 'object',
         description:

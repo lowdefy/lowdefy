@@ -28,6 +28,12 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
+      orientation: {
+        type: 'string',
+        enum: ['horizontal', 'vertical'],
+        default: 'horizontal',
+        description: 'Direction of the main axis. Takes precedence over vertical.',
+      },
       vertical: {
         type: 'boolean',
         default: false,
@@ -42,17 +48,42 @@ export default {
       },
       justify: {
         type: 'string',
-        enum: ['flex-start', 'center', 'flex-end', 'space-between', 'space-around', 'space-evenly'],
+        enum: [
+          'flex-start',
+          'center',
+          'flex-end',
+          'space-between',
+          'space-around',
+          'space-evenly',
+          'start',
+          'end',
+          'left',
+          'right',
+          'stretch',
+          'normal',
+        ],
         description: 'Set the alignment of elements on the main axis.',
       },
       align: {
         type: 'string',
-        enum: ['flex-start', 'center', 'flex-end', 'stretch', 'baseline'],
+        enum: [
+          'flex-start',
+          'center',
+          'flex-end',
+          'stretch',
+          'baseline',
+          'start',
+          'end',
+          'self-start',
+          'self-end',
+          'normal',
+        ],
         description: 'Set the alignment of elements on the cross axis.',
       },
       gap: {
         type: ['string', 'number'],
-        description: 'Set the gap between items. Can be "small", "middle", "large", or a number.',
+        description:
+          'Set the gap between items. Can be "small", "medium" ("middle" is an alias), "large", a number of pixels or a CSS length.',
         docs: {
           displayType: 'yaml',
         },
@@ -77,17 +108,20 @@ export default {
           link: 'https://ant.design/components/flex#design-token',
         },
         properties: {
+          paddingXS: {
+            type: 'number',
+            default: 8,
+            description: 'Gap of the "small" gap preset.',
+          },
           padding: {
             type: 'number',
-            description: 'Base padding value.',
+            default: 16,
+            description: 'Gap of the "medium" gap preset.',
           },
-          margin: {
+          paddingLG: {
             type: 'number',
-            description: 'Base margin value.',
-          },
-          colorBgContainer: {
-            type: 'string',
-            description: 'Background color when used with a custom component wrapper.',
+            default: 24,
+            description: 'Gap of the "large" gap preset.',
           },
         },
       },

@@ -64,10 +64,10 @@
   type: DateSelector
   properties:
     format: YYYY-MMMM-DD
-- id: 'properties.inputStyle: CSS style applied'
+- id: 'style.element: CSS style applied'
   type: DateSelector
-  properties:
-    inputStyle:
+  style:
+    .element:
       border: 1px solid red
 - id: 'properties.placeholder: - Select this Date'
   type: DateSelector
@@ -115,3 +115,23 @@
   properties:
     label:
       extra: extra text added
+- id: 'properties.variant: underlined'
+  type: DateSelector
+  properties:
+    variant: underlined
+- id: 'properties.prefixIcon: clock'
+  type: DateSelector
+  properties:
+    prefixIcon: clock
+- id: 'properties.inputReadOnly: true'
+  type: DateSelector
+  properties:
+    inputReadOnly: true
+- id: 'properties.placement: bottomRight'
+  type: DateSelector
+  properties:
+    placement: bottomRight
+- id: 'properties.showWeek: true'
+  type: DateSelector
+  properties:
+    showWeek: true

@@ -94,7 +94,7 @@
                 title: 12px padding
                 color: default
 
-- title: Bordered vs Borderless
+- title: Outlined vs Borderless
   blocks:
     - id: border_wrapper
       type: Box
@@ -107,8 +107,8 @@
           layout:
             flex: 1 1 0
           properties:
-            title: Bordered (default)
-            bordered: true
+            title: Outlined (default)
+            variant: outlined
           blocks:
             - id: bordered_content
               type: Paragraph
@@ -121,7 +121,7 @@
             flex: 1 1 0
           properties:
             title: Borderless
-            bordered: false
+            variant: borderless
           blocks:
             - id: borderless_content
               type: Paragraph
@@ -334,6 +334,52 @@
                 title: Featured
                 color: gold
 
+- title: Card with Actions Slot
+  blocks:
+    - id: actions_card
+      type: Card
+      properties:
+        title: Quarterly report
+      slots:
+        content:
+          blocks:
+            - id: actions_card_text
+              type: Paragraph
+              properties:
+                content: Revenue grew 12% over the previous quarter.
+        actions:
+          blocks:
+            - id: actions_card_buttons
+              type: Flex
+              properties:
+                justify: space-around
+              blocks:
+                - id: actions_card_view
+                  type: Button
+                  properties:
+                    title: View
+                    type: link
+                    icon: view
+                - id: actions_card_share
+                  type: Button
+                  properties:
+                    title: Share
+                    type: link
+                    icon: share
+
+- title: Loading Card
+  blocks:
+    - id: loading_card
+      type: Card
+      properties:
+        title: Customer details
+        loading: true
+      blocks:
+        - id: loading_card_text
+          type: Paragraph
+          properties:
+            content: Shown once loading is false.
+
 - title: Inner Cards
   blocks:
     - id: inner_outer
@@ -496,8 +542,7 @@
               properties:
                 icon: user
                 size: 64
-                color: '#fff'
-                backgroundColor: '#1677ff'
+                color: '#1677ff'
             - id: rich_profile_info
               type: Box
               layout:
@@ -854,8 +899,10 @@
         title: Colored Header
       style:
         .header:
-          borderBottom: 1px solid #91caff
+          backgroundColor: var(--ant-color-primary-bg)
+          borderBottom: 1px solid var(--ant-color-primary-border)
         .body:
+          backgroundColor: var(--ant-color-fill-quaternary)
       blocks:
         - id: style_header_bg_p
           type: Paragraph
@@ -872,7 +919,7 @@
         .header:
           backgroundColor: '#1f1f1f'
           color: '#ffffff'
-          borderBottom: 1px solid #333
+          borderBottom: '1px solid #333'
         .body:
           backgroundColor: '#2a2a2a'
       blocks:
@@ -907,9 +954,9 @@
       layout:
         flex: 1 1 0
       class:
-        element: shadow-lg rounded-xl
-        header: bg-bg-layout
-        body: bg-bg-container
+        .element: shadow-lg rounded-xl
+        .header: bg-bg-layout
+        .body: bg-bg-container
       properties:
         title: Element + Header + Body
       blocks:
@@ -923,7 +970,7 @@
       layout:
         flex: 1 1 0
       class:
-        element: hover:ring-2 hover:ring-blue-400 transition-all duration-200 rounded-lg
+        .element: hover:ring-2 hover:ring-blue-400 transition-all duration-200 rounded-lg
       properties:
         title: Hover Ring Effect
         hoverable: true
@@ -938,7 +985,7 @@
       layout:
         flex: 1 1 0
       class:
-        extra: bg-bg-layout px-3 py-1 rounded-full
+        .extra: bg-bg-layout px-3 py-1 rounded-full
       properties:
         title: Styled Extra Area
       slots:

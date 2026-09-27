@@ -235,4 +235,33 @@ test.describe('ButtonSelector Block', () => {
     await expect(getButtonInput(page, 'bs_interaction', 1)).toBeChecked();
     await expect(getButtonInput(page, 'bs_interaction', 0)).not.toBeChecked();
   });
+
+  test('stretches the buttons across the parent with block', async ({ page }) => {
+    const group = getButtonGroup(page, 'bs_block');
+    await expect(group).toHaveClass(/ant-radio-group-block/);
+    const [groupBox, buttonBox] = await Promise.all([
+      group.boundingBox(),
+      group.locator('.ant-radio-button-wrapper').first().boundingBox(),
+    ]);
+    expect(buttonBox.width).toBeGreaterThan(groupBox.width / 2 - 2);
+  });
+
+  test('stacks the buttons with direction vertical', async ({ page }) => {
+    const group = getButtonGroup(page, 'bs_vertical');
+    await expect(group).toHaveClass(/ant-radio-group-vertical/);
+    const [first, second] = await Promise.all([
+      group.locator('.ant-radio-button-wrapper').nth(0).boundingBox(),
+      group.locator('.ant-radio-button-wrapper').nth(1).boundingBox(),
+    ]);
+    expect(second.y).toBeGreaterThan(first.y);
+  });
+
+  test('class.options and style.options reach every option button', async ({ page }) => {
+    const options = getButtonGroup(page, 'bs_options_css').locator('.ant-radio-button-wrapper');
+    await expect(options).toHaveCount(2);
+    for (const option of await options.all()) {
+      await expect(option).toHaveClass(/bs-option-tailwind/);
+      await expect(option).toHaveCSS('font-style', 'italic');
+    }
+  });
 });

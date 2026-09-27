@@ -265,3 +265,130 @@ test.describe('Drawer Block', () => {
     await expect(footer).toContainText('Footer Content Here');
   });
 });
+
+test.describe('Drawer Block features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'drawer_features');
+  });
+
+  const openDrawer = async (page, id) => {
+    await getBlock(page, `open_${id}`).locator('.ant-btn').click();
+    const section = page.locator('.ant-drawer-section').filter({ hasText: `Content of ${id}.` });
+    await expect(section).toBeVisible();
+    return section;
+  };
+
+  test('size large renders a 736px drawer', async ({ page }) => {
+    const section = await openDrawer(page, 'drawer_large');
+    const box = await page
+      .locator('.ant-drawer-content-wrapper')
+      .filter({ has: section })
+      .boundingBox();
+    expect(Math.round(box.width)).toBe(736);
+  });
+
+  test('resizable drawer can be dragged and fires onResizeEnd with the size', async ({ page }) => {
+    const section = await openDrawer(page, 'drawer_resizable');
+    const wrapper = page.locator('.ant-drawer-content-wrapper').filter({ has: section });
+    expect(Math.round((await wrapper.boundingBox()).width)).toBe(400);
+    const dragger = page.locator('.ant-drawer-resizable-dragger');
+    await expect(dragger).toBeAttached();
+    // The drag handle only sits at the drawer edge once the open animation has finished.
+    await page.waitForTimeout(500);
+    const box = await dragger.boundingBox();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(box.x - 100, box.y + box.height / 2, { steps: 5 });
+    await page.mouse.up();
+    expect(Math.round((await wrapper.boundingBox()).width)).toBeGreaterThan(450);
+    await expect(getBlock(page, 'drawer_resized_display')).toHaveText('resized larger');
+    await expect(getBlock(page, 'drawer_resize_end_display')).toHaveText('resize end fired');
+  });
+
+  test('clicking the resize handle without dragging does not fire onResizeEnd', async ({
+    page,
+  }) => {
+    const section = await openDrawer(page, 'drawer_resizable');
+    const wrapper = page.locator('.ant-drawer-content-wrapper').filter({ has: section });
+    const dragger = page.locator('.ant-drawer-resizable-dragger');
+    await expect(dragger).toBeAttached();
+    // The drag handle only sits at the drawer edge once the open animation has finished.
+    await page.waitForTimeout(500);
+    const box = await dragger.boundingBox();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.up();
+    expect(Math.round((await wrapper.boundingBox()).width)).toBe(400);
+    await expect(getBlock(page, 'drawer_resize_end_display')).toHaveText('no resize end');
+  });
+
+  test('resizable drawer starts at the named size large', async ({ page }) => {
+    const section = await openDrawer(page, 'drawer_resizable_large');
+    const wrapper = page.locator('.ant-drawer-content-wrapper').filter({ has: section });
+    await expect.poll(async () => Math.round((await wrapper.boundingBox()).width)).toBe(736);
+  });
+
+  test('getContainer false renders the drawer in place', async ({ page }) => {
+    await getBlock(page, 'open_drawer_in_place').locator('.ant-btn').click();
+    const section = getBlock(page, 'drawer_in_place_box').locator('.ant-drawer-section');
+    await expect(section).toBeVisible();
+    await expect(section).toContainText('Content of drawer_in_place.');
+    await expect(getBlock(page, 'drawer_in_place_box').locator('.ant-drawer')).toHaveCSS(
+      'position',
+      'absolute'
+    );
+  });
+
+  test('getContainer selector mounts the drawer in the matching element', async ({ page }) => {
+    await getBlock(page, 'open_drawer_selector').locator('.ant-btn').click();
+    const section = page.locator('#drawer_selector_target .ant-drawer-section');
+    await expect(section).toBeVisible();
+    await expect(section).toContainText('Content of drawer_selector.');
+  });
+
+  test('closable placement end moves the close button to the end', async ({ page }) => {
+    const section = await openDrawer(page, 'drawer_close_end');
+    await expect(section.locator('.ant-drawer-close.ant-drawer-close-end')).toBeVisible();
+  });
+
+  test('closable disabled renders a disabled close button', async ({ page }) => {
+    const section = await openDrawer(page, 'drawer_close_disabled');
+    await expect(section.locator('.ant-drawer-close')).toBeDisabled();
+  });
+
+  test('mask blur adds the antd blur class to the mask', async ({ page }) => {
+    await openDrawer(page, 'drawer_blur');
+    await expect(page.locator('.ant-drawer-mask.ant-drawer-mask-blur')).toBeVisible();
+  });
+
+  test('loading shows a skeleton in place of the body', async ({ page }) => {
+    await getBlock(page, 'open_drawer_loading').locator('.ant-btn').click();
+    const section = page.locator('.ant-drawer-section').filter({ hasText: 'Loading' });
+    await expect(section.locator('.ant-skeleton')).toBeVisible();
+    await expect(section).not.toContainText('Content of drawer_loading.');
+  });
+
+  test('title renders html', async ({ page }) => {
+    await openDrawer(page, 'drawer_html_title');
+    await expect(page.locator('.ant-drawer-title b')).toHaveText('Bold');
+  });
+
+  test('afterOpenChange fires with the open state', async ({ page }) => {
+    const section = await openDrawer(page, 'drawer_after_open_change');
+    const display = getBlock(page, 'drawer_after_open_display');
+    await expect(display).toHaveText('opened');
+    await section.locator('.ant-drawer-close').click();
+    await expect(display).toHaveText('closed');
+  });
+
+  test('forceRender renders the drawer content before it opens', async ({ page }) => {
+    await expect(page.locator('#bl-drawer_force_render_text')).toBeAttached();
+    await expect(page.locator('#bl-drawer_force_render_text')).toBeHidden();
+  });
+
+  test('destroyOnHidden unmounts the content when the drawer closes', async ({ page }) => {
+    const section = await openDrawer(page, 'drawer_destroy_on_hidden');
+    await section.locator('.ant-drawer-close').click();
+    await expect(page.locator('#bl-drawer_destroy_on_hidden_text')).not.toBeAttached();
+  });
+});

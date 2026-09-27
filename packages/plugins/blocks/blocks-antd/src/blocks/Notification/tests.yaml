@@ -22,18 +22,6 @@
   type: Notification
   properties:
     description: 'Notification status type.'
-- id: 'properties.bottom: 250 placement: bottomLeft'
-  type: Notification
-  properties:
-    placement: bottomLeft
-    bottom: 250
-    title: Notification title
-- id: 'properties.top: 250 placement: topLeft'
-  type: Notification
-  properties:
-    placement: topLeft
-    top: 250
-    title: Notification title
 - id: 'properties.button: icon'
   type: Notification
   properties:
@@ -95,3 +83,34 @@
   type: Notification
   properties:
     description: <div style="background:green;">Notification Description</div>
+- id: 'properties.closable: false'
+  type: Notification
+  properties:
+    title: Notification title
+    closable: false
+- id: 'properties.showProgress: true'
+  type: Notification
+  properties:
+    title: Notification title
+    showProgress: true
+- id: 'properties.pauseOnHover: false'
+  type: Notification
+  properties:
+    title: Notification title
+    showProgress: true
+    pauseOnHover: false
+- id: 'properties.placement: top'
+  type: Notification
+  properties:
+    placement: top
+    title: Notification title
+- id: 'properties.placement: bottom'
+  type: Notification
+  properties:
+    placement: bottom
+    title: Notification title
+- id: 'properties.role: status'
+  type: Notification
+  properties:
+    role: status
+    title: Saved

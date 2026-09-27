@@ -153,6 +153,12 @@
         level: 4
         italic: true
         underline: true
+    - id: deco_keyboard
+      type: Title
+      properties:
+        content: Esc
+        level: 4
+        keyboard: true
 
 - title: Disabled
   blocks:
@@ -268,6 +274,24 @@
         ellipsis:
           rows: 1
           suffix: ' /Read More'
+    - id: ellipsis_collapsible
+      type: Title
+      properties:
+        content: This long title can be expanded and collapsed again. The expand and collapse buttons use custom text set with the symbol option.
+        level: 5
+        ellipsis:
+          rows: 1
+          expandable: collapsible
+          symbol:
+            - more
+            - less
+    - id: ellipsis_tooltip
+      type: Title
+      properties:
+        content: Hover this truncated title to see the full heading in a tooltip, which helps when titles come from user data.
+        level: 4
+        ellipsis:
+          tooltip: true
 
 - title: Style and CSS
   blocks:
@@ -296,7 +320,7 @@
         level: 4
       style:
         .element:
-          borderBottom: 2px solid #1677ff
+          borderBottom: '2px solid #1677ff'
           paddingBottom: 8px
     - id: css_inline_shadow
       type: Title

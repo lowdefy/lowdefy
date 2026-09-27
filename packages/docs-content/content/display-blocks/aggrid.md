@@ -410,7 +410,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
         assignee: Diana
         priority: Low
         status: To Do
-      - task: Code review PR
+      - task: "Code review PR #42"
         assignee: Erik
         priority: Medium
         status: In Progress
@@ -1064,7 +1064,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
             Archived: default
       - headerName: Actions
         field: _id
-        width: 220
+        width: 300
         cell:
           type: buttons
           buttons:
@@ -1078,6 +1078,11 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
               danger: true
               disabledField: locked
               hiddenField: archived
+            - eventName: onOpenClick
+              title: Open
+              icon: arrow-right
+              iconPlacement: end
+              type: link
     rowData:
       - _id: TSK-001
         name: Wire main switchboard
@@ -1112,6 +1117,14 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
             _string.concat:
               - "Delete "
               - _event: row.name
+    onOpenClick:
+      - id: open_msg
+        type: DisplayMessage
+        params:
+          content:
+            _string.concat:
+              - "Open "
+              - _event: row._id
 ```
 
 ```yaml
@@ -1376,6 +1389,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.buttons.$.titleField` | string | - | Row-data path for the title. |
 | `columnDefs.$.cell.buttons.$.icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or Icon block config. |
 | `columnDefs.$.cell.buttons.$.iconField` | string | - | Row-data path for the icon name or config. |
+| `columnDefs.$.cell.buttons.$.iconPlacement` | string | `"start"` | Place the icon before (start) or after (end) the title. Enum: `start`, `end`. |
 | `columnDefs.$.cell.buttons.$.type` | string | - | antd Button type. Enum: `primary`, `default`, `dashed`, `link`, `text`. |
 | `columnDefs.$.cell.buttons.$.variant` | string | - | antd Button variant. Takes precedence over `type` when set. Enum: `solid`, `outlined`, `dashed`, `filled`, `text`, `link`. |
 | `columnDefs.$.cell.buttons.$.color` | string | - | Button color (antd preset or hex). |
@@ -1401,7 +1415,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.items.$.hidden` | boolean | `false` | Hide the item entirely. |
 | `columnDefs.$.cell.items.$.hiddenField` | string | - | Row-data path → boolean. |
 | `columnDefs.$.cell.icon` | string \| object | `"more-vertical"` | Menu cell: the trigger icon. Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or Icon block config. The trigger is icon-only. |
-| `columnDefs.$.cell.placement` | string | `"bottomRight"` | Menu cell: where the dropdown opens relative to its trigger. Enum: `bottomLeft`, `bottom`, `bottomRight`, `topLeft`, `top`, `topRight`. |
+| `columnDefs.$.cell.placement` | string | `"bottomRight"` | Menu cell: where the dropdown opens relative to its trigger. Enum: `bottomLeft`, `bottom`, `bottomRight`, `topLeft`, `top`, `topRight`, `left`, `leftTop`, `leftBottom`, `right`, `rightTop`, `rightBottom`. |
 | `columnDefs.$.cell.options` | array | - | Selector / Multiple selector cell: dropdown options. An array of primitives, or objects mirroring the `Selector` block options: `{ label, value, disabled, color, filterString, style }`. `label` supports html. |
 | `columnDefs.$.cell.valueKey` | string | - | Selector / Multiple selector: field on each option object to use as its value. Defaults to `value`. |
 | `columnDefs.$.cell.primaryKey` | string | - | Selector / Multiple selector: field used to match the cell value to an option (identity key for object values). |

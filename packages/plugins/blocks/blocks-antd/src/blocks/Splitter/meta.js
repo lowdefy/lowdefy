@@ -14,13 +14,19 @@
   limitations under the License.
 */
 
+import icon from '../../schemas/icon.js';
+
 export default {
   category: 'container',
-  icons: [],
+  icons: ['chevron-down', 'chevron-left', 'chevron-right', 'chevron-up'],
   valueType: null,
   slots: false,
   cssKeys: {
     element: 'The Splitter element.',
+    panel: 'Each Splitter panel.',
+    dragger: 'The drag handle between panels.',
+    draggerIcon: 'The custom icon in the drag handle, set with draggerIcon.',
+    collapseIcon: 'The collapse icons on the drag handles of collapsible panels.',
   },
   events: {
     onCollapse: {
@@ -39,11 +45,60 @@ export default {
       description: 'Trigger action when resize starts.',
       event: { sizes: 'The panel sizes array.' },
     },
+    onDraggerDoubleClick: {
+      description: 'Trigger action when a drag handle is double-clicked.',
+      event: { index: 'The index of the drag handle, counted from 0.' },
+    },
   },
   properties: {
     type: 'object',
     additionalProperties: false,
     properties: {
+      collapsible: {
+        type: 'object',
+        description:
+          'Collapse behaviour shared by all panels. Which panels collapse is set per panel with panels[].collapsible.',
+        docs: {
+          displayType: 'yaml',
+        },
+        additionalProperties: false,
+        properties: {
+          motion: {
+            type: 'boolean',
+            default: false,
+            description: 'Animate panels as they collapse and expand.',
+          },
+          icon: {
+            type: 'object',
+            description:
+              'Custom collapse icons. By default the collapse buttons show `chevron-left` and `chevron-right` arrows, or `chevron-up` and `chevron-down` arrows on a vertical Splitter.',
+            additionalProperties: false,
+            properties: {
+              start: {
+                ...icon,
+                description:
+                  'Icon name or properties of an Icon block for the collapse button that moves the bar towards the start.',
+              },
+              end: {
+                ...icon,
+                description:
+                  'Icon name or properties of an Icon block for the collapse button that moves the bar towards the end.',
+              },
+            },
+          },
+        },
+      },
+      destroyOnHidden: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Unmount the blocks in a panel while it is collapsed. Can be overridden per panel.',
+      },
+      draggerIcon: {
+        ...icon,
+        description:
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to show in the drag handle.',
+      },
       lazy: {
         type: 'boolean',
         default: false,
@@ -53,7 +108,7 @@ export default {
         type: 'string',
         enum: ['horizontal', 'vertical'],
         default: 'horizontal',
-        description: 'Layout direction of the splitter.',
+        description: 'Layout direction of the splitter. Prefer orientation.',
       },
       orientation: {
         type: 'string',
@@ -64,7 +119,7 @@ export default {
       panels: {
         type: 'array',
         description:
-          'Panel configuration array. Each panel has key, size, min, max, defaultSize, collapsible, resizable.',
+          'Panel configuration array. Each panel has key, size, min, max, defaultSize, collapsible, resizable and destroyOnHidden.',
         docs: {
           displayType: 'yaml',
         },
@@ -93,7 +148,32 @@ export default {
             },
             collapsible: {
               type: ['boolean', 'object'],
-              description: 'Whether the panel is collapsible.',
+              default: false,
+              description:
+                'Whether the panel is collapsible. Set an object to choose the collapse directions and when the collapse buttons show.',
+              additionalProperties: false,
+              properties: {
+                start: {
+                  type: 'boolean',
+                  description: 'Show a collapse button on the bar at the start edge of the panel.',
+                },
+                end: {
+                  type: 'boolean',
+                  description: 'Show a collapse button on the bar at the end edge of the panel.',
+                },
+                showCollapsibleIcon: {
+                  type: ['boolean', 'string'],
+                  enum: [true, false, 'auto'],
+                  default: 'auto',
+                  description:
+                    'When to show the collapse buttons: always (true), never (false) or on hover (auto).',
+                },
+              },
+            },
+            destroyOnHidden: {
+              type: 'boolean',
+              description:
+                'Unmount the blocks in this panel while it is collapsed. Overrides the Splitter destroyOnHidden.',
             },
             resizable: {
               type: 'boolean',

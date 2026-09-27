@@ -551,6 +551,19 @@
           properties:
             shape: square
             icon: user
+    - id: title_tooltip_off
+      type: Badge
+      layout:
+        flex: 0 0 auto
+      properties:
+        count: 3
+        title: false
+      blocks:
+        - id: title_tooltip_off_child
+          type: Avatar
+          properties:
+            shape: square
+            content: 'N'
 
 - title: Badge Wrapping Different Blocks
   blocks:
@@ -604,6 +617,50 @@
             name: mail
             size: 24
 
+- title: Ribbon
+  blocks:
+    - id: ribbon_row
+      type: Box
+      layout:
+        gap: 24
+      blocks:
+        - id: ribbon_recommended
+          type: Badge
+          layout:
+            span: 12
+          properties:
+            ribbon:
+              text: Recommended
+          blocks:
+            - id: ribbon_recommended_card
+              type: Card
+              properties:
+                title: Team plan
+              blocks:
+                - id: ribbon_recommended_text
+                  type: Paragraph
+                  properties:
+                    content: Up to 20 members, shared workspaces and priority support.
+        - id: ribbon_sale
+          type: Badge
+          layout:
+            span: 12
+          properties:
+            ribbon:
+              text: 20% off
+              color: volcano
+              placement: start
+          blocks:
+            - id: ribbon_sale_card
+              type: Card
+              properties:
+                title: Annual billing
+              blocks:
+                - id: ribbon_sale_text
+                  type: Paragraph
+                  properties:
+                    content: Pay yearly and save on every seat.
+
 - title: Style and CSS Examples
   blocks:
     - id: css_indicator_shadow
@@ -614,7 +671,7 @@
         count: 5
       style:
         .indicator:
-          boxShadow: 0 0 0 2px #1677ff
+          boxShadow: '0 0 0 2px #1677ff'
       blocks:
         - id: css_indicator_shadow_child
           type: Avatar
@@ -659,7 +716,7 @@
     - id: tw_element_margin
       type: Badge
       class:
-        element: mr-8
+        .element: mr-8
       layout:
         flex: 0 0 auto
       properties:
@@ -673,7 +730,7 @@
     - id: tw_indicator_animate
       type: Badge
       class:
-        indicator: animate-bounce
+        .indicator: animate-bounce
       layout:
         flex: 0 0 auto
       properties:
@@ -687,7 +744,7 @@
     - id: tw_badge_in_box
       type: Badge
       class:
-        element: p-1
+        .element: p-1
       layout:
         flex: 0 0 auto
       properties:
@@ -863,8 +920,7 @@
             flex: 0 0 auto
           properties:
             content: JD
-            color: '#fff'
-            backgroundColor: '#1677ff'
+            color: '#1677ff'
 
 - title: Order Status Dashboard
   blocks:

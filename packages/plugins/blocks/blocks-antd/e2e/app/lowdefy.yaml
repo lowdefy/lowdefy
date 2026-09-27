@@ -30,6 +30,8 @@ pages:
   - _ref: ../../src/blocks/CheckboxSelector/tests/CheckboxSelector.e2e.yaml
   - _ref: ../../src/blocks/RadioSelector/tests/RadioSelector.e2e.yaml
   - _ref: ../../src/blocks/TreeInput/tests/TreeInput.e2e.yaml
+  - _ref: ../../src/blocks/TreeSelector/tests/TreeSelector.e2e.yaml
+  - _ref: ../../src/blocks/TreeMultipleSelector/tests/TreeMultipleSelector.e2e.yaml
   - _ref: ../../src/blocks/AutoComplete/tests/AutoComplete.e2e.yaml
   - _ref: ../../src/blocks/ButtonSelector/tests/ButtonSelector.e2e.yaml
   # Step 1.3: Date/Time Inputs
@@ -78,13 +80,17 @@ pages:
   - _ref: ../../src/blocks/Descriptions/tests/Descriptions.e2e.yaml
   # Step 3.3: List/Page Containers
   - _ref: ../../src/blocks/ControlledList/tests/ControlledList.e2e.yaml
+  - _ref: ../../src/blocks/ListSelector/tests/ListSelector.e2e.yaml
   - _ref: ../../src/blocks/Carousel/tests/Carousel.e2e.yaml
   - _ref: ../../src/blocks/Pagination/tests/Pagination.e2e.yaml
+  - _ref: ../../src/blocks/Steps/tests/Steps.e2e.yaml
   - _ref: ../../src/blocks/Affix/tests/Affix.e2e.yaml
   # Step 4.1: Modal Blocks
   - _ref: ../../src/blocks/Modal/tests/Modal.e2e.yaml
+  - _ref: ../../src/blocks/Modal/tests/ModalFeatures.e2e.yaml
   - _ref: ../../src/blocks/ConfirmModal/tests/ConfirmModal.e2e.yaml
   - _ref: ../../src/blocks/Drawer/tests/Drawer.e2e.yaml
+  - _ref: ../../src/blocks/Drawer/tests/DrawerFeatures.e2e.yaml
   # Step 4.2: Message Blocks
   - _ref: ../../src/blocks/Message/tests/Message.e2e.yaml
   - _ref: ../../src/blocks/Notification/tests/Notification.e2e.yaml
@@ -98,6 +104,7 @@ pages:
   - _ref: ../../src/blocks/Label/tests/Label.e2e.yaml
   # Step 7: New Blocks
   - _ref: ../../src/blocks/ColorSelector/tests/ColorSelector.e2e.yaml
+  - _ref: ../../src/blocks/ConfigProvider/tests/ConfigProvider.e2e.yaml
   - _ref: ../../src/blocks/DropdownButton/tests/DropdownButton.e2e.yaml
   - _ref: ../../src/blocks/DropdownMenu/tests/DropdownMenu.e2e.yaml
   - _ref: ../../src/blocks/Flex/tests/Flex.e2e.yaml

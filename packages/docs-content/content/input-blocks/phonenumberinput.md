@@ -617,7 +617,7 @@ Phone number input with international country code selector.
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `maxLength` | integer | - | The max number of input characters. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
-| `prefix` | string | - | Prefix text for the block, priority over $prefix_con. |
+| `prefix` | string | - | Prefix text for the block, priority over prefixIcon. |
 | `prefixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to prefix the text input. |
 | `prefixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
 | `prefixIcon.color` | string | - | Icon color. |
@@ -629,6 +629,18 @@ Phone number input with international country code selector.
 | `prefixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `prefixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `label` | object | - | Label properties. |
+| `label.xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |
+| `label.xs.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.sm` | object | - | Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set. |
+| `label.sm.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.md` | object | - | Label width on medium screens (768px and up) when the label is not inline. Overrides `span`. |
+| `label.md.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.lg` | object | - | Label width on large screens (992px and up) when the label is not inline. |
+| `label.lg.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xl` | object | - | Label width on extra large screens (1200px and up) when the label is not inline. |
+| `label.xl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xxl` | object | - | Label width on extra extra large screens (1600px and up) when the label is not inline. |
+| `label.xxl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
 | `label.extra` | string | - | Extra text to display beneath the content - supports html. |
@@ -637,17 +649,18 @@ Phone number input with international country code selector.
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
 | `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
-| `label.span` | number | - | Label inline span. |
+| `label.span` | number | - | Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns. |
 | `label.disabled` | boolean | `false` | Hide input label. |
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
+| `label.wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap. |
 | `replaceInput` | object | - | Regex used to sanitize input. |
 | `replaceInput.pattern` | string | - | The regular expression pattern to use to sanitize input. |
 | `replaceInput.flags` | string | - | The regex flags to use. The default value is 'gm'. |
 | `replaceInput.replacement` | string | - | The string used to replace the input that matches the pattern. The default value is ''. |
 | `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon. |
 | `size` | string | `"middle"` | Size of the block. Enum: `small`, `middle`, `large`. |
-| `suffix` | string | - | Suffix text for the block, priority over suffixIcon. |
+| `suffix` | string | - | Suffix text for the block, shown before suffixIcon. |
 | `suffixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to suffix the text input. |
 | `suffixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
 | `suffixIcon.color` | string | - | Icon color. |
@@ -659,11 +672,10 @@ Phone number input with international country code selector.
 | `suffixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `suffixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `title` | string | - | Title to describe the input component, if no title is specified the block id is displayed - supports html. |
-| `variant` | string | - | Input visual variant. When set, takes precedence over bordered. Enum: `outlined`, `filled`, `borderless`. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design input tokens](https://ant.design/components/input#design-token). |
+| `variant` | string | - | Input visual variant. The deprecated bordered: false takes precedence and renders the input as 'borderless'. Enum: `outlined`, `filled`, `borderless`, `underlined`. |
+| `theme` | object | - | Antd design token overrides for this block, applied to both the region selector (antd Select) and the phone number input (antd Input). See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design input tokens](https://ant.design/components/input#design-token). |
 | `theme.activeBorderColor` | string | - | Border color when the input is focused. |
 | `theme.activeShadow` | string | - | Box shadow when the input is focused. |
-| `theme.addonBg` | string | `"rgba(0, 0, 0, 0.02)"` | Background color of addon elements. |
 | `theme.colorBgContainer` | string | - | Background color of the input. |
 | `theme.colorBorder` | string | - | Border color of the input. |
 | `theme.colorError` | string | - | Color used for error status. |
@@ -680,6 +692,7 @@ Phone number input with international country code selector.
 | `theme.hoverBorderColor` | string | - | Border color when the input is hovered. |
 | `theme.paddingBlock` | number | `4` | Vertical padding. |
 | `theme.paddingInline` | number | `11` | Horizontal padding. |
+| `theme.selectorBg` | string | `"#ffffff"` | Background color of the region selector. |
 | `theme.warningActiveShadow` | string | `"0 0 0 2px rgba(255, 215, 5, 0.1)"` | Box shadow when the input has warning status and is focused. |
 
 | Event | Event Data | Description |
@@ -688,6 +701,7 @@ Phone number input with international country code selector.
 | `onCodeChange` | \- | Trigger action when the selector is changed. |
 | `onChange` | `{ value }` | Trigger action when the number is changed. |
 | `onBlur` | \- | Trigger action event occurs when input loses focus. |
+| `onClear` | \- | Trigger action when the clear button is clicked. |
 | `onFocus` | \- | Trigger action when input gets focus. |
 | `onPressEnter` | \- | Trigger action when enter is pressed while text input is focused. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |

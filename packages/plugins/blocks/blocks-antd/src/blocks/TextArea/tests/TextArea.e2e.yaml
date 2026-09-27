@@ -22,6 +22,7 @@ events:
       params:
         textarea_with_value: Initial multiline text
         textarea_allowclear: Clear this text
+        textarea_onclear: Clear me too
 
 blocks:
   # ============================================
@@ -215,4 +216,38 @@ blocks:
             _string.concat:
               - 'Typed: '
               - _state: textarea_typing
+          else: ''
+
+  # ============================================
+  # ANTD 6 FEATURES
+  # ============================================
+
+  - id: textarea_underlined
+    type: TextArea
+    properties:
+      title: Underlined
+      variant: underlined
+
+  - id: textarea_onclear
+    type: TextArea
+    properties:
+      title: OnClear Test
+      allowClear: true
+    events:
+      onClear:
+        - id: set_onclear
+          type: SetState
+          params:
+            textarea_onclear_fired: true
+
+  - id: onclear_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: textarea_onclear_fired
+              - true
+          then: Clear fired
           else: ''

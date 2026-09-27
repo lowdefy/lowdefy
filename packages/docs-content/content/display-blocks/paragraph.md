@@ -75,6 +75,8 @@ Deleted (strikethrough) text indicating removed content.
 
 Marked (highlighted) text to call out key information.
 
+Ctrl + K
+
 ```yaml
 - id: deco_strong
   type: Paragraph
@@ -101,6 +103,11 @@ Marked (highlighted) text to call out key information.
   properties:
     content: Marked (highlighted) text to call out key information.
     mark: true
+- id: deco_keyboard
+  type: Paragraph
+  properties:
+    content: Ctrl + K
+    keyboard: true
 ```
 
 Bold and italic text for maximum emphasis.
@@ -199,6 +206,8 @@ Two-state copy icons that change after clicking
 
 npm install lowdefy
 
+The copy button sits before this text.
+
 ```yaml
 - id: copyable_simple
   type: Paragraph
@@ -234,6 +243,13 @@ npm install lowdefy
     content: npm install lowdefy
     code: true
     copyable: true
+- id: copyable_actions_start
+  type: Paragraph
+  properties:
+    content: The copy button sits before this text.
+    copyable: true
+    actions:
+      placement: start
 ```
 
 Copy this text and a message will appear.
@@ -322,6 +338,33 @@ Three-line ellipsis with a custom suffix. Lowdefy makes it easy to build interna
       rows: 3
       expandable: true
       suffix: " /Read More"
+```
+
+Collapsible ellipsis lets readers expand the full text and fold it back. Lowdefy apps are defined in YAML with blocks, operators, actions and connections, and the framework handles rendering, state and server-side logic.
+
+Hover over this single line to read the full text in a tooltip. The rest of the sentence is cut off with an ellipsis when it does not fit.
+
+```yaml
+- id: ellipsis_collapsible
+  type: Paragraph
+  properties:
+    content: Collapsible ellipsis lets readers expand the full text and fold it
+      back. Lowdefy apps are defined in YAML with blocks, operators, actions and
+      connections, and the framework handles rendering, state and server-side
+      logic.
+    ellipsis:
+      rows: 2
+      expandable: collapsible
+      symbol:
+        - Read more
+        - Show less
+- id: ellipsis_tooltip
+  type: Paragraph
+  properties:
+    content: Hover over this single line to read the full text in a tooltip. The
+      rest of the sentence is cut off with an ellipsis when it does not fit.
+    ellipsis:
+      tooltip: true
 ```
 
 Click expand to trigger an event. Lowdefy makes it easy to build internal tools, client portals, and web applications using YAML or JSON configuration files. No need to learn complex frontend frameworks, manage build tooling, or write boilerplate code.
@@ -438,7 +481,7 @@ A blockquote-style paragraph using inline styles with a left border and padding.
     italic: true
   style:
     .element:
-      borderLeft: 3px solid
+      borderLeft: "3px solid #1677ff"
       paddingLeft: 12px
 ```
 
@@ -598,6 +641,8 @@ Maintenance window scheduled for Sunday 02:00-04:00 UTC.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `actions` | object | - | Configure the bar of action buttons, such as copy and expand. |
+| `actions.placement` | string | `"end"` | Place the action buttons before or after the text. Enum: `start`, `end`. |
 | `code` | boolean | `false` | Apply code style. |
 | `content` | string | - | Paragraph text content - supports html. |
 | `copyable` | boolean \| object | `false` | Provide copy text button. |
@@ -608,16 +653,20 @@ Maintenance window scheduled for Sunday 02:00-04:00 UTC.
 | `disabled` | boolean | `false` | Apply disabled style. |
 | `ellipsis` | boolean \| object | `false` | Display ellipsis when text overflows a single line. |
 | `ellipsis.rows` | number | - | Max rows of content. |
-| `ellipsis.expandable` | boolean | - | Expand hidden content when clicked. |
+| `ellipsis.expandable` | boolean \| string | - | Show a button that expands the hidden content. Set to 'collapsible' to also allow collapsing it again. Enum: `true`, `false`, `collapsible`. |
+| `ellipsis.defaultExpanded` | boolean | `false` | Start with the content expanded. |
 | `ellipsis.suffix` | string | - | Suffix of ellipses content. |
+| `ellipsis.symbol` | string \| array | - | Text of the expand button, or an array of two strings for the expand and collapse buttons. |
+| `ellipsis.tooltip` | boolean \| string | - | Show a tooltip when the text is truncated. true shows the full text, a string shows that text. |
 | `italic` | boolean | `false` | Apply italic style. |
+| `keyboard` | boolean | `false` | Apply keyboard key style. |
 | `mark` | boolean | `false` | Apply marked (highlighted) style. |
 | `strong` | boolean | `false` | Apply strong (bold) style. |
 | `type` | string | `"default"` | Additional types. Don't specify for default. Enum: `success`, `default`, `secondary`, `warning`, `danger`. |
 | `underline` | boolean | `false` | Apply underline style. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design typography tokens](https://ant.design/components/typography#design-token). |
-| `theme.titleMarginBottom` | string | `"0.5em"` | Margin bottom of title. |
-| `theme.titleMarginTop` | string | `"1.2em"` | Margin top of title. |
+| `theme.titleMarginBottom` | string \| number | `"0.5em"` | Margin bottom of title, as a CSS length or a number of pixels. |
+| `theme.titleMarginTop` | string \| number | `"1.2em"` | Margin top of title, as a CSS length or a number of pixels. |
 | `theme.fontWeightStrong` | number | `600` | Font weight for strong text. |
 | `theme.fontFamilyCode` | string | - | Font family for code style text. |
 | `theme.colorText` | string | - | Default text color. |
@@ -630,7 +679,7 @@ Maintenance window scheduled for Sunday 02:00-04:00 UTC.
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onExpand` | \- | Trigger action when ellipse expand is clicked. |
+| `onExpand` | `{ expanded }` | Trigger action when the ellipsis expand or collapse button is clicked. |
 | `onCopy` | \- | Trigger action when copy text is clicked. |
 | `onTextSelection` | \- | Trigger action when text is selected and pass selected text to the event object. |
 
@@ -639,5 +688,6 @@ Maintenance window scheduled for Sunday 02:00-04:00 UTC.
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Paragraph element. |
 | `/copyableIcon` | The copyable icon in the Paragraph. |
+| `/actions` | The bar of action buttons, such as copy and expand, next to the text. |
 
 No slots defined.

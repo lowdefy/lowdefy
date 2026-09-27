@@ -44,4 +44,10 @@ test.describe('MasonryList Block', () => {
     await expect(block).toContainText('Item B');
     await expect(block).toContainText('Item C');
   });
+
+  test('item cssKey styles each item', async ({ page }) => {
+    const items = getBlock(page, 'ml_styled').locator('.ant-masonry-item');
+    await expect(items).toHaveCount(2);
+    await expect(items.first()).toHaveCSS('outline-color', 'rgb(255, 0, 0)');
+  });
 });

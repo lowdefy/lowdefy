@@ -1643,8 +1643,8 @@ Editable paragraph text with copyable and ellipsis support.
 | `type` | string | `"default"` | Additional types. Don't specify for default. Enum: `success`, `default`, `secondary`, `warning`, `danger`. |
 | `underline` | boolean | `false` | Apply underline style. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design typography tokens](https://ant.design/components/typography#design-token). |
-| `theme.titleMarginBottom` | string | `"0.5em"` | Margin bottom for title elements. |
-| `theme.titleMarginTop` | string | `"1.2em"` | Margin top for title elements. |
+| `theme.titleMarginBottom` | string \| number | `"0.5em"` | Margin bottom for title elements, as a CSS length or a number of pixels. |
+| `theme.titleMarginTop` | string \| number | `"1.2em"` | Margin top for title elements, as a CSS length or a number of pixels. |
 | `theme.colorText` | string | - | Default text color. |
 | `theme.colorTextSecondary` | string | - | Text color for secondary type. |
 | `theme.colorSuccess` | string | - | Text color for success type. |

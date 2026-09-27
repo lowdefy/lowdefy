@@ -35,6 +35,14 @@
           _state: float_props.href
         target:
           _state: float_props.target
+        disabled:
+          _state: float_props.disabled
+        backTop:
+          _state: float_props.backTop
+        visibilityHeight:
+          _state: float_props.visibilityHeight
+        showProgress:
+          _state: float_props.showProgress
         theme:
           _state: float_props.theme
       events:
@@ -425,6 +433,71 @@
                 tooltip: View documentation (new tab)
                 href: https://docs.lowdefy.com
                 target: _blank
+
+- title: Back to Top
+  blocks:
+    - id: btn_back_top
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Back to top
+        color: default
+        variant: outlined
+        icon: arrow-up
+      events:
+        onClick:
+          - id: set_back_top
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                backTop: true
+                visibilityHeight: 0
+                tooltip: Back to top
+    - id: btn_back_top_progress
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: With scroll progress
+        color: primary
+        variant: outlined
+        icon: arrow-up
+      events:
+        onClick:
+          - id: set_back_top_progress
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                type: primary
+                backTop: true
+                showProgress: true
+                visibilityHeight: 0
+                tooltip: Back to top
+
+- title: Disabled
+  blocks:
+    - id: btn_disabled
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Disabled
+        color: default
+        variant: outlined
+        icon: lock
+      events:
+        onClick:
+          - id: set_disabled
+            type: SetState
+            params:
+              float_active: true
+              float_props:
+                icon: add
+                disabled: true
+                tooltip: Adding is disabled
 
 - title: Theme Token Overrides
   blocks:

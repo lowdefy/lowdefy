@@ -19,6 +19,7 @@ import { Button, ConfigProvider, Tooltip } from 'antd';
 import { get, type } from '@lowdefy/helpers';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
+import getDisabled from '../../getDisabled.js';
 import withTheme from '../withTheme.js';
 
 const ANTD_COLOR_PRESETS = new Set([
@@ -68,6 +69,7 @@ const ButtonBlock = ({
   styles = {},
 }) => {
   const onClickActionName = get(rename, 'events.onClick', { default: 'onClick' });
+  const actionLoading = get(events, `${onClickActionName}.loading`);
   const { color: buttonColor, variant, type: buttonType } = getButtonProps(properties);
 
   const isPresetColor = ANTD_COLOR_PRESETS.has(properties.color);
@@ -94,14 +96,17 @@ const ButtonBlock = ({
       color={resolvedColor}
       variant={variant}
       type={buttonType}
-      disabled={properties.disabled || get(events, `${onClickActionName}.loading`) || loading}
+      disabled={getDisabled({ loading: actionLoading || loading, properties })}
       ghost={properties.ghost}
       danger={properties.danger}
       href={properties.href}
+      iconPlacement={properties.iconPlacement}
       id={blockId}
-      loading={get(events, `${onClickActionName}.loading`)}
+      loading={actionLoading}
       shape={properties.shape}
       size={properties.size}
+      // Only a link has a target; without href antd renders a <button>.
+      target={type.isNone(properties.href) ? undefined : properties.target}
       icon={
         properties.icon && (
           <Icon

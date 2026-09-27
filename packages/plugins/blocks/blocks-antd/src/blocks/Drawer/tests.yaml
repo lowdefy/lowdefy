@@ -59,22 +59,79 @@
   type: Drawer
   properties:
     keyboard: false
-- id: 'properties.contentWrapperStyle: border: 10px solid green'
+- id: 'style: .wrapper: border: 10px solid green'
   type: Drawer
-  properties:
-    contentWrapperStyle:
+  style:
+    .wrapper:
       border: 10px solid green
-- id: 'areas.extra:'
+- id: 'slots.extra:'
   type: Drawer
-  areas:
+  slots:
     extra:
       blocks:
-        - id: one
-          type: Test
-- id: 'areas.footer:'
+        - id: drawer_extra_button
+          type: Button
+          properties:
+            title: Save
+- id: 'slots.footer:'
   type: Drawer
-  areas:
+  slots:
     footer:
       blocks:
-        - id: one
-          type: Test
+        - id: drawer_footer_text
+          type: Paragraph
+          properties:
+            content: Drawer footer
+- id: 'properties.size: large'
+  type: Drawer
+  properties:
+    size: large
+- id: 'properties.resizable: true'
+  type: Drawer
+  properties:
+    title: Resizable
+    size: 480
+    resizable: true
+    maxSize: 900
+- id: 'properties.closable: placement: end'
+  type: Drawer
+  properties:
+    title: Close button at the end
+    closable:
+      placement: end
+- id: 'properties.closable: disabled: true'
+  type: Drawer
+  properties:
+    closable:
+      disabled: true
+- id: 'properties.mask: blur: true'
+  type: Drawer
+  properties:
+    mask:
+      blur: true
+- id: 'properties.loading: true'
+  type: Drawer
+  properties:
+    loading: true
+- id: 'properties.destroyOnHidden: true'
+  type: Drawer
+  properties:
+    destroyOnHidden: true
+- id: 'properties.forceRender: true'
+  type: Drawer
+  properties:
+    forceRender: true
+- id: 'properties.focusable: trap: false'
+  type: Drawer
+  properties:
+    focusable:
+      trap: false
+- id: 'properties.title: html'
+  type: Drawer
+  properties:
+    title: '<b>Bold</b> drawer title'
+- id: 'properties.getContainer: false'
+  type: Drawer
+  properties:
+    title: Rendered in place
+    getContainer: false

@@ -573,6 +573,8 @@ U
 
 U
 
+N
+
 ```yaml
 - id: title_tooltip
   type: Badge
@@ -600,6 +602,19 @@ U
       properties:
         shape: square
         icon: user
+- id: title_tooltip_off
+  type: Badge
+  layout:
+    flex: 0 0 auto
+  properties:
+    count: 3
+    title: false
+  blocks:
+    - id: title_tooltip_off_child
+      type: Avatar
+      properties:
+        shape: square
+        content: N
 ```
 
 JD
@@ -656,6 +671,54 @@ JD
         size: 24
 ```
 
+Up to 20 members, shared workspaces and priority support.
+
+Pay yearly and save on every seat.
+
+```yaml
+- id: ribbon_row
+  type: Box
+  layout:
+    gap: 24
+  blocks:
+    - id: ribbon_recommended
+      type: Badge
+      layout:
+        span: 12
+      properties:
+        ribbon:
+          text: Recommended
+      blocks:
+        - id: ribbon_recommended_card
+          type: Card
+          properties:
+            title: Team plan
+          blocks:
+            - id: ribbon_recommended_text
+              type: Paragraph
+              properties:
+                content: Up to 20 members, shared workspaces and priority support.
+    - id: ribbon_sale
+      type: Badge
+      layout:
+        span: 12
+      properties:
+        ribbon:
+          text: 20% off
+          color: volcano
+          placement: start
+      blocks:
+        - id: ribbon_sale_card
+          type: Card
+          properties:
+            title: Annual billing
+          blocks:
+            - id: ribbon_sale_text
+              type: Paragraph
+              properties:
+                content: Pay yearly and save on every seat.
+```
+
 U
 
 U
@@ -671,7 +734,7 @@ U
     count: 5
   style:
     .indicator:
-      boxShadow: 0 0 0 2px
+      boxShadow: "0 0 0 2px #1677ff"
   blocks:
     - id: css_indicator_shadow_child
       type: Avatar
@@ -722,7 +785,7 @@ Inbox
 - id: tw_element_margin
   type: Badge
   class:
-    element: mr-8
+    .element: mr-8
   layout:
     flex: 0 0 auto
   properties:
@@ -736,7 +799,7 @@ Inbox
 - id: tw_indicator_animate
   type: Badge
   class:
-    indicator: animate-bounce
+    .indicator: animate-bounce
   layout:
     flex: 0 0 auto
   properties:
@@ -750,7 +813,7 @@ Inbox
 - id: tw_badge_in_box
   type: Badge
   class:
-    element: p-1
+    .element: p-1
   layout:
     flex: 0 0 auto
   properties:
@@ -938,8 +1001,7 @@ JD
         flex: 0 0 auto
       properties:
         content: JD
-        color: "#fff"
-        backgroundColor: "#1677ff"
+        color: "#1677ff"
 ```
 
 #ORD-1042
@@ -1202,7 +1264,11 @@ James Wilson
 | `showZero` | boolean | `false` | Whether to show badge when count is zero. |
 | `status` | string | `null` | Set Badge as a status dot. Enum: `success`, `processing`, `default`, `error`, `warning`. |
 | `text` | string | - | If status is set, text sets the display text of the status dot. |
-| `title` | string | - | Text to show when hovering over the badge. |
+| `ribbon` | object | - | Render a ribbon on the corner of the content area instead of a count badge. Count, dot and status properties are ignored when ribbon is set. |
+| `ribbon.text` | string | - | Text inside the ribbon. |
+| `ribbon.color` | string | - | Ribbon color. A preset color name or any css color. |
+| `ribbon.placement` | string | `"end"` | Corner of the content the ribbon is placed on. `start` and `end` follow the text direction. Enum: `start`, `end`. |
+| `title` | string \| boolean | - | Text to show when hovering over the badge. Set to false to remove the native tooltip. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design badge tokens](https://ant.design/components/badge#design-token). |
 | `theme.indicatorHeight` | number | `20` | Height of the badge indicator. |
 | `theme.indicatorHeightSM` | number | `14` | Height of the badge indicator in small size. |
@@ -1210,6 +1276,7 @@ James Wilson
 | `theme.textFontSize` | number | `12` | Font size for badge count text. |
 | `theme.textFontSizeSM` | number | `12` | Font size for badge count text in small size. |
 | `theme.textFontWeight` | string | `"normal"` | Font weight for badge count text. |
+| `theme.paddingInline` | number \| string | `8` | Inline padding of a badge count with several characters. |
 | `theme.textLineHeight` | number | - | Line height for badge count text. |
 | `theme.statusSize` | number | `6` | Size of the status dot. |
 | `theme.indicatorZIndex` | number \| string | `"auto"` | Z-index of the badge indicator. |
@@ -1222,9 +1289,9 @@ No events defined.
 | Key | Target |
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
-| `/element` | The Badge element. |
+| `/element` | The Badge element, or the ribbon wrapper when ribbon is set. |
 | `/icon` | The icon in the Badge. |
-| `/indicator` | The Badge indicator. |
+| `/indicator` | The Badge count or dot indicator, or the ribbon when ribbon is set. |
 
 | Slot | Description |
 | --- | --- |

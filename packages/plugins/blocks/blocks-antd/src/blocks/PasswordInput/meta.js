@@ -16,7 +16,9 @@
 
 import LabelMeta from '../Label/meta.js';
 import label from '../../schemas/label.js';
+import icon from '../../schemas/icon.js';
 import {
+  allowClear,
   disabled,
   placeholder,
   inputTitle,
@@ -28,13 +30,14 @@ import {
 
 export default {
   category: 'input',
-  icons: [...LabelMeta.icons, 'view', 'hide'],
+  icons: [...LabelMeta.icons, 'view', 'hide', 'clear'],
   valueType: 'string',
   cssKeys: {
     element: 'The PasswordInput element.',
     label: 'The PasswordInput label.',
     extra: 'The PasswordInput extra content.',
     feedback: 'The PasswordInput validation feedback.',
+    prefixIcon: 'The prefix icon in the PasswordInput.',
   },
   events: {
     onBlur: 'Trigger action event occurs when text input loses focus.',
@@ -42,6 +45,7 @@ export default {
       description: 'Trigger action when text input is changed.',
       event: { value: 'The current input value.' },
     },
+    onClear: 'Trigger action when the clear button is clicked.',
     onFocus: 'Trigger action when text input gets focus.',
     onPressEnter: 'Trigger action when enter is pressed while text input is focused.',
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
@@ -50,10 +54,24 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
+      allowClear: { ...allowClear, default: false },
       autoFocus,
       bordered,
       disabled,
+      maxLength: {
+        type: 'integer',
+        description: 'The max number of input characters.',
+      },
       placeholder,
+      prefix: {
+        type: 'string',
+        description: 'Prefix text for the block, priority over prefixIcon.',
+      },
+      prefixIcon: {
+        ...icon,
+        description:
+          'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to prefix the password input.',
+      },
       label,
       size: sizeSmallDefaultLarge,
       title: inputTitle,
@@ -161,6 +179,21 @@ export default {
             type: 'string',
             default: '#ffffff',
             description: 'Background color when the input is active (focused).',
+          },
+          inputFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the input text.',
+          },
+          inputFontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Font size of the input text for large inputs.',
+          },
+          inputFontSizeSM: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the input text for small inputs.',
           },
           paddingBlock: {
             type: 'number',

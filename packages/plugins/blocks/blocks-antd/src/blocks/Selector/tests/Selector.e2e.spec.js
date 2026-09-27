@@ -296,4 +296,90 @@ test.describe('Selector Block', () => {
     const selector = getSelector(page, 'selector_object_primarykey');
     await expect(selector.locator('.ant-select-content')).toHaveText('Bob');
   });
+
+  // ============================================
+  // ANTD 6.6 FEATURES
+  // ============================================
+
+  test('renders the underlined variant', async ({ page }) => {
+    const selector = getSelector(page, 'selector_underlined');
+    await expect(selector).toHaveClass(/ant-select-underlined/);
+  });
+
+  test('opens the dropdown above the selector with placement topLeft', async ({ page }) => {
+    const selector = getSelector(page, 'selector_placement_top');
+    await selector.click();
+    const popup = page.locator('.ant-select-dropdown:visible');
+    await expect(popup).toBeVisible();
+    await expect(popup).toHaveClass(/ant-select-dropdown-placement-topLeft/);
+  });
+
+  test('caps the dropdown list height with listHeight', async ({ page }) => {
+    const selector = getSelector(page, 'selector_list_height');
+    await selector.click();
+    const holder = page.locator('.ant-select-dropdown:visible .ant-select-dropdown-list-holder');
+    await expect(holder).toHaveCSS('max-height', '100px');
+  });
+
+  test('sets a fixed dropdown width with popupMatchSelectWidth', async ({ page }) => {
+    const selector = getSelector(page, 'selector_popup_width');
+    await selector.click();
+    const popup = page.locator('.ant-select-dropdown:visible');
+    await expect(popup).toHaveCSS('width', '320px');
+  });
+
+  test('renders every option when virtual is false', async ({ page }) => {
+    const selector = getSelector(page, 'selector_not_virtual');
+    await selector.click();
+    const options = page.locator('.ant-select-dropdown:visible .ant-select-item-option');
+    await expect(options).toHaveCount(12);
+    // Without virtual scrolling antd puts the listbox roles on the rendered options.
+    await expect(options.last()).toHaveAttribute('role', 'option');
+  });
+
+  test('renders prefix text inside the selector', async ({ page }) => {
+    const selector = getSelector(page, 'selector_prefix');
+    await expect(selector.locator('.ant-select-prefix')).toHaveText('Fruit:');
+  });
+
+  test('renders a prefix icon inside the selector', async ({ page }) => {
+    const selector = getSelector(page, 'selector_prefix_icon');
+    await expect(selector.locator('.ant-select-prefix svg')).toBeVisible();
+  });
+
+  test('shows a loading spinner and disables the selector while loading', async ({ page }) => {
+    const selector = getSelector(page, 'selector_loading');
+    await expect(selector).toHaveClass(/ant-select-loading/);
+    await expect(selector).toHaveClass(/ant-select-disabled/);
+    await expect(selector.locator('#selector_loading_loadingIcon')).toBeVisible();
+    await expect(selector.locator('#selector_loading_suffixIcon')).toHaveCount(0);
+  });
+
+  test('class.popup and style.popup are applied to the dropdown', async ({ page }) => {
+    const selector = getSelector(page, 'selector_popup_css');
+    await selector.click();
+    const popup = page.locator('.ant-select-dropdown.selector-popup-tailwind');
+    await expect(popup).toBeVisible();
+    await expect(popup).toHaveCSS('min-width', '300px');
+  });
+
+  test('onOpenChange fires with the open state', async ({ page }) => {
+    const selector = getSelector(page, 'selector_open_change');
+    const display = getBlock(page, 'selector_open_change_display');
+    await selector.click();
+    await expect(display).toHaveText('Open: true');
+    await page.keyboard.press('Escape');
+    await expect(display).toHaveText('Open: false');
+  });
+
+  test('search matches filterString, falling back to the label html', async ({ page }) => {
+    const selector = getSelector(page, 'selector_filter_string');
+    await selector.click();
+    await page.keyboard.type('deutsch');
+    await expect(getOption(page, 'selector_filter_string', 1)).toBeVisible();
+    await expect(getOption(page, 'selector_filter_string', 0)).toBeHidden();
+    await page.locator('#selector_filter_string_input').fill('fra');
+    await expect(getOption(page, 'selector_filter_string', 2)).toBeVisible();
+    await expect(getOption(page, 'selector_filter_string', 1)).toBeHidden();
+  });
 });

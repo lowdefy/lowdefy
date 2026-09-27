@@ -120,18 +120,84 @@ blocks:
 
   - id: statistic_value_style
     type: Statistic
+    style:
+      .value:
+        color: '#3f8600'
     properties:
       title: Positive Change
       value: 11.28
       suffix: '%'
-      valueStyle:
-        color: '#3f8600'
 
   - id: statistic_negative_style
     type: Statistic
+    style:
+      .value:
+        color: '#cf1322'
     properties:
       title: Negative Change
       value: -9.26
       suffix: '%'
-      valueStyle:
-        color: '#cf1322'
+
+  # ============================================
+  # TIMER AND SEMANTIC KEYS
+  # ============================================
+
+  - id: statistic_countdown_finished
+    type: Statistic
+    properties:
+      title: Offer ended
+      value:
+        _date: '2020-01-01T00:00:00.000Z'
+      timer:
+        type: countdown
+    events:
+      onFinish:
+        - id: set_countdown_finished
+          type: SetState
+          params:
+            countdown_finished: true
+
+  - id: countdown_finished_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: countdown_finished
+              - true
+          then: Countdown finished
+          else: ''
+
+  - id: statistic_countup
+    type: Statistic
+    properties:
+      title: Running for
+      value:
+        _date: '2020-01-01T00:00:00.000Z'
+      timer:
+        type: countup
+        format: D [days]
+
+  - id: statistic_timer_no_value
+    type: Statistic
+    properties:
+      title: Waiting for a target
+      timer:
+        type: countdown
+
+  - id: statistic_css_keys
+    type: Statistic
+    class:
+      .title: statistic-title-class
+      .suffix: statistic-suffix-class
+    style:
+      .content:
+        color: 'rgb(0, 128, 0)'
+      .prefix:
+        fontSize: 12px
+    properties:
+      title: Styled Statistic
+      value: 42
+      prefix: '~'
+      suffix: '%'

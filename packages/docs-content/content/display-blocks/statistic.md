@@ -181,6 +181,37 @@ Statistic display with prefix, suffix, and formatting.
 ```
 
 ```yaml
+- id: timer_countdown
+  type: Statistic
+  layout:
+    span: 12
+  properties:
+    title: Launch in
+    value:
+      _date: 2030-01-01T00:00:00.000Z
+    timer:
+      type: countdown
+      format: D [days] HH:mm:ss
+  events:
+    onFinish:
+      - id: timer_countdown_finished
+        type: DisplayMessage
+        params:
+          content: We have launched.
+- id: timer_countup
+  type: Statistic
+  layout:
+    span: 12
+  properties:
+    title: Incident open for
+    value:
+      _date: 2026-01-01T00:00:00.000Z
+    timer:
+      type: countup
+      format: D [days] HH:mm
+```
+
+```yaml
 - id: loading_true
   type: Statistic
   layout:
@@ -273,7 +304,7 @@ Statistic display with prefix, suffix, and formatting.
     .element:
       padding: 16px 24px
       borderRadius: 8px
-      border: 1px solid
+      border: "1px solid #ffa39e"
     .value:
       color: "#cf1322"
       fontSize: 28
@@ -480,6 +511,9 @@ _Last updated 2 minutes ago_
 | `suffixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
 | `suffixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `suffixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
+| `timer` | object | - | Show a live timer instead of a static value. `value` is the target time for a countdown, or the start time for a count up, as a date or a timestamp in milliseconds. |
+| `timer.type` | string | - | Count down to value, or count up from value. Enum: `countdown`, `countup`. |
+| `timer.format` | string | `"HH:mm:ss"` | Format of the time, using the tokens Y, M, D, H, m, s and S, like `D [days] HH:mm:ss`. |
 | `title` | string | - | Title to describe the component - supports html. |
 | `value` | number \| string | - | Value to display. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design statistic tokens](https://ant.design/components/statistic#design-token). |
@@ -490,13 +524,19 @@ _Last updated 2 minutes ago_
 | `theme.colorText` | string | - | Default text color for the statistic value. |
 | `theme.colorTextDescription` | string | - | Color for the statistic title text. |
 
-No events defined.
+| Event | Event Data | Description |
+| --- | --- | --- |
+| `onFinish` | \- | Trigger actions when a countdown timer reaches zero. |
 
 | Key | Target |
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Statistic element. |
+| `/title` | The Statistic title. |
+| `/content` | The value section, with the prefix, value and suffix. |
+| `/prefix` | The prefix of the value. |
 | `/prefixIcon` | The prefix icon in the Statistic. |
+| `/suffix` | The suffix of the value. |
 | `/suffixIcon` | The suffix icon in the Statistic. |
 | `/value` | The Statistic value. |
 

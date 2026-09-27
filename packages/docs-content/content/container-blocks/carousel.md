@@ -283,6 +283,56 @@ Auto Slide 4
                 color: white
 ```
 
+The active dot fills until the next slide
+
+Second slide
+
+```yaml
+- id: dot_duration_carousel
+  type: Carousel
+  properties:
+    autoplay:
+      dotDuration: true
+    autoplaySpeed: 4000
+  slots:
+    progress_s1:
+      blocks:
+        - id: progress_s1
+          type: Box
+          style:
+            height: 160
+            background: "#1677ff"
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: progress_s1_text
+              type: Title
+              properties:
+                content: The active dot fills until the next slide
+                level: 4
+              style:
+                color: white
+    progress_s2:
+      blocks:
+        - id: progress_s2
+          type: Box
+          style:
+            height: 160
+            background: "#722ed1"
+            display: flex
+            alignItems: center
+            justifyContent: center
+          blocks:
+            - id: progress_s2_text
+              type: Title
+              properties:
+                content: Second slide
+                level: 4
+              style:
+                color: white
+```
+
 Hover to Pause
 
 Autoplay Resumes
@@ -2195,15 +2245,17 @@ Custom Spacing
 | `adaptiveHeight` | boolean | `false` | Adjust the slide's height automatically. |
 | `arrows` | boolean | `false` | Whether or not to show arrows. |
 | `autoplaySpeed` | integer | `3000` | Delay between each auto scroll (in milliseconds). |
-| `autoplay` | boolean | `false` | Toggles whether or not to scroll automatically. |
+| `autoplay` | boolean \| object | `false` | Toggles whether or not to scroll automatically. Set to `{ dotDuration: true }` to show the time until the next slide as a progress bar in the active dot. |
+| `autoplay.dotDuration` | boolean | `false` | Show the autoplay progress in the active dot. |
 | `centerMode` | boolean | `false` | Center current slide. |
 | `centerPadding` | string | `"50px"` | Padding applied to center slide. |
-| `dotPosition` | string | `"bottom"` | The position of the dots, which can be one of top, bottom, left or right. Enum: `left`, `right`, `top`, `bottom`. |
+| `dotPosition` | string | `"bottom"` | The position of the dots, which can be one of top, bottom, left or right. Left and right dots make the carousel vertical. Enum: `left`, `right`, `top`, `bottom`. |
 | `dots` | boolean | `true` | Whether or not to show the dots. |
 | `draggable` | boolean | `false` | Enable scrollable via dragging on desktop |
 | `easing` | string | `"linear"` | Transition interpolation function name. |
 | `effect` | string | `"scrollx"` | Transition effect, either scrollx or fade. |
 | `focusOnSelect` | boolean | `false` | Go to slide on click. |
+| `initialSlide` | integer | `0` | Index of the slide to show first. |
 | `infinite` | boolean | `true` | Infinitely wrap around contents. |
 | `pauseOnDotsHover` | boolean | `false` | Prevents autoplay while hovering on dot. |
 | `pauseOnFocus` | boolean | `false` | Prevents autoplay while focused on slides. |
@@ -2218,10 +2270,11 @@ Custom Spacing
 | `slidesPerRow` | integer | `1` | Number of slides to display in grid mode, this is useful with rows option. |
 | `slidesToScroll` | integer | `1` | How many slides to scroll at once. |
 | `slidesToShow` | integer | `1` | How many slides to show in one frame. |
-| `speed` | integer | `500` | Number of slides to display in grid mode, this is useful with rows option. |
+| `speed` | integer | `500` | Slide transition animation speed in milliseconds. |
 | `swipeToSlide` | boolean | `false` | Enable drag/swipe irrespective of `slidesToScroll`. |
 | `swipe` | boolean | `true` | Enable/disable swiping to change slides. |
 | `vertical` | boolean | `false` | Whether or not the slides are shown in a column. |
+| `waitForAnimate` | boolean | `false` | Ignore requests to change slide while a slide transition is animating. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design carousel tokens](https://ant.design/components/carousel#design-token). |
 | `theme.dotWidth` | number | `16` | Width of the indicator dot. |
 | `theme.dotHeight` | number | `3` | Height of the indicator dot. |
@@ -2237,7 +2290,7 @@ Custom Spacing
 | `afterChange` | \- | Trigger actions after the slide is changed. |
 | `beforeChange` | \- | Trigger actions before the slide is changed. |
 | `onInit` | \- | Trigger actions when the carousel is initialized. |
-| `onSwipe` | \- | Trigger actions when the carousel is swiped. |
+| `onSwipe` | `{ direction }` | Trigger actions when the user starts to swipe or drag the carousel. |
 
 | Key | Target |
 | --- | --- |

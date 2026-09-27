@@ -303,3 +303,109 @@ test.describe('AutoComplete Block', () => {
     await expect(content).toHaveClass(/ac-selector-tailwind/);
   });
 });
+
+test.describe('AutoComplete antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'auto_complete');
+  });
+
+  test('renders a prefix icon', async ({ page }) => {
+    const wrapper = getAutoComplete(page, 'ac_prefix_icon');
+    await expect(wrapper.locator('.ant-select-prefix svg')).toBeAttached();
+  });
+
+  test('renders prefix text', async ({ page }) => {
+    const wrapper = getAutoComplete(page, 'ac_prefix_text');
+    await expect(wrapper.locator('.ant-select-prefix')).toHaveText('Fruit');
+  });
+
+  test('renders the underlined variant', async ({ page }) => {
+    const wrapper = getAutoComplete(page, 'ac_underlined');
+    await expect(wrapper).toHaveClass(/ant-select-underlined/);
+  });
+
+  test('applies Select design tokens from theme', async ({ page }) => {
+    const wrapper = getAutoComplete(page, 'ac_theme');
+    await expect(wrapper).toHaveCSS('background-color', 'rgb(255, 240, 200)');
+  });
+
+  test('renders options with their ids', async ({ page }) => {
+    await getInput(page, 'ac_onselect').click();
+    await expect(getOption(page, 'ac_onselect', 0)).toHaveText('Apple');
+    await expect(getOption(page, 'ac_onselect', 2)).toHaveText('Cherry');
+  });
+
+  test('filters options by the typed text', async ({ page }) => {
+    await getInput(page, 'ac_onselect').fill('an');
+    const dropdown = page.locator('.ant-select-dropdown:visible');
+    await expect(dropdown.locator('.ant-select-item-option')).toHaveText(['Banana']);
+  });
+
+  test('applies the popup cssKey to the dropdown', async ({ page }) => {
+    await getInput(page, 'ac_popup').click();
+    const popup = page.locator('.ant-select-dropdown.ac-custom-popup');
+    await expect(popup).toBeVisible();
+    await expect(popup).toHaveCSS('background-color', 'rgb(250, 250, 210)');
+  });
+
+  test('applies the options cssKey to each option', async ({ page }) => {
+    await getInput(page, 'ac_popup').click();
+    const option = getOption(page, 'ac_popup', 1);
+    await expect(option).toHaveText('Banana');
+    await expect(option).toHaveClass(/ac-custom-option/);
+    await expect(option).toHaveCSS('color', 'rgb(0, 128, 0)');
+  });
+
+  test('onSelect fires with the value of the selected option', async ({ page }) => {
+    await getInput(page, 'ac_onselect').click();
+    await getOption(page, 'ac_onselect', 1).click();
+    await expect(getInput(page, 'ac_onselect')).toHaveValue('Banana');
+    await expect(getBlock(page, 'ac_onselect_display')).toHaveText('Selected: "Banana"');
+  });
+
+  test('onOpenChange fires with the open state', async ({ page }) => {
+    const display = getBlock(page, 'ac_open_change_display');
+    await getInput(page, 'ac_open_change').click();
+    await expect(display).toHaveText('Open: true');
+    await page.keyboard.press('Escape');
+    await expect(display).toHaveText('Open: false');
+  });
+
+  test('size default renders the medium size', async ({ page }) => {
+    const wrapper = getAutoComplete(page, 'ac_size_default');
+    await expect(wrapper).not.toHaveClass(/ant-select-(sm|lg)/);
+    await expect(wrapper).toHaveCSS('height', '32px');
+  });
+
+  test('prefix text takes priority over prefixIcon', async ({ page }) => {
+    const wrapper = getAutoComplete(page, 'ac_prefix_priority');
+    await expect(wrapper.locator('.ant-select-prefix')).toHaveText('Fruit');
+    await expect(wrapper.locator('.ant-select-prefix svg')).toHaveCount(0);
+  });
+
+  test('opens the dropdown above the input with placement topLeft', async ({ page }) => {
+    await getInput(page, 'ac_placement_top').click();
+    const popup = page.locator('.ant-select-dropdown:visible');
+    await expect(popup).toBeVisible();
+    await expect(popup).toHaveClass(/ant-select-dropdown-placement-topLeft/);
+  });
+
+  test('caps the dropdown list height with listHeight', async ({ page }) => {
+    await getInput(page, 'ac_list_height').click();
+    const holder = page.locator('.ant-select-dropdown:visible .ant-select-dropdown-list-holder');
+    await expect(holder).toHaveCSS('max-height', '100px');
+  });
+
+  test('sets a fixed dropdown width with popupMatchSelectWidth', async ({ page }) => {
+    await getInput(page, 'ac_popup_width').click();
+    const popup = page.locator('.ant-select-dropdown:visible');
+    await expect(popup).toHaveCSS('width', '320px');
+  });
+
+  test('renders every option when virtual is false', async ({ page }) => {
+    await getInput(page, 'ac_not_virtual').click();
+    const options = page.locator('.ant-select-dropdown:visible .ant-select-item-option');
+    await expect(options).toHaveCount(12);
+    await expect(options.last()).toHaveAttribute('role', 'option');
+  });
+});

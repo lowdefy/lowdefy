@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import showUploadList from '../../schemas/showUploadList.js';
 import uploadTheme from '../../schemas/uploadTheme.js';
 
 export default {
@@ -89,6 +90,12 @@ export default {
               displayType: 'icon',
             },
           },
+          iconPlacement: {
+            type: 'string',
+            enum: ['start', 'end'],
+            default: 'start',
+            description: 'Place the icon before (`start`) or after (`end`) the button title.',
+          },
           type: {
             type: 'string',
             enum: ['default', 'primary', 'dashed', 'text', 'link'],
@@ -112,6 +119,23 @@ export default {
             description: 'Button size.',
           },
         },
+      },
+      directory: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Select a whole folder instead of files. Every file in the folder is uploaded.',
+      },
+      listType: {
+        type: 'string',
+        enum: ['text', 'picture'],
+        default: 'text',
+        description: 'Style of the file list. `picture` shows a thumbnail for each image.',
+      },
+      pastable: {
+        type: 'boolean',
+        default: false,
+        description: 'Upload files pasted anywhere on the page.',
       },
       disabled: {
         type: 'boolean',
@@ -159,11 +183,7 @@ export default {
           },
         },
       },
-      showUploadList: {
-        type: 'boolean',
-        default: true,
-        description: 'Whether to show default upload list.',
-      },
+      showUploadList,
       singleFile: {
         type: 'boolean',
         default: false,

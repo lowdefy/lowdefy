@@ -18,7 +18,11 @@ import React from 'react';
 import { ConfigProvider } from 'antd';
 import { type } from '@lowdefy/helpers';
 
+// `antdComponentName` may be an array when a block renders several antd components styled from
+// the same tokens, e.g. TreeSelect draws its selector with the Select styles, and PhoneNumberInput
+// sets a Select next to an Input.
 function withTheme(antdComponentName, BlockComponent) {
+  const componentNames = type.isArray(antdComponentName) ? antdComponentName : [antdComponentName];
   const Wrapped = (props) => {
     const { theme, ...restProperties } = props.properties;
     // Only intercept object themes (design tokens for ConfigProvider).
@@ -26,8 +30,12 @@ function withTheme(antdComponentName, BlockComponent) {
     if (!type.isObject(theme)) {
       return <BlockComponent {...props} />;
     }
+    const components = {};
+    componentNames.forEach((name) => {
+      components[name] = theme;
+    });
     return (
-      <ConfigProvider theme={{ components: { [antdComponentName]: theme } }}>
+      <ConfigProvider theme={{ components }}>
         <BlockComponent {...props} properties={restProperties} />
       </ConfigProvider>
     );

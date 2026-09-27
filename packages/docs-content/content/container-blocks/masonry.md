@@ -264,58 +264,6 @@ Notice the asymmetric spacing.
             content: Notice the asymmetric spacing.
 ```
 
-Items fill left-to-right in source order instead of shortest column.
-
-Second item.
-
-Third item.
-
-Taller card — order still preserved.
-
-```yaml
-- id: mas_seq
-  type: Masonry
-  properties:
-    columns: 3
-    gutter: 12
-    sequential: true
-  blocks:
-    - id: mas_seq_c1
-      type: Card
-      properties:
-        size: small
-        title: "1"
-      blocks:
-        - id: mas_seq_c1_p
-          type: Paragraph
-          properties:
-            content: Items fill left-to-right in source order instead of shortest column.
-    - id: mas_seq_c2
-      type: Card
-      properties:
-        size: small
-        title: "2"
-      blocks:
-        - id: mas_seq_c2_p
-          type: Paragraph
-          properties:
-            content: Second item.
-    - id: mas_seq_c3
-      type: Card
-      properties:
-        size: small
-        title: "3"
-      blocks:
-        - id: mas_seq_c3_p
-          type: Paragraph
-          properties:
-            content: Third item.
-        - id: mas_seq_c3_p2
-          type: Paragraph
-          properties:
-            content: Taller card — order still preserved.
-```
-
 Theme tokens cascade to all child blocks within this Masonry.
 
 ```yaml
@@ -396,7 +344,7 @@ White cards against gray create visual separation.
 - id: mas_tw
   type: Masonry
   class:
-    element: bg-bg-layout p-6 rounded-xl
+    .element: bg-bg-layout p-6 rounded-xl
   properties:
     columns: 2
     gutter: 12
@@ -666,8 +614,7 @@ Product Manager
               properties:
                 icon: user
                 size: 48
-                color: "#fff"
-                backgroundColor: "#1677ff"
+                color: "#1677ff"
             - id: mas_team_c1_info
               type: Box
               layout:
@@ -732,8 +679,7 @@ Product Manager
               properties:
                 icon: user
                 size: 48
-                color: "#fff"
-                backgroundColor: "#52c41a"
+                color: "#52c41a"
             - id: mas_team_c2_info
               type: Box
               layout:
@@ -796,8 +742,7 @@ Product Manager
               properties:
                 icon: user
                 size: 48
-                color: "#fff"
-                backgroundColor: "#722ed1"
+                color: "#722ed1"
             - id: mas_team_c3_info
               type: Box
               layout:
@@ -861,7 +806,7 @@ Desk Lamp
 - id: mas_products
   type: Masonry
   class:
-    element: bg-bg-layout p-6 rounded-xl
+    .element: bg-bg-layout p-6 rounded-xl
   properties:
     columns:
       xs: 1
@@ -1069,10 +1014,10 @@ Desk Lamp
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `columns` | integer \| object | - | Number of columns, or responsive breakpoint object. |
-| `fresh` | boolean | `false` | Force refresh the masonry layout. |
-| `gutter` | number \| array | - | Gap between items. Number or [horizontal, vertical] array. |
-| `sequential` | boolean | `false` | Whether to render items sequentially. |
+| `columns` | integer \| object | `3` | Number of columns, or responsive breakpoint object (e.g. { xs: 1, sm: 2, md: 3 }). |
+| `fresh` | boolean | `false` | Keep watching the size of each item and re-layout when it changes, for items whose height changes after they render (images loading, expanding content). |
+| `gutter` | number \| array \| object | `0` | Gap between items in pixels. A number, a responsive breakpoint object (e.g. { xs: 8, md: 16 }), or a [horizontal, vertical] array of either. |
+| `sequential` | boolean | `false` | Has no effect: antd Masonry always places each item in the shortest column. Kept so existing configs stay valid. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design masonry tokens](https://ant.design/components/masonry#design-token). |
 | `theme.motionDurationSlow` | string | `"0.3s"` | Duration for item position transitions and appear animations. |
 | `theme.motionDurationFast` | string | `"0.1s"` | Duration for item leave animations. |
@@ -1084,6 +1029,7 @@ No events defined.
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Masonry element. |
+| `/item` | Each item in the masonry grid. |
 
 | Slot | Description |
 | --- | --- |

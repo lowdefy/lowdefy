@@ -299,6 +299,35 @@ Notification message displayed in the corner of the page.
 ```
 
 ```yaml
+- id: notif_progress
+  type: Notification
+  layout:
+    span: 0
+  properties:
+    status: info
+    title: Export started
+    description: The progress bar counts down to when this notification closes.
+      Hover to pause it.
+    duration: 8
+    showProgress: true
+- id: btn_progress
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Show Progress Bar
+    color: default
+    variant: outlined
+  events:
+    onClick:
+      - id: open_progress
+        type: CallMethod
+        params:
+          blockId: notif_progress
+          method: open
+```
+
+```yaml
 - id: notif_icon_string
   type: Notification
   layout:
@@ -555,83 +584,6 @@ Notification message displayed in the corner of the page.
 ```
 
 ```yaml
-- id: notif_top_offset
-  type: Notification
-  layout:
-    span: 0
-  properties:
-    status: info
-    title: Top Offset
-    description: Positioned 80px from the top of the viewport.
-    placement: topRight
-    top: 80
-- id: notif_bottom_offset
-  type: Notification
-  layout:
-    span: 0
-  properties:
-    status: info
-    title: Bottom Offset
-    description: Positioned 80px from the bottom of the viewport.
-    placement: bottomRight
-    bottom: 80
-- id: notif_default_offset
-  type: Notification
-  layout:
-    span: 0
-  properties:
-    status: info
-    title: Default Offset
-    description: Uses the default 24px offset.
-    placement: topRight
-- id: btn_top_offset
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Top 80px
-    color: default
-    variant: outlined
-  events:
-    onClick:
-      - id: open_top_offset
-        type: CallMethod
-        params:
-          blockId: notif_top_offset
-          method: open
-- id: btn_bottom_offset
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Bottom 80px
-    color: default
-    variant: outlined
-  events:
-    onClick:
-      - id: open_bottom_offset
-        type: CallMethod
-        params:
-          blockId: notif_bottom_offset
-          method: open
-- id: btn_default_offset
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Default (24px)
-    color: default
-    variant: outlined
-  events:
-    onClick:
-      - id: open_default_offset
-        type: CallMethod
-        params:
-          blockId: notif_default_offset
-          method: open
-```
-
-```yaml
 - id: notif_html_bold
   type: Notification
   layout:
@@ -718,7 +670,7 @@ Notification message displayed in the corner of the page.
     description: This notification has a left green border.
   style:
     .element:
-      borderLeft: 4px solid
+      borderLeft: "4px solid #52c41a"
 - id: notif_style_bg
   type: Notification
   layout:
@@ -992,7 +944,7 @@ Notification message displayed in the corner of the page.
   style:
     .element:
       borderRadius: 12
-      border: 2px solid
+      border: "2px solid #1890ff"
   properties:
     status: info
     title: Inline Style
@@ -1044,112 +996,6 @@ Notification message displayed in the corner of the page.
           method: open
 ```
 
-```yaml
-- id: notif_theme_wide
-  type: Notification
-  layout:
-    span: 0
-  properties:
-    status: info
-    title: Wide Notification
-    description: This notification is wider than the default 384px.
-    theme:
-      width: 500
-- id: notif_theme_zindex
-  type: Notification
-  layout:
-    span: 0
-  properties:
-    status: warning
-    title: High Z-Index
-    description: This notification has an elevated z-index of 2000.
-    theme:
-      zIndexPopup: 2000
-- id: notif_theme_progress
-  type: Notification
-  layout:
-    span: 0
-  properties:
-    status: success
-    title: Custom Progress Bar
-    description: The auto-close progress bar has a custom gradient.
-    duration: 8
-    theme:
-      progressBg: "linear-gradient(to right, #52c41a, #1890ff)"
-- id: notif_theme_combined
-  type: Notification
-  layout:
-    span: 0
-  properties:
-    status: info
-    title: Combined Tokens
-    description: Wide notification with custom progress bar.
-    duration: 6
-    theme:
-      width: 450
-      progressBg: "linear-gradient(to right, #722ed1, #eb2f96)"
-- id: btn_theme_wide
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Wide (500px)
-    color: default
-    variant: outlined
-  events:
-    onClick:
-      - id: open_theme_wide
-        type: CallMethod
-        params:
-          blockId: notif_theme_wide
-          method: open
-- id: btn_theme_zindex
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Z-Index 2000
-    color: default
-    variant: outlined
-  events:
-    onClick:
-      - id: open_theme_zindex
-        type: CallMethod
-        params:
-          blockId: notif_theme_zindex
-          method: open
-- id: btn_theme_progress
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Custom Progress
-    color: default
-    variant: outlined
-  events:
-    onClick:
-      - id: open_theme_progress
-        type: CallMethod
-        params:
-          blockId: notif_theme_progress
-          method: open
-- id: btn_theme_combined
-  type: Button
-  layout:
-    flex: 0 0 auto
-  properties:
-    title: Combined Tokens
-    color: default
-    variant: outlined
-  events:
-    onClick:
-      - id: open_theme_combined
-        type: CallMethod
-        params:
-          blockId: notif_theme_combined
-          method: open
-```
-
 **Customer:** Sarah Johnson
 **Items:** 3 items totaling $247.50
 **Status:** Pending fulfillment
@@ -1158,7 +1004,7 @@ Notification message displayed in the corner of the page.
 - id: order_card
   type: Card
   properties:
-    title: Order
+    title: "Order #12847"
     size: small
   blocks:
     - id: order_status_text
@@ -1380,8 +1226,9 @@ Monitor system health and receive real-time alerts. Click a button below to simu
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `bottom` | number | `24` | Distance from the bottom of the viewport, when placement is bottomRight or bottomLeft (unit: pixels). |
-| `button` | object | - | Button object to customized the close button. Triggers onClose event when clicked. |
+| `bottom` | number | `24` | Has no effect: notifications open in the app-wide notification holder, which keeps them 24px from the bottom of the viewport. To move every bottom notification, set the `--notification-bottom` CSS variable on `.ant-notification` in `public/styles.css`, for example `.ant-notification { --notification-bottom: 80px; }`. |
+| `closable` | boolean | `true` | Whether to show the close button. |
+| `button` | object | - | Button object to customize the close button. Closes the notification and triggers the onClose event when clicked. |
 | `description` | string | - | The content of notification box - supports html. |
 | `duration` | number | `4.5` | Time in seconds before Notification is closed. When set to 0 or null, it will never be closed automatically. |
 | `icon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize notification icon. |
@@ -1405,10 +1252,13 @@ Monitor system health and receive real-time alerts. Click a button below to simu
 | `closeIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `closeIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `title` | string | - | The title of notification box - supports html. |
-| `placement` | string | `"topRight"` | Position of Notification. Enum: `topLeft`, `topRight`, `bottomLeft`, `bottomRight`. |
-| `top` | number | `24` | Distance from the top of the viewport, when placement is topRight or topLeft (unit: pixels). |
-| `status` | string | - | Notification status type. Enum: `success`, `error`, `info`, `warning`. |
-| `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design notification tokens](https://ant.design/components/notification#design-token). |
+| `pauseOnHover` | boolean | `true` | Pause the auto-close timer while the mouse is over the notification. |
+| `placement` | string | `"topRight"` | Position of Notification. Enum: `top`, `topLeft`, `topRight`, `bottom`, `bottomLeft`, `bottomRight`. |
+| `role` | string | `"alert"` | How screen readers announce the notification. `alert` interrupts the reader immediately, `status` waits until it is idle. Enum: `alert`, `status`. |
+| `showProgress` | boolean | `false` | Show a progress bar counting down to when the notification closes. |
+| `top` | number | `24` | Has no effect: notifications open in the app-wide notification holder, which keeps them 24px from the top of the viewport. To move every top notification, set the `--notification-top` CSS variable on `.ant-notification` in `public/styles.css`, for example `.ant-notification { --notification-top: 80px; }`. |
+| `status` | string | `"success"` | Notification status type. Enum: `success`, `error`, `info`, `warning`. |
+| `theme` | object | - | Has no effect: notifications render in the app-wide notification holder, outside the block. Set these Notification design tokens for the whole app in `lowdefy.yaml` under `theme.antd.components.Notification`. See [Ant Design notification tokens](https://ant.design/components/notification#design-token). |
 | `theme.zIndexPopup` | number | `1100` | Z-index of the notification popup. |
 | `theme.width` | number | `384` | Width of the notification box. |
 | `theme.progressBg` | string | - | Background gradient for the auto-close progress bar. Defaults to a gradient from colorPrimaryBorderHover to colorPrimary. |
@@ -1422,6 +1272,10 @@ Monitor system health and receive real-time alerts. Click a button below to simu
 | --- | --- |
 | `/block` | Outer block wrapper (always available). |
 | `/element` | The Notification element. |
+| `/title` | The Notification title. |
+| `/description` | The Notification description. |
+| `/actions` | The area holding the Notification button. |
+| `/progress` | The auto-close progress bar, shown with showProgress. |
 | `/closeIcon` | The close icon in the Notification. |
 | `/icon` | The icon in the Notification. |
 

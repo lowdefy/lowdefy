@@ -41,6 +41,13 @@ Month picker for selecting year and month.
     variant: borderless
     label:
       disabled: true
+- id: month_variant_underlined
+  type: MonthSelector
+  properties:
+    title: Underlined
+    variant: underlined
+    label:
+      disabled: true
 ```
 
 ```yaml
@@ -130,20 +137,31 @@ Month picker for selecting year and month.
 ```
 
 ```yaml
-- id: month_today_enabled
+- id: month_prefix_icon
   type: MonthSelector
   properties:
-    title: Show Today (default)
-    showToday: true
-    label:
-      disabled: true
-- id: month_today_disabled
+    title: Prefix Icon
+    prefixIcon: clock
+    suffixIcon:
+      name: calendar
+      color: "#8c8c8c"
+- id: month_prefix_text
   type: MonthSelector
   properties:
-    title: No Today Button
-    showToday: false
+    title: Prefix Text
+    prefix: "From:"
+- id: month_placement
+  type: MonthSelector
+  properties:
+    title: Popup Opens Top Right
+    placement: topRight
+- id: month_read_only
+  type: MonthSelector
+  properties:
+    title: Pick From Calendar Only
+    inputReadOnly: true
     label:
-      disabled: true
+      extra: The input is read-only, so touch devices do not open the keyboard.
 ```
 
 ```yaml
@@ -435,7 +453,8 @@ Month picker for selecting year and month.
 - id: month_style_element
   type: MonthSelector
   style:
-    .element: null
+    .element:
+      backgroundColor: var(--ant-color-primary-bg)
   properties:
     title: Custom Background
     label:
@@ -690,7 +709,7 @@ Month picker for selecting year and month.
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
 | `bordered` | boolean | `true` | Deprecated - use variant: 'borderless'. Whether or not the input has a border style. |
 | `disabled` | boolean | `false` | Disable the block if true. |
-| `variant` | string | `"outlined"` | Variant style of the input. Use 'borderless' instead of bordered: false. Enum: `outlined`, `filled`, `borderless`. |
+| `variant` | string | `"outlined"` | Variant style of the input. Use 'borderless' instead of bordered: false. Enum: `outlined`, `filled`, `borderless`, `underlined`. |
 | `disabledDates` | object | - | Disable specific dates so that they can not be chosen. |
 | `disabledDates.min` | string \| object | - | Disable all dates less than the minimum date. Can be a date string or a _date object. |
 | `disabledDates.max` | string \| object | - | Disable all dates greater than the maximum date. Can be a date string or a _date object. |
@@ -699,11 +718,24 @@ Month picker for selecting year and month.
 | `disabledDates.ranges.$.from` | string \| object | - | Start of the disabled range. |
 | `disabledDates.ranges.$.to` | string \| object | - | End of the disabled range. |
 | `format` | string | - | Format in which to format the date value, eg. "MMMM YYYY" will format a date value of 1999-12-31 as "December 1999". The format has to conform to dayjs formats. Defaults to the active locale's month format, or "YYYY-MM" when no locale is configured. |
+| `inputReadOnly` | boolean | `false` | Make the text input read-only, so a date can only be chosen from the calendar. This also stops the on-screen keyboard opening on touch devices. |
 | `placeholder` | string | - | Placeholder text inside the block before user types input. |
+| `placement` | string | `"bottomLeft"` | Position of the calendar popup relative to the input. Enum: `bottomLeft`, `bottomRight`, `topLeft`, `topRight`. |
+| `prefix` | string | - | Prefix text shown before the date in the input, priority over prefixIcon. |
+| `prefixIcon` | string \| object | - | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on the left-hand side of the date picker. |
+| `prefixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
+| `prefixIcon.color` | string | - | Icon color. |
+| `prefixIcon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
+| `prefixIcon.rotate` | number | - | Number of degrees to rotate the icon. |
+| `prefixIcon.spin` | boolean | - | Continuously spin the icon with animation. |
+| `prefixIcon.strokeWidth` | number | - | Stroke width of the icon lines, in pixels of the 24px icon grid. Defaults to `theme.icons.strokeWidth` (2). |
+| `prefixIcon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
+| `prefixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
+| `prefixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `presets` | array | - | Shortcuts listed next to the calendar to quickly select a month. Presets are re-evaluated every time the block config is evaluated, so operator based values like "_date: now" stay current. A preset is offered on the same terms as the calendar cells: a shortcut with nothing it may select is listed as disabled. |
 | `presets.$.label` | string | - | Text shown for the shortcut - supports html. |
 | `presets.$.value` | string \| number \| object | - | A date string, a timestamp, or a _date object. Dates are read as UTC, the same as the block value, so a fixed date like "2026-01-01" resolves to the same month in every timezone. A date relative to now is an instant, not a calendar date, so end a _dayjs chain with a format step to pin it to the local calendar: "_dayjs: [now, {startOf: month}, {format: YYYY-MM-DD}]". Without the format step the chain resolves to an instant, which can select the month before or after the current one, depending on the browser timezone and the time of day. |
-| `showToday` | boolean | `true` | Shows a button to easily select the current date if true. |
+| `showToday` | boolean | `true` | Deprecated - has no effect. The month picker has no button to select the current date. |
 | `size` | string | `"default"` | Size of the block. Enum: `small`, `default`, `large`. |
 | `suffixIcon` | string \| object | `"calendar"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon on right-hand side of the date picker. |
 | `suffixIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
@@ -716,6 +748,18 @@ Month picker for selecting year and month.
 | `suffixIcon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `suffixIcon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
 | `label` | object | - | Label properties. |
+| `label.xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |
+| `label.xs.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.sm` | object | - | Label width on small screens (576px and up) when the label is not inline. Also applies below 576px unless `xs` is set. |
+| `label.sm.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.md` | object | - | Label width on medium screens (768px and up) when the label is not inline. Overrides `span`. |
+| `label.md.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.lg` | object | - | Label width on large screens (992px and up) when the label is not inline. |
+| `label.lg.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xl` | object | - | Label width on extra large screens (1200px and up) when the label is not inline. |
+| `label.xl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
+| `label.xxl` | object | - | Label width on extra extra large screens (1600px and up) when the label is not inline. |
+| `label.xxl.span` | number | - | Label width in columns, out of 24. The content takes the remaining columns. |
 | `label.align` | string | `"left"` | Align label left or right when inline. Enum: `left`, `right`. |
 | `label.colon` | boolean | `true` | Append label with colon. |
 | `label.extra` | string | - | Extra text to display beneath the content - supports html. |
@@ -724,48 +768,62 @@ Month picker for selecting year and month.
 | `label.tooltip.title` | string | - | Tooltip text shown on hover - supports html. |
 | `label.tooltip.icon` | string | `"help"` | Icon name to show beside the label: a semantic name like `help`, a Lucide icon name like `CircleQuestionMark`, or a set-qualified name like `tabler:HelpCircle`. |
 | `label.tooltip.color` | string | - | Color of the tooltip icon. |
-| `label.span` | number | - | Label inline span. |
+| `label.span` | number | - | Label width in columns, out of 24, on medium screens (768px) and up when the label is not inline. The content takes the remaining columns. |
 | `label.disabled` | boolean | `false` | Hide input label. |
 | `label.hasFeedback` | boolean | `true` | Display feedback extra from validation, this does not disable validation. |
 | `label.inline` | boolean | `false` | Render input and label inline. |
+| `label.wrap` | boolean | `false` | Wrap long label text onto multiple lines when the label is inline. Labels above their input always wrap. |
 | `title` | string | - | Month selector label title - supports html. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design date-picker tokens](https://ant.design/components/date-picker#design-token). |
+| `theme.activeBg` | string | `"#ffffff"` | Background color of the input when the picker is active/focused. |
 | `theme.activeBorderColor` | string | - | Border color when the picker is active/focused. |
-| `theme.activeShadow` | string | - | Shadow effect when the picker is active/focused. |
-| `theme.hoverBorderColor` | string | - | Border color when hovering over the picker. |
-| `theme.cellHeight` | number | `24` | Height of a calendar cell. |
-| `theme.cellWidth` | number | `36` | Width of a calendar cell. |
-| `theme.cellHoverBg` | string | `"rgba(0, 0, 0, 0.04)"` | Background color of a calendar cell on hover. |
-| `theme.cellActiveWithRangeBg` | string | `"#e6f4ff"` | Background color of active cell within a range selection. |
-| `theme.cellHoverWithRangeBg` | string | - | Background color of cells within range on hover. |
-| `theme.cellBgDisabled` | string | - | Background color of disabled cells. |
-| `theme.cellRangeBorderColor` | string | - | Border color of range selection cells. |
-| `theme.addonBg` | string | `"rgba(0, 0, 0, 0.02)"` | Background color of the footer addon area. |
-| `theme.zIndexPopup` | number | `1050` | Z-index of the picker popup layer. |
-| `theme.paddingBlock` | number | `4` | Vertical padding for the default size picker. |
-| `theme.paddingBlockSM` | number | `0` | Vertical padding for the small size picker. |
-| `theme.paddingBlockLG` | number | `7` | Vertical padding for the large size picker. |
-| `theme.paddingInline` | number | `11` | Horizontal padding for the default size picker. |
-| `theme.paddingInlineSM` | number | `7` | Horizontal padding for the small size picker. |
-| `theme.paddingInlineLG` | number | `11` | Horizontal padding for the large size picker. |
+| `theme.activeShadow` | string | `"0 0 0 2px rgba(5,145,255,0.1)"` | Shadow effect when the picker is active/focused. |
 | `theme.borderRadius` | number | `6` | Border radius of the picker input. |
-| `theme.borderRadiusSM` | number | `4` | Border radius for the small picker. |
 | `theme.borderRadiusLG` | number | `8` | Border radius for the large picker and popup panel. |
-| `theme.controlHeight` | number | `32` | Height of the picker input. |
-| `theme.controlHeightSM` | number | `24` | Height of the small picker input. |
-| `theme.controlHeightLG` | number | `40` | Height of the large picker input. |
-| `theme.fontSize` | number | `14` | Font size of the picker input. |
-| `theme.fontSizeSM` | number | `14` | Font size for the small picker. |
-| `theme.fontSizeLG` | number | `16` | Font size for the large picker. |
-| `theme.lineWidth` | number | `1` | Border width of the picker input. |
-| `theme.colorPrimary` | string | - | Primary color used for selected month and active states. |
+| `theme.borderRadiusSM` | number | `4` | Border radius for the small picker. |
+| `theme.cellActiveWithRangeBg` | string | `"#e6f4ff"` | Background color of cells within the selected range. |
+| `theme.cellBgDisabled` | string | `"rgba(0,0,0,0.04)"` | Background color of disabled cells. |
+| `theme.cellHeight` | number | `24` | Height of a calendar cell. |
+| `theme.cellHoverBg` | string | `"rgba(0, 0, 0, 0.04)"` | Background color of a calendar cell on hover. |
+| `theme.cellHoverWithRangeBg` | string | `"#cbe0fd"` | Background color of cells within range on hover. |
+| `theme.cellRangeBorderColor` | string | `"#82b4f9"` | Border color of range selection cells. |
+| `theme.cellWidth` | number | `36` | Width of a calendar cell. |
 | `theme.colorBgContainer` | string | - | Background color of the picker input. |
-| `theme.colorText` | string | - | Text color of the picker input and calendar cells. |
 | `theme.colorBorder` | string | - | Border color of the picker input. |
+| `theme.colorPrimary` | string | - | Primary color used for the selected date and active states. |
+| `theme.colorText` | string | - | Text color of the picker input and calendar cells. |
 | `theme.colorTextPlaceholder` | string | - | Color of the placeholder text. |
+| `theme.controlHeight` | number | `32` | Height of the picker input. |
+| `theme.controlHeightLG` | number | `40` | Height of the large picker input. |
+| `theme.controlHeightSM` | number | `24` | Height of the small picker input. |
+| `theme.errorActiveShadow` | string | `"0 0 0 2px rgba(255,38,5,0.06)"` | Shadow effect when the picker has error status and is focused. |
+| `theme.fontSize` | number | `14` | Font size of the picker input. |
+| `theme.fontSizeLG` | number | `16` | Font size for the large picker. |
+| `theme.fontSizeSM` | number | `14` | Font size for the small picker. |
+| `theme.hoverBg` | string | `"#ffffff"` | Background color of the input when hovering over the picker. |
+| `theme.hoverBorderColor` | string | - | Border color when hovering over the picker. |
+| `theme.lineWidth` | number | `1` | Border width of the picker input. |
+| `theme.paddingBlock` | number | `4` | Vertical padding for the default size picker. |
+| `theme.paddingBlockLG` | number | `7` | Vertical padding for the large size picker. |
+| `theme.paddingBlockSM` | number | `0` | Vertical padding for the small size picker. |
+| `theme.paddingInline` | number | `11` | Horizontal padding for the default size picker. |
+| `theme.paddingInlineLG` | number | `11` | Horizontal padding for the large size picker. |
+| `theme.paddingInlineSM` | number | `7` | Horizontal padding for the small size picker. |
+| `theme.presetsMaxWidth` | number | `200` | Maximum width of the presets list next to the calendar. |
+| `theme.presetsWidth` | number | `120` | Width of the presets list next to the calendar. |
+| `theme.timeCellHeight` | number | `28` | Height of a time cell in the time panel. |
+| `theme.timeColumnHeight` | number | `224` | Height of the time panel column. |
+| `theme.timeColumnWidth` | number | `56` | Width of the time panel column. |
+| `theme.warningActiveShadow` | string | `"0 0 0 2px rgba(255,215,5,0.1)"` | Shadow effect when the picker has warning status and is focused. |
+| `theme.withoutTimeCellHeight` | number | `66` | Height of the cells of the month, week, quarter, year and decade panels. |
+| `theme.zIndexPopup` | number | `1050` | Z-index of the picker popup layer. |
 
 | Event | Event Data | Description |
 | --- | --- | --- |
+| `onBlur` | \- | Trigger actions when the picker loses focus. |
+| `onClear` | \- | Trigger actions when the clear button is clicked. |
+| `onFocus` | \- | Trigger actions when the picker gets focus. |
+| `onOpenChange` | `{ open }` | Trigger actions when the calendar popup opens or closes. |
 | `onChange` | `{ value }` | Trigger actions when selection is changed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |
 
@@ -777,6 +835,7 @@ Month picker for selecting year and month.
 | `/extra` | The MonthSelector extra content. |
 | `/feedback` | The MonthSelector validation feedback. |
 | `/popup` | The MonthSelector popup. |
+| `/prefixIcon` | The prefix icon in the MonthSelector. |
 | `/suffixIcon` | The suffix icon in the MonthSelector. |
 
 No slots defined.

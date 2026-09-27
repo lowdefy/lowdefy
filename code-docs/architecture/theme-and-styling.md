@@ -822,7 +822,7 @@ ls -la node_modules/.pnpm/@lowdefy+client*/node_modules/antd
 ls -la node_modules/.pnpm/@lowdefy+blocks-antd*/node_modules/antd
 ```
 
-**Dev vs Prod:** The monorepo's server copies (`pnpm dev`, `pnpm app:build`, block e2e) use `SINGLETON_PACKAGES` in `scripts/lib/rewriteDeps.mjs` to force `pnpm.overrides` for antd. Production CLI builds do NOT apply this — they rely on exact version pinning (all packages pin `antd@6.3.1`) for natural deduplication.
+**Dev vs Prod:** The monorepo's server copies (`pnpm dev`, `pnpm app:build`, block e2e) use `SINGLETON_PACKAGES` in `scripts/lib/rewriteDeps.mjs` to force `pnpm.overrides` for antd. Production CLI builds do NOT apply this — they rely on exact version pinning (all packages pin `antd@6.6.5`) for natural deduplication.
 
 **Risk:** Custom plugins with different antd version specs can introduce duplicates. The production build has no `pnpm.overrides` safety net.
 

@@ -49,9 +49,13 @@ test.describe('Message Block', () => {
     const message = getMessage(page);
     await expect(message).toBeVisible();
     await expect(message).toContainText('Operation successful!');
-    // Check for success icon class
-    const icon = message.locator('.ant-message-success > .anticon svg');
+    // antd colours the status icon through the icon wrapper class
+    const icon = message.locator('.ant-message-notice-icon-success svg');
     await expect(icon).toBeAttached();
+    await expect(message.locator('.ant-message-notice-icon')).toHaveCSS(
+      'color',
+      'rgb(82, 196, 26)'
+    );
   });
 
   test('renders error message', async ({ page }) => {
@@ -62,7 +66,7 @@ test.describe('Message Block', () => {
     await expect(message).toBeVisible();
     await expect(message).toContainText('An error occurred!');
     // Check for error icon class
-    const icon = message.locator('.ant-message-error > .anticon svg');
+    const icon = message.locator('.ant-message-notice-icon-error svg');
     await expect(icon).toBeAttached();
   });
 
@@ -74,7 +78,7 @@ test.describe('Message Block', () => {
     await expect(message).toBeVisible();
     await expect(message).toContainText('Warning message!');
     // Check for warning icon class
-    const icon = message.locator('.ant-message-warning > .anticon svg');
+    const icon = message.locator('.ant-message-notice-icon-warning svg');
     await expect(icon).toBeAttached();
   });
 
@@ -86,7 +90,7 @@ test.describe('Message Block', () => {
     await expect(message).toBeVisible();
     await expect(message).toContainText('Loading...');
     // Check for loading icon class
-    const icon = message.locator('.ant-message-loading > .anticon svg');
+    const icon = message.locator('.ant-message-notice-icon-loading svg');
     await expect(icon).toBeAttached();
   });
 
@@ -117,7 +121,7 @@ test.describe('Message Block', () => {
     const message = getMessage(page);
     await expect(message).toBeVisible();
     await expect(message).toContainText('Runtime success message');
-    const icon = message.locator('.ant-message-success > .anticon svg');
+    const icon = message.locator('.ant-message-notice-icon-success svg');
     await expect(icon).toBeAttached();
   });
 
@@ -128,7 +132,7 @@ test.describe('Message Block', () => {
     const message = getMessage(page);
     await expect(message).toBeVisible();
     await expect(message).toContainText('Runtime error message');
-    const icon = message.locator('.ant-message-error > .anticon svg');
+    const icon = message.locator('.ant-message-notice-icon-error svg');
     await expect(icon).toBeAttached();
   });
 
@@ -149,5 +153,21 @@ test.describe('Message Block', () => {
     // onClose event should have fired
     const display = getBlock(page, 'onclose_display');
     await expect(display).toHaveText('Close fired');
+  });
+
+  test('onClick event fires when the message is clicked', async ({ page }) => {
+    await getBlock(page, 'open_onclick').locator('.ant-btn').click();
+    const message = getMessage(page);
+    await expect(message).toBeVisible();
+    await message.click();
+    await expect(getBlock(page, 'onclick_display')).toHaveText('Click fired');
+  });
+
+  test('pauseOnHover false closes the message while hovered', async ({ page }) => {
+    await getBlock(page, 'open_no_pause').locator('.ant-btn').click();
+    const message = getMessage(page);
+    await expect(message).toBeVisible();
+    await message.hover();
+    await expect(message).toBeHidden({ timeout: 5000 });
   });
 });

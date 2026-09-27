@@ -878,9 +878,9 @@ Editable title heading with levels, copyable, and text styles.
     level: 3
     editable: true
   style:
-    background: linear-gradient(90deg,
+    background: "linear-gradient(90deg, #f0f5ff, #fff)"
     padding: 8px 16px
-    borderLeft: 4px solid
+    borderLeft: "4px solid #1677ff"
   events:
     onMount:
       - id: set_default
@@ -907,7 +907,7 @@ Editable title heading with levels, copyable, and text styles.
     type: success
     editable: true
   style:
-    border: 1px dashed
+    border: "1px dashed #52c41a"
     borderRadius: 8px
     padding: 12px 20px
     className: shadow-md
@@ -1078,8 +1078,8 @@ Editable title heading with levels, copyable, and text styles.
 | `type` | string | `"default"` | Additional types. Don't specify for default. Enum: `default`, `secondary`, `warning`, `danger`, `success`. |
 | `underline` | boolean | `false` | Apply underline style. |
 | `theme` | object | - | Antd design token overrides for this block. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design typography tokens](https://ant.design/components/typography#design-token). |
-| `theme.titleMarginBottom` | string | `"0.5em"` | Margin bottom for title elements. |
-| `theme.titleMarginTop` | string | `"1.2em"` | Margin top for title elements. |
+| `theme.titleMarginBottom` | string \| number | `"0.5em"` | Margin bottom for title elements, as a CSS length or a number of pixels. |
+| `theme.titleMarginTop` | string \| number | `"1.2em"` | Margin top for title elements, as a CSS length or a number of pixels. |
 | `theme.colorText` | string | - | Default text color. |
 | `theme.colorTextSecondary` | string | - | Text color for secondary type. |
 | `theme.colorSuccess` | string | - | Text color for success type. |

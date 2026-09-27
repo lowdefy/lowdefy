@@ -221,3 +221,26 @@ test.describe('TextInput Block', () => {
     await expect(input).toHaveValue('Second');
   });
 });
+
+test.describe('TextInput antd 6 features', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'textinput');
+  });
+
+  test('renders the underlined variant', async ({ page }) => {
+    const input = getInput(page, 'textinput_underlined');
+    await expect(input).toHaveClass(/ant-input-underlined/);
+  });
+
+  test('onClear event fires when the clear button is clicked', async ({ page }) => {
+    const block = getBlock(page, 'textinput_onclear');
+    const input = getInput(page, 'textinput_onclear');
+    await expect(input).toHaveValue('Clear me too');
+
+    await block.hover();
+    await block.locator('.ant-input-clear-icon').click();
+
+    await expect(input).toHaveValue('');
+    await expect(getBlock(page, 'onclear_display')).toHaveText('Clear fired');
+  });
+});

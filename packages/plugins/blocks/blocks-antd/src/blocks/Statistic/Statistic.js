@@ -34,46 +34,68 @@ const StatisticBlock = ({
   if (properties.decimalSeparator) {
     additionalProps.decimalSeparator = properties.decimalSeparator;
   }
+  const statisticProps = {
+    className: classNames.element,
+    classNames: {
+      content: classNames.content,
+      prefix: classNames.prefix,
+      suffix: classNames.suffix,
+      title: classNames.title,
+      value: classNames.value,
+    },
+    groupSeparator: properties.groupSeparator,
+    id: blockId,
+    loading: properties.loading,
+    precision: properties.precision,
+    title: renderHtml({ html: properties.title, methods }),
+    style: styles.element,
+    styles: {
+      content: styles.content,
+      prefix: styles.prefix,
+      suffix: styles.suffix,
+      title: styles.title,
+      value: styles.value,
+    },
+    prefix: properties.prefixIcon ? (
+      <Icon
+        blockId={`${blockId}_prefixIcon`}
+        classNames={{ element: classNames.prefixIcon }}
+        events={events}
+        properties={properties.prefixIcon}
+        styles={{ element: styles.prefixIcon }}
+      />
+    ) : (
+      properties.prefix ?? ''
+    ),
+    suffix: properties.suffixIcon ? (
+      <Icon
+        blockId={`${blockId}_suffixIcon`}
+        classNames={{ element: classNames.suffixIcon }}
+        events={events}
+        properties={properties.suffixIcon}
+        styles={{ element: styles.suffixIcon }}
+      />
+    ) : (
+      properties.suffix ?? ''
+    ),
+    ...additionalProps,
+  };
+  // A timer's target often comes from a request that hasn't loaded yet; until it has, the block
+  // renders the empty statistic the non-timer path shows, not a NaN countdown.
+  if (type.isObject(properties.timer) && !type.isNone(properties.value)) {
+    return (
+      <Statistic.Timer
+        {...statisticProps}
+        format={properties.timer.format}
+        onFinish={() => methods.triggerEvent({ name: 'onFinish' })}
+        type={properties.timer.type}
+        // A timestamp keeps the timer effect stable across re-renders that re-create a Date value.
+        value={new Date(properties.value).getTime()}
+      />
+    );
+  }
   return (
-    <Statistic
-      className={classNames.element}
-      classNames={{ value: classNames.value }}
-      groupSeparator={properties.groupSeparator}
-      id={blockId}
-      loading={properties.loading}
-      precision={properties.precision}
-      title={renderHtml({ html: properties.title, methods })}
-      value={type.isNone(properties.value) ? '' : properties.value}
-      style={styles.element}
-      styles={{ value: styles.value }}
-      prefix={
-        properties.prefixIcon ? (
-          <Icon
-            blockId={`${blockId}_prefixIcon`}
-            classNames={{ element: classNames.prefixIcon }}
-            events={events}
-            properties={properties.prefixIcon}
-            styles={{ element: styles.prefixIcon }}
-          />
-        ) : (
-          properties.prefix ?? ''
-        )
-      }
-      suffix={
-        properties.suffixIcon ? (
-          <Icon
-            blockId={`${blockId}_suffixIcon`}
-            classNames={{ element: classNames.suffixIcon }}
-            events={events}
-            properties={properties.suffixIcon}
-            styles={{ element: styles.suffixIcon }}
-          />
-        ) : (
-          properties.suffix ?? ''
-        )
-      }
-      {...additionalProps}
-    />
+    <Statistic {...statisticProps} value={type.isNone(properties.value) ? '' : properties.value} />
   );
 };
 
