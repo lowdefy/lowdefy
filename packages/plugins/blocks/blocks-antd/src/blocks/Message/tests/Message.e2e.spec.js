@@ -154,4 +154,20 @@ test.describe('Message Block', () => {
     const display = getBlock(page, 'onclose_display');
     await expect(display).toHaveText('Close fired');
   });
+
+  test('onClick event fires when the message is clicked', async ({ page }) => {
+    await getBlock(page, 'open_onclick').locator('.ant-btn').click();
+    const message = getMessage(page);
+    await expect(message).toBeVisible();
+    await message.click();
+    await expect(getBlock(page, 'onclick_display')).toHaveText('Click fired');
+  });
+
+  test('pauseOnHover false closes the message while hovered', async ({ page }) => {
+    await getBlock(page, 'open_no_pause').locator('.ant-btn').click();
+    const message = getMessage(page);
+    await expect(message).toBeVisible();
+    await message.hover();
+    await expect(message).toBeHidden({ timeout: 5000 });
+  });
 });

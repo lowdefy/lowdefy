@@ -95,3 +95,34 @@
   type: Notification
   properties:
     description: <div style="background:green;">Notification Description</div>
+- id: 'properties.closable: false'
+  type: Notification
+  properties:
+    title: Notification title
+    closable: false
+- id: 'properties.showProgress: true'
+  type: Notification
+  properties:
+    title: Notification title
+    showProgress: true
+- id: 'properties.pauseOnHover: false'
+  type: Notification
+  properties:
+    title: Notification title
+    showProgress: true
+    pauseOnHover: false
+- id: 'properties.placement: top'
+  type: Notification
+  properties:
+    placement: top
+    title: Notification title
+- id: 'properties.placement: bottom'
+  type: Notification
+  properties:
+    placement: bottom
+    title: Notification title
+- id: 'properties.role: status'
+  type: Notification
+  properties:
+    role: status
+    title: Saved
