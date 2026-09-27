@@ -21,6 +21,18 @@ import { type } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
+// The block documented gap as { x, y }, while antd reads { offset, radius }.
+function getGap(gap) {
+  if (!type.isObject(gap)) {
+    return gap;
+  }
+  const { x, y, ...antdGap } = gap;
+  if (type.isNone(antdGap.offset) && (!type.isNone(x) || !type.isNone(y))) {
+    antdGap.offset = [x ?? 6, y ?? 6];
+  }
+  return antdGap;
+}
+
 const TourBlock = ({ blockId, classNames = {}, methods, properties, styles = {} }) => {
   const steps = useMemo(
     () =>
@@ -36,7 +48,19 @@ const TourBlock = ({ blockId, classNames = {}, methods, properties, styles = {} 
     <Tour
       id={blockId}
       className={classNames.element}
+      classNames={{
+        title: classNames.title,
+        description: classNames.description,
+        cover: classNames.cover,
+        footer: classNames.footer,
+      }}
       style={styles.element}
+      styles={{
+        title: styles.title,
+        description: styles.description,
+        cover: styles.cover,
+        footer: styles.footer,
+      }}
       open={properties.open === true}
       steps={steps}
       current={properties.current}
@@ -55,7 +79,7 @@ const TourBlock = ({ blockId, classNames = {}, methods, properties, styles = {} 
       keyboard={properties.keyboard}
       animated={properties.animated}
       zIndex={properties.zIndex}
-      gap={properties.gap}
+      gap={getGap(properties.gap)}
       scrollIntoViewOptions={properties.scrollIntoViewOptions}
       disabledInteraction={properties.disabledInteraction}
       onClose={(current) => {

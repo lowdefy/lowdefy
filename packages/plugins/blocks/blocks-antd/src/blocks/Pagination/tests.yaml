@@ -26,6 +26,23 @@
   type: Pagination
   properties:
     size: default
+- id: 'properties.size: large'
+  type: Pagination
+  properties:
+    size: large
+- id: 'properties.align: center'
+  type: Pagination
+  properties:
+    align: center
+- id: 'properties.showLessItems: true'
+  type: Pagination
+  properties:
+    total: 500
+    showLessItems: true
+- id: 'properties.responsive: true'
+  type: Pagination
+  properties:
+    responsive: true
 - id: 'properties.simple: true'
   type: Pagination
   properties:

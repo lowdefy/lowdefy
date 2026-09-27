@@ -60,4 +60,15 @@ test.describe('Affix Block', () => {
     const affixedElement = block.locator('.ant-affix');
     await expect(affixedElement).toBeVisible();
   });
+
+  test('sticks to a scrollable target element', async ({ page }) => {
+    const block = getBlock(page, 'affix_target');
+    await expect(block).toContainText('Sticky in panel');
+    await expect(block.locator('.ant-affix')).toHaveCount(0);
+    await page.locator('#affix_scroll_box').evaluate((element) => {
+      element.scrollTop = 300;
+    });
+    await expect(block.locator('.ant-affix')).toBeAttached();
+    await expect(getBlock(page, 'affix_target_display')).toHaveText('affixed:true');
+  });
 });

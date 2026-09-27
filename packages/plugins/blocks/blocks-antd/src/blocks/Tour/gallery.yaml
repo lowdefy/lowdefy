@@ -1477,8 +1477,8 @@
         open:
           _state: gap_large_tour_open
         gap:
-          x: 20
-          y: 20
+          offset: 20
+          radius: 8
         steps:
           - title: Large Gap
             description: Increased gap (20px) around the target for more breathing room.
@@ -1500,8 +1500,8 @@
         open:
           _state: gap_tight_tour_open
         gap:
-          x: 0
-          y: 0
+          offset: 0
+          radius: 0
         steps:
           - title: No Gap
             description: The highlight fits tightly around the target with zero spacing.

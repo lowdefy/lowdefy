@@ -24,11 +24,12 @@ import withTheme from '../withTheme.js';
 const createChangeHandler =
   ({ eventName, methods, setState }) =>
   (current, pageSize) => {
-    setState({ current, pageSize, skip: (current - 1) * pageSize });
-    methods.setValue({ current, pageSize, skip: (current - 1) * pageSize });
+    const skip = (current - 1) * pageSize;
+    setState({ current, pageSize, skip });
+    methods.setValue({ current, pageSize, skip });
     methods.triggerEvent({
       name: eventName,
-      event: { current, pageSize, skip: current * pageSize },
+      event: { current, pageSize, skip },
     });
   };
 
@@ -102,6 +103,8 @@ const PaginationBlock = ({
       </button>
     );
   }
+  // antd 6 has no `default` size; its middle size is `medium`.
+  const size = properties.size === 'default' ? 'medium' : properties.size;
   const total = properties.total !== undefined ? properties.total : 100;
   // antd shows the size changer by itself above 50 items when showSizeChanger
   // is unset; resolving that here gives the automatic changer the app's arrow too.
@@ -109,7 +112,9 @@ const PaginationBlock = ({
   return (
     <Pagination
       id={blockId}
+      align={properties.align}
       className={classNames.element}
+      classNames={{ item: classNames.item }}
       disabled={properties.disabled || loading}
       hideOnSinglePage={properties.hideOnSinglePage}
       onChange={createChangeHandler({ eventName: 'onChange', methods, setState })}
@@ -129,14 +134,17 @@ const PaginationBlock = ({
             }
           : showSizeChanger
       }
+      responsive={properties.responsive}
+      showLessItems={properties.showLessItems}
       prevIcon={stepIcon('chevron-left')}
       nextIcon={stepIcon('chevron-right')}
       jumpPrevIcon={jumpIcon('chevrons-left')}
       jumpNextIcon={jumpIcon('chevrons-right')}
       showTotal={showTotal}
       simple={!!properties.simple}
-      size={properties.size}
+      size={size}
       style={styles.element}
+      styles={{ item: styles.item }}
       total={total}
       current={state.current}
     />

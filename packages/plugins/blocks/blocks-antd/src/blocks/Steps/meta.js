@@ -23,6 +23,10 @@ export default {
   cssKeys: {
     element: 'The Steps element.',
     icon: 'The icon in the Steps.',
+    item: 'Each step.',
+    itemTitle: 'The title of each step.',
+    itemSubtitle: 'The subtitle of each step.',
+    itemContent: 'The description of each step.',
   },
   events: {
     onChange: {
@@ -74,6 +78,12 @@ export default {
         enum: ['horizontal', 'vertical'],
         description: 'Place title and description horizontal or vertical.',
       },
+      maxCount: {
+        type: 'integer',
+        minimum: 3,
+        description:
+          'Maximum number of steps to show, at least 3. Hidden steps collapse into disabled ellipsis steps around the current step.',
+      },
       percent: {
         type: 'number',
         description:
@@ -82,7 +92,7 @@ export default {
       progressDot: {
         type: 'boolean',
         default: false,
-        description: 'Steps with progress dot style.',
+        description: 'Steps with progress dot style. Same as `type: dot`.',
       },
       variant: {
         type: 'string',
@@ -178,12 +188,22 @@ export default {
           descriptionMaxWidth: {
             type: 'number',
             default: 140,
-            description: 'Max width of the step description.',
+            description: 'Deprecated in antd 6 and has no effect.',
           },
           titleLineHeight: {
             type: 'number',
             default: 32,
-            description: 'Line height of the step title.',
+            description: 'Deprecated in antd 6 and has no effect.',
+          },
+          customIconSize: {
+            type: 'number',
+            default: 32,
+            description: 'Size of the container of a custom step icon.',
+          },
+          customIconFontSize: {
+            type: 'number',
+            default: 24,
+            description: 'Font size of a custom step icon.',
           },
           navArrowColor: {
             type: 'string',
@@ -192,22 +212,22 @@ export default {
           },
           navContentMaxWidth: {
             type: 'string',
-            default: 'auto',
+            default: 'unset',
             description: 'Max width of navigation step content.',
           },
           finishIconBorderColor: {
             type: 'string',
-            default: '#1677ff',
+            default: '#e6f4ff',
             description: 'Border color of finished step icon.',
           },
           waitIconBorderColor: {
             type: 'string',
-            default: 'rgba(0, 0, 0, 0.25)',
+            default: 'transparent',
             description: 'Border color of waiting step icon.',
           },
           waitIconColor: {
             type: 'string',
-            default: 'rgba(0, 0, 0, 0.25)',
+            default: 'rgba(0, 0, 0, 0.65)',
             description: 'Color of waiting step icon.',
           },
         },

@@ -129,4 +129,28 @@ test.describe('Pagination Block', () => {
     const display = getBlock(page, 'onsizechange_display');
     await expect(display).toHaveText('New Size: 20');
   });
+
+  test('aligns to the center and renders the large size', async ({ page }) => {
+    const pagination = getPagination(page, 'pagination_align_center');
+    await expect(pagination).toHaveClass(/ant-pagination-center/);
+    await expect(pagination).toHaveClass(/ant-pagination-large/);
+    await expect(getPageItems(pagination).first()).toHaveCSS('min-width', '40px');
+  });
+
+  test('applies the item class to each page item', async ({ page }) => {
+    const pagination = getPagination(page, 'pagination_align_center');
+    await expect(pagination.locator('.ant-pagination-item.pagination-custom-item')).toHaveCount(5);
+  });
+
+  test('shows fewer page items with showLessItems', async ({ page }) => {
+    const pagination = getPagination(page, 'pagination_less_items');
+    // 50 pages: 1, 2, 3, ellipsis, 50 instead of 1..5, ellipsis, 50.
+    await expect(getPageItems(pagination)).toHaveCount(4);
+  });
+
+  test('onChange event skip counts the items before the page', async ({ page }) => {
+    const pagination = getPagination(page, 'pagination_skip');
+    await getPageItems(pagination).filter({ hasText: '3' }).click();
+    await expect(getBlock(page, 'pagination_skip_display')).toHaveText('skip:20');
+  });
 });
