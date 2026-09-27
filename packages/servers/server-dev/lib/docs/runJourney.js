@@ -27,6 +27,7 @@ import { getBrowser, buildPageUrl } from './getBrowser.js';
 import isPageReady from './isPageReady.js';
 import JourneyStepError from './JourneyStepError.js';
 import openJourneyEmail from './openJourneyEmail.js';
+import readJourneyEmailMatch from './readJourneyEmailMatch.js';
 import selectFinalState from './selectFinalState.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneySteps, { getStepKey } from './validateJourneySteps.js';
@@ -248,8 +249,20 @@ async function runClick({ page, step, timeout }) {
   });
 }
 
-async function runFill({ page, step, timeout }) {
-  const { value, ...target } = step.fill;
+// A fill types `value`, or text read from an email (`fromEmail`) - the way a
+// person types a one-time code from their inbox into the tab they started in.
+async function runFill({ journey, page, step, timeout }) {
+  const { value: literal, fromEmail, ...target } = step.fill;
+  let value = literal;
+  if (!type.isUndefined(fromEmail)) {
+    value = await readJourneyEmailMatch({
+      page,
+      params: fromEmail,
+      since: journey.startedAt,
+      configDirectory: journey.configDirectory,
+      timeout,
+    });
+  }
   await actOnTarget({
     target,
     action: async () => {
@@ -586,6 +599,11 @@ async function settlePage({ page, timeout }) {
 
 const INTERACTION_STEPS = ['click', 'fill', 'select', 'press', 'back'];
 
+function readsMail(step) {
+  const key = getStepKey(step);
+  return key === 'email' || (key === 'fill' && !type.isUndefined(step.fill.fromEmail));
+}
+
 async function runStep({ journey, step, index, screenshots }) {
   const page = journey.actors.current().page;
   const timeout = journey.stepTimeout;
@@ -594,7 +612,7 @@ async function runStep({ journey, step, index, screenshots }) {
       await runClick({ page, step, timeout });
       return;
     case 'fill':
-      await runFill({ page, step, timeout });
+      await runFill({ journey, page, step, timeout });
       return;
     case 'select':
       await runSelect({ page, step, timeout });
@@ -741,10 +759,10 @@ async function runJourney({
     return { error: stateSelectionError };
   }
   const capturesMail = process.env.LOWDEFY_SERVER_DEV_MAIL_SINK === 'true';
-  if (steps.some((step) => getStepKey(step) === 'email') && !capturesMail) {
+  if (steps.some(readsMail) && !capturesMail) {
     return {
       error:
-        'The journey has an "email" step, but this dev server captures no mail. Start (or restart) it with LOWDEFY_DEV_SMTP_PORT set to a free port, and point the app\'s SMTP connection at 127.0.0.1 on that port.',
+        'The journey reads email (an "email" step or a "fill" with "fromEmail"), but this dev server captures no mail. Start (or restart) it with LOWDEFY_DEV_SMTP_PORT set to a free port, and point the app\'s SMTP connection at 127.0.0.1 on that port.',
     };
   }
   // Taken before any page opens: mail the journey causes arrives after it.

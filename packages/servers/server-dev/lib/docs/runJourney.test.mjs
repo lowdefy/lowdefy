@@ -31,6 +31,11 @@ jest.unstable_mockModule('./getBrowser.js', () => ({
 const mockOpenJourneyEmail = jest.fn();
 jest.unstable_mockModule('./openJourneyEmail.js', () => ({ default: mockOpenJourneyEmail }));
 
+const mockReadJourneyEmailMatch = jest.fn();
+jest.unstable_mockModule('./readJourneyEmailMatch.js', () => ({
+  default: mockReadJourneyEmailMatch,
+}));
+
 const { default: runJourney } = await import('./runJourney.js');
 
 // Node ships a read-only navigator; the page's platform decides Mod, so it is
@@ -1292,23 +1297,63 @@ test('runJourney reports a goto that fails to load', async () => {
   });
 });
 
-test('runJourney refuses an email step before opening a browser when no mail sink listens, even with the port set', async () => {
-  // A port added to .env after start: the child sees it, but no sink started.
-  process.env.LOWDEFY_DEV_SMTP_PORT = '2525';
+test.each([
+  ['an email step', { email: { to: 'ada@example.test' } }],
+  [
+    'a fill from an email',
+    { fill: { blockId: 'otp', fromEmail: { to: 'ada@example.test', match: '\\d{6}' } } },
+  ],
+])(
+  'runJourney refuses %s before opening a browser when no mail sink listens, even with the port set',
+  async (_, step) => {
+    // A port added to .env after start: the child sees it, but no sink started.
+    process.env.LOWDEFY_DEV_SMTP_PORT = '2525';
+    try {
+      const result = await runJourney({
+        origin,
+        pageId: 'signup',
+        user: 'none',
+        steps: [step],
+      });
+
+      expect(result.error).toMatch(
+        /captures no mail. Start \(or restart\) it with LOWDEFY_DEV_SMTP_PORT/
+      );
+      expect(mockGetBrowser).not.toHaveBeenCalled();
+    } finally {
+      delete process.env.LOWDEFY_DEV_SMTP_PORT;
+    }
+  }
+);
+
+test('runJourney fills the text read from an email into the block, staying on the page', async () => {
+  process.env.LOWDEFY_SERVER_DEV_MAIL_SINK = 'true';
+  process.env.LOWDEFY_DIRECTORY_CONFIG = '/apps/tenant';
+  const page = createPage();
+  openWith(page);
+  mockReadJourneyEmailMatch.mockResolvedValue('482913');
+  const fromEmail = { to: 'ada@example.test', subject: 'Your sign-in link', match: '\\d{6}' };
   try {
     const result = await runJourney({
       origin,
-      pageId: 'signup',
+      pageId: 'login',
       user: 'none',
-      steps: [{ email: { to: 'ada@example.test' } }],
+      steps: [{ fill: { blockId: 'otp', fromEmail } }],
     });
 
-    expect(result.error).toMatch(
-      /captures no mail. Start \(or restart\) it with LOWDEFY_DEV_SMTP_PORT/
-    );
-    expect(mockGetBrowser).not.toHaveBeenCalled();
+    expect(result.failure).toBeUndefined();
+    expect(mockReadJourneyEmailMatch).toHaveBeenCalledWith({
+      page,
+      params: fromEmail,
+      since: expect.any(Number),
+      configDirectory: '/apps/tenant',
+      timeout: 5000,
+    });
+    expect(page.fills).toEqual([{ selector: '#bl-otp input, textarea', value: '482913' }]);
+    expect(page.goto).not.toHaveBeenCalled();
   } finally {
-    delete process.env.LOWDEFY_DEV_SMTP_PORT;
+    delete process.env.LOWDEFY_SERVER_DEV_MAIL_SINK;
+    delete process.env.LOWDEFY_DIRECTORY_CONFIG;
   }
 });
 

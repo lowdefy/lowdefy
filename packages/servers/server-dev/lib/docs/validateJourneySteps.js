@@ -191,6 +191,64 @@ function validateGoto(params) {
   return undefined;
 }
 
+// fill takes { blockId, value }, or { blockId, fromEmail } to type text read
+// from an email - a one-time code - instead of a literal value.
+function validateFill(params) {
+  if (!type.isObject(params) || type.isUndefined(params.fromEmail)) {
+    return validateBlockValue({ key: 'fill', params });
+  }
+  if (!type.isUndefined(params.value)) {
+    return `Step "fill" takes a "value" or a "fromEmail", not both. Received ${describe(params)}.`;
+  }
+  const fromEmailError = validateFromEmail(params.fromEmail);
+  if (!type.isUndefined(fromEmailError)) {
+    return fromEmailError;
+  }
+  return validateTargetObject({
+    key: 'fill',
+    params,
+    extraKeys: ['fromEmail'],
+    requireBlockId: true,
+  });
+}
+
+// fill.fromEmail reads the newest message to `to` (optionally narrowed by
+// subject) and takes the first match of the regular expression `match`.
+function validateFromEmail(params) {
+  if (!type.isObject(params)) {
+    return `Step "fill" requires "fromEmail" to be { to, subject, match }. Received ${describe(
+      params
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'fill.fromEmail',
+    params,
+    allowed: ['to', 'subject', 'match'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  if (!type.isString(params.to) || params.to === '') {
+    return `Step "fill.fromEmail" requires a "to" address string. Received ${describe(params.to)}.`;
+  }
+  if (!type.isUndefined(params.subject) && !type.isString(params.subject)) {
+    return `Step "fill.fromEmail" requires "subject" to be a string. Received ${describe(
+      params.subject
+    )}.`;
+  }
+  if (!type.isString(params.match) || params.match === '') {
+    return `Step "fill.fromEmail" requires a "match" regular expression string, e.g. "\\b\\d{6}\\b" for a six-digit code. Received ${describe(
+      params.match
+    )}.`;
+  }
+  try {
+    new RegExp(params.match);
+  } catch (error) {
+    return `Step "fill.fromEmail" requires "match" to be a valid regular expression: ${error.message}.`;
+  }
+  return undefined;
+}
+
 // email opens the newest message to `to`, optionally narrowed by subject.
 function validateEmail(params) {
   if (!type.isObject(params)) {
@@ -275,6 +333,7 @@ function validateStep(step) {
     case 'click':
       return validateTarget({ key: 'click', params });
     case 'fill':
+      return validateFill(params);
     case 'select':
       return validateBlockValue({ key, params });
     case 'press':

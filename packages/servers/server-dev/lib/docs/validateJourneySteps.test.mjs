@@ -31,6 +31,13 @@ test('validateJourneySteps accepts every step of the grammar', () => {
       { goto: { pageId: 'invoice', urlQuery: { id: 'inv-1' } } },
       { email: { to: 'ada@example.test' } },
       { email: { to: 'ada@example.test', subject: 'Verify' } },
+      { fill: { blockId: 'otp', fromEmail: { to: 'ada@example.test', match: '\\b\\d{6}\\b' } } },
+      {
+        fill: {
+          blockId: 'otp',
+          fromEmail: { to: 'ada@example.test', subject: 'Your sign-in link', match: 'code (\\d+)' },
+        },
+      },
       { as: 'invitee' },
       { wait: { ms: 100 } },
       { wait: { request: 'get_rows' } },
@@ -216,6 +223,38 @@ test.each([
   [
     { email: { to: 'ada@example.test', subjet: 'Verify' } },
     /Step "email" has unknown key "subjet". Keys are: to, subject/,
+  ],
+  [
+    { fill: { blockId: 'otp', value: '1', fromEmail: { to: 'ada@example.test', match: '\\d' } } },
+    /Step "fill" takes a "value" or a "fromEmail", not both/,
+  ],
+  [
+    { fill: { fromEmail: { to: 'ada@example.test', match: '\\d' } } },
+    /Step "fill" requires a "blockId" string/,
+  ],
+  [
+    { fill: { blockId: 'otp', fromEmail: 'ada@example.test' } },
+    /Step "fill" requires "fromEmail" to be \{ to, subject, match \}/,
+  ],
+  [
+    { fill: { blockId: 'otp', fromEmail: { match: '\\d' } } },
+    /Step "fill.fromEmail" requires a "to" address string. Received undefined/,
+  ],
+  [
+    { fill: { blockId: 'otp', fromEmail: { to: 'ada@example.test' } } },
+    /Step "fill.fromEmail" requires a "match" regular expression string/,
+  ],
+  [
+    { fill: { blockId: 'otp', fromEmail: { to: 'ada@example.test', match: '(' } } },
+    /Step "fill.fromEmail" requires "match" to be a valid regular expression/,
+  ],
+  [
+    { fill: { blockId: 'otp', fromEmail: { to: 'ada@example.test', match: '\\d', subject: 1 } } },
+    /Step "fill.fromEmail" requires "subject" to be a string. Received 1/,
+  ],
+  [
+    { fill: { blockId: 'otp', fromEmail: { to: 'ada@example.test', pattern: '\\d' } } },
+    /Step "fill.fromEmail" has unknown key "pattern". Keys are: to, subject, match/,
   ],
   [{ as: '' }, /Step "as" requires an actor name string/],
   [{ as: { name: 'invitee' } }, /Step "as" requires an actor name string/],
