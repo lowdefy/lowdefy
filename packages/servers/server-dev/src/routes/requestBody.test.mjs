@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { Hono } from 'hono';
 import { jest } from '@jest/globals';
 
-import parseRequestBody from '../../../../api/dist/context/parseRequestBody.js';
+import { parseRequestBody } from '@lowdefy/api';
 
 // usage.js reads package.json from the working directory as it loads, and a suite that
 // ran earlier in the same jest worker may have left the working directory in a temporary

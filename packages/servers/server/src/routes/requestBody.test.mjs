@@ -17,7 +17,7 @@
 import { Hono } from 'hono';
 import { jest } from '@jest/globals';
 
-import parseRequestBody from '../../../../api/dist/context/parseRequestBody.js';
+import { parseRequestBody } from '@lowdefy/api';
 
 const mockCallEndpoint = jest.fn();
 jest.unstable_mockModule('@sentry/node', () => ({ captureException: jest.fn() }));
