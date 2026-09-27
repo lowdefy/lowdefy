@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import fs from 'fs';
 import net from 'net';
 import { wait } from '@lowdefy/helpers';
 
@@ -24,7 +25,29 @@ import startHubProcess from './startHubProcess.js';
 
 const START_TIMEOUT_MS = 10000;
 
+// The hub runs dev scripts with the environment each client sends it, secrets
+// included, so a client talks only to a hub of its own user. The socket falls
+// back to the shared temp directory when the home path is long, where another
+// user could have created it first.
+function assertOwnSocket(socketPath) {
+  if (process.platform === 'win32') {
+    return;
+  }
+  let owner;
+  try {
+    owner = fs.lstatSync(socketPath).uid;
+  } catch {
+    return;
+  }
+  if (owner !== process.getuid()) {
+    throw new Error(
+      `The Lowdefy hub socket ${socketPath} belongs to another user (uid ${owner}), so it is not used. Remove it, or set LOWDEFY_HOME to a shorter path.`
+    );
+  }
+}
+
 function openSocket(socketPath) {
+  assertOwnSocket(socketPath);
   return new Promise((resolve) => {
     const socket = net.connect(socketPath);
     socket.once('connect', () => resolve(socket));

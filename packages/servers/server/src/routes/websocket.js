@@ -15,13 +15,17 @@
 */
 
 import { upgradeWebSocket } from '@hono/node-server';
-import { createChannelRegistry, createWebSocketConnection } from '@lowdefy/api';
+import {
+  createChannelRegistry,
+  createWebSocketConnection,
+  isWebSocketOriginAllowed,
+} from '@lowdefy/api';
 
 // One registry per server process — channels and their running source
 // resolvers are shared across all websocket connections on this instance.
 const registry = createChannelRegistry();
 
-const websocketHandler = upgradeWebSocket((c) => {
+const upgrade = upgradeWebSocket((c) => {
   const context = c.get('lowdefyContext');
   let connection;
   return {
@@ -44,5 +48,15 @@ const websocketHandler = upgradeWebSocket((c) => {
     },
   };
 });
+
+// Upgrades are accepted from the app's own pages and from clients that send no
+// Origin; isWebSocketOriginAllowed holds the rule and logs a refusal.
+function websocketHandler(c, next) {
+  const context = c.get('lowdefyContext');
+  if (!isWebSocketOriginAllowed({ context, getHeader: (name) => c.req.header(name) })) {
+    return c.json({ error: 'Forbidden' }, 403);
+  }
+  return upgrade(c, next);
+}
 
 export default websocketHandler;

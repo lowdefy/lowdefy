@@ -67,6 +67,7 @@ import jitPageHandler from './routes/jitPage.js';
 import localDevToolsOnly from './middleware/localDevToolsOnly.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
+import mountDevPageRoutes from './routes/mountDevPageRoutes.js';
 import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
 import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import pingHandler from './routes/ping.js';
@@ -221,8 +222,7 @@ function createApp() {
   // so the shell can inject the resolved caller — without it the client's
   // _user never carries roles/organization_id under `lowdefy dev`.
   app.use('/*', apiContext());
-  app.get('/', (c) => renderDevPage(c, { basePath }));
-  app.get('/:rest{.+}', (c) => renderDevPage(c, { basePath }));
+  mountDevPageRoutes({ app, renderPage: (c) => renderDevPage(c, { basePath }) });
 
   app.onError(createErrorHandler({ basePath, logger }));
 

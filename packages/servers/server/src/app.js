@@ -37,6 +37,7 @@ import getStrategies from '../lib/server/auth/getStrategies.js';
 import lowdefyConfig from '../lib/build/config.js';
 import mcpHandler from './routes/mcp.js';
 import mountOauthDiscovery from './routes/mountOauthDiscovery.js';
+import mountPageRoutes from './routes/mountPageRoutes.js';
 import wellKnownFallbackHandler from './routes/wellKnownFallback.js';
 import renderPage from './html/renderPage.js';
 import requestHandler from './routes/request.js';
@@ -150,9 +151,7 @@ function createApp({ serveStaticAssets = true } = {}) {
   }
 
   app.use('/*', apiContext());
-  app.get('/', (c) => renderPage(c, { pageId: '' }));
-  app.get('/404', (c) => renderPage(c, { pageId: '404', status: 404 }));
-  app.get('/:rest{.+}', (c) => renderPage(c, { pageId: c.req.param('rest') }));
+  mountPageRoutes({ app, renderPage });
 
   app.onError(createErrorHandler({ basePath, logger }));
 

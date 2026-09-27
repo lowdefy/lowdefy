@@ -57,7 +57,12 @@ const lifecycleTools = [
       type: 'object',
       properties: {
         directory: DIRECTORY_PROPERTY,
-        lines: { type: 'integer', minimum: 1, description: 'How many lines. Default 100.' },
+        lines: {
+          type: 'integer',
+          minimum: 1,
+          maximum: 1000,
+          description: 'How many lines. Default 100, at most 1000.',
+        },
         grep: {
           type: 'string',
           description: 'Only lines containing this text (case-insensitive).',

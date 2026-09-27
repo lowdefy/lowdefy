@@ -270,22 +270,6 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // JIT addKeys assigns fresh ~k values that aren't in the skeleton keyMap.
     await writeMaps({ context: buildContext });
 
-    // Initialize action ref collections for buildPage (normally done by buildPages)
-    if (!buildContext.linkActionRefs) {
-      buildContext.linkActionRefs = [];
-    }
-    if (!buildContext.callApiActionRefs) {
-      buildContext.callApiActionRefs = [];
-    }
-    if (!buildContext.websocketActionRefs) {
-      buildContext.websocketActionRefs = [];
-    }
-    if (!buildContext.dynamicBlockRefs) {
-      buildContext.dynamicBlockRefs = [];
-    }
-    if (!buildContext.orgClientActionRefs) {
-      buildContext.orgClientActionRefs = [];
-    }
     // buildSubscriptions validates against websocketIds — the dev server
     // restores the set from the websocketIds.json skeleton artifact. Rebuild
     // it from skeleton-built websockets when the context doesn't carry it
@@ -300,6 +284,19 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     const checkDuplicatePageId = createCheckDuplicateId({
       message: 'Duplicate pageId "{{ id }}".',
     });
+    // buildPage collects the page's action references on the context. The dev
+    // context outlives page builds, so each build starts empty lists - else
+    // every build re-checks all pages built before it, and a page that keeps
+    // failing grows them on each request. Held locally, like errors above:
+    // buildPage is synchronous, so no concurrent build swaps them in between.
+    const refs = {
+      linkActionRefs: [],
+      callApiActionRefs: [],
+      websocketActionRefs: [],
+      dynamicBlockRefs: [],
+      orgClientActionRefs: [],
+    };
+    Object.assign(buildContext, refs);
     buildPage({ page: processed, index: 0, context: buildContext, checkDuplicatePageId });
 
     // Validate that all page-level types (blocks, actions, operators) exist
@@ -328,7 +325,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // Validate link, state, payload, and server-state references
     const pageIds = Object.keys(pageRegistry);
     validateLinkReferences({
-      linkActionRefs: buildContext.linkActionRefs,
+      linkActionRefs: refs.linkActionRefs,
       pageIds,
       context: buildContext,
     });
@@ -336,7 +333,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       ? buildContext.components.api
       : [];
     validateCallApiRefs({
-      callApiActionRefs: buildContext.callApiActionRefs,
+      callApiActionRefs: refs.callApiActionRefs,
       endpointConfigs,
       context: buildContext,
     });
@@ -344,7 +341,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // "pinned" organizations policy. The dev JIT context is rebuilt from disk
     // and carries no components.auth, so the policy is read from the auth.json
     // artifact - only when a ref exists, to avoid a disk read on every build.
-    if (buildContext.orgClientActionRefs.length > 0) {
+    if (refs.orgClientActionRefs.length > 0) {
       let policy = buildContext.components?.auth?.organizations?.policy;
       if (type.isUndefined(policy) && type.isString(buildContext.directories?.build)) {
         const authPath = path.join(buildContext.directories.build, 'auth.json');
@@ -356,18 +353,18 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         }
       }
       validateOrgClientActionRefs({
-        orgClientActionRefs: buildContext.orgClientActionRefs,
+        orgClientActionRefs: refs.orgClientActionRefs,
         policy: policy ?? 'pinned',
         context: buildContext,
       });
     }
     validateDynamicBlockRefs({
-      dynamicBlockRefs: buildContext.dynamicBlockRefs,
+      dynamicBlockRefs: refs.dynamicBlockRefs,
       endpointConfigs,
       context: buildContext,
     });
     validateWebsocketRefs({
-      websocketActionRefs: buildContext.websocketActionRefs,
+      websocketActionRefs: refs.websocketActionRefs,
       websocketIds: buildContext.websocketIds,
       context: buildContext,
     });

@@ -19,11 +19,20 @@ import { spawnSync } from 'child_process';
 // A pid alone does not identify a process: after a reboot, or enough churn,
 // the pid in the hub's registry can belong to something else entirely. The pid
 // plus its start time does. Windows has no ps; there the hub relies on the pid.
+//
+// ps prints lstart in the caller's time zone and locale. Hubs, shims and CLIs
+// run with the environment of whichever session started them, so without
+// pinning both, a reader in another session would read another string for
+// the same process - and a hub would drop, orphaning, every server it should
+// adopt.
 function getProcessStartTime({ pid }) {
   if (process.platform === 'win32') {
     return null;
   }
-  const result = spawnSync('ps', ['-o', 'lstart=', '-p', String(pid)], { encoding: 'utf8' });
+  const result = spawnSync('ps', ['-o', 'lstart=', '-p', String(pid)], {
+    encoding: 'utf8',
+    env: { ...process.env, LC_ALL: 'C', TZ: 'UTC' },
+  });
   const startTime = (result.stdout ?? '').trim();
   return startTime === '' ? null : startTime;
 }

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { logClientError, parseRequestBody } from '@lowdefy/api';
+import { isSameOriginRequest, logClientError, parseRequestBody } from '@lowdefy/api';
 
 async function clientErrorHandler(c) {
   if (c.req.method !== 'POST') {
@@ -24,15 +24,7 @@ async function clientErrorHandler(c) {
   }
   const context = c.get('lowdefyContext');
 
-  const origin = c.req.header('origin');
-  if (!origin) {
-    return c.json({ error: 'Forbidden' }, 403);
-  }
-  try {
-    if (new URL(origin).host !== c.req.header('host')) {
-      return c.json({ error: 'Forbidden' }, 403);
-    }
-  } catch {
+  if (!isSameOriginRequest({ getHeader: (name) => c.req.header(name) })) {
     return c.json({ error: 'Forbidden' }, 403);
   }
 

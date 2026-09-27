@@ -63,7 +63,7 @@ test('screenshotPage returns an error for an invalid viewport before launching a
   chromium.launch.mockClear();
   const width = await screenshotPage({ origin: 'http://localhost:3001', pageId: 'home', width: 0 });
   expect(width.error).toEqual(
-    'Viewport width must be a positive integer (CSS pixels). Received 0.'
+    'Viewport width must be a positive integer of at most 4096 (CSS pixels). Received 0.'
   );
   const scheme = await screenshotPage({
     origin: 'http://localhost:3001',
