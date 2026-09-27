@@ -271,7 +271,7 @@
             initialCollapsed: false
             reverseArrow: true
           style:
-            borderLeft: 1px solid #f0f0f0
+            borderLeft: '1px solid #f0f0f0'
           blocks:
             - id: reverse_menu
               type: Menu
@@ -524,7 +524,7 @@
             collapsible: false
             initialCollapsed: false
           class:
-            element: bg-gradient-to-b from-primary/10 to-bg-container border-r border-border
+            .element: bg-gradient-to-b from-primary/10 to-bg-container border-r border-border
           blocks:
             - id: css_menu
               type: Menu
@@ -571,7 +571,7 @@
             collapsible: false
             initialCollapsed: false
           class:
-            element: shadow-lg bg-bg-container
+            .element: shadow-lg bg-bg-container
           blocks:
             - id: css_shadow_menu
               type: Menu
@@ -786,7 +786,7 @@
             collapsible: false
             initialCollapsed: false
           style:
-            borderRight: 1px solid #f0f0f0
+            borderRight: '1px solid #f0f0f0'
           blocks:
             - id: settings_heading
               type: Title
@@ -883,7 +883,7 @@
             initialCollapsed: false
             breakpoint: md
           class:
-            element: border-r border-border
+            .element: border-r border-border
           blocks:
             - id: docs_search
               type: TextInput

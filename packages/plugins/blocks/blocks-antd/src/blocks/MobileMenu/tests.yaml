@@ -339,7 +339,7 @@
         type: MenuLink
         properties:
           title: Home
-  areas:
+  slots:
     drawerContent:
       blocks:
         - id: one
@@ -352,7 +352,7 @@
         type: MenuLink
         properties:
           title: Home
-  areas:
+  slots:
     drawerFooter:
       blocks:
         - id: one

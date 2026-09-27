@@ -302,6 +302,24 @@ test.describe('Drawer Block features', () => {
     await page.mouse.up();
     expect(Math.round((await wrapper.boundingBox()).width)).toBeGreaterThan(450);
     await expect(getBlock(page, 'drawer_resized_display')).toHaveText('resized larger');
+    await expect(getBlock(page, 'drawer_resize_end_display')).toHaveText('resize end fired');
+  });
+
+  test('clicking the resize handle without dragging does not fire onResizeEnd', async ({
+    page,
+  }) => {
+    const section = await openDrawer(page, 'drawer_resizable');
+    const wrapper = page.locator('.ant-drawer-content-wrapper').filter({ has: section });
+    const dragger = page.locator('.ant-drawer-resizable-dragger');
+    await expect(dragger).toBeAttached();
+    // The drag handle only sits at the drawer edge once the open animation has finished.
+    await page.waitForTimeout(500);
+    const box = await dragger.boundingBox();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.up();
+    expect(Math.round((await wrapper.boundingBox()).width)).toBe(400);
+    await expect(getBlock(page, 'drawer_resize_end_display')).toHaveText('no resize end');
   });
 
   test('resizable drawer starts at the named size large', async ({ page }) => {

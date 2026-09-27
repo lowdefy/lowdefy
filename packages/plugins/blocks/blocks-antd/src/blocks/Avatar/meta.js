@@ -156,8 +156,8 @@ export default {
                 },
                 size: {
                   type: ['string', 'number'],
-                  enum: ['default', 'small', 'large'],
-                  description: 'Override size for this avatar.',
+                  description:
+                    'Override size for this avatar: default, small, large or a pixel number.',
                   docs: {
                     displayType: 'string',
                   },

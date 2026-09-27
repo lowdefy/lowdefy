@@ -142,6 +142,12 @@ test.describe('Alert Block', () => {
     await expect(block.locator('.ant-alert-close-icon')).toHaveText('Hide');
   });
 
+  test('an empty close text does not make the alert closable', async ({ page }) => {
+    const block = getAlert(page, 'alert_close_text_empty');
+    await expect(block).toBeVisible();
+    await expect(block.locator('.ant-alert-close-icon')).toHaveCount(0);
+  });
+
   // ============================================
   // VARIANT AND SEMANTIC KEY TESTS
   // ============================================

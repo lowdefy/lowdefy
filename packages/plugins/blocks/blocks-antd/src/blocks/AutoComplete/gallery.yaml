@@ -447,9 +447,10 @@
       type: AutoComplete
       style:
         .element:
+          backgroundColor: var(--ant-color-success-bg)
       properties:
         title: Custom Background
-        placeholder: Light green background
+        placeholder: Green tinted background
         options:
           - Option A
           - Option B
@@ -473,7 +474,7 @@
     - id: class_element
       type: AutoComplete
       class:
-        element: rounded-lg shadow-sm
+        .element: rounded-lg shadow-sm
       properties:
         title: Custom Class
         placeholder: Tailwind classes applied

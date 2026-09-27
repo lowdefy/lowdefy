@@ -92,7 +92,7 @@
     footer:
       style:
         textAlign: center
-  areas:
+  slots:
     footer:
       blocks: []
 - id: 'properties.content.style'
@@ -101,7 +101,7 @@
     content:
       style:
         padding: 0 20px
-  areas:
+  slots:
     content:
       blocks: []
 - id: 'properties.toggleSiderButton.type'
@@ -139,35 +139,35 @@
       borderRadius: 8
 - id: 'areas.siderOpen:'
   type: PageSidebarLayout
-  areas:
+  slots:
     siderOpen:
       blocks:
         - id: one
           type: Test
 - id: 'areas.siderClosed:'
   type: PageSidebarLayout
-  areas:
+  slots:
     siderClosed:
       blocks:
         - id: one
           type: Test
 - id: 'areas.mobileExtra:'
   type: PageSidebarLayout
-  areas:
+  slots:
     mobileExtra:
       blocks:
         - id: one
           type: Test
 - id: 'areas.mobileDrawerContent:'
   type: PageSidebarLayout
-  areas:
+  slots:
     mobileDrawerContent:
       blocks:
         - id: one
           type: Test
 - id: 'areas.mobileDrawerFooter:'
   type: PageSidebarLayout
-  areas:
+  slots:
     mobileDrawerFooter:
       blocks:
         - id: one

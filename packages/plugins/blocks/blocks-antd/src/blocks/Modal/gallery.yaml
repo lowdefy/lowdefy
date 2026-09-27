@@ -768,8 +768,8 @@
           titleColor: '#d46b08'
           colorBgMask: 'rgba(250, 173, 20, 0.1)'
           borderRadiusLG: 20
-          headerBorderBottom: 1px solid #ffd591
-          footerBorderTop: 1px solid #ffd591
+          headerBorderBottom: '1px solid #ffd591'
+          footerBorderTop: '1px solid #ffd591'
           headerMarginBottom: 0
           footerMarginTop: 0
           headerPadding: 16px 24px
@@ -870,10 +870,10 @@
       properties:
         title: Tailwind Styled Modal
       class:
-        header: bg-bg-layout
-        body: bg-bg-layout p-8
-        footer: bg-bg-layout
-        content: rounded-2xl overflow-hidden
+        .header: bg-bg-layout
+        .body: bg-bg-layout p-8
+        .footer: bg-bg-layout
+        .content: rounded-2xl overflow-hidden
       blocks:
         - id: modal_css_keys_content
           type: Paragraph
@@ -909,7 +909,7 @@
         cancelText: Cancel
         centered: true
         theme:
-          headerBorderBottom: 1px solid #f0f0f0
+          headerBorderBottom: '1px solid #f0f0f0'
           headerMarginBottom: 0
       events:
         onOk:
@@ -932,8 +932,7 @@
               properties:
                 icon: user
                 size: 72
-                color: '#fff'
-                backgroundColor: '#1677ff'
+                color: '#1677ff'
             - id: modal_profile_info
               type: Box
               layout:

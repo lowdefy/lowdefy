@@ -514,7 +514,7 @@
       type: Menu
       style:
         width: 256
-        border: 1px solid #d9d9d9
+        border: '1px solid #d9d9d9'
         borderRadius: 8
         padding: 4
       properties:
@@ -906,7 +906,7 @@
             type: MenuLink
             style:
               .element:
-                borderLeft: 3px solid '#1677ff'
+                borderLeft: '3px solid #1677ff'
               .label:
                 letterSpacing: 0.05em
             properties:

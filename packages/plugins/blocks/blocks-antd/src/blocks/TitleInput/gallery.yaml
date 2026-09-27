@@ -841,9 +841,9 @@
         level: 3
         editable: true
       style:
-        background: linear-gradient(90deg, #f0f5ff, #fff)
+        background: 'linear-gradient(90deg, #f0f5ff, #fff)'
         padding: 8px 16px
-        borderLeft: 4px solid #1677ff
+        borderLeft: '4px solid #1677ff'
       events:
         onMount:
           - id: set_default
@@ -870,7 +870,7 @@
         type: success
         editable: true
       style:
-        border: 1px dashed #52c41a
+        border: '1px dashed #52c41a'
         borderRadius: 8px
         padding: 12px 20px
         className: shadow-md

@@ -457,6 +457,7 @@
       type: MonthSelector
       style:
         .element:
+          backgroundColor: var(--ant-color-primary-bg)
       properties:
         title: Custom Background
         label:

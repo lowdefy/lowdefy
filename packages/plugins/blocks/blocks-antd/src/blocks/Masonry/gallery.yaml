@@ -327,7 +327,7 @@
     - id: mas_tw
       type: Masonry
       class:
-        element: bg-bg-layout p-6 rounded-xl
+        .element: bg-bg-layout p-6 rounded-xl
       properties:
         columns: 2
         gutter: 12
@@ -558,8 +558,7 @@
                   properties:
                     icon: user
                     size: 48
-                    color: '#fff'
-                    backgroundColor: '#1677ff'
+                    color: '#1677ff'
                 - id: mas_team_c1_info
                   type: Box
                   layout:
@@ -624,8 +623,7 @@
                   properties:
                     icon: user
                     size: 48
-                    color: '#fff'
-                    backgroundColor: '#52c41a'
+                    color: '#52c41a'
                 - id: mas_team_c2_info
                   type: Box
                   layout:
@@ -688,8 +686,7 @@
                   properties:
                     icon: user
                     size: 48
-                    color: '#fff'
-                    backgroundColor: '#722ed1'
+                    color: '#722ed1'
                 - id: mas_team_c3_info
                   type: Box
                   layout:
@@ -744,7 +741,7 @@
     - id: mas_products
       type: Masonry
       class:
-        element: bg-bg-layout p-6 rounded-xl
+        .element: bg-bg-layout p-6 rounded-xl
       properties:
         columns:
           xs: 1

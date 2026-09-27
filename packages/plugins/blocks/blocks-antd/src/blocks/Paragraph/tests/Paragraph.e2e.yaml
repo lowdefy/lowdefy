@@ -149,7 +149,8 @@ blocks:
       content: This is a very long paragraph that should be truncated with ellipsis when it exceeds a certain number of rows. The content continues to demonstrate the ellipsis functionality.
       ellipsis:
         rows: 2
-      style:
+    style:
+      .element:
         width: 300px
 
   # ============================================

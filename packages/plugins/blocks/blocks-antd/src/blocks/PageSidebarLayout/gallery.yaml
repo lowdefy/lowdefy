@@ -327,7 +327,8 @@
               type: Paragraph
               properties:
                 content: Admin Panel v2.4.1
-                style:
+              style:
+                .element:
                   textAlign: center
                   margin: 0
                   color: '#999'

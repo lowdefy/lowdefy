@@ -216,7 +216,7 @@
             assignee: Diana
             priority: Low
             status: To Do
-          - task: Code review PR #42
+          - task: 'Code review PR #42'
             assignee: Erik
             priority: Medium
             status: In Progress

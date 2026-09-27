@@ -868,7 +868,7 @@
       type: MultipleSelector
       style:
         .element:
-          border: 2px solid '#1677ff'
+          border: '2px solid #1677ff'
           borderRadius: 8
       properties:
         title: Custom Border Style
@@ -885,6 +885,7 @@
       type: MultipleSelector
       style:
         .element:
+          backgroundColor: var(--ant-color-primary-bg)
       properties:
         title: Custom Background
         label:
@@ -910,7 +911,7 @@
           - label: Three
             value: 3
       class:
-        element: rounded-lg shadow-sm
+        .element: rounded-lg shadow-sm
     - id: class_tailwind_label
       type: MultipleSelector
       properties:
@@ -921,7 +922,7 @@
           - label: Beta
             value: beta
       class:
-        label: text-blue-600 font-semibold
+        .label: text-blue-600 font-semibold
 
 - title: Theme Token Overrides
   blocks:

@@ -69,7 +69,8 @@
               properties:
                 content: My Application
                 level: 4
-                style:
+              style:
+                .element:
                   margin: 0
         - id: content_full_page_main
           type: Content
@@ -116,7 +117,8 @@
               properties:
                 content: App with Sidebar
                 level: 4
-                style:
+              style:
+                .element:
                   margin: 0
         - id: content_sider_inner
           type: Layout
@@ -137,16 +139,22 @@
                   type: Menu
                   properties:
                     mode: inline
-                    options:
-                      - id: dashboard
-                        title: Dashboard
-                        icon: Gauge
-                      - id: users
-                        title: Users
-                        icon: user
-                      - id: settings
-                        title: Settings
-                        icon: settings
+                    links:
+                      - id: cs_dashboard
+                        type: MenuLink
+                        properties:
+                          title: Dashboard
+                          icon: Gauge
+                      - id: cs_users
+                        type: MenuLink
+                        properties:
+                          title: Users
+                          icon: user
+                      - id: cs_settings
+                        type: MenuLink
+                        properties:
+                          title: Settings
+                          icon: settings
             - id: content_sider_main
               type: Content
               layout:
@@ -214,7 +222,7 @@
         - id: content_css_rounded
           type: Content
           class:
-            element: bg-bg-layout rounded-xl p-6 m-4
+            .element: bg-bg-layout rounded-xl p-6 m-4
           style:
             minHeight: 150px
           blocks:
@@ -234,7 +242,7 @@
         - id: content_css_gradient
           type: Content
           class:
-            element: bg-gradient-to-br from-primary/10 to-primary/5 p-8 m-4 rounded-lg shadow-inner
+            .element: bg-gradient-to-br from-primary/10 to-primary/5 p-8 m-4 rounded-lg shadow-inner
           style:
             minHeight: 150px
           blocks:
@@ -255,7 +263,7 @@
         - id: content_css_border
           type: Content
           class:
-            element: border-l-4 border-l-green-500 bg-bg-layout p-6 m-4
+            .element: border-l-4 border-l-green-500 bg-bg-layout p-6 m-4
           style:
             minHeight: 150px
           blocks:
@@ -292,7 +300,8 @@
               properties:
                 content: Analytics Dashboard
                 level: 4
-                style:
+              style:
+                .element:
                   margin: 0
             - id: content_dashboard_header_btn
               type: Button
@@ -323,19 +332,27 @@
                   type: Menu
                   properties:
                     mode: inline
-                    options:
-                      - id: overview
-                        title: Overview
-                        icon: home
-                      - id: analytics
-                        title: Analytics
-                        icon: chart
-                      - id: reports
-                        title: Reports
-                        icon: document
-                      - id: team
-                        title: Team
-                        icon: users
+                    links:
+                      - id: cd_overview
+                        type: MenuLink
+                        properties:
+                          title: Overview
+                          icon: home
+                      - id: cd_analytics
+                        type: MenuLink
+                        properties:
+                          title: Analytics
+                          icon: chart
+                      - id: cd_reports
+                        type: MenuLink
+                        properties:
+                          title: Reports
+                          icon: document
+                      - id: cd_team
+                        type: MenuLink
+                        properties:
+                          title: Team
+                          icon: users
             - id: content_dashboard_main
               type: Content
               layout:
@@ -424,7 +441,8 @@
               properties:
                 content: Account Settings
                 level: 4
-                style:
+              style:
+                .element:
                   margin: 0
         - id: content_settings_main
           type: Content

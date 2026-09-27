@@ -93,19 +93,21 @@
     extra: |
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commod
     title: Label title
-- id: 'properties.extraStyle: border 1px purple'
+- id: 'style.extra: border 1px purple'
   type: Label
   properties:
     title: Label title
     extra: Extra text
-    extraStyle:
+  style:
+    .extra:
       border: 1px solid purple
-- id: 'properties.feedbackStyle: border 1px blue'
+- id: 'style.feedback: border 1px blue'
   type: Label
   properties:
     title: Label title
     extra: The extra content
-    feedbackStyle:
+  style:
+    .feedback:
       border: 1px solid blue
 - id: 'properties.span: 2'
   type: Label

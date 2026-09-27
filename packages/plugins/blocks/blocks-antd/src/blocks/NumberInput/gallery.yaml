@@ -535,9 +535,10 @@
       type: NumberInput
       style:
         .element:
+          backgroundColor: var(--ant-color-primary-bg)
       properties:
         title: Custom Background
-        placeholder: Light blue background
+        placeholder: Blue tinted background
     - id: style_border
       type: NumberInput
       style:
@@ -570,14 +571,14 @@
     - id: class_element
       type: NumberInput
       class:
-        element: rounded-lg shadow-md
+        .element: rounded-lg shadow-md
       properties:
         title: Rounded with Shadow
         placeholder: Tailwind classes
     - id: class_label
       type: NumberInput
       class:
-        label: text-blue-600 font-semibold
+        .label: text-blue-600 font-semibold
       properties:
         title: Blue Bold Label
         placeholder: Label class override

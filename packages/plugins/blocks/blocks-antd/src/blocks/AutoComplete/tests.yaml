@@ -79,7 +79,7 @@
   properties:
     disabled: true
 - id: 'properties.placeholder_Text_inside_block'
-  type: AutoComplete"
+  type: AutoComplete
   properties:
     placeholder: Text inside block
 - id: 'properties.size: small'

@@ -868,7 +868,7 @@
         .element:
           padding: 16px
           borderRadius: 8px
-          border: 1px dashed #91caff
+          border: '1px dashed #91caff'
       properties:
         gap: 12
         justify: center
@@ -925,7 +925,7 @@
     - id: flex_tw_gradient
       type: Flex
       class:
-        element: bg-gradient-to-r from-primary/100 to-purple-600 p-6 rounded-xl shadow-lg
+        .element: bg-gradient-to-r from-primary/100 to-purple-600 p-6 rounded-xl shadow-lg
       properties:
         gap: 16
         align: center
@@ -952,7 +952,7 @@
     - id: flex_tw_bordered
       type: Flex
       class:
-        element: border-2 border-dashed border-border p-4 rounded-lg hover:border-blue-400 transition-colors duration-200
+        .element: border-2 border-dashed border-border p-4 rounded-lg hover:border-blue-400 transition-colors duration-200
       properties:
         gap: 12
         justify: center
@@ -983,7 +983,7 @@
     - id: flex_tw_ring
       type: Flex
       class:
-        element: ring-2 ring-green-400 ring-offset-2 p-4 rounded-lg bg-bg-layout
+        .element: ring-2 ring-green-400 ring-offset-2 p-4 rounded-lg bg-bg-layout
       properties:
         gap: 8
         align: center
@@ -1159,8 +1159,7 @@
           properties:
             icon: user
             size: 72
-            color: '#fff'
-            backgroundColor: '#1677ff'
+            color: '#1677ff'
         - id: flex_profile_info
           type: Flex
           layout:

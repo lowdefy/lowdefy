@@ -36,8 +36,8 @@ blocks:
 
   - id: footer_with_style
     type: Footer
-    properties:
-      style:
+    style:
+      .element:
         backgroundColor: '#f5f5f5'
         textAlign: center
         padding: 24px

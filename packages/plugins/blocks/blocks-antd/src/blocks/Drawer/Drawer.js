@@ -117,14 +117,23 @@ const DrawerBlock = ({
         defaultSize: namedDrawerSizes[drawerSize] ?? drawerSize,
         maxSize: properties.maxSize,
         resizable: {
+          onResizeStart: () => {
+            resizedSize.current = undefined;
+          },
           onResize: (size) => {
             resizedSize.current = size;
           },
-          onResizeEnd: () =>
+          // antd calls onResizeEnd on every mouseup of the handle, so a click without a
+          // drag would report no size. Only a drag that moved the edge is a resize.
+          onResizeEnd: () => {
+            if (type.isNone(resizedSize.current)) {
+              return;
+            }
             methods.triggerEvent({
               name: get(rename, 'events.onResizeEnd', { default: 'onResizeEnd' }),
               event: { size: resizedSize.current },
-            }),
+            });
+          },
         },
       }
     : { size: drawerSize };

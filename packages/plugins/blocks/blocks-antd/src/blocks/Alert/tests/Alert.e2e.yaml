@@ -111,6 +111,12 @@ blocks:
       message: Close text without closable
       closeText: Hide
 
+  - id: alert_close_text_empty
+    type: Alert
+    properties:
+      message: Empty close text without closable
+      closeText: ''
+
   # ============================================
   # VARIANT AND SEMANTIC KEY TESTS
   # ============================================

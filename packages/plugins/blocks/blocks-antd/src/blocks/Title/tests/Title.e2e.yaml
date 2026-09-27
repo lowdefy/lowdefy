@@ -176,7 +176,8 @@ blocks:
     properties:
       content: This is a very long title that should be truncated with ellipsis when it exceeds a certain width
       ellipsis: true
-      style:
+    style:
+      .element:
         width: 200px
 
   # ============================================

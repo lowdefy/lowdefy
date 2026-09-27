@@ -208,14 +208,20 @@ export default {
         },
         properties: {
           titleMarginBottom: {
-            type: 'string',
+            type: ['string', 'number'],
             default: '0.5em',
-            description: 'Margin bottom for title elements.',
+            description: 'Margin bottom for title elements, as a CSS length or a number of pixels.',
+            docs: {
+              displayType: 'string',
+            },
           },
           titleMarginTop: {
-            type: 'string',
+            type: ['string', 'number'],
             default: '1.2em',
-            description: 'Margin top for title elements.',
+            description: 'Margin top for title elements, as a CSS length or a number of pixels.',
+            docs: {
+              displayType: 'string',
+            },
           },
           colorText: {
             type: 'string',

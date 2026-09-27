@@ -178,8 +178,7 @@ export default {
               size: {
                 type: ['string', 'number'],
                 default: 'small',
-                enum: ['default', 'small', 'large'],
-                description: 'Size of the avatar.',
+                description: 'Size of the avatar: default, small, large or a pixel number.',
                 docs: {
                   displayType: 'string',
                 },

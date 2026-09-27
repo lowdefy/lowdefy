@@ -246,7 +246,7 @@
       layout:
         flex: 0 0 auto
       class:
-        element: shadow-lg rounded-lg
+        .element: shadow-lg rounded-lg
       properties:
         offsetTop: 10
       blocks:
@@ -264,7 +264,7 @@
       layout:
         flex: 0 0 auto
       class:
-        element: ring-2 ring-green-400 rounded-lg
+        .element: ring-2 ring-green-400 rounded-lg
       properties:
         offsetTop: 10
       blocks:

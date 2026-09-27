@@ -32,7 +32,7 @@
             icon: CircleAlert
             title: Alert
 - id: 'properties.logo.src'
-  type: PageHeaderMenu
+  type: PageSiderMenu
   properties:
     logo:
       src: 'https://lowdefy.com/logos/name_250.png'
@@ -51,7 +51,7 @@
             icon: CircleAlert
             title: Alert
 - id: 'properties.logo.alt'
-  type: PageHeaderMenu
+  type: PageSiderMenu
   properties:
     logo:
       alt: 'Header logo alt text'
@@ -69,55 +69,38 @@
           properties:
             icon: CircleAlert
             title: Alert
-- id: 'properties.logo.style'
-  type: PageHeaderMenu
-  properties:
-    logo:
-      style:
-        border: 5px solid blue
-- id: 'properties.logo.srcSet'
-  type: PageHeaderMenu
-  properties:
-    logo:
-      srcSet: 'https://lowdefy.com/logos/name_250.png 250w, https://lowdefy.com/logos/name_450.png 450w'
-    menu:
-      links:
-        - id: Introduction
-          type: MenuLink
-          pageId: introduction
-          properties:
-            icon: Rocket
-            title: Introduction
-        - id: alert
-          type: MenuLink
-          pageId: Alert
-          properties:
-            icon: CircleAlert
-            title: Alert
-- id: 'properties.logo.size'
-  type: PageHeaderMenu
-  properties:
-    logo:
-      srcSet: '(max-width: 767px) 40px, 768px'
-    menu:
-      links:
-        - id: Introduction
-          type: MenuLink
-          pageId: introduction
-          properties:
-            icon: Rocket
-            title: Introduction
-        - id: alert
-          type: MenuLink
-          pageId: Alert
-          properties:
-            icon: CircleAlert
-            title: Alert
-- id: 'properties.header.theme: light'
+- id: 'style.logo'
+  type: PageSiderMenu
+  style:
+    .logo:
+      border: 5px solid blue
+- id: 'properties.logo.srcMobile'
   type: PageSiderMenu
   properties:
-    header:
-      theme: light
+    logo:
+      src: 'https://lowdefy.com/logos/name_250.png'
+      srcMobile: /logo_square.png
+    menu:
+      links:
+        - id: Introduction
+          type: MenuLink
+          pageId: introduction
+          properties:
+            icon: Rocket
+            title: Introduction
+        - id: alert
+          type: MenuLink
+          pageId: Alert
+          properties:
+            icon: CircleAlert
+            title: Alert
+- id: 'properties.logo.breakpoint'
+  type: PageSiderMenu
+  properties:
+    logo:
+      src: 'https://lowdefy.com/logos/name_250.png'
+      srcMobile: /logo_square.png
+      breakpoint: 768
     menu:
       links:
         - id: Introduction
@@ -133,79 +116,71 @@
             icon: CircleAlert
             title: Alert
 - id: 'properties.breadcrumb.list'
-  type: PageHeaderMenu
+  type: PageSiderMenu
   properties:
     breadcrumb:
       list:
         - Link one
         - Link two
-- id: 'properties.footer.style'
-  type: PageHeaderMenu
-  properties:
-    footer:
-      style:
-        border: 5px solid blue
-  areas:
+- id: 'style.footer'
+  type: PageSiderMenu
+  style:
+    .footer:
+      border: 5px solid blue
+  slots:
     footer:
       blocks: []
-- id: 'properties.content.style'
-  type: PageHeaderMenu
-  properties:
-    content:
-      style:
-        border: 5px solid blue
-  areas:
+- id: 'style.content'
+  type: PageSiderMenu
+  style:
+    .content:
+      border: 5px solid blue
+  slots:
     content:
       blocks: []
-- id: 'properties.sider.style'
-  type: PageHeaderMenu
-  properties:
-    sider:
-      style:
-        border: 5px solid blue
-  areas:
+- id: 'style.sider'
+  type: PageSiderMenu
+  style:
+    .sider:
+      border: 5px solid blue
+  slots:
     sider:
       blocks: []
 - id: 'properties.sider.initialCollapsed'
-  type: PageHeaderMenu
+  type: PageSiderMenu
   properties:
     sider:
       initialCollapsed: true
-  areas:
+  slots:
     sider:
       blocks: []
-- id: 'properties.sider.theme: dark'
-  type: PageHeaderMenu
-  properties:
-    sider:
-      theme: dark
-- id: 'properties.toggleSiderButton.type'
-  type: PageHeaderMenu
+- id: 'properties.toggleSiderButton.color'
+  type: PageSiderMenu
   properties:
     toggleSiderButton:
-      type: primary
-  areas:
+      color: primary
+      variant: solid
+  slots:
     sider:
       blocks: []
-- id: 'properties.toggleSiderButton.hide'
-  type: PageHeaderMenu
+- id: 'properties.sider.hideToggleButton'
+  type: PageSiderMenu
   properties:
-    toggleSiderButton:
-      hide: true
-  areas:
+    sider:
+      hideToggleButton: true
+  slots:
     sider:
       blocks: []
-- id: 'properties.header.style'
-  type: PageHeaderMenu
-  properties:
-    header:
-      style:
-        border: 5px solid blue
-  areas:
+- id: 'style.header'
+  type: PageSiderMenu
+  style:
+    .header:
+      border: 5px solid blue
+  slots:
     header:
       blocks: []
-- id: 'properties.style'
-  type: PageHeaderMenu
-  properties:
-    style:
+- id: 'style.element'
+  type: PageSiderMenu
+  style:
+    .element:
       border: 5px solid blue

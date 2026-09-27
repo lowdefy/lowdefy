@@ -582,7 +582,7 @@
           - label: Three
             value: 3
       class:
-        element: rounded-lg shadow-sm
+        .element: rounded-lg shadow-sm
     - id: class_label
       type: Selector
       properties:
@@ -593,7 +593,7 @@
           - label: Beta
             value: beta
       class:
-        label: text-blue-600 font-semibold
+        .label: text-blue-600 font-semibold
 - title: Many Options (Scrollable)
   blocks:
     - id: many_options

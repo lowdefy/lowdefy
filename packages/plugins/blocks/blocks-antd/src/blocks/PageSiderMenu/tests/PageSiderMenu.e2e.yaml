@@ -19,10 +19,7 @@ class:
 properties:
   theme:
     colorBgLayout: rgb(250, 240, 255)
-  header:
-    theme: dark
   sider:
-    theme: light
     initialCollapsed: false
     collapsible: true
   menu:

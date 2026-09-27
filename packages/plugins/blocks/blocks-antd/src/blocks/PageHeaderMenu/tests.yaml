@@ -69,17 +69,17 @@
           properties:
             icon: CircleAlert
             title: Alert
-- id: 'properties.logo.style'
+- id: 'style.logo'
+  type: PageHeaderMenu
+  style:
+    .logo:
+      border: 5px solid blue
+- id: 'properties.logo.srcMobile'
   type: PageHeaderMenu
   properties:
     logo:
-      style:
-        border: 5px solid blue
-- id: 'properties.logo.srcSet'
-  type: PageHeaderMenu
-  properties:
-    logo:
-      srcSet: 'https://lowdefy.com/logos/name_250.png 250w, https://lowdefy.com/logos/name_450.png 450w'
+      src: 'https://lowdefy.com/logos/name_250.png'
+      srcMobile: /logo_square.png
     menu:
       links:
         - id: Introduction
@@ -94,30 +94,13 @@
           properties:
             icon: CircleAlert
             title: Alert
-- id: 'properties.logo.size'
+- id: 'properties.logo.breakpoint'
   type: PageHeaderMenu
   properties:
     logo:
-      srcSet: '(max-width: 767px) 40px, 768px'
-    menu:
-      links:
-        - id: Introduction
-          type: MenuLink
-          pageId: introduction
-          properties:
-            icon: Rocket
-            title: Introduction
-        - id: alert
-          type: MenuLink
-          pageId: Alert
-          properties:
-            icon: CircleAlert
-            title: Alert
-- id: 'properties.header.theme: light'
-  type: PageHeaderMenu
-  properties:
-    header:
-      theme: light
+      src: 'https://lowdefy.com/logos/name_250.png'
+      srcMobile: /logo_square.png
+      breakpoint: 768
     menu:
       links:
         - id: Introduction
@@ -139,35 +122,32 @@
       list:
         - Link one
         - Link two
-- id: 'properties.footer.style'
+- id: 'style.footer'
   type: PageHeaderMenu
-  properties:
-    footer:
-      style:
-        border: 5px solid blue
-  areas:
+  style:
+    .footer:
+      border: 5px solid blue
+  slots:
     footer:
       blocks: []
-- id: 'properties.content.style'
+- id: 'style.content'
   type: PageHeaderMenu
-  properties:
-    content:
-      style:
-        border: 5px solid blue
-  areas:
+  style:
+    .content:
+      border: 5px solid blue
+  slots:
     content:
       blocks: []
-- id: 'properties.header.style'
+- id: 'style.header'
   type: PageHeaderMenu
-  properties:
-    header:
-      style:
-        border: 5px solid blue
-  areas:
+  style:
+    .header:
+      border: 5px solid blue
+  slots:
     header:
       blocks: []
-- id: 'properties.style'
+- id: 'style.element'
   type: PageHeaderMenu
-  properties:
-    style:
+  style:
+    .element:
       border: 5px solid blue

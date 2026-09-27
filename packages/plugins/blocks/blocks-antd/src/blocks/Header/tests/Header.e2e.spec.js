@@ -33,18 +33,18 @@ test.describe('Header Block', () => {
     await expect(header).toContainText('Header content');
   });
 
-  test('renders header with light theme', async ({ page }) => {
-    const header = getHeader(page, 'header_theme_light');
+  test('renders header with the container background by default', async ({ page }) => {
+    const header = getHeader(page, 'header_default_background');
     await expect(header).toBeVisible();
-    await expect(header).toContainText('Light theme header');
-    // Light theme sets white background
+    await expect(header).toContainText('Default background header');
     await expect(header).toHaveCSS('background-color', 'rgb(255, 255, 255)');
   });
 
-  test('renders header with dark theme', async ({ page }) => {
-    const header = getHeader(page, 'header_theme_dark');
+  test('renders header with a custom background color', async ({ page }) => {
+    const header = getHeader(page, 'header_color');
     await expect(header).toBeVisible();
-    await expect(header).toContainText('Dark theme header');
+    await expect(header).toContainText('Colored header');
+    await expect(header).toHaveCSS('background-color', 'rgb(0, 21, 41)');
   });
 
   test('renders header with custom style', async ({ page }) => {

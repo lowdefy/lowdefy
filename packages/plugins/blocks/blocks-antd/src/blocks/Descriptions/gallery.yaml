@@ -642,7 +642,7 @@
             value: +1 (555) 444-7890
       style:
         .element:
-          border: 2px solid #1677ff
+          border: '2px solid #1677ff'
           borderRadius: 8px
           padding: 4px
     - id: css_label_content

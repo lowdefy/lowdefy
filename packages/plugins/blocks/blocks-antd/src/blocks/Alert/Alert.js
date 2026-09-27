@@ -44,9 +44,11 @@ const AlertBlock = ({
     );
   }
   // antd shows a close button whenever a close text is set, so closeText keeps implying closable.
-  const closable = properties.closable === true || !type.isNone(properties.closeText);
+  // antd ignores an empty close text, so '' neither makes the alert closable nor replaces the icon.
+  const hasCloseText = !type.isNone(properties.closeText) && properties.closeText !== '';
+  const closable = properties.closable === true || hasCloseText;
   let closeIcon;
-  if (!type.isNone(properties.closeText)) {
+  if (hasCloseText) {
     closeIcon = properties.closeText;
   } else if (!type.isNone(properties.closeIcon)) {
     closeIcon = (

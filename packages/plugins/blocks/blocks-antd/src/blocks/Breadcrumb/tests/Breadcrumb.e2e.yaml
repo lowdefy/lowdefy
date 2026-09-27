@@ -146,12 +146,13 @@ blocks:
   - id: breadcrumb_with_style
     type: Breadcrumb
     properties:
-      style:
-        fontSize: 16px
-        fontWeight: bold
       list:
         - Home
         - Products
+    style:
+      .element:
+        fontSize: 16px
+        fontWeight: bold
 
   - id: breadcrumb_item_style
     type: Breadcrumb
