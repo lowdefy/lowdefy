@@ -28,6 +28,8 @@ In the Vercel project settings:
   automatically.
 - Enable **"Include files outside the root directory in the Build Step"** — the Lowdefy config
   usually lives in the parent of `deploy/`.
+- **Node.js Version:** `24.x` or newer. The install and build steps run the Lowdefy CLI, which
+  requires Node.js 24.
 
 ## Public files
 

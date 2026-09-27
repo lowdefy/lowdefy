@@ -408,7 +408,7 @@
         - id: article_note
           type: Paragraph
           properties:
-            content: 'Note: Lowdefy requires Node.js 18 or later. Check your version with node /version.'
+            content: 'Note: Lowdefy requires Node.js 24 or later. Check your version with node /version.'
             type: warning
             italic: true
 

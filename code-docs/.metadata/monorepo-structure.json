@@ -75,7 +75,7 @@
     "framework": "Hono + Vite",
     "auth": "Auth.js (via plugin-next-auth)",
     "configFormat": ["YAML", "JSON", "JSON5"],
-    "runtime": "Node.js >= 18"
+    "runtime": "Node.js >= 24"
   },
   "corePackageRoles": {
     "@lowdefy/api": "Server-side API routes, context creation, request handling",
