@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { getOperatorType, serializer, type } from '@lowdefy/helpers';
+import { getOperatorType, type } from '@lowdefy/helpers';
 
 function findInValue({ value, path }) {
   if (type.isArray(value)) {
@@ -47,11 +47,11 @@ function findInValue({ value, path }) {
 
 // Returns { operator, path } for the first operator-shaped object in a data value,
 // or null. The path is relative to the value, dot-separated ('' for the value itself).
-// The value is scanned as the page sends it: serialized, so an undefined value is
-// gone, an Error or Date is a "~e" or "~d" object, and the scan walks into every
-// such wrapper, whose contents the client evaluates before it revives the wrapper.
+// The value is the serialized form the page sends (an Error or Date is a "~e" or
+// "~d" object there), and the scan walks into every such wrapper, whose contents
+// the client evaluates before it revives the wrapper.
 function findOperatorInData(value) {
-  return findInValue({ value: serializer.serialize(value, { skipMarkers: true }), path: '' });
+  return findInValue({ value, path: '' });
 }
 
 export default findOperatorInData;

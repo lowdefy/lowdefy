@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
-
 import findOperatorInData from './findOperatorInData.js';
 
 test('findOperatorInData returns null for data without operators', () => {
@@ -42,21 +40,15 @@ test('findOperatorInData reports an empty path when the value itself is an opera
   expect(findOperatorInData({ _request: 'x' })).toEqual({ operator: '_request', path: '' });
 });
 
-test('findOperatorInData finds an operator beside keys the client never receives', () => {
-  expect(findOperatorInData({ rows: [{ _request: 'secret', note: undefined }] })).toEqual({
-    operator: '_request',
-    path: 'rows.0',
-  });
+test('findOperatorInData finds an operator beside a __proto__ key parsed from JSON', () => {
   expect(findOperatorInData(JSON.parse('[{ "_user": "email", "__proto__": {} }]'))).toEqual({
     operator: '_user',
     path: '0',
   });
 });
 
-test('findOperatorInData finds an operator inside an error, as the page sends it', () => {
-  const error = serializer.deserialize({ '~e': { name: 'Error', message: { _request: 'x' } } });
-  expect(findOperatorInData({ html: error })).toEqual({
-    operator: '_request',
-    path: 'html.~e.message',
-  });
+test('findOperatorInData walks into serialized wrappers', () => {
+  expect(
+    findOperatorInData({ html: { '~e': { name: 'Error', message: { _request: 'x' } } } })
+  ).toEqual({ operator: '_request', path: 'html.~e.message' });
 });

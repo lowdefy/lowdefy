@@ -18,6 +18,7 @@
 import { jest } from '@jest/globals';
 
 import { ConfigError, OperatorError } from '@lowdefy/errors';
+import { serializer } from '@lowdefy/helpers';
 
 import ServerParser from './serverParser.js';
 
@@ -429,4 +430,57 @@ test("parse with literalData lets a validated step's blocks through as config", 
   });
   expect(res.output.a).toEqual([{ html: { _state: 'x' } }]);
   expect(res.errors[0].message).toContain('Data returned by "_step"');
+});
+
+test.each([
+  ['beside an undefined value', [{ html: { _request: 'secret', note: undefined } }], '0.html'],
+  [
+    'inside an error',
+    serializer.deserialize([{ '~e': { name: 'Error', message: { _request: 'secret' } } }]),
+    '0.~e.message',
+  ],
+])('parse with literalData rejects an operator %s in the form the page sends', (_, data, path) => {
+  const parser = new ServerParser({ operators: createDataOperators(data) });
+  const res = parser.parse({
+    input: { a: { _data: true } },
+    location,
+    literalData: { validatedStepIds: new Set() },
+  });
+  expect(res.errors[0].message).toContain(`contains the operator "_request" at "${path}"`);
+});
+
+class Hider {
+  constructor() {
+    this.x = { _request: 'secret' };
+  }
+
+  toJSON() {
+    return { safe: true };
+  }
+}
+
+class Flip {
+  constructor() {
+    this.calls = 0;
+  }
+
+  toJSON() {
+    this.calls += 1;
+    return this.calls === 1 ? { safe: true } : { _request: 'secret' };
+  }
+}
+
+test.each([
+  ['whose toJSON hides its own keys', () => new Hider()],
+  ['whose toJSON changes on each call', () => new Flip()],
+])('parse with literalData returns the scanned form of a class instance %s', (_, create) => {
+  const parser = new ServerParser({ operators: createDataOperators(create()) });
+  const res = parser.parse({
+    input: { a: { _data: true } },
+    location,
+    literalData: { validatedStepIds: new Set() },
+  });
+  expect(res.errors).toEqual([]);
+  expect(res.output.a).toEqual({ safe: true });
+  expect(JSON.stringify(res.output)).toBe('{"a":{"safe":true}}');
 });

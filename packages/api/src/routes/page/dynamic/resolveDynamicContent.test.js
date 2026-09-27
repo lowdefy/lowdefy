@@ -21,7 +21,18 @@ import { ConfigError } from '@lowdefy/errors';
 import resolveDynamicContent from './resolveDynamicContent.js';
 import testContext from '../../../test/testContext.js';
 
-const operators = { ...operatorsServer };
+// A plugin operator can return a class instance whose toJSON differs from its own keys.
+class Hider {
+  constructor() {
+    this.x = { _request: 'secret' };
+  }
+
+  toJSON() {
+    return { safe: true };
+  }
+}
+
+const operators = { ...operatorsServer, _hider: () => new Hider() };
 
 const logger = {
   debug: jest.fn(),
@@ -756,6 +767,15 @@ test('resolveDynamicContent falls back when parsed data text hides an operator i
   expect(dynamicBlockError()).toContain(
     'Data returned by "_json.parse" contains the operator "_request"'
   );
+});
+
+test('resolveDynamicContent sends the form of operator data it checked, not a class instance', async () => {
+  const dynamicBlock = await resolveWithRoutine({
+    ':return': { blocks: [{ id: 'field', type: 'Html', properties: { html: { _hider: true } } }] },
+  });
+  const { properties } = dynamicBlock.slots.content.blocks[0];
+  expect(properties.html).toEqual({ safe: true });
+  expect(JSON.stringify(properties)).not.toContain('_request');
 });
 
 test('resolveDynamicContent rejects blocks built up in routine state', async () => {
