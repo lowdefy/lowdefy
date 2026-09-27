@@ -137,3 +137,76 @@ blocks:
         - { id: banana, label: Banana, parentId: fruits }
         - { id: vegetables, label: Vegetables }
         - { id: carrot, label: Carrot, parentId: vegetables }
+
+  # ============================================
+  # ANTD 6.6 FEATURES
+  # ============================================
+
+  - id: ts_block_node
+    type: TreeInput
+    properties:
+      blockNode: true
+      primaryKey: id
+      parentKey: parentId
+      valueKey: id
+      html: '{{ item.label }}'
+      data:
+        - { id: item1, label: Item 1 }
+        - { id: item2, label: Item 2 }
+
+  - id: ts_height
+    type: TreeInput
+    properties:
+      height: 120
+      defaultExpandAll: true
+      primaryKey: id
+      parentKey: parentId
+      valueKey: id
+      html: '{{ item.label }}'
+      data:
+        - { id: n1, label: Node 1 }
+        - { id: n2, label: Node 2 }
+        - { id: n3, label: Node 3 }
+        - { id: n4, label: Node 4 }
+        - { id: n5, label: Node 5 }
+        - { id: n6, label: Node 6 }
+        - { id: n7, label: Node 7 }
+        - { id: n8, label: Node 8 }
+        - { id: n9, label: Node 9 }
+        - { id: n10, label: Node 10 }
+        - { id: n11, label: Node 11 }
+        - { id: n12, label: Node 12 }
+
+  - id: ts_semantic_css
+    type: TreeInput
+    class:
+      .item: ts-item-tailwind
+      .itemTitle: ts-item-title-tailwind
+      .itemSwitcher: ts-item-switcher-tailwind
+    style:
+      .itemTitle:
+        fontStyle: italic
+    properties:
+      defaultExpandAll: true
+      primaryKey: id
+      parentKey: parentId
+      valueKey: id
+      html: '{{ item.label }}'
+      data:
+        - { id: parent, label: Parent }
+        - { id: child, label: Child, parentId: parent }
+
+  - id: ts_theme
+    type: TreeInput
+    properties:
+      theme:
+        indentSize: 40
+        titleHeight: 32
+      defaultExpandAll: true
+      primaryKey: id
+      parentKey: parentId
+      valueKey: id
+      html: '{{ item.label }}'
+      data:
+        - { id: parent, label: Parent }
+        - { id: child, label: Child, parentId: parent }

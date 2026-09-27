@@ -49,6 +49,8 @@ const getTreeData = ({ entries, properties }) => {
     return {
       id,
       pId,
+      // antd keys simple-mode nodes by `id` unless a key is set, and warns when key and value differ.
+      key: `${index}`,
       value: `${index}`,
       title: isObject ? entry.label : `${entry}`,
       disabled: isObject ? entry.disabled : undefined,
