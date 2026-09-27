@@ -21,6 +21,8 @@ const mockCreateWebSocketConnection = jest.fn(() => ({
   close: jest.fn(),
   handleMessage: jest.fn(),
 }));
+// The route's origin rule has its own tests (src/routes/websocket.test.mjs);
+// these requests carry no Origin, which it allows.
 jest.unstable_mockModule('@lowdefy/api', () => ({
   createChannelRegistry: jest.fn(() => ({})),
   createWebSocketConnection: mockCreateWebSocketConnection,
