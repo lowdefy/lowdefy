@@ -15,9 +15,9 @@
 */
 
 import { APIError } from 'better-auth/api';
-import { getOrgAdapter } from 'better-auth/plugins';
 import { type } from '@lowdefy/helpers';
 
+import ensureAuthIndexes from './ensureAuthIndexes.js';
 import ensureOrganization from './ensureOrganization.js';
 import findPendingInvitation from './findPendingInvitation.js';
 import getHookRequestHeaders from './getHookRequestHeaders.js';
@@ -91,66 +91,104 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
   }
 
   // The user's own organization under open + auto. The slugs derive from the
-  // user id - org-<userId>, then org-<userId>-2, -3 and on - so a racing login
-  // collides on the unique slug index instead of minting a second org. A slug
-  // whose org has no members is the half-finished mint the reuse exists for:
-  // the mint is not atomic, and an earlier attempt may have written the org
-  // row and failed before the member row, so the retry reuses it rather than
-  // tripping the index and locking the user out of login. A slug whose org
-  // has members belongs to the people who run it now (the user may have
-  // handed it over and later been removed), so it is never reused: the user
-  // moves on to the next slug and gets a fresh organization. Returns the
-  // user's member row alongside when they already hold one there.
-  async function findOrMintOwnOrganization({ adapter, orgAdapter, session, user }) {
-    for (let suffix = 1; ; suffix += 1) {
-      const slug = suffix === 1 ? `org-${session.userId}` : `org-${session.userId}-${suffix}`;
-      let organization = await adapter.findOne({
+  // user id - org-<userId>, then org-<userId>-2, -3 and on. There are no
+  // transactions to lean on (the adapter supports standalone MongoDB), so the
+  // mint is two writes made safe by unique indexes (ensureAuthIndexes) and a
+  // marker:
+  //
+  // - The organization row is written with mintPending: true. Only a marked
+  //   organization is ever joined as its owner here: one minted for this
+  //   user whose owner row was never written - a mint that failed between
+  //   its two writes, or one a concurrent session of the same user (a double
+  //   submit, two tabs) is finishing right now. The marker is cleared once
+  //   the owner row exists, so an organization everyone later left - with its
+  //   data and pending invitations - is never handed back; the user moves on
+  //   to the next slug and gets a fresh organization.
+  // - Two sessions creating the same slug: the unique slug index rejects the
+  //   second, which reads the winner's row.
+  // - Two sessions writing the owner row, in any order around each other's
+  //   writes: the unique (user, organization) index rejects the second, which
+  //   reads the winner's row. The member row is always written before the
+  //   marker is cleared, so a session that sees the marker cleared finds the
+  //   member row.
+  async function findMember({ adapter, userId, organizationId }) {
+    return adapter.findOne({
+      model: 'member',
+      where: [
+        { field: 'userId', value: userId },
+        { field: 'organizationId', value: organizationId },
+      ],
+    });
+  }
+
+  async function findOrCreateOrganization({ adapter, name, slug }) {
+    const existing = await adapter.findOne({
+      model: 'organization',
+      where: [{ field: 'slug', value: slug }],
+    });
+    if (existing) {
+      return existing;
+    }
+    try {
+      return await adapter.create({
+        model: 'organization',
+        data: { name, slug, mintPending: true, createdAt: new Date() },
+      });
+    } catch (error) {
+      const winner = await adapter.findOne({
         model: 'organization',
         where: [{ field: 'slug', value: slug }],
       });
-      if (!organization) {
-        try {
-          const minted = await orgAdapter.createOrganization({
-            organization: {
-              name: user?.name || user?.email || session.userId,
-              slug,
-              createdAt: new Date(),
-            },
-          });
-          return { organization: minted, member: null };
-        } catch (error) {
-          // A racing login minted the org between the find and the create -
-          // the unique slug index rejected this write, so read the winner's row.
-          organization = await adapter.findOne({
-            model: 'organization',
-            where: [{ field: 'slug', value: slug }],
-          });
-          if (!organization) {
-            throw error;
-          }
-        }
+      if (!winner) {
+        throw error;
       }
-      const memberCount = await adapter.count({
+      return winner;
+    }
+  }
+
+  async function joinAsOwner({ adapter, userId, organizationId }) {
+    try {
+      await adapter.create({
         model: 'member',
-        where: [{ field: 'organizationId', value: organization.id }],
+        data: { userId, organizationId, role: 'owner', createdAt: new Date() },
       });
-      if (memberCount === 0) {
-        return { organization, member: null };
+    } catch (error) {
+      const winner = await findMember({ adapter, userId, organizationId });
+      if (type.isNone(winner)) {
+        throw error;
       }
-      // A concurrent session for the same user (a double submit, two tabs)
-      // can mint this org and join it after this hook read the user's
-      // memberships. Its members are then the user, not people it was handed
-      // to - moving on would mint the user a second organization.
-      const member = await adapter.findOne({
-        model: 'member',
-        where: [
-          { field: 'userId', value: session.userId },
-          { field: 'organizationId', value: organization.id },
-        ],
+    }
+  }
+
+  async function clearMintPending({ adapter, organization }) {
+    if (organization.mintPending !== true) {
+      return;
+    }
+    await adapter.update({
+      model: 'organization',
+      where: [{ field: 'id', value: organization.id }],
+      update: { mintPending: false },
+    });
+  }
+
+  async function findOrMintOwnOrganization({ adapter, session, user }) {
+    const name = user?.name || user?.email || session.userId;
+    for (let suffix = 1; ; suffix += 1) {
+      const slug = suffix === 1 ? `org-${session.userId}` : `org-${session.userId}-${suffix}`;
+      const organization = await findOrCreateOrganization({ adapter, name, slug });
+      const member = await findMember({
+        adapter,
+        userId: session.userId,
+        organizationId: organization.id,
       });
-      if (!type.isNone(member)) {
-        return { organization, member };
+      if (type.isNone(member) && organization.mintPending !== true) {
+        continue;
       }
+      if (type.isNone(member)) {
+        await joinAsOwner({ adapter, userId: session.userId, organizationId: organization.id });
+      }
+      await clearMintPending({ adapter, organization });
+      return organization;
     }
   }
 
@@ -193,26 +231,13 @@ function createActiveOrgPolicyHook({ getAuth, logger, organizations }) {
       return;
     }
     // open + auto: mint the user's own org as owner.
-    // Minted through the org plugin's own adapter layer - the same layer its
-    // createOrganization endpoint drives. The endpoint itself cannot serve
-    // this call at 1.7.0: a headerless system-action call cannot resolve
-    // the engine's dynamic baseURL, and forwarding the firing request's
-    // headers makes the endpoint demand a session that does not exist yet.
-    const orgPlugin = auth.options.plugins.find((plugin) => plugin.id === 'organization');
-    const orgAdapter = getOrgAdapter(await auth.$context, orgPlugin.options);
-    const { organization, member } = await findOrMintOwnOrganization({
-      adapter,
-      orgAdapter,
-      session,
-      user,
-    });
-    if (type.isNone(member)) {
-      await orgAdapter.createMember({
-        userId: session.userId,
-        organizationId: organization.id,
-        role: 'owner',
-      });
-    }
+    // Written through the adapter, not the org plugin's createOrganization
+    // endpoint: a headerless system-action call cannot resolve the engine's
+    // dynamic baseURL at 1.7.0, and forwarding the firing request's headers
+    // makes the endpoint demand a session that does not exist yet. The mint
+    // is only safe behind the unique indexes, so it refuses without them.
+    await ensureAuthIndexes({ auth, logger });
+    const organization = await findOrMintOwnOrganization({ adapter, session, user });
     return { data: { ...session, activeOrganizationId: organization.id } };
   }
 

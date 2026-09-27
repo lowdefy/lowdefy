@@ -16,6 +16,7 @@
 
 import { betterAuth } from 'better-auth';
 
+import ensureAuthIndexes from './organizations/ensureAuthIndexes.js';
 import ensureOrganization from './organizations/ensureOrganization.js';
 import getBetterAuthConfig from './getBetterAuthConfig.js';
 import { getMcpResourceUri } from '../mcp/getMcpUri.js';
@@ -76,6 +77,15 @@ function getBetterAuth({
   // failed startup when BETTER_AUTH_URL is unset, so the URI resolves here.
   if (authJson.oauthProvider) {
     registerMcpResourceBinding({ auth: instance, resourceUri: getMcpResourceUri({ config }) });
+  }
+
+  // Ensure the unique indexes the organization writes rely on at startup. The
+  // tenant signup mint awaits the same memoized ensure and refuses to mint
+  // without them, so a failure here is logged and retried there.
+  if (authJson.database) {
+    ensureAuthIndexes({ auth: instance, logger }).catch((error) => {
+      logger.warn({ err: error }, 'Failed to ensure the auth database indexes at startup.');
+    });
   }
 
   // Ensure the pinned organization exists at startup - created if missing,
