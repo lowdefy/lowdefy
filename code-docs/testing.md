@@ -116,6 +116,20 @@ when the copy's `package.json` changes, so a repeat run spends its time on the b
 Delete `_server/e2e/<package>` to force a fresh install. `packages/cli/dist` and the linked
 packages' `dist` must be built first (`pnpm build`).
 
+CI does not run block e2e on every push. Start the `Block E2E Tests` workflow from the
+Actions tab, or add the `run-block-e2e` label to a pull request; it runs each package's
+suite in its own job.
+
+## Before merging
+
+The root `pnpm test` in CI skips the MongoDB and block e2e suites, so a pull request that
+touches them runs them on request (the pull request template lists both):
+
+| Change touches                               | Run                                                  |
+| -------------------------------------------- | ---------------------------------------------------- |
+| `connection-mongodb`, tenancy, auth adapters | `pnpm test:mongodb` or the `run-mongodb-tests` label |
+| blocks, `block-utils`, the engine            | `pnpm e2e` or the `run-block-e2e` label              |
+
 ## Dev server and hub
 
 - The dev hub (`lowdefy hub`, `lowdefy mcp`) keeps state in `~/.lowdefy`. Point

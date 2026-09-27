@@ -17,6 +17,8 @@ Closes #ISSUE_NUMBER
 
 - [ ] Pull request is made to the "develop" branch
 - [ ] Tests added
+- [ ] Changes to `connection-mongodb`, tenancy or auth adapters: MongoDB tests pass (`pnpm test:mongodb`, or add the `run-mongodb-tests` label)
+- [ ] Changes to blocks, `block-utils` or the engine: block e2e tests pass (`pnpm e2e`, or add the `run-block-e2e` label)
 - [ ] Documentation added/updated
 - [ ] Code has been formatted with Prettier
 - [ ] Edits from maintainers are allowed
