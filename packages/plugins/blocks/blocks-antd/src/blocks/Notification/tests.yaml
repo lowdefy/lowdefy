@@ -22,18 +22,6 @@
   type: Notification
   properties:
     description: 'Notification status type.'
-- id: 'properties.bottom: 250 placement: bottomLeft'
-  type: Notification
-  properties:
-    placement: bottomLeft
-    bottom: 250
-    title: Notification title
-- id: 'properties.top: 250 placement: topLeft'
-  type: Notification
-  properties:
-    placement: topLeft
-    top: 250
-    title: Notification title
 - id: 'properties.button: icon'
   type: Notification
   properties:
