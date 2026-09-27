@@ -21,6 +21,7 @@ import createHub from './createHub.js';
 import createLineReader from './createLineReader.js';
 import getHubPaths from './getHubPaths.js';
 import { HUB_IDLE_EXIT_MS } from './hubProtocol.js';
+import withStartLock from './withStartLock.js';
 
 const REAP_INTERVAL_MS = 60 * 1000;
 
@@ -45,29 +46,39 @@ function isHubListening(socketPath) {
   });
 }
 
-async function listen({ server, socketPath }) {
-  try {
-    await new Promise((resolve, reject) => {
-      server.once('error', reject);
-      server.listen(socketPath, resolve);
-    });
-    return true;
-  } catch (error) {
-    if (error.code !== 'EADDRINUSE') {
-      throw error;
+function tryListen({ server, socketPath }) {
+  return new Promise((resolve, reject) => {
+    function onError(error) {
+      if (error.code === 'EADDRINUSE') {
+        resolve(false);
+        return;
+      }
+      reject(error);
     }
-  }
-  // A socket file with no hub behind it is left over from a crash. One with a
-  // live hub means another hub won the start-up race - this one steps aside.
-  if (await isHubListening(socketPath)) {
-    return false;
-  }
-  fs.rmSync(socketPath, { force: true });
-  await new Promise((resolve, reject) => {
-    server.once('error', reject);
-    server.listen(socketPath, resolve);
+    server.once('error', onError);
+    server.listen(socketPath, () => {
+      server.removeListener('error', onError);
+      resolve(true);
+    });
   });
-  return true;
+}
+
+async function listen({ server, socketPath, lockPath }) {
+  if (await tryListen({ server, socketPath })) {
+    return true;
+  }
+  // A socket file with no hub behind it is left over from a crash or a
+  // reboot. One with a live hub means another hub won the start-up race - this
+  // one steps aside. Hubs starting together would each find the file stale,
+  // and one would remove the socket another had just bound, leaving that hub
+  // running unreachable beside it - so the check and takeover are locked.
+  return withStartLock({ lockPath }, async () => {
+    if (await isHubListening(socketPath)) {
+      return false;
+    }
+    fs.rmSync(socketPath, { force: true });
+    return tryListen({ server, socketPath });
+  });
 }
 
 // `lowdefy hub serve` - the per-user daemon behind `lowdefy mcp` and the
@@ -132,7 +143,7 @@ async function hubServe({ cliVersion }) {
     });
   });
 
-  if (!(await listen({ server, socketPath: paths.socketPath }))) {
+  if (!(await listen({ server, socketPath: paths.socketPath, lockPath: paths.startLockPath }))) {
     logger.info('Another hub is already running - exiting.');
     return;
   }
