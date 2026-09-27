@@ -314,6 +314,25 @@ test('requestPasswordReset calls auth.requestPasswordReset with email and redire
   ]);
 });
 
+test('requestPasswordReset sends the reset link to authPages.resetPassword without redirectTo', async () => {
+  const { auth, lowdefy } = setup();
+  lowdefy.basePath = '/base';
+  auth.authConfig.authPages = { resetPassword: '/reset-password' };
+  const { requestPasswordReset } = createAuthMethods(lowdefy, auth);
+  await requestPasswordReset({ email: 'user@example.com' });
+  expect(auth.requestPasswordReset.mock.calls).toEqual([
+    [{ email: 'user@example.com', redirectTo: '/base/reset-password' }],
+  ]);
+});
+
+test('requestPasswordReset keeps an explicit redirectTo over authPages.resetPassword', async () => {
+  const { auth, lowdefy } = setup();
+  auth.authConfig.authPages = { resetPassword: '/reset-password' };
+  const { requestPasswordReset } = createAuthMethods(lowdefy, auth);
+  await requestPasswordReset({ email: 'user@example.com', redirectTo: '/account/new-password' });
+  expect(auth.requestPasswordReset.mock.calls[0][0].redirectTo).toBe('/account/new-password');
+});
+
 test('requestPasswordReset throws when email is missing', async () => {
   const { auth, lowdefy } = setup();
   const { requestPasswordReset } = createAuthMethods(lowdefy, auth);

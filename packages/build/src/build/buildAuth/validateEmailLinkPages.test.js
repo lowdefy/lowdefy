@@ -14,42 +14,58 @@
   limitations under the License.
 */
 
-import validateVerifyEmailPage from './validateVerifyEmailPage.js';
+import validateEmailLinkPages from './validateEmailLinkPages.js';
 import testContext from '../../test-utils/testContext.js';
 
 function run({ auth, pages }) {
   const context = testContext();
   context.warnings = [];
-  validateVerifyEmailPage({ components: { auth, pages }, context });
+  validateEmailLinkPages({ components: { auth, pages }, context });
   return context.warnings.map((warning) => warning.message);
 }
 
 const emailAuth = {
   email: { connectionId: 'email' },
   emailAndPassword: { enabled: true },
-  authPages: { verifyEmail: '/verify-email' },
+  authPages: { verifyEmail: '/verify-email', resetPassword: '/reset-password' },
 };
 
-test('validateVerifyEmailPage warns when verification email is sent and the page is missing', () => {
+test('validateEmailLinkPages warns for each emailed link page the app is missing', () => {
   expect(run({ auth: emailAuth, pages: [{ id: 'home' }] })).toEqual([
     'Auth "authPages.verifyEmail" is "/verify-email", but the app has no page "verify-email". Email verification links land there unless the SignUp or SendVerificationEmail action sets a callbackUrl. Add the page, or set authPages.verifyEmail to an existing one.',
+    'Auth "authPages.resetPassword" is "/reset-password", but the app has no page "reset-password". Password reset links land there unless the RequestPasswordReset action sets redirectTo. Add the page, or set authPages.resetPassword to an existing one.',
+  ]);
+});
+
+test('validateEmailLinkPages warns only for the missing reset password page', () => {
+  expect(run({ auth: emailAuth, pages: [{ id: 'verify-email' }] })).toEqual([
+    expect.stringContaining('Auth "authPages.resetPassword" is "/reset-password"'),
   ]);
 });
 
 test.each([
-  ['the page exists', emailAuth, [{ id: 'verify-email' }]],
+  ['both pages exist', emailAuth, [{ id: 'verify-email' }, { id: 'reset-password' }]],
   [
-    'a module page is named',
-    { ...emailAuth, authPages: { verifyEmail: '/crm/verify?from=email' } },
-    [{ id: 'crm/verify' }],
+    'module pages are named',
+    {
+      ...emailAuth,
+      authPages: { verifyEmail: '/crm/verify?from=email', resetPassword: '/crm/reset#form' },
+    },
+    [{ id: 'crm/verify' }, { id: 'crm/reset' }],
   ],
   ['no auth email is configured', { ...emailAuth, email: undefined }, []],
   ['email and password is off', { ...emailAuth, emailAndPassword: { enabled: false } }, []],
   [
-    'the page is another origin',
-    { ...emailAuth, authPages: { verifyEmail: 'https://accounts.example.com/verified' } },
+    'the pages are on another origin',
+    {
+      ...emailAuth,
+      authPages: {
+        verifyEmail: 'https://accounts.example.com/verified',
+        resetPassword: 'https://accounts.example.com/reset',
+      },
+    },
     [],
   ],
-])('validateVerifyEmailPage does not warn when %s', (_, auth, pages) => {
+])('validateEmailLinkPages does not warn when %s', (_, auth, pages) => {
   expect(run({ auth, pages })).toEqual([]);
 });

@@ -28,13 +28,13 @@ import { getEntityDefaultProtected } from './getProtectedEntities.js';
 import setAuthConfigured from './setAuthConfigured.js';
 import setAuthDefaults from './setAuthDefaults.js';
 import validateAuthConfig from './validateAuthConfig.js';
-import validateVerifyEmailPage from './validateVerifyEmailPage.js';
+import validateEmailLinkPages from './validateEmailLinkPages.js';
 
 function buildAuth({ components, context }) {
   validateAuthConfig({ components, context });
   setAuthConfigured({ components, context });
   setAuthDefaults({ components, context });
-  validateVerifyEmailPage({ components, context });
+  validateEmailLinkPages({ components, context });
   buildRoleCatalog({ components, context });
   buildTrustedProviders({ components, context });
   buildTwoFactorTrustedProviders({ components, context });

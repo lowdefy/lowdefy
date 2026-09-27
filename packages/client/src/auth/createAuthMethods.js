@@ -204,6 +204,16 @@ function createAuthMethods(lowdefy, auth) {
     });
   }
 
+  // The target of an authPages role (verifyEmail, resetPassword), or undefined
+  // when the app has not set it.
+  function resolveAuthPageTarget(role) {
+    const page = auth.authConfig?.authPages?.[role];
+    if (!type.isString(page)) {
+      return undefined;
+    }
+    return resolveTarget({ lowdefy, target: { url: page }, name: `authPages.${role}` });
+  }
+
   // Where an emailed verification link lands once BetterAuth has verified the
   // address: the action's own callbackUrl, else the app's authPages.verifyEmail
   // page. BetterAuth appends ?error= to it when the link is invalid or has
@@ -214,15 +224,7 @@ function createAuthMethods(lowdefy, auth) {
     if (!type.isNone(explicit)) {
       return explicit;
     }
-    const verifyEmailPage = auth.authConfig?.authPages?.verifyEmail;
-    if (!type.isString(verifyEmailPage)) {
-      return undefined;
-    }
-    return resolveTarget({
-      lowdefy,
-      target: { url: verifyEmailPage },
-      name: 'authPages.verifyEmail',
-    });
+    return resolveAuthPageTarget('verifyEmail');
   }
 
   // The engine owns the two-factor challenge destination on every sign-in path,
@@ -623,7 +625,9 @@ function createAuthMethods(lowdefy, auth) {
 
   // Dispatches by parameter, matching login: a phoneNumber param requests the
   // reset code over SMS (the "phone.passwordReset.send" hook), otherwise
-  // email carries the reset link.
+  // email carries the reset link. BetterAuth sends that link to redirectTo
+  // with ?token= (or ?error=INVALID_TOKEN) appended, and without one the link
+  // fails, so it defaults to the app's authPages.resetPassword page.
   async function requestPasswordReset({
     captchaToken,
     email,
@@ -640,7 +644,14 @@ function createAuthMethods(lowdefy, auth) {
     if (!type.isString(email)) {
       throw new Error('RequestPasswordReset requires an "email" or "phoneNumber" param.');
     }
-    return unwrap(auth.requestPasswordReset({ email, redirectTo, ...rest, ...captchaOptions }));
+    return unwrap(
+      auth.requestPasswordReset({
+        email,
+        redirectTo: redirectTo ?? serializeTarget(resolveAuthPageTarget('resetPassword')),
+        ...rest,
+        ...captchaOptions,
+      })
+    );
   }
 
   // Dispatches by parameter: a phoneNumber param resets with the SMS otp,
