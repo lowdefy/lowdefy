@@ -79,7 +79,7 @@ All error classes in `@lowdefy/errors` with single flat entry point:
 | `ActionError`                     | Action failures                                           | Action runner (engine)                                   | No (use received) |
 | `RequestError`                    | Request/connection failures                               | Request handler (API)                                    | No (use received) |
 | `BlockError`                      | Block rendering failures                                  | ErrorBoundary (client)                                   | No (use received) |
-| `ServiceError`                    | External service failures                                 | Plugin interface layer                                   | No (use service)  |
+| `ServiceError`                    | External service failures (network, timeout, 5xx, 429)    | Plugin interface layer                                   | No (use service)  |
 | `AuthenticationError`             | Unauthenticated request (401)                             | API authorization gates                                  | No (warn line)    |
 | `TwoFactorEnrolmentRequiredError` | Unenrolled caller under `twoFactor.required` (403)        | Authorization gate                                       | No (warn line)    |
 | `AuthorizationError`              | Authenticated caller refused by a gate (wrong roles, 403) | Request/endpoint/agent/websocket/auth-step gates         | No (warn line)    |
@@ -503,6 +503,8 @@ try {
   });
 }
 ```
+
+**What is a ServiceError.** `ServiceError.isServiceError` decides it, for every connection: network error codes, a `TimeoutError`, HTTP 5xx and HTTP 429 (from `statusCode`, `status`, `response.status`, `$metadata.httpStatusCode` or a numeric `code`), AWS SDK throttling exceptions (`$retryable.throttling`), and service-sounding messages, following a retrying client's `lastError` and the `cause` chain. 429 counts because throttling is an external condition that passes with time; a developer cannot fix it in config. The wrapped `ServiceError` keeps the service's Retry-After as `retryAfter` (`ServiceError.readRetryAfter`), which the server log projection (`logErrorProjection.js`) keeps.
 
 ### Operator Key Extraction
 
