@@ -63,8 +63,7 @@ or add the `run-mongodb-tests` label to a pull request. Each jest run starts its
 The tenant auth reference app (`apps/auth-reference-tenant`) carries config tests for the
 real auth path: sign-up with email verification, sign-in refusals, sign-out, magic link,
 invitations, tenant isolation, organization switching and member removal
-(`tests/journeys/*.yaml`, all `user: none`). The pinned-organization app
-(`apps/auth-reference`) carries the password reset journey. Run them with:
+(`tests/journeys/*.yaml`, all `user: none`). Run them with:
 
 ```bash
 pnpm test:journeys:auth                      # builds first, like pnpm dev
@@ -72,6 +71,8 @@ pnpm test:journeys:auth --skip-build         # reuse the current build
 pnpm test:journeys:auth --filter invitation  # journeys whose name matches
 pnpm test:journeys:auth --app auth-reference # another app (default auth-reference-tenant)
 ```
+
+The pinned-organization app (`apps/auth-reference`) carries the password reset journey.
 
 `scripts/test-journeys-auth.mjs` starts a single-node memory replica set (fresh every run,
 auth indexes provisioned), then this checkout's dev server (`scripts/dev.mjs`) with the
