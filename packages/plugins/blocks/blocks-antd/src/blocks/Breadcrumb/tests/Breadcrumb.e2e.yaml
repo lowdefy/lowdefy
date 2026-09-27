@@ -163,3 +163,34 @@ blocks:
         - label: Current
           style:
             fontWeight: bold
+
+  # ============================================
+  # SEMANTIC CSS KEYS AND DROPDOWN LINKS
+  # ============================================
+
+  - id: breadcrumb_semantic
+    type: Breadcrumb
+    class:
+      .item: bc-semantic-item
+      .separator: bc-semantic-separator
+    style:
+      .separator:
+        color: rgb(255, 0, 0)
+    properties:
+      list:
+        - Home
+        - Library
+
+  - id: breadcrumb_dropdown
+    type: Breadcrumb
+    properties:
+      list:
+        - label: Home
+          pageId: breadcrumb
+        - label: Products
+          links:
+            - label: Laptops
+              pageId: breadcrumb
+            - label: Phones
+              url: '#phones'
+        - label: Details

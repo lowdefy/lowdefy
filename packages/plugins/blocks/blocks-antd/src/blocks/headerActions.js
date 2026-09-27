@@ -288,8 +288,9 @@ function renderProfile({
       trigger={[prof.trigger ?? (expanded ? 'click' : 'hover')]}
       placement={prof.placement ?? (expanded ? 'topRight' : 'bottomRight')}
       arrow={prof.arrow}
-      popupClassName={classNames.profileMenu}
-      popupStyle={styles.profileMenu}
+      // rc-dropdown overwrites popupClassName and popupStyle, so the popup takes semantic root props.
+      classNames={{ root: classNames.profileMenu }}
+      styles={{ root: styles.profileMenu }}
       onOpenChange={(open) =>
         methods.triggerEvent({
           name: 'onProfileMenuOpen',
@@ -402,8 +403,8 @@ function renderLocaleSelector({
       }}
       trigger={[expanded ? 'click' : 'hover']}
       placement={expanded ? 'topRight' : 'bottomRight'}
-      popupClassName={classNames.localeSelectorMenu}
-      popupStyle={styles.localeSelectorMenu}
+      classNames={{ root: classNames.localeSelectorMenu }}
+      styles={{ root: styles.localeSelectorMenu }}
     >
       {/* Antd Dropdown attaches its trigger handlers to the immediate child
           DOM element; wrapping in a div ensures click/hover listeners land. */}

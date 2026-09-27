@@ -83,23 +83,37 @@ function TabsBlock({
     .map((tab) => ({ key: tab.key, shortcut: tab.shortcut, disabled: tab.disabled }));
   useItemShortcuts({ items: shortcutItems, onMatch: fireTabChange });
 
+  // antd 6 names the tab bar `header`, the tab panes `content` and the ink bar `indicator`;
+  // the block keeps its own cssKey names for them.
   return (
     <Tabs
       activeKey={key}
       animated={properties.animated !== undefined ? properties.animated : true}
+      centered={properties.centered}
+      destroyOnHidden={properties.destroyOnHidden}
       id={blockId}
+      indicator={properties.indicator}
       onChange={(activeKey) => fireTabChange(activeKey)}
       size={properties.size ?? 'default'}
+      tabBarGutter={properties.tabBarGutter}
       tabPlacement={properties.tabPlacement ?? 'top'}
       type={properties.tabType ?? 'line'}
       className={classNames.element}
       classNames={{
-        tabBar: classNames.tabBar,
-        tabPane: classNames.tabPane,
-        inkBar: classNames.inkBar,
+        header: classNames.tabBar,
+        content: classNames.tabPane,
+        indicator: classNames.inkBar,
+        item: classNames.item,
+        popup: { root: classNames.popup },
       }}
       style={styles.element}
-      styles={{ tabBar: styles.tabBar }}
+      styles={{
+        header: styles.tabBar,
+        content: styles.tabPane,
+        indicator: styles.inkBar,
+        item: styles.item,
+        popup: { root: styles.popup },
+      }}
       items={tabs.map((tab) => ({
         id: `${blockId}_${tab.key}`,
         key: tab.key,

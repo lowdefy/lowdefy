@@ -15,6 +15,8 @@
 id: pageheadermenu
 type: PageHeaderMenu
 properties:
+  theme:
+    colorBgLayout: rgb(250, 240, 255)
   header:
     theme: dark
   menu:

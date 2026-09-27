@@ -56,6 +56,7 @@ export default {
   cssKeys: {
     element: 'The PageSidebarLayout element.',
     sider: 'The PageSidebarLayout sider.',
+    siderBody: 'The box inside the sider that holds the toggle button, menu and sider slots.',
     siderHeader:
       'The box above the sider menu that holds the siderHeader or siderHeaderClosed slot.',
     menu: 'The PageSidebarLayout menu.',
@@ -113,9 +114,10 @@ export default {
       theme: {
         type: 'object',
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Antd global design token overrides, such as colorPrimary or borderRadius, applied to everything in the page layout. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/docs/react/customize-theme#seedtoken',
         },
       },
       logo: {
@@ -160,8 +162,9 @@ export default {
           },
           collapsible: {
             type: 'boolean',
-            default: true,
-            description: 'Whether can be collapsed.',
+            default: false,
+            description:
+              'Show a trigger at the bottom of the sider that collapses and expands it, like the toggle button.',
           },
           initialCollapsed: {
             type: 'boolean',

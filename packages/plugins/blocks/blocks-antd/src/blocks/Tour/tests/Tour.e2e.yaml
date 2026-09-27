@@ -88,3 +88,45 @@ blocks:
               - false
           then: Tour closed
           else: ''
+
+  # ============================================
+  # GAP, CSS KEYS AND BUTTON TEXT
+  # ============================================
+
+  - id: tour_custom_trigger
+    type: Button
+    properties:
+      title: Start Custom Tour
+    events:
+      onClick:
+        - id: open_custom_tour
+          type: SetState
+          params:
+            tour_custom_open: true
+
+  - id: tour_custom
+    type: Tour
+    class:
+      .title: tour-custom-title
+      .description: tour-custom-description
+    properties:
+      open:
+        _state: tour_custom_open
+      gap:
+        x: 10
+        y: 4
+        radius: 12
+      steps:
+        - target: tour_target_1
+          title: Custom Step
+          description: Custom description
+          nextButtonProps:
+            children: Got it
+        - target: tour_target_2
+          title: Last Step
+    events:
+      onClose:
+        - id: close_custom_tour
+          type: SetState
+          params:
+            tour_custom_open: false

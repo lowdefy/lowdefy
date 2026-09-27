@@ -104,3 +104,16 @@
       - label: Settings
         pageId: settings
       - label: Profile
+- id: properties.list.links
+  type: Breadcrumb
+  properties:
+    list:
+      - label: Home
+        pageId: home
+      - label: Products
+        links:
+          - label: Laptops
+            pageId: laptops
+          - label: Phones
+            pageId: phones
+      - label: Details

@@ -160,3 +160,65 @@ blocks:
                     type: Span
                     properties:
                       content: Collapsible sider
+            events:
+              onClose:
+                - id: set_sider_collapsible_closed
+                  type: SetState
+                  params:
+                    sider_collapsible_closed: true
+
+  - id: sider_collapsible_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: sider_collapsible_closed
+              - true
+          then: sider:closed
+          else: sider:open
+
+  # ============================================
+  # BODY CSS KEY AND BREAKPOINT
+  # ============================================
+
+  - id: sider_body
+    type: Layout
+    slots:
+      content:
+        blocks:
+          - id: sider_body_sider
+            type: Sider
+            class:
+              .body: sider-custom-body
+            style:
+              .body:
+                padding: 12px
+            properties:
+              initialCollapsed: false
+              breakpoint: xxxl
+            events:
+              onBreakpoint:
+                - id: set_sider_broken
+                  type: SetState
+                  params:
+                    sider_broken:
+                      _event: broken
+            slots:
+              content:
+                blocks:
+                  - id: sider_body_content
+                    type: Span
+                    properties:
+                      content: Sider body
+
+  - id: sider_broken_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'broken:'
+          - _if_none:
+              - _state: sider_broken
+              - unset

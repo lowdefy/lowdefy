@@ -81,15 +81,16 @@ function MenuComp({
     width: '100%',
     display: properties.mode === 'horizontal' ? 'inline-block' : undefined,
   };
-  const exProps = {};
-  if (properties.mode === 'inline') {
-    exProps.collapsed = properties.collapsed;
-    exProps.inlineIndent = properties.inlineIndent;
-  }
   const menu = getDefaultMenu(menus, properties.menuId, properties.links);
   const theme = properties.theme;
   const { siderCollapsed } = useContext(SiderContext) ?? {};
   const isCollapsed = properties.collapsed === true || siderCollapsed === true;
+  // antd warns when inlineCollapsed is set outside inline mode.
+  const exProps = {};
+  if (properties.mode === 'inline') {
+    exProps.inlineCollapsed = isCollapsed;
+    exProps.inlineIndent = properties.inlineIndent;
+  }
 
   // Back-compat: the prior cssKey for the menu item icon was `icon`; the shared helper
   // standardises on `itemIcon`. Map either through so existing YAML keeps working.
@@ -136,6 +137,11 @@ function MenuComp({
         )
       }
       forceSubMenuRender={properties.forceSubMenuRender}
+      classNames={{ popup: { root: classNames.popup } }}
+      styles={{ popup: { root: styles.popup } }}
+      overflowedIndicator={
+        <Icon blockId={`${blockId}_overflowedIndicator`} properties={{ name: 'more', title: '' }} />
+      }
       mode={properties.mode}
       selectable={true}
       theme={theme}
@@ -161,16 +167,18 @@ function MenuComp({
       selectedKeys={properties.selectedKeys ?? [pageId]}
       subMenuCloseDelay={properties.subMenuCloseDelay}
       subMenuOpenDelay={properties.subMenuOpenDelay}
+      tooltip={properties.tooltip === true ? undefined : properties.tooltip}
+      triggerSubMenuAction={properties.triggerSubMenuAction}
       onSelect={(item) =>
         methods.triggerEvent({
           name: get(rename, 'events.onSelect', { default: 'onSelect' }),
-          event: { key: item.key },
+          event: { key: item.key, keyPath: item.keyPath },
         })
       }
       onClick={(item) =>
         methods.triggerEvent({
           name: get(rename, 'events.onClick', { default: 'onClick' }),
-          event: { key: item.key },
+          event: { key: item.key, keyPath: item.keyPath },
         })
       }
       onOpenChange={(openKeys) =>

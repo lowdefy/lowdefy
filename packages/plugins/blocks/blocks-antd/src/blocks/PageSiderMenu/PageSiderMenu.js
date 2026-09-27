@@ -34,6 +34,7 @@ import {
   registerDarkModeMethod,
   registerLocaleMethod,
 } from '../headerActions.js';
+import withPageTheme from '../withPageTheme.js';
 
 function getInitialSiderState({ properties }) {
   const storageKey = `lf-${properties.siderStorageKey ?? 'sider'}-open`;
@@ -91,6 +92,7 @@ const PageSiderMenu = ({
       blockId={blockId}
       components={{ Icon, Link, ShortcutBadge }}
       events={events}
+      properties={{}}
       styles={{
         element: mergeObjects([{ minHeight: '100vh' }, styles.element]),
       }}
@@ -208,13 +210,18 @@ const PageSiderMenu = ({
                         ...(properties.sider ?? {}),
                         initialCollapsed: !openSiderState,
                       }}
-                      classNames={{ element: classNames.sider ?? 'hidden lg:block' }}
+                      classNames={{
+                        element: classNames.sider ?? 'hidden lg:block',
+                        body: classNames.siderBody,
+                      }}
                       styles={{
                         element: mergeObjects([
                           { borderInlineEnd: '1px solid var(--ant-color-border)' },
                           styles.sider,
                         ]),
+                        body: styles.siderBody,
                       }}
+                      onCollapse={() => methods.toggleSiderOpen()}
                       rename={{
                         methods: {
                           toggleOpen: '_toggleSiderOpen',
@@ -372,4 +379,4 @@ const PageSiderMenu = ({
   );
 };
 
-export default withBlockDefaults(PageSiderMenu);
+export default withBlockDefaults(withPageTheme(PageSiderMenu));

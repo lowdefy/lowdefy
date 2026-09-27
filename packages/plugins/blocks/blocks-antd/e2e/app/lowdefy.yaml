@@ -83,6 +83,7 @@ pages:
   - _ref: ../../src/blocks/ListSelector/tests/ListSelector.e2e.yaml
   - _ref: ../../src/blocks/Carousel/tests/Carousel.e2e.yaml
   - _ref: ../../src/blocks/Pagination/tests/Pagination.e2e.yaml
+  - _ref: ../../src/blocks/Steps/tests/Steps.e2e.yaml
   - _ref: ../../src/blocks/Affix/tests/Affix.e2e.yaml
   # Step 4.1: Modal Blocks
   - _ref: ../../src/blocks/Modal/tests/Modal.e2e.yaml

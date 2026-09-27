@@ -27,3 +27,8 @@
   properties:
     style:
       border: 5px solid blue
+- id: 'properties.target'
+  type: Affix
+  properties:
+    offsetTop: 0
+    target: scroll_panel

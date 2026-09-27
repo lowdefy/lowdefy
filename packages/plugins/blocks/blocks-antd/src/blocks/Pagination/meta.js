@@ -23,6 +23,7 @@ export default {
   },
   cssKeys: {
     element: 'The Pagination element.',
+    item: 'Each page number item.',
   },
   events: {
     onSizeChange: {
@@ -53,9 +54,26 @@ export default {
       },
       size: {
         type: 'string',
-        enum: ['small', 'default'],
+        enum: ['small', 'default', 'large'],
         default: 'default',
         description: 'Pagination element size.',
+      },
+      align: {
+        type: 'string',
+        enum: ['start', 'center', 'end'],
+        default: 'start',
+        description: 'Horizontal alignment of the pagination.',
+      },
+      responsive: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Switch to the small size on narrow screens. Only applies when size is not set.',
+      },
+      showLessItems: {
+        type: 'boolean',
+        default: false,
+        description: 'Show fewer page number items around the current page.',
       },
       simple: {
         type: 'boolean',
@@ -123,6 +141,11 @@ export default {
             default: 24,
             description: 'Size of pagination items in small mode.',
           },
+          itemSizeLG: {
+            type: 'number',
+            default: 40,
+            description: 'Size of pagination items in large mode.',
+          },
           itemActiveBg: {
             type: 'string',
             default: '#ffffff',
@@ -130,7 +153,13 @@ export default {
           },
           itemActiveColor: {
             type: 'string',
+            default: '#1677ff',
             description: 'Text color for the active pagination item.',
+          },
+          itemActiveColorHover: {
+            type: 'string',
+            default: '#4096ff',
+            description: 'Text color for the active pagination item on hover.',
           },
           itemActiveColorDisabled: {
             type: 'string',

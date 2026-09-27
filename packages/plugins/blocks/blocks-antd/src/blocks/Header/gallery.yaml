@@ -209,41 +209,49 @@
 - title: Theme Token Overrides
   fullWidth: true
   blocks:
-    - id: header_token_branded
-      type: Header
+    # antd scopes Layout design tokens to the Layout element, so the tokens go on the parent Layout.
+    - id: header_token_branded_layout
+      type: Layout
       properties:
         theme:
-          headerBg: '#0958d9'
           headerHeight: 56
           headerPadding: '0 24px'
       blocks:
-        - id: header_token_branded_title
-          type: Html
-          layout:
-            flex: 0 0 auto
+        - id: header_token_branded
+          type: Header
           properties:
-            html: '<span class="text-white text-lg font-bold">Branded Header</span>'
-        - id: header_token_branded_spacer
-          type: Box
-          layout:
-            flex: 1 1 0
-        - id: header_token_branded_subtitle
-          type: Html
-          layout:
-            flex: 0 0 auto
-          properties:
-            html: '<span style="color:#bae0ff">Using headerBg token</span>'
+            color: '#0958d9'
+          blocks:
+            - id: header_token_branded_title
+              type: Html
+              layout:
+                flex: 0 0 auto
+              properties:
+                html: '<span class="text-white text-lg font-bold">Branded Header</span>'
+            - id: header_token_branded_spacer
+              type: Box
+              layout:
+                flex: 1 1 0
+            - id: header_token_branded_subtitle
+              type: Html
+              layout:
+                flex: 0 0 auto
+              properties:
+                html: '<span style="color:#bae0ff">color property with Layout headerHeight and headerPadding tokens</span>'
 
-    - id: header_token_compact
-      type: Header
+    - id: header_token_compact_layout
+      type: Layout
       properties:
         theme:
           headerHeight: 40
           headerPadding: '0 16px'
-      style:
-        borderBottom: 1px solid var(--ant-color-border)
       blocks:
-        - id: header_token_compact_title
-          type: Html
-          properties:
-            html: '<span class="text-sm">Compact Header (40px height)</span>'
+        - id: header_token_compact
+          type: Header
+          style:
+            borderBottom: 1px solid var(--ant-color-border)
+          blocks:
+            - id: header_token_compact_title
+              type: Html
+              properties:
+                html: '<span class="text-sm">Compact Header (40px height)</span>'

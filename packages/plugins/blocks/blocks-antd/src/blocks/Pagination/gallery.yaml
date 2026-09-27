@@ -31,6 +31,36 @@
       properties:
         total: 100
         size: small
+    - id: size_large_label
+      type: Markdown
+      properties:
+        content: '**Large size:**'
+    - id: size_large
+      type: Pagination
+      properties:
+        total: 100
+        size: large
+
+- title: Alignment
+  blocks:
+    - id: align_center
+      type: Pagination
+      properties:
+        total: 100
+        align: center
+    - id: align_end
+      type: Pagination
+      properties:
+        total: 100
+        align: end
+
+- title: Fewer Page Items
+  blocks:
+    - id: less_items
+      type: Pagination
+      properties:
+        total: 500
+        showLessItems: true
 
 - title: Simple Mode
   blocks:

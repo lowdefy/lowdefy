@@ -84,3 +84,35 @@ blocks:
                     type: Span
                     properties:
                       content: Footer
+
+  # ============================================
+  # THEME TOKENS
+  # ============================================
+
+  - id: layout_theme
+    type: Layout
+    properties:
+      theme:
+        bodyBg: rgb(230, 244, 255)
+        headerHeight: 48
+    slots:
+      content:
+        blocks:
+          - id: layout_theme_header
+            type: Header
+            slots:
+              content:
+                blocks:
+                  - id: layout_theme_header_content
+                    type: Span
+                    properties:
+                      content: Themed layout header
+          - id: layout_theme_content
+            type: Content
+            slots:
+              content:
+                blocks:
+                  - id: layout_theme_content_text
+                    type: Span
+                    properties:
+                      content: Themed layout

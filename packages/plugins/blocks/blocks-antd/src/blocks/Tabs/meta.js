@@ -27,6 +27,8 @@ export default {
     tabBar: 'The Tabs tab bar.',
     tabPane: 'The Tabs tab pane.',
     inkBar: 'The Tabs ink bar.',
+    item: 'Each tab in the tab bar.',
+    popup: 'The dropdown that lists tabs that overflow the tab bar.',
   },
   // Each tab may declare its own eventName, so the event names a Tabs block
   // fires are authored in its properties and cannot be enumerated here.
@@ -52,9 +54,41 @@ export default {
         description:
           'Whether to change tabs with animation. Only works while tabPlacement is top or bottom.',
       },
+      centered: {
+        type: 'boolean',
+        default: false,
+        description: 'Center the tabs in the tab bar.',
+      },
       defaultActiveKey: {
         type: 'string',
         description: "Initial active TabPane's key, if activeKey is not set.",
+      },
+      destroyOnHidden: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Unmount the content of inactive tabs. Blocks in a hidden tab keep their state values.',
+      },
+      indicator: {
+        type: 'object',
+        description: 'Size and alignment of the active tab indicator (ink bar).',
+        additionalProperties: false,
+        properties: {
+          size: {
+            type: 'number',
+            description: 'Length of the indicator in pixels. Defaults to the width of the tab.',
+          },
+          align: {
+            type: 'string',
+            enum: ['start', 'center', 'end'],
+            default: 'center',
+            description: 'Alignment of the indicator along the tab when size is set.',
+          },
+        },
+      },
+      tabBarGutter: {
+        type: 'number',
+        description: 'Gap between tabs in pixels.',
       },
       size: {
         type: 'string',
@@ -137,6 +171,16 @@ export default {
             type: 'number',
             default: 40,
             description: 'Height of card-type tab.',
+          },
+          cardHeightSM: {
+            type: 'number',
+            default: 32,
+            description: 'Height of small card-type tab.',
+          },
+          cardHeightLG: {
+            type: 'number',
+            default: 48,
+            description: 'Height of large card-type tab.',
           },
           cardPadding: {
             type: 'string',

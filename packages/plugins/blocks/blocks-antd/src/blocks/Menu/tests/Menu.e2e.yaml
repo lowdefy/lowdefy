@@ -482,3 +482,90 @@ blocks:
               - 'selected:'
               - _state: menu_shortcut_fired_key
           else: ''
+
+  # ============================================
+  # COLLAPSED, SUBMENU TRIGGER, POPUP CLASS, KEY PATH
+  # ============================================
+
+  - id: menu_inline_collapsed
+    type: Menu
+    properties:
+      mode: inline
+      collapsed: true
+      links:
+        - id: collapsed_home
+          type: MenuLink
+          properties:
+            title: Home
+            icon: home
+        - id: collapsed_settings
+          type: MenuLink
+          properties:
+            title: Settings
+            icon: settings
+
+  - id: menu_click_submenu
+    type: Menu
+    class:
+      .popup: menu-click-popup
+    properties:
+      mode: vertical
+      triggerSubMenuAction: click
+      links:
+        - id: click_group
+          type: MenuGroup
+          properties:
+            title: Reports
+          links:
+            - id: click_group_sales
+              type: MenuLink
+              properties:
+                title: Sales
+            - id: click_group_stock
+              type: MenuLink
+              properties:
+                title: Stock
+    events:
+      onClick:
+        - id: set_click_keypath
+          type: SetState
+          params:
+            menu_click_keypath:
+              _event: keyPath
+
+  - id: menu_click_keypath_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'keyPath:'
+          - _if_none:
+              - _array.join:
+                  - _state: menu_click_keypath
+                  - ','
+              - ''
+
+  - id: menu_horizontal_overflow
+    type: Menu
+    style:
+      .element:
+        width: 160px
+    properties:
+      mode: horizontal
+      links:
+        - id: overflow_one
+          type: MenuLink
+          properties:
+            title: Dashboard
+        - id: overflow_two
+          type: MenuLink
+          properties:
+            title: Customers
+        - id: overflow_three
+          type: MenuLink
+          properties:
+            title: Invoices
+        - id: overflow_four
+          type: MenuLink
+          properties:
+            title: Settings

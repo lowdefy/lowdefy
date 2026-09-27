@@ -21,6 +21,10 @@ export default {
   cssKeys: {
     element: 'The Tour element.',
     mask: 'The Tour mask.',
+    title: 'The title of the step card.',
+    description: 'The description of the step card.',
+    cover: 'The cover image area of the step card.',
+    footer: 'The footer of the step card with the indicators and buttons.',
   },
   events: {
     onChange: {
@@ -63,16 +67,30 @@ export default {
       },
       gap: {
         type: 'object',
-        description: 'Gap offset between highlighted area and target element.',
+        description: 'Gap between the highlighted area and the target element, and its radius.',
         additionalProperties: false,
         properties: {
+          offset: {
+            anyOf: [
+              { type: 'number' },
+              { type: 'array', items: { type: 'number' }, minItems: 2, maxItems: 2 },
+            ],
+            default: 6,
+            description:
+              'Gap in pixels around the target, or a [horizontal, vertical] pair of gaps.',
+          },
+          radius: {
+            type: 'number',
+            default: 2,
+            description: 'Border radius of the highlighted area in pixels.',
+          },
           x: {
             type: 'number',
-            description: 'Horizontal gap offset.',
+            description: 'Horizontal gap offset. Same as the first value of `offset`.',
           },
           y: {
             type: 'number',
-            description: 'Vertical gap offset.',
+            description: 'Vertical gap offset. Same as the second value of `offset`.',
           },
         },
       },
@@ -93,12 +111,18 @@ export default {
       },
       placement: {
         type: 'string',
-        description: 'Position of the guide card relative to the target element.',
+        default: 'bottom',
+        description:
+          'Position of the guide card relative to the target element: center, left, leftTop, leftBottom, right, rightTop, rightBottom, top, topLeft, topRight, bottom, bottomLeft or bottomRight.',
       },
       scrollIntoViewOptions: {
-        type: 'boolean',
+        type: ['boolean', 'object'],
         default: true,
-        description: 'Whether to scroll the step target element into view.',
+        description:
+          'Whether to scroll the step target element into view, or scrollIntoView options such as `{ block: center }`.',
+        docs: {
+          displayType: 'yaml',
+        },
       },
       steps: {
         type: 'array',
@@ -127,6 +151,26 @@ export default {
               type: ['boolean', 'object'],
               description:
                 'Whether to enable mask for this step, or object with style and color properties.',
+            },
+            nextButtonProps: {
+              type: 'object',
+              description: 'Next button settings for this step.',
+              properties: {
+                children: {
+                  type: 'string',
+                  description: 'Text of the next button, for example "Got it".',
+                },
+              },
+            },
+            prevButtonProps: {
+              type: 'object',
+              description: 'Previous button settings for this step.',
+              properties: {
+                children: {
+                  type: 'string',
+                  description: 'Text of the previous button.',
+                },
+              },
             },
             placement: {
               type: 'string',

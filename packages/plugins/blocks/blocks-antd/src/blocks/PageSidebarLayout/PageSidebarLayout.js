@@ -15,7 +15,6 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { ConfigProvider } from 'antd';
 import { get, mergeObjects, type } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
@@ -34,6 +33,7 @@ import {
   registerDarkModeMethod,
   registerLocaleMethod,
 } from '../headerActions.js';
+import withPageTheme from '../withPageTheme.js';
 
 function getInitialSiderState({ properties }) {
   const storageKey = `lf-${properties.siderStorageKey ?? 'sider'}-open`;
@@ -121,6 +121,7 @@ const PageSidebarLayout = ({
               ])}
               classNames={{
                 element: `${classNames.sider ?? 'hidden lg:block'} hide-on-print`,
+                body: classNames.siderBody,
               }}
               styles={{
                 element: mergeObjects([
@@ -133,6 +134,11 @@ const PageSidebarLayout = ({
                   },
                   styles.sider,
                 ]),
+                body: styles.siderBody,
+              }}
+              onCollapse={() => {
+                methods.toggleSiderOpen();
+                methods.triggerEvent({ name: 'onToggleSider' });
               }}
               rename={{
                 methods: {
@@ -283,6 +289,7 @@ const PageSidebarLayout = ({
               blockId={`${blockId}_content_layout`}
               components={{ Icon, Link, ShortcutBadge }}
               events={events}
+              properties={{}}
               content={{
                 content: () => (
                   <>
@@ -502,16 +509,4 @@ const PageSidebarLayout = ({
   return layout;
 };
 
-function PageSidebarLayoutWithTheme(props) {
-  const { theme, ...restProperties } = props.properties;
-  if (!type.isObject(theme)) {
-    return <PageSidebarLayout {...props} />;
-  }
-  return (
-    <ConfigProvider theme={{ token: theme }}>
-      <PageSidebarLayout {...props} properties={restProperties} />
-    </ConfigProvider>
-  );
-}
-
-export default withBlockDefaults(PageSidebarLayoutWithTheme);
+export default withBlockDefaults(withPageTheme(PageSidebarLayout));

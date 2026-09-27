@@ -21,7 +21,7 @@ export default {
   icons: ['chevron-down', 'chevron-right', 'more', 'loading'],
   valueType: null,
   cssKeys: {
-    element: 'The outer container.',
+    element: 'The outer element: the button group in split mode, otherwise the button.',
     button: 'The trigger button.',
     icon: 'The icon in the button.',
     menu: 'The floating menu container.',
@@ -49,6 +49,12 @@ export default {
         ...icon,
         description:
           'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use icon in button.',
+      },
+      iconPlacement: {
+        type: 'string',
+        enum: ['start', 'end'],
+        default: 'start',
+        description: 'Place the button icon before (start) or after (end) the title.',
       },
       type: {
         type: 'string',
@@ -104,7 +110,20 @@ export default {
       },
       placement: {
         type: 'string',
-        enum: ['bottomLeft', 'bottom', 'bottomRight', 'topLeft', 'top', 'topRight'],
+        enum: [
+          'bottomLeft',
+          'bottom',
+          'bottomRight',
+          'topLeft',
+          'top',
+          'topRight',
+          'left',
+          'leftTop',
+          'leftBottom',
+          'right',
+          'rightTop',
+          'rightBottom',
+        ],
         default: 'bottomRight',
         description: 'Dropdown position.',
       },

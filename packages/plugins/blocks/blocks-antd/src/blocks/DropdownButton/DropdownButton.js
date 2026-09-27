@@ -18,7 +18,7 @@ import React, { useCallback } from 'react';
 import { Button, ConfigProvider, Dropdown, Space } from 'antd';
 import { get, type } from '@lowdefy/helpers';
 
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { cn, withBlockDefaults } from '@lowdefy/block-utils';
 import useItemShortcuts from '../useItemShortcuts.js';
 import getDropdownMenuIcons from '../getDropdownMenuIcons.js';
 
@@ -125,8 +125,8 @@ function DropdownButtonBlock({
     placement: properties.placement ?? 'bottomRight',
     arrow: properties.arrow,
     disabled: properties.disabled,
-    popupClassName: classNames.menu,
-    popupStyle: styles.menu,
+    classNames: { root: classNames.menu, item: classNames.item },
+    styles: { root: styles.menu, item: styles.item },
     onOpenChange: (open) =>
       methods.triggerEvent({
         name: get(rename, 'events.onOpenChange', { default: 'onOpenChange' }),
@@ -135,6 +135,8 @@ function DropdownButtonBlock({
   };
 
   const { color: buttonColor, variant, type: buttonType } = getButtonProps(properties);
+  // antd 6 deprecates the `middle` size in favour of `medium`.
+  const buttonSize = properties.size === 'middle' ? 'medium' : properties.size;
   const isPresetColor = ANTD_COLOR_PRESETS.has(properties.color);
   const resolvedColor = isPresetColor ? buttonColor : properties.color ? 'primary' : buttonColor;
 
@@ -159,7 +161,7 @@ function DropdownButtonBlock({
             color={resolvedColor}
             variant={variant}
             type={buttonType}
-            size={properties.size}
+            size={buttonSize}
             shape={properties.shape}
             ghost={properties.ghost}
             danger={properties.danger}
@@ -168,6 +170,7 @@ function DropdownButtonBlock({
             className={classNames.button}
             style={styles.button}
             icon={buttonIcon}
+            iconPlacement={properties.iconPlacement}
             onClick={() => methods.triggerEvent({ name: onClickActionName })}
           >
             {properties.title}
@@ -178,7 +181,7 @@ function DropdownButtonBlock({
               color={resolvedColor}
               variant={variant}
               type={buttonType}
-              size={properties.size}
+              size={buttonSize}
               ghost={properties.ghost}
               danger={properties.danger}
               disabled={properties.disabled}
@@ -194,25 +197,23 @@ function DropdownButtonBlock({
       );
     }
 
+    // antd's Dropdown renders no element of its own, so the button is the block's outer element.
     return (
-      <Dropdown
-        id={blockId}
-        className={classNames.element}
-        style={styles.element}
-        {...dropdownProps}
-      >
+      <Dropdown {...dropdownProps}>
         <Button
+          id={blockId}
           color={resolvedColor}
           variant={variant}
           type={buttonType}
-          size={properties.size}
+          size={buttonSize}
           shape={properties.shape}
           ghost={properties.ghost}
           danger={properties.danger}
           disabled={properties.disabled}
-          className={classNames.button}
-          style={styles.button}
+          className={cn(classNames.element, classNames.button) || undefined}
+          style={{ ...styles.element, ...styles.button }}
           icon={buttonIcon}
+          iconPlacement={properties.iconPlacement}
         >
           {properties.title}
         </Button>
