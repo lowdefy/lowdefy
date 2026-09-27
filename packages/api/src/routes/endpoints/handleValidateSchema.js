@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { validate } from '@lowdefy/ajv';
 import { UserError } from '@lowdefy/errors';
 
 import addStepResult from './addStepResult.js';
 import evaluateRoutineOperators from './evaluateRoutineOperators.js';
+import getSchemaValidator from './getSchemaValidator.js';
 
 function buildErrorMessage(errors, stepId) {
   const first = errors?.[0];
@@ -41,8 +41,8 @@ async function handleValidateSchema(context, routineContext, { step }) {
   });
 
   const { schema, data, throwOnInvalid = true } = evaluatedProperties;
-  const { valid, errors } = validate({ schema, data, returnErrors: true });
-  const result = { valid, errors: errors ?? [] };
+  const result = getSchemaValidator({ schema })(data);
+  const { valid } = result;
 
   addStepResult(context, routineContext, {
     result,
