@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-
 /*
   Copyright 2020-2026 Lowdefy, Inc
 

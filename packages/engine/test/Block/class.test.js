@@ -1,5 +1,3 @@
-/* eslint-disable dot-notation */
-
 /*
   Copyright 2020-2026 Lowdefy, Inc
 
@@ -31,7 +29,7 @@ async function renderBoxClass({ boxClass, value }) {
     blocks: [{ id: 'box', type: 'Box', class: boxClass }],
   };
   const context = await testContext({ lowdefy, pageConfig });
-  return context._internal.RootSlots.map['box'].eval;
+  return context._internal.RootSlots.map.box.eval;
 }
 
 test.each([
