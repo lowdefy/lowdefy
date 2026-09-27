@@ -71,7 +71,7 @@ function createLogger() {
   };
 }
 
-async function setup({ organizations }) {
+async function setup({ organizations, cookieCache = false }) {
   run += 1;
   const database = `acceptExistingMember${run}`;
   const logger = createLogger();
@@ -91,7 +91,7 @@ async function setup({ organizations }) {
       session: {
         expiresIn: 604800,
         updateAge: 86400,
-        cookieCache: { enabled: false, maxAge: 300 },
+        cookieCache: { enabled: cookieCache, maxAge: 300 },
         crossSubDomainCookies: { enabled: false },
       },
       account: { accountLinking: { enabled: true, trustedProviders: [] } },
@@ -127,7 +127,16 @@ async function post({ auth, path, body, cookie }) {
   );
 }
 
-// Signs the user up through the real route and returns their session cookie.
+function cookiesOf(response) {
+  return response.headers
+    .getSetCookie()
+    .map((header) => header.split(';')[0])
+    .join('; ');
+}
+
+// Signs the user up through the real route and returns a session cookie. A
+// verified user signs in again afterwards, so a session cookie cache holds the
+// verified user.
 async function signUp({ auth, adapter, email, verified = true }) {
   const response = await post({
     auth,
@@ -136,18 +145,28 @@ async function signUp({ auth, adapter, email, verified = true }) {
   });
   expect(response.status).toBe(200);
   const { user } = await response.json();
-  if (verified) {
-    await adapter.update({
-      model: 'user',
-      where: [{ field: 'id', value: user.id }],
-      update: { emailVerified: true },
-    });
+  if (!verified) {
+    return { cookie: cookiesOf(response), user };
   }
-  const cookie = response.headers
-    .getSetCookie()
-    .map((header) => header.split(';')[0])
-    .join('; ');
-  return { cookie, user };
+  await adapter.update({
+    model: 'user',
+    where: [{ field: 'id', value: user.id }],
+    update: { emailVerified: true },
+  });
+  const signIn = await post({ auth, path: '/sign-in/email', body: { email, password: PASSWORD } });
+  expect(signIn.status).toBe(200);
+  return { cookie: cookiesOf(signIn), user };
+}
+
+// The browser's cookie jar after a response: its Set-Cookie values replace
+// the cookies of the same name.
+function mergeCookies(cookie, response) {
+  const jar = new Map(cookie.split('; ').map((pair) => [pair.split('=')[0], pair]));
+  response.headers.getSetCookie().forEach((header) => {
+    const pair = header.split(';')[0];
+    jar.set(pair.split('=')[0], pair);
+  });
+  return [...jar.values()].join('; ');
 }
 
 async function invite({ adapter, email, organizationId, inviterId, role = 'owner' }) {
@@ -197,8 +216,8 @@ test('a member accepting an invitation to their organization succeeds, consumes 
   expect(members[0].app_roles).toBeUndefined();
 });
 
-test('a member added by an operator gets the organization active when accepting from an org-less session', async () => {
-  const { adapter, auth, db } = await setup({ organizations: tenantOpen });
+test('a member added by an operator gets the organization active when accepting from an org-less session, also through the session cookie cache', async () => {
+  const { adapter, auth, db } = await setup({ organizations: tenantOpen, cookieCache: true });
   const owner = await adapter.create({
     model: 'user',
     data: { email: 'owner@example.com', name: 'Owner', emailVerified: true },
@@ -227,8 +246,12 @@ test('a member added by an operator gets the organization active when accepting 
   const response = await accept({ auth, cookie, invitationId: invitation.id });
   expect(response.status).toBe(200);
   expect(await db.collection('user-members').countDocuments({ user_id: user.id })).toBe(1);
-  const sessions = await db.collection('user-sessions').find({ user_id: user.id }).toArray();
-  expect(sessions.map((session) => session.active_organization_id)).toEqual([organization.id]);
+  const getSession = await auth.handler(
+    new Request(`${ORIGIN}/api/auth/get-session`, {
+      headers: { cookie: mergeCookies(cookie, response), origin: ORIGIN },
+    })
+  );
+  expect((await getSession.json()).session.activeOrganizationId).toBe(organization.id);
 });
 
 test('a user who is not yet a member still joins through the route with the invitation role', async () => {

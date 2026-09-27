@@ -15,6 +15,7 @@
 */
 
 import { getSessionFromCtx } from 'better-auth/api';
+import { setSessionCookie } from 'better-auth/cookies';
 import { type } from '@lowdefy/helpers';
 
 // The engine-tier request hooks.before on /organization/accept-invitation for a
@@ -90,8 +91,13 @@ function createAcceptExistingMemberHook() {
       return undefined;
     }
     if (type.isNone(session.session.activeOrganizationId)) {
-      await internalAdapter.updateSession(session.session.token, {
-        activeOrganizationId: invitation.organizationId,
+      // Re-issued like the set-active-organization route does, so a session
+      // cookie cache does not keep serving the org-less session.
+      await setSessionCookie(ctx, {
+        session: await internalAdapter.updateSession(session.session.token, {
+          activeOrganizationId: invitation.organizationId,
+        }),
+        user: session.user,
       });
     }
     return { invitation: accepted, member };
