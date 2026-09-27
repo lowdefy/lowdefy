@@ -19,6 +19,7 @@ import { AutoComplete } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 
@@ -58,7 +59,7 @@ const AutoCompleteInput = ({
             style={{ width: '100%', ...styles.element }}
             styles={{ content: styles.selector, popup: { root: styles.popup } }}
             defaultOpen={properties.defaultOpen}
-            disabled={properties.disabled || loading}
+            disabled={getDisabled({ loading, properties })}
             placeholder={properties.placeholder ?? 'Type or select item'}
             allowClear={
               properties.allowClear !== false && {
@@ -70,7 +71,11 @@ const AutoCompleteInput = ({
                 ),
               }
             }
-            size={properties.size}
+            listHeight={properties.listHeight}
+            placement={properties.placement}
+            popupMatchSelectWidth={properties.popupMatchSelectWidth}
+            // antd 6 names the default size `medium`; `default` is not an antd size.
+            size={properties.size === 'default' ? 'medium' : properties.size}
             status={validation.status}
             options={(properties.options ?? []).map((opt, i) => ({
               className: classNames.options,
@@ -81,7 +86,7 @@ const AutoCompleteInput = ({
               value: `${opt}`,
             }))}
             prefix={
-              properties.prefix ||
+              properties.prefix ??
               (properties.prefixIcon && (
                 <components.Icon
                   blockId={`${blockId}_prefixIcon`}
@@ -112,10 +117,15 @@ const AutoCompleteInput = ({
             onClear={() => {
               methods.triggerEvent({ name: 'onClear' });
             }}
+            onOpenChange={(open) => {
+              methods.triggerEvent({ name: 'onOpenChange', event: { open } });
+            }}
             onSelect={(newVal) => {
               methods.triggerEvent({ name: 'onSelect', event: { value: newVal } });
             }}
             value={type.isNone(value) ? undefined : `${value}`}
+            // antd lets even an undefined `virtual` prop override the ConfigProvider `virtual`.
+            {...(type.isNone(properties.virtual) ? {} : { virtual: properties.virtual })}
           />
         ),
       }}

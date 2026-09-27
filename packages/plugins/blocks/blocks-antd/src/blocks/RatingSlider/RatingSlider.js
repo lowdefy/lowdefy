@@ -19,6 +19,7 @@ import { get, mergeObjects, serializer, type } from '@lowdefy/helpers';
 import { ConfigProvider, Slider } from 'antd';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import CheckboxSelector from '../CheckboxSelector/CheckboxSelector.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
@@ -88,15 +89,15 @@ const RatingSlider = ({
     sliderTheme.railBg = validationColor;
   }
   const hasSliderTheme = Object.keys(sliderTheme).length > 0;
+  const disabled = getDisabled({ loading, properties });
+  const notApplicable = check === true && !properties.disableNotApplicable;
 
   const slider = (
     <Slider
       id={`${blockId}_input`}
       className={classNames.element}
       autoFocus={properties.autoFocus}
-      disabled={
-        properties.disabled || (check === true && !properties.disableNotApplicable) || loading
-      }
+      disabled={notApplicable || disabled}
       dots={get(properties, 'showDots', { default: true })}
       tooltip={{
         open:
@@ -156,7 +157,7 @@ const RatingSlider = ({
                     label: { disabled: true },
                     options: [{ value: true, label: properties.notApplicableLabel ?? 'N/A' }],
                     color: properties.color,
-                    disabled: properties.disabled || loading,
+                    disabled,
                   },
                   properties.CheckboxInput,
                   { style: { flex: '0 0 1', paddingTop: 6 } },

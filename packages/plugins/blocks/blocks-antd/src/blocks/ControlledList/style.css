@@ -181,4 +181,12 @@
   .lf-controlled-list-remove:active {
     color: var(--ant-color-error-active);
   }
+
+  /* A ConfigProvider with componentDisabled disables the add button, so the remove icon follows. */
+  .lf-controlled-list-remove-disabled,
+  .lf-controlled-list-remove-disabled:hover,
+  .lf-controlled-list-remove-disabled:active {
+    color: var(--ant-color-text-disabled);
+    cursor: not-allowed;
+  }
 }

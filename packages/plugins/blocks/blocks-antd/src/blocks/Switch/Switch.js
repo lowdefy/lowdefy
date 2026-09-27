@@ -19,6 +19,7 @@ import { ConfigProvider, Switch } from 'antd';
 import { type, serializer } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 
@@ -50,7 +51,7 @@ const SwitchBlock = ({
       autoFocus={properties.autoFocus}
       checked={!!value}
       className={classNames.element}
-      disabled={properties.disabled || loading}
+      disabled={getDisabled({ loading, properties })}
       id={`${blockId}_input`}
       loading={properties.loading}
       size={size}

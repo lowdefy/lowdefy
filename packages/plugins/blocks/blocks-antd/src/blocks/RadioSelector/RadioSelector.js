@@ -19,6 +19,7 @@ import { Col, ConfigProvider, Radio, Row, Space, theme } from 'antd';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import getSelectedIndex from '../../getSelectedIndex.js';
 import useSelectorOptions from '../../useSelectorOptions.js';
@@ -97,7 +98,7 @@ const RadioSelector = ({
     <RadioGroup
       id={`${blockId}_input`}
       className={classNames.element}
-      disabled={properties.disabled || loading}
+      disabled={getDisabled({ loading, properties })}
       // Radio.Group is inline-block and shrink-wraps, so the Row inside it can
       // only fill a group that has been given a width.
       style={grid ? { width: '100%', ...styles.element } : styles.element}

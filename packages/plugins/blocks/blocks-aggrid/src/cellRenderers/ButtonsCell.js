@@ -40,7 +40,10 @@ function ButtonsCell(params) {
 
         const title = resolveField('title', 'titleField', btn, data);
         const iconConfig = resolveField('icon', 'iconField', btn, data);
-        const disabled = resolveField('disabled', 'disabledField', btn, data) === true;
+        // Row data can hold any value, so only a boolean counts. Anything else stays undefined so a
+        // ConfigProvider with componentDisabled still disables the button.
+        const disabledValue = resolveField('disabled', 'disabledField', btn, data);
+        const disabled = type.isBoolean(disabledValue) ? disabledValue : undefined;
 
         function onClick(e) {
           e.stopPropagation();

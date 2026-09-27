@@ -18,6 +18,7 @@ import React from 'react';
 import { ColorPicker } from 'antd';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import getColorValue from './getColorValue.js';
@@ -59,7 +60,7 @@ const ColorSelectorInput = ({
             format={properties.format}
             showText={properties.showText}
             size={properties.size}
-            disabled={properties.disabled || loading}
+            disabled={getDisabled({ loading, properties })}
             allowClear={properties.allowClear}
             arrow={properties.arrow}
             disabledAlpha={properties.disabledAlpha}

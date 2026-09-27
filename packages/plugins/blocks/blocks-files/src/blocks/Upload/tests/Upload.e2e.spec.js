@@ -106,6 +106,9 @@ test.describe('Upload Block', () => {
   });
 
   test('pastable uploads a file pasted on the page', async ({ page }) => {
+    // rc-upload adds its document paste listener when it mounts, which can land after page.goto
+    // resolves; a rendered block means the listener is in place.
+    await expect(getBlock(page, 'upload_pastable').locator('.ant-upload-select')).toBeVisible();
     await page.evaluate(() => {
       const data = new DataTransfer();
       data.items.add(new File(['pasted'], 'pasted.txt', { type: 'text/plain' }));

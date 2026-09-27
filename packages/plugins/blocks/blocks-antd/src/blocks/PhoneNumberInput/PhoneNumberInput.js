@@ -19,6 +19,7 @@ import { Input, Select, Space } from 'antd';
 import regions from './regions.js';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import getValueIndex from '../../getValueIndex.js';
@@ -66,7 +67,7 @@ function AddOnSelect({
       variant={properties.bordered === false ? 'borderless' : properties.variant}
       style={{ minWidth: 100, ...styles.select }}
       defaultValue={defaultValue}
-      disabled={properties.disabled || loading}
+      disabled={getDisabled({ loading, properties })}
       popupMatchSelectWidth={false}
       notFoundContent={'Not found'}
       onChange={(newVal) => {
@@ -218,7 +219,7 @@ const PhoneNumberInput = ({
                 }
                 autoFocus={properties.autoFocus}
                 variant={properties.bordered === false ? 'borderless' : properties.variant}
-                disabled={properties.disabled || loading}
+                disabled={getDisabled({ loading, properties })}
                 maxLength={properties.maxLength}
                 placeholder={properties.placeholder}
                 size={properties.size}

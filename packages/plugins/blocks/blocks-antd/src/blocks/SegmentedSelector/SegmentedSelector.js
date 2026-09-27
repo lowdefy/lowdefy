@@ -21,6 +21,7 @@ import { type } from '@lowdefy/helpers';
 
 import Label from '../Label/Label.js';
 import getSelectedIndex from '../../getSelectedIndex.js';
+import useDisabled from '../../useDisabled.js';
 import useSelectorOptions from '../../useSelectorOptions.js';
 import withTheme from '../withTheme.js';
 
@@ -38,6 +39,8 @@ const SegmentedSelector = ({
   value,
 }) => {
   const uniqueValueOptions = useSelectorOptions({ properties, methods });
+  // antd Segmented doesn't read ConfigProvider componentDisabled itself.
+  const disabled = useDisabled({ loading, properties });
   return (
     <Label
       blockId={blockId}
@@ -68,7 +71,7 @@ const SegmentedSelector = ({
                       ? renderHtml({ html: `${opt.value}`, methods })
                       : renderHtml({ html: opt.label, methods }),
                     value: `${i}`,
-                    disabled: opt.disabled || properties.disabled || loading,
+                    disabled: opt.disabled || disabled,
                     icon: opt.icon ? (
                       <Icon
                         blockId={`${blockId}_${i}_icon`}
@@ -84,7 +87,7 @@ const SegmentedSelector = ({
             // antd 6 renamed the `middle` size to `medium`.
             size={properties.size === 'middle' ? 'medium' : properties.size}
             block={properties.block}
-            disabled={properties.disabled || loading}
+            disabled={disabled}
             vertical={properties.vertical}
             shape={properties.shape}
             value={

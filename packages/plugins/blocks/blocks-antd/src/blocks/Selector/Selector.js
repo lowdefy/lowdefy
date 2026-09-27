@@ -19,6 +19,7 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 import { get, type } from '@lowdefy/helpers';
 import { ConfigProvider, Select } from 'antd';
 
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import filterSelectorOption from '../../filterSelectorOption.js';
@@ -124,7 +125,7 @@ const Selector = ({
                 }}
                 autoFocus={properties.autoFocus}
                 getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
-                disabled={properties.disabled || loading}
+                disabled={getDisabled({ loading, properties })}
                 listHeight={properties.listHeight}
                 loading={loading}
                 placeholder={get(properties, 'placeholder', { default: 'Select item' })}

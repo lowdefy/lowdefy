@@ -332,7 +332,8 @@ The antd 6.6.5 audit (every block compared against its antd component's API) set
 **antd behaviours that bite**
 
 - antd's deprecation checks test key presence (`'x' in props`), so `x={undefined}` still warns. Spread conditional props instead.
-- An `undefined` prop also overrides ConfigProvider context: Select builds `{ virtual: contextVirtual, ...props }`, so `virtual={undefined}` switched virtual scrolling back on. The same applies to `disabled`: blocks pass `disabled={properties.disabled || loading}`, and the resulting `false` means ConfigProvider `componentDisabled` doesn't reach Lowdefy blocks (a known gap).
+- An `undefined` prop also overrides ConfigProvider context: Select builds `{ virtual: contextVirtual, ...props }`, so `virtual={undefined}` switched virtual scrolling back on.
+- `disabled` goes the other way: antd resolves it as `disabled ?? contextDisabled`, so an explicit `false` beats ConfigProvider `componentDisabled`. Blocks pass `getDisabled({ loading, properties })`, which is `true` while loading and otherwise `properties.disabled` unchanged: unset lets `componentDisabled` apply, `false` re-enables the block. Never write `properties.disabled || loading` (that yields `false`). Custom markup (TagSelector pills) and antd components that ignore the context (Segmented, Dropdown) use `useDisabled`, which falls back to `ConfigProvider.useConfig().componentDisabled`. Typography (ParagraphInput, TitleInput) and Pagination ignore `componentDisabled`, as in antd.
 - `e2e/tests/no-antd-deprecations.e2e.spec.js` runs against a production build, where antd strips its warnings. It is a backstop; find deprecated usage by reading the component source for `warning.deprecated`.
 - Use the `items`/`options` APIs, never child components: `Collapse.Panel`, `Descriptions.Item`, `Timeline.Item`, `Select.Option` and the top-level Select search props (`filterOption`, `onSearch`, now inside `showSearch`) are deprecated.
 - antd's `List` is deprecated in 6.6 (use `Listy`, which has no header, footer or bordered mode). ControlledList renders its own markup with the `ant-list-*` class names.
@@ -342,15 +343,16 @@ The antd 6.6.5 audit (every block compared against its antd component's API) set
 
 **Shared schemas and helpers**
 
-| File                                                            | Used by                                                                                |
-| --------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `schemas/inputProperties.js`                                    | Text inputs and selectors (`variant` includes `underlined`, `size`, `allowClear`, ...) |
-| `schemas/pickerProperties.js`, `schemas/pickerTheme.js`         | The five date selectors (one property and token set)                                   |
-| `schemas/selectProperties.js`                                   | Selector, MultipleSelector, TreeSelector, TreeMultipleSelector dropdown properties     |
-| `schemas/treeTheme.js`, `schemas/treeSelectTheme.js`            | TreeInput and the tree selectors                                                       |
-| `schemas/mask.js`, `schemas/focusable.js`, `blocks/getMask.js`  | Modal, ConfirmModal, Drawer                                                            |
-| `blocks/getEllipsisConfig.js`, `blocks/getTypographyContent.js` | Title, Paragraph                                                                       |
-| `getSelectOptions.js`, `filterSelectorOption.js`                | Select-based blocks                                                                    |
+| File                                                            | Used by                                                                                          |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `schemas/inputProperties.js`                                    | Text inputs and selectors (`variant` includes `underlined`, `size`, `allowClear`, ...)           |
+| `schemas/pickerProperties.js`, `schemas/pickerTheme.js`         | The five date selectors (one property and token set)                                             |
+| `schemas/selectProperties.js`                                   | Selector, MultipleSelector, TreeSelector, TreeMultipleSelector, AutoComplete dropdown properties |
+| `schemas/treeTheme.js`, `schemas/treeSelectTheme.js`            | TreeInput and the tree selectors                                                                 |
+| `schemas/mask.js`, `schemas/focusable.js`, `blocks/getMask.js`  | Modal, ConfirmModal, Drawer                                                                      |
+| `blocks/getEllipsisConfig.js`, `blocks/getTypographyContent.js` | Title, Paragraph                                                                                 |
+| `getSelectOptions.js`, `filterSelectorOption.js`                | Select-based blocks                                                                              |
+| `getDisabled.js`, `useDisabled.js`                              | Every block with a `disabled` property (ConfigProvider `componentDisabled`)                      |
 
 ## Design Decisions
 

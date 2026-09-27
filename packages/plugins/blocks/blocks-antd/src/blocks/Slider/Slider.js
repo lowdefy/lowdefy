@@ -18,6 +18,7 @@ import React from 'react';
 import { Slider } from 'antd';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 
@@ -56,7 +57,7 @@ const SliderBlock = ({
               rail: classNames.rail,
               track: classNames.track,
             }}
-            disabled={loading || properties.disabled}
+            disabled={getDisabled({ loading, properties })}
             dots={properties.dots}
             included={properties.included}
             keyboard={properties.keyboard}

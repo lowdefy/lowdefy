@@ -474,4 +474,17 @@ test.describe('AgGridLowdefy Block', () => {
     await toggle.click();
     await expect(overlay).toBeHidden();
   });
+
+  test('ConfigProvider componentDisabled disables the antd cells', async ({ page }) => {
+    const row = getBlock(page, 'aggridlowdefy_component_disabled_grid').locator(
+      '.ag-row[row-index="0"]'
+    );
+    await expect(row.locator('input.ant-input')).toBeDisabled();
+    await expect(row.locator('.ant-switch')).toBeDisabled();
+    const buttons = row.locator('.ant-btn');
+    await expect(buttons).toHaveCount(2);
+    await expect(buttons.nth(0)).toBeDisabled();
+    // A button's own `disabled: false` still re-enables it.
+    await expect(buttons.nth(1)).toBeEnabled();
+  });
 });

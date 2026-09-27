@@ -19,6 +19,7 @@ import { InputNumber } from 'antd';
 import { getLocaleDecimalSeparator } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 
@@ -76,7 +77,7 @@ const NumberInput = ({
             decimalSeparator={
               properties.decimalSeparator ?? getLocaleDecimalSeparator(methods.getLocale?.()) ?? '.'
             }
-            disabled={properties.disabled || loading}
+            disabled={getDisabled({ loading, properties })}
             formatter={properties.formatter}
             keyboard={properties.keyboard}
             max={properties.max}

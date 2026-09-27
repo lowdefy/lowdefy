@@ -362,4 +362,50 @@ test.describe('AutoComplete antd 6 features', () => {
     await expect(getInput(page, 'ac_onselect')).toHaveValue('Banana');
     await expect(getBlock(page, 'ac_onselect_display')).toHaveText('Selected: "Banana"');
   });
+
+  test('onOpenChange fires with the open state', async ({ page }) => {
+    const display = getBlock(page, 'ac_open_change_display');
+    await getInput(page, 'ac_open_change').click();
+    await expect(display).toHaveText('Open: true');
+    await page.keyboard.press('Escape');
+    await expect(display).toHaveText('Open: false');
+  });
+
+  test('size default renders the medium size', async ({ page }) => {
+    const wrapper = getAutoComplete(page, 'ac_size_default');
+    await expect(wrapper).not.toHaveClass(/ant-select-(sm|lg)/);
+    await expect(wrapper).toHaveCSS('height', '32px');
+  });
+
+  test('prefix text takes priority over prefixIcon', async ({ page }) => {
+    const wrapper = getAutoComplete(page, 'ac_prefix_priority');
+    await expect(wrapper.locator('.ant-select-prefix')).toHaveText('Fruit');
+    await expect(wrapper.locator('.ant-select-prefix svg')).toHaveCount(0);
+  });
+
+  test('opens the dropdown above the input with placement topLeft', async ({ page }) => {
+    await getInput(page, 'ac_placement_top').click();
+    const popup = page.locator('.ant-select-dropdown:visible');
+    await expect(popup).toBeVisible();
+    await expect(popup).toHaveClass(/ant-select-dropdown-placement-topLeft/);
+  });
+
+  test('caps the dropdown list height with listHeight', async ({ page }) => {
+    await getInput(page, 'ac_list_height').click();
+    const holder = page.locator('.ant-select-dropdown:visible .ant-select-dropdown-list-holder');
+    await expect(holder).toHaveCSS('max-height', '100px');
+  });
+
+  test('sets a fixed dropdown width with popupMatchSelectWidth', async ({ page }) => {
+    await getInput(page, 'ac_popup_width').click();
+    const popup = page.locator('.ant-select-dropdown:visible');
+    await expect(popup).toHaveCSS('width', '320px');
+  });
+
+  test('renders every option when virtual is false', async ({ page }) => {
+    await getInput(page, 'ac_not_virtual').click();
+    const options = page.locator('.ant-select-dropdown:visible .ant-select-item-option');
+    await expect(options).toHaveCount(12);
+    await expect(options.last()).toHaveAttribute('role', 'option');
+  });
 });
