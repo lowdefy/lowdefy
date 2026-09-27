@@ -22,7 +22,7 @@ import { readDevInstance } from '@lowdefy/node-utils';
 
 import allocatePorts from './allocatePorts.js';
 import getProcessStartTime from './getProcessStartTime.js';
-import { HUB_PROTOCOL, IDLE_STOP_MS, READY_TIMEOUT_MS } from './hubProtocol.js';
+import { HUB_PROTOCOL, IDLE_STOP_MS, PORT_RANGE, READY_TIMEOUT_MS } from './hubProtocol.js';
 import readLogTail from './readLogTail.js';
 import resolveDevCommand from './resolveDevCommand.js';
 import stopProcessGroup from './stopProcessGroup.js';
@@ -57,6 +57,15 @@ function loadRegistry({ registryPath }) {
   }
 }
 
+// Whether the app still exists. Not the directory: a running dev server
+// recreates <app>/.lowdefy (its instance record, its build) after its git
+// worktree is removed, so only the app's own config shows it is gone.
+function hasAppConfig(configDirectory) {
+  return ['lowdefy.yaml', 'lowdefy.yml'].some((name) =>
+    fs.existsSync(path.join(configDirectory, name))
+  );
+}
+
 function realDirectory(configDirectory) {
   try {
     return fs.realpathSync(configDirectory);
@@ -83,11 +92,29 @@ async function fetchOpenTabs({ url }) {
 // Discovery never goes through the hub: every reader finds a running server
 // through the app's own .lowdefy/instance.json. The hub is needed only to
 // start, stop and read the logs of the servers it runs.
-function createHub({ paths, cliVersion, logger, openTabs = fetchOpenTabs }) {
+function createHub({
+  paths,
+  cliVersion,
+  logger,
+  openTabs = fetchOpenTabs,
+  portRange = PORT_RANGE,
+}) {
   const registry = loadRegistry(paths);
   const exits = new Map();
   const attachments = new Map();
   const lastDetachedAt = new Map();
+  let queue = Promise.resolve();
+
+  // Starting and stopping read the registry, then act on it across awaits. Two
+  // sessions asking for one app at once (or one agent's parallel tool calls)
+  // would both see it stopped and launch two servers, the loser orphaned; two
+  // apps starting at once would both be handed the same free port pair. So
+  // these run one at a time. Waiting for ready does not.
+  function serialize(task) {
+    const result = queue.then(task);
+    queue = result.catch(() => {});
+    return result;
+  }
 
   function saveRegistry() {
     fs.mkdirSync(path.dirname(paths.registryPath), { recursive: true });
@@ -164,8 +191,7 @@ function createHub({ paths, cliVersion, logger, openTabs = fetchOpenTabs }) {
     };
   }
 
-  async function stop(params) {
-    const configDirectory = realDirectory(params.configDirectory);
+  async function stopServer({ configDirectory }) {
     const managed = registry.instances[configDirectory];
     if (type.isUndefined(managed)) {
       const record = readDevInstance({ configDirectory });
@@ -191,7 +217,11 @@ function createHub({ paths, cliVersion, logger, openTabs = fetchOpenTabs }) {
     const reserved = Object.entries(registry.ports)
       .filter(([directory]) => directory !== configDirectory)
       .map(([, pair]) => pair);
-    const ports = await allocatePorts({ previous: registry.ports[configDirectory], reserved });
+    const ports = await allocatePorts({
+      previous: registry.ports[configDirectory],
+      reserved,
+      range: portRange,
+    });
     registry.ports[configDirectory] = ports;
 
     const logPath = logPathFor(configDirectory);
@@ -223,6 +253,10 @@ function createHub({ paths, cliVersion, logger, openTabs = fetchOpenTabs }) {
     });
     child.on('exit', (code, signal) => {
       exits.set(configDirectory, { code, signal, at: new Date().toISOString() });
+      // The leader's life is the server's. A manager killed outright (out of
+      // memory, kill -9) takes the leader down but leaves Vite running in the
+      // group, holding the app's internal port with nothing left to stop it.
+      stopProcessGroup({ pid: child.pid });
       if (registry.instances[configDirectory]?.pid === child.pid) {
         delete registry.instances[configDirectory];
         saveRegistry();
@@ -239,8 +273,14 @@ function createHub({ paths, cliVersion, logger, openTabs = fetchOpenTabs }) {
     logger.info(`Started ${configDirectory} on port ${ports.port}: ${devCommand.display}`);
   }
 
-  async function start({ env, restart = false, clean = false, ...params }) {
+  async function stop(params) {
     const configDirectory = realDirectory(params.configDirectory);
+    return serialize(() => stopServer({ configDirectory }));
+  }
+
+  // Returns the answer when there is nothing to wait for, else null once the
+  // server is running or launched.
+  async function launchUnlessRunning({ configDirectory, env, restart, clean }) {
     const current = describe(configDirectory);
     const running = ['starting', 'ready'].includes(current.state);
     if (running && current.owner !== 'hub') {
@@ -249,7 +289,7 @@ function createHub({ paths, cliVersion, logger, openTabs = fetchOpenTabs }) {
       return current;
     }
     if (running && !restart && !clean) {
-      return waitForReady(configDirectory);
+      return null;
     }
     if (running) {
       if (!current.managed) {
@@ -258,7 +298,7 @@ function createHub({ paths, cliVersion, logger, openTabs = fetchOpenTabs }) {
           note: 'This dev server was started by another hub; it cannot be restarted from here.',
         };
       }
-      await stop({ configDirectory });
+      await stopServer({ configDirectory });
     }
     if (clean) {
       fs.rmSync(path.join(configDirectory, '.lowdefy', 'dev', 'build'), {
@@ -267,7 +307,15 @@ function createHub({ paths, cliVersion, logger, openTabs = fetchOpenTabs }) {
       });
     }
     await launch({ configDirectory, env });
-    return waitForReady(configDirectory);
+    return null;
+  }
+
+  async function start({ env, restart = false, clean = false, ...params }) {
+    const configDirectory = realDirectory(params.configDirectory);
+    const answer = await serialize(() =>
+      launchUnlessRunning({ configDirectory, env, restart, clean })
+    );
+    return answer ?? waitForReady(configDirectory);
   }
 
   function status({ configDirectory }) {
@@ -318,19 +366,33 @@ function createHub({ paths, cliVersion, logger, openTabs = fetchOpenTabs }) {
     });
   }
 
-  // Stops servers nobody uses: the worktree was removed, or no agent session
+  // Ports stick to an app between runs, but a removed app - a deleted git
+  // worktree, most often - never runs again. Kept, every worktree ever used
+  // would hold a pair until the range ran out.
+  function forgetRemovedApps() {
+    Object.keys(registry.ports)
+      .filter(
+        (configDirectory) =>
+          type.isUndefined(registry.instances[configDirectory]) && !hasAppConfig(configDirectory)
+      )
+      .forEach((configDirectory) => {
+        delete registry.ports[configDirectory];
+      });
+    saveRegistry();
+  }
+
+  // Stops servers nobody uses: the app was removed, or no agent session
   // has been attached and no browser tab open for IDLE_STOP_MS.
   async function reap() {
     forgetDeadServers();
     for (const [configDirectory, managed] of Object.entries(registry.instances)) {
-      if (!fs.existsSync(configDirectory)) {
+      if (!hasAppConfig(configDirectory)) {
         if (isManagedAlive(managed)) {
           await stopProcessGroup({ pid: managed.pid });
         }
         delete registry.instances[configDirectory];
-        delete registry.ports[configDirectory];
         saveRegistry();
-        logger.info(`Stopped ${configDirectory}: the directory was removed.`);
+        logger.info(`Stopped ${configDirectory}: the app was removed.`);
         continue;
       }
       if (isAttached(configDirectory)) {
@@ -347,6 +409,7 @@ function createHub({ paths, cliVersion, logger, openTabs = fetchOpenTabs }) {
       await stop({ configDirectory });
       logger.info(`Stopped ${configDirectory}: idle.`);
     }
+    forgetRemovedApps();
   }
 
   function hasManagedServers() {
