@@ -17,9 +17,27 @@
 import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
+import findDataOrigin from './findDataOrigin.js';
 import findOperatorInData from './findOperatorInData.js';
 import isCheckedContentRead from './isCheckedContentRead.js';
 import isLiteralPassThrough from './isLiteralPassThrough.js';
+import markDataObject from './markDataObject.js';
+import markDataObjects from './markDataObjects.js';
+
+// _object.assign is the one pass-through method that moves data keys into
+// another object, so an object it merges data into is data too.
+function findMergedDataOrigin({ literalData, op, methodName, params }) {
+  if (op !== '_object' || methodName !== 'assign' || !type.isArray(params)) {
+    return null;
+  }
+  for (const source of params) {
+    const origin = findDataOrigin({ literalData, value: source });
+    if (origin !== null) {
+      return origin;
+    }
+  }
+  return null;
+}
 
 class ServerParser {
   constructor({ env, i18n, jsMap, lowdefyApp, operators, organization, secrets, user }) {
@@ -85,6 +103,11 @@ class ServerParser {
       const configKey = value['~k'];
       const params = value[key];
       try {
+        // Read before the call: the merge changes the target it would match.
+        const mergedFrom =
+          literalData === null
+            ? null
+            : findMergedDataOrigin({ literalData, op, methodName, params });
         const res = this.operators[op]({
           args,
           arrayIndices,
@@ -108,30 +131,35 @@ class ServerParser {
           steps,
           user: this.user,
         });
+        if (literalData === null || isCheckedContentRead({ literalData, op, params })) {
+          return res;
+        }
+        const operatorName = methodName ? `${op}.${methodName}` : op;
+        if (isLiteralPassThrough({ op, methodName })) {
+          if (mergedFrom !== null && type.isObject(res)) {
+            markDataObject({ literalData, value: res, operator: mergedFrom });
+          }
+          return res;
+        }
         // Under literalData the output is sent to a client that evaluates every
         // operator-shaped object, so no operator result may carry one unless
         // the operator only passes through params the reviver already checked.
-        if (
-          literalData !== null &&
-          !isLiteralPassThrough({ op, methodName }) &&
-          !isCheckedContentRead({ literalData, op, params })
-        ) {
-          // The result is replaced by its serialized form, the one scanned, so the
-          // page sends exactly what was checked: a class instance's toJSON runs once,
-          // here, and no later copy can read other keys or call it again.
-          const sent = serializer.serialize(res, { skipMarkers: true });
-          const found = findOperatorInData(sent);
-          if (found) {
-            const operatorName = methodName ? `${op}.${methodName}` : op;
-            throw new ConfigError(
-              `Data returned by "${operatorName}" contains the operator "${found.operator}"${
-                found.path ? ` at "${found.path}"` : ''
-              }. Operators in endpoint data do not run in Dynamic block content. Write client operators in the endpoint's :return config instead.`
-            );
-          }
-          return sent;
+        // The result is replaced by its serialized form, the one scanned, so the
+        // page sends exactly what was checked: a class instance's toJSON runs once,
+        // here, and no later copy can read other keys or call it again.
+        const sent = serializer.serialize(res, { skipMarkers: true });
+        const found = findOperatorInData({ value: sent, operators: literalData.clientOperators });
+        if (found) {
+          throw new ConfigError(
+            `Data returned by "${operatorName}" contains the operator "${found.operator}"${
+              found.path ? ` at "${found.path}"` : ''
+            }. Operators in endpoint data do not run in Dynamic block content. Write client operators in the endpoint's :return config instead.`
+          );
         }
-        return res;
+        // Remembered so the finished :return can refuse this data where it would
+        // become a block, an action or an operator after a later merge.
+        markDataObjects({ literalData, value: sent, operator: operatorName });
+        return sent;
       } catch (e) {
         if (e instanceof ConfigError) {
           if (!e.configKey) {

@@ -20,6 +20,8 @@ import { jest } from '@jest/globals';
 import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
+import createLiteralData from './createLiteralData.js';
+import findDataOrigin from './findDataOrigin.js';
 import ServerParser from './serverParser.js';
 
 const args = [{ args: true }];
@@ -367,7 +369,7 @@ test('parse with literalData rejects an operator result that carries an operator
   const res = parser.parse({
     input: { a: { _data: true } },
     location,
-    literalData: { validatedStepIds: new Set() },
+    literalData: createLiteralData({}),
   });
   expect(res.output).toEqual({ a: null });
   expect(res.errors[0]).toBeInstanceOf(ConfigError);
@@ -382,7 +384,7 @@ test('parse with literalData allows an operator result without operators', () =>
   const res = parser.parse({
     input: { a: { _data: true } },
     location,
-    literalData: { validatedStepIds: new Set() },
+    literalData: createLiteralData({}),
   });
   expect(res.errors).toEqual([]);
   expect(res.output).toEqual({ a: data });
@@ -393,7 +395,7 @@ test('parse with literalData leaves results of pass-through operators unchecked'
   const res = parser.parse({
     input: { a: { _get: true }, b: { '_object.assign': [] } },
     location,
-    literalData: { validatedStepIds: new Set() },
+    literalData: createLiteralData({}),
   });
   expect(res.errors).toEqual([]);
   expect(res.output).toEqual({ a: { __state: 'x' }, b: { __state: 'x' } });
@@ -404,7 +406,7 @@ test('parse with literalData checks _object methods that build keys from data', 
   const res = parser.parse({
     input: { a: { '_object.fromEntries': [] } },
     location,
-    literalData: { validatedStepIds: new Set() },
+    literalData: createLiteralData({}),
   });
   expect(res.errors[0].message).toContain('Data returned by "_object.fromEntries"');
 });
@@ -423,10 +425,12 @@ test("parse with literalData lets a validated step's blocks through as config", 
   };
   const operators = { _step: ({ params }) => steps[params.split('.')[0]][params.split('.')[1]] };
   const parser = new ServerParser({ operators });
+  const literalData = createLiteralData({});
+  literalData.validatedStepIds.add('check');
   const res = parser.parse({
     input: { a: { _step: 'check.blocks' }, b: { _step: 'raw.blocks' } },
     location,
-    literalData: { validatedStepIds: new Set(['check']) },
+    literalData,
   });
   expect(res.output.a).toEqual([{ html: { _state: 'x' } }]);
   expect(res.errors[0].message).toContain('Data returned by "_step"');
@@ -444,7 +448,7 @@ test.each([
   const res = parser.parse({
     input: { a: { _data: true } },
     location,
-    literalData: { validatedStepIds: new Set() },
+    literalData: createLiteralData({}),
   });
   expect(res.errors[0].message).toContain(`contains the operator "_request" at "${path}"`);
 });
@@ -478,9 +482,68 @@ test.each([
   const res = parser.parse({
     input: { a: { _data: true } },
     location,
-    literalData: { validatedStepIds: new Set() },
+    literalData: createLiteralData({}),
   });
   expect(res.errors).toEqual([]);
   expect(res.output.a).toEqual({ safe: true });
   expect(JSON.stringify(res.output)).toBe('{"a":{"safe":true}}');
+});
+
+test('parse with literalData treats keys that name no client operator as data', () => {
+  const data = [{ _score: 0.5 }, { _source: { title: 'x' } }];
+  const parser = new ServerParser({ operators: createDataOperators(data) });
+  const res = parser.parse({
+    input: { a: { _data: true } },
+    location,
+    literalData: createLiteralData({ clientOperators: new Set(['_request', '_state']) }),
+  });
+  expect(res.errors).toEqual([]);
+  expect(res.output.a).toEqual(data);
+});
+
+test('parse with literalData still refuses a key that names a client operator', () => {
+  const parser = new ServerParser({
+    operators: createDataOperators([{ _score: 0.5 }, { title: { _state: 'secret' } }]),
+  });
+  const res = parser.parse({
+    input: { a: { _data: true } },
+    location,
+    literalData: createLiteralData({ clientOperators: new Set(['_state']) }),
+  });
+  expect(res.errors[0].message).toContain('contains the operator "_state" at "1.title"');
+});
+
+test('parse with literalData remembers data an operator returned, and copies of it', () => {
+  const row = { id: 'raw', type: 'Html', properties: { html: 'x' } };
+  const parser = new ServerParser({ operators: createDataOperators(row) });
+  const literalData = createLiteralData({});
+  const res = parser.parse({
+    input: { a: { _data: true }, b: { id: 'written', type: 'Html' } },
+    location,
+    literalData,
+  });
+  expect(findDataOrigin({ literalData, value: res.output.a })).toBe('_data');
+  expect(findDataOrigin({ literalData, value: serializer.copy(res.output.a) })).toBe('_data');
+  expect(findDataOrigin({ literalData, value: res.output.b })).toBe(null);
+});
+
+test('parse with literalData treats an object _object.assign merges data into as data', () => {
+  const row = { _user: 'email', note: 'x' };
+  const operators = {
+    _data: () => serializer.copy(row),
+    _object: ({ params }) => Object.assign(...params),
+  };
+  const parser = new ServerParser({ operators });
+  const literalData = createLiteralData({});
+  const res = parser.parse({
+    input: {
+      merged: { '_object.assign': [{}, { _data: true }, { note: 'y' }] },
+      written: { '_object.assign': [{}, { type: 'Html' }] },
+    },
+    location,
+    literalData,
+  });
+  expect(res.errors).toEqual([]);
+  expect(findDataOrigin({ literalData, value: res.output.merged })).toBe('_data');
+  expect(findDataOrigin({ literalData, value: res.output.written })).toBe(null);
 });

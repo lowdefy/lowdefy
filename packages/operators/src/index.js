@@ -14,22 +14,30 @@
   limitations under the License.
 */
 
+import createLiteralData from './createLiteralData.js';
 import evaluateOperators, { hasDynamicMarker, hasDynChild } from './evaluateOperators.js';
+import findDataOrigin from './findDataOrigin.js';
 import getFromArray from './getFromArray.js';
 import getFromObject from './getFromObject.js';
+import getKeyOperator from './getKeyOperator.js';
 import getObjectReadKeys from './getObjectReadKeys.js';
+import getPossibleOperators from './getPossibleOperators.js';
 import ServerParser from './serverParser.js';
 import runClass from './runClass.js';
 import runInstance from './runInstance.js';
 import WebParser from './webParser.js';
 
 export {
+  createLiteralData,
   evaluateOperators,
+  findDataOrigin,
   hasDynamicMarker,
   hasDynChild,
   getFromArray,
   getFromObject,
+  getKeyOperator,
   getObjectReadKeys,
+  getPossibleOperators,
   ServerParser,
   runClass,
   runInstance,

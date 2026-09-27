@@ -14,14 +14,17 @@
   limitations under the License.
 */
 
-import { getOperatorType, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
-function findInValue({ value, path }) {
+import getPossibleOperators from './getPossibleOperators.js';
+
+function findInValue({ value, path, operators }) {
   if (type.isArray(value)) {
     for (let index = 0; index < value.length; index += 1) {
       const found = findInValue({
         value: value[index],
         path: path ? `${path}.${index}` : `${index}`,
+        operators,
       });
       if (found) return found;
     }
@@ -30,28 +33,29 @@ function findInValue({ value, path }) {
   if (!type.isObject(value)) {
     return null;
   }
-  // A "__proto__" key parsed from JSON becomes a prototype, not a key, once the
-  // object is copied by assignment, so { _request: 'x', __proto__: {} } reaches
-  // the client as an operator.
-  const sent = Object.fromEntries(Object.entries(value).filter(([key]) => key !== '__proto__'));
-  const operator = getOperatorType(sent);
-  if (operator) {
-    return { operator, path };
+  const [possible] = getPossibleOperators({ value, operators });
+  if (possible) {
+    return { operator: possible.operator, path };
   }
   for (const key of Object.keys(value)) {
-    const found = findInValue({ value: value[key], path: path ? `${path}.${key}` : key });
+    const found = findInValue({
+      value: value[key],
+      path: path ? `${path}.${key}` : key,
+      operators,
+    });
     if (found) return found;
   }
   return null;
 }
 
-// Returns { operator, path } for the first operator-shaped object in a data value,
-// or null. The path is relative to the value, dot-separated ('' for the value itself).
-// The value is the serialized form the page sends (an Error or Date is a "~e" or
-// "~d" object there), and the scan walks into every such wrapper, whose contents
-// the client evaluates before it revives the wrapper.
-function findOperatorInData(value) {
-  return findInValue({ value, path: '' });
+// Returns { operator, path } for the first object in a data value the client
+// could run as one of its operators, or null. The path is relative to the value,
+// dot-separated ('' for the value itself). The value is the serialized form the
+// page sends (an Error or Date is a "~e" or "~d" object there), and the scan
+// walks into every such wrapper, whose contents the client evaluates before it
+// revives the wrapper. operators is the app's set of client operator names.
+function findOperatorInData({ value, operators = null }) {
+  return findInValue({ value, path: '', operators });
 }
 
 export default findOperatorInData;

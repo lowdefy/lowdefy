@@ -17,31 +17,36 @@
 import findOperatorInData from './findOperatorInData.js';
 
 test('findOperatorInData returns null for data without operators', () => {
-  expect(findOperatorInData({ a: [1, 'two', { b: null }], _id: 'x' })).toBe(null);
-  expect(findOperatorInData('text')).toBe(null);
-  expect(findOperatorInData({ _a: 1, b: 2 })).toBe(null);
+  expect(findOperatorInData({ value: { a: [1, 'two', { b: null }], _id: 'x' } })).toBe(null);
+  expect(findOperatorInData({ value: 'text' })).toBe(null);
+  expect(findOperatorInData({ value: { _a: 1, b: 2 } })).toBe(null);
 });
 
 test('findOperatorInData finds the operator and its path', () => {
-  expect(findOperatorInData({ rows: [{ title: { _global: 'token' } }] })).toEqual({
+  expect(findOperatorInData({ value: { rows: [{ title: { _global: 'token' } }] } })).toEqual({
     operator: '_global',
     path: 'rows.0.title',
   });
 });
 
 test('findOperatorInData normalises escaped operators and methods', () => {
-  expect(findOperatorInData([{ '___string.concat': [] }])).toEqual({
+  expect(findOperatorInData({ value: [{ '___string.concat': [] }] })).toEqual({
     operator: '_string',
     path: '0',
   });
 });
 
 test('findOperatorInData reports an empty path when the value itself is an operator', () => {
-  expect(findOperatorInData({ _request: 'x' })).toEqual({ operator: '_request', path: '' });
+  expect(findOperatorInData({ value: { _request: 'x' } })).toEqual({
+    operator: '_request',
+    path: '',
+  });
 });
 
 test('findOperatorInData finds an operator beside a __proto__ key parsed from JSON', () => {
-  expect(findOperatorInData(JSON.parse('[{ "_user": "email", "__proto__": {} }]'))).toEqual({
+  expect(
+    findOperatorInData({ value: JSON.parse('[{ "_user": "email", "__proto__": {} }]') })
+  ).toEqual({
     operator: '_user',
     path: '0',
   });
@@ -49,6 +54,24 @@ test('findOperatorInData finds an operator beside a __proto__ key parsed from JS
 
 test('findOperatorInData walks into serialized wrappers', () => {
   expect(
-    findOperatorInData({ html: { '~e': { name: 'Error', message: { _request: 'x' } } } })
+    findOperatorInData({ value: { html: { '~e': { name: 'Error', message: { _request: 'x' } } } } })
   ).toEqual({ operator: '_request', path: 'html.~e.message' });
+});
+
+test('findOperatorInData leaves keys that name no client operator as data', () => {
+  const operators = new Set(['_request']);
+  expect(findOperatorInData({ value: [{ _score: 0.5 }, { __typename: 'x' }], operators })).toBe(
+    null
+  );
+  expect(findOperatorInData({ value: [{ _score: 0.5 }, { _request: 'x' }], operators })).toEqual({
+    operator: '_request',
+    path: '1',
+  });
+});
+
+test('findOperatorInData finds an operator whose sibling can vanish on the client', () => {
+  expect(findOperatorInData({ value: { a: { _user: 'email', x: { _if: {} } } } })).toEqual({
+    operator: '_user',
+    path: 'a',
+  });
 });
