@@ -18,21 +18,26 @@ import { type } from '@lowdefy/helpers';
 
 const COLOR_SCHEMES = ['light', 'dark'];
 
-function isPositiveInt(value) {
-  return type.isInt(value) && value > 0;
+// Wide enough for a 4K screen. Chromium renders far larger viewports only
+// slowly, and fails some of them after tying up the browser for many seconds;
+// a full-page screenshot, not a tall viewport, is the way to see a long page.
+const MAX_VIEWPORT_SIZE = 4096;
+
+function isViewportSize(value) {
+  return type.isInt(value) && value > 0 && value <= MAX_VIEWPORT_SIZE;
 }
 
 // Checks the viewport a headless page is opened with: width and height in CSS
 // pixels, and the colour scheme the page's `prefers-color-scheme` reports.
 // Returns an error message, or undefined when every given option is valid.
 function validateViewport({ width, height, colorScheme }) {
-  if (!type.isUndefined(width) && !isPositiveInt(width)) {
-    return `Viewport width must be a positive integer (CSS pixels). Received ${JSON.stringify(
+  if (!type.isUndefined(width) && !isViewportSize(width)) {
+    return `Viewport width must be a positive integer of at most ${MAX_VIEWPORT_SIZE} (CSS pixels). Received ${JSON.stringify(
       width
     )}.`;
   }
-  if (!type.isUndefined(height) && !isPositiveInt(height)) {
-    return `Viewport height must be a positive integer (CSS pixels). Received ${JSON.stringify(
+  if (!type.isUndefined(height) && !isViewportSize(height)) {
+    return `Viewport height must be a positive integer of at most ${MAX_VIEWPORT_SIZE} (CSS pixels). Received ${JSON.stringify(
       height
     )}.`;
   }
@@ -42,5 +47,5 @@ function validateViewport({ width, height, colorScheme }) {
   return undefined;
 }
 
-export { COLOR_SCHEMES };
+export { COLOR_SCHEMES, MAX_VIEWPORT_SIZE };
 export default validateViewport;

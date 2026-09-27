@@ -183,13 +183,13 @@ test('MCP tools that render a page headless advertise an optional user parameter
   await client.close();
 });
 
-test('MCP lowdefy_screenshot_page advertises width, height and colorScheme', async () => {
+test('MCP lowdefy_screenshot_page advertises width and height up to 4096, and colorScheme', async () => {
   const client = await connectClient();
   const { tools } = await client.listTools();
   const { properties } = tools.find((tool) => tool.name === 'lowdefy_screenshot_page').inputSchema;
 
-  expect(properties.width).toMatchObject({ type: 'integer', exclusiveMinimum: 0 });
-  expect(properties.height).toMatchObject({ type: 'integer', exclusiveMinimum: 0 });
+  expect(properties.width).toMatchObject({ type: 'integer', exclusiveMinimum: 0, maximum: 4096 });
+  expect(properties.height).toMatchObject({ type: 'integer', exclusiveMinimum: 0, maximum: 4096 });
   expect(properties.colorScheme).toMatchObject({ enum: ['light', 'dark'] });
   await client.close();
 });

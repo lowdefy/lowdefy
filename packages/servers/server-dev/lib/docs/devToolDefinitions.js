@@ -16,6 +16,8 @@
 
 import { z } from 'zod';
 
+import { MAX_VIEWPORT_SIZE } from './validateViewport.js';
+
 // The dev MCP tool contract - names, descriptions, input schemas and the
 // server instructions - kept apart from the handlers so it can be read without
 // a running dev server. The `lowdefy mcp` stdio shim lists these at session
@@ -250,14 +252,20 @@ const devToolDefinitions = {
         .number()
         .int()
         .positive()
+        .max(MAX_VIEWPORT_SIZE)
         .optional()
-        .describe('Viewport width in CSS pixels. Default 1280; 390 is a phone.'),
+        .describe(
+          `Viewport width in CSS pixels, at most ${MAX_VIEWPORT_SIZE}. Default 1280; 390 is a phone.`
+        ),
       height: z
         .number()
         .int()
         .positive()
+        .max(MAX_VIEWPORT_SIZE)
         .optional()
-        .describe('Viewport height in CSS pixels. Default 800.'),
+        .describe(
+          `Viewport height in CSS pixels, at most ${MAX_VIEWPORT_SIZE}. Default 800. Use fullPage for a long page.`
+        ),
       colorScheme: z
         .enum(['light', 'dark'])
         .optional()
