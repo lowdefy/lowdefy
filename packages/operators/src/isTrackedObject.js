@@ -18,21 +18,17 @@ import { type } from '@lowdefy/helpers';
 
 import getKeyOperator from './getKeyOperator.js';
 
-// The keys an object is remembered under when it is data: its block or action
-// type, and each client operator one of its keys names. An object with none of
-// these cannot become a block, an action or an operator, so it is not tracked.
-function getDataIndexKeys({ value, operators }) {
-  const indexKeys = [];
-  if (type.isString(value.type)) {
-    indexKeys.push(`type:${value.type}`);
+// An object the literal data rules track: one that could become a block or an
+// action (it has a string type) or run as a client operator (a key names one).
+// An object with neither cannot become structure, so it is not tracked.
+function isTrackedObject({ value, operators }) {
+  if (!type.isObject(value)) {
+    return false;
   }
-  Object.keys(value).forEach((key) => {
-    const operator = getKeyOperator({ key, operators });
-    if (operator !== null) {
-      indexKeys.push(`operator:${operator}`);
-    }
-  });
-  return indexKeys;
+  if (type.isString(value.type)) {
+    return true;
+  }
+  return Object.keys(value).some((key) => getKeyOperator({ key, operators }) !== null);
 }
 
-export default getDataIndexKeys;
+export default isTrackedObject;

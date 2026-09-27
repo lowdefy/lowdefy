@@ -18,10 +18,11 @@
 import { jest } from '@jest/globals';
 
 import { ConfigError, OperatorError } from '@lowdefy/errors';
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 import createLiteralData from './createLiteralData.js';
 import findDataOrigin from './findDataOrigin.js';
+import getFromObject from './getFromObject.js';
 import ServerParser from './serverParser.js';
 
 const args = [{ args: true }];
@@ -513,18 +514,138 @@ test('parse with literalData still refuses a key that names a client operator', 
   expect(res.errors[0].message).toContain('contains the operator "_state" at "1.title"');
 });
 
-test('parse with literalData remembers data an operator returned, and copies of it', () => {
-  const row = { id: 'raw', type: 'Html', properties: { html: 'x' } };
-  const parser = new ServerParser({ operators: createDataOperators(row) });
+// The copying reads, as operators-js implements them.
+const copyingOperators = {
+  _args: ({ args, arrayIndices, params }) =>
+    getFromObject({ arrayIndices, location, object: args, operator: '_args', params }),
+  _function:
+    ({ operatorPrefix, params, parser }) =>
+    (...args) => {
+      const { output, errors } = parser.parse({
+        args,
+        input: serializer.copy(params),
+        operatorPrefix: `_${operatorPrefix}`,
+      });
+      if (errors.length > 0) throw errors[0];
+      return output;
+    },
+  _get: ({ arrayIndices, params }) =>
+    getFromObject({ arrayIndices, location, object: params.from, operator: '_get', params }),
+  _object: ({ params }) => Object.assign(...params),
+};
+
+function parseWithData(data, input) {
+  const operators = { ...copyingOperators, _data: () => serializer.copy(data) };
+  const parser = new ServerParser({ operators });
   const literalData = createLiteralData({});
-  const res = parser.parse({
-    input: { a: { _data: true }, b: { id: 'written', type: 'Html' } },
-    location,
-    literalData,
+  const res = parser.parse({ input, location, literalData });
+  return { literalData, output: res.output, errors: res.errors };
+}
+
+const row = { id: 'raw', type: 'Html', properties: { html: 'x' } };
+
+test('parse with literalData marks data an operator returned, not config equal to it', () => {
+  const { literalData, output } = parseWithData(row, { a: { _data: true }, b: row });
+  expect(findDataOrigin({ literalData, value: output.a })).toBe('_data');
+  expect(findDataOrigin({ literalData, value: output.b })).toBe(null);
+  expect(findDataOrigin({ literalData, value: serializer.copy(output.a) })).toBe(null);
+});
+
+test.each([
+  ['_get by key', { _get: { from: { rows: [{ _data: true }] }, key: 'rows.0' } }],
+  ['_get of all', { _get: { from: [{ _data: true }], key: '0' } }],
+  ['_get default', { _get: { from: {}, key: 'missing', default: { _data: true } } }],
+])('parse with literalData marks a copy that %s makes of data', (_, input) => {
+  const { literalData, output, errors } = parseWithData(row, { a: input });
+  expect(errors).toEqual([]);
+  expect(output.a).toEqual(row);
+  expect(findDataOrigin({ literalData, value: output.a })).toBe('_data');
+});
+
+test('parse with literalData marks a copy _args makes of data in a function call', () => {
+  const { literalData, output } = parseWithData(row, {
+    fn: { _function: { __args: 0 } },
   });
-  expect(findDataOrigin({ literalData, value: res.output.a })).toBe('_data');
-  expect(findDataOrigin({ literalData, value: serializer.copy(res.output.a) })).toBe('_data');
-  expect(findDataOrigin({ literalData, value: res.output.b })).toBe(null);
+  const copy = output.fn(serializer.copy(row));
+  expect(findDataOrigin({ literalData, value: copy })).toBe(null);
+  const { literalData: data, output: mapped } = parseWithData(row, {
+    fn: { _function: { __args: 0 } },
+    row: { _data: true },
+  });
+  expect(findDataOrigin({ literalData: data, value: mapped.fn(mapped.row) })).toBe('_data');
+});
+
+const withError = { ...row, properties: { html: 'x', error: { '~e': { message: 'm' } } } };
+
+test.each([
+  ['data', row, { _function: { _data: true } }],
+  ['data holding a serialized error', withError, { _function: { _data: true } }],
+  [
+    'data merged with config',
+    row,
+    { _function: { '__object.assign': [{ _data: true }, { x: 1 }] } },
+  ],
+])('parse with literalData marks the copies a _function body holding %s makes', (_, data, fn) => {
+  const { literalData, output } = parseWithData(data, { fn });
+  expect(findDataOrigin({ literalData, value: output.fn() })).toBe('_data');
+});
+
+test('parse with literalData leaves a _function body built from config unmarked', () => {
+  const { literalData, output } = parseWithData(row, {
+    fn: {
+      _function: {
+        id: { __args: '0.id' },
+        type: { __args: '0.type' },
+        properties: { __args: '0.properties' },
+      },
+    },
+    row: { _data: true },
+  });
+  const block = output.fn(output.row);
+  expect(block).toEqual(row);
+  expect(findDataOrigin({ literalData, value: block })).toBe(null);
+});
+
+function nestTyped(depth) {
+  let nested = { type: 'leaf' };
+  for (let level = 0; level < depth; level += 1) {
+    nested = { type: 'Box', child: nested };
+  }
+  return nested;
+}
+
+function parseDeepData(depth) {
+  const result = parseWithData(nestTyped(depth), {
+    a: { _data: true },
+    b: { _get: { from: { value: { _data: true } }, key: 'value' } },
+    fn: { _function: { _data: true } },
+  });
+  return { ...result, copy: result.output.fn() };
+}
+
+// Marking is linear in the data's size. Timing is not a stable measure on a
+// shared machine, so the test bounds the text serialized while parsing: a few
+// copies of the data, where serializing every nested object separately made it
+// grow with the square of the depth.
+test('parse with literalData marks deeply nested data in linear work', () => {
+  const once = JSON.stringify(nestTyped(2500)).length;
+  const stringify = jest.spyOn(JSON, 'stringify');
+  let result;
+  let serialized = 0;
+  try {
+    result = parseDeepData(2500);
+    stringify.mock.results.forEach(({ value }) => {
+      serialized += type.isString(value) ? value.length : 0;
+    });
+  } finally {
+    stringify.mockRestore();
+  }
+  const { copy, errors, literalData, output } = result;
+  expect(errors.map((error) => error.message)).toEqual([]);
+  expect(findDataOrigin({ literalData, value: output.a.child.child })).toBe('_data');
+  expect(findDataOrigin({ literalData, value: output.b.child.child })).toBe('_data');
+  expect(findDataOrigin({ literalData, value: copy.child.child })).toBe('_data');
+  expect(serialized).toBeLessThan(20 * once);
 });
 
 test('parse with literalData treats an object _object.assign merges data into as data', () => {

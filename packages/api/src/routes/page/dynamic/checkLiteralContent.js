@@ -163,9 +163,10 @@ function findDataBlock({ block, path, literalData }) {
 // Checks the content a Dynamic block's endpoint returns, as :return built it.
 // Data may fill values inside the blocks the :return writes, but without a
 // dynamic blocks policy it may not be a block or an action itself: a block or
-// action that is data an operator returned, or a copy of it, is refused. With a
-// policy the policy checks every block and action at page get instead. Under
-// both, data may not become an operator.
+// action that is data an operator returned, or a copy a copying read made of
+// it, is refused. Config is never matched by content. With a policy the policy
+// checks every block and action at page get instead. Under both, data may not
+// become an operator.
 function checkLiteralContent({ blocks, configKey, literalData }) {
   if (!type.isArray(blocks)) {
     return;

@@ -17,12 +17,15 @@
 import { ConfigError, OperatorError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
+import createContentHasher from './createContentHasher.js';
 import findDataOrigin from './findDataOrigin.js';
 import findOperatorInData from './findOperatorInData.js';
+import indexDataShapes from './indexDataShapes.js';
 import isCheckedContentRead from './isCheckedContentRead.js';
 import isLiteralPassThrough from './isLiteralPassThrough.js';
-import markDataObject from './markDataObject.js';
+import markCopiedData from './markCopiedData.js';
 import markDataObjects from './markDataObjects.js';
+import markDataShape from './markDataShape.js';
 
 // _object.assign is the one pass-through method that moves data keys into
 // another object, so an object it merges data into is data too.
@@ -73,6 +76,7 @@ class ServerParser {
   parse({
     args,
     arrayIndices = [],
+    dataShapes = null,
     error,
     input,
     items,
@@ -109,7 +113,12 @@ class ServerParser {
           ...callOptions,
         }),
     };
+    // Set while a _function body that holds data is parsed (see below).
+    const digest = dataShapes === null ? null : createContentHasher();
     const reviver = (_, value) => {
+      if (dataShapes !== null) {
+        markDataShape({ literalData, dataShapes, digest, value });
+      }
       if (!type.isObject(value)) return value;
       if (Object.keys(value).length !== 1) return value;
 
@@ -126,6 +135,18 @@ class ServerParser {
           literalData === null
             ? null
             : findMergedDataOrigin({ literalData, op, methodName, params });
+        // A _function body is copied and parsed each time the function runs. When
+        // the body holds data, its copies are recognised by content as they are
+        // parsed, before any operator in the body reads them.
+        let operatorParser = parser;
+        if (literalData !== null && op === '_function') {
+          const bodyShapes = indexDataShapes({ literalData, value: params });
+          if (bodyShapes !== null) {
+            operatorParser = {
+              parse: (callOptions) => parser.parse({ ...callOptions, dataShapes: bodyShapes }),
+            };
+          }
+        }
         const res = this.operators[op]({
           args,
           arrayIndices,
@@ -141,7 +162,7 @@ class ServerParser {
           operators: this.operators,
           organization: this.organization,
           params,
-          parser,
+          parser: operatorParser,
           payload,
           runtime: 'node',
           secrets: this.secrets,
@@ -155,8 +176,9 @@ class ServerParser {
         const operatorName = methodName ? `${op}.${methodName}` : op;
         if (isLiteralPassThrough({ op, methodName })) {
           if (mergedFrom !== null && type.isObject(res)) {
-            markDataObject({ literalData, value: res, operator: mergedFrom });
+            literalData.dataObjects.set(res, mergedFrom);
           }
+          markCopiedData({ literalData, op, params, args, arrayIndices, copy: res });
           return res;
         }
         // Under literalData the output is sent to a client that evaluates every
@@ -177,8 +199,8 @@ class ServerParser {
             }. Operators in endpoint data do not run in Dynamic block content. Write client operators in the endpoint's :return config instead.`
           );
         }
-        // Remembered so the finished :return can refuse this data where it would
-        // become a block, an action or an operator after a later merge.
+        // Marked so the finished :return can refuse this data, or a copy of it,
+        // where it would become a block, an action or an operator.
         markDataObjects({ literalData, value: sent, operator: operatorName });
         return sent;
       } catch (e) {

@@ -17,15 +17,14 @@
 // The state a Dynamic block's endpoint carries while it evaluates :return.
 // validatedStepIds collects the ValidateDynamic steps whose blocks :return may
 // read as config. clientOperators is the app's set of client operator names, so
-// only keys the client would run count as operators. dataObjects and dataShapes
-// remember what operators returned as data (by identity, and by serialized form
-// so a copy is still recognised), so the finished content can be checked for
-// data that became blocks, actions or operators after the per-result scan.
+// only keys the client would run count as operators. dataObjects marks, by
+// identity, the objects operators returned as data and the copies made of them,
+// so the finished content can be checked for data that became a block, an
+// action or an operator.
 function createLiteralData({ clientOperators = null, policyId = null }) {
   return {
     clientOperators,
     dataObjects: new WeakMap(),
-    dataShapes: new Map(),
     policyId,
     validatedStepIds: new Set(),
   };

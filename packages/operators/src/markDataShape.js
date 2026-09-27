@@ -16,23 +16,17 @@
 
 import { type } from '@lowdefy/helpers';
 
-import isTrackedObject from './isTrackedObject.js';
-
-// Marks every tracked object in an operator's result as data returned by it.
-function markDataObjects({ literalData, value, operator }) {
-  if (type.isArray(value)) {
-    for (const item of value) markDataObjects({ literalData, value: item, operator });
-    return;
-  }
+// Marks an object parsed from a copy of a _function body as data when its
+// content matches data the body held. Only tracked objects are in the index,
+// and tracking follows from content, so any other object simply finds no match.
+function markDataShape({ literalData, dataShapes, digest, value }) {
   if (!type.isObject(value)) {
     return;
   }
-  if (isTrackedObject({ value, operators: literalData.clientOperators })) {
-    literalData.dataObjects.set(value, operator);
-  }
-  for (const key of Object.keys(value)) {
-    markDataObjects({ literalData, value: value[key], operator });
+  const origin = dataShapes.get(digest(value));
+  if (!type.isUndefined(origin)) {
+    literalData.dataObjects.set(value, origin);
   }
 }
 
-export default markDataObjects;
+export default markDataShape;

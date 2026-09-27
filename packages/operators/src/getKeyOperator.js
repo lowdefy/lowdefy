@@ -23,7 +23,7 @@ import { getOperatorType } from '@lowdefy/helpers';
 function getKeyOperator({ key, operators = null }) {
   // A "__proto__" key read from JSON becomes a prototype once the object is
   // copied by assignment, so it never reaches the client as a key.
-  if (key === '__proto__') {
+  if (key === '__proto__' || !key.startsWith('_')) {
     return null;
   }
   const operator = getOperatorType({ [key]: true });

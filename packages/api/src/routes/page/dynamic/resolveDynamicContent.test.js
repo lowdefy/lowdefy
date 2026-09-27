@@ -925,6 +925,63 @@ test('resolveDynamicContent maps data rows that carry a type into written blocks
   expect(dynamicBlock.slots.content.blocks[0].properties.html).toBe('Name');
 });
 
+// A form builder stores fields in block shape; developer config maps each field
+// into a block, so the rendered blocks are config even where they equal a row.
+test.each([
+  ['with the same keys as the row', {}],
+  ['with keys the row does not have', { label: 'Name' }],
+])('resolveDynamicContent renders stored fields mapped into blocks %s', async (_, extra) => {
+  const fields = [{ id: 'name', type: 'Html', properties: { html: 'Name' }, ...extra }];
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { fields } },
+    {
+      ':return': {
+        blocks: {
+          '_array.map': {
+            on: { _state: 'fields' },
+            callback: {
+              _function: {
+                id: { __args: '0.id' },
+                type: { __args: '0.type' },
+                properties: { __args: '0.properties' },
+              },
+            },
+          },
+        },
+      },
+    },
+  ]);
+  expect(dynamicBlockError()).toBe(undefined);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('name');
+  expect(dynamicBlock.slots.content.blocks[0].properties.html).toBe('Name');
+});
+
+test('resolveDynamicContent renders a written block equal to data read elsewhere', async () => {
+  const block = { id: 'intro', type: 'Html', properties: { html: 'Intro' } };
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { stored: [block] } },
+    {
+      ':return': {
+        blocks: [block, { id: 'raw', type: 'Html', properties: { stored: { _state: 'stored' } } }],
+      },
+    },
+  ]);
+  expect(dynamicBlockError()).toBe(undefined);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('intro');
+});
+
+test.each([
+  ['is data', { _function: { _state: 'stored.0' } }],
+  ['merges data', { _function: { '__object.assign': [{ _state: 'stored.0' }, { layout: {} }] } }],
+])('resolveDynamicContent falls back when a mapping function body %s', async (_, callback) => {
+  const dynamicBlock = await resolveWithRoutine([
+    { ':set_state': { stored: storedBlocks } },
+    { ':return': { blocks: { '_array.map': { on: [1], callback } } } },
+  ]);
+  expect(dynamicBlock.slots.content.blocks[0].blockId).toBe('fb');
+  expect(dynamicBlockErrorMessage()).toContain('Block at "blocks.0" is data returned by "_state"');
+});
+
 test('resolveDynamicContent keeps written block config chosen from a literal map', async () => {
   const dynamicBlock = await resolveWithRoutine({
     ':return': {

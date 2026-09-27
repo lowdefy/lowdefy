@@ -14,35 +14,16 @@
   limitations under the License.
 */
 
-import { serializer, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
-import getDataIndexKeys from './getDataIndexKeys.js';
-
-// The operator whose result an object is, or a copy of, or null when the object
-// is config. Only objects that could become a block, an action or an operator
-// are tracked (getDataIndexKeys).
+// The operator whose data an object is, or null when it is config. Only the
+// objects an operator returned, and the copies the copying reads made of them,
+// are marked; an object built from config never is, whatever it holds.
 function findDataOrigin({ literalData, value }) {
   if (!type.isObject(value)) {
     return null;
   }
-  const byIdentity = literalData.dataObjects.get(value);
-  if (!type.isUndefined(byIdentity)) {
-    return byIdentity;
-  }
-  const indexKeys = getDataIndexKeys({ value, operators: literalData.clientOperators }).filter(
-    (indexKey) => literalData.dataShapes.has(indexKey)
-  );
-  if (indexKeys.length === 0) {
-    return null;
-  }
-  const shape = serializer.serializeToString(value, { skipMarkers: true });
-  for (const indexKey of indexKeys) {
-    const operator = literalData.dataShapes.get(indexKey).get(shape);
-    if (!type.isUndefined(operator)) {
-      return operator;
-    }
-  }
-  return null;
+  return literalData.dataObjects.get(value) ?? null;
 }
 
 export default findDataOrigin;
