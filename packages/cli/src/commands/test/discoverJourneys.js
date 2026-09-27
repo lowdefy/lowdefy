@@ -19,8 +19,6 @@ import path from 'path';
 import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
 
-const JOURNEYS_DIRECTORY = path.join('tests', 'journeys');
-
 function isJourneyFile(fileName) {
   return fileName.endsWith('.yaml') || fileName.endsWith('.yml');
 }
@@ -39,7 +37,7 @@ function readJourneyFile({ filePath }) {
 }
 
 function discoverJourneys({ context }) {
-  const directory = path.join(context.directories.config, JOURNEYS_DIRECTORY);
+  const directory = context.directories.journeys;
   if (!fs.existsSync(directory)) {
     return [];
   }
