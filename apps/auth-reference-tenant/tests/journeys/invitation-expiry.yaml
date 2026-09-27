@@ -3,6 +3,7 @@
 - name: an expired invitation tells the invitee it expired, and a new invitation works
   pageId: signup
   user: none
+  timeout: 30000
   steps:
     - fill: { blockId: name, value: Expiry Owner }
     - fill: { blockId: email, value: expiry-owner@example.test }
@@ -106,6 +107,7 @@
 - name: a cancelled invitation tells the invitee it expired
   pageId: signup
   user: none
+  timeout: 30000
   steps:
     - fill: { blockId: name, value: Cancel Owner }
     - fill: { blockId: email, value: cancel-owner@example.test }

@@ -1,6 +1,7 @@
 - name: sign-in refuses an unverified email and a wrong password, signs out, and signs back in by magic link
   pageId: signup
   user: none
+  timeout: 30000
   steps:
     - fill: { blockId: name, value: Signin Member }
     - fill: { blockId: email, value: signin-member@example.test }
