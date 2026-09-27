@@ -156,16 +156,22 @@ The template embeds everything the client needs in one response:
 - Pre-hydration **layer-order MutationObserver** script (locks `@layer theme, base, antd, components, utilities;` as the first `<head>` child against antd's prependQueue) and the **dark-mode flash prevention** script — both interpolated via `safeScriptJson`.
 - `appendHead` / `appendBody` from app config injected as raw HTML.
 - `<script id="__LOWDEFY_CONFIG__" type="application/json">` containing `{ pageConfig, rootConfig, session, basePath, sentryDsn }` (escaped by `safeScriptJson`).
-- `<link>`/`<script type="module">` asset URLs resolved from `dist/client/.vite/manifest.json`, **read once at startup** (`src/html/getAssets.js`) — deploys must build before restarting. The page's plugin chunks (its types chunk, the icons chunk and their import closure, `collectPageTypesAssets.js`) are preloaded alongside the main entry.
+- `<link>`/`<script type="module">` asset URLs resolved from `dist/client/.vite/manifest.json`, **read once at startup** (`src/html/getAssets.js`) — deploys must build before restarting. The page's plugin chunks (its types chunk, which carries its icons, and its import closure, `collectPageTypesAssets.js`) are preloaded alongside the main entry, plus the app-wide icons chunk for a page flagged `loadAllIcons` or `loadAllTypes` (`getPageAssets.js`).
 - A server-side `<title>` from `pageConfig.properties.title`.
 
 ## Per-Page Plugin Chunks
 
 The production client does not import the app-wide plugin barrels. The full build counts each page's client types while it builds the page (`createPageTypeCounters` tees every block, action and client-operator increment into a per-page counter), adds the types the page runs without naming them (`buildPages/countImpliedClientTypes.js`: block `meta.actions`/`meta.operators` for events a block registers itself, and the operators the `_js` accessors call, `build/jsAccessorOperators.js`), adds the mandatory set (`build/mandatoryClientTypes.js`), and writes one module per distinct type set to `build/plugins/pageTypes/<hash>.js` plus the registry `build/plugins/pageTypes.js` (`build/full/buildPageTypes.js`, `writePageTypes.js`). Each page carries its `typesKey`. Keys are content hashes, never page ids, so the public registry does not reveal protected pages.
 
-`client/loadPageTypes.js` loads a page's chunk plus the app-wide icons chunk and merges them in place into the long-lived registries in `client/types.js`, which `initLowdefyContext` holds by reference. `main.jsx` awaits the first page's types before rendering (reloading once on failure, `shouldReloadForTypes.js`); `Page.jsx` awaits them on navigation before `setPageConfig`.
+Icons are the fourth category of a page's type set, inlined as data in its module. `build/full/createGetPageIcons.js` restricts the app's icons (`components.imports.icons`, from the whole-app scan in `buildIconImports`) to what the page can reach: the same text scan over the built page, the `_js` sources whose hashes the page references, its blocks' `meta.icons`, the always-bundled client icons, and the names in `menus` and `global` (every page renders or reads them). Names that only arrive at runtime (`theme.icons.include`, endpoints, server `_js`, other pages, state) stay in the app-wide `plugins/icons.js`.
+
+`client/loadPageTypes.js` loads a page's chunk and merges it in place into the long-lived registries in `client/types.js`, which `initLowdefyContext` holds by reference. `main.jsx` awaits the first page's types before rendering (reloading once on failure, `shouldReloadForTypes.js`); `Page.jsx` awaits them on navigation before `setPageConfig`. `client/loadAllIcons.js` loads the app-wide icons chunk into `types.icons` once per tab (a failed load clears itself so the next miss retries); `Page.jsx` passes it to `Client`, and `createIcon` and the `data-icon` enhancer call it the first time a name is missing, drawing an empty icon of the same size (or nothing, for `data-icon`) until it settles. After one load, a missing name is unknown and draws `icon-missing`.
+
+`_operator` calls an operator by name at runtime. `countOperators` counts the names its config fixes (a literal, the literal branches of an `_if` or `_switch`); a name read at runtime must come with an `operators` list, which is counted instead (the build fails without one) and which `_operator` enforces when it runs, so a page never calls an operator its chunk does not hold.
 
 Dynamic content may use any type the app bundles. `resolveDynamicContent` records fragment types and, when one falls outside the page's set (`build/pageTypeSets.json`, server-only), sets `pageConfig.loadAllTypes` so the client also loads the app-wide barrels, and logs a warning naming the type to declare.
+
+A `loadAllTypes` page also loads every icon, since the blocks outside its set draw their own. `flagIconsOutsidePage` runs the build's icon scan (`@lowdefy/build/collectIconNames`) over the resolved page and sets `pageConfig.loadAllIcons` when it names an app icon (`build/iconImports.json`, server-only) outside the page's icons, so the first render has them without a placeholder; no warning, since runtime content is expected to use such icons.
 
 Plugin packages declare `"sideEffects": ["**/*.css"]` so a page importing one block from a package barrel does not keep the whole package. Hashed assets under `/assets/` are served `Cache-Control: public, max-age=31536000, immutable` (`app.js`, and a route in `lowdefy vercel-output`).
 
@@ -205,7 +211,7 @@ The Hono server runs as plain Node ESM — server-side imports from `build/plugi
 
 - `base` from `build/config.json` `basePath`; `build.outDir: 'dist/client'`; `build.manifest: true`; input `client/main.jsx`.
 - `define: { 'process.env.NODE_ENV': ... }` — Vite does not replace it inside dependencies.
-- `resolve.dedupe: ['react', 'react-dom']` for linked plugin packages.
+- `resolve.dedupe` for linked plugin packages: React, antd, dayjs and every `@lowdefy/*` package in the server's dependencies, so a plugin pinned to another release cannot bundle a second copy of the libraries whose module state the client and blocks share.
 - `sentryVitePlugin` (source map upload) gated on `SENTRY_AUTH_TOKEN`.
 - PostCSS (`@tailwindcss/postcss`) is read automatically from `postcss.config.cjs` — `client/main.jsx` imports `build/layer-order.css` **first**, then `build/globals.css`.
 

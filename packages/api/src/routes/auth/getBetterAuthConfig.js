@@ -46,6 +46,7 @@ import createAuthLogger from './createAuthLogger.js';
 import createMcpAccessTokenClaims from './createMcpAccessTokenClaims.js';
 import createOnAPIError from './createOnAPIError.js';
 import createSendEmail from './createSendEmail.js';
+import { CLIENT_ADDRESS_HEADER } from './handleAuthRequest.js';
 import modelNames from './modelNames.js';
 import renderAuthEmail from '../../email/renderAuthEmail.js';
 import resolveCookiePrefix from './resolveCookiePrefix.js';
@@ -158,6 +159,27 @@ function buildMagicLinkUrl({ authConfig, config, url }) {
   return landingUrl.href;
 }
 
+// The emailed flows whose links BetterAuth builds from the base URL. Every one
+// needs auth.email; verification mail is always wired with it, since
+// /send-verification-email is public. An invitation carries a link only when
+// the app has an accept page.
+function getEmailLinkFlows({ authConfig }) {
+  if (type.isNone(authConfig.email)) {
+    return [];
+  }
+  const flows = ['email verification'];
+  if (authConfig.emailAndPassword?.enabled === true) {
+    flows.push('password reset');
+  }
+  if (authConfig.magicLink?.enabled === true) {
+    flows.push('magic link');
+  }
+  if (type.isString(authConfig.authPages?.acceptInvitation)) {
+    flows.push('invitation');
+  }
+  return flows;
+}
+
 function getBetterAuthConfig({
   appMeta,
   authJson,
@@ -247,15 +269,25 @@ function getBetterAuthConfig({
   // origin from each request, and trusts that one origin only. The dynamic
   // `{ allowedHosts: ['*'] }` form would also derive links per request, but it
   // turns the wildcard into trusted origins, so any site's callbackURL or
-  // redirectTo passes the check. The unpinned path still takes the link host
-  // from the request, so warn in production.
+  // redirectTo passes the check. The unpinned path takes the link host from the
+  // request, so production refuses to start when auth emails links, and warns
+  // otherwise. The dev server keeps the request origin: it runs on localhost.
   const canonicalUrl = getCanonicalUrl({ config });
   let baseUrlOrigin;
   if (canonicalUrl) {
     baseUrlOrigin = canonicalUrl;
   } else if (!dev) {
+    const emailLinkFlows = getEmailLinkFlows({ authConfig });
+    if (emailLinkFlows.length > 0) {
+      throw new ConfigError(
+        `Auth base URL is not pinned, and auth emails links (${emailLinkFlows.join(
+          ', '
+        )}) that would take their host from the request. Set the BETTER_AUTH_URL environment variable, or the url of the current environment in config.environments, to the app's canonical origin (e.g. https://app.example.com).`,
+        { configKey: authConfig.email['~k'] }
+      );
+    }
     logger.warn(
-      "Auth base URL is not pinned. Set the url of the current environment in config.environments (or BETTER_AUTH_URL) to the app's canonical origin (e.g. https://app.example.com) so password-reset, magic-link and verification email links cannot be spoofed through the Host header."
+      "Auth base URL is not pinned. Set the url of the current environment in config.environments (or BETTER_AUTH_URL) to the app's canonical origin (e.g. https://app.example.com) so the origins auth trusts do not come from the request's Host header."
     );
   }
 
@@ -316,6 +348,11 @@ function getBetterAuthConfig({
     },
     advanced: {
       cookiePrefix: resolveCookiePrefix({ appMeta, dev }),
+      // The server resolves the client address from the connection and the
+      // app's trusted proxies, and handleAuthRequest passes it in this header.
+      // BetterAuth reads no other, so X-Forwarded-For sent by a client never
+      // picks its rate-limit bucket.
+      ipAddress: { ipAddressHeaders: [CLIENT_ADDRESS_HEADER] },
       // Decision 7: function-form generateId. The vendored adapter stores a
       // function result verbatim as a plain string (no ObjectId/UUID-binary
       // coercion), so all ids are plain UUID strings that native reads match.

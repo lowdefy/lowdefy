@@ -114,6 +114,8 @@ const result = parser.parse({
 - `_user` - Current user session
 - `_payload` - Request payload from action
 
+**`literalData`** (Dynamic block endpoints only). When `parse` receives `literalData` (from `createLiteralData`), every result of an operator outside the pass-through set (`isLiteralPassThrough.js`) is checked against `MAX_DATA_DEPTH` (200 levels, `isNestedDeeperThan`, so the recursive serializer never sees deeper data; a stack overflow inside an operator is reported as the same refusal), serialized, scanned with `findOperatorInData` and its tracked objects marked as data by identity (`markDataObjects`); `_get`, `_args` and a `_function` body holding data pass the marks on to the copies they make (`markCopiedData`, `indexDataShapes` with `createContentHasher`, linear in the data's size; every such walk uses an explicit stack); `_step: <validated step>.blocks` is the one exempt read (`isCheckedContentRead.js`). The frame carries `literalData` into `_function` bodies. `getPossibleOperators` decides what the client would run as an operator and is shared with the API's final content check and dynamic blocks policies: only keys that name one of `literalData.clientOperators` count, and an operator key counts when every sibling can vanish (undefined, a function, `__proto__`, or an operator). The per-result scan also counts the parser's own (server) operators, since a `_function` body read from data is evaluated on the server.
+
 ### WebParser
 
 Used by `@lowdefy/engine` for client-side evaluation:

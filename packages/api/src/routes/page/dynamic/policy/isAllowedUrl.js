@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import normalizeUrlText from './normalizeUrlText.js';
+
 // A reserved origin: a URL that resolves to it stays on the app.
 const SENTINEL = 'https://app.invalid';
 
@@ -24,11 +26,12 @@ const SENTINEL = 'https://app.invalid';
 // classifyUrl), which reads a colon-less `url` such as `example.com` as
 // `https://example.com`.
 function isAllowedUrl({ value, policy, navigation, schemeless }) {
-  if (value === '' || value.startsWith('#')) {
+  const text = normalizeUrlText(value);
+  if (text === '' || text.startsWith('#')) {
     return true;
   }
   const candidate =
-    schemeless && !value.includes(':') && !value.startsWith('/') ? `https://${value}` : value;
+    schemeless && !text.includes(':') && !text.startsWith('/') ? `https://${text}` : text;
   let url;
   try {
     url = new URL(candidate, SENTINEL);

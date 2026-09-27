@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { RequestError, ServiceError } from '@lowdefy/errors';
+import { RequestError, ServiceError, UserError } from '@lowdefy/errors';
 
 import getCurrentEnvironment from '../../context/getCurrentEnvironment.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
@@ -31,7 +31,7 @@ async function callRequestResolver(
     tenantGuard,
   }
 ) {
-  const { blockId, endpointId, logger, pageId, payload } = context;
+  const { blockId, endpointId, logger, pageId, payload, signal } = context;
   // stepId for endpoint steps (after build), requestId for page requests
   const stepOrRequestId = requestConfig.stepId ?? requestConfig.requestId;
 
@@ -79,13 +79,19 @@ async function callRequestResolver(
       payload,
       request: requestProperties,
       requestId: stepOrRequestId,
+      // Aborts when the request that started this work closes: the client
+      // disconnected or the server's request timeout answered. Undefined for work
+      // nobody waits on (background runs, agent chat). Connection types hand it to
+      // their upstream calls so a closed request stops them.
+      signal,
       // The tenant verdict ({ field, value } or null/undefined) computed by
-      // resolveTenant - connection types implementing the scoping contract
+      // resolveTenancy - connection types implementing the scoping contract
       // enforce it (stamp writes, merge filters, inject pipeline matches).
       tenant: tenant ?? null,
-      // The tenant: none write guard ({ field } or null) computed by
-      // resolveTenantGuard - scoping connection types assert every row the
-      // request writes still carries a real organization id.
+      // The unscoped write guard ({ field, stampChangeLog } or null) computed
+      // by resolveTenancy for tenant: none requests and for shared connections
+      // over a walled collection - scoping connection types assert every row
+      // the request writes still carries a real organization id.
       tenantGuard: tenantGuard ?? null,
     });
     return response;
@@ -105,7 +111,18 @@ async function callRequestResolver(
       throw error;
     }
 
-    // Check if this is a service error (network, timeout, 5xx)
+    // The client left before the resolver finished and the resolver stopped on the
+    // signal: the cancellation is the caller's doing, not a fault in the request.
+    if (signal?.reason?.name === 'AbortError' && error.name === 'AbortError') {
+      const cancelled = new UserError(signal.reason.message, { cause: error });
+      logger.debug(
+        { params: { id: stepOrRequestId, type: requestConfig.type }, err: cancelled },
+        cancelled.message
+      );
+      throw cancelled;
+    }
+
+    // Check if this is a service error (network, timeout, 5xx, 429)
     if (ServiceError.isServiceError(error)) {
       const serviceError = new ServiceError(undefined, {
         cause: error,

@@ -31,6 +31,7 @@ const lowdefyErrorFields = [
   'location',
   'service',
   'hint',
+  'retryAfter',
   'methodName',
   'metaData',
   'blockId',

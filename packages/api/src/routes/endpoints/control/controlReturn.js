@@ -14,14 +14,20 @@
   limitations under the License.
 */
 
+import checkLiteralContent from '../../page/dynamic/checkLiteralContent.js';
 import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 
 async function controlReturn(context, routineContext, { control }) {
+  const literalData = routineContext.literalData ?? null;
   const response = evaluateRoutineOperators(context, routineContext, {
     input: control[':return'],
-    literalData: routineContext.literalData ?? null,
+    literalData,
     location: control['~k'] ?? ':return',
   });
+  // The :return of the endpoint a Dynamic block calls becomes page config.
+  if (literalData !== null) {
+    checkLiteralContent({ blocks: response?.blocks, configKey: control['~k'], literalData });
+  }
 
   context.logger.debug({
     event: 'debug_control_return',

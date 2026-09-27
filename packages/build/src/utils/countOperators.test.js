@@ -118,13 +118,56 @@ test.each([
     counts: ['_eq', '_if', '_operator', '_product', '_state', '_subtract', '_sum'],
   },
   {
-    name: 'a name read at runtime',
-    params: { name: { _state: 'op' } },
-    counts: ['_operator', '_state'],
+    name: 'the names a _switch returns',
+    params: {
+      name: {
+        _switch: {
+          branches: [{ if: { _state: 'rounded' }, then: '_number.round' }],
+          default: '_sum',
+        },
+      },
+    },
+    counts: ['_number', '_operator', '_state', '_sum', '_switch'],
+  },
+  {
+    name: 'a name read at runtime with the operators it may call',
+    params: { name: { _state: 'op' }, operators: ['_sum', '_number.round'] },
+    counts: ['_number', '_operator', '_state', '_sum'],
+  },
+  {
+    name: 'an escaped name read at runtime in a function body',
+    params: { name: { __args: 0 }, operators: ['_product'] },
+    counts: ['_args', '_operator', '_product'],
   },
   { name: 'a name that is not an operator', params: { name: 'sum' }, counts: ['_operator'] },
 ])('countOperators counts the operator _operator dispatches to: $name', ({ params, counts }) => {
   const counter = createCounter();
   countOperators({ value: { _operator: params } }, { counter });
   expect(Object.keys(counter.getCounts()).sort()).toEqual(counts);
+});
+
+test.each([
+  ['read from state', { _operator: { name: { _state: 'op' } } }],
+  ['read from a request payload', { _operator: { name: { _payload: 'op' }, params: 1 } }],
+  [
+    'an _if branch read at runtime',
+    { _operator: { name: { _if: { test: true, then: '_sum', else: { _state: 'op' } } } } },
+  ],
+  ['params read at runtime', { _operator: { _state: 'call' } }],
+])('countOperators requires the operators an _operator name %s may call', (_, value) => {
+  const counter = createCounter();
+  expect(() => countOperators({ value }, { counter })).toThrow(
+    '_operator "name" is read at runtime, so the build cannot tell which operator it calls.'
+  );
+});
+
+test.each([
+  ['not a list', '_sum'],
+  ['a list holding a non-name', ['_sum', 'sum']],
+  ['a list holding _operator', ['_sum', '_operator']],
+])('countOperators refuses _operator operators that are %s', (_, operators) => {
+  const counter = createCounter();
+  expect(() =>
+    countOperators({ value: { _operator: { name: { _state: 'op' }, operators } } }, { counter })
+  ).toThrow('_operator "operators"');
 });

@@ -49,14 +49,22 @@ async function test({ context }) {
   const selected = selectTests({ context, filter });
 
   if (selected.length === 0) {
-    if (type.isNone(filter)) {
-      context.logger.warn('No tests found. Add journeys to tests/journeys/*.yaml.');
+    if (!type.isNone(filter)) {
+      context.logger.error(`No tests matched --filter "${filter}".`);
       context.sendTelemetry();
+      process.exitCode = 1;
       return;
     }
-    context.logger.error(`No tests matched --filter "${filter}".`);
+    // A directory named on the command line is a run that expects journeys;
+    // finding none there is a mistyped path, not an app without tests yet.
+    if (!type.isNone(context.options.journeysDirectory)) {
+      context.logger.error(`No journeys found in ${context.directories.journeys}.`);
+      context.sendTelemetry();
+      process.exitCode = 1;
+      return;
+    }
+    context.logger.warn('No tests found. Add journeys to tests/journeys/*.yaml.');
     context.sendTelemetry();
-    process.exitCode = 1;
     return;
   }
 

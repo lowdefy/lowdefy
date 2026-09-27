@@ -61,6 +61,40 @@ function walkBlock(block, used) {
   });
 }
 
+// Literal names at icon positions (a key ending in "icon", or its name; an
+// Icon block's name; a data-icon attribute), found by a walk rather than the
+// build's own text scan.
+function walkIconNames(value, found) {
+  if (type.isString(value)) {
+    for (const match of value.matchAll(/data-icon="([^"]+)"/g)) {
+      found.add(match[1]);
+    }
+    return;
+  }
+  if (type.isArray(value)) {
+    value.forEach((item) => walkIconNames(item, found));
+    return;
+  }
+  if (!type.isObject(value)) {
+    return;
+  }
+  if (value.type === 'Icon' && type.isString(value.properties?.name)) {
+    found.add(value.properties.name);
+  }
+  Object.keys(value)
+    .filter((key) => !key.startsWith('~'))
+    .forEach((key) => {
+      const child = value[key];
+      if (/icon$/i.test(key) && type.isString(child)) {
+        found.add(child);
+      }
+      if (/icon$/i.test(key) && type.isString(child?.name)) {
+        found.add(child.name);
+      }
+      walkIconNames(child, found);
+    });
+}
+
 const fixtures = fs
   .readdirSync(fixturesDir)
   .filter((name) => fs.existsSync(path.join(fixturesDir, name, 'snapshot.json')))
@@ -100,3 +134,28 @@ test.each(fixtures)('page type sets cover every client type each page uses: %s',
     expect(snapshot[`plugins/pageTypes/${page.typesKey}.js`]).toBeDefined();
   });
 });
+
+test.each(fixtures)(
+  'page icon sets cover every app icon each page and the menus name: %s',
+  (fixture) => {
+    const snapshot = JSON.parse(
+      fs.readFileSync(path.join(fixturesDir, fixture, 'snapshot.json'), 'utf8')
+    );
+    const appIcons = new Set(snapshot['iconImports.json']);
+    const pageTypeSets = snapshot['pageTypeSets.json'];
+    const menuIcons = new Set();
+    walkIconNames(serializer.deserialize(snapshot['menus.json'] ?? []), menuIcons);
+    const pageKeys = Object.keys(snapshot).filter((key) => /^pages\/[^/]+\.json$/.test(key));
+    pageKeys.forEach((pageKey) => {
+      const page = serializer.deserialize(snapshot[pageKey]);
+      const pageIcons = pageTypeSets[page.pageId].icons;
+      const used = new Set(menuIcons);
+      walkIconNames(page, used);
+      expect({
+        page: page.pageId,
+        missing: [...used].filter((name) => appIcons.has(name) && !pageIcons.includes(name)),
+      }).toEqual({ page: page.pageId, missing: [] });
+      expect(pageIcons.filter((name) => !appIcons.has(name))).toEqual([]);
+    });
+  }
+);

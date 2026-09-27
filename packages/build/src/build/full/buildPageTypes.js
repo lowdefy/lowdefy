@@ -17,6 +17,7 @@
 import crypto from 'crypto';
 
 import mandatoryClientTypes from '../mandatoryClientTypes.js';
+import createGetPageIcons from './createGetPageIcons.js';
 
 const CATEGORIES = ['actions', 'blocks', 'operators'];
 
@@ -28,11 +29,13 @@ function getTypeDefinitions({ components, category }) {
 }
 
 // Page building recorded the client types each page uses (createPageTypeCounters).
+// Icons join them as a fourth category, from the built page (createGetPageIcons).
 // Pages with the same type set share one module, keyed by a hash of the set, so
 // the public registry never lists page ids.
 function buildPageTypes({ components, context }) {
   components.pageTypes = {};
   components.pageTypeSets = {};
+  const getPageIcons = createGetPageIcons({ components, context });
   (components.pages ?? []).forEach((page) => {
     const pageCounters = context.pageTypeCounters.get(page.pageId);
     const typeSet = {};
@@ -52,6 +55,8 @@ function buildPageTypes({ components, context }) {
         typeName,
       }));
     });
+    typeSet.icons = getPageIcons({ blocks: typeSet.blocks, page });
+    imports.icons = typeSet.icons;
     const typesKey = crypto
       .createHash('sha256')
       .update(JSON.stringify(typeSet))

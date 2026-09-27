@@ -34,6 +34,26 @@ export default {
         type: 'Anthropic connection property "baseURL" should be a string.',
       },
     },
+    maxOutputTokens: {
+      type: 'integer',
+      minimum: 1,
+      description:
+        'Default maximum number of tokens a model call generates, for the requests and agents on this connection that do not set their own.',
+      errorMessage: {
+        type: 'Anthropic connection property "maxOutputTokens" should be an integer.',
+        minimum: 'Anthropic connection property "maxOutputTokens" should be at least 1.',
+      },
+    },
+    timeout: {
+      type: 'integer',
+      minimum: 1,
+      description:
+        'Default milliseconds a model call may take, retries included, before it is cancelled, for the requests and agents on this connection that do not set their own.',
+      errorMessage: {
+        type: 'Anthropic connection property "timeout" should be an integer.',
+        minimum: 'Anthropic connection property "timeout" should be at least 1.',
+      },
+    },
   },
   errorMessage: {
     type: 'Anthropic connection properties should be an object.',

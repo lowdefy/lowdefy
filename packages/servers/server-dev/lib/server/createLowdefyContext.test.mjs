@@ -27,6 +27,7 @@ process.env.LOWDEFY_SECRET_TEST = secret;
 
 jest.unstable_mockModule('@lowdefy/api', () => ({
   createApiContext: jest.fn(),
+  createRequestSignal: jest.fn(({ clientSignal }) => clientSignal),
   // Returns what the server passes, so the test reads the auth-hook system context inputs.
   createSystemContext: jest.fn((options) => options),
   ensureMcpOauthResource: jest.fn(async () => {}),
@@ -112,7 +113,7 @@ function createHonoContext({ path: reqPath = '/api/request/foo' } = {}) {
       header: (name) => (name ? undefined : {}),
       path: reqPath,
       method: 'POST',
-      raw: { headers: new Headers() },
+      raw: { headers: new Headers(), signal: new AbortController().signal },
       url: `http://localhost${reqPath}`,
     },
   };
@@ -121,6 +122,12 @@ function createHonoContext({ path: reqPath = '/api/request/foo' } = {}) {
 test('createLowdefyContext sets mode to dev', async () => {
   const context = await createLowdefyContext({ c: createHonoContext() });
   expect(context.mode).toEqual('dev');
+});
+
+test('createLowdefyContext cancels the request work with the incoming request signal', async () => {
+  const c = createHonoContext();
+  const context = await createLowdefyContext({ c });
+  expect(context.signal).toBe(c.req.raw.signal);
 });
 
 test('createLowdefyContext scrubSecrets redacts a planted secret', async () => {

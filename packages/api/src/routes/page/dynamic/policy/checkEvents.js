@@ -15,10 +15,10 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { getPossibleOperators } from '@lowdefy/operators';
 
 import checkAction from './checkAction.js';
 import checkValue from './checkValue.js';
-import getPossibleOperators from './getPossibleOperators.js';
 
 function literalError({ path, what, policy }) {
   return {
@@ -41,7 +41,7 @@ function checkActionList({ actions, path, walk }) {
   actions.forEach((item, index) => {
     const itemPath = `${path}.${index}`;
     if (type.isObject(item) && ':if' in item) {
-      checkValue({ value: item[':if'], path: `${itemPath}.:if`, policy, errors });
+      checkValue({ value: item[':if'], path: `${itemPath}.:if`, walk });
       count += checkActionList({ actions: item[':then'] ?? [], path: `${itemPath}.:then`, walk });
       count += checkActionList({ actions: item[':else'] ?? [], path: `${itemPath}.:else`, walk });
       return;
@@ -53,7 +53,7 @@ function checkActionList({ actions, path, walk }) {
       }
       item[':switch'].forEach((caseObject, caseIndex) => {
         const casePath = `${itemPath}.:switch.${caseIndex}`;
-        checkValue({ value: caseObject?.[':case'], path: `${casePath}.:case`, policy, errors });
+        checkValue({ value: caseObject?.[':case'], path: `${casePath}.:case`, walk });
         count += checkActionList({
           actions: caseObject?.[':then'] ?? [],
           path: `${casePath}.:then`,
@@ -68,7 +68,7 @@ function checkActionList({ actions, path, walk }) {
       return;
     }
     if (type.isObject(item) && ':return' in item) {
-      checkValue({ value: item[':return'], path: `${itemPath}.:return`, policy, errors });
+      checkValue({ value: item[':return'], path: `${itemPath}.:return`, walk });
       return;
     }
     count += 1;
@@ -80,7 +80,10 @@ function checkActionList({ actions, path, walk }) {
 // An event is an action list or { try, catch, debounce }.
 function checkEvents({ events, path, walk }) {
   const { errors, policy } = walk;
-  if (!type.isObject(events) || getPossibleOperators(events).length > 0) {
+  if (
+    !type.isObject(events) ||
+    getPossibleOperators({ value: events, operators: walk.clientOperators }).length > 0
+  ) {
     errors.push(literalError({ path, what: 'Block "events"', policy }));
     return;
   }
@@ -93,7 +96,10 @@ function checkEvents({ events, path, walk }) {
     let count = 0;
     if (type.isArray(event)) {
       count = checkActionList({ actions: event, path: eventPath, walk });
-    } else if (type.isObject(event) && getPossibleOperators(event).length === 0) {
+    } else if (
+      type.isObject(event) &&
+      getPossibleOperators({ value: event, operators: walk.clientOperators }).length === 0
+    ) {
       count += checkActionList({ actions: event.try ?? [], path: `${eventPath}.try`, walk });
       count += checkActionList({ actions: event.catch ?? [], path: `${eventPath}.catch`, walk });
     } else {

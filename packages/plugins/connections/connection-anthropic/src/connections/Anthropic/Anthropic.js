@@ -19,8 +19,11 @@ import { createDecide, createGenerateObject, createGenerateText } from '@lowdefy
 import createProvider from './createProvider.js';
 import schema from './schema.js';
 
+// maxOutputTokens and timeout are defaults for the agents on this connection; the
+// request resolvers read them from the connection properties.
 function create({ connection }) {
-  return { provider: createProvider({ connection }) };
+  const { maxOutputTokens, timeout } = connection ?? {};
+  return { provider: createProvider({ connection }), maxOutputTokens, timeout };
 }
 
 const Anthropic = {

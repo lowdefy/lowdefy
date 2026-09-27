@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-// Each import() is a chunk the client loads for one page. The app-wide barrels
-// stay as dynamic imports: icons (one shared chunk every page loads, since icon
-// names are often computed at runtime) and the full type set (loaded when a
-// Dynamic fragment uses types outside its page's set).
+// Each import() is a chunk the client loads for one page, holding its types and
+// its icons. The app-wide barrels stay as dynamic imports, loaded only when a
+// page needs more than its own set: icons (a name that is not in the page's
+// set reaches an icon at runtime, or Dynamic content uses one) and the full
+// type set (a Dynamic fragment uses types outside its page's set).
 function generatePageTypesRegistry({ typesKeys }) {
   const entries = typesKeys.map(
     (typesKey) =>

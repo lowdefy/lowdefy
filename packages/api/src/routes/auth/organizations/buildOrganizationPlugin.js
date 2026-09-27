@@ -65,7 +65,17 @@ function buildOrganizationPlugin({ authConfig = {}, getAuth, sendInvitationEmail
       ? { invitationExpiresIn: authConfig.organizations.invitationExpiresIn }
       : {}),
     schema: {
-      organization: { modelName: modelNames.organization },
+      organization: {
+        modelName: modelNames.organization,
+        additionalFields: {
+          // Set while a tenant signup mint has written the organization but
+          // not yet its owner's member row (createActiveOrgPolicyHook). Only a
+          // marked organization is ever joined as owner by the mint, so one
+          // that everyone has left is never handed back. Server-only: never
+          // accepted from a request body, never returned by an endpoint.
+          mintPending: { type: 'boolean', required: false, input: false, returned: false },
+        },
+      },
       member: {
         modelName: modelNames.member,
         // Per-(user, org) admin-set authorization inputs - internal, not an

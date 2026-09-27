@@ -24,12 +24,14 @@ import {
   generateClientJsModule,
   hydrateDeferredRecords,
   makeId,
+  restoreTenantTargets,
 } from '@lowdefy/build/dev';
 
 import createLogger from './log/createLogger.js';
 import pageBuildRecords from './pageBuildRecords.js';
 import PageCache from './pageCache.mjs';
 import readBuildApiArtifacts from './readBuildApiArtifacts.mjs';
+import skipStaleMapWrites from './skipStaleMapWrites.js';
 
 const jitLogger = createLogger({ name: 'jit-build' });
 
@@ -92,7 +94,7 @@ function loadPageRegistry(buildDirectory) {
   }
 }
 
-function getBuildContext(buildDirectory, configDirectory) {
+export function getBuildContext(buildDirectory, configDirectory) {
   if (cachedBuildContext) return cachedBuildContext;
 
   const refMap = readJsonFile(path.join(buildDirectory, 'refMap.json')) ?? {};
@@ -127,6 +129,12 @@ function getBuildContext(buildDirectory, configDirectory) {
   }
   for (const id of websocketIds) {
     cachedBuildContext.websocketIds.add(id);
+  }
+  // The scoped connections, walled collections and shared connections, so a
+  // page's requests get the same tenant pipeline checks as in a full build.
+  const tenantTargets = readJsonFile(path.join(buildDirectory, 'tenantTargets.json'));
+  if (tenantTargets) {
+    restoreTenantTargets({ context: cachedBuildContext, tenantTargets });
   }
   // Pages that host a policy-bound Dynamic block count the policy's types
   // and validate its pages and endpoints.
@@ -172,11 +180,15 @@ function getBuildContext(buildDirectory, configDirectory) {
   // changed; JIT re-resolves as pages are requested.
   cachedBuildContext.dynamicIconData = {};
 
-  // Advance makeId past all skeleton IDs to prevent collisions with JIT builds
+  // Continue the config build's keys, so JIT keys never repeat a key of that build, of
+  // an earlier page build, or of an earlier config build.
   const idCounter = readJsonFile(path.join(buildDirectory, 'idCounter.json'));
-  if (idCounter != null) {
-    makeId.setCounter(idCounter);
-  }
+  makeId.continueFrom(idCounter);
+  skipStaleMapWrites({
+    buildDirectory,
+    context: cachedBuildContext,
+    keyPrefix: idCounter.prefix,
+  });
 
   return cachedBuildContext;
 }

@@ -24,7 +24,9 @@ test('generatePageTypesModule aliases imports so a block and an action can share
       operators: [
         { originalTypeName: '_state', package: '@lowdefy/operators-js', typeName: '_state' },
       ],
+      icons: [],
     },
+    iconData: {},
   });
   expect(source).toEqual(`import { Throw as a0 } from "@lowdefy/actions-core/actions";
 import { Throw as b0 } from "@lowdefy/blocks-basic/blocks";
@@ -39,6 +41,9 @@ export default {
   operators: {
     "_state": o0,
   },
+  icons: {
+
+  },
 };
 `);
 });
@@ -49,8 +54,26 @@ test('generatePageTypesModule maps a renamed type to its original export', () =>
       actions: [],
       blocks: [{ originalTypeName: 'Button', package: 'my-plugin', typeName: 'MyButton' }],
       operators: [],
+      icons: [],
     },
+    iconData: {},
   });
   expect(source).toContain('import { Button as b0 } from "my-plugin/blocks";');
   expect(source).toContain('"MyButton": b0,');
+});
+
+test('generatePageTypesModule inlines only its page icons, each node array once', async () => {
+  const node = [['path', { d: 'm15 5 4 4' }]];
+  const source = generatePageTypesModule({
+    imports: { actions: [], blocks: [], operators: [], icons: ['Pencil', 'edit'] },
+    iconData: {
+      Pencil: { node },
+      edit: { node },
+      Rocket: { node: [['path', { d: 'M4 4h2' }]] },
+    },
+  });
+  const url = `data:text/javascript;base64,${Buffer.from(source).toString('base64')}`;
+  const { default: pageTypes } = await import(url);
+  expect(pageTypes.icons).toEqual({ Pencil: { node }, edit: { node } });
+  expect(source.match(/const n\d+ = /g)).toEqual(['const n0 = ']);
 });

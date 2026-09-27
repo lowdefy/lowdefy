@@ -82,6 +82,7 @@ export default {
             },
             url: {
               type: 'string',
+              urlKind: 'url',
               description: 'External URL to link to.',
             },
             newTab: {
@@ -160,7 +161,7 @@ export default {
                     description: 'Menu item type.',
                   },
                   pageId: { type: 'string', description: 'Page to link to.' },
-                  url: { type: 'string', description: 'External URL to link to.' },
+                  url: { type: 'string', urlKind: 'url', description: 'External URL to link to.' },
                   newTab: { type: 'boolean', description: 'Open link in new tab.' },
                   style: {
                     type: ['object', 'string', 'array'],

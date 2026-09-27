@@ -588,6 +588,8 @@ _ref:
 
                 The build bundles only the icons your config names. An icon name that only exists at runtime — read from state or a request — is not in the config, so list it under `theme.icons.include` to bundle it. A name kept in config data, such as `icon: warning` on a status enum that a template turns into `data-icon="{% raw %}{{ status.icon }}{% endraw %}"`, is already in the config and gets bundled.
 
+                In production each page loads only its own icons: the names in its config and `_js` functions, the icons its blocks draw, and the icons in `menus` and `global`, which every page can show. The first time a page draws a bundled icon that is not one of its own, such as a name from `include`, from an endpoint or from another page, it loads the rest of the app's icons. The icon keeps its space, empty, until they arrive, and stays loaded for the rest of the visit. A page whose Dynamic content names such an icon loads them before it first renders. The dev server loads every icon.
+
                 An unknown icon name at an icon property fails the build, with a suggestion. Old react-icons names such as `AiOutlineUser` fail too; [V6 to V7](/v6-to-v7) shows how to migrate them.
 
                 ### Icons in HTML

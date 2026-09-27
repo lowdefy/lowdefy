@@ -27,7 +27,8 @@ export default {
       // The properties naming the physical collection a connection reads and
       // the one its change log writes into. The build uses them to refuse a
       // tenant: shared connection whose change log writes into a collection a
-      // scoped connection reads.
+      // scoped connection reads, and to mark a tenant: shared connection whose
+      // own collection a scoped connection reads, so its writes are guarded.
       tenantTarget: {
         database: ['databaseUri', 'databaseName'],
         collection: 'collection',

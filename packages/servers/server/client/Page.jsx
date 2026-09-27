@@ -26,6 +26,7 @@ import blockMetas from '../build/plugins/blockMetas.json';
 import jsMap from '../build/plugins/operators/clientJsMap.js';
 import appMeta from '../build/appMeta.json';
 
+import loadAllIcons from './loadAllIcons.js';
 import loadPageTypes from './loadPageTypes.js';
 import shouldReloadForBuild from './shouldReloadForBuild.js';
 import types from './types.js';
@@ -117,6 +118,7 @@ function Page({ auth, config, lowdefy }) {
         rootConfig: config.rootConfig,
       }}
       jsMap={jsMap}
+      loadAllIcons={loadAllIcons}
       lowdefy={lowdefy}
       router={router}
       types={{

@@ -123,7 +123,8 @@ Page protection works the same as production: `renderPage` builds the context (w
 
 | Route | Purpose |
 |-------|---------|
-| `GET /api/auth/session` | Returns `context.session ?? {}` (from cookie) — also the e2e-utils webServer health check |
+| `GET /api/auth/session` | Returns `context.session ?? {}` (from cookie) |
+| `GET /api/e2e/identity` | `{ server: 'lowdefy-e2e', buildDirectory }` — e2e-utils checks it before reusing a running server |
 | `/api/request/*` | Execute requests (same as production) |
 | `/api/endpoints/*` | Execute API endpoints (same as production) |
 | `GET /api/page/*` | Page config JSON for SPA navigation (same as production) |
@@ -144,6 +145,7 @@ server-e2e/
 │   │   └── errorHandler.js   # No Sentry capture
 │   ├── routes/
 │   │   ├── sessionMock.js    # GET /api/auth/session
+│   │   ├── e2eIdentity.js    # GET /api/e2e/identity
 │   │   ├── apiPage.js / clientError.js / endpoints.js / request.js / usage.js
 │   ├── html/                 # template.js / renderPage.js / getAssets.js
 │   └── lib/                  # safeScriptJson.js / getPathSegments.js

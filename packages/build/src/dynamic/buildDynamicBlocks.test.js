@@ -151,6 +151,33 @@ test('buildDynamicBlocks throws when a client operator is not in the client bund
   );
 });
 
+test('buildDynamicBlocks treats a key that names no client operator the app knows as data', () => {
+  const usedTypes = { actions: new Set(), blocks: new Set(), operators: new Set() };
+  const blocks = [
+    {
+      id: 'wrapper',
+      type: 'Html',
+      properties: { hit: { _score: 0.5 }, html: { _number: { round: 1.5 } } },
+    },
+  ];
+  // _number is installed but not bundled: still an operator, still refused.
+  expect(() =>
+    buildDynamicBlocks({
+      ...defaultArgs,
+      blocks,
+      clientOperators: new Set(['_number', '_state']),
+      usedTypes,
+    })
+  ).toThrow('resolved content uses operator type "_number"');
+  expect(usedTypes.operators.has('_score')).toBe(false);
+  const result = buildDynamicBlocks({
+    ...defaultArgs,
+    blocks: [{ id: 'hit', type: 'Html', properties: { hit: { _score: 0.5 } } }],
+    clientOperators: new Set(['_number', '_state']),
+  });
+  expect(result.blocks[0].properties.hit).toEqual({ _score: 0.5 });
+});
+
 test('buildDynamicBlocks allows bundled client operators', () => {
   const blocks = [
     {

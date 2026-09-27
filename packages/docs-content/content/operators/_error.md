@@ -60,6 +60,28 @@ error:
 
 `code` and `statusCode` follow one rule across connection libraries. `code` is the error's own `code`, such as `ERR_BAD_REQUEST` from AxiosHttp or `11000` from MongoDB. `statusCode` is the first number among the error's `statusCode`, `status` and `response.status`. A request error takes both from the error the connection threw, so `_error: statusCode` reads the HTTP status of a failed `AxiosHttp` request without reading the cause.
 
+##### Service errors and rate limits
+
+A request that fails because of the service it calls, not its config, is a `ServiceError`: a network failure, a timeout, a 5xx response, or a rate limit (HTTP 429, including a provider's throttling error). Every other request failure is a `RequestError`. A routine can tell a rate limit from a fault and try again later:
+
+```yaml
+- :try:
+    - id: summarize
+      type: GenerateText
+      connectionId: claude
+      properties:
+        model: claude-haiku-4-5
+        prompt:
+          _payload: text
+  :catch:
+    - :if:
+        _eq: [{ _error: statusCode }, 429]
+      :then:
+        - :return:
+            status: busy
+    - :throw: Summary failed
+```
+
 #### Arguments
 
 ###### string

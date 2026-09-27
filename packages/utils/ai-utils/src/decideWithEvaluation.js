@@ -15,6 +15,7 @@
 */
 
 import { experimental_evaluate as evaluate } from 'ai';
+import { type } from '@lowdefy/helpers';
 
 import { fromEvaluationAnswer, questionKind } from './decideQuestions.js';
 
@@ -35,13 +36,32 @@ function toEvaluationQuestion(question) {
   return { type: 'score', instructions: question.score, criteria: question.levels };
 }
 
+// evaluate takes no timeout, so the timeout becomes part of its abort signal. It takes
+// no maxOutputTokens either: an evaluation model returns probabilities, not text.
+function toEvaluateOptions({ abortSignal, maxOutputTokens, timeout, ...options }) {
+  const signals = [abortSignal];
+  if (!type.isNone(timeout)) {
+    signals.push(AbortSignal.timeout(timeout));
+  }
+  const present = signals.filter((signal) => !type.isNone(signal));
+  if (present.length > 0) {
+    options.abortSignal = AbortSignal.any(present);
+  }
+  return options;
+}
+
 // The evaluation backend: an evaluation model answers every question in one
 // pass, with a probability for each option (ai experimental_evaluate).
 async function decideWithEvaluation({ model, request, options }) {
   const questions = Object.fromEntries(
     Object.entries(request.questions).map(([id, question]) => [id, toEvaluationQuestion(question)])
   );
-  const result = await evaluate({ model, state: request.state, questions, ...options });
+  const result = await evaluate({
+    model,
+    state: request.state,
+    questions,
+    ...toEvaluateOptions(options),
+  });
   // TypeSafe reports a calibrated confidence per question alongside the
   // probabilities; other evaluation providers may not.
   const confidence = Object.values(result.providerMetadata ?? {}).find(

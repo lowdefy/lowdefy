@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { OperatorError, RequestError, UserError } from '@lowdefy/errors';
+import { OperatorError, RequestError, ServiceError, UserError } from '@lowdefy/errors';
 
 import {
   maskCredentialKeys,
@@ -39,6 +39,7 @@ const allowedErrorKeys = new Set([
   'location',
   'service',
   'hint',
+  'retryAfter',
   'methodName',
   'metaData',
   'blockId',
@@ -210,6 +211,17 @@ test('serializeErrorForLog keeps UserError metaData, blockId, pageId and isRejec
     isReject: true,
     metaData: { step: 'validate' },
   });
+});
+
+test('serializeErrorForLog keeps the Retry-After of a rate-limited ServiceError', () => {
+  const cause = new Error('Too Many Requests');
+  cause.statusCode = 429;
+  cause.responseHeaders = { 'retry-after': '30' };
+  const serialized = serializeErrorForLog(
+    new ServiceError(undefined, { cause, service: 'claude' })
+  );
+  expect(serialized.statusCode).toBe(429);
+  expect(serialized.retryAfter).toBe('30');
 });
 
 test('serializeErrorForLog keeps Lowdefy fields on an error that has a Lowdefy class name but not the class', () => {

@@ -14,20 +14,24 @@
   limitations under the License.
 */
 
-import pageTypes, { allTypes, icons } from '../build/plugins/pageTypes.js';
+import pageTypes, { allTypes } from '../build/plugins/pageTypes.js';
 
+import loadAllIcons from './loadAllIcons.js';
 import types from './types.js';
 
-// Loads the plugin code one page uses: its type set (a chunk shared by every
-// page with the same set), the app-wide icons, and the full type set when
-// Dynamic content reaches outside the page's own types.
+// Loads the plugin code one page uses: its type set with its icons (a chunk
+// shared by every page with the same set), and the full type set when Dynamic
+// content reaches outside the page's own types. Dynamic content that names an
+// icon outside the page's set, or types outside it (whose blocks draw their
+// own icons), loads every icon before the first render.
 async function loadPageTypes({ pageConfig }) {
-  const loaders = [
-    pageTypes[pageConfig.typesKey]().then((module) => module.default),
-    icons().then((module) => ({ icons: module.default })),
-  ];
+  const loaders = [pageTypes[pageConfig.typesKey]().then((module) => module.default)];
   if (pageConfig.loadAllTypes === true) {
     loaders.push(allTypes());
+  }
+  if (pageConfig.loadAllTypes === true || pageConfig.loadAllIcons === true) {
+    // loadAllIcons merges into types.icons itself, so it adds no type set here.
+    loaders.push(loadAllIcons().then(() => ({})));
   }
   const loaded = await Promise.all(loaders);
   loaded.forEach((typeSet) => {
