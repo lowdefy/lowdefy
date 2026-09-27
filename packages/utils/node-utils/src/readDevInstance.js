@@ -30,10 +30,32 @@ function readRecord(instancePath) {
   }
 }
 
+// Readers poll the record (every 100 ms while waiting on a build), and a
+// start time costs a ps process, so it is read once a few seconds per pid.
+const START_TIME_TTL_MS = 5000;
+const startTimes = new Map();
+
+function readStartTime(pid) {
+  const cached = startTimes.get(pid);
+  if (!type.isUndefined(cached) && Date.now() - cached.readAt < START_TIME_TTL_MS) {
+    return cached.startTime;
+  }
+  const now = Date.now();
+  startTimes.forEach((entry, key) => {
+    if (now - entry.readAt >= START_TIME_TTL_MS) {
+      startTimes.delete(key);
+    }
+  });
+  const startTime = getProcessStartTime({ pid });
+  startTimes.set(pid, { startTime, readAt: now });
+  return startTime;
+}
+
 // A pid alone does not name a process: after a crash (kill -9 skips the
 // manager's cleanup) or a reboot, the record's pid can belong to something
-// else. The manager records its start time too; a record from a manager that
-// predates it is checked by pid only.
+// else. The manager records its start time too. A record from a manager that
+// predates it, or a start time ps could not read, leaves the pid to decide -
+// never "not running", which would let a second dev server start beside it.
 function isRecordProcess(record) {
   if (!isPidAlive(record.pid)) {
     return false;
@@ -41,7 +63,8 @@ function isRecordProcess(record) {
   if (type.isNone(record.processStartTime)) {
     return true;
   }
-  return getProcessStartTime({ pid: record.pid }) === record.processStartTime;
+  const startTime = readStartTime(record.pid);
+  return type.isNone(startTime) || startTime === record.processStartTime;
 }
 
 // A record is live only when it was written for this exact directory and its

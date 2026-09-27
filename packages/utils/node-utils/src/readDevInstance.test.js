@@ -14,22 +14,35 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import getDevInstancePath from './getDevInstancePath.js';
-import getProcessStartTime from './getProcessStartTime.js';
-import readDevInstance from './readDevInstance.js';
+const mockGetProcessStartTime = jest.fn();
+jest.unstable_mockModule('./getProcessStartTime.js', () => ({
+  default: mockGetProcessStartTime,
+}));
 
+const { default: getDevInstancePath } = await import('./getDevInstancePath.js');
+const { default: readDevInstance } = await import('./readDevInstance.js');
+
+const START_TIME = 'Sun Sep 27 08:00:00 2026';
 let configDirectory;
+let now = Date.now();
 
 beforeEach(() => {
+  // Past the start time cache, so each test reads afresh.
+  now += 60000;
+  jest.spyOn(Date, 'now').mockImplementation(() => now);
+  mockGetProcessStartTime.mockReset();
+  mockGetProcessStartTime.mockReturnValue(START_TIME);
   configDirectory = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-instance-')));
   fs.mkdirSync(path.join(configDirectory, '.lowdefy'));
 });
 
 afterEach(() => {
+  jest.restoreAllMocks();
   fs.rmSync(configDirectory, { recursive: true, force: true });
 });
 
@@ -62,18 +75,28 @@ test('readDevInstance returns null for an unreadable record', () => {
   expect(readDevInstance({ configDirectory })).toBe(null);
 });
 
-test('readDevInstance returns a record whose pid is still the process that wrote it', () => {
-  const processStartTime = getProcessStartTime({ pid: process.pid });
-  writeRecord({ pid: process.pid, processStartTime, configDirectory, port: 4100 });
-  expect(readDevInstance({ configDirectory })).toMatchObject({ pid: process.pid, port: 4100 });
+test.each([
+  ['is the process that wrote it', START_TIME, true],
+  ['now belongs to another process', 'Thu Jan  1 00:00:00 1970', false],
+])('readDevInstance with a live pid that %s', (_, processStartTime, live) => {
+  writeRecord({ pid: process.pid, processStartTime: START_TIME, configDirectory });
+  mockGetProcessStartTime.mockReturnValue(processStartTime);
+  expect(readDevInstance({ configDirectory }) !== null).toBe(live);
 });
 
-test('readDevInstance ignores a record whose pid now belongs to another process', () => {
-  writeRecord({
-    pid: process.pid,
-    processStartTime: 'Thu Jan  1 00:00:00 1970',
-    configDirectory,
-    port: 4100,
-  });
-  expect(readDevInstance({ configDirectory })).toBe(null);
+test('readDevInstance trusts a live pid when its start time cannot be read', () => {
+  writeRecord({ pid: process.pid, processStartTime: START_TIME, configDirectory });
+  mockGetProcessStartTime.mockReturnValue(null);
+  expect(readDevInstance({ configDirectory })).toMatchObject({ pid: process.pid });
+});
+
+test('readDevInstance reads a pid start time once while polling', () => {
+  writeRecord({ pid: process.pid, processStartTime: START_TIME, configDirectory });
+  readDevInstance({ configDirectory });
+  now += 100;
+  readDevInstance({ configDirectory });
+  expect(mockGetProcessStartTime).toHaveBeenCalledTimes(1);
+  now += 10000;
+  readDevInstance({ configDirectory });
+  expect(mockGetProcessStartTime).toHaveBeenCalledTimes(2);
 });
