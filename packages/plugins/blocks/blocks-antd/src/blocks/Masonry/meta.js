@@ -56,7 +56,8 @@ export default {
       sequential: {
         type: 'boolean',
         default: false,
-        description: 'Whether to render items sequentially.',
+        description:
+          'Has no effect: antd Masonry always places each item in the shortest column. Kept so existing configs stay valid.',
       },
       theme: {
         type: 'object',

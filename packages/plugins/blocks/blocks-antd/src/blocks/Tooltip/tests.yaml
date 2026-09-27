@@ -110,3 +110,8 @@
   properties:
     title: Opens on right click
     trigger: contextMenu
+- id: 'properties.destroyOnHidden: true'
+  type: Tooltip
+  properties:
+    title: Removed from the page when hidden
+    destroyOnHidden: true

@@ -328,3 +328,96 @@ blocks:
             method: setOpen
             args:
               - open: true
+
+  - id: drawer_resizable_large
+    type: Drawer
+    properties:
+      title: Resizable large
+      size: large
+      resizable: true
+    slots:
+      content:
+        blocks:
+          - id: drawer_resizable_large_text
+            type: Paragraph
+            properties:
+              content: Content of drawer_resizable_large.
+
+  - id: open_drawer_resizable_large
+    type: Button
+    properties:
+      title: Open drawer_resizable_large
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_resizable_large
+            method: setOpen
+            args:
+              - open: true
+
+  - id: open_drawer_in_place
+    type: Button
+    properties:
+      title: Open drawer_in_place
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_in_place
+            method: setOpen
+            args:
+              - open: true
+
+  - id: drawer_in_place_box
+    type: Box
+    style:
+      .element:
+        position: relative
+        height: 240px
+        overflow: hidden
+    blocks:
+      - id: drawer_in_place
+        type: Drawer
+        properties:
+          title: In place
+          getContainer: false
+        slots:
+          content:
+            blocks:
+              - id: drawer_in_place_text
+                type: Paragraph
+                properties:
+                  content: Content of drawer_in_place.
+
+  - id: drawer_selector_target
+    type: Box
+
+  - id: drawer_selector
+    type: Drawer
+    properties:
+      title: Selector container
+      getContainer: '#drawer_selector_target'
+    slots:
+      content:
+        blocks:
+          - id: drawer_selector_text
+            type: Paragraph
+            properties:
+              content: Content of drawer_selector.
+
+  - id: open_drawer_selector
+    type: Button
+    properties:
+      title: Open drawer_selector
+    events:
+      onClick:
+        - id: open_drawer
+          type: CallMethod
+          params:
+            blockId: drawer_selector
+            method: setOpen
+            args:
+              - open: true

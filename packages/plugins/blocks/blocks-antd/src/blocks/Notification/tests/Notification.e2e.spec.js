@@ -289,6 +289,27 @@ test.describe('Notification Block', () => {
     expect(iconBox.x).toBeGreaterThan(titleBox.x);
   });
 
+  test('each open shows its own notification, and its button closes only that one', async ({
+    page,
+  }) => {
+    const openBtn = getBlock(page, 'open_with_button').locator('.ant-btn');
+    await openBtn.click();
+    await openBtn.click();
+    const notices = page.locator('.ant-notification-notice').filter({ hasText: 'With Button' });
+    await expect(notices).toHaveCount(2);
+    await notices.first().locator('.ant-notification-notice-actions .ant-btn').click();
+    await expect(notices).toHaveCount(1);
+  });
+
+  test('the --notification-top CSS variable moves top notifications', async ({ page }) => {
+    // The documented way to offset notifications, since the top property has no effect.
+    await page.addStyleTag({ content: '.ant-notification { --notification-top: 120px; }' });
+    await getBlock(page, 'open_basic').locator('.ant-btn').click();
+    const notification = getNotification(page);
+    await expect(notification).toBeVisible();
+    await expect.poll(async () => Math.round((await notification.boundingBox()).y)).toBe(120);
+  });
+
   test('clicking the notification button closes the notification', async ({ page }) => {
     await getBlock(page, 'open_notif_styled').locator('.ant-btn').click();
     const notification = getNotification(page);

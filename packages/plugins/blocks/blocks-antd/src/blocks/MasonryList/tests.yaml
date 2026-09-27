@@ -36,10 +36,6 @@
     gutter:
       - 16
       - 24
-- id: 'properties.sequential: true'
-  type: MasonryList
-  properties:
-    sequential: true
 - id: 'properties.gutter: responsive'
   type: MasonryList
   properties:

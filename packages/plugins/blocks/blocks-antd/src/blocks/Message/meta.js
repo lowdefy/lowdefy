@@ -60,7 +60,7 @@ export default {
       theme: {
         type: 'object',
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Has no effect: messages render in the app-wide message holder, outside the block. Set these Message design tokens for the whole app in `lowdefy.yaml` under `theme.antd.components.Message`.',
         docs: {
           displayType: 'yaml',
           link: 'https://ant.design/components/message#design-token',

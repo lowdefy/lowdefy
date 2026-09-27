@@ -193,32 +193,3 @@
               properties:
                 content:
                   _state: ml_team.$.role
-
-- title: Sequential Rendering
-  fullWidth: true
-  blocks:
-    - id: ml_seq
-      type: MasonryList
-      properties:
-        columns: 3
-        gutter: 16
-        sequential: true
-      blocks:
-        - id: ml_seq.$.card
-          type: Card
-          class:
-            _state: ml_seq.$.bg
-          properties:
-            size: small
-          blocks:
-            - id: ml_seq.$.title_block
-              type: Title
-              properties:
-                content:
-                  _state: ml_seq.$.title
-                level: 5
-            - id: ml_seq.$.desc_block
-              type: Paragraph
-              properties:
-                content:
-                  _state: ml_seq.$.desc

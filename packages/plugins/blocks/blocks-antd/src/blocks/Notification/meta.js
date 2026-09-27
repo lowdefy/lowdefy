@@ -41,7 +41,7 @@ export default {
         type: 'number',
         default: 24,
         description:
-          'Distance from the bottom of the viewport, when placement is bottomRight or bottomLeft (unit: pixels).',
+          'Has no effect: notifications open in the app-wide notification holder, which keeps them 24px from the bottom of the viewport. To move every bottom notification, set the `--notification-bottom` CSS variable on `.ant-notification` in `public/styles.css`, for example `.ant-notification { --notification-bottom: 80px; }`.',
       },
       closable: {
         type: 'boolean',
@@ -107,7 +107,7 @@ export default {
         type: 'number',
         default: 24,
         description:
-          'Distance from the top of the viewport, when placement is topRight or topLeft (unit: pixels).',
+          'Has no effect: notifications open in the app-wide notification holder, which keeps them 24px from the top of the viewport. To move every top notification, set the `--notification-top` CSS variable on `.ant-notification` in `public/styles.css`, for example `.ant-notification { --notification-top: 80px; }`.',
       },
       status: {
         type: 'string',
@@ -118,7 +118,7 @@ export default {
       theme: {
         type: 'object',
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Has no effect: notifications render in the app-wide notification holder, outside the block. Set these Notification design tokens for the whole app in `lowdefy.yaml` under `theme.antd.components.Notification`.',
         docs: {
           displayType: 'yaml',
           link: 'https://ant.design/components/notification#design-token',

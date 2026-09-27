@@ -57,7 +57,7 @@ export default {
         type: 'boolean',
         default: false,
         description:
-          'Render items sequentially (top to bottom, then next column). Default is balanced column-fill.',
+          'Has no effect: antd Masonry always places each item in the shortest column. Kept so existing configs stay valid.',
       },
       theme: {
         type: 'object',

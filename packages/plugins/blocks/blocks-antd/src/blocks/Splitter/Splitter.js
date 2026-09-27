@@ -19,52 +19,9 @@ import { Splitter } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getCollapsible from './getCollapsible.js';
 import withTheme from '../withTheme.js';
-
-function renderIcon({ blockId, classNames, events, Icon, properties, slot, styles }) {
-  if (type.isNone(properties)) {
-    return undefined;
-  }
-  return (
-    <Icon
-      blockId={`${blockId}_${slot}`}
-      classNames={{ element: classNames }}
-      events={events}
-      properties={properties}
-      styles={{ element: styles }}
-    />
-  );
-}
-
-function getCollapsible({ blockId, classNames, collapsible, events, Icon, styles }) {
-  if (type.isNone(collapsible)) {
-    return undefined;
-  }
-  const icon = collapsible.icon ?? {};
-  return {
-    motion: collapsible.motion,
-    icon: {
-      start: renderIcon({
-        blockId,
-        classNames: classNames.collapseIcon,
-        events,
-        Icon,
-        properties: icon.start,
-        slot: 'collapseIcon_start',
-        styles: styles.collapseIcon,
-      }),
-      end: renderIcon({
-        blockId,
-        classNames: classNames.collapseIcon,
-        events,
-        Icon,
-        properties: icon.end,
-        slot: 'collapseIcon_end',
-        styles: styles.collapseIcon,
-      }),
-    },
-  };
-}
+import './style.css';
 
 const SplitterBlock = ({
   blockId,
@@ -77,33 +34,38 @@ const SplitterBlock = ({
   styles = {},
 }) => {
   const panels = properties.panels ?? [];
+  // antd 6 renamed `layout` to `orientation`; Lowdefy keeps both properties.
+  const orientation = properties.orientation ?? properties.layout;
   return (
     <Splitter
       id={blockId}
       className={classNames.element}
       classNames={{ panel: classNames.panel, dragger: classNames.dragger }}
       style={styles.element}
-      styles={{ panel: styles.panel, dragger: styles.dragger }}
+      // antd reads the dragger style from `default` and `active` keys, and only applies `default`.
+      styles={{ panel: styles.panel, dragger: { default: styles.dragger } }}
       collapsible={getCollapsible({
         blockId,
         classNames,
         collapsible: properties.collapsible,
         events,
         Icon,
+        orientation,
         styles,
       })}
       destroyOnHidden={properties.destroyOnHidden}
-      draggerIcon={renderIcon({
-        blockId,
-        classNames: classNames.draggerIcon,
-        events,
-        Icon,
-        properties: properties.draggerIcon,
-        slot: 'draggerIcon',
-        styles: styles.draggerIcon,
-      })}
-      // antd 6 renamed `layout` to `orientation`; Lowdefy keeps both properties.
-      orientation={properties.orientation ?? properties.layout}
+      draggerIcon={
+        type.isNone(properties.draggerIcon) ? undefined : (
+          <Icon
+            blockId={`${blockId}_draggerIcon`}
+            classNames={{ element: classNames.draggerIcon }}
+            events={events}
+            properties={properties.draggerIcon}
+            styles={{ element: styles.draggerIcon }}
+          />
+        )
+      }
+      orientation={orientation}
       lazy={properties.lazy}
       onDraggerDoubleClick={(index) => {
         methods.triggerEvent({ name: 'onDraggerDoubleClick', event: { index } });

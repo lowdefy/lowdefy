@@ -147,6 +147,14 @@ test.describe('Tooltip Block', () => {
     await expect(tooltip).toHaveCount(0);
   });
 
+  test('destroyOnHidden removes the tooltip after it hides', async ({ page }) => {
+    await getBlock(page, 'tooltip_destroy_on_hidden_trigger').hover();
+    const tooltip = page.locator('.ant-tooltip').filter({ hasText: 'Destroyed on hidden tooltip' });
+    await expect(tooltip).toBeVisible();
+    await page.mouse.move(0, 0);
+    await expect(tooltip).toHaveCount(0);
+  });
+
   test('trigger contextMenu opens the tooltip on right click', async ({ page }) => {
     await getBlock(page, 'tooltip_context_menu_trigger').click({ button: 'right' });
     const tooltip = page.locator('.ant-tooltip').filter({ hasText: 'Context menu tooltip' });

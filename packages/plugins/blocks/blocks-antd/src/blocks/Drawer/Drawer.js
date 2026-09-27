@@ -66,6 +66,12 @@ const setOpenState = ({ open, methods, rename, setOpen }) => {
   }
 };
 
+// antd resolves the named sizes for `size`, but not for `defaultSize`.
+const namedDrawerSizes = {
+  default: 378,
+  large: 736,
+};
+
 // antd v6 replaced the separate `width`/`height` Drawer props with a single `size` prop
 // whose meaning depends on `placement`: width for left/right, height for top/bottom.
 const getDrawerSize = ({ placement, size, width, height }) => {
@@ -108,7 +114,7 @@ const DrawerBlock = ({
   // A controlled `size` would pin a resizable drawer, so it becomes the starting size instead.
   const sizeProps = properties.resizable
     ? {
-        defaultSize: drawerSize,
+        defaultSize: namedDrawerSizes[drawerSize] ?? drawerSize,
         maxSize: properties.maxSize,
         resizable: {
           onResize: (size) => {

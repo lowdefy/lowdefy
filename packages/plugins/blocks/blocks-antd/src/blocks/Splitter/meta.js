@@ -18,7 +18,7 @@ import icon from '../../schemas/icon.js';
 
 export default {
   category: 'container',
-  icons: [],
+  icons: ['chevron-down', 'chevron-left', 'chevron-right', 'chevron-up'],
   valueType: null,
   slots: false,
   cssKeys: {
@@ -26,7 +26,7 @@ export default {
     panel: 'Each Splitter panel.',
     dragger: 'The drag handle between panels.',
     draggerIcon: 'The custom icon in the drag handle, set with draggerIcon.',
-    collapseIcon: 'The custom collapse icons, set with collapsible.icon.',
+    collapseIcon: 'The collapse icons on the drag handles of collapsible panels.',
   },
   events: {
     onCollapse: {
@@ -70,7 +70,8 @@ export default {
           },
           icon: {
             type: 'object',
-            description: 'Custom collapse icons.',
+            description:
+              'Custom collapse icons. By default the collapse buttons show `chevron-left` and `chevron-right` arrows, or `chevron-up` and `chevron-down` arrows on a vertical Splitter.',
             additionalProperties: false,
             properties: {
               start: {
