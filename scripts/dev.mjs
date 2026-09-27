@@ -23,6 +23,8 @@
     pnpm dev --config-directory /path/to/app --log-level debug  # external app
     pnpm dev --no-open --port 3001                              # custom port, no browser
 
+  LOWDEFY_DEV_PORT (set by the Lowdefy hub) outranks --port and binds strictly.
+
   How it works:
     1. Builds the monorepo (pnpm build:turbo)
     2. Imports CLI logger from built dist (for spinners and formatted output)
@@ -47,15 +49,25 @@ const SERVER_DEV_DIR = path.join(REPO_ROOT, 'packages/servers/server-dev');
 
 // -- Arg parsing --
 
-const { configDirectory, logLevel, skipBuild, values: args } = parse({
+const {
+  configDirectory,
+  logLevel,
+  skipBuild,
+  values: args,
+} = parse({
   open: { type: 'boolean', default: false },
   port: { type: 'string', default: '3000' },
   watch: { type: 'string', multiple: true, default: [] },
   'watch-ignore': { type: 'string', multiple: true, default: [] },
 });
 
+// The Lowdefy hub allocates each managed server's port and sets it here. As in
+// `lowdefy dev`, it outranks --port (dev scripts often hard-code one) and is
+// bound strictly: a hub server that moved port would answer for another app.
+const hubPort = process.env.LOWDEFY_DEV_PORT;
+const hubAllocated = typeof hubPort === 'string' && hubPort !== '';
 const openBrowser = args['open'];
-const port = args['port'];
+const port = hubAllocated ? hubPort : args['port'];
 const watchPaths = args['watch'];
 const watchIgnorePaths = args['watch-ignore'];
 
@@ -135,6 +147,9 @@ const env = {
   LOWDEFY_SERVER_DEV_OPEN_BROWSER: openBrowser ? 'true' : 'false',
   PORT: port,
 };
+if (hubAllocated) {
+  env.LOWDEFY_SERVER_DEV_STRICT_PORT = 'true';
+}
 
 // Merge CLI --watch/--watch-ignore with cli.watch/cli.watchIgnore from lowdefy.yaml
 const yamlForCli = readLowdefyYaml(configDirectory);

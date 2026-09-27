@@ -17,7 +17,7 @@
 const DIRECTORY_PROPERTY = {
   type: 'string',
   description:
-    "The app to act on: its directory or any path inside it, absolute or relative to the session's working directory. Defaults to the session's working directory. Pass your own working directory whenever you work in a different git worktree from the session (for example as a subagent), and the app's directory when the repository holds several apps.",
+    "The app to act on: its directory or any path inside it, absolute or relative to the session's working directory. Defaults to the session's working directory. Pass your own working directory whenever you work in a different git worktree from the session (for example as a subagent), and the app's directory when the repository holds several apps. Only apps in the session's checkout and the git worktrees of its repository are allowed.",
 };
 
 const lifecycleTools = [
