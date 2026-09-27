@@ -22,6 +22,8 @@ events:
       params:
         titleinput_with_value: Editable Title
         titleinput_editable: Click to Edit
+        titleinput_not_editable: Read only title
+        titleinput_edit_icon: Edit with the icon
         titleinput_onchange: Change me
         titleinput_level2: Level 2 Title
         titleinput_level3: Level 3 Title
@@ -138,6 +140,17 @@ blocks:
     type: TitleInput
     properties:
       editable: false
+
+  - id: titleinput_edit_icon
+    type: TitleInput
+    properties:
+      editable:
+        icon: edit
+
+  - id: titleinput_empty
+    type: TitleInput
+    properties:
+      placeholder: Name this document
 
   # ============================================
   # EVENT TESTS

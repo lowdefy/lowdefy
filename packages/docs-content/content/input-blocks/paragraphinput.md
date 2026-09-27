@@ -12,8 +12,8 @@ Editable paragraph text with copyable and ellipsis support.
       - id: set_default
         type: SetState
         params:
-          basic_default: Click the edit icon to start editing this paragraph. Changes are
-            saved when you press Enter or click away.
+          basic_default: Click anywhere in this paragraph to edit it in place. Press Enter
+            or click away to save, or Escape to cancel.
 - id: basic_editable_object
   type: ParagraphInput
   properties:
@@ -39,6 +39,10 @@ Editable paragraph text with copyable and ellipsis support.
   type: ParagraphInput
   properties:
     editable: true
+- id: basic_placeholder
+  type: ParagraphInput
+  properties:
+    placeholder: Add a description
 - id: basic_long
   type: ParagraphInput
   properties:
@@ -49,11 +53,11 @@ Editable paragraph text with copyable and ellipsis support.
         type: SetState
         params:
           basic_long: This is a longer paragraph to demonstrate how ParagraphInput handles
-            multi-line content. When you click the edit icon, a text area
-            appears allowing you to modify all of the text. The editable
-            paragraph is useful for inline content editing scenarios where users
-            should be able to quickly update descriptive text without navigating
-            to a separate form.
+            multi-line content. When you click the text, it becomes editable in
+            place, with the caret where you clicked. The editable paragraph is
+            useful for inline content editing scenarios where users should be
+            able to quickly update descriptive text without navigating to a
+            separate form.
 ```
 
 ```yaml
@@ -67,7 +71,7 @@ Editable paragraph text with copyable and ellipsis support.
       - id: set_default
         type: SetState
         params:
-          tooltip_short: Hover over the edit icon to see a short tooltip.
+          tooltip_short: Hover over this paragraph to see a short tooltip.
 - id: tooltip_descriptive
   type: ParagraphInput
   properties:
@@ -78,7 +82,7 @@ Editable paragraph text with copyable and ellipsis support.
       - id: set_default
         type: SetState
         params:
-          tooltip_descriptive: Hover over the edit icon to see a descriptive tooltip.
+          tooltip_descriptive: Hover over this paragraph to see a descriptive tooltip.
 - id: tooltip_instructional
   type: ParagraphInput
   properties:
@@ -104,8 +108,8 @@ Editable paragraph text with copyable and ellipsis support.
       - id: set_default
         type: SetState
         params:
-          icon_highlight: This paragraph uses a highlight icon instead of the default edit
-            icon.
+          icon_highlight: An edit icon is shown only when one is set. This one uses the
+            highlight icon.
 - id: icon_form
   type: ParagraphInput
   properties:
@@ -210,8 +214,8 @@ Editable paragraph text with copyable and ellipsis support.
         type: SetState
         params:
           autosize_true: This paragraph uses autoSize true so the text area automatically
-            grows to fit the content when editing. Try clicking the edit icon to
-            see the text area expand.
+            grows to fit the content when editing. Click the text to see the
+            text area expand.
 - id: autosize_min_max
   type: ParagraphInput
   properties:
@@ -1060,8 +1064,8 @@ Editable paragraph text with copyable and ellipsis support.
         params:
           default_long: This is a longer default value that spans multiple words and
             demonstrates how ParagraphInput handles pre-populated content. Users
-            can click the edit icon to modify this text. The paragraph displays
-            the full content by default.
+            can click the text to modify it. The paragraph displays the full
+            content by default.
 - id: default_with_styles
   type: ParagraphInput
   properties:
@@ -1611,8 +1615,8 @@ Editable paragraph text with copyable and ellipsis support.
 | `copyable.tooltips` | string \| array | - | Tooltip text, can be an array or two strings for before and after clicked. |
 | `delete` | boolean | `false` | Apply deleted (strikethrough) style. |
 | `disabled` | boolean | `false` | Apply disabled style. |
-| `editable` | boolean \| object | `true` | Allow paragraph editing when true, editable settings can be provided with editable object. |
-| `editable.icon` | string \| object | - | Edit icon. |
+| `editable` | boolean \| object | `true` | Allow editing the paragraph in place. Click the text, or focus it and press Enter, to edit. Enter saves, Escape cancels. Provide an object for editable settings. |
+| `editable.icon` | string \| object | - | Show an edit icon button after the text, like `edit`. No icon is shown by default, since clicking the text edits it. |
 | `editable.icon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |
 | `editable.icon.color` | string | - | Icon color. |
 | `editable.icon.size` | string \| number | - | Size of the icon. Defaults to `theme.icons.size`. |
@@ -1622,10 +1626,10 @@ Editable paragraph text with copyable and ellipsis support.
 | `editable.icon.nonScalingStroke` | boolean | - | Keep the stroke width constant at any icon size. Defaults to `theme.icons.nonScalingStroke`. |
 | `editable.icon.title` | string | - | Icon hover title for accessibility. An empty string marks the icon as decorative. |
 | `editable.icon.disableLoadingIcon` | boolean | - | While loading after the icon has been clicked, don't render the loading icon. |
-| `editable.tooltip` | string | - | Edit tooltip text. |
+| `editable.tooltip` | string | - | Tooltip text, shown on the edit icon, or on the text when no icon is set. |
 | `editable.editing` | boolean | - | Control editing state. |
 | `editable.maxLength` | number | - | Max length of text area input. |
-| `editable.autoSize` | boolean \| object | `false` | Auto size the text area height when editing. |
+| `editable.autoSize` | boolean \| object | `true` | Grow the text area with its content when editing. Set false for a single scrolling line. |
 | `editable.autoSize.minRows` | number | - | Minimum number of rows for the text area. |
 | `editable.autoSize.maxRows` | number | - | Maximum number of rows for the text area. |
 | `ellipsis` | boolean \| object | `false` | Display ellipsis when text overflows a single line. |
@@ -1634,6 +1638,7 @@ Editable paragraph text with copyable and ellipsis support.
 | `ellipsis.suffix` | string | - | Suffix of ellipses content. |
 | `italic` | boolean | `false` | Apply italic style. |
 | `mark` | boolean | `false` | Apply marked (highlighted) style. |
+| `placeholder` | string | `"Empty"` | Muted text shown when the paragraph is empty and editable. |
 | `strong` | boolean | `false` | Apply strong (bold) style. |
 | `type` | string | `"default"` | Additional types. Don't specify for default. Enum: `success`, `default`, `secondary`, `warning`, `danger`. |
 | `underline` | boolean | `false` | Apply underline style. |

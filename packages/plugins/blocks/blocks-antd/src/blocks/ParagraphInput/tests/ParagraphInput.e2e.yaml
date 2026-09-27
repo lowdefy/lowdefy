@@ -22,6 +22,8 @@ events:
       params:
         paragraphinput_with_value: Editable paragraph text
         paragraphinput_editable: Click to edit this paragraph
+        paragraphinput_not_editable: Read only paragraph
+        paragraphinput_edit_icon: Edit with the icon
         paragraphinput_onchange: Change me
         paragraphinput_copyable: Copy this paragraph text
         paragraphinput_code: const x = 1;
@@ -132,6 +134,17 @@ blocks:
     type: ParagraphInput
     properties:
       editable: false
+
+  - id: paragraphinput_edit_icon
+    type: ParagraphInput
+    properties:
+      editable:
+        icon: edit
+
+  - id: paragraphinput_empty
+    type: ParagraphInput
+    properties:
+      placeholder: Add a description
 
   # ============================================
   # EVENT TESTS
