@@ -10,6 +10,7 @@ Lowdefy v7 draws every icon with [Lucide](https://lucide.dev) instead of [react-
 | ---------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------ |
 | react-icons names are not built in             | Almost every app                       | Run `lowdefy upgrade`, or install the compatibility set                  |
 | An unknown icon name fails the build           | Apps with old or misspelled names      | Fix the name the error names                                             |
+| `_operator` names read at runtime need a list  | Apps with a runtime `_operator` name   | List the operators it may call in `operators`                            |
 | Block and Ant Design icons are Lucide          | All apps                               | None; check screens that depend on the old look                          |
 | `theme.icons.aliases` targets are Lucide names | Apps with aliases                      | Drop the `Lu` prefix: `LuReceipt` becomes `Receipt`                      |
 | Icon hover titles come from the new names      | Apps that show Icon block hover titles | Set `title` where the text matters                                       |
@@ -130,6 +131,29 @@ theme:
 ```
 
 `theme.icons` also has new keys: `set`, `size`, `strokeWidth` and `nonScalingStroke`. See [Theming](/theming).
+
+## `_operator` names read at runtime
+
+An `_operator` whose `name` is read at runtime (from state, a request, a payload or `__args`) must list the operators it may call in `operators`, or the build fails. The build loads exactly those operators with the page, so the call works on a direct page load, and `_operator` refuses any other name. A literal `name`, and the literal branches an `_if` or `_switch` returns, need no list.
+
+```yaml
+# v6
+_operator:
+  name:
+    _state: aggregation
+  params:
+    _state: values
+
+# v7
+_operator:
+  name:
+    _state: aggregation
+  operators:
+    - _sum
+    - _product
+  params:
+    _state: values
+```
 
 ## Plugins
 
