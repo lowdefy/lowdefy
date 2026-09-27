@@ -37,6 +37,11 @@ test.describe('Steps Block', () => {
     await expect(steps).toContainText('Card or EFT');
   });
 
+  test('limits the description width with the descriptionMaxWidth token', async ({ page }) => {
+    const steps = getSteps(page, 'steps_description_width');
+    await expect(steps.locator('.ant-steps-item-content').first()).toHaveCSS('max-width', '80px');
+  });
+
   test('applies item, title and content classes', async ({ page }) => {
     const steps = getSteps(page, 'steps_basic');
     await expect(steps.locator('.ant-steps-item.steps-custom-item')).toHaveCount(3);
