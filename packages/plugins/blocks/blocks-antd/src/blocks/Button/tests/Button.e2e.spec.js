@@ -85,6 +85,28 @@ test.describe('Button Block', () => {
     await expect(svg).toBeAttached();
   });
 
+  test('renders the icon after the title with iconPlacement end', async ({ page }) => {
+    const button = getButton(page, 'button_icon_end');
+    await expect(button).toHaveClass(/ant-btn-icon-end/);
+    const iconBox = await button.locator('.ant-btn-icon').boundingBox();
+    const titleBox = await button.locator(':scope > span:not(.ant-btn-icon)').boundingBox();
+    expect(iconBox.x).toBeGreaterThan(titleBox.x);
+  });
+
+  test('renders the icon before the title with iconPlacement start', async ({ page }) => {
+    const button = getButton(page, 'button_icon_start');
+    await expect(button).not.toHaveClass(/ant-btn-icon-end/);
+    const iconBox = await button.locator('.ant-btn-icon').boundingBox();
+    const titleBox = await button.locator(':scope > span:not(.ant-btn-icon)').boundingBox();
+    expect(iconBox.x).toBeLessThan(titleBox.x);
+  });
+
+  test('passes target to a button with href', async ({ page }) => {
+    const button = getButton(page, 'button_href_target');
+    await expect(button).toHaveAttribute('href', 'https://lowdefy.com');
+    await expect(button).toHaveAttribute('target', '_blank');
+  });
+
   test('onClick event fires and updates state', async ({ page }) => {
     const button = getButton(page, 'button_clickable');
     await expect(button).toHaveText('Click me');

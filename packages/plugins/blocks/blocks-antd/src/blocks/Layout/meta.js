@@ -36,9 +36,67 @@ export default {
       theme: {
         type: 'object',
         description:
-          'Antd design token overrides for this block. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
+          'Antd Layout design token overrides for this block. Header, Footer and Sider blocks inside the layout use them too. See <a href="https://ant.design/components/overview#design-token">antd design tokens</a>.',
         docs: {
           displayType: 'yaml',
+          link: 'https://ant.design/components/layout#design-token',
+        },
+        properties: {
+          bodyBg: {
+            type: 'string',
+            default: '#f5f5f5',
+            description: 'Background color of the layout.',
+          },
+          headerHeight: {
+            type: 'number',
+            default: 64,
+            description: 'Height of Header blocks.',
+          },
+          headerPadding: {
+            type: 'string',
+            default: '0 50px',
+            description: 'Padding of Header blocks.',
+          },
+          headerColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.88)',
+            description: 'Text color of Header blocks.',
+          },
+          footerBg: {
+            type: 'string',
+            default: '#f5f5f5',
+            description: 'Background color of Footer blocks.',
+          },
+          footerPadding: {
+            type: 'string',
+            default: '24px 50px',
+            description: 'Padding of Footer blocks.',
+          },
+          triggerHeight: {
+            type: 'number',
+            default: 48,
+            description: 'Height of the collapse trigger of a collapsible Sider.',
+          },
+          triggerBg: {
+            type: 'string',
+            default: '#002140',
+            description: 'Background color of the collapse trigger of a dark Sider.',
+          },
+          triggerColor: {
+            type: 'string',
+            default: '#fff',
+            description: 'Color of the collapse trigger of a dark Sider.',
+          },
+          lightTriggerBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color of the collapse trigger of a light Sider.',
+          },
+          lightTriggerColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.88)',
+            description: 'Color of the collapse trigger of a light Sider.',
+          },
         },
       },
     },

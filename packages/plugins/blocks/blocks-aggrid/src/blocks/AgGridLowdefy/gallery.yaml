@@ -996,7 +996,7 @@
                 Archived: default
           - headerName: Actions
             field: _id
-            width: 220
+            width: 300
             cell:
               type: buttons
               buttons:
@@ -1010,6 +1010,11 @@
                   danger: true
                   disabledField: locked
                   hiddenField: archived
+                - eventName: onOpenClick
+                  title: Open
+                  icon: arrow-right
+                  iconPlacement: end
+                  type: link
         rowData:
           - _id: TSK-001
             name: Wire main switchboard
@@ -1044,6 +1049,14 @@
                 _string.concat:
                   - 'Delete '
                   - _event: row.name
+        onOpenClick:
+          - id: open_msg
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Open '
+                  - _event: row._id
 
 # Selector cells fire an event on change (event-only, like buttons) — the cell does not write to
 # the grid's row data. The app persists the change by updating the data bound to `rowData`. Here

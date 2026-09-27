@@ -75,3 +75,22 @@ blocks:
             type: Span
             properties:
               content: Styled header
+
+  # ============================================
+  # PROFILE MENU CSS KEY
+  # ============================================
+
+  - id: header_profile
+    type: Header
+    class:
+      .profileMenu: header-profile-menu
+    properties:
+      profile:
+        trigger: click
+        avatar:
+          content: AB
+        links:
+          - id: header_profile_settings
+            type: MenuLink
+            properties:
+              title: Account settings

@@ -28,6 +28,12 @@
     icon:
       name: save
       color: red
+- id: 'properties.iconPlacement: end'
+  type: Button
+  properties:
+    title: Send
+    icon: send
+    iconPlacement: end
 - id: 'properties.shape: circle'
   type: Button
   properties:
@@ -98,6 +104,12 @@
   type: Button
   properties:
     href: https://www.lowdefy.com
+- id: 'properties.target: _blank'
+  type: Button
+  properties:
+    title: Open in new tab
+    href: https://www.lowdefy.com
+    target: _blank
 - id: 'with html in title'
   type: Button
   properties:

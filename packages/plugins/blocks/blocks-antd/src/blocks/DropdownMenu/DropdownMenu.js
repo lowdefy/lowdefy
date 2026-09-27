@@ -75,11 +75,11 @@ function DropdownMenuBlock({
   );
   useItemShortcuts({ items: shortcutItems, onMatch: onShortcutMatch });
 
+  // antd's Dropdown renders no element of its own, so the trigger wrapper is the block's element.
   return (
     <Dropdown
-      id={blockId}
-      className={classNames.element}
-      style={styles.element}
+      classNames={{ root: classNames.menu }}
+      styles={{ root: styles.menu }}
       menu={{
         ...getDropdownMenuIcons({ blockId, Icon }),
         items,
@@ -97,6 +97,7 @@ function DropdownMenuBlock({
             event: { key, selectedKeys, pageId: link?.pageId, url: link?.url },
           });
         },
+        selectable: properties.selectable,
         selectedKeys: properties.selectedKeys,
       }}
       trigger={[properties.trigger ?? 'hover']}
@@ -104,8 +105,6 @@ function DropdownMenuBlock({
       arrow={properties.arrow}
       disabled={properties.disabled}
       destroyOnHidden={properties.destroyOnClose}
-      popupClassName={classNames.menu}
-      popupStyle={styles.menu}
       onOpenChange={(open) =>
         methods.triggerEvent({
           name: get(rename, 'events.onOpenChange', { default: 'onOpenChange' }),
@@ -113,7 +112,9 @@ function DropdownMenuBlock({
         })
       }
     >
-      <div>{content.content && content.content()}</div>
+      <div id={blockId} className={classNames.element} style={styles.element}>
+        {content.content && content.content()}
+      </div>
     </Dropdown>
   );
 }

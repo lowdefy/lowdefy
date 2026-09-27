@@ -54,7 +54,8 @@ const ProgressBlock = ({ blockId, classNames = {}, properties, styles = {} }) =>
         track: classNames.track,
       }}
       gapDegree={properties.gapDegree}
-      gapPlacement={gapPlacements[properties.gapPosition]}
+      // Earlier versions passed an undocumented gapPlacement straight to antd, so it is still read.
+      gapPlacement={properties.gapPlacement ?? gapPlacements[properties.gapPosition]}
       id={blockId}
       percent={properties.percent}
       percentPosition={properties.percentPosition}

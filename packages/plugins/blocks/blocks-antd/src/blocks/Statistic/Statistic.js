@@ -80,7 +80,9 @@ const StatisticBlock = ({
     ),
     ...additionalProps,
   };
-  if (type.isObject(properties.timer)) {
+  // A timer's target often comes from a request that hasn't loaded yet; until it has, the block
+  // renders the empty statistic the non-timer path shows, not a NaN countdown.
+  if (type.isObject(properties.timer) && !type.isNone(properties.value)) {
     return (
       <Statistic.Timer
         {...statisticProps}

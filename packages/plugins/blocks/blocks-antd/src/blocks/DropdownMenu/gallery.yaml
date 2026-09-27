@@ -199,6 +199,77 @@
             variant: outlined
             size: small
 
+    - id: dropdown_menu_pl_right
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        trigger: click
+        placement: right
+        links:
+          - id: dm_pl_right_1
+            type: MenuLink
+            properties:
+              title: Item 1
+          - id: dm_pl_right_2
+            type: MenuLink
+            properties:
+              title: Item 2
+      blocks:
+        - id: dropdown_menu_pl_right_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: right
+            color: default
+            variant: outlined
+            size: small
+
+- title: Selectable Items
+  blocks:
+    - id: dropdown_menu_selectable
+      type: DropdownMenu
+      layout:
+        flex: 0 0 auto
+      properties:
+        trigger: click
+        selectable: true
+        selectedKeys:
+          _if_none:
+            - _state: dm_sort_keys
+            - - dm_sort_newest
+        links:
+          - id: dm_sort_newest
+            type: MenuLink
+            properties:
+              title: Newest first
+          - id: dm_sort_oldest
+            type: MenuLink
+            properties:
+              title: Oldest first
+          - id: dm_sort_name
+            type: MenuLink
+            properties:
+              title: Name
+      events:
+        onSelect:
+          - id: dm_sort_set
+            type: SetState
+            params:
+              dm_sort_keys:
+                _event: selectedKeys
+      blocks:
+        - id: dropdown_menu_selectable_btn
+          type: Button
+          layout:
+            flex: 0 0 auto
+          properties:
+            title: Sort
+            icon: sort
+            color: default
+            variant: outlined
+
 - title: With Arrow
   blocks:
     - id: dropdown_menu_arrow

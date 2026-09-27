@@ -136,16 +136,16 @@ test.describe('Statistic Block', () => {
 
   test('renders with custom value style', async ({ page }) => {
     const block = getStatistic(page, 'statistic_value_style');
-    // Value style is applied - just verify content is visible
     const value = block.locator('.ant-statistic-content-value');
-    await expect(value).toBeVisible();
     await expect(value).toContainText('11.28');
+    await expect(value).toHaveCSS('color', 'rgb(63, 134, 0)');
   });
 
   test('renders negative value with custom style', async ({ page }) => {
     const block = getStatistic(page, 'statistic_negative_style');
     const value = block.locator('.ant-statistic-content-value');
     await expect(value).toContainText('-9.26');
+    await expect(value).toHaveCSS('color', 'rgb(207, 19, 34)');
   });
 
   // ============================================
@@ -161,6 +161,12 @@ test.describe('Statistic Block', () => {
   test('count up timer formats the elapsed time', async ({ page }) => {
     const value = getStatistic(page, 'statistic_countup').locator('.ant-statistic-content-value');
     await expect(value).toHaveText(/^\d{4,} days$/);
+  });
+
+  test('timer without a value renders an empty statistic, not NaN', async ({ page }) => {
+    const block = getStatistic(page, 'statistic_timer_no_value');
+    await expect(block.locator('.ant-statistic-title')).toHaveText('Waiting for a target');
+    await expect(block).not.toContainText('NaN');
   });
 
   test('applies class and style to the semantic parts', async ({ page }) => {

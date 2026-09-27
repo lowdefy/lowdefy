@@ -74,6 +74,29 @@ test.describe('Sider Block', () => {
     await expect(trigger).toBeVisible();
   });
 
-  // Note: Toggle via trigger requires onCollapse handler which the Sider component
-  // doesn't expose. Sider uses setOpen/toggleOpen methods for programmatic control.
+  test('collapses the sider when the trigger is clicked', async ({ page }) => {
+    const sider = getSider(page, 'sider_collapsible_sider');
+    await expect(sider).not.toHaveClass(/ant-layout-sider-collapsed/);
+    const trigger = sider.locator('.ant-layout-sider-trigger');
+    // The app's icons are Lucide svgs, where antd's own trigger arrows are not.
+    await expect(trigger.locator('svg.lucide')).toBeAttached();
+    await trigger.click();
+    await expect(sider).toHaveClass(/ant-layout-sider-collapsed/);
+    await expect(getBlock(page, 'sider_collapsible_display')).toHaveText('sider:closed');
+    await trigger.click();
+    await expect(sider).not.toHaveClass(/ant-layout-sider-collapsed/);
+  });
+
+  test('applies the body class and style', async ({ page }) => {
+    const sider = getSider(page, 'sider_body_sider');
+    const body = sider.locator('.ant-layout-sider-children.sider-custom-body');
+    await expect(body).toContainText('Sider body');
+    await expect(body).toHaveCSS('padding-top', '12px');
+  });
+
+  test('fires onBreakpoint with broken when the screen is below the breakpoint', async ({
+    page,
+  }) => {
+    await expect(getBlock(page, 'sider_broken_display')).toHaveText('broken:true');
+  });
 });

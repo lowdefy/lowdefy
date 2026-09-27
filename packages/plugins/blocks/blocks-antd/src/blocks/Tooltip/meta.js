@@ -75,10 +75,15 @@ export default {
         default: false,
         description: 'Whether the floating tooltip card is visible by default.',
       },
-      destroyTooltipOnHide: {
+      destroyOnHidden: {
         type: 'boolean',
         default: false,
         description: 'Whether to destroy the tooltip DOM when hidden.',
+      },
+      destroyTooltipOnHide: {
+        type: 'boolean',
+        default: false,
+        description: 'Same as destroyOnHidden, which takes precedence.',
       },
       mouseEnterDelay: {
         type: 'number',

@@ -37,7 +37,6 @@ const MasonryBlock = ({ blockId, classNames = {}, content, properties, styles = 
       columns={properties.columns}
       fresh={properties.fresh}
       gutter={properties.gutter}
-      sequential={properties.sequential}
       items={items}
     />
   );

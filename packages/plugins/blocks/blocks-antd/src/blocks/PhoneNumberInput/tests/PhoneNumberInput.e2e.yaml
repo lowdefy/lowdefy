@@ -311,3 +311,18 @@ blocks:
               - true
           then: Clear fired
           else: ''
+
+  - id: phone_theme
+    type: PhoneNumberInput
+    class:
+      .element: phone-custom-element
+      .options: phone-custom-option
+    style:
+      .element:
+        maxWidth: 400px
+    properties:
+      title: Theme
+      theme:
+        controlHeight: 44
+        colorBorder: 'rgb(255, 0, 0)'
+        selectorBg: 'rgb(255, 240, 200)'

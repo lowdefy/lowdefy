@@ -401,9 +401,12 @@ blocks:
     type: AutoComplete
     class:
       .popup: ac-custom-popup
+      .options: ac-custom-option
     style:
       .popup:
         backgroundColor: 'rgb(250, 250, 210)'
+      .options:
+        color: 'rgb(0, 128, 0)'
     properties:
       options:
         - Apple

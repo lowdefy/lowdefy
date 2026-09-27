@@ -368,3 +368,65 @@ blocks:
               - 'active:'
               - _state: tabs_shortcut_active_key
           else: ''
+
+  # ============================================
+  # SEMANTIC CSS KEYS, CENTERED, GUTTER, INDICATOR, DESTROY
+  # ============================================
+
+  - id: tabs_semantic
+    type: Tabs
+    class:
+      .tabBar: tabs-custom-bar
+      .tabPane: tabs-custom-pane
+      .inkBar: tabs-custom-ink
+      .item: tabs-custom-item
+    style:
+      .tabBar:
+        backgroundColor: rgb(240, 248, 255)
+    properties:
+      centered: true
+      tabBarGutter: 48
+      indicator:
+        size: 16
+        align: center
+      tabs:
+        - key: sem1
+          title: Overview
+        - key: sem2
+          title: Details
+    slots:
+      sem1:
+        blocks:
+          - id: tabs_semantic_content_1
+            type: Span
+            properties:
+              content: Overview content
+      sem2:
+        blocks:
+          - id: tabs_semantic_content_2
+            type: Span
+            properties:
+              content: Details content
+
+  - id: tabs_destroy
+    type: Tabs
+    properties:
+      destroyOnHidden: true
+      tabs:
+        - key: destroy1
+          title: First
+        - key: destroy2
+          title: Second
+    slots:
+      destroy1:
+        blocks:
+          - id: tabs_destroy_content_1
+            type: Span
+            properties:
+              content: First content
+      destroy2:
+        blocks:
+          - id: tabs_destroy_content_2
+            type: Span
+            properties:
+              content: Second content

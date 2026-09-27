@@ -29,9 +29,12 @@ const PopoverBlock = ({ blockId, classNames = {}, content, methods, properties, 
       autoAdjustOverflow={properties.autoAdjustOverflow}
       color={properties.color}
       defaultOpen={properties.defaultOpen}
-      destroyOnHidden={properties.destroyOnHidden}
+      // Popover used to pass every property to antd, so the undocumented `open`,
+      // `destroyTooltipOnHide`, `overlayClassName` and `overlayStyle` keep working.
+      destroyOnHidden={properties.destroyOnHidden ?? properties.destroyTooltipOnHide}
       mouseEnterDelay={properties.mouseEnterDelay}
       mouseLeaveDelay={properties.mouseLeaveDelay}
+      open={properties.open}
       placement={properties.placement}
       title={renderHtml({ html: properties.title, methods })}
       trigger={properties.trigger}
@@ -39,12 +42,14 @@ const PopoverBlock = ({ blockId, classNames = {}, content, methods, properties, 
       className={classNames.element}
       // antd 6 renamed the Popover inner element from `inner` to `container`.
       classNames={{
+        root: properties.overlayClassName,
         container: classNames.inner,
         title: classNames.title,
         content: classNames.content,
       }}
       style={styles.element}
       styles={{
+        root: properties.overlayStyle,
         // antd 6 deprecated `overlayInnerStyle` in favour of `styles.container`.
         container: { ...properties.overlayInnerStyle, ...styles.inner },
         title: styles.title,

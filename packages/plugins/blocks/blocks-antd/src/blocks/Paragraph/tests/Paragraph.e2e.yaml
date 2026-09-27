@@ -232,3 +232,33 @@ blocks:
       content: This is a long piece of text that is truncated to a single row until the reader expands it, and it keeps going so that it is always longer than the box it sits in.
       ellipsis:
         tooltip: Full text in a tooltip
+
+  - id: para_ellipsis_selection
+    type: Paragraph
+    style:
+      .element:
+        width: 300
+    properties:
+      content: Selectable text that is cut to a single row with an expand button after it, so it is always longer than its box.
+      ellipsis:
+        rows: 1
+        expandable: true
+    events:
+      onTextSelection:
+        - id: set_para_selection
+          type: SetState
+          params:
+            para_selection:
+              _event: selection
+
+  - id: para_selection_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: para_selection
+              - Selectable
+          then: Selected Selectable
+          else: Nothing selected

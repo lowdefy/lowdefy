@@ -586,6 +586,10 @@ blocks:
               - eventName: onEditClick
                 title: Edit
                 icon: edit
+              - eventName: onOpenClick
+                title: Open
+                icon: arrow-right
+                iconPlacement: end
       rowData:
         - _id: TSK-001
     events:

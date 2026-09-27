@@ -347,3 +347,60 @@
       blocks:
         - id: ex_1_block_3
           type: Test
+- id: 'properties.centered: true'
+  type: Tabs
+  properties:
+    centered: true
+    tabs:
+      - key: content_one
+        title: Title One
+      - key: content_two
+        title: Title Two
+  slots:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
+- id: 'properties.indicator: { size: 24 }'
+  type: Tabs
+  properties:
+    tabBarGutter: 40
+    indicator:
+      size: 24
+      align: center
+    tabs:
+      - key: content_one
+        title: Title One
+      - key: content_two
+        title: Title Two
+  slots:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test
+- id: 'properties.destroyOnHidden: true'
+  type: Tabs
+  properties:
+    destroyOnHidden: true
+    tabs:
+      - key: content_one
+        title: Title One
+      - key: content_two
+        title: Title Two
+  slots:
+    content_one:
+      blocks:
+        - id: ex_1_block_1
+          type: Test
+    content_two:
+      blocks:
+        - id: ex_1_block_2
+          type: Test

@@ -68,6 +68,12 @@ test.describe('Carousel Block', () => {
     await expect(dots).toHaveClass(/slick-dots-top/);
   });
 
+  test('passes an antd dotPlacement through', async ({ page }) => {
+    const carousel = getCarousel(page, 'carousel_dot_placement');
+    await expect(getDots(carousel)).toHaveClass(/slick-dots-end/);
+    await expect(carousel).toHaveClass(/ant-carousel-vertical/);
+  });
+
   test('renders with arrows', async ({ page }) => {
     const carousel = getCarousel(page, 'carousel_arrows');
     await expect(carousel).toBeVisible();

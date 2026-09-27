@@ -148,4 +148,16 @@ test.describe('Popover Block', () => {
     await getBlock(page, 'popover_open_payload_trigger').click();
     await expect(getBlock(page, 'popover_open_payload_display')).toHaveText('opened');
   });
+
+  test('open, overlayClassName and overlayStyle still reach antd', async ({ page }) => {
+    const popover = page.locator('.ant-popover').filter({ hasText: 'Legacy content' });
+    await expect(popover).toHaveCount(0);
+    const toggle = getBlock(page, 'popover_legacy_toggle').locator('.ant-btn');
+    await toggle.click();
+    await expect(popover).toBeVisible();
+    await expect(popover).toHaveClass(/popover-legacy-overlay/);
+    await expect(popover).toHaveCSS('width', '300px');
+    await toggle.click();
+    await expect(popover).toBeHidden();
+  });
 });

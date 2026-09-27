@@ -192,7 +192,7 @@ const Selector = ({
                   styles,
                 })}
                 value={selectedIndex}
-                // An undefined `virtual` would override ConfigProvider's, so pass it only when set.
+                // antd lets even an undefined `virtual` prop override the ConfigProvider `virtual`.
                 {...(type.isNone(properties.virtual) ? {} : { virtual: properties.virtual })}
               />
             </ConfigProvider>

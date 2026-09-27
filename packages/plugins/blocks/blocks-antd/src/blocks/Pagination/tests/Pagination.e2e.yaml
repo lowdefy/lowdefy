@@ -65,6 +65,12 @@ blocks:
       total: 85
       showTotal: true
 
+  - id: pagination_hide_total
+    type: Pagination
+    properties:
+      total: 85
+      showTotal: false
+
   # ============================================
   # CONTROLS
   # ============================================
@@ -157,3 +163,44 @@ blocks:
               - 'New Size: '
               - _state: pagination_new_size
           else: ''
+
+  # ============================================
+  # ALIGN, LARGE SIZE, LESS ITEMS, ITEM CLASS, SKIP
+  # ============================================
+
+  - id: pagination_align_center
+    type: Pagination
+    class:
+      .item: pagination-custom-item
+    properties:
+      total: 50
+      align: center
+      size: large
+
+  - id: pagination_less_items
+    type: Pagination
+    properties:
+      total: 500
+      showLessItems: true
+
+  - id: pagination_skip
+    type: Pagination
+    properties:
+      total: 100
+    events:
+      onChange:
+        - id: set_pagination_skip
+          type: SetState
+          params:
+            pagination_event_skip:
+              _event: skip
+
+  - id: pagination_skip_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'skip:'
+          - _if_none:
+              - _state: pagination_event_skip
+              - ''

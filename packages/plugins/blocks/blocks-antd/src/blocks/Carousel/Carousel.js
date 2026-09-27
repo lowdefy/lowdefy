@@ -58,7 +58,7 @@ const CarouselBlock = ({ blockId, classNames = {}, content, properties, methods,
   return (
     <Carousel
       {...carouselProperties}
-      dotPlacement={dotPlacements[dotPosition]}
+      dotPlacement={carouselProperties.dotPlacement ?? dotPlacements[dotPosition]}
       id={blockId}
       afterChange={(current) => {
         methods.triggerEvent({

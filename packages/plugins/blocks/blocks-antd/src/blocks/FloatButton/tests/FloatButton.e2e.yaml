@@ -71,3 +71,80 @@ blocks:
     properties:
       tooltip: Help
       icon: help
+
+  # ============================================
+  # CONTENT, DISABLED AND BACK TO TOP
+  # ============================================
+
+  - id: fb_description
+    type: FloatButton
+    style:
+      .element:
+        insetInlineEnd: 96px
+    properties:
+      shape: square
+      icon: help
+      description: HELP
+
+  - id: fb_default_icon
+    type: FloatButton
+    style:
+      .element:
+        insetInlineEnd: 152px
+    properties:
+      tooltip: No icon set
+
+  - id: fb_disabled
+    type: FloatButton
+    style:
+      .element:
+        insetInlineEnd: 208px
+    properties:
+      icon: add
+      disabled: true
+    events:
+      onClick:
+        - id: set_fb_disabled_clicked
+          type: SetState
+          params:
+            fb_disabled_clicked: true
+
+  - id: fb_disabled_display
+    type: Paragraph
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: fb_disabled_clicked
+              - true
+          then: disabled:clicked
+          else: disabled:idle
+
+  - id: fb_back_top
+    type: FloatButton
+    style:
+      .element:
+        insetInlineEnd: 264px
+    properties:
+      backTop: true
+      showProgress: true
+      visibilityHeight: 0
+    events:
+      onClick:
+        - id: set_fb_back_top_clicked
+          type: SetState
+          params:
+            fb_back_top_clicked: true
+
+  - id: fb_back_top_display
+    type: Paragraph
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: fb_back_top_clicked
+              - true
+          then: backtop:clicked
+          else: backtop:idle

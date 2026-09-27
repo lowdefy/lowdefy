@@ -67,6 +67,17 @@ blocks:
         properties:
           title: Destroy on hide
 
+  - id: tooltip_destroy_on_hidden
+    type: Tooltip
+    properties:
+      title: Destroyed on hidden tooltip
+      destroyOnHidden: true
+    blocks:
+      - id: tooltip_destroy_on_hidden_trigger
+        type: Button
+        properties:
+          title: Destroy on hidden
+
   - id: tooltip_context_menu
     type: Tooltip
     properties:

@@ -192,6 +192,15 @@ test.describe('Paragraph Block', () => {
     await expect(el).toContainText('the box it sits in.');
   });
 
+  test('onTextSelection fires for plain text cut by an expandable ellipsis', async ({ page }) => {
+    const el = getParagraph(page, 'para_ellipsis_selection');
+    await expect(el.locator('.ant-typography-expand')).toBeVisible();
+    await expect(getBlock(page, 'para_selection_display')).toHaveText('Nothing selected');
+    // A double click on the first word selects it.
+    await el.dblclick({ position: { x: 5, y: 5 } });
+    await expect(getBlock(page, 'para_selection_display')).toHaveText('Selected Selectable');
+  });
+
   test('ellipsis tooltip shows on hover', async ({ page }) => {
     await getParagraph(page, 'para_ellipsis_tooltip').hover();
     await expect(page.locator('.ant-tooltip')).toContainText('Full text in a tooltip');

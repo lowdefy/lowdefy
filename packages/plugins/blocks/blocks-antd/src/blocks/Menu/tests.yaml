@@ -186,6 +186,47 @@
             pageId: page_1_2
             properties:
               title: Menu Item two
+- id: 'properties.triggerSubMenuAction: click'
+  type: Menu
+  properties:
+    mode: vertical
+    triggerSubMenuAction: click
+    links:
+      - id: reports
+        type: MenuGroup
+        properties:
+          title: Reports
+        links:
+          - id: sales
+            type: MenuLink
+            pageId: sales
+            properties:
+              title: Sales
+- id: 'properties.collapsed: true'
+  type: Menu
+  properties:
+    mode: inline
+    collapsed: true
+    links:
+      - id: home
+        type: MenuLink
+        pageId: home
+        properties:
+          title: Home
+          icon: home
+- id: 'properties.tooltip: false'
+  type: Menu
+  properties:
+    mode: inline
+    collapsed: true
+    tooltip: false
+    links:
+      - id: home
+        type: MenuLink
+        pageId: home
+        properties:
+          title: Home
+          icon: home
 - id: 'properties.expandIcon: check'
   type: Menu
   properties:

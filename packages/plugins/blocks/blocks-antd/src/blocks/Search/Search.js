@@ -150,4 +150,5 @@ function SearchBlock({
   );
 }
 
-export default withTheme('Search', withBlockDefaults(SearchBlock));
+// antd has no Search component: the block draws a Button trigger, a Modal and an Input.
+export default withTheme(['Button', 'Modal', 'Input'], withBlockDefaults(SearchBlock));

@@ -464,3 +464,24 @@ blocks:
           params:
             blockId: notif_styled
             method: open
+
+  - id: notif_button_icon_end
+    type: Notification
+    properties:
+      title: Message sent
+      button:
+        title: Open
+        icon: arrow-right
+        iconPlacement: end
+
+  - id: open_notif_button_icon_end
+    type: Button
+    properties:
+      title: Open notif_button_icon_end
+    events:
+      onClick:
+        - id: open_notification
+          type: CallMethod
+          params:
+            blockId: notif_button_icon_end
+            method: open

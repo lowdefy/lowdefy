@@ -120,21 +120,23 @@ blocks:
 
   - id: statistic_value_style
     type: Statistic
+    style:
+      .value:
+        color: '#3f8600'
     properties:
       title: Positive Change
       value: 11.28
       suffix: '%'
-      valueStyle:
-        color: '#3f8600'
 
   - id: statistic_negative_style
     type: Statistic
+    style:
+      .value:
+        color: '#cf1322'
     properties:
       title: Negative Change
       value: -9.26
       suffix: '%'
-      valueStyle:
-        color: '#cf1322'
 
   # ============================================
   # TIMER AND SEMANTIC KEYS
@@ -176,6 +178,13 @@ blocks:
       timer:
         type: countup
         format: D [days]
+
+  - id: statistic_timer_no_value
+    type: Statistic
+    properties:
+      title: Waiting for a target
+      timer:
+        type: countdown
 
   - id: statistic_css_keys
     type: Statistic

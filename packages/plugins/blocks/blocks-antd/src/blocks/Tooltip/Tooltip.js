@@ -17,20 +17,9 @@
 import React from 'react';
 import { Tooltip } from 'antd';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
-import { type } from '@lowdefy/helpers';
 
+import getArrow from './getArrow.js';
 import withTheme from '../withTheme.js';
-
-// antd 5 folded `arrowPointAtCenter` into `arrow: { pointAtCenter }`; Lowdefy keeps the property.
-function getArrow({ arrow, arrowPointAtCenter }) {
-  if (arrow === false || type.isObject(arrow)) {
-    return arrow;
-  }
-  if (arrowPointAtCenter === true) {
-    return { pointAtCenter: true };
-  }
-  return arrow;
-}
 
 const TooltipBlock = ({ blockId, classNames = {}, content, properties, methods, styles = {} }) => (
   <Tooltip
@@ -43,8 +32,8 @@ const TooltipBlock = ({ blockId, classNames = {}, content, properties, methods, 
     autoAdjustOverflow={properties.autoAdjustOverflow}
     color={properties.color}
     defaultOpen={properties.defaultOpen}
-    // antd 6 renamed `destroyTooltipOnHide` to `destroyOnHidden`.
-    destroyOnHidden={properties.destroyTooltipOnHide}
+    // antd 6 renamed `destroyTooltipOnHide` to `destroyOnHidden`; Lowdefy accepts both.
+    destroyOnHidden={properties.destroyOnHidden ?? properties.destroyTooltipOnHide}
     mouseEnterDelay={properties.mouseEnterDelay}
     mouseLeaveDelay={properties.mouseLeaveDelay}
     placement={properties.placement}

@@ -31,6 +31,36 @@
       properties:
         total: 100
         size: small
+    - id: size_large_label
+      type: Markdown
+      properties:
+        content: '**Large size:**'
+    - id: size_large
+      type: Pagination
+      properties:
+        total: 100
+        size: large
+
+- title: Alignment
+  blocks:
+    - id: align_center
+      type: Pagination
+      properties:
+        total: 100
+        align: center
+    - id: align_end
+      type: Pagination
+      properties:
+        total: 100
+        align: end
+
+- title: Fewer Page Items
+  blocks:
+    - id: less_items
+      type: Pagination
+      properties:
+        total: 500
+        showLessItems: true
 
 - title: Simple Mode
   blocks:
@@ -59,7 +89,7 @@
     - id: show_total_bool_label
       type: Markdown
       properties:
-        content: '**Boolean (default format):**'
+        content: '**Default format:**'
     - id: show_total_bool
       type: Pagination
       properties:
@@ -74,6 +104,15 @@
       properties:
         total: 85
         showTotal: '85 results found'
+    - id: show_total_hidden_label
+      type: Markdown
+      properties:
+        content: '**Hidden:**'
+    - id: show_total_hidden
+      type: Pagination
+      properties:
+        total: 85
+        showTotal: false
     - id: show_total_small_label
       type: Markdown
       properties:

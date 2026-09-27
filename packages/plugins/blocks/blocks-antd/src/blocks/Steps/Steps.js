@@ -48,12 +48,14 @@ function StepsBlock({
     });
   });
 
-  // Mirrors antd's merged step type: progressDot only turns a default Steps into dots.
+  // antd deprecates progressDot in favour of type dot, so the block resolves it the way antd does.
   let stepsType = properties.type;
   if ((type.isNone(stepsType) || stepsType === 'default') && properties.progressDot) {
     stepsType = 'dot';
   }
   const isDot = stepsType === 'dot' || stepsType === 'inline';
+  // antd 6 deprecates the `default` size in favour of `medium`.
+  const size = properties.size === 'default' ? 'medium' : properties.size;
 
   // antd draws the finish tick and error cross itself; swap them for the app's icons.
   function iconRender(originalNode, { index, item, components: { Icon: StepIcon } }) {
@@ -76,16 +78,28 @@ function StepsBlock({
     <Steps
       id={blockId}
       className={classNames.element}
+      classNames={{
+        item: classNames.item,
+        itemTitle: classNames.itemTitle,
+        itemSubtitle: classNames.itemSubtitle,
+        itemContent: classNames.itemContent,
+      }}
       style={styles.element}
+      styles={{
+        item: styles.item,
+        itemTitle: styles.itemTitle,
+        itemSubtitle: styles.itemSubtitle,
+        itemContent: styles.itemContent,
+      }}
       current={current}
       initial={properties.initial}
       status={properties.status}
-      size={properties.size}
-      type={properties.type}
+      size={size}
+      type={stepsType}
       orientation={properties.orientation}
       titlePlacement={properties.titlePlacement}
       percent={properties.percent}
-      progressDot={properties.progressDot}
+      maxCount={properties.maxCount}
       iconRender={iconRender}
       responsive={properties.responsive}
       variant={properties.variant}
@@ -101,7 +115,7 @@ function StepsBlock({
         key: index,
         title: item.title ? renderHtml({ html: item.title, methods }) : undefined,
         subTitle: item.subTitle ? renderHtml({ html: item.subTitle, methods }) : undefined,
-        description: item.description ? renderHtml({ html: item.description, methods }) : undefined,
+        content: item.description ? renderHtml({ html: item.description, methods }) : undefined,
         status: item.status,
         disabled: item.disabled,
         icon: item.icon ? (

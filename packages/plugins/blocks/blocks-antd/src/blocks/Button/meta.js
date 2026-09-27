@@ -75,10 +75,21 @@ export default {
         description:
           'The URL to redirect to when the button is clicked. Useful when used with a type link button.',
       },
+      target: {
+        type: 'string',
+        description:
+          'Where to open the `href` link, the anchor target attribute. For example `_blank` opens it in a new tab.',
+      },
       icon: {
         ...icon,
         description:
           'Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to use icon in button.',
+      },
+      iconPlacement: {
+        type: 'string',
+        enum: ['start', 'end'],
+        default: 'start',
+        description: 'Place the icon before (start) or after (end) the title.',
       },
       shape: {
         type: 'string',
@@ -184,7 +195,7 @@ export default {
           paddingBlock: {
             type: 'number',
             default: 0,
-            description: 'Vertical padding.',
+            description: 'Deprecated in antd 6 and has no effect. Use controlHeight instead.',
           },
           colorPrimary: {
             type: 'string',
@@ -209,6 +220,96 @@ export default {
           colorBorder: {
             type: 'string',
             description: 'Border color for outlined and dashed buttons.',
+          },
+          fontWeight: {
+            type: ['number', 'string'],
+            default: 400,
+            description: 'Font weight of the button text.',
+          },
+          iconGap: {
+            type: 'number',
+            default: 8,
+            description: 'Gap between the icon and the title.',
+          },
+          contentFontSize: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the button content.',
+          },
+          contentFontSizeLG: {
+            type: 'number',
+            default: 16,
+            description: 'Font size of the content of large buttons.',
+          },
+          contentFontSizeSM: {
+            type: 'number',
+            default: 14,
+            description: 'Font size of the content of small buttons.',
+          },
+          onlyIconSize: {
+            type: ['number', 'string'],
+            default: 'inherit',
+            description: 'Icon size of a button that only contains an icon.',
+          },
+          primaryColor: {
+            type: 'string',
+            default: '#fff',
+            description: 'Text color of primary buttons.',
+          },
+          dangerColor: {
+            type: 'string',
+            default: '#fff',
+            description: 'Text color of danger buttons.',
+          },
+          defaultBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color of default buttons.',
+          },
+          defaultColor: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.88)',
+            description: 'Text color of default buttons.',
+          },
+          defaultBorderColor: {
+            type: 'string',
+            default: '#d9d9d9',
+            description: 'Border color of default buttons.',
+          },
+          defaultHoverBg: {
+            type: 'string',
+            default: '#ffffff',
+            description: 'Background color of default buttons on hover.',
+          },
+          defaultHoverColor: {
+            type: 'string',
+            default: '#4096ff',
+            description: 'Text color of default buttons on hover.',
+          },
+          defaultHoverBorderColor: {
+            type: 'string',
+            default: '#4096ff',
+            description: 'Border color of default buttons on hover.',
+          },
+          textHoverBg: {
+            type: 'string',
+            default: 'rgba(0, 0, 0, 0.04)',
+            description: 'Background color of text buttons on hover.',
+          },
+          defaultShadow: {
+            type: 'string',
+            default: '0 2px 0 rgba(0, 0, 0, 0.02)',
+            description: 'Box shadow of default buttons.',
+          },
+          primaryShadow: {
+            type: 'string',
+            default: '0 2px 0 rgba(5, 145, 255, 0.1)',
+            description: 'Box shadow of primary buttons.',
+          },
+          dangerShadow: {
+            type: 'string',
+            default: '0 2px 0 rgba(255, 38, 5, 0.06)',
+            description: 'Box shadow of danger buttons.',
           },
         },
       },

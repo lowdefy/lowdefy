@@ -28,8 +28,9 @@ export default {
     menu: 'The floating menu container.',
     item: 'Individual menu items.',
     itemIcon: 'Icon within menu items.',
-    subMenu: 'Submenu/group containers.',
-    arrow: 'Dropdown arrow indicator.',
+    subMenu:
+      'Has no effect: antd does not expose submenu containers as a separately styled part. The item key also applies to submenu items.',
+    arrow: 'Has no effect: antd does not expose the dropdown arrow as a separately styled part.',
   },
   events: {
     onClick: {
@@ -42,7 +43,7 @@ export default {
       },
     },
     onSelect: {
-      description: 'Trigger action when a menu item is selected.',
+      description: 'Trigger action when a menu item is selected. Requires `selectable: true`.',
       event: {
         key: 'The selected menu item key.',
         selectedKeys: 'All selected menu item keys.',
@@ -222,7 +223,20 @@ export default {
       },
       placement: {
         type: 'string',
-        enum: ['bottomLeft', 'bottom', 'bottomRight', 'topLeft', 'top', 'topRight'],
+        enum: [
+          'bottomLeft',
+          'bottom',
+          'bottomRight',
+          'topLeft',
+          'top',
+          'topRight',
+          'left',
+          'leftTop',
+          'leftBottom',
+          'right',
+          'rightTop',
+          'rightBottom',
+        ],
         default: 'bottomLeft',
         description: 'Position relative to trigger.',
       },
@@ -246,6 +260,12 @@ export default {
         type: 'boolean',
         default: false,
         description: 'Unmount menu DOM when closed.',
+      },
+      selectable: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Allow menu items to be selected. Selecting an item highlights it and fires onSelect.',
       },
       selectedKeys: {
         type: 'array',

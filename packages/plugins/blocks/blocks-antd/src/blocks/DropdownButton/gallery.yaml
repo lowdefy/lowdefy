@@ -227,6 +227,38 @@
               content: Exporting Excel...
               duration: 2
 
+- title: Icon Placement
+  blocks:
+    - id: db_icon_end
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Options
+        icon: chevron-down
+        iconPlacement: end
+        items:
+          - title: Rename
+            eventName: onRename
+            icon: edit
+          - title: Archive
+            eventName: onArchive
+    - id: db_split_icon_end
+      type: DropdownButton
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Send
+        icon: send
+        iconPlacement: end
+        split: true
+        color: primary
+        variant: solid
+        items:
+          - title: Schedule send
+            eventName: onSchedule
+            icon: clock
+
 - title: Disabled Items
   blocks:
     - id: db_disabled_items
