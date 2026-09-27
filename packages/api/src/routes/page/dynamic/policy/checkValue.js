@@ -82,10 +82,12 @@ function checkString({ value, key, path, walk }) {
         schemeless: urlKind === 'url',
       });
       if (!allowed) {
+        // A URL in a list (an array item) has no key of its own.
+        const label = key === null ? 'URL' : `"${key}" value`;
         errors.push({
           path,
           rule: 'policy.urls',
-          message: `"${key}" value "${url}" is not a page or origin dynamic blocks policy "${policy.id}" allows.`,
+          message: `${label} "${url}" is not a page or origin dynamic blocks policy "${policy.id}" allows.`,
         });
       }
     });
@@ -144,10 +146,12 @@ function checkOperators({ value, key, path, walk }) {
   // cannot see it.
   const urlKind = getUrlKind({ key, path, walk });
   if (possible.length > 0 && (urlKind !== null || key === 'pageId')) {
+    // A URL in a list (an array item) has no key of its own.
+    const label = key === null ? 'A URL' : `"${key}"`;
     errors.push({
       path,
       rule: key === 'pageId' ? 'policy.links' : 'policy.urls',
-      message: `"${key}" must be a literal string under dynamic blocks policy "${policy.id}", not an operator.`,
+      message: `${label} must be a literal string under dynamic blocks policy "${policy.id}", not an operator.`,
     });
   }
 }
