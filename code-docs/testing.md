@@ -41,6 +41,25 @@ Never pass `--` before jest flags, and never call `pnpm jest` or `npx jest` dire
 Packages import each other from `dist/`, so run `pnpm build` after changing more than one
 package.
 
+## Dependency check
+
+`pnpm test` starts with `pnpm test:dependencies` (about a second). It parses every source
+file under `packages/` and fails when a file imports a package that its `package.json` does
+not declare. In the monorepo such an import still resolves through another package's
+install, so only the published package (or a later lockfile change) breaks.
+
+- Published files (`files` in `package.json`; `src/` counts as `dist/`) may import
+  `dependencies`, `peerDependencies` and `optionalDependencies`.
+- Tests (`*.test.js`, `test/`, `tests/`, `test-utils/`, `__mocks__/`), unpublished files,
+  block e2e helpers (reachable from a package's `./e2e` export) and private packages may
+  also import `devDependencies`. So do the servers' `lowdefy/` build scripts and the
+  webpack-bundled `@lowdefy/nunjucks`, listed in `scripts/lib/findUndeclaredImports.mjs`.
+- Tests that import `@jest/globals` declare it as a devDependency.
+
+The check reads what is declared, not what resolves: ESLint's
+`import/no-extraneous-dependencies` skips any import it cannot resolve, which in a pnpm
+workspace is most undeclared imports.
+
 ## MongoDB tests
 
 `@lowdefy/connection-mongodb` runs against a real single-node replica set started by
