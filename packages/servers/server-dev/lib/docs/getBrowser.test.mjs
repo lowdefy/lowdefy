@@ -199,6 +199,30 @@ test('openPage loads the page and waits on isPageReady for the page the app show
   expect(opened.ready).toBe(true);
 });
 
+test.each([
+  ['every image has loaded', [{ complete: true }], true],
+  ['an image is still loading', [{ complete: true }, { complete: false, loading: 'eager' }], false],
+  // Below the fold a lazy image never loads, so waiting on it would always
+  // run out the timeout.
+  [
+    'the only one loading is lazy',
+    [{ complete: true }, { complete: false, loading: 'lazy' }],
+    true,
+  ],
+])('openPage treats the page images as loaded when %s', async (_, images, loaded) => {
+  const { browser, page } = createBrowser();
+
+  await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+
+  const imagesLoaded = page.waitForFunction.mock.calls[1][0];
+  global.document = { images };
+  try {
+    expect(imagesLoaded()).toBe(loaded);
+  } finally {
+    delete global.document;
+  }
+});
+
 test('openPage resolves with ready false when the readiness wait times out', async () => {
   const { browser, page } = createBrowser();
   page.waitForFunction.mockRejectedValueOnce(new Error('Timeout 15000ms exceeded.'));

@@ -143,10 +143,12 @@ async function openPage({
       ready = false;
     });
     // Images blocks render start loading only once the page is ready; a
-    // screenshot taken before they arrive shows empty frames.
+    // screenshot taken before they arrive shows empty frames. A lazy image
+    // below the fold never loads until scrolled to, so it counts as done.
     await page
       .waitForFunction(
-        () => Array.from(document.images).every((image) => image.complete),
+        () =>
+          Array.from(document.images).every((image) => image.complete || image.loading === 'lazy'),
         undefined,
         { timeout }
       )
