@@ -30,7 +30,7 @@ In the Vercel project:
 
 ###### Public files
 
-Files in your app's `public/` directory (favicon, icons, images, `manifest.webmanifest`, etc.) are copied into `dist/client` by Vite during the build, placed in `.vercel/output/static`, and served by the Vercel CDN — no extra configuration needed.
+Files in your app's `public/` directory (favicon, icons, images, `manifest.webmanifest`, etc.) are copied into `dist/client` by Vite during the build, placed in `.vercel/output/static`, and served by the Vercel CDN — no extra configuration needed. With `config.basePath` set, they are placed and served under the base path, as are the generated cron paths below.
 
 ###### Secrets and environment variables
 
