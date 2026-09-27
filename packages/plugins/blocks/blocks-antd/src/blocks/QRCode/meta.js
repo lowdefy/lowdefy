@@ -62,6 +62,7 @@ export default {
       },
       icon: {
         type: 'string',
+        urlKind: 'src',
         description: 'Icon URL in the center of the QR code.',
       },
       iconSize: {

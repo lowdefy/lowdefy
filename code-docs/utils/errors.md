@@ -48,7 +48,7 @@ Error
 │   └── isLowdefyError: true
 ├── PluginError            # Plugin failures (operators, actions, blocks, requests)
 │   └── isLowdefyError: true
-├── ServiceError           # External service failures (network, timeout, 5xx)
+├── ServiceError           # External service failures (network, timeout, 5xx, 429)
 │   └── isLowdefyError: true
 └── UserError              # Expected user interaction (client-only)
     └── isLowdefyError: true
@@ -202,7 +202,7 @@ throw new PluginError('_if requires a boolean condition.', {
 
 #### ServiceError
 
-External service failures (network issues, timeouts, 5xx responses). Follows TC39 `(message, options)` constructor pattern.
+External service failures (network issues, timeouts, 5xx responses, rate limits). Follows TC39 `(message, options)` constructor pattern.
 
 ```javascript
 throw new ServiceError('Connection to MongoDB failed.', {
@@ -214,24 +214,31 @@ throw new ServiceError('Connection to MongoDB failed.', {
 
 **Properties:**
 
-| Property         | Type    | Description                        |
-| ---------------- | ------- | ---------------------------------- |
-| `name`           | string  | `'ServiceError'`                   |
-| `isLowdefyError` | boolean | `true`                             |
-| `service`        | string  | Service name (connection ID)       |
-| `_message`       | string  | Raw unformatted message            |
-| `code`           | string  | Error code (ECONNREFUSED, etc.)    |
-| `statusCode`     | number  | HTTP status code                   |
-| `configKey`      | string  | `~k` value for location resolution |
+| Property         | Type    | Description                                                                                                                     |
+| ---------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `name`           | string  | `'ServiceError'`                                                                                                                |
+| `isLowdefyError` | boolean | `true`                                                                                                                          |
+| `service`        | string  | Service name (connection ID)                                                                                                    |
+| `_message`       | string  | Raw unformatted message                                                                                                         |
+| `code`           | string  | Error code (ECONNREFUSED, etc.)                                                                                                 |
+| `statusCode`     | number  | HTTP status code                                                                                                                |
+| `retryAfter`     | string  | Retry-After a throttling service sent (seconds or an HTTP date), else `null`. Read from the cause chain; kept in the server log |
+| `configKey`      | string  | `~k` value for location resolution                                                                                              |
 
 **Message enhancement:** Constructor enhances messages based on error codes:
 
 - `ECONNREFUSED` → `"Connection refused. The service may be down. {message}"`
 - `ENOTFOUND` → `"DNS lookup failed. {message}"`
 - `ETIMEDOUT` → `"Connection timed out. {message}"`
+- HTTP 429 → `"Rate limited by the service (429 Too Many Requests). Retry after {retryAfter}. {message}"`
 - HTTP 5xx → `"Server returned error {statusCode}. {message}"`
 
-**Static helper:** `ServiceError.isServiceError(error)` checks error codes and HTTP 5xx.
+**Static helpers:**
+
+- `ServiceError.isServiceError(error)` is the one classification every connection goes through (callRequestResolver, websocket resolvers, auth email, JWKS fetches). True for: network error codes (`ECONNREFUSED`, `ETIMEDOUT`, ...); a `TimeoutError` (a call cancelled by `AbortSignal.timeout`, the AI SDK's `timeout`, or the server's request timeout); HTTP 5xx and **429** read from `statusCode`, `status`, `response.status`, `$metadata.httpStatusCode` (AWS SDK v3) or a numeric `code` (SendGrid, @google-cloud); an AWS SDK throttling exception (`$retryable.throttling`, some answer 400); and service-sounding messages (`network`, `timeout`, `too many requests`, ...). It follows a retrying client's `lastError` (the AI SDK's `RetryError`) and the `cause` chain. A caller-cancelled `AbortError` is not a service error.
+- `ServiceError.readRetryAfter(error)` reads a Retry-After header from `responseHeaders` (AI SDK), `response.headers` (axios, SendGrid), `headers` (Stripe) or `$response.headers` (AWS), plain object or fetch `Headers`, along `lastError` and `cause`.
+
+429 is a service error by design: throttling is an external condition that passes with time, not a config fault, so it is not a `RequestError`.
 
 **Stack trace:** Suppressed in CLI display — service/code context is more useful.
 

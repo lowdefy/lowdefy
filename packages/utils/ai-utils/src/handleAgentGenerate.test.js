@@ -310,6 +310,45 @@ test('handleAgentGenerate passes the agent timeout to generate', async () => {
   expect(mockGenerate.mock.calls[0][0].timeout).toBe(60000);
 });
 
+test('handleAgentGenerate cancels the run with the signal of the request that started it', async () => {
+  const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
+  mockGenerateSteps();
+  const signal = new AbortController().signal;
+
+  await handleAgentGenerate({
+    connection,
+    properties: { agent: createAgent(), prompt: 'Go.' },
+    context: { ...createTestContext(), signal },
+  });
+
+  expect(mockGenerate.mock.calls[0][0].abortSignal).toBe(signal);
+});
+
+test('handleAgentGenerate falls back to the connection maxOutputTokens and timeout', async () => {
+  const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
+  mockGenerateSteps();
+  const limited = { ...connection, maxOutputTokens: 800, timeout: 45000 };
+
+  await handleAgentGenerate({
+    connection: limited,
+    properties: { agent: createAgent(), prompt: 'Go.' },
+    context: createTestContext(),
+  });
+  expect(lastAgentConfig.maxOutputTokens).toBe(800);
+  expect(mockGenerate.mock.calls[0][0].timeout).toBe(45000);
+
+  await handleAgentGenerate({
+    connection: limited,
+    properties: {
+      agent: createAgent({ properties: { model: 'm', maxOutputTokens: 200, timeout: 5000 } }),
+      prompt: 'Go.',
+    },
+    context: createTestContext(),
+  });
+  expect(lastAgentConfig.maxOutputTokens).toBe(200);
+  expect(mockGenerate.mock.calls[1][0].timeout).toBe(5000);
+});
+
 test('handleAgentGenerate never generates a conversation title', async () => {
   const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
   mockGenerateSteps();

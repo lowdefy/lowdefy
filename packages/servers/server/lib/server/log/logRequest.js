@@ -33,6 +33,9 @@ function logRequest({ context, status, durationMs }) {
       url: context.req.url,
       method: context.req.method,
       hostname: context.req.hostname,
+      // The address the server resolved (see getClientAddress). The forwarding
+      // headers below are logged as the client sent them, and are not it.
+      client_address: context.clientAddress,
       status,
       duration_ms: durationMs,
       headers: {

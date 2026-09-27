@@ -17,7 +17,10 @@
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
-import { assertUnscopedUpdate } from '../tenant/guardUnscopedWrite.js';
+import {
+  assertUnscopedUpdate,
+  changeLogOrganizationOfFilter,
+} from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
@@ -50,6 +53,10 @@ async function MongodbUpdateMany({
     });
   }
   const { collection, logCollection } = await getCollection({ connection });
+  let logOrganizationId = null;
+  if (tenantGuard?.stampChangeLog && logCollection) {
+    logOrganizationId = changeLogOrganizationOfFilter({ filter, update, field: tenantGuard.field });
+  }
   let response;
   try {
     response = await collection.updateMany(filter, update, options);
@@ -69,6 +76,8 @@ async function MongodbUpdateMany({
             meta: connection.changeLog?.meta,
           },
           tenant,
+          tenantGuard,
+          organizationId: logOrganizationId,
         })
       );
     }

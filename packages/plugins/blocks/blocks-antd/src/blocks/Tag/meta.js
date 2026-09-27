@@ -58,6 +58,7 @@ export default {
       },
       href: {
         type: 'string',
+        urlKind: 'href',
         description: 'Render the tag as a link to this URL.',
       },
       target: {

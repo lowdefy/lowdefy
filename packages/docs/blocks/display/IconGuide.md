@@ -75,7 +75,7 @@ The Icon block adds a hover title made from the name: `Pencil` gives "Pencil", `
 
 ## Names only known at runtime
 
-The build bundles only the icons your config names. A name that comes from state, a request or a database is not in the config, so list it under `theme.icons.include`:
+The build bundles only the icons your config names. A name that comes from state, a request or a database is not in the config, so list it under `theme.icons.include`. In production each page loads only its own icons, so the first such name a page draws loads the rest of the app's icons; the icon keeps its space until they arrive:
 
 ```yaml
 theme:

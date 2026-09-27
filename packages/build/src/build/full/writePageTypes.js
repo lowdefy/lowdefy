@@ -14,16 +14,21 @@
   limitations under the License.
 */
 
+import loadIconData from '../icons/loadIconData.js';
 import generatePageTypesModule from './generatePageTypesModule.js';
 import generatePageTypesRegistry from './generatePageTypesRegistry.js';
 
 async function writePageTypes({ components, context }) {
   const typesKeys = Object.keys(components.pageTypes).sort();
+  const pageIconNames = new Set(
+    typesKeys.flatMap((typesKey) => components.pageTypes[typesKey].icons)
+  );
+  const iconData = await loadIconData({ names: [...pageIconNames], icons: context.icons });
   await Promise.all(
     typesKeys.map((typesKey) =>
       context.writeBuildArtifact(
         `plugins/pageTypes/${typesKey}.js`,
-        generatePageTypesModule({ imports: components.pageTypes[typesKey] })
+        generatePageTypesModule({ iconData, imports: components.pageTypes[typesKey] })
       )
     )
   );
@@ -31,7 +36,7 @@ async function writePageTypes({ components, context }) {
     'plugins/pageTypes.js',
     generatePageTypesRegistry({ typesKeys })
   );
-  // Server-only: Dynamic resolution compares fragment types against it.
+  // Server-only: Dynamic resolution compares fragment types and icons against it.
   await context.writeBuildArtifact('pageTypeSets.json', JSON.stringify(components.pageTypeSets));
 }
 

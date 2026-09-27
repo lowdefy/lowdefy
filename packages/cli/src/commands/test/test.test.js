@@ -50,7 +50,10 @@ beforeEach(() => {
   configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-command-'));
   logs = { info: [], warn: [], error: [] };
   context = {
-    directories: { config: configDirectory },
+    directories: {
+      config: configDirectory,
+      journeys: path.join(configDirectory, 'tests', 'journeys'),
+    },
     options: { port: 3000 },
     logger: {
       info: (line) => logs.info.push(line),
@@ -150,6 +153,19 @@ test('test exits 1 when an explicit --filter matches no journey', async () => {
   await test({ context });
   expect(mockStartDevServer).not.toHaveBeenCalled();
   expect(logs.error).toEqual(['No tests matched --filter "nothing".']);
+  expect(process.exitCode).toEqual(1);
+});
+
+test('test exits 1 when a named --journeys-directory holds no journeys', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'default journey' }));
+  const directory = path.join(configDirectory, 'tests', 'auth-journeys');
+  context.options.journeysDirectory = directory;
+  context.directories.journeys = directory;
+  await test({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(logs.error).toEqual([`No journeys found in ${directory}.`]);
   expect(process.exitCode).toEqual(1);
 });
 

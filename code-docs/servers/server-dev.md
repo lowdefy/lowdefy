@@ -65,7 +65,7 @@ Both `server` and `server-dev` have `antd` and `@ant-design/cssinjs` as direct d
 
 **Symptoms of duplicate instances:** Dark mode toggle only partially works — some antd components (like Menu) respond while the rest of the page stays in light mode. No errors in console.
 
-`resolve.dedupe: ['react', 'react-dom']` in `vite.config.js` handles the same problem for React itself — linked plugin packages must share one React instance.
+`resolve.dedupe` in `vite.config.js` handles the same problem for React itself — linked plugin packages must share one React instance — and for every `@lowdefy/*` package in the server's `package.json` dependencies. A linked workspace plugin pinned to another Lowdefy release otherwise brings its own `@lowdefy/helpers` and `@lowdefy/block-utils`: the dependency optimizer pre-bundles one copy per package for every importer (whichever its scan meets first), so the server's own client could load a plugin's older copy and fail on a missing export, and the client's HTML enhancements, registered in `@lowdefy/block-utils`, would not reach blocks that import another copy.
 
 ## Scripts
 
@@ -362,7 +362,7 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
 }
 ```
 
-`getBuildContext` also restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), API endpoint configs (for JIT `CallAPI` validation), and advances the `makeId` counter past skeleton IDs. Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart. The startup bundle holds the always-bundled icon names plus every name the config uses; there is no preset icon list. Icons found later reach the page as `_dynamicIcons` data (see below).
+`getBuildContext` also restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), API endpoint configs (for JIT `CallAPI` validation), and continues the skeleton build's `~k` keys from `idCounter.json` (`makeId.continueFrom`: same key prefix, counter only moves forward). It also wraps the context's `writeBuildArtifact` with `skipStaleMapWrites`, so a page build that started before a skeleton rebuild does not write its `keyMap.json`/`refMap.json` over the new ones (see [Keys across dev rebuilds](../architecture/error-tracing.md#keys-across-dev-rebuilds)). Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart. The startup bundle holds the always-bundled icon names plus every name the config uses; there is no preset icon list. Icons found later reach the page as `_dynamicIcons` data (see below).
 
 ### PageCache
 
@@ -888,8 +888,17 @@ export default defineConfig(({ mode }) => ({
     'process.env.NODE_ENV': JSON.stringify(mode === 'production' ? 'production' : 'development'),
   },
   resolve: {
-    // Linked plugin packages (pnpm link: / workspace) must share one React.
-    dedupe: ['react', 'react-dom'],
+    // Linked plugin packages share one React, antd, dayjs and the server's
+    // @lowdefy packages (lowdefyDependencies, read from package.json).
+    dedupe: [
+      'react',
+      'react-dom',
+      'antd',
+      '@ant-design/x',
+      '@ant-design/cssinjs',
+      'dayjs',
+      ...lowdefyDependencies,
+    ],
   },
 }));
 ```
@@ -972,7 +981,7 @@ Auth itself is Auth.js v5 (`@auth/core` via `@hono/auth-js`), wired the same way
 
 With `LOWDEFY_DEV_SMTP_PORT` set, the manager (`manager/processes/startMailSink.mjs`, `smtp-server` + `postal-mime`) listens for SMTP on `127.0.0.1:<port>` and writes every message it receives as `<config>/.lowdefy/mail/<sequence>.json` (envelope recipients, subject, html, text, receive time) instead of delivering it. The directory is emptied at start. The app's own SMTP connection is pointed at the port through its secrets, so the real send path runs unchanged. The manager owns the listener so it survives child restarts, and `startServer` passes each child `LOWDEFY_SERVER_DEV_MAIL_SINK=true` only while it listens (a port added to `.env` later starts no sink); the journey `email` step (`lib/docs/openJourneyEmail.js`) checks that flag and reads the files from the server child. `smtp-server` and `postal-mime` load only when the port is set. Nothing in `@lowdefy/server` captures mail.
 
-Journeys that test auth run with `user: 'none'` (no injected caller) and one browser context per actor (`lib/docs/createJourneyActors.js`). Each actor sends `X-Forwarded-For` from `203.0.113.0/24`, so BetterAuth's per-address rate limits count each actor apart instead of one budget for the whole run. See the config tests docs (`packages/docs/testing/config-tests.md`) and `code-docs/testing.md`.
+Journeys that test auth run with `user: 'none'` (no injected caller) and one browser context per actor (`lib/docs/createJourneyActors.js`). Each actor gets an address from `203.0.113.0/24`, carried by a `lowdefy_journey_actor` cookie with a per-process token (`lib/server/auth/journeyActor.js`), which only the dev server's `getClientAddress` reads, so BetterAuth's per-address rate limits count each actor apart instead of one budget for the whole run. `X-Forwarded-For` is not believed: neither server reads it unless the connection comes from one of `config.trustedProxies`. See the config tests docs (`packages/docs/testing/config-tests.md`) and `code-docs/testing.md`.
 
 ## Plugin Strategy
 

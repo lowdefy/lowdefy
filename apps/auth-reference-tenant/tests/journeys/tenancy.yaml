@@ -1,6 +1,7 @@
 - name: a note one organization adds is invisible to another organization
   pageId: signup
   user: none
+  timeout: 30000
   steps:
     - fill: { blockId: name, value: Alpha Owner }
     - fill: { blockId: email, value: alpha-owner@example.test }
@@ -42,6 +43,7 @@
 - name: a member of two organizations switches between them, and loses access on the next request once removed
   pageId: signup
   user: none
+  timeout: 30000
   steps:
     - fill: { blockId: name, value: Switch Owner }
     - fill: { blockId: email, value: switch-owner@example.test }

@@ -64,6 +64,31 @@ test('Anthropic create handles undefined connection', async () => {
   expect(result).toEqual({ provider: mockProvider });
 });
 
+test('Anthropic create returns the connection maxOutputTokens and timeout for its agents', async () => {
+  const mockProvider = jest.fn();
+  mockCreateAnthropic.mockReturnValue(mockProvider);
+
+  const { default: Anthropic } = await import('./Anthropic.js');
+
+  const result = Anthropic.create({
+    connection: { apiKey: 'test-api-key', maxOutputTokens: 1024, timeout: 30000 },
+  });
+
+  expect(result).toEqual({ provider: mockProvider, maxOutputTokens: 1024, timeout: 30000 });
+});
+
+test.each([
+  ['maxOutputTokens', 1.5, 'should be an integer.'],
+  ['maxOutputTokens', 0, 'should be at least 1.'],
+  ['timeout', '30s', 'should be an integer.'],
+  ['timeout', 0, 'should be at least 1.'],
+])('Anthropic connection schema rejects %s %p', async (property, value, message) => {
+  const { default: Anthropic } = await import('./Anthropic.js');
+  expect(() =>
+    validate({ schema: Anthropic.schema, data: { apiKey: 'k', [property]: value } })
+  ).toThrow(`Anthropic connection property "${property}" ${message}`);
+});
+
 test('Anthropic has schema', async () => {
   const { default: Anthropic } = await import('./Anthropic.js');
   expect(Anthropic.schema).toBeDefined();
@@ -81,7 +106,12 @@ test('valid connection schema with all properties', async () => {
   const { default: Anthropic } = await import('./Anthropic.js');
   const schema = Anthropic.schema;
 
-  const connection = { apiKey: 'sk-ant-test', baseURL: 'https://custom.anthropic.com' };
+  const connection = {
+    apiKey: 'sk-ant-test',
+    baseURL: 'https://custom.anthropic.com',
+    maxOutputTokens: 1024,
+    timeout: 30000,
+  };
   expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 

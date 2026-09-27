@@ -51,6 +51,14 @@ const journeySchema = {
       type: 'object',
       errorMessage: { type: 'Journey "urlQuery" should be an object.' },
     },
+    // Must match MAX_JOURNEY_TIMEOUT in @lowdefy/server-dev.
+    timeout: {
+      type: 'integer',
+      minimum: 1,
+      maximum: 60000,
+      errorMessage:
+        'Journey "timeout" should be a whole number of milliseconds from 1 to 60000 - how long each step may wait.',
+    },
     steps: {
       type: 'array',
       minItems: 1,

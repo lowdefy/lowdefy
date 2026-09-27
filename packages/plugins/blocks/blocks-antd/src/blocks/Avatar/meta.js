@@ -79,10 +79,12 @@ export default {
       },
       src: {
         type: 'string',
+        urlKind: 'src',
         description: 'The address of the image for an image avatar.',
       },
       srcSet: {
         type: 'string',
+        urlKind: 'srcSet',
         description:
           'A list of image sources for different screen resolutions, as in the img srcset attribute.',
       },
@@ -164,10 +166,12 @@ export default {
                 },
                 src: {
                   type: 'string',
+                  urlKind: 'src',
                   description: 'Image URL.',
                 },
                 srcSet: {
                   type: 'string',
+                  urlKind: 'srcSet',
                   description: 'Image sources for different screen resolutions.',
                 },
               },

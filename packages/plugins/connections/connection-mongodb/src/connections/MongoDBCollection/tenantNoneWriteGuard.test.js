@@ -32,9 +32,9 @@ import populateTestMongoDb from '../../../test/populateTestMongoDb.js';
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
 const tenantGuard = { field: 'organization_id' };
-const refusal = 'Unscoped write (tenant: none) on a tenant connection must leave "organization_id"';
+const refusal = 'must leave "organization_id" a non-empty organization id on every row it writes';
 const aggregationRefusal =
-  'Unscoped aggregation (tenant: none) on a tenant connection can not contain';
+  'Unscoped aggregation on a walled collection (tenant: none, or a tenant: shared connection over a collection a scoped connection reads) can not contain';
 const seed = [
   { _id: 'a1', doc_id: 'da', organization_id: 'org_a', v: 'before' },
   { _id: 'b1', doc_id: 'db', organization_id: 'org_b', v: 'before' },
@@ -86,7 +86,7 @@ test.each([
       update: { $set: { v: 'after' } },
       options: { find: { projection: { organization_id: 0 } } },
     },
-    `${refusal} a non-empty organization id on every row it writes - the version copy carries null`,
+    `${refusal} - the version copy carries null`,
   ],
   [
     'an aggregation that $merges org-less rows over its own collection',

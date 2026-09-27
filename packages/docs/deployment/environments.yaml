@@ -81,7 +81,7 @@ _ref:
             - the `serverUrl` of `RenderNotification` steps — the links and logo in notification emails;
             - where crons are forwarded to, when another environment forwards to this one.
 
-            An explicit `BETTER_AUTH_URL` or `serverUrl` still wins. On the dev server (`lowdefy dev`), an environment without a `url` uses the request origin for notification links; production never does, since a spoofed `Host` header would then steer the links in outgoing mail.
+            An explicit `BETTER_AUTH_URL` or `serverUrl` still wins. On the dev server (`lowdefy dev`), an environment without a `url` uses the request origin for notification and auth links; production never does, since a spoofed `Host` header would then steer the links in outgoing mail. A production server with `auth.email` configured refuses to start when neither `BETTER_AUTH_URL` nor the current environment's `url` is set.
 
             ## Crons
 

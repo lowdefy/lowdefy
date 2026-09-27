@@ -61,10 +61,12 @@ export default {
         properties: {
           src: {
             type: 'string',
+            urlKind: 'src',
             description: 'Logo source url.',
           },
           srcMobile: {
             type: 'string',
+            urlKind: 'src',
             description: 'Mobile logo source url.',
           },
           alt: {

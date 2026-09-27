@@ -46,7 +46,7 @@ _ref:
 
             ## Generation Settings
 
-            - `maxOutputTokens: integer`: Maximum tokens the model can generate per step.
+            - `maxOutputTokens: integer`: Maximum tokens the model can generate per step. Defaults to the connection's `maxOutputTokens`.
             - `temperature: number`: Sampling temperature between `0` and `2`. Lower values are more deterministic, higher values more creative. Default depends on the provider.
             - `topP: number`: Nucleus sampling probability between `0` and `1`. Alternative to temperature — use one or the other.
             - `topK: integer`: Only sample from the top K token options (not supported by all providers).
@@ -180,12 +180,14 @@ _ref:
             ## Timeouts and Retries
 
             - `maxRetries: integer`: Default: `2` - Maximum retries on provider errors. Set to `0` to disable.
-            - `timeout: number | object`: Timeout configuration.
+            - `timeout: number | object`: Timeout configuration. Defaults to the connection's `timeout`.
               - As a number: total timeout in milliseconds.
               - As an object with granular control:
                 - `totalMs: number`: Total timeout across all steps.
                 - `stepMs: number`: Timeout per step.
                 - `chunkMs: number`: Timeout between stream chunks.
+
+            A chat turn keeps running when the client disconnects, so its `onFinish` hooks still save the whole conversation; `timeout` and `maxSteps` are what bound it. A `CallAgent` step is cancelled with the routine that runs it: when its request closes or the server's request timeout (`config.requestTimeout`) answers first.
 
             ## Provider-Specific Properties
 

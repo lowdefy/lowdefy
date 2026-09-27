@@ -72,6 +72,7 @@ export default {
       },
       href: {
         type: 'string',
+        urlKind: 'href',
         description:
           'The URL to redirect to when the button is clicked. Useful when used with a type link button.',
       },

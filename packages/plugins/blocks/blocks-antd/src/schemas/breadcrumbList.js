@@ -42,6 +42,7 @@ export default {
           },
           url: {
             type: 'string',
+            urlKind: 'url',
             description: 'External url link.',
           },
           style: {
@@ -72,6 +73,7 @@ export default {
                 },
                 url: {
                   type: 'string',
+                  urlKind: 'url',
                   description: 'External url link.',
                 },
               },

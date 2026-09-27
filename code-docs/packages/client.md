@@ -109,7 +109,7 @@ Handles auth state and session management on the client.
 
 ### Icons (`createIcon.js`)
 
-`createIcon(Icons)` returns the `Icon` component that blocks receive as `components.Icon`, and that HTML `data-icon` renders through `registerHtmlEnhancements`. `Icons` is `types.icons`: the build-generated `plugins/icons.js`, a plain map from every icon name the app uses (semantic `edit`, set `Pencil`, qualified `lucide:Pencil`) to `IconData`:
+`createIcon({ icons, loadAllIcons })` returns the `Icon` component that blocks receive as `components.Icon`, and that HTML `data-icon` renders through `registerHtmlEnhancements`. `icons` is `types.icons`: a plain map from icon names (semantic `edit`, set `Pencil`, qualified `lucide:Pencil`) to `IconData`. In dev and e2e it is the build-generated `plugins/icons.js`, every icon the app uses. The production server fills it per page (each page's types module carries its own icons) and passes `loadAllIcons` to `Client`, which loads the app-wide `plugins/icons.js` into the same map:
 
 ```javascript
 { node: [['path', { d: 'M21.174 6.812…' }], ['path', { d: 'm15 5 4 4' }]], size: 24, attrs: { … } }
@@ -126,6 +126,7 @@ The build resolves names and bakes set `attrs` into the data, so the client does
 - `color` and `rotate` go through CSS (`color`, `transform`), so they work for stroke and fill sets alike.
 - An empty title sets `aria-hidden="true"`; a non-empty one renders a `<title>` child. The Icon block generates titles from names (`ArrowLeftRight` → "Arrow left right"); HTML icons pass `title: ''`.
 - `spin` swaps in the spinning `loading` icon. An unknown name renders `icon-missing` in red. Both are semantic names, so aliases and sets restyle them.
+- With `loadAllIcons`, the first miss of a name renders an empty `<svg>` with the icon's props (same box, no fallback flash) and calls it; every pending icon re-renders when it settles. After one successful load a missing name is unknown and renders `icon-missing` at once. A failed load renders `icon-missing`; the loader logs it and clears itself, so a later miss retries.
 
 **antd chrome.** `Client.js` also wraps the page in a nested `ConfigProvider` whose icon keys (`modal.closeIcon`, `alert.successIcon`, `collapse.expandIcon`, `button.loadingIcon`, …) are `<Icon>` elements with semantic names. Message, Notification and ConfirmModal render through `App.useApp()` holders above `Client`, so the message and notification helpers set `icon` and `closeIcon` on each call instead.
 

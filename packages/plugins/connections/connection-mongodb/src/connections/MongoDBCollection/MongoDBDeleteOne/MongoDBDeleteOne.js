@@ -30,6 +30,7 @@ async function MongodbDeleteOne({
   request,
   requestId,
   tenant,
+  tenantGuard,
 }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
@@ -52,23 +53,29 @@ async function MongodbDeleteOne({
         acknowledged: true,
         deletedCount: result.lastErrorObject?.n ?? 0,
       };
-      await logCollection.insertOne(
-        stampTenantOnLogRecord({
-          record: {
-            args: { filter, options },
-            blockId,
-            connectionId,
-            pageId,
-            payload,
-            requestId,
-            before,
-            timestamp: new Date(),
-            type: 'MongoDBDeleteOne',
-            meta: connection.changeLog?.meta,
-          },
-          tenant,
-        })
-      );
+      // An unscoped record belongs to the organization of the row it records;
+      // a delete that matched no row has none, and records nothing.
+      if (!(tenantGuard?.stampChangeLog && before === null)) {
+        await logCollection.insertOne(
+          stampTenantOnLogRecord({
+            record: {
+              args: { filter, options },
+              blockId,
+              connectionId,
+              pageId,
+              payload,
+              requestId,
+              before,
+              timestamp: new Date(),
+              type: 'MongoDBDeleteOne',
+              meta: connection.changeLog?.meta,
+            },
+            tenant,
+            tenantGuard,
+            organizationId: tenantGuard && before?.[tenantGuard.field],
+          })
+        );
+      }
     } else {
       response = await collection.deleteOne(filter, options);
     }

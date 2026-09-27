@@ -23,12 +23,14 @@ import createApiContext from './context/createApiContext.js';
 import createAsMetadataHandler from './routes/auth/createAsMetadataHandler.js';
 import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
 import createMcpServer from './routes/mcp/createMcpServer.js';
+import createRequestSignal from './context/createRequestSignal.js';
 import createSystemContext from './context/createSystemContext.js';
 import createWebSocketConnection from './routes/websocket/createWebSocketConnection.js';
 import createWireProjection from './response/createWireProjection.js';
 import getAuthStrategies from './routes/auth/strategies/getAuthStrategies.js';
 import getBetterAuth from './routes/auth/getBetterAuth.js';
 import { MCP_OAUTH_SCOPES } from './routes/auth/getBetterAuthConfig.js';
+import handleAuthRequest from './routes/auth/handleAuthRequest.js';
 import {
   getAsIssuer,
   getMcpResourceMetadataUri,
@@ -67,6 +69,7 @@ export {
   createAsMetadataHandler,
   createChannelRegistry,
   createMcpServer,
+  createRequestSignal,
   createSystemContext,
   createWebSocketConnection,
   createWireProjection,
@@ -76,6 +79,7 @@ export {
   getBetterAuth,
   MCP_OAUTH_SCOPES,
   getHomeAndMenus,
+  handleAuthRequest,
   getMcpResourceBinding,
   getMcpResourceMetadataUri,
   getMcpResourceUri,

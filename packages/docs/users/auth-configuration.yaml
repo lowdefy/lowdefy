@@ -46,7 +46,7 @@ _ref:
                     _secret: BETTER_AUTH_SECRET
                 ```
 
-                Also pin the app's canonical origin — the `url` of the current environment in [`config.environments`](/lowdefy-schema), or the `BETTER_AUTH_URL` environment variable, which wins — auth builds password-reset, magic-link and verification links, and its CSRF origin allowlist, from it. See the [migration guide](/auth-upgrade#3-pin-the-canonical-url-with-better-auth-url).
+                Also pin the app's canonical origin — the `url` of the current environment in [`config.environments`](/lowdefy-schema), or the `BETTER_AUTH_URL` environment variable, which wins — auth builds password-reset, magic-link and verification links, and its CSRF origin allowlist, from it. With `auth.email` configured, a production server refuses to start without it. See the [migration guide](/auth-upgrade#3-pin-the-canonical-url-with-better-auth-url).
 
                 ## Database
 
@@ -115,8 +115,8 @@ _ref:
                 | `signUp` | `/signup` | |
                 | `error` | `/auth/error` | receives `?error=` code |
                 | `forgotPassword` | `/forgot-password` | |
-                | `resetPassword` | `/reset-password` | |
-                | `verifyEmail` | `/verify-email` | |
+                | `resetPassword` | `/reset-password` | where the emailed reset link lands, with `?token=` (or `?error=INVALID_TOKEN`); the default `redirectTo` of `RequestPasswordReset` |
+                | `verifyEmail` | `/verify-email` | where the emailed verification link lands; receives `?error=` code when the link is invalid or expired |
                 | `twoFactor` | — | **required** when `twoFactor.enabled` |
                 | `twoFactorEnrol` | — | **required** when `twoFactor.required` |
                 | `acceptInvitation` | — | consumes an `?invitationId=` link |
@@ -130,6 +130,10 @@ _ref:
                     signUp: /signup
                     error: /auth-error
                 ```
+
+                ### The email verification page
+
+                A verification email links to Better Auth's verify endpoint, which confirms the address and then redirects to `authPages.verifyEmail`. When the link is invalid or has expired, it redirects there with `?error=` set (`INVALID_TOKEN`, `TOKEN_EXPIRED`), so the page can offer to resend with the `SendVerificationEmail` action. A `callbackUrl` on the `SignUp` or `SendVerificationEmail` action sends that link somewhere else instead.
 
                 ### The magic link landing page
 
@@ -223,7 +227,7 @@ _ref:
 
                 ## Rate limiting and account linking
 
-                - `auth.rateLimit` — brute-force protection, on by default (`enabled`, `window` seconds, `max`).
+                - `auth.rateLimit` — brute-force protection, on by default (`enabled`, `window` seconds, `max`). Sign-in and sign-up allow 3 attempts per 10 seconds, and password-reset and verification emails 3 per minute. Limits count per client address: the connection's address on a self-hosted server, or the address a trusted proxy forwarded when the app lists its proxies in [`config.trustedProxies`](/docker#behind-a-reverse-proxy). `X-Forwarded-For` from anyone else is ignored.
                 - `auth.account.accountLinking` — link a new OAuth sign-in to an existing account by verified email. `trustedProviders` lists providers whose email claim you trust for linking. **This is unrelated to `provider.twoFactorTrusted`** — see [Two-Factor Authentication](/two-factor#trusting-an-oauth-provider).
 
                 ## Mock User for Testing (Dev Server Only)

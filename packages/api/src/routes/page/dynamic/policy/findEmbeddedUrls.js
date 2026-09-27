@@ -14,10 +14,15 @@
   limitations under the License.
 */
 
+import normalizeUrlText from './normalizeUrlText.js';
+
 // Returns every URL a string can make the client load or navigate to that is
-// not given by its key: a scheme or protocol-relative value, markdown link and
-// image targets, and CSS url()/image-set()/src() arguments after unescaping.
+// not given by its key: a scheme or protocol-relative value (read as the URL
+// parser reads it), markdown link and image targets, and CSS
+// url()/image-set()/src() arguments after unescaping.
 const SCHEME = /^[a-zA-Z][a-zA-Z0-9+.-]*:\S/;
+// Script schemes run whatever follows them, spaces included.
+const SCRIPT_SCHEME = /^(javascript|vbscript):/i;
 const MARKDOWN_INLINE = /\]\(\s*<?([^)\s>]+)/g;
 const MARKDOWN_REFERENCE = /^\s*\[[^\]]+\]:\s*<?([^\s>]+)/gm;
 const CSS_FUNCTION = /(url|src|image-set)\(([^)]*)\)/gi;
@@ -31,11 +36,11 @@ function unescapeCss(value) {
 
 function findEmbeddedUrls(value) {
   const urls = [];
-  if (
-    !/\s/.test(value) &&
-    (SCHEME.test(value) || value.startsWith('//') || value.startsWith('/\\'))
-  ) {
-    urls.push(value);
+  const text = normalizeUrlText(value);
+  const isUrlText =
+    !/\s/.test(text) && (SCHEME.test(text) || text.startsWith('//') || text.startsWith('/\\'));
+  if (isUrlText || SCRIPT_SCHEME.test(text)) {
+    urls.push(text);
   }
   for (const match of value.matchAll(MARKDOWN_INLINE)) urls.push(match[1]);
   for (const match of value.matchAll(MARKDOWN_REFERENCE)) urls.push(match[1]);

@@ -36,6 +36,23 @@ The build cross-checks these, and the errors are worth knowing before you hit th
 
 Defaults line up with intent: `pinned` defaults to a closed, invite-only internal app; `tenant` defaults to self-serve SaaS (`signup: open`, `create: auto`).
 
+### The organization `create: auto` mints
+
+Under `tenant` with `create: auto`, the first session of a user who has no membership and no pending invitation mints the user's own organization, with the user as its `owner`, slugged `org-<userId>`. A user who later leaves their last organization gets a fresh one at their next session (`org-<userId>-2`, then `-3` and on). An organization the user was ever a member of is never handed back to them, even after every member has left it, so its data and pending invitations stay with it.
+
+The mint is safe when the same user signs in from two tabs at once or submits twice: exactly one organization and one `owner` membership are written. It relies on two unique indexes in the auth database, which the server creates at startup (and checks again before it mints):
+
+```js
+db['user-organizations'].createIndex({ slug: 1 }, { unique: true })
+db['user-members'].createIndex({ user_id: 1, organization_id: 1 }, { unique: true })
+```
+
+An equivalent unique index you created yourself, under any name, is accepted. If the auth database user may not create indexes, or the collections already hold duplicate rows, the server logs an error naming the index, and a sign-in that needs a new organization is refused with status 503 and the code `ORGANIZATION_SETUP_UNAVAILABLE` (existing members sign in as usual). The server tries again at most every 30 seconds while such sign-ins arrive, so removing the duplicates or creating the indexes by hand recovers without a restart.
+
+### Invitations for existing members
+
+An invitation is how someone joins an organization, never how a membership changes. Accepting an invitation into an organization you already belong to (you joined another way after it was sent) succeeds and marks the invitation accepted, but leaves your membership exactly as it is: the invitation's role, app roles and attributes are not applied, and no second membership is written. If your session had no active organization, the accepted organization becomes active. To change an existing membership, use the [auth steps](/auth-steps) (`UpdateMemberOrgRole`, `UpdateMemberRoles`, `UpdateMemberAttributes`), which check the caller's authority at the time of the change.
+
 ## The `owner` / `admin` / `member` tier vs app roles
 
 A membership carries **two** independent role authorities, and keeping them apart is the whole point:
@@ -92,6 +109,10 @@ connections:
 
 **A shared connection's change log must not write into a walled collection.** A `tenant: shared` connection's writes belong to no organization, so its `changeLog` records carry no `organization_id`. In a collection a scoped connection reads, those records would be invisible to every walled read and would make the tenant preflight refuse to serve the app, so the build rejects a shared connection whose `changeLog.collection` is the collection of a scoped connection in the same database. Give shared connections their own change-log collection.
 
+**A shared connection over a walled collection has its writes checked.** When a `tenant: shared` connection names the same collection, in the same database, as a scoped connection, the build marks it, and every row it inserts, replaces, upserts or updates must keep a non-empty `organization_id` — the same check a [`tenant: none` write](#writing-with-tenant-none) gets. Its reads stay unscoped, which is what `shared` is for. A collection name resolved at runtime (`_secret`, `_payload`) can not be compared at build time, so such a connection is not marked.
+
+**A shared connection's aggregation may not `$out` or `$merge` into a walled collection.** The rows an aggregation writes are not checked, so the build rejects a request or step on a `tenant: shared` connection whose literal pipeline writes, with `$out` or `$merge`, into a collection a scoped connection reads in the same database. Write the rows with a checked request instead (see the rollup example below). A target named by an operator, or in another database, is not checked at build time.
+
 **Under `tenant` policy every connection type must declare its capability.** A connection whose type does not declare tenant support (`connectionMetas.tenant`) fails the build — no connection is ever *silently* unscoped. Connection plugins declare this in their `types.js`; you do not set it.
 
 ### Exceptions at the point of use
@@ -128,6 +149,70 @@ properties:
                   _payload: q
                 path: title
 ```
+
+### Writing with `tenant: none`
+
+`tenant: none` lifts the filter and the stamp, not the rule that every row in a walled collection belongs to an organization. A row without `organization_id` is invisible to every walled read, and the tenant preflight refuses to serve the app while one exists, so a `tenant: none` write on a scoped connection is checked instead of stamped:
+
+- Inserted and replacement documents must carry a non-empty `organization_id`, and upserts must author it (`$set` / `$setOnInsert`, or an equality match in the filter).
+- Updates may not null, unset, rename or otherwise overwrite it with a value the wall can not verify.
+- An aggregation may not contain `$out` or `$merge`: the rows they write can not be checked. Return the documents and write them with `MongoDBInsertMany` or `MongoDBBulkWrite`, which check every row (see the example below).
+
+**Change logs.** On a connection with a `changeLog`, the change-log record of a `tenant: none` write carries the `organization_id` of the rows it records, so the log collection can itself be read through a scoped connection. A single-document write takes it from the row it inserted, updated (the row as the update left it) or deleted; a write that matched no row writes no record. A multi-document write must be held to one organization before it runs:
+
+| Request | Allowed on a change-logged connection when |
+| ------- | ------------------------------------------ |
+| `MongoDBInsertMany`, `MongoDBInsertManyConsecutiveIds` | every document carries the same `organization_id` |
+| `MongoDBUpdateMany` | the filter matches `organization_id` by equality (`{ organization_id: <id> }` or `{ $eq: <id> }`) and the update does not write it |
+| `MongoDBDeleteMany` | the filter matches `organization_id` by equality |
+
+Anything else is refused before it writes, with an error naming the fix — usually running the write once per organization. Connections without a `changeLog` are not affected. (A [shared connection](#declaring-scope-on-a-connection) writes no organization into its change-log records; its change log can not point into a walled collection.)
+
+**Rollups across organizations** — group walled rows by organization and save the totals, typically from a scheduled endpoint — read with `tenant: none` and write the rows with a checked request instead of `$merge`:
+
+```yaml
+routine:
+  - id: rollup
+    type: MongoDBAggregation
+    connectionId: orders
+    tenant: none
+    properties:
+      pipeline:
+        - $group:
+            _id:
+              organization_id: $organization_id
+              month:
+                $dateToString:
+                  format: '%Y-%m'
+                  date: $created_at
+            total:
+              $sum: $amount
+        - $project:
+            _id: 0
+            organization_id: $_id.organization_id
+            month: $_id.month
+            total: 1
+  - id: save_rollup
+    type: MongoDBBulkWrite
+    connectionId: monthly_totals
+    tenant: none
+    properties:
+      operations:
+        _array.map:
+          - _step: rollup
+          - _function:
+              replaceOne:
+                filter:
+                  organization_id:
+                    __args: 0.organization_id
+                  month:
+                    __args: 0.month
+                replacement:
+                  __args: 0
+                upsert: true
+```
+
+Every replacement carries the `organization_id` the group produced, so the bulk write passes the check, and each organization reads its own totals through the scoped `monthly_totals` connection.
 
 ### Why the wall lives on the connection
 

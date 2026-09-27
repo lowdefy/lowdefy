@@ -21,6 +21,8 @@ events:
       params:
         members:
           _actions: load_members.response
+    - _ref: pages/members/load-invitations.yaml
+    - _ref: pages/members/set-invitations.yaml
 blocks:
   - id: members_title
     type: Title
@@ -100,6 +102,8 @@ blocks:
           params:
             invite_response:
               _actions: invite.response
+        - _ref: pages/members/load-invitations.yaml
+        - _ref: pages/members/set-invitations.yaml
   - id: invite_response_html
     type: Html
     visible:
@@ -114,6 +118,61 @@ blocks:
           on:
             response:
               _state: invite_response
+  - id: invitations_title
+    type: Title
+    properties:
+      content: Invitations
+      level: 4
+  - id: invitations_list
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <ul>
+            {% for invitation in invitations %}
+              <li>{{ invitation.email }} ({{ invitation.state }})</li>
+            {% endfor %}
+            </ul>
+          on:
+            invitations:
+              _state: invitations
+  - id: cancel_invitation_id
+    type: Selector
+    properties:
+      title: Invitation to cancel
+      options:
+        _array.map:
+          on:
+            _state: invitations
+          callback:
+            _function:
+              label:
+                __args: 0.email
+              value:
+                __args: 0.id
+  - id: cancel_invitation_button
+    type: Button
+    properties:
+      title: Cancel invitation
+      block: true
+    events:
+      onClick:
+        - id: cancel_invitation
+          type: Fetch
+          params:
+            url: /api/auth/organization/cancel-invitation
+            responseFunction: json
+            options:
+              method: POST
+              headers:
+                Content-Type: application/json
+              body:
+                _json.stringify:
+                  - invitationId:
+                      _state: cancel_invitation_id
+        - _ref: pages/members/load-invitations.yaml
+        - _ref: pages/members/set-invitations.yaml
   - id: update_role_title
     type: Title
     properties:

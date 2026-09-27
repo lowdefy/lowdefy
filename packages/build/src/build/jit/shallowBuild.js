@@ -16,6 +16,8 @@
   limitations under the License.
 */
 
+import { randomBytes } from 'crypto';
+
 import { serializer } from '@lowdefy/helpers';
 import { BuildError } from '@lowdefy/errors';
 
@@ -63,6 +65,7 @@ import writeAuth from '../writeAuth.js';
 import writeConfig from '../writeConfig.js';
 import writeConnections from '../writeConnections.js';
 import writeDynamicPolicies from '../writeDynamicPolicies.js';
+import writeTenantTargets from '../writeTenantTargets.js';
 import writeAgents from '../writeAgents.js';
 import writeApi from '../writeApi.js';
 import writeMcp from '../writeMcp.js';
@@ -89,7 +92,7 @@ import collectSkeletonSourceFiles from './collectSkeletonSourceFiles.js';
 import writeSourcelessPages from './writeSourcelessPages.js';
 
 async function shallowBuild(options) {
-  makeId.reset();
+  makeId.reset({ prefix: `${randomBytes(2).toString('hex')}_` });
 
   let context;
   try {
@@ -241,6 +244,7 @@ async function shallowBuild(options) {
       'connectionIds.json',
       JSON.stringify([...context.connectionIds].sort())
     );
+    await writeTenantTargets({ context });
     await context.writeBuildArtifact(
       'websocketIds.json',
       JSON.stringify([...context.websocketIds].sort())
@@ -259,7 +263,10 @@ async function shallowBuild(options) {
     await context.writeBuildArtifact('pageTypeSets.json', 'null');
     await writeJs({ context });
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
-    await context.writeBuildArtifact('idCounter.json', JSON.stringify(makeId.counter));
+    await context.writeBuildArtifact(
+      'idCounter.json',
+      JSON.stringify({ prefix: makeId.prefix, counter: makeId.counter })
+    );
     await context.writeBuildArtifact(
       'customTypesMap.json',
       JSON.stringify(options.customTypesMap ?? {})
@@ -288,11 +295,9 @@ async function shallowBuild(options) {
     // Deferred-record bodies referenced by placeholders in modules.json.
     // JIT hydrates the registry from this artifact (hydrateDeferredRecords).
     await context.writeBuildArtifact('deferredRecords.json', serializeRegistry(context));
+    // Also writes iconImports.json, the icon names snapshot JIT page builds
+    // compare discovered icons against.
     await writePluginImports({ components, context });
-    // Persist icon imports snapshot for JIT icon detection.
-    // When buildPageJit resolves a page, it compares discovered icons against
-    // this snapshot and regenerates plugins/icons.js if new icons are found.
-    await context.writeBuildArtifact('iconImports.json', JSON.stringify(components.imports.icons));
     await writePageRegistry({ pageRegistry, context });
     await copyPublicFolder({ components, context });
     await copyAgentFileSystems({ components, context });

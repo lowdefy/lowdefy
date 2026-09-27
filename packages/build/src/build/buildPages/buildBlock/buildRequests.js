@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 import validateId from '../../../utils/validateId.js';
+import validateSharedPipelineWrite from '../../validateSharedPipelineWrite.js';
 import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
 
 function buildRequest(request, pageContext) {
@@ -81,6 +82,13 @@ function buildRequest(request, pageContext) {
     config: request,
     location: `Request "${request.id}" at page "${pageId}"`,
     tenantConnectionIds: context.tenantConnectionIds,
+    configKey,
+  });
+  validateSharedPipelineWrite({
+    config: request,
+    location: `Request "${request.id}" at page "${pageId}"`,
+    sharedTargets: context.sharedTargets,
+    walledTargets: context.walledTargets,
     configKey,
   });
 

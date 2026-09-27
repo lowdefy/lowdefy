@@ -27,6 +27,7 @@ test('default directories', () => {
     config: '/test/config',
     dev: '/test/config/.lowdefy/dev',
     emails: '/test/config/.lowdefy/emails',
+    journeys: '/test/config/tests/journeys',
     server: '/test/config/.lowdefy/server',
   });
 });
@@ -44,6 +45,7 @@ test('specify serverDirectory in options', () => {
     config: '/test/config',
     dev: '/test/config/.lowdefy/dev',
     emails: '/test/config/.lowdefy/emails',
+    journeys: '/test/config/tests/journeys',
     server: '/test/server',
   });
 });
@@ -61,6 +63,18 @@ test('specify devDirectory in options', () => {
     config: '/test/config',
     dev: '/test/dev',
     emails: '/test/config/.lowdefy/emails',
+    journeys: '/test/config/tests/journeys',
     server: '/test/config/.lowdefy/server',
   });
+});
+
+test('specify journeysDirectory in options', () => {
+  const directories = getDirectories({
+    configDirectory: '/test/config',
+    options: {
+      journeysDirectory: '/test/config/tests/auth-journeys',
+    },
+  });
+
+  expect(directories.journeys).toEqual('/test/config/tests/auth-journeys');
 });

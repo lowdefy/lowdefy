@@ -33,6 +33,8 @@ function buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, env
     typeCounters: context.typeCounters,
     stepTypes: context.typesMap?.steps ?? {},
     tenantConnectionIds: context.tenantConnectionIds,
+    sharedTargets: context.sharedTargets,
+    walledTargets: context.walledTargets,
   });
 
   // Validate that _step references point to defined step IDs

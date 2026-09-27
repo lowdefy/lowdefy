@@ -17,7 +17,7 @@ export default {
       redirectTo: {
         type: 'string',
         description:
-          'URL of the app page where the user resets their password - the emailed link redirects here with the reset token as a query parameter.',
+          'URL of the app page where the user resets their password - the emailed link redirects here with the reset token as a query parameter (?token=), or with ?error=INVALID_TOKEN when the link is invalid or expired. Defaults to the auth.authPages.resetPassword page.',
       },
       captchaToken: {
         type: 'string',

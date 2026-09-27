@@ -284,7 +284,7 @@ import {
 | `ActionError`                     | Action failures (`SetState`, `Request`, etc.)                                                                 | Action runner (engine)           |
 | `RequestError`                    | Request/connection failures (`MongoDBFind`, etc.)                                                             | Request handler (API)            |
 | `BlockError`                      | Block rendering failures                                                                                      | ErrorBoundary (client)           |
-| `ServiceError`                    | External service failures (network, timeout, 5xx)                                                             | Request/connection layer         |
+| `ServiceError`                    | External service failures (network failures, timeouts, 5xx, 429/rate limits)                                  | Request/connection layer         |
 | `ConfigError`                     | YAML config validation errors                                                                                 | Build validation, runtime        |
 | `ConfigWarning`                   | Config inconsistencies (warning in dev, error in prod)                                                        | Build validation                 |
 | `AuthenticationError`             | Unauthenticated request to a protected endpoint (401)                                                         | Server error handler (warn only) |

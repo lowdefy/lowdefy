@@ -128,11 +128,13 @@ export default {
         properties: {
           src: {
             type: 'string',
+            urlKind: 'src',
             description:
               'Logo image URL for desktop. Defaults to logo-light-theme.png or logo-dark-theme.png from the public folder (~250x72px), auto-selected based on dark mode.',
           },
           srcMobile: {
             type: 'string',
+            urlKind: 'src',
             description:
               'Logo image URL for mobile. Defaults to logo-square-light-theme.png or logo-square-dark-theme.png from the public folder (~125x125px), auto-selected based on dark mode.',
           },
@@ -297,6 +299,7 @@ export default {
               },
               url: {
                 type: 'string',
+                urlKind: 'url',
                 description: 'External URL to link to.',
               },
               newTab: {
@@ -363,6 +366,7 @@ export default {
             properties: {
               src: {
                 type: 'string',
+                urlKind: 'src',
                 description: 'Image URL for the avatar. Typically bound to _user: image.',
               },
               content: {
@@ -422,6 +426,7 @@ export default {
                 },
                 url: {
                   type: 'string',
+                  urlKind: 'url',
                   description: 'External URL to link to.',
                 },
                 newTab: {
