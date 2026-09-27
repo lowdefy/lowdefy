@@ -39,7 +39,7 @@ export const autoFocus = {
 
 export const variant = {
   type: 'string',
-  enum: ['outlined', 'filled', 'borderless'],
+  enum: ['outlined', 'filled', 'borderless', 'underlined'],
   description: 'Input visual variant. When set, takes precedence over bordered.',
 };
 
