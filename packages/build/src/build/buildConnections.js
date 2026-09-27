@@ -23,6 +23,8 @@ import collectExceptions from '../utils/collectExceptions.js';
 import countOperators from '../utils/countOperators.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 import validateId from '../utils/validateId.js';
+import collectWalledTargets from './collectWalledTargets.js';
+import markWalledSharedConnections from './markWalledSharedConnections.js';
 import validateSharedChangeLog from './validateSharedChangeLog.js';
 
 function validateConnection(connection, context) {
@@ -223,7 +225,9 @@ function buildConnections({ components, context }) {
   });
 
   if (tenantPolicy) {
-    validateSharedChangeLog({ connections: validConnections, context });
+    const walledTargets = collectWalledTargets({ connections: validConnections, context });
+    validateSharedChangeLog({ connections: validConnections, context, walledTargets });
+    markWalledSharedConnections({ connections: validConnections, context, walledTargets });
   }
 
   return components;

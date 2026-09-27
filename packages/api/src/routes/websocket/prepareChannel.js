@@ -21,7 +21,7 @@ import getConnection from '../connections/getConnection.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
 import getWebsocketConfig from './getWebsocketConfig.js';
 import getWebsocketResolver from './getWebsocketResolver.js';
-import resolveTenant from '../request/resolveTenant.js';
+import resolveTenancy from '../request/resolveTenancy.js';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 
@@ -52,11 +52,12 @@ async function prepareChannel(context, { websocketId, payload }) {
     // verdict is resolved per subscriber exactly like per request, and joins
     // the channel identity so callers from different orgs never share a
     // running source (see createChannelRegistry getChannelKey).
-    tenant = resolveTenant(context, {
+    // A change stream only reads, so the write guard does not apply.
+    ({ tenant } = resolveTenancy(context, {
       connection,
       connectionConfig,
       requestConfig: websocketConfig,
-    });
+    }));
     connectionProperties = context.evaluateOperators({
       input: connectionConfig.properties ?? {},
       location: connectionConfig.connectionId,
