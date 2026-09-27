@@ -39,8 +39,8 @@ blocks:
 
   - id: divider_vertical_container
     type: Box
-    properties:
-      style:
+    style:
+      .element:
         display: flex
         alignItems: center
         height: 50px

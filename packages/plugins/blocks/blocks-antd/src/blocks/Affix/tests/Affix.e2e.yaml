@@ -14,8 +14,8 @@
 
 id: affix
 type: Box
-properties:
-  style:
+style:
+  .element:
     height: 2000px
     paddingTop: 200px
 
@@ -62,7 +62,7 @@ blocks:
       .element:
         height: 200px
         overflowY: auto
-        border: 1px solid #d9d9d9
+        border: '1px solid #d9d9d9'
     blocks:
       - id: affix_scroll_spacer_top
         type: Box
@@ -112,7 +112,8 @@ blocks:
     type: Affix
     properties:
       offsetTop: 100
-      style:
+    style:
+      .element:
         zIndex: 100
     slots:
       content:

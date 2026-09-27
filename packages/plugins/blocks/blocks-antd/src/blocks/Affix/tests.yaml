@@ -22,10 +22,10 @@
   type: Affix
   properties:
     offsetBottom: 15
-- id: 'properties.style'
+- id: 'style.element'
   type: Affix
-  properties:
-    style:
+  style:
+    .element:
       border: 5px solid blue
 - id: 'properties.target'
   type: Affix

@@ -34,29 +34,27 @@ blocks:
   # THEME TESTS
   # ============================================
 
-  - id: header_theme_light
+  - id: header_default_background
     type: Header
-    properties:
-      theme: light
     slots:
       content:
         blocks:
-          - id: header_theme_light_content
+          - id: header_default_background_content
             type: Span
             properties:
-              content: Light theme header
+              content: Default background header
 
-  - id: header_theme_dark
+  - id: header_color
     type: Header
     properties:
-      theme: dark
+      color: '#001529'
     slots:
       content:
         blocks:
-          - id: header_theme_dark_content
+          - id: header_color_content
             type: Span
             properties:
-              content: Dark theme header
+              content: Colored header
 
   # ============================================
   # STYLE TESTS
@@ -64,10 +62,10 @@ blocks:
 
   - id: header_with_style
     type: Header
-    properties:
-      style:
+    style:
+      .element:
         padding: 20px
-        borderBottom: 1px solid #e8e8e8
+        borderBottom: '1px solid #e8e8e8'
     slots:
       content:
         blocks:

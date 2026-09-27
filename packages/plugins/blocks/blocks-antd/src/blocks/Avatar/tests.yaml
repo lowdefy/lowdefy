@@ -72,7 +72,8 @@
   type: Avatar
   properties:
     content: Avatar
-    style:
+  style:
+    .element:
       border: 1px solid red
 - id: properties.srcSet
   type: Avatar

@@ -52,18 +52,19 @@
     options:
       - Option 1
       - Option 2
-- id: 'properties.inputStyle: CSS style applied'
+- id: 'style.element: CSS style applied'
   type: MultipleSelector
-  properties:
-    inputStyle:
+  style:
+    .element:
       border: 1px solid red
-- id: 'properties.optionsStyle: CSS style applied'
+- id: 'style.options: CSS style applied'
   type: MultipleSelector
   properties:
     options:
       - Option 1
       - Option 2
-    optionsStyle:
+  style:
+    .options:
       color: blue
 - id: 'properties.allowClear: false'
   type: MultipleSelector

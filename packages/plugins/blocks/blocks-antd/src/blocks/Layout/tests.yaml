@@ -14,14 +14,14 @@
 
 - id: default
   type: Layout
-- id: properties.style
+- id: style.element
   type: Layout
-  properties:
-    style:
+  style:
+    .element:
       border: '1px solid blue'
 - id: areas.content
   type: Layout
-  areas:
+  slots:
     content:
       blocks:
         - id: testArea
