@@ -51,9 +51,28 @@ Files run in file-name order, and journeys run one at a time — each journey op
 
 `user: none` injects no user at all, so the journey signs in through the app's own auth — see [Testing sign-up and sign-in](#testing-sign-up-and-sign-in).
 
+`timeout` sets how long each step may wait, in milliseconds (a whole number from 1 to 60000, default 5000). Raise it on a slow machine or CI runner rather than adding `wait: { ms }` steps.
+
+### Timeouts
+
+The journey's `timeout` (the step timeout) bounds every wait a step makes for something to happen, and a step moves on as soon as it has:
+
+| Wait                                                                       | Bound                                      |
+| -------------------------------------------------------------------------- | ------------------------------------------ |
+| A control becoming actionable for `click`, `fill`, `select`                | The step timeout.                          |
+| `expect` (`state`, `visible`, `text`, `url`, `title`) matching             | The step timeout.                          |
+| `wait: { request }` and `wait: { state }`                                  | The step timeout.                          |
+| `back` loading the previous page                                           | The step timeout.                          |
+| An email arriving for `email` or `fill.fromEmail`                          | The step timeout.                          |
+| Opening a page: the journey's page, `goto`, the first `as` for a name      | The step timeout, but at least 15 seconds. |
+| Settling after an interaction (`click`, `fill`, `select`, `press`, `back`) | The step timeout, but at most 5 seconds.   |
+| `wait: { ms }`                                                             | Exactly `ms`; the timeout does not apply.  |
+
+The settle after an interaction lets the page's own events and requests finish before the next step. It never fails a step: a page still busy after 5 seconds (an event that ends in a resend cooldown, for example) moves on, and the next step waits for what it needs itself. So raising `timeout` makes a slow journey pass without making a passing one slower.
+
 ## Steps
 
-Blocks are addressed by their `blockId`. Every step has a 5 second timeout by default; a step that does not complete in time fails the journey. An `expect` step waits, up to that timeout, for what it checks to become true, so a value a click leads to can arrive a moment later.
+Blocks are addressed by their `blockId`. A step that does not complete within the step timeout (5 seconds, or the journey's [`timeout`](#timeouts)) fails the journey. An `expect` step waits, up to that timeout, for what it checks to become true, so a value a click leads to can arrive a moment later.
 
 | Step                                      | Meaning                                                                                                                                                     |
 | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |

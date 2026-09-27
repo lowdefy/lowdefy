@@ -313,7 +313,7 @@ A radio, checkbox or segmented option is reached through its label: `{ "click": 
 ]
 ```
 
-Each step gets 5 seconds (Playwright's own auto-waiting — a `click` waits for the block to be attached, visible and enabled; nothing is retried). After an interaction the runner waits for the page to settle — the event the interaction fired, the requests it called — using the same readiness check the page open uses, so the next `expect` asserts against the outcome instead of racing it. The page opens with the same headless `user` and `urlQuery` handling as the other tools.
+Each step gets 5 seconds (Playwright's own auto-waiting — a `click` waits for the block to be attached, visible and enabled; nothing is retried); pass `timeout` (milliseconds, up to 60000) to give every step of a journey longer on a slow machine. After an interaction the runner waits for the page to settle — the event the interaction fired, the requests it called — using the same readiness check the page open uses, so the next `expect` asserts against the outcome instead of racing it. The page opens with the same headless `user` and `urlQuery` handling as the other tools.
 
 A step that fails **stops the journey and comes back as data**, never as a tool error — a failed journey is the answer, not a fault:
 

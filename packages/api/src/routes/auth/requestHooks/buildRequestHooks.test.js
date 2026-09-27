@@ -92,6 +92,26 @@ test('buildRequestHooks leaves paths other than /sign-in/magic-link alone when m
   expect(getAuth).not.toHaveBeenCalled();
 });
 
+test('buildRequestHooks routes /organization/accept-invitation into the expired invitation gate', async () => {
+  const adapter = {
+    findOne: jest.fn(async () => ({
+      id: 'inv_1',
+      status: 'pending',
+      expiresAt: new Date(Date.now() - 1000).toISOString(),
+    })),
+  };
+  const auth = { $context: Promise.resolve({ adapter }) };
+  const hooks = buildRequestHooks({ authConfig: { organizations }, getAuth: () => auth });
+
+  await expect(
+    hooks.before({ path: '/organization/accept-invitation', body: { invitationId: 'inv_1' } })
+  ).rejects.toThrow();
+  expect(
+    await hooks.before({ path: '/organization/reject-invitation', body: { invitationId: 'inv_1' } })
+  ).toBeUndefined();
+  expect(adapter.findOne).toHaveBeenCalledTimes(1);
+});
+
 test('buildRequestHooks does not resolve the BetterAuth instance while assembling', () => {
   const getAuth = jest.fn();
   buildRequestHooks({ authConfig: { magicLink: { enabled: true }, organizations }, getAuth });

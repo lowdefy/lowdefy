@@ -58,6 +58,7 @@ async function runJourney({ item, url }) {
       steps: journey.steps,
       user: journey.user,
       urlQuery: journey.urlQuery,
+      timeout: journey.timeout,
     });
   } catch (error) {
     return {

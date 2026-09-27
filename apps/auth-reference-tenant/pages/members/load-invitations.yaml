@@ -1,0 +1,7 @@
+# Shared by the members page's onInit and every control that changes an
+# invitation, so the list always reloads the same way.
+id: load_invitations
+type: Fetch
+params:
+  url: /api/auth/organization/list-invitations
+  responseFunction: json

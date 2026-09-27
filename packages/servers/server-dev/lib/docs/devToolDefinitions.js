@@ -16,6 +16,7 @@
 
 import { z } from 'zod';
 
+import { MAX_JOURNEY_TIMEOUT } from './validateJourneyTimeout.js';
 import { MAX_VIEWPORT_SIZE } from './validateViewport.js';
 
 // The dev MCP tool contract - names, descriptions, input schemas and the
@@ -284,7 +285,7 @@ const devToolDefinitions = {
       steps: z
         .array(z.record(z.any()))
         .describe(
-          'Ordered steps, one key each: {"click": target} | {"fill": {...target, "value"}} | {"fill": {...target, "fromEmail": {"to", "subject"?, "match"}}} (type text read from the newest email to that address, like the email step, without leaving the page: the first match of the regular expression "match", or its first capture group, e.g. "\\\\b\\\\d{6}\\\\b" for a one-time sign-in code) | {"select": {...target, "value"}} (option by exact text: a dropdown option, or a radio, button or segmented option in the block) | {"press": "Enter" | "Mod+k"} (Mod is Meta/Control per platform) | {"back": true} (the browser Back button) | {"goto": pageId | {"pageId", "urlQuery"}} (load an app page like a typed URL; a protected page may redirect to sign-in) | {"email": {"to", "subject"?}} (open the newest email to that address, subject containing the text, that arrived during this journey, waiting for it if needed; opening it again opens the same message; then click its links by text, e.g. {"click": {"text": "Verify email address"}}; needs the dev server started with LOWDEFY_DEV_SMTP_PORT and the app\'s SMTP connection pointed at 127.0.0.1 on that port) | {"as": name} (switch to another person, each with their own browser and cookies; the journey starts as "main", and a new name opens the journey\'s page) | {"wait": {"ms": n} | {"request": requestId} | {"state": path}} | {"screenshot": name?} | {"expect": {"state": {"path", "equals"}} | {"visible": target} | {"text": {...target, "contains"}} | {"url": {"contains"}} | {"title": {"equals"} | {"contains"}}} (title is the document title). A target is a blockId string, or an object of {"blockId", "row" (zero-based grid row as displayed), "column" (grid col-id), "text" (exact text of the interactive control to use), "containing" (text the element shows, e.g. the email a list row shows; a click on it reaches the row\'s click handler), "nth" (zero-based pick among several matches)}; "text" without "blockId" searches the whole page, which is how confirm dialog / modal footer buttons, dropdown menu items and email links are reached. fill, select and expect.text need a blockId. Each step gets 5s; every expect waits up to that for its condition, and after an interaction the runner waits (at most 5s) for the page\'s pending events and requests to settle.'
+          'Ordered steps, one key each: {"click": target} | {"fill": {...target, "value"}} | {"fill": {...target, "fromEmail": {"to", "subject"?, "match"}}} (type text read from the newest email to that address, like the email step, without leaving the page: the first match of the regular expression "match", or its first capture group, e.g. "\\\\b\\\\d{6}\\\\b" for a one-time sign-in code) | {"select": {...target, "value"}} (option by exact text: a dropdown option, or a radio, button or segmented option in the block) | {"press": "Enter" | "Mod+k"} (Mod is Meta/Control per platform) | {"back": true} (the browser Back button) | {"goto": pageId | {"pageId", "urlQuery"}} (load an app page like a typed URL; a protected page may redirect to sign-in) | {"email": {"to", "subject"?}} (open the newest email to that address, subject containing the text, that arrived during this journey, waiting for it if needed; opening it again opens the same message; then click its links by text, e.g. {"click": {"text": "Verify email address"}}; needs the dev server started with LOWDEFY_DEV_SMTP_PORT and the app\'s SMTP connection pointed at 127.0.0.1 on that port) | {"as": name} (switch to another person, each with their own browser and cookies; the journey starts as "main", and a new name opens the journey\'s page) | {"wait": {"ms": n} | {"request": requestId} | {"state": path}} | {"screenshot": name?} | {"expect": {"state": {"path", "equals"}} | {"visible": target} | {"text": {...target, "contains"}} | {"url": {"contains"}} | {"title": {"equals"} | {"contains"}}} (title is the document title). A target is a blockId string, or an object of {"blockId", "row" (zero-based grid row as displayed), "column" (grid col-id), "text" (exact text of the interactive control to use), "containing" (text the element shows, e.g. the email a list row shows; a click on it reaches the row\'s click handler), "nth" (zero-based pick among several matches)}; "text" without "blockId" searches the whole page, which is how confirm dialog / modal footer buttons, dropdown menu items and email links are reached. fill, select and expect.text need a blockId. Each step gets 5s, or the journey\'s timeout: every wait for something to happen (a control to be actionable, an expect to match, a request, state or email to arrive) is bounded by it; page opens get at least 15s; after an interaction the runner waits at most 5s for the page\'s pending events and requests to settle, without failing; wait.ms is exact.'
         ),
       user: z
         .union([z.literal('none'), z.object({}).passthrough()])
@@ -296,6 +297,15 @@ const devToolDefinitions = {
         .record(z.any())
         .optional()
         .describe('Query params to open the page with, read by _url_query, e.g. {"id": "1"}.'),
+      timeout: z
+        .number()
+        .int()
+        .min(1)
+        .max(MAX_JOURNEY_TIMEOUT)
+        .optional()
+        .describe(
+          `How long each step may wait, in milliseconds (at most ${MAX_JOURNEY_TIMEOUT}). Default 5000. Raise it for a slow machine instead of adding wait ms steps; a step still moves on as soon as its condition holds. Page opens get at least 15000; the settle after an interaction stays at most 5000.`
+        ),
       state: z
         .union([z.boolean(), z.array(z.string().min(1))])
         .optional()

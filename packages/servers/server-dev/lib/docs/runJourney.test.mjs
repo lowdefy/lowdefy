@@ -1277,6 +1277,27 @@ test('runJourney settles the page after an interaction before the next step', as
   expect(page.waitForFunction.mock.calls[0][1]).toEqual('form');
 });
 
+test('runJourney opens pages with the journey timeout when it is longer than 15000 ms', async () => {
+  const page = createPage();
+  openWith(page);
+
+  await runJourney({ origin, pageId: 'form', steps: [{ goto: 'form' }], stepTimeout: 30000 });
+  await runJourney({ origin, pageId: 'form', steps: [], stepTimeout: 20 });
+
+  expect(mockOpenPage.mock.calls.map(([args]) => args.timeout)).toEqual([30000, 15000]);
+  expect(page.goto).toHaveBeenCalledWith('http://localhost:3227/form', {
+    waitUntil: 'load',
+    timeout: 30000,
+  });
+});
+
+test('runJourney returns an error for a timeout outside 1 to 60000 ms before opening a browser', async () => {
+  const result = await runJourney({ origin, pageId: 'form', steps: [], stepTimeout: 0 });
+
+  expect(result.error).toMatch(/"timeout" must be a whole number of milliseconds from 1 to 60000/);
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+});
+
 test('runJourney reports an unsettled page open with ready: false and a note', async () => {
   const page = createPage();
   openWith(page, { ready: false });
