@@ -81,6 +81,28 @@ blocks:
       title: With Icon
       icon: save
 
+  - id: button_icon_end
+    type: Button
+    properties:
+      title: Send
+      icon: send
+      iconPlacement: end
+
+  - id: button_icon_start
+    type: Button
+    properties:
+      title: Back
+      icon: arrow-left
+      iconPlacement: start
+
+  - id: button_href_target
+    type: Button
+    properties:
+      title: New tab link
+      type: link
+      href: https://lowdefy.com
+      target: _blank
+
   - id: button_clickable
     type: Button
     properties:

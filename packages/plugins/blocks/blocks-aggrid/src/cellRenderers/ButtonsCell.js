@@ -82,6 +82,7 @@ function ButtonsCell(params) {
             ghost={btn.ghost === true}
             disabled={disabled}
             icon={iconNode}
+            iconPlacement={btn.iconPlacement}
             onClick={onClick}
           >
             {showTitle && renderHtml({ html: String(title), methods })}

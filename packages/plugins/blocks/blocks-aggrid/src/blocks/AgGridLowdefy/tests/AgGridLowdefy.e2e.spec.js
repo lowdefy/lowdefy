@@ -407,6 +407,16 @@ test.describe('AgGridLowdefy Block', () => {
     await expect(button.locator('svg').first()).toBeVisible();
   });
 
+  test('cell.type: buttons places a button icon at the end with iconPlacement', async ({
+    page,
+  }) => {
+    const block = getBlock(page, 'aggridlowdefy_cell_buttons');
+    const buttons = block.locator('.ag-row[row-index="0"] button');
+    await expect(buttons.first()).not.toHaveClass(/ant-btn-icon-end/);
+    await expect(buttons.nth(1)).toContainText('Open');
+    await expect(buttons.nth(1)).toHaveClass(/ant-btn-icon-end/);
+  });
+
   test('cell.type: buttons click triggers the named block event', async ({ page }) => {
     const block = getBlock(page, 'aggridlowdefy_cell_buttons');
     await block.locator('.ag-row[row-index="0"] button').first().click();

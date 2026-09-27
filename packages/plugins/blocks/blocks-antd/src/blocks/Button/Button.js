@@ -98,10 +98,12 @@ const ButtonBlock = ({
       ghost={properties.ghost}
       danger={properties.danger}
       href={properties.href}
+      iconPlacement={properties.iconPlacement}
       id={blockId}
       loading={get(events, `${onClickActionName}.loading`)}
       shape={properties.shape}
       size={properties.size}
+      target={properties.target}
       icon={
         properties.icon && (
           <Icon
