@@ -15,7 +15,6 @@
 */
 
 import { jest } from '@jest/globals';
-import { UserError } from '@lowdefy/errors';
 
 const mockTool = jest.fn((def) => def);
 const mockJsonSchema = jest.fn((schema) => schema);
@@ -268,30 +267,6 @@ test('handleAgentGenerate warns and continues when an onFinish hook fails', asyn
   expect(result.text).toBe('Final answer');
   expect(testLogger.error).toHaveBeenCalledWith(
     expect.objectContaining({ err: expect.any(Error) }),
-    'onFinish hook "save-run" failed.'
-  );
-});
-
-test('handleAgentGenerate logs an onFinish payload its endpoint refuses as a warning', async () => {
-  const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
-  mockGenerateSteps();
-
-  const refused = new UserError(
-    'Payload for endpoint "save-run" does not match its payloadSchema.'
-  );
-  const callEndpoint = jest.fn().mockRejectedValue(refused);
-  await handleAgentGenerate({
-    connection,
-    properties: {
-      agent: createAgent({ hooks: { onFinish: ['save-run'] } }),
-      prompt: 'Go.',
-    },
-    context: createTestContext({ callEndpoint }),
-  });
-
-  expect(testLogger.error).not.toHaveBeenCalled();
-  expect(testLogger.warn).toHaveBeenCalledWith(
-    { err: refused },
     'onFinish hook "save-run" failed.'
   );
 });

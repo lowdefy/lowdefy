@@ -1162,36 +1162,6 @@ test('onFinish hook failure logs warning and continues to next hook', async () =
   expect(localWriter.write).toHaveBeenCalledWith({ type: 'data', value: { ok: true } });
 });
 
-test('onFinish hook payload refused by its endpoint logs a warning, not an error', async () => {
-  mockTool.mockImplementation((def) => def);
-  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
-  testLogger.warn.mockClear();
-  testLogger.error.mockClear();
-
-  const { default: handleAgentChat } = await import('./handleAgentChat.js');
-
-  const refused = new UserError('Payload for endpoint "save" does not match its payloadSchema.');
-  const callEndpoint = jest.fn().mockRejectedValue(refused);
-
-  await handleAgentChat({
-    connection: { provider: jest.fn().mockReturnValue({}) },
-    properties: {
-      agent: {
-        tools: [],
-        hooks: { onFinish: ['save'] },
-        properties: { model: 'gpt-4o' },
-      },
-      messages: [],
-    },
-    context: { logger: testLogger, callEndpoint, getEndpointConfig: jest.fn() },
-  });
-
-  await mockCreateUIMessageStream._lastExecute({ writer: { write: jest.fn() } });
-
-  expect(testLogger.error).not.toHaveBeenCalled();
-  expect(testLogger.warn).toHaveBeenCalledWith({ err: refused }, 'onFinish hook "save" failed.');
-});
-
 test('onFinish hook without dataParts does not write to stream', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);

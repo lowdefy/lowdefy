@@ -31,7 +31,6 @@ import { serializer } from '@lowdefy/helpers';
 import createToolLoopAgent from './createToolLoopAgent.js';
 import createUsageAccumulator from './createUsageAccumulator.js';
 import handleAgentGenerate from './handleAgentGenerate.js';
-import logHookFailure from './logHookFailure.js';
 
 // Convert data: URLs in file parts to raw base64 so the AI SDK does not attempt
 // to download them (it only supports http/https).  The mediaType field already
@@ -270,7 +269,7 @@ async function handleAgentChat({ connection, properties, context }) {
               }
             }
           } catch (error) {
-            logHookFailure({ logger: context.logger, endpointId, error });
+            context.logger.error({ err: error }, `onFinish hook "${endpointId}" failed.`);
           }
         }
       }

@@ -16,7 +16,6 @@
 
 import createToolLoopAgent from './createToolLoopAgent.js';
 import createUsageAccumulator from './createUsageAccumulator.js';
-import logHookFailure from './logHookFailure.js';
 
 // Runs an agent headlessly to completion — no chat UI, no streaming. Used by
 // the CallAgent routine step. Confirm tools auto-execute (no client exists to
@@ -90,7 +89,7 @@ async function handleAgentGenerate({ connection, properties, context }) {
       try {
         await context.callEndpoint(endpointId, { payload: finishPayload });
       } catch (error) {
-        logHookFailure({ logger: context.logger, endpointId, error });
+        context.logger.error({ err: error }, `onFinish hook "${endpointId}" failed.`);
       }
     }
   }
