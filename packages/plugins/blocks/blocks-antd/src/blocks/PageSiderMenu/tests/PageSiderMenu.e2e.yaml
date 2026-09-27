@@ -14,7 +14,11 @@
 
 id: pagesidermenu
 type: PageSiderMenu
+class:
+  .siderBody: psm-sider-body
 properties:
+  theme:
+    colorBgLayout: rgb(250, 240, 255)
   header:
     theme: dark
   sider:

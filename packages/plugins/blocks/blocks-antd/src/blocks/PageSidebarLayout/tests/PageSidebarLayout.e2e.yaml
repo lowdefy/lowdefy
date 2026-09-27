@@ -14,6 +14,8 @@
 
 id: pagesidebarlayout
 type: PageSidebarLayout
+class:
+  .siderBody: psl-sider-body
 properties:
   siderStorageKey: psl_e2e
   sider:

@@ -170,77 +170,40 @@
 - title: Theme Token Overrides
   fullWidth: true
   blocks:
+    # antd scopes Layout design tokens to the Layout element, so the tokens go on the parent Layout.
     - id: content_theme_layout
       type: Layout
+      properties:
+        theme:
+          bodyBg: '#e6f4ff'
       blocks:
         - id: content_theme_custom
           type: Content
           style:
             padding: 24px
             minHeight: 150px
-          properties:
-            theme:
-              colorText: '#003a8c'
           blocks:
-            - id: content_theme_title
-              type: Title
-              properties:
-                content: Themed Content Area
-                level: 4
             - id: content_theme_text
-              type: Paragraph
+              type: Html
               properties:
-                content: |
-                  Use the theme property to override antd design tokens. The colorBgLayout token changes the background of the Content block, and colorText adjusts the default text color within it.
+                html: The parent Layout theme sets the background behind the Content area with the bodyBg token.
 
     - id: content_theme_warm_layout
       type: Layout
+      properties:
+        theme:
+          bodyBg: '#fff7e6'
       blocks:
         - id: content_theme_warm
           type: Content
           style:
             padding: 24px
             minHeight: 150px
-          properties:
-            theme:
-              colorText: '#874d00'
           blocks:
-            - id: content_theme_warm_title
-              type: Title
-              properties:
-                content: Warm Color Scheme
-                level: 4
             - id: content_theme_warm_text
-              type: Paragraph
+              type: Html
               properties:
-                content: |
-                  A warm-toned content area using orange theme tokens. Theme tokens cascade through the antd design system and affect all child blocks within this Content.
-
-    - id: content_theme_dark_layout
-      type: Layout
-      blocks:
-        - id: content_theme_dark
-          type: Content
-          style:
-            padding: 24px
-            minHeight: 150px
-          properties:
-            theme:
-              colorBgLayout: '#1f1f1f'
-              colorText: '#e0e0e0'
-          blocks:
-            - id: content_theme_dark_title
-              type: Title
-              class: text-text-secondary
-              properties:
-                content: Dark Content Area
-                level: 4
-            - id: content_theme_dark_text
-              type: Paragraph
-              class: text-text-secondary
-              properties:
-                content: |
-                  Dark-themed content using colorBgLayout and colorText tokens. For app-wide dark themes, prefer using a global ConfigProvider rather than per-block overrides.
+                html: A warm-toned content area from the same Layout token.
 
 - title: Style and CSS Classes
   fullWidth: true

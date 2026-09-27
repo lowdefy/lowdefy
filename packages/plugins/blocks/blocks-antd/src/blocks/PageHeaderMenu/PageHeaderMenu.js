@@ -31,6 +31,7 @@ import {
   registerDarkModeMethod,
   registerLocaleMethod,
 } from '../headerActions.js';
+import withPageTheme from '../withPageTheme.js';
 
 const PageHeaderMenu = ({
   basePath,
@@ -55,6 +56,7 @@ const PageHeaderMenu = ({
       blockId={blockId}
       events={events}
       components={{ Icon, Link, ShortcutBadge }}
+      properties={{}}
       styles={{
         element: mergeObjects([{ minHeight: '100vh' }, styles.element]),
       }}
@@ -263,4 +265,4 @@ const PageHeaderMenu = ({
   );
 };
 
-export default withBlockDefaults(PageHeaderMenu);
+export default withBlockDefaults(withPageTheme(PageHeaderMenu));

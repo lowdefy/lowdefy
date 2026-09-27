@@ -486,4 +486,22 @@ test.describe('PageSidebarLayout Block', () => {
     const display = getBlock(page, 'menuitem_display');
     await expect(display).toHaveText('Menu clicked: psl_link1');
   });
+
+  // ============================================
+  // SIDER BODY AND SIDER TRIGGER
+  // ============================================
+
+  test('applies the siderBody class to the sider body', async ({ page }) => {
+    const body = page.locator('.ant-layout-sider .ant-layout-sider-children');
+    await expect(body).toHaveClass(/psl-sider-body/);
+  });
+
+  test('sider trigger collapses the sider and persists the state', async ({ page }) => {
+    const sider = page.locator('.ant-layout-sider');
+    await expect(sider).not.toHaveClass(/ant-layout-sider-collapsed/);
+    await sider.locator('.ant-layout-sider-trigger').click();
+    await expect(sider).toHaveClass(/ant-layout-sider-collapsed/);
+    const storedValue = await page.evaluate(() => localStorage.getItem('lf-psl_e2e-open'));
+    expect(storedValue).toBe('false');
+  });
 });

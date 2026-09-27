@@ -26,3 +26,9 @@
       blocks:
         - id: testArea
           type: Test
+- id: properties.theme
+  type: Layout
+  properties:
+    theme:
+      bodyBg: '#f0f5ff'
+      headerHeight: 48
