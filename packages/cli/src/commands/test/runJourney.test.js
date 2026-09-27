@@ -26,6 +26,7 @@ const journey = {
   pageId: 'form',
   user: { roles: ['admin'] },
   urlQuery: { tab: 'new' },
+  timeout: 20000,
   steps: [{ fill: { blockId: 'title', value: 'x' } }, { click: 'submit' }],
 };
 const item = { filePath: '/app/tests/journeys/form.yaml', journey };
@@ -42,6 +43,7 @@ test('runJourney posts the journey to the REST route and reports a pass', async 
     steps: journey.steps,
     user: { roles: ['admin'] },
     urlQuery: { tab: 'new' },
+    timeout: 20000,
   });
   expect(result).toMatchObject({
     name: 'submits the form',

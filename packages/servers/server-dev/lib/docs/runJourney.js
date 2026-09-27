@@ -30,6 +30,7 @@ import openJourneyEmail from './openJourneyEmail.js';
 import selectFinalState from './selectFinalState.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneySteps, { getStepKey } from './validateJourneySteps.js';
+import validateJourneyTimeout from './validateJourneyTimeout.js';
 import validateStateSelection from './validateStateSelection.js';
 
 // The actor a journey starts as; `as` steps switch to others by name.
@@ -699,8 +700,9 @@ async function readFinalState({ page }) {
 // list of steps — click, fill, select, press, back, goto, email, as, wait,
 // screenshot, expect — so an agent can verify behaviour (a form submits, a
 // modal opens, state changes, a sign-up email arrives) and not only layout.
-// `timeout` bounds each page open; `stepTimeout` bounds each step, matching
-// Playwright's per-action timeout. `state` picks what the result carries of
+// `stepTimeout` (the journey's `timeout`) bounds each step, matching
+// Playwright's per-action timeout; `timeout` bounds each page open, raised to
+// `stepTimeout` when that is longer, so one journey setting raises every wait. `state` picks what the result carries of
 // the final page state (see selectFinalState). `user: 'none'` injects no
 // caller, so the app's own auth decides who each actor is.
 async function runJourney({
@@ -740,6 +742,11 @@ async function runJourney({
   if (!type.isUndefined(stateSelectionError)) {
     return { error: stateSelectionError };
   }
+  const timeoutError = validateJourneyTimeout({ timeout: stepTimeout });
+  if (!type.isUndefined(timeoutError)) {
+    return { error: timeoutError };
+  }
+  const openTimeout = Math.max(timeout, stepTimeout);
   const capturesMail = process.env.LOWDEFY_SERVER_DEV_MAIL_SINK === 'true';
   if (steps.some((step) => getStepKey(step) === 'email') && !capturesMail) {
     return {
@@ -768,7 +775,7 @@ async function runJourney({
     urlQuery,
     width,
     height,
-    timeout,
+    timeout: openTimeout,
   });
   try {
     const main = await actors.switchTo(MAIN_ACTOR);
@@ -777,7 +784,7 @@ async function runJourney({
       origin,
       configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd(),
       startedAt,
-      openTimeout: timeout,
+      openTimeout,
       stepTimeout,
     };
     const { results, screenshots, failure } = await runSteps({ journey, steps });
@@ -795,7 +802,7 @@ async function runJourney({
     // openPage already waited for the page's async lifecycle; an unsettled page
     // still runs its steps and reports `ready: false` alongside the result.
     if (!main.ready) {
-      return { ...result, ready: false, note: unsettledPageNote({ timeout }) };
+      return { ...result, ready: false, note: unsettledPageNote({ timeout: openTimeout }) };
     }
     return result;
   } catch (error) {

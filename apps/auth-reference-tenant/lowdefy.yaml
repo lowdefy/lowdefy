@@ -43,6 +43,16 @@ auth:
   # belong to several; the user switches with SetActiveOrganization.
   organizations:
     policy: tenant
+    # 48 hours, unless the build environment sets INVITATION_EXPIRES_IN - the
+    # journeys (pnpm test:journeys:auth) set the 60 second minimum so an
+    # invitation can expire inside a run. Read at build time, so the value is
+    # an ordinary integer the auth schema checks.
+    invitationExpiresIn:
+      _build.number.parseInt:
+        on:
+          _build.if_none:
+            - _build.env: INVITATION_EXPIRES_IN
+            - '172800'
 
   pages:
     protected: true
