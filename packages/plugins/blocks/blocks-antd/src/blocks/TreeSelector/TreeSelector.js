@@ -23,6 +23,7 @@ import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import useSelectorOptions from '../../useSelectorOptions.js';
 import getSelectedIndex from '../../getSelectedIndex.js';
+import getTreeAncestorKeys from '../../getTreeAncestorKeys.js';
 import getTreeData, { ROOT_PID } from '../../getTreeData.js';
 
 const TreeSelector = ({
@@ -44,6 +45,13 @@ const TreeSelector = ({
   // primaryKey / parentKey are structural (node id + parent ref); the stored value is the valueKey
   // value, so selection is matched on valueKey — hide primaryKey from getSelectedIndex.
   const matchProps = { ...properties, primaryKey: undefined };
+  const selectedIndex = getSelectedIndex(value, entries, { properties: matchProps });
+  // antd scrolls the opened dropdown to the selected node, which fails with a console warning
+  // while a collapsed parent hides it, so the dropdown first opens with its parents expanded.
+  const treeDefaultExpandedKeys =
+    properties.treeDefaultExpandAll || type.isNone(selectedIndex)
+      ? undefined
+      : getTreeAncestorKeys({ key: selectedIndex, treeData });
 
   let antdVariant = properties.variant;
   if (properties.bordered === false) antdVariant = 'borderless';
@@ -113,6 +121,7 @@ const TreeSelector = ({
               treeDataSimpleMode={{ id: 'id', pId: 'pId', rootPId: ROOT_PID }}
               treeData={treeData}
               treeDefaultExpandAll={properties.treeDefaultExpandAll}
+              treeDefaultExpandedKeys={treeDefaultExpandedKeys}
               treeExpandAction={properties.treeExpandAction}
               treeLine={properties.treeLine}
               showSearch={
@@ -140,7 +149,7 @@ const TreeSelector = ({
                   ),
                 }
               }
-              value={getSelectedIndex(value, entries, { properties: matchProps })}
+              value={selectedIndex}
               onChange={(idx) => {
                 const val = type.isNone(idx) ? null : entries[idx].value;
                 methods.setValue(val);
