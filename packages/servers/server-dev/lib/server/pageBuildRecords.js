@@ -56,7 +56,9 @@ function locateErrors({ error, context, configDirectory }) {
   }
 }
 
-async function record({ pageId, context, configDirectory, build }) {
+// registryMtime identifies the page registry, and so the config build, the
+// page was built against.
+async function record({ pageId, context, configDirectory, registryMtime, build }) {
   const files = new Set();
   const builtAt = Date.now();
   let result;
@@ -64,13 +66,13 @@ async function record({ pageId, context, configDirectory, build }) {
     result = await fileReads.run(files, build);
   } catch (error) {
     locateErrors({ error, context, configDirectory });
-    records.set(pageId, { builtAt, files, errors: mapPageBuildErrors(error) });
+    records.set(pageId, { builtAt, files, registryMtime, errors: mapPageBuildErrors(error) });
     throw error;
   }
   // A plugin install ends the build before the page is built, so the page's
   // previous record still describes it.
   if (!result?.installing) {
-    records.set(pageId, { builtAt, files, errors: null });
+    records.set(pageId, { builtAt, files, registryMtime, errors: null });
   }
   return result;
 }

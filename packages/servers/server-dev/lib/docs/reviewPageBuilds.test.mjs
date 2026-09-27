@@ -41,18 +41,18 @@ function writeConfigFile(relativePath, { modified } = {}) {
   return filePath;
 }
 
-function writeRegistry(pageIds) {
+const registryPath = path.join(serverDirectory, 'build', 'pageRegistry.json');
+
+function writeRegistry(pageIds, { modified = longAgo } = {}) {
   const registry = Object.fromEntries(
     pageIds.map((pageId) => [
       pageId,
       { pageId, refId: `ref-${pageId}`, refPath: `pages/${pageId}.yaml` },
     ])
   );
-  fs.mkdirSync(path.join(serverDirectory, 'build'), { recursive: true });
-  fs.writeFileSync(
-    path.join(serverDirectory, 'build', 'pageRegistry.json'),
-    JSON.stringify(registry)
-  );
+  fs.mkdirSync(path.dirname(registryPath), { recursive: true });
+  fs.writeFileSync(registryPath, JSON.stringify(registry));
+  fs.utimesSync(registryPath, modified, modified);
 }
 
 const context = { keyMap: {}, refMap: {}, readConfigFile: async () => 'id: page\n' };
@@ -64,6 +64,7 @@ async function buildPage({ pageId, files, error }) {
       pageId,
       context,
       configDirectory,
+      registryMtime: fs.statSync(registryPath).mtimeMs,
       build: async () => {
         for (const file of files) {
           await context.readConfigFile(file);
@@ -104,6 +105,21 @@ test('a built page is edited when a file its build read is gone', async () => {
   fs.rmSync(file);
 
   expect(reviewPageBuilds().edited).toEqual(['removed']);
+});
+
+test('a page built against a page registry a config build has since replaced is edited, even when it failed', async () => {
+  writeConfigFile('pages/before.yaml', { modified: longAgo });
+  writeConfigFile('pages/failed_before.yaml', { modified: longAgo });
+  writeRegistry(['before', 'failed_before']);
+  await buildPage({ pageId: 'before', files: ['pages/before.yaml'] });
+  await buildPage({
+    pageId: 'failed_before',
+    files: ['pages/failed_before.yaml'],
+    error: new Error('Request "get" references non-existent connection "api".'),
+  });
+  writeRegistry(['before', 'failed_before'], { modified: new Date('2001-01-01T00:00:00.000Z') });
+
+  expect(reviewPageBuilds().edited).toEqual(['before', 'failed_before']);
 });
 
 test('a page whose last build failed is listed with its errors', async () => {

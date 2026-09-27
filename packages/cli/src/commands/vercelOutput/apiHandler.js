@@ -79,7 +79,9 @@ async function handleRequest(req, res) {
   const response = await app.fetch(request);
 
   res.statusCode = response.status;
-  response.headers.forEach((value, key) => res.setHeader(key, value));
+  // Headers yields each Set-Cookie separately (a sign-in sets the session cookie and clears
+  // others), and setHeader would keep only the last one.
+  response.headers.forEach((value, key) => res.appendHeader(key, value));
   if (response.body) {
     const reader = response.body.getReader();
     for (;;) {
@@ -91,17 +93,32 @@ async function handleRequest(req, res) {
   res.end();
 }
 
+// The HTTP server does not handle a request listener's rejected promise, so it would stop the
+// process and every other request the function instance is serving. A client that disconnects
+// while its body is read is the common cause, and is not logged.
+function requestListener(req, res) {
+  handleRequest(req, res).catch((error) => {
+    if (!req.destroyed) console.error(error);
+    if (res.headersSent) {
+      res.destroy();
+      return;
+    }
+    res.statusCode = 500;
+    res.end();
+  });
+}
+
 // 256 KiB max frame, matching the Node server (src/index.js) and Vercel's documented default for
 // WebSocket functions.
 const wss = new WebSocketServer({ noServer: true, maxPayload: 256 * 1024 });
 
 // createAdaptorServer attaches the WebSocket upgrade handling to the server it creates. The
-// createServer option swaps its lazily-reading request listener for handleRequest, so only
+// createServer option swaps its lazily-reading request listener for requestListener, so only
 // upgrades go through @hono/node-server.
 const server = createAdaptorServer({
   fetch: app.fetch,
   websocket: { server: wss },
-  createServer: (serverOptions) => http.createServer(serverOptions, handleRequest),
+  createServer: (serverOptions) => http.createServer(serverOptions, requestListener),
 });
 
 export default server;

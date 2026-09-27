@@ -38,12 +38,19 @@ function createModifiedAt() {
 }
 
 // A built page is edited when a file its last JIT build read has changed or
-// gone since that build. A page not built since the server started is edited
-// when its own page file changed after the start. Returns 'edited', 'unbuilt'
-// (never built and not edited) or 'current'.
+// gone since that build, or when a config build has replaced the page registry
+// it was built against: the page builds against that build's connections,
+// endpoints and plugin types, so an error it failed with may be fixed, or a new
+// one caused, without any of its own files changing. A page not built since the
+// server started is edited when its own page file changed after the start.
+// Returns 'edited', 'unbuilt' (never built and not edited) or 'current'.
 function reviewPage({ pageId, entry, modifiedAt, configDirectory }) {
   const record = pageBuildRecords.get(pageId);
   if (record) {
+    const registryMtime = modifiedAt(path.join(process.cwd(), 'build', 'pageRegistry.json'));
+    if (record.registryMtime !== registryMtime) {
+      return 'edited';
+    }
     const changed = [...record.files].some((filePath) => {
       const mtime = modifiedAt(filePath);
       return mtime === null || mtime > record.builtAt;

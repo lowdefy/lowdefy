@@ -29,13 +29,16 @@ function lowdefyBuild({ directories, logger, options }) {
   async function build() {
     logger.info({ spin: 'start' }, 'Building config...');
     const startTime = Date.now();
-    const [customTypesMap, customMessagesMap] = await Promise.all([
-      createCustomPluginTypesMap({ directories, logger }),
-      createCustomPluginMessagesMap({ directories, logger }),
-    ]);
 
+    // Reading the plugin maps parses lowdefy.yaml and imports each plugin's
+    // types, so a YAML syntax error or a broken plugin fails the build there,
+    // and the build status has to report it like any other build error.
     let result;
     try {
+      const [customTypesMap, customMessagesMap] = await Promise.all([
+        createCustomPluginTypesMap({ directories, logger }),
+        createCustomPluginMessagesMap({ directories, logger }),
+      ]);
       result = await shallowBuild({
         customMessagesMap,
         customTypesMap,

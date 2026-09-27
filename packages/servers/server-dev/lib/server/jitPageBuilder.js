@@ -184,6 +184,7 @@ function getBuildContext(buildDirectory, configDirectory) {
 async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
   checkPageInvalidations(buildDirectory);
   const registry = loadPageRegistry(buildDirectory);
+  const registryMtime = cachedRegistryMtime;
   if (!registry || !registry[pageId]) {
     return false;
   }
@@ -206,6 +207,7 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
       pageId,
       context,
       configDirectory,
+      registryMtime,
       build: () => buildPageJit({ pageId, pageRegistry: registry, context }),
     });
     if (result && result.installing) {

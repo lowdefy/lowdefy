@@ -489,7 +489,7 @@ Install the CLI to get started.
 
 npx lowdefy@latest dev
 
-Note: Lowdefy requires Node.js 18 or later. Check your version with node /version.
+Note: Lowdefy requires Node.js 24 or later. Check your version with node /version.
 
 ```yaml
 - id: article_card
@@ -532,7 +532,7 @@ Note: Lowdefy requires Node.js 18 or later. Check your version with node /versio
     - id: article_note
       type: Paragraph
       properties:
-        content: "Note: Lowdefy requires Node.js 18 or later. Check your version with
+        content: "Note: Lowdefy requires Node.js 24 or later. Check your version with
           node /version."
         type: warning
         italic: true
