@@ -193,6 +193,7 @@ See [Agent System Architecture](../architecture/agent-system.md) for the complet
 | `checkConnectionRead.js`  | Verify read permissions on connection                  |
 | `checkConnectionWrite.js` | Verify write permissions on connection                 |
 | `validateSchemas.js`      | Validate properties against connection/request schemas |
+| `resolveTenancy.js`       | Resolve the tenant verdict (`{ field, value }`, filter and stamp) and the unscoped write guard (`{ field, stampChangeLog }`) in one call, so no call site (page request, routine step, webhook verifier, websocket) can take the verdict and miss the guard. The guard applies to `tenant: none` requests on scoped connections (`stampChangeLog: true`) and to `tenant: shared` connections the build marked `walled` (`stampChangeLog: false`). |
 | `callRequestResolver.js`  | Execute the resolver function. Constructs `callApi` (closing over `context` + `endpointDepth`) and threads it into the resolver argument bag. Lowdefy errors pass through unchanged; raw errors wrap into `RequestError` / `ServiceError`. |
 
 ### `/routes/endpoints/`
@@ -230,6 +231,14 @@ Handles Auth.js configuration retrieval.
 | `callbacks/addUserFieldsToSession.js` | Maps provider fields to session via `auth.userFields`       |
 | `callbacks/addUserFieldsToToken.js`   | Maps provider fields to JWT token via `auth.userFields`     |
 | `callbacks/createCallbackPlugins.js`  | Filters callback plugins by type                            |
+
+### `/routes/auth/organizations/`
+
+| Module                          | Purpose |
+| ------------------------------- | ------- |
+| `createActiveOrgPolicyHook.js`  | `session.create` hook applying the active-organization policy, including the tenant signup mint under `create: auto`. The mint writes the organization with a server-only `mintPending` marker, writes the owner member row, then clears the marker; only a marked organization is ever joined as owner. Lost races on the unique slug or member index are recovered by reading the winner's row. |
+| `ensureAuthIndexes.js`          | Ensures the unique indexes the organization writes rely on (organization `slug`, member `(userId, organizationId)`) through the auth adapter's `adapter.options.ensureUniqueIndexes` capability. Run at startup by `getBetterAuth` and awaited by the mint, which refuses without them; memoized per auth instance, retried after a failure. Startup rather than build/CLI because only the running server reliably reaches the database it serves. |
+| `ensureOrganization.js`         | Ensure-by-slug seeding of the pinned organization (id = slug). |
 
 ### `/routes/page/`
 
