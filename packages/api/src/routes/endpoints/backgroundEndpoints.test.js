@@ -784,6 +784,40 @@ test('detached run dispatched by a user is re-checked against their roles - a fo
   expect(serializer.deserialize(result.error).message).toContain('does not exist');
 });
 
+test.each([
+  ['a system dispatcher', { user: null, system: true }, true],
+  [
+    'a user with the target roles',
+    { user: { id: 'user_1', roles: ['admin'] }, system: false },
+    true,
+  ],
+  [
+    'a user without the target roles',
+    { user: { id: 'user_1', roles: ['viewer'] }, system: false },
+    false,
+  ],
+  ['a dispatcher with no user', { user: null, system: false }, false],
+])(
+  'detached run authorizes its target endpoint for %s as a synchronous CallApi would',
+  async (_, { user, system }, allowed) => {
+    const context = testContext({
+      logger,
+      operators: operatorsServer,
+      readConfigFile: createDetachedReadConfigFile({ childRoles: ['admin'] }),
+    });
+    const run = runDetachedEndpoint(context, {
+      endpointId: 'child_ep',
+      payload: {},
+      principal: { user: serializer.serialize(user), system },
+    });
+    if (allowed) {
+      await expect(run).resolves.toMatchObject({ success: true, response: 'child_ran' });
+    } else {
+      await expect(run).rejects.toThrow(user ? 'does not exist' : 'Authentication required');
+    }
+  }
+);
+
 test('acceptDetachedEndpoint accepts at once and runs the routine after, under waitUntil', async () => {
   const readConfigFile = jest.fn((path) => {
     if (path === 'api/slow_child.json') {

@@ -467,9 +467,9 @@ A `CallApi` step with `detached: true` does not wait for — or ever see — the
 
 Detached calls differ from normal `CallApi` steps in important ways:
 
-- **System context**: like a scheduled run, the target executes with no user — `_user` is `undefined` — regardless of who called the parent endpoint. `InternalApi` endpoints are callable.
+- **Same identity**: the target runs as whoever dispatched it — the user who called the parent endpoint, or a system context when the parent was a scheduled run, hook or verified webhook. The target and its nested calls are authorized against that identity exactly as a synchronous `CallApi` would be, so a detached call reaches nothing the caller could not call directly. `InternalApi` endpoints are callable.
 - **At-most-once, no retry**: if the dispatch or the target fails, nothing retries it. Design targets to be idempotent. The target's outcome exists only in the server logs and whatever its routine writes.
-- **Accepted, then run**: the `/api/detached` route answers `202` as soon as the call is authorized, and runs the target after the response under the platform's `waitUntil` (bounded by the target's own `maxDuration`). The dispatching invocation's request settles at once instead of staying in flight (and holding its instance's memory) while the target runs, so a chain of detached calls is a chain of separate invocations, not nested in-flight requests. The outcome is logged as `detached_run_done` (with the routine's status) or `detached_run_failed`.
+- **Accepted, then run**: the `/api/detached` route answers `202` as soon as the `CRON_SECRET` check passes, and runs the target after the response under the platform's `waitUntil` (bounded by the target's own `maxDuration`). The dispatching invocation's request settles at once instead of staying in flight (and holding its instance's memory) while the target runs, so a chain of detached calls is a chain of separate invocations, not nested in-flight requests. The outcome is logged as `detached_run_done` (with the routine's status) or `detached_run_failed`, which includes a target whose `auth` refuses the caller.
 - **Requires `CRON_SECRET`**: the dispatch authenticates against the deployment's own `/api/detached` route with the `CRON_SECRET` environment variable (the same secret that secures cron, fail closed). The step fails with a config error if it is not set.
 - **No depth cap across detached calls**: each detached target starts at call depth 0, so the 10-level nesting limit does not protect against detached recursion. An endpoint that (directly or indirectly) detaches back into itself will loop forever — spawning a new invocation each time.
 
@@ -654,6 +654,64 @@ routine:
           tier: { type: string, enum: [free, pro, enterprise] }
       data:
         _step: load_profile
+```
+
+## Validating Dynamic Content As A Routine Step
+
+`ValidateDynamic` checks block config against a [dynamic blocks policy](/dynamic-page-content#dynamic-blocks-policies) with the same function a Dynamic block runs at page get, so content that passes here renders there. `DescribeDynamicPolicy` returns what a policy allows. Both are built-in steps: no `connectionId`, no plugin install.
+
+A `ValidateDynamic` step has:
+
+- `id: string`: **Required** - A unique step id within the routine.
+- `type: ValidateDynamic`: **Required**
+- `properties.policy: string`: **Required** - The policy id, as a literal string.
+- `properties.blocks: object[]`: **Required** - The content to check. **Operators are evaluated**, so read it with `_step` or `_payload`.
+- `properties.throwOnInvalid: boolean`: Optional, default `true`. When `true`, invalid content ends the routine with an error. When `false`, the routine continues.
+
+The step result is `{ valid, errors, blocks }`. Each error has `path` (a dot path into the content, such as `blocks.2.properties.title`), `rule` (such as `policy.blocks`, `policy.urls`, `limits.depth` or `schema`) and `message`. In the endpoint a Dynamic block calls, `_step: <stepId>.blocks` of a passing step with the block's policy is returned as config.
+
+A `DescribeDynamicPolicy` step has `id`, `type: DescribeDynamicPolicy` and `properties.policy`. Its result lists the policy's `blocks` (each with its properties schema), `actions` and `operators` (each with its params schema), `endpoints`, `requests`, `links`, `state`, `html` and `limits`.
+
+###### Generate, check and store a form
+
+```yaml
+api:
+  - id: generate_form
+    type: Api
+    routine:
+      - id: vocabulary
+        type: DescribeDynamicPolicy
+        properties:
+          policy: generated_form
+      - id: attempt
+        type: GenerateObject
+        connectionId: model
+        properties:
+          # prompt built from _payload.description and _step.vocabulary
+      - id: check
+        type: ValidateDynamic
+        properties:
+          policy: generated_form
+          blocks:
+            _step: attempt.blocks
+          throwOnInvalid: false
+      - :if:
+          _step: check.valid
+        :then:
+          - id: store
+            type: MongoDBInsertOne
+            connectionId: forms
+            properties:
+              doc:
+                blocks:
+                  _step: check.blocks
+          - :return:
+              valid: true
+        :else:
+          - :return:
+              valid: false
+              errors:
+                _step: check.errors
 ```
 
 ## Rendering Notifications As A Routine Step
