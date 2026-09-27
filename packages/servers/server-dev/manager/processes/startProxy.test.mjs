@@ -115,6 +115,34 @@ test('startProxy probes a new child after a restart before forwarding to it', as
   expect(childConnections).toBe(afterFirstChild + 1);
 });
 
+test('startProxy sends requests back through the hold once a confirmed child goes away', async () => {
+  function handler(req, res) {
+    res.end('ok');
+  }
+  const port = await startChildAndProxy(handler);
+  context.devServer = { exitCode: null, signalCode: null };
+  expect(await (await fetch(`http://localhost:${port}/a.js`)).text()).toBe('ok');
+
+  async function stopChildAndRestartSoon() {
+    await close(child);
+    setTimeout(() => {
+      child = http.createServer(handler);
+      child.listen(context.internalPort, '127.0.0.1');
+    }, 300);
+  }
+
+  // Gone before the manager has seen it exit: the forward fails once, and the
+  // next request waits for the child instead of failing too.
+  await stopChildAndRestartSoon();
+  expect((await fetch(`http://localhost:${port}/b.js`)).status).toBe(502);
+  expect(await (await fetch(`http://localhost:${port}/c.js`)).text()).toBe('ok');
+
+  // An exit the manager has seen sends the very next request through the hold.
+  await stopChildAndRestartSoon();
+  context.devServer.exitCode = 1;
+  expect(await (await fetch(`http://localhost:${port}/d.js`)).text()).toBe('ok');
+});
+
 test('startProxy aborts the child request when the client drops a streaming response', async () => {
   let upstreamClosed;
   const upstreamClosedPromise = new Promise((resolve) => {
