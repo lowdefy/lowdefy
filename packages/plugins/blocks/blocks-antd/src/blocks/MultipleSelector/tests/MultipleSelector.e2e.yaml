@@ -35,6 +35,18 @@ events:
         ms_object_primarykey:
           - _id: b2
             name: Stale Name
+        ms_max_count:
+          - A
+          - B
+        ms_responsive:
+          - Alpha option
+          - Bravo option
+          - Charlie option
+          - Delta option
+          - Echo option
+          - Foxtrot option
+        ms_remove_icon:
+          - A
 
 blocks:
   # ============================================
@@ -443,3 +455,94 @@ blocks:
             _id: b2
             name: Bob
           label: Bob
+
+  # ============================================
+  # ANTD 6.6 FEATURES
+  # ============================================
+
+  - id: ms_max_count
+    type: MultipleSelector
+    properties:
+      maxCount: 2
+      options:
+        - A
+        - B
+        - C
+
+  - id: ms_responsive
+    type: MultipleSelector
+    layout:
+      span: 8
+    properties:
+      maxTagCount: responsive
+      options:
+        - Alpha option
+        - Bravo option
+        - Charlie option
+        - Delta option
+        - Echo option
+        - Foxtrot option
+
+  - id: ms_no_search
+    type: MultipleSelector
+    properties:
+      showSearch: false
+      options:
+        - Apple
+        - Banana
+
+  - id: ms_remove_icon
+    type: MultipleSelector
+    properties:
+      removeIcon: delete
+      options:
+        - A
+        - B
+
+  - id: ms_event_value
+    type: MultipleSelector
+    properties:
+      options:
+        - Apple
+        - Banana
+    events:
+      onChange:
+        - id: set_event_value
+          type: SetState
+          params:
+            ms_event_value_state:
+              _event: value
+
+  - id: ms_event_value_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'Event: '
+          - _json.stringify:
+              - _state: ms_event_value_state
+
+  - id: ms_underlined
+    type: MultipleSelector
+    properties:
+      variant: underlined
+      options:
+        - A
+        - B
+
+  - id: ms_popup_css
+    type: MultipleSelector
+    class:
+      .popup: ms-popup-tailwind
+    properties:
+      options:
+        - A
+        - B
+
+  - id: ms_prefix_icon
+    type: MultipleSelector
+    properties:
+      prefixIcon: search
+      options:
+        - A
+        - B

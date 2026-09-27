@@ -275,6 +275,45 @@
             value: green
           - label: Blue
             value: blue
+- title: Prefix and Dropdown
+  blocks:
+    - id: prefix_icon_selector
+      type: Selector
+      properties:
+        title: Prefix Icon
+        prefixIcon: globe
+        placeholder: Choose a region...
+        options:
+          - label: Europe
+            value: eu
+          - label: North America
+            value: na
+          - label: Asia Pacific
+            value: apac
+    - id: wide_dropdown_selector
+      type: Selector
+      style:
+        .element:
+          width: 160px
+      properties:
+        title: Dropdown Wider Than the Input
+        popupMatchSelectWidth: false
+        placement: bottomRight
+        options:
+          - label: Standard shipping (5 to 7 business days)
+            value: standard
+          - label: Express shipping (1 to 2 business days)
+            value: express
+    - id: underlined_selector
+      type: Selector
+      properties:
+        title: Underlined Variant
+        variant: underlined
+        options:
+          - Draft
+          - Published
+          - Archived
+
 - title: Sizes
   blocks:
     - id: size_small
