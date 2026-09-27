@@ -333,3 +333,73 @@ test('checkPolicy reports structure errors with their paths', () => {
     'policy.structure blocks.3.blocks',
   ]);
 });
+
+// The client runs an object as an operator once its other keys evaluate to
+// undefined, so { _user: 'email', x: { _if: { test: false } } } runs _user.
+const vanishes = { _if: { test: false } };
+
+test.each([
+  [
+    'an unlisted operator beside a key that evaluates to undefined',
+    { id: 'p', type: 'Paragraph', properties: { content: { _user: 'email', x: vanishes } } },
+    ['policy.operators blocks.0.properties.content'],
+  ],
+  [
+    'an unlisted operator beside an undefined value',
+    { id: 'b', type: 'Box', style: { color: { _user: 'email', x: undefined } } },
+    ['policy.operators blocks.0.style.color'],
+  ],
+  [
+    'a URL an operator computes once its sibling vanishes',
+    { id: 'a', type: 'Anchor', properties: { href: { _state: 'form.url', x: vanishes } } },
+    ['policy.urls blocks.0.properties.href'],
+  ],
+  [
+    'CallAPI payload read by an unlisted operator once its sibling vanishes',
+    {
+      id: 'b',
+      type: 'Box',
+      events: {
+        onClick: [
+          {
+            id: 'a',
+            type: 'CallAPI',
+            params: { endpointId: 'submit', payload: { leak: { _user: true, x: vanishes } } },
+          },
+        ],
+      },
+    },
+    ['policy.operators blocks.0.events.onClick.0.params.payload.leak'],
+  ],
+  [
+    'Link params an operator computes once its sibling vanishes',
+    {
+      id: 'b',
+      type: 'Box',
+      events: {
+        onClick: [{ id: 'a', type: 'Link', params: { _state: 'form.link', x: vanishes } }],
+      },
+    },
+    ['policy.literal blocks.0.events.onClick.0.params'],
+  ],
+  [
+    'SetState params an operator computes once its sibling vanishes',
+    {
+      id: 'b',
+      type: 'Box',
+      events: {
+        onClick: [
+          { id: 'a', type: 'SetState', params: { _state: 'form.values', 'form.x': vanishes } },
+        ],
+      },
+    },
+    ['policy.literal blocks.0.events.onClick.0.params'],
+  ],
+  [
+    'properties an operator computes once its sibling vanishes',
+    { id: 'b', type: 'Box', properties: { _state: 'form.props', x: vanishes } },
+    ['policy.literal blocks.0.properties'],
+  ],
+])('checkPolicy rejects %s', (_, block, expected) => {
+  expect(rules(check([block]))).toEqual(expected);
+});

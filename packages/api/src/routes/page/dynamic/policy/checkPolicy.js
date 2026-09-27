@@ -14,11 +14,12 @@
   limitations under the License.
 */
 
-import { getOperatorType, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
 import getPropertiesSchemaErrors from '../getPropertiesSchemaErrors.js';
 import checkEvents from './checkEvents.js';
 import checkValue from './checkValue.js';
+import getPossibleOperators from './getPossibleOperators.js';
 import isUnderState from './isUnderState.js';
 
 // Block keys walked by a dedicated rule rather than checkValue.
@@ -55,7 +56,7 @@ function bindsState({ block, blockMetas }) {
 }
 
 function checkBlockShape({ block, path, errors }) {
-  if (!type.isObject(block) || getOperatorType(block) !== null) {
+  if (!type.isObject(block) || getPossibleOperators(block).length > 0) {
     errors.push(structureError({ path, message: 'Blocks must be literal objects.' }));
     return false;
   }
@@ -115,7 +116,7 @@ function checkBlock({ block, path, depth, walk }) {
     }
   }
   LITERAL_KEYS.forEach((key) => {
-    if (getOperatorType(block[key]) !== null) {
+    if (getPossibleOperators(block[key]).length > 0) {
       errors.push({
         path: `${path}.${key}`,
         rule: 'policy.literal',
