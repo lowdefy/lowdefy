@@ -103,6 +103,12 @@ blocks:
       href: https://lowdefy.com
       target: _blank
 
+  - id: button_target_no_href
+    type: Button
+    properties:
+      title: Target without href
+      target: _blank
+
   - id: button_clickable
     type: Button
     properties:

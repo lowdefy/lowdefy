@@ -27,6 +27,12 @@ test.describe('FloatButton Block', () => {
     await expect(floatBtn).toBeVisible();
   });
 
+  test('renders no badge element when no badge is set', async ({ page }) => {
+    const floatBtn = page.locator('#fb_basic');
+    await expect(floatBtn).toBeVisible();
+    await expect(floatBtn.locator('.ant-badge')).toHaveCount(0);
+  });
+
   test('renders primary type', async ({ page }) => {
     const block = getBlock(page, 'fb_primary');
     const floatBtn = block.locator('.ant-float-btn');

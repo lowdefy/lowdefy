@@ -55,7 +55,8 @@ function FloatButtonBlock({
     content: properties.description,
     tooltip: properties.tooltip,
     disabled: properties.disabled,
-    badge: properties.badge,
+    // antd renders an empty badge element for any badge key, even undefined.
+    ...(type.isNone(properties.badge) ? {} : { badge: properties.badge }),
     icon: iconProperties && (
       <Icon
         blockId={`${blockId}_icon`}

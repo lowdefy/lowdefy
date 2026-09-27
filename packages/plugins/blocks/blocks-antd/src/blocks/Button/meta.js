@@ -110,7 +110,7 @@ export default {
       type: {
         type: 'string',
         default: 'primary',
-        enum: ['primary', 'default', 'dashed', 'link', 'text'],
+        enum: ['primary', 'default', 'dashed', 'link', 'text', 'danger'],
         description: 'Deprecated - use color and variant instead. The button type.',
       },
       variant: {

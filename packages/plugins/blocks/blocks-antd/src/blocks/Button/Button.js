@@ -103,7 +103,8 @@ const ButtonBlock = ({
       loading={get(events, `${onClickActionName}.loading`)}
       shape={properties.shape}
       size={properties.size}
-      target={properties.target}
+      // Only a link has a target; without href antd renders a <button>.
+      target={type.isNone(properties.href) ? undefined : properties.target}
       icon={
         properties.icon && (
           <Icon

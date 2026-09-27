@@ -107,6 +107,12 @@ test.describe('Button Block', () => {
     await expect(button).toHaveAttribute('target', '_blank');
   });
 
+  test('does not put target on a button without href', async ({ page }) => {
+    const button = getButton(page, 'button_target_no_href');
+    await expect(button).toHaveText('Target without href');
+    await expect(button).not.toHaveAttribute('target', /.*/);
+  });
+
   test('onClick event fires and updates state', async ({ page }) => {
     const button = getButton(page, 'button_clickable');
     await expect(button).toHaveText('Click me');
