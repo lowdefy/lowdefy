@@ -97,20 +97,30 @@ test('frame with non-string websocketId sends an error frame carrying the reques
   expect(registry.publish).not.toHaveBeenCalled();
 });
 
-test('subscribe frame calls registry.subscribe and acks with a subscribed frame', async () => {
-  const { connection, context, registry, send } = setup();
+test.each([
+  ['without a requestId', {}, { type: 'subscribed', websocketId: 'ticker' }],
+  [
+    'with a requestId',
+    { requestId: 's1' },
+    { type: 'subscribed', websocketId: 'ticker', requestId: 's1' },
+  ],
+])(
+  'subscribe frame %s calls registry.subscribe and acks with a subscribed frame echoing it',
+  async (_, extra, ack) => {
+    const { connection, context, registry, send } = setup();
 
-  await connection.handleMessage(
-    JSON.stringify({ type: 'subscribe', websocketId: 'ticker', payload: { room: 1 } })
-  );
+    await connection.handleMessage(
+      JSON.stringify({ type: 'subscribe', websocketId: 'ticker', payload: { room: 1 }, ...extra })
+    );
 
-  expect(registry.subscribe).toHaveBeenCalledWith(context, {
-    websocketId: 'ticker',
-    payload: { room: 1 },
-    subscriber: connection.subscriber,
-  });
-  expect(sentFrames(send)).toEqual([{ type: 'subscribed', websocketId: 'ticker' }]);
-});
+    expect(registry.subscribe).toHaveBeenCalledWith(context, {
+      websocketId: 'ticker',
+      payload: { room: 1 },
+      subscriber: connection.subscriber,
+    });
+    expect(sentFrames(send)).toEqual([ack]);
+  }
+);
 
 test('unsubscribe frame calls registry.unsubscribe and acks with an unsubscribed frame', async () => {
   const { connection, registry, send } = setup();
@@ -288,4 +298,73 @@ test('subscriber is created with the connection rid, the context i18n and an emp
   expect(connection.subscriber.subscriptions.size).toBe(0);
   expect(typeof connection.subscriber.send).toBe('function');
   expect(connection.subscriber.i18n).toBe(context.i18n);
+});
+
+function setupHeldSubscribe() {
+  const releases = [];
+  const resolver = jest.fn(() => new Promise(() => {}));
+  mockPrepareChannel.mockImplementation(
+    (context, { websocketId }) =>
+      new Promise((resolve) => {
+        releases.push(() =>
+          resolve({
+            connectionProperties: null,
+            properties: {},
+            websocketConfig: { websocketId, type: 'TestSource', '~k': 'websockets.0' },
+            websocketResolver: resolver,
+          })
+        );
+      })
+  );
+  const send = jest.fn();
+  const context = {
+    rid: 'r',
+    mode: 'prod',
+    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
+    handleError: jest.fn(),
+  };
+  const registry = createChannelRegistry();
+  const connection = createWebSocketConnection(context, { registry, send });
+  return { connection, registry, releases, resolver, send };
+}
+
+test('an unsubscribe sent while its subscribe is being prepared removes the subscription', async () => {
+  const { connection, releases, send } = setupHeldSubscribe();
+
+  const subscribed = connection.handleMessage(
+    JSON.stringify({ type: 'subscribe', websocketId: 'chat', requestId: 's1' })
+  );
+  const unsubscribed = connection.handleMessage(
+    JSON.stringify({ type: 'unsubscribe', websocketId: 'chat' })
+  );
+  await Promise.resolve();
+  releases[0]();
+  await Promise.all([subscribed, unsubscribed]);
+
+  expect(connection.subscriber.subscriptions.size).toBe(0);
+  expect(sentFrames(send)).toEqual([
+    { type: 'subscribed', websocketId: 'chat', requestId: 's1' },
+    { type: 'unsubscribed', websocketId: 'chat' },
+  ]);
+});
+
+test('a connection that closes while a subscribe is being prepared leaves no subscription behind', async () => {
+  const { connection, registry, releases } = setupHeldSubscribe();
+  const unsubscribeAll = jest.spyOn(registry, 'unsubscribeAll');
+
+  const subscribed = connection.handleMessage(
+    JSON.stringify({ type: 'subscribe', websocketId: 'chat', requestId: 's1' })
+  );
+  const afterClose = connection.handleMessage(
+    JSON.stringify({ type: 'subscribe', websocketId: 'news', requestId: 's2' })
+  );
+  await Promise.resolve();
+  connection.close();
+  releases[0]();
+  await Promise.all([subscribed, afterClose]);
+  await Promise.resolve();
+
+  expect(releases).toHaveLength(1);
+  expect(unsubscribeAll).toHaveBeenCalledTimes(2);
+  expect(connection.subscriber.subscriptions.size).toBe(0);
 });

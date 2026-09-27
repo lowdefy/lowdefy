@@ -23,6 +23,12 @@ import redactErrorResponse from '../../response/redactErrorResponse.js';
 // frame with an ack or an error so client actions never hang.
 function createWebSocketConnection(context, { registry, send }) {
   const { logger } = context;
+  // Frames are handled one at a time, in the order they arrive. A subscribe
+  // awaits its channel preparation, so without this an unsubscribe sent right
+  // after it would run first, find nothing to remove, and leave the
+  // subscription running for a client that no longer wants it.
+  let frameQueue = Promise.resolve();
+  let closed = false;
   const subscriber = {
     id: context.rid,
     subscriptions: new Map(),
@@ -56,7 +62,7 @@ function createWebSocketConnection(context, { registry, send }) {
     switch (frame.type) {
       case 'subscribe':
         await registry.subscribe(context, { websocketId, payload, subscriber });
-        send(JSON.stringify({ type: 'subscribed', websocketId }));
+        send(JSON.stringify({ type: 'subscribed', websocketId, requestId }));
         return;
       case 'unsubscribe':
         registry.unsubscribe({ websocketId, subscriber });
@@ -72,7 +78,10 @@ function createWebSocketConnection(context, { registry, send }) {
     }
   }
 
-  async function handleMessage(raw) {
+  async function processMessage(raw) {
+    if (closed) {
+      return;
+    }
     let frame;
     try {
       frame = JSON.parse(raw);
@@ -107,8 +116,17 @@ function createWebSocketConnection(context, { registry, send }) {
     }
   }
 
+  function handleMessage(raw) {
+    const handled = frameQueue.then(() => processMessage(raw));
+    frameQueue = handled.catch(() => {});
+    return handled;
+  }
+
   function close() {
+    closed = true;
     registry.unsubscribeAll({ subscriber });
+    // A subscribe still being prepared registers after this point.
+    frameQueue = frameQueue.then(() => registry.unsubscribeAll({ subscriber }));
     logger.debug({ event: 'ws_disconnect' });
   }
 
