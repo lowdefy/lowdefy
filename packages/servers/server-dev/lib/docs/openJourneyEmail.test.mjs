@@ -95,7 +95,12 @@ test.each([
   expect(page.opened).toEqual([
     `<a href="http://localhost/${expectedId}" target="_blank">Open ${expectedId}</a>`,
   ]);
-  expect(page.evaluate).toHaveBeenCalledTimes(1);
+  // Links open where the email is, since each actor drives one tab.
+  const link = { removeAttribute: jest.fn() };
+  global.document = { querySelectorAll: jest.fn(() => [link]) };
+  await page.evaluate.mock.calls[0][0]();
+  delete global.document;
+  expect(link.removeAttribute).toHaveBeenCalledWith('target');
 });
 
 test('openJourneyEmail waits for a message that arrives after the step starts', async () => {
@@ -136,39 +141,47 @@ test('openJourneyEmail shows a text-only message escaped in a pre block', async 
   expect(page.opened).toEqual(['<pre>Your code is &#60;1234&#62; &#38; &#34;5&#34;</pre>']);
 });
 
-test('openJourneyEmail fails with the messages this journey received when none matches', async () => {
-  writeMessage({ id: '000000', to: ['ada@example.test'], subject: 'Old', secondsAfterStart: -5 });
-  writeMessage({ id: '000001', to: ['bob@example.test'], subject: 'Verify your email' });
-  const page = createPage();
+const OLD_MESSAGE = {
+  id: '000000',
+  to: ['ada@example.test'],
+  subject: 'Old',
+  secondsAfterStart: -5,
+};
+const OTHER_MESSAGE = { id: '000001', to: ['bob@example.test'], subject: 'Verify your email' };
 
-  const error = await openJourneyEmail({
-    page,
-    params: { to: 'ada@example.test', subject: 'Verify' },
-    since: STARTED_AT,
-    configDirectory,
-    timeout: 0,
-  }).catch((caught) => caught);
+test.each([
+  [
+    'names the messages this journey received',
+    [OLD_MESSAGE, OTHER_MESSAGE],
+    { to: 'ada@example.test', subject: 'Verify' },
+    'an email to "ada@example.test" with a subject containing "Verify"',
+    ['"Verify your email" to bob@example.test'],
+  ],
+  [
+    'says so when the journey received no mail at all',
+    [OLD_MESSAGE],
+    { to: 'ada@example.test' },
+    'an email to "ada@example.test"',
+    'no email received during this journey',
+  ],
+])(
+  'openJourneyEmail fails when none matches and %s',
+  async (_, messages, params, expected, actual) => {
+    messages.forEach(writeMessage);
+    const page = createPage();
 
-  expect(error).toBeInstanceOf(JourneyStepError);
-  expect(error.message).toEqual(
-    'Timed out after 0ms waiting for an email to "ada@example.test" with a subject containing "Verify".'
-  );
-  expect(error.expected).toEqual(
-    'an email to "ada@example.test" with a subject containing "Verify"'
-  );
-  expect(error.actual).toEqual(['"Verify your email" to bob@example.test']);
-  expect(page.opened).toEqual([]);
-});
+    const error = await openJourneyEmail({
+      page,
+      params,
+      since: STARTED_AT,
+      configDirectory,
+      timeout: 0,
+    }).catch((caught) => caught);
 
-test('openJourneyEmail says so when the journey received no mail at all', async () => {
-  const error = await openJourneyEmail({
-    page: createPage(),
-    params: { to: 'ada@example.test' },
-    since: STARTED_AT,
-    configDirectory,
-    timeout: 0,
-  }).catch((caught) => caught);
-
-  expect(error.expected).toEqual('an email to "ada@example.test"');
-  expect(error.actual).toEqual('no email received during this journey');
-});
+    expect(error).toBeInstanceOf(JourneyStepError);
+    expect(error.message).toEqual(`Timed out after 0ms waiting for ${expected}.`);
+    expect(error.expected).toEqual(expected);
+    expect(error.actual).toEqual(actual);
+    expect(page.opened).toEqual([]);
+  }
+);

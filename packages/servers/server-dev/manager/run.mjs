@@ -142,7 +142,7 @@ try {
   // agents, the reload SSE stream, HMR websockets) reconnect instead of dying
   // on ECONNREFUSED.
   await startProxy(context);
-  await startMailSink(context);
+  context.mailSink = await startMailSink(context);
 
   startServer(context);
   if (await waitForServer({ port: context.internalPort, basePath: context.basePath })) {

@@ -14,10 +14,6 @@
   limitations under the License.
 */
 
-import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
-
 import { jest } from '@jest/globals';
 
 // getBrowser.js is mocked so no Chromium is needed; the fake page below stands
@@ -31,6 +27,9 @@ jest.unstable_mockModule('./getBrowser.js', () => ({
   openPage: mockOpenPage,
   buildPageUrl: ({ origin, pageId }) => `${origin}/${pageId}`,
 }));
+
+const mockOpenJourneyEmail = jest.fn();
+jest.unstable_mockModule('./openJourneyEmail.js', () => ({ default: mockOpenJourneyEmail }));
 
 const { default: runJourney } = await import('./runJourney.js');
 
@@ -1293,66 +1292,51 @@ test('runJourney reports a goto that fails to load', async () => {
   });
 });
 
-test('runJourney refuses an email step before opening a browser when the dev server captures no mail', async () => {
-  const result = await runJourney({
-    origin,
-    pageId: 'signup',
-    user: 'none',
-    steps: [{ email: { to: 'ada@example.test' } }],
-  });
-
-  expect(result.error).toMatch(/captures no mail. Start it with LOWDEFY_DEV_SMTP_PORT/);
-  expect(mockGetBrowser).not.toHaveBeenCalled();
-});
-
-test('runJourney opens an email the journey caused in the current actor tab', async () => {
-  const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-journey-'));
-  const outbox = path.join(configDirectory, '.lowdefy', 'mail');
-  fs.mkdirSync(outbox, { recursive: true });
+test('runJourney refuses an email step before opening a browser when no mail sink listens, even with the port set', async () => {
+  // A port added to .env after start: the child sees it, but no sink started.
   process.env.LOWDEFY_DEV_SMTP_PORT = '2525';
-  process.env.LOWDEFY_DIRECTORY_CONFIG = configDirectory;
-  const page = createPage();
-  openWith(page);
-  const link = { target: '_blank', removeAttribute: jest.fn(() => delete link.target) };
-  globalThis.document = { querySelectorAll: jest.fn(() => [link]) };
-  // The sign-up click is what sends the email, so it arrives after the journey
-  // started - the only mail an email step considers.
-  page.locator.mockImplementation((selector) => {
-    const locator = createLocator({ selector, page });
-    locator.click.mockImplementation(async () => {
-      fs.writeFileSync(
-        path.join(outbox, '000001.json'),
-        JSON.stringify({
-          id: '000001',
-          receivedAt: new Date().toISOString(),
-          to: ['ada@example.test'],
-          subject: 'Verify your email address',
-          html: '<a href="http://localhost:3227/api/auth/verify-email">Verify email address</a>',
-          text: null,
-        })
-      );
-    });
-    return locator;
-  });
-
   try {
     const result = await runJourney({
       origin,
       pageId: 'signup',
       user: 'none',
-      steps: [{ click: 'signup_button' }, { email: { to: 'ada@example.test', subject: 'Verify' } }],
+      steps: [{ email: { to: 'ada@example.test' } }],
+    });
+
+    expect(result.error).toMatch(
+      /captures no mail. Start \(or restart\) it with LOWDEFY_DEV_SMTP_PORT/
+    );
+    expect(mockGetBrowser).not.toHaveBeenCalled();
+  } finally {
+    delete process.env.LOWDEFY_DEV_SMTP_PORT;
+  }
+});
+
+test('runJourney hands an email step the current tab, the journey start and the config directory', async () => {
+  process.env.LOWDEFY_SERVER_DEV_MAIL_SINK = 'true';
+  process.env.LOWDEFY_DIRECTORY_CONFIG = '/apps/tenant';
+  const page = createPage();
+  openWith(page);
+  const before = Date.now();
+  try {
+    const result = await runJourney({
+      origin,
+      pageId: 'signup',
+      user: 'none',
+      steps: [{ email: { to: 'ada@example.test', subject: 'Verify' } }],
     });
 
     expect(result.failure).toBeUndefined();
-    expect(page.goto).toHaveBeenCalledTimes(1);
-    expect(page.goto.mock.calls[0][0]).toMatch(/^data:text\/html;charset=utf-8;base64,/);
-    // Links open where the email is, since each actor drives one tab.
-    expect(globalThis.document.querySelectorAll).toHaveBeenCalledWith('a[target]');
-    expect(link.target).toBeUndefined();
+    expect(mockOpenJourneyEmail).toHaveBeenCalledWith({
+      page,
+      params: { to: 'ada@example.test', subject: 'Verify' },
+      since: expect.any(Number),
+      configDirectory: '/apps/tenant',
+      timeout: 5000,
+    });
+    expect(mockOpenJourneyEmail.mock.calls[0][0].since).toBeGreaterThanOrEqual(before);
   } finally {
-    delete globalThis.document;
-    delete process.env.LOWDEFY_DEV_SMTP_PORT;
+    delete process.env.LOWDEFY_SERVER_DEV_MAIL_SINK;
     delete process.env.LOWDEFY_DIRECTORY_CONFIG;
-    fs.rmSync(configDirectory, { recursive: true, force: true });
   }
 });

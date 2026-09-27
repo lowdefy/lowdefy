@@ -740,11 +740,11 @@ async function runJourney({
   if (!type.isUndefined(stateSelectionError)) {
     return { error: stateSelectionError };
   }
-  const capturesMail = !['', undefined].includes(process.env.LOWDEFY_DEV_SMTP_PORT);
+  const capturesMail = process.env.LOWDEFY_SERVER_DEV_MAIL_SINK === 'true';
   if (steps.some((step) => getStepKey(step) === 'email') && !capturesMail) {
     return {
       error:
-        'The journey has an "email" step, but this dev server captures no mail. Start it with LOWDEFY_DEV_SMTP_PORT set to a free port, and point the app\'s SMTP connection at 127.0.0.1 on that port.',
+        'The journey has an "email" step, but this dev server captures no mail. Start (or restart) it with LOWDEFY_DEV_SMTP_PORT set to a free port, and point the app\'s SMTP connection at 127.0.0.1 on that port.',
     };
   }
   // Taken before any page opens: mail the journey causes arrives after it.
@@ -775,7 +775,7 @@ async function runJourney({
     const journey = {
       actors,
       origin,
-      configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),
+      configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd(),
       startedAt,
       openTimeout: timeout,
       stepTimeout,
