@@ -3967,6 +3967,7 @@
             },
             "srcSet": {
               "type": "string",
+              "urlKind": "srcSet",
               "description": "A list of image sources for different screen resolutions, as in the img srcset attribute."
             },
             "group": {
@@ -4115,6 +4116,7 @@
                       },
                       "srcSet": {
                         "type": "string",
+                        "urlKind": "srcSet",
                         "description": "Image sources for different screen resolutions."
                       }
                     }
