@@ -22,25 +22,18 @@ import {
   getState,
 } from '@lowdefy/e2e-utils/runtime';
 
-import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
+import createJourneyActors from './createJourneyActors.js';
+import { getBrowser, buildPageUrl } from './getBrowser.js';
 import isPageReady from './isPageReady.js';
+import JourneyStepError from './JourneyStepError.js';
+import openJourneyEmail from './openJourneyEmail.js';
 import selectFinalState from './selectFinalState.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneySteps, { getStepKey } from './validateJourneySteps.js';
 import validateStateSelection from './validateStateSelection.js';
 
-// Carries what a failed step expected and what it found, so the journey's
-// failure report can show both. Executors throw it for a failed `expect` and
-// for an interaction Playwright refused; the run loop turns it into
-// `failure` and stops.
-class JourneyStepError extends Error {
-  constructor(message, { expected, actual }) {
-    super(message);
-    this.name = 'JourneyStepError';
-    this.expected = expected;
-    this.actual = actual;
-  }
-}
+// The actor a journey starts as; `as` steps switch to others by name.
+const MAIN_ACTOR = 'main';
 
 // Structural equality over values that have already been through the JSON
 // round-trip getState performs in the page (no undefined, no Dates, no
@@ -381,6 +374,25 @@ async function runBack({ page, timeout }) {
   }
 }
 
+// Loads an app page the way a typed URL does. The page shown may not be the
+// one asked for - a protected page redirects a signed-out actor to sign in -
+// so the runner settles whichever page the app mounts (isPageReady with a
+// null pageId, as openPage does) and lets the next step assert where it
+// landed.
+async function runGoto({ page, step, origin, timeout }) {
+  const { pageId, urlQuery } = type.isString(step.goto) ? { pageId: step.goto } : step.goto;
+  const url = buildPageUrl({ origin, pageId, urlQuery });
+  try {
+    await page.goto(url, { waitUntil: 'load', timeout });
+  } catch (error) {
+    throw new JourneyStepError(`Could not open page "${pageId}": ${cleanMessage(error)}`, {
+      expected: `page "${pageId}" to load`,
+      actual: cleanMessage(error),
+    });
+  }
+  await page.waitForFunction(isPageReady, null, { timeout }).catch(() => {});
+}
+
 // Polls a page read until it satisfies `check`, or fails once `timeout` has
 // elapsed. Playwright's own waitForFunction cannot be used here because the
 // reads go through the e2e-utils helpers, which run in Node.
@@ -434,9 +446,12 @@ async function runScreenshot({ page, step, index, screenshots }) {
   screenshots.push({ name, data: buffer.toString('base64'), mimeType: 'image/png' });
 }
 
+// A path that does not exist reads as null: a journey is JSON, where null is
+// the only way to say "absent", and the failure report already shows a
+// missing value as null - so `equals: null` asserts the value is not there.
 async function expectState({ page, params }) {
   const { path, equals } = params;
-  const actual = get((await getState(page)) ?? {}, path);
+  const actual = get((await getState(page)) ?? {}, path) ?? null;
   if (!isDeepEqual(actual, equals)) {
     throw new JourneyStepError(
       `Expected state "${path}" to equal ${JSON.stringify(equals)} but found ${JSON.stringify(
@@ -571,7 +586,9 @@ async function settlePage({ page, timeout }) {
 
 const INTERACTION_STEPS = ['click', 'fill', 'select', 'press', 'back'];
 
-async function runStep({ page, step, index, timeout, screenshots }) {
+async function runStep({ journey, step, index, screenshots }) {
+  const page = journey.actors.current().page;
+  const timeout = journey.stepTimeout;
   switch (getStepKey(step)) {
     case 'click':
       await runClick({ page, step, timeout });
@@ -587,6 +604,21 @@ async function runStep({ page, step, index, timeout, screenshots }) {
       return;
     case 'back':
       await runBack({ page, timeout });
+      return;
+    case 'goto':
+      await runGoto({ page, step, origin: journey.origin, timeout: journey.openTimeout });
+      return;
+    case 'email':
+      await openJourneyEmail({
+        page,
+        params: step.email,
+        since: journey.startedAt,
+        configDirectory: journey.configDirectory,
+        timeout,
+      });
+      return;
+    case 'as':
+      await journey.actors.switchTo(step.as);
       return;
     case 'wait':
       await runWait({ page, step, timeout });
@@ -627,7 +659,7 @@ function toFailure({ error, index, step }) {
 // log, the failure (if any) and the screenshots taken — never throws for a
 // step that fails, because a failed journey is a result an agent reads, not
 // an error it recovers from.
-async function runSteps({ page, steps, stepTimeout }) {
+async function runSteps({ journey, steps }) {
   const results = [];
   const screenshots = [];
   let failure;
@@ -639,9 +671,9 @@ async function runSteps({ page, steps, stepTimeout }) {
     }
     const started = Date.now();
     try {
-      await runStep({ page, step, index, timeout: stepTimeout, screenshots });
+      await runStep({ journey, step, index, screenshots });
       if (INTERACTION_STEPS.includes(getStepKey(step))) {
-        await settlePage({ page, timeout: stepTimeout });
+        await settlePage({ page: journey.actors.current().page, timeout: journey.stepTimeout });
       }
       results.push({ index, step, status: 'ok', durationMs: Date.now() - started });
     } catch (error) {
@@ -664,11 +696,13 @@ async function readFinalState({ page }) {
 }
 
 // runJourney drives a page of the running dev server through a declarative
-// list of steps — click, fill, select, press, back, wait, screenshot, expect —
-// so an agent can verify behaviour (a form submits, a modal opens, state
-// changes) and not only layout. `timeout` bounds the page open; `stepTimeout`
-// bounds each step, matching Playwright's per-action timeout. `state` picks
-// what the result carries of the final page state (see selectFinalState).
+// list of steps — click, fill, select, press, back, goto, email, as, wait,
+// screenshot, expect — so an agent can verify behaviour (a form submits, a
+// modal opens, state changes, a sign-up email arrives) and not only layout.
+// `timeout` bounds each page open; `stepTimeout` bounds each step, matching
+// Playwright's per-action timeout. `state` picks what the result carries of
+// the final page state (see selectFinalState). `user: 'none'` injects no
+// caller, so the app's own auth decides who each actor is.
 async function runJourney({
   origin,
   pageId,
@@ -706,6 +740,15 @@ async function runJourney({
   if (!type.isUndefined(stateSelectionError)) {
     return { error: stateSelectionError };
   }
+  const capturesMail = process.env.LOWDEFY_SERVER_DEV_MAIL_SINK === 'true';
+  if (steps.some((step) => getStepKey(step) === 'email') && !capturesMail) {
+    return {
+      error:
+        'The journey has an "email" step, but this dev server captures no mail. Start (or restart) it with LOWDEFY_DEV_SMTP_PORT set to a free port, and point the app\'s SMTP connection at 127.0.0.1 on that port.',
+    };
+  }
+  // Taken before any page opens: mail the journey causes arrives after it.
+  const startedAt = Date.now();
 
   let browser;
   try {
@@ -717,26 +760,28 @@ async function runJourney({
   }
 
   const url = buildPageUrl({ origin, pageId, urlQuery });
-
-  let context;
+  const actors = createJourneyActors({
+    browser,
+    origin,
+    pageId,
+    user,
+    urlQuery,
+    width,
+    height,
+    timeout,
+  });
   try {
-    const opened = await openPage({
-      browser,
+    const main = await actors.switchTo(MAIN_ACTOR);
+    const journey = {
+      actors,
       origin,
-      pageId,
-      user,
-      urlQuery,
-      width,
-      height,
-      timeout,
-    });
-    context = opened.context;
-    const { results, screenshots, failure } = await runSteps({
-      page: opened.page,
-      steps,
+      configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd(),
+      startedAt,
+      openTimeout: timeout,
       stepTimeout,
-    });
-    const state = await readFinalState({ page: opened.page });
+    };
+    const { results, screenshots, failure } = await runSteps({ journey, steps });
+    const state = await readFinalState({ page: actors.current().page });
     const result = {
       pageId,
       passed: type.isUndefined(failure),
@@ -749,16 +794,14 @@ async function runJourney({
     }
     // openPage already waited for the page's async lifecycle; an unsettled page
     // still runs its steps and reports `ready: false` alongside the result.
-    if (!opened.ready) {
+    if (!main.ready) {
       return { ...result, ready: false, note: unsettledPageNote({ timeout }) };
     }
     return result;
   } catch (error) {
     return { error: `Failed to run journey at "${url}": ${error.message}` };
   } finally {
-    if (context) {
-      await context.close();
-    }
+    await actors.closeAll();
   }
 }
 

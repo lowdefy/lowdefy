@@ -28,6 +28,7 @@
     "prettier": "prettier --config .prettierrc --write **/*.js",
     "test": "pnpm -r --filter='!@lowdefy/plugin-aws' --filter='!@lowdefy/connection-mongodb' test",
     "test:mongodb": "pnpm --filter=@lowdefy/connection-mongodb test && pnpm --filter=@lowdefy/api test:mongodb",
+    "test:journeys:auth": "node scripts/test-journeys-auth.mjs",
     "test:build:u": "UPDATE_SNAPSHOTS=true pnpm --filter=@lowdefy/build test",
     "e2e": "pnpm -r --workspace-concurrency=1 e2e",
     "update-packages": "pnpm up -i -r --latest",
@@ -63,6 +64,8 @@
     "eslint-plugin-prettier": "5.0.1",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "4.6.0",
+    "mongodb": "7.2.0",
+    "mongodb-memory-server": "9.2.0",
     "node-gyp": "13.0.0",
     "prettier": "3.1.0",
     "turbo": "2.9.14"

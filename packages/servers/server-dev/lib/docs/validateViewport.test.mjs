@@ -20,13 +20,34 @@ test('validateViewport accepts no options and every valid option', () => {
   expect(validateViewport({})).toBeUndefined();
   expect(validateViewport({ width: 390, height: 844, colorScheme: 'dark' })).toBeUndefined();
   expect(validateViewport({ colorScheme: 'light' })).toBeUndefined();
+  expect(validateViewport({ width: 4096, height: 4096 })).toBeUndefined();
 });
 
 test.each([
-  [{ width: 0 }, 'Viewport width must be a positive integer (CSS pixels). Received 0.'],
-  [{ width: 390.5 }, 'Viewport width must be a positive integer (CSS pixels). Received 390.5.'],
-  [{ height: -1 }, 'Viewport height must be a positive integer (CSS pixels). Received -1.'],
-  [{ height: '800' }, 'Viewport height must be a positive integer (CSS pixels). Received "800".'],
+  [
+    { width: 0 },
+    'Viewport width must be a positive integer of at most 4096 (CSS pixels). Received 0.',
+  ],
+  [
+    { width: 390.5 },
+    'Viewport width must be a positive integer of at most 4096 (CSS pixels). Received 390.5.',
+  ],
+  [
+    { height: -1 },
+    'Viewport height must be a positive integer of at most 4096 (CSS pixels). Received -1.',
+  ],
+  [
+    { height: '800' },
+    'Viewport height must be a positive integer of at most 4096 (CSS pixels). Received "800".',
+  ],
+  [
+    { width: 40000 },
+    'Viewport width must be a positive integer of at most 4096 (CSS pixels). Received 40000.',
+  ],
+  [
+    { height: 4097 },
+    'Viewport height must be a positive integer of at most 4096 (CSS pixels). Received 4097.',
+  ],
   [{ colorScheme: 'dim' }, 'Color scheme must be "light" or "dark". Received "dim".'],
 ])('validateViewport rejects %j', (options, message) => {
   expect(validateViewport(options)).toEqual(message);

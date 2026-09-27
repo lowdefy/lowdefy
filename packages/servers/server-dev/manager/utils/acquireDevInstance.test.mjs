@@ -101,3 +101,15 @@ test('acquireDevInstance release leaves a record taken over by a newer manager',
   instance.release();
   expect(fs.existsSync(instancePath())).toBe(true);
 });
+
+test('acquireDevInstance takes over a record left on a pid another process now has', () => {
+  // pid 1 is alive, but it is not the manager that wrote this record.
+  fs.mkdirSync(path.dirname(instancePath()), { recursive: true });
+  fs.writeFileSync(
+    instancePath(),
+    JSON.stringify({ pid: 1, processStartTime: 'Thu Jan  1 00:00:00 1970', configDirectory })
+  );
+  const instance = acquireDevInstance({ configDirectory, owner: 'terminal', version: '6.0.0' });
+  expect(instance.acquired).toBe(true);
+  expect(readRecord().processStartTime).toEqual(expect.any(String));
+});

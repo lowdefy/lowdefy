@@ -58,8 +58,13 @@ auth:
     signIn: /login
     signUp: /signup
     verifyEmail: /verify-email
+    # With the origin pinned (BETTER_AUTH_URL), the invitation email links
+    # here with the invitation id; unpinned, it carries no link.
+    acceptInvitation: /accept-invitation
 
-# The transport auth.email sends through - Mailpit for the walkthrough.
+# The transport auth.email sends through - Mailpit for the walkthrough, or
+# the dev server's mail sink for the journeys (pnpm test:journeys:auth sets
+# SMTP_PORT to it).
 connections:
   - id: auth_email
     type: SMTP
@@ -67,8 +72,24 @@ connections:
       from: auth-reference-tenant@localhost
       host:
         _secret: SMTP_HOST
-      port: 1025
+      port:
+        _number.parseInt:
+          on:
+            _if_none:
+              - _secret: SMTP_PORT
+              - '1025'
       secure: false
+
+  # App data behind the tenant wall: under policy tenant a MongoDB
+  # connection is scoped to the caller's active organization on every read
+  # and write, with nothing declared here. The notes page shows it.
+  - id: notes
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: TENANT_DATABASE_URI
+      collection: notes
+      write: true
 
 # Phase-8 error demos: under the tenant policy there is no single implied
 # organization, so _organization fails at evaluation and an org-scoped step
@@ -87,3 +108,4 @@ pages:
   - _ref: pages/dashboard.yaml
   - _ref: pages/organizations.yaml
   - _ref: pages/members.yaml
+  - _ref: pages/notes.yaml

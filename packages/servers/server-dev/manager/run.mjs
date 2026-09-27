@@ -18,6 +18,7 @@
 import opener from 'opener';
 import getContext from './getContext.mjs';
 import acquireDevInstance from './utils/acquireDevInstance.mjs';
+import startMailSink from './processes/startMailSink.mjs';
 import startProxy from './processes/startProxy.mjs';
 import startServer from './processes/startServer.mjs';
 import formatNoticeBox from './utils/formatNoticeBox.mjs';
@@ -141,6 +142,7 @@ try {
   // agents, the reload SSE stream, HMR websockets) reconnect instead of dying
   // on ECONNREFUSED.
   await startProxy(context);
+  context.mailSink = await startMailSink(context);
 
   startServer(context);
   if (await waitForServer({ port: context.internalPort, basePath: context.basePath })) {

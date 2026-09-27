@@ -28,6 +28,9 @@ jest.unstable_mockModule('./getBrowser.js', () => ({
   buildPageUrl: ({ origin, pageId }) => `${origin}/${pageId}`,
 }));
 
+const mockOpenJourneyEmail = jest.fn();
+jest.unstable_mockModule('./openJourneyEmail.js', () => ({ default: mockOpenJourneyEmail }));
+
 const { default: runJourney } = await import('./runJourney.js');
 
 // Node ships a read-only navigator; the page's platform decides Mod, so it is
@@ -116,6 +119,7 @@ function createPage({ window = createLowdefyWindow(), url = 'http://localhost:32
     documentTitle: '',
     title: jest.fn(async () => page.documentTitle),
     goBack: jest.fn(async () => null),
+    goto: jest.fn(async () => null),
     keyboard: { press: jest.fn(async (key) => page.presses.push(key)) },
     screenshot: jest.fn(async () => {
       page.screenshotCount += 1;
@@ -163,7 +167,7 @@ test('runJourney returns an error naming an unknown step key before opening a br
     steps: [{ click: 'ok' }, { tap: 'ok' }],
   });
   expect(result.error).toEqual(
-    'Step 1: Unknown journey step "tap". Steps are: click, fill, select, press, back, wait, screenshot, expect.'
+    'Step 1: Unknown journey step "tap". Steps are: click, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
   );
   expect(mockGetBrowser).not.toHaveBeenCalled();
   expect(mockOpenPage).not.toHaveBeenCalled();
@@ -195,6 +199,7 @@ test('runJourney passes user, urlQuery and viewport through to openPage', async 
     urlQuery: { id: '1' },
     width: 800,
     height: 600,
+    clientAddress: expect.stringMatching(/^203\.0\.113\.\d+$/),
     timeout: 15000,
   });
 });
@@ -660,6 +665,20 @@ test('runJourney reports a missing expect.state value as actual null', async () 
   });
   expect(result.failure.actual).toBeNull();
   expect(Object.keys(result.failure)).toContain('actual');
+});
+
+test('runJourney matches a missing state path with equals null, as its failure report shows it', async () => {
+  const page = createPage({ window: createLowdefyWindow({ state: { rows: [{ id: 1 }] } }) });
+  openWith(page);
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [
+      { expect: { state: { path: 'rows.1', equals: null } } },
+      { expect: { state: { path: 'rows.0', equals: null } } },
+    ],
+  });
+  expect(result.failure).toMatchObject({ index: 1, expected: null, actual: { id: 1 } });
 });
 
 test('runJourney fills a numeric value as a string', async () => {
@@ -1176,4 +1195,148 @@ test('runJourney returns an error and closes the context when the page fails to 
   expect(result.error).toEqual(
     'Failed to run journey at "http://localhost:3227/form": net::ERR_CONNECTION_REFUSED'
   );
+});
+
+test('runJourney opens each actor the first time an as step names it and returns to earlier actors', async () => {
+  const mainPage = createPage();
+  const inviteePage = createPage();
+  const mainContext = { close: jest.fn(async () => {}) };
+  const inviteeContext = { close: jest.fn(async () => {}) };
+  mockOpenPage
+    .mockResolvedValueOnce({ context: mainContext, page: mainPage, ready: true })
+    .mockResolvedValueOnce({ context: inviteeContext, page: inviteePage, ready: true });
+
+  const result = await runJourney({
+    origin,
+    pageId: 'signup',
+    user: 'none',
+    steps: [
+      { click: 'invite' },
+      { as: 'invitee' },
+      { click: 'accept' },
+      { as: 'main' },
+      { click: 'members' },
+      { as: 'invitee' },
+      { click: 'dashboard' },
+    ],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(mainPage.clicks).toEqual(['#bl-invite', '#bl-members']);
+  expect(inviteePage.clicks).toEqual(['#bl-accept', '#bl-dashboard']);
+  expect(mockOpenPage).toHaveBeenCalledTimes(2);
+  const [mainOpen, inviteeOpen] = mockOpenPage.mock.calls.map(([args]) => args);
+  expect(inviteeOpen).toEqual({ ...mainOpen, clientAddress: inviteeOpen.clientAddress });
+  expect(inviteeOpen).toMatchObject({ pageId: 'signup', user: 'none' });
+  // Two people, two clients: rate limits count each actor's attempts apart.
+  expect(inviteeOpen.clientAddress).not.toEqual(mainOpen.clientAddress);
+  expect(mainContext.close).toHaveBeenCalledTimes(1);
+  expect(inviteeContext.close).toHaveBeenCalledTimes(1);
+});
+
+test('runJourney fails an as step whose actor cannot open and still closes every actor', async () => {
+  const mainContext = { close: jest.fn(async () => {}) };
+  mockOpenPage
+    .mockResolvedValueOnce({ context: mainContext, page: createPage(), ready: true })
+    .mockRejectedValueOnce(new Error('net::ERR_CONNECTION_REFUSED'));
+
+  const result = await runJourney({
+    origin,
+    pageId: 'login',
+    steps: [{ as: 'member' }, { click: 'logout' }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 0,
+    step: { as: 'member' },
+    actual: 'net::ERR_CONNECTION_REFUSED',
+  });
+  expect(result.steps.map((step) => step.status)).toEqual(['failed', 'skipped']);
+  expect(mainContext.close).toHaveBeenCalledTimes(1);
+});
+
+test('runJourney goto loads the page and settles on the page the app shows', async () => {
+  const window = createLowdefyWindow({ pageId: 'login' });
+  const page = createPage({ window });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'login',
+    steps: [{ goto: 'dashboard' }, { goto: { pageId: 'invoice', urlQuery: { id: 'i1' } } }],
+  });
+
+  expect(result.passed).toBe(true);
+  expect(page.goto.mock.calls).toEqual([
+    ['http://localhost:3227/dashboard', { waitUntil: 'load', timeout: 15000 }],
+    ['http://localhost:3227/invoice', { waitUntil: 'load', timeout: 15000 }],
+  ]);
+  // null: the runner settles the page the app shows, which after a redirect
+  // is the sign-in page rather than the one asked for.
+  expect(page.waitForFunction.mock.calls.map((call) => call[1])).toEqual([null, null]);
+});
+
+test('runJourney reports a goto that fails to load', async () => {
+  const page = createPage();
+  openWith(page);
+  page.goto.mockRejectedValue(new Error('page.goto: net::ERR_ABORTED'));
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ goto: 'report' }] });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    expected: 'page "report" to load',
+    actual: 'page.goto: net::ERR_ABORTED',
+    message: 'Could not open page "report": page.goto: net::ERR_ABORTED',
+  });
+});
+
+test('runJourney refuses an email step before opening a browser when no mail sink listens, even with the port set', async () => {
+  // A port added to .env after start: the child sees it, but no sink started.
+  process.env.LOWDEFY_DEV_SMTP_PORT = '2525';
+  try {
+    const result = await runJourney({
+      origin,
+      pageId: 'signup',
+      user: 'none',
+      steps: [{ email: { to: 'ada@example.test' } }],
+    });
+
+    expect(result.error).toMatch(
+      /captures no mail. Start \(or restart\) it with LOWDEFY_DEV_SMTP_PORT/
+    );
+    expect(mockGetBrowser).not.toHaveBeenCalled();
+  } finally {
+    delete process.env.LOWDEFY_DEV_SMTP_PORT;
+  }
+});
+
+test('runJourney hands an email step the current tab, the journey start and the config directory', async () => {
+  process.env.LOWDEFY_SERVER_DEV_MAIL_SINK = 'true';
+  process.env.LOWDEFY_DIRECTORY_CONFIG = '/apps/tenant';
+  const page = createPage();
+  openWith(page);
+  const before = Date.now();
+  try {
+    const result = await runJourney({
+      origin,
+      pageId: 'signup',
+      user: 'none',
+      steps: [{ email: { to: 'ada@example.test', subject: 'Verify' } }],
+    });
+
+    expect(result.failure).toBeUndefined();
+    expect(mockOpenJourneyEmail).toHaveBeenCalledWith({
+      page,
+      params: { to: 'ada@example.test', subject: 'Verify' },
+      since: expect.any(Number),
+      configDirectory: '/apps/tenant',
+      timeout: 5000,
+    });
+    expect(mockOpenJourneyEmail.mock.calls[0][0].since).toBeGreaterThanOrEqual(before);
+  } finally {
+    delete process.env.LOWDEFY_SERVER_DEV_MAIL_SINK;
+    delete process.env.LOWDEFY_DIRECTORY_CONFIG;
+  }
 });

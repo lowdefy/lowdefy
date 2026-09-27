@@ -1,0 +1,92 @@
+# Tenant isolation: the notes connection declares nothing about tenancy and
+# these requests author no organization filter - the tenant wall scopes every
+# read to the caller's active organization and stamps every write with it.
+# Each organization sees only its own notes, and switching organizations
+# switches the list.
+id: notes
+type: Box
+properties:
+  style:
+    maxWidth: 640
+    margin: 60px auto
+requests:
+  - id: get_notes
+    type: MongoDBFind
+    connectionId: notes
+    properties:
+      query: {}
+      options:
+        sort:
+          _id: 1
+  - id: add_note
+    type: MongoDBInsertOne
+    connectionId: notes
+    payload:
+      text:
+        _state: note_text
+    properties:
+      doc:
+        text:
+          _payload: text
+events:
+  onInit:
+    - id: load_notes
+      type: Request
+      params: get_notes
+    - id: set_notes
+      type: SetState
+      params:
+        note_texts:
+          _array.map:
+            on:
+              _request: get_notes
+            callback:
+              _function:
+                __args: 0.text
+blocks:
+  - id: notes_title
+    type: Title
+    properties:
+      content: Organization notes (tenant-scoped)
+      level: 2
+  - id: notes_list
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          template: |
+            <ul>
+            {% for text in texts %}
+              <li>{{ text }}</li>
+            {% endfor %}
+            </ul>
+          on:
+            texts:
+              _state: note_texts
+  - id: note_text
+    type: TextInput
+    properties:
+      title: Note
+  - id: add_note_button
+    type: Button
+    properties:
+      title: Add note
+      block: true
+    events:
+      onClick:
+        - id: add
+          type: Request
+          params: add_note
+        - id: reload_notes
+          type: Request
+          params: get_notes
+        - id: set_notes_after_add
+          type: SetState
+          params:
+            note_texts:
+              _array.map:
+                on:
+                  _request: get_notes
+                callback:
+                  _function:
+                    __args: 0.text

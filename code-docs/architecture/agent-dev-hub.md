@@ -28,9 +28,9 @@ Discovery, for every reader: <app>/.lowdefy/instance.json
 
 ### `.lowdefy/instance.json`
 
-The dev manager (`server-dev/manager/utils/acquireDevInstance.mjs`) creates it exclusively (`wx`) at start-up. It holds `pid`, the real `configDirectory`, `owner` (`hub` or `terminal`), `state` (`starting`, then `ready` once the child answers `<basePath>/api/ping`), `port`, `internalPort`, `url`, `version` and `startedAt`. `url` is the app's base URL, `http://localhost:<port><basePath>`: the dev server mounts every route under `config.basePath` (the app, `/api/*`, `/lowdefy-docs/*`), so readers append paths to `url` and never rebuild it from `port`. `startServer` rewrites it on every child start, because a config change can edit `basePath`. It is written with mode `0600` and removed on exit.
+The dev manager (`server-dev/manager/utils/acquireDevInstance.mjs`) creates it exclusively (`wx`) at start-up. It holds `pid`, the real `configDirectory`, `owner` (`hub` or `terminal`), `state` (`starting`, then `ready` once the child answers `<basePath>/api/ping`), `port`, `internalPort`, `url`, `version`, `startedAt` and `processStartTime`. `url` is the app's base URL, `http://localhost:<port><basePath>`: the dev server mounts every route under `config.basePath` (the app, `/api/*`, `/lowdefy-docs/*`), so readers append paths to `url` and never rebuild it from `port`. `startServer` rewrites it on every child start, because a config change can edit `basePath`. It is written with mode `0600` and removed on exit.
 
-`readDevInstance` (`@lowdefy/node-utils`) returns a record only when its `configDirectory` is this directory **and** its pid is alive. The directory check makes a record copied into another git worktree harmless. The record is keyed on the config directory, not the dev directory, so every launch path (CLI, `--dev-directory`, `scripts/dev.mjs`) shares it.
+`readDevInstance` (`@lowdefy/node-utils`) returns a record only when its `configDirectory` is this directory **and** its pid is alive and still the process that wrote it: the manager records `processStartTime` (`getProcessStartTime`, `ps -o lstart=`), so a record left by a killed manager never passes for a live one on a reused pid. A start time `ps` cannot read leaves the pid to decide, and each pid's start time is read at most every 5 s. The directory check makes a record copied into another git worktree harmless. The record is keyed on the config directory, not the dev directory, so every launch path (CLI, `--dev-directory`, `scripts/dev.mjs`) shares it.
 
 It replaces the old `.lowdefy/dev/.manager.lock`. It is used in four places:
 
@@ -43,7 +43,7 @@ It replaces the old `.lowdefy/dev/.manager.lock`. It is used in four places:
 
 - An explicit port is strict: `--port`, `PORT` and `cli.port` all fail if the port is taken. The CLI passes `LOWDEFY_SERVER_DEV_STRICT_PORT` to the manager, which binds the port. Only the unrequested default of 3000 moves to the next free port.
 - The hub sets `LOWDEFY_DEV_PORT`, which outranks `--port`, because dev scripts often hard-code one. It also sets `LOWDEFY_SERVER_DEV_INTERNAL_PORT` for the Vite child, bound strictly.
-- Hub ports come from 4100–4999 in public/internal pairs. They stick to the app's path across restarts, in `registry.json`.
+- Hub ports come from 4100–4999 in public/internal pairs. They stick to the app's path across restarts, in `registry.json`, until the app is removed.
 
 ### `lowdefy mcp`
 
@@ -56,7 +56,7 @@ A low-level MCP `Server` over stdio (`createShim.js`). Nothing else may write to
 
 ### The hub
 
-`lowdefy hub serve` (`hubServe.js` + `createHub.js`) speaks newline-delimited JSON-RPC over a Unix socket at `~/.lowdefy/hub/hub.sock`, or a named pipe on Windows. The socket falls back to the temp directory when the path is too long. `connectHub` starts the hub detached when none answers.
+`lowdefy hub serve` (`hubServe.js` + `createHub.js`) speaks newline-delimited JSON-RPC over a Unix socket at `~/.lowdefy/hub/hub.sock`, or a named pipe on Windows. The socket falls back to the temp directory when the path is too long. It is bound under umask 077, so only its user can ever connect (`listenHubSocket.js`). `connectHub` refuses a socket another user owns, and starts the hub detached when none answers; a shim shares one connect between parallel tool calls. Hubs that start together against a stale socket take it over under a start lock (`withStartLock.js`, `hub/start.lock`), so exactly one keeps listening.
 
 - **Start.**
   - `resolveDevCommand` picks the app's dev script: `cli.devScript`, else the one `package.json` script containing `lowdefy dev`, else `npx --no-install lowdefy dev`. Several matching scripts is an error, because one is often a production-secrets variant.
@@ -64,15 +64,19 @@ A low-level MCP `Server` over stdio (`createShim.js`). Nothing else may write to
   - Output goes to `<app>/.lowdefy/dev.log`.
   - A hub-owned manager never opens a browser.
 - **Stop.** `stopProcessGroup` sends SIGTERM to the group, then SIGKILL after 5 s; on Windows it runs `taskkill /T /F`. The hub only stops what is in its registry. It never kills by port or name.
-- **Pid reuse.** `registry.json` survives crashes and reboots. Each entry records the leader's start time (`ps -o lstart=`). An entry whose pid is alive but whose start time differs is dropped, never signalled.
+- **Pid reuse.** `registry.json` survives crashes and reboots. Each entry records the leader's start time (`ps -o lstart=`, run with `LC_ALL=C` and `TZ=UTC` so hubs started from different sessions read the same string). An entry whose pid is alive but whose start time differs is dropped, never signalled.
 - **Adoption.** A new hub reads the registry and keeps the live entries. It can stop those servers, but has no exit events for them.
+- **One at a time.** `start` and `stop` decide and act one at a time (waiting for ready does not), so parallel starts of one app share one server and two apps never get the same port pair.
+- **Leader exit.** When the group leader exits, the hub stops the rest of its group: a manager killed outright otherwise leaves Vite running on the internal port.
 - **Reaping.** Every minute, the hub stops managed servers in two cases:
 
-  - Their directory is gone.
+  - Their app is gone: two reap passes in a row found no `lowdefy.yaml` (a running server recreates `.lowdefy/` after its worktree is deleted, so the directory itself is no signal, and a checkout or rebase can hide the file for one pass). The port pairs of removed apps are released too.
   - No shim is attached, 30 minutes have passed, and `GET /api/dev-inspect` reports no open tabs.
 
   The hub exits after 10 idle minutes with no servers and no clients.
 
+- **Timeouts.** The open-tabs check (`fetchOpenTabs`, 5 s), `lowdefy_dev_status`'s build summary (10 s) and the shim's MCP connect to a dev server (15 s) give up on a server that stops answering. A reap pass still running is shared, not started again. A forwarded call is retried once on a new connection only when it never reached the server (an HTTP refusal such as a stale session, or a network error); a timeout or a server error is not retried (`callWithReconnect`).
+- **Logs.** `readLogTail` loads only the last MiB of `dev.log` and returns at most 1000 lines.
 - **Protocol.** `hello` returns `{ protocol, version, pid }`. On a mismatch, the client errors and asks for the old hub to be stopped; servers survive that and the next hub adopts them.
 
 ### Cross-site guard

@@ -20,6 +20,7 @@ import createSecretScrubber from './createSecretScrubber.js';
 import findAvailablePort from './findAvailablePort.js';
 import getDevInstancePath from './getDevInstancePath.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
+import getProcessStartTime from './getProcessStartTime.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPidAlive from './isPidAlive.js';
@@ -38,6 +39,7 @@ export {
   getDevInstancePath,
   getFileExtension,
   getFileSubExtension,
+  getProcessStartTime,
   getSecretsFromEnv,
   installIfPackageJsonChanged,
   isPidAlive,

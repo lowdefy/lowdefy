@@ -18,6 +18,10 @@ import net from 'net';
 
 import allocatePorts from './allocatePorts.js';
 
+// Clear of the hub's real 4100-4999, which hubs in other worktrees use.
+const first = 20000 + 2 * Math.floor(Math.random() * 15000);
+const range = { first, last: first + 20 };
+
 function listen(port) {
   return new Promise((resolve) => {
     const server = net.createServer();
@@ -26,22 +30,19 @@ function listen(port) {
 }
 
 test('allocatePorts keeps the previous pair when both ports are free', async () => {
-  expect(
-    await allocatePorts({ previous: { port: 4400, internalPort: 4401 }, reserved: [] })
-  ).toEqual({
-    port: 4400,
-    internalPort: 4401,
-  });
+  const previous = { port: first + 4, internalPort: first + 5 };
+  expect(await allocatePorts({ previous, reserved: [], range })).toEqual(previous);
 });
 
 test('allocatePorts moves when the previous pair is taken', async () => {
-  const server = await listen(4402);
+  const server = await listen(first + 2);
   try {
     const pair = await allocatePorts({
-      previous: { port: 4402, internalPort: 4403 },
+      previous: { port: first + 2, internalPort: first + 3 },
       reserved: [],
+      range,
     });
-    expect(pair.port).not.toEqual(4402);
+    expect(pair.port).not.toEqual(first + 2);
     expect(pair.internalPort).toEqual(pair.port + 1);
   } finally {
     server.close();
@@ -49,8 +50,17 @@ test('allocatePorts moves when the previous pair is taken', async () => {
 });
 
 test('allocatePorts never hands out a pair another app has reserved', async () => {
-  const first = await allocatePorts({ reserved: [] });
-  const second = await allocatePorts({ reserved: [first] });
-  expect(second.port).not.toEqual(first.port);
-  expect(second.port).toBeGreaterThanOrEqual(4100);
+  const firstPair = await allocatePorts({ reserved: [], range });
+  const second = await allocatePorts({ reserved: [firstPair], range });
+  expect(second.port).not.toEqual(firstPair.port);
+  expect(second.port).toBeGreaterThanOrEqual(range.first);
+});
+
+test('allocatePorts fails with the way out when the range is used up', async () => {
+  await expect(
+    allocatePorts({
+      reserved: [{ port: first, internalPort: first + 1 }],
+      range: { first, last: first + 2 },
+    })
+  ).rejects.toThrow('lowdefy hub stop --all');
 });
