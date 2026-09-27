@@ -19,6 +19,7 @@ import { Checkbox, Col, ConfigProvider, Row, Space, theme } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import getSelectedIndex from '../../getSelectedIndex.js';
 import useSelectorOptions from '../../useSelectorOptions.js';
@@ -99,7 +100,7 @@ const CheckboxSelector = ({
     <Checkbox.Group
       id={`${blockId}_input`}
       className={classNames.element}
-      disabled={properties.disabled || loading}
+      disabled={getDisabled({ loading, properties })}
       // Checkbox.Group is inline-flex and shrink-wraps, so the Row inside it can
       // only fill a group that has been given a width.
       style={grid ? { width: '100%', ...styles.element } : styles.element}

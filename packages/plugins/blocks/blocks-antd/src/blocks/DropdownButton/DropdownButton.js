@@ -19,6 +19,8 @@ import { Button, ConfigProvider, Dropdown, Space } from 'antd';
 import { get, type } from '@lowdefy/helpers';
 
 import { cn, withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
+import useDisabled from '../../useDisabled.js';
 import useItemShortcuts from '../useItemShortcuts.js';
 import getDropdownMenuIcons from '../getDropdownMenuIcons.js';
 
@@ -114,6 +116,10 @@ function DropdownButtonBlock({
 
   const onClickActionName = get(rename, 'events.onClick', { default: 'onClick' });
   const onClickShortcut = events[onClickActionName]?.shortcut;
+  const actionLoading = get(events, `${onClickActionName}.loading`);
+  // antd Dropdown doesn't read ConfigProvider componentDisabled, so a hover trigger would still
+  // open the menu of a button disabled by context.
+  const dropdownDisabled = useDisabled({ properties });
 
   const dropdownProps = {
     menu: {
@@ -124,7 +130,7 @@ function DropdownButtonBlock({
     trigger: [properties.trigger ?? 'click'],
     placement: properties.placement ?? 'bottomRight',
     arrow: properties.arrow,
-    disabled: properties.disabled,
+    disabled: dropdownDisabled,
     classNames: { root: classNames.menu, item: classNames.item },
     styles: { root: styles.menu, item: styles.item },
     onOpenChange: (open) =>
@@ -165,8 +171,8 @@ function DropdownButtonBlock({
             shape={properties.shape}
             ghost={properties.ghost}
             danger={properties.danger}
-            disabled={properties.disabled || get(events, `${onClickActionName}.loading`) || loading}
-            loading={get(events, `${onClickActionName}.loading`)}
+            disabled={getDisabled({ loading: actionLoading || loading, properties })}
+            loading={actionLoading}
             className={classNames.button}
             style={styles.button}
             icon={buttonIcon}

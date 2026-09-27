@@ -21,6 +21,7 @@ import { Select } from 'antd';
 
 import filterSelectorOption from '../../filterSelectorOption.js';
 import getContrastTextColor from '../../getContrastTextColor.js';
+import getDisabled from '../../getDisabled.js';
 import getOptionColorStyle from '../../getOptionColorStyle.js';
 import getSelectedIndex from '../../getSelectedIndex.js';
 import getSelectOptions from '../../getSelectOptions.js';
@@ -136,7 +137,7 @@ const MultipleSelector = ({
               classNames={{ content: classNames.selector, popup: { root: classNames.popup } }}
               style={{ width: '100%', ...styles.element }}
               styles={{ content: styles.selector, popup: { root: styles.popup } }}
-              disabled={properties.disabled || loading}
+              disabled={getDisabled({ loading, properties })}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               listHeight={properties.listHeight}
               loading={loading}

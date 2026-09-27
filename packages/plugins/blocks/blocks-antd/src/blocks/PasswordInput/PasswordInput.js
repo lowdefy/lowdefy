@@ -17,6 +17,7 @@
 import React from 'react';
 import { Input } from 'antd';
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import useRunAfterUpdate from '../../useRunAfterUpdate.js';
@@ -65,7 +66,7 @@ const PasswordInput = ({
               className={classNames.element}
               style={styles.element}
               autoFocus={properties.autoFocus}
-              disabled={properties.disabled || loading}
+              disabled={getDisabled({ loading, properties })}
               maxLength={properties.maxLength}
               onChange={(event) => {
                 methods.setValue(event.target.value);

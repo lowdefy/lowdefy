@@ -21,6 +21,7 @@ import { getLocaleDateFormat, type } from '@lowdefy/helpers';
 import { DatePicker } from 'antd';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import disabledDate from '../../disabledDate.js';
@@ -75,7 +76,7 @@ const DateSelector = ({
               classNames={{ popup: { root: classNames.popup } }}
               style={{ width: '100%', ...styles.element }}
               styles={{ popup: { root: styles.popup } }}
-              disabled={properties.disabled || loading}
+              disabled={getDisabled({ loading, properties })}
               format={
                 properties.format ?? getLocaleDateFormat(methods.getLocale?.()) ?? 'YYYY-MM-DD'
               }

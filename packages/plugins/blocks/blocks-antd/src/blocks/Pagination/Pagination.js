@@ -19,6 +19,7 @@ import { Pagination } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import withTheme from '../withTheme.js';
 
 const createChangeHandler =
@@ -121,7 +122,7 @@ const PaginationBlock = ({
       align={properties.align}
       className={classNames.element}
       classNames={{ item: classNames.item }}
-      disabled={properties.disabled || loading}
+      disabled={getDisabled({ loading, properties })}
       hideOnSinglePage={properties.hideOnSinglePage}
       onChange={createChangeHandler({ eventName: 'onChange', methods, setState })}
       onShowSizeChange={createChangeHandler({ eventName: 'onSizeChange', methods, setState })}

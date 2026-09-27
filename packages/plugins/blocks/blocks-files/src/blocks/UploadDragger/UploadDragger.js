@@ -15,7 +15,7 @@
 */
 
 import React, { useEffect } from 'react';
-import { Upload as AntdUpload, theme as antdTheme } from 'antd';
+import { ConfigProvider, Upload as AntdUpload, theme as antdTheme } from 'antd';
 import { cn, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
@@ -49,7 +49,13 @@ const UploadDragger = ({
   const uploadRequest = emitFileContent
     ? getEmitFileContent({ methods, setFileList })
     : getUploadRequest({ methods, setFileList });
-  const onPaste = getOnPaste({ uploadRequest, properties });
+  // The Dragger follows ConfigProvider componentDisabled itself; pasting has to follow it too.
+  const { componentDisabled } = ConfigProvider.useConfig();
+  const onPaste = getOnPaste({
+    disabled: properties.disabled ?? componentDisabled,
+    properties,
+    uploadRequest,
+  });
   useEffect(() => {
     if (!emitFileContent) {
       methods.registerEvent({

@@ -19,6 +19,7 @@ import { ConfigProvider, Radio } from 'antd';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import getSelectedIndex from '../../getSelectedIndex.js';
 import useSelectorOptions from '../../useSelectorOptions.js';
@@ -47,6 +48,7 @@ const ButtonSelector = ({
   const selectedIndex = type.isNone(value)
     ? undefined
     : getSelectedIndex(value, uniqueValueOptions, { properties });
+  const disabled = getDisabled({ loading, properties });
   const contrastColor = getContrastTextColor(properties.color);
   const themeConfig = { token: { colorPrimary: properties.color } };
   if (contrastColor) {
@@ -57,7 +59,7 @@ const ButtonSelector = ({
       id={`${blockId}_input`}
       block={properties.block}
       className={classNames.element}
-      disabled={properties.disabled || loading}
+      disabled={disabled}
       orientation={properties.direction}
       size={properties.size}
       buttonStyle={isOutline ? 'outline' : 'solid'}
@@ -94,7 +96,7 @@ const ButtonSelector = ({
             id={`${blockId}_${i}`}
             key={i}
             value={`${i}`}
-            disabled={(isPrimitive ? undefined : opt.disabled) || properties.disabled || loading}
+            disabled={(isPrimitive ? undefined : opt.disabled) || disabled}
             className={classNames.options}
             style={{ ...styles.options, ...(isPrimitive ? {} : opt.style), ...selectedStyle }}
           >

@@ -36,7 +36,8 @@ export default {
       componentDisabled: {
         type: 'boolean',
         default: false,
-        description: 'Set disabled state for all child components.',
+        description:
+          'Disable every input and button inside the ConfigProvider. A block that sets its own `disabled` property keeps that value, so `disabled: false` re-enables it.',
       },
       componentSize: {
         type: 'string',

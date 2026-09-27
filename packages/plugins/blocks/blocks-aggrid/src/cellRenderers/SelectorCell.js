@@ -144,7 +144,7 @@ function SelectorCell(params) {
           maxTagCount={cellConfig.maxTagCount}
           autoClearSearchValue={cellConfig.autoClearSearchValue}
           placeholder={cellConfig.placeholder}
-          disabled={cellConfig.disabled === true}
+          disabled={cellConfig.disabled}
           labelRender={multiple ? undefined : labelRender}
           tagRender={multiple && hasColouredOptions ? tagRender : undefined}
           // Render the dropdown to the body so it is not clipped by the ag-grid cell.

@@ -669,3 +669,40 @@ blocks:
       rowData:
         - name: Alice
         - name: Bob
+
+  # ============================================
+  # CONFIG PROVIDER componentDisabled reaches the antd cells
+  # ============================================
+
+  - id: aggridlowdefy_component_disabled
+    type: ConfigProvider
+    properties:
+      componentDisabled: true
+    blocks:
+      - id: aggridlowdefy_component_disabled_grid
+        type: AgGridLowdefy
+        properties:
+          columnDefs:
+            - headerName: Name
+              field: name
+              cell:
+                type: textInput
+                eventName: onNameInput
+            - headerName: Active
+              field: active
+              cell:
+                type: switch
+                eventName: onActiveToggle
+            - headerName: Actions
+              field: name
+              cell:
+                type: buttons
+                buttons:
+                  - eventName: onEditClick
+                    title: Edit
+                  - eventName: onOpenClick
+                    title: Open
+                    disabled: false
+          rowData:
+            - name: Alice
+              active: false

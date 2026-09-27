@@ -19,6 +19,7 @@ import { TreeSelect } from 'antd';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 import useSelectorOptions from '../../useSelectorOptions.js';
@@ -93,7 +94,7 @@ const TreeSelector = ({
               classNames={{ content: classNames.selector, popup: { root: classNames.popup } }}
               style={{ width: '100%', ...styles.element }}
               styles={{ content: styles.selector, popup: { root: styles.popup } }}
-              disabled={properties.disabled || loading}
+              disabled={getDisabled({ loading, properties })}
               placeholder={
                 properties.placeholder ?? methods.translate('blocks.treeSelector.placeholder')
               }

@@ -15,6 +15,15 @@
 id: config_provider
 type: Box
 
+events:
+  onInit:
+    - id: set_defaults
+      type: SetState
+      params:
+        cp_disabled_list:
+          - name: Item A
+          - name: Item B
+
 blocks:
   - id: cp_theme
     type: ConfigProvider
@@ -142,3 +151,103 @@ blocks:
             - Node 18
             - Node 19
             - Node 20
+
+  - id: cp_disabled
+    type: ConfigProvider
+    properties:
+      componentDisabled: true
+    blocks:
+      - id: cp_disabled_text_input
+        type: TextInput
+        properties:
+          title: Disabled by context
+      - id: cp_disabled_button
+        type: Button
+        properties:
+          title: Disabled by context
+      - id: cp_disabled_selector
+        type: Selector
+        properties:
+          title: Disabled by context
+          options:
+            - A
+            - B
+      - id: cp_disabled_date_selector
+        type: DateSelector
+        properties:
+          title: Disabled by context
+      - id: cp_disabled_switch
+        type: Switch
+        properties:
+          title: Disabled by context
+      - id: cp_disabled_tag_selector
+        type: TagSelector
+        properties:
+          title: Disabled by context
+          options:
+            - X
+            - Y
+      - id: cp_disabled_segmented_selector
+        type: SegmentedSelector
+        properties:
+          title: Disabled by context
+          options:
+            - X
+            - Y
+      - id: cp_disabled_button_selector
+        type: ButtonSelector
+        properties:
+          title: Disabled by context
+          options:
+            - X
+            - Y
+      - id: cp_disabled_dropdown_button
+        type: DropdownButton
+        properties:
+          title: Disabled by context
+          trigger: hover
+          items:
+            - title: First item
+              eventName: onFirst
+      - id: cp_disabled_list
+        type: ControlledList
+        properties:
+          title: Disabled by context
+        slots:
+          content:
+            blocks:
+              - id: cp_disabled_list.$.name
+                type: TextInput
+      - id: cp_enabled_text_input
+        type: TextInput
+        properties:
+          title: Re-enabled with disabled false
+          disabled: false
+      - id: cp_enabled_button
+        type: Button
+        properties:
+          title: Re-enabled with disabled false
+          disabled: false
+      - id: cp_enabled_tag_selector
+        type: TagSelector
+        properties:
+          title: Re-enabled with disabled false
+          disabled: false
+          options:
+            - X
+            - Y
+
+  - id: cp_disabled_false
+    type: ConfigProvider
+    properties:
+      componentDisabled: false
+    blocks:
+      - id: cp_disabled_false_text_input
+        type: TextInput
+        properties:
+          title: componentDisabled false
+      - id: cp_disabled_false_disabled_input
+        type: TextInput
+        properties:
+          title: Own disabled wins
+          disabled: true

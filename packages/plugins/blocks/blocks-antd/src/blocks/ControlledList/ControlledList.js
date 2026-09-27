@@ -46,7 +46,7 @@ const ControlledListBlock = ({
 }) => {
   // withTheme puts the block theme on a ConfigProvider, merged there with the app's List tokens.
   const { direction, theme } = useContext(ConfigProvider.ConfigContext);
-  const { componentSize } = ConfigProvider.useConfig();
+  const { componentDisabled, componentSize } = ConfigProvider.useConfig();
   useEffect(() => {
     methods.registerMethod('moveItemDown', methods.moveItemDown);
     methods.registerMethod('moveItemUp', methods.moveItemUp);
@@ -163,7 +163,12 @@ const ControlledListBlock = ({
               {item.content && item.content({ width: '100%' })}
               {showRemoveButton && (
                 <span
-                  className={cn('lf-controlled-list-remove', classNames.removeIcon)}
+                  aria-disabled={componentDisabled || undefined}
+                  className={cn(
+                    'lf-controlled-list-remove',
+                    componentDisabled && 'lf-controlled-list-remove-disabled',
+                    classNames.removeIcon
+                  )}
                   style={styles.removeIcon}
                 >
                   <Icon
@@ -173,7 +178,7 @@ const ControlledListBlock = ({
                       name: 'remove',
                       ...properties.removeItemIcon,
                     }}
-                    onClick={() => removeItemAt(i)}
+                    onClick={componentDisabled ? undefined : () => removeItemAt(i)}
                   />
                 </span>
               )}

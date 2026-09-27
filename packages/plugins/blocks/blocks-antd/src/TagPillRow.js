@@ -20,6 +20,7 @@ import { cn } from '@lowdefy/block-utils';
 import Label from './blocks/Label/Label.js';
 import getTagColor from './getTagColor.js';
 import getContrastTextColor from './getContrastTextColor.js';
+import useDisabled from './useDisabled.js';
 
 import './tagSelectorStyle.css';
 
@@ -47,6 +48,7 @@ function TagPillRow({
   validation,
 }) {
   const colored = properties.colored !== false;
+  const disabled = useDisabled({ loading, properties });
   return (
     <Label
       blockId={blockId}
@@ -86,7 +88,7 @@ function TagPillRow({
                 <button
                   key={`${opt.value}`}
                   type="button"
-                  disabled={opt.disabled || properties.disabled || loading}
+                  disabled={opt.disabled || disabled}
                   aria-pressed={selected}
                   className={cn(
                     'lf-tag-selector-tag',

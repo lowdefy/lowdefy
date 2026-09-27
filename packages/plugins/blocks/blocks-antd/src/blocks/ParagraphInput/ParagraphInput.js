@@ -19,6 +19,7 @@ import { Typography } from 'antd';
 import { type } from '@lowdefy/helpers';
 
 import { withBlockDefaults } from '@lowdefy/block-utils';
+import getDisabled from '../../getDisabled.js';
 import withTheme from '../withTheme.js';
 
 const Paragraph = Typography.Paragraph;
@@ -98,7 +99,7 @@ const ParagraphInput = ({
           : properties.copyable
       }
       delete={properties.delete}
-      disabled={properties.disabled || loading}
+      disabled={getDisabled({ loading, properties })}
       ellipsis={
         type.isObject(properties.ellipsis)
           ? {

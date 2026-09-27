@@ -18,6 +18,7 @@ import React from 'react';
 import { Checkbox, ConfigProvider, Space } from 'antd';
 import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
+import getDisabled from '../../getDisabled.js';
 import Label from '../Label/Label.js';
 import withTheme from '../withTheme.js';
 
@@ -40,7 +41,7 @@ const CheckboxSwitch = ({
       autoFocus={properties.autoFocus}
       checked={value}
       className={classNames.element}
-      disabled={properties.disabled || loading}
+      disabled={getDisabled({ loading, properties })}
       indeterminate={properties.indeterminate}
       style={{
         marginRight: properties.description ? '30px' : undefined,
