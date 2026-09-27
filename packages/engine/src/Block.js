@@ -594,28 +594,27 @@ class Block {
     this.hiddenValue = undefined;
   };
 
-  updateState = (toSet) => {
+  updateState = ({ toDelete, toSet }) => {
     if (!this.isVisible()) return;
 
     if (this.isList()) {
       this.restoreHiddenValue();
     }
+    toSet.add(this.blockId);
 
     if (this.isContainer() || this.isList()) {
       if (this.subSlots && this.subSlots.length > 0) {
-        this.loopSubSlots((subSlotsClass) => subSlotsClass.updateState());
-        return; // Don't add to set
-      } else {
-        this.context._internal.State.republish(
-          this.blockId,
-          type.enforceType(this.meta.valueType, null)
-        );
+        this.loopSubSlots((subSlotsClass) => subSlotsClass.collectState({ toDelete, toSet }));
+        return;
       }
+      this.context._internal.State.republish(
+        this.blockId,
+        type.enforceType(this.meta.valueType, null)
+      );
     }
     if (this.isInput()) {
       this.context._internal.State.republish(this.blockId, this.value);
     }
-    toSet.add(this.blockId);
   };
 
   isVisible = () => {

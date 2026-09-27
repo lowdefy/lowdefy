@@ -60,7 +60,6 @@ test('two slots in block', async () => {
 });
 
 test('parse values across slots with same block id and visible switching block type', async () => {
-  // TODO: FIX? when a input with a duplicate id goes invisible it remove the value from state, yet the duplicate block is still visible.
   const pageConfig = {
     id: 'root',
     type: 'Box',

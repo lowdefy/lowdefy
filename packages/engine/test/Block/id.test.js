@@ -147,6 +147,127 @@ test('two blocks with same id and state and different visibility', async () => {
   expect(context.state).toEqual({ textInput: 'abc', swtch: false });
 });
 
+test('a hidden duplicate input in another container keeps the visible input field in state', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [{ id: 'init', type: 'SetState', params: { name: 'Ann' } }],
+    },
+    blocks: [
+      {
+        id: 'shown',
+        type: 'Box',
+        blocks: [{ id: 'name', type: 'TextInput' }],
+      },
+      {
+        id: 'hidden',
+        type: 'Box',
+        visible: false,
+        blocks: [{ id: 'name', type: 'TextInput' }],
+      },
+    ],
+  };
+  const context = await testContext({ lowdefy, pageConfig });
+  expect(context.state).toEqual({ name: 'Ann' });
+
+  context._internal.RootSlots.map['name'].setValue('Bob');
+  expect(context.state).toEqual({ name: 'Bob' });
+});
+
+test('a hidden block in another container keeps a visible list row field in state', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { items: [{ name: 'one' }, { name: 'two' }], editing: false },
+        },
+      ],
+    },
+    blocks: [
+      {
+        id: 'items',
+        type: 'List',
+        blocks: [{ id: 'items.$.name', type: 'TextInput' }],
+      },
+      {
+        id: 'editor',
+        type: 'Box',
+        visible: { _state: 'editing' },
+        blocks: [{ id: 'items.0.name', type: 'TextInput' }],
+      },
+      { id: 'editing', type: 'Switch' },
+    ],
+  };
+  const context = await testContext({ lowdefy, pageConfig });
+  expect(context.state).toEqual({
+    items: [{ name: 'one' }, { name: 'two' }],
+    editing: false,
+  });
+
+  context._internal.RootSlots.map['items.1.name'].setValue('changed');
+  expect(context.state).toEqual({
+    items: [{ name: 'one' }, { name: 'changed' }],
+    editing: false,
+  });
+});
+
+test('a hidden duplicate list in another container keeps the visible list in state', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [{ id: 'init', type: 'SetState', params: { items: ['a', 'b'] } }],
+    },
+    blocks: [
+      {
+        id: 'shown',
+        type: 'Box',
+        blocks: [{ id: 'items', type: 'List', blocks: [{ id: 'items.$', type: 'Paragraph' }] }],
+      },
+      {
+        id: 'hidden',
+        type: 'Box',
+        visible: false,
+        blocks: [{ id: 'items', type: 'List', blocks: [{ id: 'items.$', type: 'Paragraph' }] }],
+      },
+    ],
+  };
+  const context = await testContext({ lowdefy, pageConfig });
+  expect(context.state).toEqual({ items: ['a', 'b'] });
+});
+
+test('a hidden container named like the parent of a visible field keeps that field', async () => {
+  const pageConfig = {
+    id: 'root',
+    type: 'Box',
+    events: {
+      onInit: [
+        {
+          id: 'init',
+          type: 'SetState',
+          params: { profile: { name: 'Ann', nickname: 'A' } },
+        },
+      ],
+    },
+    blocks: [
+      { id: 'profile.name', type: 'TextInput' },
+      {
+        id: 'profile',
+        type: 'Box',
+        visible: false,
+        blocks: [{ id: 'profile.nickname', type: 'TextInput' }],
+      },
+    ],
+  };
+  const context = await testContext({ lowdefy, pageConfig });
+  expect(context.state).toEqual({ profile: { name: 'Ann' } });
+});
+
 // TODO:
 // test('two blocks with same field visibility and state', async () => {
 //   const pageConfig = {
