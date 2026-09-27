@@ -118,7 +118,7 @@ While a Dynamic block's endpoint evaluates its `:return`, data read at runtime s
 - **Data cannot be a block or an action.** Without a [dynamic blocks policy](#dynamic-blocks-policies), every block and action in the returned content must be written in the `:return` config. Data may fill values inside those blocks (an id, a title, a type, a list of options), but a block or action that is itself data an operator returned, or a copy of it, fails resolution. To render stored block config, check it with a `ValidateDynamic` step under a policy.
 - **Data cannot become an operator by merging.** An object from data that `_object.assign` merges with other config must not be left with an operator key alone, for example next to a key whose value is a function or evaluates to undefined on the client.
 
-Only keys that name one of the app's operators count as operators. Data such as a search hit's `{ _score: 0.5 }` or `{ _source: { ... } }` stays data.
+Data may nest at most 200 levels deep; deeper data fails resolution with an error saying so. Only keys that name one of the app's operators count as operators. Data such as a search hit's `{ _score: 0.5 }` or `{ _source: { ... } }` stays data.
 
 Write client operators in the `:return` config itself. Only operators that pass their own already-checked params through — `_if`, `_switch`, `_if_none`, `_get`, `_args`, `_function`, `_log`, `_array` and `_object` (except `_object.fromEntries` and `_object.defineProperty`) — may return them, so mapping data rows into blocks with `_array.map` and `_function` works as shown above.
 
