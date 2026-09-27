@@ -22,14 +22,15 @@ declarative config, and several properties that silently did nothing now work.
   cssKey. The `afterClose` event it already fired is now documented.
 - Drawer: `size` (`default`, `large`, a number or a CSS length), `resizable` with `maxSize` and an
   `onResizeEnd` event with `{ size }`, html `title`, `title` cssKey, and `open` on the
-  `afterOpenChange` event.
+  `afterOpenChange` event. The `getContainer` property it already passed to antd is now documented:
+  `false` renders the drawer in place, a CSS selector mounts it in the matching element.
 - ConfirmModal: `okButton` and `cancelButton` document their button properties, including
   `iconPlacement: end`.
 
 **Message and Notification**
 
-- Notification: `showProgress`, `pauseOnHover`, `closable`, `role`, the `top` and `bottom`
-  placements, and `title`, `description`, `actions` and `progress` cssKeys.
+- Notification: `showProgress`, `pauseOnHover`, `closable`, `role`, the `placement` values `top`
+  and `bottom`, and `title`, `description`, `actions` and `progress` cssKeys.
 - Notification: the `button` now closes the notification when clicked, as documented.
 - Message: `pauseOnHover` and an `onClick` event.
 
@@ -38,6 +39,7 @@ declarative config, and several properties that silently did nothing now work.
 - `arrow` (`false` hides it, `{ pointAtCenter: true }` centres it), the `contextMenu` trigger, and
   `{ open }` on the `onOpenChange` event.
 - Popover: `destroyOnHidden`, html `title`, and the `width` and `minWidth` theme tokens.
+- Tooltip: `destroyOnHidden`, the antd 6 name for `destroyTooltipOnHide`, which still works.
 
 **Flex, Masonry, MasonryList, Splitter and ConfigProvider**
 
@@ -47,7 +49,8 @@ declarative config, and several properties that silently did nothing now work.
 - Splitter: `collapsible` (`motion`, custom `icon.start` and `icon.end`), `destroyOnHidden` (also per
   panel), `draggerIcon`, the `onDraggerDoubleClick` event with `{ index }`, and `panel`, `dragger`,
   `draggerIcon` and `collapseIcon` cssKeys. Panel `collapsible` objects document `start`, `end` and
-  `showCollapsibleIcon`.
+  `showCollapsibleIcon`. The default collapse arrows are now the `chevron-left`, `chevron-right`,
+  `chevron-up` and `chevron-down` icons, so they follow the app icon set.
 - ConfigProvider: `virtual`, `popupMatchSelectWidth`, `popupOverflow`, `wave` and the `medium`
   component size.
 
@@ -81,3 +84,8 @@ declarative config, and several properties that silently did nothing now work.
   status (`success`), Popover placement (`top`) and hover delays (seconds), Masonry `fresh`, and
   the Flex theme tokens (the gap preset tokens `paddingXS`, `padding` and `paddingLG`).
 - The MasonryList docs page linked to the antd List component instead of Masonry.
+- Message and Notification `theme`, Notification `top` and `bottom`, and Masonry and MasonryList
+  `sequential` never had an effect. They stay valid, and their descriptions now say so: set
+  Message and Notification tokens app-wide under `theme.antd.components` in `lowdefy.yaml`, and
+  move notifications with the `--notification-top` and `--notification-bottom` CSS variables on
+  `.ant-notification`.
