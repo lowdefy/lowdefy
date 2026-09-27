@@ -193,8 +193,8 @@ const ListSelector = ({
     [token.colorPrimary, styles.selected]
   );
 
-  // antd deprecates Card size "default"; leaving size unset renders the same card.
-  const cardSize = properties.size === 'small' ? 'small' : undefined;
+  // antd 6 renamed the `default` size to `medium` and warns on size="default".
+  const cardSize = properties.size === 'default' ? 'medium' : properties.size;
   const gap = properties.gap ?? 8;
   const useWindowScroll = type.isNone(properties.height);
   const overscan = properties.overscan ?? 400;

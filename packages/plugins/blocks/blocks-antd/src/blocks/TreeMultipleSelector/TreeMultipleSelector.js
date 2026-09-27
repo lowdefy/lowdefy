@@ -101,7 +101,8 @@ const TreeMultipleSelector = ({
                 methods.translate('blocks.treeMultipleSelector.placeholder')
               }
               status={validation.status}
-              size={properties.size}
+              // antd 6 names the default size `medium`; `default` is not an antd size.
+              size={properties.size === 'default' ? 'medium' : properties.size}
               autoFocus={properties.autoFocus}
               listHeight={properties.listHeight}
               loading={loading}

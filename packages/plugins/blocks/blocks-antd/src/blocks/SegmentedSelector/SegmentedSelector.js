@@ -81,7 +81,8 @@ const SegmentedSelector = ({
                     tooltip: opt.tooltip,
                   }
             )}
-            size={properties.size}
+            // antd 6 renamed the `middle` size to `medium`.
+            size={properties.size === 'middle' ? 'medium' : properties.size}
             block={properties.block}
             disabled={properties.disabled || loading}
             vertical={properties.vertical}

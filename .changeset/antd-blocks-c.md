@@ -57,7 +57,9 @@ and style keys are additive; existing properties keep their names and defaults.
 **Fixes**
 
 - RadioSelector and CheckboxSelector no longer trigger antd's deprecated `Space` `direction` prop.
-- ListSelector no longer passes the deprecated Card `size="default"`.
+- ListSelector no longer passes the deprecated Card `size="default"`. It and the Select-based
+  blocks now pass antd's `medium` for the default size, and SegmentedSelector maps `middle` to
+  `medium`.
 - Selector and MultipleSelector build antd `options` instead of the deprecated `Select.Option`
   children. The search props (`filterOption`, `onSearch`, `autoClearSearchValue`,
   `treeNodeFilterProp`) now go inside `showSearch`, where antd 6 expects them.

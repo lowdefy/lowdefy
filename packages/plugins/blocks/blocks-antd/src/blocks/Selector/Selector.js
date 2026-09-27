@@ -158,7 +158,8 @@ const Selector = ({
                   }
                 }
                 showSearch={showSearch}
-                size={properties.size}
+                // antd 6 names the default size `medium`; `default` is not an antd size.
+                size={properties.size === 'default' ? 'medium' : properties.size}
                 notFoundContent={
                   fetchState
                     ? properties.loadingPlaceholder || 'Loading'
