@@ -18,7 +18,7 @@ import { upgradeWebSocket } from '@hono/node-server';
 import {
   createChannelRegistry,
   createWebSocketConnection,
-  isSameOriginRequest,
+  isWebSocketOriginAllowed,
 } from '@lowdefy/api';
 
 // One registry per server process — channels and their running source
@@ -49,11 +49,11 @@ const upgrade = upgradeWebSocket((c) => {
   };
 });
 
-// Browsers let any page open a websocket to any host, with the user's cookies,
-// so an upgrade whose Origin is another site is refused before it opens. A
-// client that sends no Origin (a server, a script) connects as before.
+// Upgrades are accepted from the app's own pages and from clients that send no
+// Origin; isWebSocketOriginAllowed holds the rule and logs a refusal.
 function websocketHandler(c, next) {
-  if (!isSameOriginRequest({ getHeader: (name) => c.req.header(name), allowNoOrigin: true })) {
+  const context = c.get('lowdefyContext');
+  if (!isWebSocketOriginAllowed({ context, getHeader: (name) => c.req.header(name) })) {
     return c.json({ error: 'Forbidden' }, 403);
   }
   return upgrade(c, next);
