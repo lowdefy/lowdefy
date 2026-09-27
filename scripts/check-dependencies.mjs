@@ -21,7 +21,7 @@
   tests and builds pass, and the published package breaks for users (or here, once the
   lockfile shifts). Published files may only import dependencies, peerDependencies and
   optionalDependencies; tests, e2e helpers and unpublished scripts may also import
-  devDependencies. Runs first in `pnpm test`, in about a second.
+  devDependencies. Runs first in `pnpm test`, in one to three seconds.
 
   Usage: pnpm test:dependencies
 */

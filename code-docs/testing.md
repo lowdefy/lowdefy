@@ -45,7 +45,7 @@ package.
 
 ## Dependency check
 
-`pnpm test` starts with `pnpm test:dependencies` (about a second). It parses every source
+`pnpm test` starts with `pnpm test:dependencies` (one to three seconds). It parses every source
 file under `packages/` and fails when a file imports a package that its `package.json` does
 not declare. In the monorepo such an import still resolves through another package's
 install, so only the published package (or a later lockfile change) breaks.
