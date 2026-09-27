@@ -105,4 +105,4 @@ Websockets use Vercel's native WebSocket support for Node.js functions on Fluid 
 
 ### Self-Hosted
 
-The Node.js server handles websocket upgrades directly — nothing to configure. A single server process delivers publishes to all subscribers, so `Channel` behavior is complete on one instance. Behind a reverse proxy, ensure upgrade headers are forwarded (`proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection "upgrade";` for nginx).
+The Node.js server handles websocket upgrades directly — nothing to configure. A single server process delivers publishes to all subscribers, so `Channel` behavior is complete on one instance. Behind a reverse proxy, forward the upgrade headers and the original `Host` header (`proxy_set_header Upgrade $http_upgrade; proxy_set_header Connection "upgrade"; proxy_set_header Host $host;` for nginx). The server refuses a websocket upgrade from a page whose origin does not match the `Host` it receives.
