@@ -111,6 +111,6 @@ Vercel Fluid bills by execution duration, so a request that hangs (a stuck datab
 - **`config.requestTimeout`** (in `lowdefy.yaml`, default `30000` ms) — the server returns a timeout instead of letting a request run on. Set to `0` to disable. Agent streaming routes are exempt.
 - **`config.vercel.maxDuration`** (default `60`) — a hard platform cap; Vercel stops the function at this many seconds. See Function settings above.
 
-> The function runs on Vercel's Node.js runtime. Streaming agent responses (`/api/agent/*`) are exempt from `config.requestTimeout` and are bounded only by `maxDuration` — for heavy streaming or agent workloads, a long-lived Node host (Docker, Fly.io, Railway, Render) may suit better.
+> The function runs on Vercel's Node.js runtime. Streaming agent responses (`/api/agent/*`) are exempt from `config.requestTimeout` and are bounded only by `maxDuration` — for heavy streaming or agent workloads, a long-lived Node host (Docker, Fly.io, Railway, Render) may suit better. An agent run keeps running to the end when its client disconnects, so its work completes; a `GET` stream (such as an MCP client's notification stream) stops when its client goes, instead of holding the function until `maxDuration`.
 
 All other Vercel configuration like domain names, preview deploy branches, serverless regions and redirects can be configured as desired.
