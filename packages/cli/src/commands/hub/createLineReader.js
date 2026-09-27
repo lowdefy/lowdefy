@@ -14,17 +14,29 @@
   limitations under the License.
 */
 
-// The hub speaks newline-delimited JSON in both directions.
+import { type } from '@lowdefy/helpers';
+
+function parseLine(line) {
+  try {
+    return JSON.parse(line);
+  } catch {
+    return null;
+  }
+}
+
+// The hub speaks newline-delimited JSON objects in both directions. Anything
+// else is dropped: thrown from a socket data handler it would crash the hub,
+// which every agent session shares, over one bad client.
 function createLineReader({ onMessage }) {
   let buffer = '';
   return function onData(chunk) {
     buffer += chunk;
     let index = buffer.indexOf('\n');
     while (index >= 0) {
-      const line = buffer.slice(0, index);
+      const message = parseLine(buffer.slice(0, index));
       buffer = buffer.slice(index + 1);
-      if (line.trim() !== '') {
-        onMessage(JSON.parse(line));
+      if (type.isObject(message)) {
+        onMessage(message);
       }
       index = buffer.indexOf('\n');
     }
