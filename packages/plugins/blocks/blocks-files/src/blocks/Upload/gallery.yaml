@@ -135,14 +135,21 @@
 - title: Label Options
   blocks:
     - id: label_default
-      type: Upload
+      type: Label
       properties:
         title: Upload Attachment
-        uploadPolicyRequestId: upload_policy_request
+      blocks:
+        - id: label_default_upload
+          type: Upload
+          properties:
+            uploadPolicyRequestId: upload_policy_request
     - id: label_extra
-      type: Upload
+      type: Label
       properties:
         title: Upload Document
-        uploadPolicyRequestId: upload_policy_request
-        label:
-          extra: Accepted formats are PDF, DOCX, and PNG. Max size 10MB.
+        extra: Accepted formats are PDF, DOCX, and PNG. Max size 10MB.
+      blocks:
+        - id: label_extra_upload
+          type: Upload
+          properties:
+            uploadPolicyRequestId: upload_policy_request
