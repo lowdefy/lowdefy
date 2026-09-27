@@ -20,13 +20,20 @@ import CopyButton from './CopyButton.js';
 import NATIVE_INTERACTIVE from './nativeInteractive.js';
 import visibleText from './visibleText.js';
 
-const MAX_LABEL_VALUE = 40;
+// Zero-width and direction-override characters change what a label seems to say.
+const INVISIBLE_FORMAT_CHARACTERS = /\p{Cf}/gu;
 
-// A value that differs from the text is shown in the button's label, so HTML
-// cannot show one text and silently copy another.
+function showInvisible(character) {
+  const codePoint = character.codePointAt(0).toString(16).toUpperCase().padStart(4, '0');
+  return `[U+${codePoint}]`;
+}
+
+// A value that differs from the text is shown in the button's label, in full
+// and with its invisible characters spelled out, so HTML cannot show one text
+// and silently copy another.
 function buttonLabel({ shown, text, translate }) {
   if (text === shown) return translate('client.copy');
-  const value = text.length > MAX_LABEL_VALUE ? `${text.slice(0, MAX_LABEL_VALUE)}…` : text;
+  const value = text.replace(INVISIBLE_FORMAT_CHARACTERS, showInvisible);
   return translate('client.copyValue', { value });
 }
 

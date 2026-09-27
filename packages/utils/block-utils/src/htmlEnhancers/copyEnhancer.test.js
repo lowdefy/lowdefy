@@ -150,3 +150,11 @@ test('the copy button tooltip says Copied after a copy', async () => {
   expect(button.getAttribute('data-tooltip')).toBe('Copied');
   expect(button.getAttribute('aria-label')).toBe('Copy');
 });
+
+test.each([
+  ['a long value in full', 'x'.repeat(60), `Copy: ${'x'.repeat(60)}`],
+  ['invisible characters spelled out', 'ab‮cd​', 'Copy: ab[U+202E]cd[U+200B]'],
+])('a copy value that differs from the text shows %s in the label', (_, value, label) => {
+  const { container } = render(<HtmlComponent html={`<span data-copy="${value}">Ticket</span>`} />);
+  expect(container.querySelector('[data-lf-copy] button').getAttribute('aria-label')).toBe(label);
+});
