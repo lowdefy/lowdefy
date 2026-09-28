@@ -36,6 +36,11 @@ beforeEach(() => {
 test('getRootConfig', async () => {
   const getRootConfig = (await import('./getRootConfig.js')).default;
   mockReadConfigFile.mockImplementation((path) => {
+    if (path === 'events.json') {
+      return {
+        onInit: { try: [{ id: 'set', type: 'SetGlobal', params: { ready: true } }], catch: [] },
+      };
+    }
     if (path === 'global.json') {
       return {
         global: true,
@@ -65,6 +70,9 @@ test('getRootConfig', async () => {
   mockGetMenu.mockImplementation(() => menus);
   const res = await getRootConfig(context);
   expect(res).toEqual({
+    events: {
+      onInit: { try: [{ id: 'set', type: 'SetGlobal', params: { ready: true } }], catch: [] },
+    },
     home: {
       configured: false,
       pageId: 'page',

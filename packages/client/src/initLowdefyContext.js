@@ -75,6 +75,8 @@ function initLowdefyContext({
       router,
     };
     lowdefy.apiResponses = {};
+    // Rebuilt with the page contexts, so a dev config reload runs the app events again.
+    lowdefy.appContext = null;
     lowdefy.basePath = router.basePath;
     lowdefy.contexts = {};
     lowdefy.inputs = {};
