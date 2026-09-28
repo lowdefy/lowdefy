@@ -2,6 +2,7 @@
 '@lowdefy/engine': minor
 '@lowdefy/build': minor
 '@lowdefy/blocks-aggrid': minor
+'@lowdefy/codemods': minor
 '@lowdefy/docs': patch
 ---
 
@@ -24,4 +25,4 @@ events:
 
 Inside AgGrid blocks, clicks on a cell's buttons, links, menus, inputs, selectors, switches or selection checkbox no longer trigger `onRowClick` or `onCellClick`. They only fire the control's own event.
 
-This changes behaviour for apps that relied on a nested click running both events: add `bubble: true` to the inner event to keep it. Closes #1154.
+This changes behaviour for apps that relied on a nested click running both events: add `bubble: true` to the inner event to keep it. The `nested-event-bubbling` codemod in `lowdefy upgrade` adds `bubble: true` only where an outer event reads a value the inner event sets, moves AgGrid row-click state setup into the cell control events that relied on it, and lists the other nested events for review. Closes #1154.
