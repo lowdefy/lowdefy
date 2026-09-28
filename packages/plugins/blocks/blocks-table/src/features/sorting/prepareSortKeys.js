@@ -16,7 +16,7 @@
 
 import compareSortKeys from '@lowdefy/blocks-antd/table/compareSortKeys.js';
 
-import collectSortKeys from './collectSortKeys.js';
+import createSortKeyCollector from './createSortKeyCollector.js';
 import getCachedSortKeys from './getCachedSortKeys.js';
 import getSortKeys from './getSortKeys.js';
 import isNumericSortType from './isNumericSortType.js';
@@ -24,21 +24,40 @@ import rankSortKeys from './rankSortKeys.js';
 import setCachedSortKeys from './setCachedSortKeys.js';
 import sortInSlices from './sortInSlices.js';
 import toFloatSortKeys from './toFloatSortKeys.js';
+import yieldToMain from './yieldToMain.js';
 
-// Below this many distinct text keys the synchronous build is fast enough to run in the render.
+// Below this many rows (or distinct text keys) the synchronous build is fast enough to run at once.
 const SLICED_THRESHOLD = 5000;
+const CHUNK_ROWS = 5000;
+const BUDGET_MS = 12;
 
-// Builds a column's sort keys before its sort is applied, in time slices for large text columns
-// (the collator sort of 100k distinct strings is the one step that can exceed the D10 blocking
-// budget). Resolves once the keys are cached for `rows`; they equal buildSortKeys' keys.
+async function collectInSlices({ rows, accessor, getSortKey }) {
+  const collector = createSortKeyCollector({ count: rows.length, getSortKey });
+  // The header click paints (the table dims) before the first slice runs.
+  await yieldToMain();
+  let sliceStart = performance.now();
+  for (let start = 0; start < rows.length; start += CHUNK_ROWS) {
+    collector.collect({ rows, accessor, start, end: Math.min(rows.length, start + CHUNK_ROWS) });
+    if (performance.now() - sliceStart >= BUDGET_MS) {
+      await yieldToMain();
+      sliceStart = performance.now();
+    }
+  }
+  return collector.result();
+}
+
+// Builds a column's sort keys before its sort is applied, in time slices for large non-numeric
+// columns (reading 100k values and the collator sort of their distinct strings are the steps that
+// can exceed the D10 blocking budget). Resolves once the keys are cached for `rows`; they equal
+// buildSortKeys' keys.
 async function prepareSortKeys({ rows, column }) {
   if (getCachedSortKeys({ rows, columnId: column.id })) return;
   const { accessor, getSortKey, column: definition } = column.columnDef.meta;
-  if (isNumericSortType(definition.type)) {
+  if (isNumericSortType(definition.type) || rows.length < SLICED_THRESHOLD) {
     getSortKeys({ rows, column });
     return;
   }
-  const { rowKeys, distinct, numeric } = collectSortKeys({ rows, accessor, getSortKey });
+  const { rowKeys, distinct, numeric } = await collectInSlices({ rows, accessor, getSortKey });
   let keys;
   if (numeric) {
     keys = toFloatSortKeys(rowKeys);

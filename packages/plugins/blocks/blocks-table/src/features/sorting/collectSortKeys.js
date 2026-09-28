@@ -14,38 +14,13 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import createSortKeyCollector from './createSortKeyCollector.js';
 
-// Each row's sort key from the shared column core's key getter (null for an empty value), plus
-// the distinct non-null keys. The getter runs once per distinct primitive value, so
-// low-cardinality columns (statuses, dates, owners) cost one key per value, not per row.
-// `numeric` is true when every key is a number (numbers, dates, booleans, enums whose values all
-// have options): those keys order the rows as they are, without ranking.
+// Every row's sort key and the distinct keys, in one pass (see createSortKeyCollector).
 function collectSortKeys({ rows, accessor, getSortKey }) {
-  const count = rows.length;
-  const rowKeys = new Array(count);
-  const byValue = new Map();
-  const distinct = new Set();
-  let numeric = true;
-  for (let i = 0; i < count; i++) {
-    const value = accessor(rows[i].original);
-    let key;
-    if (type.isPrimitive(value)) {
-      key = byValue.get(value);
-      if (key === undefined) {
-        key = getSortKey(value);
-        byValue.set(value, key);
-      }
-    } else {
-      key = getSortKey(value);
-    }
-    rowKeys[i] = key;
-    if (key !== null) {
-      distinct.add(key);
-      if (numeric && !type.isNumber(key)) numeric = false;
-    }
-  }
-  return { rowKeys, distinct: Array.from(distinct), numeric };
+  const collector = createSortKeyCollector({ count: rows.length, getSortKey });
+  collector.collect({ rows, accessor, start: 0, end: rows.length });
+  return collector.result();
 }
 
 export default collectSortKeys;
