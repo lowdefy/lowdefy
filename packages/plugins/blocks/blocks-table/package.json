@@ -53,7 +53,8 @@
     "e2e": "playwright test --config e2e/playwright.config.js",
     "e2e:ui": "playwright test --config e2e/playwright.config.js --ui",
     "bench": "node bench/run.mjs",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "test": "node --test \"src/**/*.test.js\""
   },
   "dependencies": {
     "@lowdefy/block-utils": "6.0.0",

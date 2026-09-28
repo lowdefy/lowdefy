@@ -16,6 +16,7 @@
 
 import eventsFeature from './events/eventsFeature.js';
 import exportFeature from './export/exportFeature.js';
+import groupingFeature from './grouping/groupingFeature.js';
 import keyboardFeature from './keyboard/keyboardFeature.js';
 import orderingFeature from './ordering/orderingFeature.js';
 import pinningFeature from './pinning/pinningFeature.js';
@@ -37,6 +38,7 @@ const features = [
   visibilityFeature,
   selectionFeature,
   virtualizationFeature,
+  groupingFeature,
   keyboardFeature,
   eventsFeature,
   exportFeature,

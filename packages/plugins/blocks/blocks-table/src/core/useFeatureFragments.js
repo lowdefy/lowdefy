@@ -24,7 +24,11 @@ const EMPTY = [];
 // - `leadingColumns`: special columns rendered first in the start-pinned region (the selection
 //   checkbox; later a drag handle or expander),
 // - `regions.top` / `regions.bottom`: elements rendered above or below the grid inside the table
-//   root (toolbar, bulk bar, summary footer, pagination).
+//   root (toolbar, bulk bar, summary footer, pagination),
+// - `rows`: the display list replacing the row model's rows (grouping: group header items
+//   `{ kind: 'group', key, depth, ... }` between the data rows), with `dataRows`, the view's data
+//   rows in display order including those inside collapsed groups (export reads these). The
+//   first fragment with `rows` wins.
 function useFeatureFragments(ctx) {
   const fragments = features.map((feature) => feature.useFeature?.(ctx) ?? null);
   const leadingParts = fragments.map((fragment) => fragment?.leadingColumns ?? EMPTY);
@@ -36,7 +40,13 @@ function useFeatureFragments(ctx) {
     if (fragment?.regions?.top) top.push({ name, element: fragment.regions.top });
     if (fragment?.regions?.bottom) bottom.push({ name, element: fragment.regions.bottom });
   });
-  return { leadingColumns, regions: { top, bottom } };
+  const listFragment = fragments.find((fragment) => fragment?.rows);
+  return {
+    dataRows: listFragment?.dataRows,
+    leadingColumns,
+    regions: { top, bottom },
+    rows: listFragment?.rows,
+  };
 }
 
 export default useFeatureFragments;

@@ -109,3 +109,46 @@
           - _id: d2
             name: Globex expansion
             owner: Grace
+
+- title: Grouped report
+  blocks:
+    - id: deals_grouped
+      type: Table
+      properties:
+        defaultView:
+          group:
+            - key: region
+            - key: owner
+          aggregates:
+            amount: sum
+        columns:
+          - key: name
+            title: Deal
+            width: 220
+          - key: region
+            groupable: true
+          - key: owner
+            groupable: true
+          - key: amount
+            type: number
+        data:
+          - _id: d1
+            name: Acme renewal
+            region: EMEA
+            owner: Ada
+            amount: 12000
+          - _id: d2
+            name: Globex expansion
+            region: EMEA
+            owner: Grace
+            amount: 48000
+          - _id: d3
+            name: Initech pilot
+            region: AMER
+            owner: Alan
+            amount: 3500
+          - _id: d4
+            name: Umbrella upsell
+            region: EMEA
+            owner: Ada
+            amount: 9000

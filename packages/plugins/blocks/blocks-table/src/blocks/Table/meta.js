@@ -29,7 +29,8 @@ const columnFlags = {
   },
   groupable: {
     type: 'boolean',
-    description: 'Allow grouping rows by this column.',
+    description:
+      'Allow grouping rows by this column (view `group`, the `setGroup` method, the header menu). Default false.',
   },
   editable: {
     type: 'boolean',
@@ -109,7 +110,21 @@ const column = {
     ...columnFlags,
     aggregate: {
       type: 'string',
-      description: 'Footer and group aggregate, for example sum or count.',
+      enum: [
+        'sum',
+        'avg',
+        'min',
+        'max',
+        'count',
+        'countDistinct',
+        'countEmpty',
+        'countNotEmpty',
+        'percentEmpty',
+        'earliest',
+        'latest',
+      ],
+      description:
+        'Default aggregate for this column, shown in group headers (and the summary footer). The view `aggregates` overrides it.',
     },
     options: {
       type: ['array', 'object'],
@@ -168,7 +183,8 @@ export default {
         'Trigger when the table value changes through the table: a sort, a resize or reorder that ends, or a selection.',
       event: {
         value: 'The table value `{ view, selected, expanded }`.',
-        cause: 'What changed: `sort`, `columns` or `select`.',
+        cause:
+          'What changed: `sort`, `columns`, `select`, `group` (the grouping levels) or `expand` (a group collapsed or expanded).',
       },
     },
     onSelectionChange: {
@@ -219,6 +235,10 @@ export default {
     scrollToRow:
       'Scroll a row into view. Accepts `{ rowKey, align }` with align `auto`, `start` or `center` (default).',
     clearSelection: 'Clear the row selection.',
+    setGroup:
+      'Group rows by these columns, outermost first. Accepts column keys or `[{ key }]` of groupable columns; an empty list removes the grouping.',
+    expandAllGroups: 'Expand every group.',
+    collapseAllGroups: 'Collapse every group at every level.',
   },
   properties: {
     type: 'object',
@@ -287,15 +307,27 @@ export default {
           },
           group: {
             type: 'array',
-            description: 'Group by: `[{ key }]`.',
+            description:
+              'Group rows by these columns, outermost first: `[{ key }]`. Only columns with `groupable: true` group; groups follow the sort on their column, else option order, else first appearance, and empty values group as "(Empty)" last.',
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['key'],
+              properties: {
+                key: { type: 'string' },
+              },
+            },
           },
           collapsedGroups: {
             type: 'array',
-            description: 'Collapsed group keys.',
+            description:
+              'Keys of collapsed groups: the JSON of the group value path, for example `["lead"]` or `["EMEA","Ada"]` (empty values are `null`).',
+            items: { type: 'string' },
           },
           aggregates: {
             type: 'object',
-            description: 'Aggregates by column key.',
+            description:
+              "Aggregates by column key, for example `{ amount: sum, deals: count }`, over the columns' own `aggregate`. `null` turns a column default off. Group headers show them under their columns.",
           },
           density: {
             type: 'string',

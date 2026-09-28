@@ -92,7 +92,10 @@ function useScrollWindow({ scrollerRef, params }) {
     };
   }, []);
 
-  return range;
+  // The range state catches up with a new row count in the layout effect above; for the one
+  // render before it does (rows filtered away, groups collapsed), it must not reach past the rows.
+  if (range.rowEnd <= params.rowCount) return range;
+  return { ...range, rowStart: Math.min(range.rowStart, params.rowCount), rowEnd: params.rowCount };
 }
 
 export default useScrollWindow;

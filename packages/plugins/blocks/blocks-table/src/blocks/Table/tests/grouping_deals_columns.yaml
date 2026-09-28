@@ -12,10 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-lowdefy: local
-name: blocks-table E2E Tests
-
-pages:
-  - _ref: ../../src/blocks/Table/tests/Table.e2e.yaml
-  - _ref: ../../src/blocks/Table/tests/TableLinkTarget.e2e.yaml
-  - _ref: ../../src/blocks/Table/tests/grouping.e2e.yaml
+# Columns shared by the grouping e2e tables. `name` is not groupable.
+- key: name
+- key: region
+  groupable: true
+- key: rep
+  groupable: true
+- key: stage
+  type: tag
+  groupable: true
+  options:
+    - { value: lead, label: Lead }
+    - { value: qualified, label: Qualified }
+    - { value: won, label: Won }
+- key: amount
+  type: number
+  aggregate: sum
+- key: margin
+  type: number
