@@ -25,7 +25,7 @@ import extractBlockTypes from './extractBlockTypes.js';
 import getLazyBlockLoadsInFlight from './getLazyBlockLoadsInFlight.js';
 import HtmlComponent from './HtmlComponent.js';
 import isEventFromDomDescendant from './isEventFromDomDescendant.js';
-import registerHtmlEnhancements from './registerHtmlEnhancements.js';
+import registerHtmlEnhancements, { getHtmlEnhancements } from './registerHtmlEnhancements.js';
 import renderHtml from './renderHtml.js';
 import withBlockDefaults from './withBlockDefaults.js';
 
@@ -38,6 +38,7 @@ export {
   ErrorBoundary,
   ErrorPage,
   extractBlockTypes,
+  getHtmlEnhancements,
   getLazyBlockLoadsInFlight,
   HtmlComponent,
   isEventFromDomDescendant,

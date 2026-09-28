@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Table } from 'antd';
-import { cn, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { cn, getHtmlEnhancements, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { get, type } from '@lowdefy/helpers';
 
 import compileColumns from '../../table/compileColumns.js';
@@ -25,7 +25,6 @@ import createRowKeyGetter from '../../table/createRowKeyGetter.js';
 import isControlTarget from '../../table/isControlTarget.js';
 import normalizeColumns from '../../table/normalizeColumns.js';
 import resolveLink from '../../table/resolveLink.js';
-import CellLink from '../../table/cells/CellLink.js';
 import buildAntdColumns from './buildAntdColumns.js';
 import sortRows from './sortRows.js';
 import TableLightSummary from './TableLightSummary.js';
@@ -112,8 +111,6 @@ function TableLightBlock({
     [properties.rowKey]
   );
   const [sort, setSort] = useState(null);
-  const [pendingLink, setPendingLink] = useState(null);
-  const linkHostRef = useRef(null);
   const pointerDownRef = useRef(null);
 
   const rows = useMemo(
@@ -157,21 +154,14 @@ function TableLightBlock({
     );
   }, [overRowLimit, blockId]);
 
-  // A row link goes through the Lowdefy Link component, the same as a link
-  // cell: the row renders a hidden Link for the clicked row and clicks it,
-  // so router navigation, new tabs and page input behave as they do for links.
-  useLayoutEffect(() => {
-    if (pendingLink === null) return;
-    linkHostRef.current.firstElementChild.click();
-    setPendingLink(null);
-  }, [pendingLink]);
-
   const hasRowLink = type.isObject(properties.rowLink);
   const hasRowClick = !type.isNone(events.onRowClick);
 
   function openRowLink({ row, newTab }) {
     const link = resolveLink({ link: properties.rowLink, row });
-    setPendingLink({ ...link, newTab: newTab || link.newTab === true });
+    // The client registers the same link function the Link action uses, so router navigation,
+    // new tabs and page input behave as they do for a Link.
+    getHtmlEnhancements().link({ ...link, newTab: newTab || link.newTab === true });
   }
 
   function getRowEntry(event) {
@@ -286,13 +276,6 @@ function TableLightBlock({
             : undefined
         }
       />
-      <span ref={linkHostRef} hidden>
-        {pendingLink !== null && (
-          <CellLink link={pendingLink} components={components}>
-            {' '}
-          </CellLink>
-        )}
-      </span>
     </div>
   );
 }
