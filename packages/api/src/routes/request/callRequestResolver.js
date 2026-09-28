@@ -22,6 +22,7 @@ import invokeEndpoint from '../endpoints/invokeEndpoint.js';
 async function callRequestResolver(
   context,
   {
+    agent = null,
     connectionProperties,
     endpointDepth,
     requestConfig,
@@ -44,6 +45,7 @@ async function callRequestResolver(
     });
 
     const result = await invokeEndpoint(context, {
+      agent,
       endpointId: targetEndpointId,
       payload: targetPayload,
       endpointDepth,

@@ -76,6 +76,7 @@ async function handleEndpointCall(context, routineContext, { step }) {
           principal: {
             user: serializer.serialize(context.user ?? null),
             system: context.system === true,
+            agent: routineContext.agent ?? null,
           },
         }),
       })
@@ -94,6 +95,7 @@ async function handleEndpointCall(context, routineContext, { step }) {
   }
 
   const result = await invokeEndpoint(context, {
+    agent: routineContext.agent,
     endpointId: evaluatedProperties.endpointId,
     payload: evaluatedProperties.payload,
     endpointDepth: routineContext.endpointDepth,
