@@ -1,0 +1,395 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: table-editing
+type: Box
+
+blocks:
+  # ============================================
+  # EVERY EDITOR TYPE (onCellEdit records the event)
+  # ============================================
+
+  - id: edit_types
+    type: Table
+    properties:
+      columns:
+        - key: name
+          editable: true
+          validate:
+            - pass: { op: notEmpty }
+              message: Name is required
+        - key: age
+          type: number
+          width: 100
+          editable: true
+          validate:
+            - pass: { op: gte, value: 0 }
+              message: Age must be positive
+        - key: joined
+          type: date
+          editable: true
+        - key: active
+          type: boolean
+          width: 100
+          editable: true
+        - key: stage
+          type: status
+          editable: true
+          options: [lead, won, lost]
+        - key: labels
+          type: tags
+          editable: true
+          options: [red, green, blue]
+        - key: score
+          type: rating
+          width: 140
+          editable: true
+        - key: city
+          editable:
+            when: { key: locked, op: isFalse }
+        - key: note
+      data:
+        - id: 1
+          name: Ann
+          age: 30
+          joined: '2026-03-01'
+          active: false
+          stage: lead
+          labels: [red]
+          score: 2
+          city: Berlin
+          note: read only
+        - id: 2
+          name: Ben
+          age: 40
+          joined: '2026-04-01'
+          active: true
+          stage: won
+          labels: []
+          score: 4
+          city: Austin
+          locked: true
+          note: read only
+    events:
+      onCellEdit:
+        - id: record_edit
+          type: SetState
+          params:
+            types_edit:
+              _event: true
+      onRowClick:
+        - id: record_row_click
+          type: SetState
+          params:
+            types_row_click:
+              _event: rowKey
+
+  - id: edit_types_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'edit='
+          - _json.stringify:
+              - rowKey:
+                  _state: types_edit.rowKey
+                column:
+                  _state: types_edit.column
+                value:
+                  _state: types_edit.value
+                previous:
+                  _state: types_edit.previous
+              - space: 0
+          - ' click='
+          - _if_none:
+              - _state: types_row_click
+              - none
+
+  # ============================================
+  # OPTIMISTIC SAVE: success (Wait) and failure (Throw)
+  # ============================================
+
+  - id: edit_save
+    type: Table
+    properties:
+      columns:
+        - key: name
+          editable: true
+        - key: city
+      data:
+        - id: 1
+          name: Ann
+          city: Berlin
+        - id: 2
+          name: Ben
+          city: Austin
+    events:
+      onCellEdit:
+        - id: save_wait
+          type: Wait
+          params:
+            ms: 800
+        - id: save_done
+          type: SetState
+          params:
+            save_done:
+              _event: value
+
+  - id: edit_save_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'saved='
+          - _if_none:
+              - _state: save_done
+              - none
+
+  - id: edit_fail
+    type: Table
+    properties:
+      columns:
+        - key: name
+          editable: true
+        - key: city
+      data:
+        - id: 1
+          name: Ann
+          city: Berlin
+        - id: 2
+          name: Ben
+          city: Austin
+    events:
+      onCellEdit:
+        - id: fail_wait
+          type: Wait
+          params:
+            ms: 400
+        - id: fail_throw
+          type: Throw
+          params:
+            throw: true
+            message: Deal is locked
+
+  # The app saves by writing the data: the overlay gives way to the new data row.
+  - id: edit_data
+    type: Table
+    properties:
+      columns:
+        - key: name
+          editable: true
+      data:
+        _if_none:
+          - _state: data_rows
+          - - id: 1
+              name: Ann
+            - id: 2
+              name: Ben
+    events:
+      onCellEdit:
+        - id: write_data
+          type: SetState
+          params:
+            data_rows:
+              - id: 1
+                name: Written by the app
+              - id: 2
+                name: Ben
+
+  - id: edit_local
+    type: Table
+    properties:
+      columns:
+        - key: name
+          editable: true
+      data:
+        - id: 1
+          name: Ann
+
+  # ============================================
+  # SORTED: edits go to the row by key
+  # ============================================
+
+  - id: edit_sorted
+    type: Table
+    properties:
+      defaultView:
+        sort:
+          - key: name
+            desc: true
+      columns:
+        - key: name
+          editable: true
+        - key: age
+          type: number
+          editable: true
+      data:
+        - id: a
+          name: Ann
+          age: 30
+        - id: b
+          name: Ben
+          age: 40
+        - id: c
+          name: Cat
+          age: 50
+    events:
+      onCellEdit:
+        - id: record_sorted_edit
+          type: SetState
+          params:
+            sorted_edit:
+              rowKey:
+                _event: rowKey
+              value:
+                _event: value
+              row:
+                _event: row.name
+
+  - id: edit_sorted_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'sorted='
+          - _json.stringify:
+              - _state: sorted_edit
+              - space: 0
+
+  # ============================================
+  # COPY: selected rows as TSV
+  # ============================================
+
+  - id: edit_copy
+    type: Table
+    properties:
+      rowSelection:
+        type: checkbox
+      columns:
+        - key: name
+        - key: age
+          type: number
+      data:
+        - id: 1
+          name: Ann
+          age: 30
+        - id: 2
+          name: Ben
+          age: 40
+        - id: 3
+          name: Cat
+          age: 50
+
+  # ============================================
+  # ROW MOVES: onRowMove success (Wait) and failure (Throw)
+  # ============================================
+
+  - id: move_positions
+    type: Table
+    properties:
+      rowDrag:
+        positionField: position
+      columns:
+        - key: title
+        - key: position
+          type: number
+      data:
+        - id: s1
+          title: Plan
+          position: 1024
+        - id: s2
+          title: Build
+          position: 2048
+        - id: s3
+          title: Ship
+          position: 3072
+    events:
+      onRowMove:
+        - id: move_wait
+          type: Wait
+          params:
+            ms: 600
+        - id: move_record
+          type: SetState
+          params:
+            move_event:
+              rowKey:
+                _event: rowKey
+              fromIndex:
+                _event: fromIndex
+              toIndex:
+                _event: toIndex
+              beforeKey:
+                _event: beforeKey
+              afterKey:
+                _event: afterKey
+              position:
+                _event: position
+              positions:
+                _event: positions
+
+  - id: move_positions_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'move='
+          - _json.stringify:
+              - _state: move_event
+              - space: 0
+
+  - id: move_fail
+    type: Table
+    properties:
+      rowDrag: true
+      columns:
+        - key: title
+      data:
+        - id: s1
+          title: Plan
+        - id: s2
+          title: Build
+        - id: s3
+          title: Ship
+    events:
+      onRowMove:
+        - id: move_fail_wait
+          type: Wait
+          params:
+            ms: 300
+        - id: move_fail_throw
+          type: Throw
+          params:
+            throw: true
+            message: Order is locked
+
+  - id: move_sorted
+    type: Table
+    properties:
+      rowDrag:
+        positionField: position
+      defaultView:
+        sort:
+          - key: title
+      columns:
+        - key: title
+        - key: position
+          type: number
+      data:
+        - id: s1
+          title: Plan
+          position: 1024
+        - id: s2
+          title: Build
+          position: 2048

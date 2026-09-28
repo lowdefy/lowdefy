@@ -15,3 +15,4 @@
 */
 
 export { default as Table } from './blocks/Table/Table.js';
+export { default as TableInput } from './blocks/TableInput/TableInput.js';
