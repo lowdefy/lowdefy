@@ -223,13 +223,25 @@ test('handleError displays server errors from two different requests on one page
   expect(lowdefy._internal.logger.error).toHaveBeenNthCalledWith(2, second);
 });
 
-test('handleError displays a request failing on every poll only once', async () => {
+test('handleError displays each failure of one request, with its own request ID', async () => {
   const lowdefy = createLowdefy();
   const handleError = createHandleError(lowdefy);
 
   await handleError(decodeWireError({ configKey: 'request:1', requestId: 'rid-1' }));
   await handleError(decodeWireError({ configKey: 'request:1', requestId: 'rid-2' }));
-  await handleError(decodeWireError({ configKey: 'request:1', requestId: 'rid-3' }));
+
+  expect(lowdefy._runtimeErrorCallback).toHaveBeenCalledTimes(2);
+  const logged = lowdefy._internal.logger.error.mock.calls.map(([error]) => error.requestId);
+  expect(logged).toEqual(['rid-1', 'rid-2']);
+});
+
+test('handleError displays one server failure reaching it twice only once', async () => {
+  const lowdefy = createLowdefy();
+  const handleError = createHandleError(lowdefy);
+  const error = decodeWireError({ configKey: 'request:1', requestId: 'rid-1' });
+
+  await handleError(error);
+  await handleError(error);
 
   expect(lowdefy._runtimeErrorCallback).toHaveBeenCalledTimes(1);
   expect(lowdefy._internal.logger.error).toHaveBeenCalledTimes(1);
@@ -259,17 +271,6 @@ test('handleError in dev displays two different server failures of one action, a
   expect(shown[1].message).toBe('Duplicate key on field "email".');
   expect(lowdefy._internal.logger.error).toHaveBeenNthCalledWith(1, shown[0]);
   expect(lowdefy._internal.logger.error).toHaveBeenNthCalledWith(2, shown[1]);
-});
-
-test('handleError in dev displays the same dev failure of one action only once', async () => {
-  const lowdefy = createLowdefy();
-  const handleError = createHandleError(lowdefy);
-  const devMessage = 'Collection "users" not found.';
-
-  await handleError(decodeWireError({ configKey: 'action:1', requestId: 'rid-1', devMessage }));
-  await handleError(decodeWireError({ configKey: 'action:1', requestId: 'rid-2', devMessage }));
-
-  expect(lowdefy._runtimeErrorCallback).toHaveBeenCalledTimes(1);
 });
 
 test('handleError does not POST a handled wire error to /api/client-error', async () => {

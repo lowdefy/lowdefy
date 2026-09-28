@@ -30,11 +30,13 @@ function createHandleError(lowdefy) {
   return async function handleError(error) {
     // The dev tools show the dev server's full error; every decision below stays on
     // the error config sees. Keying on the shown message means two different dev
-    // failures of one action both display, while prod's generic server message
-    // still logs once per configKey.
+    // failures of one action both display. Every server failure carries its own
+    // requestId, and prod gives them all one generic message, so the requestId in
+    // the key is what lets a later failure - and the ID support asks for - log at
+    // all; one failure reaching here twice still logs once.
     const devError = getDevError(error);
     const shown = devError ?? error;
-    const errorKey = `${shown.message}:${error.configKey || ''}`;
+    const errorKey = `${shown.message}:${error.configKey ?? ''}:${error.requestId ?? ''}`;
     if (loggedErrors.has(errorKey)) {
       return;
     }
