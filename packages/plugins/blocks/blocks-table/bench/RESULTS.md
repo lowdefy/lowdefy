@@ -20,6 +20,9 @@ This is a fast developer machine, not the fixed CI runner D10 asks for; expect t
 | Scroll 100k x 50 at 4x CPU throttle (positioned)                | >= 30 fps sustained                                            | 60 fps, p99 17.6 ms, max 17.7 ms, 2.88 ms main thread/frame                                                                                | met       |
 | Sort 100k (number)                                              | <= 50 ms main-thread blocking; INP <= 100 ms                   | longest task < 50 ms, sort render 23.2 ms, INP 16 ms, click to sorted paint 82 ms (toggle: 82.2 ms), keys 6.7 ms                           | met       |
 | Sort 100k (text)                                                | <= 150 ms main-thread blocking; INP <= 100 ms                  | longest task < 50 ms, sort render 19.3 ms, INP 56 ms, click to sorted paint 198.8 ms (toggle: 82.2 ms), keys 120.7 ms                      | met       |
+| Group by one column 100k (tag, 6 groups; sum + avg)             | <= 150 ms main-thread blocking                                 | longest task < 50 ms, group render 31.5 ms, call to grouped paint 64.9 ms; collapse all 1.1 ms, expand all 1.3 ms render                   | met       |
+| Group by one column 100k (text, 8 groups; sum)                  | <= 150 ms main-thread blocking                                 | longest task < 50 ms, group render 25.8 ms, call to grouped paint 64.9 ms; collapse all 1.2 ms, expand all 1.1 ms render                   | met       |
+| Group by one column 100k (text, ~100k groups; stress)           | <= 150 ms main-thread blocking                                 | longest task 78 ms, group render 79 ms, call to grouped paint 109.5 ms; collapse all 8.8 ms, expand all 8.1 ms render                      | met       |
 | First render 1000 x 10                                          | reference                                                      | 19.9 ms render+commit, 22.48 ms main-thread task time, 605 nodes, heap 5.59 MB (data included)                                             | reference |
 | First render 10000 x 20                                         | < 300 ms scripting, <= 3,000 nodes                             | 25.6 ms render+commit, 31.02 ms main-thread task time, 1155 nodes, heap 16.2 MB (data included)                                            | met       |
 | First render 100000 x 50                                        | < 800 ms scripting, <= 3,000 nodes                             | 62.4 ms render+commit, 65.41 ms main-thread task time, 715 nodes, heap 286.59 MB (data included)                                           | met       |
@@ -34,6 +37,7 @@ This is a fast developer machine, not the fixed CI runner D10 asks for; expect t
 - **First render** is the table's own render and commit (and the main-thread task time around it), with the data already in memory. It does not include the Lowdefy engine evaluating a 100k-row `data` property, which the harness bypasses.
 - **Sort 100k.** "Longest task < 50 ms" means the long-task observer saw no task at or above its 50 ms threshold. The sort render (index sort plus the body render, as React measures it) is 23 ms for numbers and 19 ms for text. Click to sorted paint includes Playwright's click, the transition and two frames. Toggling direction reuses the cached keys (82 ms click to paint, the same as a number sort).
 - **Row update** is a new `data` array with one new row object (the P1 path; `applyTransaction` is P3). One row re-renders; the render and commit take 1.8 ms.
+- **Group 100k** (measured 2026-09-29, same machine) sets the grouping with the `setGroup` method: the render builds the group tree and its aggregates in one pass over the sorted rows, flattens it and renders the body, inside a transition. Collapse and expand all rerun only the flatten. The 100k-groups case (grouping on a unique text column) is a stress case, not a budget scenario.
 
 ## Row window: TanStack Virtual per-row positioning vs one translated window
 
@@ -57,7 +61,7 @@ The translated window renders only when the rendered range changes (the virtuali
 
 ## Known gaps
 
-- Mixed tier-0/tier-1 cells, filter-100k, group-100k, server mode and the lazy-mount interaction bench from performance.md §8 are not in this suite yet: their features arrive with later modules.
+- Mixed tier-0/tier-1 cells, filter-100k, server mode and the lazy-mount interaction bench from performance.md §8 are not in this suite yet: their features arrive with later modules.
 - A sort that arrives through the value or `defaultView` builds text keys synchronously (the 120 ms step runs in that render).
 - A data change on a sorted table re-sorts all rows (incremental re-sort is part of P3 transactions).
 - Numbers are from one run of each scenario (medians of 5 for sort, initial render and row update); CI should run the suite on a fixed runner and store a baseline.

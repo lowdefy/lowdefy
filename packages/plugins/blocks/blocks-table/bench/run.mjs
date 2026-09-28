@@ -147,6 +147,20 @@ function buildRows({ chunk }) {
           : 'MISSED',
     });
   });
+  ['tag-6-groups', 'text-8-groups', 'text-100k-groups'].forEach((kind) => {
+    const result = readRaw(`group-100k-${kind}`);
+    if (!result) return;
+    rows.push({
+      scenario: `Group by one column 100k (${kind})`,
+      budget: '<= 150 ms main-thread blocking',
+      measured: `longest task ${result.groupLongestTaskMs || '< 50'} ms, group render ${
+        result.groupMaxCommitMs
+      } ms, call to grouped paint ${result.groupCallToPaintMs} ms; collapse all ${
+        result.collapseMaxCommitMs
+      } ms, expand all ${result.expandMaxCommitMs} ms render`,
+      status: statusOf(Math.max(result.groupLongestTaskMs, result.groupMaxCommitMs) <= 150),
+    });
+  });
   [
     [1000, 10, null],
     [10000, 20, 300],
