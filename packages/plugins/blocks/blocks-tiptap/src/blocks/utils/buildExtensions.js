@@ -17,14 +17,12 @@
 import FileHandler from '@tiptap/extension-file-handler';
 import Highlight from '@tiptap/extension-highlight';
 import Image from '@tiptap/extension-image';
-import Placeholder from '@tiptap/extension-placeholder';
-import StarterKit from '@tiptap/starter-kit';
+import { Placeholder } from '@tiptap/extensions';
 import LinkExtension from '@tiptap/extension-link';
-import Table from '@tiptap/extension-table';
-import TableCell from '@tiptap/extension-table-cell';
-import TableHeader from '@tiptap/extension-table-header';
-import TableRow from '@tiptap/extension-table-row';
+import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table';
 import { type } from '@lowdefy/helpers';
+
+import buildStarterKit from './buildStarterKit.js';
 
 const DEFAULT_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
@@ -46,17 +44,22 @@ function merge(defaults, overrides) {
   return { ...defaults, ...overrides };
 }
 
-function buildExtensions({ properties, insertImage, mentionExtension, uploadEnabled }) {
+function buildExtensions({
+  properties,
+  getPlaceholder,
+  insertImage,
+  mentionExtension,
+  uploadEnabled,
+}) {
   const image = merge(DEFAULTS.image, properties.image);
   const table = merge(DEFAULTS.table, properties.table);
   const link = merge(DEFAULTS.link, properties.link);
   const highlight = merge(DEFAULTS.highlight, properties.highlight);
-  const starterKitOptions = type.isObject(properties.starterKit) ? properties.starterKit : {};
   const allowedMimeTypes = type.isArray(properties.allowedMimeTypes)
     ? properties.allowedMimeTypes
     : DEFAULT_IMAGE_MIME_TYPES;
 
-  const extensions = [StarterKit.configure(starterKitOptions)];
+  const extensions = [buildStarterKit(properties.starterKit)];
 
   if (!table.disabled) {
     extensions.push(
@@ -82,9 +85,8 @@ function buildExtensions({ properties, insertImage, mentionExtension, uploadEnab
 
   extensions.push(
     Placeholder.configure({
-      placeholder: () => properties.placeholder ?? '',
+      placeholder: getPlaceholder,
       showOnlyWhenEditable: false,
-      considerAnyAsEmpty: true,
     })
   );
 
@@ -104,6 +106,9 @@ function buildExtensions({ properties, insertImage, mentionExtension, uploadEnab
         linkOnPaste: link.linkOnPaste,
         openOnClick: link.openOnClick,
         defaultProtocol: link.defaultProtocol,
+        // TipTap v2's default. v3's default also skips bare IP addresses and hosts without a TLD
+        // (e.g. localhost:3000), and applies to pasted URLs too.
+        shouldAutoLink: (url) => !!url,
       })
     );
   }
