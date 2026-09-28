@@ -14,15 +14,12 @@
   limitations under the License.
 */
 
-// Ctrl/Cmd+C on the focused cell copies its displayed text. A text selection inside the table
-// wins: the browser copies that as usual.
-function copyCell({ cell, event }) {
-  const selection = window.getSelection?.();
-  if (selection && !selection.isCollapsed && selection.toString() !== '') return false;
-  const text = cell.innerText.trim();
-  navigator.clipboard?.writeText(text);
-  event.preventDefault();
-  return true;
+// The rendered row range is state, updated in a layout effect after the row count changes. In the
+// render where rows shrink (a delete, a refetch with fewer rows) it still spans the old count, so
+// it is clamped to the rows there are.
+function clampRowRange({ range, rowCount }) {
+  if (range.rowEnd <= rowCount) return range;
+  return { ...range, rowStart: Math.min(range.rowStart, rowCount), rowEnd: rowCount };
 }
 
-export default copyCell;
+export default clampRowRange;

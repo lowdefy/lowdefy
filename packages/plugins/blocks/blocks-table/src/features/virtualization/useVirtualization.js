@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import clampRowRange from './clampRowRange.js';
 import useScrollWindow from './useScrollWindow.js';
 import useTanstackRowWindow from './useTanstackRowWindow.js';
 
@@ -30,9 +31,19 @@ function useVirtualization(ctx) {
     config.virtual === true ||
     (auto &&
       (layout.center.length > AUTO_COLUMN_THRESHOLD || layout.totalWidth > 2 * viewport.width));
-  const scrollWindow = useScrollWindow({
-    scrollerRef,
-    params: { headerHeight, layout, rowCount: rows.length, rowHeight, virtualColumns, virtualRows },
+  const scrollWindow = clampRowRange({
+    range: useScrollWindow({
+      scrollerRef,
+      params: {
+        headerHeight,
+        layout,
+        rowCount: rows.length,
+        rowHeight,
+        virtualColumns,
+        virtualRows,
+      },
+    }),
+    rowCount: rows.length,
   });
   const positioned = strategy === 'positioned' && virtualRows;
   const tanstackRows = useTanstackRowWindow({
