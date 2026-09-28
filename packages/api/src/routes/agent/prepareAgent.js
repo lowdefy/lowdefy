@@ -76,7 +76,10 @@ async function prepareAgent(context, { agentId, agentContext, endpointDepth = 0,
     mode,
     // The agent stream's error text reaches the end user and AgentChat config, so it takes
     // the wire policy. Built here because the agent plugins cannot import @lowdefy/api.
-    wireErrorMessage: (error) => createWireProjection(context)(error).message,
+    // The AI SDK types onError's argument as unknown: a tool can reject with null or a
+    // string, which takes the generic message like any other non-author error.
+    wireErrorMessage: (error) =>
+      createWireProjection(context)(type.isError(error) ? error : new Error(String(error))).message,
     evaluateOperators: (input) =>
       context.evaluateOperators({
         input,

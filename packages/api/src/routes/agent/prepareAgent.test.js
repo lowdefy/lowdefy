@@ -137,6 +137,15 @@ test.each(['dev', 'prod'])(
   }
 );
 
+test.each([null, undefined, 'tool failed'])(
+  'prepareAgent wireErrorMessage returns the generic message when a tool rejects with %p',
+  async (rejection) => {
+    const context = createContext({ mode: 'prod' });
+    const { resolverContext } = await prepareAgent(context, { agentId: 'my-agent', agentContext });
+    expect(resolverContext.wireErrorMessage(rejection)).toBe('Something went wrong.');
+  }
+);
+
 test.each(['dev', 'prod'])(
   "prepareAgent wireErrorMessage returns the author's message for a UserError in %s",
   async (mode) => {
