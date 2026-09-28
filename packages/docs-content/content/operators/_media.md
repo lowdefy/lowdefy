@@ -25,6 +25,19 @@ The `_media` operator gets a value from the [`media`](/page-and-app-state) objec
   - `xl`: `1280px <= width < 1536px`
   - `2xl`: `1536px <= width`
 
+`media` stays current while the page is open. When the browser window is resized, Lowdefy waits until the resize settles (150ms without a further resize event) and then re-evaluates the blocks that read a `media` value that changed. Only the values a block reads count: a block that reads `_media: size` is re-evaluated when the window crosses a breakpoint, not on every pixel of a resize, while a block that reads `_media: width` or the whole `media` object is re-evaluated whenever the width changes. Blocks that do not use `_media` are not re-evaluated at all. This makes `_media` suitable for responsive `visible` conditions and properties:
+
+```yaml
+id: mobile_menu
+type: Box
+visible:
+  _eq:
+    - _media: size
+    - xs
+```
+
+Prefer `_media: size` over `_media: width` where a breakpoint is enough, so that blocks only re-render when the layout actually changes. `darkMode` and `darkModePreference` update when dark mode is toggled. For purely visual responsive changes, CSS breakpoints in `style`, `class` and `layout` do not need `_media` at all.
+
 > **Note:** In v4, the largest breakpoint was `xxl` (1600px). It has been renamed to `2xl` (1536px) to align with Tailwind CSS breakpoints. See the [Migration Guide](/v4-to-v5) for details.
 
 #### Arguments

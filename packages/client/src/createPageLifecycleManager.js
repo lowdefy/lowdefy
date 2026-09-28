@@ -27,9 +27,12 @@
 // None of these fire on the initial page load - the active state is seeded from
 // the document when the page mounts, and only transitions away from that seed
 // trigger an event.
+//
+// The same resize listener keeps _media current: once a resize settles, the
+// engine re-evaluates the blocks that read a media value that changed.
 
 const VISIBILITY_DEBOUNCE_MS = 300;
-const RESIZE_DEBOUNCE_MS = 200;
+const RESIZE_DEBOUNCE_MS = 150;
 
 function createPageLifecycleManager() {
   let destroyed = false;
@@ -125,18 +128,33 @@ function createPageLifecycleManager() {
       listen(win, 'offline', () => trigger('onOffline', { online: false }));
     }
 
-    // --- onResize ------------------------------------------------------------
-    if (configured('onResize')) {
+    // --- onResize and _media -------------------------------------------------
+    // The operator registry holds the operators of every page loaded so far, so
+    // a page that can not reach _media attaches no listener for it.
+    const watchMedia = !!context._internal.lowdefy._internal.operators._media;
+    const onResize = configured('onResize');
+    if (watchMedia || onResize) {
       let resizeTimeout = null;
+      // One trailing debounce for the whole page: a drag fires resize at frame
+      // rate, and this evaluates once when it settles. A requestAnimationFrame
+      // throttle would evaluate every frame of the drag instead.
+      const flush = () => {
+        resizeTimeout = null;
+        if (destroyed) return;
+        // Blocks first, so onResize actions see the page evaluated at the new size.
+        if (watchMedia) {
+          context._internal.updateMedia();
+        }
+        if (onResize) {
+          trigger('onResize', { width: win.innerWidth, height: win.innerHeight });
+        }
+      };
       listen(win, 'resize', () => {
         if (resizeTimeout) {
           clearTimeout(resizeTimeout);
           timeouts = timeouts.filter((t) => t !== resizeTimeout);
         }
-        resizeTimeout = setTimer(() => {
-          resizeTimeout = null;
-          trigger('onResize', { width: win.innerWidth, height: win.innerHeight });
-        }, RESIZE_DEBOUNCE_MS);
+        resizeTimeout = setTimer(flush, RESIZE_DEBOUNCE_MS);
       });
     }
   }
