@@ -57,17 +57,17 @@ test('redactErrorResponse sends the same wire error in dev as in prod', () => {
   expect(dev['~e']).toEqual(prod['~e']);
 });
 
-test('redactErrorResponse adds devError with the full error only in dev', () => {
+test('redactErrorResponse adds devError with the full error less received only in dev', () => {
   const payload = redactErrorResponse({ mode: 'dev', rid: 'rid-1' }, createChain());
   const full = payload.devError['~e'];
 
   expect(full.message).toBe('Request failed.');
   expect(full.requestId).toBe('rid-1');
-  expect(full.received).toEqual({ headers: { authorization: 'Bearer super-secret' } });
+  expect('received' in full).toBe(false);
   expect(full.config).toBe('root.pages[0:home].requests[0:users]');
   expect(typeof full.stack).toBe('string');
   expect(full.cause.message).toBe('connect ECONNREFUSED 10.0.0.5:5432');
-  expect(full.cause.received).toEqual({ password: 'root-secret' });
+  expect('received' in full.cause).toBe(false);
   expect(typeof full.cause.stack).toBe('string');
 
   expect('devError' in redactErrorResponse({ mode: 'prod', rid: 'rid-1' }, createChain())).toBe(
