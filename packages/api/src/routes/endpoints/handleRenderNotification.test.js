@@ -353,30 +353,6 @@ test('RenderNotification falls back to the request origin on the dev server', as
   expect(renderArgs.links.button).toBe('http://localhost:3001/home');
 });
 
-test('RenderNotification links to the request origin on the dev server over the environment url', async () => {
-  const context = {
-    ...createTestContext({
-      notificationConfig: createNotificationConfig(),
-      config: {
-        basePath: '',
-        environment: 'staging',
-        environments: { staging: { url: 'https://staging.myapp.com' } },
-      },
-    }),
-    dev: true,
-    origin: 'http://localhost:3001',
-  };
-  const routineContext = createRoutineContext();
-
-  const res = await runRoutine(context, routineContext, {
-    routine: createStep({ data: { contact, links: { button: { pageId: 'home' } } } }),
-  });
-
-  expect(res.status).toBe('continue');
-  const renderArgs = mockRenderEmail.mock.calls[0][0];
-  expect(renderArgs.links.button).toBe('http://localhost:3001/home');
-});
-
 test('RenderNotification never uses the request origin outside the dev server', async () => {
   const context = {
     ...createTestContext({ notificationConfig: createNotificationConfig() }),

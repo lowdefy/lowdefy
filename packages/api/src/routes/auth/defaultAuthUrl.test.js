@@ -58,7 +58,8 @@ test('defaultAuthUrl sets nothing without a current environment url', () => {
   expect(process.env.AUTH_URL).toBeUndefined();
 });
 
-test('defaultAuthUrl leaves the dev server on the request origin', () => {
-  defaultAuthUrl({ config, dev: true });
-  expect(process.env.AUTH_URL).toBeUndefined();
+test('defaultAuthUrl keeps an empty AUTH_URL, which counts as set', () => {
+  process.env.AUTH_URL = '';
+  defaultAuthUrl({ config });
+  expect(process.env.AUTH_URL).toBe('');
 });

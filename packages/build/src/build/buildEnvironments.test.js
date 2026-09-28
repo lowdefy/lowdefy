@@ -73,6 +73,15 @@ test('buildEnvironments uses config.environment when LOWDEFY_ENVIRONMENT is not 
   expect(components.config.environment).toEqual('prod');
 });
 
+test("buildEnvironments drops the current environment's url on the dev server", () => {
+  process.env.LOWDEFY_ENVIRONMENT = 'staging';
+  const { context } = makeContext({ stage: 'dev' });
+  const components = { config: { environments: structuredClone(environments) } };
+  buildEnvironments({ components, context });
+  expect(components.config.environments.staging.url).toBeUndefined();
+  expect(components.config.environments.prod.url).toEqual('https://app.example.com');
+});
+
 test('buildEnvironments throws when the current environment is not declared', () => {
   process.env.LOWDEFY_ENVIRONMENT = 'preview';
   const { context } = makeContext();

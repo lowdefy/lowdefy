@@ -255,6 +255,13 @@ function buildEnvironments({ components, context }) {
   }
   config.environment = current;
   const settings = config.environments?.[current] ?? {};
+
+  // The dev server is the local app, not the deployment the environment's url names, so the url is
+  // dropped: auth and notification links stay on the request origin even when a local .env names a
+  // deployed environment.
+  if (context.stage === 'dev') {
+    delete settings.url;
+  }
   const disabled = switchableFeatures.filter((feature) => settings[feature]?.enabled === false);
 
   // App metadata is the deploy identity the server stamps on every log line and the client reads

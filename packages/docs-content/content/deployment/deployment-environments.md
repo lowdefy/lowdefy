@@ -56,7 +56,7 @@ The current environment's `url` is the default for:
 - the `serverUrl` of `RenderNotification` steps — the links and logo in notification emails;
 - where crons are forwarded to, when another environment forwards to this one.
 
-An explicit `AUTH_URL` / `NEXTAUTH_URL` or `serverUrl` still wins. The dev server (`lowdefy dev`) never uses the environment `url`: auth and notification links use the request origin, the local app, even when your local `.env` names a deployed environment. Production never uses the request origin, since a spoofed `Host` header would then steer the links in outgoing mail.
+An explicit `AUTH_URL` / `NEXTAUTH_URL` or `serverUrl` still wins. The dev server (`lowdefy dev`) never uses the current environment's `url`: auth and notification links use the request origin, the local app, even when your local `.env` names a deployed environment. Production never uses the request origin, since a spoofed `Host` header would then steer the links in outgoing mail.
 
 Every deployment that names an environment is taken to be served at its `url`. Preview deployments that should not sign users in on the staging host need their own environment, e.g. a `preview` environment with no `url` and the same `email.filter` and guards as staging.
 
