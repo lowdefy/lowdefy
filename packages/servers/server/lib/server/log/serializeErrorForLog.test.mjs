@@ -16,11 +16,9 @@
 
 import { OperatorError, RequestError, UserError } from '@lowdefy/errors';
 
-import {
-  maskCredentialKeys,
-  projectErrorForLog,
-  serializeErrorForLog,
-} from './logErrorProjection.js';
+import maskCredentialKeys from './maskCredentialKeys.js';
+import projectErrorForLog from './projectErrorForLog.js';
+import serializeErrorForLog from './serializeErrorForLog.js';
 
 const allowedErrorKeys = new Set([
   'name',

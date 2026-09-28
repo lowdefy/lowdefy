@@ -29,7 +29,7 @@ import {
 import captureSentryError from '../sentry/captureSentryError.js';
 import redactUrlQuery from './redactUrlQuery.js';
 import scrubSecrets from '../scrubSecrets.js';
-import { serializeErrorForLog } from './logErrorProjection.js';
+import serializeErrorForLog from './serializeErrorForLog.js';
 
 function getEventType(error) {
   if (error instanceof ServiceError) {

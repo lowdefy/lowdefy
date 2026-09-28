@@ -17,7 +17,7 @@
 import * as Sentry from '@sentry/node';
 import { type } from '@lowdefy/helpers';
 
-import { serializeErrorForLog } from '../log/logErrorProjection.js';
+import serializeErrorForLog from '../log/serializeErrorForLog.js';
 
 function captureSentryError({ error, context, configLocation }) {
   // No-op if Sentry not initialized (DSN not set)
