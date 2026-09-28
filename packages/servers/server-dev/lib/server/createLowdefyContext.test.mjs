@@ -27,7 +27,9 @@ process.env.LOWDEFY_SECRET_TEST = secret;
 
 jest.unstable_mockModule('@lowdefy/api', () => ({
   createApiContext: jest.fn(),
-  createRequestSignal: jest.fn(({ clientSignal }) => clientSignal),
+  createRequestSignal: jest.fn(({ clientSignal, timeoutSignal }) =>
+    timeoutSignal ? AbortSignal.any([clientSignal, timeoutSignal]) : clientSignal
+  ),
   // Returns what the server passes, so the test reads the auth-hook system context inputs.
   createSystemContext: jest.fn((options) => options),
   ensureMcpOauthResource: jest.fn(async () => {}),
@@ -107,8 +109,10 @@ afterAll(() => {
 const { default: createLowdefyContext } = await import('./createLowdefyContext.js');
 const { default: createSystemContext } = await import('./auth/createSystemContext.js');
 
-function createHonoContext({ path: reqPath = '/api/request/foo' } = {}) {
+function createHonoContext({ path: reqPath = '/api/request/foo', requestTimeoutSignal } = {}) {
+  const variables = { requestTimeoutSignal };
   return {
+    get: (key) => variables[key],
     req: {
       header: (name) => (name ? undefined : {}),
       path: reqPath,
@@ -128,6 +132,17 @@ test('createLowdefyContext cancels the request work with the incoming request si
   const c = createHonoContext();
   const context = await createLowdefyContext({ c });
   expect(context.signal).toBe(c.req.raw.signal);
+});
+
+test('createLowdefyContext cancels the request work when the request timeout answers first', async () => {
+  const timeout = new AbortController();
+  const c = createHonoContext({ requestTimeoutSignal: timeout.signal });
+  const context = await createLowdefyContext({ c });
+  expect(context.signal.aborted).toBe(false);
+  const reason = new DOMException('The request timeout of 20ms was exceeded.', 'TimeoutError');
+  timeout.abort(reason);
+  expect(context.signal.aborted).toBe(true);
+  expect(context.signal.reason).toBe(reason);
 });
 
 test('createLowdefyContext scrubSecrets redacts a planted secret', async () => {
