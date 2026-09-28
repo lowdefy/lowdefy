@@ -163,8 +163,9 @@ async function build(options) {
     // appMeta is computed in Phase 0; attach it here (where buildApp used to
     // create it) so the following addKeys pass keys it identically.
     components.appMeta = context.appMeta;
-    tryBuildStep(buildLogger, 'buildLogger', { components, context });
+    // validateConfig resolves the current environment, which buildLogger reads for Sentry.
     tryBuildStep(validateConfig, 'validateConfig', { components, context });
+    tryBuildStep(buildLogger, 'buildLogger', { components, context });
     tryBuildStep(validateRequestTimeout, 'validateRequestTimeout', { components, context });
     tryBuildStep(validateDeprecatedStyles, 'validateDeprecatedStyles', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
