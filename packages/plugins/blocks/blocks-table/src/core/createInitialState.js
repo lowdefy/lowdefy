@@ -17,7 +17,6 @@
 import { type } from '@lowdefy/helpers';
 
 import claimedViewKeys from './claimedViewKeys.js';
-import densityHeights from './densityHeights.js';
 import pickViewPart from './pickViewPart.js';
 import resolveViewColumns from './resolveViewColumns.js';
 import sliceDefinitions from './sliceDefinitions.js';
@@ -43,8 +42,6 @@ function createInitialState({ value, config, rows }) {
   Object.entries(sliceDefinitions).forEach(([name, definition]) => {
     state[name] = definition.init(args);
   });
-  const density = pickViewPart({ value, defaultView, key: 'density' });
-  state.density = type.isUndefined(densityHeights[density]) ? 'default' : density;
   state.viewPassthrough = passthroughView({ value, defaultView });
   state.expanded = type.isArray(value?.expanded) ? value.expanded : [];
   return state;

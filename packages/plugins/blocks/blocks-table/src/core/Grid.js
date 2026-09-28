@@ -138,7 +138,7 @@ function Grid({
   } else if (loading) {
     body = <LoadingRows layout={layout} />;
   } else {
-    body = <EmptyState text={config.emptyText} />;
+    body = <EmptyState content={api.content} text={config.emptyText} />;
   }
 
   return (

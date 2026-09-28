@@ -41,6 +41,7 @@ function TableRoot({
   blockId,
   classNames = {},
   components,
+  content = {},
   events = {},
   loading,
   methods,
@@ -72,11 +73,12 @@ function TableRoot({
   }
   const api = apiRef.current;
 
-  const { isPending, setSliceSilently, state, updateSlice } = useTableState({
+  const { isPending, loadValue, setSliceSilently, state, updateSlice } = useTableState({
     api,
     config,
     data,
     methods,
+    properties,
     value,
   });
   const sliceHandlers = useMemo(() => createSliceHandlers({ updateSlice }), [updateSlice]);
@@ -98,13 +100,17 @@ function TableRoot({
     blockId,
     components,
     config,
+    content,
     events,
+    loadValue,
     methods,
     pageId,
+    properties,
     setSliceSilently,
     state,
     table,
     updateSlice,
+    value,
   });
   useForeignKeys({ api, selected: value?.selected });
   useFeatureMethods({ api, methods });

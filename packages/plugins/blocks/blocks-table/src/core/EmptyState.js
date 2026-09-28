@@ -17,12 +17,15 @@
 import React from 'react';
 import { Empty } from 'antd';
 
-// TODO(areas): an `empty` area needs the block to receive slots, which input blocks do not
-// (see ARCHITECTURE.md); `emptyText` covers the common case.
-function EmptyState({ text }) {
+// Blocks in the `empty` slot replace the default empty state.
+function EmptyState({ content, text }) {
   return (
-    <div className="lf-table-empty">
-      <Empty description={text} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+    <div className="lf-table-empty" data-lf-empty="">
+      {content.empty ? (
+        content.empty()
+      ) : (
+        <Empty description={text} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      )}
     </div>
   );
 }

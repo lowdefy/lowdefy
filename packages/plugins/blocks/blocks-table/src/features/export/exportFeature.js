@@ -18,6 +18,7 @@ import createExportCsv from './createExportCsv.js';
 
 const exportFeature = {
   name: 'export',
+  actions: { exportCsv: createExportCsv },
   methods: { exportCsv: createExportCsv },
 };
 

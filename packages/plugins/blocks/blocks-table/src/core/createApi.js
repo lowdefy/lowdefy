@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import createInitialState from './createInitialState.js';
+import deriveValue from './deriveValue.js';
+
 // The table's per-instance API object: one stable mutable object that the core refreshes on every
 // render (table, config, state, layout, ...), so delegated event handlers, actions and methods
 // always read current values without being recreated.
@@ -26,6 +29,11 @@ function createApi() {
     suppressedClick: false,
   };
   api.contains = (element) => Boolean(api.rootRef.current?.contains(element));
+  // The block value of the current state, and of any value once the fallback rules are applied
+  // (a saved view resolves to the view the table would write after loading it).
+  api.getValue = () => deriveValue({ state: api.state, api });
+  api.resolveValue = (value) =>
+    deriveValue({ state: createInitialState({ value, config: api.config, rows: [] }), api });
   api.suppressClick = () => {
     api.suppressedClick = true;
     // A drag that ends outside the header produces no click; do not swallow the next one.

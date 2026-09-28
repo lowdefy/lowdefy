@@ -20,6 +20,8 @@ import { type } from '@lowdefy/helpers';
 import createColumnDefs from './createColumnDefs.js';
 import createRowKeyGetter from './createRowKeyGetter.js';
 import normalizeColumns from './normalizeColumns.js';
+import normalizePersist from '../features/views/normalizePersist.js';
+import normalizeToolbar from '../features/toolbar/normalizeToolbar.js';
 import useStableConfig from './useStableConfig.js';
 
 function normalizeRowSelection(rowSelection) {
@@ -38,6 +40,9 @@ function useTableConfig({ properties }) {
   const defaultView = useStableConfig(properties.defaultView);
   const rowSelection = useStableConfig(properties.rowSelection);
   const rowLink = useStableConfig(properties.rowLink);
+  const toolbar = useStableConfig(properties.toolbar);
+  const persist = useStableConfig(properties.persist);
+  const keyboard = useStableConfig(properties.keyboard);
   const getKey = useMemo(
     () => createRowKeyGetter({ rowKey: properties.rowKey }),
     [properties.rowKey]
@@ -45,9 +50,10 @@ function useTableConfig({ properties }) {
 
   return useMemo(() => {
     const { columns, headerGroups } = normalizeColumns({ columns: columnsConfig, defaultColumn });
+    const columnsByKey = new Map(columns.map((column) => [column.key, column]));
     return {
       columns,
-      columnsByKey: new Map(columns.map((column) => [column.key, column])),
+      columnsByKey,
       columnDefs: createColumnDefs({ columns }),
       defaultView: defaultView ?? {},
       emptyText: properties.emptyText ?? 'No data',
@@ -55,14 +61,17 @@ function useTableConfig({ properties }) {
       getKey,
       headerGroups,
       height: properties.height,
-      keyboard: properties.keyboard !== false,
+      keyboard: keyboard !== false,
+      keyboardNext: keyboard?.next === true,
       maxHeight: properties.maxHeight ?? 600,
+      persist: normalizePersist(persist),
       reorderable: properties.reorderable !== false,
       rowHeight: properties.rowHeight,
       rowLink: type.isObject(rowLink) ? rowLink : null,
       rowSelection: normalizeRowSelection(rowSelection),
       rowVersionField: properties.rowVersionField,
       stickyHeader: properties.stickyHeader !== false,
+      toolbar: normalizeToolbar({ toolbar, columnsByKey }),
       virtual: properties.virtual ?? 'auto',
     };
   }, [
@@ -70,9 +79,10 @@ function useTableConfig({ properties }) {
     defaultColumn,
     defaultView,
     getKey,
+    keyboard,
+    persist,
     properties.emptyText,
     properties.height,
-    properties.keyboard,
     properties.maxHeight,
     properties.reorderable,
     properties.rowHeight,
@@ -81,6 +91,7 @@ function useTableConfig({ properties }) {
     properties.virtual,
     rowLink,
     rowSelection,
+    toolbar,
   ]);
 }
 

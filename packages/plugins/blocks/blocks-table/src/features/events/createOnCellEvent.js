@@ -15,13 +15,18 @@
 */
 
 // Cells never call triggerEvent: their `onEvent({ name, event })` goes through here, which adds
-// the row payload every cell event carries (D5).
+// the row payload every cell event carries (D5). Row button and menu events also go to
+// afterRowAction (`keyboard.next`).
 function createOnCellEvent(api) {
   return function onCellEvent({ name, event, original }) {
-    return api.methods.triggerEvent({
+    const result = api.methods.triggerEvent({
       name,
       event: { row: original, rowKey: api.config.getKey(original), ...event },
     });
+    if (event.button || event.item) {
+      api.actions.afterRowAction({ id: api.config.getId(original), result });
+    }
+    return result;
   };
 }
 
