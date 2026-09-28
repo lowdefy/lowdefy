@@ -31,7 +31,7 @@ let initialized = false;
 function getAuthConfig({ appMeta, authJson, config, dev, logger, plugins, secrets }) {
   if (initialized) return authConfigCache;
 
-  defaultAuthUrl({ config });
+  defaultAuthUrl({ config, dev });
 
   const operatorsParser = new ServerParser({
     lowdefyApp: appMeta,

@@ -2235,7 +2235,7 @@ export default {
         environment: {
           type: 'string',
           description:
-            'The environment this build is for, one of the names in "config.environments". Defaults to the LOWDEFY_ENVIRONMENT environment variable.',
+            'The environment this build is for, one of the names in "config.environments". Used when the LOWDEFY_ENVIRONMENT environment variable is not set; the variable always wins.',
           errorMessage: {
             type: 'App "config.environment" should be a string.',
           },

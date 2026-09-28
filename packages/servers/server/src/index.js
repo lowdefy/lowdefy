@@ -18,6 +18,8 @@ import { serve } from '@hono/node-server';
 import * as Sentry from '@sentry/node';
 import { WebSocketServer } from 'ws';
 
+import { checkEnvironmentGuards } from '@lowdefy/node-utils';
+
 import initSentryServer from '../lib/server/sentry/initSentry.js';
 
 // Auth.js v5 reads AUTH_URL but not NEXTAUTH_URL — alias the v4 variable
@@ -32,6 +34,14 @@ const sentryEnabled = initSentryServer();
 const { default: createApp } = await import('./app.js');
 const { default: createLogger } = await import('../lib/server/log/createLogger.js');
 const { default: appMeta } = await import('../lib/build/appMeta.js');
+const { default: config } = await import('../lib/build/config.js');
+
+// The build checked the current environment's guards, but an image built once can be started with
+// different variables, so they are checked again before the server takes any traffic.
+checkEnvironmentGuards({
+  name: config.environment,
+  guards: config.environments?.[config.environment]?.guards,
+});
 
 const app = createApp();
 const logger = createLogger({ server: 'lowdefy' });

@@ -14,15 +14,20 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import getCurrentEnvironment from '../../context/getCurrentEnvironment.js';
 
 // Auth.js reads its base URL from AUTH_URL (NEXTAUTH_URL is aliased to it at startup). Default it to
 // the current environment's url so a deployment declared in config.environments needs no separate
-// AUTH_URL / NEXTAUTH_URL.
-function defaultAuthUrl({ config }) {
-  if (process.env.AUTH_URL || process.env.NEXTAUTH_URL) return;
+// AUTH_URL / NEXTAUTH_URL. The dev server keeps the request origin: a LOWDEFY_ENVIRONMENT in a
+// local .env names a deployed environment whose url is not the local app.
+function defaultAuthUrl({ config, dev }) {
+  if (dev === true) return;
+  // Same "is it set" test as resolveCookies, so both agree on whether an auth URL is configured.
+  if (!type.isNone(process.env.AUTH_URL ?? process.env.NEXTAUTH_URL)) return;
   const url = getCurrentEnvironment({ config })?.url;
-  if (url) {
+  if (!type.isNone(url)) {
     process.env.AUTH_URL = url;
   }
 }

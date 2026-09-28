@@ -14,7 +14,9 @@
   limitations under the License.
 */
 
+import checkEnvironmentGuards from './checkEnvironmentGuards.js';
 import cleanDirectory from './cleanDirectory.js';
+import collectEnvironmentGuards from './collectEnvironmentGuards.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import findAvailablePort from './findAvailablePort.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
@@ -27,7 +29,9 @@ import writeFile from './writeFile.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 
 export {
+  checkEnvironmentGuards,
   cleanDirectory,
+  collectEnvironmentGuards,
   copyFileOrDirectory,
   findAvailablePort,
   getFileExtension,

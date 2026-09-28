@@ -58,8 +58,15 @@ test('buildEnvironments sets config.environment from LOWDEFY_ENVIRONMENT', () =>
   expect(components.config.environments).toEqual(environments);
 });
 
-test('buildEnvironments prefers an authored config.environment over LOWDEFY_ENVIRONMENT', () => {
+test('buildEnvironments prefers LOWDEFY_ENVIRONMENT over an authored config.environment', () => {
   process.env.LOWDEFY_ENVIRONMENT = 'staging';
+  const { context } = makeContext();
+  const components = { config: { environment: 'prod', environments } };
+  buildEnvironments({ components, context });
+  expect(components.config.environment).toEqual('staging');
+});
+
+test('buildEnvironments uses config.environment when LOWDEFY_ENVIRONMENT is not set', () => {
   const { context } = makeContext();
   const components = { config: { environment: 'prod', environments } };
   buildEnvironments({ components, context });
@@ -83,20 +90,39 @@ test('buildEnvironments names the environment without declared environments', ()
   expect(components.config).toEqual({ environment: 'prod' });
 });
 
-test('buildEnvironments leaves config.environment unset without LOWDEFY_ENVIRONMENT', () => {
+test('buildEnvironments leaves config.environment unset without LOWDEFY_ENVIRONMENT or declared environments', () => {
   const { context, warn } = makeContext();
-  const components = { config: { environments } };
+  const components = { config: {} };
   buildEnvironments({ components, context });
   expect(components.config.environment).toBeUndefined();
   expect(warn).not.toHaveBeenCalled();
 });
 
-test('buildEnvironments warns in a prod build when environments are declared but none is current', () => {
-  const { context, warn } = makeContext({ stage: 'prod' });
+test('buildEnvironments warns on the dev server when environments are declared but none is current', () => {
+  const { context, warn } = makeContext({ stage: 'dev' });
   const components = { config: { environments } };
   buildEnvironments({ components, context });
+  expect(components.config.environment).toBeUndefined();
   expect(warn).toHaveBeenCalledTimes(1);
   expect(warn.mock.calls[0][0]).toMatch('no current environment is set');
+});
+
+test('buildEnvironments fails a prod build when environments are declared but none is current', () => {
+  const { context } = makeContext({ stage: 'prod' });
+  const components = { config: { environments } };
+  expect(() => buildEnvironments({ components, context })).toThrow(
+    'no current environment is set. Set LOWDEFY_ENVIRONMENT to the environment this deployment is (prod, staging)'
+  );
+});
+
+test('buildEnvironments throws when an email filter regex is not a valid regular expression', () => {
+  const { context } = makeContext();
+  const components = {
+    config: { environments: { staging: { email: { filter: { regex: '[a-z' } } } } },
+  };
+  expect(() => buildEnvironments({ components, context })).toThrow(
+    'App "config.environments.staging.email.filter.regex" is not a valid regular expression'
+  );
 });
 
 test('buildEnvironments throws when a cron.secret environment has no url', () => {
@@ -153,30 +179,6 @@ test('buildEnvironments records the current environment in the app metadata', ()
   expect(components.appMeta).toEqual({ name: 'app', environment: 'staging', disabled: [] });
 });
 
-test('buildEnvironments defaults the Sentry environment to the current environment', () => {
-  process.env.LOWDEFY_ENVIRONMENT = 'staging';
-  const { context } = makeContext();
-  const components = { config: { environments }, logger: { sentry: { tracesSampleRate: 0.5 } } };
-  buildEnvironments({ components, context });
-  expect(components.logger.sentry).toEqual({ tracesSampleRate: 0.5, environment: 'staging' });
-});
-
-test('buildEnvironments keeps an authored Sentry environment', () => {
-  process.env.LOWDEFY_ENVIRONMENT = 'staging';
-  const { context } = makeContext();
-  const components = { config: { environments }, logger: { sentry: { environment: 'qa' } } };
-  buildEnvironments({ components, context });
-  expect(components.logger.sentry).toEqual({ environment: 'qa' });
-});
-
-test('buildEnvironments sets the Sentry environment when only SENTRY_DSN enables Sentry', () => {
-  process.env.LOWDEFY_ENVIRONMENT = 'prod';
-  const { context } = makeContext();
-  const components = { config: { environments }, logger: {} };
-  buildEnvironments({ components, context });
-  expect(components.logger.sentry).toEqual({ environment: 'prod' });
-});
-
 test('buildEnvironments lists the features the current environment switches off in the app metadata', () => {
   process.env.LOWDEFY_ENVIRONMENT = 'preview';
   const { context } = makeContext();
@@ -198,7 +200,7 @@ test('buildEnvironments lists the features the current environment switches off 
   expect(components.appMeta.disabled).toEqual(['cron', 'email']);
 });
 
-test('buildEnvironments turns Sentry off on both sides when the environment switches it off', () => {
+test('buildEnvironments lists Sentry as disabled when the environment switches it off', () => {
   process.env.LOWDEFY_ENVIRONMENT = 'preview';
   const { context } = makeContext();
   const components = {
@@ -207,12 +209,6 @@ test('buildEnvironments turns Sentry off on both sides when the environment swit
     appMeta: {},
   };
   buildEnvironments({ components, context });
-  expect(components.logger.sentry).toEqual({
-    client: false,
-    server: false,
-    tracesSampleRate: 0.5,
-    environment: 'preview',
-  });
   expect(components.appMeta.disabled).toEqual(['sentry']);
 });
 
@@ -250,14 +246,15 @@ describe('guards', () => {
     });
   });
 
-  test('buildEnvironments passes when every guarded value matches, and strips the guards', () => {
+  test("buildEnvironments passes when every guarded value matches, and keeps only the current environment's guards", () => {
     process.env.LOWDEFY_ENVIRONMENT = 'prod';
     process.env.LOWDEFY_SECRET_MONGODB_URI = 'mongodb+srv://u:p@acme-prod.a1b2c.mongodb.net/db';
     process.env.BETTER_AUTH_URL = 'https://app.example.com';
     const { context } = makeContext();
     const components = { config: { environments: structuredClone(guarded) } };
     buildEnvironments({ components, context });
-    expect(components.config.environments.prod).toEqual({ url: 'https://app.example.com' });
+    expect(components.config.environments.prod).toEqual(guarded.prod);
+    expect(components.config.environments.staging).toEqual({ url: 'https://staging.example.com' });
   });
 
   test('buildEnvironments fails when a guarded secret does not match, without printing it', () => {
@@ -296,6 +293,22 @@ describe('guards', () => {
     const components = { config: { environments: structuredClone(guarded) } };
     buildEnvironments({ components, context });
     expect(components.config.environments.prod.guards).toBeUndefined();
+  });
+
+  test('buildEnvironments fails on an unknown guard kind', () => {
+    process.env.LOWDEFY_ENVIRONMENT = 'staging';
+    const { context } = makeContext();
+    const components = {
+      config: {
+        environments: {
+          staging: {},
+          prod: { guards: { secret: { MONGODB_URI: 'acme-prod' } } },
+        },
+      },
+    };
+    expect(() => buildEnvironments({ components, context })).toThrow(
+      'App "config.environments.prod.guards.secret" is not a guard kind.'
+    );
   });
 
   test('buildEnvironments fails on an invalid guard pattern in any environment', () => {

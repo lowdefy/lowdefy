@@ -52,10 +52,10 @@ _ref:
 
             ## The current environment
 
-            `LOWDEFY_ENVIRONMENT` is read **at build time**, so set it wherever the app is built (on Vercel, as an Environment Variable of each Vercel environment). `config.environment` can name the current environment in config instead; it wins over the variable.
+            `LOWDEFY_ENVIRONMENT` is read **at build time**, so set it wherever the app is built (on Vercel, as an Environment Variable of each Vercel environment). `config.environment` can name the current environment in config instead, for a deployment that sets no `LOWDEFY_ENVIRONMENT`; the variable always wins, so a literal committed to config never forces every deployment into one environment.
 
             - With `config.environments` declared, the current environment must be one of its names — a typo fails the build.
-            - A build with environments declared but no current environment warns in production builds, applies no environment setting, and registers only the `default` schedules.
+            - With `config.environments` declared, a production build (`lowdefy build`) fails when no current environment is set: no environment setting would apply — no email filter, no forwarded crons, no guards. The dev server warns and runs with no environment setting.
             - Environment names may contain `A-Z`, `a-z`, `0-9`, `-` and `_`. `default` is reserved.
 
             ## Environment settings
@@ -80,7 +80,9 @@ _ref:
             - the `serverUrl` of `RenderNotification` steps — the links and logo in notification emails;
             - where crons are forwarded to, when another environment forwards to this one.
 
-            An explicit `AUTH_URL` / `NEXTAUTH_URL` or `serverUrl` still wins. On the dev server (`lowdefy dev`), an environment without a `url` uses the request origin for notification links; production never does, since a spoofed `Host` header would then steer the links in outgoing mail.
+            An explicit `AUTH_URL` / `NEXTAUTH_URL` or `serverUrl` still wins. The dev server (`lowdefy dev`) never uses the environment `url`: auth and notification links use the request origin, the local app, even when your local `.env` names a deployed environment. Production never uses the request origin, since a spoofed `Host` header would then steer the links in outgoing mail.
+
+            Every deployment that names an environment is taken to be served at its `url`. Preview deployments that should not sign users in on the staging host need their own environment, e.g. a `preview` environment with no `url` and the same `email.filter` and guards as staging.
 
             ## Crons
 
@@ -95,8 +97,8 @@ _ref:
 
             ## Email
 
-            - **`email.filter`** is applied to every `SMTPMailSend` and `SendGridMailSend` request whose connection sets no `filter` of its own (or a filter that resolves to `null`). Put a catch-all `replaceAddress` on every non-production environment and no environment can email real users by accident.
-            - A connection's own `filter` always wins, and **`filter: false`** on a connection turns filtering off entirely, the environment's too — for mail that must reach its real recipient everywhere, such as an invite.
+            - **`email.filter`** is applied to every `SMTPMailSend` and `SendGridMailSend` request whose connection sets no `filter` of its own, or a filter whose fields all resolve to `null` (a `_secret` that is not set on this deployment, say). Put a catch-all `replaceAddress` on every non-production environment and no environment can email real users by accident.
+            - A connection's own `filter` wins when it sets at least one field, and **`filter: false`** on a connection turns filtering off entirely, the environment's too — for mail that must reach its real recipient everywhere, such as an invite.
             - **`email.enabled: false`** sends nothing: each message reports `{ messageId: null, to: null, disabled: true }`.
             - Auth emails (magic links, verification, invitations sent by the auth engine) never go through a mail request, so neither setting affects them — sign-in keeps working in every environment.
 
@@ -109,7 +111,7 @@ _ref:
 
             ## Guards
 
-            Guards pin an environment's secrets and environment variables to a pattern kept in config — a second factor for deploy-time configuration. In the current environment the build fails before anything deploys unless every guarded value matches its regular expression; an unset value fails too. Changing the production database then takes both a new variable value **and** a reviewed config change.
+            Guards pin an environment's secrets and environment variables to a pattern kept in config — a second factor for deploy-time configuration. In the current environment the build fails before anything deploys unless every guarded value matches its regular expression; an unset value fails too. The production server checks the same guards again when it starts, against the variables it runs with, and refuses to start on a mismatch — an image built once can be started with different variables. Changing the production database then takes both a new variable value **and** a reviewed config change.
 
             ```yaml
             config:
@@ -124,9 +126,9 @@ _ref:
             ```
 
             - Patterns match anywhere in the value, so a distinctive substring is enough; add `^` and `$` to pin the whole value. A pattern is committed with your config, so never put the sensitive part of a secret in it — a host name or database name is enough.
-            - Only the current environment's guards are checked, against the variables present when the build runs. Every environment's patterns are validated, so a broken pattern fails the build that introduces it.
+            - Only the current environment's guards are checked. Every environment's patterns are validated, so a broken pattern fails the build that introduces it. `secrets` and `env` are the only guard kinds; any other key (a `secret:` typo, say) fails the build.
             - A failure names the variable and never prints its value.
-            - Guards need the real values at build time. On Vercel, Environment Variables are available to the build; a container build that only injects secrets when the container starts sees them as unset and fails.
+            - Guards need the real values at build time and at startup. On Vercel, Environment Variables are available to both; a container build that only injects secrets when the container starts sees them as unset and fails.
 
             ## What reaches the browser
 
@@ -135,7 +137,7 @@ _ref:
             - `_app: environment` — the current environment's name.
             - `_app: disabled` — the switched-off features, e.g. `[email, sentry]`.
 
-            Other environments' settings, URLs, secret names, email filters and guards never reach the client bundle; guards are removed from the build output altogether.
+            Other environments' settings, URLs, secret names, email filters and guards never reach the client bundle. Only the current environment's guards are kept in the build output, in the server-only `config.json`, for the startup check.
 
             ## Upgrading from `config.cron`
 
