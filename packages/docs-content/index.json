@@ -3032,7 +3032,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "3fb91f6d6c76d287e2cd638e76a10e99f43050340cf72d147ef3333b00641292"
+      "hash": "6764be9fbbc749fb037bcb4edc0fc7a6240e06173c1825c7cf42172f8e0af6fd"
     },
     "concepts/keyboard-shortcuts": {
       "files": [
