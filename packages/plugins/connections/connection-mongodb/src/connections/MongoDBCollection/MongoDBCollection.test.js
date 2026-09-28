@@ -28,6 +28,7 @@ test('All requests are present', () => {
   expect(MongoDBCollection.requests.MongoDBFindOne).toBeDefined();
   expect(MongoDBCollection.requests.MongoDBInsertMany).toBeDefined();
   expect(MongoDBCollection.requests.MongoDBInsertOne).toBeDefined();
+  expect(MongoDBCollection.requests.MongoDBTableQuery).toBeDefined();
   expect(MongoDBCollection.requests.MongoDBUpdateMany).toBeDefined();
   expect(MongoDBCollection.requests.MongoDBUpdateOne).toBeDefined();
 });

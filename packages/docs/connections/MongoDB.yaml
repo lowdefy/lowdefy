@@ -136,6 +136,7 @@ _ref:
               - MongoDBInsertMany
               - MongoDBInsertManyConsecutiveIds
               - MongoDBInsertOne
+              - MongoDBTableQuery
               - MongoDBUpdateMany
               - MongoDBUpdateOne
               - MongoDBVersionedUpdateOne
@@ -643,6 +644,199 @@ _ref:
                       _user: id
                     timestamp:
                       _date: now
+            ```
+
+            ### MongoDBTableQuery
+
+            The `MongoDBTableQuery` request serves a `Table` block in server mode. The table sends its view (sort, filter, search, grouping and aggregates) and the rows it needs, and the request compiles them to one aggregation on the server, against an allowlist of `fields`. The browser never sends MongoDB syntax: view keys that are not in `fields`, operators the field type does not allow and values of the wrong type are refused, regex input is escaped, and no `$where`, `$expr` or raw stages are accepted from the view.
+
+            The base `pipeline` always runs first, so use it for tenant or permission scoping (and a `$project` of the fields the table may see). The view can only narrow what the base pipeline returns. On a tenant connection the tenant scope is added before the base pipeline, as for `MongoDBAggregation`.
+
+            The request compiles to:
+
+            ```yaml
+            - <base pipeline stages>
+            - $match: <view filter>
+            - $match: <view search>
+            - $match: <groupPath>
+            - $facet:
+                rows: [$sort, $skip, $limit]      # or groups: [$group, $sort, $skip, $limit]
+                total: [$count]
+                aggregates: [$group]              # when the view has aggregates
+            ```
+
+            Rows are sorted by the view sort with `_id` as a tiebreak, so blocks of rows never repeat or skip a row.
+
+            ##### Response
+
+            ```yaml
+            rows: [...]           # the rows from startRow to endRow, [] when groups are returned
+            total: 12408          # rows matching the view, or the number of groups at this level
+            groups:               # only when view.group has more levels than groupPath
+              - key: won          # the group value (null for missing values)
+                count: 210
+                aggregates: { amount: 125000 }
+            aggregates:           # only when view.aggregates is set, over the rows this request matches
+              amount: 3400000
+            ```
+
+            When `view.group` is set and `groupPath` is shorter than it, the request returns the groups of the next level, inside the groups in `groupPath`. When `groupPath` has a value for every level, it returns the leaf rows of that group.
+
+            ##### Filters
+
+            The view `filter` is a condition: `{ and: [...] }`, `{ or: [...] }` or `{ key, op, value }`. The operators each field type allows:
+
+            | Field types | Operators |
+            | --- | --- |
+            | all | `eq`, `ne`, `in`, `nin`, `empty`, `notEmpty` |
+            | `text`, `email`, `phone`, `url`, `link`, `html`, `relation`, `tag`, `status` | `contains`, `notContains`, `startsWith`, `endsWith` |
+            | `number`, `currency`, `percent`, `progress`, `rating` | `gt`, `gte`, `lt`, `lte`, `between` (`value: [from, to]`) |
+            | `date`, `datetime` | `before`, `after`, `between`, `within` (`value: { last or next: n, unit: day, week, month or year }`) |
+            | `boolean` | `isTrue`, `isFalse` |
+            | `tags`, `people` | `contains` (has the value); `in` is has any of, `nin` is has none of |
+            | `avatar`, `image`, `json` | the operators for all types only |
+
+            - Text comparisons are case-insensitive.
+            - `empty` matches null, missing, `''` and `[]`.
+            - `eq` on dates compares whole days, and `before`, `after` and `between` on `date` fields compare whole days. Days are UTC days.
+            - `isFalse` matches every value that is not `true`.
+            - Numeric values may be numbers or numeric strings, and date values dates, date strings or timestamps.
+
+            A value can be `{ $user: path }`, for example `{ key: owner, op: eq, value: { $user: id } }`. It is resolved on the server from the request's `user` property, which should be set to `{ _user: true }` (evaluated on the server from the session), never from a value the browser sends. The request throws when the user value is not set, rather than matching rows where the field is empty.
+
+            ##### Aggregates
+
+            `view.aggregates` maps field keys to a function. All field types allow `count`, `countDistinct`, `countEmpty`, `countNotEmpty` and `percentEmpty` (a fraction from 0 to 1). Numeric types also allow `sum`, `avg`, `min` and `max`, and date types `earliest` and `latest`.
+
+            #### Properties
+            - `fields: object`: __Required__ - The allowlist, keyed by the Table column key. Each field is an object:
+              - `type: enum`: __Required__ - The column type: `text`, `email`, `phone`, `url`, `link`, `html`, `relation`, `tag`, `status`, `number`, `currency`, `percent`, `progress`, `rating`, `date`, `datetime`, `boolean`, `tags`, `people`, `avatar`, `image` or `json`. It decides the operators and aggregates the field allows.
+              - `path: string`: Default: the field key - Dot path of the value in the documents the base pipeline returns.
+              - `search: boolean`: Default: `false` - Include the field in the view search. Each search word must match at least one search field.
+              - `sortable: boolean`: Default: `true` - Allow sorting by the field.
+              - `filterable: boolean`: Default: `true` - Allow filtering by the field.
+              - `groupable: boolean`: Default: `false` - Allow grouping by the field. `tags` and `people` fields can not be grouped.
+            - `pipeline: object[]`: Default: `[]` - Base aggregation stages that always run first, for example tenant scoping and a `$project`. `$out` and `$merge` are not allowed.
+            - `view: object`: The Table view, `{ _payload: view }`. Only `sort`, `filter`, `search`, `group` and `aggregates` are read.
+            - `startRow: integer`: Default: `0` - Index of the first row to return, `{ _payload: startRow }`.
+            - `endRow: integer`: Default: `startRow + maxRows` - Index after the last row to return, `{ _payload: endRow }`.
+            - `groupPath: any[]`: Default: `[]` - The group values of the expanded group, one per group level, `{ _payload: groupPath }`.
+            - `maxRows: integer`: Default: `1000` - The most rows or groups one request may return. A request for more throws.
+            - `user: object`: The user that `{ $user: path }` filter values resolve from. Set it to `{ _user: true }`.
+            - `options: object`: Optional aggregate settings, for example `collation`, `maxTimeMS`, `allowDiskUse` or `hint`. See `MongoDBAggregation`.
+
+            #### Examples
+
+            ###### A Table in server mode:
+            The Table sends `{ startRow, endRow, view, groupPath }` as the fetch event. The request `payload` reads it with `_event`, and the properties read the payload with `_payload`. Field keys match the Table column keys.
+            ```yaml
+            id: deals
+            type: PageHeaderMenu
+            requests:
+              - id: deals_page
+                type: MongoDBTableQuery
+                connectionId: deals
+                payload:
+                  view:
+                    _event: view
+                  startRow:
+                    _event: startRow
+                  endRow:
+                    _event: endRow
+                  groupPath:
+                    _event: groupPath
+                properties:
+                  pipeline:
+                    - $match:
+                        org_id:
+                          _user: organization.id
+                    - $project:
+                        name: 1
+                        stage: 1
+                        owner: 1
+                        amount: 1
+                        created: 1
+                  fields:
+                    name:
+                      type: text
+                      search: true
+                    stage:
+                      type: tag
+                      groupable: true
+                    owner:
+                      type: text
+                      path: owner.name
+                      search: true
+                      groupable: true
+                    amount:
+                      type: currency
+                    created:
+                      type: date
+                  user:
+                    _user: true
+                  view:
+                    _payload: view
+                  startRow:
+                    _payload: startRow
+                  endRow:
+                    _payload: endRow
+                  groupPath:
+                    _payload: groupPath
+            blocks:
+              - id: deals_table
+                type: Table
+                properties:
+                  data:
+                    mode: server
+                    request: deals_page
+                  columns:
+                    - key: name
+                    - key: stage
+                      type: tag
+                      groupable: true
+                    - key: owner
+                      field: owner.name
+                      groupable: true
+                    - key: amount
+                      type: currency
+                      aggregate: sum
+                    - key: created
+                      type: date
+            ```
+
+            ###### Only the current user's deals, with a filter the table can not remove:
+            ```yaml
+            requests:
+              - id: my_deals_page
+                type: MongoDBTableQuery
+                connectionId: deals
+                payload:
+                  view:
+                    _event: view
+                  startRow:
+                    _event: startRow
+                  endRow:
+                    _event: endRow
+                properties:
+                  pipeline:
+                    - $match:
+                        owner_id:
+                          _user: id
+                  fields:
+                    name:
+                      type: text
+                      search: true
+                    amount:
+                      type: currency
+                    closed:
+                      type: boolean
+                  view:
+                    _payload: view
+                  startRow:
+                    _payload: startRow
+                  endRow:
+                    _payload: endRow
+                  maxRows: 500
             ```
 
             ### MongoDBUpdateMany

@@ -24,6 +24,7 @@ import MongoDBInsertConsecutiveId from './MongoDBInsertConsecutiveId/MongoDBInse
 import MongoDBInsertMany from './MongoDBInsertMany/MongoDBInsertMany.js';
 import MongoDBInsertManyConsecutiveIds from './MongoDBInsertManyConsecutiveIds/MongoDBInsertManyConsecutiveIds.js';
 import MongoDBInsertOne from './MongoDBInsertOne/MongoDBInsertOne.js';
+import MongoDBTableQuery from './MongoDBTableQuery/MongoDBTableQuery.js';
 import MongoDBUpdateMany from './MongoDBUpdateMany/MongoDBUpdateMany.js';
 import MongoDBUpdateOne from './MongoDBUpdateOne/MongoDBUpdateOne.js';
 import MongoDBVersionedUpdateOne from './MongoDBVersionedUpdateOne/MongoDBVersionedUpdateOne.js';
@@ -55,6 +56,7 @@ export default {
     MongoDBInsertMany,
     MongoDBInsertManyConsecutiveIds,
     MongoDBInsertOne,
+    MongoDBTableQuery,
     MongoDBUpdateMany,
     MongoDBUpdateOne,
     MongoDBVersionedUpdateOne,
