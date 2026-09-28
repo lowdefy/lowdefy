@@ -80,6 +80,8 @@ function createSortKeyGetter({ column }) {
       }
       return (value) => {
         if (isEmptyValue(value)) return null;
+        // Plain strings are their own text; skipping toText keeps big text sorts cheap.
+        if (type.isString(value) && optionsMap.size === 0) return value;
         if (family === 'other' && !type.isPrimitive(value)) return JSON.stringify(value);
         return toText({ value, optionsMap });
       };
