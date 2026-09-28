@@ -14,18 +14,16 @@
   limitations under the License.
 */
 
-import { EventEmitter } from 'node:events';
 import { jest } from '@jest/globals';
 
-const mockMongoClient = jest.fn(() => {
-  const client = new EventEmitter();
-  client.db = jest.fn((name) => ({ collection: jest.fn((model) => ({ client, name, model })) }));
-  return client;
-});
+const mockClient = {
+  db: jest.fn((name) => ({ collection: jest.fn((model) => ({ name, model })) })),
+};
+const mockGetClient = jest.fn();
 const mockMongodbAdapter = jest.fn(() => 'betterAuthAdapter');
 
-jest.unstable_mockModule('mongodb', () => ({
-  MongoClient: mockMongoClient,
+jest.unstable_mockModule('../../../connections/MongoDBCollection/getClient.js', () => ({
+  default: mockGetClient,
 }));
 
 jest.unstable_mockModule('../mongodbAdapter/mongodbAdapter.js', () => ({
@@ -33,7 +31,9 @@ jest.unstable_mockModule('../mongodbAdapter/mongodbAdapter.js', () => ({
 }));
 
 beforeEach(() => {
-  mockMongoClient.mockClear();
+  mockClient.db.mockClear();
+  mockGetClient.mockReset();
+  mockGetClient.mockResolvedValue(mockClient);
   mockMongodbAdapter.mockClear();
 });
 
@@ -51,28 +51,30 @@ test('MongoDBAuthAdapter returns the vendored adapter over the selected database
   });
   expect(mockMongodbAdapter).toHaveBeenCalledTimes(1);
   expect(adapter).toBe('betterAuthAdapter');
-  const { db } = mockMongodbAdapter.mock.calls[0][0];
-  const clientInstance = mockMongoClient.mock.results[0].value;
-  expect(db.collection('user')).toEqual({ client: clientInstance, name: 'auth', model: 'user' });
+  const { getDb } = mockMongodbAdapter.mock.calls[0][0];
+  const db = await getDb();
+  expect(mockClient.db).toHaveBeenCalledWith('auth');
+  expect(db.collection('user')).toEqual({ name: 'auth', model: 'user' });
 });
 
-test('MongoDBAuthAdapter replaces the client once its topology closes', async () => {
+test('MongoDBAuthAdapter does not connect until the first operation', async () => {
   const { default: MongoDBAuthAdapter } = await import('./MongoDBAuthAdapter.js');
   MongoDBAuthAdapter({ properties: { uri: 'mongodb://localhost:27017', database: 'auth' } });
-  const { db } = mockMongodbAdapter.mock.calls[0][0];
-  const first = mockMongoClient.mock.results[0].value;
-  first.emit('topologyClosed');
-  expect(mockMongoClient).toHaveBeenCalledTimes(2);
-  const second = mockMongoClient.mock.results[1].value;
-  expect(db.collection('session').client).toBe(second);
-  // A late close event from the replaced client does not churn the new one.
-  first.emit('topologyClosed');
-  expect(mockMongoClient).toHaveBeenCalledTimes(2);
-  second.emit('topologyClosed');
-  expect(mockMongoClient).toHaveBeenCalledTimes(3);
+  expect(mockGetClient).not.toHaveBeenCalled();
 });
 
-test('MongoDBAuthAdapter passes client options and database selection through', async () => {
+test('MongoDBAuthAdapter resolves the client from getClient on every operation', async () => {
+  const { default: MongoDBAuthAdapter } = await import('./MongoDBAuthAdapter.js');
+  MongoDBAuthAdapter({ properties: { uri: 'mongodb://localhost:27017', database: 'auth' } });
+  const { getDb } = mockMongodbAdapter.mock.calls[0][0];
+  const connectError = new Error('connect failed');
+  mockGetClient.mockRejectedValueOnce(connectError);
+  await expect(getDb()).rejects.toBe(connectError);
+  await expect(getDb()).resolves.toBeDefined();
+  expect(mockGetClient).toHaveBeenCalledTimes(2);
+});
+
+test('MongoDBAuthAdapter passes the uri and client options to getClient', async () => {
   const { default: MongoDBAuthAdapter } = await import('./MongoDBAuthAdapter.js');
   MongoDBAuthAdapter({
     properties: {
@@ -81,7 +83,10 @@ test('MongoDBAuthAdapter passes client options and database selection through', 
       mongoDBClientOptions: { maxPoolSize: 3 },
     },
   });
-  expect(mockMongoClient).toHaveBeenCalledWith('mongodb://localhost:27017', { maxPoolSize: 3 });
-  const clientInstance = mockMongoClient.mock.results[0].value;
-  expect(clientInstance.db).toHaveBeenCalledWith('auth');
+  const { getDb } = mockMongodbAdapter.mock.calls[0][0];
+  await getDb();
+  expect(mockGetClient).toHaveBeenCalledWith({
+    databaseUri: 'mongodb://localhost:27017',
+    options: { maxPoolSize: 3 },
+  });
 });

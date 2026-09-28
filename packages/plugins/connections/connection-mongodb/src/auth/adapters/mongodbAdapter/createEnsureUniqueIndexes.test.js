@@ -18,24 +18,11 @@
 // constructs the way the engine does: model and logical field names in, the
 // physical collections and snake_case fields out.
 
-import { jest } from '@jest/globals';
-import * as mongodb from 'mongodb';
+import { betterAuth } from 'better-auth';
+import { organization } from 'better-auth/plugins';
+import { MongoClient } from 'mongodb';
 
-// The adapter keeps its client for the process lifetime, so the test records
-// every client it creates and closes them afterwards.
-const clients = [];
-class RecordingMongoClient extends mongodb.MongoClient {
-  constructor(...args) {
-    super(...args);
-    clients.push(this);
-  }
-}
-
-jest.unstable_mockModule('mongodb', () => ({ ...mongodb, MongoClient: RecordingMongoClient }));
-
-const { betterAuth } = await import('better-auth');
-const { organization } = await import('better-auth/plugins');
-const { default: MongoDBAuthAdapter } = await import('../MongoDBAuthAdapter/MongoDBAuthAdapter.js');
+import MongoDBAuthAdapter from '../MongoDBAuthAdapter/MongoDBAuthAdapter.js';
 
 const indexes = [
   { model: 'organization', fields: ['slug'] },
@@ -46,12 +33,13 @@ let client;
 let run = 0;
 
 beforeAll(async () => {
-  client = new mongodb.MongoClient(process.env.MONGO_URL);
+  client = new MongoClient(process.env.MONGO_URL);
   await client.connect();
 });
 
+// The adapter's cached client is closed by the closeClientsAfterAll setup file.
 afterAll(async () => {
-  await Promise.all([client, ...clients].map((each) => each.close()));
+  await client.close();
 });
 
 async function setup() {

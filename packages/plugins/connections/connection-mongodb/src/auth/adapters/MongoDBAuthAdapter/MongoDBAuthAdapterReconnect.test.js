@@ -16,21 +16,12 @@
 
 import net from 'node:net';
 import { jest } from '@jest/globals';
-import * as mongodb from 'mongodb';
 
-// The real driver, recording every client the adapter creates so the test can
-// count replacements and close them all afterwards.
-const clients = [];
-class RecordingMongoClient extends mongodb.MongoClient {
-  constructor(...args) {
-    super(...args);
-    clients.push(this);
-  }
-}
+import { closeClients } from '../../../connections/MongoDBCollection/getClient.js';
 
-const mockMongodbAdapter = jest.fn(({ db }) => db);
-
-jest.unstable_mockModule('mongodb', () => ({ ...mongodb, MongoClient: RecordingMongoClient }));
+// The vendored adapter is replaced by the getDb function it receives, so the test
+// drives the real driver directly.
+const mockMongodbAdapter = jest.fn(({ getDb }) => getDb);
 
 jest.unstable_mockModule('../mongodbAdapter/mongodbAdapter.js', () => ({
   default: mockMongodbAdapter,
@@ -74,47 +65,50 @@ async function startGatedProxy({ host, port }) {
 let proxy;
 
 afterEach(async () => {
-  await Promise.all(clients.splice(0).map((client) => client.close()));
+  await closeClients();
   await proxy?.close();
   proxy = undefined;
 });
 
-// Real driver, unreachable server: the first operation's auto-connect fails and
-// the driver closes the client's topology. Without a replacement client every
-// later operation throws MongoTopologyClosedError instead of trying again.
+// Real driver, unreachable server: the first operation's connect fails. Unless the
+// failed client is evicted, every later operation fails for the life of the
+// process instead of trying again - with MongoTopologyClosedError, or by
+// re-throwing the first error from a rejected connect promise.
 test('MongoDBAuthAdapter connects afresh after a failed first connect', async () => {
   const { default: MongoDBAuthAdapter } = await import('./MongoDBAuthAdapter.js');
-  const db = MongoDBAuthAdapter({
+  const getDb = MongoDBAuthAdapter({
     properties: {
       uri: 'mongodb://127.0.0.1:1/?directConnection=true',
       database: 'auth',
       mongoDBClientOptions: { serverSelectionTimeoutMS: 100, connectTimeoutMS: 100 },
     },
   });
-  const findUser = () => db.collection('user').findOne({ email: 'a@example.com' });
-  await expect(findUser()).rejects.toMatchObject({ name: 'MongoServerSelectionError' });
-  await expect(findUser()).rejects.toMatchObject({ name: 'MongoServerSelectionError' });
+  const findUser = async () =>
+    (await getDb()).collection('user').findOne({ email: 'a@example.com' });
+  const first = await findUser().catch((error) => error);
+  const second = await findUser().catch((error) => error);
+  expect(first).toMatchObject({ name: 'MongoServerSelectionError' });
+  expect(second).toMatchObject({ name: 'MongoServerSelectionError' });
+  expect(second).not.toBe(first);
 });
 
-test('MongoDBAuthAdapter serves again once the server is reachable, replacing the failed client once for all requests that raced it', async () => {
+test('MongoDBAuthAdapter serves again once the server is reachable, after the requests that raced the failed connect', async () => {
   const target = new URL(process.env.MONGO_URL);
   proxy = await startGatedProxy({ host: target.hostname, port: Number(target.port) });
   const { default: MongoDBAuthAdapter } = await import('./MongoDBAuthAdapter.js');
-  const db = MongoDBAuthAdapter({
+  const getDb = MongoDBAuthAdapter({
     properties: {
       uri: `mongodb://127.0.0.1:${proxy.port}/?directConnection=true`,
       database: 'auth',
       mongoDBClientOptions: { serverSelectionTimeoutMS: 200, connectTimeoutMS: 200 },
     },
   });
-  const findUser = () => db.collection('user').findOne({ email: 'a@example.com' });
-  // The requests that raced the failed connect all fail on the old client (the
-  // first with the connect error, the rest with its closed topology).
+  const findUser = async () =>
+    (await getDb()).collection('user').findOne({ email: 'a@example.com' });
+  // The requests that raced the failed connect share its client and fail with it.
   const raced = await Promise.allSettled([findUser(), findUser(), findUser()]);
   expect(raced.map(({ status }) => status)).toEqual(['rejected', 'rejected', 'rejected']);
-  expect(clients).toHaveLength(2);
   proxy.open();
   await expect(findUser()).resolves.toBeNull();
   await expect(findUser()).resolves.toBeNull();
-  expect(clients).toHaveLength(2);
 });
