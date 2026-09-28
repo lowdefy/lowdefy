@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import getExportValue from '../../core/getExportValue.js';
+import getExportValue from '@lowdefy/blocks-antd/table/getExportValue.js';
+
 import serializeTsv from './serializeTsv.js';
 import isDataItem from '../../core/isDataItem.js';
 

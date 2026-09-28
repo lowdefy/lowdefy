@@ -18,7 +18,7 @@ import assert from 'node:assert/strict';
 
 import buildGroupTree from './buildGroupTree.js';
 import createAccessor from '../../core/createAccessor.js';
-import createComparator from '../../core/createComparator.js';
+import createComparator from '@lowdefy/blocks-antd/table/createComparator.js';
 
 const amountColumn = { key: 'amount', type: 'number', cell: {} };
 

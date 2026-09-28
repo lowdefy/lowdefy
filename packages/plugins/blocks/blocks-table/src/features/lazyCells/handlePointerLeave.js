@@ -14,14 +14,9 @@
   limitations under the License.
 */
 
-import computeRowOffsets from './computeRowOffsets.js';
+function handlePointerLeave(event, api) {
+  api.cellActivity.set({ hoveredRow: null });
+  return false;
+}
 
-test('computeRowOffsets gives each item its top offset and the body height last', () => {
-  const rows = ['a', { kind: 'detail' }, 'b'];
-  const offsets = computeRowOffsets({
-    rows,
-    rowHeight: 40,
-    heightFns: [(item) => (item?.kind === 'detail' ? 100 : undefined)],
-  });
-  expect([...offsets]).toEqual([0, 40, 140, 180]);
-});
+export default handlePointerLeave;

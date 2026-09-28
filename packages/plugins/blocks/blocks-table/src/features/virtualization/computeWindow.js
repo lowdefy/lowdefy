@@ -23,10 +23,31 @@ function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
 
+function fixedRowRange({ rowCount, rowHeight, top, bottom }) {
+  const rowStart = clamp(Math.floor(top / rowHeight), 0, rowCount);
+  const rowEnd = clamp(Math.ceil(bottom / rowHeight), rowStart, rowCount);
+  return { rowStart, rowEnd };
+}
+
+// With `rowOffsets` (each item's top, and the total height last): the first item whose bottom is
+// below `top`, up to the first item whose top is below `bottom`.
+function offsetRowRange({ rowOffsets: offsets, rowCount, top, bottom }) {
+  const rowStart = clamp(
+    firstIndexAbove({ offsets: offsets.subarray(1), value: top }),
+    0,
+    rowCount
+  );
+  const rowEnd = clamp(
+    firstIndexAbove({ offsets: offsets.subarray(0, rowCount), value: bottom }),
+    rowStart,
+    rowCount
+  );
+  return { rowStart, rowEnd };
+}
+
 // The rendered row and centre-column ranges for a scroll position. Row overscan is measured in
 // pixels and leans in the scroll direction: one body height ahead, a quarter behind (D10.3).
-// `rowOffsets` (item tops, length rowCount + 1) replaces `index * rowHeight` when some items are
-// not one row high.
+// `rowOffsets` (see useRowOffsets) replaces the fixed row height when items differ in height.
 function computeWindow({
   direction,
   headerHeight,
@@ -51,15 +72,10 @@ function computeWindow({
     let after = trail;
     if (direction < 0) before = lead;
     if (direction > 0) after = lead;
-    const top = scrollTop - before;
-    const bottom = scrollTop + bodyHeight + after;
-    if (rowOffsets) {
-      rowStart = clamp(firstIndexAbove({ offsets: rowOffsets, value: top }) - 1, 0, rowCount);
-      rowEnd = clamp(firstIndexAbove({ offsets: rowOffsets, value: bottom }), rowStart, rowCount);
-    } else {
-      rowStart = clamp(Math.floor(top / rowHeight), 0, rowCount);
-      rowEnd = clamp(Math.ceil(bottom / rowHeight), rowStart, rowCount);
-    }
+    const bounds = { rowCount, top: scrollTop - before, bottom: scrollTop + bodyHeight + after };
+    ({ rowStart, rowEnd } = rowOffsets
+      ? offsetRowRange({ rowOffsets, ...bounds })
+      : fixedRowRange({ rowHeight, ...bounds }));
   }
   let colStart = 0;
   let colEnd = layout.center.length;

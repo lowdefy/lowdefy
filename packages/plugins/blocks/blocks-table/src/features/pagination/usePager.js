@@ -14,14 +14,21 @@
   limitations under the License.
 */
 
-function stripHtml(text) {
-  return String(text ?? '')
-    .replace(/<[^>]*>/g, '')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .trim();
+import React from 'react';
+
+import TablePagination from './TablePagination.js';
+
+// The pager below the grid for the page usePagination picked in this render.
+function usePager({ api }) {
+  if (!api.page) return null;
+  const { current, onChange, pageSize, total } = api.page;
+  return {
+    regions: {
+      bottom: (
+        <TablePagination current={current} onChange={onChange} pageSize={pageSize} total={total} />
+      ),
+    },
+  };
 }
 
-export default stripHtml;
+export default usePager;

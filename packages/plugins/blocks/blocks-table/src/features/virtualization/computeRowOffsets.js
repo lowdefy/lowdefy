@@ -14,20 +14,18 @@
   limitations under the License.
 */
 
-// Top offset of every display item (length n + 1; the last entry is the body height) for lists
-// where some items are not one row high. The first height function that answers for an item wins.
-function computeRowOffsets({ rows, rowHeight, heightFns }) {
-  const offsets = new Float64Array(rows.length + 1);
+// Each display item's top offset in the body, and the body height last (`rows.length + 1`
+// entries), for lists whose items are not all one row high: `heightOf(item, index)` gives an
+// item's measured height or estimate, undefined for one row.
+function computeRowOffsets({ rows, rowHeight, heightOf }) {
+  const count = rows.length;
+  const offsets = new Float64Array(count + 1);
   let top = 0;
-  for (let i = 0; i < rows.length; i++) {
+  for (let i = 0; i < count; i++) {
     offsets[i] = top;
-    let height;
-    for (let f = 0; f < heightFns.length && height === undefined; f++) {
-      height = heightFns[f](rows[i], i);
-    }
-    top += height ?? rowHeight;
+    top += heightOf(rows[i], i) ?? rowHeight;
   }
-  offsets[rows.length] = top;
+  offsets[count] = top;
   return offsets;
 }
 

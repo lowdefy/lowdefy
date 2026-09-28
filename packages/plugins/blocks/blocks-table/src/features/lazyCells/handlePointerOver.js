@@ -14,17 +14,11 @@
   limitations under the License.
 */
 
-import isEmptySortValue from './isEmptySortValue.js';
+import getBodyRowKey from './getBodyRowKey.js';
 
-function collectDistinct({ rows, accessor }) {
-  const values = new Array(rows.length);
-  const distinct = new Set();
-  for (let i = 0; i < rows.length; i++) {
-    const value = accessor(rows[i].original);
-    values[i] = value;
-    if (!isEmptySortValue(value)) distinct.add(value);
-  }
-  return { values, distinct: Array.from(distinct) };
+function handlePointerOver(event, api) {
+  api.cellActivity.set({ hoveredRow: getBodyRowKey(event.target) });
+  return false;
 }
 
-export default collectDistinct;
+export default handlePointerOver;

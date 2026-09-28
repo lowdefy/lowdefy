@@ -53,8 +53,8 @@ class Events {
     });
   }
 
-  // Events a block registers for its own machinery (Upload's policy request, a Table's fetch and
-  // row link). They are internal: see claimDomEvent.
+  // Events a block registers for its own machinery (Upload's policy request, a Table's row
+  // fetch). They are internal: see claimDomEvent.
   registerEvent({ name, actions }) {
     this.events[name] = { ...this.initEvent(actions), internal: true };
   }

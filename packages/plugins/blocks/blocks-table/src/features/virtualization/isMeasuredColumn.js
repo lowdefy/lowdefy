@@ -14,15 +14,10 @@
   limitations under the License.
 */
 
-// Cells never call triggerEvent: their `onEvent({ name, event })` goes through here, which adds
-// the row payload every cell event carries (D5).
-function createOnCellEvent(api) {
-  return function onCellEvent({ name, event, original }) {
-    return api.methods.triggerEvent({
-      name,
-      event: { row: original, rowKey: api.config.getKey(original), ...event },
-    });
-  };
+// Wrapped text and multi-line ellipsis make rows as tall as their content (D10.1).
+function isMeasuredColumn(col) {
+  if (col.special) return false;
+  return col.column.wrap === true || col.column.ellipsis > 1;
 }
 
-export default createOnCellEvent;
+export default isMeasuredColumn;

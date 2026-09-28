@@ -14,16 +14,18 @@
   limitations under the License.
 */
 
-import normalizeOptions from '@lowdefy/blocks-antd/table/normalizeOptions.js';
+import createComparator from '@lowdefy/blocks-antd/table/createComparator.js';
+import getCellRenderer from '@lowdefy/blocks-antd/table/getCellRenderer.js';
 
 // One entry per group level with what the tree build and the header rows need: the column's
-// compiled accessor, comparator and renderer, its options, and how its groups are ordered
-// ('sort' when the view sorts on the column, 'options' for enum columns, else 'appearance').
+// compiled accessor, the shared core's value comparator and cell renderer, its options (already
+// normalised by the shared normalizeColumns), and how its groups are ordered ('sort' when the
+// view sorts on the column, 'options' for enum columns, else 'appearance').
 function createGroupLevels({ keys, table, sorting }) {
   return keys.map((key) => {
-    const { accessor, column, comparator, Renderer } = table.getColumn(key).columnDef.meta;
+    const { accessor, column } = table.getColumn(key).columnDef.meta;
     const sort = sorting.find((entry) => entry.id === key);
-    const options = normalizeOptions(column.options);
+    const { options } = column;
     let order = 'appearance';
     if (sort) {
       order = 'sort';
@@ -34,11 +36,11 @@ function createGroupLevels({ keys, table, sorting }) {
       key,
       accessor,
       column,
-      compare: comparator,
+      compare: createComparator({ column }),
       desc: sort?.desc === true,
       options,
       order,
-      Renderer,
+      Renderer: getCellRenderer(column.type),
     };
   });
 }

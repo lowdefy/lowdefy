@@ -15,10 +15,10 @@
 */
 
 import getSortKeys from './getSortKeys.js';
+import sortIndices from './sortIndices.js';
 
-// Sorts a Uint32Array of row indices over precomputed Float64 keys instead of sorting row objects
-// with a comparator that reads values on every call (D10.7). Ties keep source order, and empty
-// values (NaN keys) sort last whichever the direction.
+// Sorts row indices over precomputed keys instead of sorting row objects with a comparator that
+// reads values on every call (D10.7).
 function sortRowModel(table) {
   const preSorted = table.getPreSortedRowModel();
   const sorting = table.atoms.sorting?.get();
@@ -34,26 +34,7 @@ function sortRowModel(table) {
   if (!entries.length) return preSorted;
 
   const count = rows.length;
-  const order = new Uint32Array(count);
-  for (let i = 0; i < count; i++) order[i] = i;
-  const entryCount = entries.length;
-  order.sort((a, b) => {
-    for (let e = 0; e < entryCount; e++) {
-      const { keys, desc } = entries[e];
-      const left = keys[a];
-      const right = keys[b];
-      if (left !== right) {
-        const leftEmpty = Number.isNaN(left);
-        const rightEmpty = Number.isNaN(right);
-        if (leftEmpty && rightEmpty) continue;
-        if (leftEmpty) return 1;
-        if (rightEmpty) return -1;
-        return desc ? right - left : left - right;
-      }
-    }
-    return a - b;
-  });
-
+  const order = sortIndices({ count, entries });
   const sortedRows = new Array(count);
   for (let i = 0; i < count; i++) sortedRows[i] = rows[order[i]];
   return { rows: sortedRows, flatRows: sortedRows, rowsById: preSorted.rowsById };

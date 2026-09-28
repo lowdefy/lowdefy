@@ -43,6 +43,7 @@ function renderCells({ activeCol, api, cols, item, overlay, selectionCount }) {
 function GroupRow({
   activeCol,
   api,
+  ariaRowIndex,
   centerCols,
   className,
   displayIndex,
@@ -81,7 +82,7 @@ function GroupRow({
   return (
     <div
       aria-expanded={!item.collapsed}
-      aria-rowindex={overlay ? undefined : displayIndex + 2}
+      aria-rowindex={overlay ? undefined : ariaRowIndex}
       className={`${className} lf-table-group-row`}
       data-group-depth={item.depth}
       data-group-index={displayIndex}

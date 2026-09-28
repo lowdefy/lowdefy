@@ -237,6 +237,12 @@ export default {
           },
         },
       },
+      user: {
+        type: 'object',
+        description:
+          'The user object for `$user` values in `rules`, `rowRules` and button `hidden`/`disabled` conditions, usually `{ _user: true }`. Blocks do not see the session, so conditions read `$user` from this property.',
+        docs: { displayType: 'yaml' },
+      },
       rowLink: {
         type: 'object',
         description:

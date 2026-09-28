@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 
 import getExpandedIds from '../expansion/getExpandedIds.js';
 import isDataItem from '../../core/isDataItem.js';
@@ -47,22 +47,13 @@ function getDetail({ item, cache }) {
 }
 
 // Rows get their expand state, and every expanded row is followed by a detail item rendered by
-// DetailRow. Detail rows are as high as their content: DetailRow measures itself and the height
-// feeds the body's item offsets (`rowHeights`); an unmeasured detail row is estimated at three
-// rows. Wrappers are cached per row, so unchanged rows keep their memoised row component.
-function useExpandableItems({ api, config, rows, rowHeight, state }) {
+// DetailRow. Detail rows are as high as their content: the window measures them (useRowOffsets);
+// `rowHeights` estimates an unmeasured one at three rows. Wrappers are cached per row, so
+// unchanged rows keep their memoised row component.
+function useExpandableItems({ config, rows, rowHeight, state }) {
   const { expandable } = config;
-  const [heights, setHeights] = useState(() => new Map());
   const rowCache = useRef(new WeakMap());
   const detailCache = useRef(new WeakMap());
-  api.setDetailHeight = useCallback(({ id, height }) => {
-    setHeights((previous) => {
-      if (previous.get(id) === height) return previous;
-      const next = new Map(previous);
-      next.set(id, height);
-      return next;
-    });
-  }, []);
 
   const result = useMemo(() => {
     if (!expandable) return null;
@@ -89,11 +80,8 @@ function useExpandableItems({ api, config, rows, rowHeight, state }) {
   }, [expandable, rows, state.expanded]);
 
   const rowHeights = useCallback(
-    (item) => {
-      if (item?.kind !== 'detail') return undefined;
-      return heights.get(item.parentId) ?? rowHeight * 3;
-    },
-    [heights, rowHeight]
+    (item) => (item?.kind === 'detail' ? rowHeight * 3 : undefined),
+    [rowHeight]
   );
   if (!result) return null;
   return { rows: result.items, rowHeights: result.details > 0 ? rowHeights : undefined };

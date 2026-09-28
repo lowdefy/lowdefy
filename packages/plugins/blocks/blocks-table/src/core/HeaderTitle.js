@@ -15,15 +15,28 @@
 */
 
 import React from 'react';
+import { Tooltip } from 'antd';
 import { type } from '@lowdefy/helpers';
 import { renderHtml } from '@lowdefy/block-utils';
 
-// Titles may hold HTML; plain titles skip the sanitiser.
-function HeaderTitle({ api, title }) {
+function renderTitle({ api, title }) {
+  // Titles may hold HTML; plain titles skip the sanitiser.
   if (type.isString(title) && title.includes('<')) {
     return renderHtml({ className: 'lf-table-header-title', html: title, methods: api.methods });
   }
   return <span className="lf-table-header-title">{title}</span>;
+}
+
+// A header title, with the column's (or group's) `headerTooltip` as an antd Tooltip, as in
+// TableLight. Headers are few, so the tooltip mounts with the header.
+function HeaderTitle({ api, headerTooltip, title }) {
+  const element = renderTitle({ api, title });
+  if (type.isNone(headerTooltip)) return element;
+  return (
+    <Tooltip title={renderHtml({ html: headerTooltip, methods: api.methods })}>
+      <span className="lf-table-header-tooltip">{element}</span>
+    </Tooltip>
+  );
 }
 
 export default HeaderTitle;

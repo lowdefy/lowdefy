@@ -83,9 +83,10 @@ test.describe('Table grouping', () => {
         'r:7',
         'r:8',
       ]);
+    // 12 list rows, the header row and the summary footer (amount declares `aggregate: sum`).
     await expect(getBlock(page, 'group_single').locator('[role="grid"]')).toHaveAttribute(
       'aria-rowcount',
-      '13'
+      '14'
     );
     await expect(groupRow(page, 'group_single', '[null]')).toHaveAttribute(
       'data-group-label',

@@ -17,14 +17,16 @@
 import React from 'react';
 import { type } from '@lowdefy/helpers';
 
-const ROW_HEIGHT = 40;
+import densityHeights from '../../core/densityHeights.js';
+
 const DEFAULT_MAX_HEIGHT = 600;
 
 function estimateHeight(properties) {
   if (!type.isNone(properties.height)) return properties.height;
   const rows = type.isArray(properties.data) ? properties.data.length : 0;
-  const rowHeight = properties.rowHeight ?? ROW_HEIGHT;
-  const content = ROW_HEIGHT + Math.max(rows, 3) * rowHeight;
+  const rowHeight =
+    properties.rowHeight ?? densityHeights[properties.size] ?? densityHeights.default;
+  const content = densityHeights.default + Math.max(rows, 3) * rowHeight;
   return Math.min(content, properties.maxHeight ?? DEFAULT_MAX_HEIGHT);
 }
 

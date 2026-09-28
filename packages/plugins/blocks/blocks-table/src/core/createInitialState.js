@@ -44,7 +44,8 @@ function createInitialState({ value, config, rows }) {
     state[name] = definition.init(args);
   });
   const density = pickViewPart({ value, defaultView, key: 'density' });
-  state.density = type.isUndefined(densityHeights[density]) ? 'default' : density;
+  // `size` is the density the view starts from (TableLight's `size`, the same names).
+  state.density = type.isUndefined(densityHeights[density]) ? config.defaultDensity : density;
   state.viewPassthrough = passthroughView({ value, defaultView });
   return state;
 }

@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-const CONTROL_SELECTOR =
-  'a[href], button, input, select, textarea, label, summary, [role="button"], [role="checkbox"], [role="switch"], [role="link"], [data-event], [data-lf-control], [contenteditable="true"]';
+import computeRowOffsets from './computeRowOffsets.js';
 
-// Clicks on controls inside a cell (buttons, links, inputs, `data-event` HTML) are the control's,
-// never a row click or row link (D5).
-function isControlTarget({ target, cell }) {
-  const control = target.closest(CONTROL_SELECTOR);
-  return Boolean(control && control !== cell && cell.contains(control));
-}
-
-export default isControlTarget;
+test('computeRowOffsets gives each item its top offset and the body height last', () => {
+  const rows = ['a', { kind: 'detail' }, 'b'];
+  const offsets = computeRowOffsets({
+    rows,
+    rowHeight: 40,
+    heightOf: (item) => (item?.kind === 'detail' ? 100 : undefined),
+  });
+  expect([...offsets]).toEqual([0, 40, 140, 180]);
+});

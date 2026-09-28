@@ -21,7 +21,7 @@ import compileCondition from '@lowdefy/blocks-antd/table/compileCondition.js';
 // `expandable: { template, rowExpandable: { when } }`. The template is nunjucks (autoescaped, so
 // `| safe` is needed to insert HTML from a field), compiled once and rendered with
 // `{ row, rowKey }`; `rowExpandable.when` is a table condition tested against the row.
-function normalizeExpandable({ expandable, columns }) {
+function normalizeExpandable({ expandable, columns, user }) {
   if (type.isNone(expandable)) return null;
   if (!type.isObject(expandable)) {
     throw new Error(
@@ -47,7 +47,7 @@ function normalizeExpandable({ expandable, columns }) {
       );
     }
     const columnsByKey = Object.fromEntries(columns.map((column) => [column.key, column]));
-    const matches = compileCondition({ condition: when, columnsByKey });
+    const matches = compileCondition({ condition: when, columnsByKey, user });
     isExpandable = (row) => matches(row);
   }
   return { render, isExpandable };

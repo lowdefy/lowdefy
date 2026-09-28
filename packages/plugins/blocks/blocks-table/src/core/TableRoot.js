@@ -31,6 +31,7 @@ import useFeatureItems from './useFeatureItems.js';
 import useFeatureMethods from './useFeatureMethods.js';
 import useFeatureRows from './useFeatureRows.js';
 import useForeignKeys from './useForeignKeys.js';
+import useSummary from './useSummary.js';
 import useTableConfig from './useTableConfig.js';
 import useTableState from './useTableState.js';
 
@@ -50,8 +51,9 @@ import './table.css';
 //    TableInput's changeset.
 // 4. TanStack: filter and sort (manual in server mode), selection, row lookup.
 // 5. display list (`useItems` hooks): server items, client groups, tree rows, expandable detail
-//    rows, with per-item heights when they differ.
-// 6. window (Grid, virtualization): the rendered range of the display list.
+//    rows, the current page; with the items' height estimates when they are not one row high.
+// 6. window (Grid, virtualization): the rendered range of the display list, and the row offsets
+//    when heights differ (measured rows, detail rows).
 function TableRoot({
   basePath,
   blockId,
@@ -127,12 +129,11 @@ function TableRoot({
   });
   useForeignKeys({ api, selected: value?.selected });
   useFeatureMethods({ api, methods });
-  const fragments = useFeatureFragments({ api, config, data, state, table });
-  const { leadingColumns, regions } = fragments;
 
   const rowHeight = config.rowHeight ?? densityHeights[state.density];
   const headerHeight = Math.min(Math.max(rowHeight, 32), 48);
-  const { dataRows, rows, rowOffsets } = useFeatureItems({
+  // Before the fragments, so a fragment (the pager) renders with this render's display list.
+  const { dataRows, rowHeights, rows } = useFeatureItems({
     api,
     config,
     rowHeight,
@@ -141,6 +142,9 @@ function TableRoot({
     table,
   });
   api.dataRows = dataRows;
+  const fragments = useFeatureFragments({ api, config, data, state, table });
+  const { leadingColumns, regions } = fragments;
+  const summary = useSummary({ api, config, state, table });
 
   return (
     <Grid
@@ -155,11 +159,12 @@ function TableRoot({
       loading={loading === true || properties.loading === true || fragments.loading}
       regions={regions}
       rowHeight={rowHeight}
-      rowOffsets={rowOffsets}
+      rowHeights={rowHeights}
       rows={rows}
       state={state}
       strategy={rowWindowStrategy}
       styles={styles}
+      summary={summary}
     />
   );
 }

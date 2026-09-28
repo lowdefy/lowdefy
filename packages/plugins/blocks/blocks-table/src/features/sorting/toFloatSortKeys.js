@@ -14,15 +14,14 @@
   limitations under the License.
 */
 
-// Integration point: this file will re-export `compileCondition` from
-// `@lowdefy/blocks-antd/table/compileCondition.js` once the shared condition core lands. The
-// engine core does not evaluate conditions yet (filtering, rules and `when` arrive with their
-// feature modules), so the local stand-in accepts every row.
-
-function compileCondition() {
-  return function matches() {
-    return true;
-  };
+// Numeric row keys as Float64 sort keys, empty (null) keys as NaN.
+function toFloatSortKeys(rowKeys) {
+  const keys = new Float64Array(rowKeys.length);
+  for (let i = 0; i < rowKeys.length; i++) {
+    const key = rowKeys[i];
+    keys[i] = key === null ? NaN : key;
+  }
+  return keys;
 }
 
-export default compileCondition;
+export default toFloatSortKeys;

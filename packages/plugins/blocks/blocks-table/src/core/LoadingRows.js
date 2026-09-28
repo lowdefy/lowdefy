@@ -24,7 +24,7 @@ function LoadingRows({ layout }) {
     rows.push(
       <div aria-hidden="true" className="lf-table-row" key={i}>
         {layout.cols.map((col) => (
-          <div className="lf-table-cell" key={col.key} style={{ width: col.width }}>
+          <div className="lf-table-gridcell" key={col.key} style={{ width: col.width }}>
             {col.special ? null : <span className="lf-table-skeleton-bar" />}
           </div>
         ))}

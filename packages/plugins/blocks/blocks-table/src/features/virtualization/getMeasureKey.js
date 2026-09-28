@@ -14,10 +14,14 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import isDataItem from '../../core/isDataItem.js';
 
-function isEmptySortValue(value) {
-  return type.isNone(value) || value === '' || (type.isArray(value) && value.length === 0);
+// The key a display item's measured height is cached under (its element's `data-measure-key`):
+// the row id for data rows, `kind:key` for other items, null for a row that is not loaded yet.
+function getMeasureKey(item) {
+  if (item === undefined) return null;
+  if (isDataItem(item)) return item.id;
+  return `${item.kind}:${item.key}`;
 }
 
-export default isEmptySortValue;
+export default getMeasureKey;

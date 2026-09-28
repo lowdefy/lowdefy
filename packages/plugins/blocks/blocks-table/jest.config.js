@@ -34,7 +34,7 @@ export default {
   errorOnDeprecated: true,
   testEnvironment: 'node',
   testMatch: ['<rootDir>/src/**/*.test.js'],
-  testPathIgnorePatterns: ['<rootDir>/dist/'],
+  testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/bench/'],
   transform: {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../../.swcrc.test' }],
   },

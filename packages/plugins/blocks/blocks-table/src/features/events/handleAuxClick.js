@@ -14,20 +14,19 @@
   limitations under the License.
 */
 
+import isControlTarget from '@lowdefy/blocks-antd/table/isControlTarget.js';
+
 import getBodyTarget from './getBodyTarget.js';
-import isControlTarget from './isControlTarget.js';
-import resolveRowLink from './resolveRowLink.js';
+import openRowLink from './openRowLink.js';
 
 // Middle click opens the row link in a new tab, like a middle-clicked link.
 function handleAuxClick(event, api) {
   if (event.button !== 1 || !api.config.rowLink) return false;
   const target = getBodyTarget({ event, api });
   if (!target) return false;
-  if (target.cell && isControlTarget({ target: event.target, cell: target.cell })) return false;
+  if (isControlTarget({ target: event.target, container: target.rowElement })) return false;
   event.preventDefault();
-  const link = { ...resolveRowLink({ rowLink: api.config.rowLink, row: target.row.original }) };
-  link.newTab = true;
-  api.methods.triggerEvent({ name: '__rowLink', event: { link } });
+  openRowLink({ rowLink: api.config.rowLink, row: target.row.original, newTab: true });
   return true;
 }
 

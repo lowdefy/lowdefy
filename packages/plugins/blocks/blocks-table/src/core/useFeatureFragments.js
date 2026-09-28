@@ -24,7 +24,7 @@ const EMPTY = [];
 // - `leadingColumns`: special columns rendered first in the start-pinned region (the selection
 //   checkbox; later a drag handle or expander),
 // - `regions.top` / `regions.bottom`: elements rendered above or below the grid inside the table
-//   root (toolbar, bulk bar, summary footer, pagination),
+//   root (toolbar, bulk bar, pagination),
 // - `loading: true`: the table is waiting for data it cannot show yet (server mode's first block),
 // - `pending: true`: the rows shown are about to be replaced, so they are dimmed (server mode keeps
 //   the previous view's rows until the new view's first block lands).

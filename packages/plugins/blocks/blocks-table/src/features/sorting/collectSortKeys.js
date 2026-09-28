@@ -14,19 +14,13 @@
   limitations under the License.
 */
 
-import { get, type } from '@lowdefy/helpers';
+import createSortKeyCollector from './createSortKeyCollector.js';
 
-// `rowLink.urlQuery` values are row paths (as ag-grid's link cells); everything else passes to
-// the Link action as written.
-function resolveRowLink({ rowLink, row }) {
-  const link = { ...rowLink };
-  if (type.isObject(rowLink.urlQuery)) {
-    link.urlQuery = {};
-    Object.entries(rowLink.urlQuery).forEach(([key, path]) => {
-      link.urlQuery[key] = type.isString(path) ? get(row, path) : path;
-    });
-  }
-  return link;
+// Every row's sort key and the distinct keys, in one pass (see createSortKeyCollector).
+function collectSortKeys({ rows, accessor, getSortKey }) {
+  const collector = createSortKeyCollector({ count: rows.length, getSortKey });
+  collector.collect({ rows, accessor, start: 0, end: rows.length });
+  return collector.result();
 }
 
-export default resolveRowLink;
+export default collectSortKeys;

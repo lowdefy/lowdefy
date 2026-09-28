@@ -21,8 +21,8 @@ import setCachedSortKeys from './setCachedSortKeys.js';
 function getSortKeys({ rows, column }) {
   const cached = getCachedSortKeys({ rows, columnId: column.id });
   if (cached) return cached;
-  const { accessor, comparator, column: definition } = column.columnDef.meta;
-  const keys = buildSortKeys({ rows, accessor, comparator, columnType: definition.type });
+  const { accessor, getSortKey, column: definition } = column.columnDef.meta;
+  const keys = buildSortKeys({ rows, accessor, getSortKey, columnType: definition.type });
   setCachedSortKeys({ rows, columnId: column.id, keys });
   return keys;
 }

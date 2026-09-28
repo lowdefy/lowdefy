@@ -18,11 +18,11 @@ import React, { memo } from 'react';
 
 // A row that is not loaded yet (server mode): the row's box with a skeleton bar per data cell,
 // so fast scrolling shows placeholders instead of blank space.
-function SkeletonRow({ centerCols, className, displayIndex, endCols, startCols }) {
+function SkeletonRow({ ariaRowIndex, centerCols, className, displayIndex, endCols, startCols }) {
   const renderCells = (cols) =>
     cols.map((col) => (
       <div
-        className="lf-table-cell"
+        className="lf-table-gridcell"
         data-col-index={col.index}
         data-lf-cell=""
         data-pinned={col.region === 'center' ? undefined : col.region}
@@ -37,7 +37,7 @@ function SkeletonRow({ centerCols, className, displayIndex, endCols, startCols }
   return (
     <div
       aria-busy="true"
-      aria-rowindex={displayIndex + 2}
+      aria-rowindex={ariaRowIndex}
       className={className}
       data-row-index={displayIndex}
       data-skeleton=""

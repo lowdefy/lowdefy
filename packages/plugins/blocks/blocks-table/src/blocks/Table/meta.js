@@ -14,10 +14,18 @@
   limitations under the License.
 */
 
+import AGGREGATE_LABELS from '@lowdefy/blocks-antd/table/aggregateLabels.js';
+import CELL_TYPE_FAMILIES from '@lowdefy/blocks-antd/table/cellTypeFamilies.js';
+
+// Every property TableLight accepts is valid here with the same meaning (TableLight is a strict
+// subset of Table, design D16), so changing `type: TableLight` to `type: Table` keeps a block
+// working. The column keys shared with TableLight use its descriptions.
+
 const columnFlags = {
   sortable: {
     type: 'boolean',
-    description: 'Sort by clicking the header (Shift+click adds to a multi-sort).',
+    description:
+      'Sort by clicking the header (Shift+click adds to a multi-sort). Defaults to `defaultColumn.sortable` (true).',
   },
   filterable: {
     type: 'boolean',
@@ -46,6 +54,21 @@ const columnFlags = {
   },
 };
 
+const textLayout = {
+  ellipsis: {
+    type: ['integer', 'boolean'],
+    description:
+      'Clamp the text to this many lines (`true` is one) with an ellipsis; the full text shows on hover. More than one line makes rows as tall as their content.',
+    docs: { displayType: 'number' },
+  },
+  wrap: {
+    type: 'boolean',
+    default: false,
+    description:
+      'Wrap long text; rows grow to fit (measured row heights, which turn column virtualisation off). Text stays on one line by default.',
+  },
+};
+
 const widthProperties = {
   width: {
     type: 'number',
@@ -59,14 +82,6 @@ const widthProperties = {
     type: 'number',
     description: 'Maximum width in pixels when resizing.',
   },
-  ellipsis: {
-    type: 'integer',
-    description: 'Clamp cell text to this many lines.',
-  },
-  wrap: {
-    type: 'boolean',
-    description: 'Wrap cell text instead of truncating it.',
-  },
 };
 
 const pinned = {
@@ -76,29 +91,35 @@ const pinned = {
 };
 
 const column = {
-  type: 'object',
+  type: ['object', 'string'],
   additionalProperties: false,
-  description: 'A column. `key` (or `field`) is required.',
+  description: 'A column, or just its key. `key` (or `field`) is required.',
   properties: {
     key: {
       type: 'string',
-      description: 'Stable column id used in the view. Defaults to `field`.',
+      description:
+        'The column id, unique in the table and used in the view. Defaults to `field`. Two columns showing the same field need their own keys.',
     },
     field: {
       type: 'string',
-      description: 'Dot path to the value in the row. Defaults to `key`.',
+      description: 'The dot path of the value in each row. Defaults to `key`.',
     },
     title: {
       type: 'string',
-      description: 'Header title (HTML allowed). Defaults to the humanised key.',
+      description: 'The header - supports html. Defaults to the key in sentence case.',
     },
     type: {
       type: 'string',
-      description: 'Cell type, for example text, number, date, tag, link. Default text.',
+      enum: Object.keys(CELL_TYPE_FAMILIES),
+      default: 'text',
+      description:
+        'The cell type. It sets how the value renders, sorts and aggregates and the default alignment.',
     },
     cell: {
       type: 'object',
-      description: "Options for the column's cell type.",
+      description:
+        'Options for the cell type, the same keys as TableLight (and the AgGrid `cell` keys where they overlap), for example `format`, `currency`, `relative`, `pageId`/`urlQuery` (link), `template` (html), `buttons` and `showOn` (buttons), `items` (menu).',
+      docs: { displayType: 'yaml' },
     },
     ...widthProperties,
     flex: {
@@ -108,47 +129,44 @@ const column = {
     align: {
       type: 'string',
       enum: ['start', 'center', 'end'],
-      description: 'Cell alignment. Defaults from the type (numbers align end).',
+      description: 'Horizontal alignment. Defaults to `end` for number, currency and percent.',
     },
     pinned,
+    ...textLayout,
     hidden: {
       type: 'boolean',
-      description: 'Declared but hidden by default.',
+      default: false,
+      description: 'Declare the column but hide it.',
     },
     ...columnFlags,
     aggregate: {
       type: 'string',
-      enum: [
-        'sum',
-        'avg',
-        'min',
-        'max',
-        'count',
-        'countDistinct',
-        'countEmpty',
-        'countNotEmpty',
-        'percentEmpty',
-        'earliest',
-        'latest',
-      ],
+      enum: Object.keys(AGGREGATE_LABELS),
       description:
-        'Default aggregate for this column, shown in group headers (and the summary footer). The view `aggregates` overrides it.',
+        'Default aggregate for this column, shown in group headers and the summary footer (over all filtered rows): sum, avg, min, max, count, countDistinct, countEmpty, countNotEmpty, percentEmpty, earliest or latest. The view `aggregates` overrides it.',
     },
     options: {
       type: ['array', 'object'],
-      description: 'Labels and colours for enum values: a list or a map of value to label.',
+      description:
+        'Labels and colours for enum values, for tag, tags and status cells: a list of values or `{ value, label, color, icon }`, or a map from value to a label or `{ label, color, icon }`. Enums sort in option order.',
+      docs: { displayType: 'yaml' },
     },
     tooltip: {
-      type: ['object', 'string'],
-      description: 'Cell tooltip: a string, `{ field }` or `{ template }`.',
+      type: ['string', 'object'],
+      description:
+        'A plain-text hover tooltip: a nunjucks template string (with `value` and `row`), `{ template }` or `{ field }` (a row path).',
+      docs: { displayType: 'yaml' },
     },
     headerTooltip: {
       type: 'string',
-      description: 'Header tooltip.',
+      description: 'A tooltip on the header - supports html.',
     },
     rules: {
       type: 'array',
-      description: 'Conditional formatting: `[{ when, color, className, style }]`.',
+      description:
+        'Conditional formatting: `[{ when, color, className, style }]`. Every rule whose `when` condition holds applies, in order.',
+      items: { type: 'object' },
+      docs: { displayType: 'yaml' },
     },
     validate: {
       type: 'array',
@@ -176,7 +194,10 @@ const column = {
     },
     children: {
       type: 'array',
-      description: 'Child columns under a header group titled by `title`.',
+      description:
+        'Columns grouped under this header. A group needs a `title`; groups render as header rows above the column headers.',
+      items: { type: ['object', 'string'] },
+      docs: { displayType: 'yaml' },
     },
   },
 };
@@ -197,15 +218,16 @@ export default {
   category: 'input',
   valueType: 'object',
   icons: [],
-  // rowLink navigates through an internal event running the Link action with `_event`; server
-  // mode fetches through an internal event running the Request action.
-  actions: ['Link', 'Request'],
-  operators: ['_event'],
+  // Server mode fetches through an internal event running the Request action.
+  actions: ['Request'],
   cssKeys: {
     element: 'The table root element.',
     header: 'The header row group.',
     row: 'Every body row.',
   },
+  // Cell buttons and menu items declare their own eventName, so the event names this block fires
+  // are authored in its properties.
+  dynamicEvents: true,
   events: {
     onChange: {
       description:
@@ -244,9 +266,9 @@ export default {
     },
     onRowClick: {
       description:
-        'Trigger when a row is clicked (not a control inside it, and not the end of a text selection), or activated with Enter.',
+        'Trigger when a row is clicked, or activated with Enter. Clicks on buttons, links, menus and `data-event` elements in a cell, and clicks that end a text selection, do not trigger it. With `rowLink`, a plain click runs onRowClick instead of following the link.',
       event: {
-        row: 'The row object.',
+        row: 'The row data.',
         rowKey: 'The row key.',
         index: 'The index of the row in `data`.',
       },
@@ -254,17 +276,18 @@ export default {
     onRowDoubleClick: {
       description: 'Trigger when a row is double clicked.',
       event: {
-        row: 'The row object.',
+        row: 'The row data.',
         rowKey: 'The row key.',
         index: 'The index of the row in `data`.',
       },
     },
     onCellClick: {
-      description: 'Trigger when a cell is clicked (not a control inside it).',
+      description:
+        'Trigger actions when a cell is clicked. Clicks on controls in the cell do not trigger it.',
       event: {
-        row: 'The row object.',
+        row: 'The row data.',
         rowKey: 'The row key.',
-        column: 'The column `{ key, field }`.',
+        column: 'The column: { key, field }.',
         value: 'The cell value.',
       },
     },
@@ -295,27 +318,50 @@ export default {
       },
     },
     onCellLink: {
-      description: 'Trigger when a link cell is clicked.',
+      description:
+        'Triggered when a link, avatar link or relation cell is clicked. The link navigates by itself; this event is for anything else to do.',
       event: {
-        link: 'The resolved link.',
-        row: 'The row object.',
+        link: 'The resolved link: { pageId, href, urlQuery, newTab, ... }.',
+        row: 'The row data.',
+        value: 'The cell value (the related record for relation cells).',
+      },
+    },
+    onCellButton: {
+      description:
+        'Documentation reference - the event fired is the `eventName` of each button in a `buttons` cell. Define any number of named events on the block, such as `onEdit`.',
+      event: {
+        row: 'The row data.',
+        rowKey: 'The row key.',
         value: 'The cell value.',
+        button: 'The clicked button: { eventName, title }.',
+        buttonIndex: 'The index of the button in `cell.buttons`.',
+      },
+    },
+    onCellMenuItem: {
+      description:
+        'Documentation reference - the event fired is the `eventName` of each item in a `menu` cell.',
+      event: {
+        row: 'The row data.',
+        rowKey: 'The row key.',
+        value: 'The cell value.',
+        item: 'The clicked item: { eventName, title }.',
+        itemIndex: 'The index of the item in `cell.items`.',
       },
     },
   },
   methods: {
     exportCsv:
-      'Download the current view as CSV: visible columns in order, rows in their current order. Accepts `{ filename, formatted }`; `formatted` (default true) exports displayed text. In server mode it fires `onExport { view }` instead.',
+      'Download the current view as CSV: visible data columns in order, every row in its current order (every page, rows of collapsed groups included). Accepts `{ filename, formatted }`; `formatted` (default true) exports displayed text. In server mode it fires `onExport { view }` instead.',
     refresh:
       'Server mode: clear the block cache and refetch the visible rows (they stay on screen until the new rows land).',
     applyTransaction:
       'Apply `{ add, update, remove, addIndex }` without replacing `data`: `update` rows are merged into the row with the same key, `remove` takes rows or row keys, `add` rows are appended (or inserted at `addIndex`). Only the touched rows re-render. In client mode the change holds until `data` changes; in server mode updates apply to the loaded rows, and adds or removes also refetch the visible rows. Returns `{ added, updated, removed }`.',
     scrollToRow:
-      'Scroll a row into view. Accepts `{ rowKey, align }` with align `auto`, `start` or `center` (default).',
+      'Scroll a row into view. Accepts `{ rowKey, align }` with align `auto`, `start` or `center` (default). With pagination, only rows on the current page.',
     clearSelection: 'Clear the row selection.',
     setGroup:
       'Group rows by these columns, outermost first. Accepts column keys or `[{ key }]` of groupable columns; an empty list removes the grouping.',
-    expandAllGroups: 'Expand every group.',
+    expandAllGroups: 'Expand every group (client data; server groups open one at a time).',
     collapseAllGroups: 'Collapse every group at every level.',
   },
   properties: {
@@ -323,21 +369,27 @@ export default {
     additionalProperties: false,
     properties: {
       columns: {
-        type: 'array',
+        type: ['array', 'null'],
         description: 'The columns, in default order.',
         items: column,
+        docs: { displayType: 'yaml' },
       },
       defaultColumn: {
         type: 'object',
         additionalProperties: false,
         description: 'Defaults applied to every column.',
         properties: {
-          ...columnFlags,
+          sortable: { ...columnFlags.sortable, default: true },
+          filterable: { ...columnFlags.filterable, default: true },
+          resizable: { ...columnFlags.resizable, default: true },
+          groupable: { ...columnFlags.groupable, default: false },
+          editable: { ...columnFlags.editable, default: false },
           ...widthProperties,
+          ...textLayout,
         },
       },
       data: {
-        type: ['array', 'object'],
+        type: ['array', 'object', 'null'],
         description:
           'The rows, or `{ mode: server, request, blockSize }` to load rows from a request in blocks as the table scrolls. In server mode the table fires the request with the event `{ startRow, endRow, view: { sort, filter, search, group, aggregates }, groupPath, selected }` (read it in the request `payload` with `_event`) and expects `{ rows, total, groups?, aggregates? }`, the contract of `MongoDBTableQuery`. Sorting, filtering and grouping then run on the server. Rows need a `rowKey`.',
         items: { type: 'object' },
@@ -365,16 +417,23 @@ export default {
               'Blocks kept in the cache; the least recently used are dropped (and refetched when they come back into view).',
           },
         },
+        docs: { displayType: 'yaml' },
       },
       rowKey: {
         type: 'string',
         description:
-          'Dot path to the unique row key. Defaults to `_id`, then `id`. Rows without a key are keyed per object and lose their identity when data is refetched.',
+          'The row field that identifies each row. Defaults to `_id`, then `id`. Rows with neither get a key per row object, which does not survive a refetch.',
       },
       rowVersionField: {
         type: 'string',
         description:
           'Field that changes whenever a row changes (for example `updated_at`). When set, rows are compared by key and this field instead of by content.',
+      },
+      user: {
+        type: 'object',
+        description:
+          'The user object for `$user` values in `rules`, `rowRules` and button `hidden`/`disabled` conditions, usually `{ _user: true }`. Blocks do not see the session, so conditions read `$user` from this property.',
+        docs: { displayType: 'yaml' },
       },
       defaultView: {
         type: 'object',
@@ -435,7 +494,8 @@ export default {
           density: {
             type: 'string',
             enum: ['compact', 'default', 'comfortable'],
-            description: 'Row density: compact 32px, default 40px, comfortable 52px rows.',
+            description:
+              'Row density: compact 32px, default 40px, comfortable 52px rows. Defaults to `size`.',
           },
           wrap: {
             type: 'boolean',
@@ -535,22 +595,47 @@ export default {
         type: 'object',
         additionalProperties: false,
         description:
-          'Make rows links: a click navigates, Cmd/Ctrl or middle click opens a new tab. Values in `urlQuery` are row paths.',
+          'Make rows links. A plain click navigates, Cmd/Ctrl or middle click opens a new tab, and Enter on a focused row follows it. Values in `urlQuery` are row paths.',
         properties: {
-          pageId: { type: 'string', description: 'Page to link to.' },
+          pageId: { type: 'string', description: 'The page to open.' },
+          href: { type: 'string', description: 'A URL to open instead of a page.' },
           urlQuery: {
             type: 'object',
-            description: 'URL query; each value is a dot path into the row.',
+            description: 'Query parameters; each value is a path in the row, like `{ _id: _id }`.',
+            docs: { displayType: 'yaml' },
           },
-          href: { type: 'string', description: 'External URL to link to.' },
+          input: {
+            type: 'object',
+            description: 'Input for the page.',
+            docs: { displayType: 'yaml' },
+          },
           newTab: { type: 'boolean', description: 'Always open in a new tab.' },
-          input: { type: 'object', description: 'Input for the linked page.' },
         },
+      },
+      rowRules: {
+        type: 'array',
+        items: { type: 'object' },
+        description:
+          'Conditional row formatting: `[{ when, className, style, color }]`, where `when` conditions name columns by `key`.',
+        docs: { displayType: 'yaml' },
+      },
+      size: {
+        type: 'string',
+        enum: ['compact', 'default', 'comfortable'],
+        default: 'default',
+        description:
+          'Row density: compact 32px, default 40px, comfortable 52px rows. The view starts at this density (`view.density` overrides it).',
+      },
+      bordered: {
+        type: 'boolean',
+        default: false,
+        description: 'Draw borders between cells.',
       },
       height: {
         type: ['number', 'string'],
         description:
-          'Table height (px number or CSS size). Without it the table grows with its rows up to `maxHeight`.',
+          'A fixed table height (px number or CSS size); the rows scroll under a sticky header and the summary row stays in view. Without it the table grows with its rows up to `maxHeight`.',
+        docs: { displayType: 'number' },
       },
       maxHeight: {
         type: ['number', 'string'],
@@ -598,12 +683,29 @@ export default {
       emptyText: {
         type: 'string',
         default: 'No data',
-        description: 'Text shown when there are no rows.',
+        description: 'What to show when there are no rows - supports html.',
       },
       loading: {
         type: 'boolean',
         default: false,
         description: 'Show the loading state: skeleton rows without data, a progress bar with it.',
+      },
+      pagination: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Show the rows in pages of `pageSize` with a pager below the table. Off by default, unlike TableLight: the Table scrolls any number of rows virtually. `true` means what it means on TableLight: pages, with the pager always shown.',
+      },
+      pageSize: {
+        type: 'integer',
+        default: 50,
+        description: 'Rows per page when `pagination` is on.',
+      },
+      summary: {
+        type: 'boolean',
+        default: true,
+        description:
+          'Show the summary footer when a column declares an `aggregate`. `false` hides it.',
       },
     },
   },

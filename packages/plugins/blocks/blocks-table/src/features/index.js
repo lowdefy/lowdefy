@@ -22,7 +22,9 @@ import expansionFeature from './expansion/expansionFeature.js';
 import exportFeature from './export/exportFeature.js';
 import groupingFeature from './grouping/groupingFeature.js';
 import keyboardFeature from './keyboard/keyboardFeature.js';
+import lazyCellsFeature from './lazyCells/lazyCellsFeature.js';
 import orderingFeature from './ordering/orderingFeature.js';
+import paginationFeature from './pagination/paginationFeature.js';
 import pinningFeature from './pinning/pinningFeature.js';
 import selectionFeature from './selection/selectionFeature.js';
 import serverDataFeature from './serverData/serverDataFeature.js';
@@ -58,9 +60,11 @@ const features = [
   expandableFeature,
   virtualizationFeature,
   serverRangeFeature,
+  lazyCellsFeature,
   keyboardFeature,
   eventsFeature,
   exportFeature,
+  paginationFeature,
 ];
 
 export default features;

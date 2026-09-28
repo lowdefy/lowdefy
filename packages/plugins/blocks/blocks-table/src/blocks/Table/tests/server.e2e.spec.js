@@ -347,7 +347,8 @@ test.describe('Table server mode', () => {
     );
     await block.locator('[data-group-key=\'["qualified"]\']').click();
     await expect(block.locator('.lf-table-body [data-row-key="1"]')).toHaveCount(0);
-    await expect(block.locator('[role="grid"]')).toHaveAttribute('aria-rowcount', '5');
+    // Four groups, the header row and the summary footer with the root list's aggregates.
+    await expect(block.locator('[role="grid"]')).toHaveAttribute('aria-rowcount', '6');
   });
 
   // ============================================

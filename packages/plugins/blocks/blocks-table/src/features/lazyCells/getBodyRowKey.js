@@ -14,12 +14,9 @@
   limitations under the License.
 */
 
-// The rendered row range is state, updated in a layout effect after the row count changes. In the
-// render where rows shrink (a delete, a refetch with fewer rows) it still spans the old count, so
-// it is clamped to the rows there are.
-function clampRowRange({ range, rowCount }) {
-  if (range.rowEnd <= rowCount) return range;
-  return { ...range, rowStart: Math.min(range.rowStart, rowCount), rowEnd: rowCount };
+function getBodyRowKey(target) {
+  if (!(target instanceof Element)) return null;
+  return target.closest('.lf-table-body [data-row-key]')?.dataset.rowKey ?? null;
 }
 
-export default clampRowRange;
+export default getBodyRowKey;

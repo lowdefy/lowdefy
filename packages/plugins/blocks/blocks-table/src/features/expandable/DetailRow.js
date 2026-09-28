@@ -18,28 +18,27 @@ import React, { memo, useLayoutEffect, useRef } from 'react';
 import { renderHtml } from '@lowdefy/block-utils';
 
 // The expanded content of a row: the `expandable.template` HTML in one cell as wide as the
-// viewport (it stays put while the table scrolls sideways). Its height is its content's; it
-// measures itself so the window places the rows below it.
-function DetailRow({ api, displayIndex, item }) {
+// viewport (it stays put while the table scrolls sideways). Its height is its content's: the body
+// measures it after each window render like any measured item (`data-measure-key`), and it
+// reports again when its content resizes (images loading, fonts), so the rows below move.
+function DetailRow({ api, ariaRowIndex, displayIndex, item }) {
   const ref = useRef(null);
   useLayoutEffect(() => {
     const element = ref.current;
-    const report = () =>
-      api.setDetailHeight({ id: item.parentId, height: element.getBoundingClientRect().height });
-    report();
-    const observer = new ResizeObserver(report);
+    const observer = new ResizeObserver(() => api.measureRows([element]));
     observer.observe(element);
     return () => observer.disconnect();
-  }, [api, item.parentId]);
+  }, [api]);
   const html = api.config.expandable.render({
     row: item.original,
     rowKey: api.config.getKey(item.original),
   });
   return (
     <div
-      aria-rowindex={displayIndex + 2}
+      aria-rowindex={ariaRowIndex}
       className="lf-table-detail"
       data-detail-for={item.parentId}
+      data-measure-key={`detail:${item.key}`}
       data-row-index={displayIndex}
       ref={ref}
       role="row"
