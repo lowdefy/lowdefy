@@ -20,8 +20,10 @@ import { flushSync } from 'react-dom';
 import { App, ConfigProvider } from 'antd';
 
 import RenderProbeContext from '../../dist/core/RenderProbeContext.js';
+import createSortKeyGetter from '@lowdefy/blocks-antd/table/createSortKeyGetter.js';
+import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
+
 import buildSortKeys from '../../dist/features/sorting/buildSortKeys.js';
-import createComparator from '../../dist/core/createComparator.js';
 import createAccessor from '../../dist/core/createAccessor.js';
 import BenchTable from './BenchTable.jsx';
 import generateData from './generateData.js';
@@ -121,13 +123,15 @@ window.__bench = {
   },
   sortKeysMicro({ key }) {
     const { columns, data } = window.__bench.dataset;
-    const column = columns.find((entry) => entry.key === key);
+    const column = normalizeColumns({
+      columns: [columns.find((entry) => entry.key === key)],
+    }).columns[0];
     const rows = data.map((original) => ({ original }));
     const started = performance.now();
     buildSortKeys({
       rows,
       accessor: createAccessor(key),
-      comparator: createComparator({ column }),
+      getSortKey: createSortKeyGetter({ column }),
       columnType: column.type,
     });
     return performance.now() - started;

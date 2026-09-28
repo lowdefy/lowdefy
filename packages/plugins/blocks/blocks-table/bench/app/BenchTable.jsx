@@ -18,6 +18,19 @@ import React, { useState } from 'react';
 
 import Table from '../../dist/blocks/Table/Table.lazy.js';
 
+// Stand-ins for the Lowdefy client's components: an anchor for Link (the client's Link adds router
+// navigation on click) and no icons.
+function BenchLink({ children, className, onClick, pageId, urlQuery }) {
+  const query = new URLSearchParams(urlQuery ?? {}).toString();
+  return (
+    <a className={className} href={`/${pageId}${query ? `?${query}` : ''}`} onClick={onClick}>
+      {children}
+    </a>
+  );
+}
+
+const components = { Icon: () => null, Link: BenchLink };
+
 // Mounts the Table implementation with engine-shaped props: setValue feeds the value back as the
 // `value` prop with its identity kept, as the Lowdefy engine does.
 function BenchTable({ columns, data, methodsRef, properties, strategy }) {
@@ -39,7 +52,7 @@ function BenchTable({ columns, data, methodsRef, properties, strategy }) {
   return (
     <Table
       blockId="bench_table"
-      components={{ Icon: () => null, Link: 'a' }}
+      components={components}
       methods={methods}
       properties={{ columns, data, height: 800, ...properties }}
       rowWindowStrategy={strategy}
