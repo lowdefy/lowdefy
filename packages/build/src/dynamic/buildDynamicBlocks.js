@@ -121,6 +121,9 @@ function buildDynamicBlocks({
     // unique by construction, so they can never collide with static block ids.
     blockIdPrefix: idPrefix,
     callApiActionRefs,
+    // Sink: dynamic content can target blocks on the static page, which this
+    // fragment cannot see, so a missing block surfaces when the action runs.
+    callMethodActionRefs: [],
     checkDuplicateRequestId: createCheckDuplicateId({
       message: 'Duplicate requestId "{{ id }}" on page "{{ pageId }}".',
     }),

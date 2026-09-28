@@ -27,6 +27,7 @@ import validateId from '../../utils/validateId.js';
 import createCounter from '../../utils/createCounter.js';
 import countImpliedClientTypes from './countImpliedClientTypes.js';
 import createPageTypeCounters from './createPageTypeCounters.js';
+import validateCallMethodReferences from './validateCallMethodReferences.js';
 import validateRequestReferences from './validateRequestReferences.js';
 
 function buildPage({ page, index, context, checkDuplicatePageId }) {
@@ -49,6 +50,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   page.pageId = page.id;
   const requests = [];
   const requestActionRefs = [];
+  const callMethodActionRefs = [];
   const shortcutRefs = [];
   // Extract subscriptions before block building — validateBlock rejects the
   // subscriptions key on nested blocks, so the page root must not carry it.
@@ -62,6 +64,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
     auth: page.auth,
     blockIdCounter: createCounter(),
     callApiActionRefs: context.callApiActionRefs ?? [],
+    callMethodActionRefs,
     websocketActionRefs: context.websocketActionRefs ?? [],
     dynamicBlockRefs: context.dynamicBlockRefs ?? [],
     checkDuplicateRequestId: createCheckDuplicateId({
@@ -89,6 +92,7 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   page.subscriptions = subscriptions;
   buildSubscriptions(page, {
     callApiActionRefs: context.callApiActionRefs ?? [],
+    callMethodActionRefs,
     context,
     linkActionRefs: context.linkActionRefs,
     pageId: page.pageId,
@@ -105,6 +109,14 @@ function buildPage({ page, index, context, checkDuplicatePageId }) {
   validateRequestReferences({
     requestActionRefs,
     requests,
+    pageId: page.pageId,
+    context,
+  });
+
+  validateCallMethodReferences({
+    blockIds: Object.keys(pageContext.blockIdCounter.getCounts()),
+    callMethodActionRefs,
+    hasDynamicBlocks: pageContext.hasDynamicBlocks === true,
     pageId: page.pageId,
     context,
   });
