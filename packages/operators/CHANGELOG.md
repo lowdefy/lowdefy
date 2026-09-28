@@ -1,5 +1,47 @@
 # Change Log
 
+## 6.1.0
+
+### Minor Changes
+
+- 6d6f8fa: feat: add the `_error` operator, which reads the error being handled.
+
+  - **Inside a server `:catch`**, `_error` returns the error that sent the routine there: its `name`, real `message`, `code`, `statusCode` and `cause` chain. Values of the app's secrets in the message are replaced with `[REDACTED]`. It resolves to the innermost `:catch`, a `:finally` reads the error of the `:catch` around its `:try`, and each `:parallel` branch reads its own. A routine can now branch on the failure:
+
+    ```yaml
+    - :try:
+        - id: get_customer
+          type: AxiosHttp
+          connectionId: crm
+          properties:
+            url: /customers
+      :catch:
+        - :if:
+            _eq: [{ _error: statusCode }, 404]
+          :then:
+            - :reject: Customer not found
+        - :throw: Customer lookup failed
+    ```
+
+  - **Inside a client `catch` action list**, `_error` returns the error that sent the event there. An error from the server keeps its `code` and `statusCode`, so a page can branch on a failed `Request` without an endpoint.
+  - **Outside a catch**, `_error` returns `null`.
+  - **`:throw` and `:reject` accept an Error as their message.** `:throw: { _error: true }` rethrows the caught error, keeping its class, `code` and `statusCode`; `:reject: { _error: true }` rejects with its message as the user would see it. Use `{ _error: message }` to send the real message to the user.
+  - `code` and `statusCode` are read the same way for every connection: `code` is the error's own `code`, and `statusCode` the first number among its `statusCode`, `status` and `response.status`. A request error now carries both from the error its connection threw, and AxiosHttp sets both on a non-2xx response.
+
+### Patch Changes
+
+- 5657441: fix: API routine steps now evaluate operators against the full routine frame.
+
+  - `ValidateSchema` step properties can read routine state. `_state` in a `ValidateSchema` step resolved to `null`.
+  - Connection properties can read the loop item. `_item` in a connection's properties inside a `:for` or `:parallel_for` loop resolved to `null`.
+  - `$` in `_state`, `_step`, `_payload` and `_item` paths inside a `:for` or `:parallel_for` loop now resolves to the current loop index, as it does for list blocks on the client. For example, `_step: fetch.$.id` reads the current iteration's `fetch` result.
+  - Operators that evaluate nested config, such as `_function`, now receive a parser bound to the calling frame. `_function` bodies no longer depend on `_function` forwarding each frame field, so a nested `__function` keeps routine state, items and loop indices.
+
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/helpers@6.1.0
+  - @lowdefy/errors@6.1.0
+
 ## 6.0.0
 
 ### Minor Changes

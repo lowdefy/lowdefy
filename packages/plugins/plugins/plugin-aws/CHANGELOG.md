@@ -1,5 +1,20 @@
 # Change Log
 
+## 6.1.0
+
+### Patch Changes
+
+- Updated dependencies [ae9803e]
+- Updated dependencies [ea69869]
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [1d3a0b8]
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/blocks-antd@6.1.0
+  - @lowdefy/block-utils@6.1.0
+  - @lowdefy/helpers@6.1.0
+  - @lowdefy/errors@6.1.0
+  - @lowdefy/blocks-files@6.1.0
+
 ## 6.0.0
 
 ### Minor Changes
