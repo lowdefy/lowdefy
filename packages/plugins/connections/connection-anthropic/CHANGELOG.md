@@ -1,5 +1,12 @@
 # @lowdefy/connection-anthropic
 
+## 6.1.0
+
+### Patch Changes
+
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/ai-utils@6.1.0
+
 ## 6.0.0
 
 ### Minor Changes

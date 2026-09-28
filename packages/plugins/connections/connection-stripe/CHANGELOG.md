@@ -1,5 +1,13 @@
 # Change Log
 
+## 6.1.0
+
+### Patch Changes
+
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/helpers@6.1.0
+
 ## 6.0.0
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/e2e-utils",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "license": "Apache-2.0",
   "description": "Lowdefy E2E Testing Utilities for Playwright",
   "homepage": "https://lowdefy.com",
@@ -44,7 +44,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@lowdefy/helpers": "6.0.0",
+    "@lowdefy/helpers": "6.1.0",
     "js-yaml": "4.3.2",
     "prompts": "2.4.2"
   },

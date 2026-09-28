@@ -1,5 +1,36 @@
 # Change Log
 
+## 6.1.0
+
+### Minor Changes
+
+- ea69869: feat(blocks-basic): add the `ClickableHtml` block. It renders sanitised HTML like `Html`, and additionally fires a named event when an element carrying a `data-event` attribute inside the markup is clicked: `data-event="onEditClick"` fires the block's `onEditClick` event, so a single block of markup can carry many clickable targets, each with its own action chain, without a block per button. The event object holds the element's other `data-*` attributes with snake_case keys (`data-record-id` → `record_id`). `HtmlComponent` in `@lowdefy/block-utils` now accepts an `onClick` prop.
+
+### Patch Changes
+
+- 1d3a0b8: Update dependencies to releases with published security fixes.
+
+  - `hono` 4.13.5 and `@hono/node-server` 2.0.10 in the servers.
+  - `ws` 8.21.0 in the servers; `postcss` 8.5.23 in the dev server.
+  - The servers drop leftover Next.js-era dependencies they no longer use: `@sentry/nextjs` from `@lowdefy/server`, and the `webpack` and `@next/eslint-plugin-next` devDependencies.
+  - `axios` 1.18.0 in the CLI and AxiosHttp.
+  - `dompurify` 3.4.13 in `block-utils`, `blocks-basic` and `blocks-markdown`.
+  - `echarts` 6.1.0, `mysql2` 3.23.1, `nodemailer` 9.1.1, `uuid` 13.0.1 and `@auth/mongodb-adapter` 3.11.3 in their plugins.
+  - `tar` 7.5.21 and `picomatch` 4.0.4 in the build, `js-yaml` 4.3.2 in `e2e-utils`, and `@babel/core` 7.29.6 in `block-utils`.
+  - `@auth/core` 0.41.3 in the servers and `plugin-next-auth`, whose peer range is now `>=0.41.3`. `@auth/mongodb-adapter` 3.11.3 depends on the same release.
+
+  Two of these change output an app can see:
+
+  - **`echarts` 6.1.0** changes chart defaults. Bar, pictorialBar, candlestick and boxplot series no longer draw past the grid edge; set `containShape: false` on the axis to restore the previous look. `axis.startValue` no longer sets `min`. The second argument of a `tooltip.valueFormatter` function is now `rawDataIndex`.
+  - **`dompurify` 3.4.13** keeps a few attributes and elements that earlier releases removed: `command` / `commandfor`, `<selectedcontent>`, and some SVG attributes. HTML rendered by `Html`, `ClickableHtml`, `DangerousHtml`, `DangerousMarkdown` and other `renderHtml` properties may keep them.
+
+- Updated dependencies [ea69869]
+- Updated dependencies [6d6f8fa]
+- Updated dependencies [1d3a0b8]
+- Updated dependencies [6d6f8fa]
+  - @lowdefy/block-utils@6.1.0
+  - @lowdefy/helpers@6.1.0
+
 ## 6.0.0
 
 ### Minor Changes
