@@ -81,6 +81,7 @@ Columns, cells, conditions and exports come from `@lowdefy/blocks-antd/table/<fi
 - `Cell` renders `renderCell({ column, row, rowKey, methods, components, onEvent })` inside its grid cell. Renderers build full event payloads (buttons, menus, `onCellLink`) and `api.onCellEvent` passes them to `methods.triggerEvent` unchanged.
 - Row events use the shared `isControlTarget` (with the row as container) and `resolveLink`; `rowLink` navigates with `getHtmlEnhancements().link(...)`, the client's registered Link function, as TableLight does. With `onRowClick` defined, a plain click runs it and only a modified click follows the link.
 - Export uses `getExportValue` and `htmlToText`; the summary footer uses `computeAggregate` and `getAggregateText`.
+- Rich cell types (`core/lazyCellTypes.js`) render through `core/LazyCell.js`: cells that come into view during a fast scroll show their text (`getCellText`) in the cell layout and upgrade when the scroll settles; `buttons` with `showOn: hover` mount only on the hovered or focused row. `api.cellActivity` (`core/createCellActivity.js`) holds the hovered row, focused row and fast-scroll flag, fed by `features/lazyCells`.
 - The engine's own grid-cell class is `lf-table-gridcell` (the shared core owns `lf-table-cell`, `lf-table-empty` and `lf-table-progress`).
 
 ## Not done yet
@@ -90,4 +91,4 @@ Columns, cells, conditions and exports come from `@lowdefy/blocks-antd/table/<fi
 - Sorted tables re-sort fully on a data change (incremental re-sort comes with P3 transactions).
 - Text sort keys are built in slices on the header click; a sort set through the value or `defaultView` builds them synchronously in the render.
 - Pagination (`pagination: true`) keeps the page in local state, not in the value; `scrollToRow` only finds rows on the current page.
-- `buttons` cells render antd `Button`s (shared with TableLight); they are mounted for every rendered row, hidden by opacity with `showOn: hover` (see bench/RESULTS.md for the cost).
+- `buttons` cells mount antd `Button`s (the shared renderer, as in TableLight). D4's static token-styled form for always-visible buttons is not built; the fast-scroll placeholder stands in for it.
