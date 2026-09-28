@@ -187,3 +187,25 @@ blocks:
       data:
         - { id: 1, name: Ann }
         - { id: 2, name: Ben }
+
+  # ============================================
+  # FAST SCROLL PLACEHOLDERS
+  # ============================================
+
+  - id: tf_fast
+    type: Table
+    properties:
+      height: 300
+      columns:
+        - key: id
+          type: number
+        - key: stage
+          type: tag
+          options:
+            - { value: won, label: Won, color: success }
+            - { value: lost, label: Lost, color: error }
+      data:
+        _js: |
+          const rows = [];
+          for (let i = 0; i < 5000; i++) rows.push({ id: i, stage: i % 2 ? 'won' : 'lost' });
+          return rows;

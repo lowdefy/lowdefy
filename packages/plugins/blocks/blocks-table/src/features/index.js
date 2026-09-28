@@ -17,6 +17,7 @@
 import eventsFeature from './events/eventsFeature.js';
 import exportFeature from './export/exportFeature.js';
 import keyboardFeature from './keyboard/keyboardFeature.js';
+import lazyCellsFeature from './lazyCells/lazyCellsFeature.js';
 import orderingFeature from './ordering/orderingFeature.js';
 import paginationFeature from './pagination/paginationFeature.js';
 import pinningFeature from './pinning/pinningFeature.js';
@@ -38,6 +39,7 @@ const features = [
   visibilityFeature,
   selectionFeature,
   virtualizationFeature,
+  lazyCellsFeature,
   keyboardFeature,
   eventsFeature,
   exportFeature,

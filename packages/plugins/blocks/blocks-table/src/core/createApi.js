@@ -14,12 +14,15 @@
   limitations under the License.
 */
 
+import createCellActivity from './createCellActivity.js';
+
 // The table's per-instance API object: one stable mutable object that the core refreshes on every
 // render (table, config, state, layout, ...), so delegated event handlers, actions and methods
 // always read current values without being recreated.
 function createApi() {
   const api = {
     actions: {},
+    cellActivity: createCellActivity(),
     foreignKeys: new Map(),
     rootRef: { current: null },
     scrollerRef: { current: null },

@@ -17,10 +17,29 @@
 import React, { memo } from 'react';
 import renderCell from '@lowdefy/blocks-antd/table/renderCell.js';
 
+import LAZY_CELL_TYPES from './lazyCellTypes.js';
+import LazyCell from './LazyCell.js';
+
+function renderContent({ api, col, original }) {
+  const rowKey = api.config.getKey(original);
+  if (LAZY_CELL_TYPES.has(col.column.type)) {
+    return <LazyCell api={api} col={col} original={original} rowKey={rowKey} />;
+  }
+  return renderCell({
+    column: col.column,
+    row: original,
+    rowKey,
+    methods: api.methods,
+    components: api.components,
+    onEvent: api.onCellEvent,
+  });
+}
+
 // One grid cell. Memoised on the row object and the layout column, so a horizontal range change
 // only mounts the cells that came into range. The content is the shared column core's cell
 // (`renderCell`, the same renderers TableLight uses); renderers build their own event payloads
-// and `api.onCellEvent` passes them to the block's triggerEvent.
+// and `api.onCellEvent` passes them to the block's triggerEvent. Rich cell types mount on demand
+// through LazyCell (placeholders during fast scrolls, hover-only buttons on hover).
 function Cell({ api, col, focused, original, selected }) {
   if (col.special) {
     return (
@@ -57,14 +76,7 @@ function Cell({ api, col, focused, original, selected }) {
       style={col.style}
       tabIndex={focused ? 0 : -1}
     >
-      {renderCell({
-        column: col.column,
-        row: original,
-        rowKey: api.config.getKey(original),
-        methods: api.methods,
-        components: api.components,
-        onEvent: api.onCellEvent,
-      })}
+      {renderContent({ api, col, original })}
     </div>
   );
 }

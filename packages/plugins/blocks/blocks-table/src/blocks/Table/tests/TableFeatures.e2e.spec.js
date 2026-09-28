@@ -139,12 +139,58 @@ test.describe('Table features shared with TableLight', () => {
     await expect(page).toHaveURL(/\/table-link-target\?id=2$/);
   });
 
-  test('showOn hover buttons appear on the hovered row only', async ({ page }) => {
+  test('showOn hover buttons mount and show on the hovered or focused row only', async ({
+    page,
+  }) => {
     const first = cell(page, 'tf_hover', 1, 'actions').locator('.lf-table-actions');
     const second = cell(page, 'tf_hover', 2, 'actions').locator('.lf-table-actions');
-    await expect(first).toHaveCSS('opacity', '0');
+    // Tier 1: the buttons are not mounted until their row is hovered.
+    await expect(first).toHaveCount(0);
     await cell(page, 'tf_hover', 1, 'name').hover();
     await expect(first).toHaveCSS('opacity', '1');
-    await expect(second).toHaveCSS('opacity', '0');
+    await expect(first.locator('button')).toHaveText('Open');
+    await expect(second).toHaveCount(0);
+    await cell(page, 'tf_hover', 2, 'name').hover();
+    await expect(second).toHaveCSS('opacity', '1');
+    await expect(first).toHaveCount(0);
+    // Keyboard focus in a row mounts them too.
+    await page.mouse.move(0, 0);
+    await cell(page, 'tf_hover', 1, 'name').focus();
+    await expect(first).toHaveCSS('opacity', '1');
+  });
+
+  test('rich cells scrolled in fast show their text, then render in full once the scroll settles', async ({
+    page,
+  }) => {
+    const scroller = getBlock(page, 'tf_fast').locator('.lf-table-scroller');
+    await scroller.scrollIntoViewIfNeeded();
+    const placeholders = await scroller.evaluate(async (element) => {
+      const frame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+      let seen = 0;
+      for (let i = 1; i <= 20; i++) {
+        element.scrollTop = i * 4000;
+        await frame();
+        await frame();
+        const cells = element.querySelectorAll('.lf-table-body [data-col-key="stage"]');
+        cells.forEach((cellElement) => {
+          if (cellElement.querySelector('.lf-table-tag') === null) seen += 1;
+        });
+      }
+      return seen;
+    });
+    // Rows that came into view mid-scroll showed the text placeholder.
+    expect(placeholders).toBeGreaterThan(0);
+    const visible = getBlock(page, 'tf_fast').locator(
+      '.lf-table-body [role="row"] [data-col-key="stage"]'
+    );
+    await expect(visible.first().locator('.lf-table-tag')).toBeVisible();
+    await expect
+      .poll(() =>
+        visible.evaluateAll((cells) =>
+          cells.every((cellElement) => cellElement.querySelector('.lf-table-tag'))
+        )
+      )
+      .toBe(true);
+    await expect(visible.first()).toHaveText(/Won|Lost/);
   });
 });

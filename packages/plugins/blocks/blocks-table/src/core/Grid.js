@@ -165,11 +165,14 @@ function Grid({
       data-pending={isPending ? '' : undefined}
       id={blockId}
       onAuxClick={dispatch('auxclick')}
+      onBlur={dispatch('blur')}
       onClick={dispatch('click')}
       onDoubleClick={dispatch('dblclick')}
       onFocus={dispatch('focus')}
       onKeyDown={dispatch('keydown')}
       onPointerDown={dispatch('pointerdown')}
+      onPointerLeave={dispatch('pointerleave')}
+      onPointerOver={dispatch('pointerover')}
       ref={rootRef}
       style={rootStyle}
     >
