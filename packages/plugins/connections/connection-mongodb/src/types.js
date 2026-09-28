@@ -47,6 +47,7 @@ export default {
     'MongoDBInsertMany',
     'MongoDBInsertManyConsecutiveIds',
     'MongoDBInsertOne',
+    'MongoDBTableChanges',
     'MongoDBTableQuery',
     'MongoDBUpdateMany',
     'MongoDBUpdateOne',

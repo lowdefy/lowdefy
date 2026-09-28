@@ -31,7 +31,7 @@ const implementations = fs
   .sort();
 
 test('every MongoDBCollection request implementation is found', () => {
-  expect(implementations.length).toBe(15);
+  expect(implementations.length).toBe(16);
 });
 
 test.each(implementations)('%s imports mapMongoError', (name) => {
