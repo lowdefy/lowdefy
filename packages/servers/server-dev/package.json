@@ -62,6 +62,7 @@
     "@lowdefy/blocks-echarts": "6.0.0",
     "@lowdefy/blocks-loaders": "6.0.0",
     "@lowdefy/blocks-markdown": "6.0.0",
+    "@lowdefy/blocks-table": "6.0.0",
     "@lowdefy/blocks-tiptap": "6.0.0",
     "@lowdefy/build": "6.0.0",
     "@lowdefy/client": "6.0.0",

@@ -91,6 +91,7 @@
     "@lowdefy/blocks-google-maps": "6.0.0",
     "@lowdefy/blocks-markdown": "6.0.0",
     "@lowdefy/blocks-qr": "6.0.0",
+    "@lowdefy/blocks-table": "6.0.0",
     "@lowdefy/blocks-tiptap": "6.0.0",
     "@lowdefy/connection-ai-gateway": "6.0.0",
     "@lowdefy/connection-anthropic": "6.0.0",
