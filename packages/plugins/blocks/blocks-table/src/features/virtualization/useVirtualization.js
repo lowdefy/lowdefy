@@ -34,6 +34,11 @@ function useVirtualization(ctx) {
     scrollerRef,
     params: { headerHeight, layout, rowCount: rows.length, rowHeight, virtualColumns, virtualRows },
   });
+  // The scroll window is state recomputed in a layout effect, so in the render where the row
+  // count drops (a filter, shorter data) it still spans the previous rows. Clamp it to the rows
+  // this render has; the effect then settles the window for the new count before paint.
+  const rowEnd = Math.min(scrollWindow.rowEnd, rows.length);
+  const rowStart = Math.min(scrollWindow.rowStart, rowEnd);
   const positioned = strategy === 'positioned' && virtualRows;
   const tanstackRows = useTanstackRowWindow({
     enabled: positioned,
@@ -45,7 +50,7 @@ function useVirtualization(ctx) {
   if (positioned && tanstackRows) {
     return { range: { ...scrollWindow, ...tanstackRows, positioning: 'positioned' } };
   }
-  return { range: { ...scrollWindow, positioning: 'translated' } };
+  return { range: { ...scrollWindow, rowStart, rowEnd, positioning: 'translated' } };
 }
 
 export default useVirtualization;

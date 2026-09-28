@@ -28,7 +28,8 @@ function createToggleSort(api) {
       apply();
       return true;
     }
-    const rows = api.table.getPreSortedRowModel().rows;
+    // Keys are built for the core rows (sortRowModel reads filtered subsets through them).
+    const rows = api.table.getCoreRowModel().rows;
     const root = api.rootRef.current;
     root?.setAttribute('data-pending', '');
     prepareSortKeys({ rows, column }).then(() => {
