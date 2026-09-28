@@ -350,6 +350,52 @@ _ref:
                       _event: width
             ```
 
+            ## App events
+
+            Events can also be defined for the whole app, in the `events` object at the root of `lowdefy.yaml`. App events run once each time the app is loaded in the browser, whichever page is opened first, and do not run again when the user navigates between pages. Opening the app in a new tab, or reloading the browser, loads the app again. App events are a good place to set up [`global`](/page-and-app-state) values that every page uses, like user settings fetched from an [API endpoint](/lowdefy-api).
+
+            - `onInit`: Runs before the first page's own events. The page stays in its loading state, rendering only the progress bar, until the app `onInit` actions have finished, so the first page's `onInit` can read the values it set with [`_global`](/_global).
+            - `onInitAsync`: Runs once the app `onInit` has finished, without blocking the page. The first page's events do not wait for it, and pages re-render when it sets `global` values.
+
+            ###### Load user settings when the app loads:
+            ```yaml
+            # lowdefy.yaml
+            global:
+              settings: null
+            events:
+              onInit:
+                - id: set_user
+                  type: SetGlobal
+                  params:
+                    userName:
+                      _user: name
+              onInitAsync:
+                try:
+                  - id: fetch_settings
+                    type: CallAPI
+                    params:
+                      endpointId: user_settings
+                  - id: set_settings
+                    type: SetGlobal
+                    params:
+                      settings:
+                        _actions: fetch_settings.response.response
+                catch:
+                  - id: warn
+                    type: DisplayMessage
+                    params:
+                      content: Could not load your settings.
+                      status: warning
+            pages:
+              # ...
+            ```
+
+            App events run outside any page, so page state, inputs, requests, blocks and subscriptions are not available to them. The build fails if an app event uses the `CallMethod`, `Request`, `Reset`, `ResetValidation`, `SetFocus`, `SetState`, `Subscribe`, `Unsubscribe` or `Validate` actions, or the `_input`, `_request`, `_request_details`, `_state` or `_websocket` operators. Use [`CallAPI`](/CallAPI) to fetch data, [`SetGlobal`](/SetGlobal) to store it, and operators like [`_user`](/_user), [`_url_query`](/_url_query), [`_global`](/_global) and [`_actions`](/_actions) to read values. A [`Link`](/Link) action can redirect the user, for example to an onboarding page.
+
+            App event errors are handled like page event errors: the error message is displayed, the error is logged, and the `catch` actions run. A failed app `onInit` does not stop the page from loading, and the app `onInitAsync` still runs after it. App events do not support `shortcut`.
+
+            The app events config is sent to the browser with the rest of the app config, like `global`, so do not put secrets in it.
+
             ## Action types
 
             The following actions can be used:
@@ -386,6 +432,7 @@ _ref:
             - The `onOnline` and `onOffline` events are triggered when the browser reports that the network connection was regained or lost.
             - The `onResize` event is triggered when the window is resized, debounced by 200ms.
             - Browser lifecycle events are never triggered on the initial page load, and are removed when the user navigates away from the page.
+            - App events, defined in the root `events` object, run once per app load: the app `onInit` runs before the first page's events and keeps the page in loading, and the app `onInitAsync` runs after it without blocking the page.
 
       - _ref:
           path: templates/navigation_buttons.yaml

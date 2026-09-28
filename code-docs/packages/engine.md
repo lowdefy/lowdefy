@@ -33,6 +33,25 @@ const context = getContext({
 });
 ```
 
+## App Context
+
+`getAppContext({ events, jsMap, lowdefy })` builds the context that runs the app events
+(`events.onInit` / `events.onInitAsync` in `lowdefy.yaml`, delivered in `rootConfig.events`).
+It shares `createContext` with `getContext`, over a block-less `Box` root with id and blockId
+`app`, and is memoized on `lowdefy.appContext` (not in `lowdefy.contexts`, so page
+iteration never sees it; `initLowdefyContext` clears it so a dev config reload runs the app
+events again).
+
+- `runOnInit` / `runOnInitAsync` are single-flight: every page mount calls them
+  (`client/src/Context.js`), and a navigation can mount the next page before they finish.
+  `runOnInitAsync` always chains after `runOnInit`.
+- The page's `runOnInit` awaits the app `runOnInit`; the app `runOnInitAsync` is not awaited.
+- The app context's `update` also runs a tracked pass (`update({ changes: [] })`) on every page
+  context, so a `SetGlobal` or `CallAPI` in the app `onInitAsync` re-renders the mounted page.
+- Page-scoped actions and operators (`SetState`, `Request`, `_state`, `_input`, ...) are
+  rejected by the build (`build/buildAppEvents.js`), and the app event types join every page's
+  per-page type set (`buildPageTypes`), since any page can be the first to load.
+
 ## Architecture
 
 ```
