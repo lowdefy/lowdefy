@@ -260,3 +260,32 @@ test('compileCondition throws when a group is not a list', () => {
     'Condition "and" must be a list of conditions.'
   );
 });
+
+test('compileCondition in and eq keep exact equality for values without a key', () => {
+  const inTest = compileCondition({
+    condition: { key: 'v', op: 'in', value: [NaN, { name: 'x' }, true, 5] },
+    columnsByKey,
+  });
+  expect(inTest({ v: NaN })).toBe(false);
+  expect(inTest({ v: { name: 'X' } })).toBe(true);
+  expect(inTest({ v: 'TRUE' })).toBe(true);
+  expect(inTest({ v: '5' })).toBe(true);
+  expect(inTest({ v: 1 })).toBe(false);
+  expect(inTest({ v: new Date(0) })).toBe(false);
+  const eqTest = compileCondition({
+    condition: { key: 'v', op: 'eq', value: 'Ada' },
+    columnsByKey,
+  });
+  expect(eqTest({ v: ['ada'] })).toBe(true);
+  expect(eqTest({ v: ['ada', 'bob'] })).toBe(false);
+});
+
+test('compileCondition reads nested row fields and literal dotted keys', () => {
+  const test = compileCondition({
+    condition: { key: 'owner.name', op: 'eq', value: 'ada' },
+    columnsByKey: {},
+  });
+  expect(test({ owner: { name: 'Ada' } })).toBe(true);
+  expect(test({ 'owner.name': 'Ada' })).toBe(true);
+  expect(test({ owner: null })).toBe(false);
+});

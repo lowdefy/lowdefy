@@ -94,6 +94,7 @@ function normalizeLeaf({ column, defaults, path }) {
     resizable: getFlag({ name: 'resizable', column, defaults, isAction }),
     groupable: getFlag({ name: 'groupable', column, defaults, isAction }),
     editable: getFlag({ name: 'editable', column, defaults, isAction }),
+    searchable: column.searchable === true,
     ellipsis: getEllipsis(column.ellipsis ?? defaults.ellipsis),
     wrap: (column.wrap ?? defaults.wrap) === true,
     aggregate: column.aggregate,
