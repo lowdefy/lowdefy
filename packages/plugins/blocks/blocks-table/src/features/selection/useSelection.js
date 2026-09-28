@@ -22,7 +22,8 @@ import SelectCell from './SelectCell.js';
 const SELECT_COLUMN_WIDTH = 40;
 
 // While the selection is `{ all: true, except }`, rows that appear in later data are selected
-// too: "all" means every row, not the rows that happened to be loaded.
+// too: "all" means every row, not the rows that happened to be loaded. Rows in `except` stay out
+// when their block is loaded again (server mode).
 function useSelection(ctx) {
   const { api, data, state } = ctx;
   const enabled = Boolean(ctx.config.rowSelection);
@@ -33,7 +34,9 @@ function useSelection(ctx) {
     const previous = previousRowsById.current;
     previousRowsById.current = rowsById;
     if (!previous || state.selectionMode !== 'all') return;
-    const added = Object.keys(rowsById).filter((id) => !previous[id]);
+    const added = Object.keys(rowsById).filter(
+      (id) => !previous[id] && !api.selectionExcept.has(id)
+    );
     if (!added.length) return;
     api.setSliceSilently('rowSelection', (selection) => {
       const next = { ...selection };

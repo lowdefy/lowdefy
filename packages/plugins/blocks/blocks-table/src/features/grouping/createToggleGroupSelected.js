@@ -20,6 +20,8 @@ import countGroupSelection from './countGroupSelection.js';
 function createToggleGroupSelected(api) {
   return function toggleGroupSelected({ key }) {
     if (api.config.rowSelection?.type !== 'checkbox') return false;
+    // Server groups have no leaf rows in the browser, so they have no group checkbox.
+    if (!api.grouping?.tree) return false;
     const group = api.grouping.tree.groupsByKey.get(key);
     const { leaves } = api.grouping.tree;
     const { selected, total } = countGroupSelection({

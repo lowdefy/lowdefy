@@ -65,7 +65,9 @@ function getTouchedRows({ rows, changes, getKey }) {
   return rows.filter((row) => touched.has(String(getKey(row))));
 }
 
-// The editing feature's data hook (runs before TanStack sees the rows). It compiles the edit
+// The editing feature's `useRows` hook (after the rows are diffed by key, before TanStack sees
+// them). Row identity is stable here, which the overlay relies on: an entry applies until its
+// row in `data` is a different object. It compiles the edit
 // specs, and then per block:
 // - Table: lays the optimistic overlays over `data` (cell edits and a row move that are saving,
 //   or saved and not yet replaced by new data) and prunes them once `data` catches up.
@@ -73,7 +75,7 @@ function getTouchedRows({ rows, changes, getKey }) {
 //   that fail inline validation.
 // `data` is never written. The per-table editing state lives on `api.editing` for handlers,
 // actions and the editing layer.
-function useEditingData({ api, config, data, input, properties }) {
+function useEditingData({ api, config, input, properties, rows: data }) {
   const specs = useMemo(
     () =>
       createEditSpecs({

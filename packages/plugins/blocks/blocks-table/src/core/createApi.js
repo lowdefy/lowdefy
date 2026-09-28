@@ -23,6 +23,9 @@ function createApi() {
     foreignKeys: new Map(),
     rootRef: { current: null },
     scrollerRef: { current: null },
+    // Row ids (to raw keys) left out of an `{ all: true, except }` selection, kept while their
+    // rows are not loaded (server mode).
+    selectionExcept: new Map(),
     suppressedClick: false,
   };
   api.contains = (element) => Boolean(api.rootRef.current?.contains(element));

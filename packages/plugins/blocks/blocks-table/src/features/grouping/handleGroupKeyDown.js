@@ -24,7 +24,8 @@ function handleGroupKeyDown(event, api) {
   const rowElement = cell.closest('[data-group-key]');
   if (!rowElement) return false;
   const key = rowElement.dataset.groupKey;
-  const collapsed = api.state.collapsedGroups.includes(key);
+  // Read from the row, which holds it for client and server groups alike.
+  const collapsed = rowElement.getAttribute('aria-expanded') === 'false';
   switch (event.key) {
     case 'Enter':
       event.preventDefault();

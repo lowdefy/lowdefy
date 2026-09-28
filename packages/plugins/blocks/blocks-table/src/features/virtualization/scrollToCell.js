@@ -19,10 +19,11 @@
 function scrollToCell({ api, row, col, align }) {
   const scroller = api.scrollerRef.current;
   if (!scroller) return;
-  const { headerHeight, layout, rowHeight } = api;
+  const { headerHeight, layout, rowOffsets } = api;
   if (row >= 0) {
     const bodyHeight = scroller.clientHeight - headerHeight;
-    const rowTop = row * rowHeight;
+    const rowTop = rowOffsets ? rowOffsets[row] : row * api.rowHeight;
+    const rowHeight = rowOffsets ? rowOffsets[row + 1] - rowTop : api.rowHeight;
     let top = scroller.scrollTop;
     if (align === 'start') {
       top = rowTop;

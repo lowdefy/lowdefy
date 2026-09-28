@@ -19,6 +19,9 @@
 // shows the data order: no grouping, no client filter, and no sort except ascending by the
 // position field itself.
 function getReorderBlock({ config, data, positionField, state, table }) {
+  // Server rows and tree rows have no single saved order the display neighbours come from.
+  if (config.server) return 'Rows cannot be reordered in server mode.';
+  if (config.tree) return 'Rows cannot be reordered in a tree.';
   if ((state.grouping?.length ?? 0) > 0) return 'Rows cannot be reordered while grouped.';
   if (table.getRowModel().rows.length !== data.length) {
     return 'Clear the filter to reorder rows.';

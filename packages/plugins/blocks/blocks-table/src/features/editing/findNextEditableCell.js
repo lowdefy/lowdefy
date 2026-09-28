@@ -15,6 +15,7 @@
 */
 
 import isCellEditable from './isCellEditable.js';
+import isDataItem from '../../core/isDataItem.js';
 
 // Tab / Shift+Tab from an editor: the next editable cell in display order, along the row and
 // then on to the next row (the previous one for -1). Row-level `editable.when` is tested per
@@ -36,6 +37,7 @@ function findNextEditableCell({ rows, cols, specs, rowIndex, colIndex, direction
     const col = cols[c];
     if (col.special) continue;
     const row = rows[r];
+    if (!isDataItem(row)) continue;
     const spec = specs.get(col.key);
     if (isCellEditable({ spec, row: row.original, value: col.accessor(row.original) })) {
       return { rowIndex: r, colIndex: c, rowId: row.id, colKey: col.key };

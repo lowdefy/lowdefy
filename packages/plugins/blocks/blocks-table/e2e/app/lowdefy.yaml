@@ -15,9 +15,26 @@
 lowdefy: local
 name: blocks-table E2E Tests
 
+connections:
+  # Server-mode requests run on the test connection; the specs answer them with page.route.
+  - id: table_test
+    type: TestConnection
+  # MongoDBTableQuery e2e (server-mongodb.e2e.spec.js); only used when the URI secret is set.
+  - id: table_people
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: TABLE_MONGODB_URI
+      collection: table_people
+      write: true
+
 pages:
   - _ref: ../../src/blocks/Table/tests/Table.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/TableLinkTarget.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/grouping.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/editing.e2e.yaml
   - _ref: ../../src/blocks/TableInput/tests/TableInput.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/server.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/tree.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/expandable.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/server-mongodb.e2e.yaml

@@ -14,8 +14,11 @@
   limitations under the License.
 */
 
+// Expands every client group. Server groups open one at a time: opening all of them would fetch
+// every group's rows.
 function createExpandAllGroups(api) {
   return function expandAllGroups() {
+    if (api.serverStore) return false;
     return api.actions.setCollapsedGroups([]);
   };
 }

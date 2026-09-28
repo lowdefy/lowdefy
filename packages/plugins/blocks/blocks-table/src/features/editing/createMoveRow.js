@@ -16,6 +16,7 @@
 
 import applyMoveToChanges from './applyMoveToChanges.js';
 import computeRowMove from './computeRowMove.js';
+import isDataItem from '../../core/isDataItem.js';
 
 // A row move from a drag drop or Alt+Shift+Arrow, on the rows in display order. Moves are only
 // offered while the display order is the data order (or the position order), so the move's
@@ -28,7 +29,7 @@ function createMoveRow(api) {
     const row = api.table.getRow(rowId, true);
     if (!row) return null;
     const move = computeRowMove({
-      rows: api.rows.map((displayRow) => displayRow.original),
+      rows: api.rows.filter(isDataItem).map((displayRow) => displayRow.original),
       getKey: api.config.getKey,
       positionField: editing.options.positionField,
       rowKey: rowId,

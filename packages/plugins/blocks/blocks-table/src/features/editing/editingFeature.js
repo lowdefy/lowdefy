@@ -42,7 +42,7 @@ import useEditingGrid from './useEditingGrid.js';
 // the row controls never select.
 const editingFeature = {
   name: 'editing',
-  useData: useEditingData,
+  useRows: useEditingData,
   useFeature: useEditingFragments,
   useGridFeature: useEditingGrid,
   actions: {

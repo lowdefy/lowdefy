@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import scrollToCell from './scrollToCell.js';
+import isDataItem from '../../core/isDataItem.js';
 
 // Block method `scrollToRow({ rowKey, align })`; returns false when no loaded row has that key.
 function createScrollToRow(api) {
@@ -25,7 +26,7 @@ function createScrollToRow(api) {
       throw new Error('scrollToRow requires "rowKey".');
     }
     const id = String(rowKey);
-    const index = api.rows.findIndex((row) => row.id === id);
+    const index = api.rows.findIndex((row) => isDataItem(row) && row.id === id);
     if (index === -1) return false;
     scrollToCell({ api, row: index, col: -1, align: align ?? 'center' });
     return true;

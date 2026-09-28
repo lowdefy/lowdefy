@@ -15,15 +15,13 @@
 */
 
 import getRawRowKey from './getRawRowKey.js';
+import getSelectAllExcept from './getSelectAllExcept.js';
 
 function selectionToValue({ state, api }) {
   const selection = state.rowSelection;
   const rowsById = api.table.getCoreRowModel().rowsById;
   if (state.selectionMode === 'all') {
-    const except = Object.keys(rowsById)
-      .filter((id) => selection[id] !== true)
-      .map((id) => getRawRowKey({ id, api }));
-    return { selected: { all: true, except } };
+    return { selected: { all: true, except: getSelectAllExcept({ api }) } };
   }
   const preserve = api.config.rowSelection?.preserve === true;
   const selected = [];

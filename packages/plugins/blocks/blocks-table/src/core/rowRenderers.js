@@ -16,8 +16,9 @@
 
 import features from '../features/index.js';
 
-// Row components for non-row items of the display list, by item kind (grouping registers
-// `group`). Data rows (TanStack rows, no `kind`) render with the core Row.
+// Components for display items that are not data rows, by item kind (grouping and server groups:
+// `group`; expandable: `detail`), from the features' `rowRenderers`. Data rows (TanStack rows and
+// wrapped `kind: 'row'` items) render with the core Row.
 const rowRenderers = {};
 features.forEach((feature) => {
   Object.assign(rowRenderers, feature.rowRenderers ?? {});

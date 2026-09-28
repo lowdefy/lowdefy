@@ -357,6 +357,7 @@ test('registerEvent then triggerEvent x1', async () => {
       shortcut: null,
       bubble: false,
       history: [],
+      internal: true,
       loading: false,
     },
   });

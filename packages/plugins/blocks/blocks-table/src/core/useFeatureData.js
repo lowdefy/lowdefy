@@ -14,17 +14,22 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import features from '../features/index.js';
 
-// Feature hooks on the table's rows, between the stabilised data and TanStack, in registry order.
-// Each `useData(ctx)` returns the rows the next one (and the table) sees: editing lays its
-// optimistic overlay over `data` here without writing `data`. A hook must return its input rows
-// unchanged (same array) when it has nothing to add, which keeps every row model memo warm.
-function useFeatureData(ctx) {
-  let { data } = ctx;
+const EMPTY = [];
+
+// Stage 1 of the data pipeline (see TableRoot): the source rows, before they are diffed by key.
+// `properties.data` is the client rows; a feature's `useData(ctx)` hook may replace them in
+// registry order: server mode returns the rows its block cache holds, and a tree built from
+// `childrenField` flattens nested rows (so every node is diffed by key). The registry is a
+// module constant, so the hook order never changes between renders.
+function useFeatureData({ api, config, properties }) {
+  let data = type.isArray(properties.data) ? properties.data : EMPTY;
   features.forEach((feature) => {
     if (!feature.useData) return;
-    data = feature.useData({ ...ctx, data });
+    data = feature.useData({ api, config, data, properties });
   });
   return data;
 }

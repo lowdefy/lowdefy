@@ -14,9 +14,13 @@
   limitations under the License.
 */
 
+// Rows that are not data rows (an expanded detail row, a group header) may have fewer cells than
+// the grid has columns; focus lands on their first cell.
 function findCellElement({ api, row, col }) {
-  return api.scrollerRef.current?.querySelector(
-    `[data-row-index="${row}"] [data-lf-cell][data-col-index="${col}"]`
+  const scroller = api.scrollerRef.current;
+  return (
+    scroller?.querySelector(`[data-row-index="${row}"] [data-lf-cell][data-col-index="${col}"]`) ??
+    scroller?.querySelector(`[data-row-index="${row}"] [data-lf-cell]`)
   );
 }
 

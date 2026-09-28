@@ -28,6 +28,7 @@ import { createPortal } from 'react-dom';
 import computeEditTargets from './computeEditTargets.js';
 import EditMarker from './EditMarker.js';
 import isSameTargets from './isSameTargets.js';
+import isDataItem from '../../core/isDataItem.js';
 import scrollToCell from '../virtualization/scrollToCell.js';
 
 import './editing.css';
@@ -41,7 +42,7 @@ const NOTICE_MS = 6000;
 function startPending(api) {
   const pending = api.editing.pendingStart;
   if (!pending) return;
-  const index = api.rows.findIndex((row) => row.id === pending.rowId);
+  const index = api.rows.findIndex((row) => isDataItem(row) && row.id === pending.rowId);
   if (index === -1) return;
   api.editing.pendingStart = null;
   const col = api.layout.byKey.get(pending.colKey);

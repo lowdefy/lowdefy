@@ -27,7 +27,8 @@ function ignoreEvent() {}
 function renderValue({ api, item, label, level }) {
   if (item.empty || !RENDERED_TYPES.has(level.column.type)) return label;
   const { Renderer } = level;
-  const row = api.grouping.tree.leaves[item.start].original;
+  // A client group's first row feeds the renderer's row fields; server groups have no rows here.
+  const row = api.grouping.tree ? api.grouping.tree.leaves[item.start].original : {};
   return (
     <Renderer
       column={level.column}

@@ -24,7 +24,17 @@ const AUTO_COLUMN_THRESHOLD = 20;
 // `virtual: auto` (D15) virtualises rows above 200 and columns above 20 or when the table is wider
 // than twice the viewport; below that the extra range logic costs more than it saves.
 function useVirtualization(ctx) {
-  const { config, headerHeight, layout, rowHeight, rows, scrollerRef, strategy, viewport } = ctx;
+  const {
+    config,
+    headerHeight,
+    layout,
+    rowHeight,
+    rowOffsets,
+    rows,
+    scrollerRef,
+    strategy,
+    viewport,
+  } = ctx;
   const auto = config.virtual === 'auto';
   const virtualRows = config.virtual === true || (auto && rows.length > AUTO_ROW_THRESHOLD);
   const virtualColumns =
@@ -39,13 +49,14 @@ function useVirtualization(ctx) {
         layout,
         rowCount: rows.length,
         rowHeight,
+        rowOffsets,
         virtualColumns,
         virtualRows,
       },
     }),
     rowCount: rows.length,
   });
-  const positioned = strategy === 'positioned' && virtualRows;
+  const positioned = strategy === 'positioned' && virtualRows && !rowOffsets;
   const tanstackRows = useTanstackRowWindow({
     enabled: positioned,
     headerHeight,
