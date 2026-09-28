@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import copyCell from './copyCell.js';
 import getNextCell from './getNextCell.js';
 
 function activate({ event, api, cell, row, rowElement }) {
@@ -48,9 +47,6 @@ function handleGridKeyDown(event, api) {
     event.preventDefault();
     activate({ event, api, cell, row, rowElement });
     return true;
-  }
-  if ((event.key === 'c' || event.key === 'C') && (event.ctrlKey || event.metaKey)) {
-    return copyCell({ cell, event });
   }
   const next = getNextCell({ event, api, row, col });
   if (!next) return false;

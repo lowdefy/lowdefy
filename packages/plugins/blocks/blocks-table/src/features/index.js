@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import clipboardFeature from './clipboard/clipboardFeature.js';
+import editingFeature from './editing/editingFeature.js';
 import eventsFeature from './events/eventsFeature.js';
 import exportFeature from './export/exportFeature.js';
 import groupingFeature from './grouping/groupingFeature.js';
@@ -36,6 +38,8 @@ const features = [
   orderingFeature,
   pinningFeature,
   visibilityFeature,
+  editingFeature,
+  clipboardFeature,
   selectionFeature,
   virtualizationFeature,
   groupingFeature,

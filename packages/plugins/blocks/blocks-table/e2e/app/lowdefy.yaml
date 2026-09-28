@@ -19,3 +19,5 @@ pages:
   - _ref: ../../src/blocks/Table/tests/Table.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/TableLinkTarget.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/grouping.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/editing.e2e.yaml
+  - _ref: ../../src/blocks/TableInput/tests/TableInput.e2e.yaml

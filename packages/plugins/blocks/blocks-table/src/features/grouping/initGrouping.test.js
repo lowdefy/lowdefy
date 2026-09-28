@@ -15,7 +15,6 @@
 */
 
 import assert from 'node:assert/strict';
-import test from 'node:test';
 
 import initAggregates from './initAggregates.js';
 import initCollapsedGroups from './initCollapsedGroups.js';

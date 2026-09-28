@@ -15,7 +15,6 @@
 */
 
 import assert from 'node:assert/strict';
-import test from 'node:test';
 
 import buildGroupTree from './buildGroupTree.js';
 import createAccessor from '../../core/createAccessor.js';

@@ -15,3 +15,4 @@
 */
 
 export { default as Table } from './blocks/Table/e2e.js';
+export { default as TableInput } from './blocks/TableInput/e2e.js';

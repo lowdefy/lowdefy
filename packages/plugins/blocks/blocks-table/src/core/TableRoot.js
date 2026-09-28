@@ -25,6 +25,7 @@ import features from '../features/index.js';
 import Grid from './Grid.js';
 import stabilizeData from './stabilizeData.js';
 import TABLE_FEATURES from './tableFeatures.js';
+import useFeatureData from './useFeatureData.js';
 import useFeatureFragments from './useFeatureFragments.js';
 import useFeatureMethods from './useFeatureMethods.js';
 import useForeignKeys from './useForeignKeys.js';
@@ -35,13 +36,15 @@ import './table.css';
 
 // The table core: config, data, TanStack state and the feature fragments, composed into the
 // window component. `rowWindowStrategy` is a benchmark-only prop (the Lowdefy client never passes
-// it) that switches the row window to TanStack Virtual's per-row positioning.
+// it) that switches the row window to TanStack Virtual's per-row positioning. `input` is set by
+// TableInput only: `{ rows, methods }`, its value (the rows) and the engine methods that write it.
 function TableRoot({
   basePath,
   blockId,
   classNames = {},
   components,
   events = {},
+  input,
   loading,
   methods,
   pageId,
@@ -63,7 +66,6 @@ function TableRoot({
     [properties.data, config.getKey, config.rowVersionField]
   );
   previousData.current = stable;
-  const data = stable.rows;
 
   const apiRef = useRef(null);
   if (apiRef.current === null) {
@@ -71,6 +73,7 @@ function TableRoot({
     createFeatureActions(apiRef.current);
   }
   const api = apiRef.current;
+  const data = useFeatureData({ api, config, data: stable.rows, input, properties });
 
   const { isPending, setSliceSilently, state, updateSlice } = useTableState({
     api,
@@ -99,6 +102,7 @@ function TableRoot({
     components,
     config,
     events,
+    input,
     methods,
     pageId,
     setSliceSilently,

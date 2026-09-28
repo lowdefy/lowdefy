@@ -14,15 +14,13 @@
   limitations under the License.
 */
 
-// Ctrl/Cmd+C on the focused cell copies its displayed text. A text selection inside the table
-// wins: the browser copies that as usual.
-function copyCell({ cell, event }) {
-  const selection = window.getSelection?.();
-  if (selection && !selection.isCollapsed && selection.toString() !== '') return false;
-  const text = cell.innerText.trim();
-  navigator.clipboard?.writeText(text);
-  event.preventDefault();
-  return true;
+import findCellByKey from './findCellByKey.js';
+
+// Returns keyboard focus to a cell after its editor closes; the keyboard feature's focus handler
+// makes it the active cell again, so arrows continue from where the edit was.
+function focusCell({ api, rowId, colKey }) {
+  const cell = findCellByKey({ api, rowId, colKey });
+  cell?.focus({ preventScroll: true });
 }
 
-export default copyCell;
+export default focusCell;

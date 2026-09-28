@@ -15,7 +15,6 @@
 */
 
 import assert from 'node:assert/strict';
-import test from 'node:test';
 
 import createSetGroup from './createSetGroup.js';
 import groupingHeaderMenuItems from './groupingHeaderMenuItems.js';

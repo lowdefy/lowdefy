@@ -33,8 +33,16 @@ const columnFlags = {
       'Allow grouping rows by this column (view `group`, the `setGroup` method, the header menu). Default false.',
   },
   editable: {
-    type: 'boolean',
-    description: 'Allow editing cells of this column (fires onCellEdit).',
+    type: ['boolean', 'object'],
+    description:
+      'Edit cells of this column: `true`, or `{ when: Condition }` to allow it per row. The editor comes from the type: text, email, phone and url edit as text; number, currency and percent as a number; date and datetime with a date picker; boolean with a switch; tag and status select from `options`; tags select several; rating with stars. Enter, F2, double-click or typing opens it; Enter, Tab or leaving commits; Esc cancels. Table fires onCellEdit; TableInput writes its value.',
+    properties: {
+      when: {
+        type: 'object',
+        description:
+          'Condition tested against the row (and the cell value, for leaves without `key`) that decides whether the cell is editable.',
+      },
+    },
   },
 };
 
@@ -144,7 +152,27 @@ const column = {
     },
     validate: {
       type: 'array',
-      description: 'Cell validation: `[{ pass, message }]`.',
+      description:
+        'Edit validation, checked before an edit commits: `[{ pass: Condition, message }]`. A failing check keeps the editor open with the message. TableInput also marks the cells of changed and added rows that fail inline.',
+      items: {
+        type: 'object',
+        required: ['pass'],
+        properties: {
+          pass: {
+            type: 'object',
+            description:
+              'Condition the edited value must pass. Leaves without `key` test the cell value; leaves with `key` read the edited row.',
+          },
+          message: { type: 'string', description: 'Message shown when the check fails.' },
+        },
+      },
+    },
+    required: {
+      type: 'boolean',
+      description: 'An edit may not leave the cell empty (validated like `validate`).',
+    },
+    default: {
+      description: 'TableInput: the value of this column in a row added with "+ Add row".',
     },
     children: {
       type: 'array',
@@ -218,6 +246,32 @@ export default {
         rowKey: 'The row key.',
         column: 'The column `{ key, field }`.',
         value: 'The cell value.',
+      },
+    },
+    onCellEdit: {
+      description:
+        'Trigger when an edited cell commits. The cell shows the new value with a saving indicator while the event runs. When the actions fail (a Request error or a Throw), the cell reverts and shows the error message. After success the new value shows until the row changes in `data`. Without this event, edits only show in the table.',
+      event: {
+        row: 'The row object before the edit.',
+        rowKey: 'The row key.',
+        column: 'The column `{ key, field }`.',
+        value: 'The new value.',
+        previous: 'The value before the edit.',
+      },
+    },
+    onRowMove: {
+      description:
+        'Trigger when a row is dropped at a new place (`rowDrag`): a drag of its handle, or Alt+Shift+ArrowUp/Down. The rows reorder at once with a saving indicator on the handle while the event runs; when the actions fail the order reverts and the handle shows the error message. After success the new order shows until `data` changes. With `rowDrag.positionField`, save `position` on the moved row (`positions` holds every row whose position changed: normally just this one, all rows when the list had to be renumbered). Without it, save the order from `beforeKey` / `afterKey`.',
+      event: {
+        row: 'The moved row object.',
+        rowKey: 'The moved row key.',
+        fromIndex: 'The display index the row was at.',
+        toIndex: 'The display index the row is at now.',
+        beforeKey: 'The key of the row now before it, or null at the top.',
+        afterKey: 'The key of the row now after it, or null at the bottom.',
+        position: "With a positionField: the moved row's new position.",
+        positions:
+          'With a positionField: `{ [rowKey]: position }` of every row whose position changed.',
       },
     },
     onCellLink: {
@@ -403,6 +457,19 @@ export default {
         type: 'boolean',
         default: true,
         description: 'Keep the header visible while the table scrolls.',
+      },
+      rowDrag: {
+        type: ['boolean', 'object'],
+        description:
+          'Reorder rows by dragging a handle in a leading column, or with Alt+Shift+ArrowUp/Down on a focused row. Not available while the table is sorted (except ascending by the position field), filtered or grouped; the handle is disabled with a tooltip saying why. Table fires onRowMove; TableInput records the move in its value. `true`, or `{ positionField }` for fractional positions.',
+        additionalProperties: false,
+        properties: {
+          positionField: {
+            type: 'string',
+            description:
+              'Dot path of a numeric position field the rows are ordered by. A move gives only the moved row a new position: the midpoint of its new neighbours (a neighbour ∓ 1024 at the ends), renumbering the list in steps of 1024 only when there is no room left.',
+          },
+        },
       },
       reorderable: {
         type: 'boolean',
