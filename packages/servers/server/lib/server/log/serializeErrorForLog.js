@@ -14,16 +14,12 @@
   limitations under the License.
 */
 
-import { mapPlainValues, type } from '@lowdefy/helpers';
+import { serializer } from '@lowdefy/helpers';
 
-import scrubSecrets from '../scrubSecrets.js';
+import projectErrorForLog from './projectErrorForLog.js';
 
-// Class instances are left as they are: Sentry normalizes those before beforeSend
-// runs, so the event hook still reaches their strings. Breadcrumbs reach
-// beforeBreadcrumb un-normalized - a console breadcrumb holds the logged arguments
-// as they are - so the walk must be cycle-safe, which mapPlainValues is.
-function scrubEvent(value) {
-  return mapPlainValues(value, (item) => (type.isString(item) ? scrubSecrets(item) : item));
+function serializeErrorForLog(error) {
+  return serializer.serialize(error, { projectError: projectErrorForLog })?.['~e'] ?? error;
 }
 
-export default scrubEvent;
+export default serializeErrorForLog;
