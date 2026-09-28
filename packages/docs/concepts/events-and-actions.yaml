@@ -90,6 +90,7 @@ _ref:
             ```
               (eventName: (action | control)[])
               (eventName: {
+                bubble?: boolean,
                 shortcut?: string | string[],
                 debounce?: {
                   ms?: number,
@@ -265,6 +266,47 @@ _ref:
                       type: ActionType2
             ```
 
+            ## Nested blocks and event bubbling
+
+            A click, key press or other browser event starts on the element under the pointer and passes up through every block around it, like a `Button` inside a clickable `Card`, or a clickable `Box` in a `List` row. Lowdefy runs only the innermost event that handles it: once a block with actions for the event fires, the blocks around it skip that same browser event. Clicking the `Button` runs the button's `onClick`, not the card's. A block without an event for the interaction, like a `Paragraph` in the card, passes it on, so clicking the text still runs the card's `onClick`.
+
+            Set `bubble: true` on the inner event to also run the events of the blocks around it. `bubble` passes the browser event one handler further up; set it again on the outer event to pass it further still.
+
+            ###### Button in a clickable card example:
+            ```yaml
+            - id: order_card
+              type: Card
+              events:
+                onClick:
+                  - id: open_order
+                    type: Link
+                    params: order-detail
+              blocks:
+                - id: delete_button
+                  type: Button
+                  properties:
+                    title: Delete
+                  events:
+                    onClick:
+                      - id: delete_order
+                        type: Request
+                        params: delete_order
+                - id: select_button
+                  type: Button
+                  properties:
+                    title: Select and open
+                  events:
+                    onClick:
+                      bubble: true # also runs the card's onClick
+                      try:
+                        - id: select_order
+                          type: SetState
+                          params:
+                            selected: true
+            ```
+
+            Only events fired by the same browser event are skipped. Events that run from actions, requests or timers are never affected. Inside an `AgGrid`, clicks on a cell's buttons, links, menus, inputs or selection checkbox fire only that control's event, never `onRowClick` or `onCellClick`.
+
             ## Keyboard Shortcuts
 
             Events can be triggered by keyboard shortcuts. Add a `shortcut` property to an event to bind a key combination — when pressed, the event fires as if the user clicked the block. See the [Keyboard Shortcuts](/keyboard-shortcuts) page for the full shortcut format, common shortcuts, recipes, and more.
@@ -377,6 +419,7 @@ _ref:
             - The [`_actions`](/_actions) operator is available for sequential actions to use the values returned from preceding actions in the chain.
             - Actions have a `skip` field that can be used to skip action execution.
             - Action lists also support the [`:if`](/:if), [`:switch`](/:switch) and [`:return`](/:return) controls — `skip` gates one action, `:if` gates a group, `:switch` picks between alternatives, and `:return` ends the event early.
+            - A browser event runs only the innermost block event that handles it. Set `bubble: true` on an event to also run the events of the blocks around it.
             - Events support `shortcut` to bind keyboard shortcuts to the event. The shortcut fires the event when the key combination is pressed.
             - The `onInit` event is triggered the first time a page is mounted and keeps the page in loading until all actions have finished.
             - The `onInitAsync` event is triggered the first time a page is mounted and does not keep the page in loading.
