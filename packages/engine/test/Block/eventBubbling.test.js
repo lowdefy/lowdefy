@@ -157,3 +157,45 @@ test('events triggered outside a DOM event dispatch are never skipped', async ()
   await card.triggerEvent({ name: 'onClick' });
   expect(context.state).toEqual({ button: true, card: true });
 });
+
+test('an event a block fires from an action run by the handling event is not skipped', async () => {
+  const context = await testContext({
+    lowdefy,
+    pageConfig: {
+      id: 'root',
+      type: 'Box',
+      blocks: [
+        {
+          id: 'button',
+          type: 'Button',
+          events: {
+            onClick: [
+              {
+                id: 'collapse',
+                type: 'CallMethod',
+                params: { blockId: 'table', method: 'collapse' },
+              },
+            ],
+          },
+        },
+        {
+          id: 'table',
+          type: 'Box',
+          events: {
+            onChange: [setStateAction('table_changed', { changed: true })],
+          },
+        },
+      ],
+    },
+  });
+  const { button, table } = context._internal.RootSlots.map;
+  let changeResult;
+  // The method fires the block's own event while the button's click is still being dispatched,
+  // as a block does when a method changes its value.
+  table.registerMethod('collapse', () => {
+    changeResult = table.triggerEvent({ name: 'onChange' });
+  });
+  await dispatch(new Event('click'), () => button.triggerEvent({ name: 'onClick' }));
+  expect((await changeResult).handledBy).toBeUndefined();
+  expect(context.state).toEqual({ changed: true });
+});
