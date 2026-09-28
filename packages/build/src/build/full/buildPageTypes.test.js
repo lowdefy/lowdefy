@@ -37,7 +37,7 @@ function pageCounters({ actions = [], blocks = [], operators = [] }) {
   return counters;
 }
 
-function setup(pages) {
+function setup(pages, appUsed = {}) {
   const components = {
     // buildIconImports always bundles the icons the client draws itself.
     imports: { icons: [...alwaysBundledIcons, 'edit'] },
@@ -55,6 +55,7 @@ function setup(pages) {
     },
   };
   const context = {
+    appTypeCounters: pageCounters(appUsed),
     jsMap: {},
     pageTypeCounters: new Map(pages.map(({ pageId, used }) => [pageId, pageCounters(used)])),
     typesMap: { icons: {} },
@@ -119,4 +120,19 @@ test('buildPageTypes gives pages with the same types but different icons differe
   expect(a.typesKey).not.toEqual(b.typesKey);
   expect(components.pageTypes[a.typesKey].icons).toContain('edit');
   expect(components.pageTypes[b.typesKey].icons).not.toContain('edit');
+});
+
+test('buildPageTypes adds the app event types to every page', () => {
+  const components = setup(
+    [
+      { pageId: 'a', used: {} },
+      { pageId: 'b', used: { actions: ['SetState'] } },
+    ],
+    { actions: ['SetState'], operators: ['_state'] }
+  );
+  expect(components.pageTypeSets.a.actions).toEqual(['SetDarkMode', 'SetState']);
+  expect(components.pageTypeSets.a.operators).toEqual(['_not', '_state', '_type']);
+  expect(components.pageTypeSets.b.actions).toEqual(['SetDarkMode', 'SetState']);
+  const [a, b] = components.pages;
+  expect(a.typesKey).toEqual(b.typesKey);
 });

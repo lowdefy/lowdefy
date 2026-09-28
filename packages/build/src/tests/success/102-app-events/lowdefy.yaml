@@ -1,0 +1,47 @@
+# 102: App events - onInit and onInitAsync run once per app load, before page events
+lowdefy: local
+name: App Events Demo
+
+global:
+  settings: null
+
+events:
+  onInit:
+    - id: set_ready
+      type: SetGlobal
+      params:
+        ready: true
+        userId:
+          _user: id
+  onInitAsync:
+    try:
+      - id: wait
+        type: Wait
+        params:
+          ms: 10
+      - id: set_settings
+        type: SetGlobal
+        params:
+          settings:
+            theme: dark
+    catch:
+      - id: go_error
+        type: Link
+        params: error
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: ready
+        type: Paragraph
+        properties:
+          content:
+            _global: ready
+  - id: error
+    type: Box
+    blocks:
+      - id: message
+        type: Paragraph
+        properties:
+          content: Could not load settings.
