@@ -26,8 +26,15 @@ jest.unstable_mockModule('knex', () => {
     default: jest.fn(() => ({
       client: { connectionSettings: {} },
       raw: mockRaw,
+      destroy: jest.fn(() => Promise.resolve()),
     })),
   };
+});
+
+// Knex instances are cached per connection config; clear the cache so each test creates its own.
+afterEach(async () => {
+  const { destroyKnexClients } = await import('../getKnex.js');
+  await destroyKnexClients();
 });
 
 const request = {
