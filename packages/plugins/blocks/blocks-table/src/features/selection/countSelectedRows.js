@@ -14,14 +14,17 @@
   limitations under the License.
 */
 
+// Counts against the filtered rows, the set the header checkbox selects (TanStack's select-all
+// toggles the pre-grouped rows, which come after filtering), so "all selected" means all the rows
+// the filter shows.
 function countSelectedRows({ api }) {
-  const rowsById = api.table.getCoreRowModel().rowsById;
+  const { rows, rowsById } = api.table.getFilteredRowModel();
   const selection = api.state.rowSelection;
   let selectedCount = 0;
   Object.keys(selection).forEach((id) => {
     if (selection[id] === true && rowsById[id]) selectedCount += 1;
   });
-  return { selectedCount, total: api.table.getCoreRowModel().rows.length };
+  return { selectedCount, total: rows.length };
 }
 
 export default countSelectedRows;

@@ -14,8 +14,11 @@
   limitations under the License.
 */
 
+import columnManagerFeature from './columnManager/columnManagerFeature.js';
 import eventsFeature from './events/eventsFeature.js';
 import exportFeature from './export/exportFeature.js';
+import filteringFeature from './filtering/filteringFeature.js';
+import headerMenuFeature from './headerMenu/headerMenuFeature.js';
 import keyboardFeature from './keyboard/keyboardFeature.js';
 import orderingFeature from './ordering/orderingFeature.js';
 import pinningFeature from './pinning/pinningFeature.js';
@@ -28,8 +31,13 @@ import visibilityFeature from './visibility/visibilityFeature.js';
 // The table's feature modules, in composition order. The core loops over this list for TanStack
 // feature slots, state slices, view/value derivation, header parts, delegated event handlers,
 // actions and block methods (see ARCHITECTURE.md). The order is the order handlers run in: a
-// handler that returns true stops the chain for that event.
+// handler that returns true stops the chain for that event. Filtering and the header menu come
+// first: the filtered row model feeds sorting, and their header buttons claim clicks and pointer
+// presses before sorting and column reordering see them.
 const features = [
+  filteringFeature,
+  headerMenuFeature,
+  columnManagerFeature,
   sortingFeature,
   sizingFeature,
   orderingFeature,

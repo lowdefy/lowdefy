@@ -1,0 +1,251 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: table-filtering
+type: Box
+
+blocks:
+  # ============================================
+  # COLUMN FILTERS, SEARCH, SETSTATE ROUND TRIP
+  # ============================================
+
+  - id: filter_table
+    type: Table
+    properties:
+      columns:
+        _ref: ../../src/blocks/Table/tests/deals_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/deals.yaml
+    events:
+      onChange:
+        - id: set_filter_cause
+          type: SetState
+          params:
+            filter_cause:
+              _event: cause
+
+  - id: filter_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'filter='
+          - _json.stringify:
+              - _state: filter_table.view.filter
+              - space: 0
+          - ' search='
+          - _json.stringify:
+              - _state: filter_table.view.search
+              - space: 0
+          - ' cause='
+          - _if_none:
+              - _state: filter_cause
+              - none
+
+  - id: set_filter_state
+    type: Button
+    properties:
+      title: SetState filter
+    events:
+      onClick:
+        - id: set_filter_state_action
+          type: SetState
+          params:
+            filter_table.view.filter:
+              and:
+                - key: stage
+                  op: in
+                  value:
+                    - won
+                    - lost
+                - or:
+                    - key: amount
+                      op: gte
+                      value: 1000
+                    - key: active
+                      op: isFalse
+
+  - id: call_set_filter
+    type: Button
+    properties:
+      title: setFilter
+    events:
+      onClick:
+        - id: call_set_filter_action
+          type: CallMethod
+          params:
+            blockId: filter_table
+            method: setFilter
+            args:
+              - key: owner
+                op: eq
+                value: dana
+
+  - id: call_clear_filters
+    type: Button
+    properties:
+      title: clearFilters
+    events:
+      onClick:
+        - id: call_clear_filters_action
+          type: CallMethod
+          params:
+            blockId: filter_table
+            method: clearFilters
+
+  - id: call_set_search
+    type: Button
+    properties:
+      title: setSearch
+    events:
+      onClick:
+        - id: call_set_search_action
+          type: CallMethod
+          params:
+            blockId: filter_table
+            method: setSearch
+            args:
+              - ACME   won
+
+  - id: call_clear_search
+    type: Button
+    properties:
+      title: clearSearch
+    events:
+      onClick:
+        - id: call_clear_search_action
+          type: CallMethod
+          params:
+            blockId: filter_table
+            method: setSearch
+            args:
+              - null
+
+  # ============================================
+  # DEFAULT VIEW FILTER, SEARCHABLE COLUMNS, SELECTION
+  # ============================================
+
+  - id: filter_default_table
+    type: Table
+    properties:
+      columns:
+        _ref: ../../src/blocks/Table/tests/deals_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/deals.yaml
+      defaultView:
+        filter:
+          key: stage
+          op: in
+          value:
+            - lead
+        search: hooli
+
+  - id: filter_searchable_table
+    type: Table
+    properties:
+      defaultView:
+        search: dana
+      columns:
+        - key: name
+          searchable: true
+        - key: owner
+      data:
+        _ref: ../../src/blocks/Table/tests/deals.yaml
+
+  - id: filter_select_table
+    type: Table
+    properties:
+      rowSelection:
+        type: checkbox
+      defaultView:
+        filter:
+          key: owner
+          op: eq
+          value: Dana
+      columns:
+        _ref: ../../src/blocks/Table/tests/deals_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/deals.yaml
+
+  - id: filter_select_value
+    type: Span
+    properties:
+      content:
+        _json.stringify:
+          - _state: filter_select_table.selected
+          - space: 0
+
+  # ============================================
+  # 100K ROWS
+  # ============================================
+
+  - id: filter_big_table
+    type: Table
+    properties:
+      height: 400
+      columns:
+        - key: id
+          type: number
+          width: 120
+        - key: name
+        - key: amount
+          type: number
+        - key: team
+          options:
+            - Red
+            - Blue
+            - Green
+      data:
+        _js: |
+          const teams = ['Red', 'Blue', 'Green'];
+          const rows = new Array(100000);
+          for (let i = 0; i < rows.length; i++) {
+            rows[i] = { id: i, name: 'Row ' + i, amount: i % 1000, team: teams[i % 3] };
+          }
+          return rows;
+
+  - id: filter_big_set
+    type: Button
+    properties:
+      title: Filter 100k
+    events:
+      onClick:
+        - id: filter_big_set_action
+          type: CallMethod
+          params:
+            blockId: filter_big_table
+            method: setFilter
+            args:
+              - and:
+                  - key: amount
+                    op: lt
+                    value: 10
+                  - key: team
+                    op: in
+                    value:
+                      - Red
+
+  - id: filter_big_search
+    type: Button
+    properties:
+      title: Search 100k
+    events:
+      onClick:
+        - id: filter_big_search_action
+          type: CallMethod
+          params:
+            blockId: filter_big_table
+            method: setSearch
+            args:
+              - row 9999

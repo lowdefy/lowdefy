@@ -16,7 +16,9 @@
 
 import { rowSortingFeature } from '@tanstack/react-table';
 
+import createClearSort from './createClearSort.js';
 import createIndexSortedRowModel from './createIndexSortedRowModel.js';
+import createSetSort from './createSetSort.js';
 import createToggleSort from './createToggleSort.js';
 import getSortHeaderProps from './getSortHeaderProps.js';
 import handleSortClick from './handleSortClick.js';
@@ -39,7 +41,7 @@ const sortingFeature = {
     isMultiSortEvent: (event) => event.shiftKey === true,
   }),
   toValue: sortingToValue,
-  actions: { toggleSort: createToggleSort },
+  actions: { toggleSort: createToggleSort, setSort: createSetSort, clearSort: createClearSort },
   headerParts: [SortIndicator],
   headerCellProps: getSortHeaderProps,
   gridHandlers: { click: handleSortClick },

@@ -45,7 +45,9 @@ function HeaderCell({ api, col, focused, state }) {
     'div',
     props,
     <HeaderTitle api={api} title={col.column.title} />,
-    ...headerParts.map((Part, i) => <Part api={api} col={col} key={i} state={state} />)
+    ...headerParts.map((Part, i) => (
+      <Part api={api} col={col} focused={focused} key={i} state={state} />
+    ))
   );
 }
 

@@ -38,6 +38,7 @@ function useTableConfig({ properties }) {
   const defaultView = useStableConfig(properties.defaultView);
   const rowSelection = useStableConfig(properties.rowSelection);
   const rowLink = useStableConfig(properties.rowLink);
+  const user = useStableConfig(properties.user);
   const getKey = useMemo(
     () => createRowKeyGetter({ rowKey: properties.rowKey }),
     [properties.rowKey]
@@ -54,6 +55,7 @@ function useTableConfig({ properties }) {
       getId: (row) => String(getKey(row)),
       getKey,
       headerGroups,
+      headerMenu: properties.headerMenu !== false,
       height: properties.height,
       keyboard: properties.keyboard !== false,
       maxHeight: properties.maxHeight ?? 600,
@@ -63,6 +65,7 @@ function useTableConfig({ properties }) {
       rowSelection: normalizeRowSelection(rowSelection),
       rowVersionField: properties.rowVersionField,
       stickyHeader: properties.stickyHeader !== false,
+      user: user ?? {},
       virtual: properties.virtual ?? 'auto',
     };
   }, [
@@ -71,6 +74,7 @@ function useTableConfig({ properties }) {
     defaultView,
     getKey,
     properties.emptyText,
+    properties.headerMenu,
     properties.height,
     properties.keyboard,
     properties.maxHeight,
@@ -81,6 +85,7 @@ function useTableConfig({ properties }) {
     properties.virtual,
     rowLink,
     rowSelection,
+    user,
   ]);
 }
 

@@ -21,7 +21,8 @@ const columnFlags = {
   },
   filterable: {
     type: 'boolean',
-    description: 'Offer the column in filters.',
+    description:
+      'Offer the column in filters: the header menu "Filter…" item and the filter builder.',
   },
   resizable: {
     type: 'boolean',
@@ -107,6 +108,11 @@ const column = {
       description: 'Declared but hidden by default.',
     },
     ...columnFlags,
+    searchable: {
+      type: 'boolean',
+      description:
+        'Include the column in `view.search`. When any column sets it, search reads only those columns; otherwise it reads every visible column.',
+    },
     aggregate: {
       type: 'string',
       description: 'Footer and group aggregate, for example sum or count.',
@@ -165,10 +171,10 @@ export default {
   events: {
     onChange: {
       description:
-        'Trigger when the table value changes through the table: a sort, a resize or reorder that ends, or a selection.',
+        'Trigger when the table value changes through the table: a sort, a filter or search, a column change (resize, reorder, pin, hide, column manager), or a selection.',
       event: {
         value: 'The table value `{ view, selected, expanded }`.',
-        cause: 'What changed: `sort`, `columns` or `select`.',
+        cause: 'What changed: `sort`, `filter`, `search`, `columns` or `select`.',
       },
     },
     onSelectionChange: {
@@ -219,6 +225,13 @@ export default {
     scrollToRow:
       'Scroll a row into view. Accepts `{ rowKey, align }` with align `auto`, `start` or `center` (default).',
     clearSelection: 'Clear the row selection.',
+    setFilter:
+      'Set `view.filter` to a condition (`{ and | or: [...] }` groups of `{ key, op, value }` leaves), or clear it with null.',
+    clearFilters: 'Remove every filter condition. The search stays; clear it with `setSearch`.',
+    setSearch:
+      'Set `view.search`: rows match when every word appears in the searched columns. An empty string or null clears it.',
+    openColumnManager:
+      'Open the column manager: show, hide, reorder and pin columns, or reset them to the default view.',
   },
   properties: {
     type: 'object',
@@ -279,11 +292,13 @@ export default {
           },
           filter: {
             type: ['object', 'null'],
-            description: 'Filter condition.',
+            description:
+              'Filter condition: `{ and: [...] }` / `{ or: [...] }` groups of `{ key, op, value }` leaves. Operators depend on the column type; `{ $user: path }` values read the `user` property.',
           },
           search: {
             type: ['string', 'null'],
-            description: 'Search text.',
+            description:
+              'Search text: rows match when every word appears (case-insensitive) in the display text of the searched columns.',
           },
           group: {
             type: 'array',
@@ -371,6 +386,17 @@ export default {
         type: 'boolean',
         default: true,
         description: 'Keep the header visible while the table scrolls.',
+      },
+      headerMenu: {
+        type: 'boolean',
+        default: true,
+        description:
+          'Show the column menu button in each header (on hover or focus): sort, filter, pin, freeze, autosize, hide and the column manager.',
+      },
+      user: {
+        type: 'object',
+        description:
+          'The user object that `{ $user: path }` values in filters and rules read, usually `_user: true`. Blocks do not receive the user otherwise.',
       },
       reorderable: {
         type: 'boolean',

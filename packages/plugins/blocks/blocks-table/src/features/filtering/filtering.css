@@ -1,0 +1,151 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/* Column filter popover, filter builder and the header filter icon. */
+
+@layer components {
+  .lf-table-filter-indicator {
+    order: 1;
+    color: var(--ant-color-primary, #1677ff);
+  }
+
+  .lf-table-column-filter {
+    width: 300px;
+    max-width: calc(100vw - 32px);
+  }
+
+  .lf-table-column-filter:has(.lf-filter-builder) {
+    width: 480px;
+  }
+
+  .lf-filter-simple {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ant-margin-xs, 8px);
+  }
+
+  .lf-filter-range {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .lf-filter-range .ant-input-number {
+    flex: 1;
+    width: auto;
+  }
+
+  .lf-filter-range-dash {
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+  }
+
+  .lf-filter-options-actions {
+    display: flex;
+    justify-content: space-between;
+    margin: 2px 0;
+  }
+
+  .lf-filter-options-actions .ant-btn {
+    padding: 0;
+  }
+
+  .lf-filter-options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 240px;
+    overflow-y: auto;
+  }
+
+  .lf-filter-options-list .ant-checkbox-wrapper {
+    margin: 0;
+    padding: 2px 0;
+  }
+
+  .lf-filter-options-empty {
+    padding: var(--ant-padding-xs, 8px) 0;
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+  }
+
+  .lf-filter-builder {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ant-margin-xs, 8px);
+  }
+
+  .lf-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ant-margin-xxs, 4px);
+  }
+
+  .lf-filter-group[data-depth='2'],
+  .lf-filter-group[data-depth='3'] {
+    padding: var(--ant-padding-xs, 8px);
+    background: var(--ant-color-fill-quaternary, rgba(0, 0, 0, 0.02));
+    border: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+    border-radius: var(--ant-border-radius, 6px);
+  }
+
+  .lf-filter-group-header {
+    display: flex;
+    align-items: center;
+    gap: var(--ant-margin-xs, 8px);
+  }
+
+  .lf-filter-group-header .lf-filter-remove {
+    margin-left: auto;
+  }
+
+  .lf-filter-group-label {
+    color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+  }
+
+  .lf-filter-group-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ant-margin-xxs, 4px);
+  }
+
+  .lf-filter-group-actions {
+    display: flex;
+    gap: var(--ant-margin-xs, 8px);
+  }
+
+  .lf-filter-group-actions .ant-btn {
+    padding: 0;
+  }
+
+  .lf-filter-leaf {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ant-margin-xxs, 4px);
+  }
+
+  .lf-filter-column,
+  .lf-filter-operator {
+    min-width: 110px;
+  }
+
+  .lf-filter-value {
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .lf-filter-leaf .lf-filter-remove {
+    margin-left: auto;
+  }
+}

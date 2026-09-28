@@ -147,6 +147,35 @@ function buildRows({ chunk }) {
           : 'MISSED',
     });
   });
+  ['tag', 'number', 'text', 'nested', 'sorted-text'].forEach((name) => {
+    const result = readRaw(`filter-100k-${name}`);
+    if (!result) return;
+    const microMs = result.filterMs === undefined ? '' : `, row test alone ${result.filterMs} ms`;
+    rows.push({
+      scenario: `Filter 100k (${name})`,
+      budget: '<= 50 ms main-thread blocking',
+      measured: `longest task ${result.apply.longestTaskMs || '< 50'} ms, filter render ${
+        result.apply.maxCommitMs
+      } ms, call to filtered paint ${result.apply.callToPaintMs} ms${microMs}`,
+      status: statusOf(Math.max(result.apply.longestTaskMs, result.apply.maxCommitMs) <= 50),
+    });
+  });
+  const search = readRaw('filter-100k-search');
+  if (search) {
+    rows.push({
+      scenario: 'Search 100k x 50 (first, then narrowed)',
+      budget: '<= 50 ms main-thread blocking',
+      measured: `first: longest task ${search.cold.longestTaskMs || '< 50'} ms, render ${
+        search.cold.maxCommitMs
+      } ms, call to paint ${search.cold.callToPaintMs} ms; narrowed: longest task ${
+        search.warm.longestTaskMs || '< 50'
+      } ms, call to paint ${search.warm.callToPaintMs} ms`,
+      status: statusOf(
+        Math.max(search.cold.longestTaskMs, search.cold.maxCommitMs, search.warm.longestTaskMs) <=
+          50
+      ),
+    });
+  }
   [
     [1000, 10, null],
     [10000, 20, 300],
