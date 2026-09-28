@@ -1,0 +1,43 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+// Placeholder: replaced by feat/v7-table-chrome on merge.
+
+import React, { useState } from 'react';
+import { Input } from 'antd';
+
+// Edits a Condition as JSON. Props: `condition`, `columns`, `user`, `onChange(condition)`.
+function FilterBuilder({ condition, onChange }) {
+  const [text, setText] = useState(JSON.stringify(condition ?? null));
+  return (
+    <div className="lf-filter-builder" data-lf-filter-builder="">
+      <Input.TextArea
+        autoSize={{ minRows: 3 }}
+        onChange={(event) => {
+          setText(event.target.value);
+          try {
+            onChange(JSON.parse(event.target.value));
+          } catch {
+            // Incomplete JSON while typing.
+          }
+        }}
+        value={text}
+      />
+    </div>
+  );
+}
+
+export default FilterBuilder;
