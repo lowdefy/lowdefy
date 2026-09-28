@@ -21,6 +21,7 @@ import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import useColDefs from './useColDefs.js';
 import assignRowId from './assignRowId.js';
 import LoadingOverlay from './LoadingOverlay.js';
+import isCellControlClick from './isCellControlClick.js';
 
 // Registration is idempotent, so each core registers independently to stay standalone.
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -52,7 +53,7 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
   );
 
   const onRowClick = useCallback((event) => {
-    if (events.onRowClick) {
+    if (events.onRowClick && !isCellControlClick(event)) {
       methods.triggerEvent({
         name: 'onRowClick',
         event: {
@@ -64,7 +65,7 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
     }
   }, []);
   const onCellClicked = useCallback((event) => {
-    if (events.onCellClick) {
+    if (events.onCellClick && !isCellControlClick(event)) {
       methods.triggerEvent({
         name: 'onCellClick',
         event: {

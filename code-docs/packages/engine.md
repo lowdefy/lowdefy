@@ -124,6 +124,12 @@ Events orchestrate action execution and handle:
 - Event-level catch actions for error recovery
 - Keyboard shortcut metadata storage
 
+#### DOM Event Bubbling
+
+A DOM event bubbles through every block that wraps its target, and each wrapping block may call `triggerEvent` for it (a Button click also reaches the clickable Card around it). `triggerEvent` asks `claimDomEvent` (`src/claimDomEvent.js`) whether another block already handled the DOM event currently being dispatched, read from `window.event`. The first block with actions for the event claims it in a module-level `WeakMap`; other blocks then return early with `handledBy: <blockId>` instead of running their actions. The same block may fire several events for one DOM event (AgGrid `onCellClick` and `onRowClick`). An event with `bubble: true` handles the DOM event without claiming it. Outside a DOM dispatch `window.event` is undefined, so events from actions, requests and timers are never skipped.
+
+Blocks that fire events from third-party DOM listeners handle their own inner controls: AgGrid skips `onRowClick`/`onCellClick` for clicks on cell controls (`isCellControlClick`), because ag-grid's listeners run before React's.
+
 #### Shortcut Support
 
 `initEvent()` preserves the `shortcut` string (or string array) from the event config on the runtime event object. Blocks access it via `events.onClick?.shortcut` to render shortcut badges.

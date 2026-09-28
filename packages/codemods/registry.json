@@ -3,7 +3,7 @@
     {
       "version": "7.0.0",
       "from": ">=6.0.0 <7.0.0",
-      "description": "Lucide icons replace react-icons; ClickableHtml lists its data events",
+      "description": "Lucide icons replace react-icons; ClickableHtml lists its data events; nested events no longer bubble",
       "codemods": [
         {
           "id": "react-icons-to-lucide",
@@ -14,6 +14,11 @@
           "id": "clickable-html-data-events",
           "description": "List the events each ClickableHtml block's HTML fires in its new dataEvents property (from data-event attributes and the block's events), mark data-changing events that use data-confirm as confirm: true, and report HTML built from data that inserts values unescaped.",
           "path": "v7-0-0/02-clickable-html-data-events.md"
+        },
+        {
+          "id": "nested-event-bubbling",
+          "description": "Add bubble: true only to nested events whose outer event reads a value the inner event sets, copy AgGrid onRowClick state setup into cell control events that relied on it, and report the nested events left with the new innermost-only behaviour.",
+          "path": "v7-0-0/03-nested-event-bubbling.md"
         }
       ]
     },

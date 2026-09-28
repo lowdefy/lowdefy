@@ -2017,6 +2017,12 @@ export default {
                         $ref: '#/definitions/actionOrControl',
                       },
                     },
+                    bubble: {
+                      type: 'boolean',
+                      errorMessage: {
+                        type: 'Event "bubble" should be a boolean.',
+                      },
+                    },
                     debounce: {
                       type: 'object',
                       additionalProperties: false,
