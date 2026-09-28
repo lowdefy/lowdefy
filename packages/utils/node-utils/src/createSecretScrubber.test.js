@@ -158,6 +158,12 @@ test('createSecretScrubber replaces a longer secret before a shorter secret it c
   expect(scrub('PLANTEDKEYEXTENDED')).toEqual('[REDACTED]');
 });
 
+test('createSecretScrubber matches regex metacharacters in a secret literally', () => {
+  const scrub = createSecretScrubber({ secrets: { API_KEY: 'a.b*c+d?(e)[f]$^|\\' }, env: {} });
+  expect(scrub('key=a.b*c+d?(e)[f]$^|\\ end')).toEqual('key=[REDACTED] end');
+  expect(scrub('key=aXbbbcdde end')).toEqual('key=aXbbbcdde end');
+});
+
 test('createSecretScrubber returns non-string input unchanged', () => {
   const scrub = createSecretScrubber({ secrets: { API_KEY: 'PLANTEDAPIKEY123' }, env: {} });
   const object = { message: 'PLANTEDAPIKEY123' };

@@ -92,12 +92,26 @@ function createSecretScrubber({ secrets, env = process.env }) {
       if (form.length > 0) forms.add(form);
     });
   });
-  // Longest first, so a form is replaced whole before a shorter form it contains can break it up.
-  const sortedForms = [...forms].sort((a, b) => b.length - a.length);
+  // No secrets means no pattern: an empty alternation would match at every position.
+  if (forms.size === 0) {
+    return function scrub(value) {
+      return value;
+    };
+  }
+  // One alternation, so every log line and Sentry string takes a single pass however many
+  // secrets there are. Longest first, so a form is replaced whole before a shorter form it
+  // contains can match at the same position.
+  const pattern = new RegExp(
+    [...forms]
+      .sort((a, b) => b.length - a.length)
+      .map((form) => form.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+      .join('|'),
+    'g'
+  );
 
   return function scrub(value) {
     if (!type.isString(value)) return value;
-    return sortedForms.reduce((text, form) => text.split(form).join(REDACTED), value);
+    return value.replace(pattern, REDACTED);
   };
 }
 
