@@ -16,7 +16,7 @@
 
 import { MongoDBAdapter as AuthJsMongoDBAdapter } from '@auth/mongodb-adapter';
 
-import createGetMongoClient from '../createGetMongoClient.js';
+import getClient from '../../../connections/MongoDBCollection/getClient.js';
 
 /*
 Default collections are:
@@ -32,10 +32,12 @@ Default collections are:
 
 function MongoDBAdapter({ properties }) {
   const { databaseUri, mongoDBClientOptions, options } = properties;
-  // A client promise would stay rejected after a failed first connect; a getter
-  // lets the Auth.js adapter resolve the current (possibly replaced) client per
-  // operation.
-  const getMongoClient = createGetMongoClient({ databaseUri, mongoDBClientOptions });
+  // A single client promise would stay rejected after a failed first connect. Auth.js
+  // calls a client function per operation, and getClient evicts failed connects, so
+  // the next operation connects afresh.
+  function getMongoClient() {
+    return getClient({ databaseUri, options: mongoDBClientOptions });
+  }
   return AuthJsMongoDBAdapter(getMongoClient, options);
 }
 

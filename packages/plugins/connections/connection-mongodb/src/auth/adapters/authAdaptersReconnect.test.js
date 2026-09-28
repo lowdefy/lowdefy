@@ -17,11 +17,11 @@
 import MongoDBAdapter from './MongoDBAdapter/MongoDBAdapter.js';
 import MultiAppMongoDBAdapter from './MultiAppMongoDBAdapter/MultiAppMongoDBAdapter.js';
 
-// Real driver, unreachable server: the first operation's connect fails and the
-// driver closes the client's topology. Without a replacement client every later
-// operation fails for the life of the process instead of trying again - with
-// MongoTopologyClosedError, or by re-throwing the first error from a rejected
-// connect promise. The second failure must come from a fresh connect attempt.
+// Real driver, unreachable server: the first operation's connect fails. Unless the
+// failed client is evicted, every later operation fails for the life of the process
+// instead of trying again - with MongoTopologyClosedError, or by re-throwing the
+// first error from a rejected connect promise. The second failure must come from a
+// fresh connect attempt.
 async function expectFreshConnectFailures(getUser) {
   const first = await getUser().catch((error) => error);
   const second = await getUser().catch((error) => error);

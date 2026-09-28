@@ -18,7 +18,7 @@ import createDatabaseUser from './createDatabaseUser.js';
 import getUserFromDbByEmail from './getUserFromDbByEmail.js';
 import getUserFromDbById from './getUserFromDbById.js';
 import updateDatabaseUser from './updateDatabaseUser.js';
-import createGetMongoClient from '../createGetMongoClient.js';
+import getClient from '../../../connections/MongoDBCollection/getClient.js';
 
 function from({ _id, ...data }) {
   return { id: _id, ...data };
@@ -30,10 +30,11 @@ function to({ id, ...data }) {
 
 function MultiAppMongoDBAdapter({ properties }) {
   const { appName, collections, databaseUri, mongoDBClientOptions } = properties;
-  const getMongoClient = createGetMongoClient({ databaseUri, mongoDBClientOptions });
-  // The adapter and its helpers only call mongoClient.db(), so a facade that
-  // resolves the current (possibly replaced) client is enough.
-  const mongoClient = { db: (dbName) => getMongoClient().db(dbName) };
+  // Resolved per operation: getClient evicts failed connects, so the operation after
+  // a failed first connect connects afresh instead of reusing a dead client.
+  function getMongoClient() {
+    return getClient({ databaseUri, options: mongoDBClientOptions });
+  }
   const collectionNames = {
     accounts: collections?.accounts ?? 'user-accounts',
     contacts: collections?.contacts ?? 'user-contacts',
@@ -43,6 +44,7 @@ function MultiAppMongoDBAdapter({ properties }) {
 
   return {
     async createUser(adapterUserData) {
+      const mongoClient = await getMongoClient();
       return createDatabaseUser({
         adapterUserData,
         appName,
@@ -53,14 +55,17 @@ function MultiAppMongoDBAdapter({ properties }) {
     },
 
     async getUser(userId) {
+      const mongoClient = await getMongoClient();
       return getUserFromDbById({ appName, collectionNames, mongoClient, userId });
     },
 
     async getUserByEmail(email) {
+      const mongoClient = await getMongoClient();
       return getUserFromDbByEmail({ appName, collectionNames, mongoClient, email });
     },
 
     async getUserByAccount(provider_providerAccountId) {
+      const mongoClient = await getMongoClient();
       const account = await mongoClient
         .db()
         .collection(collectionNames.accounts)
@@ -71,6 +76,7 @@ function MultiAppMongoDBAdapter({ properties }) {
     },
 
     async updateUser(adapterUserData) {
+      const mongoClient = await getMongoClient();
       await updateDatabaseUser({ adapterUserData, collectionNames, mongoClient });
       return adapterUserData;
     },
@@ -86,11 +92,13 @@ function MultiAppMongoDBAdapter({ properties }) {
     // },
 
     async linkAccount(account) {
+      const mongoClient = await getMongoClient();
       await mongoClient.db().collection(collectionNames.accounts).insertOne(to(account));
       return from(account);
     },
 
     async unlinkAccount(provider_providerAccountId) {
+      const mongoClient = await getMongoClient();
       const account = await mongoClient
         .db()
         .collection(collectionNames.accounts)
@@ -99,6 +107,7 @@ function MultiAppMongoDBAdapter({ properties }) {
     },
 
     async getSessionAndUser(sessionToken) {
+      const mongoClient = await getMongoClient();
       // eslint-disable-next-line no-unused-vars
       const session = await mongoClient
         .db()
@@ -120,11 +129,13 @@ function MultiAppMongoDBAdapter({ properties }) {
     },
 
     async createSession(session) {
+      const mongoClient = await getMongoClient();
       await mongoClient.db().collection(collectionNames.sessions).insertOne(to(session));
       return session;
     },
 
     async updateSession(data) {
+      const mongoClient = await getMongoClient();
       // eslint-disable-next-line no-unused-vars
       const { _id, ...session } = to(data);
 
@@ -140,6 +151,7 @@ function MultiAppMongoDBAdapter({ properties }) {
     },
 
     async deleteSession(sessionToken) {
+      const mongoClient = await getMongoClient();
       const session = await mongoClient.db().collection(collectionNames.sessions).findOneAndDelete({
         sessionToken,
       });
@@ -147,6 +159,7 @@ function MultiAppMongoDBAdapter({ properties }) {
     },
 
     async createVerificationToken(data) {
+      const mongoClient = await getMongoClient();
       const tokens = Array.from({ length: properties?.verificationTokens?.uses ?? 1 }, () =>
         to(data)
       );
@@ -155,6 +168,7 @@ function MultiAppMongoDBAdapter({ properties }) {
     },
 
     async useVerificationToken(identifier_token) {
+      const mongoClient = await getMongoClient();
       const verificationToken = await mongoClient
         .db()
         .collection(collectionNames.verificationTokens)
