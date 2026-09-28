@@ -1,0 +1,111 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: deals_basic
+      type: Table
+      properties:
+        columns:
+          - key: name
+            title: Deal
+            width: 220
+          - key: stage
+          - key: owner
+          - key: amount
+            type: number
+        data:
+          - _id: d1
+            name: Acme renewal
+            stage: proposal
+            owner: Ada
+            amount: 12000
+          - _id: d2
+            name: Globex expansion
+            stage: qualified
+            owner: Grace
+            amount: 48000
+          - _id: d3
+            name: Initech pilot
+            stage: lead
+            owner: Alan
+            amount: 3500
+
+- title: Default view, selection and pinned columns
+  blocks:
+    - id: deals_selection
+      type: Table
+      properties:
+        rowSelection:
+          type: checkbox
+        defaultView:
+          sort:
+            - key: amount
+              desc: true
+          density: compact
+        columns:
+          - key: name
+            title: Deal
+            width: 220
+            pinned: start
+          - key: stage
+          - key: owner
+          - key: amount
+            type: number
+        data:
+          - _id: d1
+            name: Acme renewal
+            stage: proposal
+            owner: Ada
+            amount: 12000
+          - _id: d2
+            name: Globex expansion
+            stage: qualified
+            owner: Grace
+            amount: 48000
+          - _id: d3
+            name: Initech pilot
+            stage: lead
+            owner: Alan
+            amount: 3500
+    - id: deals_selected
+      type: Span
+      properties:
+        content:
+          _string.concat:
+            - 'Selected: '
+            - _json.stringify:
+                - _state: deals_selection.selected
+                - space: 0
+
+- title: Row links
+  blocks:
+    - id: deals_links
+      type: Table
+      properties:
+        rowLink:
+          pageId: deal
+          urlQuery:
+            _id: _id
+        columns:
+          - key: name
+            title: Deal
+          - key: owner
+        data:
+          - _id: d1
+            name: Acme renewal
+            owner: Ada
+          - _id: d2
+            name: Globex expansion
+            owner: Grace

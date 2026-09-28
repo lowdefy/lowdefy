@@ -1,0 +1,393 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/* Table engine styles. Every colour, radius and font is an antd design token (var(--ant-*)), so
+   the table follows the app theme and dark mode without JS. The antd Table stylesheet is never
+   used: antd injects it only when an antd Table mounts. Column widths, sticky offsets and the
+   centre spacer are CSS variables on the root (--lf-w<n>, --lf-l<n>, --lf-r<n>), which is what
+   lets a resize drag run without React renders. */
+
+@layer components {
+  .lf-table {
+    --lf-border: var(--ant-color-border-secondary, #f0f0f0);
+    --lf-header-bg: color-mix(in srgb, var(--ant-color-text, #000) 2%, var(--lf-bg));
+    --lf-bg: var(--ant-color-bg-container, #fff);
+    /* Opaque mixes, so sticky pinned cells never show the scrolled cells beneath them. */
+    --lf-row-hover: color-mix(in srgb, var(--ant-color-text, #000) 4%, var(--lf-bg));
+    --lf-row-selected: var(--ant-color-primary-bg, #e6f4ff);
+    --lf-row-selected-hover: var(--ant-color-primary-bg-hover, #bae0ff);
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+    font-family: var(--ant-font-family, inherit);
+    font-size: var(--ant-font-size, 14px);
+    line-height: var(--ant-line-height, 1.5714);
+    background: var(--lf-bg);
+    border: 1px solid var(--lf-border);
+    border-radius: var(--ant-border-radius-lg, 8px);
+    overflow: hidden;
+  }
+
+  .lf-table-scroller {
+    position: relative;
+    overflow: auto;
+    overflow-anchor: none;
+    outline: none;
+    contain: strict;
+    max-height: var(--lf-table-max-height, none);
+  }
+
+  .lf-table-scroller[data-autoheight] {
+    contain: layout paint style;
+  }
+
+  .lf-table-canvas {
+    position: relative;
+    width: var(--lf-total);
+    min-width: 100%;
+  }
+
+  .lf-table-header {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    width: var(--lf-total);
+    min-width: 100%;
+    background: var(--lf-header-bg);
+  }
+
+  .lf-table-header[data-sticky='false'] {
+    position: relative;
+  }
+
+  .lf-table-row {
+    display: flex;
+    width: var(--lf-total);
+    min-width: 100%;
+    height: var(--lf-row-h);
+    box-sizing: border-box;
+  }
+
+  .lf-table-body {
+    position: relative;
+    width: var(--lf-total);
+    min-width: 100%;
+  }
+
+  .lf-table-window {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    will-change: transform;
+  }
+
+  .lf-table-body .lf-table-row {
+    contain: layout style;
+    background: var(--lf-bg);
+  }
+
+  .lf-table-body .lf-table-row[data-positioned] {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .lf-table-center {
+    display: flex;
+    flex: none;
+    box-sizing: border-box;
+    width: var(--lf-center-w);
+    padding-left: var(--lf-center-before);
+  }
+
+  .lf-table-cell {
+    position: relative;
+    display: flex;
+    flex: none;
+    align-items: center;
+    box-sizing: border-box;
+    min-width: 0;
+    height: 100%;
+    padding: 0 var(--ant-padding-xs, 8px);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid var(--lf-border);
+    background: inherit;
+    outline: none;
+  }
+
+  .lf-table-cell-content {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lf-table-cell[data-align='end'] {
+    justify-content: flex-end;
+    text-align: end;
+  }
+
+  .lf-table-cell[data-align='center'] {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .lf-table-cell[data-pinned] {
+    position: sticky;
+    z-index: 1;
+  }
+
+  .lf-table-cell[data-pinned='start'][data-pinned-edge] {
+    box-shadow: inset -1px 0 0 var(--lf-border);
+  }
+
+  .lf-table-cell[data-pinned='end'][data-pinned-edge] {
+    box-shadow: inset 1px 0 0 var(--lf-border);
+  }
+
+  .lf-table-cell:focus-visible,
+  .lf-table-cell[data-focused]:focus {
+    outline: 2px solid var(--ant-color-primary, #1677ff);
+    outline-offset: -2px;
+  }
+
+  .lf-table-body .lf-table-row:hover {
+    background: var(--lf-row-hover);
+  }
+
+  .lf-table-body .lf-table-row[aria-selected='true'] {
+    background: var(--lf-row-selected);
+  }
+
+  .lf-table-body .lf-table-row[aria-selected='true']:hover {
+    background: var(--lf-row-selected-hover);
+  }
+
+  .lf-table[data-clickable] .lf-table-body .lf-table-row {
+    cursor: pointer;
+  }
+
+  .lf-table-header .lf-table-row {
+    height: var(--lf-header-h);
+    background: var(--lf-header-bg);
+  }
+
+  .lf-table-header .lf-table-cell {
+    font-weight: var(--ant-font-weight-strong, 600);
+    color: var(--ant-color-text-heading, var(--ant-color-text));
+    user-select: none;
+    gap: var(--ant-padding-xxs, 4px);
+  }
+
+  .lf-table-header .lf-table-cell[data-sortable] {
+    cursor: pointer;
+  }
+
+  .lf-table-header .lf-table-cell[data-sortable]:hover {
+    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  }
+
+  .lf-table-header-title {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lf-table-sort {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 2px;
+    color: var(--ant-color-text-quaternary, rgba(0, 0, 0, 0.25));
+    font-size: var(--ant-font-size-sm, 12px);
+  }
+
+  .lf-table-sort svg {
+    display: block;
+    width: 8px;
+    height: 12px;
+  }
+
+  .lf-table-sort [data-active] {
+    color: var(--ant-color-primary, #1677ff);
+  }
+
+  .lf-table-sort-order {
+    color: var(--ant-color-primary, #1677ff);
+    font-weight: normal;
+  }
+
+  .lf-table-resize {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    width: 8px;
+    height: 100%;
+    cursor: col-resize;
+    touch-action: none;
+  }
+
+  .lf-table-resize::after {
+    position: absolute;
+    top: 25%;
+    right: 3px;
+    width: 1px;
+    height: 50%;
+    background: var(--ant-color-split, rgba(5, 5, 5, 0.06));
+    content: '';
+  }
+
+  .lf-table-resize:hover::after,
+  .lf-table[data-resizing] .lf-table-resize[data-active]::after {
+    top: 0;
+    right: 2px;
+    width: 3px;
+    height: 100%;
+    background: var(--ant-color-primary, #1677ff);
+  }
+
+  .lf-table[data-resizing],
+  .lf-table[data-resizing] * {
+    cursor: col-resize !important;
+    user-select: none;
+  }
+
+  .lf-table[data-reordering],
+  .lf-table[data-reordering] * {
+    cursor: grabbing !important;
+    user-select: none;
+  }
+
+  .lf-table-reorder-ghost {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0 var(--ant-padding-xs, 8px);
+    font-weight: var(--ant-font-weight-strong, 600);
+    background: var(--ant-color-bg-elevated, #fff);
+    border-radius: var(--ant-border-radius, 6px);
+    box-shadow: var(--ant-box-shadow-secondary, 0 6px 16px rgba(0, 0, 0, 0.08));
+    opacity: 0.9;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  .lf-table-reorder-line {
+    position: absolute;
+    top: 0;
+    z-index: 4;
+    width: 2px;
+    height: var(--lf-header-h);
+    background: var(--ant-color-primary, #1677ff);
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  .lf-table-select {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .lf-table-checkbox {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--ant-color-primary, #1677ff);
+    cursor: pointer;
+  }
+
+  .lf-table-empty {
+    position: sticky;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: var(--lf-viewport-w, 100%);
+    padding: var(--ant-padding-lg, 24px) var(--ant-padding, 16px);
+    color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.45));
+  }
+
+  .lf-table-skeleton-bar {
+    display: block;
+    width: 70%;
+    height: 40%;
+    max-height: 14px;
+    background: linear-gradient(
+      90deg,
+      var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06)) 25%,
+      var(--ant-color-fill-tertiary, rgba(0, 0, 0, 0.04)) 37%,
+      var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06)) 63%
+    );
+    background-size: 400% 100%;
+    border-radius: var(--ant-border-radius-sm, 4px);
+    animation: lf-table-skeleton 1.4s ease infinite;
+  }
+
+  @keyframes lf-table-skeleton {
+    0% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
+  }
+
+  .lf-table-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    width: 100%;
+    height: 2px;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .lf-table-progress::after {
+    position: absolute;
+    top: 0;
+    left: -40%;
+    width: 40%;
+    height: 100%;
+    background: var(--ant-color-primary, #1677ff);
+    animation: lf-table-progress 1.2s ease-in-out infinite;
+    content: '';
+  }
+
+  @keyframes lf-table-progress {
+    0% {
+      left: -40%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+
+  .lf-table[data-pending] .lf-table-body {
+    opacity: 0.6;
+    transition: opacity 0.1s;
+  }
+}
