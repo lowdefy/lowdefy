@@ -25,7 +25,7 @@ jest.unstable_mockModule('better-auth/adapters', () => ({
 
 async function getFactoryArgs({ db = { collection: jest.fn() } } = {}) {
   const { default: mongodbAdapter } = await import('./mongodbAdapter.js');
-  mongodbAdapter({ db });
+  mongodbAdapter({ getDb: async () => db });
   return mockCreateAdapterFactory.mock.calls[0][0];
 }
 

@@ -26,7 +26,7 @@ import createSerializeId from './createSerializeId.js';
 // by the BetterAuth adapter API.
 // Adapted from @better-auth/mongo-adapter@1.6.23 - see mongodbAdapter.js for
 // provenance.
-function createCustomAdapter({ db }) {
+function createCustomAdapter({ getDb }) {
   return function customAdapter({
     getFieldAttributes,
     getFieldName,
@@ -125,13 +125,15 @@ function createCustomAdapter({ db }) {
       // (adapter.options), the one place a capability beyond BetterAuth's
       // adapter interface reaches the engine - see ensureAuthIndexes.
       options: {
-        ensureUniqueIndexes: createEnsureUniqueIndexes({ db, getFieldName, getModelName }),
+        ensureUniqueIndexes: createEnsureUniqueIndexes({ getDb, getFieldName, getModelName }),
       },
       async create({ model, data }) {
+        const db = await getDb();
         const result = await db.collection(model).insertOne(data);
         return { _id: result.insertedId.toString(), ...data };
       },
       async findOne({ model, where, select, join }) {
+        const db = await getDb();
         const pipeline = [matchStage({ model, where })];
         if (join) {
           for (const [joinedModel, joinConfig] of Object.entries(join)) {
@@ -158,6 +160,7 @@ function createCustomAdapter({ db }) {
         return res[0];
       },
       async findMany({ model, where, limit, select, offset, sortBy, join }) {
+        const db = await getDb();
         const pipeline = [matchStage({ model, where })];
         if (join) {
           for (const [joinedModel, joinConfig] of Object.entries(join)) {
@@ -195,6 +198,7 @@ function createCustomAdapter({ db }) {
         return db.collection(model).aggregate(pipeline).toArray();
       },
       async count({ model, where }) {
+        const db = await getDb();
         const pipeline = [matchStage({ model, where }), { $count: 'total' }];
         const res = await db.collection(model).aggregate(pipeline).toArray();
         if (!res || res.length === 0) {
@@ -203,6 +207,7 @@ function createCustomAdapter({ db }) {
         return res[0]?.total ?? 0;
       },
       async update({ model, where, update }) {
+        const db = await getDb();
         const clause = convertWhereClause({ model, where });
         const result = await db
           .collection(model)
@@ -214,20 +219,24 @@ function createCustomAdapter({ db }) {
         return result?.value ?? null;
       },
       async updateMany({ model, where, update }) {
+        const db = await getDb();
         const clause = convertWhereClause({ model, where });
         const result = await db.collection(model).updateMany(clause, { $set: update });
         return result.modifiedCount;
       },
       async delete({ model, where }) {
+        const db = await getDb();
         const clause = convertWhereClause({ model, where });
         await db.collection(model).deleteOne(clause);
       },
       async deleteMany({ model, where }) {
+        const db = await getDb();
         const clause = convertWhereClause({ model, where });
         const result = await db.collection(model).deleteMany(clause);
         return result.deletedCount;
       },
       async consumeOne({ model, where }) {
+        const db = await getDb();
         const clause = convertWhereClause({ model, where });
         const result = await db
           .collection(model)
@@ -235,6 +244,7 @@ function createCustomAdapter({ db }) {
         return result?.value ?? null;
       },
       async incrementOne({ model, where, increment, set }) {
+        const db = await getDb();
         const clause = convertWhereClause({ model, where });
         const update = {};
         if (Object.keys(increment).length > 0) {

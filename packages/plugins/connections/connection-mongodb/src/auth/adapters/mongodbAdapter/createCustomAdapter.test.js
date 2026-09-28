@@ -47,7 +47,7 @@ function setup({ collectionMethods = {} } = {}) {
     ...collectionMethods,
   };
   const db = { collection: jest.fn(() => collection) };
-  const customAdapter = createCustomAdapter({ db })({
+  const customAdapter = createCustomAdapter({ getDb: async () => db })({
     getFieldAttributes: ({ model, field }) => schema[model].fields[field] ?? {},
     getFieldName: ({ field }) => field,
     schema,

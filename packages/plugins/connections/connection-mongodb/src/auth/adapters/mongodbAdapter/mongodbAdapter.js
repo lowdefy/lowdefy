@@ -32,7 +32,9 @@ import createCustomAdapter from './createCustomAdapter.js';
 //   objects.
 // - Transactions are not supported (matching upstream behavior when no
 //   MongoClient is passed) - standalone MongoDB deployments have no sessions.
-function mongodbAdapter({ db }) {
+// - It takes a getDb function instead of a Db, resolved per operation, so a
+//   client evicted after a failed connect is replaced rather than reused.
+function mongodbAdapter({ getDb }) {
   return createAdapterFactory({
     config: {
       adapterId: 'mongodb-adapter',
@@ -131,7 +133,7 @@ function mongodbAdapter({ db }) {
         return new ObjectId().toString();
       },
     },
-    adapter: createCustomAdapter({ db }),
+    adapter: createCustomAdapter({ getDb }),
   });
 }
 

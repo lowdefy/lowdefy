@@ -51,8 +51,9 @@ async function listIndexes({ collection }) {
   }
 }
 
-function createEnsureUniqueIndexes({ db, getFieldName, getModelName }) {
+function createEnsureUniqueIndexes({ getDb, getFieldName, getModelName }) {
   return async function ensureUniqueIndexes({ indexes }) {
+    const db = await getDb();
     for (const { model, fields } of indexes) {
       const collectionName = getModelName(model);
       const collection = db.collection(collectionName);

@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import { MongoClient } from 'mongodb';
 import { ConfigError } from '@lowdefy/errors';
 
+import getClient from '../../../connections/MongoDBCollection/getClient.js';
 import mongodbAdapter from '../mongodbAdapter/mongodbAdapter.js';
 
 // A thin wrapper around the vendored MongoDB adapter (see mongodbAdapter.js
@@ -34,28 +34,19 @@ function MongoDBAuthAdapter({ properties }) {
   if (!properties.uri) {
     throw new ConfigError('MongoDBAuthAdapter requires "uri" property.');
   }
-  // Process-lifetime client by design: getBetterAuth memoizes the engine (and
-  // this adapter with it), the driver connects lazily and pools, and the
-  // client is never closed by us. The driver does close it on a failed first
-  // connect (a serverless instance frozen mid-handshake, a network blip) and
-  // then keeps handing out the closed topology - every later operation throws
-  // MongoTopologyClosedError for the life of the process. So the client is
-  // replaced as soon as its topology closes: the request that hit the failed
-  // connect errors, the next one connects afresh.
-  let client;
-  let db;
-  function connect() {
-    const current = new MongoClient(properties.uri, properties.mongoDBClientOptions);
-    current.once('topologyClosed', () => {
-      if (client === current) connect();
+  // The client is cached for the process lifetime and shared with MongoDBCollection
+  // connections on the same uri and options. It is resolved per operation because
+  // getClient evicts a client whose connect failed (a serverless instance frozen
+  // mid-handshake, a network blip): the request that hit the failed connect errors,
+  // the next one connects afresh instead of reusing the dead client.
+  async function getDb() {
+    const client = await getClient({
+      databaseUri: properties.uri,
+      options: properties.mongoDBClientOptions,
     });
-    client = current;
-    db = current.db(properties.database);
+    return client.db(properties.database);
   }
-  connect();
-  // The vendored adapter only calls db.collection(model) per operation, so a
-  // facade that resolves the current client's database is enough.
-  return mongodbAdapter({ db: { collection: (name) => db.collection(name) } });
+  return mongodbAdapter({ getDb });
 }
 
 export default MongoDBAuthAdapter;
