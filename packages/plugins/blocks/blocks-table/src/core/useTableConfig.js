@@ -20,13 +20,19 @@ import { type } from '@lowdefy/helpers';
 import createColumnDefs from './createColumnDefs.js';
 import createRowKeyGetter from './createRowKeyGetter.js';
 import normalizeColumns from './normalizeColumns.js';
+import normalizeExpandable from '../features/expandable/normalizeExpandable.js';
+import normalizeServerData from '../features/serverData/normalizeServerData.js';
+import normalizeTree from '../features/tree/normalizeTree.js';
 import useStableConfig from './useStableConfig.js';
 
-function normalizeRowSelection(rowSelection) {
+// In server mode rows leave the block cache while they stay selected, so selection is always
+// preserved there.
+function normalizeRowSelection({ rowSelection, server }) {
   if (!type.isObject(rowSelection)) return null;
   return {
     type: rowSelection.type === 'radio' ? 'radio' : 'checkbox',
-    preserve: rowSelection.preserve === true,
+    preserve: rowSelection.preserve === true || Boolean(server),
+    cascade: rowSelection.cascade === true,
   };
 }
 
@@ -38,6 +44,10 @@ function useTableConfig({ properties }) {
   const defaultView = useStableConfig(properties.defaultView);
   const rowSelection = useStableConfig(properties.rowSelection);
   const rowLink = useStableConfig(properties.rowLink);
+  // Client `data` is an array of rows, never compared here; server mode is a small object.
+  const serverData = useStableConfig(type.isObject(properties.data) ? properties.data : null);
+  const tree = useStableConfig(properties.tree);
+  const expandable = useStableConfig(properties.expandable);
   const getKey = useMemo(
     () => createRowKeyGetter({ rowKey: properties.rowKey }),
     [properties.rowKey]
@@ -45,12 +55,14 @@ function useTableConfig({ properties }) {
 
   return useMemo(() => {
     const { columns, headerGroups } = normalizeColumns({ columns: columnsConfig, defaultColumn });
+    const server = normalizeServerData(serverData);
     return {
       columns,
       columnsByKey: new Map(columns.map((column) => [column.key, column])),
       columnDefs: createColumnDefs({ columns }),
       defaultView: defaultView ?? {},
       emptyText: properties.emptyText ?? 'No data',
+      expandable: normalizeExpandable({ expandable, columns }),
       getId: (row) => String(getKey(row)),
       getKey,
       headerGroups,
@@ -60,15 +72,18 @@ function useTableConfig({ properties }) {
       reorderable: properties.reorderable !== false,
       rowHeight: properties.rowHeight,
       rowLink: type.isObject(rowLink) ? rowLink : null,
-      rowSelection: normalizeRowSelection(rowSelection),
+      rowSelection: normalizeRowSelection({ rowSelection, server }),
       rowVersionField: properties.rowVersionField,
+      server,
       stickyHeader: properties.stickyHeader !== false,
+      tree: normalizeTree({ tree, server }),
       virtual: properties.virtual ?? 'auto',
     };
   }, [
     columnsConfig,
     defaultColumn,
     defaultView,
+    expandable,
     getKey,
     properties.emptyText,
     properties.height,
@@ -81,6 +96,8 @@ function useTableConfig({ properties }) {
     properties.virtual,
     rowLink,
     rowSelection,
+    serverData,
+    tree,
   ]);
 }
 

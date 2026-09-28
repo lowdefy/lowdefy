@@ -154,8 +154,9 @@ export default {
   category: 'input',
   valueType: 'object',
   icons: [],
-  // rowLink navigates through an internal event running the Link action with `_event`.
-  actions: ['Link'],
+  // rowLink navigates through an internal event running the Link action with `_event`; server
+  // mode fetches through an internal event running the Request action.
+  actions: ['Link', 'Request'],
   operators: ['_event'],
   cssKeys: {
     element: 'The table root element.',
@@ -168,14 +169,33 @@ export default {
         'Trigger when the table value changes through the table: a sort, a resize or reorder that ends, or a selection.',
       event: {
         value: 'The table value `{ view, selected, expanded }`.',
-        cause: 'What changed: `sort`, `columns` or `select`.',
+        cause: 'What changed: `sort`, `columns`, `select` or `expand`.',
       },
     },
     onSelectionChange: {
-      description: 'Trigger when the row selection changes.',
+      description:
+        'Trigger when the row selection changes. In server mode the header checkbox selects every row the view matches as `{ all: true, except: [] }`; resolve it on the server with the same view.',
       event: {
         selected: 'The selected row keys, or `{ all: true, except }`.',
         rows: 'The selected row objects that are loaded.',
+      },
+    },
+    onRowExpand: {
+      description:
+        "Trigger when a tree row or an expandable row is expanded or collapsed. With `tree.lazy`, load the row's children here and add them to `data`.",
+      event: {
+        row: 'The row object.',
+        rowKey: 'The row key.',
+        expanded: 'True when the row was expanded, false when it was collapsed.',
+      },
+    },
+    onExport: {
+      description:
+        'Server mode: trigger when `exportCsv` is called. The browser only holds the loaded blocks, so produce the file from the view, for example with a request and a download action.',
+      event: {
+        view: 'The table view (columns, sort, filter, search, group, ...).',
+        filename: 'The filename passed to exportCsv.',
+        formatted: 'The formatted flag passed to exportCsv.',
       },
     },
     onRowClick: {
@@ -215,7 +235,11 @@ export default {
   },
   methods: {
     exportCsv:
-      'Download the current view as CSV: visible columns in order, rows in their current order. Accepts `{ filename, formatted }`; `formatted` (default true) exports displayed text.',
+      'Download the current view as CSV: visible columns in order, rows in their current order. Accepts `{ filename, formatted }`; `formatted` (default true) exports displayed text. In server mode it fires `onExport { view }` instead.',
+    refresh:
+      'Server mode: clear the block cache and refetch the visible rows (they stay on screen until the new rows land).',
+    applyTransaction:
+      'Apply `{ add, update, remove, addIndex }` without replacing `data`: `update` rows are merged into the row with the same key, `remove` takes rows or row keys, `add` rows are appended (or inserted at `addIndex`). Only the touched rows re-render. In client mode the change holds until `data` changes; in server mode updates apply to the loaded rows, and adds or removes also refetch the visible rows. Returns `{ added, updated, removed }`.',
     scrollToRow:
       'Scroll a row into view. Accepts `{ rowKey, align }` with align `auto`, `start` or `center` (default).',
     clearSelection: 'Clear the row selection.',
@@ -239,9 +263,34 @@ export default {
         },
       },
       data: {
-        type: 'array',
-        description: 'The rows.',
+        type: ['array', 'object'],
+        description:
+          'The rows, or `{ mode: server, request, blockSize }` to load rows from a request in blocks as the table scrolls. In server mode the table fires the request with the event `{ startRow, endRow, view: { sort, filter, search, group, aggregates }, groupPath, selected }` (read it in the request `payload` with `_event`) and expects `{ rows, total, groups?, aggregates? }`, the contract of `MongoDBTableQuery`. Sorting, filtering and grouping then run on the server. Rows need a `rowKey`.',
         items: { type: 'object' },
+        additionalProperties: false,
+        required: ['mode', 'request'],
+        properties: {
+          mode: {
+            type: 'string',
+            enum: ['server'],
+            description: 'Load rows from `request`.',
+          },
+          request: {
+            type: 'string',
+            description: 'Id of the request on the page that returns `{ rows, total }`.',
+          },
+          blockSize: {
+            type: 'integer',
+            default: 200,
+            description: 'Rows per request. Blocks load as they scroll into view.',
+          },
+          maxBlocks: {
+            type: 'integer',
+            default: 20,
+            description:
+              'Blocks kept in the cache; the least recently used are dropped (and refetched when they come back into view).',
+          },
+        },
       },
       rowKey: {
         type: 'string',
@@ -327,7 +376,72 @@ export default {
           preserve: {
             type: 'boolean',
             default: false,
-            description: 'Keep selected keys of rows that leave `data`.',
+            description: 'Keep selected keys of rows that leave `data`. Always on in server mode.',
+          },
+          cascade: {
+            type: 'boolean',
+            default: false,
+            description:
+              'In a tree, selecting or clearing a row also selects or clears all its descendants.',
+          },
+        },
+      },
+      tree: {
+        type: 'object',
+        additionalProperties: false,
+        description:
+          'Show rows as a tree (client data only): rows are indented under their parent with an expand chevron in the first column, Right and Left expand and collapse, sorting sorts within each level and a filter keeps the ancestors of matching rows. The expanded row keys are the `expanded` part of the table value. Give exactly one of `childrenField` or `parentField`.',
+        properties: {
+          childrenField: {
+            type: 'string',
+            description: "Dot path to each row's child rows (nested data).",
+          },
+          parentField: {
+            type: 'string',
+            description:
+              "Dot path to the row key of each row's parent (flat data). Rows whose parent is not in `data` are roots.",
+          },
+          lazy: {
+            type: 'boolean',
+            default: false,
+            description:
+              'Load children on demand: rows whose `hasChildrenField` is true show a chevron before their children are loaded, expanding a row fires `onRowExpand`, and the app adds the children to `data` (for example a request whose result is merged into the data with `parentField` set).',
+          },
+          hasChildrenField: {
+            type: 'string',
+            default: 'hasChildren',
+            description:
+              'With `lazy`, the field that marks rows with children that are not loaded yet.',
+          },
+          indent: {
+            type: 'number',
+            default: 20,
+            description: 'Indent per level in pixels.',
+          },
+        },
+      },
+      expandable: {
+        type: 'object',
+        additionalProperties: false,
+        description:
+          'Expandable rows: a chevron in the first column opens a detail row below the row, as high as its content. The expanded row keys are the `expanded` part of the table value.',
+        properties: {
+          template: {
+            type: 'string',
+            description:
+              'Nunjucks HTML for the detail row, rendered with `row` and `rowKey`. Output is escaped: use `| safe` to insert HTML from a field. The HTML is sanitised.',
+          },
+          rowExpandable: {
+            type: 'object',
+            additionalProperties: false,
+            description: 'Which rows can expand.',
+            properties: {
+              when: {
+                type: 'object',
+                description:
+                  'A condition (`{ key, op, value }`, or `and` / `or` lists) tested against the row.',
+              },
+            },
           },
         },
       },

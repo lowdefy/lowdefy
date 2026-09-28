@@ -68,6 +68,7 @@ function useScrollWindow({ scrollerRef, params }) {
     params.layout,
     params.rowCount,
     params.rowHeight,
+    params.rowOffsets,
     params.virtualColumns,
     params.virtualRows,
   ]);

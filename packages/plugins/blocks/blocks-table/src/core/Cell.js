@@ -18,7 +18,7 @@ import React, { memo, useCallback } from 'react';
 
 // One grid cell. Memoised on the row object and the layout column, so a horizontal range change
 // only mounts the cells that came into range. Tier-0 cells render plain DOM (D4).
-function Cell({ api, col, focused, original, selected }) {
+function Cell({ api, col, focused, lead, original, selected }) {
   const onEvent = useCallback(
     ({ name, event }) => api.actions.onCellEvent({ name, event, original, column: col.column }),
     [api, original, col]
@@ -59,6 +59,7 @@ function Cell({ api, col, focused, original, selected }) {
       style={col.style}
       tabIndex={focused ? 0 : -1}
     >
+      {lead}
       <span className="lf-table-cell-content">
         <Renderer
           column={col.column}

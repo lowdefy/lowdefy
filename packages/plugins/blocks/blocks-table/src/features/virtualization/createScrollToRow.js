@@ -25,7 +25,7 @@ function createScrollToRow(api) {
       throw new Error('scrollToRow requires "rowKey".');
     }
     const id = String(rowKey);
-    const index = api.rows.findIndex((row) => row.id === id);
+    const index = api.rows.findIndex((row) => row?.id === id && (row.kind ?? 'row') === 'row');
     if (index === -1) return false;
     scrollToCell({ api, row: index, col: -1, align: align ?? 'center' });
     return true;

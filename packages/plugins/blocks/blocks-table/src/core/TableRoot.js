@@ -25,7 +25,10 @@ import features from '../features/index.js';
 import Grid from './Grid.js';
 import stabilizeData from './stabilizeData.js';
 import TABLE_FEATURES from './tableFeatures.js';
+import useFeatureData from './useFeatureData.js';
 import useFeatureFragments from './useFeatureFragments.js';
+import useFeatureItems from './useFeatureItems.js';
+import useFeatureRows from './useFeatureRows.js';
 import useFeatureMethods from './useFeatureMethods.js';
 import useForeignKeys from './useForeignKeys.js';
 import useTableConfig from './useTableConfig.js';
@@ -51,26 +54,27 @@ function TableRoot({
   value,
 }) {
   const config = useTableConfig({ properties });
-  const previousData = useRef(null);
-  const stable = useMemo(
-    () =>
-      stabilizeData({
-        data: properties.data,
-        previous: previousData.current,
-        getKey: config.getKey,
-        rowVersionField: config.rowVersionField,
-      }),
-    [properties.data, config.getKey, config.rowVersionField]
-  );
-  previousData.current = stable;
-  const data = stable.rows;
-
   const apiRef = useRef(null);
   if (apiRef.current === null) {
     apiRef.current = createApi();
     createFeatureActions(apiRef.current);
   }
   const api = apiRef.current;
+
+  const sourceData = useFeatureData({ api, config, properties });
+  const previousData = useRef(null);
+  const stable = useMemo(
+    () =>
+      stabilizeData({
+        data: sourceData,
+        previous: previousData.current,
+        getKey: config.getKey,
+        rowVersionField: config.rowVersionField,
+      }),
+    [sourceData, config.getKey, config.rowVersionField]
+  );
+  previousData.current = stable;
+  const data = useFeatureRows({ api, config, rows: stable.rows });
 
   const { isPending, setSliceSilently, state, updateSlice } = useTableState({
     api,
@@ -108,11 +112,19 @@ function TableRoot({
   });
   useForeignKeys({ api, selected: value?.selected });
   useFeatureMethods({ api, methods });
-  const { leadingColumns, regions } = useFeatureFragments({ api, config, data, state, table });
+  const fragments = useFeatureFragments({ api, config, data, state, table });
+  const { leadingColumns, regions } = fragments;
 
-  const rows = table.getRowModel().rows;
   const rowHeight = config.rowHeight ?? densityHeights[state.density];
   const headerHeight = Math.min(Math.max(rowHeight, 32), 48);
+  const { rows, rowOffsets } = useFeatureItems({
+    api,
+    config,
+    rowHeight,
+    rows: table.getRowModel().rows,
+    state,
+    table,
+  });
 
   return (
     <Grid
@@ -122,11 +134,12 @@ function TableRoot({
       clickable={Boolean(config.rowLink || events.onRowClick)}
       config={config}
       headerHeight={headerHeight}
-      isPending={isPending}
+      isPending={isPending || fragments.pending}
       leadingColumns={leadingColumns}
-      loading={loading === true || properties.loading === true}
+      loading={loading === true || properties.loading === true || fragments.loading}
       regions={regions}
       rowHeight={rowHeight}
+      rowOffsets={rowOffsets}
       rows={rows}
       state={state}
       strategy={rowWindowStrategy}

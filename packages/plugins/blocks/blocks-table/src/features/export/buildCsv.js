@@ -24,6 +24,8 @@ function buildCsv({ api, formatted }) {
   const cols = api.layout.cols.filter((col) => !col.special);
   const lines = [cols.map((col) => toCsvField(stripHtml(col.column.title))).join(',')];
   api.rows.forEach((row) => {
+    // Display items that are not data rows (group headers, expanded detail rows) are not exported.
+    if ((row.kind ?? 'row') !== 'row') return;
     lines.push(
       cols
         .map((col) =>

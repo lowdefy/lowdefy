@@ -15,20 +15,28 @@
 */
 
 import eventsFeature from './events/eventsFeature.js';
+import expandableFeature from './expandable/expandableFeature.js';
+import expansionFeature from './expansion/expansionFeature.js';
 import exportFeature from './export/exportFeature.js';
 import keyboardFeature from './keyboard/keyboardFeature.js';
 import orderingFeature from './ordering/orderingFeature.js';
 import pinningFeature from './pinning/pinningFeature.js';
 import selectionFeature from './selection/selectionFeature.js';
+import serverDataFeature from './serverData/serverDataFeature.js';
+import serverRangeFeature from './serverData/serverRangeFeature.js';
 import sizingFeature from './sizing/sizingFeature.js';
 import sortingFeature from './sorting/sortingFeature.js';
+import transactionsFeature from './transactions/transactionsFeature.js';
+import treeFeature from './tree/treeFeature.js';
 import virtualizationFeature from './virtualization/virtualizationFeature.js';
 import visibilityFeature from './visibility/visibilityFeature.js';
 
 // The table's feature modules, in composition order. The core loops over this list for TanStack
 // feature slots, state slices, view/value derivation, header parts, delegated event handlers,
 // actions and block methods (see ARCHITECTURE.md). The order is the order handlers run in: a
-// handler that returns true stops the chain for that event.
+// handler that returns true stops the chain for that event. It is also the order of the data
+// hooks (server rows, tree flattening), row hooks (transactions) and item hooks (server items,
+// tree rows, expandable detail rows).
 const features = [
   sortingFeature,
   sizingFeature,
@@ -36,7 +44,13 @@ const features = [
   pinningFeature,
   visibilityFeature,
   selectionFeature,
+  expansionFeature,
+  serverDataFeature,
+  treeFeature,
+  transactionsFeature,
+  expandableFeature,
   virtualizationFeature,
+  serverRangeFeature,
   keyboardFeature,
   eventsFeature,
   exportFeature,

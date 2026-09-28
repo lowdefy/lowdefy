@@ -18,10 +18,16 @@ import React, { useContext } from 'react';
 
 import RenderProbeContext from './RenderProbeContext.js';
 import Row from './Row.js';
+import rowRenderers from './rowRenderers.js';
+import SkeletonRow from './SkeletonRow.js';
 
 // Rows of the current window. `translated` (the default) renders the window rows in flow inside
 // one container moved by a single translateY per range change; `positioned` gives each row its own
 // absolute transform (TanStack Virtual's pattern), kept for the benchmark comparison.
+//
+// Items are TanStack rows, wrapped row items (`kind: 'row'`, with a tree depth or an expand
+// state), other kinds rendered by a feature's row renderer, or `undefined` for a row that is not
+// loaded yet. `rowOffsets` positions the items when some are not one row high.
 function Body({
   activeCell,
   api,
@@ -29,6 +35,7 @@ function Body({
   layout,
   rowClassName,
   rowHeight,
+  rowOffsets,
   rowStyle,
   rows,
   selectable,
@@ -38,37 +45,66 @@ function Body({
   const probe = useContext(RenderProbeContext);
   probe?.body();
   const rowElements = [];
-  const positioned = range.positioning === 'positioned';
+  const positioned = range.positioning === 'positioned' && !rowOffsets;
+  const leadIndex = layout.cols.find((col) => !col.special)?.index;
   for (let i = range.rowStart; i < range.rowEnd; i++) {
-    const row = rows[i];
-    rowElements.push(
-      <Row
-        activeCol={activeCell.row === i ? activeCell.col : -1}
-        api={api}
-        centerCols={centerCols}
-        className={rowClassName}
-        displayIndex={i}
-        endCols={layout.end}
-        key={row.id}
-        original={row.original}
-        rowId={row.id}
-        selectable={selectable}
-        selected={selection[row.id] === true}
-        startCols={layout.start}
-        offset={positioned ? i * rowHeight : undefined}
-        style={rowStyle}
-      />
-    );
+    const item = rows[i];
+    const kind = item?.kind ?? 'row';
+    if (item === undefined) {
+      rowElements.push(
+        <SkeletonRow
+          centerCols={centerCols}
+          className={rowClassName}
+          displayIndex={i}
+          endCols={layout.end}
+          key={`__skeleton_${i}`}
+          startCols={layout.start}
+        />
+      );
+    } else if (kind !== 'row') {
+      const Renderer = rowRenderers[kind];
+      rowElements.push(
+        <Renderer
+          api={api}
+          centerCols={centerCols}
+          className={rowClassName}
+          displayIndex={i}
+          item={item}
+          key={item.id}
+          layout={layout}
+        />
+      );
+    } else {
+      rowElements.push(
+        <Row
+          activeCol={activeCell.row === i ? activeCell.col : -1}
+          api={api}
+          centerCols={centerCols}
+          className={rowClassName}
+          displayIndex={i}
+          endCols={layout.end}
+          item={item.kind ? item : undefined}
+          key={item.id}
+          leadIndex={leadIndex}
+          original={item.original}
+          rowId={item.id}
+          selectable={selectable}
+          selected={selection[item.id] === true}
+          startCols={layout.start}
+          offset={positioned ? i * rowHeight : undefined}
+          style={rowStyle}
+        />
+      );
+    }
   }
+  const height = rowOffsets ? rowOffsets[rows.length] : rows.length * rowHeight;
+  const top = rowOffsets ? rowOffsets[range.rowStart] : range.rowStart * rowHeight;
   return (
-    <div className="lf-table-body" role="rowgroup" style={{ height: rows.length * rowHeight }}>
+    <div className="lf-table-body" role="rowgroup" style={{ height }}>
       {positioned ? (
         rowElements
       ) : (
-        <div
-          className="lf-table-window"
-          style={{ transform: `translateY(${range.rowStart * rowHeight}px)` }}
-        >
+        <div className="lf-table-window" style={{ transform: `translateY(${top}px)` }}>
           {rowElements}
         </div>
       )}

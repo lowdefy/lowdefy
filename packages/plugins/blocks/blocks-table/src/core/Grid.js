@@ -47,6 +47,7 @@ function Grid({
   loading,
   regions,
   rowHeight,
+  rowOffsets,
   rows,
   state,
   strategy,
@@ -66,7 +67,7 @@ function Grid({
       viewport.width,
     ]
   );
-  Object.assign(api, { headerHeight, layout, rowHeight, rows });
+  Object.assign(api, { headerHeight, layout, rowHeight, rowOffsets, rows });
   api.previewLayout = ({ widths }) =>
     applyLayoutVars({
       element: rootRef.current,
@@ -84,6 +85,7 @@ function Grid({
     headerHeight,
     layout,
     rowHeight,
+    rowOffsets,
     rows,
     scrollerRef,
     state,
@@ -128,6 +130,7 @@ function Grid({
         range={range}
         rowClassName={rowClassName}
         rowHeight={rowHeight}
+        rowOffsets={rowOffsets}
         rowStyle={styles.row}
         rows={rows}
         selectable={Boolean(config.rowSelection)}
@@ -165,7 +168,7 @@ function Grid({
         className="lf-table-scroller"
         data-autoheight={fixedHeight ? undefined : ''}
         ref={scrollerRef}
-        role="grid"
+        role={config.tree ? 'treegrid' : 'grid'}
         style={scrollerStyle}
         tabIndex={scrollerTabIndex}
       >

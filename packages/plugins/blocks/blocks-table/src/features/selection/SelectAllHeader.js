@@ -16,15 +16,13 @@
 
 import React, { useEffect, useRef } from 'react';
 
-import countSelectedRows from './countSelectedRows.js';
+import getSelectAllState from './getSelectAllState.js';
 
 function ignoreChange() {}
 
 function SelectAllHeader({ api }) {
   const ref = useRef(null);
-  const { selectedCount, total } = countSelectedRows({ api });
-  const checked = total > 0 && selectedCount === total;
-  const indeterminate = selectedCount > 0 && !checked;
+  const { checked, indeterminate } = getSelectAllState({ api });
   useEffect(() => {
     if (ref.current) ref.current.indeterminate = indeterminate;
   }, [indeterminate]);

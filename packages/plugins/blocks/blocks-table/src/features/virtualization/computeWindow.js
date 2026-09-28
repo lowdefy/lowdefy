@@ -25,12 +25,15 @@ function clamp(value, min, max) {
 
 // The rendered row and centre-column ranges for a scroll position. Row overscan is measured in
 // pixels and leans in the scroll direction: one body height ahead, a quarter behind (D10.3).
+// `rowOffsets` (item tops, length rowCount + 1) replaces `index * rowHeight` when some items are
+// not one row high.
 function computeWindow({
   direction,
   headerHeight,
   layout,
   rowCount,
   rowHeight,
+  rowOffsets,
   scrollLeft,
   scrollTop,
   viewportHeight,
@@ -48,8 +51,15 @@ function computeWindow({
     let after = trail;
     if (direction < 0) before = lead;
     if (direction > 0) after = lead;
-    rowStart = clamp(Math.floor((scrollTop - before) / rowHeight), 0, rowCount);
-    rowEnd = clamp(Math.ceil((scrollTop + bodyHeight + after) / rowHeight), rowStart, rowCount);
+    const top = scrollTop - before;
+    const bottom = scrollTop + bodyHeight + after;
+    if (rowOffsets) {
+      rowStart = clamp(firstIndexAbove({ offsets: rowOffsets, value: top }) - 1, 0, rowCount);
+      rowEnd = clamp(firstIndexAbove({ offsets: rowOffsets, value: bottom }), rowStart, rowCount);
+    } else {
+      rowStart = clamp(Math.floor(top / rowHeight), 0, rowCount);
+      rowEnd = clamp(Math.ceil(bottom / rowHeight), rowStart, rowCount);
+    }
   }
   let colStart = 0;
   let colEnd = layout.center.length;

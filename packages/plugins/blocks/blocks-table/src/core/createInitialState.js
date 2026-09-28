@@ -46,7 +46,6 @@ function createInitialState({ value, config, rows }) {
   const density = pickViewPart({ value, defaultView, key: 'density' });
   state.density = type.isUndefined(densityHeights[density]) ? 'default' : density;
   state.viewPassthrough = passthroughView({ value, defaultView });
-  state.expanded = type.isArray(value?.expanded) ? value.expanded : [];
   return state;
 }
 

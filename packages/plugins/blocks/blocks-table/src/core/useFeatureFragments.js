@@ -24,7 +24,10 @@ const EMPTY = [];
 // - `leadingColumns`: special columns rendered first in the start-pinned region (the selection
 //   checkbox; later a drag handle or expander),
 // - `regions.top` / `regions.bottom`: elements rendered above or below the grid inside the table
-//   root (toolbar, bulk bar, summary footer, pagination).
+//   root (toolbar, bulk bar, summary footer, pagination),
+// - `loading: true`: the table is waiting for data it cannot show yet (server mode's first block),
+// - `pending: true`: the rows shown are about to be replaced, so they are dimmed (server mode keeps
+//   the previous view's rows until the new view's first block lands).
 function useFeatureFragments(ctx) {
   const fragments = features.map((feature) => feature.useFeature?.(ctx) ?? null);
   const leadingParts = fragments.map((fragment) => fragment?.leadingColumns ?? EMPTY);
@@ -36,7 +39,9 @@ function useFeatureFragments(ctx) {
     if (fragment?.regions?.top) top.push({ name, element: fragment.regions.top });
     if (fragment?.regions?.bottom) bottom.push({ name, element: fragment.regions.bottom });
   });
-  return { leadingColumns, regions: { top, bottom } };
+  const loading = fragments.some((fragment) => fragment?.loading === true);
+  const pending = fragments.some((fragment) => fragment?.pending === true);
+  return { leadingColumns, loading, pending, regions: { top, bottom } };
 }
 
 export default useFeatureFragments;
