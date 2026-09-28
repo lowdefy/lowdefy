@@ -3392,7 +3392,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "7e8e6009293d390533fd38d58730c33aacaaf45d7468b84593c054a42ece02df"
+      "hash": "21b5605894f876c5593cfebcbbc0250fc0566307fbfece29da4a3814370c906c"
     },
     "websockets/websockets-introduction": {
       "files": [

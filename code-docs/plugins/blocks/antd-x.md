@@ -59,6 +59,7 @@ Standalone conversation list sidebar, decoupled from AgentChat.
 
 - `items` — Conversation list (from state/requests)
 - `activeKey` — Currently selected conversation
+- `loadingKey` / `items[].loading` — Row(s) showing a spinner in the icon slot (antd-x Conversations has no loading state, so the block swaps the item's `icon` and adds `aria-busy`/`data-loading`)
 - `menu` — Context menu actions per conversation
 - `creation` — "New Chat" button config
 - `groupable` — Enable collapsible groups
