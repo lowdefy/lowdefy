@@ -15,15 +15,19 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { isEventFromDomDescendant, withBlockDefaults } from '@lowdefy/block-utils';
 
 const Box = ({ blockId, classNames, content, events, methods, properties, styles }) => {
   return (
     <div
       id={blockId}
       data-testid={blockId}
-      onClick={() => methods.triggerEvent({ name: 'onClick' })}
-      onPaste={() => methods.triggerEvent({ name: 'onPaste' })}
+      onClick={(event) => {
+        if (isEventFromDomDescendant(event)) methods.triggerEvent({ name: 'onClick' });
+      }}
+      onPaste={(event) => {
+        if (isEventFromDomDescendant(event)) methods.triggerEvent({ name: 'onPaste' });
+      }}
       className={classNames?.element}
       style={{ outline: 'none', cursor: events.onClick && 'pointer', ...styles?.element }}
     >

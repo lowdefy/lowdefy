@@ -14,24 +14,11 @@
   limitations under the License.
 */
 
-import getKnex from '../getKnex.js';
-import schema from './schema.js';
-
-async function KnexRaw({ request, connection }) {
-  const client = getKnex(connection);
-  const res = await client.raw(request.query, request.parameters);
-  Object.keys(res).forEach((key) => {
-    if (key.startsWith('_')) {
-      delete res[key];
-    }
-  });
-  return res;
+// React bubbles events through the component tree, so a click inside a portal (a Modal, a Drawer,
+// a dropdown) also reaches the block that renders it, although the portal's DOM sits elsewhere in
+// the document. A block's own events should only fire for DOM it contains.
+function isEventFromDomDescendant(event) {
+  return event.currentTarget.contains(event.target);
 }
 
-KnexRaw.schema = schema;
-KnexRaw.meta = {
-  checkRead: false,
-  checkWrite: false,
-};
-
-export default KnexRaw;
+export default isEventFromDomDescendant;

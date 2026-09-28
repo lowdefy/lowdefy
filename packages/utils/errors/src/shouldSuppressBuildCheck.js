@@ -30,6 +30,7 @@ export const VALID_CHECK_SLUGS = {
   'callapi-internal-refs': 'CallAPI actions targeting InternalApi endpoints',
   'dynamic-endpoint-refs': 'Invalid Dynamic block endpoint reference warnings',
   'websocket-refs': 'Invalid websocket action reference warnings',
+  'callmethod-refs': 'CallMethod actions targeting blocks not defined on the page',
   icons: 'Unresolvable icon name warnings',
   types: 'All type validation (blocks, operators, actions, requests, connections)',
   schema: 'JSON schema validation errors',

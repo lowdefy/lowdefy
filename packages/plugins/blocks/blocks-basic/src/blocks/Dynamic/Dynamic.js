@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { isEventFromDomDescendant, withBlockDefaults } from '@lowdefy/block-utils';
 
 // Server-resolved container. The server fills the content slot at page get by
 // calling the configured api endpoint — by the time config reaches the client,
@@ -25,7 +25,9 @@ const Dynamic = ({ blockId, classNames, content, events, methods, styles }) => {
     <div
       id={blockId}
       data-testid={blockId}
-      onClick={() => methods.triggerEvent({ name: 'onClick' })}
+      onClick={(event) => {
+        if (isEventFromDomDescendant(event)) methods.triggerEvent({ name: 'onClick' });
+      }}
       className={classNames?.element}
       style={{ outline: 'none', cursor: events.onClick && 'pointer', ...styles?.element }}
     >

@@ -15,11 +15,11 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import createKnex from '../createKnex.js';
+import getKnex from '../getKnex.js';
 import schema from './schema.js';
 
 async function KnexBuilder({ request, connection }) {
-  let client = createKnex(connection);
+  let client = getKnex(connection);
   if (request.tableName) {
     client = client(request.tableName);
   }

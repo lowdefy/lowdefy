@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Card } from 'antd';
-import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
+import { isEventFromDomDescendant, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 
 import withTheme from '../withTheme.js';
 
@@ -41,7 +41,9 @@ const CardBlock = ({
     // antd 6 renamed the `default` size to `medium`.
     size={properties.size === 'default' ? 'medium' : properties.size}
     type={properties.inner ? 'inner' : null}
-    onClick={() => methods.triggerEvent({ name: 'onClick' })}
+    onClick={(event) => {
+      if (isEventFromDomDescendant(event)) methods.triggerEvent({ name: 'onClick' });
+    }}
     className={classNames.element}
     classNames={{
       header: classNames.header,

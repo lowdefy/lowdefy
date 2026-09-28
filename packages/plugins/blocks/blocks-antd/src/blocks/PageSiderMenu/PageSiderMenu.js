@@ -309,46 +309,64 @@ const PageSiderMenu = ({
                         ),
                       }}
                     />
-                    <Content
-                      blockId={`${blockId}_content`}
+                    {/* The footer is a sibling of the content, as in PageHeaderMenu, so it sits below the
+                        page padding and the content grows to push it to the bottom of the viewport. */}
+                    <Layout
+                      blockId={`${blockId}_main`}
                       components={{ Icon, Link, ShortcutBadge }}
-                      classNames={{ element: classNames.content }}
                       events={events}
-                      properties={properties.content ?? {}}
-                      styles={{
-                        element: mergeObjects([
-                          {
-                            padding: '0 40px 40px 40px',
-                            minWidth: 0,
-                          },
-                          styles.content,
-                        ]),
-                      }}
+                      properties={{}}
+                      styles={{ element: { minWidth: 0 } }}
                       content={{
                         content: () => (
                           <>
-                            {!type.isNone(properties.breadcrumb) ? (
-                              <Breadcrumb
-                                blockId={`${blockId}_breadcrumb`}
-                                basePath={basePath}
-                                components={{ Icon, Link, ShortcutBadge }}
-                                classNames={{ element: classNames.breadcrumb }}
-                                events={events}
-                                methods={methods}
-                                properties={properties.breadcrumb}
-                                styles={{
-                                  element: mergeObjects([{ margin: '16px 0' }, styles.breadcrumb]),
-                                }}
-                                rename={{
-                                  events: {
-                                    onClick: 'onBreadcrumbClick',
+                            <Content
+                              blockId={`${blockId}_content`}
+                              components={{ Icon, Link, ShortcutBadge }}
+                              classNames={{ element: classNames.content }}
+                              events={events}
+                              properties={properties.content ?? {}}
+                              styles={{
+                                element: mergeObjects([
+                                  {
+                                    padding: '0 40px 40px 40px',
+                                    minWidth: 0,
                                   },
-                                }}
-                              />
-                            ) : (
-                              <div className="py-1.5 sm:py-1.5 md:py-2.5 lg:py-5" />
-                            )}
-                            {content.content && content.content()}
+                                  styles.content,
+                                ]),
+                              }}
+                              content={{
+                                content: () => (
+                                  <>
+                                    {!type.isNone(properties.breadcrumb) ? (
+                                      <Breadcrumb
+                                        blockId={`${blockId}_breadcrumb`}
+                                        basePath={basePath}
+                                        components={{ Icon, Link, ShortcutBadge }}
+                                        classNames={{ element: classNames.breadcrumb }}
+                                        events={events}
+                                        methods={methods}
+                                        properties={properties.breadcrumb}
+                                        styles={{
+                                          element: mergeObjects([
+                                            { margin: '16px 0' },
+                                            styles.breadcrumb,
+                                          ]),
+                                        }}
+                                        rename={{
+                                          events: {
+                                            onClick: 'onBreadcrumbClick',
+                                          },
+                                        }}
+                                      />
+                                    ) : (
+                                      <div className="py-1.5 sm:py-1.5 md:py-2.5 lg:py-5" />
+                                    )}
+                                    {content.content && content.content()}
+                                  </>
+                                ),
+                              }}
+                            />
                             {content.footer && (
                               <Footer
                                 blockId={`${blockId}_footer`}

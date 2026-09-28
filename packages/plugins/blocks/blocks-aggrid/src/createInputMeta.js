@@ -21,7 +21,8 @@
 function createInputMeta(blockName, { size = false } = {}) {
   return {
     category: 'input',
-    icons: [],
+    // The menu cell renders this icon when a column's menu has no icon of its own.
+    icons: ['more-vertical'],
     valueType: 'array',
     cssKeys: {
       element: `The ${blockName} element.`,

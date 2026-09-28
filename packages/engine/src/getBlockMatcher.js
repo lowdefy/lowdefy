@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { applyArrayIndices, type } from '@lowdefy/helpers';
 
-const getBlockMatcher = (params) => {
+function getBlockMatcher({ params, arrayIndices }) {
   let testParams = params;
   if (type.isNone(testParams)) return () => true;
   if (type.isString(testParams)) {
@@ -30,6 +30,12 @@ const getBlockMatcher = (params) => {
   }
   if (type.isString(testParams.blockIds)) {
     testParams.blockIds = [testParams.blockIds];
+  }
+  // An action in a list row names its row's blocks as "list.$.field", like SetState and CallMethod.
+  if (type.isArray(testParams.blockIds)) {
+    testParams.blockIds = testParams.blockIds.map((blockId) =>
+      applyArrayIndices(arrayIndices, blockId)
+    );
   }
   if (type.isString(testParams.regex)) {
     testParams.regex = [testParams.regex];
@@ -53,6 +59,6 @@ const getBlockMatcher = (params) => {
     }
     return false;
   };
-};
+}
 
 export default getBlockMatcher;

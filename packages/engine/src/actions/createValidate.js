@@ -18,9 +18,11 @@ import { UserError } from '@lowdefy/errors';
 
 import getBlockMatcher from '../getBlockMatcher.js';
 
-function createValidate({ context }) {
+function createValidate({ arrayIndices, context }) {
   return function validate(params) {
-    const validationErrors = context._internal.RootSlots.validate(getBlockMatcher(params));
+    const validationErrors = context._internal.RootSlots.validate(
+      getBlockMatcher({ params, arrayIndices })
+    );
     if (validationErrors.length > 0) {
       throw new UserError(
         context._internal.lowdefy._internal.translate('engine.validation.summary', {

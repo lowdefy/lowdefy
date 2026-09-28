@@ -45,6 +45,7 @@ function checkAction(
   {
     blockId,
     callApiActionRefs,
+    callMethodActionRefs,
     checkDuplicateActionId,
     eventId,
     linkActionRefs,
@@ -126,6 +127,15 @@ function checkAction(
         sourcePageId: pageId,
       });
     }
+  }
+
+  // Collect static CallMethod action references for validation
+  if (
+    action.type === 'CallMethod' &&
+    type.isObject(action.params) &&
+    type.isString(action.params.blockId)
+  ) {
+    callMethodActionRefs.push({ targetBlockId: action.params.blockId, action, blockId, eventId });
   }
 
   // Collect static per-org client action references for policy validation.
@@ -313,6 +323,7 @@ function buildEvents(block, pageContext) {
         eventId: key,
         blockId: block.blockId,
         callApiActionRefs: pageContext.callApiActionRefs,
+        callMethodActionRefs: pageContext.callMethodActionRefs,
         typeCounters: pageContext.typeCounters,
         pageId: pageContext.pageId,
         linkActionRefs: pageContext.linkActionRefs,

@@ -21,6 +21,7 @@
 function createDisplayMeta(blockName, { size = false } = {}) {
   return {
     category: 'display',
+    // The menu cell renders this icon when a column's menu has no icon of its own.
     icons: ['more-vertical'],
     valueType: null,
     cssKeys: {

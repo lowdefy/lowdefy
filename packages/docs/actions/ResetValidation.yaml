@@ -35,6 +35,8 @@ _ref:
 
       The `ResetValidation` action `blockIds` or `regex` params are used to limit which blocks validation errors and warnings should be reset.
 
+      When the action runs in a list row, `$` in a blockId is replaced with the row index, as in `SetState` and `CallMethod`, so `list.$.name` matches the `name` input in the same row. `$` in a `regex` pattern keeps its regex meaning.
+
     params: |
       ###### void
       The `ResetValidation` action lowers validation flags on all blocks on the page if called without params.
@@ -46,7 +48,7 @@ _ref:
       An array of blockIds of the blocks for which to lower validation flags.
 
       ###### object
-        - `blockId?: string|string[]`: A blockId or an array of the blockIds of the blocks for which to lower validation flags
+        - `blockIds?: string|string[]`: A blockId or an array of the blockIds of the blocks for which to lower validation flags
         - `regex?: string|string[]`: A regex string pattern or an array of regex string patterns to match the blockIds for which to lower validation flags.
 
     examples: |
