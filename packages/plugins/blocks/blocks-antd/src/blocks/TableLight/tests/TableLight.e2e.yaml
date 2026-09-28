@@ -1,0 +1,459 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: tablelight
+type: Box
+
+blocks:
+  # ============================================
+  # BASIC RENDERING
+  # ============================================
+
+  - id: tl_basic
+    type: TableLight
+    properties:
+      columns:
+        - first_name
+        - key: age
+          type: number
+        - key: city
+          title: Home <i>city</i>
+      data:
+        - { _id: a, first_name: Alice, age: 25, city: Cape Town }
+        - { _id: b, first_name: Bob, age: 30, city: Durban }
+        - { _id: c, first_name: Charlie, age: 35, city: Paarl }
+
+  # ============================================
+  # TIER 0 CELL TYPES
+  # ============================================
+
+  - id: tl_types
+    type: TableLight
+    properties:
+      defaultColumn:
+        sortable: false
+      columns:
+        - { key: text }
+        - { key: number, type: number, cell: { locale: en-US, decimals: 1 } }
+        - { key: currency, type: currency, cell: { currency: EUR, locale: en-US } }
+        - { key: percent, type: percent, cell: { locale: en-US } }
+        - { key: date, type: date }
+        - { key: datetime, type: datetime, cell: { format: 'D MMM YYYY HH:mm' } }
+        - { key: boolean, type: boolean, cell: { trueLabel: Active } }
+        - key: tag
+          type: tag
+          options:
+            won: { label: Won, color: success }
+        - { key: tags, type: tags, cell: { max: 2 } }
+        - key: status
+          type: status
+          options:
+            - { value: open, label: Open, color: processing }
+        - { key: avatar, type: avatar }
+        - { key: people, type: people }
+        - { key: link, type: link, cell: { pageId: button, urlQuery: { id: _id } } }
+        - { key: email, type: email }
+        - { key: phone, type: phone }
+        - { key: url, type: url }
+        - { key: relation, type: relation, cell: { pageId: button } }
+        - { key: progress, type: progress }
+        - { key: rating, type: rating }
+        - { key: image, type: image }
+        - { key: html, type: html }
+        - { key: json, type: json }
+      data:
+        - _id: r1
+          text: Plain text
+          number: 1234.56
+          currency: 99.5
+          percent: 0.25
+          date: '2026-03-01T10:00:00'
+          datetime: '2026-03-01T10:05:00'
+          boolean: true
+          tag: won
+          tags: [alpha, beta, gamma]
+          status: open
+          avatar: Jane Doe
+          people: [{ name: Ann Lee }, { name: Bob Stone }, { name: Cy Dunn }, { name: Di Park }]
+          link: Open record
+          email: jane@example.com
+          phone: '+27 21 555 0100'
+          url: example.com
+          relation: { _id: c1, name: Acme Ltd }
+          progress: 40
+          rating: 4
+          image: 'data:image/gif;base64,R0lGODlhAQABAAAAACw='
+          html: '<b>Bold</b> text'
+          json: { a: 1 }
+
+  - id: tl_unsafe_url
+    type: TableLight
+    properties:
+      columns:
+        - { key: url, type: url }
+      data:
+        - { _id: u1, url: 'javascript:alert(1)' }
+
+  # ============================================
+  # SORTING
+  # ============================================
+
+  - id: tl_sort
+    type: TableLight
+    properties:
+      columns:
+        - name
+        - { key: amount, type: number }
+        - { key: note, sortable: false }
+      data:
+        - { _id: s1, name: banana, amount: 10, note: x }
+        - { _id: s2, name: Apple, amount: 9, note: y }
+        - { _id: s3, name: cherry, amount: 100, note: z }
+        - { _id: s4, name: date, note: w }
+
+  - id: tl_sort_off
+    type: TableLight
+    properties:
+      defaultColumn:
+        sortable: false
+      columns:
+        - name
+      data:
+        - { _id: 1, name: b }
+        - { _id: 2, name: a }
+
+  # ============================================
+  # PAGINATION
+  # ============================================
+
+  - id: tl_page_auto
+    type: TableLight
+    properties:
+      pageSize: 5
+      columns:
+        - n
+      data:
+        - { n: 1 }
+        - { n: 2 }
+        - { n: 3 }
+        - { n: 4 }
+        - { n: 5 }
+        - { n: 6 }
+        - { n: 7 }
+
+  - id: tl_page_single
+    type: TableLight
+    properties:
+      pageSize: 5
+      columns:
+        - n
+      data:
+        - { n: 1 }
+        - { n: 2 }
+        - { n: 3 }
+
+  - id: tl_page_off
+    type: TableLight
+    properties:
+      pageSize: 5
+      pagination: false
+      columns:
+        - n
+      data:
+        - { n: 1 }
+        - { n: 2 }
+        - { n: 3 }
+        - { n: 4 }
+        - { n: 5 }
+        - { n: 6 }
+        - { n: 7 }
+
+  # ============================================
+  # SUMMARY
+  # ============================================
+
+  - id: tl_summary
+    type: TableLight
+    properties:
+      columns:
+        - { key: name, aggregate: count }
+        - { key: amount, type: currency, cell: { currency: USD, locale: en-US }, aggregate: sum }
+        - { key: score, type: number, cell: { locale: en-US }, aggregate: avg }
+        - { key: owner, aggregate: percentEmpty }
+      data:
+        - { _id: 1, name: A, amount: 10, score: 2, owner: x }
+        - { _id: 2, name: B, amount: 15.5, score: 4 }
+        - { _id: 3, name: C, amount: 4.5, score: 6, owner: y }
+        - { _id: 4, name: D, amount: 0, score: 8 }
+
+  # ============================================
+  # BUTTONS AND MENU
+  # ============================================
+
+  - id: tl_actions
+    type: TableLight
+    properties:
+      columns:
+        - name
+        - key: actions
+          type: buttons
+          cell:
+            buttons:
+              - eventName: onEdit
+                title: Edit
+              - eventName: onRemove
+                title: Remove
+                icon: delete
+                hideTitle: true
+              - eventName: onUnlock
+                title: Unlock
+                hidden:
+                  when: { key: locked, op: isFalse }
+        - key: hover_actions
+          type: buttons
+          cell:
+            showOn: hover
+            buttons:
+              - eventName: onEdit
+                title: Hover edit
+        - key: more
+          type: menu
+          cell:
+            items:
+              - eventName: onArchive
+                title: Archive
+              - eventName: onSecret
+                title: Secret
+                hiddenField: locked
+      data:
+        - { _id: p1, name: Alice, locked: true }
+        - { _id: p2, name: Bob, locked: false }
+    events:
+      onRowClick:
+        - id: set_actions_row
+          type: SetState
+          params:
+            tl_actions_row:
+              _event: row.name
+      onEdit:
+        - id: set_actions_edit
+          type: SetState
+          params:
+            tl_actions_event:
+              _string.concat:
+                - _event: button.eventName
+                - ' '
+                - _event: button.title
+                - ' '
+                - _event: row.name
+                - ' '
+                - _event: rowKey
+                - ' '
+                - _string.concat:
+                    - ''
+                    - _event: buttonIndex
+      onRemove:
+        - id: set_actions_remove
+          type: SetState
+          params:
+            tl_actions_event:
+              _string.concat:
+                - _event: button.eventName
+                - ' '
+                - _event: row.name
+                - ' '
+                - _string.concat:
+                    - ''
+                    - _event: buttonIndex
+      onArchive:
+        - id: set_actions_archive
+          type: SetState
+          params:
+            tl_actions_event:
+              _string.concat:
+                - _event: item.eventName
+                - ' '
+                - _event: item.title
+                - ' '
+                - _event: row.name
+                - ' '
+                - _event: rowKey
+                - ' '
+                - _string.concat:
+                    - ''
+                    - _event: itemIndex
+
+  - id: tl_actions_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'row='
+          - _if_none:
+              - _state: tl_actions_row
+              - none
+          - ' event='
+          - _if_none:
+              - _state: tl_actions_event
+              - none
+
+  # ============================================
+  # CLICKS AND LINKS
+  # ============================================
+
+  - id: tl_clicks
+    type: TableLight
+    properties:
+      columns:
+        - name
+        - { key: age, type: number }
+        - { key: profile, type: link, cell: { pageId: button, urlQuery: { id: _id } } }
+      data:
+        - { _id: k1, name: Alice, age: 25, profile: Alice profile }
+        - { _id: k2, name: Bob, age: 30, profile: Bob profile }
+    events:
+      onRowClick:
+        - id: set_clicks_row
+          type: SetState
+          params:
+            tl_clicks_row:
+              _string.concat:
+                - _event: row.name
+                - ' '
+                - _event: rowKey
+                - ' '
+                - _string.concat:
+                    - ''
+                    - _event: index
+      onCellClick:
+        - id: set_clicks_cell
+          type: SetState
+          params:
+            tl_clicks_cell:
+              _string.concat:
+                - _event: column.key
+                - ' '
+                - _event: column.field
+                - ' '
+                - _string.concat:
+                    - ''
+                    - _event: value
+
+  - id: tl_clicks_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'row='
+          - _if_none:
+              - _state: tl_clicks_row
+              - none
+          - ' cell='
+          - _if_none:
+              - _state: tl_clicks_cell
+              - none
+
+  - id: tl_row_link
+    type: TableLight
+    properties:
+      rowLink:
+        pageId: button
+        urlQuery:
+          id: _id
+      columns:
+        - name
+      data:
+        - { _id: l1, name: Linked one }
+        - { _id: l2, name: Linked two }
+
+  - id: tl_row_link_click
+    type: TableLight
+    properties:
+      rowLink:
+        pageId: button
+        urlQuery:
+          id: _id
+      columns:
+        - name
+      data:
+        - { _id: m1, name: Peek one }
+    events:
+      onRowClick:
+        - id: set_peek
+          type: SetState
+          params:
+            tl_peek: { _event: row.name }
+
+  - id: tl_peek_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'peek='
+          - _if_none:
+              - _state: tl_peek
+              - none
+
+  # ============================================
+  # RULES, HTML, EMPTY, UNSUPPORTED KEYS
+  # ============================================
+
+  - id: tl_rules
+    type: TableLight
+    properties:
+      rowRules:
+        - when: { key: overdue, op: isTrue }
+          className: tl-overdue-row
+      columns:
+        - name
+        - key: score
+          type: number
+          rules:
+            - when: { op: gte, value: 8 }
+              color: success
+            - when: { op: lt, value: 5 }
+              color: '#ff0000'
+              className: tl-low-score
+      data:
+        - { _id: 1, name: High, score: 9, overdue: false }
+        - { _id: 2, name: Low, score: 2, overdue: true }
+        - { _id: 3, name: Mid, score: 6, overdue: false }
+
+  - id: tl_html
+    type: TableLight
+    properties:
+      columns:
+        - key: name
+          type: html
+          cell:
+            template: '<b class="tl-name">{{ value }}</b> from {{ row.city }}'
+      data:
+        - { _id: 1, name: '<i>Alice</i>', city: Paarl }
+
+  - id: tl_empty
+    type: TableLight
+    properties:
+      emptyText: No orders yet
+      columns:
+        - number
+      data: []
+
+  - id: tl_unsupported
+    type: TableLight
+    properties:
+      columns:
+        - key: name
+          filterable: true
+      data:
+        - { _id: 1, name: A }

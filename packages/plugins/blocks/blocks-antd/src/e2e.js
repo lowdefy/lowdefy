@@ -81,6 +81,7 @@ export { default as Splitter } from './blocks/Splitter/e2e.js';
 export { default as Statistic } from './blocks/Statistic/e2e.js';
 export { default as Steps } from './blocks/Steps/e2e.js';
 export { default as Switch } from './blocks/Switch/e2e.js';
+export { default as TableLight } from './blocks/TableLight/e2e.js';
 export { default as Tabs } from './blocks/Tabs/e2e.js';
 export { default as Tag } from './blocks/Tag/e2e.js';
 export { default as TagMultipleSelector } from './blocks/TagMultipleSelector/e2e.js';

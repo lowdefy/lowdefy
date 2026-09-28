@@ -82,6 +82,7 @@ export { default as Splitter } from './blocks/Splitter/meta.js';
 export { default as Statistic } from './blocks/Statistic/meta.js';
 export { default as Steps } from './blocks/Steps/meta.js';
 export { default as Switch } from './blocks/Switch/meta.js';
+export { default as TableLight } from './blocks/TableLight/meta.js';
 export { default as Tabs } from './blocks/Tabs/meta.js';
 export { default as Tag } from './blocks/Tag/meta.js';
 export { default as TagMultipleSelector } from './blocks/TagMultipleSelector/meta.js';

@@ -78,6 +78,7 @@ pages:
   - _ref: ../../src/blocks/Collapse/tests/Collapse.e2e.yaml
   - _ref: ../../src/blocks/Tabs/tests/Tabs.e2e.yaml
   - _ref: ../../src/blocks/Descriptions/tests/Descriptions.e2e.yaml
+  - _ref: ../../src/blocks/TableLight/tests/TableLight.e2e.yaml
   # Step 3.3: List/Page Containers
   - _ref: ../../src/blocks/ControlledList/tests/ControlledList.e2e.yaml
   - _ref: ../../src/blocks/ListSelector/tests/ListSelector.e2e.yaml
