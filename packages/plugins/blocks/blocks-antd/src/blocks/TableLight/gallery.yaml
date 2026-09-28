@@ -1,0 +1,375 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic table
+  fullWidth: true
+  blocks:
+    - id: basic_table
+      type: TableLight
+      properties:
+        columns:
+          - name
+          - key: email
+            type: email
+          - key: role
+          - key: joined
+            type: date
+        data:
+          - {
+              _id: 1,
+              name: Sarah Johnson,
+              email: sarah@example.com,
+              role: Engineer,
+              joined: '2023-04-12',
+            }
+          - {
+              _id: 2,
+              name: Alex Chen,
+              email: alex@example.com,
+              role: Product,
+              joined: '2022-11-01',
+            }
+          - {
+              _id: 3,
+              name: Maria Garcia,
+              email: maria@example.com,
+              role: Design,
+              joined: '2024-02-20',
+            }
+
+- title: Recent orders with a row link and a summary
+  fullWidth: true
+  blocks:
+    - id: orders_table
+      type: TableLight
+      properties:
+        rowLink:
+          pageId: order
+          urlQuery:
+            _id: _id
+        columns:
+          - key: number
+            title: Order
+          - key: customer
+            type: avatar
+          - key: status
+            type: tag
+            options:
+              pending: { label: Pending, color: warning }
+              shipped: { label: Shipped, color: processing }
+              delivered: { label: Delivered, color: success }
+              cancelled: { label: Cancelled, color: error }
+          - key: total
+            type: currency
+            cell:
+              currency: USD
+            aggregate: sum
+          - key: placed
+            type: date
+            cell:
+              relative: true
+        data:
+          - {
+              _id: o1,
+              number: ORD-1042,
+              customer: Sarah Johnson,
+              status: delivered,
+              total: 129.97,
+              placed: '2026-09-20T10:15:00',
+            }
+          - {
+              _id: o2,
+              number: ORD-1043,
+              customer: Alex Chen,
+              status: shipped,
+              total: 54.5,
+              placed: '2026-09-24T16:40:00',
+            }
+          - {
+              _id: o3,
+              number: ORD-1044,
+              customer: Maria Garcia,
+              status: pending,
+              total: 310,
+              placed: '2026-09-27T08:05:00',
+            }
+          - {
+              _id: o4,
+              number: ORD-1045,
+              customer: Jordan Rivera,
+              status: cancelled,
+              total: 18.99,
+              placed: '2026-09-27T12:30:00',
+            }
+
+- title: Cell types
+  fullWidth: true
+  blocks:
+    - id: cell_types_table
+      type: TableLight
+      properties:
+        columns:
+          - key: company
+            type: relation
+            cell:
+              labelField: name
+          - key: owners
+            type: people
+          - key: stage
+            type: status
+            options:
+              - { value: lead, label: Lead, color: default }
+              - { value: qualified, label: Qualified, color: processing }
+              - { value: won, label: Won, color: success }
+          - key: labels
+            type: tags
+            cell:
+              max: 2
+          - key: probability
+            type: percent
+          - key: health
+            type: progress
+          - key: rating
+            type: rating
+          - key: active
+            type: boolean
+          - key: website
+            type: url
+          - key: phone
+            type: phone
+        data:
+          - _id: d1
+            company: { _id: c1, name: Acme Ltd }
+            owners: [{ name: Ann Lee }, { name: Bob Stone }, { name: Cy Dunn }, { name: Di Park }]
+            stage: won
+            labels: [enterprise, renewal, priority]
+            probability: 0.9
+            health: 82
+            rating: 4
+            active: true
+            website: acme.example.com
+            phone: '+1 555 010 2000'
+          - _id: d2
+            company: { _id: c2, name: Globex }
+            owners: [{ name: Bob Stone }]
+            stage: qualified
+            labels: [smb]
+            probability: 0.4
+            health: 35
+            rating: 3
+            active: false
+            website: https://globex.example.com
+            phone: '+1 555 010 3000'
+
+- title: Conditional formatting and templates
+  fullWidth: true
+  blocks:
+    - id: rules_table
+      type: TableLight
+      properties:
+        size: compact
+        bordered: true
+        rowRules:
+          - when: { key: overdue, op: isTrue }
+            style:
+              fontStyle: italic
+        columns:
+          - key: task
+          - key: score
+            type: number
+            rules:
+              - when: { op: gte, value: 8 }
+                color: success
+              - when: { op: lt, value: 5 }
+                color: error
+          - key: summary
+            type: html
+            ellipsis: 2
+            width: 260
+            cell:
+              template: '<b>{{ row.task }}</b>: {{ value }}'
+          - key: overdue
+            type: boolean
+            cell:
+              trueLabel: Overdue
+              falseLabel: On time
+              trueColor: error
+        data:
+          - {
+              _id: t1,
+              task: Onboarding,
+              score: 9,
+              summary: Welcome pack sent and first call booked.,
+              overdue: false,
+            }
+          - {
+              _id: t2,
+              task: Renewal,
+              score: 4,
+              summary: Waiting on the signed order form from procurement.,
+              overdue: true,
+            }
+          - {
+              _id: t3,
+              task: Upsell,
+              score: 6,
+              summary: Demo scheduled for next week.,
+              overdue: false,
+            }
+
+- title: Row buttons and menus
+  fullWidth: true
+  blocks:
+    - id: actions_table
+      type: TableLight
+      properties:
+        columns:
+          - key: name
+          - key: email
+            type: email
+          - key: actions
+            type: buttons
+            align: end
+            cell:
+              showOn: hover
+              buttons:
+                - eventName: onEdit
+                  title: Edit
+                  icon: edit
+                - eventName: onArchive
+                  title: Archive
+                  icon: Archive
+                  hideTitle: true
+                  hidden:
+                    when: { key: archived, op: isTrue }
+          - key: more
+            title: ''
+            type: menu
+            width: 48
+            cell:
+              items:
+                - eventName: onDuplicate
+                  title: Duplicate
+                - eventName: onDelete
+                  title: Delete
+                  danger: true
+        data:
+          - { _id: u1, name: Sarah Johnson, email: sarah@example.com, archived: false }
+          - { _id: u2, name: Alex Chen, email: alex@example.com, archived: true }
+      events:
+        onEdit:
+          - id: edit_message
+            type: DisplayMessage
+            params:
+              content:
+                _string.concat:
+                  - 'Edit '
+                  - _event: row.name
+
+- title: Scrolling body, header groups and pinned columns
+  fullWidth: true
+  blocks:
+    - id: grouped_table
+      type: TableLight
+      properties:
+        height: 200
+        pagination: false
+        columns:
+          - key: region
+            pinned: start
+            width: 140
+          - title: Q1
+            children:
+              - { key: jan, type: currency, aggregate: sum, width: 120 }
+              - { key: feb, type: currency, aggregate: sum, width: 120 }
+              - { key: mar, type: currency, aggregate: sum, width: 120 }
+          - title: Q2
+            children:
+              - { key: apr, type: currency, aggregate: sum, width: 120 }
+              - { key: may, type: currency, aggregate: sum, width: 120 }
+              - { key: jun, type: currency, aggregate: sum, width: 120 }
+        data:
+          - {
+              _id: 1,
+              region: North,
+              jan: 12000,
+              feb: 13500,
+              mar: 14100,
+              apr: 12900,
+              may: 15200,
+              jun: 16000,
+            }
+          - {
+              _id: 2,
+              region: South,
+              jan: 9800,
+              feb: 10100,
+              mar: 9900,
+              apr: 11200,
+              may: 11800,
+              jun: 12500,
+            }
+          - {
+              _id: 3,
+              region: East,
+              jan: 15300,
+              feb: 14900,
+              mar: 16200,
+              apr: 17100,
+              may: 16800,
+              jun: 18200,
+            }
+          - {
+              _id: 4,
+              region: West,
+              jan: 8700,
+              feb: 9200,
+              mar: 9800,
+              apr: 10400,
+              may: 10900,
+              jun: 11300,
+            }
+          - {
+              _id: 5,
+              region: Central,
+              jan: 11100,
+              feb: 11600,
+              mar: 12000,
+              apr: 12500,
+              may: 13100,
+              jun: 13400,
+            }
+          - {
+              _id: 6,
+              region: Islands,
+              jan: 4300,
+              feb: 4100,
+              mar: 4600,
+              apr: 4900,
+              may: 5200,
+              jun: 5600,
+            }
+
+- title: Empty state
+  fullWidth: true
+  blocks:
+    - id: empty_table
+      type: TableLight
+      properties:
+        emptyText: No orders yet.
+        columns:
+          - number
+          - key: total
+            type: currency
+        data: []

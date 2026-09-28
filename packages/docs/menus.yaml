@@ -729,6 +729,9 @@
         - id: Steps
           type: MenuLink
           pageId: Steps
+        - id: TableLight
+          type: MenuLink
+          pageId: TableLight
         - id: Tag
           type: MenuLink
           pageId: Tag

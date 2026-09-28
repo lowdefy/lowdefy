@@ -1,0 +1,331 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/* Table cells. Tier-0 cells are plain elements styled here from antd design
+   tokens, so they follow the theme and dark mode without an antd component or
+   a context read per cell.
+
+   Host contract (TableLight, Table):
+   - Render each cell's content with renderCell (it applies .lf-table-cell).
+   - Give every row element the class `lf-table-row`. Hovering it, or focus
+     inside it, reveals `showOn: hover` buttons.
+   - A host that tracks hover itself (a row split across pinned sections, a
+     virtual row) sets the attribute `data-row-hover` on any ancestor of the
+     cell to reveal them, and removes it to hide them again.
+   - Devices without hover always show them. */
+@layer components {
+  .lf-table-cell {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .lf-table-cell-nowrap {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .lf-table-cell-wrap {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .lf-table-cell-clamp {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--lf-table-clamp, 1);
+    overflow: hidden;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .lf-table-cell-actions {
+    white-space: nowrap;
+  }
+
+  .lf-table-cell-align-center {
+    text-align: center;
+  }
+
+  .lf-table-cell-align-end {
+    text-align: end;
+  }
+
+  .lf-table-empty {
+    color: var(--ant-color-text-quaternary);
+  }
+
+  .lf-table-number {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lf-table-boolean-true {
+    color: var(--ant-color-success-text, var(--ant-color-success));
+    font-weight: 600;
+  }
+
+  .lf-table-boolean:not(.lf-table-boolean-true) {
+    color: var(--ant-color-text-quaternary);
+  }
+
+  .lf-table-chips {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ant-margin-xxs, 4px);
+    max-width: 100%;
+    vertical-align: middle;
+  }
+
+  .lf-table-cell-nowrap .lf-table-chips {
+    flex-wrap: nowrap;
+  }
+
+  .lf-table-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ant-margin-xxs, 4px);
+    max-width: 100%;
+    padding: var(--ant-padding-xxs, 4px) var(--ant-padding-xs, 8px);
+    border: 1px solid color-mix(in srgb, var(--lf-table-tone) 30%, transparent);
+    border-radius: var(--ant-border-radius-sm, 4px);
+    background: color-mix(in srgb, var(--lf-table-tone) 12%, transparent);
+    color: var(--lf-table-tone);
+    font-size: var(--ant-font-size-sm, 12px);
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  .lf-table-chip {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    padding: 0 var(--ant-padding-xs, 8px);
+    border: 1px solid var(--ant-color-border-secondary);
+    border-radius: var(--ant-border-radius-sm, 4px);
+    background: var(--ant-color-fill-quaternary);
+    font-size: var(--ant-font-size-sm, 12px);
+    line-height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lf-table-more {
+    color: var(--ant-color-text-tertiary);
+    font-size: var(--ant-font-size-sm, 12px);
+  }
+
+  .lf-table-status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ant-margin-xs, 8px);
+    max-width: 100%;
+  }
+
+  .lf-table-status-dot {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--lf-table-tone);
+  }
+
+  .lf-table-link {
+    color: var(--ant-color-link);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .lf-table-link:hover {
+    color: var(--ant-color-link-hover);
+  }
+
+  .lf-table-link:focus-visible,
+  .lf-table-menu-trigger:focus-visible {
+    outline: var(--ant-line-width-focus, 3px) solid var(--ant-color-primary-border);
+    outline-offset: 1px;
+    border-radius: var(--ant-border-radius-sm, 4px);
+  }
+
+  .lf-table-person {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ant-margin-xs, 8px);
+    max-width: 100%;
+    vertical-align: middle;
+  }
+
+  .lf-table-person-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .lf-table-avatar {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: var(--lf-avatar-size, var(--ant-control-height-sm, 24px));
+    height: var(--lf-avatar-size, var(--ant-control-height-sm, 24px));
+    border-radius: 50%;
+    background: var(--lf-table-tone, var(--ant-color-fill-secondary));
+    color: var(--ant-color-text-light-solid, #fff);
+    font-size: var(--lf-avatar-font-size, 11px);
+    font-weight: 600;
+    line-height: 1;
+    object-fit: cover;
+    overflow: hidden;
+  }
+
+  .lf-table-avatar-square {
+    border-radius: var(--ant-border-radius-sm, 4px);
+  }
+
+  .lf-table-people {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+  }
+
+  .lf-table-people > .lf-table-avatar {
+    box-shadow: 0 0 0 2px var(--ant-color-bg-container);
+  }
+
+  .lf-table-people > .lf-table-avatar + .lf-table-avatar {
+    margin-inline-start: -6px;
+  }
+
+  .lf-table-people-more {
+    background: var(--ant-color-fill-secondary);
+    color: var(--ant-color-text-secondary);
+  }
+
+  .lf-table-progress {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ant-margin-xs, 8px);
+    vertical-align: middle;
+  }
+
+  .lf-table-progress-track {
+    position: relative;
+    flex: none;
+    width: var(--lf-table-progress-width, 80px);
+    height: 6px;
+    border-radius: 3px;
+    background: var(--ant-color-fill-secondary);
+    overflow: hidden;
+  }
+
+  .lf-table-progress-fill {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    border-radius: 3px;
+    background: var(--lf-table-tone);
+  }
+
+  .lf-table-progress-text {
+    color: var(--ant-color-text-secondary);
+    font-size: var(--ant-font-size-sm, 12px);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lf-table-rating {
+    letter-spacing: 1px;
+  }
+
+  .lf-table-rating-on {
+    color: var(--ant-color-warning);
+  }
+
+  .lf-table-rating-off {
+    color: var(--ant-color-fill-secondary);
+  }
+
+  .lf-table-image {
+    display: inline-block;
+    border-radius: var(--ant-border-radius-sm, 4px);
+    background: var(--ant-color-fill-quaternary);
+    object-fit: cover;
+    vertical-align: middle;
+  }
+
+  .lf-table-image-circle {
+    border-radius: 50%;
+  }
+
+  .lf-table-json {
+    color: var(--ant-color-text-secondary);
+    font-family: var(--ant-font-family-code, monospace);
+    font-size: var(--ant-font-size-sm, 12px);
+  }
+
+  .lf-table-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ant-margin-xxs, 4px);
+    vertical-align: middle;
+  }
+
+  .lf-table-actions-hover {
+    opacity: 0;
+    transition: opacity var(--ant-motion-duration-fast, 0.1s);
+  }
+
+  .lf-table-row:hover .lf-table-actions-hover,
+  .lf-table-row:focus-within .lf-table-actions-hover,
+  [data-row-hover] .lf-table-actions-hover,
+  .lf-table-actions-hover:focus-within {
+    opacity: 1;
+  }
+
+  @media (hover: none) {
+    .lf-table-actions-hover {
+      opacity: 1;
+    }
+  }
+
+  .lf-table-menu {
+    display: inline-flex;
+    vertical-align: middle;
+  }
+
+  .lf-table-menu-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--ant-control-height-sm, 24px);
+    height: var(--ant-control-height-sm, 24px);
+    padding: 0;
+    border: 0;
+    border-radius: var(--ant-border-radius-sm, 4px);
+    background: transparent;
+    color: var(--ant-color-text-secondary);
+    cursor: pointer;
+  }
+
+  .lf-table-menu-trigger:hover,
+  .lf-table-menu-trigger[aria-expanded='true'] {
+    background: var(--ant-color-bg-text-hover);
+    color: var(--ant-color-text);
+  }
+}
