@@ -19,13 +19,12 @@ import { type } from '@lowdefy/helpers';
 
 // extractErrorProps emits a nested error as a plain props object, not as a second
 // '~e' wrapper, so an error node is recognised by its shape. Keying on the shape
-// rather than on a map of where errors can appear is deliberate: re-deriving those
-// positions is the mistake the walk-level omit exists to avoid, and this predicate
-// still visits every position.
+// rather than on a map of where errors can appear means every position is visited
+// without re-deriving where the walk puts errors.
 //
-// The check matters because the payload also carries author-written data the policy
-// deliberately preserves - a UserError's non-Error cause, its metaData - and a
-// `source` key inside those belongs to the app, not to us.
+// The check matters because the payload also carries author-written data - a
+// UserError's non-Error cause, its metaData - and a `source` key inside those
+// belongs to the app, not to us.
 function isErrorNode(value) {
   return type.isString(value.name) && type.isString(value.message);
 }
@@ -48,17 +47,15 @@ function stripConfigDirectory(value, prefix) {
   Object.values(value).forEach((child) => stripConfigDirectory(child, prefix));
 }
 
-// Guarantees `source` reaches a client config-relative, never as an absolute server
-// path. resolveConfigLocation makes it absolute whenever the context carries a
-// configDirectory - server-dev and server-e2e do, and production happens not to
-// today by omission rather than by invariant, which is the drift this closes.
+// Makes `source` in the dev-only `devError` config-relative, never an absolute
+// server path, so the dev tools show the path the developer knows. The wire error
+// carries no `source` at all. resolveConfigLocation makes it absolute whenever the
+// context carries a configDirectory, which server-dev does.
 //
 // A rewrite rather than an omission, and it needs the context, so it runs as a pass
 // over the serialized payload instead of inside the walk.
 function normalizeErrorSources(context, payload) {
-  // errorHandler has an else branch for requests with no lowdefyContext, so a
-  // missing context is a supported call - it only means no source to normalise.
-  const configDirectory = context?.configDirectory;
+  const configDirectory = context.configDirectory;
   if (type.isNone(configDirectory)) return payload;
   // configDirectory is `LOWDEFY_DIRECTORY_CONFIG || process.cwd()` at every site
   // that sets it, so it may be relative or carry a trailing separator, while

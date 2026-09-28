@@ -34,7 +34,12 @@ const location = 'location';
 
 const operatorPrefix = '_';
 
-const parser = new ServerParser({ operators, secrets: {}, user: {} });
+const serverParser = new ServerParser({ operators, secrets: {}, user: {} });
+
+// Operators receive a parser bound to the calling frame; mirror that for the callbacks built here.
+const parser = {
+  parse: (callOptions) => serverParser.parse({ location, ...callOptions }),
+};
 
 describe('_array.concat', () => {
   const methodName = 'concat';

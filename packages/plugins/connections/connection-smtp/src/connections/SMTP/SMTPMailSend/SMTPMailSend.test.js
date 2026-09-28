@@ -49,7 +49,7 @@ test('SMTPMailSend sends a single object request through send', async () => {
   expect(mockSend.mock.calls).toEqual([
     [
       {
-        connection,
+        connection: { ...connection, filter: null },
         mail: {
           to: 'someone@example.com',
           subject: 'A',
@@ -93,7 +93,7 @@ test('SMTPMailSend sends each message in an array request through send sequentia
   expect(mockSend.mock.calls).toEqual([
     [
       {
-        connection,
+        connection: { ...connection, filter: null },
         mail: {
           to: 'a@example.com',
           subject: 'A',
@@ -103,7 +103,7 @@ test('SMTPMailSend sends each message in an array request through send sequentia
     ],
     [
       {
-        connection,
+        connection: { ...connection, filter: null },
         mail: {
           to: 'b@example.com',
           subject: 'B',
@@ -224,4 +224,71 @@ test('SMTPMailSend meta checkRead should be false', async () => {
 test('SMTPMailSend meta checkWrite should be false', async () => {
   const SMTPMailSend = (await import('./SMTPMailSend.js')).default;
   expect(SMTPMailSend.meta.checkWrite).toBe(false);
+});
+
+test('SMTPMailSend applies the current environment email filter when the connection has none', async () => {
+  const SMTPMailSend = (await import('./SMTPMailSend.js')).default;
+  const connection = { host: 'smtp.example.com', from: 'from@example.com' };
+  const environment = {
+    name: 'staging',
+    email: { filter: { replaceAddress: 'team@example.com' } },
+  };
+  await SMTPMailSend({
+    request: { to: 'someone@example.com', subject: 'A', text: 'B' },
+    connection,
+    environment,
+  });
+  expect(mockSend.mock.calls[0][0].connection).toEqual({
+    ...connection,
+    filter: { replaceAddress: 'team@example.com' },
+  });
+});
+
+test('SMTPMailSend keeps the connection filter over the environment email filter', async () => {
+  const SMTPMailSend = (await import('./SMTPMailSend.js')).default;
+  const connection = {
+    host: 'smtp.example.com',
+    from: 'from@example.com',
+    filter: { allowlist: ['example.com'] },
+  };
+  const environment = {
+    name: 'staging',
+    email: { filter: { replaceAddress: 'team@example.com' } },
+  };
+  await SMTPMailSend({
+    request: { to: 'someone@example.com', subject: 'A', text: 'B' },
+    connection,
+    environment,
+  });
+  expect(mockSend.mock.calls[0][0].connection.filter).toEqual({ allowlist: ['example.com'] });
+});
+
+test('SMTPMailSend sends unfiltered when the connection filter is false', async () => {
+  const SMTPMailSend = (await import('./SMTPMailSend.js')).default;
+  await SMTPMailSend({
+    request: { to: 'someone@example.com', subject: 'A', text: 'B' },
+    connection: { host: 'smtp.example.com', from: 'from@example.com', filter: false },
+    environment: { name: 'staging', email: { filter: { replaceAddress: 'team@example.com' } } },
+  });
+  expect(mockSend.mock.calls[0][0].connection.filter).toBe(null);
+});
+
+test('SMTPMailSend sends nothing when the environment switches email off', async () => {
+  const SMTPMailSend = (await import('./SMTPMailSend.js')).default;
+  const result = await SMTPMailSend({
+    request: [
+      { to: 'a@example.com', subject: 'A', text: 'B' },
+      { to: 'b@example.com', subject: 'A', text: 'B' },
+    ],
+    connection: { host: 'smtp.example.com', from: 'from@example.com' },
+    environment: { name: 'preview', email: { enabled: false } },
+  });
+  expect(mockSend).not.toHaveBeenCalled();
+  expect(result).toEqual({
+    response: 'Mail is disabled in this environment.',
+    results: [
+      { messageId: null, to: null, disabled: true },
+      { messageId: null, to: null, disabled: true },
+    ],
+  });
 });

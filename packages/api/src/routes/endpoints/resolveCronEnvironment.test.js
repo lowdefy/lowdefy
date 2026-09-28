@@ -17,22 +17,21 @@
 import resolveCronEnvironment from './resolveCronEnvironment.js';
 
 const config = {
-  cron: {
-    environments: {
-      '~k': 'k1',
-      staging: { url: 'https://staging.example.com', secret: 'S' },
-      production: {},
-    },
+  environment: 'production',
+  environments: {
+    '~k': 'k1',
+    staging: { url: 'https://staging.example.com', cron: { secret: 'S' } },
+    production: { url: 'https://example.com' },
   },
 };
 
-test('returns undefined when config.cron is not defined and no environment is named', () => {
+test('returns undefined when config.environments is not defined and no environment is named', () => {
   expect(resolveCronEnvironment({ config: {}, environment: undefined })).toBe(undefined);
 });
 
-test('throws when an environment is named but config.cron is not defined', () => {
+test('throws when an environment is named but config.environments is not defined', () => {
   expect(() => resolveCronEnvironment({ config: {}, environment: 'staging' })).toThrow(
-    'Cron environment "staging" is not configured: lowdefy.config.cron.environments is not defined.'
+    'Cron environment "staging" is not configured: config.environments is not defined.'
   );
 });
 
@@ -42,13 +41,20 @@ test('returns the named environment when it is declared', () => {
 
 test('throws for an undeclared environment name, including build key markers', () => {
   expect(() => resolveCronEnvironment({ config, environment: 'develop' })).toThrow(
-    'Cron environment "develop" is not declared in lowdefy.config.cron.environments.'
+    'Cron environment "develop" is not declared in config.environments.'
   );
   expect(() => resolveCronEnvironment({ config, environment: '~k' })).toThrow(
     'Cron environment "~k" is not declared'
   );
 });
 
-test('resolves the host environment (no url) when no environment is named', () => {
+test('resolves the current environment when no environment is named', () => {
   expect(resolveCronEnvironment({ config, environment: undefined })).toBe('production');
+});
+
+test('resolves undefined when no environment is named and there is no current environment', () => {
+  const { environment, ...withoutCurrent } = config;
+  expect(resolveCronEnvironment({ config: withoutCurrent, environment: undefined })).toBe(
+    undefined
+  );
 });

@@ -1,0 +1,27 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_ref:
+  path: templates/blocks/gallery.yaml.njk
+  vars:
+    pageId: ClickableHtml
+    pageTitle: ClickableHtml
+    section: Display Blocks
+    filePath: blocks/display/ClickableHtml.yaml
+    block_type: ClickableHtml
+    github_path: packages/plugins/blocks/blocks-basic/src/blocks/ClickableHtml
+    schema: ../plugins/blocks/blocks-basic/src/blocks/ClickableHtml/meta.js
+    gallery: ../plugins/blocks/blocks-basic/src/blocks/ClickableHtml/gallery.yaml
+    description: >
+      Render raw HTML content safely, and fire a named event when an element carrying a `data-event` attribute is clicked: `data-event="onEditClick"` fires the block's `onEditClick` event, so every clickable target in one block of markup gets its own action chain without a block per button. The event object holds the element's other `data-*` attributes with snake_case keys (`data-record-id` becomes `record_id`).

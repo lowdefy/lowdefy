@@ -22,7 +22,7 @@ function js(operatorContext) {
   const args = type.isObject(params) ? params.args : undefined;
   if (!jsMap[hash]) {
     throw new Error(
-      `_js function not found. The function may not have been built yet. Received hash: ${hash}`
+      `_js function not found. The function may not have been built yet, or the page is running a client bundle from an older build - reload the page to update. Received hash: ${hash}`
     );
   }
   try {

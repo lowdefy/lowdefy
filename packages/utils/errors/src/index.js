@@ -59,6 +59,11 @@
  *   resolveErrorLocation      - Sync: unified resolver (configKey or filePath/lineNumber)
  *   loadAndResolveErrorLocation - Async: reads keyMap/refMap files at runtime
  *   shouldSuppressBuildCheck   - Check ~ignoreBuildChecks in parent chain
+ *
+ * Error Field Utilities:
+ *   readErrorCodes            - {code, statusCode} from one error node's own fields
+ *   lowdefyErrorNames         - Set of Lowdefy error class names
+ *   lowdefyErrorTypes         - Lowdefy error class by name, for reviving and reshaping errors
  */
 
 import ActionError from './ActionError.js';
@@ -69,8 +74,11 @@ import ConfigError from './ConfigError.js';
 import ConfigWarning from './ConfigWarning.js';
 import errorToDisplayString from './errorToDisplayString.js';
 import LowdefyInternalError from './LowdefyInternalError.js';
+import lowdefyErrorNames from './lowdefyErrorNames.js';
+import lowdefyErrorTypes from './lowdefyErrorTypes.js';
 import OperatorError from './OperatorError.js';
 import PluginError from './PluginError.js';
+import readErrorCodes from './readErrorCodes.js';
 import RequestError from './RequestError.js';
 import resolveConfigLocation from './resolveConfigLocation.js';
 import loadAndResolveErrorLocation from './loadAndResolveErrorLocation.js';
@@ -88,8 +96,11 @@ export {
   ConfigWarning,
   errorToDisplayString,
   LowdefyInternalError,
+  lowdefyErrorNames,
+  lowdefyErrorTypes,
   OperatorError,
   PluginError,
+  readErrorCodes,
   RequestError,
   resolveConfigLocation,
   loadAndResolveErrorLocation,

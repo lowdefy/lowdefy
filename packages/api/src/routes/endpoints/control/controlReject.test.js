@@ -469,3 +469,47 @@ test('deep nested reject', async () => {
     ],
   ]);
 });
+
+const failingTry = {
+  id: 'request:test_endpoint:try_fail',
+  type: 'TestRequestError',
+  stepId: 'try_fail',
+  connectionId: 'test',
+  properties: {
+    message: 'Try and fail',
+  },
+};
+
+test('reject given a plugin error rejects with the generic message', async () => {
+  const routine = {
+    ':try': failingTry,
+    ':catch': { ':reject': { _error: true } },
+  };
+  const { res } = await runTest({ routine });
+  expect(res.status).toEqual('reject');
+  expect(res.error).toBeInstanceOf(UserError);
+  expect(res.error.message).toEqual('Something went wrong.');
+  expect(res.error.isReject).toBe(true);
+});
+
+test('reject given a caught UserError rejects with its message', async () => {
+  const routine = {
+    ':try': { ':throw': 'Name taken.' },
+    ':catch': { ':reject': { _error: true } },
+  };
+  const { res } = await runTest({ routine });
+  expect(res.status).toEqual('reject');
+  expect(res.error).toBeInstanceOf(UserError);
+  expect(res.error.message).toEqual('Name taken.');
+  expect(res.error.isReject).toBe(true);
+});
+
+test('reject given the caught error message rejects with the real text', async () => {
+  const routine = {
+    ':try': failingTry,
+    ':catch': { ':reject': { _error: 'message' } },
+  };
+  const { res } = await runTest({ routine });
+  expect(res.status).toEqual('reject');
+  expect(res.error.message).toEqual('Try and fail at test/try_fail.');
+});

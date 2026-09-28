@@ -15,7 +15,7 @@
 */
 import { type, serializer } from '@lowdefy/helpers';
 
-import getCronEnvironmentNames from '../utils/getCronEnvironmentNames.js';
+import getEnvironmentNames from '../utils/getEnvironmentNames.js';
 
 async function writeEndpoint({ endpoint, context }) {
   await context.writeBuildArtifact(
@@ -28,17 +28,22 @@ async function writeEndpoint({ endpoint, context }) {
 // generate the `crons` array in config.json. The runtime reads schedules off the endpoint artifact
 // directly, so it does not depend on this file.
 //
-// With config.cron.environments declared there is one entry per enabled environment and schedule:
-// `environment` names it and `forward` is true for environments the production deployment forwards
-// to (those with a url) — Vercel fires crons only on production, so every environment's schedules
-// must be registered there.
-function getSchedules({ endpoint, environment }) {
+// With config.environments declared there is one entry per registered environment and schedule:
+// `environment` names it and `forward` is true for environments this deployment forwards to.
+// Vercel fires crons only on production, so:
+//   - the current environment registers its own schedules;
+//   - an environment with a cron.secret is forwarded to, so its own crons never fire it; any other
+//     current environment is the one Vercel fires crons on and also registers every forwarded
+//     environment's schedules;
+//   - without a current environment only the `default` schedules are registered;
+//   - cron.enabled: false registers nothing for that environment.
+function getSchedules({ endpoint, key }) {
   if (type.isArray(endpoint.schedules)) return endpoint.schedules;
-  return endpoint.schedules?.[environment] ?? [];
+  return endpoint.schedules?.[key] ?? [];
 }
 
-function pushSchedules({ endpoint, environment, forward }) {
-  return getSchedules({ endpoint, environment }).map((schedule) => ({
+function toManifestEntries({ endpoint, key, environment, forward }) {
+  return getSchedules({ endpoint, key }).map((schedule) => ({
     endpointId: endpoint.endpointId,
     cron: schedule.cron,
     payload: schedule.payload ?? {},
@@ -46,25 +51,47 @@ function pushSchedules({ endpoint, environment, forward }) {
   }));
 }
 
+function isCronEnabled(environment) {
+  return environment.cron?.enabled !== false;
+}
+
+function isForwardTarget(environment) {
+  return !type.isUndefined(environment.cron?.secret);
+}
+
+function getRegisteredEnvironments({ environments, current }) {
+  const registered = [];
+  if (isCronEnabled(environments[current])) {
+    registered.push({ name: current, forward: false });
+  }
+  if (isForwardTarget(environments[current])) return registered;
+  getEnvironmentNames(environments).forEach((name) => {
+    const environment = environments[name];
+    if (name === current || !isForwardTarget(environment) || !isCronEnabled(environment)) return;
+    registered.push({ name, forward: true });
+  });
+  return registered;
+}
+
 async function writeSchedulesManifest({ components, context }) {
-  const cronEnvironments = components.config?.cron?.environments;
-  const environmentNames = getCronEnvironmentNames(cronEnvironments);
+  const { environments, environment: current } = components.config ?? {};
+  const declared = getEnvironmentNames(environments).length > 0;
+  const registered =
+    declared && !type.isUndefined(current)
+      ? getRegisteredEnvironments({ environments, current })
+      : [];
   const schedules = [];
   (components.api ?? []).forEach((endpoint) => {
-    if (environmentNames.length === 0) {
-      schedules.push(...pushSchedules({ endpoint }));
+    if (!declared) {
+      schedules.push(...toManifestEntries({ endpoint }));
       return;
     }
-    environmentNames.forEach((environment) => {
-      const config = cronEnvironments[environment];
-      if (config.enabled === false) return;
-      schedules.push(
-        ...pushSchedules({
-          endpoint,
-          environment,
-          forward: !type.isUndefined(config.url),
-        })
-      );
+    if (type.isUndefined(current)) {
+      schedules.push(...toManifestEntries({ endpoint, key: 'default' }));
+      return;
+    }
+    registered.forEach(({ name, forward }) => {
+      schedules.push(...toManifestEntries({ endpoint, key: name, environment: name, forward }));
     });
   });
   // Only emit the manifest when something is scheduled; the Vercel assembly treats a missing

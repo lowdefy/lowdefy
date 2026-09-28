@@ -20,6 +20,13 @@ allowBuilds:
 
 overrides:
   better-sqlite3: 12.11.1
+  # Keep transitive copies on the patched releases the direct dependencies pin.
+  '@hono/node-server@<2': ^1.19.15
+  dompurify: 3.4.13
+  hono: 4.13.5
+  js-yaml@<4: ^3.15.2
+  js-yaml@>=4 <5: ^4.3.2
+  postcss: 8.5.23
 
 packageExtensions:
   echarts-for-react:

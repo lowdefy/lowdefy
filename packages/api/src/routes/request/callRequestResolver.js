@@ -16,6 +16,7 @@
 
 import { RequestError, ServiceError } from '@lowdefy/errors';
 
+import getCurrentEnvironment from '../../context/getCurrentEnvironment.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
 
 async function callRequestResolver(
@@ -63,6 +64,9 @@ async function callRequestResolver(
       connection: connectionProperties,
       connectionId: requestConfig.connectionId,
       endpointId,
+      // The deployment's current environment ({ name, url, email, ... }) or null, so connection
+      // types can apply environment settings such as the email delivery filter.
+      environment: getCurrentEnvironment({ config: context.config }),
       pageId,
       payload,
       request: requestProperties,

@@ -50,6 +50,7 @@ async function runDetachedEndpoint(context, { endpointId, payload }) {
     steps: {},
     payload: serializer.deserialize(payload ?? {}),
     arrayIndices: [],
+    error: null,
     items: {},
     state: {},
     endpointDepth: 0,

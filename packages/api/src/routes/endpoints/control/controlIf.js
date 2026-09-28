@@ -15,18 +15,14 @@
 */
 
 import runRoutine from '../runRoutine.js';
+import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 
 async function controlIf(context, routineContext, { control }) {
-  const { endpointId, logger, evaluateOperators } = context;
-  const { items } = routineContext;
+  const { endpointId, logger } = context;
 
-  const evaluatedIf = evaluateOperators({
+  const evaluatedIf = evaluateRoutineOperators(context, routineContext, {
     input: control[':if'],
-    items,
     location: control['~k'] ?? ':if',
-    payload: routineContext.payload,
-    state: routineContext.state,
-    steps: routineContext.steps,
   });
 
   logger.debug({

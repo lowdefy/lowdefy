@@ -14,12 +14,17 @@
   limitations under the License.
 */
 
-// The declared environment names in config.cron.environments. Build key markers (~k, ~r, ~l) live
-// on the same object as the environments, so they are skipped rather than treated as names.
-const markerKeys = new Set(['~k', '~r', '~l']);
+import operatorScope from './operatorScope.js';
 
-function getCronEnvironmentNames(environments) {
-  return Object.keys(environments ?? {}).filter((key) => !markerKeys.has(key));
+// Every routine step evaluates against the same frame. Taking the frame from routineContext in one
+// place means a step handler cannot drop part of it (state, items, loop indices).
+function evaluateRoutineOperators(context, routineContext, { input, location }) {
+  return context.evaluateOperators({
+    arrayIndices: routineContext.arrayIndices,
+    input,
+    location,
+    ...operatorScope(routineContext),
+  });
 }
 
-export default getCronEnvironmentNames;
+export default evaluateRoutineOperators;

@@ -28,12 +28,12 @@ function buildApi({ components, context }) {
     message: 'Duplicate endpointId "{{ id }}".',
   });
   // Validated by validateConfig, which runs before buildApi.
-  const cronEnvironments = components.config?.cron?.environments;
+  const environments = components.config?.environments;
 
   // Wrap each endpoint build to collect errors instead of stopping on first error
   api.forEach((endpoint, index) => {
     try {
-      buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, cronEnvironments });
+      buildEndpoint({ endpoint, index, context, checkDuplicateEndpointId, environments });
     } catch (error) {
       // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
       if (error instanceof ConfigError && shouldSuppressBuildCheck(error, context.keyMap)) {

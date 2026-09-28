@@ -103,8 +103,10 @@ export default {
       },
     },
     filter: {
-      type: ['object', 'null'],
-      description: 'Filter to restrict or redirect the recipients of outgoing mail.',
+      type: ['object', 'null', 'boolean'],
+      not: { const: true },
+      description:
+        "Filter to restrict or redirect the recipients of outgoing mail. Unset falls back to the current environment's email filter (config.environments); false turns filtering off, the environment's too.",
       additionalProperties: false,
       properties: {
         replaceAddress: {
@@ -129,8 +131,7 @@ export default {
         },
         regex: {
           type: ['string', 'null'],
-          description:
-            'Regular expression an email address must match to receive mail.',
+          description: 'Regular expression an email address must match to receive mail.',
           errorMessage: {
             type: 'SendGridMail connection property "filter.regex" should be a string.',
           },

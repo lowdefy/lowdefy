@@ -135,6 +135,7 @@ test('operator returns value with ~k present', () => {
             1,
           ],
           "basePath": "basePath",
+          "error": undefined,
           "event": Object {
             "event": true,
           },
@@ -196,80 +197,7 @@ test('operator returns value with ~k present', () => {
           "params": Object {
             "params": true,
           },
-          "parser": WebParser {
-            "context": Object {
-              "_internal": Object {
-                "lowdefy": Object {
-                  "_internal": Object {
-                    "globals": Object {
-                      "window": Object {
-                        "location": Object {
-                          "hash": "window.location.hash",
-                          "host": "window.location.host",
-                          "hostname": "window.location.hostname",
-                          "href": "window.location.href",
-                          "origin": "window.location.origin",
-                          "pathname": "window.location.pathname",
-                          "port": "window.location.port",
-                          "protocol": "window.location.protocol",
-                          "search": "window.location.search",
-                        },
-                      },
-                    },
-                  },
-                  "apiResponses": Object {},
-                  "basePath": "basePath",
-                  "home": Object {
-                    "configured": false,
-                    "pageId": "home.pageId",
-                  },
-                  "inputs": Object {
-                    "id": true,
-                  },
-                  "lowdefyApp": Object {
-                    "app": true,
-                  },
-                  "lowdefyGlobal": Object {
-                    "global": true,
-                  },
-                  "menus": Array [
-                    Object {
-                      "menus": true,
-                    },
-                  ],
-                  "user": Object {
-                    "user": true,
-                  },
-                },
-              },
-              "eventLog": Array [
-                Object {
-                  "eventLog": true,
-                },
-              ],
-              "id": "id",
-              "requests": Array [
-                Object {
-                  "requests": true,
-                },
-              ],
-              "state": Object {
-                "state": true,
-              },
-            },
-            "operators": Object {
-              "_error": [MockFunction],
-              "_init": [MockFunction],
-              "_test": [MockFunction] {
-                "calls": [Circular],
-                "results": Array [
-                  Object {
-                    "type": "return",
-                    "value": "test",
-                  },
-                ],
-              },
-            },
+          "parser": Object {
             "parse": [Function],
           },
           "requests": Array [
@@ -377,4 +305,47 @@ test('operator errors preserve existing configKey', () => {
   const res = parser.parse({ actions, args, arrayIndices, event, input, location });
   expect(res.errors.length).toBe(1);
   expect(res.errors[0].configKey).toBe('existing-key'); // Should preserve existing key
+});
+
+test('operator parser re-enters parse with the calling frame', () => {
+  const frameOperators = {
+    _nested: jest.fn(({ parser }) =>
+      parser.parse({ args: ['nestedArg'], input: { __frame: true }, operatorPrefix: '__' })
+    ),
+    _frame: jest.fn(({ actions, args, arrayIndices, error, event, location }) => ({
+      actions,
+      args,
+      arrayIndices,
+      error,
+      event,
+      location,
+    })),
+  };
+  const parser = new WebParser({ context, operators: frameOperators });
+  const res = parser.parse({
+    actions,
+    arrayIndices,
+    error: { caught: true },
+    event,
+    input: { _nested: true },
+    location: 'location.$',
+  });
+  expect(res.errors).toEqual([]);
+  expect(res.output.errors).toEqual([]);
+  expect(res.output.output).toEqual({
+    actions: [{ actions: true }],
+    args: ['nestedArg'],
+    arrayIndices: [1],
+    error: { caught: true },
+    event: { event: true },
+    location: 'location.1',
+  });
+});
+
+test('parse passes error to every operator call', () => {
+  const caught = new Error('Caught.');
+  const parser = new WebParser({ context, operators });
+  parser.parse({ actions, error: caught, event, input: { a: { _test: true } }, location });
+  const lastCall = operators._test.mock.calls[operators._test.mock.calls.length - 1][0];
+  expect(lastCall.error).toBe(caught);
 });
