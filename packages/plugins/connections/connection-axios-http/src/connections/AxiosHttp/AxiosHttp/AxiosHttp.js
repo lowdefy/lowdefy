@@ -36,9 +36,16 @@ async function AxiosHttp({ request, connection }) {
     return { status, statusText, headers, method, path, data };
   } catch (error) {
     if (error.response) {
-      throw new Error(`Http response "${error.response.status}: ${error.response.statusText}".`, {
-        cause: error,
-      });
+      const responseError = new Error(
+        `Http response "${error.response.status}: ${error.response.statusText}".`,
+        { cause: error }
+      );
+      // The wrapper is what the request layer sees, and codes are read from
+      // each error's own fields, so the upstream code and status have to live
+      // here too.
+      responseError.code = error.code;
+      responseError.statusCode = error.response.status;
+      throw responseError;
     }
     throw error;
   }

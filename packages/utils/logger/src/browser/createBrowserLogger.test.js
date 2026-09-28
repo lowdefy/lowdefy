@@ -102,6 +102,36 @@ describe('warn level', () => {
   });
 });
 
+describe('request id', () => {
+  test('Lowdefy error with requestId prints the Request ID line before the cause chain', () => {
+    const logger = createBrowserLogger();
+    const error = createLowdefyError({ name: 'RequestError', message: 'Something went wrong.' });
+    error.requestId = 'req-123';
+    error.cause = new Error('connection refused');
+    logger.error(error);
+    expect(mockConsoleError).toHaveBeenCalledTimes(3);
+    expect(mockConsoleError).toHaveBeenNthCalledWith(1, '[RequestError] Something went wrong.');
+    expect(mockConsoleError).toHaveBeenNthCalledWith(2, '  Request ID: req-123');
+    expect(mockConsoleError).toHaveBeenNthCalledWith(3, '  Caused by: [Error] connection refused');
+  });
+
+  test('Lowdefy error without requestId does not print a Request ID line', () => {
+    const logger = createBrowserLogger();
+    logger.error(createLowdefyError({ name: 'RequestError', message: 'Something went wrong.' }));
+    expect(mockConsoleError).toHaveBeenCalledTimes(1);
+    expect(mockConsoleError).toHaveBeenCalledWith('[RequestError] Something went wrong.');
+  });
+
+  test('Lowdefy warning with requestId prints the Request ID line', () => {
+    const logger = createBrowserLogger();
+    const error = createLowdefyError({ name: 'ConfigWarning', message: 'warn' });
+    error.requestId = 'req-456';
+    logger.warn(error);
+    expect(mockConsoleWarn).toHaveBeenCalledTimes(2);
+    expect(mockConsoleWarn).toHaveBeenNthCalledWith(2, '  Request ID: req-456');
+  });
+});
+
 describe('info and debug pass through', () => {
   test('info passes arguments through', () => {
     const logger = createBrowserLogger();

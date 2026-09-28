@@ -15,6 +15,9 @@
 */
 
 import { UserError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
+
+import createWireProjection from '../../../response/createWireProjection.js';
 import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
 
 async function controlReject(context, routineContext, { control }) {
@@ -28,7 +31,12 @@ async function controlReject(context, routineContext, { control }) {
     input: control[':cause'],
     location,
   });
-  const error = new UserError(message, { cause, isReject: true });
+  // A reject is the author telling the user something, so it stays a UserError, whose message the
+  // wire passes through as written. An Error given as the message is reduced to what the wire
+  // would show for it - the author's text for a UserError, the generic message for a plugin error
+  // - rather than stringified with its library text; `{ _error: message }` opts into the real text.
+  const text = type.isError(message) ? createWireProjection(context)(message).message : message;
+  const error = new UserError(text, { cause, isReject: true });
 
   // Log under `err` — see controlThrow: only the `err` key runs the pino error
   // serializer, so `error` would drop the message from the log line.

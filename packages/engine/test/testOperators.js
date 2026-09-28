@@ -1,6 +1,7 @@
 import { _actions as _actions } from '@lowdefy/operators-js/operators/client';
 import { _divide as _divide } from '@lowdefy/operators-js/operators/client';
 import { _eq as _eq } from '@lowdefy/operators-js/operators/client';
+import { _error as _error } from '@lowdefy/operators-js/operators/client';
 import { _event as _event } from '@lowdefy/operators-js/operators/client';
 import { _global as _global } from '@lowdefy/operators-js/operators/client';
 import { _if_none as _if_none } from '@lowdefy/operators-js/operators/client';
@@ -17,6 +18,7 @@ export default {
   _actions,
   _divide,
   _eq,
+  _error,
   _event,
   _global,
   _if_none,

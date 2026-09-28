@@ -36,8 +36,8 @@ function createTestContext() {
   };
 }
 
-function createSubscriber(id) {
-  return { id, subscriptions: new Map(), send: jest.fn() };
+function createSubscriber(id, { i18n } = {}) {
+  return { id, subscriptions: new Map(), send: jest.fn(), i18n };
 }
 
 function sentFrames(subscriber) {
@@ -245,7 +245,7 @@ test('resolver rejection sends an error frame to subscribers and restarts with b
   useFakeTimers();
   const resolver = jest
     .fn()
-    .mockRejectedValueOnce(new Error('source failed'))
+    .mockRejectedValueOnce(new Error('source failed: mongodb://admin:planted-secret-value@db'))
     .mockImplementation(() => new Promise(() => {}));
   mockPrepare({ resolver });
   const registry = createChannelRegistry();
@@ -260,10 +260,12 @@ test('resolver rejection sends an error frame to subscribers and restarts with b
     {
       type: 'error',
       websocketId: 'ticker',
-      message: expect.stringContaining('source failed'),
+      message: 'Something went wrong.',
     },
   ]);
   expect(context.handleError).toHaveBeenCalledTimes(1);
+  // The server keeps the full error; only the frame is reduced.
+  expect(context.handleError.mock.calls[0][0].message).toContain('planted-secret-value');
   expect(registry.channels.size).toBe(1);
 
   // First retry uses the base backoff delay.
@@ -272,6 +274,32 @@ test('resolver rejection sends an error frame to subscribers and restarts with b
   await advanceTimers(1);
   expect(resolver).toHaveBeenCalledTimes(2);
   expect(registry.channels.size).toBe(1);
+});
+
+test('resolver rejection translates the error message with each subscriber locale', async () => {
+  const resolver = jest.fn().mockRejectedValueOnce(new Error('source failed'));
+  mockPrepare({ resolver });
+  const registry = createChannelRegistry();
+  const context = createTestContext();
+  const english = createSubscriber('a', { i18n: { active: 'en-US', messages: {} } });
+  const french = createSubscriber('b', {
+    i18n: {
+      active: 'fr',
+      messages: { fr: { 'server.genericError': 'Une erreur est survenue.' } },
+    },
+  });
+
+  // Both join before the rejection is handled, so one failure reaches both.
+  await registry.subscribe(context, { websocketId: 'ticker', payload: {}, subscriber: english });
+  await registry.subscribe(context, { websocketId: 'ticker', payload: {}, subscriber: french });
+  await flushMicrotasks();
+
+  expect(sentFrames(english)).toEqual([
+    { type: 'error', websocketId: 'ticker', message: 'Something went wrong.' },
+  ]);
+  expect(sentFrames(french)).toEqual([
+    { type: 'error', websocketId: 'ticker', message: 'Une erreur est survenue.' },
+  ]);
 });
 
 test('unsubscribe while a restart is pending cancels the retry and removes the channel', async () => {

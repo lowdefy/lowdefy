@@ -32,6 +32,7 @@ import i18nConfig from '../../lib/build/i18n.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
 import loggerConfig from '../../lib/build/logger.js';
+import scrubSecrets from '../../lib/server/scrubSecrets.js';
 import notifications, {
   interpolateProperties,
   renderEmail,
@@ -83,6 +84,7 @@ function apiContext() {
       interpolateProperties,
       jsMap,
       logger: createLogger({ rid }),
+      mode: 'prod',
       notifications,
       operators,
       renderEmail,
@@ -91,6 +93,7 @@ function apiContext() {
         method: c.req.method,
         hostname: c.req.header('host'),
       },
+      scrubSecrets,
       secrets,
       // On Vercel (fluid compute) the platform request context keeps the
       // invocation alive until waitUntil promises settle; on long-lived hosts

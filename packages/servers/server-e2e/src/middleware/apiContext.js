@@ -31,6 +31,7 @@ import i18nConfig from '../../lib/build/i18n.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
 import operators from '../../build/plugins/operators/server.js';
+import scrubSecrets from '../../lib/server/scrubSecrets.js';
 import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getE2eSecrets();
@@ -60,12 +61,14 @@ function apiContext() {
       i18n: i18nConfig,
       jsMap,
       logger: createLogger({ rid }),
+      mode: 'prod',
       operators,
       req: {
         url: c.req.path,
         method: c.req.method,
         hostname: c.req.header('host'),
       },
+      scrubSecrets,
       secrets,
       websockets,
     };
