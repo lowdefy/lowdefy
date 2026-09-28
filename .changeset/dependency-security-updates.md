@@ -20,7 +20,7 @@
 Update dependencies to releases with published security fixes.
 
 - `hono` 4.13.5 and `@hono/node-server` 2.0.10 in the servers.
-- `ws` 8.21.0 and `webpack` 5.104.1 in the servers; `postcss` 8.5.23 in the dev server.
+- `ws` 8.21.0 in the servers, which also drop their unused `webpack` devDependency; `postcss` 8.5.23 in the dev server.
 - `axios` 1.18.0 in the CLI and AxiosHttp.
 - `dompurify` 3.4.13 in `block-utils`, `blocks-basic` and `blocks-markdown`.
 - `echarts` 6.1.0, `mysql2` 3.23.1, `nodemailer` 9.1.1, `uuid` 13.0.1 and `@auth/mongodb-adapter` 3.11.3 in their plugins.
