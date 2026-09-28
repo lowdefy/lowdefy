@@ -17,10 +17,12 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
-import collectEnvironmentGuards from '../utils/collectEnvironmentGuards.js';
+import collectEnvironmentGuards from './collectEnvironmentGuards.js';
 
-// Checks the current environment's guards against the build's environment variables. Values are
-// never echoed: a failure names the variable, not what it holds.
+// Checks the current environment's guards against this process's environment variables. The build
+// runs it before anything deploys, and the production server again at startup: an image built once
+// can be started with different variables. Values are never echoed: a failure names the variable,
+// not what it holds.
 function checkEnvironmentGuards({ name, guards, configKey }) {
   const failures = collectEnvironmentGuards({ guards }).filter(({ variable, pattern }) => {
     const value = process.env[variable];

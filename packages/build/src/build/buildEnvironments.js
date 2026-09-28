@@ -16,8 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
+import { checkEnvironmentGuards } from '@lowdefy/node-utils';
 
-import checkEnvironmentGuards from './checkEnvironmentGuards.js';
 import getEnvironmentNames from '../utils/getEnvironmentNames.js';
 import validateEnvironmentGuards from './validateEnvironmentGuards.js';
 
@@ -57,11 +57,22 @@ function validateEmailFilter({ name, filter, configKey }) {
       configKey,
     });
   }
-  if (!type.isNone(regex) && !type.isString(regex)) {
-    throw new ConfigError(`App "${where}.regex" should be a string.`, {
-      received: regex,
-      configKey,
-    });
+  if (!type.isNone(regex)) {
+    if (!type.isString(regex)) {
+      throw new ConfigError(`App "${where}.regex" should be a string.`, {
+        received: regex,
+        configKey,
+      });
+    }
+    // Compiled here so a broken pattern fails the build, not every mail request in the environment.
+    try {
+      new RegExp(regex);
+    } catch (error) {
+      throw new ConfigError(
+        `App "${where}.regex" is not a valid regular expression: ${error.message}`,
+        { configKey }
+      );
+    }
   }
 }
 
@@ -148,6 +159,8 @@ function validateEnvironment({ name, environment, configKey }) {
   }
 }
 
+// LOWDEFY_ENVIRONMENT wins over config.environment: the variable is set per deployment, while a
+// literal in config is shared by every deployment and would force them all into one environment.
 function getCurrentEnvironmentName({ config }) {
   if (!type.isNone(config.environment)) {
     if (!type.isString(config.environment) || config.environment === '') {
@@ -156,19 +169,20 @@ function getCurrentEnvironmentName({ config }) {
         configKey: config['~k'],
       });
     }
-    return config.environment;
   }
   const fromEnv = process.env.LOWDEFY_ENVIRONMENT?.trim();
-  return fromEnv === '' ? undefined : fromEnv;
+  if (!type.isNone(fromEnv) && fromEnv !== '') return fromEnv;
+  return config.environment ?? undefined;
 }
 
 // Resolves the deployment environments once for the whole build. After this step:
 //   - config.environments holds every declared environment ({ url, cron, email }), validated;
-//   - config.environment names the environment this build is for (config.environment, else the
-//     LOWDEFY_ENVIRONMENT variable), and must be declared when environments are.
+//   - config.environment names the environment this build is for (the LOWDEFY_ENVIRONMENT
+//     variable, else config.environment), and must be declared when environments are.
 // Everything environment-specific (cron registration and forwarding, notification links, the auth
 // base URL, the email delivery filter, the Sentry environment) reads the current environment from
-// there instead of from its own environment variable.
+// there instead of from its own environment variable. buildLogger, which runs next, applies the
+// Sentry settings.
 function buildEnvironments({ components, context }) {
   const config = components.config;
   const configKey = config['~k'];
@@ -209,19 +223,22 @@ function buildEnvironments({ components, context }) {
         { configKey: envKey }
       );
     }
-    if (type.isUndefined(current) && context.stage === 'prod') {
+    // Without a current environment every environment setting fails open: no email filter, no
+    // forwarded crons, no guards. That is an error in a prod build, and a warning on the dev server.
+    if (type.isUndefined(current)) {
       context.handleWarning(
         new ConfigWarning(
-          'App "config.environments" is declared but no current environment is set. Set LOWDEFY_ENVIRONMENT to the environment this deployment is: until then no environment setting (url, cron, email filter) applies and only the "default" schedules are registered.',
-          { configKey: envKey }
+          `App "config.environments" is declared but no current environment is set. Set LOWDEFY_ENVIRONMENT to the environment this deployment is (${names.join(
+            ', '
+          )}): until then no environment setting (url, cron, email filter, guards) applies and only the "default" schedules are registered.`,
+          { configKey: envKey, prodError: true }
         )
       );
     }
   }
 
-  // The current environment's guards are checked against this build's variables; then every
-  // environment's guards are dropped — config.json reaches the client bundle, and the runtime has
-  // no use for the patterns.
+  // The current environment's guards are checked against this build's variables and kept for the
+  // production server, which checks them again at startup; other environments' guards are dropped.
   if (!type.isUndefined(environments)) {
     if (!type.isUndefined(current)) {
       checkEnvironmentGuards({
@@ -230,9 +247,11 @@ function buildEnvironments({ components, context }) {
         configKey: environments[current]['~k'] ?? configKey,
       });
     }
-    getEnvironmentNames(environments).forEach((name) => {
-      delete environments[name].guards;
-    });
+    getEnvironmentNames(environments)
+      .filter((name) => name !== current)
+      .forEach((name) => {
+        delete environments[name].guards;
+      });
   }
 
   if (type.isUndefined(current)) {
@@ -241,6 +260,13 @@ function buildEnvironments({ components, context }) {
   }
   config.environment = current;
   const settings = config.environments?.[current] ?? {};
+
+  // The dev server is the local app, not the deployment the environment's url names, so the url is
+  // dropped: auth and notification links stay on the request origin even when a local .env names a
+  // deployed environment.
+  if (context.stage === 'dev') {
+    delete settings.url;
+  }
   const disabled = switchableFeatures.filter((feature) => settings[feature]?.enabled === false);
 
   // App metadata is the deploy identity the server stamps on every log line and the client reads
@@ -250,20 +276,6 @@ function buildEnvironments({ components, context }) {
     components.appMeta.environment = current;
     components.appMeta.disabled = disabled;
   }
-
-  // Sentry reports under the environment name unless the app names one itself, and is off on both
-  // sides when the environment switches it off. logger.sentry is created when absent: Sentry is
-  // enabled by SENTRY_DSN, not by the config being present.
-  components.logger = components.logger ?? {};
-  const sentry = { ...(components.logger.sentry ?? {}) };
-  if (type.isNone(sentry.environment)) {
-    sentry.environment = current;
-  }
-  if (disabled.includes('sentry')) {
-    sentry.client = false;
-    sentry.server = false;
-  }
-  components.logger.sentry = sentry;
 }
 
 export default buildEnvironments;

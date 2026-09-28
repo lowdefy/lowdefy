@@ -17,12 +17,19 @@
 import { type } from '@lowdefy/helpers';
 
 // The connection's own filter wins over the current environment's delivery filter
-// (config.environments.<env>.email.filter). `false` turns filtering off, the environment's too —
-// for mail that must reach the real recipient in every environment. An unset (null) connection
-// filter falls back to the environment's, so a missing value can never switch the safety net off.
+// (config.environments.<env>.email.filter) when it sets at least one field. `false` turns
+// filtering off, the environment's too — for mail that must reach the real recipient in every
+// environment. An unset connection filter, or one whose fields all resolve to null (a
+// `_secret` that is not set on this deployment, say), falls back to the environment's, so a
+// missing value can never switch the safety net off.
+function setsAField(filter) {
+  if (!type.isObject(filter)) return false;
+  return ['replaceAddress', 'allowlist', 'regex'].some((field) => !type.isNone(filter[field]));
+}
+
 function resolveMailFilter({ connection, environment }) {
   if (connection.filter === false) return null;
-  if (!type.isNone(connection.filter)) return connection.filter;
+  if (setsAField(connection.filter)) return connection.filter;
   return environment?.email?.filter ?? null;
 }
 

@@ -16,8 +16,9 @@
 
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
+import { collectEnvironmentGuards } from '@lowdefy/node-utils';
 
-import collectEnvironmentGuards from '../utils/collectEnvironmentGuards.js';
+const guardKinds = ['secrets', 'env'];
 
 // Guard shape and patterns are validated for every environment, not only the current one, so a
 // broken guard fails the build that introduces it.
@@ -27,7 +28,16 @@ function validateEnvironmentGuards({ name, guards, configKey }) {
   if (!type.isObject(guards)) {
     throw new ConfigError(`App "${where}" should be an object.`, { received: guards, configKey });
   }
-  ['secrets', 'env'].forEach((kind) => {
+  // An unknown key (a `secret:` typo for `secrets:`) would otherwise check nothing and let the
+  // value it was meant to pin through, so it fails the build.
+  Object.keys(guards).forEach((kind) => {
+    if (kind.startsWith('~') || guardKinds.includes(kind)) return;
+    throw new ConfigError(
+      `App "${where}.${kind}" is not a guard kind. Guards are "secrets" (Lowdefy secret names) and "env" (environment variable names).`,
+      { configKey }
+    );
+  });
+  guardKinds.forEach((kind) => {
     const map = guards[kind];
     if (type.isUndefined(map)) return;
     if (!type.isObject(map)) {

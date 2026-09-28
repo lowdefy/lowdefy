@@ -40,3 +40,12 @@ test('resolveMailFilter turns filtering off, the environment filter too, when th
 test('resolveMailFilter returns null without a connection or environment filter', () => {
   expect(resolveMailFilter({ connection: {}, environment: null })).toBe(null);
 });
+
+test('resolveMailFilter falls back to the environment filter when every connection filter field is null', () => {
+  expect(
+    resolveMailFilter({
+      connection: { filter: { replaceAddress: null, allowlist: undefined, regex: null } },
+      environment,
+    })
+  ).toEqual({ replaceAddress: 'team@example.com' });
+});
