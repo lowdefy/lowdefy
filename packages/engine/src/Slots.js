@@ -113,25 +113,27 @@ class Slots {
 
   collectState = ({ toDelete, toSet }) => {
     this.loopBlocks((block) => {
-      if (!block.isVisible()) {
-        if (block.isContainer()) {
-          block.loopSubSlots((subSlotsClass) => subSlotsClass.recContainerDelState(toDelete));
-        }
-        toDelete.add(block.blockId);
-      } else {
+      if (block.isVisible()) {
         block.updateState({ toDelete, toSet });
+        return;
       }
+      this.collectHiddenFields({ block, toDelete });
     });
   };
 
   recContainerDelState = (toDelete) => {
-    this.loopBlocks((block) => {
-      if (block.isContainer()) {
-        block.loopSubSlots((subSlotsClass) => subSlotsClass.recContainerDelState(toDelete));
-      } else {
-        toDelete.add(block.blockId);
-      }
-    });
+    this.loopBlocks((block) => this.collectHiddenFields({ block, toDelete }));
+  };
+
+  // Only inputs and lists own a state field at their id. Display and container blocks have no
+  // value, so hiding one must not delete a field that an action or another block wrote there.
+  collectHiddenFields = ({ block, toDelete }) => {
+    if (block.isContainer()) {
+      block.loopSubSlots((subSlotsClass) => subSlotsClass.recContainerDelState(toDelete));
+    }
+    if (block.isInput() || block.isList()) {
+      toDelete.add(block.blockId);
+    }
   };
 
   evalFromRoot = ({ full, changes }) => {
