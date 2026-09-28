@@ -157,3 +157,15 @@ test('events triggered outside a DOM event dispatch are never skipped', async ()
   await card.triggerEvent({ name: 'onClick' });
   expect(context.state).toEqual({ button: true, card: true });
 });
+
+test('events fired while a scheduler message is dispatched are never claimed', async () => {
+  const context = await testContext({
+    lowdefy,
+    pageConfig: pageConfig({ buttonEvent: [setStateAction('button_clicked', { button: true })] }),
+  });
+  const [, cardResult] = await Promise.all(
+    await clickButtonThenCard(context, new MessageEvent('message'))
+  );
+  expect(cardResult.handledBy).toBeUndefined();
+  expect(context.state).toEqual({ button: true, card: true });
+});

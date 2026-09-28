@@ -18,6 +18,7 @@ import { ActionError, ConfigError } from '@lowdefy/errors';
 import { projectCaughtError, type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
 import { isDecodedServerError } from './decodeServerError.js';
+import runOutsideDomEvent from './runOutsideDomEvent.js';
 import { isStopChain } from './stopChain.js';
 import trackActionMethods from './tracking/trackActionMethods.js';
 
@@ -449,23 +450,25 @@ class Actions {
       status: 'loading',
     });
     try {
-      response = await this.actions[action.type]({
-        globals: this.context._internal.lowdefy._internal.globals,
-        // Read-only app metadata (name, slug, version, gitSha, environment) — what _app reads.
-        lowdefyApp: this.context._internal.lowdefy.lowdefyApp,
-        methods: trackActionMethods({
-          context: this.context,
-          methods: getActionMethods({
-            actionId: action.id,
-            actions: responses,
-            arrayIndices,
-            blockId: block.blockId,
+      response = await runOutsideDomEvent(() =>
+        this.actions[action.type]({
+          globals: this.context._internal.lowdefy._internal.globals,
+          // Read-only app metadata (name, slug, version, gitSha, environment) — what _app reads.
+          lowdefyApp: this.context._internal.lowdefy.lowdefyApp,
+          methods: trackActionMethods({
             context: this.context,
-            event,
+            methods: getActionMethods({
+              actionId: action.id,
+              actions: responses,
+              arrayIndices,
+              blockId: block.blockId,
+              context: this.context,
+              event,
+            }),
           }),
-        }),
-        params: parsedAction.params,
-      });
+          params: parsedAction.params,
+        })
+      );
       if (progress) {
         progress();
       }
