@@ -184,3 +184,11 @@
   style:
     .element:
       border: 5px solid blue
+- id: 'properties.padding: compact'
+  type: PageSiderMenu
+  properties:
+    padding: compact
+- id: 'properties.padding: none'
+  type: PageSiderMenu
+  properties:
+    padding: none

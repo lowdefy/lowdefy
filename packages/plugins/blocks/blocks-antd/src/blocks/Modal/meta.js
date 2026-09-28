@@ -103,6 +103,13 @@ export default {
         default: false,
         description: 'Show a loading skeleton in place of the modal body.',
       },
+      padding: {
+        type: 'string',
+        enum: ['default', 'compact', 'none'],
+        default: 'default',
+        description:
+          'Space inside the modal. `compact` tightens it to 16px. `none` removes the body padding so content such as a table, list or image runs edge to edge; the header and footer keep their padding.',
+      },
       scrollLock: {
         type: 'boolean',
         default: true,

@@ -94,6 +94,38 @@
                 title: 12px padding
                 color: default
 
+- title: Padding
+  blocks:
+    - id: padding_compact_card
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Compact
+        padding: compact
+      blocks:
+        - id: padding_compact_p
+          type: Paragraph
+          properties:
+            content: 'padding: compact tightens the body to 12px and lines the header up with it, while keeping the default header height. Use it for dense dashboards and forms.'
+
+    - id: padding_none_card
+      type: Card
+      layout:
+        flex: 1 1 0
+      properties:
+        title: Recent invoices
+        padding: none
+      blocks:
+        - id: padding_none_card_rows
+          type: Html
+          properties:
+            html: |
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1042</span><span style="color: var(--ant-color-text-secondary);">$1,280.00</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1041</span><span style="color: var(--ant-color-text-secondary);">$640.00</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1040</span><span style="color: var(--ant-color-text-secondary);">$2,115.50</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px;"><span>INV-1039</span><span style="color: var(--ant-color-text-secondary);">$96.00</span></div>
+
 - title: Outlined vs Borderless
   blocks:
     - id: border_wrapper

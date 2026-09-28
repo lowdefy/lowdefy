@@ -31,6 +31,7 @@ import {
   registerDarkModeMethod,
   registerLocaleMethod,
 } from '../headerActions.js';
+import getPageSpacing from '../getPageSpacing.js';
 import withPageTheme from '../withPageTheme.js';
 
 const PageHeaderMenu = ({
@@ -46,6 +47,7 @@ const PageHeaderMenu = ({
   properties,
   styles = {},
 }) => {
+  const spacing = getPageSpacing({ padding: properties.padding });
   useEffect(() => {
     registerDarkModeMethod(methods);
     registerLocaleMethod(methods);
@@ -208,7 +210,7 @@ const PageHeaderMenu = ({
               styles={{
                 element: mergeObjects([
                   {
-                    padding: '0 40px 40px 40px',
+                    padding: spacing.content,
                     minWidth: 0,
                   },
                   styles.content,
@@ -227,7 +229,7 @@ const PageHeaderMenu = ({
                         methods={methods}
                         properties={properties.breadcrumb}
                         styles={{
-                          element: mergeObjects([{ margin: '16px 0' }, styles.breadcrumb]),
+                          element: mergeObjects([spacing.breadcrumb, styles.breadcrumb]),
                         }}
                         rename={{
                           events: {
@@ -236,7 +238,7 @@ const PageHeaderMenu = ({
                         }}
                       />
                     ) : (
-                      <div className="py-1.5 sm:py-1.5 md:py-2.5 lg:py-5" />
+                      spacing.spacerClassName && <div className={spacing.spacerClassName} />
                     )}
                     {content.content && content.content()}
                   </>

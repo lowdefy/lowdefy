@@ -172,3 +172,11 @@
       blocks:
         - id: one
           type: Test
+- id: 'properties.padding: compact'
+  type: PageSidebarLayout
+  properties:
+    padding: compact
+- id: 'properties.padding: none'
+  type: PageSidebarLayout
+  properties:
+    padding: none
