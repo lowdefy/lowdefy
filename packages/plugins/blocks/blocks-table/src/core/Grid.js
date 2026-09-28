@@ -19,6 +19,7 @@ import { cn } from '@lowdefy/block-utils';
 
 import applyLayoutVars from './applyLayoutVars.js';
 import Body from './Body.js';
+import bodyOverlays from './bodyOverlays.js';
 import computeLayout from './computeLayout.js';
 import dispatchGridEvent from './dispatchGridEvent.js';
 import EmptyState from './EmptyState.js';
@@ -180,6 +181,22 @@ function Grid({
             sticky={config.stickyHeader}
             style={styles.header}
           />
+          {rows.length > 0
+            ? bodyOverlays.map((Overlay, i) => (
+                <Overlay
+                  api={api}
+                  centerCols={centerCols}
+                  headerHeight={headerHeight}
+                  key={i}
+                  layout={layout}
+                  rowClassName={rowClassName}
+                  rows={rows}
+                  selectable={Boolean(config.rowSelection)}
+                  selection={state.rowSelection}
+                  sticky={config.stickyHeader}
+                />
+              ))
+            : null}
           {body}
         </div>
       </div>

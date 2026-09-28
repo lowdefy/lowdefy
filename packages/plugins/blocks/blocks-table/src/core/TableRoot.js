@@ -108,9 +108,11 @@ function TableRoot({
   });
   useForeignKeys({ api, selected: value?.selected });
   useFeatureMethods({ api, methods });
-  const { leadingColumns, regions } = useFeatureFragments({ api, config, data, state, table });
+  const fragments = useFeatureFragments({ api, config, data, state, table });
+  const { leadingColumns, regions } = fragments;
 
-  const rows = table.getRowModel().rows;
+  const rows = fragments.rows ?? table.getRowModel().rows;
+  api.dataRows = fragments.dataRows ?? rows;
   const rowHeight = config.rowHeight ?? densityHeights[state.density];
   const headerHeight = Math.min(Math.max(rowHeight, 32), 48);
 

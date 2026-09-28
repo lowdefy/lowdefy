@@ -19,11 +19,12 @@ import stripHtml from './stripHtml.js';
 import toCsvField from './toCsvField.js';
 
 // The current client view: visible data columns in their displayed order (start-pinned, centre,
-// end-pinned) and the rows in their current (sorted) order. Header titles lose their HTML.
+// end-pinned) and the data rows in their current (sorted, grouped) order, including rows of
+// collapsed groups. Header titles lose their HTML.
 function buildCsv({ api, formatted }) {
   const cols = api.layout.cols.filter((col) => !col.special);
   const lines = [cols.map((col) => toCsvField(stripHtml(col.column.title))).join(',')];
-  api.rows.forEach((row) => {
+  api.dataRows.forEach((row) => {
     lines.push(
       cols
         .map((col) =>

@@ -18,10 +18,13 @@ import React, { useContext } from 'react';
 
 import RenderProbeContext from './RenderProbeContext.js';
 import Row from './Row.js';
+import rowRenderers from './rowRenderers.js';
 
 // Rows of the current window. `translated` (the default) renders the window rows in flow inside
 // one container moved by a single translateY per range change; `positioned` gives each row its own
-// absolute transform (TanStack Virtual's pattern), kept for the benchmark comparison.
+// absolute transform (TanStack Virtual's pattern), kept for the benchmark comparison. The list
+// holds TanStack rows and feature items (`{ kind, key, ... }`, e.g. group headers), which render
+// with the row renderer their feature registers for that kind.
 function Body({
   activeCell,
   api,
@@ -41,6 +44,27 @@ function Body({
   const positioned = range.positioning === 'positioned';
   for (let i = range.rowStart; i < range.rowEnd; i++) {
     const row = rows[i];
+    if (row.kind) {
+      const ItemRow = rowRenderers[row.kind];
+      rowElements.push(
+        <ItemRow
+          activeCol={activeCell.row === i ? activeCell.col : -1}
+          api={api}
+          centerCols={centerCols}
+          className={rowClassName}
+          displayIndex={i}
+          endCols={layout.end}
+          item={row}
+          key={`${row.kind}:${row.key}`}
+          offset={positioned ? i * rowHeight : undefined}
+          selectable={selectable}
+          selection={selection}
+          startCols={layout.start}
+          style={rowStyle}
+        />
+      );
+      continue;
+    }
     rowElements.push(
       <Row
         activeCol={activeCell.row === i ? activeCell.col : -1}
