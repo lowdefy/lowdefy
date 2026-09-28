@@ -1,0 +1,40 @@
+# 98: Deployment environments declared under config.environments
+# Verifies config.environments passes through with config.environment naming the current
+# environment (authored here in place of LOWDEFY_ENVIRONMENT), the Sentry environment defaults to
+# it, schedules keyed by environment resolve onto every declared environment plus `default`, and
+# build/schedules.json registers the current environment's schedules and forwards to every
+# environment with a cron.secret.
+lowdefy: local
+name: Api Environments Test
+
+config:
+  environment: prod
+  environments:
+    prod:
+      url: https://app.example.com
+    staging:
+      url: https://staging.example.com
+      cron:
+        secret: STAGING_CRON_SECRET
+      email:
+        filter:
+          replaceAddress: team+staging@example.com
+    local:
+      email:
+        filter:
+          replaceAddress: team+local@example.com
+
+api:
+  - id: purge-stale
+    type: Api
+    schedules:
+      default:
+        - cron: '*/5 * * * *'
+      staging:
+        - cron: '0 * * * *'
+      local: []
+    routine: []
+
+pages:
+  - id: home
+    type: Box

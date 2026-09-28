@@ -236,6 +236,12 @@
       "path": "content/deployment/vercel.md"
     },
     {
+      "slug": "deployment/deployment-environments",
+      "title": "Deployment environments",
+      "section": "Deployment",
+      "path": "content/deployment/deployment-environments.md"
+    },
+    {
       "slug": "plugins/plugins-introduction",
       "title": "Plugins",
       "section": "Plugins",

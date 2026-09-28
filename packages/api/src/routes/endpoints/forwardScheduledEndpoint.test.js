@@ -27,16 +27,15 @@ const logger = {
 };
 
 const config = {
-  cron: {
-    environments: {
-      production: {},
-      staging: { url: 'https://staging.example.com/', secret: 'STAGING_CRON_SECRET' },
-      develop: {
-        url: 'https://develop.example.com',
-        secret: 'DEVELOP_CRON_SECRET',
-        enabled: false,
-      },
+  environment: 'production',
+  environments: {
+    production: { url: 'https://example.com' },
+    staging: { url: 'https://staging.example.com/', cron: { secret: 'STAGING_CRON_SECRET' } },
+    develop: {
+      url: 'https://develop.example.com',
+      cron: { secret: 'DEVELOP_CRON_SECRET', enabled: false },
     },
+    preview: { url: 'https://preview.example.com' },
   },
   vercel: { maxDuration: 120 },
 };
@@ -131,11 +130,11 @@ test('throws when the environment is not declared', async () => {
       endpointId: 'jobs/purge',
       cron: '0 * * * *',
     })
-  ).rejects.toThrow('Cron environment "qa" is not declared in lowdefy.config.cron.environments.');
+  ).rejects.toThrow('Cron environment "qa" is not declared in config.environments.');
   expect(fetchMock).not.toHaveBeenCalled();
 });
 
-test('throws when asked to forward to the environment that runs the crons', async () => {
+test('throws when asked to forward to its own environment', async () => {
   const context = makeContext();
   await expect(
     forwardScheduledEndpoint(context, {
@@ -143,7 +142,9 @@ test('throws when asked to forward to the environment that runs the crons', asyn
       endpointId: 'jobs/purge',
       cron: '*/5 * * * *',
     })
-  ).rejects.toThrow('Cron environment "production" has no url to forward to');
+  ).rejects.toThrow(
+    'Cron environment "production" is this deployment\'s own environment: its crons run here, not forwarded.'
+  );
 });
 
 test('throws when the environment is disabled', async () => {
@@ -155,6 +156,19 @@ test('throws when the environment is disabled', async () => {
       cron: '0 * * * *',
     })
   ).rejects.toThrow('Cron environment "develop" is disabled.');
+});
+
+test('throws when the environment has no cron.secret', async () => {
+  const context = makeContext();
+  await expect(
+    forwardScheduledEndpoint(context, {
+      environment: 'preview',
+      endpointId: 'jobs/purge',
+      cron: '0 * * * *',
+    })
+  ).rejects.toThrow(
+    'Cron environment "preview" has no cron.secret: crons are only forwarded to environments with one.'
+  );
 });
 
 test('fails closed when the environment secret is not set', async () => {
