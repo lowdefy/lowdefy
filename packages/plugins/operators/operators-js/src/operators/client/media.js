@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { getFromObject } from '@lowdefy/operators';
+import { getFromObject, getMediaViewport, getObjectReadKeys } from '@lowdefy/operators';
 
 function getDarkModePreference(window) {
   return window.localStorage?.getItem('lowdefy_darkMode') ?? 'system';
@@ -24,44 +24,13 @@ function getDarkMode(window) {
   return window.__lowdefy_isDark ?? false;
 }
 
-const breakpoints = {
-  xs: 640,
-  sm: 768,
-  md: 1024,
-  lg: 1280,
-  xl: 1536,
-};
-
 function _media({ arrayIndices, location, params, globals }) {
   const { window } = globals;
   if (!window?.innerWidth) {
     throw new Error(`device window width not available for _media.`);
   }
-  let size;
-  switch (true) {
-    case window.innerWidth < breakpoints.xs:
-      size = 'xs';
-      break;
-    case window.innerWidth < breakpoints.sm:
-      size = 'sm';
-      break;
-    case window.innerWidth < breakpoints.md:
-      size = 'md';
-      break;
-    case window.innerWidth < breakpoints.lg:
-      size = 'lg';
-      break;
-    case window.innerWidth < breakpoints.xl:
-      size = 'xl';
-      break;
-    default:
-      size = '2xl';
-      break;
-  }
   const media = {
-    size,
-    width: window.innerWidth,
-    height: window.innerHeight,
+    ...getMediaViewport({ window }),
     darkMode: getDarkMode(window),
     darkModePreference: getDarkModePreference(window),
   };
@@ -75,7 +44,13 @@ function _media({ arrayIndices, location, params, globals }) {
 }
 
 _media.dynamic = true;
-// Reads the window size, dark mode and localStorage live, none of which reports a change.
-_media.tracking = { kind: 'volatile' };
+// The page's resize listener reports media:size, media:width and media:height when they change, so
+// a block reading _media: size re-evaluates only when the breakpoint changes. Dark mode changes
+// re-render the app, and that render-time full pass evaluates every block (as for _theme).
+_media.tracking = {
+  kind: 'read',
+  keys: ({ arrayIndices, params }) =>
+    getObjectReadKeys({ arrayIndices, namespace: 'media', params }),
+};
 
 export default _media;

@@ -20,6 +20,7 @@ import findDataOrigin from './findDataOrigin.js';
 import getFromArray from './getFromArray.js';
 import getFromObject from './getFromObject.js';
 import getKeyOperator from './getKeyOperator.js';
+import getMediaViewport from './getMediaViewport.js';
 import getObjectReadKeys from './getObjectReadKeys.js';
 import getPossibleOperators from './getPossibleOperators.js';
 import isNestedDeeperThan from './isNestedDeeperThan.js';
@@ -38,6 +39,7 @@ export {
   getFromArray,
   getFromObject,
   getKeyOperator,
+  getMediaViewport,
   getObjectReadKeys,
   getPossibleOperators,
   isNestedDeeperThan,
