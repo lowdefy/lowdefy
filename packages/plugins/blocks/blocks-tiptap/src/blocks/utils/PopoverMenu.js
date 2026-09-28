@@ -91,7 +91,8 @@ const PopoverMenu = ({ editor }) => {
       editor,
       element: menu.root,
       // v2 mounted the menu beside the editor wrapper; v3 defaults to inside it.
-      appendTo: () => editor.view.dom.parentElement.parentElement,
+      // `options.element` is the EditorContent wrapper once it has mounted.
+      appendTo: () => editor.options.element?.parentElement,
       options: FLOATING_OPTIONS,
       shouldShow: ({ editor: menuEditor, view, state, from, to }) => {
         if (menuEditor.isActive('image')) return false;
