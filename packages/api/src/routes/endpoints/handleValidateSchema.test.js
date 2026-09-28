@@ -105,8 +105,7 @@ test('invalid data throws by default', async () => {
   expect(res.status).toBe('error');
   expect(res.error).toBeInstanceOf(UserError);
   expect(res.error.message).toMatch(/ValidateSchema step "check_input" failed/);
-  expect(Array.isArray(res.error.cause)).toBe(true);
-  expect(res.error.cause.length).toBeGreaterThan(0);
+  expect(res.error.cause).toBeUndefined();
   expect(routineContext.steps.check_input.valid).toBe(false);
   expect(routineContext.steps.check_input.errors.length).toBeGreaterThan(0);
   expect(logger.error).toHaveBeenCalledWith(
@@ -168,7 +167,10 @@ test('ajv-formats email format is registered and enforced', async () => {
   expect(res).toEqual({ status: 'continue' });
   expect(routineContext.steps.check_email.valid).toBe(false);
   expect(routineContext.steps.check_email.errors[0]).toEqual(
-    expect.objectContaining({ keyword: 'format', params: expect.objectContaining({ format: 'email' }) })
+    expect.objectContaining({
+      keyword: 'format',
+      params: expect.objectContaining({ format: 'email' }),
+    })
   );
 });
 
