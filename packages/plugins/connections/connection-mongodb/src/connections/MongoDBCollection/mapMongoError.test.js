@@ -64,6 +64,18 @@ test('mapMongoError never quotes the driver message or the caller values in a du
   expect(mapped.hint).toContain('A unique index on ref, org');
 });
 
+test('mapMongoError maps a bulk write error by the code of its first failed write', () => {
+  const cause = driverError({
+    code: 11000,
+    name: 'MongoBulkWriteError',
+    message: 'E11000 duplicate key error collection: app.orders index: _id_ dup key: { _id: "a" }',
+  });
+  const mapped = mapMongoError(cause, { connection, requestType: 'MongoDBTableChanges' });
+  expect(mapped).toBeInstanceOf(ServiceError);
+  expect(mapped.message).toBe('MongoDB: Duplicate key on collection "orders".');
+  expect(mapped.cause).toBe(cause);
+});
+
 test('mapMongoError maps a duplicate key error without a keyPattern', () => {
   const mapped = mapMongoError(driverError({ code: 11001 }), {
     connection,

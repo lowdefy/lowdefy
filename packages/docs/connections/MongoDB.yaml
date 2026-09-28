@@ -136,6 +136,7 @@ _ref:
               - MongoDBInsertMany
               - MongoDBInsertManyConsecutiveIds
               - MongoDBInsertOne
+              - MongoDBTableChanges
               - MongoDBTableQuery
               - MongoDBUpdateMany
               - MongoDBUpdateOne
@@ -644,6 +645,232 @@ _ref:
                       _user: id
                     timestamp:
                       _date: now
+            ```
+
+            ### MongoDBTableChanges
+
+            The `MongoDBTableChanges` request saves the value of a `TableInput` block. The value of a `TableInput` is not its rows but a changeset: only what changed since `data`. The request validates the changeset against an allowlist of `fields` and compiles it to one `bulkWrite` on the server. The browser never sends MongoDB syntax: keys that are not in `fields`, keys that start with `$` (operators such as `$where`, positional paths such as `items.$[x]`), values of the wrong type, and operator objects such as `{ $ne: null }` as values or row keys are refused before anything is written.
+
+            The changeset is the `TableInput` value:
+
+            ```yaml
+            updated:                # changed fields of existing rows: { [rowKey]: { [field]: value } }
+              flour:
+                qty: 450            # the key is the column field, a dot path
+                details.note: strong
+            added:                  # new rows: [{ rowKey, ...fields }]
+              - rowKey: 3f2c9a61-…  # a temporary key the browser generated
+                ingredient: Yeast
+                qty: 7
+            removed:                # existing rows to delete: [rowKey]
+              - salt
+            moved:                  # with rowDrag.positionField: { [rowKey]: position }
+              water: 1536
+            order: [salt, flour]    # with rowDrag and no positionField: every row key in the new order
+            ```
+
+            The `fields` keys are the column `field` dot paths, and only those fields can be written (at their `path`). Values are coerced to the field type like `MongoDBTableQuery` values: numbers from numeric strings, dates from date strings and timestamps, and `null` clears a value of any type. `avatar`, `image` and `json` fields accept documents, but not with keys that start with `$`.
+
+            Every operation is scoped by the base `filter`, for example the organization or owner of the rows. The row key is combined with the filter using `$and`, so it can only narrow it. `filter` is required, unless the connection is tenant-scoped: then the tenant is merged into every operation and stamped on new rows, as for `MongoDBBulkWrite`. Set `filter: {}` to allow writes to every document in the collection. Keep tenant and ownership fields out of `fields`, and set them on new rows with `insertDefaults`.
+
+            ##### Collection mode
+
+            By default every row is a document, matched by `rowKeyField` (default `_id`). The changeset compiles to:
+
+            ```yaml
+            - deleteOne: { filter: { $and: [<filter>, { _id: <key> }] } }             # one per removed row
+            - updateOne:                                                                # one per updated or moved row
+                filter: { $and: [<filter>, { _id: <key> }] }
+                update: { $set: { qty: 450, details.note: strong, position: 1536 } }   # its fields and position in one $set
+            - insertOne: { document: { <insertDefaults>, <row fields>, _id: <new ObjectId> } }   # one per added row
+            ```
+
+            An update sets only the changed dot paths, so the rest of the document is kept. A move writes one position field on one row. An `order` needs a `positionField` in collection mode: it writes positions 1024, 2048, … to every row in the order.
+
+            ##### Array mode
+
+            With `array: { documentId, path }`, the rows are the items of an embedded array in one document, such as the ingredients of a recipe. Every operation matches that document inside the base filter, and field paths and `positionField` are paths in the item. MongoDB can not `$set` into, `$pull` from and `$push` to the same array in one update, so the changeset compiles to up to four updates of that document, run in order:
+
+            ```yaml
+            - $set: { items.$[r0].qty: 450, items.$[r1].position: 1536 }   # arrayFilters: [{ r0._id: flour }, { r1._id: water }]
+            - $pull: { items: { _id: { $in: [salt] } } }
+            - $push: { items: { $each: [<new items>] } }
+            - <a pipeline update that puts the items in the order of "order">  # only for an order without a positionField
+            ```
+
+            New items get a generated ObjectId `_id` when `itemKeyField` is `_id`. Without a `positionField`, the array order is the row order, and an `order` is applied by a pipeline update that reorders the items on the server, as the array is when the update runs. Items are moved, never rewritten, so an edit someone else saved to an item in the meantime is kept; items the order does not name (added since the table loaded) follow in their current order, and keys of items that are gone are skipped. Setting the whole array from the browser's copy instead would overwrite such edits.
+
+            When the document is not found inside the filter, nothing is written and the request throws.
+
+            ##### Response
+
+            ```yaml
+            matchedCount: 2       # collection mode: rows matched by updates and moves
+            modifiedCount: 2
+            insertedCount: 1
+            deletedCount: 1
+            insertedKeys:         # the key each added row got, by its temporary rowKey
+              3f2c9a61-…: { _oid: 66f9… }
+            ```
+
+            In array mode `matchedCount` and `modifiedCount` count the document (0 or 1), and `insertedCount` and `deletedCount` are the items pushed and the keys pulled. A collection mode `matchedCount` lower than the rows updated means some rows were outside the filter or already deleted.
+
+            The operations are one `bulkWrite`, not a transaction: with `ordered: true` the first failing operation stops the rest, and the ones before it stay written.
+
+            ##### Row keys
+
+            The `TableInput` keys rows by `rowKey` (default `_id`, then `id`). An ObjectId key comes back from the browser as the text `{"_oid":"…"}`, which the default `rowKeyType: auto` reads as an ObjectId. Object keys are always strings, so the keys of `updated` and `moved` are strings too: use `rowKeyType: number` for numeric keys, or `rowKeyType: objectId` to read 24 character hex strings as ObjectIds.
+
+            #### Properties
+            - `changes: object`: __Required__ - The `TableInput` value, `{ _payload: changes }`: `{ updated, added, removed, moved, order }`.
+            - `fields: object`: __Required__ - The allowlist, keyed by the `TableInput` column field (its dot path). Each field is an object:
+              - `type: enum`: __Required__ - The column type, as for `MongoDBTableQuery`. Values are checked and coerced to it.
+              - `path: string`: Default: the field key - Dot path the value is written to, in the document or, in array mode, in the item.
+            - `filter: object`: The base filter that scopes every operation, for example `{ org_id: { _user: organization.id } }`. Required unless the connection is tenant-scoped. Set it to `{}` to allow writes to every document.
+            - `rowKeyField: string`: Default: `_id` - The document field a row key matches, in collection mode. With any other field, added rows need their key from a column or `insertDefaults`.
+            - `rowKeyType: enum`: Default: `auto` - How row keys are read: `auto`, `objectId`, `string` or `number`. See Row keys.
+            - `array: object`: Array mode: the rows are the items of an embedded array in one document.
+              - `documentId: any`: __Required__ - The `_id` of the document. Use `{ _oid: <hex string> }` for an ObjectId from a string.
+              - `path: string`: __Required__ - Dot path of the array in the document.
+              - `itemKeyField: string`: Default: `_id` - The item field a row key matches.
+            - `positionField: string`: Dot path of the numeric position field, the `TableInput` `rowDrag.positionField`. Needed to save `moved`, and to save `order` in collection mode.
+            - `insertDefaults: object`: Values every added row starts with, for example `{ org_id: { _user: organization.id } }` or a created date. The row's own values are set over them. Keys may be dot paths.
+            - `ordered: boolean`: Default: `true` - Run the operations in order and stop at the first error. `false` (collection mode only) runs every operation and reports every error.
+            - `maxChanges: integer`: Default: `1000` - The most row changes one request may apply (updated, added, removed and moved rows, plus order entries). A larger changeset throws.
+            - `options: object`: Optional `bulkWrite` settings, for example `writeConcern`, `bypassDocumentValidation` or `comment`. See `MongoDBBulkWrite`.
+
+            #### Examples
+
+            ###### Save the ingredients of a recipe (array mode):
+            The ingredients are an array in the recipe document, ordered by a `position` field. Dragging a row gives it a position between its neighbours, so a move saves one field on one item.
+            ```yaml
+            id: recipe
+            type: Box
+            requests:
+              - id: get_recipe
+                type: MongoDBAggregation
+                connectionId: recipes
+                payload:
+                  recipe_id:
+                    _url_query: id
+                properties:
+                  pipeline:
+                    - $match:
+                        _id:
+                          _payload: recipe_id
+                        org_id:
+                          _user: organization.id
+                    - $project:
+                        title: 1
+                        items:
+                          $sortArray:
+                            input: $items
+                            sortBy:
+                              position: 1
+              - id: save_items
+                type: MongoDBTableChanges
+                connectionId: recipes
+                payload:
+                  recipe_id:
+                    _url_query: id
+                  changes:
+                    _state: items
+                properties:
+                  array:
+                    documentId:
+                      _payload: recipe_id
+                    path: items
+                  filter:
+                    org_id:
+                      _user: organization.id
+                  positionField: position
+                  fields:
+                    ingredient:
+                      type: text
+                    qty:
+                      type: number
+                    unit:
+                      type: text
+                  changes:
+                    _payload: changes
+            events:
+              onMount:
+                - id: fetch
+                  type: Request
+                  params: get_recipe
+            blocks:
+              - id: items
+                type: TableInput
+                properties:
+                  data:
+                    _request: get_recipe.0.items
+                  addRow: true
+                  rowDrag:
+                    positionField: position
+                  rowActions:
+                    delete: true
+                  columns:
+                    - key: ingredient
+                      editable: true
+                    - key: qty
+                      type: number
+                      editable: true
+                    - key: unit
+                      editable: true
+              - id: save
+                type: Button
+                properties:
+                  title: Save
+                events:
+                  onClick:
+                    - id: save_items
+                      type: Request
+                      params: save_items
+                    - id: refetch
+                      type: Request
+                      params: get_recipe
+                    - id: reset
+                      type: CallMethod
+                      params:
+                        blockId: items
+                        method: resetChanges
+            ```
+
+            ###### Save edits to a list of deals (collection mode):
+            Every row is a document. New deals get the organization and creator from `insertDefaults`, which the table can not set, since `org_id` and `created_by` are not in `fields`.
+            ```yaml
+            requests:
+              - id: save_deals
+                type: MongoDBTableChanges
+                connectionId: deals
+                payload:
+                  changes:
+                    _state: deals_table
+                properties:
+                  filter:
+                    org_id:
+                      _user: organization.id
+                  fields:
+                    name:
+                      type: text
+                    stage:
+                      type: tag
+                    amount:
+                      type: currency
+                    owner:
+                      type: text
+                      path: owner.name
+                    close_date:
+                      type: date
+                  insertDefaults:
+                    org_id:
+                      _user: organization.id
+                    created_by:
+                      _user: id
+                    created:
+                      _date: now
+                  changes:
+                    _payload: changes
             ```
 
             ### MongoDBTableQuery
