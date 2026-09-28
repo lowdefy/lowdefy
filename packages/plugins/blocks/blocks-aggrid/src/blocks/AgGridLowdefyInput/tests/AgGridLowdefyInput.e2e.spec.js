@@ -195,9 +195,9 @@ test.describe('AgGridLowdefyInput Block', () => {
     await cellEditor.fill('Updated Alice');
     await cellEditor.press('Enter');
 
-    // The core mutates the row object in place, and that object is the same reference the engine
-    // holds in state, so this shows the edit reaching state — not that methods.setValue ran. The
-    // no-events test below is the one that isolates setValue.
+    // ag-grid writes the edit into the row object in place, and that object is the same reference
+    // the engine holds in state, so this shows the edit reaching state — not that methods.setValue
+    // ran. The no-events test below is the one that isolates setValue.
     await expect(display).toHaveText('Value: Updated Alice');
   });
 
@@ -235,6 +235,22 @@ test.describe('AgGridLowdefyInput Block', () => {
     await expect(getBlock(page, 'aggridlowdefyinput_value_display')).toHaveText(
       'Value: Updated Alice'
     );
+  });
+
+  test('editing a sorted grid changes only the edited row in the value', async ({ page }) => {
+    const block = getBlock(page, 'aggridlowdefyinput_edit_sorted');
+    const display = getBlock(page, 'aggridlowdefyinput_edit_sorted_value_display');
+    await expect(display).toHaveText('Value: Charlie, Alice, Bob');
+
+    // Sorted ascending, Alice is displayed first but is the second row in the value.
+    const firstCell = block.locator('.ag-row[row-index="0"] .ag-cell').first();
+    await expect(firstCell).toHaveText('Alice');
+    await firstCell.dblclick();
+    const cellEditor = block.locator('.ag-cell-editor input');
+    await cellEditor.fill('Alicia');
+    await cellEditor.press('Enter');
+
+    await expect(display).toHaveText('Value: Charlie, Alicia, Bob');
   });
 
   // ============================================
@@ -380,6 +396,14 @@ test.describe('AgGridLowdefyInput Block', () => {
     // the flex cell. This block has no file-theme class, so it is the .antdTheme rule that applies.
     await expect(editContent).toHaveCSS('margin-top', '0px');
     await expect(editContent).toHaveCSS('inset-inline-start', '0px');
+  });
+
+  // The input wrappers forward components to the core, so components.Icon reaches the buttons cell.
+  test('cell.type: buttons renders its icon from the forwarded components', async ({ page }) => {
+    const block = getBlock(page, 'aggridlowdefyinput_cell_buttons');
+    const button = block.locator('.ag-row[row-index="0"] button').first();
+    await expect(button).toContainText('Edit');
+    await expect(button.locator('svg').first()).toBeVisible();
   });
 
   // ============================================

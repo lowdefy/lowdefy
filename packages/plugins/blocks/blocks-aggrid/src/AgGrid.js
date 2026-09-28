@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 
@@ -42,8 +42,11 @@ const AgGrid = ({ components, events, loading, methods, properties, theme }) => 
   const [rowData, setRowData] = useState(newRowData ?? []);
 
   const gridRef = useRef();
+  // The handlers below are created once, so they read events through a ref to see the current
+  // render's events rather than the first render's.
+  const eventsRef = useRef(events);
+  eventsRef.current = events;
 
-  const memoDefaultColDef = useMemo(() => defaultColDef);
   const processedColDefs = useColDefs({ columnDefs, methods, components, gridRef });
 
   const getRowId = useCallback(
@@ -55,7 +58,7 @@ const AgGrid = ({ components, events, loading, methods, properties, theme }) => 
   );
 
   const onRowClick = useCallback((event) => {
-    if (events.onRowClick && !isCellControlClick(event)) {
+    if (eventsRef.current.onRowClick && !isCellControlClick(event)) {
       methods.triggerEvent({
         name: 'onRowClick',
         event: {
@@ -67,7 +70,7 @@ const AgGrid = ({ components, events, loading, methods, properties, theme }) => 
     }
   }, []);
   const onCellClicked = useCallback((event) => {
-    if (events.onCellClick && !isCellControlClick(event)) {
+    if (eventsRef.current.onCellClick && !isCellControlClick(event)) {
       methods.triggerEvent({
         name: 'onCellClick',
         event: {
@@ -84,7 +87,7 @@ const AgGrid = ({ components, events, loading, methods, properties, theme }) => 
     // AG Grid fires onRowSelected for deselection too, which the Lowdefy event does not represent.
     // See https://stackoverflow.com/a/63265775/2453657
     if (!event.node.isSelected()) return;
-    if (events.onRowSelected) {
+    if (eventsRef.current.onRowSelected) {
       methods.triggerEvent({
         name: 'onRowSelected',
         event: {
@@ -96,7 +99,7 @@ const AgGrid = ({ components, events, loading, methods, properties, theme }) => 
     }
   }, []);
   const onSelectionChanged = useCallback(() => {
-    if (events.onSelectionChanged) {
+    if (eventsRef.current.onSelectionChanged) {
       methods.triggerEvent({
         name: 'onSelectionChanged',
         event: { selected: gridRef.current.api.getSelectedRows() },
@@ -111,7 +114,7 @@ const AgGrid = ({ components, events, loading, methods, properties, theme }) => 
   };
 
   const onFilterChanged = useCallback((event) => {
-    if (events.onFilterChanged) {
+    if (eventsRef.current.onFilterChanged) {
       methods.triggerEvent({
         name: 'onFilterChanged',
         event: {
@@ -123,7 +126,7 @@ const AgGrid = ({ components, events, loading, methods, properties, theme }) => 
   }, []);
 
   const onSortChanged = useCallback((event) => {
-    if (events.onSortChanged) {
+    if (eventsRef.current.onSortChanged) {
       methods.triggerEvent({
         name: 'onSortChanged',
         event: {
@@ -159,18 +162,16 @@ const AgGrid = ({ components, events, loading, methods, properties, theme }) => 
     }
   }, [newRowData]);
 
-  if (quickFilterValue && quickFilterValue === '') {
-    gridRef.current.api.setGridOption('quickFilterText', quickFilterValue); // check if empty string matches all
-  }
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <AgGridReact
         columnMenu="legacy"
+        quickFilterText={quickFilterValue}
         {...someProperties}
         theme={theme}
         suppressCellFocus={suppressCellFocus}
         rowData={rowData}
-        defaultColDef={memoDefaultColDef}
+        defaultColDef={defaultColDef}
         onFilterChanged={onFilterChanged}
         onSortChanged={onSortChanged}
         onSelectionChanged={onSelectionChanged}
