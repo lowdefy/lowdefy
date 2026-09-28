@@ -52,15 +52,16 @@ async function handleValidateSchema(context, routineContext, { step }) {
   if (!valid && throwOnInvalid) {
     // Failed validation of caller-supplied data is an expected user outcome,
     // not a config or system fault.
-    const error = new UserError(buildErrorMessage(result.errors, step.stepId), {
-      cause: result.errors,
-    });
+    // No cause: a UserError's cause crosses the wire as author data, and the ajv errors carry
+    // server schema detail. They stay in the step result and the log.
+    const error = new UserError(buildErrorMessage(result.errors, step.stepId));
     // Log under `err` — see controlThrow: only the `err` key runs the pino error
     // serializer, so `error` would drop the message from the log line.
     logger.warn({
       event: 'warn_validate_schema',
       stepId: step.stepId,
       err: error,
+      errors: result.errors,
     });
     error.handled = true;
     return { status: 'error', error };

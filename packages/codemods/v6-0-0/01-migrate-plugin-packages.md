@@ -131,7 +131,7 @@ Server-side plugin files load as Node ESM. CJS dists still load through Node's i
     "./*": "./dist/*"
   },
   "dependencies": {
-    "@auth/core": "0.41.2"
+    "@auth/core": "0.41.3"
   }
 }
 ```

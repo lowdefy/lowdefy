@@ -74,6 +74,7 @@ import pingHandler from './routes/ping.js';
 import reloadHandler from './routes/reload.js';
 import renderDevPage from './html/renderDevPage.js';
 import requestHandler from './routes/request.js';
+import requestTimeout from './middleware/requestTimeout.js';
 import rootHandler from './routes/root.js';
 import staleFlag from './middleware/staleFlag.js';
 import usageHandler from './routes/usage.js';
@@ -81,6 +82,10 @@ import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
+
+// Same default as the production server, so a request that would time out in production (a 504
+// the page shows as a generic error, beside the other requests' results) also times out in dev.
+const requestTimeoutMs = lowdefyConfig.requestTimeout ?? 30000;
 
 // Dev Hono app — mounted into Vite via @hono/vite-dev-server (Vite owns HTTP
 // and serves /client/* modules with HMR; everything else lands here).
@@ -177,6 +182,19 @@ function createApp() {
   app.get('/lowdefy-docs/plugin-doc/:package{.+}', docsPluginDocHandler);
   app.get('/lowdefy-docs/content/:slug{.+}', docsContentHandler);
   app.get('/lowdefy-docs/:kind', docsTypesHandler);
+
+  // Only the routes that run app logic: JIT page builds, the docs/MCP routes and the SSE streams
+  // are dev-only and can legitimately run longer than any production request.
+  if (requestTimeoutMs > 0) {
+    const timeoutMiddleware = requestTimeout({ timeoutMs: requestTimeoutMs });
+    [
+      '/api/request/*',
+      '/api/endpoints/*',
+      '/api/cron/*',
+      '/api/cron-forward/*',
+      '/api/detached/*',
+    ].forEach((route) => app.use(route, timeoutMiddleware));
+  }
 
   app.use('/api/*', apiContext());
   // Unified dev get-session: createLowdefyContext resolves the mock or headless
