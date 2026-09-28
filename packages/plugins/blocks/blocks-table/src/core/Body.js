@@ -14,21 +14,25 @@
   limitations under the License.
 */
 
-import React, { useContext } from 'react';
+import React, { useContext, useLayoutEffect, useRef } from 'react';
 
 import RenderProbeContext from './RenderProbeContext.js';
 import Row from './Row.js';
 
 // Rows of the current window. `translated` (the default) renders the window rows in flow inside
 // one container moved by a single translateY per range change; `positioned` gives each row its own
-// absolute transform (TanStack Virtual's pattern), kept for the benchmark comparison.
+// absolute transform (TanStack Virtual's pattern), kept for the benchmark comparison. With
+// measured rows (`rowOffsets`), rows take their content height and report it after each render.
 function Body({
   activeCell,
   api,
+  ariaRowOffset,
   centerCols,
   layout,
+  measureRows,
   rowClassName,
   rowHeight,
+  rowOffsets,
   rowStyle,
   rows,
   selectable,
@@ -37,19 +41,26 @@ function Body({
 }) {
   const probe = useContext(RenderProbeContext);
   probe?.body();
+  const windowRef = useRef(null);
+  useLayoutEffect(() => {
+    if (measureRows && windowRef.current) measureRows(windowRef.current.children);
+  });
   const rowElements = [];
   const positioned = range.positioning === 'positioned';
+  const measured = rowOffsets !== null;
   for (let i = range.rowStart; i < range.rowEnd; i++) {
     const row = rows[i];
     rowElements.push(
       <Row
         activeCol={activeCell.row === i ? activeCell.col : -1}
         api={api}
+        ariaRowIndex={i + ariaRowOffset}
         centerCols={centerCols}
         className={rowClassName}
         displayIndex={i}
         endCols={layout.end}
         key={row.id}
+        measured={measured}
         original={row.original}
         rowId={row.id}
         selectable={selectable}
@@ -60,14 +71,17 @@ function Body({
       />
     );
   }
+  const height = measured ? rowOffsets[rows.length] : rows.length * rowHeight;
+  const windowTop = measured ? rowOffsets[range.rowStart] : range.rowStart * rowHeight;
   return (
-    <div className="lf-table-body" role="rowgroup" style={{ height: rows.length * rowHeight }}>
+    <div className="lf-table-body" role="rowgroup" style={{ height }}>
       {positioned ? (
         rowElements
       ) : (
         <div
           className="lf-table-window"
-          style={{ transform: `translateY(${range.rowStart * rowHeight}px)` }}
+          ref={windowRef}
+          style={{ transform: `translateY(${windowTop}px)` }}
         >
           {rowElements}
         </div>

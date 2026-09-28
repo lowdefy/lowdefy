@@ -14,10 +14,14 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { getHtmlEnhancements } from '@lowdefy/block-utils';
+import resolveLink from '@lowdefy/blocks-antd/table/resolveLink.js';
 
-function isEmptySortValue(value) {
-  return type.isNone(value) || value === '' || (type.isArray(value) && value.length === 0);
+// The client registers the same link function the Link action uses, so rowLink gets router
+// navigation, page input and new tabs exactly as a Link (and TableLight's rowLink) does.
+function openRowLink({ rowLink, row, newTab }) {
+  const link = resolveLink({ link: rowLink, row });
+  getHtmlEnhancements().link({ ...link, newTab: newTab === true || link.newTab === true });
 }
 
-export default isEmptySortValue;
+export default openRowLink;

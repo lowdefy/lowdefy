@@ -14,16 +14,22 @@
   limitations under the License.
 */
 
-import getExportValue from '../../core/getExportValue.js';
-import stripHtml from './stripHtml.js';
+import CELL_TYPE_FAMILIES from '@lowdefy/blocks-antd/table/cellTypeFamilies.js';
+import getExportValue from '@lowdefy/blocks-antd/table/getExportValue.js';
+import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
+
 import toCsvField from './toCsvField.js';
 
 // The current client view: visible data columns in their displayed order (start-pinned, centre,
-// end-pinned) and the rows in their current (sorted) order. Header titles lose their HTML.
+// end-pinned) and the rows in their current (sorted) order, every page. Values come from the
+// shared column core (`formatted` gives the text the cell shows). Header titles lose their HTML;
+// action columns (buttons, menu) hold no data and are left out.
 function buildCsv({ api, formatted }) {
-  const cols = api.layout.cols.filter((col) => !col.special);
-  const lines = [cols.map((col) => toCsvField(stripHtml(col.column.title))).join(',')];
-  api.rows.forEach((row) => {
+  const cols = api.layout.cols.filter(
+    (col) => !col.special && CELL_TYPE_FAMILIES[col.column.type] !== 'action'
+  );
+  const lines = [cols.map((col) => toCsvField(htmlToText(col.column.title))).join(',')];
+  api.viewRows.forEach((row) => {
     lines.push(
       cols
         .map((col) =>

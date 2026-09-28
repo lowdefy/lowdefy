@@ -14,24 +14,30 @@
   limitations under the License.
 */
 
-import resolveRowLink from './resolveRowLink.js';
+import openRowLink from './openRowLink.js';
 
-// A row "activation" (click, or Enter on a focused cell) fires onRowClick and follows rowLink.
-// Cmd/Ctrl/Shift open the link in a new tab, as a link would.
+// A row "activation" (click, or Enter on a focused cell), with TableLight's semantics: onRowClick
+// fires, and rowLink is followed unless onRowClick is defined too, in which case a plain click is
+// the app's (a peek, say) and only a modified click (Cmd/Ctrl/Shift) follows the link, in a new
+// tab.
 function createActivateRow(api) {
   return function activateRow({ id, event, newTab }) {
     const row = api.table.getRow(id, true);
     if (!row) return false;
-    api.methods.triggerEvent({
-      name: 'onRowClick',
-      event: { row: row.original, rowKey: api.config.getKey(row.original), index: row.index },
-    });
+    const hasRowClick = Boolean(api.events.onRowClick);
+    if (hasRowClick) {
+      api.methods.triggerEvent({
+        name: 'onRowClick',
+        event: { row: row.original, rowKey: api.config.getKey(row.original), index: row.index },
+      });
+    }
     const { rowLink } = api.config;
     if (!rowLink) return true;
     const modified = event?.metaKey || event?.ctrlKey || event?.shiftKey;
-    const link = resolveRowLink({ rowLink, row: row.original });
-    if (newTab || modified) link.newTab = true;
-    api.methods.triggerEvent({ name: '__rowLink', event: { link } });
+    const openInNewTab = newTab === true || modified === true;
+    if (openInNewTab || !hasRowClick) {
+      openRowLink({ rowLink, row: row.original, newTab: openInNewTab });
+    }
     return true;
   };
 }

@@ -28,6 +28,7 @@ import TABLE_FEATURES from './tableFeatures.js';
 import useFeatureFragments from './useFeatureFragments.js';
 import useFeatureMethods from './useFeatureMethods.js';
 import useForeignKeys from './useForeignKeys.js';
+import useSummary from './useSummary.js';
 import useTableConfig from './useTableConfig.js';
 import useTableState from './useTableState.js';
 
@@ -108,9 +109,24 @@ function TableRoot({
   });
   useForeignKeys({ api, selected: value?.selected });
   useFeatureMethods({ api, methods });
-  const { leadingColumns, regions } = useFeatureFragments({ api, config, data, state, table });
+  const { leadingColumns, regions, rowRange } = useFeatureFragments({
+    api,
+    config,
+    data,
+    state,
+    table,
+  });
+  const summary = useSummary({ config, table });
 
-  const rows = table.getRowModel().rows;
+  const viewRows = table.getRowModel().rows;
+  const rowStart = rowRange?.start;
+  const rowEnd = rowRange?.end;
+  const rows = useMemo(
+    () => (rowRange === null ? viewRows : viewRows.slice(rowStart, rowEnd)),
+    [viewRows, rowStart, rowEnd]
+  );
+  // Every row of the view in display order (all pages): export and the summary read these.
+  api.viewRows = viewRows;
   const rowHeight = config.rowHeight ?? densityHeights[state.density];
   const headerHeight = Math.min(Math.max(rowHeight, 32), 48);
 
@@ -131,6 +147,7 @@ function TableRoot({
       state={state}
       strategy={rowWindowStrategy}
       styles={styles}
+      summary={summary}
     />
   );
 }

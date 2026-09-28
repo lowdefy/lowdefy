@@ -14,17 +14,14 @@
   limitations under the License.
 */
 
-import isEmptySortValue from './isEmptySortValue.js';
-
-function collectDistinct({ rows, accessor }) {
-  const values = new Array(rows.length);
-  const distinct = new Set();
-  for (let i = 0; i < rows.length; i++) {
-    const value = accessor(rows[i].original);
-    values[i] = value;
-    if (!isEmptySortValue(value)) distinct.add(value);
+// Numeric row keys as Float64 sort keys, empty (null) keys as NaN.
+function toFloatSortKeys(rowKeys) {
+  const keys = new Float64Array(rowKeys.length);
+  for (let i = 0; i < rowKeys.length; i++) {
+    const key = rowKeys[i];
+    keys[i] = key === null ? NaN : key;
   }
-  return { values, distinct: Array.from(distinct) };
+  return keys;
 }
 
-export default collectDistinct;
+export default toFloatSortKeys;

@@ -14,14 +14,24 @@
   limitations under the License.
 */
 
-function stripHtml(text) {
-  return String(text ?? '')
-    .replace(/<[^>]*>/g, '')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .trim();
+import React from 'react';
+import { Pagination } from 'antd';
+
+// Client-side pages below the grid (`pagination: true`), with antd's Pagination as TableLight
+// has it: the pager always shows once pagination is on.
+function TablePagination({ current, onChange, pageSize, total }) {
+  return (
+    <div className="lf-table-pagination">
+      <Pagination
+        current={current}
+        onChange={onChange}
+        pageSize={pageSize}
+        showSizeChanger={false}
+        size="small"
+        total={total}
+      />
+    </div>
+  );
 }
 
-export default stripHtml;
+export default TablePagination;

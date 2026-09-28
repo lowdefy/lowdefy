@@ -25,6 +25,9 @@ function createApi() {
     scrollerRef: { current: null },
     suppressedClick: false,
   };
+  // Cell renderers build the full event payload (row, rowKey, ...); one stable function keeps
+  // the memoised cells from re-rendering when the block's methods object changes.
+  api.onCellEvent = ({ name, event }) => api.methods.triggerEvent({ name, event });
   api.contains = (element) => Boolean(api.rootRef.current?.contains(element));
   api.suppressClick = () => {
     api.suppressedClick = true;

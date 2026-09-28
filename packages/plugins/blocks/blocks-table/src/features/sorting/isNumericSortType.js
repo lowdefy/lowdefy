@@ -14,10 +14,12 @@
   limitations under the License.
 */
 
-const NUMERIC_TYPES = new Set(['number', 'currency', 'percent', 'progress', 'rating']);
+import CELL_TYPE_FAMILIES from '@lowdefy/blocks-antd/table/cellTypeFamilies.js';
 
+// Number-family columns (number, currency, percent, progress, rating) are usually all distinct,
+// so their keys are read per row without the distinct-value pass.
 function isNumericSortType(columnType) {
-  return NUMERIC_TYPES.has(columnType);
+  return CELL_TYPE_FAMILIES[columnType ?? 'text'] === 'number';
 }
 
 export default isNumericSortType;

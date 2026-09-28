@@ -18,3 +18,5 @@ name: blocks-table E2E Tests
 pages:
   - _ref: ../../src/blocks/Table/tests/Table.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/TableLinkTarget.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/TableParity.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/TableFeatures.e2e.yaml

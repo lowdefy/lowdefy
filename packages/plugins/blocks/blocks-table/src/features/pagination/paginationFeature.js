@@ -14,19 +14,12 @@
   limitations under the License.
 */
 
-import { get, type } from '@lowdefy/helpers';
+import usePagination from './usePagination.js';
 
-// `rowLink.urlQuery` values are row paths (as ag-grid's link cells); everything else passes to
-// the Link action as written.
-function resolveRowLink({ rowLink, row }) {
-  const link = { ...rowLink };
-  if (type.isObject(rowLink.urlQuery)) {
-    link.urlQuery = {};
-    Object.entries(rowLink.urlQuery).forEach(([key, path]) => {
-      link.urlQuery[key] = type.isString(path) ? get(row, path) : path;
-    });
-  }
-  return link;
-}
+// `pagination: true` (off by default: the Table scrolls any number of rows virtually).
+const paginationFeature = {
+  name: 'pagination',
+  useFeature: usePagination,
+};
 
-export default resolveRowLink;
+export default paginationFeature;

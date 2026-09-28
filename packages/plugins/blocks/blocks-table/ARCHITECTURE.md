@@ -10,6 +10,8 @@ blocks/Table/Table.lazy.js    the implementation chunk (TanStack Table + Virtual
 core/TableRoot.js             config, data, table state, TanStack instance, block-level feature hooks
 core/Grid.js                  the window component: layout, scroll-driven state, grid-level hooks, DOM
 core/Body.js, Row.js, Cell.js rows of the current range, memoised by row key and row object
+core/HeaderRow.js             header group rows (GroupHeaderRow) and the leaf header row
+core/SummaryRow.js            the sticky summary footer (aggregates from core/useSummary.js)
 features/<name>/              feature modules, composed through features/index.js
 ```
 
@@ -25,7 +27,9 @@ Scrolling renders `Grid` and never `TableRoot`, so the engine and the block's ow
 
 ## Data path
 
-`properties.data` → `stabilizeData` (diff by row key, positional fast path, `rowVersionField` or structural compare; unchanged rows keep their object identity) → TanStack with `createStableCoreRowModel` (reuses `Row` instances; one changed row patches one row) → `createIndexSortedRowModel` (typed `Float64Array` keys per column, index sort, keys cached per rows array; big text columns build their keys in time slices before the sort applies) → `table.getRowModel().rows`. Rows re-render only when their row object, display index, selection, active column or the visible column list changes.
+`properties.data` → `stabilizeData` (diff by row key, positional fast path, `rowVersionField` or structural compare; unchanged rows keep their object identity) → TanStack with `createStableCoreRowModel` (reuses `Row` instances; one changed row patches one row) → `createIndexSortedRowModel` (typed `Float64Array` keys per column, index sort, keys cached per rows array; big text columns build their keys in time slices before the sort applies) → `table.getRowModel().rows` (`api.viewRows`, every page) → the pagination feature's `rowRange` slice (`api.rows`, what the grid shows). Rows re-render only when their row object, display index, selection, active column or the visible column list changes.
+
+Sort keys come from the shared core: `createSortKeyGetter({ column })` gives each value's typed key once per distinct value, and text keys are ranked with `compareSortKeys`, the comparison `createComparator` itself uses. The index sort therefore orders rows exactly as `createComparator({ column, desc })` (and TableLight) does, empty values last in both directions; `features/sorting/buildSortKeys.test.js` checks this for every type family.
 
 ## Layout contract
 
@@ -55,12 +59,14 @@ A module is a plain object exported from `features/<name>/<name>Feature.js` and 
 
 `api` (`core/createApi.js`) is one stable object per table, refreshed every render: `table`, `config`, `state`, `layout`, `rows`, `rowHeight`, `headerHeight`, `rootRef`, `scrollerRef`, `methods`, `components`, `updateSlice`, `setSliceSilently`, `previewLayout`, `actions`, `keyboard`, `suppressClick()` / `takeSuppressedClick()` (a drag that ends on a header must not also sort).
 
-DOM contract for handlers: body rows carry `data-row-key` (TanStack row id = `String(rowKey)`) and `data-row-index` (display index; the header row is `-1`); cells carry `data-lf-cell`, `data-col-key`, `data-col-index` (layout index); header cells `data-lf-header`; special columns `data-special`.
+Rows are fixed height (the density, or `rowHeight`) unless a visible column wraps or clamps to more than one line: then `useMeasuredRows` keeps measured heights by row key, `computeWindow` binary-searches the row offsets, rows that grow above the viewport shift the scroll position by the same amount, and column virtualisation is off (D10.1).
+
+DOM contract for handlers: body rows carry `data-row-key` (TanStack row id = `String(rowKey)`) and `data-row-index` (display index; the header row is `-1`); cells carry `data-lf-cell`, `data-col-key`, `data-col-index` (layout index) and the class `lf-table-gridcell`; header cells `data-lf-header`; header group cells `data-group` (no `data-lf-cell`, so keyboard navigation skips them); special columns `data-special`. Body rows carry `lf-table-row`, the class the shared cell CSS reveals `showOn: hover` buttons from (a row element holds its pinned cells too, so CSS hover covers the whole row and no `data-row-hover` tracking is needed).
 
 ## Adding the planned modules
 
 - **headerMenu**: `headerParts` (menu button, lazy antd `Dropdown` mounted on open), `actions.openHeaderMenu`, a `gridHandlers.click` placed before sorting's (return `true` for the button), and `pin`/`hide`/`sort` through `api.updateSlice('columnPinning' | 'columnVisibility' | 'sorting', ...)`.
-- **filtering**: `tableFeatures: { columnFilteringFeature, globalFilteringFeature, filteredRowModel }` where the row model compiles `view.filter` once with `core/compileCondition.js`; slices for the condition and search; `viewKeys: ['filter', 'search']`; `toValue` writes them back; a `headerCellProps` flag for the active-filter icon.
+- **filtering**: `tableFeatures: { columnFilteringFeature, globalFilteringFeature, filteredRowModel }` where the row model compiles `view.filter` once with `@lowdefy/blocks-antd/table/compileCondition.js` (with `config.user`); slices for the condition and search; `viewKeys: ['filter', 'search']`; `toValue` writes them back; a `headerCellProps` flag for the active-filter icon.
 - **toolbar**: `useFeature` returning `regions.top`; `viewKeys: ['density', ...]` only if it takes density over from the core (then move `density` out of `claimedViewKeys`).
 - **views** (`persist`, saved views): a `useFeature` effect that reads/writes `api.state` through `deriveValue` / `updateSlice`, and events `onViewSave`/`onViewSelect`; `api.updateSlice` for each slice when a view loads.
 - **grouping**: TanStack grouping + `groupedRowModel`/`expandedRowModel` slots, slices `grouping` and `expanded` (take `expanded` from the core), `viewKeys: ['group', 'collapsedGroups', 'aggregates']`. Body needs one core change: rendering a group-header item for grouped rows (the flat row list already feeds the window), plus a single sticky group-header overlay (D10.8).
@@ -69,12 +75,19 @@ DOM contract for handlers: body rows carry `data-row-key` (TanStack row id = `St
 
 ## Shared column core
 
-`core/normalizeColumns.js`, `getCellRenderer.js`, `createComparator.js`, `compileCondition.js` and `getExportValue.js` are the integration points for `@lowdefy/blocks-antd/table/`. They hold minimal local stand-ins (text cells, a basic comparator) and will re-export the shared implementations. Renderer contract: `CellRenderer({ value, row, rowKey, column, methods, components, onEvent })`; `onEvent({ name, event })` fires a block event with `{ row, rowKey }` added.
+Columns, cells, conditions and exports come from `@lowdefy/blocks-antd/table/<file>.js`, the core TableLight renders with, so a TableLight config means the same thing on Table (TableLight is a strict subset of Table's properties):
+
+- `useTableConfig` runs `normalizeColumns` (string or object columns, header tree) and `compileColumns({ columns, columnsByKey, user })` once per config; `rowRules` compile with `compileRules`. `user` is the block property the app sets with `_user`, so `$user` works in client-side conditions.
+- `Cell` renders `renderCell({ column, row, rowKey, methods, components, onEvent })` inside its grid cell. Renderers build full event payloads (buttons, menus, `onCellLink`) and `api.onCellEvent` passes them to `methods.triggerEvent` unchanged.
+- Row events use the shared `isControlTarget` (with the row as container) and `resolveLink`; `rowLink` navigates with `getHtmlEnhancements().link(...)`, the client's registered Link function, as TableLight does. With `onRowClick` defined, a plain click runs it and only a modified click follows the link.
+- Export uses `getExportValue` and `htmlToText`; the summary footer uses `computeAggregate` and `getAggregateText`.
+- The engine's own grid-cell class is `lf-table-gridcell` (the shared core owns `lf-table-cell`, `lf-table-empty` and `lf-table-progress`).
 
 ## Not done yet
 
 - `empty` area: input blocks receive no slots (`client/src/block/CategorySwitch.js` renders `input` blocks without `content`); supporting it means the `input-container` category or a slot mechanism for input blocks. `emptyText` covers the common case.
-- Header groups (`children`) normalise but render as leaf headers only.
 - Hovering a row with `rowLink` does not show the URL (rows are not anchors).
 - Sorted tables re-sort fully on a data change (incremental re-sort comes with P3 transactions).
 - Text sort keys are built in slices on the header click; a sort set through the value or `defaultView` builds them synchronously in the render.
+- Pagination (`pagination: true`) keeps the page in local state, not in the value; `scrollToRow` only finds rows on the current page.
+- `buttons` cells render antd `Button`s (shared with TableLight); they are mounted for every rendered row, hidden by opacity with `showOn: hover` (see bench/RESULTS.md for the cost).

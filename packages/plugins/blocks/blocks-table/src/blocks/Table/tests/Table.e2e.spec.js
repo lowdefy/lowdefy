@@ -89,7 +89,7 @@ test.describe('Table Block', () => {
   });
 
   test('renders the empty text without rows', async ({ page }) => {
-    await expect(getBlock(page, 'table_empty').locator('.lf-table-empty')).toContainText(
+    await expect(getBlock(page, 'table_empty').locator('.lf-table-empty-state')).toContainText(
       'Nothing here yet'
     );
     await expect(bodyRows(page, 'table_empty')).toHaveCount(0);

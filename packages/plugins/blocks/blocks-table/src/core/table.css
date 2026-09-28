@@ -115,7 +115,7 @@
     padding-left: var(--lf-center-before);
   }
 
-  .lf-table-cell {
+  .lf-table-gridcell {
     position: relative;
     display: flex;
     flex: none;
@@ -132,37 +132,37 @@
     outline: none;
   }
 
-  .lf-table-cell-content {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  /* The shared column core's cell content (renderCell's .lf-table-cell) fills the grid cell and
+     carries its own layout: single line, wrap or clamp, and alignment. */
+  .lf-table-gridcell > .lf-table-cell {
+    flex: 1 1 auto;
   }
 
-  .lf-table-cell[data-align='end'] {
+  .lf-table-gridcell[data-align='end'] {
     justify-content: flex-end;
     text-align: end;
   }
 
-  .lf-table-cell[data-align='center'] {
+  .lf-table-gridcell[data-align='center'] {
     justify-content: center;
     text-align: center;
   }
 
-  .lf-table-cell[data-pinned] {
+  .lf-table-gridcell[data-pinned] {
     position: sticky;
     z-index: 1;
   }
 
-  .lf-table-cell[data-pinned='start'][data-pinned-edge] {
+  .lf-table-gridcell[data-pinned='start'][data-pinned-edge] {
     box-shadow: inset -1px 0 0 var(--lf-border);
   }
 
-  .lf-table-cell[data-pinned='end'][data-pinned-edge] {
+  .lf-table-gridcell[data-pinned='end'][data-pinned-edge] {
     box-shadow: inset 1px 0 0 var(--lf-border);
   }
 
-  .lf-table-cell:focus-visible,
-  .lf-table-cell[data-focused]:focus {
+  .lf-table-gridcell:focus-visible,
+  .lf-table-gridcell[data-focused]:focus {
     outline: 2px solid var(--ant-color-primary, #1677ff);
     outline-offset: -2px;
   }
@@ -188,18 +188,18 @@
     background: var(--lf-header-bg);
   }
 
-  .lf-table-header .lf-table-cell {
+  .lf-table-header .lf-table-gridcell {
     font-weight: var(--ant-font-weight-strong, 600);
     color: var(--ant-color-text-heading, var(--ant-color-text));
     user-select: none;
     gap: var(--ant-padding-xxs, 4px);
   }
 
-  .lf-table-header .lf-table-cell[data-sortable] {
+  .lf-table-header .lf-table-gridcell[data-sortable] {
     cursor: pointer;
   }
 
-  .lf-table-header .lf-table-cell[data-sortable]:hover {
+  .lf-table-header .lf-table-gridcell[data-sortable]:hover {
     background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
   }
 
@@ -318,7 +318,7 @@
     cursor: pointer;
   }
 
-  .lf-table-empty {
+  .lf-table-empty-state {
     position: sticky;
     left: 0;
     display: flex;
@@ -355,7 +355,7 @@
     }
   }
 
-  .lf-table-progress {
+  .lf-table-loading-bar {
     position: absolute;
     top: 0;
     left: 0;
@@ -366,18 +366,18 @@
     pointer-events: none;
   }
 
-  .lf-table-progress::after {
+  .lf-table-loading-bar::after {
     position: absolute;
     top: 0;
     left: -40%;
     width: 40%;
     height: 100%;
     background: var(--ant-color-primary, #1677ff);
-    animation: lf-table-progress 1.2s ease-in-out infinite;
+    animation: lf-table-loading-bar 1.2s ease-in-out infinite;
     content: '';
   }
 
-  @keyframes lf-table-progress {
+  @keyframes lf-table-loading-bar {
     0% {
       left: -40%;
     }
@@ -389,5 +389,81 @@
   .lf-table[data-pending] .lf-table-body {
     opacity: 0.6;
     transition: opacity 0.1s;
+  }
+
+  /* bordered: lines between cells as well as under them. */
+  .lf-table[data-bordered] .lf-table-gridcell {
+    border-inline-end: 1px solid var(--lf-border);
+  }
+
+  /* Measured rows (a wrapped or multi-line column): rows take their content height, never less
+     than the density height. */
+  .lf-table-body .lf-table-row[data-measured] {
+    height: auto;
+    min-height: var(--lf-row-h);
+  }
+
+  .lf-table-row[data-measured] .lf-table-gridcell {
+    height: auto;
+    padding-block: var(--ant-padding-xxs, 4px);
+  }
+
+  .lf-table-header-tooltip {
+    text-decoration: underline dotted var(--ant-color-text-quaternary, rgba(0, 0, 0, 0.25));
+    text-underline-offset: 3px;
+  }
+
+  /* Header groups (`children` columns). */
+  .lf-table-header .lf-table-group-header {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .lf-table-header .lf-table-group-header[data-pinned] {
+    z-index: 1;
+  }
+
+  /* Summary footer: sticky at the bottom of the scroller, like the header at the top. */
+  .lf-table-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 3;
+    width: var(--lf-total);
+    min-width: 100%;
+    background: var(--lf-header-bg);
+  }
+
+  .lf-table-footer .lf-table-row {
+    background: var(--lf-header-bg);
+  }
+
+  .lf-table-footer .lf-table-gridcell {
+    border-top: 1px solid var(--lf-border);
+    border-bottom: 0;
+  }
+
+  .lf-table-summary {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--ant-margin-xs, 8px);
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .lf-table-summary-label {
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    font-size: var(--ant-font-size-sm, 12px);
+  }
+
+  .lf-table-summary-value {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lf-table-pagination {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--ant-padding-xs, 8px) var(--ant-padding, 16px);
+    border-top: 1px solid var(--lf-border);
   }
 }

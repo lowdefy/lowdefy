@@ -14,23 +14,24 @@
   limitations under the License.
 */
 
-import isEmptySortValue from './isEmptySortValue.js';
+import compareSortKeys from '@lowdefy/blocks-antd/table/compareSortKeys.js';
 
-// Turns the column values into Float64 ranks from their distinct values in sorted order (equal
-// values share a rank; empty values are NaN).
-function rankValues({ values, ordered, comparator }) {
+// Float64 sort keys from row keys and the distinct keys in ascending order (sorted with
+// compareSortKeys). Keys the shared comparator calls equal (text that differs only in case or
+// accents) share a rank; empty (null) keys are NaN.
+function rankSortKeys({ rowKeys, ordered }) {
   const ranks = new Map();
   let rank = 0;
   for (let i = 0; i < ordered.length; i++) {
-    if (i > 0 && comparator(ordered[i - 1], ordered[i]) !== 0) rank += 1;
+    if (i > 0 && compareSortKeys(ordered[i - 1], ordered[i]) !== 0) rank += 1;
     ranks.set(ordered[i], rank);
   }
-  const keys = new Float64Array(values.length);
-  for (let i = 0; i < values.length; i++) {
-    const value = values[i];
-    keys[i] = isEmptySortValue(value) ? NaN : ranks.get(value);
+  const keys = new Float64Array(rowKeys.length);
+  for (let i = 0; i < rowKeys.length; i++) {
+    const key = rowKeys[i];
+    keys[i] = key === null ? NaN : ranks.get(key);
   }
   return keys;
 }
 
-export default rankValues;
+export default rankSortKeys;

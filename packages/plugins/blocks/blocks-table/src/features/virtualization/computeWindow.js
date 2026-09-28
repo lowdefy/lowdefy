@@ -23,12 +23,36 @@ function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
 
+function fixedRowRange({ rowCount, rowHeight, top, bottom }) {
+  const rowStart = clamp(Math.floor(top / rowHeight), 0, rowCount);
+  const rowEnd = clamp(Math.ceil(bottom / rowHeight), rowStart, rowCount);
+  return { rowStart, rowEnd };
+}
+
+// With measured rows `offsets` holds each row's top (and the total height last): the first row
+// whose bottom is below `top`, up to the first row whose top is below `bottom`.
+function measuredRowRange({ offsets, rowCount, top, bottom }) {
+  const rowStart = clamp(
+    firstIndexAbove({ offsets: offsets.subarray(1), value: top }),
+    0,
+    rowCount
+  );
+  const rowEnd = clamp(
+    firstIndexAbove({ offsets: offsets.subarray(0, rowCount), value: bottom }),
+    rowStart,
+    rowCount
+  );
+  return { rowStart, rowEnd };
+}
+
 // The rendered row and centre-column ranges for a scroll position. Row overscan is measured in
 // pixels and leans in the scroll direction: one body height ahead, a quarter behind (D10.3).
+// `offsets` (measured row heights, see useVirtualization) replaces the fixed row height.
 function computeWindow({
   direction,
   headerHeight,
   layout,
+  offsets,
   rowCount,
   rowHeight,
   scrollLeft,
@@ -48,8 +72,10 @@ function computeWindow({
     let after = trail;
     if (direction < 0) before = lead;
     if (direction > 0) after = lead;
-    rowStart = clamp(Math.floor((scrollTop - before) / rowHeight), 0, rowCount);
-    rowEnd = clamp(Math.ceil((scrollTop + bodyHeight + after) / rowHeight), rowStart, rowCount);
+    const bounds = { rowCount, top: scrollTop - before, bottom: scrollTop + bodyHeight + after };
+    ({ rowStart, rowEnd } = offsets
+      ? measuredRowRange({ offsets, ...bounds })
+      : fixedRowRange({ rowHeight, ...bounds }));
   }
   let colStart = 0;
   let colEnd = layout.center.length;

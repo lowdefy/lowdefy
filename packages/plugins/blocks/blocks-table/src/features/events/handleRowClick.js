@@ -14,17 +14,19 @@
   limitations under the License.
 */
 
+import { get } from '@lowdefy/helpers';
+import isControlTarget from '@lowdefy/blocks-antd/table/isControlTarget.js';
+
 import getBodyTarget from './getBodyTarget.js';
-import isControlTarget from './isControlTarget.js';
 import isTextDrag from './isTextDrag.js';
 
 function handleRowClick(event, api) {
   const target = getBodyTarget({ event, api });
   if (!target) return false;
-  const { cell, row } = target;
-  if (cell && isControlTarget({ target: event.target, cell })) return false;
+  const { cell, row, rowElement } = target;
+  if (isControlTarget({ target: event.target, container: rowElement })) return false;
   if (isTextDrag({ event, api })) return true;
-  if (cell) {
+  if (cell && api.events.onCellClick) {
     const col = api.layout.byKey.get(cell.dataset.colKey);
     if (col && !col.special) {
       api.methods.triggerEvent({
@@ -33,7 +35,7 @@ function handleRowClick(event, api) {
           row: row.original,
           rowKey: api.config.getKey(row.original),
           column: { key: col.key, field: col.column.field },
-          value: col.accessor(row.original),
+          value: get(row.original, col.column.field),
         },
       });
     }

@@ -14,15 +14,18 @@
   limitations under the License.
 */
 
-// Cells never call triggerEvent: their `onEvent({ name, event })` goes through here, which adds
-// the row payload every cell event carries (D5).
-function createOnCellEvent(api) {
-  return function onCellEvent({ name, event, original }) {
-    return api.methods.triggerEvent({
-      name,
-      event: { row: original, rowKey: api.config.getKey(original), ...event },
-    });
-  };
+// Each row's top offset in the body, and the body height last (`rows.length + 1` entries): the
+// measured height where the row has been rendered, `rowHeight` where it has not.
+function computeRowOffsets({ rows, rowHeight, heights }) {
+  const count = rows.length;
+  const offsets = new Float64Array(count + 1);
+  let top = 0;
+  for (let i = 0; i < count; i++) {
+    offsets[i] = top;
+    top += heights.get(rows[i].id) ?? rowHeight;
+  }
+  offsets[count] = top;
+  return offsets;
 }
 
-export default createOnCellEvent;
+export default computeRowOffsets;

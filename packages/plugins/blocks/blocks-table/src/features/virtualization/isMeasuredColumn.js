@@ -14,15 +14,10 @@
   limitations under the License.
 */
 
-// Integration point: this file will re-export `compileCondition` from
-// `@lowdefy/blocks-antd/table/compileCondition.js` once the shared condition core lands. The
-// engine core does not evaluate conditions yet (filtering, rules and `when` arrive with their
-// feature modules), so the local stand-in accepts every row.
-
-function compileCondition() {
-  return function matches() {
-    return true;
-  };
+// Wrapped text and multi-line ellipsis make rows as tall as their content (D10.1).
+function isMeasuredColumn(col) {
+  if (col.special) return false;
+  return col.column.wrap === true || col.column.ellipsis > 1;
 }
 
-export default compileCondition;
+export default isMeasuredColumn;

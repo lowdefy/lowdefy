@@ -14,20 +14,19 @@
   limitations under the License.
 */
 
-import React, { memo, useCallback } from 'react';
+import React, { memo } from 'react';
+import renderCell from '@lowdefy/blocks-antd/table/renderCell.js';
 
 // One grid cell. Memoised on the row object and the layout column, so a horizontal range change
-// only mounts the cells that came into range. Tier-0 cells render plain DOM (D4).
+// only mounts the cells that came into range. The content is the shared column core's cell
+// (`renderCell`, the same renderers TableLight uses); renderers build their own event payloads
+// and `api.onCellEvent` passes them to the block's triggerEvent.
 function Cell({ api, col, focused, original, selected }) {
-  const onEvent = useCallback(
-    ({ name, event }) => api.actions.onCellEvent({ name, event, original, column: col.column }),
-    [api, original, col]
-  );
   if (col.special) {
     return (
       <div
         aria-colindex={col.ariaIndex}
-        className="lf-table-cell lf-table-select"
+        className="lf-table-gridcell lf-table-select"
         data-col-index={col.index}
         data-col-key={col.key}
         data-focused={focused ? '' : undefined}
@@ -43,11 +42,10 @@ function Cell({ api, col, focused, original, selected }) {
       </div>
     );
   }
-  const { Renderer } = col;
   return (
     <div
       aria-colindex={col.ariaIndex}
-      className="lf-table-cell"
+      className="lf-table-gridcell"
       data-align={col.column.align}
       data-col-index={col.index}
       data-col-key={col.key}
@@ -59,17 +57,14 @@ function Cell({ api, col, focused, original, selected }) {
       style={col.style}
       tabIndex={focused ? 0 : -1}
     >
-      <span className="lf-table-cell-content">
-        <Renderer
-          column={col.column}
-          components={api.components}
-          methods={api.methods}
-          onEvent={onEvent}
-          row={original}
-          rowKey={api.config.getKey(original)}
-          value={col.accessor(original)}
-        />
-      </span>
+      {renderCell({
+        column: col.column,
+        row: original,
+        rowKey: api.config.getKey(original),
+        methods: api.methods,
+        components: api.components,
+        onEvent: api.onCellEvent,
+      })}
     </div>
   );
 }

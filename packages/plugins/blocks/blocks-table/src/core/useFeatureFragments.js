@@ -24,7 +24,8 @@ const EMPTY = [];
 // - `leadingColumns`: special columns rendered first in the start-pinned region (the selection
 //   checkbox; later a drag handle or expander),
 // - `regions.top` / `regions.bottom`: elements rendered above or below the grid inside the table
-//   root (toolbar, bulk bar, summary footer, pagination).
+//   root (toolbar, bulk bar, pagination),
+// - `rowRange: { start, end }`: the slice of the row model the grid shows (a page).
 function useFeatureFragments(ctx) {
   const fragments = features.map((feature) => feature.useFeature?.(ctx) ?? null);
   const leadingParts = fragments.map((fragment) => fragment?.leadingColumns ?? EMPTY);
@@ -36,7 +37,8 @@ function useFeatureFragments(ctx) {
     if (fragment?.regions?.top) top.push({ name, element: fragment.regions.top });
     if (fragment?.regions?.bottom) bottom.push({ name, element: fragment.regions.bottom });
   });
-  return { leadingColumns, regions: { top, bottom } };
+  const rowRange = fragments.find((fragment) => fragment?.rowRange)?.rowRange ?? null;
+  return { leadingColumns, regions: { top, bottom }, rowRange };
 }
 
 export default useFeatureFragments;
