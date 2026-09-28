@@ -1,0 +1,158 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { serializer } from '@lowdefy/helpers';
+import { WebParser } from '@lowdefy/operators';
+
+import Actions from './Actions.js';
+import DependencyTracker from './tracking/DependencyTracker.js';
+import Slots from './Slots.js';
+import Requests from './Requests.js';
+import State from './State.js';
+import WebSockets from './WebSockets.js';
+
+const blockData = (config) => {
+  const {
+    slots,
+    blockId,
+    blocks,
+    class: blockClass,
+    events,
+    field,
+    id,
+    layout,
+    loading,
+    pageId,
+    properties,
+    requests,
+    required,
+    skeleton,
+    style,
+    subscriptions,
+    type,
+    validate,
+    visible,
+  } = config;
+  const result = {
+    slots,
+    blockId,
+    blocks,
+    class: blockClass,
+    events,
+    field,
+    id,
+    layout,
+    loading,
+    pageId,
+    properties,
+    requests,
+    required,
+    skeleton,
+    style,
+    subscriptions,
+    type,
+    validate,
+    visible,
+  };
+  // Preserve ~k (configKey) for error tracing - it's non-enumerable so must be copied explicitly
+  if (config['~k']) {
+    Object.defineProperty(result, '~k', {
+      value: config['~k'],
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
+  }
+  return result;
+};
+
+// Builds an engine context around one root block: the page's root block for a
+// page context, and a block-less root carrying the app events for the app context.
+function createContext({ config, jsMap, lowdefy }) {
+  const { id } = config;
+  const ctx = {
+    id,
+    pageId: config.pageId,
+    eventLog: [],
+    jsMap,
+    requests: {},
+    state: {},
+    _internal: {
+      lowdefy,
+      // Config object reference for dynamic page memoization — identity marks
+      // which fetch this context was built from.
+      pageConfig: config,
+      // The read recorder of the block evaluating itself, or null. Managed by DependencyTracker.
+      readRecorder: null,
+      rootBlock: blockData(config), // filter block to prevent circular structure
+      update: () => {}, // Initialize update since Requests might call it during context creation
+      // React updaters register here per block id when the context's Block
+      // components mount — scoped per context so rebuilding over a live
+      // context (dynamic page navigation, reset) never notifies the previous
+      // context's still-mounted components.
+      updaters: {},
+    },
+  };
+  const _internal = ctx._internal;
+  _internal.DependencyTracker = new DependencyTracker(ctx);
+  _internal.parser = new WebParser({ context: ctx, operators: lowdefy._internal.operators });
+  _internal.State = new State(ctx);
+  _internal.Actions = new Actions(ctx);
+  _internal.Requests = new Requests(ctx);
+  _internal.WebSockets = new WebSockets(ctx);
+  _internal.RootSlots = new Slots({
+    slots: { root: { blocks: [_internal.rootBlock] } },
+    context: ctx,
+  });
+  _internal.RootSlots.init(serializer.copy(ctx.state));
+  // update({ changes }) is a dependency-tracked pass; a bare update() is a full pass.
+  _internal.update = (options) => {
+    _internal.RootSlots.update(options);
+  };
+  _internal.runOnInit = async (progress) => {
+    progress();
+    if (!_internal.onInitDone) {
+      await _internal.RootSlots.slots.root.blocks[0].triggerEvent({
+        name: 'onInit',
+        progress,
+      });
+      _internal.update();
+      _internal.State.freezeState();
+      _internal.onInitDone = true;
+    }
+  };
+  _internal.runOnInitAsync = async (progress) => {
+    if (_internal.onInitDone && !_internal.onInitAsyncDone) {
+      await _internal.RootSlots.slots.root.blocks[0].triggerEvent({
+        name: 'onInitAsync',
+        progress,
+      });
+      _internal.onInitAsyncDone = true;
+    }
+  };
+  // Page lifecycle events (onVisible, onHidden, onOnline, onOffline, onResize) are
+  // triggered on the page's root block by browser listeners attached in the client.
+  _internal.triggerPageEvent = ({ name, event, progress = () => undefined }) =>
+    _internal.RootSlots.slots.root.blocks[0].triggerEvent({
+      name,
+      event,
+      progress,
+    });
+  ctx._internal.update();
+  return ctx;
+}
+
+export default createContext;
