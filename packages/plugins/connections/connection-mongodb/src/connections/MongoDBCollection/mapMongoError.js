@@ -17,7 +17,9 @@
 import { ServiceError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
-const DRIVER_ERROR_NAMES = new Set(['MongoServerError', 'MongoError']);
+// MongoBulkWriteError carries the code of the first failed write, and its message quotes
+// the document values like any other server error.
+const DRIVER_ERROR_NAMES = new Set(['MongoServerError', 'MongoError', 'MongoBulkWriteError']);
 
 // The keys of keyPattern name the indexed fields. keyValue is never read here -
 // it holds the caller's document values, which must not reach the browser.
