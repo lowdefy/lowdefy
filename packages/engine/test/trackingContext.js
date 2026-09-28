@@ -53,6 +53,8 @@ const stubDeclarations = {
     objectReadKeys({ arrayIndices, namespace: 'global', params }),
   _if_none: 'pure',
   _json: 'pure',
+  _media: ({ arrayIndices, params }) =>
+    objectReadKeys({ arrayIndices, namespace: 'media', params }),
   _mql: 'untracked',
   _not: 'pure',
   _regex: locationReadKeys,

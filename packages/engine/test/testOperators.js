@@ -6,6 +6,7 @@ import { _event as _event } from '@lowdefy/operators-js/operators/client';
 import { _global as _global } from '@lowdefy/operators-js/operators/client';
 import { _if_none as _if_none } from '@lowdefy/operators-js/operators/client';
 import { _json as _json } from '@lowdefy/operators-js/operators/client';
+import { _media as _media } from '@lowdefy/operators-js/operators/client';
 import { _mql as _mql } from '@lowdefy/operators-mql/operators/client';
 import { _not as _not } from '@lowdefy/operators-js/operators/client';
 import { _regex as _regex } from '@lowdefy/operators-js/operators/client';
@@ -23,6 +24,7 @@ export default {
   _global,
   _if_none,
   _json,
+  _media,
   _mql,
   _not,
   _regex,

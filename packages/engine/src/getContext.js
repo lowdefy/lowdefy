@@ -20,9 +20,11 @@ import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions.js';
 import DependencyTracker from './tracking/DependencyTracker.js';
+import readMediaViewport from './tracking/readMediaViewport.js';
 import Slots from './Slots.js';
 import Requests from './Requests.js';
 import State from './State.js';
+import updateMedia from './tracking/updateMedia.js';
 import WebSockets from './WebSockets.js';
 
 const blockData = (config) => {
@@ -101,6 +103,8 @@ function getContext({
     // memoize context if already created, eg between page transitions, unless the reset flag is
     // raised. A full pass: this render-time update is how changes with no reporting hook reach the
     // page - user, i18n, theme, menus, inputs and the URL.
+    // The pass reads the current viewport, which a resize while the page was away changed.
+    lowdefy.contexts[id]._internal.media = readMediaViewport({ lowdefy });
     lowdefy.contexts[id]._internal.update();
     return lowdefy.contexts[id];
   }
@@ -126,6 +130,9 @@ function getContext({
       // Config object reference for dynamic page memoization — identity marks
       // which fetch this context was built from.
       pageConfig: config,
+      // The viewport the page's blocks last evaluated _media against, or null without a window.
+      // updateMedia diffs a resize against it.
+      media: readMediaViewport({ lowdefy }),
       // The read recorder of the block evaluating itself, or null. Managed by DependencyTracker.
       readRecorder: null,
       rootBlock: blockData(config), // filter block to prevent circular structure
@@ -174,6 +181,8 @@ function getContext({
       _internal.onInitAsyncDone = true;
     }
   };
+  // Called by the client's debounced resize listener.
+  _internal.updateMedia = () => updateMedia({ context: ctx });
   // Page lifecycle events (onVisible, onHidden, onOnline, onOffline, onResize) are
   // triggered on the page's root block by browser listeners attached in the client.
   _internal.triggerPageEvent = ({ name, event, progress = () => undefined }) =>
