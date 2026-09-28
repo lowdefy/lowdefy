@@ -85,15 +85,18 @@ function TableLightBlock({
     properties.columns,
     properties.defaultColumn,
     properties.rowRules,
+    properties.user,
   ]);
   const config = useMemo(() => {
     const normalized = normalizeColumns({
       columns: properties.columns,
       defaultColumn: properties.defaultColumn,
     });
+    // Blocks do not see the session: `$user` in conditions reads the `user` property.
     const columns = compileColumns({
       columns: normalized.columns,
       columnsByKey: normalized.columnsByKey,
+      user: properties.user,
     });
     return {
       columns,
@@ -102,6 +105,7 @@ function TableLightBlock({
       rowRules: compileRules({
         rules: properties.rowRules,
         columnsByKey: normalized.columnsByKey,
+        user: properties.user,
       }),
     };
   }, [configKey]);
