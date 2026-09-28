@@ -141,6 +141,7 @@ const snapshotTypesMap = {
     MongoDBDeleteOne: { package: '@lowdefy/connection-mongodb' },
     MongoDBDeleteMany: { package: '@lowdefy/connection-mongodb' },
     MongoDBAggregate: { package: '@lowdefy/connection-mongodb' },
+    MongoDBTableQuery: { package: '@lowdefy/connection-mongodb' },
     KnexRaw: { package: '@lowdefy/connection-knex' },
     RedisGet: { package: '@lowdefy/connection-redis' },
     RedisSet: { package: '@lowdefy/connection-redis' },
