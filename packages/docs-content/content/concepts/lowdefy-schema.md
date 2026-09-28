@@ -304,6 +304,7 @@ The `~ignoreBuildChecks` property suppresses build-time validation errors and wa
 | `step-refs` | Undefined `_step` reference warnings |
 | `link-refs` | Invalid Link action page reference warnings |
 | `request-refs` | Invalid Request action reference warnings |
+| `callmethod-refs` | CallMethod actions targeting blocks not defined on the page |
 | `connection-refs` | Nonexistent connection ID references |
 | `types` | All type validation (blocks, operators, actions, requests, connections) |
 | `schema` | JSON schema validation errors |

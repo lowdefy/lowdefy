@@ -16,6 +16,8 @@ By default when a page is opened, no validation flags are set on any input field
 
 The `ResetValidation` action `blockIds` or `regex` params are used to limit which blocks validation errors and warnings should be reset.
 
+When the action runs in a list row, `$` in a blockId is replaced with the row index, as in `SetState` and `CallMethod`, so `list.$.name` matches the `name` input in the same row. `$` in a `regex` pattern keeps its regex meaning.
+
 #### Parameters
 
 ###### void
@@ -28,7 +30,7 @@ A blockId of the block for which to lower validation flags.
 An array of blockIds of the blocks for which to lower validation flags.
 
 ###### object
-  - `blockId?: string|string[]`: A blockId or an array of the blockIds of the blocks for which to lower validation flags
+  - `blockIds?: string|string[]`: A blockId or an array of the blockIds of the blocks for which to lower validation flags
   - `regex?: string|string[]`: A regex string pattern or an array of regex string patterns to match the blockIds for which to lower validation flags.
 
 #### Examples
