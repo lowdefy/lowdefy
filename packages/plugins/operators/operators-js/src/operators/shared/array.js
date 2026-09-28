@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { runInstance } from '@lowdefy/operators';
+import { runClass, runInstance } from '@lowdefy/operators';
 
 const prep = (args) => {
   if (type.isNone(args[0])) {
@@ -25,6 +25,7 @@ const prep = (args) => {
 };
 
 const meta = {
+  at: { namedArgs: ['on', 'index'], prep, validTypes: ['array', 'object'] },
   concat: { prep, validTypes: ['array'] },
   copyWithin: {
     namedArgs: ['on', 'target', 'start', 'end'],
@@ -56,13 +57,40 @@ const meta = {
     prep,
     validTypes: ['array', 'object'],
   },
+  findLast: {
+    namedArgs: ['on', 'callback'],
+    prep,
+    validTypes: ['array', 'object'],
+  },
+  findLastIndex: {
+    namedArgs: ['on', 'callback'],
+    prep,
+    validTypes: ['array', 'object'],
+  },
   flat: { namedArgs: ['on', 'depth'], prep, validTypes: ['array', 'object'] },
+  flatMap: {
+    namedArgs: ['on', 'callback'],
+    prep,
+    validTypes: ['array', 'object'],
+  },
+  // Array.from is static; it builds a new array, e.g. of length n from { length: n }.
+  from: { namedArgs: ['on', 'callback'], validTypes: ['array', 'object'] },
   includes: { namedArgs: ['on', 'value'], prep, validTypes: ['array', 'object'] },
   indexOf: { namedArgs: ['on', 'value'], prep, validTypes: ['array', 'object'] },
   join: { namedArgs: ['on', 'separator'], prep, validTypes: ['array', 'object'] },
   lastIndexOf: { namedArgs: ['on', 'value'], prep, validTypes: ['array', 'object'] },
   map: {
     namedArgs: ['on', 'callback'],
+    prep,
+    validTypes: ['array', 'object'],
+  },
+  // Methods that change the array in place return the changed array, like splice, since the
+  // native return values (the new length, or the removed item) are rarely useful in config.
+  pop: { prep, validTypes: ['array', 'null'], singleArg: true, returnInstance: true },
+  push: {
+    namedArgs: ['on'],
+    spreadArgs: 'items',
+    returnInstance: true,
     prep,
     validTypes: ['array', 'object'],
   },
@@ -77,6 +105,7 @@ const meta = {
     validTypes: ['array', 'object'],
   },
   reverse: { prep, validTypes: ['array', 'null'], singleArg: true },
+  shift: { prep, validTypes: ['array', 'null'], singleArg: true, returnInstance: true },
   slice: { namedArgs: ['on', 'start', 'end'], prep, validTypes: ['array', 'object'] },
   some: {
     namedArgs: ['on', 'callback'],
@@ -91,17 +120,31 @@ const meta = {
     prep,
     validTypes: ['array', 'object'],
   },
+  unshift: {
+    namedArgs: ['on'],
+    spreadArgs: 'items',
+    returnInstance: true,
+    prep,
+    validTypes: ['array', 'object'],
+  },
   length: { validTypes: ['array', 'null'], prep, property: true },
-  // some,
-  // forEach,
-  // pop: { namedArgs: ['on'] },
-  // push: { namedArgs: ['on'] },
-  // shift: { namedArgs: ['on'] },
-  // toString,
-  // unshift: { namedArgs: ['on'] },
+};
+
+const functions = {
+  from: (arrayLike, callback) => Array.from(arrayLike, callback),
 };
 
 function _array({ params, location, methodName }) {
+  if (methodName === 'from') {
+    return runClass({
+      functions,
+      location,
+      meta,
+      methodName,
+      operator: '_array',
+      params,
+    });
+  }
   return runInstance({
     location,
     meta,
