@@ -17,16 +17,16 @@
 import React, { useEffect } from 'react';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
-import { useEditor, EditorContent } from '@tiptap/react';
+import { EditorContent } from '@tiptap/react';
 import { mergeAttributes } from '@tiptap/core';
 import Mention from '@tiptap/extension-mention';
 
 import Label from '@lowdefy/blocks-antd/blocks/Label/Label.js';
 
 import PopoverMenu from '../utils/PopoverMenu.js';
-import buildExtensions from '../utils/buildExtensions.js';
 import computeHeightStyle from '../utils/computeHeightStyle.js';
 import statusClass from '../utils/statusClass.js';
+import useTiptapEditor from '../utils/useTiptapEditor.js';
 import suggestion from './suggestion.js';
 import useGroupMembersPopover from './useGroupMembersPopover.js';
 import useTiptapMentionState from './useTiptapMentionState.js';
@@ -156,29 +156,23 @@ const TiptapMentionInput = ({
     suggestion: suggestion({ methods, char, allowSpaces, limit }),
   });
 
-  const extensions = buildExtensions({
-    properties,
-    insertImage,
-    mentionExtension,
-    uploadEnabled,
-  });
-
   const heightStyle = computeHeightStyle({
     rows: properties.rows,
     autoSize: properties.autoSize,
   });
 
-  const editor = useEditor({
+  const editor = useTiptapEditor({
+    disabled,
     editorProps: {
       items: type.isArray(properties.mentions?.options) ? properties.mentions.options : [],
     },
-    extensions,
-    content: value?.html || '',
-    editable: () => !disabled,
-    onUpdate: ({ editor }) => {
-      emit(editor);
-      methods.triggerEvent({ name: 'onChange' });
-    },
+    emit,
+    insertImage,
+    mentionExtension,
+    methods,
+    properties,
+    uploadEnabled,
+    value,
   });
 
   useGroupMembersPopover({ editor, properties });
@@ -236,55 +230,6 @@ const TiptapMentionInput = ({
       });
     }
   }, []);
-
-  useEffect(() => {
-    if (!editor) return;
-    methods.registerMethod('clear', () => {
-      editor.commands.clearContent();
-      emit(editor);
-    });
-    methods.registerMethod('setContent', (args) => {
-      editor.commands.setContent(args?.html ?? '');
-      emit(editor);
-    });
-    methods.registerMethod('focus', () => {
-      editor.commands.focus();
-    });
-  }, [editor]);
-
-  // External value.html → editor sync. One-way only: we read value.html and
-  // push it into the editor with setContent(..., false) so tiptap's onUpdate
-  // does not fire. No write-back via emit() — that would race with concurrent
-  // SetState calls (child effects fire before parent effects, so a sibling's
-  // onMount SetState could be overwritten by our derived emit). Derived
-  // fields (text/markdown/fileList/mentions) are populated on user interaction
-  // via onUpdate; downstream consumers of seeded content should read
-  // value.html directly, or include the fields they need in their SetState
-  // payload.
-  useEffect(() => {
-    if (!editor) return;
-    const next = value?.html ?? '';
-    const current = editor.getHTML();
-    if (next !== current) {
-      editor.commands.setContent(next, false);
-    }
-  }, [value?.html, editor]);
-
-  useEffect(() => {
-    if (!editor) return;
-    editor.setOptions({ editable: !disabled });
-  }, [editor, disabled]);
-
-  useEffect(() => {
-    if (!editor) return;
-    const placeholderExt = editor.extensionManager.extensions.find(
-      (extension) => extension.name === 'placeholder'
-    );
-    if (placeholderExt) {
-      placeholderExt.options.placeholder = properties.placeholder ?? '';
-      editor.view.dispatch(editor.state.tr);
-    }
-  }, [editor, properties.placeholder]);
 
   const wrapperClass = [
     'tiptap-wrapper',
