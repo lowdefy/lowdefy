@@ -126,6 +126,37 @@ _ref:
                         # ...
             ```
 
+            Inside the `catch` list, the [`_error`](/_error) operator returns the error that sent the event there — the error of the failed action, or of a control whose operators failed. Outside a `catch` list it returns `null`. An error from the server carries the message "Something went wrong." unless the endpoint author wrote it, and keeps its `code` and `statusCode`, so a `catch` list can branch on them. An error raised in the browser keeps its real message, and carries `actionId`, the id of the action that failed.
+
+            ###### Branch on the error in a catch list:
+            ```yaml
+            events:
+              onClick:
+                try:
+                  - id: save
+                    type: Request
+                    params: save_customer
+                    messages:
+                      error: false
+                catch:
+                  - :if:
+                      _eq:
+                        - _error: statusCode
+                        - 409
+                    :then:
+                      - id: conflict_message
+                        type: DisplayMessage
+                        params:
+                          status: warning
+                          content: Someone else changed this customer. Reload the page and try again.
+                    :else:
+                      - id: error_message
+                        type: DisplayMessage
+                        params:
+                          status: error
+                          content: Could not save the customer.
+            ```
+
             ## Control flow in action lists
 
             An item in an action list is either an action (`id` and `type`) or a control. Action lists support the routine controls [`:if`](/:if), [`:switch`](/:switch) and [`:return`](/:return):

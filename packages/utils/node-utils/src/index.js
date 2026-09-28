@@ -16,6 +16,7 @@
 
 import cleanDirectory from './cleanDirectory.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
+import createSecretScrubber from './createSecretScrubber.js';
 import findAvailablePort from './findAvailablePort.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
@@ -29,6 +30,7 @@ import writeFileIfChanged from './writeFileIfChanged.js';
 export {
   cleanDirectory,
   copyFileOrDirectory,
+  createSecretScrubber,
   findAvailablePort,
   getFileExtension,
   getFileSubExtension,

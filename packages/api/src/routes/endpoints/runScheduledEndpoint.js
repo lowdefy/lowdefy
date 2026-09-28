@@ -63,6 +63,7 @@ async function runScheduledEndpoint(context, { endpointId, cron, environment }) 
     steps: {},
     payload: schedule.payload ?? {},
     arrayIndices: [],
+    error: null,
     items: {},
     state: {},
     endpointDepth: 0,

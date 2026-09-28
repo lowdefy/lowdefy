@@ -16,6 +16,8 @@
 
 import { serializer } from '@lowdefy/helpers';
 
+import decodeServerError from './decodeServerError.js';
+
 async function callAPIHandler(context, { blockId, params }) {
   if (!context._internal.lowdefy.apiResponses[params.endpointId]) {
     context._internal.lowdefy.apiResponses[params.endpointId] = [];
@@ -64,8 +66,11 @@ async function callAPIHandler(context, { blockId, params }) {
   }
 
   const { error, response, status, success } = apiResponse;
+  // Decoded once so the stored and the thrown error are the same object: the
+  // dev error is keyed by that object.
+  const decodedError = decodeServerError(error);
 
-  api.error = serializer.deserialize(error);
+  api.error = decodedError;
   api.loading = false;
   api.response = serializer.deserialize(response);
   api.status = status;
@@ -76,7 +81,7 @@ async function callAPIHandler(context, { blockId, params }) {
   context._internal.update();
 
   if (!success) {
-    throw serializer.deserialize(error);
+    throw decodedError;
   }
 
   return api;

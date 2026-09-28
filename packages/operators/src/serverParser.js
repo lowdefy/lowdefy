@@ -32,6 +32,7 @@ class ServerParser {
   parse({
     args,
     arrayIndices = [],
+    error,
     input,
     items,
     location,
@@ -54,7 +55,16 @@ class ServerParser {
     // means they only pass what they change, so no frame field can be dropped on the way in.
     const parser = {
       parse: (callOptions) =>
-        this.parse({ arrayIndices, items, location, payload, state, steps, ...callOptions }),
+        this.parse({
+          arrayIndices,
+          error,
+          items,
+          location,
+          payload,
+          state,
+          steps,
+          ...callOptions,
+        }),
     };
     const reviver = (_, value) => {
       if (!type.isObject(value)) return value;
@@ -72,6 +82,7 @@ class ServerParser {
           args,
           arrayIndices,
           env: this.env,
+          error,
           i18n: this.i18n,
           items,
           jsMap: this.jsMap,

@@ -31,6 +31,7 @@ import getSession from './auth/session.js';
 import getStrategyCaller from './auth/strategies.js';
 import i18nConfig from '../build/i18n.js';
 import logRequest from './log/logRequest.js';
+import scrubSecrets from './scrubSecrets.js';
 import notifications, {
   interpolateProperties,
   renderEmail,
@@ -93,6 +94,7 @@ async function createLowdefyContext({ c }) {
     interpolateProperties,
     jsMap,
     logger: createLogger(),
+    mode: 'dev',
     notifications,
     operators,
     renderEmail,
@@ -101,6 +103,7 @@ async function createLowdefyContext({ c }) {
       method: c.req.method,
       hostname: c.req.header('host'),
     },
+    scrubSecrets,
     secrets,
     websockets,
   };

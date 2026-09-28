@@ -1371,6 +1371,9 @@ importers:
       '@lowdefy/ajv':
         specifier: 6.0.0
         version: link:../../../utils/ajv
+      '@lowdefy/errors':
+        specifier: 6.0.0
+        version: link:../../../utils/errors
       '@swc/cli':
         specifier: 0.8.1
         version: 0.8.1(@swc/core@1.15.32)

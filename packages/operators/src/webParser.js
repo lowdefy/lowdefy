@@ -24,7 +24,7 @@ class WebParser {
     this.parse = this.parse.bind(this);
   }
 
-  parse({ actions, args, arrayIndices, event, input, location, operatorPrefix = '_' }) {
+  parse({ actions, args, arrayIndices, error, event, input, location, operatorPrefix = '_' }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
@@ -42,7 +42,7 @@ class WebParser {
     // means they only pass what they change, so no frame field can be dropped on the way in.
     const parser = {
       parse: (callOptions) =>
-        this.parse({ actions, arrayIndices, event, location, ...callOptions }),
+        this.parse({ actions, arrayIndices, error, event, location, ...callOptions }),
     };
     const {
       apiResponses,
@@ -79,6 +79,7 @@ class WebParser {
           arrayIndices,
           apiResponses,
           basePath,
+          error,
           event,
           eventLog: this.context.eventLog,
           globals: _internal.globals,
