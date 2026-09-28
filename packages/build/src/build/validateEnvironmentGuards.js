@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
-import { collectEnvironmentGuards } from '@lowdefy/node-utils';
+import collectEnvironmentGuards from '@lowdefy/node-utils/collectEnvironmentGuards.js';
 
 const guardKinds = ['secrets', 'env'];
 
