@@ -18,7 +18,7 @@ import { serve } from '@hono/node-server';
 import * as Sentry from '@sentry/node';
 import { WebSocketServer } from 'ws';
 
-import { checkEnvironmentGuards } from '@lowdefy/node-utils';
+import checkEnvironmentGuards from '@lowdefy/node-utils/checkEnvironmentGuards.js';
 
 import initSentryServer from '../lib/server/sentry/initSentry.js';
 

@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
-import { checkEnvironmentGuards } from '@lowdefy/node-utils';
+import checkEnvironmentGuards from '@lowdefy/node-utils/checkEnvironmentGuards.js';
 
 import getEnvironmentNames from '../utils/getEnvironmentNames.js';
 import validateEnvironmentGuards from './validateEnvironmentGuards.js';
