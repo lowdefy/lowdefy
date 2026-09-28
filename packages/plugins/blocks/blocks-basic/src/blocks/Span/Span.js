@@ -15,13 +15,15 @@
 */
 
 import React from 'react';
-import { withBlockDefaults } from '@lowdefy/block-utils';
+import { isEventFromDomDescendant, withBlockDefaults } from '@lowdefy/block-utils';
 
 const Span = ({ blockId, classNames, content, events, methods, properties, styles }) => (
   <span
     id={blockId}
     data-testid={blockId}
-    onClick={() => methods.triggerEvent({ name: 'onClick' })}
+    onClick={(event) => {
+      if (isEventFromDomDescendant(event)) methods.triggerEvent({ name: 'onClick' });
+    }}
     className={classNames?.element}
     style={{ outline: 'none', cursor: events.onClick && 'pointer', ...styles?.element }}
   >
