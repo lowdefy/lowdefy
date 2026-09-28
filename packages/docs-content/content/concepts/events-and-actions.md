@@ -314,7 +314,7 @@ events:
         content: You are offline, changes will not be saved.
 ```
 
-The `onResize` event is triggered when the window is resized, debounced by 200ms so that the actions only run once the user stops resizing. The `_event` object contains the `width` and `height` of the window.
+The `onResize` event is triggered when the window is resized, debounced by 150ms so that the actions only run once the user stops resizing. Blocks that use the [`_media`](/_media) operator are re-evaluated for the new window size before the `onResize` actions run. The `_event` object contains the `width` and `height` of the window.
 
 ```yaml
 events:
@@ -360,5 +360,5 @@ See additional action type available under the Actions tab in the menu.
 - The `onMountAsync` event is triggered the every time a block is mounted, after `onMount` has completed, and does not keep the block in loading.
 - The `onVisible` and `onHidden` events are triggered when the browser tab is shown or hidden, or when the window gains or loses focus, coalesced over 300ms.
 - The `onOnline` and `onOffline` events are triggered when the browser reports that the network connection was regained or lost.
-- The `onResize` event is triggered when the window is resized, debounced by 200ms.
+- The `onResize` event is triggered when the window is resized, debounced by 150ms.
 - Browser lifecycle events are never triggered on the initial page load, and are removed when the user navigates away from the page.
