@@ -432,13 +432,26 @@ test.describe('Table enrichment', () => {
     await options.press('Enter');
     await options.fill('enterprise');
     await options.press('Enter');
-    // Each option starts on its own tone; a colour select changes one.
-    await expect(picker(page).locator('.lf-enrich-option-chip')).toHaveText(['smb', 'enterprise']);
-    await expect(picker(page).locator('[data-lf-picker-option] .ant-select')).toHaveText([
-      'blue',
-      'green',
-    ]);
-    await pick(page, picker(page).getByLabel('Colour of enterprise'), 'red');
+    // One control: each option is a chip in its own tone (listed once, no separate colour
+    // selects), and its colour button picks another tone.
+    const chips = picker(page).locator('[data-lf-picker-option]');
+    await expect(chips.locator('.lf-enrich-option-text')).toHaveText(['smb', 'enterprise']);
+    await expect(picker(page).getByText('enterprise', { exact: true })).toHaveCount(1);
+    await expect(chips.nth(0)).toHaveAttribute('data-color', 'blue');
+    await expect(chips.nth(1)).toHaveAttribute('data-color', 'green');
+    await picker(page).getByRole('button', { name: 'Colour of enterprise: green' }).click();
+    await page.getByRole('group', { name: 'Colours for enterprise' }).getByTitle('red').click();
+    await expect(chips.nth(1)).toHaveAttribute('data-color', 'red');
+    await expect(page.getByRole('group', { name: 'Colours for enterprise' })).toBeHidden();
+    // An option can be removed and typed again; Backspace in the empty input removes the last.
+    await options.fill('mid-market');
+    await options.press('Enter');
+    await expect(chips.nth(2)).toHaveAttribute('data-color', 'green');
+    await picker(page).getByRole('button', { name: 'Remove mid-market' }).click();
+    await options.fill('mid-market');
+    await options.press('Enter');
+    await options.press('Backspace');
+    await expect(chips.locator('.lf-enrich-option-text')).toHaveText(['smb', 'enterprise']);
     expect((await previewConfig(page)).inputs).toEqual({
       company: { column: 'company' },
       domain: { column: 'domain' },
