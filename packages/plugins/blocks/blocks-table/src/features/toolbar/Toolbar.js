@@ -18,6 +18,7 @@ import React from 'react';
 import { Button } from 'antd';
 
 import DensityToggle from './DensityToggle.js';
+import ExportButton from './ExportButton.js';
 import FilterButton from './FilterButton.js';
 import LazyColumnManagerPopover from '../columnManager/LazyColumnManagerPopover.js';
 import GroupButton from './GroupButton.js';
@@ -71,16 +72,7 @@ function Toolbar({ api, searchRef, toolbar }) {
               Columns
             </Button>
           ) : null}
-          {toolbar.export ? (
-            <Button
-              data-lf-toolbar-button="export"
-              icon={<ToolbarIcon api={api} name="download" />}
-              onClick={() => api.actions.exportCsv({ filename: `${api.blockId}.csv` })}
-              size="small"
-            >
-              Export
-            </Button>
-          ) : null}
+          {toolbar.export ? <ExportButton api={api} /> : null}
           {api.features.toolbarItems.map((Item, index) => (
             <Item api={api} key={index} />
           ))}

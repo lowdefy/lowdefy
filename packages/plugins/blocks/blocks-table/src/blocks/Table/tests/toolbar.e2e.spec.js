@@ -15,7 +15,9 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 // The toolbar renders in the table's top region as [data-lf-toolbar]; buttons carry
 // data-lf-toolbar-button, quick filter chips data-lf-quick-filter. Popovers render in the body.
@@ -37,7 +39,7 @@ async function addFromList(page, name, label) {
 
 test.describe('Table toolbar', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'toolbar');
+    await openTablePage(page, 'toolbar');
     await expect(toolbar(page, 'tb')).toBeVisible();
   });
 

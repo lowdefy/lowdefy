@@ -14,12 +14,18 @@
   limitations under the License.
 */
 
+import { nunjucksFunction } from '@lowdefy/nunjucks';
+
 import compileColumns from './compileColumns.js';
 import normalizeColumns from './normalizeColumns.js';
 
 function compile(columns) {
   const normalized = normalizeColumns({ columns });
-  return compileColumns({ columns: normalized.columns, columnsByKey: normalized.columnsByKey });
+  return compileColumns({
+    columns: normalized.columns,
+    columnsByKey: normalized.columnsByKey,
+    compileTemplate: nunjucksFunction,
+  });
 }
 
 test('compileColumns sets the cell layout class from wrap, ellipsis, type and align', () => {

@@ -175,7 +175,24 @@ Each button or menu item fires the block event named by its `eventName`, with `{
 - A column with `aggregate` adds a summary row: `sum`, `avg`, `min`, `max`, `count`, `countDistinct`, `countEmpty`, `countNotEmpty`, `percentEmpty`, `earliest` or `latest`, calculated over every row. `summary: false` hides it.
 - Pages show only when there are more rows than `pageSize` (default 50). `pagination: false` shows every row; `pagination: true` always shows the pager.
 - `height` fixes the body height: rows scroll under a sticky header, and the summary row stays in view.
-- `size` is `compact`, `default` or `comfortable`. `bordered`, `loading` and `emptyText` do what they say.
+- `size` is `compact`, `default` or `comfortable`. `bordered` and `emptyText` (default "No rows") do what they say.
+
+## Loading states
+
+TableLight shows loading the way [`Table`](/TableGuide#loading-states) does, so switching `type` looks the same. With no rows yet and `loading` true (the property, or Lowdefy's own while `onMount` actions run) it shows the real header over skeleton rows shaped like the cells, filling `height` (or 600px) and at most a page. With rows, a refetch keeps them on screen, even while `_request` returns null, and a thin progress bar runs under the header. The skeleton shows after 120 ms and stays at least 300 ms, so fast responses never flash it. There is no spinner overlay.
+
+```yaml
+- id: recent_orders
+  type: TableLight
+  properties:
+    loading:
+      _request_details: recent_orders.0.loading
+    data:
+      _request: recent_orders
+    columns: [number, customer, total]
+```
+
+A block `skeleton` config replaces the table while the block loads, as for any block.
 
 ```yaml
 - id: basic_table
@@ -579,8 +596,8 @@ Each button or menu item fires the block event named by its `eventName`, with `{
 | `size` | string | `"default"` | Row density. Enum: `compact`, `default`, `comfortable`. |
 | `bordered` | boolean | `false` | Draw borders around cells. |
 | `height` | number \| string | - | A fixed body height; the rows scroll under a sticky header and the summary row stays in view. |
-| `emptyText` | string | - | What to show when there are no rows - supports html. |
-| `loading` | boolean | `false` | Show a loading spinner over the table. |
+| `emptyText` | string | - | What to show when there are no rows - supports html. Defaults to "No rows". |
+| `loading` | boolean | `false` | Show the loading state: skeleton rows while there are no rows yet, a progress bar under the header while rows are shown. The rows stay while `data` is null during a refetch. Lowdefy sets loading while onMount actions run. |
 | `pagination` | boolean | - | Pages are shown only when there are more rows than `pageSize`. `false` shows every row on one page; `true` always shows the pager. |
 | `pageSize` | integer | `50` | Rows per page. |
 | `summary` | boolean | `true` | Show the summary row when a column declares an `aggregate`. `false` hides it. |

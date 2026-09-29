@@ -171,4 +171,21 @@ Each button or menu item fires the block event named by its `eventName`, with `{
 - A column with `aggregate` adds a summary row: `sum`, `avg`, `min`, `max`, `count`, `countDistinct`, `countEmpty`, `countNotEmpty`, `percentEmpty`, `earliest` or `latest`, calculated over every row. `summary: false` hides it.
 - Pages show only when there are more rows than `pageSize` (default 50). `pagination: false` shows every row; `pagination: true` always shows the pager.
 - `height` fixes the body height: rows scroll under a sticky header, and the summary row stays in view.
-- `size` is `compact`, `default` or `comfortable`. `bordered`, `loading` and `emptyText` do what they say.
+- `size` is `compact`, `default` or `comfortable`. `bordered` and `emptyText` (default "No rows") do what they say.
+
+## Loading states
+
+TableLight shows loading the way [`Table`](/TableGuide#loading-states) does, so switching `type` looks the same. With no rows yet and `loading` true (the property, or Lowdefy's own while `onMount` actions run) it shows the real header over skeleton rows shaped like the cells, filling `height` (or 600px) and at most a page. With rows, a refetch keeps them on screen, even while `_request` returns null, and a thin progress bar runs under the header. The skeleton shows after 120 ms and stays at least 300 ms, so fast responses never flash it. There is no spinner overlay.
+
+```yaml
+- id: recent_orders
+  type: TableLight
+  properties:
+    loading:
+      _request_details: recent_orders.0.loading
+    data:
+      _request: recent_orders
+    columns: [number, customer, total]
+```
+
+A block `skeleton` config replaces the table while the block loads, as for any block.

@@ -122,7 +122,11 @@ function EditingLayer({ api }) {
         if (target.kind === 'editor') {
           if (!session || target.id !== `editor:${session.id}`) return null;
           return createPortal(
-            <Suspense fallback={null}>
+            <Suspense
+              fallback={
+                <span aria-label="Loading editor" className="lf-table-spinner" role="img" />
+              }
+            >
               <CellEditor api={api} session={session} />
             </Suspense>,
             target.element,

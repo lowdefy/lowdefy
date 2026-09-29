@@ -15,7 +15,9 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 // Grouped tables render one flat list: group header rows carry data-group-key (JSON of the value
 // path), data-group-label and aria-expanded; data rows carry data-row-key. The sticky group
@@ -56,7 +58,7 @@ async function scrollTo(page, blockId, top) {
 
 test.describe('Table grouping', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'grouping');
+    await openTablePage(page, 'grouping');
     await expect(groupRow(page, 'group_single', '["EMEA"]')).toBeVisible();
   });
 

@@ -16,6 +16,9 @@
 
 import React, { useMemo, useRef } from 'react';
 import { useTable } from '@tanstack/react-table';
+import resolveLoadingState from '@lowdefy/blocks-antd/table/resolveLoadingState.js';
+import useHeldRows from '@lowdefy/blocks-antd/table/useHeldRows.js';
+import useSkeletonTiming from '@lowdefy/blocks-antd/table/useSkeletonTiming.js';
 
 import createApi from './createApi.js';
 import createFeatureActions from './createFeatureActions.js';
@@ -71,6 +74,8 @@ function TableRoot({
   value,
 }) {
   const config = useTableConfig({ properties });
+  // Lowdefy's `loading` (onMount actions running, the block's `loading` key) or the property.
+  const loadingSignal = loading === true || properties.loading === true;
   const apiRef = useRef(null);
   if (apiRef.current === null) {
     apiRef.current = createApi({ features });
@@ -78,7 +83,9 @@ function TableRoot({
   }
   const api = apiRef.current;
 
-  const sourceData = useFeatureData({ api, config, properties });
+  // A refetch without holdValue makes `data` null until it lands: the rows on screen stay.
+  const clientData = useHeldRows({ data: properties.data, loading: loadingSignal });
+  const sourceData = useFeatureData({ api, config, data: clientData, properties });
   const previousData = useRef(null);
   const stable = useMemo(
     () =>
@@ -164,6 +171,18 @@ function TableRoot({
   const { leadingColumns, regions, trailingColumns } = fragments;
   const summary = useSummary({ api, config, state, table });
 
+  // D17: which loading state the table is in, and the skeleton's timing.
+  const viewPending = isPending || fragments.pending;
+  const loadingState = resolveLoadingState({
+    loading: loadingSignal || fragments.loading,
+    pending: viewPending || fragments.refreshing,
+    sourceCount: data.length,
+    displayCount: rows.length,
+  });
+  const skeletonPhase = useSkeletonTiming({ active: loadingState === 'initial', id: blockId });
+  const showSkeleton = loadingState === 'initial' || skeletonPhase === 'holding';
+  api.loadingState = showSkeleton ? 'initial' : loadingState;
+
   return (
     <Grid
       api={api}
@@ -171,14 +190,17 @@ function TableRoot({
       classNames={classNames}
       clickable={Boolean(config.rowLink || events.onRowClick)}
       config={config}
+      busy={!showSkeleton && (loadingSignal || fragments.refreshing)}
       headerHeight={headerHeight}
-      isPending={isPending || fragments.pending}
+      isPending={viewPending}
       leadingColumns={leadingColumns}
-      loading={loading === true || properties.loading === true || fragments.loading}
+      loadingState={loadingState}
       regions={regions}
       rowHeight={rowHeight}
       rowHeights={rowHeights}
       rows={rows}
+      showSkeleton={showSkeleton}
+      skeletonHidden={skeletonPhase === 'hidden'}
       state={state}
       strategy={rowWindowStrategy}
       styles={styles}

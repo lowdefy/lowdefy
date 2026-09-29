@@ -15,7 +15,9 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 // Server mode against a mocked request endpoint: page.route answers the table's requests from a
 // synthetic 100k row dataset in the test process, so the tests count requests, delay responses
@@ -129,7 +131,7 @@ async function scrollTo(page, blockId, top) {
 test.describe('Table server mode', () => {
   test('loads the first block and sizes the grid from the total', async ({ page }) => {
     const server = await mockServer(page);
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
     await expect(grid(page, 'table_server')).toHaveAttribute('aria-rowcount', String(TOTAL + 1));
     const [first] = server.for('table_server');
@@ -150,7 +152,7 @@ test.describe('Table server mode', () => {
 
   test('scrolling to the end of 100k rows loads only the blocks it stops on', async ({ page }) => {
     const server = await mockServer(page);
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
     // A fast scroll through the whole table: many range changes, far apart.
     for (let step = 1; step <= 40; step++) {
@@ -169,7 +171,7 @@ test.describe('Table server mode', () => {
 
   test('onRowClick reports the absolute index of a row in a later block', async ({ page }) => {
     await mockServer(page);
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
     await scrollTo(page, 'table_server', 50000 * 40);
     await expect(cell(page, 'table_server', '50002', 'name')).toHaveText('Person 50002');
@@ -181,7 +183,7 @@ test.describe('Table server mode', () => {
 
   test('shows skeleton rows while a block loads', async ({ page }) => {
     await mockServer(page, { delayFor: (payload) => (payload.startRow === 0 ? 20 : 1000) });
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
     await scrollTo(page, 'table_server', 5000 * 40);
     const skeletons = getBlock(page, 'table_server').locator('.lf-table-body [data-skeleton]');
@@ -196,7 +198,7 @@ test.describe('Table server mode', () => {
     const server = await mockServer(page, {
       delayFor: (payload) => (payload.view.sort.length ? 800 : 20),
     });
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
     await scrollTo(page, 'table_server', 2000);
     await getBlock(page, 'table_server').locator('[data-lf-header][data-col-key="amount"]').click();
@@ -223,7 +225,7 @@ test.describe('Table server mode', () => {
     page,
   }) => {
     const server = await mockServer(page);
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
     await clickButton(page, 'server_filter');
     await expect(grid(page, 'table_server')).toHaveAttribute(
@@ -246,7 +248,7 @@ test.describe('Table server mode', () => {
         return sort.desc ? 20 : 1500;
       },
     });
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
     const header = getBlock(page, 'table_server').locator('[data-lf-header][data-col-key="name"]');
     await header.click();
@@ -261,7 +263,7 @@ test.describe('Table server mode', () => {
 
   test('header checkbox selects every matching row as { all: true, except }', async ({ page }) => {
     await mockServer(page);
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
     await getBlock(page, 'table_server').locator('[data-lf-select-all]').click();
     await expect(getBlock(page, 'server_selection_value')).toHaveText(
@@ -290,7 +292,7 @@ test.describe('Table server mode', () => {
 
   test('a filter change ends an all selection', async ({ page }) => {
     await mockServer(page);
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
     await getBlock(page, 'table_server').locator('[data-lf-select-all]').click();
     await expect(getBlock(page, 'server_selection_value')).toContainText(
@@ -304,7 +306,7 @@ test.describe('Table server mode', () => {
 
   test('the fetch sends the selection', async ({ page }) => {
     const server = await mockServer(page);
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
     await row(page, 'table_server', '1').locator('[data-lf-select-cell] input').click();
     await scrollTo(page, 'table_server', 5000 * 40);
@@ -316,7 +318,7 @@ test.describe('Table server mode', () => {
     page,
   }) => {
     await mockServer(page);
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
     await getBlock(page, 'table_server').locator('[data-lf-header][data-col-key="amount"]').click();
     await expect(cell(page, 'table_server', '0', 'amount')).toHaveText('0');
@@ -326,7 +328,7 @@ test.describe('Table server mode', () => {
 
   test('refresh refetches the visible rows and keeps them on screen', async ({ page }) => {
     const server = await mockServer(page, { delayFor: () => 400 });
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
     const before = server.for('table_server').length;
     await clickButton(page, 'server_refresh');
@@ -337,7 +339,7 @@ test.describe('Table server mode', () => {
 
   test('applyTransaction updates a loaded row without a request', async ({ page }) => {
     const server = await mockServer(page);
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     await expect(cell(page, 'table_server', '1', 'name')).toHaveText('Person 00001');
     const before = server.for('table_server').length;
     await clickButton(page, 'server_update');
@@ -353,7 +355,7 @@ test.describe('Table server mode', () => {
 
   test('loads groups first and the rows of a group when it opens', async ({ page }) => {
     const server = await mockServer(page);
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     const block = getBlock(page, 'table_server_grouped');
     const groups = block.locator('.lf-table-body [data-group-key]');
     await expect(groups).toHaveCount(4);
@@ -383,7 +385,7 @@ test.describe('Table server mode', () => {
 
   test('applyTransaction adds, updates and removes client rows by key', async ({ page }) => {
     await mockServer(page);
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     await expect(cell(page, 'table_transactions', '2', 'name')).toHaveText('Two');
     await clickButton(page, 'transactions_apply');
     await expect(cell(page, 'table_transactions', '2', 'name')).toHaveText('Two updated');
@@ -396,7 +398,7 @@ test.describe('Table server mode', () => {
     page,
   }) => {
     await mockServer(page);
-    await navigateToTestPage(page, 'table-server');
+    await openTablePage(page, 'table-server');
     await clickButton(page, 'transactions_apply');
     await expect(cell(page, 'table_transactions', '4', 'name')).toHaveText('Four');
     await cell(page, 'table_transactions', '4', 'name').click();

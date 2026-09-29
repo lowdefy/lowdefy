@@ -101,6 +101,10 @@ Enter, F2, a double-click or typing opens the editor (typing starts with that ch
 - Cmd/Ctrl+V pastes tab-separated text (not with `keyboard: false`), as a spreadsheet copies it, over the cells from the focused one: down the displayed rows and across the visible columns. Each value is coerced to the column type and validated. Cells that are not editable, fail validation or fall outside the table are skipped and reported in `onChange` `skipped`; paste never adds rows.
 - Cmd/Ctrl+C copies the selected rows, or the focused cell, as tab-separated displayed text, also with `keyboard: false`.
 
+## Loading states
+
+TableInput loads like [`Table`](/TableGuide#loading-states): skeleton rows under the real header while `loading` is true and `data` has no rows (also while its code loads), the rows and a progress bar under the header while a refetch runs (the rows stay even while `_request` returns null), and "No rows" (`emptyText`) when there are none. The changes in its value stay through a refetch: they apply by row key to whatever rows `data` holds.
+
 ## Saving
 
 `MongoDBTableChanges` saves the value in one request. Pass the value as the payload and list the columns it may write in `fields`, keyed by the column `field` (the changeset keys; `MongoDBTableQuery` keys its `fields` by column `key` instead):
@@ -399,7 +403,7 @@ Any other save path works too: the value is plain data, so a request can read `_
 | `persist` | object | - | Keep the user's view between visits. Off by default. The selection is never persisted. |
 | `persist.key` | string | - | Storage key (localStorage) or query parameter name (url). |
 | `persist.storage` | string | `"local"` | `local` keeps the view in localStorage (none in a private window or with blocked storage); `url` writes a compact encoding to the query string, replacing history. Enum: `local`, `url`. |
-| `emptyText` | string | `"No data"` | What to show when there are no rows - supports html. |
+| `emptyText` | string | `"No rows"` | What to show when there are no rows - supports html. |
 | `loading` | boolean | `false` | Show the loading state: skeleton rows without data, a progress bar with it. |
 | `pagination` | boolean | `false` | Show the rows in pages of `pageSize` with a pager below the table. Off by default, unlike TableLight: the Table scrolls any number of rows virtually. `true` means what it means on TableLight: pages, with the pager always shown. |
 | `pageSize` | integer | `50` | Rows per page when `pagination` is on (`view.pageSize` overrides it). |

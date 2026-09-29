@@ -24,11 +24,11 @@ import readServerRunCounts from './readServerRunCounts.js';
 import RunRowCell from './RunRowCell.js';
 import AddColumnHeader from './AddColumnHeader.js';
 import TRAILING_COLUMN_KEY from './trailingColumnKey.js';
+import TRAILING_COLUMN_WIDTH from './trailingColumnWidth.js';
 
 import './enrichment.css';
 
 const EMPTY = [];
-const TRAILING_WIDTH = 44;
 const INITIAL_UI = {
   deleting: null,
   details: null,
@@ -75,7 +75,7 @@ function useEnrichment({ api, config, data }) {
         key: TRAILING_COLUMN_KEY,
         special: 'enrich',
         cellClassName: 'lf-enrich-trailing',
-        width: TRAILING_WIDTH,
+        width: TRAILING_COLUMN_WIDTH,
         Header: AddColumnHeader,
         Cell: RunRowCell,
       },

@@ -26,8 +26,11 @@ const EMPTY = [];
 // - `regions.top` / `regions.bottom`: elements rendered above or below the grid inside the table
 //   root (toolbar, bulk bar, pagination),
 // - `loading: true`: the table is waiting for data it cannot show yet (server mode's first block),
-// - `pending: true`: the rows shown are about to be replaced, so they are dimmed (server mode keeps
-//   the previous view's rows until the new view's first block lands).
+// - `pending: true`: the rows shown are about to be replaced by a view change, so the progress bar
+//   runs and they dim after 300 ms (server mode keeps the previous view's rows until the new
+//   view's first block lands),
+// - `refreshing: true`: the rows shown are reloading in the background (a server refresh): the
+//   progress bar runs, the rows never dim.
 function useFeatureFragments(ctx) {
   const features = ctx.api.features.list;
   const fragments = features.map((feature) => feature.useFeature?.(ctx) ?? null);
@@ -44,7 +47,15 @@ function useFeatureFragments(ctx) {
   });
   const loading = fragments.some((fragment) => fragment?.loading === true);
   const pending = fragments.some((fragment) => fragment?.pending === true);
-  return { leadingColumns, loading, pending, regions: { top, bottom }, trailingColumns };
+  const refreshing = fragments.some((fragment) => fragment?.refreshing === true);
+  return {
+    leadingColumns,
+    loading,
+    pending,
+    refreshing,
+    regions: { top, bottom },
+    trailingColumns,
+  };
 }
 
 export default useFeatureFragments;

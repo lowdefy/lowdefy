@@ -31,6 +31,24 @@ function BenchLink({ children, className, onClick, pageId, urlQuery }) {
 
 const components = { Icon: () => null, Link: BenchLink };
 
+// Server mode's `__tableFetch` answered from the generated rows after `window.__bench.latencyMs`
+// (default 50 ms, the server-mode scenario of performance.md §8), in the Request action's result
+// shape.
+function answerFetch({ startRow, endRow }) {
+  const { data } = window.__bench.dataset;
+  window.__bench.fetches += 1;
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        responses: {
+          __tableFetch: { response: [{ rows: data.slice(startRow, endRow), total: data.length }] },
+        },
+      });
+    }, window.__bench.latencyMs ?? 50);
+  });
+}
+
 // Mounts the Table implementation with engine-shaped props: setValue feeds the value back as the
 // `value` prop with its identity kept, as the Lowdefy engine does.
 function BenchTable({ columns, data, methodsRef, properties, strategy }) {
@@ -46,6 +64,7 @@ function BenchTable({ columns, data, methodsRef, properties, strategy }) {
     },
     triggerEvent: ({ name, event }) => {
       window.__bench.events.push({ name, event });
+      if (name === '__tableFetch') return answerFetch(event);
       return { success: true };
     },
   }));

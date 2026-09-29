@@ -262,9 +262,7 @@ test('the picker refuses template tags, and shows why the server refused a colum
   // templates, so the picker refuses it before the server does.
   const prompt = picker(page).locator('[data-lf-picker-template="prompt"] textarea');
   await prompt.fill('Describe {% for x in range(9) %}{{ x }}{% endfor %}');
-  await expect(page.locator('[data-lf-picker-problem]')).toContainText(
-    'template tags ({% %})'
-  );
+  await expect(page.locator('[data-lf-picker-problem]')).toContainText('template tags ({% %})');
   await expect(page.locator('[data-lf-picker-submit]')).toBeDisabled();
   // A title the server takes as too long: the picker shows the server's reason.
   await prompt.fill('Describe the company.');

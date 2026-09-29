@@ -386,9 +386,43 @@ test.describe('TableLight Block', () => {
   });
 
   test('shows the empty text when there are no rows', async ({ page }) => {
-    await expect(getTable(page, 'tl_empty').locator('.ant-table-placeholder')).toHaveText(
+    await expect(getTable(page, 'tl_empty').locator('.ant-table-placeholder')).toContainText(
       'No orders yet'
     );
+  });
+
+  test('loading without rows shows type-shaped skeleton rows under the real header', async ({
+    page,
+  }) => {
+    const table = getTable(page, 'tl_loading');
+    await expect(table).toHaveAttribute('data-loading-state', 'initial');
+    await expect(table).toHaveAttribute('aria-busy', 'true');
+    await expect(table.locator('thead th')).toHaveText(['Number', 'Customer', 'Status', 'Total']);
+    // A 240px body under a 47px header: five 47px rows fill it.
+    await expect(table.locator('tbody tr[data-skeleton]')).toHaveCount(5);
+    await expect(table.locator('tbody tr[data-row-key]')).toHaveCount(0);
+    const row = table.locator('tbody tr[data-skeleton]').first();
+    await expect(row.locator('[data-shape="person"]')).toHaveCount(1);
+    await expect(row.locator('[data-shape="pill"]')).toHaveCount(1);
+    await expect(row.locator('[data-shape="number"][data-align="end"]')).toHaveCount(1);
+    await expect(table.locator('.ant-spin-spinning')).toHaveCount(0);
+    await expect(table.locator('.ant-table-placeholder')).toHaveCount(0);
+  });
+
+  test('loading with rows keeps them and runs a progress bar under the header', async ({
+    page,
+  }) => {
+    const table = getTable(page, 'tl_loading_rows');
+    await expect(table).toHaveAttribute('data-loading-state', 'refreshing');
+    await expect(getRows(page, 'tl_loading_rows')).toHaveText(['A-1']);
+    const bar = table.locator('.lf-table-light-bar');
+    await expect(bar).toBeVisible();
+    const barTop = (await bar.boundingBox()).y;
+    const headerBottom = await table
+      .locator('thead')
+      .evaluate((element) => element.getBoundingClientRect().bottom);
+    expect(Math.abs(barTop + 2 - headerBottom)).toBeLessThan(1);
+    await expect(table.locator('.ant-spin-spinning')).toHaveCount(0);
   });
 
   test('a Table-only key stops the block from rendering', async ({ page }) => {

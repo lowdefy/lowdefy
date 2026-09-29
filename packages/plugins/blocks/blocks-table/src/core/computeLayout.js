@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import distributeFlex from './distributeFlex.js';
+import buildLayout from './buildLayout.js';
 import getViewWrapColumn from '../features/density/getViewWrapColumn.js';
 
 function fromTanstackColumn({ column, region, widths, wrap }) {
@@ -68,68 +68,8 @@ function computeLayout({
       maxWidth: trailing.width,
     })),
   ];
-  const cols = [...start, ...center, ...end];
   const sizing = { ...table.atoms.columnSizing.get(), ...widths };
-  distributeFlex({ cols, viewportWidth, sizing });
-
-  const vars = {};
-  const byKey = new Map();
-  let startWidth = 0;
-  start.forEach((col) => {
-    col.left = startWidth;
-    startWidth += col.width;
-  });
-  let endWidth = 0;
-  for (let i = end.length - 1; i >= 0; i--) {
-    end[i].right = endWidth;
-    endWidth += end[i].width;
-  }
-  const centerStarts = new Float64Array(center.length);
-  const centerEnds = new Float64Array(center.length);
-  let centerWidth = 0;
-  center.forEach((col, i) => {
-    col.centerStart = centerWidth;
-    centerStarts[i] = centerWidth;
-    centerWidth += col.width;
-    centerEnds[i] = centerWidth;
-  });
-
-  cols.forEach((col, index) => {
-    col.index = index;
-    col.ariaIndex = index + 1;
-    vars[`--lf-w${index}`] = `${col.width}px`;
-    const style = { width: `var(--lf-w${index})` };
-    if (col.region === 'start') {
-      vars[`--lf-l${index}`] = `${col.left}px`;
-      style.left = `var(--lf-l${index})`;
-    }
-    if (col.region === 'end') {
-      vars[`--lf-r${index}`] = `${col.right}px`;
-      style.right = `var(--lf-r${index})`;
-    }
-    col.style = style;
-    byKey.set(col.key, col);
-  });
-  if (start.length) start[start.length - 1].pinnedEdge = true;
-  if (end.length) end[0].pinnedEdge = true;
-
-  const totalWidth = startWidth + centerWidth + endWidth;
-  vars['--lf-total'] = `${totalWidth}px`;
-  vars['--lf-center-w'] = `${centerWidth}px`;
-  return {
-    byKey,
-    center,
-    centerEnds,
-    centerStarts,
-    centerWidth,
-    cols,
-    end,
-    endWidth,
-    start,
-    startWidth,
-    totalWidth,
-    vars,
-  };
+  return buildLayout({ start, center, end, sizing, viewportWidth });
 }
 
 export default computeLayout;

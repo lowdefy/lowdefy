@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useSyncExternalStore } from 'react';
 
 import buildTreeIndex from './buildTreeIndex.js';
 import buildTreeItems from './buildTreeItems.js';
@@ -22,7 +22,8 @@ import getDescendantIds from './getDescendantIds.js';
 import getExpandedIds from '../expansion/getExpandedIds.js';
 
 // Tree rows from the row model: the index (parents and children) rebuilds when data changes, the
-// display list when the filtered/sorted rows or the expanded keys change. `api.tree` is what
+// display list when the filtered/sorted rows, the expanded keys or a lazy load (childLoads)
+// change. `api.tree` is what
 // cascading selection and keyboard expansion read.
 function useTreeItems({ api, config, rows, state, table }) {
   const { tree } = config;
@@ -39,6 +40,8 @@ function useTreeItems({ api, config, rows, state, table }) {
         : null,
     [coreModel, tree, config.getId]
   );
+  const { childLoads } = api;
+  const loadsVersion = useSyncExternalStore(childLoads.subscribe, childLoads.getVersion);
   const cache = useRef(new WeakMap());
   const items = useMemo(
     () =>
@@ -50,10 +53,11 @@ function useTreeItems({ api, config, rows, state, table }) {
             childrenOf: index.childrenOf,
             expandedIds: getExpandedIds(state.expanded),
             hasChildrenField: tree.hasChildrenField,
+            childLoads,
             cache: cache.current,
           })
         : null,
-    [rows, index, state.expanded]
+    [rows, index, state.expanded, loadsVersion]
   );
   api.tree = index
     ? { ...index, getDescendantIds: (id) => getDescendantIds({ id, childrenOf: index.childrenOf }) }

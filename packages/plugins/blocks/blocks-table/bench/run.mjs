@@ -138,6 +138,61 @@ async function measureChunk() {
   };
 }
 
+// What a page with a Table or a TableLight loads for the block beyond React, antd and dayjs: the
+// block's code with the shared column core (`@lowdefy/blocks-antd/table`) and the template
+// compiler (`@lowdefy/nunjucks`) counted, which the chunk measurement above treats as shared.
+// The compiler loads on demand, only for tables whose config uses a template.
+async function measureTemplateCost() {
+  const entries = [
+    { block: 'Table', entry: path.join(packageDir, 'dist/blocks/Table/Table.lazy.js') },
+    {
+      block: 'TableLight',
+      entry: path.join(packageDir, '../blocks-antd/dist/blocks/TableLight/TableLight.js'),
+    },
+  ];
+  const results = [];
+  for (const { block, entry } of entries) {
+    const result = await build({
+      configFile: false,
+      logLevel: 'error',
+      define: { 'process.env.NODE_ENV': JSON.stringify('production') },
+      build: {
+        outDir: path.join(resultsDir, 'template-cost', block),
+        emptyOutDir: true,
+        minify: true,
+        lib: { entry, formats: ['es'], fileName: 'entry' },
+        rolldownOptions: {
+          external: (id) =>
+            /^(react|react-dom|antd|dayjs)(\/|$)/.test(id) ||
+            (id.startsWith('@lowdefy/') &&
+              !id.startsWith('@lowdefy/nunjucks') &&
+              !id.startsWith('@lowdefy/blocks-antd/table')),
+        },
+      },
+    });
+    const chunks = (Array.isArray(result) ? result : [result])
+      .flatMap((item) => item.output)
+      .filter((file) => file.type === 'chunk');
+    const byFileName = new Map(chunks.map((file) => [file.fileName, file]));
+    const initial = new Set();
+    const visit = (file) => {
+      if (initial.has(file)) return;
+      initial.add(file);
+      file.imports.forEach((name) => byFileName.has(name) && visit(byFileName.get(name)));
+    };
+    visit(byFileName.get('entry.js'));
+    const hasNunjucks = (file) => Object.keys(file.modules).some((id) => id.includes('nunjucks'));
+    const templateChunk = chunks.find((file) => !initial.has(file) && hasNunjucks(file));
+    results.push({
+      block,
+      mainGzipKb: toKb(zlib.gzipSync([...initial].map((file) => file.code).join('\n')).length),
+      templatesInMain: [...initial].some(hasNunjucks),
+      templateChunkGzipKb: templateChunk ? toKb(zlib.gzipSync(templateChunk.code).length) : null,
+    });
+  }
+  return results;
+}
+
 function check(value, budget, compare = (a, b) => a <= b) {
   if (value === null || value === undefined) return 'not run';
   return compare(value, budget) ? 'met' : 'MISSED';
@@ -147,7 +202,7 @@ function statusOf(met) {
   return met ? 'met' : 'MISSED';
 }
 
-function buildRows({ chunk }) {
+function buildRows({ chunk, templateCost }) {
   const rows = [];
   const scroll = (strategy, scenario) => readRaw(`scroll-${strategy}-${scenario}`);
   ['translated', 'positioned'].forEach((strategy) => {
@@ -317,6 +372,29 @@ function buildRows({ chunk }) {
     )} kB gzip`,
     status: check(chunk.jsGzipKb, 60),
   });
+  templateCost.forEach(({ block, mainGzipKb, templatesInMain, templateChunkGzipKb }) => {
+    rows.push({
+      scenario: `${block} page cost (shared column core and template compiler counted)`,
+      budget: 'template compiler on demand',
+      measured: `${mainGzipKb} kB gzip on first mount; template compiler ${
+        templatesInMain ? 'in it' : `on demand (${templateChunkGzipKb} kB gzip)`
+      }`,
+      status: statusOf(!templatesInMain),
+    });
+  });
+  ['wheel-fast', 'programmatic-3000', 'wheel-fast-cpu4x'].forEach((scenario) => {
+    const result = readRaw(`server-scroll-${scenario}`);
+    if (!result) return;
+    const throttled = result.throttle > 1;
+    rows.push({
+      scenario: `Server-mode scroll 100k x 50, ${scenario} (skeleton rows while blocks load)`,
+      budget: throttled
+        ? '>= 30 fps sustained'
+        : 'p95 <= 16.7 ms (idle floor + 1 ms), p99 <= 33 ms',
+      measured: `p50 ${result.p50} / p95 ${result.p95} / p99 ${result.p99} ms, ${result.fps} fps, ${result.longTasks} long tasks, skeleton rows on screen in ${result.skeletonFramesPercent}% of frames`,
+      status: throttled ? check(result.fps, 30, (a, b) => a >= b) : check(result.p99, 33),
+    });
+  });
   return rows;
 }
 
@@ -350,6 +428,7 @@ async function main() {
   fs.rmSync(rawDir, { recursive: true, force: true });
   run('pnpm', ['build']);
   const chunk = await measureChunk();
+  const templateCost = await measureTemplateCost();
   const filters = process.argv.slice(2);
   // `pnpm bench --chunk` measures the chunk only.
   const chunkOnly = filters.includes('--chunk');
@@ -363,11 +442,15 @@ async function main() {
     platform: `${os.platform()} ${os.release()}`,
     node: process.version,
   };
-  const rows = buildRows({ chunk });
+  const rows = buildRows({ chunk, templateCost });
   fs.mkdirSync(resultsDir, { recursive: true });
   fs.writeFileSync(
     path.join(resultsDir, 'report.json'),
-    JSON.stringify({ machine, chunk, rows, generatedAt: new Date().toISOString() }, null, 2)
+    JSON.stringify(
+      { machine, chunk, templateCost, rows, generatedAt: new Date().toISOString() },
+      null,
+      2
+    )
   );
   fs.writeFileSync(path.join(resultsDir, 'report.md'), toMarkdown({ chunk, rows, machine }));
   process.stdout.write(`\n${toMarkdown({ chunk, rows, machine })}`);

@@ -15,7 +15,9 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 // The same TableLight config (parity_properties.yaml) rendered under `type: TableLight` and
 // `type: Table`: TableLight is a strict subset of Table, so switching the type must show the same
@@ -149,7 +151,7 @@ function eventText(page, blockId) {
 
 test.describe('TableLight and Table render the same config the same way', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'table-parity');
+    await openTablePage(page, 'table-parity');
     await expect(table.row(page, 'a')).toBeVisible();
     await expect(light.row(page, 'a')).toBeVisible();
   });

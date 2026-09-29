@@ -121,6 +121,11 @@ blocks:
       importCsv: true
       toolbar:
         search: true
+      # The table's loading states (skeleton rows on the first load, the bar on a refetch)
+      # follow the rows request; reloads hold the previous response (holdValue), so the table
+      # never goes empty between them.
+      loading:
+        _request_details: leads.0.loading
       columns:
         _if_none:
           - _request: get_columns
@@ -143,7 +148,9 @@ blocks:
                 _event: position
         - id: reload_columns
           type: Request
-          params: get_columns
+          params:
+            requestId: get_columns
+            holdValue: true
       onColumnUpdate:
         - id: update_column
           type: CallAPI
@@ -156,7 +163,9 @@ blocks:
                 _event: previous
         - id: reload_columns
           type: Request
-          params: get_columns
+          params:
+            requestId: get_columns
+            holdValue: true
       onColumnDelete:
         - id: delete_column
           type: CallAPI
@@ -167,7 +176,9 @@ blocks:
                 _event: column
         - id: reload_columns
           type: Request
-          params: get_columns
+          params:
+            requestId: get_columns
+            holdValue: true
 
       # Runs: queue the cells; the websocket shows them go queued, running, done.
       onColumnRun:
@@ -214,7 +225,9 @@ blocks:
                 _event: values
         - id: reload_rows
           type: Request
-          params: leads
+          params:
+            requestId: leads
+            holdValue: true
       onImport:
         - id: import_rows
           type: CallAPI
@@ -234,8 +247,10 @@ blocks:
         - id: reload
           type: Request
           params:
-            - leads
-            - get_columns
+            requestIds:
+              - leads
+              - get_columns
+            holdValue: true
       # An edit of an input cell. Enrichment cells that read it show as stale until rerun.
       onCellEdit:
         - id: edit_cell
@@ -251,4 +266,6 @@ blocks:
                     - _event: value
         - id: reload_rows
           type: Request
-          params: leads
+          params:
+            requestId: leads
+            holdValue: true

@@ -292,12 +292,13 @@ export default {
       },
       emptyText: {
         type: 'string',
-        description: 'What to show when there are no rows - supports html.',
+        description: 'What to show when there are no rows - supports html. Defaults to "No rows".',
       },
       loading: {
         type: 'boolean',
         default: false,
-        description: 'Show a loading spinner over the table.',
+        description:
+          'Show the loading state: skeleton rows while there are no rows yet, a progress bar under the header while rows are shown. The rows stay while `data` is null during a refetch. Lowdefy sets loading while onMount actions run.',
       },
       pagination: {
         type: 'boolean',

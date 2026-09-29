@@ -15,7 +15,9 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 // Enrichment tables (enrichment.e2e.yaml). Cells carry their run state in
 // [data-lf-enrich-status]; event payloads are recorded as JSON in the ev_<event> spans; buttons
@@ -102,7 +104,7 @@ async function openPicker(page, blockId = 'enrich') {
 
 test.describe('Table enrichment', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'table-enrichment');
+    await openTablePage(page, 'table-enrichment');
     await expect(cell(page, 'r1', 'company')).toHaveText('Acme');
   });
 
@@ -849,7 +851,7 @@ test.describe('Table optional features', () => {
   test('columns that pass through an empty list keep the table and its pushed rows', async ({
     page,
   }) => {
-    await navigateToTestPage(page, 'table-enrichment');
+    await openTablePage(page, 'table-enrichment');
     const table = getBlock(page, 'keep_features');
     const email = table.locator('.lf-table-body [data-row-key="k1"] [data-col-key="email"]');
     await button(page, 'keep_push').click();
@@ -866,7 +868,7 @@ test.describe('Table error columns', () => {
   test('a bad user-defined column renders as an error column with Edit and Delete', async ({
     page,
   }) => {
-    await navigateToTestPage(page, 'table-enrichment');
+    await openTablePage(page, 'table-enrichment');
     const table = getBlock(page, 'enrich_invalid');
     const row = table.locator('.lf-table-body [data-row-key="i1"]');
     await expect(row.locator('[data-col-key="company"]')).toHaveText('Acme');

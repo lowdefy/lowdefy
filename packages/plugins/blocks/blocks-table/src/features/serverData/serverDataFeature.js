@@ -15,6 +15,7 @@
 */
 
 import createRefresh from './createRefresh.js';
+import ServerErrorRow from './ServerErrorRow.js';
 import useServerData from './useServerData.js';
 import useServerItems from './useServerItems.js';
 import useServerView from './useServerView.js';
@@ -32,6 +33,7 @@ const serverDataFeature = {
   useData: useServerData,
   useFeature: useServerView,
   useItems: useServerItems,
+  rowRenderers: { error: ServerErrorRow },
   methods: { refresh: createRefresh },
 };
 
