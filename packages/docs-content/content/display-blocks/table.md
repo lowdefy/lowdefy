@@ -36,7 +36,7 @@ expanded: [] # the expanded tree rows or detail rows
 - Rows come from `data`: a list of rows (client mode), or `{ mode: server, request }` (server mode, below).
 - `rowKey` names the field that identifies a row: `_id` by default, then `id`. Selection, expansion, events and edits all use it, so give rows a key. Rows with neither field get a key per row object, which does not survive a refetch.
 
-The table loads its code (TanStack Table and Virtual, about 47 kB gzipped) the first time a `Table` or `TableInput` mounts. A page without one does not load it.
+The table loads its code (TanStack Table and Virtual, about 47 kB gzipped) the first time a `Table` or `TableInput` mounts, showing its loading skeleton until then (see [Loading states](#loading-states)). A page without one does not load it.
 
 ## What is on by default
 
@@ -55,7 +55,7 @@ A `Table` with only `columns` and `data` already does what users expect of a tab
 | Keyboard navigation, focus ring, ARIA grid roles                                  | on                                                                        | `keyboard: false` (the roles stay)                                                            |
 | Copy with Cmd/Ctrl+C                                                              | on                                                                        | always on, also with `keyboard: false`                                                        |
 | Text wrap                                                                         | off: text stays on one line                                               | `wrap` or `ellipsis` on a column, `view.wrap`, or the toolbar Wrap toggle (`toolbar.density`) |
-| Hover highlight, empty state, loading skeleton                                    | on                                                                        | `emptyText`, the `empty` slot, `loading`                                                      |
+| Hover highlight, empty state, loading states                                      | on                                                                        | `emptyText`, the `empty` slot, `loading`, the block's `skeleton`                              |
 | Summary footer                                                                    | on when a column has an `aggregate` (or the view has `aggregates`)        | `summary: false`                                                                              |
 | Height                                                                            | grows with its rows up to `maxHeight` (600px), then scrolls               | `height` for a fixed height                                                                   |
 | Toolbar                                                                           | off                                                                       | `toolbar: true` (every item) or `toolbar: { search: true, ... }`                              |
@@ -67,6 +67,56 @@ A `Table` with only `columns` and `data` already does what users expect of a tab
 | Saved views, server mode                                                          | off                                                                       | `views`, `data: { mode: server }`                                                             |
 
 Changes a user makes with the default features (sort, widths, order, filters, hidden columns) live in the table value for the session. `Reset` and `SetState` still control them, and they outlive a page reload only with `persist`.
+
+## Loading states
+
+The table shows what it is doing while data loads, the same way in `Table`, `TableInput` and `TableLight`, so switching `type` looks the same. It reads one signal: `loading`. Lowdefy sets it while the block's or a parent's `onMount` actions run, and you set it with the `loading` property.
+
+| `loading` | Rows                                   | The table shows                                                                                               |
+| --------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| true      | none yet                               | **Initial:** the real header over skeleton rows that fill the body                                            |
+| true      | rows on screen                         | **Refreshing:** the rows stay, and a thin progress bar runs under the header                                  |
+| false     | none (`[]`, or `data` null or missing) | **Empty:** "No rows" (`emptyText`), or "No matching rows" with _Clear filters_ when a filter or search is set |
+| false     | rows                                   | **Ready**                                                                                                     |
+
+**Wire `loading` to the request.** A request that runs again makes `_request` return `null` until the new response lands (unless the `Request` action sets `holdValue: true`). The table holds its rows while `loading` is true, so a refetch never flashes empty, either way:
+
+```yaml
+- id: deals
+  type: Table
+  properties:
+    loading:
+      _request_details: deals_list.0.loading # the latest call of the request
+    data:
+      _request: deals_list
+    columns: [name, stage, amount]
+```
+
+Set `loading` as the property rather than the block's own `loading` key: the block key also puts every block in the table's slots (toolbar buttons, bulk actions) into their loading state. Without `loading`, a table whose request failed or has not run yet shows its empty state, never a skeleton that never ends. A table on a page whose `onMount` fetches its data is loading until those actions finish, so it shows the skeleton meanwhile.
+
+- **Skeleton rows** are shaped like their cells, so nothing jumps when the rows land: text bars of varied width, short end-aligned bars for numbers, a circle and a bar for avatars and people, pills for tags and statuses, squares for booleans and checkboxes, small squares for buttons and a thin bar for progress. They fill the table's height (`height`, or `maxHeight` for a table that grows with its rows), at most a page when paginated, at the current density. A light shimmer runs across them, and stops when the user prefers reduced motion.
+- **Timing.** The skeleton shows 120 ms after loading starts, so a fast response never flashes it, and once shown it stays at least 300 ms, so it never flickers. The progress bar fades in after the same 120 ms.
+- **View changes.** A sort, filter, search, group or view tab the user picks keeps the old rows on screen with the progress bar; if the new rows take longer than 300 ms, the old rows dim until they arrive. A background refetch or a server `refresh` never dims.
+- **While the first rows load** the toolbar's search, filters and views stay usable; Export, the select-all checkbox and the bulk bar wait for rows. The grid is `aria-busy`, and a polite live region says "Loading rows", then "N rows loaded".
+- **The table's own code.** `Table` and `TableInput` load their code on first mount. Until it arrives the block shows this same skeleton, built from the column config, so the swap to the table moves nothing.
+- **Server mode.** Rows not loaded yet (a fast scroll) are skeleton rows. An expanded group shows a spinner in its chevron and skeleton rows until its rows land. A block of rows that fails to load is one row, "Couldn't load rows · Retry": Retry loads just that block again, and the rows already loaded stay.
+- **Trees.** A lazy expand (`onRowExpand` with `needsChildren`) is awaited: the chevron spins and a skeleton child row shows until the children arrive. If the actions fail, the row collapses and its chevron shows the error.
+- **Actions.** Cell saves, row moves and TableInput edits show their own saving and error markers. Export spins while the file builds (in server mode, while the `onExport` actions run). The filter builder, column filters, column manager, header menu and cell editor open at once, with a spinner inside them the first time their code loads.
+
+**A different loading look.** A block's `skeleton` config replaces the whole table while the block is loading, as for any Lowdefy block (with the block's own `loading` key, or while `onMount` runs):
+
+```yaml
+- id: deals
+  type: Table
+  skeleton:
+    type: Skeleton
+    properties:
+      height: 320
+  properties:
+    data:
+      _request: deals_list
+    columns: [name, stage, amount]
+```
 
 ## Table types
 
@@ -1159,7 +1209,7 @@ In the column manager, Alt+Up / Down on a column's handle moves it. `keyboard: f
 
 - **Virtualisation.** With `virtual: auto` the table renders only the rows in view once there are more than 200 display rows (groups count), and only the columns in view once there are more than 20 scrolling columns or the table is wider than twice its viewport. Pinned columns always render. Scrolling never re-renders the engine or touches Lowdefy state.
 - **Fixed heights are fastest.** Rows are one fixed height from the density (32, 40 or 52px) or `rowHeight`. A column with `wrap: true` or `ellipsis` above 1 makes rows as tall as their content: heights are measured as rows render, and column virtualisation turns off, since a row's height then depends on every cell in it. Expandable detail rows are measured too.
-- **Rich cells.** Hover buttons mount only on the hovered row or the row focused with the keyboard. During a fast scroll, avatar, tag, button and other rich cells show their text and upgrade when the scroll settles. Templates compile once per column.
+- **Rich cells.** Hover buttons mount only on the hovered row or the row focused with the keyboard. During a fast scroll, avatar, tag, button and other rich cells show their text and upgrade when the scroll settles. Templates compile once per column, and the template compiler (about 36 kB gzipped) loads only for a table with an `html` template, a template tooltip or `expandable`.
 - **Data updates.** Rows are compared by key, so a refetch re-renders only rows whose content changed. `rowVersionField`, a dot path such as `updated.timestamp`, compares rows by key and that field instead of by content; a row without the field is compared by content. `applyTransaction` adds, updates or removes rows without replacing `data`.
 - **Big client data.** Sort, filter and group of 100k rows stay under the 60fps budget in the benchmark (text sort keys and the first search are built in time slices, without blocking). Keep `data` a plain request result: an `_js` or `_function` in it runs on every page update.
 - **Server mode** is for data the browser should not hold. `blockSize` (default 200) sets the rows per request and `maxBlocks` (default 20) the blocks kept; loads wait for a fast scroll to settle.
@@ -2095,7 +2145,7 @@ Every column the user can sort or filter must be in `fields`, or the request fai
 | `persist` | object | - | Keep the user's view between visits. Off by default. The selection is never persisted. |
 | `persist.key` | string | - | Storage key (localStorage) or query parameter name (url). |
 | `persist.storage` | string | `"local"` | `local` keeps the view in localStorage (none in a private window or with blocked storage); `url` writes a compact encoding to the query string, replacing history. Enum: `local`, `url`. |
-| `emptyText` | string | `"No data"` | What to show when there are no rows - supports html. |
+| `emptyText` | string | `"No rows"` | What to show when there are no rows - supports html. |
 | `loading` | boolean | `false` | Show the loading state: skeleton rows without data, a progress bar with it. |
 | `pagination` | boolean | `false` | Show the rows in pages of `pageSize` with a pager below the table. Off by default, unlike TableLight: the Table scrolls any number of rows virtually. `true` means what it means on TableLight: pages, with the pager always shown. |
 | `pageSize` | integer | `50` | Rows per page when `pagination` is on (`view.pageSize` overrides it). |

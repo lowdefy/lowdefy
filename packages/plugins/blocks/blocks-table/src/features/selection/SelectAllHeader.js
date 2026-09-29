@@ -33,6 +33,7 @@ function SelectAllHeader({ api }) {
       checked={checked}
       className="lf-table-checkbox"
       data-lf-select-all=""
+      disabled={api.loadingState === 'initial'}
       onChange={ignoreChange}
       ref={ref}
       tabIndex={-1}

@@ -19,6 +19,7 @@ import React, { Suspense } from 'react';
 import FilterIcon from './FilterIcon.js';
 import getFilteredKeys from './getFilteredKeys.js';
 import LazyColumnFilterPopover from './LazyColumnFilterPopover.js';
+import PopoverLoading from '../../core/PopoverLoading.js';
 
 // Header part: a filter icon while the column is filtered (click it to edit the filter), and the
 // column filter popover while it is open.
@@ -42,7 +43,15 @@ function FilterIndicator({ api, col, state }) {
         </button>
       ) : null}
       {open ? (
-        <Suspense fallback={null}>
+        <Suspense
+          fallback={
+            <PopoverLoading
+              anchor="header"
+              onClose={() => api.actions.closeColumnFilter()}
+              placement="bottomLeft"
+            />
+          }
+        >
           <LazyColumnFilterPopover api={api} col={col} />
         </Suspense>
       ) : null}

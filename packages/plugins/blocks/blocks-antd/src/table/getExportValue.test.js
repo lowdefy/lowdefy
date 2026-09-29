@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { nunjucksFunction } from '@lowdefy/nunjucks';
+
 import compileColumns from './compileColumns.js';
 import getExportValue from './getExportValue.js';
 import normalizeColumns from './normalizeColumns.js';
@@ -40,9 +42,11 @@ const normalized = normalizeColumns({
   ],
 });
 const columns = Object.fromEntries(
-  compileColumns({ columns: normalized.columns, columnsByKey: normalized.columnsByKey }).map(
-    (column) => [column.key, column]
-  )
+  compileColumns({
+    columns: normalized.columns,
+    columnsByKey: normalized.columnsByKey,
+    compileTemplate: nunjucksFunction,
+  }).map((column) => [column.key, column])
 );
 
 const row = {

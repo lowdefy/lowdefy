@@ -20,13 +20,21 @@ import RenderProbeContext from './RenderProbeContext.js';
 import Row from './Row.js';
 import SkeletonRow from './SkeletonRow.js';
 
+// A tree child skeleton lines up with the child rows: their indent and the chevron's room.
+const TOGGLE_ROOM = 24;
+
+function getSkeletonIndent({ api, depth }) {
+  return depth * (api.config.tree?.indent ?? 0) + TOGGLE_ROOM;
+}
+
 // Rows of the current window. `translated` (the default) renders the window rows in flow inside
 // one container moved by a single translateY per range change; `positioned` gives each row its own
 // absolute transform (TanStack Virtual's pattern), kept for the benchmark comparison.
 //
 // Items are TanStack rows, wrapped row items (`kind: 'row'`, with a tree depth or an expand
 // state), other kinds rendered by the row renderer their feature registers (group headers,
-// detail rows), or `undefined` for a row that is not loaded yet (a skeleton row). `rowOffsets`
+// detail rows), `undefined` for a row that is not loaded yet or `kind: 'skeleton'` for a lazy tree
+// row's children while they load (skeleton rows). `rowOffsets`
 // positions the items when some are not one row high; measured items (data rows with
 // `measuredRows`, detail rows) take their content height and report it after each render.
 function Body({
@@ -61,15 +69,16 @@ function Body({
     const activeCol = activeCell.row === i ? activeCell.col : -1;
     const ariaRowIndex = i + ariaRowOffset;
     const offset = positioned ? i * rowHeight : undefined;
-    if (item === undefined) {
+    if (item === undefined || kind === 'skeleton') {
       rowElements.push(
         <SkeletonRow
           ariaRowIndex={ariaRowIndex}
           centerCols={centerCols}
           className={rowClassName}
+          depthIndent={item ? getSkeletonIndent({ api, depth: item.depth }) : undefined}
           displayIndex={i}
           endCols={layout.end}
-          key={`__skeleton_${i}`}
+          key={item ? `skeleton:${item.key}` : `__skeleton_${i}`}
           startCols={layout.start}
         />
       );

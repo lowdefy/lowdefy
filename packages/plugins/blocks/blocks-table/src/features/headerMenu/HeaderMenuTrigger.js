@@ -17,6 +17,7 @@
 import React, { Suspense } from 'react';
 
 import LazyHeaderMenuDropdown from './LazyHeaderMenuDropdown.js';
+import PopoverLoading from '../../core/PopoverLoading.js';
 import MenuIcon from './MenuIcon.js';
 
 // Header part: the menu button, shown on hover or focus of the header cell, over the end of the
@@ -44,7 +45,15 @@ function HeaderMenuTrigger({ api, col, focused }) {
         <MenuIcon />
       </button>
       {open ? (
-        <Suspense fallback={null}>
+        <Suspense
+          fallback={
+            <PopoverLoading
+              anchor="header"
+              onClose={() => api.actions.closeHeaderMenu()}
+              placement="bottomRight"
+            />
+          }
+        >
           <LazyHeaderMenuDropdown api={api} col={col} />
         </Suspense>
       ) : null}

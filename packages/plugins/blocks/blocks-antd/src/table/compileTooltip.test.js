@@ -14,28 +14,45 @@
   limitations under the License.
 */
 
+import { nunjucksFunction } from '@lowdefy/nunjucks';
+
 import compileTooltip from './compileTooltip.js';
 
 test('compileTooltip returns null without a tooltip', () => {
-  expect(compileTooltip({ tooltip: undefined })).toBeNull();
+  expect(compileTooltip({ tooltip: undefined, compileTemplate: nunjucksFunction })).toBeNull();
 });
 
 test('compileTooltip reads a row field', () => {
-  const tooltip = compileTooltip({ tooltip: { field: 'meta.note' } });
+  const tooltip = compileTooltip({
+    tooltip: { field: 'meta.note' },
+    compileTemplate: nunjucksFunction,
+  });
   expect(tooltip({ meta: { note: 'Hi' } })).toBe('Hi');
   expect(tooltip({ meta: { note: '' } })).toBeUndefined();
   expect(tooltip({})).toBeUndefined();
 });
 
 test('compileTooltip renders a template or string as plain text', () => {
-  const tooltip = compileTooltip({ tooltip: { template: '{{ row.name }}: {{ value }}' } });
+  const tooltip = compileTooltip({
+    tooltip: { template: '{{ row.name }}: {{ value }}' },
+    compileTemplate: nunjucksFunction,
+  });
   expect(tooltip({ name: 'A & B' }, '<3')).toBe('A & B: <3');
-  expect(compileTooltip({ tooltip: 'Static' })({}, 1)).toBe('Static');
-  expect(compileTooltip({ tooltip: '{{ value }}' })({}, '')).toBeUndefined();
+  expect(compileTooltip({ tooltip: 'Static', compileTemplate: nunjucksFunction })({}, 1)).toBe(
+    'Static'
+  );
+  expect(
+    compileTooltip({ tooltip: '{{ value }}', compileTemplate: nunjucksFunction })({}, '')
+  ).toBeUndefined();
 });
 
 test('compileTooltip throws on other shapes', () => {
-  expect(() => compileTooltip({ tooltip: { text: 'x' } })).toThrow(
-    'Table column tooltip must be a string, { field } or { template }.'
-  );
+  expect(() =>
+    compileTooltip({ tooltip: { text: 'x' }, compileTemplate: nunjucksFunction })
+  ).toThrow('Table column tooltip must be a string, { field } or { template }.');
+});
+
+test('compileTooltip needs the template compiler for a template tooltip', () => {
+  expect(() => compileTooltip({ tooltip: '{{ value }}' })).toThrow('compileTemplate');
+  expect(compileTooltip({ tooltip: { field: 'name' } })({ name: 'Ada' })).toBe('Ada');
 });

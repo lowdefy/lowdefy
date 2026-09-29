@@ -14,23 +14,19 @@
   limitations under the License.
 */
 
+import getRowControlsWidth from './getRowControlsWidth.js';
 import RowControlsCell from './RowControlsCell.js';
 import RowControlsHeader from './RowControlsHeader.js';
 
 export const ROW_CONTROLS_KEY = '__row';
 export const ROW_CONTROLS_SPECIAL = 'row';
 
-const HANDLE_WIDTH = 20;
-const DELETE_WIDTH = 26;
-const PADDING = 8;
-
 // The leading special column for TableInput's row controls, sized to the controls it holds.
 function rowControlsColumn({ rowDrag, deleteButton }) {
-  const width = PADDING + (rowDrag ? HANDLE_WIDTH : 0) + (deleteButton ? DELETE_WIDTH : 0);
   return {
     key: ROW_CONTROLS_KEY,
     special: ROW_CONTROLS_SPECIAL,
-    width,
+    width: getRowControlsWidth({ rowDrag, deleteButton }),
     Header: RowControlsHeader,
     Cell: RowControlsCell,
   };

@@ -98,15 +98,15 @@ test('buildServerItems nests an expanded group list under its group item', () =>
   });
   expect(items[1].id).toBe('a');
   expect(items[2].id).toBe('b');
-  expect(items[3]).toMatchObject({ kind: 'group', value: 'won', collapsed: false });
-  // The expanded "won" list has not loaded: one placeholder loads it.
-  expect(items[4]).toBeUndefined();
-  expect(items).toHaveLength(5);
+  expect(items[0].loading).toBe(false);
+  expect(items[3]).toMatchObject({ kind: 'group', value: 'won', collapsed: false, loading: true });
+  // The expanded "won" list has not loaded: its count of skeleton rows until it lands.
+  expect(items.slice(4)).toEqual([undefined, undefined, undefined, undefined, undefined]);
   expect(segments).toEqual([
     { itemStart: 0, length: 1, listKey: '[]', groupPath: [], listStart: 0 },
     { itemStart: 1, length: 2, listKey: '["lead"]', groupPath: ['lead'], listStart: 0 },
     { itemStart: 3, length: 1, listKey: '[]', groupPath: [], listStart: 1 },
-    { itemStart: 4, length: 1, listKey: '["won"]', groupPath: ['won'], listStart: 0 },
+    { itemStart: 4, length: 5, listKey: '["won"]', groupPath: ['won'], listStart: 0 },
   ]);
 });
 
@@ -128,4 +128,43 @@ test('buildServerItems keeps group item identity while nothing about the group c
   expect(expanded).not.toBe(first);
   expect(first.collapsed).toBe(true);
   expect(expanded.collapsed).toBe(false);
+});
+
+test('buildServerItems shows a failed block as one error row and keeps the loaded rows', () => {
+  const cache = createBlockCache({ blockSize: 2, maxBlocks: 10 });
+  const rows = [{ id: 'a' }, { id: 'b' }];
+  fill({ cache, listKey: '[]', index: 0, entries: rows, total: 6 });
+  cache.startLoad('[]', 1);
+  cache.failLoad({ listKey: '[]', index: 1, generation: cache.generation, error: true });
+  const { items, segments } = buildServerItems({
+    blockCache: cache,
+    groupKeys: [],
+    expandedGroups: new Set(),
+    rowsById: rowsByIdFor(rows),
+    getId,
+    itemCache: new WeakMap(),
+  });
+  expect(items[0].id).toBe('a');
+  expect(items[1].id).toBe('b');
+  expect(items[2]).toEqual({ kind: 'error', key: '[]#1', listKey: '[]', groupPath: [], index: 1 });
+  expect(items.slice(3)).toEqual([undefined, undefined]);
+  expect(segments).toEqual([
+    { itemStart: 0, length: 2, listKey: '[]', groupPath: [], listStart: 0 },
+    { itemStart: 3, length: 2, listKey: '[]', groupPath: [], listStart: 4 },
+  ]);
+});
+
+test('buildServerItems shows an error row when the first block of the root list fails', () => {
+  const cache = createBlockCache({ blockSize: 2, maxBlocks: 10 });
+  cache.startLoad('[]', 0);
+  cache.failLoad({ listKey: '[]', index: 0, generation: cache.generation, error: true });
+  const { items } = buildServerItems({
+    blockCache: cache,
+    groupKeys: [],
+    expandedGroups: new Set(),
+    rowsById: {},
+    getId,
+    itemCache: new WeakMap(),
+  });
+  expect(items).toEqual([{ kind: 'error', key: '[]#0', listKey: '[]', groupPath: [], index: 0 }]);
 });

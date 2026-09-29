@@ -135,3 +135,35 @@ test('buildTreeItems keeps item identity for unchanged rows', () => {
   expect(second[1]).toBe(first[1]);
   expect(second[2]).not.toBe(first[2]);
 });
+
+test('buildTreeItems adds one skeleton child under a lazy row whose children are loading', () => {
+  const data = [{ id: 'lazy', name: 'Lazy', hasChildren: true }];
+  const tanstackRows = data.map((original, index) => ({ id: original.id, original, index }));
+  const { parentOf, childrenOf } = buildTreeIndex({
+    rows: data,
+    getId: (row) => row.id,
+    parentField: 'parent',
+  });
+  const args = {
+    rows: tanstackRows,
+    rowsById: { lazy: tanstackRows[0] },
+    parentOf,
+    childrenOf,
+    expandedIds: new Set(['lazy']),
+    hasChildrenField: 'hasChildren',
+    cache: new WeakMap(),
+  };
+  const loading = buildTreeItems({
+    ...args,
+    childLoads: { loading: new Set(['lazy']), errors: new Map() },
+  });
+  expect(loading[0]).toMatchObject({ id: 'lazy', expanded: true, loading: true, error: null });
+  expect(loading[1]).toEqual({ kind: 'skeleton', key: 'lazy:children', depth: 1 });
+  const failed = buildTreeItems({
+    ...args,
+    expandedIds: new Set(),
+    childLoads: { loading: new Set(), errors: new Map([['lazy', 'Down']]) },
+  });
+  expect(failed).toHaveLength(1);
+  expect(failed[0]).toMatchObject({ expanded: false, loading: false, error: 'Down' });
+});

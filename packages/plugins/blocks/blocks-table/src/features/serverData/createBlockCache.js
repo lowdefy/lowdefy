@@ -156,6 +156,24 @@ function createBlockCache({ blockSize, maxBlocks }) {
     invalidate() {
       generation += 1;
     },
+    // A failed block loads again (Retry on its error row): it is dropped, so it is missing, and
+    // its list's error clears.
+    resetFailed(listKey, index) {
+      const id = getBlockId({ listKey, index });
+      const block = blocks.get(id);
+      if (!block || block.status !== 'error') return false;
+      blocks.delete(id);
+      const list = lists.get(listKey);
+      if (list) list.error = null;
+      return true;
+    },
+    // Whether loaded blocks are reloading (a refresh) with their rows still on screen.
+    isReloading() {
+      for (const block of blocks.values()) {
+        if (block.reloading && block.rows) return true;
+      }
+      return false;
+    },
     // Visits the loaded rows of every list: `fn(rows, block)`.
     forEachLoaded(fn) {
       blocks.forEach((block) => {

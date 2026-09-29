@@ -15,7 +15,9 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 // Server mode end to end against MongoDB through MongoDBTableQuery. Needs a MongoDB the e2e
 // server can reach, passed as a Lowdefy secret, for example:
@@ -48,12 +50,12 @@ function trackRequests(page) {
 
 // The tables fetch when the page loads, so the tests after the seed test see the seeded data.
 async function open(page) {
-  await navigateToTestPage(page, 'table-server-mongodb');
+  await openTablePage(page, 'table-server-mongodb');
 }
 
 test.describe('Table server mode with MongoDBTableQuery', () => {
   test('seeds the collection', async ({ page }) => {
-    await navigateToTestPage(page, 'table-server-mongodb');
+    await openTablePage(page, 'table-server-mongodb');
     await page.locator('#mongo_seed').click();
     await expect(getBlock(page, 'mongo_seeded')).toHaveText('seeded', { timeout: 30000 });
   });

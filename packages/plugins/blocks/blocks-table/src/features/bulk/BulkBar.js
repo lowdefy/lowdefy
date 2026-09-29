@@ -22,9 +22,11 @@ import './bulk.css';
 const numberFormat = new Intl.NumberFormat();
 
 // "N selected · Select all M matching · Clear" plus the `bulkActions` slot (Linear, Attio). It
-// sits below the grid, so rows never move under the pointer when it appears.
+// sits below the grid, so rows never move under the pointer when it appears. Bulk actions need
+// rows, so the bar waits while the table loads its first rows.
 function BulkBar({ api, matching, selected, selectionMode }) {
   const { content } = api;
+  if (api.loadingState === 'initial') return null;
   const canSelectAll =
     api.config.rowSelection.type === 'checkbox' && selectionMode !== 'all' && selected < matching;
   return (

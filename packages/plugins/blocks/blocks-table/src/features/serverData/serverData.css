@@ -18,4 +18,38 @@
   .lf-table-body .lf-table-row[data-skeleton] {
     pointer-events: none;
   }
+
+  /* A failed block's inline error row (ServerErrorRow). */
+  .lf-table-body .lf-table-error-row,
+  .lf-table-body .lf-table-error-row:hover {
+    background: var(--lf-bg);
+  }
+
+  .lf-table-error-cell {
+    position: sticky;
+    left: 0;
+    gap: var(--ant-padding-xs, 8px);
+    width: var(--lf-viewport-w, 100%);
+    color: var(--ant-color-error, #ff4d4f);
+  }
+
+  .lf-table-error-retry {
+    padding: 0;
+    color: var(--ant-color-primary, #1677ff);
+    font: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .lf-table-error-retry:hover {
+    color: var(--ant-color-primary-hover, #4096ff);
+    text-decoration: underline;
+  }
+
+  .lf-table-error-retry:focus-visible {
+    outline: 2px solid var(--ant-color-primary, #1677ff);
+    outline-offset: 2px;
+    border-radius: var(--ant-border-radius-sm, 4px);
+  }
 }

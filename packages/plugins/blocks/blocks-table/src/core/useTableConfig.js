@@ -19,7 +19,9 @@ import { type } from '@lowdefy/helpers';
 import compileColumns from '@lowdefy/blocks-antd/table/compileColumns.js';
 import compileRules from '@lowdefy/blocks-antd/table/compileRules.js';
 import createRowKeyGetter from '@lowdefy/blocks-antd/table/createRowKeyGetter.js';
+import needsTemplates from '@lowdefy/blocks-antd/table/needsTemplates.js';
 import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
+import readTemplateCompiler from '@lowdefy/blocks-antd/table/readTemplateCompiler.js';
 
 import createColumnDefs from './createColumnDefs.js';
 import densityHeights from './densityHeights.js';
@@ -81,20 +83,29 @@ function useTableConfig({ properties }) {
     [properties.rowKey]
   );
 
+  const normalized = useMemo(
+    () => normalizeColumns({ columns: columnsConfig, defaultColumn }),
+    [columnsConfig, defaultColumn]
+  );
+  // The template compiler loads only for a config with templates; until it has, the table
+  // suspends and the lazy block keeps its skeleton fallback up.
+  const compileTemplate = readTemplateCompiler({
+    needed: needsTemplates({ columns: normalized.columns, expandable }),
+  });
   const columnModel = useMemo(() => {
-    const normalized = normalizeColumns({ columns: columnsConfig, defaultColumn });
     // `$user` values resolve from an empty user when the app sets none.
     const configUser = user ?? {};
     const columns = compileColumns({
       columns: normalized.columns,
       columnsByKey: normalized.columnsByKey,
       user: configUser,
+      compileTemplate,
     });
     return {
       columns,
       columnsByKey: new Map(columns.map((column) => [column.key, column])),
       columnDefs: createColumnDefs({ columns }),
-      expandable: normalizeExpandable({ expandable, columns, user: configUser }),
+      expandable: normalizeExpandable({ expandable, columns, user: configUser, compileTemplate }),
       headerLevels: getHeaderLevels({ headerGroups: normalized.headerGroups }),
       rowRules: compileRules({
         rules: rowRules,
@@ -103,7 +114,7 @@ function useTableConfig({ properties }) {
       }),
       user: configUser,
     };
-  }, [columnsConfig, defaultColumn, expandable, rowRules, user]);
+  }, [normalized, compileTemplate, expandable, rowRules, user]);
 
   return useMemo(() => {
     const server = normalizeServerData(serverData);
@@ -114,7 +125,7 @@ function useTableConfig({ properties }) {
         ? 'default'
         : properties.size,
       defaultView: defaultView ?? {},
-      emptyText: properties.emptyText ?? 'No data',
+      emptyText: properties.emptyText ?? 'No rows',
       getId: (row) => String(getKey(row)),
       getKey,
       headerMenu: properties.headerMenu !== false,

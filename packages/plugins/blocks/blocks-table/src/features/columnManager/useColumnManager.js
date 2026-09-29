@@ -17,6 +17,7 @@
 import React, { Suspense, useState } from 'react';
 
 import LazyColumnManagerPopover from './LazyColumnManagerPopover.js';
+import PopoverLoading from '../../core/PopoverLoading.js';
 
 // Block-level open state; the popover (loaded on first open) renders in the table's top region
 // while open.
@@ -27,7 +28,15 @@ function useColumnManager({ api }) {
   return {
     regions: {
       top: (
-        <Suspense fallback={null}>
+        <Suspense
+          fallback={
+            <PopoverLoading
+              anchor="corner"
+              onClose={() => api.actions.closeColumnManager()}
+              placement="bottomRight"
+            />
+          }
+        >
           <LazyColumnManagerPopover api={api} />
         </Suspense>
       ),

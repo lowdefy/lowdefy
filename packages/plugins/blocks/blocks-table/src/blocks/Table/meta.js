@@ -842,7 +842,7 @@ export default {
       },
       emptyText: {
         type: 'string',
-        default: 'No data',
+        default: 'No rows',
         description: 'What to show when there are no rows - supports html.',
       },
       loading: {

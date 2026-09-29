@@ -49,9 +49,15 @@ function GroupLabel({ api, item, label, left, level }) {
   return (
     <div className="lf-table-group-label" style={{ left }}>
       <div className="lf-table-group-label-content" style={{ '--lf-group-depth': item.depth }}>
-        <svg aria-hidden="true" className="lf-table-group-toggle" viewBox="0 0 16 16">
-          <path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
-        </svg>
+        {item.loading ? (
+          <span className="lf-table-group-toggle" data-loading="">
+            <span aria-label="Loading group" className="lf-table-spinner" role="img" />
+          </span>
+        ) : (
+          <svg aria-hidden="true" className="lf-table-group-toggle" viewBox="0 0 16 16">
+            <path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
+          </svg>
+        )}
         <span className="lf-table-group-value">{renderValue({ api, item, label, level })}</span>
         <span className="lf-table-group-count">{countFormat.format(item.count)}</span>
       </div>

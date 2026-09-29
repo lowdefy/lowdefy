@@ -52,4 +52,8 @@
   .lf-table-toggle[data-expanded] svg {
     transform: rotate(90deg);
   }
+
+  .lf-table-toggle[data-error] {
+    color: var(--ant-color-error, #ff4d4f);
+  }
 }

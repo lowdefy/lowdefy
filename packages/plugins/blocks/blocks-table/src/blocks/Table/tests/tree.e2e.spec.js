@@ -15,7 +15,9 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 // Tree rows: `tree.parentField` / `tree.childrenField` produce one flat list of rows with a depth
 // (aria-level), an expand chevron ([data-lf-tree-toggle]) in the first data column, and the
@@ -37,7 +39,7 @@ function rowKeys(page, blockId) {
 
 test.describe('Table tree', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'table-tree');
+    await openTablePage(page, 'table-tree');
     await expect(row(page, 'table_tree', 'docs')).toBeVisible();
   });
 
