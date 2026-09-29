@@ -45,14 +45,18 @@ test.describe('Table bulk action bar', () => {
     await expect(bar(page).locator('#bk_assign')).toBeVisible();
   });
 
-  test('Select all matching sets { all: true, except: [] }', async ({ page }) => {
+  test('Select all matching sets { all: true, except: [], filter, search }', async ({ page }) => {
     await selectRow(page, 1);
     await bar(page).locator('[data-lf-bulk-action="select-all"]').click();
-    await expect(getBlock(page, 'bk_value')).toContainText('selected={"all":true,"except":[]}');
+    await expect(getBlock(page, 'bk_value')).toContainText(
+      'selected={"all":true,"except":[],"filter":null,"search":null}'
+    );
     await expect(bar(page).locator('[data-lf-bulk-count]')).toHaveText('5 selected');
     await expect(bar(page).locator('[data-lf-bulk-action="select-all"]')).toHaveCount(0);
     await selectRow(page, 2);
-    await expect(getBlock(page, 'bk_value')).toContainText('selected={"all":true,"except":[2]}');
+    await expect(getBlock(page, 'bk_value')).toContainText(
+      'selected={"all":true,"except":[2],"filter":null,"search":null}'
+    );
     await expect(bar(page).locator('[data-lf-bulk-count]')).toHaveText('4 selected');
   });
 
@@ -70,6 +74,22 @@ test.describe('Table bulk action bar', () => {
       getBlock(page, 'bk_filtered').locator('.lf-table-body [data-row-key="6"]')
     ).toHaveAttribute('aria-selected', 'true');
     await expect(filteredBar.locator('[data-lf-bulk-count]')).toHaveText('4 selected');
+  });
+
+  test('an all matching selection records the filter and ends when the filter changes', async ({
+    page,
+  }) => {
+    const filteredBar = getBlock(page, 'bk_filtered').locator('[data-lf-bulk-bar]');
+    await getBlock(page, 'bk_filtered')
+      .locator('.lf-table-body [data-row-key="1"] [data-lf-select-cell] input')
+      .click();
+    await filteredBar.locator('[data-lf-bulk-action="select-all"]').click();
+    await expect(getBlock(page, 'bk_filtered_value')).toHaveText(
+      'selected={"all":true,"except":[],"filter":{"key":"team","op":"eq","value":"Blue"},"search":null}'
+    );
+    await page.locator('#bk_filtered_clear_filters').click();
+    await expect(getBlock(page, 'bk_filtered_value')).toHaveText('selected=[]');
+    await expect(filteredBar).toHaveCount(0);
   });
 
   test('Clear empties the selection and hides the bar', async ({ page }) => {

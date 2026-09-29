@@ -15,9 +15,10 @@
 */
 
 // Action and block method `selectAllMatching()`: selects every row the view matches as
-// `{ all: true, except: [] }`, never a list of every key (D7). The filtered rows (in server mode
-// the loaded ones, the server resolves the rest) are marked selected; rows loaded later are
-// selected too while the selection stays "all". Earlier exceptions are dropped.
+// `{ all: true, except: [], filter, search }`, never a list of every key (D7). The filtered rows
+// (in server mode the loaded ones, the server resolves the rest) are marked selected; rows loaded
+// later that match are selected too while the selection stays "all". Earlier exceptions are
+// dropped. A later filter or search change ends the selection (useSelection).
 function createSelectAllMatching(api) {
   return function selectAllMatching() {
     if (api.config.rowSelection?.type !== 'checkbox') return false;
@@ -27,6 +28,11 @@ function createSelectAllMatching(api) {
     });
     api.selectionExcept.clear();
     api.updateSlice('selectionMode', () => 'all', { cause: 'select' });
+    api.updateSlice(
+      'selectionView',
+      () => ({ filter: api.state.filter, search: api.state.search }),
+      { cause: 'select' }
+    );
     api.updateSlice('rowSelection', () => selection, { cause: 'select' });
     return true;
   };

@@ -267,9 +267,9 @@ export default {
     },
     onSelectionChange: {
       description:
-        'Trigger when the row selection changes. In server mode the header checkbox selects every row the view matches as `{ all: true, except: [] }`; resolve it on the server with the same view.',
+        'Trigger when the row selection changes. "Select all matching" in the bulk bar (and, in server mode, the header checkbox) selects every row the view matches as `{ all: true, except, filter, search }`: every row matching that filter and search except the `except` keys, so a request can resolve it from the value alone. Changing the filter or search clears such a selection.',
       event: {
-        selected: 'The selected row keys, or `{ all: true, except }`.',
+        selected: 'The selected row keys, or `{ all: true, except, filter, search }`.',
         rows: 'The selected row objects that are loaded.',
       },
     },
@@ -413,7 +413,7 @@ export default {
     setGroup:
       'Group rows by these columns, outermost first. Accepts column keys or `[{ key }]` of groupable columns; an empty list removes the grouping.',
     selectAllMatching:
-      'Select every row the view matches, as `{ all: true, except: [] }` (checkbox selection only).',
+      "Select every row the view matches, as `{ all: true, except: [], filter, search }` with the view's filter and search (checkbox selection only). Rows that arrive later and match are selected too; a filter or search change clears the selection.",
     expandAllGroups: 'Expand every group (client data; server groups open one at a time).',
     collapseAllGroups: 'Collapse every group at every level.',
     setFilter:

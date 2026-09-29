@@ -265,11 +265,11 @@ test.describe('Table server mode', () => {
     await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
     await getBlock(page, 'table_server').locator('[data-lf-select-all]').click();
     await expect(getBlock(page, 'server_selection_value')).toHaveText(
-      'selected={"all":true,"except":[]} event={"all":true,"except":[]} rows=100'
+      'selected={"all":true,"except":[],"filter":null,"search":null} event={"all":true,"except":[],"filter":null,"search":null} rows=100'
     );
     await row(page, 'table_server', '2').locator('[data-lf-select-cell] input').click();
     await expect(getBlock(page, 'server_selection_value')).toHaveText(
-      'selected={"all":true,"except":[2]} event={"all":true,"except":[2]} rows=99'
+      'selected={"all":true,"except":[2],"filter":null,"search":null} event={"all":true,"except":[2],"filter":null,"search":null} rows=99'
     );
     await expect(getBlock(page, 'table_server').locator('[data-lf-select-all]')).toHaveJSProperty(
       'indeterminate',
@@ -282,10 +282,24 @@ test.describe('Table server mode', () => {
     await expect(row(page, 'table_server', '2')).toHaveAttribute('aria-selected', 'false');
     await getBlock(page, 'table_server').locator('[data-lf-select-all]').click();
     await expect(getBlock(page, 'server_selection_value')).toContainText(
-      'selected={"all":true,"except":[]}'
+      'selected={"all":true,"except":[],"filter":null,"search":null}'
     );
     await getBlock(page, 'table_server').locator('[data-lf-select-all]').click();
     await expect(getBlock(page, 'server_selection_value')).toContainText('selected=[]');
+  });
+
+  test('a filter change ends an all selection', async ({ page }) => {
+    await mockServer(page);
+    await navigateToTestPage(page, 'table-server');
+    await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
+    await getBlock(page, 'table_server').locator('[data-lf-select-all]').click();
+    await expect(getBlock(page, 'server_selection_value')).toContainText(
+      'selected={"all":true,"except":[],"filter":null,"search":null}'
+    );
+    await clickButton(page, 'server_filter');
+    await expect(cell(page, 'table_server', '2', 'stage')).toHaveText('won');
+    await expect(getBlock(page, 'server_selection_value')).toContainText('selected=[]');
+    await expect(row(page, 'table_server', '2')).toHaveAttribute('aria-selected', 'false');
   });
 
   test('the fetch sends the selection', async ({ page }) => {

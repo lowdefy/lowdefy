@@ -127,6 +127,18 @@ blocks:
                     age: 28
                     city: Lima
 
+  - id: bk_filtered_clear_filters
+    type: Button
+    properties:
+      title: Clear filters
+    events:
+      onClick:
+        - id: clear_filtered_filters
+          type: CallMethod
+          params:
+            blockId: bk_filtered
+            method: clearFilters
+
   - id: bk_filtered_value
     type: Span
     properties:

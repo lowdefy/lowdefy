@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-// Selection and expansion are not part of the view. Leaving them out of the dependencies keeps a
-// click on a checkbox from re-deriving the view.
-const NON_VIEW_SLICES = new Set(['rowSelection', 'selectionMode', 'selectionView', 'expanded']);
-
-// The state slices a view derives from, in a fixed order, for hook dependencies.
-function getViewSliceDeps(state) {
-  return Object.keys(state)
-    .filter((name) => !NON_VIEW_SLICES.has(name))
-    .map((name) => state[name]);
+// Whether the view's filter and search are still the ones an `{ all: true }` selection was made
+// with. Conditions are plain data; config markers (`~k`) are not enumerable.
+function isSelectionViewCurrent({ state }) {
+  const { selectionView } = state;
+  if (selectionView === null) return true;
+  return (
+    JSON.stringify(selectionView.filter ?? null) === JSON.stringify(state.filter ?? null) &&
+    (selectionView.search ?? null) === (state.search ?? null)
+  );
 }
 
-export default getViewSliceDeps;
+export default isSelectionViewCurrent;

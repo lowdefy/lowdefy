@@ -18,6 +18,7 @@ function createClearSelection(api) {
   return function clearSelection() {
     api.selectionExcept.clear();
     api.updateSlice('selectionMode', () => 'keys', { cause: 'select' });
+    api.updateSlice('selectionView', () => null, { cause: 'select' });
     api.updateSlice('rowSelection', () => ({}), { cause: 'select' });
   };
 }

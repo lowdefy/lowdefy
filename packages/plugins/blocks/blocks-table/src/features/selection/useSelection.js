@@ -16,6 +16,7 @@
 
 import { useEffect, useMemo, useRef } from 'react';
 
+import isSelectionViewCurrent from './isSelectionViewCurrent.js';
 import SelectAllHeader from './SelectAllHeader.js';
 import SelectCell from './SelectCell.js';
 
@@ -49,6 +50,13 @@ function useSelection(ctx) {
       return next;
     });
   }, [data]);
+
+  // An all selection belongs to the filter and search it was made with: the rows another filter
+  // matches are a different set, so changing either (from the table or the value) clears it.
+  useEffect(() => {
+    if (state.selectionMode !== 'all' || isSelectionViewCurrent({ state })) return;
+    api.actions.clearSelection();
+  }, [state.filter, state.search, state.selectionMode, state.selectionView]);
 
   const leadingColumns = useMemo(
     () =>

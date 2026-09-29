@@ -17,10 +17,10 @@
 import countSelectedRows from './countSelectedRows.js';
 import getSelectAllState from './getSelectAllState.js';
 
-// The header checkbox selects every loaded row (or clears them when all are selected). In server
-// mode most rows are not loaded, so it selects all rows the view matches as
-// `{ all: true, except: [] }`, which the server resolves; client mode only gets that shape from
-// outside (SetState).
+// The header checkbox selects every row the filter shows (or clears them when all are selected),
+// as their keys. In server mode most rows are not loaded, so it selects all rows the view matches
+// as `{ all: true, except: [], filter, search }`, which the server resolves. Client mode writes
+// that shape through the bulk bar's "Select all matching" (selectAllMatching) or from outside.
 function createToggleAllRowsSelected(api) {
   return function toggleAllRowsSelected() {
     if (api.config.rowSelection?.type === 'radio') return false;
@@ -34,6 +34,11 @@ function createToggleAllRowsSelected(api) {
         });
       }
       api.updateSlice('selectionMode', () => (checked ? 'keys' : 'all'), { cause: 'select' });
+      api.updateSlice(
+        'selectionView',
+        () => (checked ? null : { filter: api.state.filter, search: api.state.search }),
+        { cause: 'select' }
+      );
       api.updateSlice('rowSelection', () => selection, { cause: 'select' });
       return true;
     }
