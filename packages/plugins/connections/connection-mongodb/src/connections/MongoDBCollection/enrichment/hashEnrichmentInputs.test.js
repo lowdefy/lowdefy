@@ -14,12 +14,25 @@
   limitations under the License.
 */
 import { readFile } from 'node:fs/promises';
-import { ObjectId } from 'mongodb';
+import { Binary, Decimal128, Long, ObjectId } from 'mongodb';
 import { serializer } from '@lowdefy/helpers';
 
 import canonicalJson from './canonicalJson.js';
 import cyrb53 from './cyrb53.js';
 import hashEnrichmentInputs from './hashEnrichmentInputs.js';
+
+// The markers the fixture uses for values JSON can not hold (see its description).
+function reviveTyped(value) {
+  if (Array.isArray(value)) return value.map(reviveTyped);
+  if (value === null || typeof value !== 'object' || value instanceof Date) return value;
+  const keys = Object.keys(value);
+  if (keys.length === 1 && keys[0] === '~bigint') return BigInt(value['~bigint']);
+  if (keys.length === 1 && keys[0] === '~toJSON') {
+    const json = value['~toJSON'];
+    return { toJSON: () => json };
+  }
+  return Object.fromEntries(keys.map((key) => [key, reviveTyped(value[key])]));
+}
 
 async function readFixture() {
   const text = await readFile(
@@ -39,9 +52,9 @@ test('cyrb53 matches the published test vectors of the reference implementation'
 
 test('hashEnrichmentInputs gives every fixture hash and canonical text', async () => {
   const fixture = await readFixture();
-  expect(fixture.cases.length).toBeGreaterThanOrEqual(10);
+  expect(fixture.cases.length).toBeGreaterThanOrEqual(12);
   fixture.cases.forEach(({ name, inputs, canonical, hash }) => {
-    const revived = serializer.deserialize(inputs);
+    const revived = reviveTyped(serializer.deserialize(inputs));
     expect({ name, canonical: canonicalJson(revived) }).toEqual({ name, canonical });
     expect({ name, hash: hashEnrichmentInputs(revived) }).toEqual({ name, hash });
   });
@@ -96,4 +109,21 @@ test('numbers print as JSON prints them', () => {
 
 test('a string and a number of the same text hash differently', () => {
   expect(hashEnrichmentInputs({ a: 5 })).not.toBe(hashEnrichmentInputs({ a: '5' }));
+});
+
+test('driver values hash as the JSON form the browser receives them in', () => {
+  const inputs = {
+    price: Decimal128.fromString('1.50'),
+    big: Long.fromString('9007199254740993'),
+    blob: new Binary(Buffer.from('hi')),
+    id: ObjectId.createFromHexString('64b7f0c2a1b2c3d4e5f60718'),
+  };
+  const wire = JSON.parse(JSON.stringify({ ...inputs, id: { _oid: inputs.id.toHexString() } }));
+  expect(canonicalJson(inputs)).toBe(canonicalJson(wire));
+  expect(hashEnrichmentInputs(inputs)).toBe(hashEnrichmentInputs(wire));
+});
+
+test('a bigint hashes as the number with the same digits', () => {
+  expect(canonicalJson({ n: 5n })).toBe('{"n":5}');
+  expect(hashEnrichmentInputs({ n: 5n })).toBe(hashEnrichmentInputs({ n: 5 }));
 });
