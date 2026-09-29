@@ -174,13 +174,37 @@ test('getProgressMode takes the largest chip form that fits beside the title', (
   // Every character 6px wide.
   const measure = { smallText: (text) => text.length * 6 };
   const progress = getProgressParts({ running: 3, queued: 1, error: 1, ok: 0, empty: 0 });
+  const statuses = (result) => result.parts.map((part) => part.status);
   // Full: inset 14 + icon 12 + gap 3 + 30 characters.
-  expect(getProgressMode({ progress, measure, room: 209 })).toBe('full');
+  expect(getProgressMode({ progress, measure, room: 209 })).toMatchObject({ mode: 'full' });
   // Compact: inset 14 + 3 × (icon 12 + gap 3 + one digit 6) + 2 part gaps of 6.
-  expect(getProgressMode({ progress, measure, room: 208 })).toBe('compact');
-  expect(getProgressMode({ progress, measure, room: 89 })).toBe('compact');
-  expect(getProgressMode({ progress, measure, room: 88 })).toBe('dot');
-  expect(getProgressMode({ progress, measure, room: -20 })).toBe('dot');
+  const compact = getProgressMode({ progress, measure, room: 208 });
+  expect(compact.mode).toBe('compact');
+  expect(statuses(compact)).toEqual(['running', 'queued', 'error']);
+  expect(getProgressMode({ progress, measure, room: 89 }).mode).toBe('compact');
+  // Partial: queued goes first (inset 14 + 2 × 21 + one gap of 6), then running (14 + 21).
+  const partial = getProgressMode({ progress, measure, room: 88 });
+  expect(partial.mode).toBe('partial');
+  expect(statuses(partial)).toEqual(['running', 'error']);
+  expect(statuses(getProgressMode({ progress, measure, room: 62 }))).toEqual(['running', 'error']);
+  const errorOnly = getProgressMode({ progress, measure, room: 61 });
+  expect(errorOnly.mode).toBe('partial');
+  expect(statuses(errorOnly)).toEqual(['error']);
+  expect(getProgressMode({ progress, measure, room: 35 }).mode).toBe('partial');
+  expect(getProgressMode({ progress, measure, room: 34 })).toEqual({ mode: 'dot', parts: [] });
+  expect(getProgressMode({ progress, measure, room: -20 }).mode).toBe('dot');
+});
+
+test('getProgressMode drops queued before running when there is no error', () => {
+  const measure = { smallText: (text) => text.length * 6 };
+  const progress = getProgressParts({ running: 3, queued: 1, error: 0, ok: 0, empty: 0 });
+  const partial = getProgressMode({ progress, measure, room: 40 });
+  expect(partial.mode).toBe('partial');
+  expect(partial.parts.map((part) => part.status)).toEqual(['running']);
+  // One status has no partial form: it is compact or a dot.
+  const single = getProgressParts({ running: 0, queued: 4, error: 0, ok: 0, empty: 0 });
+  expect(getProgressMode({ progress: single, measure, room: 35 }).mode).toBe('compact');
+  expect(getProgressMode({ progress: single, measure, room: 34 }).mode).toBe('dot');
 });
 
 test('readServerRunCounts reads counts from the response aggregates', () => {

@@ -15,9 +15,10 @@
 */
 
 // Features that take over the content of some data columns' cells, from their `cellRenderer`:
-// `{ match(column), Cell }`. `Cell` receives `{ api, col, original, rowKey }` and renders the
-// cells of every column `match` accepts (enrichment's run-state and invalid columns); the first
-// match wins, and other columns render through the shared cell core.
+// `{ match(column), Cell }`. `Cell` receives `{ api, col, lead, original, rowKey }` (`lead`: the
+// tree or expand chevron before the content in a row's first data cell) and renders the cells
+// of every column `match` accepts (enrichment's computed and invalid columns); the first match
+// wins, and other columns render through the shared cell core.
 function collectCellRenderers(features) {
   return features.map((feature) => feature.cellRenderer).filter(Boolean);
 }

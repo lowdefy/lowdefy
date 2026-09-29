@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import assignOptionColors from './assignOptionColors.js';
 import needsTemplates from './needsTemplates.js';
 import normalizeColumns from './normalizeColumns.js';
 import USER_COLUMN_TYPES from './userColumnTypes.js';
@@ -132,6 +133,45 @@ test('normalizeColumns keeps the layout, feature flags and kind keys of user-def
     headerTooltip: 'What users typed',
   });
   expect(column.options.map((option) => option.value)).toEqual(['a', 'b']);
+});
+
+test('a user-defined column gives options without a colour the tones the picker would', () => {
+  // Plain strings, as an API client or a column saved before options had colours writes them.
+  const ai = userColumn({
+    kind: 'ai',
+    prompt: '{{ name }}',
+    inputs: { name: { column: 'name' } },
+    output: { type: 'tag', options: ['Decision maker', 'Champion', 'Influencer'] },
+  });
+  expect(ai.options).toEqual([
+    { value: 'Decision maker', label: 'Decision maker', color: 'blue' },
+    { value: 'Champion', label: 'Champion', color: 'green' },
+    { value: 'Influencer', label: 'Influencer', color: 'orange' },
+  ]);
+  // The same colours the picker gives the same options.
+  expect(
+    assignOptionColors({ values: ['Decision maker', 'Champion', 'Influencer'] }).map(
+      (option) => option.color
+    )
+  ).toEqual(['blue', 'green', 'orange']);
+  // A colour an option has is kept, and the others skip it.
+  const mixed = userColumn({
+    type: 'tag',
+    options: ['a', { value: 'b', color: 'blue' }, { value: 'c', label: 'C' }],
+  });
+  expect(mixed.options).toEqual([
+    { value: 'a', label: 'a', color: 'green' },
+    { value: 'b', label: 'b', color: 'blue' },
+    { value: 'c', label: 'C', color: 'orange' },
+  ]);
+  // Declared columns keep options without a colour neutral.
+  const declared = normalizeColumns({
+    columns: [{ key: 'd', type: 'tag', options: ['a', 'b'] }],
+  }).columnsByKey.d;
+  expect(declared.options).toEqual([
+    { value: 'a', label: 'a' },
+    { value: 'b', label: 'b' },
+  ]);
 });
 
 test('a user-defined column takes tone names as option colours, and nothing else', () => {

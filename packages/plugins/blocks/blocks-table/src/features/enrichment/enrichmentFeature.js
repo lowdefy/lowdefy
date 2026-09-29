@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import ComputedCell from './ComputedCell.js';
 import createAddColumn from './createAddColumn.js';
 import createAddExtractColumn from './createAddExtractColumn.js';
 import createAddRow from './createAddRow.js';
@@ -31,7 +32,6 @@ import createRunRow from './createRunRow.js';
 import createStartRename from './createStartRename.js';
 import createSubmitColumn from './createSubmitColumn.js';
 import createSubmitRename from './createSubmitRename.js';
-import EnrichmentCell from './EnrichmentCell.js';
 import getEnrichmentMenuItems from './getEnrichmentMenuItems.js';
 import getInvalidHeaderProps from './getInvalidHeaderProps.js';
 import handleEnrichmentClick from './handleEnrichmentClick.js';
@@ -64,8 +64,9 @@ const enrichmentFeature = {
   headerCellProps: getInvalidHeaderProps,
   headerMenuItems: getEnrichmentMenuItems,
   cellRenderer: {
-    match: (column) => Boolean(column.stateField) || column.invalid !== undefined,
-    Cell: EnrichmentCell,
+    match: (column) =>
+      Boolean(column.stateField) || column.kind === 'extract' || column.invalid !== undefined,
+    Cell: ComputedCell,
   },
   toolbarItems: [ImportButton],
   bulkItems: [RunSelectedButton],

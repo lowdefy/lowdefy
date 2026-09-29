@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import AGGREGATE_LABELS from './aggregateLabels.js';
 import CELL_TYPE_FAMILIES from './cellTypeFamilies.js';
 import COLUMN_KINDS from './columnKinds.js';
+import fillOptionColors from './fillOptionColors.js';
 import humanizeKey from './humanizeKey.js';
 import invalidateColumn from './invalidateColumn.js';
 import linkColumnKinds from './linkColumnKinds.js';
@@ -197,8 +198,9 @@ function checkOptionColors(leaf) {
 
 // A user-defined column (`userDefined: true`) is runtime data a user wrote: it keeps only the
 // keys in USER_COLUMN_KEYS and a type in USER_COLUMN_TYPES (with no type it is text, whatever
-// defaultColumn sets), and a config error makes it an error column (invalidateColumn) instead of
-// throwing, so the table still renders.
+// defaultColumn sets), its options without a colour get the picker's tones (fillOptionColors),
+// and a config error makes it an error column (invalidateColumn) instead of throwing, so the
+// table still renders.
 function normalizeUserLeaf({ column, defaults, path, providerIds, index }) {
   try {
     const leaf = normalizeLeaf({
@@ -215,6 +217,8 @@ function normalizeUserLeaf({ column, defaults, path, providerIds, index }) {
     }
     checkOptionColors(leaf);
     checkProvider({ leaf, providerIds });
+    // Declared columns keep options without a colour neutral: the config author chose that.
+    leaf.options = fillOptionColors(leaf.options);
     return leaf;
   } catch (error) {
     const key = type.isString(column.key) ? column.key : `invalid:${index}`;

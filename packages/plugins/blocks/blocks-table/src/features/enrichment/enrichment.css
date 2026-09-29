@@ -135,8 +135,9 @@
 
   /* Header: progress chip and inline rename. */
   /* The chip is sized to what fits beside the title (RunProgress: full text, an icon and count
-     per status, or a dot), so it never shrinks: the title keeps its room. Its colours are the
-     most severe status' tag tone, set inline. The widths getProgressMode assumes are these:
+     per status, the most important statuses' counts, or a dot), so it never shrinks: the title
+     keeps its room. Its colours are the most severe status' tag tone, set inline. The widths
+     getProgressMode assumes are these:
      padding 6 + border 1 each side, 12px icons, a 3px gap after an icon, 6px between parts. */
   .lf-enrich-progress {
     display: inline-flex;
@@ -159,7 +160,8 @@
     height: 12px;
   }
 
-  .lf-enrich-progress[data-lf-enrich-progress='compact'] {
+  .lf-enrich-progress[data-lf-enrich-progress='compact'],
+  .lf-enrich-progress[data-lf-enrich-progress='partial'] {
     gap: 6px;
   }
 
@@ -404,34 +406,93 @@
   }
 
   /* An AI tag answer's options, each its chip and colour select. */
+  /* AI answer options: one bordered control holding the option chips, each with its colour
+     button and remove button, and the input that adds one. */
   .lf-enrich-options {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--ant-padding-xs, 8px);
-    margin: var(--ant-padding-xs, 8px) 0 0;
+    align-items: center;
+    gap: var(--ant-padding-xxs, 4px);
+    box-sizing: border-box;
+    min-height: var(--ant-control-height, 32px);
+    padding: 3px 4px;
+    background: var(--ant-color-bg-container, #fff);
+    border: 1px solid var(--ant-color-border, #d9d9d9);
+    border-radius: var(--ant-border-radius, 6px);
+  }
+
+  .lf-enrich-options:focus-within {
+    border-color: var(--ant-color-primary, #1677ff);
+  }
+
+  .lf-enrich-options-list {
+    display: contents;
+    margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .lf-enrich-options > li {
+  .lf-enrich-option-chip {
     display: inline-flex;
     align-items: center;
-    gap: var(--ant-padding-xxs, 4px);
-  }
-
-  .lf-enrich-option-chip {
-    padding: 0 8px;
+    gap: 2px;
+    padding: 0 2px 0 4px;
     font-size: var(--ant-font-size-sm, 12px);
     font-weight: 600;
-    line-height: 20px;
+    line-height: 22px;
     border: 1px solid transparent;
     border-radius: var(--ant-border-radius-sm, 4px);
   }
 
-  .lf-enrich-option-tone {
+  .lf-enrich-option-color,
+  .lf-enrich-option-remove,
+  .lf-enrich-option-palette-tone {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    padding: 0;
+    color: inherit;
+    background: none;
+    border: 0;
+    border-radius: var(--ant-border-radius-xs, 2px);
+    cursor: pointer;
+  }
+
+  .lf-enrich-option-color,
+  .lf-enrich-option-remove {
+    width: 18px;
+    height: 18px;
+  }
+
+  .lf-enrich-option-color:hover,
+  .lf-enrich-option-remove:hover,
+  .lf-enrich-option-palette-tone:hover {
+    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  }
+
+  .lf-enrich-option-remove {
+    opacity: 0.65;
+  }
+
+  .lf-enrich-options-input {
+    flex: 1 1 120px;
+    min-width: 120px;
+    padding-inline: 4px;
+  }
+
+  .lf-enrich-option-palette {
+    display: grid;
+    grid-template-columns: repeat(6, 24px);
+    gap: 4px;
+  }
+
+  .lf-enrich-option-palette-tone {
+    width: 24px;
+    height: 24px;
+  }
+
+  .lf-enrich-option-palette-tone[aria-pressed='true'] {
+    box-shadow: inset 0 0 0 2px var(--ant-color-primary, #1677ff);
   }
 
   .lf-enrich-option-swatch {
@@ -439,6 +500,11 @@
     height: 10px;
     border: 1px solid transparent;
     border-radius: 50%;
+  }
+
+  .lf-enrich-option-palette .lf-enrich-option-swatch {
+    width: 14px;
+    height: 14px;
   }
 
   .lf-enrich-preview pre {

@@ -125,10 +125,10 @@ function JsonNode({ depth, label, onAdd, path, value }) {
   );
 }
 
-// A cell's raw provider result as a collapsible tree (the details panel). The root is open;
-// every node, leaf or object, can be added as an extract column. Keys, strings, numbers and
-// booleans each have their colour.
-function JsonTree({ onAdd, value }) {
+// A cell's raw provider result as a collapsible tree (the details panel). The root, named
+// `label` (the column's title), is open; every node, leaf or object, can be added as an extract
+// column. Keys, strings, numbers and booleans each have their colour.
+function JsonTree({ label, onAdd, value }) {
   return (
     <ul
       aria-label="Raw result"
@@ -137,7 +137,7 @@ function JsonTree({ onAdd, value }) {
       role="tree"
       style={TREE_STYLE}
     >
-      <JsonNode depth={0} label="result" onAdd={onAdd} path="" value={value} />
+      <JsonNode depth={0} label={label} onAdd={onAdd} path="" value={value} />
     </ul>
   );
 }

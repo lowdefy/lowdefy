@@ -1320,6 +1320,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `themeParams` | object | - | AG Grid Theming API parameters merged onto this block's theme, for per-grid overrides. Keys are AG Grid param names, e.g. `headerBackgroundColor`, `rowHoverColor`, `borderColor`. Values are CSS strings and may reference antd tokens, e.g. `var(--ant-color-primary)`. An unrecognised param name has no effect — neither Lowdefy nor AG Grid validates the names — so check spelling against AG Grid's theming parameter reference. |
 | `height` | number \| string | `"auto"` | Specify table height explicitly, in pixel. |
 | `rowData` | array | - | The list of data to display on the table. |
+| `quickFilterValue` | string | - | Show only rows with a cell containing this text. Bind it to state to drive a search box; the `setQuickFilter` method does the same imperatively. |
 | `rowId` | string | - | The data field to use in `getRowId` which results in Row Selection being maintained across Row Data changes (assuming the Row exists in both sets). See Ag Grid docs for more details (https://www.ag-grid.com/react-data-grid/data-update-row-data/). |
 | `enableBrowserTooltips` | boolean | `false` | Set to `true` to use the browser native `title` attribute tooltips instead of AG Grid's styled tooltip component. |
 | `suppressCellFocus` | boolean | `true` | When `true` (default), clicking a cell does not draw the AG Grid cell-focus border. Set to `false` to enable spreadsheet-style cell focus and keyboard navigation. |

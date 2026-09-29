@@ -24,7 +24,9 @@ import LazyCell from './LazyCell.js';
 function renderContent({ api, col, lead, original }) {
   const rowKey = api.config.getKey(original);
   const custom = api.features.cellRenderers.find((renderer) => renderer.match(col.column));
-  if (custom) return <custom.Cell api={api} col={col} original={original} rowKey={rowKey} />;
+  if (custom) {
+    return <custom.Cell api={api} col={col} lead={lead} original={original} rowKey={rowKey} />;
+  }
   if (LAZY_CELL_TYPES.has(col.column.type)) {
     return <LazyCell api={api} col={col} lead={lead} original={original} rowKey={rowKey} />;
   }

@@ -253,7 +253,20 @@ test.describe('Table enrichment', () => {
     await expect(email).toHaveAttribute('data-lf-enrich-progress', 'full');
     await expect(email).toHaveText('2 running · 1 queued · 1 error');
     expect(await titleFits()).toBe(true);
-    await dragBy(page, handle, -280);
+    // 160px: queued goes first, so the error and running counts stay.
+    await dragBy(page, handle, -230);
+    await expect(email).toHaveAttribute('data-lf-enrich-progress', 'partial');
+    await expect(email.locator('.lf-enrich-progress-part')).toHaveText(['2', '1']);
+    await expect(email.locator('.lf-enrich-progress-part[data-status="queued"]')).toHaveCount(0);
+    await expect(email).toHaveAttribute('title', '2 running · 1 queued · 1 error');
+    expect(await titleFits()).toBe(true);
+    // 120px: the error count alone.
+    await dragBy(page, handle, -40);
+    await expect(email).toHaveAttribute('data-lf-enrich-progress', 'partial');
+    await expect(email.locator('.lf-enrich-progress-part')).toHaveText(['1']);
+    await expect(email.locator('.lf-enrich-progress-part')).toHaveAttribute('data-status', 'error');
+    expect(await titleFits()).toBe(true);
+    await dragBy(page, handle, -30);
     await expect(email).toHaveAttribute('data-lf-enrich-progress', 'dot');
     await expect(email).toHaveAttribute('title', '2 running · 1 queued · 1 error');
     expect(await titleFits()).toBe(true);
@@ -419,13 +432,26 @@ test.describe('Table enrichment', () => {
     await options.press('Enter');
     await options.fill('enterprise');
     await options.press('Enter');
-    // Each option starts on its own tone; a colour select changes one.
-    await expect(picker(page).locator('.lf-enrich-option-chip')).toHaveText(['smb', 'enterprise']);
-    await expect(picker(page).locator('[data-lf-picker-option] .ant-select')).toHaveText([
-      'blue',
-      'green',
-    ]);
-    await pick(page, picker(page).getByLabel('Colour of enterprise'), 'red');
+    // One control: each option is a chip in its own tone (listed once, no separate colour
+    // selects), and its colour button picks another tone.
+    const chips = picker(page).locator('[data-lf-picker-option]');
+    await expect(chips.locator('.lf-enrich-option-text')).toHaveText(['smb', 'enterprise']);
+    await expect(picker(page).getByText('enterprise', { exact: true })).toHaveCount(1);
+    await expect(chips.nth(0)).toHaveAttribute('data-color', 'blue');
+    await expect(chips.nth(1)).toHaveAttribute('data-color', 'green');
+    await picker(page).getByRole('button', { name: 'Colour of enterprise: green' }).click();
+    await page.getByRole('group', { name: 'Colours for enterprise' }).getByTitle('red').click();
+    await expect(chips.nth(1)).toHaveAttribute('data-color', 'red');
+    await expect(page.getByRole('group', { name: 'Colours for enterprise' })).toBeHidden();
+    // An option can be removed and typed again; Backspace in the empty input removes the last.
+    await options.fill('mid-market');
+    await options.press('Enter');
+    await expect(chips.nth(2)).toHaveAttribute('data-color', 'green');
+    await picker(page).getByRole('button', { name: 'Remove mid-market' }).click();
+    await options.fill('mid-market');
+    await options.press('Enter');
+    await options.press('Backspace');
+    await expect(chips.locator('.lf-enrich-option-text')).toHaveText(['smb', 'enterprise']);
     expect((await previewConfig(page)).inputs).toEqual({
       company: { column: 'company' },
       domain: { column: 'domain' },
@@ -793,6 +819,11 @@ test.describe('Table enrichment', () => {
       /^2026-09-01 \d\d:00:00$/
     );
     await expect(details(page).locator('[data-lf-details-timing="attempts"]')).toHaveText('1');
+    // How long the run took, beside its finish time.
+    await expect(details(page).locator('[data-lf-details-duration]')).toHaveText(' · took 2 s');
+    await expect(details(page).locator('[data-lf-details-timing="finished"]')).toHaveText(
+      /^2026-09-01 \d\d:00:03$/
+    );
     await expect(details(page).locator('[data-lf-details-input="domain"]')).toHaveText(
       '"acme.com"'
     );
@@ -803,6 +834,10 @@ test.describe('Table enrichment', () => {
     await expect(details(page).locator('[data-lf-json-node="email"]')).toContainText(
       '"ada@acme.com"'
     );
+    // The tree's root is named after the column, not "result".
+    await expect(
+      details(page).locator('[data-lf-json-node=""] .lf-enrich-json-key').first()
+    ).toHaveText('Email');
     // Objects expand on demand.
     await expect(details(page).locator('[data-lf-json-node="profile.name"]')).toHaveCount(0);
     await details(page).locator('[data-lf-json-toggle="profile"]').click();
@@ -839,6 +874,10 @@ test.describe('Table enrichment', () => {
       'Extracts "profile.linkedin" from Email.'
     );
     await expect(details(page).locator('[data-lf-details-value]')).toHaveText('in/ada');
+    // The raw result is the source column's, and its root carries that column's title.
+    await expect(
+      details(page).locator('[data-lf-json-node=""] .lf-enrich-json-key').first()
+    ).toHaveText('Email');
   });
 
   test('the raw result tree colours values, cuts them to its width and always shows add', async ({
@@ -938,10 +977,22 @@ test.describe('Table enrichment', () => {
     const saving = getBlock(page, 'enrich').locator('.lf-table-body [data-saving]');
     await expect(saving).toHaveCount(1);
     await expect(saving.locator('[data-col-key="company"]')).toHaveText('Tyrell');
+    // Nothing is computed yet: the enrichment (email), ai (summary) and extract (linkedin) cells
+    // all show the same placeholder, their type's skeleton shape, never "—" in some and blank in
+    // others. The formula fills in from the typed values.
+    for (const key of ['email', 'summary', 'linkedin']) {
+      const pending = saving.locator(`[data-col-key="${key}"] [data-lf-enrich-pending]`);
+      await expect(pending.locator('.lf-table-skeleton')).toHaveCount(1);
+      await expect(saving.locator(`[data-col-key="${key}"]`)).toHaveText('');
+    }
+    await expect(saving.locator('[data-col-key="label"]')).toHaveText('Tyrell (tyrell.com)');
     await expect(editor.locator('[data-lf-new-row-saving]')).toBeVisible();
     await expectEvent(page, 'onRowAdd', { values: { company: 'Tyrell', domain: 'tyrell.com' } });
     await expect(saving).toHaveCount(0);
     await expect(cell(page, 'saved', 'company')).toHaveText('Tyrell');
+    // Saved, the row renders from its data.
+    await expect(cell(page, 'saved', 'email').locator('[data-lf-enrich-pending]')).toHaveCount(0);
+    await expect(state(page, 'saved', 'email')).toHaveAttribute('data-lf-enrich-status', 'none');
     // The editor stays open, cleared, for the next row.
     await expect(editor.locator('[data-lf-new-row-field="company"] input')).toHaveValue('');
   });
@@ -1125,4 +1176,75 @@ test.describe('Table error columns', () => {
     // The picker opens on the column's own config, to be fixed.
     await expect(page.locator('.ant-drawer [aria-label="Title"]')).toHaveValue('Broken');
   });
+});
+
+test.describe('Table enrichment option tones', () => {
+  test('plain string options of a user-defined column take the tones the picker gives, declared ones stay neutral', async ({
+    page,
+  }) => {
+    await openTablePage(page, 'table-enrichment');
+    const table = getBlock(page, 'enrich_option_tones');
+    const tagBackgrounds = (key) =>
+      table
+        .locator(`.lf-table-body [data-col-key="${key}"] .lf-table-tag`)
+        .evaluateAll((tags) => tags.map((tag) => getComputedStyle(tag).backgroundColor));
+    const picked = await tagBackgrounds('picked');
+    expect(picked).toHaveLength(3);
+    expect(new Set(picked).size).toBe(3);
+    // The same colours the picker gave the same options.
+    expect(await tagBackgrounds('plain')).toEqual(picked);
+    // A declared column's options without colours stay one neutral tone.
+    const declared = await tagBackgrounds('declared');
+    expect(declared).toHaveLength(3);
+    expect(new Set(declared).size).toBe(1);
+    expect(picked).not.toContain(declared[0]);
+  });
+});
+
+test.describe('Table enrichment trailing column', () => {
+  for (const blockId of ['enrich_wide_loading', 'enrich_wide']) {
+    test(`the trailing column never covers the last data column once scrolled to the end: ${blockId}`, async ({
+      page,
+    }) => {
+      await openTablePage(page, 'table-enrichment');
+      const table = getBlock(page, blockId);
+      const scroller = table.locator('.lf-table-scroller');
+      const body = table.locator('.lf-table-body, .lf-table-skeleton-row').first();
+      await expect(body).toBeVisible();
+      // The trailing column's cells carry the pinned divider in every row, skeleton rows too.
+      const rows = table.locator('[role="row"]');
+      const rowCount = await rows.count();
+      expect(rowCount).toBeGreaterThan(1);
+      for (let i = 0; i < rowCount; i++) {
+        await expect(rows.nth(i).locator('.lf-table-gridcell[data-pinned="end"]')).toHaveAttribute(
+          'data-pinned-edge',
+          ''
+        );
+      }
+      await scroller.evaluate((element) => {
+        element.scrollLeft = element.scrollWidth;
+      });
+      const box = async (locator) => locator.boundingBox();
+      const trailingHeader = table.locator(
+        '.lf-table-header .lf-table-gridcell[data-pinned="end"]'
+      );
+      const lastHeader = table.locator('[data-lf-header][data-col-key="segment"]');
+      await expect(async () => {
+        const trailing = await box(trailingHeader);
+        const last = await box(lastHeader);
+        const view = await box(scroller);
+        // The last data column ends where the trailing column starts, and fits in the view.
+        expect(Math.round(last.x + last.width)).toBeLessThanOrEqual(Math.round(trailing.x));
+        expect(Math.round(last.x)).toBeGreaterThanOrEqual(Math.round(view.x));
+      }).toPass();
+      // Its title is cut with an ellipsis inside its own cell, not under the trailing column.
+      const title = lastHeader.locator('.lf-table-header-title');
+      expect(
+        await title.evaluate((element) => ({
+          overflow: getComputedStyle(element).textOverflow,
+          cut: element.scrollWidth > element.clientWidth,
+        }))
+      ).toEqual({ overflow: 'ellipsis', cut: true });
+    });
+  }
 });

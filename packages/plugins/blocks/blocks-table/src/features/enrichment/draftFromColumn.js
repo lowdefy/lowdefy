@@ -15,9 +15,9 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import assignOptionColors from '@lowdefy/blocks-antd/table/assignOptionColors.js';
 import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
 
-import assignOptionColors from './assignOptionColors.js';
 import createDraft from './createDraft.js';
 import getDraftKind from './getDraftKind.js';
 import getDraftType from './getDraftType.js';
