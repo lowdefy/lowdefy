@@ -387,4 +387,40 @@ test.describe('Table visual polish', () => {
     const ownBox = await own.boundingBox();
     expect(Math.abs(ownBox.y - (outerBox.y + outerBox.height))).toBeLessThan(1);
   });
+
+  test('the status editor shows the current value and options with the cell colours', async ({
+    page,
+  }) => {
+    const cell = row(page, 'crm', 3).locator('[data-col-key="stage"]');
+    const cellDot = await cell
+      .locator('.lf-table-status-dot')
+      .evaluate((element) => getComputedStyle(element).backgroundColor);
+    await cell.dblclick();
+    const editor = page.locator('[data-lf-editor]');
+    const value = editor.locator('.ant-select-content');
+    await expect(value).toHaveCSS('opacity', '1');
+    await expect(value.locator('.lf-table-status')).toHaveText('Won');
+    const options = page.locator('.lf-table-editor-popup .ant-select-item-option');
+    await expect(options).toHaveCount(4);
+    await expect(options.locator('.lf-table-status-dot')).toHaveCount(4);
+    const optionDot = await options
+      .filter({ hasText: 'Won' })
+      .locator('.lf-table-status-dot')
+      .evaluate((element) => getComputedStyle(element).backgroundColor);
+    expect(optionDot).toBe(cellDot);
+    // Typing searches the option labels.
+    await page.keyboard.type('Lo');
+    await expect(options).toHaveCount(1);
+    await expect(options).toHaveText('Lost');
+    await page.keyboard.press('Escape');
+    await page.keyboard.press('Escape');
+  });
+
+  test('the tags editor shows picked values and options as the cell chips', async ({ page }) => {
+    await row(page, 'crm', 3).locator('[data-col-key="labels"]').dblclick();
+    const editor = page.locator('[data-lf-editor]');
+    await expect(editor.locator('.lf-table-editor-tag .lf-table-tag').first()).toBeVisible();
+    const options = page.locator('.lf-table-editor-popup .ant-select-item-option');
+    await expect(options.locator('.lf-table-tag')).toHaveCount(4);
+  });
 });

@@ -34,6 +34,43 @@
     min-width: 0;
   }
 
+  /* antd fades a searchable select's value while it is open; the editor shows the current value
+     as the value until something is typed. */
+  .lf-table-editor
+    .ant-select-open
+    .ant-select-content-has-value:not(.ant-select-content-has-search-value) {
+    opacity: 1;
+  }
+
+  .lf-table-editor-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    max-width: 100%;
+    margin-inline-end: var(--ant-margin-xxs, 4px);
+  }
+
+  .lf-table-editor-tag > .lf-table-tag {
+    padding: 2px var(--ant-padding-xxs, 4px);
+  }
+
+  .lf-table-editor-tag-remove {
+    flex: none;
+    padding: 0 1px;
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    font: inherit;
+    line-height: 1;
+    background: transparent;
+    border: 0;
+    border-radius: var(--ant-border-radius-sm, 4px);
+    cursor: pointer;
+  }
+
+  .lf-table-editor-tag-remove:hover {
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  }
+
   .lf-table-editor > .ant-switch,
   .lf-table-editor > .ant-rate {
     flex: none;
