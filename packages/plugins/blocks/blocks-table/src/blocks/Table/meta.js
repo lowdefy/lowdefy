@@ -485,7 +485,7 @@ export default {
       rowVersionField: {
         type: 'string',
         description:
-          'Field that changes whenever a row changes (for example `updated_at`). When set, rows are compared by key and this field instead of by content.',
+          'Dot path to a field that changes whenever a row changes (for example `updated.timestamp`). When set, rows are compared by key and this field instead of by content; a row without it is compared by content.',
       },
       user: {
         type: 'object',

@@ -14,12 +14,21 @@
   limitations under the License.
 */
 
+import { get, type } from '@lowdefy/helpers';
+
 import isRowEqual from './isRowEqual.js';
 
 const EMPTY = [];
 
+// `rowVersionField` is a dot path (`updated.timestamp`). A row without a version cannot be told
+// apart by it, so it is compared field by field.
 function isSameRow({ prior, row, rowVersionField }) {
-  if (rowVersionField) return prior[rowVersionField] === row[rowVersionField];
+  if (rowVersionField) {
+    const priorVersion = get(prior, rowVersionField);
+    const version = get(row, rowVersionField);
+    if (!type.isNone(priorVersion) && !type.isNone(version))
+      return isRowEqual(priorVersion, version);
+  }
   return isRowEqual(prior, row);
 }
 
