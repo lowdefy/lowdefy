@@ -184,7 +184,7 @@ test('invalid columns are refused with the reason', async ({ request }) => {
         provider: 'company_lookup',
         inputs: { domain: { column: 'employees' } },
       },
-      'Input "domain" reads "employees", which is not a column the server can read.',
+      'Input "domain" reads the extract column "employees", which computes in the browser, so the server can not read it.',
     ],
     [
       {
