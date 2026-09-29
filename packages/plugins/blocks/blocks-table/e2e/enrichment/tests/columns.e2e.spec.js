@@ -198,6 +198,25 @@ test('invalid columns are refused with the reason', async ({ request }) => {
       { key: 'x', kind: 'extract', source: 'name', path: 'a' },
       'An extract column needs the key of an enrichment or ai column as its source.',
     ],
+    // Other users' data must never render as markup or load URLs in a viewer's browser.
+    [
+      { key: 'x', kind: 'formula', type: 'html', template: '{{ name }}' },
+      'The column type should be one of text, email, phone, url',
+    ],
+    [
+      { key: 'x', kind: 'extract', type: 'image', source: 'company', path: 'logo' },
+      'The column type should be one of',
+    ],
+    [
+      {
+        key: 'x',
+        kind: 'enrichment',
+        type: 'avatar',
+        provider: 'company_lookup',
+        inputs: { domain: { column: 'domain' } },
+      },
+      'The column type should be one of',
+    ],
   ];
   for (const [column, message] of cases) {
     const refused = await addColumn(request, column);

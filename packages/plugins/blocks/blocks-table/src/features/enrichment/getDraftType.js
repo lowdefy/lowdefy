@@ -15,14 +15,15 @@
 */
 
 import AI_OUTPUT_TYPES from '@lowdefy/blocks-antd/table/aiOutputTypes.js';
-import CELL_TYPE_FAMILIES from '@lowdefy/blocks-antd/table/cellTypeFamilies.js';
+import USER_COLUMN_TYPES from '@lowdefy/blocks-antd/table/userColumnTypes.js';
 
 // The cell type an error column's draft starts from: the type its config asked for, when the
-// kind can have it (an ai column answers one of AI_OUTPUT_TYPES), else text.
+// kind can have it (an ai column answers one of AI_OUTPUT_TYPES, any other user column one of
+// USER_COLUMN_TYPES), else text.
 function getDraftType({ raw, kind }) {
   const wanted = raw.output?.type ?? raw.type;
   if (kind === 'ai') return AI_OUTPUT_TYPES.includes(wanted) ? wanted : 'text';
-  return Object.hasOwn(CELL_TYPE_FAMILIES, wanted ?? '') ? wanted : 'text';
+  return USER_COLUMN_TYPES.includes(wanted) ? wanted : 'text';
 }
 
 export default getDraftType;

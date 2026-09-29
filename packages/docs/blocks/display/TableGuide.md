@@ -1255,6 +1255,8 @@ The enrichment feature loads in its own chunk, only for tables that use it (an e
 
 **User-defined columns.** Columns with `userDefined: true` get Rename, Edit, Duplicate, Insert and Delete in their header menu (each shown when the table has the event it fires). A user-defined column whose config is invalid (an unknown provider or answer type, an input column that was deleted) renders as an error column instead of breaking the table: its cells show "Invalid column: <reason>", its header is marked, and its menu offers Edit column and Delete column. A declared column with an invalid config is a config error.
 
+A user-defined column is one user's content rendered in every viewer's browser, so the Table only takes text-safe config from it: its type must be one of `text`, `email`, `phone`, `url`, `number`, `currency`, `percent`, `progress`, `rating`, `date`, `datetime`, `boolean`, `tag`, `tags`, `status` or `json` (an `html`, `image`, `avatar`, `people`, `link`, `relation` or action type makes it an error column; with no type it is `text`, whatever `defaultColumn` sets), and its `cell`, `rules`, `validate` and template tooltips are ignored (a `{ field }` tooltip is kept). The add-column picker offers only these types. Check stored columns against the same list on the server, as the reference app's column check does.
+
 **Values at field paths.** `onRowAdd` `values` and `onImport` `rows` carry every value at its column's `field` path. New input columns from the picker or a CSV import carry their `field` too, under `inputFieldPrefix` (`values.notes` with `inputFieldPrefix: values`), so the endpoint that stores them only has to accept the paths of its `fields` allowlist. Build that allowlist on the server, with the user input columns added:
 
 ```yaml

@@ -18,11 +18,13 @@ import { type } from '@lowdefy/helpers';
 
 import AGGREGATE_LABELS from './aggregateLabels.js';
 import CELL_TYPE_FAMILIES from './cellTypeFamilies.js';
+import COLUMN_KINDS from './columnKinds.js';
 import humanizeKey from './humanizeKey.js';
 import invalidateColumn from './invalidateColumn.js';
 import linkColumnKinds from './linkColumnKinds.js';
 import normalizeColumnKind from './normalizeColumnKind.js';
 import normalizeOptions from './normalizeOptions.js';
+import USER_COLUMN_TYPES from './userColumnTypes.js';
 
 const DEFAULT_COLUMN = {
   sortable: true,
@@ -132,11 +134,69 @@ function checkProvider({ leaf, providerIds }) {
   }
 }
 
-// A user-defined column (`userDefined: true`) is runtime data a user wrote: a config error makes
-// it an error column (invalidateColumn) instead of throwing, so the table still renders.
+// The keys a user-defined column keeps: its identity, layout and feature flags, and its kind's
+// keys. Everything else is dropped, above all `cell` (an html template, rules that style the
+// cell), `rules`, `validate` and template tooltips, which would run nunjucks on what one user
+// wrote in every viewer's browser.
+const USER_COLUMN_KEYS = [
+  'key',
+  'field',
+  'title',
+  'type',
+  'kind',
+  'userDefined',
+  'editable',
+  'status',
+  'options',
+  'headerTooltip',
+  'width',
+  'minWidth',
+  'maxWidth',
+  'flex',
+  'align',
+  'pinned',
+  'hidden',
+  'sortable',
+  'filterable',
+  'resizable',
+  'groupable',
+  'searchable',
+  'ellipsis',
+  'wrap',
+  'aggregate',
+  ...new Set(Object.values(COLUMN_KINDS).flat()),
+];
+
+function pickUserColumn(column) {
+  const picked = {};
+  USER_COLUMN_KEYS.forEach((name) => {
+    if (!type.isUndefined(column[name])) picked[name] = column[name];
+  });
+  // A { field } tooltip reads a row field as plain text; a template tooltip is nunjucks.
+  if (type.isObject(column.tooltip) && type.isString(column.tooltip.field)) {
+    picked.tooltip = { field: column.tooltip.field };
+  }
+  return picked;
+}
+
+// A user-defined column (`userDefined: true`) is runtime data a user wrote: it keeps only the
+// keys in USER_COLUMN_KEYS and a type in USER_COLUMN_TYPES (with no type it is text, whatever
+// defaultColumn sets), and a config error makes it an error column (invalidateColumn) instead of
+// throwing, so the table still renders.
 function normalizeUserLeaf({ column, defaults, path, providerIds, index }) {
   try {
-    const leaf = normalizeLeaf({ column, defaults, path });
+    const leaf = normalizeLeaf({
+      column: pickUserColumn(column),
+      defaults: { ...defaults, type: undefined },
+      path,
+    });
+    if (!USER_COLUMN_TYPES.includes(leaf.type)) {
+      throw new Error(
+        `User-defined column "${leaf.key}" can not have type "${
+          leaf.type
+        }". Use one of: ${USER_COLUMN_TYPES.join(', ')}.`
+      );
+    }
     checkProvider({ leaf, providerIds });
     return leaf;
   } catch (error) {

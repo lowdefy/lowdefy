@@ -208,7 +208,7 @@ const column = {
     userDefined: {
       type: 'boolean',
       description:
-        'A column users added at runtime (stored by the app). Its header menu has Rename, Edit, Duplicate, Insert left / right and Delete, which fire onColumnUpdate, onColumnAdd and onColumnDelete. If its config is invalid it renders as an error column ("Invalid column: " and the reason in its cells, Edit column and Delete column in its menu) instead of breaking the table.',
+        'A column users added at runtime (stored by the app). Its header menu has Rename, Edit, Duplicate, Insert left / right and Delete, which fire onColumnUpdate, onColumnAdd and onColumnDelete. If its config is invalid it renders as an error column ("Invalid column: " and the reason in its cells, Edit column and Delete column in its menu) instead of breaking the table. Its config is other users\' content, so it may only have a text-safe type (text, email, phone, url, number, currency, percent, progress, rating, date, datetime, boolean, tag, tags, status or json; another type makes it an error column, and no type is text whatever `defaultColumn` sets), and its `cell`, `rules`, `validate` and template tooltips are ignored (a `{ field }` tooltip is kept).',
     },
     template: {
       type: 'string',

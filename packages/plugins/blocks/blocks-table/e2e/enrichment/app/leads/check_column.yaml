@@ -31,6 +31,13 @@ _js:
     const KEY = /^[A-Za-z0-9_-]{1,128}$/;
     const PLACEHOLDER = /\{\{\s*([A-Za-z0-9_-]+)\s*\}\}/g;
     const kinds = ['input', 'formula', 'enrichment', 'ai', 'extract'];
+    // The types a user column can show, as the Table's column core allows them (its
+    // userColumnTypes): no html, image, avatar or people, which would render markup or load
+    // URLs from other users' data in every viewer's browser.
+    const columnTypes = [
+      'text', 'email', 'phone', 'url', 'number', 'currency', 'percent', 'progress', 'rating',
+      'date', 'datetime', 'boolean', 'tag', 'tags', 'status', 'json',
+    ];
     const inputTypes = ['text', 'email', 'phone', 'url', 'number', 'currency', 'date', 'boolean'];
     const aiOutputTypes = ['text', 'number', 'boolean', 'tag', 'tags'];
     // Formulas and AI prompts only take {{ column }} placeholders, filled in as plain text: a
@@ -109,6 +116,9 @@ _js:
       return false;
     }
 
+    if (column.type !== undefined && !columnTypes.includes(column.type)) {
+      errors.push(`The column type should be one of ${columnTypes.join(', ')}.`);
+    }
     const config = {};
     if (kind === 'input') {
       if (column.type !== undefined && !inputTypes.includes(column.type)) {
