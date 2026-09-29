@@ -92,6 +92,8 @@ All three requests (`connection-mongodb`) share `MongoDBTableQuery`'s safety rul
 
   Expected errors a `:catch` handles (`RequestError`, `ServiceError`, `UserError`: a provider's 404 in a waterfall) are logged at debug, not as errors. A caught `ConfigError`, `OperatorError` or `LowdefyInternalError` still goes through `handleError`.
 
+  The errors it stores are shown to every user of the table, so the worker's `:catch` and the provider endpoints store user-safe messages mapped from the thrown error's status (`Provider error (500)`, `Rate limited by the provider (429)`, `The provider did not respond`), never the connection's message (which names the connection and carries the service's response); the full error stays in the server log. The cell's tooltip shows "Failed after <attempts> attempts" and the message shortened (`formatRunError`), the details panel the whole message.
+
   A cron entry runs it every minute. An enqueue also calls it as a detached endpoint, so results start at once. A run survives a crash through leases.
 
 ### E5. Live updates
@@ -107,7 +109,7 @@ The module is an optional feature: it loads in its own chunk only for tables wit
   - `queued`: a clock icon, muted.
   - `running`: a spinner.
   - `ok`: the value, through the column's type.
-  - `error`: a red marker, with the message in a tooltip.
+  - `error`: a red marker, with "Failed after <n> attempts" and the message (shortened) in a tooltip below the cell.
   - `empty`: a muted "No result".
   - Stale (`inputHash` differs): the value, dimmed, with a refresh affordance.
 

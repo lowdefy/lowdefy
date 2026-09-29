@@ -76,7 +76,9 @@ routine:
               status: empty
               raw:
                 status: 404
-      # Other 4xx (but a 429 rate limit) will fail again: a final error.
+      # Other 4xx (but a 429 rate limit) will fail again: a final error. Stored on the cell for
+      # every user to see, so it gives the status, not the connection's message (which names
+      # the connection and carries the service's response).
       - :if:
           _and:
             - _gte:
@@ -94,7 +96,10 @@ routine:
           - :return:
               status: error
               error:
-                _error: message
+                _string.concat:
+                  - Provider error (
+                  - _error: statusCode
+                  - )
               retry: false
       # A 429, a 5xx or a network failure: rethrown, so the attempt fails and is retried.
       - :throw:

@@ -149,10 +149,12 @@ test('a failing cell is retried, then shows its error on hover', async ({ page, 
     'error'
   );
   const marker = cell(page, 'Gina Brooks', 'company').locator('[data-lf-enrich-error]');
-  await expect(marker).toHaveAttribute('data-lf-enrich-error', /500/);
+  await expect(marker).toHaveAttribute('data-lf-enrich-error', 'Provider error (500)');
   await cell(page, 'Gina Brooks', 'company').hover();
   await marker.hover();
-  await expect(page.getByRole('tooltip')).toContainText('500');
+  await expect(page.locator('[data-lf-enrich-error-tooltip]')).toHaveText(
+    'Failed after 3 attemptsProvider error (500)'
+  );
   expect(await mock.log(request, 'company')).toHaveLength(3);
 });
 

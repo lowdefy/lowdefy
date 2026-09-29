@@ -138,7 +138,12 @@ test.describe('Table enrichment', () => {
     );
     await cell(page, 'r4', 'email').hover();
     await cell(page, 'r4', 'email').locator('[data-lf-enrich-error]').hover();
-    await expect(page.getByRole('tooltip')).toContainText('Rate limited by the provider');
+    // What failed and how often, then the message; below the cell, never over the row above.
+    const tooltip = page.locator('[data-lf-enrich-error-tooltip]');
+    await expect(tooltip).toHaveText('Failed after 3 attemptsRate limited by the provider');
+    const cellBox = await cell(page, 'r4', 'email').boundingBox();
+    const tooltipBox = await tooltip.boundingBox();
+    expect(tooltipBox.y).toBeGreaterThanOrEqual(cellBox.y + cellBox.height - 1);
   });
 
   test('a done cell whose inputs changed since it ran is stale', async ({ page }) => {

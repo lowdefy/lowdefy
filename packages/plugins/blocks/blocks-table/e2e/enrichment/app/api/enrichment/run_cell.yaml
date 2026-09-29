@@ -80,6 +80,11 @@
     # written with retry, so the cell is queued again, until maxAttempts makes it final. It
     # waits as long as the service asked (a ServiceError's retryAfter, such as treg's
     # retry_after on a 429 or 503) or else the backoff (backoffMs, doubled per attempt).
+    #
+    # The stored error is what every user of the table sees on the cell, so it says what
+    # happened in words a user can read ("Provider error (500)"), never the thrown message: that
+    # names the app's connection and carries the service's response. The full error stays in
+    # the server log.
     - id: complete_error
       type: MongoDBEnrichmentComplete
       connectionId: leads
@@ -104,7 +109,18 @@
               _item: cell.claimToken
             status: error
             error:
-              _error: message
+              _js:
+                fn: |
+                  const { statusCode, name } = args;
+                  if (statusCode === 429) return 'Rate limited by the provider (429)';
+                  if (Number.isInteger(statusCode)) return `Provider error (${statusCode})`;
+                  if (name === 'ServiceError') return 'The provider did not respond';
+                  return 'The provider call failed';
+                args:
+                  statusCode:
+                    _error: statusCode
+                  name:
+                    _error: name
             retry: true
             # retryAfter is seconds (a number, or the Retry-After header as text: seconds or an
             # HTTP date); null without one.

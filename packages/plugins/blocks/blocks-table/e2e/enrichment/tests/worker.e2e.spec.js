@@ -100,8 +100,8 @@ test('a failing provider is retried with backoff, then the cell fails', async ({
   await callEndpoint(request, 'enrichment_run', { columns: ['company'], selection });
   const retried = await waitForLeads(request, (leads) => {
     const cell = cellOf(byName(leads, 'Gina Brooks'), 'company');
-    expect(cell).toMatchObject({ status: 'queued', attempts: 1 });
-    expect(cell.error).toContain('500');
+    // A message users can read: the connection's own message stays in the server log.
+    expect(cell).toMatchObject({ status: 'queued', attempts: 1, error: 'Provider error (500)' });
   });
   // The failed attempt is queued again, due after the backoff.
   const [firstCall] = await mock.log(request, 'company');
@@ -145,7 +145,7 @@ test('a bad request or invalid inputs fail at once, without a retry', async ({ r
     status: 'error',
     attempts: 1,
   });
-  expect(cellOf(byName(leads, 'Hal Stone'), 'company').error).toContain('400');
+  expect(cellOf(byName(leads, 'Hal Stone'), 'company').error).toBe('Provider error (400)');
   // The provider checks its inputs, so the service is never called with them.
   expect(cellOf(byName(leads, 'Ada Brightwell'), 'company')).toMatchObject({
     status: 'error',

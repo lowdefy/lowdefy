@@ -23,8 +23,6 @@ import LazyCell from '../../core/LazyCell.js';
 import RunError from './RunError.js';
 import RunIcon from './RunIcon.js';
 
-const ERROR_FALLBACK = 'The run failed.';
-
 function renderValue({ api, col, original, rowKey }) {
   if (LAZY_CELL_TYPES.has(col.column.type)) {
     return <LazyCell api={api} col={col} original={original} rowKey={rowKey} />;
@@ -86,9 +84,7 @@ function renderState({ api, col, original, rowKey, run }) {
         </span>
       );
     case 'error':
-      return (
-        <RunError api={api} message={run.state.error ?? ERROR_FALLBACK} rowId={String(rowKey)} />
-      );
+      return <RunError api={api} rowId={String(rowKey)} state={run.state} />;
     case 'empty':
       // A missing input leaves the cell empty with the reason (`Missing input: <column>`).
       return (
