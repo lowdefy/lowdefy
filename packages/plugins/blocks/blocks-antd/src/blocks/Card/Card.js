@@ -20,6 +20,10 @@ import { isEventFromDomDescendant, renderHtml, withBlockDefaults } from '@lowdef
 
 import withTheme from '../withTheme.js';
 
+// Compact keeps the header inset in line with the body, so titles and content stay aligned.
+const headerPadding = { compact: 12 };
+const bodyPadding = { compact: 12, none: 0 };
+
 const CardBlock = ({
   blockId,
   classNames = {},
@@ -55,9 +59,9 @@ const CardBlock = ({
     }}
     style={{ outline: 'none', cursor: events.onClick && 'pointer', ...styles.element }}
     styles={{
-      header: styles.header,
+      header: { paddingInline: headerPadding[properties.padding], ...styles.header },
       title: styles.title,
-      body: styles.body,
+      body: { padding: bodyPadding[properties.padding], ...styles.body },
       cover: styles.cover,
       actions: styles.actions,
       extra: styles.extra,

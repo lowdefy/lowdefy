@@ -22,6 +22,13 @@ import { Modal } from 'antd';
 import getMask from '../getMask.js';
 import withTheme from '../withTheme.js';
 
+// antd pads the whole modal box, with the header, body and footer inside it. The close button is
+// placed by antd on its own, so the top insets keep the title centred with it.
+const containerPadding = { compact: '16px 16px 12px', none: 0 };
+// With no box padding the header and footer carry their own inset, and only the body is flush.
+const headerSpacing = { none: { padding: '16px 24px 8px', marginBottom: 0 } };
+const footerSpacing = { none: { padding: '12px 24px 16px', marginTop: 0 } };
+
 const triggerSetOpen = ({ methods, setOpen, state }) => {
   if (!state) {
     methods.triggerEvent({ name: 'onClose' });
@@ -97,12 +104,12 @@ const ModalBlock = ({
         }}
         style={styles.element}
         styles={{
-          header: styles.header,
+          header: { ...headerSpacing[properties.padding], ...styles.header },
           title: styles.title,
           body: styles.body,
-          footer: styles.footer,
+          footer: { ...footerSpacing[properties.padding], ...styles.footer },
           mask: styles.mask,
-          container: styles.content,
+          container: { padding: containerPadding[properties.padding], ...styles.content },
           wrapper: styles.wrapper,
         }}
         onOk={async () => {

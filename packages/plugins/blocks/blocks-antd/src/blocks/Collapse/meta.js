@@ -90,6 +90,13 @@ export default {
         default: false,
         description: 'Make the collapse borderless with a transparent background.',
       },
+      padding: {
+        type: 'string',
+        enum: ['default', 'compact', 'none'],
+        default: 'default',
+        description:
+          'Space inside each panel body. `compact` tightens it to 8px 16px. `none` removes it so content such as a table or list runs edge to edge; the panel headers keep their padding.',
+      },
       panels: {
         type: 'array',
         items: {

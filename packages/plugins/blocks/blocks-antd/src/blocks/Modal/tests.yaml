@@ -121,3 +121,11 @@
       xs: 90%
       md: 600
       xl: 800
+- id: 'properties.padding: compact'
+  type: Modal
+  properties:
+    padding: compact
+- id: 'properties.padding: none'
+  type: Modal
+  properties:
+    padding: none

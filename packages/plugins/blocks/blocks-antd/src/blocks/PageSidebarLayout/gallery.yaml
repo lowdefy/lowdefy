@@ -45,6 +45,46 @@
           properties:
             content: PageSidebarLayout provides a full-page layout with a full-height sidebar. The sider spans the entire viewport height with the logo at the bottom. On mobile screens, a hamburger menu with a full-width drawer replaces the sider.
 
+- title: Edge-to-Edge Content
+  fullWidth: true
+  blocks:
+    - id: psl_flush
+      type: PageSidebarLayout
+      properties:
+        siderStorageKey: psl_flush
+        padding: none
+        menu:
+          links:
+            - id: psl_flush_dashboard
+              type: MenuLink
+              properties:
+                title: Dashboard
+            - id: psl_flush_invoices
+              type: MenuLink
+              properties:
+                title: Invoices
+      blocks:
+        - id: psl_flush_text
+          type: Paragraph
+          class: px-4
+          properties:
+            content: 'padding: none removes the content padding, so tables and grids can run edge to edge. Blocks set their own spacing.'
+        - id: psl_flush_card
+          type: Card
+          properties:
+            title: Recent invoices
+            padding: none
+            variant: borderless
+          blocks:
+            - id: psl_flush_card_rows
+              type: Html
+              properties:
+                html: |
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1042</span><span style="color: var(--ant-color-text-secondary);">$1,280.00</span></div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1041</span><span style="color: var(--ant-color-text-secondary);">$640.00</span></div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1040</span><span style="color: var(--ant-color-text-secondary);">$2,115.50</span></div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px;"><span>INV-1039</span><span style="color: var(--ant-color-text-secondary);">$96.00</span></div>
+
 - title: Initially Collapsed
   fullWidth: true
   blocks:

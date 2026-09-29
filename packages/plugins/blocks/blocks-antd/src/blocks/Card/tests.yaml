@@ -97,3 +97,11 @@
           properties:
             title: Edit
             type: link
+- id: 'properties.padding: compact'
+  type: Card
+  properties:
+    padding: compact
+- id: 'properties.padding: none'
+  type: Card
+  properties:
+    padding: none

@@ -71,6 +71,52 @@ The modal title supports HTML markup for rich text formatting.
         content: The modal title supports HTML markup for rich text formatting.
 ```
 
+```yaml
+- id: modal_padding_trigger
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Open Modal with padding none
+  events:
+    onClick:
+      - id: modal_padding_open
+        type: CallMethod
+        params:
+          blockId: modal_padding
+          method: setOpen
+          args:
+            - open: true
+- id: modal_padding
+  type: Modal
+  properties:
+    title: Recent invoices
+    padding: none
+  blocks:
+    - id: modal_padding_rows
+      type: Html
+      properties:
+        html: >
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px; border-bottom: 1px solid
+          var(--ant-color-border-secondary);"><span>INV-1042</span><span
+          style="color: var(--ant-color-text-secondary);">$1,280.00</span></div>
+
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px; border-bottom: 1px solid
+          var(--ant-color-border-secondary);"><span>INV-1041</span><span
+          style="color: var(--ant-color-text-secondary);">$640.00</span></div>
+
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px; border-bottom: 1px solid
+          var(--ant-color-border-secondary);"><span>INV-1040</span><span
+          style="color: var(--ant-color-text-secondary);">$2,115.50</span></div>
+
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px;"><span>INV-1039</span><span style="color:
+          var(--ant-color-text-secondary);">$96.00</span></div>
+```
+
 The okText and cancelText properties customize the footer button labels. This modal uses "Save Changes" and "Discard" instead of "Ok" and "Cancel".
 
 ```yaml
@@ -1199,6 +1245,7 @@ A serene mountain landscape captured at golden hour. Photography by John Doe.
 | `forceRender` | boolean | `false` | Render the blocks inside the modal before it is first opened, so their methods can be called and their onMount events run while it is still closed. |
 | `keyboard` | boolean | `true` | Whether pressing Esc closes the modal. |
 | `loading` | boolean | `false` | Show a loading skeleton in place of the modal body. |
+| `padding` | string | `"default"` | Space inside the modal. `compact` tightens it to 16px. `none` removes the body padding so content such as a table, list or image runs edge to edge; the header and footer keep their padding. Enum: `default`, `compact`, `none`. |
 | `scrollLock` | boolean | `true` | Whether to lock page scrolling while the modal is open. |
 | `title` | string | - | The modal dialog's title - supports html. |
 | `footer` | boolean | `true` | Show footer area. |
