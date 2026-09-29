@@ -80,6 +80,7 @@ All three requests (`connection-mongodb`) share `MongoDBTableQuery`'s safety rul
   - An error below `maxAttempts` goes back to `queued` with a backoff (`queuedAt` moved into the future).
   - After writing, it releases the row's cells waiting for a cell that finished for good, and queues the downstream `autoRun` columns an ok cell feeds (the waterfall between columns). Queued with the result rather than by the worker afterwards, a crash between the two can not lose them. `downstream` in the response names them.
   - `error: null` and `retry: null` (what `_step` gives for a missing key) are the same as leaving them out.
+  - A result's `cost` (integer micro-USD) is stored as the cell's `cost`, and an error result's `retryAfterMs` (a provider's Retry-After) replaces the exponential backoff, at most a day.
 - **The worker is a Lowdefy API endpoint** (`enrichment_worker`), written in YAML:
 
   1. Claim a batch.
@@ -143,6 +144,10 @@ The module is an optional feature: it loads in its own chunk only for tables wit
 - **Formula templates** are user content too, rendered in every viewer's browser, so they follow the same rule: placeholders only, no template engine.
 - **Limits.** `MongoDBEnrichmentEnqueue` caps cells per enqueue (`maxCells`, default 10,000). The worker caps concurrency and time. A `cost` per provider can be summed and shown in the confirm dialog before a large run ("Run 2,400 cells · ~2,400 credits?").
 - **Scope.** All three requests take the base `filter` and tenant scoping. The `fields` allowlist covers `_enrich.*` writes: only `status` / `value` / `raw` / `error` for the claimed column.
+
+### E8. treg as a provider backend
+
+`@lowdefy/connection-treg` (`code-docs/plugins/connections/treg.md`) calls treg's catalog and routed endpoints. A treg-backed provider endpoint maps its inputs to a `TregCall` and returns `{ status, value, raw, cost }`, with `cost` from `cost.micro` (`X-Treg-Cost-Micro`); a routed miss is `empty`, a 402 is a final error, and a 429 or 503 `ServiceError` is rethrown so the worker completes the cell with `retry` and `retryAfterMs` (`_error: retryAfter` × 1000). The worker sends `idempotencyKey: runId:columnKey:rowKey:inputHash`, the same on every attempt at a cell within a run (the claim token changes per attempt), so a retry replays an answer treg already charged for at no cost. The reference app's `find_work_email_treg` provider does this against a treg mock (`tests/treg.e2e.spec.js`).
 
 ## Scope of the PR
 
