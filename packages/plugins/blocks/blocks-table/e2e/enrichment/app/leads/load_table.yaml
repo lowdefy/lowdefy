@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # Loads the table for an endpoint: the merged columns as `columnDefs`, and the fields allowlist
 # with the user-defined input columns added. Every endpoint reads the columns on the server,
 # never from the payload, so a browser can not send a column the table does not have.

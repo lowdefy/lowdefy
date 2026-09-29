@@ -12,16 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # Run queue settings, shared by the worker's claim and complete requests.
 #
 # Tuned small for the e2e run so retries are fast. In production keep the request defaults
 # (backoffMs: 30000, doubled per attempt; leaseMs: 120000), and keep the lease longer than
 # the slowest provider call (the AxiosHttp timeouts in connections.yaml).
 
-# Cells per claim. :parallel_for runs every claimed cell at once, so this is the worker's
-# concurrency.
-claimLimit: 5
+# Cells per claim.
+claimLimit: 6
+# The most cells of one provider the worker runs at once (:parallel_for :concurrency), by
+# provider id; `default` for providers not listed.
+providerConcurrency:
+  ai: 2
+  default: 3
 leaseMs: 60000
 maxAttempts: 3
 backoffMs: 300

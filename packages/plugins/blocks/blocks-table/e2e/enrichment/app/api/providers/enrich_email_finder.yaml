@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # Provider email_finder: a waterfall. It asks source A, then source B, and returns the first
 # hit, so the table sees one email column however many sources stand behind it. The sources
 # answer a miss differently (A with a 404, B with `result: null`); the provider maps both.

@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # One claimed cell (`_item: cell`, a MongoDBEnrichmentClaim item): call its provider, complete
 # it, and queue the autoRun columns that read it.
 - :try:
@@ -29,11 +28,7 @@
           prompt:
             _item: cell.prompt
           output:
-            _get:
-              from:
-                _state: outputs
-              key:
-                _item: cell.columnKey
+            _item: cell.output
     # The provider answered: ok, empty (nothing found) or error (a final failure, such as
     # invalid inputs, with retry: false). The result is written only while this worker still
     # holds the claim; a late result from a worker whose lease ran out is ignored.

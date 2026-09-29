@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # Updates a user-defined column: the Table's onColumnUpdate { column, previous } (rename, edit).
 # The key names the column and can not change, since its cells are stored under
 # _enrich.<key>. Declared columns can not be changed here.

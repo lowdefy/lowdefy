@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # The table's MongoDBTableQuery fields, keyed by column key: the allowlist of row fields that
 # enrichment inputs may read and that claimed rows return. A user-defined column can never
 # send a field that is not listed here to a provider. User-defined input columns are added

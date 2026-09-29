@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # The provider catalogue (the Table `providers` property): what users can pick in the
 # add-column picker. Each provider maps to the API endpoint enrich_<id>, which takes
 # { inputs, prompt, output } and returns { status: ok | empty | error, value, raw, error, retry }.
@@ -63,6 +62,5 @@
       title: Email
       type: email
   cost: 2
-
 # The ai kind is not listed: the picker offers it as a kind of its own, and its columns run
 # the enrich_ai endpoint (provider `ai`, the default of an ai column).

@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # The declared columns of the leads table, in position order. User-defined columns (in the
 # table_columns collection) are merged in by position (leads/get_columns.yaml), so leave gaps.
 #

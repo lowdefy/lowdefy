@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # The worker: claims queued cells, calls each cell's provider endpoint, writes the results and
 # queues the autoRun columns they feed, until nothing is left to claim or its time is spent.
 #
@@ -28,17 +27,6 @@ schedules:
 routine:
   - _ref: leads/load_table.yaml
   - :set_state:
-      # The output settings of each column, for the providers: the claim returns the cell's
-      # provider, inputs and prompt, but not the rest of its column.
-      outputs:
-        _js:
-          fn: |
-            return Object.fromEntries(
-              args.columns.map((column) => [column.key, column.output ?? null])
-            );
-          args:
-            columns:
-              _state: columnDefs
       deadline:
         _date:
           _sum:
@@ -90,13 +78,39 @@ routine:
             _ref:
               path: leads/queue.yaml
               key: maxAttempts
-      # Every claimed cell at once: the claim limit bounds the concurrency. Each cell is
-      # completed on its own, so its result shows as soon as its provider answers.
-      - :parallel_for: cell
+      # The claimed cells by provider, each provider running at most its own number of cells
+      # at once (providerConcurrency), so a slow or rate-limited provider never gets the whole
+      # batch at the same moment. Each cell is completed on its own, so its result shows as
+      # soon as its provider answers. A claim carries its column's provider, prompt and output,
+      # so nothing here reads the columns again.
+      - :parallel_for: group
         :in:
-          _step: claim
+          _js:
+            fn: |
+              const groups = new Map();
+              args.cells.forEach((cell) => {
+                if (!groups.has(cell.provider)) groups.set(cell.provider, []);
+                groups.get(cell.provider).push(cell);
+              });
+              return [...groups].map(([provider, cells]) => ({
+                cells,
+                concurrency: args.limits[provider] ?? args.limits.default,
+              }));
+            args:
+              cells:
+                _step: claim
+              limits:
+                _ref:
+                  path: leads/queue.yaml
+                  key: providerConcurrency
         :do:
-          _ref: api/enrichment/run_cell.yaml
+          :parallel_for: cell
+          :in:
+            _item: group.cells
+          :concurrency:
+            _item: group.concurrency
+          :do:
+            _ref: api/enrichment/run_cell.yaml
       - :set_state:
           claimed:
             _array.length:

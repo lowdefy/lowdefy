@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # Imports rows: the Table's onImport { rows, newColumns, batchIndex, batchCount, total }, a
 # batch of at most 500 parsed CSV rows, each value at its column's field path. The first batch
 # carries the CSV columns imported as new input columns (`newColumns`), which are added first.

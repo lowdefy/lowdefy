@@ -86,8 +86,11 @@ function compileEnrichmentClaim({ properties, tenantScoped }) {
     const paths = getCellPaths(columnDef.key);
     return {
       columnKey: columnDef.key,
+      kind: columnDef.kind,
+      title: columnDef.title,
       provider: columnDef.provider,
       prompt: columnDef.prompt,
+      output: columnDef.output,
       sources,
       paths,
       projection: buildProjection([

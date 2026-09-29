@@ -99,6 +99,8 @@ describe('claiming', () => {
     expect(claims[0]).toEqual({
       rowKey: 'old',
       columnKey: 'email',
+      kind: 'enrichment',
+      title: 'Email',
       provider: 'finder',
       runId: 'run1',
       claimToken: expect.stringMatching(new RegExp(`^[0-9a-f]{24}:${inputHash}$`)),
@@ -160,6 +162,8 @@ describe('claiming', () => {
       ['b', 'email'],
     ]);
     expect(claims[0]).toMatchObject({
+      kind: 'ai',
+      title: 'Pitch',
       provider: 'ai',
       prompt: 'Write a pitch for {{ name }} to {{ email }}',
       inputs: { name: 'Acme', email: 'ada@acme.test' },

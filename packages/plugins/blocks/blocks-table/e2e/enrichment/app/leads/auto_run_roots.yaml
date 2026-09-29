@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # The autoRun columns a new row starts: those whose inputs are all fields or literal values.
 # The columns that read other enrichment columns follow on their own, as the cells they read
 # complete (MongoDBEnrichmentComplete returns them as `downstream`). Queued together, they

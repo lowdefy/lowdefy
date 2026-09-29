@@ -24,6 +24,9 @@ const PROVIDER_ID = /^[A-Za-z0-9_-]{1,64}$/;
 const maxColumnDefs = 500;
 const maxInputs = 50;
 const maxPromptLength = 20000;
+const maxTitleLength = 500;
+// The Table column types an ai column's answer can be (design E2): what the model is asked for.
+const aiOutputTypes = ['text', 'number', 'boolean', 'tag', 'tags'];
 
 function invalid({ requestType, message, received }) {
   return new Error(`${requestType} "columnDefs" ${message} Received ${JSON.stringify(received)}.`);
@@ -90,6 +93,53 @@ function parseInputs({ inputs, key, requestType }) {
   return entries.map(([param, input]) => parseInput({ param, input, key, requestType }));
 }
 
+function parseTitle({ columnDef, requestType }) {
+  if (type.isNone(columnDef.title)) return null;
+  if (!type.isString(columnDef.title) || columnDef.title.length > maxTitleLength) {
+    throw invalid({
+      requestType,
+      message: `column "${columnDef.key}" "title" should be a string of at most ${maxTitleLength} characters.`,
+      received: columnDef.title,
+    });
+  }
+  return columnDef.title;
+}
+
+// An enrichment column's output is the path of its value in the provider result; an ai
+// column's is the answer's type, `{ type, options? }`.
+function parseOutput({ columnDef, requestType }) {
+  const { key, kind, output } = columnDef;
+  if (type.isNone(output)) return null;
+  if (kind === 'enrichment') {
+    if (!type.isString(output)) {
+      throw invalid({
+        requestType,
+        message: `column "${key}" "output" should be the path of the value in the provider result.`,
+        received: output,
+      });
+    }
+    return output;
+  }
+  const validOptions =
+    type.isUndefined(output.options) ||
+    (type.isArray(output.options) &&
+      output.options.every(
+        (option) => type.isString(option) || (type.isObject(option) && !type.isNone(option.value))
+      ));
+  if (!type.isObject(output) || !aiOutputTypes.includes(output.type) || !validOptions) {
+    throw invalid({
+      requestType,
+      message: `column "${key}" "output" should be { type, options? } with type one of ${JSON.stringify(
+        aiOutputTypes
+      )}.`,
+      received: output,
+    });
+  }
+  return type.isUndefined(output.options)
+    ? { type: output.type }
+    : { type: output.type, options: output.options };
+}
+
 function parseRunnable({ columnDef, requestType }) {
   const { key, kind } = columnDef;
   if (!isColumnKey(key)) {
@@ -128,8 +178,10 @@ function parseRunnable({ columnDef, requestType }) {
     key,
     kind,
     runnable: true,
+    title: parseTitle({ columnDef, requestType }),
     provider,
     prompt: columnDef.prompt ?? null,
+    output: parseOutput({ columnDef, requestType }),
     autoRun: columnDef.autoRun === true,
     inputs: parseInputs({ inputs: columnDef.inputs, key, requestType }),
   };

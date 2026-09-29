@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # E2E only: overwrites one enrichment cell, to set up states a test can not reach by running
 # the worker, such as a running cell whose worker crashed and whose lease ran out.
 id: test_set_cell

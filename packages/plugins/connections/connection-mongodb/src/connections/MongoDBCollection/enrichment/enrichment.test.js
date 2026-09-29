@@ -58,8 +58,10 @@ describe('parseColumnDefs', () => {
       key: 'email',
       kind: 'enrichment',
       runnable: true,
+      title: null,
       provider: 'finder',
       prompt: null,
+      output: null,
       autoRun: true,
       inputs: [
         { param: 'domain', column: 'domain', required: true },
@@ -122,6 +124,29 @@ describe('parseColumnDefs', () => {
     );
     expect(() => parse([{ key: 'e', kind: 'ai', autoRun: 'yes' }])).toThrow(
       '"autoRun" should be a boolean'
+    );
+  });
+
+  test('keeps the title and output a worker needs, and refuses malformed ones', () => {
+    const byKey = parse([
+      { key: 'email', title: 'Email', kind: 'enrichment', provider: 'p', output: 'emails.0' },
+      { key: 'tier', kind: 'ai', output: { type: 'tag', options: ['A', { value: 'B' }] } },
+      { key: 'score', kind: 'ai', output: { type: 'number' } },
+    ]);
+    expect(byKey.get('email')).toMatchObject({ title: 'Email', output: 'emails.0' });
+    expect(byKey.get('tier').output).toEqual({ type: 'tag', options: ['A', { value: 'B' }] });
+    expect(byKey.get('score').output).toEqual({ type: 'number' });
+    expect(() => parse([{ key: 'e', kind: 'enrichment', provider: 'p', output: 5 }])).toThrow(
+      '"output" should be the path of the value in the provider result.'
+    );
+    expect(() => parse([{ key: 'e', kind: 'ai', output: { type: 'email' } }])).toThrow(
+      '"output" should be { type, options? } with type one of ["text","number","boolean","tag","tags"].'
+    );
+    expect(() => parse([{ key: 'e', kind: 'ai', output: 'text' }])).toThrow(
+      '"output" should be { type, options? }'
+    );
+    expect(() => parse([{ key: 'e', kind: 'ai', title: 7 }])).toThrow(
+      '"title" should be a string of at most 500 characters.'
     );
   });
 

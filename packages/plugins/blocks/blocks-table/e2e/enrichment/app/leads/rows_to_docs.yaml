@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # Turns rows from the browser into documents. The Table sends each value at its column's field
 # path (onRowAdd `values`, onImport `rows`), and a CSV column imported as a new column at its
 # key. Only paths of the fields allowlist are kept, so a row can only set the table's input

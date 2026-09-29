@@ -43,7 +43,8 @@ function operation({ match, columnKey, set, unset }) {
 // What a claim does to one candidate cell. Every update is a compare-and-set: its filter
 // holds the cell's state as it was read (status, claimToken, attempts, runId) and that it is
 // still claimable, so of two workers that read the same cell only the first write matches,
-// and the second changes nothing.
+// and the second changes nothing. A claim carries the column config a worker needs (`kind`,
+// `title`, `provider`, `prompt`, `output`), so the worker never rebuilds a map of the columns.
 //   claim:   running, with a lease until `now + leaseMs`, attempts + 1 and a new claimToken.
 //            The token is random, followed by the hash of the inputs the worker is given, which
 //            MongoDBEnrichmentComplete stores as the result's inputHash.
@@ -52,7 +53,7 @@ function operation({ match, columnKey, set, unset }) {
 //   defer:   an input column is still queued or running: queued again, due in 15 seconds.
 function planClaimCell({ doc, target, compiled, now, generateToken }) {
   const { filter, fieldsByKey, leaseMs, maxAttempts, rowKeyField } = compiled;
-  const { columnKey, paths, prompt, provider, sources } = target;
+  const { columnKey, kind, output, paths, prompt, provider, sources, title } = target;
   const read = readCell({ doc, paths });
   const match = andConditions([
     filter,
@@ -121,8 +122,11 @@ function planClaimCell({ doc, target, compiled, now, generateToken }) {
     claim: {
       rowKey: get(doc, rowKeyField, { default: null }),
       columnKey,
+      kind,
+      ...(title === null ? {} : { title }),
       provider,
       ...(prompt === null ? {} : { prompt }),
+      ...(output === null ? {} : { output }),
       runId: read.runId,
       claimToken,
       attempt: attempts + 1,

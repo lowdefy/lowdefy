@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # E2E only: fictional leads. The mock services answer each domain differently (see
 # e2e/enrichment/mocks/mockServices.mjs): found, not found (404), failing (500), a bad request
 # (400) or rate limited once (429). The last lead has no domain.

@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # E2E only: empties both collections and inserts the seed leads.
 id: test_reset
 type: Api

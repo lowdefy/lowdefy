@@ -32,14 +32,17 @@ const columnDefs = [
   { key: 'domain' },
   {
     key: 'email',
+    title: 'Work email',
     kind: 'enrichment',
     provider: 'finder',
+    output: 'emails.0.address',
     inputs: { domain: { column: 'domain' } },
   },
   {
     key: 'pitch',
     kind: 'ai',
     prompt: 'Write a pitch for {{ name }}',
+    output: { type: 'tag', options: ['Hot', 'Cold'] },
     inputs: { name: { column: 'name' }, email: { column: 'email' } },
   },
 ];
@@ -145,7 +148,10 @@ describe('planClaimCell', () => {
     expect(cell.claim).toEqual({
       rowKey: 'r1',
       columnKey: 'email',
+      kind: 'enrichment',
+      title: 'Work email',
       provider: 'finder',
+      output: 'emails.0.address',
       runId: 'run1',
       claimToken: `${'a'.repeat(24)}:${inputHash}`,
       attempt: 1,
@@ -167,6 +173,13 @@ describe('planClaimCell', () => {
     const cell = planClaimCell({ doc, target: pitchTarget, compiled, now, generateToken });
     expect(cell.claim.prompt).toBe('Write a pitch for {{ name }}');
     expect(cell.claim.inputs).toEqual({ name: 'Acme', email: 'ada@acme.test' });
+    // The column config a worker needs comes with the claim, so it never rebuilds it.
+    expect(cell.claim).toMatchObject({
+      kind: 'ai',
+      provider: 'ai',
+      output: { type: 'tag', options: ['Hot', 'Cold'] },
+    });
+    expect(cell.claim).not.toHaveProperty('title');
   });
 
   test('reclaims an expired running cell as the next attempt', () => {

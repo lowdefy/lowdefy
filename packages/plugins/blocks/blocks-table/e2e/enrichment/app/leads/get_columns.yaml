@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # The MongoDBAggregation properties of the column list: the user-defined columns of the leads
 # table, flattened from { key, title, type, kind, config, position }, merged with the declared
 # columns and sorted by position. One definition, used by the page (`_request: get_columns`,

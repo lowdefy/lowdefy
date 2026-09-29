@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # Deletes a user-defined column: the Table's onColumnDelete { column }. A column other columns
 # read (an input, or an extract source) is kept, since the queue refuses columns whose inputs
 # do not resolve. The column's cells are removed from the rows.

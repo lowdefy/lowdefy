@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # E2E only: starts two workers at once, each in its own invocation, to check that concurrent
 # workers never run the same cell.
 id: test_start_workers

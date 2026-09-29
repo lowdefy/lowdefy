@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # Updates a row's input values: an edit in the table. Enrichment cells are not re-run; a cell
 # whose inputs changed shows as stale, and a run with mode: stale recomputes exactly those.
 id: leads_update

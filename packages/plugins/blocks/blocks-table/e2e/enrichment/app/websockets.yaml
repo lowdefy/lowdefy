@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # Live cell updates. A change stream on the rows pushes every row whose enrichment cells
 # changed (and every new row) to the page, which merges it into the table: only the changed
 # rows re-render, and nothing polls. The stream runs while at least one page is subscribed,

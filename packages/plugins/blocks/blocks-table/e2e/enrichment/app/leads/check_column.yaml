@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # Checks a user-defined column (from the Table's onColumnAdd / onColumnUpdate) against the
 # table and the provider catalogue, and returns { errors, doc }: the problems found, and the
 # column as stored in table_columns ({ key, title, type, kind, config }).

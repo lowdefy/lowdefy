@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # Provider ai: renders the column's prompt with the row's inputs and asks the model for a value
 # of the column's output type: a number for numeric types, a boolean, one of the options (a
 # list of them for tags), or text. The model's answer is
