@@ -14,16 +14,17 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import React from 'react';
 
-// The number of leaf conditions in a filter, for the Filter button's count.
-function countConditions(condition) {
-  if (!type.isObject(condition)) return 0;
-  const group = condition.and ?? condition.or;
-  if (type.isArray(group)) {
-    return group.reduce((total, child) => total + countConditions(child), 0);
-  }
-  return 1;
+// How many filter conditions, sort levels or group levels are set, inside the toolbar button
+// after its label: a small count in the primary tint, not a badge over the button's border.
+function ToolbarCount({ count }) {
+  if (count === 0) return null;
+  return (
+    <span className="lf-table-toolbar-count" data-lf-toolbar-count="">
+      {count}
+    </span>
+  );
 }
 
-export default countConditions;
+export default ToolbarCount;

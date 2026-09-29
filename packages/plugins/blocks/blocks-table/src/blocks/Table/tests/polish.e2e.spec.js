@@ -423,4 +423,22 @@ test.describe('Table visual polish', () => {
     const options = page.locator('.lf-table-editor-popup .ant-select-item-option');
     await expect(options.locator('.lf-table-tag')).toHaveCount(4);
   });
+
+  test('toolbar buttons count inside the button and skip the default sort', async ({ page }) => {
+    const toolbar = table(page, 'crm').locator('[data-lf-toolbar]');
+    const filter = toolbar.locator('[data-lf-toolbar-button="filter"]');
+    const sort = toolbar.locator('[data-lf-toolbar-button="sort"]');
+    await expect(toolbar.locator('.ant-badge')).toHaveCount(0);
+    await expect(filter.locator('[data-lf-toolbar-count]')).toHaveText('2');
+    // The sort is defaultView's: no count.
+    await expect(sort.locator('[data-lf-toolbar-count]')).toHaveCount(0);
+    await table(page, 'crm').locator('[data-lf-header][data-col-key="win"]').click();
+    await expect(sort.locator('[data-lf-toolbar-count]')).toHaveText('1');
+    const inside = await filter.evaluate((button) => {
+      const count = button.querySelector('[data-lf-toolbar-count]').getBoundingClientRect();
+      const box = button.getBoundingClientRect();
+      return count.left >= box.left && count.right <= box.right && count.top >= box.top;
+    });
+    expect(inside).toBe(true);
+  });
 });

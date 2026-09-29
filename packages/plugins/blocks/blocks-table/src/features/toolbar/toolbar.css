@@ -48,14 +48,21 @@
     max-width: 100%;
   }
 
-  .lf-table-quick-filter .lf-table-quick-filter-count {
+  /* The count of set conditions or levels inside a toolbar button (and a quick filter's picked
+     values): a small chip in the primary tint, part of the button. */
+  .lf-table-toolbar-count {
+    display: inline-block;
+    box-sizing: border-box;
     min-width: 16px;
     padding: 0 4px;
-    border-radius: 8px;
-    background: var(--ant-color-primary, #1677ff);
-    color: var(--ant-color-white, #fff);
+    color: var(--ant-color-primary-text, #1677ff);
     font-size: 11px;
+    font-weight: var(--ant-font-weight-strong, 600);
+    font-variant-numeric: tabular-nums;
     line-height: 16px;
+    text-align: center;
+    background: var(--ant-color-primary-bg, #e6f4ff);
+    border-radius: 8px;
   }
 
   .lf-table-quick-filter-options {

@@ -39,6 +39,13 @@ blocks:
         sort:
           - key: amount
             desc: true
+        filter:
+          and:
+            - key: amount
+              op: gt
+              value: 0
+            - key: name
+              op: notEmpty
         columns:
           - key: company
             hidden: true

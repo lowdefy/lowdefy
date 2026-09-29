@@ -59,7 +59,9 @@ function OptionsQuickFilter({ api, column }) {
       >
         <ColumnTitle api={api} column={column} />
         {values.length > 0 ? (
-          <span className="lf-table-quick-filter-count">{values.length}</span>
+          <span className="lf-table-toolbar-count lf-table-quick-filter-count">
+            {values.length}
+          </span>
         ) : null}
         <ToolbarIcon api={api} name="chevron-down" />
       </Button>

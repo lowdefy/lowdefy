@@ -15,8 +15,9 @@
 */
 
 import React from 'react';
-import { Badge, Button, Popover } from 'antd';
+import { Button, Popover } from 'antd';
 
+import ToolbarCount from './ToolbarCount.js';
 import ToolbarIcon from './ToolbarIcon.js';
 import ToolbarList from './ToolbarList.js';
 
@@ -39,15 +40,14 @@ function GroupButton({ api, groupable }) {
   );
   return (
     <Popover content={content} placement="bottomLeft" trigger="click">
-      <Badge count={keys.length} size="small">
-        <Button
-          data-lf-toolbar-button="group"
-          icon={<ToolbarIcon api={api} name="list" />}
-          size="small"
-        >
-          Group
-        </Button>
-      </Badge>
+      <Button
+        data-lf-toolbar-button="group"
+        icon={<ToolbarIcon api={api} name="list" />}
+        size="small"
+      >
+        Group
+        <ToolbarCount count={keys.length} />
+      </Button>
     </Popover>
   );
 }

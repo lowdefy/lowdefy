@@ -15,13 +15,14 @@
 */
 
 import React from 'react';
-import { Badge, Button, Popover } from 'antd';
+import { Button, Popover } from 'antd';
 
 import countConditions from './countConditions.js';
 import FilterBuilder from '../filtering/FilterBuilder.js';
+import ToolbarCount from './ToolbarCount.js';
 import ToolbarIcon from './ToolbarIcon.js';
 
-// Opens the filter builder on the whole `view.filter`; the badge counts its conditions. Edits go
+// Opens the filter builder on the whole `view.filter`; the button counts its conditions. Edits go
 // through applyFiltering, the one filter write path.
 function FilterButton({ api }) {
   const filter = api.state.filter ?? null;
@@ -38,15 +39,14 @@ function FilterButton({ api }) {
   );
   return (
     <Popover content={content} placement="bottomLeft" trigger="click">
-      <Badge count={countConditions(filter)} size="small">
-        <Button
-          data-lf-toolbar-button="filter"
-          icon={<ToolbarIcon api={api} name="filter" />}
-          size="small"
-        >
-          Filter
-        </Button>
-      </Badge>
+      <Button
+        data-lf-toolbar-button="filter"
+        icon={<ToolbarIcon api={api} name="filter" />}
+        size="small"
+      >
+        Filter
+        <ToolbarCount count={countConditions(filter)} />
+      </Button>
     </Popover>
   );
 }

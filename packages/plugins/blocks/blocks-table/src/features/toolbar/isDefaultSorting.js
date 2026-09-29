@@ -14,16 +14,15 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import initSorting from '../sorting/initSorting.js';
 
-// The number of leaf conditions in a filter, for the Filter button's count.
-function countConditions(condition) {
-  if (!type.isObject(condition)) return 0;
-  const group = condition.and ?? condition.or;
-  if (type.isArray(group)) {
-    return group.reduce((total, child) => total + countConditions(child), 0);
-  }
-  return 1;
+// Whether the sort is the one `defaultView` starts with, which the Sort button does not count.
+function isDefaultSorting({ config, sorting }) {
+  const defaults = initSorting({ value: null, defaultView: config.defaultView, config });
+  if (defaults.length !== sorting.length) return false;
+  return defaults.every(
+    (entry, index) => entry.id === sorting[index].id && entry.desc === sorting[index].desc
+  );
 }
 
-export default countConditions;
+export default isDefaultSorting;
