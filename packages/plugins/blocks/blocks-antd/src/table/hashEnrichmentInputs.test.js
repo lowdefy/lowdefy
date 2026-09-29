@@ -28,7 +28,7 @@ const fixture = JSON.parse(
   fs.readFileSync(new URL('../../test/enrichmentInputHash.json', import.meta.url), 'utf8')
 );
 
-test.each(fixture.map((entry) => [entry.name, entry]))(
+test.each(fixture.cases.map((entry) => [entry.name, entry]))(
   'hashEnrichmentInputs matches the shared fixture: %s',
   (name, entry) => {
     const inputs = serializer.deserialize(entry.inputs);

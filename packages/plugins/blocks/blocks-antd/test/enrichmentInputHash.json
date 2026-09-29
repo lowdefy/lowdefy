@@ -1,126 +1,144 @@
-[
-  {
-    "name": "empty object",
-    "inputs": {},
-    "canonical": "{}",
-    "hash": "1bc27f5a56d1e7"
-  },
-  {
-    "name": "flat strings",
-    "inputs": {
-      "domain": "acme.com",
-      "name": "Acme"
+{
+  "description": "hashEnrichmentInputs(inputs) = cyrb53(canonicalJson(inputs), seed 0) as 14 lowercase hex digits. canonicalJson: object keys sorted (UTF-16 code unit order) at every depth, no whitespace, Dates as ISO strings, ObjectIds and { _oid } markers as lowercase hex strings, undefined object values dropped, arrays in order. \"inputs\" are in Lowdefy serializer form: revive them with serializer.deserialize (a { \"~d\": ms } marker is a Date) before hashing. \"canonical\" is the text that is hashed. The source of truth is @lowdefy/connection-mongodb test/enrichmentInputHash.json; copies elsewhere must stay byte-for-byte identical.",
+  "cases": [
+    {
+      "name": "no inputs",
+      "inputs": {},
+      "canonical": "{}",
+      "hash": "1bc27f5a56d1e7"
     },
-    "canonical": "{\"domain\":\"acme.com\",\"name\":\"Acme\"}",
-    "hash": "17f7ab6b48b584"
-  },
-  {
-    "name": "flat strings, keys in another order",
-    "inputs": {
-      "name": "Acme",
-      "domain": "acme.com"
-    },
-    "canonical": "{\"domain\":\"acme.com\",\"name\":\"Acme\"}",
-    "hash": "17f7ab6b48b584"
-  },
-  {
-    "name": "nested objects and arrays keep array order",
-    "inputs": {
-      "person": {
-        "last": "Lovelace",
-        "first": "Ada"
+    {
+      "name": "one text input",
+      "inputs": {
+        "domain": "example.com"
       },
-      "tags": ["b", "a"]
+      "canonical": "{\"domain\":\"example.com\"}",
+      "hash": "0659b6fcca796a"
     },
-    "canonical": "{\"person\":{\"first\":\"Ada\",\"last\":\"Lovelace\"},\"tags\":[\"b\",\"a\"]}",
-    "hash": "0ac5ccd50b9354"
-  },
-  {
-    "name": "numbers",
-    "inputs": {
-      "int": 42,
-      "float": 3.14159,
-      "negative": -0.5,
-      "large": 1e21,
-      "zero": 0,
-      "small": 1e-7
-    },
-    "canonical": "{\"float\":3.14159,\"int\":42,\"large\":1e+21,\"negative\":-0.5,\"small\":1e-7,\"zero\":0}",
-    "hash": "1d06afbc7c170f"
-  },
-  {
-    "name": "booleans and null",
-    "inputs": {
-      "active": true,
-      "deleted": false,
-      "note": null
-    },
-    "canonical": "{\"active\":true,\"deleted\":false,\"note\":null}",
-    "hash": "178bd384b6b897"
-  },
-  {
-    "name": "date as ISO string",
-    "inputs": {
-      "since": {
-        "~d": 1767225600000
-      }
-    },
-    "canonical": "{\"since\":\"2026-01-01T00:00:00.000Z\"}",
-    "hash": "0029949ebd9244"
-  },
-  {
-    "name": "ObjectId as hex string",
-    "inputs": {
-      "owner": {
-        "_oid": "65F0C0FFEE0000000000ABCD"
-      }
-    },
-    "canonical": "{\"owner\":\"65f0c0ffee0000000000abcd\"}",
-    "hash": "19c59bffcfec58"
-  },
-  {
-    "name": "unicode",
-    "inputs": {
-      "city": "Zürich",
-      "greeting": "こんにちは",
-      "emoji": "🚀"
-    },
-    "canonical": "{\"city\":\"Zürich\",\"emoji\":\"🚀\",\"greeting\":\"こんにちは\"}",
-    "hash": "0216a7ca649f07"
-  },
-  {
-    "name": "array of objects",
-    "inputs": [
-      {
-        "b": 1,
-        "a": 2
+    {
+      "name": "keys are sorted",
+      "inputs": {
+        "name": "Ada Lovelace",
+        "company": "Analytical Engines",
+        "domain": "example.com"
       },
-      {
-        "c": [
-          1,
-          2,
+      "canonical": "{\"company\":\"Analytical Engines\",\"domain\":\"example.com\",\"name\":\"Ada Lovelace\"}",
+      "hash": "06d854b95e15b3"
+    },
+    {
+      "name": "nested objects are sorted at every depth",
+      "inputs": {
+        "company": {
+          "size": 120,
+          "name": "Acme",
+          "address": {
+            "zip": "8001",
+            "city": "Cape Town"
+          }
+        },
+        "owner": {
+          "name": "Grace",
+          "id": 7
+        }
+      },
+      "canonical": "{\"company\":{\"address\":{\"city\":\"Cape Town\",\"zip\":\"8001\"},\"name\":\"Acme\",\"size\":120},\"owner\":{\"id\":7,\"name\":\"Grace\"}}",
+      "hash": "0c1cf261d07b63"
+    },
+    {
+      "name": "arrays keep their order",
+      "inputs": {
+        "tags": ["b", "a", "c"],
+        "people": [
           {
-            "z": true,
-            "y": null
+            "z": 1,
+            "a": 2
+          },
+          {
+            "name": "x"
+          }
+        ],
+        "matrix": [[3, 2], [1]]
+      },
+      "canonical": "{\"matrix\":[[3,2],[1]],\"people\":[{\"a\":2,\"z\":1},{\"name\":\"x\"}],\"tags\":[\"b\",\"a\",\"c\"]}",
+      "hash": "123d465b9810cf"
+    },
+    {
+      "name": "numbers",
+      "inputs": {
+        "integer": 42,
+        "negative": -7,
+        "zero": 0,
+        "float": 1.5,
+        "small": 0.000001,
+        "large": 1e21,
+        "big": 123456789012345,
+        "precise": 0.1
+      },
+      "canonical": "{\"big\":123456789012345,\"float\":1.5,\"integer\":42,\"large\":1e+21,\"negative\":-7,\"precise\":0.1,\"small\":0.000001,\"zero\":0}",
+      "hash": "00776c34bad4f7"
+    },
+    {
+      "name": "booleans, null and empty values",
+      "inputs": {
+        "yes": true,
+        "no": false,
+        "nothing": null,
+        "emptyText": "",
+        "emptyList": [],
+        "emptyObject": {}
+      },
+      "canonical": "{\"emptyList\":[],\"emptyObject\":{},\"emptyText\":\"\",\"no\":false,\"nothing\":null,\"yes\":true}",
+      "hash": "15fa1a77a5b04a"
+    },
+    {
+      "name": "unicode and escapes",
+      "inputs": {
+        "name": "Zoë Ångström",
+        "city": "東京",
+        "emoji": "🚀 launch",
+        "quote": "She said \"hi\"\\n",
+        "control": "line\nbreak\ttab"
+      },
+      "canonical": "{\"city\":\"東京\",\"control\":\"line\\nbreak\\ttab\",\"emoji\":\"🚀 launch\",\"name\":\"Zoë Ångström\",\"quote\":\"She said \\\"hi\\\"\\\\n\"}",
+      "hash": "0c3817c6e46dfd"
+    },
+    {
+      "name": "a date is its ISO string",
+      "inputs": {
+        "signedUp": {
+          "~d": 1700000000000
+        },
+        "events": [
+          {
+            "at": {
+              "~d": 1577836800123
+            }
           }
         ]
-      }
-    ],
-    "canonical": "[{\"a\":2,\"b\":1},{\"c\":[1,2,{\"y\":null,\"z\":true}]}]",
-    "hash": "1108efc6baeb18"
-  },
-  {
-    "name": "escaped characters",
-    "inputs": {
-      "text": "He said \"hi\"\n\ttab \\ backslash"
+      },
+      "canonical": "{\"events\":[{\"at\":\"2020-01-01T00:00:00.123Z\"}],\"signedUp\":\"2023-11-14T22:13:20.000Z\"}",
+      "hash": "147ba20c3ba0e0"
     },
-    "canonical": "{\"text\":\"He said \\\"hi\\\"\\n\\ttab \\\\ backslash\"}",
-    "hash": "09cde1c88d9629"
-  },
-  {
-    "name": "a bare string",
-    "inputs": "acme.com",
-    "canonical": "\"acme.com\"",
-    "hash": "0c038e33c03f2c"
-  }
-]
+    {
+      "name": "an ObjectId is its hex string",
+      "inputs": {
+        "account": {
+          "_oid": "64b7f0c2a1b2c3d4e5f60718"
+        },
+        "prompt": "Summarise the company"
+      },
+      "canonical": "{\"account\":\"64b7f0c2a1b2c3d4e5f60718\",\"prompt\":\"Summarise the company\"}",
+      "hash": "0aea04e37a971c"
+    },
+    {
+      "name": "a literal value input next to a column input",
+      "inputs": {
+        "model": "small",
+        "maxWords": 50,
+        "website": "https://example.com/about?x=1&y=2"
+      },
+      "canonical": "{\"maxWords\":50,\"model\":\"small\",\"website\":\"https://example.com/about?x=1&y=2\"}",
+      "hash": "0c36399e3ec7d2"
+    }
+  ]
+}
