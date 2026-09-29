@@ -633,6 +633,18 @@ blocks:
 
   # The buttons cell reaches components.Icon through the components prop the block
   # forwards to the shared core — an icon here proves that forwarding.
+  - id: aggridlowdefy_quick_filter
+    type: AgGridLowdefy
+    properties:
+      quickFilterValue: bob
+      columnDefs:
+        - headerName: Name
+          field: name
+      rowData:
+        - name: Alice
+        - name: Bob
+        - name: Charlie
+
   - id: aggridlowdefy_cell_buttons
     type: AgGridLowdefy
     properties:

@@ -24,6 +24,7 @@ import AgGridInput from '../../AgGridInput.js';
 
 const AgGridLowdefyInput = ({
   blockId,
+  components,
   events,
   loading,
   methods,
@@ -53,6 +54,7 @@ const AgGridLowdefyInput = ({
     >
       <AgGridInput
         blockId={blockId}
+        components={components}
         events={events}
         loading={loading}
         methods={methods}

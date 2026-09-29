@@ -422,6 +422,12 @@ test.describe('AgGridLowdefy Block', () => {
     expect(await clampSpan.evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(true);
   });
 
+  test('quickFilterValue shows only rows with a matching cell', async ({ page }) => {
+    const rows = getBlock(page, 'aggridlowdefy_quick_filter').locator('.ag-row');
+    await expect(rows).toHaveCount(1);
+    await expect(rows.first()).toContainText('Bob');
+  });
+
   // components is forwarded to the shared core, so components.Icon reaches the buttons cell.
   test('cell.type: buttons renders its icon from the forwarded components', async ({ page }) => {
     const block = getBlock(page, 'aggridlowdefy_cell_buttons');

@@ -124,6 +124,11 @@ function createInputMeta(blockName, { size = false } = {}) {
           type: 'array',
           description: 'The list of data to display on the table.',
         },
+        quickFilterValue: {
+          type: 'string',
+          description:
+            'Show only rows with a cell containing this text. Bind it to state to drive a search box; the `setQuickFilter` method does the same imperatively.',
+        },
         rowId: {
           type: 'string',
           description:
