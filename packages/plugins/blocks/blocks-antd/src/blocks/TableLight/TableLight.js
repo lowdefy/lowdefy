@@ -25,11 +25,13 @@ import createRowKeyGetter from '../../table/createRowKeyGetter.js';
 import getSkeletonRowCount from '../../table/getSkeletonRowCount.js';
 import isControlTarget from '../../table/isControlTarget.js';
 import LoadingAnnouncer from '../../table/LoadingAnnouncer.js';
+import needsTemplates from '../../table/needsTemplates.js';
 import normalizeColumns from '../../table/normalizeColumns.js';
 import resolveLink from '../../table/resolveLink.js';
 import resolveLoadingState from '../../table/resolveLoadingState.js';
 import useHeldRows from '../../table/useHeldRows.js';
 import useSkeletonTiming from '../../table/useSkeletonTiming.js';
+import useTemplateCompiler from '../../table/useTemplateCompiler.js';
 import buildAntdColumns from './buildAntdColumns.js';
 import sortRows from './sortRows.js';
 import TableLightSummary from './TableLightSummary.js';
@@ -114,19 +116,6 @@ function TableLightBlock({
   styles = {},
 }) {
   validateTableLightProperties({ properties });
-  const loadingSignal = loading === true || properties.loading === true;
-  const data = useHeldRows({ data: properties.data, loading: loadingSignal });
-  const loadingState = resolveLoadingState({
-    loading: loadingSignal,
-    sourceCount: data.length,
-    displayCount: data.length,
-  });
-  const skeletonPhase = useSkeletonTiming({ active: loadingState === 'initial', id: blockId });
-  const showSkeleton = loadingState === 'initial' || skeletonPhase === 'holding';
-  const busy = loadingState === 'refreshing';
-  const size = ANTD_SIZES[properties.size ?? 'default'];
-  const blockRef = useRef(null);
-  const headerBottom = useHeaderBottom({ ref: blockRef, active: busy || showSkeleton });
 
   // The engine hands the block new property objects whenever anything in them
   // changes, so the columns are compiled per config content, not per object.
@@ -136,17 +125,32 @@ function TableLightBlock({
     properties.rowRules,
     properties.user,
   ]);
+  const normalized = useMemo(
+    () =>
+      normalizeColumns({
+        columns: properties.columns,
+        defaultColumn: properties.defaultColumn,
+      }),
+    [configKey]
+  );
+  // The template compiler loads only for a config with templates; the skeleton shows until then.
+  const templatesNeeded = useMemo(
+    () => needsTemplates({ columns: normalized.columns }),
+    [normalized]
+  );
+  const compileTemplate = useTemplateCompiler({ needed: templatesNeeded });
+  const waitingForTemplates = templatesNeeded && compileTemplate === null;
   const config = useMemo(() => {
-    const normalized = normalizeColumns({
-      columns: properties.columns,
-      defaultColumn: properties.defaultColumn,
-    });
-    // Blocks do not see the session: `$user` in conditions reads the `user` property.
-    const columns = compileColumns({
-      columns: normalized.columns,
-      columnsByKey: normalized.columnsByKey,
-      user: properties.user,
-    });
+    // Blocks do not see the session: `$user` in conditions reads the `user` property. Until the
+    // template compiler has loaded, the skeleton renders from the normalised columns.
+    const columns = waitingForTemplates
+      ? normalized.columns
+      : compileColumns({
+          columns: normalized.columns,
+          columnsByKey: normalized.columnsByKey,
+          user: properties.user,
+          compileTemplate,
+        });
     return {
       columns,
       compiledByKey: Object.fromEntries(columns.map((column) => [column.key, column])),
@@ -157,7 +161,25 @@ function TableLightBlock({
         user: properties.user,
       }),
     };
-  }, [configKey]);
+  }, [normalized, compileTemplate, waitingForTemplates]);
+
+  const loadingSignal = loading === true || properties.loading === true;
+  const data = useHeldRows({ data: properties.data, loading: loadingSignal });
+  const loadingState = resolveLoadingState({
+    loading: loadingSignal,
+    sourceCount: data.length,
+    displayCount: data.length,
+  });
+  const skeletonPhase = useSkeletonTiming({
+    active: loadingState === 'initial' || waitingForTemplates,
+    id: blockId,
+  });
+  const showSkeleton =
+    loadingState === 'initial' || waitingForTemplates || skeletonPhase === 'holding';
+  const busy = loadingState === 'refreshing';
+  const size = ANTD_SIZES[properties.size ?? 'default'];
+  const blockRef = useRef(null);
+  const headerBottom = useHeaderBottom({ ref: blockRef, active: busy || showSkeleton });
 
   const getRowKey = useMemo(
     () => createRowKeyGetter({ rowKey: properties.rowKey }),

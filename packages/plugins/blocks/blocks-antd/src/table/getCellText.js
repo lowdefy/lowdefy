@@ -17,7 +17,6 @@
 import formatDate from '@lowdefy/block-utils/format/formatDate.js';
 import formatNumber from '@lowdefy/block-utils/format/formatNumber.js';
 import { get, type } from '@lowdefy/helpers';
-import { nunjucksFunction } from '@lowdefy/nunjucks';
 
 import DATE_FORMATS from './dateFormats.js';
 import getNumberConfig from './getNumberConfig.js';
@@ -102,9 +101,9 @@ function getCellText({ column, value, row }) {
         .map((item) => getRelationLabel({ item, cell }))
         .join(', ');
     case 'html':
-      if (type.isString(cell.template)) {
-        const render = column.compiled?.template ?? nunjucksFunction(cell.template);
-        return htmlToText(render({ value, row }));
+      // Columns are compiled (compileColumns) before any text is read from them.
+      if (type.isFunction(column.compiled?.template)) {
+        return htmlToText(column.compiled.template({ value, row }));
       }
       return htmlToText(plainText(value));
     case 'json':

@@ -15,13 +15,13 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { nunjucksFunction } from '@lowdefy/nunjucks';
 import compileCondition from '@lowdefy/blocks-antd/table/compileCondition.js';
 
 // `expandable: { template, rowExpandable: { when } }`. The template is nunjucks (autoescaped, so
 // `| safe` is needed to insert HTML from a field), compiled once and rendered with
-// `{ row, rowKey }`; `rowExpandable.when` is a table condition tested against the row.
-function normalizeExpandable({ expandable, columns, user }) {
+// `{ row, rowKey }` (`compileTemplate`, the compiler useTableConfig loads when templates are
+// used); `rowExpandable.when` is a table condition tested against the row.
+function normalizeExpandable({ expandable, columns, user, compileTemplate }) {
   if (type.isNone(expandable)) return null;
   if (!type.isObject(expandable)) {
     throw new Error(
@@ -35,7 +35,7 @@ function normalizeExpandable({ expandable, columns, user }) {
       )}.`
     );
   }
-  const render = nunjucksFunction(expandable.template);
+  const render = compileTemplate(expandable.template);
   let isExpandable = () => true;
   if (!type.isNone(expandable.rowExpandable)) {
     const when = expandable.rowExpandable?.when;

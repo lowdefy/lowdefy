@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
-import React, { useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { type } from '@lowdefy/helpers';
+import loadTemplateCompiler from '@lowdefy/blocks-antd/table/loadTemplateCompiler.js';
+import needsTemplates from '@lowdefy/blocks-antd/table/needsTemplates.js';
 import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
 import useSkeletonTiming from '@lowdefy/blocks-antd/table/useSkeletonTiming.js';
 
@@ -115,10 +117,15 @@ function TableFallback({
   const columnsConfig = useStableConfig(properties.columns);
   const defaultColumn = useStableConfig(properties.defaultColumn);
   const defaultView = useStableConfig(properties.defaultView) ?? {};
+  const expandable = useStableConfig(properties.expandable);
   const normalized = useMemo(
     () => normalizeColumns({ columns: columnsConfig, defaultColumn }),
     [columnsConfig, defaultColumn]
   );
+  useEffect(() => {
+    // The template compiler loads alongside the table's code, not after it.
+    if (needsTemplates({ columns: normalized.columns, expandable })) loadTemplateCompiler();
+  }, [normalized, expandable]);
   const layout = computeFallbackLayout({
     columns: normalized.columns,
     defaultView,
