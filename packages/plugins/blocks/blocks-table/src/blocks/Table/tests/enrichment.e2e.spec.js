@@ -527,6 +527,20 @@ test.describe('Table enrichment', () => {
     });
   });
 
+  test('the Run submenu shows a flyout arrow, not an inline menu caret', async ({ page }) => {
+    const menu = await openMenu(page, 'email');
+    const run = menu.getByRole('menuitem', { name: 'Run', exact: true });
+    await expect(run.locator('.ant-dropdown-menu-submenu-arrow svg')).toHaveCount(1);
+    await expect(run.locator('.ant-menu-submenu-expand-icon')).toHaveCount(0);
+    await run.hover();
+    await expect(page.getByRole('menuitem', { name: 'Errors', exact: true })).toBeVisible();
+    // The arrow does not turn when the submenu opens (an inline menu's caret flips up).
+    const transform = await run
+      .locator('.ant-dropdown-menu-submenu-arrow svg')
+      .evaluate((element) => element.style.transform);
+    expect(transform).toBe('');
+  });
+
   test('Run on a selection runs the selected rows', async ({ page }) => {
     await selectRow(page, 'r2');
     await selectRow(page, 'r3');

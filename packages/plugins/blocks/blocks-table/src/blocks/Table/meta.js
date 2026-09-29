@@ -290,6 +290,7 @@ export default {
   valueType: 'object',
   icons: [
     'chevron-down',
+    'chevron-right',
     'chevron-up',
     'close',
     'download',
