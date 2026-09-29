@@ -401,6 +401,9 @@ test.describe('Table enrichment', () => {
     await picker(page)
       .locator('[data-lf-picker-template="prompt"] [data-lf-picker-chip="company"]')
       .click();
+    // The chip hands focus back to the prompt, with the caret after the placeholder, a frame on.
+    await expect(prompt).toHaveValue('Which segment is {{ company }}');
+    await expect(prompt).toBeFocused();
     await prompt.press('End');
     await prompt.pressSequentially(' at ');
     await picker(page)
@@ -411,11 +414,18 @@ test.describe('Table enrichment', () => {
       'Changing the prompt does not make cells stale'
     );
     await search(page, picker(page).locator('[data-lf-picker-field="type"] .ant-select'), 'tag');
-    const options = picker(page).locator('[data-lf-picker-field="outputOptions"] input');
+    const options = picker(page).getByLabel('Answer options', { exact: true });
     await options.fill('smb');
     await options.press('Enter');
     await options.fill('enterprise');
     await options.press('Enter');
+    // Each option starts on its own tone; a colour select changes one.
+    await expect(picker(page).locator('.lf-enrich-option-chip')).toHaveText(['smb', 'enterprise']);
+    await expect(picker(page).locator('[data-lf-picker-option] .ant-select')).toHaveText([
+      'blue',
+      'green',
+    ]);
+    await pick(page, picker(page).getByLabel('Colour of enterprise'), 'red');
     expect((await previewConfig(page)).inputs).toEqual({
       company: { column: 'company' },
       domain: { column: 'domain' },
@@ -432,7 +442,13 @@ test.describe('Table enrichment', () => {
         userDefined: true,
         prompt: 'Which segment is {{ company }}?',
         inputs: { company: { column: 'company' } },
-        output: { type: 'tag', options: ['smb', 'enterprise'] },
+        output: {
+          type: 'tag',
+          options: [
+            { value: 'smb', color: 'blue' },
+            { value: 'enterprise', color: 'red' },
+          ],
+        },
         autoRun: false,
       },
       position: null,
@@ -735,6 +751,33 @@ test.describe('Table enrichment', () => {
     const event = await eventOf(page, 'onColumnRun');
     expect(event.mode).toBe('all');
     expect(event.column.key).toBe('summary');
+  });
+
+  test('Run selected and the new row editor leave out hidden columns', async ({ page }) => {
+    await menuItem(page, 'summary', 'Hide column');
+    await menuItem(page, 'domain', 'Hide column');
+    await selectRow(page, 'r1');
+    await page.locator('[data-lf-bulk-action="run"]').click();
+    await expect(page.locator('.ant-dropdown:visible').getByRole('menuitem')).toHaveText(['Email']);
+    await page.keyboard.press('Escape');
+    await getBlock(page, 'enrich').locator('[data-lf-new-row]').click();
+    await expect(
+      getBlock(page, 'enrich').locator('[data-lf-new-row-editor] [data-lf-new-row-field]')
+    ).toHaveText(['Company']);
+  });
+
+  test('a picker select near the bottom of a short window opens where it can be clicked', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 520 });
+    await openPicker(page);
+    await picker(page).locator('[data-lf-picker-kind="provider:findEmail"]').click();
+    const select = picker(page).locator('[data-lf-picker-input="name"] .ant-select');
+    await select.scrollIntoViewIfNeeded();
+    await pick(page, select, 'Company');
+    await expect(select).toHaveText('Company');
+    // The generated config is there for developers, closed by default.
+    await expect(picker(page).locator('details.lf-enrich-preview')).not.toHaveAttribute('open');
   });
 
   // ============================================

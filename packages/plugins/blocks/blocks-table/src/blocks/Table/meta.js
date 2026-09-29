@@ -229,7 +229,7 @@ const column = {
     output: {
       type: ['string', 'object'],
       description:
-        "`kind: enrichment`: the path of the value in the provider's result (`value` defaults to the whole result). `kind: ai`: `{ type, options? }`, the answer's type (also the column type): `text`, `number`, `boolean`, `tag` or `tags`; `options`, the answers allowed, only for `tag` and `tags`.",
+        "`kind: enrichment`: the path of the value in the provider's result (`value` defaults to the whole result). `kind: ai`: `{ type, options? }`, the answer's type (also the column type): `text`, `number`, `boolean`, `tag` or `tags`; `options`, the answers allowed, only for `tag` and `tags`: each its text or `{ value, color }` (the tag's colour; on a user-defined column a tone name such as `blue` or `error`, never a CSS value; the add-column picker gives each option a distinct tone).",
       docs: { displayType: 'yaml' },
     },
     autoRun: {

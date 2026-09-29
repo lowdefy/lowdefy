@@ -327,7 +327,7 @@ test('an AI column from the picker answers with one of its options', async ({ pa
     .locator('[data-lf-picker-template="prompt"] [data-lf-picker-chip="company"]')
     .click();
   await search(page, picker(page).locator('[data-lf-picker-field="type"] .ant-select'), 'tag');
-  const options = picker(page).locator('[data-lf-picker-field="outputOptions"] input');
+  const options = picker(page).getByLabel('Answer options', { exact: true });
   for (const option of ['Software', 'Logistics', 'Retail']) {
     await options.fill(option);
     await options.press('Enter');
@@ -341,6 +341,12 @@ test('an AI column from the picker answers with one of its options', async ({ pa
   await page.locator('.ant-dropdown:visible').getByRole('menuitem', { name: 'Segment' }).click();
   await expect(cell(page, 'Ada Brightwell', 'segment')).toHaveText('Logistics');
   await expect(cell(page, 'Ben Quill', 'segment')).toHaveText('Software');
+  // Each option has its own colour.
+  const tagFill = (name) =>
+    cell(page, name, 'segment')
+      .locator('.lf-table-tag')
+      .evaluate((element) => getComputedStyle(element).backgroundColor);
+  expect(await tagFill('Ada Brightwell')).not.toBe(await tagFill('Ben Quill'));
   await expect(status(page, 'Cara Tidewell', 'segment')).toHaveAttribute(
     'data-lf-enrich-status',
     'none'

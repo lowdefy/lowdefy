@@ -47,7 +47,7 @@ This design adds that glue: cell run state, the column and row UX, and a MongoDB
 | `ai`         | an AI prompt per row               | the server worker               | `prompt` (`{{ input }}` placeholders only), `provider?` (default `ai`), `output`, `autoRun`          |
 | `extract`    | a path into another column's `raw` | in the browser                  | `source` (column key), `path`                                                                        |
 
-An ai column's `output` is `{ type, options? }`, a Table column type the answer can be: `text`, `number`, `boolean`, `tag` or `tags` (`options`, the answers allowed, only for `tag` and `tags`). The picker, the Table, the claim and the AI endpoint all use this list.
+An ai column's `output` is `{ type, options? }`, a Table column type the answer can be: `text`, `number`, `boolean`, `tag` or `tags` (`options`, the answers allowed, only for `tag` and `tags`: each its text or `{ value, color }`, the colour a tone name; the picker starts each option on a distinct tone, `assignOptionColors`, and a user-defined column with a non-tone option colour is an error column). The picker, the Table, the claim and the AI endpoint all use this list.
 
 **Templates are placeholders, never a template engine.** Formula templates and AI prompts are user content shared between users: a nunjucks template runs code (`{{ range.constructor("...")() }}`), in every viewer's browser for a formula and on the server for a prompt. Both only take `{{ column }}` placeholders (a key or a dot path into its value, one pattern on the client and the server) and are filled in by plain substitution, in one pass, so a row value that looks like a template stays text. A template with tags (`{% %}`), comments (`{# #}`) or expressions (`{{ a | upper }}`) is refused when the column is saved (the picker and the app's column check) and when it is read (the Table's column core). Declared `html` cells keep nunjucks: their templates are config, not user content.
 
@@ -116,7 +116,7 @@ The module is an optional feature: it loads in its own chunk only for tables wit
   All states are tier 0: static DOM, with the tooltip mounted on hover.
 
 - **Header progress.** Enrichment column headers show live counts ("12 running · 3 errors") from the loaded rows, or from server aggregates in server mode. The chip takes its most severe status' tag tone (an error red, running blue, queued alone neutral; tag tones read at 4.5:1 in light and dark) and the largest form that fits beside the title, which keeps its room: the full text, an icon and a count per status, or a dot, with the full text as its tooltip (`getProgressMode`, widths from the table's text measure).
-- **Add column.** `addColumn: true | { kinds }` shows a "+" at the end of the header. It opens a picker with these kinds:
+- **Add column.** `addColumn: true | { kinds }` shows a "+" at the end of the header. The generated column config shows under a closed "Advanced: column config" disclosure. It opens a picker with these kinds:
 
   - input types
   - formula
@@ -130,7 +130,7 @@ The module is an optional feature: it loads in its own chunk only for tables wit
 - **Row and cell runs.**
   - The row menu has "Run row", which fires `onRowRun { rowKey, columns }`.
   - An enrichment cell's details panel has "Rerun", which fires `onCellRun`.
-  - The bulk bar has "Run selected", which fires `onColumnRun` with the selection.
+  - The bulk bar has "Run selected", which fires `onColumnRun` with the selection. It lists the visible run columns; the "+ New row" editor asks for the visible input columns.
 - **Cell details panel.** Clicking an enrichment cell, or pressing Space on it, opens a built-in side panel. It shows:
 
   - the status, the value, the error and the timings;

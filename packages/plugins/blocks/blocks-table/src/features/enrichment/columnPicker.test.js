@@ -17,6 +17,7 @@
 import isEnrichmentInputColumn from '@lowdefy/blocks-antd/table/isEnrichmentInputColumn.js';
 import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
 
+import assignOptionColors from './assignOptionColors.js';
 import buildColumnConfig from './buildColumnConfig.js';
 import createDraft from './createDraft.js';
 import draftFromColumn from './draftFromColumn.js';
@@ -119,7 +120,10 @@ test('buildColumnConfig builds an ai column whose output type is the column type
     type: 'tag',
     prompt,
     inputs: syncPromptInputs({ prompt, columnKeys: ['company'] }),
-    outputOptions: ['smb', 'enterprise'],
+    outputOptions: [
+      { value: 'smb', color: 'blue' },
+      { value: 'enterprise', color: 'green' },
+    ],
   };
   expect(buildColumnConfig({ draft, key: 'segment' })).toEqual({
     key: 'segment',
@@ -129,9 +133,57 @@ test('buildColumnConfig builds an ai column whose output type is the column type
     userDefined: true,
     prompt,
     inputs: { company: { column: 'company' } },
-    output: { type: 'tag', options: ['smb', 'enterprise'] },
+    output: {
+      type: 'tag',
+      options: [
+        { value: 'smb', color: 'blue' },
+        { value: 'enterprise', color: 'green' },
+      ],
+    },
     autoRun: false,
   });
+});
+
+test('assignOptionColors gives new options distinct tones and keeps chosen ones', () => {
+  expect(assignOptionColors({ values: ['a', 'b', 'c'] })).toEqual([
+    { value: 'a', color: 'blue' },
+    { value: 'b', color: 'green' },
+    { value: 'c', color: 'orange' },
+  ]);
+  // A kept colour stays; a new option takes the first tone no other option uses.
+  expect(
+    assignOptionColors({
+      values: ['b', 'd'],
+      previous: [
+        { value: 'a', color: 'blue' },
+        { value: 'b', color: 'blue' },
+      ],
+    })
+  ).toEqual([
+    { value: 'b', color: 'blue' },
+    { value: 'd', color: 'green' },
+  ]);
+  // Plain string options (saved before options had colours) get tones.
+  expect(assignOptionColors({ values: ['x'], previous: ['x'] })).toEqual([
+    { value: 'x', color: 'blue' },
+  ]);
+});
+
+test('draftFromColumn reads answer options back with their colours', () => {
+  const raw = {
+    key: 'tier',
+    title: 'Tier',
+    kind: 'ai',
+    userDefined: true,
+    prompt: 'Tier of {{ name }}',
+    inputs: { name: { column: 'name' } },
+    output: { type: 'tag', options: [{ value: 'A', color: 'red' }, 'B'] },
+  };
+  const { columnsByKey } = normalizeColumns({ columns: ['name', raw] });
+  expect(draftFromColumn({ raw, column: columnsByKey.tier }).outputOptions).toEqual([
+    { value: 'A', color: 'red' },
+    { value: 'B', color: 'blue' },
+  ]);
 });
 
 test('syncPromptInputs lists exactly the columns the prompt references', () => {
@@ -321,12 +373,12 @@ test('an ai draft keeps answer options only for tag and tags', () => {
     ...createDraft({ kind: 'ai' }),
     title: 'Tier',
     prompt: 'Tier of {{ name }}',
-    outputOptions: ['A', 'B'],
+    outputOptions: [{ value: 'A', color: 'blue' }],
   };
   expect(buildColumnConfig({ draft, key: 'tier' }).output).toEqual({ type: 'text' });
   expect(buildColumnConfig({ draft: { ...draft, type: 'tag' }, key: 'tier' }).output).toEqual({
     type: 'tag',
-    options: ['A', 'B'],
+    options: [{ value: 'A', color: 'blue' }],
   });
 });
 

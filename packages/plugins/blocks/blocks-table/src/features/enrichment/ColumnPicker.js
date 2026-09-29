@@ -22,6 +22,7 @@ import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
 import isEnrichmentInputColumn from '@lowdefy/blocks-antd/table/isEnrichmentInputColumn.js';
 import USER_COLUMN_TYPES from '@lowdefy/blocks-antd/table/userColumnTypes.js';
 
+import AnswerOptions from './AnswerOptions.js';
 import buildColumnConfig from './buildColumnConfig.js';
 import generateColumnKey from './generateColumnKey.js';
 import getPickerKinds from './getPickerKinds.js';
@@ -153,13 +154,9 @@ function KindFields({ columns, draft, inputColumns, provider, sources, update })
           </Field>
           {OPTION_TYPES.has(draft.type) ? (
             <Field label="Answer options" name="outputOptions">
-              <Select
-                aria-label="Answer options"
-                mode="tags"
+              <AnswerOptions
                 onChange={(outputOptions) => update({ outputOptions })}
-                open={false}
-                placeholder="Type an option and press Enter"
-                value={draft.outputOptions}
+                options={draft.outputOptions}
               />
             </Field>
           ) : null}
@@ -335,8 +332,9 @@ function ColumnPicker({ api, picker }) {
             />
           </Field>
         ) : null}
-        <details className="lf-enrich-preview" open>
-          <summary>Column config</summary>
+        {/* The generated config, for whoever wires the app's column endpoints: closed by default. */}
+        <details className="lf-enrich-preview">
+          <summary>Advanced: column config</summary>
           <pre data-lf-picker-preview="">{JSON.stringify(column, null, 2)}</pre>
         </details>
         {picker.error ? (

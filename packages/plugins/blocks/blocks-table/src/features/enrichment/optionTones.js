@@ -14,24 +14,22 @@
   limitations under the License.
 */
 
-// A fresh add-column picker draft. The picker edits one flat draft for every kind (so switching
-// kinds keeps what was typed); buildColumnConfig picks the keys the chosen kind uses.
-function createDraft({ kind = 'input', provider = null } = {}) {
-  return {
-    kind,
-    provider,
-    title: '',
-    type: 'text',
-    template: '',
-    inputs: {},
-    output: '',
-    // An AI tag answer's options, `[{ value, color }]` (assignOptionColors).
-    outputOptions: [],
-    prompt: '',
-    autoRun: false,
-    source: null,
-    path: '',
-  };
-}
+// The tag tones an AI answer option can take, in the order new options get them, so neighbouring
+// options differ. Preset names only: a user-defined column is rendered in every viewer's browser,
+// so its colours are never free CSS.
+const OPTION_TONES = [
+  'blue',
+  'green',
+  'orange',
+  'purple',
+  'cyan',
+  'magenta',
+  'gold',
+  'red',
+  'geekblue',
+  'lime',
+  'volcano',
+  'yellow',
+];
 
-export default createDraft;
+export default OPTION_TONES;

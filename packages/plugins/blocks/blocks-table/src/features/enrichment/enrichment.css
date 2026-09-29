@@ -403,6 +403,44 @@
     cursor: pointer;
   }
 
+  /* An AI tag answer's options, each its chip and colour select. */
+  .lf-enrich-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ant-padding-xs, 8px);
+    margin: var(--ant-padding-xs, 8px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lf-enrich-options > li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ant-padding-xxs, 4px);
+  }
+
+  .lf-enrich-option-chip {
+    padding: 0 8px;
+    font-size: var(--ant-font-size-sm, 12px);
+    font-weight: 600;
+    line-height: 20px;
+    border: 1px solid transparent;
+    border-radius: var(--ant-border-radius-sm, 4px);
+  }
+
+  .lf-enrich-option-tone {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .lf-enrich-option-swatch {
+    width: 10px;
+    height: 10px;
+    border: 1px solid transparent;
+    border-radius: 50%;
+  }
+
   .lf-enrich-preview pre {
     max-height: 240px;
     margin: 4px 0 0;

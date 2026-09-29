@@ -50,11 +50,19 @@ routine:
                   - boolean
                   - tag
                   - tags
+              # An option is its text, or { value, color } (the colour is the Table's).
               options:
                 type: array
                 minItems: 1
                 items:
-                  type: string
+                  anyOf:
+                    - type: string
+                    - type: object
+                      required:
+                        - value
+                      properties:
+                        value:
+                          type: string
   - :if:
       _not:
         _step: check_payload.valid
@@ -97,7 +105,9 @@ routine:
         _js:
           fn: |
             const output = args.output ?? { type: 'text' };
-            const options = Array.isArray(output.options) ? output.options : null;
+            const options = Array.isArray(output.options)
+              ? output.options.map((option) => (typeof option === 'string' ? option : option.value))
+              : null;
             let value = { type: 'string' };
             if (output.type === 'tags') {
               value = {
