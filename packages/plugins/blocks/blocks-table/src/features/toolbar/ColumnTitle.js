@@ -15,10 +15,16 @@
 */
 
 import { renderHtml } from '@lowdefy/block-utils';
+import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
 
-// Column titles may be HTML; the toolbar shows them the way the header does.
+import getPlainTitle from '../filtering/getPlainTitle.js';
+
+// Column titles may be HTML; the toolbar shows them the way the header does. An empty title shows
+// the column's key-based label (getPlainTitle).
 function ColumnTitle({ api, column }) {
-  return renderHtml({ html: String(column.title), methods: api.methods });
+  const html = String(column.title ?? '');
+  if (htmlToText(html).trim() === '') return getPlainTitle(column);
+  return renderHtml({ html, methods: api.methods });
 }
 
 export default ColumnTitle;

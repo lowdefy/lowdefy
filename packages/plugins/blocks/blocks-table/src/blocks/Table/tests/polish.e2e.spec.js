@@ -276,4 +276,27 @@ test.describe('Table visual polish', () => {
       expect(element.cellBorder).toBe('0px');
     });
   });
+
+  test('column manager labels untitled columns and never cuts an entry above its footer', async ({
+    page,
+  }) => {
+    await table(page, 'crm').locator('[data-lf-toolbar-button="columns"]').click();
+    const manager = page.locator('[data-lf-column-manager]');
+    await expect(manager).toBeVisible();
+    await expect(manager.locator('[data-lf-manager-item][data-col-key="actions"]')).toHaveText(
+      'Actions'
+    );
+    const list = await manager.locator('.lf-table-manager-list').evaluate((element) => ({
+      scrollable: element.dataset.scrollable !== undefined,
+      scrolls: element.scrollHeight > element.clientHeight,
+      cut: Array.from(element.children).filter((entry) => {
+        const top = entry.offsetTop - element.scrollTop;
+        const bottom = top + entry.offsetHeight;
+        return top < element.clientHeight && bottom > element.clientHeight + 0.5;
+      }).length,
+    }));
+    expect(list.scrolls).toBe(true);
+    expect(list.scrollable).toBe(true);
+    expect(list.cut).toBe(0);
+  });
 });
