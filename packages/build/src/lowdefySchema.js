@@ -3723,6 +3723,12 @@ export default {
         type: 'App "global" should be an object.',
       },
     },
+    events: {
+      type: 'object',
+      errorMessage: {
+        type: 'App "events" should be an object.',
+      },
+    },
     agents: {
       type: 'array',
       items: {

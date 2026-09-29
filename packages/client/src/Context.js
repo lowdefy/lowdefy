@@ -47,24 +47,25 @@ const WebSocketsEffect = ({ context }) => {
   return null;
 };
 
-const Context = ({ children, config, jsMap, lowdefy, resetContext }) => {
+const Context = ({ appContext, children, config, jsMap, lowdefy, resetContext }) => {
   const context = getContext({ config, jsMap, lowdefy, resetContext });
+  const progress = () => {
+    lowdefy._internal.progress.dispatch({
+      type: 'increment',
+    });
+  };
   return (
     <MountEvents
       context={context}
       triggerEvent={async () => {
-        await context._internal.runOnInit(() => {
-          lowdefy._internal.progress.dispatch({
-            type: 'increment',
-          });
-        });
+        // The app events run once per app load, when the first page mounts. The
+        // page onInit waits for the app onInit, but not for the app onInitAsync.
+        await appContext._internal.runOnInit(progress);
+        appContext._internal.runOnInitAsync(progress);
+        await context._internal.runOnInit(progress);
       }}
       triggerEventAsync={() => {
-        context._internal.runOnInitAsync(() => {
-          lowdefy._internal.progress.dispatch({
-            type: 'increment',
-          });
-        });
+        context._internal.runOnInitAsync(progress);
       }}
     >
       {(loadingOnInit) => {

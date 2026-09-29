@@ -15,6 +15,7 @@ The root schema for a Lowdefy app is:
 - `config: object`: An object with app configuration like the home page pageId.
 - `auth: object` An object with authentication and authorization configuration.
 - `global: object`: A data object that can be accessed anywhere in the app using the [`_global`](/_global) operator.
+- `events: object`: App events, `onInit` and `onInitAsync`, that run once each time the app loads in the browser. See [App events](/events-and-actions#app-events).
 - `connections: object[]`: An array of [`connection`](/connections-and-requests) objects.
 - `plugins: object[]`: An array of `plugin` objects to customize and add block types.
 - `modules: object[]`: An array of module entries. Each module references a reusable configuration package distributed via GitHub or local file paths. See [Modules](/modules) for details.
@@ -79,6 +80,8 @@ See more about how user authentication and authorization [here](/users-introduct
 ## Global
 
 In a Lowdefy app, you can define global variables in the __global__ object, which can be accessed using the [`_global`](/_global) operator, and modified using the [`SetGlobal`](/SetGlobal) action. This is a good place to store data or configuration that is used over various pages throughout the app, for example, user preferences that can be modified using `SetGlobal` on one page and easily referenced on all others.
+
+The app [`events`](/events-and-actions#app-events) `onInit` and `onInitAsync` run once each time the app loads, before the first page's own events, and are a good place to set global values, for example user settings fetched with a [`CallAPI`](/CallAPI) action.
 
 ## Connections
 

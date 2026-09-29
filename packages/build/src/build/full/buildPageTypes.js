@@ -30,7 +30,8 @@ function getTypeDefinitions({ components, category }) {
 
 // Page building recorded the client types each page uses (createPageTypeCounters).
 // Icons join them as a fourth category, from the built page (createGetPageIcons).
-// Pages with the same type set share one module, keyed by a hash of the set, so
+// The app events' types join every page's set, since any page can be the first
+// to load. Pages with the same type set share one module, keyed by a hash of the set, so
 // the public registry never lists page ids.
 function buildPageTypes({ components, context }) {
   components.pageTypes = {};
@@ -45,6 +46,7 @@ function buildPageTypes({ components, context }) {
       const names = new Set([
         ...mandatoryClientTypes[category],
         ...Object.keys(pageCounters[category].getCounts()),
+        ...Object.keys(context.appTypeCounters[category].getCounts()),
       ]);
       // Operators counted but not installed stay data at runtime, as in the
       // app-wide barrel (buildTypes warns about them).

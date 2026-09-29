@@ -30,6 +30,7 @@ import addDefaultPages from './build/addDefaultPages/addDefaultPages.js';
 import addKeys from './build/addKeys.js';
 import buildAgents from './build/buildAgents.js';
 import buildApp from './build/buildApp.js';
+import buildAppEvents from './build/buildAppEvents.js';
 import buildAppMeta from './build/buildAppMeta.js';
 import buildAuth from './build/buildAuth/buildAuth.js';
 import buildConnections from './build/buildConnections.js';
@@ -66,6 +67,7 @@ import validateRenderNotificationSteps from './build/validateRenderNotificationS
 import validateRequestTimeout from './build/validateRequestTimeout.js';
 import writeAgents from './build/writeAgents.js';
 import writeApp from './build/writeApp.js';
+import writeAppEvents from './build/writeAppEvents.js';
 import writeAppMeta from './build/writeAppMeta.js';
 import writeAuth from './build/writeAuth.js';
 import writeConfig from './build/writeConfig.js';
@@ -187,6 +189,8 @@ async function build(options) {
       context,
     });
     tryBuildStep(buildPages, 'buildPages', { components, context });
+    // After buildPages: Link actions in app events are checked against the page ids.
+    tryBuildStep(buildAppEvents, 'buildAppEvents', { components, context });
     tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     // Collect page content strings for Tailwind to scan. Must run before
@@ -224,6 +228,7 @@ async function build(options) {
     // Write steps - only if no errors
     await cleanBuildDirectory({ context });
     await writeApp({ components, context });
+    await writeAppEvents({ components, context });
     await writeAppMeta({ components, context });
     await writeAuth({ components, context });
     await writeConnections({ components, context });

@@ -70,6 +70,15 @@ test('isPageReady returns false while onInitAsync has not finished', () => {
   expect(isPageReady('home')).toBe(false);
 });
 
+test('isPageReady returns false while the app onInitAsync has not finished', () => {
+  setWindow(settledContext());
+  global.window.lowdefy.appContext = { _internal: { onInitDone: true } };
+  expect(isPageReady('home')).toBe(false);
+
+  global.window.lowdefy.appContext._internal.onInitAsyncDone = true;
+  expect(isPageReady('home')).toBe(true);
+});
+
 test('isPageReady returns false while a block onMountAsync event is loading', () => {
   setWindow(
     settledContext({

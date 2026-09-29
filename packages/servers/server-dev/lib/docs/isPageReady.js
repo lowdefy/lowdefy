@@ -35,6 +35,9 @@ function isPageReady(pageId) {
   // runOnInitAsync is always invoked once runOnInit resolves, so this settles
   // even for a page that declares no onInitAsync event.
   if (context._internal?.onInitAsyncDone !== true) return false;
+  // The app onInitAsync runs once per app load, alongside the first page's events.
+  const appContext = window.lowdefy?.appContext;
+  if (appContext && appContext._internal?.onInitAsyncDone !== true) return false;
 
   // Covers onMountAsync (fired without await by Block.js) and any other event
   // still running, such as an onClick from an earlier tool call.

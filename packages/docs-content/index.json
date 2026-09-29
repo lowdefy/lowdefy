@@ -2915,7 +2915,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "d78a939e7c5875332ca6ef0e422fcd3c8c002f5bca46b64e2103a0605c9fc851"
+      "hash": "6d273e4078d1879d36efe355b4f1de38d4381985478aa29dd906b2ac8e211944"
     },
     "concepts/menus": {
       "files": [
@@ -3064,7 +3064,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "71f01fc0f417f51b7dd51b9ac277e1d97f4acc733de055eae9b69deb92005e37"
+      "hash": "d4c7c280343a5a4539c10d507408c1c0337dbacd2c0517e8d5b052a1e47c3cc5"
     },
     "concepts/keyboard-shortcuts": {
       "files": [
@@ -6983,7 +6983,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "7a519041124d85da254cc9f1104cce5d46ac7fea576997a08d2864006f1c7333"
+      "hash": "8a9f43d3ff2d46ea5d23cc685394e12a04ae5b5ea7ef4c085c6a9dd59565e1ed"
     },
     "actions/setlocale": {
       "files": [

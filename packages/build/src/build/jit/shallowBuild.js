@@ -30,6 +30,7 @@ import tryBuildStep from '../../utils/tryBuildStep.js';
 import addDefaultPages from '../addDefaultPages/addDefaultPages.js';
 import addKeys from '../addKeys.js';
 import buildApp from '../buildApp.js';
+import buildAppEvents from '../buildAppEvents.js';
 import buildAppMeta from '../buildAppMeta.js';
 import buildAuth from '../buildAuth/buildAuth.js';
 import buildConnections from '../buildConnections.js';
@@ -60,6 +61,7 @@ import copyPublicFolder from '../copyPublicFolder.js';
 import testSchema from '../testSchema.js';
 import validateConfig from '../validateConfig.js';
 import writeApp from '../writeApp.js';
+import writeAppEvents from '../writeAppEvents.js';
 import writeAppMeta from '../writeAppMeta.js';
 import writeAuth from '../writeAuth.js';
 import writeConfig from '../writeConfig.js';
@@ -202,6 +204,8 @@ async function shallowBuild(options) {
     logCollectedErrors(context);
 
     const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
+    // After buildShallowPages: Link actions in app events are checked against the page ids.
+    tryBuildStep(buildAppEvents, 'buildAppEvents', { components, context });
     tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });
 
     tryBuildStep(buildJsShallow, 'buildJsShallow', { components, context });
@@ -225,6 +229,7 @@ async function shallowBuild(options) {
     await cleanBuildDirectory({ context });
     await writeSourcelessPages({ sourcelessPageArtifacts, context });
     await writeApp({ components, context });
+    await writeAppEvents({ components, context });
     await writeAppMeta({ components, context });
     await writeAuth({ components, context });
     await writeConnections({ components, context });

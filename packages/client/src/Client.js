@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { ConfigProvider } from 'antd';
+import { getAppContext } from '@lowdefy/engine';
 import { serializer } from '@lowdefy/helpers';
 
 import Block from './block/Block.js';
@@ -73,6 +74,7 @@ const Client = ({
     types,
     window,
   });
+  const appContext = getAppContext({ events: config.rootConfig.events, jsMap, lowdefy });
   const Icon = lowdefy._internal.components.Icon;
   const antdIconConfig = React.useMemo(() => createAntdIconConfig({ Icon }), [Icon]);
   return (
@@ -103,6 +105,7 @@ const Client = ({
       <ConfigProvider {...antdIconConfig}>
         <Context
           key={contextKey}
+          appContext={appContext}
           config={config.pageConfig}
           jsMap={jsMap}
           lowdefy={lowdefy}
