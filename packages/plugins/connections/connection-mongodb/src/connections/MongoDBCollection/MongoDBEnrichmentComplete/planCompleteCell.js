@@ -32,6 +32,13 @@ function getBackoff({ backoffMs, attempts }) {
   return Math.min(backoffMs * 2 ** Math.max(attempts - 1, 0), maxBackoffMs);
 }
 
+// The micro-USD the provider call behind this result cost, when the result reports it (a
+// treg-backed provider reads it from X-Treg-Cost-Micro). A result without a cost leaves the
+// cell's cost as it was.
+function getCost(result) {
+  return result.cost === undefined ? {} : { cost: result.cost };
+}
+
 function planError({ result, match, attempts, compiled, now }) {
   const { backoffMs, maxAttempts } = compiled;
   if (result.retry && attempts < maxAttempts) {
@@ -44,6 +51,7 @@ function planError({ result, match, attempts, compiled, now }) {
           status: 'queued',
           queuedAt: new Date(now.getTime() + getBackoff({ backoffMs, attempts })),
           error: result.error,
+          ...getCost(result),
         },
         unset: ['leaseUntil', 'startedAt'],
       }),
@@ -54,7 +62,7 @@ function planError({ result, match, attempts, compiled, now }) {
     operation: operation({
       match,
       columnKey: result.columnKey,
-      set: { status: 'error', error: result.error, finishedAt: now },
+      set: { status: 'error', error: result.error, finishedAt: now, ...getCost(result) },
       unset: ['leaseUntil'],
     }),
   };
@@ -68,6 +76,7 @@ function planError({ result, match, attempts, compiled, now }) {
 //   requeue:    an error below maxAttempts: queued again after the backoff, backoffMs doubled
 //               per attempt made, keeping the error message and the previous result.
 //   error:      an error on the last attempt, or with retry: false. The previous value stays.
+// Any result with a cost stores it as the cell's cost.
 // A value larger than rawMaxBytes is a final error; a raw larger than it is stored as a
 // truncation marker.
 function planCompleteCell({ result, doc, compiled, now }) {
@@ -98,7 +107,12 @@ function planCompleteCell({ result, doc, compiled, now }) {
       });
     }
   }
-  const set = { status: result.status, inputHash: result.inputHash, finishedAt: now };
+  const set = {
+    status: result.status,
+    inputHash: result.inputHash,
+    finishedAt: now,
+    ...getCost(result),
+  };
   const unset = ['error', 'leaseUntil'];
   if (result.status === 'ok' && result.value !== undefined) {
     set.value = result.value;

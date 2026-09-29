@@ -645,6 +645,7 @@ The `downstream` columns are already queued: the worker's next claim runs them.
   - `status: enum`: __Required__ - `ok`, `empty` (no result) or `error`.
   - `value: any`: The result the column shows.
   - `raw: any`: The provider's response.
+  - `cost: integer`: What the provider call behind the result cost, in micro-USD, such as a [`TregCall`](/Treg) `cost.micro`. Stored as the cell's `cost` with any status; a result without a cost leaves the cell's cost as it was.
   - `error: string | null`: The error message, with status `error`. `null` is the same as leaving it out.
   - `retry: boolean | null`: Default: `true` - With status `error`, `false` makes the error final. `null` is the same as leaving it out.
 - `columnDefs: object[]`: __Required__ - The table columns, declared and user-defined merged.

@@ -47,6 +47,7 @@ const defaultPackages = [
   '@lowdefy/connection-sendgrid',
   '@lowdefy/connection-smtp',
   '@lowdefy/connection-stripe',
+  '@lowdefy/connection-treg',
   '@lowdefy/email-templates',
   '@lowdefy/operators-change-case',
   '@lowdefy/operators-cron',

@@ -1692,6 +1692,14 @@
       "typeName": "Stripe"
     },
     {
+      "slug": "connections/treg",
+      "title": "treg",
+      "section": "Connections",
+      "path": "content/connections/treg.md",
+      "kind": "connection",
+      "typeName": "treg"
+    },
+    {
       "slug": "actions/callapi",
       "title": "CallAPI",
       "section": "Actions",
@@ -6319,7 +6327,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "e662e36acd4b918d25d2cc74af615ba95ea1119dcd577bd15cdaed436da9dccc"
+      "hash": "73cd8264b89a5976745e20e6c4c12e5b55b7a92f9d36de0bbf96752898faf262"
     },
     "connections/mssql": {
       "files": [
@@ -6436,6 +6444,20 @@
         "version.yaml"
       ],
       "hash": "eaa4ae10334296add8d254d8331efe7efe210663aa612477fcc68f6e688c4ff5"
+    },
+    "connections/treg": {
+      "files": [
+        "connections/Treg.yaml",
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/validate_email.yaml",
+        "version.yaml"
+      ],
+      "hash": "689fd65fa8713eede62f1ff8851683986d42b4f9a9e58e5d4d438383a657681f"
     },
     "actions/callapi": {
       "files": [
@@ -7320,7 +7342,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "1d090eacbdf9acaa3d824fe644de34eb4c5a7c55fa22fbb15f1716d6cf451da7"
+      "hash": "7bd4a5d6dc3733343e6ee8a5d3af7da1a1f945b9a0b21a9e7007effc801b60b2"
     },
     "operators/_event": {
       "files": [

@@ -28,6 +28,7 @@ const resultKeys = [
   'status',
   'value',
   'raw',
+  'cost',
   'error',
   'retry',
 ];
@@ -91,6 +92,13 @@ function parseResult({ result, index, columnDefsByKey, rowKeyType }) {
       received: result.status,
     });
   }
+  if (!type.isNone(result.cost) && !(type.isInt(result.cost) && result.cost >= 0)) {
+    throw invalid({
+      index,
+      message: '"cost" should be a whole number of micro-USD, 0 or more.',
+      received: result.cost,
+    });
+  }
   if (!type.isNone(result.retry) && !type.isBoolean(result.retry)) {
     throw invalid({ index, message: '"retry" should be a boolean.', received: result.retry });
   }
@@ -104,6 +112,7 @@ function parseResult({ result, index, columnDefsByKey, rowKeyType }) {
     status: result.status,
     value: result.value,
     raw: result.raw,
+    cost: type.isNone(result.cost) ? undefined : result.cost,
     error: parseError({ result, index }),
     retry: result.retry !== false,
   };

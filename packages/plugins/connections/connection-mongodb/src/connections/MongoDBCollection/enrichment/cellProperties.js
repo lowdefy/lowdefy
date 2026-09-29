@@ -21,6 +21,7 @@ const cellProperties = [
   'status',
   'value',
   'raw',
+  'cost',
   'error',
   'inputHash',
   'runId',
