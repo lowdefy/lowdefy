@@ -1281,6 +1281,8 @@ fields:
 
 **Read columns on the server.** Endpoints that enqueue runs or run the worker read the table's columns themselves (declared columns plus the stored user columns), never from the event payload: a browser can send any column config. Check every user column when it is saved (its key, provider, inputs, prompt and template), as the enrichment reference app's column check does.
 
+**Loading.** Wire `loading` to the rows request (`_request_details: leads.0.loading`) and reload columns and rows with `holdValue: true` after a column or row change, so the table keeps its rows and columns on screen while they reload; the first load shows the table's skeleton rows. The picker, details panel and import dialog open at once, with a spinner while their code loads.
+
 **Live results.** Push cell updates to the table with `applyTransaction({ merge: 'deep', update })` from a websocket (`MongoDBChangeStream` on the rows), so a partial `_enrich` update keeps the row's other cells.
 
 ## Moving from TableLight or AgGrid
