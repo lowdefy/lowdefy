@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import findRow from '../../core/findRow.js';
-
-// The body row and cell an event targets, or null for header and non-row targets.
-function getBodyTarget({ event, api }) {
-  const rowElement = event.target.closest('[data-row-key]');
-  if (!rowElement || !api.contains(rowElement)) return null;
-  const row = findRow({ table: api.table, id: rowElement.dataset.rowKey });
-  if (!row) return null;
-  return { cell: event.target.closest('[data-lf-cell]'), row, rowElement };
+// Whether display row `row` renders focusable cells. The header row always does. Body rows do not
+// while the body shows the initial skeleton (api.loadingState), and neither do the items the body
+// renders as a skeleton row (an unloaded server row, a lazy tree row's loading children) or as
+// a server error row.
+function hasCells({ api, row }) {
+  if (row === -1) return true;
+  if (api.loadingState === 'initial') return false;
+  const item = api.rows[row];
+  return item !== undefined && item.kind !== 'skeleton' && item.kind !== 'error';
 }
 
-export default getBodyTarget;
+export default hasCells;

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import getSkeletonPhase from './getSkeletonPhase.js';
 import waitUntil from './waitUntil.js';
@@ -27,9 +27,15 @@ const startTimes = new Map();
 // getSkeletonPhase across renders for a table that is `active` (loading with no rows). One timer
 // re-renders the table when the phase ends by itself. `handoff` (the fallback) keeps the start
 // time on unmount for the component that follows.
+//
+// Returns `{ phase, endHold }`. The minimum time exists so the skeleton never flickers, not to
+// block input: the table calls `endHold` when the user interacts with it (a key, a pointer press,
+// focus), and a holding skeleton gives way to the rows at once. In every other phase `endHold`
+// does nothing, so the table can call it on every such event.
 function useSkeletonTiming({ active, id, handoff = false }) {
   const [, setTick] = useState(0);
   const startRef = useRef(undefined);
+  const phaseRef = useRef('idle');
   if (startRef.current === undefined) startRef.current = startTimes.get(id) ?? null;
   if (active && startRef.current === null) startRef.current = performance.now();
   const { phase, until } = getSkeletonPhase({
@@ -38,6 +44,14 @@ function useSkeletonTiming({ active, id, handoff = false }) {
     now: performance.now(),
   });
   if (phase === 'idle') startRef.current = null;
+  phaseRef.current = phase;
+
+  const endHold = useCallback(() => {
+    if (phaseRef.current !== 'holding') return;
+    phaseRef.current = 'idle';
+    startRef.current = null;
+    setTick((tick) => tick + 1);
+  }, []);
 
   useEffect(() => {
     if (startRef.current === null) {
@@ -60,7 +74,7 @@ function useSkeletonTiming({ active, id, handoff = false }) {
     },
     [id]
   );
-  return phase;
+  return { phase, endHold };
 }
 
 export default useSkeletonTiming;

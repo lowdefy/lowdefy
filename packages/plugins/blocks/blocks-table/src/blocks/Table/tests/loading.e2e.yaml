@@ -293,7 +293,8 @@ blocks:
               - { title: Copy, eventName: onCopy }
               - { title: Delete, eventName: onDelete }
 
-  # The `loading` property on its own, with rows from state.
+  # The `loading` property on its own, with rows from state. onRowClick records the activated row
+  # (keyboard input while the skeleton holds its minimum time).
   - id: table_prop
     type: Table
     properties:
@@ -305,6 +306,23 @@ blocks:
         - key: name
         - key: amount
           type: number
+    events:
+      onRowClick:
+        - id: record_prop_click
+          type: SetState
+          params:
+            prop_clicked:
+              _event: rowKey
+
+  - id: prop_clicked_value
+    type: Paragraph
+    properties:
+      content:
+        _string.concat:
+          - 'Clicked: '
+          - _if_none:
+              - _state: prop_clicked
+              - none
 
   - id: light_prop
     type: TableLight

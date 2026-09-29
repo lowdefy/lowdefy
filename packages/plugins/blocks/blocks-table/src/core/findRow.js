@@ -14,15 +14,14 @@
   limitations under the License.
 */
 
-import findRow from '../../core/findRow.js';
-
-// The body row and cell an event targets, or null for header and non-row targets.
-function getBodyTarget({ event, api }) {
-  const rowElement = event.target.closest('[data-row-key]');
-  if (!rowElement || !api.contains(rowElement)) return null;
-  const row = findRow({ table: api.table, id: rowElement.dataset.rowKey });
-  if (!row) return null;
-  return { cell: event.target.closest('[data-lf-cell]'), row, rowElement };
+// The TanStack row with this id, on any page, filtered out or not; null when there is none.
+// TanStack's `table.getRow(id, true)` searches the same models but throws for an unknown id. Ids
+// come from the DOM and from event payloads (a row removed while its event ran, a server row that
+// was evicted), so a miss is an expected answer, not an error.
+function findRow({ table, id }) {
+  return (
+    table.getPrePaginatedRowModel().rowsById[id] ?? table.getCoreRowModel().rowsById[id] ?? null
+  );
 }
 
-export default getBodyTarget;
+export default findRow;

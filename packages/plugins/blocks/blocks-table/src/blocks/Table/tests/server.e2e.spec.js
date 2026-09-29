@@ -154,11 +154,15 @@ test.describe('Table server mode', () => {
     const server = await mockServer(page);
     await openTablePage(page, 'table-server');
     await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
-    // A fast scroll through the whole table: many range changes, far apart.
-    for (let step = 1; step <= 40; step++) {
-      await scrollTo(page, 'table_server', step * 100000);
-      await page.waitForTimeout(16);
-    }
+    // A fast scroll through the whole table: many range changes, far apart, one per frame. The
+    // steps run in the page: a round trip per step can take longer than the 120 ms settle time
+    // on a loaded machine, and a range that stays that long loads its blocks, as it should.
+    await scroller(page, 'table_server').evaluate(async (element) => {
+      for (let step = 1; step <= 40; step++) {
+        element.scrollTop = step * 100000;
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+      }
+    });
     await scrollTo(page, 'table_server', TOTAL * 40);
     await expect(cell(page, 'table_server', String(TOTAL - 1), 'name')).toHaveText('Person 99999');
     await page.waitForTimeout(300);

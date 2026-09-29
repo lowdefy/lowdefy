@@ -15,12 +15,13 @@
 */
 
 import removeChangeRow from './removeChangeRow.js';
+import findRow from '../../core/findRow.js';
 
 // Deletes a TableInput row (the row controls' delete button, or Delete on a focused row with
 // `deleteRows`). An editor open on that row closes without committing.
 function createDeleteRow(api) {
   return function deleteRow({ rowId }) {
-    const row = api.table.getRow(rowId, true);
+    const row = findRow({ table: api.table, id: rowId });
     if (!row) return false;
     const rowKey = api.config.getKey(row.original);
     if (api.editing.layer?.getSession()?.rowId === rowId) {
