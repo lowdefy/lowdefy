@@ -244,6 +244,7 @@
 - _ref: connections/SMTP.yaml
 - _ref: connections/SQLite.yaml
 - _ref: connections/Stripe.yaml
+- _ref: connections/Treg.yaml
 
 - _ref: actions/CallAPI.yaml
 - _ref: actions/CallMethod.yaml

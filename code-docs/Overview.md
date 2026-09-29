@@ -91,6 +91,7 @@ These ship with Lowdefy and don't need explicit installation:
 - `@lowdefy/connection-google` - Google Gemini models
 - `@lowdefy/connection-ai-gateway` - Vercel AI Gateway (multi-provider routing)
 - `@lowdefy/connection-mcp` - MCP server connections
+- `@lowdefy/connection-treg` - treg API catalog (paid external endpoints, enrichment providers)
 
 See [Plugin System Architecture](./architecture/plugin-system.md) for internals.
 
