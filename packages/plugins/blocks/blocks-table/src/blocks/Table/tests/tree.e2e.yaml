@@ -179,3 +179,35 @@ blocks:
                         - ' child'
                     parent:
                       _event: rowKey
+
+  # ============================================
+  # FILTERED TREE
+  # ============================================
+
+  - id: table_tree_filtered
+    type: Table
+    properties:
+      tree:
+        parentField: parent
+      defaultView:
+        filter:
+          key: name
+          op: eq
+          value: Setup
+      columns:
+        - key: name
+          width: 240
+      data:
+        - id: docs
+          name: Docs
+        - id: guides
+          name: Guides
+          parent: docs
+        - id: intro
+          name: Intro
+          parent: guides
+        - id: setup
+          name: Setup
+          parent: guides
+        - id: blog
+          name: Blog

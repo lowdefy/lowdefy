@@ -78,19 +78,25 @@ function useTableConfig({ properties }) {
 
   const columnModel = useMemo(() => {
     const normalized = normalizeColumns({ columns: columnsConfig, defaultColumn });
+    // `$user` values resolve from an empty user when the app sets none.
+    const configUser = user ?? {};
     const columns = compileColumns({
       columns: normalized.columns,
       columnsByKey: normalized.columnsByKey,
-      user,
+      user: configUser,
     });
     return {
       columns,
       columnsByKey: new Map(columns.map((column) => [column.key, column])),
       columnDefs: createColumnDefs({ columns }),
-      expandable: normalizeExpandable({ expandable, columns, user }),
+      expandable: normalizeExpandable({ expandable, columns, user: configUser }),
       headerLevels: getHeaderLevels({ headerGroups: normalized.headerGroups }),
-      rowRules: compileRules({ rules: rowRules, columnsByKey: normalized.columnsByKey, user }),
-      user,
+      rowRules: compileRules({
+        rules: rowRules,
+        columnsByKey: normalized.columnsByKey,
+        user: configUser,
+      }),
+      user: configUser,
     };
   }, [columnsConfig, defaultColumn, expandable, rowRules, user]);
 
@@ -106,6 +112,7 @@ function useTableConfig({ properties }) {
       emptyText: properties.emptyText ?? 'No data',
       getId: (row) => String(getKey(row)),
       getKey,
+      headerMenu: properties.headerMenu !== false,
       height: properties.height,
       keyboard: properties.keyboard !== false,
       maxHeight: properties.maxHeight ?? 600,
@@ -131,6 +138,7 @@ function useTableConfig({ properties }) {
     getKey,
     properties.bordered,
     properties.emptyText,
+    properties.headerMenu,
     properties.height,
     properties.keyboard,
     properties.maxHeight,

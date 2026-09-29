@@ -37,6 +37,7 @@ test('normalizeColumns fills every leaf default from the key', () => {
       resizable: true,
       groupable: false,
       editable: false,
+      searchable: false,
       ellipsis: undefined,
       wrap: false,
       aggregate: undefined,

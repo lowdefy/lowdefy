@@ -17,19 +17,42 @@
 import getSortKeys from './getSortKeys.js';
 import sortIndices from './sortIndices.js';
 
-// Sorts row indices over precomputed keys instead of sorting row objects with a comparator that
-// reads values on every call (D10.7).
+// Sort keys are built for the core rows, whatever subset is sorted: a filtered subset (every
+// row still a core row) reads its keys through the rows' core index, so a filter change never
+// rebuilds a column's keys (a text column's collator ranking is the slow part). Rows that are
+// not core rows (grouped rows) get keys of their own.
+function getSubsetKeys({ table, rows }) {
+  const coreRows = table.getCoreRowModel().rows;
+  if (rows === coreRows) return { keyRows: rows, positions: null };
+  const positions = new Uint32Array(rows.length);
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+    if (coreRows[row.index] !== row) return { keyRows: rows, positions: null };
+    positions[i] = row.index;
+  }
+  return { keyRows: coreRows, positions };
+}
+
+// Sorts row indices over precomputed keys (the shared core's sort keys, see buildSortKeys)
+// instead of sorting row objects with a comparator that reads values on every call (D10.7).
 function sortRowModel(table) {
   const preSorted = table.getPreSortedRowModel();
   const sorting = table.atoms.sorting?.get();
   const rows = preSorted.rows;
   if (!rows.length || !sorting?.length) return preSorted;
 
+  const { keyRows, positions } = getSubsetKeys({ table, rows });
   const entries = [];
   sorting.forEach((sort) => {
     const column = table.getColumn(sort.id);
     if (!column || !column.getCanSort()) return;
-    entries.push({ keys: getSortKeys({ rows, column }), desc: sort.desc === true });
+    const columnKeys = getSortKeys({ rows: keyRows, column });
+    let keys = columnKeys;
+    if (positions !== null) {
+      keys = new Float64Array(rows.length);
+      for (let i = 0; i < rows.length; i++) keys[i] = columnKeys[positions[i]];
+    }
+    entries.push({ keys, desc: sort.desc === true });
   });
   if (!entries.length) return preSorted;
 

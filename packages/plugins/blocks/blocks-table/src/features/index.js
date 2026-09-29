@@ -16,11 +16,14 @@
 
 import clipboardFeature from './clipboard/clipboardFeature.js';
 import editingFeature from './editing/editingFeature.js';
+import columnManagerFeature from './columnManager/columnManagerFeature.js';
 import eventsFeature from './events/eventsFeature.js';
 import expandableFeature from './expandable/expandableFeature.js';
 import expansionFeature from './expansion/expansionFeature.js';
 import exportFeature from './export/exportFeature.js';
 import groupingFeature from './grouping/groupingFeature.js';
+import filteringFeature from './filtering/filteringFeature.js';
+import headerMenuFeature from './headerMenu/headerMenuFeature.js';
 import keyboardFeature from './keyboard/keyboardFeature.js';
 import lazyCellsFeature from './lazyCells/lazyCellsFeature.js';
 import orderingFeature from './ordering/orderingFeature.js';
@@ -39,11 +42,16 @@ import visibilityFeature from './visibility/visibilityFeature.js';
 // The table's feature modules, in composition order. The core loops over this list for TanStack
 // feature slots, state slices, view/value derivation, header parts, delegated event handlers,
 // actions and block methods (see ARCHITECTURE.md). The order is the order handlers run in: a
-// handler that returns true stops the chain for that event. It is also the order of the data
+// handler that returns true stops the chain for that event. Filtering and the header menu come
+// first: the filtered row model feeds sorting, and their header buttons claim clicks and pointer
+// presses before sorting and column reordering see them. It is also the order of the data
 // pipeline's hooks (TableRoot): `useData` (server rows, tree flattening), `useRows`
 // (transactions, then editing's overlay over them) and `useItems` (server items, client groups,
-// tree rows, expandable detail rows).
+// tree rows, expandable detail rows, the page).
 const features = [
+  filteringFeature,
+  headerMenuFeature,
+  columnManagerFeature,
   sortingFeature,
   sizingFeature,
   orderingFeature,

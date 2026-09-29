@@ -29,7 +29,8 @@ const columnFlags = {
   },
   filterable: {
     type: 'boolean',
-    description: 'Offer the column in filters.',
+    description:
+      'Offer the column in filters: the header menu "Filter…" item and the filter builder.',
   },
   resizable: {
     type: 'boolean',
@@ -139,6 +140,11 @@ const column = {
       description: 'Declare the column but hide it.',
     },
     ...columnFlags,
+    searchable: {
+      type: 'boolean',
+      description:
+        'Include the column in `view.search`. When any column sets it, search reads only those columns; otherwise it reads every visible column.',
+    },
     aggregate: {
       type: 'string',
       enum: Object.keys(AGGREGATE_LABELS),
@@ -231,11 +237,11 @@ export default {
   events: {
     onChange: {
       description:
-        'Trigger when the table value changes through the table: a sort, a resize or reorder that ends, or a selection.',
+        'Trigger when the table value changes through the table: a sort, a filter or search, a column change (resize, reorder, pin, hide, column manager), or a selection.',
       event: {
         value: 'The table value `{ view, selected, expanded }`.',
         cause:
-          'What changed: `sort`, `columns`, `select`, `group` (the grouping levels), `aggregate` (group aggregates) or `expand` (a group, tree row or detail row collapsed or expanded).',
+          'What changed: `sort`, `filter`, `search`, `columns`, `select`, `group` (the grouping levels), `aggregate` (group aggregates) or `expand` (a group, tree row or detail row collapsed or expanded).',
       },
     },
     onSelectionChange: {
@@ -363,6 +369,13 @@ export default {
       'Group rows by these columns, outermost first. Accepts column keys or `[{ key }]` of groupable columns; an empty list removes the grouping.',
     expandAllGroups: 'Expand every group (client data; server groups open one at a time).',
     collapseAllGroups: 'Collapse every group at every level.',
+    setFilter:
+      'Set `view.filter` to a condition (`{ and | or: [...] }` groups of `{ key, op, value }` leaves), or clear it with null.',
+    clearFilters: 'Remove every filter condition. The search stays; clear it with `setSearch`.',
+    setSearch:
+      'Set `view.search`: rows match when every word appears in the searched columns. An empty string or null clears it.',
+    openColumnManager:
+      'Open the column manager: show, hide, reorder and pin columns, or reset them to the default view.',
   },
   properties: {
     type: 'object',
@@ -432,7 +445,7 @@ export default {
       user: {
         type: 'object',
         description:
-          'The user object for `$user` values in `rules`, `rowRules` and button `hidden`/`disabled` conditions, usually `{ _user: true }`. Blocks do not see the session, so conditions read `$user` from this property.',
+          'The user object for `$user` values in filters, `rules`, `rowRules` and button `hidden`/`disabled` conditions, usually `{ _user: true }`. Blocks do not see the session, so conditions read `$user` from this property.',
         docs: { displayType: 'yaml' },
       },
       defaultView: {
@@ -461,11 +474,13 @@ export default {
           },
           filter: {
             type: ['object', 'null'],
-            description: 'Filter condition.',
+            description:
+              'Filter condition: `{ and: [...] }` / `{ or: [...] }` groups of `{ key, op, value }` leaves. Operators depend on the column type; `{ $user: path }` values read the `user` property.',
           },
           search: {
             type: ['string', 'null'],
-            description: 'Search text.',
+            description:
+              'Search text: rows match when every word appears (case-insensitive) in the display text of the searched columns.',
           },
           group: {
             type: 'array',
@@ -660,7 +675,7 @@ export default {
       rowDrag: {
         type: ['boolean', 'object'],
         description:
-          'Reorder rows by dragging a handle in a leading column, or with Alt+Shift+ArrowUp/Down on a focused row. Not available while the table is sorted (except ascending by the position field), filtered or grouped; the handle is disabled with a tooltip saying why. Table fires onRowMove; TableInput records the move in its value. `true`, or `{ positionField }` for fractional positions.',
+          'Reorder rows by dragging a handle in a leading column, or with Alt+Shift+ArrowUp/Down on a focused row. Not available while the table is sorted (except ascending by the position field), filtered or grouped, in a tree or in server mode; the handle is disabled with a tooltip saying why. Table fires onRowMove; TableInput records the move in its value. `true`, or `{ positionField }` for fractional positions.',
         additionalProperties: false,
         properties: {
           positionField: {
@@ -669,6 +684,12 @@ export default {
               'Dot path of a numeric position field the rows are ordered by. A move gives only the moved row a new position: the midpoint of its new neighbours (a neighbour ∓ 1024 at the ends), renumbering the list in steps of 1024 only when there is no room left.',
           },
         },
+      },
+      headerMenu: {
+        type: 'boolean',
+        default: true,
+        description:
+          'Show the column menu button in each header (on hover or focus): sort, filter, pin, freeze, autosize, hide and the column manager.',
       },
       reorderable: {
         type: 'boolean',

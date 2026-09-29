@@ -21,9 +21,11 @@ import { App, ConfigProvider } from 'antd';
 
 import RenderProbeContext from '../../dist/core/RenderProbeContext.js';
 import createSortKeyGetter from '@lowdefy/blocks-antd/table/createSortKeyGetter.js';
+import compileCondition from '@lowdefy/blocks-antd/table/compileCondition.js';
 import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
 
 import buildSortKeys from '../../dist/features/sorting/buildSortKeys.js';
+import pruneCondition from '../../dist/features/filtering/pruneCondition.js';
 import createAccessor from '../../dist/core/createAccessor.js';
 import BenchTable from './BenchTable.jsx';
 import generateData from './generateData.js';
@@ -134,6 +136,20 @@ window.__bench = {
       getSortKey: createSortKeyGetter({ column }),
       columnType: column.type,
     });
+    return performance.now() - started;
+  },
+  // The client filter row model's work on its own: compile the condition once, test every row.
+  filterMicro({ filter }) {
+    const { columns, data } = window.__bench.dataset;
+    const columnsByKey = {};
+    columns.forEach((column) => {
+      columnsByKey[column.key] = { ...column, field: column.key };
+    });
+    const started = performance.now();
+    const matches = compileCondition({ condition: pruneCondition(filter), columnsByKey });
+    let count = 0;
+    for (let i = 0; i < data.length; i++) if (matches(data[i])) count += 1;
+    window.__bench.lastFilterCount = count;
     return performance.now() - started;
   },
   nextFrames,

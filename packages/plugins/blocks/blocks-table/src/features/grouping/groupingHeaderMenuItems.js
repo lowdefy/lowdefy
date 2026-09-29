@@ -26,6 +26,7 @@ function groupingHeaderMenuItems({ column, api }) {
       {
         key: 'grouping-remove',
         label: 'Remove grouping',
+        section: 'group',
         onClick: () => api.actions.setGroupKeys(keys.filter((key) => key !== column.key)),
       },
     ];
@@ -34,6 +35,7 @@ function groupingHeaderMenuItems({ column, api }) {
     {
       key: 'grouping-add',
       label: 'Group by this column',
+      section: 'group',
       onClick: () => api.actions.setGroupKeys([...keys, column.key]),
     },
   ];
