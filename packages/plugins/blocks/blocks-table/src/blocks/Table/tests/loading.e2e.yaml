@@ -219,6 +219,80 @@ blocks:
           type: progress
           width: 140
 
+  # Skeleton details: square avatars load as squares, hover buttons load as an empty cell, other
+  # buttons as one square per button.
+  - id: table_shapes
+    type: Table
+    properties:
+      height: 200
+      loading:
+        _request_details: rows.0.loading
+      data:
+        _request: rows
+      columns:
+        - key: name
+          width: 160
+        - key: owner
+          type: avatar
+          width: 160
+          cell:
+            nameField: owner
+            shape: square
+        - key: hover
+          type: buttons
+          title: ''
+          width: 90
+          cell:
+            showOn: hover
+            buttons:
+              - { title: Email, eventName: onEmail }
+              - { title: Archive, eventName: onArchive }
+        - key: actions
+          type: buttons
+          title: ''
+          width: 120
+          cell:
+            buttons:
+              - { title: Edit, eventName: onEdit }
+              - { title: Copy, eventName: onCopy }
+              - { title: Delete, eventName: onDelete }
+
+  - id: light_shapes
+    type: TableLight
+    properties:
+      height: 200
+      loading:
+        _request_details: rows.0.loading
+      data:
+        _request: rows
+      columns:
+        - key: name
+          width: 160
+        - key: owner
+          type: avatar
+          width: 160
+          cell:
+            nameField: owner
+            shape: square
+        - key: hover
+          type: buttons
+          title: ''
+          width: 90
+          cell:
+            showOn: hover
+            buttons:
+              - { title: Email, eventName: onEmail }
+              - { title: Archive, eventName: onArchive }
+        - key: actions
+          type: buttons
+          title: ''
+          width: 120
+          cell:
+            buttons:
+              - { title: Edit, eventName: onEdit }
+              - { title: Copy, eventName: onCopy }
+              - { title: Delete, eventName: onDelete }
+
   # The `loading` property on its own, with rows from state.
   - id: table_prop
     type: Table

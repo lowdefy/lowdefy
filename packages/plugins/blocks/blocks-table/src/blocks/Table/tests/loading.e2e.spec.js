@@ -135,8 +135,9 @@ test.describe('Table loading states', () => {
     );
     await expect(firstRow.locator('[data-shape="pill"]')).toHaveCount(1);
     await expect(firstRow.locator('[data-shape="progress"]')).toHaveCount(1);
+    // One square per configured button (the actions column has one).
     await expect(firstRow.locator('[data-shape="buttons"] .lf-table-skeleton-square')).toHaveCount(
-      2
+      1
     );
     // Stable seeded widths: the same row and column keep their width, rows differ.
     const widths = await skeletonRows(page, 'table_client').evaluateAll((rows) =>
@@ -177,6 +178,28 @@ test.describe('Table loading states', () => {
       'true'
     );
   });
+
+  for (const blockId of ['table_shapes', 'light_shapes']) {
+    test(`${blockId} skeletons follow square avatars and the configured buttons`, async ({
+      page,
+    }) => {
+      const mocks = await mockAll(page);
+      mocks.rows.hold();
+      await navigateToTestPage(page, PAGE);
+      const firstRow = skeletonRows(page, blockId).first();
+      await expect(firstRow).toBeVisible();
+      const cells = firstRow.locator('td, [data-lf-cell]');
+      // name, owner, hover buttons, buttons (TableLight has no selection column here either).
+      await expect(cells).toHaveCount(4);
+      await expect(cells.nth(2).locator('.lf-table-skeleton')).toHaveCount(0);
+      await expect(cells.nth(3).locator('.lf-table-skeleton-square')).toHaveCount(3);
+      const avatar = cells.nth(1).locator('.lf-table-skeleton-circle');
+      await expect(avatar).toHaveAttribute('data-square', '');
+      await expect(avatar).not.toHaveCSS('border-radius', '50%');
+      mocks.rows.release();
+      await expect(skeletonRows(page, blockId)).toHaveCount(0);
+    });
+  }
 
   test('the record count holds a text skeleton until the first rows land', async ({ page }) => {
     const mocks = await mockAll(page);

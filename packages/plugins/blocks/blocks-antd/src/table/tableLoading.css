@@ -82,6 +82,11 @@
     border-radius: 50%;
   }
 
+  /* An avatar column with `shape: square` loads as a square, like its avatars. */
+  .lf-table-skeleton-circle[data-square] {
+    border-radius: var(--ant-border-radius-sm, 4px);
+  }
+
   .lf-table-skeleton-name {
     flex: 1;
     min-width: 0;
