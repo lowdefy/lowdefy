@@ -21,9 +21,9 @@ const AVATAR_COLORS = [
   'var(--ant-color-success)',
   'var(--ant-color-warning)',
   'var(--ant-color-error)',
-  'var(--ant-color-purple, var(--ant-color-info))',
-  'var(--ant-color-cyan, var(--ant-color-info))',
-  'var(--ant-color-magenta, var(--ant-color-error))',
+  'var(--ant-purple-6, #722ed1)',
+  'var(--ant-cyan-6, #13c2c2)',
+  'var(--ant-magenta-6, #eb2f96)',
 ];
 
 // An avatar background picked from a stable seed (an id or a name).

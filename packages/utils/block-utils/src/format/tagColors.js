@@ -15,20 +15,23 @@
 */
 
 // antd's preset tag colours, as theme tokens so tags follow the theme and dark
-// mode. The grid's tag cells resolve with this table.
+// mode. Status names use the semantic tokens; the other presets use antd's
+// palette variables (`--ant-<name>-6`, which the dark algorithm also sets), with
+// antd's default as the fallback. The grid's tag cells resolve with this table.
 const TAG_COLORS = {
   red: 'var(--ant-color-error)',
-  volcano: 'var(--ant-color-volcano, var(--ant-color-error))',
+  volcano: 'var(--ant-volcano-6, #fa541c)',
   orange: 'var(--ant-color-warning)',
-  gold: 'var(--ant-color-gold, var(--ant-color-warning))',
+  gold: 'var(--ant-gold-6, #faad14)',
   yellow: 'var(--ant-color-warning)',
-  lime: 'var(--ant-color-lime, var(--ant-color-success))',
+  lime: 'var(--ant-lime-6, #a0d911)',
   green: 'var(--ant-color-success)',
-  cyan: 'var(--ant-color-cyan, var(--ant-color-info))',
+  cyan: 'var(--ant-cyan-6, #13c2c2)',
   blue: 'var(--ant-color-info)',
-  geekblue: 'var(--ant-color-geekblue, var(--ant-color-info))',
-  purple: 'var(--ant-color-purple, var(--ant-color-info))',
-  magenta: 'var(--ant-color-magenta, var(--ant-color-error))',
+  geekblue: 'var(--ant-geekblue-6, #2f54eb)',
+  purple: 'var(--ant-purple-6, #722ed1)',
+  magenta: 'var(--ant-magenta-6, #eb2f96)',
+  pink: 'var(--ant-pink-6, #eb2f96)',
   default: 'var(--ant-color-text-secondary)',
 };
 
