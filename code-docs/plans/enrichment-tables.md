@@ -69,7 +69,7 @@ All three requests (`connection-mongodb`) share `MongoDBTableQuery`'s safety rul
   - Rows whose inputs are missing get `status: empty` with `error: 'Missing input: <column>'` instead of queueing.
 - **`MongoDBEnrichmentClaim`** atomically claims up to `limit` queued cells, oldest first. Each claim sets `running`, a lease (`leaseUntil`) and increments `attempts`. Cells whose lease has expired while `running` are claimed again. It returns `[{ rowKey, columnKey, row, inputs, attempt }]`, with the inputs resolved from `columnDefs`.
 - **`MongoDBEnrichmentComplete`** writes the results `[{ rowKey, columnKey, runId, status, value, raw, error }]`.
-  - It only applies a result if the row's `runId` still matches, so a stale worker can't overwrite a newer run.
+  - It only applies a result if the cell's `claimToken` still matches, so a stale worker can't overwrite a newer run. The token carries the hash of the inputs the worker was given, and that is the `inputHash` stored with the result.
   - An error below `maxAttempts` goes back to `queued` with a backoff (`queuedAt` moved into the future).
   - After writing, it returns the downstream `autoRun` columns whose inputs just became ready, so the worker can enqueue them (the waterfall between columns).
 - **The worker is a Lowdefy API endpoint** (`enrichment_worker`), written in YAML:
