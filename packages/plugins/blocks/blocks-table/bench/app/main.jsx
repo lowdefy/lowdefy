@@ -93,6 +93,7 @@ function nextFrames(count = 2) {
 window.__bench = {
   commits: [],
   events: [],
+  fetches: 0,
   renders: { body: 0, rows: 0, rowKeys: [] },
   setValueCount: 0,
   generate({ rows, cols, seed }) {
@@ -123,6 +124,7 @@ window.__bench = {
   resetCounters() {
     window.__bench.commits = [];
     window.__bench.events = [];
+    window.__bench.fetches = 0;
     window.__bench.renders = { body: 0, rows: 0, rowKeys: [] };
     window.__bench.setValueCount = 0;
   },
