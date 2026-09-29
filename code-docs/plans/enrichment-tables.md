@@ -135,7 +135,7 @@ The module is an optional feature: it loads in its own chunk only for tables wit
 
   Every leaf and object in the tree has an "Add as column" action, which fires `onColumnAdd` with `kind: extract`.
 
-- **Add rows.** `addRow: true` on `Table` shows a "+ New row" row at the bottom and fires `onRowAdd { values }`. `importCsv: true` adds a toolbar Import button: the CSV is parsed in the browser and headers are mapped to columns in a dialog. It fires `onImport { rows, newColumns }` in batches of 500, and the app inserts them with `MongoDBInsertMany`. Every value in `onRowAdd` and `onImport` is at its column's field path; new input columns (from the picker or a CSV header) carry their `field`, under the Table's `inputFieldPrefix` (for example `values.<key>`).
+- **Add rows.** `addRow: true` on `Table` shows a "+ New row" row at the bottom and fires `onRowAdd { values }`. `importCsv: true` adds a toolbar Import button: the CSV is parsed in the browser (`readCsvFile`: at most 50 MB and 100,000 rows, parsed in slices with a pause between them, fields cut with slices) and headers are mapped to columns in a dialog. It fires `onImport { rows, newColumns }` in batches of 500, and the app inserts them with `MongoDBInsertMany`. Every value in `onRowAdd` and `onImport` is at its column's field path; new input columns (from the picker or a CSV header) carry their `field`, under the Table's `inputFieldPrefix` (for example `values.<key>`).
 
 ### E7. Security and cost
 

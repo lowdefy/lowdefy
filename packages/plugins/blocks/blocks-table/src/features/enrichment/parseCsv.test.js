@@ -14,8 +14,11 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import detectCsvDelimiter from './detectCsvDelimiter.js';
 import parseCsv from './parseCsv.js';
+import readCsvFile from './readCsvFile.js';
 
 test('parseCsv splits records and fields', () => {
   expect(parseCsv('name,domain\nAcme,acme.com\nGlobex,globex.com')).toEqual([
@@ -92,4 +95,53 @@ test('parseCsv takes an explicit delimiter', () => {
 test('detectCsvDelimiter ignores delimiters inside quotes and defaults to comma', () => {
   expect(detectCsvDelimiter('"a;b;c",d\n')).toBe(',');
   expect(detectCsvDelimiter('single')).toBe(',');
+});
+
+test('parseCsv ends a record with an empty field after a trailing delimiter', () => {
+  expect(parseCsv('a,')).toEqual([['a', '']]);
+  expect(parseCsv(',')).toEqual([['', '']]);
+  expect(parseCsv('a,\nb')).toEqual([['a', ''], ['b']]);
+  expect(parseCsv('"a"')).toEqual([['a']]);
+  expect(parseCsv(' "a",b')).toEqual([[' "a"', 'b']]);
+});
+
+test('parseCsv parses 100,000 records in well under a second', () => {
+  const lines = ['name,title,notes'];
+  for (let i = 0; i < 100000; i++) lines.push(`Person ${i},"Head of, Ops",said ""hi""`);
+  const started = Date.now();
+  const records = parseCsv(lines.join('\n'));
+  expect(records).toHaveLength(100001);
+  expect(records[5]).toEqual(['Person 4', 'Head of, Ops', 'said ""hi""']);
+  expect(Date.now() - started).toBeLessThan(1000);
+});
+
+describe('readCsvFile', () => {
+  function csvFile(text, size = text.length) {
+    return { size, text: jest.fn(async () => text) };
+  }
+
+  test('readCsvFile refuses a file larger than the size limit without reading it', async () => {
+    const file = csvFile('a\n1', 60 * 1024 * 1024);
+    await expect(readCsvFile({ file })).rejects.toThrow(
+      'The file is 60 MB. Import files of at most 50 MB: split larger files.'
+    );
+    expect(file.text).not.toHaveBeenCalled();
+  });
+
+  test('readCsvFile refuses a file with more rows than the row limit', async () => {
+    const file = csvFile(['a', '1', '2', '3'].join('\n'));
+    await expect(readCsvFile({ file, maxRows: 2 })).rejects.toThrow(
+      'The file has more than 2 rows. Import at most 2 rows at a time: split larger files.'
+    );
+  });
+
+  test('readCsvFile reads the records, pausing between slices so the page stays responsive', async () => {
+    const lines = ['name'];
+    for (let i = 0; i < 5000; i++) lines.push(`Person ${i}`);
+    const pause = jest.fn(async () => {});
+    const records = await readCsvFile({ file: csvFile(lines.join('\n')), sliceMs: 0, pause });
+    expect(records).toHaveLength(5001);
+    expect(records[5000]).toEqual(['Person 4999']);
+    expect(pause.mock.calls.length).toBeGreaterThan(1);
+  });
 });

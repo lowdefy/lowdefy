@@ -1239,7 +1239,7 @@ Enrichment tables compute columns from other columns, per row: an `enrichment` c
       _ref: leads/providers.yaml
     addColumn: true # the "+" header and its picker
     addRow: true # "+ New row"
-    importCsv: true # the toolbar's Import button
+    importCsv: true # the toolbar's Import button: CSV files of at most 50 MB and 100,000 rows
     inputFieldPrefix: values # user input columns keep their values at values.<key>
     columns:
       _request: get_columns # declared and user-defined columns, merged on the server

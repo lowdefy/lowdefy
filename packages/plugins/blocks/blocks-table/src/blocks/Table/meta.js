@@ -1061,7 +1061,7 @@ export default {
         type: 'boolean',
         default: false,
         description:
-          'Show an Import button in the toolbar: a CSV file is parsed in the browser, its headers mapped to input columns (or new text columns), and the rows sent through onImport in batches of 500.',
+          'Show an Import button in the toolbar: a CSV file (at most 50 MB and 100,000 rows) is parsed in the browser, in slices so the page stays responsive, its headers mapped to input columns (or new text columns), and the rows sent through onImport in batches of 500.',
       },
       summary: {
         type: 'boolean',

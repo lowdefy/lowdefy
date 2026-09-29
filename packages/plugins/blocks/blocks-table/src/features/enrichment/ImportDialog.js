@@ -21,16 +21,28 @@ import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
 import buildImportRows from './buildImportRows.js';
 import getInputColumns from './getInputColumns.js';
 import matchCsvHeaders, { NEW_COLUMN, SKIP_COLUMN } from './matchCsvHeaders.js';
-import parseCsv from './parseCsv.js';
+import readCsvFile from './readCsvFile.js';
 
 const numberFormat = new Intl.NumberFormat();
 
 function FileStep({ onParsed }) {
   const [error, setError] = useState(null);
+  const [reading, setReading] = useState(false);
   async function onChange(event) {
     const file = event.target.files?.[0];
     if (!file) return;
-    const records = parseCsv(await file.text());
+    setError(null);
+    setReading(true);
+    let records;
+    // The file is the user's: one too large, with too many rows, or unreadable is a message.
+    try {
+      records = await readCsvFile({ file });
+    } catch (readError) {
+      setError(readError.message);
+      return;
+    } finally {
+      setReading(false);
+    }
     if (records.length < 2) {
       setError('The file has no rows under its header line.');
       return;
@@ -40,7 +52,14 @@ function FileStep({ onParsed }) {
   return (
     <div className="lf-enrich-import-file">
       <p>Choose a CSV file. Its first line names the columns.</p>
-      <input accept=".csv,text/csv" data-lf-import-file="" onChange={onChange} type="file" />
+      <input
+        accept=".csv,text/csv"
+        data-lf-import-file=""
+        disabled={reading}
+        onChange={onChange}
+        type="file"
+      />
+      {reading ? <p data-lf-import-reading="">Reading the file…</p> : null}
       {error ? <Alert data-lf-import-error="" showIcon title={error} type="error" /> : null}
     </div>
   );
@@ -95,8 +114,8 @@ function MappingStep({ columns, csv, mapping, setMapping }) {
   );
 }
 
-// The CSV import dialog (`importCsv: true`, design E6): parse the file in the browser
-// (parseCsv), map its headers to input columns or new text columns (matched by key or title
+// The CSV import dialog (`importCsv: true`, design E6): parse the file in the browser in slices
+// (readCsvFile: at most 50 MB and 100,000 rows), map its headers to input columns or new text columns (matched by key or title
 // first), then send the rows through onImport in batches of 500 with progress, stopping at the
 // first failed batch with its error. Loaded and mounted only while open.
 function ImportDialog({ api }) {

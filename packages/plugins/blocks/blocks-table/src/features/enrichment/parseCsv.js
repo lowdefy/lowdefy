@@ -14,64 +14,15 @@
   limitations under the License.
 */
 
-import detectCsvDelimiter from './detectCsvDelimiter.js';
+import createCsvReader from './createCsvReader.js';
 
-// CSV text as records of fields (RFC 4180): fields separated by the delimiter (detected when not
-// given), records by CRLF, LF or CR; a field in double quotes may hold delimiters, line breaks and
-// escaped quotes (`""`). A leading byte order mark is dropped, as are blank lines (a trailing
-// line break makes none). Quotes inside an unquoted field are kept as written, and text after a
-// closing quote is appended to the field, as spreadsheet apps read it. Returns string[][].
+// CSV text as records of fields (string[][]), read as createCsvReader describes.
 function parseCsv(text, { delimiter } = {}) {
-  const source = text.charCodeAt(0) === 0xfeff ? text.slice(1) : text;
-  const separator = delimiter ?? detectCsvDelimiter(source);
+  const reader = createCsvReader(text, { delimiter });
   const records = [];
-  let record = [];
-  let field = '';
-  let quoted = false;
-  let fieldStarted = false;
-  // Anything on the line at all, so a line holding only `""` is a record and an empty line not.
-  let recordStarted = false;
-
-  function endField() {
-    record.push(field);
-    field = '';
-    fieldStarted = false;
+  for (let record = reader.readRecord(); record !== null; record = reader.readRecord()) {
+    records.push(record);
   }
-  function endRecord() {
-    endField();
-    if (recordStarted) records.push(record);
-    record = [];
-    recordStarted = false;
-  }
-
-  for (let i = 0; i < source.length; i++) {
-    const char = source[i];
-    if (quoted) {
-      if (char !== '"') {
-        field += char;
-      } else if (source[i + 1] === '"') {
-        field += '"';
-        i += 1;
-      } else {
-        quoted = false;
-      }
-      continue;
-    }
-    if (char !== '\r' && char !== '\n') recordStarted = true;
-    if (char === '"' && !fieldStarted) {
-      quoted = true;
-      fieldStarted = true;
-    } else if (char === separator) {
-      endField();
-    } else if (char === '\r' || char === '\n') {
-      if (char === '\r' && source[i + 1] === '\n') i += 1;
-      endRecord();
-    } else {
-      field += char;
-      fieldStarted = true;
-    }
-  }
-  if (recordStarted) endRecord();
   return records;
 }
 
