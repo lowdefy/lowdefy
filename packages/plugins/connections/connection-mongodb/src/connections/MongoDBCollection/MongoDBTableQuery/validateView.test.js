@@ -37,7 +37,7 @@ const fieldsByKey = normalizeFields({
 const user = { id: 'user_1', roles: ['admin', 'sales'], organization: { id: 'org_1' } };
 
 function filter(condition) {
-  return validateView({ view: { filter: condition }, fieldsByKey, user }).filter;
+  return validateView({ view: { filter: condition }, fieldsByKey, user, timeZone: 'UTC' }).filter;
 }
 
 describe('view shape', () => {

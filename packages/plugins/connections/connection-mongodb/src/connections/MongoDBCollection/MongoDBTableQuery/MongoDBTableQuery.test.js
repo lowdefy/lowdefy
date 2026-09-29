@@ -229,6 +229,19 @@ describe('filter and search', () => {
     expect(day.rows.map((row) => row._id)).toEqual(['d02']);
   });
 
+  test('date filters compare the days of the timezone', async () => {
+    // Deals are created at UTC midnight, which is the evening before in New York.
+    const newYork = await query({
+      timezone: 'America/New_York',
+      view: { filter: { key: 'created', op: 'eq', value: '2026-01-03' } },
+    });
+    expect(newYork.rows.map((row) => row._id)).toEqual(['d03']);
+    const utc = await query({
+      view: { filter: { key: 'created', op: 'eq', value: '2026-01-03' } },
+    });
+    expect(utc.rows.map((row) => row._id)).toEqual(['d02']);
+  });
+
   test('relation filter by ObjectId returns serialized ids', async () => {
     const res = await query({
       view: { filter: { key: 'owner_id', op: 'eq', value: { _oid: ownerIds[1].toHexString() } } },

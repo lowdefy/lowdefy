@@ -64,6 +64,14 @@ export default {
         type: 'MongoDBTableChanges request property "queryFields" should be an object.',
       },
     },
+    timezone: {
+      type: 'string',
+      description:
+        'Bulk mode: the IANA time zone whose days the date filters of a "selection" compare, as for MongoDBTableQuery. Defaults to UTC.',
+      errorMessage: {
+        type: 'MongoDBTableChanges request property "timezone" should be a string.',
+      },
+    },
     user: {
       type: ['object', 'null'],
       description:

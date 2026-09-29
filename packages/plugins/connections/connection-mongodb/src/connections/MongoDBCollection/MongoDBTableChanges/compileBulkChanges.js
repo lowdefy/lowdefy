@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import compileCondition from '../MongoDBTableQuery/compileCondition.js';
 import compileSearch from '../MongoDBTableQuery/compileSearch.js';
+import getTimeZone from '../MongoDBTableQuery/getTimeZone.js';
 import normalizeFields from '../MongoDBTableQuery/normalizeFields.js';
 import validateView from '../MongoDBTableQuery/validateView.js';
 import getKeyForms from './getKeyForms.js';
@@ -27,7 +28,7 @@ import parseSelection from './parseSelection.js';
 // The view of a select-all selection, compiled by MongoDBTableQuery's own validator and
 // compiler against `queryFields` (the table's MongoDBTableQuery fields), so it matches the
 // rows the table showed, with the same limits and refusals.
-function compileViewMatches({ selection, queryFields, user, now }) {
+function compileViewMatches({ selection, queryFields, user, timezone, now }) {
   if (type.isNone(selection.filter) && type.isNone(selection.search)) return [];
   if (type.isNone(queryFields)) {
     throw new Error(
@@ -35,15 +36,17 @@ function compileViewMatches({ selection, queryFields, user, now }) {
     );
   }
   const fieldsByKey = normalizeFields({ fields: queryFields });
+  const timeZone = getTimeZone({ timezone, requestType: 'MongoDBTableChanges' });
   const view = validateView({
     view: { filter: selection.filter, search: selection.search },
     fieldsByKey,
     user,
+    timeZone,
   });
   return [
     type.isNone(view.filter)
       ? null
-      : compileCondition({ condition: view.filter, fieldsByKey, now }),
+      : compileCondition({ condition: view.filter, fieldsByKey, now, timeZone }),
     compileSearch({ search: view.search, fieldsByKey }),
   ].filter((match) => match !== null);
 }
@@ -81,6 +84,7 @@ function compileBulkChanges({
           selection,
           queryFields: properties.queryFields,
           user: properties.user,
+          timezone: properties.timezone,
           now,
         })
       : []),

@@ -759,6 +759,7 @@ _ref:
             - `unset: string[]`: Bulk mode: fields to remove from every selected row.
             - `queryFields: object`: Bulk mode: the `MongoDBTableQuery` `fields` of the table, keyed by column key. Needed when a `selection` has a `filter` or `search`.
             - `user: object`: Bulk mode: the user that `{ $user: path }` values in a `selection` filter resolve from. Set it to `{ _user: true }`.
+            - `timezone: string`: Default: `UTC` - Bulk mode: the IANA time zone whose days the date filters of a `selection` compare, as for `MongoDBTableQuery`.
             - `fields: object`: __Required__ - The allowlist, keyed by the `TableInput` column `field` (its dot path, the changeset key), not the column `key` that `MongoDBTableQuery` fields use. Each field is an object:
               - `type: enum`: __Required__ - The column type, as for `MongoDBTableQuery`. Values are checked and coerced to it.
               - `path: string`: Default: the field key - Dot path the value is written to, in the document or, in array mode, in the item.
@@ -1008,7 +1009,8 @@ _ref:
 
             - Text comparisons are case-insensitive.
             - `empty` matches null, missing, `''` and `[]`.
-            - `eq` on dates compares whole days, and `before`, `after` and `between` on `date` fields compare whole days. Days are UTC days.
+            - `eq` and `ne` on dates compare whole days, and so do `before`, `after` and `between` on `date` fields. `within` covers whole days, from the start of the day `n` units ago to the end of today (or from the start of today to the end of the day `n` units ahead), as the table filters in the browser.
+            - Days are the days of `timezone`, UTC by default. The browser filters by the user's local days, so pass the user's time zone for day-based filters, for example `timezone: { _payload: timezone }` with `timezone: { _js: 'return Intl.DateTimeFormat().resolvedOptions().timeZone;' }` in the request `payload`. A date-only value such as `2026-03-01` (what `date` column filters send) is that day in the time zone. An instant is compared by the day it falls on there.
             - `isFalse` matches every value that is not `true`.
             - Numeric values may be numbers or numeric strings, and date values dates, date strings or timestamps.
 
@@ -1048,6 +1050,7 @@ _ref:
             - `groupPath: any[]`: Default: `[]` - The group values of the expanded group, one per group level, `{ _payload: groupPath }`.
             - `maxRows: integer`: Default: `1000` - The most rows or groups one request may return. A request for more throws.
             - `user: object`: The user that `{ $user: path }` filter values resolve from. Set it to `{ _user: true }`.
+            - `timezone: string`: Default: `UTC` - The IANA time zone, for example `Europe/London`, whose days date filters compare. See Filters.
             - `project: boolean`: Default: `true` - Return only `_id`, the `fields` paths and `returnFields` in each row. Set it to `false` to return the documents as the base pipeline leaves them.
             - `returnFields: string[]`: More dot paths each row returns, for values that cells read without a field of their own, for example an avatar `srcField` or a link `labelField`.
             - `options: object`: Optional aggregate settings, for example `collation`, `maxTimeMS` (default `10000`), `allowDiskUse` or `hint`. See `MongoDBAggregation`.

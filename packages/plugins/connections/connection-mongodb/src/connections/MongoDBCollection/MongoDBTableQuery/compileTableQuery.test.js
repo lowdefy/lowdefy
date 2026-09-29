@@ -497,6 +497,34 @@ describe('aggregates', () => {
   });
 });
 
+describe('time zone', () => {
+  test('timezone sets the days date filters compare, UTC by default', () => {
+    const filter = { key: 'created', op: 'eq', value: '2026-01-03' };
+    expect(compile({ view: { filter } }).pipeline[1]).toEqual({
+      $match: {
+        created: {
+          $gte: new Date('2026-01-03T00:00:00.000Z'),
+          $lt: new Date('2026-01-04T00:00:00.000Z'),
+        },
+      },
+    });
+    expect(compile({ view: { filter }, timezone: 'Asia/Tokyo' }).pipeline[1]).toEqual({
+      $match: {
+        created: {
+          $gte: new Date('2026-01-02T15:00:00.000Z'),
+          $lt: new Date('2026-01-03T15:00:00.000Z'),
+        },
+      },
+    });
+  });
+
+  test('an unknown timezone is refused', () => {
+    expect(() => compile({ timezone: 'Mars/Base' })).toThrow(
+      'MongoDBTableQuery "timezone" should be an IANA time zone name such as "Europe/London". Received "Mars/Base".'
+    );
+  });
+});
+
 describe('options', () => {
   test('the aggregation runs with a default maxTimeMS of 10 seconds', () => {
     expect(compile({}).options).toEqual({ maxTimeMS: 10000 });

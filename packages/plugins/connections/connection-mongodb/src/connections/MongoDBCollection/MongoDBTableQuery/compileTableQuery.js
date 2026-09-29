@@ -24,6 +24,7 @@ import compileProjection from './compileProjection.js';
 import compileSearch from './compileSearch.js';
 import compileSort from './compileSort.js';
 import getCollectionWriteStage from '../tenant/getCollectionWriteStage.js';
+import getTimeZone from './getTimeZone.js';
 import normalizeFields from './normalizeFields.js';
 import validateGroupPath from './validateGroupPath.js';
 import validateRows from './validateRows.js';
@@ -81,14 +82,15 @@ function compileTableQuery({ properties, now }) {
     }
   });
   const fieldsByKey = normalizeFields({ fields });
-  const parsedView = validateView({ view, fieldsByKey, user });
+  const timeZone = getTimeZone({ timezone: properties.timezone, requestType: 'MongoDBTableQuery' });
+  const parsedView = validateView({ view, fieldsByKey, user, timeZone });
   const rows = validateRows({ startRow, endRow, maxRows: maxRows ?? DEFAULT_MAX_ROWS });
   const parsedGroupPath = validateGroupPath({ groupPath, group: parsedView.group });
 
   const matches = [
     type.isNone(parsedView.filter)
       ? null
-      : compileCondition({ condition: parsedView.filter, fieldsByKey, now }),
+      : compileCondition({ condition: parsedView.filter, fieldsByKey, now, timeZone }),
     compileSearch({ search: parsedView.search, fieldsByKey }),
     compileGroupPathMatch({ groupPath: parsedGroupPath, group: parsedView.group, fieldsByKey }),
   ].filter((match) => match !== null);

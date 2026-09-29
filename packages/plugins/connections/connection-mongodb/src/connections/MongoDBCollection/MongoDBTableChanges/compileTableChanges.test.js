@@ -1234,6 +1234,26 @@ describe('bulk selection', () => {
     ).toThrow('operator "gt" expects a number');
   });
 
+  test('a select-all date filter compares the days of the timezone', () => {
+    const { operations } = compile({
+      queryFields: { due: { type: 'date' } },
+      timezone: 'Asia/Tokyo',
+      selection: { all: true, filter: { key: 'due', op: 'eq', value: '2026-01-03' } },
+      set: { done: true },
+    });
+    expect(operations[0].updateMany.filter).toEqual({
+      $and: [
+        filter,
+        {
+          due: {
+            $gte: new Date('2026-01-02T15:00:00.000Z'),
+            $lt: new Date('2026-01-03T15:00:00.000Z'),
+          },
+        },
+      ],
+    });
+  });
+
   test('a view needs queryFields', () => {
     expect(() => compile({ selection: { all: true, search: 'ada' }, set: { done: true } })).toThrow(
       'MongoDBTableChanges "selection" has a filter or search, so the request needs "queryFields", the MongoDBTableQuery fields of the table.'

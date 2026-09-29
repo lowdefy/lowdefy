@@ -47,7 +47,7 @@ function countValues({ field, value, counter }) {
   }
 }
 
-function parseLeaf({ condition, fieldsByKey, user, counter }) {
+function parseLeaf({ condition, fieldsByKey, user, timeZone, counter }) {
   const extraKey = Object.keys(condition).find((key) => !leafKeys.includes(key));
   if (!type.isUndefined(extraKey)) {
     throw new Error(
@@ -67,7 +67,13 @@ function parseLeaf({ condition, fieldsByKey, user, counter }) {
       )} is not allowed for type "${field.type}". Allowed operators: ${field.operators.join(', ')}.`
     );
   }
-  const value = parseLeafValue({ field, op: condition.op, value: condition.value, user });
+  const value = parseLeafValue({
+    field,
+    op: condition.op,
+    value: condition.value,
+    user,
+    timeZone,
+  });
   countValues({ field, value, counter });
   return { key: field.key, op: condition.op, value };
 }
@@ -79,6 +85,7 @@ function parseCondition({
   condition,
   fieldsByKey,
   user,
+  timeZone,
   depth = 0,
   counter = { nodes: 0, values: 0 },
 }) {
@@ -98,7 +105,7 @@ function parseCondition({
     Object.prototype.hasOwnProperty.call(condition, 'and') ||
     Object.prototype.hasOwnProperty.call(condition, 'or');
   if (!isGroup) {
-    return parseLeaf({ condition, fieldsByKey, user, counter });
+    return parseLeaf({ condition, fieldsByKey, user, timeZone, counter });
   }
   const keys = Object.keys(condition);
   const [groupOp] = keys;
@@ -111,7 +118,14 @@ function parseCondition({
   }
   return {
     [groupOp]: condition[groupOp].map((child) =>
-      parseCondition({ condition: child, fieldsByKey, user, depth: depth + 1, counter })
+      parseCondition({
+        condition: child,
+        fieldsByKey,
+        user,
+        timeZone,
+        depth: depth + 1,
+        counter,
+      })
     ),
   };
 }

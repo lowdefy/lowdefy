@@ -157,6 +157,14 @@ export default {
         type: 'MongoDBTableQuery request property "returnFields" should be an array of strings.',
       },
     },
+    timezone: {
+      type: 'string',
+      description:
+        'The IANA time zone (for example "Europe/London") whose days date filters compare: eq, ne, before, after and between on date fields, and within. Defaults to UTC. Pass the user\'s time zone to match the days the Table shows.',
+      errorMessage: {
+        type: 'MongoDBTableQuery request property "timezone" should be a string.',
+      },
+    },
     options: {
       type: 'object',
       description:
