@@ -408,6 +408,23 @@ test.describe('Table loading states in server mode', () => {
     await expect(bodyRows(page, 'table_server').first()).toContainText('Server 0');
   });
 
+  test('a failed block raises no global error message, and the error is still logged', async ({
+    page,
+  }) => {
+    const logged = [];
+    page.on('console', (message) => {
+      if (message.type() === 'error') logged.push(message.text());
+    });
+    const mocks = await mockAll(page);
+    mocks.server.fail = () => true;
+    await navigateToTestPage(page, PAGE);
+    const errorRow = getBlock(page, 'table_server').locator('[data-lf-error-row]');
+    await expect(errorRow).toContainText("Couldn't load rows");
+    await expect.poll(() => logged.some((text) => text.includes('Service down'))).toBe(true);
+    // The table's inline error row with Retry is the UX; the page shows no message over it.
+    await expect(page.locator('.ant-message-notice')).toHaveCount(0);
+  });
+
   test('expanding a server group spins its chevron and shows skeleton rows', async ({ page }) => {
     const mocks = await mockAll(page);
     await navigateToTestPage(page, PAGE);

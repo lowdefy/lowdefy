@@ -34,7 +34,16 @@ function useServerView({ api, config, state }) {
     if (!server) return;
     api.methods.registerEvent({
       name: '__tableFetch',
-      actions: [{ id: '__tableFetch', type: 'Request', params: [server.request] }],
+      // A failed block shows as the table's own error row with Retry, so the action's global
+      // error message is off; the engine still logs the error.
+      actions: [
+        {
+          id: '__tableFetch',
+          type: 'Request',
+          params: [server.request],
+          messages: { error: false },
+        },
+      ],
     });
   }, [server]);
 
