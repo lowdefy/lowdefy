@@ -126,6 +126,21 @@ function buildRows({ chunk }) {
       });
     }
   });
+  [10, 50].forEach((cols) => {
+    ['wheel-fast', 'programmatic-3000', 'programmatic-3000-cpu4x'].forEach((scenario) => {
+      const result = readRaw(`scroll-wrap-${cols}-${scenario}`);
+      if (!result) return;
+      rows.push({
+        scenario: `Scroll 100k x ${cols} with wrapped rows, ${scenario}`,
+        budget: result.throttle > 1 ? '>= 30 fps sustained' : 'p99 <= 33 ms, 0 long tasks',
+        measured: `${result.fps} fps, p95 ${result.p95} / p99 ${result.p99} ms, ${result.longTasks} long tasks, ${result.mainThreadMsPerFrame} ms main thread/frame, ${result.reactMsPerCommit} ms per commit (${result.reactCommits} commits)`,
+        status:
+          result.throttle > 1
+            ? check(result.fps, 30, (a, b) => a >= b)
+            : statusOf(result.p99 <= 33 && result.longTasks === 0),
+      });
+    });
+  });
   [
     ['number', 50],
     ['text', 150],

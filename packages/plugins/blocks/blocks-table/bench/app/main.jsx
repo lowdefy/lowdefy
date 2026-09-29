@@ -98,8 +98,12 @@ window.__bench = {
     window.__bench.dataset = generateData({ rows, cols, seed });
     return performance.now() - started;
   },
-  async mount({ properties = {}, strategy } = {}) {
-    const { columns, data } = window.__bench.dataset;
+  // `wrap`: column keys that wrap their text at `wrapWidth`, so rows have measured heights.
+  async mount({ properties = {}, strategy, wrap = [], wrapWidth = 90 } = {}) {
+    const { data } = window.__bench.dataset;
+    const columns = window.__bench.dataset.columns.map((column) =>
+      wrap.includes(column.key) ? { ...column, wrap: true, width: wrapWidth } : column
+    );
     const started = performance.now();
     flushSync(() => setHarness({ columns, data, mountKey: Math.random(), properties, strategy }));
     const committed = performance.now();

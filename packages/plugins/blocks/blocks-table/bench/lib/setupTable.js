@@ -15,11 +15,15 @@
 */
 
 // Opens the bench page, generates seeded data and mounts the table.
-async function setupTable({ page, rows, cols, properties, strategy }) {
+async function setupTable({ page, rows, cols, properties, strategy, wrap }) {
   await page.goto('/');
   await page.waitForFunction(() => window.__bench !== undefined);
   const generateMs = await page.evaluate((args) => window.__bench.generate(args), { rows, cols });
-  const mount = await page.evaluate((args) => window.__bench.mount(args), { properties, strategy });
+  const mount = await page.evaluate((args) => window.__bench.mount(args), {
+    properties,
+    strategy,
+    wrap,
+  });
   await page.waitForSelector('#bench_table .lf-table-body [role="row"]');
   await page.evaluate(() => window.__bench.nextFrames(5));
   return { generateMs, mount };
