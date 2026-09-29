@@ -16,11 +16,13 @@
 
 import { type } from '@lowdefy/helpers';
 
+import mergeRowPatch from './mergeRowPatch.js';
+
 // Applies a normalised transaction to a rows array without mutating it. Updated rows are new
-// objects (shallow-merged into the row with the same key); every other row keeps its identity,
-// so only touched rows re-render. Keys to remove may be given as rows or as key values.
+// objects (merged into the row with the same key: shallow, or deep with `merge: 'deep'`); every
+// other row keeps its identity, so only touched rows re-render. Keys to remove may be given as rows or as key values.
 function applyTransactionToRows({ rows, transaction, getKey }) {
-  const { add, update, remove, addIndex } = transaction;
+  const { add, update, remove, addIndex, merge } = transaction;
   const updates = new Map();
   update.forEach((row) => updates.set(String(getKey(row)), row));
   const removals = new Set(
@@ -40,7 +42,7 @@ function applyTransactionToRows({ rows, transaction, getKey }) {
       return;
     }
     changed.updated += 1;
-    next.push({ ...row, ...patch });
+    next.push(merge === 'deep' ? mergeRowPatch({ row, patch }) : { ...row, ...patch });
   });
   if (add.length > 0) {
     const index = type.isUndefined(addIndex)

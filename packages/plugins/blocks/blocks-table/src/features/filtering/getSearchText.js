@@ -16,7 +16,7 @@
 
 import getCellText from '@lowdefy/blocks-antd/table/getCellText.js';
 
-import createAccessor from '../../core/createAccessor.js';
+import createColumnAccessor from '../../core/createColumnAccessor.js';
 
 // Formatting a cell's display text (numbers, dates, option labels) is the expensive part of a
 // search, and it only depends on the row and the searched columns. Each row's lowercased text is
@@ -35,7 +35,7 @@ function getIndex(columns) {
   if (!index || !sameColumns(index.columns, columns)) {
     index = {
       columns,
-      accessors: columns.map((column) => createAccessor(column.field)),
+      accessors: columns.map((column) => createColumnAccessor(column)),
       texts: new WeakMap(),
     };
     indexes.set(signature, index);

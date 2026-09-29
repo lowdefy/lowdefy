@@ -23,6 +23,8 @@ const EMPTY = [];
 // Block-level feature hooks in registry order. A fragment may contribute:
 // - `leadingColumns`: special columns rendered first in the start-pinned region (the selection
 //   checkbox; later a drag handle or expander),
+// - `trailingColumns`: special columns rendered last, pinned to the end (enrichment's add-column
+//   header and row run buttons),
 // - `regions.top` / `regions.bottom`: elements rendered above or below the grid inside the table
 //   root (toolbar, bulk bar, pagination),
 // - `loading: true`: the table is waiting for data it cannot show yet (server mode's first block),
@@ -32,6 +34,8 @@ function useFeatureFragments(ctx) {
   const fragments = features.map((feature) => feature.useFeature?.(ctx) ?? null);
   const leadingParts = fragments.map((fragment) => fragment?.leadingColumns ?? EMPTY);
   const leadingColumns = useMemo(() => leadingParts.flat(), leadingParts);
+  const trailingParts = fragments.map((fragment) => fragment?.trailingColumns ?? EMPTY);
+  const trailingColumns = useMemo(() => trailingParts.flat(), trailingParts);
   const top = [];
   const bottom = [];
   fragments.forEach((fragment, index) => {
@@ -41,7 +45,7 @@ function useFeatureFragments(ctx) {
   });
   const loading = fragments.some((fragment) => fragment?.loading === true);
   const pending = fragments.some((fragment) => fragment?.pending === true);
-  return { leadingColumns, loading, pending, regions: { top, bottom } };
+  return { leadingColumns, loading, pending, regions: { top, bottom }, trailingColumns };
 }
 
 export default useFeatureFragments;
