@@ -14,23 +14,11 @@
   limitations under the License.
 */
 
-// The only enrichment cell properties the requests write, under `_enrich.<column key>`. Every
-// update the three requests send is built from these (buildCellUpdate), so nothing else of
-// a row can be written by an enrichment run.
-const cellProperties = [
-  'status',
-  'value',
-  'raw',
-  'cost',
-  'error',
-  'inputHash',
-  'runId',
-  'claimToken',
-  'attempts',
-  'queuedAt',
-  'startedAt',
-  'finishedAt',
-  'leaseUntil',
-];
 
-export default cellProperties;
+// A cell's cost, stored in micro-USD, as dollars: "$0.004". null when the cell has no cost.
+function formatCost(micro) {
+  if (!Number.isInteger(micro) || micro < 0) return null;
+  return `$${Number((micro / 1000000).toFixed(6))}`;
+}
+
+export default formatCost;

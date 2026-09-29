@@ -33,7 +33,7 @@ export default {
       type: 'array',
       maxItems: 1000,
       description:
-        'The results of claimed cells: [{ rowKey, columnKey, claimToken, status: ok | error | empty, value?, raw?, error?, retry? }], with rowKey, columnKey and claimToken as MongoDBEnrichmentClaim returned them.',
+        'The results of claimed cells: [{ rowKey, columnKey, claimToken, status: ok | error | empty, value?, raw?, cost?, error?, retry? }], with rowKey, columnKey and claimToken as MongoDBEnrichmentClaim returned them.',
       items: {
         type: 'object',
         required: ['rowKey', 'columnKey', 'claimToken', 'status'],
@@ -45,6 +45,12 @@ export default {
             type: 'string',
             enum: ['ok', 'error', 'empty'],
             description: 'ok with a value, empty for no result, or error.',
+          },
+          cost: {
+            type: ['integer', 'null'],
+            minimum: 0,
+            description:
+              'What the provider call behind this result cost, in micro-USD (such as TregCall cost.micro). Stored as the cell cost; null is the same as not given.',
           },
           value: { description: 'The extracted result the column shows.' },
           raw: {
@@ -64,7 +70,7 @@ export default {
           required:
             'MongoDBEnrichmentComplete request "results" items should have "rowKey", "columnKey", "claimToken" and "status".',
           additionalProperties:
-            'MongoDBEnrichmentComplete request "results" items should only have "rowKey", "columnKey", "claimToken", "status", "value", "raw", "error" and "retry".',
+            'MongoDBEnrichmentComplete request "results" items should only have "rowKey", "columnKey", "claimToken", "status", "value", "raw", "cost", "error" and "retry".',
         },
       },
       errorMessage: {

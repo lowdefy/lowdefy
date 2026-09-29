@@ -14,23 +14,19 @@
   limitations under the License.
 */
 
-// The only enrichment cell properties the requests write, under `_enrich.<column key>`. Every
-// update the three requests send is built from these (buildCellUpdate), so nothing else of
-// a row can be written by an enrichment run.
-const cellProperties = [
-  'status',
-  'value',
-  'raw',
-  'cost',
-  'error',
-  'inputHash',
-  'runId',
-  'claimToken',
-  'attempts',
-  'queuedAt',
-  'startedAt',
-  'finishedAt',
-  'leaseUntil',
-];
 
-export default cellProperties;
+import formatCost from './formatCost.js';
+
+test('formatCost shows micro-USD as dollars', () => {
+  expect(formatCost(4000)).toBe('$0.004');
+  expect(formatCost(1250000)).toBe('$1.25');
+  expect(formatCost(1)).toBe('$0.000001');
+  expect(formatCost(0)).toBe('$0');
+});
+
+test('formatCost returns null for a cell without a cost', () => {
+  expect(formatCost(undefined)).toBeNull();
+  expect(formatCost(null)).toBeNull();
+  expect(formatCost(-1)).toBeNull();
+  expect(formatCost(0.5)).toBeNull();
+});

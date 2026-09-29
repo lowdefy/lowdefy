@@ -20,6 +20,7 @@ import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
 import renderCell from '@lowdefy/blocks-antd/table/renderCell.js';
 import resolveEnrichmentInputs from '@lowdefy/blocks-antd/table/resolveEnrichmentInputs.js';
 
+import formatCost from './formatCost.js';
 import formatJsonPreview from './formatJsonPreview.js';
 import formatRunTime from './formatRunTime.js';
 import getRunState from './getRunState.js';
@@ -49,6 +50,7 @@ function Timings({ state }) {
     ['Started', formatRunTime(state?.startedAt)],
     ['Finished', formatRunTime(state?.finishedAt)],
     ['Attempts', state?.attempts ?? null],
+    ['Cost', formatCost(state?.cost)],
   ].filter(([, value]) => value !== null && value !== undefined);
   if (rows.length === 0) return <p className="lf-enrich-muted">Not run yet.</p>;
   return (
@@ -179,8 +181,8 @@ function renderBody({ api, column, row, rowId }) {
 
 // The cell details panel (design E6): an antd Drawer beside the table, loaded and mounted only
 // while open, reading the row live (a push update shows at once). It shows the run's status
-// (with Rerun, onCellRun), the value through the column's type, the error, the timings, the
-// inputs the value was computed from, and the raw result as a JSON tree whose nodes can each be
+// (with Rerun, onCellRun), the value through the column's type, the error, the timings and
+// cost, the inputs the value was computed from, and the raw result as a JSON tree whose nodes can each be
 // added as an extract column (onColumnAdd). For an extract cell it shows its source column's run.
 function CellDetails({ api, details }) {
   const column = api.config.columnsByKey.get(details.key);
