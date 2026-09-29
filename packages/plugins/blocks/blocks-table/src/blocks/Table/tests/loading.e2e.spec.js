@@ -178,6 +178,27 @@ test.describe('Table loading states', () => {
     );
   });
 
+  test('the record count holds a text skeleton until the first rows land', async ({ page }) => {
+    const mocks = await mockAll(page);
+    mocks.rows.hold();
+    await navigateToTestPage(page, PAGE);
+    const count = getBlock(page, 'table_client').locator('[data-lf-record-count]');
+    await expect(table(page, 'table_client')).toHaveAttribute('data-loading-state', 'initial');
+    await expect(count).toHaveAttribute('data-loading', '');
+    await expect(count).toHaveText('');
+    await expect(count.locator('.lf-table-skeleton')).toHaveCount(1);
+    mocks.rows.release();
+    await expect(count).toHaveText('30 rows');
+    await expect(count).not.toHaveAttribute('data-loading', '');
+    // A refetch keeps the count of the rows on screen.
+    mocks.rows.hold();
+    await page.locator('#refetch').click();
+    await expect(table(page, 'table_client')).toHaveAttribute('data-busy', '');
+    await expect(count).toHaveText('30 rows');
+    mocks.rows.release();
+    await expect(table(page, 'table_client')).not.toHaveAttribute('data-busy', '');
+  });
+
   test('a refetch without holdValue keeps the rows and runs the progress bar', async ({ page }) => {
     const mocks = await mockAll(page);
     await navigateToTestPage(page, PAGE);

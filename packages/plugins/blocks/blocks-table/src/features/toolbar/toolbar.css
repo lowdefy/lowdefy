@@ -85,6 +85,11 @@
     white-space: nowrap;
   }
 
+  /* About the width of "1,234 rows", so the toolbar keeps its layout when the count lands. */
+  .lf-table-record-count-skeleton {
+    width: 56px;
+  }
+
   .lf-table-toolbar-popover {
     min-width: 280px;
     max-width: min(560px, 90vw);
