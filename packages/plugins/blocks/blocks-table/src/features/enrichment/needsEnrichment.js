@@ -23,8 +23,11 @@ const ENRICHMENT_KINDS = new Set(['enrichment', 'ai', 'extract']);
 // Enrichment loads for a Table with enrichment, ai or extract columns, a run state (`status`),
 // user-defined columns (their header menu manages them), a provider catalogue, the add-column
 // picker, "+ New row" or CSV import. Formula columns alone do not need it: the shared column core
-// reads them (`column.read`), so every table and TableLight can.
-function needsEnrichment({ properties }) {
+// reads them (`column.read`), so every table and TableLight can. Never for TableInput: it edits
+// a changeset over `data`, where cells are not run and rows are added by its own "+ Add row"
+// (the editing feature), so its meta takes none of the keys that turn enrichment on.
+function needsEnrichment({ input, properties }) {
+  if (input) return false;
   if (type.isArray(properties.providers) && properties.providers.length > 0) return true;
   if (properties.addColumn === true || type.isObject(properties.addColumn)) return true;
   if (properties.addRow === true || properties.importCsv === true) return true;

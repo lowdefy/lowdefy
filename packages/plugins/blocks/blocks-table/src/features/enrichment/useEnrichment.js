@@ -82,7 +82,7 @@ function useEnrichment({ api, config, data }) {
     ];
   }, [showAdd, showRunRow]);
 
-  const showNewRow = settings.addRow && !api.input;
+  const showNewRow = settings.addRow;
   const hasOverlay = Object.values(ui).some((entry) => entry !== null);
   if (!hasOverlay && !showNewRow) return { trailingColumns };
   return {

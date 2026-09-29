@@ -17,7 +17,7 @@
 import needsEnrichment from './needsEnrichment.js';
 
 function needs(properties) {
-  return needsEnrichment({ properties });
+  return needsEnrichment({ input: false, properties });
 }
 
 test('needsEnrichment is false for plain and formula columns', () => {
@@ -48,4 +48,16 @@ test('needsEnrichment is true for providers, addColumn, addRow and importCsv', (
   expect(needs({ addColumn: { kinds: ['input'] } })).toBe(true);
   expect(needs({ addRow: true })).toBe(true);
   expect(needs({ importCsv: true })).toBe(true);
+});
+
+test('needsEnrichment is false for TableInput, whatever its config', () => {
+  [
+    { providers: [{ id: 'p' }] },
+    { addColumn: true },
+    { addRow: true },
+    { importCsv: true },
+    { columns: [{ key: 'e', kind: 'enrichment', provider: 'p' }] },
+  ].forEach((properties) => {
+    expect(needsEnrichment({ input: true, properties })).toBe(false);
+  });
 });

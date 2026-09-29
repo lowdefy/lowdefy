@@ -6,6 +6,8 @@ Use `Table` instead when each edit should save at once (a CRM record list, where
 
 `TableInput` takes every `Table` property: columns and cell types, sorting, filters, search, grouping, selection, `rowLink`, row buttons and the rest work the same. It reads client `data` only (no server mode), and its view and selection are internal to the block rather than part of its value. Unlike `Table` it has no slots (no toolbar, bulk action or empty slot blocks): use `emptyText` for its empty state. Row events carry the row's `index` in `data`, and `null` for a row added in the table.
 
+Of the [enrichment table](/TableGuide#enrichment-tables) features it takes formula columns (`kind: formula` with a `template`, computed in the browser) and its own "+ Add row" (`addRow`, into the changes). The rest runs cells on the server over stored rows, so it is `Table` only: `providers`, `addColumn`, `importCsv`, `inputFieldPrefix`, enrichment, ai, extract, `status` and user-defined columns, and the column and run events. `TableInput` refuses those keys with a message naming `Table`.
+
 ## The value is the changes, not the rows
 
 `data` is never written. The block value holds only what changed since `data`, keyed by row key:
