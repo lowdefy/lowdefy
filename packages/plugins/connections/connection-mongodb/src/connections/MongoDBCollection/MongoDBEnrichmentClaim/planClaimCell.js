@@ -1,0 +1,138 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { get } from '@lowdefy/helpers';
+
+import andConditions from '../enrichment/andConditions.js';
+import buildCellUpdate from '../enrichment/buildCellUpdate.js';
+import getClaimableCondition from '../enrichment/getClaimableCondition.js';
+import hashEnrichmentInputs from '../enrichment/hashEnrichmentInputs.js';
+import pickRow from '../enrichment/pickRow.js';
+import resolveCellInputs from '../enrichment/resolveCellInputs.js';
+
+// A queued cell whose input column is still queued or running waits this long before it is
+// looked at again, instead of running without its input.
+const deferMs = 15000;
+
+function readCell({ doc, paths }) {
+  return {
+    attempts: get(doc, paths.attempts, { default: null }),
+    claimToken: get(doc, paths.claimToken, { default: null }),
+    runId: get(doc, paths.runId, { default: null }),
+    status: get(doc, paths.status, { default: null }),
+  };
+}
+
+function operation({ match, columnKey, set, unset }) {
+  return { updateOne: { filter: match, update: buildCellUpdate({ columnKey, set, unset }) } };
+}
+
+// What a claim does to one candidate cell. Every update is a compare-and-set: its filter
+// holds the cell's state as it was read (status, claimToken, attempts, runId) and that it is
+// still claimable, so of two workers that read the same cell only the first write matches,
+// and the second changes nothing.
+//   claim:   running, with a lease until `now + leaseMs`, attempts + 1 and a new claimToken.
+//            The token is random, followed by the hash of the inputs the worker is given, which
+//            MongoDBEnrichmentComplete stores as the result's inputHash.
+//   expired: a lease that ran out on the last allowed attempt: the cell is an error.
+//   missing: a required input has no value: empty, with the missing column named.
+//   defer:   an input column is still queued or running: queued again, due in 15 seconds.
+function planClaimCell({ doc, target, compiled, now, generateToken }) {
+  const { filter, fieldsByKey, leaseMs, maxAttempts, rowKeyField } = compiled;
+  const { columnKey, paths, prompt, provider, sources } = target;
+  const read = readCell({ doc, paths });
+  const match = andConditions([
+    filter,
+    { _id: doc._id },
+    getClaimableCondition({ columnKey, now }),
+    { [paths.status]: read.status },
+    { [paths.claimToken]: read.claimToken },
+    { [paths.attempts]: read.attempts },
+    { [paths.runId]: read.runId },
+  ]);
+  const attempts = read.attempts ?? 0;
+  if (read.status === 'running' && attempts >= maxAttempts) {
+    return {
+      kind: 'expired',
+      operation: operation({
+        match,
+        columnKey,
+        set: {
+          status: 'error',
+          error: `The worker's lease ran out on attempt ${attempts} of ${maxAttempts}.`,
+          finishedAt: now,
+        },
+        unset: ['claimToken', 'leaseUntil'],
+      }),
+    };
+  }
+  const { inputs, missing, waiting } = resolveCellInputs({ doc, sources });
+  if (missing !== null) {
+    return {
+      kind: 'missing',
+      operation: operation({
+        match,
+        columnKey,
+        set: { status: 'empty', error: `Missing input: ${missing}`, finishedAt: now },
+        unset: ['value', 'raw', 'inputHash', 'claimToken', 'leaseUntil', 'queuedAt', 'startedAt'],
+      }),
+    };
+  }
+  if (waiting) {
+    return {
+      kind: 'defer',
+      operation: operation({
+        match,
+        columnKey,
+        set: { status: 'queued', queuedAt: new Date(now.getTime() + deferMs) },
+        unset: ['claimToken', 'leaseUntil', 'startedAt'],
+      }),
+    };
+  }
+  const inputHash = hashEnrichmentInputs(inputs);
+  const claimToken = `${generateToken()}:${inputHash}`;
+  return {
+    kind: 'claim',
+    operation: operation({
+      match,
+      columnKey,
+      set: {
+        status: 'running',
+        startedAt: now,
+        leaseUntil: new Date(now.getTime() + leaseMs),
+        attempts: attempts + 1,
+        claimToken,
+      },
+      unset: [],
+    }),
+    claim: {
+      rowKey: get(doc, rowKeyField, { default: null }),
+      columnKey,
+      provider,
+      ...(prompt === null ? {} : { prompt }),
+      runId: read.runId,
+      claimToken,
+      attempt: attempts + 1,
+      inputHash,
+      inputs,
+      row: pickRow({ doc, fieldsByKey, rowKeyField }),
+    },
+    docId: doc._id,
+    tokenPath: paths.claimToken,
+  };
+}
+
+export default planClaimCell;

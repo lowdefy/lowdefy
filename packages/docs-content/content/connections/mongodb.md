@@ -106,6 +106,9 @@ Request types:
   - MongoDBBulkWrite
   - MongoDBDeleteMany
   - MongoDBDeleteOne
+  - MongoDBEnrichmentClaim
+  - MongoDBEnrichmentComplete
+  - MongoDBEnrichmentEnqueue
   - MongoDBFind
   - MongoDBFindOne
   - MongoDBInsertConsecutiveId
@@ -341,6 +344,326 @@ requests:
         _id:
           _payload: selected_id
 ```
+
+### Enrichment run queue
+
+Three requests run the enrichment columns of a `Table`: columns whose cells are computed per row by a provider (an API endpoint of the app) or an AI prompt, from the values of other columns. `MongoDBEnrichmentEnqueue` marks cells queued, `MongoDBEnrichmentClaim` hands a worker a batch of queued cells, and `MongoDBEnrichmentComplete` writes the worker's results. There is no queue collection: each cell's run state is stored in its row, under `_enrich.<column key>`, next to the row's data.
+
+```yaml
+_enrich:
+  email:                    # the column key
+    status: ok              # queued | running | ok | error | empty
+    value: ada@acme.test    # the result the column shows (its field is _enrich.email.value)
+    raw: { ... }            # the provider's response, for the details panel
+    error: null             # the message, with status error (or the last failed attempt, while queued again)
+    inputHash: 0659b6fcca796a  # the hash of the inputs the value was computed from
+    runId: 66f9…            # the enqueue that queued the cell
+    attempts: 1
+    claimToken: …           # the claim of the worker that ran it
+    queuedAt, startedAt, finishedAt, leaseUntil
+```
+
+A cell moves from `queued` to `running` (claimed by a worker, with a lease) to `ok`, `empty` (the provider found nothing) or `error`. A failed attempt goes back to `queued` after a backoff until `maxAttempts`. While a cell is queued or running again, its previous `value`, `raw` and `inputHash` stay, so the table keeps showing the old value until a new result lands.
+
+The three requests take the table's columns as `columnDefs`, the declared and user-defined columns merged, as the app passes them to the `Table` (a Table columns list can be passed as it is). Enrichment and ai columns run; other columns are only looked up by key:
+
+```yaml
+- key: email
+  kind: enrichment                 # or ai
+  provider: finder                 # the worker calls the endpoint enrich_finder; ai columns default to ai
+  inputs:
+    domain: { column: domain }     # another column's value; required unless required: false
+    country: { value: ZA }         # a literal value
+  autoRun: true                    # run when an input column completes
+- key: pitch
+  kind: ai
+  prompt: Write a two line pitch for {{ name }}
+  inputs:
+    name: { column: name }         # list every column the prompt uses
+    email: { column: email }       # an enrichment column: its value, once its cell is ok
+```
+
+A `{ column }` input reads another enrichment or ai column's value (only when that cell is `ok`; while it is queued or running, the cell waits), or a field of `fields`, the table's `MongoDBTableQuery` fields keyed by column key, at its `path`. A column outside both is refused, so a user-defined column can never send a field the table does not list to a provider. A required input that is `null`, missing or `''` sets the cell to `empty` with `error: Missing input: <column>` instead of running it. A chain of inputs that comes back to a column is refused, since `autoRun` would run it forever.
+
+The browser never sends MongoDB syntax, and the requests only ever write the cell properties above, under `_enrich.<column key>` of an enrichment or ai column of `columnDefs` (column keys are 1 to 128 letters, digits, `_` or `-`). Every read and write is scoped by the base `filter` (required unless the connection is tenant-scoped; `filter: {}` for every document) and, on a tenant connection, by the tenant; the `filter` may not name `_enrich`. No request runs JavaScript on the database server.
+
+##### Input hash
+
+`inputHash` is the hash of a cell's inputs, `{ [param]: value }` with optional inputs that have no value left out: [cyrb53](https://github.com/bryc/code/blob/master/jshash/experimental/cyrb53.js) (seed 0) of the canonical JSON of the inputs, as 14 lowercase hex digits. The canonical JSON has object keys sorted at every depth, no whitespace, dates as ISO strings, ObjectIds as hex strings and undefined values left out. The `Table` computes the same hash in the browser, so a cell whose row's inputs changed since its value was computed shows as stale, and `mode: stale` re-runs exactly those cells. A claim hashes the inputs it gives the worker, and the result is stored with that hash.
+
+##### The worker
+
+The worker is an API endpoint: it claims a batch of cells, calls each cell's provider endpoint with `:parallel_for`, completes each cell, and enqueues the `autoRun` columns the completed cell feeds (a waterfall between columns). It loops until a claim returns nothing, or for at most ten rounds. A schedule runs it every minute, and the endpoint that enqueues a run starts it at once with a detached call. A worker that crashes loses nothing: its cells are claimed again when their lease runs out, and a result from a worker whose lease ran out is ignored.
+
+```yaml
+api:
+  - id: enrichment_worker
+    type: InternalApi
+    schedules:
+      - cron: '* * * * *'
+    routine:
+      - id: user_columns
+        type: MongoDBFind
+        connectionId: table_columns
+        properties:
+          query:
+            tableId: leads
+      - :set_state:
+          columnDefs:
+            _array.concat:
+              - _ref: leads/columns.yaml # the declared columns
+              - _step: user_columns
+          claimed: 1
+          rounds: 0
+      - :while:
+          _and:
+            - _gt: [{ _state: claimed }, 0]
+            - _lt: [{ _state: rounds }, 10]
+        :do:
+          - id: claim
+            type: MongoDBEnrichmentClaim
+            connectionId: leads
+            properties:
+              filter: {} # cells were scoped when they were queued
+              fields:
+                _ref: leads/fields.yaml # the table's MongoDBTableQuery fields
+              columnDefs:
+                _state: columnDefs
+              limit: 20
+          - :parallel_for: cell
+            :in:
+              _step: claim
+            :do:
+              - :try:
+                  - id: call_provider
+                    type: CallApi
+                    properties:
+                      endpointId:
+                        _string.concat: [enrich_, { _item: cell.provider }]
+                      payload:
+                        inputs:
+                          _item: cell.inputs
+                        prompt:
+                          _item: cell.prompt
+                  - id: complete
+                    type: MongoDBEnrichmentComplete
+                    connectionId: leads
+                    properties:
+                      filter: {}
+                      columnDefs:
+                        _state: columnDefs
+                      results:
+                        - rowKey:
+                            _item: cell.rowKey
+                          columnKey:
+                            _item: cell.columnKey
+                          claimToken:
+                            _item: cell.claimToken
+                          status:
+                            _step: call_provider.$.status # ok or empty
+                          value:
+                            _step: call_provider.$.value
+                          raw:
+                            _step: call_provider.$.raw
+                  - :if:
+                      _gt:
+                        - _array.length:
+                            _step: complete.$.downstream
+                        - 0
+                    :then:
+                      - id: enqueue_downstream
+                        type: MongoDBEnrichmentEnqueue
+                        connectionId: leads
+                        properties:
+                          filter: {}
+                          fields:
+                            _ref: leads/fields.yaml
+                          columnDefs:
+                            _state: columnDefs
+                          columns:
+                            _step: complete.$.downstream.0.columns
+                          selection:
+                            - _item: cell.rowKey
+                :catch:
+                  - id: complete_error
+                    type: MongoDBEnrichmentComplete
+                    connectionId: leads
+                    properties:
+                      filter: {}
+                      columnDefs:
+                        _state: columnDefs
+                      results:
+                        - rowKey:
+                            _item: cell.rowKey
+                          columnKey:
+                            _item: cell.columnKey
+                          claimToken:
+                            _item: cell.claimToken
+                          status: error
+                          error:
+                            _error: message
+          - :set_state:
+              claimed:
+                _array.length:
+                  _step: claim
+              rounds:
+                _sum: [{ _state: rounds }, 1]
+```
+
+Each provider endpoint `enrich_<provider id>` takes `{ inputs, prompt }` and returns `{ status: ok | empty, value, raw }`; throwing is a failed attempt. The app declares these endpoints, so a column can only call what the app exposes, and API keys stay on the server. For a worker per provider (to limit each provider's concurrency), set `providers` on the claim.
+
+The endpoint the table's run events call queues the cells, then starts the worker without waiting for it (a detached call needs the `CRON_SECRET` environment variable):
+
+```yaml
+api:
+  - id: run_enrichment
+    type: Api
+    routine:
+      - id: enqueue
+        type: MongoDBEnrichmentEnqueue
+        connectionId: leads
+        properties:
+          filter:
+            org_id:
+              _user: organization.id
+          fields:
+            _ref: leads/fields.yaml
+          columnDefs:
+            _payload: columnDefs
+          columns:
+            _payload: columns
+          mode:
+            _payload: mode
+          selection:
+            _payload: selection
+          user:
+            _user: true
+      - id: start_worker
+        type: CallApi
+        properties:
+          endpointId: enrichment_worker
+          detached: true
+      - :return:
+          _step: enqueue
+```
+
+A claim reads the oldest due cells of each column. On a large table, index each enrichment column's queue fields, for example `{ "_enrich.email.status": 1, "_enrich.email.queuedAt": 1 }`, with the base filter fields first when every run is scoped by them.
+
+### MongoDBEnrichmentClaim
+
+The `MongoDBEnrichmentClaim` request claims up to `limit` enrichment cells for a worker: the oldest cells that are queued and due (`queuedAt` passed, so a retry waits out its backoff), and running cells whose lease ran out. Each claimed cell is set to `running` with `startedAt`, `leaseUntil` (now plus `leaseMs`), `attempts` plus one and a new random `claimToken`. See [Enrichment run queue](#enrichment-run-queue).
+
+Concurrent workers never claim the same cell. Every claim is a compare-and-set: the write matches the cell only in the state the claim read (its status, token, attempts and run) and while it is still claimable, so when two workers read the same cell, only the first write changes it. A worker that lost cells to another reads further candidates, up to five rounds, so it does not stop while cells are still queued.
+
+A claim also settles cells it can not hand out: a cell whose required input is now missing is set to `empty` with the missing column named, a cell whose enrichment input is queued or running again waits 15 seconds, and a running cell whose lease ran out on its last attempt (`maxAttempts`) becomes an `error`.
+
+##### Response
+
+```yaml
+- rowKey: 66f9…              # the row key (rowKeyField)
+  columnKey: email
+  provider: finder
+  prompt: …                  # ai columns
+  runId: 66f9…
+  claimToken: 3b1f…:0659b6fcca796a
+  attempt: 1
+  inputHash: 0659b6fcca796a
+  inputs:                    # resolved from columnDefs
+    domain: acme.test
+  row:                       # _id, the row key and the fields paths only
+    _id: …
+    name: Acme
+    domain: acme.test
+```
+
+#### Properties
+- `columnDefs: object[]`: __Required__ - The table columns, declared and user-defined merged. See [Enrichment run queue](#enrichment-run-queue).
+- `fields: object`: __Required__ - The table's `MongoDBTableQuery` fields, keyed by column key: the fields column inputs read and claimed rows return.
+- `columns: string[]`: Claim only cells of these enrichment or ai columns. Defaults to every enrichment and ai column.
+- `providers: string[]`: Claim only cells of columns that use these providers, for a worker per provider.
+- `filter: object`: The base filter every read and write is scoped by. Required unless the connection is tenant-scoped. Set it to `{}` to claim cells of every document.
+- `limit: integer`: Default: `20` - The most cells one claim returns, at most 200.
+- `leaseMs: integer`: Default: `120000` - How long a claimed cell stays with its worker. After it, the cell can be claimed again, and the first worker's result is ignored. Keep it longer than a provider call, and keep the servers' clocks in sync.
+- `maxAttempts: integer`: Default: `3` - A cell whose lease ran out on this attempt becomes an error instead of being claimed again. Use the same value as `MongoDBEnrichmentComplete`.
+- `rowKeyField: string`: Default: `_id` - The document field returned as `rowKey`.
+
+### MongoDBEnrichmentComplete
+
+The `MongoDBEnrichmentComplete` request writes a worker's results to the cells it claimed. A result is applied only while its cell still holds the claim, its `claimToken` with status `running`, so a worker whose lease ran out (and whose cell was claimed again or queued again since) changes nothing, and a result sent twice is applied once. See [Enrichment run queue](#enrichment-run-queue).
+
+- `ok` and `empty` results replace the cell's `value` and `raw` (an empty result has no value), and store `finishedAt` and the `inputHash` of the inputs the claim gave the worker.
+- An `error` below `maxAttempts` goes back to `queued` with its error message, due after `backoffMs * 2^(attempt - 1)` (30 seconds, then 60, …, at most a day). On the last attempt, or with `retry: false`, the error is final. The previous value stays in both cases.
+- A `raw` larger than `rawMaxBytes` is stored as `{ _truncated: true, bytes, maxBytes, preview }`, with the first 1000 characters of its JSON, so one large response can not fill the row. A `value` larger than `rawMaxBytes` makes the result a final error.
+
+##### Response
+
+```yaml
+applied: 18      # results written
+ignored: 2       # results whose claim no cell holds any more
+requeued: 1      # errors queued again for a retry
+downstream:      # autoRun columns that read a column that just completed ok
+  - rowKey: 66f9…
+    columns: [pitch]
+```
+
+Enqueue the `downstream` columns of each row with `MongoDBEnrichmentEnqueue`, as the worker above does.
+
+#### Properties
+- `results: object[]`: __Required__ - At most 1000 results, each:
+  - `rowKey: any`: __Required__ - The `rowKey` of the claim.
+  - `columnKey: string`: __Required__ - The `columnKey` of the claim.
+  - `claimToken: string`: __Required__ - The `claimToken` of the claim.
+  - `status: enum`: __Required__ - `ok`, `empty` (no result) or `error`.
+  - `value: any`: The result the column shows.
+  - `raw: any`: The provider's response.
+  - `error: string`: The error message, with status `error`.
+  - `retry: boolean`: Default: `true` - With status `error`, `false` makes the error final.
+- `columnDefs: object[]`: __Required__ - The table columns, declared and user-defined merged.
+- `filter: object`: The base filter every read and write is scoped by. Required unless the connection is tenant-scoped.
+- `maxAttempts: integer`: Default: `3` - The attempts a cell gets.
+- `backoffMs: integer`: Default: `30000` - The wait before a failed cell is claimed again, doubled per attempt made.
+- `rawMaxBytes: integer`: Default: `65536` - The largest raw response (BSON bytes) stored as it is.
+- `rowKeyField: string`: Default: `_id` - The document field a row key matches.
+- `rowKeyType: enum`: Default: `auto` - How row keys are read, as for `MongoDBTableChanges`.
+
+### MongoDBEnrichmentEnqueue
+
+The `MongoDBEnrichmentEnqueue` request queues cells of enrichment columns: the cells of `columns` in the selected rows that `mode` names. See [Enrichment run queue](#enrichment-run-queue).
+
+- `all`: every cell that is not queued, or running with a live lease. A run in progress is never restarted, whatever the mode.
+- `empty`: cells never run, or whose last result was empty.
+- `errors`: cells that failed.
+- `stale`: cells with a result whose inputs changed since it was computed. The request reads each candidate row's inputs (in batches of 1000 rows, with only the input paths projected) and compares their hash with the cell's `inputHash`.
+
+A queued cell gets `status: queued`, the `runId`, `queuedAt` and `attempts: 0`; its previous value, raw and inputHash stay until a new result lands. A cell whose required input has no value is set to `empty` with `error: Missing input: <column>` instead, and its previous result is cleared.
+
+`selection` is the table's `selected` value: row keys, or `{ all: true, except, filter, search }`, compiled against `fields` like `MongoDBTableChanges` compiles it, with the same limits. Leave it out to run every row inside the base `filter`. Row keys are read as in `MongoDBTableChanges` Row keys: an ObjectId as `{ _oid }` or its Table key text, and a numeric key as the number or its text.
+
+The cells are written as unordered bulkWrites of 1000 cells, each write guarded by the mode's condition, so a cell a worker took since it was read is left alone. When more than `maxCells` cells would be written, nothing is written and the request throws, so a large run can be confirmed first.
+
+##### Response
+
+```yaml
+queued: 2400          # cells queued
+skipped: 12           # selected cells the mode left alone (live, fresh or not matching)
+missingInputs: 3      # cells set to empty for a missing input
+runId: 66f9…
+```
+
+#### Properties
+- `columns: string[]`: __Required__ - The keys of the enrichment or ai columns to run.
+- `columnDefs: object[]`: __Required__ - The table columns, declared and user-defined merged.
+- `fields: object`: __Required__ - The table's `MongoDBTableQuery` fields, keyed by column key: the fields column inputs read and a select-all selection is compiled against.
+- `selection: object | any[]`: The rows to run, the `Table` `selected` value. Defaults to every row inside `filter`.
+- `mode: enum`: Default: `all` - `all`, `empty`, `errors` or `stale`.
+- `filter: object`: The base filter every read and write is scoped by, for example `{ org_id: { _user: organization.id } }`. Required unless the connection is tenant-scoped. Set it to `{}` to run on every document.
+- `maxCells: integer`: Default: `10000` - The most cells one enqueue may write, queued and missing input cells together.
+- `maxTimeMS: integer`: Default: `30000` - The time limit of each read.
+- `runId: string`: The `runId` the queued cells get, 1 to 64 letters, digits, `_` or `-`. Generated when left out.
+- `user: object`: The user that `{ $user: path }` values in a selection filter resolve from. Set it to `{ _user: true }`.
+- `timezone: string`: Default: `UTC` - The IANA time zone whose days the date filters of a selection compare.
+- `rowKeyField: string`: Default: `_id` - The document field a row key matches.
+- `rowKeyType: enum`: Default: `auto` - How row keys are read, as for `MongoDBTableChanges`.
 
 ### MongoDBFind
 
