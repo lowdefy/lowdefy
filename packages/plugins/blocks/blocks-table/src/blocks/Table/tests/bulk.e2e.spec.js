@@ -15,7 +15,9 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 const bar = (page) => getBlock(page, 'bk').locator('[data-lf-bulk-bar]');
 const selectRow = (page, rowKey) =>
@@ -31,7 +33,7 @@ const focusedRow = (page) =>
 
 test.describe('Table bulk action bar', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'bulk');
+    await openTablePage(page, 'bulk');
     await expect(getBlock(page, 'bk').locator('.lf-table-body')).toBeVisible();
   });
 
@@ -121,7 +123,7 @@ test.describe('Table bulk action bar', () => {
 
 test.describe('Table single-key row actions', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'bulk');
+    await openTablePage(page, 'bulk');
     await expect(getBlock(page, 'queue').locator('.lf-table-body')).toBeVisible();
   });
 

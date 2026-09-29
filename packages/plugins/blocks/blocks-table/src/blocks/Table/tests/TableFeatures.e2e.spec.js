@@ -15,7 +15,9 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 const header = (page, blockId, key) =>
   getBlock(page, blockId).locator(`[data-lf-header][data-col-key="${key}"]`);
@@ -31,7 +33,7 @@ async function width(locator) {
 
 test.describe('Table features shared with TableLight', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'table-features');
+    await openTablePage(page, 'table-features');
     await expect(bodyRows(page, 'tf_groups')).toHaveCount(1);
   });
 

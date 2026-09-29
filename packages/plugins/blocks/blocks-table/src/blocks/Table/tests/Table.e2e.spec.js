@@ -16,7 +16,9 @@
 
 import fs from 'node:fs';
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 // Table renders a root div with id={blockId} (class lf-table) holding one scroller with
 // role="grid". Body rows carry data-row-key (the row key) and data-row-index (display order);
@@ -68,7 +70,7 @@ async function dragBy(page, locator, dx) {
 
 test.describe('Table Block', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'table');
+    await openTablePage(page, 'table');
     await expect(bodyRows(page, 'table_basic')).toHaveCount(5);
   });
 

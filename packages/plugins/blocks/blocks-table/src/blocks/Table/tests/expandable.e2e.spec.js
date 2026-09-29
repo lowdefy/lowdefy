@@ -15,7 +15,9 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 // Expandable rows: a chevron ([data-lf-expand-toggle]) in the first data column opens a detail
 // row ([data-detail-for="<rowKey>"]) with the `expandable.template` HTML, as high as its content.
@@ -30,7 +32,7 @@ const scroller = (page, blockId) => getBlock(page, blockId).locator('.lf-table-s
 
 test.describe('Table expandable rows', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'table-expandable');
+    await openTablePage(page, 'table-expandable');
     await expect(row(page, 'table_expandable', '1')).toBeVisible();
   });
 

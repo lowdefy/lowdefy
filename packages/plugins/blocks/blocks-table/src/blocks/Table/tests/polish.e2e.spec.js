@@ -14,7 +14,9 @@
   limitations under the License.
 */
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 // Visual checks for the Table's layout: computed styles, boxes and truncation, not pixels.
 const table = (page, blockId) => getBlock(page, blockId);
@@ -56,7 +58,7 @@ function measureSummary(locator) {
 
 test.describe('Table visual polish', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'polish');
+    await openTablePage(page, 'polish');
     await expect(row(page, 'crm', 1)).toBeAttached();
   });
 
@@ -604,7 +606,7 @@ test.describe('Table visual polish', () => {
   test('link, status and progress cells share the text baseline in TableLight and Table', async ({
     page,
   }) => {
-    await navigateToTestPage(page, 'table-parity');
+    await openTablePage(page, 'table-parity');
     for (const [id, rowSelector] of [
       ['parity_light', 'tbody tr[data-row-key]'],
       ['parity_table', '.lf-table-body [data-row-key]'],

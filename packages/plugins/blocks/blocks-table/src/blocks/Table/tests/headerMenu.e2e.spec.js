@@ -14,7 +14,9 @@
   limitations under the License.
 */
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 const header = (page, blockId, key) =>
   getBlock(page, blockId).locator(`[data-lf-header][data-col-key="${key}"]`);
@@ -60,7 +62,7 @@ async function menuItem(page, blockId, key, name) {
 
 test.describe('Table header menu', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'table-header-menu');
+    await openTablePage(page, 'table-header-menu');
     await expect(getBlock(page, 'menu_table').locator('.lf-table-body [role="row"]')).toHaveCount(
       5
     );

@@ -14,7 +14,9 @@
   limitations under the License.
 */
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 // Popups (menu, column filter) render in portals at the end of the body. The header menu popup
 // carries data-lf-header-menu-popup and the column filter data-lf-column-filter, both with the
@@ -71,7 +73,7 @@ async function choose(page, select, label) {
 
 test.describe('Table filtering', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'table-filtering');
+    await openTablePage(page, 'table-filtering');
     await expectRows(page, 'filter_table', [1, 2, 3, 4, 5, 6]);
   });
 

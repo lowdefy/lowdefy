@@ -15,7 +15,9 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 // Editors are portalled into the cell being edited ([data-lf-editor]); status markers into
 // cells with a save running or failed ([data-lf-edit-status]). Cells are addressed by row key.
@@ -73,7 +75,7 @@ function focusedCell(page) {
 
 test.describe('Table editing', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'table-editing');
+    await openTablePage(page, 'table-editing');
     await expect(cell(page, 'edit_types', 1, 'name')).toHaveText('Ann');
   });
 
