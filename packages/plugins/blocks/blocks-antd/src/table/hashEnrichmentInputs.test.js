@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+/* global BigInt */
+
 import fs from 'fs';
 import { serializer } from '@lowdefy/helpers';
 
@@ -24,6 +26,19 @@ import toCanonicalJson from './toCanonicalJson.js';
 // The same fixture is checked into @lowdefy/connection-mongodb (test/enrichmentInputHash.json),
 // where the enrichment requests hash the inputs on the server: both copies must stay identical.
 // Inputs are serializer JSON (`~d` dates), revived before hashing.
+// The markers the fixture uses for values JSON can not hold (see its description).
+function reviveTyped(value) {
+  if (Array.isArray(value)) return value.map(reviveTyped);
+  if (value === null || typeof value !== 'object' || value instanceof Date) return value;
+  const keys = Object.keys(value);
+  if (keys.length === 1 && keys[0] === '~bigint') return BigInt(value['~bigint']);
+  if (keys.length === 1 && keys[0] === '~toJSON') {
+    const json = value['~toJSON'];
+    return { toJSON: () => json };
+  }
+  return Object.fromEntries(keys.map((key) => [key, reviveTyped(value[key])]));
+}
+
 const fixture = JSON.parse(
   fs.readFileSync(new URL('../../test/enrichmentInputHash.json', import.meta.url), 'utf8')
 );
@@ -31,7 +46,7 @@ const fixture = JSON.parse(
 test.each(fixture.cases.map((entry) => [entry.name, entry]))(
   'hashEnrichmentInputs matches the shared fixture: %s',
   (name, entry) => {
-    const inputs = serializer.deserialize(entry.inputs);
+    const inputs = reviveTyped(serializer.deserialize(entry.inputs));
     expect(toCanonicalJson(inputs)).toBe(entry.canonical);
     expect(hashEnrichmentInputs(inputs)).toBe(entry.hash);
   }
@@ -85,4 +100,12 @@ test('hashEnrichmentInputs gives different hashes for different values', () => {
     hashEnrichmentInputs({ domain: 'acme.co' })
   );
   expect(hashEnrichmentInputs({ n: 1 })).not.toBe(hashEnrichmentInputs({ n: '1' }));
+});
+
+test('toCanonicalJson writes an object with toJSON as its JSON form, and a bigint as digits', () => {
+  const decimal = { toJSON: () => ({ $numberDecimal: '1.50' }), bytes: [1, 2] };
+  expect(toCanonicalJson({ price: decimal, n: 5n })).toBe(
+    '{"n":5,"price":{"$numberDecimal":"1.50"}}'
+  );
+  expect(hashEnrichmentInputs({ n: 5n })).toBe(hashEnrichmentInputs({ n: 5 }));
 });

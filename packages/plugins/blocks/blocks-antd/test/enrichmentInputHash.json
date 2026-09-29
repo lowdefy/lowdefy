@@ -1,5 +1,5 @@
 {
-  "description": "hashEnrichmentInputs(inputs) = cyrb53(canonicalJson(inputs), seed 0) as 14 lowercase hex digits. canonicalJson: object keys sorted (UTF-16 code unit order) at every depth, no whitespace, Dates as ISO strings, ObjectIds and { _oid } markers as lowercase hex strings, undefined object values dropped, arrays in order. \"inputs\" are in Lowdefy serializer form: revive them with serializer.deserialize (a { \"~d\": ms } marker is a Date) before hashing. \"canonical\" is the text that is hashed. The source of truth is @lowdefy/connection-mongodb test/enrichmentInputHash.json; copies elsewhere must stay byte-for-byte identical.",
+  "description": "hashEnrichmentInputs(inputs) = cyrb53(canonicalJson(inputs), seed 0) as 14 lowercase hex digits. canonicalJson: object keys sorted (UTF-16 code unit order) at every depth, no whitespace, Dates as ISO strings, ObjectIds and { _oid } markers as lowercase hex strings, undefined object values dropped, arrays in order. \"inputs\" are in Lowdefy serializer form: revive them with serializer.deserialize (a { \"~d\": ms } marker is a Date) before hashing, then the two markers JSON can not hold: { \"~bigint\": digits } is a BigInt and { \"~toJSON\": value } an object whose toJSON() returns value (as Decimal128 and Binary have). An object with toJSON is hashed as its JSON form, what the browser receives, and a bigint as its digits, unquoted. \"canonical\" is the text that is hashed. The source of truth is @lowdefy/connection-mongodb test/enrichmentInputHash.json; copies elsewhere must stay byte-for-byte identical.",
   "cases": [
     {
       "name": "no inputs",
@@ -139,6 +139,26 @@
       },
       "canonical": "{\"maxWords\":50,\"model\":\"small\",\"website\":\"https://example.com/about?x=1&y=2\"}",
       "hash": "0c36399e3ec7d2"
+    },
+    {
+      "name": "a bigint is its decimal digits, as a number is",
+      "inputs": {
+        "count": { "~bigint": "9007199254740993" },
+        "small": { "~bigint": "5" },
+        "list": [{ "~bigint": "-12" }, 3]
+      },
+      "canonical": "{\"count\":9007199254740993,\"list\":[-12,3],\"small\":5}",
+      "hash": "17450a6ffb6247"
+    },
+    {
+      "name": "an object with toJSON is its JSON form, as the browser receives it",
+      "inputs": {
+        "price": { "~toJSON": { "$numberDecimal": "1.50" } },
+        "blob": { "~toJSON": "aGk=" },
+        "nested": { "at": { "~toJSON": { "b": 2, "a": 1 } } }
+      },
+      "canonical": "{\"blob\":\"aGk=\",\"nested\":{\"at\":{\"a\":1,\"b\":2}},\"price\":{\"$numberDecimal\":\"1.50\"}}",
+      "hash": "0d280a203148a5"
     }
   ]
 }

@@ -18,9 +18,16 @@ import getEventError from '../editing/getEventError.js';
 
 // Fires an enrichment event and resolves with its failure message, or null when its actions
 // succeeded (the same reading of the result as onCellEdit: a failed action chain resolves with
-// `success: false`).
+// `success: false`). It never rejects: the engine's event runner resolves even when an action
+// fails, but should it ever reject, the caller still gets a message to show and can undo what
+// it showed while the event ran (a saving row, a busy overlay).
 async function triggerEnrichmentEvent({ api, name, event }) {
-  const result = await api.methods.triggerEvent({ name, event });
+  let result;
+  try {
+    result = await api.methods.triggerEvent({ name, event });
+  } catch (error) {
+    return getEventError({ success: false, error });
+  }
   return getEventError(result);
 }
 

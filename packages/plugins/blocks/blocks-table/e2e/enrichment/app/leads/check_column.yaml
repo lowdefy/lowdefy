@@ -29,8 +29,17 @@ _js:
     const { column, columns, fields, providers, replacing } = args;
     const errors = [];
     const KEY = /^[A-Za-z0-9_-]{1,128}$/;
-    const PLACEHOLDER = /\{\{\s*([A-Za-z0-9_-]+)\s*\}\}/g;
+    // {{ input }} or {{ input.path }}: the Table's placeholder pattern (placeholderPattern.js), which
+    // api/providers/enrich_ai.yaml fills in. A dot path reads into the input's value.
+    const PLACEHOLDER = /\{\{-?\s*([A-Za-z_$](?:[\w$-]*[\w$])?(?:\.[\w$](?:[\w$-]*[\w$])?)*)\s*-?\}\}/g;
     const kinds = ['input', 'formula', 'enrichment', 'ai', 'extract'];
+    // The types a user column can show, as the Table's column core allows them (its
+    // userColumnTypes): no html, image, avatar or people, which would render markup or load
+    // URLs from other users' data in every viewer's browser.
+    const columnTypes = [
+      'text', 'email', 'phone', 'url', 'number', 'currency', 'percent', 'progress', 'rating',
+      'date', 'datetime', 'boolean', 'tag', 'tags', 'status', 'json',
+    ];
     const inputTypes = ['text', 'email', 'phone', 'url', 'number', 'currency', 'date', 'boolean'];
     const aiOutputTypes = ['text', 'number', 'boolean', 'tag', 'tags'];
     // Formulas and AI prompts only take {{ column }} placeholders, filled in as plain text: a
@@ -40,8 +49,9 @@ _js:
       if (/\{%|\{#/.test(template)) {
         return 'Only {{ column }} placeholders are supported: template tags ({% %}) and comments ({# #}) are not.';
       }
-      const bad = [...template.matchAll(/\{\{-?(.*?)-?\}\}/gs)].find(
-        (match) => !/^\s*[A-Za-z_$][\w$-]*(\.[\w$-]+)*\s*$/.test(match[1])
+      const placeholder = new RegExp(`^${PLACEHOLDER.source}$`);
+      const bad = [...template.matchAll(/\{\{.*?\}\}/gs)].find(
+        (match) => !placeholder.test(match[0])
       );
       return bad ? `Only {{ column }} placeholders are supported: "${bad[0]}" is an expression.` : null;
     }
@@ -109,6 +119,9 @@ _js:
       return false;
     }
 
+    if (column.type !== undefined && !columnTypes.includes(column.type)) {
+      errors.push(`The column type should be one of ${columnTypes.join(', ')}.`);
+    }
     const config = {};
     if (kind === 'input') {
       if (column.type !== undefined && !inputTypes.includes(column.type)) {
@@ -161,8 +174,15 @@ _js:
         if (templateProblem(column.prompt) !== null) errors.push(templateProblem(column.prompt));
         [...column.prompt.matchAll(PLACEHOLDER)]
           .map((match) => match[1])
-          .filter((param) => !(param in inputs))
-          .forEach((param) => errors.push(`The prompt uses {{ ${param} }}, which is not an input.`));
+          .filter((path) => !Object.prototype.hasOwnProperty.call(inputs, path.split('.')[0]))
+          .forEach((path) => {
+            const param = path.split('.')[0];
+            errors.push(
+              param === path
+                ? `The prompt uses {{ ${path} }}, which is not an input.`
+                : `The prompt uses {{ ${path} }}, which reads "${param}", not an input.`
+            );
+          });
       }
       // The answer's type is one of the Table's AI output types; tag and tags take options, the
       // answers allowed (api/providers/enrich_ai.yaml asks the model for exactly that).

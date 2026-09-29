@@ -53,6 +53,23 @@ describe('402', () => {
     expect(error.code).toBe('insufficient_balance');
   });
 
+  test.each([
+    ['an unparseable URL', 'http://['],
+    ['a number', 42],
+  ])('mapTregError keeps the balance error when the top-up link is %s', (_, topupUrl) => {
+    const error = map({
+      status: 402,
+      headers: tregOwn,
+      body: { detail: { ...balanceBody.detail, topup_url: topupUrl } },
+    });
+    expect(error.message).toBe('treg balance too low: needs ~$0.01, has $0.002.');
+    expect(error.statusCode).toBe(402);
+    expect(error.code).toBe('insufficient_balance');
+    expect(error.cause.message).toBe(
+      `treg balance too low for ${target}. Top up the team balance, or connect the team's own key for the provider.`
+    );
+  });
+
   test('mapTregError keeps the top-up link out of the message and puts it in the cause for the server log', () => {
     const error = map({
       status: 402,

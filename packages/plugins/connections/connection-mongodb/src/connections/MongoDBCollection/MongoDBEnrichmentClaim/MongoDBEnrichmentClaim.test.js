@@ -310,6 +310,88 @@ describe('leases', () => {
   });
 });
 
+describe('cells a claim finishes release the cells waiting for them', () => {
+  function waitingPitch() {
+    // Parked out of claims until the email it reads finishes.
+    return {
+      status: 'queued',
+      runId: 'run1',
+      attempts: 0,
+      waitingFor: ['email'],
+      queuedAt: new Date(Date.now() + 60 * minute),
+    };
+  }
+
+  test('a lease that ran out on the last attempt releases the cells waiting for it', async () => {
+    const documents = [
+      {
+        _id: 'a',
+        org: 'o1',
+        name: 'Acme',
+        domain: 'a.test',
+        _enrich: {
+          email: {
+            status: 'running',
+            runId: 'run1',
+            attempts: 3,
+            claimToken: 'x',
+            leaseUntil: new Date(Date.now() - minute),
+          },
+          pitch: waitingPitch(),
+        },
+      },
+    ];
+    const { collection, connection } = await setupEnrichmentCollection({ name, documents });
+    const before = Date.now();
+    await expect(claim({ connection, columns: ['email'] })).resolves.toEqual([]);
+    const docs = await readDocuments(collection);
+    expect(cellOf(docs, 'a').status).toBe('error');
+    const pitch = cellOf(docs, 'a', 'pitch');
+    expect(pitch.status).toBe('queued');
+    expect(pitch.waitingFor).toBeUndefined();
+    expect(pitch.queuedAt.getTime()).toBeLessThanOrEqual(Date.now());
+    expect(pitch.queuedAt.getTime()).toBeGreaterThanOrEqual(before - 1000);
+  });
+
+  test('a cell a claim finds without its input releases the cells waiting for it', async () => {
+    const documents = [
+      {
+        _id: 'a',
+        org: 'o1',
+        name: 'Acme',
+        domain: null,
+        _enrich: { email: queued({ minutesAgo: 2 }), pitch: waitingPitch() },
+      },
+    ];
+    const { collection, connection } = await setupEnrichmentCollection({ name, documents });
+    await expect(claim({ connection, columns: ['email'] })).resolves.toEqual([]);
+    const docs = await readDocuments(collection);
+    expect(cellOf(docs, 'a').status).toBe('empty');
+    const pitch = cellOf(docs, 'a', 'pitch');
+    expect(pitch.waitingFor).toBeUndefined();
+    expect(pitch.queuedAt.getTime()).toBeLessThanOrEqual(Date.now());
+  });
+
+  test('a claim of the released cell then finds its input missing', async () => {
+    const documents = [
+      {
+        _id: 'a',
+        org: 'o1',
+        name: 'Acme',
+        domain: null,
+        _enrich: { email: queued({ minutesAgo: 2 }), pitch: waitingPitch() },
+      },
+    ];
+    const { collection, connection } = await setupEnrichmentCollection({ name, documents });
+    await claim({ connection, columns: ['email'] });
+    await expect(claim({ connection, columns: ['pitch'] })).resolves.toEqual([]);
+    expect(cellOf(await readDocuments(collection), 'a', 'pitch')).toMatchObject({
+      status: 'empty',
+      error: 'Missing input: email',
+    });
+  });
+});
+
 describe('inputs at claim time', () => {
   test('a cell whose input is gone is set to empty, and the claim moves on', async () => {
     const documents = [

@@ -16,8 +16,10 @@
 
 import { type } from '@lowdefy/helpers';
 
-const PLACEHOLDER = /\{\{-?(.*?)-?\}\}/gs;
-const PATH = /^\s*[A-Za-z_$][\w$-]*(\.[\w$-]+)*\s*$/;
+import placeholderPattern from './placeholderPattern.js';
+
+const OUTPUT = /\{\{.*?\}\}/gs;
+const PLACEHOLDER = new RegExp(`^${placeholderPattern}$`);
 
 // Why a user-writable template (a formula column's `template`, an ai column's `prompt`) is
 // refused, or null. Both only take `{{ column }}` placeholders (a key or a dot path), filled in
@@ -29,8 +31,8 @@ function findTemplateProblem(template) {
   if (template.includes('{%') || template.includes('{#')) {
     return 'Only {{ column }} placeholders are supported: template tags ({% %}) and comments ({# #}) are not.';
   }
-  for (const match of template.matchAll(PLACEHOLDER)) {
-    if (!PATH.test(match[1])) {
+  for (const match of template.matchAll(OUTPUT)) {
+    if (!PLACEHOLDER.test(match[0])) {
       return `Only {{ column }} placeholders are supported: "${match[0]}" is an expression.`;
     }
   }

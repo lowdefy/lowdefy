@@ -19,6 +19,7 @@ import { test, expect } from '@playwright/test';
 import {
   byName,
   callEndpoint,
+  callTestEndpoint,
   cellOf,
   date,
   mock,
@@ -247,7 +248,7 @@ test('concurrent workers never run the same cell twice', async ({ request }) => 
   // workers and a cron tick run at the same time.
   const imported = await callEndpoint(request, 'leads_import', { rows });
   expect(imported.insertedCount).toBe(24);
-  await Promise.all([callEndpoint(request, 'test_start_workers'), runCron(request)]);
+  await Promise.all([callTestEndpoint(request, 'test_start_workers'), runCron(request)]);
   const leads = await settle(request, { timeout: 30000 });
 
   const importedLeads = leads.filter((lead) => lead.name.startsWith('Import Person'));
@@ -277,13 +278,13 @@ test('a cell whose worker crashed is claimed again when its lease runs out', asy
     startedAt: past,
     leaseUntil: past,
   };
-  await callEndpoint(request, 'test_set_cell', {
+  await callTestEndpoint(request, 'test_set_cell', {
     rowKey: ada,
     columnKey: 'company',
     cell: crashed,
   });
   // On its last attempt, a lost lease is final.
-  await callEndpoint(request, 'test_set_cell', {
+  await callTestEndpoint(request, 'test_set_cell', {
     rowKey: ben,
     columnKey: 'company',
     cell: { ...crashed, attempts: 3 },
@@ -327,6 +328,29 @@ test('a new row can only set input fields', async ({ request }) => {
   });
   expect(refused.error).toContain('"_enrich" is not an input column.');
   expect(refused.error).toContain('"secret" is not an input column.');
+});
+
+test('an AI prompt fills a dotted placeholder from the input it starts with', async ({
+  request,
+}) => {
+  const column = {
+    key: 'firm_note',
+    kind: 'ai',
+    prompt: 'Note {{ firm.name }} in {{ firm.address.city }} for {{name}}, not {{ firm.missing }}.',
+    inputs: {
+      name: { column: 'name' },
+      firm: { value: { name: 'Acme', address: { city: 'Cape Town' } } },
+    },
+  };
+  const added = await callEndpoint(request, 'columns_add', { column });
+  expect(added.error).toBeUndefined();
+  const selection = await rowKeys(request, ['Ada Brightwell']);
+  await callEndpoint(request, 'enrichment_run', { columns: ['firm_note'], selection });
+  const leads = await settle(request);
+  expect(cellOf(byName(leads, 'Ada Brightwell'), 'firm_note')).toMatchObject({
+    status: 'ok',
+    raw: { prompt: 'Note Acme in Cape Town for Ada Brightwell, not .' },
+  });
 });
 
 test('AI columns return values of their output type', async ({ request }) => {

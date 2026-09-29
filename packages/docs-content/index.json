@@ -5361,7 +5361,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "833e571e1782d16f9c13a4503db34a8fe243d69edbbd288c2d3d90bb88bcf103"
+      "hash": "986a89b871fef68346e6c23f5c018e71a6f2d8f7f1602685d7bbdb96320810f1"
     },
     "display-blocks/tablelight": {
       "files": [
@@ -6327,7 +6327,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "d9159a03d10f49edfc85ec5431fc7fdffbcbf2a2c8c4be05b82ea7c5501fd320"
+      "hash": "0e1fb9466c525726db004120f7c1131b5aa8286410ecef6d1a56e19c813b4e49"
     },
     "connections/mssql": {
       "files": [
@@ -6457,7 +6457,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "27eaec8e98e5b5cff0b33e2e3e30ccc1c9e32a3e8060d304ac2984d0ba35bfb4"
+      "hash": "525ad3ed5d850e8330b2071c57c03a0b35521de2e92583a91b317ac3dd041b95"
     },
     "actions/callapi": {
       "files": [
@@ -8347,7 +8347,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "bb4011b5bd43b3fd5287d1f4d79ccaedd110581e4c068dc4452b8ef19a06d162"
+      "hash": "ca4c8901a3cae74824802a946768337174b25c130f6b849fe55cf2220781445d"
     },
     "controls/while": {
       "files": [

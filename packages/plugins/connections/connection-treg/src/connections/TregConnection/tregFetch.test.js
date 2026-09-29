@@ -101,3 +101,46 @@ test('tregFetch defaults the base URL to https://treg.to', async () => {
   expect(calls[0].options.headers['x-treg-token']).toBe(TOKEN);
   expect(calls[0].options.redirect).toBe('manual');
 });
+
+describe('the URL the call reaches', () => {
+  let calls;
+  let originalFetch;
+  beforeEach(() => {
+    calls = [];
+    originalFetch = global.fetch;
+    global.fetch = async (url) => {
+      calls.push(String(url));
+      return new Response('{}', { status: 200 });
+    };
+  });
+  afterEach(() => {
+    global.fetch = originalFetch;
+  });
+
+  test.each([
+    ['a tab the URL parser strips', '/call/stripe/.\t./https://evil.example/steal'],
+    ['newlines the URL parser strips', '/call/stripe/.\n./.\n./x'],
+    ['a parent segment', '/call/stripe/../x'],
+    ['an encoded parent segment', '/call/stripe/%2e%2e/x'],
+    ['a backslash', '/call/stripe\\..\\x'],
+    ['a query', '/call/stripe/x?y=1'],
+    ['a fragment', '/call/stripe/x#y'],
+  ])(
+    'tregFetch refuses a path the URL parser would change (%s) and sends nothing',
+    async (_, path) => {
+      await expect(
+        tregFetch({ connection: { token: TOKEN, baseUrl: 'https://treg.example' }, path })
+      ).rejects.toThrow('treg path');
+      expect(calls).toHaveLength(0);
+    }
+  );
+
+  test('tregFetch keeps a base URL path prefix and query parameters', async () => {
+    await tregFetch({
+      connection: { token: TOKEN, baseUrl: 'https://treg.example/treg/' },
+      path: '/call/a.b',
+      query: { q: 'x y', list: [1, 2] },
+    });
+    expect(calls).toEqual(['https://treg.example/treg/call/a.b?q=x+y&list=1&list=2']);
+  });
+});

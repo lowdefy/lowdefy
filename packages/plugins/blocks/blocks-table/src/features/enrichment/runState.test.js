@@ -18,7 +18,7 @@ import hashEnrichmentInputs from '@lowdefy/blocks-antd/table/hashEnrichmentInput
 import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
 import readColumnValue from '@lowdefy/blocks-antd/table/readColumnValue.js';
 
-import countRunStates from './countRunStates.js';
+import createRunCounter from './createRunCounter.js';
 import formatRunCounts from './formatRunCounts.js';
 import getRunState from './getRunState.js';
 import readServerRunCounts from './readServerRunCounts.js';
@@ -82,23 +82,69 @@ test('an extract column reads a path in the source column raw result', () => {
   expect(readColumnValue({ column: columnsByKey.raw, row: {} })).toBeUndefined();
 });
 
-test('countRunStates counts each status of a column over rows', () => {
+const phone = { key: 'phone', stateField: '_enrich.phone' };
+
+test('createRunCounter counts each status of each run column over rows', () => {
   const rows = [
-    { _enrich: { email: { status: 'running' } } },
+    { _enrich: { email: { status: 'running' }, phone: { status: 'ok' } } },
     { _enrich: { email: { status: 'running' } } },
     { _enrich: { email: { status: 'error' } } },
     { _enrich: { email: { status: 'queued' } } },
     { _enrich: { email: { status: 'ok' } } },
+    { _enrich: { email: { status: 'unknown' } } },
     { _enrich: {} },
     {},
   ];
-  expect(countRunStates({ rows, column: email })).toEqual({
-    queued: 1,
-    running: 2,
+  const counts = createRunCounter()({ rows, columns: [email, phone] });
+  expect(counts.get('email')).toEqual({ queued: 1, running: 2, ok: 1, error: 1, empty: 0 });
+  expect(counts.get('phone')).toEqual({ queued: 0, running: 0, ok: 1, error: 0, empty: 0 });
+});
+
+// A row whose _enrich reads are counted, to see which rows a count reads again.
+function trackedRow({ reads, status }) {
+  const enrich = { email: { status } };
+  const row = {};
+  Object.defineProperty(row, '_enrich', {
+    enumerable: true,
+    get() {
+      reads.count += 1;
+      return enrich;
+    },
+  });
+  return row;
+}
+
+test('createRunCounter only reads the rows that changed since its last count', () => {
+  const reads = { count: 0 };
+  const rows = Array.from({ length: 100 }, () => trackedRow({ reads, status: 'queued' }));
+  const count = createRunCounter();
+  expect(count({ rows, columns: [email] }).get('email').queued).toBe(100);
+  expect(reads.count).toBe(100);
+  // A websocket batch replaces two rows; the other 98 keep their identity.
+  const next = [...rows];
+  next[3] = trackedRow({ reads, status: 'running' });
+  next[40] = trackedRow({ reads, status: 'ok' });
+  reads.count = 0;
+  expect(count({ rows: next, columns: [email] }).get('email')).toEqual({
+    queued: 98,
+    running: 1,
     ok: 1,
-    error: 1,
+    error: 0,
     empty: 0,
   });
+  expect(reads.count).toBe(2);
+});
+
+test('createRunCounter reads every row again when the run columns change', () => {
+  const reads = { count: 0 };
+  const rows = Array.from({ length: 10 }, () => trackedRow({ reads, status: 'ok' }));
+  const count = createRunCounter();
+  count({ rows, columns: [email] });
+  reads.count = 0;
+  const counts = count({ rows, columns: [email, phone] });
+  expect(reads.count).toBe(20);
+  expect(counts.get('email').ok).toBe(10);
+  expect(counts.get('phone').ok).toBe(0);
 });
 
 test('formatRunCounts lists running, queued and errors', () => {

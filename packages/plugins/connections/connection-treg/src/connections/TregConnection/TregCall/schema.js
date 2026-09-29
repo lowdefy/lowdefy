@@ -54,11 +54,14 @@ export default {
     },
     path: {
       type: 'string',
+      pattern: '^[\\x21-\\x7e]*$',
       maxLength: 2000,
       description:
-        'The path on the tool\'s API, such as "/v1/charges". A path only: no scheme, host, query or "..".',
+        'The path on the tool\'s API, such as "/v1/charges". A path only: printable ASCII with no scheme, host, query, "..", whitespace or control characters.',
       errorMessage: {
         type: 'TregCall request property "path" should be a string.',
+        pattern:
+          'TregCall request property "path" should only have printable ASCII characters, with no whitespace or control characters.',
         maxLength: 'TregCall request property "path" should be at most 2000 characters.',
       },
     },

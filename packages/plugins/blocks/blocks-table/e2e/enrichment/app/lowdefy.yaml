@@ -23,7 +23,9 @@
 #   api/providers/   one endpoint per provider: enrich_<provider id>
 #   api/columns/     add, update and delete user-defined columns
 #   api/leads/       add, import and update rows
-#   api/test/        e2e only: seeding and inspecting the database. Not part of the reference.
+#   api/test/        E2E ONLY, DO NOT COPY: endpoints that delete, overwrite and dump the
+#                    database for the e2e suite. They refuse every call unless the
+#                    ENRICHMENT_E2E_SECRET secret is set and sent (api/test/e2e_guard.yaml).
 #   websockets.yaml  live cell updates from a change stream on the rows
 #   pages/           the enrichment page
 #
@@ -56,6 +58,7 @@ api:
   - _ref: api/leads/leads_add.yaml
   - _ref: api/leads/leads_import.yaml
   - _ref: api/leads/leads_update.yaml
+  # E2E ONLY, DO NOT COPY: guarded by the e2e secret (api/test/e2e_guard.yaml).
   - _ref: api/test/test_reset.yaml
   - _ref: api/test/test_leads.yaml
   - _ref: api/test/test_columns.yaml

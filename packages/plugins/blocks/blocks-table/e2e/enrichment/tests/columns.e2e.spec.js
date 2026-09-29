@@ -16,7 +16,15 @@
 
 import { test, expect } from '@playwright/test';
 
-import { byName, callEndpoint, cellOf, reset, rowKeys, settle } from './helpers.js';
+import {
+  byName,
+  callEndpoint,
+  callTestEndpoint,
+  cellOf,
+  reset,
+  rowKeys,
+  settle,
+} from './helpers.js';
 
 // User-defined columns through the columns endpoints, and the merged column list the page and
 // the worker read (the get_columns request, run here by the endpoints' shared routine).
@@ -24,6 +32,23 @@ test.describe.configure({ mode: 'serial' });
 
 test.beforeEach(async ({ request }) => {
   await reset(request);
+});
+
+test('the e2e-only test endpoints refuse calls without the e2e secret', async ({ request }) => {
+  for (const endpointId of [
+    'test_reset',
+    'test_leads',
+    'test_columns',
+    'test_set_cell',
+    'test_start_workers',
+  ]) {
+    const refused = await callEndpoint(request, endpointId, {});
+    expect(refused.error, endpointId).toBeDefined();
+    const wrong = await callEndpoint(request, endpointId, { e2eSecret: 'guess' });
+    expect(wrong.error, endpointId).toBeDefined();
+  }
+  // Nothing was deleted.
+  expect(await callTestEndpoint(request, 'test_leads')).toHaveLength(9);
 });
 
 async function addColumn(request, column, position) {
@@ -61,7 +86,7 @@ test('added columns are stored and merged with the declared columns by position'
   });
   expect(updated.column.title).toBe('Notes');
 
-  const columns = await callEndpoint(request, 'test_columns');
+  const columns = await callTestEndpoint(request, 'test_columns');
   expect(columns.map((column) => column.key)).toEqual([
     'name',
     'title',
@@ -171,6 +196,15 @@ test('invalid columns are refused with the reason', async ({ request }) => {
       'The prompt uses {{ domain }}, which is not an input.',
     ],
     [
+      {
+        key: 'x',
+        kind: 'ai',
+        prompt: 'Describe {{ firm.name }}',
+        inputs: { name: { column: 'name' } },
+      },
+      'The prompt uses {{ firm.name }}, which reads "firm", not an input.',
+    ],
+    [
       { key: 'x', kind: 'ai', prompt: '{{ range.constructor("return 1")() }}', inputs: {} },
       'Only {{ column }} placeholders are supported: "{{ range.constructor("return 1")() }}" is an expression.',
     ],
@@ -198,12 +232,31 @@ test('invalid columns are refused with the reason', async ({ request }) => {
       { key: 'x', kind: 'extract', source: 'name', path: 'a' },
       'An extract column needs the key of an enrichment or ai column as its source.',
     ],
+    // Other users' data must never render as markup or load URLs in a viewer's browser.
+    [
+      { key: 'x', kind: 'formula', type: 'html', template: '{{ name }}' },
+      'The column type should be one of text, email, phone, url',
+    ],
+    [
+      { key: 'x', kind: 'extract', type: 'image', source: 'company', path: 'logo' },
+      'The column type should be one of',
+    ],
+    [
+      {
+        key: 'x',
+        kind: 'enrichment',
+        type: 'avatar',
+        provider: 'company_lookup',
+        inputs: { domain: { column: 'domain' } },
+      },
+      'The column type should be one of',
+    ],
   ];
   for (const [column, message] of cases) {
     const refused = await addColumn(request, column);
     expect(refused.error, JSON.stringify(column)).toContain(message);
   }
-  const columns = await callEndpoint(request, 'test_columns');
+  const columns = await callTestEndpoint(request, 'test_columns');
   expect(columns.filter((column) => column.userDefined)).toEqual([]);
 });
 
@@ -271,8 +324,8 @@ test('deleting a column removes its cells, unless another column reads it', asyn
   expect(
     (await callEndpoint(request, 'columns_delete', { column: { key: 'founded' } })).deleted
   ).toBe('founded');
-  const leads = await callEndpoint(request, 'test_leads');
+  const leads = await callTestEndpoint(request, 'test_leads');
   expect(byName(leads, 'Ada Brightwell')._enrich.founded).toBeUndefined();
-  const columns = await callEndpoint(request, 'test_columns');
+  const columns = await callTestEndpoint(request, 'test_columns');
   expect(columns.map((column) => column.key)).not.toContain('founded');
 });

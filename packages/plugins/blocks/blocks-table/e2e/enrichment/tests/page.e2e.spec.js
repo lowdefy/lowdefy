@@ -205,6 +205,40 @@ test('an edited input makes its cells stale, and refresh reruns them', async ({
   );
 });
 
+test('a rerun that finds no result clears the old value and raw from the row', async ({
+  page,
+  request,
+}) => {
+  await open(page);
+  await selectRow(page, 'Ben Quill');
+  await runColumn(page, 'company');
+  await expect(cell(page, 'Ben Quill', 'company')).toHaveText('Software');
+  await expect(cell(page, 'Ben Quill', 'employees')).toHaveText(/^1,?200$/);
+
+  // nowhere.test has no company: the rerun is empty, and the server unsets value and raw.
+  await cell(page, 'Ben Quill', 'domain').dblclick();
+  await table(page).locator('[data-lf-editor] input').first().fill('nowhere.test');
+  await page.keyboard.press('Enter');
+  await expect(status(page, 'Ben Quill', 'company')).toHaveAttribute('data-lf-enrich-stale', '');
+  await cell(page, 'Ben Quill', 'company').hover();
+  await cell(page, 'Ben Quill', 'company').locator('[data-lf-enrich-rerun]').click();
+  await expect(status(page, 'Ben Quill', 'company')).toHaveAttribute(
+    'data-lf-enrich-status',
+    'empty'
+  );
+  const leads = await readLeads(request);
+  expect(cellOf(byName(leads, 'Ben Quill'), 'company').value).toBeUndefined();
+  // The pushed row replaced the cell: no old raw for the extract column, no stale marker.
+  await expect(cell(page, 'Ben Quill', 'employees')).not.toHaveText(/1,?200/);
+  await expect(status(page, 'Ben Quill', 'company')).not.toHaveAttribute(
+    'data-lf-enrich-stale',
+    ''
+  );
+  await openDetails(page, 'Ben Quill', 'company');
+  await expect(details(page).locator('[data-lf-details-status]')).toHaveText('No result');
+  await expect(details(page)).not.toContainText('Software');
+});
+
 test('"Add as column" in the details panel adds an extract column', async ({ page }) => {
   await open(page);
   await selectRow(page, 'Ada Brightwell');

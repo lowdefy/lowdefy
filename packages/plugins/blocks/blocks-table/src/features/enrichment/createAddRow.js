@@ -29,9 +29,11 @@ function createAddRow(api) {
     set(row, api.properties.rowKey ?? '_id', `new:${generateRowKey()}`);
     const { setPending } = api.enrichment;
     setPending((pending) => [...pending, row]);
-    const error = await triggerEnrichmentEvent({ api, name: 'onRowAdd', event: { values } });
-    setPending((pending) => pending.filter((entry) => entry !== row));
-    return error;
+    try {
+      return await triggerEnrichmentEvent({ api, name: 'onRowAdd', event: { values } });
+    } finally {
+      setPending((pending) => pending.filter((entry) => entry !== row));
+    }
   };
 }
 

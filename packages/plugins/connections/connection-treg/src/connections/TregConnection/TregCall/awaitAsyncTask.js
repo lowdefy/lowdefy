@@ -27,6 +27,9 @@ import readJsonPath from './readJsonPath.js';
 
 const DEFAULT_TIMEOUT_MS = 60000;
 const DEFAULT_INTERVAL_MS = 2000;
+// The descriptor's interval comes from treg (or a provider): an interval of 0 would poll in a
+// tight loop, so it is never shorter than the shortest `await.intervalMs` the schema accepts.
+const MIN_INTERVAL_MS = 100;
 // Consecutive transient poll failures (network, 5xx, 429) before the wait gives up.
 const MAX_POLL_FAILURES = 5;
 
@@ -58,9 +61,10 @@ async function awaitAsyncTask({ connection, request, target, result, task, signa
   }
   const paramName = descriptor.poll?.param?.name ?? 'id';
   const timeoutMs = request.await.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-  const intervalMs =
-    request.await.intervalMs ??
-    (type.isNumber(descriptor.interval) ? descriptor.interval * 1000 : DEFAULT_INTERVAL_MS);
+  const descriptorIntervalMs = Number.isFinite(descriptor.interval)
+    ? descriptor.interval * 1000
+    : DEFAULT_INTERVAL_MS;
+  const intervalMs = Math.max(request.await.intervalMs ?? descriptorIntervalMs, MIN_INTERVAL_MS);
   const deadline = Date.now() + timeoutMs;
   const pollTarget = `the poll of async task "${task.id}" for ${target}`;
   let failures = 0;

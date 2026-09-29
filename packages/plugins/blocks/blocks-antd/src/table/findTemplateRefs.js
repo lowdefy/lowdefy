@@ -16,17 +16,21 @@
 
 import { type } from '@lowdefy/helpers';
 
-const OUTPUT_PATTERN = /\{\{-?\s*([A-Za-z_$][\w$]*)/g;
+import placeholderPattern from './placeholderPattern.js';
 
-// The names a template's `{{ name }}` outputs start with, in order of first use, without
-// duplicates: `{{ company | upper }}` and `{{ company.name }}` both give `company`. Formula and AI
-// prompt templates reference columns by key this way (the add-column picker's chips insert
-// `{{ key }}`).
+const PLACEHOLDER = new RegExp(placeholderPattern, 'g');
+
+// The keys a template's `{{ key }}` placeholders start with, in order of first use, without
+// duplicates: `{{ company }}` and `{{ company.name }}` both give `company`. Formula and AI
+// prompt templates reference columns (or prompt inputs) by key this way (the add-column
+// picker's chips insert `{{ key }}`); anything else in `{{ }}` is refused by
+// findTemplateProblem, so it references nothing.
 function findTemplateRefs(template) {
   if (!type.isString(template)) return [];
   const refs = [];
-  for (const match of template.matchAll(OUTPUT_PATTERN)) {
-    if (!refs.includes(match[1])) refs.push(match[1]);
+  for (const match of template.matchAll(PLACEHOLDER)) {
+    const [key] = match[1].split('.');
+    if (!refs.includes(key)) refs.push(key);
   }
   return refs;
 }

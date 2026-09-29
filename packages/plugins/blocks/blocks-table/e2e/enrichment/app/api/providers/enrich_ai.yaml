@@ -68,13 +68,23 @@ routine:
           retry: false
   - :set_state:
       # The prompt is user content, so it is never rendered as a template (a template engine
-      # would run it). Only {{ input }} placeholders are replaced, in one pass, so a row value
-      # that contains "{{ ... }}" stays text.
+      # would run it). Only placeholders are replaced, in one pass, so a row value that
+      # contains "{{ ... }}" stays text: {{ input }}, or {{ input.path }} for a dot path into
+      # an input's value. The pattern is the Table's (findTemplateProblem, renderPlaceholders)
+      # and the column check's, so every placeholder a saved prompt has is filled in here.
       prompt:
         _js:
           fn: |
-            return args.prompt.replace(/\{\{\s*([A-Za-z0-9_-]+)\s*\}\}/g, (match, name) => {
-              const value = args.inputs[name];
+            const PLACEHOLDER = /\{\{-?\s*([A-Za-z_$](?:[\w$-]*[\w$])?(?:\.[\w$](?:[\w$-]*[\w$])?)*)\s*-?\}\}/g;
+            const hasOwn = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
+            function read(path) {
+              return path.split('.').reduce((current, part) => {
+                if (current === null || typeof current !== 'object') return undefined;
+                return hasOwn(current, part) ? current[part] : undefined;
+              }, args.inputs);
+            }
+            return args.prompt.replace(PLACEHOLDER, (match, path) => {
+              const value = read(path);
               if (value === undefined || value === null) return '';
               return typeof value === 'string' ? value : JSON.stringify(value);
             });

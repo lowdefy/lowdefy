@@ -19,6 +19,7 @@ import { Alert, Button, Drawer, Input, Select, Switch } from 'antd';
 import AI_OUTPUT_TYPES from '@lowdefy/blocks-antd/table/aiOutputTypes.js';
 import CELL_TYPE_FAMILIES from '@lowdefy/blocks-antd/table/cellTypeFamilies.js';
 import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
+import USER_COLUMN_TYPES from '@lowdefy/blocks-antd/table/userColumnTypes.js';
 
 import buildColumnConfig from './buildColumnConfig.js';
 import generateColumnKey from './generateColumnKey.js';
@@ -28,9 +29,8 @@ import syncPromptInputs from './syncPromptInputs.js';
 import TemplateEditor from './TemplateEditor.js';
 import validateDraft from './validateDraft.js';
 
-const TYPE_OPTIONS = Object.keys(CELL_TYPE_FAMILIES)
-  .filter((cellType) => CELL_TYPE_FAMILIES[cellType] !== 'action')
-  .map((cellType) => ({ value: cellType, label: cellType }));
+// The column core only accepts these types on a user-defined column (userColumnTypes.js).
+const TYPE_OPTIONS = USER_COLUMN_TYPES.map((cellType) => ({ value: cellType, label: cellType }));
 // An ai column answers one of the AI output types; tag and tags take the answers allowed.
 const AI_TYPE_OPTIONS = AI_OUTPUT_TYPES.map((cellType) => ({ value: cellType, label: cellType }));
 const OPTION_TYPES = new Set(['tag', 'tags']);

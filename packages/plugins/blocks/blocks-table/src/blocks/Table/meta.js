@@ -208,7 +208,7 @@ const column = {
     userDefined: {
       type: 'boolean',
       description:
-        'A column users added at runtime (stored by the app). Its header menu has Rename, Edit, Duplicate, Insert left / right and Delete, which fire onColumnUpdate, onColumnAdd and onColumnDelete. If its config is invalid it renders as an error column ("Invalid column: " and the reason in its cells, Edit column and Delete column in its menu) instead of breaking the table.',
+        'A column users added at runtime (stored by the app). Its header menu has Rename, Edit, Duplicate, Insert left / right and Delete, which fire onColumnUpdate, onColumnAdd and onColumnDelete. If its config is invalid it renders as an error column ("Invalid column: " and the reason in its cells, Edit column and Delete column in its menu) instead of breaking the table. Its config is other users\' content, so it may only have a text-safe type (text, email, phone, url, number, currency, percent, progress, rating, date, datetime, boolean, tag, tags, status or json; another type makes it an error column, and no type is text whatever `defaultColumn` sets), and its `cell`, `rules`, `validate` and template tooltips are ignored (a `{ field }` tooltip is kept).',
     },
     template: {
       type: 'string',
@@ -544,7 +544,7 @@ export default {
     refresh:
       'Server mode: clear the block cache and refetch the visible rows (they stay on screen until the new rows land).',
     applyTransaction:
-      "Apply `{ add, update, remove, addIndex, merge }` without replacing `data`: `update` rows are merged into the row with the same key (top-level fields replaced; with `merge: deep` nested objects merge too, so a pushed `{ _id, _enrich: { email: {...} } }` keeps the row's other fields and `_enrich` entries), `remove` takes rows or row keys, `add` rows are appended (or inserted at `addIndex`). Only the touched rows re-render. In client mode the change holds until `data` changes; in server mode updates apply to the loaded rows, and adds or removes also refetch the visible rows. Returns `{ added, updated, removed }`.",
+      "Apply `{ add, update, remove, addIndex, merge }` without replacing `data`: `update` rows are merged into the row with the same key: by default each top-level field they have is replaced, which is right for whole documents such as a change stream's `fullDocument` (a key the server removed goes from the row too); with `merge: deep` nested objects merge too, for partial patches, so a pushed `{ _id, _enrich: { email: {...} } }` keeps the row's other fields and `_enrich` entries, but a deep merge never removes a key. `remove` takes rows or row keys, and `add` rows are appended (or inserted at `addIndex`). Only the touched rows re-render. In client mode the change holds until `data` changes; in server mode updates apply to the loaded rows, and adds or removes also refetch the visible rows. Returns `{ added, updated, removed }`.",
     scrollToRow:
       'Scroll a row into view. Accepts `{ rowKey, align }` with align `auto`, `start` or `center` (default). With pagination, only rows on the current page.',
     clearSelection: 'Clear the row selection.',
@@ -1061,7 +1061,7 @@ export default {
         type: 'boolean',
         default: false,
         description:
-          'Show an Import button in the toolbar: a CSV file is parsed in the browser, its headers mapped to input columns (or new text columns), and the rows sent through onImport in batches of 500.',
+          'Show an Import button in the toolbar: a CSV file (at most 50 MB and 100,000 rows) is parsed in the browser, in slices so the page stays responsive, its headers mapped to input columns (or new text columns), and the rows sent through onImport in batches of 500.',
       },
       summary: {
         type: 'boolean',

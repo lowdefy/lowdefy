@@ -23,7 +23,25 @@ const DEFAULT_BASE_URL = 'https://treg.to';
 const DEFAULT_TIMEOUT_MS = 30000;
 
 function buildUrl({ baseUrl, path, query }) {
+  const base = new URL(baseUrl);
   const url = new URL(`${baseUrl.replace(/\/+$/, '')}${path}`);
+  // The URL parser drops tabs and newlines, resolves "." and ".." segments (also encoded)
+  // and turns backslashes into slashes, so a path that looked safe can reach another /call/
+  // target, where treg injects the team's credential. Only a path the parser keeps exactly
+  // as written is sent.
+  const expectedPath = `${base.pathname.replace(/\/+$/, '')}${path}`;
+  if (
+    url.origin !== base.origin ||
+    url.pathname !== expectedPath ||
+    url.search !== '' ||
+    url.hash !== ''
+  ) {
+    throw new Error(
+      `The treg path ${JSON.stringify(
+        path
+      )} is not kept as written by the URL parser, so it is not sent.`
+    );
+  }
   Object.entries(query ?? {}).forEach(([key, value]) => {
     const values = type.isArray(value) ? value : [value];
     values

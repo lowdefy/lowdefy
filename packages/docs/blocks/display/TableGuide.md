@@ -1239,7 +1239,7 @@ Enrichment tables compute columns from other columns, per row: an `enrichment` c
       _ref: leads/providers.yaml
     addColumn: true # the "+" header and its picker
     addRow: true # "+ New row"
-    importCsv: true # the toolbar's Import button
+    importCsv: true # the toolbar's Import button: CSV files of at most 50 MB and 100,000 rows
     inputFieldPrefix: values # user input columns keep their values at values.<key>
     columns:
       _request: get_columns # declared and user-defined columns, merged on the server
@@ -1251,9 +1251,11 @@ The enrichment feature loads in its own chunk, only for tables that use it (an e
 
 **Column kinds.** An `ai` column takes `prompt`, `inputs` (every column the prompt uses), `provider` (default `ai`, the app's `enrich_ai` endpoint) and `output: { type, options? }`: the answer is `text`, `number`, `boolean`, `tag` or `tags`, and `tag` and `tags` take `options`, the answers allowed. An `enrichment` column takes a `provider` from `providers`, `inputs` mapped to columns or literal values, and `output`, the path of its value in the provider result. A catalogue provider with id `ai` is the AI kind's provider: the picker shows it once, as the AI entry.
 
-**Templates are placeholders.** Formula templates and AI prompts only take `{{ column }}` placeholders (a column key or a dot path), filled in as plain text. They are user content shared between users, and a template engine would run them as code, so the Table refuses tags (`{% %}`), comments (`{# #}`) and expressions (`{{ name | upper }}`), and so should the endpoint that saves a column. Fill prompts on the server with plain string replacement, never `_nunjucks`.
+**Templates are placeholders.** Formula templates and AI prompts only take `{{ column }}` placeholders (a column key or a dot path), filled in as plain text. They are user content shared between users, and a template engine would run them as code, so the Table refuses tags (`{% %}`), comments (`{# #}`) and expressions (`{{ name | upper }}`), and so should the endpoint that saves a column. Fill prompts on the server with plain string replacement, never `_nunjucks`. A placeholder is `{{ key }}` or `{{ key.path }}` (a dot path into that column's or input's value), optionally with whitespace control (`{{- key -}}`); a key starts with a letter, `_` or `$` and may hold `-`, but not end with one. The server that fills prompts must accept exactly the placeholders the Table does, with the same pattern, so no placeholder the Table accepts is left unfilled (the reference app's `check_column` and `enrich_ai` use it).
 
 **User-defined columns.** Columns with `userDefined: true` get Rename, Edit, Duplicate, Insert and Delete in their header menu (each shown when the table has the event it fires). A user-defined column whose config is invalid (an unknown provider or answer type, an input column that was deleted) renders as an error column instead of breaking the table: its cells show "Invalid column: <reason>", its header is marked, and its menu offers Edit column and Delete column. A declared column with an invalid config is a config error.
+
+A user-defined column is one user's content rendered in every viewer's browser, so the Table only takes text-safe config from it: its type must be one of `text`, `email`, `phone`, `url`, `number`, `currency`, `percent`, `progress`, `rating`, `date`, `datetime`, `boolean`, `tag`, `tags`, `status` or `json` (an `html`, `image`, `avatar`, `people`, `link`, `relation` or action type makes it an error column; with no type it is `text`, whatever `defaultColumn` sets), and its `cell`, `rules`, `validate` and template tooltips are ignored (a `{ field }` tooltip is kept). The add-column picker offers only these types. Check stored columns against the same list on the server, as the reference app's column check does.
 
 **Values at field paths.** `onRowAdd` `values` and `onImport` `rows` carry every value at its column's `field` path. New input columns from the picker or a CSV import carry their `field` too, under `inputFieldPrefix` (`values.notes` with `inputFieldPrefix: values`), so the endpoint that stores them only has to accept the paths of its `fields` allowlist. Build that allowlist on the server, with the user input columns added:
 
@@ -1279,7 +1281,7 @@ fields:
 
 **Loading.** Wire `loading` to the rows request (`_request_details: leads.0.loading`) and reload columns and rows with `holdValue: true` after a column or row change, so the table keeps its rows and columns on screen while they reload; the first load shows the table's skeleton rows. The picker, details panel and import dialog open at once, with a spinner while their code loads.
 
-**Live results.** Push cell updates to the table with `applyTransaction({ merge: 'deep', update })` from a websocket (`MongoDBChangeStream` on the rows), so a partial `_enrich` update keeps the row's other cells.
+**Live results.** Push cell updates to the table with `applyTransaction({ update })` from a websocket (`MongoDBChangeStream` on the rows) that sends each changed row's `fullDocument` (projected to the fields the table shows, `_enrich` whole). The default shallow merge replaces each top-level field, so a cell whose rerun found nothing loses its old `value`, `raw` and `inputHash`, as the server unset them. Keep `merge: 'deep'` for partial patches you build yourself: a deep merge never removes a key, so a formula, an extract column or the stale marker would keep reading what the server removed.
 
 ## Moving from TableLight or AgGrid
 

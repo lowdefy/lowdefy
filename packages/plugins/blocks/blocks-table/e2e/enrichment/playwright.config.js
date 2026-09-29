@@ -21,6 +21,7 @@ import { createPlaywrightConfig } from '@lowdefy/block-dev-e2e';
 import {
   appPort,
   cronSecret,
+  e2eSecret,
   externalMongoUri,
   mockPort,
   mockUrl,
@@ -62,6 +63,8 @@ export default createPlaywrightConfig({
   services,
   env: {
     CRON_SECRET: cronSecret,
+    // Enables the e2e-only api/test endpoints; without it they refuse every call.
+    LOWDEFY_SECRET_ENRICHMENT_E2E_SECRET: e2eSecret,
     LOWDEFY_SECRET_ENRICHMENT_MONGODB_URI: mongoUri,
     LOWDEFY_SECRET_ENRICHMENT_API_URL: mockUrl,
     LOWDEFY_SECRET_ANTHROPIC_BASE_URL: `${mockUrl}/anthropic/v1`,

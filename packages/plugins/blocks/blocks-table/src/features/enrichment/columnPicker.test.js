@@ -134,7 +134,10 @@ test('buildColumnConfig builds an ai column whose output type is the column type
 test('syncPromptInputs lists exactly the columns the prompt references', () => {
   expect(
     syncPromptInputs({
-      prompt: 'Pitch {{ company }} to {{ title | upper }} ({{ company }}, {{ unknown }})',
+      // A dot path references the column it starts with; an expression references nothing
+      // (validateDraft refuses it).
+      prompt:
+        'Pitch {{ company }} to {{ title.name }} ({{ company }}, {{ unknown }}, {{ domain | upper }})',
       columnKeys: ['company', 'title', 'domain'],
     })
   ).toEqual({

@@ -49,9 +49,9 @@ This design adds that glue: cell run state, the column and row UX, and a MongoDB
 
 An ai column's `output` is `{ type, options? }`, a Table column type the answer can be: `text`, `number`, `boolean`, `tag` or `tags` (`options`, the answers allowed, only for `tag` and `tags`). The picker, the Table, the claim and the AI endpoint all use this list.
 
-**Templates are placeholders, never a template engine.** Formula templates and AI prompts are user content shared between users: a nunjucks template runs code (`{{ range.constructor("...")() }}`), in every viewer's browser for a formula and on the server for a prompt. Both only take `{{ column }}` placeholders (a key or a dot path) and are filled in by plain substitution, in one pass, so a row value that looks like a template stays text. A template with tags (`{% %}`), comments (`{# #}`) or expressions (`{{ a | upper }}`) is refused when the column is saved (the picker and the app's column check) and when it is read (the Table's column core). Declared `html` cells keep nunjucks: their templates are config, not user content.
+**Templates are placeholders, never a template engine.** Formula templates and AI prompts are user content shared between users: a nunjucks template runs code (`{{ range.constructor("...")() }}`), in every viewer's browser for a formula and on the server for a prompt. Both only take `{{ column }}` placeholders (a key or a dot path into its value, one pattern on the client and the server) and are filled in by plain substitution, in one pass, so a row value that looks like a template stays text. A template with tags (`{% %}`), comments (`{# #}`) or expressions (`{{ a | upper }}`) is refused when the column is saved (the picker and the app's column check) and when it is read (the Table's column core). Declared `html` cells keep nunjucks: their templates are config, not user content.
 
-**User-defined columns fail on their own.** A column with `userDefined: true` is runtime data; if its config is invalid (an unknown provider or output type, an input or source column that is gone, a formula cycle) it renders as an error column: its cells show "Invalid column: <reason>", its header is marked, and its header menu offers Edit column and Delete column. A declared column's config error still throws.
+**User-defined columns fail on their own.** A column with `userDefined: true` is runtime data; if its config is invalid (an unknown provider or output type, an input or source column that is gone, a formula cycle) it renders as an error column: its cells show "Invalid column: <reason>", its header is marked, and its header menu offers Edit column and Delete column. A declared column's config error still throws. A user-defined column only takes text-safe config: a type from the Table's `userColumnTypes` (no `html`, `image`, `avatar`, `people`, `link`, `relation` or actions, which would render markup or load URLs from other users' data in every viewer's browser), and no `cell`, `rules`, `validate` or template tooltip. The picker offers the same types and the app's column check refuses others for every kind.
 
 A waterfall is an enrichment column whose provider tries several sources in order. The provider's own endpoint runs the waterfall, so the table stays simple.
 
@@ -74,7 +74,7 @@ All three requests (`connection-mongodb`) share `MongoDBTableQuery`'s safety rul
   - For `stale` it compares `inputHash`, computed on the server from each row's current inputs.
   - Rows whose inputs are missing get `status: empty` with `error: 'Missing input: <column>'` instead of queueing.
   - Columns are planned upstream first. A cell whose required enrichment input is queued by the same call, or is queued or running already, is queued with `waitingFor: [<column>]` and out of claims (a far `queuedAt`) until that input finishes, never "Missing input".
-- **`MongoDBEnrichmentClaim`** atomically claims up to `limit` queued cells, oldest first. Each claim sets `running`, a lease (`leaseUntil`) and increments `attempts`. Cells whose lease has expired while `running` are claimed again. It returns `[{ rowKey, columnKey, kind, title, provider, prompt, output, row, inputs, attempt, claimToken }]`, with the inputs resolved from `columnDefs` and the column config a worker needs, so the worker never rebuilds a map of the columns. A cell whose input is queued or running again waits for it (`waitingFor`), as in an enqueue.
+- **`MongoDBEnrichmentClaim`** atomically claims up to `limit` queued cells, oldest first. Each claim sets `running`, a lease (`leaseUntil`) and increments `attempts`. Cells whose lease has expired while `running` are claimed again. It returns `[{ rowKey, columnKey, kind, title, provider, prompt, output, row, inputs, attempt, claimToken }]`, with the inputs resolved from `columnDefs` and the column config a worker needs, so the worker never rebuilds a map of the columns. A cell whose input is queued or running again waits for it (`waitingFor`), as in an enqueue. A cell the claim finishes itself (a lease out of attempts, a missing input) releases the cells waiting for it, as Complete does.
 - **`MongoDBEnrichmentComplete`** writes the results `[{ rowKey, columnKey, runId, status, value, raw, error }]`.
   - It only applies a result if the cell's `claimToken` still matches, so a stale worker can't overwrite a newer run. The token carries the hash of the inputs the worker was given, and that is the `inputHash` stored with the result.
   - An error below `maxAttempts` goes back to `queued` with a backoff (`queuedAt` moved into the future).
@@ -88,13 +88,13 @@ All three requests (`connection-mongodb`) share `MongoDBTableQuery`'s safety rul
   3. Complete each cell (which queues its downstream columns).
   4. Loop until nothing is claimed or a time budget is spent.
 
-  Errors a `:catch` handles (a provider's 404 in a waterfall) are logged at debug, not as errors.
+  Expected errors a `:catch` handles (`RequestError`, `ServiceError`, `UserError`: a provider's 404 in a waterfall) are logged at debug, not as errors. A caught `ConfigError`, `OperatorError` or `LowdefyInternalError` still goes through `handleError`.
 
   A cron entry runs it every minute. An enqueue also calls it as a detached endpoint, so results start at once. A run survives a crash through leases.
 
 ### E5. Live updates
 
-A websocket channel (`enrichment`) uses a `MongoDBChangeStream` source on the rows collection, filtered to `_enrich` changes and scoped by tenant. The page subscribes, and `onMessage` calls the table's `applyTransaction({ update })`. Only the changed rows re-render, and there is no polling.
+A websocket channel (`enrichment`) uses a `MongoDBChangeStream` source on the rows collection, filtered to `_enrich` changes and scoped by tenant. The page subscribes, and `onMessage` calls the table's `applyTransaction({ update })` with each change's `fullDocument` (projected to the table's fields, `_enrich` whole). The default shallow merge replaces each top-level field, so cell keys the server unset (`value`, `raw`, `inputHash` after an empty rerun) go from the row too; `merge: 'deep'` is for partial patches only and never removes a key. The stream matches updates whose updated or removed fields touch `_enrich`. Only the changed rows re-render, and there is no polling.
 
 ### E6. Table features (a new `enrichment` feature module in blocks-table)
 
@@ -135,7 +135,7 @@ The module is an optional feature: it loads in its own chunk only for tables wit
 
   Every leaf and object in the tree has an "Add as column" action, which fires `onColumnAdd` with `kind: extract`.
 
-- **Add rows.** `addRow: true` on `Table` shows a "+ New row" row at the bottom and fires `onRowAdd { values }`. `importCsv: true` adds a toolbar Import button: the CSV is parsed in the browser and headers are mapped to columns in a dialog. It fires `onImport { rows, newColumns }` in batches of 500, and the app inserts them with `MongoDBInsertMany`. Every value in `onRowAdd` and `onImport` is at its column's field path; new input columns (from the picker or a CSV header) carry their `field`, under the Table's `inputFieldPrefix` (for example `values.<key>`).
+- **Add rows.** `addRow: true` on `Table` shows a "+ New row" row at the bottom and fires `onRowAdd { values }`. `importCsv: true` adds a toolbar Import button: the CSV is parsed in the browser (`readCsvFile`: at most 50 MB and 100,000 rows, parsed in slices with a pause between them, fields cut with slices) and headers are mapped to columns in a dialog. It fires `onImport { rows, newColumns }` in batches of 500, and the app inserts them with `MongoDBInsertMany`. Every value in `onRowAdd` and `onImport` is at its column's field path; new input columns (from the picker or a CSV header) carry their `field`, under the Table's `inputFieldPrefix` (for example `values.<key>`).
 
 ### E7. Security and cost
 

@@ -46,8 +46,8 @@ async function invokeEndpoint(
     items: {},
     state: {},
     endpointDepth: endpointDepth + 1,
-    // Called from inside a :try with a :catch: an error the called endpoint does not catch
-    // itself is handled by the caller's :catch, so it is not logged as an error.
+    // Called from inside a :try with a :catch: an expected error the called endpoint does not
+    // catch itself is handled by the caller's :catch, so it is logged at debug (runRoutine).
     caught,
     // Set only for the endpoint a Dynamic block calls: its :return becomes page
     // config, so data read into it must not carry operators. Nested CallApi

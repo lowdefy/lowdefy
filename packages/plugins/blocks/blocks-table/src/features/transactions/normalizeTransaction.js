@@ -27,9 +27,11 @@ function checkList({ list, name }) {
 const MERGES = new Set(['shallow', 'deep']);
 
 // `{ add, update, remove, addIndex, merge }`: rows to add, rows to merge into the row with the
-// same key, and rows (or row keys) to remove. `merge: 'deep'` merges nested objects of an update
-// into the row's (a pushed `{ _id, _enrich: { email: {...} } }` keeps the row's other `_enrich`
-// entries); the default `shallow` replaces each top-level field.
+// same key, and rows (or row keys) to remove. The default `shallow` replaces each top-level field
+// an update has: for whole documents (a change stream's fullDocument), where a key the server
+// removed must go from the row too. `merge: 'deep'` is for partial patches: nested objects of an
+// update merge into the row's (a pushed `{ _id, _enrich: { email: {...} } }` keeps the row's
+// other `_enrich` entries), and no key is ever removed.
 function normalizeTransaction(transaction) {
   if (!type.isObject(transaction)) {
     throw new Error(
