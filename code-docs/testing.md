@@ -194,7 +194,10 @@ before the app:
 It builds into `_server/e2e/blocks-table-enrichment` and runs the specs one at a time, since
 they share the database. The API specs call endpoints over `/api/endpoints/<id>` and run the
 worker as a cron tick (`/api/cron/enrichment_worker`); the page spec drives the Table. The
-app's `api/test/` endpoints (seed, read cells, set a cell) exist for the specs only.
+app's `api/test/` endpoints (seed, read cells, set a cell) exist for the specs only: each starts
+with `api/test/e2e_guard.yaml`, which refuses the call unless `LOWDEFY_SECRET_ENRICHMENT_E2E_SECRET`
+(set by the Playwright config) is set and the payload's `e2eSecret` matches it; the specs call
+them through `callTestEndpoint`. They are marked "E2E ONLY, DO NOT COPY".
 
 On teardown Playwright stops the app first, with a SIGTERM it waits for (suites with services),
 then the replica set; mongod runs in a process group of its own, so the script stops it cleanly.

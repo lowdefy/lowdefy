@@ -16,7 +16,7 @@
 
 import { expect } from '@playwright/test';
 
-import { cronSecret, mockUrl } from '../settings.js';
+import { cronSecret, e2eSecret, mockUrl } from '../settings.js';
 
 // Calls an API endpoint of the app, as CallAPI does, and returns its response. A refused call
 // (a :reject, a failed payload check) returns { error } instead, so a test can assert it.
@@ -27,6 +27,12 @@ async function callEndpoint(request, endpointId, payload = {}) {
   // The error is serialized (an Error travels as { '~e': { name, message } }).
   const error = body.error?.['~e'] ?? body.error ?? body;
   return { error: error.message ?? JSON.stringify(body) };
+}
+
+// Calls one of the app's e2e-only api/test endpoints, which refuse any call without the e2e
+// secret.
+async function callTestEndpoint(request, endpointId, payload = {}) {
+  return callEndpoint(request, endpointId, { ...payload, e2eSecret });
 }
 
 // A cron tick: runs the worker in this request and returns { rounds, cells }.
@@ -56,12 +62,12 @@ const mock = {
 // A fresh database (the seed leads, no user columns) and fresh mocks.
 async function reset(request) {
   await mock.reset(request);
-  const response = await callEndpoint(request, 'test_reset');
+  const response = await callTestEndpoint(request, 'test_reset');
   expect(response.insertedCount).toBe(9);
 }
 
 async function readLeads(request) {
-  return callEndpoint(request, 'test_leads');
+  return callTestEndpoint(request, 'test_leads');
 }
 
 function byName(leads, name) {
@@ -119,6 +125,7 @@ function date(value) {
 export {
   byName,
   callEndpoint,
+  callTestEndpoint,
   cellOf,
   date,
   mock,

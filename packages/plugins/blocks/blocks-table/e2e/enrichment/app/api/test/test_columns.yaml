@@ -12,10 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# ============================================================================================
+# E2E ONLY. DO NOT COPY: this endpoint returns the merged columns.
+# It refuses every call without the e2e secret (api/test/e2e_guard.yaml), and is no part
+# of the enrichment reference.
+# ============================================================================================
 # E2E only: the merged columns, as the page and the worker read them.
 id: test_columns
 type: Api
 routine:
+  - _ref: api/test/e2e_guard.yaml
   - _ref: leads/load_table.yaml
   - :return:
       _state: columnDefs

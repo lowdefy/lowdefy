@@ -27,5 +27,7 @@ const mongoUri = externalMongoUri ?? `mongodb://127.0.0.1:${mongoPort}/enrichmen
 
 const mockUrl = `http://127.0.0.1:${mockPort}`;
 const cronSecret = process.env.CRON_SECRET ?? 'enrichment-e2e-cron-secret';
+// The secret the app's e2e-only api/test endpoints require (LOWDEFY_SECRET_ENRICHMENT_E2E_SECRET).
+const e2eSecret = process.env.LOWDEFY_SECRET_ENRICHMENT_E2E_SECRET ?? 'enrichment-e2e-test-secret';
 
-export { appPort, cronSecret, externalMongoUri, mockPort, mockUrl, mongoPort, mongoUri };
+export { appPort, cronSecret, e2eSecret, externalMongoUri, mockPort, mockUrl, mongoPort, mongoUri };
