@@ -15,49 +15,105 @@
 */
 
 import claimDomEvent from './claimDomEvent.js';
-import runOutsideDomEvent from './runOutsideDomEvent.js';
+import exemptFromDomEvent from './exemptFromDomEvent.js';
 
-function dispatch(domEvent, fn) {
+// A DOM event whose path runs through the layout elements of these blocks, innermost first, as
+// the client renders them (`bl-<blockId>`).
+function createDomEvent(type, blockIds) {
+  const elements = blockIds.map((blockId) => ({ id: `bl-${blockId}` }));
+  const domEvent = new Event(type);
+  domEvent.composedPath = () => [...elements, { id: 'root' }];
+  return { domEvent, elements };
+}
+
+function dispatch({ domEvent, elements }, fn) {
   global.window = { event: domEvent };
+  global.document = {
+    getElementById: (id) => elements.find((element) => element.id === id) ?? null,
+  };
   try {
     return fn();
   } finally {
     delete global.window;
+    delete global.document;
   }
 }
 
-test('claimDomEvent lets the first block with actions handle a DOM event', () => {
-  dispatch(new Event('click'), () => {
+test('claimDomEvent lets the innermost block with actions handle a DOM event', () => {
+  dispatch(createDomEvent('click', ['button', 'card']), () => {
     expect(claimDomEvent({ blockId: 'button', bubble: false, hasActions: true })).toBeNull();
     expect(claimDomEvent({ blockId: 'card', bubble: false, hasActions: true })).toBe('button');
   });
 });
 
-test('claimDomEvent never claims for events fired while an action runs', () => {
-  dispatch(new Event('click'), () => {
+test('claimDomEvent never skips or claims for a block the DOM event did not pass through', () => {
+  dispatch(createDomEvent('click', ['button', 'card']), () => {
     expect(claimDomEvent({ blockId: 'button', bubble: false, hasActions: true })).toBeNull();
-    const handledBy = runOutsideDomEvent(() =>
-      claimDomEvent({ blockId: 'table', bubble: false, hasActions: true })
-    );
-    expect(handledBy).toBeNull();
-    // Outside the action the claim still holds for the blocks around the button.
+    // A table next to the button fires onSelectionChange from an effect React flushes inside the
+    // click, after the button's CallMethod cleared its selection.
+    expect(claimDomEvent({ blockId: 'table', bubble: false, hasActions: true })).toBeNull();
     expect(claimDomEvent({ blockId: 'card', bubble: false, hasActions: true })).toBe('button');
   });
 });
 
-test('claimDomEvent never claims scheduler messages', () => {
-  dispatch(new MessageEvent('message'), () => {
+test('claimDomEvent lets an inner block run after an outer block handled the DOM event', () => {
+  dispatch(createDomEvent('click', ['table', 'card', 'page']), () => {
+    // A clickable card runs its onClick in the click, the table inside it fires
+    // onSelectionChange for the checkbox from an effect afterwards.
+    expect(claimDomEvent({ blockId: 'card', bubble: false, hasActions: true })).toBeNull();
+    expect(claimDomEvent({ blockId: 'table', bubble: false, hasActions: true })).toBeNull();
+    // The innermost handler holds the claim for the blocks further out.
+    expect(claimDomEvent({ blockId: 'page', bubble: false, hasActions: true })).toBe('table');
+  });
+});
+
+test('claimDomEvent lets a block without actions or with bubble: true pass the DOM event on', () => {
+  dispatch(createDomEvent('click', ['text', 'button', 'card']), () => {
+    expect(claimDomEvent({ blockId: 'text', bubble: false, hasActions: false })).toBeNull();
+    expect(claimDomEvent({ blockId: 'button', bubble: true, hasActions: true })).toBeNull();
+    expect(claimDomEvent({ blockId: 'card', bubble: false, hasActions: true })).toBeNull();
+  });
+});
+
+test('claimDomEvent never skips a block an action called a method on', () => {
+  dispatch(createDomEvent('click', ['button', 'table', 'card']), () => {
+    // A button in the table's bulk action slot runs CallMethod clearSelection on the table.
+    expect(claimDomEvent({ blockId: 'button', bubble: false, hasActions: true })).toBeNull();
+    exemptFromDomEvent({ blockId: 'table' });
+    expect(claimDomEvent({ blockId: 'table', bubble: false, hasActions: true })).toBeNull();
+    expect(claimDomEvent({ blockId: 'card', bubble: false, hasActions: true })).toBe('button');
+  });
+});
+
+test('claimDomEvent never claims a DOM event that passed through no block', () => {
+  // React's scheduler runs effects inside MessageChannel `message` events.
+  dispatch(createDomEvent('message', []), () => {
     expect(claimDomEvent({ blockId: 'a', bubble: false, hasActions: true })).toBeNull();
     expect(claimDomEvent({ blockId: 'b', bubble: false, hasActions: true })).toBeNull();
   });
 });
 
-test('claimDomEvent never skips an internal event for a DOM event another block handled', () => {
-  dispatch(new Event('click'), () => {
+test('claimDomEvent never skips an internal event for a DOM event an inner block handled', () => {
+  dispatch(createDomEvent('click', ['button', 'table', 'card']), () => {
     expect(claimDomEvent({ blockId: 'button', bubble: false, hasActions: true })).toBeNull();
     expect(
       claimDomEvent({ blockId: 'table', bubble: false, hasActions: true, internal: true })
     ).toBeNull();
+    // The internal event did not take the claim from the button.
     expect(claimDomEvent({ blockId: 'card', bubble: false, hasActions: true })).toBe('button');
   });
+});
+
+test('claimDomEvent lets an internal event claim an unclaimed DOM event', () => {
+  dispatch(createDomEvent('click', ['header', 'box']), () => {
+    expect(
+      claimDomEvent({ blockId: 'header', bubble: false, hasActions: true, internal: true })
+    ).toBeNull();
+    expect(claimDomEvent({ blockId: 'box', bubble: false, hasActions: true })).toBe('header');
+  });
+});
+
+test('claimDomEvent ignores events outside a DOM dispatch', () => {
+  expect(claimDomEvent({ blockId: 'button', bubble: false, hasActions: true })).toBeNull();
+  exemptFromDomEvent({ blockId: 'button' });
 });

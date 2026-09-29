@@ -64,6 +64,17 @@ test.describe('Table bulk action bar', () => {
     await expect(bar(page)).toHaveCount(0);
   });
 
+  test('a bulk action block clearing the selection fires onSelectionChange', async ({ page }) => {
+    await selectRow(page, 1);
+    await selectRow(page, 3);
+    await expect(getBlock(page, 'bk_value')).toContainText('selected=[1,3]');
+    await expect(getBlock(page, 'bk_value')).toContainText('rows=2');
+    await bar(page).locator('#bk_done').click();
+    await expect(getBlock(page, 'bk_value')).toContainText('selected=[]');
+    await expect(getBlock(page, 'bk_value')).toContainText('rows=0');
+    await expect(bar(page)).toHaveCount(0);
+  });
+
   test('bulk action blocks read the selection from state', async ({ page }) => {
     await selectRow(page, 1);
     await selectRow(page, 3);

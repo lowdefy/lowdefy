@@ -14,19 +14,15 @@
   limitations under the License.
 */
 
-import outsideDomEventScope from './outsideDomEventScope.js';
-
-// Runs the synchronous part of an action call outside DOM event claiming. An action can run
-// inside the DOM event that fired it (a Button click running CallMethod), and events it fires on
-// other blocks (the called block's own events) are caused by the handled event, not copies of it
-// bubbling through the blocks around the target.
-function runOutsideDomEvent(fn) {
-  outsideDomEventScope.depth += 1;
-  try {
-    return fn();
-  } finally {
-    outsideDomEventScope.depth -= 1;
-  }
+// The DOM event whose listeners are running: window.event is set while a listener runs, including
+// the microtasks that run before the listener returns (React flushes discrete updates and their
+// effects there), and undefined outside a DOM dispatch.
+function getDomEvent() {
+  // The engine's unit tests run without a window.
+  if (typeof window === 'undefined') return null;
+  const domEvent = window.event;
+  if (!(domEvent instanceof Event)) return null;
+  return domEvent;
 }
 
-export default runOutsideDomEvent;
+export default getDomEvent;

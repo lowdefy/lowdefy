@@ -324,6 +324,26 @@ test.describe('Table Block', () => {
     await expect(getBlock(page, 'table_selection_value')).toContainText('selected=[]');
   });
 
+  test('onSelectionChange runs after a button clears the selection with CallMethod', async ({
+    page,
+  }) => {
+    await row(page, 'table_selection', 2).locator('[data-lf-select-cell] input').click();
+    await expect(getBlock(page, 'table_selection_value')).toHaveText(
+      'selected=[2] rows=1 rowClick=false'
+    );
+    await page.locator('#selection_clear').click();
+    await expect(getBlock(page, 'table_selection_value')).toHaveText(
+      'selected=[] rows=0 rowClick=false'
+    );
+  });
+
+  test('a table inside a clickable card fires onSelectionChange for a checkbox', async ({
+    page,
+  }) => {
+    await row(page, 'table_in_card', 2).locator('[data-lf-select-cell] input').click();
+    await expect(getBlock(page, 'table_in_card_value')).toHaveText('rows=1 card=true');
+  });
+
   test('radio selection keeps one row', async ({ page }) => {
     await row(page, 'table_radio', 1).locator('[data-lf-select-cell] input').click();
     await row(page, 'table_radio', 3).locator('[data-lf-select-cell] input').click();

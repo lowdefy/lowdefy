@@ -43,6 +43,25 @@ blocks:
                   params:
                     bk_assigned:
                       _state: bk.selected
+          - id: bk_done
+            type: Button
+            properties:
+              title: Done
+            events:
+              onClick:
+                - id: clear_bk_selection
+                  type: CallMethod
+                  params:
+                    blockId: bk
+                    method: clearSelection
+    events:
+      onSelectionChange:
+        - id: set_bk_rows
+          type: SetState
+          params:
+            bk_rows:
+              _array.length:
+                _event: rows
 
   - id: bk_value
     type: Span
@@ -59,6 +78,10 @@ blocks:
                   - _state: bk_assigned
                   - null
               - space: 0
+          - ' rows='
+          - _if_none:
+              - _state: bk_rows
+              - none
 
   # ============================================
   # QUEUE: SINGLE-KEY ACTIONS AND keyboard.next
