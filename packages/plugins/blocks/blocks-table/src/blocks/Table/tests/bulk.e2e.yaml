@@ -84,6 +84,60 @@ blocks:
               - none
 
   # ============================================
+  # SELECT ALL MATCHING WITH A FILTER, THEN NEW DATA
+  # ============================================
+
+  - id: bk_filtered
+    type: Table
+    properties:
+      rowSelection:
+        type: checkbox
+      defaultView:
+        filter:
+          key: team
+          op: eq
+          value: Blue
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _if_none:
+          - _state: bk_filtered_data
+          - _ref: ../../src/blocks/Table/tests/people.yaml
+
+  - id: bk_filtered_add
+    type: Button
+    properties:
+      title: Add rows
+    events:
+      onClick:
+        - id: add_filtered_rows
+          type: SetState
+          params:
+            bk_filtered_data:
+              _array.concat:
+                - _ref: ../../src/blocks/Table/tests/people.yaml
+                - - id: 6
+                    name: Finn
+                    team: Blue
+                    age: 22
+                    city: Oslo
+                  - id: 7
+                    name: Gail
+                    team: Red
+                    age: 28
+                    city: Lima
+
+  - id: bk_filtered_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'selected='
+          - _json.stringify:
+              - _state: bk_filtered.selected
+              - space: 0
+
+  # ============================================
   # QUEUE: SINGLE-KEY ACTIONS AND keyboard.next
   # ============================================
 
