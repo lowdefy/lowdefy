@@ -1,0 +1,557 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/* Table engine styles. Every colour, radius and font is an antd design token (var(--ant-*)), so
+   the table follows the app theme and dark mode without JS. The antd Table stylesheet is never
+   used: antd injects it only when an antd Table mounts. Column widths, sticky offsets and the
+   centre spacer are CSS variables on the root (--lf-w<n>, --lf-l<n>, --lf-r<n>), which is what
+   lets a resize drag run without React renders. */
+
+@layer components {
+  .lf-table {
+    --lf-border: var(--ant-color-border-secondary, #f0f0f0);
+    --lf-header-bg: color-mix(in srgb, var(--ant-color-text-base, #000) 2%, var(--lf-bg));
+    --lf-bg: var(--ant-color-bg-container, #fff);
+    /* Opaque backgrounds, so sticky pinned cells never show the scrolled cells beneath them. The
+       row hover is antd's item hover fill laid over the table background (4% black in light
+       themes, 8% white in dark ones), as a full background value. */
+    --lf-row-hover: linear-gradient(
+        var(--ant-control-item-bg-hover, rgba(0, 0, 0, 0.04)),
+        var(--ant-control-item-bg-hover, rgba(0, 0, 0, 0.04))
+      ),
+      var(--lf-bg);
+    --lf-row-selected: var(--ant-color-primary-bg, #e6f4ff);
+    --lf-row-selected-hover: var(--ant-color-primary-bg-hover, #bae0ff);
+    --lf-pinned-shadow: rgba(0, 0, 0, 0.16);
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+    font-family: var(--ant-font-family, inherit);
+    font-size: var(--ant-font-size, 14px);
+    line-height: var(--ant-line-height, 1.5714);
+    background: var(--lf-bg);
+    border: 1px solid var(--lf-border);
+    border-radius: var(--ant-border-radius-lg, 8px);
+    overflow: hidden;
+  }
+
+  .lf-table-scroller {
+    position: relative;
+    overflow: auto;
+    overflow-anchor: none;
+    outline: none;
+    contain: strict;
+    max-height: var(--lf-table-max-height, none);
+  }
+
+  .lf-table-scroller[data-autoheight] {
+    contain: layout paint style;
+  }
+
+  .lf-table-canvas {
+    position: relative;
+    width: var(--lf-total);
+    min-width: 100%;
+  }
+
+  .lf-table-header {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    width: var(--lf-total);
+    min-width: 100%;
+    background: var(--lf-header-bg);
+  }
+
+  .lf-table-header[data-sticky='false'] {
+    position: relative;
+  }
+
+  /* The separator is the row's own border, not each cell's, so it runs the full width of the
+     row when the columns are narrower than the table and passes under sticky pinned cells.
+     Scoped to the root: `lf-table-row` is also the shared cell contract's row class, which
+     TableLight's table rows carry on the same page. */
+  .lf-table .lf-table-row {
+    display: flex;
+    width: var(--lf-total);
+    min-width: 100%;
+    height: var(--lf-row-h);
+    box-sizing: border-box;
+    border-bottom: 1px solid var(--lf-border);
+  }
+
+  .lf-table-body {
+    position: relative;
+    width: var(--lf-total);
+    min-width: 100%;
+  }
+
+  .lf-table-window {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    will-change: transform;
+  }
+
+  .lf-table-body .lf-table-row {
+    contain: layout style;
+    background: var(--lf-bg);
+  }
+
+  .lf-table-body .lf-table-row[data-positioned] {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .lf-table-center {
+    display: flex;
+    flex: none;
+    box-sizing: border-box;
+    width: var(--lf-center-w);
+    padding-left: var(--lf-center-before);
+  }
+
+  .lf-table-gridcell {
+    position: relative;
+    display: flex;
+    flex: none;
+    align-items: center;
+    box-sizing: border-box;
+    min-width: 0;
+    height: 100%;
+    padding: 0 var(--ant-padding-xs, 8px);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background: inherit;
+    outline: none;
+  }
+
+  /* The shared column core's cell content (renderCell's .lf-table-cell) fills the grid cell and
+     carries its own layout: single line, wrap or clamp, and alignment. */
+  .lf-table-gridcell > .lf-table-cell {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .lf-table-gridcell[data-align='end'] {
+    justify-content: flex-end;
+    text-align: end;
+  }
+
+  .lf-table-gridcell[data-align='center'] {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .lf-table-gridcell[data-pinned] {
+    position: sticky;
+    z-index: 1;
+  }
+
+  .lf-table-gridcell[data-pinned='start'][data-pinned-edge] {
+    box-shadow: inset -1px 0 0 var(--lf-border);
+  }
+
+  .lf-table-gridcell[data-pinned='end'][data-pinned-edge] {
+    box-shadow: inset 1px 0 0 var(--lf-border);
+  }
+
+  /* While columns scroll under a pinned region, its inner edge casts a shadow over them
+     (writeScrollEdges sets the attributes from the scroll position). */
+  .lf-table-scroller[data-scrolled-start]
+    .lf-table-gridcell[data-pinned='start'][data-pinned-edge] {
+    box-shadow:
+      inset -1px 0 0 var(--lf-border),
+      6px 0 8px -6px var(--lf-pinned-shadow);
+  }
+
+  .lf-table-scroller[data-scrolled-end] .lf-table-gridcell[data-pinned='end'][data-pinned-edge] {
+    box-shadow:
+      inset 1px 0 0 var(--lf-border),
+      -6px 0 8px -6px var(--lf-pinned-shadow);
+  }
+
+  /* The table's own border ends the last column, so an end-pinned last header shows no divider
+     (its resize handle still highlights on hover and while dragging). */
+  .lf-table-header
+    .lf-table-gridcell[data-pinned='end']:last-child
+    > .lf-table-resize:not(:hover):not([data-active])::after {
+    opacity: 0;
+  }
+
+  .lf-table-gridcell:focus-visible,
+  .lf-table-gridcell[data-focused]:focus {
+    outline: 2px solid var(--ant-color-primary, #1677ff);
+    outline-offset: -2px;
+  }
+
+  .lf-table-body .lf-table-row:hover {
+    background: var(--lf-row-hover);
+  }
+
+  .lf-table-body .lf-table-row[aria-selected='true'] {
+    background: var(--lf-row-selected);
+  }
+
+  .lf-table-body .lf-table-row[aria-selected='true']:hover {
+    background: var(--lf-row-selected-hover);
+  }
+
+  .lf-table[data-clickable] .lf-table-body .lf-table-row {
+    cursor: pointer;
+  }
+
+  .lf-table-header .lf-table-row {
+    height: var(--lf-header-h);
+    background: var(--lf-header-bg);
+  }
+
+  /* --lf-header-cell-bg is opaque, so a sticky pinned header covers the headers scrolled under it
+     and header buttons laid over the title can take the cell's colour. */
+  /* Each header cell is its own stacking context, so the resize handle and menu button of a
+     column scrolled under a pinned column stay under that column instead of showing through it
+     (a stray divider inside the pinned end). */
+  .lf-table-header .lf-table-gridcell {
+    --lf-header-cell-bg: var(--lf-header-bg);
+    isolation: isolate;
+    font-weight: var(--ant-font-weight-strong, 600);
+    color: var(--ant-color-text-heading, var(--ant-color-text));
+    user-select: none;
+    gap: var(--ant-padding-xxs, 4px);
+    background: var(--lf-header-cell-bg);
+  }
+
+  .lf-table-header .lf-table-gridcell[data-sortable] {
+    cursor: pointer;
+  }
+
+  .lf-table-header .lf-table-gridcell[data-sortable]:hover {
+    --lf-header-cell-bg: color-mix(
+      in srgb,
+      var(--ant-color-text-base, #000) 5%,
+      var(--lf-header-bg)
+    );
+  }
+
+  /* End-aligned headers put their sort and filter indicators before the title, so the title ends
+     on the same padding edge as the column's values. */
+  .lf-table-header .lf-table-gridcell[data-align='end'] > .lf-table-sort,
+  .lf-table-header .lf-table-gridcell[data-align='end'] > .lf-table-filter-indicator {
+    order: -1;
+  }
+
+  .lf-table-header-title {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lf-table-sort {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 2px;
+    color: var(--ant-color-text-quaternary, rgba(0, 0, 0, 0.25));
+    font-size: var(--ant-font-size-sm, 12px);
+  }
+
+  .lf-table-sort svg {
+    display: block;
+    width: 8px;
+    height: 12px;
+  }
+
+  .lf-table-sort [data-active] {
+    color: var(--ant-color-primary, #1677ff);
+  }
+
+  .lf-table-sort-order {
+    color: var(--ant-color-primary, #1677ff);
+    font-weight: normal;
+  }
+
+  .lf-table-resize {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    width: 8px;
+    height: 100%;
+    cursor: col-resize;
+    touch-action: none;
+  }
+
+  .lf-table-resize::after {
+    position: absolute;
+    top: 25%;
+    right: 3px;
+    width: 1px;
+    height: 50%;
+    background: var(--ant-color-split, rgba(5, 5, 5, 0.06));
+    content: '';
+  }
+
+  .lf-table-resize:hover::after,
+  .lf-table[data-resizing] .lf-table-resize[data-active]::after {
+    top: 0;
+    right: 2px;
+    width: 3px;
+    height: 100%;
+    background: var(--ant-color-primary, #1677ff);
+  }
+
+  .lf-table[data-resizing],
+  .lf-table[data-resizing] * {
+    cursor: col-resize !important;
+    user-select: none;
+  }
+
+  .lf-table[data-reordering],
+  .lf-table[data-reordering] * {
+    cursor: grabbing !important;
+    user-select: none;
+  }
+
+  .lf-table-reorder-ghost {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0 var(--ant-padding-xs, 8px);
+    font-weight: var(--ant-font-weight-strong, 600);
+    background: var(--ant-color-bg-elevated, #fff);
+    border-radius: var(--ant-border-radius, 6px);
+    box-shadow: var(--ant-box-shadow-secondary, 0 6px 16px rgba(0, 0, 0, 0.08));
+    opacity: 0.9;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  .lf-table-reorder-line {
+    position: absolute;
+    top: 0;
+    z-index: 4;
+    width: 2px;
+    height: var(--lf-header-h);
+    background: var(--ant-color-primary, #1677ff);
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  .lf-table-select {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .lf-table-checkbox {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--ant-color-primary, #1677ff);
+    cursor: pointer;
+  }
+
+  .lf-table-empty-state {
+    position: sticky;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: var(--lf-viewport-w, 100%);
+    padding: var(--ant-padding-lg, 24px) var(--ant-padding, 16px);
+    color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.45));
+  }
+
+  .lf-table-skeleton-bar {
+    display: block;
+    width: 70%;
+    height: 40%;
+    max-height: 14px;
+    background: linear-gradient(
+      90deg,
+      var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06)) 25%,
+      var(--ant-color-fill-tertiary, rgba(0, 0, 0, 0.04)) 37%,
+      var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06)) 63%
+    );
+    background-size: 400% 100%;
+    border-radius: var(--ant-border-radius-sm, 4px);
+    animation: lf-table-skeleton 1.4s ease infinite;
+  }
+
+  @keyframes lf-table-skeleton {
+    0% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0 50%;
+    }
+  }
+
+  .lf-table-loading-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    width: 100%;
+    height: 2px;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .lf-table-loading-bar::after {
+    position: absolute;
+    top: 0;
+    left: -40%;
+    width: 40%;
+    height: 100%;
+    background: var(--ant-color-primary, #1677ff);
+    animation: lf-table-loading-bar 1.2s ease-in-out infinite;
+    content: '';
+  }
+
+  @keyframes lf-table-loading-bar {
+    0% {
+      left: -40%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+
+  .lf-table[data-pending] .lf-table-body {
+    opacity: 0.6;
+    transition: opacity 0.1s;
+  }
+
+  /* bordered: lines between cells as well as under them. */
+  .lf-table[data-bordered] .lf-table-gridcell {
+    border-inline-end: 1px solid var(--lf-border);
+  }
+
+  /* Measured rows (a wrapped or multi-line column): rows take their content height, never less
+     than the density height. */
+  .lf-table-body .lf-table-row[data-measured] {
+    height: auto;
+    min-height: var(--lf-row-h);
+  }
+
+  .lf-table .lf-table-row[data-measured] .lf-table-gridcell {
+    height: auto;
+    padding-block: var(--ant-padding-xxs, 4px);
+  }
+
+  .lf-table-header-tooltip {
+    text-decoration: underline dotted var(--ant-color-text-quaternary, rgba(0, 0, 0, 0.25));
+    text-underline-offset: 3px;
+  }
+
+  /* Header groups (`children` columns). */
+  .lf-table-header .lf-table-group-header {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .lf-table-header .lf-table-group-header[data-pinned] {
+    z-index: 1;
+  }
+
+  /* Summary footer: sticky at the bottom of the scroller, like the header at the top. */
+  .lf-table-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 3;
+    width: var(--lf-total);
+    min-width: 100%;
+    background: var(--lf-header-bg);
+  }
+
+  .lf-table-footer .lf-table-row {
+    background: var(--lf-header-bg);
+    border-top: 1px solid var(--lf-border);
+    border-bottom: 0;
+  }
+
+  /* A summary never clips silently. SummaryRow shows the full label, its short form or none, from
+     measured widths (getSummaryLabel); the value ends with an ellipsis when it is wider than what
+     is left, and the title holds the full label and value. */
+  .lf-table-summary {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: var(--ant-margin-xxs, 4px);
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .lf-table-gridcell[data-align='end'] > .lf-table-summary {
+    justify-content: flex-end;
+  }
+
+  .lf-table-gridcell[data-align='center'] > .lf-table-summary {
+    justify-content: center;
+  }
+
+  .lf-table-summary-label {
+    flex: none;
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    font-size: var(--ant-font-size-sm, 12px);
+  }
+
+  .lf-table-summary-value {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Toolbar and bulk bar slots: the blocks sit side by side, like the table's own buttons. A
+     slot is a Lowdefy area (an .lf-row) whose blocks default to span 24 (.lf-col), which would
+     stack them; here span blocks take their content width instead, since a toolbar row has no
+     grid to span. A block's own flex layout (`layout.flex`, `grow`, `size`) is not an .lf-col and
+     still applies, as do the slot's area settings (`gap`, `align`, `justify`, `direction`, `wrap`),
+     which Area writes inline. */
+  :is(.lf-table-toolbar-start, .lf-table-toolbar-end, .lf-table-bulk-actions) > .lf-row {
+    --lf-gap-x: var(--ant-margin-xs, 8px);
+    --lf-gap-y: var(--ant-margin-xs, 8px);
+    align-items: center;
+    min-width: 0;
+  }
+
+  :is(.lf-table-toolbar-start, .lf-table-toolbar-end, .lf-table-bulk-actions) > .lf-row > .lf-col {
+    flex: 0 1 auto;
+    max-width: 100%;
+  }
+
+  .lf-table-pagination {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--ant-padding-xs, 8px) var(--ant-padding, 16px);
+    border-top: 1px solid var(--lf-border);
+  }
+}

@@ -119,6 +119,65 @@ blocks:
               - _state: aggridlowdefy_row_clicked
           else: ''
 
+  - id: aggridlowdefy_row_controls
+    type: AgGridLowdefy
+    properties:
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Profile
+          field: name
+          cell:
+            type: link
+            pageId: aggridlowdefy
+        - headerName: Actions
+          field: name
+          cell:
+            type: buttons
+            buttons:
+              - eventName: onEditClick
+                title: Edit
+      rowData:
+        - name: Alice
+        - name: Bob
+    events:
+      onRowClick:
+        - id: set_controls_row_click
+          type: SetState
+          params:
+            aggridlowdefy_controls_row:
+              _event: row.name
+      onEditClick:
+        - id: set_controls_edit_click
+          type: SetState
+          params:
+            aggridlowdefy_controls_edit:
+              _event: row.name
+      onCellLink:
+        - id: set_controls_link_click
+          type: SetState
+          params:
+            aggridlowdefy_controls_link:
+              _event: row.name
+
+  - id: aggridlowdefy_row_controls_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'row='
+          - _if_none:
+              - _state: aggridlowdefy_controls_row
+              - none
+          - ' edit='
+          - _if_none:
+              - _state: aggridlowdefy_controls_edit
+              - none
+          - ' link='
+          - _if_none:
+              - _state: aggridlowdefy_controls_link
+              - none
+
   - id: aggridlowdefy_oncellclick
     type: AgGridLowdefy
     properties:
@@ -574,6 +633,18 @@ blocks:
 
   # The buttons cell reaches components.Icon through the components prop the block
   # forwards to the shared core — an icon here proves that forwarding.
+  - id: aggridlowdefy_quick_filter
+    type: AgGridLowdefy
+    properties:
+      quickFilterValue: bob
+      columnDefs:
+        - headerName: Name
+          field: name
+      rowData:
+        - name: Alice
+        - name: Bob
+        - name: Charlie
+
   - id: aggridlowdefy_cell_buttons
     type: AgGridLowdefy
     properties:

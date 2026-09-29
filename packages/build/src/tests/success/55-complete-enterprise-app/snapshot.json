@@ -6722,6 +6722,16 @@
               "additionalProperties": false,
               "properties": {}
             },
+            "padding": {
+              "type": "string",
+              "enum": [
+                "default",
+                "compact",
+                "none"
+              ],
+              "default": "default",
+              "description": "Space around the page content. `compact` tightens it to 16px for dense, data-heavy pages. `none` removes it so content such as a table or grid runs edge to edge; the breadcrumb keeps its own inset."
+            },
             "content": {
               "type": "object",
               "description": "Content properties.",
@@ -8238,6 +8248,16 @@
               "type": "boolean",
               "default": false,
               "description": "Change the card style to inner."
+            },
+            "padding": {
+              "type": "string",
+              "enum": [
+                "default",
+                "compact",
+                "none"
+              ],
+              "default": "default",
+              "description": "Space inside the card body. `compact` tightens the body to 12px and aligns the header with it. `none` removes the body padding so content such as a table, list or image runs edge to edge; the header keeps its padding."
             },
             "size": {
               "type": "string",

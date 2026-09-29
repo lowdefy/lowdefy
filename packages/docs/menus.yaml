@@ -561,6 +561,9 @@
         - id: Switch
           type: MenuLink
           pageId: Switch
+        - id: TableInput
+          type: MenuLink
+          pageId: TableInput
         - id: TagMultipleSelector
           type: MenuLink
           pageId: TagMultipleSelector
@@ -729,6 +732,12 @@
         - id: Steps
           type: MenuLink
           pageId: Steps
+        - id: Table
+          type: MenuLink
+          pageId: Table
+        - id: TableLight
+          type: MenuLink
+          pageId: TableLight
         - id: Tag
           type: MenuLink
           pageId: Tag
@@ -1119,6 +1128,9 @@
         - id: _actions
           type: MenuLink
           pageId: _actions
+        - id: _agent
+          type: MenuLink
+          pageId: _agent
         - id: _and
           type: MenuLink
           pageId: _and

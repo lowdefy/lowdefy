@@ -28,6 +28,7 @@ Blocks are:
 | [@lowdefy/blocks-antd](./antd.md)               | Primary UI kit (Ant Design) | 61          |
 | [@lowdefy/blocks-basic](./basic.md)             | HTML primitives             | 8           |
 | [@lowdefy/blocks-aggrid](./aggrid.md)           | AG Grid data tables         | 1           |
+| [@lowdefy/blocks-table](./table.md)             | Table and TableInput        | 2           |
 | [@lowdefy/blocks-diff](./diff.md)               | Diff visualizations         | 4           |
 | [@lowdefy/blocks-echarts](./echarts.md)         | ECharts visualizations      | 1           |
 | [@lowdefy/blocks-markdown](./markdown.md)       | Markdown rendering          | 2           |

@@ -74,6 +74,38 @@
           properties:
             content: The modal title supports HTML markup for rich text formatting.
 
+- title: Padding
+  blocks:
+    - id: modal_padding_trigger
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Open Modal with padding none
+      events:
+        onClick:
+          - id: modal_padding_open
+            type: CallMethod
+            params:
+              blockId: modal_padding
+              method: setOpen
+              args:
+                - open: true
+    - id: modal_padding
+      type: Modal
+      properties:
+        title: Recent invoices
+        padding: none
+      blocks:
+        - id: modal_padding_rows
+          type: Html
+          properties:
+            html: |
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1042</span><span style="color: var(--ant-color-text-secondary);">$1,280.00</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1041</span><span style="color: var(--ant-color-text-secondary);">$640.00</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1040</span><span style="color: var(--ant-color-text-secondary);">$2,115.50</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 24px;"><span>INV-1039</span><span style="color: var(--ant-color-text-secondary);">$96.00</span></div>
+
 - title: Custom Button Text
   blocks:
     - id: modal_btn_text_trigger

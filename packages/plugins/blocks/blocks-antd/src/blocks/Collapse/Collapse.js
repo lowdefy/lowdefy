@@ -24,6 +24,9 @@ import withTheme from '../withTheme.js';
 // expandIconPosition is the pre-v5 name, with left and right values.
 const legacyIconPlacements = { left: 'start', right: 'end' };
 
+// Compact keeps the 16px inline inset of the panel header, so content stays aligned with it.
+const bodyPadding = { compact: '8px 16px', none: 0 };
+
 const CollapseBlock = ({
   blockId,
   classNames = {},
@@ -79,7 +82,11 @@ const CollapseBlock = ({
       className={classNames.element}
       classNames={{ header: classNames.header, title: classNames.title, body: classNames.content }}
       style={styles.element}
-      styles={{ header: styles.header, title: styles.title, body: styles.content }}
+      styles={{
+        header: styles.header,
+        title: styles.title,
+        body: { padding: bodyPadding[properties.padding], ...styles.content },
+      }}
       items={panels.map((panel) => ({
         key: panel.key,
         label: renderHtml({ html: panel.title, methods }),

@@ -228,7 +228,7 @@ _ref:
                 ```
                 ## Media
 
-                The `media` object contains some information about the client screen size, and can be accessed using the [`_media`](/_media) operator. This can be used to add additional responsive logic to a page.
+                The `media` object contains some information about the client screen size, and can be accessed using the [`_media`](/_media) operator. This can be used to add additional responsive logic to a page. When the window is resized, blocks that read a `media` value that changed are re-evaluated once the resize settles.
 
                 Here is an example showing how to read the screen size of a smartphone:
                 ```yaml

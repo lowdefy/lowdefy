@@ -19,9 +19,11 @@ import { WebParser } from '@lowdefy/operators';
 
 import Actions from './Actions.js';
 import DependencyTracker from './tracking/DependencyTracker.js';
+import readMediaViewport from './tracking/readMediaViewport.js';
 import Slots from './Slots.js';
 import Requests from './Requests.js';
 import State from './State.js';
+import updateMedia from './tracking/updateMedia.js';
 import WebSockets from './WebSockets.js';
 
 const blockData = (config) => {
@@ -95,6 +97,9 @@ function createContext({ config, jsMap, lowdefy }) {
       // Config object reference for dynamic page memoization — identity marks
       // which fetch this context was built from.
       pageConfig: config,
+      // The viewport the page's blocks last evaluated _media against, or null without a window.
+      // updateMedia diffs a resize against it.
+      media: readMediaViewport({ lowdefy }),
       // The read recorder of the block evaluating itself, or null. Managed by DependencyTracker.
       readRecorder: null,
       rootBlock: blockData(config), // filter block to prevent circular structure
@@ -143,6 +148,8 @@ function createContext({ config, jsMap, lowdefy }) {
       _internal.onInitAsyncDone = true;
     }
   };
+  // Called by the client's debounced resize listener.
+  _internal.updateMedia = () => updateMedia({ context: ctx });
   // Page lifecycle events (onVisible, onHidden, onOnline, onOffline, onResize) are
   // triggered on the page's root block by browser listeners attached in the client.
   _internal.triggerPageEvent = ({ name, event, progress = () => undefined }) =>

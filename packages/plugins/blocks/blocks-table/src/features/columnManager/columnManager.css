@@ -1,0 +1,155 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/* Column manager popover. */
+
+@layer components {
+  .lf-table-manager-anchor {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: var(--lf-header-h);
+    pointer-events: none;
+  }
+
+  .lf-table-column-manager {
+    width: 280px;
+    max-width: calc(100vw - 32px);
+  }
+
+  /* The list takes the viewport height below the popover's anchor (getListRoom), capped at the
+     last whole entry (snapListHeight); while entries are out of view it fades out at that edge. */
+  .lf-table-manager-list {
+    --lf-manager-fade: 28px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: 70vh;
+    margin-top: var(--ant-margin-xs, 8px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .lf-table-manager-list[data-more-below] {
+    mask-image: linear-gradient(to bottom, #000 calc(100% - var(--lf-manager-fade)), transparent);
+  }
+
+  .lf-table-manager-list[data-more-above] {
+    mask-image: linear-gradient(to top, #000 calc(100% - var(--lf-manager-fade)), transparent);
+  }
+
+  .lf-table-manager-list[data-more-above][data-more-below] {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      #000 var(--lf-manager-fade),
+      #000 calc(100% - var(--lf-manager-fade)),
+      transparent
+    );
+  }
+
+  .lf-table-manager-item,
+  .lf-table-manager-boundary {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--ant-margin-xxs, 4px);
+    min-height: 28px;
+  }
+
+  .lf-table-manager-item .ant-checkbox-wrapper {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .lf-table-manager-boundary {
+    min-height: 20px;
+    color: var(--ant-color-primary, #1677ff);
+    font-size: var(--ant-font-size-sm, 12px);
+  }
+
+  .lf-table-manager-boundary::after {
+    flex: 1;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+    opacity: 0.5;
+    content: '';
+  }
+
+  .lf-table-manager-boundary-label {
+    white-space: nowrap;
+  }
+
+  .lf-table-manager-handle,
+  .lf-table-manager-handle-spacer {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    color: var(--ant-color-text-quaternary, rgba(0, 0, 0, 0.25));
+    background: transparent;
+    border: 0;
+    border-radius: var(--ant-border-radius-sm, 4px);
+  }
+
+  .lf-table-manager-handle {
+    cursor: grab;
+  }
+
+  .lf-table-manager-handle:hover,
+  .lf-table-manager-handle:focus-visible {
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  }
+
+  .lf-table-manager-handle:focus-visible {
+    outline: 2px solid var(--ant-color-primary, #1677ff);
+    outline-offset: -2px;
+  }
+
+  .lf-table-manager-item[data-drop='before']::before,
+  .lf-table-manager-boundary[data-drop='before']::before,
+  .lf-table-manager-item[data-drop='after']::before,
+  .lf-table-manager-boundary[data-drop='after']::before {
+    position: absolute;
+    right: 0;
+    left: 0;
+    height: 2px;
+    background: var(--ant-color-primary, #1677ff);
+    content: '';
+  }
+
+  .lf-table-manager-item[data-drop='before']::before,
+  .lf-table-manager-boundary[data-drop='before']::before {
+    top: -1px;
+  }
+
+  .lf-table-manager-item[data-drop='after']::before,
+  .lf-table-manager-boundary[data-drop='after']::before {
+    bottom: -1px;
+  }
+
+  .lf-table-manager-heading {
+    margin-top: var(--ant-margin-xs, 8px);
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    font-size: var(--ant-font-size-sm, 12px);
+  }
+}

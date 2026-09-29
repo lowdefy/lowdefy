@@ -40,9 +40,25 @@ const lowdefyDependencies = Object.keys(
   JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8')).dependencies ?? {}
 ).filter((name) => name.startsWith('@lowdefy/'));
 
+// Vite 8 tree-shakes a `.module.css` imported only for its side effects
+// (`import './style.module.css'`), and its CSS goes with it: `:global(...)` rules in block and
+// plugin stylesheets never reach the built client. Marking CSS modules as side-effectful keeps
+// them, whatever the import style.
+function keepCssModuleSideEffects() {
+  return {
+    name: 'lowdefy-keep-css-module-side-effects',
+    enforce: 'post',
+    transform(code, id) {
+      if (/\.module\.css($|\?)/.test(id)) {
+        return { code, moduleSideEffects: 'no-treeshake' };
+      }
+    },
+  };
+}
+
 export default defineConfig(({ mode }) => ({
   base: `${basePath}/`,
-  plugins: [react()],
+  plugins: [react(), keepCssModuleSideEffects()],
   define: {
     // Vite does not replace process.env.NODE_ENV inside dependencies —
     // plugin and client code branch on it.

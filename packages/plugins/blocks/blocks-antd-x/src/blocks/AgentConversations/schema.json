@@ -10,6 +10,10 @@
           "label": { "type": "string" },
           "icon": {},
           "disabled": { "type": "boolean" },
+          "loading": {
+            "type": "boolean",
+            "description": "Show a spinner in place of this row's icon."
+          },
           "timestamp": { "type": "number" },
           "group": { "type": "string" }
         }
@@ -17,6 +21,10 @@
       "default": []
     },
     "activeKey": { "type": "string" },
+    "loadingKey": {
+      "type": "string",
+      "description": "Key of a conversation that is still loading, for example while its transcript is read after a select. That row shows a spinner in place of its icon."
+    },
     "menu": {
       "type": "array",
       "items": {

@@ -83,6 +83,7 @@ These ship with Lowdefy and don't need explicit installation:
 - `@lowdefy/blocks-antd` - Primary UI components (Ant Design based)
 - `@lowdefy/blocks-antd-x` - AI chat components (AgentChat, AgentConversations)
 - `@lowdefy/blocks-basic` - HTML primitives
+- `@lowdefy/blocks-table` - Table and TableInput data tables (see [plugins/blocks/table.md](./plugins/blocks/table.md))
 - `@lowdefy/operators-js` - Core JavaScript operators
 - `@lowdefy/actions-core` - Standard actions
 - `@lowdefy/connection-anthropic` - Anthropic Claude models
@@ -156,10 +157,10 @@ Requests are server-side data operations:
 
 ## Server Variants
 
-| Server       | Use Case                                                                                     |
-| ------------ | -------------------------------------------------------------------------------------------- |
-| `server`     | Production — Hono app serving the Vite-built client                                           |
-| `server-dev` | Local development — Vite owns HTTP with the Hono app mounted via `@hono/vite-dev-server`      |
+| Server       | Use Case                                                                                       |
+| ------------ | ---------------------------------------------------------------------------------------------- |
+| `server`     | Production — Hono app serving the Vite-built client                                            |
+| `server-dev` | Local development — Vite owns HTTP with the Hono app mounted via `@hono/vite-dev-server`       |
 | `server-e2e` | Playwright e2e testing — production server minus auth/Sentry, with a cookie-based session mock |
 
 ## File Structure

@@ -1,0 +1,434 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: table
+type: Box
+
+blocks:
+  # ============================================
+  # RENDERING
+  # ============================================
+
+  - id: table_basic
+    type: Table
+    properties:
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+
+  - id: table_empty
+    type: Table
+    properties:
+      emptyText: Nothing here yet
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data: []
+
+  - id: table_loading
+    type: Table
+    properties:
+      loading: true
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data: []
+
+  # ============================================
+  # SORTING
+  # ============================================
+
+  - id: table_sort
+    type: Table
+    properties:
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+    events:
+      onChange:
+        - id: set_sort_cause
+          type: SetState
+          params:
+            sort_cause:
+              _event: cause
+
+  - id: table_sort_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'sort='
+          - _json.stringify:
+              - _state: table_sort.view.sort
+              - space: 0
+          - ' cause='
+          - _if_none:
+              - _state: sort_cause
+              - none
+
+  - id: table_default_sort
+    type: Table
+    properties:
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+      defaultView:
+        sort:
+          - key: age
+            desc: true
+
+  # ============================================
+  # COLUMNS: RESIZE, REORDER, PINNING
+  # ============================================
+
+  - id: table_columns
+    type: Table
+    properties:
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+
+  - id: table_columns_value
+    type: Span
+    properties:
+      content:
+        _json.stringify:
+          - _state: table_columns.view.columns
+          - space: 0
+
+  - id: table_pinned
+    type: Table
+    style:
+      .element:
+        width: 600
+    properties:
+      columns:
+        - key: id
+          type: number
+          width: 80
+          pinned: start
+        - key: c1
+        - key: c2
+        - key: c3
+        - key: c4
+        - key: c5
+        - key: c6
+        - key: c7
+        - key: action
+          width: 90
+          pinned: end
+      data:
+        - id: 1
+          c1: a1
+          c2: a2
+          c3: a3
+          c4: a4
+          c5: a5
+          c6: a6
+          c7: a7
+          action: open
+        - id: 2
+          c1: b1
+          c2: b2
+          c3: b3
+          c4: b4
+          c5: b5
+          c6: b6
+          c7: b7
+          action: open
+
+  # ============================================
+  # VIRTUALISATION
+  # ============================================
+
+  - id: table_virtual
+    type: Table
+    properties:
+      height: 400
+      columns:
+        - key: id
+          type: number
+          width: 120
+        - key: name
+      data:
+        _js: |
+          const rows = new Array(100000);
+          for (let i = 0; i < rows.length; i++) rows[i] = { id: i, name: 'Row ' + i };
+          return rows;
+
+  # ============================================
+  # SELECTION
+  # ============================================
+
+  - id: table_selection
+    type: Table
+    properties:
+      rowSelection:
+        type: checkbox
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+    events:
+      onSelectionChange:
+        - id: set_selection_rows
+          type: SetState
+          params:
+            selection_rows:
+              _array.length:
+                _event: rows
+      onRowClick:
+        - id: set_selection_row_click
+          type: SetState
+          params:
+            selection_row_clicked: true
+
+  - id: table_selection_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'selected='
+          - _json.stringify:
+              - _state: table_selection.selected
+              - space: 0
+          - ' rows='
+          - _if_none:
+              - _state: selection_rows
+              - none
+          - ' rowClick='
+          - _if_none:
+              - _state: selection_row_clicked
+              - false
+
+  - id: selection_clear
+    type: Button
+    properties:
+      title: Clear selection
+    events:
+      onClick:
+        - id: clear_selection
+          type: CallMethod
+          params:
+            blockId: table_selection
+            method: clearSelection
+
+  - id: selection_set
+    type: Button
+    properties:
+      title: Select Dana
+    events:
+      onClick:
+        - id: set_selection
+          type: SetState
+          params:
+            table_selection.selected:
+              - 4
+
+  - id: selection_card
+    type: Card
+    events:
+      onClick:
+        - id: set_card_clicked
+          type: SetState
+          params:
+            selection_card_clicked: true
+    blocks:
+      - id: table_in_card
+        type: Table
+        properties:
+          rowSelection:
+            type: checkbox
+          columns:
+            _ref: ../../src/blocks/Table/tests/people_columns.yaml
+          data:
+            _ref: ../../src/blocks/Table/tests/people.yaml
+        events:
+          onSelectionChange:
+            - id: set_card_table_rows
+              type: SetState
+              params:
+                card_table_rows:
+                  _array.length:
+                    _event: rows
+
+  - id: table_in_card_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'rows='
+          - _if_none:
+              - _state: card_table_rows
+              - none
+          - ' card='
+          - _if_none:
+              - _state: selection_card_clicked
+              - false
+
+  - id: table_radio
+    type: Table
+    properties:
+      rowSelection:
+        type: radio
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+
+  - id: table_radio_value
+    type: Span
+    properties:
+      content:
+        _json.stringify:
+          - _state: table_radio.selected
+          - space: 0
+
+  # ============================================
+  # EVENTS
+  # ============================================
+
+  - id: table_events
+    type: Table
+    properties:
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+    events:
+      onRowClick:
+        - id: set_row_click
+          type: SetState
+          params:
+            evt_row:
+              _event: true
+      onCellClick:
+        - id: set_cell_click
+          type: SetState
+          params:
+            evt_cell:
+              _event: true
+      onRowDoubleClick:
+        - id: set_row_double_click
+          type: SetState
+          params:
+            evt_double:
+              _event: true
+
+  - id: table_events_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'row='
+          - _json.stringify:
+              - _state: evt_row
+              - space: 0
+          - ' cell='
+          - _json.stringify:
+              - _state: evt_cell
+              - space: 0
+          - ' double='
+          - _json.stringify:
+              - _state: evt_double
+              - space: 0
+
+  # ============================================
+  # ROW LINK
+  # ============================================
+
+  - id: table_link
+    type: Table
+    properties:
+      rowLink:
+        pageId: table-link-target
+        urlQuery:
+          id: id
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+
+  # ============================================
+  # KEYBOARD
+  # ============================================
+
+  - id: table_keyboard
+    type: Table
+    properties:
+      rowSelection:
+        type: checkbox
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+
+  - id: table_keyboard_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'selected='
+          - _json.stringify:
+              - _state: table_keyboard.selected
+              - space: 0
+          - ' sort='
+          - _json.stringify:
+              - _state: table_keyboard.view.sort
+              - space: 0
+
+  # ============================================
+  # METHODS
+  # ============================================
+
+  - id: table_export
+    type: Table
+    properties:
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+      defaultView:
+        sort:
+          - key: name
+
+  - id: export_csv
+    type: Button
+    properties:
+      title: Export CSV
+    events:
+      onClick:
+        - id: export_csv_call
+          type: CallMethod
+          params:
+            blockId: table_export
+            method: exportCsv
+            args:
+              - filename: people.csv
+
+  - id: scroll_to_row
+    type: Button
+    properties:
+      title: Scroll to row 90000
+    events:
+      onClick:
+        - id: scroll_to_row_call
+          type: CallMethod
+          params:
+            blockId: table_virtual
+            method: scrollToRow
+            args:
+              - rowKey: 90000

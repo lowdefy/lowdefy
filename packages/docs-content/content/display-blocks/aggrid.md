@@ -1453,9 +1453,9 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 
 | Event | Event Data | Description |
 | --- | --- | --- |
-| `onCellClick` | `{ cell, colId, row, rowIndex, selected }` | Trigger event when a cell is clicked. |
+| `onCellClick` | `{ cell, colId, row, rowIndex, selected }` | Trigger event when a cell is clicked. Clicks on a button, link, menu, input or checkbox in the cell do not trigger it. |
 | `onFilterChanged` | `{ rows, filter }` | Trigger event when the filter changes. |
-| `onRowClick` | `{ row, selected, rowIndex }` | Trigger event when a row is clicked. |
+| `onRowClick` | `{ row, selected, rowIndex }` | Trigger event when a row is clicked. Clicks on a button, link, menu, input or checkbox in a cell do not trigger it. |
 | `onRowSelected` | `{ row, rowIndex, selected }` | Trigger event when a row is selected. |
 | `onSelectionChanged` | `{ selected }` | Triggered when the selected rows are changed. |
 | `onSortChanged` | `{ rows, sort }` | Trigger event when the sort changes. |

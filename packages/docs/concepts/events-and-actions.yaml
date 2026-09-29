@@ -90,6 +90,7 @@ _ref:
             ```
               (eventName: (action | control)[])
               (eventName: {
+                bubble?: boolean,
                 shortcut?: string | string[],
                 debounce?: {
                   ms?: number,
@@ -265,6 +266,47 @@ _ref:
                       type: ActionType2
             ```
 
+            ## Nested blocks and event bubbling
+
+            A click, key press or other browser event starts on the element under the pointer and passes up through every block around it, like a `Button` inside a clickable `Card`, or a clickable `Box` in a `List` row. Lowdefy runs only the innermost event that handles it: once a block with actions for the event fires, the blocks around it skip that same browser event. Clicking the `Button` runs the button's `onClick`, not the card's. A block without an event for the interaction, like a `Paragraph` in the card, passes it on, so clicking the text still runs the card's `onClick`.
+
+            Set `bubble: true` on the inner event to also run the events of the blocks around it. `bubble` passes the browser event one handler further up; set it again on the outer event to pass it further still.
+
+            ###### Button in a clickable card example:
+            ```yaml
+            - id: order_card
+              type: Card
+              events:
+                onClick:
+                  - id: open_order
+                    type: Link
+                    params: order-detail
+              blocks:
+                - id: delete_button
+                  type: Button
+                  properties:
+                    title: Delete
+                  events:
+                    onClick:
+                      - id: delete_order
+                        type: Request
+                        params: delete_order
+                - id: select_button
+                  type: Button
+                  properties:
+                    title: Select and open
+                  events:
+                    onClick:
+                      bubble: true # also runs the card's onClick
+                      try:
+                        - id: select_order
+                          type: SetState
+                          params:
+                            selected: true
+            ```
+
+            Only blocks the browser event passed through, around the block that handled it, are skipped. Other blocks' events are never affected, nor are events that run from actions, requests or timers, or events of a block an action called a method on: a `Table` next to the button, or holding it in its toolbar, still fires `onSelectionChange` after the button's `CallMethod` cleared its selection. Inside an `AgGrid`, clicks on a cell's buttons, links, menus, inputs or selection checkbox fire only that control's event, never `onRowClick` or `onCellClick`.
+
             ## Keyboard Shortcuts
 
             Events can be triggered by keyboard shortcuts. Add a `shortcut` property to an event to bind a key combination — when pressed, the event fires as if the user clicked the block. See the [Keyboard Shortcuts](/keyboard-shortcuts) page for the full shortcut format, common shortcuts, recipes, and more.
@@ -338,7 +380,7 @@ _ref:
                     content: You are offline, changes will not be saved.
             ```
 
-            The `onResize` event is triggered when the window is resized, debounced by 200ms so that the actions only run once the user stops resizing. The `_event` object contains the `width` and `height` of the window.
+            The `onResize` event is triggered when the window is resized, debounced by 150ms so that the actions only run once the user stops resizing. Blocks that use the [`_media`](/_media) operator are re-evaluated for the new window size before the `onResize` actions run. The `_event` object contains the `width` and `height` of the window.
 
             ```yaml
             events:
@@ -423,6 +465,7 @@ _ref:
             - The [`_actions`](/_actions) operator is available for sequential actions to use the values returned from preceding actions in the chain.
             - Actions have a `skip` field that can be used to skip action execution.
             - Action lists also support the [`:if`](/:if), [`:switch`](/:switch) and [`:return`](/:return) controls — `skip` gates one action, `:if` gates a group, `:switch` picks between alternatives, and `:return` ends the event early.
+            - A browser event runs only the innermost block event that handles it. Set `bubble: true` on an event to also run the events of the blocks around it.
             - Events support `shortcut` to bind keyboard shortcuts to the event. The shortcut fires the event when the key combination is pressed.
             - The `onInit` event is triggered the first time a page is mounted and keeps the page in loading until all actions have finished.
             - The `onInitAsync` event is triggered the first time a page is mounted and does not keep the page in loading.
@@ -430,7 +473,7 @@ _ref:
             - The `onMountAsync` event is triggered the every time a block is mounted, after `onMount` has completed, and does not keep the block in loading.
             - The `onVisible` and `onHidden` events are triggered when the browser tab is shown or hidden, or when the window gains or loses focus, coalesced over 300ms.
             - The `onOnline` and `onOffline` events are triggered when the browser reports that the network connection was regained or lost.
-            - The `onResize` event is triggered when the window is resized, debounced by 200ms.
+            - The `onResize` event is triggered when the window is resized, debounced by 150ms.
             - Browser lifecycle events are never triggered on the initial page load, and are removed when the user navigates away from the page.
             - App events, defined in the root `events` object, run once per app load: the app `onInit` runs before the first page's events and keeps the page in loading, and the app `onInitAsync` runs after it without blocking the page.
 

@@ -58,7 +58,7 @@ class Actions {
 
     // Not deduped here: every server failure carries the same generic message, so a
     // message + action key would hide each later failure of the action. handleError
-    // dedups on the message it displays, which in dev is the full server error.
+    // dedups on the message it displays plus the server's requestId.
     if (handleError) {
       handleError(error);
     }

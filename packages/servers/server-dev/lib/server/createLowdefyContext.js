@@ -106,9 +106,12 @@ async function createLowdefyContext({ c, user }) {
     },
     scrubSecrets,
     secrets,
-    // Aborts when the client disconnects before the response is sent. The dev server
-    // has no request timeout.
-    signal: createRequestSignal({ clientSignal: c.req.raw.signal }),
+    // Aborts when the client disconnects before the response is sent, or when the
+    // request timeout (src/middleware/requestTimeout.js) answers first.
+    signal: createRequestSignal({
+      clientSignal: c.req.raw.signal,
+      timeoutSignal: c.get('requestTimeoutSignal'),
+    }),
     steps,
     websockets,
   };

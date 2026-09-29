@@ -28,6 +28,7 @@ import getOperatorType from './getOperatorType.js';
 import { isReserved, ReservedKeyError } from './ReservedKeyError.js';
 import joinPath from './joinPath.js';
 import LRUCache from './LRUCache.js';
+import mapPlainValues from './mapPlainValues.js';
 import mergeObjects from './mergeObjects.js';
 import normalizeCaller from './normalizeCaller.js';
 import omit from './omit.js';
@@ -60,6 +61,7 @@ export {
   isReserved,
   joinPath,
   LRUCache,
+  mapPlainValues,
   mergeObjects,
   normalizeCaller,
   omit,

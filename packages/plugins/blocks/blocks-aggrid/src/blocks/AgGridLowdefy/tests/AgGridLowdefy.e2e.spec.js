@@ -96,6 +96,29 @@ test.describe('AgGridLowdefy Block', () => {
     await expect(display).toHaveText('Row: Alice');
   });
 
+  test('a cell button click fires its event but not onRowClick', async ({ page }) => {
+    const block = getBlock(page, 'aggridlowdefy_row_controls');
+    await block.locator('.ag-row[row-index="1"] button').click();
+    const display = getBlock(page, 'aggridlowdefy_row_controls_display');
+    await expect(display).toHaveText('row=none edit=Bob link=none');
+  });
+
+  test('a cell link click fires onCellLink but not onRowClick', async ({ page }) => {
+    const block = getBlock(page, 'aggridlowdefy_row_controls');
+    await block.locator('.ag-row[row-index="0"] a').click();
+    const display = getBlock(page, 'aggridlowdefy_row_controls_display');
+    await expect(display).toHaveText('row=none edit=none link=Alice');
+  });
+
+  test('a click on plain cell text in a row with controls still fires onRowClick', async ({
+    page,
+  }) => {
+    const block = getBlock(page, 'aggridlowdefy_row_controls');
+    await block.locator('.ag-row[row-index="0"] .ag-cell').first().click();
+    const display = getBlock(page, 'aggridlowdefy_row_controls_display');
+    await expect(display).toHaveText('row=Alice edit=none link=none');
+  });
+
   test('onCellClick event fires when cell is clicked', async ({ page }) => {
     const block = getBlock(page, 'aggridlowdefy_oncellclick');
     const nameCell = block.locator('.ag-row[row-index="1"] .ag-cell').first();
@@ -397,6 +420,12 @@ test.describe('AgGridLowdefy Block', () => {
     await expect(clampSpan).toHaveCSS('-webkit-line-clamp', '2');
     await expect(clampSpan).toHaveCSS('overflow', 'hidden');
     expect(await clampSpan.evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(true);
+  });
+
+  test('quickFilterValue shows only rows with a matching cell', async ({ page }) => {
+    const rows = getBlock(page, 'aggridlowdefy_quick_filter').locator('.ag-row');
+    await expect(rows).toHaveCount(1);
+    await expect(rows.first()).toContainText('Bob');
   });
 
   // components is forwarded to the shared core, so components.Icon reaches the buttons cell.

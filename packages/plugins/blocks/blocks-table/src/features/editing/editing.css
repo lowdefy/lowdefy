@@ -1,0 +1,223 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/* Editing styles: the cell editor and status markers (portalled into cells), TableInput's row
+   controls, drop indicator and add-row row. Colours are antd tokens, like the engine's. */
+
+@layer components {
+  .lf-table-editor {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    padding: 0 2px;
+    background: var(--lf-bg);
+    white-space: normal;
+  }
+
+  .lf-table-editor > * {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* antd fades a searchable select's value while it is open; the editor shows the current value
+     as the value until something is typed. */
+  .lf-table-editor
+    .ant-select-open
+    .ant-select-content-has-value:not(.ant-select-content-has-search-value) {
+    opacity: 1;
+  }
+
+  .lf-table-editor-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    max-width: 100%;
+    margin-inline-end: var(--ant-margin-xxs, 4px);
+  }
+
+  .lf-table-editor-tag > .lf-table-tag {
+    padding: 2px var(--ant-padding-xxs, 4px);
+  }
+
+  .lf-table-editor-tag-remove {
+    flex: none;
+    padding: 0 1px;
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    font: inherit;
+    line-height: 1;
+    background: transparent;
+    border: 0;
+    border-radius: var(--ant-border-radius-sm, 4px);
+    cursor: pointer;
+  }
+
+  .lf-table-editor-tag-remove:hover {
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  }
+
+  .lf-table-editor > .ant-switch,
+  .lf-table-editor > .ant-rate {
+    flex: none;
+    margin-inline-start: var(--ant-padding-xs, 8px);
+  }
+
+  .lf-table-edit-marker {
+    position: absolute;
+    z-index: 1;
+    pointer-events: auto;
+  }
+
+  .lf-table-edit-marker[data-lf-edit-status='saving'] {
+    top: 50%;
+    inset-inline-end: 4px;
+    width: 10px;
+    height: 10px;
+    margin-top: -5px;
+    border: 2px solid var(--ant-color-primary, #1677ff);
+    border-inline-end-color: transparent;
+    border-radius: 50%;
+    animation: lf-table-edit-spin 0.8s linear infinite;
+  }
+
+  .lf-table-edit-marker[data-lf-edit-status='error'],
+  .lf-table-edit-marker[data-lf-edit-status='invalid'] {
+    top: 0;
+    inset-inline-end: 0;
+    width: 10px;
+    height: 10px;
+    background: linear-gradient(
+      to bottom left,
+      var(--ant-color-error, #ff4d4f) 50%,
+      transparent 50%
+    );
+    cursor: help;
+  }
+
+  .lf-table-gridcell:has(> [data-lf-edit-status='saving']) > .lf-table-cell {
+    opacity: 0.65;
+  }
+
+  .lf-table-gridcell:has(> [data-lf-edit-status='error']) {
+    box-shadow: inset 0 0 0 1px var(--ant-color-error-border, #ffccc7);
+  }
+
+  .lf-table-row-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .lf-table-drag-handle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 24px;
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    border-radius: var(--ant-border-radius-sm, 4px);
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .lf-table-drag-handle:hover {
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  }
+
+  .lf-table-drag-handle[aria-disabled='true'] {
+    cursor: not-allowed;
+    opacity: 0.35;
+  }
+
+  .lf-table-row-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    background: transparent;
+    border: 0;
+    border-radius: var(--ant-border-radius-sm, 4px);
+    cursor: pointer;
+  }
+
+  .lf-table-row-delete:hover {
+    color: var(--ant-color-error, #ff4d4f);
+    background: var(--ant-color-error-bg, #fff2f0);
+  }
+
+  .lf-table-body .lf-table-row[data-lf-dragging] {
+    opacity: 0.5;
+  }
+
+  .lf-table-drop-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 4;
+    width: 100%;
+    height: 2px;
+    background: var(--ant-color-primary, #1677ff);
+    pointer-events: none;
+  }
+
+  .lf-table-add-row {
+    display: flex;
+    align-items: center;
+    gap: var(--ant-padding-xs, 8px);
+    width: 100%;
+    height: var(--lf-row-h);
+    padding: 0 var(--ant-padding-sm, 12px);
+    color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+    font: inherit;
+    text-align: start;
+    background: var(--lf-bg);
+    border: 0;
+    border-top: 1px solid var(--lf-border);
+    cursor: pointer;
+  }
+
+  .lf-table-add-row:hover,
+  .lf-table-add-row:focus-visible {
+    color: var(--ant-color-primary, #1677ff);
+    background: var(--lf-row-hover);
+    outline: none;
+  }
+
+  .lf-table-add-row-icon {
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .lf-table-edit-notice {
+    padding: var(--ant-padding-xxs, 4px) var(--ant-padding-sm, 12px);
+    color: var(--ant-color-warning-text, #d48806);
+    font-size: var(--ant-font-size-sm, 12px);
+    background: var(--ant-color-warning-bg, #fffbe6);
+    border-top: 1px solid var(--lf-border);
+  }
+
+  @keyframes lf-table-edit-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}

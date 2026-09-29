@@ -22,7 +22,10 @@ import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
 import validatePayload from './validatePayload.js';
 
-async function invokeEndpoint(context, { endpointId, payload, endpointDepth, literalData = null }) {
+async function invokeEndpoint(
+  context,
+  { agent = null, endpointId, payload, endpointDepth, literalData = null }
+) {
   if (endpointDepth >= 10) {
     throw new ConfigError(
       'Endpoint call depth exceeded maximum of 10. Check for recursive endpoint calls.'
@@ -43,6 +46,10 @@ async function invokeEndpoint(context, { endpointId, payload, endpointDepth, lit
     items: {},
     state: {},
     endpointDepth: endpointDepth + 1,
+    // The agent ({ id, conversationId }) whose tool call started this chain of endpoint calls, or
+    // null. Set by the engine from the running agent, never from the payload, so `_agent` can mark
+    // agent work.
+    agent,
     // Set only for the endpoint a Dynamic block calls: its :return becomes page
     // config, so data read into it must not carry operators. Nested CallApi
     // endpoints get a fresh context without it; their result arrives through

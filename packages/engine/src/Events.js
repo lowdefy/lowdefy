@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import claimDomEvent from './claimDomEvent.js';
+
 class Events {
   constructor({ arrayIndices, block, context }) {
     this.defaultDebounceMs = 300;
@@ -37,6 +39,7 @@ class Events {
     return {
       actions: (type.isObject(actions) ? actions.try : actions) || [],
       catchActions: (type.isObject(actions) ? actions.catch : []) || [],
+      bubble: type.isObject(actions) ? actions.bubble === true : false,
       debounce: type.isObject(actions) ? actions.debounce : null,
       shortcut: type.isObject(actions) ? actions.shortcut ?? null : null,
       history: [],
@@ -50,8 +53,10 @@ class Events {
     });
   }
 
+  // Events a block registers for its own machinery (Upload's policy request, a Table's row
+  // fetch). They are internal: see claimDomEvent.
   registerEvent({ name, actions }) {
-    this.events[name] = this.initEvent(actions);
+    this.events[name] = { ...this.initEvent(actions), internal: true };
   }
 
   triggerEvent({ name, event, progress }) {
@@ -69,6 +74,16 @@ class Events {
       success: true,
       bounced: false,
     };
+    const handledBy = claimDomEvent({
+      blockId: this.block.blockId,
+      bubble: eventDescription?.bubble === true,
+      hasActions: !type.isUndefined(eventDescription),
+      internal: eventDescription?.internal === true,
+    });
+    if (!type.isNull(handledBy)) {
+      result.handledBy = handledBy;
+      return result;
+    }
     // no event
     if (type.isUndefined(eventDescription)) {
       return result;

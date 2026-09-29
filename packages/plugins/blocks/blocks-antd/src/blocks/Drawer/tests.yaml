@@ -135,3 +135,11 @@
   properties:
     title: Rendered in place
     getContainer: false
+- id: 'properties.padding: compact'
+  type: Drawer
+  properties:
+    padding: compact
+- id: 'properties.padding: none'
+  type: Drawer
+  properties:
+    padding: none

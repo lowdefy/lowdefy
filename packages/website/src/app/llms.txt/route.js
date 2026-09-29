@@ -1,5 +1,7 @@
 import articles from '@/content/articles';
 
+export const dynamic = 'force-static';
+
 export function GET() {
   const articleLines = articles
     .map((a) => `- [${a.title}](https://lowdefy.com/articles/${a.id})`)

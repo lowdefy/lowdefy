@@ -80,6 +80,7 @@ class ServerParser {
   }
 
   parse({
+    agent,
     args,
     arrayIndices = [],
     dataShapes = null,
@@ -108,6 +109,7 @@ class ServerParser {
     const parser = {
       parse: (callOptions) =>
         this.parse({
+          agent,
           arrayIndices,
           error,
           items,
@@ -154,6 +156,7 @@ class ServerParser {
           }
         }
         const res = this.operators[op]({
+          agent,
           args,
           arrayIndices,
           env: this.env,

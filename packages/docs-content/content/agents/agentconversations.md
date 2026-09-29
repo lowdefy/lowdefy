@@ -59,7 +59,7 @@ The block does not manage data — you load conversations from your database and
         type: Request
         skip:
           _ne:
-            - _event: key
+            - _event: action
             - delete
         params:
           - delete_conversation
@@ -74,10 +74,12 @@ The block does not manage data — you load conversations from your database and
   - `label: string`: Conversation title.
   - `icon`: Optional icon.
   - `disabled: boolean`: Whether the item is disabled.
+  - `loading: boolean`: Show a spinner in place of the item's icon, for example while a title is being generated.
   - `timestamp: number`: Timestamp for sorting or display.
   - `group: string`: Group key (e.g. `'Today'`, `'Yesterday'`, `'Last week'`).
 
 - `activeKey: string`: The `key` of the currently selected conversation. Highlights the active item.
+- `loadingKey: string`: The `key` of a conversation that is still loading. That row shows a spinner in place of its icon and is marked `aria-busy`. Set it on select while the transcript is read, and clear it when the read completes (see below).
 - `width: number`: Default: `250` - Sidebar width in pixels.
 
 ### Creation Button
@@ -102,13 +104,45 @@ The block does not manage data — you load conversations from your database and
   - `label: string`: Label for ungrouped items.
   - `defaultExpandedKeys: string[]`: Groups expanded by default.
 
+###### Mark the selected conversation as loading while its transcript is read:
+```yaml
+- id: conversations
+  type: AgentConversations
+  properties:
+    items:
+      _request: list_conversations
+    activeKey:
+      _state: activeConversationId
+    loadingKey:
+      _state: loadingConversationId
+  events:
+    onSelect:
+      - id: switch
+        type: SetState
+        params:
+          activeConversationId:
+            _event: key
+          loadingConversationId:
+            _event: key
+      - id: load
+        type: Request
+        params:
+          - load_messages
+      - id: loaded
+        type: SetState
+        params:
+          loadingConversationId: null
+```
+
+Pair it with the [`AgentChat`](/AgentChat) `loading` property, driven from the same state, so the chat column shows a skeleton and disables the composer for the same window.
+
 ## Events
 
 | Event | When | Event data |
 | --- | --- | --- |
-| `onSelect` | User clicks a conversation. | `key` |
+| `onSelect` | User clicks a conversation. | `key`, `previousKey` |
 | `onNew` | User clicks the creation button. | |
-| `onMenuClick` | User clicks a context menu item. | `key` (menu action), `item` (conversation) |
+| `onMenuClick` | User clicks a context menu item. | `action` (menu item key), `conversationKey`, `conversation` |
 
 ###### Handle menu actions:
 ```yaml
@@ -118,7 +152,7 @@ events:
       type: CallMethod
       skip:
         _ne:
-          - _event: key
+          - _event: action
           - rename
       params:
         blockId: rename_modal
@@ -129,7 +163,7 @@ events:
       type: Request
       skip:
         _ne:
-          - _event: key
+          - _event: action
           - delete
       params:
         - delete_conversation
@@ -137,7 +171,7 @@ events:
       type: Request
       skip:
         _ne:
-          - _event: key
+          - _event: action
           - delete
       params:
         - list_conversations

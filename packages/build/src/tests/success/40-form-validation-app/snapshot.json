@@ -5092,6 +5092,16 @@
               "default": false,
               "description": "Change the card style to inner."
             },
+            "padding": {
+              "type": "string",
+              "enum": [
+                "default",
+                "compact",
+                "none"
+              ],
+              "default": "default",
+              "description": "Space inside the card body. `compact` tightens the body to 12px and aligns the header with it. `none` removes the body padding so content such as a table, list or image runs edge to edge; the header keeps its padding."
+            },
             "size": {
               "type": "string",
               "enum": [

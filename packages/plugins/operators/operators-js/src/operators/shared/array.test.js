@@ -1475,7 +1475,7 @@ describe('_array.length', () => {
 
 test('_array called with no method or params', () => {
   expect(() => _array({ location: 'location' })).toThrowErrorMatchingInlineSnapshot(
-    `"_array requires a method. Use one of the following: concat, copyWithin, every, fill, filter, find, findIndex, flat, includes, indexOf, join, lastIndexOf, map, reduce, reduceRight, reverse, slice, some, sort, splice, length."`
+    `"_array requires a method. Use one of the following: at, concat, copyWithin, every, fill, filter, find, findIndex, findLast, findLastIndex, flat, flatMap, from, includes, indexOf, join, lastIndexOf, map, pop, push, reduce, reduceRight, reverse, shift, slice, some, sort, splice, unshift, length."`
   );
 });
 
@@ -1483,6 +1483,135 @@ test('_array invalid method', () => {
   expect(() =>
     _array({ params: [['a']], methodName: 'X', location: 'location' })
   ).toThrowErrorMatchingInlineSnapshot(
-    `"_array.X is not supported, use one of the following: concat, copyWithin, every, fill, filter, find, findIndex, flat, includes, indexOf, join, lastIndexOf, map, reduce, reduceRight, reverse, slice, some, sort, splice, length."`
+    `"_array.X is not supported, use one of the following: at, concat, copyWithin, every, fill, filter, find, findIndex, findLast, findLastIndex, flat, flatMap, from, includes, indexOf, join, lastIndexOf, map, pop, push, reduce, reduceRight, reverse, shift, slice, some, sort, splice, unshift, length."`
   );
+});
+
+describe('_array.push', () => {
+  const methodName = 'push';
+  test('push returns the array with items appended', () => {
+    expect(_array({ params: [[1, 2], 3, 4], methodName, location })).toEqual([1, 2, 3, 4]);
+    expect(_array({ params: { on: [1, 2], items: [3, 4] }, methodName, location })).toEqual([
+      1, 2, 3, 4,
+    ]);
+    expect(_array({ params: { on: null, items: ['a'] }, methodName, location })).toEqual(['a']);
+  });
+  test('push throws when items is not an array', () => {
+    expect(() =>
+      _array({ params: { on: [1], items: 2 }, methodName, location })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_array.push takes an array as input argument for items."`
+    );
+  });
+});
+
+describe('_array.unshift', () => {
+  const methodName = 'unshift';
+  test('unshift returns the array with items prepended', () => {
+    expect(_array({ params: [[3, 4], 1, 2], methodName, location })).toEqual([1, 2, 3, 4]);
+    expect(_array({ params: { on: [3], items: [1, 2] }, methodName, location })).toEqual([1, 2, 3]);
+  });
+});
+
+describe('_array.pop', () => {
+  const methodName = 'pop';
+  test('pop returns the array without its last item', () => {
+    expect(_array({ params: [1, 2, 3], methodName, location })).toEqual([1, 2]);
+    expect(_array({ params: null, methodName, location })).toEqual([]);
+  });
+  test('pop throws for an object', () => {
+    expect(() =>
+      _array({ params: { on: [1] }, methodName, location })
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"_array.pop accepts one of the following types: array, null."`
+    );
+  });
+});
+
+describe('_array.shift', () => {
+  const methodName = 'shift';
+  test('shift returns the array without its first item', () => {
+    expect(_array({ params: [1, 2, 3], methodName, location })).toEqual([2, 3]);
+    expect(_array({ params: null, methodName, location })).toEqual([]);
+  });
+});
+
+describe('_array.at', () => {
+  const methodName = 'at';
+  test('at returns the item at an index, counting back from the end for negative indices', () => {
+    expect(_array({ params: [['a', 'b', 'c'], 0], methodName, location })).toEqual('a');
+    expect(_array({ params: { on: ['a', 'b', 'c'], index: -1 }, methodName, location })).toEqual(
+      'c'
+    );
+    expect(_array({ params: [['a'], 5], methodName, location })).toBeUndefined();
+  });
+});
+
+describe('_array.findLast and _array.findLastIndex', () => {
+  const callback = _function({
+    location,
+    operatorPrefix,
+    params: { __gt: [{ __args: '0' }, 3] },
+    parser,
+  });
+  test('findLast returns the last item passing the callback', () => {
+    expect(_array({ params: [[5, 1, 6, 2], callback], methodName: 'findLast', location })).toEqual(
+      6
+    );
+    expect(
+      _array({ params: { on: [1, 2], callback }, methodName: 'findLast', location })
+    ).toBeUndefined();
+  });
+  test('findLastIndex returns the index of the last item passing the callback', () => {
+    expect(
+      _array({ params: [[5, 1, 6, 2], callback], methodName: 'findLastIndex', location })
+    ).toEqual(2);
+    expect(
+      _array({ params: { on: [1, 2], callback }, methodName: 'findLastIndex', location })
+    ).toEqual(-1);
+  });
+});
+
+describe('_array.flatMap', () => {
+  const callback = _function({
+    location,
+    operatorPrefix,
+    params: [{ __args: '0' }, { __args: '0' }],
+    parser,
+  });
+  test('flatMap maps each item and flattens the result one level', () => {
+    expect(_array({ params: [[1, 2], callback], methodName: 'flatMap', location })).toEqual([
+      1, 1, 2, 2,
+    ]);
+    expect(_array({ params: { on: null, callback }, methodName: 'flatMap', location })).toEqual([]);
+  });
+});
+
+describe('_array.from', () => {
+  const methodName = 'from';
+  const indexCallback = _function({
+    location,
+    operatorPrefix,
+    params: { __args: '1' },
+    parser,
+  });
+  test('from creates an array of length n from { length: n }', () => {
+    expect(_array({ params: [{ length: 3 }], methodName, location })).toEqual([
+      undefined,
+      undefined,
+      undefined,
+    ]);
+    expect(
+      _array({ params: { on: { length: 4 }, callback: indexCallback }, methodName, location })
+    ).toEqual([0, 1, 2, 3]);
+  });
+  test('from copies an array or splits a string into characters', () => {
+    expect(_array({ params: [[1, 2]], methodName, location })).toEqual([1, 2]);
+    expect(_array({ params: { on: 'abc' }, methodName, location })).toEqual(['a', 'b', 'c']);
+  });
+  test('from throws for a non array or object param', () => {
+    expect(() => _array({ params: 3, methodName, location })).toThrowErrorMatchingInlineSnapshot(
+      `"_array.from accepts one of the following types: array, object."`
+    );
+  });
 });

@@ -143,6 +143,14 @@ Events orchestrate action execution and handle:
 - Event-level catch actions for error recovery
 - Keyboard shortcut metadata storage
 
+#### DOM Event Bubbling
+
+A DOM event bubbles through every block that wraps its target, and each wrapping block may call `triggerEvent` for it (a Button click also reaches the clickable Card around it). `triggerEvent` asks `claimDomEvent` (`src/claimDomEvent.js`) whether another block already handled the DOM event currently being dispatched, read from `window.event`. Only blocks on the event's path take part: `getPathIndex` finds the block's layout element (`bl-<blockId>`, rendered by the client) in `domEvent.composedPath()`. The first block on the path with actions for the event claims it in a module-level `WeakMap`; blocks further out on the path then return early with `handledBy: <blockId>` instead of running their actions, and a block further in runs and takes the claim. The same block may fire several events for one DOM event (AgGrid `onCellClick` and `onRowClick`). An event with `bubble: true` handles the DOM event without claiming it.
+
+`window.event` stays set while React flushes a discrete update and its effects in a microtask inside the listener, so events blocks fire from effects (a Table's `onSelectionChange` after a Button's `CallMethod clearSelection`) see the click too. They run because the block is off the path, inside the handler, or was called: `createCallMethod` marks the target block with `exemptFromDomEvent`, and its events for that DOM event are never skipped. Internal events (`registerEvent`) are never skipped either. Outside a DOM dispatch `window.event` is undefined, so events from requests and timers are never skipped.
+
+Blocks that fire events from third-party DOM listeners handle their own inner controls: AgGrid skips `onRowClick`/`onCellClick` for clicks on cell controls (`isCellControlClick`), because ag-grid's listeners run before React's.
+
 #### Shortcut Support
 
 `initEvent()` preserves the `shortcut` string (or string array) from the event config on the runtime event object. Blocks access it via `events.onClick?.shortcut` to render shortcut badges.
@@ -239,6 +247,8 @@ The engine also evaluates `class` (string, array, or cssKey-keyed object of Tail
 ## Dependency-Tracked Evaluation
 
 A block records what it reads while it self-evaluates (`src/tracking/ReadRecorder.js`, pushed in `Block.evaluateSelf`); `WebParser` reports each operator call to the current recorder through the operator's `tracking` declaration (pure / read keys / volatile / untracked — see `@lowdefy/operators` `classifyOperatorCall`), and `_js` accessor reads go through a tracked operator view. Writers report what they changed to the context's `DependencyTracker`: `State.set` (always), `State.republish` (only if the value differs), SetState, SetGlobal, request start/completion, input `setValue`. `update({ changes })` then re-evaluates only blocks whose reads intersect the changes (prefix match both ways), plus volatile/untracked/forced blocks, keeping today's visibility-driven settling loop; a bare `update()` is a full pass, as are unknown callers and any action method outside the reporting allowlist (`trackActionMethods`). Off switches: `config.dependencyTracking: false` (via appMeta), `window.__lowdefyFullEvaluation`, `lowdefy._internal.dependencyTracking === false`, `DependencyTracker.enabled`. Parity is proven differentially (`test/Block/dependencyTracking.parity.test.js`; `test:full` runs the suite with full passes).
+
+Resizes report `media:size`, `media:width` and `media:height` through `context._internal.updateMedia()` (`src/tracking/updateMedia.js`), called by the client's debounced page resize listener. It diffs the viewport against `context._internal.media` (seeded when the context is created and on each render-time full pass) and skips the pass entirely when no block's reads intersect the changes (`blocksReadChanges`), so a same-breakpoint resize costs one scan of the block map and evaluates nothing when blocks only read `_media: size`. See `test/Block/media.test.js`.
 
 ## State Container Structure
 

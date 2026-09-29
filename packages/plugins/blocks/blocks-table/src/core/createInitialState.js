@@ -1,0 +1,51 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { type } from '@lowdefy/helpers';
+
+import pickViewPart from './pickViewPart.js';
+import resolveViewColumns from './resolveViewColumns.js';
+
+function passthroughView({ claimedViewKeys, value, defaultView }) {
+  const keys = new Set([...Object.keys(defaultView ?? {}), ...Object.keys(value?.view ?? {})]);
+  const view = {};
+  keys.forEach((key) => {
+    if (claimedViewKeys.has(key)) return;
+    const part = pickViewPart({ value, defaultView, key });
+    if (!type.isUndefined(part)) view[key] = part;
+  });
+  return view;
+}
+
+// Builds the whole table state from a block value: each feature slice resolves its own part of the
+// value with the brief's fallback rules (value, then defaultView, then column defaults).
+function createInitialState({ value, config, features, rows }) {
+  const { defaultView } = config;
+  const viewColumns = resolveViewColumns({ value, defaultView, columns: config.columns });
+  const args = { value, defaultView, config, viewColumns, rows, getKey: config.getKey };
+  const state = {};
+  Object.entries(features.sliceDefinitions).forEach(([name, definition]) => {
+    state[name] = definition.init(args);
+  });
+  state.viewPassthrough = passthroughView({
+    claimedViewKeys: features.claimedViewKeys,
+    value,
+    defaultView,
+  });
+  return state;
+}
+
+export default createInitialState;

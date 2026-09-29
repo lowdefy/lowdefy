@@ -732,6 +732,14 @@
       "typeName": "Switch"
     },
     {
+      "slug": "input-blocks/tableinput",
+      "title": "TableInput",
+      "section": "Input Blocks",
+      "path": "content/input-blocks/tableinput.md",
+      "kind": "block",
+      "typeName": "TableInput"
+    },
+    {
       "slug": "input-blocks/tagmultipleselector",
       "title": "TagMultipleSelector",
       "section": "Input Blocks",
@@ -1138,6 +1146,22 @@
       "path": "content/display-blocks/steps.md",
       "kind": "block",
       "typeName": "Steps"
+    },
+    {
+      "slug": "display-blocks/table",
+      "title": "Table",
+      "section": "Display Blocks",
+      "path": "content/display-blocks/table.md",
+      "kind": "block",
+      "typeName": "Table"
+    },
+    {
+      "slug": "display-blocks/tablelight",
+      "title": "TableLight",
+      "section": "Display Blocks",
+      "path": "content/display-blocks/tablelight.md",
+      "kind": "block",
+      "typeName": "TableLight"
     },
     {
       "slug": "display-blocks/tag",
@@ -2016,6 +2040,14 @@
       "path": "content/operators/_actions.md",
       "kind": "operator",
       "typeName": "_actions"
+    },
+    {
+      "slug": "operators/_agent",
+      "title": "_agent",
+      "section": "Operators",
+      "path": "content/operators/_agent.md",
+      "kind": "operator",
+      "typeName": "_agent"
     },
     {
       "slug": "operators/_and",
@@ -2958,7 +2990,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "f52651442973e69179191bf792d08489e2744919cff5c49491a77705494adc07"
+      "hash": "eba6af9c23caa7b984b5e0f7e26a88f82764325de1711e267cc7eb6c96d8cac9"
     },
     "concepts/selectors": {
       "files": [
@@ -3032,7 +3064,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "638493d2e9f4c6786559b1923786c267fa0e8b172944c10a1d4928aaaadfb43d"
+      "hash": "d4c7c280343a5a4539c10d507408c1c0337dbacd2c0517e8d5b052a1e47c3cc5"
     },
     "concepts/keyboard-shortcuts": {
       "files": [
@@ -3317,7 +3349,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "9095e1f01b1b6ecd69d589d0abf98bd176647ff55331295479ffd5606ce59ede"
+      "hash": "8da70420644d16968c55a9f4afeb4479b9f01d66992987851a8936d2487d716a"
     },
     "agents/agent-mcp-tools": {
       "files": [
@@ -3392,7 +3424,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "7e8e6009293d390533fd38d58730c33aacaaf45d7468b84593c054a42ece02df"
+      "hash": "21b5605894f876c5593cfebcbbc0250fc0566307fbfece29da4a3814370c906c"
     },
     "websockets/websockets-introduction": {
       "files": [
@@ -4424,6 +4456,24 @@
       ],
       "hash": "0747b461ea044813ac4f02d44eb2add893b2a2150b51342a2a893a71da047498"
     },
+    "input-blocks/tableinput": {
+      "files": [
+        "../plugins/blocks/blocks-table/src/blocks/TableInput/gallery.yaml",
+        "../plugins/blocks/blocks-table/src/blocks/TableInput/meta.js",
+        "blocks/input/TableInput.yaml",
+        "blocks/input/TableInputGuide.md",
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/blocks/gallery.yaml.njk",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/validate_email.yaml",
+        "version.yaml"
+      ],
+      "hash": "2489254cdf380db73d1ee4b6c22b754972d335cb9ad233e83d760b889a9977fc"
+    },
     "input-blocks/tagmultipleselector": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/TagMultipleSelector/gallery.yaml",
@@ -5295,6 +5345,42 @@
       ],
       "hash": "15e86cf199a3dc5dfccc0f1e475af08f1169e2ca87c98c363484d40ac719a1d2"
     },
+    "display-blocks/table": {
+      "files": [
+        "../plugins/blocks/blocks-table/src/blocks/Table/gallery.yaml",
+        "../plugins/blocks/blocks-table/src/blocks/Table/meta.js",
+        "blocks/display/Table.yaml",
+        "blocks/display/TableGuide.md",
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/blocks/gallery.yaml.njk",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/validate_email.yaml",
+        "version.yaml"
+      ],
+      "hash": "b46d99292da7874f729be8108278d63095662d09212e22d50e0d5a7032a28f35"
+    },
+    "display-blocks/tablelight": {
+      "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/TableLight/gallery.yaml",
+        "../plugins/blocks/blocks-antd/src/blocks/TableLight/meta.js",
+        "blocks/display/TableLight.yaml",
+        "blocks/display/TableLightGuide.md",
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/blocks/gallery.yaml.njk",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/validate_email.yaml",
+        "version.yaml"
+      ],
+      "hash": "bc2adfc091e7b502c7ddf1f511137eebcc5ac73489c2c1f24af809f4c950c71d"
+    },
     "display-blocks/tag": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/Tag/gallery.yaml",
@@ -5429,7 +5515,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "1c51cef644cbf0e2d3a5edc45f681fe01f40b3824443d41ac175bc8c397ad978"
+      "hash": "b170905ecd23109a8ed6037754abe4759cac11998f5ac5ac72e3b4c6b9fa1fc3"
     },
     "container-blocks/carousel": {
       "files": [
@@ -5463,7 +5549,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "f49804d38246898105cd0820a18e24abd85a540c2e3a660228953930494f4cd3"
+      "hash": "c5b9742cb7603d8be55f8f90106b95ba3700449378fb732964548eac99ca3df0"
     },
     "container-blocks/configprovider": {
       "files": [
@@ -5548,7 +5634,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "900f4a2e9ff4e132d1992ca31c4f54e4289ec2a77d46492fb0149724132c1301"
+      "hash": "f5803086c3546f00b1ca03d68310bc85cf629d869a69cd7481e64f25850d0128"
     },
     "container-blocks/dropdownmenu": {
       "files": [
@@ -5752,7 +5838,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "8b85a1c08cff2cf1eb78f74913bed78d2c71a1e8a9dd179c598756a606b72c33"
+      "hash": "2c01a1a126a1a9308c97a830d604aa4ad49a7f2e5073051c5de48759744019d5"
     },
     "container-blocks/pageheadermenu": {
       "files": [
@@ -5769,7 +5855,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "99410b927d062e2f9f256044e4a9a4c471e55aa8dcae7cb731e7b31221c3e08b"
+      "hash": "586ae34243b1a12f93351fd8ffcbabe296b3de418434661b230a5b37d9609cc6"
     },
     "container-blocks/pagesidebarlayout": {
       "files": [
@@ -5786,7 +5872,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "ce7aee910669e1f828f2870238c677a1b79bb337a55295ed198ead8cc5707a29"
+      "hash": "a9b7b1c93659840bc2eeabbc2f420cebf82e12d0f23701639df648b6241c555d"
     },
     "container-blocks/pagesidermenu": {
       "files": [
@@ -5803,7 +5889,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "b55a07b04cf406b17bf3832b4d4ba7e9631316bfa8794ff236cfccaf0a37b703"
+      "hash": "b5e747e01970ae587cc34238b863442934aff4f5e791abfb25889287bccb095d"
     },
     "container-blocks/popover": {
       "files": [
@@ -6241,7 +6327,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "3f55dbf50ed9b7f341cc28ad0ec803604be15047fa39356b06ffcd0f3bd53889"
+      "hash": "0e537a84feda13373d078b0ab684b9ef7325510dffe7fefab3c46230f383e4bc"
     },
     "connections/mssql": {
       "files": [
@@ -7019,6 +7105,21 @@
       ],
       "hash": "b132c74a87ce9d243f4990952307af12f8f43680e62775bcc099cfc7886c2e83"
     },
+    "operators/_agent": {
+      "files": [
+        "operators/_agent.yaml",
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/operators.yaml.njk",
+        "templates/validate_email.yaml",
+        "version.yaml"
+      ],
+      "hash": "5a9a5a270e9e9b16c7acd3cdc2f72f9ffaf6c30121eefe2b6e06fce09fc1a10b"
+    },
     "operators/_and": {
       "files": [
         "operators/_and.yaml",
@@ -7092,7 +7193,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "a7546035423ce1ec38baf92ad933019b1d7d43974fbbee095cb6dd41130422fe"
+      "hash": "32a5e6bb1b39723888a661ae9d9a2b0f18a46b42df8458c5f497e2c072064a7d"
     },
     "operators/_base64": {
       "files": [
@@ -7587,7 +7688,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "35504ffd887fa487286bc1c53a5a6eec9795a8a91b5e12c3c6cbd3a2cea488b6"
+      "hash": "1c7c156a331263086de1c96389592ef3d36105e87998555db40e517a3d37b46c"
     },
     "operators/_menu": {
       "files": [

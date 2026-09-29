@@ -238,12 +238,24 @@ test.each([
     context.buildActivity = createBuildActivity({ onChange: () => {} });
     context.devServer = { exitCode: null, signalCode: null };
     context.buildActivity.setBusy(true);
+    // waitedMs is timed from when the proxy starts waiting, a moment after the request is sent.
+    // Holding for 200ms from that moment, not from the fetch call, keeps the waitedMs assertion
+    // below from racing the request's arrival.
+    const { waitForIdle } = context.buildActivity;
+    const waitStarted = new Promise((resolve) => {
+      context.buildActivity.waitForIdle = (options) => {
+        const waiting = waitForIdle(options);
+        resolve();
+        return waiting;
+      };
+    });
 
     const { path: requestPath, init } = makeRequest();
     const pending = fetch(`http://localhost:${port}${requestPath}`, {
       ...init,
       headers: { 'x-lowdefy-build-wait': 'settled=true&sawBuild=false&waitedMs=0' },
     }).then((response) => response.json());
+    await waitStarted;
     await new Promise((resolve) => setTimeout(resolve, 200));
 
     // The restart the build needed: the old server stops, a new one answers.

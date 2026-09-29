@@ -3,7 +3,7 @@
     {
       "version": "7.0.0",
       "from": ">=6.0.0 <7.0.0",
-      "description": "Lucide icons replace react-icons; ClickableHtml lists its data events",
+      "description": "Lucide icons replace react-icons; ClickableHtml lists its data events; nested events no longer bubble",
       "codemods": [
         {
           "id": "react-icons-to-lucide",
@@ -14,13 +14,18 @@
           "id": "clickable-html-data-events",
           "description": "List the events each ClickableHtml block's HTML fires in its new dataEvents property (from data-event attributes and the block's events), mark data-changing events that use data-confirm as confirm: true, and report HTML built from data that inserts values unescaped.",
           "path": "v7-0-0/02-clickable-html-data-events.md"
+        },
+        {
+          "id": "nested-event-bubbling",
+          "description": "Add bubble: true only to nested events whose outer event reads a value the inner event sets, copy AgGrid onRowClick state setup into cell control events that relied on it, and report the nested events left with the new innermost-only behaviour.",
+          "path": "v7-0-0/03-nested-event-bubbling.md"
         }
       ]
     },
     {
       "version": "6.0.0",
       "from": ">=5.0.0 <6.0.0",
-      "description": "Vite + Hono server migration (plugin ESM exports, Auth.js imports, provider-neutral file blocks)",
+      "description": "Vite + Hono server migration (plugin ESM exports, Auth.js imports, provider-neutral file blocks, request timeout, plugin type overrides)",
       "codemods": [
         {
           "id": "migrate-plugin-packages",
@@ -31,6 +36,16 @@
           "id": "s3-blocks-to-file-blocks",
           "description": "Optional: rename the deprecated S3UploadButton/S3UploadPhoto/S3UploadDragger/S3Download blocks to the provider-neutral Upload/UploadPhoto/UploadDragger/Download blocks, and s3PostPolicyRequestId/s3GetPolicyRequestId to uploadPolicyRequestId/downloadPolicyRequestId (also on TiptapInput, TiptapMentionInput, and AgentChat attachments). The aliases keep working; this silences deprecation warnings.",
           "path": "v6-0-0/02-s3-blocks-to-file-blocks.md"
+        },
+        {
+          "id": "request-timeout",
+          "description": "Add config.requestTimeout: 0 to keep the v5 request duration. v6 cuts requests off after 30 seconds by default (v5 had no timeout), and a cut-off request shows a generic error while the rest of the page renders from the requests that finished.",
+          "path": "v6-0-0/03-request-timeout.md"
+        },
+        {
+          "id": "report-type-overrides",
+          "description": "Report-only: after a build, list custom plugin types that override a Lowdefy built-in type of the same name. A plugin holding a v5 copy of a built-in keeps its v5 behaviour and can break v6 blocks without an error. Each override needs author review: keep, delete the copy, or rename.",
+          "path": "v6-0-0/04-report-type-overrides.md"
         }
       ]
     },

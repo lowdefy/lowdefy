@@ -32,7 +32,8 @@ function createDisplayMeta(blockName, { size = false } = {}) {
     dynamicEvents: true,
     events: {
       onCellClick: {
-        description: 'Trigger event when a cell is clicked.',
+        description:
+          'Trigger event when a cell is clicked. Clicks on a button, link, menu, input or checkbox in the cell do not trigger it.',
         event: {
           cell: 'The clicked cell with column and value.',
           colId: 'The column id.',
@@ -46,7 +47,8 @@ function createDisplayMeta(blockName, { size = false } = {}) {
         event: { rows: 'The displayed rows after filtering.', filter: 'The filter model.' },
       },
       onRowClick: {
-        description: 'Trigger event when a row is clicked.',
+        description:
+          'Trigger event when a row is clicked. Clicks on a button, link, menu, input or checkbox in a cell do not trigger it.',
         event: { row: 'The row data.', selected: 'All selected rows.', rowIndex: 'The row index.' },
       },
       onRowSelected: {
@@ -120,6 +122,11 @@ function createDisplayMeta(blockName, { size = false } = {}) {
         rowData: {
           type: 'array',
           description: 'The list of data to display on the table.',
+        },
+        quickFilterValue: {
+          type: 'string',
+          description:
+            'Show only rows with a cell containing this text. Bind it to state to drive a search box; the `setQuickFilter` method does the same imperatively.',
         },
         rowId: {
           type: 'string',

@@ -29,6 +29,22 @@ try {
   // No build yet (e.g. editor tooling) — default base.
 }
 
+// Vite 8 tree-shakes a `.module.css` imported only for its side effects
+// (`import './style.module.css'`), and its CSS goes with it: `:global(...)` rules in block and
+// plugin stylesheets never reach the built client. Marking CSS modules as side-effectful keeps
+// them, whatever the import style.
+function keepCssModuleSideEffects() {
+  return {
+    name: 'lowdefy-keep-css-module-side-effects',
+    enforce: 'post',
+    transform(code, id) {
+      if (/\.module\.css($|\?)/.test(id)) {
+        return { code, moduleSideEffects: 'no-treeshake' };
+      }
+    },
+  };
+}
+
 const uploadSourceMaps = Boolean(process.env.SENTRY_AUTH_TOKEN);
 
 // The @lowdefy packages this server depends on. A linked plugin pinned to
@@ -47,6 +63,7 @@ export default defineConfig(({ mode }) => ({
   base: `${basePath}/`,
   plugins: [
     react(),
+    keepCssModuleSideEffects(),
     uploadSourceMaps &&
       sentryVitePlugin({
         org: process.env.SENTRY_ORG,

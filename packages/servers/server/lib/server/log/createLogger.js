@@ -19,7 +19,7 @@ import { type } from '@lowdefy/helpers';
 
 import appMeta from '../../build/appMeta.js';
 import scrubSecrets from '../scrubSecrets.js';
-import { serializeErrorForLog } from './logErrorProjection.js';
+import serializeErrorForLog from './serializeErrorForLog.js';
 
 // Deploy identity on every log line — pid/hostname are stripped, so these
 // fields are what correlates a line to an app build across replicas.

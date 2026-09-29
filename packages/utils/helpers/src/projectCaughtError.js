@@ -16,23 +16,15 @@
 
 import { lowdefyErrorTypes, readErrorCodes } from '@lowdefy/errors';
 
+import mapPlainValues from './mapPlainValues.js';
 import type from './type.js';
 
 function identity(value) {
   return value;
 }
 
-function scrubDeep(value, scrub) {
-  if (type.isString(value)) return scrub(value);
-  if (type.isArray(value)) return value.map((item) => scrubDeep(item, scrub));
-  if (type.isObject(value)) {
-    const scrubbed = {};
-    for (const [key, item] of Object.entries(value)) {
-      scrubbed[key] = scrubDeep(item, scrub);
-    }
-    return scrubbed;
-  }
-  return value;
+function scrubStrings(value, scrub) {
+  return mapPlainValues(value, (item) => (type.isString(item) ? scrub(item) : item));
 }
 
 // Own-key lookup: an error named after an Object.prototype member, such as
@@ -79,10 +71,10 @@ function projectNode(error, scrub, seen) {
   } else if (error.name === 'UserError') {
     // The author wrote a UserError's cause and metaData in config; any other
     // class's non-Error cause is library data, such as a response body.
-    if (!type.isUndefined(cause)) projected.cause = scrubDeep(cause, scrub);
+    if (!type.isUndefined(cause)) projected.cause = scrubStrings(cause, scrub);
   }
   if (error.name === 'UserError' && !type.isUndefined(error.metaData)) {
-    projected.metaData = scrubDeep(error.metaData, scrub);
+    projected.metaData = scrubStrings(error.metaData, scrub);
   }
 
   return projected;
