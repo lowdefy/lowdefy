@@ -16,11 +16,11 @@
 
 import getEnrichmentLogOrganization from '../enrichment/getEnrichmentLogOrganization.js';
 import runBulkWriteBatches from '../enrichment/runBulkWriteBatches.js';
+import planReleaseWaiting from '../enrichment/planReleaseWaiting.js';
 import scopeWriteOperations from '../enrichment/scopeWriteOperations.js';
 import getDownstream from './getDownstream.js';
 import planCompleteCell from './planCompleteCell.js';
 import planQueueDownstream from './planQueueDownstream.js';
-import planReleaseWaiting from './planReleaseWaiting.js';
 import readAppliedCells from './readAppliedCells.js';
 import readClaimedRows from './readClaimedRows.js';
 
@@ -30,7 +30,7 @@ import readClaimedRows from './readClaimedRows.js';
 // were waiting for the finished cells are released, and the autoRun columns the ok cells feed
 // are queued (`downstream` names them).
 async function runComplete({ collection, compiled, logCollection, now, tenant, tenantGuard }) {
-  const { downstreamByColumn, filter, results } = compiled;
+  const { dependentsByColumn, downstreamByColumn, filter, results } = compiled;
   const docs = await readClaimedRows({ collection, compiled, tenant });
   const cells = [];
   results.forEach((result, index) => {
@@ -55,7 +55,14 @@ async function runComplete({ collection, compiled, logCollection, now, tenant, t
       ? cells
       : await readAppliedCells({ collection, cells, tenant });
   const releaseOperations = scopeWriteOperations({
-    operations: planReleaseWaiting({ applied, compiled, now }),
+    operations: planReleaseWaiting({
+      finished: applied
+        .filter((cell) => cell.kind !== 'requeue')
+        .map(({ docId, result }) => ({ docId, columnKey: result.columnKey })),
+      dependentsByColumn,
+      filter,
+      now,
+    }),
     tenant,
     tenantGuard,
   });

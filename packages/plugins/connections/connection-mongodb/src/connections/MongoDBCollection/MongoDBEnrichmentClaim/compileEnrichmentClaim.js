@@ -16,6 +16,7 @@
 
 import buildProjection from '../enrichment/buildProjection.js';
 import enrichPath from '../enrichment/enrichPath.js';
+import getDependentColumns from '../enrichment/getDependentColumns.js';
 import getEnrichmentFilter from '../enrichment/getEnrichmentFilter.js';
 import getSourcePaths from '../enrichment/getSourcePaths.js';
 import getTargetColumns from '../enrichment/getTargetColumns.js';
@@ -102,7 +103,16 @@ function compileEnrichmentClaim({ properties, tenantScoped }) {
       ]),
     };
   });
-  return { fieldsByKey, filter, leaseMs, limit, maxAttempts, rowKeyField, targets };
+  return {
+    dependentsByColumn: getDependentColumns(columnDefsByKey),
+    fieldsByKey,
+    filter,
+    leaseMs,
+    limit,
+    maxAttempts,
+    rowKeyField,
+    targets,
+  };
 }
 
 export default compileEnrichmentClaim;

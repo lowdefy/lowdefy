@@ -47,6 +47,7 @@ function operation({ match, columnKey, set, unset }) {
 //            MongoDBEnrichmentComplete stores as the result's inputHash.
 //   expired: a lease that ran out on the last allowed attempt: the cell is an error.
 //   missing: a required input has no value: empty, with the missing column named.
+//            Both finish the cell for good, so runClaim releases the cells waiting for it.
 //   wait:    an input column is still queued or running: queued again with `waitingFor`, and
 //            released as soon as that input completes (MongoDBEnrichmentComplete).
 function planClaimCell({ doc, target, compiled, now, generateToken }) {
@@ -66,6 +67,8 @@ function planClaimCell({ doc, target, compiled, now, generateToken }) {
   if (read.status === 'running' && attempts >= maxAttempts) {
     return {
       kind: 'expired',
+      docId: doc._id,
+      columnKey,
       operation: operation({
         match,
         columnKey,
@@ -82,6 +85,8 @@ function planClaimCell({ doc, target, compiled, now, generateToken }) {
   if (missing !== null) {
     return {
       kind: 'missing',
+      docId: doc._id,
+      columnKey,
       operation: operation({
         match,
         columnKey,

@@ -602,7 +602,7 @@ _ref:
 
             Concurrent workers never claim the same cell. Every claim is a compare-and-set: the write matches the cell only in the state the claim read (its status, token, attempts and run) and while it is still claimable, so when two workers read the same cell, only the first write changes it. A worker that lost cells to another reads further candidates, up to five rounds, so it does not stop while cells are still queued.
 
-            A claim also settles cells it can not hand out: a cell whose required input is now missing is set to `empty` with the missing column named, a cell whose enrichment input is queued or running again waits for it (queued with `waitingFor`, released when that input finishes), and a running cell whose lease ran out on its last attempt (`maxAttempts`) becomes an `error`.
+            A claim also settles cells it can not hand out: a cell whose required input is now missing is set to `empty` with the missing column named, a cell whose enrichment input is queued or running again waits for it (queued with `waitingFor`, released when that input finishes), and a running cell whose lease ran out on its last attempt (`maxAttempts`) becomes an `error`. A cell a claim sets to `empty` or `error` releases the cells waiting for it, as a final result does.
 
             ##### Response
 
