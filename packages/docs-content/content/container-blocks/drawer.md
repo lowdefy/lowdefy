@@ -259,6 +259,52 @@ Using a percentage width makes the drawer responsive. This drawer takes up 60% o
           up 60% of the viewport width.
 ```
 
+```yaml
+- id: drawer_padding_btn
+  type: Button
+  layout:
+    flex: 0 0 auto
+  properties:
+    title: Open Drawer with padding none
+  events:
+    onClick:
+      - id: drawer_padding_open
+        type: CallMethod
+        params:
+          blockId: drawer_padding
+          method: setOpen
+          args:
+            - open: true
+- id: drawer_padding
+  type: Drawer
+  properties:
+    title: Recent invoices
+    padding: none
+  blocks:
+    - id: drawer_padding_rows
+      type: Html
+      properties:
+        html: >
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px; border-bottom: 1px solid
+          var(--ant-color-border-secondary);"><span>INV-1042</span><span
+          style="color: var(--ant-color-text-secondary);">$1,280.00</span></div>
+
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px; border-bottom: 1px solid
+          var(--ant-color-border-secondary);"><span>INV-1041</span><span
+          style="color: var(--ant-color-text-secondary);">$640.00</span></div>
+
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px; border-bottom: 1px solid
+          var(--ant-color-border-secondary);"><span>INV-1040</span><span
+          style="color: var(--ant-color-text-secondary);">$2,115.50</span></div>
+
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px;"><span>INV-1039</span><span style="color:
+          var(--ant-color-text-secondary);">$96.00</span></div>
+```
+
 The close button is visible in the top right corner. This is the default behavior.
 
 The close (x) button is hidden. Users can still close by clicking the mask or pressing Escape.
@@ -1399,6 +1445,7 @@ Jane Cooper
 | `mask.closable` | boolean | - | Whether clicking the mask closes the dialog. Takes precedence over `maskClosable`. |
 | `maskClosable` | boolean | `true` | Clicking on the mask (area outside the Drawer) to close the Drawer or not. `mask.closable` takes precedence. |
 | `maxSize` | number | - | Maximum size in pixels a resizable Drawer can be dragged to. |
+| `padding` | string | `"default"` | Space inside the drawer. `compact` tightens the header and body. `none` removes the body padding so content such as a table or list runs edge to edge; the header and footer keep their padding. Enum: `default`, `compact`, `none`. |
 | `resizable` | boolean | `false` | Let the user resize the Drawer by dragging its edge. The configured size is the starting size. |
 | `size` | string \| number | - | Size of the Drawer: width for left and right placements, height for top and bottom. `default` (378px), `large` (736px), a number of pixels or a CSS length. Takes precedence over width and height. |
 | `title` | string | - | The title of the Drawer - supports html. |

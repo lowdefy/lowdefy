@@ -71,6 +71,62 @@ Dashboard
                 prefix: $
 ```
 
+padding: compact trims the content padding from 40px to 16px, so data-heavy pages show more.
+
+```yaml
+- id: psm_compact
+  type: PageSiderMenu
+  properties:
+    padding: compact
+    menu:
+      links:
+        - id: psm_compact_dashboard
+          type: MenuLink
+          properties:
+            title: Dashboard
+        - id: psm_compact_invoices
+          type: MenuLink
+          properties:
+            title: Invoices
+  blocks:
+    - id: psm_compact_text
+      type: Paragraph
+      properties:
+        content: "padding: compact trims the content padding from 40px to 16px, so
+          data-heavy pages show more."
+    - id: psm_compact_card
+      type: Card
+      properties:
+        title: Recent invoices
+        padding: none
+      blocks:
+        - id: psm_compact_card_rows
+          type: Html
+          properties:
+            html: >
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 24px; border-bottom: 1px solid
+              var(--ant-color-border-secondary);"><span>INV-1042</span><span
+              style="color:
+              var(--ant-color-text-secondary);">$1,280.00</span></div>
+
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 24px; border-bottom: 1px solid
+              var(--ant-color-border-secondary);"><span>INV-1041</span><span
+              style="color:
+              var(--ant-color-text-secondary);">$640.00</span></div>
+
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 24px; border-bottom: 1px solid
+              var(--ant-color-border-secondary);"><span>INV-1040</span><span
+              style="color:
+              var(--ant-color-text-secondary);">$2,115.50</span></div>
+
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 24px;"><span>INV-1039</span><span style="color:
+              var(--ant-color-text-secondary);">$96.00</span></div>
+```
+
 Website Redesign
 
 Breadcrumb items support both simple strings and objects with label, icon, pageId, and url properties. Toggle dark mode to see the layout adapt automatically.
@@ -547,6 +603,7 @@ Profile from _menu
 | `siderStorageKey` | string | `"sider"` | localStorage key suffix for sider state persistence. Produces key 'lf-{siderStorageKey}-open'. |
 | `toggleSiderButton` | object | - | Toggle sider button properties. |
 | `footer` | object | - | Footer properties. |
+| `padding` | string | `"default"` | Space around the page content. `compact` tightens it to 16px for dense, data-heavy pages. `none` removes it so content such as a table or grid runs edge to edge; the breadcrumb keeps its own inset. Enum: `default`, `compact`, `none`. |
 | `content` | object | - | Content properties. |
 | `breadcrumb` | object | - | Breadcrumb properties. |
 | `breadcrumb.separator` | string | `"/"` | Use a custom separator string. |

@@ -98,6 +98,55 @@ Small size card with compact padding (12px) and shorter header (38px). Ideal for
             color: default
 ```
 
+padding: compact tightens the body to 12px and lines the header up with it, while keeping the default header height. Use it for dense dashboards and forms.
+
+```yaml
+- id: padding_compact_card
+  type: Card
+  layout:
+    flex: 1 1 0
+  properties:
+    title: Compact
+    padding: compact
+  blocks:
+    - id: padding_compact_p
+      type: Paragraph
+      properties:
+        content: "padding: compact tightens the body to 12px and lines the header up
+          with it, while keeping the default header height. Use it for dense
+          dashboards and forms."
+- id: padding_none_card
+  type: Card
+  layout:
+    flex: 1 1 0
+  properties:
+    title: Recent invoices
+    padding: none
+  blocks:
+    - id: padding_none_card_rows
+      type: Html
+      properties:
+        html: >
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px; border-bottom: 1px solid
+          var(--ant-color-border-secondary);"><span>INV-1042</span><span
+          style="color: var(--ant-color-text-secondary);">$1,280.00</span></div>
+
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px; border-bottom: 1px solid
+          var(--ant-color-border-secondary);"><span>INV-1041</span><span
+          style="color: var(--ant-color-text-secondary);">$640.00</span></div>
+
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px; border-bottom: 1px solid
+          var(--ant-color-border-secondary);"><span>INV-1040</span><span
+          style="color: var(--ant-color-text-secondary);">$2,115.50</span></div>
+
+          <div style="display: flex; justify-content: space-between; padding:
+          8px 24px;"><span>INV-1039</span><span style="color:
+          var(--ant-color-text-secondary);">$96.00</span></div>
+```
+
 The default card has a visible border. This clearly separates the card from its surroundings.
 
 A borderless card blends into its container. Best used on colored backgrounds where the card's white fill provides enough contrast.
@@ -1207,6 +1256,7 @@ A warm-toned card using theme tokens to customize the background, header, text, 
 | `hoverable` | boolean | `false` | Lift up when hovering card. |
 | `loading` | boolean | `false` | Show a loading skeleton in place of the card content. |
 | `inner` | boolean | `false` | Change the card style to inner. |
+| `padding` | string | `"default"` | Space inside the card body. `compact` tightens the body to 12px and aligns the header with it. `none` removes the body padding so content such as a table, list or image runs edge to edge; the header keeps its padding. Enum: `default`, `compact`, `none`. |
 | `size` | string | `"default"` | Size of the card. Enum: `default`, `small`. |
 | `title` | string | - | Title to show in the title area - supports html. Overwritten by blocks in the title content area. |
 | `variant` | string | `"outlined"` | Card style variant. Enum: `outlined`, `borderless`. |

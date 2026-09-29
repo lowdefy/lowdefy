@@ -39,6 +39,65 @@ PageSidebarLayout provides a full-page layout with a full-height sidebar. The si
           drawer replaces the sider.
 ```
 
+padding: none removes the content padding, so tables and grids can run edge to edge. Blocks set their own spacing.
+
+```yaml
+- id: psl_flush
+  type: PageSidebarLayout
+  properties:
+    siderStorageKey: psl_flush
+    padding: none
+    menu:
+      links:
+        - id: psl_flush_dashboard
+          type: MenuLink
+          properties:
+            title: Dashboard
+        - id: psl_flush_invoices
+          type: MenuLink
+          properties:
+            title: Invoices
+  blocks:
+    - id: psl_flush_text
+      type: Paragraph
+      class: px-4
+      properties:
+        content: "padding: none removes the content padding, so tables and grids can run
+          edge to edge. Blocks set their own spacing."
+    - id: psl_flush_card
+      type: Card
+      properties:
+        title: Recent invoices
+        padding: none
+        variant: borderless
+      blocks:
+        - id: psl_flush_card_rows
+          type: Html
+          properties:
+            html: >
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 24px; border-bottom: 1px solid
+              var(--ant-color-border-secondary);"><span>INV-1042</span><span
+              style="color:
+              var(--ant-color-text-secondary);">$1,280.00</span></div>
+
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 24px; border-bottom: 1px solid
+              var(--ant-color-border-secondary);"><span>INV-1041</span><span
+              style="color:
+              var(--ant-color-text-secondary);">$640.00</span></div>
+
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 24px; border-bottom: 1px solid
+              var(--ant-color-border-secondary);"><span>INV-1040</span><span
+              style="color:
+              var(--ant-color-text-secondary);">$2,115.50</span></div>
+
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 24px;"><span>INV-1039</span><span style="color:
+              var(--ant-color-text-secondary);">$96.00</span></div>
+```
+
 Sider starts collapsed. Click the toggle button to expand. The collapsed state is persisted in localStorage.
 
 ```yaml
@@ -412,6 +471,7 @@ Dashboard Overview
 | `toggleSiderButton` | object | - | Toggle sider button properties. |
 | `footer` | object | - | Footer properties. |
 | `footer.style` | object | - | Footer css style object. |
+| `padding` | string | `"default"` | Space around the page content. `compact` tightens it to 16px for dense, data-heavy pages. `none` removes it so content such as a table or grid runs edge to edge; the breadcrumb keeps its own inset. Enum: `default`, `compact`, `none`. |
 | `content` | object | - | Content properties. |
 | `content.style` | object | - | Content css style object. |
 | `breadcrumb` | object | - | Breadcrumb properties. |
