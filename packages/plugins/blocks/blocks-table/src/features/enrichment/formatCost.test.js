@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-
 import formatCost from './formatCost.js';
 
 test('formatCost shows micro-USD as dollars', () => {

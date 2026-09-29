@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-
 // A cell's cost, stored in micro-USD, as dollars: "$0.004". null when the cell has no cost.
 function formatCost(micro) {
   if (!Number.isInteger(micro) || micro < 0) return null;
