@@ -38,28 +38,29 @@ The table loads its code (TanStack Table and Virtual, about 47 kB gzipped) the f
 
 A `Table` with only `columns` and `data` already does what users expect of a table. Features that need your intent, a place to save something, or page chrome are one key away.
 
-| Feature                                                                           | Default                                                                   | Turn it off or on                                                      |
-| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| Sort by header click (Shift+click adds a level)                                   | on                                                                        | `sortable: false` on a column, or `defaultColumn: { sortable: false }` |
-| Column resize by dragging a header edge                                           | on                                                                        | `resizable: false`, or `defaultColumn: { resizable: false }`           |
-| Column reorder by dragging a header                                               | on                                                                        | `reorderable: false`                                                   |
-| Header menu: sort, filter, group, pin, freeze, autosize, hide, Columns…           | on                                                                        | `headerMenu: false`                                                    |
-| Column filters (from the header menu; the header shows an icon while one applies) | on                                                                        | `filterable: false`, or `defaultColumn: { filterable: false }`         |
-| Column manager (Columns… in the header menu)                                      | on                                                                        | follows `headerMenu`                                                   |
-| Sticky header                                                                     | on                                                                        | `stickyHeader: false`                                                  |
-| Virtualisation                                                                    | `auto`: rows above 200, columns above 20 or wider than twice the viewport | `virtual: true` or `virtual: false`                                    |
-| Keyboard navigation, focus ring, ARIA grid roles                                  | on                                                                        | `keyboard: false` (the roles stay)                                     |
-| Copy with Cmd/Ctrl+C                                                              | on                                                                        | follows `keyboard`                                                     |
-| Hover highlight, empty state, loading skeleton                                    | on                                                                        | `emptyText`, the `empty` slot, `loading`                               |
-| Summary footer                                                                    | on when a column has an `aggregate` (or the view has `aggregates`)        | `summary: false`                                                       |
-| Height                                                                            | grows with its rows up to `maxHeight` (600px), then scrolls               | `height` for a fixed height                                            |
-| Toolbar                                                                           | off                                                                       | `toolbar: true` (every item) or `toolbar: { search: true, ... }`       |
-| Row selection                                                                     | off                                                                       | `rowSelection: { type: checkbox }`                                     |
-| Grouping                                                                          | off                                                                       | `groupable: true` on columns                                           |
-| Editing                                                                           | off                                                                       | `editable: true` on columns                                            |
-| Pagination                                                                        | off                                                                       | `pagination: true`                                                     |
-| View persistence                                                                  | off                                                                       | `persist: { key }`                                                     |
-| Saved views, server mode                                                          | off                                                                       | `views`, `data: { mode: server }`                                      |
+| Feature                                                                           | Default                                                                   | Turn it off or on                                                                             |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Sort by header click (Shift+click adds a level)                                   | on                                                                        | `sortable: false` on a column, or `defaultColumn: { sortable: false }`                        |
+| Column resize by dragging a header edge                                           | on                                                                        | `resizable: false`, or `defaultColumn: { resizable: false }`                                  |
+| Column reorder by dragging a header                                               | on                                                                        | `reorderable: false`                                                                          |
+| Header menu: sort, filter, group, pin, freeze, autosize, hide, Columns…           | on                                                                        | `headerMenu: false`                                                                           |
+| Column filters (from the header menu; the header shows an icon while one applies) | on                                                                        | `filterable: false`, or `defaultColumn: { filterable: false }`                                |
+| Column manager (Columns… in the header menu)                                      | on                                                                        | follows `headerMenu`                                                                          |
+| Sticky header                                                                     | on                                                                        | `stickyHeader: false`                                                                         |
+| Virtualisation                                                                    | `auto`: rows above 200, columns above 20 or wider than twice the viewport | `virtual: true` or `virtual: false`                                                           |
+| Keyboard navigation, focus ring, ARIA grid roles                                  | on                                                                        | `keyboard: false` (the roles stay)                                                            |
+| Copy with Cmd/Ctrl+C                                                              | on                                                                        | always on, also with `keyboard: false`                                                        |
+| Text wrap                                                                         | off: text stays on one line                                               | `wrap` or `ellipsis` on a column, `view.wrap`, or the toolbar Wrap toggle (`toolbar.density`) |
+| Hover highlight, empty state, loading skeleton                                    | on                                                                        | `emptyText`, the `empty` slot, `loading`                                                      |
+| Summary footer                                                                    | on when a column has an `aggregate` (or the view has `aggregates`)        | `summary: false`                                                                              |
+| Height                                                                            | grows with its rows up to `maxHeight` (600px), then scrolls               | `height` for a fixed height                                                                   |
+| Toolbar                                                                           | off                                                                       | `toolbar: true` (every item) or `toolbar: { search: true, ... }`                              |
+| Row selection                                                                     | off                                                                       | `rowSelection: { type: checkbox }`                                                            |
+| Grouping                                                                          | off                                                                       | `groupable: true` on columns                                                                  |
+| Editing                                                                           | off                                                                       | `editable: true` on columns                                                                   |
+| Pagination                                                                        | off                                                                       | `pagination: true`                                                                            |
+| View persistence                                                                  | off                                                                       | `persist: { key }`                                                                            |
+| Saved views, server mode                                                          | off                                                                       | `views`, `data: { mode: server }`                                                             |
 
 Changes a user makes with the default features (sort, widths, order, filters, hidden columns) live in the table value for the session. `Reset` and `SetState` still control them, and they outlive a page reload only with `persist`.
 
@@ -120,6 +121,8 @@ requests:
         _event: endRow
       groupPath:
         _event: groupPath
+      timezone: # date filters compare the user's days
+        _js: 'return Intl.DateTimeFormat().resolvedOptions().timeZone;'
     properties:
       pipeline: # always runs first: the view can only narrow it
         - $match:
@@ -127,30 +130,22 @@ requests:
               _user: organization.id
             archived:
               $ne: true
-        - $project:
-            name: 1
-            stage: 1
-            owner: 1
-            amount: 1
-            updated: 1
-      fields: # the allowlist, keyed by column key
-        name:
-          type: text
-          search: true
-        stage:
-          type: status
-          groupable: true
-        owner:
-          type: text
-          path: owner.name
-          search: true
-          groupable: true
-        amount:
-          type: currency
-        updated:
-          type: date
+      # The allowlist, keyed by column key. The bulk request below uses the same fields, so they
+      # live in one file:
+      #   name: { type: text, search: true }
+      #   stage: { type: status, groupable: true }
+      #   owner: { type: avatar, path: owner.name, search: true, groupable: true }
+      #   amount: { type: currency }
+      #   updated: { type: date }
+      fields:
+        _ref: deals/table_fields.yaml
+      # Rows return _id and the fields' paths only; add the paths cells read on their own.
+      returnFields:
+        - owner.avatar
       user:
         _user: true
+      timezone:
+        _payload: timezone
       view:
         _payload: view
       startRow:
@@ -272,27 +267,37 @@ requests:
         $set:
           archived: true
 
-  # A bulk action over the selected keys.
+  # A bulk action over the selection: a list of keys, or every row matching the view.
   - id: assign_deals
-    type: MongoDBUpdateMany
+    type: MongoDBTableChanges
     connectionId: deals
     payload:
-      ids:
+      selected:
         _state: deals_table.selected
+      timezone:
+        _js: 'return Intl.DateTimeFormat().resolvedOptions().timeZone;'
     properties:
       filter:
-        _id:
-          $in:
-            _payload: ids
         org_id:
           _user: organization.id
-      update:
-        $set:
-          owner:
-            name:
-              _user: name
-            id:
-              _user: id
+      fields: # what the bulk write may set, keyed by field path
+        owner.name:
+          type: text
+        owner.id:
+          type: text
+      queryFields: # the table's MongoDBTableQuery fields, to read an all-matching selection
+        _ref: deals/table_fields.yaml
+      user:
+        _user: true
+      timezone:
+        _payload: timezone
+      selection:
+        _payload: selected
+      set:
+        owner.name:
+          _user: name
+        owner.id:
+          _user: id
 
 events:
   onMount:
@@ -355,7 +360,10 @@ blocks:
               color: error
         - key: owner
           field: owner.name
+          type: avatar
           groupable: true
+          cell:
+            srcField: owner.avatar # returned through returnFields
         - key: amount
           type: currency
           aggregate: sum
@@ -471,14 +479,16 @@ The connections are `MongoDBCollection` connections to the `deals` and `table_vi
 What each part does:
 
 - **Server mode.** The table fetches rows 0 to 200 on mount, then each block of `blockSize` rows (default 200) as it scrolls into view, keeping at most `maxBlocks` blocks (default 20). A sort, filter, search or grouping change fetches from the top, and the old rows stay on screen, dimmed, until the new ones land. See [MongoDBTableQuery](/MongoDB) for the request, and Security below.
-- **Row links.** A plain click opens the deal, Cmd/Ctrl+click or a middle click opens it in a new tab, and Enter on a focused row follows the link. Clicks on buttons, links, menus and editors in a cell never trigger the row.
-- **Saved views.** The tabs show `views`. Selecting a tab loads its `view` (parts it leaves out come from `defaultView`) and fires `onViewSelect`. When the current view differs from the tab's, a strip offers Save, Save as and Discard; Save fires `onViewSave` with the tab's `id`, Save as asks for a title (and whether to share it) and fires `onViewSave` without an `id`. A tab's menu offers Delete, which fires `onViewDelete`. The table never stores views itself: update `views` and, for a new view, `activeView`. `locked: true` hides Save and Delete for that tab. Changing the search or collapsing groups never marks a view as changed.
+- **Row links.** A plain click opens the deal, Cmd/Ctrl+click or a middle click opens it in a new tab, and Enter on a focused row follows the link. Clicks on buttons, links, menus and editors in a cell never trigger the row. A click on a block in one of the table's slots, such as "Assign to me", runs that block's event and not the table's (the innermost block with actions handles a click, unless an event sets `bubble: true`), and the table still fires its own events for the methods that button calls, such as `onSelectionChange` after `clearSelection`.
+- **Saved views.** The tabs show `views`. A view `id` is a string, a number or a MongoDB ObjectId (`{ _oid }`, matched by its hex, so `id: $_id` works too); this example uses string ids so that Save as can pick one before the request runs. Selecting a tab loads its `view` (parts it leaves out come from `defaultView`) and fires `onViewSelect`. When the current view differs from the tab's, a strip offers Save, Save as and Discard; Save fires `onViewSave` with the tab's `id`, Save as asks for a title (and whether to share it) and fires `onViewSave` without an `id`. A tab's menu offers Delete, which fires `onViewDelete`. The table never stores views itself: update `views` and, for a new view, `activeView`. `locked: true` hides Save and Delete for that tab. Changing the search or collapsing groups never marks a view as changed.
 - **`persist`.** Keeps the user's current view and active tab in `localStorage` under `lowdefy-table:deals`, so a returning user sees what they left. A persisted view wins over `activeView` when the page loads.
-- **Bulk actions.** While rows are selected, a bar below the table shows "N selected", "Select all M matching", Clear, and the `bulkActions` slot. The blocks in it read `_state: deals_table.selected`.
+- **Bulk actions.** While rows are selected, a bar below the table shows "N selected", "Select all M matching", Clear, and the `bulkActions` slot. The blocks in it read `_state: deals_table.selected`, and "Assign to me" sends it to `assign_deals`, one `updateMany` (see below).
 - **Hover buttons.** `showOn: hover` shows the buttons only on the hovered or focused row. They mount only there, which keeps scrolling fast. The event carries `{ row, rowKey, value, button, buttonIndex }`. `applyTransaction` removes the archived row without a full refetch; in server mode a remove also refetches the visible rows.
 - **Inline editing.** Double-click, Enter, F2 or typing on a stage cell opens a select of its `options`. The committed value shows at once with a saving marker while `onCellEdit` runs. If an action fails (a request error, or a `Throw`), the cell reverts and shows the error message. After success the new value shows until the row changes in `data`.
 
-Selection in server mode: the header checkbox (and "Select all M matching") selects every row the view matches as `{ all: true, except: [...] }`, not a list of keys, because most rows are not in the browser. The request that acts on such a selection must apply the same scope and the same view filter on the server. `assign_deals` above handles key lists only; guard it, for example with `skip: { _eq: [{ _state: deals_table.selected.all }, true] }`, or resolve the view on the server.
+**Bulk assign to every matching row.** In server mode most rows are not in the browser, so the header checkbox, and "Select all M matching" in the bulk bar, select every row the view matches as `{ all: true, except, filter, search }`: the view's filter and search, and the keys the user unticked since. Changing the filter or search clears such a selection, so it always describes the rows the user sees. `MongoDBTableChanges` with `selection` (bulk mode) resolves either shape on the server: a key list becomes `{ _id: { $in: [...] } }`, and an all-matching selection is validated and compiled against `queryFields` exactly as `MongoDBTableQuery` compiles the view, with `{ _id: { $nin: except } }`. The base `filter` is one clause of the `updateMany` filter, so a crafted selection can only narrow it, and `set` / `unset` can write only `fields`, never a scope field. The response is `{ matchedCount, modifiedCount }`.
+
+`fields` and `queryFields` are different key spaces: `queryFields` are the `MongoDBTableQuery` fields keyed by column key (`owner`, with `path: owner.name`), `fields` are keyed by the field path written (`owner.name`). Keep the query fields in one file and `_ref` it from both requests.
 
 To edit more columns, give each one its own request and pick it with the column key: `params: { _string.concat: [update_deal_, { _event: column.key }] }`. Do not build the `$set` field name from the event: the browser could then write any field. Alternatively, save the edit with [MongoDBTableChanges](/MongoDB), which checks the field against its `fields` allowlist and coerces the value to the field type.
 
@@ -531,7 +541,7 @@ A click opens the row in a drawer; Cmd/Ctrl+click still follows `rowLink`.
           _state: peek.amount
 ```
 
-With `onRowClick` defined, a plain click runs it instead of following `rowLink`. `onRowClick` receives `{ row, rowKey, index }`; `index` is the row's position in `data`, whatever the sort.
+With `onRowClick` defined, a plain click runs it instead of following `rowLink`. `onRowClick` receives `{ row, rowKey, index }`; `index` is the row's position in `data`, whatever the sort (with `tree.childrenField`, in the depth-first list of every row). In server mode it is the row's index in the rows the request matches (inside a group, in the group), and it is `null` for a row that is not in `data`, such as one added with `applyTransaction`.
 
 ### Picker
 
@@ -577,7 +587,7 @@ Choose rows and read the selection from state. No events needed.
 - `type: radio` picks one row; `selected` is then a list of at most one key.
 - Space on a focused row toggles it, and Cmd/Ctrl+C copies the selected rows as tab-separated text.
 - `onSelectionChange` fires with `{ selected, rows }` when the selection changes; `rows` are the selected row objects.
-- "Select all M matching" in the bulk bar writes `{ all: true, except: [] }` in client mode too. A picker that reads `selected` as a list should either leave the `bulkActions` slot empty and use `onSelectionChange` `rows`, or handle both shapes.
+- "Select all M matching" in the bulk bar writes `{ all: true, except: [], filter, search }` in client mode too: every row matching the view's filter and search, except the unticked keys. Rows that arrive later and match are selected too, and a filter or search change clears the selection. A picker that needs a list of keys can read the selected row objects from `onSelectionChange` `rows`, or handle both shapes.
 
 ### Grouped report with totals
 
@@ -624,7 +634,7 @@ Choose rows and read the selection from state. No events needed.
 - A group's checkbox (with `rowSelection`) selects its rows. Space on a group header does the same.
 - `exportCsv` exports every row in the current order, including the rows of collapsed groups.
 
-Aggregates: `sum`, `avg`, `min`, `max`, `count`, `countDistinct`, `countEmpty`, `countNotEmpty`, `percentEmpty` (a fraction), `earliest` and `latest`. In client mode `min` and `max` follow the column's sort order, so they work on text and enum columns too; `MongoDBTableQuery` allows `sum`, `avg`, `min` and `max` on numeric fields only.
+Aggregates: `sum`, `avg`, `min`, `max`, `count`, `countDistinct`, `countEmpty`, `countNotEmpty`, `percentEmpty` (a fraction), `earliest` and `latest`. In client mode `min` and `max` follow the column's sort order, so they work on text and enum columns too. `MongoDBTableQuery` allows `sum` and `avg` on numeric fields, `min` and `max` on numeric and text fields (text compared by code point unless `options.collation` sets a locale), `earliest` and `latest` on dates, and `countDistinct` only on fields with `groupable: true`.
 
 Server mode groups the same way through `MongoDBTableQuery`: the first request returns the groups with their counts and aggregates, and a group's rows load when it is opened. Server groups start collapsed, open one at a time, and have no group checkbox.
 
@@ -658,7 +668,7 @@ Rows nested under a parent, with a chevron in the first column.
 - A sort sorts within each level. A filter or search keeps the ancestors of matching rows.
 - Trees are client mode only, and are never grouped. Rows in a tree cannot be dragged.
 
-Load children on demand with `lazy`: a row whose `hasChildrenField` (default `hasChildren`) is true shows a chevron before its children are in `data`, and expanding it fires `onRowExpand { row, rowKey, expanded }`. The event fires on every expand, so load each parent once:
+Load children on demand with `lazy`: a row whose `hasChildrenField` (default `hasChildren`) is true shows a chevron before its children are in `data`, and expanding it fires `onRowExpand { row, rowKey, expanded, needsChildren }`. `needsChildren` is true only when that row is expanded and none of its children are in `data` yet, so skip the load on every other expand and collapse. A row whose request returns no children asks again on its next expand.
 
 ```yaml
 - id: folders
@@ -677,32 +687,18 @@ Load children on demand with `lazy`: a row whose `hasChildrenField` (default `ha
         type: Request
         params: child_folders # payload: { parent: { _event: rowKey } }
         skip:
-          _or:
-            - _not:
-                _event: expanded
-            - _get:
-                from:
-                  _state: loaded_parents
-                key:
-                  _event: rowKey
+          _not:
+            _event: needsChildren
       - id: add_children
         type: SetState
         skip:
           _not:
-            _event: expanded
+            _event: needsChildren
         params:
           folder_rows:
             _array.concat:
               - _state: folder_rows
               - _request: child_folders
-          loaded_parents:
-            _object.assign:
-              - _if_none:
-                  - _state: loaded_parents
-                  - {}
-              - _object.fromEntries:
-                  - - _event: rowKey
-                    - true
 ```
 
 ### Queue
@@ -900,6 +896,19 @@ blocks:
         - id: save_items
           type: Request
           params: save_items
+        # Rows the save named but did not find (another user deleted them, or they are outside
+        # the filter) are in unmatchedKeys: nothing was written for them.
+        - id: check_saved
+          type: Throw
+          params:
+            throw:
+              _gt:
+                - _array.length:
+                    _if_none:
+                      - _request: save_items.unmatchedKeys
+                      - []
+                - 0
+            message: Some ingredients were changed or removed by someone else. Reload the recipe and try again.
         - id: refetch
           type: Request
           params: get_recipe
@@ -910,12 +919,13 @@ blocks:
             method: resetChanges
 ```
 
-- Editing a cell writes `updated: { <rowKey>: { <field>: value } }`, only the changed fields; an edit back to the original value drops out. "+ Add ingredient" appends a row with each column's `default` (and a position after the last row) to `added` and opens its first editable cell. The delete button (and Delete or Backspace with `deleteRows: true`) adds the key to `removed`.
-- `rowDrag.positionField` gives a dragged row one new position, the midpoint between its new neighbours, in `moved: { <rowKey>: position }`. A move is one field on one item. Only when two neighbours are closer than 1e-6 is the list renumbered in steps of 1024, which reports every changed position. Dragging is blocked while the table is sorted by anything but the position field ascending, filtered or grouped; the handle says why. Alt+Shift+Up/Down moves the focused row.
+- Editing a cell writes `updated: { <rowKey>: { <field>: value } }`, only the changed fields; an edit back to the original value drops out. "+ Add ingredient" appends a row with each column's `default` (and a position after the last row) to `added` and opens its first editable cell. Its `rowKey` is always a new temporary key: a `default` on the key column is ignored, so added rows never share a key. The delete button (and Delete or Backspace with `deleteRows: true`) adds the key to `removed`.
+- `rowDrag.positionField` gives a dragged row one new position (with `pagination`, positions and indices count across every page), the midpoint between its new neighbours, in `moved: { <rowKey>: position }`. A move is one field on one item. Only when two neighbours are closer than 1e-6 is the list renumbered in steps of 1024, which reports every changed position. Dragging is blocked while the table is sorted by anything but the position field ascending, filtered or grouped; the handle says why. Alt+Shift+Up/Down moves the focused row.
 - In array mode `MongoDBTableChanges` compiles the changes to `$set` with `arrayFilters` on the changed items, `$pull` for removed ones and `$push` for new ones (new items get an ObjectId `_id`). Only the `fields` listed can be written, values are coerced to the field type, and the base `filter` scopes the document.
+- Treat a non-empty `unmatchedKeys` in the response as a failed save: those rows matched nothing, so nothing was written for them (the rest of the save was). The `Throw` stops the actions and shows the message; the changes stay in the table.
 - After saving, refetch `data` and call `resetChanges`, which clears the changes and the undo history.
 
-Collection mode, where every row is a document: leave out `array`. The changes compile to one `bulkWrite` of `updateOne` (the changed dot paths and the position, in one `$set`), `insertOne` and `deleteOne`, each scoped by the base `filter`. Tenant and ownership fields stay out of `fields` and are set on new rows with `insertDefaults`:
+Collection mode, where every row is a document: leave out `array`. The changes compile to one `bulkWrite` of `updateOne` (the changed dot paths and the position, in one `$set`), `insertOne` and `deleteOne`, each scoped by the base `filter`. The `filter` and `insertDefaults` fields are the rows' scope, and the table can never write them: `fields` that name them are refused, new rows are stamped with the `filter`'s equality conditions (here `org_id`), and a row value can never override an `insertDefaults` value:
 
 ```yaml
 - id: save_contacts
@@ -935,14 +945,16 @@ Collection mode, where every row is a document: leave out `array`. The changes c
         type: email
       role:
         type: tag
-    insertDefaults:
-      org_id:
-        _user: organization.id
+    insertDefaults: # org_id comes from the filter
       created:
         _date: now
+      created_by:
+        _user: id
     changes:
       _payload: changes
 ```
+
+The `fields` keys are the `TableInput` column `field` paths, the keys of the changes, not the column keys `MongoDBTableQuery` uses. Numeric row keys match in both forms (a key `5` arrives as `"5"` in `updated` and matches a document `_id` of `5` or `"5"`); set `rowKeyType` if a collection holds both as different rows.
 
 Without a `positionField`, `rowDrag: true` records the full key `order` after a move instead. Array mode applies it by reordering the items on the server; collection mode needs a `positionField` to save an order. The response's `insertedKeys` maps each added row's temporary key to the key it got. See [MongoDBTableChanges](/MongoDB) for the response, row key types and limits.
 
@@ -981,7 +993,7 @@ columns:
 | `options`                                                      | Labels and colours for enum values (below).                                                                                                                                          |
 | `tooltip`                                                      | A plain-text hover tooltip: a nunjucks template with `value` and `row`, `{ template }` or `{ field }`.                                                                               |
 | `rules`                                                        | Conditional formatting (below).                                                                                                                                                      |
-| `validate`, `required`, `default`                              | Editing: checks before an edit commits, and a `TableInput` new row's value.                                                                                                          |
+| `validate`, `required`, `default`                              | Editing: checks before an edit commits, and a `TableInput` new row's value (ignored on the key column, which always gets a new temporary key).                                       |
 | `children`                                                     | Columns grouped under a shared header (the group needs a `title`).                                                                                                                   |
 
 `columns` is data, so it can come from a request: `columns: { _request: deal_fields }`. Columns added to config later appear in stored views as hidden, and unknown keys in a stored view are dropped.
@@ -1089,26 +1101,28 @@ Every rule whose `when` holds applies, in order: class names add up, and a later
 
 The view is one serialisable object, the `view` part of the value:
 
-| Key               | Holds                                                                                                           |
-| ----------------- | --------------------------------------------------------------------------------------------------------------- |
-| `columns`         | `[{ key, width, pinned, hidden }]` in display order                                                             |
-| `sort`            | `[{ key, desc }]`, outermost first                                                                              |
-| `filter`          | a condition, or null                                                                                            |
-| `search`          | the search text: rows match when every word appears (ignoring case) in the display text of the searched columns |
-| `group`           | `[{ key }]` of groupable columns, outermost first                                                               |
-| `collapsedGroups` | keys of collapsed groups                                                                                        |
-| `aggregates`      | `{ <columnKey>: <fn> \| null }` over the columns' own `aggregate`                                               |
-| `density`         | `compact` (32px rows), `default` (40px) or `comfortable` (52px); starts from `size`                             |
+| Key               | Holds                                                                                                                                                                                                        |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `columns`         | `[{ key, width, pinned, hidden }]` in display order                                                                                                                                                          |
+| `sort`            | `[{ key, desc }]`, outermost first                                                                                                                                                                           |
+| `filter`          | a condition, or null                                                                                                                                                                                         |
+| `search`          | the search text: rows match when every word appears (ignoring case) in the display text of the searched columns                                                                                              |
+| `group`           | `[{ key }]` of groupable columns, outermost first                                                                                                                                                            |
+| `collapsedGroups` | keys of collapsed groups                                                                                                                                                                                     |
+| `aggregates`      | `{ <columnKey>: <fn> \| null }` over the columns' own `aggregate`                                                                                                                                            |
+| `density`         | `compact` (32px rows), `default` (40px) or `comfortable` (52px); starts from `size`                                                                                                                          |
+| `wrap`            | `true` wraps the text of text-like columns (text, email, phone, url, link, html, relation) without their own `wrap` or `ellipsis`; rows grow to their content. The toolbar density control has a Wrap toggle |
+| `pageSize`        | rows per page with `pagination`; defaults to the `pageSize` property                                                                                                                                         |
 
 - `defaultView` sets the initial view and the one `Reset` returns to. Each part missing from the value falls back to `defaultView`, then to the column defaults. `defaultView.columns` entries merge over the column config, and columns it leaves out keep their defaults.
 - While the column layout equals the configured one, the derived view leaves `columns` out, so columns added to config keep appearing until the user changes the layout.
 - `SetState` on any part loads it: `SetState: { deals.view.sort: [{ key: amount, desc: true }] }`. So do the methods `setFilter`, `clearFilters`, `setSearch` and `setGroup`.
-- `onChange` fires after the user changes the view or the selection, with `{ value, cause }`; `cause` is `sort`, `filter`, `search`, `columns`, `select`, `group`, `aggregate`, `expand`, `density` or `view` (a saved view loaded). It does not fire for `SetState`, `Reset` or the initial value.
+- `onChange` fires after the user changes the view or the selection, with `{ value, cause }`; `cause` is `sort`, `filter`, `search`, `columns`, `select`, `group`, `aggregate`, `expand`, `density`, `wrap` (the toolbar Wrap toggle) or `view` (a saved view loaded). It does not fire for `SetState`, `Reset` or the initial value.
 - To share a view in a link, `persist: { key: view, storage: url }` writes a compact encoding of the view to the `view` query parameter as it changes (with `history.replaceState`), and reads it on load.
 
 `persist: { key, storage: local }` (the default storage) keeps the view in `localStorage` under `lowdefy-table:<key>`; a private window or blocked storage just means no persistence. The selection is never persisted. Persisted views outlive config changes (unknown keys are dropped and new columns appended hidden), which is why persistence is opt-in.
 
-`view.wrap` and `view.pageSize` are accepted but have no effect yet: use the column `wrap` and the `pageSize` property.
+A saved view can carry `wrap` and `pageSize` like any other part: `defaultView: { pageSize: 25 }` or a view tab with `wrap: true`. There is no page size picker; set `view.pageSize` with `SetState` to change it.
 
 ## Keyboard
 
@@ -1135,14 +1149,14 @@ Click a cell, or Tab into the table, and the focused cell shows a ring.
 | Delete or Backspace                    | `TableInput` with `deleteRows`: delete the focused row                                                                                                        |
 | Cmd/Ctrl+V                             | `TableInput`: paste tab-separated text over the cells from the focused one                                                                                    |
 
-In the column manager, Alt+Up / Down on a column's handle moves it. `keyboard: false` turns navigation, copying and single-key actions off; the grid roles stay for screen readers.
+In the column manager, Alt+Up / Down on a column's handle moves it. `keyboard: false` turns off cell navigation (arrows, Home/End, PageUp/PageDown, Enter and Space on cells), tree Right/Left and `TableInput` paste. Copy, Cmd/Ctrl+F, the header menu keys, the keys of a focused group header, single-key row actions and the editing keys keep working, and the grid roles stay for screen readers.
 
 ## Performance
 
 - **Virtualisation.** With `virtual: auto` the table renders only the rows in view once there are more than 200 display rows (groups count), and only the columns in view once there are more than 20 scrolling columns or the table is wider than twice its viewport. Pinned columns always render. Scrolling never re-renders the engine or touches Lowdefy state.
 - **Fixed heights are fastest.** Rows are one fixed height from the density (32, 40 or 52px) or `rowHeight`. A column with `wrap: true` or `ellipsis` above 1 makes rows as tall as their content: heights are measured as rows render, and column virtualisation turns off, since a row's height then depends on every cell in it. Expandable detail rows are measured too.
 - **Rich cells.** Hover buttons mount only on the hovered or focused row. During a fast scroll, avatar, tag, button and other rich cells show their text and upgrade when the scroll settles. Templates compile once per column.
-- **Data updates.** Rows are compared by key, so a refetch re-renders only rows whose content changed. `rowVersionField` (for example `updated`) compares rows by that field instead of by content. `applyTransaction` adds, updates or removes rows without replacing `data`.
+- **Data updates.** Rows are compared by key, so a refetch re-renders only rows whose content changed. `rowVersionField`, a dot path such as `updated.timestamp`, compares rows by key and that field instead of by content; a row without the field is compared by content. `applyTransaction` adds, updates or removes rows without replacing `data`.
 - **Big client data.** Sort, filter and group of 100k rows stay under the 60fps budget in the benchmark (text sort keys and the first search are built in time slices, without blocking). Keep `data` a plain request result: an `_js` or `_function` in it runs on every page update.
 - **Server mode** is for data the browser should not hold. `blockSize` (default 200) sets the rows per request and `maxBlocks` (default 20) the blocks kept; loads wait for a fast scroll to settle.
 - **TableLight renders every row** with antd's Table: keep it to hundreds of rows. It logs a development warning above 1,000.
@@ -1153,13 +1167,15 @@ In server mode the browser sends the view, and the view is user input. `MongoDBT
 
 - **The allowlist.** Only keys in `fields` can be sorted, filtered, searched, grouped or aggregated, only with the operators and aggregates their `type` allows, and only with values of that type. Anything else is refused before the query runs. Regex input is escaped, and the view can not send `$where`, `$expr` or pipeline stages.
 - **The base pipeline runs first.** Put tenant, ownership and permission scoping in `pipeline`, evaluated on the server with `_user`, never in the payload. On a tenant connection the tenant scope comes before it.
-- **Project what the table may see.** The rows are whatever the base pipeline returns, hidden columns included, so end it with a `$project` of the fields the table shows.
+- **Only allowed fields leave the server.** With `project: true` (the default) each row returns only `_id`, the `fields` paths and the `returnFields` paths, even when the documents hold more. List in `returnFields` the paths cells read without a field of their own: an avatar `srcField`, a link or relation `labelField`, a `rowKey` other than `_id`. `project: false` returns what the base pipeline leaves, for a pipeline that ends in its own `$project`.
 - **`user: { _user: true }`** on the request resolves `{ $user: path }` filter values on the server from the session. A browser-sent user value is never used, and a missing one throws instead of matching empty fields.
-- **Bounded requests.** `maxRows` (default 1000) caps the rows or groups one request returns.
-- **Selections.** A `{ all: true, except }` selection is not a list of keys: a request that acts on it must recompute the set on the server under the same scope, so a crafted view can not widen a bulk action beyond what the user can read.
-- **Saves.** `MongoDBTableChanges` writes only the `fields` listed, at their paths, with coerced values, scoped by its base `filter`; row keys and values that are operator objects are refused.
+- **Bounded requests.** One view may have at most 200 filter conditions and groups (nested at most 8 deep), 1000 filter values in all (500 per `in` / `nin`), strings of at most 200 characters, 10 sort keys and 5 group levels, and a request returns at most `maxRows` (default 1000) rows or groups. The aggregation stops after `options.maxTimeMS`, 10 seconds by default. A request over a limit throws before it runs.
+- **Selections.** An all-matching selection `{ all: true, except, filter, search }` is not a list of keys. `MongoDBTableChanges` with `selection` recomputes the set on the server: its filter and search are validated against `queryFields` like a view, and the base `filter` is ANDed in, so a crafted selection can not widen a bulk action beyond what the user can read.
+- **Saves.** `MongoDBTableChanges` writes only the `fields` listed, at their paths, with coerced values, scoped by its base `filter`; row keys and values that are operator objects are refused. Fields that overlap a `filter` or `insertDefaults` field are refused, so a save can not move a row out of scope, and new rows are stamped with the `filter`'s equalities.
 
 Every column the user can sort or filter must be in `fields`, or the request fails when they try. Set `sortable: false` and `filterable: false` on columns the request does not allow, and give `toolbar.search` only to tables whose request has `search: true` fields. Server search matches the raw field values, not the display labels a client-side search reads.
+
+**Time zones and indexes.** The browser compares date filters by the user's local days, the server by the days of the request's `timezone` (UTC by default): pass the user's time zone, as `deals_page` does. The request sorts before it pages, so an index on the base match, filter and sort fields (for example `{ org_id: 1, updated: -1, _id: 1 }`) serves each block; without one, MongoDB sorts every matching document for every block. Add indexes for the sorts a large table offers.
 
 ## Moving from TableLight or AgGrid
 

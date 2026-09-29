@@ -252,6 +252,31 @@
                 icon: add
                 size: small
 
+- title: Pages and wrapped text
+  blocks:
+    - id: notes_paged
+      type: Table
+      properties:
+        pagination: true
+        defaultView:
+          pageSize: 2
+          wrap: true
+        columns:
+          - key: title
+            width: 160
+          - key: note
+            width: 260
+        data:
+          - _id: n1
+            title: Kick-off
+            note: Agree the scope, the owners of each workstream and the first review date.
+          - _id: n2
+            title: Design review
+            note: Walk through the flows with support and sales before the build starts.
+          - _id: n3
+            title: Launch
+            note: Announce in the changelog and email every customer on the beta list.
+
 - title: Row links
   blocks:
     - id: deals_links
@@ -469,6 +494,60 @@
             - _json.stringify:
                 - _state: accounts_tree.expanded
                 - space: 0
+
+- title: Tree with children loaded on expand
+  blocks:
+    - id: folders_lazy
+      type: Table
+      properties:
+        tree:
+          parentField: parent
+          lazy: true
+        columns:
+          - key: name
+            title: Folder
+            width: 260
+        data:
+          _if_none:
+            - _state: folders_lazy_rows
+            - []
+      events:
+        onMount:
+          - id: folders_lazy_init
+            type: SetState
+            params:
+              folders_lazy_rows:
+                - _id: invoices
+                  name: Invoices
+                  hasChildren: true
+                - _id: recipes
+                  name: Recipes
+                  hasChildren: true
+        onRowExpand:
+          # needsChildren is true only the first time a lazy row opens without children in data.
+          - id: folders_lazy_load
+            type: SetState
+            skip:
+              _not:
+                _event: needsChildren
+            params:
+              folders_lazy_rows:
+                _array.concat:
+                  - _state: folders_lazy_rows
+                  - - _id:
+                        _string.concat:
+                          - _event: rowKey
+                          - '-2025'
+                      name: '2025'
+                      parent:
+                        _event: rowKey
+                    - _id:
+                        _string.concat:
+                          - _event: rowKey
+                          - '-2026'
+                      name: '2026'
+                      parent:
+                        _event: rowKey
 
 - title: Expandable rows
   blocks:
