@@ -14,12 +14,15 @@
   limitations under the License.
 */
 
-import TAG_TONES from './tagTones.js';
+import { type } from '@lowdefy/helpers';
 
-// The tones HTML understands, as one colour each: the preset tag colours plus antd's status
-// names. The tag look of each is in TAG_TONES.
-const TONE_COLORS = Object.fromEntries(
-  Object.entries(TAG_TONES).map(([name, tone]) => [name, tone.color])
-);
+// How many button squares a buttons cell shows while its row loads: one per configured button,
+// and none for `showOn: hover` buttons, which are invisible until the row is hovered, so their
+// loading cell is as empty as the loaded one.
+function getSkeletonButtonCount({ column }) {
+  const { cell } = column;
+  if (cell.showOn === 'hover') return 0;
+  return type.isArray(cell.buttons) ? cell.buttons.length : 0;
+}
 
-export default TONE_COLORS;
+export default getSkeletonButtonCount;

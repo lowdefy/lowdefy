@@ -33,6 +33,7 @@ function FilterButton({ api }) {
       <Suspense fallback={<PopoverLoadingContent />}>
         <LazyFilterBuilder
           columns={columns}
+          components={api.components}
           condition={filter}
           onChange={(condition) => api.actions.applyFiltering({ filter: condition ?? null })}
           user={api.config.user}

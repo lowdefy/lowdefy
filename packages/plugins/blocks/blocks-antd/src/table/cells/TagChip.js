@@ -17,12 +17,17 @@
 import React from 'react';
 import { type } from '@lowdefy/helpers';
 
-// One tag: a plain span tinted with its colour through --lf-table-tone, so a
-// cell costs one element per tag and no antd component.
+// One tag: a plain span coloured with its tone (getTagTone) through CSS variables, so a cell
+// costs one element per tag and no antd component.
 function TagChip({ label, tone, icon, components }) {
   const { Icon } = components;
+  const style = {
+    '--lf-table-tone-text': tone.text,
+    '--lf-table-tone-bg': tone.bg,
+    '--lf-table-tone-border': tone.border,
+  };
   return (
-    <span className="lf-table-tag" style={{ '--lf-table-tone': tone }}>
+    <span className="lf-table-tag" style={style}>
       {!type.isNone(icon) && <Icon blockId="lf-table-tag-icon" events={{}} properties={icon} />}
       {label}
     </span>

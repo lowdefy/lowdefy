@@ -17,9 +17,10 @@
 /* Loading states shared by Table, TableInput and TableLight (design D17): type-shaped skeleton
    cells, the row shimmer, the refreshing progress bar and small spinners. The skeleton colours are
    the loaders Skeleton's (antd fill tokens), so a table skeleton next to a Skeleton block looks
-   the same. The shimmer is a light band moved by one transform animation per row (compositor
-   only), laid over the shapes: over the row background it is invisible, over a shape it lightens
-   it. */
+   the same. The shimmer is a band moved by one transform animation per row (compositor only),
+   laid over the row: antd's fill token, so it darkens the shapes in a light theme and lightens
+   them in a dark one, reaching about the peak of antd's Skeleton `active` gradient (colorFill
+   over colorFillContent), with its 1.4 s ease timing. */
 @layer components {
   .lf-table-skeleton {
     --lf-skeleton-fill: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
@@ -82,6 +83,11 @@
     border-radius: 50%;
   }
 
+  /* An avatar column with `shape: square` loads as a square, like its avatars. */
+  .lf-table-skeleton-circle[data-square] {
+    border-radius: var(--ant-border-radius-sm, 4px);
+  }
+
   .lf-table-skeleton-name {
     flex: 1;
     min-width: 0;
@@ -127,12 +133,12 @@
     width: var(--lf-viewport-w, 100%);
     background: linear-gradient(
       90deg,
-      transparent 0%,
-      color-mix(in srgb, var(--ant-color-bg-container, #fff) 70%, transparent) 50%,
-      transparent 100%
+      transparent 35%,
+      var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06)) 50%,
+      transparent 65%
     );
     transform: translateX(-100%);
-    animation: lf-table-shimmer 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    animation: lf-table-shimmer 1.4s ease infinite;
     pointer-events: none;
     content: '';
   }

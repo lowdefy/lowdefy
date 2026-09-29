@@ -14,12 +14,11 @@
   limitations under the License.
 */
 
-import TAG_TONES from './tagTones.js';
+// A text colour for a tone that reads on the tone's tinted fill: the colour mixed toward the
+// theme's text colour (black in light themes, white in dark ones), so it darkens on light fills
+// and lightens on dark ones. `share` is the tone's part of the mix, in percent.
+function readableToneText({ color, share }) {
+  return `color-mix(in oklab, ${color} ${share}%, var(--ant-color-text-base, #000))`;
+}
 
-// The tones HTML understands, as one colour each: the preset tag colours plus antd's status
-// names. The tag look of each is in TAG_TONES.
-const TONE_COLORS = Object.fromEntries(
-  Object.entries(TAG_TONES).map(([name, tone]) => [name, tone.color])
-);
-
-export default TONE_COLORS;
+export default readableToneText;

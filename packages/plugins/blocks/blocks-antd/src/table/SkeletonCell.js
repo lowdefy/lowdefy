@@ -16,6 +16,7 @@
 
 import React from 'react';
 
+import getSkeletonButtonCount from './getSkeletonButtonCount.js';
 import getSkeletonShape from './getSkeletonShape.js';
 import getSkeletonWidth from './getSkeletonWidth.js';
 import './tableLoading.css';
@@ -29,18 +30,21 @@ function SkeletonCell({ column, rowIndex }) {
   if (shape === 'person') {
     children = (
       <>
-        <span className="lf-table-skeleton-circle" />
+        <span
+          className="lf-table-skeleton-circle"
+          data-square={column.cell.shape === 'square' ? '' : undefined}
+        />
         <span className="lf-table-skeleton-name" />
       </>
     );
   }
   if (shape === 'buttons') {
-    children = (
-      <>
-        <span className="lf-table-skeleton-square" />
-        <span className="lf-table-skeleton-square" />
-      </>
-    );
+    const count = getSkeletonButtonCount({ column });
+    // An empty cell, as the loaded one is (hover buttons) or would be (no buttons).
+    if (count === 0) return null;
+    children = Array.from({ length: count }, (_, index) => (
+      <span className="lf-table-skeleton-square" key={index} />
+    ));
   }
   return (
     <span

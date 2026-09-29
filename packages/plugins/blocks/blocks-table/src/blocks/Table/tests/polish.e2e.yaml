@@ -370,3 +370,59 @@ blocks:
             amount: 8920,
             due: '2026-10-06',
           }
+
+  # Text baselines in TableLight rows made taller by buttons: link, avatar name, text, number and
+  # date text sit on one line.
+  - id: light_baseline
+    type: TableLight
+    properties:
+      columns:
+        - key: invoice
+          type: link
+          cell:
+            pageId: polish
+            urlQuery:
+              id: id
+        - key: customer
+          type: avatar
+          cell:
+            shape: square
+        - key: status
+          type: tag
+          options:
+            - { value: Paid, color: success }
+            - { value: Overdue, color: error }
+        - key: amount
+          type: currency
+          cell:
+            currency: USD
+        - key: due
+          type: date
+          cell:
+            format: D MMM YYYY
+        - key: actions
+          type: buttons
+          title: ''
+          cell:
+            buttons:
+              - { title: View, eventName: onView }
+              - title: Remind
+                eventName: onRemind
+                type: primary
+      data:
+        - {
+            id: 1,
+            invoice: INV-2041,
+            customer: Halcyon Freight,
+            status: Paid,
+            amount: 12480,
+            due: '2026-09-12',
+          }
+        - {
+            id: 2,
+            invoice: INV-2042,
+            customer: Tessellate Labs,
+            status: Overdue,
+            amount: 4350.5,
+            due: '2026-09-18',
+          }

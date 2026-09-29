@@ -5,6 +5,9 @@ exports[`createHtmlCss output 1`] = `
 @layer components {
   :where([data-lf-html] [data-tag]) {
     --lf-tone: var(--ant-color-text-secondary);
+    --lf-tone-text: var(--ant-color-text);
+    --lf-tone-bg: var(--ant-color-fill-quaternary);
+    --lf-tone-border: var(--ant-color-border);
     display: inline-flex;
     align-items: center;
     padding: var(--ant-padding-xxs, 4px) var(--ant-padding-xs, 8px);
@@ -12,9 +15,9 @@ exports[`createHtmlCss output 1`] = `
     font-size: var(--ant-font-size-sm, 12px);
     font-weight: 600;
     line-height: 1;
-    color: var(--lf-tone);
-    background: color-mix(in srgb, var(--lf-tone) 12%, transparent);
-    border: 1px solid color-mix(in srgb, var(--lf-tone) 30%, transparent);
+    color: var(--lf-tone-text);
+    background: var(--lf-tone-bg);
+    border: 1px solid var(--lf-tone-border);
   }
   :where([data-lf-html] [data-status]) {
     --lf-tone: var(--ant-color-text-secondary);
@@ -32,79 +35,136 @@ exports[`createHtmlCss output 1`] = `
   }
   :where([data-lf-html] [data-tag=\\"red\\"]),
   :where([data-lf-html] [data-status=\\"red\\"]) {
-    --lf-tone: var(--ant-color-error);
+    --lf-tone: var(--ant-red-6, #f5222d);
+    --lf-tone-text: color-mix(in oklab, var(--ant-red-7, #cf1322) 70%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-red-1, #fff1f0);
+    --lf-tone-border: var(--ant-red-3, #ffa39e);
   }
   :where([data-lf-html] [data-tag=\\"volcano\\"]),
   :where([data-lf-html] [data-status=\\"volcano\\"]) {
     --lf-tone: var(--ant-volcano-6, #fa541c);
+    --lf-tone-text: color-mix(in oklab, var(--ant-volcano-7, #d4380d) 70%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-volcano-1, #fff2e8);
+    --lf-tone-border: var(--ant-volcano-3, #ffbb96);
   }
   :where([data-lf-html] [data-tag=\\"orange\\"]),
   :where([data-lf-html] [data-status=\\"orange\\"]) {
-    --lf-tone: var(--ant-color-warning);
+    --lf-tone: var(--ant-orange-6, #fa8c16);
+    --lf-tone-text: color-mix(in oklab, var(--ant-orange-7, #d46b08) 70%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-orange-1, #fff7e6);
+    --lf-tone-border: var(--ant-orange-3, #ffd591);
   }
   :where([data-lf-html] [data-tag=\\"gold\\"]),
   :where([data-lf-html] [data-status=\\"gold\\"]) {
     --lf-tone: var(--ant-gold-6, #faad14);
+    --lf-tone-text: color-mix(in oklab, var(--ant-gold-7, #d48806) 70%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-gold-1, #fffbe6);
+    --lf-tone-border: var(--ant-gold-3, #ffe58f);
   }
   :where([data-lf-html] [data-tag=\\"yellow\\"]),
   :where([data-lf-html] [data-status=\\"yellow\\"]) {
-    --lf-tone: var(--ant-color-warning);
+    --lf-tone: var(--ant-yellow-6, #fadb14);
+    --lf-tone-text: color-mix(in oklab, var(--ant-yellow-7, #d4b106) 70%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-yellow-1, #feffe6);
+    --lf-tone-border: var(--ant-yellow-3, #fffb8f);
   }
   :where([data-lf-html] [data-tag=\\"lime\\"]),
   :where([data-lf-html] [data-status=\\"lime\\"]) {
     --lf-tone: var(--ant-lime-6, #a0d911);
+    --lf-tone-text: color-mix(in oklab, var(--ant-lime-7, #7cb305) 70%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-lime-1, #fcffe6);
+    --lf-tone-border: var(--ant-lime-3, #eaff8f);
   }
   :where([data-lf-html] [data-tag=\\"green\\"]),
   :where([data-lf-html] [data-status=\\"green\\"]) {
-    --lf-tone: var(--ant-color-success);
+    --lf-tone: var(--ant-green-6, #52c41a);
+    --lf-tone-text: color-mix(in oklab, var(--ant-green-7, #389e0d) 70%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-green-1, #f6ffed);
+    --lf-tone-border: var(--ant-green-3, #b7eb8f);
   }
   :where([data-lf-html] [data-tag=\\"cyan\\"]),
   :where([data-lf-html] [data-status=\\"cyan\\"]) {
     --lf-tone: var(--ant-cyan-6, #13c2c2);
+    --lf-tone-text: color-mix(in oklab, var(--ant-cyan-7, #08979c) 70%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-cyan-1, #e6fffb);
+    --lf-tone-border: var(--ant-cyan-3, #87e8de);
   }
   :where([data-lf-html] [data-tag=\\"blue\\"]),
   :where([data-lf-html] [data-status=\\"blue\\"]) {
-    --lf-tone: var(--ant-color-info);
+    --lf-tone: var(--ant-blue-6, #1677ff);
+    --lf-tone-text: color-mix(in oklab, var(--ant-blue-7, #0958d9) 70%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-blue-1, #e6f4ff);
+    --lf-tone-border: var(--ant-blue-3, #91caff);
   }
   :where([data-lf-html] [data-tag=\\"geekblue\\"]),
   :where([data-lf-html] [data-status=\\"geekblue\\"]) {
     --lf-tone: var(--ant-geekblue-6, #2f54eb);
+    --lf-tone-text: color-mix(in oklab, var(--ant-geekblue-7, #1d39c4) 70%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-geekblue-1, #f0f5ff);
+    --lf-tone-border: var(--ant-geekblue-3, #adc6ff);
   }
   :where([data-lf-html] [data-tag=\\"purple\\"]),
   :where([data-lf-html] [data-status=\\"purple\\"]) {
     --lf-tone: var(--ant-purple-6, #722ed1);
+    --lf-tone-text: color-mix(in oklab, var(--ant-purple-7, #531dab) 70%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-purple-1, #f9f0ff);
+    --lf-tone-border: var(--ant-purple-3, #d3adf7);
   }
   :where([data-lf-html] [data-tag=\\"magenta\\"]),
   :where([data-lf-html] [data-status=\\"magenta\\"]) {
     --lf-tone: var(--ant-magenta-6, #eb2f96);
+    --lf-tone-text: color-mix(in oklab, var(--ant-magenta-7, #c41d7f) 70%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-magenta-1, #fff0f6);
+    --lf-tone-border: var(--ant-magenta-3, #ffadd2);
   }
   :where([data-lf-html] [data-tag=\\"pink\\"]),
   :where([data-lf-html] [data-status=\\"pink\\"]) {
     --lf-tone: var(--ant-pink-6, #eb2f96);
-  }
-  :where([data-lf-html] [data-tag=\\"default\\"]),
-  :where([data-lf-html] [data-status=\\"default\\"]) {
-    --lf-tone: var(--ant-color-text-secondary);
+    --lf-tone-text: color-mix(in oklab, var(--ant-pink-7, #c41d7f) 70%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-pink-1, #fff0f6);
+    --lf-tone-border: var(--ant-pink-3, #ffadd2);
   }
   :where([data-lf-html] [data-tag=\\"success\\"]),
   :where([data-lf-html] [data-status=\\"success\\"]) {
     --lf-tone: var(--ant-color-success);
+    --lf-tone-text: color-mix(in oklab, var(--ant-color-success-text) 60%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-color-success-bg);
+    --lf-tone-border: var(--ant-color-success-border);
   }
   :where([data-lf-html] [data-tag=\\"processing\\"]),
   :where([data-lf-html] [data-status=\\"processing\\"]) {
     --lf-tone: var(--ant-color-info);
+    --lf-tone-text: color-mix(in oklab, var(--ant-color-info-text) 60%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-color-info-bg);
+    --lf-tone-border: var(--ant-color-info-border);
   }
   :where([data-lf-html] [data-tag=\\"info\\"]),
   :where([data-lf-html] [data-status=\\"info\\"]) {
     --lf-tone: var(--ant-color-info);
+    --lf-tone-text: color-mix(in oklab, var(--ant-color-info-text) 60%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-color-info-bg);
+    --lf-tone-border: var(--ant-color-info-border);
   }
   :where([data-lf-html] [data-tag=\\"warning\\"]),
   :where([data-lf-html] [data-status=\\"warning\\"]) {
     --lf-tone: var(--ant-color-warning);
+    --lf-tone-text: color-mix(in oklab, var(--ant-color-warning-text) 60%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-color-warning-bg);
+    --lf-tone-border: var(--ant-color-warning-border);
   }
   :where([data-lf-html] [data-tag=\\"error\\"]),
   :where([data-lf-html] [data-status=\\"error\\"]) {
     --lf-tone: var(--ant-color-error);
+    --lf-tone-text: color-mix(in oklab, var(--ant-color-error-text) 60%, var(--ant-color-text-base, #000));
+    --lf-tone-bg: var(--ant-color-error-bg);
+    --lf-tone-border: var(--ant-color-error-border);
+  }
+  :where([data-lf-html] [data-tag=\\"default\\"]),
+  :where([data-lf-html] [data-status=\\"default\\"]) {
+    --lf-tone: var(--ant-color-text-secondary);
+    --lf-tone-text: var(--ant-color-text);
+    --lf-tone-bg: var(--ant-color-fill-quaternary);
+    --lf-tone-border: var(--ant-color-border);
   }
   :where([data-lf-html] [data-tone=\\"secondary\\" i]) {
     color: var(--ant-color-text-secondary);

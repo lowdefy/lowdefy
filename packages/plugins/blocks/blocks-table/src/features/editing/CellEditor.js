@@ -17,9 +17,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { DatePicker, Input, InputNumber, Rate, Select, Switch, Tooltip } from 'antd';
 
-import SelectedTag from './SelectedTag.js';
+import SelectedTag from '../../core/SelectedTag.js';
+import toSelectOptions from '../../core/toSelectOptions.js';
 import toEditorDraft from './toEditorDraft.js';
-import toSelectOptions from './toSelectOptions.js';
 
 const POPUP_CLASS = 'lf-table-editor-popup';
 const POPUP_KINDS = new Set(['date', 'datetime', 'select', 'multiSelect']);

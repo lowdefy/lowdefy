@@ -26,16 +26,18 @@ import useSyncedState from './useSyncedState.js';
 // - `condition`: the Condition to edit (a group, a leaf, or null),
 // - `columns`: the normalised columns conditions may use (pass the filterable ones),
 // - `user`: the user object, to show what `{ $user: path }` values resolve to,
+// - `components`: Lowdefy's components (tag chips with icons in the value lists),
 // - `onChange(condition)`: called with the edited condition; null once it has no conditions.
 // Conditions still being built (no value yet) are written as they are; the table's filter
 // ignores them until they are complete.
-function FilterBuilder({ condition, columns, user, onChange }) {
+function FilterBuilder({ components, condition, columns, user, onChange }) {
   const [local, setLocal] = useSyncedState({ value: condition ?? null, onChange });
   const root = toRootGroup(local);
   return (
     <div className="lf-filter-builder" data-lf-filter-builder="">
       <FilterGroup
         columns={columns}
+        components={components}
         depth={1}
         group={root}
         onChange={(next) => setLocal(next[getGroupOperator(next)].length ? next : null)}

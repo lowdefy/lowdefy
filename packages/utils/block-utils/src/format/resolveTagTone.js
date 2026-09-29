@@ -14,12 +14,17 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
+import customTagTone from './customTagTone.js';
 import TAG_TONES from './tagTones.js';
 
-// The tones HTML understands, as one colour each: the preset tag colours plus antd's status
-// names. The tag look of each is in TAG_TONES.
-const TONE_COLORS = Object.fromEntries(
-  Object.entries(TAG_TONES).map(([name, tone]) => [name, tone.color])
-);
+// A tone name (a preset colour or an antd status name) becomes its theme tokens; any other value
+// is a CSS colour, with a readable text colour derived from it.
+function resolveTagTone(value) {
+  if (type.isNone(value)) return TAG_TONES.default;
+  if (Object.hasOwn(TAG_TONES, value)) return TAG_TONES[value];
+  return customTagTone(value);
+}
 
-export default TONE_COLORS;
+export default resolveTagTone;

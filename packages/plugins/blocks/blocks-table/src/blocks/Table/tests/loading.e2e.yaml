@@ -112,6 +112,16 @@ blocks:
   # CLIENT DATA: initial (onMount), refetch, empty
   # ============================================
 
+  - id: client_new_clicks
+    type: Paragraph
+    properties:
+      content:
+        _string.concat:
+          - 'Clicks: '
+          - _if_none:
+              - _state: new_clicks
+              - 0
+
   - id: table_client
     type: Table
     properties:
@@ -156,6 +166,27 @@ blocks:
             buttons:
               - title: Edit
                 eventName: onEdit
+    # Slot blocks keep only their own loading: the page's onMount (which fetches the rows) must
+    # not disable them.
+    slots:
+      toolbarStart:
+        blocks:
+          - id: client_new
+            type: Button
+            properties:
+              title: New person
+              size: small
+            events:
+              onClick:
+                - id: count_new
+                  type: SetState
+                  params:
+                    new_clicks:
+                      _sum:
+                        - _if_none:
+                            - _state: new_clicks
+                            - 0
+                        - 1
 
   - id: light_client
     type: TableLight
@@ -187,6 +218,80 @@ blocks:
         - key: progress
           type: progress
           width: 140
+
+  # Skeleton details: square avatars load as squares, hover buttons load as an empty cell, other
+  # buttons as one square per button.
+  - id: table_shapes
+    type: Table
+    properties:
+      height: 200
+      loading:
+        _request_details: rows.0.loading
+      data:
+        _request: rows
+      columns:
+        - key: name
+          width: 160
+        - key: owner
+          type: avatar
+          width: 160
+          cell:
+            nameField: owner
+            shape: square
+        - key: hover
+          type: buttons
+          title: ''
+          width: 90
+          cell:
+            showOn: hover
+            buttons:
+              - { title: Email, eventName: onEmail }
+              - { title: Archive, eventName: onArchive }
+        - key: actions
+          type: buttons
+          title: ''
+          width: 120
+          cell:
+            buttons:
+              - { title: Edit, eventName: onEdit }
+              - { title: Copy, eventName: onCopy }
+              - { title: Delete, eventName: onDelete }
+
+  - id: light_shapes
+    type: TableLight
+    properties:
+      height: 200
+      loading:
+        _request_details: rows.0.loading
+      data:
+        _request: rows
+      columns:
+        - key: name
+          width: 160
+        - key: owner
+          type: avatar
+          width: 160
+          cell:
+            nameField: owner
+            shape: square
+        - key: hover
+          type: buttons
+          title: ''
+          width: 90
+          cell:
+            showOn: hover
+            buttons:
+              - { title: Email, eventName: onEmail }
+              - { title: Archive, eventName: onArchive }
+        - key: actions
+          type: buttons
+          title: ''
+          width: 120
+          cell:
+            buttons:
+              - { title: Edit, eventName: onEdit }
+              - { title: Copy, eventName: onCopy }
+              - { title: Delete, eventName: onDelete }
 
   # The `loading` property on its own, with rows from state.
   - id: table_prop

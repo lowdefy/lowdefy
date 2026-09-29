@@ -28,7 +28,7 @@ import ValueEditor from './ValueEditor.js';
 
 // One condition row: column, operator (the column type's operators), value, remove. The column
 // select is left out when the builder only offers one column (the column filter popover).
-function FilterLeaf({ leaf, columns, user, onChange, onRemove }) {
+function FilterLeaf({ leaf, columns, components, user, onChange, onRemove }) {
   const column = columns.find((entry) => entry.key === leaf.key) ?? null;
   const family = column ? CELL_TYPE_FAMILIES[column.type] : null;
   const operators = column ? getOperators(column.type) : [];
@@ -64,6 +64,7 @@ function FilterLeaf({ leaf, columns, user, onChange, onRemove }) {
       {column ? (
         <ValueEditor
           column={column}
+          components={components}
           onChange={(value) => onChange({ ...leaf, value })}
           op={leaf.op}
           user={user}

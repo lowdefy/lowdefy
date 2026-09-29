@@ -14,12 +14,13 @@
   limitations under the License.
 */
 
-import TAG_TONES from './tagTones.js';
+// Renders one of the table's slots (toolbarStart, toolbarEnd, bulkActions, empty), or null when
+// it has no blocks. Slot blocks keep only their own loading: the table's loading (its rows
+// loading, including the page's onMount that fetches them) is shown by the table itself, and a
+// create or refresh button next to it must stay usable meanwhile.
+function renderSlot({ content, slot }) {
+  if (!content[slot]) return null;
+  return content[slot](undefined, { loading: false });
+}
 
-// The tones HTML understands, as one colour each: the preset tag colours plus antd's status
-// names. The tag look of each is in TAG_TONES.
-const TONE_COLORS = Object.fromEntries(
-  Object.entries(TAG_TONES).map(([name, tone]) => [name, tone.color])
-);
-
-export default TONE_COLORS;
+export default renderSlot;

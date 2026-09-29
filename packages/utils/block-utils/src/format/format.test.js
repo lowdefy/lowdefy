@@ -21,9 +21,11 @@ import formatNumber from './formatNumber.js';
 import hashSeed from './hashSeed.js';
 import initials from './initials.js';
 import lineClampStyle from './lineClampStyle.js';
-import resolveTagColor from './resolveTagColor.js';
+import customTagTone from './customTagTone.js';
+import resolveTagTone from './resolveTagTone.js';
 import seededTagColor from './seededTagColor.js';
 import tagStyle from './tagStyle.js';
+import TAG_TONES from './tagTones.js';
 import TONE_COLORS from './toneColors.js';
 
 test('hashSeed is stable and treats null and undefined as 0', () => {
@@ -39,25 +41,54 @@ test('seededTagColor picks a preset tag colour name from the value', () => {
   expect(seededTagColor('Approved')).toBe(seededTagColor('Approved'));
 });
 
-test('resolveTagColor maps preset names to tokens and passes other values through', () => {
-  expect(resolveTagColor('green')).toBe('var(--ant-color-success)');
-  expect(resolveTagColor(undefined)).toBe('var(--ant-color-text-secondary)');
-  expect(resolveTagColor('#ff0000')).toBe('#ff0000');
-  // The grid table has no status names; they stay as written.
-  expect(resolveTagColor('success')).toBe('success');
+test('resolveTagTone maps tone names to their tokens and derives a tone for other colours', () => {
+  expect(resolveTagTone('green')).toBe(TAG_TONES.green);
+  expect(resolveTagTone('success')).toBe(TAG_TONES.success);
+  expect(resolveTagTone(undefined)).toBe(TAG_TONES.default);
+  expect(resolveTagTone('#ff0000')).toEqual(customTagTone('#ff0000'));
+  // An inherited object key is a colour value, not a tone name.
+  expect(resolveTagTone('constructor')).toEqual(customTagTone('constructor'));
 });
 
-test('TONE_COLORS adds the antd status names to the tag colours', () => {
+test('preset tones follow antd Tag: -1 fill, -3 border, -7 text taken toward the text colour', () => {
+  expect(TAG_TONES.gold).toEqual({
+    color: 'var(--ant-gold-6, #faad14)',
+    text: 'color-mix(in oklab, var(--ant-gold-7, #d48806) 70%, var(--ant-color-text-base, #000))',
+    bg: 'var(--ant-gold-1, #fffbe6)',
+    border: 'var(--ant-gold-3, #ffe58f)',
+  });
+});
+
+test('status tones use antd status tokens, processing as info', () => {
+  expect(TAG_TONES.processing).toEqual({
+    color: 'var(--ant-color-info)',
+    text: 'color-mix(in oklab, var(--ant-color-info-text) 60%, var(--ant-color-text-base, #000))',
+    bg: 'var(--ant-color-info-bg)',
+    border: 'var(--ant-color-info-border)',
+  });
+});
+
+test('customTagTone tints the fill and border and darkens the text toward the text colour', () => {
+  expect(customTagTone('var(--x)')).toEqual({
+    color: 'var(--x)',
+    text: 'color-mix(in oklab, var(--x) 60%, var(--ant-color-text-base, #000))',
+    bg: 'color-mix(in srgb, var(--x) 12%, transparent)',
+    border: 'color-mix(in srgb, var(--x) 30%, transparent)',
+  });
+});
+
+test('TONE_COLORS is the colour of every tone', () => {
   expect(TONE_COLORS.success).toBe('var(--ant-color-success)');
   expect(TONE_COLORS.processing).toBe('var(--ant-color-info)');
-  expect(TONE_COLORS.red).toBe('var(--ant-color-error)');
+  expect(TONE_COLORS.red).toBe('var(--ant-red-6, #f5222d)');
+  expect(Object.keys(TONE_COLORS)).toEqual(Object.keys(TAG_TONES));
 });
 
-test('tagStyle tints the fill and border with the colour', () => {
-  const style = tagStyle('var(--x)');
-  expect(style.color).toBe('var(--x)');
-  expect(style.background).toBe('color-mix(in srgb, var(--x) 12%, transparent)');
-  expect(style.border).toBe('1px solid color-mix(in srgb, var(--x) 30%, transparent)');
+test('tagStyle draws the tone text, fill and border', () => {
+  const style = tagStyle({ text: 'var(--t)', bg: 'var(--b)', border: 'var(--o)' });
+  expect(style.color).toBe('var(--t)');
+  expect(style.background).toBe('var(--b)');
+  expect(style.border).toBe('1px solid var(--o)');
 });
 
 test('initials takes the first letter of the first two words', () => {
