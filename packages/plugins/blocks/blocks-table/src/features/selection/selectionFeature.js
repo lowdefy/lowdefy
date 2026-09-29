@@ -22,19 +22,22 @@ import createToggleRowSelected from './createToggleRowSelected.js';
 import handleSelectionClick from './handleSelectionClick.js';
 import initRowSelection from './initRowSelection.js';
 import initSelectionMode from './initSelectionMode.js';
+import initSelectionView from './initSelectionView.js';
 import notifySelectionChange from './notifySelectionChange.js';
 import pruneRowSelection from './pruneRowSelection.js';
 import selectionToValue from './selectionToValue.js';
 import useSelection from './useSelection.js';
 
 // `rowSelection` is TanStack's selection record (row id -> true); `selectionMode` is Lowdefy's
-// own slice ('keys' | 'all') that decides which value shape the selection is written back in.
+// own slice ('keys' | 'all') that decides which value shape the selection is written back in;
+// `selectionView` is the filter and search an 'all' selection matches (null otherwise).
 const selectionFeature = {
   name: 'selection',
   tableFeatures: { rowSelectionFeature },
   slices: {
     rowSelection: { init: initRowSelection, cause: 'select', normalize: pruneRowSelection },
     selectionMode: { init: initSelectionMode, cause: 'select' },
+    selectionView: { init: initSelectionView, cause: 'select' },
   },
   tableOptions: ({ config }) => ({
     enableRowSelection: Boolean(config.rowSelection),

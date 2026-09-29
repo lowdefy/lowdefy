@@ -323,6 +323,21 @@ test.describe('Table editing', () => {
     await expect(page.getByRole('tooltip')).toContainText('Deal is locked');
   });
 
+  test('a save keeps its value when other rows of data change while it runs', async ({ page }) => {
+    await cell(page, 'edit_unrelated', 1, 'name').dblclick();
+    await editorInput(page, 'edit_unrelated').fill('Anna');
+    await page.keyboard.press('Enter');
+    await expect(marker(page, 'edit_unrelated', 1, 'name')).toHaveAttribute(
+      'data-lf-edit-status',
+      'saving'
+    );
+    await page.locator('#edit_unrelated_touch').click();
+    await expect(cell(page, 'edit_unrelated', 2, 'name')).toHaveText('Ben changed');
+    await expect(cell(page, 'edit_unrelated', 1, 'name')).toHaveText('Anna');
+    await expect(marker(page, 'edit_unrelated', 1, 'name')).toHaveCount(0);
+    await expect(cell(page, 'edit_unrelated', 1, 'name')).toHaveText('Anna');
+  });
+
   test('the overlay gives way when the app writes the saved row into data', async ({ page }) => {
     await cell(page, 'edit_data', 1, 'name').dblclick();
     await editorInput(page, 'edit_data').fill('Typed');
@@ -389,6 +404,30 @@ test.describe('Table editing', () => {
     expect(await displayKeys(page, 'move_positions')).toEqual(['s1', 's3', 's2']);
   });
 
+  test('a row move on a later page reports indices and neighbours in the whole list', async ({
+    page,
+  }) => {
+    await getBlock(page, 'move_paged').locator('.ant-pagination-item-2').click();
+    await expect.poll(() => displayKeys(page, 'move_paged')).toEqual(['s3', 's4']);
+    await dragRow(page, 'move_paged', 's4', 's3', { below: false });
+    await expect.poll(() => displayKeys(page, 'move_paged')).toEqual(['s4', 's3']);
+    await expect(getBlock(page, 'move_paged_value')).toHaveText(
+      'move={"rowKey":"s4","fromIndex":3,"toIndex":2,"beforeKey":"s2","afterKey":"s3","position":2560,"positions":{"s4":2560}}'
+    );
+  });
+
+  test('Alt+Shift+ArrowUp on the first row of a page does not move it', async ({ page }) => {
+    await getBlock(page, 'move_paged').locator('.ant-pagination-item-2').click();
+    await cell(page, 'move_paged', 's3', 'title').click();
+    await page.keyboard.press('Alt+Shift+ArrowUp');
+    await page.keyboard.press('Alt+Shift+ArrowDown');
+    await expect.poll(() => displayKeys(page, 'move_paged')).toEqual(['s4', 's3']);
+    await expect(cell(page, 'move_paged', 's3', 'title')).toBeFocused();
+    await expect(getBlock(page, 'move_paged_value')).toContainText(
+      '"rowKey":"s3","fromIndex":2,"toIndex":3,"beforeKey":"s4","afterKey":"s5","position":4608'
+    );
+  });
+
   test('Alt+Shift+ArrowDown moves the focused row and keeps focus on it', async ({ page }) => {
     await cell(page, 'move_positions', 's1', 'title').click();
     await page.keyboard.press('Alt+Shift+ArrowDown');
@@ -431,6 +470,14 @@ test.describe('Table editing', () => {
   // ============================================
   // COPY
   // ============================================
+
+  test('Ctrl/Cmd+C copies the focused cell with keyboard: false', async ({ page, context }) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.evaluate(() => navigator.clipboard.writeText('before'));
+    await cell(page, 'copy_nokeys', 1, 'name').click();
+    await page.keyboard.press('ControlOrMeta+c');
+    await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe('Ann');
+  });
 
   test('Ctrl/Cmd+C copies the selected rows as TSV', async ({ page, context }) => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);

@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import compactView from './compactView.js';
 import createViewsApi from './createViewsApi.js';
 import findActiveView from './findActiveView.js';
+import getViewKey from './getViewKey.js';
 import getViewSliceDeps from './getViewSliceDeps.js';
 import isViewDirty from './isViewDirty.js';
 import normalizeViews from './normalizeViews.js';
@@ -35,6 +36,8 @@ function useViews({ api, config, state }) {
   const viewsConfig = useStableConfig(api.properties.views);
   const views = useMemo(() => normalizeViews(viewsConfig), [viewsConfig]);
   const activeProp = api.properties.activeView;
+  // By key: an object id (`{ _oid }`) is a new object every time the engine evaluates it.
+  const activePropKey = type.isNone(activeProp) ? null : getViewKey(activeProp);
   const { persist } = config;
   const enabled = views.length > 0 || persist !== null;
 
@@ -51,7 +54,7 @@ function useViews({ api, config, state }) {
   }
   const [activeId, setActiveId] = useState(mount.current.activeId);
   const pendingLoad = useRef(mount.current.pendingLoad);
-  const lastActiveProp = useRef(activeProp);
+  const lastActiveProp = useRef(activePropKey);
   const active = useMemo(() => findActiveView({ views, id: activeId }), [views, activeId]);
 
   const viewDeps = getViewSliceDeps(state);
@@ -68,11 +71,11 @@ function useViews({ api, config, state }) {
   api.views = viewsApi;
 
   useEffect(() => {
-    if (lastActiveProp.current === activeProp) return;
-    lastActiveProp.current = activeProp;
+    if (lastActiveProp.current === activePropKey) return;
+    lastActiveProp.current = activePropKey;
     pendingLoad.current = true;
     setActiveId(activeProp ?? null);
-  }, [activeProp]);
+  }, [activePropKey]);
 
   useEffect(() => {
     if (!pendingLoad.current || active === null) return;

@@ -238,6 +238,47 @@ blocks:
             table_selection.selected:
               - 4
 
+  - id: selection_card
+    type: Card
+    events:
+      onClick:
+        - id: set_card_clicked
+          type: SetState
+          params:
+            selection_card_clicked: true
+    blocks:
+      - id: table_in_card
+        type: Table
+        properties:
+          rowSelection:
+            type: checkbox
+          columns:
+            _ref: ../../src/blocks/Table/tests/people_columns.yaml
+          data:
+            _ref: ../../src/blocks/Table/tests/people.yaml
+        events:
+          onSelectionChange:
+            - id: set_card_table_rows
+              type: SetState
+              params:
+                card_table_rows:
+                  _array.length:
+                    _event: rows
+
+  - id: table_in_card_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'rows='
+          - _if_none:
+              - _state: card_table_rows
+              - none
+          - ' card='
+          - _if_none:
+              - _state: selection_card_clicked
+              - false
+
   - id: table_radio
     type: Table
     properties:

@@ -26,8 +26,12 @@ const {
   ...tableEvents
 } = tableMeta.events;
 
+// TableInput is an input, not an input-container: it renders no slots (no toolbar, bulk action
+// or empty slot blocks), so it does not take Table's.
+const { slots, ...inputMeta } = tableMeta; // eslint-disable-line no-unused-vars
+
 export default {
-  ...tableMeta,
+  ...inputMeta,
   category: 'input',
   valueType: 'object',
   // No changes yet. The value is only ever what changed, never the rows (see onChange `value`).
@@ -38,7 +42,7 @@ export default {
         'Trigger when the changes change through the table: a cell edit, an added, deleted or moved row, a paste, or an undo or redo.',
       event: {
         value:
-          'The block value: the changes made in the table since `data`, `{ updated, added, removed, moved?, order? }`. `updated` is `{ [rowKey]: { [field]: value } }` with only the changed fields, keyed by the column `field` dot path (a MongoDB $set); a field edited back to its original value leaves it. `added` is `[{ rowKey, ...row }]`, `rowKey` a generated temporary key unless a column default gives the key. `removed` is `[rowKey]` of data rows deleted (deleting an added row just drops it from `added`). With `rowDrag.positionField`, `moved` is `{ [rowKey]: position }` of moved data rows; with `rowDrag` and no positionField, `order` is the full row key order after a move. No changes is `{ updated: {}, added: [], removed: [] }`.',
+          'The block value: the changes made in the table since `data`, `{ updated, added, removed, moved?, order? }`. `updated` is `{ [rowKey]: { [field]: value } }` with only the changed fields, keyed by the column `field` dot path (a MongoDB $set); a field edited back to its original value leaves it. `added` is `[{ rowKey, ...row }]`, `rowKey` a generated temporary key (a `default` on the key column is ignored, so added rows never share a key). `removed` is `[rowKey]` of data rows deleted (deleting an added row just drops it from `added`). With `rowDrag.positionField`, `moved` is `{ [rowKey]: position }` of moved data rows; with `rowDrag` and no positionField, `order` is the full row key order after a move. No changes is `{ updated: {}, added: [], removed: [] }`.',
         cause: 'What changed: `edit`, `add`, `delete`, `move`, `paste`, `undo` or `redo`.',
         rowKey: 'The key of the row that changed, for `edit`, `add`, `delete` and `move`.',
         skipped:

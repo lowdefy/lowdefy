@@ -16,7 +16,7 @@
 
 // Selection and expansion are not part of the view. Leaving them out of the dependencies keeps a
 // click on a checkbox from re-deriving the view.
-const NON_VIEW_SLICES = new Set(['rowSelection', 'selectionMode', 'expanded']);
+const NON_VIEW_SLICES = new Set(['rowSelection', 'selectionMode', 'selectionView', 'expanded']);
 
 // The state slices a view derives from, in a fixed order, for hook dependencies.
 function getViewSliceDeps(state) {

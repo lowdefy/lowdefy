@@ -37,6 +37,23 @@ The sort rows are from a later run (load 52) after the text sort read its keys i
 
 - **Group 100k** (measured 2026-09-29 on the same machine before the table moved to the shared cells; not rerun with mixed cells) sets the grouping with the `setGroup` method: the render builds the group tree and its aggregates in one pass over the sorted rows, flattens it and renders the body, inside a transition. Collapse and expand all rerun only the flatten. The 100k-groups case (grouping on a unique text column) is a stress case, not a budget scenario.
 
+## Wrapped rows: incremental row offsets
+
+Measured 2026-09-29 on the same machine (load average 2-4), `bench/tests/scroll-wrap.bench.js`: 100k rows with two text columns wrapping at 90 px (`name_1`, `name_13`), so every data row is measured and rows differ in height; column virtualisation is off. Two runs each, before and after, translated window.
+
+Before, every measurement batch (each window render reaching unmeasured rows) recomputed all 100k item tops, looking up each item's measured height (about 1.3 ms at 100k in Node). After, a batch shifts the offsets from its first changed item with one running sum (`shiftRowOffsets`, about 0.3 ms including the copy), and batches reported before the next render share one copy.
+
+| Scenario                             | Before: ms per commit, main thread per frame | After: ms per commit, main thread per frame |
+| ------------------------------------ | -------------------------------------------- | ------------------------------------------- |
+| 10 cols, wheel-fast                  | 1.81 / 1.63 ms, 2.28 / 2.2 ms                | 0.8 / 1.08 ms, 1.74 / 1.98 ms               |
+| 10 cols, programmatic 3,000 px/s     | 0.56 / 0.62 ms, 2.99 / 3.13 ms               | 0.27 / 0.29 ms, 2.8 / 3.04 ms               |
+| 10 cols, programmatic 3,000 px/s, 4x | 1.43 / 1.25 ms, 7.3 / 6.27 ms                | 0.43 / 0.46 ms, 4.74 / 4.87 ms              |
+| 50 cols, wheel-fast                  | 3.28 / 2.02 ms, 4.6 / 3.67 ms                | 2.44 / 2.56 ms, 4.22 / 4.44 ms              |
+| 50 cols, programmatic 3,000 px/s     | 1.07 / 0.9 ms, 6.58 / 5.91 ms                | 0.68 / 0.75 ms, 6.02 / 6.69 ms              |
+| 50 cols, programmatic 3,000 px/s, 4x | 2.32 / 2.36 ms, 15.59 / 16.48 ms, 58.3 fps   | 1.52 / 1.47 ms, 14.25 / 14.02 ms, 58.9 fps  |
+
+Every case held 60 fps at 1x (p95 18.1-18.6 ms against an idle floor near 18.4 ms on this run) with no long tasks; at 4x the 50-column case has one long task in both (the first render of the wrapped window). The offsets work was a third to a half of the React time per commit with 10 columns; with 50 columns rendering every cell of a wrapped row dominates, and the saving is a smaller share.
+
 ## Mixed cells: before and after
 
 "Before" is the engine as merged, with the local stand-in renderers (every cell plain text) and the old column set; "after" is this branch with the shared renderers and the mixed column set above. Translated window, 100k x 50.

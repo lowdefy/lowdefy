@@ -16,12 +16,14 @@
 
 import applyMoveToChanges from './applyMoveToChanges.js';
 import computeRowMove from './computeRowMove.js';
-import isDataItem from '../../core/isDataItem.js';
+import getDataGap from './getDataGap.js';
 
 // A row move from a drag drop or Alt+Shift+Arrow, on the rows in display order. Moves are only
 // offered while the display order is the data order (or the position order), so the move's
-// neighbours are the row's neighbours in the saved order. TableInput records the move in its
-// changeset; Table saves it through onRowMove. Returns the move, or null when nothing moved.
+// neighbours are the row's neighbours in the saved order. The move is computed over every data
+// row (`api.dataRows`), not only the current page, so its indices, neighbours, key order and
+// positions hold for the whole list. TableInput records the move in its changeset; Table saves it
+// through onRowMove. Returns the move, or null when nothing moved.
 function createMoveRow(api) {
   return function moveRow({ rowId, gap }) {
     const { editing } = api;
@@ -29,11 +31,11 @@ function createMoveRow(api) {
     const row = api.table.getRow(rowId, true);
     if (!row) return null;
     const move = computeRowMove({
-      rows: api.rows.filter(isDataItem).map((displayRow) => displayRow.original),
+      rows: api.dataRows.map((dataRow) => dataRow.original),
       getKey: api.config.getKey,
       positionField: editing.options.positionField,
       rowKey: rowId,
-      gap,
+      gap: getDataGap({ api, gap }),
     });
     if (!move) return null;
     api.actions.cancelEdit({ refocus: false });

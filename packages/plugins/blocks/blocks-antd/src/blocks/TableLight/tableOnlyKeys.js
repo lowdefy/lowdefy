@@ -17,7 +17,8 @@
 // The Table features TableLight leaves out, by the key that turns them on,
 // with the feature named in the error. The schema (meta.js) and the runtime
 // check (validateTableLightProperties.js) both read these, so the message is
-// the same wherever the key is caught.
+// the same wherever the key is caught. `defaultColumn` adds the keys a
+// TableLight column takes but its defaultColumn does not.
 const TABLE_ONLY_KEYS = {
   properties: {
     rowSelection: 'row selection',
@@ -35,6 +36,8 @@ const TABLE_ONLY_KEYS = {
     expandable: 'expandable rows',
     keyboard: 'keyboard grid navigation',
     rowVersionField: 'row change tracking',
+    rowDrag: 'row reordering',
+    maxHeight: 'a maximum height (TableLight takes a fixed height)',
   },
   columns: {
     filterable: 'column filters',
@@ -44,6 +47,13 @@ const TABLE_ONLY_KEYS = {
     validate: 'editing',
     flex: 'flexible column widths',
     maxWidth: 'maximum column widths',
+    searchable: 'search',
+    required: 'editing',
+    default: 'editing',
+  },
+  defaultColumn: {
+    width: 'default column widths',
+    minWidth: 'default column widths',
   },
 };
 

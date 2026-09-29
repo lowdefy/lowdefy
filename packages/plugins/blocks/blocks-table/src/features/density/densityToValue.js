@@ -15,7 +15,7 @@
 */
 
 function densityToValue({ state }) {
-  return { view: { density: state.density } };
+  return { view: { density: state.density, wrap: state.wrap } };
 }
 
 export default densityToValue;

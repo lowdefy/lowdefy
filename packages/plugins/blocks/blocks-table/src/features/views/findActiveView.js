@@ -16,10 +16,12 @@
 
 import { type } from '@lowdefy/helpers';
 
+import getViewKey from './getViewKey.js';
+
 // The active saved view: the requested id when it is still in the list, else the first (leftmost)
 // view, as tabbed index pages default to their first tab.
 function findActiveView({ views, id }) {
-  const key = type.isNone(id) ? null : String(id);
+  const key = type.isNone(id) ? null : getViewKey(id);
   return views.find((view) => view.key === key) ?? views[0] ?? null;
 }
 

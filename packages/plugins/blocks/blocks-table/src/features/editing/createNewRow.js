@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { get, serializer, set, type } from '@lowdefy/helpers';
+import { serializer, set, type, unset } from '@lowdefy/helpers';
 
-// A row for "+ Add row": `fields` holds each column's `default` at its field. The row's key is
-// the key field's default when one is given; otherwise a generated temporary key, kept out of
-// `fields` so the server assigns the real one (the table shows the temporary key until then).
+// A row for "+ Add row": `fields` holds each column's `default` at its field. The row always gets
+// a generated temporary key, kept out of `fields` so the server assigns the real one (the table
+// shows the temporary key until then). A default on the key column is ignored: every added row
+// would share it, and changes are recorded by key.
 function createNewRow({ specs, keyField, generateKey }) {
   const fields = {};
   specs.forEach((spec) => {
     if (type.isUndefined(spec.default)) return;
     set(fields, spec.field, serializer.copy(spec.default));
   });
-  const keyDefault = get(fields, keyField);
-  if (!type.isNone(keyDefault) && keyDefault !== '') return { rowKey: keyDefault, fields };
+  unset(fields, keyField);
   return { rowKey: generateKey(), fields };
 }
 

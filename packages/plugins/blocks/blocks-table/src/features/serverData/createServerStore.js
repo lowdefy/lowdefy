@@ -48,7 +48,7 @@ function createServerStore({ api, server }) {
     timer: null,
     version: 0,
     requestCount: 0,
-    loadedRows: { version: -1, rows: [] },
+    loadedRows: { version: -1, rows: [], indices: new Map() },
     itemCache: new WeakMap(),
   };
 
@@ -224,17 +224,27 @@ function createServerStore({ api, server }) {
       store.segments = built.segments;
       return built;
     },
-    // Leaf rows of the cache on screen, for TanStack (selection, row lookup, events).
+    // Leaf rows of the cache on screen, for TanStack (selection, row lookup, events), and each
+    // one's index in its list on the server.
     getLoadedRows() {
       if (store.loadedRows.version === store.version) return store.loadedRows.rows;
       const levels = (store.view?.group ?? []).length;
+      const display = getDisplayCache();
       const rows = [];
-      getDisplayCache().forEachLoaded((blockRows, block) => {
+      const indices = new Map();
+      display.forEachLoaded((blockRows, block) => {
         if (JSON.parse(block.listKey).length < levels) return;
-        blockRows.forEach((row) => rows.push(row));
+        blockRows.forEach((row, offset) => {
+          rows.push(row);
+          indices.set(String(api.config.getKey(row)), block.index * display.blockSize + offset);
+        });
       });
-      store.loadedRows = { version: store.version, rows };
+      store.loadedRows = { version: store.version, rows, indices };
       return rows;
+    },
+    getRowIndex(rowKey) {
+      store.getLoadedRows();
+      return store.loadedRows.indices.get(String(rowKey)) ?? null;
     },
     toggleGroup({ key, expanded }) {
       const next = expanded ?? !store.expandedGroups.has(key);

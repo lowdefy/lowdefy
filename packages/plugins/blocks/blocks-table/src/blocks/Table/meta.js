@@ -149,7 +149,7 @@ const column = {
       type: 'string',
       enum: Object.keys(AGGREGATE_LABELS),
       description:
-        'Default aggregate for this column, shown in group headers and the summary footer (over all filtered rows): sum, avg, min, max, count, countDistinct, countEmpty, countNotEmpty, percentEmpty, earliest or latest. The view `aggregates` overrides it.',
+        'Default aggregate for this column, shown in group headers and the summary footer (over all filtered rows): sum, avg, min, max, count, countDistinct, countEmpty, countNotEmpty, percentEmpty, earliest or latest. The view `aggregates` overrides it, and can set aggregates for columns without one.',
     },
     options: {
       type: ['array', 'object'],
@@ -262,24 +262,26 @@ export default {
       event: {
         value: 'The table value `{ view, selected, expanded }`.',
         cause:
-          'What changed: `sort`, `filter`, `search`, `columns`, `select`, `group` (the grouping levels), `aggregate` (group aggregates), `expand` (a group, tree row or detail row collapsed or expanded), `density`, or `view` (a saved view loaded, discarded to, or selected).',
+          'What changed: `sort`, `filter`, `search`, `columns`, `select`, `group` (the grouping levels), `aggregate` (group aggregates), `expand` (a group, tree row or detail row collapsed or expanded), `density`, `wrap` (the toolbar Wrap toggle), or `view` (a saved view loaded, discarded to, or selected).',
       },
     },
     onSelectionChange: {
       description:
-        'Trigger when the row selection changes. In server mode the header checkbox selects every row the view matches as `{ all: true, except: [] }`; resolve it on the server with the same view.',
+        'Trigger when the row selection changes. "Select all matching" in the bulk bar (and, in server mode, the header checkbox) selects every row the view matches as `{ all: true, except, filter, search }`: every row matching that filter and search except the `except` keys, so a request can resolve it from the value alone. Changing the filter or search clears such a selection.',
       event: {
-        selected: 'The selected row keys, or `{ all: true, except }`.',
+        selected: 'The selected row keys, or `{ all: true, except, filter, search }`.',
         rows: 'The selected row objects that are loaded.',
       },
     },
     onRowExpand: {
       description:
-        "Trigger when a tree row or an expandable row is expanded or collapsed. With `tree.lazy`, load the row's children here and add them to `data`.",
+        "Trigger when a tree row or an expandable row is expanded or collapsed. With `tree.lazy`, load the row's children here when `needsChildren` is true (skip the load action otherwise) and add them to `data`.",
       event: {
         row: 'The row object.',
         rowKey: 'The row key.',
         expanded: 'True when the row was expanded, false when it was collapsed.',
+        needsChildren:
+          'True when a `tree.lazy` row is expanded and none of its children are in `data` yet, so they need loading. False for every other expand and collapse.',
       },
     },
     onExport: {
@@ -297,7 +299,8 @@ export default {
       event: {
         row: 'The row data.',
         rowKey: 'The row key.',
-        index: 'The index of the row in `data`.',
+        index:
+          'The index of the row in `data` (with `childrenField`, in the depth-first list of every row). In server mode, its index in the rows the request matches (inside a group, in the group). `null` for a row that is not in `data`: added with `applyTransaction`, or in a TableInput.',
       },
     },
     onRowDoubleClick: {
@@ -305,7 +308,8 @@ export default {
       event: {
         row: 'The row data.',
         rowKey: 'The row key.',
-        index: 'The index of the row in `data`.',
+        index:
+          'The index of the row in `data` (with `childrenField`, in the depth-first list of every row). In server mode, its index in the rows the request matches (inside a group, in the group). `null` for a row that is not in `data`: added with `applyTransaction`, or in a TableInput.',
       },
     },
     onCellClick: {
@@ -357,8 +361,8 @@ export default {
       event: {
         row: 'The moved row object.',
         rowKey: 'The moved row key.',
-        fromIndex: 'The display index the row was at.',
-        toIndex: 'The display index the row is at now.',
+        fromIndex: 'The index the row was at in the displayed rows, across every page.',
+        toIndex: 'The index the row is at now in the displayed rows, across every page.',
         beforeKey: 'The key of the row now before it, or null at the top.',
         afterKey: 'The key of the row now after it, or null at the bottom.',
         position: "With a positionField: the moved row's new position.",
@@ -411,7 +415,7 @@ export default {
     setGroup:
       'Group rows by these columns, outermost first. Accepts column keys or `[{ key }]` of groupable columns; an empty list removes the grouping.',
     selectAllMatching:
-      'Select every row the view matches, as `{ all: true, except: [] }` (checkbox selection only).',
+      "Select every row the view matches, as `{ all: true, except: [], filter, search }` with the view's filter and search (checkbox selection only). Rows that arrive later and match are selected too; a filter or search change clears the selection.",
     expandAllGroups: 'Expand every group (client data; server groups open one at a time).',
     collapseAllGroups: 'Collapse every group at every level.',
     setFilter:
@@ -485,7 +489,7 @@ export default {
       rowVersionField: {
         type: 'string',
         description:
-          'Field that changes whenever a row changes (for example `updated_at`). When set, rows are compared by key and this field instead of by content.',
+          'Dot path to a field that changes whenever a row changes (for example `updated.timestamp`). When set, rows are compared by key and this field instead of by content; a row without it is compared by content.',
       },
       user: {
         type: 'object',
@@ -559,11 +563,13 @@ export default {
           },
           wrap: {
             type: 'boolean',
-            description: 'Wrap cell text.',
+            description:
+              'Wrap the text of text-like columns (text, email, phone, url, link, html, relation) that set no `wrap` or `ellipsis` of their own; rows grow to their content. The toolbar density control has a Wrap toggle.',
           },
           pageSize: {
-            type: 'number',
-            description: 'Rows per page when pagination is on.',
+            type: 'integer',
+            description:
+              'Rows per page when pagination is on. Defaults to the `pageSize` property.',
           },
         },
       },
@@ -611,7 +617,7 @@ export default {
             type: 'boolean',
             default: false,
             description:
-              'Load children on demand: rows whose `hasChildrenField` is true show a chevron before their children are loaded, expanding a row fires `onRowExpand`, and the app adds the children to `data` (for example a request whose result is merged into the data with `parentField` set).',
+              'Load children on demand: rows whose `hasChildrenField` is true show a chevron before their children are loaded, expanding a row fires `onRowExpand` with `needsChildren: true` until its children are in `data`, and the app adds them (for example a request whose result is merged into the data with `parentField` set).',
           },
           hasChildrenField: {
             type: 'string',
@@ -745,7 +751,7 @@ export default {
         type: ['boolean', 'object'],
         default: true,
         description:
-          'Keyboard navigation between cells. Grid roles stay on when off. An object turns it on with options.',
+          'Keyboard navigation between cells. Grid roles stay on when off, and so do Ctrl/Cmd+C copy and the keys of a focused group header. An object turns it on with options.',
         additionalProperties: false,
         properties: {
           next: {
@@ -777,7 +783,9 @@ export default {
           sort: toolbarItem('A Sort button to add, remove, reorder and flip sort levels.'),
           group: toolbarItem('A Group button to pick and order group levels (groupable columns).'),
           columns: toolbarItem('A Columns button that opens the column manager.'),
-          density: toolbarItem('A compact / default / comfortable density toggle.'),
+          density: toolbarItem(
+            'A compact / default / comfortable density toggle, with a Wrap toggle for `view.wrap`.'
+          ),
           export: toolbarItem('An Export button that downloads the view as CSV.'),
         },
       },
@@ -789,7 +797,11 @@ export default {
           type: 'object',
           required: ['id'],
           properties: {
-            id: { type: ['string', 'number'], description: 'Unique view id.' },
+            id: {
+              type: ['string', 'number', 'object'],
+              description:
+                'Unique view id: a string, number, or an ObjectId from a MongoDB request (`{ _oid }`, keyed by its hex). Events carry it as given.',
+            },
             title: { type: 'string', description: 'Tab title. Defaults to the id.' },
             view: { type: 'object', description: 'The saved view (any part of a view).' },
             shared: { type: 'boolean', description: 'Whether the view is shared.' },
@@ -802,9 +814,9 @@ export default {
         },
       },
       activeView: {
-        type: ['string', 'number', 'null'],
+        type: ['string', 'number', 'object', 'null'],
         description:
-          'The id of the active saved view. Defaults to the first view. Changing it selects that view.',
+          'The id of the active saved view (an ObjectId id matches by its hex). Defaults to the first view. Changing it selects that view.',
       },
       persist: {
         type: 'object',
@@ -845,13 +857,13 @@ export default {
       pageSize: {
         type: 'integer',
         default: 50,
-        description: 'Rows per page when `pagination` is on.',
+        description: 'Rows per page when `pagination` is on (`view.pageSize` overrides it).',
       },
       summary: {
         type: 'boolean',
         default: true,
         description:
-          'Show the summary footer when a column declares an `aggregate`. `false` hides it.',
+          'Show the summary footer when any aggregate is in effect: a column `aggregate`, or one the view sets in `view.aggregates`. `false` hides it.',
       },
     },
   },

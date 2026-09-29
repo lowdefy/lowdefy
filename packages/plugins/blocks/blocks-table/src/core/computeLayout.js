@@ -15,13 +15,14 @@
 */
 
 import distributeFlex from './distributeFlex.js';
+import getViewWrapColumn from '../features/density/getViewWrapColumn.js';
 
-function fromTanstackColumn({ column, region, widths }) {
+function fromTanstackColumn({ column, region, widths, wrap }) {
   const { meta } = column.columnDef;
   return {
     key: column.id,
     region,
-    column: meta.column,
+    column: wrap ? getViewWrapColumn(meta.column) : meta.column,
     accessor: meta.accessor,
     width: widths?.[column.id] ?? column.getSize(),
     minWidth: column.columnDef.minSize,
@@ -31,8 +32,9 @@ function fromTanstackColumn({ column, region, widths }) {
 
 // The column geometry every row shares: visual order (start-pinned, centre, end-pinned), widths,
 // sticky offsets, centre prefix offsets for column virtualisation, and the CSS variables that
-// carry widths and offsets. `widths` overrides column sizes (a resize drag in progress).
-function computeLayout({ table, leadingColumns, viewportWidth, widths }) {
+// carry widths and offsets. `widths` overrides column sizes (a resize drag in progress); `wrap` is
+// the view's wrap.
+function computeLayout({ table, leadingColumns, viewportWidth, widths, wrap = false }) {
   const start = [
     ...leadingColumns.map((leading) => ({
       ...leading,
@@ -42,14 +44,14 @@ function computeLayout({ table, leadingColumns, viewportWidth, widths }) {
     })),
     ...table
       .getStartVisibleLeafColumns()
-      .map((column) => fromTanstackColumn({ column, region: 'start', widths })),
+      .map((column) => fromTanstackColumn({ column, region: 'start', widths, wrap })),
   ];
   const center = table
     .getCenterVisibleLeafColumns()
-    .map((column) => fromTanstackColumn({ column, region: 'center', widths }));
+    .map((column) => fromTanstackColumn({ column, region: 'center', widths, wrap }));
   const end = table
     .getEndVisibleLeafColumns()
-    .map((column) => fromTanstackColumn({ column, region: 'end', widths }));
+    .map((column) => fromTanstackColumn({ column, region: 'end', widths, wrap }));
   const cols = [...start, ...center, ...end];
   const sizing = { ...table.atoms.columnSizing.get(), ...widths };
   distributeFlex({ cols, viewportWidth, sizing });

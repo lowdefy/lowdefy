@@ -20,8 +20,17 @@ import getSelectAllExcept from './getSelectAllExcept.js';
 function selectionToValue({ state, api }) {
   const selection = state.rowSelection;
   const rowsById = api.table.getCoreRowModel().rowsById;
+  // An all selection describes itself, so it can be resolved on the server from the value alone:
+  // every row the filter and search match, except `except`.
   if (state.selectionMode === 'all') {
-    return { selected: { all: true, except: getSelectAllExcept({ api }) } };
+    return {
+      selected: {
+        all: true,
+        except: getSelectAllExcept({ api }),
+        filter: state.selectionView?.filter ?? null,
+        search: state.selectionView?.search ?? null,
+      },
+    };
   }
   const preserve = api.config.rowSelection?.preserve === true;
   const selected = [];

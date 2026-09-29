@@ -16,6 +16,8 @@
 
 import { applyArrayIndices, type } from '@lowdefy/helpers';
 
+import exemptFromDomEvent from '../exemptFromDomEvent.js';
+
 function createCallMethod({ arrayIndices, context }) {
   return function callMethod(params) {
     const { blockId, method, args = [] } = params;
@@ -38,6 +40,7 @@ function createCallMethod({ arrayIndices, context }) {
         `Failed to call method "${method}" on block "${blockId}". Check if "${method}" is a valid block method for block "${blockId}".`
       );
     }
+    exemptFromDomEvent({ blockId: block.blockId });
     return blockMethod(...args);
   };
 }

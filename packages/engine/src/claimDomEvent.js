@@ -14,39 +14,43 @@
   limitations under the License.
 */
 
-import outsideDomEventScope from './outsideDomEventScope.js';
+import domEventClaims from './domEventClaims.js';
+import getDomEvent from './getDomEvent.js';
+import getPathIndex from './getPathIndex.js';
 
-// DOM event -> id of the block whose event handled it. Weak, so dispatched events are collected.
-const domEventHandlers = new WeakMap();
-
-// A DOM event bubbles through every block that wraps its target, and each of those blocks may
-// fire an event for it: a Button click also reaches the clickable Card around it. The first
-// block with actions for the event handles it, and other blocks skip the same DOM event unless
-// the handling event sets `bubble: true`. window.event is the DOM event whose listeners are
-// running (React dispatches synchronously inside it), and undefined outside a DOM dispatch, so
-// events fired by actions (runOutsideDomEvent), timers or requests are never affected.
+// A DOM event bubbles through every block that wraps its target, and each of those blocks may fire
+// an event for it: a Button click also reaches the clickable Card around it. The innermost block on
+// the event's path with actions for the event handles it, and the blocks further out on the path
+// skip their events for the same DOM event, unless the handling event sets `bubble: true`.
 //
-// React's scheduler runs renders and effects inside MessageChannel `message` events, so an event a
-// block fires from an effect (a table fetching its first rows on mount) sees that message as
-// window.event. It is not a user interaction and is shared by every block the task mounts, so it
-// is never claimed.
-//
-// An internal event (registered by the block itself) is never skipped: a block can fire one from
-// an effect React flushes inside another block's click (a Table fetching rows after a Button set
-// its filter). It still claims an unclaimed DOM event, as the block's own handler would.
+// Only blocks the DOM event passed through take part. Blocks fire events for other reasons while
+// a DOM event is dispatched, and those are never skipped:
+// - A block off the path: a Table next to a Button fires onSelectionChange from the effect that
+//   commits the selection the Button's CallMethod cleared. React flushes that effect in a
+//   microtask inside the click listener, so window.event is still the click. The same holds for
+//   effects in React's scheduler `message` events, whose path has no blocks.
+// - A block inside the handling block: a Table in a clickable Card fires onSelectionChange for a
+//   checkbox after the Card's onClick ran. It runs, and holds the claim from then on.
+// - A block an action called a method on (exemptFromDomEvent), even when it is on the path: a
+//   Button in a Table's bulk action slot clearing the Table's selection.
+// - An internal event (registered by the block itself, like a Table's row fetch). It still claims
+//   an unclaimed DOM event, as the block's own handler would.
 function claimDomEvent({ blockId, bubble, hasActions, internal }) {
-  // The engine's unit tests run without a window.
-  if (typeof window === 'undefined') return null;
-  const domEvent = window.event;
-  if (!(domEvent instanceof Event)) return null;
-  if (outsideDomEventScope.depth > 0) return null;
-  if (domEvent instanceof MessageEvent) return null;
-  const handledBy = domEventHandlers.get(domEvent);
+  const domEvent = getDomEvent();
+  if (domEvent === null) return null;
+  const path = domEvent.composedPath();
+  const index = getPathIndex({ blockId, path });
+  if (index === -1) return null;
+  if (domEventClaims.exempt.get(domEvent)?.has(blockId)) return null;
+  const handledBy = domEventClaims.handledBy.get(domEvent);
   if (handledBy !== undefined && handledBy !== blockId) {
-    return internal === true ? null : handledBy;
+    const handledByIsInner = getPathIndex({ blockId: handledBy, path }) < index;
+    if (handledByIsInner) {
+      return internal === true ? null : handledBy;
+    }
   }
   if (hasActions && !bubble) {
-    domEventHandlers.set(domEvent, blockId);
+    domEventClaims.handledBy.set(domEvent, blockId);
   }
   return null;
 }

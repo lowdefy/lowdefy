@@ -160,11 +160,33 @@ blocks:
         _state: lazy_rows
     events:
       onRowExpand:
+        - id: record_lazy_expand
+          type: SetState
+          params:
+            lazy_expands:
+              _array.concat:
+                - _if_none:
+                    - _state: lazy_expands
+                    - []
+                - - _string.concat:
+                      - _event: rowKey
+                      - ':'
+                      - _if:
+                          test:
+                            _event: expanded
+                          then: open
+                          else: close
+                      - ':'
+                      - _if:
+                          test:
+                            _event: needsChildren
+                          then: load
+                          else: loaded
         - id: load_children
           type: SetState
           skip:
             _not:
-              _event: expanded
+              _event: needsChildren
           params:
             lazy_rows:
               _array.concat:
@@ -179,6 +201,16 @@ blocks:
                         - ' child'
                     parent:
                       _event: rowKey
+
+  - id: table_tree_lazy_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'expands='
+          - _json.stringify:
+              - _state: lazy_expands
+              - space: 0
 
   # ============================================
   # FILTERED TREE

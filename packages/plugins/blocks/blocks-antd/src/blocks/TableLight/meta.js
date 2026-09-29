@@ -219,7 +219,10 @@ export default {
         type: 'object',
         description: 'Defaults applied to every column.',
         additionalProperties: false,
-        patternProperties: tableOnly(TABLE_ONLY_KEYS.columns),
+        patternProperties: tableOnly({
+          ...TABLE_ONLY_KEYS.columns,
+          ...TABLE_ONLY_KEYS.defaultColumn,
+        }),
         properties: {
           sortable: {
             type: 'boolean',

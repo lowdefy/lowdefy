@@ -51,9 +51,16 @@ function handleMoveKeys({ event, api, rowElement, rowIndex, cell }) {
   if (!api.editing.options.rowDrag || !event.altKey || !event.shiftKey) return false;
   if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return false;
   event.preventDefault();
-  const gap = event.key === 'ArrowUp' ? rowIndex - 1 : rowIndex + 2;
+  const up = event.key === 'ArrowUp';
+  const gap = up ? rowIndex - 1 : rowIndex + 2;
   const move = api.actions.moveRow({ rowId: rowElement.dataset.rowKey, gap });
-  if (move) api.keyboard?.moveTo({ row: move.toIndex, col: Number(cell.dataset.colIndex) });
+  // The move's indices are in the whole list; the row moved one place in the display.
+  if (move) {
+    api.keyboard?.moveTo({
+      row: up ? rowIndex - 1 : rowIndex + 1,
+      col: Number(cell.dataset.colIndex),
+    });
+  }
   return true;
 }
 

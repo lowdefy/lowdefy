@@ -16,16 +16,18 @@
 
 import { type } from '@lowdefy/helpers';
 
+import getViewKey from './getViewKey.js';
+
 // Saved views `[{ id, title, view, shared, locked, count }]` from any source. Views often come
 // from a request, so a list that has not loaded yet (null) is an empty list. `key` is the id as a
-// string, for tabs and lookups; events carry the id as the app gave it.
+// string (getViewKey), for tabs and lookups; events carry the id as the app gave it.
 function normalizeViews(views) {
   if (!type.isArray(views)) return [];
   const seen = new Set();
   const normalized = [];
   views.forEach((entry) => {
     if (!type.isObject(entry) || type.isNone(entry.id)) return;
-    const key = String(entry.id);
+    const key = getViewKey(entry.id);
     if (seen.has(key)) return;
     seen.add(key);
     normalized.push({

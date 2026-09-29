@@ -16,14 +16,17 @@
 
 import { useEffect, useMemo, useRef } from 'react';
 
+import isSelectionViewCurrent from './isSelectionViewCurrent.js';
 import SelectAllHeader from './SelectAllHeader.js';
 import SelectCell from './SelectCell.js';
 
 const SELECT_COLUMN_WIDTH = 40;
 
-// While the selection is `{ all: true, except }`, rows that appear in later data are selected
-// too: "all" means every row, not the rows that happened to be loaded. Rows in `except` stay out
-// when their block is loaded again (server mode).
+// While the selection is `{ all: true, except }`, rows that appear in later data and match the
+// view are selected too: "all matching" means every row the filter and search match, not the rows
+// that happened to be loaded. Client-side that is the filtered rows; in server mode the server
+// matches, so every loaded row counts. Rows in `except` stay out when their block is loaded again
+// (server mode).
 function useSelection(ctx) {
   const { api, data, state } = ctx;
   const enabled = Boolean(ctx.config.rowSelection);
@@ -34,8 +37,9 @@ function useSelection(ctx) {
     const previous = previousRowsById.current;
     previousRowsById.current = rowsById;
     if (!previous || state.selectionMode !== 'all') return;
+    const matching = api.config.server ? rowsById : api.table.getFilteredRowModel().rowsById;
     const added = Object.keys(rowsById).filter(
-      (id) => !previous[id] && !api.selectionExcept.has(id)
+      (id) => !previous[id] && matching[id] && !api.selectionExcept.has(id)
     );
     if (!added.length) return;
     api.setSliceSilently('rowSelection', (selection) => {
@@ -46,6 +50,13 @@ function useSelection(ctx) {
       return next;
     });
   }, [data]);
+
+  // An all selection belongs to the filter and search it was made with: the rows another filter
+  // matches are a different set, so changing either (from the table or the value) clears it.
+  useEffect(() => {
+    if (state.selectionMode !== 'all' || isSelectionViewCurrent({ state })) return;
+    api.actions.clearSelection();
+  }, [state.filter, state.search, state.selectionMode, state.selectionView]);
 
   const leadingColumns = useMemo(
     () =>

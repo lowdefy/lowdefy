@@ -2,10 +2,9 @@
 '@lowdefy/engine': patch
 ---
 
-Block events that are not copies of a DOM event bubbling through the page are no longer skipped when another block handled that DOM event:
+A browser event now only skips the events of blocks it actually passed through. The innermost block on the event's path with actions for it handles it, and blocks further out on that path skip the same browser event unless the handling event sets `bubble: true`. Every other block event fired while the browser event is dispatched runs:
 
-- An event a block fires from inside another event's actions always runs. For example, a button's `onClick` with a `CallMethod` whose method changes a block's value used to lose that block's `onChange`, because the engine treated it as the same click bubbling up.
-- Events blocks fire from effects that React runs in its scheduler's `message` events (for example two blocks fetching data on mount) never claim or skip each other.
-- Events a block registers for its own machinery (such as a file upload's policy request or a table's row fetch) are never skipped.
-
-The one-handler-per-DOM-event rule still applies to blocks the DOM event actually bubbles through.
+- Events of blocks the browser event did not pass through. For example, a table's `onChange` or `onSelectionChange` after a button next to it ran `CallMethod clearSelection` used to be dropped, because the table fired it from an effect that runs inside the click.
+- Events of blocks inside the block that handled it. A table inside a clickable card now fires `onSelectionChange` for a checkbox click after the card's `onClick` ran.
+- Events of a block an action called a method on, such as a button in a table's bulk action slot clearing the table's selection.
+- Events a block registers for its own machinery, such as a file upload's policy request or a table's row fetch.

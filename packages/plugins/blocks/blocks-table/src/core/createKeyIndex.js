@@ -14,19 +14,16 @@
   limitations under the License.
 */
 
-import outsideDomEventScope from './outsideDomEventScope.js';
-
-// Runs the synchronous part of an action call outside DOM event claiming. An action can run
-// inside the DOM event that fired it (a Button click running CallMethod), and events it fires on
-// other blocks (the called block's own events) are caused by the handled event, not copies of it
-// bubbling through the blocks around the target.
-function runOutsideDomEvent(fn) {
-  outsideDomEventScope.depth += 1;
-  try {
-    return fn();
-  } finally {
-    outsideDomEventScope.depth -= 1;
-  }
+// Row key -> index in `rows`, built on the first lookup: row events need it, most renders do not.
+function createKeyIndex({ rows, getKey }) {
+  let indices = null;
+  return function getIndex(rowKey) {
+    if (indices === null) {
+      indices = new Map();
+      rows.forEach((row, index) => indices.set(String(getKey(row)), index));
+    }
+    return indices.get(String(rowKey)) ?? null;
+  };
 }
 
-export default runOutsideDomEvent;
+export default createKeyIndex;

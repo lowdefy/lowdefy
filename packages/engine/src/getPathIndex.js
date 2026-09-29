@@ -14,8 +14,13 @@
   limitations under the License.
 */
 
-// How many action calls are running synchronously right now. Shared by runOutsideDomEvent (which
-// counts) and claimDomEvent (which reads it).
-const outsideDomEventScope = { depth: 0 };
+// The client renders every block inside a layout element with the id `bl-<blockId>`
+// (packages/client/src/block). Its position on the DOM event's path, innermost first, or -1 when
+// the event did not pass through the block.
+function getPathIndex({ blockId, path }) {
+  const element = document.getElementById(`bl-${blockId}`);
+  if (element === null) return -1;
+  return path.indexOf(element);
+}
 
-export default outsideDomEventScope;
+export default getPathIndex;

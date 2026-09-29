@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import getRowIndex from './getRowIndex.js';
 import openRowLink from './openRowLink.js';
 
 // A row "activation" (click, or Enter on a focused cell), with TableLight's semantics: onRowClick
@@ -26,9 +27,14 @@ function createActivateRow(api) {
     if (!row) return false;
     const hasRowClick = Boolean(api.events.onRowClick);
     if (hasRowClick) {
+      const rowKey = api.config.getKey(row.original);
       api.methods.triggerEvent({
         name: 'onRowClick',
-        event: { row: row.original, rowKey: api.config.getKey(row.original), index: row.index },
+        event: {
+          row: row.original,
+          rowKey,
+          index: getRowIndex({ api, rowKey }),
+        },
       });
     }
     const { rowLink } = api.config;

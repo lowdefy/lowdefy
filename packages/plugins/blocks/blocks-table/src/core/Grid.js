@@ -65,10 +65,17 @@ function Grid({
   const levels = config.headerLevels;
   const viewport = useViewportSize(scrollerRef);
   const layout = useMemo(
-    () => computeLayout({ table: api.table, leadingColumns, viewportWidth: viewport.width }),
+    () =>
+      computeLayout({
+        table: api.table,
+        leadingColumns,
+        viewportWidth: viewport.width,
+        wrap: state.wrap,
+      }),
     [
       config,
       leadingColumns,
+      state.wrap,
       state.columnOrder,
       state.columnPinning,
       state.columnSizing,
@@ -89,6 +96,7 @@ function Grid({
         leadingColumns,
         viewportWidth: viewport.width,
         widths,
+        wrap: state.wrap,
       }),
     });
 

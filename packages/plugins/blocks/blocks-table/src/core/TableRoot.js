@@ -19,6 +19,7 @@ import { useTable } from '@tanstack/react-table';
 
 import createApi from './createApi.js';
 import createFeatureActions from './createFeatureActions.js';
+import createKeyIndex from './createKeyIndex.js';
 import createSliceHandlers from './createSliceHandlers.js';
 import densityHeights from './densityHeights.js';
 import features from '../features/index.js';
@@ -91,6 +92,11 @@ function TableRoot({
     [sourceData, config.getKey, config.rowVersionField]
   );
   previousData.current = stable;
+  // Row events report a row's index in the source rows (`data`), before any overlay.
+  api.getSourceIndex = useMemo(
+    () => createKeyIndex({ rows: stable.rows, getKey: config.getKey }),
+    [stable.rows, config.getKey]
+  );
   const data = useFeatureRows({ api, config, input, properties, rows: stable.rows });
 
   const { isPending, loadValue, setSliceSilently, state, updateSlice } = useTableState({

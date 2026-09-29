@@ -73,6 +73,25 @@ blocks:
           params:
             export_view:
               _event: view
+      onRowClick:
+        - id: set_server_click
+          type: SetState
+          params:
+            server_click:
+              rowKey:
+                _event: rowKey
+              index:
+                _event: index
+
+  - id: server_click_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'click='
+          - _json.stringify:
+              - _state: server_click
+              - space: 0
 
   - id: server_selection_value
     type: Span
@@ -205,6 +224,26 @@ blocks:
           name: Two
         - id: 3
           name: Three
+    events:
+      onRowClick:
+        - id: set_transactions_click
+          type: SetState
+          params:
+            transactions_click:
+              rowKey:
+                _event: rowKey
+              index:
+                _event: index
+
+  - id: transactions_click_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'click='
+          - _json.stringify:
+              - _state: transactions_click
+              - space: 0
 
   - id: transactions_apply
     type: Button

@@ -53,7 +53,7 @@ function validateTableLightProperties({ properties }) {
     );
   }
   Object.keys(properties.defaultColumn ?? {}).forEach((key) => {
-    const feature = TABLE_ONLY_KEYS.columns[key];
+    const feature = TABLE_ONLY_KEYS.columns[key] ?? TABLE_ONLY_KEYS.defaultColumn[key];
     if (!type.isUndefined(feature)) throw unsupported({ path: `defaultColumn.${key}`, feature });
   });
   if (type.isArray(properties.columns)) {

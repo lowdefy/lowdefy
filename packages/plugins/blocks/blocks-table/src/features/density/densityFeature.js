@@ -16,14 +16,17 @@
 
 import densityToValue from './densityToValue.js';
 import initDensity from './initDensity.js';
+import initWrap from './initWrap.js';
 
 // `view.density` (compact | default | comfortable): the row height when `rowHeight` is not set.
-// A slice, so the toolbar's density toggle is an ordinary committed change.
+// `view.wrap`: text-like columns wrap (getViewWrapColumn, applied to the layout columns). Slices,
+// so the toolbar's density and Wrap toggles are ordinary committed changes.
 const densityFeature = {
   name: 'density',
-  viewKeys: ['density'],
+  viewKeys: ['density', 'wrap'],
   slices: {
     density: { init: initDensity, cause: 'density' },
+    wrap: { init: initWrap, cause: 'wrap' },
   },
   toValue: densityToValue,
 };

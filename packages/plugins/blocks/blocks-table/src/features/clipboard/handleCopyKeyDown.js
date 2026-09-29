@@ -17,10 +17,10 @@
 import getCopyText from './getCopyText.js';
 
 // Ctrl/Cmd+C on a focused cell. A text selection inside the table wins: the browser copies that
-// as usual.
+// as usual. Copy is always on (D15): `keyboard: false` turns off cell navigation, not the
+// clipboard.
 function handleCopyKeyDown(event, api) {
   if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== 'c') return false;
-  if (!api.config.keyboard) return false;
   const cell = event.target.closest('[data-lf-cell]');
   if (!cell || !api.contains(cell) || event.target !== cell) return false;
   const selection = window.getSelection?.();

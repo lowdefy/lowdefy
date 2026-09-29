@@ -167,6 +167,18 @@ test.describe('Table server mode', () => {
     expect(starts.length).toBeLessThanOrEqual(5);
   });
 
+  test('onRowClick reports the absolute index of a row in a later block', async ({ page }) => {
+    await mockServer(page);
+    await navigateToTestPage(page, 'table-server');
+    await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
+    await scrollTo(page, 'table_server', 50000 * 40);
+    await expect(cell(page, 'table_server', '50002', 'name')).toHaveText('Person 50002');
+    await cell(page, 'table_server', '50002', 'name').click();
+    await expect(getBlock(page, 'server_click_value')).toHaveText(
+      'click={"rowKey":50002,"index":50002}'
+    );
+  });
+
   test('shows skeleton rows while a block loads', async ({ page }) => {
     await mockServer(page, { delayFor: (payload) => (payload.startRow === 0 ? 20 : 1000) });
     await navigateToTestPage(page, 'table-server');
@@ -253,11 +265,11 @@ test.describe('Table server mode', () => {
     await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
     await getBlock(page, 'table_server').locator('[data-lf-select-all]').click();
     await expect(getBlock(page, 'server_selection_value')).toHaveText(
-      'selected={"all":true,"except":[]} event={"all":true,"except":[]} rows=100'
+      'selected={"all":true,"except":[],"filter":null,"search":null} event={"all":true,"except":[],"filter":null,"search":null} rows=100'
     );
     await row(page, 'table_server', '2').locator('[data-lf-select-cell] input').click();
     await expect(getBlock(page, 'server_selection_value')).toHaveText(
-      'selected={"all":true,"except":[2]} event={"all":true,"except":[2]} rows=99'
+      'selected={"all":true,"except":[2],"filter":null,"search":null} event={"all":true,"except":[2],"filter":null,"search":null} rows=99'
     );
     await expect(getBlock(page, 'table_server').locator('[data-lf-select-all]')).toHaveJSProperty(
       'indeterminate',
@@ -270,10 +282,24 @@ test.describe('Table server mode', () => {
     await expect(row(page, 'table_server', '2')).toHaveAttribute('aria-selected', 'false');
     await getBlock(page, 'table_server').locator('[data-lf-select-all]').click();
     await expect(getBlock(page, 'server_selection_value')).toContainText(
-      'selected={"all":true,"except":[]}'
+      'selected={"all":true,"except":[],"filter":null,"search":null}'
     );
     await getBlock(page, 'table_server').locator('[data-lf-select-all]').click();
     await expect(getBlock(page, 'server_selection_value')).toContainText('selected=[]');
+  });
+
+  test('a filter change ends an all selection', async ({ page }) => {
+    await mockServer(page);
+    await navigateToTestPage(page, 'table-server');
+    await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
+    await getBlock(page, 'table_server').locator('[data-lf-select-all]').click();
+    await expect(getBlock(page, 'server_selection_value')).toContainText(
+      'selected={"all":true,"except":[],"filter":null,"search":null}'
+    );
+    await clickButton(page, 'server_filter');
+    await expect(cell(page, 'table_server', '2', 'stage')).toHaveText('won');
+    await expect(getBlock(page, 'server_selection_value')).toContainText('selected=[]');
+    await expect(row(page, 'table_server', '2')).toHaveAttribute('aria-selected', 'false');
   });
 
   test('the fetch sends the selection', async ({ page }) => {
@@ -364,5 +390,22 @@ test.describe('Table server mode', () => {
     await expect(row(page, 'table_transactions', '3')).toHaveCount(0);
     await expect(cell(page, 'table_transactions', '4', 'name')).toHaveText('Four');
     await expect(cell(page, 'table_transactions', '1', 'name')).toHaveText('One');
+  });
+
+  test('onRowClick reports the index in data, and null for a row a transaction added', async ({
+    page,
+  }) => {
+    await mockServer(page);
+    await navigateToTestPage(page, 'table-server');
+    await clickButton(page, 'transactions_apply');
+    await expect(cell(page, 'table_transactions', '4', 'name')).toHaveText('Four');
+    await cell(page, 'table_transactions', '4', 'name').click();
+    await expect(getBlock(page, 'transactions_click_value')).toHaveText(
+      'click={"rowKey":4,"index":null}'
+    );
+    await cell(page, 'table_transactions', '2', 'name').click();
+    await expect(getBlock(page, 'transactions_click_value')).toHaveText(
+      'click={"rowKey":2,"index":1}'
+    );
   });
 });

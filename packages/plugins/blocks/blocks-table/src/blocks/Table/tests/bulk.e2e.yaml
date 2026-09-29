@@ -43,6 +43,25 @@ blocks:
                   params:
                     bk_assigned:
                       _state: bk.selected
+          - id: bk_done
+            type: Button
+            properties:
+              title: Done
+            events:
+              onClick:
+                - id: clear_bk_selection
+                  type: CallMethod
+                  params:
+                    blockId: bk
+                    method: clearSelection
+    events:
+      onSelectionChange:
+        - id: set_bk_rows
+          type: SetState
+          params:
+            bk_rows:
+              _array.length:
+                _event: rows
 
   - id: bk_value
     type: Span
@@ -58,6 +77,76 @@ blocks:
               - _if_none:
                   - _state: bk_assigned
                   - null
+              - space: 0
+          - ' rows='
+          - _if_none:
+              - _state: bk_rows
+              - none
+
+  # ============================================
+  # SELECT ALL MATCHING WITH A FILTER, THEN NEW DATA
+  # ============================================
+
+  - id: bk_filtered
+    type: Table
+    properties:
+      rowSelection:
+        type: checkbox
+      defaultView:
+        filter:
+          key: team
+          op: eq
+          value: Blue
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _if_none:
+          - _state: bk_filtered_data
+          - _ref: ../../src/blocks/Table/tests/people.yaml
+
+  - id: bk_filtered_add
+    type: Button
+    properties:
+      title: Add rows
+    events:
+      onClick:
+        - id: add_filtered_rows
+          type: SetState
+          params:
+            bk_filtered_data:
+              _array.concat:
+                - _ref: ../../src/blocks/Table/tests/people.yaml
+                - - id: 6
+                    name: Finn
+                    team: Blue
+                    age: 22
+                    city: Oslo
+                  - id: 7
+                    name: Gail
+                    team: Red
+                    age: 28
+                    city: Lima
+
+  - id: bk_filtered_clear_filters
+    type: Button
+    properties:
+      title: Clear filters
+    events:
+      onClick:
+        - id: clear_filtered_filters
+          type: CallMethod
+          params:
+            blockId: bk_filtered
+            method: clearFilters
+
+  - id: bk_filtered_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'selected='
+          - _json.stringify:
+              - _state: bk_filtered.selected
               - space: 0
 
   # ============================================

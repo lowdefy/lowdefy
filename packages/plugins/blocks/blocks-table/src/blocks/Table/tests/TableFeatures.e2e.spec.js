@@ -76,6 +76,13 @@ test.describe('Table features shared with TableLight', () => {
     expect(lastBox.y + lastBox.height).toBeLessThanOrEqual(footerBox.y + 1);
   });
 
+  test('the summary footer shows for view aggregates without column aggregates', async ({
+    page,
+  }) => {
+    const summary = getBlock(page, 'tf_summary_view').locator('.lf-table-summary-row');
+    await expect(summary.locator('[data-col-key="amount"]')).toContainText('7');
+  });
+
   test('pagination shows pages of pageSize with a pager', async ({ page }) => {
     await expect(bodyRows(page, 'tf_pages')).toHaveCount(5);
     const pager = getBlock(page, 'tf_pages').locator('.ant-pagination');
@@ -101,6 +108,40 @@ test.describe('Table features shared with TableLight', () => {
     await expect(cell(page, 'tf_wrap', 2, 'note').locator('.lf-table-cell')).toHaveClass(
       /lf-table-cell-wrap/
     );
+  });
+
+  test('view.wrap wraps text columns, and the toolbar Wrap toggle turns it off', async ({
+    page,
+  }) => {
+    const noteCell = cell(page, 'tf_view_wrap', 2, 'note').locator('.lf-table-cell');
+    await expect(noteCell).toHaveClass(/lf-table-cell-wrap/);
+    await expect(cell(page, 'tf_view_wrap', 2, 'amount').locator('.lf-table-cell')).toHaveClass(
+      /lf-table-cell-nowrap/
+    );
+    await expect
+      .poll(async () => (await row(page, 'tf_view_wrap', 2).boundingBox()).height)
+      .toBeGreaterThan(60);
+    const toggle = getBlock(page, 'tf_view_wrap').locator('[data-lf-toolbar-wrap]');
+    await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+    await toggle.click();
+    await expect(getBlock(page, 'tf_view_wrap_value')).toHaveText('wrap=false');
+    await expect(noteCell).toHaveClass(/lf-table-cell-nowrap/);
+    await expect
+      .poll(async () => Math.round((await row(page, 'tf_view_wrap', 2).boundingBox()).height))
+      .toBe(40);
+    await toggle.click();
+    await expect(getBlock(page, 'tf_view_wrap_value')).toHaveText('wrap=true');
+    await expect(noteCell).toHaveClass(/lf-table-cell-wrap/);
+  });
+
+  test('view.pageSize sets the rows per page', async ({ page }) => {
+    await expect(bodyRows(page, 'tf_view_pages')).toHaveCount(3);
+    await expect(getBlock(page, 'tf_view_pages_value')).toHaveText('pageSize=3');
+    const pager = getBlock(page, 'tf_view_pages').locator('.ant-pagination');
+    await expect(pager.locator('.ant-pagination-item-4')).toBeVisible();
+    await page.locator('#tf_view_pages_four').click();
+    await expect(bodyRows(page, 'tf_view_pages')).toHaveCount(4);
+    await expect(pager.locator('.ant-pagination-item-4')).toHaveCount(0);
   });
 
   test('size sets the density and bordered draws cell borders', async ({ page }) => {

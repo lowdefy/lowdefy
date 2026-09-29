@@ -81,3 +81,12 @@ test('computeAggregate throws on an unknown function', () => {
     'Unknown table aggregate "median".'
   );
 });
+
+test('computeAggregate min and max handle more values than fit in a call stack', () => {
+  const values = Array.from({ length: 300000 }, (_, i) => (i * 7919) % 300001);
+  values[123456] = -5;
+  values[234567] = 400000;
+  const column = { type: 'number' };
+  expect(computeAggregate({ fn: 'min', values, column })).toBe(-5);
+  expect(computeAggregate({ fn: 'max', values, column })).toBe(400000);
+});
