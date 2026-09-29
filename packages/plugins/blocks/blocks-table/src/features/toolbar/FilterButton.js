@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Button, Popover } from 'antd';
 
 import countConditions from './countConditions.js';
-import FilterBuilder from '../filtering/FilterBuilder.js';
+import LazyFilterBuilder from '../filtering/LazyFilterBuilder.js';
 import ToolbarCount from './ToolbarCount.js';
 import ToolbarIcon from './ToolbarIcon.js';
 
@@ -29,12 +29,14 @@ function FilterButton({ api }) {
   const columns = api.config.columns.filter((column) => column.filterable);
   const content = (
     <div className="lf-table-toolbar-popover" data-lf-toolbar-filter="">
-      <FilterBuilder
-        columns={columns}
-        condition={filter}
-        onChange={(condition) => api.actions.applyFiltering({ filter: condition ?? null })}
-        user={api.config.user}
-      />
+      <Suspense fallback={null}>
+        <LazyFilterBuilder
+          columns={columns}
+          condition={filter}
+          onChange={(condition) => api.actions.applyFiltering({ filter: condition ?? null })}
+          user={api.config.user}
+        />
+      </Suspense>
     </div>
   );
   return (
@@ -42,6 +44,8 @@ function FilterButton({ api }) {
       <Button
         data-lf-toolbar-button="filter"
         icon={<ToolbarIcon api={api} name="filter" />}
+        onFocus={LazyFilterBuilder.preload}
+        onPointerEnter={LazyFilterBuilder.preload}
         size="small"
       >
         Filter

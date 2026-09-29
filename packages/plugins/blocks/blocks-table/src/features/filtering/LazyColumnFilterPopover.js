@@ -14,25 +14,10 @@
   limitations under the License.
 */
 
-import React, { Suspense, useState } from 'react';
+import lazyComponent from '../../core/lazyComponent.js';
 
-import LazyColumnManagerPopover from './LazyColumnManagerPopover.js';
+// The column filter popover (simple editors per type and the filter builder), loaded when a
+// column filter first opens; the header menu and the filter indicator preload it.
+const LazyColumnFilterPopover = lazyComponent(() => import('./ColumnFilterPopover.js'));
 
-// Block-level open state; the popover (loaded on first open) renders in the table's top region
-// while open.
-function useColumnManager({ api }) {
-  const [open, setOpen] = useState(false);
-  api.columnManager = { open, setOpen };
-  if (!open) return null;
-  return {
-    regions: {
-      top: (
-        <Suspense fallback={null}>
-          <LazyColumnManagerPopover api={api} />
-        </Suspense>
-      ),
-    },
-  };
-}
-
-export default useColumnManager;
+export default LazyColumnFilterPopover;

@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { Suspense } from 'react';
 
-import ColumnFilterPopover from './ColumnFilterPopover.js';
 import FilterIcon from './FilterIcon.js';
 import getFilteredKeys from './getFilteredKeys.js';
+import LazyColumnFilterPopover from './LazyColumnFilterPopover.js';
 
 // Header part: a filter icon while the column is filtered (click it to edit the filter), and the
 // column filter popover while it is open.
@@ -33,13 +33,19 @@ function FilterIndicator({ api, col, state }) {
           aria-label="Edit column filter"
           className="lf-table-header-button lf-table-filter-indicator"
           data-lf-filter-indicator=""
+          onFocus={LazyColumnFilterPopover.preload}
+          onPointerEnter={LazyColumnFilterPopover.preload}
           tabIndex={-1}
           type="button"
         >
           <FilterIcon />
         </button>
       ) : null}
-      {open ? <ColumnFilterPopover api={api} col={col} /> : null}
+      {open ? (
+        <Suspense fallback={null}>
+          <LazyColumnFilterPopover api={api} col={col} />
+        </Suspense>
+      ) : null}
     </>
   );
 }

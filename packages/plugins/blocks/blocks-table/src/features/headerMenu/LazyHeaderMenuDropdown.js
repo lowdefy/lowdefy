@@ -14,25 +14,10 @@
   limitations under the License.
 */
 
-import React, { Suspense, useState } from 'react';
+import lazyComponent from '../../core/lazyComponent.js';
 
-import LazyColumnManagerPopover from './LazyColumnManagerPopover.js';
+// The header menu, loaded when a header menu first opens (the menu button preloads it on hover
+// and focus).
+const LazyHeaderMenuDropdown = lazyComponent(() => import('./HeaderMenuDropdown.js'));
 
-// Block-level open state; the popover (loaded on first open) renders in the table's top region
-// while open.
-function useColumnManager({ api }) {
-  const [open, setOpen] = useState(false);
-  api.columnManager = { open, setOpen };
-  if (!open) return null;
-  return {
-    regions: {
-      top: (
-        <Suspense fallback={null}>
-          <LazyColumnManagerPopover api={api} />
-        </Suspense>
-      ),
-    },
-  };
-}
-
-export default useColumnManager;
+export default LazyHeaderMenuDropdown;
