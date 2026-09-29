@@ -132,4 +132,54 @@ test.describe('Table visual polish', () => {
       }
     }
   });
+
+  test('header titles line up with their column values and keep the room of the menu button', async ({
+    page,
+  }) => {
+    const edges = await table(page, 'crm').evaluate((root) => {
+      const measure = (key) => {
+        const header = root.querySelector(`[data-lf-header][data-col-key="${key}"]`);
+        const title = header.querySelector('.lf-table-header-title');
+        const content = root.querySelector(
+          `.lf-table-body [data-row-key] [data-col-key="${key}"] .lf-table-cell`
+        );
+        const titleBox = title.getBoundingClientRect();
+        const contentBox = content.getBoundingClientRect();
+        return {
+          titleLeft: titleBox.left,
+          titleRight: titleBox.right,
+          contentLeft: contentBox.left,
+          contentRight: contentBox.right,
+          truncated: title.scrollWidth > title.clientWidth,
+        };
+      };
+      return { amount: measure('amount'), win: measure('win'), owner: measure('owner') };
+    });
+    // End-aligned: the title ends where the values end, whatever the sort icon and menu button do.
+    expect(Math.abs(edges.amount.titleRight - edges.amount.contentRight)).toBeLessThan(1);
+    expect(Math.abs(edges.win.titleRight - edges.win.contentRight)).toBeLessThan(1);
+    // Start-aligned: the title starts where the values start.
+    expect(Math.abs(edges.owner.titleLeft - edges.owner.contentLeft)).toBeLessThan(1);
+    // "Win chance" fits a 110px column once the hidden menu button reserves no room.
+    expect(edges.win.truncated).toBe(false);
+  });
+
+  test('the header menu button shows over the end of a hovered header', async ({ page }) => {
+    const header = table(page, 'crm').locator('[data-lf-header][data-col-key="win"]');
+    const trigger = header.locator('[data-lf-header-menu]');
+    await expect(trigger).toHaveCSS('opacity', '0');
+    await header.hover();
+    await expect(trigger).toHaveCSS('opacity', '1');
+    await expect(trigger).toHaveCSS('position', 'absolute');
+    await trigger.click();
+    await expect(page.locator('.lf-table-header-menu .ant-dropdown-menu')).toBeVisible();
+  });
+
+  test('menu cells in the body are visible without hovering a header', async ({ page }) => {
+    await expect(
+      table(page, 'narrow').locator(
+        '.lf-table-body [data-row-key="1"] [data-col-key="more"] button'
+      )
+    ).toHaveCSS('opacity', '1');
+  });
 });

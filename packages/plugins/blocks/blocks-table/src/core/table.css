@@ -189,11 +189,15 @@
     background: var(--lf-header-bg);
   }
 
+  /* --lf-header-cell-bg is opaque, so a sticky pinned header covers the headers scrolled under it
+     and header buttons laid over the title can take the cell's colour. */
   .lf-table-header .lf-table-gridcell {
+    --lf-header-cell-bg: var(--lf-header-bg);
     font-weight: var(--ant-font-weight-strong, 600);
     color: var(--ant-color-text-heading, var(--ant-color-text));
     user-select: none;
     gap: var(--ant-padding-xxs, 4px);
+    background: var(--lf-header-cell-bg);
   }
 
   .lf-table-header .lf-table-gridcell[data-sortable] {
@@ -201,7 +205,14 @@
   }
 
   .lf-table-header .lf-table-gridcell[data-sortable]:hover {
-    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+    --lf-header-cell-bg: color-mix(in srgb, var(--ant-color-text, #000) 5%, var(--lf-header-bg));
+  }
+
+  /* End-aligned headers put their sort and filter indicators before the title, so the title ends
+     on the same padding edge as the column's values. */
+  .lf-table-header .lf-table-gridcell[data-align='end'] > .lf-table-sort,
+  .lf-table-header .lf-table-gridcell[data-align='end'] > .lf-table-filter-indicator {
+    order: -1;
   }
 
   .lf-table-header-title {

@@ -209,6 +209,14 @@ blocks:
           type: number
           width: 70
           aggregate: sum
+        - key: more
+          title: ''
+          type: menu
+          width: 48
+          cell:
+            items:
+              - eventName: onSnooze
+                title: Snooze
         - key: actions
           title: ''
           type: buttons
