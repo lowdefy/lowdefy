@@ -17,6 +17,7 @@
 import React, { useMemo, useState } from 'react';
 import { Alert, Button, Drawer, Input, Select, Switch } from 'antd';
 import AI_OUTPUT_TYPES from '@lowdefy/blocks-antd/table/aiOutputTypes.js';
+import CELL_TYPE_FAMILIES from '@lowdefy/blocks-antd/table/cellTypeFamilies.js';
 import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
 import USER_COLUMN_TYPES from '@lowdefy/blocks-antd/table/userColumnTypes.js';
 
