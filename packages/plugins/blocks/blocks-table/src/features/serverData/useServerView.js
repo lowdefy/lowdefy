@@ -44,7 +44,11 @@ function useServerView({ api, config, state }) {
   }, [store, viewKey]);
 
   if (!store) return null;
-  return { loading: store.isLoading(), pending: store.isPending() };
+  return {
+    loading: store.isLoading(),
+    pending: store.isPending(),
+    refreshing: store.isRefreshing(),
+  };
 }
 
 export default useServerView;
