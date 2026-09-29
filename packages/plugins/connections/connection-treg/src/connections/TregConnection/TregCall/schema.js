@@ -186,8 +186,14 @@ export default {
       not: { required: ['endpoint'] },
     },
   ],
+  // fetch refuses a GET with a body before anything is sent.
+  not: {
+    required: ['method', 'body'],
+    properties: { method: { const: 'GET' } },
+  },
   errorMessage: {
     type: 'TregCall request properties should be an object.',
+    not: 'TregCall request with method GET should not have a body. Leave method out to POST the body.',
     additionalProperties:
       'TregCall request should only have "endpoint", "tool", "path", "method", "query", "body", "idempotencyKey", "maxCost", "maxAge", "noCache", "waterfall", "strictFilters", "meta" and "await".',
     oneOf: 'TregCall request should have either "endpoint", or "tool" and "path".',

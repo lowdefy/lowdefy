@@ -212,6 +212,15 @@ describe('endpoint and custom tool validation', () => {
     });
   });
 
+  test('TregCall schema refuses a GET with a body', () => {
+    expect(() => validate({ schema, data: { endpoint: 'a.b', method: 'GET', body: {} } })).toThrow(
+      'TregCall request with method GET should not have a body. Leave method out to POST the body.'
+    );
+    expect(validate({ schema, data: { endpoint: 'a.b', method: 'POST', body: {} } })).toEqual({
+      valid: true,
+    });
+  });
+
   test('TregCall schema refuses unknown properties', () => {
     expect(() => validate({ schema, data: { endpoint: 'a.b', url: 'https://x' } })).toThrow(
       'TregCall request should only have'
