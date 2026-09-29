@@ -16,33 +16,72 @@
 
 import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
 
+import CSV_HEADER_SYNONYMS from './csvHeaderSynonyms.js';
+import getTextSimilarity from './getTextSimilarity.js';
+import normalizeHeader from './normalizeHeader.js';
+
 export const NEW_COLUMN = '__new';
 export const SKIP_COLUMN = '__skip';
 
-function normalize(text) {
-  return String(text ?? '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '');
+// How alike a header and a column must be to be suggested without a synonym.
+const SIMILARITY_THRESHOLD = 0.8;
+
+const CONCEPTS = new Map(
+  CSV_HEADER_SYNONYMS.flatMap((group, index) => group.map((name) => [name, index]))
+);
+
+function compact(text) {
+  return text.replace(/ /g, '');
 }
 
-// The import dialog's first guess at the mapping: each CSV header to the input column whose key
-// or title matches it (ignoring case, spaces and punctuation), each column used once, and every
-// header that matches none to a new text column. Returns one target per header: a column key,
-// NEW_COLUMN or SKIP_COLUMN (empty headers).
+// The best reason a header matches a column, with its score: the same name (key or title,
+// ignoring case, spaces and punctuation), a synonym (csvHeaderSynonyms), or a similar spelling.
+function scoreMatch({ header, names }) {
+  if (names.some((name) => compact(name) === compact(header))) {
+    return { reason: 'exact', score: 1 };
+  }
+  const concept = CONCEPTS.get(header);
+  if (concept !== undefined && names.some((name) => CONCEPTS.get(name) === concept)) {
+    return { reason: 'synonym', score: 0.9 };
+  }
+  const similarity = Math.max(...names.map((name) => getTextSimilarity(header, name)));
+  if (similarity >= SIMILARITY_THRESHOLD) return { reason: 'similar', score: similarity * 0.85 };
+  return null;
+}
+
+// The import dialog's first guess at the mapping, one `{ target, reason }` per header: `target`
+// is a column key, NEW_COLUMN (no column matches: a new text column) or SKIP_COLUMN (an empty
+// header); `reason` says why a column was suggested: `exact` (its key or title), `synonym`
+// ("Website" for "Company domain") or `similar` (a close spelling, "Emial"), else null. Every
+// header and column pair is scored and the best pairs are taken first, each header and column
+// once, so a weaker match never takes a column a better one needs.
 function matchCsvHeaders({ headers, columns }) {
-  const used = new Set();
-  return headers.map((header) => {
-    const wanted = normalize(header);
-    if (wanted === '') return SKIP_COLUMN;
-    const match = columns.find(
-      (column) =>
-        !used.has(column.key) &&
-        (normalize(column.key) === wanted || normalize(htmlToText(column.title)) === wanted)
+  const normalizedHeaders = headers.map(normalizeHeader);
+  const candidates = [];
+  columns.forEach((column, columnIndex) => {
+    const names = [normalizeHeader(column.key), normalizeHeader(htmlToText(column.title))].filter(
+      (name) => name !== ''
     );
-    if (!match) return NEW_COLUMN;
-    used.add(match.key);
-    return match.key;
+    normalizedHeaders.forEach((header, headerIndex) => {
+      if (header === '') return;
+      const match = scoreMatch({ header, names });
+      if (match !== null) candidates.push({ ...match, headerIndex, columnIndex, key: column.key });
+    });
   });
+  candidates.sort(
+    (a, b) => b.score - a.score || a.headerIndex - b.headerIndex || a.columnIndex - b.columnIndex
+  );
+  const result = normalizedHeaders.map((header) => ({
+    target: header === '' ? SKIP_COLUMN : NEW_COLUMN,
+    reason: null,
+  }));
+  const usedColumns = new Set();
+  candidates.forEach((candidate) => {
+    if (result[candidate.headerIndex].reason !== null || usedColumns.has(candidate.key)) return;
+    usedColumns.add(candidate.key);
+    result[candidate.headerIndex] = { target: candidate.key, reason: candidate.reason };
+  });
+  return result;
 }
 
 export default matchCsvHeaders;

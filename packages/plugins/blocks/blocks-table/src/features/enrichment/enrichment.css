@@ -578,6 +578,19 @@
     border-bottom: 1px solid var(--ant-color-border-secondary, #f0f0f0);
   }
 
+  .lf-enrich-import-target {
+    display: flex;
+    align-items: center;
+    gap: var(--ant-padding-xs, 8px);
+  }
+
+  .lf-enrich-import-suggestion {
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    font-size: var(--ant-font-size-sm, 12px);
+    white-space: nowrap;
+    cursor: help;
+  }
+
   /* Spinners pause while the grid scrolls (usePauseWhileScrolling). */
   .lf-table-scroller[data-scrolling] .lf-enrich-spinner {
     animation-play-state: paused;

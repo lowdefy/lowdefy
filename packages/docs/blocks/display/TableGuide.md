@@ -1261,6 +1261,8 @@ The enrichment feature loads in its own chunk, only for tables that use it (an e
 
 A user-defined column is one user's content rendered in every viewer's browser, so the Table only takes text-safe config from it: its type must be one of `text`, `email`, `phone`, `url`, `number`, `currency`, `percent`, `progress`, `rating`, `date`, `datetime`, `boolean`, `tag`, `tags`, `status` or `json` (an `html`, `image`, `avatar`, `people`, `link`, `relation` or action type makes it an error column; with no type it is `text`, whatever `defaultColumn` sets), and its `cell`, `rules`, `validate` and template tooltips are ignored (a `{ field }` tooltip is kept). The add-column picker offers only these types. Check stored columns against the same list on the server, as the reference app's column check does.
 
+**CSV import.** The Import button parses the file in the browser and suggests a column for each header: one whose key or title matches it (ignoring case, spaces and punctuation), then a common synonym ("Website" or "URL" for a domain column, "Employer" or "Organisation" for a company, "Role" for a job title, "Full name" for a name, "E-mail" for email), then a close spelling. Suggestions that are not a column's own name are marked until the user picks another column, and headers without a match become new text columns.
+
 **Values at field paths.** `onRowAdd` `values` and `onImport` `rows` carry every value at its column's `field` path. New input columns from the picker or a CSV import carry their `field` too, under `inputFieldPrefix` (`values.notes` with `inputFieldPrefix: values`), so the endpoint that stores them only has to accept the paths of its `fields` allowlist. Build that allowlist on the server, with the user input columns added:
 
 ```yaml

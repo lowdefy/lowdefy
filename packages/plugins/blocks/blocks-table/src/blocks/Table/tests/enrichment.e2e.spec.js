@@ -933,6 +933,25 @@ test.describe('Table enrichment', () => {
     ]);
   });
 
+  test('CSV import suggests columns for synonyms, marked until changed', async ({ page }) => {
+    await getBlock(page, 'enrich').locator('[data-lf-toolbar-button="import"]').click();
+    const dialog = page.locator('[data-lf-import-dialog]');
+    await dialog.locator('[data-lf-import-file]').setInputFiles({
+      name: 'leads.csv',
+      mimeType: 'text/csv',
+      buffer: Buffer.from('Employer,Website,Notes\nAcme,acme.com,hi\n'),
+    });
+    const row = (header) => dialog.locator(`[data-lf-import-header="${header}"]`);
+    await expect(row('Employer').locator('.ant-select')).toHaveText('Company');
+    await expect(row('Employer').locator('[data-lf-import-suggestion]')).toHaveText('Suggested');
+    await expect(row('Website').locator('.ant-select')).toHaveText('Domain');
+    await expect(row('Notes').locator('.ant-select')).toHaveText('New text column');
+    await expect(row('Notes').locator('[data-lf-import-suggestion]')).toHaveCount(0);
+    // Overriding a suggestion removes its note.
+    await pick(page, row('Website').locator('.ant-select'), 'Skip');
+    await expect(row('Website').locator('[data-lf-import-suggestion]')).toHaveCount(0);
+  });
+
   test('CSV import can remap a header and stops at a failed batch', async ({ page }) => {
     const lines = ['name,notes'];
     for (let i = 1; i <= 700; i++) lines.push(`Co ${i},n`);
