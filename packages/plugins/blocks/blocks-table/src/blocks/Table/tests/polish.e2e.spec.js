@@ -563,6 +563,37 @@ test.describe('Table visual polish', () => {
     expect(await colours(picked)).toEqual(await colours(cellChip));
   });
 
+  test('TableLight link, avatar name, number and date text share one baseline', async ({
+    page,
+  }) => {
+    // The text box of each cell's last text node; same font, so equal boxes mean one baseline.
+    const boxes = await page.locator('#light_baseline tbody tr.lf-table-row').evaluateAll((rows) =>
+      rows.map((row) => {
+        const texts = {};
+        Array.from(row.children).forEach((td, index) => {
+          const walker = document.createTreeWalker(td, NodeFilter.SHOW_TEXT);
+          let last = null;
+          for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+            if (node.textContent.trim()) last = node;
+          }
+          if (last === null) return;
+          const range = document.createRange();
+          range.selectNodeContents(last);
+          texts[index] = range.getBoundingClientRect().bottom;
+        });
+        return texts;
+      })
+    );
+    expect(boxes).toHaveLength(2);
+    boxes.forEach((texts) => {
+      // Columns: invoice (link), customer (avatar), status (tag), amount, due, actions.
+      const link = texts[0];
+      [texts[1], texts[3], texts[4]].forEach((bottom) => {
+        expect(Math.abs(bottom - link)).toBeLessThan(0.1);
+      });
+    });
+  });
+
   test('TableLight rows next to a Table keep their table layout', async ({ page }) => {
     const lightRow = page.locator('#light tbody tr.lf-table-row').first();
     await expect(lightRow).toHaveCSS('display', 'table-row');

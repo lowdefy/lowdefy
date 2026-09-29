@@ -179,12 +179,17 @@
     border-radius: var(--ant-border-radius-sm, 4px);
   }
 
+  /* A person (and a group of avatars) is exactly one text line tall, top-aligned in the line, with
+     the avatar centred and overhanging it: the name then sits where plain and link text sit in
+     the same row. `vertical-align: middle` put the box at the font's x-height, so the name moved
+     by up to 2px with the font's metrics, and the taller box grew the line. */
   .lf-table-person {
     display: inline-flex;
     align-items: center;
     gap: calc(var(--ant-margin-xs, 8px) * 0.75);
     max-width: 100%;
-    vertical-align: middle;
+    height: 1lh;
+    vertical-align: top;
   }
 
   .lf-table-person-name {
@@ -221,7 +226,8 @@
     --lf-avatar-font-size: 10px;
     display: inline-flex;
     align-items: center;
-    vertical-align: middle;
+    height: 1lh;
+    vertical-align: top;
   }
 
   .lf-table-people > .lf-table-avatar {
