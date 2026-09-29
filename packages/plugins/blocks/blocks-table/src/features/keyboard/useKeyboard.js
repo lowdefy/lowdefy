@@ -17,6 +17,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 
 import findCellElement from './findCellElement.js';
+import hasCells from './hasCells.js';
 import isCellRendered from './isCellRendered.js';
 import scrollToCell from '../virtualization/scrollToCell.js';
 
@@ -27,13 +28,22 @@ function clampCell({ cell, rowCount, colCount }) {
   };
 }
 
+function isFocusInTable(api) {
+  const focused = document.activeElement;
+  return focused === null || focused === document.body || api.rootRef.current.contains(focused);
+}
+
 // Roving tabindex over the grid (D11): exactly one cell (header row -1 included) is tabbable. The
 // active cell may be scrolled out of the rendered window; then the scroller itself takes the tab
-// stop and hands focus back to the cell (scrolled into view) when it receives it.
+// stop and hands focus back to the cell (scrolled into view) when it receives it. The scroller
+// also stands in while the active cell's row renders no cells (a skeleton row: the initial
+// skeleton, an unloaded server row). A move onto such a row waits: focus stays where it is and
+// lands on the cell once its real row renders, unless focus has left the table by then.
 function useKeyboard(ctx) {
   const { api, layout, range, rows } = ctx;
   const [active, setActive] = useState(null);
   const pendingFocus = useRef(false);
+  const waiting = useRef(false);
   const fallback = { row: rows.length ? 0 : -1, col: 0 };
   const activeCell = clampCell({
     cell: active ?? fallback,
@@ -46,6 +56,7 @@ function useKeyboard(ctx) {
     moveTo(cell) {
       const next = clampCell({ cell, rowCount: api.rows.length, colCount: api.layout.cols.length });
       pendingFocus.current = true;
+      waiting.current = false;
       setActive(next);
       scrollToCell({ api, row: next.row, col: next.col });
     },
@@ -59,13 +70,18 @@ function useKeyboard(ctx) {
   useLayoutEffect(() => {
     if (!pendingFocus.current) return;
     const element = findCellElement({ api, row: activeCell.row, col: activeCell.col });
-    if (!element) return;
+    if (!element) {
+      waiting.current = true;
+      return;
+    }
     pendingFocus.current = false;
+    if (waiting.current && !isFocusInTable(api)) return;
     element.focus({ preventScroll: true });
   });
 
-  const rendered = isCellRendered({ cell: activeCell, layout, range });
-  return { activeCell, scrollerTabIndex: rendered ? -1 : 0 };
+  const focusable =
+    isCellRendered({ cell: activeCell, layout, range }) && hasCells({ api, row: activeCell.row });
+  return { activeCell, scrollerTabIndex: focusable ? -1 : 0 };
 }
 
 export default useKeyboard;

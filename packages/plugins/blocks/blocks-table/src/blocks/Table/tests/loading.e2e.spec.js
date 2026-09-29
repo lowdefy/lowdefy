@@ -188,7 +188,7 @@ test.describe('Table loading states', () => {
       await navigateToTestPage(page, PAGE);
       const firstRow = skeletonRows(page, blockId).first();
       await expect(firstRow).toBeVisible();
-      const cells = firstRow.locator('td, [data-lf-cell]');
+      const cells = firstRow.locator('td, [role="gridcell"]');
       // name, owner, hover buttons, buttons (TableLight has no selection column here either).
       await expect(cells).toHaveCount(4);
       await expect(cells.nth(2).locator('.lf-table-skeleton')).toHaveCount(0);
