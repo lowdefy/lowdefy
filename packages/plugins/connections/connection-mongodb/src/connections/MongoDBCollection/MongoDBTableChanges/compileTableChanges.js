@@ -15,7 +15,7 @@
 */
 import { type } from '@lowdefy/helpers';
 
-import coerceRowKey from './coerceRowKey.js';
+import coerceDocumentId from './coerceDocumentId.js';
 import compileArrayChanges from './compileArrayChanges.js';
 import compileCollectionChanges from './compileCollectionChanges.js';
 import isSafePath from './isSafePath.js';
@@ -78,11 +78,7 @@ function getArray({ array }) {
   const itemKeyField = array.itemKeyField ?? '_id';
   assertPath({ name: 'array.path', value: array.path });
   assertPath({ name: 'array.itemKeyField', value: itemKeyField });
-  const documentId = coerceRowKey({
-    value: array.documentId,
-    rowKeyType: 'auto',
-    part: 'array.documentId',
-  });
+  const documentId = coerceDocumentId({ value: array.documentId });
   return { documentId, itemKeyField, path: array.path };
 }
 
@@ -131,11 +127,14 @@ function compileTableChanges({ properties, tenantScoped, generateId }) {
     }
     return {
       mode: 'array',
+      array,
       filter,
       options,
+      rowKeyType,
+      keyField: array.itemKeyField,
       insertedCount: changes.added.length,
       removedCount: changes.removed.length,
-      ...compileArrayChanges({ array, changes, filter, generateId, insertDefaults }),
+      ...compileArrayChanges({ array, changes, filter, generateId, insertDefaults, rowKeyType }),
     };
   }
   if (changes.order !== undefined) {
@@ -147,7 +146,16 @@ function compileTableChanges({ properties, tenantScoped, generateId }) {
     mode: 'collection',
     filter,
     options,
-    ...compileCollectionChanges({ changes, filter, generateId, insertDefaults, rowKeyField }),
+    rowKeyType,
+    keyField: rowKeyField,
+    ...compileCollectionChanges({
+      changes,
+      filter,
+      generateId,
+      insertDefaults,
+      rowKeyField,
+      rowKeyType,
+    }),
   };
 }
 

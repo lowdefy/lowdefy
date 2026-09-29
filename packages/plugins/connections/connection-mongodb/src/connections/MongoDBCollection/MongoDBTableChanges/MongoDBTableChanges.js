@@ -24,6 +24,7 @@ import { serialize, deserialize } from '../serialize.js';
 import compileTableChanges from './compileTableChanges.js';
 import getChangeLogOrganization from './getChangeLogOrganization.js';
 import readChangesResult from './readChangesResult.js';
+import runChanges from './runChanges.js';
 import schema from './schema.js';
 
 function generateId() {
@@ -32,7 +33,8 @@ function generateId() {
 
 // Saves a TableInput changeset. The browser sends only what changed; it is validated against
 // the `fields` allowlist and compiled to one bulkWrite on the server, every operation scoped
-// by the base filter. The browser never sends MongoDB syntax.
+// by the base filter. The browser never sends MongoDB syntax. The response lists the rows
+// that matched nothing in `unmatchedKeys`.
 async function MongoDBTableChanges({
   blockId,
   connection,
@@ -62,13 +64,13 @@ async function MongoDBTableChanges({
       field: tenantGuard.field,
     });
   }
-  let result;
+  let run;
   try {
-    result = await collection.bulkWrite(operations, compiled.options);
+    run = await runChanges({ collection, compiled, operations });
   } catch (error) {
     throw mapMongoError(error, { connection, requestType: 'MongoDBTableChanges' });
   }
-  const response = readChangesResult({ compiled, result });
+  const response = readChangesResult({ compiled, ...run });
   if (logCollection) {
     try {
       await logCollection.insertOne(

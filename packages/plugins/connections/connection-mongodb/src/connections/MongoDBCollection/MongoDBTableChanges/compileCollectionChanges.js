@@ -14,23 +14,38 @@
   limitations under the License.
 */
 import buildNewRow from './buildNewRow.js';
+import getKeyMatch from './getKeyMatch.js';
 import scopeFilter from './scopeFilter.js';
 
 // Collection mode: every row is a document. One operation per row, all scoped by the base
 // filter: deletes first (so a removed key can be added again), then one updateOne per changed
-// row with its fields and its position merged into one $set, then the inserts.
-function compileCollectionChanges({ changes, filter, generateId, insertDefaults, rowKeyField }) {
+// row with its fields and its position merged into one $set, then the inserts. `targets`
+// names the operation of each existing row, so the save can report the rows that matched
+// nothing (runChanges).
+function compileCollectionChanges({
+  changes,
+  filter,
+  generateId,
+  insertDefaults,
+  rowKeyField,
+  rowKeyType,
+}) {
   const operations = [];
   const insertedKeys = {};
+  const targets = { removed: [], updated: [] };
   changes.removed.forEach((key) => {
+    targets.removed.push({ index: operations.length, key });
     operations.push({
-      deleteOne: { filter: scopeFilter({ filter, match: { [rowKeyField]: key } }) },
+      deleteOne: {
+        filter: scopeFilter({ filter, match: { [rowKeyField]: getKeyMatch({ key, rowKeyType }) } }),
+      },
     });
   });
   changes.rows.forEach(({ key, patch }) => {
+    targets.updated.push({ index: operations.length, key });
     operations.push({
       updateOne: {
-        filter: scopeFilter({ filter, match: { [rowKeyField]: key } }),
+        filter: scopeFilter({ filter, match: { [rowKeyField]: getKeyMatch({ key, rowKeyType }) } }),
         update: { $set: Object.fromEntries(patch) },
       },
     });
@@ -45,7 +60,7 @@ function compileCollectionChanges({ changes, filter, generateId, insertDefaults,
     insertedKeys[String(entry.rowKey)] = key;
     operations.push({ insertOne: { document } });
   });
-  return { operations, insertedKeys };
+  return { operations, insertedKeys, targets };
 }
 
 export default compileCollectionChanges;

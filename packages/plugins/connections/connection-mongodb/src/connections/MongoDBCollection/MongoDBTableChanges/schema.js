@@ -87,7 +87,7 @@ export default {
       enum: ['auto', 'objectId', 'string', 'number'],
       default: 'auto',
       description:
-        'How row keys are read. "auto" keeps strings and numbers and reads ObjectIds (the Table keys them as {"_oid":"..."} text); "objectId" also reads 24 character hex strings; "number" reads numeric strings, which numeric keys become in "updated" and "moved".',
+        'How row keys are read. "auto" reads ObjectIds (the Table keys them as {"_oid":"..."} text), and a numeric key, whether the number 5 or the text "5" (as numeric keys become in "updated" and "moved"), is one row that matches a document key 5 or "5"; other strings stay strings. "objectId" also reads 24 character hex strings; "string" matches strings only; "number" reads numeric strings and matches numbers only.',
       errorMessage: {
         type: 'MongoDBTableChanges request property "rowKeyType" should be a string.',
         enum: 'MongoDBTableChanges request property "rowKeyType" should be "auto", "objectId", "string" or "number".',

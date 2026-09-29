@@ -13,12 +13,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-// The response: row counts and the key each added row got, by its temporary browser key.
-// Collection mode counts rows (one operation per row). In array mode every operation matches
-// the one document, so matchedCount and modifiedCount are 0 or 1 for it, and insertedCount
-// and deletedCount are the items pushed and the keys pulled. An array document outside the
+// The response: row counts, the key each added row got, by its temporary browser key, and
+// the existing rows the changes named that matched nothing (outside the filter, deleted, or
+// never there), which an app should treat as a failed save. Collection mode counts rows (one
+// operation per row). In array mode every operation matches the one document, so
+// matchedCount and modifiedCount are 0 or 1 for it, insertedCount is the items pushed and
+// deletedCount the removed items that were in the array. An array document outside the
 // filter matches no operation, and nothing is written: that is an error, not an empty save.
-function readChangesResult({ compiled, result }) {
+function readChangesResult({ compiled, result, unmatchedRemoved, unmatchedUpdated }) {
+  const unmatchedKeys = [...unmatchedRemoved, ...unmatchedUpdated];
   if (compiled.mode === 'collection') {
     return {
       matchedCount: result.matchedCount,
@@ -26,6 +29,7 @@ function readChangesResult({ compiled, result }) {
       insertedCount: result.insertedCount,
       deletedCount: result.deletedCount,
       insertedKeys: compiled.insertedKeys,
+      unmatchedKeys,
     };
   }
   if (result.matchedCount === 0) {
@@ -37,8 +41,9 @@ function readChangesResult({ compiled, result }) {
     matchedCount: 1,
     modifiedCount: result.modifiedCount > 0 ? 1 : 0,
     insertedCount: compiled.insertedCount,
-    deletedCount: compiled.removedCount,
+    deletedCount: compiled.removedCount - unmatchedRemoved.length,
     insertedKeys: compiled.insertedKeys,
+    unmatchedKeys,
   };
 }
 

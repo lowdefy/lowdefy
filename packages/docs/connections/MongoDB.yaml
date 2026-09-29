@@ -711,15 +711,18 @@ _ref:
             deletedCount: 1
             insertedKeys:         # the key each added row got, by its temporary rowKey
               3f2c9a61-…: { _oid: 66f9… }
+            unmatchedKeys: []     # updated, moved or removed rows that matched nothing
             ```
 
-            In array mode `matchedCount` and `modifiedCount` count the document (0 or 1), and `insertedCount` and `deletedCount` are the items pushed and the keys pulled. A collection mode `matchedCount` lower than the rows updated means some rows were outside the filter or already deleted.
+            In array mode `matchedCount` and `modifiedCount` count the document (0 or 1), `insertedCount` is the items pushed and `deletedCount` the removed items that were in the array.
+
+            `unmatchedKeys` lists the existing rows the changeset named that matched nothing: outside the `filter` (another organization's row), deleted by someone else, or never there. Treat a non-empty `unmatchedKeys` as a failed save, for example with a `Throw` action after the request, since nothing was written for those rows. Numeric keys are listed as numbers and ObjectId keys as `{ _oid }`. The rows are found with a read of their keys, scoped like the writes: removed rows are read before the write (a removed row that someone else deletes between that read and the write counts as matched, since it is gone as asked), and updated rows after it, only when fewer rows matched than were updated. A save that only updates rows that all match is one round trip.
 
             The operations are one `bulkWrite`, not a transaction: with `ordered: true` the first failing operation stops the rest, and the ones before it stay written.
 
             ##### Row keys
 
-            The `TableInput` keys rows by `rowKey` (default `_id`, then `id`). An ObjectId key comes back from the browser as the text `{"_oid":"…"}`, which the default `rowKeyType: auto` reads as an ObjectId. Object keys are always strings, so the keys of `updated` and `moved` are strings too: use `rowKeyType: number` for numeric keys, or `rowKeyType: objectId` to read 24 character hex strings as ObjectIds.
+            The `TableInput` keys rows by `rowKey` (default `_id`, then `id`). An ObjectId key comes back from the browser as the text `{"_oid":"…"}`, which the default `rowKeyType: auto` reads as an ObjectId. Object keys are always strings, so a numeric key `5` arrives as `"5"` in `updated` and `moved`, and as `5` in `removed` and `order`. With `rowKeyType: auto` both are the same row, and it matches a document key `5` or `"5"` (`{ $in: [5, "5"] }`). A string is read as a number only when it is exactly how that number prints (`"5"`, `"-2"`, `"1.5"`; not `"05"` or `"1e3"`). If a collection holds both `5` and `"5"` as different rows, set `rowKeyType: number` or `rowKeyType: string` to match one form only. `rowKeyType: objectId` also reads 24 character hex strings as ObjectIds.
 
             #### Properties
             - `changes: object`: __Required__ - The `TableInput` value, `{ _payload: changes }`: `{ updated, added, removed, moved, order }`.
@@ -728,7 +731,7 @@ _ref:
               - `path: string`: Default: the field key - Dot path the value is written to, in the document or, in array mode, in the item.
             - `filter: object`: The base filter that scopes every operation, for example `{ org_id: { _user: organization.id } }`. Required unless the connection is tenant-scoped. Set it to `{}` to allow writes to every document.
             - `rowKeyField: string`: Default: `_id` - The document field a row key matches, in collection mode. With any other field, added rows need their key from a column or `insertDefaults`.
-            - `rowKeyType: enum`: Default: `auto` - How row keys are read: `auto`, `objectId`, `string` or `number`. See Row keys.
+            - `rowKeyType: enum`: Default: `auto` - How row keys are read and matched: `auto`, `objectId`, `string` or `number`. See Row keys.
             - `array: object`: Array mode: the rows are the items of an embedded array in one document.
               - `documentId: any`: __Required__ - The `_id` of the document. Use `{ _oid: <hex string> }` for an ObjectId from a string.
               - `path: string`: __Required__ - Dot path of the array in the document.

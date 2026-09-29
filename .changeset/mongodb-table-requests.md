@@ -10,6 +10,6 @@
   - `$set` on the changed dot paths only;
   - inserts, deletes, and position writes for dragged rows.
 
-  With `array: { documentId, path }` the rows are items embedded in one document, such as a recipe's items. It then writes with `arrayFilters`, `$push` and `$pull`, and reorders by moving items on the server. Only allowlisted fields can be written, and the base `filter` scopes every operation.
+  With `array: { documentId, path }` the rows are items embedded in one document, such as a recipe's items. It then writes with `arrayFilters`, `$push` and `$pull`, and reorders by moving items on the server. Only allowlisted fields can be written, and the base `filter` scopes every operation. The response lists the rows that matched nothing (outside the filter, or gone) in `unmatchedKeys`, and a numeric row key matches whether the table sends it as `5` or `"5"`.
 
 - Bulk write errors (`MongoBulkWriteError`, from `MongoDBBulkWrite`, `MongoDBInsertMany` and the new request) are now mapped like other driver errors, so the failing document's values no longer reach the browser.

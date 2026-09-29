@@ -289,8 +289,76 @@ describe('row keys', () => {
     const { operations } = compile({ changes: { removed: [oid, 7] } });
     expect(operations.map((operation) => operation.deleteOne.filter)).toEqual([
       scoped({ _id: oid }),
-      scoped({ _id: 7 }),
+      scoped({ _id: { $in: [7, '7'] } }),
     ]);
+  });
+
+  test('auto matches a numeric key in its number and string forms, from object keys and arrays alike', () => {
+    const { operations } = compile({
+      changes: { updated: { 5: { qty: 3 } }, removed: [6] },
+    });
+    expect(operations).toEqual([
+      { deleteOne: { filter: scoped({ _id: { $in: [6, '6'] } }) } },
+      { updateOne: { filter: scoped({ _id: { $in: [5, '5'] } }), update: { $set: { qty: 3 } } } },
+    ]);
+  });
+
+  test('auto reads the object key "5" and the array value 5 as the same row', () => {
+    expect(() => compile({ changes: { updated: { 5: { qty: 3 } }, removed: [5] } })).toThrow(
+      'MongoDBTableChanges row 5 is removed, so it can not also be updated, moved or ordered.'
+    );
+    expect(() => compile({ changes: { removed: [5, '5'] } })).toThrow(
+      'MongoDBTableChanges removed row "5" appears twice.'
+    );
+  });
+
+  test('auto keeps a string that is not how a number prints as a string', () => {
+    const { operations } = compile({ changes: { removed: ['05', '1e3', ' 5', '5x', '-0'] } });
+    expect(operations.map((operation) => operation.deleteOne.filter)).toEqual([
+      scoped({ _id: '05' }),
+      scoped({ _id: '1e3' }),
+      scoped({ _id: ' 5' }),
+      scoped({ _id: '5x' }),
+      scoped({ _id: '-0' }),
+    ]);
+  });
+
+  test('rowKeyType string and number match one form only', () => {
+    const { operations: numberOperations } = compile({
+      rowKeyType: 'number',
+      changes: { updated: { 5: { qty: 1 } }, removed: [6] },
+    });
+    expect(numberOperations.map((operation) => Object.values(operation)[0].filter)).toEqual([
+      scoped({ _id: 6 }),
+      scoped({ _id: 5 }),
+    ]);
+    const { operations: stringOperations } = compile({
+      rowKeyType: 'string',
+      changes: { updated: { 5: { qty: 1 } }, removed: ['6'] },
+    });
+    expect(stringOperations.map((operation) => Object.values(operation)[0].filter)).toEqual([
+      scoped({ _id: '6' }),
+      scoped({ _id: '5' }),
+    ]);
+  });
+
+  test('the compiled changes list the keys each operation addresses', () => {
+    const compiled = compile({
+      changes: {
+        updated: { a: { qty: 1 }, 5: { qty: 2 } },
+        removed: ['b'],
+        added: [{ rowKey: 't' }],
+      },
+    });
+    expect(compiled.targets).toEqual({
+      removed: [{ index: 0, key: 'b' }],
+      updated: [
+        { index: 1, key: 5 },
+        { index: 2, key: 'a' },
+      ],
+    });
+    expect(compiled.rowKeyType).toBe('auto');
+    expect(compiled.keyField).toBe('_id');
   });
 
   test('rowKeyType objectId reads hex strings', () => {
@@ -648,7 +716,7 @@ describe('request properties', () => {
     expect(() =>
       compile({ array: { documentId: { $ne: null }, path: 'items' }, changes: { removed: ['a'] } })
     ).toThrow(
-      'MongoDBTableChanges "array.documentId" has an invalid row key: expected a string, number or ObjectId (rowKeyType "auto"). Received {"$ne":null}.'
+      'MongoDBTableChanges "array.documentId" should be a string, number or ObjectId. Received {"$ne":null}.'
     );
   });
 });
@@ -772,6 +840,7 @@ describe('array mode', () => {
       changes: { added: [{ rowKey: 't', name: 'New' }], order: ['b', 't', 'a'] },
     });
     const newId = new ObjectId('64b000000000000000000001');
+    const orderKeyForms = { $literal: [['b'], [newId], ['a']] };
     const orderKeys = { $literal: ['b', newId, 'a'] };
     expect(operations[1]).toEqual({
       updateOne: {
@@ -788,15 +857,15 @@ describe('array mode', () => {
                         $filter: {
                           input: {
                             $map: {
-                              input: orderKeys,
-                              as: 'key',
+                              input: orderKeyForms,
+                              as: 'forms',
                               in: {
                                 $arrayElemAt: [
                                   {
                                     $filter: {
                                       input: '$items',
                                       as: 'item',
-                                      cond: { $eq: ['$$item._id', '$$key'] },
+                                      cond: { $in: ['$$item._id', '$$forms'] },
                                     },
                                   },
                                   0,
@@ -844,18 +913,45 @@ describe('array mode', () => {
     ]);
   });
 
+  test('auto matches numeric item keys in their number and string forms', () => {
+    const { operations, targets } = compile({
+      array,
+      changes: { updated: { 5: { qty: 1 } }, removed: [6] },
+    });
+    expect(operations[0].updateOne.arrayFilters).toEqual([{ 'r0._id': { $in: [5, '5'] } }]);
+    expect(operations[1].updateOne.update).toEqual({
+      $pull: { items: { _id: { $in: [6, '6'] } } },
+    });
+    expect(targets).toEqual({ removed: [6], updated: [5] });
+  });
+
+  test('an order matches numeric item keys in both forms', () => {
+    const { operations } = compile({ array, changes: { order: [5, 'b'] } });
+    const [stage] = operations[0].updateOne.update;
+    const [ordered, rest] = stage.$set.items.$cond.then.$concatArrays;
+    expect(ordered.$filter.input.$map.input).toEqual({ $literal: [[5, '5'], ['b']] });
+    expect(rest.$filter.cond).toEqual({
+      $not: [{ $in: ['$$item._id', { $literal: [5, '5', 'b'] }] }],
+    });
+  });
+
   test('ordered false is refused in array mode', () => {
     expect(() => compile({ array, ordered: false, changes: { removed: ['a'] } })).toThrow(
       'MongoDBTableChanges in array mode runs its updates of the document in order, so "ordered" can not be false.'
     );
   });
 
-  test('the documentId is read like a row key, and the item key field can not be updated', () => {
+  test('the documentId reads the ObjectId key text, is otherwise exact, and the item key field can not be updated', () => {
     const { operations } = compile({
       array: { documentId: `{"_oid":"${oid.toHexString()}"}`, path: 'items' },
       changes: { removed: ['a'] },
     });
     expect(operations[0].updateOne.filter).toEqual(scoped({ _id: oid }));
+    const { operations: stringIdOperations } = compile({
+      array: { documentId: '5', path: 'items' },
+      changes: { removed: ['a'] },
+    });
+    expect(stringIdOperations[0].updateOne.filter).toEqual(scoped({ _id: '5' }));
     expect(() =>
       compile({
         array: { ...array, itemKeyField: 'code' },

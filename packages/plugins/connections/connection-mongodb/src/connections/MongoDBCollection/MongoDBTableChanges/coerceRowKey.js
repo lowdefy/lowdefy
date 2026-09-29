@@ -27,9 +27,20 @@ function fromObjectIdKey(value) {
   return match === null ? undefined : ObjectId.createFromHexString(match[1]);
 }
 
+// The number a string is the text of, exactly as String(number) prints it: the Table's key 5
+// becomes "5" as an `updated` or `moved` object key. "05", "1e3" and " 5" stay strings.
+function fromNumberText(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && String(number) === value ? number : undefined;
+}
+
+// Numeric keys are canonical numbers, whichever part of the changeset they came from, so the
+// object key "5" and the array value 5 are one row; getKeyForms matches both forms of it.
 function coerceAuto(value) {
   if (value instanceof ObjectId || type.isNumber(value)) return value;
-  if (type.isString(value) && value !== '') return fromObjectIdKey(value) ?? value;
+  if (type.isString(value) && value !== '') {
+    return fromObjectIdKey(value) ?? fromNumberText(value) ?? value;
+  }
   return undefined;
 }
 

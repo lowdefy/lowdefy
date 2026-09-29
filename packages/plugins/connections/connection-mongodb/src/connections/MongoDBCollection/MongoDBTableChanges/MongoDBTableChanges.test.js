@@ -136,6 +136,7 @@ describe('collection mode', () => {
       insertedCount: 0,
       deletedCount: 0,
       insertedKeys: {},
+      unmatchedKeys: [],
     });
     const after = await readAll(collection);
     expect(after[0]).toEqual({
@@ -169,6 +170,7 @@ describe('collection mode', () => {
       insertedCount: 1,
       deletedCount: 1,
       insertedKeys: { 'tmp-1': newId },
+      unmatchedKeys: [],
     });
     const after = await readAll(collection);
     expect(after.map((doc) => doc.item).sort()).toEqual(['Apples', 'Bread', 'Dates', 'Other org']);
@@ -226,9 +228,70 @@ describe('collection mode', () => {
       changes: { updated: { x: { item: 'hijacked' } } },
     });
     expect(updateResponse.matchedCount).toBe(0);
+    expect(updateResponse.unmatchedKeys).toEqual(['x']);
     const removeResponse = await save({ connection, changes: { removed: ['x'] } });
     expect(removeResponse.deletedCount).toBe(0);
+    expect(removeResponse.unmatchedKeys).toEqual(['x']);
     expect(await readAll(collection)).toEqual(before);
+  });
+
+  test('numeric row keys match whether they arrive as object keys or array values', async () => {
+    const { collection, connection } = await setup([
+      { _id: 5, org_id: 'org_1', item: 'Five', qty: 1 },
+      { _id: 6, org_id: 'org_1', item: 'Six', qty: 1 },
+      { _id: 8, org_id: 'org_1', item: 'Eight', qty: 1 },
+      { _id: '7', org_id: 'org_1', item: 'Seven', qty: 1 },
+    ]);
+    const response = await save({
+      connection,
+      positionField: 'position',
+      changes: { updated: { 5: { qty: 3 }, 7: { qty: 4 } }, moved: { 8: 512 }, removed: [6] },
+    });
+    expect(response).toEqual({
+      matchedCount: 3,
+      modifiedCount: 3,
+      insertedCount: 0,
+      deletedCount: 1,
+      insertedKeys: {},
+      unmatchedKeys: [],
+    });
+    expect(await readAll(collection)).toEqual([
+      { _id: 5, org_id: 'org_1', item: 'Five', qty: 3 },
+      { _id: 8, org_id: 'org_1', item: 'Eight', qty: 1, position: 512 },
+      { _id: '7', org_id: 'org_1', item: 'Seven', qty: 4 },
+    ]);
+  });
+
+  test('rows that match nothing inside the filter are listed in unmatchedKeys', async () => {
+    const { collection, connection } = await setup(lines());
+    const response = await save({
+      connection,
+      changes: {
+        updated: { a: { qty: 8 }, x: { item: 'hijacked' }, 99: { qty: 1 } },
+        removed: ['c', 'gone', 98],
+      },
+    });
+    expect(response).toEqual({
+      matchedCount: 1,
+      modifiedCount: 1,
+      insertedCount: 0,
+      deletedCount: 1,
+      insertedKeys: {},
+      unmatchedKeys: ['gone', 98, 99, 'x'],
+    });
+    const after = await readAll(collection);
+    expect(after.map((doc) => doc._id)).toEqual(['a', 'b', 'x']);
+    expect(after[2].item).toBe('Other org');
+  });
+
+  test('unmatchedKeys lists ObjectId keys as { _oid }', async () => {
+    const missing = new ObjectId();
+    const { connection } = await setup(lines());
+    const response = await save({
+      connection,
+      changes: { updated: { [`{"_oid":"${missing.toHexString()}"}`]: { qty: 1 } } },
+    });
+    expect(response.unmatchedKeys).toEqual([{ _oid: missing.toHexString() }]);
   });
 
   test('rows keyed by ObjectId are matched by the Table key text', async () => {
@@ -331,6 +394,7 @@ describe('array mode', () => {
       insertedCount: 0,
       deletedCount: 0,
       insertedKeys: {},
+      unmatchedKeys: [],
     });
     const [recipe, other] = await readAll(collection);
     expect(recipe.items).toEqual([
@@ -363,6 +427,7 @@ describe('array mode', () => {
       insertedCount: 1,
       deletedCount: 1,
       insertedKeys: { tmp: yeastId },
+      unmatchedKeys: [],
     });
     const [recipe] = await readAll(collection);
     expect(recipe.items).toEqual([
@@ -451,6 +516,38 @@ describe('array mode', () => {
       'MongoDBTableChanges found no document with "array.documentId" inside "filter", so nothing was written.'
     );
     expect(await readAll(collection)).toEqual(before);
+  });
+
+  test('numeric item keys match in both forms, and items that are not there are listed', async () => {
+    const { collection, connection } = await setup([
+      {
+        _id: 'd',
+        org_id: 'org_1',
+        items: [
+          { _id: 1, item: 'A', qty: 1 },
+          { _id: 2, item: 'B', qty: 2 },
+          { _id: 3, item: 'C', qty: 3 },
+        ],
+      },
+    ]);
+    const response = await save({
+      connection,
+      array: { documentId: 'd', path: 'items' },
+      changes: { updated: { 1: { qty: 9 }, 42: { qty: 1 } }, removed: [2, 43] },
+    });
+    expect(response).toEqual({
+      matchedCount: 1,
+      modifiedCount: 1,
+      insertedCount: 0,
+      deletedCount: 1,
+      insertedKeys: {},
+      unmatchedKeys: [43, 42],
+    });
+    const [doc] = await readAll(collection);
+    expect(doc.items).toEqual([
+      { _id: 1, item: 'A', qty: 9 },
+      { _id: 3, item: 'C', qty: 3 },
+    ]);
   });
 
   test('items keyed by a custom field', async () => {
