@@ -732,6 +732,14 @@
       "typeName": "Switch"
     },
     {
+      "slug": "input-blocks/tableinput",
+      "title": "TableInput",
+      "section": "Input Blocks",
+      "path": "content/input-blocks/tableinput.md",
+      "kind": "block",
+      "typeName": "TableInput"
+    },
+    {
       "slug": "input-blocks/tagmultipleselector",
       "title": "TagMultipleSelector",
       "section": "Input Blocks",
@@ -1138,6 +1146,22 @@
       "path": "content/display-blocks/steps.md",
       "kind": "block",
       "typeName": "Steps"
+    },
+    {
+      "slug": "display-blocks/table",
+      "title": "Table",
+      "section": "Display Blocks",
+      "path": "content/display-blocks/table.md",
+      "kind": "block",
+      "typeName": "Table"
+    },
+    {
+      "slug": "display-blocks/tablelight",
+      "title": "TableLight",
+      "section": "Display Blocks",
+      "path": "content/display-blocks/tablelight.md",
+      "kind": "block",
+      "typeName": "TableLight"
     },
     {
       "slug": "display-blocks/tag",
@@ -4424,6 +4448,24 @@
       ],
       "hash": "0747b461ea044813ac4f02d44eb2add893b2a2150b51342a2a893a71da047498"
     },
+    "input-blocks/tableinput": {
+      "files": [
+        "../plugins/blocks/blocks-table/src/blocks/TableInput/gallery.yaml",
+        "../plugins/blocks/blocks-table/src/blocks/TableInput/meta.js",
+        "blocks/input/TableInput.yaml",
+        "blocks/input/TableInputGuide.md",
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/blocks/gallery.yaml.njk",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/validate_email.yaml",
+        "version.yaml"
+      ],
+      "hash": "2cef89adf916985eef9b1ba05074b4fb9719e638bac8f34b938e590317265845"
+    },
     "input-blocks/tagmultipleselector": {
       "files": [
         "../plugins/blocks/blocks-antd/src/blocks/TagMultipleSelector/gallery.yaml",
@@ -5294,6 +5336,42 @@
         "version.yaml"
       ],
       "hash": "15e86cf199a3dc5dfccc0f1e475af08f1169e2ca87c98c363484d40ac719a1d2"
+    },
+    "display-blocks/table": {
+      "files": [
+        "../plugins/blocks/blocks-table/src/blocks/Table/gallery.yaml",
+        "../plugins/blocks/blocks-table/src/blocks/Table/meta.js",
+        "blocks/display/Table.yaml",
+        "blocks/display/TableGuide.md",
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/blocks/gallery.yaml.njk",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/validate_email.yaml",
+        "version.yaml"
+      ],
+      "hash": "260c89e9de64ad9b7aa39446f6995f067c6353da6fcafc02ace413fbaaa58f1a"
+    },
+    "display-blocks/tablelight": {
+      "files": [
+        "../plugins/blocks/blocks-antd/src/blocks/TableLight/gallery.yaml",
+        "../plugins/blocks/blocks-antd/src/blocks/TableLight/meta.js",
+        "blocks/display/TableLight.yaml",
+        "blocks/display/TableLightGuide.md",
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/blocks/gallery.yaml.njk",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/validate_email.yaml",
+        "version.yaml"
+      ],
+      "hash": "07dbf897b88da15ebc68e4072cd513dc92636e3fe1f715406e8e8b0d5a7ac773"
     },
     "display-blocks/tag": {
       "files": [
@@ -6241,7 +6319,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "3f55dbf50ed9b7f341cc28ad0ec803604be15047fa39356b06ffcd0f3bd53889"
+      "hash": "44b8da43e621eca06df29fc1ac37f9fefe28fd707f935ecbaaa263ec7aa401d9"
     },
     "connections/mssql": {
       "files": [
