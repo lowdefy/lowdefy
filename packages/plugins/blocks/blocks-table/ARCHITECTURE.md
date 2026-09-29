@@ -79,7 +79,7 @@ TanStack sees only the loaded leaf rows (`manualSorting`/`manualFiltering`/`manu
 
 ## Layout contract
 
-`computeLayout` returns the visual column order (`start` = leading columns + start-pinned, `center`, `end`) with widths, sticky offsets, centre prefix offsets, and CSS variables on the root: `--lf-w<n>` (width of layout column `n`), `--lf-l<n>` / `--lf-r<n>` (sticky offsets), `--lf-total`, `--lf-center-w`; the scroller carries `--lf-center-before` (the column-virtualisation spacer). Cells use the column's shared `style` object. `api.previewLayout({ widths })` recomputes and writes the variables without rendering: use it for any drag.
+`computeLayout` returns the visual column order (`start` = leading columns + start-pinned, `center`, `end`) with widths, sticky offsets, centre prefix offsets, and CSS variables on the root: `--lf-w<n>` (width of layout column `n`), `--lf-l<n>` / `--lf-r<n>` (sticky offsets), `--lf-total`, `--lf-center-w`; the scroller carries `--lf-center-before` (the column-virtualisation spacer). Cells use the column's shared `style` object. `api.previewLayout({ widths })` recomputes and writes the variables without rendering: use it for any drag. The scroll range update (`useScrollWindow`) also writes `data-scrolled-start` / `data-scrolled-end` on the scroller when they change (`writeScrollEdges`), from which the pinned edge cells cast their shadow; no row renders for it.
 
 ## Feature module
 

@@ -23,12 +23,13 @@
 @layer components {
   .lf-table {
     --lf-border: var(--ant-color-border-secondary, #f0f0f0);
-    --lf-header-bg: color-mix(in srgb, var(--ant-color-text, #000) 2%, var(--lf-bg));
+    --lf-header-bg: color-mix(in srgb, var(--ant-color-text-base, #000) 2%, var(--lf-bg));
     --lf-bg: var(--ant-color-bg-container, #fff);
     /* Opaque mixes, so sticky pinned cells never show the scrolled cells beneath them. */
-    --lf-row-hover: color-mix(in srgb, var(--ant-color-text, #000) 4%, var(--lf-bg));
+    --lf-row-hover: color-mix(in srgb, var(--ant-color-text-base, #000) 4%, var(--lf-bg));
     --lf-row-selected: var(--ant-color-primary-bg, #e6f4ff);
     --lf-row-selected-hover: var(--ant-color-primary-bg-hover, #bae0ff);
+    --lf-pinned-shadow: rgba(0, 0, 0, 0.16);
     position: relative;
     width: 100%;
     min-width: 0;
@@ -164,6 +165,29 @@
     box-shadow: inset 1px 0 0 var(--lf-border);
   }
 
+  /* While columns scroll under a pinned region, its inner edge casts a shadow over them
+     (writeScrollEdges sets the attributes from the scroll position). */
+  .lf-table-scroller[data-scrolled-start]
+    .lf-table-gridcell[data-pinned='start'][data-pinned-edge] {
+    box-shadow:
+      inset -1px 0 0 var(--lf-border),
+      6px 0 8px -6px var(--lf-pinned-shadow);
+  }
+
+  .lf-table-scroller[data-scrolled-end] .lf-table-gridcell[data-pinned='end'][data-pinned-edge] {
+    box-shadow:
+      inset 1px 0 0 var(--lf-border),
+      -6px 0 8px -6px var(--lf-pinned-shadow);
+  }
+
+  /* The table's own border ends the last column, so an end-pinned last header shows no divider
+     (its resize handle still highlights on hover and while dragging). */
+  .lf-table-header
+    .lf-table-gridcell[data-pinned='end']:last-child
+    > .lf-table-resize:not(:hover):not([data-active])::after {
+    opacity: 0;
+  }
+
   .lf-table-gridcell:focus-visible,
   .lf-table-gridcell[data-focused]:focus {
     outline: 2px solid var(--ant-color-primary, #1677ff);
@@ -207,7 +231,11 @@
   }
 
   .lf-table-header .lf-table-gridcell[data-sortable]:hover {
-    --lf-header-cell-bg: color-mix(in srgb, var(--ant-color-text, #000) 5%, var(--lf-header-bg));
+    --lf-header-cell-bg: color-mix(
+      in srgb,
+      var(--ant-color-text-base, #000) 5%,
+      var(--lf-header-bg)
+    );
   }
 
   /* End-aligned headers put their sort and filter indicators before the title, so the title ends

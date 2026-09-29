@@ -19,7 +19,7 @@
     box-sizing: border-box;
     width: var(--lf-total);
     min-width: 100%;
-    background: color-mix(in srgb, var(--ant-color-text, #000) 2%, var(--lf-bg));
+    background: color-mix(in srgb, var(--ant-color-text-base, #000) 2%, var(--lf-bg));
     border-bottom: 1px solid var(--lf-border);
   }
 

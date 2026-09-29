@@ -22,14 +22,14 @@
 
 @layer components {
   .lf-table .lf-table-row.lf-table-group-row {
-    --lf-group-row-bg: color-mix(in srgb, var(--ant-color-text, #000) 3%, var(--lf-bg));
+    --lf-group-row-bg: color-mix(in srgb, var(--ant-color-text-base, #000) 3%, var(--lf-bg));
     background: var(--lf-group-row-bg);
     cursor: pointer;
     user-select: none;
   }
 
   .lf-table .lf-table-row.lf-table-group-row:hover {
-    --lf-group-row-bg: color-mix(in srgb, var(--ant-color-text, #000) 6%, var(--lf-bg));
+    --lf-group-row-bg: color-mix(in srgb, var(--ant-color-text-base, #000) 6%, var(--lf-bg));
     background: var(--lf-group-row-bg);
   }
 

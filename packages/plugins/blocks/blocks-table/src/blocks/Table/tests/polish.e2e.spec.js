@@ -299,4 +299,40 @@ test.describe('Table visual polish', () => {
     expect(list.scrollable).toBe(true);
     expect(list.cut).toBe(0);
   });
+
+  test('pinned regions cast a shadow only while columns are scrolled under them', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 900, height: 720 });
+    const scroller = table(page, 'crm').locator('.lf-table-scroller');
+    const startEdge = row(page, 'crm', 1).locator('[data-col-key="name"]');
+    const endEdge = row(page, 'crm', 1).locator('[data-col-key="actions"]');
+    const shadows = (locator) =>
+      locator.evaluate(
+        (element) => getComputedStyle(element).boxShadow.split(/,(?![^(]*\))/).length
+      );
+    await expect(scroller).not.toHaveAttribute('data-scrolled-start');
+    await expect(scroller).toHaveAttribute('data-scrolled-end');
+    expect(await shadows(startEdge)).toBe(1);
+    expect(await shadows(endEdge)).toBe(2);
+
+    await scroller.evaluate((element) => (element.scrollLeft = 100));
+    await expect(scroller).toHaveAttribute('data-scrolled-start');
+    await expect(scroller).toHaveAttribute('data-scrolled-end');
+    expect(await shadows(startEdge)).toBe(2);
+
+    await scroller.evaluate((element) => (element.scrollLeft = element.scrollWidth));
+    await expect(scroller).not.toHaveAttribute('data-scrolled-end');
+    expect(await shadows(endEdge)).toBe(1);
+
+    // Pinned cells are opaque, so the columns scrolled under them never show through.
+    const header = table(page, 'crm').locator('[data-lf-header][data-col-key="name"]');
+    const alpha = await header.evaluate((element) => {
+      const canvas = document.createElement('canvas').getContext('2d');
+      canvas.fillStyle = getComputedStyle(element).backgroundColor;
+      canvas.fillRect(0, 0, 1, 1);
+      return canvas.getImageData(0, 0, 1, 1).data[3];
+    });
+    expect(alpha).toBe(255);
+  });
 });
