@@ -1,0 +1,117 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# The worker: claims queued cells, calls each cell's provider endpoint, writes the results and
+# queues the autoRun columns they feed, until nothing is left to claim or its time is spent.
+#
+# InternalApi: a page can not call it. It runs from the schedule below (every minute, which
+# also picks up retries once their backoff has passed and cells whose worker crashed), and
+# from enrichment_run as a detached call, so a run starts at once. Any number of workers can
+# run at the same time: a claim is a compare-and-set, so two workers never get the same cell,
+# and a result is only written while the cell still holds the worker's claim.
+id: enrichment_worker
+type: InternalApi
+schedules:
+  - cron: '* * * * *'
+routine:
+  - _ref: leads/load_table.yaml
+  - :set_state:
+      # The output settings of each column, for the providers: the claim returns the cell's
+      # provider, inputs and prompt, but not the rest of its column.
+      outputs:
+        _js:
+          fn: |
+            return Object.fromEntries(
+              args.columns.map((column) => [column.key, column.output ?? null])
+            );
+          args:
+            columns:
+              _state: columnDefs
+      deadline:
+        _date:
+          _sum:
+            - _date.getTime:
+                _date: now
+            - _ref:
+                path: leads/queue.yaml
+                key: timeBudgetMs
+      # Loop until a claim returns no cells.
+      claimed: null
+      rounds: 0
+      cells: 0
+  - :while:
+      _and:
+        - _ne:
+            - _state: claimed
+            - 0
+        - _lt:
+            - _state: rounds
+            - _ref:
+                path: leads/queue.yaml
+                key: maxRounds
+        - _lt:
+            - _date: now
+            - _state: deadline
+    :do:
+      # Queued cells that are due (a retry waits out its backoff) and running cells whose
+      # lease ran out, oldest first. Each is now running, with a lease and a claimToken.
+      - id: claim
+        type: MongoDBEnrichmentClaim
+        connectionId: leads
+        properties:
+          # The cells were scoped when they were queued; a tenant-scoped connection scopes
+          # the claim by tenant as well.
+          filter: {}
+          fields:
+            _state: fields
+          columnDefs:
+            _state: columnDefs
+          limit:
+            _ref:
+              path: leads/queue.yaml
+              key: claimLimit
+          leaseMs:
+            _ref:
+              path: leads/queue.yaml
+              key: leaseMs
+          maxAttempts:
+            _ref:
+              path: leads/queue.yaml
+              key: maxAttempts
+      # Every claimed cell at once: the claim limit bounds the concurrency. Each cell is
+      # completed on its own, so its result shows as soon as its provider answers.
+      - :parallel_for: cell
+        :in:
+          _step: claim
+        :do:
+          _ref: api/enrichment/run_cell.yaml
+      - :set_state:
+          claimed:
+            _array.length:
+              _step: claim
+          rounds:
+            _sum:
+              - _state: rounds
+              - 1
+          cells:
+            _sum:
+              - _state: cells
+              - _array.length:
+                  _step: claim
+  - :return:
+      rounds:
+        _state: rounds
+      cells:
+        _state: cells

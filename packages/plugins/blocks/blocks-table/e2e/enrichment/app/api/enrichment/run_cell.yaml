@@ -1,0 +1,117 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# One claimed cell (`_item: cell`, a MongoDBEnrichmentClaim item): call its provider, complete
+# it, and queue the autoRun columns that read it.
+- :try:
+    - id: provider
+      type: CallApi
+      properties:
+        endpointId:
+          _string.concat:
+            - enrich_
+            - _item: cell.provider
+        payload:
+          inputs:
+            _item: cell.inputs
+          prompt:
+            _item: cell.prompt
+          output:
+            _get:
+              from:
+                _state: outputs
+              key:
+                _item: cell.columnKey
+    # The provider answered: ok, empty (nothing found) or error (a final failure, such as
+    # invalid inputs, with retry: false). The result is written only while this worker still
+    # holds the claim; a late result from a worker whose lease ran out is ignored.
+    - id: complete
+      type: MongoDBEnrichmentComplete
+      connectionId: leads
+      properties:
+        filter: {}
+        columnDefs:
+          _state: columnDefs
+        maxAttempts:
+          _ref:
+            path: leads/queue.yaml
+            key: maxAttempts
+        backoffMs:
+          _ref:
+            path: leads/queue.yaml
+            key: backoffMs
+        results:
+          # The claim's cell, with the provider's answer ({ status, value, raw } or
+          # { status, error, retry }) merged in as it came.
+          - _object.assign:
+              - rowKey:
+                  _item: cell.rowKey
+                columnKey:
+                  _item: cell.columnKey
+                claimToken:
+                  _item: cell.claimToken
+              - _step: provider.$
+    # A cell that completed ok feeds the autoRun columns that read it (a pitch waits for the
+    # company it mentions). The downstream cells of this row are queued, and a later round of
+    # this worker (or another worker) claims them.
+    - :if:
+        _gt:
+          - _array.length:
+              _step: complete.$.downstream
+          - 0
+      :then:
+        - id: enqueue_downstream
+          type: MongoDBEnrichmentEnqueue
+          connectionId: leads
+          properties:
+            filter: {}
+            fields:
+              _state: fields
+            columnDefs:
+              _state: columnDefs
+            columns:
+              _step: complete.$.downstream.0.columns
+            selection:
+              - _item: cell.rowKey
+  :catch:
+    # The provider threw: a transient failure (a timeout, a 5xx, a rate limit). The error is
+    # written with retry, so the cell is queued again after a backoff (backoffMs, doubled per
+    # attempt), until maxAttempts makes it final.
+    - id: complete_error
+      type: MongoDBEnrichmentComplete
+      connectionId: leads
+      properties:
+        filter: {}
+        columnDefs:
+          _state: columnDefs
+        maxAttempts:
+          _ref:
+            path: leads/queue.yaml
+            key: maxAttempts
+        backoffMs:
+          _ref:
+            path: leads/queue.yaml
+            key: backoffMs
+        results:
+          - rowKey:
+              _item: cell.rowKey
+            columnKey:
+              _item: cell.columnKey
+            claimToken:
+              _item: cell.claimToken
+            status: error
+            error:
+              _error: message
+            retry: true

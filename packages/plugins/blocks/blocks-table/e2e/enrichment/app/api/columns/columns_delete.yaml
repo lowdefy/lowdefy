@@ -1,0 +1,102 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# Deletes a user-defined column: the Table's onColumnDelete { column }. A column other columns
+# read (an input, or an extract source) is kept, since the queue refuses columns whose inputs
+# do not resolve. The column's cells are removed from the rows.
+id: columns_delete
+type: Api
+payloadSchema:
+  type: object
+  required:
+    - column
+  additionalProperties: false
+  properties:
+    column:
+      type: object
+      required:
+        - key
+      properties:
+        key:
+          type: string
+          pattern: ^[A-Za-z0-9_-]{1,128}$
+routine:
+  - _ref: leads/load_table.yaml
+  - :set_state:
+      readers:
+        _js:
+          fn: |
+            return args.columns
+              .filter(
+                (column) =>
+                  column.source === args.key ||
+                  Object.values(column.inputs ?? {}).some((input) => input.column === args.key)
+              )
+              .map((column) => column.key);
+          args:
+            key:
+              _payload: column.key
+            columns:
+              _state: columnDefs
+  - :if:
+      _gt:
+        - _array.length:
+            _state: readers
+        - 0
+    :then:
+      - :reject:
+          _string.concat:
+            - 'Column "'
+            - _payload: column.key
+            - '" is read by '
+            - _array.join:
+                - _state: readers
+                - ', '
+            - '. Change those columns first.'
+  - id: delete_column
+    type: MongoDBDeleteOne
+    connectionId: table_columns
+    properties:
+      filter:
+        tableId: leads
+        key:
+          _payload: column.key
+  - :if:
+      _eq:
+        - _step: delete_column.deletedCount
+        - 0
+    :then:
+      - :reject: Only user-defined columns can be deleted.
+  # The key is a checked path segment, so the $unset paths are always the column's own: its
+  # cells (_enrich.<key>) and, for an input column, its values (values.<key>).
+  - id: remove_cells
+    type: MongoDBUpdateMany
+    connectionId: leads
+    properties:
+      filter: {}
+      update:
+        $unset:
+          _object.fromEntries:
+            - - _string.concat:
+                  - _enrich.
+                  - _payload: column.key
+              - ''
+            - - _string.concat:
+                  - values.
+                  - _payload: column.key
+              - ''
+  - :return:
+      deleted:
+        _payload: column.key

@@ -1,0 +1,46 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# Queues the autoRun columns (`_state: autoRun`) of new rows (the `selection` var) and starts
+# a worker, as enrichment_run does.
+- :if:
+    _gt:
+      - _array.length:
+          _state: autoRun
+      - 0
+  :then:
+    - id: enqueue_auto_run
+      type: MongoDBEnrichmentEnqueue
+      connectionId: leads
+      properties:
+        filter: {}
+        fields:
+          _state: fields
+        columnDefs:
+          _state: columnDefs
+        columns:
+          _state: autoRun
+        selection:
+          _var: selection
+    - :if:
+        _gt:
+          - _step: enqueue_auto_run.queued
+          - 0
+      :then:
+        - id: start_worker
+          type: CallApi
+          properties:
+            endpointId: enrichment_worker
+            detached: true

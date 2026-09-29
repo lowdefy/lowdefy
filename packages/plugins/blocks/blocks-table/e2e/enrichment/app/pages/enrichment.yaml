@@ -1,0 +1,251 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# The enrichment table. Every change goes through an endpoint (columns_*, leads_*,
+# enrichment_run); the Table awaits each event and shows its error when the endpoint refuses.
+# Cell results arrive live through the enrichment websocket channel.
+id: enrichment
+type: Box
+
+requests:
+  # The rows, with their cells under _enrich. Client mode: the table sorts and filters in the
+  # browser. A table of many thousands of rows uses server mode (MongoDBTableQuery), where the
+  # header counts come from server aggregates.
+  - id: leads
+    type: MongoDBFind
+    connectionId: leads
+    properties:
+      query: {}
+      # A multi-tenant app scopes the rows:
+      # query:
+      #   org_id:
+      #     _user: organization.id
+      options:
+        sort:
+          _id: 1
+        limit: 5000
+        projection:
+          name: 1
+          title: 1
+          domain: 1
+          values: 1
+          _enrich: 1
+
+  # The declared and user-defined columns, merged in position order: the same list the
+  # endpoints read as columnDefs.
+  - id: get_columns
+    type: MongoDBAggregation
+    connectionId: table_columns
+    properties:
+      _ref: leads/get_columns.yaml
+
+events:
+  onMount:
+    - id: load
+      type: Request
+      params:
+        - leads
+        - get_columns
+
+subscriptions:
+  - websocketId: enrichment
+    client:
+      throttleRender: 100
+    events:
+      onMessage:
+        # Every pushed row merges into the table's row with the same key: a deep merge, so a
+        # cell update keeps the row's other cells and fields. Rows the table does not have
+        # are skipped.
+        - id: apply_cells
+          type: CallMethod
+          params:
+            blockId: leads_table
+            method: applyTransaction
+            args:
+              - merge: deep
+                update:
+                  _array.map:
+                    - _event: messages
+                    - _function:
+                        __args: 0.fullDocument
+        # A row another user added (or imported) is not in the table: read the rows again.
+        - id: load_new_rows
+          type: Request
+          skip:
+            _not:
+              _array.some:
+                - _event: messages
+                - _function:
+                    __eq:
+                      - __args: 0.operationType
+                      - insert
+          params: leads
+
+blocks:
+  # Whether cell updates are arriving: the websocket subscription is live.
+  - id: live_status
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _websocket: enrichment.connected
+          then: Live
+          else: Connecting…
+  - id: leads_table
+    type: Table
+    properties:
+      height: 520
+      rowSelection:
+        type: checkbox
+      # The provider catalogue the add-column picker offers; each maps to enrich_<id>.
+      providers:
+        _ref: leads/providers.yaml
+      addColumn: true
+      addRow: true
+      addRowText: New lead
+      importCsv: true
+      toolbar:
+        search: true
+      columns:
+        _if_none:
+          - _request: get_columns
+          - []
+      data:
+        _if_none:
+          - _request: leads
+          - []
+    events:
+      # Columns: stored by the columns endpoints, then read again.
+      onColumnAdd:
+        - id: add_column
+          type: CallAPI
+          params:
+            endpointId: columns_add
+            payload:
+              column:
+                _event: column
+              position:
+                _event: position
+        - id: reload_columns
+          type: Request
+          params: get_columns
+      onColumnUpdate:
+        - id: update_column
+          type: CallAPI
+          params:
+            endpointId: columns_update
+            payload:
+              column:
+                _event: column
+              previous:
+                _event: previous
+        - id: reload_columns
+          type: Request
+          params: get_columns
+      onColumnDelete:
+        - id: delete_column
+          type: CallAPI
+          params:
+            endpointId: columns_delete
+            payload:
+              column:
+                _event: column
+        - id: reload_columns
+          type: Request
+          params: get_columns
+
+      # Runs: queue the cells; the websocket shows them go queued, running, done.
+      onColumnRun:
+        - id: run_column
+          type: CallAPI
+          params:
+            endpointId: enrichment_run
+            payload:
+              columns:
+                - _event: column.key
+              mode:
+                _event: mode
+              selection:
+                _event: selection
+      onRowRun:
+        - id: run_row
+          type: CallAPI
+          params:
+            endpointId: enrichment_run
+            payload:
+              columns:
+                _event: columns
+              selection:
+                - _event: row._id
+      onCellRun:
+        - id: run_cell
+          type: CallAPI
+          params:
+            endpointId: enrichment_run
+            payload:
+              columns:
+                - _event: column.key
+              selection:
+                - _event: row._id
+
+      # Rows: inserted by the leads endpoints, which also start the autoRun columns.
+      onRowAdd:
+        - id: add_row
+          type: CallAPI
+          params:
+            endpointId: leads_add
+            payload:
+              values:
+                _event: values
+        - id: reload_rows
+          type: Request
+          params: leads
+      onImport:
+        - id: import_rows
+          type: CallAPI
+          params:
+            endpointId: leads_import
+            payload:
+              rows:
+                _event: rows
+              newColumns:
+                _event: newColumns
+              batchIndex:
+                _event: batchIndex
+              batchCount:
+                _event: batchCount
+              total:
+                _event: total
+        - id: reload
+          type: Request
+          params:
+            - leads
+            - get_columns
+      # An edit of an input cell. Enrichment cells that read it show as stale until rerun.
+      onCellEdit:
+        - id: edit_cell
+          type: CallAPI
+          params:
+            endpointId: leads_update
+            payload:
+              rowKey:
+                _event: row._id
+              values:
+                _object.fromEntries:
+                  - - _event: column.field
+                    - _event: value
+        - id: reload_rows
+          type: Request
+          params: leads

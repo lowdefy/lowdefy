@@ -1,0 +1,82 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# Turns rows from the browser into documents. The Table sends each value at its column's field
+# path (onRowAdd `values`, onImport `rows`), and a CSV column imported as a new column at its
+# key. Only paths of the fields allowlist are kept, so a row can only set the table's input
+# fields, never _enrich or another field of the document.
+# Returns { errors, docs, sets }: a document per row to insert, and per row the $set of dotted
+# paths an update writes (so it never replaces a whole `values` object).
+_js:
+  fn: |
+    const fieldPaths = new Set(
+      Object.entries(args.fields).map(([key, field]) => field.path ?? key)
+    );
+    const errors = [];
+    const sets = [];
+    function isPlainObject(value) {
+      return value !== null && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date);
+    }
+    function collect({ value, prefix, set, index }) {
+      Object.entries(value).forEach(([name, item]) => {
+        const path = prefix === '' ? name : `${prefix}.${name}`;
+        let target = null;
+        if (fieldPaths.has(path)) target = path;
+        else if (prefix === '' && Object.hasOwn(args.fields, name)) target = args.fields[name].path ?? name;
+        if (target === null && isPlainObject(item)) {
+          collect({ value: item, prefix: path, set, index });
+          return;
+        }
+        if (target === null) {
+          errors.push(`Row ${index + 1}: "${path}" is not an input column.`);
+          return;
+        }
+        if (item !== null && typeof item === 'object' && !(item instanceof Date)) {
+          errors.push(`Row ${index + 1}: "${path}" should be a single value.`);
+          return;
+        }
+        if (typeof item === 'string' && item.length > 2000) {
+          errors.push(`Row ${index + 1}: "${path}" is longer than 2000 characters.`);
+          return;
+        }
+        set[target] = item;
+      });
+    }
+    const docs = args.rows.map((values, index) => {
+      const set = {};
+      sets.push(set);
+      if (!isPlainObject(values)) {
+        errors.push(`Row ${index + 1} should be an object of column values.`);
+        return {};
+      }
+      collect({ value: values, prefix: '', set, index });
+      const doc = {};
+      Object.entries(set).forEach(([path, item]) => {
+        const segments = path.split('.');
+        let target = doc;
+        segments.slice(0, -1).forEach((segment) => {
+          target[segment] = target[segment] ?? {};
+          target = target[segment];
+        });
+        target[segments[segments.length - 1]] = item;
+      });
+      return doc;
+    });
+    return { errors, docs, sets };
+  args:
+    fields:
+      _state: fields
+    rows:
+      _state: rows

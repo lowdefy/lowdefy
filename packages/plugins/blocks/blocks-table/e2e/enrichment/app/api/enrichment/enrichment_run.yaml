@@ -1,0 +1,118 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# Queues enrichment cells and starts a worker. The page calls it from the Table's run events:
+#
+#   onColumnRun { column, mode, selection }  ->  { columns: [column.key], mode, selection }
+#   onRowRun    { rowKey, columns }          ->  { columns, selection: [rowKey] }
+#   onCellRun   { rowKey, columnKey }        ->  { columns: [columnKey], selection: [rowKey] }
+#
+# `selection` is the Table's `selected` value (row keys, or { all, except, filter, search });
+# leave it out for every row. `mode` is all (default), empty, errors or stale.
+id: enrichment_run
+type: Api
+payloadSchema:
+  type: object
+  required:
+    - columns
+  additionalProperties: false
+  properties:
+    columns:
+      type: array
+      minItems: 1
+      maxItems: 50
+      items:
+        type: string
+        pattern: ^[A-Za-z0-9_-]{1,128}$
+    # Row keys or a select-all selection; MongoDBEnrichmentEnqueue checks its shape.
+    selection:
+      type:
+        - array
+        - object
+    mode:
+      enum:
+        - all
+        - empty
+        - errors
+        - stale
+routine:
+  - _ref: leads/load_table.yaml
+  # In an `all` run, an autoRun column that reads another column of the run follows it on its
+  # own (the worker queues it when the cell it reads completes). Queued together, it would
+  # find its input not run yet ("Missing input"), or queued again and wait for it. Other
+  # modes queue only some cells of each column, so they keep every column.
+  - :set_state:
+      columns:
+        _js:
+          fn: |
+            if ((args.mode ?? 'all') !== 'all') return args.columns;
+            const runnable = new Set(args.columns);
+            const byKey = new Map(args.columnDefs.map((column) => [column.key, column]));
+            const follows = (key) =>
+              byKey.get(key)?.autoRun === true &&
+              Object.values(byKey.get(key)?.inputs ?? {}).some(
+                (input) => input.column !== key && runnable.has(input.column)
+              );
+            const kept = args.columns.filter((key) => !follows(key));
+            return kept.length > 0 ? kept : args.columns;
+          args:
+            mode:
+              _payload: mode
+            columns:
+              _payload: columns
+            columnDefs:
+              _state: columnDefs
+  # Marks the cells queued in bulk writes. A cell that is queued, or running with a live lease,
+  # is never queued again, so a double click or two users running the same column is safe. A
+  # row whose required input is missing gets an empty cell ("Missing input: domain") instead.
+  - id: enqueue
+    type: MongoDBEnrichmentEnqueue
+    connectionId: leads
+    properties:
+      filter: {}
+      # A multi-tenant app scopes every run to the caller's organization:
+      # filter:
+      #   org_id:
+      #     _user: organization.id
+      fields:
+        _state: fields
+      columnDefs:
+        _state: columnDefs
+      columns:
+        _state: columns
+      selection:
+        _payload: selection
+      mode:
+        _if_none:
+          - _payload: mode
+          - all
+      # Refuses (and queues nothing) above this, so a large run can be confirmed first.
+      maxCells: 10000
+      user:
+        _user: true
+  # Starts a worker in its own invocation without waiting for it, so results start at once and
+  # this call returns. Needs the CRON_SECRET environment variable.
+  - :if:
+      _gt:
+        - _step: enqueue.queued
+        - 0
+    :then:
+      - id: start_worker
+        type: CallApi
+        properties:
+          endpointId: enrichment_worker
+          detached: true
+  - :return:
+      _step: enqueue

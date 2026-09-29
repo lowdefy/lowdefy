@@ -1,0 +1,68 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# The provider catalogue (the Table `providers` property): what users can pick in the
+# add-column picker. Each provider maps to the API endpoint enrich_<id>, which takes
+# { inputs, prompt, output } and returns { status: ok | empty | error, value, raw, error, retry }.
+# The columns endpoints check new columns against it, so a column can only call what is listed.
+
+- id: company_lookup
+  title: Company lookup
+  description: Industry, size and country of a company, from its domain.
+  icon: Building
+  inputs:
+    - key: domain
+      title: Domain
+      type: text
+      required: true
+  outputs:
+    - path: industry
+      title: Industry
+      type: text
+    - path: name
+      title: Company name
+      type: text
+    - path: employees
+      title: Employees
+      type: number
+    - path: country
+      title: Country
+      type: text
+    - path: founded
+      title: Founded
+      type: number
+  cost: 1
+
+- id: email_finder
+  title: Email finder
+  description: A work email from a name and company domain. Tries two sources in order.
+  icon: mail
+  inputs:
+    - key: name
+      title: Full name
+      type: text
+      required: true
+    - key: domain
+      title: Domain
+      type: text
+      required: true
+  outputs:
+    - path: email
+      title: Email
+      type: email
+  cost: 2
+
+# The ai kind is not listed: the picker offers it as a kind of its own, and its columns run
+# the enrich_ai endpoint (provider `ai`, the default of an ai column).
