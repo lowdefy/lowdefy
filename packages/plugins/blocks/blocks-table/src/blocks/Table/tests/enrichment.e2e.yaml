@@ -462,3 +462,62 @@ blocks:
                 - _event: batchIndex
                 - 1
             message: Batch rejected
+
+  # Columns that pass through an empty list (a columns request loading again) keep the table
+  # mounted: it keeps the optional features it loaded, so pushed rows are not dropped.
+  - id: keep_features
+    type: Table
+    properties:
+      columns:
+        _if_none:
+          - _state: keep_columns
+          - - key: name
+              editable: true
+            - key: email
+              kind: enrichment
+              provider: finder
+              inputs:
+                name:
+                  column: name
+      data:
+        - _id: k1
+          name: Ada
+  - id: keep_push
+    type: Button
+    properties:
+      title: Push email
+    events:
+      onClick:
+        - id: keep_push_ok
+          type: CallMethod
+          params:
+            blockId: keep_features
+            method: applyTransaction
+            args:
+              - merge: deep
+                update:
+                  - _id: k1
+                    _enrich:
+                      email:
+                        status: ok
+                        value: ada@pushed.test
+  - id: keep_clear_columns
+    type: Button
+    properties:
+      title: Clear columns
+    events:
+      onClick:
+        - id: keep_clear
+          type: SetState
+          params:
+            keep_columns: []
+  - id: keep_restore_columns
+    type: Button
+    properties:
+      title: Restore columns
+    events:
+      onClick:
+        - id: keep_restore
+          type: SetState
+          params:
+            keep_columns: null

@@ -13,7 +13,8 @@
 # limitations under the License.
 
 # One claimed cell (`_item: cell`, a MongoDBEnrichmentClaim item): call its provider, complete
-# it, and queue the autoRun columns that read it.
+# it, and queue the autoRun columns that read it. It runs inside the worker's two
+# :parallel_for loops (provider group, then cell), so its step results are `<id>.$.$`.
 - :try:
     - id: provider
       type: CallApi
@@ -57,14 +58,14 @@
                   _item: cell.columnKey
                 claimToken:
                   _item: cell.claimToken
-              - _step: provider.$
+              - _step: provider.$.$
     # A cell that completed ok feeds the autoRun columns that read it (a pitch waits for the
     # company it mentions). The downstream cells of this row are queued, and a later round of
     # this worker (or another worker) claims them.
     - :if:
         _gt:
           - _array.length:
-              _step: complete.$.downstream
+              _step: complete.$.$.downstream
           - 0
       :then:
         - id: enqueue_downstream
@@ -77,7 +78,7 @@
             columnDefs:
               _state: columnDefs
             columns:
-              _step: complete.$.downstream.0.columns
+              _step: complete.$.$.downstream.0.columns
             selection:
               - _item: cell.rowKey
   :catch:

@@ -833,3 +833,20 @@ test.describe('Table enrichment', () => {
     );
   });
 });
+
+test.describe('Table optional features', () => {
+  test('columns that pass through an empty list keep the table and its pushed rows', async ({
+    page,
+  }) => {
+    await navigateToTestPage(page, 'table-enrichment');
+    const table = getBlock(page, 'keep_features');
+    const email = table.locator('.lf-table-body [data-row-key="k1"] [data-col-key="email"]');
+    await button(page, 'keep_push').click();
+    await expect(email).toHaveText('ada@pushed.test');
+    await button(page, 'keep_clear_columns').click();
+    await expect(table.locator('.lf-table-body [data-col-key="email"]')).toHaveCount(0);
+    await button(page, 'keep_restore_columns').click();
+    // Not remounted: the pushed value is still there.
+    await expect(email).toHaveText('ada@pushed.test');
+  });
+});
