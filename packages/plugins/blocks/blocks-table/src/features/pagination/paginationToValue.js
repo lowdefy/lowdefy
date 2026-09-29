@@ -14,8 +14,11 @@
   limitations under the License.
 */
 
-function densityToValue({ state }) {
-  return { view: { density: state.density, wrap: state.wrap } };
+import { type } from '@lowdefy/helpers';
+
+function paginationToValue({ state }) {
+  if (type.isUndefined(state.pageSize)) return null;
+  return { view: { pageSize: state.pageSize } };
 }
 
-export default densityToValue;
+export default paginationToValue;

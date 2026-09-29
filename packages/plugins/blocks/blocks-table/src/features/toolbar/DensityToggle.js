@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import { Segmented } from 'antd';
+import { Button, Segmented } from 'antd';
 
 const OPTIONS = [
   { label: 'Compact', value: 'compact' },
@@ -23,16 +23,29 @@ const OPTIONS = [
   { label: 'Comfortable', value: 'comfortable' },
 ];
 
+// Row density, and the view's Wrap toggle (text-like columns wrap onto several lines).
 function DensityToggle({ api }) {
+  const { wrap } = api.state;
   return (
-    <Segmented
-      aria-label="Row density"
-      data-lf-toolbar-density=""
-      onChange={(density) => api.updateSlice('density', () => density, { cause: 'density' })}
-      options={OPTIONS}
-      size="small"
-      value={api.state.density}
-    />
+    <>
+      <Segmented
+        aria-label="Row density"
+        data-lf-toolbar-density=""
+        onChange={(density) => api.updateSlice('density', () => density, { cause: 'density' })}
+        options={OPTIONS}
+        size="small"
+        value={api.state.density}
+      />
+      <Button
+        aria-pressed={wrap}
+        data-lf-toolbar-wrap=""
+        onClick={() => api.updateSlice('wrap', (current) => !current, { cause: 'wrap' })}
+        size="small"
+        type={wrap ? 'primary' : 'default'}
+      >
+        Wrap
+      </Button>
+    </>
   );
 }
 

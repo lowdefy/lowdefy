@@ -23,9 +23,9 @@ import isDataItem from '../../core/isDataItem.js';
 // value); it is clamped when the list shrinks under it, and changing page scrolls the grid back
 // to the top. `api.page` is what the pager (usePager) renders. `dataRows` keeps every page for
 // export and the summary.
-function usePagination({ api, config, rows }) {
+function usePagination({ api, config, rows, state }) {
   const [page, setPage] = useState(1);
-  const pageSize = config.pagination?.pageSize;
+  const pageSize = state.pageSize;
   const total = rows.length;
   const pageCount = config.pagination ? Math.max(1, Math.ceil(total / pageSize)) : 1;
   const current = Math.min(page, pageCount);

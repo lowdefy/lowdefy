@@ -103,6 +103,40 @@ test.describe('Table features shared with TableLight', () => {
     );
   });
 
+  test('view.wrap wraps text columns, and the toolbar Wrap toggle turns it off', async ({
+    page,
+  }) => {
+    const noteCell = cell(page, 'tf_view_wrap', 2, 'note').locator('.lf-table-cell');
+    await expect(noteCell).toHaveClass(/lf-table-cell-wrap/);
+    await expect(cell(page, 'tf_view_wrap', 2, 'amount').locator('.lf-table-cell')).toHaveClass(
+      /lf-table-cell-nowrap/
+    );
+    await expect
+      .poll(async () => (await row(page, 'tf_view_wrap', 2).boundingBox()).height)
+      .toBeGreaterThan(60);
+    const toggle = getBlock(page, 'tf_view_wrap').locator('[data-lf-toolbar-wrap]');
+    await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+    await toggle.click();
+    await expect(getBlock(page, 'tf_view_wrap_value')).toHaveText('wrap=false');
+    await expect(noteCell).toHaveClass(/lf-table-cell-nowrap/);
+    await expect
+      .poll(async () => Math.round((await row(page, 'tf_view_wrap', 2).boundingBox()).height))
+      .toBe(40);
+    await toggle.click();
+    await expect(getBlock(page, 'tf_view_wrap_value')).toHaveText('wrap=true');
+    await expect(noteCell).toHaveClass(/lf-table-cell-wrap/);
+  });
+
+  test('view.pageSize sets the rows per page', async ({ page }) => {
+    await expect(bodyRows(page, 'tf_view_pages')).toHaveCount(3);
+    await expect(getBlock(page, 'tf_view_pages_value')).toHaveText('pageSize=3');
+    const pager = getBlock(page, 'tf_view_pages').locator('.ant-pagination');
+    await expect(pager.locator('.ant-pagination-item-4')).toBeVisible();
+    await page.locator('#tf_view_pages_four').click();
+    await expect(bodyRows(page, 'tf_view_pages')).toHaveCount(4);
+    await expect(pager.locator('.ant-pagination-item-4')).toHaveCount(0);
+  });
+
   test('size sets the density and bordered draws cell borders', async ({ page }) => {
     expect(Math.round((await row(page, 'tf_compact', 1).boundingBox()).height)).toBe(32);
     await expect(getBlock(page, 'tf_compact').locator('.lf-table')).toHaveAttribute(

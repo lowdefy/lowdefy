@@ -14,8 +14,16 @@
   limitations under the License.
 */
 
-function densityToValue({ state }) {
-  return { view: { density: state.density, wrap: state.wrap } };
+import { type } from '@lowdefy/helpers';
+
+import pickViewPart from '../../core/pickViewPart.js';
+
+// `view.pageSize`, else the `pageSize` property (normalised with `pagination`). Without
+// pagination a view's pageSize is kept as it is, for when pagination is turned on.
+function initPageSize({ value, defaultView, config }) {
+  const pageSize = pickViewPart({ value, defaultView, key: 'pageSize' });
+  if (type.isInt(pageSize) && pageSize > 0) return pageSize;
+  return config.pagination?.pageSize;
 }
 
-export default densityToValue;
+export default initPageSize;

@@ -14,13 +14,20 @@
   limitations under the License.
 */
 
+import initPageSize from './initPageSize.js';
+import paginationToValue from './paginationToValue.js';
 import usePager from './usePager.js';
 import usePagination from './usePagination.js';
 
 // `pagination: true` (off by default: the Table scrolls any number of rows virtually). Last in
-// the registry: a page is a slice of the finished display list.
+// the registry: a page is a slice of the finished display list. `view.pageSize` is the page size.
 const paginationFeature = {
   name: 'pagination',
+  viewKeys: ['pageSize'],
+  slices: {
+    pageSize: { init: initPageSize, cause: 'pageSize' },
+  },
+  toValue: paginationToValue,
   useItems: usePagination,
   useFeature: usePager,
 };

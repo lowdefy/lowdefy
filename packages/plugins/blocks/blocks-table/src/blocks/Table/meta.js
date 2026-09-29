@@ -262,7 +262,7 @@ export default {
       event: {
         value: 'The table value `{ view, selected, expanded }`.',
         cause:
-          'What changed: `sort`, `filter`, `search`, `columns`, `select`, `group` (the grouping levels), `aggregate` (group aggregates), `expand` (a group, tree row or detail row collapsed or expanded), `density`, or `view` (a saved view loaded, discarded to, or selected).',
+          'What changed: `sort`, `filter`, `search`, `columns`, `select`, `group` (the grouping levels), `aggregate` (group aggregates), `expand` (a group, tree row or detail row collapsed or expanded), `density`, `wrap` (the toolbar Wrap toggle), or `view` (a saved view loaded, discarded to, or selected).',
       },
     },
     onSelectionChange: {
@@ -563,11 +563,13 @@ export default {
           },
           wrap: {
             type: 'boolean',
-            description: 'Wrap cell text.',
+            description:
+              'Wrap the text of text-like columns (text, email, phone, url, link, html, relation) that set no `wrap` or `ellipsis` of their own; rows grow to their content. The toolbar density control has a Wrap toggle.',
           },
           pageSize: {
-            type: 'number',
-            description: 'Rows per page when pagination is on.',
+            type: 'integer',
+            description:
+              'Rows per page when pagination is on. Defaults to the `pageSize` property.',
           },
         },
       },
@@ -781,7 +783,9 @@ export default {
           sort: toolbarItem('A Sort button to add, remove, reorder and flip sort levels.'),
           group: toolbarItem('A Group button to pick and order group levels (groupable columns).'),
           columns: toolbarItem('A Columns button that opens the column manager.'),
-          density: toolbarItem('A compact / default / comfortable density toggle.'),
+          density: toolbarItem(
+            'A compact / default / comfortable density toggle, with a Wrap toggle for `view.wrap`.'
+          ),
           export: toolbarItem('An Export button that downloads the view as CSV.'),
         },
       },
@@ -853,7 +857,7 @@ export default {
       pageSize: {
         type: 'integer',
         default: 50,
-        description: 'Rows per page when `pagination` is on.',
+        description: 'Rows per page when `pagination` is on (`view.pageSize` overrides it).',
       },
       summary: {
         type: 'boolean',

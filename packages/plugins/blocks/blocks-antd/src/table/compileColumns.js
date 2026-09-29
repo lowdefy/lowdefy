@@ -17,10 +17,10 @@
 import { type } from '@lowdefy/helpers';
 import { nunjucksFunction } from '@lowdefy/nunjucks';
 
-import CELL_TYPE_FAMILIES from './cellTypeFamilies.js';
 import compileCondition from './compileCondition.js';
 import compileRules from './compileRules.js';
 import compileTooltip from './compileTooltip.js';
+import getCellLayout from './getCellLayout.js';
 
 // `hidden` and `disabled` on a button or menu item take a boolean, or
 // `{ when: Condition }` tested against the row and the cell value.
@@ -35,27 +35,6 @@ function compileControls({ controls, columnsByKey, column, user, now }) {
     hidden: compileWhen({ option: control?.hidden, columnsByKey, column, user, now }),
     disabled: compileWhen({ option: control?.disabled, columnsByKey, column, user, now }),
   }));
-}
-
-// The class and style of a column's cell wrapper, fixed per column so cells
-// share them: text layout (single line, wrap or line clamp) and alignment.
-function getCellLayout(column) {
-  const classes = ['lf-table-cell'];
-  let style;
-  if (CELL_TYPE_FAMILIES[column.type] === 'action') {
-    classes.push('lf-table-cell-actions');
-  } else if (type.isInt(column.ellipsis)) {
-    classes.push('lf-table-cell-clamp');
-    style = { '--lf-table-clamp': column.ellipsis };
-  } else if (column.wrap) {
-    classes.push('lf-table-cell-wrap');
-  } else {
-    classes.push('lf-table-cell-nowrap');
-  }
-  if (column.align === 'center' || column.align === 'end') {
-    classes.push(`lf-table-cell-align-${column.align}`);
-  }
-  return { className: classes.join(' '), style };
 }
 
 // Adds `compiled` to each normalised column: everything a cell would otherwise

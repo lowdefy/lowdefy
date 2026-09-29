@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
-function densityToValue({ state }) {
-  return { view: { density: state.density, wrap: state.wrap } };
+import pickViewPart from '../../core/pickViewPart.js';
+
+function initWrap({ value, defaultView }) {
+  return pickViewPart({ value, defaultView, key: 'wrap' }) === true;
 }
 
-export default densityToValue;
+export default initWrap;
