@@ -45,3 +45,4 @@ pages:
   - _ref: ../../src/blocks/Table/tests/toolbar.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/views.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/bulk.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/enrichment.e2e.yaml

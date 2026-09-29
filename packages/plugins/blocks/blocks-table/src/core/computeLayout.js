@@ -33,8 +33,16 @@ function fromTanstackColumn({ column, region, widths, wrap }) {
 // The column geometry every row shares: visual order (start-pinned, centre, end-pinned), widths,
 // sticky offsets, centre prefix offsets for column virtualisation, and the CSS variables that
 // carry widths and offsets. `widths` overrides column sizes (a resize drag in progress); `wrap` is
-// the view's wrap.
-function computeLayout({ table, leadingColumns, viewportWidth, widths, wrap = false }) {
+// the view's wrap. Leading special columns go first in the start region, trailing ones last in
+// the end region.
+function computeLayout({
+  table,
+  leadingColumns,
+  trailingColumns = [],
+  viewportWidth,
+  widths,
+  wrap = false,
+}) {
   const start = [
     ...leadingColumns.map((leading) => ({
       ...leading,
@@ -49,9 +57,17 @@ function computeLayout({ table, leadingColumns, viewportWidth, widths, wrap = fa
   const center = table
     .getCenterVisibleLeafColumns()
     .map((column) => fromTanstackColumn({ column, region: 'center', widths, wrap }));
-  const end = table
-    .getEndVisibleLeafColumns()
-    .map((column) => fromTanstackColumn({ column, region: 'end', widths, wrap }));
+  const end = [
+    ...table
+      .getEndVisibleLeafColumns()
+      .map((column) => fromTanstackColumn({ column, region: 'end', widths, wrap })),
+    ...trailingColumns.map((trailing) => ({
+      ...trailing,
+      region: 'end',
+      minWidth: trailing.width,
+      maxWidth: trailing.width,
+    })),
+  ];
   const cols = [...start, ...center, ...end];
   const sizing = { ...table.atoms.columnSizing.get(), ...widths };
   distributeFlex({ cols, viewportWidth, sizing });

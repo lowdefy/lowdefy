@@ -16,7 +16,7 @@
 
 import createSortKeyGetter from '@lowdefy/blocks-antd/table/createSortKeyGetter.js';
 
-import createAccessor from './createAccessor.js';
+import createColumnAccessor from './createColumnAccessor.js';
 
 const DEFAULT_WIDTH = 160;
 const MIN_WIDTH = 48;
@@ -28,7 +28,7 @@ const MAX_WIDTH = 2000;
 function createColumnDefs({ columns }) {
   return columns.map((column) => ({
     id: column.key,
-    accessorFn: createAccessor(column.field),
+    accessorFn: createColumnAccessor(column),
     header: column.title,
     size: column.width ?? DEFAULT_WIDTH,
     minSize: column.minWidth ?? MIN_WIDTH,
@@ -37,7 +37,7 @@ function createColumnDefs({ columns }) {
     sortDescFirst: false,
     meta: {
       column,
-      accessor: createAccessor(column.field),
+      accessor: createColumnAccessor(column),
       getSortKey: createSortKeyGetter({ column }),
     },
   }));

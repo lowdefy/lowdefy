@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
-import { get } from '@lowdefy/helpers';
 import isControlTarget from '@lowdefy/blocks-antd/table/isControlTarget.js';
+import readColumnValue from '@lowdefy/blocks-antd/table/readColumnValue.js';
 
 import getBodyTarget from './getBodyTarget.js';
 import isTextDrag from './isTextDrag.js';
@@ -35,7 +35,7 @@ function handleRowClick(event, api) {
           row: row.original,
           rowKey: api.config.getKey(row.original),
           column: { key: col.key, field: col.column.field },
-          value: get(row.original, col.column.field),
+          value: readColumnValue({ column: col.column, row: row.original }),
         },
       });
     }

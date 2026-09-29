@@ -19,14 +19,18 @@ import React, { useRef } from 'react';
 import normalizeToolbar from './normalizeToolbar.js';
 import Toolbar from './Toolbar.js';
 
-// Blocks in the `toolbarStart` / `toolbarEnd` slots show the bar even without `toolbar`.
+// Blocks in the `toolbarStart` / `toolbarEnd` slots, and `importCsv`, show the bar even without
+// `toolbar`.
 const SLOTS_ONLY = { ...normalizeToolbar({ toolbar: {}, columnsByKey: new Map() }), count: false };
 
 function useToolbar({ api, config }) {
   const searchRef = useRef(null);
   api.toolbarSearchRef = searchRef;
   const { content } = api;
-  if (config.toolbar === null && !content.toolbarStart && !content.toolbarEnd) return null;
+  const importCsv = config.enrichment.importCsv && !api.input;
+  if (config.toolbar === null && !content.toolbarStart && !content.toolbarEnd && !importCsv) {
+    return null;
+  }
   return {
     regions: {
       top: <Toolbar api={api} searchRef={searchRef} toolbar={config.toolbar ?? SLOTS_ONLY} />,

@@ -1,0 +1,538 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/* Enrichment styles: cell run states, the header progress chip and rename input, the trailing
+   "+" / run column, the new-row editor and notice (inside the table), and the picker, details
+   panel and import dialog (antd overlays in portals, so antd tokens rather than the table's own
+   variables). The new-row button reuses editing's .lf-table-add-row. */
+
+@layer components {
+  .lf-enrich-cell {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: var(--ant-padding-xxs, 4px);
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .lf-enrich-cell > .lf-table-cell {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .lf-enrich-state {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ant-padding-xxs, 4px);
+    min-width: 0;
+    overflow: hidden;
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    font-size: var(--ant-font-size-sm, 12px);
+    white-space: nowrap;
+  }
+
+  .lf-enrich-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lf-enrich-cell[data-lf-enrich-status='running'] .lf-enrich-state {
+    color: var(--ant-color-primary, #1677ff);
+  }
+
+  .lf-enrich-cell[data-lf-enrich-status='error'] .lf-enrich-state {
+    color: var(--ant-color-error, #ff4d4f);
+    cursor: help;
+  }
+
+  .lf-enrich-cell[data-lf-enrich-status='empty'] .lf-enrich-state {
+    font-style: italic;
+  }
+
+  .lf-enrich-cell[data-lf-enrich-stale] > .lf-table-cell,
+  .lf-enrich-cell[data-lf-enrich-stale] > .lf-enrich-state {
+    opacity: 0.5;
+  }
+
+  .lf-enrich-icon {
+    display: block;
+    flex: none;
+    width: 14px;
+    height: 14px;
+  }
+
+  .lf-enrich-spinner {
+    flex: none;
+    box-sizing: border-box;
+    width: 12px;
+    height: 12px;
+    border: 2px solid currentColor;
+    border-inline-end-color: transparent;
+    border-radius: 50%;
+    animation: lf-enrich-spin 0.8s linear infinite;
+  }
+
+  .lf-enrich-rerun,
+  .lf-enrich-stale-mark {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    padding: 2px;
+    color: var(--ant-color-warning, #faad14);
+    background: none;
+    border: 0;
+    border-radius: var(--ant-border-radius-sm, 4px);
+  }
+
+  .lf-enrich-rerun {
+    cursor: pointer;
+  }
+
+  .lf-enrich-rerun:hover {
+    color: var(--ant-color-primary, #1677ff);
+    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  }
+
+  /* Header: progress chip and inline rename. */
+  /* The chip gives way before the column title does. */
+  .lf-enrich-progress {
+    display: inline-flex;
+    flex: 0 100 auto;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    padding: 0 6px;
+    overflow: hidden;
+    color: var(--ant-color-primary, #1677ff);
+    font-weight: normal;
+    font-size: var(--ant-font-size-sm, 12px);
+    line-height: 18px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background: var(--ant-color-primary-bg, #e6f4ff);
+    border-radius: 9px;
+  }
+
+  .lf-enrich-progress[data-errors]:not([data-running]) {
+    color: var(--ant-color-error, #ff4d4f);
+    background: var(--ant-color-error-bg, #fff2f0);
+  }
+
+  .lf-enrich-rename {
+    position: absolute;
+    inset: 4px;
+    z-index: 3;
+    box-sizing: border-box;
+    min-width: 0;
+    padding: 0 6px;
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+    font: inherit;
+    background: var(--ant-color-bg-container, #fff);
+    border: 1px solid var(--ant-color-primary, #1677ff);
+    border-radius: var(--ant-border-radius-sm, 4px);
+    outline: none;
+  }
+
+  .lf-enrich-rename[aria-invalid] {
+    border-color: var(--ant-color-error, #ff4d4f);
+  }
+
+  .lf-enrich-rename[data-saving] {
+    opacity: 0.65;
+  }
+
+  /* The trailing column: "+" in the header, run buttons in the rows. */
+  .lf-table-gridcell.lf-enrich-trailing {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .lf-enrich-add-column,
+  .lf-enrich-run-row {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 24px;
+    padding: 0;
+    color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+    background: none;
+    border: 0;
+    border-radius: var(--ant-border-radius-sm, 4px);
+    cursor: pointer;
+  }
+
+  .lf-enrich-add-column:hover,
+  .lf-enrich-run-row:hover {
+    color: var(--ant-color-primary, #1677ff);
+    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  }
+
+  .lf-enrich-run-row {
+    opacity: 0;
+  }
+
+  .lf-table-row:hover .lf-enrich-run-row,
+  .lf-enrich-trailing[data-focused] .lf-enrich-run-row,
+  .lf-enrich-trailing:focus-within .lf-enrich-run-row {
+    opacity: 1;
+  }
+
+  @media (hover: none) {
+    .lf-enrich-run-row {
+      opacity: 1;
+    }
+  }
+
+  /* Rows added with "+ New row" while onRowAdd runs. */
+  .lf-table-row[data-saving] {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .lf-enrich-notice {
+    display: flex;
+    align-items: center;
+    gap: var(--ant-padding-xs, 8px);
+    padding: var(--ant-padding-xxs, 4px) var(--ant-padding-sm, 12px);
+    color: var(--ant-color-error-text, #cf1322);
+    font-size: var(--ant-font-size-sm, 12px);
+    background: var(--ant-color-error-bg, #fff2f0);
+    border-top: 1px solid var(--lf-border);
+  }
+
+  .lf-enrich-notice-text {
+    flex: 1 1 auto;
+  }
+
+  .lf-enrich-notice-close {
+    padding: 0 4px;
+    color: inherit;
+    font-size: 14px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  /* The new-row editor. */
+  .lf-enrich-new-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ant-padding-xs, 8px);
+    padding: var(--ant-padding-xs, 8px) var(--ant-padding-sm, 12px);
+    background: var(--lf-bg);
+    border-top: 1px solid var(--lf-border);
+  }
+
+  .lf-enrich-new-row-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ant-padding-xs, 8px) var(--ant-padding-sm, 12px);
+  }
+
+  .lf-enrich-new-row-field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 140px;
+    max-width: 240px;
+  }
+
+  .lf-enrich-new-row-label,
+  .lf-enrich-field-label {
+    color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+    font-size: var(--ant-font-size-sm, 12px);
+  }
+
+  .lf-enrich-new-row-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--ant-padding-xs, 8px);
+  }
+
+  .lf-enrich-new-row-saving {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--ant-color-primary, #1677ff);
+    font-size: var(--ant-font-size-sm, 12px);
+  }
+
+  .lf-enrich-new-row-error {
+    color: var(--ant-color-error, #ff4d4f);
+    font-size: var(--ant-font-size-sm, 12px);
+  }
+
+  /* The picker, details panel and import dialog (antd overlays). */
+  .lf-enrich-picker,
+  .lf-enrich-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ant-padding-sm, 12px);
+  }
+
+  .lf-enrich-kinds {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--ant-padding-xs, 8px);
+  }
+
+  .lf-enrich-kind {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--ant-padding-xs, 8px);
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+    font: inherit;
+    text-align: start;
+    background: var(--ant-color-bg-container, #fff);
+    border: 1px solid var(--ant-color-border, #d9d9d9);
+    border-radius: var(--ant-border-radius, 6px);
+    cursor: pointer;
+  }
+
+  .lf-enrich-kind:hover {
+    border-color: var(--ant-color-primary-hover, #4096ff);
+  }
+
+  .lf-enrich-kind[aria-checked='true'] {
+    background: var(--ant-color-primary-bg, #e6f4ff);
+    border-color: var(--ant-color-primary, #1677ff);
+  }
+
+  .lf-enrich-kind-label {
+    font-weight: var(--ant-font-weight-strong, 600);
+  }
+
+  .lf-enrich-kind-description,
+  .lf-enrich-muted {
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    font-size: var(--ant-font-size-sm, 12px);
+  }
+
+  .lf-enrich-field,
+  .lf-enrich-input-map {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .lf-enrich-field > .ant-switch {
+    align-self: flex-start;
+  }
+
+  .lf-enrich-required {
+    color: var(--ant-color-error, #ff4d4f);
+  }
+
+  .lf-enrich-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .lf-enrich-chip {
+    padding: 0 8px;
+    color: var(--ant-color-primary, #1677ff);
+    font: inherit;
+    font-size: var(--ant-font-size-sm, 12px);
+    line-height: 20px;
+    background: var(--ant-color-primary-bg, #e6f4ff);
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .lf-enrich-preview pre {
+    max-height: 240px;
+    margin: 4px 0 0;
+    padding: var(--ant-padding-xs, 8px);
+    overflow: auto;
+    font-size: var(--ant-font-size-sm, 12px);
+    background: var(--ant-color-fill-quaternary, rgba(0, 0, 0, 0.02));
+    border-radius: var(--ant-border-radius, 6px);
+  }
+
+  .lf-enrich-picker-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--ant-padding-xs, 8px);
+  }
+
+  .lf-enrich-picker-hint {
+    flex: 1 1 auto;
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    font-size: var(--ant-font-size-sm, 12px);
+  }
+
+  .lf-enrich-details-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .lf-enrich-details-heading {
+    margin: 0;
+    color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+    font-size: var(--ant-font-size-sm, 12px);
+    font-weight: var(--ant-font-weight-strong, 600);
+    text-transform: uppercase;
+  }
+
+  .lf-enrich-details-section[data-lf-details-section='status'] {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ant-padding-xs, 8px);
+  }
+
+  .lf-enrich-details-section[data-lf-details-section='status'] .lf-enrich-details-heading {
+    flex-basis: 100%;
+  }
+
+  .lf-enrich-details-error {
+    margin: 0;
+    color: var(--ant-color-error, #ff4d4f);
+    white-space: pre-wrap;
+  }
+
+  .lf-enrich-details-preview {
+    max-height: 200px;
+    margin: 0;
+    padding: var(--ant-padding-xs, 8px);
+    overflow: auto;
+    font-size: var(--ant-font-size-sm, 12px);
+    white-space: pre-wrap;
+    background: var(--ant-color-fill-quaternary, rgba(0, 0, 0, 0.02));
+    border-radius: var(--ant-border-radius, 6px);
+  }
+
+  .lf-enrich-details-list {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 2px var(--ant-padding-sm, 12px);
+    margin: 0;
+  }
+
+  .lf-enrich-details-list dt {
+    color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+  }
+
+  .lf-enrich-details-list dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .lf-enrich-json,
+  .lf-enrich-json-children {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--ant-font-family-code, monospace);
+    font-size: var(--ant-font-size-sm, 12px);
+  }
+
+  .lf-enrich-json-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 24px;
+    border-radius: var(--ant-border-radius-sm, 4px);
+  }
+
+  .lf-enrich-json-row:hover {
+    background: var(--ant-color-fill-quaternary, rgba(0, 0, 0, 0.02));
+  }
+
+  .lf-enrich-json-toggle {
+    flex: none;
+    width: 16px;
+    padding: 0;
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .lf-enrich-json-key {
+    flex: none;
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+  }
+
+  .lf-enrich-json-preview {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .lf-enrich-json-add {
+    flex: none;
+    margin-inline-start: auto;
+    padding: 0 6px;
+    color: var(--ant-color-primary, #1677ff);
+    font: inherit;
+    font-size: var(--ant-font-size-sm, 12px);
+    background: none;
+    border: 0;
+    border-radius: var(--ant-border-radius-sm, 4px);
+    cursor: pointer;
+    opacity: 0;
+  }
+
+  .lf-enrich-json-row:hover .lf-enrich-json-add,
+  .lf-enrich-json-add:focus-visible,
+  .lf-enrich-json-add:disabled {
+    opacity: 1;
+  }
+
+  .lf-enrich-json-more button {
+    padding: 2px 0;
+    color: var(--ant-color-primary, #1677ff);
+    font: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .lf-enrich-import-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .lf-enrich-import-table th,
+  .lf-enrich-import-table td {
+    padding: 4px 8px;
+    text-align: start;
+    border-bottom: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+  }
+
+  /* Spinners pause while the grid scrolls (usePauseWhileScrolling). */
+  .lf-table-scroller[data-scrolling] .lf-enrich-spinner {
+    animation-play-state: paused;
+  }
+
+  @keyframes lf-enrich-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}

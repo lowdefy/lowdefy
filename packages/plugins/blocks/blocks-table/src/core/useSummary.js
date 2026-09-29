@@ -18,11 +18,11 @@ import { useMemo } from 'react';
 import computeAggregate from '@lowdefy/blocks-antd/table/computeAggregate.js';
 import getAggregateText from '@lowdefy/blocks-antd/table/getAggregateText.js';
 
-import createAccessor from './createAccessor.js';
+import createColumnAccessor from './createColumnAccessor.js';
 import resolveAggregates from '../features/grouping/resolveAggregates.js';
 
 function computeClientValue({ column, fn, rows }) {
-  const accessor = createAccessor(column.field);
+  const accessor = createColumnAccessor(column);
   const values = new Array(rows.length);
   for (let i = 0; i < rows.length; i++) values[i] = accessor(rows[i].original);
   return computeAggregate({ fn, values, column });

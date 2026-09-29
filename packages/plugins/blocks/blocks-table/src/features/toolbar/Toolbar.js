@@ -20,6 +20,7 @@ import { Button } from 'antd';
 import DensityToggle from './DensityToggle.js';
 import FilterButton from './FilterButton.js';
 import GroupButton from './GroupButton.js';
+import ImportButton from '../enrichment/ImportButton.js';
 import QuickFilter from './QuickFilter.js';
 import RecordCount from './RecordCount.js';
 import SortButton from './SortButton.js';
@@ -31,7 +32,7 @@ import './toolbar.css';
 
 // The table's own chrome above the grid (D7): view tabs, then one row with the `toolbarStart`
 // slot, search, quick filters and the view controls, and at the end the record count, density,
-// columns, export and the `toolbarEnd` slot. antd components: this is chrome, not cells.
+// columns, export, CSV import (`importCsv`) and the `toolbarEnd` slot. antd components: this is chrome, not cells.
 function Toolbar({ api, searchRef, toolbar }) {
   const { columnsByKey } = api.config;
   const { content } = api;
@@ -77,6 +78,7 @@ function Toolbar({ api, searchRef, toolbar }) {
               Export
             </Button>
           ) : null}
+          {api.config.enrichment.importCsv && !api.input ? <ImportButton api={api} /> : null}
           {content.toolbarEnd ? content.toolbarEnd() : null}
         </div>
       </div>

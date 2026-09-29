@@ -60,6 +60,7 @@ function Grid({
   strategy,
   styles,
   summary,
+  trailingColumns,
 }) {
   const { rootRef, scrollerRef } = api;
   const levels = config.headerLevels;
@@ -69,12 +70,14 @@ function Grid({
       computeLayout({
         table: api.table,
         leadingColumns,
+        trailingColumns,
         viewportWidth: viewport.width,
         wrap: state.wrap,
       }),
     [
       config,
       leadingColumns,
+      trailingColumns,
       state.wrap,
       state.columnOrder,
       state.columnPinning,
@@ -94,6 +97,7 @@ function Grid({
       layout: computeLayout({
         table: api.table,
         leadingColumns,
+        trailingColumns,
         viewportWidth: viewport.width,
         widths,
         wrap: state.wrap,

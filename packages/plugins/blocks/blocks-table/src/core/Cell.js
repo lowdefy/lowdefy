@@ -17,11 +17,15 @@
 import React, { memo } from 'react';
 import renderCell from '@lowdefy/blocks-antd/table/renderCell.js';
 
+import EnrichmentCell from '../features/enrichment/EnrichmentCell.js';
 import LAZY_CELL_TYPES from './lazyCellTypes.js';
 import LazyCell from './LazyCell.js';
 
 function renderContent({ api, col, original }) {
   const rowKey = api.config.getKey(original);
+  if (col.column.stateField) {
+    return <EnrichmentCell api={api} col={col} original={original} rowKey={rowKey} />;
+  }
   if (LAZY_CELL_TYPES.has(col.column.type)) {
     return <LazyCell api={api} col={col} original={original} rowKey={rowKey} />;
   }
@@ -39,7 +43,8 @@ function renderContent({ api, col, original }) {
 // only mounts the cells that came into range. The content is the shared column core's cell
 // (`renderCell`, the same renderers TableLight uses); renderers build their own event payloads
 // and `api.onCellEvent` passes them to the block's triggerEvent. Rich cell types mount on demand
-// through LazyCell (placeholders during fast scrolls, hover-only buttons on hover). `lead` (the
+// through LazyCell (placeholders during fast scrolls, hover-only buttons on hover); columns with a
+// run state (enrichment and ai columns) through EnrichmentCell. `lead` (the
 // tree indent and chevron, the expand chevron) goes before the content in a row's first data
 // cell.
 function Cell({ api, col, focused, lead, original, selected }) {
@@ -47,7 +52,7 @@ function Cell({ api, col, focused, lead, original, selected }) {
     return (
       <div
         aria-colindex={col.ariaIndex}
-        className="lf-table-gridcell lf-table-select"
+        className={`lf-table-gridcell ${col.cellClassName ?? 'lf-table-select'}`}
         data-col-index={col.index}
         data-col-key={col.key}
         data-focused={focused ? '' : undefined}

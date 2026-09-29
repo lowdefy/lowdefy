@@ -17,11 +17,14 @@
 import React from 'react';
 import { Button } from 'antd';
 
+import RunSelectedButton from '../enrichment/RunSelectedButton.js';
+
 import './bulk.css';
 
 const numberFormat = new Intl.NumberFormat();
 
-// "N selected · Select all M matching · Clear" plus the `bulkActions` slot (Linear, Attio). It
+// "N selected · Select all M matching · Clear", enrichment's "Run selected", plus the
+// `bulkActions` slot (Linear, Attio). It
 // sits below the grid, so rows never move under the pointer when it appears.
 function BulkBar({ api, matching, selected, selectionMode }) {
   const { content } = api;
@@ -50,6 +53,7 @@ function BulkBar({ api, matching, selected, selectionMode }) {
       >
         Clear
       </Button>
+      <RunSelectedButton api={api} />
       {content.bulkActions ? (
         <div className="lf-table-bulk-actions">{content.bulkActions()}</div>
       ) : null}
