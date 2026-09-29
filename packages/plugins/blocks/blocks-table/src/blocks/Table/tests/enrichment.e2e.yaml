@@ -653,3 +653,60 @@ blocks:
             declared:
               status: ok
               value: Influencer
+
+  # Wider than the table, loading and loaded: the trailing "+" / run column is pinned to the end,
+  # so the last data column scrolls fully into view beside it.
+  - id: enrich_wide_loading
+    type: Table
+    style:
+      .element:
+        width: 520
+    properties:
+      addColumn: true
+      loading: true
+      columns:
+        - key: company
+          kind: input
+          width: 160
+        - key: domain
+          kind: input
+          width: 160
+        - key: segment
+          title: Market segment of the company
+          kind: ai
+          prompt: Segment of {{ company }}
+          inputs:
+            company:
+              column: company
+          width: 160
+      data: []
+  - id: enrich_wide
+    type: Table
+    style:
+      .element:
+        width: 520
+    properties:
+      addColumn: true
+      columns:
+        - key: company
+          kind: input
+          width: 160
+        - key: domain
+          kind: input
+          width: 160
+        - key: segment
+          title: Market segment of the company
+          kind: ai
+          prompt: Segment of {{ company }}
+          inputs:
+            company:
+              column: company
+          width: 160
+      data:
+        - _id: w1
+          company: Acme
+          domain: acme.com
+          _enrich:
+            segment:
+              status: ok
+              value: Enterprise manufacturing and industrial supply

@@ -54,6 +54,7 @@ function SkeletonRow({
           className="lf-table-gridcell"
           data-col-index={col.index}
           data-pinned={col.region === 'center' ? undefined : col.region}
+          data-pinned-edge={col.pinnedEdge ? '' : undefined}
           key={col.key}
           role="gridcell"
           style={col.style}

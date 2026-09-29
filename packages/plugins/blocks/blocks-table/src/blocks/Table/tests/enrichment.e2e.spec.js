@@ -1162,3 +1162,51 @@ test.describe('Table enrichment option tones', () => {
     expect(picked).not.toContain(declared[0]);
   });
 });
+
+test.describe('Table enrichment trailing column', () => {
+  for (const blockId of ['enrich_wide_loading', 'enrich_wide']) {
+    test(`the trailing column never covers the last data column once scrolled to the end: ${blockId}`, async ({
+      page,
+    }) => {
+      await openTablePage(page, 'table-enrichment');
+      const table = getBlock(page, blockId);
+      const scroller = table.locator('.lf-table-scroller');
+      const body = table.locator('.lf-table-body, .lf-table-skeleton-row').first();
+      await expect(body).toBeVisible();
+      // The trailing column's cells carry the pinned divider in every row, skeleton rows too.
+      const rows = table.locator('[role="row"]');
+      const rowCount = await rows.count();
+      expect(rowCount).toBeGreaterThan(1);
+      for (let i = 0; i < rowCount; i++) {
+        await expect(rows.nth(i).locator('.lf-table-gridcell[data-pinned="end"]')).toHaveAttribute(
+          'data-pinned-edge',
+          ''
+        );
+      }
+      await scroller.evaluate((element) => {
+        element.scrollLeft = element.scrollWidth;
+      });
+      const box = async (locator) => locator.boundingBox();
+      const trailingHeader = table.locator(
+        '.lf-table-header .lf-table-gridcell[data-pinned="end"]'
+      );
+      const lastHeader = table.locator('[data-lf-header][data-col-key="segment"]');
+      await expect(async () => {
+        const trailing = await box(trailingHeader);
+        const last = await box(lastHeader);
+        const view = await box(scroller);
+        // The last data column ends where the trailing column starts, and fits in the view.
+        expect(Math.round(last.x + last.width)).toBeLessThanOrEqual(Math.round(trailing.x));
+        expect(Math.round(last.x)).toBeGreaterThanOrEqual(Math.round(view.x));
+      }).toPass();
+      // Its title is cut with an ellipsis inside its own cell, not under the trailing column.
+      const title = lastHeader.locator('.lf-table-header-title');
+      expect(
+        await title.evaluate((element) => ({
+          overflow: getComputedStyle(element).textOverflow,
+          cut: element.scrollWidth > element.clientWidth,
+        }))
+      ).toEqual({ overflow: 'ellipsis', cut: true });
+    });
+  }
+});
