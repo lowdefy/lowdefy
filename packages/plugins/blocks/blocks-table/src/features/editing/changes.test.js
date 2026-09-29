@@ -320,12 +320,30 @@ describe('createNewRow', () => {
     });
   });
 
-  test('createNewRow uses a key given by a column default', () => {
-    const withKey = new Map([['id', { field: 'id', default: 'fixed' }]]);
-    expect(createNewRow({ specs: withKey, keyField: 'id', generateKey: () => 'k1' })).toEqual({
-      rowKey: 'fixed',
-      fields: { id: 'fixed' },
-    });
+  test('createNewRow gives every added row its own key, even with a key column default', () => {
+    const withKey = new Map([
+      ['id', { field: 'id', default: 'fixed' }],
+      ['name', { field: 'name', default: 'New' }],
+    ]);
+    let count = 0;
+    const generateKey = () => {
+      count += 1;
+      return `k${count}`;
+    };
+    const first = createNewRow({ specs: withKey, keyField: 'id', generateKey });
+    const second = createNewRow({ specs: withKey, keyField: 'id', generateKey });
+    expect(first).toEqual({ rowKey: 'k1', fields: { name: 'New' } });
+    expect(second).toEqual({ rowKey: 'k2', fields: { name: 'New' } });
+  });
+
+  test('createNewRow keeps the key column default out of a nested key field', () => {
+    const withKey = new Map([
+      ['key', { field: 'meta.key', default: 'fixed' }],
+      ['kind', { field: 'meta.kind', default: 'a' }],
+    ]);
+    expect(createNewRow({ specs: withKey, keyField: 'meta.key', generateKey: () => 'k1' })).toEqual(
+      { rowKey: 'k1', fields: { meta: { kind: 'a' } } }
+    );
   });
 
   test('createNewRow copies object defaults so rows never share them', () => {
