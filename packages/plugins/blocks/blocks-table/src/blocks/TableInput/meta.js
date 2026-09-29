@@ -26,8 +26,12 @@ const {
   ...tableEvents
 } = tableMeta.events;
 
+// TableInput is an input, not an input-container: it renders no slots (no toolbar, bulk action
+// or empty slot blocks), so it does not take Table's.
+const { slots, ...inputMeta } = tableMeta; // eslint-disable-line no-unused-vars
+
 export default {
-  ...tableMeta,
+  ...inputMeta,
   category: 'input',
   valueType: 'object',
   // No changes yet. The value is only ever what changed, never the rows (see onChange `value`).
