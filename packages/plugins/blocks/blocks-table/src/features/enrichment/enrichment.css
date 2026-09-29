@@ -533,6 +533,7 @@
     color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
   }
 
+  /* Cut to the panel's width; the node's title holds the whole value. */
   .lf-enrich-json-preview {
     flex: 1 1 auto;
     min-width: 0;
@@ -542,24 +543,54 @@
     text-overflow: ellipsis;
   }
 
+  .lf-enrich-json-preview[data-kind='string'],
+  .lf-enrich-json-preview[data-kind='date'] {
+    color: var(--lf-json-string);
+  }
+
+  .lf-enrich-json-preview[data-kind='number'] {
+    color: var(--lf-json-number);
+  }
+
+  .lf-enrich-json-preview[data-kind='boolean'] {
+    color: var(--lf-json-boolean);
+  }
+
+  /* Add as column: always there, muted until its row is hovered or it has focus. */
   .lf-enrich-json-add {
+    display: inline-flex;
     flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
     margin-inline-start: auto;
-    padding: 0 6px;
-    color: var(--ant-color-primary, #1677ff);
-    font: inherit;
-    font-size: var(--ant-font-size-sm, 12px);
+    padding: 0;
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
     background: none;
     border: 0;
     border-radius: var(--ant-border-radius-sm, 4px);
     cursor: pointer;
-    opacity: 0;
+  }
+
+  .lf-enrich-json-add .lf-enrich-icon {
+    width: 12px;
+    height: 12px;
   }
 
   .lf-enrich-json-row:hover .lf-enrich-json-add,
   .lf-enrich-json-add:focus-visible,
   .lf-enrich-json-add:disabled {
-    opacity: 1;
+    color: var(--ant-color-primary, #1677ff);
+  }
+
+  .lf-enrich-json-add:hover {
+    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  }
+
+  .lf-enrich-json-add:focus-visible {
+    outline: 2px solid var(--ant-color-primary, #1677ff);
+    outline-offset: -2px;
   }
 
   .lf-enrich-json-more button {

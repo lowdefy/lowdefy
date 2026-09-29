@@ -16,9 +16,11 @@
 
 import { type } from '@lowdefy/helpers';
 
-const MAX_TEXT = 80;
+// A bound on the text a node puts in the page, not its visible length: the tree cuts previews to
+// its width with CSS, and the node's title holds the value (cut at the same bound).
+const MAX_TEXT = 2000;
 
-// The one-line preview of a JSON tree node: primitives as JSON (strings quoted and cut to 80
+// The one-line preview of a JSON tree node: primitives as JSON (strings quoted, at most 2000
 // characters), objects and arrays by their size.
 function formatJsonPreview(value) {
   if (type.isArray(value)) return `[${value.length} ${value.length === 1 ? 'item' : 'items'}]`;

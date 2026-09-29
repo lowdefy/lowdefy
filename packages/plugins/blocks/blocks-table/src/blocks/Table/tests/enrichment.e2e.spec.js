@@ -798,6 +798,50 @@ test.describe('Table enrichment', () => {
     await expect(details(page).locator('[data-lf-details-value]')).toHaveText('in/ada');
   });
 
+  test('the raw result tree colours values, cuts them to its width and always shows add', async ({
+    page,
+  }) => {
+    await clickCell(page, 'r1', 'email');
+    const node = (path) => details(page).locator(`[data-lf-json-node="${path}"]`);
+    const preview = (path) => node(path).locator('.lf-enrich-json-preview').first();
+    await expect(preview('email')).toHaveAttribute('data-kind', 'string');
+    await expect(preview('confidence')).toHaveAttribute('data-kind', 'number');
+    await expect(preview('verified')).toHaveAttribute('data-kind', 'boolean');
+    const colour = (locator) => locator.evaluate((element) => getComputedStyle(element).color);
+    const colours = new Set([
+      await colour(node('email').locator('.lf-enrich-json-key').first()),
+      await colour(preview('email')),
+      await colour(preview('confidence')),
+      await colour(preview('verified')),
+    ]);
+    expect(colours.size).toBe(4);
+    // A long string is cut by the panel's width, not a fixed length; its title holds all of it.
+    const bio = preview('bio');
+    await expect(bio).toHaveAttribute('title', /computer\."$/);
+    expect(await bio.evaluate((element) => element.scrollWidth > element.clientWidth)).toBe(true);
+    expect(await preview('email').evaluate((e) => e.scrollWidth <= e.clientWidth)).toBe(true);
+    // "+" is visible without hovering, named for screen readers and reachable by Tab.
+    const add = details(page).locator('[data-lf-json-add="confidence"]');
+    await expect(add).toBeVisible();
+    expect(await add.evaluate((element) => getComputedStyle(element).opacity)).toBe('1');
+    await expect(add).toHaveAttribute('aria-label', 'Add confidence as column');
+    await expect(add).toHaveAttribute('title', 'Add as column');
+    await add.focus();
+    await expect(add).toBeFocused();
+  });
+
+  for (const scheme of ['light', 'dark']) {
+    test(`raw result values read at 4.5:1 in ${scheme} mode`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme: scheme });
+      await clickCell(page, 'r1', 'email');
+      const contrasts = await details(page)
+        .locator('.lf-enrich-json-key, .lf-enrich-json-preview')
+        .evaluateAll(measureContrast);
+      const failing = Object.entries(contrasts).filter(([, ratio]) => ratio < 4.5);
+      expect(failing, JSON.stringify(contrasts)).toEqual([]);
+    });
+  }
+
   test('"Add as column" on a raw result node fires onColumnAdd with an extract column', async ({
     page,
   }) => {
