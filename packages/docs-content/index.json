@@ -3056,7 +3056,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "6764be9fbbc749fb037bcb4edc0fc7a6240e06173c1825c7cf42172f8e0af6fd"
+      "hash": "71f01fc0f417f51b7dd51b9ac277e1d97f4acc733de055eae9b69deb92005e37"
     },
     "concepts/keyboard-shortcuts": {
       "files": [
@@ -4464,7 +4464,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "2cef89adf916985eef9b1ba05074b4fb9719e638bac8f34b938e590317265845"
+      "hash": "2489254cdf380db73d1ee4b6c22b754972d335cb9ad233e83d760b889a9977fc"
     },
     "input-blocks/tagmultipleselector": {
       "files": [
@@ -5353,7 +5353,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "260c89e9de64ad9b7aa39446f6995f067c6353da6fcafc02ace413fbaaa58f1a"
+      "hash": "488c52c9268704979573c16606a3a83702c51eae1da494d243d577cdba6483d7"
     },
     "display-blocks/tablelight": {
       "files": [
@@ -5371,7 +5371,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "07dbf897b88da15ebc68e4072cd513dc92636e3fe1f715406e8e8b0d5a7ac773"
+      "hash": "bc2adfc091e7b502c7ddf1f511137eebcc5ac73489c2c1f24af809f4c950c71d"
     },
     "display-blocks/tag": {
       "files": [
@@ -6319,7 +6319,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "44b8da43e621eca06df29fc1ac37f9fefe28fd707f935ecbaaa263ec7aa401d9"
+      "hash": "91d48cdf7ee1a8b707a0d6b4f15bafdb7b9f5a8d44dd5fffc07bb4caab792639"
     },
     "connections/mssql": {
       "files": [
