@@ -228,6 +228,13 @@ export default {
           },
         },
       },
+      padding: {
+        type: 'string',
+        enum: ['default', 'compact', 'none'],
+        default: 'default',
+        description:
+          'Space around the page content. `compact` tightens it to 16px for dense, data-heavy pages. `none` removes it so content such as a table or grid runs edge to edge; the breadcrumb keeps its own inset.',
+      },
       content: {
         type: 'object',
         description: 'Content properties.',

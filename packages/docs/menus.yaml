@@ -1133,6 +1133,9 @@
         - id: _actions
           type: MenuLink
           pageId: _actions
+        - id: _agent
+          type: MenuLink
+          pageId: _agent
         - id: _and
           type: MenuLink
           pageId: _and

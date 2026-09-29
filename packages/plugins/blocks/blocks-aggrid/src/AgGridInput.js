@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 
@@ -26,7 +26,7 @@ import isCellControlClick from './isCellControlClick.js';
 // Registration is idempotent, so each core registers independently to stay standalone.
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const AgGridInput = ({ events, loading, methods, properties, theme, value }) => {
+const AgGridInput = ({ components, events, loading, methods, properties, theme, value }) => {
   const {
     quickFilterValue,
     columnDefs,
@@ -40,9 +40,12 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
   const [rowData, setRowData] = useState(value ?? []);
 
   const gridRef = useRef();
+  // The handlers below are created once, so they read events through a ref to see the current
+  // render's events rather than the first render's.
+  const eventsRef = useRef(events);
+  eventsRef.current = events;
 
-  const memoDefaultColDef = useMemo(() => defaultColDef);
-  const processedColDefs = useColDefs({ columnDefs, methods, gridRef });
+  const processedColDefs = useColDefs({ columnDefs, methods, components, gridRef });
 
   const getRowId = useCallback(
     (params) => {
@@ -53,7 +56,7 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
   );
 
   const onRowClick = useCallback((event) => {
-    if (events.onRowClick && !isCellControlClick(event)) {
+    if (eventsRef.current.onRowClick && !isCellControlClick(event)) {
       methods.triggerEvent({
         name: 'onRowClick',
         event: {
@@ -65,7 +68,7 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
     }
   }, []);
   const onCellClicked = useCallback((event) => {
-    if (events.onCellClick && !isCellControlClick(event)) {
+    if (eventsRef.current.onCellClick && !isCellControlClick(event)) {
       methods.triggerEvent({
         name: 'onCellClick',
         event: {
@@ -82,7 +85,7 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
     // AG Grid fires onRowSelected for deselection too, which the Lowdefy event does not represent.
     // See https://stackoverflow.com/a/63265775/2453657
     if (!event.node.isSelected()) return;
-    if (events.onRowSelected) {
+    if (eventsRef.current.onRowSelected) {
       methods.triggerEvent({
         name: 'onRowSelected',
         event: {
@@ -94,7 +97,7 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
     }
   }, []);
   const onSelectionChanged = useCallback(() => {
-    if (events.onSelectionChanged) {
+    if (eventsRef.current.onSelectionChanged) {
       methods.triggerEvent({
         name: 'onSelectionChanged',
         event: { selected: gridRef.current.api.getSelectedRows() },
@@ -109,7 +112,7 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
   };
 
   const onFilterChanged = useCallback((event) => {
-    if (events.onFilterChanged) {
+    if (eventsRef.current.onFilterChanged) {
       methods.triggerEvent({
         name: 'onFilterChanged',
         event: {
@@ -121,7 +124,7 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
   }, []);
 
   const onSortChanged = useCallback((event) => {
-    if (events.onSortChanged) {
+    if (eventsRef.current.onSortChanged) {
       methods.triggerEvent({
         name: 'onSortChanged',
         event: {
@@ -134,14 +137,17 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
 
   const onCellValueChanged = useCallback(
     (event) => {
-      rowData[event.rowIndex][event.colDef.field] = event.newValue;
-      methods.setValue(rowData);
-      setRowData(rowData);
+      // ag-grid has already written the edit into event.data, the edited row's own object in rowData,
+      // so no write is needed here. event.rowIndex must not be used to find the row: it is the
+      // displayed position, a different row once the grid is sorted or filtered.
+      const newRowData = rowData.slice();
+      methods.setValue(newRowData);
+      setRowData(newRowData);
       methods.triggerEvent({
         name: 'onCellValueChanged',
         event: {
           field: event.colDef.field,
-          newRowData: rowData,
+          newRowData,
           newValue: event.newValue,
           oldValue: event.oldValue,
           rowData: event.data,
@@ -149,7 +155,7 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
         },
       });
     },
-    [rowData, value]
+    [rowData]
   );
 
   const onRowDragEnd = useCallback(
@@ -164,8 +170,7 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
         newRowData.splice(fromIndex, 1);
         newRowData.splice(toIndex, 0, element);
         methods.setValue(newRowData);
-        setRowData(rowData);
-        gridRef.current.api.setGridOption('rowData', value);
+        setRowData(newRowData);
         gridRef.current.api.clearFocusedCell();
         methods.triggerEvent({
           name: 'onRowDragEnd',
@@ -179,7 +184,7 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
         });
       }
     },
-    [rowData, value]
+    [rowData]
   );
 
   useEffect(() => {
@@ -207,13 +212,11 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
     }
   }, [value]);
 
-  if (quickFilterValue && quickFilterValue === '') {
-    gridRef.current.api.setGridOption('quickFilterText', quickFilterValue); // check if empty string matches all
-  }
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <AgGridReact
         columnMenu="legacy"
+        quickFilterText={quickFilterValue}
         {...someProperties}
         theme={theme}
         rowData={rowData}
@@ -225,7 +228,7 @@ const AgGridInput = ({ events, loading, methods, properties, theme, value }) => 
         onSelectionChanged={onSelectionChanged}
         onSortChanged={onSortChanged}
         onRowDragEnd={onRowDragEnd}
-        defaultColDef={memoDefaultColDef}
+        defaultColDef={defaultColDef}
         columnDefs={processedColDefs}
         ref={gridRef}
         getRowId={getRowId}

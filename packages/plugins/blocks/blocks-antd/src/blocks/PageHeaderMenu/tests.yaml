@@ -151,3 +151,11 @@
   style:
     .element:
       border: 5px solid blue
+- id: 'properties.padding: compact'
+  type: PageHeaderMenu
+  properties:
+    padding: compact
+- id: 'properties.padding: none'
+  type: PageHeaderMenu
+  properties:
+    padding: none

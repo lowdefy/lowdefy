@@ -311,3 +311,11 @@
       blocks:
         - id: ex_1_block_1
           type: Test
+- id: 'properties.padding: compact'
+  type: Collapse
+  properties:
+    padding: compact
+- id: 'properties.padding: none'
+  type: Collapse
+  properties:
+    padding: none

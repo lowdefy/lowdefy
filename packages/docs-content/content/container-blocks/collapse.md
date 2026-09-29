@@ -282,6 +282,71 @@ Roomy header and content padding.
             content: Roomy header and content padding.
 ```
 
+With padding none, panel content sets its own spacing.
+
+Tighter panel content, still aligned with the header.
+
+```yaml
+- id: padding_none_collapse
+  type: Collapse
+  properties:
+    padding: none
+    panels:
+      - key: padding_none_invoices
+        title: Invoices (padding none)
+      - key: padding_none_notes
+        title: Notes
+  slots:
+    padding_none_invoices:
+      blocks:
+        - id: padding_none_invoices_rows
+          type: Html
+          properties:
+            html: >
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 16px; border-bottom: 1px solid
+              var(--ant-color-border-secondary);"><span>INV-1042</span><span
+              style="color:
+              var(--ant-color-text-secondary);">$1,280.00</span></div>
+
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 16px; border-bottom: 1px solid
+              var(--ant-color-border-secondary);"><span>INV-1041</span><span
+              style="color:
+              var(--ant-color-text-secondary);">$640.00</span></div>
+
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 16px; border-bottom: 1px solid
+              var(--ant-color-border-secondary);"><span>INV-1040</span><span
+              style="color:
+              var(--ant-color-text-secondary);">$2,115.50</span></div>
+
+              <div style="display: flex; justify-content: space-between;
+              padding: 8px 16px;"><span>INV-1039</span><span style="color:
+              var(--ant-color-text-secondary);">$96.00</span></div>
+    padding_none_notes:
+      blocks:
+        - id: padding_none_notes_text
+          type: Paragraph
+          class: px-4 py-2
+          properties:
+            content: With padding none, panel content sets its own spacing.
+- id: padding_compact_collapse
+  type: Collapse
+  properties:
+    padding: compact
+    panels:
+      - key: padding_compact_panel
+        title: Compact padding
+  slots:
+    padding_compact_panel:
+      blocks:
+        - id: padding_compact_panel_text
+          type: Paragraph
+          properties:
+            content: Tighter panel content, still aligned with the header.
+```
+
 **Start (default):**
 
 Premium wireless headphones with active noise cancellation, 30-hour battery life, and multipoint connection.
@@ -1373,6 +1438,7 @@ Full platform access with dedicated infrastructure, custom integrations, and whi
 | `expandIconPlacement` | string | `"start"` | Set placement of the expand icon. Enum: `start`, `end`. |
 | `forceRender` | boolean | `false` | Force render for all panels. |
 | `ghost` | boolean | `false` | Make the collapse borderless with a transparent background. |
+| `padding` | string | `"default"` | Space inside each panel body. `compact` tightens it to 8px 16px. `none` removes it so content such as a table or list runs edge to edge; the panel headers keep their padding. Enum: `default`, `compact`, `none`. |
 | `panels` | array | - |  |
 | `panels.$.title` | string | - | Title of the panel - supports html. |
 | `panels.$.key` | string | - | Key of the panel. |

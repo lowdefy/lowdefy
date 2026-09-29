@@ -79,6 +79,8 @@ async function runDetachedEndpoint(context, { endpointId, payload, principal }) 
     items: {},
     state: {},
     endpointDepth: 0,
+    // The dispatcher's agent, carried in the principal like its identity.
+    agent: principal?.agent ?? null,
   };
 
   const { error, response, status } = await runRoutine(context, routineContext, {

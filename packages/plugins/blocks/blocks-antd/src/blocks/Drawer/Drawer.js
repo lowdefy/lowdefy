@@ -22,6 +22,10 @@ import { renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import getMask from '../getMask.js';
 import withTheme from '../withTheme.js';
 
+// Compact tightens the header too, so the title stays aligned with the body content.
+const headerPadding = { compact: '12px 16px' };
+const bodyPadding = { compact: '12px 16px', none: 0 };
+
 const handleClose = async ({ methods, rename, setOpen }) => {
   const response = await methods.triggerEvent({
     name: get(rename, 'events.onClose', { default: 'onClose' }),
@@ -179,9 +183,9 @@ const DrawerBlock = ({
       }}
       style={styles.element}
       styles={{
-        header: styles.header,
+        header: { padding: headerPadding[properties.padding], ...styles.header },
         title: styles.title,
-        body: styles.body,
+        body: { padding: bodyPadding[properties.padding], ...styles.body },
         footer: styles.footer,
         mask: styles.mask,
         wrapper: styles.wrapper,

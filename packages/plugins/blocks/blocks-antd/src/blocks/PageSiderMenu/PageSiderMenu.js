@@ -34,6 +34,7 @@ import {
   registerDarkModeMethod,
   registerLocaleMethod,
 } from '../headerActions.js';
+import getPageSpacing from '../getPageSpacing.js';
 import withPageTheme from '../withPageTheme.js';
 
 function getInitialSiderState({ properties }) {
@@ -70,6 +71,7 @@ const PageSiderMenu = ({
   properties,
   styles = {},
 }) => {
+  const spacing = getPageSpacing({ padding: properties.padding });
   const [openSiderState, setSiderOpen] = useState(() => getInitialSiderState({ properties }));
   useEffect(() => {
     registerDarkModeMethod(methods);
@@ -329,7 +331,7 @@ const PageSiderMenu = ({
                               styles={{
                                 element: mergeObjects([
                                   {
-                                    padding: '0 40px 40px 40px',
+                                    padding: spacing.content,
                                     minWidth: 0,
                                   },
                                   styles.content,
@@ -349,7 +351,7 @@ const PageSiderMenu = ({
                                         properties={properties.breadcrumb}
                                         styles={{
                                           element: mergeObjects([
-                                            { margin: '16px 0' },
+                                            spacing.breadcrumb,
                                             styles.breadcrumb,
                                           ]),
                                         }}
@@ -360,7 +362,9 @@ const PageSiderMenu = ({
                                         }}
                                       />
                                     ) : (
-                                      <div className="py-1.5 sm:py-1.5 md:py-2.5 lg:py-5" />
+                                      spacing.spacerClassName && (
+                                        <div className={spacing.spacerClassName} />
+                                      )
                                     )}
                                     {content.content && content.content()}
                                   </>

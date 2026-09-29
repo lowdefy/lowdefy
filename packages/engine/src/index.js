@@ -19,6 +19,7 @@ import Slots from './Slots.js';
 import createLink from './createLink.js';
 import decodeServerError, { getDevError } from './decodeServerError.js';
 import Events from './Events.js';
+import getAppContext from './getAppContext.js';
 import getContext from './getContext.js';
 import getHomePathname from './getHomePathname.js';
 import Requests from './Requests.js';
@@ -32,6 +33,7 @@ export {
   createLink,
   decodeServerError,
   Events,
+  getAppContext,
   getDevError,
   getHomePathname,
   Requests,

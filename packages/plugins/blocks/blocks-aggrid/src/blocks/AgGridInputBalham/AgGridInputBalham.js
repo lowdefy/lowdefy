@@ -24,6 +24,7 @@ import AgGridInput from '../../AgGridInput.js';
 
 const AgGridInputBalham = ({
   blockId,
+  components,
   events,
   loading,
   methods,
@@ -43,6 +44,7 @@ const AgGridInputBalham = ({
     >
       <AgGridInput
         blockId={blockId}
+        components={components}
         events={events}
         loading={loading}
         methods={methods}

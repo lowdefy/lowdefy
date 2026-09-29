@@ -29,6 +29,7 @@ function createEvaluateOperators(context) {
     user,
   });
   function evaluateOperators({
+    agent,
     arrayIndices,
     error,
     input,
@@ -40,6 +41,7 @@ function createEvaluateOperators(context) {
     steps,
   }) {
     const { output, errors } = operatorsParser.parse({
+      agent,
       arrayIndices,
       error,
       input,

@@ -80,6 +80,43 @@
                     value: 4820
                     prefix: $
 
+- title: Compact Padding
+  fullWidth: true
+  blocks:
+    - id: psm_compact
+      type: PageSiderMenu
+      properties:
+        padding: compact
+        menu:
+          links:
+            - id: psm_compact_dashboard
+              type: MenuLink
+              properties:
+                title: Dashboard
+            - id: psm_compact_invoices
+              type: MenuLink
+              properties:
+                title: Invoices
+      blocks:
+        - id: psm_compact_text
+          type: Paragraph
+          properties:
+            content: 'padding: compact trims the content padding from 40px to 16px, so data-heavy pages show more.'
+        - id: psm_compact_card
+          type: Card
+          properties:
+            title: Recent invoices
+            padding: none
+          blocks:
+            - id: psm_compact_card_rows
+              type: Html
+              properties:
+                html: |
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1042</span><span style="color: var(--ant-color-text-secondary);">$1,280.00</span></div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1041</span><span style="color: var(--ant-color-text-secondary);">$640.00</span></div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px; border-bottom: 1px solid var(--ant-color-border-secondary);"><span>INV-1040</span><span style="color: var(--ant-color-text-secondary);">$2,115.50</span></div>
+                  <div style="display: flex; justify-content: space-between; padding: 8px 24px;"><span>INV-1039</span><span style="color: var(--ant-color-text-secondary);">$96.00</span></div>
+
 - title: Breadcrumb with Dark Mode Toggle
   fullWidth: true
   blocks:

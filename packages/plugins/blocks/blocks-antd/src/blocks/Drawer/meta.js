@@ -115,6 +115,13 @@ export default {
         type: 'number',
         description: 'Maximum size in pixels a resizable Drawer can be dragged to.',
       },
+      padding: {
+        type: 'string',
+        enum: ['default', 'compact', 'none'],
+        default: 'default',
+        description:
+          'Space inside the drawer. `compact` tightens the header and body. `none` removes the body padding so content such as a table or list runs edge to edge; the header and footer keep their padding.',
+      },
       resizable: {
         type: 'boolean',
         default: false,

@@ -33,6 +33,7 @@ import {
   registerDarkModeMethod,
   registerLocaleMethod,
 } from '../headerActions.js';
+import getPageSpacing from '../getPageSpacing.js';
 import withPageTheme from '../withPageTheme.js';
 
 function getInitialSiderState({ properties }) {
@@ -69,6 +70,7 @@ const PageSidebarLayout = ({
   properties,
   styles = {},
 }) => {
+  const spacing = getPageSpacing({ padding: properties.padding });
   const [openSiderState, setSiderOpen] = useState(() => getInitialSiderState({ properties }));
   // Re-read localStorage on mount: during SSR localStorage is unavailable, so
   // the lazy initializer falls back to properties.sider.initialCollapsed. Once
@@ -447,7 +449,7 @@ const PageSidebarLayout = ({
                       styles={{
                         element: mergeObjects([
                           {
-                            padding: '0 40px 40px 40px',
+                            padding: spacing.content,
                             minWidth: 0,
                           },
                           styles.content,
@@ -466,7 +468,7 @@ const PageSidebarLayout = ({
                                 methods={methods}
                                 properties={properties.breadcrumb}
                                 styles={{
-                                  element: mergeObjects([{ margin: '16px 0' }, styles.breadcrumb]),
+                                  element: mergeObjects([spacing.breadcrumb, styles.breadcrumb]),
                                 }}
                                 rename={{
                                   events: {
@@ -475,7 +477,7 @@ const PageSidebarLayout = ({
                                 }}
                               />
                             ) : (
-                              <div className="py-1.5 sm:py-1.5 md:py-2.5 lg:py-5" />
+                              spacing.spacerClassName && <div className={spacing.spacerClassName} />
                             )}
                             {content.content && content.content()}
                           </>
