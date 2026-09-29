@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import compileAggregates from './compileAggregates.js';
 import compileCondition from './compileCondition.js';
 import compileGroupPathMatch from './compileGroupPathMatch.js';
+import compileProjection from './compileProjection.js';
 import compileSearch from './compileSearch.js';
 import compileSort from './compileSort.js';
 import getCollectionWriteStage from '../tenant/getCollectionWriteStage.js';
@@ -65,7 +66,7 @@ function compileGroupsFacet({ view, groupPath, fieldsByKey, rows, aggregates }) 
 // Compiles the validated request to one aggregation:
 //   base pipeline (the app's scoping, always first, so the view can only narrow it)
 //   → $match filter → $match search → $match groupPath
-//   → $facet { rows | groups, total, aggregates? }
+//   → $facet { rows (projected to the fields) | groups, total, aggregates? }
 function compileTableQuery({ properties, now }) {
   const { fields, view, startRow, endRow, groupPath, maxRows, user } = properties;
   const pipeline = properties.pipeline ?? [];
@@ -98,6 +99,10 @@ function compileTableQuery({ properties, now }) {
     fieldsByKey,
     distinct: 'branch',
   });
+  const projection =
+    properties.project === false
+      ? []
+      : [compileProjection({ fieldsByKey, returnFields: properties.returnFields })];
   const grouped = parsedGroupPath.length < parsedView.group.length;
   const facet = grouped
     ? compileGroupsFacet({
@@ -108,7 +113,11 @@ function compileTableQuery({ properties, now }) {
         aggregates: groupAggregates,
       })
     : {
-        rows: [{ $sort: compileSort({ sort: parsedView.sort, fieldsByKey }) }, ...pageStages(rows)],
+        rows: [
+          { $sort: compileSort({ sort: parsedView.sort, fieldsByKey }) },
+          ...pageStages(rows),
+          ...projection,
+        ],
         total: [{ $count: 'count' }],
       };
   if (aggregates.specs.length > 0) {

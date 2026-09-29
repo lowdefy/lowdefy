@@ -463,6 +463,27 @@ describe('aggregates', () => {
   });
 });
 
+describe('projection', () => {
+  test('rows hold only the field paths and _id by default', async () => {
+    const res = await query({ fields: { name: { type: 'text' } }, endRow: 1 });
+    expect(res.rows).toEqual([{ _id: 'd00', name: 'Deal 0' }]);
+  });
+
+  test('returnFields adds paths a cell reads without a field for them', async () => {
+    const res = await query({
+      fields: { name: { type: 'text' } },
+      returnFields: ['amount', 'owner'],
+      endRow: 1,
+    });
+    expect(res.rows).toEqual([{ _id: 'd00', name: 'Deal 0', amount: 0, owner: { name: 'Ada' } }]);
+  });
+
+  test('project: false returns the documents the base pipeline returns', async () => {
+    const res = await query({ fields: { name: { type: 'text' } }, project: false, endRow: 1 });
+    expect(res.rows).toEqual([{ ...orgOneDocs[0], owner_id: { _oid: ownerIds[0].toHexString() } }]);
+  });
+});
+
 describe('tenant scoping', () => {
   test('a tenant connection walls the table query to the tenant', async () => {
     const res = await MongoDBTableQuery({
@@ -509,6 +530,8 @@ describe('schema', () => {
           maxRows: 500,
           user: { id: 'u' },
           options: { maxTimeMS: 1000 },
+          project: true,
+          returnFields: ['owner.avatar'],
         },
       })
     ).toEqual({ valid: true });

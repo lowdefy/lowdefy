@@ -139,6 +139,24 @@ export default {
         type: 'MongoDBTableQuery request property "user" should be an object.',
       },
     },
+    project: {
+      type: 'boolean',
+      default: true,
+      description:
+        'Return only _id, the "fields" paths and "returnFields" in each row. Set it to false to return the documents as the base pipeline leaves them.',
+      errorMessage: {
+        type: 'MongoDBTableQuery request property "project" should be a boolean.',
+      },
+    },
+    returnFields: {
+      type: 'array',
+      items: { type: 'string' },
+      description:
+        'More dot paths each row returns, for values cells read without a field of their own, for example an avatar srcField or a link labelField.',
+      errorMessage: {
+        type: 'MongoDBTableQuery request property "returnFields" should be an array of strings.',
+      },
+    },
     options: {
       type: 'object',
       description:

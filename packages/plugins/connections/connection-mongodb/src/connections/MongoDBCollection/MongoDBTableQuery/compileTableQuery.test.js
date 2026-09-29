@@ -31,6 +31,17 @@ const fields = {
 
 const base = [{ $match: { org_id: 'org_1' } }];
 
+const projection = {
+  _id: 1,
+  name: 1,
+  email: 1,
+  amount: 1,
+  stage: 1,
+  'owner.name': 1,
+  created: 1,
+};
+const project = { $project: projection };
+
 function compile(properties) {
   return compileTableQuery({ properties: { pipeline: base, fields, ...properties }, now });
 }
@@ -45,7 +56,7 @@ describe('rows', () => {
         { $match: { org_id: 'org_1' } },
         {
           $facet: {
-            rows: [{ $sort: { _id: 1 } }, { $limit: 100 }],
+            rows: [{ $sort: { _id: 1 } }, { $limit: 100 }, project],
             total: [{ $count: 'count' }],
           },
         },
@@ -73,6 +84,7 @@ describe('rows', () => {
             { $sort: { amount: -1, 'owner.name': 1, _id: 1 } },
             { $skip: 200 },
             { $limit: 200 },
+            project,
           ],
           total: [{ $count: 'count' }],
         },
@@ -100,7 +112,7 @@ describe('rows', () => {
     expect(pipeline).toEqual([
       {
         $facet: {
-          rows: [{ $sort: { _id: 1 } }, { $limit: 10 }],
+          rows: [{ $sort: { _id: 1 } }, { $limit: 10 }, project],
           total: [{ $count: 'count' }],
         },
       },
@@ -158,12 +170,66 @@ describe('rows', () => {
       { $sort: { _id: 1 } },
       { $skip: 50 },
       { $match: { $expr: false } },
+      project,
     ]);
   });
 
   test('endRow defaults to startRow + maxRows', () => {
     const { pipeline } = compile({ startRow: 10, maxRows: 50 });
-    expect(pipeline[1].$facet.rows).toEqual([{ $sort: { _id: 1 } }, { $skip: 10 }, { $limit: 50 }]);
+    expect(pipeline[1].$facet.rows).toEqual([
+      { $sort: { _id: 1 } },
+      { $skip: 10 },
+      { $limit: 50 },
+      project,
+    ]);
+  });
+});
+
+describe('projection', () => {
+  test('rows are projected to the field paths and _id by default', () => {
+    const { pipeline } = compile({ endRow: 10 });
+    expect(pipeline[1].$facet.rows.at(-1)).toEqual({ $project: projection });
+  });
+
+  test('returnFields adds the paths cells read, and paths inside another path collapse into it', () => {
+    const { pipeline } = compile({ endRow: 10, returnFields: ['owner', 'avatar.src', 'name'] });
+    expect(pipeline[1].$facet.rows.at(-1)).toEqual({
+      $project: {
+        _id: 1,
+        name: 1,
+        email: 1,
+        amount: 1,
+        stage: 1,
+        created: 1,
+        owner: 1,
+        'avatar.src': 1,
+      },
+    });
+  });
+
+  test('project: false returns the rows as the base pipeline leaves them', () => {
+    const { pipeline } = compile({ endRow: 10, project: false });
+    expect(pipeline[1].$facet.rows).toEqual([{ $sort: { _id: 1 } }, { $limit: 10 }]);
+  });
+
+  test('the leaf rows of a group are projected, group levels are not', () => {
+    const view = { group: [{ key: 'stage' }] };
+    const leaf = compile({ view, groupPath: ['won'], endRow: 10 });
+    expect(leaf.pipeline[2].$facet.rows.at(-1)).toEqual({ $project: projection });
+    const groups = compile({ view, groupPath: [], endRow: 10 });
+    expect(groups.pipeline[1].$facet.groups.some((stage) => stage.$project)).toBe(false);
+  });
+
+  test('returnFields must be an array of dot paths', () => {
+    expect(() => compile({ returnFields: 'owner' })).toThrow(
+      'MongoDBTableQuery "returnFields" should be an array of dot paths. Received "owner".'
+    );
+    expect(() => compile({ returnFields: ['$where'] })).toThrow(
+      'MongoDBTableQuery "returnFields" should be an array of dot paths. Received ["$where"].'
+    );
+    expect(() => compile({ returnFields: ['a..b'] })).toThrow(
+      'MongoDBTableQuery "returnFields" should be an array of dot paths.'
+    );
   });
 });
 

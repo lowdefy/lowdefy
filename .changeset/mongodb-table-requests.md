@@ -4,7 +4,7 @@
 
 `MongoDBTableQuery` and `MongoDBTableChanges` for the Table blocks
 
-- **`MongoDBTableQuery`** serves `Table` in server mode. It turns the table's view (sort, a nested filter, search, grouping and totals) into one aggregation, checked against a `fields` allowlist. It pages rows as the table scrolls, returns groups one level at a time, and returns totals. The browser never sends MongoDB syntax: unknown fields, operators a field's type doesn't allow, and operator-shaped values are all refused. Your base `pipeline` always runs first, so a filter can only narrow it. `{ $user: path }` values are resolved on the server from `user: { _user: true }`.
+- **`MongoDBTableQuery`** serves `Table` in server mode. It turns the table's view (sort, a nested filter, search, grouping and totals) into one aggregation, checked against a `fields` allowlist. It pages rows as the table scrolls, returns groups one level at a time, and returns totals. The browser never sends MongoDB syntax: unknown fields, operators a field's type doesn't allow, and operator-shaped values are all refused. Your base `pipeline` always runs first, so a filter can only narrow it. Rows return only `_id`, the `fields` paths and any `returnFields`, unless you set `project: false`. `{ $user: path }` values are resolved on the server from `user: { _user: true }`.
 - **`MongoDBTableChanges`** saves a `TableInput` changeset in one `bulkWrite`:
 
   - `$set` on the changed dot paths only;

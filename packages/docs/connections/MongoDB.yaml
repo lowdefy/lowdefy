@@ -891,7 +891,9 @@ _ref:
 
             The `MongoDBTableQuery` request serves a `Table` block in server mode. The table sends its view (sort, filter, search, grouping and aggregates) and the rows it needs, and the request compiles them to one aggregation on the server, against an allowlist of `fields`. The browser never sends MongoDB syntax: view keys that are not in `fields`, operators the field type does not allow and values of the wrong type are refused, regex input is escaped, and no `$where`, `$expr` or raw stages are accepted from the view.
 
-            The base `pipeline` always runs first, so use it for tenant or permission scoping (and a `$project` of the fields the table may see). The view can only narrow what the base pipeline returns. On a tenant connection the tenant scope is added before the base pipeline, as for `MongoDBAggregation`.
+            The base `pipeline` always runs first, so use it for tenant or permission scoping. The view can only narrow what the base pipeline returns. On a tenant connection the tenant scope is added before the base pipeline, as for `MongoDBAggregation`.
+
+            Rows return only `_id`, the `fields` paths and the `returnFields` paths (`project: true`, the default), so a field the table does not list never reaches the browser, even when the documents hold it. Add the paths that cells read without a field of their own to `returnFields`, such as an avatar `srcField`, a link `labelField` or a `rowKey` other than `_id`. Set `project: false` to return the documents as the base pipeline leaves them, for example when it ends with its own `$project`.
 
             The request compiles to:
 
@@ -901,7 +903,7 @@ _ref:
             - $match: <view search>
             - $match: <groupPath>
             - $facet:
-                rows: [$sort, $skip, $limit]      # or groups: [$group, $sort, $skip, $limit]
+                rows: [$sort, $skip, $limit, $project]   # or groups: [$group, $sort, $skip, $limit]
                 total: [$count]
                 aggregates: [$group]              # when the view has aggregates
             ```
@@ -981,6 +983,8 @@ _ref:
             - `groupPath: any[]`: Default: `[]` - The group values of the expanded group, one per group level, `{ _payload: groupPath }`.
             - `maxRows: integer`: Default: `1000` - The most rows or groups one request may return. A request for more throws.
             - `user: object`: The user that `{ $user: path }` filter values resolve from. Set it to `{ _user: true }`.
+            - `project: boolean`: Default: `true` - Return only `_id`, the `fields` paths and `returnFields` in each row. Set it to `false` to return the documents as the base pipeline leaves them.
+            - `returnFields: string[]`: More dot paths each row returns, for values that cells read without a field of their own, for example an avatar `srcField` or a link `labelField`.
             - `options: object`: Optional aggregate settings, for example `collation`, `maxTimeMS` (default `10000`), `allowDiskUse` or `hint`. See `MongoDBAggregation`.
 
             #### Examples
@@ -1008,12 +1012,9 @@ _ref:
                     - $match:
                         org_id:
                           _user: organization.id
-                    - $project:
-                        name: 1
-                        stage: 1
-                        owner: 1
-                        amount: 1
-                        created: 1
+                  # Rows return _id, the field paths and these paths only.
+                  returnFields:
+                    - owner.avatar
                   fields:
                     name:
                       type: text
@@ -1054,7 +1055,10 @@ _ref:
                       groupable: true
                     - key: owner
                       field: owner.name
+                      type: avatar
                       groupable: true
+                      cell:
+                        srcField: owner.avatar
                     - key: amount
                       type: currency
                       aggregate: sum
