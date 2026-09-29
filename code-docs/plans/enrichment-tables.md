@@ -88,7 +88,7 @@ All three requests (`connection-mongodb`) share `MongoDBTableQuery`'s safety rul
   3. Complete each cell (which queues its downstream columns).
   4. Loop until nothing is claimed or a time budget is spent.
 
-  Errors a `:catch` handles (a provider's 404 in a waterfall) are logged at debug, not as errors.
+  Expected errors a `:catch` handles (`RequestError`, `ServiceError`, `UserError`: a provider's 404 in a waterfall) are logged at debug, not as errors. A caught `ConfigError`, `OperatorError` or `LowdefyInternalError` still goes through `handleError`.
 
   A cron entry runs it every minute. An enqueue also calls it as a detached endpoint, so results start at once. A run survives a crash through leases.
 

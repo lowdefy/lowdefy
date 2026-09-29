@@ -27,6 +27,7 @@ _ref:
       To handle any errors thrown by a routine element, a routine can be provided using `catch` key.
       The routine defined using the `:finally` key will be run regardless of whether or not the routine throws an error.
       A [`:reject`](/:reject) inside the `:try` routine is __not__ caught. `:reject` is the routine's own reply — it stops the routine, returns a `"reject"` status to the caller, and flows past every enclosing `:catch`. `:finally` still runs. Use [`:throw`](/:throw) for failures a `:catch` should handle.
+      An error a `:catch` handles is an outcome, not a fault, when it is a request or service error (a provider's 404, a timeout) or a [`:throw`](/:throw): it is logged at debug level only. A config, operator or internal error in the `:try` is still logged as an error, with its config location, and the `:catch` runs as well.
       Inside the `:catch` routine, the [`_error`](/_error) operator returns the error that was caught, so the routine can branch on its `statusCode` or `code`, or read its `message`. `_error` returns the error of the innermost `:catch` that encloses it, and `null` outside a `:catch`.
     controlKeys: |
       - `:try: routine`: __Required__ - The routine to be run.
