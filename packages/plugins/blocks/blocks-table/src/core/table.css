@@ -225,8 +225,12 @@
 
   /* --lf-header-cell-bg is opaque, so a sticky pinned header covers the headers scrolled under it
      and header buttons laid over the title can take the cell's colour. */
+  /* Each header cell is its own stacking context, so the resize handle and menu button of a
+     column scrolled under a pinned column stay under that column instead of showing through it
+     (a stray divider inside the pinned end). */
   .lf-table-header .lf-table-gridcell {
     --lf-header-cell-bg: var(--lf-header-bg);
+    isolation: isolate;
     font-weight: var(--ant-font-weight-strong, 600);
     color: var(--ant-color-text-heading, var(--ant-color-text));
     user-select: none;

@@ -559,4 +559,22 @@ test.describe('Table visual polish', () => {
       '1'
     );
   });
+
+  test('columns scrolled under a pinned header never show their dividers through it', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 900, height: 720 });
+    const pinned = table(page, 'crm').locator('[data-lf-header][data-col-key="actions"]');
+    await expect(pinned).toBeVisible();
+    const leaks = await pinned.evaluate((cell) => {
+      const box = cell.getBoundingClientRect();
+      const found = [];
+      for (let x = Math.ceil(box.left) + 1; x < box.right - 1; x += 1) {
+        const top = document.elementFromPoint(x, box.top + box.height / 2);
+        if (!cell.contains(top)) found.push(top.className);
+      }
+      return found;
+    });
+    expect(leaks).toEqual([]);
+  });
 });
