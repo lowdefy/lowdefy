@@ -37,6 +37,16 @@ test.describe('Table bulk action bar', () => {
     await expect(getBlock(page, 'bk').locator('.lf-table-body')).toBeVisible();
   });
 
+  test('the select-all checkbox lines up with the row checkboxes', async ({ page }) => {
+    const all = await getBlock(page, 'bk').locator('[data-lf-select-all]').boundingBox();
+    const row = await getBlock(page, 'bk')
+      .locator('.lf-table-body [data-lf-select-cell] input')
+      .first()
+      .boundingBox();
+    expect(Math.abs(all.x - row.x)).toBeLessThan(0.5);
+    expect(Math.abs(all.width - row.width)).toBeLessThan(0.5);
+  });
+
   test('the bar shows while rows are selected, with the bulkActions slot', async ({ page }) => {
     await expect(bar(page)).toHaveCount(0);
     await selectRow(page, 1);
