@@ -491,4 +491,14 @@ test.describe('Table visual polish', () => {
     expect(colours.hovered[0] - colours.plain[0]).toBeGreaterThanOrEqual(15);
     expect(contrast(colours.link, colours.bar)).toBeGreaterThanOrEqual(4.5);
   });
+
+  test('TableLight rows next to a Table keep their table layout', async ({ page }) => {
+    const lightRow = page.locator('#light tbody tr.lf-table-row').first();
+    await expect(lightRow).toHaveCSS('display', 'table-row');
+    const widths = await page.locator('#light').evaluate((root) => ({
+      header: root.querySelector('thead tr').getBoundingClientRect().width,
+      row: root.querySelector('tbody tr.lf-table-row').getBoundingClientRect().width,
+    }));
+    expect(Math.abs(widths.header - widths.row)).toBeLessThan(1);
+  });
 });

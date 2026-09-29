@@ -268,3 +268,39 @@ blocks:
             rows.push({ id: i + 1, name: 'Deal ' + (i + 1), region: regions[Math.floor(i / 30)], rep: reps[Math.floor(i / 10) % 3], amount: 100 * (i + 1) });
           }
           return rows;
+
+  # ============================================
+  # TABLELIGHT AND TABLE WITH ONE CONFIG
+  # ============================================
+
+  - id: light
+    type: TableLight
+    properties:
+      columns:
+        - key: invoice
+        - key: customer
+        - key: amount
+          type: number
+          aggregate: sum
+        - key: due
+          type: date
+      data:
+        - { id: 1, invoice: INV-2041, customer: Halcyon Freight, amount: 12480, due: '2026-09-12' }
+        - { id: 2, invoice: INV-2042, customer: Tessellate Labs, amount: 4350, due: '2026-09-18' }
+        - { id: 3, invoice: INV-2043, customer: Copperleaf Health, amount: 8920, due: '2026-10-06' }
+
+  - id: light_table
+    type: Table
+    properties:
+      columns:
+        - key: invoice
+        - key: customer
+        - key: amount
+          type: number
+          aggregate: sum
+        - key: due
+          type: date
+      data:
+        - { id: 1, invoice: INV-2041, customer: Halcyon Freight, amount: 12480, due: '2026-09-12' }
+        - { id: 2, invoice: INV-2042, customer: Tessellate Labs, amount: 4350, due: '2026-09-18' }
+        - { id: 3, invoice: INV-2043, customer: Copperleaf Health, amount: 8920, due: '2026-10-06' }
