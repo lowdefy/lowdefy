@@ -1,0 +1,235 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: views
+type: Box
+
+events:
+  onInit:
+    - id: init_views
+      type: SetState
+      params:
+        active_view: null
+        # Views from a MongoDB request have ObjectId ids, which reach the client as { _oid }.
+        oid_views:
+          _json.parse: '[{"id":{"_oid":"65f1c0ffee0000000000000a"},"title":"Mine","view":{}},{"id":{"_oid":"65f1c0ffee0000000000000b"},"title":"Team","view":{"density":"compact"}}]'
+        oid_active:
+          _json.parse: '{"_oid":"65f1c0ffee0000000000000b"}'
+        saved_views:
+          - id: all
+            title: All
+            view: {}
+          - id: oldest
+            title: Oldest
+            count: 3
+            view:
+              sort:
+                - key: age
+                  desc: true
+          - id: fixed
+            title: Fixed
+            locked: true
+            view:
+              density: compact
+
+blocks:
+  # ============================================
+  # SAVED VIEWS
+  # ============================================
+
+  - id: vw
+    type: Table
+    properties:
+      toolbar:
+        views: true
+        sort: true
+        density: true
+      views:
+        _state: saved_views
+      activeView:
+        _state: active_view
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+    events:
+      onChange:
+        - id: set_cause
+          type: SetState
+          params:
+            vw_cause:
+              _event: cause
+      onViewSelect:
+        - id: log_select
+          type: SetState
+          params:
+            vw_select:
+              _event: true
+            vw_select_sort:
+              _state: vw.view.sort
+      onViewSave:
+        - id: log_save
+          type: SetState
+          params:
+            vw_save:
+              _event: true
+      onViewDelete:
+        - id: log_delete
+          type: SetState
+          params:
+            vw_delete:
+              _event: true
+
+  - id: vw_oid
+    type: Table
+    properties:
+      toolbar:
+        views: true
+      views:
+        _state: oid_views
+      activeView:
+        _state: oid_active
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+    events:
+      onViewSelect:
+        - id: log_oid_select
+          type: SetState
+          params:
+            oid_select:
+              _event: id
+
+  - id: vw_oid_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'select='
+          - _json.stringify:
+              - _state: oid_select
+              - space: 0
+
+  - id: vw_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'sort='
+          - _json.stringify:
+              - _state: vw.view.sort
+              - space: 0
+          - ' density='
+          - _state: vw.view.density
+          - ' cause='
+          - _if_none:
+              - _state: vw_cause
+              - none
+
+  - id: vw_events
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'select='
+          - _json.stringify:
+              - _if_none:
+                  - _state: vw_select
+                  - null
+              - space: 0
+          - ' select_sort='
+          - _json.stringify:
+              - _if_none:
+                  - _state: vw_select_sort
+                  - null
+              - space: 0
+          - ' save='
+          - _json.stringify:
+              - _if_none:
+                  - _state: vw_save
+                  - null
+              - space: 0
+          - ' delete='
+          - _json.stringify:
+              - _if_none:
+                  - _state: vw_delete
+                  - null
+              - space: 0
+
+  - id: vw_pick_fixed
+    type: Button
+    properties:
+      title: Make Fixed active
+    events:
+      onClick:
+        - id: set_active
+          type: SetState
+          params:
+            active_view: fixed
+
+  # ============================================
+  # PERSIST
+  # ============================================
+
+  - id: persist_local
+    type: Table
+    properties:
+      persist:
+        key: e2e_people
+        storage: local
+      toolbar:
+        density: true
+        search: true
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+      rowSelection:
+        type: checkbox
+
+  - id: persist_local_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'view='
+          - _json.stringify:
+              - _state: persist_local.view
+              - space: 0
+          - ' selected='
+          - _json.stringify:
+              - _state: persist_local.selected
+              - space: 0
+
+  - id: persist_url
+    type: Table
+    properties:
+      persist:
+        key: pv
+        storage: url
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+
+  - id: persist_url_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'sort='
+          - _json.stringify:
+              - _state: persist_url.view.sort
+              - space: 0

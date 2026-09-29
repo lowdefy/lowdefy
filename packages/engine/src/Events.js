@@ -53,8 +53,10 @@ class Events {
     });
   }
 
+  // Events a block registers for its own machinery (Upload's policy request, a Table's row
+  // fetch). They are internal: see claimDomEvent.
   registerEvent({ name, actions }) {
-    this.events[name] = this.initEvent(actions);
+    this.events[name] = { ...this.initEvent(actions), internal: true };
   }
 
   triggerEvent({ name, event, progress }) {
@@ -76,6 +78,7 @@ class Events {
       blockId: this.block.blockId,
       bubble: eventDescription?.bubble === true,
       hasActions: !type.isUndefined(eventDescription),
+      internal: eventDescription?.internal === true,
     });
     if (!type.isNull(handledBy)) {
       result.handledBy = handledBy;

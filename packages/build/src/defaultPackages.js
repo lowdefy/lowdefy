@@ -29,6 +29,7 @@ const defaultPackages = [
   '@lowdefy/blocks-loaders',
   '@lowdefy/blocks-markdown',
   '@lowdefy/blocks-qr',
+  '@lowdefy/blocks-table',
   '@lowdefy/blocks-tiptap',
   '@lowdefy/ai-utils',
   '@lowdefy/connection-ai-gateway',

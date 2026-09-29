@@ -1,0 +1,836 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- title: Basic
+  blocks:
+    - id: deals_basic
+      type: Table
+      properties:
+        columns:
+          - key: name
+            title: Deal
+            width: 220
+          - key: stage
+          - key: owner
+          - key: amount
+            type: number
+        data:
+          - _id: d1
+            name: Acme renewal
+            stage: proposal
+            owner: Ada
+            amount: 12000
+          - _id: d2
+            name: Globex expansion
+            stage: qualified
+            owner: Grace
+            amount: 48000
+          - _id: d3
+            name: Initech pilot
+            stage: lead
+            owner: Alan
+            amount: 3500
+
+- title: Typed cells
+  fullWidth: true
+  blocks:
+    - id: deals_typed
+      type: Table
+      properties:
+        columns:
+          - key: name
+            title: Deal
+            width: 200
+            pinned: start
+          - key: stage
+            type: status
+            options:
+              lead: Lead
+              qualified:
+                label: Qualified
+                color: processing
+              won:
+                label: Won
+                color: success
+              lost:
+                label: Lost
+                color: error
+          - key: owner
+            type: avatar
+            cell:
+              nameField: owner
+          - key: amount
+            type: currency
+            cell:
+              currency: EUR
+              decimals: 0
+          - key: probability
+            type: progress
+            width: 140
+          - key: labels
+            type: tags
+            options:
+              - value: renewal
+                color: blue
+              - value: strategic
+                color: purple
+              - value: at-risk
+                label: At risk
+                color: red
+          - key: updated
+            type: date
+            cell:
+              format: D MMM YYYY
+          - key: website
+            type: url
+            cell:
+              label: Visit
+        data:
+          - _id: d1
+            name: Acme renewal
+            stage: won
+            owner: Ada Lovelace
+            amount: 12000
+            probability: 100
+            labels: [renewal]
+            updated: '2026-09-21'
+            website: https://example.com
+          - _id: d2
+            name: Globex expansion
+            stage: qualified
+            owner: Grace Hopper
+            amount: 48000
+            probability: 60
+            labels: [strategic]
+            updated: '2026-09-02'
+            website: https://example.org
+          - _id: d3
+            name: Initech pilot
+            stage: lead
+            owner: Alan Turing
+            amount: 3500
+            probability: 20
+            labels: [at-risk, renewal]
+            updated: '2026-08-15'
+          - _id: d4
+            name: Umbrella upsell
+            stage: lost
+            owner: Ada Lovelace
+            amount: 9000
+            probability: 0
+            labels: []
+            updated: '2026-07-30'
+
+- title: Default view, selection and pinned columns
+  blocks:
+    - id: deals_selection
+      type: Table
+      properties:
+        rowSelection:
+          type: checkbox
+        defaultView:
+          sort:
+            - key: amount
+              desc: true
+          density: compact
+        columns:
+          - key: name
+            title: Deal
+            width: 220
+            pinned: start
+          - key: stage
+          - key: owner
+          - key: amount
+            type: number
+        data:
+          - _id: d1
+            name: Acme renewal
+            stage: proposal
+            owner: Ada
+            amount: 12000
+          - _id: d2
+            name: Globex expansion
+            stage: qualified
+            owner: Grace
+            amount: 48000
+          - _id: d3
+            name: Initech pilot
+            stage: lead
+            owner: Alan
+            amount: 3500
+    - id: deals_selected
+      type: Span
+      properties:
+        content:
+          _string.concat:
+            - 'Selected: '
+            - _json.stringify:
+                - _state: deals_selection.selected
+                - space: 0
+
+- title: Toolbar with search, quick filters and a slot
+  fullWidth: true
+  overflowVisible: true
+  blocks:
+    - id: contacts_toolbar
+      type: Table
+      properties:
+        toolbar:
+          search: true
+          quickFilters: [status]
+          filter: true
+          sort: true
+          columns: true
+          density: true
+          export: true
+        columns:
+          - key: name
+            width: 180
+          - key: email
+            type: email
+            width: 220
+          - key: company
+          - key: status
+            type: tag
+            options:
+              - value: active
+                label: Active
+                color: green
+              - value: churned
+                label: Churned
+                color: red
+              - value: trial
+                label: Trial
+                color: gold
+          - key: signed_up
+            type: date
+            cell:
+              relative: true
+        data:
+          - _id: c1
+            name: Ada Lovelace
+            email: ada@example.com
+            company: Acme
+            status: active
+            signed_up: '2026-01-12'
+          - _id: c2
+            name: Grace Hopper
+            email: grace@example.com
+            company: Globex
+            status: trial
+            signed_up: '2026-09-20'
+          - _id: c3
+            name: Alan Turing
+            email: alan@example.com
+            company: Initech
+            status: churned
+            signed_up: '2025-06-01'
+          - _id: c4
+            name: Katherine Johnson
+            email: katherine@example.com
+            company: Acme
+            status: active
+            signed_up: '2026-04-03'
+      slots:
+        toolbarStart:
+          blocks:
+            - id: contacts_toolbar_new
+              type: Button
+              properties:
+                title: New contact
+                icon: add
+                size: small
+
+- title: Pages and wrapped text
+  blocks:
+    - id: notes_paged
+      type: Table
+      properties:
+        pagination: true
+        defaultView:
+          pageSize: 2
+          wrap: true
+        columns:
+          - key: title
+            width: 160
+          - key: note
+            width: 260
+        data:
+          - _id: n1
+            title: Kick-off
+            note: Agree the scope, the owners of each workstream and the first review date.
+          - _id: n2
+            title: Design review
+            note: Walk through the flows with support and sales before the build starts.
+          - _id: n3
+            title: Launch
+            note: Announce in the changelog and email every customer on the beta list.
+
+- title: Row links
+  blocks:
+    - id: deals_links
+      type: Table
+      properties:
+        rowLink:
+          pageId: deal
+          urlQuery:
+            _id: _id
+        columns:
+          - key: name
+            title: Deal
+          - key: owner
+        data:
+          - _id: d1
+            name: Acme renewal
+            owner: Ada
+          - _id: d2
+            name: Globex expansion
+            owner: Grace
+
+- title: Bulk actions and hover buttons
+  fullWidth: true
+  blocks:
+    - id: tickets_bulk
+      type: Table
+      properties:
+        rowSelection:
+          type: checkbox
+        columns:
+          - key: subject
+            width: 260
+          - key: requester
+          - key: priority
+            type: tag
+            options:
+              - value: high
+                label: High
+                color: red
+              - value: normal
+                label: Normal
+                color: blue
+          - key: actions
+            type: buttons
+            title: ''
+            width: 96
+            pinned: end
+            sortable: false
+            cell:
+              showOn: hover
+              buttons:
+                - eventName: onReply
+                  title: Reply
+                  icon: mail
+                  hideTitle: true
+                - eventName: onClose
+                  title: Close
+                  icon: check
+                  hideTitle: true
+        data:
+          - _id: t1
+            subject: Cannot export the monthly invoice
+            requester: Ada
+            priority: high
+          - _id: t2
+            subject: How do I add a second address?
+            requester: Grace
+            priority: normal
+          - _id: t3
+            subject: Login link expired
+            requester: Alan
+            priority: normal
+      slots:
+        bulkActions:
+          blocks:
+            - id: tickets_bulk_close
+              type: Button
+              properties:
+                title: Close selected
+                size: small
+              events:
+                onClick:
+                  - id: tickets_bulk_record
+                    type: SetState
+                    params:
+                      tickets_bulk_closed:
+                        _state: tickets_bulk.selected
+      events:
+        onReply:
+          - id: tickets_bulk_reply
+            type: SetState
+            params:
+              tickets_bulk_last:
+                _string.concat:
+                  - 'Reply to '
+                  - _event: row.requester
+        onClose:
+          - id: tickets_bulk_close_one
+            type: SetState
+            params:
+              tickets_bulk_last:
+                _string.concat:
+                  - 'Close '
+                  - _event: rowKey
+    - id: tickets_bulk_status
+      type: Span
+      properties:
+        content:
+          _string.concat:
+            - 'Last action: '
+            - _if_none:
+                - _state: tickets_bulk_last
+                - none
+            - ' · Closed: '
+            - _json.stringify:
+                - _if_none:
+                    - _state: tickets_bulk_closed
+                    - []
+                - space: 0
+
+- title: Grouped report with totals
+  fullWidth: true
+  blocks:
+    - id: deals_grouped
+      type: Table
+      properties:
+        defaultView:
+          group:
+            - key: region
+            - key: owner
+        columns:
+          - key: name
+            title: Deal
+            width: 220
+          - key: region
+            groupable: true
+          - key: owner
+            groupable: true
+          - key: amount
+            type: number
+            aggregate: sum
+          - key: probability
+            type: percent
+            aggregate: avg
+        data:
+          - _id: d1
+            name: Acme renewal
+            region: EMEA
+            owner: Ada
+            amount: 12000
+            probability: 0.9
+          - _id: d2
+            name: Globex expansion
+            region: EMEA
+            owner: Grace
+            amount: 48000
+            probability: 0.6
+          - _id: d3
+            name: Initech pilot
+            region: AMER
+            owner: Alan
+            amount: 3500
+            probability: 0.2
+          - _id: d4
+            name: Umbrella upsell
+            region: EMEA
+            owner: Ada
+            amount: 9000
+            probability: 0.4
+
+- title: Tree
+  blocks:
+    - id: accounts_tree
+      type: Table
+      properties:
+        tree:
+          parentField: parent
+        rowSelection:
+          type: checkbox
+          cascade: true
+        defaultView:
+          sort:
+            - key: name
+        columns:
+          - key: name
+            title: Account
+            width: 220
+          - key: balance
+            type: currency
+        data:
+          - _id: assets
+            name: Assets
+            balance: 128000
+          - _id: cash
+            name: Cash
+            balance: 28000
+            parent: assets
+          - _id: receivables
+            name: Receivables
+            balance: 100000
+            parent: assets
+          - _id: liabilities
+            name: Liabilities
+            balance: 42000
+          - _id: payables
+            name: Payables
+            balance: 42000
+            parent: liabilities
+    - id: accounts_tree_value
+      type: Span
+      properties:
+        content:
+          _string.concat:
+            - 'Expanded: '
+            - _json.stringify:
+                - _state: accounts_tree.expanded
+                - space: 0
+
+- title: Tree with children loaded on expand
+  blocks:
+    - id: folders_lazy
+      type: Table
+      properties:
+        tree:
+          parentField: parent
+          lazy: true
+        columns:
+          - key: name
+            title: Folder
+            width: 260
+        data:
+          _if_none:
+            - _state: folders_lazy_rows
+            - []
+      events:
+        onMount:
+          - id: folders_lazy_init
+            type: SetState
+            params:
+              folders_lazy_rows:
+                - _id: invoices
+                  name: Invoices
+                  hasChildren: true
+                - _id: recipes
+                  name: Recipes
+                  hasChildren: true
+        onRowExpand:
+          # needsChildren is true only the first time a lazy row opens without children in data.
+          - id: folders_lazy_load
+            type: SetState
+            skip:
+              _not:
+                _event: needsChildren
+            params:
+              folders_lazy_rows:
+                _array.concat:
+                  - _state: folders_lazy_rows
+                  - - _id:
+                        _string.concat:
+                          - _event: rowKey
+                          - '-2025'
+                      name: '2025'
+                      parent:
+                        _event: rowKey
+                    - _id:
+                        _string.concat:
+                          - _event: rowKey
+                          - '-2026'
+                      name: '2026'
+                      parent:
+                        _event: rowKey
+
+- title: Expandable rows
+  blocks:
+    - id: recipes_expandable
+      type: Table
+      properties:
+        expandable:
+          template: |
+            <div style="padding: 8px 0">
+              <strong>{{ row.name }}</strong>: {{ row.method }}
+            </div>
+          rowExpandable:
+            when:
+              key: method
+              op: notEmpty
+        columns:
+          - key: name
+            title: Recipe
+            width: 200
+          - key: minutes
+            type: number
+        data:
+          - _id: r1
+            name: Sourdough loaf
+            minutes: 1440
+            method: Mix, rest overnight, shape and bake at 250°C.
+          - _id: r2
+            name: Pancakes
+            minutes: 20
+            method: Whisk the batter and fry in a hot pan.
+          - _id: r3
+            name: Toast
+            minutes: 3
+
+- title: Inline editing
+  fullWidth: true
+  blocks:
+    - id: deals_editing
+      type: Table
+      properties:
+        columns:
+          - key: name
+            title: Deal
+            width: 220
+            editable: true
+            validate:
+              - pass:
+                  op: notEmpty
+                message: A deal needs a name.
+          - key: stage
+            type: status
+            editable: true
+            options:
+              lead: Lead
+              won:
+                label: Won
+                color: success
+              lost:
+                label: Lost
+                color: error
+          - key: amount
+            type: currency
+            editable:
+              when:
+                key: stage
+                op: ne
+                value: won
+          - key: close_date
+            type: date
+            editable: true
+        data:
+          - _id: d1
+            name: Acme renewal
+            stage: won
+            amount: 12000
+            close_date: '2026-10-01'
+          - _id: d2
+            name: Globex expansion
+            stage: lead
+            amount: 48000
+            close_date: '2026-11-15'
+      events:
+        onCellEdit:
+          # A real app saves here, for example with a MongoDBUpdateOne request. The cell shows a
+          # saving marker until the actions finish, and reverts if one of them fails.
+          - id: deals_editing_wait
+            type: Wait
+            params:
+              ms: 600
+          - id: deals_editing_record
+            type: SetState
+            params:
+              deals_editing_last:
+                _string.concat:
+                  - _event: rowKey
+                  - ' '
+                  - _event: column.key
+                  - ' = '
+                  - _json.stringify:
+                      - _event: value
+    - id: deals_editing_value
+      type: Span
+      properties:
+        content:
+          _string.concat:
+            - 'Last edit: '
+            - _if_none:
+                - _state: deals_editing_last
+                - none
+
+- title: Reorder rows with positions
+  blocks:
+    - id: steps_drag
+      type: Table
+      properties:
+        rowDrag:
+          positionField: position
+        defaultView:
+          sort:
+            - key: position
+        columns:
+          - key: title
+            title: Step
+          - key: position
+            type: number
+            width: 110
+        data:
+          - _id: s1
+            title: Plan
+            position: 1024
+          - _id: s2
+            title: Build
+            position: 2048
+          - _id: s3
+            title: Ship
+            position: 3072
+      events:
+        onRowMove:
+          - id: steps_drag_record
+            type: SetState
+            params:
+              steps_drag_last:
+                rowKey:
+                  _event: rowKey
+                position:
+                  _event: position
+    - id: steps_drag_value
+      type: Span
+      properties:
+        content:
+          _string.concat:
+            - 'Last move: '
+            - _json.stringify:
+                - _if_none:
+                    - _state: steps_drag_last
+                    - none
+                - space: 0
+
+- title: Queue with view tabs and single-key actions
+  fullWidth: true
+  overflowVisible: true
+  blocks:
+    - id: tickets_queue
+      type: Table
+      properties:
+        toolbar:
+          views: true
+        keyboard:
+          next: true
+        views:
+          - id: open
+            title: Open
+            count: 2
+            locked: true
+            view:
+              filter:
+                key: status
+                op: eq
+                value: open
+          - id: waiting
+            title: Waiting
+            count: 1
+            locked: true
+            view:
+              filter:
+                key: status
+                op: eq
+                value: waiting
+        columns:
+          - key: subject
+            width: 260
+          - key: status
+            type: tag
+            options: [open, waiting]
+          - key: actions
+            type: buttons
+            title: ''
+            width: 200
+            sortable: false
+            cell:
+              buttons:
+                - eventName: onAssign
+                  title: Assign (a)
+                  key: a
+                - eventName: onSnooze
+                  title: Snooze (s)
+                  key: s
+        data:
+          - _id: t1
+            subject: Refund for a double charge
+            status: open
+          - _id: t2
+            subject: Change the billing email
+            status: open
+          - _id: t3
+            subject: Waiting for a screenshot
+            status: waiting
+      events:
+        onAssign:
+          - id: tickets_queue_assign
+            type: SetState
+            params:
+              tickets_queue_last:
+                _string.concat:
+                  - 'Assigned '
+                  - _event: rowKey
+        onSnooze:
+          - id: tickets_queue_snooze
+            type: SetState
+            params:
+              tickets_queue_last:
+                _string.concat:
+                  - 'Snoozed '
+                  - _event: rowKey
+    - id: tickets_queue_value
+      type: Span
+      properties:
+        content:
+          _string.concat:
+            - 'Focus a row and press a or s. Last: '
+            - _if_none:
+                - _state: tickets_queue_last
+                - none
+
+- title: Conditional formatting
+  blocks:
+    - id: invoices_rules
+      type: Table
+      properties:
+        rowRules:
+          - when:
+              key: overdue
+              op: isTrue
+            style:
+              fontWeight: 600
+        columns:
+          - key: number
+            title: Invoice
+          - key: total
+            type: currency
+            rules:
+              - when:
+                  op: gte
+                  value: 10000
+                color: success
+          - key: due
+            type: date
+            rules:
+              - when:
+                  key: overdue
+                  op: isTrue
+                color: error
+          - key: overdue
+            type: boolean
+            hidden: true
+        data:
+          - _id: i1
+            number: INV-1001
+            total: 12500
+            due: '2026-08-01'
+            overdue: true
+          - _id: i2
+            number: INV-1002
+            total: 800
+            due: '2026-10-30'
+            overdue: false

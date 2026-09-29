@@ -1,0 +1,48 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+lowdefy: local
+name: blocks-table E2E Tests
+
+connections:
+  # Server-mode requests run on the test connection; the specs answer them with page.route.
+  - id: table_test
+    type: TestConnection
+  # MongoDBTableQuery e2e (server-mongodb.e2e.spec.js); only used when the URI secret is set.
+  - id: table_people
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: TABLE_MONGODB_URI
+      collection: table_people
+      write: true
+
+pages:
+  - _ref: ../../src/blocks/Table/tests/Table.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/TableLinkTarget.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/grouping.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/editing.e2e.yaml
+  - _ref: ../../src/blocks/TableInput/tests/TableInput.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/server.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/tree.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/expandable.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/server-mongodb.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/TableParity.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/TableFeatures.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/filtering.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/headerMenu.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/toolbar.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/views.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/bulk.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/polish.e2e.yaml

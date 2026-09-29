@@ -178,6 +178,9 @@ Content presentation:
 | `Progress`       | Progress bar               |
 | `Result`         | Operation result page      |
 | `Alert`          | Alert message box          |
+| `TableLight`     | Light table on antd Table  |
+
+`TableLight` renders antd's `<Table>` with the shared column core in `src/table/` (column normalisation, cell renderers, conditions, sort keys, aggregates, exports), which `@lowdefy/blocks-table` imports as `@lowdefy/blocks-antd/table/*.js`. Its properties are a strict subset of `Table`'s (`blocks/TableLight/tableOnlyKeys.js` names the Table-only keys in its schema errors). See [table.md](./table.md).
 
 ### List Blocks
 

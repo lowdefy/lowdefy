@@ -118,6 +118,7 @@
 - _ref: blocks/input/S3UploadPhoto.yaml
 - _ref: blocks/input/Selector.yaml
 - _ref: blocks/input/Switch.yaml
+- _ref: blocks/input/TableInput.yaml
 - _ref: blocks/input/TagMultipleSelector.yaml
 - _ref: blocks/input/TagSelector.yaml
 - _ref: blocks/input/TextArea.yaml
@@ -170,6 +171,8 @@
 - _ref: blocks/display/SkeletonParagraph.yaml
 - _ref: blocks/display/Statistic.yaml
 - _ref: blocks/display/Steps.yaml
+- _ref: blocks/display/Table.yaml
+- _ref: blocks/display/TableLight.yaml
 - _ref: blocks/display/Tag.yaml
 - _ref: blocks/display/Title.yaml
 - _ref: blocks/display/Tour.yaml

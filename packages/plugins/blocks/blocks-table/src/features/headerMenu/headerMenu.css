@@ -1,0 +1,122 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/* Header menu button and the shared header-part buttons. Colours are antd tokens. The menu
+   button is laid over the end of the header cell, so it reserves no room from the title (and an
+   end-aligned title lines up with its column's values). It shows on hover, on focus inside the
+   header cell and while its menu is open, on the cell's own opaque background so the title end
+   it covers does not show through. Without hover (touch) it is always shown and takes its room
+   in the row instead. */
+
+@layer components {
+  .lf-table-header-button {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    background: transparent;
+    border: 0;
+    border-radius: var(--ant-border-radius-sm, 4px);
+    cursor: pointer;
+  }
+
+  .lf-table-header-button:hover {
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  }
+
+  .lf-table-header-button:focus-visible {
+    outline: 2px solid var(--ant-color-primary, #1677ff);
+    outline-offset: -2px;
+  }
+
+  .lf-table-icon {
+    display: block;
+    width: 14px;
+    height: 14px;
+  }
+
+  .lf-table-header-menu-trigger {
+    position: absolute;
+    top: 50%;
+    right: var(--ant-padding-xs, 8px);
+    z-index: 1;
+    background: var(--lf-header-cell-bg);
+    box-shadow: -4px 0 0 var(--lf-header-cell-bg);
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+
+  .lf-table-header-menu-trigger:hover {
+    background: linear-gradient(
+        var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06)),
+        var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06))
+      ),
+      var(--lf-header-cell-bg);
+  }
+
+  .lf-table-header .lf-table-gridcell:hover .lf-table-header-menu-trigger,
+  .lf-table-header .lf-table-gridcell:focus-within .lf-table-header-menu-trigger,
+  .lf-table-header-menu-trigger[data-open] {
+    opacity: 1;
+  }
+
+  @media (hover: none) {
+    .lf-table-header-menu-trigger {
+      position: static;
+      order: 2;
+      margin-left: auto;
+      box-shadow: none;
+      opacity: 1;
+      transform: none;
+    }
+
+    .lf-table-header .lf-table-gridcell[data-align='end'] .lf-table-header-menu-trigger {
+      margin-left: 0;
+    }
+  }
+
+  /* Zero-height anchor on the header cell's bottom edge for the menu and filter popups. */
+  .lf-table-header-anchor {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .lf-table-header-menu .ant-dropdown-menu {
+    min-width: 180px;
+  }
+
+  .lf-table-overlay-title {
+    margin-bottom: var(--ant-margin-xs, 8px);
+    font-weight: var(--ant-font-weight-strong, 600);
+  }
+
+  .lf-table-overlay-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ant-margin-xs, 8px);
+    margin-top: var(--ant-margin-xs, 8px);
+  }
+}

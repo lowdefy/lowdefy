@@ -611,13 +611,14 @@ class Block {
     if (this.isContainer() || this.isList()) {
       if (this.subSlots && this.subSlots.length > 0) {
         this.loopSubSlots((subSlotsClass) => subSlotsClass.collectState({ toDelete, toSet }));
-        return;
+      } else {
+        this.context._internal.State.republish(
+          this.blockId,
+          type.enforceType(this.meta.valueType, null)
+        );
       }
-      this.context._internal.State.republish(
-        this.blockId,
-        type.enforceType(this.meta.valueType, null)
-      );
     }
+    // After the slots, so an input-container (an input with slots) republishes its own value.
     if (this.isInput()) {
       this.context._internal.State.republish(this.blockId, this.value);
     }

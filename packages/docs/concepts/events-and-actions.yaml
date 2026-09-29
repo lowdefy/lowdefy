@@ -305,7 +305,7 @@ _ref:
                             selected: true
             ```
 
-            Only events fired by the same browser event are skipped. Events that run from actions, requests or timers are never affected. Inside an `AgGrid`, clicks on a cell's buttons, links, menus, inputs or selection checkbox fire only that control's event, never `onRowClick` or `onCellClick`.
+            Only blocks the browser event passed through, around the block that handled it, are skipped. Other blocks' events are never affected, nor are events that run from actions, requests or timers, or events of a block an action called a method on: a `Table` next to the button, or holding it in its toolbar, still fires `onSelectionChange` after the button's `CallMethod` cleared its selection. Inside an `AgGrid`, clicks on a cell's buttons, links, menus, inputs or selection checkbox fire only that control's event, never `onRowClick` or `onCellClick`.
 
             ## Keyboard Shortcuts
 
