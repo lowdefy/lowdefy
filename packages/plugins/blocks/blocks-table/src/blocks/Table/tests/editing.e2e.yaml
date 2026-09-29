@@ -207,6 +207,41 @@ blocks:
               - id: 2
                 name: Ben
 
+  - id: edit_unrelated
+    type: Table
+    properties:
+      columns:
+        - key: name
+          editable: true
+      data:
+        _if_none:
+          - _state: unrelated_rows
+          - - id: 1
+              name: Ann
+            - id: 2
+              name: Ben
+    events:
+      onCellEdit:
+        - id: unrelated_wait
+          type: Wait
+          params:
+            ms: 800
+
+  - id: edit_unrelated_touch
+    type: Button
+    properties:
+      title: Change another row
+    events:
+      onClick:
+        - id: unrelated_write
+          type: SetState
+          params:
+            unrelated_rows:
+              - id: 1
+                name: Ann
+              - id: 2
+                name: Ben changed
+
   - id: edit_local
     type: Table
     properties:

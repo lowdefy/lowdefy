@@ -323,6 +323,21 @@ test.describe('Table editing', () => {
     await expect(page.getByRole('tooltip')).toContainText('Deal is locked');
   });
 
+  test('a save keeps its value when other rows of data change while it runs', async ({ page }) => {
+    await cell(page, 'edit_unrelated', 1, 'name').dblclick();
+    await editorInput(page, 'edit_unrelated').fill('Anna');
+    await page.keyboard.press('Enter');
+    await expect(marker(page, 'edit_unrelated', 1, 'name')).toHaveAttribute(
+      'data-lf-edit-status',
+      'saving'
+    );
+    await page.locator('#edit_unrelated_touch').click();
+    await expect(cell(page, 'edit_unrelated', 2, 'name')).toHaveText('Ben changed');
+    await expect(cell(page, 'edit_unrelated', 1, 'name')).toHaveText('Anna');
+    await expect(marker(page, 'edit_unrelated', 1, 'name')).toHaveCount(0);
+    await expect(cell(page, 'edit_unrelated', 1, 'name')).toHaveText('Anna');
+  });
+
   test('the overlay gives way when the app writes the saved row into data', async ({ page }) => {
     await cell(page, 'edit_data', 1, 'name').dblclick();
     await editorInput(page, 'edit_data').fill('Typed');
