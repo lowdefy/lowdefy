@@ -2324,7 +2324,7 @@ fields:
 | `loading` | boolean | `false` | Show the loading state: skeleton rows without data, a progress bar with it. |
 | `pagination` | boolean | `false` | Show the rows in pages of `pageSize` with a pager below the table. Off by default, unlike TableLight: the Table scrolls any number of rows virtually. `true` means what it means on TableLight: pages, with the pager always shown. |
 | `pageSize` | integer | `50` | Rows per page when `pagination` is on (`view.pageSize` overrides it). |
-| `providers` | array | - | The enrichment providers columns can call (`kind: enrichment`), the catalogue the add-column picker offers. Each maps, on the server, to the app's `enrich_{id}` endpoint, so a column only calls what the app exposes. |
+| `providers` | array | - | The enrichment providers columns can call (`kind: enrichment`), the catalogue the add-column picker offers. Each maps, on the server, to the app's `enrich_<id>` endpoint, so a column only calls what the app exposes. |
 | `providers.$.id` | string | - | The provider id, the column `provider`. |
 | `providers.$.title` | string | - | The name in the picker. |
 | `providers.$.description` | string | - | A line under the name in the picker. |

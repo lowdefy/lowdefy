@@ -1378,7 +1378,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.negative` | string | `"minus"` | Number: how to render negative numbers — `minus` (default) or `parentheses` for accounting. Enum: `minus`, `parentheses`. |
 | `columnDefs.$.cell.signColor` | boolean | `false` | Number: when true, positives use `positiveColor` (default success token), negatives use `negativeColor` (default error token). |
 | `columnDefs.$.cell.positiveColor` | string | - | Number: CSS colour when value > 0 (requires `signColor: true`). |
-| `columnDefs.$.cell.negativeColor` | string | - | Number: CSS colour when value < 0 (requires `signColor: true`). |
+| `columnDefs.$.cell.negativeColor` | string | - | Number: CSS colour when value &lt; 0 (requires `signColor: true`). |
 | `columnDefs.$.cell.zeroColor` | string | - | Number: CSS colour when value === 0 (requires `signColor: true`). |
 | `columnDefs.$.cell.color` | string | - | Number: CSS colour applied to all values (overridden by `signColor`). |
 | `columnDefs.$.cell.prefix` | string | - | Number: literal prefix (e.g. `Δ `, `~`). |

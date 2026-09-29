@@ -173,28 +173,57 @@ properties:
 
 An enrichment column's provider endpoint (`enrich_<provider>`) that finds a work email through treg. The worker calls it with the claimed cell's inputs and an idempotency key, and completes the cell with its answer, including the cost treg charged.
 
-The idempotency key must stay the same across the attempts of one run of a cell, so that a cell retried after treg charged for an answer that was then lost gets the stored answer instead of paying again, and a timed-out async task is resumed. A claim token is new on every attempt, so build the key from the claim's `runId`, `columnKey`, `rowKey` and `inputHash` instead. In the worker:
+The idempotency key must stay the same across the attempts of one run of a cell, so that a cell retried after treg charged for an answer that was then lost gets the stored answer instead of paying again, and a timed-out async task is resumed. A claim token is new on every attempt, so build the key from the claim's `runId`, `columnKey`, `rowKey` and `inputHash` instead. When the provider endpoint throws a `ServiceError`, the worker completes the cell with `retryAfterMs`, so the retry waits as long as treg asked. In the worker:
 
 ```yaml
-- id: provider
-  type: CallApi
-  properties:
-    endpointId:
-      _string.concat:
-        - enrich_
-        - _item: cell.provider
-    payload:
-      inputs:
-        _item: cell.inputs
-      idempotencyKey:
-        _string.concat:
-          - _item: cell.runId
-          - ':'
-          - _item: cell.columnKey
-          - ':'
-          - _item: cell.rowKey
-          - ':'
-          - _item: cell.inputHash
+- :try:
+    - id: provider
+      type: CallApi
+      properties:
+        endpointId:
+          _string.concat:
+            - enrich_
+            - _item: cell.provider
+        payload:
+          inputs:
+            _item: cell.inputs
+          idempotencyKey:
+            _js:
+              fn: |
+                const { cell } = args;
+                // An ObjectId row key reaches the routine as { _oid }.
+                const rowKey = cell.rowKey?._oid ?? String(cell.rowKey);
+                return [cell.runId, cell.columnKey, rowKey, cell.inputHash].join(':');
+              args:
+                cell:
+                  _item: cell
+    # MongoDBEnrichmentComplete with the claim's cell and the provider's answer,
+    # { status, value, raw, cost }.
+  :catch:
+    - id: complete_error
+      type: MongoDBEnrichmentComplete
+      connectionId: leads
+      properties:
+        columnDefs:
+          _state: columnDefs
+        results:
+          - rowKey:
+              _item: cell.rowKey
+            columnKey:
+              _item: cell.columnKey
+            claimToken:
+              _item: cell.claimToken
+            status: error
+            error:
+              _error: message
+            retryAfterMs:
+              _js:
+                fn: |
+                  const { retryAfter } = args;
+                  return typeof retryAfter === 'number' ? retryAfter * 1000 : null;
+                args:
+                  retryAfter:
+                    _error: retryAfter
 ```
 
 The provider endpoint:
