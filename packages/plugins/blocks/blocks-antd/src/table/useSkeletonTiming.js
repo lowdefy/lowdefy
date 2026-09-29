@@ -17,6 +17,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import getSkeletonPhase from './getSkeletonPhase.js';
+import waitUntil from './waitUntil.js';
 
 // Loading start times by block id. The lazy block's fallback and the table that replaces it are
 // different components; the table picks up the fallback's start time, so a skeleton that is
@@ -47,8 +48,11 @@ function useSkeletonTiming({ active, id, handoff = false }) {
   });
   useEffect(() => {
     if (until === null) return undefined;
-    const timer = setTimeout(() => setTick((tick) => tick + 1), until - performance.now());
-    return () => clearTimeout(timer);
+    return waitUntil({
+      until,
+      now: () => performance.now(),
+      onDue: () => setTick((tick) => tick + 1),
+    });
   }, [phase, until]);
   useEffect(
     () => () => {
