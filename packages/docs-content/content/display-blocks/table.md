@@ -2005,6 +2005,127 @@ Every column the user can sort or filter must be in `fields`, or the request fai
         overdue: false
 ```
 
+```yaml
+- id: leads_enrichment
+  type: Table
+  properties:
+    addColumn: true
+    addRow: true
+    importCsv: true
+    rowSelection:
+      type: checkbox
+    providers:
+      - id: findEmail
+        title: Find email
+        description: A work email from a name and a domain.
+        inputs:
+          - key: domain
+            title: Domain
+            required: true
+          - key: name
+            title: Name
+        outputs:
+          - path: email
+            title: Email
+            type: email
+    columns:
+      - key: name
+        kind: input
+        editable: true
+        width: 150
+      - key: domain
+        kind: input
+        editable: true
+        width: 140
+      - key: email
+        kind: enrichment
+        type: email
+        provider: findEmail
+        inputs:
+          domain:
+            column: domain
+          name:
+            column: name
+        output: email
+        width: 200
+      - key: segment
+        kind: ai
+        type: tag
+        prompt: Which market segment is {{ domain }} in?
+        inputs:
+          domain:
+            column: domain
+        output:
+          type: tag
+          options:
+            - smb
+            - mid-market
+            - enterprise
+        userDefined: true
+        width: 140
+      - key: linkedin
+        kind: extract
+        source: email
+        path: profile.linkedin
+        userDefined: true
+      - key: greeting
+        kind: formula
+        template: Hi {{ name }}, about {{ domain }}
+        userDefined: true
+        width: 220
+    data:
+      - _id: l1
+        name: Ada
+        domain: acme.com
+        _enrich:
+          email:
+            status: ok
+            value: ada@acme.com
+            inputHash: 1d27590e6f1c9b
+            raw:
+              email: ada@acme.com
+              profile:
+                linkedin: in/ada
+          segment:
+            status: ok
+            value: enterprise
+      - _id: l2
+        name: Grace
+        domain: globex.com
+        _enrich:
+          email:
+            status: running
+          segment:
+            status: queued
+      - _id: l3
+        name: Alan
+        domain: initech.com
+        _enrich:
+          email:
+            status: queued
+      - _id: l4
+        name: Linus
+        domain: umbrella.com
+        _enrich:
+          email:
+            status: error
+            error: The provider timed out.
+      - _id: l5
+        name: Margaret
+        _enrich:
+          email:
+            status: empty
+            error: "Missing input: domain"
+      - _id: l6
+        name: Ivan
+        domain: hooli.com
+        _enrich:
+          email:
+            status: ok
+            value: ivan@old-domain.com
+            inputHash: 0
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `columns` | array \| null | - | The columns, in default order. |
@@ -2099,6 +2220,19 @@ Every column the user can sort or filter must be in `fields`, or the request fai
 | `loading` | boolean | `false` | Show the loading state: skeleton rows without data, a progress bar with it. |
 | `pagination` | boolean | `false` | Show the rows in pages of `pageSize` with a pager below the table. Off by default, unlike TableLight: the Table scrolls any number of rows virtually. `true` means what it means on TableLight: pages, with the pager always shown. |
 | `pageSize` | integer | `50` | Rows per page when `pagination` is on (`view.pageSize` overrides it). |
+| `providers` | array | - | The enrichment providers columns can call (`kind: enrichment`), the catalogue the add-column picker offers. Each maps, on the server, to the app's `enrich_` endpoint, so a column only calls what the app exposes. |
+| `providers.$.id` | string | - | The provider id, the column `provider`. |
+| `providers.$.title` | string | - | The name in the picker. |
+| `providers.$.description` | string | - | A line under the name in the picker. |
+| `providers.$.icon` | - | - | An icon for the provider. |
+| `providers.$.inputs` | array | - | The inputs, `[{ key, title, type, required }]`, mapped to columns or literals in the picker. |
+| `providers.$.outputs` | array | - | Paths in the result a column can show, `[{ path, title, type }]`; the picker sets the column type from it. |
+| `providers.$.cost` | number | - | The cost of one call, for the app to show. |
+| `addColumn` | boolean \| object | - | Show a "+" at the end of the header that opens the add-column picker (onColumnAdd). `true` offers every kind; `{ kinds: [...] }` only those (`input`, `formula`, `enrichment`, `ai`, `extract`). |
+| `addColumn.kinds` | array | - | The column kinds the picker offers. |
+| `addRow` | boolean | `false` | Show a "+ New row" row under the table that opens an inline editor for the input columns; Enter adds the row through onRowAdd. |
+| `addRowText` | string | `"New row"` | Text of the new-row row. |
+| `importCsv` | boolean | `false` | Show an Import button in the toolbar: a CSV file is parsed in the browser, its headers mapped to input columns (or new text columns), and the rows sent through onImport in batches of 500. |
 | `summary` | boolean | `true` | Show the summary footer when any aggregate is in effect: a column `aggregate`, or one the view sets in `view.aggregates`. `false` hides it. |
 
 | Event | Event Data | Description |
@@ -2115,6 +2249,14 @@ Every column the user can sort or filter must be in `fields`, or the request fai
 | `onViewDelete` | `{ id }` | Trigger when the user deletes a saved view from its tab menu. |
 | `onCellEdit` | `{ row, rowKey, column, value, previous }` | Trigger when an edited cell commits. The cell shows the new value with a saving indicator while the event runs. When the actions fail (a Request error or a Throw), the cell reverts and shows the error message. After success the new value shows until the row changes in `data`. Without this event, edits only show in the table. |
 | `onRowMove` | `{ row, rowKey, fromIndex, toIndex, beforeKey, afterKey, position, positions }` | Trigger when a row is dropped at a new place (`rowDrag`): a drag of its handle, or Alt+Shift+ArrowUp/Down. The rows reorder at once with a saving indicator on the handle while the event runs; when the actions fail the order reverts and the handle shows the error message. After success the new order shows until `data` changes. With `rowDrag.positionField`, save `position` on the moved row (`positions` holds every row whose position changed: normally just this one, all rows when the list had to be renumbered). Without it, save the order from `beforeKey` / `afterKey`. |
+| `onColumnAdd` | `{ column, position }` | Trigger when a column is added: the add-column picker (`addColumn`), Duplicate or Insert left / right in a user-defined column's header menu, or "Add as column" in the cell details panel. The picker stays open, pending, while the event runs, and shows the error when the actions fail. Store the column and add it to `columns`. |
+| `onColumnUpdate` | `{ column, previous }` | Trigger when a user-defined column is renamed (inline in its header) or edited (the picker). The rename or picker shows it pending while the event runs and the error when it fails. |
+| `onColumnDelete` | `{ column }` | Trigger when a user-defined column is deleted from its header menu, after the confirmation. The dialog stays open, pending, while the event runs. |
+| `onColumnRun` | `{ column, mode, selection }` | Trigger to run an enrichment or ai column: Run in its header menu (all rows, empty cells, errors or stale cells) or "Run selected" in the bulk bar. Enqueue the cells, for example with MongoDBEnrichmentEnqueue; their states then show in the cells. |
+| `onRowRun` | `{ row, rowKey, columns }` | Trigger when a row's run button is clicked (the trailing column, shown on hover): run every enrichment and ai column of the row. |
+| `onCellRun` | `{ row, rowKey, column }` | Trigger when one cell is rerun: Rerun in the cell details panel, or the rerun button of a stale cell. |
+| `onRowAdd` | `{ values }` | Trigger when a row is added with "+ New row" (`addRow`). The row shows at the end of the table, marked saving, while the event runs; after it the row comes from `data` (add it there, for example by refetching). When the actions fail, the row goes and the editor shows the error with the values kept. |
+| `onImport` | `{ rows, newColumns, batchIndex, batchCount, total }` | Trigger for each batch of rows a CSV import sends (`importCsv`), 500 rows at a time, each awaited before the next; a failed batch stops the import and shows its error. Insert the rows, for example with MongoDBInsertMany, and create `newColumns` once. |
 | `onCellLink` | `{ link, row, value }` | Triggered when a link, avatar link or relation cell is clicked. The link navigates by itself; this event is for anything else to do. |
 | `onCellButton` | `{ row, rowKey, value, button, buttonIndex }` | Documentation reference - the event fired is the `eventName` of each button in a `buttons` cell. Define any number of named events on the block, such as `onEdit`. |
 | `onCellMenuItem` | `{ row, rowKey, value, item, itemIndex }` | Documentation reference - the event fired is the `eventName` of each item in a `menu` cell. |

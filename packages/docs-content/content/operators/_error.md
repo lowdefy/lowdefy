@@ -29,6 +29,7 @@ Inside a `:catch`, `_error` is an Error rebuilt from the caught error with only 
 - `code`: The error's `code`, if it has one.
 - `statusCode`: The error's HTTP status, if it has one.
 - `handled`: `true` once the server has logged the error.
+- `retryAfter`: On a `ServiceError`, the wait the service asked for before a retry (seconds or an HTTP date), if it sent one.
 - `cause`: The error that caused this one, with the same fields, down the chain.
 
 A caught `UserError` (from a [`:throw`](/:throw) or a plugin) also keeps its `:cause` and `metaData`. The error carries no `received`, `source`, `config`, `configKey`, `location` or `stack`.
