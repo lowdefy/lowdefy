@@ -240,9 +240,11 @@ export default {
     'view',
   ],
   slots: {
-    toolbarStart: 'Blocks at the start of the toolbar, for example a "New deal" button.',
-    toolbarEnd: 'Blocks at the end of the toolbar.',
-    bulkActions: 'Blocks in the bulk action bar, shown while rows are selected.',
+    toolbarStart:
+      'Blocks at the start of the toolbar, for example a "New deal" button. Blocks sit side by side at their content width (8px gap, wrapping); the slot\'s `gap`, `align` and `justify` and a block\'s `layout.flex` still apply.',
+    toolbarEnd: 'Blocks at the end of the toolbar, side by side like `toolbarStart`.',
+    bulkActions:
+      'Blocks in the bulk action bar, shown while rows are selected, side by side at the end of the bar like `toolbarStart`.',
     empty: 'Blocks shown instead of the empty state when there are no rows.',
   },
   // Server mode fetches through an internal event running the Request action.

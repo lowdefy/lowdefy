@@ -483,6 +483,24 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* Toolbar and bulk bar slots: the blocks sit side by side, like the table's own buttons. A
+     slot is a Lowdefy area (an .lf-row) whose blocks default to span 24 (.lf-col), which would
+     stack them; here span blocks take their content width instead, since a toolbar row has no
+     grid to span. A block's own flex layout (`layout.flex`, `grow`, `size`) is not an .lf-col and
+     still applies, as do the slot's area settings (`gap`, `align`, `justify`, `direction`, `wrap`),
+     which Area writes inline. */
+  :is(.lf-table-toolbar-start, .lf-table-toolbar-end, .lf-table-bulk-actions) > .lf-row {
+    --lf-gap-x: var(--ant-margin-xs, 8px);
+    --lf-gap-y: var(--ant-margin-xs, 8px);
+    align-items: center;
+    min-width: 0;
+  }
+
+  :is(.lf-table-toolbar-start, .lf-table-toolbar-end, .lf-table-bulk-actions) > .lf-row > .lf-col {
+    flex: 0 1 auto;
+    max-width: 100%;
+  }
+
   .lf-table-pagination {
     display: flex;
     justify-content: flex-end;

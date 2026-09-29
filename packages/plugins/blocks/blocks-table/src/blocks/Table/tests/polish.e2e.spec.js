@@ -112,4 +112,24 @@ test.describe('Table visual polish', () => {
     expect(hover.row).toBe(hover.label);
     expect(hover.row).not.toBe(colours[0].row);
   });
+
+  test('slot blocks sit side by side in the toolbar and the bulk bar', async ({ page }) => {
+    await row(page, 'crm', 2).locator('input[type="checkbox"]').click();
+    await expect(table(page, 'crm').locator('[data-lf-bulk-bar]')).toBeVisible();
+    const groups = [
+      ['crm_new', 'crm_import'],
+      ['crm_end_a', 'crm_end_b'],
+      ['crm_assign', 'crm_move', 'crm_delete'],
+    ];
+    for (const ids of groups) {
+      const boxes = [];
+      for (const id of ids) boxes.push(await page.locator(`#bl-${id}`).boundingBox());
+      for (let i = 1; i < boxes.length; i++) {
+        expect(Math.abs(boxes[i].y - boxes[0].y)).toBeLessThan(1);
+        const gap = boxes[i].x - (boxes[i - 1].x + boxes[i - 1].width);
+        expect(gap).toBeGreaterThanOrEqual(7.5);
+        expect(gap).toBeLessThanOrEqual(8.5);
+      }
+    }
+  });
 });
