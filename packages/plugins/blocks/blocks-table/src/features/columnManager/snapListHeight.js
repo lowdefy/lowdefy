@@ -14,31 +14,26 @@
   limitations under the License.
 */
 
-// Caps a scrolling list at the last whole entry that fits its CSS max-height, so the entry above
-// the popover footer is never cut in half, and marks it `data-scrollable` while it scrolls (the
-// divider above the footer). Entries have different heights (items, boundaries, headings), so
-// the cap is found from the rendered entries after each render.
-function snapListHeight(list) {
+import updateScrollHints from './updateScrollHints.js';
+
+// Sizes the column manager list to `limit` (the room below its anchor, getListRoom), capped at
+// the last whole entry that fits, so no entry is cut in half above the popover footer; entries
+// have different heights (items, boundaries, headings), so the cap is found from the rendered
+// entries. Then updates the scroll hints.
+function snapListHeight({ limit, list }) {
   list.style.maxHeight = '';
-  const limit = Number.parseFloat(getComputedStyle(list).maxHeight);
-  if (!Number.isFinite(limit) || list.scrollHeight <= limit) {
-    delete list.dataset.scrollable;
+  if (list.scrollHeight <= limit) {
+    updateScrollHints(list);
     return;
   }
-  list.dataset.scrollable = '';
-  const style = getComputedStyle(list);
-  // With border-box sizing the max-height includes the divider.
-  const border =
-    style.boxSizing === 'border-box'
-      ? Number.parseFloat(style.borderTopWidth) + Number.parseFloat(style.borderBottomWidth)
-      : 0;
   let height = 0;
   for (const entry of list.children) {
     const bottom = entry.offsetTop + entry.offsetHeight;
-    if (bottom + border > limit) break;
+    if (bottom > limit) break;
     height = bottom;
   }
-  list.style.maxHeight = `${height + border}px`;
+  list.style.maxHeight = `${height}px`;
+  updateScrollHints(list);
 }
 
 export default snapListHeight;

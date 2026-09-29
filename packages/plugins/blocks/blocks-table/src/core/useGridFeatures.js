@@ -14,14 +14,12 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
-
 // Grid-level feature hooks (virtualisation, keyboard, ...) in registry order. Each receives the
 // grid context with the earlier hooks' results merged in (keyboard reads virtualisation's
 // `range`). The registry is a module constant, so the hook order never changes between renders.
 function useGridFeatures(gridCtx) {
   const ctx = gridCtx;
-  features.forEach((feature) => {
+  ctx.api.features.list.forEach((feature) => {
     if (!feature.useGridFeature) return;
     Object.assign(ctx, feature.useGridFeature(ctx));
   });

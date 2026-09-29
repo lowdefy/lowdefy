@@ -17,7 +17,6 @@
 import isMeasuredColumn from './isMeasuredColumn.js';
 import useRowOffsets from './useRowOffsets.js';
 import useScrollWindow from './useScrollWindow.js';
-import useTanstackRowWindow from './useTanstackRowWindow.js';
 
 const AUTO_ROW_THRESHOLD = 200;
 const AUTO_COLUMN_THRESHOLD = 20;
@@ -26,20 +25,11 @@ const AUTO_COLUMN_THRESHOLD = 20;
 // than twice the viewport; below that the extra range logic costs more than it saves. Measured
 // rows (wrapped or multi-line columns) turn column virtualisation off, as a row's height depends
 // on every cell in it. Items of other heights (measured rows, detail rows) are placed by
-// `rowOffsets` (useRowOffsets), which also rules out TanStack Virtual's per-row positioning.
+// `rowOffsets` (useRowOffsets), which also rules out the bench's positioned strategy
+// (positionedRowsFeature). The rows are placed by one translated window.
 function useVirtualization(ctx) {
-  const {
-    api,
-    config,
-    headerHeight,
-    layout,
-    rowHeight,
-    rowHeights,
-    rows,
-    scrollerRef,
-    strategy,
-    viewport,
-  } = ctx;
+  const { api, config, headerHeight, layout, rowHeight, rowHeights, rows, scrollerRef, viewport } =
+    ctx;
   const measuredColumns = layout.cols.some(isMeasuredColumn);
   const auto = config.virtual === 'auto';
   const virtualRows = config.virtual === true || (auto && rows.length > AUTO_ROW_THRESHOLD);
@@ -69,19 +59,13 @@ function useVirtualization(ctx) {
       virtualRows,
     },
   });
-  const positioned = strategy === 'positioned' && virtualRows && rowOffsets === null;
-  const tanstackRows = useTanstackRowWindow({
-    enabled: positioned,
-    headerHeight,
-    rowCount: rows.length,
-    rowHeight,
-    scrollerRef,
-  });
-  const result = { measuredColumns, measureRows, rowOffsets };
-  if (positioned && tanstackRows) {
-    return { ...result, range: { ...scrollWindow, ...tanstackRows, positioning: 'positioned' } };
-  }
-  return { ...result, range: { ...scrollWindow, positioning: 'translated' } };
+  return {
+    measuredColumns,
+    measureRows,
+    range: { ...scrollWindow, positioning: 'translated' },
+    rowOffsets,
+    virtualRows,
+  };
 }
 
 export default useVirtualization;

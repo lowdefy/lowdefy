@@ -16,12 +16,10 @@
 
 import { type } from '@lowdefy/helpers';
 
-import claimedViewKeys from './claimedViewKeys.js';
 import pickViewPart from './pickViewPart.js';
 import resolveViewColumns from './resolveViewColumns.js';
-import sliceDefinitions from './sliceDefinitions.js';
 
-function passthroughView({ value, defaultView }) {
+function passthroughView({ claimedViewKeys, value, defaultView }) {
   const keys = new Set([...Object.keys(defaultView ?? {}), ...Object.keys(value?.view ?? {})]);
   const view = {};
   keys.forEach((key) => {
@@ -34,15 +32,19 @@ function passthroughView({ value, defaultView }) {
 
 // Builds the whole table state from a block value: each feature slice resolves its own part of the
 // value with the brief's fallback rules (value, then defaultView, then column defaults).
-function createInitialState({ value, config, rows }) {
+function createInitialState({ value, config, features, rows }) {
   const { defaultView } = config;
   const viewColumns = resolveViewColumns({ value, defaultView, columns: config.columns });
   const args = { value, defaultView, config, viewColumns, rows, getKey: config.getKey };
   const state = {};
-  Object.entries(sliceDefinitions).forEach(([name, definition]) => {
+  Object.entries(features.sliceDefinitions).forEach(([name, definition]) => {
     state[name] = definition.init(args);
   });
-  state.viewPassthrough = passthroughView({ value, defaultView });
+  state.viewPassthrough = passthroughView({
+    claimedViewKeys: features.claimedViewKeys,
+    value,
+    defaultView,
+  });
   return state;
 }
 

@@ -18,7 +18,6 @@ import React, { memo, useContext } from 'react';
 import { cn } from '@lowdefy/block-utils';
 
 import Cell from './Cell.js';
-import cellLeads from './cellLeads.js';
 import RenderProbeContext from './RenderProbeContext.js';
 
 function renderCells({ api, cols, activeCol, lead, leadIndex, original, selected }) {
@@ -39,7 +38,7 @@ function renderCells({ api, cols, activeCol, lead, leadIndex, original, selected
 // data cell; plain rows render none.
 function renderLead({ api, item }) {
   if (!item) return undefined;
-  return cellLeads.map((Lead, index) => <Lead api={api} item={item} key={index} />);
+  return api.features.cellLeads.map((Lead, index) => <Lead api={api} item={item} key={index} />);
 }
 
 // Memoised by row key and row object: with data diffed by key, an update to one row of 100k

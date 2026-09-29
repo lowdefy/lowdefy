@@ -14,10 +14,8 @@
   limitations under the License.
 */
 
-import gridHandlers from './gridHandlers.js';
-
 function dispatchGridEvent({ api, event, eventType }) {
-  const handlers = gridHandlers[eventType] ?? [];
+  const handlers = api.features.gridHandlers[eventType] ?? [];
   for (let i = 0; i < handlers.length; i++) {
     if (handlers[i](event, api) === true) return;
   }

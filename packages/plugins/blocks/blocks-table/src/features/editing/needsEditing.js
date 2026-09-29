@@ -14,15 +14,18 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
+import { type } from '@lowdefy/helpers';
 
-// Every delegated handler, by DOM event type, in feature order. The grid root carries one React
-// listener per event type (D5); a handler that returns true stops the chain.
-const gridHandlers = {};
-features.forEach((feature) => {
-  Object.entries(feature.gridHandlers ?? {}).forEach(([eventType, handler]) => {
-    gridHandlers[eventType] = [...(gridHandlers[eventType] ?? []), handler];
+import someColumnConfig from '../../core/someColumnConfig.js';
+
+// Editing loads for TableInput, and for a Table with an editable column or row drag.
+function needsEditing({ input, properties }) {
+  if (input === true) return true;
+  if (properties.rowDrag === true || type.isObject(properties.rowDrag)) return true;
+  return someColumnConfig({
+    properties,
+    test: (column) => column.editable === true || type.isObject(column.editable),
   });
-});
+}
 
-export default gridHandlers;
+export default needsEditing;

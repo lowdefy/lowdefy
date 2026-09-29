@@ -19,7 +19,6 @@ import { cn } from '@lowdefy/block-utils';
 
 import applyLayoutVars from './applyLayoutVars.js';
 import Body from './Body.js';
-import bodyOverlays from './bodyOverlays.js';
 import computeLayout from './computeLayout.js';
 import dispatchGridEvent from './dispatchGridEvent.js';
 import EmptyState from './EmptyState.js';
@@ -216,7 +215,7 @@ function Grid({
             style={styles.header}
           />
           {rows.length > 0
-            ? bodyOverlays.map((Overlay, i) => (
+            ? api.features.bodyOverlays.map((Overlay, i) => (
                 <Overlay
                   api={api}
                   centerCols={centerCols}
@@ -234,6 +233,7 @@ function Grid({
           {body}
           {showSummary ? (
             <SummaryRow
+              api={api}
               ariaRowIndex={rows.length + ariaRowOffset}
               centerCols={centerCols}
               layout={layout}

@@ -45,7 +45,8 @@ function measureSummary(locator) {
     return {
       title: summary.title,
       summary: box(summary),
-      label: box(label),
+      label: label ? box(label) : null,
+      labelText: label ? label.textContent : null,
       value: box(value),
       valueTruncated: value.scrollWidth > value.clientWidth,
       textOverflow: getComputedStyle(value).textOverflow,
@@ -61,25 +62,35 @@ test.describe('Table visual polish', () => {
 
   test('summary shows its label and value when both fit', async ({ page }) => {
     const summary = await measureSummary(summaryCell(page, 'narrow', 'amount'));
+    expect(summary.labelText).toBe('Sum');
     expect(isInsideBox(summary.label, summary.summary)).toBe(true);
     expect(isInsideBox(summary.value, summary.summary)).toBe(true);
     expect(summary.valueTruncated).toBe(false);
     expect(summary.title).toBe('Sum 600');
   });
 
-  test('summary drops the label before it shortens the value', async ({ page }) => {
+  test('summary shortens the label before it drops it', async ({ page }) => {
+    const summary = await measureSummary(summaryCell(page, 'narrow', 'rate'));
+    expect(summary.labelText).toBe('Avg');
+    expect(isInsideBox(summary.label, summary.summary)).toBe(true);
+    expect(summary.valueTruncated).toBe(false);
+    expect(summary.title).toMatch(/^Average /);
+  });
+
+  test('summary drops the label rather than cut a value that fits alone', async ({ page }) => {
     const summary = await measureSummary(summaryCell(page, 'crm', 'amount'));
-    expect(isInsideBox(summary.label, summary.summary)).toBe(false);
+    expect(summary.label).toBe(null);
     expect(isInsideBox(summary.value, summary.summary)).toBe(true);
     expect(summary.valueTruncated).toBe(false);
     expect(summary.title).toMatch(/^Sum \$\d/);
   });
 
-  test('summary value too wide for its column ends with an ellipsis and a title', async ({
+  test('summary value too wide for its column ends with an ellipsis beside the short label', async ({
     page,
   }) => {
     const summary = await measureSummary(summaryCell(page, 'narrow', 'big'));
-    expect(isInsideBox(summary.label, summary.summary)).toBe(false);
+    expect(summary.labelText).toBe('Σ');
+    expect(isInsideBox(summary.label, summary.summary)).toBe(true);
     expect(summary.valueTruncated).toBe(true);
     expect(summary.textOverflow).toBe('ellipsis');
     expect(summary.title).toBe('Sum 6,000,000,000');
@@ -277,7 +288,7 @@ test.describe('Table visual polish', () => {
     });
   });
 
-  test('column manager labels untitled columns and never cuts an entry above its footer', async ({
+  test('column manager labels untitled columns and uses the viewport height below it', async ({
     page,
   }) => {
     await table(page, 'crm').locator('[data-lf-toolbar-button="columns"]').click();
@@ -286,18 +297,42 @@ test.describe('Table visual polish', () => {
     await expect(manager.locator('[data-lf-manager-item][data-col-key="actions"]')).toHaveText(
       'Actions'
     );
-    const list = await manager.locator('.lf-table-manager-list').evaluate((element) => ({
-      scrollable: element.dataset.scrollable !== undefined,
+    // With room below the anchor, every entry shows and nothing scrolls.
+    const roomy = await manager.locator('.lf-table-manager-list').evaluate((element) => ({
       scrolls: element.scrollHeight > element.clientHeight,
-      cut: Array.from(element.children).filter((entry) => {
-        const top = entry.offsetTop - element.scrollTop;
-        const bottom = top + entry.offsetHeight;
-        return top < element.clientHeight && bottom > element.clientHeight + 0.5;
-      }).length,
+      below: element.hasAttribute('data-more-below'),
     }));
-    expect(list.scrolls).toBe(true);
-    expect(list.scrollable).toBe(true);
-    expect(list.cut).toBe(0);
+    expect(roomy).toEqual({ scrolls: false, below: false });
+  });
+
+  test('column manager list scrolls within the viewport with a fade and no half entry', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 520 });
+    await table(page, 'crm').locator('[data-lf-toolbar-button="columns"]').click();
+    const manager = page.locator('[data-lf-column-manager]');
+    await expect(manager).toBeVisible();
+    const list = manager.locator('.lf-table-manager-list');
+    await expect(list).toHaveAttribute('data-more-below');
+    const measure = () =>
+      list.evaluate((element) => ({
+        scrolls: element.scrollHeight > element.clientHeight,
+        popupBottom: element.closest('.ant-popover').getBoundingClientRect().bottom,
+        mask: getComputedStyle(element).maskImage,
+        cut: Array.from(element.children).filter((entry) => {
+          const top = entry.offsetTop - element.scrollTop;
+          const bottom = top + entry.offsetHeight;
+          return top < element.clientHeight && bottom > element.clientHeight + 0.5;
+        }).length,
+      }));
+    const first = await measure();
+    expect(first.scrolls).toBe(true);
+    expect(first.popupBottom).toBeLessThanOrEqual(520);
+    expect(first.mask).toContain('linear-gradient');
+    expect(first.cut).toBe(0);
+    await list.evaluate((element) => element.scrollTo(0, element.scrollHeight));
+    await expect(list).toHaveAttribute('data-more-above');
+    await expect(list).not.toHaveAttribute('data-more-below');
   });
 
   test('pinned regions cast a shadow only while columns are scrolled under them', async ({
@@ -523,5 +558,85 @@ test.describe('Table visual polish', () => {
       'opacity',
       '1'
     );
+  });
+
+  test('columns scrolled under a pinned header never show their dividers through it', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 900, height: 720 });
+    const pinned = table(page, 'crm').locator('[data-lf-header][data-col-key="actions"]');
+    await expect(pinned).toBeVisible();
+    const leaks = await pinned.evaluate((cell) => {
+      const box = cell.getBoundingClientRect();
+      const found = [];
+      for (let x = Math.ceil(box.left) + 1; x < box.right - 1; x += 1) {
+        const top = document.elementFromPoint(x, box.top + box.height / 2);
+        if (!cell.contains(top)) found.push(top.className);
+      }
+      return found;
+    });
+    expect(leaks).toEqual([]);
+  });
+
+  test('summary labels sit as close to their values as group header labels', async ({ page }) => {
+    const gap = (locator, labelSelector, valueSelector) =>
+      locator.evaluate(
+        (element, [label, value]) =>
+          element.querySelector(value).getBoundingClientRect().left -
+          element.querySelector(label).getBoundingClientRect().right,
+        [labelSelector, valueSelector]
+      );
+    const summaryGap = await gap(
+      summaryCell(page, 'grouped', 'amount'),
+      '.lf-table-summary-label',
+      '.lf-table-summary-value'
+    );
+    const groupGap = await gap(
+      table(page, 'grouped')
+        .locator('.lf-table-body .lf-table-group-row [data-col-key="amount"]')
+        .first(),
+      '.lf-table-group-aggregate-fn',
+      '.lf-table-group-aggregate-value'
+    );
+    expect(Math.abs(summaryGap - groupGap)).toBeLessThan(0.5);
+  });
+
+  test('link, status and progress cells share the text baseline in TableLight and Table', async ({
+    page,
+  }) => {
+    await navigateToTestPage(page, 'table-parity');
+    for (const [id, rowSelector] of [
+      ['parity_light', 'tbody tr[data-row-key]'],
+      ['parity_table', '.lf-table-body [data-row-key]'],
+    ]) {
+      const row = page.locator(`#${id} ${rowSelector}`).first();
+      await expect(row).toBeVisible();
+      const baselines = await row.evaluate((element) => {
+        const out = {};
+        element.querySelectorAll('[data-col-key]').forEach((cell) => {
+          const walker = document.createTreeWalker(cell, NodeFilter.SHOW_TEXT, {
+            acceptNode: (node) => (node.textContent.trim() ? 1 : 3),
+          });
+          const text = walker.nextNode();
+          if (!text) return;
+          // A zero-size inline block after the text sits on its line's baseline.
+          const wrap = document.createElement('span');
+          text.parentNode.insertBefore(wrap, text);
+          wrap.appendChild(text);
+          const probe = document.createElement('span');
+          probe.style.cssText = 'display:inline-block;width:0;height:0';
+          wrap.appendChild(probe);
+          out[cell.dataset.colKey] = probe.getBoundingClientRect().bottom;
+          wrap.parentNode.insertBefore(text, wrap);
+          wrap.remove();
+        });
+        return out;
+      });
+      ['profile', 'state', 'progress'].forEach((key) => {
+        if (baselines[key] === undefined) return;
+        expect(Math.abs(baselines[key] - baselines.name)).toBeLessThan(0.25);
+      });
+      expect(baselines.state).toBeDefined();
+    }
   });
 });

@@ -16,8 +16,6 @@
 
 import { type } from '@lowdefy/helpers';
 
-import features from '../features/index.js';
-
 const EMPTY = [];
 
 // Stage 1 of the data pipeline (see TableRoot): the source rows, before they are diffed by key.
@@ -27,7 +25,7 @@ const EMPTY = [];
 // module constant, so the hook order never changes between renders.
 function useFeatureData({ api, config, properties }) {
   let data = type.isArray(properties.data) ? properties.data : EMPTY;
-  features.forEach((feature) => {
+  api.features.list.forEach((feature) => {
     if (!feature.useData) return;
     data = feature.useData({ api, config, data, properties });
   });

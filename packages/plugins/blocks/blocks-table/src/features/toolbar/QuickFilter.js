@@ -18,6 +18,7 @@ import React from 'react';
 import { Button } from 'antd';
 
 import ColumnTitle from './ColumnTitle.js';
+import LazyColumnFilterPopover from '../filtering/LazyColumnFilterPopover.js';
 import OptionsQuickFilter from './OptionsQuickFilter.js';
 import ToolbarIcon from './ToolbarIcon.js';
 
@@ -31,6 +32,8 @@ function QuickFilter({ api, column }) {
       className="lf-table-quick-filter"
       data-lf-quick-filter={column.key}
       onClick={() => api.actions.openColumnFilter({ key: column.key })}
+      onFocus={LazyColumnFilterPopover.preload}
+      onPointerEnter={LazyColumnFilterPopover.preload}
       size="small"
     >
       <ColumnTitle api={api} column={column} />

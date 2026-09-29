@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
+import { type } from '@lowdefy/helpers';
 
-// Components rendered once between the header and the body rows, inside the scroll canvas, when
-// there are rows (the sticky group header). Each receives the grid's row and layout props.
-const bodyOverlays = features.filter((feature) => feature.bodyOverlay).map((f) => f.bodyOverlay);
+// Server mode loads for `data: { mode: server, ... }` (normalizeServerData validates it).
+function needsServerData({ properties }) {
+  return type.isObject(properties.data);
+}
 
-export default bodyOverlays;
+export default needsServerData;

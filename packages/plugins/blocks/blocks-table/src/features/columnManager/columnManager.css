@@ -31,20 +31,35 @@
     max-width: calc(100vw - 32px);
   }
 
-  /* snapListHeight lowers the max-height to the last whole entry, so no entry is cut in half
-     above the footer, and a divider shows while the list scrolls. */
+  /* The list takes the viewport height below the popover's anchor (getListRoom), capped at the
+     last whole entry (snapListHeight); while entries are out of view it fades out at that edge. */
   .lf-table-manager-list {
+    --lf-manager-fade: 28px;
     position: relative;
     display: flex;
     flex-direction: column;
-    max-height: min(360px, 50vh);
+    max-height: 70vh;
     margin-top: var(--ant-margin-xs, 8px);
     overflow-y: auto;
     overscroll-behavior: contain;
   }
 
-  .lf-table-manager-list[data-scrollable] {
-    border-bottom: 1px solid var(--ant-color-split, rgba(5, 5, 5, 0.06));
+  .lf-table-manager-list[data-more-below] {
+    mask-image: linear-gradient(to bottom, #000 calc(100% - var(--lf-manager-fade)), transparent);
+  }
+
+  .lf-table-manager-list[data-more-above] {
+    mask-image: linear-gradient(to top, #000 calc(100% - var(--lf-manager-fade)), transparent);
+  }
+
+  .lf-table-manager-list[data-more-above][data-more-below] {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      #000 var(--lf-manager-fade),
+      #000 calc(100% - var(--lf-manager-fade)),
+      transparent
+    );
   }
 
   .lf-table-manager-item,

@@ -18,7 +18,6 @@ import React, { useContext, useLayoutEffect, useRef } from 'react';
 
 import RenderProbeContext from './RenderProbeContext.js';
 import Row from './Row.js';
-import rowRenderers from './rowRenderers.js';
 import SkeletonRow from './SkeletonRow.js';
 
 // Rows of the current window. `translated` (the default) renders the window rows in flow inside
@@ -75,7 +74,7 @@ function Body({
         />
       );
     } else if (kind !== 'row') {
-      const ItemRow = rowRenderers[kind];
+      const ItemRow = api.features.rowRenderers[kind];
       rowElements.push(
         <ItemRow
           activeCol={activeCol}

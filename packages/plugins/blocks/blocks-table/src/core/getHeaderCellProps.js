@@ -14,9 +14,7 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
-
-function getHeaderCellProps({ col, state }) {
+function getHeaderCellProps({ col, features, state }) {
   return Object.assign(
     {},
     ...features.map((feature) => feature.headerCellProps?.({ col, state }) ?? {})

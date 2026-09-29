@@ -17,7 +17,6 @@
 import React from 'react';
 
 import getHeaderCellProps from './getHeaderCellProps.js';
-import headerParts from './headerParts.js';
 import HeaderTitle from './HeaderTitle.js';
 
 function HeaderCell({ api, col, focused, state }) {
@@ -36,7 +35,7 @@ function HeaderCell({ api, col, focused, state }) {
     role: 'columnheader',
     style: col.style,
     tabIndex: focused ? 0 : -1,
-    ...(col.special ? {} : getHeaderCellProps({ col, state })),
+    ...(col.special ? {} : getHeaderCellProps({ col, features: api.features.list, state })),
   };
   if (col.special) {
     return React.createElement('div', props, <col.Header api={api} state={state} />);
@@ -45,7 +44,7 @@ function HeaderCell({ api, col, focused, state }) {
     'div',
     props,
     <HeaderTitle api={api} headerTooltip={col.column.headerTooltip} title={col.column.title} />,
-    ...headerParts.map((Part, i) => (
+    ...api.features.headerParts.map((Part, i) => (
       <Part api={api} col={col} focused={focused} key={i} state={state} />
     ))
   );

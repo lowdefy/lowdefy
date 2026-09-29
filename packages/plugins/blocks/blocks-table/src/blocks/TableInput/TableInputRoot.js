@@ -18,6 +18,7 @@ import React, { useMemo, useState } from 'react';
 
 import normalizeChanges from '../../features/editing/normalizeChanges.js';
 import TableRoot from '../../core/TableRoot.js';
+import useFeatureSet from '../../core/useFeatureSet.js';
 
 const HANDLED = { success: true };
 
@@ -29,6 +30,7 @@ const HANDLED = { success: true };
 // `input.methods`.
 function TableInputRoot(props) {
   const { methods, value } = props;
+  const features = useFeatureSet({ content: {}, input: true, properties: props.properties });
   const changes = useMemo(() => normalizeChanges(value), [value]);
   const [uiValue, setUiValue] = useState(null);
 
@@ -45,7 +47,9 @@ function TableInputRoot(props) {
   // The block's own props pass through; the engine reads what it needs from them.
   return React.createElement(TableRoot, {
     ...props,
+    features,
     input,
+    key: features.signature,
     methods: tableMethods,
     value: uiValue,
   });

@@ -14,14 +14,15 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
+// Short forms of the summary footer's aggregate labels, for columns too narrow for the full label
+// (AGGREGATE_LABELS). Labels already short (Min, Max) have none and keep their full form.
+const AGGREGATE_SHORT_LABELS = {
+  sum: 'Σ',
+  avg: 'Avg',
+  count: '#',
+  countDistinct: 'Uniq',
+  earliest: 'First',
+  latest: 'Last',
+};
 
-// Components for display items that are not data rows, by item kind (grouping and server groups:
-// `group`; expandable: `detail`), from the features' `rowRenderers`. Data rows (TanStack rows and
-// wrapped `kind: 'row'` items) render with the core Row.
-const rowRenderers = {};
-features.forEach((feature) => {
-  Object.assign(rowRenderers, feature.rowRenderers ?? {});
-});
-
-export default rowRenderers;
+export default AGGREGATE_SHORT_LABELS;

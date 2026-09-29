@@ -14,18 +14,16 @@
   limitations under the License.
 */
 
-import { tableFeatures } from '@tanstack/react-table';
+// Every state slice the features declare, by name. Slices are React-owned (controlled TanStack
+// state), which is what lets a slice update run inside a transition.
+function collectSliceDefinitions(features) {
+  const definitions = {};
+  features.forEach((feature) => {
+    Object.entries(feature.slices ?? {}).forEach(([name, definition]) => {
+      definitions[name] = { ...definition, feature: feature.name };
+    });
+  });
+  return definitions;
+}
 
-import createStableCoreRowModel from './createStableCoreRowModel.js';
-import features from '../features/index.js';
-
-// One stable TanStack feature set for every Table instance, merged from the feature modules'
-// slots at module load (TanStack requires `features` to be stable).
-const TABLE_FEATURES = tableFeatures(
-  Object.assign(
-    { coreRowModel: createStableCoreRowModel() },
-    ...features.map((feature) => feature.tableFeatures ?? {})
-  )
-);
-
-export default TABLE_FEATURES;
+export default collectSliceDefinitions;

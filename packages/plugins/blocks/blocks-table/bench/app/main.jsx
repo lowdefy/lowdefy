@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { Profiler, useRef, useState } from 'react';
+import React, { Profiler, Suspense, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { flushSync } from 'react-dom';
 import { App, ConfigProvider } from 'antd';
@@ -58,14 +58,16 @@ function Harness() {
               window.__bench.commits.push({ phase, actualDuration });
             }}
           >
-            <BenchTable
-              columns={harness.columns}
-              data={harness.data}
-              key={harness.mountKey}
-              methodsRef={methodsRef}
-              properties={harness.properties}
-              strategy={harness.strategy}
-            />
+            <Suspense fallback={null}>
+              <BenchTable
+                columns={harness.columns}
+                data={harness.data}
+                key={harness.mountKey}
+                methodsRef={methodsRef}
+                properties={harness.properties}
+                strategy={harness.strategy}
+              />
+            </Suspense>
           </Profiler>
         </RenderProbeContext.Provider>
       </App>
@@ -104,8 +106,16 @@ window.__bench = {
     const columns = window.__bench.dataset.columns.map((column) =>
       wrap.includes(column.key) ? { ...column, wrap: true, width: wrapWidth } : column
     );
-    const started = performance.now();
-    flushSync(() => setHarness({ columns, data, mountKey: Math.random(), properties, strategy }));
+    const harness = { columns, data, properties, strategy };
+    let started = performance.now();
+    flushSync(() => setHarness({ ...harness, mountKey: Math.random() }));
+    // A config that needs optional features suspends until their chunks load the first time: wait
+    // for the grid, then measure a mount with the chunks loaded, as a page's second table would.
+    if (!document.querySelector('[role="grid"], [role="treegrid"]')) {
+      while (!document.querySelector('[role="grid"], [role="treegrid"]')) await nextFrames(1);
+      started = performance.now();
+      flushSync(() => setHarness({ ...harness, mountKey: Math.random() }));
+    }
     const committed = performance.now();
     const painted = await nextFrames(2);
     return { commitMs: committed - started, paintMs: painted - started };

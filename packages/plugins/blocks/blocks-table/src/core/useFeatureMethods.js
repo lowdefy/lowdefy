@@ -16,13 +16,11 @@
 
 import { useEffect } from 'react';
 
-import features from '../features/index.js';
-
 // Registers the features' block methods (exportCsv, scrollToRow, clearSelection, ...) once per
 // engine methods object. Each method reads the live table through the API object.
 function useFeatureMethods({ api, methods }) {
   useEffect(() => {
-    features.forEach((feature) => {
+    api.features.list.forEach((feature) => {
       Object.entries(feature.methods ?? {}).forEach(([name, create]) => {
         methods.registerMethod(name, create(api));
       });
