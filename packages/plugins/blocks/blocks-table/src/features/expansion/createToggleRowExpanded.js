@@ -17,9 +17,12 @@
 import { type } from '@lowdefy/helpers';
 
 import getExpandedIds from './getExpandedIds.js';
+import rowNeedsChildren from '../tree/rowNeedsChildren.js';
 
 // Expands or collapses a row (a tree node or a row with a detail row), writes `expanded` to the
-// value and fires `onRowExpand { row, rowKey, expanded }`. `expanded` omitted toggles.
+// value and fires `onRowExpand { row, rowKey, expanded, needsChildren }`. `needsChildren` is true
+// when a lazy tree row is expanded before its children are in `data`. `expanded` omitted
+// toggles.
 function createToggleRowExpanded(api) {
   return function toggleRowExpanded({ id, expanded }) {
     const row = api.table.getRow(id, true);
@@ -35,7 +38,12 @@ function createToggleRowExpanded(api) {
     );
     api.methods.triggerEvent({
       name: 'onRowExpand',
-      event: { row: row.original, rowKey, expanded: next },
+      event: {
+        row: row.original,
+        rowKey,
+        expanded: next,
+        needsChildren: next && rowNeedsChildren({ api, id, row }),
+      },
     });
     return true;
   };

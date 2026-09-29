@@ -150,6 +150,18 @@ test.describe('Table tree', () => {
     expect(await rowKeys(page, 'table_tree_lazy')).toEqual(['region-a', 'region-a-1', 'region-b']);
   });
 
+  test('onRowExpand says when a lazy row needs its children, once', async ({ page }) => {
+    await toggle(page, 'table_tree_lazy', 'region-a').click();
+    await expect(nameCell(page, 'table_tree_lazy', 'region-a-1')).toHaveText('Region A child');
+    await toggle(page, 'table_tree_lazy', 'region-a').click();
+    await expect(row(page, 'table_tree_lazy', 'region-a-1')).toHaveCount(0);
+    await toggle(page, 'table_tree_lazy', 'region-a').click();
+    await expect(getBlock(page, 'table_tree_lazy_value')).toHaveText(
+      'expands=["region-a:open:load","region-a:close:loaded","region-a:open:loaded"]'
+    );
+    expect(await rowKeys(page, 'table_tree_lazy')).toEqual(['region-a', 'region-a-1', 'region-b']);
+  });
+
   test('a filter keeps the ancestors of the rows it matches', async ({ page }) => {
     await expect(row(page, 'table_tree_filtered', 'docs')).toBeVisible();
     await toggle(page, 'table_tree_filtered', 'docs').click();

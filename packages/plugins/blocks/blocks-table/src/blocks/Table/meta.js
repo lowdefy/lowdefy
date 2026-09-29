@@ -275,11 +275,13 @@ export default {
     },
     onRowExpand: {
       description:
-        "Trigger when a tree row or an expandable row is expanded or collapsed. With `tree.lazy`, load the row's children here and add them to `data`.",
+        "Trigger when a tree row or an expandable row is expanded or collapsed. With `tree.lazy`, load the row's children here when `needsChildren` is true (skip the load action otherwise) and add them to `data`.",
       event: {
         row: 'The row object.',
         rowKey: 'The row key.',
         expanded: 'True when the row was expanded, false when it was collapsed.',
+        needsChildren:
+          'True when a `tree.lazy` row is expanded and none of its children are in `data` yet, so they need loading. False for every other expand and collapse.',
       },
     },
     onExport: {
@@ -613,7 +615,7 @@ export default {
             type: 'boolean',
             default: false,
             description:
-              'Load children on demand: rows whose `hasChildrenField` is true show a chevron before their children are loaded, expanding a row fires `onRowExpand`, and the app adds the children to `data` (for example a request whose result is merged into the data with `parentField` set).',
+              'Load children on demand: rows whose `hasChildrenField` is true show a chevron before their children are loaded, expanding a row fires `onRowExpand` with `needsChildren: true` until its children are in `data`, and the app adds them (for example a request whose result is merged into the data with `parentField` set).',
           },
           hasChildrenField: {
             type: 'string',
