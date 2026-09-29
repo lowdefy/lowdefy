@@ -203,7 +203,7 @@ const column = {
       type: 'string',
       enum: Object.keys(COLUMN_KINDS),
       description:
-        'Enrichment tables: what computes the column. `input`: typed by users. `formula`: a `template` over the row, in the browser. `enrichment`: a `provider` call per row, on the server. `ai`: a `prompt` per row, on the server. `extract`: a `path` into another column\'s raw result, in the browser. Enrichment and ai columns read their value from `_enrich.{key}.value` (unless `field` is set) and their run state from `_enrich.{key}`, and render it: queued, running, the value, an error (message on hover), "No result", or the value dimmed when their inputs changed since they ran (stale).',
+        'Enrichment tables: what computes the column. `input`: typed by users. `formula`: a `template` over the row, in the browser. `enrichment`: a `provider` call per row, on the server. `ai`: a `prompt` per row, on the server. `extract`: a `path` into another column\'s raw result, in the browser. Enrichment and ai columns read their value from `_enrich.<key>.value` (unless `field` is set) and their run state from `_enrich.<key>`, and render it: queued, running, the value, an error (message on hover), "No result", or the value dimmed when their inputs changed since they ran (stale).',
     },
     userDefined: {
       type: 'boolean',
@@ -223,7 +223,7 @@ const column = {
     inputs: {
       type: 'object',
       description:
-        "`kind: enrichment` or `ai`: the inputs, each `{ column: {column key}, required? }` (that column's value in the row; an enrichment or ai column's only once its cell is done) or `{ value: {literal} }`. An ai column lists the columns its prompt references here (the add-column picker keeps them in step). A cell is stale when its resolved inputs differ from the ones it ran with.",
+        "`kind: enrichment` or `ai`: the inputs, each `{ column: <column key>, required? }` (that column's value in the row; an enrichment or ai column's only once its cell is done) or `{ value: <literal> }`. An ai column lists the columns its prompt references here (the add-column picker keeps them in step). A cell is stale when its resolved inputs differ from the ones it ran with.",
       docs: { displayType: 'yaml' },
     },
     output: {
@@ -249,12 +249,12 @@ const column = {
     path: {
       type: 'string',
       description:
-        "`kind: extract`: the dot path in the source column's raw result (`people.0.email`); empty for the whole result. The column reads `_enrich.{source}.raw.{path}`.",
+        "`kind: extract`: the dot path in the source column's raw result (`people.0.email`); empty for the whole result. The column reads `_enrich.<source>.raw.<path>`.",
     },
     status: {
       type: 'object',
       description:
-        "Show a run state in this column's cells from `{ field }`, a path to an object like `_enrich.{key}` (`status`, `value`, `error`, `inputHash`, ...). Enrichment and ai columns have it by default.",
+        "Show a run state in this column's cells from `{ field }`, a path to an object like `_enrich.<key>` (`status`, `value`, `error`, `inputHash`, ...). Enrichment and ai columns have it by default.",
       properties: {
         field: { type: 'string', description: 'The dot path of the run state object.' },
       },
@@ -1003,7 +1003,7 @@ export default {
       providers: {
         type: 'array',
         description:
-          "The enrichment providers columns can call (`kind: enrichment`), the catalogue the add-column picker offers. Each maps, on the server, to the app's `enrich_{id}` endpoint, so a column only calls what the app exposes.",
+          "The enrichment providers columns can call (`kind: enrichment`), the catalogue the add-column picker offers. Each maps, on the server, to the app's `enrich_<id>` endpoint, so a column only calls what the app exposes.",
         items: {
           type: 'object',
           required: ['id'],
