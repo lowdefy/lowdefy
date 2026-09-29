@@ -88,6 +88,15 @@ async function runRoutine(context, routineContext, { routine }) {
     if (error.isReject) {
       return { status: 'reject', error };
     }
+    // An error inside a :try with a :catch is handled by that :catch, so it is logged once, at
+    // debug (a provider's 404 in a waterfall is not a fault). The :catch can still rethrow it.
+    if (routineContext.caught === true) {
+      if (!error.handled) {
+        context.logger.debug({ event: 'debug_routine_caught_error', err: error }, error.message);
+        error.handled = true;
+      }
+      return { status: 'error', error };
+    }
     // A UserError is an expected outcome, not a fault: it is logged once, as a
     // warning. A step or control that logs one marks it handled; one thrown
     // without being logged, such as a nested CallApi whose payload the target's

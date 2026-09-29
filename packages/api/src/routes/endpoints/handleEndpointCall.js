@@ -97,6 +97,7 @@ async function handleEndpointCall(context, routineContext, { step }) {
     endpointId: evaluatedProperties.endpointId,
     payload: evaluatedProperties.payload,
     endpointDepth: routineContext.endpointDepth,
+    caught: routineContext.caught === true,
   });
 
   // Store the return value in the caller's steps

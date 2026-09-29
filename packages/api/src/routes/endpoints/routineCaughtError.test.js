@@ -419,3 +419,48 @@ test(':reject of _error rejects with the generic message for a plugin error', as
   });
   expect(JSON.stringify(result)).not.toContain('Try failed.');
 });
+
+test('an error a :catch handles logs at debug, never as an error', async () => {
+  const { context, res } = await run({
+    ':try': step({ stepId: 'lookup', type: 'FailHttp', properties: {} }),
+    ':catch': { ':set_state': { status: 'empty' } },
+  });
+  expect(res.status).toEqual('continue');
+  expect(context.logger.error).not.toHaveBeenCalled();
+  expect(context.logger.warn).not.toHaveBeenCalled();
+  expect(context.logger.debug).toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'debug_routine_caught_error' }),
+    'Http response "404: Not Found". at test/lookup.'
+  );
+});
+
+test('an error inside a loop that a :catch around it handles logs at debug', async () => {
+  const { context, res } = await run({
+    ':try': {
+      ':parallel_for': 'item',
+      ':in': [1, 2],
+      ':do': fail('in_loop', 'Loop failed.'),
+    },
+    ':catch': { ':set_state': { failed: true } },
+  });
+  expect(res.status).toEqual('continue');
+  expect(context.logger.error).not.toHaveBeenCalled();
+});
+
+test('an error with no :catch, or thrown in :finally or :catch, still logs as an error', async () => {
+  const noCatch = await run({
+    ':try': fail('try_only', 'No catch.'),
+    ':finally': { ':set_state': { done: true } },
+  });
+  expect(noCatch.res.status).toEqual('error');
+  expect(noCatch.context.logger.error).toHaveBeenCalledTimes(1);
+  const inCatch = await run({
+    ':try': fail('try_fail', 'Try failed.'),
+    ':catch': fail('catch_fail', 'Catch failed.'),
+  });
+  expect(inCatch.res.status).toEqual('error');
+  expect(inCatch.context.logger.error).toHaveBeenCalledTimes(1);
+  expect(inCatch.context.logger.error.mock.calls[0][0].message).toContain('Catch failed.');
+  const uncaught = await run(fail('plain', 'Plain failure.'));
+  expect(uncaught.context.logger.error).toHaveBeenCalledTimes(1);
+});
