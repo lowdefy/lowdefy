@@ -228,6 +228,9 @@ test.describe('Table loading states', () => {
             fillColour,
           };
         });
+    // The fallback's skeleton rows are replaced by the table's: read the table's.
+    await expect(table(page, 'table_client')).toHaveAttribute('data-loading-state', 'initial');
+    await expect(table(page, 'table_client')).not.toHaveAttribute('data-lf-fallback', '');
     await expect(skeletonRows(page, 'table_client').first()).toBeVisible();
     const shimmer = await readShimmer();
     expect(shimmer.animation).toBe('lf-table-shimmer');
@@ -237,7 +240,7 @@ test.describe('Table loading states', () => {
     expect(shimmer.image).toContain('35%');
     expect(shimmer.image).toContain('65%');
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    expect((await readShimmer()).display).toBe('none');
+    await expect.poll(async () => (await readShimmer()).display).toBe('none');
     mocks.rows.release();
   });
 
