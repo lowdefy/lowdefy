@@ -52,3 +52,38 @@ jobs:
           name: block-e2e-results-${{ strategy.job-index }}
           path: packages/**/e2e/test-results/
           retention-days: 7
+
+  enrichment:
+    name: E2E @lowdefy/blocks-table enrichment
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-block-e2e'
+    runs-on: ubuntu-latest
+    env:
+      # Where mongodb-memory-server keeps the mongod binaries (cached below).
+      MONGOMS_DOWNLOAD_DIR: /home/runner/.cache/mongodb-binaries
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm --filter=@lowdefy/blocks-table exec playwright install --with-deps chromium
+      # The suite starts its own single-node replica set (scripts/e2e-mongodb.mjs) from the
+      # mongodb-memory-server binaries. Cache them, and download them before the run, so the
+      # download never counts against the replica set's start timeout.
+      - uses: actions/cache@v4
+        with:
+          path: /home/runner/.cache/mongodb-binaries
+          key: mongodb-binaries-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: mongodb-binaries-${{ runner.os }}-
+      - run: node --input-type=module -e "import { MongoBinary } from 'mongodb-memory-server'; console.log(await MongoBinary.getPath());"
+      # The reference app, its mock services and the replica set; see code-docs/testing.md.
+      - run: pnpm --filter=@lowdefy/blocks-table e2e:enrichment
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: block-e2e-enrichment-results
+          path: packages/plugins/blocks/blocks-table/e2e/enrichment/test-results/
+          retention-days: 7
