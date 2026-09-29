@@ -28,7 +28,10 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
   const slots = Blocks.subSlots[block.id][0].slots;
   Object.keys(slots).forEach((slotKey, i) => {
     if (slots[slotKey].blocks.length === 0) return;
-    content[slotKey] = (contentStyle) => (
+    // A block may pass the loading its slot's blocks inherit (`{ loading }`), for slots that are
+    // its chrome rather than its content: the Table keeps its toolbar and bulk action blocks
+    // usable while its own rows load. By default they inherit the block's loading.
+    content[slotKey] = (contentStyle, { loading: slotLoading = loading } = {}) => (
       <Area
         area={block.eval.slots[slotKey]}
         areaKey={slotKey}
@@ -45,7 +48,7 @@ const InputContainer = ({ block, Blocks, Component, context, loading, lowdefy })
             context={context}
             key={`co-${bl.blockId}-${k}`}
             lowdefy={lowdefy}
-            parentLoading={loading}
+            parentLoading={slotLoading}
           />
         ))}
       </Area>

@@ -24,6 +24,7 @@ import LazyColumnManagerPopover from '../columnManager/LazyColumnManagerPopover.
 import GroupButton from './GroupButton.js';
 import QuickFilter from './QuickFilter.js';
 import RecordCount from './RecordCount.js';
+import renderSlot from '../../core/renderSlot.js';
 import SortButton from './SortButton.js';
 import ToolbarIcon from './ToolbarIcon.js';
 import ToolbarSearch from './ToolbarSearch.js';
@@ -45,7 +46,7 @@ function Toolbar({ api, searchRef, toolbar }) {
       {showTabs ? <ViewTabs api={api} /> : null}
       <div className="lf-table-toolbar-row">
         <div className="lf-table-toolbar-start">
-          {content.toolbarStart ? content.toolbarStart() : null}
+          {renderSlot({ content, slot: 'toolbarStart' })}
           {toolbar.search ? <ToolbarSearch api={api} searchRef={searchRef} /> : null}
           {quickFilters.map((column) => (
             <QuickFilter api={api} column={column} key={column.key} />
@@ -72,7 +73,7 @@ function Toolbar({ api, searchRef, toolbar }) {
             </Button>
           ) : null}
           {toolbar.export ? <ExportButton api={api} /> : null}
-          {content.toolbarEnd ? content.toolbarEnd() : null}
+          {renderSlot({ content, slot: 'toolbarEnd' })}
         </div>
       </div>
     </div>

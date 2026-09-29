@@ -17,6 +17,8 @@
 import React from 'react';
 import { Button } from 'antd';
 
+import renderSlot from '../../core/renderSlot.js';
+
 import './bulk.css';
 
 const numberFormat = new Intl.NumberFormat();
@@ -53,7 +55,7 @@ function BulkBar({ api, matching, selected, selectionMode }) {
         Clear
       </Button>
       {content.bulkActions ? (
-        <div className="lf-table-bulk-actions">{content.bulkActions()}</div>
+        <div className="lf-table-bulk-actions">{renderSlot({ content, slot: 'bulkActions' })}</div>
       ) : null}
     </div>
   );

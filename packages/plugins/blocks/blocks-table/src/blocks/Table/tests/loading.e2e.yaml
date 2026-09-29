@@ -112,6 +112,16 @@ blocks:
   # CLIENT DATA: initial (onMount), refetch, empty
   # ============================================
 
+  - id: client_new_clicks
+    type: Paragraph
+    properties:
+      content:
+        _string.concat:
+          - 'Clicks: '
+          - _if_none:
+              - _state: new_clicks
+              - 0
+
   - id: table_client
     type: Table
     properties:
@@ -156,6 +166,27 @@ blocks:
             buttons:
               - title: Edit
                 eventName: onEdit
+    # Slot blocks keep only their own loading: the page's onMount (which fetches the rows) must
+    # not disable them.
+    slots:
+      toolbarStart:
+        blocks:
+          - id: client_new
+            type: Button
+            properties:
+              title: New person
+              size: small
+            events:
+              onClick:
+                - id: count_new
+                  type: SetState
+                  params:
+                    new_clicks:
+                      _sum:
+                        - _if_none:
+                            - _state: new_clicks
+                            - 0
+                        - 1
 
   - id: light_client
     type: TableLight

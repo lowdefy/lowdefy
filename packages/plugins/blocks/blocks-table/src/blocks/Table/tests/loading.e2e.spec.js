@@ -199,6 +199,22 @@ test.describe('Table loading states', () => {
     await expect(table(page, 'table_client')).not.toHaveAttribute('data-busy', '');
   });
 
+  test("slot buttons stay usable while the page's onMount loads the rows", async ({ page }) => {
+    const mocks = await mockAll(page);
+    mocks.rows.hold();
+    await navigateToTestPage(page, PAGE);
+    await expect(table(page, 'table_client')).toHaveAttribute('data-loading-state', 'initial');
+    // Lowdefy's page loading still reaches blocks outside the table.
+    await expect(page.locator('#refetch')).toBeDisabled();
+    await expect(page.locator('#client_new')).toBeEnabled();
+    await page.locator('#client_new').click();
+    await expect(page.locator('#client_new_clicks')).toHaveText('Clicks: 1');
+    mocks.rows.release();
+    await expect(table(page, 'table_client')).toHaveAttribute('data-loading-state', 'ready');
+    await expect(page.locator('#refetch')).toBeEnabled();
+    await expect(page.locator('#client_new')).toBeEnabled();
+  });
+
   test('a refetch without holdValue keeps the rows and runs the progress bar', async ({ page }) => {
     const mocks = await mockAll(page);
     await navigateToTestPage(page, PAGE);
