@@ -93,9 +93,9 @@ window.__bench = {
   events: [],
   renders: { body: 0, rows: 0, rowKeys: [] },
   setValueCount: 0,
-  generate({ rows, cols, seed }) {
+  generate({ rows, cols, seed, enrich }) {
     const started = performance.now();
-    window.__bench.dataset = generateData({ rows, cols, seed });
+    window.__bench.dataset = generateData({ rows, cols, seed, enrich });
     return performance.now() - started;
   },
   // `wrap`: column keys that wrap their text at `wrapWidth`, so rows have measured heights.

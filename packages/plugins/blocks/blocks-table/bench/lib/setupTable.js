@@ -14,11 +14,16 @@
   limitations under the License.
 */
 
-// Opens the bench page, generates seeded data and mounts the table.
-async function setupTable({ page, rows, cols, properties, strategy, wrap }) {
+// Opens the bench page, generates seeded data (`enrich`: with enrichment columns and run states)
+// and mounts the table.
+async function setupTable({ page, rows, cols, enrich, properties, strategy, wrap }) {
   await page.goto('/');
   await page.waitForFunction(() => window.__bench !== undefined);
-  const generateMs = await page.evaluate((args) => window.__bench.generate(args), { rows, cols });
+  const generateMs = await page.evaluate((args) => window.__bench.generate(args), {
+    rows,
+    cols,
+    enrich,
+  });
   const mount = await page.evaluate((args) => window.__bench.mount(args), {
     properties,
     strategy,
