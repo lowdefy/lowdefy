@@ -172,7 +172,7 @@ function TableLightBlock({
     sourceCount: data.length,
     displayCount: data.length,
   });
-  const skeletonPhase = useSkeletonTiming({
+  const { phase: skeletonPhase, endHold: endSkeletonHold } = useSkeletonTiming({
     active: loadingState === 'initial' || waitingForTemplates,
     id: blockId,
   });
@@ -314,8 +314,12 @@ function TableLightBlock({
       data-busy={busy ? '' : undefined}
       data-loading-state={showSkeleton ? 'initial' : loadingState}
       data-skeleton-hidden={showSkeleton && skeletonPhase === 'hidden' ? '' : undefined}
+      data-skeleton-holding={skeletonPhase === 'holding' ? '' : undefined}
       ref={blockRef}
       style={styles.element}
+      onFocus={endSkeletonHold}
+      onKeyDown={endSkeletonHold}
+      onPointerDown={endSkeletonHold}
       onMouseDown={(event) => {
         pointerDownRef.current = {
           x: event.clientX,

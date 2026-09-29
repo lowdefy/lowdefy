@@ -37,6 +37,10 @@ function toCssSize(size) {
   return typeof size === 'number' ? `${size}px` : size;
 }
 
+// A key, a pointer press or focus in the table ends a holding skeleton (D17's minimum time avoids
+// flicker; it must not block input), before the handlers run, so the action lands on the rows.
+const HOLD_ENDING_EVENTS = new Set(['focus', 'keydown', 'pointerdown']);
+
 function hasSummary({ layout, summary }) {
   if (summary === null) return false;
   return layout.cols.some((col) => !col.special && summary.has(col.key));
@@ -48,7 +52,9 @@ function hasSummary({ layout, summary }) {
 //
 // Loading (D17): `loadingState` is resolveLoadingState's. `showSkeleton` renders skeleton rows
 // in place of the body (the initial load, and the minimum time a shown skeleton stays);
-// `skeletonHidden` keeps them invisible for the first 120 ms. `busy` (a refetch or refresh with
+// `skeletonPhase` is useSkeletonTiming's: `hidden` keeps them invisible for the first 120 ms, and
+// `holding` (rows are there, the skeleton stays its minimum time) is marked on the root; a key,
+// pointer press or focus in the table ends it (`endSkeletonHold`). `busy` (a refetch or refresh with
 // rows on screen) and `isPending` (a view change) show the progress bar under the header through
 // CSS on the root; a view change also dims the rows once it takes longer than 300 ms (table.css).
 function Grid({
@@ -58,6 +64,7 @@ function Grid({
   classNames,
   clickable,
   config,
+  endSkeletonHold,
   headerHeight,
   isPending,
   leadingColumns,
@@ -67,7 +74,7 @@ function Grid({
   rowHeights,
   rows,
   showSkeleton,
-  skeletonHidden,
+  skeletonPhase,
   state,
   strategy,
   styles,
@@ -152,7 +159,10 @@ function Grid({
     scrollerStyle.maxHeight = toCssSize(config.maxHeight);
   }
   const rowClassName = cn('lf-table-row', classNames.row);
-  const dispatch = (eventType) => (event) => dispatchGridEvent({ api, event, eventType });
+  const dispatch = (eventType) => (event) => {
+    if (HOLD_ENDING_EVENTS.has(eventType)) endSkeletonHold();
+    dispatchGridEvent({ api, event, eventType });
+  };
 
   // Body rows follow the header rows in aria-rowindex (1-based).
   const ariaRowOffset = levels.depth + 2;
@@ -216,7 +226,8 @@ function Grid({
       data-clickable={clickable ? '' : undefined}
       data-loading-state={showSkeleton ? 'initial' : loadingState}
       data-pending={isPending ? '' : undefined}
-      data-skeleton-hidden={showSkeleton && skeletonHidden ? '' : undefined}
+      data-skeleton-hidden={showSkeleton && skeletonPhase === 'hidden' ? '' : undefined}
+      data-skeleton-holding={skeletonPhase === 'holding' ? '' : undefined}
       id={blockId}
       onAuxClick={dispatch('auxclick')}
       onBlur={dispatch('blur')}

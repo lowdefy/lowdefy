@@ -368,6 +368,72 @@ test.describe('Table loading states', () => {
     await expect(lightRows(page, 'light_prop')).toHaveText([/Ada/, /Grace/]);
   });
 
+  // The minimum time avoids flicker; it must not block input. Rows that land while the skeleton
+  // holds are what a key or pointer press acts on, so the hold ends at the first one.
+  async function holdSkeletonOverRows(page) {
+    await mockAll(page);
+    await page.clock.install();
+    await navigateToTestPage(page, PAGE);
+    await expect(table(page, 'table_prop')).toHaveAttribute('data-loading-state', 'empty');
+    await page.clock.pauseAt(Date.now() + 60000);
+    await page.locator('#set_loading').click();
+    await page.clock.runFor(130);
+    for (const id of ['table_prop', 'light_prop']) {
+      await expect(table(page, id)).not.toHaveAttribute('data-skeleton-hidden', '');
+    }
+    await page.locator('#load_rows').click();
+    await page.clock.runFor(10);
+    for (const id of ['table_prop', 'light_prop']) {
+      await expect(table(page, id)).toHaveAttribute('data-loading-state', 'initial');
+    }
+    await expect(skeletonRows(page, 'table_prop')).toHaveCount(2);
+  }
+
+  test('a key on the header ends the skeleton hold and moves onto the real first row', async ({
+    page,
+  }) => {
+    await holdSkeletonOverRows(page);
+    const nameHeader = getBlock(page, 'table_prop').locator(
+      '[data-lf-header][data-col-key="name"]'
+    );
+    await nameHeader.focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(table(page, 'table_prop')).toHaveAttribute('data-loading-state', 'ready');
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const cell = document.activeElement;
+          return `${cell.closest('[data-row-key]')?.dataset.rowKey}:${cell.dataset.colKey}`;
+        })
+      )
+      .toBe('1:name');
+    await page.keyboard.press('Enter');
+    await expect(getBlock(page, 'prop_clicked_value')).toHaveText('Clicked: 1');
+    // The other table still holds: nothing happened there.
+    await expect(table(page, 'light_prop')).toHaveAttribute('data-loading-state', 'initial');
+  });
+
+  test('a header click during the skeleton hold sorts the rows it reveals', async ({ page }) => {
+    await holdSkeletonOverRows(page);
+    await getBlock(page, 'table_prop').locator('[data-lf-header][data-col-key="name"]').click();
+    await expect(table(page, 'table_prop')).toHaveAttribute('data-loading-state', 'ready');
+    await expect(bodyRows(page, 'table_prop')).toHaveText([/Ada/, /Grace/]);
+    await getBlock(page, 'table_prop').locator('[data-lf-header][data-col-key="name"]').click();
+    await expect(bodyRows(page, 'table_prop')).toHaveText([/Grace/, /Ada/]);
+    await page.locator('#light_prop').click();
+    await expect(table(page, 'light_prop')).toHaveAttribute('data-loading-state', 'ready');
+    await expect(lightRows(page, 'light_prop')).toHaveText([/Ada/, /Grace/]);
+  });
+
+  test('skeleton cells are not keyboard targets', async ({ page }) => {
+    await holdSkeletonOverRows(page);
+    const skeletonCells = skeletonRows(page, 'table_prop').locator('[role="gridcell"]');
+    await expect(skeletonCells).toHaveCount(4);
+    await expect(skeletonRows(page, 'table_prop').locator('[data-lf-cell]')).toHaveCount(0);
+    await expect(skeletonRows(page, 'table_prop').locator('[tabindex]')).toHaveCount(0);
+    await expect(skeletonRows(page, 'table_prop').first()).toHaveAttribute('aria-busy', 'true');
+  });
+
   test('a fast response never flashes the skeleton', async ({ page }) => {
     await mockAll(page);
     await page.clock.install();
