@@ -19,6 +19,7 @@ import { Alert, Button, Drawer, Input, Select, Switch } from 'antd';
 import AI_OUTPUT_TYPES from '@lowdefy/blocks-antd/table/aiOutputTypes.js';
 import CELL_TYPE_FAMILIES from '@lowdefy/blocks-antd/table/cellTypeFamilies.js';
 import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
+import isEnrichmentInputColumn from '@lowdefy/blocks-antd/table/isEnrichmentInputColumn.js';
 import USER_COLUMN_TYPES from '@lowdefy/blocks-antd/table/userColumnTypes.js';
 
 import buildColumnConfig from './buildColumnConfig.js';
@@ -108,7 +109,7 @@ function ProviderFields({ columns, draft, provider, update }) {
   );
 }
 
-function KindFields({ columns, draft, provider, sources, update }) {
+function KindFields({ columns, draft, inputColumns, provider, sources, update }) {
   switch (draft.kind) {
     case 'formula':
       return (
@@ -124,21 +125,21 @@ function KindFields({ columns, draft, provider, sources, update }) {
       );
     case 'enrichment':
       return provider ? (
-        <ProviderFields columns={columns} draft={draft} provider={provider} update={update} />
+        <ProviderFields columns={inputColumns} draft={draft} provider={provider} update={update} />
       ) : null;
     case 'ai':
       return (
         <>
           <Field label="Prompt" name="prompt">
             <TemplateEditor
-              columns={columns}
+              columns={inputColumns}
               name="prompt"
               onChange={(prompt) =>
                 update({
                   prompt,
                   inputs: syncPromptInputs({
                     prompt,
-                    columnKeys: columns.map((column) => column.key),
+                    columnKeys: inputColumns.map((column) => column.key),
                   }),
                 })
               }
@@ -218,15 +219,18 @@ function ColumnPicker({ api, picker }) {
   const [draft, setDraft] = useState(picker.draft);
   const update = (patch) => setDraft((current) => ({ ...current, ...patch }));
   const allColumns = api.config.columns;
-  const columns = useMemo(
-    () =>
-      allColumns
-        .filter(
-          (column) => column.key !== picker.key && CELL_TYPE_FAMILIES[column.type] !== 'action'
-        )
-        .map((column) => ({ key: column.key, title: htmlToText(column.title) })),
-    [allColumns, picker.key]
-  );
+  // A formula can read any column; provider inputs and prompt placeholders only the columns the
+  // server can read (isEnrichmentInputColumn: no formula or extract columns).
+  const { columns, inputColumns } = useMemo(() => {
+    const others = allColumns.filter(
+      (column) => column.key !== picker.key && CELL_TYPE_FAMILIES[column.type] !== 'action'
+    );
+    const toOption = (column) => ({ key: column.key, title: htmlToText(column.title) });
+    return {
+      columns: others.map(toOption),
+      inputColumns: others.filter(isEnrichmentInputColumn).map(toOption),
+    };
+  }, [allColumns, picker.key]);
   const sources = settings.runColumns
     .filter((column) => column.key !== picker.key)
     .map((column) => ({ key: column.key, title: htmlToText(column.title) }));
@@ -248,7 +252,11 @@ function ColumnPicker({ api, picker }) {
     key,
     inputFieldPrefix: picker.mode === 'edit' ? null : settings.inputFieldPrefix,
   });
-  const problem = validateDraft({ draft, provider });
+  const problem = validateDraft({
+    draft,
+    provider,
+    inputKeys: inputColumns.map((column) => column.key),
+  });
   const saving = picker.status === 'saving';
   const runs = draft.kind === 'enrichment' || draft.kind === 'ai';
   const close = () => api.actions.closeOverlay({ name: 'picker' });
@@ -313,6 +321,7 @@ function ColumnPicker({ api, picker }) {
         <KindFields
           columns={columns}
           draft={draft}
+          inputColumns={inputColumns}
           provider={provider}
           sources={sources}
           update={update}

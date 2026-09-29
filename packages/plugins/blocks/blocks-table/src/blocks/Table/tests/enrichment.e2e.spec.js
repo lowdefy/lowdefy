@@ -356,6 +356,36 @@ test.describe('Table enrichment', () => {
     });
   });
 
+  test('provider inputs and prompt chips only offer columns the server can read', async ({
+    page,
+  }) => {
+    await openPicker(page);
+    // A formula reads any column, formula and extract columns too.
+    await picker(page).locator('[data-lf-picker-kind="formula"]').click();
+    const chips = (name) =>
+      picker(page).locator(`[data-lf-picker-template="${name}"] [data-lf-picker-chip]`);
+    await expect(chips('template')).toHaveText([
+      'Company',
+      'Domain',
+      'Email',
+      'Summary',
+      'Linkedin',
+      'Label',
+    ]);
+    // Formula and extract values are never stored, so an AI prompt can not read them.
+    await picker(page).locator('[data-lf-picker-kind="ai"]').click();
+    await expect(chips('prompt')).toHaveText(['Company', 'Domain', 'Email', 'Summary']);
+    await picker(page).locator('[data-lf-picker-kind="provider:findEmail"]').click();
+    await picker(page).locator('[data-lf-picker-input="domain"] .ant-select').click();
+    await expect(dropdown(page).locator('.ant-select-item-option')).toHaveText([
+      'Company',
+      'Domain',
+      'Email',
+      'Summary',
+      'Literal value…',
+    ]);
+  });
+
   test('the add-column picker adds an extract column', async ({ page }) => {
     await openPicker(page);
     await picker(page).locator('[data-lf-picker-kind="extract"]').click();

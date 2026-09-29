@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import isEnrichmentInputColumn from '@lowdefy/blocks-antd/table/isEnrichmentInputColumn.js';
 import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
 
 import buildColumnConfig from './buildColumnConfig.js';
@@ -23,6 +24,8 @@ import generateColumnKey from './generateColumnKey.js';
 import getPickerKinds from './getPickerKinds.js';
 import syncPromptInputs from './syncPromptInputs.js';
 import validateDraft from './validateDraft.js';
+
+const inputKeys = ['name', 'domain'];
 
 const provider = {
   id: 'findEmail',
@@ -193,26 +196,72 @@ test('every built column config normalises', () => {
 });
 
 test('validateDraft asks for what the kind needs', () => {
-  expect(validateDraft({ draft: createDraft(), provider: null })).toBe('Enter a column title.');
+  expect(validateDraft({ draft: createDraft(), provider: null, inputKeys })).toBe(
+    'Enter a column title.'
+  );
   const titled = (kind) => ({ ...createDraft({ kind }), title: 'X' });
-  expect(validateDraft({ draft: titled('input'), provider: null })).toBe(null);
-  expect(validateDraft({ draft: titled('formula'), provider: null })).toBe(
+  expect(validateDraft({ draft: titled('input'), provider: null, inputKeys })).toBe(null);
+  expect(validateDraft({ draft: titled('formula'), provider: null, inputKeys })).toBe(
     'Enter a formula template.'
   );
-  expect(validateDraft({ draft: titled('enrichment'), provider: null })).toBe('Choose a provider.');
-  expect(validateDraft({ draft: titled('enrichment'), provider })).toBe(
+  expect(validateDraft({ draft: titled('enrichment'), provider: null, inputKeys })).toBe(
+    'Choose a provider.'
+  );
+  expect(validateDraft({ draft: titled('enrichment'), provider, inputKeys })).toBe(
     'Map the required inputs: Domain.'
   );
   expect(
     validateDraft({
       draft: { ...titled('enrichment'), inputs: { domain: { mode: 'value', value: 'a.io' } } },
       provider,
+      inputKeys,
     })
   ).toBe(null);
-  expect(validateDraft({ draft: titled('ai'), provider: null })).toBe('Enter a prompt.');
-  expect(validateDraft({ draft: titled('extract'), provider: null })).toBe(
+  expect(validateDraft({ draft: titled('ai'), provider: null, inputKeys })).toBe('Enter a prompt.');
+  expect(validateDraft({ draft: titled('extract'), provider: null, inputKeys })).toBe(
     'Choose the column to extract from.'
   );
+});
+
+test('validateDraft refuses inputs and prompt placeholders from columns the server can not read', () => {
+  const enrichment = {
+    ...createDraft({ kind: 'enrichment' }),
+    title: 'Email',
+    inputs: { domain: { mode: 'column', column: 'label' } },
+  };
+  expect(validateDraft({ draft: enrichment, provider, inputKeys })).toBe(
+    'An input can not read "label": use an input, data, enrichment or AI column (formula and extract columns compute in the browser).'
+  );
+  const ai = {
+    ...createDraft({ kind: 'ai' }),
+    title: 'Pitch',
+    prompt: 'Hi {{ name }} at {{ label }}',
+  };
+  expect(validateDraft({ draft: ai, provider: null, inputKeys })).toContain('"label"');
+  expect(
+    validateDraft({ draft: { ...ai, prompt: 'Hi {{ name }}' }, provider: null, inputKeys })
+  ).toBe(null);
+});
+
+test('isEnrichmentInputColumn offers input, data, enrichment and ai columns, not formula or extract', () => {
+  const { columns } = normalizeColumns({
+    columns: [
+      'name',
+      { key: 'notes', kind: 'input' },
+      { key: 'email', kind: 'enrichment', provider: 'p', inputs: { n: { column: 'name' } } },
+      { key: 'pitch', kind: 'ai', prompt: '{{ name }}', inputs: { name: { column: 'name' } } },
+      { key: 'label', kind: 'formula', template: '{{ name }}!' },
+      { key: 'city', kind: 'extract', source: 'email', path: 'city' },
+      { key: 'actions', type: 'buttons', buttons: [] },
+    ],
+    providerIds: new Set(['p']),
+  });
+  expect(columns.filter(isEnrichmentInputColumn).map((column) => column.key)).toEqual([
+    'name',
+    'notes',
+    'email',
+    'pitch',
+  ]);
 });
 
 test('draftFromColumn reads a column config back into a draft that rebuilds it', () => {
@@ -234,19 +283,27 @@ test('draftFromColumn reads a column config back into a draft that rebuilds it',
 
 test('validateDraft refuses templates and prompts that are more than column placeholders', () => {
   const formula = { ...createDraft({ kind: 'formula' }), title: 'Label' };
-  expect(validateDraft({ draft: { ...formula, template: '{{ name }}!' }, provider: null })).toBe(
-    null
-  );
   expect(
-    validateDraft({ draft: { ...formula, template: '{% if a %}x{% endif %}' }, provider: null })
+    validateDraft({ draft: { ...formula, template: '{{ name }}!' }, provider: null, inputKeys })
+  ).toBe(null);
+  expect(
+    validateDraft({
+      draft: { ...formula, template: '{% if a %}x{% endif %}' },
+      provider: null,
+      inputKeys,
+    })
   ).toContain('template tags ({% %})');
   expect(
-    validateDraft({ draft: { ...formula, template: '{{ name | upper }}' }, provider: null })
+    validateDraft({
+      draft: { ...formula, template: '{{ name | upper }}' },
+      provider: null,
+      inputKeys,
+    })
   ).toBe('Only {{ column }} placeholders are supported: "{{ name | upper }}" is an expression.');
   const ai = { ...createDraft({ kind: 'ai' }), title: 'Pitch' };
-  expect(validateDraft({ draft: { ...ai, prompt: 'Hi {# x #}' }, provider: null })).toContain(
-    'comments ({# #})'
-  );
+  expect(
+    validateDraft({ draft: { ...ai, prompt: 'Hi {# x #}' }, provider: null, inputKeys })
+  ).toContain('comments ({# #})');
 });
 
 test('getPickerKinds shows a catalogue ai provider once, as the AI kind', () => {

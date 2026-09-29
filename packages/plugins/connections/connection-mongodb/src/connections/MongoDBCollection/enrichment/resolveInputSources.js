@@ -16,16 +16,26 @@
 
 import enrichPath from './enrichPath.js';
 
+// Formula and extract columns compute in the browser, so no row holds their value.
+const browserKinds = ['formula', 'extract'];
+
 // Where each input of an enrichment column is read from. A { column } input reads another
 // enrichment or ai column's result (`_enrich.<key>.value`, once that cell is ok), or a field
 // of the `fields` allowlist at its path: a column outside both is refused, so a column
 // config (which users write) can never send a field the table does not list to a provider.
+// A formula or extract column is refused even when its key is also a field name: its value
+// is never stored, so the field would hold something else (the Table refuses the same).
 function resolveInputSources({ columnDef, columnDefsByKey, fieldsByKey, requestType }) {
   return columnDef.inputs.map((input) => {
     if (Object.hasOwn(input, 'value')) {
       return { param: input.param, source: 'value', value: input.value };
     }
     const upstream = columnDefsByKey.get(input.column);
+    if (browserKinds.includes(upstream?.kind)) {
+      throw new Error(
+        `${requestType} column "${columnDef.key}" input "${input.param}" reads ${upstream.kind} column "${input.column}", which computes in the browser and is never stored.`
+      );
+    }
     if (upstream?.runnable === true) {
       return {
         param: input.param,

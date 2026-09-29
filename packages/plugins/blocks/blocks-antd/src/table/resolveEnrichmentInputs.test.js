@@ -28,7 +28,7 @@ const { columnsByKey } = normalizeColumns({
       provider: 'people',
       inputs: { domain: { column: 'domain' } },
     },
-    { key: 'title', kind: 'extract', source: 'person', path: 'job.title' },
+    { key: 'title', field: 'job.title' },
     {
       key: 'email',
       kind: 'enrichment',
@@ -56,7 +56,8 @@ const row = {
   domain: 'acme.com',
   org: { name: 'Acme' },
   note: '',
-  _enrich: { person: { status: 'ok', value: 'Ada', raw: { job: { title: 'CTO' } } } },
+  job: { title: 'CTO' },
+  _enrich: { person: { status: 'ok', value: 'Ada' } },
 };
 
 test('resolveEnrichmentInputs reads column refs and keeps literals as given', () => {
@@ -73,6 +74,7 @@ test('resolveEnrichmentInputs reads an enrichment column input only once its cel
   const running = { ...row, _enrich: { person: { status: 'running', value: 'Old' } } };
   expect(resolveEnrichmentInputs({ column: columnsByKey.email, row: running })).toEqual({
     domain: 'acme.com',
+    title: 'CTO',
     limit: 3,
     empty: '',
   });

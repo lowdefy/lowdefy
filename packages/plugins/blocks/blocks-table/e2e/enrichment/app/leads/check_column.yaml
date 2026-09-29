@@ -96,7 +96,13 @@ _js:
           errors.push(`Input "${param}" should be { column } or { value }.`);
           return;
         }
-        if (isColumn && !(input.column in fields) && !isRunnable(byKey.get(input.column))) {
+        const other = byKey.get(input.column);
+        // Formula and extract values are never stored, even when a field shares the key.
+        if (isColumn && (other?.kind === 'formula' || other?.kind === 'extract')) {
+          errors.push(`Input "${param}" reads the ${other.kind} column "${input.column}", which computes in the browser, so the server can not read it.`);
+          return;
+        }
+        if (isColumn && !(input.column in fields) && !isRunnable(other)) {
           errors.push(`Input "${param}" reads "${input.column}", which is not a column the server can read.`);
         }
       });

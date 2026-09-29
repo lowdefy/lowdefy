@@ -223,7 +223,7 @@ const column = {
     inputs: {
       type: 'object',
       description:
-        "`kind: enrichment` or `ai`: the inputs, each `{ column: <column key>, required? }` (that column's value in the row; an enrichment or ai column's only once its cell is done) or `{ value: <literal> }`. An ai column lists the columns its prompt references here (the add-column picker keeps them in step). A cell is stale when its resolved inputs differ from the ones it ran with.",
+        "`kind: enrichment` or `ai`: the inputs, each `{ column: <column key>, required? }` (that column's value in the row; an enrichment or ai column's only once its cell is done) or `{ value: <literal> }`. An input reads an input or data column (a stored field) or an enrichment or ai column, never a formula or extract column: those compute in the browser, so the server can not read them (the picker does not offer them, a declared column reading one throws and a user-defined one becomes an error column). An ai column lists the columns its prompt references here (the add-column picker keeps them in step). A cell is stale when its resolved inputs differ from the ones it ran with.",
       docs: { displayType: 'yaml' },
     },
     output: {
