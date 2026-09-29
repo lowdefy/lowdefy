@@ -16,7 +16,9 @@
 
 import { get, type } from '@lowdefy/helpers';
 
-const PLACEHOLDER = /\{\{-?\s*([A-Za-z_$][\w$-]*(?:\.[\w$-]+)*)\s*-?\}\}/g;
+import placeholderPattern from './placeholderPattern.js';
+
+const PLACEHOLDER = new RegExp(placeholderPattern, 'g');
 
 function toText(value) {
   if (type.isNone(value)) return '';

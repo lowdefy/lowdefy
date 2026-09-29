@@ -554,7 +554,7 @@ _ref:
 
             Each provider endpoint `enrich_<provider id>` takes `{ inputs, prompt, output }` and returns `{ status: ok | empty, value, raw }`, or `{ status: error, error, retry: false }` for a final failure; throwing is a failed attempt that is retried. `null` for `error` or `retry` (what `_step` gives for a key the provider did not return) is the same as leaving it out. The app declares these endpoints, so a column can only call what the app exposes, and API keys stay on the server. For a concurrency per provider, group the claimed cells by `provider` and run each group with its own `:concurrency`, or run a worker per provider with `providers` on the claim.
 
-            The AI provider (`enrich_ai`) fills the prompt's `{{ input }}` placeholders with the cell's inputs by plain string replacement, in one pass, so a row value that looks like a template stays text, and asks the model for an answer of the column's `output.type`.
+            The AI provider (`enrich_ai`) fills the prompt's `{{ input }}` and `{{ input.path }}` placeholders (a dot path reads into the input's value, the pattern the Table accepts) with the cell's inputs by plain string replacement, in one pass, so a row value that looks like a template stays text, and asks the model for an answer of the column's `output.type`.
 
             The endpoint the table's run events call queues the cells, then starts the worker without waiting for it (a detached call needs the `CRON_SECRET` environment variable):
 

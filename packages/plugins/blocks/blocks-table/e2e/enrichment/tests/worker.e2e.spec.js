@@ -329,6 +329,29 @@ test('a new row can only set input fields', async ({ request }) => {
   expect(refused.error).toContain('"secret" is not an input column.');
 });
 
+test('an AI prompt fills a dotted placeholder from the input it starts with', async ({
+  request,
+}) => {
+  const column = {
+    key: 'firm_note',
+    kind: 'ai',
+    prompt: 'Note {{ firm.name }} in {{ firm.address.city }} for {{name}}, not {{ firm.missing }}.',
+    inputs: {
+      name: { column: 'name' },
+      firm: { value: { name: 'Acme', address: { city: 'Cape Town' } } },
+    },
+  };
+  const added = await callEndpoint(request, 'columns_add', { column });
+  expect(added.error).toBeUndefined();
+  const selection = await rowKeys(request, ['Ada Brightwell']);
+  await callEndpoint(request, 'enrichment_run', { columns: ['firm_note'], selection });
+  const leads = await settle(request);
+  expect(cellOf(byName(leads, 'Ada Brightwell'), 'firm_note')).toMatchObject({
+    status: 'ok',
+    raw: { prompt: 'Note Acme in Cape Town for Ada Brightwell, not .' },
+  });
+});
+
 test('AI columns return values of their output type', async ({ request }) => {
   const columns = [
     {

@@ -171,6 +171,15 @@ test('invalid columns are refused with the reason', async ({ request }) => {
       'The prompt uses {{ domain }}, which is not an input.',
     ],
     [
+      {
+        key: 'x',
+        kind: 'ai',
+        prompt: 'Describe {{ firm.name }}',
+        inputs: { name: { column: 'name' } },
+      },
+      'The prompt uses {{ firm.name }}, which reads "firm", not an input.',
+    ],
+    [
       { key: 'x', kind: 'ai', prompt: '{{ range.constructor("return 1")() }}', inputs: {} },
       'Only {{ column }} placeholders are supported: "{{ range.constructor("return 1")() }}" is an expression.',
     ],
