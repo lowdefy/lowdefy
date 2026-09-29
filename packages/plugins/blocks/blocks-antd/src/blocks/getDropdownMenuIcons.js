@@ -16,6 +16,20 @@
 
 import React from 'react';
 
+function createExpandIcon({ blockId, Icon }) {
+  return function DropdownExpandIcon() {
+    return (
+      <span className="ant-dropdown-menu-submenu-arrow">
+        <Icon
+          blockId={`${blockId}_expandIcon`}
+          className="ant-dropdown-menu-submenu-arrow-icon"
+          properties={{ name: 'chevron-right', title: '' }}
+        />
+      </span>
+    );
+  };
+}
+
 // One expand icon component per Icon component and block id, so it keeps its identity across
 // renders (antd renders a function expandIcon as a component: a new function would remount it).
 const expandIcons = new WeakMap();
@@ -23,20 +37,7 @@ const expandIcons = new WeakMap();
 function getExpandIcon({ blockId, Icon }) {
   if (!expandIcons.has(Icon)) expandIcons.set(Icon, new Map());
   const byBlockId = expandIcons.get(Icon);
-  if (!byBlockId.has(blockId)) {
-    function DropdownExpandIcon() {
-      return (
-        <span className="ant-dropdown-menu-submenu-arrow">
-          <Icon
-            blockId={`${blockId}_expandIcon`}
-            className="ant-dropdown-menu-submenu-arrow-icon"
-            properties={{ name: 'chevron-right', title: '' }}
-          />
-        </span>
-      );
-    }
-    byBlockId.set(blockId, DropdownExpandIcon);
-  }
+  if (!byBlockId.has(blockId)) byBlockId.set(blockId, createExpandIcon({ blockId, Icon }));
   return byBlockId.get(blockId);
 }
 
