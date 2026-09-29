@@ -36,7 +36,7 @@ exports[`createHtmlCss output 1`] = `
   }
   :where([data-lf-html] [data-tag=\\"volcano\\"]),
   :where([data-lf-html] [data-status=\\"volcano\\"]) {
-    --lf-tone: var(--ant-color-volcano, var(--ant-color-error));
+    --lf-tone: var(--ant-volcano-6, #fa541c);
   }
   :where([data-lf-html] [data-tag=\\"orange\\"]),
   :where([data-lf-html] [data-status=\\"orange\\"]) {
@@ -44,7 +44,7 @@ exports[`createHtmlCss output 1`] = `
   }
   :where([data-lf-html] [data-tag=\\"gold\\"]),
   :where([data-lf-html] [data-status=\\"gold\\"]) {
-    --lf-tone: var(--ant-color-gold, var(--ant-color-warning));
+    --lf-tone: var(--ant-gold-6, #faad14);
   }
   :where([data-lf-html] [data-tag=\\"yellow\\"]),
   :where([data-lf-html] [data-status=\\"yellow\\"]) {
@@ -52,7 +52,7 @@ exports[`createHtmlCss output 1`] = `
   }
   :where([data-lf-html] [data-tag=\\"lime\\"]),
   :where([data-lf-html] [data-status=\\"lime\\"]) {
-    --lf-tone: var(--ant-color-lime, var(--ant-color-success));
+    --lf-tone: var(--ant-lime-6, #a0d911);
   }
   :where([data-lf-html] [data-tag=\\"green\\"]),
   :where([data-lf-html] [data-status=\\"green\\"]) {
@@ -60,7 +60,7 @@ exports[`createHtmlCss output 1`] = `
   }
   :where([data-lf-html] [data-tag=\\"cyan\\"]),
   :where([data-lf-html] [data-status=\\"cyan\\"]) {
-    --lf-tone: var(--ant-color-cyan, var(--ant-color-info));
+    --lf-tone: var(--ant-cyan-6, #13c2c2);
   }
   :where([data-lf-html] [data-tag=\\"blue\\"]),
   :where([data-lf-html] [data-status=\\"blue\\"]) {
@@ -68,15 +68,19 @@ exports[`createHtmlCss output 1`] = `
   }
   :where([data-lf-html] [data-tag=\\"geekblue\\"]),
   :where([data-lf-html] [data-status=\\"geekblue\\"]) {
-    --lf-tone: var(--ant-color-geekblue, var(--ant-color-info));
+    --lf-tone: var(--ant-geekblue-6, #2f54eb);
   }
   :where([data-lf-html] [data-tag=\\"purple\\"]),
   :where([data-lf-html] [data-status=\\"purple\\"]) {
-    --lf-tone: var(--ant-color-purple, var(--ant-color-info));
+    --lf-tone: var(--ant-purple-6, #722ed1);
   }
   :where([data-lf-html] [data-tag=\\"magenta\\"]),
   :where([data-lf-html] [data-status=\\"magenta\\"]) {
-    --lf-tone: var(--ant-color-magenta, var(--ant-color-error));
+    --lf-tone: var(--ant-magenta-6, #eb2f96);
+  }
+  :where([data-lf-html] [data-tag=\\"pink\\"]),
+  :where([data-lf-html] [data-status=\\"pink\\"]) {
+    --lf-tone: var(--ant-pink-6, #eb2f96);
   }
   :where([data-lf-html] [data-tag=\\"default\\"]),
   :where([data-lf-html] [data-status=\\"default\\"]) {
