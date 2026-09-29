@@ -311,3 +311,13 @@ test('the schema accepts a full request and refuses unknown result keys', () => 
     'MongoDBEnrichmentComplete request "results" items should only have'
   );
 });
+
+test('the schema and compile take error and retry null as not given', () => {
+  // `_step` yields null for a key the provider step did not return.
+  const nulls = result({ status: 'ok', value: 'a@b', error: null, retry: null });
+  expect(validate({ schema, data: { columnDefs, results: [nulls] } })).toEqual({ valid: true });
+  const failed = result({ status: 'error', error: null, retry: null });
+  expect(validate({ schema, data: { columnDefs, results: [failed] } })).toEqual({ valid: true });
+  expect(() => compile({ results: [nulls] })).not.toThrow();
+  expect(() => compile({ results: [failed] })).not.toThrow();
+});

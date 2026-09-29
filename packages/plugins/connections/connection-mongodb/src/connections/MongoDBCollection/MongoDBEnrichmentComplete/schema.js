@@ -51,11 +51,16 @@ export default {
             description:
               'The provider response, for the details panel and "Add as column". Larger than rawMaxBytes, it is stored as a truncation marker.',
           },
-          error: { type: 'string', description: 'The error message, with status error.' },
+          error: {
+            type: ['string', 'null'],
+            description:
+              'The error message, with status error. null (what _step gives for a missing key) is the same as not given.',
+          },
           retry: {
-            type: 'boolean',
+            type: ['boolean', 'null'],
             default: true,
-            description: 'With status error: false makes the error final, with no retry.',
+            description:
+              'With status error: false makes the error final, with no retry. null is the same as not given (true).',
           },
         },
         additionalProperties: false,
