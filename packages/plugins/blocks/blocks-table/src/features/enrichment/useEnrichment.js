@@ -17,7 +17,7 @@
 import React, { useMemo, useState } from 'react';
 
 import collectRawColumns from '../editing/collectRawColumns.js';
-import countRunStates from './countRunStates.js';
+import createRunCounter from './createRunCounter.js';
 import EnrichmentLayer from './EnrichmentLayer.js';
 import NewRow from './NewRow.js';
 import readServerRunCounts from './readServerRunCounts.js';
@@ -54,17 +54,20 @@ function useEnrichment({ api, config, data }) {
     [config]
   );
   const aggregates = api.serverStore ? api.serverStore.getAggregates() : null;
+  // Remembers each row's statuses, so a websocket batch only reads the rows it changed.
+  const [countRuns] = useState(() => createRunCounter());
   enrichment.counts = useMemo(() => {
     const counts = new Map();
+    const counted = [];
     settings.runColumns.forEach((column) => {
-      counts.set(
-        column.key,
-        readServerRunCounts({ aggregates, key: column.key }) ??
-          countRunStates({ rows: data, column })
-      );
+      const server = readServerRunCounts({ aggregates, key: column.key });
+      if (server === null) counted.push(column);
+      else counts.set(column.key, server);
     });
+    if (counted.length === 0) return counts;
+    countRuns({ rows: data, columns: counted }).forEach((value, key) => counts.set(key, value));
     return counts;
-  }, [settings, data, aggregates]);
+  }, [settings, data, aggregates, countRuns]);
 
   const showAdd = Boolean(settings.addColumn);
   const showRunRow = Boolean(api.events.onRowRun) && settings.runColumns.length > 0;
