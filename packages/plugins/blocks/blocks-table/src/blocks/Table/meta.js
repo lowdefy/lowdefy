@@ -149,7 +149,7 @@ const column = {
       type: 'string',
       enum: Object.keys(AGGREGATE_LABELS),
       description:
-        'Default aggregate for this column, shown in group headers and the summary footer (over all filtered rows): sum, avg, min, max, count, countDistinct, countEmpty, countNotEmpty, percentEmpty, earliest or latest. The view `aggregates` overrides it.',
+        'Default aggregate for this column, shown in group headers and the summary footer (over all filtered rows): sum, avg, min, max, count, countDistinct, countEmpty, countNotEmpty, percentEmpty, earliest or latest. The view `aggregates` overrides it, and can set aggregates for columns without one.',
     },
     options: {
       type: ['array', 'object'],
@@ -863,7 +863,7 @@ export default {
         type: 'boolean',
         default: true,
         description:
-          'Show the summary footer when a column declares an `aggregate`. `false` hides it.',
+          'Show the summary footer when any aggregate is in effect: a column `aggregate`, or one the view sets in `view.aggregates`. `false` hides it.',
       },
     },
   },

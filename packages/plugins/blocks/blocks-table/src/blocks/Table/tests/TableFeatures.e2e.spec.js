@@ -76,6 +76,13 @@ test.describe('Table features shared with TableLight', () => {
     expect(lastBox.y + lastBox.height).toBeLessThanOrEqual(footerBox.y + 1);
   });
 
+  test('the summary footer shows for view aggregates without column aggregates', async ({
+    page,
+  }) => {
+    const summary = getBlock(page, 'tf_summary_view').locator('.lf-table-summary-row');
+    await expect(summary.locator('[data-col-key="amount"]')).toContainText('7');
+  });
+
   test('pagination shows pages of pageSize with a pager', async ({ page }) => {
     await expect(bodyRows(page, 'tf_pages')).toHaveCount(5);
     const pager = getBlock(page, 'tf_pages').locator('.ant-pagination');

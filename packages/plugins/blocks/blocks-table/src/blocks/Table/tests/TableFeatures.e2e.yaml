@@ -70,6 +70,20 @@ blocks:
           for (let i = 1; i <= 30; i++) rows.push({ id: i, name: 'Row ' + i, amount: i });
           return rows;
 
+  - id: tf_summary_view
+    type: Table
+    properties:
+      defaultView:
+        aggregates:
+          amount: max
+      columns:
+        - key: name
+        - key: amount
+          type: number
+      data:
+        - { id: 1, name: Ann, amount: 3 }
+        - { id: 2, name: Ben, amount: 7 }
+
   # ============================================
   # PAGINATION
   # ============================================
