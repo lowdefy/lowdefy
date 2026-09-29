@@ -18,6 +18,13 @@ function isEmptyExpression({ path }) {
   return { $in: [{ $ifNull: [`$${path}`, null] }, [null, '', []]] };
 }
 
+// $min and $max skip null and missing values; for text an empty string would be the minimum,
+// so empty values are left out, as the Table's own footers leave them out.
+function compileExtremeValue({ field, isEmpty }) {
+  if (field.family === 'text') return { $cond: [isEmpty, '$$REMOVE', `$${field.path}`] };
+  return `$${field.path}`;
+}
+
 // A distinct count of the whole set as its own $facet branch: one $group document per value,
 // then a count, where an $addToSet would build every distinct value into one document (16MB).
 function compileDistinctBranch({ path }) {
@@ -40,7 +47,8 @@ function compileAggregates({ aggregates, fieldsByKey, distinct }) {
   const specs = [];
   Object.entries(aggregates).forEach(([key, fn], index) => {
     const name = `a${index}`;
-    const { path } = fieldsByKey.get(key);
+    const field = fieldsByKey.get(key);
+    const { path } = field;
     const isEmpty = isEmptyExpression({ path });
     specs.push({ key, fn, name });
     switch (fn) {
@@ -55,11 +63,11 @@ function compileAggregates({ aggregates, fieldsByKey, distinct }) {
         break;
       case 'min':
       case 'earliest':
-        accumulators[name] = { $min: `$${path}` };
+        accumulators[name] = { $min: compileExtremeValue({ field, isEmpty }) };
         break;
       case 'max':
       case 'latest':
-        accumulators[name] = { $max: `$${path}` };
+        accumulators[name] = { $max: compileExtremeValue({ field, isEmpty }) };
         break;
       case 'countDistinct':
         if (distinct === 'branch') {

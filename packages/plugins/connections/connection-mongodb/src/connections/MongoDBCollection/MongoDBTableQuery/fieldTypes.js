@@ -24,9 +24,10 @@ const allOperators = ['eq', 'ne', 'in', 'nin', 'empty', 'notEmpty'];
 const allAggregates = ['count', 'countDistinct', 'countEmpty', 'countNotEmpty', 'percentEmpty'];
 
 const families = {
+  // min and max of text compare strings, as the Table's own footers do.
   text: {
     operators: [...allOperators, 'contains', 'notContains', 'startsWith', 'endsWith'],
-    aggregates: allAggregates,
+    aggregates: [...allAggregates, 'min', 'max'],
   },
   numeric: {
     operators: [...allOperators, 'gt', 'gte', 'lt', 'lte', 'between'],

@@ -517,7 +517,7 @@ describe('sort, search, group and aggregates', () => {
       }).aggregates
     ).toEqual({ amount: 'sum', created: 'latest', stage: 'countDistinct' });
     expect(() => validateView({ view: { aggregates: { name: 'sum' } }, fieldsByKey })).toThrow(
-      'MongoDBTableQuery aggregate "sum" is not allowed on "name" of type "text". Allowed aggregates: count, countDistinct, countEmpty, countNotEmpty, percentEmpty.'
+      'MongoDBTableQuery aggregate "sum" is not allowed on "name" of type "text". Allowed aggregates: count, countDistinct, countEmpty, countNotEmpty, percentEmpty, min, max.'
     );
     expect(() =>
       validateView({ view: { aggregates: { amount: { $sum: '$amount' } } }, fieldsByKey })

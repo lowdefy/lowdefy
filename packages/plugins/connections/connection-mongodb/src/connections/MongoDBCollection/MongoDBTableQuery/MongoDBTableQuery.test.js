@@ -420,6 +420,18 @@ describe('aggregates', () => {
     expect(res.aggregates).toEqual({ amount: 400, created: new Date(Date.UTC(2026, 0, 30)) });
   });
 
+  test('min and max of a text field leave out empty values', async () => {
+    const res = await query({
+      view: { aggregates: { name: 'min', owner: 'max', note: 'min' } },
+      endRow: 1,
+    });
+    expect(res.aggregates).toEqual({
+      name: 'Ada Lovelace (a.k.a. Countess)',
+      owner: 'Grace',
+      note: 'x',
+    });
+  });
+
   test('countDistinct leaves out empty values', async () => {
     const res = await query({
       fields: {

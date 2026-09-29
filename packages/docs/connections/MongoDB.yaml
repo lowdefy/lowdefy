@@ -1016,7 +1016,7 @@ _ref:
 
             ##### Aggregates
 
-            `view.aggregates` maps field keys to a function. All field types allow `count`, `countDistinct`, `countEmpty`, `countNotEmpty` and `percentEmpty` (a fraction from 0 to 1). Numeric types also allow `sum`, `avg`, `min` and `max`, and date types `earliest` and `latest`.
+            `view.aggregates` maps field keys to a function. All field types allow `count`, `countDistinct`, `countEmpty`, `countNotEmpty` and `percentEmpty` (a fraction from 0 to 1). Numeric types also allow `sum`, `avg`, `min` and `max`, text types (`text`, `email`, `phone`, `url`, `link`, `html`, `relation`, `tag`, `status`, `avatar`) `min` and `max`, and date types `earliest` and `latest`. `min` and `max` of text leave out empty values and compare strings as MongoDB does: by code point, so `Z` comes before `a`, unless `options.collation` sets a locale.
 
             `countDistinct` groups by the field's values, so it needs `groupable: true` on the field, like grouping by it. Over the whole result it counts the groups in their own `$facet` branch, so a field with many distinct values never builds them all into one document; in a group level it collects the values of each group.
 

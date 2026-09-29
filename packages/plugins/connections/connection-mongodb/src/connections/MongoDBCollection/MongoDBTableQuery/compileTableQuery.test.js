@@ -415,6 +415,19 @@ describe('aggregates', () => {
     ]);
   });
 
+  test('min and max on text compare the non-empty strings', () => {
+    const { pipeline } = compile({ view: { aggregates: { name: 'min', email: 'max' } } });
+    expect(pipeline.at(-1).$facet.aggregates).toEqual([
+      {
+        $group: {
+          _id: null,
+          a0: { $min: { $cond: [isEmpty('name'), '$$REMOVE', '$name'] } },
+          a1: { $max: { $cond: [isEmpty('email'), '$$REMOVE', '$email'] } },
+        },
+      },
+    ]);
+  });
+
   test('countDistinct needs a groupable field', () => {
     expect(() => compile({ view: { aggregates: { amount: 'countDistinct' } } })).toThrow(
       'MongoDBTableQuery aggregate "countDistinct" on "amount" groups by its values, so the field needs "groupable: true".'
