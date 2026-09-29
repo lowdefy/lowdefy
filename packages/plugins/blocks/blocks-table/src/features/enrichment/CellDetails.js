@@ -21,6 +21,7 @@ import renderCell from '@lowdefy/blocks-antd/table/renderCell.js';
 
 import formatCost from './formatCost.js';
 import formatJsonPreview from './formatJsonPreview.js';
+import formatRunDuration from './formatRunDuration.js';
 import formatRunTime from './formatRunTime.js';
 import getInputRows from './getInputRows.js';
 import getRunState from './getRunState.js';
@@ -44,21 +45,33 @@ function Section({ children, name, title }) {
   );
 }
 
+// The run's times, with how long it took beside its finish time ("took 1.2 s").
 function Timings({ state }) {
+  const duration = formatRunDuration({
+    startedAt: state?.startedAt,
+    finishedAt: state?.finishedAt,
+  });
   const rows = [
     ['Queued', formatRunTime(state?.queuedAt)],
     ['Started', formatRunTime(state?.startedAt)],
-    ['Finished', formatRunTime(state?.finishedAt)],
+    ['Finished', formatRunTime(state?.finishedAt), duration],
     ['Attempts', state?.attempts ?? null],
     ['Cost', formatCost(state?.cost)],
   ].filter(([, value]) => value !== null && value !== undefined);
   if (rows.length === 0) return <p className="lf-enrich-muted">Not run yet.</p>;
   return (
     <dl className="lf-enrich-details-list" data-lf-details-timings="">
-      {rows.map(([label, value]) => (
+      {rows.map(([label, value, took]) => (
         <React.Fragment key={label}>
           <dt>{label}</dt>
-          <dd data-lf-details-timing={label.toLowerCase()}>{value}</dd>
+          <dd>
+            <span data-lf-details-timing={label.toLowerCase()}>{value}</span>
+            {took ? (
+              <span className="lf-enrich-muted" data-lf-details-duration="">
+                {` · took ${took}`}
+              </span>
+            ) : null}
+          </dd>
         </React.Fragment>
       ))}
     </dl>
@@ -115,12 +128,15 @@ function TruncatedRaw({ raw }) {
   );
 }
 
+// The raw result tree, its root named after the column that ran (the extract source for an
+// extract cell).
 function RawResult({ api, raw, source }) {
   if (raw === undefined || raw === null) return <p className="lf-enrich-muted">No raw result.</p>;
   if (raw._truncated === true) return <TruncatedRaw raw={raw} />;
   return (
     <JsonTree
-      onAdd={({ path, value }) => api.actions.addExtractColumn({ source, path, value })}
+      label={htmlToText(source.title)}
+      onAdd={({ path, value }) => api.actions.addExtractColumn({ source: source.key, path, value })}
       value={raw}
     />
   );
@@ -188,7 +204,7 @@ function renderBody({ api, column, row, rowId }) {
         <Inputs rows={inputRows} />
       </Section>
       <Section name="raw" title="Raw result">
-        <RawResult api={api} raw={raw} source={runColumn.key} />
+        <RawResult api={api} raw={raw} source={runColumn} />
       </Section>
     </>
   );

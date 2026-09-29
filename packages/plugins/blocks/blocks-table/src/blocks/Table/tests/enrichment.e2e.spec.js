@@ -819,6 +819,11 @@ test.describe('Table enrichment', () => {
       /^2026-09-01 \d\d:00:00$/
     );
     await expect(details(page).locator('[data-lf-details-timing="attempts"]')).toHaveText('1');
+    // How long the run took, beside its finish time.
+    await expect(details(page).locator('[data-lf-details-duration]')).toHaveText(' · took 2 s');
+    await expect(details(page).locator('[data-lf-details-timing="finished"]')).toHaveText(
+      /^2026-09-01 \d\d:00:03$/
+    );
     await expect(details(page).locator('[data-lf-details-input="domain"]')).toHaveText(
       '"acme.com"'
     );
@@ -829,6 +834,10 @@ test.describe('Table enrichment', () => {
     await expect(details(page).locator('[data-lf-json-node="email"]')).toContainText(
       '"ada@acme.com"'
     );
+    // The tree's root is named after the column, not "result".
+    await expect(
+      details(page).locator('[data-lf-json-node=""] .lf-enrich-json-key').first()
+    ).toHaveText('Email');
     // Objects expand on demand.
     await expect(details(page).locator('[data-lf-json-node="profile.name"]')).toHaveCount(0);
     await details(page).locator('[data-lf-json-toggle="profile"]').click();
@@ -865,6 +874,10 @@ test.describe('Table enrichment', () => {
       'Extracts "profile.linkedin" from Email.'
     );
     await expect(details(page).locator('[data-lf-details-value]')).toHaveText('in/ada');
+    // The raw result is the source column's, and its root carries that column's title.
+    await expect(
+      details(page).locator('[data-lf-json-node=""] .lf-enrich-json-key').first()
+    ).toHaveText('Email');
   });
 
   test('the raw result tree colours values, cuts them to its width and always shows add', async ({

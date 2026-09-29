@@ -133,9 +133,9 @@ The module is an optional feature: it loads in its own chunk only for tables wit
   - The bulk bar has "Run selected", which fires `onColumnRun` with the selection. It lists the visible run columns; the "+ New row" editor asks for the visible input columns.
 - **Cell details panel.** Clicking an enrichment cell, or pressing Space on it, opens a built-in side panel. It shows:
 
-  - the status, the value, the error and the timings;
+  - the status, the value, the error and the timings, with how long the run took beside its finish time ("took 1.2 s", `formatRunDuration`);
   - the inputs the value was computed from;
-  - `raw` as a collapsible JSON tree.
+  - `raw` as a collapsible JSON tree, its root named after the column that ran.
 
   Every leaf and object in the tree has an "Add as column" action (an always-visible "+", muted until hovered or focused, named for screen readers), which fires `onColumnAdd` with `kind: extract`. Keys, strings, numbers and booleans have their own colours (tag tone text colours, 4.5:1 in light and dark), and previews are cut to the panel's width with the whole value in their title.
 
