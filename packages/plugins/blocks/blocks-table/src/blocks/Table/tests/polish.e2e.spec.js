@@ -220,4 +220,35 @@ test.describe('Table visual polish', () => {
     });
     expect(cells.some((cell) => cell.hidden > 0)).toBe(true);
   });
+
+  test('stacked avatars leave the initials of every avatar uncovered', async ({ page }) => {
+    const overlaps = await table(page, 'crm').evaluate((root) => {
+      const result = [];
+      root.querySelectorAll('.lf-table-body .lf-table-people').forEach((stack) => {
+        const avatars = Array.from(stack.children);
+        for (let i = 0; i < avatars.length - 1; i++) {
+          const text = avatars[i].firstChild;
+          if (!text || text.nodeType !== Node.TEXT_NODE) continue;
+          const range = document.createRange();
+          range.selectNodeContents(avatars[i]);
+          const glyphs = range.getBoundingClientRect();
+          const next = avatars[i + 1];
+          const ring = Number.parseFloat(getComputedStyle(next).boxShadow.split(' ').at(-1)) || 0;
+          result.push({
+            initials: text.textContent,
+            covered: glyphs.right - (next.getBoundingClientRect().left - ring),
+          });
+        }
+      });
+      return result;
+    });
+    expect(overlaps.length).toBeGreaterThan(5);
+    // The text box includes the glyphs' side bearings, so half a pixel of it may sit under the ring.
+    overlaps.forEach(({ covered }) => expect(covered).toBeLessThanOrEqual(0.5));
+  });
+
+  test('a single person shows the full name as a title when it is cut', async ({ page }) => {
+    const name = row(page, 'crm', 6).locator('[data-col-key="owner"] .lf-table-person-name');
+    await expect(name).toHaveAttribute('title', 'Samuel Adeyemi');
+  });
 });

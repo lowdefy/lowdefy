@@ -49,7 +49,9 @@ function AvatarCell({ value, row, column, components, onEvent }) {
   return (
     <span className="lf-table-person">
       {mark}
-      <span className="lf-table-person-name">{label}</span>
+      <span className="lf-table-person-name" title={label}>
+        {label}
+      </span>
     </span>
   );
 }

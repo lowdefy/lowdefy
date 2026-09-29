@@ -178,7 +178,7 @@
   .lf-table-person {
     display: inline-flex;
     align-items: center;
-    gap: var(--ant-margin-xs, 8px);
+    gap: calc(var(--ant-margin-xs, 8px) * 0.75);
     max-width: 100%;
     vertical-align: middle;
   }
@@ -211,18 +211,21 @@
     border-radius: var(--ant-border-radius-sm, 4px);
   }
 
+  /* Stacked avatars overlap by a few pixels only, and their initials are a size smaller, so the
+     next avatar and its ring never cover the initials before it. */
   .lf-table-people {
+    --lf-avatar-font-size: 10px;
     display: inline-flex;
     align-items: center;
     vertical-align: middle;
   }
 
   .lf-table-people > .lf-table-avatar {
-    box-shadow: 0 0 0 2px var(--ant-color-bg-container);
+    box-shadow: 0 0 0 1px var(--ant-color-bg-container);
   }
 
   .lf-table-people > .lf-table-avatar + .lf-table-avatar {
-    margin-inline-start: -6px;
+    margin-inline-start: -3px;
   }
 
   .lf-table-people-more {
