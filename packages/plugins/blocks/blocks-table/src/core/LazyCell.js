@@ -35,8 +35,8 @@ function renderPlaceholder({ col, original }) {
 // A rich cell (lazyCellTypes.js) that mounts on demand. Any rich cell that comes into view while
 // the grid scrolls fast shows its text placeholder until the scroll settles, then renders in
 // full and stays (D10.4). `buttons` with `showOn: hover` mount only while their row is hovered or
-// holds focus, and not during a fast scroll (tier 1, D4): they are invisible otherwise. Chip
-// cells show the chips that fit their column (getCellFit), worked out again when it resizes.
+// holds keyboard focus, and not during a fast scroll (tier 1, D4): they are invisible otherwise.
+// Chip cells show the chips that fit their column (getCellFit), worked out again when it resizes.
 function LazyCell({ api, col, lead, original, rowKey }) {
   const activity = api.cellActivity;
   const rowId = String(rowKey);

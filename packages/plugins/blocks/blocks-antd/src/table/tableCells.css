@@ -20,8 +20,8 @@
 
    Host contract (TableLight, Table):
    - Render each cell's content with renderCell (it applies .lf-table-cell).
-   - Give every row element the class `lf-table-row`. Hovering it, or focus
-     inside it, reveals `showOn: hover` buttons.
+   - Give every row element the class `lf-table-row`. Hovering it, or keyboard
+     focus inside it, reveals `showOn: hover` buttons.
    - A host that tracks hover itself (a row split across pinned sections, a
      virtual row) sets the attribute `data-row-hover` on any ancestor of the
      cell to reveal them, and removes it to hide them again.
@@ -306,10 +306,13 @@
     transition: opacity var(--ant-motion-duration-fast, 0.1s);
   }
 
+  /* Keyboard focus only (:focus-visible), so a clicked checkbox or button does not keep a row's
+     buttons shown after the pointer moves on. Matching starts from the few hover-button elements,
+     so the :has() checks stay cheap in large tables. */
   .lf-table-row:hover .lf-table-actions-hover,
-  .lf-table-row:focus-within .lf-table-actions-hover,
+  .lf-table-row:has(:focus-visible) .lf-table-actions-hover,
   [data-row-hover] .lf-table-actions-hover,
-  .lf-table-actions-hover:focus-within {
+  .lf-table-actions-hover:has(:focus-visible) {
     opacity: 1;
   }
 

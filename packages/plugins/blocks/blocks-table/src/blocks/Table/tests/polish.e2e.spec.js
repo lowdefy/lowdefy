@@ -501,4 +501,27 @@ test.describe('Table visual polish', () => {
     }));
     expect(Math.abs(widths.header - widths.row)).toBeLessThan(1);
   });
+
+  test('hover buttons follow the pointer after a row checkbox click, and keyboard focus', async ({
+    page,
+  }) => {
+    const buttons = (rowKey) => row(page, 'crm', rowKey).locator('[data-col-key="actions"] button');
+    await row(page, 'crm', 2).locator('input[type="checkbox"]').click();
+    await expect(buttons(2)).toHaveCount(2);
+    await row(page, 'crm', 6).hover();
+    await expect(buttons(6)).toHaveCount(2);
+    await expect(buttons(2)).toHaveCount(0);
+    // Keyboard focus keeps a row's buttons while the pointer is elsewhere.
+    await row(page, 'crm', 4).locator('[data-col-key="name"]').click();
+    await page.keyboard.press('ArrowDown');
+    await row(page, 'crm', 6).hover();
+    const focusedKey = await page.evaluate(
+      () => document.activeElement.closest('[data-row-key]').dataset.rowKey
+    );
+    await expect(buttons(focusedKey)).toHaveCount(2);
+    await expect(row(page, 'crm', focusedKey).locator('.lf-table-actions-hover')).toHaveCSS(
+      'opacity',
+      '1'
+    );
+  });
 });

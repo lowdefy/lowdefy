@@ -156,7 +156,7 @@ The D10 rules the code follows, and what to keep when changing it:
 1. Native scroll, one scroll container, one sizer. Scroll handling is passive and rAF-coalesced; the scroll offset never enters React state above `Grid`.
 2. Rows and columns are both virtualised (`virtual: auto`: rows above 200, columns above 20 or wider than 2x the viewport). Pinned columns are sticky, outside the column range.
 3. Fixed row heights by default (density 32/40/52 or `rowHeight`). `wrap` or `ellipsis > 1` opts into measured heights (`useRowOffsets`, cached by measure key, dropped on layout change) and turns column virtualisation off. Detail rows are always measured.
-4. Tiered cells: tier 0 is static DOM from the shared renderers; `buttons` with `showOn: hover` mount only on the hovered or focused row, and during a fast scroll rich cells (`lazyCellTypes.js`) render their text and upgrade when scrolling settles (`api.cellActivity`, fed by `features/lazyCells`).
+4. Tiered cells: tier 0 is static DOM from the shared renderers; `buttons` with `showOn: hover` mount only on the hovered row or the row with keyboard focus, and during a fast scroll rich cells (`lazyCellTypes.js`) render their text and upgrade when scrolling settles (`api.cellActivity`, fed by `features/lazyCells`).
 5. Rows memoise on row key and row object; column definitions compile once per config (`useStableConfig` compares config by content, not identity).
 6. Resizes and drags write CSS variables, never React state, until the gesture ends.
 7. Heavy stages (text sort keys, the first filter over many rows) run in time slices; sort, filter and group commit in transitions.
