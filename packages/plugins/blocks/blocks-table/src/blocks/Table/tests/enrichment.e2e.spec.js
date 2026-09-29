@@ -787,6 +787,8 @@ test.describe('Table enrichment', () => {
         title: 'Industry',
         type: 'text',
         kind: 'input',
+        // Without inputFieldPrefix a new column keeps its values at its key.
+        field: 'industry',
         editable: true,
         userDefined: true,
       },
