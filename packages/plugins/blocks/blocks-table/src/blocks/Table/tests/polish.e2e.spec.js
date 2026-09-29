@@ -441,4 +441,54 @@ test.describe('Table visual polish', () => {
     });
     expect(inside).toBe(true);
   });
+
+  test('dark mode keeps row hover and the bulk bar links readable', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await page.reload();
+    await expect(row(page, 'crm', 1)).toBeAttached();
+    await row(page, 'crm', 2).locator('input[type="checkbox"]').click();
+    await row(page, 'crm', 5).hover();
+    const colours = await table(page, 'crm').evaluate((root) => {
+      const context = document.createElement('canvas').getContext('2d');
+      // Paints the element's background layers over its colour and returns the pixel.
+      const paint = (element) => {
+        const style = getComputedStyle(element);
+        context.clearRect(0, 0, 1, 1);
+        context.fillStyle = style.backgroundColor;
+        context.fillRect(0, 0, 1, 1);
+        const layer = style.backgroundImage.match(/linear-gradient\((rgba?\([^)]*\))/);
+        if (layer) {
+          context.fillStyle = layer[1];
+          context.fillRect(0, 0, 1, 1);
+        }
+        return Array.from(context.getImageData(0, 0, 1, 1).data.slice(0, 3));
+      };
+      const toRgb = (colour) => {
+        context.clearRect(0, 0, 1, 1);
+        context.fillStyle = colour;
+        context.fillRect(0, 0, 1, 1);
+        return Array.from(context.getImageData(0, 0, 1, 1).data.slice(0, 3));
+      };
+      const link = root.querySelector('[data-lf-bulk-action="select-all"]');
+      return {
+        hovered: paint(root.querySelector('.lf-table-body [data-row-key="5"]')),
+        plain: paint(root.querySelector('.lf-table-body [data-row-key="7"]')),
+        link: toRgb(getComputedStyle(link).color),
+        bar: toRgb(getComputedStyle(link.closest('[data-lf-bulk-bar]')).backgroundColor),
+      };
+    });
+    const luminance = ([r, g, b]) => {
+      const [lr, lg, lb] = [r, g, b].map((value) => {
+        const channel = value / 255;
+        return channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * lr + 0.7152 * lg + 0.0722 * lb;
+    };
+    const contrast = (a, b) => {
+      const [high, low] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+      return (high + 0.05) / (low + 0.05);
+    };
+    expect(colours.hovered[0] - colours.plain[0]).toBeGreaterThanOrEqual(15);
+    expect(contrast(colours.link, colours.bar)).toBeGreaterThanOrEqual(4.5);
+  });
 });

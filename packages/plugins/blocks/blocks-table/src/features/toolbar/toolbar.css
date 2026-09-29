@@ -49,13 +49,18 @@
   }
 
   /* The count of set conditions or levels inside a toolbar button (and a quick filter's picked
-     values): a small chip in the primary tint, part of the button. */
+     values): a small chip in the primary tint, part of the button. The text is the primary colour
+     mixed toward the text base, readable on the tint in light and dark themes. */
   .lf-table-toolbar-count {
     display: inline-block;
     box-sizing: border-box;
     min-width: 16px;
     padding: 0 4px;
-    color: var(--ant-color-primary-text, #1677ff);
+    color: color-mix(
+      in srgb,
+      var(--ant-color-primary, #1677ff) 60%,
+      var(--ant-color-text-base, #000)
+    );
     font-size: 11px;
     font-weight: var(--ant-font-weight-strong, 600);
     font-variant-numeric: tabular-nums;
