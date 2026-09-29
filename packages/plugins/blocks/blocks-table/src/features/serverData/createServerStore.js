@@ -158,6 +158,21 @@ function createServerStore({ api, server }) {
     getTotal() {
       return getDisplayCache().getTotal(ROOT);
     },
+    // The rows the view matches (the toolbar's record count). A grouped view's root list holds
+    // groups, whose counts add up to the rows; before the first block lands it is null.
+    getRecordCount() {
+      const display = getDisplayCache();
+      const total = display.getTotal(ROOT);
+      if (total === null || (store.view?.group ?? []).length === 0) return total;
+      let count = 0;
+      display.forEachLoaded((entries, block) => {
+        if (block.listKey !== ROOT) return;
+        entries.forEach((entry) => {
+          count += entry.count;
+        });
+      });
+      return count;
+    },
     // The view the request receives: `{ sort, filter, search, group, aggregates }`. A new view
     // gets a new cache and starts from the top; the old rows stay until its first block lands.
     setView({ view, viewKey }) {

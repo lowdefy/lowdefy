@@ -17,7 +17,6 @@
 import { type } from '@lowdefy/helpers';
 
 import claimedViewKeys from './claimedViewKeys.js';
-import densityHeights from './densityHeights.js';
 import pickViewPart from './pickViewPart.js';
 import resolveViewColumns from './resolveViewColumns.js';
 import sliceDefinitions from './sliceDefinitions.js';
@@ -43,9 +42,6 @@ function createInitialState({ value, config, rows }) {
   Object.entries(sliceDefinitions).forEach(([name, definition]) => {
     state[name] = definition.init(args);
   });
-  const density = pickViewPart({ value, defaultView, key: 'density' });
-  // `size` is the density the view starts from (TableLight's `size`, the same names).
-  state.density = type.isUndefined(densityHeights[density]) ? config.defaultDensity : density;
   state.viewPassthrough = passthroughView({ value, defaultView });
   return state;
 }

@@ -18,15 +18,19 @@ import React from 'react';
 import { Empty } from 'antd';
 import { renderHtml } from '@lowdefy/block-utils';
 
-// TODO(areas): an `empty` area needs the block to receive slots, which input blocks do not
-// (see ARCHITECTURE.md); `emptyText` (html, as in TableLight) covers the common case.
-function EmptyState({ methods, text }) {
+// Blocks in the `empty` slot replace the default empty state; otherwise `emptyText` (html, as in
+// TableLight).
+function EmptyState({ content, methods, text }) {
   return (
-    <div className="lf-table-empty-state">
-      <Empty
-        description={renderHtml({ html: text, methods })}
-        image={Empty.PRESENTED_IMAGE_SIMPLE}
-      />
+    <div className="lf-table-empty-state" data-lf-empty="">
+      {content.empty ? (
+        content.empty()
+      ) : (
+        <Empty
+          description={renderHtml({ html: text, methods })}
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+        />
+      )}
     </div>
   );
 }

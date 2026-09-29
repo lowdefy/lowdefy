@@ -42,3 +42,6 @@ pages:
   - _ref: ../../src/blocks/Table/tests/TableFeatures.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/filtering.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/headerMenu.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/toolbar.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/views.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/bulk.e2e.yaml

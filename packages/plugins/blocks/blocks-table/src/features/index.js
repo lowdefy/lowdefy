@@ -14,28 +14,33 @@
   limitations under the License.
 */
 
+import bulkFeature from './bulk/bulkFeature.js';
 import clipboardFeature from './clipboard/clipboardFeature.js';
-import editingFeature from './editing/editingFeature.js';
 import columnManagerFeature from './columnManager/columnManagerFeature.js';
+import densityFeature from './density/densityFeature.js';
+import editingFeature from './editing/editingFeature.js';
 import eventsFeature from './events/eventsFeature.js';
 import expandableFeature from './expandable/expandableFeature.js';
 import expansionFeature from './expansion/expansionFeature.js';
 import exportFeature from './export/exportFeature.js';
-import groupingFeature from './grouping/groupingFeature.js';
 import filteringFeature from './filtering/filteringFeature.js';
+import groupingFeature from './grouping/groupingFeature.js';
 import headerMenuFeature from './headerMenu/headerMenuFeature.js';
 import keyboardFeature from './keyboard/keyboardFeature.js';
 import lazyCellsFeature from './lazyCells/lazyCellsFeature.js';
 import orderingFeature from './ordering/orderingFeature.js';
 import paginationFeature from './pagination/paginationFeature.js';
 import pinningFeature from './pinning/pinningFeature.js';
+import queueFeature from './queue/queueFeature.js';
 import selectionFeature from './selection/selectionFeature.js';
 import serverDataFeature from './serverData/serverDataFeature.js';
 import serverRangeFeature from './serverData/serverRangeFeature.js';
 import sizingFeature from './sizing/sizingFeature.js';
 import sortingFeature from './sorting/sortingFeature.js';
+import toolbarFeature from './toolbar/toolbarFeature.js';
 import transactionsFeature from './transactions/transactionsFeature.js';
 import treeFeature from './tree/treeFeature.js';
+import viewsFeature from './views/viewsFeature.js';
 import virtualizationFeature from './virtualization/virtualizationFeature.js';
 import visibilityFeature from './visibility/visibilityFeature.js';
 
@@ -44,10 +49,12 @@ import visibilityFeature from './visibility/visibilityFeature.js';
 // actions and block methods (see ARCHITECTURE.md). The order is the order handlers run in: a
 // handler that returns true stops the chain for that event. Filtering and the header menu come
 // first: the filtered row model feeds sorting, and their header buttons claim clicks and pointer
-// presses before sorting and column reordering see them. It is also the order of the data
-// pipeline's hooks (TableRoot): `useData` (server rows, tree flattening), `useRows`
-// (transactions, then editing's overlay over them) and `useItems` (server items, client groups,
-// tree rows, expandable detail rows, the page).
+// presses before sorting and column reordering see them. Views come before the toolbar, which
+// renders their tabs, and queue's single-key actions run before keyboard navigation sees the key
+// (editing's keys, earlier, win on editable cells). It is also the order of the data pipeline's
+// hooks (TableRoot): `useData` (server rows, tree flattening), `useRows` (transactions, then
+// editing's overlay over them) and `useItems` (server items, client groups, tree rows,
+// expandable detail rows, the page).
 const features = [
   filteringFeature,
   headerMenuFeature,
@@ -57,6 +64,7 @@ const features = [
   orderingFeature,
   pinningFeature,
   visibilityFeature,
+  densityFeature,
   transactionsFeature,
   editingFeature,
   clipboardFeature,
@@ -69,6 +77,10 @@ const features = [
   virtualizationFeature,
   serverRangeFeature,
   lazyCellsFeature,
+  viewsFeature,
+  toolbarFeature,
+  bulkFeature,
+  queueFeature,
   keyboardFeature,
   eventsFeature,
   exportFeature,

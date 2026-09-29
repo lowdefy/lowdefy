@@ -1,0 +1,173 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/* The toolbar, view tabs and their popovers. Popovers render in document.body, so their rules are
+   not scoped under .lf-table. */
+
+@layer components {
+  .lf-table-toolbar {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid var(--lf-border);
+  }
+
+  .lf-table-toolbar-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .lf-table-toolbar-start,
+  .lf-table-toolbar-end {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .lf-table-toolbar-search {
+    display: inline-flex;
+    width: 220px;
+    max-width: 100%;
+  }
+
+  .lf-table-quick-filter .lf-table-quick-filter-count {
+    min-width: 16px;
+    padding: 0 4px;
+    border-radius: 8px;
+    background: var(--ant-color-primary, #1677ff);
+    color: var(--ant-color-white, #fff);
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  .lf-table-quick-filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 320px;
+    overflow: auto;
+  }
+
+  .lf-table-record-count {
+    color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+    font-size: var(--ant-font-size-sm, 12px);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .lf-table-toolbar-popover {
+    min-width: 280px;
+    max-width: min(560px, 90vw);
+  }
+
+  .lf-table-toolbar-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .lf-table-toolbar-list-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .lf-table-toolbar-list-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .lf-table-toolbar-list-empty {
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+  }
+
+  .lf-table-toolbar-list-add {
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .lf-table-views {
+    padding: 0 8px;
+  }
+
+  .lf-table-views > .ant-tabs-nav {
+    margin: 0;
+  }
+
+  .lf-table-view-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .lf-table-view-tab-count {
+    padding: 0 6px;
+    border-radius: 8px;
+    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+    color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+    font-size: 11px;
+    line-height: 18px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lf-table-view-dirty {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ant-color-warning, #faad14);
+  }
+
+  .lf-table-view-menu {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 2px;
+    border: 0;
+    border-radius: var(--ant-border-radius-sm, 4px);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .lf-table-view-menu:hover {
+    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  }
+
+  .lf-table-view-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .lf-table-view-actions-label {
+    color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+    font-size: var(--ant-font-size-sm, 12px);
+  }
+
+  .lf-table-save-view {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 220px;
+  }
+}

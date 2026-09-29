@@ -119,7 +119,7 @@ const column = {
     cell: {
       type: 'object',
       description:
-        'Options for the cell type, the same keys as TableLight (and the AgGrid `cell` keys where they overlap), for example `format`, `currency`, `relative`, `pageId`/`urlQuery` (link), `template` (html), `buttons` and `showOn` (buttons), `items` (menu).',
+        'Options for the cell type, the same keys as TableLight (and the AgGrid `cell` keys where they overlap), for example `format`, `currency`, `relative`, `pageId`/`urlQuery` (link), `template` (html), `buttons` and `showOn` (buttons), `items` (menu). Row buttons (`buttons`) and menu items (`items`) also accept `key`, a single key that fires the item when its row is focused, for example `key: a` (no editor open, no modifier).',
       docs: { displayType: 'yaml' },
     },
     ...widthProperties,
@@ -208,6 +208,8 @@ const column = {
   },
 };
 
+const toolbarItem = (description) => ({ type: 'boolean', default: false, description });
+
 const viewColumn = {
   type: 'object',
   additionalProperties: false,
@@ -221,9 +223,28 @@ const viewColumn = {
 };
 
 export default {
-  category: 'input',
+  // An input with slots: its value is the table state, and `toolbarStart`, `toolbarEnd`,
+  // `bulkActions` and `empty` hold blocks.
+  category: 'input-container',
   valueType: 'object',
-  icons: [],
+  icons: [
+    'chevron-down',
+    'chevron-up',
+    'close',
+    'download',
+    'filter',
+    'list',
+    'more',
+    'search',
+    'sort',
+    'view',
+  ],
+  slots: {
+    toolbarStart: 'Blocks at the start of the toolbar, for example a "New deal" button.',
+    toolbarEnd: 'Blocks at the end of the toolbar.',
+    bulkActions: 'Blocks in the bulk action bar, shown while rows are selected.',
+    empty: 'Blocks shown instead of the empty state when there are no rows.',
+  },
   // Server mode fetches through an internal event running the Request action.
   actions: ['Request'],
   cssKeys: {
@@ -241,7 +262,7 @@ export default {
       event: {
         value: 'The table value `{ view, selected, expanded }`.',
         cause:
-          'What changed: `sort`, `filter`, `search`, `columns`, `select`, `group` (the grouping levels), `aggregate` (group aggregates) or `expand` (a group, tree row or detail row collapsed or expanded).',
+          'What changed: `sort`, `filter`, `search`, `columns`, `select`, `group` (the grouping levels), `aggregate` (group aggregates), `expand` (a group, tree row or detail row collapsed or expanded), `density`, or `view` (a saved view loaded, discarded to, or selected).',
       },
     },
     onSelectionChange: {
@@ -295,6 +316,28 @@ export default {
         rowKey: 'The row key.',
         column: 'The column: { key, field }.',
         value: 'The cell value.',
+      },
+    },
+    onViewSelect: {
+      description: 'Trigger when a saved view tab is selected, after its view loads.',
+      event: {
+        id: 'The id of the selected view.',
+      },
+    },
+    onViewSave: {
+      description:
+        'Trigger when the user saves the current view: Save (with the active view `id`) or Save as (no `id`, a new view). The app stores views; update `views` (and `activeView`) with the result.',
+      event: {
+        view: 'The current view.',
+        id: 'The id of the view to overwrite. Missing for Save as.',
+        title: 'The view title.',
+        shared: 'Whether the view is shared.',
+      },
+    },
+    onViewDelete: {
+      description: 'Trigger when the user deletes a saved view from its tab menu.',
+      event: {
+        id: 'The id of the view to delete.',
       },
     },
     onCellEdit: {
@@ -367,6 +410,8 @@ export default {
     clearSelection: 'Clear the row selection.',
     setGroup:
       'Group rows by these columns, outermost first. Accepts column keys or `[{ key }]` of groupable columns; an empty list removes the grouping.',
+    selectAllMatching:
+      'Select every row the view matches, as `{ all: true, except: [] }` (checkbox selection only).',
     expandAllGroups: 'Expand every group (client data; server groups open one at a time).',
     collapseAllGroups: 'Collapse every group at every level.',
     setFilter:
@@ -697,9 +742,89 @@ export default {
         description: 'Reorder columns by dragging their headers.',
       },
       keyboard: {
-        type: 'boolean',
+        type: ['boolean', 'object'],
         default: true,
-        description: 'Keyboard navigation between cells. Grid roles stay on when off.',
+        description:
+          'Keyboard navigation between cells. Grid roles stay on when off. An object turns it on with options.',
+        additionalProperties: false,
+        properties: {
+          next: {
+            type: 'boolean',
+            default: false,
+            description:
+              'After a row button, menu item or single-key action completes, move focus to the next row (queue and triage lists).',
+          },
+        },
+      },
+      toolbar: {
+        type: ['boolean', 'object'],
+        default: false,
+        description:
+          'The toolbar above the table. `true` turns on every item; an object turns on the listed items.',
+        additionalProperties: false,
+        properties: {
+          views: toolbarItem('Saved view tabs (needs `views`), with the unsaved changes strip.'),
+          search: toolbarItem(
+            'A search box that writes `view.search` (Cmd/Ctrl+F focuses it while the table has focus).'
+          ),
+          quickFilters: {
+            type: 'array',
+            items: { type: 'string' },
+            description:
+              'Column keys to show as quick filter chips. Columns with `options` get a checkbox list (an `in` condition); others open the column filter.',
+          },
+          filter: toolbarItem('A Filter button that edits the whole `view.filter`.'),
+          sort: toolbarItem('A Sort button to add, remove, reorder and flip sort levels.'),
+          group: toolbarItem('A Group button to pick and order group levels (groupable columns).'),
+          columns: toolbarItem('A Columns button that opens the column manager.'),
+          density: toolbarItem('A compact / default / comfortable density toggle.'),
+          export: toolbarItem('An Export button that downloads the view as CSV.'),
+        },
+      },
+      views: {
+        type: ['array', 'null'],
+        description:
+          'Saved views, from any source (often a request). Selecting a tab loads its view; changes show an unsaved changes strip with Save, Save as and Discard.',
+        items: {
+          type: 'object',
+          required: ['id'],
+          properties: {
+            id: { type: ['string', 'number'], description: 'Unique view id.' },
+            title: { type: 'string', description: 'Tab title. Defaults to the id.' },
+            view: { type: 'object', description: 'The saved view (any part of a view).' },
+            shared: { type: 'boolean', description: 'Whether the view is shared.' },
+            locked: {
+              type: 'boolean',
+              description: 'Hide Save and Delete, so the view is only changed on purpose.',
+            },
+            count: { type: 'number', description: 'A count shown on the tab (queue tabs).' },
+          },
+        },
+      },
+      activeView: {
+        type: ['string', 'number', 'null'],
+        description:
+          'The id of the active saved view. Defaults to the first view. Changing it selects that view.',
+      },
+      persist: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['key'],
+        description:
+          "Keep the user's view between visits. Off by default. The selection is never persisted.",
+        properties: {
+          key: {
+            type: 'string',
+            description: 'Storage key (localStorage) or query parameter name (url).',
+          },
+          storage: {
+            type: 'string',
+            enum: ['local', 'url'],
+            default: 'local',
+            description:
+              '`local` keeps the view in localStorage (none in a private window or with blocked storage); `url` writes a compact encoding to the query string, replacing history.',
+          },
+        },
       },
       emptyText: {
         type: 'string',

@@ -27,6 +27,8 @@ import getHeaderLevels from './getHeaderLevels.js';
 import normalizeExpandable from '../features/expandable/normalizeExpandable.js';
 import normalizeServerData from '../features/serverData/normalizeServerData.js';
 import normalizeTree from '../features/tree/normalizeTree.js';
+import normalizePersist from '../features/views/normalizePersist.js';
+import normalizeToolbar from '../features/toolbar/normalizeToolbar.js';
 import useStableConfig from './useStableConfig.js';
 
 const DEFAULT_PAGE_SIZE = 50;
@@ -71,6 +73,9 @@ function useTableConfig({ properties }) {
   const serverData = useStableConfig(type.isObject(properties.data) ? properties.data : null);
   const tree = useStableConfig(properties.tree);
   const expandable = useStableConfig(properties.expandable);
+  const toolbar = useStableConfig(properties.toolbar);
+  const persist = useStableConfig(properties.persist);
+  const keyboard = useStableConfig(properties.keyboard);
   const getKey = useMemo(
     () => createRowKeyGetter({ rowKey: properties.rowKey }),
     [properties.rowKey]
@@ -114,13 +119,15 @@ function useTableConfig({ properties }) {
       getKey,
       headerMenu: properties.headerMenu !== false,
       height: properties.height,
-      keyboard: properties.keyboard !== false,
+      keyboard: keyboard !== false,
+      keyboardNext: keyboard?.next === true,
       maxHeight: properties.maxHeight ?? 600,
       pagination: normalizePagination({
         pagination: properties.pagination,
         pageSize: properties.pageSize,
         server,
       }),
+      persist: normalizePersist(persist),
       reorderable: properties.reorderable !== false,
       rowHeight: properties.rowHeight,
       rowLink: type.isObject(rowLink) ? rowLink : null,
@@ -130,6 +137,7 @@ function useTableConfig({ properties }) {
       stickyHeader: properties.stickyHeader !== false,
       summary: properties.summary !== false,
       tree: normalizeTree({ tree, server }),
+      toolbar: normalizeToolbar({ toolbar, columnsByKey: columnModel.columnsByKey }),
       virtual: properties.virtual ?? 'auto',
     };
   }, [
@@ -137,10 +145,11 @@ function useTableConfig({ properties }) {
     defaultView,
     getKey,
     properties.bordered,
+    keyboard,
+    persist,
     properties.emptyText,
     properties.headerMenu,
     properties.height,
-    properties.keyboard,
     properties.maxHeight,
     properties.pageSize,
     properties.pagination,
@@ -155,6 +164,7 @@ function useTableConfig({ properties }) {
     rowSelection,
     serverData,
     tree,
+    toolbar,
   ]);
 }
 

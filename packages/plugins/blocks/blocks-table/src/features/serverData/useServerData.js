@@ -30,6 +30,9 @@ function useServerData({ api, config, data }) {
   }
   const store = server ? storeRef.current.store : null;
   api.serverStore = store;
+  // The server's count of matching rows (null until the first block lands); the record count
+  // and the bulk bar's "all matching" read it.
+  api.total = store ? store.getRecordCount() : undefined;
   const [, setVersion] = useState(0);
   useEffect(() => {
     if (!store) return undefined;
