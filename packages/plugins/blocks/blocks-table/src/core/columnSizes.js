@@ -14,16 +14,12 @@
   limitations under the License.
 */
 
-import { createLazyBlock } from '@lowdefy/block-utils';
+// Column sizes when the config sets none, shared by the engine's column defs and the lazy block's
+// fallback layout.
+const columnSizes = {
+  width: 160,
+  minWidth: 48,
+  maxWidth: 2000,
+};
 
-import meta from './meta.js';
-import TableInputFallback from './TableInputFallback.js';
-
-// The engine it shares with Table loads with the block's first mount, as Table's does.
-const TableInput = createLazyBlock({
-  load: () => import('./TableInput.lazy.js'),
-  meta,
-  Fallback: TableInputFallback,
-});
-
-export default TableInput;
+export default columnSizes;

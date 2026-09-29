@@ -14,16 +14,23 @@
   limitations under the License.
 */
 
-import { createLazyBlock } from '@lowdefy/block-utils';
+import React from 'react';
 
-import meta from './meta.js';
-import TableInputFallback from './TableInputFallback.js';
+import TableFallback from '../Table/TableFallback.js';
 
-// The engine it shares with Table loads with the block's first mount, as Table's does.
-const TableInput = createLazyBlock({
-  load: () => import('./TableInput.lazy.js'),
-  meta,
-  Fallback: TableInputFallback,
-});
+// Table's fallback with TableInput's own chrome: the row controls column and "+ Add row".
+function TableInputFallback({ blockId, content, loading, methods, properties, value }) {
+  return (
+    <TableFallback
+      blockId={blockId}
+      content={content}
+      input
+      loading={loading}
+      methods={methods}
+      properties={properties}
+      value={value}
+    />
+  );
+}
 
-export default TableInput;
+export default TableInputFallback;

@@ -14,16 +14,14 @@
   limitations under the License.
 */
 
-import { createLazyBlock } from '@lowdefy/block-utils';
+const HANDLE_WIDTH = 20;
+const DELETE_WIDTH = 26;
+const PADDING = 8;
 
-import meta from './meta.js';
-import TableInputFallback from './TableInputFallback.js';
+// The row controls column's width, sized to the controls it holds (a drag handle, a delete
+// button). The lazy block's fallback reserves the same width.
+function getRowControlsWidth({ rowDrag, deleteButton }) {
+  return PADDING + (rowDrag ? HANDLE_WIDTH : 0) + (deleteButton ? DELETE_WIDTH : 0);
+}
 
-// The engine it shares with Table loads with the block's first mount, as Table's does.
-const TableInput = createLazyBlock({
-  load: () => import('./TableInput.lazy.js'),
-  meta,
-  Fallback: TableInputFallback,
-});
-
-export default TableInput;
+export default getRowControlsWidth;

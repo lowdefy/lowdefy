@@ -14,24 +14,7 @@
   limitations under the License.
 */
 
-import React from 'react';
+// The selection checkbox column's width (the engine's and the lazy block fallback's).
+const selectColumnWidth = 40;
 
-const SKELETON_ROWS = 5;
-
-function LoadingRows({ layout }) {
-  const rows = [];
-  for (let i = 0; i < SKELETON_ROWS; i++) {
-    rows.push(
-      <div aria-hidden="true" className="lf-table-row" key={i}>
-        {layout.cols.map((col) => (
-          <div className="lf-table-gridcell" key={col.key} style={{ width: col.width }}>
-            {col.special ? null : <span className="lf-table-skeleton-bar" />}
-          </div>
-        ))}
-      </div>
-    );
-  }
-  return <div className="lf-table-body">{rows}</div>;
-}
-
-export default LoadingRows;
+export default selectColumnWidth;

@@ -114,7 +114,7 @@ function useTableConfig({ properties }) {
         ? 'default'
         : properties.size,
       defaultView: defaultView ?? {},
-      emptyText: properties.emptyText ?? 'No data',
+      emptyText: properties.emptyText ?? 'No rows',
       getId: (row) => String(getKey(row)),
       getKey,
       headerMenu: properties.headerMenu !== false,

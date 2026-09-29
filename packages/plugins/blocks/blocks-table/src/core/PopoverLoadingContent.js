@@ -14,16 +14,15 @@
   limitations under the License.
 */
 
-import { createLazyBlock } from '@lowdefy/block-utils';
+import React from 'react';
 
-import meta from './meta.js';
-import TableInputFallback from './TableInputFallback.js';
+// The spinner shown inside a popover's frame while its code loads.
+function PopoverLoadingContent() {
+  return (
+    <div className="lf-table-popover-loading" data-lf-popover-loading="">
+      <span aria-label="Loading" className="lf-table-spinner" role="img" />
+    </div>
+  );
+}
 
-// The engine it shares with Table loads with the block's first mount, as Table's does.
-const TableInput = createLazyBlock({
-  load: () => import('./TableInput.lazy.js'),
-  meta,
-  Fallback: TableInputFallback,
-});
-
-export default TableInput;
+export default PopoverLoadingContent;

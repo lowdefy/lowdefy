@@ -19,13 +19,13 @@ import deriveValue from '../../core/deriveValue.js';
 
 // Block method `exportCsv({ filename, formatted })`. `formatted` (default true) exports what the
 // cells display; false exports raw values. In server mode the browser holds only the cached
-// blocks, so the table fires `onExport { view }` for the app to produce the file (D12).
+// blocks, so the table fires `onExport { view }` for the app to produce the file (D12), and
+// returns the event's promise (the toolbar's Export spinner waits on it).
 function createExportCsv(api) {
   return function exportCsv({ filename, formatted } = {}) {
     if (api.config.server) {
       const { view } = deriveValue({ state: api.state, api });
-      api.methods.triggerEvent({ name: 'onExport', event: { view, filename, formatted } });
-      return undefined;
+      return api.methods.triggerEvent({ name: 'onExport', event: { view, filename, formatted } });
     }
     const csv = buildCsv({ api, formatted: formatted !== false });
     // The byte order mark makes spreadsheet apps read the file as UTF-8.

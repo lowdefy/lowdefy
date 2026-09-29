@@ -16,11 +16,8 @@
 
 import createSortKeyGetter from '@lowdefy/blocks-antd/table/createSortKeyGetter.js';
 
+import columnSizes from './columnSizes.js';
 import createAccessor from './createAccessor.js';
-
-const DEFAULT_WIDTH = 160;
-const MIN_WIDTH = 48;
-const MAX_WIDTH = 2000;
 
 // Compiled once per column config change, with stable accessor and sort key identities (D10.5):
 // cells and sort keys never rebuild them per row. `getSortKey` is the shared column core's, so
@@ -30,9 +27,9 @@ function createColumnDefs({ columns }) {
     id: column.key,
     accessorFn: createAccessor(column.field),
     header: column.title,
-    size: column.width ?? DEFAULT_WIDTH,
-    minSize: column.minWidth ?? MIN_WIDTH,
-    maxSize: column.maxWidth ?? MAX_WIDTH,
+    size: column.width ?? columnSizes.width,
+    minSize: column.minWidth ?? columnSizes.minWidth,
+    maxSize: column.maxWidth ?? columnSizes.maxWidth,
     enableSorting: column.sortable,
     sortDescFirst: false,
     meta: {

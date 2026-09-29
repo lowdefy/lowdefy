@@ -97,7 +97,7 @@ test.describe('Table Block', () => {
 
   test('renders skeleton rows while loading without data', async ({ page }) => {
     await expect(
-      getBlock(page, 'table_loading').locator('.lf-table-skeleton-bar').first()
+      getBlock(page, 'table_loading').locator('.lf-table-skeleton').first()
     ).toBeVisible();
     await expect(grid(page, 'table_loading')).toHaveAttribute('aria-busy', 'true');
   });

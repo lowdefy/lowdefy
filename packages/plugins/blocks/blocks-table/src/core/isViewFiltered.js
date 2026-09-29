@@ -14,16 +14,15 @@
   limitations under the License.
 */
 
-import { createLazyBlock } from '@lowdefy/block-utils';
+import { type } from '@lowdefy/helpers';
 
-import meta from './meta.js';
-import TableInputFallback from './TableInputFallback.js';
+import countConditions from '../features/toolbar/countConditions.js';
 
-// The engine it shares with Table loads with the block's first mount, as Table's does.
-const TableInput = createLazyBlock({
-  load: () => import('./TableInput.lazy.js'),
-  meta,
-  Fallback: TableInputFallback,
-});
+// Whether the view filters rows out: a filter condition or a search is set. An empty table under
+// a filtered view says "No matching rows" and offers to clear them, instead of "No rows".
+function isViewFiltered(state) {
+  if (type.isString(state.search) && state.search.trim() !== '') return true;
+  return countConditions(state.filter) > 0;
+}
 
-export default TableInput;
+export default isViewFiltered;
