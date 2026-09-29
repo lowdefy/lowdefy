@@ -349,6 +349,64 @@ blocks:
               - _state: move_event
               - space: 0
 
+  - id: move_paged
+    type: Table
+    properties:
+      pagination: true
+      pageSize: 2
+      rowDrag:
+        positionField: position
+      columns:
+        - key: title
+        - key: position
+          type: number
+      data:
+        - id: s1
+          title: Plan
+          position: 1024
+        - id: s2
+          title: Build
+          position: 2048
+        - id: s3
+          title: Test
+          position: 3072
+        - id: s4
+          title: Ship
+          position: 4096
+        - id: s5
+          title: Launch
+          position: 5120
+    events:
+      onRowMove:
+        - id: move_paged_record
+          type: SetState
+          params:
+            move_paged_event:
+              rowKey:
+                _event: rowKey
+              fromIndex:
+                _event: fromIndex
+              toIndex:
+                _event: toIndex
+              beforeKey:
+                _event: beforeKey
+              afterKey:
+                _event: afterKey
+              position:
+                _event: position
+              positions:
+                _event: positions
+
+  - id: move_paged_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'move='
+          - _json.stringify:
+              - _state: move_paged_event
+              - space: 0
+
   - id: move_fail
     type: Table
     properties:

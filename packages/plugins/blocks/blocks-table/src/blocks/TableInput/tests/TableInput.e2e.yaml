@@ -146,6 +146,81 @@ blocks:
               - space: 0
 
   # ============================================
+  # PAGINATED: moves and adds over every page
+  # ============================================
+
+  - id: lines_paged
+    type: TableInput
+    properties:
+      rowKey: id
+      pagination: true
+      pageSize: 2
+      rowDrag: true
+      columns:
+        - key: item
+      data:
+        - id: a
+          item: Apples
+        - id: b
+          item: Bread
+        - id: c
+          item: Cheese
+        - id: d
+          item: Dates
+        - id: e
+          item: Eggs
+
+  - id: lines_paged_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'paged='
+          - _json.stringify:
+              - _state: lines_paged
+              - space: 0
+
+  - id: steps_paged
+    type: TableInput
+    properties:
+      pagination: true
+      pageSize: 2
+      addRow: true
+      rowDrag:
+        positionField: position
+      columns:
+        - key: title
+          editable: true
+        - key: position
+          type: number
+      data:
+        - _id: s1
+          title: Plan
+          position: 1024
+        - _id: s2
+          title: Build
+          position: 2048
+        - _id: s3
+          title: Test
+          position: 3072
+        - _id: s4
+          title: Ship
+          position: 4096
+        - _id: s5
+          title: Launch
+          position: 5120
+
+  - id: steps_paged_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'steps='
+          - _json.stringify:
+              - _state: steps_paged
+              - space: 0
+
+  # ============================================
   # SORTED: edits by key, reorder off
   # ============================================
 

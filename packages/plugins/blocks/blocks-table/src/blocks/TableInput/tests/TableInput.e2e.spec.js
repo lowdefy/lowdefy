@@ -222,6 +222,37 @@ test.describe('TableInput', () => {
     });
   });
 
+  test('a move on a later page records the order of every row', async ({ page }) => {
+    await getBlock(page, 'lines_paged').locator('.ant-pagination-item-2').click();
+    await expect.poll(() => displayKeys(page, 'lines_paged')).toEqual(['c', 'd']);
+    await dragRow(page, 'lines_paged', 'd', 'c', { below: false });
+    await expect.poll(() => displayKeys(page, 'lines_paged')).toEqual(['d', 'c']);
+    expect(await readJson(page, 'lines_paged_value', 'paged=')).toEqual({
+      ...noChanges,
+      order: ['a', 'b', 'd', 'c', 'e'],
+    });
+  });
+
+  test('a move on a later page records a position between its neighbours in the whole list', async ({
+    page,
+  }) => {
+    await getBlock(page, 'steps_paged').locator('.ant-pagination-item-2').click();
+    await expect.poll(() => displayKeys(page, 'steps_paged')).toEqual(['s3', 's4']);
+    await dragRow(page, 'steps_paged', 's4', 's3', { below: false });
+    await expect.poll(() => displayKeys(page, 'steps_paged')).toEqual(['s4', 's3']);
+    expect(await readJson(page, 'steps_paged_value', 'steps=')).toEqual({
+      ...noChanges,
+      moved: { s4: 2560 },
+    });
+  });
+
+  test('with pagination an added row goes after the last row of every page', async ({ page }) => {
+    await getBlock(page, 'steps_paged').locator('[data-lf-add-row]').click();
+    await page.keyboard.press('Escape');
+    const [added] = (await readJson(page, 'steps_paged_value', 'steps=')).added;
+    expect(added).toEqual({ rowKey: added.rowKey, position: 6144 });
+  });
+
   test('with a position field an added row goes after the last row', async ({ page }) => {
     await getBlock(page, 'steps').locator('[data-lf-add-row]').click();
     await page.keyboard.press('Escape');

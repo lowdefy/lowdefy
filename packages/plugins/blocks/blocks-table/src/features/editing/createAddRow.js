@@ -21,9 +21,9 @@ import createNewRow from './createNewRow.js';
 import generateRowKey from './generateRowKey.js';
 import positionBetween, { POSITION_STEP } from './positionBetween.js';
 
-// With a position field, an added row goes after the last row shown.
+// With a position field, an added row goes after the last data row (of every page).
 function nextPosition({ api, positionField }) {
-  const last = api.rows[api.rows.length - 1]?.original;
+  const last = api.dataRows[api.dataRows.length - 1]?.original;
   if (last === undefined) return positionBetween();
   return positionBetween({ before: get(last, positionField) }) ?? POSITION_STEP;
 }

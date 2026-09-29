@@ -389,6 +389,30 @@ test.describe('Table editing', () => {
     expect(await displayKeys(page, 'move_positions')).toEqual(['s1', 's3', 's2']);
   });
 
+  test('a row move on a later page reports indices and neighbours in the whole list', async ({
+    page,
+  }) => {
+    await getBlock(page, 'move_paged').locator('.ant-pagination-item-2').click();
+    await expect.poll(() => displayKeys(page, 'move_paged')).toEqual(['s3', 's4']);
+    await dragRow(page, 'move_paged', 's4', 's3', { below: false });
+    await expect.poll(() => displayKeys(page, 'move_paged')).toEqual(['s4', 's3']);
+    await expect(getBlock(page, 'move_paged_value')).toHaveText(
+      'move={"rowKey":"s4","fromIndex":3,"toIndex":2,"beforeKey":"s2","afterKey":"s3","position":2560,"positions":{"s4":2560}}'
+    );
+  });
+
+  test('Alt+Shift+ArrowUp on the first row of a page does not move it', async ({ page }) => {
+    await getBlock(page, 'move_paged').locator('.ant-pagination-item-2').click();
+    await cell(page, 'move_paged', 's3', 'title').click();
+    await page.keyboard.press('Alt+Shift+ArrowUp');
+    await page.keyboard.press('Alt+Shift+ArrowDown');
+    await expect.poll(() => displayKeys(page, 'move_paged')).toEqual(['s4', 's3']);
+    await expect(cell(page, 'move_paged', 's3', 'title')).toBeFocused();
+    await expect(getBlock(page, 'move_paged_value')).toContainText(
+      '"rowKey":"s3","fromIndex":2,"toIndex":3,"beforeKey":"s4","afterKey":"s5","position":4608'
+    );
+  });
+
   test('Alt+Shift+ArrowDown moves the focused row and keeps focus on it', async ({ page }) => {
     await cell(page, 'move_positions', 's1', 'title').click();
     await page.keyboard.press('Alt+Shift+ArrowDown');

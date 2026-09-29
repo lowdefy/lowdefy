@@ -357,8 +357,8 @@ export default {
       event: {
         row: 'The moved row object.',
         rowKey: 'The moved row key.',
-        fromIndex: 'The display index the row was at.',
-        toIndex: 'The display index the row is at now.',
+        fromIndex: 'The index the row was at in the displayed rows, across every page.',
+        toIndex: 'The index the row is at now in the displayed rows, across every page.',
         beforeKey: 'The key of the row now before it, or null at the top.',
         afterKey: 'The key of the row now after it, or null at the bottom.',
         position: "With a positionField: the moved row's new position.",
