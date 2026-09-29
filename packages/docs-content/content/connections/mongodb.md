@@ -112,6 +112,8 @@ Request types:
   - MongoDBInsertMany
   - MongoDBInsertManyConsecutiveIds
   - MongoDBInsertOne
+  - MongoDBTableChanges
+  - MongoDBTableQuery
   - MongoDBUpdateMany
   - MongoDBUpdateOne
   - MongoDBVersionedUpdateOne
@@ -619,6 +621,425 @@ requests:
           _user: id
         timestamp:
           _date: now
+```
+
+### MongoDBTableChanges
+
+The `MongoDBTableChanges` request saves the value of a `TableInput` block. The value of a `TableInput` is not its rows but a changeset: only what changed since `data`. The request validates the changeset against an allowlist of `fields` and compiles it to one `bulkWrite` on the server. The browser never sends MongoDB syntax: keys that are not in `fields`, keys that start with `$` (operators such as `$where`, positional paths such as `items.$[x]`), values of the wrong type, and operator objects such as `{ $ne: null }` as values or row keys are refused before anything is written.
+
+The changeset is the `TableInput` value:
+
+```yaml
+updated:                # changed fields of existing rows: { [rowKey]: { [field]: value } }
+  flour:
+    qty: 450            # the key is the column field, a dot path
+    details.note: strong
+added:                  # new rows: [{ rowKey, ...fields }]
+  - rowKey: 3f2c9a61-…  # a temporary key the browser generated
+    ingredient: Yeast
+    qty: 7
+removed:                # existing rows to delete: [rowKey]
+  - salt
+moved:                  # with rowDrag.positionField: { [rowKey]: position }
+  water: 1536
+order: [salt, flour]    # with rowDrag and no positionField: every row key in the new order
+```
+
+The `fields` keys are the column `field` dot paths, and only those fields can be written (at their `path`). Values are coerced to the field type like `MongoDBTableQuery` values: numbers from numeric strings, dates from date strings and timestamps, and `null` clears a value of any type. `avatar`, `image` and `json` fields accept documents, but not with keys that start with `$`.
+
+Every operation is scoped by the base `filter`, for example the organization or owner of the rows. The row key is combined with the filter using `$and`, so it can only narrow it. `filter` is required, unless the connection is tenant-scoped: then the tenant is merged into every operation and stamped on new rows, as for `MongoDBBulkWrite`. Set `filter: {}` to allow writes to every document in the collection. Keep tenant and ownership fields out of `fields`, and set them on new rows with `insertDefaults`.
+
+##### Collection mode
+
+By default every row is a document, matched by `rowKeyField` (default `_id`). The changeset compiles to:
+
+```yaml
+- deleteOne: { filter: { $and: [<filter>, { _id: <key> }] } }             # one per removed row
+- updateOne:                                                                # one per updated or moved row
+    filter: { $and: [<filter>, { _id: <key> }] }
+    update: { $set: { qty: 450, details.note: strong, position: 1536 } }   # its fields and position in one $set
+- insertOne: { document: { <insertDefaults>, <row fields>, _id: <new ObjectId> } }   # one per added row
+```
+
+An update sets only the changed dot paths, so the rest of the document is kept. A move writes one position field on one row. An `order` needs a `positionField` in collection mode: it writes positions 1024, 2048, … to every row in the order.
+
+##### Array mode
+
+With `array: { documentId, path }`, the rows are the items of an embedded array in one document, such as the ingredients of a recipe. Every operation matches that document inside the base filter, and field paths and `positionField` are paths in the item. MongoDB can not `$set` into, `$pull` from and `$push` to the same array in one update, so the changeset compiles to up to four updates of that document, run in order:
+
+```yaml
+- $set: { items.$[r0].qty: 450, items.$[r1].position: 1536 }   # arrayFilters: [{ r0._id: flour }, { r1._id: water }]
+- $pull: { items: { _id: { $in: [salt] } } }
+- $push: { items: { $each: [<new items>] } }
+- <a pipeline update that puts the items in the order of "order">  # only for an order without a positionField
+```
+
+New items get a generated ObjectId `_id` when `itemKeyField` is `_id`. Without a `positionField`, the array order is the row order, and an `order` is applied by a pipeline update that reorders the items on the server, as the array is when the update runs. Items are moved, never rewritten, so an edit someone else saved to an item in the meantime is kept; items the order does not name (added since the table loaded) follow in their current order, and keys of items that are gone are skipped. Setting the whole array from the browser's copy instead would overwrite such edits.
+
+When the document is not found inside the filter, nothing is written and the request throws.
+
+##### Response
+
+```yaml
+matchedCount: 2       # collection mode: rows matched by updates and moves
+modifiedCount: 2
+insertedCount: 1
+deletedCount: 1
+insertedKeys:         # the key each added row got, by its temporary rowKey
+  3f2c9a61-…: { _oid: 66f9… }
+```
+
+In array mode `matchedCount` and `modifiedCount` count the document (0 or 1), and `insertedCount` and `deletedCount` are the items pushed and the keys pulled. A collection mode `matchedCount` lower than the rows updated means some rows were outside the filter or already deleted.
+
+The operations are one `bulkWrite`, not a transaction: with `ordered: true` the first failing operation stops the rest, and the ones before it stay written.
+
+##### Row keys
+
+The `TableInput` keys rows by `rowKey` (default `_id`, then `id`). An ObjectId key comes back from the browser as the text `{"_oid":"…"}`, which the default `rowKeyType: auto` reads as an ObjectId. Object keys are always strings, so the keys of `updated` and `moved` are strings too: use `rowKeyType: number` for numeric keys, or `rowKeyType: objectId` to read 24 character hex strings as ObjectIds.
+
+#### Properties
+- `changes: object`: __Required__ - The `TableInput` value, `{ _payload: changes }`: `{ updated, added, removed, moved, order }`.
+- `fields: object`: __Required__ - The allowlist, keyed by the `TableInput` column field (its dot path). Each field is an object:
+  - `type: enum`: __Required__ - The column type, as for `MongoDBTableQuery`. Values are checked and coerced to it.
+  - `path: string`: Default: the field key - Dot path the value is written to, in the document or, in array mode, in the item.
+- `filter: object`: The base filter that scopes every operation, for example `{ org_id: { _user: organization.id } }`. Required unless the connection is tenant-scoped. Set it to `{}` to allow writes to every document.
+- `rowKeyField: string`: Default: `_id` - The document field a row key matches, in collection mode. With any other field, added rows need their key from a column or `insertDefaults`.
+- `rowKeyType: enum`: Default: `auto` - How row keys are read: `auto`, `objectId`, `string` or `number`. See Row keys.
+- `array: object`: Array mode: the rows are the items of an embedded array in one document.
+  - `documentId: any`: __Required__ - The `_id` of the document. Use `{ _oid: <hex string> }` for an ObjectId from a string.
+  - `path: string`: __Required__ - Dot path of the array in the document.
+  - `itemKeyField: string`: Default: `_id` - The item field a row key matches.
+- `positionField: string`: Dot path of the numeric position field, the `TableInput` `rowDrag.positionField`. Needed to save `moved`, and to save `order` in collection mode.
+- `insertDefaults: object`: Values every added row starts with, for example `{ org_id: { _user: organization.id } }` or a created date. The row's own values are set over them. Keys may be dot paths.
+- `ordered: boolean`: Default: `true` - Run the operations in order and stop at the first error. `false` (collection mode only) runs every operation and reports every error.
+- `maxChanges: integer`: Default: `1000` - The most row changes one request may apply (updated, added, removed and moved rows, plus order entries). A larger changeset throws.
+- `options: object`: Optional `bulkWrite` settings, for example `writeConcern`, `bypassDocumentValidation` or `comment`. See `MongoDBBulkWrite`.
+
+#### Examples
+
+###### Save the ingredients of a recipe (array mode):
+The ingredients are an array in the recipe document, ordered by a `position` field. Dragging a row gives it a position between its neighbours, so a move saves one field on one item.
+```yaml
+id: recipe
+type: Box
+requests:
+  - id: get_recipe
+    type: MongoDBAggregation
+    connectionId: recipes
+    payload:
+      recipe_id:
+        _url_query: id
+    properties:
+      pipeline:
+        - $match:
+            _id:
+              _payload: recipe_id
+            org_id:
+              _user: organization.id
+        - $project:
+            title: 1
+            items:
+              $sortArray:
+                input: $items
+                sortBy:
+                  position: 1
+  - id: save_items
+    type: MongoDBTableChanges
+    connectionId: recipes
+    payload:
+      recipe_id:
+        _url_query: id
+      changes:
+        _state: items
+    properties:
+      array:
+        documentId:
+          _payload: recipe_id
+        path: items
+      filter:
+        org_id:
+          _user: organization.id
+      positionField: position
+      fields:
+        ingredient:
+          type: text
+        qty:
+          type: number
+        unit:
+          type: text
+      changes:
+        _payload: changes
+events:
+  onMount:
+    - id: fetch
+      type: Request
+      params: get_recipe
+blocks:
+  - id: items
+    type: TableInput
+    properties:
+      data:
+        _request: get_recipe.0.items
+      addRow: true
+      rowDrag:
+        positionField: position
+      rowActions:
+        delete: true
+      columns:
+        - key: ingredient
+          editable: true
+        - key: qty
+          type: number
+          editable: true
+        - key: unit
+          editable: true
+  - id: save
+    type: Button
+    properties:
+      title: Save
+    events:
+      onClick:
+        - id: save_items
+          type: Request
+          params: save_items
+        - id: refetch
+          type: Request
+          params: get_recipe
+        - id: reset
+          type: CallMethod
+          params:
+            blockId: items
+            method: resetChanges
+```
+
+###### Save edits to a list of deals (collection mode):
+Every row is a document. New deals get the organization and creator from `insertDefaults`, which the table can not set, since `org_id` and `created_by` are not in `fields`.
+```yaml
+requests:
+  - id: save_deals
+    type: MongoDBTableChanges
+    connectionId: deals
+    payload:
+      changes:
+        _state: deals_table
+    properties:
+      filter:
+        org_id:
+          _user: organization.id
+      fields:
+        name:
+          type: text
+        stage:
+          type: tag
+        amount:
+          type: currency
+        owner:
+          type: text
+          path: owner.name
+        close_date:
+          type: date
+      insertDefaults:
+        org_id:
+          _user: organization.id
+        created_by:
+          _user: id
+        created:
+          _date: now
+      changes:
+        _payload: changes
+```
+
+### MongoDBTableQuery
+
+The `MongoDBTableQuery` request serves a `Table` block in server mode. The table sends its view (sort, filter, search, grouping and aggregates) and the rows it needs, and the request compiles them to one aggregation on the server, against an allowlist of `fields`. The browser never sends MongoDB syntax: view keys that are not in `fields`, operators the field type does not allow and values of the wrong type are refused, regex input is escaped, and no `$where`, `$expr` or raw stages are accepted from the view.
+
+The base `pipeline` always runs first, so use it for tenant or permission scoping (and a `$project` of the fields the table may see). The view can only narrow what the base pipeline returns. On a tenant connection the tenant scope is added before the base pipeline, as for `MongoDBAggregation`.
+
+The request compiles to:
+
+```yaml
+- <base pipeline stages>
+- $match: <view filter>
+- $match: <view search>
+- $match: <groupPath>
+- $facet:
+    rows: [$sort, $skip, $limit]      # or groups: [$group, $sort, $skip, $limit]
+    total: [$count]
+    aggregates: [$group]              # when the view has aggregates
+```
+
+Rows are sorted by the view sort with `_id` as a tiebreak, so blocks of rows never repeat or skip a row.
+
+##### Response
+
+```yaml
+rows: [...]           # the rows from startRow to endRow, [] when groups are returned
+total: 12408          # rows matching the view, or the number of groups at this level
+groups:               # only when view.group has more levels than groupPath
+  - key: won          # the group value (null for missing values)
+    count: 210
+    aggregates: { amount: 125000 }
+aggregates:           # only when view.aggregates is set, over the rows this request matches
+  amount: 3400000
+```
+
+When `view.group` is set and `groupPath` is shorter than it, the request returns the groups of the next level, inside the groups in `groupPath`. When `groupPath` has a value for every level, it returns the leaf rows of that group.
+
+##### Filters
+
+The view `filter` is a condition: `{ and: [...] }`, `{ or: [...] }` or `{ key, op, value }`. The operators each field type allows:
+
+| Field types | Operators |
+| --- | --- |
+| all | `eq`, `ne`, `in`, `nin`, `empty`, `notEmpty` |
+| `text`, `email`, `phone`, `url`, `link`, `html`, `relation`, `tag`, `status` | `contains`, `notContains`, `startsWith`, `endsWith` |
+| `number`, `currency`, `percent`, `progress`, `rating` | `gt`, `gte`, `lt`, `lte`, `between` (`value: [from, to]`) |
+| `date`, `datetime` | `before`, `after`, `between`, `within` (`value: { last or next: n, unit: day, week, month or year }`) |
+| `boolean` | `isTrue`, `isFalse` |
+| `tags`, `people` | `contains` (has the value); `in` is has any of, `nin` is has none of |
+| `avatar`, `image`, `json` | the operators for all types only |
+
+- Text comparisons are case-insensitive.
+- `empty` matches null, missing, `''` and `[]`.
+- `eq` on dates compares whole days, and `before`, `after` and `between` on `date` fields compare whole days. Days are UTC days.
+- `isFalse` matches every value that is not `true`.
+- Numeric values may be numbers or numeric strings, and date values dates, date strings or timestamps.
+
+A value can be `{ $user: path }`, for example `{ key: owner, op: eq, value: { $user: id } }`. It is resolved on the server from the request's `user` property, which should be set to `{ _user: true }` (evaluated on the server from the session), never from a value the browser sends. The request throws when the user value is not set, rather than matching rows where the field is empty.
+
+##### Aggregates
+
+`view.aggregates` maps field keys to a function. All field types allow `count`, `countDistinct`, `countEmpty`, `countNotEmpty` and `percentEmpty` (a fraction from 0 to 1). Numeric types also allow `sum`, `avg`, `min` and `max`, and date types `earliest` and `latest`.
+
+#### Properties
+- `fields: object`: __Required__ - The allowlist, keyed by the Table column key. Each field is an object:
+  - `type: enum`: __Required__ - The column type: `text`, `email`, `phone`, `url`, `link`, `html`, `relation`, `tag`, `status`, `number`, `currency`, `percent`, `progress`, `rating`, `date`, `datetime`, `boolean`, `tags`, `people`, `avatar`, `image` or `json`. It decides the operators and aggregates the field allows.
+  - `path: string`: Default: the field key - Dot path of the value in the documents the base pipeline returns.
+  - `search: boolean`: Default: `false` - Include the field in the view search. Each search word must match at least one search field.
+  - `sortable: boolean`: Default: `true` - Allow sorting by the field.
+  - `filterable: boolean`: Default: `true` - Allow filtering by the field.
+  - `groupable: boolean`: Default: `false` - Allow grouping by the field. `tags` and `people` fields can not be grouped.
+- `pipeline: object[]`: Default: `[]` - Base aggregation stages that always run first, for example tenant scoping and a `$project`. `$out` and `$merge` are not allowed.
+- `view: object`: The Table view, `{ _payload: view }`. Only `sort`, `filter`, `search`, `group` and `aggregates` are read.
+- `startRow: integer`: Default: `0` - Index of the first row to return, `{ _payload: startRow }`.
+- `endRow: integer`: Default: `startRow + maxRows` - Index after the last row to return, `{ _payload: endRow }`.
+- `groupPath: any[]`: Default: `[]` - The group values of the expanded group, one per group level, `{ _payload: groupPath }`.
+- `maxRows: integer`: Default: `1000` - The most rows or groups one request may return. A request for more throws.
+- `user: object`: The user that `{ $user: path }` filter values resolve from. Set it to `{ _user: true }`.
+- `options: object`: Optional aggregate settings, for example `collation`, `maxTimeMS`, `allowDiskUse` or `hint`. See `MongoDBAggregation`.
+
+#### Examples
+
+###### A Table in server mode:
+The Table sends `{ startRow, endRow, view, groupPath }` as the fetch event. The request `payload` reads it with `_event`, and the properties read the payload with `_payload`. Field keys match the Table column keys.
+```yaml
+id: deals
+type: PageHeaderMenu
+requests:
+  - id: deals_page
+    type: MongoDBTableQuery
+    connectionId: deals
+    payload:
+      view:
+        _event: view
+      startRow:
+        _event: startRow
+      endRow:
+        _event: endRow
+      groupPath:
+        _event: groupPath
+    properties:
+      pipeline:
+        - $match:
+            org_id:
+              _user: organization.id
+        - $project:
+            name: 1
+            stage: 1
+            owner: 1
+            amount: 1
+            created: 1
+      fields:
+        name:
+          type: text
+          search: true
+        stage:
+          type: tag
+          groupable: true
+        owner:
+          type: text
+          path: owner.name
+          search: true
+          groupable: true
+        amount:
+          type: currency
+        created:
+          type: date
+      user:
+        _user: true
+      view:
+        _payload: view
+      startRow:
+        _payload: startRow
+      endRow:
+        _payload: endRow
+      groupPath:
+        _payload: groupPath
+blocks:
+  - id: deals_table
+    type: Table
+    properties:
+      data:
+        mode: server
+        request: deals_page
+      columns:
+        - key: name
+        - key: stage
+          type: tag
+          groupable: true
+        - key: owner
+          field: owner.name
+          groupable: true
+        - key: amount
+          type: currency
+          aggregate: sum
+        - key: created
+          type: date
+```
+
+###### Only the current user's deals, with a filter the table can not remove:
+```yaml
+requests:
+  - id: my_deals_page
+    type: MongoDBTableQuery
+    connectionId: deals
+    payload:
+      view:
+        _event: view
+      startRow:
+        _event: startRow
+      endRow:
+        _event: endRow
+    properties:
+      pipeline:
+        - $match:
+            owner_id:
+              _user: id
+      fields:
+        name:
+          type: text
+          search: true
+        amount:
+          type: currency
+        closed:
+          type: boolean
+      view:
+        _payload: view
+      startRow:
+        _payload: startRow
+      endRow:
+        _payload: endRow
+      maxRows: 500
 ```
 
 ### MongoDBUpdateMany
