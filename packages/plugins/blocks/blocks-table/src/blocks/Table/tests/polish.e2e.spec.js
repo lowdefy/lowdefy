@@ -277,7 +277,7 @@ test.describe('Table visual polish', () => {
     });
   });
 
-  test('column manager labels untitled columns and never cuts an entry above its footer', async ({
+  test('column manager labels untitled columns and uses the viewport height below it', async ({
     page,
   }) => {
     await table(page, 'crm').locator('[data-lf-toolbar-button="columns"]').click();
@@ -286,18 +286,42 @@ test.describe('Table visual polish', () => {
     await expect(manager.locator('[data-lf-manager-item][data-col-key="actions"]')).toHaveText(
       'Actions'
     );
-    const list = await manager.locator('.lf-table-manager-list').evaluate((element) => ({
-      scrollable: element.dataset.scrollable !== undefined,
+    // With room below the anchor, every entry shows and nothing scrolls.
+    const roomy = await manager.locator('.lf-table-manager-list').evaluate((element) => ({
       scrolls: element.scrollHeight > element.clientHeight,
-      cut: Array.from(element.children).filter((entry) => {
-        const top = entry.offsetTop - element.scrollTop;
-        const bottom = top + entry.offsetHeight;
-        return top < element.clientHeight && bottom > element.clientHeight + 0.5;
-      }).length,
+      below: element.hasAttribute('data-more-below'),
     }));
-    expect(list.scrolls).toBe(true);
-    expect(list.scrollable).toBe(true);
-    expect(list.cut).toBe(0);
+    expect(roomy).toEqual({ scrolls: false, below: false });
+  });
+
+  test('column manager list scrolls within the viewport with a fade and no half entry', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 520 });
+    await table(page, 'crm').locator('[data-lf-toolbar-button="columns"]').click();
+    const manager = page.locator('[data-lf-column-manager]');
+    await expect(manager).toBeVisible();
+    const list = manager.locator('.lf-table-manager-list');
+    await expect(list).toHaveAttribute('data-more-below');
+    const measure = () =>
+      list.evaluate((element) => ({
+        scrolls: element.scrollHeight > element.clientHeight,
+        popupBottom: element.closest('.ant-popover').getBoundingClientRect().bottom,
+        mask: getComputedStyle(element).maskImage,
+        cut: Array.from(element.children).filter((entry) => {
+          const top = entry.offsetTop - element.scrollTop;
+          const bottom = top + entry.offsetHeight;
+          return top < element.clientHeight && bottom > element.clientHeight + 0.5;
+        }).length,
+      }));
+    const first = await measure();
+    expect(first.scrolls).toBe(true);
+    expect(first.popupBottom).toBeLessThanOrEqual(520);
+    expect(first.mask).toContain('linear-gradient');
+    expect(first.cut).toBe(0);
+    await list.evaluate((element) => element.scrollTo(0, element.scrollHeight));
+    await expect(list).toHaveAttribute('data-more-above');
+    await expect(list).not.toHaveAttribute('data-more-below');
   });
 
   test('pinned regions cast a shadow only while columns are scrolled under them', async ({

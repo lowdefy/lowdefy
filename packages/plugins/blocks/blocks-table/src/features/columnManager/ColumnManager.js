@@ -25,6 +25,8 @@ import getPlainTitle from '../filtering/getPlainTitle.js';
 import moveSequenceEntry from './moveSequenceEntry.js';
 import sequenceToRegions from './sequenceToRegions.js';
 import snapListHeight from './snapListHeight.js';
+import getListRoom from './getListRoom.js';
+import updateScrollHints from './updateScrollHints.js';
 
 const BOUNDARY_LABELS = {
   start: 'Pinned to start above',
@@ -65,16 +67,24 @@ function ColumnManager({ api }) {
     );
   };
 
-  useLayoutEffect(() => {
-    snapListHeight(listRef.current);
-  });
-
-  // The popover lays its content out hidden first, so snap again once the list has a size.
-  useEffect(() => {
+  function sizeList() {
     const list = listRef.current;
-    const observer = new ResizeObserver(() => snapListHeight(list));
-    observer.observe(list);
-    return () => observer.disconnect();
+    const anchor = api.rootRef.current?.querySelector('.lf-table-manager-anchor');
+    snapListHeight({ limit: getListRoom({ anchor, list }), list });
+  }
+
+  useLayoutEffect(sizeList);
+
+  // The popover lays its content out hidden first, so size the list again once it has a size, and
+  // when the viewport changes.
+  useEffect(() => {
+    const observer = new ResizeObserver(sizeList);
+    observer.observe(listRef.current);
+    window.addEventListener('resize', sizeList);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', sizeList);
+    };
   }, []);
 
   useEffect(() => {
@@ -212,7 +222,11 @@ function ColumnManager({ api }) {
         size="small"
         value={search}
       />
-      <div className="lf-table-manager-list" ref={listRef}>
+      <div
+        className="lf-table-manager-list"
+        onScroll={(event) => updateScrollHints(event.currentTarget)}
+        ref={listRef}
+      >
         {sequence.map(renderVisible)}
         {hidden.length ? <div className="lf-table-manager-heading">Hidden</div> : null}
         {hidden.map((key) => (
