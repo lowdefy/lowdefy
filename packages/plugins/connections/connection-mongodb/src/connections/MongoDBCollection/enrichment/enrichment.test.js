@@ -272,7 +272,7 @@ describe('input sources and cell inputs', () => {
     expect(resolveCellInputs({ doc, sources: summarySources })).toEqual({
       inputs: { company: 'Acme', email: 'ada@acme.test', words: 50 },
       missing: null,
-      waiting: false,
+      waitingFor: [],
     });
   });
 
@@ -301,7 +301,7 @@ describe('input sources and cell inputs', () => {
           doc: { company: { name: 'Acme' }, _enrich: { email: { status, value: 'old' } } },
           sources: summarySources,
         })
-      ).toEqual({ inputs: { company: 'Acme', words: 50 }, missing: null, waiting: true });
+      ).toEqual({ inputs: { company: 'Acme', words: 50 }, missing: null, waitingFor: ['email'] });
     });
   });
 
@@ -311,7 +311,7 @@ describe('input sources and cell inputs', () => {
         doc: { _enrich: { email: { status: 'running' } } },
         sources: summarySources,
       })
-    ).toEqual({ inputs: { words: 50 }, missing: 'company', waiting: false });
+    ).toEqual({ inputs: { words: 50 }, missing: 'company', waitingFor: [] });
     const emailSources = resolveInputSources({
       columnDef: columnDefsByKey.get('email'),
       columnDefsByKey,
@@ -321,7 +321,7 @@ describe('input sources and cell inputs', () => {
     expect(resolveCellInputs({ doc: { domain: 'acme.test' }, sources: emailSources })).toEqual({
       inputs: { domain: 'acme.test' },
       missing: null,
-      waiting: false,
+      waitingFor: [],
     });
   });
 });

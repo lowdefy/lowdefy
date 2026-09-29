@@ -12,23 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# The autoRun columns a new row starts: those whose inputs are all fields or literal values.
-# The columns that read other enrichment columns follow on their own, as the cells they read
-# complete (MongoDBEnrichmentComplete returns them as `downstream`). Queued together, they
-# would find their inputs not yet run and be set to "Missing input".
+# The autoRun columns a new row starts: every enrichment and ai column with autoRun. They are
+# queued together: a column that reads another of them waits for it (MongoDBEnrichmentEnqueue
+# queues it with waitingFor, and MongoDBEnrichmentComplete releases it when the column it reads
+# completes), so the waterfall between columns needs nothing here.
 _js:
   fn: |
-    const runnable = new Set(
-      args.columns
-        .filter((column) => column.kind === 'enrichment' || column.kind === 'ai')
-        .map((column) => column.key)
-    );
     return args.columns
       .filter(
         (column) =>
-          runnable.has(column.key) &&
-          column.autoRun === true &&
-          Object.values(column.inputs ?? {}).every((input) => !runnable.has(input.column))
+          (column.kind === 'enrichment' || column.kind === 'ai') && column.autoRun === true
       )
       .map((column) => column.key);
   args:

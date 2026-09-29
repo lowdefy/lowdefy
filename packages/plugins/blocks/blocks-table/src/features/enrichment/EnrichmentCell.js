@@ -64,13 +64,20 @@ function renderRerun({ api, col }) {
 
 function renderState({ api, col, original, rowKey, run }) {
   switch (run.status) {
-    case 'queued':
+    case 'queued': {
+      // Queued behind a column it reads (the server's `waitingFor`): it runs once that is done.
+      const waitingFor = run.state.waitingFor ?? [];
+      const waiting = waitingFor.length > 0;
       return (
-        <span className="lf-enrich-state">
+        <span
+          className="lf-enrich-state"
+          title={waiting ? `Waiting for ${waitingFor.join(', ')}` : undefined}
+        >
           <RunIcon name="queued" />
-          <span className="lf-enrich-label">Queued</span>
+          <span className="lf-enrich-label">{waiting ? 'Waiting' : 'Queued'}</span>
         </span>
       );
+    }
     case 'running':
       return (
         <span className="lf-enrich-state">
@@ -95,7 +102,8 @@ function renderState({ api, col, original, rowKey, run }) {
 }
 
 // An enrichment or ai cell (design E6), tier 0: the value through the column's type when the run
-// is done (`ok`, or a cell that never ran), otherwise its state: a clock (queued), a spinner
+// is done (`ok`, or a cell that never ran), otherwise its state: a clock (queued, or "Waiting"
+// while it waits for a column it reads), a spinner
 // (running), a red marker with the message on hover (error) or "No result" (empty). A done cell
 // whose inputs changed since it ran (stale: its `inputHash` differs from the row's current
 // inputs) shows dimmed with a rerun button. `data-lf-enrich-status` carries the state.

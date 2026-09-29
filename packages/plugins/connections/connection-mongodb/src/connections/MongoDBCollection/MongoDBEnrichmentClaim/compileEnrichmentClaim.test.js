@@ -143,6 +143,7 @@ describe('planClaimCell', () => {
           '_enrich.email.attempts': 1,
           '_enrich.email.claimToken': `${'a'.repeat(24)}:${inputHash}`,
         },
+        $unset: { '_enrich.email.waitingFor': '' },
       },
     });
     expect(cell.claim).toEqual({
@@ -222,17 +223,19 @@ describe('planClaimCell', () => {
     });
   });
 
-  test('a cell whose enrichment input is still running is deferred', () => {
+  test('a cell whose enrichment input is still running waits for it', () => {
     const doc = {
       _id: 'r1',
       name: 'Acme',
       _enrich: { email: { status: 'running' }, pitch: { status: 'queued', attempts: 0 } },
     };
     const cell = planClaimCell({ doc, target: pitchTarget, compiled, now, generateToken });
-    expect(cell.kind).toBe('defer');
+    expect(cell.kind).toBe('wait');
+    // Out of claims until the email completes and releases it (MongoDBEnrichmentComplete).
     expect(cell.operation.updateOne.update.$set).toEqual({
       '_enrich.pitch.status': 'queued',
-      '_enrich.pitch.queuedAt': new Date('2026-09-29T10:00:15.000Z'),
+      '_enrich.pitch.queuedAt': new Date('2026-09-29T10:10:00.000Z'),
+      '_enrich.pitch.waitingFor': ['email'],
     });
   });
 });

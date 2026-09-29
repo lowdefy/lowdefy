@@ -33,6 +33,9 @@ async function planEnqueue({ collection, compiled, tenant }) {
   });
   const queueOperations = [];
   const missingOperations = [];
+  // The columns this enqueue queues, by row: targets come upstream first, so a column that
+  // reads one of them waits for it instead of finding its input missing.
+  const pendingByRow = new Map();
   for (const target of targets) {
     const cursor = collection.find(
       scopeReadFilter({ filter: andConditions([scope, target.condition]), tenant }),
@@ -40,8 +43,13 @@ async function planEnqueue({ collection, compiled, tenant }) {
     );
     try {
       for await (const doc of cursor) {
-        const cell = planEnqueueCell({ doc, target, compiled });
-        if (cell.kind === 'queue') queueOperations.push(cell.operation);
+        const rowId = String(doc._id);
+        const cell = planEnqueueCell({ doc, target, compiled, pending: pendingByRow.get(rowId) });
+        if (cell.kind === 'queue' || cell.kind === 'wait') {
+          queueOperations.push(cell.operation);
+          if (!pendingByRow.has(rowId)) pendingByRow.set(rowId, new Set());
+          pendingByRow.get(rowId).add(target.columnKey);
+        }
         if (cell.kind === 'missing') missingOperations.push(cell.operation);
         if (queueOperations.length + missingOperations.length > maxCells) {
           throw new Error(

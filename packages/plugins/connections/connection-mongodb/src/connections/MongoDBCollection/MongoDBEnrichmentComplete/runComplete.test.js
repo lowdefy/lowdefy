@@ -57,7 +57,14 @@ test('runComplete reads back which cells it wrote when a claim moved on between 
     ],
   });
   const run = await runComplete({ collection, compiled, now: new Date() });
-  expect(run.response).toEqual({ applied: 1, ignored: 1, requeued: 0, downstream: [] });
+  expect(run.response).toEqual({
+    applied: 1,
+    ignored: 1,
+    requeued: 0,
+    released: 0,
+    downstream: [],
+  });
+  // No column waits for email, so there is nothing to release.
   expect(collection.bulkWrite).toHaveBeenCalledTimes(1);
   expect(collection.find).toHaveBeenCalledTimes(2);
 });

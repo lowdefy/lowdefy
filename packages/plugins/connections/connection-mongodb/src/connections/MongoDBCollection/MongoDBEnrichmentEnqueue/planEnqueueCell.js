@@ -20,19 +20,24 @@ import andConditions from '../enrichment/andConditions.js';
 import buildCellUpdate from '../enrichment/buildCellUpdate.js';
 import hashEnrichmentInputs from '../enrichment/hashEnrichmentInputs.js';
 import resolveCellInputs from '../enrichment/resolveCellInputs.js';
+import waitingParkMs from '../enrichment/waitingParkMs.js';
 
 // What an enqueue does to one cell of a row it read:
 //   missing: a required input has no value, so the cell is set to empty with
 //            "Missing input: <column>" instead of queueing a call that can not run.
+//   wait:    a required input column is queued or running, or queued by this same enqueue
+//            (`pending`): queued with `waitingFor` and due only once those complete
+//            (MongoDBEnrichmentComplete releases it), never "Missing input" for a column the
+//            run is about to compute.
 //   skip:    stale mode, and the cell's inputHash is the hash of the current inputs.
 //   queue:   queued for this run. The previous value, raw and inputHash stay until a new
 //            result lands, so the table keeps showing the old value while the cell re-runs.
 // Each update's filter repeats the mode's condition (and, in stale mode, the inputHash read),
 // so a cell that changed since it was read, or that a worker took, is left alone.
-function planEnqueueCell({ doc, target, compiled }) {
+function planEnqueueCell({ doc, target, compiled, pending }) {
   const { filter, mode, now, runId } = compiled;
   const { columnKey, condition, inputHashPath, sources } = target;
-  const { inputs, missing } = resolveCellInputs({ doc, sources });
+  const { inputs, missing, waitingFor } = resolveCellInputs({ doc, sources, pending });
   const storedHash = get(doc, inputHashPath, { default: undefined });
   const match = andConditions([
     filter,
@@ -63,7 +68,29 @@ function planEnqueueCell({ doc, target, compiled }) {
               'leaseUntil',
               'queuedAt',
               'startedAt',
+              'waitingFor',
             ],
+          }),
+        },
+      },
+    };
+  }
+  if (waitingFor.length > 0) {
+    return {
+      kind: 'wait',
+      operation: {
+        updateOne: {
+          filter: match,
+          update: buildCellUpdate({
+            columnKey,
+            set: {
+              status: 'queued',
+              runId,
+              queuedAt: new Date(now.getTime() + waitingParkMs),
+              attempts: 0,
+              waitingFor,
+            },
+            unset: ['error', 'claimToken', 'leaseUntil', 'startedAt'],
           }),
         },
       },
@@ -80,7 +107,7 @@ function planEnqueueCell({ doc, target, compiled }) {
         update: buildCellUpdate({
           columnKey,
           set: { status: 'queued', runId, queuedAt: now, attempts: 0 },
-          unset: ['error', 'claimToken', 'leaseUntil', 'startedAt'],
+          unset: ['error', 'claimToken', 'leaseUntil', 'startedAt', 'waitingFor'],
         }),
       },
     },

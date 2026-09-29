@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import getDependentColumns from '../enrichment/getDependentColumns.js';
 import getEnrichmentFilter from '../enrichment/getEnrichmentFilter.js';
 import parseColumnDefs from '../enrichment/parseColumnDefs.js';
 import parseLimit from '../enrichment/parseLimit.js';
@@ -71,6 +72,7 @@ function compileEnrichmentComplete({ properties, tenantScoped }) {
   const results = parseResults({ results: properties.results, columnDefsByKey, rowKeyType });
   return {
     backoffMs,
+    dependentsByColumn: getDependentColumns(columnDefsByKey),
     downstreamByColumn: getDownstreamByColumn(columnDefsByKey),
     filter,
     maxAttempts,

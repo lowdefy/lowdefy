@@ -19,12 +19,14 @@ import runBulkWriteBatches from '../enrichment/runBulkWriteBatches.js';
 import scopeWriteOperations from '../enrichment/scopeWriteOperations.js';
 import getDownstream from './getDownstream.js';
 import planCompleteCell from './planCompleteCell.js';
+import planReleaseWaiting from './planReleaseWaiting.js';
 import readAppliedCells from './readAppliedCells.js';
 import readClaimedRows from './readClaimedRows.js';
 
 // Writes the results whose claim still holds, in unordered bulkWrites guarded by the claim
 // token, and reports which were applied. When every write matched (the usual case) that is
-// all of them; otherwise the written cells are read back.
+// all of them; otherwise the written cells are read back. Then the cells of the same rows that
+// were waiting for the finished cells are released.
 async function runComplete({ collection, compiled, logCollection, now, tenant, tenantGuard }) {
   const { downstreamByColumn, filter, results } = compiled;
   const docs = await readClaimedRows({ collection, compiled, tenant });
@@ -50,6 +52,12 @@ async function runComplete({ collection, compiled, logCollection, now, tenant, t
     written.matchedCount === cells.length
       ? cells
       : await readAppliedCells({ collection, cells, tenant });
+  const releaseOperations = scopeWriteOperations({
+    operations: planReleaseWaiting({ applied, compiled, now }),
+    tenant,
+    tenantGuard,
+  });
+  const released = await runBulkWriteBatches({ collection, operations: releaseOperations });
   return {
     organizationId,
     applied,
@@ -57,6 +65,7 @@ async function runComplete({ collection, compiled, logCollection, now, tenant, t
       applied: applied.length,
       ignored: results.length - applied.length,
       requeued: applied.filter((cell) => cell.kind === 'requeue').length,
+      released: released.modifiedCount,
       downstream: getDownstream({ applied, downstreamByColumn }),
     },
   };

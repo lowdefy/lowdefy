@@ -32,7 +32,7 @@ routine:
       converted:
         _ref: leads/rows_to_docs.yaml
       autoRun:
-        _ref: leads/auto_run_roots.yaml
+        _ref: leads/auto_run_columns.yaml
   - :if:
       _gt:
         - _array.length:

@@ -102,6 +102,7 @@ test('an ok result stores the value, raw and the hash of the claimed inputs', as
     applied: 1,
     ignored: 0,
     requeued: 0,
+    released: 0,
     downstream: [{ rowKey: 'a', columns: ['pitch'] }],
   });
   const docs = await readDocuments(collection);
@@ -148,7 +149,7 @@ describe('claim tokens', () => {
       connection,
       results: [resultOf(first, { value: 'stale@acme.test' })],
     });
-    expect(stale).toEqual({ applied: 0, ignored: 1, requeued: 0, downstream: [] });
+    expect(stale).toEqual({ applied: 0, ignored: 1, requeued: 0, released: 0, downstream: [] });
     expect(cellOf(await readDocuments(collection), 'a')).toMatchObject({
       status: 'running',
       claimToken: second.claimToken,
@@ -211,7 +212,13 @@ describe('retries', () => {
       connection,
       results: [resultOf(first, { status: 'error', error: 'rate limited' })],
     });
-    expect(firstResponse).toEqual({ applied: 1, ignored: 0, requeued: 1, downstream: [] });
+    expect(firstResponse).toEqual({
+      applied: 1,
+      ignored: 0,
+      requeued: 1,
+      released: 0,
+      downstream: [],
+    });
     let email = cellOf(await readDocuments(collection), 'a');
     expect(email).toMatchObject({ status: 'queued', error: 'rate limited', value: 'previous' });
     expect(email.queuedAt.getTime() - before).toBeGreaterThanOrEqual(30000);
@@ -283,6 +290,7 @@ describe('downstream', () => {
       applied: 2,
       ignored: 0,
       requeued: 1,
+      released: 0,
       downstream: [{ rowKey: claims[0].rowKey, columns: ['pitch'] }],
     });
   });
@@ -371,6 +379,7 @@ describe('row keys, scope and limits', () => {
       applied: 0,
       ignored: 0,
       requeued: 0,
+      released: 0,
       downstream: [],
     });
   });

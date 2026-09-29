@@ -110,7 +110,8 @@ test('a run flows from enqueue through claims and completes to the downstream co
     request: { fields, columnDefs, filter, columns: ['email', 'pitch'], mode: 'stale' },
     connection,
   });
-  expect(stale).toMatchObject({ queued: 1, missingInputs: 0 });
+  // Row b's email is stale, and its pitch, which reads the email, waits for it in the same run.
+  expect(stale).toMatchObject({ queued: 2, missingInputs: 0 });
   await runWorker({ connection, provider });
   const after = await readDocuments(collection);
   expect(after[1]._enrich).toMatchObject({
@@ -125,4 +126,134 @@ test('a run flows from enqueue through claims and completes to the downstream co
   });
   // Row c never had a result (its input is missing), so it has no inputHash to be stale against.
   expect(fresh).toMatchObject({ queued: 0, missingInputs: 0 });
+});
+
+test('a column and the column that reads it, enqueued together, run one after the other', async () => {
+  const documents = [
+    { _id: 'a', org: 'o1', name: 'Acme', domain: 'acme.test' },
+    { _id: 'b', org: 'o1', name: 'Bolt', domain: 'bolt.test' },
+  ];
+  const { collection, connection } = await setupEnrichmentCollection({ name, documents });
+  const before = Date.now();
+  const enqueued = await MongoDBEnrichmentEnqueue({
+    request: { fields, columnDefs, filter, columns: ['pitch', 'email'] },
+    connection,
+  });
+  expect(enqueued).toMatchObject({ queued: 4, missingInputs: 0 });
+  const queuedDocs = await readDocuments(collection);
+  // The pitch is queued waiting for the email, never "Missing input", and is not due yet.
+  expect(queuedDocs[0]._enrich.pitch).toMatchObject({ status: 'queued', waitingFor: ['email'] });
+  expect(queuedDocs[0]._enrich.pitch.queuedAt.getTime()).toBeGreaterThan(before + 60000);
+  expect(queuedDocs[0]._enrich.email).toMatchObject({ status: 'queued' });
+  expect(queuedDocs[0]._enrich.email).not.toHaveProperty('waitingFor');
+
+  // The first claim takes only the emails: the pitches wait.
+  const first = await MongoDBEnrichmentClaim({
+    request: { fields, columnDefs, filter, limit: 10 },
+    connection,
+  });
+  expect(first.map((item) => item.columnKey)).toEqual(['email', 'email']);
+  const completed = await MongoDBEnrichmentComplete({
+    request: {
+      columnDefs,
+      filter,
+      results: first.map((item) => ({
+        rowKey: item.rowKey,
+        columnKey: item.columnKey,
+        claimToken: item.claimToken,
+        ...provider(item),
+      })),
+    },
+    connection,
+  });
+  expect(completed).toMatchObject({ applied: 2, released: 2 });
+  // Released as soon as the email completed: due now, no 15 second wait.
+  const released = await readDocuments(collection);
+  expect(released[0]._enrich.pitch).not.toHaveProperty('waitingFor');
+  expect(released[0]._enrich.pitch.queuedAt.getTime()).toBeLessThanOrEqual(Date.now());
+
+  const second = await MongoDBEnrichmentClaim({
+    request: { fields, columnDefs, filter, limit: 10 },
+    connection,
+  });
+  expect(second.map((item) => [item.rowKey, item.columnKey])).toEqual([
+    ['a', 'pitch'],
+    ['b', 'pitch'],
+  ]);
+  expect(second[0].inputs).toEqual({ name: 'Acme', email: 'hello@acme.test' });
+});
+
+test('a cell waiting for a column that fails for good is released and finds its input missing', async () => {
+  const documents = [{ _id: 'a', org: 'o1', name: 'Acme', domain: 'acme.test' }];
+  const { collection, connection } = await setupEnrichmentCollection({ name, documents });
+  await MongoDBEnrichmentEnqueue({
+    request: { fields, columnDefs, filter, columns: ['email', 'pitch'] },
+    connection,
+  });
+  const [emailClaim] = await MongoDBEnrichmentClaim({
+    request: { fields, columnDefs, filter, limit: 10 },
+    connection,
+  });
+  await MongoDBEnrichmentComplete({
+    request: {
+      columnDefs,
+      filter,
+      results: [
+        {
+          rowKey: 'a',
+          columnKey: 'email',
+          claimToken: emailClaim.claimToken,
+          status: 'error',
+          error: 'No such domain.',
+          retry: false,
+        },
+      ],
+    },
+    connection,
+  });
+  await expect(
+    MongoDBEnrichmentClaim({ request: { fields, columnDefs, filter, limit: 10 }, connection })
+  ).resolves.toEqual([]);
+  const docs = await readDocuments(collection);
+  expect(docs[0]._enrich.pitch).toMatchObject({ status: 'empty', error: 'Missing input: email' });
+});
+
+test('a claim parks a cell whose input is still running until that input completes', async () => {
+  const documents = [{ _id: 'a', org: 'o1', name: 'Acme', domain: 'acme.test' }];
+  const { collection, connection } = await setupEnrichmentCollection({ name, documents });
+  await MongoDBEnrichmentEnqueue({
+    request: { fields, columnDefs, filter, columns: ['email'] },
+    connection,
+  });
+  const [emailClaim] = await MongoDBEnrichmentClaim({
+    request: { fields, columnDefs, filter, limit: 10 },
+    connection,
+  });
+  // A second enqueue of the pitch alone, while the email runs: it waits for the email.
+  await MongoDBEnrichmentEnqueue({
+    request: { fields, columnDefs, filter, columns: ['pitch'] },
+    connection,
+  });
+  const parked = await readDocuments(collection);
+  expect(parked[0]._enrich.pitch).toMatchObject({ status: 'queued', waitingFor: ['email'] });
+  await MongoDBEnrichmentComplete({
+    request: {
+      columnDefs,
+      filter,
+      results: [
+        {
+          rowKey: 'a',
+          columnKey: 'email',
+          claimToken: emailClaim.claimToken,
+          ...provider(emailClaim),
+        },
+      ],
+    },
+    connection,
+  });
+  const claims = await MongoDBEnrichmentClaim({
+    request: { fields, columnDefs, filter, limit: 10 },
+    connection,
+  });
+  expect(claims.map((item) => item.columnKey)).toEqual(['pitch']);
 });

@@ -22,10 +22,7 @@ import getClaimableCondition from '../enrichment/getClaimableCondition.js';
 import hashEnrichmentInputs from '../enrichment/hashEnrichmentInputs.js';
 import pickRow from '../enrichment/pickRow.js';
 import resolveCellInputs from '../enrichment/resolveCellInputs.js';
-
-// A queued cell whose input column is still queued or running waits this long before it is
-// looked at again, instead of running without its input.
-const deferMs = 15000;
+import waitingParkMs from '../enrichment/waitingParkMs.js';
 
 function readCell({ doc, paths }) {
   return {
@@ -50,7 +47,8 @@ function operation({ match, columnKey, set, unset }) {
 //            MongoDBEnrichmentComplete stores as the result's inputHash.
 //   expired: a lease that ran out on the last allowed attempt: the cell is an error.
 //   missing: a required input has no value: empty, with the missing column named.
-//   defer:   an input column is still queued or running: queued again, due in 15 seconds.
+//   wait:    an input column is still queued or running: queued again with `waitingFor`, and
+//            released as soon as that input completes (MongoDBEnrichmentComplete).
 function planClaimCell({ doc, target, compiled, now, generateToken }) {
   const { filter, fieldsByKey, leaseMs, maxAttempts, rowKeyField } = compiled;
   const { columnKey, kind, output, paths, prompt, provider, sources, title } = target;
@@ -80,7 +78,7 @@ function planClaimCell({ doc, target, compiled, now, generateToken }) {
       }),
     };
   }
-  const { inputs, missing, waiting } = resolveCellInputs({ doc, sources });
+  const { inputs, missing, waitingFor } = resolveCellInputs({ doc, sources });
   if (missing !== null) {
     return {
       kind: 'missing',
@@ -88,17 +86,30 @@ function planClaimCell({ doc, target, compiled, now, generateToken }) {
         match,
         columnKey,
         set: { status: 'empty', error: `Missing input: ${missing}`, finishedAt: now },
-        unset: ['value', 'raw', 'inputHash', 'claimToken', 'leaseUntil', 'queuedAt', 'startedAt'],
+        unset: [
+          'value',
+          'raw',
+          'inputHash',
+          'claimToken',
+          'leaseUntil',
+          'queuedAt',
+          'startedAt',
+          'waitingFor',
+        ],
       }),
     };
   }
-  if (waiting) {
+  if (waitingFor.length > 0) {
     return {
-      kind: 'defer',
+      kind: 'wait',
       operation: operation({
         match,
         columnKey,
-        set: { status: 'queued', queuedAt: new Date(now.getTime() + deferMs) },
+        set: {
+          status: 'queued',
+          queuedAt: new Date(now.getTime() + waitingParkMs),
+          waitingFor,
+        },
         unset: ['claimToken', 'leaseUntil', 'startedAt'],
       }),
     };
@@ -117,7 +128,7 @@ function planClaimCell({ doc, target, compiled, now, generateToken }) {
         attempts: attempts + 1,
         claimToken,
       },
-      unset: [],
+      unset: ['waitingFor'],
     }),
     claim: {
       rowKey: get(doc, rowKeyField, { default: null }),

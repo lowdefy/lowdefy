@@ -221,6 +221,7 @@ describe('planEnqueueCell', () => {
               '_enrich.email.claimToken': '',
               '_enrich.email.leaseUntil': '',
               '_enrich.email.startedAt': '',
+              '_enrich.email.waitingFor': '',
             },
           },
         },
@@ -252,6 +253,7 @@ describe('planEnqueueCell', () => {
         '_enrich.email.leaseUntil': '',
         '_enrich.email.queuedAt': '',
         '_enrich.email.startedAt': '',
+        '_enrich.email.waitingFor': '',
       },
     });
   });
@@ -281,14 +283,33 @@ describe('planEnqueueCell', () => {
     });
   });
 
-  test('queues a cell whose enrichment input is still running', () => {
+  test('queues a cell whose enrichment input is still running as waiting for it', () => {
     const compiled = compile({ columns: ['pitch'] });
     const cell = planEnqueueCell({
       doc: { _id, name: 'Acme', _enrich: { email: { status: 'running' } } },
       target: compiled.targets[0],
       compiled,
     });
-    expect(cell.kind).toBe('queue');
+    expect(cell.kind).toBe('wait');
+    expect(cell.operation.updateOne.update.$set).toMatchObject({
+      '_enrich.pitch.status': 'queued',
+      '_enrich.pitch.waitingFor': ['email'],
+      '_enrich.pitch.queuedAt': new Date(now.getTime() + 600000),
+    });
+  });
+
+  test('a cell whose input column the same enqueue queues waits for it, never missing', () => {
+    const compiled = compile({ columns: ['pitch', 'email'] });
+    // Upstream first, whatever order the columns were given in.
+    expect(compiled.targets.map((target) => target.columnKey)).toEqual(['email', 'pitch']);
+    const cell = planEnqueueCell({
+      doc: { _id, name: 'Acme', _enrich: { email: { status: 'error' } } },
+      target: compiled.targets[1],
+      compiled,
+      pending: new Set(['email']),
+    });
+    expect(cell.kind).toBe('wait');
+    expect(cell.operation.updateOne.update.$set['_enrich.pitch.waitingFor']).toEqual(['email']);
   });
 });
 

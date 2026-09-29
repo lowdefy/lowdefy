@@ -25,6 +25,7 @@ import enrichPath from '../enrichment/enrichPath.js';
 import getEnrichmentFilter from '../enrichment/getEnrichmentFilter.js';
 import getSourcePaths from '../enrichment/getSourcePaths.js';
 import getTargetColumns from '../enrichment/getTargetColumns.js';
+import orderTargetsByInputs from '../enrichment/orderTargetsByInputs.js';
 import parseColumnDefs from '../enrichment/parseColumnDefs.js';
 import parseEnrichmentFields from '../enrichment/parseEnrichmentFields.js';
 import parseLimit from '../enrichment/parseLimit.js';
@@ -111,12 +112,14 @@ function compileEnrichmentEnqueue({ properties, tenantScoped, now, generate = ge
   const runId = getRunId({ runId: properties.runId, generate });
   const fieldsByKey = parseEnrichmentFields({ fields: properties.fields, requestType });
   const columnDefsByKey = parseColumnDefs({ columnDefs: properties.columnDefs, requestType });
-  const columns = getTargetColumns({
-    columns: properties.columns,
-    columnDefsByKey,
-    required: true,
-    requestType,
-  });
+  const columns = orderTargetsByInputs(
+    getTargetColumns({
+      columns: properties.columns,
+      columnDefsByKey,
+      required: true,
+      requestType,
+    })
+  );
   const filter = getEnrichmentFilter({ filter: properties.filter, tenantScoped, requestType });
   const scope = andConditions([
     filter,

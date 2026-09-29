@@ -24,12 +24,14 @@ function isMissingValue(value) {
 //   inputs:  { [param]: value }; an optional input with no value is left out.
 //   missing: the first required input column with no value (null, missing or ''), or an
 //            enrichment input whose cell finished without an ok value. The cell can not run.
-//   waiting: a required enrichment input is queued or running, so the cell waits for it.
+//   waitingFor: the required enrichment inputs that are queued or running, or that this
+//            enqueue queues (`pending`, keys of the row's columns queued in the same call),
+//            so the cell waits for them. Empty when an input is missing.
 // The Table resolves inputs the same way in the browser, so the hashes agree.
-function resolveCellInputs({ doc, sources }) {
+function resolveCellInputs({ doc, sources, pending = null }) {
   const inputs = {};
   let missing = null;
-  let waiting = false;
+  const waitingFor = [];
   sources.forEach((source) => {
     if (source.source === 'value') {
       inputs[source.param] = source.value;
@@ -44,6 +46,10 @@ function resolveCellInputs({ doc, sources }) {
       }
       return;
     }
+    if (pending?.has(source.column)) {
+      if (source.required) waitingFor.push(source.column);
+      return;
+    }
     const status = get(doc, source.statusPath, { default: undefined });
     const value = get(doc, source.valuePath, { default: undefined });
     if (status === 'ok' && !isMissingValue(value)) {
@@ -52,12 +58,12 @@ function resolveCellInputs({ doc, sources }) {
     }
     if (!source.required) return;
     if (status === 'queued' || status === 'running') {
-      waiting = true;
+      waitingFor.push(source.column);
     } else if (missing === null) {
       missing = source.column;
     }
   });
-  return { inputs, missing, waiting: missing === null && waiting };
+  return { inputs, missing, waitingFor: missing === null ? waitingFor : [] };
 }
 
 export default resolveCellInputs;

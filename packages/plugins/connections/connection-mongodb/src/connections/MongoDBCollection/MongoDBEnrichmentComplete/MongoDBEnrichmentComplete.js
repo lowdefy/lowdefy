@@ -34,7 +34,7 @@ async function MongoDBEnrichmentComplete(context) {
   const properties = deserialize(request);
   const compiled = compileEnrichmentComplete({ properties, tenantScoped: Boolean(tenant) });
   if (compiled.results.length === 0) {
-    return { applied: 0, ignored: 0, requeued: 0, downstream: [] };
+    return { applied: 0, ignored: 0, requeued: 0, released: 0, downstream: [] };
   }
   const { collection, logCollection } = await getCollection({ connection });
   let run;

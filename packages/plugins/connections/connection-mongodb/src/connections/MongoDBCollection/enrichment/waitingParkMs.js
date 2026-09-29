@@ -14,23 +14,10 @@
   limitations under the License.
 */
 
-// The only enrichment cell properties the requests write, under `_enrich.<column key>`. Every
-// update the three requests send is built from these (buildCellUpdate), so nothing else of
-// a row can be written by an enrichment run.
-const cellProperties = [
-  'status',
-  'value',
-  'raw',
-  'error',
-  'inputHash',
-  'runId',
-  'claimToken',
-  'attempts',
-  'queuedAt',
-  'startedAt',
-  'finishedAt',
-  'leaseUntil',
-  'waitingFor',
-];
+// How long a cell queued waiting for an input column (`waitingFor`) stays out of claims. The
+// input's completion releases it at once (MongoDBEnrichmentComplete); this only bounds the wait
+// when that never comes (the input's worker lost its lease on the last attempt), after which a
+// claim looks at the cell again.
+const waitingParkMs = 600000;
 
-export default cellProperties;
+export default waitingParkMs;
