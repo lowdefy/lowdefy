@@ -14,29 +14,14 @@
   limitations under the License.
 */
 
-import createCollapseAllGroups from './createCollapseAllGroups.js';
-import createExpandAllGroups from './createExpandAllGroups.js';
-import createSetCollapsedGroups from './createSetCollapsedGroups.js';
-import createSetGroup from './createSetGroup.js';
-import createSetGroupKeys from './createSetGroupKeys.js';
-import createToggleGroup from './createToggleGroup.js';
-import createToggleGroupSelected from './createToggleGroupSelected.js';
-import groupingHeaderMenuItems from './groupingHeaderMenuItems.js';
 import groupingToValue from './groupingToValue.js';
-import GroupRow from './GroupRow.js';
-import handleGroupClick from './handleGroupClick.js';
-import handleGroupKeyDown from './handleGroupKeyDown.js';
 import initAggregates from './initAggregates.js';
 import initCollapsedGroups from './initCollapsedGroups.js';
 import initGrouping from './initGrouping.js';
-import StickyGroupRow from './StickyGroupRow.js';
-import useGrouping from './useGrouping.js';
 
-// Client-side row grouping (D6, D10.8): `view.group` levels over groupable columns, collapsed
-// groups and group aggregates. The rows it produces are one flat list of group header items and
-// leaf rows; the Body renders the headers with `rowRenderers.group`, and one sticky overlay shows
-// the current group while scrolling. Server groups (serverData) are the same items and render
-// the same way.
+// The grouping state every table keeps, loaded or not with the group rows (groupRowsFeature):
+// `view.group` levels, collapsed groups and the view's aggregates (which the summary footer reads
+// too). Owning the view keys here keeps the value the same whether or not a table can group.
 const groupingFeature = {
   name: 'grouping',
   viewKeys: ['group', 'collapsedGroups', 'aggregates'],
@@ -48,22 +33,6 @@ const groupingFeature = {
     aggregates: { init: initAggregates, cause: 'aggregate' },
   },
   toValue: groupingToValue,
-  actions: {
-    setCollapsedGroups: createSetCollapsedGroups,
-    setGroupKeys: createSetGroupKeys,
-    toggleGroup: createToggleGroup,
-    toggleGroupSelected: createToggleGroupSelected,
-  },
-  methods: {
-    collapseAllGroups: createCollapseAllGroups,
-    expandAllGroups: createExpandAllGroups,
-    setGroup: createSetGroup,
-  },
-  gridHandlers: { click: handleGroupClick, keydown: handleGroupKeyDown },
-  headerMenuItems: groupingHeaderMenuItems,
-  rowRenderers: { group: GroupRow },
-  bodyOverlay: StickyGroupRow,
-  useItems: useGrouping,
 };
 
 export default groupingFeature;

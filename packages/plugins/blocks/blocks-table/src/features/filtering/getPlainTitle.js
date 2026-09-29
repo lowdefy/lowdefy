@@ -16,11 +16,18 @@
 
 import { type } from '@lowdefy/helpers';
 import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
+import humanizeKey from '@lowdefy/blocks-antd/table/humanizeKey.js';
 
-// Column titles may hold HTML; menus, selects and labels show them as text.
+// Column titles may hold HTML; menus, selects and labels show them as text. A column whose title
+// is empty (an actions column with `title: ''`) is named by its key there ("Actions"), so every
+// column the table lists has a label.
 function getPlainTitle(column) {
-  if (type.isString(column.title) && column.title.includes('<')) return htmlToText(column.title);
-  return String(column.title ?? column.key);
+  const title =
+    type.isString(column.title) && column.title.includes('<')
+      ? htmlToText(column.title)
+      : String(column.title ?? '');
+  if (title.trim() !== '') return title;
+  return humanizeKey(column.key) || String(column.key);
 }
 
 export default getPlainTitle;

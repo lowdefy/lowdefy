@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
+import someColumnConfig from '../../core/someColumnConfig.js';
 
-// Components rendered inside every data header cell (filter indicator, menu button, sort
-// indicator, resize handle), in feature order. Each receives `{ api, col, focused, state }`.
-const headerParts = features.flatMap((feature) => feature.headerParts ?? []);
+// The group rows load when a column can be grouped by: `view.group` only takes groupable columns.
+function needsGroupRows({ properties }) {
+  return someColumnConfig({ properties, test: (column) => column.groupable === true });
+}
 
-export default headerParts;
+export default needsGroupRows;

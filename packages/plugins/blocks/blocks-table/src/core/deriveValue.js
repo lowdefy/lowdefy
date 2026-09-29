@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
 import isDefaultViewColumns from './isDefaultViewColumns.js';
 
 // The block value is derived from table state, never kept alongside it.
@@ -22,13 +21,13 @@ function deriveValue({ state, api }) {
   const entries = state.columnOrder.map((key) =>
     Object.assign(
       { key },
-      ...features.map((feature) => feature.toViewColumn?.({ key, state, api }) ?? {})
+      ...api.features.list.map((feature) => feature.toViewColumn?.({ key, state, api }) ?? {})
     )
   );
   const view = { ...state.viewPassthrough };
   if (!isDefaultViewColumns({ entries, config: api.config })) view.columns = entries;
   const value = { view, selected: [], expanded: state.expanded };
-  features.forEach((feature) => {
+  api.features.list.forEach((feature) => {
     const part = feature.toValue?.({ state, api });
     if (!part) return;
     Object.entries(part).forEach(([key, partValue]) => {

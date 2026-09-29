@@ -14,20 +14,22 @@
   limitations under the License.
 */
 
-/* Group header rows and the sticky group overlay. Selectors carry the .lf-table root so they win
-   over the core row rules whatever order the stylesheets load in. */
+/* Group header rows and the sticky group overlay. A group row is also an `lf-table-row`, so the
+   core body row rules (`.lf-table-body .lf-table-row` and its `:hover`, both in the same layer)
+   match it too. The group rules name both classes of the row under the root, one class more
+   specific than each core rule, so they win whatever order the stylesheets load in (a tie would
+   go to whichever loads last). */
 
 @layer components {
-  .lf-table .lf-table-group-row {
-    --lf-group-row-bg: color-mix(in srgb, var(--ant-color-text, #000) 3%, var(--lf-bg));
+  .lf-table .lf-table-row.lf-table-group-row {
+    --lf-group-row-bg: color-mix(in srgb, var(--ant-color-text-base, #000) 3%, var(--lf-bg));
     background: var(--lf-group-row-bg);
     cursor: pointer;
     user-select: none;
   }
 
-  .lf-table .lf-table-body .lf-table-group-row:hover,
-  .lf-table .lf-table-group-sticky .lf-table-group-row:hover {
-    --lf-group-row-bg: color-mix(in srgb, var(--ant-color-text, #000) 6%, var(--lf-bg));
+  .lf-table .lf-table-row.lf-table-group-row:hover {
+    --lf-group-row-bg: color-mix(in srgb, var(--ant-color-text-base, #000) 6%, var(--lf-bg));
     background: var(--lf-group-row-bg);
   }
 
@@ -42,7 +44,7 @@
   .lf-table-group-label-content {
     position: absolute;
     top: 0;
-    bottom: 1px;
+    bottom: 0;
     left: 0;
     display: flex;
     align-items: center;
@@ -119,7 +121,8 @@
     will-change: transform;
   }
 
-  .lf-table-group-sticky .lf-table-row {
+  /* Only the innermost stacked header casts the shadow over the rows. */
+  .lf-table-group-sticky-shift:last-child .lf-table-row {
     box-shadow: 0 2px 4px color-mix(in srgb, var(--ant-color-text, #000) 6%, transparent);
   }
 }

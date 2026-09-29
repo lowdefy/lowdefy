@@ -14,15 +14,10 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
+import lazyComponent from '../../core/lazyComponent.js';
 
-// Every state slice the features declare, by name. Slices are React-owned (controlled TanStack
-// state), which is what lets a slice update run inside a transition.
-const sliceDefinitions = {};
-features.forEach((feature) => {
-  Object.entries(feature.slices ?? {}).forEach(([name, definition]) => {
-    sliceDefinitions[name] = { ...definition, feature: feature.name };
-  });
-});
+// The header menu, loaded when a header menu first opens (the menu button preloads it on hover
+// and focus).
+const LazyHeaderMenuDropdown = lazyComponent(() => import('./HeaderMenuDropdown.js'));
 
-export default sliceDefinitions;
+export default LazyHeaderMenuDropdown;

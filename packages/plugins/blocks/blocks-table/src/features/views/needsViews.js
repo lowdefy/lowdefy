@@ -14,11 +14,14 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
+import { type } from '@lowdefy/helpers';
 
-// Components rendered at the start of a row's first data cell, before its content (the tree
-// indent and chevron, the expandable-row chevron), from the features' `cellLead`. Each receives
-// `{ api, item }` for wrapped row items and returns null when it has nothing to show.
-const cellLeads = features.map((feature) => feature.cellLead).filter(Boolean);
+// Saved views load with `persist`, with a `views` property (views may arrive later from a
+// request, so the key alone counts) and with the toolbar's view tabs.
+function needsViews({ properties }) {
+  if (!type.isNone(properties.persist)) return true;
+  if (!type.isUndefined(properties.views)) return true;
+  return properties.toolbar === true || properties.toolbar?.views === true;
+}
 
-export default cellLeads;
+export default needsViews;

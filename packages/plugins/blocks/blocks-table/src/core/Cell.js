@@ -21,13 +21,13 @@ import EnrichmentCell from '../features/enrichment/EnrichmentCell.js';
 import LAZY_CELL_TYPES from './lazyCellTypes.js';
 import LazyCell from './LazyCell.js';
 
-function renderContent({ api, col, original }) {
+function renderContent({ api, col, lead, original }) {
   const rowKey = api.config.getKey(original);
   if (col.column.stateField) {
     return <EnrichmentCell api={api} col={col} original={original} rowKey={rowKey} />;
   }
   if (LAZY_CELL_TYPES.has(col.column.type)) {
-    return <LazyCell api={api} col={col} original={original} rowKey={rowKey} />;
+    return <LazyCell api={api} col={col} lead={lead} original={original} rowKey={rowKey} />;
   }
   return renderCell({
     column: col.column,
@@ -84,7 +84,7 @@ function Cell({ api, col, focused, lead, original, selected }) {
       tabIndex={focused ? 0 : -1}
     >
       {lead}
-      {renderContent({ api, col, original })}
+      {renderContent({ api, col, lead, original })}
     </div>
   );
 }

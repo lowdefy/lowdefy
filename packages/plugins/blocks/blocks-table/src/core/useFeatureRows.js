@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
-
 // Stage 3 of the data pipeline (see TableRoot): the rows TanStack sees, after they are diffed by
 // key. Each `useRows(ctx)` hook, in registry order, returns the rows the next one sees:
 // transactions keep `applyTransaction` results over the rows until the app's data changes, then
@@ -25,7 +23,7 @@ import features from '../features/index.js';
 // to add, which keeps every row model memo warm.
 function useFeatureRows({ api, config, input, properties, rows }) {
   let result = rows;
-  features.forEach((feature) => {
+  api.features.list.forEach((feature) => {
     if (!feature.useRows) return;
     result = feature.useRows({ api, config, input, properties, rows: result });
   });

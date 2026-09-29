@@ -19,6 +19,7 @@ import { Button } from 'antd';
 
 import DensityToggle from './DensityToggle.js';
 import FilterButton from './FilterButton.js';
+import LazyColumnManagerPopover from '../columnManager/LazyColumnManagerPopover.js';
 import GroupButton from './GroupButton.js';
 import ImportButton from '../enrichment/ImportButton.js';
 import QuickFilter from './QuickFilter.js';
@@ -63,6 +64,8 @@ function Toolbar({ api, searchRef, toolbar }) {
               data-lf-toolbar-button="columns"
               icon={<ToolbarIcon api={api} name="view" />}
               onClick={() => api.actions.openColumnManager()}
+              onFocus={LazyColumnManagerPopover.preload}
+              onPointerEnter={LazyColumnManagerPopover.preload}
               size="small"
             >
               Columns

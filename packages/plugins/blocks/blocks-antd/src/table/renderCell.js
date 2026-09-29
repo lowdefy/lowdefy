@@ -27,8 +27,10 @@ import './tableCells.css';
 // `rules` class and style, and the tooltip as a native title. A line-clamped
 // cell without a tooltip shows its full text on hover. `column` must come
 // from compileColumns. Returns an element for the host's own cell element
-// (a td, or a grid cell div).
-function renderCell({ column, row, rowKey, methods, components, onEvent }) {
+// (a td, or a grid cell div). `fit` (optional, `{ width, measure }`) is the
+// content width of a fixed-width single-line cell and the host's chip
+// measurer: `tag` / `tags` cells then show only the chips that fit whole.
+function renderCell({ column, row, rowKey, methods, components, onEvent, fit }) {
   const value = readColumnValue({ column, row });
   const { compiled } = column;
   const ruled = compiled.rules === null ? null : compiled.rules(row, value);
@@ -52,6 +54,7 @@ function renderCell({ column, row, rowKey, methods, components, onEvent }) {
         methods={methods}
         components={components}
         onEvent={onEvent}
+        fit={fit}
       />
     </div>
   );

@@ -48,6 +48,7 @@ test('getTagTone falls back to the ag-grid colorFrom, colorMap and default keys'
 test('getTagTone seeds a stable colour when the column sets no colours', () => {
   const column = { cell: {} };
   const tone = getTagTone({ item: 'Approved', column, row: {} });
-  expect(tone).toMatch(/^var\(--ant-color-/);
+  // A status colour (var(--ant-color-*)) or a palette colour (var(--ant-<name>-6, #hex)).
+  expect(tone).toMatch(/^var\(--ant-/);
   expect(getTagTone({ item: 'Approved', column, row: {} })).toBe(tone);
 });

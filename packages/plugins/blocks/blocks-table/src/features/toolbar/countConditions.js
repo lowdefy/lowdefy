@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-// The number of leaf conditions in a filter, for the Filter button's badge.
+// The number of leaf conditions in a filter, for the Filter button's count.
 function countConditions(condition) {
   if (!type.isObject(condition)) return 0;
   const group = condition.and ?? condition.or;

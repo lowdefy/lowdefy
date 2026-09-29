@@ -23,12 +23,19 @@
 @layer components {
   .lf-table {
     --lf-border: var(--ant-color-border-secondary, #f0f0f0);
-    --lf-header-bg: color-mix(in srgb, var(--ant-color-text, #000) 2%, var(--lf-bg));
+    --lf-header-bg: color-mix(in srgb, var(--ant-color-text-base, #000) 2%, var(--lf-bg));
     --lf-bg: var(--ant-color-bg-container, #fff);
-    /* Opaque mixes, so sticky pinned cells never show the scrolled cells beneath them. */
-    --lf-row-hover: color-mix(in srgb, var(--ant-color-text, #000) 4%, var(--lf-bg));
+    /* Opaque backgrounds, so sticky pinned cells never show the scrolled cells beneath them. The
+       row hover is antd's item hover fill laid over the table background (4% black in light
+       themes, 8% white in dark ones), as a full background value. */
+    --lf-row-hover: linear-gradient(
+        var(--ant-control-item-bg-hover, rgba(0, 0, 0, 0.04)),
+        var(--ant-control-item-bg-hover, rgba(0, 0, 0, 0.04))
+      ),
+      var(--lf-bg);
     --lf-row-selected: var(--ant-color-primary-bg, #e6f4ff);
     --lf-row-selected-hover: var(--ant-color-primary-bg-hover, #bae0ff);
+    --lf-pinned-shadow: rgba(0, 0, 0, 0.16);
     position: relative;
     width: 100%;
     min-width: 0;
@@ -74,12 +81,17 @@
     position: relative;
   }
 
-  .lf-table-row {
+  /* The separator is the row's own border, not each cell's, so it runs the full width of the
+     row when the columns are narrower than the table and passes under sticky pinned cells.
+     Scoped to the root: `lf-table-row` is also the shared cell contract's row class, which
+     TableLight's table rows carry on the same page. */
+  .lf-table .lf-table-row {
     display: flex;
     width: var(--lf-total);
     min-width: 100%;
     height: var(--lf-row-h);
     box-sizing: border-box;
+    border-bottom: 1px solid var(--lf-border);
   }
 
   .lf-table-body {
@@ -127,7 +139,6 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    border-bottom: 1px solid var(--lf-border);
     background: inherit;
     outline: none;
   }
@@ -162,6 +173,29 @@
     box-shadow: inset 1px 0 0 var(--lf-border);
   }
 
+  /* While columns scroll under a pinned region, its inner edge casts a shadow over them
+     (writeScrollEdges sets the attributes from the scroll position). */
+  .lf-table-scroller[data-scrolled-start]
+    .lf-table-gridcell[data-pinned='start'][data-pinned-edge] {
+    box-shadow:
+      inset -1px 0 0 var(--lf-border),
+      6px 0 8px -6px var(--lf-pinned-shadow);
+  }
+
+  .lf-table-scroller[data-scrolled-end] .lf-table-gridcell[data-pinned='end'][data-pinned-edge] {
+    box-shadow:
+      inset 1px 0 0 var(--lf-border),
+      -6px 0 8px -6px var(--lf-pinned-shadow);
+  }
+
+  /* The table's own border ends the last column, so an end-pinned last header shows no divider
+     (its resize handle still highlights on hover and while dragging). */
+  .lf-table-header
+    .lf-table-gridcell[data-pinned='end']:last-child
+    > .lf-table-resize:not(:hover):not([data-active])::after {
+    opacity: 0;
+  }
+
   .lf-table-gridcell:focus-visible,
   .lf-table-gridcell[data-focused]:focus {
     outline: 2px solid var(--ant-color-primary, #1677ff);
@@ -189,11 +223,19 @@
     background: var(--lf-header-bg);
   }
 
+  /* --lf-header-cell-bg is opaque, so a sticky pinned header covers the headers scrolled under it
+     and header buttons laid over the title can take the cell's colour. */
+  /* Each header cell is its own stacking context, so the resize handle and menu button of a
+     column scrolled under a pinned column stay under that column instead of showing through it
+     (a stray divider inside the pinned end). */
   .lf-table-header .lf-table-gridcell {
+    --lf-header-cell-bg: var(--lf-header-bg);
+    isolation: isolate;
     font-weight: var(--ant-font-weight-strong, 600);
     color: var(--ant-color-text-heading, var(--ant-color-text));
     user-select: none;
     gap: var(--ant-padding-xxs, 4px);
+    background: var(--lf-header-cell-bg);
   }
 
   .lf-table-header .lf-table-gridcell[data-sortable] {
@@ -201,7 +243,18 @@
   }
 
   .lf-table-header .lf-table-gridcell[data-sortable]:hover {
-    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+    --lf-header-cell-bg: color-mix(
+      in srgb,
+      var(--ant-color-text-base, #000) 5%,
+      var(--lf-header-bg)
+    );
+  }
+
+  /* End-aligned headers put their sort and filter indicators before the title, so the title ends
+     on the same padding edge as the column's values. */
+  .lf-table-header .lf-table-gridcell[data-align='end'] > .lf-table-sort,
+  .lf-table-header .lf-table-gridcell[data-align='end'] > .lf-table-filter-indicator {
+    order: -1;
   }
 
   .lf-table-header-title {
@@ -404,7 +457,7 @@
     min-height: var(--lf-row-h);
   }
 
-  .lf-table-row[data-measured] .lf-table-gridcell {
+  .lf-table .lf-table-row[data-measured] .lf-table-gridcell {
     height: auto;
     padding-block: var(--ant-padding-xxs, 4px);
   }
@@ -436,29 +489,63 @@
 
   .lf-table-footer .lf-table-row {
     background: var(--lf-header-bg);
-  }
-
-  .lf-table-footer .lf-table-gridcell {
     border-top: 1px solid var(--lf-border);
     border-bottom: 0;
   }
 
+  /* A summary never clips silently. SummaryRow shows the full label, its short form or none, from
+     measured widths (getSummaryLabel); the value ends with an ellipsis when it is wider than what
+     is left, and the title holds the full label and value. */
   .lf-table-summary {
-    display: inline-flex;
+    display: flex;
+    flex: 1 1 auto;
     align-items: baseline;
-    gap: var(--ant-margin-xs, 8px);
+    justify-content: flex-start;
+    gap: var(--ant-margin-xxs, 4px);
     min-width: 0;
+    overflow: hidden;
     white-space: nowrap;
   }
 
+  .lf-table-gridcell[data-align='end'] > .lf-table-summary {
+    justify-content: flex-end;
+  }
+
+  .lf-table-gridcell[data-align='center'] > .lf-table-summary {
+    justify-content: center;
+  }
+
   .lf-table-summary-label {
+    flex: none;
     color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
     font-size: var(--ant-font-size-sm, 12px);
   }
 
   .lf-table-summary-value {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
+  }
+
+  /* Toolbar and bulk bar slots: the blocks sit side by side, like the table's own buttons. A
+     slot is a Lowdefy area (an .lf-row) whose blocks default to span 24 (.lf-col), which would
+     stack them; here span blocks take their content width instead, since a toolbar row has no
+     grid to span. A block's own flex layout (`layout.flex`, `grow`, `size`) is not an .lf-col and
+     still applies, as do the slot's area settings (`gap`, `align`, `justify`, `direction`, `wrap`),
+     which Area writes inline. */
+  :is(.lf-table-toolbar-start, .lf-table-toolbar-end, .lf-table-bulk-actions) > .lf-row {
+    --lf-gap-x: var(--ant-margin-xs, 8px);
+    --lf-gap-y: var(--ant-margin-xs, 8px);
+    align-items: center;
+    min-width: 0;
+  }
+
+  :is(.lf-table-toolbar-start, .lf-table-toolbar-end, .lf-table-bulk-actions) > .lf-row > .lf-col {
+    flex: 0 1 auto;
+    max-width: 100%;
   }
 
   .lf-table-pagination {

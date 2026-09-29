@@ -23,6 +23,8 @@ const toolbar = (page, blockId) => getBlock(page, blockId).locator('[data-lf-too
 const button = (page, blockId, name) =>
   toolbar(page, blockId).locator(`[data-lf-toolbar-button="${name}"]`);
 const value = (page) => getBlock(page, 'tb_value');
+const bodyRow = (page, blockId, rowKey) =>
+  getBlock(page, blockId).locator(`.lf-table-body [data-row-key="${rowKey}"]`);
 const cell = (page, blockId, rowKey, colKey) =>
   getBlock(page, blockId).locator(
     `.lf-table-body [data-row-key="${rowKey}"] [data-col-key="${colKey}"]`
@@ -189,10 +191,10 @@ test.describe('Table toolbar', () => {
     await toolbar(page, 'tb').locator('[data-lf-toolbar-density]').getByText('Compact').click();
     await expect(value(page)).toContainText('"density":"compact"');
     await expect(value(page)).toContainText('cause=density');
-    await expect(cell(page, 'tb', 1, 'name')).toHaveCSS('height', '32px');
+    await expect(bodyRow(page, 'tb', 1)).toHaveCSS('height', '32px');
     await toolbar(page, 'tb').locator('[data-lf-toolbar-density]').getByText('Comfortable').click();
     await expect(value(page)).toContainText('"density":"comfortable"');
-    await expect(cell(page, 'tb', 1, 'name')).toHaveCSS('height', '52px');
+    await expect(bodyRow(page, 'tb', 1)).toHaveCSS('height', '52px');
   });
 
   test('the Export button downloads the view as CSV', async ({ page }) => {

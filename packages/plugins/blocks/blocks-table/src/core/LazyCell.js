@@ -19,6 +19,8 @@ import getCellText from '@lowdefy/blocks-antd/table/getCellText.js';
 import readColumnValue from '@lowdefy/blocks-antd/table/readColumnValue.js';
 import renderCell from '@lowdefy/blocks-antd/table/renderCell.js';
 
+import getCellFit from './getCellFit.js';
+
 // The cell's text in the column's cell layout: what a rich cell shows while the grid scrolls
 // fast. Buttons hold no text, so theirs is an empty cell.
 function renderPlaceholder({ col, original }) {
@@ -33,8 +35,9 @@ function renderPlaceholder({ col, original }) {
 // A rich cell (lazyCellTypes.js) that mounts on demand. Any rich cell that comes into view while
 // the grid scrolls fast shows its text placeholder until the scroll settles, then renders in
 // full and stays (D10.4). `buttons` with `showOn: hover` mount only while their row is hovered or
-// holds focus, and not during a fast scroll (tier 1, D4): they are invisible otherwise.
-function LazyCell({ api, col, original, rowKey }) {
+// holds keyboard focus, and not during a fast scroll (tier 1, D4): they are invisible otherwise.
+// Chip cells show the chips that fit their column (getCellFit), worked out again when it resizes.
+function LazyCell({ api, col, lead, original, rowKey }) {
   const activity = api.cellActivity;
   const rowId = String(rowKey);
   const hoverOnly = col.column.type === 'buttons' && col.column.cell.showOn === 'hover';
@@ -57,6 +60,7 @@ function LazyCell({ api, col, original, rowKey }) {
     methods: api.methods,
     components: api.components,
     onEvent: api.onCellEvent,
+    fit: getCellFit({ api, col, lead }),
   });
 }
 

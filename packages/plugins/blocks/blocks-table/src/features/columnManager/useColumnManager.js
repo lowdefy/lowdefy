@@ -14,16 +14,25 @@
   limitations under the License.
 */
 
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 
-import ColumnManagerPopover from './ColumnManagerPopover.js';
+import LazyColumnManagerPopover from './LazyColumnManagerPopover.js';
 
-// Block-level open state; the popover renders in the table's top region while open.
+// Block-level open state; the popover (loaded on first open) renders in the table's top region
+// while open.
 function useColumnManager({ api }) {
   const [open, setOpen] = useState(false);
   api.columnManager = { open, setOpen };
   if (!open) return null;
-  return { regions: { top: <ColumnManagerPopover api={api} /> } };
+  return {
+    regions: {
+      top: (
+        <Suspense fallback={null}>
+          <LazyColumnManagerPopover api={api} />
+        </Suspense>
+      ),
+    },
+  };
 }
 
 export default useColumnManager;

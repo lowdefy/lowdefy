@@ -16,8 +16,9 @@
 
 // Scrolls the minimum needed to bring a cell into view below the sticky header and beside the
 // pinned columns (`align: 'start' | 'center'` for rows scroll further), with measured row
-// offsets when rows wrap.
-function scrollToCell({ api, row, col, align }) {
+// offsets when rows wrap. `startInset` leaves that much room above a row aligned to the start
+// (the stacked sticky group headers above an inner group's header).
+function scrollToCell({ api, row, col, align, startInset = 0 }) {
   const scroller = api.scrollerRef.current;
   if (!scroller) return;
   const { footerHeight, headerHeight, layout, rowOffsets } = api;
@@ -27,7 +28,7 @@ function scrollToCell({ api, row, col, align }) {
     const rowHeight = rowOffsets ? rowOffsets[row + 1] - rowOffsets[row] : api.rowHeight;
     let top = scroller.scrollTop;
     if (align === 'start') {
-      top = rowTop;
+      top = rowTop - startInset;
     } else if (align === 'center') {
       top = rowTop - (bodyHeight - rowHeight) / 2;
     } else if (rowTop < top) {

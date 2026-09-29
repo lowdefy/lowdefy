@@ -14,39 +14,43 @@
   limitations under the License.
 */
 
-import React from 'react';
-import { Badge, Button, Popover } from 'antd';
+import React, { Suspense } from 'react';
+import { Button, Popover } from 'antd';
 
 import countConditions from './countConditions.js';
-import FilterBuilder from '../filtering/FilterBuilder.js';
+import LazyFilterBuilder from '../filtering/LazyFilterBuilder.js';
+import ToolbarCount from './ToolbarCount.js';
 import ToolbarIcon from './ToolbarIcon.js';
 
-// Opens the filter builder on the whole `view.filter`; the badge counts its conditions. Edits go
+// Opens the filter builder on the whole `view.filter`; the button counts its conditions. Edits go
 // through applyFiltering, the one filter write path.
 function FilterButton({ api }) {
   const filter = api.state.filter ?? null;
   const columns = api.config.columns.filter((column) => column.filterable);
   const content = (
     <div className="lf-table-toolbar-popover" data-lf-toolbar-filter="">
-      <FilterBuilder
-        columns={columns}
-        condition={filter}
-        onChange={(condition) => api.actions.applyFiltering({ filter: condition ?? null })}
-        user={api.config.user}
-      />
+      <Suspense fallback={null}>
+        <LazyFilterBuilder
+          columns={columns}
+          condition={filter}
+          onChange={(condition) => api.actions.applyFiltering({ filter: condition ?? null })}
+          user={api.config.user}
+        />
+      </Suspense>
     </div>
   );
   return (
     <Popover content={content} placement="bottomLeft" trigger="click">
-      <Badge count={countConditions(filter)} size="small">
-        <Button
-          data-lf-toolbar-button="filter"
-          icon={<ToolbarIcon api={api} name="filter" />}
-          size="small"
-        >
-          Filter
-        </Button>
-      </Badge>
+      <Button
+        data-lf-toolbar-button="filter"
+        icon={<ToolbarIcon api={api} name="filter" />}
+        onFocus={LazyFilterBuilder.preload}
+        onPointerEnter={LazyFilterBuilder.preload}
+        size="small"
+      >
+        Filter
+        <ToolbarCount count={countConditions(filter)} />
+      </Button>
     </Popover>
   );
 }

@@ -16,8 +16,6 @@
 
 import { useMemo } from 'react';
 
-import features from '../features/index.js';
-
 const EMPTY = [];
 
 // Block-level feature hooks in registry order. A fragment may contribute:
@@ -31,6 +29,7 @@ const EMPTY = [];
 // - `pending: true`: the rows shown are about to be replaced, so they are dimmed (server mode keeps
 //   the previous view's rows until the new view's first block lands).
 function useFeatureFragments(ctx) {
+  const features = ctx.api.features.list;
   const fragments = features.map((feature) => feature.useFeature?.(ctx) ?? null);
   const leadingParts = fragments.map((fragment) => fragment?.leadingColumns ?? EMPTY);
   const leadingColumns = useMemo(() => leadingParts.flat(), leadingParts);

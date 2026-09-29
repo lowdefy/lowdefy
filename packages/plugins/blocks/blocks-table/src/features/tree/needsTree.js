@@ -14,13 +14,11 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
+import { type } from '@lowdefy/helpers';
 
-// View keys with an owner. `columns` belongs to the core; the rest of the view (filter, search,
-// ...) passes through unchanged until a feature module claims it.
-const claimedViewKeys = new Set(['columns']);
-features.forEach((feature) => {
-  (feature.viewKeys ?? []).forEach((key) => claimedViewKeys.add(key));
-});
+// Trees load when `tree` is set (normalizeTree validates it).
+function needsTree({ properties }) {
+  return !type.isNone(properties.tree);
+}
 
-export default claimedViewKeys;
+export default needsTree;

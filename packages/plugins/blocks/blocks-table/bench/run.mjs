@@ -19,7 +19,7 @@
   (bench/tests/*.bench.js) and writes bench/results/report.json and report.md with each D10
   budget next to the measured value.
 
-  Usage: pnpm bench [playwright test filters...]
+  Usage: pnpm bench [playwright test filters...]   (`pnpm bench --chunk`: the chunk measurement only)
   Environment: LOWDEFY_BENCH_PORT (default 3116).
 */
 
@@ -47,11 +47,42 @@ function readRaw(name) {
   return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : null;
 }
 
+function toKb(bytes) {
+  return Math.round((bytes / 1024) * 10) / 10;
+}
+
+// A module's group in the breakdown: the npm package, or the package's own folder
+// (`features/<name>`, `core`, `blocks/<Block>`).
+function moduleGroup(id) {
+  const nodeModules = id.lastIndexOf('node_modules/');
+  if (nodeModules >= 0) {
+    const parts = id.slice(nodeModules + 'node_modules/'.length).split('/');
+    return parts[0].startsWith('@') ? parts.slice(0, 2).join('/') : parts[0];
+  }
+  const parts = path.relative(path.join(packageDir, 'dist'), id).split(path.sep);
+  return parts[0] === 'features' || parts[0] === 'blocks' ? parts.slice(0, 2).join('/') : parts[0];
+}
+
+// Rendered bytes (before minification) per module group of a chunk, largest first. Not
+// gzipped: modules share one gzip dictionary in the chunk, so per-module gzip sizes do not add up.
+function breakDown(chunk) {
+  const groups = new Map();
+  Object.entries(chunk.modules).forEach(([id, info]) => {
+    const group = moduleGroup(id);
+    groups.set(group, (groups.get(group) ?? 0) + (info.renderedLength ?? info.code?.length ?? 0));
+  });
+  return [...groups.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([group, bytes]) => ({ group, kb: toKb(bytes) }));
+}
+
 // The lazy implementation chunk as a Lowdefy page would load it: TanStack and the table code
-// counted; React, antd and the @lowdefy packages shared with the page and excluded (D10 budget).
+// counted; React, antd, dayjs and the @lowdefy packages shared with the page and excluded (D10
+// budget). The main chunk is what the first mount loads; the others load on demand (optional
+// features by config, popovers and editors on first use).
 async function measureChunk() {
   const outDir = path.join(resultsDir, 'chunk');
-  await build({
+  const result = await build({
     configFile: false,
     logLevel: 'error',
     define: { 'process.env.NODE_ENV': JSON.stringify('production') },
@@ -70,13 +101,40 @@ async function measureChunk() {
       },
     },
   });
-  const js = fs.readFileSync(path.join(outDir, 'table.js'));
-  const cssFile = fs.readdirSync(outDir).find((file) => file.endsWith('.css'));
-  const css = cssFile ? fs.readFileSync(path.join(outDir, cssFile)) : Buffer.alloc(0);
+  const output = (Array.isArray(result) ? result : [result]).flatMap((entry) => entry.output);
+  const chunks = output.filter((file) => file.type === 'chunk');
+  const byFileName = new Map(chunks.map((file) => [file.fileName, file]));
+  // The first mount loads the entry and every chunk it imports statically (modules the entry
+  // shares with on-demand chunks are split out into those); the rest load on demand.
+  const initial = new Set();
+  const visit = (file) => {
+    if (initial.has(file)) return;
+    initial.add(file);
+    file.imports.forEach((name) => byFileName.has(name) && visit(byFileName.get(name)));
+  };
+  visit(byFileName.get('table.js'));
+  const main = {
+    code: [...initial].map((file) => file.code).join('\n'),
+    modules: Object.assign({}, ...[...initial].map((file) => file.modules)),
+  };
+  const css = output
+    .filter((file) => file.type === 'asset' && file.fileName.endsWith('.css'))
+    .map((file) => Buffer.from(file.source));
+  const gzipKb = (code) => toKb(zlib.gzipSync(code).length);
   return {
-    jsKb: Math.round((js.length / 1024) * 10) / 10,
-    jsGzipKb: Math.round((zlib.gzipSync(js).length / 1024) * 10) / 10,
-    cssGzipKb: Math.round((zlib.gzipSync(css).length / 1024) * 10) / 10,
+    jsKb: toKb(Buffer.byteLength(main.code)),
+    jsGzipKb: gzipKb(main.code),
+    cssGzipKb: gzipKb(Buffer.concat(css)),
+    breakdown: breakDown(main),
+    initialChunks: initial.size,
+    lazyChunks: chunks
+      .filter((file) => !initial.has(file))
+      .map((file) => ({
+        name: file.name,
+        kb: toKb(Buffer.byteLength(file.code)),
+        gzipKb: gzipKb(file.code),
+      }))
+      .sort((a, b) => b.gzipKb - a.gzipKb),
   };
 }
 
@@ -251,14 +309,18 @@ function buildRows({ chunk }) {
   }
   rows.push({
     scenario: 'Block chunk (Table.lazy + TanStack, antd/React/@lowdefy shared)',
-    budget: '<= 80 kB gzip',
-    measured: `${chunk.jsGzipKb} kB gzip JS (${chunk.jsKb} kB min), ${chunk.cssGzipKb} kB gzip CSS`,
-    status: check(chunk.jsGzipKb, 80),
+    budget: '<= 60 kB gzip main chunk (D10: 80 kB)',
+    measured: `${chunk.jsGzipKb} kB gzip JS (${chunk.jsKb} kB min, ${chunk.initialChunks} files), ${
+      chunk.cssGzipKb
+    } kB gzip CSS; ${chunk.lazyChunks.length} on-demand chunks, ${toKb(
+      chunk.lazyChunks.reduce((sum, file) => sum + file.gzipKb * 1024, 0)
+    )} kB gzip`,
+    status: check(chunk.jsGzipKb, 60),
   });
   return rows;
 }
 
-function toMarkdown({ rows, machine }) {
+function toMarkdown({ chunk, rows, machine }) {
   const lines = [
     '# Table bench report',
     '',
@@ -267,6 +329,18 @@ function toMarkdown({ rows, machine }) {
     '| Scenario | Budget | Measured | Status |',
     '| --- | --- | --- | --- |',
     ...rows.map((row) => `| ${row.scenario} | ${row.budget} | ${row.measured} | ${row.status} |`),
+    '',
+    `## Main chunk by module group (kB of rendered code before minification)`,
+    '',
+    '| Group | kB |',
+    '| --- | --- |',
+    ...chunk.breakdown.slice(0, 20).map(({ group, kb }) => `| ${group} | ${kb} |`),
+    '',
+    '## On-demand chunks',
+    '',
+    '| Chunk | kB min | kB gzip |',
+    '| --- | --- | --- |',
+    ...chunk.lazyChunks.map(({ name, kb, gzipKb }) => `| ${name} | ${kb} | ${gzipKb} |`),
     '',
   ];
   return lines.join('\n');
@@ -277,7 +351,11 @@ async function main() {
   run('pnpm', ['build']);
   const chunk = await measureChunk();
   const filters = process.argv.slice(2);
-  run('npx', ['playwright', 'test', '--config', 'bench/playwright.config.mjs', ...filters]);
+  // `pnpm bench --chunk` measures the chunk only.
+  const chunkOnly = filters.includes('--chunk');
+  if (!chunkOnly) {
+    run('npx', ['playwright', 'test', '--config', 'bench/playwright.config.mjs', ...filters]);
+  }
   const machine = {
     cpu: os.cpus()[0]?.model ?? 'unknown',
     cores: os.cpus().length,
@@ -291,8 +369,8 @@ async function main() {
     path.join(resultsDir, 'report.json'),
     JSON.stringify({ machine, chunk, rows, generatedAt: new Date().toISOString() }, null, 2)
   );
-  fs.writeFileSync(path.join(resultsDir, 'report.md'), toMarkdown({ rows, machine }));
-  process.stdout.write(`\n${toMarkdown({ rows, machine })}`);
+  fs.writeFileSync(path.join(resultsDir, 'report.md'), toMarkdown({ chunk, rows, machine }));
+  process.stdout.write(`\n${toMarkdown({ chunk, rows, machine })}`);
 }
 
 main();
