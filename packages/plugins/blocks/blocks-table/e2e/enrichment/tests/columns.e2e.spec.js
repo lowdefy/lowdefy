@@ -195,9 +195,9 @@ test('declared columns can not be changed or deleted', async ({ request }) => {
     column: { key: 'company', kind: 'input' },
   });
   expect(update.error).toBe('Only user-defined columns can be changed.');
-  const deleted = await callEndpoint(request, 'columns_delete', { key: 'company' });
+  const deleted = await callEndpoint(request, 'columns_delete', { column: { key: 'company' } });
   expect(deleted.error).toContain('is read by');
-  const email = await callEndpoint(request, 'columns_delete', { key: 'email' });
+  const email = await callEndpoint(request, 'columns_delete', { column: { key: 'email' } });
   expect(email.error).toBe('Only user-defined columns can be deleted.');
 });
 
@@ -244,16 +244,16 @@ test('deleting a column removes its cells, unless another column reads it', asyn
   const before = await settle(request);
   expect(cellOf(byName(before, 'Ada Brightwell'), 'founded').value).toBe(2004);
 
-  const refused = await callEndpoint(request, 'columns_delete', { key: 'founded' });
+  const refused = await callEndpoint(request, 'columns_delete', { column: { key: 'founded' } });
   expect(refused.error).toBe(
     'Column "founded" is read by founded_note. Change those columns first.'
   );
-  expect((await callEndpoint(request, 'columns_delete', { key: 'founded_note' })).deleted).toBe(
-    'founded_note'
-  );
-  expect((await callEndpoint(request, 'columns_delete', { key: 'founded' })).deleted).toBe(
-    'founded'
-  );
+  expect(
+    (await callEndpoint(request, 'columns_delete', { column: { key: 'founded_note' } })).deleted
+  ).toBe('founded_note');
+  expect(
+    (await callEndpoint(request, 'columns_delete', { column: { key: 'founded' } })).deleted
+  ).toBe('founded');
   const leads = await callEndpoint(request, 'test_leads');
   expect(byName(leads, 'Ada Brightwell')._enrich.founded).toBeUndefined();
   const columns = await callEndpoint(request, 'test_columns');
