@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import isEmptyValue from '@lowdefy/blocks-antd/table/isEmptyValue.js';
 
-import createAccessor from '../../core/createAccessor.js';
+import createColumnAccessor from '../../core/createColumnAccessor.js';
 
 const LIMIT = 1000;
 
@@ -32,7 +32,7 @@ function toOption(item) {
 // `options` (tags, people, statuses from data). Array values count each item. Capped, so a column
 // of unique values does not build a 100k-item list.
 function getDistinctOptions({ rows, column }) {
-  const accessor = createAccessor(column.field);
+  const accessor = createColumnAccessor(column);
   const seen = new Map();
   for (let i = 0; i < rows.length && seen.size < LIMIT; i++) {
     const value = accessor(rows[i].original);

@@ -16,8 +16,29 @@
 
 import sectionOrder from './sectionOrder.js';
 
+// An item and its submenu (`children`, the same item shape), keys namespaced by feature. Items
+// with children open their submenu; only leaves get a click handler.
+function toMenuItem({ item, prefix, handlers }) {
+  const key = `${prefix}:${item.key}`;
+  const menuItem = {
+    key,
+    label: item.label,
+    icon: item.icon,
+    danger: item.danger,
+    disabled: item.disabled,
+  };
+  if (Array.isArray(item.children)) {
+    menuItem.children = item.children.map((child) =>
+      toMenuItem({ item: child, prefix: key, handlers })
+    );
+    return menuItem;
+  }
+  handlers.set(key, item.onClick);
+  return menuItem;
+}
+
 // The header menu extension point. Every feature module may declare
-// `headerMenuItems({ column, api }) => [{ key, label, icon?, danger?, disabled?, section?, onClick() }]`;
+// `headerMenuItems({ column, api }) => [{ key, label, icon?, danger?, disabled?, section?, onClick(), children? }]`;
 // the items are collected in feature order, grouped by `section` (default: the feature's name)
 // in `sectionOrder`, and separated by dividers. Returns antd menu items plus the click handler
 // for each item key (keys are namespaced by feature, so two features may use the same key).
@@ -28,16 +49,8 @@ function collectHeaderMenuItems({ column, api, features }) {
     if (!feature.headerMenuItems) return;
     feature.headerMenuItems({ column, api }).forEach((item) => {
       const section = item.section ?? feature.name;
-      const key = `${feature.name}:${item.key}`;
       if (!sections.has(section)) sections.set(section, []);
-      sections.get(section).push({
-        key,
-        label: item.label,
-        icon: item.icon,
-        danger: item.danger,
-        disabled: item.disabled,
-      });
-      handlers.set(key, item.onClick);
+      sections.get(section).push(toMenuItem({ item, prefix: feature.name, handlers }));
     });
   });
   const known = sectionOrder.filter((section) => sections.has(section));

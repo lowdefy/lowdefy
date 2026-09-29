@@ -24,6 +24,7 @@ import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
 import createColumnDefs from './createColumnDefs.js';
 import densityHeights from './densityHeights.js';
 import getHeaderLevels from './getHeaderLevels.js';
+import normalizeEnrichment from '../features/enrichment/normalizeEnrichment.js';
 import normalizeExpandable from '../features/expandable/normalizeExpandable.js';
 import normalizeServerData from '../features/serverData/normalizeServerData.js';
 import normalizeTree from '../features/tree/normalizeTree.js';
@@ -76,6 +77,8 @@ function useTableConfig({ properties }) {
   const toolbar = useStableConfig(properties.toolbar);
   const persist = useStableConfig(properties.persist);
   const keyboard = useStableConfig(properties.keyboard);
+  const providers = useStableConfig(properties.providers);
+  const addColumn = useStableConfig(properties.addColumn);
   const getKey = useMemo(
     () => createRowKeyGetter({ rowKey: properties.rowKey }),
     [properties.rowKey]
@@ -115,6 +118,16 @@ function useTableConfig({ properties }) {
         : properties.size,
       defaultView: defaultView ?? {},
       emptyText: properties.emptyText ?? 'No data',
+      enrichment: normalizeEnrichment({
+        properties: {
+          addColumn,
+          addRow: properties.addRow,
+          addRowText: properties.addRowText,
+          importCsv: properties.importCsv,
+          providers,
+        },
+        columns: columnModel.columns,
+      }),
       getId: (row) => String(getKey(row)),
       getKey,
       headerMenu: properties.headerMenu !== false,
@@ -141,14 +154,18 @@ function useTableConfig({ properties }) {
       virtual: properties.virtual ?? 'auto',
     };
   }, [
+    addColumn,
     columnModel,
     defaultView,
     getKey,
     properties.bordered,
     keyboard,
     persist,
+    properties.addRow,
+    properties.addRowText,
     properties.emptyText,
     properties.headerMenu,
+    properties.importCsv,
     properties.height,
     properties.maxHeight,
     properties.pageSize,
@@ -160,6 +177,7 @@ function useTableConfig({ properties }) {
     properties.stickyHeader,
     properties.summary,
     properties.virtual,
+    providers,
     rowLink,
     rowSelection,
     serverData,

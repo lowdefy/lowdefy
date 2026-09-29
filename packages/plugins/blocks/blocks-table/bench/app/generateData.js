@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import hashEnrichmentInputs from '@lowdefy/blocks-antd/table/hashEnrichmentInputs.js';
+
 import createRandom from './createRandom.js';
 
 const SYLLABLES = ['ka', 'lo', 'mi', 'ne', 'ro', 'sa', 'tu', 'vi', 'zo', 'an', 'el', 'or', 'us'];
@@ -121,7 +123,60 @@ function createValue({ column, random }) {
   }
 }
 
-function generateData({ rows, cols, seed = 42 }) {
+// Enrichment columns (`enrich: true`), placed after name_1 so they are in the first viewport: an
+// enrichment and an ai column computing from name_1, their run states cycled per row (ok, some of
+// them stale, running, queued, error, empty), so scrolling renders every state and hashes every
+// done cell's inputs.
+const ENRICH_COLUMNS = [
+  {
+    key: 'lead_email',
+    kind: 'enrichment',
+    type: 'email',
+    provider: 'findEmail',
+    inputs: { name: { column: 'name_1' } },
+    width: 180,
+  },
+  {
+    key: 'segment',
+    kind: 'ai',
+    type: 'tag',
+    prompt: 'Segment of {{ name_1 }}',
+    inputs: { name_1: { column: 'name_1' } },
+    output: { type: 'tag', options: STATUS_OPTIONS },
+    width: 130,
+  },
+];
+const RUN_STATES = ['ok', 'ok', 'ok', 'ok', 'ok', 'ok', 'running', 'queued', 'error', 'empty'];
+
+function createRunState({ index, value, inputs }) {
+  const status = RUN_STATES[index % RUN_STATES.length];
+  if (status === 'error') return { status, error: 'The provider timed out.' };
+  if (status !== 'ok') return { status };
+  const inputHash = index % 4 === 0 ? '00000000000000' : hashEnrichmentInputs(inputs);
+  return { status, value, inputHash, raw: { value } };
+}
+
+function addEnrichment({ columns, data }) {
+  const at = columns.findIndex((column) => column.key === 'name_1') + 1;
+  const enriched = [...columns.slice(0, at), ...ENRICH_COLUMNS, ...columns.slice(at)];
+  data.forEach((row, index) => {
+    row._enrich = {
+      lead_email: createRunState({
+        index,
+        value: `lead${index}@example.com`,
+        inputs: { name: row.name_1 },
+      }),
+      segment: createRunState({
+        index: index + 3,
+        value: STATUSES[index % STATUSES.length],
+        inputs: { name_1: row.name_1 },
+      }),
+    };
+  });
+  return enriched;
+}
+
+function generateData({ rows, cols, seed = 42, enrich = false }) {
   const random = createRandom(seed);
   const columns = createColumns(cols);
   const data = new Array(rows);
@@ -132,6 +187,7 @@ function generateData({ rows, cols, seed = 42 }) {
     }
     data[r] = row;
   }
+  if (enrich) return { columns: addEnrichment({ columns, data }), data };
   return { columns, data };
 }
 

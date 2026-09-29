@@ -834,3 +834,125 @@
             total: 800
             due: '2026-10-30'
             overdue: false
+
+- title: Enrichment table
+  fullWidth: true
+  blocks:
+    - id: leads_enrichment
+      type: Table
+      properties:
+        addColumn: true
+        addRow: true
+        importCsv: true
+        rowSelection:
+          type: checkbox
+        providers:
+          - id: findEmail
+            title: Find email
+            description: A work email from a name and a domain.
+            inputs:
+              - key: domain
+                title: Domain
+                required: true
+              - key: name
+                title: Name
+            outputs:
+              - path: email
+                title: Email
+                type: email
+        columns:
+          - key: name
+            kind: input
+            editable: true
+            width: 150
+          - key: domain
+            kind: input
+            editable: true
+            width: 140
+          - key: email
+            kind: enrichment
+            type: email
+            provider: findEmail
+            inputs:
+              domain:
+                column: domain
+              name:
+                column: name
+            output: email
+            width: 200
+          - key: segment
+            kind: ai
+            type: tag
+            prompt: Which market segment is {{ domain }} in?
+            inputs:
+              domain:
+                column: domain
+            output:
+              type: tag
+              options: [smb, mid-market, enterprise]
+            userDefined: true
+            width: 140
+          - key: linkedin
+            kind: extract
+            source: email
+            path: profile.linkedin
+            userDefined: true
+          - key: greeting
+            kind: formula
+            template: Hi {{ name }}, about {{ domain }}
+            userDefined: true
+            width: 220
+        # Each cell's run state lives beside the row's data in `_enrich.<column>`. inputHash is
+        # hashEnrichmentInputs of the inputs a value was computed from; Ivan's email is stale:
+        # it ran before his domain changed.
+        data:
+          - _id: l1
+            name: Ada
+            domain: acme.com
+            _enrich:
+              email:
+                status: ok
+                value: ada@acme.com
+                inputHash: 1d27590e6f1c9b
+                raw:
+                  email: ada@acme.com
+                  profile:
+                    linkedin: in/ada
+              segment:
+                status: ok
+                value: enterprise
+          - _id: l2
+            name: Grace
+            domain: globex.com
+            _enrich:
+              email:
+                status: running
+              segment:
+                status: queued
+          - _id: l3
+            name: Alan
+            domain: initech.com
+            _enrich:
+              email:
+                status: queued
+          - _id: l4
+            name: Linus
+            domain: umbrella.com
+            _enrich:
+              email:
+                status: error
+                error: The provider timed out.
+          - _id: l5
+            name: Margaret
+            _enrich:
+              email:
+                status: empty
+                error: 'Missing input: domain'
+          - _id: l6
+            name: Ivan
+            domain: hooli.com
+            _enrich:
+              email:
+                status: ok
+                value: ivan@old-domain.com
+                inputHash: 00000000000000

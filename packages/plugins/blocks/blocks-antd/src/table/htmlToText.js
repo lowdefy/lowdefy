@@ -16,27 +16,17 @@
 
 import { type } from '@lowdefy/helpers';
 
-const ENTITIES = {
-  '&amp;': '&',
-  '&lt;': '<',
-  '&gt;': '>',
-  '&quot;': '"',
-  '&#39;': "'",
-  '&#x27;': "'",
-  '&nbsp;': ' ',
-};
+import decodeHtmlEntities from './decodeHtmlEntities.js';
 
 // Plain text from an HTML string, for places that cannot hold markup: CSV
 // cells, native tooltips and sort keys. Tags are dropped and the entities an
 // autoescaped template produces are decoded, so the text reads as written.
 function htmlToText(html) {
   if (type.isNone(html)) return '';
-  return String(html)
+  const withoutTags = String(html)
     .replace(/<br\s*\/?>/gi, ' ')
-    .replace(/<[^>]*>/g, '')
-    .replace(/&(amp|lt|gt|quot|#39|#x27|nbsp);/g, (entity) => ENTITIES[entity])
-    .replace(/\s+/g, ' ')
-    .trim();
+    .replace(/<[^>]*>/g, '');
+  return decodeHtmlEntities(withoutTags).replace(/\s+/g, ' ').trim();
 }
 
 export default htmlToText;

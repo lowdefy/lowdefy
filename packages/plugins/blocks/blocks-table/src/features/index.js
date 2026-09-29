@@ -19,6 +19,7 @@ import clipboardFeature from './clipboard/clipboardFeature.js';
 import columnManagerFeature from './columnManager/columnManagerFeature.js';
 import densityFeature from './density/densityFeature.js';
 import editingFeature from './editing/editingFeature.js';
+import enrichmentFeature from './enrichment/enrichmentFeature.js';
 import eventsFeature from './events/eventsFeature.js';
 import expandableFeature from './expandable/expandableFeature.js';
 import expansionFeature from './expansion/expansionFeature.js';
@@ -28,6 +29,7 @@ import groupingFeature from './grouping/groupingFeature.js';
 import headerMenuFeature from './headerMenu/headerMenuFeature.js';
 import keyboardFeature from './keyboard/keyboardFeature.js';
 import lazyCellsFeature from './lazyCells/lazyCellsFeature.js';
+import newRowsFeature from './enrichment/newRowsFeature.js';
 import orderingFeature from './ordering/orderingFeature.js';
 import paginationFeature from './pagination/paginationFeature.js';
 import pinningFeature from './pinning/pinningFeature.js';
@@ -51,7 +53,10 @@ import visibilityFeature from './visibility/visibilityFeature.js';
 // first: the filtered row model feeds sorting, and their header buttons claim clicks and pointer
 // presses before sorting and column reordering see them. Views come before the toolbar, which
 // renders their tabs, and queue's single-key actions run before keyboard navigation sees the key
-// (editing's keys, earlier, win on editable cells). It is also the order of the data pipeline's
+// (editing's keys, earlier, win on editable cells). Enrichment comes before sorting: its "+"
+// header, run buttons and detail-cell clicks and keys win over sorting, selection, editing,
+// keyboard navigation and row events; its optimistic new rows (newRows) come after editing, over
+// every other overlay. It is also the order of the data pipeline's
 // hooks (TableRoot): `useData` (server rows, tree flattening), `useRows` (transactions, then
 // editing's overlay over them) and `useItems` (server items, client groups, tree rows,
 // expandable detail rows, the page).
@@ -59,6 +64,7 @@ const features = [
   filteringFeature,
   headerMenuFeature,
   columnManagerFeature,
+  enrichmentFeature,
   sortingFeature,
   sizingFeature,
   orderingFeature,
@@ -67,6 +73,7 @@ const features = [
   densityFeature,
   transactionsFeature,
   editingFeature,
+  newRowsFeature,
   clipboardFeature,
   selectionFeature,
   expansionFeature,

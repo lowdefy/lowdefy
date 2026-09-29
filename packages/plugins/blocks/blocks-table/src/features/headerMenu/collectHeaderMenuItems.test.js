@@ -94,3 +94,50 @@ test('collectHeaderMenuItems passes the column and api to each feature', () => {
   collectHeaderMenuItems({ column, api, features: [{ name: 'f', headerMenuItems }] });
   expect(calls).toEqual([{ column, api }]);
 });
+
+test('collectHeaderMenuItems builds submenus from children and registers their handlers', () => {
+  const { items, handlers } = collectHeaderMenuItems({
+    column,
+    api,
+    features: [
+      feature('enrichment', [
+        {
+          key: 'run',
+          label: 'Run',
+          section: 'column',
+          children: [
+            { key: 'all', label: 'All rows', onClick: () => 'all' },
+            { key: 'errors', label: 'Errors', onClick: () => 'errors' },
+          ],
+        },
+      ]),
+    ],
+  });
+  expect(items).toEqual([
+    {
+      key: 'enrichment:run',
+      label: 'Run',
+      icon: undefined,
+      danger: undefined,
+      disabled: undefined,
+      children: [
+        {
+          key: 'enrichment:run:all',
+          label: 'All rows',
+          icon: undefined,
+          danger: undefined,
+          disabled: undefined,
+        },
+        {
+          key: 'enrichment:run:errors',
+          label: 'Errors',
+          icon: undefined,
+          danger: undefined,
+          disabled: undefined,
+        },
+      ],
+    },
+  ]);
+  expect(handlers.has('enrichment:run')).toBe(false);
+  expect(handlers.get('enrichment:run:errors')()).toBe('errors');
+});
