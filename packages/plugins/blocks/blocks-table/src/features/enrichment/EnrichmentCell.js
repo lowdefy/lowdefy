@@ -15,27 +15,11 @@
 */
 
 import React from 'react';
-import renderCell from '@lowdefy/blocks-antd/table/renderCell.js';
 
 import getRunState from './getRunState.js';
-import LAZY_CELL_TYPES from '../../core/lazyCellTypes.js';
-import LazyCell from '../../core/LazyCell.js';
+import renderColumnValue from './renderColumnValue.js';
 import RunError from './RunError.js';
 import RunIcon from './RunIcon.js';
-
-function renderValue({ api, col, original, rowKey }) {
-  if (LAZY_CELL_TYPES.has(col.column.type)) {
-    return <LazyCell api={api} col={col} original={original} rowKey={rowKey} />;
-  }
-  return renderCell({
-    column: col.column,
-    row: original,
-    rowKey,
-    methods: api.methods,
-    components: api.components,
-    onEvent: api.onCellEvent,
-  });
-}
 
 function renderRerun({ api, col }) {
   const label = 'Inputs changed since this ran. Rerun';
@@ -60,7 +44,7 @@ function renderRerun({ api, col }) {
   );
 }
 
-function renderState({ api, col, original, rowKey, run }) {
+function renderState({ api, col, lead, original, rowKey, run }) {
   switch (run.status) {
     case 'queued': {
       // Queued behind a column it reads (the server's `waitingFor`): it runs once that is done.
@@ -93,7 +77,7 @@ function renderState({ api, col, original, rowKey, run }) {
         </span>
       );
     default:
-      return renderValue({ api, col, original, rowKey });
+      return renderColumnValue({ api, col, lead, original, rowKey });
   }
 }
 
@@ -104,7 +88,7 @@ function renderState({ api, col, original, rowKey, run }) {
 // whose inputs changed since it ran (stale: its `inputHash` differs from the row's current
 // inputs) shows dimmed with a rerun button. `data-lf-enrich-status` carries the state. An error
 // column (`invalid`: a user-defined column whose config is invalid) shows the reason instead.
-function EnrichmentCell({ api, col, original, rowKey }) {
+function EnrichmentCell({ api, col, lead, original, rowKey }) {
   const reason = col.column.invalid;
   if (reason !== undefined) {
     return (
@@ -122,7 +106,7 @@ function EnrichmentCell({ api, col, original, rowKey }) {
       data-lf-enrich-stale={run.stale ? '' : undefined}
       data-lf-enrich-status={run.status}
     >
-      {renderState({ api, col, original, rowKey, run })}
+      {renderState({ api, col, lead, original, rowKey, run })}
       {run.stale ? renderRerun({ api, col }) : null}
     </div>
   );

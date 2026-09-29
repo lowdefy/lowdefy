@@ -964,10 +964,22 @@ test.describe('Table enrichment', () => {
     const saving = getBlock(page, 'enrich').locator('.lf-table-body [data-saving]');
     await expect(saving).toHaveCount(1);
     await expect(saving.locator('[data-col-key="company"]')).toHaveText('Tyrell');
+    // Nothing is computed yet: the enrichment (email), ai (summary) and extract (linkedin) cells
+    // all show the same placeholder, their type's skeleton shape, never "—" in some and blank in
+    // others. The formula fills in from the typed values.
+    for (const key of ['email', 'summary', 'linkedin']) {
+      const pending = saving.locator(`[data-col-key="${key}"] [data-lf-enrich-pending]`);
+      await expect(pending.locator('.lf-table-skeleton')).toHaveCount(1);
+      await expect(saving.locator(`[data-col-key="${key}"]`)).toHaveText('');
+    }
+    await expect(saving.locator('[data-col-key="label"]')).toHaveText('Tyrell (tyrell.com)');
     await expect(editor.locator('[data-lf-new-row-saving]')).toBeVisible();
     await expectEvent(page, 'onRowAdd', { values: { company: 'Tyrell', domain: 'tyrell.com' } });
     await expect(saving).toHaveCount(0);
     await expect(cell(page, 'saved', 'company')).toHaveText('Tyrell');
+    // Saved, the row renders from its data.
+    await expect(cell(page, 'saved', 'email').locator('[data-lf-enrich-pending]')).toHaveCount(0);
+    await expect(state(page, 'saved', 'email')).toHaveAttribute('data-lf-enrich-status', 'none');
     // The editor stays open, cleared, for the next row.
     await expect(editor.locator('[data-lf-new-row-field="company"] input')).toHaveValue('');
   });
