@@ -34,15 +34,21 @@
     min-width: 0;
   }
 
+  /* A run state ("Queued", "Running", ...) is the cell's text, muted: the cell's font size, on the
+     text baseline (its icon centred on the line), so it lines up with values in the same row. */
   .lf-enrich-state {
     display: inline-flex;
-    align-items: center;
+    align-items: baseline;
     gap: var(--ant-padding-xxs, 4px);
     min-width: 0;
     overflow: hidden;
     color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
-    font-size: var(--ant-font-size-sm, 12px);
     white-space: nowrap;
+  }
+
+  .lf-enrich-state > .lf-enrich-icon,
+  .lf-enrich-state > .lf-enrich-spinner {
+    align-self: center;
   }
 
   .lf-enrich-label {
@@ -54,7 +60,6 @@
   .lf-enrich-invalid {
     overflow: hidden;
     color: var(--ant-color-error, #ff4d4f);
-    font-size: var(--ant-font-size-sm, 12px);
     white-space: nowrap;
     text-overflow: ellipsis;
   }

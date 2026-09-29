@@ -145,6 +145,27 @@ test.describe('Table enrichment', () => {
     );
   });
 
+  test('run state labels take the cell font size and sit on the row text baseline', async ({
+    page,
+  }) => {
+    // The bottom of each text's line box and its font size, beside the company cell's text.
+    const textBox = (locator) =>
+      locator.evaluate((element) => {
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+        const text = walker.nextNode();
+        const range = document.createRange();
+        range.selectNodeContents(text);
+        const box = range.getBoundingClientRect();
+        return { bottom: box.bottom, fontSize: getComputedStyle(text.parentElement).fontSize };
+      });
+    for (const rowKey of ['r2', 'r3', 'r4', 'r5']) {
+      const value = await textBox(cell(page, rowKey, 'company'));
+      const label = await textBox(state(page, rowKey, 'email'));
+      expect(label.fontSize, rowKey).toBe(value.fontSize);
+      expect(Math.abs(label.bottom - value.bottom), rowKey).toBeLessThan(1);
+    }
+  });
+
   test('an error cell shows its message in a tooltip on hover', async ({ page }) => {
     await expect(cell(page, 'r4', 'email').locator('[data-lf-enrich-error]')).toHaveAttribute(
       'data-lf-enrich-error',
