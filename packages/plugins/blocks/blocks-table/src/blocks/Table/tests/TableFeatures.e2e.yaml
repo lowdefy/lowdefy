@@ -1,0 +1,211 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+id: table-features
+type: Box
+
+blocks:
+  # ============================================
+  # HEADER GROUPS
+  # ============================================
+
+  - id: tf_groups
+    type: Table
+    properties:
+      columns:
+        - key: name
+          width: 150
+        - title: Contact
+          headerTooltip: How to reach them
+          children:
+            - key: email
+              width: 200
+            - title: Phone
+              children:
+                - key: work
+                  width: 120
+                - key: mobile
+                  width: 130
+        - key: city
+          width: 110
+      data:
+        - {
+            id: 1,
+            name: Ann,
+            email: ann@example.com,
+            work: '021 555',
+            mobile: '082 555',
+            city: Paarl,
+          }
+
+  # ============================================
+  # SUMMARY FOOTER
+  # ============================================
+
+  - id: tf_summary
+    type: Table
+    properties:
+      height: 240
+      columns:
+        - key: name
+          aggregate: count
+        - key: amount
+          type: currency
+          cell: { currency: USD, locale: en-US }
+          aggregate: sum
+      data:
+        _js: |
+          const rows = [];
+          for (let i = 1; i <= 30; i++) rows.push({ id: i, name: 'Row ' + i, amount: i });
+          return rows;
+
+  # ============================================
+  # PAGINATION
+  # ============================================
+
+  - id: tf_pages
+    type: Table
+    properties:
+      pagination: true
+      pageSize: 5
+      columns:
+        - key: n
+          type: number
+      data:
+        _js: |
+          const rows = [];
+          for (let i = 1; i <= 12; i++) rows.push({ id: i, n: i });
+          return rows;
+
+  # ============================================
+  # WRAP, SIZE, BORDERED, EMPTY TEXT
+  # ============================================
+
+  - id: tf_wrap
+    type: Table
+    properties:
+      columns:
+        - key: name
+          width: 120
+        - key: note
+          width: 140
+          wrap: true
+      data:
+        - { id: 1, name: Short, note: Brief }
+        - id: 2
+          name: Long
+          note: This note is long enough to wrap over several lines in a narrow column.
+        - { id: 3, name: Short again, note: Brief }
+
+  - id: tf_compact
+    type: Table
+    properties:
+      size: compact
+      bordered: true
+      columns:
+        - name
+        - city
+      data:
+        - { id: 1, name: Ann, city: Paarl }
+
+  - id: tf_empty
+    type: Table
+    properties:
+      emptyText: Nothing <b>yet</b>
+      columns:
+        - name
+      data: null
+
+  # ============================================
+  # ROW LINK WITH onRowClick, ENTER, HOVER ACTIONS
+  # ============================================
+
+  - id: tf_link_click
+    type: Table
+    properties:
+      rowLink:
+        pageId: table-link-target
+        urlQuery:
+          id: id
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+    events:
+      onRowClick:
+        - id: set_peek
+          type: SetState
+          params:
+            peek:
+              _event: row.name
+
+  - id: tf_peek
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'peek='
+          - _if_none:
+              - _state: peek
+              - none
+
+  - id: tf_link_enter
+    type: Table
+    properties:
+      rowLink:
+        pageId: table-link-target
+        urlQuery:
+          id: id
+      columns:
+        _ref: ../../src/blocks/Table/tests/people_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/people.yaml
+
+  - id: tf_hover
+    type: Table
+    properties:
+      columns:
+        - name
+        - key: actions
+          type: buttons
+          cell:
+            showOn: hover
+            buttons:
+              - eventName: onOpen
+                title: Open
+      data:
+        - { id: 1, name: Ann }
+        - { id: 2, name: Ben }
+
+  # ============================================
+  # FAST SCROLL PLACEHOLDERS
+  # ============================================
+
+  - id: tf_fast
+    type: Table
+    properties:
+      height: 300
+      columns:
+        - key: id
+          type: number
+        - key: stage
+          type: tag
+          options:
+            - { value: won, label: Won, color: success }
+            - { value: lost, label: Lost, color: error }
+      data:
+        _js: |
+          const rows = [];
+          for (let i = 0; i < 5000; i++) rows.push({ id: i, stage: i % 2 ? 'won' : 'lost' });
+          return rows;

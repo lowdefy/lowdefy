@@ -18,20 +18,6 @@ import { type } from '@lowdefy/helpers';
 
 import claimDomEvent from './claimDomEvent.js';
 
-// How many events are running the synchronous start of their actions. An event a block fires in
-// that window, such as a CallMethod whose method changes a block's value and fires its onChange,
-// is caused by those actions and not by the DOM event being dispatched, so it is never claimed.
-let startingActions = 0;
-
-function startActions(actionHandle) {
-  startingActions += 1;
-  try {
-    return actionHandle();
-  } finally {
-    startingActions -= 1;
-  }
-}
-
 class Events {
   constructor({ arrayIndices, block, context }) {
     this.defaultDebounceMs = 300;
@@ -67,8 +53,10 @@ class Events {
     });
   }
 
+  // Events a block registers for its own machinery (Upload's policy request, a Table's row
+  // fetch). They are internal: see claimDomEvent.
   registerEvent({ name, actions }) {
-    this.events[name] = this.initEvent(actions);
+    this.events[name] = { ...this.initEvent(actions), internal: true };
   }
 
   triggerEvent({ name, event, progress }) {
@@ -86,14 +74,12 @@ class Events {
       success: true,
       bounced: false,
     };
-    const handledBy =
-      startingActions > 0
-        ? null
-        : claimDomEvent({
-            blockId: this.block.blockId,
-            bubble: eventDescription?.bubble === true,
-            hasActions: !type.isUndefined(eventDescription),
-          });
+    const handledBy = claimDomEvent({
+      blockId: this.block.blockId,
+      bubble: eventDescription?.bubble === true,
+      hasActions: !type.isUndefined(eventDescription),
+      internal: eventDescription?.internal === true,
+    });
     if (!type.isNull(handledBy)) {
       result.handledBy = handledBy;
       return result;
@@ -127,7 +113,7 @@ class Events {
 
     // no debounce
     if (type.isNone(eventDescription.debounce)) {
-      return startActions(actionHandle);
+      return actionHandle();
     }
     const delay = !type.isNone(eventDescription.debounce.ms)
       ? eventDescription.debounce.ms
@@ -145,7 +131,7 @@ class Events {
       this.timeouts[name] = setTimeout(() => {
         this.timeouts[name] = null;
       }, delay);
-      return startActions(actionHandle);
+      return actionHandle();
     }
 
     // trailing edge

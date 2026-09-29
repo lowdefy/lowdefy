@@ -14,18 +14,27 @@
   limitations under the License.
 */
 
-// Unit tests cover the pure helpers in src (features and core). Blocks are tested
+// Unit tests cover the pure functions of the table core and features. Blocks are tested
 // end to end with Playwright (src/**/tests/*.e2e.spec.js), which Jest skips.
 export default {
   clearMocks: true,
   collectCoverage: true,
-  collectCoverageFrom: ['src/features/editing/**/*.js', 'src/features/clipboard/**/*.js'],
+  // React components and hooks are covered by the e2e suite.
+  collectCoverageFrom: [
+    'src/**/*.js',
+    '!src/**/use*.js',
+    '!src/**/[A-Z]*.js',
+    '!src/**/*Feature.js',
+    '!src/**/handle*.js',
+    '!src/blocks/**',
+    '!src/*.js',
+  ],
   coverageDirectory: 'coverage',
   coverageReporters: [['lcov', { projectRoot: '../../../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
   testEnvironment: 'node',
   testMatch: ['<rootDir>/src/**/*.test.js'],
-  testPathIgnorePatterns: ['<rootDir>/dist/'],
+  testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/bench/'],
   transform: {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../../.swcrc.test' }],
   },

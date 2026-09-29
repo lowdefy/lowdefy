@@ -56,3 +56,23 @@ test('getStickyGroup shows nothing without groups', () => {
     -1
   );
 });
+
+test('getStickyGroup reads item tops from rowOffsets when items differ in height', () => {
+  // Items 0 (group) and 1 are one row high, item 2 is a 100px detail row, item 3 is a group.
+  const rowOffsets = new Float64Array([0, 40, 80, 180, 220]);
+  const indices = Uint32Array.from([0, 3]);
+  assert.deepEqual(
+    getStickyGroup({ groupIndices: indices, rowHeight: 40, rowOffsets, scrollTop: 100 }),
+    {
+      index: 0,
+      shift: 0,
+    }
+  );
+  assert.deepEqual(
+    getStickyGroup({ groupIndices: indices, rowHeight: 40, rowOffsets, scrollTop: 160 }),
+    {
+      index: 0,
+      shift: -20,
+    }
+  );
+});

@@ -23,7 +23,6 @@ function fromTanstackColumn({ column, region, widths }) {
     region,
     column: meta.column,
     accessor: meta.accessor,
-    Renderer: meta.Renderer,
     width: widths?.[column.id] ?? column.getSize(),
     minWidth: column.columnDef.minSize,
     maxWidth: column.columnDef.maxSize,

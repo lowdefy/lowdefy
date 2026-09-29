@@ -1,0 +1,55 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+@layer components {
+  .lf-table-tree-indent {
+    display: inline-block;
+    flex: none;
+  }
+
+  .lf-table-toggle,
+  .lf-table-toggle-spacer {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
+  }
+
+  .lf-table-toggle {
+    padding: 0;
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    background: none;
+    border: 0;
+    border-radius: var(--ant-border-radius-sm, 4px);
+    cursor: pointer;
+  }
+
+  .lf-table-toggle:hover {
+    color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
+    background: var(--ant-color-fill-tertiary, rgba(0, 0, 0, 0.04));
+  }
+
+  .lf-table-toggle svg {
+    transition: transform 0.15s;
+  }
+
+  .lf-table-toggle[data-expanded] svg {
+    transform: rotate(90deg);
+  }
+}

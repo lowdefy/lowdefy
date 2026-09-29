@@ -15,25 +15,23 @@
 */
 
 import createActivateRow from './createActivateRow.js';
-import createOnCellEvent from './createOnCellEvent.js';
 import handleAuxClick from './handleAuxClick.js';
 import handlePointerDown from './handlePointerDown.js';
 import handleRowClick from './handleRowClick.js';
 import handleRowDoubleClick from './handleRowDoubleClick.js';
-import useRowLinkEvent from './useRowLinkEvent.js';
 
 // Row and cell events through the grid's one delegated listener (D5): onRowClick,
-// onRowDoubleClick, onCellClick, rowLink, and the row payload for cell events.
+// onRowDoubleClick, onCellClick and rowLink. Cell renderers fire their own events (buttons, menus,
+// onCellLink) with full payloads through `api.onCellEvent`.
 const eventsFeature = {
   name: 'events',
-  actions: { activateRow: createActivateRow, onCellEvent: createOnCellEvent },
+  actions: { activateRow: createActivateRow },
   gridHandlers: {
     auxclick: handleAuxClick,
     click: handleRowClick,
     dblclick: handleRowDoubleClick,
     pointerdown: handlePointerDown,
   },
-  useFeature: useRowLinkEvent,
 };
 
 export default eventsFeature;

@@ -17,6 +17,7 @@
 import applyChangeUpdates from '../editing/applyChangeUpdates.js';
 import parseTsv from './parseTsv.js';
 import planPaste from './planPaste.js';
+import isDataItem from '../../core/isDataItem.js';
 
 function describeSkipped(skipped) {
   return skipped.map((cell) => `${cell.column ?? '(no column)'}: ${cell.reason}`).join('\n');
@@ -32,11 +33,12 @@ function createPasteCells(api) {
     if (grid.length === 0) return false;
     const { updates, skipped } = planPaste({
       grid,
-      rows: api.rows,
+      // The data rows from the focused one down: pasted lines skip group headers and detail rows.
+      rows: api.rows.slice(rowIndex).filter(isDataItem),
       cols: api.layout.cols,
       specs: api.editing.specs,
       getKey: api.config.getKey,
-      startRow: rowIndex,
+      startRow: 0,
       startCol: colIndex,
     });
     if (skipped.length > 0) {

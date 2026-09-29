@@ -14,16 +14,17 @@
   limitations under the License.
 */
 
+import createSortKeyGetter from '@lowdefy/blocks-antd/table/createSortKeyGetter.js';
+
 import createAccessor from './createAccessor.js';
-import createComparator from './createComparator.js';
-import getCellRenderer from './getCellRenderer.js';
 
 const DEFAULT_WIDTH = 160;
 const MIN_WIDTH = 48;
 const MAX_WIDTH = 2000;
 
-// Compiled once per column config change, with stable accessor, comparator and renderer
-// identities (D10.5): cells and sort keys never rebuild them per row.
+// Compiled once per column config change, with stable accessor and sort key identities (D10.5):
+// cells and sort keys never rebuild them per row. `getSortKey` is the shared column core's, so
+// the index sort orders rows exactly as the shared comparator (and TableLight) would.
 function createColumnDefs({ columns }) {
   return columns.map((column) => ({
     id: column.key,
@@ -37,8 +38,7 @@ function createColumnDefs({ columns }) {
     meta: {
       column,
       accessor: createAccessor(column.field),
-      comparator: createComparator({ column }),
-      Renderer: getCellRenderer(column.type),
+      getSortKey: createSortKeyGetter({ column }),
     },
   }));
 }

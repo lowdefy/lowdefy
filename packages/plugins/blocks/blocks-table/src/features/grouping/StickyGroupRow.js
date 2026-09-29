@@ -33,6 +33,7 @@ function measure({ api, headerHeight, sticky }) {
   return getStickyGroup({
     groupIndices: api.grouping.groupIndices,
     rowHeight: api.rowHeight,
+    rowOffsets: api.rowOffsets,
     scrollTop,
   });
 }

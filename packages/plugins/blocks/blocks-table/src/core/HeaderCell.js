@@ -23,7 +23,7 @@ import HeaderTitle from './HeaderTitle.js';
 function HeaderCell({ api, col, focused, state }) {
   const props = {
     'aria-colindex': col.ariaIndex,
-    className: 'lf-table-cell',
+    className: 'lf-table-gridcell',
     'data-align': col.column?.align,
     'data-col-index': col.index,
     'data-col-key': col.key,
@@ -44,8 +44,10 @@ function HeaderCell({ api, col, focused, state }) {
   return React.createElement(
     'div',
     props,
-    <HeaderTitle api={api} title={col.column.title} />,
-    ...headerParts.map((Part, i) => <Part api={api} col={col} key={i} state={state} />)
+    <HeaderTitle api={api} headerTooltip={col.column.headerTooltip} title={col.column.title} />,
+    ...headerParts.map((Part, i) => (
+      <Part api={api} col={col} focused={focused} key={i} state={state} />
+    ))
   );
 }
 

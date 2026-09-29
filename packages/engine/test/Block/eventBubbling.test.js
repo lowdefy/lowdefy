@@ -21,11 +21,11 @@ const lowdefy = { pageId };
 
 // window.event is the DOM event being dispatched; the node test environment has no window.
 function dispatch(domEvent, fn) {
-  globalThis.window = { event: domEvent };
+  global.window = { event: domEvent };
   try {
     return fn();
   } finally {
-    delete globalThis.window;
+    delete global.window;
   }
 }
 
@@ -198,4 +198,16 @@ test('an event a block fires from an action run by the handling event is not ski
   await dispatch(new Event('click'), () => button.triggerEvent({ name: 'onClick' }));
   expect((await changeResult).handledBy).toBeUndefined();
   expect(context.state).toEqual({ changed: true });
+});
+
+test('events fired while a scheduler message is dispatched are never claimed', async () => {
+  const context = await testContext({
+    lowdefy,
+    pageConfig: pageConfig({ buttonEvent: [setStateAction('button_clicked', { button: true })] }),
+  });
+  const [, cardResult] = await Promise.all(
+    await clickButtonThenCard(context, new MessageEvent('message'))
+  );
+  expect(cardResult.handledBy).toBeUndefined();
+  expect(context.state).toEqual({ button: true, card: true });
 });

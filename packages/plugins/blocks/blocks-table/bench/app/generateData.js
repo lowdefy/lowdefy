@@ -20,18 +20,48 @@ const SYLLABLES = ['ka', 'lo', 'mi', 'ne', 'ro', 'sa', 'tu', 'vi', 'zo', 'an', '
 const STATUSES = ['lead', 'qualified', 'proposal', 'negotiation', 'won', 'lost'];
 const OWNERS = ['Ada', 'Grace', 'Alan', 'Edsger', 'Barbara', 'Donald', 'Frances', 'Ken'];
 
-// Column kinds cycled to build a CRM-like mixed set of any width.
+const STATUS_OPTIONS = [
+  { value: 'lead', label: 'Lead', color: 'default' },
+  { value: 'qualified', label: 'Qualified', color: 'processing' },
+  { value: 'proposal', label: 'Proposal', color: 'warning' },
+  { value: 'negotiation', label: 'Negotiation', color: 'purple' },
+  { value: 'won', label: 'Won', color: 'success' },
+  { value: 'lost', label: 'Lost', color: 'error' },
+];
+
+// Column kinds cycled to build a CRM-like mixed set of any width: tier-0 cells (text, number,
+// currency, tag, status, avatar, date, link, html, boolean, email) and a tier-1 `buttons` column
+// shown on row hover (actions_12 pinned to the end). Kind 1 (name_1) and kind 6 (score_6) are the
+// sort bench's text and number columns.
 const KINDS = [
-  { prefix: 'name', type: 'text' },
-  { prefix: 'amount', type: 'currency' },
-  { prefix: 'status', type: 'tag' },
+  { prefix: 'name', type: 'text', width: 180 },
+  { prefix: 'amount', type: 'currency', cell: { currency: 'USD', locale: 'en-US' } },
+  { prefix: 'status', type: 'tag', options: STATUS_OPTIONS },
   { prefix: 'created', type: 'date' },
-  { prefix: 'owner', type: 'text' },
+  { prefix: 'owner', type: 'avatar', width: 170 },
   { prefix: 'score', type: 'number' },
+  { prefix: 'stage', type: 'status', options: STATUS_OPTIONS },
+  { prefix: 'profile', type: 'link', cell: { pageId: 'contact', urlQuery: { id: 'id' } } },
+  {
+    prefix: 'note',
+    type: 'html',
+    width: 180,
+    cell: { template: '<b>{{ value }}</b> <span class="muted">#{{ row.id }}</span>' },
+  },
   { prefix: 'active', type: 'boolean' },
-  { prefix: 'email', type: 'email' },
-  { prefix: 'rate', type: 'percent' },
-  { prefix: 'company', type: 'text' },
+  { prefix: 'email', type: 'email', width: 180 },
+  {
+    prefix: 'actions',
+    type: 'buttons',
+    width: 150,
+    cell: {
+      showOn: 'hover',
+      buttons: [
+        { eventName: 'onEdit', title: 'Edit' },
+        { eventName: 'onOpen', title: 'Open', type: 'primary' },
+      ],
+    },
+  },
 ];
 
 function word(random) {
@@ -49,7 +79,12 @@ function createColumns(count) {
       key: `${kind.prefix}_${i}`,
       title: `${kind.prefix} ${i}`,
       type: kind.type,
-      width: kind.type === 'text' || kind.type === 'email' ? 180 : 120,
+      width: kind.width ?? 120,
+      cell: kind.cell,
+      options: kind.options,
+      // The first actions column is pinned to the end, as a CRM's row actions are, so every
+      // rendered row has one whatever the horizontal scroll.
+      pinned: i === KINDS.length ? 'end' : undefined,
     });
   }
   return columns;
@@ -60,7 +95,16 @@ function createValue({ column, random }) {
     case 'currency':
       return Math.round(random() * 1e8) / 100;
     case 'tag':
+    case 'status':
       return STATUSES[Math.floor(random() * STATUSES.length)];
+    case 'avatar':
+      return OWNERS[Math.floor(random() * OWNERS.length)];
+    case 'link':
+      return `${word(random)} ${word(random)}`;
+    case 'html':
+      return word(random);
+    case 'buttons':
+      return undefined;
     case 'date':
       return new Date(1.6e12 + Math.floor(random() * 1.5e11)).toISOString().slice(0, 10);
     case 'number':

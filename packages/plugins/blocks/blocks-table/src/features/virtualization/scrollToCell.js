@@ -15,14 +15,16 @@
 */
 
 // Scrolls the minimum needed to bring a cell into view below the sticky header and beside the
-// pinned columns (`align: 'start' | 'center'` for rows scroll further).
+// pinned columns (`align: 'start' | 'center'` for rows scroll further), with measured row
+// offsets when rows wrap.
 function scrollToCell({ api, row, col, align }) {
   const scroller = api.scrollerRef.current;
   if (!scroller) return;
-  const { headerHeight, layout, rowHeight } = api;
+  const { footerHeight, headerHeight, layout, rowOffsets } = api;
   if (row >= 0) {
-    const bodyHeight = scroller.clientHeight - headerHeight;
-    const rowTop = row * rowHeight;
+    const bodyHeight = scroller.clientHeight - headerHeight - footerHeight;
+    const rowTop = rowOffsets ? rowOffsets[row] : row * api.rowHeight;
+    const rowHeight = rowOffsets ? rowOffsets[row + 1] - rowOffsets[row] : api.rowHeight;
     let top = scroller.scrollTop;
     if (align === 'start') {
       top = rowTop;

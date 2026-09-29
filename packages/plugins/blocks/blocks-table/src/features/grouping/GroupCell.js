@@ -47,7 +47,7 @@ function GroupCell({ api, col, focused, item, overlay, selectionCount }) {
   return (
     <div
       aria-colindex={overlay ? undefined : col.ariaIndex}
-      className={col.special ? 'lf-table-cell lf-table-select' : 'lf-table-cell'}
+      className={col.special ? 'lf-table-gridcell lf-table-select' : 'lf-table-gridcell'}
       data-align={col.column?.align}
       data-col-index={col.index}
       data-col-key={col.key}

@@ -38,10 +38,12 @@ function renderCells({ activeCol, api, cols, item, overlay, selectionCount }) {
 
 // A group header item of the flat row list (the `group` row renderer). Same row element, height
 // and cell layout as a data row; it carries `data-group-key` and no `data-row-key`, so row
-// events, rowLink and row selection ignore it. `overlay` renders the sticky copy.
+// events, rowLink and row selection ignore it. `overlay` renders the sticky copy. Client groups
+// (flattenGroups) and server groups (buildServerItems) are the same items and render here.
 function GroupRow({
   activeCol,
   api,
+  ariaRowIndex,
   centerCols,
   className,
   displayIndex,
@@ -56,7 +58,9 @@ function GroupRow({
 }) {
   const { grouping } = api;
   const level = grouping.levels[item.depth];
-  const checkbox = selectable && api.config.rowSelection.type === 'checkbox';
+  // Server groups have no leaf rows in the browser to count or select.
+  const checkbox =
+    selectable && api.config.rowSelection.type === 'checkbox' && grouping.tree !== null;
   const selectionCount = useMemo(
     () =>
       checkbox
@@ -78,7 +82,7 @@ function GroupRow({
   return (
     <div
       aria-expanded={!item.collapsed}
-      aria-rowindex={overlay ? undefined : displayIndex + 2}
+      aria-rowindex={overlay ? undefined : ariaRowIndex}
       className={`${className} lf-table-group-row`}
       data-group-depth={item.depth}
       data-group-index={displayIndex}

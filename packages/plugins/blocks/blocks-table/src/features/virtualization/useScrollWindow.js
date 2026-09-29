@@ -68,6 +68,7 @@ function useScrollWindow({ scrollerRef, params }) {
     params.layout,
     params.rowCount,
     params.rowHeight,
+    params.rowOffsets,
     params.virtualColumns,
     params.virtualRows,
   ]);
@@ -92,10 +93,18 @@ function useScrollWindow({ scrollerRef, params }) {
     };
   }, []);
 
-  // The range state catches up with a new row count in the layout effect above; for the one
-  // render before it does (rows filtered away, groups collapsed), it must not reach past the rows.
-  if (range.rowEnd <= params.rowCount) return range;
-  return { ...range, rowStart: Math.min(range.rowStart, params.rowCount), rowEnd: params.rowCount };
+  // The range state catches up with a new row or column count in a layout effect, after this
+  // render; until then it is clamped to what exists, so a shrinking row list (a new page, fewer
+  // rows) never renders past its end.
+  const rowEnd = Math.min(range.rowEnd, params.rowCount);
+  const colEnd = Math.min(range.colEnd, params.layout.center.length);
+  if (rowEnd === range.rowEnd && colEnd === range.colEnd) return range;
+  return {
+    rowStart: Math.min(range.rowStart, rowEnd),
+    rowEnd,
+    colStart: Math.min(range.colStart, colEnd),
+    colEnd,
+  };
 }
 
 export default useScrollWindow;

@@ -14,10 +14,12 @@
   limitations under the License.
 */
 
-// Collapses every group at every level of the current grouping.
+// Collapses every group at every level of the current grouping (server mode: closes every open
+// server group).
 function createCollapseAllGroups(api) {
   return function collapseAllGroups() {
     if (!api.grouping) return false;
+    if (api.serverStore) return api.serverStore.collapseAllGroups();
     return api.actions.setCollapsedGroups([...api.grouping.tree.groupsByKey.keys()]);
   };
 }

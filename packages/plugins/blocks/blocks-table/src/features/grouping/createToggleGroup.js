@@ -16,9 +16,18 @@
 
 import { type } from '@lowdefy/helpers';
 
-// Collapses or expands one group (`collapsed` omitted toggles it).
+// Collapses or expands one group (`collapsed` omitted toggles it). Server groups open and close
+// in the server store, which loads a group's first block when it opens; client groups are the
+// `collapsedGroups` slice.
 function createToggleGroup(api) {
   return function toggleGroup({ key, collapsed }) {
+    if (api.serverStore) {
+      api.serverStore.toggleGroup({
+        key,
+        expanded: type.isBoolean(collapsed) ? !collapsed : undefined,
+      });
+      return true;
+    }
     const current = api.state.collapsedGroups;
     const isCollapsed = current.includes(key);
     const next = type.isBoolean(collapsed) ? collapsed : !isCollapsed;

@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
 // The table's one meaning of empty, shared by the empty operator, the empty
-// aggregates, sorting (empty sorts last) and the empty cell placeholder.
+// aggregates, sorting (empty sorts last) and the empty cell placeholder. Plain
+// checks rather than the `type` helpers: filters and sort keys call it once
+// per row.
 function isEmptyValue(value) {
-  if (type.isNone(value)) return true;
+  if (value === null || value === undefined) return true;
   if (value === '') return true;
-  if (type.isArray(value) && value.length === 0) return true;
+  if (Array.isArray(value) && value.length === 0) return true;
   return false;
 }
 

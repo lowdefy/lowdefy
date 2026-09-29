@@ -43,6 +43,7 @@ const selectionFeature = {
   toValue: selectionToValue,
   onCommit: notifySelectionChange,
   actions: {
+    clearSelection: createClearSelection,
     toggleRowSelected: createToggleRowSelected,
     toggleAllRowsSelected: createToggleAllRowsSelected,
   },

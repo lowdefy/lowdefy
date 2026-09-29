@@ -21,6 +21,7 @@ import setRowField from './setRowField.js';
 import validateCellValue from './validateCellValue.js';
 import valuesEqual from './valuesEqual.js';
 import scrollToCell from '../virtualization/scrollToCell.js';
+import isDataItem from '../../core/isDataItem.js';
 
 function openNext({ api, next }) {
   scrollToCell({ api, row: next.rowIndex, col: next.colIndex });
@@ -63,7 +64,9 @@ function createCommitEdit(api) {
           rows: api.rows,
           cols: api.layout.cols,
           specs: editing.specs,
-          rowIndex: api.rows.findIndex((candidate) => candidate.id === session.rowId),
+          rowIndex: api.rows.findIndex(
+            (candidate) => isDataItem(candidate) && candidate.id === session.rowId
+          ),
           colIndex: col.index,
           direction: move,
         })

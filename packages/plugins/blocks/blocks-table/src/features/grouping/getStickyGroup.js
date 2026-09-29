@@ -20,18 +20,22 @@ const NONE = { index: -1, shift: 0 };
 
 // The group header the sticky overlay shows for a body scroll offset: the last header at or
 // above the top row, once that header has scrolled (partly) out of view. `shift` (zero or
-// negative) pushes the overlay up as the next header arrives beneath it. Rows have one fixed
-// height, so list index times row height is each header's offset.
-function getStickyGroup({ groupIndices, rowHeight, scrollTop }) {
+// negative) pushes the overlay up as the next header arrives beneath it. Item tops are
+// `rowOffsets` when some items are not one row high (detail rows, measured rows), else index
+// times row height; group headers themselves are always one row high.
+function getStickyGroup({ groupIndices, rowHeight, rowOffsets, scrollTop }) {
   if (scrollTop <= 0 || groupIndices.length === 0) return NONE;
-  const top = Math.floor(scrollTop / rowHeight);
+  const offsetOf = (index) => (rowOffsets ? rowOffsets[index] : index * rowHeight);
+  const top = rowOffsets
+    ? firstIndexAbove({ offsets: rowOffsets, value: scrollTop }) - 1
+    : Math.floor(scrollTop / rowHeight);
   const position = firstIndexAbove({ offsets: groupIndices, value: top }) - 1;
   if (position < 0) return NONE;
   const index = groupIndices[position];
-  if (index * rowHeight >= scrollTop) return NONE;
+  if (offsetOf(index) >= scrollTop) return NONE;
   let shift = 0;
   if (position + 1 < groupIndices.length) {
-    shift = Math.min(0, groupIndices[position + 1] * rowHeight - scrollTop - rowHeight);
+    shift = Math.min(0, offsetOf(groupIndices[position + 1]) - scrollTop - rowHeight);
   }
   return { index, shift };
 }

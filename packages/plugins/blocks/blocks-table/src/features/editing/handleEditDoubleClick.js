@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import isControlTarget from '../events/isControlTarget.js';
+import isControlTarget from '@lowdefy/blocks-antd/table/isControlTarget.js';
 
 // Double-click on an editable cell opens its editor; the double-click is the edit's, not
 // onRowDoubleClick's. Double-clicks inside an open editor (selecting a word) stay the editor's.
@@ -25,7 +25,7 @@ function handleEditDoubleClick(event, api) {
   if (!cell || !api.contains(cell) || cell.dataset.special) return false;
   const rowElement = cell.closest('[data-row-key]');
   if (!rowElement) return false;
-  if (isControlTarget({ target: event.target, cell })) return false;
+  if (isControlTarget({ target: event.target, container: cell })) return false;
   return api.actions.startEdit({ rowId: rowElement.dataset.rowKey, colKey: cell.dataset.colKey });
 }
 

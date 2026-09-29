@@ -35,7 +35,8 @@ import useGrouping from './useGrouping.js';
 // Client-side row grouping (D6, D10.8): `view.group` levels over groupable columns, collapsed
 // groups and group aggregates. The rows it produces are one flat list of group header items and
 // leaf rows; the Body renders the headers with `rowRenderers.group`, and one sticky overlay shows
-// the current group while scrolling.
+// the current group while scrolling. Server groups (serverData) are the same items and render
+// the same way.
 const groupingFeature = {
   name: 'grouping',
   viewKeys: ['group', 'collapsedGroups', 'aggregates'],
@@ -62,7 +63,7 @@ const groupingFeature = {
   headerMenuItems: groupingHeaderMenuItems,
   rowRenderers: { group: GroupRow },
   bodyOverlay: StickyGroupRow,
-  useFeature: useGrouping,
+  useItems: useGrouping,
 };
 
 export default groupingFeature;

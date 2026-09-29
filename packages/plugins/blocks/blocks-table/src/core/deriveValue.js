@@ -25,7 +25,7 @@ function deriveValue({ state, api }) {
       ...features.map((feature) => feature.toViewColumn?.({ key, state, api }) ?? {})
     )
   );
-  const view = { ...state.viewPassthrough, density: state.density };
+  const view = { ...state.viewPassthrough };
   if (!isDefaultViewColumns({ entries, config: api.config })) view.columns = entries;
   const value = { view, selected: [], expanded: state.expanded };
   features.forEach((feature) => {

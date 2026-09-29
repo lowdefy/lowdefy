@@ -15,12 +15,28 @@
 */
 
 import countSelectedRows from './countSelectedRows.js';
+import getSelectAllState from './getSelectAllState.js';
 
-// The header checkbox selects every loaded row (or clears them when all are selected). An
-// explicit `{ all: true, except }` value only comes from outside (SetState, or server mode later).
+// The header checkbox selects every loaded row (or clears them when all are selected). In server
+// mode most rows are not loaded, so it selects all rows the view matches as
+// `{ all: true, except: [] }`, which the server resolves; client mode only gets that shape from
+// outside (SetState).
 function createToggleAllRowsSelected(api) {
   return function toggleAllRowsSelected() {
     if (api.config.rowSelection?.type === 'radio') return false;
+    if (api.config.server) {
+      const { checked } = getSelectAllState({ api });
+      api.selectionExcept.clear();
+      const selection = {};
+      if (!checked) {
+        Object.keys(api.table.getCoreRowModel().rowsById).forEach((id) => {
+          selection[id] = true;
+        });
+      }
+      api.updateSlice('selectionMode', () => (checked ? 'keys' : 'all'), { cause: 'select' });
+      api.updateSlice('rowSelection', () => selection, { cause: 'select' });
+      return true;
+    }
     const { selectedCount, total } = countSelectedRows({ api });
     const selectAll = total > 0 && selectedCount < total;
     api.updateSlice('selectionMode', () => 'keys', { cause: 'select' });

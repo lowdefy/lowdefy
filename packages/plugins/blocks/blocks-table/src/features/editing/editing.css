@@ -72,11 +72,11 @@
     cursor: help;
   }
 
-  .lf-table-cell:has(> [data-lf-edit-status='saving']) > .lf-table-cell-content {
+  .lf-table-gridcell:has(> [data-lf-edit-status='saving']) > .lf-table-cell {
     opacity: 0.65;
   }
 
-  .lf-table-cell:has(> [data-lf-edit-status='error']) {
+  .lf-table-gridcell:has(> [data-lf-edit-status='error']) {
     box-shadow: inset 0 0 0 1px var(--ant-color-error-border, #ffccc7);
   }
 

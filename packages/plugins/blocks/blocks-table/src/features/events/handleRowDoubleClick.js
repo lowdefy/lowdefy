@@ -14,16 +14,17 @@
   limitations under the License.
 */
 
+import isControlTarget from '@lowdefy/blocks-antd/table/isControlTarget.js';
+
 import getBodyTarget from './getBodyTarget.js';
-import isControlTarget from './isControlTarget.js';
 
 function handleRowDoubleClick(event, api) {
   const target = getBodyTarget({ event, api });
   if (!target) return false;
-  const { cell, row } = target;
+  const { cell, row, rowElement } = target;
   if (
-    cell &&
-    (isControlTarget({ target: event.target, cell }) || cell.dataset.lfSelectCell === '')
+    isControlTarget({ target: event.target, container: rowElement }) ||
+    cell?.dataset.lfSelectCell === ''
   ) {
     return false;
   }

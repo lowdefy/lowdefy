@@ -16,15 +16,17 @@
 
 // The header menu's grouping entries for a groupable column (collected by the headerMenu feature
 // through its `headerMenuItems` extension point). "Group by this column" adds the column as the
-// innermost level, so repeating it on other columns builds a multi-level grouping.
+// innermost level, so repeating it on other columns builds a multi-level grouping. Trees are
+// never grouped.
 function groupingHeaderMenuItems({ column, api }) {
-  if (api.config.columnsByKey.get(column.key)?.groupable !== true) return [];
+  if (api.config.tree || api.config.columnsByKey.get(column.key)?.groupable !== true) return [];
   const keys = api.state.grouping;
   if (keys.includes(column.key)) {
     return [
       {
         key: 'grouping-remove',
         label: 'Remove grouping',
+        section: 'group',
         onClick: () => api.actions.setGroupKeys(keys.filter((key) => key !== column.key)),
       },
     ];
@@ -33,6 +35,7 @@ function groupingHeaderMenuItems({ column, api }) {
     {
       key: 'grouping-add',
       label: 'Group by this column',
+      section: 'group',
       onClick: () => api.actions.setGroupKeys([...keys, column.key]),
     },
   ];

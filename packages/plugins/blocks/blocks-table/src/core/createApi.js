@@ -14,18 +14,41 @@
   limitations under the License.
 */
 
+import createCellActivity from './createCellActivity.js';
+import createInitialState from './createInitialState.js';
+import deriveValue from './deriveValue.js';
+
 // The table's per-instance API object: one stable mutable object that the core refreshes on every
 // render (table, config, state, layout, ...), so delegated event handlers, actions and methods
 // always read current values without being recreated.
 function createApi() {
   const api = {
     actions: {},
+    cellActivity: createCellActivity(),
     foreignKeys: new Map(),
     rootRef: { current: null },
     scrollerRef: { current: null },
+    // Row ids (to raw keys) left out of an `{ all: true, except }` selection, kept while their
+    // rows are not loaded (server mode).
+    selectionExcept: new Map(),
     suppressedClick: false,
   };
+  // Cell renderers build the full event payload (row, rowKey, ...); one stable function keeps
+  // the memoised cells from re-rendering when the block's methods object changes. Row button and
+  // menu events also go to afterRowAction (`keyboard.next`).
+  api.onCellEvent = ({ name, event }) => {
+    const result = api.methods.triggerEvent({ name, event });
+    if (event.button || event.item) {
+      api.actions.afterRowAction({ id: api.config.getId(event.row), result });
+    }
+    return result;
+  };
   api.contains = (element) => Boolean(api.rootRef.current?.contains(element));
+  // The block value of the current state, and of any value once the fallback rules are applied
+  // (a saved view resolves to the view the table would write after loading it).
+  api.getValue = () => deriveValue({ state: api.state, api });
+  api.resolveValue = (value) =>
+    deriveValue({ state: createInitialState({ value, config: api.config, rows: [] }), api });
   api.suppressClick = () => {
     api.suppressedClick = true;
     // A drag that ends outside the header produces no click; do not swallow the next one.

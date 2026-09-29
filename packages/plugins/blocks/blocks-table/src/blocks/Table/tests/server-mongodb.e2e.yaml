@@ -1,0 +1,169 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Server mode against a real MongoDB through MongoDBTableQuery. The spec runs only when
+# LOWDEFY_SECRET_TABLE_MONGODB_URI is set (see server-mongodb.e2e.spec.js); the "Seed" button
+# replaces the collection with 10k people, and the tables show them after a reload.
+id: table-server-mongodb
+type: Box
+
+requests:
+  - id: seed_clear
+    type: MongoDBDeleteMany
+    connectionId: table_people
+    properties:
+      filter: {}
+  - id: seed_insert
+    type: MongoDBInsertMany
+    connectionId: table_people
+    payload:
+      docs:
+        _state: seed_docs
+    properties:
+      docs:
+        _payload: docs
+  - id: people_page
+    type: MongoDBTableQuery
+    connectionId: table_people
+    payload:
+      view:
+        _event: view
+      startRow:
+        _event: startRow
+      endRow:
+        _event: endRow
+      groupPath:
+        _event: groupPath
+    properties:
+      fields:
+        name:
+          type: text
+          search: true
+        stage:
+          type: tag
+          groupable: true
+        amount:
+          type: number
+      view:
+        _payload: view
+      startRow:
+        _payload: startRow
+      endRow:
+        _payload: endRow
+      groupPath:
+        _payload: groupPath
+
+blocks:
+  - id: mongo_seed
+    type: Button
+    properties:
+      title: Seed
+    events:
+      onClick:
+        - id: seed_docs_set
+          type: SetState
+          params:
+            seed_docs:
+              _js: |
+                const stages = ['lead', 'qualified', 'won', 'lost'];
+                const docs = new Array(10000);
+                for (let i = 0; i < docs.length; i++) {
+                  docs[i] = {
+                    _id: i,
+                    name: 'Person ' + String(i).padStart(5, '0'),
+                    stage: stages[i % 4],
+                    amount: (i * 7919) % 1000,
+                  };
+                }
+                return docs;
+        - id: seed_clear_call
+          type: Request
+          params: seed_clear
+        - id: seed_insert_call
+          type: Request
+          params: seed_insert
+        - id: seed_done
+          type: SetState
+          params:
+            seeded: true
+
+  - id: mongo_seeded
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _eq:
+              - _state: seeded
+              - true
+          then: seeded
+          else: not seeded
+
+  - id: table_mongo
+    type: Table
+    properties:
+      height: 400
+      data:
+        mode: server
+        request: people_page
+        blockSize: 200
+      columns:
+        - key: _id
+          title: Id
+          type: number
+          width: 100
+        - key: name
+        - key: stage
+          type: tag
+        - key: amount
+          type: number
+
+  - id: table_mongo_filter
+    type: Button
+    properties:
+      title: Filter won
+    events:
+      onClick:
+        - id: table_mongo_filter_set
+          type: SetState
+          params:
+            table_mongo.view.filter:
+              key: stage
+              op: eq
+              value: won
+
+  - id: table_mongo_grouped
+    type: Table
+    properties:
+      height: 400
+      data:
+        mode: server
+        request: people_page
+        blockSize: 100
+      defaultView:
+        group:
+          - key: stage
+        aggregates:
+          amount: sum
+      columns:
+        - key: _id
+          title: Id
+          type: number
+          width: 100
+        - key: name
+        - key: stage
+          type: tag
+          groupable: true
+        - key: amount
+          type: number

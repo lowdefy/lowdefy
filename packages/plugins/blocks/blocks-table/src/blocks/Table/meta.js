@@ -14,14 +14,23 @@
   limitations under the License.
 */
 
+import AGGREGATE_LABELS from '@lowdefy/blocks-antd/table/aggregateLabels.js';
+import CELL_TYPE_FAMILIES from '@lowdefy/blocks-antd/table/cellTypeFamilies.js';
+
+// Every property TableLight accepts is valid here with the same meaning (TableLight is a strict
+// subset of Table, design D16), so changing `type: TableLight` to `type: Table` keeps a block
+// working. The column keys shared with TableLight use its descriptions.
+
 const columnFlags = {
   sortable: {
     type: 'boolean',
-    description: 'Sort by clicking the header (Shift+click adds to a multi-sort).',
+    description:
+      'Sort by clicking the header (Shift+click adds to a multi-sort). Defaults to `defaultColumn.sortable` (true).',
   },
   filterable: {
     type: 'boolean',
-    description: 'Offer the column in filters.',
+    description:
+      'Offer the column in filters: the header menu "Filter…" item and the filter builder.',
   },
   resizable: {
     type: 'boolean',
@@ -46,6 +55,21 @@ const columnFlags = {
   },
 };
 
+const textLayout = {
+  ellipsis: {
+    type: ['integer', 'boolean'],
+    description:
+      'Clamp the text to this many lines (`true` is one) with an ellipsis; the full text shows on hover. More than one line makes rows as tall as their content.',
+    docs: { displayType: 'number' },
+  },
+  wrap: {
+    type: 'boolean',
+    default: false,
+    description:
+      'Wrap long text; rows grow to fit (measured row heights, which turn column virtualisation off). Text stays on one line by default.',
+  },
+};
+
 const widthProperties = {
   width: {
     type: 'number',
@@ -59,14 +83,6 @@ const widthProperties = {
     type: 'number',
     description: 'Maximum width in pixels when resizing.',
   },
-  ellipsis: {
-    type: 'integer',
-    description: 'Clamp cell text to this many lines.',
-  },
-  wrap: {
-    type: 'boolean',
-    description: 'Wrap cell text instead of truncating it.',
-  },
 };
 
 const pinned = {
@@ -76,29 +92,35 @@ const pinned = {
 };
 
 const column = {
-  type: 'object',
+  type: ['object', 'string'],
   additionalProperties: false,
-  description: 'A column. `key` (or `field`) is required.',
+  description: 'A column, or just its key. `key` (or `field`) is required.',
   properties: {
     key: {
       type: 'string',
-      description: 'Stable column id used in the view. Defaults to `field`.',
+      description:
+        'The column id, unique in the table and used in the view. Defaults to `field`. Two columns showing the same field need their own keys.',
     },
     field: {
       type: 'string',
-      description: 'Dot path to the value in the row. Defaults to `key`.',
+      description: 'The dot path of the value in each row. Defaults to `key`.',
     },
     title: {
       type: 'string',
-      description: 'Header title (HTML allowed). Defaults to the humanised key.',
+      description: 'The header - supports html. Defaults to the key in sentence case.',
     },
     type: {
       type: 'string',
-      description: 'Cell type, for example text, number, date, tag, link. Default text.',
+      enum: Object.keys(CELL_TYPE_FAMILIES),
+      default: 'text',
+      description:
+        'The cell type. It sets how the value renders, sorts and aggregates and the default alignment.',
     },
     cell: {
       type: 'object',
-      description: "Options for the column's cell type.",
+      description:
+        'Options for the cell type, the same keys as TableLight (and the AgGrid `cell` keys where they overlap), for example `format`, `currency`, `relative`, `pageId`/`urlQuery` (link), `template` (html), `buttons` and `showOn` (buttons), `items` (menu). Row buttons (`buttons`) and menu items (`items`) also accept `key`, a single key that fires the item when its row is focused, for example `key: a` (no editor open, no modifier).',
+      docs: { displayType: 'yaml' },
     },
     ...widthProperties,
     flex: {
@@ -108,47 +130,49 @@ const column = {
     align: {
       type: 'string',
       enum: ['start', 'center', 'end'],
-      description: 'Cell alignment. Defaults from the type (numbers align end).',
+      description: 'Horizontal alignment. Defaults to `end` for number, currency and percent.',
     },
     pinned,
+    ...textLayout,
     hidden: {
       type: 'boolean',
-      description: 'Declared but hidden by default.',
+      default: false,
+      description: 'Declare the column but hide it.',
     },
     ...columnFlags,
+    searchable: {
+      type: 'boolean',
+      description:
+        'Include the column in `view.search`. When any column sets it, search reads only those columns; otherwise it reads every visible column.',
+    },
     aggregate: {
       type: 'string',
-      enum: [
-        'sum',
-        'avg',
-        'min',
-        'max',
-        'count',
-        'countDistinct',
-        'countEmpty',
-        'countNotEmpty',
-        'percentEmpty',
-        'earliest',
-        'latest',
-      ],
+      enum: Object.keys(AGGREGATE_LABELS),
       description:
-        'Default aggregate for this column, shown in group headers (and the summary footer). The view `aggregates` overrides it.',
+        'Default aggregate for this column, shown in group headers and the summary footer (over all filtered rows): sum, avg, min, max, count, countDistinct, countEmpty, countNotEmpty, percentEmpty, earliest or latest. The view `aggregates` overrides it.',
     },
     options: {
       type: ['array', 'object'],
-      description: 'Labels and colours for enum values: a list or a map of value to label.',
+      description:
+        'Labels and colours for enum values, for tag, tags and status cells: a list of values or `{ value, label, color, icon }`, or a map from value to a label or `{ label, color, icon }`. Enums sort in option order.',
+      docs: { displayType: 'yaml' },
     },
     tooltip: {
-      type: ['object', 'string'],
-      description: 'Cell tooltip: a string, `{ field }` or `{ template }`.',
+      type: ['string', 'object'],
+      description:
+        'A plain-text hover tooltip: a nunjucks template string (with `value` and `row`), `{ template }` or `{ field }` (a row path).',
+      docs: { displayType: 'yaml' },
     },
     headerTooltip: {
       type: 'string',
-      description: 'Header tooltip.',
+      description: 'A tooltip on the header - supports html.',
     },
     rules: {
       type: 'array',
-      description: 'Conditional formatting: `[{ when, color, className, style }]`.',
+      description:
+        'Conditional formatting: `[{ when, color, className, style }]`. Every rule whose `when` condition holds applies, in order.',
+      items: { type: 'object' },
+      docs: { displayType: 'yaml' },
     },
     validate: {
       type: 'array',
@@ -176,10 +200,15 @@ const column = {
     },
     children: {
       type: 'array',
-      description: 'Child columns under a header group titled by `title`.',
+      description:
+        'Columns grouped under this header. A group needs a `title`; groups render as header rows above the column headers.',
+      items: { type: ['object', 'string'] },
+      docs: { displayType: 'yaml' },
     },
   },
 };
+
+const toolbarItem = (description) => ({ type: 'boolean', default: false, description });
 
 const viewColumn = {
   type: 'object',
@@ -194,39 +223,79 @@ const viewColumn = {
 };
 
 export default {
-  category: 'input',
+  // An input with slots: its value is the table state, and `toolbarStart`, `toolbarEnd`,
+  // `bulkActions` and `empty` hold blocks.
+  category: 'input-container',
   valueType: 'object',
-  icons: [],
-  // rowLink navigates through an internal event running the Link action with `_event`.
-  actions: ['Link'],
-  operators: ['_event'],
+  icons: [
+    'chevron-down',
+    'chevron-up',
+    'close',
+    'download',
+    'filter',
+    'list',
+    'more',
+    'search',
+    'sort',
+    'view',
+  ],
+  slots: {
+    toolbarStart: 'Blocks at the start of the toolbar, for example a "New deal" button.',
+    toolbarEnd: 'Blocks at the end of the toolbar.',
+    bulkActions: 'Blocks in the bulk action bar, shown while rows are selected.',
+    empty: 'Blocks shown instead of the empty state when there are no rows.',
+  },
+  // Server mode fetches through an internal event running the Request action.
+  actions: ['Request'],
   cssKeys: {
     element: 'The table root element.',
     header: 'The header row group.',
     row: 'Every body row.',
   },
+  // Cell buttons and menu items declare their own eventName, so the event names this block fires
+  // are authored in its properties.
+  dynamicEvents: true,
   events: {
     onChange: {
       description:
-        'Trigger when the table value changes through the table: a sort, a resize or reorder that ends, or a selection.',
+        'Trigger when the table value changes through the table: a sort, a filter or search, a column change (resize, reorder, pin, hide, column manager), or a selection.',
       event: {
         value: 'The table value `{ view, selected, expanded }`.',
         cause:
-          'What changed: `sort`, `columns`, `select`, `group` (the grouping levels) or `expand` (a group collapsed or expanded).',
+          'What changed: `sort`, `filter`, `search`, `columns`, `select`, `group` (the grouping levels), `aggregate` (group aggregates), `expand` (a group, tree row or detail row collapsed or expanded), `density`, or `view` (a saved view loaded, discarded to, or selected).',
       },
     },
     onSelectionChange: {
-      description: 'Trigger when the row selection changes.',
+      description:
+        'Trigger when the row selection changes. In server mode the header checkbox selects every row the view matches as `{ all: true, except: [] }`; resolve it on the server with the same view.',
       event: {
         selected: 'The selected row keys, or `{ all: true, except }`.',
         rows: 'The selected row objects that are loaded.',
       },
     },
-    onRowClick: {
+    onRowExpand: {
       description:
-        'Trigger when a row is clicked (not a control inside it, and not the end of a text selection), or activated with Enter.',
+        "Trigger when a tree row or an expandable row is expanded or collapsed. With `tree.lazy`, load the row's children here and add them to `data`.",
       event: {
         row: 'The row object.',
+        rowKey: 'The row key.',
+        expanded: 'True when the row was expanded, false when it was collapsed.',
+      },
+    },
+    onExport: {
+      description:
+        'Server mode: trigger when `exportCsv` is called. The browser only holds the loaded blocks, so produce the file from the view, for example with a request and a download action.',
+      event: {
+        view: 'The table view (columns, sort, filter, search, group, ...).',
+        filename: 'The filename passed to exportCsv.',
+        formatted: 'The formatted flag passed to exportCsv.',
+      },
+    },
+    onRowClick: {
+      description:
+        'Trigger when a row is clicked, or activated with Enter. Clicks on buttons, links, menus and `data-event` elements in a cell, and clicks that end a text selection, do not trigger it. With `rowLink`, a plain click runs onRowClick instead of following the link.',
+      event: {
+        row: 'The row data.',
         rowKey: 'The row key.',
         index: 'The index of the row in `data`.',
       },
@@ -234,18 +303,41 @@ export default {
     onRowDoubleClick: {
       description: 'Trigger when a row is double clicked.',
       event: {
-        row: 'The row object.',
+        row: 'The row data.',
         rowKey: 'The row key.',
         index: 'The index of the row in `data`.',
       },
     },
     onCellClick: {
-      description: 'Trigger when a cell is clicked (not a control inside it).',
+      description:
+        'Trigger actions when a cell is clicked. Clicks on controls in the cell do not trigger it.',
       event: {
-        row: 'The row object.',
+        row: 'The row data.',
         rowKey: 'The row key.',
-        column: 'The column `{ key, field }`.',
+        column: 'The column: { key, field }.',
         value: 'The cell value.',
+      },
+    },
+    onViewSelect: {
+      description: 'Trigger when a saved view tab is selected, after its view loads.',
+      event: {
+        id: 'The id of the selected view.',
+      },
+    },
+    onViewSave: {
+      description:
+        'Trigger when the user saves the current view: Save (with the active view `id`) or Save as (no `id`, a new view). The app stores views; update `views` (and `activeView`) with the result.',
+      event: {
+        view: 'The current view.',
+        id: 'The id of the view to overwrite. Missing for Save as.',
+        title: 'The view title.',
+        shared: 'Whether the view is shared.',
+      },
+    },
+    onViewDelete: {
+      description: 'Trigger when the user deletes a saved view from its tab menu.',
+      event: {
+        id: 'The id of the view to delete.',
       },
     },
     onCellEdit: {
@@ -275,57 +367,131 @@ export default {
       },
     },
     onCellLink: {
-      description: 'Trigger when a link cell is clicked.',
+      description:
+        'Triggered when a link, avatar link or relation cell is clicked. The link navigates by itself; this event is for anything else to do.',
       event: {
-        link: 'The resolved link.',
-        row: 'The row object.',
+        link: 'The resolved link: { pageId, href, urlQuery, newTab, ... }.',
+        row: 'The row data.',
+        value: 'The cell value (the related record for relation cells).',
+      },
+    },
+    onCellButton: {
+      description:
+        'Documentation reference - the event fired is the `eventName` of each button in a `buttons` cell. Define any number of named events on the block, such as `onEdit`.',
+      event: {
+        row: 'The row data.',
+        rowKey: 'The row key.',
         value: 'The cell value.',
+        button: 'The clicked button: { eventName, title }.',
+        buttonIndex: 'The index of the button in `cell.buttons`.',
+      },
+    },
+    onCellMenuItem: {
+      description:
+        'Documentation reference - the event fired is the `eventName` of each item in a `menu` cell.',
+      event: {
+        row: 'The row data.',
+        rowKey: 'The row key.',
+        value: 'The cell value.',
+        item: 'The clicked item: { eventName, title }.',
+        itemIndex: 'The index of the item in `cell.items`.',
       },
     },
   },
   methods: {
     exportCsv:
-      'Download the current view as CSV: visible columns in order, rows in their current order. Accepts `{ filename, formatted }`; `formatted` (default true) exports displayed text.',
+      'Download the current view as CSV: visible data columns in order, every row in its current order (every page, rows of collapsed groups included). Accepts `{ filename, formatted }`; `formatted` (default true) exports displayed text. In server mode it fires `onExport { view }` instead.',
+    refresh:
+      'Server mode: clear the block cache and refetch the visible rows (they stay on screen until the new rows land).',
+    applyTransaction:
+      'Apply `{ add, update, remove, addIndex }` without replacing `data`: `update` rows are merged into the row with the same key, `remove` takes rows or row keys, `add` rows are appended (or inserted at `addIndex`). Only the touched rows re-render. In client mode the change holds until `data` changes; in server mode updates apply to the loaded rows, and adds or removes also refetch the visible rows. Returns `{ added, updated, removed }`.',
     scrollToRow:
-      'Scroll a row into view. Accepts `{ rowKey, align }` with align `auto`, `start` or `center` (default).',
+      'Scroll a row into view. Accepts `{ rowKey, align }` with align `auto`, `start` or `center` (default). With pagination, only rows on the current page.',
     clearSelection: 'Clear the row selection.',
     setGroup:
       'Group rows by these columns, outermost first. Accepts column keys or `[{ key }]` of groupable columns; an empty list removes the grouping.',
-    expandAllGroups: 'Expand every group.',
+    selectAllMatching:
+      'Select every row the view matches, as `{ all: true, except: [] }` (checkbox selection only).',
+    expandAllGroups: 'Expand every group (client data; server groups open one at a time).',
     collapseAllGroups: 'Collapse every group at every level.',
+    setFilter:
+      'Set `view.filter` to a condition (`{ and | or: [...] }` groups of `{ key, op, value }` leaves), or clear it with null.',
+    clearFilters: 'Remove every filter condition. The search stays; clear it with `setSearch`.',
+    setSearch:
+      'Set `view.search`: rows match when every word appears in the searched columns. An empty string or null clears it.',
+    openColumnManager:
+      'Open the column manager: show, hide, reorder and pin columns, or reset them to the default view.',
   },
   properties: {
     type: 'object',
     additionalProperties: false,
     properties: {
       columns: {
-        type: 'array',
+        type: ['array', 'null'],
         description: 'The columns, in default order.',
         items: column,
+        docs: { displayType: 'yaml' },
       },
       defaultColumn: {
         type: 'object',
         additionalProperties: false,
         description: 'Defaults applied to every column.',
         properties: {
-          ...columnFlags,
+          sortable: { ...columnFlags.sortable, default: true },
+          filterable: { ...columnFlags.filterable, default: true },
+          resizable: { ...columnFlags.resizable, default: true },
+          groupable: { ...columnFlags.groupable, default: false },
+          editable: { ...columnFlags.editable, default: false },
           ...widthProperties,
+          ...textLayout,
         },
       },
       data: {
-        type: 'array',
-        description: 'The rows.',
+        type: ['array', 'object', 'null'],
+        description:
+          'The rows, or `{ mode: server, request, blockSize }` to load rows from a request in blocks as the table scrolls. In server mode the table fires the request with the event `{ startRow, endRow, view: { sort, filter, search, group, aggregates }, groupPath, selected }` (read it in the request `payload` with `_event`) and expects `{ rows, total, groups?, aggregates? }`, the contract of `MongoDBTableQuery`. Sorting, filtering and grouping then run on the server. Rows need a `rowKey`.',
         items: { type: 'object' },
+        additionalProperties: false,
+        required: ['mode', 'request'],
+        properties: {
+          mode: {
+            type: 'string',
+            enum: ['server'],
+            description: 'Load rows from `request`.',
+          },
+          request: {
+            type: 'string',
+            description: 'Id of the request on the page that returns `{ rows, total }`.',
+          },
+          blockSize: {
+            type: 'integer',
+            default: 200,
+            description: 'Rows per request. Blocks load as they scroll into view.',
+          },
+          maxBlocks: {
+            type: 'integer',
+            default: 20,
+            description:
+              'Blocks kept in the cache; the least recently used are dropped (and refetched when they come back into view).',
+          },
+        },
+        docs: { displayType: 'yaml' },
       },
       rowKey: {
         type: 'string',
         description:
-          'Dot path to the unique row key. Defaults to `_id`, then `id`. Rows without a key are keyed per object and lose their identity when data is refetched.',
+          'The row field that identifies each row. Defaults to `_id`, then `id`. Rows with neither get a key per row object, which does not survive a refetch.',
       },
       rowVersionField: {
         type: 'string',
         description:
           'Field that changes whenever a row changes (for example `updated_at`). When set, rows are compared by key and this field instead of by content.',
+      },
+      user: {
+        type: 'object',
+        description:
+          'The user object for `$user` values in filters, `rules`, `rowRules` and button `hidden`/`disabled` conditions, usually `{ _user: true }`. Blocks do not see the session, so conditions read `$user` from this property.',
+        docs: { displayType: 'yaml' },
       },
       defaultView: {
         type: 'object',
@@ -353,11 +519,13 @@ export default {
           },
           filter: {
             type: ['object', 'null'],
-            description: 'Filter condition.',
+            description:
+              'Filter condition: `{ and: [...] }` / `{ or: [...] }` groups of `{ key, op, value }` leaves. Operators depend on the column type; `{ $user: path }` values read the `user` property.',
           },
           search: {
             type: ['string', 'null'],
-            description: 'Search text.',
+            description:
+              'Search text: rows match when every word appears (case-insensitive) in the display text of the searched columns.',
           },
           group: {
             type: 'array',
@@ -386,7 +554,8 @@ export default {
           density: {
             type: 'string',
             enum: ['compact', 'default', 'comfortable'],
-            description: 'Row density: compact 32px, default 40px, comfortable 52px rows.',
+            description:
+              'Row density: compact 32px, default 40px, comfortable 52px rows. Defaults to `size`.',
           },
           wrap: {
             type: 'boolean',
@@ -413,7 +582,72 @@ export default {
           preserve: {
             type: 'boolean',
             default: false,
-            description: 'Keep selected keys of rows that leave `data`.',
+            description: 'Keep selected keys of rows that leave `data`. Always on in server mode.',
+          },
+          cascade: {
+            type: 'boolean',
+            default: false,
+            description:
+              'In a tree, selecting or clearing a row also selects or clears all its descendants.',
+          },
+        },
+      },
+      tree: {
+        type: 'object',
+        additionalProperties: false,
+        description:
+          'Show rows as a tree (client data only): rows are indented under their parent with an expand chevron in the first column, Right and Left expand and collapse, sorting sorts within each level and a filter keeps the ancestors of matching rows. The expanded row keys are the `expanded` part of the table value. Give exactly one of `childrenField` or `parentField`.',
+        properties: {
+          childrenField: {
+            type: 'string',
+            description: "Dot path to each row's child rows (nested data).",
+          },
+          parentField: {
+            type: 'string',
+            description:
+              "Dot path to the row key of each row's parent (flat data). Rows whose parent is not in `data` are roots.",
+          },
+          lazy: {
+            type: 'boolean',
+            default: false,
+            description:
+              'Load children on demand: rows whose `hasChildrenField` is true show a chevron before their children are loaded, expanding a row fires `onRowExpand`, and the app adds the children to `data` (for example a request whose result is merged into the data with `parentField` set).',
+          },
+          hasChildrenField: {
+            type: 'string',
+            default: 'hasChildren',
+            description:
+              'With `lazy`, the field that marks rows with children that are not loaded yet.',
+          },
+          indent: {
+            type: 'number',
+            default: 20,
+            description: 'Indent per level in pixels.',
+          },
+        },
+      },
+      expandable: {
+        type: 'object',
+        additionalProperties: false,
+        description:
+          'Expandable rows: a chevron in the first column opens a detail row below the row, as high as its content. The expanded row keys are the `expanded` part of the table value.',
+        properties: {
+          template: {
+            type: 'string',
+            description:
+              'Nunjucks HTML for the detail row, rendered with `row` and `rowKey`. Output is escaped: use `| safe` to insert HTML from a field. The HTML is sanitised.',
+          },
+          rowExpandable: {
+            type: 'object',
+            additionalProperties: false,
+            description: 'Which rows can expand.',
+            properties: {
+              when: {
+                type: 'object',
+                description:
+                  'A condition (`{ key, op, value }`, or `and` / `or` lists) tested against the row.',
+              },
+            },
           },
         },
       },
@@ -421,22 +655,47 @@ export default {
         type: 'object',
         additionalProperties: false,
         description:
-          'Make rows links: a click navigates, Cmd/Ctrl or middle click opens a new tab. Values in `urlQuery` are row paths.',
+          'Make rows links. A plain click navigates, Cmd/Ctrl or middle click opens a new tab, and Enter on a focused row follows it. Values in `urlQuery` are row paths.',
         properties: {
-          pageId: { type: 'string', description: 'Page to link to.' },
+          pageId: { type: 'string', description: 'The page to open.' },
+          href: { type: 'string', description: 'A URL to open instead of a page.' },
           urlQuery: {
             type: 'object',
-            description: 'URL query; each value is a dot path into the row.',
+            description: 'Query parameters; each value is a path in the row, like `{ _id: _id }`.',
+            docs: { displayType: 'yaml' },
           },
-          href: { type: 'string', description: 'External URL to link to.' },
+          input: {
+            type: 'object',
+            description: 'Input for the page.',
+            docs: { displayType: 'yaml' },
+          },
           newTab: { type: 'boolean', description: 'Always open in a new tab.' },
-          input: { type: 'object', description: 'Input for the linked page.' },
         },
+      },
+      rowRules: {
+        type: 'array',
+        items: { type: 'object' },
+        description:
+          'Conditional row formatting: `[{ when, className, style, color }]`, where `when` conditions name columns by `key`.',
+        docs: { displayType: 'yaml' },
+      },
+      size: {
+        type: 'string',
+        enum: ['compact', 'default', 'comfortable'],
+        default: 'default',
+        description:
+          'Row density: compact 32px, default 40px, comfortable 52px rows. The view starts at this density (`view.density` overrides it).',
+      },
+      bordered: {
+        type: 'boolean',
+        default: false,
+        description: 'Draw borders between cells.',
       },
       height: {
         type: ['number', 'string'],
         description:
-          'Table height (px number or CSS size). Without it the table grows with its rows up to `maxHeight`.',
+          'A fixed table height (px number or CSS size); the rows scroll under a sticky header and the summary row stays in view. Without it the table grows with its rows up to `maxHeight`.',
+        docs: { displayType: 'number' },
       },
       maxHeight: {
         type: ['number', 'string'],
@@ -461,7 +720,7 @@ export default {
       rowDrag: {
         type: ['boolean', 'object'],
         description:
-          'Reorder rows by dragging a handle in a leading column, or with Alt+Shift+ArrowUp/Down on a focused row. Not available while the table is sorted (except ascending by the position field), filtered or grouped; the handle is disabled with a tooltip saying why. Table fires onRowMove; TableInput records the move in its value. `true`, or `{ positionField }` for fractional positions.',
+          'Reorder rows by dragging a handle in a leading column, or with Alt+Shift+ArrowUp/Down on a focused row. Not available while the table is sorted (except ascending by the position field), filtered or grouped, in a tree or in server mode; the handle is disabled with a tooltip saying why. Table fires onRowMove; TableInput records the move in its value. `true`, or `{ positionField }` for fractional positions.',
         additionalProperties: false,
         properties: {
           positionField: {
@@ -471,25 +730,128 @@ export default {
           },
         },
       },
+      headerMenu: {
+        type: 'boolean',
+        default: true,
+        description:
+          'Show the column menu button in each header (on hover or focus): sort, filter, pin, freeze, autosize, hide and the column manager.',
+      },
       reorderable: {
         type: 'boolean',
         default: true,
         description: 'Reorder columns by dragging their headers.',
       },
       keyboard: {
-        type: 'boolean',
+        type: ['boolean', 'object'],
         default: true,
-        description: 'Keyboard navigation between cells. Grid roles stay on when off.',
+        description:
+          'Keyboard navigation between cells. Grid roles stay on when off. An object turns it on with options.',
+        additionalProperties: false,
+        properties: {
+          next: {
+            type: 'boolean',
+            default: false,
+            description:
+              'After a row button, menu item or single-key action completes, move focus to the next row (queue and triage lists).',
+          },
+        },
+      },
+      toolbar: {
+        type: ['boolean', 'object'],
+        default: false,
+        description:
+          'The toolbar above the table. `true` turns on every item; an object turns on the listed items.',
+        additionalProperties: false,
+        properties: {
+          views: toolbarItem('Saved view tabs (needs `views`), with the unsaved changes strip.'),
+          search: toolbarItem(
+            'A search box that writes `view.search` (Cmd/Ctrl+F focuses it while the table has focus).'
+          ),
+          quickFilters: {
+            type: 'array',
+            items: { type: 'string' },
+            description:
+              'Column keys to show as quick filter chips. Columns with `options` get a checkbox list (an `in` condition); others open the column filter.',
+          },
+          filter: toolbarItem('A Filter button that edits the whole `view.filter`.'),
+          sort: toolbarItem('A Sort button to add, remove, reorder and flip sort levels.'),
+          group: toolbarItem('A Group button to pick and order group levels (groupable columns).'),
+          columns: toolbarItem('A Columns button that opens the column manager.'),
+          density: toolbarItem('A compact / default / comfortable density toggle.'),
+          export: toolbarItem('An Export button that downloads the view as CSV.'),
+        },
+      },
+      views: {
+        type: ['array', 'null'],
+        description:
+          'Saved views, from any source (often a request). Selecting a tab loads its view; changes show an unsaved changes strip with Save, Save as and Discard.',
+        items: {
+          type: 'object',
+          required: ['id'],
+          properties: {
+            id: { type: ['string', 'number'], description: 'Unique view id.' },
+            title: { type: 'string', description: 'Tab title. Defaults to the id.' },
+            view: { type: 'object', description: 'The saved view (any part of a view).' },
+            shared: { type: 'boolean', description: 'Whether the view is shared.' },
+            locked: {
+              type: 'boolean',
+              description: 'Hide Save and Delete, so the view is only changed on purpose.',
+            },
+            count: { type: 'number', description: 'A count shown on the tab (queue tabs).' },
+          },
+        },
+      },
+      activeView: {
+        type: ['string', 'number', 'null'],
+        description:
+          'The id of the active saved view. Defaults to the first view. Changing it selects that view.',
+      },
+      persist: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['key'],
+        description:
+          "Keep the user's view between visits. Off by default. The selection is never persisted.",
+        properties: {
+          key: {
+            type: 'string',
+            description: 'Storage key (localStorage) or query parameter name (url).',
+          },
+          storage: {
+            type: 'string',
+            enum: ['local', 'url'],
+            default: 'local',
+            description:
+              '`local` keeps the view in localStorage (none in a private window or with blocked storage); `url` writes a compact encoding to the query string, replacing history.',
+          },
+        },
       },
       emptyText: {
         type: 'string',
         default: 'No data',
-        description: 'Text shown when there are no rows.',
+        description: 'What to show when there are no rows - supports html.',
       },
       loading: {
         type: 'boolean',
         default: false,
         description: 'Show the loading state: skeleton rows without data, a progress bar with it.',
+      },
+      pagination: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Show the rows in pages of `pageSize` with a pager below the table. Off by default, unlike TableLight: the Table scrolls any number of rows virtually. `true` means what it means on TableLight: pages, with the pager always shown.',
+      },
+      pageSize: {
+        type: 'integer',
+        default: 50,
+        description: 'Rows per page when `pagination` is on.',
+      },
+      summary: {
+        type: 'boolean',
+        default: true,
+        description:
+          'Show the summary footer when a column declares an `aggregate`. `false` hides it.',
       },
     },
   },

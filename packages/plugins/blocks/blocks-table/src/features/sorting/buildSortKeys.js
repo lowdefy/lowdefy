@@ -14,40 +14,34 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import compareSortKeys from '@lowdefy/blocks-antd/table/compareSortKeys.js';
 
-import collectDistinct from './collectDistinct.js';
-import isEmptySortValue from './isEmptySortValue.js';
+import collectSortKeys from './collectSortKeys.js';
 import isNumericSortType from './isNumericSortType.js';
-import rankValues from './rankValues.js';
+import rankSortKeys from './rankSortKeys.js';
+import toFloatSortKeys from './toFloatSortKeys.js';
 
-function toNumber(value) {
-  if (type.isNumber(value)) return value;
-  if (type.isDate(value)) return value.getTime();
-  if (type.isString(value) && value !== '') {
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed : NaN;
+function readNumericKeys({ rows, accessor, getSortKey }) {
+  const keys = new Float64Array(rows.length);
+  for (let i = 0; i < rows.length; i++) {
+    const key = getSortKey(accessor(rows[i].original));
+    keys[i] = key === null ? NaN : key;
   }
-  return NaN;
+  return keys;
 }
 
-// Precomputes one typed sort key per row, so the sort itself only compares numbers. Numeric types
-// read the number; every other type ranks its distinct values once with the column comparator
-// (the shared Intl.Collator for text), which also makes low-cardinality columns cheap. Empty
-// values are NaN, which the sort places last in both directions. This is the synchronous path;
+// Precomputes one Float64 sort key per row, so the sort itself only compares numbers (D10.7).
+// The keys come from the shared column core's `createSortKeyGetter` and text ranks from its
+// `compareSortKeys`, so the index sort orders rows exactly as `createComparator({ column, desc })`
+// does, empty values last in both directions (NaN keys). This is the synchronous path;
 // prepareSortKeys builds the same keys in time slices ahead of a header click.
-function buildSortKeys({ rows, accessor, comparator, columnType }) {
+function buildSortKeys({ rows, accessor, getSortKey, columnType }) {
   if (isNumericSortType(columnType)) {
-    const keys = new Float64Array(rows.length);
-    for (let i = 0; i < rows.length; i++) {
-      const value = accessor(rows[i].original);
-      keys[i] = isEmptySortValue(value) ? NaN : toNumber(value);
-    }
-    return keys;
+    return readNumericKeys({ rows, accessor, getSortKey });
   }
-  const { values, distinct } = collectDistinct({ rows, accessor });
-  const ordered = distinct.sort(comparator);
-  return rankValues({ values, ordered, comparator });
+  const { rowKeys, distinct, numeric } = collectSortKeys({ rows, accessor, getSortKey });
+  if (numeric) return toFloatSortKeys(rowKeys);
+  return rankSortKeys({ rowKeys, ordered: distinct.sort(compareSortKeys) });
 }
 
 export default buildSortKeys;

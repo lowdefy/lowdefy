@@ -14,13 +14,16 @@
   limitations under the License.
 */
 
+import getNumberFormat from './getNumberFormat.js';
 import numberFormatOptions from './numberFormatOptions.js';
 
 // Formats a number with the shared config: Intl options, then a hyphen or
 // parentheses for negatives, then an optional prefix and suffix.
 function formatNumber({ value, config }) {
   const opts = numberFormatOptions(config);
-  const absText = new Intl.NumberFormat(config?.locale, opts).format(Math.abs(value));
+  const absText = getNumberFormat({ locale: config?.locale, options: opts }).format(
+    Math.abs(value)
+  );
 
   let text;
   if (value < 0) {

@@ -16,6 +16,7 @@
 
 import React from 'react';
 
+import GroupHeaderRow from './GroupHeaderRow.js';
 import HeaderCell from './HeaderCell.js';
 
 function renderHeaderCells({ api, cols, activeCol, state }) {
@@ -24,7 +25,34 @@ function renderHeaderCells({ api, cols, activeCol, state }) {
   ));
 }
 
-function HeaderRow({ activeCol, api, centerCols, className, layout, state, sticky, style }) {
+function renderGroupRows({ api, centerCols, layout, levels }) {
+  const groupRows = [];
+  for (let level = 0; level < levels.depth; level++) {
+    groupRows.push(
+      <GroupHeaderRow
+        api={api}
+        centerCols={centerCols}
+        key={level}
+        layout={layout}
+        level={level}
+        levels={levels}
+      />
+    );
+  }
+  return groupRows;
+}
+
+function HeaderRow({
+  activeCol,
+  api,
+  centerCols,
+  className,
+  layout,
+  levels,
+  state,
+  sticky,
+  style,
+}) {
   return (
     <div
       className={className}
@@ -32,7 +60,8 @@ function HeaderRow({ activeCol, api, centerCols, className, layout, state, stick
       role="rowgroup"
       style={style}
     >
-      <div aria-rowindex={1} className="lf-table-row" data-row-index={-1} role="row">
+      {renderGroupRows({ api, centerCols, layout, levels })}
+      <div aria-rowindex={levels.depth + 1} className="lf-table-row" data-row-index={-1} role="row">
         {renderHeaderCells({ api, cols: layout.start, activeCol, state })}
         <div className="lf-table-center">
           {renderHeaderCells({ api, cols: centerCols, activeCol, state })}

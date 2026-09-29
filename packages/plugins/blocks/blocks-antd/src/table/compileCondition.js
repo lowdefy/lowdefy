@@ -18,6 +18,7 @@ import dayjs from 'dayjs';
 import { get, type } from '@lowdefy/helpers';
 
 import CELL_TYPE_FAMILIES from './cellTypeFamilies.js';
+import createFieldAccessor from './createFieldAccessor.js';
 import isEmptyValue from './isEmptyValue.js';
 
 const WITHIN_UNITS = new Set(['day', 'week', 'month', 'year']);
@@ -34,26 +35,54 @@ function resolveDynamic({ value, user }) {
 
 // Array items that are records (people, relations) are compared by their id,
 // so `in: [id1, id2]` works on `[{ _id, name }]` values.
+// `typeof` first: text and tag tests call these once per row, and most values are primitives.
 function itemKey(item) {
-  if (!type.isObject(item)) return item;
+  if (typeof item !== 'object' || item === null || !type.isObject(item)) return item;
   return item._id ?? item.id ?? item.value ?? item.name ?? item.label;
 }
 
 // Text operators read a record by its label, so `contains: acme` matches a
 // relation to "Acme Ltd".
 function itemLabel(item) {
-  if (!type.isObject(item)) return item;
+  if (typeof item !== 'object' || item === null || !type.isObject(item)) return item;
   return item.label ?? item.name ?? item.title ?? itemKey(item);
 }
 
 function lower(value) {
+  if (typeof value === 'string') return value.toLowerCase();
   return String(value ?? '').toLowerCase();
 }
 
+const DATE_ONLY = /^(\d{4})-(\d{2})-(\d{2})$/;
+
+// A value's timestamp, as dayjs reads it (date-only strings are local midnight). Numbers, Dates
+// and date-only strings skip dayjs: date filters parse every row's value.
 function toTime(value) {
   if (isEmptyValue(value)) return NaN;
+  if (typeof value === 'number') return value;
+  if (value instanceof Date) return value.getTime();
+  if (typeof value === 'string') {
+    const match = DATE_ONLY.exec(value);
+    if (match) return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])).getTime();
+  }
   const date = dayjs(value);
   return date.isValid() ? date.valueOf() : NaN;
+}
+
+// toTime memoised for one compiled test: a date column repeats the same strings across rows.
+const TIME_CACHE_LIMIT = 50000;
+
+function createTimeReader() {
+  const cache = new Map();
+  return function readTime(value) {
+    if (typeof value !== 'string') return toTime(value);
+    let time = cache.get(value);
+    if (time === undefined) {
+      time = toTime(value);
+      if (cache.size < TIME_CACHE_LIMIT) cache.set(value, time);
+    }
+    return time;
+  };
 }
 
 function scalarEqual({ a, b, family }) {
@@ -82,24 +111,113 @@ function valueEqual({ a, b, family }) {
   return scalarEqual({ a, b, family });
 }
 
-function inList({ value, list, family }) {
-  const candidates = type.isArray(list) ? list : [list];
-  const items = type.isArray(value) ? value : [value];
-  return items.some((item) =>
-    candidates.some((candidate) => scalarEqual({ a: item, b: candidate, family }))
-  );
+// Membership and equality tests run once per row, so their comparison value is reduced to a key
+// at compile time. Two values get the same key exactly when scalarEqual finds them equal; values
+// with no such key (records without an id, NaN) take the scalarEqual path instead.
+const NONE_KEY = Symbol('none');
+const INVALID_KEY = Symbol('invalid');
+const UNKEYED = Symbol('unkeyed');
+
+// Lowercased strings for keys, memoised: tag, status and owner columns repeat a few values
+// across every row, and lowercasing allocates.
+const LOWER_CACHE_LIMIT = 10000;
+const lowerCache = new Map();
+
+function lowerKey(value) {
+  let key = lowerCache.get(value);
+  if (key === undefined) {
+    key = value.toLowerCase();
+    if (lowerCache.size >= LOWER_CACHE_LIMIT) lowerCache.clear();
+    lowerCache.set(value, key);
+  }
+  return key;
 }
 
-function contains({ value, search }) {
-  if (isEmptyValue(value)) return false;
-  if (type.isArray(value)) {
-    return value.some(
-      (item) =>
-        scalarEqual({ a: item, b: search, family: 'text' }) ||
-        lower(itemLabel(item)) === lower(search)
-    );
+function scalarKey({ value, family }) {
+  if (value === null || value === undefined) return NONE_KEY;
+  if (family === 'date') {
+    const time = toTime(value);
+    if (Number.isNaN(time)) return INVALID_KEY;
+    const day = new Date(time);
+    day.setHours(0, 0, 0, 0);
+    return day.getTime();
   }
-  return lower(itemLabel(value)).includes(lower(search));
+  if (family === 'number') {
+    const n = Number(value);
+    return Number.isNaN(n) ? INVALID_KEY : n;
+  }
+  const kind = typeof value;
+  if (kind === 'string') return lowerKey(value);
+  if (kind === 'boolean') return value ? 'true' : 'false';
+  if (kind === 'number') return Number.isNaN(value) ? UNKEYED : String(value);
+  const key = itemKey(value);
+  const keyKind = typeof key;
+  if (
+    keyKind === 'string' ||
+    keyKind === 'boolean' ||
+    (keyKind === 'number' && !Number.isNaN(key))
+  ) {
+    return String(key).toLowerCase();
+  }
+  return UNKEYED;
+}
+
+function createScalarEqualTest({ b, family }) {
+  const bKey = scalarKey({ value: b, family });
+  if (bKey === INVALID_KEY) return () => false;
+  if (bKey === UNKEYED) return (a) => scalarEqual({ a, b, family });
+  return (a) => {
+    const aKey = scalarKey({ value: a, family });
+    if (aKey === UNKEYED) return scalarEqual({ a, b, family });
+    return aKey === bKey;
+  };
+}
+
+// valueEqual with `b` fixed at compile time.
+function createEqualTest({ b, family }) {
+  if (type.isArray(b)) return (a) => valueEqual({ a, b, family });
+  const equalsB = createScalarEqualTest({ b, family });
+  return (a) => {
+    if (type.isArray(a)) return a.length === 1 && equalsB(a[0]);
+    return equalsB(a);
+  };
+}
+
+// inList with the list fixed at compile time: keyed candidates in a Set.
+function createListTest({ list, family }) {
+  const candidates = type.isArray(list) ? list : [list];
+  const keys = new Set();
+  const unkeyed = [];
+  candidates.forEach((candidate) => {
+    const key = scalarKey({ value: candidate, family });
+    if (key === UNKEYED) {
+      unkeyed.push(candidate);
+    } else if (key !== INVALID_KEY) {
+      keys.add(key);
+    }
+  });
+  function matchesItem(item) {
+    const key = scalarKey({ value: item, family });
+    if (key === UNKEYED) {
+      return candidates.some((candidate) => scalarEqual({ a: item, b: candidate, family }));
+    }
+    if (key !== INVALID_KEY && keys.has(key)) return true;
+    return unkeyed.some((candidate) => scalarEqual({ a: item, b: candidate, family }));
+  }
+  return (value) => (type.isArray(value) ? value.some(matchesItem) : matchesItem(value));
+}
+
+// contains with the search fixed at compile time.
+function createContainsTest({ search }) {
+  const needle = lower(search);
+  const equalsSearch = createScalarEqualTest({ b: search, family: 'text' });
+  return (value) => {
+    if (isEmptyValue(value)) return false;
+    if (type.isArray(value)) {
+      return value.some((item) => equalsSearch(item) || lower(itemLabel(item)) === needle);
+    }
+    return lower(itemLabel(value)).includes(needle);
+  };
 }
 
 // Numbers compare as numbers, dates as timestamps. A `date` column compares by
@@ -125,8 +243,9 @@ function createRangeTest({
   // upper bound ends before that day starts.
   const low = toBound(lowerBound, lowerInclusive ? 'lower' : 'upper');
   const high = toBound(upperBound, upperInclusive ? 'upper' : 'lower');
+  const readTime = createTimeReader();
   return (value) => {
-    const n = family === 'date' ? toTime(value) : Number(isEmptyValue(value) ? NaN : value);
+    const n = family === 'date' ? readTime(value) : Number(isEmptyValue(value) ? NaN : value);
     if (Number.isNaN(n)) return false;
     if (!type.isUndefined(low)) {
       if (lowerInclusive ? n < low : n <= low) return false;
@@ -163,8 +282,9 @@ function createWithinTest({ value, now }) {
   }
   const low = start.valueOf();
   const high = end.valueOf();
+  const readTime = createTimeReader();
   return (cellValue) => {
-    const time = toTime(cellValue);
+    const time = readTime(cellValue);
     return !Number.isNaN(time) && time >= low && time <= high;
   };
 }
@@ -172,27 +292,37 @@ function createWithinTest({ value, now }) {
 function createTest({ op, value, family, byDay, now }) {
   switch (op) {
     case 'eq':
-      return (cellValue) => valueEqual({ a: cellValue, b: value, family });
-    case 'ne':
-      return (cellValue) => !valueEqual({ a: cellValue, b: value, family });
+      return createEqualTest({ b: value, family });
+    case 'ne': {
+      const equals = createEqualTest({ b: value, family });
+      return (cellValue) => !equals(cellValue);
+    }
     case 'in':
-      return (cellValue) => inList({ value: cellValue, list: value, family });
-    case 'nin':
-      return (cellValue) => !inList({ value: cellValue, list: value, family });
+      return createListTest({ list: value, family });
+    case 'nin': {
+      const listed = createListTest({ list: value, family });
+      return (cellValue) => !listed(cellValue);
+    }
     case 'empty':
       return (cellValue) => isEmptyValue(cellValue);
     case 'notEmpty':
       return (cellValue) => !isEmptyValue(cellValue);
     case 'contains':
-      return (cellValue) => contains({ value: cellValue, search: value });
-    case 'notContains':
-      return (cellValue) => !contains({ value: cellValue, search: value });
-    case 'startsWith':
+      return createContainsTest({ search: value });
+    case 'notContains': {
+      const containsSearch = createContainsTest({ search: value });
+      return (cellValue) => !containsSearch(cellValue);
+    }
+    case 'startsWith': {
+      const prefix = lower(value);
       return (cellValue) =>
-        !isEmptyValue(cellValue) && lower(itemLabel(cellValue)).startsWith(lower(value));
-    case 'endsWith':
+        !isEmptyValue(cellValue) && lower(itemLabel(cellValue)).startsWith(prefix);
+    }
+    case 'endsWith': {
+      const suffix = lower(value);
       return (cellValue) =>
-        !isEmptyValue(cellValue) && lower(itemLabel(cellValue)).endsWith(lower(value));
+        !isEmptyValue(cellValue) && lower(itemLabel(cellValue)).endsWith(suffix);
+    }
     case 'gt':
     case 'after':
       return createRangeTest({ lowerBound: value, lowerInclusive: false, family, byDay });
@@ -251,7 +381,8 @@ function compileLeaf({ leaf, columnsByKey, column, user, now }) {
     now,
   });
   if (hasKey) {
-    return (row) => test(get(row, field));
+    const read = createFieldAccessor(field);
+    return (row) => test(read(row));
   }
   return (row, value) => test(value);
 }

@@ -23,18 +23,28 @@ import deriveValue from './deriveValue.js';
 import features from '../features/index.js';
 import getValueSignature from './getValueSignature.js';
 import isSameSignature from './isSameSignature.js';
+import resolveMountValue from './resolveMountValue.js';
 import sliceDefinitions from './sliceDefinitions.js';
 
 // Table state is the single source: one React state object holding every TanStack slice plus the
 // core's own (density, view passthrough, expanded). The block value is derived from it and written
 // with methods.setValue only after a committed change (sort, resize end, drop, selection). A value
 // that changes from outside (SetState, Reset) re-initialises the state; a null value (mount, Reset
-// to empty) is filled with the resolved default value without an onChange event.
-function useTableState({ api, config, data, methods, value }) {
-  const [state, setState] = useState(() => createInitialState({ value, config, rows: data }));
+// to empty) is filled with the resolved default value without an onChange event. On mount only, a
+// null value may come from a feature instead (a persisted or saved view, `mountValue`).
+function useTableState({ api, config, data, methods, properties, value }) {
+  const [state, setState] = useState(() =>
+    createInitialState({
+      value: resolveMountValue({ value, config, properties }),
+      config,
+      rows: data,
+    })
+  );
   const [isPending, startTransition] = useTransition();
   const written = useRef(null);
   const pendingCause = useRef(null);
+  const dataRef = useRef(data);
+  dataRef.current = data;
 
   const signature = getValueSignature(value);
   const [synced, setSynced] = useState({ signature, config });
@@ -69,6 +79,12 @@ function useTableState({ api, config, data, methods, value }) {
     });
   }, []);
 
+  // Replaces the whole state from a value (a saved view loading), then commits it with this cause.
+  const loadValue = useCallback((nextValue, options) => {
+    pendingCause.current = options.cause;
+    setState(createInitialState({ value: nextValue, config: api.config, rows: dataRef.current }));
+  }, []);
+
   const commit = useCallback(
     (cause) => {
       const nextValue = deriveValue({ state: api.state, api });
@@ -92,7 +108,7 @@ function useTableState({ api, config, data, methods, value }) {
     if (type.isNone(value)) commit('init');
   }, [value]);
 
-  return { isPending, setSliceSilently, state, updateSlice };
+  return { isPending, loadValue, setSliceSilently, state, updateSlice };
 }
 
 export default useTableState;

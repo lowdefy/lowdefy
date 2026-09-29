@@ -15,33 +15,50 @@
 */
 
 import React, { memo, useContext } from 'react';
+import { cn } from '@lowdefy/block-utils';
 
 import Cell from './Cell.js';
+import cellLeads from './cellLeads.js';
 import RenderProbeContext from './RenderProbeContext.js';
 
-function renderCells({ api, cols, activeCol, original, selected }) {
+function renderCells({ api, cols, activeCol, lead, leadIndex, original, selected }) {
   return cols.map((col) => (
     <Cell
       api={api}
       col={col}
       focused={activeCol === col.index}
       key={col.key}
+      lead={col.index === leadIndex ? lead : undefined}
       original={original}
       selected={selected}
     />
   ));
 }
 
+// Wrapped row items (tree rows, expandable rows) get the features' lead elements in their first
+// data cell; plain rows render none.
+function renderLead({ api, item }) {
+  if (!item) return undefined;
+  return cellLeads.map((Lead, index) => <Lead api={api} item={item} key={index} />);
+}
+
 // Memoised by row key and row object: with data diffed by key, an update to one row of 100k
 // re-renders that one row. Rows never receive their TanStack row object, whose identity changes
-// whenever the row model rebuilds.
+// whenever the row model rebuilds. `rowRules` classes and styles come from the row object, so they
+// are worked out here, inside the memo. The row element carries `lf-table-row`, the class the
+// shared cell styles reveal `showOn: hover` buttons from (the row holds its pinned cells too, so
+// CSS hover covers the whole row).
 function Row({
   activeCol,
   api,
+  ariaRowIndex,
   centerCols,
   className,
   displayIndex,
   endCols,
+  item,
+  leadIndex,
+  measured,
   offset,
   original,
   rowId,
@@ -53,22 +70,34 @@ function Row({
   const probe = useContext(RenderProbeContext);
   probe?.row(rowId);
   const positioned = offset !== undefined;
+  const lead = renderLead({ api, item });
+  const cellArgs = { api, activeCol, lead, leadIndex, original, selected };
+  const ruled = api.config.rowRules === null ? null : api.config.rowRules(original);
+  let rowStyle = style;
+  if (ruled?.style) rowStyle = { ...(style ?? {}), ...ruled.style };
+  if (positioned) rowStyle = { ...(rowStyle ?? {}), transform: `translateY(${offset}px)` };
   return (
     <div
-      aria-rowindex={displayIndex + 2}
+      aria-expanded={
+        item?.hasChildren || item?.expandable
+          ? item.expanded === true || item.detailExpanded === true
+          : undefined
+      }
+      aria-level={item?.depth === undefined ? undefined : item.depth + 1}
+      aria-rowindex={ariaRowIndex}
       aria-selected={selectable ? selected : undefined}
-      className={className}
+      className={cn(className, ruled?.className)}
+      data-measure-key={measured ? rowId : undefined}
+      data-measured={measured ? '' : undefined}
       data-positioned={positioned ? '' : undefined}
       data-row-index={displayIndex}
       data-row-key={rowId}
       role="row"
-      style={positioned ? { ...style, transform: `translateY(${offset}px)` } : style}
+      style={rowStyle}
     >
-      {renderCells({ api, cols: startCols, activeCol, original, selected })}
-      <div className="lf-table-center">
-        {renderCells({ api, cols: centerCols, activeCol, original, selected })}
-      </div>
-      {renderCells({ api, cols: endCols, activeCol, original, selected })}
+      {renderCells({ ...cellArgs, cols: startCols })}
+      <div className="lf-table-center">{renderCells({ ...cellArgs, cols: centerCols })}</div>
+      {renderCells({ ...cellArgs, cols: endCols })}
     </div>
   );
 }

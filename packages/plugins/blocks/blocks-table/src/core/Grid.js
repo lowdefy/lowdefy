@@ -26,6 +26,7 @@ import EmptyState from './EmptyState.js';
 import HeaderRow from './HeaderRow.js';
 import LoadingRows from './LoadingRows.js';
 import renderRegion from './renderRegion.js';
+import SummaryRow from './SummaryRow.js';
 import useGridFeatures from './useGridFeatures.js';
 import useViewportSize from './useViewportSize.js';
 
@@ -33,9 +34,14 @@ function toCssSize(size) {
   return typeof size === 'number' ? `${size}px` : size;
 }
 
-// The window component: one scroll container for header and body (native scroll, sticky header).
-// It owns the scroll-driven state (rendered ranges, active cell), so scrolling renders the grid
-// and never the block above it.
+function hasSummary({ layout, summary }) {
+  if (summary === null) return false;
+  return layout.cols.some((col) => !col.special && summary.has(col.key));
+}
+
+// The window component: one scroll container for header, body and summary footer (native scroll,
+// sticky header and footer). It owns the scroll-driven state (rendered ranges, active cell), so
+// scrolling renders the grid and never the block above it.
 function Grid({
   api,
   blockId,
@@ -48,12 +54,15 @@ function Grid({
   loading,
   regions,
   rowHeight,
+  rowHeights,
   rows,
   state,
   strategy,
   styles,
+  summary,
 }) {
   const { rootRef, scrollerRef } = api;
+  const levels = config.headerLevels;
   const viewport = useViewportSize(scrollerRef);
   const layout = useMemo(
     () => computeLayout({ table: api.table, leadingColumns, viewportWidth: viewport.width }),
@@ -67,7 +76,11 @@ function Grid({
       viewport.width,
     ]
   );
-  Object.assign(api, { headerHeight, layout, rowHeight, rows });
+  // Header group rows stack above the leaf header row, each one header row high.
+  const headerRowsHeight = headerHeight * (levels.depth + 1);
+  const showSummary = rows.length > 0 && hasSummary({ layout, summary });
+  const footerHeight = showSummary ? rowHeight : 0;
+  Object.assign(api, { footerHeight, headerHeight: headerRowsHeight, layout, rowHeight, rows });
   api.previewLayout = ({ widths }) =>
     applyLayoutVars({
       element: rootRef.current,
@@ -79,18 +92,20 @@ function Grid({
       }),
     });
 
-  const { activeCell, range, scrollerTabIndex } = useGridFeatures({
-    api,
-    config,
-    headerHeight,
-    layout,
-    rowHeight,
-    rows,
-    scrollerRef,
-    state,
-    strategy,
-    viewport,
-  });
+  const { activeCell, measuredColumns, measureRows, range, rowOffsets, scrollerTabIndex } =
+    useGridFeatures({
+      api,
+      config,
+      headerHeight: headerRowsHeight,
+      layout,
+      rowHeight,
+      rowHeights,
+      rows,
+      scrollerRef,
+      state,
+      strategy,
+      viewport,
+    });
 
   const centerCols = useMemo(
     () => layout.center.slice(range.colStart, range.colEnd),
@@ -118,17 +133,23 @@ function Grid({
   const rowClassName = cn('lf-table-row', classNames.row);
   const dispatch = (eventType) => (event) => dispatchGridEvent({ api, event, eventType });
 
+  // Body rows follow the header rows in aria-rowindex (1-based).
+  const ariaRowOffset = levels.depth + 2;
   let body;
   if (rows.length > 0) {
     body = (
       <Body
         activeCell={activeCell}
         api={api}
+        ariaRowOffset={ariaRowOffset}
         centerCols={centerCols}
         layout={layout}
+        measuredRows={measuredColumns}
+        measureRows={measureRows}
         range={range}
         rowClassName={rowClassName}
         rowHeight={rowHeight}
+        rowOffsets={rowOffsets}
         rowStyle={styles.row}
         rows={rows}
         selectable={Boolean(config.rowSelection)}
@@ -138,35 +159,39 @@ function Grid({
   } else if (loading) {
     body = <LoadingRows layout={layout} />;
   } else {
-    body = <EmptyState text={config.emptyText} />;
+    body = <EmptyState content={api.content} methods={api.methods} text={config.emptyText} />;
   }
 
   return (
     <div
       className={cn('lf-table', classNames.element)}
+      data-bordered={config.bordered ? '' : undefined}
       data-clickable={clickable ? '' : undefined}
       data-pending={isPending ? '' : undefined}
       id={blockId}
       onAuxClick={dispatch('auxclick')}
+      onBlur={dispatch('blur')}
       onClick={dispatch('click')}
       onDoubleClick={dispatch('dblclick')}
       onFocus={dispatch('focus')}
       onKeyDown={dispatch('keydown')}
       onPointerDown={dispatch('pointerdown')}
+      onPointerLeave={dispatch('pointerleave')}
+      onPointerOver={dispatch('pointerover')}
       ref={rootRef}
       style={rootStyle}
     >
-      {loading && rows.length > 0 ? <div className="lf-table-progress" /> : null}
+      {loading && rows.length > 0 ? <div className="lf-table-loading-bar" /> : null}
       {renderRegion(regions.top)}
       <div
         aria-busy={loading ? true : undefined}
         aria-colcount={layout.cols.length}
         aria-multiselectable={config.rowSelection?.type === 'checkbox' ? true : undefined}
-        aria-rowcount={rows.length + 1}
+        aria-rowcount={rows.length + levels.depth + 1 + (showSummary ? 1 : 0)}
         className="lf-table-scroller"
         data-autoheight={fixedHeight ? undefined : ''}
         ref={scrollerRef}
-        role="grid"
+        role={config.tree ? 'treegrid' : 'grid'}
         style={scrollerStyle}
         tabIndex={scrollerTabIndex}
       >
@@ -177,6 +202,7 @@ function Grid({
             centerCols={centerCols}
             className={cn('lf-table-header', classNames.header)}
             layout={layout}
+            levels={levels}
             state={state}
             sticky={config.stickyHeader}
             style={styles.header}
@@ -186,7 +212,7 @@ function Grid({
                 <Overlay
                   api={api}
                   centerCols={centerCols}
-                  headerHeight={headerHeight}
+                  headerHeight={headerRowsHeight}
                   key={i}
                   layout={layout}
                   rowClassName={rowClassName}
@@ -198,6 +224,14 @@ function Grid({
               ))
             : null}
           {body}
+          {showSummary ? (
+            <SummaryRow
+              ariaRowIndex={rows.length + ariaRowOffset}
+              centerCols={centerCols}
+              layout={layout}
+              summary={summary}
+            />
+          ) : null}
         </div>
       </div>
       {renderRegion(regions.bottom)}
