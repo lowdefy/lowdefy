@@ -14,19 +14,19 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+const ENTITIES = {
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&quot;': '"',
+  '&#39;': "'",
+  '&#x27;': "'",
+  '&nbsp;': ' ',
+};
 
-import decodeHtmlEntities from './decodeHtmlEntities.js';
-
-// Plain text from an HTML string, for places that cannot hold markup: CSV
-// cells, native tooltips and sort keys. Tags are dropped and the entities an
-// autoescaped template produces are decoded, so the text reads as written.
-function htmlToText(html) {
-  if (type.isNone(html)) return '';
-  const withoutTags = String(html)
-    .replace(/<br\s*\/?>/gi, ' ')
-    .replace(/<[^>]*>/g, '');
-  return decodeHtmlEntities(withoutTags).replace(/\s+/g, ' ').trim();
+// The entities an autoescaped nunjucks template writes, decoded back to the characters.
+function decodeHtmlEntities(text) {
+  return text.replace(/&(amp|lt|gt|quot|#39|#x27|nbsp);/g, (entity) => ENTITIES[entity]);
 }
 
-export default htmlToText;
+export default decodeHtmlEntities;

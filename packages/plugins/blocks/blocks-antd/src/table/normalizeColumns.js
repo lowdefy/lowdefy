@@ -19,6 +19,8 @@ import { type } from '@lowdefy/helpers';
 import AGGREGATE_LABELS from './aggregateLabels.js';
 import CELL_TYPE_FAMILIES from './cellTypeFamilies.js';
 import humanizeKey from './humanizeKey.js';
+import linkColumnKinds from './linkColumnKinds.js';
+import normalizeColumnKind from './normalizeColumnKind.js';
 import normalizeOptions from './normalizeOptions.js';
 
 const DEFAULT_COLUMN = {
@@ -59,7 +61,14 @@ function normalizeLeaf({ column, defaults, path }) {
       `Table column requires a "key" or "field" string. Received ${JSON.stringify(column)}.`
     );
   }
-  const cellType = column.type ?? defaults.type ?? 'text';
+  const {
+    computed,
+    field: kindField,
+    options: kindOptions,
+    type: kindType,
+    ...kind
+  } = normalizeColumnKind({ column, key });
+  const cellType = column.type ?? kindType ?? defaults.type ?? 'text';
   if (type.isUndefined(CELL_TYPE_FAMILIES[cellType])) {
     throw new Error(
       `Table column "${key}" has unknown type "${cellType}". Use one of: ${Object.keys(
@@ -78,7 +87,7 @@ function normalizeLeaf({ column, defaults, path }) {
   const isAction = CELL_TYPE_FAMILIES[cellType] === 'action';
   return {
     key,
-    field: column.field ?? key,
+    field: column.field ?? kindField ?? key,
     title: column.title ?? humanizeKey(key),
     type: cellType,
     cell,
@@ -93,21 +102,22 @@ function normalizeLeaf({ column, defaults, path }) {
     filterable: getFlag({ name: 'filterable', column, defaults, isAction }),
     resizable: getFlag({ name: 'resizable', column, defaults, isAction }),
     groupable: getFlag({ name: 'groupable', column, defaults, isAction }),
-    editable: getFlag({ name: 'editable', column, defaults, isAction }),
+    editable: computed ? false : getFlag({ name: 'editable', column, defaults, isAction }),
     searchable: column.searchable === true,
     ellipsis: getEllipsis(column.ellipsis ?? defaults.ellipsis),
     wrap: (column.wrap ?? defaults.wrap) === true,
     aggregate: column.aggregate,
-    options: normalizeOptions(column.options),
+    options: normalizeOptions(column.options ?? kindOptions),
     tooltip: column.tooltip,
     headerTooltip: column.headerTooltip,
     rules: [...(column.rules ?? []), ...(cell.rules ?? [])],
     validate: column.validate ?? [],
     path,
+    ...kind,
   };
 }
 
-function walkColumns({ entries, path, groupPrefix, defaults, leaves, columnsByKey }) {
+function walkColumns({ entries, path, groupPrefix, defaults, leaves, columnsByKey, fieldKeys }) {
   return entries.map((entry, index) => {
     const column = type.isString(entry) ? { key: entry } : entry;
     if (!type.isObject(column)) {
@@ -131,6 +141,7 @@ function walkColumns({ entries, path, groupPrefix, defaults, leaves, columnsByKe
           defaults,
           leaves,
           columnsByKey,
+          fieldKeys,
         }),
       };
     }
@@ -141,12 +152,15 @@ function walkColumns({ entries, path, groupPrefix, defaults, leaves, columnsByKe
       );
     }
     columnsByKey[leaf.key] = leaf;
+    if (!type.isUndefined(column.field)) fieldKeys.add(leaf.key);
     leaves.push(leaf);
     return leaf;
   });
 }
 
-// The column config as the table uses it. Returns the leaf columns in order
+// The column config as the table uses it. Enrichment table kinds (`kind`, Table only) are
+// normalised per leaf (normalizeColumnKind.js), then linked once every key is known
+// (linkColumnKinds.js). Returns the leaf columns in order
 // (`columns`), the same leaves by key (`columnsByKey`), and the header tree
 // (`headerGroups`): the top-level entries, where a group is
 // `{ group: true, key, title, headerTooltip, path, children }` and a leaf is
@@ -158,6 +172,7 @@ function normalizeColumns({ columns, defaultColumn }) {
   const defaults = { ...DEFAULT_COLUMN, ...(defaultColumn ?? {}) };
   const leaves = [];
   const columnsByKey = {};
+  const fieldKeys = new Set();
   const headerGroups = walkColumns({
     entries: columns ?? [],
     path: [],
@@ -165,7 +180,9 @@ function normalizeColumns({ columns, defaultColumn }) {
     defaults,
     leaves,
     columnsByKey,
+    fieldKeys,
   });
+  linkColumnKinds({ leaves, columnsByKey, fieldKeys });
   return { columns: leaves, columnsByKey, headerGroups };
 }
 

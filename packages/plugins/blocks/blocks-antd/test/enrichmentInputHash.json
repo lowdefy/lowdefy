@@ -1,0 +1,126 @@
+[
+  {
+    "name": "empty object",
+    "inputs": {},
+    "canonical": "{}",
+    "hash": "1bc27f5a56d1e7"
+  },
+  {
+    "name": "flat strings",
+    "inputs": {
+      "domain": "acme.com",
+      "name": "Acme"
+    },
+    "canonical": "{\"domain\":\"acme.com\",\"name\":\"Acme\"}",
+    "hash": "17f7ab6b48b584"
+  },
+  {
+    "name": "flat strings, keys in another order",
+    "inputs": {
+      "name": "Acme",
+      "domain": "acme.com"
+    },
+    "canonical": "{\"domain\":\"acme.com\",\"name\":\"Acme\"}",
+    "hash": "17f7ab6b48b584"
+  },
+  {
+    "name": "nested objects and arrays keep array order",
+    "inputs": {
+      "person": {
+        "last": "Lovelace",
+        "first": "Ada"
+      },
+      "tags": ["b", "a"]
+    },
+    "canonical": "{\"person\":{\"first\":\"Ada\",\"last\":\"Lovelace\"},\"tags\":[\"b\",\"a\"]}",
+    "hash": "0ac5ccd50b9354"
+  },
+  {
+    "name": "numbers",
+    "inputs": {
+      "int": 42,
+      "float": 3.14159,
+      "negative": -0.5,
+      "large": 1e21,
+      "zero": 0,
+      "small": 1e-7
+    },
+    "canonical": "{\"float\":3.14159,\"int\":42,\"large\":1e+21,\"negative\":-0.5,\"small\":1e-7,\"zero\":0}",
+    "hash": "1d06afbc7c170f"
+  },
+  {
+    "name": "booleans and null",
+    "inputs": {
+      "active": true,
+      "deleted": false,
+      "note": null
+    },
+    "canonical": "{\"active\":true,\"deleted\":false,\"note\":null}",
+    "hash": "178bd384b6b897"
+  },
+  {
+    "name": "date as ISO string",
+    "inputs": {
+      "since": {
+        "~d": 1767225600000
+      }
+    },
+    "canonical": "{\"since\":\"2026-01-01T00:00:00.000Z\"}",
+    "hash": "0029949ebd9244"
+  },
+  {
+    "name": "ObjectId as hex string",
+    "inputs": {
+      "owner": {
+        "_oid": "65F0C0FFEE0000000000ABCD"
+      }
+    },
+    "canonical": "{\"owner\":\"65f0c0ffee0000000000abcd\"}",
+    "hash": "19c59bffcfec58"
+  },
+  {
+    "name": "unicode",
+    "inputs": {
+      "city": "Zürich",
+      "greeting": "こんにちは",
+      "emoji": "🚀"
+    },
+    "canonical": "{\"city\":\"Zürich\",\"emoji\":\"🚀\",\"greeting\":\"こんにちは\"}",
+    "hash": "0216a7ca649f07"
+  },
+  {
+    "name": "array of objects",
+    "inputs": [
+      {
+        "b": 1,
+        "a": 2
+      },
+      {
+        "c": [
+          1,
+          2,
+          {
+            "z": true,
+            "y": null
+          }
+        ]
+      }
+    ],
+    "canonical": "[{\"a\":2,\"b\":1},{\"c\":[1,2,{\"y\":null,\"z\":true}]}]",
+    "hash": "1108efc6baeb18"
+  },
+  {
+    "name": "escaped characters",
+    "inputs": {
+      "text": "He said \"hi\"\n\ttab \\ backslash"
+    },
+    "canonical": "{\"text\":\"He said \\\"hi\\\"\\n\\ttab \\\\ backslash\"}",
+    "hash": "09cde1c88d9629"
+  },
+  {
+    "name": "a bare string",
+    "inputs": "acme.com",
+    "canonical": "\"acme.com\"",
+    "hash": "0c038e33c03f2c"
+  }
+]

@@ -16,17 +16,19 @@
 
 import { type } from '@lowdefy/helpers';
 
-import decodeHtmlEntities from './decodeHtmlEntities.js';
+const OUTPUT_PATTERN = /\{\{-?\s*([A-Za-z_$][\w$]*)/g;
 
-// Plain text from an HTML string, for places that cannot hold markup: CSV
-// cells, native tooltips and sort keys. Tags are dropped and the entities an
-// autoescaped template produces are decoded, so the text reads as written.
-function htmlToText(html) {
-  if (type.isNone(html)) return '';
-  const withoutTags = String(html)
-    .replace(/<br\s*\/?>/gi, ' ')
-    .replace(/<[^>]*>/g, '');
-  return decodeHtmlEntities(withoutTags).replace(/\s+/g, ' ').trim();
+// The names a template's `{{ name }}` outputs start with, in order of first use, without
+// duplicates: `{{ company | upper }}` and `{{ company.name }}` both give `company`. Formula and AI
+// prompt templates reference columns by key this way (the add-column picker's chips insert
+// `{{ key }}`).
+function findTemplateRefs(template) {
+  if (!type.isString(template)) return [];
+  const refs = [];
+  for (const match of template.matchAll(OUTPUT_PATTERN)) {
+    if (!refs.includes(match[1])) refs.push(match[1]);
+  }
+  return refs;
 }
 
-export default htmlToText;
+export default findTemplateRefs;

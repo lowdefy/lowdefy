@@ -14,19 +14,13 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { get } from '@lowdefy/helpers';
 
-import decodeHtmlEntities from './decodeHtmlEntities.js';
-
-// Plain text from an HTML string, for places that cannot hold markup: CSV
-// cells, native tooltips and sort keys. Tags are dropped and the entities an
-// autoescaped template produces are decoded, so the text reads as written.
-function htmlToText(html) {
-  if (type.isNone(html)) return '';
-  const withoutTags = String(html)
-    .replace(/<br\s*\/?>/gi, ' ')
-    .replace(/<[^>]*>/g, '');
-  return decodeHtmlEntities(withoutTags).replace(/\s+/g, ' ').trim();
+// A column's value in a row: its `field`, or for a formula column (which has no field) its
+// compiled template over the row (`column.read`, linkColumnKinds.js).
+function readColumnValue({ column, row }) {
+  if (column.read) return column.read(row);
+  return get(row, column.field);
 }
 
-export default htmlToText;
+export default readColumnValue;
