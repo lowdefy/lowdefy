@@ -377,6 +377,8 @@ test.describe('Table loading states', () => {
     await mockAll(page);
     await page.clock.install();
     await navigateToTestPage(page, PAGE);
+    // The keys and clicks go to the table, not to the fallback it replaces.
+    await expect(table(page, 'table_prop')).not.toHaveAttribute('data-lf-fallback', '');
     await expect(table(page, 'table_prop')).toHaveAttribute('data-loading-state', 'empty');
     await page.clock.pauseAt(Date.now() + 60000);
     await page.locator('#set_loading').click();
