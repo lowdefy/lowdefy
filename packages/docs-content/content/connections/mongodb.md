@@ -839,6 +839,17 @@ blocks:
         - id: save_items
           type: Request
           params: save_items
+        - id: check_saved
+          type: Throw
+          params:
+            throw:
+              _gt:
+                - _array.length:
+                    _if_none:
+                      - _request: save_items.unmatchedKeys
+                      - []
+                - 0
+            message: Some items were changed or removed by someone else. Reload and try again.
         - id: refetch
           type: Request
           params: get_recipe

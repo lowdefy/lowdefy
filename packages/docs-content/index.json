@@ -5353,7 +5353,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "488c52c9268704979573c16606a3a83702c51eae1da494d243d577cdba6483d7"
+      "hash": "868e30e2d82a29a02fa9006f3687d2503786934be77495d7628fb5e6ec5eb417"
     },
     "display-blocks/tablelight": {
       "files": [
@@ -6319,7 +6319,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "91d48cdf7ee1a8b707a0d6b4f15bafdb7b9f5a8d44dd5fffc07bb4caab792639"
+      "hash": "0e537a84feda13373d078b0ab684b9ef7325510dffe7fefab3c46230f383e4bc"
     },
     "connections/mssql": {
       "files": [

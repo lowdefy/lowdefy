@@ -300,7 +300,7 @@ export default {
         row: 'The row data.',
         rowKey: 'The row key.',
         index:
-          'The index of the row in `data` (with `childrenField`, in the depth-first list of every row). In server mode, its index in the rows the request matches (inside a group, in the group). `null` for a row that is not in `data`: added with `applyTransaction`, or in a TableInput.',
+          'The index of the row in `data` (with `childrenField`, in the depth-first list of every row). In server mode, its index in the rows the request matches (inside a group, in the group). `null` for a row that is not in `data`: added with `applyTransaction`, or added in a TableInput.',
       },
     },
     onRowDoubleClick: {
@@ -309,7 +309,7 @@ export default {
         row: 'The row data.',
         rowKey: 'The row key.',
         index:
-          'The index of the row in `data` (with `childrenField`, in the depth-first list of every row). In server mode, its index in the rows the request matches (inside a group, in the group). `null` for a row that is not in `data`: added with `applyTransaction`, or in a TableInput.',
+          'The index of the row in `data` (with `childrenField`, in the depth-first list of every row). In server mode, its index in the rows the request matches (inside a group, in the group). `null` for a row that is not in `data`: added with `applyTransaction`, or added in a TableInput.',
       },
     },
     onCellClick: {
