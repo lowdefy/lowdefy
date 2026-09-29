@@ -76,6 +76,15 @@ blocks:
                 _event: rowKey
               skipped:
                 _event: skipped
+      onRowClick:
+        - id: record_lines_click
+          type: SetState
+          params:
+            lines_click:
+              rowKey:
+                _event: rowKey
+              index:
+                _event: index
 
   - id: lines_value
     type: Span
@@ -85,6 +94,16 @@ blocks:
           - 'value='
           - _json.stringify:
               - _state: lines
+              - space: 0
+
+  - id: lines_click_value
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'click='
+          - _json.stringify:
+              - _state: lines_click
               - space: 0
 
   - id: lines_change_value

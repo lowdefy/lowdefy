@@ -175,6 +175,19 @@ test.describe('TableInput', () => {
     expect(await change(page)).toEqual({ cause: 'delete', rowKey: 'b', skipped: null });
   });
 
+  test('onRowClick reports the index in data, and null for an added row', async ({ page }) => {
+    await row(page, 'lines', 'a').locator('[data-lf-row-delete]').click();
+    await cell(page, 'lines', 'c', 'id').click();
+    await expect(getBlock(page, 'lines_click_value')).toHaveText('click={"rowKey":"c","index":2}');
+    await getBlock(page, 'lines').locator('[data-lf-add-row]').click();
+    await page.keyboard.press('Escape');
+    const [added] = (await value(page)).added;
+    await cell(page, 'lines', added.rowKey, 'id').click();
+    await expect(getBlock(page, 'lines_click_value')).toHaveText(
+      `click={"rowKey":"${added.rowKey}","index":null}`
+    );
+  });
+
   test('deleting an added row just drops it from added', async ({ page }) => {
     await getBlock(page, 'lines').locator('[data-lf-add-row]').click();
     await page.keyboard.press('Escape');

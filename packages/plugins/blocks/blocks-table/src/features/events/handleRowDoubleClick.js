@@ -17,6 +17,7 @@
 import isControlTarget from '@lowdefy/blocks-antd/table/isControlTarget.js';
 
 import getBodyTarget from './getBodyTarget.js';
+import getRowIndex from './getRowIndex.js';
 
 function handleRowDoubleClick(event, api) {
   const target = getBodyTarget({ event, api });
@@ -28,9 +29,14 @@ function handleRowDoubleClick(event, api) {
   ) {
     return false;
   }
+  const rowKey = api.config.getKey(row.original);
   api.methods.triggerEvent({
     name: 'onRowDoubleClick',
-    event: { row: row.original, rowKey: api.config.getKey(row.original), index: row.index },
+    event: {
+      row: row.original,
+      rowKey,
+      index: getRowIndex({ api, rowKey }),
+    },
   });
   return true;
 }

@@ -237,3 +237,16 @@ test('createServerStore does not load mid-scroll when a block lands during a fas
   expect(calls[1].event.startRow).toBe(5000);
   spy.mockRestore();
 });
+
+test('createServerStore gives each loaded row its index in its list on the server', async () => {
+  const { api, calls } = createDeferredApi();
+  const store = createServerStore({ api, server: { blockSize: 50, maxBlocks: 10 } });
+  store.setView({ view: VIEW, viewKey: 'a' });
+  await respond(calls[0], { rows: rows(0, 50), total: 200 });
+  build(store);
+  store.onRange({ rowStart: 100, rowEnd: 120 });
+  await respond(calls[1], { rows: rows(100, 50), total: 200 });
+  expect(store.getRowIndex(10)).toBe(10);
+  expect(store.getRowIndex(110)).toBe(110);
+  expect(store.getRowIndex(60)).toBeNull();
+});

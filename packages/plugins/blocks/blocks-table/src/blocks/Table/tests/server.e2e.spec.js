@@ -167,6 +167,18 @@ test.describe('Table server mode', () => {
     expect(starts.length).toBeLessThanOrEqual(5);
   });
 
+  test('onRowClick reports the absolute index of a row in a later block', async ({ page }) => {
+    await mockServer(page);
+    await navigateToTestPage(page, 'table-server');
+    await expect(cell(page, 'table_server', '0', 'name')).toHaveText('Person 00000');
+    await scrollTo(page, 'table_server', 50000 * 40);
+    await expect(cell(page, 'table_server', '50002', 'name')).toHaveText('Person 50002');
+    await cell(page, 'table_server', '50002', 'name').click();
+    await expect(getBlock(page, 'server_click_value')).toHaveText(
+      'click={"rowKey":50002,"index":50002}'
+    );
+  });
+
   test('shows skeleton rows while a block loads', async ({ page }) => {
     await mockServer(page, { delayFor: (payload) => (payload.startRow === 0 ? 20 : 1000) });
     await navigateToTestPage(page, 'table-server');
@@ -364,5 +376,22 @@ test.describe('Table server mode', () => {
     await expect(row(page, 'table_transactions', '3')).toHaveCount(0);
     await expect(cell(page, 'table_transactions', '4', 'name')).toHaveText('Four');
     await expect(cell(page, 'table_transactions', '1', 'name')).toHaveText('One');
+  });
+
+  test('onRowClick reports the index in data, and null for a row a transaction added', async ({
+    page,
+  }) => {
+    await mockServer(page);
+    await navigateToTestPage(page, 'table-server');
+    await clickButton(page, 'transactions_apply');
+    await expect(cell(page, 'table_transactions', '4', 'name')).toHaveText('Four');
+    await cell(page, 'table_transactions', '4', 'name').click();
+    await expect(getBlock(page, 'transactions_click_value')).toHaveText(
+      'click={"rowKey":4,"index":null}'
+    );
+    await cell(page, 'table_transactions', '2', 'name').click();
+    await expect(getBlock(page, 'transactions_click_value')).toHaveText(
+      'click={"rowKey":2,"index":1}'
+    );
   });
 });
