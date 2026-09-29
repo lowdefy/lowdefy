@@ -183,8 +183,10 @@ The Playwright config (`e2e/enrichment/playwright.config.js`, ports in `settings
 before the app:
 
 - the mock services (`mocks/mockServices.mjs`) on `LOWDEFY_E2E_MOCK_PORT` (default app port
-  plus one): the company and email APIs the providers call, and the Anthropic Messages API,
-  with a call log, latency settings and fixed answers per domain (404, 500, 400, one 429);
+  plus one): the company and email APIs the providers call, the Anthropic Messages API and
+  treg (`/treg/call/…`: routed email find with `X-Treg-Cost-Micro`, `Idempotency-Key` replays,
+  a 402, a 503 with `retry_after`, an async task), with a call log, latency settings and fixed
+  answers per domain (404, 500, 400, one 429);
 - a fresh single-node replica set from the shared binaries (`scripts/e2e-mongodb.mjs`) on
   `LOWDEFY_E2E_MONGODB_PORT` (default 27197), unless `LOWDEFY_SECRET_ENRICHMENT_MONGODB_URI`
   points at one.

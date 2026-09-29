@@ -28,9 +28,10 @@
 #   pages/           the enrichment page
 #
 # Secrets (LOWDEFY_SECRET_<name>): ENRICHMENT_MONGODB_URI (a replica set, for change streams),
-# ENRICHMENT_API_URL (the enrichment services), ANTHROPIC_API_KEY and ANTHROPIC_BASE_URL. The
-# CRON_SECRET environment variable secures the cron route and detached endpoint calls. The e2e
-# run points all services at local mocks (e2e/enrichment/mocks/mockServices.mjs).
+# ENRICHMENT_API_URL (the enrichment services), TREG_TOKEN, ANTHROPIC_API_KEY and
+# ANTHROPIC_BASE_URL. The CRON_SECRET environment variable secures the cron route and detached
+# endpoint calls. The e2e run points all services at local mocks
+# (e2e/enrichment/mocks/mockServices.mjs).
 #
 # The app has no auth, so every Api endpoint is public. A real app protects enrichment_run and
 # the columns and leads endpoints under auth.api, and scopes every request by tenant (see the
@@ -47,6 +48,7 @@ api:
   - _ref: api/enrichment/enrichment_worker.yaml
   - _ref: api/providers/enrich_company_lookup.yaml
   - _ref: api/providers/enrich_email_finder.yaml
+  - _ref: api/providers/enrich_find_work_email_treg.yaml
   - _ref: api/providers/enrich_ai.yaml
   - _ref: api/columns/columns_add.yaml
   - _ref: api/columns/columns_update.yaml

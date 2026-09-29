@@ -63,7 +63,9 @@ What never reaches a message: the token (it is only ever a header, and `redactTo
 
 ## Enrichment
 
-`MongoDBEnrichmentComplete` results take `cost` (integer micro-USD) and store it as the cell's `cost`; the Table details panel shows it. The idempotency key a provider sends should be stable across the attempts of one run of a cell. A claim token is new on every claim, so a key built from it only dedupes within one attempt; `runId:columnKey:rowKey:inputHash` from the claim is stable. See the enrichment provider example in the user docs.
+`MongoDBEnrichmentComplete` results take `cost` (integer micro-USD) and store it as the cell's `cost`; the Table details panel shows it. The idempotency key a provider sends should be stable across the attempts of one run of a cell. A claim token is new on every claim, so a key built from it only dedupes within one attempt; `runId:columnKey:rowKey:inputHash` from the claim is stable. A retried error result takes `retryAfterMs`: the worker passes `_error: retryAfter` × 1000 from a treg `ServiceError`, so the retry waits as long as treg asked instead of the exponential backoff. See the enrichment provider example in the user docs.
+
+The enrichment reference app (`packages/plugins/blocks/blocks-table/e2e/enrichment/app`) has a treg provider, `find_work_email_treg` (`api/providers/enrich_find_work_email_treg.yaml`), whose `TregConnection` points at the treg mock in `mocks/mockServices.mjs`; `run_cell.yaml` builds the idempotency key and the `retryAfterMs`. Its spec (`tests/treg.e2e.spec.js`) covers the stored cost, a 402, a 503 retried after `retry_after`, a lost answer replayed under the same key (charged once), a new key per run, and an awaited async task.
 
 ## Tests
 

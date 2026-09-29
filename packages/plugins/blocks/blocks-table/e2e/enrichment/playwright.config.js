@@ -66,6 +66,8 @@ export default createPlaywrightConfig({
     LOWDEFY_SECRET_ENRICHMENT_API_URL: mockUrl,
     LOWDEFY_SECRET_ANTHROPIC_BASE_URL: `${mockUrl}/anthropic/v1`,
     LOWDEFY_SECRET_ANTHROPIC_API_KEY: 'mock-key',
+    // The token the treg mock accepts.
+    LOWDEFY_SECRET_TREG_TOKEN: 'mock-treg-token',
   },
   fullyParallel: false,
   workers: 1,

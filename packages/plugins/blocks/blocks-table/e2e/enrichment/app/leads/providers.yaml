@@ -62,5 +62,27 @@
       title: Email
       type: email
   cost: 2
+# A provider backed by treg: its endpoint (api/providers/enrich_find_work_email_treg.yaml)
+# calls treg's routed treg.people.email.find, which tries several email providers in order,
+# and stores what treg charged as the cell's cost. `cost` here is the catalogue estimate (the
+# TregCatalogGet price) for the confirm dialog before a large run.
+- id: find_work_email_treg
+  title: Find work email (treg)
+  description: A work email from a full name and company domain, through treg's email providers.
+  icon: mail
+  inputs:
+    - key: full_name
+      title: Full name
+      type: text
+      required: true
+    - key: domain
+      title: Domain
+      type: text
+      required: true
+  outputs:
+    - path: email
+      title: Email
+      type: email
+  cost: 4
 # The ai kind is not listed: the picker offers it as a kind of its own, and its columns run
 # the enrich_ai endpoint (provider `ai`, the default of an ai column).

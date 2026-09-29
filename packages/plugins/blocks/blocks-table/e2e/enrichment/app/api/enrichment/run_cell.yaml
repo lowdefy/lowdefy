@@ -32,6 +32,19 @@
             _item: cell.prompt
           output:
             _item: cell.output
+          # The same on every attempt at this cell within this run, so a provider that bills
+          # per call (treg's Idempotency-Key) replays an answer it already charged for. Not
+          # the claimToken, which is new on every claim.
+          idempotencyKey:
+            _js:
+              fn: |
+                const { cell } = args;
+                // An ObjectId row key reaches the routine as { _oid }.
+                const rowKey = cell.rowKey?._oid ?? String(cell.rowKey);
+                return [cell.runId, cell.columnKey, rowKey, cell.inputHash].join(':');
+              args:
+                cell:
+                  _item: cell
     # The provider answered: ok, empty (nothing found) or error (a final failure, such as
     # invalid inputs, with retry: false). The result is written only while this worker still
     # holds the claim; a late result from a worker whose lease ran out is ignored.
@@ -51,8 +64,9 @@
             path: leads/queue.yaml
             key: backoffMs
         results:
-          # The claim's cell, with the provider's answer ({ status, value, raw } or
-          # { status, error, retry }) merged in as it came.
+          # The claim's cell, with the provider's answer ({ status, value, raw, cost } or
+          # { status, error, retry }) merged in as it came. `cost` is what the call cost in
+          # micro-USD (a treg provider's X-Treg-Cost-Micro), stored on the cell.
           - _object.assign:
               - rowKey:
                   _item: cell.rowKey
@@ -63,8 +77,9 @@
               - _step: provider.$.$
   :catch:
     # The provider threw: a transient failure (a timeout, a 5xx, a rate limit). The error is
-    # written with retry, so the cell is queued again after a backoff (backoffMs, doubled per
-    # attempt), until maxAttempts makes it final.
+    # written with retry, so the cell is queued again, until maxAttempts makes it final. It
+    # waits as long as the service asked (a ServiceError's retryAfter, such as treg's
+    # retry_after on a 429 or 503) or else the backoff (backoffMs, doubled per attempt).
     - id: complete_error
       type: MongoDBEnrichmentComplete
       connectionId: leads
@@ -91,3 +106,21 @@
             error:
               _error: message
             retry: true
+            # retryAfter is seconds (a number, or the Retry-After header as text: seconds or an
+            # HTTP date); null without one.
+            retryAfterMs:
+              _js:
+                fn: |
+                  const { retryAfter } = args;
+                  if (typeof retryAfter === 'number') {
+                    return retryAfter >= 0 ? Math.ceil(retryAfter * 1000) : null;
+                  }
+                  if (typeof retryAfter !== 'string' || retryAfter.trim() === '') return null;
+                  if (/^[0-9]+(\.[0-9]+)?$/.test(retryAfter.trim())) {
+                    return Math.ceil(Number(retryAfter) * 1000);
+                  }
+                  const date = Date.parse(retryAfter);
+                  return Number.isNaN(date) ? null : Math.max(0, date - Date.now());
+                args:
+                  retryAfter:
+                    _error: retryAfter

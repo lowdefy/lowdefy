@@ -23,6 +23,11 @@
     GET  /email-a/find?name=&domain=      first email source (the email_finder waterfall)
     GET  /email-b/v2/search?name=&domain= second email source, another response shape
     POST /anthropic/v1/messages           the Anthropic Messages API (the ai provider)
+    POST /treg/call/treg.people.email.find
+                                          treg's routed work email endpoint (the
+                                          find_work_email_treg provider)
+    GET  /treg/call/mocktasks.email.status?id=
+                                          the poll endpoint of treg's async email tasks
 
   Test controls:
 
@@ -34,6 +39,16 @@
   The company lookup answers 404 for nowhere.test (a provider "no result"), 500 for
   broken.test (retried, then an error), 400 for badrequest.test (a final error) and 429
   on the first call for busybee.test (rate limited, then answers).
+
+  The treg mock checks X-Treg-Token, answers { output, raw, _treg } with the cost in
+  X-Treg-Cost-Micro, and keeps treg's Idempotency-Key contract: an answer is stored under its
+  key, and a call that reuses the key gets the stored answer again with
+  X-Treg-Idempotent-Replay: true and a cost of 0, so a retried cell is charged once. By domain:
+  brightpath.test answers at once; quillsoft.test starts an async task (a 202 with an
+  X-Treg-Async poll descriptor) that finishes on its second poll; tidewater.test is out of
+  provider capacity on the first call (503, retry_after 2 seconds); ferncrest.test answers the
+  first call after 3 seconds (longer than the connection timeout, so the answer is lost after
+  it was charged); busybee.test is out of balance (402); any other domain is a routed miss.
 
   Usage: node mockServices.mjs --port 3198
 */
@@ -90,11 +105,27 @@ const companies = {
 const emailSourceA = new Set(['brightpath.test', 'ferncrest.test']);
 const emailSourceB = new Set(['quillsoft.test', 'tidewater.test', 'busybee.test']);
 
-const defaultConfig = { latencyMs: { company: 0, email_a: 0, email_b: 0, ai: 0 } };
+const defaultConfig = { latencyMs: { company: 0, email_a: 0, email_b: 0, ai: 0, treg: 0 } };
+
+const tregToken = 'mock-treg-token';
+const tregCostMicro = 4000;
+const tregAsyncReservedMicro = 6000;
+// Longer than the TregConnection timeout of the reference app (connections.yaml).
+const tregLostAnswerMs = 3000;
+const tregAsyncView = {
+  poll: { endpoint: 'mocktasks.email.status', param: { in: 'queryParams', name: 'id' } },
+  status: { path: 'data.status', success: ['finished'], failure: ['failed'] },
+  result: { path: 'data' },
+  interval: 0.2,
+};
 
 let config = structuredClone(defaultConfig);
 let log = [];
 let counts = new Map();
+// treg's idempotency store: the answer given for each Idempotency-Key.
+let tregAnswers = new Map();
+// The async tasks started, by id: the polls each has had.
+let tregTasks = new Map();
 
 function countCall(key) {
   const count = (counts.get(key) ?? 0) + 1;
@@ -227,6 +258,165 @@ const services = [
   { service: 'ai', method: 'POST', path: '/anthropic/v1/messages', handle: anthropicMessages },
 ];
 
+// A refusal treg makes itself: X-Treg-Error: 1 and { detail: { error, ... } }.
+function tregRefusal(status, detail, headers = {}) {
+  return { status, body: { detail }, headers: { 'x-treg-error': '1', ...headers } };
+}
+
+function tregServed({ callId, fullName, domain }) {
+  const email = emailFor({ name: fullName, domain });
+  return {
+    status: 200,
+    headers: {
+      'x-treg-call-id': callId,
+      'x-treg-cost-micro': String(tregCostMicro),
+      'x-treg-served-by': 'mockmail.people.email.find',
+      'x-treg-route-outcome': 'served',
+    },
+    body: {
+      output: { email, confidence: 0.9 },
+      raw: { person: { full_name: fullName, email }, source: 'mockmail' },
+      _treg: {
+        served_by: 'mockmail.people.email.find',
+        outcome: 'served',
+        tried: [{ endpoint_id: 'mockmail.people.email.find', outcome: 'served', status: 200 }],
+        charged_micro: tregCostMicro,
+      },
+    },
+  };
+}
+
+// The answer of treg.people.email.find for a domain, and what it charges.
+function tregEmailFind({ callId, body }) {
+  const domain = String(body.domain ?? '').toLowerCase();
+  const fullName = body.full_name;
+  if (domain === 'busybee.test') {
+    return tregRefusal(402, {
+      error: 'out_of_balance',
+      estimated_cost_micro: tregCostMicro,
+      balance_micro: 1000,
+      topup_url: '/billing/topup',
+    });
+  }
+  if (domain === 'tidewater.test' && countCall(`treg:${domain}`) === 1) {
+    return tregRefusal(
+      503,
+      { error: 'provider_capacity_unavailable', provider: 'mockmail', retry_after: 2 },
+      { 'retry-after': '2' }
+    );
+  }
+  if (domain === 'quillsoft.test') {
+    const taskId = `task_${tregTasks.size + 1}`;
+    tregTasks.set(taskId, { polls: 0, email: emailFor({ name: fullName, domain }) });
+    const asyncView = { ...tregAsyncView, task_id: taskId };
+    return {
+      status: 202,
+      headers: {
+        'x-treg-call-id': callId,
+        'x-treg-served-by': 'mockmail.people.email.find',
+        'x-treg-route-outcome': 'pending',
+        'x-treg-reserved-micro': String(tregAsyncReservedMicro),
+        'x-treg-async': JSON.stringify(asyncView),
+      },
+      body: {
+        output: { email: null },
+        raw: { data: { id: taskId, status: 'queued' } },
+        _treg: {
+          served_by: 'mockmail.people.email.find',
+          outcome: 'pending',
+          tried: [{ endpoint_id: 'mockmail.people.email.find', outcome: 'pending', status: 202 }],
+          async: asyncView,
+          reserved_micro: tregAsyncReservedMicro,
+          charged_micro: null,
+        },
+      },
+    };
+  }
+  if (['brightpath.test', 'ferncrest.test', 'tidewater.test'].includes(domain)) {
+    return tregServed({ callId, fullName, domain });
+  }
+  // Every provider of the route tried, none had the person: nothing is charged.
+  return {
+    status: 200,
+    headers: { 'x-treg-call-id': callId, 'x-treg-cost-micro': '0', 'x-treg-route-outcome': 'miss' },
+    body: {
+      output: { email: null },
+      raw: null,
+      _treg: {
+        served_by: null,
+        outcome: 'miss',
+        tried: [
+          { endpoint_id: 'mockmail.people.email.find', outcome: 'miss', status: 404 },
+          { endpoint_id: 'mockfinder.people.email.find', outcome: 'miss', status: 200 },
+        ],
+        charged_micro: 0,
+      },
+    },
+  };
+}
+
+function tregTaskStatus({ query }) {
+  const task = tregTasks.get(query.get('id'));
+  if (task === undefined) return tregRefusal(404, { error: 'task_not_found' });
+  task.polls += 1;
+  if (task.polls < 2) {
+    return { status: 200, body: { data: { id: query.get('id'), status: 'processing' } } };
+  }
+  return {
+    status: 200,
+    body: { data: { id: query.get('id'), status: 'finished', email: task.email } },
+  };
+}
+
+// The treg API: /treg/call/<endpoint>. The log entry records the Idempotency-Key, whether the
+// answer was a replay, and what the call charged.
+async function handleTreg({ req, res, url, entry }) {
+  if (req.headers['x-treg-token'] !== tregToken) {
+    entry.status = 401;
+    return send(res, 401, { detail: 'Invalid token.' }, { 'x-treg-error': '1' });
+  }
+  const endpoint = url.pathname.slice('/treg/call/'.length);
+  const key = req.headers['idempotency-key'] ?? null;
+  entry.endpoint = endpoint;
+  entry.idempotencyKey = key;
+  entry.replayed = false;
+  entry.charged = 0;
+  if (endpoint === 'mocktasks.email.status' && req.method === 'GET') {
+    const result = tregTaskStatus({ query: url.searchParams });
+    entry.status = result.status;
+    return send(res, result.status, result.body, result.headers);
+  }
+  if (endpoint !== 'treg.people.email.find' || req.method !== 'POST') {
+    entry.status = 404;
+    return send(res, 404, { detail: `Unknown endpoint ${endpoint}.` }, { 'x-treg-error': '1' });
+  }
+  const body = await readBody(req);
+  entry.body = body;
+  if (key !== null && tregAnswers.has(key)) {
+    // A replay: the stored answer, without the headers of the first answer, charged nothing.
+    const stored = tregAnswers.get(key);
+    entry.status = stored.status;
+    entry.replayed = true;
+    return send(res, stored.status, stored.body, {
+      'x-treg-call-id': `call_${log.length}`,
+      'x-treg-cost-micro': '0',
+      'x-treg-idempotent-replay': 'true',
+    });
+  }
+  const result = tregEmailFind({ callId: `call_${log.length}`, body });
+  entry.status = result.status;
+  if (result.status >= 200 && result.status < 300) {
+    entry.charged = Number(result.headers['x-treg-cost-micro'] ?? 0);
+    if (key !== null) tregAnswers.set(key, { status: result.status, body: result.body });
+  }
+  if (String(body.domain).toLowerCase() === 'ferncrest.test' && !entry.replayed) {
+    // Charged and stored, but answered after the caller gave up: the answer is lost.
+    entry.lost = countCall('treg:ferncrest.test') === 1;
+    if (entry.lost) await wait(tregLostAnswerMs);
+  }
+  return send(res, result.status, result.body, result.headers);
+}
+
 async function readBody(req) {
   const chunks = [];
   for await (const chunk of req) chunks.push(chunk);
@@ -241,6 +431,8 @@ async function handleControl({ req, res, url }) {
     config = structuredClone(defaultConfig);
     log = [];
     counts = new Map();
+    tregAnswers = new Map();
+    tregTasks = new Map();
     return send(res, 200, { ok: true });
   }
   if (url.pathname === '/__config' && req.method === 'POST') {
@@ -256,6 +448,17 @@ const server = http.createServer(async (req, res) => {
   try {
     if (url.pathname.startsWith('/__')) {
       await handleControl({ req, res, url });
+      return;
+    }
+    if (url.pathname.startsWith('/treg/call/')) {
+      const entry = {
+        service: 'treg',
+        query: Object.fromEntries(url.searchParams),
+        at: Date.now(),
+      };
+      log.push(entry);
+      await wait(config.latencyMs.treg ?? 0);
+      await handleTreg({ req, res, url, entry });
       return;
     }
     const route = services.find((item) => item.method === req.method && item.path === url.pathname);
