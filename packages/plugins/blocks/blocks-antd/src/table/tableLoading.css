@@ -27,7 +27,7 @@
     flex: none;
     box-sizing: border-box;
     width: var(--lf-skeleton-w, 60%);
-    max-width: 100%;
+    max-width: min(100%, 280px);
     height: 12px;
     background: var(--lf-skeleton-fill);
     border-radius: var(--ant-border-radius-sm, 4px);
@@ -43,12 +43,13 @@
 
   .lf-table-skeleton[data-shape='number'] {
     width: calc(var(--lf-skeleton-w, 60%) * 0.6);
+    max-width: min(100%, 96px);
   }
 
   .lf-table-skeleton[data-shape='pill'] {
     width: calc(var(--lf-skeleton-w, 60%) * 0.7);
     max-width: 88px;
-    height: 20px;
+    height: 22px;
   }
 
   .lf-table-skeleton[data-shape='square'] {
@@ -62,23 +63,31 @@
     border-radius: 3px;
   }
 
-  /* A circle and a name bar: the shape's own fill is the bar, offset by the circle. */
+  /* A circle and a name bar, as tall as the avatar they stand for. */
   .lf-table-skeleton[data-shape='person'] {
-    position: relative;
-    width: calc(var(--lf-skeleton-w, 60%) * 0.8);
-    margin-inline-start: calc(var(--ant-control-height-sm, 24px) + 8px);
-    overflow: visible;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: calc(var(--lf-skeleton-w, 60%) * 0.9);
+    max-width: 240px;
+    height: var(--ant-control-height-sm, 24px);
+    background: none;
   }
 
   .lf-table-skeleton-circle {
-    position: absolute;
-    top: 50%;
-    inset-inline-start: calc(-1 * (var(--ant-control-height-sm, 24px) + 8px));
+    flex: none;
     width: var(--ant-control-height-sm, 24px);
     height: var(--ant-control-height-sm, 24px);
     background: var(--lf-skeleton-fill);
     border-radius: 50%;
-    transform: translateY(-50%);
+  }
+
+  .lf-table-skeleton-name {
+    flex: 1;
+    min-width: 0;
+    height: 12px;
+    background: var(--lf-skeleton-fill);
+    border-radius: var(--ant-border-radius-sm, 4px);
   }
 
   .lf-table-skeleton[data-shape='buttons'] {

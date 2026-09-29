@@ -20,6 +20,7 @@ import { renderHtml } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import renderCell from '../../table/renderCell.js';
+import SkeletonCell from '../../table/SkeletonCell.js';
 
 const SORT_DIRECTIONS = ['ascend', 'descend'];
 
@@ -41,8 +42,19 @@ function renderTitle({ node, methods }) {
 // antd Table columns from the normalised header tree. Sorting is controlled:
 // antd only shows the sort state and reports clicks (`sorter: true`), while
 // the block sorts the rows itself, so antd's own compare never runs. Each
-// cell gets `data-col-key`, which the block's one click listener reads.
-function buildAntdColumns({ nodes, compiledByKey, sort, getRowKey, methods, components, onEvent }) {
+// cell gets `data-col-key`, which the block's one click listener reads. With
+// `skeleton` (the table is loading its first rows) every cell renders its
+// column type's skeleton instead, under the same header.
+function buildAntdColumns({
+  nodes,
+  compiledByKey,
+  sort,
+  getRowKey,
+  methods,
+  components,
+  onEvent,
+  skeleton = false,
+}) {
   return nodes.map((node) => {
     if (node.group === true) {
       return {
@@ -56,6 +68,7 @@ function buildAntdColumns({ nodes, compiledByKey, sort, getRowKey, methods, comp
           methods,
           components,
           onEvent,
+          skeleton,
         }),
       };
     }
@@ -75,8 +88,10 @@ function buildAntdColumns({ nodes, compiledByKey, sort, getRowKey, methods, comp
       sortOrder: getSortOrder({ sort, key: column.key }),
       sortDirections: SORT_DIRECTIONS,
       onCell: () => cellAttributes,
-      render: (_, row) =>
-        renderCell({ column, row, rowKey: getRowKey(row), methods, components, onEvent }),
+      render: skeleton
+        ? (_, row, index) => <SkeletonCell column={column} rowIndex={index} />
+        : (_, row) =>
+            renderCell({ column, row, rowKey: getRowKey(row), methods, components, onEvent }),
     };
   });
 }

@@ -26,7 +26,14 @@ function SkeletonCell({ column, rowIndex }) {
   const shape = getSkeletonShape(column.type);
   const style = { '--lf-skeleton-w': `${getSkeletonWidth({ rowIndex, columnKey: column.key })}%` };
   let children = null;
-  if (shape === 'person') children = <span className="lf-table-skeleton-circle" />;
+  if (shape === 'person') {
+    children = (
+      <>
+        <span className="lf-table-skeleton-circle" />
+        <span className="lf-table-skeleton-name" />
+      </>
+    );
+  }
   if (shape === 'buttons') {
     children = (
       <>

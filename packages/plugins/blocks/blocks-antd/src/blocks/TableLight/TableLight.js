@@ -15,24 +15,36 @@
 */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Table } from 'antd';
+import { Empty, Table } from 'antd';
 import { cn, getHtmlEnhancements, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
 import { get, type } from '@lowdefy/helpers';
 
 import compileColumns from '../../table/compileColumns.js';
 import compileRules from '../../table/compileRules.js';
 import createRowKeyGetter from '../../table/createRowKeyGetter.js';
+import getSkeletonRowCount from '../../table/getSkeletonRowCount.js';
 import isControlTarget from '../../table/isControlTarget.js';
+import LoadingAnnouncer from '../../table/LoadingAnnouncer.js';
 import normalizeColumns from '../../table/normalizeColumns.js';
 import resolveLink from '../../table/resolveLink.js';
+import resolveLoadingState from '../../table/resolveLoadingState.js';
+import useHeldRows from '../../table/useHeldRows.js';
+import useSkeletonTiming from '../../table/useSkeletonTiming.js';
 import buildAntdColumns from './buildAntdColumns.js';
 import sortRows from './sortRows.js';
 import TableLightSummary from './TableLightSummary.js';
+import useHeaderBottom from './useHeaderBottom.js';
 import validateTableLightProperties from './validateTableLightProperties.js';
 import './tableLight.css';
 
 // Table's density names mapped to antd Table sizes.
 const ANTD_SIZES = { compact: 'small', default: 'middle', comfortable: 'large' };
+// antd's row heights at each size (cell padding, one 22px line and the row border), for the
+// number of skeleton rows that fill the body.
+const ANTD_ROW_HEIGHTS = { small: 39, middle: 47, large: 55 };
+// The height a table without `height` fills with skeleton rows: Table's default `maxHeight`, so
+// both types show the same skeleton.
+const DEFAULT_SKELETON_HEIGHT = 600;
 const DEV_ROW_LIMIT = 1000;
 
 const DRAG_DISTANCE = 4;
@@ -67,17 +79,54 @@ function getPagination(properties) {
   };
 }
 
+function getSkeletonRows({ properties, size }) {
+  const rowHeight = ANTD_ROW_HEIGHTS[size];
+  const height = type.isNumber(properties.height) ? properties.height : DEFAULT_SKELETON_HEIGHT;
+  const count = getSkeletonRowCount({
+    bodyHeight: height - rowHeight,
+    rowHeight,
+    pageSize: properties.pagination === false ? null : properties.pageSize ?? 50,
+  });
+  return Array.from({ length: count }, (_, index) => ({ __lfSkeleton: `__skeleton_${index}` }));
+}
+
+function getEmptyText({ properties, methods }) {
+  return (
+    <Empty
+      description={renderHtml({ html: properties.emptyText ?? 'No rows', methods })}
+      image={Empty.PRESENTED_IMAGE_SIMPLE}
+    />
+  );
+}
+
+// Loading follows Table's model (D17) with antd's Table: no spinner overlay. With no rows yet the
+// real header sits over type-shaped skeleton rows (shown after 120 ms, for at least 300 ms); with
+// rows, a refetch keeps them (held while `data` is null) and a progress bar runs under the header.
+// Switching `type` between TableLight and Table therefore looks the same.
 function TableLightBlock({
   blockId,
   classNames = {},
   components,
   events,
+  loading,
   methods,
   properties,
   styles = {},
 }) {
   validateTableLightProperties({ properties });
-  const data = properties.data ?? [];
+  const loadingSignal = loading === true || properties.loading === true;
+  const data = useHeldRows({ data: properties.data, loading: loadingSignal });
+  const loadingState = resolveLoadingState({
+    loading: loadingSignal,
+    sourceCount: data.length,
+    displayCount: data.length,
+  });
+  const skeletonPhase = useSkeletonTiming({ active: loadingState === 'initial', id: blockId });
+  const showSkeleton = loadingState === 'initial' || skeletonPhase === 'holding';
+  const busy = loadingState === 'refreshing';
+  const size = ANTD_SIZES[properties.size ?? 'default'];
+  const blockRef = useRef(null);
+  const headerBottom = useHeaderBottom({ ref: blockRef, active: busy || showSkeleton });
 
   // The engine hands the block new property objects whenever anything in them
   // changes, so the columns are compiled per config content, not per object.
@@ -145,8 +194,13 @@ function TableLightBlock({
         methods,
         components,
         onEvent,
+        skeleton: showSkeleton,
       }),
-    [config, sort, getRowKey, methods, components, onEvent]
+    [config, sort, getRowKey, methods, components, onEvent, showSkeleton]
+  );
+  const skeletonRows = useMemo(
+    () => (showSkeleton ? getSkeletonRows({ properties, size }) : null),
+    [showSkeleton, properties.height, properties.pageSize, properties.pagination, size]
   );
 
   const overRowLimit = data.length > DEV_ROW_LIMIT;
@@ -223,13 +277,20 @@ function TableLightBlock({
   const rowClassName = cn('lf-table-row', (hasRowLink || hasRowClick) && 'lf-table-row-clickable');
   const visibleColumns = config.columns.filter((column) => !column.hidden);
   const showSummary =
-    properties.summary !== false && visibleColumns.some((column) => !type.isNone(column.aggregate));
+    !showSkeleton &&
+    properties.summary !== false &&
+    visibleColumns.some((column) => !type.isNone(column.aggregate));
   const hasHeight = !type.isNone(properties.height);
 
   return (
     <div
+      aria-busy={showSkeleton || busy ? true : undefined}
       id={blockId}
       className={cn('lf-table-light-block', classNames.element)}
+      data-busy={busy ? '' : undefined}
+      data-loading-state={showSkeleton ? 'initial' : loadingState}
+      data-skeleton-hidden={showSkeleton && skeletonPhase === 'hidden' ? '' : undefined}
+      ref={blockRef}
       style={styles.element}
       onMouseDown={(event) => {
         pointerDownRef.current = {
@@ -244,19 +305,21 @@ function TableLightBlock({
       <Table
         className="lf-table-light"
         columns={columns}
-        dataSource={rows}
-        rowKey={getRowKey}
+        dataSource={showSkeleton ? skeletonRows : rows}
+        rowKey={showSkeleton ? '__lfSkeleton' : getRowKey}
         rowHoverable={false}
         rowClassName={
-          config.rowRules === null
+          showSkeleton || config.rowRules === null
             ? rowClassName
             : (row) => cn(rowClassName, config.rowRules(row)?.className)
         }
         onRow={
-          config.rowRules === null ? undefined : (row) => ({ style: config.rowRules(row)?.style })
+          showSkeleton || config.rowRules === null
+            ? undefined
+            : (row) => ({ style: config.rowRules(row)?.style })
         }
         onChange={(pagination, filters, sorter, extra) => {
-          if (extra.action !== 'sort') return;
+          if (extra.action !== 'sort' || showSkeleton) return;
           if (type.isNone(sorter.order)) {
             setSort(null);
             return;
@@ -265,21 +328,28 @@ function TableLightBlock({
         }}
         showSorterTooltip={{ target: 'sorter-icon' }}
         pagination={getPagination(properties)}
-        size={ANTD_SIZES[properties.size ?? 'default']}
+        size={size}
         bordered={properties.bordered === true}
-        loading={properties.loading === true}
         scroll={{ x: true, y: properties.height }}
-        locale={
-          type.isNone(properties.emptyText)
-            ? undefined
-            : { emptyText: renderHtml({ html: properties.emptyText, methods }) }
-        }
+        locale={{ emptyText: getEmptyText({ properties, methods }) }}
         summary={
           showSummary
             ? () => <TableLightSummary columns={visibleColumns} rows={rows} fixed={hasHeight} />
             : undefined
         }
       />
+      {showSkeleton && headerBottom !== null ? (
+        <div
+          className="lf-table-shimmer"
+          style={{ top: headerBottom, right: 0, bottom: 0, left: 0 }}
+        />
+      ) : null}
+      {busy && headerBottom !== null ? (
+        <div className="lf-table-light-bar" style={{ top: headerBottom - 2 }}>
+          <div className="lf-table-loading-bar" />
+        </div>
+      ) : null}
+      <LoadingAnnouncer count={data.length} state={showSkeleton ? 'initial' : loadingState} />
     </div>
   );
 }
