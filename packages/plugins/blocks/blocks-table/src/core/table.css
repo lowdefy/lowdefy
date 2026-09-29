@@ -489,24 +489,22 @@
     border-bottom: 0;
   }
 
-  /* A summary never clips silently. The value is ordered before the label in a reversed,
-     wrapping row one line high: when both do not fit, the label wraps onto the hidden second
-     line, and a value wider than the cell ends with an ellipsis. The title holds both. */
+  /* A summary never clips silently. SummaryRow shows the full label, its short form or none, from
+     measured widths (getSummaryLabel); the value ends with an ellipsis when it is wider than what
+     is left, and the title holds the full label and value. */
   .lf-table-summary {
     display: flex;
     flex: 1 1 auto;
-    flex-flow: row-reverse wrap;
     align-items: baseline;
-    justify-content: flex-end;
-    column-gap: var(--ant-margin-xs, 8px);
+    justify-content: flex-start;
+    gap: var(--ant-margin-xs, 8px);
     min-width: 0;
-    max-height: 1lh;
     overflow: hidden;
     white-space: nowrap;
   }
 
   .lf-table-gridcell[data-align='end'] > .lf-table-summary {
-    justify-content: flex-start;
+    justify-content: flex-end;
   }
 
   .lf-table-gridcell[data-align='center'] > .lf-table-summary {
@@ -521,7 +519,6 @@
 
   .lf-table-summary-value {
     flex: 0 1 auto;
-    order: -1;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;

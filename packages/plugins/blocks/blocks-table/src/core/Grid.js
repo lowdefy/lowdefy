@@ -233,6 +233,7 @@ function Grid({
           {body}
           {showSummary ? (
             <SummaryRow
+              api={api}
               ariaRowIndex={rows.length + ariaRowOffset}
               centerCols={centerCols}
               layout={layout}

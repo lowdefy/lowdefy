@@ -216,6 +216,10 @@ blocks:
           type: number
           width: 70
           aggregate: sum
+        - key: rate
+          type: number
+          width: 70
+          aggregate: avg
         - key: more
           title: ''
           type: menu
@@ -234,9 +238,9 @@ blocks:
               - eventName: onOpen
                 title: Open
       data:
-        - { id: 1, name: Acme, amount: 100, big: 1000000000 }
-        - { id: 2, name: Bolt, amount: 200, big: 2000000000 }
-        - { id: 3, name: Core, amount: 300, big: 3000000000 }
+        - { id: 1, name: Acme, amount: 100, big: 1000000000, rate: 10 }
+        - { id: 2, name: Bolt, amount: 200, big: 2000000000, rate: 42 }
+        - { id: 3, name: Core, amount: 300, big: 3000000000, rate: 71 }
 
   # ============================================
   # TWO GROUP LEVELS

@@ -26,7 +26,7 @@ function getCellFit({ api, col, lead }) {
   const { column } = col;
   if (!CHIP_TYPES.has(column.type) || !type.isNone(lead)) return undefined;
   if (column.wrap || (type.isInt(column.ellipsis) && column.ellipsis > 1)) return undefined;
-  const measure = api.chipMeasure;
+  const measure = api.textMeasure;
   return { width: col.width - measure.cellInset, measure };
 }
 

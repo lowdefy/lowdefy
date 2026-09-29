@@ -45,7 +45,8 @@ function measureSummary(locator) {
     return {
       title: summary.title,
       summary: box(summary),
-      label: box(label),
+      label: label ? box(label) : null,
+      labelText: label ? label.textContent : null,
       value: box(value),
       valueTruncated: value.scrollWidth > value.clientWidth,
       textOverflow: getComputedStyle(value).textOverflow,
@@ -61,25 +62,35 @@ test.describe('Table visual polish', () => {
 
   test('summary shows its label and value when both fit', async ({ page }) => {
     const summary = await measureSummary(summaryCell(page, 'narrow', 'amount'));
+    expect(summary.labelText).toBe('Sum');
     expect(isInsideBox(summary.label, summary.summary)).toBe(true);
     expect(isInsideBox(summary.value, summary.summary)).toBe(true);
     expect(summary.valueTruncated).toBe(false);
     expect(summary.title).toBe('Sum 600');
   });
 
-  test('summary drops the label before it shortens the value', async ({ page }) => {
+  test('summary shortens the label before it drops it', async ({ page }) => {
+    const summary = await measureSummary(summaryCell(page, 'narrow', 'rate'));
+    expect(summary.labelText).toBe('Avg');
+    expect(isInsideBox(summary.label, summary.summary)).toBe(true);
+    expect(summary.valueTruncated).toBe(false);
+    expect(summary.title).toMatch(/^Average /);
+  });
+
+  test('summary drops the label rather than cut a value that fits alone', async ({ page }) => {
     const summary = await measureSummary(summaryCell(page, 'crm', 'amount'));
-    expect(isInsideBox(summary.label, summary.summary)).toBe(false);
+    expect(summary.label).toBe(null);
     expect(isInsideBox(summary.value, summary.summary)).toBe(true);
     expect(summary.valueTruncated).toBe(false);
     expect(summary.title).toMatch(/^Sum \$\d/);
   });
 
-  test('summary value too wide for its column ends with an ellipsis and a title', async ({
+  test('summary value too wide for its column ends with an ellipsis beside the short label', async ({
     page,
   }) => {
     const summary = await measureSummary(summaryCell(page, 'narrow', 'big'));
-    expect(isInsideBox(summary.label, summary.summary)).toBe(false);
+    expect(summary.labelText).toBe('Σ');
+    expect(isInsideBox(summary.label, summary.summary)).toBe(true);
     expect(summary.valueTruncated).toBe(true);
     expect(summary.textOverflow).toBe('ellipsis');
     expect(summary.title).toBe('Sum 6,000,000,000');

@@ -15,7 +15,7 @@
 */
 
 import createCellActivity from './createCellActivity.js';
-import createChipMeasure from './createChipMeasure.js';
+import createTextMeasure from './createTextMeasure.js';
 import createInitialState from './createInitialState.js';
 import deriveValue from './deriveValue.js';
 
@@ -26,7 +26,6 @@ function createApi({ features }) {
   const api = {
     actions: {},
     cellActivity: createCellActivity(),
-    chipMeasure: createChipMeasure(),
     features,
     foreignKeys: new Map(),
     rootRef: { current: null },
@@ -35,6 +34,7 @@ function createApi({ features }) {
     // rows are not loaded (server mode).
     selectionExcept: new Map(),
     suppressedClick: false,
+    textMeasure: createTextMeasure(),
   };
   // Cell renderers build the full event payload (row, rowKey, ...); one stable function keeps
   // the memoised cells from re-rendering when the block's methods object changes. Row button and

@@ -22,8 +22,9 @@ function toFont(style) {
   return `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
 }
 
-// Reads the chip, count and cell styles once from a hidden copy of the markup, so the widths
-// follow the theme's tokens (font, padding, border, gap) without measuring any rendered cell.
+// Reads the chip, count, summary and cell styles once from a hidden copy of the markup, so the
+// widths follow the theme's tokens (font, padding, border, gap) without measuring any rendered
+// cell.
 function readStyles() {
   const probe = document.createElement('div');
   probe.className = 'lf-table';
@@ -31,17 +32,23 @@ function readStyles() {
   probe.style.cssText = 'position:absolute;top:0;left:-10000px;visibility:hidden;contain:strict';
   probe.innerHTML =
     '<div class="lf-table-gridcell"><span class="lf-table-chips">' +
-    '<span class="lf-table-tag">x</span><span class="lf-table-more">+1</span></span></div>';
+    '<span class="lf-table-tag">x</span><span class="lf-table-more">+1</span></span>' +
+    '<span class="lf-table-summary"><span class="lf-table-summary-label">x</span>' +
+    '<span class="lf-table-summary-value">x</span></span></div>';
   document.body.appendChild(probe);
   const cell = getComputedStyle(probe.firstChild);
   const chips = getComputedStyle(probe.querySelector('.lf-table-chips'));
   const tag = getComputedStyle(probe.querySelector('.lf-table-tag'));
   const more = getComputedStyle(probe.querySelector('.lf-table-more'));
+  const summary = getComputedStyle(probe.querySelector('.lf-table-summary'));
   const styles = {
     cellInset: toPx(cell.paddingLeft) + toPx(cell.paddingRight),
     gap: toPx(chips.columnGap),
     iconWidth: toPx(tag.fontSize) + toPx(tag.columnGap),
     moreFont: toFont(more),
+    summaryGap: toPx(summary.columnGap),
+    summaryLabelFont: toFont(getComputedStyle(probe.querySelector('.lf-table-summary-label'))),
+    summaryValueFont: toFont(getComputedStyle(probe.querySelector('.lf-table-summary-value'))),
     tagFont: toFont(tag),
     tagInset:
       toPx(tag.paddingLeft) +
@@ -53,11 +60,12 @@ function readStyles() {
   return styles;
 }
 
-// Chip widths for fitting `tag` / `tags` cells to their column (the shared TagCell's `fit`):
-// text widths come from a canvas and are cached by text, so a cell costs a few Map reads and no
-// DOM reads, and the styles are read once per table on first use. Widths round up by a pixel so
-// a measured chip never ends up a fraction wider than its room.
-function createChipMeasure() {
+// Text widths for fitting cells to their column without DOM reads: tag chips and their +N count
+// (the shared TagCell's `fit`) and the summary footer's label and value (SummaryRow). Text
+// widths come from a canvas and are cached by text, so a cell costs a few Map reads, and the
+// styles are read once per table on first use. Widths round up by a pixel so a measured item
+// never ends up a fraction wider than its room.
+function createTextMeasure() {
   let styles = null;
   let context = null;
   const cache = new Map();
@@ -93,8 +101,20 @@ function createChipMeasure() {
       if (styles === null) init();
       return Math.ceil(textWidth(styles.moreFont, text)) + 1;
     },
+    get summaryGap() {
+      if (styles === null) init();
+      return styles.summaryGap;
+    },
+    summaryLabel(text) {
+      if (styles === null) init();
+      return Math.ceil(textWidth(styles.summaryLabelFont, text)) + 1;
+    },
+    summaryValue(text) {
+      if (styles === null) init();
+      return Math.ceil(textWidth(styles.summaryValueFont, text)) + 1;
+    },
   };
   return measure;
 }
 
-export default createChipMeasure;
+export default createTextMeasure;
