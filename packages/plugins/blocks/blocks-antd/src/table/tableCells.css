@@ -94,6 +94,17 @@
     flex-wrap: nowrap;
   }
 
+  /* A chip wider than its cell is cut at its own edge, never mid-cell; the +N count keeps its
+     width. */
+  .lf-table-chips > .lf-table-tag {
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
+  .lf-table-chips > .lf-table-more {
+    flex: none;
+  }
+
   .lf-table-tag {
     display: inline-flex;
     align-items: center;
@@ -109,6 +120,7 @@
     line-height: 1;
     white-space: nowrap;
     vertical-align: middle;
+    overflow: hidden;
   }
 
   .lf-table-chip {

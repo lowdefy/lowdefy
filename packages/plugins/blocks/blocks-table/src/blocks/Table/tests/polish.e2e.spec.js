@@ -182,4 +182,42 @@ test.describe('Table visual polish', () => {
       )
     ).toHaveCSS('opacity', '1');
   });
+
+  test('tag chips that do not fit the column are counted in +N instead of cut', async ({
+    page,
+  }) => {
+    const cells = await table(page, 'crm').evaluate((root) =>
+      Array.from(
+        root.querySelectorAll('.lf-table-body [data-row-key] [data-col-key="labels"]')
+      ).map((cell) => {
+        const style = getComputedStyle(cell);
+        const box = cell.getBoundingClientRect();
+        const left = box.left + Number.parseFloat(style.paddingLeft);
+        const right = box.right - Number.parseFloat(style.paddingRight);
+        const parts = Array.from(cell.querySelectorAll('.lf-table-tag, .lf-table-more'));
+        const more = cell.querySelector('.lf-table-more');
+        return {
+          rowKey: cell.closest('[data-row-key]').dataset.rowKey,
+          chips: cell.querySelectorAll('.lf-table-tag').length,
+          hidden: more ? Number(more.textContent.slice(1)) : 0,
+          inside: parts.every((part) => {
+            const rect = part.getBoundingClientRect();
+            return rect.left >= left - 0.5 && rect.right <= right + 0.5;
+          }),
+          cut: Array.from(cell.querySelectorAll('.lf-table-tag')).some(
+            (tag) => tag.scrollWidth > tag.clientWidth
+          ),
+        };
+      })
+    );
+    // Row n has labels[(n - 1) % 5] from the page's data: 3, 1, 2, 4 and 0 values.
+    const counts = [3, 1, 2, 4, 0];
+    expect(cells.length).toBeGreaterThan(5);
+    cells.forEach((cell) => {
+      expect(cell.inside).toBe(true);
+      expect(cell.cut).toBe(false);
+      expect(cell.chips + cell.hidden).toBe(counts[(Number(cell.rowKey) - 1) % 5]);
+    });
+    expect(cells.some((cell) => cell.hidden > 0)).toBe(true);
+  });
 });

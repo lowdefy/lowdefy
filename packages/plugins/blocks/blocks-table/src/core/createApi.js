@@ -15,6 +15,7 @@
 */
 
 import createCellActivity from './createCellActivity.js';
+import createChipMeasure from './createChipMeasure.js';
 import createInitialState from './createInitialState.js';
 import deriveValue from './deriveValue.js';
 
@@ -25,6 +26,7 @@ function createApi() {
   const api = {
     actions: {},
     cellActivity: createCellActivity(),
+    chipMeasure: createChipMeasure(),
     foreignKeys: new Map(),
     rootRef: { current: null },
     scrollerRef: { current: null },
