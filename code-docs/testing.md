@@ -194,6 +194,11 @@ they share the database. The API specs call endpoints over `/api/endpoints/<id>`
 worker as a cron tick (`/api/cron/enrichment_worker`); the page spec drives the Table. The
 app's `api/test/` endpoints (seed, read cells, set a cell) exist for the specs only.
 
+On teardown Playwright stops the app first, with a SIGTERM it waits for (suites with services),
+then the replica set; mongod runs in a process group of its own, so the script stops it cleanly.
+CI runs the suite in the block e2e workflow (`test-block-e2e.yml`, job `enrichment`, on the
+`run-block-e2e` label), with the mongod binaries cached and downloaded before the run.
+
 ## Before merging
 
 The root `pnpm test` in CI skips the MongoDB and block e2e suites, so a pull request that

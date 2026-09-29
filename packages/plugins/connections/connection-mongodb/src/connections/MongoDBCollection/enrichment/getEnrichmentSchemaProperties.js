@@ -51,7 +51,7 @@ function getEnrichmentSchemaProperties(requestType) {
           autoRun: {
             type: 'boolean',
             description:
-              'Enrichment and ai columns: run when an input column completes (MongoDBEnrichmentComplete returns it as downstream).',
+              'Enrichment and ai columns: run when an input column completes (MongoDBEnrichmentComplete queues it, and names it in downstream).',
           },
         },
         errorMessage: {

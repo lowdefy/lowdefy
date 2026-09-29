@@ -403,9 +403,21 @@ Any other save path works too: the value is plain data, so a request can read `_
 | `loading` | boolean | `false` | Show the loading state: skeleton rows without data, a progress bar with it. |
 | `pagination` | boolean | `false` | Show the rows in pages of `pageSize` with a pager below the table. Off by default, unlike TableLight: the Table scrolls any number of rows virtually. `true` means what it means on TableLight: pages, with the pager always shown. |
 | `pageSize` | integer | `50` | Rows per page when `pagination` is on (`view.pageSize` overrides it). |
-| `summary` | boolean | `true` | Show the summary footer when any aggregate is in effect: a column `aggregate`, or one the view sets in `view.aggregates`. `false` hides it. |
+| `providers` | array | - | The enrichment providers columns can call (`kind: enrichment`), the catalogue the add-column picker offers. Each maps, on the server, to the app's `enrich_{id}` endpoint, so a column only calls what the app exposes. |
+| `providers.$.id` | string | - | The provider id, the column `provider`. |
+| `providers.$.title` | string | - | The name in the picker. |
+| `providers.$.description` | string | - | A line under the name in the picker. |
+| `providers.$.icon` | - | - | An icon for the provider. |
+| `providers.$.inputs` | array | - | The inputs, `[{ key, title, type, required }]`, mapped to columns or literals in the picker. |
+| `providers.$.outputs` | array | - | Paths in the result a column can show, `[{ path, title, type }]`; the picker sets the column type from it. |
+| `providers.$.cost` | number | - | The cost of one call, for the app to show. |
+| `addColumn` | boolean \| object | - | Show a "+" at the end of the header that opens the add-column picker (onColumnAdd). `true` offers every kind; `{ kinds: [...] }` only those (`input`, `formula`, `enrichment`, `ai`, `extract`). |
+| `addColumn.kinds` | array | - | The column kinds the picker offers. |
 | `addRow` | boolean | `false` | Show a "+ Add row" row under the table. A new row gets each column `default` (and, with `rowDrag.positionField`, a position after the last row), and opens its first editable cell. |
 | `addRowText` | string | `"Add row"` | Text of the add-row row. |
+| `inputFieldPrefix` | string | - | Where user-defined input columns added in the picker or by a CSV import keep their values: under this path, then the column key (with `values`, a `notes` column stores at `values.notes`, so a column can never name another field of the row). The column is sent with that `field`, and onRowAdd / onImport values sit at it. Without it, at the key. |
+| `importCsv` | boolean | `false` | Show an Import button in the toolbar: a CSV file is parsed in the browser, its headers mapped to input columns (or new text columns), and the rows sent through onImport in batches of 500. |
+| `summary` | boolean | `true` | Show the summary footer when any aggregate is in effect: a column `aggregate`, or one the view sets in `view.aggregates`. `false` hides it. |
 | `deleteRows` | boolean | `false` | Delete the focused row with the Delete or Backspace key. |
 | `rowActions` | object | - | Row controls shown in a leading column. |
 | `rowActions.delete` | boolean | `false` | A delete button on every row. |
@@ -422,6 +434,14 @@ Any other save path works too: the value is plain data, so a request can read `_
 | `onViewSelect` | `{ id }` | Trigger when a saved view tab is selected, after its view loads. |
 | `onViewSave` | `{ view, id, title, shared }` | Trigger when the user saves the current view: Save (with the active view `id`) or Save as (no `id`, a new view). The app stores views; update `views` (and `activeView`) with the result. |
 | `onViewDelete` | `{ id }` | Trigger when the user deletes a saved view from its tab menu. |
+| `onColumnAdd` | `{ column, position }` | Trigger when a column is added: the add-column picker (`addColumn`), Duplicate or Insert left / right in a user-defined column's header menu, or "Add as column" in the cell details panel. The picker stays open, pending, while the event runs, and shows the error when the actions fail. Store the column and add it to `columns`. |
+| `onColumnUpdate` | `{ column, previous }` | Trigger when a user-defined column is renamed (inline in its header) or edited (the picker). The rename or picker shows it pending while the event runs and the error when it fails. |
+| `onColumnDelete` | `{ column }` | Trigger when a user-defined column is deleted from its header menu, after the confirmation. The dialog stays open, pending, while the event runs. |
+| `onColumnRun` | `{ column, mode, selection }` | Trigger to run an enrichment or ai column: Run in its header menu (all rows, empty cells, errors or stale cells) or "Run selected" in the bulk bar. Enqueue the cells, for example with MongoDBEnrichmentEnqueue; their states then show in the cells. |
+| `onRowRun` | `{ row, rowKey, columns }` | Trigger when a row's run button is clicked (the trailing column, shown on hover): run every enrichment and ai column of the row. |
+| `onCellRun` | `{ row, rowKey, column }` | Trigger when one cell is rerun: Rerun in the cell details panel, or the rerun button of a stale cell. |
+| `onRowAdd` | `{ values }` | Trigger when a row is added with "+ New row" (`addRow`). The row shows at the end of the table, marked saving, while the event runs; after it the row comes from `data` (add it there, for example by refetching). When the actions fail, the row goes and the editor shows the error with the values kept. |
+| `onImport` | `{ rows, newColumns, batchIndex, batchCount, total }` | Trigger for each batch of rows a CSV import sends (`importCsv`), 500 rows at a time, each awaited before the next; a failed batch stops the import and shows its error. Insert the rows, for example with MongoDBInsertMany, and create `newColumns` once. |
 | `onCellLink` | `{ link, row, value }` | Triggered when a link, avatar link or relation cell is clicked. The link navigates by itself; this event is for anything else to do. |
 | `onCellButton` | `{ row, rowKey, value, button, buttonIndex }` | Documentation reference - the event fired is the `eventName` of each button in a `buttons` cell. Define any number of named events on the block, such as `onEdit`. |
 | `onCellMenuItem` | `{ row, rowKey, value, item, itemIndex }` | Documentation reference - the event fired is the `eventName` of each item in a `menu` cell. |

@@ -203,44 +203,44 @@ const column = {
       type: 'string',
       enum: Object.keys(COLUMN_KINDS),
       description:
-        'Enrichment tables: what computes the column. `input`: typed by users. `formula`: a `template` over the row, in the browser. `enrichment`: a `provider` call per row, on the server. `ai`: a `prompt` per row, on the server. `extract`: a `path` into another column\'s raw result, in the browser. Enrichment and ai columns read their value from `_enrich.<key>.value` (unless `field` is set) and their run state from `_enrich.<key>`, and render it: queued, running, the value, an error (message on hover), "No result", or the value dimmed when their inputs changed since they ran (stale).',
+        'Enrichment tables: what computes the column. `input`: typed by users. `formula`: a `template` over the row, in the browser. `enrichment`: a `provider` call per row, on the server. `ai`: a `prompt` per row, on the server. `extract`: a `path` into another column\'s raw result, in the browser. Enrichment and ai columns read their value from `_enrich.{key}.value` (unless `field` is set) and their run state from `_enrich.{key}`, and render it: queued, running, the value, an error (message on hover), "No result", or the value dimmed when their inputs changed since they ran (stale).',
     },
     userDefined: {
       type: 'boolean',
       description:
-        'A column users added at runtime (stored by the app). Its header menu has Rename, Edit, Duplicate, Insert left / right and Delete, which fire onColumnUpdate, onColumnAdd and onColumnDelete.',
+        'A column users added at runtime (stored by the app). Its header menu has Rename, Edit, Duplicate, Insert left / right and Delete, which fire onColumnUpdate, onColumnAdd and onColumnDelete. If its config is invalid it renders as an error column ("Invalid column: " and the reason in its cells, Edit column and Delete column in its menu) instead of breaking the table.',
     },
     template: {
       type: 'string',
       description:
-        "`kind: formula`: the nunjucks template the value is, rendered over the row as text. It sees the row fields, `row`, and other columns by key (`{{ email }}` is the email column's value, also for enrichment, ai and extract columns).",
+        "`kind: formula`: the value's template, `{{ column }}` placeholders (a column key or a row field path) filled in as plain text, in the browser (`{{ email }}` is the email column's value, also for enrichment, ai and extract columns). Only placeholders: tags, comments and expressions (`{{ name | upper }}`) are refused, since a template engine would run what users write as code.",
     },
     provider: {
       type: 'string',
       description:
-        '`kind: enrichment`: the id of the provider (from `providers`) the column calls.',
+        "`kind: enrichment`: the id of the provider (from `providers`) the column calls. `kind: ai`: the AI provider, `ai` (the app's `enrich_ai` endpoint) by default.",
     },
     inputs: {
       type: 'object',
       description:
-        "`kind: enrichment` or `ai`: the inputs, each `{ column: <column key>, required? }` (that column's value in the row; an enrichment or ai column's only once its cell is done) or `{ value: <literal> }`. An ai column lists the columns its prompt references here (the add-column picker keeps them in step). A cell is stale when its resolved inputs differ from the ones it ran with.",
+        "`kind: enrichment` or `ai`: the inputs, each `{ column: {column key}, required? }` (that column's value in the row; an enrichment or ai column's only once its cell is done) or `{ value: {literal} }`. An ai column lists the columns its prompt references here (the add-column picker keeps them in step). A cell is stale when its resolved inputs differ from the ones it ran with.",
       docs: { displayType: 'yaml' },
     },
     output: {
       type: ['string', 'object'],
       description:
-        "`kind: enrichment`: the path of the value in the provider's result (`value` defaults to the whole result). `kind: ai`: `{ type, options? }`, the answer's cell type (the column type) and options.",
+        "`kind: enrichment`: the path of the value in the provider's result (`value` defaults to the whole result). `kind: ai`: `{ type, options? }`, the answer's type (also the column type): `text`, `number`, `boolean`, `tag` or `tags`; `options`, the answers allowed, only for `tag` and `tags`.",
       docs: { displayType: 'yaml' },
     },
     autoRun: {
       type: 'boolean',
       description:
-        "`kind: enrichment` or `ai`: run a row's cell by itself when its inputs become ready (the app's worker enqueues it).",
+        "`kind: enrichment` or `ai`: run a row's cell by itself when an input column's cell completes (MongoDBEnrichmentComplete queues it).",
     },
     prompt: {
       type: 'string',
       description:
-        "`kind: ai`: the prompt, a template with column references (`{{ company }}`) rendered on the server from the column's `inputs` (list every referenced column there). Changing the prompt does not make cells stale; run the column again to use it.",
+        "`kind: ai`: the prompt, with `{{ input }}` placeholders (`{{ company }}`) the server fills in from the column's `inputs` as plain text (list every referenced column there). Only placeholders: tags, comments and expressions are refused. Changing the prompt does not make cells stale; run the column again to use it.",
     },
     source: {
       type: 'string',
@@ -249,12 +249,12 @@ const column = {
     path: {
       type: 'string',
       description:
-        "`kind: extract`: the dot path in the source column's raw result (`people.0.email`); empty for the whole result. The column reads `_enrich.<source>.raw.<path>`.",
+        "`kind: extract`: the dot path in the source column's raw result (`people.0.email`); empty for the whole result. The column reads `_enrich.{source}.raw.{path}`.",
     },
     status: {
       type: 'object',
       description:
-        "Show a run state in this column's cells from `{ field }`, a path to an object like `_enrich.<key>` (`status`, `value`, `error`, `inputHash`, ...). Enrichment and ai columns have it by default.",
+        "Show a run state in this column's cells from `{ field }`, a path to an object like `_enrich.{key}` (`status`, `value`, `error`, `inputHash`, ...). Enrichment and ai columns have it by default.",
       properties: {
         field: { type: 'string', description: 'The dot path of the run state object.' },
       },
@@ -1003,7 +1003,7 @@ export default {
       providers: {
         type: 'array',
         description:
-          "The enrichment providers columns can call (`kind: enrichment`), the catalogue the add-column picker offers. Each maps, on the server, to the app's `enrich_<id>` endpoint, so a column only calls what the app exposes.",
+          "The enrichment providers columns can call (`kind: enrichment`), the catalogue the add-column picker offers. Each maps, on the server, to the app's `enrich_{id}` endpoint, so a column only calls what the app exposes.",
         items: {
           type: 'object',
           required: ['id'],
@@ -1055,7 +1055,7 @@ export default {
       inputFieldPrefix: {
         type: 'string',
         description:
-          'Where user-defined input columns added in the picker or by a CSV import keep their values: `<inputFieldPrefix>.<key>` (for example `values`, so a column can never name another field of the row). The column is sent with that `field`, and onRowAdd / onImport values sit at it. Without it, the key.',
+          'Where user-defined input columns added in the picker or by a CSV import keep their values: under this path, then the column key (with `values`, a `notes` column stores at `values.notes`, so a column can never name another field of the row). The column is sent with that `field`, and onRowAdd / onImport values sit at it. Without it, at the key.',
       },
       importCsv: {
         type: 'boolean',
