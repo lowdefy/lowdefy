@@ -41,7 +41,7 @@ test('needsTrailingColumn follows addColumn, or onRowRun with an enrichment or a
   const runnable = { columns: [{ key: 'a', kind: 'ai', prompt: 'x' }] };
   expect(needsTrailingColumn({ properties: runnable })).toBe(false);
   expect(needsTrailingColumn({ properties: runnable, events: { onRowRun: [] } })).toBe(true);
-  expect(
-    needsTrailingColumn({ properties: { columns: ['name'] }, events: { onRowRun: [] } })
-  ).toBe(false);
+  expect(needsTrailingColumn({ properties: { columns: ['name'] }, events: { onRowRun: [] } })).toBe(
+    false
+  );
 });

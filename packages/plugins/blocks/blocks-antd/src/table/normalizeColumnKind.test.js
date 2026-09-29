@@ -318,14 +318,14 @@ test('normalizeColumns makes user formulas in a cycle error columns', () => {
 });
 
 test('a formula only fills in placeholders and never runs its template', () => {
-  globalThis.formulaRan = false;
+  delete process.env.LOWDEFY_FORMULA_RAN;
   expect(() =>
     normalizeColumns({
       columns: [
         {
           key: 'evil',
           kind: 'formula',
-          template: '{{ range.constructor("globalThis.formulaRan = true")() }}',
+          template: '{{ range.constructor("process.env.LOWDEFY_FORMULA_RAN = 1")() }}',
         },
       ],
     })
@@ -342,7 +342,7 @@ test('a formula only fills in placeholders and never runs its template', () => {
   });
   const row = { name: '{{ secret }}', meta: { city: 'Oslo' }, tags: ['a', 'b'], secret: 'x' };
   expect(columnsByKey.label.read(row)).toBe('{{ secret }} <Oslo> a, b ');
-  expect(globalThis.formulaRan).toBe(false);
+  expect(process.env.LOWDEFY_FORMULA_RAN).toBeUndefined();
 });
 
 test('normalizeColumns rejects an enrichment input naming an unknown column', () => {

@@ -20,7 +20,7 @@ import { ConfigError } from '@lowdefy/errors';
 import formatValidationError from '../log/formatValidationError.js';
 
 function validateSchemas(
-  { logger },
+  context,
   { connection, connectionProperties, requestConfig, requestResolver, requestProperties }
 ) {
   const configKey = requestConfig['~k'];
