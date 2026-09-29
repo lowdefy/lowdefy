@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
+import resolveTagTone from '@lowdefy/block-utils/format/resolveTagTone.js';
 import seededTagColor from '@lowdefy/block-utils/format/seededTagColor.js';
 import { get, type } from '@lowdefy/helpers';
 
 import resolveOption from './resolveOption.js';
-import resolveToneColor from './resolveToneColor.js';
 
-// The colour of a tag or status value, as a CSS colour. A matching option's
+// The tone of a tag or status value (`resolveTagTone`): its colour, for the status dot, and the
+// tag's text, fill and border colours. A matching option's
 // colour wins (an option without one is neutral). Without an option the
 // ag-grid tag keys apply: `colorFrom` (a row path), then `colorMap`, then
 // `default`; a column that sets none of them colours each value from a stable
@@ -29,7 +30,7 @@ function getTagTone({ item, column, row }) {
   const { cell } = column;
   const option = resolveOption({ options: column.options, value: item });
   if (!type.isUndefined(option)) {
-    return resolveToneColor({ color: option.color ?? 'default' });
+    return resolveTagTone(option.color ?? 'default');
   }
   let color;
   if (type.isString(cell.colorFrom)) {
@@ -41,7 +42,7 @@ function getTagTone({ item, column, row }) {
   const seeded =
     type.isNone(cell.colorFrom) && type.isNone(cell.colorMap) && type.isNone(cell.default);
   if (type.isNone(color) && seeded) color = seededTagColor(item);
-  return resolveToneColor({ color: color ?? 'default' });
+  return resolveTagTone(color ?? 'default');
 }
 
 export default getTagTone;
