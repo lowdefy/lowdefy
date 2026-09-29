@@ -168,6 +168,8 @@ function Grid({
           headerHeight: headerRowsHeight,
           measuredHeight: viewport.height,
           pageSize: config.pagination ? state.pageSize : null,
+          // Holding a shown skeleton while the rows are there: as many as the rows.
+          rowCount: rows.length > 0 ? rows.length : null,
           rowHeight,
         })}
         layout={layout}

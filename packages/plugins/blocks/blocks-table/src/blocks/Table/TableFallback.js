@@ -102,7 +102,8 @@ function getSorting({ defaultView, value }) {
 // the columns out with the engine's buildLayout (computeFallbackLayout), renders the engine's
 // skeleton rows and hands its skeleton timing to the table (useSkeletonTiming), so the swap to
 // the table is invisible. When the rows are already there it shows as many skeleton rows as the
-// table will show rows; with none (and nothing loading) it shows the empty state.
+// table will show rows (loading or not: the table holds its rows while it loads); with none and
+// nothing loading it shows the empty state.
 function TableFallback({
   blockId,
   content = {},
@@ -138,10 +139,12 @@ function TableFallback({
   const headerHeight = Math.min(Math.max(rowHeight, 32), 48);
   const headerRowsHeight = headerHeight * (levels.depth + 1);
   const isLoading = loading === true || properties.loading === true;
-  const rows = type.isArray(properties.data) ? properties.data : null;
-  const empty = !isLoading && rows !== null && rows.length === 0;
+  const server = type.isObject(properties.data);
+  const rowCount = type.isArray(properties.data) ? properties.data.length : 0;
+  // The table holds rows it has while loading, so known rows decide the height either way.
+  const empty = !server && !isLoading && rowCount === 0;
   const phase = useSkeletonTiming({ active: !empty, id: blockId, handoff: true });
-  const pagination = properties.pagination === true && !type.isObject(properties.data);
+  const pagination = properties.pagination === true && !server;
   const pageSize = type.isInt(properties.pageSize) ? properties.pageSize : DEFAULT_PAGE_SIZE;
 
   const rootStyle = {
@@ -182,7 +185,7 @@ function TableFallback({
           headerHeight: headerRowsHeight,
           measuredHeight: viewport.height,
           pageSize: pagination ? pageSize : null,
-          rowCount: isLoading || rows === null ? null : rows.length,
+          rowCount: rowCount > 0 ? rowCount : null,
           rowHeight,
         })}
         layout={layout}

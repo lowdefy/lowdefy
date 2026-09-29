@@ -34,6 +34,7 @@ import useSkeletonTiming from '../../table/useSkeletonTiming.js';
 import useTemplateCompiler from '../../table/useTemplateCompiler.js';
 import buildAntdColumns from './buildAntdColumns.js';
 import sortRows from './sortRows.js';
+import SkeletonTableRow from './SkeletonTableRow.js';
 import TableLightSummary from './TableLightSummary.js';
 import useHeaderBottom from './useHeaderBottom.js';
 import validateTableLightProperties from './validateTableLightProperties.js';
@@ -48,6 +49,7 @@ const ANTD_ROW_HEIGHTS = { small: 39, middle: 47, large: 55 };
 // both types show the same skeleton.
 const DEFAULT_SKELETON_HEIGHT = 600;
 const DEV_ROW_LIMIT = 1000;
+const SKELETON_COMPONENTS = { body: { row: SkeletonTableRow } };
 
 const DRAG_DISTANCE = 4;
 
@@ -327,6 +329,7 @@ function TableLightBlock({
       <Table
         className="lf-table-light"
         columns={columns}
+        components={showSkeleton ? SKELETON_COMPONENTS : undefined}
         dataSource={showSkeleton ? skeletonRows : rows}
         rowKey={showSkeleton ? '__lfSkeleton' : getRowKey}
         rowHoverable={false}

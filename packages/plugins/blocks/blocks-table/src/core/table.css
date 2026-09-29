@@ -386,7 +386,13 @@
 
   /* Loading states (D17; the shapes, shimmer and bar are the shared tableLoading.css). The
      progress bar hangs under the header (it takes no height: the negative margin) and spans the
-     visible width; it shows while the root is busy (a refetch) or pending (a view change). */
+     visible width; it shows while the root is busy (a refetch) or pending (a view change). The
+     header is its own formatting context, so the bar's margin cannot collapse through it and
+     grow the header. */
+  .lf-table-header {
+    display: flow-root;
+  }
+
   .lf-table-header > .lf-table-loading-bar {
     display: none;
     position: sticky;
@@ -446,6 +452,11 @@
     box-sizing: border-box;
     height: var(--lf-row-h);
     border-top: 1px solid var(--lf-border);
+  }
+
+  /* The fallback's header shows the table; it takes no clicks until the table is there. */
+  .lf-table[data-lf-fallback] .lf-table-header {
+    pointer-events: none;
   }
 
   /* A popover's frame while its code loads (PopoverLoading). */
