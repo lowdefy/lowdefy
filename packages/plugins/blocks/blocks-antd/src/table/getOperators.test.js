@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+
+import CELL_TYPE_FAMILIES from './cellTypeFamilies.js';
 import getOperators from './getOperators.js';
 
 const COMMON = ['eq', 'ne', 'in', 'nin', 'empty', 'notEmpty'];
@@ -83,4 +86,19 @@ test('getOperators returns a copy the caller may change', () => {
 
 test('getOperators throws on an unknown type', () => {
   expect(() => getOperators('txt')).toThrow('Unknown table cell type "txt".');
+});
+
+// The same fixture is checked into @lowdefy/connection-mongodb (test/tableFilterOperators.json),
+// whose MongoDBTableQuery must accept every operator a filter menu offers, so a change to the
+// operators here fails until both copies and the server field types are changed together.
+test('getOperators matches the filter operator fixture shared with MongoDBTableQuery', () => {
+  const fixture = JSON.parse(
+    fs.readFileSync(new URL('../../test/tableFilterOperators.json', import.meta.url), 'utf8')
+  );
+  const operatorsByType = Object.fromEntries(
+    Object.keys(CELL_TYPE_FAMILIES)
+      .sort()
+      .map((cellType) => [cellType, getOperators(cellType).sort()])
+  );
+  expect(operatorsByType).toEqual(fixture);
 });

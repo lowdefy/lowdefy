@@ -459,6 +459,16 @@ describe('values', () => {
     });
   });
 
+  test('avatar fields accept a document value, as image and json fields do', () => {
+    const { operations } = compile({
+      fields: { person: { type: 'avatar' } },
+      changes: { updated: { a: { person: { name: 'Ada', src: 'https://x/a.png' } } } },
+    });
+    expect(operations[0].updateOne.update).toEqual({
+      $set: { person: { name: 'Ada', src: 'https://x/a.png' } },
+    });
+  });
+
   test('ObjectId values are kept for text-like fields', () => {
     const { operations } = compile({
       fields: { ...fields, owner_id: { type: 'relation' } },

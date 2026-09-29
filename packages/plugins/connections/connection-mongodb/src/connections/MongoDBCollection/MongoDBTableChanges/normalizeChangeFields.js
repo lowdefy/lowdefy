@@ -57,7 +57,7 @@ function normalizeChangeFields({ fields }) {
       );
     }
     keyByPath.set(path, key);
-    fieldsByKey.set(key, { key, type: field.type, family: fieldType.family, path });
+    fieldsByKey.set(key, { key, type: field.type, family: fieldType.writeFamily, path });
   });
   return fieldsByKey;
 }

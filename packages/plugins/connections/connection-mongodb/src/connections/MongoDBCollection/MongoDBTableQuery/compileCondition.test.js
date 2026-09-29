@@ -31,6 +31,7 @@ const fieldsByKey = normalizeFields({
     owner: { type: 'relation', path: 'owner.id' },
     stage: { type: 'status' },
     meta: { type: 'json' },
+    person: { type: 'avatar', path: 'person.name' },
   },
 });
 
@@ -221,6 +222,25 @@ describe('array operators', () => {
       tags: { $nin: [/^vip$/i] },
     });
     expect(compile({ key: 'tags', op: 'contains', value: 'vip' })).toEqual({ tags: /^vip$/i });
+  });
+
+  test('notContains on an array field matches rows that do not have the value', () => {
+    expect(compile({ key: 'tags', op: 'notContains', value: 'vip' })).toEqual({
+      tags: { $not: /^vip$/i },
+    });
+    expect(compile({ key: 'tags', op: 'notContains', value: 5 })).toEqual({ tags: { $ne: 5 } });
+  });
+});
+
+describe('avatar operators', () => {
+  test('avatar fields filter like text on the value at their path', () => {
+    expect(compile({ key: 'person', op: 'contains', value: 'ada' })).toEqual({
+      'person.name': /ada/i,
+    });
+    expect(compile({ key: 'person', op: 'startsWith', value: 'a.' })).toEqual({
+      'person.name': /^a\./i,
+    });
+    expect(compile({ key: 'person', op: 'eq', value: 'Ada' })).toEqual({ 'person.name': /^Ada$/i });
   });
 });
 

@@ -107,6 +107,9 @@ function compileLeaf({ condition, field, now }) {
       }
       return { [path]: new RegExp(escapeRegex(value), 'i') };
     case 'notContains':
+      if (field.family === 'array') {
+        return compileNe({ field, value });
+      }
       return { [path]: { $not: new RegExp(escapeRegex(value), 'i') } };
     case 'startsWith':
       return { [path]: new RegExp(`^${escapeRegex(value)}`, 'i') };

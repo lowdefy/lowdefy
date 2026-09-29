@@ -919,12 +919,14 @@ _ref:
             | Field types | Operators |
             | --- | --- |
             | all | `eq`, `ne`, `in`, `nin`, `empty`, `notEmpty` |
-            | `text`, `email`, `phone`, `url`, `link`, `html`, `relation`, `tag`, `status` | `contains`, `notContains`, `startsWith`, `endsWith` |
+            | `text`, `email`, `phone`, `url`, `link`, `html`, `relation`, `tag`, `status`, `avatar` | `contains`, `notContains`, `startsWith`, `endsWith` |
             | `number`, `currency`, `percent`, `progress`, `rating` | `gt`, `gte`, `lt`, `lte`, `between` (`value: [from, to]`) |
             | `date`, `datetime` | `before`, `after`, `between`, `within` (`value: { last or next: n, unit: day, week, month or year }`) |
             | `boolean` | `isTrue`, `isFalse` |
-            | `tags`, `people` | `contains` (has the value); `in` is has any of, `nin` is has none of |
-            | `avatar`, `image`, `json` | the operators for all types only |
+            | `tags`, `people` | `contains` (has the value), `notContains` (does not have the value); `in` is has any of, `nin` is has none of |
+            | `image`, `json` | the operators for all types only |
+
+            These are the operators the `Table` filter menus offer for each column type, so any filter a user builds is accepted. An `avatar` field filters on the text at its `path` (the name the cell shows), like a `text` field.
 
             - Text comparisons are case-insensitive.
             - `empty` matches null, missing, `''` and `[]`.

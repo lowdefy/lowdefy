@@ -204,6 +204,18 @@ describe('filter and search', () => {
     expect(none.total).toBe(8);
     const any = await query({ view: { filter: { key: 'tags', op: 'in', value: ['new', 'x'] } } });
     expect(any.total).toBe(orgOneDocs.filter((doc) => doc.tags.includes('new')).length);
+    const notRenewal = await query({
+      view: { filter: { key: 'tags', op: 'notContains', value: 'RENEWAL' } },
+    });
+    expect(notRenewal.total).toBe(orgOneDocs.filter((doc) => !doc.tags.includes('renewal')).length);
+  });
+
+  test('avatar fields filter with the text operators', async () => {
+    const res = await query({
+      fields: { ...fields, owner: { type: 'avatar', path: 'owner.name' } },
+      view: { filter: { key: 'owner', op: 'startsWith', value: 'gr' } },
+    });
+    expect(res.total).toBe(10);
   });
 
   test('boolean and date eq filters', async () => {

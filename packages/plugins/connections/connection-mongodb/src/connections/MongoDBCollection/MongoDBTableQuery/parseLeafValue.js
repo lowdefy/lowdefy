@@ -106,6 +106,7 @@ function parseLeafValue({ field, op, value, user }) {
     case 'within':
       return parseWithin({ field, op, value });
     case 'contains':
+    case 'notContains':
       if (field.family === 'array') {
         return coerceScalar({
           field,
@@ -114,7 +115,6 @@ function parseLeafValue({ field, op, value, user }) {
         });
       }
       return parseText({ field, op, value, user });
-    case 'notContains':
     case 'startsWith':
     case 'endsWith':
       return parseText({ field, op, value, user });
