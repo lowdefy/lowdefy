@@ -23,18 +23,21 @@
   title: Person
   kind: input
   type: text
+  editable: true
   position: 10
 
 - key: title
   title: Job title
   kind: input
   type: text
+  editable: true
   position: 20
 
 - key: domain
   title: Company domain
   kind: input
   type: text
+  editable: true
   position: 30
 
 # A provider call per row: the company_lookup endpoint returns the company record as `raw`,

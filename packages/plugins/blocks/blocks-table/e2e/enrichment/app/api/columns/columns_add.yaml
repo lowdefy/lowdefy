@@ -13,10 +13,11 @@
 # limitations under the License.
 
 
-# Adds a user-defined column: the Table's onColumnAdd { column }. The column is checked
-# (leads/check_column.yaml) and stored in table_columns; the page then reads its columns
-# again. `position` places it (insert left or right sends one between two columns); by
-# default it goes at the end.
+# Adds a user-defined column: the Table's onColumnAdd { column, position }. The column is
+# checked (leads/check_column.yaml) and stored in table_columns; the page then reads its
+# columns again. `position` is { before: key } or { after: key } (Insert left / right, and
+# "Add as column", which places an extract column after its source), a number, or null for
+# the end.
 id: columns_add
 type: Api
 payloadSchema:
@@ -28,7 +29,15 @@ payloadSchema:
     column:
       type: object
     position:
-      type: number
+      type:
+        - object
+        - number
+        - 'null'
+      properties:
+        before:
+          type: string
+        after:
+          type: string
 routine:
   - _ref: leads/load_table.yaml
   - :set_state:
@@ -54,17 +63,27 @@ routine:
           - tableId: leads
             # org_id:
             #   _user: organization.id
+            # Between the neighbours, so no other column moves.
             position:
-              _if_none:
-                - _payload: position
-                - _sum:
-                    - _js:
-                        fn: |
-                          return Math.max(0, ...args.columns.map((column) => column.position ?? 0));
-                        args:
-                          columns:
-                            _state: columnDefs
-                    - 10
+              _js:
+                fn: |
+                  const { position, columns } = args;
+                  if (typeof position === 'number') return position;
+                  const positions = columns.map((column) => column.position ?? 0);
+                  const anchorKey = position?.before ?? position?.after;
+                  const index = columns.findIndex((column) => column.key === anchorKey);
+                  if (index === -1) return Math.max(0, ...positions) + 10;
+                  if (position.before !== undefined) {
+                    const previous = index > 0 ? positions[index - 1] : positions[index] - 20;
+                    return (previous + positions[index]) / 2;
+                  }
+                  const next = index < columns.length - 1 ? positions[index + 1] : positions[index] + 20;
+                  return (positions[index] + next) / 2;
+                args:
+                  position:
+                    _payload: position
+                  columns:
+                    _state: columnDefs
             createdBy:
               _user: id
             createdAt:

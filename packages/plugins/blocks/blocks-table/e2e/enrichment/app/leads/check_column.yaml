@@ -33,8 +33,6 @@ _js:
     const PLACEHOLDER = /\{\{\s*([A-Za-z0-9_-]+)\s*\}\}/g;
     const kinds = ['input', 'formula', 'enrichment', 'ai', 'extract'];
     const inputTypes = ['text', 'email', 'phone', 'url', 'number', 'currency', 'date', 'boolean'];
-    const outputTypes = ['text', 'number', 'boolean', 'options'];
-    const outputColumnTypes = { number: 'number', boolean: 'boolean' };
     const isRunnable = (other) => other?.kind === 'enrichment' || other?.kind === 'ai';
 
     if (column === null || typeof column !== 'object' || Array.isArray(column)) {
@@ -154,24 +152,32 @@ _js:
           errors.push('An AI prompt can only reference columns, as {{ column }}.');
         }
       }
-      const output = column.output ?? { type: 'text' };
-      if (!outputTypes.includes(output.type)) {
-        errors.push(`The AI output type should be one of ${outputTypes.join(', ')}.`);
+      // The output type is a column type (the Table's picker sends the column's own); text,
+      // numeric, boolean and option types are answered as such (api/providers/enrich_ai.yaml).
+      const output = column.output ?? { type: column.type ?? 'text' };
+      if (typeof output.type !== 'string' || !/^[a-z]{1,32}$/.test(output.type)) {
+        errors.push('The AI output type should be a column type, such as text, number, boolean or tag.');
       }
+      const hasOptions = output.options !== undefined && output.options !== null;
       if (
-        output.type === 'options' &&
+        (output.type === 'options' || hasOptions) &&
         (!Array.isArray(output.options) ||
           output.options.length === 0 ||
-          !output.options.every((option) => typeof option === 'string'))
+          output.options.length > 100 ||
+          !output.options.every((option) => typeof option === 'string' && option.length <= 200))
       ) {
         errors.push('An AI column with output options needs a list of text options.');
       }
       if (readsBack(key, inputs)) errors.push('The column inputs read the column itself.');
+      // No provider: an ai column runs the ai provider (enrich_ai) by default, and the Table
+      // refuses a provider on an ai column.
       Object.assign(config, {
-        provider: 'ai',
         prompt: column.prompt,
         inputs,
-        output: output.type === 'options' ? output : { type: output.type },
+        // `options` (a list to pick from) is stored as the tag column type the Table shows.
+        output: hasOptions
+          ? { type: output.type === 'options' ? 'tag' : output.type, options: output.options }
+          : { type: output.type },
         field: `_enrich.${key}.value`,
         autoRun: column.autoRun === true,
       });
@@ -194,7 +200,7 @@ _js:
       doc: {
         key,
         title: column.title ?? key,
-        type: column.type ?? outputColumnTypes[config.output?.type] ?? 'text',
+        type: column.type ?? (kind === 'ai' ? config.output?.type : undefined) ?? 'text',
         kind,
         config,
       },

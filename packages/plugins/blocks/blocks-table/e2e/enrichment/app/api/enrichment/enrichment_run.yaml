@@ -49,6 +49,31 @@ payloadSchema:
         - stale
 routine:
   - _ref: leads/load_table.yaml
+  # In an `all` run, an autoRun column that reads another column of the run follows it on its
+  # own (the worker queues it when the cell it reads completes). Queued together, it would
+  # find its input not run yet ("Missing input"), or queued again and wait for it. Other
+  # modes queue only some cells of each column, so they keep every column.
+  - :set_state:
+      columns:
+        _js:
+          fn: |
+            if ((args.mode ?? 'all') !== 'all') return args.columns;
+            const runnable = new Set(args.columns);
+            const byKey = new Map(args.columnDefs.map((column) => [column.key, column]));
+            const follows = (key) =>
+              byKey.get(key)?.autoRun === true &&
+              Object.values(byKey.get(key)?.inputs ?? {}).some(
+                (input) => input.column !== key && runnable.has(input.column)
+              );
+            const kept = args.columns.filter((key) => !follows(key));
+            return kept.length > 0 ? kept : args.columns;
+          args:
+            mode:
+              _payload: mode
+            columns:
+              _payload: columns
+            columnDefs:
+              _state: columnDefs
   # Marks the cells queued in bulk writes. A cell that is queued, or running with a live lease,
   # is never queued again, so a double click or two users running the same column is safe. A
   # row whose required input is missing gets an empty cell ("Missing input: domain") instead.
@@ -66,7 +91,7 @@ routine:
       columnDefs:
         _state: columnDefs
       columns:
-        _payload: columns
+        _state: columns
       selection:
         _payload: selection
       mode:

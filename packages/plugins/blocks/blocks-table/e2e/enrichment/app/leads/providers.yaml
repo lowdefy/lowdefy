@@ -21,7 +21,7 @@
 - id: company_lookup
   title: Company lookup
   description: Industry, size and country of a company, from its domain.
-  icon: building
+  icon: Building
   inputs:
     - key: domain
       title: Domain
@@ -64,11 +64,5 @@
       type: email
   cost: 2
 
-# The ai kind is a provider too. Its inputs are the columns its prompt uses.
-- id: ai
-  title: AI
-  description: An AI prompt per row, with {{ column }} references.
-  icon: sparkles
-  inputs: []
-  outputs: []
-  cost: 1
+# The ai kind is not listed: the picker offers it as a kind of its own, and its columns run
+# the enrich_ai endpoint (provider `ai`, the default of an ai column).

@@ -13,8 +13,10 @@
 # limitations under the License.
 
 
-# Imports rows: the Table's onImport { rows }, a batch of at most 500 parsed CSV rows keyed by
-# column key. The rows' autoRun columns start at once.
+# Imports rows: the Table's onImport { rows, newColumns, batchIndex, batchCount, total }, a
+# batch of at most 500 parsed CSV rows, each value at its column's field path. The first batch
+# carries the CSV columns imported as new input columns (`newColumns`), which are added first.
+# The rows' autoRun columns start at once.
 id: leads_import
 type: Api
 payloadSchema:
@@ -29,7 +31,33 @@ payloadSchema:
       maxItems: 500
       items:
         type: object
+    newColumns:
+      type: array
+      maxItems: 50
+      items:
+        type: object
+    batchIndex:
+      type: integer
+    batchCount:
+      type: integer
+    total:
+      type: integer
 routine:
+  # The new columns go through columns_add, so they are checked like any added column.
+  - :for: column
+    :in:
+      _if_none:
+        - _payload: newColumns
+        - []
+    :do:
+      - id: add_new_column
+        type: CallApi
+        properties:
+          endpointId: columns_add
+          payload:
+            column:
+              _item: column
+            position: null
   - _ref: leads/load_table.yaml
   - :set_state:
       rows:

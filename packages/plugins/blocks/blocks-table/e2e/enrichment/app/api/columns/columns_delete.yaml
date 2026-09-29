@@ -21,12 +21,17 @@ type: Api
 payloadSchema:
   type: object
   required:
-    - key
+    - column
   additionalProperties: false
   properties:
-    key:
-      type: string
-      pattern: ^[A-Za-z0-9_-]{1,128}$
+    column:
+      type: object
+      required:
+        - key
+      properties:
+        key:
+          type: string
+          pattern: ^[A-Za-z0-9_-]{1,128}$
 routine:
   - _ref: leads/load_table.yaml
   - :set_state:
@@ -42,7 +47,7 @@ routine:
               .map((column) => column.key);
           args:
             key:
-              _payload: key
+              _payload: column.key
             columns:
               _state: columnDefs
   - :if:
@@ -54,7 +59,7 @@ routine:
       - :reject:
           _string.concat:
             - 'Column "'
-            - _payload: key
+            - _payload: column.key
             - '" is read by '
             - _array.join:
                 - _state: readers
@@ -67,7 +72,7 @@ routine:
       filter:
         tableId: leads
         key:
-          _payload: key
+          _payload: column.key
   - :if:
       _eq:
         - _step: delete_column.deletedCount
@@ -86,12 +91,12 @@ routine:
           _object.fromEntries:
             - - _string.concat:
                   - _enrich.
-                  - _payload: key
+                  - _payload: column.key
               - ''
             - - _string.concat:
                   - values.
-                  - _payload: key
+                  - _payload: column.key
               - ''
   - :return:
       deleted:
-        _payload: key
+        _payload: column.key
