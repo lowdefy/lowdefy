@@ -19,7 +19,8 @@ import scopeFilter from './scopeFilter.js';
 
 // Collection mode: every row is a document. One operation per row, all scoped by the base
 // filter: deletes first (so a removed key can be added again), then one updateOne per changed
-// row with its fields and its position merged into one $set, then the inserts. `targets`
+// row with its fields and its position merged into one $set, then the inserts, stamped with
+// the filter's equalities (`scopeValues`, getChangeScope). `targets`
 // names the operation of each existing row, so the save can report the rows that matched
 // nothing (runChanges).
 function compileCollectionChanges({
@@ -29,6 +30,7 @@ function compileCollectionChanges({
   insertDefaults,
   rowKeyField,
   rowKeyType,
+  scopeValues,
 }) {
   const operations = [];
   const insertedKeys = {};
@@ -56,6 +58,7 @@ function compileCollectionChanges({
       insertDefaults,
       keyField: rowKeyField,
       generateId,
+      scopeValues,
     });
     insertedKeys[String(entry.rowKey)] = key;
     operations.push({ insertOne: { document } });

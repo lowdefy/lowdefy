@@ -18,11 +18,15 @@ import { set } from '@lowdefy/helpers';
 import cloneValue from './cloneValue.js';
 
 // A new row: `insertDefaults` first (a fresh copy for each row, since row values are set into
-// it), then the row's own values at their paths, so a column the user filled in wins over a
-// default. Keep tenant and ownership fields out of `fields`, and the user can not set them.
-function buildInsertDocument({ patch, insertDefaults }) {
+// it), then the filter's equalities (`scopeValues`), then the row's own values at their paths.
+// No field writes a path of the filter or insertDefaults (getChangeScope), so a row can not
+// replace its scope.
+function buildInsertDocument({ patch, insertDefaults, scopeValues }) {
   const document = {};
   Object.entries(insertDefaults).forEach(([path, value]) => {
+    set(document, path, cloneValue(value));
+  });
+  scopeValues.forEach(([path, value]) => {
     set(document, path, cloneValue(value));
   });
   patch.forEach((value, path) => {

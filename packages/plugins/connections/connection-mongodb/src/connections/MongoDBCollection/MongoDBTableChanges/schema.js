@@ -68,7 +68,7 @@ export default {
     filter: {
       type: 'object',
       description:
-        'The base filter every operation is scoped by, for example tenant or ownership. Required unless the connection is tenant-scoped; set it to {} to allow writes to every document.',
+        'The base filter every operation is scoped by, for example tenant or ownership. New rows are stamped with its equality conditions, and "fields" can not write its fields. Required unless the connection is tenant-scoped; set it to {} to allow writes to every document.',
       errorMessage: {
         type: 'MongoDBTableChanges request property "filter" should be an object.',
       },
@@ -134,7 +134,7 @@ export default {
     insertDefaults: {
       type: 'object',
       description:
-        'Values every added row starts with, for example { org_id: { _user: organization.id } } or a created date. The row values set over them.',
+        'Values every added row gets, for example { created_by: { _user: id } } or a created date. "fields" can not write them, and they may repeat but not contradict an equality of "filter".',
       errorMessage: {
         type: 'MongoDBTableChanges request property "insertDefaults" should be an object.',
       },

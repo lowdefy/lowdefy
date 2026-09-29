@@ -116,9 +116,8 @@ describe('collection mode', () => {
     const compiled = compile({
       insertDefaults: { org_id: 'org_1', created, status: 'draft' },
       changes: {
-        added: [{ rowKey: 'tmp-1', name: 'Apples', address: { city: 'Rome' }, status: 'x' }],
+        added: [{ rowKey: 'tmp-1', name: 'Apples', address: { city: 'Rome' } }],
       },
-      fields: { ...fields, status: { type: 'tag' } },
     });
     const id = new ObjectId('64b000000000000000000001');
     expect(compiled.operations).toEqual([
@@ -128,7 +127,7 @@ describe('collection mode', () => {
             _id: id,
             org_id: 'org_1',
             created,
-            status: 'x',
+            status: 'draft',
             name: 'Apples',
             address: { city: 'Rome' },
           },
@@ -161,7 +160,7 @@ describe('collection mode', () => {
       changes: { added: [{ rowKey: 'X-1', code: 'X-1', name: 'Ten' }] },
     });
     expect(compiled.operations).toEqual([
-      { insertOne: { document: { code: 'X-1', name: 'Ten' } } },
+      { insertOne: { document: { org_id: 'org_1', code: 'X-1', name: 'Ten' } } },
     ]);
     expect(compiled.insertedKeys).toEqual({ 'X-1': 'X-1' });
   });
@@ -205,7 +204,12 @@ describe('collection mode', () => {
       { updateOne: { filter: scoped({ _id: 'a' }), update: { $set: { position: 3072 } } } },
       {
         insertOne: {
-          document: { _id: new ObjectId('64b000000000000000000001'), name: 'New', position: 2048 },
+          document: {
+            _id: new ObjectId('64b000000000000000000001'),
+            org_id: 'org_1',
+            name: 'New',
+            position: 2048,
+          },
         },
       },
     ]);
@@ -243,6 +247,165 @@ describe('collection mode', () => {
         changes: { removed: ['a'] },
       }).options
     ).toEqual({ comment: 'save', ordered: false });
+  });
+});
+
+describe('scope fields', () => {
+  const orgFilter = { org_id: 'org_1' };
+
+  test('a field that writes a filter field is refused', () => {
+    expect(() =>
+      compile({
+        filter: orgFilter,
+        fields: { ...fields, org_id: { type: 'text' } },
+        changes: { updated: { a: { name: 'x' } } },
+      })
+    ).toThrow(
+      'MongoDBTableChanges field "org_id" writes "org_id", which "filter" scopes the rows by, so a change could move a row out of scope. Keep scope fields out of "fields".'
+    );
+  });
+
+  test('a field that writes into or over a filter field is refused', () => {
+    expect(() =>
+      compile({
+        filter: { owner: { id: 'u1' } },
+        changes: { updated: { a: { name: 'x' } } },
+      })
+    ).toThrow('MongoDBTableChanges field "owner" writes "owner.name", which "filter" scopes');
+    expect(() =>
+      compile({
+        filter: { $and: [orgFilter, { 'address.city.code': { $in: ['a', 'b'] } }] },
+        changes: { updated: { a: { name: 'x' } } },
+      })
+    ).toThrow('MongoDBTableChanges field "address.city" writes "address.city", which "filter"');
+    expect(() =>
+      compile({
+        filter: { $or: [{ team: 't1' }, { qty: { $gt: 0 } }] },
+        changes: { updated: { a: { name: 'x' } } },
+      })
+    ).toThrow('MongoDBTableChanges field "qty" writes "qty", which "filter" scopes');
+  });
+
+  test('a positionField that is a filter field is refused', () => {
+    expect(() =>
+      compile({
+        filter: { rank: { $gte: 0 } },
+        positionField: 'rank',
+        changes: { moved: { a: 5 } },
+      })
+    ).toThrow(
+      'MongoDBTableChanges "positionField" writes "rank", which "filter" scopes the rows by'
+    );
+  });
+
+  test('a field that writes an insertDefaults path is refused, a sibling path is not', () => {
+    expect(() =>
+      compile({
+        insertDefaults: { owner: { name: 'Ada' } },
+        changes: { updated: { a: { name: 'x' } } },
+      })
+    ).toThrow(
+      'MongoDBTableChanges field "owner" writes "owner.name", which "insertDefaults" sets on new rows, so a row could replace it. Leave the field out of "fields", or give its column a default in TableInput instead.'
+    );
+    expect(() =>
+      compile({
+        insertDefaults: { address: { country: 'FR' } },
+        changes: { updated: { a: { 'address.city': 'Lyon' } } },
+      })
+    ).not.toThrow();
+  });
+
+  test('new rows get the equality conditions of the filter', () => {
+    const owner = new ObjectId('64b0000000000000000000cc');
+    const { operations } = compile({
+      filter: { org_id: 'org_1', 'owner_ref.id': { $eq: owner }, $and: [{ team: 't1' }] },
+      changes: { added: [{ rowKey: 't', name: 'New' }] },
+    });
+    expect(operations[0].insertOne.document).toEqual({
+      _id: new ObjectId('64b000000000000000000001'),
+      org_id: 'org_1',
+      owner_ref: { id: owner },
+      team: 't1',
+      name: 'New',
+    });
+  });
+
+  test('insertDefaults may repeat a filter equality, but not contradict it', () => {
+    const { operations } = compile({
+      filter: orgFilter,
+      insertDefaults: { org_id: 'org_1' },
+      changes: { added: [{ rowKey: 't', name: 'New' }] },
+    });
+    expect(operations[0].insertOne.document.org_id).toBe('org_1');
+    expect(() =>
+      compile({
+        filter: orgFilter,
+        insertDefaults: { org_id: 'org_2' },
+        changes: { added: [{ rowKey: 't', name: 'New' }] },
+      })
+    ).toThrow(
+      'MongoDBTableChanges "insertDefaults" sets "org_id" to "org_2", but "filter" matches "org_id" to "org_1", so new rows would be out of scope.'
+    );
+  });
+
+  test('a filter condition that is not an equality needs insertDefaults for new rows', () => {
+    const filterWithStatus = { org_id: 'org_1', status: { $ne: 'archived' } };
+    expect(() =>
+      compile({
+        filter: filterWithStatus,
+        changes: { added: [{ rowKey: 't', name: 'New' }] },
+      })
+    ).toThrow(
+      'MongoDBTableChanges can not add rows: "filter" matches "status" by a condition that is not an equality, so new rows need "status" set by "insertDefaults".'
+    );
+    const { operations } = compile({
+      filter: filterWithStatus,
+      insertDefaults: { status: 'active' },
+      changes: { added: [{ rowKey: 't', name: 'New' }] },
+    });
+    expect(operations[0].insertOne.document).toMatchObject({ org_id: 'org_1', status: 'active' });
+    expect(() =>
+      compile({ filter: filterWithStatus, changes: { updated: { a: { name: 'x' } } } })
+    ).not.toThrow();
+  });
+
+  test('a filter operator new rows can not be checked against refuses adding rows', () => {
+    expect(() =>
+      compile({
+        filter: { $expr: { $eq: ['$org_id', 'org_1'] } },
+        changes: { added: [{ rowKey: 't', name: 'New' }] },
+      })
+    ).toThrow(
+      'MongoDBTableChanges can not add rows: "filter" has "$expr", which new rows can not be stamped with. Scope the rows with equality conditions such as { org_id: <value> }.'
+    );
+    expect(() =>
+      compile({
+        filter: { $or: [{ team: 't1' }, { team: 't2' }] },
+        changes: { added: [{ rowKey: 't', name: 'New' }] },
+      })
+    ).toThrow('new rows need "team" set by "insertDefaults"');
+  });
+
+  test('array mode compares scope fields with the item paths in the document', () => {
+    const array = { documentId: 'recipe_1', path: 'items' };
+    expect(() =>
+      compile({
+        array,
+        filter: { org_id: 'org_1', 'items.locked': { $ne: true } },
+        fields: { ...fields, locked: { type: 'boolean' } },
+        changes: { updated: { a: { locked: true } } },
+      })
+    ).toThrow('MongoDBTableChanges field "locked" writes "items.locked", which "filter" scopes');
+    const { operations } = compile({
+      array,
+      filter: { org_id: 'org_1', status: { $ne: 'archived' } },
+      fields: { ...fields, org_id: { type: 'text' } },
+      changes: { added: [{ rowKey: 't', name: 'New', org_id: 'org_2' }] },
+    });
+    // The document is scoped by the filter; the pushed item is not a document of it.
+    expect(operations[0].updateOne.update.$push.items.$each).toEqual([
+      { _id: new ObjectId('64b000000000000000000001'), name: 'New', org_id: 'org_2' },
+    ]);
   });
 });
 

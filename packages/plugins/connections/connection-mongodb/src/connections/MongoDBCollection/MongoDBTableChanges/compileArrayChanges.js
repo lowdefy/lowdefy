@@ -76,6 +76,7 @@ function compileArrayChanges({ array, changes, filter, generateId, insertDefault
       insertDefaults,
       keyField: itemKeyField,
       generateId,
+      scopeValues: [],
     });
     insertedKeys[String(entry.rowKey)] = key;
     return { document, key };

@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 import coerceDocumentId from './coerceDocumentId.js';
 import compileArrayChanges from './compileArrayChanges.js';
 import compileCollectionChanges from './compileCollectionChanges.js';
+import getChangeScope from './getChangeScope.js';
 import isSafePath from './isSafePath.js';
 import normalizeChangeFields from './normalizeChangeFields.js';
 import parseChanges from './parseChanges.js';
@@ -117,6 +118,14 @@ function compileTableChanges({ properties, tenantScoped, generateId }) {
     positionField,
     rowKeyType,
   });
+  const { scopeValues } = getChangeScope({
+    fieldsByKey,
+    filter,
+    insertDefaults,
+    positionField: positionField ?? undefined,
+    arrayPath: array?.path,
+    hasInserts: changes.added.length > 0,
+  });
   const options = { ...(properties.options ?? {}), ordered: properties.ordered ?? true };
   if (array !== undefined) {
     // The updates of one array build on each other (the order applies to the pushed items).
@@ -155,6 +164,7 @@ function compileTableChanges({ properties, tenantScoped, generateId }) {
       insertDefaults,
       rowKeyField,
       rowKeyType,
+      scopeValues,
     }),
   };
 }

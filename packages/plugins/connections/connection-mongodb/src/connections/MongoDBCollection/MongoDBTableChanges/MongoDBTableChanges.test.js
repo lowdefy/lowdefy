@@ -336,6 +336,32 @@ describe('collection mode', () => {
     expect(await readAll(collection)).toEqual(before);
   });
 
+  test('a new row can not be added to another organization', async () => {
+    const { collection, connection } = await setup(lines());
+    const before = await readAll(collection);
+    await expect(
+      save({ connection, changes: { added: [{ rowKey: 't', item: 'Mine', org_id: 'org_2' }] } })
+    ).rejects.toThrow('MongoDBTableChanges added row "t": "org_id" is not in "fields".');
+    await expect(
+      save({
+        connection,
+        fields: { ...lineFields, org_id: { type: 'text' } },
+        changes: { added: [{ rowKey: 't', item: 'Mine', org_id: 'org_2' }] },
+      })
+    ).rejects.toThrow('MongoDBTableChanges field "org_id" writes "org_id", which "filter" scopes');
+    await expect(
+      save({
+        connection,
+        insertDefaults: { org_id: 'org_2' },
+        changes: { added: [{ rowKey: 't', item: 'Mine' }] },
+      })
+    ).rejects.toThrow('but "filter" matches "org_id" to "org_1"');
+    expect(await readAll(collection)).toEqual(before);
+    const saved = await save({ connection, changes: { added: [{ rowKey: 't', item: 'Mine' }] } });
+    const added = await readOne(collection, saved.insertedKeys.t._oid);
+    expect(added).toEqual({ _id: added._id, org_id: 'org_1', item: 'Mine' });
+  });
+
   test('a bulk write error is mapped without quoting the document values', async () => {
     const { connection } = await setup(lines());
     const error = await save({
@@ -693,7 +719,9 @@ describe('change log', () => {
         insertDefaults: { organization_id: 'org_b' },
         changes: { updated: { a1: { qty: 2 } }, added: [{ rowKey: 't', item: 'B' }] },
       })
-    ).rejects.toThrow('the filter matches "org_a" but the added rows carry "org_b"');
+    ).rejects.toThrow(
+      'MongoDBTableChanges "insertDefaults" sets "organization_id" to "org_b", but "filter" matches "organization_id" to "org_a"'
+    );
     await save({
       connection: logged,
       tenantGuard,

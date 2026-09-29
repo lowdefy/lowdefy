@@ -671,7 +671,18 @@ _ref:
 
             The `fields` keys are the column `field` dot paths, and only those fields can be written (at their `path`). Values are coerced to the field type like `MongoDBTableQuery` values: numbers from numeric strings, dates from date strings and timestamps, and `null` clears a value of any type. `avatar`, `image` and `json` fields accept documents, but not with keys that start with `$`.
 
-            Every operation is scoped by the base `filter`, for example the organization or owner of the rows. The row key is combined with the filter using `$and`, so it can only narrow it. `filter` is required, unless the connection is tenant-scoped: then the tenant is merged into every operation and stamped on new rows, as for `MongoDBBulkWrite`. Set `filter: {}` to allow writes to every document in the collection. Keep tenant and ownership fields out of `fields`, and set them on new rows with `insertDefaults`.
+            Every operation is scoped by the base `filter`, for example the organization or owner of the rows. The row key is combined with the filter using `$and`, so it can only narrow it. `filter` is required, unless the connection is tenant-scoped: then the tenant is merged into every operation and stamped on new rows, as for `MongoDBBulkWrite`. Set `filter: {}` to allow writes to every document in the collection.
+
+            ##### Scope fields
+
+            The `filter` and `insertDefaults` fields are the scope of the rows, such as their organization or owner, and the table can never write them:
+
+            - A field (or the `positionField`) whose path is a `filter` field, or inside or over one, is refused (`org_id`, `owner` and `owner.id` all overlap `owner.id`). Otherwise an update could move a row out of scope. This includes fields named inside `$and`, `$or` and `$nor`.
+            - A field whose path is set by `insertDefaults`, or inside or over one of its values, is refused, so a new row can not replace a default. A default `{ address: { country: FR } }` still leaves `address.city` writable. For a starting value the user may change, give the `TableInput` column a default instead.
+            - New rows are stamped with the equality conditions of the `filter`: `{ org_id: X }`, `{ org_id: { $eq: X } }` and the equalities inside `$and`. A row added with a `filter` of `{ org_id: { _user: organization.id } }` belongs to that organization without an `insertDefaults` entry. `insertDefaults` may repeat such a value, but a different value is refused.
+            - Any other `filter` condition (`$ne`, `$in`, a regex, the clauses of `$or`) can not be stamped. A save that adds rows then needs that field set by `insertDefaults`. A `filter` with an operator such as `$expr` or `$where` refuses added rows. Saves that only update, move or remove rows are not affected.
+
+            In array mode the `filter` scopes the document: every operation, the `$push` of new items included, matches only the document with `array.documentId` inside the `filter`. Item fields are compared with the `filter` at their path in the document (`items.<field>`), and new items are not stamped, since they are not documents of the collection.
 
             ##### Collection mode
 
@@ -729,7 +740,7 @@ _ref:
             - `fields: object`: __Required__ - The allowlist, keyed by the `TableInput` column field (its dot path). Each field is an object:
               - `type: enum`: __Required__ - The column type, as for `MongoDBTableQuery`. Values are checked and coerced to it.
               - `path: string`: Default: the field key - Dot path the value is written to, in the document or, in array mode, in the item.
-            - `filter: object`: The base filter that scopes every operation, for example `{ org_id: { _user: organization.id } }`. Required unless the connection is tenant-scoped. Set it to `{}` to allow writes to every document.
+            - `filter: object`: The base filter that scopes every operation, for example `{ org_id: { _user: organization.id } }`. New rows are stamped with its equality conditions, and `fields` can not write its fields. Required unless the connection is tenant-scoped. Set it to `{}` to allow writes to every document. See Scope fields.
             - `rowKeyField: string`: Default: `_id` - The document field a row key matches, in collection mode. With any other field, added rows need their key from a column or `insertDefaults`.
             - `rowKeyType: enum`: Default: `auto` - How row keys are read and matched: `auto`, `objectId`, `string` or `number`. See Row keys.
             - `array: object`: Array mode: the rows are the items of an embedded array in one document.
@@ -737,7 +748,7 @@ _ref:
               - `path: string`: __Required__ - Dot path of the array in the document.
               - `itemKeyField: string`: Default: `_id` - The item field a row key matches.
             - `positionField: string`: Dot path of the numeric position field, the `TableInput` `rowDrag.positionField`. Needed to save `moved`, and to save `order` in collection mode.
-            - `insertDefaults: object`: Values every added row starts with, for example `{ org_id: { _user: organization.id } }` or a created date. The row's own values are set over them. Keys may be dot paths.
+            - `insertDefaults: object`: Values every added row gets, for example `{ created_by: { _user: id } }` or a created date. `fields` can not write them. Keys may be dot paths. See Scope fields.
             - `ordered: boolean`: Default: `true` - Run the operations in order and stop at the first error. `false` (collection mode only) runs every operation and reports every error.
             - `maxChanges: integer`: Default: `1000` - The most row changes one request may apply (updated, added, removed and moved rows, plus order entries). A larger changeset throws.
             - `options: object`: Optional `bulkWrite` settings, for example `writeConcern`, `bypassDocumentValidation` or `comment`. See `MongoDBBulkWrite`.
@@ -840,7 +851,7 @@ _ref:
             ```
 
             ###### Save edits to a list of deals (collection mode):
-            Every row is a document. New deals get the organization and creator from `insertDefaults`, which the table can not set, since `org_id` and `created_by` are not in `fields`.
+            Every row is a document. New deals get the organization from the `filter` and the creator from `insertDefaults`. The table can not set either, and a `fields` entry for `org_id` or `created_by` would be refused.
             ```yaml
             requests:
               - id: save_deals
