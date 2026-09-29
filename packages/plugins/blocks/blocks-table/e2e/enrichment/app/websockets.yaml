@@ -29,19 +29,26 @@
           #   _user: organization.id
           $or:
             - operationType: insert
-            # Updates that touch _enrich: a cell queued, claimed or completed. Updated field
-            # names are dotted paths (_enrich.company.status), or _enrich for a row's first
-            # cell.
+            # Updates that touch _enrich: a cell queued, claimed or completed. Updated and
+            # removed field names are dotted paths (_enrich.company.status), or _enrich for a
+            # row's first cell. A removal alone (an $unset of a cell's value) is a change too.
             - operationType: update
               $expr:
                 $gt:
                   - $size:
                       $filter:
                         input:
-                          $objectToArray: $updateDescription.updatedFields
+                          $concatArrays:
+                            - $map:
+                                input:
+                                  $objectToArray: $updateDescription.updatedFields
+                                in: $$this.k
+                            - $ifNull:
+                                - $updateDescription.removedFields
+                                - []
                         cond:
                           $regexMatch:
-                            input: $$this.k
+                            input: $$this
                             regex: ^_enrich(\.|$)
                   - 0
       # Only what the table shows: the row key, the input fields and the cells. The stream

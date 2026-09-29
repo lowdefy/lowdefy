@@ -94,7 +94,7 @@ All three requests (`connection-mongodb`) share `MongoDBTableQuery`'s safety rul
 
 ### E5. Live updates
 
-A websocket channel (`enrichment`) uses a `MongoDBChangeStream` source on the rows collection, filtered to `_enrich` changes and scoped by tenant. The page subscribes, and `onMessage` calls the table's `applyTransaction({ update })`. Only the changed rows re-render, and there is no polling.
+A websocket channel (`enrichment`) uses a `MongoDBChangeStream` source on the rows collection, filtered to `_enrich` changes and scoped by tenant. The page subscribes, and `onMessage` calls the table's `applyTransaction({ update })` with each change's `fullDocument` (projected to the table's fields, `_enrich` whole). The default shallow merge replaces each top-level field, so cell keys the server unset (`value`, `raw`, `inputHash` after an empty rerun) go from the row too; `merge: 'deep'` is for partial patches only and never removes a key. The stream matches updates whose updated or removed fields touch `_enrich`. Only the changed rows re-render, and there is no polling.
 
 ### E6. Table features (a new `enrichment` feature module in blocks-table)
 

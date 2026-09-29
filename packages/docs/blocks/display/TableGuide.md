@@ -1279,7 +1279,7 @@ fields:
 
 **Loading.** Wire `loading` to the rows request (`_request_details: leads.0.loading`) and reload columns and rows with `holdValue: true` after a column or row change, so the table keeps its rows and columns on screen while they reload; the first load shows the table's skeleton rows. The picker, details panel and import dialog open at once, with a spinner while their code loads.
 
-**Live results.** Push cell updates to the table with `applyTransaction({ merge: 'deep', update })` from a websocket (`MongoDBChangeStream` on the rows), so a partial `_enrich` update keeps the row's other cells.
+**Live results.** Push cell updates to the table with `applyTransaction({ update })` from a websocket (`MongoDBChangeStream` on the rows) that sends each changed row's `fullDocument` (projected to the fields the table shows, `_enrich` whole). The default shallow merge replaces each top-level field, so a cell whose rerun found nothing loses its old `value`, `raw` and `inputHash`, as the server unset them. Keep `merge: 'deep'` for partial patches you build yourself: a deep merge never removes a key, so a formula, an extract column or the stale marker would keep reading what the server removed.
 
 ## Moving from TableLight or AgGrid
 

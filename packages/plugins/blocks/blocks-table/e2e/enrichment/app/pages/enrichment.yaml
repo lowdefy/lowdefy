@@ -64,17 +64,18 @@ subscriptions:
       throttleRender: 100
     events:
       onMessage:
-        # Every pushed row merges into the table's row with the same key: a deep merge, so a
-        # cell update keeps the row's other cells and fields. Rows the table does not have
-        # are skipped.
+        # Every pushed row is the change stream's fullDocument (with every field the table
+        # shows, and _enrich whole), merged into the table's row with the same key. The default
+        # shallow merge replaces each top-level field, so a cell key the server unset (value,
+        # raw and inputHash after a rerun found nothing) goes from the row too; a deep merge
+        # would keep it. Rows the table does not have are skipped.
         - id: apply_cells
           type: CallMethod
           params:
             blockId: leads_table
             method: applyTransaction
             args:
-              - merge: deep
-                update:
+              - update:
                   _array.map:
                     - _event: messages
                     - _function:

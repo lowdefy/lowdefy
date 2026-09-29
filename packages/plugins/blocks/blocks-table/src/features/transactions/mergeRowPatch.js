@@ -16,9 +16,12 @@
 
 import { type } from '@lowdefy/helpers';
 
-// A row with a patch merged in deeply: plain objects merge key by key at every depth, anything
-// else (values, arrays, dates) replaces. Only the objects on a changed path are copied, so the
-// rest of the row keeps its identity. `undefined` in the patch leaves the row's value.
+// A row with a partial patch merged in deeply: plain objects merge key by key at every depth,
+// anything else (values, arrays, dates) replaces. Only the objects on a changed path are copied,
+// so the rest of the row keeps its identity. `undefined` in the patch leaves the row's value.
+// A deep merge never removes a key: a key the patch leaves out keeps the row's value. Rows that
+// can lose keys (a change stream's fullDocument after an $unset) are sent whole, with the
+// default shallow merge.
 function mergeRowPatch({ row, patch }) {
   if (!type.isObject(row) || !type.isObject(patch)) return patch;
   const merged = { ...row };
