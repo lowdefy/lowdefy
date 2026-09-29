@@ -201,6 +201,46 @@ test.describe('Table loading states', () => {
     });
   }
 
+  test('the shimmer is a narrow fill-token band, and stops under reduced motion', async ({
+    page,
+  }) => {
+    const mocks = await mockAll(page);
+    mocks.rows.hold();
+    await navigateToTestPage(page, PAGE);
+    const readShimmer = () =>
+      skeletonRows(page, 'table_client')
+        .first()
+        .evaluate((row) => {
+          const band = getComputedStyle(row, '::after');
+          const fill = getComputedStyle(document.documentElement)
+            .getPropertyValue('--ant-color-fill-secondary')
+            .trim();
+          const probe = document.createElement('span');
+          probe.style.color = fill;
+          document.body.appendChild(probe);
+          const fillColour = getComputedStyle(probe).color;
+          probe.remove();
+          return {
+            animation: band.animationName,
+            duration: band.animationDuration,
+            display: band.display,
+            image: band.backgroundImage,
+            fillColour,
+          };
+        });
+    await expect(skeletonRows(page, 'table_client').first()).toBeVisible();
+    const shimmer = await readShimmer();
+    expect(shimmer.animation).toBe('lf-table-shimmer');
+    expect(shimmer.duration).toBe('1.4s');
+    // The band peaks at antd's fill colour in the middle 30% of the row.
+    expect(shimmer.image).toContain(`${shimmer.fillColour} 50%`);
+    expect(shimmer.image).toContain('35%');
+    expect(shimmer.image).toContain('65%');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    expect((await readShimmer()).display).toBe('none');
+    mocks.rows.release();
+  });
+
   test('the record count holds a text skeleton until the first rows land', async ({ page }) => {
     const mocks = await mockAll(page);
     mocks.rows.hold();
