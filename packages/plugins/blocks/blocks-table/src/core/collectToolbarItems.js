@@ -14,14 +14,11 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
-// The toolbar loads when it is configured, a toolbar slot has blocks or `importCsv` adds its
-// Import button (as useToolbar shows it).
-function needsToolbar({ content, properties }) {
-  if (content?.toolbarStart || content?.toolbarEnd) return true;
-  if (properties.importCsv === true) return true;
-  return properties.toolbar === true || type.isObject(properties.toolbar);
+// Components features add to the end of the toolbar, before the `toolbarEnd` slot, from their
+// `toolbarItems` (enrichment's CSV import button). Each receives `{ api }` and returns null when
+// it has nothing to show.
+function collectToolbarItems(features) {
+  return features.flatMap((feature) => feature.toolbarItems ?? []);
 }
 
-export default needsToolbar;
+export default collectToolbarItems;

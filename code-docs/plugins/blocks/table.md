@@ -61,7 +61,7 @@ Scrolling renders `Grid` only; the engine and the block's props are never touche
 
 Every behaviour beyond the grid itself is a feature module: a plain object in `features/<name>/<name>Feature.js`, listed in `features/index.js`. The core loops over the list; order matters, because it is the order of delegated handlers (the first to return `true` stops the chain) and of data pipeline hooks.
 
-Registry order: filtering, headerMenu, columnManager, enrichment, sorting, sizing, ordering, pinning, visibility, density, transactions, editing\*, newRows, clipboard, paste\*, selection, expansion, serverData\*, grouping, groupRows\*, tree\*, expandable\*, virtualization, positionedRows\*, serverRange\*, lazyCells, views\*, toolbar\*, bulk, queue, keyboard, events, export, pagination. Starred entries are optional: each loads in its own chunk only for tables whose config needs it (`core/useFeatureSet.js`, which suspends until they are there and builds the table's feature set, `api.features`); see `ARCHITECTURE.md`, Feature sets and optional features.
+Registry order: filtering, headerMenu, columnManager, enrichment\*, sorting, sizing, ordering, pinning, visibility, density, transactions, editing\*, newRows\*, clipboard, paste\*, selection, expansion, serverData\*, grouping, groupRows\*, tree\*, expandable\*, virtualization, positionedRows\*, serverRange\*, lazyCells, views\*, toolbar\*, bulk, queue, keyboard, events, export, pagination. Starred entries are optional: each loads in its own chunk only for tables whose config needs it (`core/useFeatureSet.js`, which suspends until they are there and builds the table's feature set, `api.features`); see `ARCHITECTURE.md`, Feature sets and optional features.
 
 Why some of that order matters:
 

@@ -64,9 +64,11 @@ async function menuItem(page, key, name, blockId = 'enrich') {
   await menu.getByRole('menuitem', { name, exact: true }).click();
 }
 
+// Waits for the dropdown to close, so the next select's click never lands on a closing one.
 async function pick(page, select, title) {
   await select.click();
   await dropdown(page).getByTitle(title, { exact: true }).click();
+  await expect(page.locator('.ant-select-dropdown:visible')).toHaveCount(0);
 }
 
 // A select with search: type the option and pick it with Enter (the list is virtual, so an

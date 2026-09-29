@@ -18,7 +18,6 @@ import bulkFeature from './bulk/bulkFeature.js';
 import clipboardFeature from './clipboard/clipboardFeature.js';
 import columnManagerFeature from './columnManager/columnManagerFeature.js';
 import densityFeature from './density/densityFeature.js';
-import enrichmentFeature from './enrichment/enrichmentFeature.js';
 import eventsFeature from './events/eventsFeature.js';
 import expansionFeature from './expansion/expansionFeature.js';
 import exportFeature from './export/exportFeature.js';
@@ -28,13 +27,13 @@ import headerMenuFeature from './headerMenu/headerMenuFeature.js';
 import keyboardFeature from './keyboard/keyboardFeature.js';
 import lazyCellsFeature from './lazyCells/lazyCellsFeature.js';
 import needsEditing from './editing/needsEditing.js';
+import needsEnrichment from './enrichment/needsEnrichment.js';
 import needsExpandable from './expandable/needsExpandable.js';
 import needsGroupRows from './grouping/needsGroupRows.js';
 import needsServerData from './serverData/needsServerData.js';
 import needsToolbar from './toolbar/needsToolbar.js';
 import needsTree from './tree/needsTree.js';
 import needsViews from './views/needsViews.js';
-import newRowsFeature from './enrichment/newRowsFeature.js';
 import orderingFeature from './ordering/orderingFeature.js';
 import paginationFeature from './pagination/paginationFeature.js';
 import pinningFeature from './pinning/pinningFeature.js';
@@ -70,7 +69,12 @@ const features = [
   filteringFeature,
   headerMenuFeature,
   columnManagerFeature,
-  enrichmentFeature,
+  optional({
+    name: 'enrichment',
+    needs: needsEnrichment,
+    load: () => import('./enrichment/enrichmentFeature.js'),
+    methods: ['openCellDetails', 'openColumnPicker', 'openImport'],
+  }),
   sortingFeature,
   sizingFeature,
   orderingFeature,
@@ -83,7 +87,11 @@ const features = [
     needs: needsEditing,
     load: () => import('./editing/editingFeature.js'),
   }),
-  newRowsFeature,
+  optional({
+    name: 'newRows',
+    needs: needsEnrichment,
+    load: () => import('./enrichment/newRowsFeature.js'),
+  }),
   clipboardFeature,
   optional({
     name: 'paste',

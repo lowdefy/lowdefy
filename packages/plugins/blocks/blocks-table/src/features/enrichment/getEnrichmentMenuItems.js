@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import LazyColumnPicker from './LazyColumnPicker.js';
+
 const RUN_MODES = [
   { mode: 'all', label: 'All rows' },
   { mode: 'empty', label: 'Empty cells' },
@@ -78,7 +80,11 @@ function getEnrichmentMenuItems({ column, api }) {
   const items = [];
   const runnable = column.kind === 'enrichment' || column.kind === 'ai';
   if (runnable && api.events.onColumnRun) items.push(runItem({ column, api }));
-  if (column.userDefined) items.push(...manageItems({ column, api }));
+  if (column.userDefined) {
+    // Edit and Insert open the picker: start loading it while the menu is open.
+    LazyColumnPicker.preload();
+    items.push(...manageItems({ column, api }));
+  }
   return items;
 }
 

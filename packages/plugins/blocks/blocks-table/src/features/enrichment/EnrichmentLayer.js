@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import React, { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 
 import DeleteColumnConfirm from './DeleteColumnConfirm.js';
 import EnrichmentNotice from './EnrichmentNotice.js';
+import LazyCellDetails from './LazyCellDetails.js';
+import LazyColumnPicker from './LazyColumnPicker.js';
+import LazyImportDialog from './LazyImportDialog.js';
 
-// The overlays are antd Drawers and Modals in their own chunks, loaded the first time one opens.
-const CellDetails = lazy(() => import('./CellDetails.js'));
-const ColumnPicker = lazy(() => import('./ColumnPicker.js'));
-const ImportDialog = lazy(() => import('./ImportDialog.js'));
-
-// The enrichment overlays, each mounted only while open: the add / edit column picker, the cell
+// The enrichment overlays, each mounted only while open (antd Drawers and Modals; the picker,
+// the details panel and the import dialog in chunks of their own, loaded the first time one
+// opens): the add / edit column picker, the cell
 // details panel, the delete confirmation, the CSV import dialog, and the notice line for failed
 // events.
 function EnrichmentLayer({ api, ui }) {
@@ -32,9 +32,9 @@ function EnrichmentLayer({ api, ui }) {
     <>
       {ui.notice ? <EnrichmentNotice api={api} notice={ui.notice} /> : null}
       <Suspense fallback={null}>
-        {ui.picker ? <ColumnPicker api={api} picker={ui.picker} /> : null}
-        {ui.details ? <CellDetails api={api} details={ui.details} /> : null}
-        {ui.importing ? <ImportDialog api={api} /> : null}
+        {ui.picker ? <LazyColumnPicker api={api} picker={ui.picker} /> : null}
+        {ui.details ? <LazyCellDetails api={api} details={ui.details} /> : null}
+        {ui.importing ? <LazyImportDialog api={api} /> : null}
       </Suspense>
       {ui.deleting ? <DeleteColumnConfirm api={api} deleting={ui.deleting} /> : null}
     </>

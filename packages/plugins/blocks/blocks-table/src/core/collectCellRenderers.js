@@ -14,14 +14,12 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
-// The toolbar loads when it is configured, a toolbar slot has blocks or `importCsv` adds its
-// Import button (as useToolbar shows it).
-function needsToolbar({ content, properties }) {
-  if (content?.toolbarStart || content?.toolbarEnd) return true;
-  if (properties.importCsv === true) return true;
-  return properties.toolbar === true || type.isObject(properties.toolbar);
+// Features that take over the content of some data columns' cells, from their `cellRenderer`:
+// `{ match(column), Cell }`. `Cell` receives `{ api, col, original, rowKey }` and renders the
+// cells of every column `match` accepts (enrichment's run-state and invalid columns); the first
+// match wins, and other columns render through the shared cell core.
+function collectCellRenderers(features) {
+  return features.map((feature) => feature.cellRenderer).filter(Boolean);
 }
 
-export default needsToolbar;
+export default collectCellRenderers;

@@ -17,10 +17,20 @@
 import React from 'react';
 import { Button } from 'antd';
 
-// The toolbar's Import button (`importCsv: true`): opens the CSV import dialog.
+import LazyImportDialog from './LazyImportDialog.js';
+
+// The toolbar's Import button (`importCsv: true`, not on TableInput): opens the CSV import
+// dialog, preloading it on hover and focus.
 function ImportButton({ api }) {
+  if (!api.config.enrichment.importCsv || api.input) return null;
   return (
-    <Button data-lf-toolbar-button="import" onClick={() => api.actions.openImport()} size="small">
+    <Button
+      data-lf-toolbar-button="import"
+      onClick={() => api.actions.openImport()}
+      onFocus={LazyImportDialog.preload}
+      onPointerEnter={LazyImportDialog.preload}
+      size="small"
+    >
       Import
     </Button>
   );

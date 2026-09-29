@@ -14,14 +14,11 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
-// The toolbar loads when it is configured, a toolbar slot has blocks or `importCsv` adds its
-// Import button (as useToolbar shows it).
-function needsToolbar({ content, properties }) {
-  if (content?.toolbarStart || content?.toolbarEnd) return true;
-  if (properties.importCsv === true) return true;
-  return properties.toolbar === true || type.isObject(properties.toolbar);
+// Components features add to the bulk bar, before the `bulkActions` slot, from their
+// `bulkItems` (enrichment's "Run selected"). Each receives `{ api }` and returns null when it
+// has nothing to show.
+function collectBulkItems(features) {
+  return features.flatMap((feature) => feature.bulkItems ?? []);
 }
 
-export default needsToolbar;
+export default collectBulkItems;

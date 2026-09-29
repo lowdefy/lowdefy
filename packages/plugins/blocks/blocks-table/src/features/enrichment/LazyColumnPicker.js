@@ -14,14 +14,10 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import lazyComponent from '../../core/lazyComponent.js';
 
-// The toolbar loads when it is configured, a toolbar slot has blocks or `importCsv` adds its
-// Import button (as useToolbar shows it).
-function needsToolbar({ content, properties }) {
-  if (content?.toolbarStart || content?.toolbarEnd) return true;
-  if (properties.importCsv === true) return true;
-  return properties.toolbar === true || type.isObject(properties.toolbar);
-}
+// The add / edit column picker, loaded when it first opens (the "+" header preloads it on hover
+// and focus, a user column's header menu when it opens).
+const LazyColumnPicker = lazyComponent(() => import('./ColumnPicker.js'));
 
-export default needsToolbar;
+export default LazyColumnPicker;
