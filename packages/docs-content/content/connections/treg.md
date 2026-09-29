@@ -41,7 +41,7 @@ Calls one treg endpoint by its id, `POST` (or `GET` without a body) to `/call/<e
 
 - `endpoint: string`: The catalog or routed endpoint id to call. Find ids with `TregCatalogSearch`.
 - `tool: string`: The name of one of the team's own tools, with `path`. Needs `allowCustomTools` on the connection.
-- `path: string`: The path on the tool's API, such as `/v1/charges`. A path only: no scheme, host, query or `..`.
+- `path: string`: The path on the tool's API, such as `/v1/charges`. A path only: printable ASCII (also once percent-decoded) with no scheme, host, query, backslash, `.` or `..` segment, whitespace or control characters. A path the URL parser would change (it strips tabs and newlines and resolves `..`) is refused before anything is sent.
 - `method: enum`: `GET`, `POST`, `PUT`, `PATCH` or `DELETE`. Defaults to `POST` when `body` is set, otherwise `GET`.
 - `query: object`: Query parameters. An array value sends the parameter once per item.
 - `body: any`: The JSON request body. A routed endpoint takes its inputs here.
@@ -54,7 +54,7 @@ Calls one treg endpoint by its id, `POST` (or `GET` without a body) to `/call/<e
 - `meta: object`: Tags for this call, merged over the connection's `meta`.
 - `await: object`: Wait for an async task. Without it, a task that is still running returns `pending: true`.
   - `timeoutMs: integer`: Default: `60000` - How long to poll, from 100 to 900000.
-  - `intervalMs: integer`: The wait between polls. Defaults to the interval treg's descriptor names, or 2000.
+  - `intervalMs: integer`: The wait between polls. Defaults to the interval treg's descriptor names (at least 100), or 2000.
 
 #### Response
 

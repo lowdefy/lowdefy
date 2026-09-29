@@ -526,11 +526,11 @@ api:
                 _sum: [{ _state: rounds }, 1]
 ```
 
-An error a `:catch` handles is logged at debug, so a provider that fails on purpose (a 404 in a waterfall) does not fill the log with errors.
+A request or service error a `:catch` handles is logged at debug, so a provider that fails on purpose (a 404 in a waterfall) does not fill the log with errors. Config, operator and internal errors are still logged as errors, with their config location, even when a `:catch` handles them.
 
 Each provider endpoint `enrich_<provider id>` takes `{ inputs, prompt, output }` and returns `{ status: ok | empty, value, raw }`, or `{ status: error, error, retry: false }` for a final failure; throwing is a failed attempt that is retried. `null` for `error` or `retry` (what `_step` gives for a key the provider did not return) is the same as leaving it out. The app declares these endpoints, so a column can only call what the app exposes, and API keys stay on the server. For a concurrency per provider, group the claimed cells by `provider` and run each group with its own `:concurrency`, or run a worker per provider with `providers` on the claim.
 
-The AI provider (`enrich_ai`) fills the prompt's `{{ input }}` placeholders with the cell's inputs by plain string replacement, in one pass, so a row value that looks like a template stays text, and asks the model for an answer of the column's `output.type`.
+The AI provider (`enrich_ai`) fills the prompt's `{{ input }}` and `{{ input.path }}` placeholders (a dot path reads into the input's value, the pattern the Table accepts) with the cell's inputs by plain string replacement, in one pass, so a row value that looks like a template stays text, and asks the model for an answer of the column's `output.type`.
 
 The endpoint the table's run events call queues the cells, then starts the worker without waiting for it (a detached call needs the `CRON_SECRET` environment variable):
 
@@ -578,7 +578,7 @@ Each claim carries the column config the worker needs (`kind`, `title`, `provide
 
 Concurrent workers never claim the same cell. Every claim is a compare-and-set: the write matches the cell only in the state the claim read (its status, token, attempts and run) and while it is still claimable, so when two workers read the same cell, only the first write changes it. A worker that lost cells to another reads further candidates, up to five rounds, so it does not stop while cells are still queued.
 
-A claim also settles cells it can not hand out: a cell whose required input is now missing is set to `empty` with the missing column named, a cell whose enrichment input is queued or running again waits for it (queued with `waitingFor`, released when that input finishes), and a running cell whose lease ran out on its last attempt (`maxAttempts`) becomes an `error`.
+A claim also settles cells it can not hand out: a cell whose required input is now missing is set to `empty` with the missing column named, a cell whose enrichment input is queued or running again waits for it (queued with `waitingFor`, released when that input finishes), and a running cell whose lease ran out on its last attempt (`maxAttempts`) becomes an `error`. A cell a claim sets to `empty` or `error` releases the cells waiting for it, as a final result does.
 
 ##### Response
 
