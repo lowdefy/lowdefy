@@ -501,7 +501,7 @@
     flex: 1 1 auto;
     align-items: baseline;
     justify-content: flex-start;
-    gap: var(--ant-margin-xs, 8px);
+    gap: var(--ant-margin-xxs, 4px);
     min-width: 0;
     overflow: hidden;
     white-space: nowrap;

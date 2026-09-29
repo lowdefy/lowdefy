@@ -282,29 +282,91 @@ blocks:
     properties:
       columns:
         - key: invoice
+          type: link
+          cell:
+            pageId: polish
         - key: customer
+          type: avatar
+        - key: status
+          type: tag
+        - key: note
         - key: amount
           type: number
           aggregate: sum
         - key: due
           type: date
       data:
-        - { id: 1, invoice: INV-2041, customer: Halcyon Freight, amount: 12480, due: '2026-09-12' }
-        - { id: 2, invoice: INV-2042, customer: Tessellate Labs, amount: 4350, due: '2026-09-18' }
-        - { id: 3, invoice: INV-2043, customer: Copperleaf Health, amount: 8920, due: '2026-10-06' }
+        - {
+            id: 1,
+            invoice: INV-2041,
+            customer: Halcyon Freight,
+            status: Paid,
+            note: Net 30,
+            amount: 12480,
+            due: '2026-09-12',
+          }
+        - {
+            id: 2,
+            invoice: INV-2042,
+            customer: Tessellate Labs,
+            status: Overdue,
+            note: Net 30,
+            amount: 4350,
+            due: '2026-09-18',
+          }
+        - {
+            id: 3,
+            invoice: INV-2043,
+            customer: Copperleaf Health,
+            status: Due,
+            note: Net 60,
+            amount: 8920,
+            due: '2026-10-06',
+          }
 
   - id: light_table
     type: Table
     properties:
       columns:
         - key: invoice
+          type: link
+          cell:
+            pageId: polish
         - key: customer
+          type: avatar
+        - key: status
+          type: tag
+        - key: note
         - key: amount
           type: number
           aggregate: sum
         - key: due
           type: date
       data:
-        - { id: 1, invoice: INV-2041, customer: Halcyon Freight, amount: 12480, due: '2026-09-12' }
-        - { id: 2, invoice: INV-2042, customer: Tessellate Labs, amount: 4350, due: '2026-09-18' }
-        - { id: 3, invoice: INV-2043, customer: Copperleaf Health, amount: 8920, due: '2026-10-06' }
+        - {
+            id: 1,
+            invoice: INV-2041,
+            customer: Halcyon Freight,
+            status: Paid,
+            note: Net 30,
+            amount: 12480,
+            due: '2026-09-12',
+          }
+        - {
+            id: 2,
+            invoice: INV-2042,
+            customer: Tessellate Labs,
+            status: Overdue,
+            note: Net 30,
+            amount: 4350,
+            due: '2026-09-18',
+          }
+        - {
+            id: 3,
+            invoice: INV-2043,
+            customer: Copperleaf Health,
+            status: Due,
+            note: Net 60,
+            amount: 8920,
+            due: '2026-10-06',
+          }

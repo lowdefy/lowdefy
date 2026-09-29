@@ -143,15 +143,18 @@
     font-size: var(--ant-font-size-sm, 12px);
   }
 
+  /* Status and progress cells sit on the text baseline (their dot and bar centred), so their text
+     lines up with plain and link cells in the same row. */
   .lf-table-status {
     display: inline-flex;
-    align-items: center;
+    align-items: baseline;
     gap: var(--ant-margin-xs, 8px);
     max-width: 100%;
   }
 
   .lf-table-status-dot {
     flex: none;
+    align-self: center;
     width: 8px;
     height: 8px;
     border-radius: 50%;
@@ -235,14 +238,15 @@
 
   .lf-table-progress {
     display: inline-flex;
-    align-items: center;
+    align-items: baseline;
     gap: var(--ant-margin-xs, 8px);
-    vertical-align: middle;
+    vertical-align: baseline;
   }
 
   .lf-table-progress-track {
     position: relative;
     flex: none;
+    align-self: center;
     width: var(--lf-table-progress-width, 80px);
     height: 6px;
     border-radius: 3px;

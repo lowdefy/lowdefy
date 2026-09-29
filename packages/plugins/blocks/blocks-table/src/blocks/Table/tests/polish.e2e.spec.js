@@ -577,4 +577,66 @@ test.describe('Table visual polish', () => {
     });
     expect(leaks).toEqual([]);
   });
+
+  test('summary labels sit as close to their values as group header labels', async ({ page }) => {
+    const gap = (locator, labelSelector, valueSelector) =>
+      locator.evaluate(
+        (element, [label, value]) =>
+          element.querySelector(value).getBoundingClientRect().left -
+          element.querySelector(label).getBoundingClientRect().right,
+        [labelSelector, valueSelector]
+      );
+    const summaryGap = await gap(
+      summaryCell(page, 'grouped', 'amount'),
+      '.lf-table-summary-label',
+      '.lf-table-summary-value'
+    );
+    const groupGap = await gap(
+      table(page, 'grouped')
+        .locator('.lf-table-body .lf-table-group-row [data-col-key="amount"]')
+        .first(),
+      '.lf-table-group-aggregate-fn',
+      '.lf-table-group-aggregate-value'
+    );
+    expect(Math.abs(summaryGap - groupGap)).toBeLessThan(0.5);
+  });
+
+  test('link, status and progress cells share the text baseline in TableLight and Table', async ({
+    page,
+  }) => {
+    await navigateToTestPage(page, 'table-parity');
+    for (const [id, rowSelector] of [
+      ['parity_light', 'tbody tr[data-row-key]'],
+      ['parity_table', '.lf-table-body [data-row-key]'],
+    ]) {
+      const row = page.locator(`#${id} ${rowSelector}`).first();
+      await expect(row).toBeVisible();
+      const baselines = await row.evaluate((element) => {
+        const out = {};
+        element.querySelectorAll('[data-col-key]').forEach((cell) => {
+          const walker = document.createTreeWalker(cell, NodeFilter.SHOW_TEXT, {
+            acceptNode: (node) => (node.textContent.trim() ? 1 : 3),
+          });
+          const text = walker.nextNode();
+          if (!text) return;
+          // A zero-size inline block after the text sits on its line's baseline.
+          const wrap = document.createElement('span');
+          text.parentNode.insertBefore(wrap, text);
+          wrap.appendChild(text);
+          const probe = document.createElement('span');
+          probe.style.cssText = 'display:inline-block;width:0;height:0';
+          wrap.appendChild(probe);
+          out[cell.dataset.colKey] = probe.getBoundingClientRect().bottom;
+          wrap.parentNode.insertBefore(text, wrap);
+          wrap.remove();
+        });
+        return out;
+      });
+      ['profile', 'state', 'progress'].forEach((key) => {
+        if (baselines[key] === undefined) return;
+        expect(Math.abs(baselines[key] - baselines.name)).toBeLessThan(0.25);
+      });
+      expect(baselines.state).toBeDefined();
+    }
+  });
 });
