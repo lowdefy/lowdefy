@@ -86,8 +86,10 @@
   }
 
   /* About the width of "1,234 rows", so the toolbar keeps its layout when the count lands. */
+  /* Narrower than a short count ("64 rows"), so a toolbar that just fits once loaded doesn't
+     wrap while loading and then jump. */
   .lf-table-record-count-skeleton {
-    width: 56px;
+    width: 40px;
   }
 
   .lf-table-toolbar-popover {
