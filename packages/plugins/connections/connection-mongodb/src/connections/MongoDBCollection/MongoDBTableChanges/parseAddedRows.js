@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 import coercePosition from './coercePosition.js';
 import coerceFieldValue from './coerceFieldValue.js';
 import isSafePath from './isSafePath.js';
+import notInFieldsError from './notInFieldsError.js';
 
 // Every proper prefix of a writable path: an added row holds a column "address.city" as
 // { address: { city } }, so "address" is walked into, not refused.
@@ -56,7 +57,7 @@ function collectValues({ source, prefix, context, patch, location }) {
       collectValues({ source: value, prefix: key, context, patch, location });
       return;
     }
-    throw new Error(`MongoDBTableChanges ${location}: "${key}" is not in "fields".`);
+    throw notInFieldsError({ fieldsByKey: context.fieldsByKey, key, location });
   });
 }
 

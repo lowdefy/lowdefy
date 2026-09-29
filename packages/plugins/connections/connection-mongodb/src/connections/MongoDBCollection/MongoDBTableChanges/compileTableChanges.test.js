@@ -688,6 +688,15 @@ describe('allowlist and injection', () => {
     }
   );
 
+  test('a changeset key that is a field path but not a field key names the mismatch', () => {
+    expect(() => compile({ changes: { updated: { a: { 'owner.name': 'Ada' } } } })).toThrow(
+      'MongoDBTableChanges updated row "a": "owner.name" is not in "fields". The field "owner" writes "owner.name", but changeset keys are the TableInput column field paths, so key that field "owner.name".'
+    );
+    expect(() => compile({ changes: { added: [{ rowKey: 't', 'owner.name': 'Ada' }] } })).toThrow(
+      'MongoDBTableChanges added row "t": "owner.name" is not in "fields". The field "owner" writes "owner.name"'
+    );
+  });
+
   test('a prototype key is not an allowlist entry', () => {
     const changes = JSON.parse('{"updated":{"a":{"__proto__":{"x":1}}}}');
     expect(() => compile({ changes })).toThrow(

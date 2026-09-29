@@ -14,6 +14,7 @@
   limitations under the License.
 */
 import isSafePath from './isSafePath.js';
+import notInFieldsError from './notInFieldsError.js';
 
 // The allowlist entry for a changeset key. The "$" check comes first so an injection attempt
 // ("$where", "items.$[x]") gets an error that says what it is, not just "not in fields".
@@ -27,7 +28,7 @@ function getChangeField({ fieldsByKey, key, location }) {
   }
   const field = fieldsByKey.get(key);
   if (field === undefined) {
-    throw new Error(`MongoDBTableChanges ${location}: "${key}" is not in "fields".`);
+    throw notInFieldsError({ fieldsByKey, key, location });
   }
   return field;
 }

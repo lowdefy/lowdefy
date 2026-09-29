@@ -75,7 +75,7 @@ export default {
     fields: {
       type: 'object',
       description:
-        'The allowlist of fields the changes may write, keyed by the TableInput column field (its dot path). Nothing outside it is written.',
+        'The allowlist of fields the changes may write, keyed by the TableInput column field (its dot path, the changeset key), not the column key that MongoDBTableQuery fields use. Nothing outside it is written.',
       minProperties: 1,
       additionalProperties: {
         type: 'object',

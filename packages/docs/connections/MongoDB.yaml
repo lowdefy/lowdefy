@@ -669,7 +669,7 @@ _ref:
             order: [salt, flour]    # with rowDrag and no positionField: every row key in the new order
             ```
 
-            The `fields` keys are the column `field` dot paths, and only those fields can be written (at their `path`). Values are coerced to the field type like `MongoDBTableQuery` values: numbers from numeric strings, dates from date strings and timestamps, and `null` clears a value of any type. `avatar`, `image` and `json` fields accept documents, but not with keys that start with `$`.
+            The `fields` keys are the column `field` dot paths, because those are the keys of the changeset, and only those fields can be written (at their `path`). This differs from `MongoDBTableQuery`, whose `fields` are keyed by the column `key`: a `TableInput` column `{ key: owner, field: owner.name }` is `owner.name` here and `owner` (with `path: owner.name`) in `MongoDBTableQuery`. A changeset key that is the `path` of a field keyed otherwise is refused with an error that names the mismatch. Values are coerced to the field type like `MongoDBTableQuery` values: numbers from numeric strings, dates from date strings and timestamps, and `null` clears a value of any type. `avatar`, `image` and `json` fields accept documents, but not with keys that start with `$`.
 
             Every operation is scoped by the base `filter`, for example the organization or owner of the rows. The row key is combined with the filter using `$and`, so it can only narrow it. `filter` is required, unless the connection is tenant-scoped: then the tenant is merged into every operation and stamped on new rows, as for `MongoDBBulkWrite`. Set `filter: {}` to allow writes to every document in the collection.
 
@@ -759,7 +759,7 @@ _ref:
             - `unset: string[]`: Bulk mode: fields to remove from every selected row.
             - `queryFields: object`: Bulk mode: the `MongoDBTableQuery` `fields` of the table, keyed by column key. Needed when a `selection` has a `filter` or `search`.
             - `user: object`: Bulk mode: the user that `{ $user: path }` values in a `selection` filter resolve from. Set it to `{ _user: true }`.
-            - `fields: object`: __Required__ - The allowlist, keyed by the `TableInput` column field (its dot path). Each field is an object:
+            - `fields: object`: __Required__ - The allowlist, keyed by the `TableInput` column `field` (its dot path, the changeset key), not the column `key` that `MongoDBTableQuery` fields use. Each field is an object:
               - `type: enum`: __Required__ - The column type, as for `MongoDBTableQuery`. Values are checked and coerced to it.
               - `path: string`: Default: the field key - Dot path the value is written to, in the document or, in array mode, in the item.
             - `filter: object`: The base filter that scopes every operation, for example `{ org_id: { _user: organization.id } }`. New rows are stamped with its equality conditions, and `fields` can not write its fields. Required unless the connection is tenant-scoped. Set it to `{}` to allow writes to every document. See Scope fields.
@@ -887,15 +887,15 @@ _ref:
                     org_id:
                       _user: organization.id
                   fields:
+                    # Keyed by the TableInput column field, the changeset keys.
                     name:
                       type: text
                     stage:
                       type: tag
                     amount:
                       type: currency
-                    owner:
+                    owner.name:
                       type: text
-                      path: owner.name
                     close_date:
                       type: date
                   insertDefaults:
@@ -926,9 +926,9 @@ _ref:
                     org_id:
                       _user: organization.id
                   fields:
-                    owner:
+                    owner.name:
                       type: text
-                      path: owner.name
+                  # The table's MongoDBTableQuery fields, keyed by column key.
                   queryFields:
                     name:
                       type: text
@@ -946,7 +946,7 @@ _ref:
                   selection:
                     _payload: selected
                   set:
-                    owner:
+                    owner.name:
                       _payload: owner
             ```
 
@@ -1034,7 +1034,7 @@ _ref:
             A request over a limit throws before the query runs.
 
             #### Properties
-            - `fields: object`: __Required__ - The allowlist, keyed by the Table column key. Each field is an object:
+            - `fields: object`: __Required__ - The allowlist, keyed by the Table column `key` (the view's keys), not the column `field` that `MongoDBTableChanges` fields use; `path` gives the field path. Each field is an object:
               - `type: enum`: __Required__ - The column type: `text`, `email`, `phone`, `url`, `link`, `html`, `relation`, `tag`, `status`, `number`, `currency`, `percent`, `progress`, `rating`, `date`, `datetime`, `boolean`, `tags`, `people`, `avatar`, `image` or `json`. It decides the operators and aggregates the field allows.
               - `path: string`: Default: the field key - Dot path of the value in the documents the base pipeline returns.
               - `search: boolean`: Default: `false` - Include the field in the view search. Each search word must match at least one search field.

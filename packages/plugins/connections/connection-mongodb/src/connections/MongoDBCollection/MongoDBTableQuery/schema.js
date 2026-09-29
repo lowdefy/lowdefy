@@ -38,7 +38,7 @@ export default {
     fields: {
       type: 'object',
       description:
-        'The allowlist of fields the view may sort, filter, search, group and aggregate by, keyed by column key.',
+        'The allowlist of fields the view may sort, filter, search, group and aggregate by, keyed by the Table column key (the view keys), not the column field that MongoDBTableChanges fields use. "path" gives the dot path.',
       minProperties: 1,
       additionalProperties: {
         type: 'object',
