@@ -223,6 +223,33 @@ requests:
                 status: active
 ```
 
+## Table Requests
+
+Two requests serve the `Table` and `TableInput` blocks (`@lowdefy/blocks-table`, see [../blocks/table.md](../blocks/table.md)). Both take view or changeset data from the browser and treat it as untrusted input: it is validated against a `fields` allowlist and compiled to MongoDB syntax on the server. User docs: `packages/docs/connections/MongoDB.yaml`.
+
+### MongoDBTableQuery
+
+`MongoDBCollection/MongoDBTableQuery/`. Serves a `Table` in server mode (`data: { mode: server, request }`); the table fires the request with `{ startRow, endRow, view, groupPath, selected }` as the event.
+
+- `normalizeFields` builds the allowlist, keyed by Table column key: `{ type, path, search, sortable, filterable, groupable }`. `fieldTypes.js` maps each column type to its family, which decides the allowed operators and aggregates.
+- `validateView` reads only `sort`, `filter`, `search`, `group` and `aggregates`: `parseSort` (at most 10 levels), `parseCondition` / `parseLeafValue` (operators per type, typed coercion with `coerceScalar`, `{ $user: path }` resolved from the request's `user` property by `resolveUserValue`, which throws when the value is missing), `parseGroup`, `parseAggregates`. Any key not in `fields` throws (`getViewField`).
+- `compileTableQuery` compiles one aggregation: base `pipeline` (write stages `$out` / `$merge` refused) -> `$match` filter -> `$match` search (`compileSearch`: each word, regex-escaped, must match one `search: true` field) -> `$match` group path -> `$facet { rows: [$sort (+ _id tiebreak), $skip, $limit] | groups: [$group, $sort, $skip, $limit], total, aggregates? }`. `validateRows` enforces `maxRows` (default 1000).
+- Date `eq`, `before`, `after` and `between` on `date` fields compare whole UTC days (`getDayRange`); `within` uses `getWithinRange`.
+- On a tenant connection `injectTenantIntoPipeline` puts the tenant `$match` first; `assertUnscopedPipeline` guards unscoped pipelines.
+- `readTableResult` shapes `{ rows, total, groups?, aggregates? }`.
+
+The `$sort` runs inside `$facet`, so MongoDB can not use an index for it: every block fetch sorts all documents that match the base pipeline and the view.
+
+### MongoDBTableChanges
+
+`MongoDBCollection/MongoDBTableChanges/`. Saves a `TableInput` value `{ updated, added, removed, moved?, order? }`.
+
+- `normalizeChangeFields` builds the allowlist, keyed by column `field` (dot path), with `type` and the target `path`. `parseChanges` (and `parseUpdatedRows`, `parseAddedRows`, `parseRemovedRows`, `parseMovedRows`, `parseOrder`) validate every key and value: unknown fields, `$`-prefixed or empty path segments (`isSafePath`), operator objects as values or keys, and more than `maxChanges` (default 1000) row changes are refused. Values are coerced per type (`coerceFieldValue`), row keys per `rowKeyType` (`coerceRowKey`: `auto` reads `{"_oid":"…"}` text as an ObjectId).
+- A base `filter` is required unless the connection is tenant-scoped (`filter: {}` opts into unscoped writes). `scopeFilter` combines it with each row key under `$and`, so a key can only narrow it.
+- Collection mode (`compileCollectionChanges`): `deleteOne`, `updateOne` with one `$set` of the changed paths and the position, `insertOne` with `insertDefaults` under the row's values and a generated ObjectId `_id`. An `order` needs a `positionField` (positions 1024, 2048, …).
+- Array mode (`compileArrayChanges`, `array: { documentId, path, itemKeyField }`): up to four ordered updates of one document, `$set` with `arrayFilters`, `$pull`, `$push`, and (`compileArrayOrder`) a pipeline update that reorders items by `order` on the server. Throws when the document is not found inside the filter.
+- Runs as one `bulkWrite` (not a transaction; `ordered` default true), writes a change log record when the connection has one, and returns `{ matchedCount, modifiedCount, insertedCount, deletedCount, insertedKeys }` (`readChangesResult`).
+
 ## Dynamic Queries
 
 Use operators in queries:
