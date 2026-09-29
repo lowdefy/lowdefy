@@ -335,4 +335,56 @@ test.describe('Table visual polish', () => {
     });
     expect(alpha).toBe(255);
   });
+
+  test('sticky group headers stack one per level', async ({ page }) => {
+    const block = table(page, 'grouped');
+    const scroller = block.locator('.lf-table-scroller');
+    const stickyRows = block.locator('[data-lf-group-sticky] [data-group-key]');
+    const rowHeight = await row(page, 'grouped', 1).evaluate((element) => element.offsetHeight);
+    const scrollTo = (top) =>
+      scroller.evaluate((element, value) => (element.scrollTop = value), top);
+    // List: EMEA (0), Ada (1), rows 2-11, Ken (12), rows 13-22, Grace (23), rows 24-33, APAC (34).
+    await scrollTo(5 * rowHeight);
+    await expect(stickyRows).toHaveCount(2);
+    await expect(stickyRows.nth(0)).toHaveAttribute('data-group-key', '["EMEA"]');
+    await expect(stickyRows.nth(1)).toHaveAttribute('data-group-key', '["EMEA","Ada"]');
+    const header = await block.locator('.lf-table-header').boundingBox();
+    const outer = await stickyRows.nth(0).boundingBox();
+    const inner = await stickyRows.nth(1).boundingBox();
+    expect(Math.abs(outer.y - (header.y + header.height))).toBeLessThan(1);
+    expect(Math.abs(inner.y - (outer.y + outer.height))).toBeLessThan(1);
+
+    await scrollTo(15 * rowHeight);
+    await expect(stickyRows.nth(1)).toHaveAttribute('data-group-key', '["EMEA","Ken"]');
+
+    // APAC arrives: it pushes the rep header out first, then the region header.
+    await scrollTo(34 * rowHeight - rowHeight / 2);
+    await expect(stickyRows.nth(0)).toHaveAttribute('data-group-key', '["EMEA"]');
+    await expect(block.locator('[data-group-level="0"]')).toHaveAttribute(
+      'style',
+      new RegExp(`translateY\\(-${rowHeight / 2}px\\)`)
+    );
+    await scrollTo(34 * rowHeight + 5);
+    await expect(stickyRows).toHaveCount(2);
+    await expect(stickyRows.nth(0)).toHaveAttribute('data-group-key', '["APAC"]');
+    await expect(stickyRows.nth(1)).toHaveAttribute('data-group-key', '["APAC","Ada"]');
+  });
+
+  test('collapsing an inner group from its sticky header shows its own header under the outer one', async ({
+    page,
+  }) => {
+    const block = table(page, 'grouped');
+    const scroller = block.locator('.lf-table-scroller');
+    const rowHeight = await row(page, 'grouped', 1).evaluate((element) => element.offsetHeight);
+    await scroller.evaluate((element, value) => (element.scrollTop = value), 15 * rowHeight);
+    const inner = block.locator('[data-lf-group-sticky] [data-group-key=\'["EMEA","Ken"]\']');
+    await inner.click();
+    const own = block.locator('.lf-table-body [data-group-key=\'["EMEA","Ken"]\']');
+    await expect(own).toHaveAttribute('aria-expanded', 'false');
+    const outer = block.locator('[data-lf-group-sticky] [data-group-key=\'["EMEA"]\']');
+    await expect(outer).toBeVisible();
+    const outerBox = await outer.boundingBox();
+    const ownBox = await own.boundingBox();
+    expect(Math.abs(ownBox.y - (outerBox.y + outerBox.height))).toBeLessThan(1);
+  });
 });

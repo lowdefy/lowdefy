@@ -121,7 +121,8 @@
     will-change: transform;
   }
 
-  .lf-table-group-sticky .lf-table-row {
+  /* Only the innermost stacked header casts the shadow over the rows. */
+  .lf-table-group-sticky-shift:last-child .lf-table-row {
     box-shadow: 0 2px 4px color-mix(in srgb, var(--ant-color-text, #000) 6%, transparent);
   }
 }

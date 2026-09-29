@@ -14,33 +14,41 @@
   limitations under the License.
 */
 
-import React, { useEffect, useReducer, useRef } from 'react';
+import React, { useEffect, useMemo, useReducer, useRef } from 'react';
 import { flushSync } from 'react-dom';
 
-import getStickyGroup from './getStickyGroup.js';
+import buildStickyLevels from './buildStickyLevels.js';
+import getStickyGroups from './getStickyGroups.js';
 import GroupRow from './GroupRow.js';
 
 function bump(count) {
   return count + 1;
 }
 
-function measure({ api, headerHeight, sticky }) {
+function measure({ api, headerHeight, levels, sticky }) {
   const scroller = api.scrollerRef.current;
-  if (!api.grouping || !scroller) return { index: -1, shift: 0 };
+  if (!api.grouping || !scroller) return [];
   // Body offset of the first row under the header: with a sticky header the body starts where
   // the header sits; a non-sticky header scrolls away first.
   const scrollTop = sticky ? scroller.scrollTop : scroller.scrollTop - headerHeight;
-  return getStickyGroup({
-    groupIndices: api.grouping.groupIndices,
+  return getStickyGroups({
+    levels,
     rowHeight: api.rowHeight,
     rowOffsets: api.rowOffsets,
     scrollTop,
   });
 }
 
-// The one sticky group header (D10.8): a copy of the group header the top rows belong to,
-// overlaid under the column header, instead of a sticky element per group. It renders only when
-// that group changes; the push-up as the next header arrives is a transform written on scroll.
+function sameIndices(groups, indices) {
+  if (groups.length !== indices.length) return false;
+  return groups.every((group, level) => group.index === indices[level]);
+}
+
+// The sticky group headers (D10.8): one overlay under the column header holding a copy of the
+// current group header of each level, stacked outermost first (EMEA, then its rep), instead of
+// a sticky element per group. It renders only when a level's group changes; the push-ups as the
+// next headers arrive are transforms written on scroll. Inner levels sit under outer ones, so a
+// new outer group pushes them out first.
 function StickyGroupRow({
   api,
   centerCols,
@@ -53,10 +61,18 @@ function StickyGroupRow({
   sticky,
 }) {
   const [, forceRender] = useReducer(bump, 0);
-  const shiftRef = useRef(null);
-  const renderedIndex = useRef(-1);
+  const shiftRefs = useRef([]);
+  const renderedIndices = useRef([]);
+  // Null while the table is not grouped (the overlay then renders nothing).
+  const { grouping } = api;
+  const groupIndices = grouping?.groupIndices;
+  const levelCount = grouping?.levels.length ?? 0;
+  const levels = useMemo(
+    () => (grouping ? buildStickyLevels({ groupIndices, levelCount, rows }) : []),
+    [groupIndices, levelCount, rows]
+  );
   const args = useRef(null);
-  args.current = { api, headerHeight, sticky };
+  args.current = { api, headerHeight, levels, sticky };
 
   useEffect(() => {
     const element = api.scrollerRef.current;
@@ -64,11 +80,14 @@ function StickyGroupRow({
     function onFrame() {
       frame = 0;
       const next = measure(args.current);
-      if (next.index !== renderedIndex.current) {
+      if (!sameIndices(next, renderedIndices.current)) {
         flushSync(forceRender);
         return;
       }
-      if (shiftRef.current) shiftRef.current.style.transform = `translateY(${next.shift}px)`;
+      next.forEach((group, level) => {
+        const shift = shiftRefs.current[level];
+        if (shift) shift.style.transform = `translateY(${group.shift}px)`;
+      });
     }
     function schedule() {
       if (!frame) frame = requestAnimationFrame(onFrame);
@@ -82,9 +101,9 @@ function StickyGroupRow({
 
   // Read in render so the overlay always matches the rows it is rendered with (a collapse changes
   // which list index is the current group without any scroll).
-  const current = measure(args.current);
-  renderedIndex.current = current.index;
-  if (current.index < 0) return null;
+  const groups = measure(args.current);
+  renderedIndices.current = groups.map((group) => group.index);
+  if (groups.length === 0) return null;
   // tabIndex: a click on the overlay focuses it rather than the scroller, whose focus handler
   // would scroll back to the active cell before the click lands.
   return (
@@ -95,25 +114,35 @@ function StickyGroupRow({
       style={{ top: sticky ? headerHeight : 0 }}
       tabIndex={-1}
     >
-      <div
-        className="lf-table-group-sticky-shift"
-        ref={shiftRef}
-        style={{ transform: `translateY(${current.shift}px)` }}
-      >
-        <GroupRow
-          activeCol={-1}
-          api={api}
-          centerCols={centerCols}
-          className={rowClassName}
-          displayIndex={current.index}
-          endCols={layout.end}
-          item={rows[current.index]}
-          overlay
-          selectable={selectable}
-          selection={selection}
-          startCols={layout.start}
-        />
-      </div>
+      {groups.map((group, level) => (
+        <div
+          className="lf-table-group-sticky-shift"
+          data-group-level={level}
+          key={level}
+          ref={(element) => {
+            shiftRefs.current[level] = element;
+          }}
+          style={{
+            top: level * api.rowHeight,
+            transform: `translateY(${group.shift}px)`,
+            zIndex: groups.length - level,
+          }}
+        >
+          <GroupRow
+            activeCol={-1}
+            api={api}
+            centerCols={centerCols}
+            className={rowClassName}
+            displayIndex={group.index}
+            endCols={layout.end}
+            item={rows[group.index]}
+            overlay
+            selectable={selectable}
+            selection={selection}
+            startCols={layout.start}
+          />
+        </div>
+      ))}
     </div>
   );
 }
