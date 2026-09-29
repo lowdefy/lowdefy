@@ -13,25 +13,24 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-// A pipeline update that puts the items of an embedded array in the order of `keys`, on the
-// server and against the array as it is when the update runs: items are moved, never
-// rewritten, so a concurrent edit of an item's fields is kept. Items the order does not name
-// (added by someone else since the table loaded) follow in their current order; keys whose
-// item is gone are skipped. The keys are $literal, so a key such as "$items" is a value, not a
-// field path.
-function compileArrayOrder({ path, itemKeyField, keys }) {
+// A pipeline update that puts the items of an embedded array in the order of `keyForms` (the
+// forms each key matches, getKeyForms), on the server and against the array as it is when
+// the update runs: items are moved, never rewritten, so a concurrent edit of an item's fields
+// is kept. Items the order does not name (added by someone else since the table loaded)
+// follow in their current order; keys whose item is gone are skipped. The keys are $literal,
+// so a key such as "$items" is a value, not a field path.
+function compileArrayOrder({ path, itemKeyField, keyForms }) {
   const items = `$${path}`;
   const itemKey = `$$item.${itemKeyField}`;
-  const orderKeys = { $literal: keys };
   const ordered = {
     $filter: {
       input: {
         $map: {
-          input: orderKeys,
-          as: 'key',
+          input: { $literal: keyForms },
+          as: 'forms',
           in: {
             $arrayElemAt: [
-              { $filter: { input: items, as: 'item', cond: { $eq: [itemKey, '$$key'] } } },
+              { $filter: { input: items, as: 'item', cond: { $in: [itemKey, '$$forms'] } } },
               0,
             ],
           },
@@ -42,7 +41,11 @@ function compileArrayOrder({ path, itemKeyField, keys }) {
     },
   };
   const rest = {
-    $filter: { input: items, as: 'item', cond: { $not: [{ $in: [itemKey, orderKeys] }] } },
+    $filter: {
+      input: items,
+      as: 'item',
+      cond: { $not: [{ $in: [itemKey, { $literal: keyForms.flat() }] }] },
+    },
   };
   return [
     {

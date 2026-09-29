@@ -21,7 +21,7 @@ import compileTableQuery from './compileTableQuery.js';
 const now = new Date('2026-09-28T12:00:00.000Z');
 
 const fields = {
-  name: { type: 'text', search: true },
+  name: { type: 'text', search: true, groupable: true },
   email: { type: 'email', search: true },
   amount: { type: 'currency' },
   stage: { type: 'tag', groupable: true },
@@ -31,6 +31,17 @@ const fields = {
 
 const base = [{ $match: { org_id: 'org_1' } }];
 
+const projection = {
+  _id: 1,
+  name: 1,
+  email: 1,
+  amount: 1,
+  stage: 1,
+  'owner.name': 1,
+  created: 1,
+};
+const project = { $project: projection };
+
 function compile(properties) {
   return compileTableQuery({ properties: { pipeline: base, fields, ...properties }, now });
 }
@@ -39,12 +50,14 @@ describe('rows', () => {
   test('an empty view pages rows sorted by _id after the base pipeline', () => {
     expect(compile({ startRow: 0, endRow: 100 })).toEqual({
       grouped: false,
+      options: { maxTimeMS: 10000 },
       specs: [],
       pipeline: [
         { $match: { org_id: 'org_1' } },
+        { $sort: { _id: 1 } },
         {
           $facet: {
-            rows: [{ $sort: { _id: 1 } }, { $limit: 100 }],
+            rows: [{ $limit: 100 }, project],
             total: [{ $count: 'count' }],
           },
         },
@@ -66,13 +79,10 @@ describe('rows', () => {
       { $match: { org_id: 'org_1' } },
       { $match: { amount: { $gt: 10 } } },
       { $match: { $or: [{ name: /ada/i }, { email: /ada/i }] } },
+      { $sort: { amount: -1, 'owner.name': 1, _id: 1 } },
       {
         $facet: {
-          rows: [
-            { $sort: { amount: -1, 'owner.name': 1, _id: 1 } },
-            { $skip: 200 },
-            { $limit: 200 },
-          ],
+          rows: [{ $skip: 200 }, { $limit: 200 }, project],
           total: [{ $count: 'count' }],
         },
       },
@@ -97,9 +107,10 @@ describe('rows', () => {
   test('pipeline defaults to no base stages', () => {
     const { pipeline } = compileTableQuery({ properties: { fields, endRow: 10 }, now });
     expect(pipeline).toEqual([
+      { $sort: { _id: 1 } },
       {
         $facet: {
-          rows: [{ $sort: { _id: 1 } }, { $limit: 10 }],
+          rows: [{ $limit: 10 }, project],
           total: [{ $count: 'count' }],
         },
       },
@@ -148,21 +159,94 @@ describe('rows', () => {
       },
       now,
     });
-    expect(pipeline[0].$facet.rows[0]).toEqual({ $sort: { _id: -1 } });
+    expect(pipeline[0]).toEqual({ $sort: { _id: -1 } });
   });
 
   test('a zero row request returns the total only', () => {
     const { pipeline } = compile({ startRow: 50, endRow: 50 });
-    expect(pipeline[1].$facet.rows).toEqual([
-      { $sort: { _id: 1 } },
+    expect(pipeline.at(-1).$facet.rows).toEqual([
       { $skip: 50 },
       { $match: { $expr: false } },
+      project,
     ]);
   });
 
   test('endRow defaults to startRow + maxRows', () => {
     const { pipeline } = compile({ startRow: 10, maxRows: 50 });
-    expect(pipeline[1].$facet.rows).toEqual([{ $sort: { _id: 1 } }, { $skip: 10 }, { $limit: 50 }]);
+    expect(pipeline.at(-1).$facet.rows).toEqual([{ $skip: 10 }, { $limit: 50 }, project]);
+  });
+});
+
+describe('sort before the facet', () => {
+  test('rows are sorted before $facet, so an index on the sort fields can serve the sort', () => {
+    const { pipeline } = compile({
+      view: { filter: { key: 'stage', op: 'eq', value: 'won' }, sort: [{ key: 'amount' }] },
+      endRow: 10,
+    });
+    expect(pipeline).toEqual([
+      { $match: { org_id: 'org_1' } },
+      { $match: { stage: /^won$/i } },
+      { $sort: { amount: 1, _id: 1 } },
+      {
+        $facet: {
+          rows: [{ $limit: 10 }, project],
+          total: [{ $count: 'count' }],
+        },
+      },
+    ]);
+  });
+
+  test('group levels are not sorted before $facet', () => {
+    const { pipeline } = compile({ view: { group: [{ key: 'stage' }] }, groupPath: [] });
+    expect(pipeline.map((stage) => Object.keys(stage)[0])).toEqual(['$match', '$facet']);
+  });
+});
+
+describe('projection', () => {
+  test('rows are projected to the field paths and _id by default', () => {
+    const { pipeline } = compile({ endRow: 10 });
+    expect(pipeline.at(-1).$facet.rows.at(-1)).toEqual({ $project: projection });
+  });
+
+  test('returnFields adds the paths cells read, and paths inside another path collapse into it', () => {
+    const { pipeline } = compile({ endRow: 10, returnFields: ['owner', 'avatar.src', 'name'] });
+    expect(pipeline.at(-1).$facet.rows.at(-1)).toEqual({
+      $project: {
+        _id: 1,
+        name: 1,
+        email: 1,
+        amount: 1,
+        stage: 1,
+        created: 1,
+        owner: 1,
+        'avatar.src': 1,
+      },
+    });
+  });
+
+  test('project: false returns the rows as the base pipeline leaves them', () => {
+    const { pipeline } = compile({ endRow: 10, project: false });
+    expect(pipeline.at(-1).$facet.rows).toEqual([{ $limit: 10 }]);
+  });
+
+  test('the leaf rows of a group are projected, group levels are not', () => {
+    const view = { group: [{ key: 'stage' }] };
+    const leaf = compile({ view, groupPath: ['won'], endRow: 10 });
+    expect(leaf.pipeline.at(-1).$facet.rows.at(-1)).toEqual({ $project: projection });
+    const groups = compile({ view, groupPath: [], endRow: 10 });
+    expect(groups.pipeline.at(-1).$facet.groups.some((stage) => stage.$project)).toBe(false);
+  });
+
+  test('returnFields must be an array of dot paths', () => {
+    expect(() => compile({ returnFields: 'owner' })).toThrow(
+      'MongoDBTableQuery "returnFields" should be an array of dot paths. Received "owner".'
+    );
+    expect(() => compile({ returnFields: ['$where'] })).toThrow(
+      'MongoDBTableQuery "returnFields" should be an array of dot paths. Received ["$where"].'
+    );
+    expect(() => compile({ returnFields: ['a..b'] })).toThrow(
+      'MongoDBTableQuery "returnFields" should be an array of dot paths.'
+    );
   });
 });
 
@@ -201,6 +285,7 @@ describe('grouping', () => {
   test('groupPath shorter than group returns the next group level', () => {
     expect(compile({ view, groupPath: [], startRow: 0, endRow: 100 })).toEqual({
       grouped: true,
+      options: { maxTimeMS: 10000 },
       specs: [],
       pipeline: [
         { $match: { org_id: 'org_1' } },
@@ -222,7 +307,7 @@ describe('grouping', () => {
     const { pipeline, grouped } = compile({ view, groupPath: ['won'], startRow: 0, endRow: 100 });
     expect(grouped).toBe(true);
     expect(pipeline[1]).toEqual({ $match: { stage: 'won' } });
-    expect(pipeline[2].$facet.groups[0]).toEqual({
+    expect(pipeline.at(-1).$facet.groups[0]).toEqual({
       $group: { _id: '$owner.name', count: { $sum: 1 } },
     });
   });
@@ -236,7 +321,7 @@ describe('grouping', () => {
     });
     expect(grouped).toBe(false);
     expect(pipeline[1]).toEqual({ $match: { $and: [{ stage: 'won' }, { 'owner.name': null }] } });
-    expect(pipeline[2].$facet.rows[0]).toEqual({ $sort: { _id: 1 } });
+    expect(pipeline.at(-2)).toEqual({ $sort: { _id: 1 } });
   });
 
   test('group values match exactly, not as text', () => {
@@ -249,7 +334,7 @@ describe('grouping', () => {
       view: { ...view, sort: [{ key: 'stage', desc: true }] },
       groupPath: [],
     });
-    expect(pipeline[1].$facet.groups[1]).toEqual({ $sort: { _id: -1 } });
+    expect(pipeline.at(-1).$facet.groups[1]).toEqual({ $sort: { _id: -1 } });
   });
 
   test('groupPath values may be dates, numbers, booleans and ObjectIds', () => {
@@ -303,13 +388,12 @@ describe('aggregates', () => {
       { key: 'owner', fn: 'countEmpty', name: 'a4' },
       { key: 'stage', fn: 'countNotEmpty', name: 'a5' },
     ]);
-    expect(pipeline[1].$facet.aggregates).toEqual([
+    expect(pipeline.at(-1).$facet.aggregates).toEqual([
       {
         $group: {
           _id: null,
           a0: { $sum: '$amount' },
           a1: { $max: '$created' },
-          a2: { $addToSet: { $cond: [isEmpty('name'), '$$REMOVE', '$name'] } },
           a3: { $sum: { $cond: [isEmpty('email'), 1, 0] } },
           a3_rows: { $sum: 1 },
           a4: { $sum: { $cond: [isEmpty('owner.name'), 1, 0] } },
@@ -318,10 +402,57 @@ describe('aggregates', () => {
       },
       {
         $addFields: {
-          a2: { $size: '$a2' },
           a3: { $cond: [{ $eq: ['$a3_rows', 0] }, 0, { $divide: ['$a3', '$a3_rows'] }] },
         },
       },
+    ]);
+    // countDistinct counts the groups of the value in its own branch, never building a set
+    // of every distinct value in one document.
+    expect(pipeline.at(-1).$facet.distinct_a2).toEqual([
+      { $group: { _id: '$name' } },
+      { $match: { _id: { $nin: [null, '', []] } } },
+      { $count: 'count' },
+    ]);
+  });
+
+  test('min and max on text compare the non-empty strings', () => {
+    const { pipeline } = compile({ view: { aggregates: { name: 'min', email: 'max' } } });
+    expect(pipeline.at(-1).$facet.aggregates).toEqual([
+      {
+        $group: {
+          _id: null,
+          a0: { $min: { $cond: [isEmpty('name'), '$$REMOVE', '$name'] } },
+          a1: { $max: { $cond: [isEmpty('email'), '$$REMOVE', '$email'] } },
+        },
+      },
+    ]);
+  });
+
+  test('countDistinct needs a groupable field', () => {
+    expect(() => compile({ view: { aggregates: { amount: 'countDistinct' } } })).toThrow(
+      'MongoDBTableQuery aggregate "countDistinct" on "amount" groups by its values, so the field needs "groupable: true".'
+    );
+  });
+
+  test('group levels count distinct values per group', () => {
+    const { pipeline } = compile({
+      view: { group: [{ key: 'stage' }], aggregates: { owner: 'countDistinct' } },
+    });
+    expect(pipeline.at(-1).$facet.groups.slice(0, 2)).toEqual([
+      {
+        $group: {
+          _id: '$stage',
+          count: { $sum: 1 },
+          a0: { $addToSet: { $cond: [isEmpty('owner.name'), '$$REMOVE', '$owner.name'] } },
+        },
+      },
+      { $addFields: { a0: { $size: '$a0' } } },
+    ]);
+    expect(pipeline.at(-1).$facet.aggregates).toEqual([{ $group: { _id: null } }]);
+    expect(pipeline.at(-1).$facet.distinct_a0).toEqual([
+      { $group: { _id: '$owner.name' } },
+      { $match: { _id: { $nin: [null, '', []] } } },
+      { $count: 'count' },
     ]);
   });
 
@@ -339,7 +470,7 @@ describe('aggregates', () => {
       },
       now,
     });
-    expect(pipeline[0].$facet.aggregates).toEqual([
+    expect(pipeline.at(-1).$facet.aggregates).toEqual([
       {
         $group: {
           _id: null,
@@ -357,12 +488,53 @@ describe('aggregates', () => {
     const { pipeline } = compile({
       view: { group: [{ key: 'stage' }], aggregates: { amount: 'avg' } },
     });
-    expect(pipeline[1].$facet.groups[0]).toEqual({
+    expect(pipeline.at(-1).$facet.groups[0]).toEqual({
       $group: { _id: '$stage', count: { $sum: 1 }, a0: { $avg: '$amount' } },
     });
-    expect(pipeline[1].$facet.aggregates).toEqual([
+    expect(pipeline.at(-1).$facet.aggregates).toEqual([
       { $group: { _id: null, a0: { $avg: '$amount' } } },
     ]);
+  });
+});
+
+describe('time zone', () => {
+  test('timezone sets the days date filters compare, UTC by default', () => {
+    const filter = { key: 'created', op: 'eq', value: '2026-01-03' };
+    expect(compile({ view: { filter } }).pipeline[1]).toEqual({
+      $match: {
+        created: {
+          $gte: new Date('2026-01-03T00:00:00.000Z'),
+          $lt: new Date('2026-01-04T00:00:00.000Z'),
+        },
+      },
+    });
+    expect(compile({ view: { filter }, timezone: 'Asia/Tokyo' }).pipeline[1]).toEqual({
+      $match: {
+        created: {
+          $gte: new Date('2026-01-02T15:00:00.000Z'),
+          $lt: new Date('2026-01-03T15:00:00.000Z'),
+        },
+      },
+    });
+  });
+
+  test('an unknown timezone is refused', () => {
+    expect(() => compile({ timezone: 'Mars/Base' })).toThrow(
+      'MongoDBTableQuery "timezone" should be an IANA time zone name such as "Europe/London". Received "Mars/Base".'
+    );
+  });
+});
+
+describe('options', () => {
+  test('the aggregation runs with a default maxTimeMS of 10 seconds', () => {
+    expect(compile({}).options).toEqual({ maxTimeMS: 10000 });
+  });
+
+  test('options override the default maxTimeMS and pass through', () => {
+    expect(compile({ options: { maxTimeMS: 500, allowDiskUse: true } }).options).toEqual({
+      maxTimeMS: 500,
+      allowDiskUse: true,
+    });
   });
 });
 

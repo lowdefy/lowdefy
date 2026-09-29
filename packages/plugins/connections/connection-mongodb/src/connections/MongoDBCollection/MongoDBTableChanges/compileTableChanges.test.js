@@ -38,11 +38,14 @@ function createIdGenerator() {
   };
 }
 
+const now = new Date('2026-09-29T12:00:00.000Z');
+
 function compile(properties, { tenantScoped = false } = {}) {
   return compileTableChanges({
     properties: { fields, filter, ...properties },
     tenantScoped,
     generateId: createIdGenerator(),
+    now,
   });
 }
 
@@ -116,9 +119,8 @@ describe('collection mode', () => {
     const compiled = compile({
       insertDefaults: { org_id: 'org_1', created, status: 'draft' },
       changes: {
-        added: [{ rowKey: 'tmp-1', name: 'Apples', address: { city: 'Rome' }, status: 'x' }],
+        added: [{ rowKey: 'tmp-1', name: 'Apples', address: { city: 'Rome' } }],
       },
-      fields: { ...fields, status: { type: 'tag' } },
     });
     const id = new ObjectId('64b000000000000000000001');
     expect(compiled.operations).toEqual([
@@ -128,7 +130,7 @@ describe('collection mode', () => {
             _id: id,
             org_id: 'org_1',
             created,
-            status: 'x',
+            status: 'draft',
             name: 'Apples',
             address: { city: 'Rome' },
           },
@@ -161,7 +163,7 @@ describe('collection mode', () => {
       changes: { added: [{ rowKey: 'X-1', code: 'X-1', name: 'Ten' }] },
     });
     expect(compiled.operations).toEqual([
-      { insertOne: { document: { code: 'X-1', name: 'Ten' } } },
+      { insertOne: { document: { org_id: 'org_1', code: 'X-1', name: 'Ten' } } },
     ]);
     expect(compiled.insertedKeys).toEqual({ 'X-1': 'X-1' });
   });
@@ -205,7 +207,12 @@ describe('collection mode', () => {
       { updateOne: { filter: scoped({ _id: 'a' }), update: { $set: { position: 3072 } } } },
       {
         insertOne: {
-          document: { _id: new ObjectId('64b000000000000000000001'), name: 'New', position: 2048 },
+          document: {
+            _id: new ObjectId('64b000000000000000000001'),
+            org_id: 'org_1',
+            name: 'New',
+            position: 2048,
+          },
         },
       },
     ]);
@@ -243,6 +250,165 @@ describe('collection mode', () => {
         changes: { removed: ['a'] },
       }).options
     ).toEqual({ comment: 'save', ordered: false });
+  });
+});
+
+describe('scope fields', () => {
+  const orgFilter = { org_id: 'org_1' };
+
+  test('a field that writes a filter field is refused', () => {
+    expect(() =>
+      compile({
+        filter: orgFilter,
+        fields: { ...fields, org_id: { type: 'text' } },
+        changes: { updated: { a: { name: 'x' } } },
+      })
+    ).toThrow(
+      'MongoDBTableChanges field "org_id" writes "org_id", which "filter" scopes the rows by, so a change could move a row out of scope. Keep scope fields out of "fields".'
+    );
+  });
+
+  test('a field that writes into or over a filter field is refused', () => {
+    expect(() =>
+      compile({
+        filter: { owner: { id: 'u1' } },
+        changes: { updated: { a: { name: 'x' } } },
+      })
+    ).toThrow('MongoDBTableChanges field "owner" writes "owner.name", which "filter" scopes');
+    expect(() =>
+      compile({
+        filter: { $and: [orgFilter, { 'address.city.code': { $in: ['a', 'b'] } }] },
+        changes: { updated: { a: { name: 'x' } } },
+      })
+    ).toThrow('MongoDBTableChanges field "address.city" writes "address.city", which "filter"');
+    expect(() =>
+      compile({
+        filter: { $or: [{ team: 't1' }, { qty: { $gt: 0 } }] },
+        changes: { updated: { a: { name: 'x' } } },
+      })
+    ).toThrow('MongoDBTableChanges field "qty" writes "qty", which "filter" scopes');
+  });
+
+  test('a positionField that is a filter field is refused', () => {
+    expect(() =>
+      compile({
+        filter: { rank: { $gte: 0 } },
+        positionField: 'rank',
+        changes: { moved: { a: 5 } },
+      })
+    ).toThrow(
+      'MongoDBTableChanges "positionField" writes "rank", which "filter" scopes the rows by'
+    );
+  });
+
+  test('a field that writes an insertDefaults path is refused, a sibling path is not', () => {
+    expect(() =>
+      compile({
+        insertDefaults: { owner: { name: 'Ada' } },
+        changes: { updated: { a: { name: 'x' } } },
+      })
+    ).toThrow(
+      'MongoDBTableChanges field "owner" writes "owner.name", which "insertDefaults" sets on new rows, so a row could replace it. Leave the field out of "fields", or give its column a default in TableInput instead.'
+    );
+    expect(() =>
+      compile({
+        insertDefaults: { address: { country: 'FR' } },
+        changes: { updated: { a: { 'address.city': 'Lyon' } } },
+      })
+    ).not.toThrow();
+  });
+
+  test('new rows get the equality conditions of the filter', () => {
+    const owner = new ObjectId('64b0000000000000000000cc');
+    const { operations } = compile({
+      filter: { org_id: 'org_1', 'owner_ref.id': { $eq: owner }, $and: [{ team: 't1' }] },
+      changes: { added: [{ rowKey: 't', name: 'New' }] },
+    });
+    expect(operations[0].insertOne.document).toEqual({
+      _id: new ObjectId('64b000000000000000000001'),
+      org_id: 'org_1',
+      owner_ref: { id: owner },
+      team: 't1',
+      name: 'New',
+    });
+  });
+
+  test('insertDefaults may repeat a filter equality, but not contradict it', () => {
+    const { operations } = compile({
+      filter: orgFilter,
+      insertDefaults: { org_id: 'org_1' },
+      changes: { added: [{ rowKey: 't', name: 'New' }] },
+    });
+    expect(operations[0].insertOne.document.org_id).toBe('org_1');
+    expect(() =>
+      compile({
+        filter: orgFilter,
+        insertDefaults: { org_id: 'org_2' },
+        changes: { added: [{ rowKey: 't', name: 'New' }] },
+      })
+    ).toThrow(
+      'MongoDBTableChanges "insertDefaults" sets "org_id" to "org_2", but "filter" matches "org_id" to "org_1", so new rows would be out of scope.'
+    );
+  });
+
+  test('a filter condition that is not an equality needs insertDefaults for new rows', () => {
+    const filterWithStatus = { org_id: 'org_1', status: { $ne: 'archived' } };
+    expect(() =>
+      compile({
+        filter: filterWithStatus,
+        changes: { added: [{ rowKey: 't', name: 'New' }] },
+      })
+    ).toThrow(
+      'MongoDBTableChanges can not add rows: "filter" matches "status" by a condition that is not an equality, so new rows need "status" set by "insertDefaults".'
+    );
+    const { operations } = compile({
+      filter: filterWithStatus,
+      insertDefaults: { status: 'active' },
+      changes: { added: [{ rowKey: 't', name: 'New' }] },
+    });
+    expect(operations[0].insertOne.document).toMatchObject({ org_id: 'org_1', status: 'active' });
+    expect(() =>
+      compile({ filter: filterWithStatus, changes: { updated: { a: { name: 'x' } } } })
+    ).not.toThrow();
+  });
+
+  test('a filter operator new rows can not be checked against refuses adding rows', () => {
+    expect(() =>
+      compile({
+        filter: { $expr: { $eq: ['$org_id', 'org_1'] } },
+        changes: { added: [{ rowKey: 't', name: 'New' }] },
+      })
+    ).toThrow(
+      'MongoDBTableChanges can not add rows: "filter" has "$expr", which new rows can not be stamped with. Scope the rows with equality conditions such as { org_id: <value> }.'
+    );
+    expect(() =>
+      compile({
+        filter: { $or: [{ team: 't1' }, { team: 't2' }] },
+        changes: { added: [{ rowKey: 't', name: 'New' }] },
+      })
+    ).toThrow('new rows need "team" set by "insertDefaults"');
+  });
+
+  test('array mode compares scope fields with the item paths in the document', () => {
+    const array = { documentId: 'recipe_1', path: 'items' };
+    expect(() =>
+      compile({
+        array,
+        filter: { org_id: 'org_1', 'items.locked': { $ne: true } },
+        fields: { ...fields, locked: { type: 'boolean' } },
+        changes: { updated: { a: { locked: true } } },
+      })
+    ).toThrow('MongoDBTableChanges field "locked" writes "items.locked", which "filter" scopes');
+    const { operations } = compile({
+      array,
+      filter: { org_id: 'org_1', status: { $ne: 'archived' } },
+      fields: { ...fields, org_id: { type: 'text' } },
+      changes: { added: [{ rowKey: 't', name: 'New', org_id: 'org_2' }] },
+    });
+    // The document is scoped by the filter; the pushed item is not a document of it.
+    expect(operations[0].updateOne.update.$push.items.$each).toEqual([
+      { _id: new ObjectId('64b000000000000000000001'), name: 'New', org_id: 'org_2' },
+    ]);
   });
 });
 
@@ -289,8 +455,76 @@ describe('row keys', () => {
     const { operations } = compile({ changes: { removed: [oid, 7] } });
     expect(operations.map((operation) => operation.deleteOne.filter)).toEqual([
       scoped({ _id: oid }),
-      scoped({ _id: 7 }),
+      scoped({ _id: { $in: [7, '7'] } }),
     ]);
+  });
+
+  test('auto matches a numeric key in its number and string forms, from object keys and arrays alike', () => {
+    const { operations } = compile({
+      changes: { updated: { 5: { qty: 3 } }, removed: [6] },
+    });
+    expect(operations).toEqual([
+      { deleteOne: { filter: scoped({ _id: { $in: [6, '6'] } }) } },
+      { updateOne: { filter: scoped({ _id: { $in: [5, '5'] } }), update: { $set: { qty: 3 } } } },
+    ]);
+  });
+
+  test('auto reads the object key "5" and the array value 5 as the same row', () => {
+    expect(() => compile({ changes: { updated: { 5: { qty: 3 } }, removed: [5] } })).toThrow(
+      'MongoDBTableChanges row 5 is removed, so it can not also be updated, moved or ordered.'
+    );
+    expect(() => compile({ changes: { removed: [5, '5'] } })).toThrow(
+      'MongoDBTableChanges removed row "5" appears twice.'
+    );
+  });
+
+  test('auto keeps a string that is not how a number prints as a string', () => {
+    const { operations } = compile({ changes: { removed: ['05', '1e3', ' 5', '5x', '-0'] } });
+    expect(operations.map((operation) => operation.deleteOne.filter)).toEqual([
+      scoped({ _id: '05' }),
+      scoped({ _id: '1e3' }),
+      scoped({ _id: ' 5' }),
+      scoped({ _id: '5x' }),
+      scoped({ _id: '-0' }),
+    ]);
+  });
+
+  test('rowKeyType string and number match one form only', () => {
+    const { operations: numberOperations } = compile({
+      rowKeyType: 'number',
+      changes: { updated: { 5: { qty: 1 } }, removed: [6] },
+    });
+    expect(numberOperations.map((operation) => Object.values(operation)[0].filter)).toEqual([
+      scoped({ _id: 6 }),
+      scoped({ _id: 5 }),
+    ]);
+    const { operations: stringOperations } = compile({
+      rowKeyType: 'string',
+      changes: { updated: { 5: { qty: 1 } }, removed: ['6'] },
+    });
+    expect(stringOperations.map((operation) => Object.values(operation)[0].filter)).toEqual([
+      scoped({ _id: '6' }),
+      scoped({ _id: '5' }),
+    ]);
+  });
+
+  test('the compiled changes list the keys each operation addresses', () => {
+    const compiled = compile({
+      changes: {
+        updated: { a: { qty: 1 }, 5: { qty: 2 } },
+        removed: ['b'],
+        added: [{ rowKey: 't' }],
+      },
+    });
+    expect(compiled.targets).toEqual({
+      removed: [{ index: 0, key: 'b' }],
+      updated: [
+        { index: 1, key: 5 },
+        { index: 2, key: 'a' },
+      ],
+    });
+    expect(compiled.rowKeyType).toBe('auto');
+    expect(compiled.keyField).toBe('_id');
   });
 
   test('rowKeyType objectId reads hex strings', () => {
@@ -391,6 +625,16 @@ describe('values', () => {
     });
   });
 
+  test('avatar fields accept a document value, as image and json fields do', () => {
+    const { operations } = compile({
+      fields: { person: { type: 'avatar' } },
+      changes: { updated: { a: { person: { name: 'Ada', src: 'https://x/a.png' } } } },
+    });
+    expect(operations[0].updateOne.update).toEqual({
+      $set: { person: { name: 'Ada', src: 'https://x/a.png' } },
+    });
+  });
+
   test('ObjectId values are kept for text-like fields', () => {
     const { operations } = compile({
       fields: { ...fields, owner_id: { type: 'relation' } },
@@ -443,6 +687,15 @@ describe('allowlist and injection', () => {
       );
     }
   );
+
+  test('a changeset key that is a field path but not a field key names the mismatch', () => {
+    expect(() => compile({ changes: { updated: { a: { 'owner.name': 'Ada' } } } })).toThrow(
+      'MongoDBTableChanges updated row "a": "owner.name" is not in "fields". The field "owner" writes "owner.name", but changeset keys are the TableInput column field paths, so key that field "owner.name".'
+    );
+    expect(() => compile({ changes: { added: [{ rowKey: 't', 'owner.name': 'Ada' }] } })).toThrow(
+      'MongoDBTableChanges added row "t": "owner.name" is not in "fields". The field "owner" writes "owner.name"'
+    );
+  });
 
   test('a prototype key is not an allowlist entry', () => {
     const changes = JSON.parse('{"updated":{"a":{"__proto__":{"x":1}}}}');
@@ -648,7 +901,7 @@ describe('request properties', () => {
     expect(() =>
       compile({ array: { documentId: { $ne: null }, path: 'items' }, changes: { removed: ['a'] } })
     ).toThrow(
-      'MongoDBTableChanges "array.documentId" has an invalid row key: expected a string, number or ObjectId (rowKeyType "auto"). Received {"$ne":null}.'
+      'MongoDBTableChanges "array.documentId" should be a string, number or ObjectId. Received {"$ne":null}.'
     );
   });
 });
@@ -772,6 +1025,7 @@ describe('array mode', () => {
       changes: { added: [{ rowKey: 't', name: 'New' }], order: ['b', 't', 'a'] },
     });
     const newId = new ObjectId('64b000000000000000000001');
+    const orderKeyForms = { $literal: [['b'], [newId], ['a']] };
     const orderKeys = { $literal: ['b', newId, 'a'] };
     expect(operations[1]).toEqual({
       updateOne: {
@@ -788,15 +1042,15 @@ describe('array mode', () => {
                         $filter: {
                           input: {
                             $map: {
-                              input: orderKeys,
-                              as: 'key',
+                              input: orderKeyForms,
+                              as: 'forms',
                               in: {
                                 $arrayElemAt: [
                                   {
                                     $filter: {
                                       input: '$items',
                                       as: 'item',
-                                      cond: { $eq: ['$$item._id', '$$key'] },
+                                      cond: { $in: ['$$item._id', '$$forms'] },
                                     },
                                   },
                                   0,
@@ -844,18 +1098,45 @@ describe('array mode', () => {
     ]);
   });
 
+  test('auto matches numeric item keys in their number and string forms', () => {
+    const { operations, targets } = compile({
+      array,
+      changes: { updated: { 5: { qty: 1 } }, removed: [6] },
+    });
+    expect(operations[0].updateOne.arrayFilters).toEqual([{ 'r0._id': { $in: [5, '5'] } }]);
+    expect(operations[1].updateOne.update).toEqual({
+      $pull: { items: { _id: { $in: [6, '6'] } } },
+    });
+    expect(targets).toEqual({ removed: [6], updated: [5] });
+  });
+
+  test('an order matches numeric item keys in both forms', () => {
+    const { operations } = compile({ array, changes: { order: [5, 'b'] } });
+    const [stage] = operations[0].updateOne.update;
+    const [ordered, rest] = stage.$set.items.$cond.then.$concatArrays;
+    expect(ordered.$filter.input.$map.input).toEqual({ $literal: [[5, '5'], ['b']] });
+    expect(rest.$filter.cond).toEqual({
+      $not: [{ $in: ['$$item._id', { $literal: [5, '5', 'b'] }] }],
+    });
+  });
+
   test('ordered false is refused in array mode', () => {
     expect(() => compile({ array, ordered: false, changes: { removed: ['a'] } })).toThrow(
       'MongoDBTableChanges in array mode runs its updates of the document in order, so "ordered" can not be false.'
     );
   });
 
-  test('the documentId is read like a row key, and the item key field can not be updated', () => {
+  test('the documentId reads the ObjectId key text, is otherwise exact, and the item key field can not be updated', () => {
     const { operations } = compile({
       array: { documentId: `{"_oid":"${oid.toHexString()}"}`, path: 'items' },
       changes: { removed: ['a'] },
     });
     expect(operations[0].updateOne.filter).toEqual(scoped({ _id: oid }));
+    const { operations: stringIdOperations } = compile({
+      array: { documentId: '5', path: 'items' },
+      changes: { removed: ['a'] },
+    });
+    expect(stringIdOperations[0].updateOne.filter).toEqual(scoped({ _id: '5' }));
     expect(() =>
       compile({
         array: { ...array, itemKeyField: 'code' },
@@ -863,5 +1144,195 @@ describe('array mode', () => {
         changes: { updated: { a: { code: 'b' } } },
       })
     ).toThrow('MongoDBTableChanges row "a": the row key field "code" can not be changed.');
+  });
+});
+
+describe('bulk selection', () => {
+  const queryFields = {
+    name: { type: 'text', search: true },
+    qty: { type: 'number' },
+    owner: { type: 'text', path: 'owner.name', search: true },
+  };
+
+  test('a key array sets the fields on those rows with one updateMany', () => {
+    const compiled = compile({
+      selection: ['a', 5, `{"_oid":"${oid.toHexString()}"}`],
+      set: { owner: 'Ada', qty: '3' },
+    });
+    expect(compiled.mode).toBe('bulk');
+    expect(compiled.operations).toEqual([
+      {
+        updateMany: {
+          filter: scoped({ _id: { $in: ['a', 5, '5', oid] } }),
+          update: { $set: { 'owner.name': 'Ada', qty: 3 } },
+        },
+      },
+    ]);
+  });
+
+  test('select all matching compiles the view filter and search inside the base filter, less except', () => {
+    const { operations } = compile({
+      queryFields,
+      selection: {
+        all: true,
+        except: ['b', 7],
+        filter: { key: 'qty', op: 'gte', value: 2 },
+        search: 'ada',
+      },
+      set: { done: true },
+      unset: ['tags'],
+    });
+    expect(operations).toEqual([
+      {
+        updateMany: {
+          filter: {
+            $and: [
+              filter,
+              { qty: { $gte: 2 } },
+              { $or: [{ name: /ada/i }, { 'owner.name': /ada/i }] },
+              { _id: { $nin: ['b', 7, '7'] } },
+            ],
+          },
+          update: { $set: { done: true }, $unset: { tags: '' } },
+        },
+      },
+    ]);
+  });
+
+  test('select all without a view or except updates every row in the base filter', () => {
+    const { operations } = compile({ selection: { all: true }, set: { done: false } });
+    expect(operations[0].updateMany.filter).toEqual(filter);
+    const { operations: unscoped } = compile({
+      filter: {},
+      selection: { all: true },
+      set: { done: false },
+    });
+    expect(unscoped[0].updateMany.filter).toEqual({});
+  });
+
+  test('a crafted view is refused, and can only narrow the base filter', () => {
+    expect(() =>
+      compile({
+        queryFields,
+        selection: { all: true, filter: { $where: 'true' } },
+        set: { done: true },
+      })
+    ).toThrow('MongoDBTableQuery filter condition has an unknown key "$where".');
+    expect(() =>
+      compile({
+        queryFields,
+        selection: { all: true, filter: { key: 'org_id', op: 'ne', value: 'x' } },
+        set: { done: true },
+      })
+    ).toThrow('MongoDBTableQuery view filter key "org_id" is not in the request "fields".');
+    expect(() =>
+      compile({
+        queryFields,
+        selection: { all: true, filter: { key: 'qty', op: 'gt', value: { $gt: '' } } },
+        set: { done: true },
+      })
+    ).toThrow('operator "gt" expects a number');
+  });
+
+  test('a select-all date filter compares the days of the timezone', () => {
+    const { operations } = compile({
+      queryFields: { due: { type: 'date' } },
+      timezone: 'Asia/Tokyo',
+      selection: { all: true, filter: { key: 'due', op: 'eq', value: '2026-01-03' } },
+      set: { done: true },
+    });
+    expect(operations[0].updateMany.filter).toEqual({
+      $and: [
+        filter,
+        {
+          due: {
+            $gte: new Date('2026-01-02T15:00:00.000Z'),
+            $lt: new Date('2026-01-03T15:00:00.000Z'),
+          },
+        },
+      ],
+    });
+  });
+
+  test('a view needs queryFields', () => {
+    expect(() => compile({ selection: { all: true, search: 'ada' }, set: { done: true } })).toThrow(
+      'MongoDBTableChanges "selection" has a filter or search, so the request needs "queryFields", the MongoDBTableQuery fields of the table.'
+    );
+  });
+
+  test('set and unset are checked against fields like updated values', () => {
+    expect(() => compile({ selection: ['a'], set: { org_id: 'org_2' } })).toThrow(
+      'MongoDBTableChanges set: "org_id" is not in "fields".'
+    );
+    expect(() => compile({ selection: ['a'], set: { $where: 'x' } })).toThrow('is not allowed');
+    expect(() => compile({ selection: ['a'], set: { qty: 'many' } })).toThrow(
+      'MongoDBTableChanges set: "qty" expects a number for type "number". Received "many".'
+    );
+    expect(() => compile({ selection: ['a'], unset: ['secret'] })).toThrow(
+      'MongoDBTableChanges unset: "secret" is not in "fields".'
+    );
+    expect(() => compile({ selection: ['a'], set: { name: 'x' }, unset: ['name'] })).toThrow(
+      'MongoDBTableChanges set and unset: "name" and "name" overlap, so they can not both be written.'
+    );
+    expect(() =>
+      compile({
+        fields: { ...fields, _id: { type: 'text' } },
+        filter: {},
+        selection: ['a'],
+        set: { _id: 'b' },
+      })
+    ).toThrow('the row key field "_id" can not be changed.');
+  });
+
+  test('a selection is refused when it is malformed, empty or too large', () => {
+    expect(() => compile({ selection: [], set: { done: true } })).toThrow(
+      'MongoDBTableChanges "selection" is empty: there is nothing to write.'
+    );
+    expect(() => compile({ selection: { all: false }, set: { done: true } })).toThrow(
+      'MongoDBTableChanges "selection" should be an array of row keys or { all: true, except, filter, search }. Received {"all":false}.'
+    );
+    expect(() => compile({ selection: { all: true, where: {} }, set: { done: true } })).toThrow(
+      'MongoDBTableChanges "selection" should be an array of row keys or'
+    );
+    expect(() => compile({ selection: [{ $ne: null }], set: { done: true } })).toThrow(
+      'MongoDBTableChanges "selection" has an invalid row key'
+    );
+    expect(() =>
+      compile({ maxChanges: 2, selection: ['a', 'b', 'c'], set: { done: true } })
+    ).toThrow('MongoDBTableChanges "selection" has 3 row keys, more than "maxChanges" (2).');
+    expect(() =>
+      compile({ maxChanges: 1, selection: { all: true, except: ['a', 'b'] }, set: { done: true } })
+    ).toThrow('MongoDBTableChanges "selection" has 2 row keys, more than "maxChanges" (1).');
+  });
+
+  test('a bulk save needs set or unset, no changes and no array mode', () => {
+    expect(() => compile({ selection: ['a'] })).toThrow(
+      'MongoDBTableChanges with a "selection" needs "set" or "unset", the fields to write on every selected row.'
+    );
+    expect(() =>
+      compile({ selection: ['a'], set: { done: true }, changes: { removed: ['b'] } })
+    ).toThrow('MongoDBTableChanges takes "changes" or a "selection" with "set", not both.');
+    expect(() =>
+      compile({
+        selection: ['a'],
+        set: { done: true },
+        array: { documentId: 'd', path: 'items' },
+      })
+    ).toThrow(
+      'MongoDBTableChanges "selection" saves rows that are documents, so it can not be used in array mode.'
+    );
+    expect(() => compile({})).toThrow(
+      'MongoDBTableChanges requires "changes", the TableInput value { updated, added, removed, moved, order }. Received undefined.'
+    );
+  });
+
+  test('a field that writes a scope field is refused in bulk mode too', () => {
+    expect(() =>
+      compile({
+        fields: { ...fields, org_id: { type: 'text' } },
+        selection: { all: true },
+        set: { org_id: 'org_2' },
+      })
+    ).toThrow('MongoDBTableChanges field "org_id" writes "org_id", which "filter" scopes');
   });
 });

@@ -21,20 +21,69 @@ export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'Lowdefy Request Schema - MongoDBTableChanges',
   type: 'object',
-  required: ['changes', 'fields'],
+  required: ['fields'],
+  anyOf: [{ required: ['changes'] }, { required: ['selection'] }],
   properties: {
     changes: {
       type: 'object',
       description:
-        'The TableInput value to save, { updated, added, removed, moved, order }, usually { _payload: changes }. Validated against "fields".',
+        'The TableInput value to save, { updated, added, removed, moved, order }, usually { _payload: changes }. Validated against "fields". Leave it out for a bulk "selection" save.',
       errorMessage: {
         type: 'MongoDBTableChanges request property "changes" should be an object.',
+      },
+    },
+    selection: {
+      type: ['array', 'object'],
+      description:
+        'Bulk mode: the rows to write "set" and "unset" to, the Table selected value, usually { _payload: selected }. An array of row keys, or { all: true, except, filter, search } for every row matching the view but the keys in except.',
+      errorMessage: {
+        type: 'MongoDBTableChanges request property "selection" should be an array or an object.',
+      },
+    },
+    set: {
+      type: 'object',
+      description:
+        'Bulk mode: { [field]: value } to set on every selected row. The keys are "fields" keys, and the values are checked and coerced like "updated" values.',
+      errorMessage: {
+        type: 'MongoDBTableChanges request property "set" should be an object.',
+      },
+    },
+    unset: {
+      type: 'array',
+      items: { type: 'string' },
+      description: 'Bulk mode: "fields" keys to remove from every selected row.',
+      errorMessage: {
+        type: 'MongoDBTableChanges request property "unset" should be an array of strings.',
+      },
+    },
+    queryFields: {
+      type: 'object',
+      description:
+        'Bulk mode: the MongoDBTableQuery "fields" of the table, keyed by column key, which a select-all "selection" filter and search are validated and compiled against.',
+      errorMessage: {
+        type: 'MongoDBTableChanges request property "queryFields" should be an object.',
+      },
+    },
+    timezone: {
+      type: 'string',
+      description:
+        'Bulk mode: the IANA time zone whose days the date filters of a "selection" compare, as for MongoDBTableQuery. Defaults to UTC.',
+      errorMessage: {
+        type: 'MongoDBTableChanges request property "timezone" should be a string.',
+      },
+    },
+    user: {
+      type: ['object', 'null'],
+      description:
+        'Bulk mode: the user that { $user: path } values in a "selection" filter resolve from. Set it to { _user: true }.',
+      errorMessage: {
+        type: 'MongoDBTableChanges request property "user" should be an object.',
       },
     },
     fields: {
       type: 'object',
       description:
-        'The allowlist of fields the changes may write, keyed by the TableInput column field (its dot path). Nothing outside it is written.',
+        'The allowlist of fields the changes may write, keyed by the TableInput column field (its dot path, the changeset key), not the column key that MongoDBTableQuery fields use. Nothing outside it is written.',
       minProperties: 1,
       additionalProperties: {
         type: 'object',
@@ -68,7 +117,7 @@ export default {
     filter: {
       type: 'object',
       description:
-        'The base filter every operation is scoped by, for example tenant or ownership. Required unless the connection is tenant-scoped; set it to {} to allow writes to every document.',
+        'The base filter every operation is scoped by, for example tenant or ownership. New rows are stamped with its equality conditions, and "fields" can not write its fields. Required unless the connection is tenant-scoped; set it to {} to allow writes to every document.',
       errorMessage: {
         type: 'MongoDBTableChanges request property "filter" should be an object.',
       },
@@ -87,7 +136,7 @@ export default {
       enum: ['auto', 'objectId', 'string', 'number'],
       default: 'auto',
       description:
-        'How row keys are read. "auto" keeps strings and numbers and reads ObjectIds (the Table keys them as {"_oid":"..."} text); "objectId" also reads 24 character hex strings; "number" reads numeric strings, which numeric keys become in "updated" and "moved".',
+        'How row keys are read. "auto" reads ObjectIds (the Table keys them as {"_oid":"..."} text), and a numeric key, whether the number 5 or the text "5" (as numeric keys become in "updated" and "moved"), is one row that matches a document key 5 or "5"; other strings stay strings. "objectId" also reads 24 character hex strings; "string" matches strings only; "number" reads numeric strings and matches numbers only.',
       errorMessage: {
         type: 'MongoDBTableChanges request property "rowKeyType" should be a string.',
         enum: 'MongoDBTableChanges request property "rowKeyType" should be "auto", "objectId", "string" or "number".',
@@ -134,7 +183,7 @@ export default {
     insertDefaults: {
       type: 'object',
       description:
-        'Values every added row starts with, for example { org_id: { _user: organization.id } } or a created date. The row values set over them.',
+        'Values every added row gets, for example { created_by: { _user: id } } or a created date. "fields" can not write them, and they may repeat but not contradict an equality of "filter".',
       errorMessage: {
         type: 'MongoDBTableChanges request property "insertDefaults" should be an object.',
       },
@@ -170,8 +219,8 @@ export default {
   },
   errorMessage: {
     type: 'MongoDBTableChanges request properties should be an object.',
+    anyOf: 'MongoDBTableChanges request should have required property "changes" or "selection".',
     required: {
-      changes: 'MongoDBTableChanges request should have required property "changes".',
       fields: 'MongoDBTableChanges request should have required property "fields".',
     },
   },

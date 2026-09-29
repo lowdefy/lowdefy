@@ -15,16 +15,19 @@
 */
 
 // The Table's field type table: which filter operators and aggregate functions each column
-// type allows. One data file with no imports so the Table blocks can share it later. The
-// server enforces it: a view operator or aggregate outside this table never reaches MongoDB.
+// type allows. The server enforces it: a view operator or aggregate outside this table never
+// reaches MongoDB. The operators are exactly the ones the Table's filter menus offer
+// (test/tableFilterOperators.json, a copy of the fixture blocks-antd tests its menus against),
+// so no operator a user can pick breaks the table's fetch.
 
 const allOperators = ['eq', 'ne', 'in', 'nin', 'empty', 'notEmpty'];
 const allAggregates = ['count', 'countDistinct', 'countEmpty', 'countNotEmpty', 'percentEmpty'];
 
 const families = {
+  // min and max of text compare strings, as the Table's own footers do.
   text: {
     operators: [...allOperators, 'contains', 'notContains', 'startsWith', 'endsWith'],
-    aggregates: allAggregates,
+    aggregates: [...allAggregates, 'min', 'max'],
   },
   numeric: {
     operators: [...allOperators, 'gt', 'gte', 'lt', 'lte', 'between'],
@@ -38,9 +41,10 @@ const families = {
     operators: [...allOperators, 'isTrue', 'isFalse'],
     aggregates: allAggregates,
   },
-  // Array values (tags, people): in = has any of, nin = has none of, contains = has the value.
+  // Array values (tags, people): in = has any of, nin = has none of, contains = has the value,
+  // notContains = does not have the value.
   array: {
-    operators: [...allOperators, 'contains'],
+    operators: [...allOperators, 'contains', 'notContains'],
     aggregates: allAggregates,
   },
   other: {
@@ -69,14 +73,25 @@ const familyByType = {
   boolean: 'boolean',
   tags: 'array',
   people: 'array',
-  avatar: 'other',
+  avatar: 'text',
   image: 'other',
   json: 'other',
 };
 
+// The family whose values MongoDBTableChanges writes, where it differs. An avatar filters as
+// text, the name at its path as the Table filters it, but its cell may hold a document such
+// as { name, src }, which is written like an image or json value.
+const writeFamilyByType = {
+  avatar: 'other',
+};
+
 const fieldTypes = {};
 Object.entries(familyByType).forEach(([fieldType, family]) => {
-  fieldTypes[fieldType] = { family, ...families[family] };
+  fieldTypes[fieldType] = {
+    family,
+    writeFamily: writeFamilyByType[fieldType] ?? family,
+    ...families[family],
+  };
 });
 
 export default fieldTypes;

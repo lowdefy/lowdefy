@@ -34,7 +34,7 @@ function getChangeLogOrganization({ filter, operations, field }) {
     }
     organizationId = changeLogOrganizationOfFilter({
       filter,
-      update: operation.updateOne?.update,
+      update: (operation.updateOne ?? operation.updateMany)?.update,
       field,
     });
   });

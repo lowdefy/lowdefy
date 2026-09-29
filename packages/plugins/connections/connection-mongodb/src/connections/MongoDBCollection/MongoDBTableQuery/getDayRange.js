@@ -14,14 +14,18 @@
   limitations under the License.
 */
 
-const DAY_MS = 24 * 60 * 60 * 1000;
+import getZonedMidnight from './getZonedMidnight.js';
+import getZonedParts from './getZonedParts.js';
 
-// Day boundaries are UTC: the server has no viewer time zone, and date-only values
-// ("2026-03-01") parse as UTC midnight.
-function getDayRange({ value }) {
-  const start = new Date(Date.UTC(value.getUTCFullYear(), value.getUTCMonth(), value.getUTCDate()));
-  const end = new Date(start.getTime() + DAY_MS);
-  return { start, end };
+// The day an instant falls on in the time zone (`timezone`, default UTC), as the instants it
+// starts and ends. A date-only value ("2026-03-01") is already that day's start
+// (coerceScalar), so it is its own day.
+function getDayRange({ value, timeZone }) {
+  const { year, month, day } = getZonedParts({ date: value, timeZone });
+  return {
+    start: getZonedMidnight({ year, month, day, timeZone }),
+    end: getZonedMidnight({ year, month, day: day + 1, timeZone }),
+  };
 }
 
 export default getDayRange;

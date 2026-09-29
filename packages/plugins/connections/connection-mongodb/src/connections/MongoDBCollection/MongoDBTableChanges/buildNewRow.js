@@ -20,8 +20,8 @@ import buildInsertDocument from './buildInsertDocument.js';
 // A new row or item with its key. When the key field is `_id` and the row has no real key, a
 // new ObjectId is generated here rather than by the driver or the server, so the response can
 // map the browser's temporary key to it (and an embedded array item gets an `_id` at all).
-function buildNewRow({ entry, insertDefaults, keyField, generateId }) {
-  const document = buildInsertDocument({ patch: entry.patch, insertDefaults });
+function buildNewRow({ entry, insertDefaults, keyField, generateId, scopeValues }) {
+  const document = buildInsertDocument({ patch: entry.patch, insertDefaults, scopeValues });
   const key = get(document, keyField);
   if (!type.isNone(key) && key !== '') return { document, key };
   if (keyField !== '_id') {

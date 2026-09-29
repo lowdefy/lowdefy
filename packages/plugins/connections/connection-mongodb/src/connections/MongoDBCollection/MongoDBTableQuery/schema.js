@@ -38,7 +38,7 @@ export default {
     fields: {
       type: 'object',
       description:
-        'The allowlist of fields the view may sort, filter, search, group and aggregate by, keyed by column key.',
+        'The allowlist of fields the view may sort, filter, search, group and aggregate by, keyed by the Table column key (the view keys), not the column field that MongoDBTableChanges fields use. "path" gives the dot path.',
       minProperties: 1,
       additionalProperties: {
         type: 'object',
@@ -72,7 +72,8 @@ export default {
           groupable: {
             type: 'boolean',
             default: false,
-            description: 'Allow grouping by the field.',
+            description:
+              'Allow grouping by the field, and the "countDistinct" aggregate on it, which groups by its values.',
           },
         },
         errorMessage: {
@@ -138,10 +139,36 @@ export default {
         type: 'MongoDBTableQuery request property "user" should be an object.',
       },
     },
+    project: {
+      type: 'boolean',
+      default: true,
+      description:
+        'Return only _id, the "fields" paths and "returnFields" in each row. Set it to false to return the documents as the base pipeline leaves them.',
+      errorMessage: {
+        type: 'MongoDBTableQuery request property "project" should be a boolean.',
+      },
+    },
+    returnFields: {
+      type: 'array',
+      items: { type: 'string' },
+      description:
+        'More dot paths each row returns, for values cells read without a field of their own, for example an avatar srcField or a link labelField.',
+      errorMessage: {
+        type: 'MongoDBTableQuery request property "returnFields" should be an array of strings.',
+      },
+    },
+    timezone: {
+      type: 'string',
+      description:
+        'The IANA time zone (for example "Europe/London") whose days date filters compare: eq, ne, before, after and between on date fields, and within. Defaults to UTC. Pass the user\'s time zone to match the days the Table shows.',
+      errorMessage: {
+        type: 'MongoDBTableQuery request property "timezone" should be a string.',
+      },
+    },
     options: {
       type: 'object',
       description:
-        'Optional aggregate settings, for example collation, maxTimeMS, allowDiskUse or hint.',
+        'Optional aggregate settings, for example collation, maxTimeMS, allowDiskUse or hint. maxTimeMS defaults to 10000.',
       errorMessage: {
         type: 'MongoDBTableQuery request property "options" should be an object.',
       },

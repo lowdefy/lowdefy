@@ -41,7 +41,7 @@ function parseSearch({ search }) {
 // The view comes from the browser, so it is validated against the request's `fields`
 // allowlist. Only sort, filter, search, group and aggregates are read; the rest of a
 // Table view (columns, density, ...) is display state and never reaches the query.
-function validateView({ view, fieldsByKey, user }) {
+function validateView({ view, fieldsByKey, user, timeZone }) {
   if (type.isNone(view)) {
     return { sort: [], filter: null, search: null, group: [], aggregates: {} };
   }
@@ -52,7 +52,7 @@ function validateView({ view, fieldsByKey, user }) {
     sort: parseSort({ sort: view.sort, fieldsByKey }),
     filter: type.isNone(view.filter)
       ? null
-      : parseCondition({ condition: view.filter, fieldsByKey, user }),
+      : parseCondition({ condition: view.filter, fieldsByKey, user, timeZone }),
     search: parseSearch({ search: view.search }),
     group: parseGroup({ group: view.group, fieldsByKey }),
     aggregates: parseAggregates({ aggregates: view.aggregates, fieldsByKey }),

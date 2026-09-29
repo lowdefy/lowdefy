@@ -33,17 +33,17 @@ function emptyConditions({ path }) {
   return [{ [path]: null }, { [path]: '' }, { [path]: { $size: 0 } }];
 }
 
-function compileRange({ field, value }) {
+function compileRange({ field, value, timeZone }) {
   const [from, to] = value;
   const range = {};
   // A date column compares whole days, so the upper bound includes all of its day.
   const byDay = field.type === 'date';
   if (!type.isNone(from)) {
-    range.$gte = byDay ? getDayRange({ value: from }).start : from;
+    range.$gte = byDay ? getDayRange({ value: from, timeZone }).start : from;
   }
   if (!type.isNone(to)) {
     if (byDay) {
-      range.$lt = getDayRange({ value: to }).end;
+      range.$lt = getDayRange({ value: to, timeZone }).end;
     } else {
       range.$lte = to;
     }
@@ -51,17 +51,17 @@ function compileRange({ field, value }) {
   return { [field.path]: range };
 }
 
-function compileEq({ field, value }) {
+function compileEq({ field, value, timeZone }) {
   if (field.family === 'date') {
-    const { start, end } = getDayRange({ value });
+    const { start, end } = getDayRange({ value, timeZone });
     return { [field.path]: { $gte: start, $lt: end } };
   }
   return { [field.path]: matchValue({ field, value }) };
 }
 
-function compileNe({ field, value }) {
+function compileNe({ field, value, timeZone }) {
   if (field.family === 'date') {
-    const { start, end } = getDayRange({ value });
+    const { start, end } = getDayRange({ value, timeZone });
     return { [field.path]: { $not: { $gte: start, $lt: end } } };
   }
   const matcher = matchValue({ field, value });
@@ -71,28 +71,28 @@ function compileNe({ field, value }) {
   return { [field.path]: { $ne: matcher } };
 }
 
-function compileBefore({ field, value }) {
-  const bound = field.type === 'date' ? getDayRange({ value }).start : value;
+function compileBefore({ field, value, timeZone }) {
+  const bound = field.type === 'date' ? getDayRange({ value, timeZone }).start : value;
   return { [field.path]: { $lt: bound } };
 }
 
-function compileAfter({ field, value }) {
+function compileAfter({ field, value, timeZone }) {
   if (field.type === 'date') {
-    return { [field.path]: { $gte: getDayRange({ value }).end } };
+    return { [field.path]: { $gte: getDayRange({ value, timeZone }).end } };
   }
   return { [field.path]: { $gt: value } };
 }
 
 // Compiles one validated filter leaf to a $match expression. The path comes from the
 // allowlist and the value is a coerced scalar, so the client supplies no MongoDB syntax.
-function compileLeaf({ condition, field, now }) {
+function compileLeaf({ condition, field, now, timeZone }) {
   const { path } = field;
   const { op, value } = condition;
   switch (op) {
     case 'eq':
-      return compileEq({ field, value });
+      return compileEq({ field, value, timeZone });
     case 'ne':
-      return compileNe({ field, value });
+      return compileNe({ field, value, timeZone });
     case 'in':
       return { [path]: { $in: value.map((item) => matchValue({ field, value: item })) } };
     case 'nin':
@@ -107,6 +107,9 @@ function compileLeaf({ condition, field, now }) {
       }
       return { [path]: new RegExp(escapeRegex(value), 'i') };
     case 'notContains':
+      if (field.family === 'array') {
+        return compileNe({ field, value, timeZone });
+      }
       return { [path]: { $not: new RegExp(escapeRegex(value), 'i') } };
     case 'startsWith':
       return { [path]: new RegExp(`^${escapeRegex(value)}`, 'i') };
@@ -118,14 +121,14 @@ function compileLeaf({ condition, field, now }) {
     case 'lte':
       return { [path]: { [`$${op}`]: value } };
     case 'between':
-      return compileRange({ field, value });
+      return compileRange({ field, value, timeZone });
     case 'before':
-      return compileBefore({ field, value });
+      return compileBefore({ field, value, timeZone });
     case 'after':
-      return compileAfter({ field, value });
+      return compileAfter({ field, value, timeZone });
     case 'within': {
-      const { start, end } = getWithinRange({ value, now });
-      return { [path]: { $gte: start, $lte: end } };
+      const { start, end } = getWithinRange({ value, now, timeZone });
+      return { [path]: { $gte: start, $lt: end } };
     }
     case 'isTrue':
       return { [path]: true };

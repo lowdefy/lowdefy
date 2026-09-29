@@ -39,6 +39,13 @@ function parseAggregates({ aggregates, fieldsByKey }) {
         }" of type "${field.type}". Allowed aggregates: ${field.aggregates.join(', ')}.`
       );
     }
+    // A distinct count groups by the field's values, so it costs what grouping by the field
+    // costs, and the app allows it the same way.
+    if (fn === 'countDistinct' && !field.groupable) {
+      throw new Error(
+        `MongoDBTableQuery aggregate "countDistinct" on "${field.key}" groups by its values, so the field needs "groupable: true".`
+      );
+    }
     parsed[field.key] = fn;
   });
   return parsed;

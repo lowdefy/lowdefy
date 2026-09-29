@@ -18,13 +18,13 @@ import compileLeaf from './compileLeaf.js';
 
 // Compiles a validated Condition to a $match expression, or null when it constrains
 // nothing (an empty group, as the filter builder produces before a rule is added).
-function compileCondition({ condition, fieldsByKey, now }) {
+function compileCondition({ condition, fieldsByKey, now, timeZone }) {
   const groupOp = ['and', 'or'].find((op) => Object.prototype.hasOwnProperty.call(condition, op));
   if (groupOp === undefined) {
-    return compileLeaf({ condition, field: fieldsByKey.get(condition.key), now });
+    return compileLeaf({ condition, field: fieldsByKey.get(condition.key), now, timeZone });
   }
   const children = condition[groupOp]
-    .map((child) => compileCondition({ condition: child, fieldsByKey, now }))
+    .map((child) => compileCondition({ condition: child, fieldsByKey, now, timeZone }))
     .filter((child) => child !== null);
   if (children.length === 0) {
     return null;

@@ -37,7 +37,7 @@ const fieldsByKey = normalizeFields({
 const user = { id: 'user_1', roles: ['admin', 'sales'], organization: { id: 'org_1' } };
 
 function filter(condition) {
-  return validateView({ view: { filter: condition }, fieldsByKey, user }).filter;
+  return validateView({ view: { filter: condition }, fieldsByKey, user, timeZone: 'UTC' }).filter;
 }
 
 describe('view shape', () => {
@@ -170,6 +170,44 @@ describe('filter validation and coercion', () => {
     const value = Array.from({ length: 501 }, (_, index) => `s${index}`);
     expect(() => filter({ key: 'stage', op: 'in', value })).toThrow(
       'operator "in" expects an array of at most 500 values.'
+    );
+  });
+
+  test('groups count toward the 200 condition limit', () => {
+    const leaf = { key: 'name', op: 'eq', value: 'a' };
+    const nested = { and: Array.from({ length: 100 }, () => ({ or: [leaf] })) };
+    expect(() => filter(nested)).toThrow(
+      'MongoDBTableQuery filter has more than 200 conditions and groups.'
+    );
+    const empty = { and: Array.from({ length: 200 }, () => ({ and: [] })) };
+    expect(() => filter(empty)).toThrow(
+      'MongoDBTableQuery filter has more than 200 conditions and groups.'
+    );
+    expect(() => filter({ and: Array.from({ length: 99 }, () => ({ or: [leaf] })) })).not.toThrow();
+  });
+
+  test('a filter has at most 1000 values in all', () => {
+    const list = (offset) => Array.from({ length: 400 }, (_, index) => `s${offset + index}`);
+    const leaves = [0, 400, 800].map((offset) => ({ key: 'stage', op: 'in', value: list(offset) }));
+    expect(() => filter({ and: leaves.slice(0, 2) })).not.toThrow();
+    expect(() => filter({ or: leaves })).toThrow(
+      'MongoDBTableQuery filter has more than 1000 values.'
+    );
+  });
+
+  test('a string value has at most 200 characters', () => {
+    const long = 'a'.repeat(201);
+    expect(() => filter({ key: 'name', op: 'contains', value: long })).toThrow(
+      'MongoDBTableQuery filter on "name": a value can have at most 200 characters. Received a string of 201.'
+    );
+    expect(() => filter({ key: 'stage', op: 'in', value: ['won', long] })).toThrow(
+      'MongoDBTableQuery filter on "stage": a value can have at most 200 characters. Received a string of 201.'
+    );
+    expect(() => filter({ key: 'tags', op: 'contains', value: long })).toThrow(
+      'a value can have at most 200 characters'
+    );
+    expect(filter({ key: 'name', op: 'startsWith', value: 'a'.repeat(200) }).value).toHaveLength(
+      200
     );
   });
 
@@ -341,7 +379,7 @@ describe('filter rejection', () => {
       or: Array.from({ length: 201 }, () => ({ key: 'name', op: 'eq', value: 'a' })),
     };
     expect(() => filter(condition)).toThrow(
-      'MongoDBTableQuery filter has more than 200 conditions.'
+      'MongoDBTableQuery filter has more than 200 conditions and groups.'
     );
   });
 });
@@ -474,12 +512,12 @@ describe('sort, search, group and aggregates', () => {
   test('aggregates are checked against the field type', () => {
     expect(
       validateView({
-        view: { aggregates: { amount: 'sum', created: 'latest', name: 'countDistinct' } },
+        view: { aggregates: { amount: 'sum', created: 'latest', stage: 'countDistinct' } },
         fieldsByKey,
       }).aggregates
-    ).toEqual({ amount: 'sum', created: 'latest', name: 'countDistinct' });
+    ).toEqual({ amount: 'sum', created: 'latest', stage: 'countDistinct' });
     expect(() => validateView({ view: { aggregates: { name: 'sum' } }, fieldsByKey })).toThrow(
-      'MongoDBTableQuery aggregate "sum" is not allowed on "name" of type "text". Allowed aggregates: count, countDistinct, countEmpty, countNotEmpty, percentEmpty.'
+      'MongoDBTableQuery aggregate "sum" is not allowed on "name" of type "text". Allowed aggregates: count, countDistinct, countEmpty, countNotEmpty, percentEmpty, min, max.'
     );
     expect(() =>
       validateView({ view: { aggregates: { amount: { $sum: '$amount' } } }, fieldsByKey })

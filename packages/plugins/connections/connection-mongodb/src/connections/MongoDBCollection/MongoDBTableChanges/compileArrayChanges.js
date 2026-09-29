@@ -15,9 +15,11 @@
 */
 import buildNewRow from './buildNewRow.js';
 import compileArrayOrder from './compileArrayOrder.js';
+import getKeyForms from './getKeyForms.js';
+import getKeyMatch from './getKeyMatch.js';
 import scopeFilter from './scopeFilter.js';
 
-function compileItemUpdates({ rows, path, itemKeyField }) {
+function compileItemUpdates({ rows, path, itemKeyField, rowKeyType }) {
   const $set = {};
   const arrayFilters = [];
   rows.forEach(({ key, patch }, index) => {
@@ -25,7 +27,7 @@ function compileItemUpdates({ rows, path, itemKeyField }) {
     patch.forEach((value, fieldPath) => {
       $set[`${path}.$[${identifier}].${fieldPath}`] = value;
     });
-    arrayFilters.push({ [`${identifier}.${itemKeyField}`]: key });
+    arrayFilters.push({ [`${identifier}.${itemKeyField}`]: getKeyMatch({ key, rowKeyType }) });
   });
   return { update: { $set }, arrayFilters };
 }
@@ -37,7 +39,9 @@ function compileItemUpdates({ rows, path, itemKeyField }) {
 //   2. one $pull of the removed items by key;
 //   3. one $push of the added items;
 //   4. without a positionField, a pipeline update that applies `order`.
-function compileArrayChanges({ array, changes, filter, generateId, insertDefaults }) {
+// `targets` are the existing items the changes name, so the save can report the ones that
+// are not in the array (runChanges).
+function compileArrayChanges({ array, changes, filter, generateId, insertDefaults, rowKeyType }) {
   const { documentId, itemKeyField, path } = array;
   const documentFilter = scopeFilter({ filter, match: { _id: documentId } });
   const operations = [];
@@ -46,7 +50,7 @@ function compileArrayChanges({ array, changes, filter, generateId, insertDefault
     operations.push({
       updateOne: {
         filter: documentFilter,
-        ...compileItemUpdates({ rows: changes.rows, path, itemKeyField }),
+        ...compileItemUpdates({ rows: changes.rows, path, itemKeyField, rowKeyType }),
       },
     });
   }
@@ -54,7 +58,15 @@ function compileArrayChanges({ array, changes, filter, generateId, insertDefault
     operations.push({
       updateOne: {
         filter: documentFilter,
-        update: { $pull: { [path]: { [itemKeyField]: { $in: changes.removed } } } },
+        update: {
+          $pull: {
+            [path]: {
+              [itemKeyField]: {
+                $in: changes.removed.flatMap((key) => getKeyForms({ key, rowKeyType })),
+              },
+            },
+          },
+        },
       },
     });
   }
@@ -64,6 +76,7 @@ function compileArrayChanges({ array, changes, filter, generateId, insertDefault
       insertDefaults,
       keyField: itemKeyField,
       generateId,
+      scopeValues: [],
     });
     insertedKeys[String(entry.rowKey)] = key;
     return { document, key };
@@ -83,11 +96,16 @@ function compileArrayChanges({ array, changes, filter, generateId, insertDefault
     operations.push({
       updateOne: {
         filter: documentFilter,
-        update: compileArrayOrder({ path, itemKeyField, keys }),
+        update: compileArrayOrder({
+          path,
+          itemKeyField,
+          keyForms: keys.map((key) => getKeyForms({ key, rowKeyType })),
+        }),
       },
     });
   }
-  return { operations, insertedKeys };
+  const targets = { removed: changes.removed, updated: changes.rows.map((row) => row.key) };
+  return { operations, insertedKeys, targets };
 }
 
 export default compileArrayChanges;

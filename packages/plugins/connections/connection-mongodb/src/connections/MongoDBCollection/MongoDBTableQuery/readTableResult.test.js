@@ -43,7 +43,8 @@ test('readTableResult maps groups and their aggregates to field keys', () => {
         { _id: null, count: 1, a0: 0, a1: null, a2: 0 },
       ],
       total: [{ count: 2 }],
-      aggregates: [{ _id: null, a0: 30, a1: 7.5, a2: 2 }],
+      aggregates: [{ _id: null, a0: 30, a1: 7.5 }],
+      distinct_a2: [{ count: 2 }],
     },
   ];
   expect(readTableResult({ result, grouped: true, specs })).toEqual({
@@ -58,7 +59,7 @@ test('readTableResult maps groups and their aggregates to field keys', () => {
 });
 
 test('readTableResult returns empty aggregates when no rows matched', () => {
-  const result = [{ rows: [], total: [], aggregates: [] }];
+  const result = [{ rows: [], total: [], aggregates: [], distinct_a2: [] }];
   expect(readTableResult({ result, grouped: false, specs })).toEqual({
     rows: [],
     total: 0,

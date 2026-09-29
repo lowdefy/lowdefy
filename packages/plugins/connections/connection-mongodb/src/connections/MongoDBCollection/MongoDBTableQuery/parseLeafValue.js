@@ -31,17 +31,22 @@ function invalid({ field, op, expected, value }) {
   );
 }
 
-function parseList({ field, op, value, user }) {
+function parseList({ field, op, value, user, timeZone }) {
   const list = resolveUserValue({ value, user, key: field.key });
   if (!type.isArray(list) || list.length > MAX_LIST_VALUES) {
     throw invalid({ field, op, expected: `an array of at most ${MAX_LIST_VALUES} values`, value });
   }
   return list.map((item) =>
-    coerceScalar({ field, op, value: resolveUserValue({ value: item, user, key: field.key }) })
+    coerceScalar({
+      field,
+      op,
+      value: resolveUserValue({ value: item, user, key: field.key }),
+      timeZone,
+    })
   );
 }
 
-function parseRange({ field, op, value, user }) {
+function parseRange({ field, op, value, user, timeZone }) {
   if (!type.isArray(value) || value.length !== 2 || value.every((bound) => type.isNone(bound))) {
     throw invalid({ field, op, expected: 'an array [from, to] with at least one bound', value });
   }
@@ -53,6 +58,7 @@ function parseRange({ field, op, value, user }) {
       field,
       op,
       value: resolveUserValue({ value: bound, user, key: field.key }),
+      timeZone,
     });
   });
 }
@@ -88,7 +94,7 @@ function parseText({ field, op, value, user }) {
 
 // Returns the value the compiler uses: resolved from $user, coerced to the field's type
 // and checked against the operator's shape.
-function parseLeafValue({ field, op, value, user }) {
+function parseLeafValue({ field, op, value, user, timeZone }) {
   switch (op) {
     case 'empty':
     case 'notEmpty':
@@ -100,12 +106,13 @@ function parseLeafValue({ field, op, value, user }) {
       return undefined;
     case 'in':
     case 'nin':
-      return parseList({ field, op, value, user });
+      return parseList({ field, op, value, user, timeZone });
     case 'between':
-      return parseRange({ field, op, value, user });
+      return parseRange({ field, op, value, user, timeZone });
     case 'within':
       return parseWithin({ field, op, value });
     case 'contains':
+    case 'notContains':
       if (field.family === 'array') {
         return coerceScalar({
           field,
@@ -114,12 +121,16 @@ function parseLeafValue({ field, op, value, user }) {
         });
       }
       return parseText({ field, op, value, user });
-    case 'notContains':
     case 'startsWith':
     case 'endsWith':
       return parseText({ field, op, value, user });
     default:
-      return coerceScalar({ field, op, value: resolveUserValue({ value, user, key: field.key }) });
+      return coerceScalar({
+        field,
+        op,
+        value: resolveUserValue({ value, user, key: field.key }),
+        timeZone,
+      });
   }
 }
 

@@ -15,9 +15,11 @@
 */
 import { type } from '@lowdefy/helpers';
 
-import coerceRowKey from './coerceRowKey.js';
+import coerceDocumentId from './coerceDocumentId.js';
+import compileBulkChanges from './compileBulkChanges.js';
 import compileArrayChanges from './compileArrayChanges.js';
 import compileCollectionChanges from './compileCollectionChanges.js';
+import getChangeScope from './getChangeScope.js';
 import isSafePath from './isSafePath.js';
 import normalizeChangeFields from './normalizeChangeFields.js';
 import parseChanges from './parseChanges.js';
@@ -78,17 +80,47 @@ function getArray({ array }) {
   const itemKeyField = array.itemKeyField ?? '_id';
   assertPath({ name: 'array.path', value: array.path });
   assertPath({ name: 'array.itemKeyField', value: itemKeyField });
-  const documentId = coerceRowKey({
-    value: array.documentId,
-    rowKeyType: 'auto',
-    part: 'array.documentId',
-  });
+  const documentId = coerceDocumentId({ value: array.documentId });
   return { documentId, itemKeyField, path: array.path };
 }
 
-// The request properties as bulkWrite operations. `generateId` makes the keys of new rows;
-// it is passed in so a compile is deterministic in tests.
-function compileTableChanges({ properties, tenantScoped, generateId }) {
+function compileBulkMode({
+  properties,
+  fieldsByKey,
+  filter,
+  rowKeyField,
+  rowKeyType,
+  maxChanges,
+  now,
+}) {
+  if (!type.isNone(properties.changes)) {
+    throw new Error('MongoDBTableChanges takes "changes" or a "selection" with "set", not both.');
+  }
+  if (!type.isNone(properties.array)) {
+    throw new Error(
+      'MongoDBTableChanges "selection" saves rows that are documents, so it can not be used in array mode.'
+    );
+  }
+  return {
+    mode: 'bulk',
+    filter,
+    options: { ...(properties.options ?? {}), ordered: true },
+    ...compileBulkChanges({
+      properties,
+      fieldsByKey,
+      filter,
+      rowKeyField,
+      rowKeyType,
+      maxChanges,
+      now,
+    }),
+  };
+}
+
+// The request properties as bulkWrite operations: a changeset (collection or array mode) or a
+// bulk `selection` with `set`. `generateId` makes the keys of new rows and `now` resolves
+// relative date filters; both are passed in so a compile is deterministic in tests.
+function compileTableChanges({ properties, tenantScoped, generateId, now }) {
   const rowKeyField = properties.rowKeyField ?? '_id';
   const rowKeyType = properties.rowKeyType ?? 'auto';
   const maxChanges = properties.maxChanges ?? 1000;
@@ -112,6 +144,24 @@ function compileTableChanges({ properties, tenantScoped, generateId }) {
   const fieldsByKey = normalizeChangeFields({ fields: properties.fields });
   const filter = getFilter({ filter: properties.filter, tenantScoped });
   const insertDefaults = getInsertDefaults({ insertDefaults: properties.insertDefaults });
+  if (!type.isNone(properties.selection)) {
+    getChangeScope({
+      fieldsByKey,
+      filter,
+      insertDefaults,
+      positionField: positionField ?? undefined,
+      hasInserts: false,
+    });
+    return compileBulkMode({
+      properties,
+      fieldsByKey,
+      filter,
+      rowKeyField,
+      rowKeyType,
+      maxChanges,
+      now,
+    });
+  }
   const array = type.isNone(properties.array) ? undefined : getArray({ array: properties.array });
   const changes = parseChanges({
     changes: properties.changes,
@@ -120,6 +170,14 @@ function compileTableChanges({ properties, tenantScoped, generateId }) {
     maxChanges,
     positionField,
     rowKeyType,
+  });
+  const { scopeValues } = getChangeScope({
+    fieldsByKey,
+    filter,
+    insertDefaults,
+    positionField: positionField ?? undefined,
+    arrayPath: array?.path,
+    hasInserts: changes.added.length > 0,
   });
   const options = { ...(properties.options ?? {}), ordered: properties.ordered ?? true };
   if (array !== undefined) {
@@ -131,11 +189,14 @@ function compileTableChanges({ properties, tenantScoped, generateId }) {
     }
     return {
       mode: 'array',
+      array,
       filter,
       options,
+      rowKeyType,
+      keyField: array.itemKeyField,
       insertedCount: changes.added.length,
       removedCount: changes.removed.length,
-      ...compileArrayChanges({ array, changes, filter, generateId, insertDefaults }),
+      ...compileArrayChanges({ array, changes, filter, generateId, insertDefaults, rowKeyType }),
     };
   }
   if (changes.order !== undefined) {
@@ -147,7 +208,17 @@ function compileTableChanges({ properties, tenantScoped, generateId }) {
     mode: 'collection',
     filter,
     options,
-    ...compileCollectionChanges({ changes, filter, generateId, insertDefaults, rowKeyField }),
+    rowKeyType,
+    keyField: rowKeyField,
+    ...compileCollectionChanges({
+      changes,
+      filter,
+      generateId,
+      insertDefaults,
+      rowKeyField,
+      rowKeyType,
+      scopeValues,
+    }),
   };
 }
 

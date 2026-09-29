@@ -33,7 +33,14 @@ function readTableResult({ result, grouped, specs }) {
     }));
   }
   if (specs.length > 0) {
-    response.aggregates = readAggregates({ doc: facet.aggregates[0], specs });
+    // Distinct counts of the whole set come from their own branches (compileAggregates).
+    const doc = { ...(facet.aggregates[0] ?? {}) };
+    specs
+      .filter(({ fn }) => fn === 'countDistinct')
+      .forEach(({ name }) => {
+        doc[name] = facet[`distinct_${name}`][0]?.count ?? 0;
+      });
+    response.aggregates = readAggregates({ doc, specs });
   }
   return response;
 }

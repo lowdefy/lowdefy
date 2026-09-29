@@ -31,15 +31,16 @@ const fieldsByKey = normalizeFields({
     owner: { type: 'relation', path: 'owner.id' },
     stage: { type: 'status' },
     meta: { type: 'json' },
+    person: { type: 'avatar', path: 'person.name' },
   },
 });
 
 const now = new Date('2026-09-28T12:00:00.000Z');
 const user = { id: 'user_1' };
 
-function compile(condition) {
-  const { filter } = validateView({ view: { filter: condition }, fieldsByKey, user });
-  return compileCondition({ condition: filter, fieldsByKey, now });
+function compile(condition, { timeZone = 'UTC' } = {}) {
+  const { filter } = validateView({ view: { filter: condition }, fieldsByKey, user, timeZone });
+  return compileCondition({ condition: filter, fieldsByKey, now, timeZone });
 }
 
 describe('all types', () => {
@@ -188,18 +189,101 @@ describe('date operators', () => {
     });
   });
 
-  test('within resolves relative ranges from now', () => {
+  test('within covers whole days, from the day n units ago to the end of today', () => {
+    const today = new Date('2026-09-28T00:00:00.000Z');
+    const tomorrow = new Date('2026-09-29T00:00:00.000Z');
     expect(compile({ key: 'created', op: 'within', value: { last: 7, unit: 'day' } })).toEqual({
-      created: { $gte: new Date('2026-09-21T12:00:00.000Z'), $lte: now },
+      created: { $gte: new Date('2026-09-21T00:00:00.000Z'), $lt: tomorrow },
     });
     expect(compile({ key: 'created', op: 'within', value: { last: 2, unit: 'week' } })).toEqual({
-      created: { $gte: new Date('2026-09-14T12:00:00.000Z'), $lte: now },
+      created: { $gte: new Date('2026-09-14T00:00:00.000Z'), $lt: tomorrow },
     });
     expect(compile({ key: 'created', op: 'within', value: { next: 1, unit: 'month' } })).toEqual({
-      created: { $gte: now, $lte: new Date('2026-10-28T12:00:00.000Z') },
+      created: { $gte: today, $lt: new Date('2026-10-29T00:00:00.000Z') },
     });
     expect(compile({ key: 'created', op: 'within', value: { last: 1, unit: 'year' } })).toEqual({
-      created: { $gte: new Date('2025-09-28T12:00:00.000Z'), $lte: now },
+      created: { $gte: new Date('2025-09-28T00:00:00.000Z'), $lt: tomorrow },
+    });
+  });
+});
+
+describe('time zones', () => {
+  const newYork = { timeZone: 'America/New_York' };
+
+  test('a date-only value is that day in the time zone', () => {
+    expect(compile({ key: 'created', op: 'eq', value: '2026-01-03' }, newYork)).toEqual({
+      created: {
+        $gte: new Date('2026-01-03T05:00:00.000Z'),
+        $lt: new Date('2026-01-04T05:00:00.000Z'),
+      },
+    });
+  });
+
+  test('an instant is compared by its day in the time zone', () => {
+    expect(
+      compile({ key: 'updated', op: 'eq', value: '2026-01-03T03:00:00.000Z' }, newYork)
+    ).toEqual({
+      updated: {
+        $gte: new Date('2026-01-02T05:00:00.000Z'),
+        $lt: new Date('2026-01-03T05:00:00.000Z'),
+      },
+    });
+  });
+
+  test('before, after and between on a date column use the days of the time zone', () => {
+    expect(compile({ key: 'created', op: 'before', value: '2026-07-01' }, newYork)).toEqual({
+      created: { $lt: new Date('2026-07-01T04:00:00.000Z') },
+    });
+    expect(compile({ key: 'created', op: 'after', value: '2026-07-01' }, newYork)).toEqual({
+      created: { $gte: new Date('2026-07-02T04:00:00.000Z') },
+    });
+    expect(
+      compile({ key: 'created', op: 'between', value: ['2026-01-01', '2026-07-01'] }, newYork)
+    ).toEqual({
+      created: {
+        $gte: new Date('2026-01-01T05:00:00.000Z'),
+        $lt: new Date('2026-07-02T04:00:00.000Z'),
+      },
+    });
+  });
+
+  test('a day across a daylight saving change is 23 hours long', () => {
+    expect(
+      compile({ key: 'created', op: 'eq', value: '2026-03-29' }, { timeZone: 'Europe/London' })
+    ).toEqual({
+      created: {
+        $gte: new Date('2026-03-29T00:00:00.000Z'),
+        $lt: new Date('2026-03-29T23:00:00.000Z'),
+      },
+    });
+  });
+
+  test('within counts days in the time zone', () => {
+    expect(
+      compile({ key: 'created', op: 'within', value: { last: 1, unit: 'week' } }, newYork)
+    ).toEqual({
+      created: {
+        $gte: new Date('2026-09-21T04:00:00.000Z'),
+        $lt: new Date('2026-09-29T04:00:00.000Z'),
+      },
+    });
+  });
+
+  test('within a month clamps to the last day of a shorter month', () => {
+    const endOfMonth = new Date('2026-03-31T12:00:00.000Z');
+    const { filter } = validateView({
+      view: { filter: { key: 'created', op: 'within', value: { last: 1, unit: 'month' } } },
+      fieldsByKey,
+      user,
+      timeZone: 'UTC',
+    });
+    expect(
+      compileCondition({ condition: filter, fieldsByKey, now: endOfMonth, timeZone: 'UTC' })
+    ).toEqual({
+      created: {
+        $gte: new Date('2026-02-28T00:00:00.000Z'),
+        $lt: new Date('2026-04-01T00:00:00.000Z'),
+      },
     });
   });
 });
@@ -221,6 +305,25 @@ describe('array operators', () => {
       tags: { $nin: [/^vip$/i] },
     });
     expect(compile({ key: 'tags', op: 'contains', value: 'vip' })).toEqual({ tags: /^vip$/i });
+  });
+
+  test('notContains on an array field matches rows that do not have the value', () => {
+    expect(compile({ key: 'tags', op: 'notContains', value: 'vip' })).toEqual({
+      tags: { $not: /^vip$/i },
+    });
+    expect(compile({ key: 'tags', op: 'notContains', value: 5 })).toEqual({ tags: { $ne: 5 } });
+  });
+});
+
+describe('avatar operators', () => {
+  test('avatar fields filter like text on the value at their path', () => {
+    expect(compile({ key: 'person', op: 'contains', value: 'ada' })).toEqual({
+      'person.name': /ada/i,
+    });
+    expect(compile({ key: 'person', op: 'startsWith', value: 'a.' })).toEqual({
+      'person.name': /^a\./i,
+    });
+    expect(compile({ key: 'person', op: 'eq', value: 'Ada' })).toEqual({ 'person.name': /^Ada$/i });
   });
 });
 

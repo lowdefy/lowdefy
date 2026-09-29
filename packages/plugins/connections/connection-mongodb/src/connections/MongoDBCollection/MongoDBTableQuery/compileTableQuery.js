@@ -20,15 +20,20 @@ import { type } from '@lowdefy/helpers';
 import compileAggregates from './compileAggregates.js';
 import compileCondition from './compileCondition.js';
 import compileGroupPathMatch from './compileGroupPathMatch.js';
+import compileProjection from './compileProjection.js';
 import compileSearch from './compileSearch.js';
 import compileSort from './compileSort.js';
 import getCollectionWriteStage from '../tenant/getCollectionWriteStage.js';
+import getTimeZone from './getTimeZone.js';
 import normalizeFields from './normalizeFields.js';
 import validateGroupPath from './validateGroupPath.js';
 import validateRows from './validateRows.js';
 import validateView from './validateView.js';
 
 const DEFAULT_MAX_ROWS = 1000;
+// A table fetch runs on every scroll and filter change, so one that MongoDB can not answer
+// quickly is stopped rather than left running.
+const DEFAULT_MAX_TIME_MS = 10000;
 
 function pageStages({ startRow, endRow }) {
   const stages = [];
@@ -62,7 +67,11 @@ function compileGroupsFacet({ view, groupPath, fieldsByKey, rows, aggregates }) 
 // Compiles the validated request to one aggregation:
 //   base pipeline (the app's scoping, always first, so the view can only narrow it)
 //   → $match filter → $match search → $match groupPath
-//   → $facet { rows | groups, total, aggregates? }
+//   → $sort (rows only)
+//   → $facet { rows (paged, projected to the fields) | groups, total, aggregates? }
+// The rows are sorted before $facet, where MongoDB can serve the sort from an index on the
+// match and sort fields and stream the rows in order; a $sort inside $facet always sorts
+// every matching document again, for every block the table fetches.
 function compileTableQuery({ properties, now }) {
   const { fields, view, startRow, endRow, groupPath, maxRows, user } = properties;
   const pipeline = properties.pipeline ?? [];
@@ -73,19 +82,33 @@ function compileTableQuery({ properties, now }) {
     }
   });
   const fieldsByKey = normalizeFields({ fields });
-  const parsedView = validateView({ view, fieldsByKey, user });
+  const timeZone = getTimeZone({ timezone: properties.timezone, requestType: 'MongoDBTableQuery' });
+  const parsedView = validateView({ view, fieldsByKey, user, timeZone });
   const rows = validateRows({ startRow, endRow, maxRows: maxRows ?? DEFAULT_MAX_ROWS });
   const parsedGroupPath = validateGroupPath({ groupPath, group: parsedView.group });
 
   const matches = [
     type.isNone(parsedView.filter)
       ? null
-      : compileCondition({ condition: parsedView.filter, fieldsByKey, now }),
+      : compileCondition({ condition: parsedView.filter, fieldsByKey, now, timeZone }),
     compileSearch({ search: parsedView.search, fieldsByKey }),
     compileGroupPathMatch({ groupPath: parsedGroupPath, group: parsedView.group, fieldsByKey }),
   ].filter((match) => match !== null);
 
-  const aggregates = compileAggregates({ aggregates: parsedView.aggregates, fieldsByKey });
+  const groupAggregates = compileAggregates({
+    aggregates: parsedView.aggregates,
+    fieldsByKey,
+    distinct: 'set',
+  });
+  const aggregates = compileAggregates({
+    aggregates: parsedView.aggregates,
+    fieldsByKey,
+    distinct: 'branch',
+  });
+  const projection =
+    properties.project === false
+      ? []
+      : [compileProjection({ fieldsByKey, returnFields: properties.returnFields })];
   const grouped = parsedGroupPath.length < parsedView.group.length;
   const facet = grouped
     ? compileGroupsFacet({
@@ -93,22 +116,32 @@ function compileTableQuery({ properties, now }) {
         groupPath: parsedGroupPath,
         fieldsByKey,
         rows,
-        aggregates,
+        aggregates: groupAggregates,
       })
     : {
-        rows: [{ $sort: compileSort({ sort: parsedView.sort, fieldsByKey }) }, ...pageStages(rows)],
+        rows: [...pageStages(rows), ...projection],
         total: [{ $count: 'count' }],
       };
+  const sortStages = grouped
+    ? []
+    : [{ $sort: compileSort({ sort: parsedView.sort, fieldsByKey }) }];
   if (aggregates.specs.length > 0) {
     facet.aggregates = [
       { $group: { _id: null, ...aggregates.accumulators } },
       ...aggregates.stages,
     ];
+    Object.assign(facet, aggregates.distinctBranches);
   }
 
   return {
     grouped,
-    pipeline: [...pipeline, ...matches.map((match) => ({ $match: match })), { $facet: facet }],
+    options: { maxTimeMS: DEFAULT_MAX_TIME_MS, ...(properties.options ?? {}) },
+    pipeline: [
+      ...pipeline,
+      ...matches.map((match) => ({ $match: match })),
+      ...sortStages,
+      { $facet: facet },
+    ],
     specs: aggregates.specs,
   };
 }

@@ -115,8 +115,22 @@ test('the schema accepts a full request and refuses one without changes', () => 
     })
   ).toEqual({ valid: true });
   expect(() => validate({ schema, data: { fields: lineFields } })).toThrow(
-    'MongoDBTableChanges request should have required property "changes".'
+    'MongoDBTableChanges request should have required property "changes" or "selection".'
   );
+  expect(
+    validate({
+      schema,
+      data: {
+        fields: lineFields,
+        filter: {},
+        selection: { all: true, except: ['a'], filter: { key: 'item', op: 'notEmpty' } },
+        set: { qty: 1 },
+        unset: ['due'],
+        queryFields: { item: { type: 'text' } },
+        user: { id: 'u' },
+      },
+    })
+  ).toEqual({ valid: true });
   expect(() =>
     validate({ schema, data: { changes: {}, fields: { a: { type: 'text', search: true } } } })
   ).toThrow('MongoDBTableChanges request field should only have "type" and "path".');
@@ -136,6 +150,7 @@ describe('collection mode', () => {
       insertedCount: 0,
       deletedCount: 0,
       insertedKeys: {},
+      unmatchedKeys: [],
     });
     const after = await readAll(collection);
     expect(after[0]).toEqual({
@@ -169,6 +184,7 @@ describe('collection mode', () => {
       insertedCount: 1,
       deletedCount: 1,
       insertedKeys: { 'tmp-1': newId },
+      unmatchedKeys: [],
     });
     const after = await readAll(collection);
     expect(after.map((doc) => doc.item).sort()).toEqual(['Apples', 'Bread', 'Dates', 'Other org']);
@@ -226,9 +242,70 @@ describe('collection mode', () => {
       changes: { updated: { x: { item: 'hijacked' } } },
     });
     expect(updateResponse.matchedCount).toBe(0);
+    expect(updateResponse.unmatchedKeys).toEqual(['x']);
     const removeResponse = await save({ connection, changes: { removed: ['x'] } });
     expect(removeResponse.deletedCount).toBe(0);
+    expect(removeResponse.unmatchedKeys).toEqual(['x']);
     expect(await readAll(collection)).toEqual(before);
+  });
+
+  test('numeric row keys match whether they arrive as object keys or array values', async () => {
+    const { collection, connection } = await setup([
+      { _id: 5, org_id: 'org_1', item: 'Five', qty: 1 },
+      { _id: 6, org_id: 'org_1', item: 'Six', qty: 1 },
+      { _id: 8, org_id: 'org_1', item: 'Eight', qty: 1 },
+      { _id: '7', org_id: 'org_1', item: 'Seven', qty: 1 },
+    ]);
+    const response = await save({
+      connection,
+      positionField: 'position',
+      changes: { updated: { 5: { qty: 3 }, 7: { qty: 4 } }, moved: { 8: 512 }, removed: [6] },
+    });
+    expect(response).toEqual({
+      matchedCount: 3,
+      modifiedCount: 3,
+      insertedCount: 0,
+      deletedCount: 1,
+      insertedKeys: {},
+      unmatchedKeys: [],
+    });
+    expect(await readAll(collection)).toEqual([
+      { _id: 5, org_id: 'org_1', item: 'Five', qty: 3 },
+      { _id: 8, org_id: 'org_1', item: 'Eight', qty: 1, position: 512 },
+      { _id: '7', org_id: 'org_1', item: 'Seven', qty: 4 },
+    ]);
+  });
+
+  test('rows that match nothing inside the filter are listed in unmatchedKeys', async () => {
+    const { collection, connection } = await setup(lines());
+    const response = await save({
+      connection,
+      changes: {
+        updated: { a: { qty: 8 }, x: { item: 'hijacked' }, 99: { qty: 1 } },
+        removed: ['c', 'gone', 98],
+      },
+    });
+    expect(response).toEqual({
+      matchedCount: 1,
+      modifiedCount: 1,
+      insertedCount: 0,
+      deletedCount: 1,
+      insertedKeys: {},
+      unmatchedKeys: ['gone', 98, 99, 'x'],
+    });
+    const after = await readAll(collection);
+    expect(after.map((doc) => doc._id)).toEqual(['a', 'b', 'x']);
+    expect(after[2].item).toBe('Other org');
+  });
+
+  test('unmatchedKeys lists ObjectId keys as { _oid }', async () => {
+    const missing = new ObjectId();
+    const { connection } = await setup(lines());
+    const response = await save({
+      connection,
+      changes: { updated: { [`{"_oid":"${missing.toHexString()}"}`]: { qty: 1 } } },
+    });
+    expect(response.unmatchedKeys).toEqual([{ _oid: missing.toHexString() }]);
   });
 
   test('rows keyed by ObjectId are matched by the Table key text', async () => {
@@ -273,6 +350,32 @@ describe('collection mode', () => {
     expect(await readAll(collection)).toEqual(before);
   });
 
+  test('a new row can not be added to another organization', async () => {
+    const { collection, connection } = await setup(lines());
+    const before = await readAll(collection);
+    await expect(
+      save({ connection, changes: { added: [{ rowKey: 't', item: 'Mine', org_id: 'org_2' }] } })
+    ).rejects.toThrow('MongoDBTableChanges added row "t": "org_id" is not in "fields".');
+    await expect(
+      save({
+        connection,
+        fields: { ...lineFields, org_id: { type: 'text' } },
+        changes: { added: [{ rowKey: 't', item: 'Mine', org_id: 'org_2' }] },
+      })
+    ).rejects.toThrow('MongoDBTableChanges field "org_id" writes "org_id", which "filter" scopes');
+    await expect(
+      save({
+        connection,
+        insertDefaults: { org_id: 'org_2' },
+        changes: { added: [{ rowKey: 't', item: 'Mine' }] },
+      })
+    ).rejects.toThrow('but "filter" matches "org_id" to "org_1"');
+    expect(await readAll(collection)).toEqual(before);
+    const saved = await save({ connection, changes: { added: [{ rowKey: 't', item: 'Mine' }] } });
+    const added = await readOne(collection, saved.insertedKeys.t._oid);
+    expect(added).toEqual({ _id: added._id, org_id: 'org_1', item: 'Mine' });
+  });
+
   test('a bulk write error is mapped without quoting the document values', async () => {
     const { connection } = await setup(lines());
     const error = await save({
@@ -282,6 +385,95 @@ describe('collection mode', () => {
     }).catch((caught) => caught);
     expect(error.name).toBe('ServiceError');
     expect(error.message).toBe(`MongoDB: Duplicate key on collection "${connection.collection}".`);
+  });
+});
+
+describe('bulk selection', () => {
+  const queryFields = { item: { type: 'text', search: true }, qty: { type: 'number' } };
+
+  test('a key array assigns an owner to those rows only', async () => {
+    const { collection, connection } = await setup(lines());
+    const response = await save({
+      connection,
+      fields: { ...lineFields, owner: { type: 'text' } },
+      selection: ['a', 'c', 'x'],
+      set: { owner: 'Ada' },
+    });
+    expect(response).toEqual({ matchedCount: 2, modifiedCount: 2 });
+    const owners = (await readAll(collection)).map((doc) => [doc._id, doc.owner]);
+    expect(owners).toEqual([
+      ['a', 'Ada'],
+      ['b', undefined],
+      ['c', 'Ada'],
+      ['x', undefined],
+    ]);
+  });
+
+  test('select all matching honours the view, except and the base filter', async () => {
+    const { collection, connection } = await setup([
+      ...lines(),
+      { _id: 'd', org_id: 'org_1', item: 'Dates', qty: 6 },
+      { _id: 'y', org_id: 'org_2', item: 'Dates', qty: 6 },
+    ]);
+    const response = await save({
+      connection,
+      queryFields,
+      fields: { ...lineFields, owner: { type: 'text' } },
+      selection: {
+        all: true,
+        except: ['c'],
+        filter: { key: 'qty', op: 'gte', value: 2 },
+      },
+      set: { owner: 'Grace' },
+    });
+    expect(response).toEqual({ matchedCount: 2, modifiedCount: 2 });
+    const owners = (await readAll(collection)).map((doc) => [doc._id, doc.owner ?? null]);
+    expect(owners).toEqual([
+      ['a', 'Grace'],
+      ['b', null],
+      ['c', null],
+      ['d', 'Grace'],
+      ['x', null],
+      ['y', null],
+    ]);
+  });
+
+  test('a view filter for another organization matches nothing', async () => {
+    const { collection, connection } = await setup(lines());
+    const before = await readAll(collection);
+    const response = await save({
+      connection,
+      queryFields: { ...queryFields, org_id: { type: 'text' } },
+      selection: {
+        all: true,
+        filter: {
+          or: [
+            { key: 'org_id', op: 'eq', value: 'org_2' },
+            { key: 'item', op: 'notEmpty' },
+          ],
+        },
+        search: 'other',
+      },
+      set: { qty: 0 },
+    });
+    expect(response).toEqual({ matchedCount: 0, modifiedCount: 0 });
+    expect(await readAll(collection)).toEqual(before);
+  });
+
+  test('a tenant connection walls a bulk save to the tenant', async () => {
+    const { collection, connection } = await setup([
+      { _id: 'a1', organization_id: 'org_a', item: 'Mine', qty: 1 },
+      { _id: 'b1', organization_id: 'org_b', item: 'Theirs', qty: 1 },
+    ]);
+    const response = await save({
+      connection,
+      tenant: { field: 'organization_id', value: 'org_a' },
+      filter: undefined,
+      selection: { all: true },
+      set: { qty: 5 },
+    });
+    expect(response).toEqual({ matchedCount: 1, modifiedCount: 1 });
+    expect((await readAll(collection)).map((doc) => doc.qty)).toEqual([5, 1]);
   });
 });
 
@@ -331,6 +523,7 @@ describe('array mode', () => {
       insertedCount: 0,
       deletedCount: 0,
       insertedKeys: {},
+      unmatchedKeys: [],
     });
     const [recipe, other] = await readAll(collection);
     expect(recipe.items).toEqual([
@@ -363,6 +556,7 @@ describe('array mode', () => {
       insertedCount: 1,
       deletedCount: 1,
       insertedKeys: { tmp: yeastId },
+      unmatchedKeys: [],
     });
     const [recipe] = await readAll(collection);
     expect(recipe.items).toEqual([
@@ -451,6 +645,38 @@ describe('array mode', () => {
       'MongoDBTableChanges found no document with "array.documentId" inside "filter", so nothing was written.'
     );
     expect(await readAll(collection)).toEqual(before);
+  });
+
+  test('numeric item keys match in both forms, and items that are not there are listed', async () => {
+    const { collection, connection } = await setup([
+      {
+        _id: 'd',
+        org_id: 'org_1',
+        items: [
+          { _id: 1, item: 'A', qty: 1 },
+          { _id: 2, item: 'B', qty: 2 },
+          { _id: 3, item: 'C', qty: 3 },
+        ],
+      },
+    ]);
+    const response = await save({
+      connection,
+      array: { documentId: 'd', path: 'items' },
+      changes: { updated: { 1: { qty: 9 }, 42: { qty: 1 } }, removed: [2, 43] },
+    });
+    expect(response).toEqual({
+      matchedCount: 1,
+      modifiedCount: 1,
+      insertedCount: 0,
+      deletedCount: 1,
+      insertedKeys: {},
+      unmatchedKeys: [43, 42],
+    });
+    const [doc] = await readAll(collection);
+    expect(doc.items).toEqual([
+      { _id: 1, item: 'A', qty: 9 },
+      { _id: 3, item: 'C', qty: 3 },
+    ]);
   });
 
   test('items keyed by a custom field', async () => {
@@ -596,7 +822,9 @@ describe('change log', () => {
         insertDefaults: { organization_id: 'org_b' },
         changes: { updated: { a1: { qty: 2 } }, added: [{ rowKey: 't', item: 'B' }] },
       })
-    ).rejects.toThrow('the filter matches "org_a" but the added rows carry "org_b"');
+    ).rejects.toThrow(
+      'MongoDBTableChanges "insertDefaults" sets "organization_id" to "org_b", but "filter" matches "organization_id" to "org_a"'
+    );
     await save({
       connection: logged,
       tenantGuard,

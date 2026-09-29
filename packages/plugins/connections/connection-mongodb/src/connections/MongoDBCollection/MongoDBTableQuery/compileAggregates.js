@@ -18,15 +18,37 @@ function isEmptyExpression({ path }) {
   return { $in: [{ $ifNull: [`$${path}`, null] }, [null, '', []]] };
 }
 
+// $min and $max skip null and missing values; for text an empty string would be the minimum,
+// so empty values are left out, as the Table's own footers leave them out.
+function compileExtremeValue({ field, isEmpty }) {
+  if (field.family === 'text') return { $cond: [isEmpty, '$$REMOVE', `$${field.path}`] };
+  return `$${field.path}`;
+}
+
+// A distinct count of the whole set as its own $facet branch: one $group document per value,
+// then a count, where an $addToSet would build every distinct value into one document (16MB).
+function compileDistinctBranch({ path }) {
+  return [
+    { $group: { _id: `$${path}` } },
+    { $match: { _id: { $nin: [null, '', []] } } },
+    { $count: 'count' },
+  ];
+}
+
 // Accumulators are named a0, a1, ... because field keys may contain dots, which a $group
-// output field can not. `specs` maps the names back to field keys (readAggregates).
-function compileAggregates({ aggregates, fieldsByKey }) {
+// output field can not. `specs` maps the names back to field keys (readAggregates). The
+// whole set (`distinct: 'branch'`) counts distinct values in `distinctBranches`, named
+// distinct_a0, ...; a group level counts them with a set per group, which the field being
+// groupable bounds.
+function compileAggregates({ aggregates, fieldsByKey, distinct }) {
   const accumulators = {};
   const addFields = {};
+  const distinctBranches = {};
   const specs = [];
   Object.entries(aggregates).forEach(([key, fn], index) => {
     const name = `a${index}`;
-    const { path } = fieldsByKey.get(key);
+    const field = fieldsByKey.get(key);
+    const { path } = field;
     const isEmpty = isEmptyExpression({ path });
     specs.push({ key, fn, name });
     switch (fn) {
@@ -41,13 +63,17 @@ function compileAggregates({ aggregates, fieldsByKey }) {
         break;
       case 'min':
       case 'earliest':
-        accumulators[name] = { $min: `$${path}` };
+        accumulators[name] = { $min: compileExtremeValue({ field, isEmpty }) };
         break;
       case 'max':
       case 'latest':
-        accumulators[name] = { $max: `$${path}` };
+        accumulators[name] = { $max: compileExtremeValue({ field, isEmpty }) };
         break;
       case 'countDistinct':
+        if (distinct === 'branch') {
+          distinctBranches[`distinct_${name}`] = compileDistinctBranch({ path });
+          break;
+        }
         accumulators[name] = { $addToSet: { $cond: [isEmpty, '$$REMOVE', `$${path}`] } };
         addFields[name] = { $size: `$${name}` };
         break;
@@ -69,7 +95,7 @@ function compileAggregates({ aggregates, fieldsByKey }) {
     }
   });
   const stages = Object.keys(addFields).length > 0 ? [{ $addFields: addFields }] : [];
-  return { accumulators, stages, specs };
+  return { accumulators, distinctBranches, stages, specs };
 }
 
 export default compileAggregates;

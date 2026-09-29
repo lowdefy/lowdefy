@@ -18,6 +18,8 @@ import { ObjectId } from 'mongodb';
 import { validate } from '@lowdefy/ajv';
 
 import MongoDBTableQuery from './MongoDBTableQuery.js';
+import compileTableQuery from './compileTableQuery.js';
+import getTestCollection from '../../../../test/getTestCollection.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
 
 const { checkRead, checkWrite } = MongoDBTableQuery.meta;
@@ -70,7 +72,7 @@ const orgOneDocs = documents.filter((doc) => doc.org_id === 'org_1');
 
 const fields = {
   org_id: { type: 'text' },
-  name: { type: 'text', search: true },
+  name: { type: 'text', search: true, groupable: true },
   stage: { type: 'tag', groupable: true },
   owner: { type: 'text', path: 'owner.name', search: true, groupable: true },
   owner_id: { type: 'relation', groupable: true },
@@ -204,6 +206,18 @@ describe('filter and search', () => {
     expect(none.total).toBe(8);
     const any = await query({ view: { filter: { key: 'tags', op: 'in', value: ['new', 'x'] } } });
     expect(any.total).toBe(orgOneDocs.filter((doc) => doc.tags.includes('new')).length);
+    const notRenewal = await query({
+      view: { filter: { key: 'tags', op: 'notContains', value: 'RENEWAL' } },
+    });
+    expect(notRenewal.total).toBe(orgOneDocs.filter((doc) => !doc.tags.includes('renewal')).length);
+  });
+
+  test('avatar fields filter with the text operators', async () => {
+    const res = await query({
+      fields: { ...fields, owner: { type: 'avatar', path: 'owner.name' } },
+      view: { filter: { key: 'owner', op: 'startsWith', value: 'gr' } },
+    });
+    expect(res.total).toBe(10);
   });
 
   test('boolean and date eq filters', async () => {
@@ -213,6 +227,19 @@ describe('filter and search', () => {
       view: { filter: { key: 'created', op: 'eq', value: '2026-01-03T18:00:00Z' } },
     });
     expect(day.rows.map((row) => row._id)).toEqual(['d02']);
+  });
+
+  test('date filters compare the days of the timezone', async () => {
+    // Deals are created at UTC midnight, which is the evening before in New York.
+    const newYork = await query({
+      timezone: 'America/New_York',
+      view: { filter: { key: 'created', op: 'eq', value: '2026-01-03' } },
+    });
+    expect(newYork.rows.map((row) => row._id)).toEqual(['d03']);
+    const utc = await query({
+      view: { filter: { key: 'created', op: 'eq', value: '2026-01-03' } },
+    });
+    expect(utc.rows.map((row) => row._id)).toEqual(['d02']);
   });
 
   test('relation filter by ObjectId returns serialized ids', async () => {
@@ -406,8 +433,25 @@ describe('aggregates', () => {
     expect(res.aggregates).toEqual({ amount: 400, created: new Date(Date.UTC(2026, 0, 30)) });
   });
 
+  test('min and max of a text field leave out empty values', async () => {
+    const res = await query({
+      view: { aggregates: { name: 'min', owner: 'max', note: 'min' } },
+      endRow: 1,
+    });
+    expect(res.aggregates).toEqual({
+      name: 'Ada Lovelace (a.k.a. Countess)',
+      owner: 'Grace',
+      note: 'x',
+    });
+  });
+
   test('countDistinct leaves out empty values', async () => {
     const res = await query({
+      fields: {
+        ...fields,
+        note: { type: 'text', groupable: true },
+        tags: { type: 'tags', groupable: true },
+      },
       view: {
         aggregates: { note: 'countDistinct', owner: 'countDistinct', tags: 'countDistinct' },
       },
@@ -415,6 +459,20 @@ describe('aggregates', () => {
     });
     // tags counts distinct arrays: [], ['vip', 'new'] and ['vip', 'renewal'], less the empty one.
     expect(res.aggregates).toEqual({ note: 1, owner: 2, tags: 2 });
+  });
+
+  test('countDistinct per group and over the whole set', async () => {
+    const res = await query({
+      view: { group: [{ key: 'stage' }], aggregates: { owner: 'countDistinct' } },
+      groupPath: [],
+    });
+    expect(res.aggregates).toEqual({ owner: 2 });
+    // Stage and owner cycle together: lead deals are Ada's, won deals Grace's, lost unowned.
+    expect(res.groups.map((group) => [group.key, group.aggregates.owner])).toEqual([
+      ['lead', 1],
+      ['lost', 0],
+      ['won', 1],
+    ]);
   });
 
   test('aggregates of an empty result are zero or null', async () => {
@@ -429,6 +487,73 @@ describe('aggregates', () => {
       total: 0,
       aggregates: { amount: 0, created: null, name: 0 },
     });
+  });
+});
+
+describe('indexes', () => {
+  // Every query plan stage name ({ stage: 'IXSCAN' }) and aggregation stage ({ $sort }) in an
+  // explain output.
+  function planStages(plan, stages = []) {
+    if (Array.isArray(plan)) {
+      plan.forEach((item) => planStages(item, stages));
+    } else if (plan !== null && typeof plan === 'object') {
+      if (typeof plan.stage === 'string') stages.push(plan.stage);
+      Object.entries(plan).forEach(([key, item]) => {
+        if (key.startsWith('$')) stages.push(key);
+        planStages(item, stages);
+      });
+    }
+    return stages;
+  }
+
+  test('an index on the filter and sort fields serves the sort, with no blocking SORT', async () => {
+    const indexed = 'tableQueryIndexed';
+    await populateTestMongoDb({ collection: indexed, documents });
+    const { client, collection: raw } = await getTestCollection({ collection: indexed });
+    try {
+      await raw.createIndex({ org_id: 1, amount: -1, _id: 1 });
+      const compiled = compileTableQuery({
+        properties: {
+          pipeline,
+          fields,
+          view: { sort: [{ key: 'amount', desc: true }] },
+          startRow: 10,
+          endRow: 20,
+        },
+        now: new Date(),
+      });
+      const explained = await raw.aggregate(compiled.pipeline).explain('queryPlanner');
+      // `stages` is the pipeline as MongoDB runs it; the explain also echoes the command sent.
+      const stages = planStages(explained.stages);
+      // The index gives the order: no blocking SORT in the plan and no $sort stage after it,
+      // where every block fetch would sort all matching documents again.
+      expect(stages).toContain('IXSCAN');
+      expect(stages).not.toContain('SORT');
+      expect(stages).not.toContain('$sort');
+    } finally {
+      await client.close();
+    }
+  });
+});
+
+describe('projection', () => {
+  test('rows hold only the field paths and _id by default', async () => {
+    const res = await query({ fields: { name: { type: 'text' } }, endRow: 1 });
+    expect(res.rows).toEqual([{ _id: 'd00', name: 'Deal 0' }]);
+  });
+
+  test('returnFields adds paths a cell reads without a field for them', async () => {
+    const res = await query({
+      fields: { name: { type: 'text' } },
+      returnFields: ['amount', 'owner'],
+      endRow: 1,
+    });
+    expect(res.rows).toEqual([{ _id: 'd00', name: 'Deal 0', amount: 0, owner: { name: 'Ada' } }]);
+  });
+
+  test('project: false returns the documents the base pipeline returns', async () => {
+    const res = await query({ fields: { name: { type: 'text' } }, project: false, endRow: 1 });
+    expect(res.rows).toEqual([{ ...orgOneDocs[0], owner_id: { _oid: ownerIds[0].toHexString() } }]);
   });
 });
 
@@ -478,6 +603,8 @@ describe('schema', () => {
           maxRows: 500,
           user: { id: 'u' },
           options: { maxTimeMS: 1000 },
+          project: true,
+          returnFields: ['owner.avatar'],
         },
       })
     ).toEqual({ valid: true });
