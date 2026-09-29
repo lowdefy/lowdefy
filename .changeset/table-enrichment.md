@@ -11,3 +11,4 @@ Columns that compute per row from other columns: `enrichment` (a provider endpoi
 - Formula templates and AI prompts take `{{ column }}` placeholders only, filled in as plain text, never a template engine.
 - A user-defined column with an invalid config renders as an error column with Edit and Delete, instead of breaking the table.
 - `inputFieldPrefix` puts new input columns' values under a path, so `onRowAdd` and `onImport` values are all at field paths.
+- `TableInput` takes formula columns; the other enrichment keys are `Table` only, and `TableInput` refuses them with a message naming `Table`.
