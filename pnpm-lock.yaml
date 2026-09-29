@@ -308,6 +308,9 @@ importers:
       '@lowdefy/connection-test':
         specifier: 6.0.0
         version: link:../plugins/connections/connection-test
+      '@lowdefy/connection-treg':
+        specifier: 6.0.0
+        version: link:../plugins/connections/connection-treg
       '@lowdefy/email-templates':
         specifier: 6.0.0
         version: link:../utils/email-templates

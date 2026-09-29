@@ -108,6 +108,7 @@
     "@lowdefy/connection-smtp": "6.0.0",
     "@lowdefy/connection-stripe": "6.0.0",
     "@lowdefy/connection-test": "6.0.0",
+    "@lowdefy/connection-treg": "6.0.0",
     "@lowdefy/email-templates": "6.0.0",
     "@lowdefy/logger": "6.0.0",
     "@lowdefy/operators-change-case": "6.0.0",
