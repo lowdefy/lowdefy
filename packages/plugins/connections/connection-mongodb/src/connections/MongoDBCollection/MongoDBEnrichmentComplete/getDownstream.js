@@ -16,8 +16,9 @@
 
 import getKeyId from '../MongoDBTableChanges/getKeyId.js';
 
-// The autoRun columns each row can run next: those that read a column whose cell just
-// completed ok, so the worker can enqueue them (the waterfall between columns).
+// The autoRun columns each row runs next: those that read a column whose cell just completed
+// ok. MongoDBEnrichmentComplete queues them itself (planQueueDownstream); the response names
+// them.
 function getDownstream({ applied, downstreamByColumn }) {
   const byRow = new Map();
   applied.forEach(({ kind, result }) => {

@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# One claimed cell (`_item: cell`, a MongoDBEnrichmentClaim item): call its provider, complete
-# it, and queue the autoRun columns that read it. It runs inside the worker's two
-# :parallel_for loops (provider group, then cell), so its step results are `<id>.$.$`.
+# One claimed cell (`_item: cell`, a MongoDBEnrichmentClaim item): call its provider and
+# complete it. The complete also queues the autoRun columns that read the cell (a pitch waits
+# for the company it mentions), so a later round of this worker, or another worker, runs them.
+# It runs inside the worker's two :parallel_for loops (provider group, then cell), so its step
+# results are `<id>.$.$`.
 - :try:
     - id: provider
       type: CallApi
@@ -59,28 +61,6 @@
                 claimToken:
                   _item: cell.claimToken
               - _step: provider.$.$
-    # A cell that completed ok feeds the autoRun columns that read it (a pitch waits for the
-    # company it mentions). The downstream cells of this row are queued, and a later round of
-    # this worker (or another worker) claims them.
-    - :if:
-        _gt:
-          - _array.length:
-              _step: complete.$.$.downstream
-          - 0
-      :then:
-        - id: enqueue_downstream
-          type: MongoDBEnrichmentEnqueue
-          connectionId: leads
-          properties:
-            filter: {}
-            fields:
-              _state: fields
-            columnDefs:
-              _state: columnDefs
-            columns:
-              _step: complete.$.$.downstream.0.columns
-            selection:
-              - _item: cell.rowKey
   :catch:
     # The provider threw: a transient failure (a timeout, a 5xx, a rate limit). The error is
     # written with retry, so the cell is queued again after a backoff (backoffMs, doubled per

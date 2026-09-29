@@ -19,6 +19,7 @@ import runBulkWriteBatches from '../enrichment/runBulkWriteBatches.js';
 import scopeWriteOperations from '../enrichment/scopeWriteOperations.js';
 import getDownstream from './getDownstream.js';
 import planCompleteCell from './planCompleteCell.js';
+import planQueueDownstream from './planQueueDownstream.js';
 import planReleaseWaiting from './planReleaseWaiting.js';
 import readAppliedCells from './readAppliedCells.js';
 import readClaimedRows from './readClaimedRows.js';
@@ -26,7 +27,8 @@ import readClaimedRows from './readClaimedRows.js';
 // Writes the results whose claim still holds, in unordered bulkWrites guarded by the claim
 // token, and reports which were applied. When every write matched (the usual case) that is
 // all of them; otherwise the written cells are read back. Then the cells of the same rows that
-// were waiting for the finished cells are released.
+// were waiting for the finished cells are released, and the autoRun columns the ok cells feed
+// are queued (`downstream` names them).
 async function runComplete({ collection, compiled, logCollection, now, tenant, tenantGuard }) {
   const { downstreamByColumn, filter, results } = compiled;
   const docs = await readClaimedRows({ collection, compiled, tenant });
@@ -58,6 +60,12 @@ async function runComplete({ collection, compiled, logCollection, now, tenant, t
     tenantGuard,
   });
   const released = await runBulkWriteBatches({ collection, operations: releaseOperations });
+  const downstreamOperations = scopeWriteOperations({
+    operations: planQueueDownstream({ applied, compiled, now }),
+    tenant,
+    tenantGuard,
+  });
+  await runBulkWriteBatches({ collection, operations: downstreamOperations });
   return {
     organizationId,
     applied,

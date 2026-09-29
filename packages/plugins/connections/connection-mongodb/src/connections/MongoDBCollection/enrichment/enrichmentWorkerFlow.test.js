@@ -30,8 +30,9 @@ import {
 const name = 'enrichmentWorker';
 const filter = { org: 'o1' };
 
-// The worker routine the docs describe: claim a batch, call the provider of each cell, complete
-// the batch and enqueue the downstream columns, until nothing is claimed.
+// The worker routine the docs describe: claim a batch, call the provider of each cell and
+// complete the batch, until nothing is claimed. Complete queues the downstream autoRun columns
+// itself, so the worker never enqueues them.
 async function runWorker({ connection, provider }) {
   let rounds = 0;
   for (;;) {
@@ -47,16 +48,10 @@ async function runWorker({ connection, provider }) {
       claimToken: item.claimToken,
       ...provider(item),
     }));
-    const { downstream } = await MongoDBEnrichmentComplete({
+    await MongoDBEnrichmentComplete({
       request: { columnDefs, filter, results },
       connection,
     });
-    for (const { rowKey, columns } of downstream) {
-      await MongoDBEnrichmentEnqueue({
-        request: { fields, columnDefs, filter, columns, selection: [rowKey] },
-        connection,
-      });
-    }
   }
 }
 
@@ -256,4 +251,37 @@ test('a claim parks a cell whose input is still running until that input complet
     connection,
   });
   expect(claims.map((item) => item.columnKey)).toEqual(['pitch']);
+});
+
+test('a completed cell queues the autoRun columns it feeds with its result', async () => {
+  const documents = [{ _id: 'a', org: 'o1', name: 'Acme', domain: 'acme.test' }];
+  const { collection, connection } = await setupEnrichmentCollection({ name, documents });
+  await MongoDBEnrichmentEnqueue({
+    request: { fields, columnDefs, filter, columns: ['email'] },
+    connection,
+  });
+  const [emailClaim] = await MongoDBEnrichmentClaim({
+    request: { fields, columnDefs, filter, limit: 10 },
+    connection,
+  });
+  const completed = await MongoDBEnrichmentComplete({
+    request: {
+      columnDefs,
+      filter,
+      results: [
+        {
+          rowKey: 'a',
+          columnKey: 'email',
+          claimToken: emailClaim.claimToken,
+          ...provider(emailClaim),
+        },
+      ],
+    },
+    connection,
+  });
+  expect(completed.downstream).toEqual([{ rowKey: 'a', columns: ['pitch'] }]);
+  // Queued by the complete itself, before it returned.
+  const docs = await readDocuments(collection);
+  expect(docs[0]._enrich.pitch).toMatchObject({ status: 'queued', attempts: 0 });
+  expect(docs[0]._enrich.pitch.queuedAt.getTime()).toBeLessThanOrEqual(Date.now());
 });
