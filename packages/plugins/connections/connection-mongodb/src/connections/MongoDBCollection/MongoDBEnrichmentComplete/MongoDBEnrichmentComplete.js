@@ -26,9 +26,9 @@ const requestType = 'MongoDBEnrichmentComplete';
 
 // Writes a worker's results to the cells it claimed. A result is applied only while the cell
 // still holds its claim (the claimToken, status running), so a worker whose lease ran out
-// can not overwrite a newer run. Errors are retried with an exponential backoff up to
-// maxAttempts. Returns the autoRun columns the completed cells feed, for the worker to
-// enqueue.
+// can not overwrite a newer run. Errors are retried up to maxAttempts, after the result's
+// retryAfterMs or an exponential backoff. Queues the autoRun columns the completed cells feed
+// and names them in the response.
 async function MongoDBEnrichmentComplete(context) {
   const { connection, request, tenant, tenantGuard } = context;
   const properties = deserialize(request);

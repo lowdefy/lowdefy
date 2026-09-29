@@ -33,7 +33,7 @@ export default {
       type: 'array',
       maxItems: 1000,
       description:
-        'The results of claimed cells: [{ rowKey, columnKey, claimToken, status: ok | error | empty, value?, raw?, cost?, error?, retry? }], with rowKey, columnKey and claimToken as MongoDBEnrichmentClaim returned them.',
+        'The results of claimed cells: [{ rowKey, columnKey, claimToken, status: ok | error | empty, value?, raw?, cost?, error?, retry?, retryAfterMs? }], with rowKey, columnKey and claimToken as MongoDBEnrichmentClaim returned them.',
       items: {
         type: 'object',
         required: ['rowKey', 'columnKey', 'claimToken', 'status'],
@@ -68,6 +68,12 @@ export default {
             description:
               'With status error: false makes the error final, with no retry. null is the same as not given (true).',
           },
+          retryAfterMs: {
+            type: ['integer', 'null'],
+            minimum: 0,
+            description:
+              "With status error below maxAttempts: the wait before the cell is claimed again, in place of the exponential backoff, such as a rate limit's Retry-After. At most a day. null is the same as not given.",
+          },
         },
         additionalProperties: false,
         errorMessage: {
@@ -75,7 +81,7 @@ export default {
           required:
             'MongoDBEnrichmentComplete request "results" items should have "rowKey", "columnKey", "claimToken" and "status".',
           additionalProperties:
-            'MongoDBEnrichmentComplete request "results" items should only have "rowKey", "columnKey", "claimToken", "status", "value", "raw", "cost", "error" and "retry".',
+            'MongoDBEnrichmentComplete request "results" items should only have "rowKey", "columnKey", "claimToken", "status", "value", "raw", "cost", "error", "retry" and "retryAfterMs".',
         },
       },
       errorMessage: {

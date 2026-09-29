@@ -85,6 +85,7 @@ describe('compileEnrichmentComplete', () => {
         raw: undefined,
         error: null,
         retry: true,
+        retryAfterMs: null,
       },
     ]);
     expect(compiled.downstreamByColumn.get('email')).toEqual(['pitch', 'score']);

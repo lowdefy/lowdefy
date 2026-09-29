@@ -256,6 +256,26 @@ describe('retries', () => {
     expect(email.leaseUntil).toBeUndefined();
   });
 
+  test('an error with retryAfterMs is queued again after it, not the exponential backoff', async () => {
+    const documents = [{ _id: 'a', org: 'o1', domain: 'acme.test', _enrich: { email: queued() } }];
+    const { collection, connection } = await setupEnrichmentCollection({ name, documents });
+
+    const [first] = await claim({ connection });
+    const before = Date.now();
+    const response = await complete({
+      connection,
+      results: [
+        resultOf(first, { status: 'error', error: 'provider busy', retryAfterMs: 5000, cost: 0 }),
+      ],
+    });
+    expect(response).toMatchObject({ applied: 1, requeued: 1 });
+    const email = cellOf(await readDocuments(collection), 'a');
+    expect(email).toMatchObject({ status: 'queued', error: 'provider busy', attempts: 1, cost: 0 });
+    expect(email.queuedAt.getTime() - before).toBeGreaterThanOrEqual(5000);
+    expect(email.queuedAt.getTime() - before).toBeLessThan(6000);
+    await expect(claim({ connection })).resolves.toEqual([]);
+  });
+
   test('retry false makes an error final at once', async () => {
     const documents = [{ _id: 'a', org: 'o1', domain: 'acme.test', _enrich: { email: queued() } }];
     const { collection, connection } = await setupEnrichmentCollection({ name, documents });

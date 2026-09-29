@@ -28,7 +28,11 @@ function operation({ match, columnKey, set, unset }) {
   return { updateOne: { filter: match, update: buildCellUpdate({ columnKey, set, unset }) } };
 }
 
-function getBackoff({ backoffMs, attempts }) {
+// The wait before a failed cell is claimed again: the result's retryAfterMs when the provider
+// said how long to wait (a rate limit's Retry-After), else backoffMs doubled per attempt made.
+// Either is at most a day.
+function getBackoff({ backoffMs, attempts, retryAfterMs }) {
+  if (retryAfterMs !== null) return Math.min(retryAfterMs, maxBackoffMs);
   return Math.min(backoffMs * 2 ** Math.max(attempts - 1, 0), maxBackoffMs);
 }
 
@@ -49,7 +53,9 @@ function planError({ result, match, attempts, compiled, now }) {
         columnKey: result.columnKey,
         set: {
           status: 'queued',
-          queuedAt: new Date(now.getTime() + getBackoff({ backoffMs, attempts })),
+          queuedAt: new Date(
+            now.getTime() + getBackoff({ backoffMs, attempts, retryAfterMs: result.retryAfterMs })
+          ),
           error: result.error,
           ...getCost(result),
         },
@@ -73,8 +79,9 @@ function planError({ result, match, attempts, compiled, now }) {
 // re-queued) changes nothing.
 //   ok / empty: the value and raw of this result replace the previous ones (an empty result
 //               has no value), with the inputHash of the inputs the claim was given.
-//   requeue:    an error below maxAttempts: queued again after the backoff, backoffMs doubled
-//               per attempt made, keeping the error message and the previous result.
+//   requeue:    an error below maxAttempts: queued again after the result's retryAfterMs, or
+//               else backoffMs doubled per attempt made, keeping the error message and the
+//               previous result.
 //   error:      an error on the last attempt, or with retry: false. The previous value stays.
 // Any result with a cost stores it as the cell's cost.
 // A value larger than rawMaxBytes is a final error; a raw larger than it is stored as a

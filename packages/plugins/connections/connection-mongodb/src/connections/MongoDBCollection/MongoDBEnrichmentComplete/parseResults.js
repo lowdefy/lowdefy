@@ -31,6 +31,7 @@ const resultKeys = [
   'cost',
   'error',
   'retry',
+  'retryAfterMs',
 ];
 const statuses = ['ok', 'error', 'empty'];
 // A claim token is 24 random hex digits, then the hash of the inputs the claim was given.
@@ -102,6 +103,16 @@ function parseResult({ result, index, columnDefsByKey, rowKeyType }) {
   if (!type.isNone(result.retry) && !type.isBoolean(result.retry)) {
     throw invalid({ index, message: '"retry" should be a boolean.', received: result.retry });
   }
+  if (
+    !type.isNone(result.retryAfterMs) &&
+    !(type.isInt(result.retryAfterMs) && result.retryAfterMs >= 0)
+  ) {
+    throw invalid({
+      index,
+      message: '"retryAfterMs" should be a whole number of milliseconds, 0 or more.',
+      received: result.retryAfterMs,
+    });
+  }
   const rowKey = coerceRowKey({ value: result.rowKey, rowKeyType, part: 'results', requestType });
   return {
     rowKey,
@@ -115,6 +126,7 @@ function parseResult({ result, index, columnDefsByKey, rowKeyType }) {
     cost: type.isNone(result.cost) ? undefined : result.cost,
     error: parseError({ result, index }),
     retry: result.retry !== false,
+    retryAfterMs: type.isNone(result.retryAfterMs) ? null : result.retryAfterMs,
   };
 }
 

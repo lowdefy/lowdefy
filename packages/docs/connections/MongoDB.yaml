@@ -642,7 +642,7 @@ _ref:
             The `MongoDBEnrichmentComplete` request writes a worker's results to the cells it claimed. A result is applied only while its cell still holds the claim, its `claimToken` with status `running`, so a worker whose lease ran out (and whose cell was claimed again or queued again since) changes nothing, and a result sent twice is applied once. See [Enrichment run queue](#enrichment-run-queue).
 
             - `ok` and `empty` results replace the cell's `value` and `raw` (an empty result has no value), and store `finishedAt` and the `inputHash` of the inputs the claim gave the worker.
-            - An `error` below `maxAttempts` goes back to `queued` with its error message, due after `backoffMs * 2^(attempt - 1)` (30 seconds, then 60, …, at most a day). On the last attempt, or with `retry: false`, the error is final. The previous value stays in both cases.
+            - An `error` below `maxAttempts` goes back to `queued` with its error message, due after `backoffMs * 2^(attempt - 1)` (30 seconds, then 60, …, at most a day), or after the result's `retryAfterMs` when the provider said how long to wait (a rate limit's `Retry-After`). On the last attempt, or with `retry: false`, the error is final. The previous value stays in both cases.
             - A final result (`ok`, `empty`, or an error that is not retried) releases the cells of the row waiting for it (`waitingFor`), so they are claimed next; one whose input failed then finds it missing.
             - An `ok` result queues the `autoRun` columns that read the column, in its row, unless they are queued or running already.
             - A `raw` larger than `rawMaxBytes` is stored as `{ _truncated: true, bytes, maxBytes, preview }`, with the first 1000 characters of its JSON, so one large response can not fill the row. A `value` larger than `rawMaxBytes` makes the result a final error.
@@ -672,6 +672,7 @@ _ref:
               - `cost: integer`: What the provider call behind the result cost, in micro-USD, such as a [`TregCall`](/Treg) `cost.micro`. Stored as the cell's `cost` with any status; a result without a cost leaves the cell's cost as it was.
               - `error: string | null`: The error message, with status `error`. `null` is the same as leaving it out.
               - `retry: boolean | null`: Default: `true` - With status `error`, `false` makes the error final. `null` is the same as leaving it out.
+              - `retryAfterMs: integer | null`: With status `error` below `maxAttempts`, the wait before the cell is claimed again, in place of the exponential backoff, at most a day. A worker passes a `ServiceError`'s `retryAfter` (seconds, such as a [`TregCall`](/Treg) 429 or 503) times 1000. `null` is the same as leaving it out.
             - `columnDefs: object[]`: __Required__ - The table columns, declared and user-defined merged.
             - `filter: object`: The base filter every read and write is scoped by. Required unless the connection is tenant-scoped.
             - `maxAttempts: integer`: Default: `3` - The attempts a cell gets.
