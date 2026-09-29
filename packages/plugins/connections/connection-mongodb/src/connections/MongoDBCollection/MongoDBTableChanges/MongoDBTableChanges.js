@@ -47,7 +47,12 @@ async function MongoDBTableChanges({
   tenantGuard,
 }) {
   const properties = deserialize(request);
-  const compiled = compileTableChanges({ properties, tenantScoped: Boolean(tenant), generateId });
+  const compiled = compileTableChanges({
+    properties,
+    tenantScoped: Boolean(tenant),
+    generateId,
+    now: new Date(),
+  });
   let { operations } = compiled;
   if (tenant) {
     operations = applyTenantToBulkOperations({ operations, tenant });

@@ -21,14 +21,55 @@ export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'Lowdefy Request Schema - MongoDBTableChanges',
   type: 'object',
-  required: ['changes', 'fields'],
+  required: ['fields'],
+  anyOf: [{ required: ['changes'] }, { required: ['selection'] }],
   properties: {
     changes: {
       type: 'object',
       description:
-        'The TableInput value to save, { updated, added, removed, moved, order }, usually { _payload: changes }. Validated against "fields".',
+        'The TableInput value to save, { updated, added, removed, moved, order }, usually { _payload: changes }. Validated against "fields". Leave it out for a bulk "selection" save.',
       errorMessage: {
         type: 'MongoDBTableChanges request property "changes" should be an object.',
+      },
+    },
+    selection: {
+      type: ['array', 'object'],
+      description:
+        'Bulk mode: the rows to write "set" and "unset" to, the Table selected value, usually { _payload: selected }. An array of row keys, or { all: true, except, filter, search } for every row matching the view but the keys in except.',
+      errorMessage: {
+        type: 'MongoDBTableChanges request property "selection" should be an array or an object.',
+      },
+    },
+    set: {
+      type: 'object',
+      description:
+        'Bulk mode: { [field]: value } to set on every selected row. The keys are "fields" keys, and the values are checked and coerced like "updated" values.',
+      errorMessage: {
+        type: 'MongoDBTableChanges request property "set" should be an object.',
+      },
+    },
+    unset: {
+      type: 'array',
+      items: { type: 'string' },
+      description: 'Bulk mode: "fields" keys to remove from every selected row.',
+      errorMessage: {
+        type: 'MongoDBTableChanges request property "unset" should be an array of strings.',
+      },
+    },
+    queryFields: {
+      type: 'object',
+      description:
+        'Bulk mode: the MongoDBTableQuery "fields" of the table, keyed by column key, which a select-all "selection" filter and search are validated and compiled against.',
+      errorMessage: {
+        type: 'MongoDBTableChanges request property "queryFields" should be an object.',
+      },
+    },
+    user: {
+      type: ['object', 'null'],
+      description:
+        'Bulk mode: the user that { $user: path } values in a "selection" filter resolve from. Set it to { _user: true }.',
+      errorMessage: {
+        type: 'MongoDBTableChanges request property "user" should be an object.',
       },
     },
     fields: {
@@ -170,8 +211,8 @@ export default {
   },
   errorMessage: {
     type: 'MongoDBTableChanges request properties should be an object.',
+    anyOf: 'MongoDBTableChanges request should have required property "changes" or "selection".',
     required: {
-      changes: 'MongoDBTableChanges request should have required property "changes".',
       fields: 'MongoDBTableChanges request should have required property "fields".',
     },
   },

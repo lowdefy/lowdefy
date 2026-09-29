@@ -38,11 +38,14 @@ function createIdGenerator() {
   };
 }
 
+const now = new Date('2026-09-29T12:00:00.000Z');
+
 function compile(properties, { tenantScoped = false } = {}) {
   return compileTableChanges({
     properties: { fields, filter, ...properties },
     tenantScoped,
     generateId: createIdGenerator(),
+    now,
   });
 }
 
@@ -1132,5 +1135,175 @@ describe('array mode', () => {
         changes: { updated: { a: { code: 'b' } } },
       })
     ).toThrow('MongoDBTableChanges row "a": the row key field "code" can not be changed.');
+  });
+});
+
+describe('bulk selection', () => {
+  const queryFields = {
+    name: { type: 'text', search: true },
+    qty: { type: 'number' },
+    owner: { type: 'text', path: 'owner.name', search: true },
+  };
+
+  test('a key array sets the fields on those rows with one updateMany', () => {
+    const compiled = compile({
+      selection: ['a', 5, `{"_oid":"${oid.toHexString()}"}`],
+      set: { owner: 'Ada', qty: '3' },
+    });
+    expect(compiled.mode).toBe('bulk');
+    expect(compiled.operations).toEqual([
+      {
+        updateMany: {
+          filter: scoped({ _id: { $in: ['a', 5, '5', oid] } }),
+          update: { $set: { 'owner.name': 'Ada', qty: 3 } },
+        },
+      },
+    ]);
+  });
+
+  test('select all matching compiles the view filter and search inside the base filter, less except', () => {
+    const { operations } = compile({
+      queryFields,
+      selection: {
+        all: true,
+        except: ['b', 7],
+        filter: { key: 'qty', op: 'gte', value: 2 },
+        search: 'ada',
+      },
+      set: { done: true },
+      unset: ['tags'],
+    });
+    expect(operations).toEqual([
+      {
+        updateMany: {
+          filter: {
+            $and: [
+              filter,
+              { qty: { $gte: 2 } },
+              { $or: [{ name: /ada/i }, { 'owner.name': /ada/i }] },
+              { _id: { $nin: ['b', 7, '7'] } },
+            ],
+          },
+          update: { $set: { done: true }, $unset: { tags: '' } },
+        },
+      },
+    ]);
+  });
+
+  test('select all without a view or except updates every row in the base filter', () => {
+    const { operations } = compile({ selection: { all: true }, set: { done: false } });
+    expect(operations[0].updateMany.filter).toEqual(filter);
+    const { operations: unscoped } = compile({
+      filter: {},
+      selection: { all: true },
+      set: { done: false },
+    });
+    expect(unscoped[0].updateMany.filter).toEqual({});
+  });
+
+  test('a crafted view is refused, and can only narrow the base filter', () => {
+    expect(() =>
+      compile({
+        queryFields,
+        selection: { all: true, filter: { $where: 'true' } },
+        set: { done: true },
+      })
+    ).toThrow('MongoDBTableQuery filter condition has an unknown key "$where".');
+    expect(() =>
+      compile({
+        queryFields,
+        selection: { all: true, filter: { key: 'org_id', op: 'ne', value: 'x' } },
+        set: { done: true },
+      })
+    ).toThrow('MongoDBTableQuery view filter key "org_id" is not in the request "fields".');
+    expect(() =>
+      compile({
+        queryFields,
+        selection: { all: true, filter: { key: 'qty', op: 'gt', value: { $gt: '' } } },
+        set: { done: true },
+      })
+    ).toThrow('operator "gt" expects a number');
+  });
+
+  test('a view needs queryFields', () => {
+    expect(() => compile({ selection: { all: true, search: 'ada' }, set: { done: true } })).toThrow(
+      'MongoDBTableChanges "selection" has a filter or search, so the request needs "queryFields", the MongoDBTableQuery fields of the table.'
+    );
+  });
+
+  test('set and unset are checked against fields like updated values', () => {
+    expect(() => compile({ selection: ['a'], set: { org_id: 'org_2' } })).toThrow(
+      'MongoDBTableChanges set: "org_id" is not in "fields".'
+    );
+    expect(() => compile({ selection: ['a'], set: { $where: 'x' } })).toThrow('is not allowed');
+    expect(() => compile({ selection: ['a'], set: { qty: 'many' } })).toThrow(
+      'MongoDBTableChanges set: "qty" expects a number for type "number". Received "many".'
+    );
+    expect(() => compile({ selection: ['a'], unset: ['secret'] })).toThrow(
+      'MongoDBTableChanges unset: "secret" is not in "fields".'
+    );
+    expect(() => compile({ selection: ['a'], set: { name: 'x' }, unset: ['name'] })).toThrow(
+      'MongoDBTableChanges set and unset: "name" and "name" overlap, so they can not both be written.'
+    );
+    expect(() =>
+      compile({
+        fields: { ...fields, _id: { type: 'text' } },
+        filter: {},
+        selection: ['a'],
+        set: { _id: 'b' },
+      })
+    ).toThrow('the row key field "_id" can not be changed.');
+  });
+
+  test('a selection is refused when it is malformed, empty or too large', () => {
+    expect(() => compile({ selection: [], set: { done: true } })).toThrow(
+      'MongoDBTableChanges "selection" is empty: there is nothing to write.'
+    );
+    expect(() => compile({ selection: { all: false }, set: { done: true } })).toThrow(
+      'MongoDBTableChanges "selection" should be an array of row keys or { all: true, except, filter, search }. Received {"all":false}.'
+    );
+    expect(() => compile({ selection: { all: true, where: {} }, set: { done: true } })).toThrow(
+      'MongoDBTableChanges "selection" should be an array of row keys or'
+    );
+    expect(() => compile({ selection: [{ $ne: null }], set: { done: true } })).toThrow(
+      'MongoDBTableChanges "selection" has an invalid row key'
+    );
+    expect(() =>
+      compile({ maxChanges: 2, selection: ['a', 'b', 'c'], set: { done: true } })
+    ).toThrow('MongoDBTableChanges "selection" has 3 row keys, more than "maxChanges" (2).');
+    expect(() =>
+      compile({ maxChanges: 1, selection: { all: true, except: ['a', 'b'] }, set: { done: true } })
+    ).toThrow('MongoDBTableChanges "selection" has 2 row keys, more than "maxChanges" (1).');
+  });
+
+  test('a bulk save needs set or unset, no changes and no array mode', () => {
+    expect(() => compile({ selection: ['a'] })).toThrow(
+      'MongoDBTableChanges with a "selection" needs "set" or "unset", the fields to write on every selected row.'
+    );
+    expect(() =>
+      compile({ selection: ['a'], set: { done: true }, changes: { removed: ['b'] } })
+    ).toThrow('MongoDBTableChanges takes "changes" or a "selection" with "set", not both.');
+    expect(() =>
+      compile({
+        selection: ['a'],
+        set: { done: true },
+        array: { documentId: 'd', path: 'items' },
+      })
+    ).toThrow(
+      'MongoDBTableChanges "selection" saves rows that are documents, so it can not be used in array mode.'
+    );
+    expect(() => compile({})).toThrow(
+      'MongoDBTableChanges requires "changes", the TableInput value { updated, added, removed, moved, order }. Received undefined.'
+    );
+  });
+
+  test('a field that writes a scope field is refused in bulk mode too', () => {
+    expect(() =>
+      compile({
+        fields: { ...fields, org_id: { type: 'text' } },
+        selection: { all: true },
+        set: { org_id: 'org_2' },
+      })
+    ).toThrow('MongoDBTableChanges field "org_id" writes "org_id", which "filter" scopes');
   });
 });

@@ -735,8 +735,30 @@ _ref:
 
             The `TableInput` keys rows by `rowKey` (default `_id`, then `id`). An ObjectId key comes back from the browser as the text `{"_oid":"…"}`, which the default `rowKeyType: auto` reads as an ObjectId. Object keys are always strings, so a numeric key `5` arrives as `"5"` in `updated` and `moved`, and as `5` in `removed` and `order`. With `rowKeyType: auto` both are the same row, and it matches a document key `5` or `"5"` (`{ $in: [5, "5"] }`). A string is read as a number only when it is exactly how that number prints (`"5"`, `"-2"`, `"1.5"`; not `"05"` or `"1e3"`). If a collection holds both `5` and `"5"` as different rows, set `rowKeyType: number` or `rowKeyType: string` to match one form only. `rowKeyType: objectId` also reads 24 character hex strings as ObjectIds.
 
+            ##### Bulk selection
+
+            Set `selection` instead of `changes` to write the same values to many rows, such as a bulk "Assign owner" action on the rows selected in a `Table`. `selection` is the table's `selected` value:
+
+            - an array of row keys, which compiles to `{ <rowKeyField>: { $in: [keys] } }`;
+            - `{ all: true, except, filter, search }` when the header checkbox selects every row the view matches: the keys in `except` were deselected since, and `filter` and `search` are the view's. It compiles to the view's filter and search, validated and compiled like `MongoDBTableQuery` against `queryFields` (the table's `MongoDBTableQuery` `fields`, with the same limits and refusals), and `{ <rowKeyField>: { $nin: [except] } }`.
+
+            `set` is `{ [field]: value }` and `unset` a list of fields, both `fields` keys, checked and coerced like `updated` values, and never a scope field. The save is one `updateMany`:
+
+            ```yaml
+            - updateMany:
+                filter: { $and: [<filter>, <view filter>, <view search>, { _id: { $nin: [<except>] } }] }
+                update: { $set: { owner.name: Ada }, $unset: { due: '' } }
+            ```
+
+            The base `filter` (and the tenant, on a tenant connection) is one clause of the `$and`, so a crafted view can only narrow it. Row keys are read as in Row keys, and a `selection` has at most `maxChanges` keys. The response is `{ matchedCount, modifiedCount }`. `selection` can not be used in array mode.
+
             #### Properties
-            - `changes: object`: __Required__ - The `TableInput` value, `{ _payload: changes }`: `{ updated, added, removed, moved, order }`.
+            - `changes: object`: The `TableInput` value, `{ _payload: changes }`: `{ updated, added, removed, moved, order }`. Required unless `selection` is set.
+            - `selection: object | any[]`: Bulk mode: the rows to write `set` and `unset` to, the `Table` `selected` value, `{ _payload: selected }`. See Bulk selection.
+            - `set: object`: Bulk mode: `{ [field]: value }` to set on every selected row.
+            - `unset: string[]`: Bulk mode: fields to remove from every selected row.
+            - `queryFields: object`: Bulk mode: the `MongoDBTableQuery` `fields` of the table, keyed by column key. Needed when a `selection` has a `filter` or `search`.
+            - `user: object`: Bulk mode: the user that `{ $user: path }` values in a `selection` filter resolve from. Set it to `{ _user: true }`.
             - `fields: object`: __Required__ - The allowlist, keyed by the `TableInput` column field (its dot path). Each field is an object:
               - `type: enum`: __Required__ - The column type, as for `MongoDBTableQuery`. Values are checked and coerced to it.
               - `path: string`: Default: the field key - Dot path the value is written to, in the document or, in array mode, in the item.
@@ -885,6 +907,47 @@ _ref:
                       _date: now
                   changes:
                     _payload: changes
+            ```
+
+            ###### Assign an owner to the selected deals (bulk selection):
+            The `deals_table` `Table` in server mode shows the deals of `deals_page` (the `MongoDBTableQuery` example below). A button in its `bulkActions` sends the table's `selected` value, a list of keys or every row matching the view, and the request sets the owner on those rows inside the organization.
+            ```yaml
+            requests:
+              - id: assign_owner
+                type: MongoDBTableChanges
+                connectionId: deals
+                payload:
+                  selected:
+                    _state: deals_table.selected
+                  owner:
+                    _state: new_owner
+                properties:
+                  filter:
+                    org_id:
+                      _user: organization.id
+                  fields:
+                    owner:
+                      type: text
+                      path: owner.name
+                  queryFields:
+                    name:
+                      type: text
+                      search: true
+                    stage:
+                      type: tag
+                    owner:
+                      type: text
+                      path: owner.name
+                      search: true
+                    amount:
+                      type: currency
+                  user:
+                    _user: true
+                  selection:
+                    _payload: selected
+                  set:
+                    owner:
+                      _payload: owner
             ```
 
             ### MongoDBTableQuery

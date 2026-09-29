@@ -20,7 +20,11 @@
 // matchedCount and modifiedCount are 0 or 1 for it, insertedCount is the items pushed and
 // deletedCount the removed items that were in the array. An array document outside the
 // filter matches no operation, and nothing is written: that is an error, not an empty save.
+// A bulk selection save returns the rows its updateMany matched and modified.
 function readChangesResult({ compiled, result, unmatchedRemoved, unmatchedUpdated }) {
+  if (compiled.mode === 'bulk') {
+    return { matchedCount: result.matchedCount, modifiedCount: result.modifiedCount };
+  }
   const unmatchedKeys = [...unmatchedRemoved, ...unmatchedUpdated];
   if (compiled.mode === 'collection') {
     return {

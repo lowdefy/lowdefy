@@ -80,7 +80,13 @@ async function runArrayChanges({ collection, compiled, operations }) {
 
 // Runs the compiled operations (already tenant scoped) and finds the rows that matched
 // nothing: outside the filter, deleted, or never there.
+async function runBulkChanges({ collection, compiled, operations }) {
+  const result = await collection.bulkWrite(operations, compiled.options);
+  return { result };
+}
+
 function runChanges({ collection, compiled, operations }) {
+  if (compiled.mode === 'bulk') return runBulkChanges({ collection, compiled, operations });
   if (compiled.mode === 'array') return runArrayChanges({ collection, compiled, operations });
   return runCollectionChanges({ collection, compiled, operations });
 }

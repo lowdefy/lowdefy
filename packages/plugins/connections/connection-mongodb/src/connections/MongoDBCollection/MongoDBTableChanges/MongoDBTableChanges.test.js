@@ -115,8 +115,22 @@ test('the schema accepts a full request and refuses one without changes', () => 
     })
   ).toEqual({ valid: true });
   expect(() => validate({ schema, data: { fields: lineFields } })).toThrow(
-    'MongoDBTableChanges request should have required property "changes".'
+    'MongoDBTableChanges request should have required property "changes" or "selection".'
   );
+  expect(
+    validate({
+      schema,
+      data: {
+        fields: lineFields,
+        filter: {},
+        selection: { all: true, except: ['a'], filter: { key: 'item', op: 'notEmpty' } },
+        set: { qty: 1 },
+        unset: ['due'],
+        queryFields: { item: { type: 'text' } },
+        user: { id: 'u' },
+      },
+    })
+  ).toEqual({ valid: true });
   expect(() =>
     validate({ schema, data: { changes: {}, fields: { a: { type: 'text', search: true } } } })
   ).toThrow('MongoDBTableChanges request field should only have "type" and "path".');
@@ -371,6 +385,95 @@ describe('collection mode', () => {
     }).catch((caught) => caught);
     expect(error.name).toBe('ServiceError');
     expect(error.message).toBe(`MongoDB: Duplicate key on collection "${connection.collection}".`);
+  });
+});
+
+describe('bulk selection', () => {
+  const queryFields = { item: { type: 'text', search: true }, qty: { type: 'number' } };
+
+  test('a key array assigns an owner to those rows only', async () => {
+    const { collection, connection } = await setup(lines());
+    const response = await save({
+      connection,
+      fields: { ...lineFields, owner: { type: 'text' } },
+      selection: ['a', 'c', 'x'],
+      set: { owner: 'Ada' },
+    });
+    expect(response).toEqual({ matchedCount: 2, modifiedCount: 2 });
+    const owners = (await readAll(collection)).map((doc) => [doc._id, doc.owner]);
+    expect(owners).toEqual([
+      ['a', 'Ada'],
+      ['b', undefined],
+      ['c', 'Ada'],
+      ['x', undefined],
+    ]);
+  });
+
+  test('select all matching honours the view, except and the base filter', async () => {
+    const { collection, connection } = await setup([
+      ...lines(),
+      { _id: 'd', org_id: 'org_1', item: 'Dates', qty: 6 },
+      { _id: 'y', org_id: 'org_2', item: 'Dates', qty: 6 },
+    ]);
+    const response = await save({
+      connection,
+      queryFields,
+      fields: { ...lineFields, owner: { type: 'text' } },
+      selection: {
+        all: true,
+        except: ['c'],
+        filter: { key: 'qty', op: 'gte', value: 2 },
+      },
+      set: { owner: 'Grace' },
+    });
+    expect(response).toEqual({ matchedCount: 2, modifiedCount: 2 });
+    const owners = (await readAll(collection)).map((doc) => [doc._id, doc.owner ?? null]);
+    expect(owners).toEqual([
+      ['a', 'Grace'],
+      ['b', null],
+      ['c', null],
+      ['d', 'Grace'],
+      ['x', null],
+      ['y', null],
+    ]);
+  });
+
+  test('a view filter for another organization matches nothing', async () => {
+    const { collection, connection } = await setup(lines());
+    const before = await readAll(collection);
+    const response = await save({
+      connection,
+      queryFields: { ...queryFields, org_id: { type: 'text' } },
+      selection: {
+        all: true,
+        filter: {
+          or: [
+            { key: 'org_id', op: 'eq', value: 'org_2' },
+            { key: 'item', op: 'notEmpty' },
+          ],
+        },
+        search: 'other',
+      },
+      set: { qty: 0 },
+    });
+    expect(response).toEqual({ matchedCount: 0, modifiedCount: 0 });
+    expect(await readAll(collection)).toEqual(before);
+  });
+
+  test('a tenant connection walls a bulk save to the tenant', async () => {
+    const { collection, connection } = await setup([
+      { _id: 'a1', organization_id: 'org_a', item: 'Mine', qty: 1 },
+      { _id: 'b1', organization_id: 'org_b', item: 'Theirs', qty: 1 },
+    ]);
+    const response = await save({
+      connection,
+      tenant: { field: 'organization_id', value: 'org_a' },
+      filter: undefined,
+      selection: { all: true },
+      set: { qty: 5 },
+    });
+    expect(response).toEqual({ matchedCount: 1, modifiedCount: 1 });
+    expect((await readAll(collection)).map((doc) => doc.qty)).toEqual([5, 1]);
   });
 });
 
