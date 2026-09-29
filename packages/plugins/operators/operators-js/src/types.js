@@ -76,6 +76,7 @@ export default {
       '_websocket',
     ],
     server: [
+      '_agent',
       '_and',
       '_app',
       '_args',

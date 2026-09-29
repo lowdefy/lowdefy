@@ -71,6 +71,7 @@ async function handleRequest(context, routineContext, { request }) {
     requestProperties,
   });
   const result = await callRequestResolver(context, {
+    agent: routineContext.agent,
     connectionProperties,
     endpointDepth: routineContext.endpointDepth,
     requestConfig,

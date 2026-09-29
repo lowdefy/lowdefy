@@ -14,11 +14,21 @@
   limitations under the License.
 */
 
-// The routine fields operators can read. A field added to the routine frame goes here, so every
-// routine step and control sees it rather than only the ones that remembered to pass it.
-function operatorScope(routineContext) {
-  const { agent, error, items, payload, state, steps } = routineContext;
-  return { agent: agent ?? null, error: error ?? null, items, payload, state, steps };
+import { getFromObject } from '@lowdefy/operators';
+
+// Reads the agent ({ id, conversationId }) the engine put on the routine when an agent called the
+// endpoint as a tool or hook. On any other call there is no agent, and every read resolves to null
+// or its default, the way `_error` does outside a catch.
+function _agent({ agent, arrayIndices, location, params }) {
+  return getFromObject({
+    arrayIndices,
+    location,
+    object: agent ?? null,
+    operator: '_agent',
+    params,
+  });
 }
 
-export default operatorScope;
+_agent.dynamic = true;
+
+export default _agent;

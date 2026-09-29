@@ -294,6 +294,28 @@ test('parse forwards error to operators', () => {
   expect(operatorContext.error).toBe(error);
 });
 
+test('parse forwards agent to operators', () => {
+  const input = { a: { _test: { params: true } } };
+  const agent = { id: 'support_agent', conversationId: 'conv_1' };
+  const parser = new ServerParser({ operators, secrets, user });
+  parser.parse({ agent, input, location });
+  const operatorContext = operators._test.mock.calls[operators._test.mock.calls.length - 1][0];
+  expect(operatorContext.agent).toBe(agent);
+});
+
+test('operator parser re-enters parse with the calling agent', () => {
+  const agent = { id: 'support_agent', conversationId: 'conv_1' };
+  const frameOperators = {
+    _nested: jest.fn(({ parser }) =>
+      parser.parse({ input: { __frame: true }, operatorPrefix: '__' })
+    ),
+    _frame: jest.fn(() => null),
+  };
+  const parser = new ServerParser({ operators: frameOperators, secrets, user });
+  parser.parse({ agent, input: { _nested: true }, location });
+  expect(frameOperators._frame.mock.calls[0][0].agent).toBe(agent);
+});
+
 test('operator parser re-enters parse with the calling error', () => {
   const error = new Error('Caught error.');
   const frameOperators = {

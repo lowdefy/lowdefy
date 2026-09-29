@@ -2018,6 +2018,14 @@
       "typeName": "_actions"
     },
     {
+      "slug": "operators/_agent",
+      "title": "_agent",
+      "section": "Operators",
+      "path": "content/operators/_agent.md",
+      "kind": "operator",
+      "typeName": "_agent"
+    },
+    {
       "slug": "operators/_and",
       "title": "_and",
       "section": "Operators",
@@ -3317,7 +3325,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "9095e1f01b1b6ecd69d589d0abf98bd176647ff55331295479ffd5606ce59ede"
+      "hash": "8da70420644d16968c55a9f4afeb4479b9f01d66992987851a8936d2487d716a"
     },
     "agents/agent-mcp-tools": {
       "files": [
@@ -7018,6 +7026,21 @@
         "version.yaml"
       ],
       "hash": "b132c74a87ce9d243f4990952307af12f8f43680e62775bcc099cfc7886c2e83"
+    },
+    "operators/_agent": {
+      "files": [
+        "operators/_agent.yaml",
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/operators.yaml.njk",
+        "templates/validate_email.yaml",
+        "version.yaml"
+      ],
+      "hash": "5a9a5a270e9e9b16c7acd3cdc2f72f9ffaf6c30121eefe2b6e06fce09fc1a10b"
     },
     "operators/_and": {
       "files": [
