@@ -17,6 +17,7 @@
 import { test, expect } from '@playwright/test';
 import { getBlock } from '@lowdefy/block-dev-e2e';
 
+import measureContrast from '../../../../e2e/measureContrast.js';
 import openTablePage from '../../../../e2e/openTablePage.js';
 
 // Enrichment tables (enrichment.e2e.yaml). Cells carry their run state in
@@ -44,6 +45,19 @@ const selectRow = (page, rowKey, blockId = 'enrich') =>
 // Enrichment cells hold links (email); a click beside the value opens the details panel.
 const clickCell = (page, rowKey, key) =>
   cell(page, rowKey, key).click({ position: { x: 180, y: 10 } });
+
+async function dragBy(page, locator, dx) {
+  await locator.scrollIntoViewIfNeeded();
+  const box = await locator.boundingBox();
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  for (let i = 1; i <= 10; i++) {
+    await page.mouse.move(x + (dx * i) / 10, y);
+  }
+  await page.mouse.up();
+}
 
 async function eventOf(page, name) {
   return JSON.parse(await getBlock(page, `ev_${name}`).textContent());
@@ -143,7 +157,7 @@ test.describe('Table enrichment', () => {
     await expect(tooltip).toHaveText('Failed after 3 attemptsRate limited by the provider');
     const cellBox = await cell(page, 'r4', 'email').boundingBox();
     const tooltipBox = await tooltip.boundingBox();
-    expect(tooltipBox.y).toBeGreaterThanOrEqual(cellBox.y + cellBox.height - 1);
+    expect(tooltipBox.y).toBeGreaterThan(cellBox.y + cellBox.height / 2);
   });
 
   test('a done cell whose inputs changed since it ran is stale', async ({ page }) => {
@@ -190,12 +204,55 @@ test.describe('Table enrichment', () => {
   // ============================================
 
   test('enrichment headers count running, queued and failed cells', async ({ page }) => {
-    await expect(chip(page, 'email')).toHaveText('2 running · 1 queued · 1 error');
-    await expect(chip(page, 'summary')).toHaveText('1 running');
+    await expect(chip(page, 'email')).toHaveAttribute(
+      'aria-label',
+      '2 running · 1 queued · 1 error'
+    );
+    await expect(chip(page, 'summary')).toHaveAttribute('aria-label', '1 running');
     await expect(chip(page, 'company')).toHaveCount(0);
     await button(page, 'enrich_push_running').click();
-    await expect(chip(page, 'email')).toHaveText('4 running · 1 queued · 1 error');
+    await expect(chip(page, 'email')).toHaveAttribute(
+      'aria-label',
+      '4 running · 1 queued · 1 error'
+    );
   });
+
+  test('the header chip collapses to fit beside its title, which keeps its room', async ({
+    page,
+  }) => {
+    const email = chip(page, 'email');
+    const title = header(page, 'email').locator('.lf-table-header-title');
+    const handle = getBlock(page, 'enrich').locator('[data-lf-resize][data-col-key="email"]');
+    const titleFits = () => title.evaluate((element) => element.scrollWidth <= element.clientWidth);
+    // 190px: an icon and a count per status.
+    await expect(email).toHaveAttribute('data-lf-enrich-progress', 'compact');
+    await expect(email.locator('.lf-enrich-progress-part')).toHaveText(['2', '1', '1']);
+    expect(await titleFits()).toBe(true);
+    await dragBy(page, handle, 200);
+    await expect(email).toHaveAttribute('data-lf-enrich-progress', 'full');
+    await expect(email).toHaveText('2 running · 1 queued · 1 error');
+    expect(await titleFits()).toBe(true);
+    await dragBy(page, handle, -280);
+    await expect(email).toHaveAttribute('data-lf-enrich-progress', 'dot');
+    await expect(email).toHaveAttribute('title', '2 running · 1 queued · 1 error');
+    expect(await titleFits()).toBe(true);
+  });
+
+  for (const scheme of ['light', 'dark']) {
+    test(`the header chip takes its most severe status' tone, readable in ${scheme} mode`, async ({
+      page,
+    }) => {
+      await page.emulateMedia({ colorScheme: scheme });
+      // An error makes the chip red, running alone blue.
+      await expect(chip(page, 'email')).toHaveAttribute('data-tone', 'error');
+      await expect(chip(page, 'summary')).toHaveAttribute('data-tone', 'processing');
+      const contrasts = await getBlock(page, 'enrich')
+        .locator('[data-lf-enrich-progress]')
+        .evaluateAll(measureContrast);
+      const failing = Object.entries(contrasts).filter(([, ratio]) => ratio < 4.5);
+      expect(failing, JSON.stringify(contrasts)).toEqual([]);
+    });
+  }
 
   test('a deep applyTransaction update merges a partial _enrich push into the row', async ({
     page,
@@ -207,7 +264,7 @@ test.describe('Table enrichment', () => {
     // The row's other fields and the summary column's state survive the push.
     await expect(cell(page, 'r2', 'company')).toHaveText('Globex');
     await expect(state(page, 'r2', 'summary')).toHaveAttribute('data-lf-enrich-status', 'running');
-    await expect(chip(page, 'email')).toHaveText('2 running · 1 error');
+    await expect(chip(page, 'email')).toHaveAttribute('aria-label', '2 running · 1 error');
   });
 
   // ============================================

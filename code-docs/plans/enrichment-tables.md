@@ -115,7 +115,7 @@ The module is an optional feature: it loads in its own chunk only for tables wit
 
   All states are tier 0: static DOM, with the tooltip mounted on hover.
 
-- **Header progress.** Enrichment column headers show live counts ("12 running · 3 errors") from the loaded rows, or from server aggregates in server mode.
+- **Header progress.** Enrichment column headers show live counts ("12 running · 3 errors") from the loaded rows, or from server aggregates in server mode. The chip takes its most severe status' tag tone (an error red, running blue, queued alone neutral; tag tones read at 4.5:1 in light and dark) and the largest form that fits beside the title, which keeps its room: the full text, an icon and a count per status, or a dot, with the full text as its tooltip (`getProgressMode`, widths from the table's text measure).
 - **Add column.** `addColumn: true | { kinds }` shows a "+" at the end of the header. It opens a picker with these kinds:
 
   - input types

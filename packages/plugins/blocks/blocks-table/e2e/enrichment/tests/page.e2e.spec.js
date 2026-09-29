@@ -108,8 +108,9 @@ test('a column run shows its cells go queued, running and done, live', async ({
     'data-lf-enrich-status',
     'running'
   );
-  await expect(header(page, 'company').locator('[data-lf-enrich-progress]')).toContainText(
-    'running'
+  await expect(header(page, 'company').locator('[data-lf-enrich-progress]')).toHaveAttribute(
+    'aria-label',
+    /running/
   );
   await expect(status(page, 'Ada Brightwell', 'company')).toHaveAttribute(
     'data-lf-enrich-status',
