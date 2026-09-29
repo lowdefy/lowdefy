@@ -18,8 +18,8 @@ import React from 'react';
 import { Select } from 'antd';
 import resolveTagTone from '@lowdefy/block-utils/format/resolveTagTone.js';
 
-import assignOptionColors from './assignOptionColors.js';
-import OPTION_TONES from './optionTones.js';
+import assignOptionColors from '@lowdefy/blocks-antd/table/assignOptionColors.js';
+import OPTION_TONES from '@lowdefy/blocks-antd/table/optionTones.js';
 
 function Swatch({ color }) {
   const tone = resolveTagTone(color);

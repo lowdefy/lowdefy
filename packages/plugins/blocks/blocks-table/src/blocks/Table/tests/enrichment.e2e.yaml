@@ -566,3 +566,90 @@ blocks:
           type: SetState
           params:
             ev_invalid.delete: true
+
+  # Tag answer options: saved as plain strings (through the API, or before options had colours),
+  # a user-defined column's options take the tones the picker gives them; a declared column's stay
+  # neutral.
+  - id: enrich_option_tones
+    type: Table
+    properties:
+      columns:
+        - key: company
+        - key: picked
+          kind: ai
+          prompt: Role at {{ company }}
+          inputs:
+            company:
+              column: company
+          userDefined: true
+          output:
+            type: tag
+            options:
+              - value: Decision maker
+                color: blue
+              - value: Champion
+                color: green
+              - value: Influencer
+                color: orange
+        - key: plain
+          kind: ai
+          prompt: Role at {{ company }}
+          inputs:
+            company:
+              column: company
+          userDefined: true
+          output:
+            type: tag
+            options:
+              - Decision maker
+              - Champion
+              - Influencer
+        - key: declared
+          kind: ai
+          prompt: Role at {{ company }}
+          inputs:
+            company:
+              column: company
+          output:
+            type: tag
+            options:
+              - Decision maker
+              - Champion
+              - Influencer
+      data:
+        - _id: t1
+          company: Acme
+          _enrich:
+            picked:
+              status: ok
+              value: Decision maker
+            plain:
+              status: ok
+              value: Decision maker
+            declared:
+              status: ok
+              value: Decision maker
+        - _id: t2
+          company: Globex
+          _enrich:
+            picked:
+              status: ok
+              value: Champion
+            plain:
+              status: ok
+              value: Champion
+            declared:
+              status: ok
+              value: Champion
+        - _id: t3
+          company: Initech
+          _enrich:
+            picked:
+              status: ok
+              value: Influencer
+            plain:
+              status: ok
+              value: Influencer
+            declared:
+              status: ok
+              value: Influencer

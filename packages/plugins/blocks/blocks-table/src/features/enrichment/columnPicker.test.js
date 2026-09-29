@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
+import assignOptionColors from '@lowdefy/blocks-antd/table/assignOptionColors.js';
 import isEnrichmentInputColumn from '@lowdefy/blocks-antd/table/isEnrichmentInputColumn.js';
 import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
 
-import assignOptionColors from './assignOptionColors.js';
 import buildColumnConfig from './buildColumnConfig.js';
 import createDraft from './createDraft.js';
 import draftFromColumn from './draftFromColumn.js';

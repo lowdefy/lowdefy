@@ -1139,3 +1139,26 @@ test.describe('Table error columns', () => {
     await expect(page.locator('.ant-drawer [aria-label="Title"]')).toHaveValue('Broken');
   });
 });
+
+test.describe('Table enrichment option tones', () => {
+  test('plain string options of a user-defined column take the tones the picker gives, declared ones stay neutral', async ({
+    page,
+  }) => {
+    await openTablePage(page, 'table-enrichment');
+    const table = getBlock(page, 'enrich_option_tones');
+    const tagBackgrounds = (key) =>
+      table
+        .locator(`.lf-table-body [data-col-key="${key}"] .lf-table-tag`)
+        .evaluateAll((tags) => tags.map((tag) => getComputedStyle(tag).backgroundColor));
+    const picked = await tagBackgrounds('picked');
+    expect(picked).toHaveLength(3);
+    expect(new Set(picked).size).toBe(3);
+    // The same colours the picker gave the same options.
+    expect(await tagBackgrounds('plain')).toEqual(picked);
+    // A declared column's options without colours stay one neutral tone.
+    const declared = await tagBackgrounds('declared');
+    expect(declared).toHaveLength(3);
+    expect(new Set(declared).size).toBe(1);
+    expect(picked).not.toContain(declared[0]);
+  });
+});
