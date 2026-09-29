@@ -1,0 +1,63 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# Turns rows from the browser ({ [column key]: value }, from onRowAdd or onImport) into
+# documents: each value goes to its field's path in the fields allowlist, so a row can only
+# set the table's input fields, never _enrich or another field of the document.
+# Returns { errors, docs, sets }: a document per row to insert, and per row the $set of
+# dotted paths an update writes (so it never replaces a whole `values` object).
+_js:
+  fn: |
+    const errors = [];
+    const sets = [];
+    const docs = args.rows.map((values, index) => {
+      const doc = {};
+      const set = {};
+      sets.push(set);
+      if (values === null || typeof values !== 'object' || Array.isArray(values)) {
+        errors.push(`Row ${index + 1} should be an object of column values.`);
+        return doc;
+      }
+      Object.entries(values).forEach(([key, value]) => {
+        const field = Object.hasOwn(args.fields, key) ? args.fields[key] : undefined;
+        if (field === undefined) {
+          errors.push(`Row ${index + 1}: "${key}" is not an input column.`);
+          return;
+        }
+        if (value !== null && typeof value === 'object') {
+          errors.push(`Row ${index + 1}: "${key}" should be a single value.`);
+          return;
+        }
+        if (typeof value === 'string' && value.length > 2000) {
+          errors.push(`Row ${index + 1}: "${key}" is longer than 2000 characters.`);
+          return;
+        }
+        set[field.path ?? key] = value;
+        const path = (field.path ?? key).split('.');
+        let target = doc;
+        path.slice(0, -1).forEach((segment) => {
+          target[segment] = target[segment] ?? {};
+          target = target[segment];
+        });
+        target[path[path.length - 1]] = value;
+      });
+      return doc;
+    });
+    return { errors, docs, sets };
+  args:
+    fields:
+      _state: fields
+    rows:
+      _state: rows

@@ -1,0 +1,115 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# Provider company_lookup: the company record of a domain, from the company enrichment API.
+#
+# Every provider endpoint takes { inputs, prompt, output } from the worker and answers:
+#   { status: ok, value, raw }        a result; `raw` is the full response (the details panel
+#                                     and extract columns read it)
+#   { status: empty, raw }            the provider has nothing for these inputs
+#   { status: error, error, retry: false }
+#                                     a failure retrying can not fix, such as invalid inputs
+#   or it throws                      a transient failure: the queue retries it with backoff
+#
+# InternalApi: only the worker calls it, so API keys and costs stay behind the queue.
+id: enrich_company_lookup
+type: InternalApi
+routine:
+  # The queue does not know provider schemas, so each provider checks its own inputs.
+  - id: check_inputs
+    type: ValidateSchema
+    properties:
+      throwOnInvalid: false
+      data:
+        _payload: inputs
+      schema:
+        type: object
+        required:
+          - domain
+        additionalProperties: false
+        properties:
+          domain:
+            type: string
+            maxLength: 253
+            pattern: ^[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$
+            errorMessage: domain should be a domain name, like example.com.
+  - :if:
+      _not:
+        _step: check_inputs.valid
+    :then:
+      - :return:
+          status: error
+          error:
+            _string.concat:
+              - 'Invalid input: '
+              - _step: check_inputs.errors.0.message
+          retry: false
+  - :try:
+      - id: lookup
+        type: AxiosHttp
+        connectionId: company_api
+        properties:
+          url: /companies
+          params:
+            domain:
+              _string.toLowerCase:
+                _payload: inputs.domain
+    :catch:
+      # 404: the service does not know the company. That is a result, not a failure.
+      - :if:
+          _eq:
+            - _error: statusCode
+            - 404
+        :then:
+          - :return:
+              status: empty
+              raw:
+                status: 404
+      # Other 4xx (but a 429 rate limit) will fail again: a final error.
+      - :if:
+          _and:
+            - _gte:
+                - _if_none:
+                    - _error: statusCode
+                    - 0
+                - 400
+            - _lt:
+                - _error: statusCode
+                - 500
+            - _ne:
+                - _error: statusCode
+                - 429
+        :then:
+          - :return:
+              status: error
+              error:
+                _error: message
+              retry: false
+      # A 429, a 5xx or a network failure: rethrown, so the attempt fails and is retried.
+      - :throw:
+          _error: true
+  - :return:
+      status: ok
+      # `output` is the column's path into the record; the industry by default.
+      value:
+        _get:
+          from:
+            _step: lookup.data
+          key:
+            _if_none:
+              - _payload: output
+              - industry
+      raw:
+        _step: lookup.data

@@ -41,6 +41,7 @@ const replSet = await MongoMemoryReplSet.create({
   instanceOpts: [{ port, storageEngine: 'wiredTiger', launchTimeout: 60000 }],
   replSet: { count: 1 },
 });
+// eslint-disable-next-line no-console
 console.log(`MongoDB replica set ready at ${replSet.getUri()}`);
 
 let stopping = false;

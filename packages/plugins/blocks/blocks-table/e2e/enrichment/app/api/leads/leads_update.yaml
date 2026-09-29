@@ -1,0 +1,68 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# Updates a row's input values: an edit in the table. Enrichment cells are not re-run; a cell
+# whose inputs changed shows as stale, and a run with mode: stale recomputes exactly those.
+id: leads_update
+type: Api
+payloadSchema:
+  type: object
+  required:
+    - rowKey
+    - values
+  additionalProperties: false
+  properties:
+    # The row's _id, as the page has it ({ _oid } for an ObjectId).
+    rowKey:
+      type: object
+      required:
+        - _oid
+      properties:
+        _oid:
+          type: string
+          pattern: ^[0-9a-f]{24}$
+    values:
+      type: object
+routine:
+  - _ref: leads/load_table.yaml
+  - :set_state:
+      rows:
+        - _payload: values
+  - :set_state:
+      converted:
+        _ref: leads/rows_to_docs.yaml
+  - :if:
+      _gt:
+        - _array.length:
+            _state: converted.errors
+        - 0
+    :then:
+      - :reject:
+          _array.join:
+            - _state: converted.errors
+            - ' '
+  - id: update_lead
+    type: MongoDBUpdateOne
+    connectionId: leads
+    properties:
+      filter:
+        _id:
+          _payload: rowKey
+      update:
+        $set:
+          _state: converted.sets.0
+  - :return:
+      matched:
+        _step: update_lead.matchedCount

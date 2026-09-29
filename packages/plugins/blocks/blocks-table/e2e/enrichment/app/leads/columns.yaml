@@ -1,0 +1,97 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# The declared columns of the leads table, in position order. User-defined columns (in the
+# table_columns collection) are merged in by position (leads/get_columns.yaml), so leave gaps.
+#
+# Enrichment and ai columns show `_enrich.<key>.value` through their field; the cell's run
+# state (queued, running, ok, error, empty) is `_enrich.<key>.status`.
+
+- key: name
+  title: Person
+  kind: input
+  type: text
+  position: 10
+
+- key: title
+  title: Job title
+  kind: input
+  type: text
+  position: 20
+
+- key: domain
+  title: Company domain
+  kind: input
+  type: text
+  position: 30
+
+# A provider call per row: the company_lookup endpoint returns the company record as `raw`,
+# and `output` picks the value the cell shows from it.
+- key: company
+  title: Industry
+  kind: enrichment
+  provider: company_lookup
+  inputs:
+    domain:
+      column: domain
+  output: industry
+  autoRun: true
+  field: _enrich.company.value
+  position: 40
+
+# A path into another column's raw result, computed in the browser. The server never runs it,
+# so an extract column can not be an input of an enrichment column.
+- key: employees
+  title: Employees
+  kind: extract
+  type: number
+  source: company
+  path: employees
+  field: _enrich.company.raw.employees
+  position: 50
+
+# A waterfall: the email_finder endpoint tries two sources in order and returns the first hit.
+- key: email
+  title: Email
+  kind: enrichment
+  provider: email_finder
+  inputs:
+    name:
+      column: name
+    domain:
+      column: domain
+  autoRun: true
+  field: _enrich.email.value
+  position: 60
+
+# An AI prompt per row. `industry` reads the company column's value once its cell is ok, and
+# autoRun runs the pitch when the company cell completes (a waterfall between columns).
+- key: pitch
+  title: Opener
+  kind: ai
+  prompt: Write a one line opener for {{ name }}, {{ title }} at a {{ industry }} company.
+  inputs:
+    name:
+      column: name
+    title:
+      column: title
+      required: false
+    industry:
+      column: company
+  output:
+    type: text
+  autoRun: true
+  field: _enrich.pitch.value
+  position: 70

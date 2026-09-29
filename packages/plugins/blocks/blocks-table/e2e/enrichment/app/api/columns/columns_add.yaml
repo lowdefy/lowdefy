@@ -1,0 +1,74 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# Adds a user-defined column: the Table's onColumnAdd { column }. The column is checked
+# (leads/check_column.yaml) and stored in table_columns; the page then reads its columns
+# again. `position` places it (insert left or right sends one between two columns); by
+# default it goes at the end.
+id: columns_add
+type: Api
+payloadSchema:
+  type: object
+  required:
+    - column
+  additionalProperties: false
+  properties:
+    column:
+      type: object
+    position:
+      type: number
+routine:
+  - _ref: leads/load_table.yaml
+  - :set_state:
+      check:
+        _ref: leads/check_column.yaml
+  - :if:
+      _gt:
+        - _array.length:
+            _state: check.errors
+        - 0
+    :then:
+      - :reject:
+          _array.join:
+            - _state: check.errors
+            - ' '
+  - id: insert_column
+    type: MongoDBInsertOne
+    connectionId: table_columns
+    properties:
+      doc:
+        _object.assign:
+          - _state: check.doc
+          - tableId: leads
+            # org_id:
+            #   _user: organization.id
+            position:
+              _if_none:
+                - _payload: position
+                - _sum:
+                    - _js:
+                        fn: |
+                          return Math.max(0, ...args.columns.map((column) => column.position ?? 0));
+                        args:
+                          columns:
+                            _state: columnDefs
+                    - 10
+            createdBy:
+              _user: id
+            createdAt:
+              _date: now
+  - :return:
+      column:
+        _state: check.doc

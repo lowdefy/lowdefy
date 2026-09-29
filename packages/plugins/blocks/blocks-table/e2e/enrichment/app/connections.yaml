@@ -1,0 +1,74 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# The rows. Each row's enrichment state sits beside its data, under _enrich.<column key>, so
+# there is no queue collection. A tenant-scoped app sets the connection's tenant options here.
+- id: leads
+  type: MongoDBCollection
+  properties:
+    databaseUri:
+      _secret: ENRICHMENT_MONGODB_URI
+    collection: leads
+    write: true
+
+# The user-defined columns: { tableId, key, title, type, kind, config, position, createdBy }.
+- id: table_columns
+  type: MongoDBCollection
+  properties:
+    databaseUri:
+      _secret: ENRICHMENT_MONGODB_URI
+    collection: table_columns
+    write: true
+
+# The enrichment services the providers call. Keys and base URLs stay on the server: a column
+# can only call a provider endpoint of this app, never a URL a user typed.
+- id: company_api
+  type: AxiosHttp
+  properties:
+    baseURL:
+      _string.concat:
+        - _secret: ENRICHMENT_API_URL
+        - /company
+    # Shorter than the claim lease, so a hung call fails the attempt (and is retried) before
+    # another worker could claim the cell.
+    timeout: 10000
+
+- id: email_source_a
+  type: AxiosHttp
+  properties:
+    baseURL:
+      _string.concat:
+        - _secret: ENRICHMENT_API_URL
+        - /email-a
+    timeout: 10000
+
+- id: email_source_b
+  type: AxiosHttp
+  properties:
+    baseURL:
+      _string.concat:
+        - _secret: ENRICHMENT_API_URL
+        - /email-b
+    timeout: 10000
+
+# The AI provider's model. The app, not the column, picks the model and the token limit.
+- id: ai
+  type: Anthropic
+  properties:
+    apiKey:
+      _secret: ANTHROPIC_API_KEY
+    baseURL:
+      _secret: ANTHROPIC_BASE_URL
+    maxOutputTokens: 300
+    timeout: 20000

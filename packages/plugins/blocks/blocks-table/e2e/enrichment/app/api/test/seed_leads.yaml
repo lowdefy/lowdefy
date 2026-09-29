@@ -1,0 +1,44 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# E2E only: fictional leads. The mock services answer each domain differently (see
+# e2e/enrichment/mocks/mockServices.mjs): found, not found (404), failing (500), a bad request
+# (400) or rate limited once (429). The last lead has no domain.
+- name: Ada Brightwell
+  title: Head of Operations
+  domain: brightpath.test
+- name: Ben Quill
+  title: CTO
+  domain: quillsoft.test
+- name: Cara Tidewell
+  title: Buyer
+  domain: tidewater.test
+- name: Dan Fernsby
+  title: Founder
+  domain: ferncrest.test
+- name: Eve Honeywell
+  title: Owner
+  domain: busybee.test
+- name: Finn Marsh
+  title: Analyst
+  domain: nowhere.test
+- name: Gina Brooks
+  title: Engineer
+  domain: broken.test
+- name: Hal Stone
+  title: Manager
+  domain: badrequest.test
+- name: Ivy Lane
+  title: Consultant
