@@ -27,10 +27,10 @@ function StatusIcon({ status }) {
   return <RunIcon name={status} />;
 }
 
-function renderContent({ mode, progress }) {
+function renderContent({ mode, parts, progress }) {
   if (mode === 'dot') return null;
-  if (mode === 'compact') {
-    return progress.parts.map((part) => (
+  if (mode === 'compact' || mode === 'partial') {
+    return parts.map((part) => (
       <span className="lf-enrich-progress-part" data-status={part.status} key={part.status}>
         <StatusIcon status={part.status} />
         {part.count}
@@ -50,13 +50,14 @@ function renderContent({ mode, progress }) {
 // mode; useEnrichment). The chip takes the most severe status' tag tone (error red, running
 // blue, queued neutral; tag tones read at 4.5:1 in light and dark themes) and the largest form
 // that fits beside the title (getProgressMode): "3 running · 1 queued · 1 error", an icon and a
-// count per status, or a dot. The full text is its tooltip and accessible name in every form.
+// count per status, the most important statuses' counts (queued dropped first), or a dot. The
+// full text is its tooltip and accessible name in every form.
 function RunProgress({ api, col, state }) {
   const counts = api.enrichment?.counts.get(col.key);
   if (!counts) return null;
   const progress = getProgressParts(counts);
   if (progress === null) return null;
-  const mode = getProgressMode({
+  const { mode, parts } = getProgressMode({
     progress,
     measure: api.textMeasure,
     room: getProgressRoom({ api, col, state }),
@@ -77,7 +78,7 @@ function RunProgress({ api, col, state }) {
       style={style}
       title={progress.text}
     >
-      {renderContent({ mode, progress })}
+      {renderContent({ mode, parts, progress })}
     </span>
   );
 }

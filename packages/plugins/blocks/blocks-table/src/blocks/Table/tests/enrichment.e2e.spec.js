@@ -253,7 +253,20 @@ test.describe('Table enrichment', () => {
     await expect(email).toHaveAttribute('data-lf-enrich-progress', 'full');
     await expect(email).toHaveText('2 running · 1 queued · 1 error');
     expect(await titleFits()).toBe(true);
-    await dragBy(page, handle, -280);
+    // 160px: queued goes first, so the error and running counts stay.
+    await dragBy(page, handle, -230);
+    await expect(email).toHaveAttribute('data-lf-enrich-progress', 'partial');
+    await expect(email.locator('.lf-enrich-progress-part')).toHaveText(['2', '1']);
+    await expect(email.locator('.lf-enrich-progress-part[data-status="queued"]')).toHaveCount(0);
+    await expect(email).toHaveAttribute('title', '2 running · 1 queued · 1 error');
+    expect(await titleFits()).toBe(true);
+    // 120px: the error count alone.
+    await dragBy(page, handle, -40);
+    await expect(email).toHaveAttribute('data-lf-enrich-progress', 'partial');
+    await expect(email.locator('.lf-enrich-progress-part')).toHaveText(['1']);
+    await expect(email.locator('.lf-enrich-progress-part')).toHaveAttribute('data-status', 'error');
+    expect(await titleFits()).toBe(true);
+    await dragBy(page, handle, -30);
     await expect(email).toHaveAttribute('data-lf-enrich-progress', 'dot');
     await expect(email).toHaveAttribute('title', '2 running · 1 queued · 1 error');
     expect(await titleFits()).toBe(true);
