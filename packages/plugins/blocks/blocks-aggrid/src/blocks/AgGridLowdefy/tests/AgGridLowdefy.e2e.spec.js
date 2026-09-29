@@ -187,11 +187,11 @@ test.describe('AgGridLowdefy Block', () => {
     const block = getBlock(page, 'aggridlowdefy_cell_tag');
     const firstCellSpan = block.locator('.ag-row[row-index="0"] .ag-cell span').first();
     await expect(firstCellSpan).toHaveText('Active');
-    // Uses inline style with color-mix pattern — assert the style contains the pattern.
     const style = await firstCellSpan.getAttribute('style');
     expect(style).toContain('color-mix');
-    expect(style).toContain('12%');
-    expect(style).toContain('30%');
+    // A preset colour draws as antd's preset tag: its -1 fill and -3 border.
+    expect(style).toMatch(/background: var\(--ant-[a-z]+-1,/);
+    expect(style).toMatch(/border: 1px solid var\(--ant-[a-z]+-3,/);
   });
 
   test('cell.type: tag renders em-dash for null values', async ({ page }) => {
@@ -217,8 +217,9 @@ test.describe('AgGridLowdefy Block', () => {
     await expect(tagSpans.nth(1)).toHaveText('editor');
     const firstStyle = await tagSpans.nth(0).getAttribute('style');
     expect(firstStyle).toContain('color-mix');
-    expect(firstStyle).toContain('12%');
-    expect(firstStyle).toContain('30%');
+    // A preset colour draws as antd's preset tag: its -1 fill and -3 border.
+    expect(firstStyle).toMatch(/background: var\(--ant-[a-z]+-1,/);
+    expect(firstStyle).toMatch(/border: 1px solid var\(--ant-[a-z]+-3,/);
   });
 
   test('cell.type: tag renders single tag for a one-element array', async ({ page }) => {
@@ -249,8 +250,9 @@ test.describe('AgGridLowdefy Block', () => {
     await expect(firstRowSpan).toHaveText('frontend');
     const style = await firstRowSpan.getAttribute('style');
     expect(style).toContain('color-mix');
-    expect(style).toContain('12%');
-    expect(style).toContain('30%');
+    // A preset colour draws as antd's preset tag: its -1 fill and -3 border.
+    expect(style).toMatch(/background: var\(--ant-[a-z]+-1,/);
+    expect(style).toMatch(/border: 1px solid var\(--ant-[a-z]+-3,/);
   });
 
   test('cell.type: tag seeded colour is consistent across rows for the same value', async ({

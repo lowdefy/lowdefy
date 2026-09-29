@@ -285,11 +285,11 @@ test.describe('AgGridLowdefyInput Block', () => {
     const block = getBlock(page, 'aggridlowdefyinput_cell_tag');
     const firstCellSpan = block.locator('.ag-row[row-index="0"] .ag-cell span').first();
     await expect(firstCellSpan).toHaveText('Active');
-    // Uses inline style with color-mix pattern — assert the style contains the pattern.
     const style = await firstCellSpan.getAttribute('style');
     expect(style).toContain('color-mix');
-    expect(style).toContain('12%');
-    expect(style).toContain('30%');
+    // A preset colour draws as antd's preset tag: its -1 fill and -3 border.
+    expect(style).toMatch(/background: var\(--ant-[a-z]+-1,/);
+    expect(style).toMatch(/border: 1px solid var\(--ant-[a-z]+-3,/);
   });
 
   test('cell.type: tag renders em-dash for null values', async ({ page }) => {
