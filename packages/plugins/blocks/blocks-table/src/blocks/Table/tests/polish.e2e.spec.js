@@ -84,4 +84,32 @@ test.describe('Table visual polish', () => {
     expect(summary.textOverflow).toBe('ellipsis');
     expect(summary.title).toBe('Sum 6,000,000,000');
   });
+
+  test('group header rows have one background across the whole row', async ({ page }) => {
+    const groupRows = table(page, 'grouped').locator('.lf-table-body .lf-table-group-row');
+    await expect(groupRows.first()).toBeAttached();
+    const colours = await groupRows.evaluateAll((rows) =>
+      rows.map((element) => ({
+        row: getComputedStyle(element).backgroundColor,
+        label: getComputedStyle(element.querySelector('.lf-table-group-label-content'))
+          .backgroundColor,
+        body: getComputedStyle(
+          element.closest('.lf-table').querySelector('.lf-table-body [data-row-key]')
+        ).backgroundColor,
+      }))
+    );
+    colours.forEach(({ row: rowColour, label, body }) => {
+      expect(rowColour).toBe(label);
+      expect(rowColour).not.toBe(body);
+    });
+    const hovered = groupRows.first();
+    await hovered.hover();
+    const hover = await hovered.evaluate((element) => ({
+      row: getComputedStyle(element).backgroundColor,
+      label: getComputedStyle(element.querySelector('.lf-table-group-label-content'))
+        .backgroundColor,
+    }));
+    expect(hover.row).toBe(hover.label);
+    expect(hover.row).not.toBe(colours[0].row);
+  });
 });
