@@ -97,6 +97,10 @@ Enter, F2, a double-click or typing opens the editor (typing starts with that ch
 - Cmd/Ctrl+V pastes tab-separated text (not with `keyboard: false`), as a spreadsheet copies it, over the cells from the focused one: down the displayed rows and across the visible columns. Each value is coerced to the column type and validated. Cells that are not editable, fail validation or fall outside the table are skipped and reported in `onChange` `skipped`; paste never adds rows.
 - Cmd/Ctrl+C copies the selected rows, or the focused cell, as tab-separated displayed text, also with `keyboard: false`.
 
+## Loading states
+
+TableInput loads like [`Table`](/TableGuide#loading-states): skeleton rows under the real header while `loading` is true and `data` has no rows (also while its code loads), the rows and a progress bar under the header while a refetch runs (the rows stay even while `_request` returns null), and "No rows" (`emptyText`) when there are none. The changes in its value stay through a refetch: they apply by row key to whatever rows `data` holds.
+
 ## Saving
 
 `MongoDBTableChanges` saves the value in one request. Pass the value as the payload and list the columns it may write in `fields`, keyed by the column `field` (the changeset keys; `MongoDBTableQuery` keys its `fields` by column `key` instead):
