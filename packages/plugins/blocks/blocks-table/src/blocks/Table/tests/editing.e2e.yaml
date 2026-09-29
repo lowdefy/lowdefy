@@ -252,6 +252,19 @@ blocks:
         - id: 1
           name: Ann
 
+  - id: copy_nokeys
+    type: Table
+    properties:
+      keyboard: false
+      columns:
+        - key: name
+        - key: age
+          type: number
+      data:
+        - id: 1
+          name: Ann
+          age: 30
+
   # ============================================
   # SORTED: edits go to the row by key
   # ============================================

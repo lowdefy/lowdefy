@@ -16,9 +16,9 @@
 
 // Keys on a focused group header cell, ahead of the keyboard feature: Enter toggles the group,
 // Right expands and Left collapses it (on an already expanded or collapsed group the arrow moves
-// between cells as usual), Space selects the group's rows.
+// between cells as usual), Space selects the group's rows. They work with `keyboard: false` too:
+// they operate the focused group header, as a click does, and move no focus.
 function handleGroupKeyDown(event, api) {
-  if (!api.config.keyboard) return false;
   const cell = event.target.closest('[data-lf-cell]');
   if (!cell || cell !== event.target || !api.contains(cell)) return false;
   const rowElement = cell.closest('[data-group-key]');

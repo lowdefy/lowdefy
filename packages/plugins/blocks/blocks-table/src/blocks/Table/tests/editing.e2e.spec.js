@@ -471,6 +471,14 @@ test.describe('Table editing', () => {
   // COPY
   // ============================================
 
+  test('Ctrl/Cmd+C copies the focused cell with keyboard: false', async ({ page, context }) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.evaluate(() => navigator.clipboard.writeText('before'));
+    await cell(page, 'copy_nokeys', 1, 'name').click();
+    await page.keyboard.press('ControlOrMeta+c');
+    await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe('Ann');
+  });
+
   test('Ctrl/Cmd+C copies the selected rows as TSV', async ({ page, context }) => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write']);
     await cell(page, 'edit_copy', 1, '__select').locator('input').click();

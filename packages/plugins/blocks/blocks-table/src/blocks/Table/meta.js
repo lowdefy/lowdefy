@@ -751,7 +751,7 @@ export default {
         type: ['boolean', 'object'],
         default: true,
         description:
-          'Keyboard navigation between cells. Grid roles stay on when off. An object turns it on with options.',
+          'Keyboard navigation between cells. Grid roles stay on when off, and so do Ctrl/Cmd+C copy and the keys of a focused group header. An object turns it on with options.',
         additionalProperties: false,
         properties: {
           next: {

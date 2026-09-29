@@ -40,6 +40,18 @@ blocks:
             group_single_cause:
               _event: cause
 
+  - id: group_nokeys
+    type: Table
+    properties:
+      keyboard: false
+      columns:
+        _ref: ../../src/blocks/Table/tests/grouping_deals_columns.yaml
+      data:
+        _ref: ../../src/blocks/Table/tests/grouping_deals.yaml
+      defaultView:
+        group:
+          - key: region
+
   - id: group_single_value
     type: Span
     properties:

@@ -153,6 +153,15 @@ test.describe('Table grouping', () => {
     await expect(dataRow(page, 'group_single', 1)).toBeVisible();
   });
 
+  test('group header keys work with keyboard: false', async ({ page }) => {
+    const emea = groupRow(page, 'group_nokeys', '["EMEA"]');
+    await emea.locator('[data-col-key="margin"]').focus();
+    await page.keyboard.press('Enter');
+    await expect(emea).toHaveAttribute('aria-expanded', 'false');
+    await page.keyboard.press('ArrowRight');
+    await expect(emea).toHaveAttribute('aria-expanded', 'true');
+  });
+
   test('keyboard: Enter toggles, Right expands and Left collapses a focused group', async ({
     page,
   }) => {
