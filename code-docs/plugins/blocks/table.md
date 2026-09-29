@@ -42,7 +42,7 @@ packages/plugins/blocks/blocks-table/src/
 └── bench/                        the Playwright performance suite (not shipped)
 ```
 
-`Table.js` is a `createLazyBlock` wrapper: the page's block chunk holds only the meta, a size-stable fallback and method proxies for the methods declared in `meta.methods`. `Table.lazy.js` (TanStack plus every feature, about 47 kB gzip with React, antd and `@lowdefy/*` shared) loads on the first mount. A method called before the chunk loads is proxied, which is why every feature method must be declared in `meta.methods`.
+`Table.js` is a `createLazyBlock` wrapper: the page's block chunk holds only the meta, a size-stable fallback and method proxies for the methods declared in `meta.methods`. `Table.lazy.js` (TanStack, the core and the always-on features, about 55 kB gzip with React, antd and `@lowdefy/*` shared) loads on the first mount, then the optional features the config needs (editing, server mode, group rows, the toolbar, ...) and, on first use, the popovers and editors. A method called before the chunk loads is proxied, which is why every feature method must be declared in `meta.methods`.
 
 `Table` is category `input-container` (a value plus slots `toolbarStart`, `toolbarEnd`, `bulkActions`, `empty`), declares `actions: ['Request']` (server mode fires an internal Request action) and `dynamicEvents: true` (button and menu `eventName`s are authored in properties). `TableInput` spreads Table's meta without its `slots` (an `input` renders no slot content), switches to `input`, replaces `onChange`, drops `onCellEdit` / `onRowMove`, and adds `resetChanges`, `addRow`, `deleteRows` and `rowActions`.
 
@@ -61,7 +61,7 @@ Scrolling renders `Grid` only; the engine and the block's props are never touche
 
 Every behaviour beyond the grid itself is a feature module: a plain object in `features/<name>/<name>Feature.js`, listed in `features/index.js`. The core loops over the list; order matters, because it is the order of delegated handlers (the first to return `true` stops the chain) and of data pipeline hooks.
 
-Registry order: filtering, headerMenu, columnManager, sorting, sizing, ordering, pinning, visibility, density, transactions, editing, clipboard, selection, expansion, serverData, grouping, tree, expandable, virtualization, serverRange, lazyCells, views, toolbar, bulk, queue, keyboard, events, export, pagination.
+Registry order: filtering, headerMenu, columnManager, sorting, sizing, ordering, pinning, visibility, density, transactions, editing\*, clipboard, paste\*, selection, expansion, serverData\*, grouping, groupRows\*, tree\*, expandable\*, virtualization, positionedRows\*, serverRange\*, lazyCells, views\*, toolbar\*, bulk, queue, keyboard, events, export, pagination. Starred entries are optional: each loads in its own chunk only for tables whose config needs it (`core/useFeatureSet.js`, which suspends until they are there and builds the table's feature set, `api.features`); see `ARCHITECTURE.md`, Feature sets and optional features.
 
 Why some of that order matters:
 
