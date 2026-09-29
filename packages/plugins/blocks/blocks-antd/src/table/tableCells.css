@@ -20,8 +20,8 @@
 
    Host contract (TableLight, Table):
    - Render each cell's content with renderCell (it applies .lf-table-cell).
-   - Give every row element the class `lf-table-row`. Hovering it, or focus
-     inside it, reveals `showOn: hover` buttons.
+   - Give every row element the class `lf-table-row`. Hovering it, or keyboard
+     focus inside it, reveals `showOn: hover` buttons.
    - A host that tracks hover itself (a row split across pinned sections, a
      virtual row) sets the attribute `data-row-hover` on any ancestor of the
      cell to reveal them, and removes it to hide them again.
@@ -94,6 +94,17 @@
     flex-wrap: nowrap;
   }
 
+  /* A chip wider than its cell is cut at its own edge, never mid-cell; the +N count keeps its
+     width. */
+  .lf-table-chips > .lf-table-tag {
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
+  .lf-table-chips > .lf-table-more {
+    flex: none;
+  }
+
   .lf-table-tag {
     display: inline-flex;
     align-items: center;
@@ -109,6 +120,7 @@
     line-height: 1;
     white-space: nowrap;
     vertical-align: middle;
+    overflow: hidden;
   }
 
   .lf-table-chip {
@@ -166,7 +178,7 @@
   .lf-table-person {
     display: inline-flex;
     align-items: center;
-    gap: var(--ant-margin-xs, 8px);
+    gap: calc(var(--ant-margin-xs, 8px) * 0.75);
     max-width: 100%;
     vertical-align: middle;
   }
@@ -199,18 +211,21 @@
     border-radius: var(--ant-border-radius-sm, 4px);
   }
 
+  /* Stacked avatars overlap by a few pixels only, and their initials are a size smaller, so the
+     next avatar and its ring never cover the initials before it. */
   .lf-table-people {
+    --lf-avatar-font-size: 10px;
     display: inline-flex;
     align-items: center;
     vertical-align: middle;
   }
 
   .lf-table-people > .lf-table-avatar {
-    box-shadow: 0 0 0 2px var(--ant-color-bg-container);
+    box-shadow: 0 0 0 1px var(--ant-color-bg-container);
   }
 
   .lf-table-people > .lf-table-avatar + .lf-table-avatar {
-    margin-inline-start: -6px;
+    margin-inline-start: -3px;
   }
 
   .lf-table-people-more {
@@ -291,10 +306,13 @@
     transition: opacity var(--ant-motion-duration-fast, 0.1s);
   }
 
+  /* Keyboard focus only (:focus-visible), so a clicked checkbox or button does not keep a row's
+     buttons shown after the pointer moves on. Matching starts from the few hover-button elements,
+     so the :has() checks stay cheap in large tables. */
   .lf-table-row:hover .lf-table-actions-hover,
-  .lf-table-row:focus-within .lf-table-actions-hover,
+  .lf-table-row:has(:focus-visible) .lf-table-actions-hover,
   [data-row-hover] .lf-table-actions-hover,
-  .lf-table-actions-hover:focus-within {
+  .lf-table-actions-hover:has(:focus-visible) {
     opacity: 1;
   }
 

@@ -19,6 +19,32 @@
    carry `lf-table-row`, the class the cell styles key `showOn: hover`
    buttons from. */
 @layer components {
+  /* Looks like Table, so switching `type` does not change the frame or the headers: the same
+     outer border and radius (antd's `bordered` draws its own), and the sort icon right next to
+     the title, before it in end-aligned columns so the title ends on the values' edge. */
+  .lf-table-light .ant-table:not(.ant-table-bordered) .ant-table-container {
+    overflow: hidden;
+    border: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+    border-radius: var(--ant-border-radius-lg, 8px);
+  }
+
+  .lf-table-light .ant-table-column-sorters {
+    justify-content: flex-start;
+    gap: var(--ant-padding-xxs, 4px);
+  }
+
+  .lf-table-light .ant-table-column-sorters > .ant-table-column-title {
+    flex: 0 1 auto;
+  }
+
+  .lf-table-light .ant-table-column-sorters > .ant-table-column-sorter {
+    margin-inline: 0;
+  }
+
+  .lf-table-light .lf-table-light-align-end .ant-table-column-sorters {
+    flex-direction: row-reverse;
+  }
+
   .lf-table-light .lf-table-row:hover > td {
     background: var(--ant-table-row-hover-bg, var(--ant-color-fill-alter));
   }

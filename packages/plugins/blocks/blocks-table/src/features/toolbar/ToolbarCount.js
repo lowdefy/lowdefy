@@ -14,15 +14,17 @@
   limitations under the License.
 */
 
-import getBodyRowKey from './getBodyRowKey.js';
+import React from 'react';
 
-// Keyboard focus inside a row (navigation, Tab) reveals and mounts its hover-only buttons. Focus
-// a mouse click leaves behind (on a row checkbox, a cell) does not: the buttons follow the pointer
-// to the next hovered row instead of staying on the clicked one.
-function handleRowFocus(event, api) {
-  const keyboard = event.target.matches(':focus-visible');
-  api.cellActivity.set({ focusedRow: keyboard ? getBodyRowKey(event.target) : null });
-  return false;
+// How many filter conditions, sort levels or group levels are set, inside the toolbar button
+// after its label: a small count in the primary tint, not a badge over the button's border.
+function ToolbarCount({ count }) {
+  if (count === 0) return null;
+  return (
+    <span className="lf-table-toolbar-count" data-lf-toolbar-count="">
+      {count}
+    </span>
+  );
 }
 
-export default handleRowFocus;
+export default ToolbarCount;

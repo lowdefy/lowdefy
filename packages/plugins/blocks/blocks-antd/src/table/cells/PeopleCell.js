@@ -35,7 +35,9 @@ function PeopleCell({ value, column }) {
     return (
       <span className="lf-table-person">
         <AvatarMark name={person.name} src={person.src} seed={person.id} shape={cell.shape} />
-        <span className="lf-table-person-name">{person.name}</span>
+        <span className="lf-table-person-name" title={person.name}>
+          {person.name}
+        </span>
       </span>
     );
   }

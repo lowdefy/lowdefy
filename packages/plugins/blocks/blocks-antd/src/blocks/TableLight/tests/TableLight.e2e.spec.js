@@ -54,6 +54,28 @@ test.describe('TableLight Block', () => {
     );
   });
 
+  test('headers keep the sort icon next to the title, before it in end-aligned columns', async ({
+    page,
+  }) => {
+    const boxes = async (title) =>
+      getHeader(page, 'tl_sort', title).evaluate((th) => {
+        const box = (selector) => th.querySelector(selector).getBoundingClientRect();
+        return { title: box('.ant-table-column-title'), sorter: box('.ant-table-column-sorter') };
+      });
+    const name = await boxes('Name');
+    expect(name.sorter.left - name.title.right).toBeGreaterThanOrEqual(0);
+    expect(name.sorter.left - name.title.right).toBeLessThanOrEqual(6);
+    const amount = await boxes('Amount');
+    expect(amount.title.left - amount.sorter.right).toBeGreaterThanOrEqual(0);
+    expect(amount.title.left - amount.sorter.right).toBeLessThanOrEqual(6);
+  });
+
+  test('draws the same outer border and radius as Table', async ({ page }) => {
+    const container = getTable(page, 'tl_basic').locator('.ant-table-container');
+    await expect(container).toHaveCSS('border-top-width', '1px');
+    await expect(container).toHaveCSS('border-top-left-radius', '8px');
+  });
+
   // ============================================
   // TIER 0 CELL TYPES
   // ============================================

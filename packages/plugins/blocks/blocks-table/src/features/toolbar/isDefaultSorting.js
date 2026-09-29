@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import getBodyRowKey from './getBodyRowKey.js';
+import initSorting from '../sorting/initSorting.js';
 
-// Keyboard focus inside a row (navigation, Tab) reveals and mounts its hover-only buttons. Focus
-// a mouse click leaves behind (on a row checkbox, a cell) does not: the buttons follow the pointer
-// to the next hovered row instead of staying on the clicked one.
-function handleRowFocus(event, api) {
-  const keyboard = event.target.matches(':focus-visible');
-  api.cellActivity.set({ focusedRow: keyboard ? getBodyRowKey(event.target) : null });
-  return false;
+// Whether the sort is the one `defaultView` starts with, which the Sort button does not count.
+function isDefaultSorting({ config, sorting }) {
+  const defaults = initSorting({ value: null, defaultView: config.defaultView, config });
+  if (defaults.length !== sorting.length) return false;
+  return defaults.every(
+    (entry, index) => entry.id === sorting[index].id && entry.desc === sorting[index].desc
+  );
 }
 
-export default handleRowFocus;
+export default isDefaultSorting;

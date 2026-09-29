@@ -19,14 +19,17 @@ import { flushSync } from 'react-dom';
 
 import computeWindow from './computeWindow.js';
 import isSameRange from './isSameRange.js';
+import writeScrollEdges from './writeScrollEdges.js';
 
 // Native scroll, observed passively and coalesced into one rAF; React renders only when the
 // rendered range changes (D10.2). The render is flushed inside that frame so new rows paint with
-// the scroll position that needed them. The scroll offset itself never enters React state.
+// the scroll position that needed them. The scroll offset itself never enters React state; the
+// pinned-edge shadows follow it through attributes on the scroller (writeScrollEdges).
 function useScrollWindow({ scrollerRef, params }) {
   const paramsRef = useRef(params);
   paramsRef.current = params;
   const scrollRef = useRef({ top: 0, direction: 0 });
+  const edgesRef = useRef({ start: false, end: false });
   const [range, setRange] = useState(() =>
     computeWindow({
       ...params,
@@ -41,6 +44,7 @@ function useScrollWindow({ scrollerRef, params }) {
   const update = useCallback((sync) => {
     const element = scrollerRef.current;
     if (!element) return;
+    writeScrollEdges({ element, edges: edgesRef.current });
     const scroll = scrollRef.current;
     const top = element.scrollTop;
     if (top !== scroll.top) scroll.direction = top > scroll.top ? 1 : -1;

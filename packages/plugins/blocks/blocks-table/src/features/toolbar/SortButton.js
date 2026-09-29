@@ -15,8 +15,10 @@
 */
 
 import React from 'react';
-import { Badge, Button, Popover, Segmented } from 'antd';
+import { Button, Popover, Segmented } from 'antd';
 
+import isDefaultSorting from './isDefaultSorting.js';
+import ToolbarCount from './ToolbarCount.js';
 import ToolbarIcon from './ToolbarIcon.js';
 import ToolbarList from './ToolbarList.js';
 
@@ -25,7 +27,8 @@ const DIRECTIONS = [
   { label: 'Desc', value: 'desc' },
 ];
 
-// The multi-sort editor: sort levels in order, each with its direction.
+// The multi-sort editor: sort levels in order, each with its direction. The button counts the
+// sort levels when they differ from `defaultView`'s sort.
 function SortButton({ api }) {
   const { sorting } = api.state;
   const keys = sorting.map((entry) => entry.id);
@@ -39,6 +42,8 @@ function SortButton({ api }) {
     const byKey = new Map(sorting.map((entry) => [entry.id, entry]));
     update(nextKeys.map((key) => byKey.get(key) ?? { id: key, desc: false }));
   }
+  // The default view's own sort is not counted: the count shows the user changed the sort.
+  const sortCount = isDefaultSorting({ config: api.config, sorting }) ? 0 : sorting.length;
   const content = (
     <div className="lf-table-toolbar-popover" data-lf-toolbar-sort="">
       <ToolbarList
@@ -69,15 +74,14 @@ function SortButton({ api }) {
   );
   return (
     <Popover content={content} placement="bottomLeft" trigger="click">
-      <Badge count={sorting.length} size="small">
-        <Button
-          data-lf-toolbar-button="sort"
-          icon={<ToolbarIcon api={api} name="sort" />}
-          size="small"
-        >
-          Sort
-        </Button>
-      </Badge>
+      <Button
+        data-lf-toolbar-button="sort"
+        icon={<ToolbarIcon api={api} name="sort" />}
+        size="small"
+      >
+        Sort
+        <ToolbarCount count={sortCount} />
+      </Button>
     </Popover>
   );
 }

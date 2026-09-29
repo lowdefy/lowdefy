@@ -25,6 +25,21 @@
     background: var(--lf-row-selected);
   }
 
+  /* The bar's links (Select all matching, Clear) sit on the primary tint, where antd's link
+     colour is low contrast in dark themes: the primary colour mixed toward the text base keeps it
+     readable in both. */
+  .lf-table-bulk-bar .ant-btn-link {
+    color: color-mix(
+      in srgb,
+      var(--ant-color-primary, #1677ff) 60%,
+      var(--ant-color-text-base, #000)
+    );
+  }
+
+  .lf-table-bulk-bar .ant-btn-link:hover {
+    text-decoration: underline;
+  }
+
   .lf-table-bulk-count {
     font-weight: 600;
     font-variant-numeric: tabular-nums;

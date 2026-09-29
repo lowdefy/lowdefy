@@ -17,7 +17,7 @@
 import scrollToCell from '../virtualization/scrollToCell.js';
 
 // A click on a group header row toggles the group; on its checkbox, selects the group's rows. A
-// toggle from the sticky overlay also scrolls the group's own header back to the top, so the
+// toggle from the sticky overlay also scrolls the group's own header back to its slot, so the
 // rows that collapsed away do not leave the view somewhere below, and moves focus to that header
 // (the overlay is a hidden copy).
 function handleGroupClick(event, api) {
@@ -31,7 +31,9 @@ function handleGroupClick(event, api) {
   api.actions.toggleGroup({ key });
   if (rowElement.closest('[data-lf-group-sticky]')) {
     const row = Number(rowElement.dataset.groupIndex);
-    scrollToCell({ api, row, col: -1, align: 'start' });
+    // An inner group's header goes to its own slot, under its outer groups' sticky headers.
+    const startInset = Number(rowElement.dataset.groupDepth) * api.rowHeight;
+    scrollToCell({ api, row, col: -1, align: 'start', startInset });
     api.keyboard.moveTo({ row, col: api.keyboard.activeCell.col });
   }
   return true;

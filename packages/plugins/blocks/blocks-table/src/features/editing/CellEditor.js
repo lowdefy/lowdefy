@@ -17,16 +17,23 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { DatePicker, Input, InputNumber, Rate, Select, Switch, Tooltip } from 'antd';
 
+import SelectedTag from './SelectedTag.js';
 import toEditorDraft from './toEditorDraft.js';
+import toSelectOptions from './toSelectOptions.js';
 
 const POPUP_CLASS = 'lf-table-editor-popup';
 const POPUP_KINDS = new Set(['date', 'datetime', 'select', 'multiSelect']);
 const FOCUS_SELECTOR = 'input, [role="switch"], [role="radiogroup"], .ant-rate';
 
 function filterOption(search, option) {
-  return String(option?.label ?? '')
+  return String(option?.text ?? '')
     .toLowerCase()
     .includes(search.toLowerCase());
+}
+
+// The count of picked values that do not fit the tags editor, as the cell shows it.
+function renderMoreTags(omitted) {
+  return <span className="lf-table-more">+{omitted.length}</span>;
 }
 
 // A select column without options has nothing to pick from: it edits as text.
@@ -58,14 +65,14 @@ function CellEditor({ api, session }) {
   const { editing } = api;
   const spec = editing.specs.get(session.colKey);
   const kind = getKind(spec);
+  const [row] = useState(() => api.table.getRow(session.rowId, true)?.original);
   const [initial] = useState(() => {
     const saved = editing.layer.getDraft(session.id);
     if (saved.has) return saved.value;
-    const row = api.table.getRow(session.rowId, true);
     const col = api.layout.byKey.get(session.colKey);
     return toEditorDraft({
       spec: kind === spec.kind ? spec : { ...spec, kind },
-      value: col.accessor(row?.original),
+      value: col.accessor(row),
       seed: session.seed,
     });
   });
@@ -78,8 +85,8 @@ function CellEditor({ api, session }) {
   const popupOpen = useRef(POPUP_KINDS.has(kind));
   const openAtKeyDown = useRef(false);
   const options = useMemo(
-    () => (spec.options ?? []).map((option) => ({ label: option.label, value: option.value })),
-    [spec]
+    () => toSelectOptions({ components: api.components, spec, row }),
+    [spec, row]
   );
 
   function setDraft(value) {
@@ -221,6 +228,8 @@ function CellEditor({ api, session }) {
           size={size}
           status={status}
           style={{ width: '100%' }}
+          maxTagPlaceholder={renderMoreTags}
+          tagRender={mode === 'multiple' ? SelectedTag : undefined}
           value={draft}
         />
       );

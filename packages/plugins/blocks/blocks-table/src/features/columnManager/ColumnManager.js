@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Button, Checkbox, Input } from 'antd';
 
 import applyManagerRegions from './applyManagerRegions.js';
@@ -24,6 +24,7 @@ import getManagerEntries from './getManagerEntries.js';
 import getPlainTitle from '../filtering/getPlainTitle.js';
 import moveSequenceEntry from './moveSequenceEntry.js';
 import sequenceToRegions from './sequenceToRegions.js';
+import snapListHeight from './snapListHeight.js';
 
 const BOUNDARY_LABELS = {
   start: 'Pinned to start above',
@@ -63,6 +64,18 @@ function ColumnManager({ api }) {
       getPlainTitle(column).toLowerCase().includes(term) || column.key.toLowerCase().includes(term)
     );
   };
+
+  useLayoutEffect(() => {
+    snapListHeight(listRef.current);
+  });
+
+  // The popover lays its content out hidden first, so snap again once the list has a size.
+  useEffect(() => {
+    const list = listRef.current;
+    const observer = new ResizeObserver(() => snapListHeight(list));
+    observer.observe(list);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (focusAfterMove.current === null) return;

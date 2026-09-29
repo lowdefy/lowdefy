@@ -31,12 +31,20 @@
     max-width: calc(100vw - 32px);
   }
 
+  /* snapListHeight lowers the max-height to the last whole entry, so no entry is cut in half
+     above the footer, and a divider shows while the list scrolls. */
   .lf-table-manager-list {
+    position: relative;
     display: flex;
     flex-direction: column;
-    max-height: 360px;
+    max-height: min(360px, 50vh);
     margin-top: var(--ant-margin-xs, 8px);
     overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .lf-table-manager-list[data-scrollable] {
+    border-bottom: 1px solid var(--ant-color-split, rgba(5, 5, 5, 0.06));
   }
 
   .lf-table-manager-item,

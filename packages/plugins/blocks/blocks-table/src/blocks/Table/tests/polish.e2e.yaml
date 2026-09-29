@@ -1,0 +1,306 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Visual checks (polish.e2e.spec.js): summary footer fitting, group row backgrounds, slot layout,
+# header alignment, tag and avatar fitting, row separators, the column manager, pinned edges,
+# stacked sticky groups, the select editor and the toolbar counts.
+id: polish
+type: Box
+
+blocks:
+  # ============================================
+  # CRM LIST: toolbar, slots, pinned columns, rich cells, summary footer
+  # ============================================
+
+  - id: crm
+    type: Table
+    properties:
+      maxHeight: 420
+      rowSelection:
+        type: checkbox
+      toolbar:
+        search: true
+        filter: true
+        sort: true
+        group: true
+        columns: true
+      defaultView:
+        sort:
+          - key: amount
+            desc: true
+        filter:
+          and:
+            - key: amount
+              op: gt
+              value: 0
+            - key: name
+              op: notEmpty
+        columns:
+          - key: company
+            hidden: true
+          - key: region
+            hidden: true
+          - key: email
+            hidden: true
+      columns:
+        - key: name
+          title: Deal
+          width: 180
+          pinned: start
+        - key: stage
+          type: status
+          width: 130
+          editable: true
+          options:
+            lead: Lead
+            qualified:
+              label: Qualified
+              color: processing
+            won:
+              label: Won
+              color: success
+            lost:
+              label: Lost
+              color: error
+        - key: labels
+          title: Tags
+          type: tags
+          width: 150
+          editable: true
+          options:
+            - value: renewal
+              label: Renewal
+              color: blue
+            - value: strategic
+              label: Strategic
+              color: purple
+            - value: at-risk
+              label: At risk
+              color: red
+            - value: inbound
+              label: Inbound
+              color: green
+        - key: contacts
+          type: people
+          width: 120
+        - key: owner
+          type: people
+          width: 150
+        - key: amount
+          type: currency
+          width: 110
+          aggregate: sum
+          cell:
+            currency: USD
+            decimals: 0
+        - key: win
+          title: Win chance
+          type: number
+          width: 110
+        - key: company
+        - key: region
+        - key: email
+          type: email
+        - key: actions
+          title: ''
+          type: buttons
+          width: 110
+          pinned: end
+          cell:
+            showOn: hover
+            buttons:
+              - eventName: onMail
+                title: Mail
+              - eventName: onCall
+                title: Call
+      data:
+        _js: |
+          const names = ['Brightwater Analytics pilot', 'Marigold Hospitality multi-year renewal', 'Kestrel Aerospace fleet rollout', 'Wren & Finch Books analytics add-on', 'Stonebridge Legal seat upgrade'];
+          const people = ['Ada Tran', 'Theo Lindqvist', 'Priya Raman', 'Maya Okafor', 'Ingrid Olsen', 'Samuel Adeyemi'];
+          const stages = ['lead', 'qualified', 'won', 'lost'];
+          const labels = [['inbound', 'at-risk', 'strategic'], ['at-risk'], ['renewal', 'strategic'], ['inbound', 'renewal', 'strategic', 'at-risk'], []];
+          const rows = [];
+          for (let i = 0; i < 60; i++) {
+            rows.push({
+              id: i + 1,
+              name: names[i % names.length] + ' ' + (i + 1),
+              stage: stages[i % 4],
+              labels: labels[i % labels.length],
+              contacts: i % 3 === 0 ? [people[(i + 1) % 6]] : [people[i % 6], people[(i + 2) % 6], people[(i + 3) % 6], people[(i + 4) % 6]].slice(0, 2 + (i % 3)),
+              owner: people[i % 6],
+              amount: 900000 + i * 13579,
+              win: (i * 7) % 100,
+              company: 'Company ' + i,
+              region: i % 2 === 0 ? 'EMEA' : 'APAC',
+              email: 'deal' + i + '@example.com',
+            });
+          }
+          return rows;
+    slots:
+      toolbarStart:
+        blocks:
+          - id: crm_new
+            type: Button
+            properties:
+              title: New deal
+              size: small
+          - id: crm_import
+            type: Button
+            properties:
+              title: Import
+              size: small
+      toolbarEnd:
+        blocks:
+          - id: crm_end_a
+            type: Button
+            properties:
+              title: Share
+              size: small
+          - id: crm_end_b
+            type: Button
+            properties:
+              title: Help
+              size: small
+      bulkActions:
+        blocks:
+          - id: crm_assign
+            type: Button
+            properties:
+              title: Assign owner
+              size: small
+          - id: crm_move
+            type: Button
+            properties:
+              title: Move stage
+              size: small
+          - id: crm_delete
+            type: Button
+            properties:
+              title: Delete
+              size: small
+              danger: true
+    events:
+      onCellEdit:
+        - id: crm_edit
+          type: SetState
+          params:
+            crm_edit:
+              _event: value
+
+  # ============================================
+  # NARROW COLUMNS: the table is wider than its columns
+  # ============================================
+
+  - id: narrow
+    type: Table
+    properties:
+      columns:
+        - key: name
+          width: 120
+        - key: amount
+          type: number
+          width: 100
+          aggregate: sum
+        - key: big
+          type: number
+          width: 70
+          aggregate: sum
+        - key: more
+          title: ''
+          type: menu
+          width: 48
+          cell:
+            items:
+              - eventName: onSnooze
+                title: Snooze
+        - key: actions
+          title: ''
+          type: buttons
+          width: 90
+          pinned: end
+          cell:
+            buttons:
+              - eventName: onOpen
+                title: Open
+      data:
+        - { id: 1, name: Acme, amount: 100, big: 1000000000 }
+        - { id: 2, name: Bolt, amount: 200, big: 2000000000 }
+        - { id: 3, name: Core, amount: 300, big: 3000000000 }
+
+  # ============================================
+  # TWO GROUP LEVELS
+  # ============================================
+
+  - id: grouped
+    type: Table
+    properties:
+      maxHeight: 300
+      columns:
+        - key: name
+        - key: region
+          groupable: true
+        - key: rep
+          groupable: true
+        - key: amount
+          type: number
+          aggregate: sum
+      defaultView:
+        group:
+          - key: region
+          - key: rep
+      data:
+        _js: |
+          const regions = ['EMEA', 'APAC'];
+          const reps = ['Ada', 'Ken', 'Grace'];
+          const rows = [];
+          for (let i = 0; i < 60; i++) {
+            rows.push({ id: i + 1, name: 'Deal ' + (i + 1), region: regions[Math.floor(i / 30)], rep: reps[Math.floor(i / 10) % 3], amount: 100 * (i + 1) });
+          }
+          return rows;
+
+  # ============================================
+  # TABLELIGHT AND TABLE WITH ONE CONFIG
+  # ============================================
+
+  - id: light
+    type: TableLight
+    properties:
+      columns:
+        - key: invoice
+        - key: customer
+        - key: amount
+          type: number
+          aggregate: sum
+        - key: due
+          type: date
+      data:
+        - { id: 1, invoice: INV-2041, customer: Halcyon Freight, amount: 12480, due: '2026-09-12' }
+        - { id: 2, invoice: INV-2042, customer: Tessellate Labs, amount: 4350, due: '2026-09-18' }
+        - { id: 3, invoice: INV-2043, customer: Copperleaf Health, amount: 8920, due: '2026-10-06' }
+
+  - id: light_table
+    type: Table
+    properties:
+      columns:
+        - key: invoice
+        - key: customer
+        - key: amount
+          type: number
+          aggregate: sum
+        - key: due
+          type: date
+      data:
+        - { id: 1, invoice: INV-2041, customer: Halcyon Freight, amount: 12480, due: '2026-09-12' }
+        - { id: 2, invoice: INV-2042, customer: Tessellate Labs, amount: 4350, due: '2026-09-18' }
+        - { id: 3, invoice: INV-2043, customer: Copperleaf Health, amount: 8920, due: '2026-10-06' }
