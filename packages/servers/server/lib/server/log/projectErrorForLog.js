@@ -38,6 +38,11 @@ const lowdefyErrorFields = [
   'blockId',
   'pageId',
   'isReject',
+  'collection',
+  'connectionId',
+  'organizationId',
+  'field',
+  'endpointId',
 ];
 
 function projectErrorForLog(err) {

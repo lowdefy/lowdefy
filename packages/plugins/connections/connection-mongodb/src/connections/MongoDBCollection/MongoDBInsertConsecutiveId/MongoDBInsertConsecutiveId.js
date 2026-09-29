@@ -17,6 +17,7 @@
 import getCollection from '../getCollection.js';
 import getConsecutiveIdIndex from '../getConsecutiveIdIndex.js';
 import mapMongoError from '../mapMongoError.js';
+import verifyStoredTenant from '../tenant/verifyStoredTenant.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import { assertUnscopedDoc } from '../tenant/guardUnscopedWrite.js';
@@ -24,6 +25,7 @@ import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
 async function MongoDBInsertConsecutiveId({
+  endpointId,
   blockId,
   connection,
   connectionId,
@@ -87,6 +89,16 @@ async function MongoDBInsertConsecutiveId({
   } finally {
     await session.endSession();
   }
+  await verifyStoredTenant({
+    collection,
+    connectionId,
+    endpointId,
+    ids: response.insertedId,
+    requestId,
+    requestType: 'MongoDBInsertConsecutiveId',
+    tenant,
+    tenantGuard,
+  });
   const { acknowledged, insertedId } = serialize(response);
   return { acknowledged, insertedId };
 }

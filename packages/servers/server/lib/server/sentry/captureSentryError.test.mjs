@@ -15,7 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
-import { RequestError } from '@lowdefy/errors';
+import { RequestError, TenantIntegrityError } from '@lowdefy/errors';
 
 const captureException = jest.fn();
 
@@ -101,4 +101,32 @@ test('captureSentryError does nothing when SENTRY_DSN is not set', () => {
     process.env.SENTRY_DSN = dsn;
   }
   expect(captureException).not.toHaveBeenCalled();
+});
+
+test('captureSentryError tags integrity fields and fingerprints a TenantIntegrityError by collection', () => {
+  captureException.mockClear();
+  const error = new TenantIntegrityError('bad row', {
+    collection: 'contacts',
+    connectionId: 'contacts_conn',
+    organizationId: 'org_a',
+    endpointId: 'save',
+  });
+  captureSentryError({ error, context: { rid: 'req-2' } });
+  const [, options] = captureException.mock.calls[0];
+  expect(options.tags).toMatchObject({
+    collection: 'contacts',
+    connectionId: 'contacts_conn',
+    organizationId: 'org_a',
+    endpointId: 'save',
+    errorName: 'TenantIntegrityError',
+  });
+  expect(options.fingerprint).toEqual(['TenantIntegrityError', 'contacts']);
+});
+
+test('captureSentryError sets no fingerprint or integrity tags on an ordinary error', () => {
+  captureException.mockClear();
+  captureSentryError({ error: new Error('x'), context: { rid: 'req-3' } });
+  const [, options] = captureException.mock.calls[0];
+  expect(options.fingerprint).toBeUndefined();
+  expect(options.tags.errorName).toBeUndefined();
 });

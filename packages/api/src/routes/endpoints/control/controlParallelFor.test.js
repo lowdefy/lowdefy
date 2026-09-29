@@ -209,3 +209,36 @@ test('parallel_for error takes priority over reject', async () => {
   const { res } = await runTest({ routine });
   expect(res.status).toEqual('error');
 });
+
+test("parallel_for gives every iteration the caller's user and organization unchanged", async () => {
+  const user = { id: 'u1', roles: ['member'], organization_id: 'org_a' };
+  const routine = {
+    ':parallel_for': 'item',
+    ':in': ['a', 'b', 'c'],
+    ':do': {
+      id: 'request:test_endpoint:test_request',
+      type: 'TestRequest',
+      stepId: 'test_request',
+      connectionId: 'test',
+      properties: {
+        response: {
+          org: { _user: 'organization_id' },
+          id: { _user: 'id' },
+          item: { _item: 'item' },
+        },
+      },
+    },
+  };
+  const { res, context, routineContext } = await runTest({ routine, user });
+  expect(res.status).toEqual('continue');
+  // No iteration mutates, replaces or drops the caller's identity.
+  expect(context.user).toBe(user);
+  expect(user).toEqual({ id: 'u1', roles: ['member'], organization_id: 'org_a' });
+  const results = Object.values(routineContext.steps).flat();
+  expect(results).toHaveLength(3);
+  results.forEach((result) => {
+    expect(result.org).toEqual('org_a');
+    expect(result.id).toEqual('u1');
+  });
+  expect(results.map((result) => result.item).sort()).toEqual(['a', 'b', 'c']);
+});

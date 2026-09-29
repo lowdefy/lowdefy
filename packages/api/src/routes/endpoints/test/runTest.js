@@ -94,14 +94,14 @@ const logger = {
   error: jest.fn(),
 };
 
-function createTextContext() {
+function createTextContext({ user = { id: 'id', roles: [] } } = {}) {
   const context = testContext({
     connections,
     operators,
     logger,
     readConfigFile: mockReadConfigFile,
     secrets,
-    user: { id: 'id', roles: [] },
+    user,
   });
   context.blockId = 'blockId';
   context.pageId = 'pageId';
@@ -110,8 +110,8 @@ function createTextContext() {
 
   return context;
 }
-async function runTest({ routine, payload = {} }) {
-  const context = createTextContext();
+async function runTest({ routine, payload = {}, user }) {
+  const context = createTextContext({ user });
   const routineContext = {
     steps: {},
     payload,

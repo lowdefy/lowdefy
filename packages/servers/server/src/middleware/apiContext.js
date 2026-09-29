@@ -30,6 +30,7 @@ import agents from '../../build/plugins/agents.js';
 import appMeta from '../../lib/build/appMeta.js';
 import config from '../../lib/build/config.js';
 import connections from '../../build/plugins/connections.js';
+import captureSentryError from '../../lib/server/sentry/captureSentryError.js';
 import createHandleError from '../../lib/server/log/createHandleError.js';
 import createLogger from '../../lib/server/log/createLogger.js';
 import fileCache from '../../lib/server/fileCache.js';
@@ -162,10 +163,13 @@ function apiContext({ clientAddressHeader } = {}) {
       });
     }
     createApiContext(context);
-    // Under policy: tenant, refuse to serve while walled collections hold
-    // unstamped rows (lazily-run-once; a refusal memoizes until restart, a
-    // probe failure retries next request). No-op under pinned.
-    await resolveTenantPreflight(context);
+    // Under policy: tenant, report walled collections that hold unstamped rows
+    // (lazily-run-once, logged and captured once per offending collection). It
+    // never blocks or fails a request - a data fault must not take the app
+    // down - so it is started, not awaited. No-op under pinned.
+    void resolveTenantPreflight(context, {
+      captureError: (error) => captureSentryError({ error, context }),
+    });
     c.set('lowdefyContext', context);
     // Echo the request id so clients and proxies can quote it when reporting
     // a failure, and it can be matched to the rid on the server log lines.

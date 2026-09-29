@@ -16,6 +16,7 @@
 
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
+import verifyStoredTenant, { idsOfMap } from '../tenant/verifyStoredTenant.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import { assertUnscopedDoc, changeLogOrganizationOfDocs } from '../tenant/guardUnscopedWrite.js';
@@ -23,6 +24,7 @@ import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
 async function MongodbInsertMany({
+  endpointId,
   blockId,
   connection,
   connectionId,
@@ -74,6 +76,16 @@ async function MongodbInsertMany({
   } catch (error) {
     throw mapMongoError(error, { connection, requestType: 'MongoDBInsertMany' });
   }
+  await verifyStoredTenant({
+    collection,
+    connectionId,
+    endpointId,
+    ids: idsOfMap(response.insertedIds),
+    requestId,
+    requestType: 'MongoDBInsertMany',
+    tenant,
+    tenantGuard,
+  });
   const { acknowledged, insertedCount, insertedIds } = serialize(response);
   return { acknowledged, insertedCount, insertedIds };
 }

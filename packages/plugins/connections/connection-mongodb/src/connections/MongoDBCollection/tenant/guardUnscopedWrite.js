@@ -23,9 +23,8 @@ import getCollectionWriteStage from './getCollectionWriteStage.js';
 // resolveTenancy). An unscoped request is neither filtered nor stamped, so the
 // app authors the tenant field itself - and this checks that it did. Every row an unscoped write leaves behind must carry a non-empty
 // string organization id: a row with a null or missing field is invisible to
-// every walled read, and the tenant preflight refuses to serve the whole app
-// once one exists. Refusing the write turns that outage into one failed
-// request that names its step.
+// every walled read. Refusing the write fails one request that names its step
+// instead of leaving a row nobody can see.
 //
 // Only the tenant field is checked, and only what THIS write does to it - the
 // filter stays unscoped (tenant: none may address rows of every org).
@@ -57,7 +56,7 @@ function isPipelineOrganizationId(value) {
 
 function refuse({ field, detail }) {
   throw new ConfigError(
-    `Unscoped write to a walled collection (tenant: none, or a tenant: shared connection over a collection a scoped connection reads) must leave "${field}" a non-empty organization id on every row it writes - ${detail}. A row without it is invisible to every walled read and makes the tenant preflight refuse to serve the app. Author the organization id explicitly, or keep data that belongs to no organization in a collection no scoped connection reads.`
+    `Unscoped write to a walled collection (tenant: none, or a tenant: shared connection over a collection a scoped connection reads) must leave "${field}" a non-empty organization id on every row it writes - ${detail}. A row without it is invisible to every walled read and stays invisible until it is fixed. Author the organization id explicitly, or keep data that belongs to no organization in a collection no scoped connection reads.`
   );
 }
 
@@ -340,7 +339,7 @@ function assertUnscopedPipeline({ pipeline, field }) {
     const writeStage = getCollectionWriteStage({ stage });
     if (writeStage !== null) {
       throw new ConfigError(
-        `Unscoped aggregation on a walled collection (tenant: none, or a tenant: shared connection over a collection a scoped connection reads) can not contain "${writeStage}" - it writes rows the tenant guard can not check for a non-empty "${field}", and a row without it makes the tenant preflight refuse to serve the app. Return the documents and write them with MongoDBInsertMany or MongoDBBulkWrite, which check every row. An aggregation that neither reads nor writes a walled collection can run on a tenant: shared connection.`
+        `Unscoped aggregation on a walled collection (tenant: none, or a tenant: shared connection over a collection a scoped connection reads) can not contain "${writeStage}" - it writes rows the tenant guard can not check for a non-empty "${field}", and a row without it stays invisible to every walled read. Return the documents and write them with MongoDBInsertMany or MongoDBBulkWrite, which check every row. An aggregation that neither reads nor writes a walled collection can run on a tenant: shared connection.`
       );
     }
     assertUnscopedPipeline({ pipeline: stage.$lookup?.pipeline, field });

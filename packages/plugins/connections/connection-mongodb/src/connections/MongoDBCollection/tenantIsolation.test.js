@@ -27,6 +27,7 @@ import MongoDBFindOne from './MongoDBFindOne/MongoDBFindOne.js';
 import MongoDBInsertConsecutiveId from './MongoDBInsertConsecutiveId/MongoDBInsertConsecutiveId.js';
 import MongoDBInsertMany from './MongoDBInsertMany/MongoDBInsertMany.js';
 import MongoDBInsertOne from './MongoDBInsertOne/MongoDBInsertOne.js';
+import MongoDBTableQuery from './MongoDBTableQuery/MongoDBTableQuery.js';
 import MongoDBUpdateMany from './MongoDBUpdateMany/MongoDBUpdateMany.js';
 import MongoDBUpdateOne from './MongoDBUpdateOne/MongoDBUpdateOne.js';
 import MongoDBVersionedUpdateOne from './MongoDBVersionedUpdateOne/MongoDBVersionedUpdateOne.js';
@@ -709,4 +710,57 @@ test('updateOne changeLog record is stamped with the tenant verdict', async () =
     requestId: 'tenantLogUpdateOne',
   });
   expect(logged.organization_id).toEqual('org_a');
+});
+
+const lookupPipeline = (collection) => [
+  {
+    $lookup: {
+      from: collection,
+      localField: 'group',
+      foreignField: 'group',
+      as: 'joined',
+    },
+  },
+  { $project: { organization_id: 1, group: 1, 'joined._id': 1, 'joined.organization_id': 1 } },
+];
+
+const lookupDocs = [
+  { _id: 'a1', organization_id: 'org_a', group: 'g' },
+  { _id: 'a2', organization_id: 'org_a', group: 'g' },
+  { _id: 'b1', organization_id: 'org_b', group: 'g' },
+];
+
+test("table query: a $lookup in the base pipeline only joins this org's rows", async () => {
+  const collection = 'tenantIsolationTableQueryLookup';
+  await populateTestMongoDb({ collection, documents: lookupDocs });
+  const res = await MongoDBTableQuery({
+    request: {
+      fields: { group: { type: 'text' } },
+      pipeline: lookupPipeline(collection),
+      project: false,
+    },
+    connection: makeConnection(collection, { read: true }),
+    tenant,
+  });
+  expect(res.total).toBe(2);
+  expect(res.rows.map((row) => row._id).sort()).toEqual(['a1', 'a2']);
+  res.rows.forEach((row) => {
+    expect(row.joined.map((joined) => joined.organization_id)).toEqual(['org_a', 'org_a']);
+  });
+});
+
+test('table query under tenantGuard (tenant: none) is unscoped by design and joins every org', async () => {
+  const collection = 'tenantIsolationTableQueryGuard';
+  await populateTestMongoDb({ collection, documents: lookupDocs });
+  const res = await MongoDBTableQuery({
+    request: {
+      fields: { group: { type: 'text' } },
+      pipeline: lookupPipeline(collection),
+      project: false,
+    },
+    connection: makeConnection(collection, { read: true }),
+    tenantGuard: { field: 'organization_id' },
+  });
+  expect(res.total).toBe(3);
+  res.rows.forEach((row) => expect(row.joined).toHaveLength(3));
 });

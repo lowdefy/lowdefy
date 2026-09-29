@@ -19,6 +19,7 @@ import applyTenantToBulkOperations from '../tenant/applyTenantToBulkOperations.j
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import { assertUnscopedBulkOperations } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
+import verifyStoredTenant, { idsOfMap } from '../tenant/verifyStoredTenant.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import compileTableChanges from './compileTableChanges.js';
@@ -36,6 +37,7 @@ function generateId() {
 // by the base filter. The browser never sends MongoDB syntax. The response lists the rows
 // that matched nothing in `unmatchedKeys`.
 async function MongoDBTableChanges({
+  endpointId,
   blockId,
   connection,
   connectionId,
@@ -75,6 +77,16 @@ async function MongoDBTableChanges({
   } catch (error) {
     throw mapMongoError(error, { connection, requestType: 'MongoDBTableChanges' });
   }
+  await verifyStoredTenant({
+    collection,
+    connectionId,
+    endpointId,
+    ids: [...idsOfMap(run.result?.insertedIds), ...idsOfMap(run.result?.upsertedIds)],
+    requestId,
+    requestType: 'MongoDBTableChanges',
+    tenant,
+    tenantGuard,
+  });
   const response = readChangesResult({ compiled, ...run });
   if (logCollection) {
     try {
