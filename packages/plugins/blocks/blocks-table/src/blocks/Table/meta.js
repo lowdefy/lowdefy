@@ -540,7 +540,7 @@ export default {
   },
   methods: {
     exportCsv:
-      'Download the current view as CSV: visible data columns in order, every row in its current order (every page, rows of collapsed groups included). Accepts `{ filename, formatted }`; `formatted` (default true) exports displayed text. In server mode it fires `onExport { view }` instead.',
+      "Download the current view as CSV: visible data columns in order, every row in its current order (every page, rows of collapsed groups included). Accepts `{ filename, formatted }`; `formatted` (default true) exports displayed text. A cell that starts with `=`, `+`, `-`, `@`, a tab or a carriage return (other than a plain number) gets a leading `'`, so spreadsheets read it as text, not a formula. In server mode it fires `onExport { view }` instead.",
     refresh:
       'Server mode: clear the block cache and refetch the visible rows (they stay on screen until the new rows land).',
     applyTransaction:

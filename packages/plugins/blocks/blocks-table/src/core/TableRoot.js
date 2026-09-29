@@ -179,7 +179,10 @@ function TableRoot({
     sourceCount: data.length,
     displayCount: rows.length,
   });
-  const skeletonPhase = useSkeletonTiming({ active: loadingState === 'initial', id: blockId });
+  const { phase: skeletonPhase, endHold: endSkeletonHold } = useSkeletonTiming({
+    active: loadingState === 'initial',
+    id: blockId,
+  });
   const showSkeleton = loadingState === 'initial' || skeletonPhase === 'holding';
   api.loadingState = showSkeleton ? 'initial' : loadingState;
 
@@ -190,6 +193,7 @@ function TableRoot({
       classNames={classNames}
       clickable={Boolean(config.rowLink || events.onRowClick)}
       config={config}
+      endSkeletonHold={endSkeletonHold}
       busy={!showSkeleton && (loadingSignal || fragments.refreshing)}
       headerHeight={headerHeight}
       isPending={viewPending}
@@ -200,7 +204,7 @@ function TableRoot({
       rowHeights={rowHeights}
       rows={rows}
       showSkeleton={showSkeleton}
-      skeletonHidden={skeletonPhase === 'hidden'}
+      skeletonPhase={skeletonPhase}
       state={state}
       strategy={rowWindowStrategy}
       styles={styles}

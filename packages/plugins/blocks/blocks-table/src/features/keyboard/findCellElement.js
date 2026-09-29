@@ -15,7 +15,9 @@
 */
 
 // Rows that are not data rows (an expanded detail row, a group header) may have fewer cells than
-// the grid has columns; focus lands on their first cell.
+// the grid has columns; focus lands on their first cell. Skeleton rows (the initial skeleton, an
+// unloaded server row) have no `data-lf-cell` cells, so a row that is not loaded yet resolves to
+// null until its real row renders.
 function findCellElement({ api, row, col }) {
   const scroller = api.scrollerRef.current;
   return (

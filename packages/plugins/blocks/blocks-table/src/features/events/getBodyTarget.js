@@ -14,11 +14,13 @@
   limitations under the License.
 */
 
+import findRow from '../../core/findRow.js';
+
 // The body row and cell an event targets, or null for header and non-row targets.
 function getBodyTarget({ event, api }) {
   const rowElement = event.target.closest('[data-row-key]');
   if (!rowElement || !api.contains(rowElement)) return null;
-  const row = api.table.getRow(rowElement.dataset.rowKey, true);
+  const row = findRow({ table: api.table, id: rowElement.dataset.rowKey });
   if (!row) return null;
   return { cell: event.target.closest('[data-lf-cell]'), row, rowElement };
 }

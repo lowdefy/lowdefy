@@ -135,8 +135,9 @@ test.describe('Table loading states', () => {
     );
     await expect(firstRow.locator('[data-shape="pill"]')).toHaveCount(1);
     await expect(firstRow.locator('[data-shape="progress"]')).toHaveCount(1);
+    // One square per configured button (the actions column has one).
     await expect(firstRow.locator('[data-shape="buttons"] .lf-table-skeleton-square')).toHaveCount(
-      2
+      1
     );
     // Stable seeded widths: the same row and column keep their width, rows differ.
     const widths = await skeletonRows(page, 'table_client').evaluateAll((rows) =>
@@ -176,6 +177,108 @@ test.describe('Table loading states', () => {
       'aria-busy',
       'true'
     );
+  });
+
+  for (const blockId of ['table_shapes', 'light_shapes']) {
+    test(`${blockId} skeletons follow square avatars and the configured buttons`, async ({
+      page,
+    }) => {
+      const mocks = await mockAll(page);
+      mocks.rows.hold();
+      await navigateToTestPage(page, PAGE);
+      const firstRow = skeletonRows(page, blockId).first();
+      await expect(firstRow).toBeVisible();
+      const cells = firstRow.locator('td, [role="gridcell"]');
+      // name, owner, hover buttons, buttons (TableLight has no selection column here either).
+      await expect(cells).toHaveCount(4);
+      await expect(cells.nth(2).locator('.lf-table-skeleton')).toHaveCount(0);
+      await expect(cells.nth(3).locator('.lf-table-skeleton-square')).toHaveCount(3);
+      const avatar = cells.nth(1).locator('.lf-table-skeleton-circle');
+      await expect(avatar).toHaveAttribute('data-square', '');
+      await expect(avatar).not.toHaveCSS('border-radius', '50%');
+      mocks.rows.release();
+      await expect(skeletonRows(page, blockId)).toHaveCount(0);
+    });
+  }
+
+  test('the shimmer is a narrow fill-token band, and stops under reduced motion', async ({
+    page,
+  }) => {
+    const mocks = await mockAll(page);
+    mocks.rows.hold();
+    await navigateToTestPage(page, PAGE);
+    const readShimmer = () =>
+      skeletonRows(page, 'table_client')
+        .first()
+        .evaluate((row) => {
+          const band = getComputedStyle(row, '::after');
+          const fill = getComputedStyle(document.documentElement)
+            .getPropertyValue('--ant-color-fill-secondary')
+            .trim();
+          const probe = document.createElement('span');
+          probe.style.color = fill;
+          document.body.appendChild(probe);
+          const fillColour = getComputedStyle(probe).color;
+          probe.remove();
+          return {
+            animation: band.animationName,
+            duration: band.animationDuration,
+            display: band.display,
+            image: band.backgroundImage,
+            fillColour,
+          };
+        });
+    // The fallback's skeleton rows are replaced by the table's: read the table's.
+    await expect(table(page, 'table_client')).toHaveAttribute('data-loading-state', 'initial');
+    await expect(table(page, 'table_client')).not.toHaveAttribute('data-lf-fallback', '');
+    await expect(skeletonRows(page, 'table_client').first()).toBeVisible();
+    const shimmer = await readShimmer();
+    expect(shimmer.animation).toBe('lf-table-shimmer');
+    expect(shimmer.duration).toBe('1.4s');
+    // The band peaks at antd's fill colour in the middle 30% of the row.
+    expect(shimmer.image).toContain(`${shimmer.fillColour} 50%`);
+    expect(shimmer.image).toContain('35%');
+    expect(shimmer.image).toContain('65%');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect.poll(async () => (await readShimmer()).display).toBe('none');
+    mocks.rows.release();
+  });
+
+  test('the record count holds a text skeleton until the first rows land', async ({ page }) => {
+    const mocks = await mockAll(page);
+    mocks.rows.hold();
+    await navigateToTestPage(page, PAGE);
+    const count = getBlock(page, 'table_client').locator('[data-lf-record-count]');
+    await expect(table(page, 'table_client')).toHaveAttribute('data-loading-state', 'initial');
+    await expect(count).toHaveAttribute('data-loading', '');
+    await expect(count).toHaveText('');
+    await expect(count.locator('.lf-table-skeleton')).toHaveCount(1);
+    mocks.rows.release();
+    await expect(count).toHaveText('30 rows');
+    await expect(count).not.toHaveAttribute('data-loading', '');
+    // A refetch keeps the count of the rows on screen.
+    mocks.rows.hold();
+    await page.locator('#refetch').click();
+    await expect(table(page, 'table_client')).toHaveAttribute('data-busy', '');
+    await expect(count).toHaveText('30 rows');
+    mocks.rows.release();
+    await expect(table(page, 'table_client')).not.toHaveAttribute('data-busy', '');
+  });
+
+  test("slot buttons stay usable while the page's onMount loads the rows", async ({ page }) => {
+    const mocks = await mockAll(page);
+    mocks.rows.hold();
+    await navigateToTestPage(page, PAGE);
+    await expect(table(page, 'table_client')).toHaveAttribute('data-loading-state', 'initial');
+    // Lowdefy's page loading still reaches blocks outside the table.
+    await expect(page.locator('#refetch')).toBeDisabled();
+    await expect(page.locator('#client_new')).toBeEnabled();
+    await page.locator('#client_new').click();
+    await expect(page.locator('#client_new_clicks')).toHaveText('Clicks: 1');
+    mocks.rows.release();
+    await expect(table(page, 'table_client')).toHaveAttribute('data-loading-state', 'ready');
+    await expect(page.locator('#refetch')).toBeEnabled();
+    await expect(page.locator('#client_new')).toBeEnabled();
   });
 
   test('a refetch without holdValue keeps the rows and runs the progress bar', async ({ page }) => {
@@ -266,6 +369,74 @@ test.describe('Table loading states', () => {
     await expect(table(page, 'light_prop')).toHaveAttribute('data-loading-state', 'ready');
     await expect(bodyRows(page, 'table_prop')).toHaveText([/Ada/, /Grace/]);
     await expect(lightRows(page, 'light_prop')).toHaveText([/Ada/, /Grace/]);
+  });
+
+  // The minimum time avoids flicker; it must not block input. Rows that land while the skeleton
+  // holds are what a key or pointer press acts on, so the hold ends at the first one.
+  async function holdSkeletonOverRows(page) {
+    await mockAll(page);
+    await page.clock.install();
+    await navigateToTestPage(page, PAGE);
+    // The keys and clicks go to the table, not to the fallback it replaces.
+    await expect(table(page, 'table_prop')).not.toHaveAttribute('data-lf-fallback', '');
+    await expect(table(page, 'table_prop')).toHaveAttribute('data-loading-state', 'empty');
+    await page.clock.pauseAt(Date.now() + 60000);
+    await page.locator('#set_loading').click();
+    await page.clock.runFor(130);
+    for (const id of ['table_prop', 'light_prop']) {
+      await expect(table(page, id)).not.toHaveAttribute('data-skeleton-hidden', '');
+    }
+    await page.locator('#load_rows').click();
+    await page.clock.runFor(10);
+    for (const id of ['table_prop', 'light_prop']) {
+      await expect(table(page, id)).toHaveAttribute('data-loading-state', 'initial');
+    }
+    await expect(skeletonRows(page, 'table_prop')).toHaveCount(2);
+  }
+
+  test('a key on the header ends the skeleton hold and moves onto the real first row', async ({
+    page,
+  }) => {
+    await holdSkeletonOverRows(page);
+    const nameHeader = getBlock(page, 'table_prop').locator(
+      '[data-lf-header][data-col-key="name"]'
+    );
+    await nameHeader.focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(table(page, 'table_prop')).toHaveAttribute('data-loading-state', 'ready');
+    await expect
+      .poll(() =>
+        page.evaluate(() => {
+          const cell = document.activeElement;
+          return `${cell.closest('[data-row-key]')?.dataset.rowKey}:${cell.dataset.colKey}`;
+        })
+      )
+      .toBe('1:name');
+    await page.keyboard.press('Enter');
+    await expect(getBlock(page, 'prop_clicked_value')).toHaveText('Clicked: 1');
+    // The other table still holds: nothing happened there.
+    await expect(table(page, 'light_prop')).toHaveAttribute('data-loading-state', 'initial');
+  });
+
+  test('a header click during the skeleton hold sorts the rows it reveals', async ({ page }) => {
+    await holdSkeletonOverRows(page);
+    await getBlock(page, 'table_prop').locator('[data-lf-header][data-col-key="name"]').click();
+    await expect(table(page, 'table_prop')).toHaveAttribute('data-loading-state', 'ready');
+    await expect(bodyRows(page, 'table_prop')).toHaveText([/Ada/, /Grace/]);
+    await getBlock(page, 'table_prop').locator('[data-lf-header][data-col-key="name"]').click();
+    await expect(bodyRows(page, 'table_prop')).toHaveText([/Grace/, /Ada/]);
+    await page.locator('#light_prop').click();
+    await expect(table(page, 'light_prop')).toHaveAttribute('data-loading-state', 'ready');
+    await expect(lightRows(page, 'light_prop')).toHaveText([/Ada/, /Grace/]);
+  });
+
+  test('skeleton cells are not keyboard targets', async ({ page }) => {
+    await holdSkeletonOverRows(page);
+    const skeletonCells = skeletonRows(page, 'table_prop').locator('[role="gridcell"]');
+    await expect(skeletonCells).toHaveCount(4);
+    await expect(skeletonRows(page, 'table_prop').locator('[data-lf-cell]')).toHaveCount(0);
+    await expect(skeletonRows(page, 'table_prop').locator('[tabindex]')).toHaveCount(0);
+    await expect(skeletonRows(page, 'table_prop').first()).toHaveAttribute('aria-busy', 'true');
   });
 
   test('a fast response never flashes the skeleton', async ({ page }) => {
@@ -406,6 +577,23 @@ test.describe('Table loading states in server mode', () => {
     mocks.server.fail = () => false;
     await errorRow.locator('[data-lf-retry]').click();
     await expect(bodyRows(page, 'table_server').first()).toContainText('Server 0');
+  });
+
+  test('a failed block raises no global error message, and the error is still logged', async ({
+    page,
+  }) => {
+    const logged = [];
+    page.on('console', (message) => {
+      if (message.type() === 'error') logged.push(message.text());
+    });
+    const mocks = await mockAll(page);
+    mocks.server.fail = () => true;
+    await navigateToTestPage(page, PAGE);
+    const errorRow = getBlock(page, 'table_server').locator('[data-lf-error-row]');
+    await expect(errorRow).toContainText("Couldn't load rows");
+    await expect.poll(() => logged.some((text) => text.includes('Service down'))).toBe(true);
+    // The table's inline error row with Retry is the UX; the page shows no message over it.
+    await expect(page.locator('.ant-message-notice')).toHaveCount(0);
   });
 
   test('expanding a server group spins its chevron and shows skeleton rows', async ({ page }) => {

@@ -162,7 +162,7 @@ function TableFallback({
   const rowCount = type.isArray(properties.data) ? properties.data.length : 0;
   // The table holds rows it has while loading, so known rows decide the height either way.
   const empty = !server && !isLoading && rowCount === 0;
-  const phase = useSkeletonTiming({ active: !empty, id: blockId, handoff: true });
+  const { phase } = useSkeletonTiming({ active: !empty, id: blockId, handoff: true });
   const pagination = properties.pagination === true && !server;
   const pageSize = type.isInt(properties.pageSize) ? properties.pageSize : DEFAULT_PAGE_SIZE;
 

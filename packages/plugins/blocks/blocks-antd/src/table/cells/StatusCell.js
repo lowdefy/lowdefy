@@ -28,7 +28,7 @@ function StatusCell({ value, row, column }) {
     <span className="lf-table-status">
       <span
         className="lf-table-status-dot"
-        style={{ '--lf-table-tone': getTagTone({ item: value, column, row }) }}
+        style={{ '--lf-table-tone': getTagTone({ item: value, column, row }).color }}
       />
       {option?.label ?? String(value)}
     </span>

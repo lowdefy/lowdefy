@@ -33,6 +33,9 @@ function getSkeletonColumn(col) {
 // instead of blank space. Widths are seeded by the display index and column key, so a row keeps
 // its shapes across renders. Used for the initial skeleton, server mode's unloaded rows, a server
 // group's rows before its first block lands and a lazy tree row's children while they load.
+// A skeleton row has no row key and nothing to act on, so its cells are not keyboard targets: no
+// `data-lf-cell` and no tabindex. The keyboard's active cell waits on its row until the real row
+// renders there (features/keyboard/useKeyboard.js).
 function SkeletonRow({
   ariaRowIndex,
   centerCols,
@@ -50,12 +53,10 @@ function SkeletonRow({
         <div
           className="lf-table-gridcell"
           data-col-index={col.index}
-          data-lf-cell=""
           data-pinned={col.region === 'center' ? undefined : col.region}
           key={col.key}
           role="gridcell"
           style={col.style}
-          tabIndex={-1}
         >
           {depthIndent && col.key === leadKey ? (
             <span className="lf-table-skeleton-indent" style={{ width: depthIndent }} />

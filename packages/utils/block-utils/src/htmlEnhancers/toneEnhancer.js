@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
+import customTagTone from '../format/customTagTone.js';
 import seededTagColor from '../format/seededTagColor.js';
-import TONE_COLORS from '../format/toneColors.js';
+import TAG_TONES from '../format/tagTones.js';
 
 const HEX_COLOR = /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
 const COLOR_FUNCTION = /^(rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)\(.*\)$/i;
@@ -29,15 +30,15 @@ function isColor(value) {
 }
 
 // A tone name, a colour, or a seed for a stable colour. Lowercase tone names
-// are pure CSS (the stylesheet matches them); everything else gets its colour
-// here through the --lf-tone custom property.
+// are pure CSS (the stylesheet matches them); everything else gets its tone
+// here: the colour and the tag's text, fill and border custom properties.
 function resolveTone(element, value) {
-  if (Object.hasOwn(TONE_COLORS, value)) return null;
+  if (Object.hasOwn(TAG_TONES, value)) return null;
   const lower = value.toLowerCase();
-  if (Object.hasOwn(TONE_COLORS, lower)) return TONE_COLORS[lower];
-  if (isColor(value)) return value;
+  if (Object.hasOwn(TAG_TONES, lower)) return TAG_TONES[lower];
+  if (isColor(value)) return customTagTone(value);
   const seed = value === '' ? element.textContent.trim() : value;
-  return TONE_COLORS[seededTagColor(seed)];
+  return TAG_TONES[seededTagColor(seed)];
 }
 
 // data-tag and data-status: tinted tags and status dots in theme colours.
@@ -47,9 +48,12 @@ const toneEnhancer = {
   prepare({ select }) {
     select('[data-tag], [data-status]').forEach((element) => {
       const attribute = element.hasAttribute('data-tag') ? 'data-tag' : 'data-status';
-      const color = resolveTone(element, element.getAttribute(attribute).trim());
-      if (color !== null) {
-        element.style.setProperty('--lf-tone', color);
+      const tone = resolveTone(element, element.getAttribute(attribute).trim());
+      if (tone !== null) {
+        element.style.setProperty('--lf-tone', tone.color);
+        element.style.setProperty('--lf-tone-text', tone.text);
+        element.style.setProperty('--lf-tone-bg', tone.bg);
+        element.style.setProperty('--lf-tone-border', tone.border);
       }
     });
   },

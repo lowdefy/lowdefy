@@ -20,8 +20,13 @@ import { render } from '@testing-library/react';
 
 import HtmlComponent from '../HtmlComponent.js';
 import registerHtmlEnhancements from '../registerHtmlEnhancements.js';
+import customTagTone from '../format/customTagTone.js';
 import seededTagColor from '../format/seededTagColor.js';
-import TONE_COLORS from '../format/toneColors.js';
+import TAG_TONES from '../format/tagTones.js';
+
+const TONE_COLORS = Object.fromEntries(
+  Object.entries(TAG_TONES).map(([name, tone]) => [name, tone.color])
+);
 
 // jsdom has no CSS.supports; this stands in for the browser's colour parser.
 const supports = jest.fn((property, value) => /^rgb\(\d+ \d+ \d+\)$/.test(value));
@@ -38,9 +43,13 @@ afterEach(() => {
   registerHtmlEnhancements(null);
 });
 
-function tone(html) {
+function style(html, property) {
   const { container } = render(<HtmlComponent html={html} />);
-  return container.querySelector('[data-tag], [data-status]').style.getPropertyValue('--lf-tone');
+  return container.querySelector('[data-tag], [data-status]').style.getPropertyValue(property);
+}
+
+function tone(html) {
+  return style(html, '--lf-tone');
 }
 
 test('preset tones are left to the stylesheet', () => {
@@ -49,12 +58,21 @@ test('preset tones are left to the stylesheet', () => {
   expect(tone('<span data-status="processing">Syncing</span>')).toBe('');
 });
 
-test('a tone name in another case gets its token inline', () => {
+test('a tone name in another case gets its tokens inline', () => {
   expect(tone('<span data-tag="Success">Approved</span>')).toBe(TONE_COLORS.success);
+  expect(style('<span data-tag="Success">Approved</span>', '--lf-tone-text')).toBe(
+    TAG_TONES.success.text
+  );
+  expect(style('<span data-tag="Success">Approved</span>', '--lf-tone-bg')).toBe(
+    TAG_TONES.success.bg
+  );
 });
 
-test('explicit colour syntax becomes the tone', () => {
+test('explicit colour syntax becomes the tone, with a readable text colour', () => {
   expect(tone('<span data-tag="#1677ff">Custom</span>')).toBe('#1677ff');
+  expect(style('<span data-tag="#1677ff">Custom</span>', '--lf-tone-text')).toBe(
+    customTagTone('#1677ff').text
+  );
   expect(tone('<span data-tag="rgb(22 119 255)">Custom</span>')).toBe('rgb(22 119 255)');
   expect(tone('<span data-status="var(--ant-color-primary)">x</span>')).toBe(
     'var(--ant-color-primary)'

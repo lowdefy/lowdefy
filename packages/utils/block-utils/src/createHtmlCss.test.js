@@ -15,8 +15,7 @@
 */
 
 import createHtmlCss from './createHtmlCss.js';
-import tagStyle from './format/tagStyle.js';
-import TONE_COLORS from './format/toneColors.js';
+import TAG_TONES from './format/tagTones.js';
 
 test('createHtmlCss scopes every rule to enhanced HTML with no specificity', () => {
   const css = createHtmlCss();
@@ -30,11 +29,12 @@ test('createHtmlCss scopes every rule to enhanced HTML with no specificity', () 
 
 test('createHtmlCss writes the grid tag look and every tone', () => {
   const css = createHtmlCss();
-  expect(css).toContain(`background: ${tagStyle('var(--lf-tone)').background};`);
-  Object.entries(TONE_COLORS).forEach(([tone, color]) => {
-    expect(css).toContain(`:where([data-lf-html] [data-tag="${tone}"]),`);
+  expect(css).toContain('background: var(--lf-tone-bg);');
+  expect(css).toContain('color: var(--lf-tone-text);');
+  Object.entries(TAG_TONES).forEach(([name, tone]) => {
+    expect(css).toContain(`:where([data-lf-html] [data-tag="${name}"]),`);
     expect(css).toContain(
-      `:where([data-lf-html] [data-status="${tone}"]) {\n    --lf-tone: ${color};`
+      `:where([data-lf-html] [data-status="${name}"]) {\n    --lf-tone: ${tone.color};\n    --lf-tone-text: ${tone.text};`
     );
   });
 });

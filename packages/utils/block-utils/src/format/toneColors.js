@@ -14,16 +14,12 @@
   limitations under the License.
 */
 
-import TAG_COLORS from './tagColors.js';
+import TAG_TONES from './tagTones.js';
 
-// The tones HTML understands: the preset tag colours plus antd's status names.
-const TONE_COLORS = {
-  ...TAG_COLORS,
-  success: 'var(--ant-color-success)',
-  processing: 'var(--ant-color-info)',
-  info: 'var(--ant-color-info)',
-  warning: 'var(--ant-color-warning)',
-  error: 'var(--ant-color-error)',
-};
+// The tones HTML understands, as one colour each: the preset tag colours plus antd's status
+// names. The tag look of each is in TAG_TONES.
+const TONE_COLORS = Object.fromEntries(
+  Object.entries(TAG_TONES).map(([name, tone]) => [name, tone.color])
+);
 
 export default TONE_COLORS;

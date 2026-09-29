@@ -14,7 +14,7 @@ Three blocks with the antd look, sharing one column model and one set of cell ty
 - **`Table`** (new package `@lowdefy/blocks-table`, installed by default) is built for large datasets and record lists. Rows and columns are virtualised, so 100k rows × 50 columns scroll smoothly. It has:
 
   - sort, column resize and reorder, pinned columns, a header menu with column filters, and a column manager, all on by default;
-  - an optional toolbar with search, quick filters, a nested And/Or filter builder, grouping, density and CSV export;
+  - an optional toolbar with search, quick filters, a nested And/Or filter builder, grouping, density and CSV export (cells that start like a spreadsheet formula, `=`, `+`, `-` or `@`, are exported as text, so an opened file never runs them);
   - saved views, and optional persistence in the browser or the URL;
   - row selection with a bulk-action bar;
   - grouping with per-group totals, tree rows, expandable detail rows, and a summary footer;

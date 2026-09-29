@@ -14,15 +14,18 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import readableToneText from './readableToneText.js';
 
-import TAG_COLORS from './tagColors.js';
-
-// A preset tag colour name becomes its theme token; any other value is used as
-// a CSS colour.
-function resolveTagColor(value) {
-  if (type.isNone(value)) return TAG_COLORS.default;
-  return TAG_COLORS[value] ?? value;
+// The tag look for a colour that is not a tone name (a hex, rgb() or var() value): a fill and
+// border tinted with the colour, and the colour darkened (or, in a dark theme, lightened) toward
+// the text colour for the label, so a light custom colour still reads.
+function customTagTone(color) {
+  return {
+    color,
+    text: readableToneText({ color, share: 60 }),
+    bg: `color-mix(in srgb, ${color} 12%, transparent)`,
+    border: `color-mix(in srgb, ${color} 30%, transparent)`,
+  };
 }
 
-export default resolveTagColor;
+export default customTagTone;

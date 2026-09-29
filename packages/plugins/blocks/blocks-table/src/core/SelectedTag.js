@@ -16,21 +16,24 @@
 
 import React from 'react';
 
+import './selectTag.css';
+
 function keepFocus(event) {
   event.preventDefault();
   event.stopPropagation();
 }
 
-// A picked value in the tags editor (antd Select `tagRender`): the value's chip as the cell shows
-// it, with a remove button, instead of antd's own tag around the chip.
+// A picked value in a multiple select (antd Select `tagRender`: the tags editor, the filter
+// builder's value list): the value's chip as the cell shows it, with a remove button, instead of
+// antd's own tag around the chip.
 function SelectedTag({ closable, label, onClose }) {
   return (
-    <span className="lf-table-editor-tag" onMouseDown={keepFocus}>
+    <span className="lf-table-select-tag" onMouseDown={keepFocus}>
       {label}
       {closable ? (
         <button
           aria-label="Remove"
-          className="lf-table-editor-tag-remove"
+          className="lf-table-select-tag-remove"
           onClick={onClose}
           type="button"
         >

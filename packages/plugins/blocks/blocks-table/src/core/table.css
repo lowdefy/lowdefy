@@ -188,6 +188,19 @@
       -6px 0 8px -6px var(--lf-pinned-shadow);
   }
 
+  /* Placeholder rows have nothing scrolled under the pinned region, so they keep only the divider. */
+  .lf-table-scroller
+    .lf-table-row[data-skeleton]
+    .lf-table-gridcell[data-pinned='start'][data-pinned-edge] {
+    box-shadow: inset -1px 0 0 var(--lf-border);
+  }
+
+  .lf-table-scroller
+    .lf-table-row[data-skeleton]
+    .lf-table-gridcell[data-pinned='end'][data-pinned-edge] {
+    box-shadow: inset 1px 0 0 var(--lf-border);
+  }
+
   /* The table's own border ends the last column, so an end-pinned last header shows no divider
      (its resize handle still highlights on hover and while dragging). */
   .lf-table-header
