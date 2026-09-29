@@ -39,23 +39,23 @@ It uses the runtime's global `fetch` (Node 24+), so the package has no HTTP depe
 
 **Routed vs catalog.** A routed endpoint (`treg.<capability>`, or any answer with `X-Treg-Route-Outcome`) answers `{ output, raw, _treg: { served_by, tried, outcome, charged_micro } }`; `output` and `raw` are taken from it. A catalog body is the provider's own, relayed verbatim, so `output` is the body without `_treg` and `raw` is the body. `cost` is always `X-Treg-Cost-Micro` (absent = the team's own key, not billed = 0; a replay reports 0), never `_treg.charged_micro` or a catalog estimate.
 
-**Async.** An answer with `X-Treg-Async` (or a routed 202 whose `_treg.outcome` is `pending` with `_treg.async`, which is what an idempotent replay returns, headers not stored) is a task. `readAsyncTask` reads the task id (`task_id`, or `id_from` into the body) and the reserve (`X-Treg-Reserved-Micro`, `_treg.reserved_micro`, else `X-Treg-Cost-Micro`). Without `await` the result is `pending: true`, `cost` 0, `task: { id, pollEndpoint, reserved }`. With `await`, `awaitAsyncTask` polls `GET /call/<poll.endpoint>?<poll.param.name>=<id>` every `intervalMs` (default: the descriptor's `interval` seconds, else 2 s) until `status.path` reads a `success` or `failure`/`billed_failure` value, within `timeoutMs` (default 60 s). Success returns `result.path` of the terminal body (or the body) as `output`, the reserve as `cost`. Failure is a final `async_task_failed`. Transient poll errors (`ServiceError`s) are retried, five in a row end it; other poll errors are thrown. Timeout is a `ServiceError` `async_timeout` with the task and call ids: treg stores a routed pending answer under the `Idempotency-Key`, so a retry with the same key replays it free and polls the same task. A descriptor with `poll.url_from` (a dynamic URL) is refused: following it would be the upstream-URL form.
+**Async.** An answer with `X-Treg-Async` (or a routed 202 whose `_treg.outcome` is `pending` with `_treg.async`, which is what an idempotent replay returns, headers not stored) is a task. `readAsyncTask` reads the task id (`task_id`, or `id_from` into the body) and the reserve (`X-Treg-Reserved-Micro`, `_treg.reserved_micro`, else `X-Treg-Cost-Micro`). Without `await` the result is `pending: true`, `cost` 0, `task: { id, pollEndpoint, reserved }`. With `await`, `awaitAsyncTask` polls `GET /call/<poll.endpoint>?<poll.param.name>=<id>` every `intervalMs` (default: the descriptor's `interval` seconds, else 2 s; never under 100 ms, so a descriptor interval of 0 can not poll in a tight loop) until `status.path` reads a `success` or `failure`/`billed_failure` value, within `timeoutMs` (default 60 s). Success returns `result.path` of the terminal body (or the body) as `output`, the reserve as `cost`. Failure is a final `async_task_failed`. Transient poll errors (`ServiceError`s) are retried, five in a row end it; other poll errors are thrown. Timeout is a `ServiceError` `async_timeout` with the task and call ids: treg stores a routed pending answer under the `Idempotency-Key`, so a retry with the same key replays it free and polls the same task. A descriptor with `poll.url_from` (a dynamic URL) is refused: following it would be the upstream-URL form.
 
 ## Errors
 
 `mapTregError` decides by status and treg's `detail.error` code, and uses `X-Treg-Error: 1` (treg stamps its own refusals) to tell treg's answers from a provider's relayed verbatim.
 
-| Answer                                        | Thrown                                                                          |
-| --------------------------------------------- | ------------------------------------------------------------------------------- |
-| 402 `insufficient_balance` / `out_of_balance` | `Error` "treg balance too low: needs ~$X, has $Y." (402), top-up URL in `cause` |
-| 402 `route_max_cost`                          | `Error` naming the ceiling and estimate (402)                                   |
-| 422 with `X-Treg-Error`                       | `ConfigError` with treg's detail                                                |
-| 429                                           | `ServiceError`, `retryAfter`                                                    |
-| 503 `provider_capacity_unavailable`           | `ServiceError`, `retryAfter` = Retry-After, else `resets_at`, else 60           |
-| 503 `treg_saturated`, other 5xx               | `ServiceError`, `retryAfter` when given                                         |
-| 409 with `X-Treg-Error` (key in flight)       | `ServiceError`                                                                  |
-| 502 `response_buffer_limit`                   | `Error` with no `statusCode` (a 5xx status would make the API layer retry it)   |
-| 401 / 403 / 3xx / other 4xx                   | `Error` with the status; treg's own detail only for treg's own non-auth answers |
+| Answer                                        | Thrown                                                                                                          |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| 402 `insufficient_balance` / `out_of_balance` | `Error` "treg balance too low: needs ~$X, has $Y." (402), top-up URL in `cause` (left out if it does not parse) |
+| 402 `route_max_cost`                          | `Error` naming the ceiling and estimate (402)                                                                   |
+| 422 with `X-Treg-Error`                       | `ConfigError` with treg's detail                                                                                |
+| 429                                           | `ServiceError`, `retryAfter`                                                                                    |
+| 503 `provider_capacity_unavailable`           | `ServiceError`, `retryAfter` = Retry-After, else `resets_at`, else 60                                           |
+| 503 `treg_saturated`, other 5xx               | `ServiceError`, `retryAfter` when given                                                                         |
+| 409 with `X-Treg-Error` (key in flight)       | `ServiceError`                                                                                                  |
+| 502 `response_buffer_limit`                   | `Error` with no `statusCode` (a 5xx status would make the API layer retry it)                                   |
+| 401 / 403 / 3xx / other 4xx                   | `Error` with the status; treg's own detail only for treg's own non-auth answers                                 |
 
 A `ServiceError` passes `callRequestResolver` unchanged (`isLowdefyError`); a plain `Error` becomes a `RequestError` unless `ServiceError.isServiceError` matches it, which is why final errors never carry a 5xx/429 status and avoid its trigger words. `retryAfter` is a number of seconds, and `projectCaughtError` keeps it on a `ServiceError`, so a routine's `_error: retryAfter` can drive a backoff.
 

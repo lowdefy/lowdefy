@@ -36,6 +36,17 @@ function readDetail(body) {
   return { text: null, info: body };
 }
 
+// The team's top-up link, resolved against the base URL, or null. treg sends it, so an
+// unparseable one must not replace the balance error with a TypeError; it only goes to the log.
+function readTopupUrl({ info, connection }) {
+  if (!type.isString(info.topup_url)) return null;
+  try {
+    return new URL(info.topup_url, connection.baseUrl ?? 'https://treg.to').href;
+  } catch {
+    return null;
+  }
+}
+
 // A code a caller can branch on: treg's snake_case error names, never free text.
 function readCode(info) {
   return type.isString(info.error) && /^[a-z0-9_]{1,64}$/.test(info.error) ? info.error : undefined;
@@ -77,9 +88,7 @@ function mapTregError({ response, target, connection }) {
 
   if (status === 402) {
     if (code === 'insufficient_balance' || code === 'out_of_balance') {
-      const topupUrl = type.isString(info.topup_url)
-        ? new URL(info.topup_url, connection.baseUrl ?? 'https://treg.to').href
-        : null;
+      const topupUrl = readTopupUrl({ info, connection });
       return withFields(
         new Error(
           `treg balance too low: needs ~${formatUsd(info.estimated_cost_micro)}, has ${formatUsd(

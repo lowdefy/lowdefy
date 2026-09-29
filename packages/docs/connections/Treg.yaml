@@ -78,7 +78,7 @@ _ref:
             - `meta: object`: Tags for this call, merged over the connection's `meta`.
             - `await: object`: Wait for an async task. Without it, a task that is still running returns `pending: true`.
               - `timeoutMs: integer`: Default: `60000` - How long to poll, from 100 to 900000.
-              - `intervalMs: integer`: The wait between polls. Defaults to the interval treg's descriptor names, or 2000.
+              - `intervalMs: integer`: The wait between polls. Defaults to the interval treg's descriptor names (at least 100), or 2000.
 
             #### Response
 

@@ -324,3 +324,29 @@ test('TregCall stops polling when the request that started it closes', async () 
   setTimeout(() => controller.abort(), 250);
   await expect(promise).rejects.toMatchObject({ name: 'AbortError' });
 });
+
+test.each([
+  ['0', 0],
+  ['negative', -5],
+  ['a tiny fraction', 0.001],
+])(
+  'TregCall waits at least 100 ms between polls when the descriptor interval is %s',
+  async (_, interval) => {
+    const descriptor = { ...asyncView, interval };
+    mock.setHandler((req) => {
+      if (req.path === '/call/treg.people.email.find') {
+        return {
+          ...routedPending,
+          headers: { ...routedPending.headers, 'x-treg-async': JSON.stringify(descriptor) },
+        };
+      }
+      return { status: 200, body: { data: { status: 'running' } } };
+    });
+    await expect(
+      TregCall({ connection, request: { ...request, await: { timeoutMs: 450 } } })
+    ).rejects.toMatchObject({ code: 'async_timeout' });
+    // 450 ms at a 100 ms floor is at most 5 polls; an unbounded interval polls in a tight loop.
+    expect(mock.requests.length - 1).toBeLessThanOrEqual(5);
+    expect(mock.requests.length - 1).toBeGreaterThanOrEqual(2);
+  }
+);
