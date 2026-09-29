@@ -39,7 +39,7 @@ async function MongoDBTableQuery({ request, connection, tenant, tenantGuard }) {
   const { collection } = await getCollection({ connection });
   let result;
   try {
-    const cursor = await collection.aggregate(pipeline, properties.options);
+    const cursor = await collection.aggregate(pipeline, compiled.options);
     result = await cursor.toArray();
   } catch (error) {
     throw mapMongoError(error, { connection, requestType: 'MongoDBTableQuery' });

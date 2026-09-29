@@ -72,7 +72,8 @@ export default {
           groupable: {
             type: 'boolean',
             default: false,
-            description: 'Allow grouping by the field.',
+            description:
+              'Allow grouping by the field, and the "countDistinct" aggregate on it, which groups by its values.',
           },
         },
         errorMessage: {
@@ -141,7 +142,7 @@ export default {
     options: {
       type: 'object',
       description:
-        'Optional aggregate settings, for example collation, maxTimeMS, allowDiskUse or hint.',
+        'Optional aggregate settings, for example collation, maxTimeMS, allowDiskUse or hint. maxTimeMS defaults to 10000.',
       errorMessage: {
         type: 'MongoDBTableQuery request property "options" should be an object.',
       },

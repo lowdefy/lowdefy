@@ -21,7 +21,7 @@ import compileTableQuery from './compileTableQuery.js';
 const now = new Date('2026-09-28T12:00:00.000Z');
 
 const fields = {
-  name: { type: 'text', search: true },
+  name: { type: 'text', search: true, groupable: true },
   email: { type: 'email', search: true },
   amount: { type: 'currency' },
   stage: { type: 'tag', groupable: true },
@@ -39,6 +39,7 @@ describe('rows', () => {
   test('an empty view pages rows sorted by _id after the base pipeline', () => {
     expect(compile({ startRow: 0, endRow: 100 })).toEqual({
       grouped: false,
+      options: { maxTimeMS: 10000 },
       specs: [],
       pipeline: [
         { $match: { org_id: 'org_1' } },
@@ -201,6 +202,7 @@ describe('grouping', () => {
   test('groupPath shorter than group returns the next group level', () => {
     expect(compile({ view, groupPath: [], startRow: 0, endRow: 100 })).toEqual({
       grouped: true,
+      options: { maxTimeMS: 10000 },
       specs: [],
       pipeline: [
         { $match: { org_id: 'org_1' } },
@@ -309,7 +311,6 @@ describe('aggregates', () => {
           _id: null,
           a0: { $sum: '$amount' },
           a1: { $max: '$created' },
-          a2: { $addToSet: { $cond: [isEmpty('name'), '$$REMOVE', '$name'] } },
           a3: { $sum: { $cond: [isEmpty('email'), 1, 0] } },
           a3_rows: { $sum: 1 },
           a4: { $sum: { $cond: [isEmpty('owner.name'), 1, 0] } },
@@ -318,10 +319,44 @@ describe('aggregates', () => {
       },
       {
         $addFields: {
-          a2: { $size: '$a2' },
           a3: { $cond: [{ $eq: ['$a3_rows', 0] }, 0, { $divide: ['$a3', '$a3_rows'] }] },
         },
       },
+    ]);
+    // countDistinct counts the groups of the value in its own branch, never building a set
+    // of every distinct value in one document.
+    expect(pipeline[1].$facet.distinct_a2).toEqual([
+      { $group: { _id: '$name' } },
+      { $match: { _id: { $nin: [null, '', []] } } },
+      { $count: 'count' },
+    ]);
+  });
+
+  test('countDistinct needs a groupable field', () => {
+    expect(() => compile({ view: { aggregates: { amount: 'countDistinct' } } })).toThrow(
+      'MongoDBTableQuery aggregate "countDistinct" on "amount" groups by its values, so the field needs "groupable: true".'
+    );
+  });
+
+  test('group levels count distinct values per group', () => {
+    const { pipeline } = compile({
+      view: { group: [{ key: 'stage' }], aggregates: { owner: 'countDistinct' } },
+    });
+    expect(pipeline[1].$facet.groups.slice(0, 2)).toEqual([
+      {
+        $group: {
+          _id: '$stage',
+          count: { $sum: 1 },
+          a0: { $addToSet: { $cond: [isEmpty('owner.name'), '$$REMOVE', '$owner.name'] } },
+        },
+      },
+      { $addFields: { a0: { $size: '$a0' } } },
+    ]);
+    expect(pipeline[1].$facet.aggregates).toEqual([{ $group: { _id: null } }]);
+    expect(pipeline[1].$facet.distinct_a0).toEqual([
+      { $group: { _id: '$owner.name' } },
+      { $match: { _id: { $nin: [null, '', []] } } },
+      { $count: 'count' },
     ]);
   });
 
@@ -363,6 +398,19 @@ describe('aggregates', () => {
     expect(pipeline[1].$facet.aggregates).toEqual([
       { $group: { _id: null, a0: { $avg: '$amount' } } },
     ]);
+  });
+});
+
+describe('options', () => {
+  test('the aggregation runs with a default maxTimeMS of 10 seconds', () => {
+    expect(compile({}).options).toEqual({ maxTimeMS: 10000 });
+  });
+
+  test('options override the default maxTimeMS and pass through', () => {
+    expect(compile({ options: { maxTimeMS: 500, allowDiskUse: true } }).options).toEqual({
+      maxTimeMS: 500,
+      allowDiskUse: true,
+    });
   });
 });
 

@@ -70,7 +70,7 @@ const orgOneDocs = documents.filter((doc) => doc.org_id === 'org_1');
 
 const fields = {
   org_id: { type: 'text' },
-  name: { type: 'text', search: true },
+  name: { type: 'text', search: true, groupable: true },
   stage: { type: 'tag', groupable: true },
   owner: { type: 'text', path: 'owner.name', search: true, groupable: true },
   owner_id: { type: 'relation', groupable: true },
@@ -420,6 +420,11 @@ describe('aggregates', () => {
 
   test('countDistinct leaves out empty values', async () => {
     const res = await query({
+      fields: {
+        ...fields,
+        note: { type: 'text', groupable: true },
+        tags: { type: 'tags', groupable: true },
+      },
       view: {
         aggregates: { note: 'countDistinct', owner: 'countDistinct', tags: 'countDistinct' },
       },
@@ -427,6 +432,20 @@ describe('aggregates', () => {
     });
     // tags counts distinct arrays: [], ['vip', 'new'] and ['vip', 'renewal'], less the empty one.
     expect(res.aggregates).toEqual({ note: 1, owner: 2, tags: 2 });
+  });
+
+  test('countDistinct per group and over the whole set', async () => {
+    const res = await query({
+      view: { group: [{ key: 'stage' }], aggregates: { owner: 'countDistinct' } },
+      groupPath: [],
+    });
+    expect(res.aggregates).toEqual({ owner: 2 });
+    // Stage and owner cycle together: lead deals are Ada's, won deals Grace's, lost unowned.
+    expect(res.groups.map((group) => [group.key, group.aggregates.owner])).toEqual([
+      ['lead', 1],
+      ['lost', 0],
+      ['won', 1],
+    ]);
   });
 
   test('aggregates of an empty result are zero or null', async () => {

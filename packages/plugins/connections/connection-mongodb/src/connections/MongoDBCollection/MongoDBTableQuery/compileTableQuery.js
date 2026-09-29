@@ -29,6 +29,9 @@ import validateRows from './validateRows.js';
 import validateView from './validateView.js';
 
 const DEFAULT_MAX_ROWS = 1000;
+// A table fetch runs on every scroll and filter change, so one that MongoDB can not answer
+// quickly is stopped rather than left running.
+const DEFAULT_MAX_TIME_MS = 10000;
 
 function pageStages({ startRow, endRow }) {
   const stages = [];
@@ -85,7 +88,16 @@ function compileTableQuery({ properties, now }) {
     compileGroupPathMatch({ groupPath: parsedGroupPath, group: parsedView.group, fieldsByKey }),
   ].filter((match) => match !== null);
 
-  const aggregates = compileAggregates({ aggregates: parsedView.aggregates, fieldsByKey });
+  const groupAggregates = compileAggregates({
+    aggregates: parsedView.aggregates,
+    fieldsByKey,
+    distinct: 'set',
+  });
+  const aggregates = compileAggregates({
+    aggregates: parsedView.aggregates,
+    fieldsByKey,
+    distinct: 'branch',
+  });
   const grouped = parsedGroupPath.length < parsedView.group.length;
   const facet = grouped
     ? compileGroupsFacet({
@@ -93,7 +105,7 @@ function compileTableQuery({ properties, now }) {
         groupPath: parsedGroupPath,
         fieldsByKey,
         rows,
-        aggregates,
+        aggregates: groupAggregates,
       })
     : {
         rows: [{ $sort: compileSort({ sort: parsedView.sort, fieldsByKey }) }, ...pageStages(rows)],
@@ -104,10 +116,12 @@ function compileTableQuery({ properties, now }) {
       { $group: { _id: null, ...aggregates.accumulators } },
       ...aggregates.stages,
     ];
+    Object.assign(facet, aggregates.distinctBranches);
   }
 
   return {
     grouped,
+    options: { maxTimeMS: DEFAULT_MAX_TIME_MS, ...(properties.options ?? {}) },
     pipeline: [...pipeline, ...matches.map((match) => ({ $match: match })), { $facet: facet }],
     specs: aggregates.specs,
   };
