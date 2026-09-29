@@ -34,8 +34,9 @@ function buildInputs(inputs) {
 // The column config the add-column picker submits (onColumnAdd, onColumnUpdate): `{ key, title,
 // type, kind, userDefined: true }` plus the chosen kind's keys (design E2), from the picker's
 // draft. Input columns are editable, with their field under `inputFieldPrefix` when the table
-// sets one. An ai column's output type is its column type, and its
-// inputs are the columns its prompt references (syncPromptInputs keeps them in step).
+// sets one. An ai column's output type is its column type, its inputs are the columns its prompt
+// references (syncPromptInputs keeps them in step), and a tag or tags answer's options are
+// `{ value, color }`, each colour a preset tone (assignOptionColors).
 function buildColumnConfig({ draft, key, inputFieldPrefix = null }) {
   const column = {
     key,

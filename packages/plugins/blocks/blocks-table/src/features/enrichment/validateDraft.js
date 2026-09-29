@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 import findTemplateProblem from '@lowdefy/blocks-antd/table/findTemplateProblem.js';
+import findTemplateRefs from '@lowdefy/blocks-antd/table/findTemplateRefs.js';
 
 function missingInputs({ draft, provider }) {
   return (provider?.inputs ?? [])
@@ -28,10 +29,32 @@ function missingInputs({ draft, provider }) {
     .map((input) => input.title ?? input.key);
 }
 
+function unreadableInputs({ draft, inputKeys }) {
+  const keys = new Set(inputKeys);
+  const mapped = Object.values(draft.inputs ?? {})
+    .filter((input) => input?.mode !== 'value' && type.isString(input?.column))
+    .map((input) => input.column)
+    .filter((key) => key !== '');
+  const referenced = draft.kind === 'ai' ? findTemplateRefs(draft.prompt) : [];
+  return [...new Set([...mapped, ...referenced])].filter((key) => !keys.has(key));
+}
+
+function unreadableProblem({ draft, inputKeys }) {
+  const unreadable = unreadableInputs({ draft, inputKeys });
+  if (unreadable.length === 0) return null;
+  return `An input can not read ${unreadable
+    .map((key) => `"${key}"`)
+    .join(
+      ', '
+    )}: use an input, data, enrichment or AI column (formula and extract columns compute in the browser).`;
+}
+
 // Why the add-column picker cannot submit its draft yet, or null: a title, then what the kind
 // needs (a template, a provider with its required inputs mapped, a prompt, a source column).
-// Templates and prompts only take `{{ column }}` placeholders (findTemplateProblem).
-function validateDraft({ draft, provider }) {
+// Templates and prompts only take `{{ column }}` placeholders (findTemplateProblem), and an
+// enrichment or ai column only reads the columns the server can read (`inputKeys`, from
+// isEnrichmentInputColumn: not formula or extract columns), as the server's column check.
+function validateDraft({ draft, provider, inputKeys }) {
   if (draft.title.trim() === '') return 'Enter a column title.';
   switch (draft.kind) {
     case 'formula':
@@ -40,11 +63,12 @@ function validateDraft({ draft, provider }) {
     case 'enrichment': {
       if (!provider) return 'Choose a provider.';
       const missing = missingInputs({ draft, provider });
-      return missing.length > 0 ? `Map the required inputs: ${missing.join(', ')}.` : null;
+      if (missing.length > 0) return `Map the required inputs: ${missing.join(', ')}.`;
+      return unreadableProblem({ draft, inputKeys });
     }
     case 'ai':
       if (draft.prompt.trim() === '') return 'Enter a prompt.';
-      return findTemplateProblem(draft.prompt);
+      return findTemplateProblem(draft.prompt) ?? unreadableProblem({ draft, inputKeys });
     case 'extract':
       return type.isString(draft.source) ? null : 'Choose the column to extract from.';
     default:

@@ -14,24 +14,11 @@
   limitations under the License.
 */
 
-// A fresh add-column picker draft. The picker edits one flat draft for every kind (so switching
-// kinds keeps what was typed); buildColumnConfig picks the keys the chosen kind uses.
-function createDraft({ kind = 'input', provider = null } = {}) {
-  return {
-    kind,
-    provider,
-    title: '',
-    type: 'text',
-    template: '',
-    inputs: {},
-    output: '',
-    // An AI tag answer's options, `[{ value, color }]` (assignOptionColors).
-    outputOptions: [],
-    prompt: '',
-    autoRun: false,
-    source: null,
-    path: '',
-  };
+// The class of a special column's cells, in the header and in every row, so a header control
+// (the select-all checkbox) lines up with the rows' (the row checkboxes): the column's own
+// `cellClassName`, or `lf-table-select` (centred, no padding).
+function getSpecialCellClass(col) {
+  return `lf-table-gridcell ${col.cellClassName ?? 'lf-table-select'}`;
 }
 
-export default createDraft;
+export default getSpecialCellClass;

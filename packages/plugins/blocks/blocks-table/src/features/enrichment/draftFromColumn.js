@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
 
+import assignOptionColors from './assignOptionColors.js';
 import createDraft from './createDraft.js';
 import getDraftKind from './getDraftKind.js';
 import getDraftType from './getDraftType.js';
@@ -45,7 +46,9 @@ function draftFromColumn({ raw, column }) {
     template: raw.template ?? '',
     inputs: inputsToDraft(raw.inputs),
     output: type.isString(raw.output) ? raw.output : '',
-    outputOptions: type.isArray(raw.output?.options) ? raw.output.options : [],
+    outputOptions: type.isArray(raw.output?.options)
+      ? assignOptionColors({ values: raw.output.options, previous: raw.output.options })
+      : [],
     prompt: raw.prompt ?? '',
     autoRun: raw.autoRun === true,
     source: raw.source ?? null,

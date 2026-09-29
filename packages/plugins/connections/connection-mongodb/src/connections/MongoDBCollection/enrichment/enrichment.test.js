@@ -264,6 +264,30 @@ describe('input sources and cell inputs', () => {
     );
   });
 
+  test('a column input from a formula or extract column is refused, even when a field shares its key', () => {
+    const defs = parse([
+      ...columnDefs,
+      { key: 'city', kind: 'extract', source: 'email', path: 'city' },
+      {
+        key: 'pitch',
+        kind: 'ai',
+        prompt: '{{ first }} {{ city }}',
+        inputs: { first: { column: 'first' }, city: { column: 'city' } },
+      },
+    ]);
+    const fields = normalizeFields({ fields: { first: { type: 'text' }, city: { type: 'text' } } });
+    expect(() =>
+      resolveInputSources({
+        columnDef: defs.get('pitch'),
+        columnDefsByKey: defs,
+        fieldsByKey: fields,
+        requestType,
+      })
+    ).toThrow(
+      'TestRequest column "pitch" input "first" reads formula column "first", which computes in the browser and is never stored.'
+    );
+  });
+
   test('resolves the inputs of a row whose inputs are ready', () => {
     const doc = {
       company: { name: 'Acme' },

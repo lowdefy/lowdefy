@@ -184,7 +184,7 @@ test('invalid columns are refused with the reason', async ({ request }) => {
         provider: 'company_lookup',
         inputs: { domain: { column: 'employees' } },
       },
-      'Input "domain" reads "employees", which is not a column the server can read.',
+      'Input "domain" reads the extract column "employees", which computes in the browser, so the server can not read it.',
     ],
     [
       {
@@ -218,7 +218,16 @@ test('invalid columns are refused with the reason', async ({ request }) => {
     ],
     [
       { key: 'x', kind: 'ai', prompt: 'Pick', output: { type: 'tag', options: [] } },
-      'AI answer options are a list of text options, for a tag or tags answer.',
+      'AI answer options are a list of text options or { value, color } with a tone name, for a tag or tags answer.',
+    ],
+    [
+      {
+        key: 'x',
+        kind: 'ai',
+        prompt: 'Pick',
+        output: { type: 'tag', options: [{ value: 'a', color: 'url(https://example.test/a)' }] },
+      },
+      'AI answer options are a list of text options or { value, color } with a tone name, for a tag or tags answer.',
     ],
     [
       { key: 'x', kind: 'ai', prompt: 'Pick', output: { type: 'email' } },

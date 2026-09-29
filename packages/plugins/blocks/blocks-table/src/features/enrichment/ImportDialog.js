@@ -65,7 +65,29 @@ function FileStep({ onParsed }) {
   );
 }
 
-function MappingStep({ columns, csv, mapping, setMapping }) {
+const SUGGESTION_LABELS = {
+  synonym: 'Suggested',
+  similar: 'Close match',
+};
+
+// A note beside a header's column while it still holds a suggestion that is not the column's own
+// name: "Suggested" (a synonym, "Website" for "Company domain") or "Close match" (a spelling).
+// Choosing another column in the select removes it.
+function SuggestionNote({ suggestion, target }) {
+  const label = SUGGESTION_LABELS[suggestion?.reason];
+  if (label === undefined || suggestion.target !== target) return null;
+  return (
+    <span
+      className="lf-enrich-import-suggestion"
+      data-lf-import-suggestion={suggestion.reason}
+      title="Matched from the CSV header. Choose another column to change it."
+    >
+      {label}
+    </span>
+  );
+}
+
+function MappingStep({ columns, csv, mapping, setMapping, suggestions }) {
   const options = [
     ...columns.map((column) => ({ value: column.key, label: htmlToText(column.title) })),
     { value: NEW_COLUMN, label: 'New text column' },
@@ -91,20 +113,24 @@ function MappingStep({ columns, csv, mapping, setMapping }) {
               <td>{header || <em>(no header)</em>}</td>
               <td className="lf-enrich-muted">{csv.records[0]?.[index] ?? ''}</td>
               <td>
-                <Select
-                  aria-label={`Column for ${header}`}
-                  data-lf-import-map={index}
-                  onChange={(target) => {
-                    const next = [...mapping];
-                    next[index] = target;
-                    setMapping(next);
-                  }}
-                  options={options}
-                  popupMatchSelectWidth={false}
-                  size="small"
-                  style={{ minWidth: 180 }}
-                  value={mapping[index]}
-                />
+                <div className="lf-enrich-import-target">
+                  <Select
+                    aria-label={`Column for ${header}`}
+                    data-lf-import-map={index}
+                    onChange={(target) => {
+                      const next = [...mapping];
+                      next[index] = target;
+                      setMapping(next);
+                    }}
+                    options={options}
+                    popupMatchSelectWidth={false}
+                    showSearch={{ optionFilterProp: 'label' }}
+                    size="small"
+                    style={{ minWidth: 180 }}
+                    value={mapping[index]}
+                  />
+                  <SuggestionNote suggestion={suggestions[index]} target={mapping[index]} />
+                </div>
               </td>
             </tr>
           ))}
@@ -115,13 +141,14 @@ function MappingStep({ columns, csv, mapping, setMapping }) {
 }
 
 // The CSV import dialog (`importCsv: true`, design E6): parse the file in the browser in slices
-// (readCsvFile: at most 50 MB and 100,000 rows), map its headers to input columns or new text columns (matched by key or title
-// first), then send the rows through onImport in batches of 500 with progress, stopping at the
+// (readCsvFile: at most 50 MB and 100,000 rows), map its headers to input columns or new text columns (matchCsvHeaders suggests
+// a column by its key or title, a synonym or a close spelling, marked until changed), then send the rows through onImport in batches of 500 with progress, stopping at the
 // first failed batch with its error. Loaded and mounted only while open.
 function ImportDialog({ api }) {
   const inputColumns = useMemo(() => getInputColumns(api.config.columns), [api.config.columns]);
   const [csv, setCsv] = useState(null);
   const [mapping, setMapping] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
   const [progress, setProgress] = useState(null);
   const [result, setResult] = useState(null);
   const running = progress !== null && result === null;
@@ -129,7 +156,9 @@ function ImportDialog({ api }) {
 
   function onParsed(parsed) {
     setCsv(parsed);
-    setMapping(matchCsvHeaders({ headers: parsed.headers, columns: inputColumns }));
+    const matches = matchCsvHeaders({ headers: parsed.headers, columns: inputColumns });
+    setSuggestions(matches);
+    setMapping(matches.map((match) => match.target));
   }
   async function start() {
     const built = buildImportRows({
@@ -184,7 +213,13 @@ function ImportDialog({ api }) {
       <div className="lf-enrich-import" data-lf-import-dialog="">
         {csv === null ? <FileStep onParsed={onParsed} /> : null}
         {csv !== null && progress === null ? (
-          <MappingStep columns={inputColumns} csv={csv} mapping={mapping} setMapping={setMapping} />
+          <MappingStep
+            columns={inputColumns}
+            csv={csv}
+            mapping={mapping}
+            setMapping={setMapping}
+            suggestions={suggestions}
+          />
         ) : null}
         {progress !== null ? (
           <div data-lf-import-progress={`${progress.imported}/${progress.total}`}>

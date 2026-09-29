@@ -42,6 +42,11 @@ _js:
     ];
     const inputTypes = ['text', 'email', 'phone', 'url', 'number', 'currency', 'date', 'boolean'];
     const aiOutputTypes = ['text', 'number', 'boolean', 'tag', 'tags'];
+    // The tag tones an option colour can name (the Table's tag tones).
+    const tones = [
+      'red', 'volcano', 'orange', 'gold', 'yellow', 'lime', 'green', 'cyan', 'blue', 'geekblue',
+      'purple', 'magenta', 'pink', 'success', 'processing', 'info', 'warning', 'error', 'default',
+    ];
     // Formulas and AI prompts only take {{ column }} placeholders, filled in as plain text: a
     // template engine would run what users typed as code (on the server for a prompt, in every
     // viewer's browser for a formula). The Table refuses the same.
@@ -96,7 +101,13 @@ _js:
           errors.push(`Input "${param}" should be { column } or { value }.`);
           return;
         }
-        if (isColumn && !(input.column in fields) && !isRunnable(byKey.get(input.column))) {
+        const other = byKey.get(input.column);
+        // Formula and extract values are never stored, even when a field shares the key.
+        if (isColumn && (other?.kind === 'formula' || other?.kind === 'extract')) {
+          errors.push(`Input "${param}" reads the ${other.kind} column "${input.column}", which computes in the browser, so the server can not read it.`);
+          return;
+        }
+        if (isColumn && !(input.column in fields) && !isRunnable(other)) {
           errors.push(`Input "${param}" reads "${input.column}", which is not a column the server can read.`);
         }
       });
@@ -191,15 +202,30 @@ _js:
         errors.push(`The AI answer type should be one of ${aiOutputTypes.join(', ')}.`);
       }
       const hasOptions = output.options !== undefined && output.options !== null;
+      // An option is its text, or { value, color } with a tone name for its colour: the Table
+      // paints option colours in every viewer's browser, so never a free CSS value.
+      const isOption = (option) => {
+        if (typeof option === 'string') return option.length <= 200;
+        if (option === null || typeof option !== 'object' || Array.isArray(option)) return false;
+        const keys = Object.keys(option);
+        return (
+          typeof option.value === 'string' &&
+          option.value.length <= 200 &&
+          keys.every((name) => name === 'value' || name === 'color') &&
+          (option.color === undefined || tones.includes(option.color))
+        );
+      };
       if (
         hasOptions &&
         (!['tag', 'tags'].includes(output.type) ||
           !Array.isArray(output.options) ||
           output.options.length === 0 ||
           output.options.length > 100 ||
-          !output.options.every((option) => typeof option === 'string' && option.length <= 200))
+          !output.options.every(isOption))
       ) {
-        errors.push('AI answer options are a list of text options, for a tag or tags answer.');
+        errors.push(
+          'AI answer options are a list of text options or { value, color } with a tone name, for a tag or tags answer.'
+        );
       }
       // An ai column calls the built-in ai provider (enrich_ai) unless it names a listed one.
       const provider = column.provider ?? 'ai';

@@ -108,8 +108,9 @@ test('a column run shows its cells go queued, running and done, live', async ({
     'data-lf-enrich-status',
     'running'
   );
-  await expect(header(page, 'company').locator('[data-lf-enrich-progress]')).toContainText(
-    'running'
+  await expect(header(page, 'company').locator('[data-lf-enrich-progress]')).toHaveAttribute(
+    'aria-label',
+    /running/
   );
   await expect(status(page, 'Ada Brightwell', 'company')).toHaveAttribute(
     'data-lf-enrich-status',
@@ -149,10 +150,12 @@ test('a failing cell is retried, then shows its error on hover', async ({ page, 
     'error'
   );
   const marker = cell(page, 'Gina Brooks', 'company').locator('[data-lf-enrich-error]');
-  await expect(marker).toHaveAttribute('data-lf-enrich-error', /500/);
+  await expect(marker).toHaveAttribute('data-lf-enrich-error', 'Provider error (500)');
   await cell(page, 'Gina Brooks', 'company').hover();
   await marker.hover();
-  await expect(page.getByRole('tooltip')).toContainText('500');
+  await expect(page.locator('[data-lf-enrich-error-tooltip]')).toHaveText(
+    'Failed after 3 attemptsProvider error (500)'
+  );
   expect(await mock.log(request, 'company')).toHaveLength(3);
 });
 
@@ -324,7 +327,7 @@ test('an AI column from the picker answers with one of its options', async ({ pa
     .locator('[data-lf-picker-template="prompt"] [data-lf-picker-chip="company"]')
     .click();
   await search(page, picker(page).locator('[data-lf-picker-field="type"] .ant-select'), 'tag');
-  const options = picker(page).locator('[data-lf-picker-field="outputOptions"] input');
+  const options = picker(page).getByLabel('Answer options', { exact: true });
   for (const option of ['Software', 'Logistics', 'Retail']) {
     await options.fill(option);
     await options.press('Enter');
@@ -338,6 +341,12 @@ test('an AI column from the picker answers with one of its options', async ({ pa
   await page.locator('.ant-dropdown:visible').getByRole('menuitem', { name: 'Segment' }).click();
   await expect(cell(page, 'Ada Brightwell', 'segment')).toHaveText('Logistics');
   await expect(cell(page, 'Ben Quill', 'segment')).toHaveText('Software');
+  // Each option has its own colour.
+  const tagFill = (name) =>
+    cell(page, name, 'segment')
+      .locator('.lf-table-tag')
+      .evaluate((element) => getComputedStyle(element).backgroundColor);
+  expect(await tagFill('Ada Brightwell')).not.toBe(await tagFill('Ben Quill'));
   await expect(status(page, 'Cara Tidewell', 'segment')).toHaveAttribute(
     'data-lf-enrich-status',
     'none'

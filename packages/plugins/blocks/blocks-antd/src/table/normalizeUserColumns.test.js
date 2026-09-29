@@ -134,6 +134,34 @@ test('normalizeColumns keeps the layout, feature flags and kind keys of user-def
   expect(column.options.map((option) => option.value)).toEqual(['a', 'b']);
 });
 
+test('a user-defined column takes tone names as option colours, and nothing else', () => {
+  const tagged = userColumn({
+    type: 'status',
+    options: [{ value: 'a', color: 'green' }, { value: 'b', color: 'error' }, { value: 'c' }],
+  });
+  expect(tagged.invalid).toBeUndefined();
+  const ai = userColumn({
+    kind: 'ai',
+    prompt: '{{ name }}',
+    inputs: { name: { column: 'name' } },
+    output: { type: 'tag', options: [{ value: 'x', color: 'purple' }] },
+  });
+  expect(ai.invalid).toBeUndefined();
+  expect(ai.options).toEqual([{ value: 'x', label: 'x', color: 'purple' }]);
+  const css = userColumn({
+    type: 'status',
+    options: [{ value: 'a', color: 'url(https://example.test/x.png)' }],
+  });
+  expect(css.invalid).toContain(
+    'User-defined column "u" option "a" has colour "url(https://example.test/x.png)". Use a tone name:'
+  );
+  // Declared columns keep any CSS colour.
+  const declared = normalizeColumns({
+    columns: [{ key: 'd', type: 'status', options: [{ value: 'a', color: '#13c2c2' }] }],
+  }).columnsByKey.d;
+  expect(declared.options[0].color).toBe('#13c2c2');
+});
+
 test('declared columns keep html, image, cell templates and template tooltips', () => {
   const { columnsByKey } = normalizeColumns({
     columns: [

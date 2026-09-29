@@ -29,7 +29,7 @@ function isSelectTarget(target) {
 }
 
 // Table's "+ New row" (`addRow: true`): a row under the grid that opens an inline editor for
-// the input columns. Enter (or Add) commits it through addNewRow: the row shows in the table,
+// the visible input columns. Enter (or Add) commits it through addNewRow: the row shows in the table,
 // saving, while onRowAdd runs; on success the editor clears for the next row, on failure it
 // keeps the values and shows the error. Esc (or Cancel) closes it. The antd controls mount only
 // while it is open.
@@ -39,10 +39,14 @@ function NewRow({ api }) {
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(0);
   const { columns } = api.config;
+  const { columnVisibility } = api.state;
+  // The visible input columns: a column the view hides is not asked for.
   const inputColumns = useMemo(
     () =>
-      getInputColumns(columns).map((column) => ({ ...column, title: htmlToText(column.title) })),
-    [columns]
+      getInputColumns(columns)
+        .filter((column) => columnVisibility[column.key] !== false)
+        .map((column) => ({ ...column, title: htmlToText(column.title) })),
+    [columns, columnVisibility]
   );
   const text = api.config.enrichment.addRowText ?? 'New row';
 

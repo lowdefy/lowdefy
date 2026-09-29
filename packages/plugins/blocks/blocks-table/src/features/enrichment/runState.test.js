@@ -19,7 +19,8 @@ import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
 import readColumnValue from '@lowdefy/blocks-antd/table/readColumnValue.js';
 
 import createRunCounter from './createRunCounter.js';
-import formatRunCounts from './formatRunCounts.js';
+import getProgressMode from './getProgressMode.js';
+import getProgressParts from './getProgressParts.js';
 import getRunState from './getRunState.js';
 import readServerRunCounts from './readServerRunCounts.js';
 
@@ -147,14 +148,39 @@ test('createRunCounter reads every row again when the run columns change', () =>
   expect(counts.get('phone').ok).toBe(0);
 });
 
-test('formatRunCounts lists running, queued and errors', () => {
-  expect(formatRunCounts({ running: 12, queued: 0, error: 3, ok: 5, empty: 0 })).toBe(
-    '12 running · 3 errors'
-  );
-  expect(formatRunCounts({ running: 0, queued: 120, error: 1, ok: 0, empty: 0 })).toBe(
-    '120 queued · 1 error'
-  );
-  expect(formatRunCounts({ running: 0, queued: 0, error: 0, ok: 9, empty: 2 })).toBe('');
+test('getProgressParts lists running, queued and errors, toned by the most severe', () => {
+  expect(getProgressParts({ running: 12, queued: 0, error: 3, ok: 5, empty: 0 })).toEqual({
+    parts: [
+      { status: 'running', count: '12', text: '12 running' },
+      { status: 'error', count: '3', text: '3 errors' },
+    ],
+    status: 'error',
+    text: '12 running · 3 errors',
+    tone: 'error',
+  });
+  expect(getProgressParts({ running: 2, queued: 120, error: 0, ok: 0, empty: 0 })).toMatchObject({
+    text: '2 running · 120 queued',
+    status: 'running',
+    tone: 'processing',
+  });
+  expect(getProgressParts({ running: 0, queued: 1, error: 0, ok: 0, empty: 0 })).toMatchObject({
+    text: '1 queued',
+    tone: 'default',
+  });
+  expect(getProgressParts({ running: 0, queued: 0, error: 0, ok: 9, empty: 2 })).toBe(null);
+});
+
+test('getProgressMode takes the largest chip form that fits beside the title', () => {
+  // Every character 6px wide.
+  const measure = { smallText: (text) => text.length * 6 };
+  const progress = getProgressParts({ running: 3, queued: 1, error: 1, ok: 0, empty: 0 });
+  // Full: inset 14 + icon 12 + gap 3 + 30 characters.
+  expect(getProgressMode({ progress, measure, room: 209 })).toBe('full');
+  // Compact: inset 14 + 3 × (icon 12 + gap 3 + one digit 6) + 2 part gaps of 6.
+  expect(getProgressMode({ progress, measure, room: 208 })).toBe('compact');
+  expect(getProgressMode({ progress, measure, room: 89 })).toBe('compact');
+  expect(getProgressMode({ progress, measure, room: 88 })).toBe('dot');
+  expect(getProgressMode({ progress, measure, room: -20 })).toBe('dot');
 });
 
 test('readServerRunCounts reads counts from the response aggregates', () => {

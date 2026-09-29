@@ -16,15 +16,26 @@
 
 import React, { useState } from 'react';
 import { type } from '@lowdefy/helpers';
+import resolveTagTone from '@lowdefy/block-utils/format/resolveTagTone.js';
 
 import formatJsonPreview from './formatJsonPreview.js';
 import getJsonChildren from './getJsonChildren.js';
+import getJsonValueKind from './getJsonValueKind.js';
+import RunIcon from './RunIcon.js';
 
 const PAGE = 100;
 
+// Value colours: tag tone text colours, which read at 4.5:1 on light and dark panels.
+const TREE_STYLE = {
+  '--lf-json-string': resolveTagTone('green').text,
+  '--lf-json-number': resolveTagTone('geekblue').text,
+  '--lf-json-boolean': resolveTagTone('purple').text,
+};
+
 // One node of the raw result tree: a toggle for objects and arrays (children render only once
-// expanded, a page of 100 at a time), the key, a preview, and "Add as column" (an extract
-// column for this node's path).
+// expanded, a page of 100 at a time), the key, a preview coloured by its kind and cut to the
+// panel's width (the whole value in its title), and a "+" that adds the node as an extract
+// column, always shown (muted until the row is hovered or it has focus).
 function JsonNode({ depth, label, onAdd, path, value }) {
   const [open, setOpen] = useState(depth === 0);
   const [limit, setLimit] = useState(PAGE);
@@ -60,16 +71,28 @@ function JsonNode({ depth, label, onAdd, path, value }) {
         )}
         <span className="lf-enrich-json-key">{label}</span>
         {open && expandable ? null : (
-          <span className="lf-enrich-json-preview">{formatJsonPreview(value)}</span>
+          <span
+            className="lf-enrich-json-preview"
+            data-kind={getJsonValueKind(value)}
+            title={formatJsonPreview(value)}
+          >
+            {formatJsonPreview(value)}
+          </span>
         )}
         <button
+          aria-label={`Add ${label} as column`}
           className="lf-enrich-json-add"
           data-lf-json-add={path}
           disabled={adding}
           onClick={add}
+          title="Add as column"
           type="button"
         >
-          {adding ? 'Adding…' : 'Add as column'}
+          {adding ? (
+            <span aria-hidden="true" className="lf-enrich-spinner" />
+          ) : (
+            <RunIcon name="add" />
+          )}
         </button>
       </div>
       {open && children.length > 0 ? (
@@ -103,10 +126,17 @@ function JsonNode({ depth, label, onAdd, path, value }) {
 }
 
 // A cell's raw provider result as a collapsible tree (the details panel). The root is open;
-// every node, leaf or object, can be added as an extract column.
+// every node, leaf or object, can be added as an extract column. Keys, strings, numbers and
+// booleans each have their colour.
 function JsonTree({ onAdd, value }) {
   return (
-    <ul aria-label="Raw result" className="lf-enrich-json" data-lf-json-tree="" role="tree">
+    <ul
+      aria-label="Raw result"
+      className="lf-enrich-json"
+      data-lf-json-tree=""
+      role="tree"
+      style={TREE_STYLE}
+    >
       <JsonNode depth={0} label="result" onAdd={onAdd} path="" value={value} />
     </ul>
   );

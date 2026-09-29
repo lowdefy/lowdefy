@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import TAG_TONES from '@lowdefy/block-utils/format/tagTones.js';
 import { type } from '@lowdefy/helpers';
 
 import AGGREGATE_LABELS from './aggregateLabels.js';
@@ -179,6 +180,21 @@ function pickUserColumn(column) {
   return picked;
 }
 
+// A user-defined column's option colours are tone names (preset colours and antd status names):
+// a free CSS value from one user's config would be painted in every viewer's browser, and a
+// status dot's background could load a URL.
+function checkOptionColors(leaf) {
+  const custom = (leaf.options ?? []).find(
+    (option) => !type.isNone(option.color) && !Object.hasOwn(TAG_TONES, option.color)
+  );
+  if (custom === undefined) return;
+  throw new Error(
+    `User-defined column "${leaf.key}" option "${custom.value}" has colour ${JSON.stringify(
+      custom.color
+    )}. Use a tone name: ${Object.keys(TAG_TONES).join(', ')}.`
+  );
+}
+
 // A user-defined column (`userDefined: true`) is runtime data a user wrote: it keeps only the
 // keys in USER_COLUMN_KEYS and a type in USER_COLUMN_TYPES (with no type it is text, whatever
 // defaultColumn sets), and a config error makes it an error column (invalidateColumn) instead of
@@ -197,6 +213,7 @@ function normalizeUserLeaf({ column, defaults, path, providerIds, index }) {
         }". Use one of: ${USER_COLUMN_TYPES.join(', ')}.`
       );
     }
+    checkOptionColors(leaf);
     checkProvider({ leaf, providerIds });
     return leaf;
   } catch (error) {

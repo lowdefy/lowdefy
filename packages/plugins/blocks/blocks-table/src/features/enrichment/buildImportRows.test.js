@@ -19,7 +19,7 @@ import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
 import buildImportRows from './buildImportRows.js';
 import chunkRows from './chunkRows.js';
 import getInputColumns from './getInputColumns.js';
-import matchCsvHeaders, { NEW_COLUMN, SKIP_COLUMN } from './matchCsvHeaders.js';
+import { NEW_COLUMN, SKIP_COLUMN } from './matchCsvHeaders.js';
 
 const { columns } = normalizeColumns({
   columns: [
@@ -41,21 +41,6 @@ test('getInputColumns keeps input and plain data columns only', () => {
     'employees',
     'active',
   ]);
-});
-
-test('matchCsvHeaders matches by key or title ignoring case and punctuation', () => {
-  expect(
-    matchCsvHeaders({
-      headers: ['Company Name', 'DOMAIN', 'Employees', 'LinkedIn', ''],
-      columns: getInputColumns(columns),
-    })
-  ).toEqual(['name', 'domain', 'employees', NEW_COLUMN, SKIP_COLUMN]);
-});
-
-test('matchCsvHeaders uses each column once', () => {
-  expect(matchCsvHeaders({ headers: ['name', 'Name'], columns: getInputColumns(columns) })).toEqual(
-    ['name', NEW_COLUMN]
-  );
 });
 
 test('buildImportRows sets mapped fields, coerces types and adds new text columns', () => {

@@ -14,24 +14,19 @@
   limitations under the License.
 */
 
-// A fresh add-column picker draft. The picker edits one flat draft for every kind (so switching
-// kinds keeps what was typed); buildColumnConfig picks the keys the chosen kind uses.
-function createDraft({ kind = 'input', provider = null } = {}) {
-  return {
-    kind,
-    provider,
-    title: '',
-    type: 'text',
-    template: '',
-    inputs: {},
-    output: '',
-    // An AI tag answer's options, `[{ value, color }]` (assignOptionColors).
-    outputOptions: [],
-    prompt: '',
-    autoRun: false,
-    source: null,
-    path: '',
-  };
+import { type } from '@lowdefy/helpers';
+
+// The kind of a JSON tree node's value, which colours its preview: `string`, `number`,
+// `boolean`, `null`, `date`, `array` or `object`.
+function getJsonValueKind(value) {
+  if (type.isNone(value)) return 'null';
+  if (type.isArray(value)) return 'array';
+  if (type.isDate(value)) return 'date';
+  if (type.isObject(value)) return 'object';
+  if (type.isString(value)) return 'string';
+  if (type.isNumber(value)) return 'number';
+  if (type.isBoolean(value)) return 'boolean';
+  return 'string';
 }
 
-export default createDraft;
+export default getJsonValueKind;

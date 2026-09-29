@@ -17,6 +17,7 @@
 import { test, expect } from '@playwright/test';
 import { getBlock } from '@lowdefy/block-dev-e2e';
 
+import measureContrast from '../../../../e2e/measureContrast.js';
 import openTablePage from '../../../../e2e/openTablePage.js';
 
 // Enrichment tables (enrichment.e2e.yaml). Cells carry their run state in
@@ -44,6 +45,19 @@ const selectRow = (page, rowKey, blockId = 'enrich') =>
 // Enrichment cells hold links (email); a click beside the value opens the details panel.
 const clickCell = (page, rowKey, key) =>
   cell(page, rowKey, key).click({ position: { x: 180, y: 10 } });
+
+async function dragBy(page, locator, dx) {
+  await locator.scrollIntoViewIfNeeded();
+  const box = await locator.boundingBox();
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  for (let i = 1; i <= 10; i++) {
+    await page.mouse.move(x + (dx * i) / 10, y);
+  }
+  await page.mouse.up();
+}
 
 async function eventOf(page, name) {
   return JSON.parse(await getBlock(page, `ev_${name}`).textContent());
@@ -131,6 +145,27 @@ test.describe('Table enrichment', () => {
     );
   });
 
+  test('run state labels take the cell font size and sit on the row text baseline', async ({
+    page,
+  }) => {
+    // The bottom of each text's line box and its font size, beside the company cell's text.
+    const textBox = (locator) =>
+      locator.evaluate((element) => {
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+        const text = walker.nextNode();
+        const range = document.createRange();
+        range.selectNodeContents(text);
+        const box = range.getBoundingClientRect();
+        return { bottom: box.bottom, fontSize: getComputedStyle(text.parentElement).fontSize };
+      });
+    for (const rowKey of ['r2', 'r3', 'r4', 'r5']) {
+      const value = await textBox(cell(page, rowKey, 'company'));
+      const label = await textBox(state(page, rowKey, 'email'));
+      expect(label.fontSize, rowKey).toBe(value.fontSize);
+      expect(Math.abs(label.bottom - value.bottom), rowKey).toBeLessThan(1);
+    }
+  });
+
   test('an error cell shows its message in a tooltip on hover', async ({ page }) => {
     await expect(cell(page, 'r4', 'email').locator('[data-lf-enrich-error]')).toHaveAttribute(
       'data-lf-enrich-error',
@@ -138,7 +173,12 @@ test.describe('Table enrichment', () => {
     );
     await cell(page, 'r4', 'email').hover();
     await cell(page, 'r4', 'email').locator('[data-lf-enrich-error]').hover();
-    await expect(page.getByRole('tooltip')).toContainText('Rate limited by the provider');
+    // What failed and how often, then the message; below the cell, never over the row above.
+    const tooltip = page.locator('[data-lf-enrich-error-tooltip]');
+    await expect(tooltip).toHaveText('Failed after 3 attemptsRate limited by the provider');
+    const cellBox = await cell(page, 'r4', 'email').boundingBox();
+    const tooltipBox = await tooltip.boundingBox();
+    expect(tooltipBox.y).toBeGreaterThan(cellBox.y + cellBox.height / 2);
   });
 
   test('a done cell whose inputs changed since it ran is stale', async ({ page }) => {
@@ -185,12 +225,55 @@ test.describe('Table enrichment', () => {
   // ============================================
 
   test('enrichment headers count running, queued and failed cells', async ({ page }) => {
-    await expect(chip(page, 'email')).toHaveText('2 running · 1 queued · 1 error');
-    await expect(chip(page, 'summary')).toHaveText('1 running');
+    await expect(chip(page, 'email')).toHaveAttribute(
+      'aria-label',
+      '2 running · 1 queued · 1 error'
+    );
+    await expect(chip(page, 'summary')).toHaveAttribute('aria-label', '1 running');
     await expect(chip(page, 'company')).toHaveCount(0);
     await button(page, 'enrich_push_running').click();
-    await expect(chip(page, 'email')).toHaveText('4 running · 1 queued · 1 error');
+    await expect(chip(page, 'email')).toHaveAttribute(
+      'aria-label',
+      '4 running · 1 queued · 1 error'
+    );
   });
+
+  test('the header chip collapses to fit beside its title, which keeps its room', async ({
+    page,
+  }) => {
+    const email = chip(page, 'email');
+    const title = header(page, 'email').locator('.lf-table-header-title');
+    const handle = getBlock(page, 'enrich').locator('[data-lf-resize][data-col-key="email"]');
+    const titleFits = () => title.evaluate((element) => element.scrollWidth <= element.clientWidth);
+    // 190px: an icon and a count per status.
+    await expect(email).toHaveAttribute('data-lf-enrich-progress', 'compact');
+    await expect(email.locator('.lf-enrich-progress-part')).toHaveText(['2', '1', '1']);
+    expect(await titleFits()).toBe(true);
+    await dragBy(page, handle, 200);
+    await expect(email).toHaveAttribute('data-lf-enrich-progress', 'full');
+    await expect(email).toHaveText('2 running · 1 queued · 1 error');
+    expect(await titleFits()).toBe(true);
+    await dragBy(page, handle, -280);
+    await expect(email).toHaveAttribute('data-lf-enrich-progress', 'dot');
+    await expect(email).toHaveAttribute('title', '2 running · 1 queued · 1 error');
+    expect(await titleFits()).toBe(true);
+  });
+
+  for (const scheme of ['light', 'dark']) {
+    test(`the header chip takes its most severe status' tone, readable in ${scheme} mode`, async ({
+      page,
+    }) => {
+      await page.emulateMedia({ colorScheme: scheme });
+      // An error makes the chip red, running alone blue.
+      await expect(chip(page, 'email')).toHaveAttribute('data-tone', 'error');
+      await expect(chip(page, 'summary')).toHaveAttribute('data-tone', 'processing');
+      const contrasts = await getBlock(page, 'enrich')
+        .locator('[data-lf-enrich-progress]')
+        .evaluateAll(measureContrast);
+      const failing = Object.entries(contrasts).filter(([, ratio]) => ratio < 4.5);
+      expect(failing, JSON.stringify(contrasts)).toEqual([]);
+    });
+  }
 
   test('a deep applyTransaction update merges a partial _enrich push into the row', async ({
     page,
@@ -202,7 +285,7 @@ test.describe('Table enrichment', () => {
     // The row's other fields and the summary column's state survive the push.
     await expect(cell(page, 'r2', 'company')).toHaveText('Globex');
     await expect(state(page, 'r2', 'summary')).toHaveAttribute('data-lf-enrich-status', 'running');
-    await expect(chip(page, 'email')).toHaveText('2 running · 1 error');
+    await expect(chip(page, 'email')).toHaveAttribute('aria-label', '2 running · 1 error');
   });
 
   // ============================================
@@ -318,6 +401,9 @@ test.describe('Table enrichment', () => {
     await picker(page)
       .locator('[data-lf-picker-template="prompt"] [data-lf-picker-chip="company"]')
       .click();
+    // The chip hands focus back to the prompt, with the caret after the placeholder, a frame on.
+    await expect(prompt).toHaveValue('Which segment is {{ company }}');
+    await expect(prompt).toBeFocused();
     await prompt.press('End');
     await prompt.pressSequentially(' at ');
     await picker(page)
@@ -328,11 +414,18 @@ test.describe('Table enrichment', () => {
       'Changing the prompt does not make cells stale'
     );
     await search(page, picker(page).locator('[data-lf-picker-field="type"] .ant-select'), 'tag');
-    const options = picker(page).locator('[data-lf-picker-field="outputOptions"] input');
+    const options = picker(page).getByLabel('Answer options', { exact: true });
     await options.fill('smb');
     await options.press('Enter');
     await options.fill('enterprise');
     await options.press('Enter');
+    // Each option starts on its own tone; a colour select changes one.
+    await expect(picker(page).locator('.lf-enrich-option-chip')).toHaveText(['smb', 'enterprise']);
+    await expect(picker(page).locator('[data-lf-picker-option] .ant-select')).toHaveText([
+      'blue',
+      'green',
+    ]);
+    await pick(page, picker(page).getByLabel('Colour of enterprise'), 'red');
     expect((await previewConfig(page)).inputs).toEqual({
       company: { column: 'company' },
       domain: { column: 'domain' },
@@ -349,11 +442,47 @@ test.describe('Table enrichment', () => {
         userDefined: true,
         prompt: 'Which segment is {{ company }}?',
         inputs: { company: { column: 'company' } },
-        output: { type: 'tag', options: ['smb', 'enterprise'] },
+        output: {
+          type: 'tag',
+          options: [
+            { value: 'smb', color: 'blue' },
+            { value: 'enterprise', color: 'red' },
+          ],
+        },
         autoRun: false,
       },
       position: null,
     });
+  });
+
+  test('provider inputs and prompt chips only offer columns the server can read', async ({
+    page,
+  }) => {
+    await openPicker(page);
+    // A formula reads any column, formula and extract columns too.
+    await picker(page).locator('[data-lf-picker-kind="formula"]').click();
+    const chips = (name) =>
+      picker(page).locator(`[data-lf-picker-template="${name}"] [data-lf-picker-chip]`);
+    await expect(chips('template')).toHaveText([
+      'Company',
+      'Domain',
+      'Email',
+      'Summary',
+      'Linkedin',
+      'Label',
+    ]);
+    // Formula and extract values are never stored, so an AI prompt can not read them.
+    await picker(page).locator('[data-lf-picker-kind="ai"]').click();
+    await expect(chips('prompt')).toHaveText(['Company', 'Domain', 'Email', 'Summary']);
+    await picker(page).locator('[data-lf-picker-kind="provider:findEmail"]').click();
+    await picker(page).locator('[data-lf-picker-input="domain"] .ant-select').click();
+    await expect(dropdown(page).locator('.ant-select-item-option')).toHaveText([
+      'Company',
+      'Domain',
+      'Email',
+      'Summary',
+      'Literal value…',
+    ]);
   });
 
   test('the add-column picker adds an extract column', async ({ page }) => {
@@ -433,6 +562,20 @@ test.describe('Table enrichment', () => {
       mode: 'errors',
       selection: { all: true, except: [], filter: null, search: null },
     });
+  });
+
+  test('the Run submenu shows a flyout arrow, not an inline menu caret', async ({ page }) => {
+    const menu = await openMenu(page, 'email');
+    const run = menu.getByRole('menuitem', { name: 'Run', exact: true });
+    await expect(run.locator('.ant-dropdown-menu-submenu-arrow svg')).toHaveCount(1);
+    await expect(run.locator('.ant-menu-submenu-expand-icon')).toHaveCount(0);
+    await run.hover();
+    await expect(page.getByRole('menuitem', { name: 'Errors', exact: true })).toBeVisible();
+    // The arrow does not turn when the submenu opens (an inline menu's caret flips up).
+    const transform = await run
+      .locator('.ant-dropdown-menu-submenu-arrow svg')
+      .evaluate((element) => element.style.transform);
+    expect(transform).toBe('');
   });
 
   test('Run on a selection runs the selected rows', async ({ page }) => {
@@ -610,6 +753,33 @@ test.describe('Table enrichment', () => {
     expect(event.column.key).toBe('summary');
   });
 
+  test('Run selected and the new row editor leave out hidden columns', async ({ page }) => {
+    await menuItem(page, 'summary', 'Hide column');
+    await menuItem(page, 'domain', 'Hide column');
+    await selectRow(page, 'r1');
+    await page.locator('[data-lf-bulk-action="run"]').click();
+    await expect(page.locator('.ant-dropdown:visible').getByRole('menuitem')).toHaveText(['Email']);
+    await page.keyboard.press('Escape');
+    await getBlock(page, 'enrich').locator('[data-lf-new-row]').click();
+    await expect(
+      getBlock(page, 'enrich').locator('[data-lf-new-row-editor] [data-lf-new-row-field]')
+    ).toHaveText(['Company']);
+  });
+
+  test('a picker select near the bottom of a short window opens where it can be clicked', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 520 });
+    await openPicker(page);
+    await picker(page).locator('[data-lf-picker-kind="provider:findEmail"]').click();
+    const select = picker(page).locator('[data-lf-picker-input="name"] .ant-select');
+    await select.scrollIntoViewIfNeeded();
+    await pick(page, select, 'Company');
+    await expect(select).toHaveText('Company');
+    // The generated config is there for developers, closed by default.
+    await expect(picker(page).locator('details.lf-enrich-preview')).not.toHaveAttribute('open');
+  });
+
   // ============================================
   // CELL DETAILS PANEL
   // ============================================
@@ -625,6 +795,10 @@ test.describe('Table enrichment', () => {
     await expect(details(page).locator('[data-lf-details-timing="attempts"]')).toHaveText('1');
     await expect(details(page).locator('[data-lf-details-input="domain"]')).toHaveText(
       '"acme.com"'
+    );
+    // The provider's input title, then the column it reads.
+    await expect(details(page).locator('[data-lf-details-input-label="domain"]')).toHaveText(
+      'Domain ← Domain'
     );
     await expect(details(page).locator('[data-lf-json-node="email"]')).toContainText(
       '"ada@acme.com"'
@@ -666,6 +840,50 @@ test.describe('Table enrichment', () => {
     );
     await expect(details(page).locator('[data-lf-details-value]')).toHaveText('in/ada');
   });
+
+  test('the raw result tree colours values, cuts them to its width and always shows add', async ({
+    page,
+  }) => {
+    await clickCell(page, 'r1', 'email');
+    const node = (path) => details(page).locator(`[data-lf-json-node="${path}"]`);
+    const preview = (path) => node(path).locator('.lf-enrich-json-preview').first();
+    await expect(preview('email')).toHaveAttribute('data-kind', 'string');
+    await expect(preview('confidence')).toHaveAttribute('data-kind', 'number');
+    await expect(preview('verified')).toHaveAttribute('data-kind', 'boolean');
+    const colour = (locator) => locator.evaluate((element) => getComputedStyle(element).color);
+    const colours = new Set([
+      await colour(node('email').locator('.lf-enrich-json-key').first()),
+      await colour(preview('email')),
+      await colour(preview('confidence')),
+      await colour(preview('verified')),
+    ]);
+    expect(colours.size).toBe(4);
+    // A long string is cut by the panel's width, not a fixed length; its title holds all of it.
+    const bio = preview('bio');
+    await expect(bio).toHaveAttribute('title', /computer\."$/);
+    expect(await bio.evaluate((element) => element.scrollWidth > element.clientWidth)).toBe(true);
+    expect(await preview('email').evaluate((e) => e.scrollWidth <= e.clientWidth)).toBe(true);
+    // "+" is visible without hovering, named for screen readers and reachable by Tab.
+    const add = details(page).locator('[data-lf-json-add="confidence"]');
+    await expect(add).toBeVisible();
+    expect(await add.evaluate((element) => getComputedStyle(element).opacity)).toBe('1');
+    await expect(add).toHaveAttribute('aria-label', 'Add confidence as column');
+    await expect(add).toHaveAttribute('title', 'Add as column');
+    await add.focus();
+    await expect(add).toBeFocused();
+  });
+
+  for (const scheme of ['light', 'dark']) {
+    test(`raw result values read at 4.5:1 in ${scheme} mode`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme: scheme });
+      await clickCell(page, 'r1', 'email');
+      const contrasts = await details(page)
+        .locator('.lf-enrich-json-key, .lf-enrich-json-preview')
+        .evaluateAll(measureContrast);
+      const failing = Object.entries(contrasts).filter(([, ratio]) => ratio < 4.5);
+      expect(failing, JSON.stringify(contrasts)).toEqual([]);
+    });
+  }
 
   test('"Add as column" on a raw result node fires onColumnAdd with an extract column', async ({
     page,
@@ -821,6 +1039,25 @@ test.describe('Table enrichment', () => {
         newColumns: [],
       },
     ]);
+  });
+
+  test('CSV import suggests columns for synonyms, marked until changed', async ({ page }) => {
+    await getBlock(page, 'enrich').locator('[data-lf-toolbar-button="import"]').click();
+    const dialog = page.locator('[data-lf-import-dialog]');
+    await dialog.locator('[data-lf-import-file]').setInputFiles({
+      name: 'leads.csv',
+      mimeType: 'text/csv',
+      buffer: Buffer.from('Employer,Website,Notes\nAcme,acme.com,hi\n'),
+    });
+    const row = (header) => dialog.locator(`[data-lf-import-header="${header}"]`);
+    await expect(row('Employer').locator('.ant-select')).toHaveText('Company');
+    await expect(row('Employer').locator('[data-lf-import-suggestion]')).toHaveText('Suggested');
+    await expect(row('Website').locator('.ant-select')).toHaveText('Domain');
+    await expect(row('Notes').locator('.ant-select')).toHaveText('New text column');
+    await expect(row('Notes').locator('[data-lf-import-suggestion]')).toHaveCount(0);
+    // Overriding a suggestion removes its note.
+    await pick(page, row('Website').locator('.ant-select'), 'Skip');
+    await expect(row('Website').locator('[data-lf-import-suggestion]')).toHaveCount(0);
   });
 
   test('CSV import can remap a header and stops at a failed batch', async ({ page }) => {

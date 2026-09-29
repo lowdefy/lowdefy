@@ -15,6 +15,7 @@
 */
 
 import formatJsonPreview from './formatJsonPreview.js';
+import getJsonValueKind from './getJsonValueKind.js';
 import getJsonChildren from './getJsonChildren.js';
 import humanizePath from './humanizePath.js';
 import inferColumnType from './inferColumnType.js';
@@ -76,5 +77,18 @@ test('formatJsonPreview shows primitives as JSON and containers by size', () => 
   expect(formatJsonPreview(null)).toBe('null');
   expect(formatJsonPreview([1])).toBe('[1 item]');
   expect(formatJsonPreview({ a: 1, b: 2 })).toBe('{2 keys}');
-  expect(formatJsonPreview('y'.repeat(200))).toHaveLength(80);
+  // The tree cuts previews to its width with CSS; the text is only bounded.
+  expect(formatJsonPreview('y'.repeat(200))).toBe(`"${'y'.repeat(200)}"`);
+  expect(formatJsonPreview('y'.repeat(5000))).toHaveLength(2000);
+});
+
+test('getJsonValueKind names the kind a preview is coloured by', () => {
+  expect(getJsonValueKind('x')).toBe('string');
+  expect(getJsonValueKind(2)).toBe('number');
+  expect(getJsonValueKind(false)).toBe('boolean');
+  expect(getJsonValueKind(null)).toBe('null');
+  expect(getJsonValueKind(undefined)).toBe('null');
+  expect(getJsonValueKind(new Date(0))).toBe('date');
+  expect(getJsonValueKind([1])).toBe('array');
+  expect(getJsonValueKind({ a: 1 })).toBe('object');
 });

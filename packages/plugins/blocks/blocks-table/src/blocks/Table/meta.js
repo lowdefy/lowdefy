@@ -223,13 +223,13 @@ const column = {
     inputs: {
       type: 'object',
       description:
-        "`kind: enrichment` or `ai`: the inputs, each `{ column: <column key>, required? }` (that column's value in the row; an enrichment or ai column's only once its cell is done) or `{ value: <literal> }`. An ai column lists the columns its prompt references here (the add-column picker keeps them in step). A cell is stale when its resolved inputs differ from the ones it ran with.",
+        "`kind: enrichment` or `ai`: the inputs, each `{ column: <column key>, required? }` (that column's value in the row; an enrichment or ai column's only once its cell is done) or `{ value: <literal> }`. An input reads an input or data column (a stored field) or an enrichment or ai column, never a formula or extract column: those compute in the browser, so the server can not read them (the picker does not offer them, a declared column reading one throws and a user-defined one becomes an error column). An ai column lists the columns its prompt references here (the add-column picker keeps them in step). A cell is stale when its resolved inputs differ from the ones it ran with.",
       docs: { displayType: 'yaml' },
     },
     output: {
       type: ['string', 'object'],
       description:
-        "`kind: enrichment`: the path of the value in the provider's result (`value` defaults to the whole result). `kind: ai`: `{ type, options? }`, the answer's type (also the column type): `text`, `number`, `boolean`, `tag` or `tags`; `options`, the answers allowed, only for `tag` and `tags`.",
+        "`kind: enrichment`: the path of the value in the provider's result (`value` defaults to the whole result). `kind: ai`: `{ type, options? }`, the answer's type (also the column type): `text`, `number`, `boolean`, `tag` or `tags`; `options`, the answers allowed, only for `tag` and `tags`: each its text or `{ value, color }` (the tag's colour; on a user-defined column a tone name such as `blue` or `error`, never a CSS value; the add-column picker gives each option a distinct tone).",
       docs: { displayType: 'yaml' },
     },
     autoRun: {
@@ -290,6 +290,7 @@ export default {
   valueType: 'object',
   icons: [
     'chevron-down',
+    'chevron-right',
     'chevron-up',
     'close',
     'download',

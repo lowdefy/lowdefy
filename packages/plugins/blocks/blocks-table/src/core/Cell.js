@@ -18,6 +18,7 @@ import React, { memo } from 'react';
 import renderCell from '@lowdefy/blocks-antd/table/renderCell.js';
 
 import LAZY_CELL_TYPES from './lazyCellTypes.js';
+import getSpecialCellClass from './getSpecialCellClass.js';
 import LazyCell from './LazyCell.js';
 
 function renderContent({ api, col, lead, original }) {
@@ -50,7 +51,7 @@ function Cell({ api, col, focused, lead, original, selected }) {
     return (
       <div
         aria-colindex={col.ariaIndex}
-        className={`lf-table-gridcell ${col.cellClassName ?? 'lf-table-select'}`}
+        className={getSpecialCellClass(col)}
         data-col-index={col.index}
         data-col-key={col.key}
         data-focused={focused ? '' : undefined}

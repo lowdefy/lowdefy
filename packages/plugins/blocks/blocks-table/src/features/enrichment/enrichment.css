@@ -34,15 +34,21 @@
     min-width: 0;
   }
 
+  /* A run state ("Queued", "Running", ...) is the cell's text, muted: the cell's font size, on the
+     text baseline (its icon centred on the line), so it lines up with values in the same row. */
   .lf-enrich-state {
     display: inline-flex;
-    align-items: center;
+    align-items: baseline;
     gap: var(--ant-padding-xxs, 4px);
     min-width: 0;
     overflow: hidden;
     color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
-    font-size: var(--ant-font-size-sm, 12px);
     white-space: nowrap;
+  }
+
+  .lf-enrich-state > .lf-enrich-icon,
+  .lf-enrich-state > .lf-enrich-spinner {
+    align-self: center;
   }
 
   .lf-enrich-label {
@@ -54,7 +60,6 @@
   .lf-enrich-invalid {
     overflow: hidden;
     color: var(--ant-color-error, #ff4d4f);
-    font-size: var(--ant-font-size-sm, 12px);
     white-space: nowrap;
     text-overflow: ellipsis;
   }
@@ -129,28 +134,47 @@
   }
 
   /* Header: progress chip and inline rename. */
-  /* The chip gives way before the column title does. */
+  /* The chip is sized to what fits beside the title (RunProgress: full text, an icon and count
+     per status, or a dot), so it never shrinks: the title keeps its room. Its colours are the
+     most severe status' tag tone, set inline. The widths getProgressMode assumes are these:
+     padding 6 + border 1 each side, 12px icons, a 3px gap after an icon, 6px between parts. */
   .lf-enrich-progress {
     display: inline-flex;
-    flex: 0 100 auto;
+    flex: none;
     align-items: center;
-    gap: 4px;
-    min-width: 0;
+    gap: 3px;
+    box-sizing: border-box;
     padding: 0 6px;
-    overflow: hidden;
-    color: var(--ant-color-primary, #1677ff);
     font-weight: normal;
     font-size: var(--ant-font-size-sm, 12px);
     line-height: 18px;
     white-space: nowrap;
-    text-overflow: ellipsis;
-    background: var(--ant-color-primary-bg, #e6f4ff);
-    border-radius: 9px;
+    border: 1px solid transparent;
+    border-radius: 10px;
   }
 
-  .lf-enrich-progress[data-errors]:not([data-running]) {
-    color: var(--ant-color-error, #ff4d4f);
-    background: var(--ant-color-error-bg, #fff2f0);
+  .lf-enrich-progress .lf-enrich-icon,
+  .lf-enrich-progress .lf-enrich-spinner {
+    width: 12px;
+    height: 12px;
+  }
+
+  .lf-enrich-progress[data-lf-enrich-progress='compact'] {
+    gap: 6px;
+  }
+
+  .lf-enrich-progress-part {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .lf-enrich-progress[data-lf-enrich-progress='dot'] {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
   }
 
   .lf-enrich-rename {
@@ -379,6 +403,44 @@
     cursor: pointer;
   }
 
+  /* An AI tag answer's options, each its chip and colour select. */
+  .lf-enrich-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ant-padding-xs, 8px);
+    margin: var(--ant-padding-xs, 8px) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lf-enrich-options > li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ant-padding-xxs, 4px);
+  }
+
+  .lf-enrich-option-chip {
+    padding: 0 8px;
+    font-size: var(--ant-font-size-sm, 12px);
+    font-weight: 600;
+    line-height: 20px;
+    border: 1px solid transparent;
+    border-radius: var(--ant-border-radius-sm, 4px);
+  }
+
+  .lf-enrich-option-tone {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .lf-enrich-option-swatch {
+    width: 10px;
+    height: 10px;
+    border: 1px solid transparent;
+    border-radius: 50%;
+  }
+
   .lf-enrich-preview pre {
     max-height: 240px;
     margin: 4px 0 0;
@@ -455,6 +517,19 @@
     color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
   }
 
+  .lf-enrich-error-summary,
+  .lf-enrich-error-message {
+    display: block;
+  }
+
+  .lf-enrich-error-message {
+    overflow-wrap: anywhere;
+  }
+
+  .lf-enrich-details-source {
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+  }
+
   .lf-enrich-details-list dd {
     margin: 0;
     overflow-wrap: anywhere;
@@ -496,6 +571,7 @@
     color: var(--ant-color-text, rgba(0, 0, 0, 0.88));
   }
 
+  /* Cut to the panel's width; the node's title holds the whole value. */
   .lf-enrich-json-preview {
     flex: 1 1 auto;
     min-width: 0;
@@ -505,24 +581,54 @@
     text-overflow: ellipsis;
   }
 
+  .lf-enrich-json-preview[data-kind='string'],
+  .lf-enrich-json-preview[data-kind='date'] {
+    color: var(--lf-json-string);
+  }
+
+  .lf-enrich-json-preview[data-kind='number'] {
+    color: var(--lf-json-number);
+  }
+
+  .lf-enrich-json-preview[data-kind='boolean'] {
+    color: var(--lf-json-boolean);
+  }
+
+  /* Add as column: always there, muted until its row is hovered or it has focus. */
   .lf-enrich-json-add {
+    display: inline-flex;
     flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
     margin-inline-start: auto;
-    padding: 0 6px;
-    color: var(--ant-color-primary, #1677ff);
-    font: inherit;
-    font-size: var(--ant-font-size-sm, 12px);
+    padding: 0;
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
     background: none;
     border: 0;
     border-radius: var(--ant-border-radius-sm, 4px);
     cursor: pointer;
-    opacity: 0;
+  }
+
+  .lf-enrich-json-add .lf-enrich-icon {
+    width: 12px;
+    height: 12px;
   }
 
   .lf-enrich-json-row:hover .lf-enrich-json-add,
   .lf-enrich-json-add:focus-visible,
   .lf-enrich-json-add:disabled {
-    opacity: 1;
+    color: var(--ant-color-primary, #1677ff);
+  }
+
+  .lf-enrich-json-add:hover {
+    background: var(--ant-color-fill-secondary, rgba(0, 0, 0, 0.06));
+  }
+
+  .lf-enrich-json-add:focus-visible {
+    outline: 2px solid var(--ant-color-primary, #1677ff);
+    outline-offset: -2px;
   }
 
   .lf-enrich-json-more button {
@@ -544,6 +650,19 @@
     padding: 4px 8px;
     text-align: start;
     border-bottom: 1px solid var(--ant-color-border-secondary, #f0f0f0);
+  }
+
+  .lf-enrich-import-target {
+    display: flex;
+    align-items: center;
+    gap: var(--ant-padding-xs, 8px);
+  }
+
+  .lf-enrich-import-suggestion {
+    color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+    font-size: var(--ant-font-size-sm, 12px);
+    white-space: nowrap;
+    cursor: help;
   }
 
   /* Spinners pause while the grid scrolls (usePauseWhileScrolling). */

@@ -19,6 +19,7 @@ import { get, type } from '@lowdefy/helpers';
 import createFormulaReader from './createFormulaReader.js';
 import findTemplateRefs from './findTemplateRefs.js';
 import invalidateColumn from './invalidateColumn.js';
+import isEnrichmentInputColumn from './isEnrichmentInputColumn.js';
 import readColumnValue from './readColumnValue.js';
 
 const RUN_KINDS = new Set(['enrichment', 'ai']);
@@ -78,6 +79,11 @@ function linkEnrichmentInputs({ column, columnsByKey }) {
     if (!ref) {
       throw new Error(
         `Table column "${column.key}" input "${param}" names unknown column "${source.column}".`
+      );
+    }
+    if (!isEnrichmentInputColumn(ref)) {
+      throw new Error(
+        `Table column "${column.key}" input "${param}" reads column "${source.column}", which the server can not read (formula and extract columns compute in the browser). An input reads an input or data column, or an enrichment or ai column.`
       );
     }
     return { param, read: inputReader(ref) };

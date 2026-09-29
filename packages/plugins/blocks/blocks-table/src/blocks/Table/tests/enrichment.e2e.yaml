@@ -107,6 +107,8 @@ blocks:
               raw:
                 email: ada@acme.com
                 confidence: 0.92
+                verified: true
+                bio: Ada Lovelace was an English mathematician and writer, chiefly known for her work on the Analytical Engine, a proposed mechanical general-purpose computer.
                 profile:
                   linkedin: in/ada
                   name: Ada Lovelace

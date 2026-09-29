@@ -47,11 +47,13 @@ This design adds that glue: cell run state, the column and row UX, and a MongoDB
 | `ai`         | an AI prompt per row               | the server worker               | `prompt` (`{{ input }}` placeholders only), `provider?` (default `ai`), `output`, `autoRun`          |
 | `extract`    | a path into another column's `raw` | in the browser                  | `source` (column key), `path`                                                                        |
 
-An ai column's `output` is `{ type, options? }`, a Table column type the answer can be: `text`, `number`, `boolean`, `tag` or `tags` (`options`, the answers allowed, only for `tag` and `tags`). The picker, the Table, the claim and the AI endpoint all use this list.
+An ai column's `output` is `{ type, options? }`, a Table column type the answer can be: `text`, `number`, `boolean`, `tag` or `tags` (`options`, the answers allowed, only for `tag` and `tags`: each its text or `{ value, color }`, the colour a tone name; the picker starts each option on a distinct tone, `assignOptionColors`, and a user-defined column with a non-tone option colour is an error column). The picker, the Table, the claim and the AI endpoint all use this list.
 
 **Templates are placeholders, never a template engine.** Formula templates and AI prompts are user content shared between users: a nunjucks template runs code (`{{ range.constructor("...")() }}`), in every viewer's browser for a formula and on the server for a prompt. Both only take `{{ column }}` placeholders (a key or a dot path into its value, one pattern on the client and the server) and are filled in by plain substitution, in one pass, so a row value that looks like a template stays text. A template with tags (`{% %}`), comments (`{# #}`) or expressions (`{{ a | upper }}`) is refused when the column is saved (the picker and the app's column check) and when it is read (the Table's column core). Declared `html` cells keep nunjucks: their templates are config, not user content.
 
 **User-defined columns fail on their own.** A column with `userDefined: true` is runtime data; if its config is invalid (an unknown provider or output type, an input or source column that is gone, a formula cycle) it renders as an error column: its cells show "Invalid column: <reason>", its header is marked, and its header menu offers Edit column and Delete column. A declared column's config error still throws. A user-defined column only takes text-safe config: a type from the Table's `userColumnTypes` (no `html`, `image`, `avatar`, `people`, `link`, `relation` or actions, which would render markup or load URLs from other users' data in every viewer's browser), and no `cell`, `rules`, `validate` or template tooltip. The picker offers the same types and the app's column check refuses others for every kind.
+
+**Inputs read stored values only.** An enrichment or ai input (`{ column }`, or a prompt placeholder) reads an input or data column (a field of the `fields` allowlist) or an enrichment or ai column (`_enrich.<key>.value`, once ok). Formula and extract columns compute in the browser and are never stored, so the server can not resolve them: the picker does not offer them as provider inputs or prompt chips (`isEnrichmentInputColumn`, blocks-antd's table core), the Table's column core refuses them (a declared column throws, a user-defined one becomes an error column), `resolveInputSources` refuses them in the three requests, and the reference app's `check_column` refuses them when a column is saved. A formula template can still read any column.
 
 A waterfall is an enrichment column whose provider tries several sources in order. The provider's own endpoint runs the waterfall, so the table stays simple.
 
@@ -90,6 +92,8 @@ All three requests (`connection-mongodb`) share `MongoDBTableQuery`'s safety rul
 
   Expected errors a `:catch` handles (`RequestError`, `ServiceError`, `UserError`: a provider's 404 in a waterfall) are logged at debug, not as errors. A caught `ConfigError`, `OperatorError` or `LowdefyInternalError` still goes through `handleError`.
 
+  The errors it stores are shown to every user of the table, so the worker's `:catch` and the provider endpoints store user-safe messages mapped from the thrown error's status (`Provider error (500)`, `Rate limited by the provider (429)`, `The provider did not respond`), never the connection's message (which names the connection and carries the service's response); the full error stays in the server log. The cell's tooltip shows "Failed after <attempts> attempts" and the message shortened (`formatRunError`), the details panel the whole message.
+
   A cron entry runs it every minute. An enqueue also calls it as a detached endpoint, so results start at once. A run survives a crash through leases.
 
 ### E5. Live updates
@@ -105,14 +109,14 @@ The module is an optional feature: it loads in its own chunk only for tables wit
   - `queued`: a clock icon, muted.
   - `running`: a spinner.
   - `ok`: the value, through the column's type.
-  - `error`: a red marker, with the message in a tooltip.
+  - `error`: a red marker, with "Failed after <n> attempts" and the message (shortened) in a tooltip below the cell.
   - `empty`: a muted "No result".
   - Stale (`inputHash` differs): the value, dimmed, with a refresh affordance.
 
   All states are tier 0: static DOM, with the tooltip mounted on hover.
 
-- **Header progress.** Enrichment column headers show live counts ("12 running · 3 errors") from the loaded rows, or from server aggregates in server mode.
-- **Add column.** `addColumn: true | { kinds }` shows a "+" at the end of the header. It opens a picker with these kinds:
+- **Header progress.** Enrichment column headers show live counts ("12 running · 3 errors") from the loaded rows, or from server aggregates in server mode. The chip takes its most severe status' tag tone (an error red, running blue, queued alone neutral; tag tones read at 4.5:1 in light and dark) and the largest form that fits beside the title, which keeps its room: the full text, an icon and a count per status, or a dot, with the full text as its tooltip (`getProgressMode`, widths from the table's text measure).
+- **Add column.** `addColumn: true | { kinds }` shows a "+" at the end of the header. The generated column config shows under a closed "Advanced: column config" disclosure. It opens a picker with these kinds:
 
   - input types
   - formula
@@ -126,16 +130,16 @@ The module is an optional feature: it loads in its own chunk only for tables wit
 - **Row and cell runs.**
   - The row menu has "Run row", which fires `onRowRun { rowKey, columns }`.
   - An enrichment cell's details panel has "Rerun", which fires `onCellRun`.
-  - The bulk bar has "Run selected", which fires `onColumnRun` with the selection.
+  - The bulk bar has "Run selected", which fires `onColumnRun` with the selection. It lists the visible run columns; the "+ New row" editor asks for the visible input columns.
 - **Cell details panel.** Clicking an enrichment cell, or pressing Space on it, opens a built-in side panel. It shows:
 
   - the status, the value, the error and the timings;
   - the inputs the value was computed from;
   - `raw` as a collapsible JSON tree.
 
-  Every leaf and object in the tree has an "Add as column" action, which fires `onColumnAdd` with `kind: extract`.
+  Every leaf and object in the tree has an "Add as column" action (an always-visible "+", muted until hovered or focused, named for screen readers), which fires `onColumnAdd` with `kind: extract`. Keys, strings, numbers and booleans have their own colours (tag tone text colours, 4.5:1 in light and dark), and previews are cut to the panel's width with the whole value in their title.
 
-- **Add rows.** `addRow: true` on `Table` shows a "+ New row" row at the bottom and fires `onRowAdd { values }`. `importCsv: true` adds a toolbar Import button: the CSV is parsed in the browser (`readCsvFile`: at most 50 MB and 100,000 rows, parsed in slices with a pause between them, fields cut with slices) and headers are mapped to columns in a dialog. It fires `onImport { rows, newColumns }` in batches of 500, and the app inserts them with `MongoDBInsertMany`. Every value in `onRowAdd` and `onImport` is at its column's field path; new input columns (from the picker or a CSV header) carry their `field`, under the Table's `inputFieldPrefix` (for example `values.<key>`).
+- **Add rows.** `addRow: true` on `Table` shows a "+ New row" row at the bottom and fires `onRowAdd { values }`. `importCsv: true` adds a toolbar Import button: the CSV is parsed in the browser (`readCsvFile`: at most 50 MB and 100,000 rows, parsed in slices with a pause between them, fields cut with slices) and headers are mapped to columns in a dialog. The dialog suggests a column per header (`matchCsvHeaders`): its key or title ignoring case, spaces and punctuation, then a synonym (`csvHeaderSynonyms`: name / full name for a person, employer / organisation for a company, website / url for a domain, role / title for a job title, e-mail for email, ...), then a close spelling (edit-distance similarity of 0.8 or more); the best pairs are taken first, each column once, and a suggestion that is not the column's own name is marked ("Suggested", "Close match") until the user picks another. It fires `onImport { rows, newColumns }` in batches of 500, and the app inserts them with `MongoDBInsertMany`. Every value in `onRowAdd` and `onImport` is at its column's field path; new input columns (from the picker or a CSV header) carry their `field`, under the Table's `inputFieldPrefix` (for example `values.<key>`).
 
 ### E7. Security and cost
 

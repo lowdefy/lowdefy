@@ -14,24 +14,16 @@
   limitations under the License.
 */
 
-// A fresh add-column picker draft. The picker edits one flat draft for every kind (so switching
-// kinds keeps what was typed); buildColumnConfig picks the keys the chosen kind uses.
-function createDraft({ kind = 'input', provider = null } = {}) {
-  return {
-    kind,
-    provider,
-    title: '',
-    type: 'text',
-    template: '',
-    inputs: {},
-    output: '',
-    // An AI tag answer's options, `[{ value, color }]` (assignOptionColors).
-    outputOptions: [],
-    prompt: '',
-    autoRun: false,
-    source: null,
-    path: '',
-  };
+// Words (lowercase, accents and punctuation dropped) of a CSV header or a column key or title:
+// "E-mail", "e_mail" and "E mail" are all "e mail"; "firstName" is "first name".
+function normalizeHeader(text) {
+  return String(text ?? '')
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .normalize('NFKD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
 }
 
-export default createDraft;
+export default normalizeHeader;

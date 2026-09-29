@@ -287,6 +287,56 @@ test('normalizeColumns makes a user-defined column with a config error an error 
   );
 });
 
+test('normalizeColumns refuses enrichment inputs from formula and extract columns', () => {
+  const columns = [
+    { key: 'name' },
+    { key: 'person', kind: 'enrichment', provider: 'p', inputs: { n: { column: 'name' } } },
+    { key: 'label', kind: 'formula', template: '{{ name }}!' },
+    { key: 'city', kind: 'extract', source: 'person', path: 'city' },
+  ];
+  const reason = (key, from) =>
+    `Table column "${key}" input "x" reads column "${from}", which the server can not read (formula and extract columns compute in the browser). An input reads an input or data column, or an enrichment or ai column.`;
+  const { columnsByKey } = normalizeColumns({
+    columns: [
+      ...columns,
+      {
+        key: 'a',
+        kind: 'ai',
+        prompt: '{{ x }}',
+        inputs: { x: { column: 'label' } },
+        userDefined: true,
+      },
+      {
+        key: 'b',
+        kind: 'enrichment',
+        provider: 'p',
+        inputs: { x: { column: 'city' } },
+        userDefined: true,
+      },
+      {
+        key: 'c',
+        kind: 'enrichment',
+        provider: 'p',
+        inputs: { x: { column: 'person' } },
+        userDefined: true,
+      },
+    ],
+    providerIds: new Set(['p']),
+  });
+  expect(columnsByKey.a.invalid).toBe(reason('a', 'label'));
+  expect(columnsByKey.b.invalid).toBe(reason('b', 'city'));
+  expect(columnsByKey.c.invalid).toBeUndefined();
+  expect(() =>
+    normalizeColumns({
+      columns: [
+        ...columns,
+        { key: 'd', kind: 'enrichment', provider: 'p', inputs: { x: { column: 'label' } } },
+      ],
+      providerIds: new Set(['p']),
+    })
+  ).toThrow(reason('d', 'label'));
+});
+
 test('normalizeColumns takes a provider on an ai column, the built-in ai by default', () => {
   const { columnsByKey } = normalizeColumns({
     columns: [
