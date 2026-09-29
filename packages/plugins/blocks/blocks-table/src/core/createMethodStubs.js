@@ -14,13 +14,18 @@
   limitations under the License.
 */
 
-import handleCopyKeyDown from './handleCopyKeyDown.js';
+function noop() {
+  return undefined;
+}
 
-// Copy (Table and TableInput): Ctrl/Cmd+C copies the focused cell, or the selected rows, as TSV
-// of the displayed text. Paste is TableInput's (pasteFeature).
-const clipboardFeature = {
-  name: 'clipboard',
-  gridHandlers: { keydown: handleCopyKeyDown },
-};
+// The stand-in for an optional feature a table does not load: its block methods as no-ops (a
+// table without groupable columns has no groups to set, expand or collapse; client data has
+// nothing to refresh), so a CallMethod on any declared method succeeds.
+function createMethodStubs(entry) {
+  return {
+    name: entry.name,
+    methods: Object.fromEntries(entry.methods.map((method) => [method, () => noop])),
+  };
+}
 
-export default clipboardFeature;
+export default createMethodStubs;

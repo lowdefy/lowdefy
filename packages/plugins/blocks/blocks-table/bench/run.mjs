@@ -103,7 +103,20 @@ async function measureChunk() {
   });
   const output = (Array.isArray(result) ? result : [result]).flatMap((entry) => entry.output);
   const chunks = output.filter((file) => file.type === 'chunk');
-  const main = chunks.find((file) => file.fileName === 'table.js');
+  const byFileName = new Map(chunks.map((file) => [file.fileName, file]));
+  // The first mount loads the entry and every chunk it imports statically (modules the entry
+  // shares with on-demand chunks are split out into those); the rest load on demand.
+  const initial = new Set();
+  const visit = (file) => {
+    if (initial.has(file)) return;
+    initial.add(file);
+    file.imports.forEach((name) => byFileName.has(name) && visit(byFileName.get(name)));
+  };
+  visit(byFileName.get('table.js'));
+  const main = {
+    code: [...initial].map((file) => file.code).join('\n'),
+    modules: Object.assign({}, ...[...initial].map((file) => file.modules)),
+  };
   const css = output
     .filter((file) => file.type === 'asset' && file.fileName.endsWith('.css'))
     .map((file) => Buffer.from(file.source));
@@ -113,8 +126,9 @@ async function measureChunk() {
     jsGzipKb: gzipKb(main.code),
     cssGzipKb: gzipKb(Buffer.concat(css)),
     breakdown: breakDown(main),
+    initialChunks: initial.size,
     lazyChunks: chunks
-      .filter((file) => file !== main)
+      .filter((file) => !initial.has(file))
       .map((file) => ({
         name: file.name,
         kb: toKb(Buffer.byteLength(file.code)),
@@ -296,7 +310,7 @@ function buildRows({ chunk }) {
   rows.push({
     scenario: 'Block chunk (Table.lazy + TanStack, antd/React/@lowdefy shared)',
     budget: '<= 60 kB gzip main chunk (D10: 80 kB)',
-    measured: `${chunk.jsGzipKb} kB gzip JS (${chunk.jsKb} kB min), ${
+    measured: `${chunk.jsGzipKb} kB gzip JS (${chunk.jsKb} kB min, ${chunk.initialChunks} files), ${
       chunk.cssGzipKb
     } kB gzip CSS; ${chunk.lazyChunks.length} on-demand chunks, ${toKb(
       chunk.lazyChunks.reduce((sum, file) => sum + file.gzipKb * 1024, 0)

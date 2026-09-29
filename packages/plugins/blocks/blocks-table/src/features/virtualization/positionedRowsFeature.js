@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import handleCopyKeyDown from './handleCopyKeyDown.js';
+import usePositionedRows from './usePositionedRows.js';
 
-// Copy (Table and TableInput): Ctrl/Cmd+C copies the focused cell, or the selected rows, as TSV
-// of the displayed text. Paste is TableInput's (pasteFeature).
-const clipboardFeature = {
-  name: 'clipboard',
-  gridHandlers: { keydown: handleCopyKeyDown },
+// The benchmark's comparison strategy (`rowWindowStrategy: 'positioned'`), with TanStack Virtual,
+// loaded only when a table is mounted with it; the Lowdefy client never sets it.
+const positionedRowsFeature = {
+  name: 'positionedRows',
+  useGridFeature: usePositionedRows,
 };
 
-export default clipboardFeature;
+export default positionedRowsFeature;

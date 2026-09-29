@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
-import handleCopyKeyDown from './handleCopyKeyDown.js';
+import { type } from '@lowdefy/helpers';
 
-// Copy (Table and TableInput): Ctrl/Cmd+C copies the focused cell, or the selected rows, as TSV
-// of the displayed text. Paste is TableInput's (pasteFeature).
-const clipboardFeature = {
-  name: 'clipboard',
-  gridHandlers: { keydown: handleCopyKeyDown },
-};
+// Saved views load with `persist`, with a `views` property (views may arrive later from a
+// request, so the key alone counts) and with the toolbar's view tabs.
+function needsViews({ properties }) {
+  if (!type.isNone(properties.persist)) return true;
+  if (!type.isUndefined(properties.views)) return true;
+  return properties.toolbar === true || properties.toolbar?.views === true;
+}
 
-export default clipboardFeature;
+export default needsViews;

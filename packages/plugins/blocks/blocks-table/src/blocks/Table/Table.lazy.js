@@ -20,10 +20,15 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 import TableRoot from '../../core/TableRoot.js';
 import useFeatureSet from '../../core/useFeatureSet.js';
 
-// The Table implementation: the core with the feature modules this table uses.
+// The Table implementation: the core with the feature modules this table's config uses. A config
+// change that needs another set of features remounts the core with it.
 function Table(props) {
-  const features = useFeatureSet({ content: props.content, properties: props.properties });
-  return React.createElement(TableRoot, { ...props, features });
+  const features = useFeatureSet({
+    content: props.content,
+    properties: props.properties,
+    rowWindowStrategy: props.rowWindowStrategy,
+  });
+  return React.createElement(TableRoot, { ...props, features, key: features.signature });
 }
 
 export default withBlockDefaults(Table);

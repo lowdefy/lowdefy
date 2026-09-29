@@ -49,6 +49,7 @@ function TableInputRoot(props) {
     ...props,
     features,
     input,
+    key: features.signature,
     methods: tableMethods,
     value: uiValue,
   });

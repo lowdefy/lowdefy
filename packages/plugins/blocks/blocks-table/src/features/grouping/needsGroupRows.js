@@ -14,13 +14,11 @@
   limitations under the License.
 */
 
-import handleCopyKeyDown from './handleCopyKeyDown.js';
+import someColumnConfig from '../../core/someColumnConfig.js';
 
-// Copy (Table and TableInput): Ctrl/Cmd+C copies the focused cell, or the selected rows, as TSV
-// of the displayed text. Paste is TableInput's (pasteFeature).
-const clipboardFeature = {
-  name: 'clipboard',
-  gridHandlers: { keydown: handleCopyKeyDown },
-};
+// The group rows load when a column can be grouped by: `view.group` only takes groupable columns.
+function needsGroupRows({ properties }) {
+  return someColumnConfig({ properties, test: (column) => column.groupable === true });
+}
 
-export default clipboardFeature;
+export default needsGroupRows;

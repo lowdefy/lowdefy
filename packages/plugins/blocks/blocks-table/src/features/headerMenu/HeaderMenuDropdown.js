@@ -18,7 +18,6 @@ import React, { useEffect, useRef } from 'react';
 import { Dropdown } from 'antd';
 
 import collectHeaderMenuItems from './collectHeaderMenuItems.js';
-import features from '../index.js';
 
 // The menu itself, mounted only while open and anchored to the bottom edge of the header cell.
 // The first item takes focus when the menu opens (the ARIA menu button pattern), so arrow keys
@@ -26,7 +25,11 @@ import features from '../index.js';
 // is taken in the capture phase, ahead of the Dropdown's own handler, so focus goes back to the
 // column's menu button rather than to the (unfocusable) anchor.
 function HeaderMenuDropdown({ api, col }) {
-  const { items, handlers } = collectHeaderMenuItems({ column: col.column, api, features });
+  const { items, handlers } = collectHeaderMenuItems({
+    column: col.column,
+    api,
+    features: api.features.list,
+  });
   const popupRef = useRef(null);
   useEffect(() => {
     let frame = 0;

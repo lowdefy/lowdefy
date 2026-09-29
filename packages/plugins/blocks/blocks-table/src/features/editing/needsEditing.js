@@ -14,13 +14,18 @@
   limitations under the License.
 */
 
-import handleCopyKeyDown from './handleCopyKeyDown.js';
+import { type } from '@lowdefy/helpers';
 
-// Copy (Table and TableInput): Ctrl/Cmd+C copies the focused cell, or the selected rows, as TSV
-// of the displayed text. Paste is TableInput's (pasteFeature).
-const clipboardFeature = {
-  name: 'clipboard',
-  gridHandlers: { keydown: handleCopyKeyDown },
-};
+import someColumnConfig from '../../core/someColumnConfig.js';
 
-export default clipboardFeature;
+// Editing loads for TableInput, and for a Table with an editable column or row drag.
+function needsEditing({ input, properties }) {
+  if (input === true) return true;
+  if (properties.rowDrag === true || type.isObject(properties.rowDrag)) return true;
+  return someColumnConfig({
+    properties,
+    test: (column) => column.editable === true || type.isObject(column.editable),
+  });
+}
+
+export default needsEditing;

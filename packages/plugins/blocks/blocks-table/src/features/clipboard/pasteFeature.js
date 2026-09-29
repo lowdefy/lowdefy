@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
-import handleCopyKeyDown from './handleCopyKeyDown.js';
+import createPasteCells from './createPasteCells.js';
+import usePasteListener from './usePasteListener.js';
 
-// Copy (Table and TableInput): Ctrl/Cmd+C copies the focused cell, or the selected rows, as TSV
-// of the displayed text. Paste is TableInput's (pasteFeature).
-const clipboardFeature = {
-  name: 'clipboard',
-  gridHandlers: { keydown: handleCopyKeyDown },
+// Paste (TableInput): TSV from the clipboard into editable cells from the focused cell, planned by
+// row key (planPaste) and written as one changeset. Loaded with TableInput only.
+const pasteFeature = {
+  name: 'paste',
+  actions: { pasteCells: createPasteCells },
+  useGridFeature: usePasteListener,
 };
 
-export default clipboardFeature;
+export default pasteFeature;
