@@ -16,13 +16,15 @@
 
 import { get } from '@lowdefy/helpers';
 
-function isSameItem({ item, row, depth, hasChildren, expanded }) {
+function isSameItem({ item, row, depth, hasChildren, expanded, loading, error }) {
   return (
     item !== undefined &&
     item.row === row &&
     item.depth === depth &&
     item.hasChildren === hasChildren &&
-    item.expanded === expanded
+    item.expanded === expanded &&
+    item.loading === loading &&
+    item.error === error
   );
 }
 
@@ -30,6 +32,9 @@ function isSameItem({ item, row, depth, hasChildren, expanded }) {
 // the order the rows arrive in, so a sort sorts within each level. Ancestors of every row the
 // filter kept stay in the list, so a match deep in the tree keeps its path. Children of collapsed
 // rows are left out. Unchanged rows keep their item object (and their memoised row component).
+// A row whose lazy children are loading (`childLoads`) is `loading` and, while expanded without
+// children yet, is followed by one skeleton child (`kind: 'skeleton'`); a failed load leaves its
+// `error` on the row.
 function buildTreeItems({
   rows,
   rowsById,
@@ -37,6 +42,7 @@ function buildTreeItems({
   expandedIds,
   hasChildrenField,
   childrenOf,
+  childLoads,
   cache,
 }) {
   const inRows = new Set(rows.map((row) => row.id));
@@ -81,8 +87,10 @@ function buildTreeItems({
       get(row.original, hasChildrenField) === true;
     const hasChildren = children !== undefined || lazyChildren;
     const expanded = hasChildren && expandedIds.has(id);
+    const loading = childLoads?.loading.has(id) ?? false;
+    const error = childLoads?.errors.get(id) ?? null;
     let item = cache.get(row);
-    if (!isSameItem({ item, row, depth, hasChildren, expanded })) {
+    if (!isSameItem({ item, row, depth, hasChildren, expanded, loading, error })) {
       item = {
         kind: 'row',
         id,
@@ -92,11 +100,16 @@ function buildTreeItems({
         depth,
         hasChildren,
         expanded,
+        loading,
+        error,
         parentId: parentOf.get(id),
       };
       cache.set(row, item);
     }
     items.push(item);
+    if (expanded && loading && !children) {
+      items.push({ kind: 'skeleton', key: `${id}:children`, depth: depth + 1 });
+    }
     if (expanded && children) {
       for (let i = children.length - 1; i >= 0; i--) {
         stack.push({ id: children[i], depth: depth + 1 });
