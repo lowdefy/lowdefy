@@ -60,6 +60,9 @@ function projectNode(error, scrub, seen) {
     // the client skips reporting a handled error back to the server. A rethrown
     // `_error` without it would be logged a second time.
     handled: error.handled,
+    // A ServiceError's Retry-After (seconds, or an HTTP date), so a routine can wait as long
+    // as the service asked before retrying, such as an enrichment worker's backoff.
+    retryAfter: error.name === 'ServiceError' ? error.retryAfter ?? undefined : undefined,
   };
   for (const [key, value] of Object.entries(fields)) {
     if (!type.isUndefined(value)) projected[key] = value;
@@ -81,7 +84,8 @@ function projectNode(error, scrub, seen) {
 }
 
 // The value `_error` reads: the caught error rebuilt with only the fields a
-// routine or catch list branches on. `received`, `configKey`, `location`,
+// routine or catch list branches on (name, message, code, statusCode, handled, a
+// ServiceError's retryAfter, and the cause). `received`, `configKey`, `location`,
 // `source`, `config` and `stack` are left out - `received` can hold a token
 // fetched at runtime that the scrub does not know. The result is an Error, so
 // wherever config sends it on, the serializer's wire policy applies to it.
