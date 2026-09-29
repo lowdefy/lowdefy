@@ -169,8 +169,8 @@ test('a tarball with an entry outside the directory fails and leaves nothing beh
 
 test('a failed extraction over an earlier download can be retried', async () => {
   const { default: fetchNpmTarball } = await import('./fetchNpmTarball.js');
-  fs.mkdirSync(directory, { recursive: true });
-  fs.writeFileSync(path.join(directory, 'stale.txt'), 'stale');
+  fs.mkdirSync(path.join(directory, 'lib'), { recursive: true });
+  fs.writeFileSync(path.join(directory, 'lib', 'old.js'), 'old');
   await expect(
     fetchNpmTarball({ packageName: 'valid-package', version: 'traversal', directory })
   ).rejects.toThrow();
@@ -178,6 +178,25 @@ test('a failed extraction over an earlier download can be retried', async () => 
 
   await fetchNpmTarball({ packageName: 'valid-package', version: '1.0.0', directory });
   expect(fs.readdirSync(directory).sort()).toEqual(['lib', 'package.json']);
+  // A server entry replaces its namesake whole.
+  expect(fs.readdirSync(path.join(directory, 'lib'))).toEqual(['index.js']);
+});
+
+test('files in the directory that are not part of the server are kept', async () => {
+  const { default: fetchNpmTarball } = await import('./fetchNpmTarball.js');
+  // A Vercel deploy directory: the build step runs vercel.build.sh from here
+  // after the install step fetched the server into it.
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(path.join(directory, 'vercel.build.sh'), 'echo build');
+  fs.writeFileSync(path.join(directory, 'vercel.json'), '{}');
+  await fetchNpmTarball({ packageName: 'valid-package', version: '1.0.0', directory });
+  expect(fs.readdirSync(directory).sort()).toEqual([
+    'lib',
+    'package.json',
+    'vercel.build.sh',
+    'vercel.json',
+  ]);
+  expect(fs.readFileSync(path.join(directory, 'vercel.build.sh'), 'utf8')).toBe('echo build');
 });
 
 test('version does not exist', async () => {
