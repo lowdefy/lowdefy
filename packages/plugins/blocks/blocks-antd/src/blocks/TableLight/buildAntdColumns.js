@@ -65,6 +65,8 @@ function buildAntdColumns({ nodes, compiledByKey, sort, getRowKey, methods, comp
       key: column.key,
       title: renderTitle({ node: column, methods }),
       align: column.align,
+      // The header puts an end-aligned column's sort icon before its title (tableLight.css).
+      className: column.align === 'end' ? 'lf-table-light-align-end' : undefined,
       width: column.width,
       minWidth: column.minWidth,
       fixed: column.pinned,
