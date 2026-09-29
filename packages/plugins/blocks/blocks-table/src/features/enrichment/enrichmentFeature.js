@@ -37,6 +37,7 @@ import handleEnrichmentKeyDown from './handleEnrichmentKeyDown.js';
 import RenameInput from './RenameInput.js';
 import RunProgress from './RunProgress.js';
 import useEnrichment from './useEnrichment.js';
+import usePauseWhileScrolling from './usePauseWhileScrolling.js';
 
 // Clay-style enrichment tables (design code-docs/plans/enrichment-tables.md, E2, E3, E6): column
 // kinds with a run state per cell (queued, running, ok, error, empty, stale), the header progress
@@ -50,6 +51,7 @@ import useEnrichment from './useEnrichment.js';
 const enrichmentFeature = {
   name: 'enrichment',
   useFeature: useEnrichment,
+  useGridFeature: usePauseWhileScrolling,
   headerParts: [RunProgress, RenameInput],
   headerMenuItems: getEnrichmentMenuItems,
   actions: {

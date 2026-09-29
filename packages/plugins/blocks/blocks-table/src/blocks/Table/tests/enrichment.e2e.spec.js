@@ -752,7 +752,7 @@ test.describe('Table enrichment', () => {
     await dialog.locator('[data-lf-import-file]').setInputFiles({
       name: 'companies.csv',
       mimeType: 'text/csv',
-      buffer: Buffer.from(`﻿${lines.join('\r\n')}\r\n`),
+      buffer: Buffer.from(`\uFEFF${lines.join('\r\n')}\r\n`),
     });
     await expect(dialog).toContainText('1,200 rows in companies.csv');
     await expect(dialog.locator('[data-lf-import-header="Company"] .ant-select')).toHaveText(

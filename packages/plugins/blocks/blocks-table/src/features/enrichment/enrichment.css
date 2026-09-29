@@ -525,6 +525,11 @@
     border-bottom: 1px solid var(--ant-color-border-secondary, #f0f0f0);
   }
 
+  /* Spinners pause while the grid scrolls (usePauseWhileScrolling). */
+  .lf-table-scroller[data-scrolling] .lf-enrich-spinner {
+    animation-play-state: paused;
+  }
+
   @keyframes lf-enrich-spin {
     to {
       transform: rotate(360deg);
