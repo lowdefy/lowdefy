@@ -14,11 +14,14 @@
   limitations under the License.
 */
 
+import createFeatureSet from './createFeatureSet.js';
 import features from '../features/index.js';
 
-// Components rendered at the start of a row's first data cell, before its content (the tree
-// indent and chevron, the expandable-row chevron), from the features' `cellLead`. Each receives
-// `{ api, item }` for wrapped row items and returns null when it has nothing to show.
-const cellLeads = features.map((feature) => feature.cellLead).filter(Boolean);
+const FEATURE_SET = createFeatureSet(features);
 
-export default cellLeads;
+// The feature set a table renders with (`TableRoot`'s `features`, then `api.features`).
+function useFeatureSet() {
+  return FEATURE_SET;
+}
+
+export default useFeatureSet;

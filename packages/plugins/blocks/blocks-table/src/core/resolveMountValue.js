@@ -16,13 +16,11 @@
 
 import { type } from '@lowdefy/helpers';
 
-import features from '../features/index.js';
-
 // The value the table mounts with. A value set from outside always wins; a null value (a fresh
 // mount) takes the first feature `mountValue` that returns one (the persisted view, then the
 // active saved view), else it resolves to the defaults. Reset does not come through here, so it
 // always returns to `defaultView`.
-function resolveMountValue({ value, config, properties }) {
+function resolveMountValue({ value, config, features, properties }) {
   if (!type.isNone(value)) return value;
   for (const feature of features) {
     const mounted = feature.mountValue?.({ config, properties });

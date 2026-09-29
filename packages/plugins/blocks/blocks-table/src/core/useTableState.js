@@ -20,11 +20,9 @@ import { functionalUpdate } from '@tanstack/react-table';
 
 import createInitialState from './createInitialState.js';
 import deriveValue from './deriveValue.js';
-import features from '../features/index.js';
 import getValueSignature from './getValueSignature.js';
 import isSameSignature from './isSameSignature.js';
 import resolveMountValue from './resolveMountValue.js';
-import sliceDefinitions from './sliceDefinitions.js';
 
 // Table state is the single source: one React state object holding every TanStack slice plus the
 // core's own (density, view passthrough, expanded). The block value is derived from it and written
@@ -35,8 +33,9 @@ import sliceDefinitions from './sliceDefinitions.js';
 function useTableState({ api, config, data, methods, properties, value }) {
   const [state, setState] = useState(() =>
     createInitialState({
-      value: resolveMountValue({ value, config, properties }),
+      value: resolveMountValue({ value, config, features: api.features.list, properties }),
       config,
+      features: api.features,
       rows: data,
     })
   );
@@ -51,12 +50,12 @@ function useTableState({ api, config, data, methods, properties, value }) {
   if (!isSameSignature(synced.signature, signature) || synced.config !== config) {
     setSynced({ signature, config });
     if (synced.config !== config || !isSameSignature(signature, written.current)) {
-      setState(createInitialState({ value, config, rows: data }));
+      setState(createInitialState({ value, config, features: api.features, rows: data }));
     }
   }
 
   const updateSlice = useCallback((name, updater, options) => {
-    const definition = sliceDefinitions[name];
+    const definition = api.features.sliceDefinitions[name];
     pendingCause.current = options?.cause ?? definition.cause;
     function apply() {
       setState((previous) => {
@@ -82,7 +81,14 @@ function useTableState({ api, config, data, methods, properties, value }) {
   // Replaces the whole state from a value (a saved view loading), then commits it with this cause.
   const loadValue = useCallback((nextValue, options) => {
     pendingCause.current = options.cause;
-    setState(createInitialState({ value: nextValue, config: api.config, rows: dataRef.current }));
+    setState(
+      createInitialState({
+        value: nextValue,
+        config: api.config,
+        features: api.features,
+        rows: dataRef.current,
+      })
+    );
   }, []);
 
   const commit = useCallback(
@@ -92,7 +98,7 @@ function useTableState({ api, config, data, methods, properties, value }) {
       methods.setValue(nextValue);
       if (cause === 'init') return;
       methods.triggerEvent({ name: 'onChange', event: { value: nextValue, cause } });
-      features.forEach((feature) => feature.onCommit?.({ cause, value: nextValue, api }));
+      api.features.list.forEach((feature) => feature.onCommit?.({ cause, value: nextValue, api }));
     },
     [methods]
   );

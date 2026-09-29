@@ -14,12 +14,10 @@
   limitations under the License.
 */
 
-import sliceDefinitions from './sliceDefinitions.js';
-
 // TanStack's controlled-state callbacks (onSortingChange, onColumnSizingChange, ...), each routed
 // through updateSlice so a feature API call (column.toggleSorting, row.toggleSelected) commits the
 // same way a Lowdefy-side update does.
-function createSliceHandlers({ updateSlice }) {
+function createSliceHandlers({ sliceDefinitions, updateSlice }) {
   const handlers = {};
   Object.keys(sliceDefinitions).forEach((name) => {
     const option = `on${name.charAt(0).toUpperCase()}${name.slice(1)}Change`;

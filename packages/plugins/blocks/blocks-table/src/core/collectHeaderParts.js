@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
-
 // Components rendered inside every data header cell (filter indicator, menu button, sort
 // indicator, resize handle), in feature order. Each receives `{ api, col, focused, state }`.
-const headerParts = features.flatMap((feature) => feature.headerParts ?? []);
+function collectHeaderParts(features) {
+  return features.flatMap((feature) => feature.headerParts ?? []);
+}
 
-export default headerParts;
+export default collectHeaderParts;

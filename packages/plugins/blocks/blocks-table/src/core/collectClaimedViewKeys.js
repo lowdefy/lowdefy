@@ -14,10 +14,14 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
+// View keys with an owner. `columns` belongs to the core; the rest of the view (filter, search,
+// ...) passes through unchanged until a feature module claims it.
+function collectClaimedViewKeys(features) {
+  const keys = new Set(['columns']);
+  features.forEach((feature) => {
+    (feature.viewKeys ?? []).forEach((key) => keys.add(key));
+  });
+  return keys;
+}
 
-// Components rendered once between the header and the body rows, inside the scroll canvas, when
-// there are rows (the sticky group header). Each receives the grid's row and layout props.
-const bodyOverlays = features.filter((feature) => feature.bodyOverlay).map((f) => f.bodyOverlay);
-
-export default bodyOverlays;
+export default collectClaimedViewKeys;

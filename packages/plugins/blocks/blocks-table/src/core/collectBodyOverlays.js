@@ -14,11 +14,10 @@
   limitations under the License.
 */
 
-function dispatchGridEvent({ api, event, eventType }) {
-  const handlers = api.features.gridHandlers[eventType] ?? [];
-  for (let i = 0; i < handlers.length; i++) {
-    if (handlers[i](event, api) === true) return;
-  }
+// Components rendered once between the header and the body rows, inside the scroll canvas, when
+// there are rows (the sticky group header). Each receives the grid's row and layout props.
+function collectBodyOverlays(features) {
+  return features.filter((feature) => feature.bodyOverlay).map((feature) => feature.bodyOverlay);
 }
 
-export default dispatchGridEvent;
+export default collectBodyOverlays;

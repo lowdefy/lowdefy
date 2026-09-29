@@ -14,13 +14,11 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
+// Components for display items that are not data rows, by item kind (grouping and server groups:
+// `group`; expandable: `detail`), from the features' `rowRenderers`. Data rows (TanStack rows and
+// wrapped `kind: 'row'` items) render with the core Row.
+function collectRowRenderers(features) {
+  return Object.assign({}, ...features.map((feature) => feature.rowRenderers ?? {}));
+}
 
-// View keys with an owner. `columns` belongs to the core; the rest of the view (filter, search,
-// ...) passes through unchanged until a feature module claims it.
-const claimedViewKeys = new Set(['columns']);
-features.forEach((feature) => {
-  (feature.viewKeys ?? []).forEach((key) => claimedViewKeys.add(key));
-});
-
-export default claimedViewKeys;
+export default collectRowRenderers;

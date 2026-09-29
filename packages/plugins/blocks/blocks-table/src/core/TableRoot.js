@@ -22,10 +22,8 @@ import createFeatureActions from './createFeatureActions.js';
 import createKeyIndex from './createKeyIndex.js';
 import createSliceHandlers from './createSliceHandlers.js';
 import densityHeights from './densityHeights.js';
-import features from '../features/index.js';
 import Grid from './Grid.js';
 import stabilizeData from './stabilizeData.js';
-import TABLE_FEATURES from './tableFeatures.js';
 import useFeatureData from './useFeatureData.js';
 import useFeatureFragments from './useFeatureFragments.js';
 import useFeatureItems from './useFeatureItems.js';
@@ -62,6 +60,7 @@ function TableRoot({
   components,
   content = {},
   events = {},
+  features,
   input,
   loading,
   methods,
@@ -74,7 +73,7 @@ function TableRoot({
   const config = useTableConfig({ properties });
   const apiRef = useRef(null);
   if (apiRef.current === null) {
-    apiRef.current = createApi();
+    apiRef.current = createApi({ features });
     createFeatureActions(apiRef.current);
   }
   const api = apiRef.current;
@@ -107,9 +106,16 @@ function TableRoot({
     properties,
     value,
   });
-  const sliceHandlers = useMemo(() => createSliceHandlers({ updateSlice }), [updateSlice]);
+  const sliceHandlers = useMemo(
+    () => createSliceHandlers({ sliceDefinitions: features.sliceDefinitions, updateSlice }),
+    [updateSlice]
+  );
   const tableOptions = useMemo(
-    () => Object.assign({}, ...features.map((feature) => feature.tableOptions?.({ config }) ?? {})),
+    () =>
+      Object.assign(
+        {},
+        ...features.list.map((feature) => feature.tableOptions?.({ config }) ?? {})
+      ),
     [config]
   );
   const table = useTable({
@@ -117,7 +123,7 @@ function TableRoot({
     ...sliceHandlers,
     columns: config.columnDefs,
     data,
-    features: TABLE_FEATURES,
+    features: features.tanstackFeatures,
     getRowId: config.getId,
     state,
   });

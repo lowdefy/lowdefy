@@ -14,15 +14,16 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
-
 // Every delegated handler, by DOM event type, in feature order. The grid root carries one React
 // listener per event type (D5); a handler that returns true stops the chain.
-const gridHandlers = {};
-features.forEach((feature) => {
-  Object.entries(feature.gridHandlers ?? {}).forEach(([eventType, handler]) => {
-    gridHandlers[eventType] = [...(gridHandlers[eventType] ?? []), handler];
+function collectGridHandlers(features) {
+  const handlers = {};
+  features.forEach((feature) => {
+    Object.entries(feature.gridHandlers ?? {}).forEach(([eventType, handler]) => {
+      handlers[eventType] = [...(handlers[eventType] ?? []), handler];
+    });
   });
-});
+  return handlers;
+}
 
-export default gridHandlers;
+export default collectGridHandlers;

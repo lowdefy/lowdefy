@@ -14,14 +14,11 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
+// Components rendered at the start of a row's first data cell, before its content (the tree
+// indent and chevron, the expandable-row chevron), from the features' `cellLead`. Each receives
+// `{ api, item }` for wrapped row items and returns null when it has nothing to show.
+function collectCellLeads(features) {
+  return features.map((feature) => feature.cellLead).filter(Boolean);
+}
 
-// Components for display items that are not data rows, by item kind (grouping and server groups:
-// `group`; expandable: `detail`), from the features' `rowRenderers`. Data rows (TanStack rows and
-// wrapped `kind: 'row'` items) render with the core Row.
-const rowRenderers = {};
-features.forEach((feature) => {
-  Object.assign(rowRenderers, feature.rowRenderers ?? {});
-});
-
-export default rowRenderers;
+export default collectCellLeads;

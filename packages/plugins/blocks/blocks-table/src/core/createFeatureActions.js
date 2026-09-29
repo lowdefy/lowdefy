@@ -14,12 +14,10 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
-
 // Actions are how features call each other (keyboard Enter -> activateRow, Space ->
 // toggleRowSelected) without importing each other: each is created once per table instance.
 function createFeatureActions(api) {
-  features.forEach((feature) => {
+  api.features.list.forEach((feature) => {
     Object.entries(feature.actions ?? {}).forEach(([name, create]) => {
       api.actions[name] = create(api);
     });

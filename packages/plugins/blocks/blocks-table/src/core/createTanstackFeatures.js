@@ -17,15 +17,16 @@
 import { tableFeatures } from '@tanstack/react-table';
 
 import createStableCoreRowModel from './createStableCoreRowModel.js';
-import features from '../features/index.js';
 
-// One stable TanStack feature set for every Table instance, merged from the feature modules'
-// slots at module load (TanStack requires `features` to be stable).
-const TABLE_FEATURES = tableFeatures(
-  Object.assign(
-    { coreRowModel: createStableCoreRowModel() },
-    ...features.map((feature) => feature.tableFeatures ?? {})
-  )
-);
+// The TanStack feature set merged from the feature modules' slots. TanStack requires `features`
+// to be stable, so it is built once per feature set (createFeatureSet).
+function createTanstackFeatures(features) {
+  return tableFeatures(
+    Object.assign(
+      { coreRowModel: createStableCoreRowModel() },
+      ...features.map((feature) => feature.tableFeatures ?? {})
+    )
+  );
+}
 
-export default TABLE_FEATURES;
+export default createTanstackFeatures;

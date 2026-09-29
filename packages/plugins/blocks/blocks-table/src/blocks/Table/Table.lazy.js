@@ -14,8 +14,16 @@
   limitations under the License.
 */
 
+import React from 'react';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import TableRoot from '../../core/TableRoot.js';
+import useFeatureSet from '../../core/useFeatureSet.js';
 
-export default withBlockDefaults(TableRoot);
+// The Table implementation: the core with the feature modules this table uses.
+function Table(props) {
+  const features = useFeatureSet({ content: props.content, properties: props.properties });
+  return React.createElement(TableRoot, { ...props, features });
+}
+
+export default withBlockDefaults(Table);

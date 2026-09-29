@@ -16,7 +16,6 @@
 
 import { useMemo, useRef } from 'react';
 
-import features from '../features/index.js';
 import isDataItem from './isDataItem.js';
 
 function combineHeights(heightFns) {
@@ -50,7 +49,7 @@ function useFeatureItems(ctx) {
   let rows = ctx.rows;
   let dataRows = null;
   const heightFns = [];
-  features.forEach((feature) => {
+  ctx.api.features.list.forEach((feature) => {
     if (!feature.useItems) return;
     const result = feature.useItems({ ...ctx, rows });
     if (!result) return;

@@ -14,15 +14,16 @@
   limitations under the License.
 */
 
-import features from '../features/index.js';
-
 // Every state slice the features declare, by name. Slices are React-owned (controlled TanStack
 // state), which is what lets a slice update run inside a transition.
-const sliceDefinitions = {};
-features.forEach((feature) => {
-  Object.entries(feature.slices ?? {}).forEach(([name, definition]) => {
-    sliceDefinitions[name] = { ...definition, feature: feature.name };
+function collectSliceDefinitions(features) {
+  const definitions = {};
+  features.forEach((feature) => {
+    Object.entries(feature.slices ?? {}).forEach(([name, definition]) => {
+      definitions[name] = { ...definition, feature: feature.name };
+    });
   });
-});
+  return definitions;
+}
 
-export default sliceDefinitions;
+export default collectSliceDefinitions;
