@@ -54,9 +54,10 @@ describe('rows', () => {
       specs: [],
       pipeline: [
         { $match: { org_id: 'org_1' } },
+        { $sort: { _id: 1 } },
         {
           $facet: {
-            rows: [{ $sort: { _id: 1 } }, { $limit: 100 }, project],
+            rows: [{ $limit: 100 }, project],
             total: [{ $count: 'count' }],
           },
         },
@@ -78,14 +79,10 @@ describe('rows', () => {
       { $match: { org_id: 'org_1' } },
       { $match: { amount: { $gt: 10 } } },
       { $match: { $or: [{ name: /ada/i }, { email: /ada/i }] } },
+      { $sort: { amount: -1, 'owner.name': 1, _id: 1 } },
       {
         $facet: {
-          rows: [
-            { $sort: { amount: -1, 'owner.name': 1, _id: 1 } },
-            { $skip: 200 },
-            { $limit: 200 },
-            project,
-          ],
+          rows: [{ $skip: 200 }, { $limit: 200 }, project],
           total: [{ $count: 'count' }],
         },
       },
@@ -110,9 +107,10 @@ describe('rows', () => {
   test('pipeline defaults to no base stages', () => {
     const { pipeline } = compileTableQuery({ properties: { fields, endRow: 10 }, now });
     expect(pipeline).toEqual([
+      { $sort: { _id: 1 } },
       {
         $facet: {
-          rows: [{ $sort: { _id: 1 } }, { $limit: 10 }, project],
+          rows: [{ $limit: 10 }, project],
           total: [{ $count: 'count' }],
         },
       },
@@ -161,13 +159,12 @@ describe('rows', () => {
       },
       now,
     });
-    expect(pipeline[0].$facet.rows[0]).toEqual({ $sort: { _id: -1 } });
+    expect(pipeline[0]).toEqual({ $sort: { _id: -1 } });
   });
 
   test('a zero row request returns the total only', () => {
     const { pipeline } = compile({ startRow: 50, endRow: 50 });
-    expect(pipeline[1].$facet.rows).toEqual([
-      { $sort: { _id: 1 } },
+    expect(pipeline.at(-1).$facet.rows).toEqual([
       { $skip: 50 },
       { $match: { $expr: false } },
       project,
@@ -176,24 +173,44 @@ describe('rows', () => {
 
   test('endRow defaults to startRow + maxRows', () => {
     const { pipeline } = compile({ startRow: 10, maxRows: 50 });
-    expect(pipeline[1].$facet.rows).toEqual([
-      { $sort: { _id: 1 } },
-      { $skip: 10 },
-      { $limit: 50 },
-      project,
+    expect(pipeline.at(-1).$facet.rows).toEqual([{ $skip: 10 }, { $limit: 50 }, project]);
+  });
+});
+
+describe('sort before the facet', () => {
+  test('rows are sorted before $facet, so an index on the sort fields can serve the sort', () => {
+    const { pipeline } = compile({
+      view: { filter: { key: 'stage', op: 'eq', value: 'won' }, sort: [{ key: 'amount' }] },
+      endRow: 10,
+    });
+    expect(pipeline).toEqual([
+      { $match: { org_id: 'org_1' } },
+      { $match: { stage: /^won$/i } },
+      { $sort: { amount: 1, _id: 1 } },
+      {
+        $facet: {
+          rows: [{ $limit: 10 }, project],
+          total: [{ $count: 'count' }],
+        },
+      },
     ]);
+  });
+
+  test('group levels are not sorted before $facet', () => {
+    const { pipeline } = compile({ view: { group: [{ key: 'stage' }] }, groupPath: [] });
+    expect(pipeline.map((stage) => Object.keys(stage)[0])).toEqual(['$match', '$facet']);
   });
 });
 
 describe('projection', () => {
   test('rows are projected to the field paths and _id by default', () => {
     const { pipeline } = compile({ endRow: 10 });
-    expect(pipeline[1].$facet.rows.at(-1)).toEqual({ $project: projection });
+    expect(pipeline.at(-1).$facet.rows.at(-1)).toEqual({ $project: projection });
   });
 
   test('returnFields adds the paths cells read, and paths inside another path collapse into it', () => {
     const { pipeline } = compile({ endRow: 10, returnFields: ['owner', 'avatar.src', 'name'] });
-    expect(pipeline[1].$facet.rows.at(-1)).toEqual({
+    expect(pipeline.at(-1).$facet.rows.at(-1)).toEqual({
       $project: {
         _id: 1,
         name: 1,
@@ -209,15 +226,15 @@ describe('projection', () => {
 
   test('project: false returns the rows as the base pipeline leaves them', () => {
     const { pipeline } = compile({ endRow: 10, project: false });
-    expect(pipeline[1].$facet.rows).toEqual([{ $sort: { _id: 1 } }, { $limit: 10 }]);
+    expect(pipeline.at(-1).$facet.rows).toEqual([{ $limit: 10 }]);
   });
 
   test('the leaf rows of a group are projected, group levels are not', () => {
     const view = { group: [{ key: 'stage' }] };
     const leaf = compile({ view, groupPath: ['won'], endRow: 10 });
-    expect(leaf.pipeline[2].$facet.rows.at(-1)).toEqual({ $project: projection });
+    expect(leaf.pipeline.at(-1).$facet.rows.at(-1)).toEqual({ $project: projection });
     const groups = compile({ view, groupPath: [], endRow: 10 });
-    expect(groups.pipeline[1].$facet.groups.some((stage) => stage.$project)).toBe(false);
+    expect(groups.pipeline.at(-1).$facet.groups.some((stage) => stage.$project)).toBe(false);
   });
 
   test('returnFields must be an array of dot paths', () => {
@@ -290,7 +307,7 @@ describe('grouping', () => {
     const { pipeline, grouped } = compile({ view, groupPath: ['won'], startRow: 0, endRow: 100 });
     expect(grouped).toBe(true);
     expect(pipeline[1]).toEqual({ $match: { stage: 'won' } });
-    expect(pipeline[2].$facet.groups[0]).toEqual({
+    expect(pipeline.at(-1).$facet.groups[0]).toEqual({
       $group: { _id: '$owner.name', count: { $sum: 1 } },
     });
   });
@@ -304,7 +321,7 @@ describe('grouping', () => {
     });
     expect(grouped).toBe(false);
     expect(pipeline[1]).toEqual({ $match: { $and: [{ stage: 'won' }, { 'owner.name': null }] } });
-    expect(pipeline[2].$facet.rows[0]).toEqual({ $sort: { _id: 1 } });
+    expect(pipeline.at(-2)).toEqual({ $sort: { _id: 1 } });
   });
 
   test('group values match exactly, not as text', () => {
@@ -317,7 +334,7 @@ describe('grouping', () => {
       view: { ...view, sort: [{ key: 'stage', desc: true }] },
       groupPath: [],
     });
-    expect(pipeline[1].$facet.groups[1]).toEqual({ $sort: { _id: -1 } });
+    expect(pipeline.at(-1).$facet.groups[1]).toEqual({ $sort: { _id: -1 } });
   });
 
   test('groupPath values may be dates, numbers, booleans and ObjectIds', () => {
@@ -371,7 +388,7 @@ describe('aggregates', () => {
       { key: 'owner', fn: 'countEmpty', name: 'a4' },
       { key: 'stage', fn: 'countNotEmpty', name: 'a5' },
     ]);
-    expect(pipeline[1].$facet.aggregates).toEqual([
+    expect(pipeline.at(-1).$facet.aggregates).toEqual([
       {
         $group: {
           _id: null,
@@ -391,7 +408,7 @@ describe('aggregates', () => {
     ]);
     // countDistinct counts the groups of the value in its own branch, never building a set
     // of every distinct value in one document.
-    expect(pipeline[1].$facet.distinct_a2).toEqual([
+    expect(pipeline.at(-1).$facet.distinct_a2).toEqual([
       { $group: { _id: '$name' } },
       { $match: { _id: { $nin: [null, '', []] } } },
       { $count: 'count' },
@@ -408,7 +425,7 @@ describe('aggregates', () => {
     const { pipeline } = compile({
       view: { group: [{ key: 'stage' }], aggregates: { owner: 'countDistinct' } },
     });
-    expect(pipeline[1].$facet.groups.slice(0, 2)).toEqual([
+    expect(pipeline.at(-1).$facet.groups.slice(0, 2)).toEqual([
       {
         $group: {
           _id: '$stage',
@@ -418,8 +435,8 @@ describe('aggregates', () => {
       },
       { $addFields: { a0: { $size: '$a0' } } },
     ]);
-    expect(pipeline[1].$facet.aggregates).toEqual([{ $group: { _id: null } }]);
-    expect(pipeline[1].$facet.distinct_a0).toEqual([
+    expect(pipeline.at(-1).$facet.aggregates).toEqual([{ $group: { _id: null } }]);
+    expect(pipeline.at(-1).$facet.distinct_a0).toEqual([
       { $group: { _id: '$owner.name' } },
       { $match: { _id: { $nin: [null, '', []] } } },
       { $count: 'count' },
@@ -440,7 +457,7 @@ describe('aggregates', () => {
       },
       now,
     });
-    expect(pipeline[0].$facet.aggregates).toEqual([
+    expect(pipeline.at(-1).$facet.aggregates).toEqual([
       {
         $group: {
           _id: null,
@@ -458,10 +475,10 @@ describe('aggregates', () => {
     const { pipeline } = compile({
       view: { group: [{ key: 'stage' }], aggregates: { amount: 'avg' } },
     });
-    expect(pipeline[1].$facet.groups[0]).toEqual({
+    expect(pipeline.at(-1).$facet.groups[0]).toEqual({
       $group: { _id: '$stage', count: { $sum: 1 }, a0: { $avg: '$amount' } },
     });
-    expect(pipeline[1].$facet.aggregates).toEqual([
+    expect(pipeline.at(-1).$facet.aggregates).toEqual([
       { $group: { _id: null, a0: { $avg: '$amount' } } },
     ]);
   });

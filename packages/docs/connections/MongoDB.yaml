@@ -902,13 +902,15 @@ _ref:
             - $match: <view filter>
             - $match: <view search>
             - $match: <groupPath>
+            - $sort: <view sort, then _id>        # when rows are returned
             - $facet:
-                rows: [$sort, $skip, $limit, $project]   # or groups: [$group, $sort, $skip, $limit]
+                rows: [$skip, $limit, $project]   # or groups: [$group, $sort, $skip, $limit]
                 total: [$count]
                 aggregates: [$group]              # when the view has aggregates
+                distinct_a0: [$group, $count]     # one per countDistinct
             ```
 
-            Rows are sorted by the view sort with `_id` as a tiebreak, so blocks of rows never repeat or skip a row.
+            Rows are sorted by the view sort with `_id` as a tiebreak, so blocks of rows never repeat or skip a row. The sort runs before `$facet`, so an index on the base pipeline match, filter and sort fields (for example `{ org_id: 1, amount: -1, _id: 1 }` for a table of one organization sorted by amount) serves it, and each block reads the rows in index order. Without such an index, MongoDB sorts every matching document for each block, so add indexes for the sorts a large table offers.
 
             ##### Response
 

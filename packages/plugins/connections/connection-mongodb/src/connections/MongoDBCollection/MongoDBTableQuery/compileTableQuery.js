@@ -66,7 +66,11 @@ function compileGroupsFacet({ view, groupPath, fieldsByKey, rows, aggregates }) 
 // Compiles the validated request to one aggregation:
 //   base pipeline (the app's scoping, always first, so the view can only narrow it)
 //   → $match filter → $match search → $match groupPath
-//   → $facet { rows (projected to the fields) | groups, total, aggregates? }
+//   → $sort (rows only)
+//   → $facet { rows (paged, projected to the fields) | groups, total, aggregates? }
+// The rows are sorted before $facet, where MongoDB can serve the sort from an index on the
+// match and sort fields and stream the rows in order; a $sort inside $facet always sorts
+// every matching document again, for every block the table fetches.
 function compileTableQuery({ properties, now }) {
   const { fields, view, startRow, endRow, groupPath, maxRows, user } = properties;
   const pipeline = properties.pipeline ?? [];
@@ -113,13 +117,12 @@ function compileTableQuery({ properties, now }) {
         aggregates: groupAggregates,
       })
     : {
-        rows: [
-          { $sort: compileSort({ sort: parsedView.sort, fieldsByKey }) },
-          ...pageStages(rows),
-          ...projection,
-        ],
+        rows: [...pageStages(rows), ...projection],
         total: [{ $count: 'count' }],
       };
+  const sortStages = grouped
+    ? []
+    : [{ $sort: compileSort({ sort: parsedView.sort, fieldsByKey }) }];
   if (aggregates.specs.length > 0) {
     facet.aggregates = [
       { $group: { _id: null, ...aggregates.accumulators } },
@@ -131,7 +134,12 @@ function compileTableQuery({ properties, now }) {
   return {
     grouped,
     options: { maxTimeMS: DEFAULT_MAX_TIME_MS, ...(properties.options ?? {}) },
-    pipeline: [...pipeline, ...matches.map((match) => ({ $match: match })), { $facet: facet }],
+    pipeline: [
+      ...pipeline,
+      ...matches.map((match) => ({ $match: match })),
+      ...sortStages,
+      { $facet: facet },
+    ],
     specs: aggregates.specs,
   };
 }

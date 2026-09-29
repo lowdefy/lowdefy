@@ -18,6 +18,8 @@ import { ObjectId } from 'mongodb';
 import { validate } from '@lowdefy/ajv';
 
 import MongoDBTableQuery from './MongoDBTableQuery.js';
+import compileTableQuery from './compileTableQuery.js';
+import getTestCollection from '../../../../test/getTestCollection.js';
 import populateTestMongoDb from '../../../../test/populateTestMongoDb.js';
 
 const { checkRead, checkWrite } = MongoDBTableQuery.meta;
@@ -460,6 +462,52 @@ describe('aggregates', () => {
       total: 0,
       aggregates: { amount: 0, created: null, name: 0 },
     });
+  });
+});
+
+describe('indexes', () => {
+  // Every query plan stage name ({ stage: 'IXSCAN' }) and aggregation stage ({ $sort }) in an
+  // explain output.
+  function planStages(plan, stages = []) {
+    if (Array.isArray(plan)) {
+      plan.forEach((item) => planStages(item, stages));
+    } else if (plan !== null && typeof plan === 'object') {
+      if (typeof plan.stage === 'string') stages.push(plan.stage);
+      Object.entries(plan).forEach(([key, item]) => {
+        if (key.startsWith('$')) stages.push(key);
+        planStages(item, stages);
+      });
+    }
+    return stages;
+  }
+
+  test('an index on the filter and sort fields serves the sort, with no blocking SORT', async () => {
+    const indexed = 'tableQueryIndexed';
+    await populateTestMongoDb({ collection: indexed, documents });
+    const { client, collection: raw } = await getTestCollection({ collection: indexed });
+    try {
+      await raw.createIndex({ org_id: 1, amount: -1, _id: 1 });
+      const compiled = compileTableQuery({
+        properties: {
+          pipeline,
+          fields,
+          view: { sort: [{ key: 'amount', desc: true }] },
+          startRow: 10,
+          endRow: 20,
+        },
+        now: new Date(),
+      });
+      const explained = await raw.aggregate(compiled.pipeline).explain('queryPlanner');
+      // `stages` is the pipeline as MongoDB runs it; the explain also echoes the command sent.
+      const stages = planStages(explained.stages);
+      // The index gives the order: no blocking SORT in the plan and no $sort stage after it,
+      // where every block fetch would sort all matching documents again.
+      expect(stages).toContain('IXSCAN');
+      expect(stages).not.toContain('SORT');
+      expect(stages).not.toContain('$sort');
+    } finally {
+      await client.close();
+    }
   });
 });
 
