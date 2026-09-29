@@ -39,7 +39,11 @@ if (!Number.isInteger(port) || port <= 0) {
 const replSet = await MongoMemoryReplSet.create({
   // A loaded machine can take well over the 10 second default to start mongod.
   instanceOpts: [{ port, storageEngine: 'wiredTiger', launchTimeout: 60000 }],
-  replSet: { count: 1 },
+  // mongod in a process group of its own: Playwright stops this script with a signal to its
+  // group, and a mongod that got it too was gone before stop() could shut it down cleanly
+  // (a MongoServerSelectionError on every run). It still stops with this script: stop() below,
+  // or mongodb-memory-server's killer process if the script is killed.
+  replSet: { count: 1, spawn: { detached: true } },
 });
 // eslint-disable-next-line no-console
 console.log(`MongoDB replica set ready at ${replSet.getUri()}`);

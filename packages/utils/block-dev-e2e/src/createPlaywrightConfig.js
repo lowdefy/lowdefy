@@ -78,6 +78,11 @@ function createPlaywrightConfig({
         reuseExistingServer,
         timeout: 180000,
         env: env === undefined ? undefined : { ...process.env, ...env },
+        // Playwright stops the web servers in reverse order, the app first. Killed outright, the
+        // server that `lowdefy start` runs outlives its shell, so it was still connected when the
+        // services (a database) stopped under it. A SIGTERM to the app's process group, waited
+        // for, stops it before the services.
+        ...(services.length > 0 ? { gracefulShutdown: { signal: 'SIGTERM', timeout: 15000 } } : {}),
       },
     ],
   });
