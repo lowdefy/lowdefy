@@ -20,8 +20,13 @@ import endpointIdPattern from '../endpointIdPattern.js';
 
 const endpointIdRegex = new RegExp(endpointIdPattern);
 const toolNameRegex = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
+const printableAsciiRegex = /^[\x21-\x7e]*$/;
 
 function isUnsafeToolPath(path) {
+  // Printable ASCII only, before and after percent-decoding. A URL parser strips tabs and
+  // newlines without a word (".\t." becomes ".."), and a server may fold other whitespace or
+  // unicode lookalikes ("\uff0e\uff0e") into dots, so none of them can be in a path.
+  if (!printableAsciiRegex.test(path)) return true;
   // A scheme ("https:") or a network path ("//host") would name another host; a query or
   // fragment belongs in `query`; "." and ".." segments, also percent-encoded, would climb
   // out of the tool's base URL.
@@ -34,6 +39,7 @@ function isUnsafeToolPath(path) {
   } catch {
     return true;
   }
+  if (!printableAsciiRegex.test(decoded)) return true;
   return decoded
     .split('/')
     .some((segment) => segment === '..' || segment === '.' || segment.includes('\\'));
@@ -66,7 +72,7 @@ function resolveCallPath({ request, connection }) {
   }
   if (!type.isString(request.path) || isUnsafeToolPath(request.path)) {
     throw new Error(
-      `TregCall "path" should be a path on the tool's API, with no scheme, host, query or "..". Received ${JSON.stringify(
+      `TregCall "path" should be a path on the tool's API, with no scheme, host, query, "..", whitespace, control characters or non-ASCII characters. Received ${JSON.stringify(
         request.path
       )}.`
     );

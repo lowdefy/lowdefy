@@ -65,7 +65,7 @@ _ref:
 
             - `endpoint: string`: The catalog or routed endpoint id to call. Find ids with `TregCatalogSearch`.
             - `tool: string`: The name of one of the team's own tools, with `path`. Needs `allowCustomTools` on the connection.
-            - `path: string`: The path on the tool's API, such as `/v1/charges`. A path only: no scheme, host, query or `..`.
+            - `path: string`: The path on the tool's API, such as `/v1/charges`. A path only: printable ASCII (also once percent-decoded) with no scheme, host, query, backslash, `.` or `..` segment, whitespace or control characters. A path the URL parser would change (it strips tabs and newlines and resolves `..`) is refused before anything is sent.
             - `method: enum`: `GET`, `POST`, `PUT`, `PATCH` or `DELETE`. Defaults to `POST` when `body` is set, otherwise `GET`.
             - `query: object`: Query parameters. An array value sends the parameter once per item.
             - `body: any`: The JSON request body. A routed endpoint takes its inputs here.

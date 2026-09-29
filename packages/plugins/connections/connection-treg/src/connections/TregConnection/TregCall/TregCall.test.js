@@ -256,12 +256,51 @@ describe('endpoint and custom tool validation', () => {
     ['a query', '/v1/charges?limit=1'],
     ['a backslash', '/v1\\..\\orgs'],
     ['a malformed escape', '/v1/%zz'],
+    ['a tab inside a parent segment (URL parsers strip it)', '.\t./https://evil.example/steal'],
+    ['newlines inside parent segments', '.\n./.\n./x'],
+    ['a carriage return inside a parent segment', '/v1/.\r./orgs'],
+    ['a space', '/v1/ ../orgs'],
+    ['a NUL byte', '/v1/\u0000/orgs'],
+    ['a DEL byte', '/v1/\u007f/orgs'],
+    ['an encoded tab', '/v1/.%09./orgs'],
+    ['an encoded newline', '/v1/.%0a./.%0A./x'],
+    ['an encoded backslash', '/v1/..%5corgs'],
+    ['an encoded slash in a parent segment', '/v1/..%2f..%2forgs'],
+    ['a backslash parent segment', '\\..\\orgs'],
+    ['a fullwidth full stop parent segment', '/v1/\uff0e\uff0e/orgs'],
+    ['a one dot leader parent segment', '/v1/\u2024\u2024/orgs'],
+    ['a fullwidth solidus', '/v1/..\uff0forgs'],
+    ['a non-breaking space', '/v1/\u00a0'],
   ])('TregCall refuses a custom tool path with %s', async (_, path) => {
     const error = await callError(
       { tool: 'stripe', path },
       { ...connection, allowCustomTools: true }
     );
     expect(error.message).toContain('TregCall "path" should be a path on the tool\'s API');
+    expect(mock.requests).toHaveLength(0);
+  });
+
+  test.each([
+    ['a tab', '.\t./https://evil.example/steal'],
+    ['a newline', '.\n./.\n./x'],
+    ['a fullwidth full stop', '/v1/\uff0e\uff0e/orgs'],
+    ['a space', '/v1/ x'],
+  ])('TregCall schema refuses a custom tool path with %s', (_, path) => {
+    expect(() => validate({ schema, data: { tool: 'stripe', path } })).toThrow(
+      'TregCall request property "path" should only have printable ASCII characters'
+    );
+  });
+
+  test.each([
+    ['a tab', 'stripe\t'],
+    ['a newline', 'str\nipe'],
+    ['a fullwidth letter', 'str\uff49pe'],
+  ])('TregCall refuses a tool name with %s', async (_, tool) => {
+    const error = await callError(
+      { tool, path: '/v1/charges' },
+      { ...connection, allowCustomTools: true }
+    );
+    expect(error.message).toContain('TregCall "tool" should be a tool name');
     expect(mock.requests).toHaveLength(0);
   });
 
