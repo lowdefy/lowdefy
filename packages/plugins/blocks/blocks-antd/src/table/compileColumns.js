@@ -15,7 +15,6 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { nunjucksFunction } from '@lowdefy/nunjucks';
 
 import compileCondition from './compileCondition.js';
 import compileRules from './compileRules.js';
@@ -27,6 +26,15 @@ import getCellLayout from './getCellLayout.js';
 function compileWhen({ option, columnsByKey, column, user, now }) {
   if (!type.isObject(option)) return null;
   return compileCondition({ condition: option.when, columnsByKey, column, user, now });
+}
+
+// Hosts load the compiler when needsTemplates is true; a template reaching
+// here without it is a host bug, not a config error.
+function requireCompiler(compileTemplate) {
+  if (typeof compileTemplate !== 'function') {
+    throw new Error('compileColumns needs "compileTemplate" for a column with a template.');
+  }
+  return compileTemplate;
 }
 
 function compileControls({ controls, columnsByKey, column, user, now }) {
@@ -42,8 +50,10 @@ function compileControls({ controls, columnsByKey, column, user, now }) {
 // functions (or null), `template` is the html cell's compiled template,
 // `buttons` / `items` hold the compiled `when` conditions of each button or
 // menu item, by index, and `className` / `style` are the cell wrapper's. Hosts call this after normalizeColumns and pass the
-// compiled columns to renderCell.
-function compileColumns({ columns, columnsByKey, user, now }) {
+// compiled columns to renderCell. `compileTemplate` is the nunjucks compiler
+// (nunjucksFunction), which hosts load only when needsTemplates says a column
+// uses a template (loadTemplateCompiler).
+function compileColumns({ columns, columnsByKey, user, now, compileTemplate }) {
   return columns.map((column) => {
     const { cell } = column;
     const layout = getCellLayout(column);
@@ -53,10 +63,10 @@ function compileColumns({ columns, columnsByKey, user, now }) {
         className: layout.className,
         style: layout.style,
         rules: compileRules({ rules: column.rules, columnsByKey, column, user, now }),
-        tooltip: compileTooltip({ tooltip: column.tooltip }),
+        tooltip: compileTooltip({ tooltip: column.tooltip, compileTemplate }),
         template:
           column.type === 'html' && type.isString(cell.template)
-            ? nunjucksFunction(cell.template)
+            ? requireCompiler(compileTemplate)(cell.template)
             : null,
         buttons:
           column.type === 'buttons'

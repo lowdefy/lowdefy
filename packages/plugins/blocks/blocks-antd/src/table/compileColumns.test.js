@@ -14,12 +14,18 @@
   limitations under the License.
 */
 
+import { nunjucksFunction } from '@lowdefy/nunjucks';
+
 import compileColumns from './compileColumns.js';
 import normalizeColumns from './normalizeColumns.js';
 
 function compile(columns) {
   const normalized = normalizeColumns({ columns });
-  return compileColumns({ columns: normalized.columns, columnsByKey: normalized.columnsByKey });
+  return compileColumns({
+    columns: normalized.columns,
+    columnsByKey: normalized.columnsByKey,
+    compileTemplate: nunjucksFunction,
+  });
 }
 
 test('compileColumns sets the cell layout class from wrap, ellipsis, type and align', () => {
@@ -53,7 +59,7 @@ test('compileColumns compiles rules, tooltips and html templates once per column
   ]);
   expect(score.compiled.rules({}, 2)).toEqual({
     className: undefined,
-    style: { color: 'var(--ant-color-error)' },
+    style: { color: 'var(--ant-red-6, #f5222d)' },
   });
   expect(score.compiled.tooltip).toBeNull();
   expect(score.compiled.template).toBeNull();

@@ -19,12 +19,12 @@ import { type } from '@lowdefy/helpers';
 const EMPTY = [];
 
 // Stage 1 of the data pipeline (see TableRoot): the source rows, before they are diffed by key.
-// `properties.data` is the client rows; a feature's `useData(ctx)` hook may replace them in
+// `data` is the client rows (`properties.data`, or the rows held while a refetch loads); a feature's `useData(ctx)` hook may replace them in
 // registry order: server mode returns the rows its block cache holds, and a tree built from
 // `childrenField` flattens nested rows (so every node is diffed by key). The registry is a
 // module constant, so the hook order never changes between renders.
-function useFeatureData({ api, config, properties }) {
-  let data = type.isArray(properties.data) ? properties.data : EMPTY;
+function useFeatureData({ api, config, data: clientData, properties }) {
+  let data = type.isArray(clientData) ? clientData : EMPTY;
   api.features.list.forEach((feature) => {
     if (!feature.useData) return;
     data = feature.useData({ api, config, data, properties });

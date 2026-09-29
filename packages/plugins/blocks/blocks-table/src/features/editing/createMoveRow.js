@@ -17,6 +17,7 @@
 import applyMoveToChanges from './applyMoveToChanges.js';
 import computeRowMove from './computeRowMove.js';
 import getDataGap from './getDataGap.js';
+import findRow from '../../core/findRow.js';
 
 // A row move from a drag drop or Alt+Shift+Arrow, on the rows in display order. Moves are only
 // offered while the display order is the data order (or the position order), so the move's
@@ -28,7 +29,7 @@ function createMoveRow(api) {
   return function moveRow({ rowId, gap }) {
     const { editing } = api;
     if (!editing.options.rowDrag || editing.reorderBlock.get()) return null;
-    const row = api.table.getRow(rowId, true);
+    const row = findRow({ table: api.table, id: rowId });
     if (!row) return null;
     const move = computeRowMove({
       rows: api.dataRows.map((dataRow) => dataRow.original),

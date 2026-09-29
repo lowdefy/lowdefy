@@ -30,7 +30,7 @@ const OPERATORS = [
   { value: 'or', label: 'Any' },
 ];
 
-function FilterGroup({ group, columns, user, depth, onChange, onRemove }) {
+function FilterGroup({ group, columns, components, user, depth, onChange, onRemove }) {
   const operator = getGroupOperator(group);
   const children = group[operator];
   const canAdd = columns.length > 0;
@@ -72,6 +72,7 @@ function FilterGroup({ group, columns, user, depth, onChange, onRemove }) {
           getGroupOperator(child) === null ? (
             <FilterLeaf
               columns={columns}
+              components={components}
               key={index}
               leaf={child}
               onChange={(next) => setChild(index, next)}
@@ -81,6 +82,7 @@ function FilterGroup({ group, columns, user, depth, onChange, onRemove }) {
           ) : (
             <FilterGroup
               columns={columns}
+              components={components}
               depth={depth + 1}
               group={child}
               key={index}

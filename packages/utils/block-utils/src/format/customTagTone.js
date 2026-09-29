@@ -14,24 +14,18 @@
   limitations under the License.
 */
 
-import React from 'react';
+import readableToneText from './readableToneText.js';
 
-const SKELETON_ROWS = 5;
-
-function LoadingRows({ layout }) {
-  const rows = [];
-  for (let i = 0; i < SKELETON_ROWS; i++) {
-    rows.push(
-      <div aria-hidden="true" className="lf-table-row" key={i}>
-        {layout.cols.map((col) => (
-          <div className="lf-table-gridcell" key={col.key} style={{ width: col.width }}>
-            {col.special ? null : <span className="lf-table-skeleton-bar" />}
-          </div>
-        ))}
-      </div>
-    );
-  }
-  return <div className="lf-table-body">{rows}</div>;
+// The tag look for a colour that is not a tone name (a hex, rgb() or var() value): a fill and
+// border tinted with the colour, and the colour darkened (or, in a dark theme, lightened) toward
+// the text colour for the label, so a light custom colour still reads.
+function customTagTone(color) {
+  return {
+    color,
+    text: readableToneText({ color, share: 60 }),
+    bg: `color-mix(in srgb, ${color} 12%, transparent)`,
+    border: `color-mix(in srgb, ${color} 30%, transparent)`,
+  };
 }
 
-export default LoadingRows;
+export default customTagTone;

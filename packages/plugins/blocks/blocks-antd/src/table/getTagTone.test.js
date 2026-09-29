@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import customTagTone from '@lowdefy/block-utils/format/customTagTone.js';
+import TAG_TONES from '@lowdefy/block-utils/format/tagTones.js';
+
 import getTagTone from './getTagTone.js';
 import normalizeOptions from './normalizeOptions.js';
 
@@ -22,33 +25,32 @@ test('getTagTone uses the option colour, or neutral for an option without one', 
     cell: {},
     options: normalizeOptions([{ value: 'won', color: 'success' }, { value: 'open' }]),
   };
-  expect(getTagTone({ item: 'won', column, row: {} })).toBe('var(--ant-color-success)');
-  expect(getTagTone({ item: 'open', column, row: {} })).toBe('var(--ant-color-text-secondary)');
+  expect(getTagTone({ item: 'won', column, row: {} })).toBe(TAG_TONES.success);
+  expect(getTagTone({ item: 'open', column, row: {} })).toBe(TAG_TONES.default);
 });
 
 test('getTagTone falls back to the ag-grid colorFrom, colorMap and default keys', () => {
   expect(getTagTone({ item: 'a', column: { cell: { colorFrom: 'c' } }, row: { c: 'red' } })).toBe(
-    'var(--ant-color-error)'
+    TAG_TONES.red
   );
-  expect(getTagTone({ item: 'a', column: { cell: { colorMap: { a: '#123456' } } }, row: {} })).toBe(
-    '#123456'
-  );
+  expect(
+    getTagTone({ item: 'a', column: { cell: { colorMap: { a: '#123456' } } }, row: {} })
+  ).toEqual(customTagTone('#123456'));
   expect(
     getTagTone({
       item: 'b',
       column: { cell: { colorMap: { a: 'red' }, default: 'blue' } },
       row: {},
     })
-  ).toBe('var(--ant-color-info)');
+  ).toBe(TAG_TONES.blue);
   expect(getTagTone({ item: 'b', column: { cell: { colorMap: { a: 'red' } } }, row: {} })).toBe(
-    'var(--ant-color-text-secondary)'
+    TAG_TONES.default
   );
 });
 
-test('getTagTone seeds a stable colour when the column sets no colours', () => {
+test('getTagTone seeds a stable preset tone when the column sets no colours', () => {
   const column = { cell: {} };
   const tone = getTagTone({ item: 'Approved', column, row: {} });
-  // A status colour (var(--ant-color-*)) or a palette colour (var(--ant-<name>-6, #hex)).
-  expect(tone).toMatch(/^var\(--ant-/);
+  expect(Object.values(TAG_TONES)).toContain(tone);
   expect(getTagTone({ item: 'Approved', column, row: {} })).toBe(tone);
 });

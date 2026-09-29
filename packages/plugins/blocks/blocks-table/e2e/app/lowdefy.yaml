@@ -46,3 +46,5 @@ pages:
   - _ref: ../../src/blocks/Table/tests/views.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/bulk.e2e.yaml
   - _ref: ../../src/blocks/Table/tests/polish.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/loading.e2e.yaml
+  - _ref: ../../src/blocks/Table/tests/tones.e2e.yaml

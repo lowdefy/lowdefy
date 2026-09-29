@@ -19,6 +19,7 @@ import { Button, Popover } from 'antd';
 
 import countConditions from './countConditions.js';
 import LazyFilterBuilder from '../filtering/LazyFilterBuilder.js';
+import PopoverLoadingContent from '../../core/PopoverLoadingContent.js';
 import ToolbarCount from './ToolbarCount.js';
 import ToolbarIcon from './ToolbarIcon.js';
 
@@ -29,9 +30,10 @@ function FilterButton({ api }) {
   const columns = api.config.columns.filter((column) => column.filterable);
   const content = (
     <div className="lf-table-toolbar-popover" data-lf-toolbar-filter="">
-      <Suspense fallback={null}>
+      <Suspense fallback={<PopoverLoadingContent />}>
         <LazyFilterBuilder
           columns={columns}
+          components={api.components}
           condition={filter}
           onChange={(condition) => api.actions.applyFiltering({ filter: condition ?? null })}
           user={api.config.user}

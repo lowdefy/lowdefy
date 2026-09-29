@@ -15,7 +15,9 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 // TableInput renders the Table DOM over its `data`; its value (the changes) is mirrored into
 // spans as JSON.
@@ -56,7 +58,7 @@ async function dragRow(page, blockId, rowKey, targetRowKey, { below = true } = {
 
 test.describe('TableInput', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'table-input');
+    await openTablePage(page, 'table-input');
     await expect(cell(page, 'lines', 'a', 'item')).toHaveText('Apples');
   });
 

@@ -111,10 +111,11 @@
     gap: var(--ant-margin-xxs, 4px);
     max-width: 100%;
     padding: var(--ant-padding-xxs, 4px) var(--ant-padding-xs, 8px);
-    border: 1px solid color-mix(in srgb, var(--lf-table-tone) 30%, transparent);
+    /* The fallback keeps the border's width where no tone is set (the chip measure probe). */
+    border: 1px solid var(--lf-table-tone-border, transparent);
     border-radius: var(--ant-border-radius-sm, 4px);
-    background: color-mix(in srgb, var(--lf-table-tone) 12%, transparent);
-    color: var(--lf-table-tone);
+    background: var(--lf-table-tone-bg);
+    color: var(--lf-table-tone-text);
     font-size: var(--ant-font-size-sm, 12px);
     font-weight: 600;
     line-height: 1;
@@ -178,12 +179,17 @@
     border-radius: var(--ant-border-radius-sm, 4px);
   }
 
+  /* A person (and a group of avatars) is exactly one text line tall, top-aligned in the line, with
+     the avatar centred and overhanging it: the name then sits where plain and link text sit in
+     the same row. `vertical-align: middle` put the box at the font's x-height, so the name moved
+     by up to 2px with the font's metrics, and the taller box grew the line. */
   .lf-table-person {
     display: inline-flex;
     align-items: center;
     gap: calc(var(--ant-margin-xs, 8px) * 0.75);
     max-width: 100%;
-    vertical-align: middle;
+    height: 1lh;
+    vertical-align: top;
   }
 
   .lf-table-person-name {
@@ -220,7 +226,8 @@
     --lf-avatar-font-size: 10px;
     display: inline-flex;
     align-items: center;
-    vertical-align: middle;
+    height: 1lh;
+    vertical-align: top;
   }
 
   .lf-table-people > .lf-table-avatar {

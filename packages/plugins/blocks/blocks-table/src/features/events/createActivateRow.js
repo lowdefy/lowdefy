@@ -16,6 +16,7 @@
 
 import getRowIndex from './getRowIndex.js';
 import openRowLink from './openRowLink.js';
+import findRow from '../../core/findRow.js';
 
 // A row "activation" (click, or Enter on a focused cell), with TableLight's semantics: onRowClick
 // fires, and rowLink is followed unless onRowClick is defined too, in which case a plain click is
@@ -23,7 +24,7 @@ import openRowLink from './openRowLink.js';
 // tab.
 function createActivateRow(api) {
   return function activateRow({ id, event, newTab }) {
-    const row = api.table.getRow(id, true);
+    const row = findRow({ table: api.table, id });
     if (!row) return false;
     const hasRowClick = Boolean(api.events.onRowClick);
     if (hasRowClick) {

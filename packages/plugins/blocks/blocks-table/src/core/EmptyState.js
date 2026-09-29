@@ -15,22 +15,37 @@
 */
 
 import React from 'react';
-import { Empty } from 'antd';
+import { Button, Empty } from 'antd';
 import { renderHtml } from '@lowdefy/block-utils';
 
-// Blocks in the `empty` slot replace the default empty state; otherwise `emptyText` (html, as in
-// TableLight).
-function EmptyState({ content, methods, text }) {
+import renderSlot from './renderSlot.js';
+
+// When a filter or search hides every row, the table says so and offers to clear them, since
+// "No rows" would suggest there is no data at all (D17). Otherwise blocks in the `empty` slot
+// replace the default empty state, else `emptyText` (html, as in TableLight).
+function EmptyState({ content, filtered, methods, onClearFilters, text }) {
+  let body;
+  if (filtered) {
+    body = (
+      <Empty description="No matching rows" image={Empty.PRESENTED_IMAGE_SIMPLE}>
+        <Button data-lf-clear-filters="" onClick={onClearFilters} size="small">
+          Clear filters
+        </Button>
+      </Empty>
+    );
+  } else if (content.empty) {
+    body = renderSlot({ content, slot: 'empty' });
+  } else {
+    body = (
+      <Empty
+        description={renderHtml({ html: text, methods })}
+        image={Empty.PRESENTED_IMAGE_SIMPLE}
+      />
+    );
+  }
   return (
-    <div className="lf-table-empty-state" data-lf-empty="">
-      {content.empty ? (
-        content.empty()
-      ) : (
-        <Empty
-          description={renderHtml({ html: text, methods })}
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-        />
-      )}
+    <div className="lf-table-empty-state" data-lf-empty={filtered ? 'filtered' : ''}>
+      {body}
     </div>
   );
 }

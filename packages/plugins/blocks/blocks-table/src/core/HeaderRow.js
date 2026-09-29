@@ -68,6 +68,8 @@ function HeaderRow({
         </div>
         {renderHeaderCells({ api, cols: layout.end, activeCol, state })}
       </div>
+      {/* The refreshing progress bar, shown by CSS while the root is busy or pending. */}
+      <div aria-hidden="true" className="lf-table-loading-bar" />
     </div>
   );
 }

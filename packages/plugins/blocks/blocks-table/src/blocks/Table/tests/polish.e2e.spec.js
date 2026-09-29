@@ -14,7 +14,9 @@
   limitations under the License.
 */
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 // Visual checks for the Table's layout: computed styles, boxes and truncation, not pixels.
 const table = (page, blockId) => getBlock(page, blockId);
@@ -56,7 +58,7 @@ function measureSummary(locator) {
 
 test.describe('Table visual polish', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'polish');
+    await openTablePage(page, 'polish');
     await expect(row(page, 'crm', 1)).toBeAttached();
   });
 
@@ -454,7 +456,7 @@ test.describe('Table visual polish', () => {
   test('the tags editor shows picked values and options as the cell chips', async ({ page }) => {
     await row(page, 'crm', 3).locator('[data-col-key="labels"]').dblclick();
     const editor = page.locator('[data-lf-editor]');
-    await expect(editor.locator('.lf-table-editor-tag .lf-table-tag').first()).toBeVisible();
+    await expect(editor.locator('.lf-table-select-tag .lf-table-tag').first()).toBeVisible();
     const options = page.locator('.lf-table-editor-popup .ant-select-item-option');
     await expect(options.locator('.lf-table-tag')).toHaveCount(4);
   });
@@ -525,6 +527,71 @@ test.describe('Table visual polish', () => {
     };
     expect(colours.hovered[0] - colours.plain[0]).toBeGreaterThanOrEqual(15);
     expect(contrast(colours.link, colours.bar)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  test('filter builder value chips carry their option colours, as the cells do', async ({
+    page,
+  }) => {
+    await table(page, 'crm').locator('[data-lf-toolbar-button="filter"]').click();
+    const builder = page.locator('[data-lf-toolbar-filter] [data-lf-filter-builder]');
+    await expect(builder).toBeVisible();
+    await builder.getByRole('button', { name: '+ Add condition' }).first().click();
+    const leaf = builder.locator('[data-lf-filter-leaf]').last();
+    await leaf.getByLabel('Column').click();
+    await page
+      .locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option')
+      .filter({ hasText: /^Tags$/ })
+      .click();
+    await leaf.getByLabel('Values').click();
+    const options = page.locator(
+      '.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option'
+    );
+    // The list shows each value as its chip.
+    await expect(options.locator('.lf-table-tag')).toHaveCount(4);
+    await options.filter({ hasText: 'Renewal' }).click();
+    const picked = leaf.locator('.lf-table-select-tag .lf-table-tag');
+    await expect(picked).toHaveText(['Renewal']);
+    const cellChip = table(page, 'crm')
+      .locator('.lf-table-body .lf-table-tag')
+      .filter({ hasText: /^Renewal$/ })
+      .first();
+    const colours = (locator) =>
+      locator.evaluate((chip) => {
+        const style = getComputedStyle(chip);
+        return [style.color, style.backgroundColor, style.borderColor];
+      });
+    expect(await colours(picked)).toEqual(await colours(cellChip));
+  });
+
+  test('TableLight link, avatar name, number and date text share one baseline', async ({
+    page,
+  }) => {
+    // The text box of each cell's last text node; same font, so equal boxes mean one baseline.
+    const boxes = await page.locator('#light_baseline tbody tr.lf-table-row').evaluateAll((rows) =>
+      rows.map((row) => {
+        const texts = {};
+        Array.from(row.children).forEach((td, index) => {
+          const walker = document.createTreeWalker(td, NodeFilter.SHOW_TEXT);
+          let last = null;
+          for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+            if (node.textContent.trim()) last = node;
+          }
+          if (last === null) return;
+          const range = document.createRange();
+          range.selectNodeContents(last);
+          texts[index] = range.getBoundingClientRect().bottom;
+        });
+        return texts;
+      })
+    );
+    expect(boxes).toHaveLength(2);
+    boxes.forEach((texts) => {
+      // Columns: invoice (link), customer (avatar), status (tag), amount, due, actions.
+      const link = texts[0];
+      [texts[1], texts[3], texts[4]].forEach((bottom) => {
+        expect(Math.abs(bottom - link)).toBeLessThan(0.1);
+      });
+    });
   });
 
   test('TableLight rows next to a Table keep their table layout', async ({ page }) => {
@@ -604,7 +671,7 @@ test.describe('Table visual polish', () => {
   test('link, status and progress cells share the text baseline in TableLight and Table', async ({
     page,
   }) => {
-    await navigateToTestPage(page, 'table-parity');
+    await openTablePage(page, 'table-parity');
     for (const [id, rowSelector] of [
       ['parity_light', 'tbody tr[data-row-key]'],
       ['parity_table', '.lf-table-body [data-row-key]'],

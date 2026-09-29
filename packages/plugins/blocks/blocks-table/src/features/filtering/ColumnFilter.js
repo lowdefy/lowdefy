@@ -121,6 +121,7 @@ function ColumnFilter({ api, column }) {
       {showAdvanced ? (
         <FilterBuilder
           columns={[column]}
+          components={api.components}
           condition={builderCondition.current}
           onChange={writeFromBuilder}
           user={api.config.user}

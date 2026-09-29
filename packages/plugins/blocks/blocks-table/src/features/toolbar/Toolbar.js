@@ -18,11 +18,13 @@ import React from 'react';
 import { Button } from 'antd';
 
 import DensityToggle from './DensityToggle.js';
+import ExportButton from './ExportButton.js';
 import FilterButton from './FilterButton.js';
 import LazyColumnManagerPopover from '../columnManager/LazyColumnManagerPopover.js';
 import GroupButton from './GroupButton.js';
 import QuickFilter from './QuickFilter.js';
 import RecordCount from './RecordCount.js';
+import renderSlot from '../../core/renderSlot.js';
 import SortButton from './SortButton.js';
 import ToolbarIcon from './ToolbarIcon.js';
 import ToolbarSearch from './ToolbarSearch.js';
@@ -44,7 +46,7 @@ function Toolbar({ api, searchRef, toolbar }) {
       {showTabs ? <ViewTabs api={api} /> : null}
       <div className="lf-table-toolbar-row">
         <div className="lf-table-toolbar-start">
-          {content.toolbarStart ? content.toolbarStart() : null}
+          {renderSlot({ content, slot: 'toolbarStart' })}
           {toolbar.search ? <ToolbarSearch api={api} searchRef={searchRef} /> : null}
           {quickFilters.map((column) => (
             <QuickFilter api={api} column={column} key={column.key} />
@@ -70,17 +72,8 @@ function Toolbar({ api, searchRef, toolbar }) {
               Columns
             </Button>
           ) : null}
-          {toolbar.export ? (
-            <Button
-              data-lf-toolbar-button="export"
-              icon={<ToolbarIcon api={api} name="download" />}
-              onClick={() => api.actions.exportCsv({ filename: `${api.blockId}.csv` })}
-              size="small"
-            >
-              Export
-            </Button>
-          ) : null}
-          {content.toolbarEnd ? content.toolbarEnd() : null}
+          {toolbar.export ? <ExportButton api={api} /> : null}
+          {renderSlot({ content, slot: 'toolbarEnd' })}
         </div>
       </div>
     </div>

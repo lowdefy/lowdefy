@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-// The tag look shared by grid tag and progress cells and by data-tag in HTML:
-// a tinted fill and border in the tag colour.
-function tagStyle(color) {
+// The tag look shared by grid tag and progress cells and by data-tag in HTML: a tone's fill,
+// border and text colours (`resolveTagTone`, or CSS variables that hold them).
+function tagStyle({ text, bg, border }) {
   return {
     display: 'inline-flex',
     alignItems: 'center',
@@ -25,9 +25,9 @@ function tagStyle(color) {
     fontSize: 'var(--ant-font-size-sm, 12px)',
     fontWeight: 600,
     lineHeight: 1,
-    color,
-    background: `color-mix(in srgb, ${color} 12%, transparent)`,
-    border: `1px solid color-mix(in srgb, ${color} 30%, transparent)`,
+    color: text,
+    background: bg,
+    border: `1px solid ${border}`,
   };
 }
 

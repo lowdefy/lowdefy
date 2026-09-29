@@ -50,7 +50,7 @@ test('compileRules applies every matching rule in order', () => {
   });
   expect(apply({}, 7)).toEqual({
     className: 'a b always',
-    style: { fontWeight: 600, color: 'var(--ant-color-info)' },
+    style: { fontWeight: 600, color: 'var(--ant-blue-6, #1677ff)' },
   });
   expect(apply({}, 1)).toEqual({ className: 'a always', style: { fontWeight: 600, color: 'red' } });
 });

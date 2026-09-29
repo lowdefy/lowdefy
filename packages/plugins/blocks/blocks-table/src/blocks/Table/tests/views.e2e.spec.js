@@ -15,7 +15,9 @@
 */
 
 import { test, expect } from '@playwright/test';
-import { getBlock, navigateToTestPage } from '@lowdefy/block-dev-e2e';
+import { getBlock } from '@lowdefy/block-dev-e2e';
+
+import openTablePage from '../../../../e2e/openTablePage.js';
 
 // View tabs are antd Tabs; each label is [data-lf-view-tab=<id>] with data-dirty while the
 // current view differs from the saved one. The unsaved changes strip is [data-lf-view-actions].
@@ -29,7 +31,7 @@ const events = (page) => getBlock(page, 'vw_events');
 
 test.describe('Table saved views', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'views');
+    await openTablePage(page, 'views');
     await expect(tab(page, 'all')).toBeVisible();
   });
 
@@ -133,7 +135,7 @@ test.describe('Table view persistence', () => {
   test('persist local keeps the view across a reload, but never the selection', async ({
     page,
   }) => {
-    await navigateToTestPage(page, 'views');
+    await openTablePage(page, 'views');
     await density(page, 'persist_local', 'Compact').click();
     await getBlock(page, 'persist_local')
       .locator('.lf-table-body [data-row-key="2"] [data-lf-select-cell] input')
@@ -155,14 +157,14 @@ test.describe('Table view persistence', () => {
   });
 
   test('persist local ignores stored views it cannot read', async ({ page }) => {
-    await navigateToTestPage(page, 'views');
+    await openTablePage(page, 'views');
     await page.evaluate(() => window.localStorage.setItem('lowdefy-table:e2e_people', '{not json'));
     await page.reload();
     await expect(getBlock(page, 'persist_local_value')).toContainText('"density":"default"');
   });
 
   test('persist url writes the view to the query string and restores it', async ({ page }) => {
-    await navigateToTestPage(page, 'views');
+    await openTablePage(page, 'views');
     const historyLength = await page.evaluate(() => window.history.length);
     await getBlock(page, 'persist_url').locator('[data-lf-header][data-col-key="age"]').click();
     await expect(getBlock(page, 'persist_url_value')).toHaveText('sort=[{"key":"age"}]');

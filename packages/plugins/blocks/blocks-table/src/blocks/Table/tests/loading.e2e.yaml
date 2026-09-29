@@ -1,0 +1,499 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Loading states (design D17). Every request uses the test connection and the spec answers it with
+# page.route, so it decides when each response lands (and whether it fails). The page's onMount
+# fetches `rows`, so the tables start with Lowdefy's own `loading` prop set; the refetch button
+# runs the request again without holdValue, so `_request: rows` is null until it lands.
+id: table-loading
+type: Box
+
+requests:
+  - id: rows
+    type: TestLog
+    connectionId: table_test
+  - id: server_rows
+    type: TestLog
+    connectionId: table_test
+    payload:
+      startRow:
+        _event: startRow
+      endRow:
+        _event: endRow
+      view:
+        _event: view
+      groupPath:
+        _event: groupPath
+  - id: tree_children
+    type: TestLog
+    connectionId: table_test
+    payload:
+      rowKey:
+        _event: rowKey
+
+events:
+  onInit:
+    - id: init_prop_state
+      type: SetState
+      params:
+        prop_loading: false
+        prop_rows: null
+  onMount:
+    - id: fetch_rows
+      type: Request
+      params: rows
+
+blocks:
+  - id: refetch
+    type: Button
+    properties:
+      title: Refetch
+    events:
+      onClick:
+        - id: refetch_rows
+          type: Request
+          params: rows
+
+  - id: refetch_hold
+    type: Button
+    properties:
+      title: Refetch and hold
+    events:
+      onClick:
+        - id: refetch_rows_hold
+          type: Request
+          params:
+            requestIds:
+              - rows
+            holdValue: true
+
+  - id: set_loading
+    type: Button
+    properties:
+      title: Set loading
+    events:
+      onClick:
+        - id: start_prop_loading
+          type: SetState
+          params:
+            prop_loading: true
+            prop_rows: null
+
+  - id: load_rows
+    type: Button
+    properties:
+      title: Load rows
+    events:
+      onClick:
+        - id: finish_prop_loading
+          type: SetState
+          params:
+            prop_loading: false
+            prop_rows:
+              - id: 1
+                name: Ada
+                amount: 10
+              - id: 2
+                name: Grace
+                amount: 20
+
+  # ============================================
+  # CLIENT DATA: initial (onMount), refetch, empty
+  # ============================================
+
+  - id: client_new_clicks
+    type: Paragraph
+    properties:
+      content:
+        _string.concat:
+          - 'Clicks: '
+          - _if_none:
+              - _state: new_clicks
+              - 0
+
+  - id: table_client
+    type: Table
+    properties:
+      height: 320
+      rowSelection:
+        type: checkbox
+      toolbar:
+        search: true
+        export: true
+        count: true
+      loading:
+        _request_details: rows.0.loading
+      data:
+        _request: rows
+      columns:
+        - key: name
+          width: 200
+        - key: amount
+          type: currency
+          width: 120
+          cell:
+            currency: USD
+        - key: owner
+          type: avatar
+          width: 160
+          cell:
+            nameField: owner
+        - key: stage
+          type: tag
+          width: 120
+        - key: active
+          type: boolean
+          width: 90
+        - key: progress
+          type: progress
+          width: 140
+        - key: actions
+          type: buttons
+          title: ''
+          width: 100
+          cell:
+            buttons:
+              - title: Edit
+                eventName: onEdit
+    # Slot blocks keep only their own loading: the page's onMount (which fetches the rows) must
+    # not disable them.
+    slots:
+      toolbarStart:
+        blocks:
+          - id: client_new
+            type: Button
+            properties:
+              title: New person
+              size: small
+            events:
+              onClick:
+                - id: count_new
+                  type: SetState
+                  params:
+                    new_clicks:
+                      _sum:
+                        - _if_none:
+                            - _state: new_clicks
+                            - 0
+                        - 1
+
+  - id: light_client
+    type: TableLight
+    properties:
+      height: 320
+      loading:
+        _request_details: rows.0.loading
+      data:
+        _request: rows
+      columns:
+        - key: name
+          width: 200
+        - key: amount
+          type: currency
+          width: 120
+          cell:
+            currency: USD
+        - key: owner
+          type: avatar
+          width: 160
+          cell:
+            nameField: owner
+        - key: stage
+          type: tag
+          width: 120
+        - key: active
+          type: boolean
+          width: 90
+        - key: progress
+          type: progress
+          width: 140
+
+  # Skeleton details: square avatars load as squares, hover buttons load as an empty cell, other
+  # buttons as one square per button.
+  - id: table_shapes
+    type: Table
+    properties:
+      height: 200
+      loading:
+        _request_details: rows.0.loading
+      data:
+        _request: rows
+      columns:
+        - key: name
+          width: 160
+        - key: owner
+          type: avatar
+          width: 160
+          cell:
+            nameField: owner
+            shape: square
+        - key: hover
+          type: buttons
+          title: ''
+          width: 90
+          cell:
+            showOn: hover
+            buttons:
+              - { title: Email, eventName: onEmail }
+              - { title: Archive, eventName: onArchive }
+        - key: actions
+          type: buttons
+          title: ''
+          width: 120
+          cell:
+            buttons:
+              - { title: Edit, eventName: onEdit }
+              - { title: Copy, eventName: onCopy }
+              - { title: Delete, eventName: onDelete }
+
+  - id: light_shapes
+    type: TableLight
+    properties:
+      height: 200
+      loading:
+        _request_details: rows.0.loading
+      data:
+        _request: rows
+      columns:
+        - key: name
+          width: 160
+        - key: owner
+          type: avatar
+          width: 160
+          cell:
+            nameField: owner
+            shape: square
+        - key: hover
+          type: buttons
+          title: ''
+          width: 90
+          cell:
+            showOn: hover
+            buttons:
+              - { title: Email, eventName: onEmail }
+              - { title: Archive, eventName: onArchive }
+        - key: actions
+          type: buttons
+          title: ''
+          width: 120
+          cell:
+            buttons:
+              - { title: Edit, eventName: onEdit }
+              - { title: Copy, eventName: onCopy }
+              - { title: Delete, eventName: onDelete }
+
+  # The `loading` property on its own, with rows from state. onRowClick records the activated row
+  # (keyboard input while the skeleton holds its minimum time).
+  - id: table_prop
+    type: Table
+    properties:
+      loading:
+        _state: prop_loading
+      data:
+        _state: prop_rows
+      columns:
+        - key: name
+        - key: amount
+          type: number
+    events:
+      onRowClick:
+        - id: record_prop_click
+          type: SetState
+          params:
+            prop_clicked:
+              _event: rowKey
+
+  - id: prop_clicked_value
+    type: Paragraph
+    properties:
+      content:
+        _string.concat:
+          - 'Clicked: '
+          - _if_none:
+              - _state: prop_clicked
+              - none
+
+  - id: light_prop
+    type: TableLight
+    properties:
+      loading:
+        _state: prop_loading
+      data:
+        _state: prop_rows
+      columns:
+        - key: name
+        - key: amount
+          type: number
+
+  # A filter that matches nothing: "No matching rows" with Clear filters.
+  - id: table_filtered
+    type: Table
+    properties:
+      toolbar:
+        search: true
+      data:
+        - id: 1
+          name: Ada
+        - id: 2
+          name: Grace
+      columns:
+        - key: name
+
+  # Rows known before the table's code: the fallback shows as many skeleton rows as the table
+  # will show rows (the chunk swap spec holds the chunk back).
+  - id: table_swap
+    type: Table
+    properties:
+      toolbar:
+        search: true
+      rowSelection:
+        type: checkbox
+      data:
+        - id: 1
+          name: Ada
+          amount: 10
+        - id: 2
+          name: Grace
+          amount: 20
+        - id: 3
+          name: Linus
+          amount: 30
+      columns:
+        - key: name
+          flex: 1
+        - key: amount
+          type: number
+          width: 120
+          pinned: end
+
+  - id: table_empty
+    type: Table
+    properties:
+      data: []
+      columns:
+        - key: name
+
+  # A block-level `skeleton` replaces the table while it loads (Lowdefy handles it before the
+  # block renders).
+  - id: table_skeleton
+    type: Table
+    loading:
+      _request_details: rows.0.loading
+    skeleton:
+      type: Skeleton
+      properties:
+        height: 120
+    properties:
+      data:
+        _request: rows
+      columns:
+        - key: name
+
+  # ============================================
+  # SERVER MODE
+  # ============================================
+
+  - id: server_refresh
+    type: Button
+    properties:
+      title: Refresh server
+    events:
+      onClick:
+        - id: server_refresh_call
+          type: CallMethod
+          params:
+            blockId: table_server
+            method: refresh
+
+  - id: server_group
+    type: Button
+    properties:
+      title: Group server
+    events:
+      onClick:
+        - id: server_group_set
+          type: SetState
+          params:
+            table_server.view.group:
+              - key: stage
+
+  - id: table_server
+    type: Table
+    properties:
+      height: 320
+      toolbar:
+        export: true
+      data:
+        mode: server
+        request: server_rows
+        blockSize: 50
+      columns:
+        - key: id
+          type: number
+          width: 100
+        - key: name
+          width: 200
+        - key: stage
+          type: tag
+          groupable: true
+    events:
+      onExport:
+        - id: export_request
+          type: Request
+          params: rows
+
+  # ============================================
+  # LAZY TREE
+  # ============================================
+
+  - id: table_tree
+    type: Table
+    properties:
+      tree:
+        parentField: parent
+        lazy: true
+      columns:
+        - key: name
+          width: 240
+      data:
+        _array.concat:
+          - - id: region-a
+              name: Region A
+              hasChildren: true
+            - id: region-b
+              name: Region B
+              hasChildren: true
+          - _if_none:
+              - _state: tree_rows
+              - []
+    events:
+      onRowExpand:
+        - id: load_tree_children
+          type: Request
+          skip:
+            _not:
+              _event: needsChildren
+          params: tree_children
+        - id: set_tree_children
+          type: SetState
+          skip:
+            _not:
+              _event: needsChildren
+          params:
+            tree_rows:
+              _array.concat:
+                - _if_none:
+                    - _state: tree_rows
+                    - []
+                - _request: tree_children

@@ -75,3 +75,30 @@
     font-variant-numeric: tabular-nums;
   }
 }
+
+/* Loading (D17, the shared tableLoading.css): the block element positions the progress bar under
+   antd's header and the skeleton shimmer over its body; skeleton rows keep the header's look but
+   neither hover nor click. */
+@layer components {
+  .lf-table-light-block {
+    position: relative;
+  }
+
+  .lf-table-light-bar {
+    position: absolute;
+    left: 1px;
+    right: 1px;
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  .lf-table-light-block[data-loading-state='initial'] .lf-table-row,
+  .lf-table-light-block[data-loading-state='initial'] .lf-table-row:hover > td {
+    background: var(--ant-color-bg-container);
+    cursor: default;
+  }
+
+  .lf-table-light-block[data-loading-state='initial'] .ant-table-column-has-sorters {
+    pointer-events: none;
+  }
+}

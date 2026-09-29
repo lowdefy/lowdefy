@@ -178,8 +178,11 @@ test('createServerStore loads a group level lazily when the group opens', async 
   store.toggleGroup({ key: '["lead"]' });
   expect(calls[1].event).toMatchObject({ groupPath: ['lead'], startRow: 0 });
   items = build(store);
-  expect(items).toHaveLength(3);
+  // The group's count of skeleton rows and a spinner in its chevron until its block lands.
+  expect(items).toHaveLength(4);
+  expect(items[0].loading).toBe(true);
   expect(items[1]).toBeUndefined();
+  expect(items[2]).toBeUndefined();
   await respond(calls[1], { rows: [{ id: 'a' }, { id: 'b' }], total: 2 });
   items = build(store);
   expect(items.map((item) => item.key ?? item.id)).toEqual(['["lead"]', 'a', 'b', '["won"]']);
@@ -249,4 +252,38 @@ test('createServerStore gives each loaded row its index in its list on the serve
   expect(store.getRowIndex(10)).toBe(10);
   expect(store.getRowIndex(110)).toBe(110);
   expect(store.getRowIndex(60)).toBeNull();
+});
+
+test('createServerStore retries only the failed block and keeps the loaded rows', async () => {
+  const { api, calls } = createDeferredApi();
+  const store = createServerStore({ api, server: { blockSize: 2, maxBlocks: 10 } });
+  store.setView({ view: VIEW, viewKey: 'a' });
+  await respond(calls[0], { rows: [{ id: 1 }, { id: 2 }], total: 4 });
+  build(store);
+  store.onRange({ rowStart: 0, rowEnd: 4 });
+  expect(calls[1].event).toMatchObject({ startRow: 2, endRow: 4 });
+  calls[1].resolve({ success: false, error: { message: 'Down' } });
+  await new Promise((done) => setTimeout(done, 0));
+  let items = build(store);
+  expect(items[2]).toMatchObject({ kind: 'error', index: 1 });
+  store.retry({ listKey: '[]', groupPath: [], index: 1 });
+  expect(calls).toHaveLength(3);
+  expect(calls[2].event).toMatchObject({ startRow: 2, endRow: 4 });
+  items = build(store);
+  expect(items.map((item) => item?.id)).toEqual(['1', '2', undefined, undefined]);
+  await respond(calls[2], { rows: [{ id: 3 }, { id: 4 }], total: 4 });
+  expect(build(store).map((item) => item?.id)).toEqual(['1', '2', '3', '4']);
+});
+
+test('createServerStore is refreshing while loaded blocks reload', async () => {
+  const { api, calls } = createDeferredApi();
+  const store = createServerStore({ api, server: { blockSize: 2, maxBlocks: 10 } });
+  store.setView({ view: VIEW, viewKey: 'a' });
+  await respond(calls[0], { rows: [{ id: 1 }, { id: 2 }], total: 2 });
+  expect(store.isRefreshing()).toBe(false);
+  store.refresh();
+  expect(store.isRefreshing()).toBe(true);
+  expect(store.isPending()).toBe(false);
+  await respond(calls.at(-1), { rows: [{ id: 1 }, { id: 2 }], total: 2 });
+  expect(store.isRefreshing()).toBe(false);
 });

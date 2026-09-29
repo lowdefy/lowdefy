@@ -22,6 +22,7 @@ import validateCellValue from './validateCellValue.js';
 import valuesEqual from './valuesEqual.js';
 import scrollToCell from '../virtualization/scrollToCell.js';
 import isDataItem from '../../core/isDataItem.js';
+import findRow from '../../core/findRow.js';
 
 function openNext({ api, next }) {
   scrollToCell({ api, row: next.rowIndex, col: next.colIndex });
@@ -40,7 +41,7 @@ function createCommitEdit(api) {
     const { editing } = api;
     const session = editing.layer?.getSession();
     if (!session) return true;
-    const row = api.table.getRow(session.rowId, true);
+    const row = findRow({ table: api.table, id: session.rowId });
     const col = api.layout.byKey.get(session.colKey);
     if (!row || !col) {
       editing.layer.setSession(null);

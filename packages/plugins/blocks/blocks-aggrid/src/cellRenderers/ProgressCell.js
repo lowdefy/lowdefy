@@ -15,6 +15,7 @@
 */
 
 import React from 'react';
+import resolveTagTone from '@lowdefy/block-utils/format/resolveTagTone.js';
 import tagStyle from '@lowdefy/block-utils/format/tagStyle.js';
 import { type } from '@lowdefy/helpers';
 import NullCell from './NullCell.js';
@@ -51,7 +52,7 @@ function ProgressCell(params) {
   const color = pickColor(num, thresholds, colors);
   const suffix = cellConfig?.suffix ?? '%';
 
-  const style = tagStyle(color);
+  const style = tagStyle(resolveTagTone(color));
 
   return (
     <span style={style}>

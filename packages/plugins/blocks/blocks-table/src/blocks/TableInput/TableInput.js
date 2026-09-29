@@ -17,13 +17,13 @@
 import { createLazyBlock } from '@lowdefy/block-utils';
 
 import meta from './meta.js';
-import TableFallback from '../Table/TableFallback.js';
+import TableInputFallback from './TableInputFallback.js';
 
 // The engine it shares with Table loads with the block's first mount, as Table's does.
 const TableInput = createLazyBlock({
   load: () => import('./TableInput.lazy.js'),
   meta,
-  Fallback: TableFallback,
+  Fallback: TableInputFallback,
 });
 
 export default TableInput;

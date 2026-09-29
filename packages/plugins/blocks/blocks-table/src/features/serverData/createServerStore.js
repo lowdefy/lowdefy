@@ -152,6 +152,10 @@ function createServerStore({ api, server }) {
     isPending() {
       return getDisplayCache() !== store.cache;
     },
+    // Loaded rows reloading in the background (refresh): the rows stay, the progress bar runs.
+    isRefreshing() {
+      return store.cache.isReloading();
+    },
     getAggregates() {
       return getDisplayCache().getAggregates(ROOT);
     },
@@ -255,6 +259,12 @@ function createServerStore({ api, server }) {
       } else {
         store.expandedGroups.delete(key);
       }
+      notify();
+    },
+    // Retry on an inline error row: reloads only that failed block; loaded rows stay.
+    retry({ listKey, groupPath, index }) {
+      if (!store.cache.resetFailed(listKey, index)) return;
+      fetchBlock({ listKey, groupPath, index });
       notify();
     },
     collapseAllGroups() {

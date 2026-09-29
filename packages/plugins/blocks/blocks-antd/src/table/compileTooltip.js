@@ -15,15 +15,15 @@
 */
 
 import { get, type } from '@lowdefy/helpers';
-import { nunjucksFunction } from '@lowdefy/nunjucks';
 
 import htmlToText from './htmlToText.js';
 
 // Compiles a column `tooltip` once into `(row, value) => string | undefined`:
 // `{ field }` reads a row field, `{ template }` or a string renders a nunjucks
 // template with `{ value, row }`. Tooltips are native (plain text), so a cell
-// costs nothing until it is hovered.
-function compileTooltip({ tooltip }) {
+// costs nothing until it is hovered. `compileTemplate` is the nunjucks compiler
+// (loadTemplateCompiler), needed only for a template tooltip.
+function compileTooltip({ tooltip, compileTemplate }) {
   if (type.isNone(tooltip)) return null;
   if (type.isObject(tooltip) && type.isString(tooltip.field)) {
     const { field } = tooltip;
@@ -40,7 +40,10 @@ function compileTooltip({ tooltip }) {
       )}.`
     );
   }
-  const render = nunjucksFunction(template);
+  if (typeof compileTemplate !== 'function') {
+    throw new Error('compileTooltip needs "compileTemplate" for a template tooltip.');
+  }
+  const render = compileTemplate(template);
   return (row, value) => {
     const text = htmlToText(render({ value, row }));
     return text === '' ? undefined : text;

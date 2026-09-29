@@ -14,15 +14,11 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
-import TAG_COLORS from './tagColors.js';
-
-// A preset tag colour name becomes its theme token; any other value is used as
-// a CSS colour.
-function resolveTagColor(value) {
-  if (type.isNone(value)) return TAG_COLORS.default;
-  return TAG_COLORS[value] ?? value;
+// A text colour for a tone that reads on the tone's tinted fill: the colour mixed toward the
+// theme's text colour (black in light themes, white in dark ones), so it darkens on light fills
+// and lightens on dark ones. `share` is the tone's part of the mix, in percent.
+function readableToneText({ color, share }) {
+  return `color-mix(in oklab, ${color} ${share}%, var(--ant-color-text-base, #000))`;
 }
 
-export default resolveTagColor;
+export default readableToneText;

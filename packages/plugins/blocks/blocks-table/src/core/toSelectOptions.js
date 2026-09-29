@@ -18,9 +18,9 @@ import React from 'react';
 import StatusCell from '@lowdefy/blocks-antd/table/cells/StatusCell.js';
 import TagCell from '@lowdefy/blocks-antd/table/cells/TagCell.js';
 
-// The select editor's options with the look of the cell: a status dot or a tag chip in the
-// value's colour (the shared cell renderers, for one value), with the label as `text` for search
-// and as the option's `title`.
+// A select's options with the look of the cell (the cell editor, the filter builder's values): a
+// status dot or a tag chip in the value's colour (the shared cell renderers, for one value), with
+// the label as `text` for search and as the option's `title`.
 function toSelectOptions({ components, spec, row }) {
   const { column } = spec;
   return (spec.options ?? []).map((option) => ({

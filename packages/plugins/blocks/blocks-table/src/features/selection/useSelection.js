@@ -19,8 +19,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import isSelectionViewCurrent from './isSelectionViewCurrent.js';
 import SelectAllHeader from './SelectAllHeader.js';
 import SelectCell from './SelectCell.js';
-
-const SELECT_COLUMN_WIDTH = 40;
+import selectColumnWidth from './selectColumnWidth.js';
 
 // While the selection is `{ all: true, except }`, rows that appear in later data and match the
 // view are selected too: "all matching" means every row the filter and search match, not the rows
@@ -65,7 +64,7 @@ function useSelection(ctx) {
             {
               key: '__select',
               special: 'select',
-              width: SELECT_COLUMN_WIDTH,
+              width: selectColumnWidth,
               Header: SelectAllHeader,
               Cell: SelectCell,
             },

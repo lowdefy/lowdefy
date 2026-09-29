@@ -15,7 +15,7 @@
 */
 
 import React from 'react';
-import resolveTagColor from '@lowdefy/block-utils/format/resolveTagColor.js';
+import resolveTagTone from '@lowdefy/block-utils/format/resolveTagTone.js';
 import seededTagColor from '@lowdefy/block-utils/format/seededTagColor.js';
 import tagStyle from '@lowdefy/block-utils/format/tagStyle.js';
 import { type } from '@lowdefy/helpers';
@@ -53,9 +53,8 @@ function TagCell(params) {
     return (
       <span style={containerStyle}>
         {items.map((item, index) => {
-          const resolved = resolveTagColor(pickColor(item));
           return (
-            <span key={`${index}-${item}`} style={tagStyle(resolved)}>
+            <span key={`${index}-${item}`} style={tagStyle(resolveTagTone(pickColor(item)))}>
               {String(item)}
             </span>
           );
@@ -64,8 +63,7 @@ function TagCell(params) {
     );
   }
 
-  const resolved = resolveTagColor(pickColor(value));
-  return <span style={tagStyle(resolved)}>{String(value)}</span>;
+  return <span style={tagStyle(resolveTagTone(pickColor(value)))}>{String(value)}</span>;
 }
 
 export default TagCell;

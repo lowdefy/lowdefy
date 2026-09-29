@@ -449,6 +449,32 @@ blocks:
         - number
       data: []
 
+  # Loading (D17): skeleton rows under the real header without rows, the rows and a progress bar
+  # under the header with them. No antd spinner overlay.
+  - id: tl_loading
+    type: TableLight
+    properties:
+      loading: true
+      height: 240
+      columns:
+        - number
+        - key: customer
+          type: avatar
+        - key: status
+          type: tag
+        - key: total
+          type: currency
+      data: []
+
+  - id: tl_loading_rows
+    type: TableLight
+    properties:
+      loading: true
+      columns:
+        - number
+      data:
+        - { _id: 1, number: A-1 }
+
   - id: tl_unsupported
     type: TableLight
     properties:

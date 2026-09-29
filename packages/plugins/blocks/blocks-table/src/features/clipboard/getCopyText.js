@@ -18,6 +18,7 @@ import getExportValue from '@lowdefy/blocks-antd/table/getExportValue.js';
 
 import serializeTsv from './serializeTsv.js';
 import isDataItem from '../../core/isDataItem.js';
+import findRow from '../../core/findRow.js';
 
 function cellText({ col, row }) {
   return getExportValue({
@@ -43,7 +44,7 @@ function getCopyText({ api, rowId, colKey }) {
   const col = api.layout.byKey.get(colKey);
   if (!col || col.special) return null;
   if (rowId === null) return serializeTsv([[col.column.title]]);
-  const row = api.table.getRow(rowId, true);
+  const row = findRow({ table: api.table, id: rowId });
   if (!row) return null;
   return serializeTsv([[cellText({ col, row })]]);
 }

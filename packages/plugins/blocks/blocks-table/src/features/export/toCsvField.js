@@ -14,8 +14,21 @@
   limitations under the License.
 */
 
+// Spreadsheet apps read a cell that starts with `=`, `+`, `-` or `@` as a formula (tab and
+// carriage return are read the same way by some), so a row value such as `=HYPERLINK(...)` would
+// run when the file is opened (CSV injection). Such cells get a leading `'`, OWASP's
+// recommendation, which makes the spreadsheet read them as text. Plain numbers (`-12.5`, `+3`,
+// `1e-7`) cannot hold a formula and stay numbers.
+const FORMULA_START = /^[=+\-@\t\r]/;
+const PLAIN_NUMBER = /^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i;
+
+function neutralizeFormula(value) {
+  if (!FORMULA_START.test(value) || PLAIN_NUMBER.test(value)) return value;
+  return `'${value}`;
+}
+
 function toCsvField(text) {
-  const value = String(text);
+  const value = neutralizeFormula(String(text));
   if (/[",\r\n]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
   return value;
 }
