@@ -791,7 +791,11 @@ export default {
           type: 'object',
           required: ['id'],
           properties: {
-            id: { type: ['string', 'number'], description: 'Unique view id.' },
+            id: {
+              type: ['string', 'number', 'object'],
+              description:
+                'Unique view id: a string, number, or an ObjectId from a MongoDB request (`{ _oid }`, keyed by its hex). Events carry it as given.',
+            },
             title: { type: 'string', description: 'Tab title. Defaults to the id.' },
             view: { type: 'object', description: 'The saved view (any part of a view).' },
             shared: { type: 'boolean', description: 'Whether the view is shared.' },
@@ -804,9 +808,9 @@ export default {
         },
       },
       activeView: {
-        type: ['string', 'number', 'null'],
+        type: ['string', 'number', 'object', 'null'],
         description:
-          'The id of the active saved view. Defaults to the first view. Changing it selects that view.',
+          'The id of the active saved view (an ObjectId id matches by its hex). Defaults to the first view. Changing it selects that view.',
       },
       persist: {
         type: 'object',

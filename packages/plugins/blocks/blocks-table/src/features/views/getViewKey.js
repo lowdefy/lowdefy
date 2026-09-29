@@ -16,13 +16,16 @@
 
 import { type } from '@lowdefy/helpers';
 
-import getViewKey from './getViewKey.js';
-
-// The active saved view: the requested id when it is still in the list, else the first (leftmost)
-// view, as tabbed index pages default to their first tab.
-function findActiveView({ views, id }) {
-  const key = type.isNone(id) ? null : getViewKey(id);
-  return views.find((view) => view.key === key) ?? views[0] ?? null;
+// A saved view id as a stable string, for tabs, lookups and the persisted active view. Ids from a
+// MongoDB request arrive as `{ _oid: hex }` (the client's ObjectId form): the hex is the key, so
+// the id and its hex string find the same view. Other objects key by their JSON; String() would
+// make every object "[object Object]".
+function getViewKey(id) {
+  if (type.isObject(id)) {
+    if (type.isString(id._oid)) return id._oid;
+    return JSON.stringify(id);
+  }
+  return String(id);
 }
 
-export default findActiveView;
+export default getViewKey;

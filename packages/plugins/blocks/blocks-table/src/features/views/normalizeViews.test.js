@@ -46,3 +46,27 @@ test('findActiveView finds the view by id, else the first view', () => {
   assert.equal(findActiveView({ views, id: null }).id, 'all');
   assert.equal(findActiveView({ views: [], id: 'all' }), null);
 });
+
+test('normalizeViews keys ObjectId ids by their hex and keeps the id as given', () => {
+  const views = normalizeViews([
+    { id: { _oid: '65f1c0ffee0000000000000a' }, title: 'Mine' },
+    { id: { _oid: '65f1c0ffee0000000000000b' }, title: 'Team' },
+    { id: { _oid: '65f1c0ffee0000000000000a' }, title: 'Duplicate' },
+  ]);
+  assert.deepEqual(
+    views.map((view) => view.key),
+    ['65f1c0ffee0000000000000a', '65f1c0ffee0000000000000b']
+  );
+  assert.deepEqual(views[1].id, { _oid: '65f1c0ffee0000000000000b' });
+  assert.equal(findActiveView({ views, id: { _oid: '65f1c0ffee0000000000000b' } }).title, 'Team');
+  assert.equal(findActiveView({ views, id: '65f1c0ffee0000000000000b' }).title, 'Team');
+});
+
+test('normalizeViews keys other object ids by their JSON', () => {
+  const views = normalizeViews([{ id: { a: 1 } }, { id: { a: 2 } }]);
+  assert.deepEqual(
+    views.map((view) => view.key),
+    ['{"a":1}', '{"a":2}']
+  );
+  assert.equal(findActiveView({ views, id: { a: 2 } }).key, '{"a":2}');
+});

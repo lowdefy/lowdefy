@@ -33,6 +33,19 @@ test.describe('Table saved views', () => {
     await expect(tab(page, 'all')).toBeVisible();
   });
 
+  test('views with ObjectId ids get a tab each and keep the id in events', async ({ page }) => {
+    const oidTab = (hex) => getBlock(page, 'vw_oid').locator(`[data-lf-view-tab="${hex}"]`);
+    await expect(oidTab('65f1c0ffee0000000000000a')).toContainText('Mine');
+    await expect(oidTab('65f1c0ffee0000000000000b')).toContainText('Team');
+    await expect(getBlock(page, 'vw_oid').locator('.ant-tabs-tab-active')).toContainText('Team');
+    await oidTab('65f1c0ffee0000000000000a').click();
+    await expect(getBlock(page, 'vw_oid_value')).toHaveText(
+      'select={"_oid":"65f1c0ffee0000000000000a"}'
+    );
+    // The state change re-evaluates activeView (a new { _oid } object): the tab stays.
+    await expect(getBlock(page, 'vw_oid').locator('.ant-tabs-tab-active')).toContainText('Mine');
+  });
+
   test('tabs show the saved views with counts, and the first view is active', async ({ page }) => {
     await expect(tab(page, 'all')).toContainText('All');
     await expect(tab(page, 'oldest').locator('[data-lf-view-count]')).toHaveText('3');
