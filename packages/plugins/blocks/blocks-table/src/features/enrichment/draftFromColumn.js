@@ -18,6 +18,8 @@ import { type } from '@lowdefy/helpers';
 import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
 
 import createDraft from './createDraft.js';
+import getDraftKind from './getDraftKind.js';
+import getDraftType from './getDraftType.js';
 
 function inputsToDraft(inputs) {
   const draft = {};
@@ -30,13 +32,16 @@ function inputsToDraft(inputs) {
 }
 
 // The picker draft for editing a column: its config (`raw`, as the app gave it) read back into
-// the draft's fields, with the title and type of the normalised column.
+// the draft's fields, with the title and type of the normalised column. An error column
+// (`invalid`) has lost its kind, so its draft takes the kind and type its config asked for, to
+// be fixed.
 function draftFromColumn({ raw, column }) {
-  const draft = createDraft({ kind: column.kind ?? 'input', provider: raw.provider ?? null });
+  const kind = getDraftKind({ raw, column });
+  const draft = createDraft({ kind, provider: raw.provider ?? null });
   return {
     ...draft,
     title: htmlToText(column.title),
-    type: column.type,
+    type: column.invalid === undefined ? column.type : getDraftType({ raw, kind }),
     template: raw.template ?? '',
     inputs: inputsToDraft(raw.inputs),
     output: type.isString(raw.output) ? raw.output : '',

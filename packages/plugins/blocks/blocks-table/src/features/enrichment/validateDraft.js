@@ -15,6 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import findTemplateProblem from '@lowdefy/blocks-antd/table/findTemplateProblem.js';
 
 function missingInputs({ draft, provider }) {
   return (provider?.inputs ?? [])
@@ -29,18 +30,21 @@ function missingInputs({ draft, provider }) {
 
 // Why the add-column picker cannot submit its draft yet, or null: a title, then what the kind
 // needs (a template, a provider with its required inputs mapped, a prompt, a source column).
+// Templates and prompts only take `{{ column }}` placeholders (findTemplateProblem).
 function validateDraft({ draft, provider }) {
   if (draft.title.trim() === '') return 'Enter a column title.';
   switch (draft.kind) {
     case 'formula':
-      return draft.template.trim() === '' ? 'Enter a formula template.' : null;
+      if (draft.template.trim() === '') return 'Enter a formula template.';
+      return findTemplateProblem(draft.template);
     case 'enrichment': {
       if (!provider) return 'Choose a provider.';
       const missing = missingInputs({ draft, provider });
       return missing.length > 0 ? `Map the required inputs: ${missing.join(', ')}.` : null;
     }
     case 'ai':
-      return draft.prompt.trim() === '' ? 'Enter a prompt.' : null;
+      if (draft.prompt.trim() === '') return 'Enter a prompt.';
+      return findTemplateProblem(draft.prompt);
     case 'extract':
       return type.isString(draft.source) ? null : 'Choose the column to extract from.';
     default:

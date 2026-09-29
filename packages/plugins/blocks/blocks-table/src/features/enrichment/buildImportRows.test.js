@@ -75,6 +75,7 @@ test('buildImportRows sets mapped fields, coerces types and adds new text column
       title: 'LinkedIn URL',
       type: 'text',
       kind: 'input',
+      field: 'linkedin_url',
       editable: true,
       userDefined: true,
     },
@@ -121,4 +122,18 @@ test('chunkRows splits rows into batches of the size, the last one shorter', () 
   expect(batches.map((batch) => batch.length)).toEqual([500, 500, 201]);
   expect(batches[2][200]).toBe(1200);
   expect(chunkRows({ rows: [], size: 500 })).toEqual([]);
+});
+
+test('buildImportRows puts new columns and their values under inputFieldPrefix', () => {
+  const result = buildImportRows({
+    records: [['Acme', 'in/acme']],
+    headers: ['Company', 'LinkedIn URL'],
+    mapping: ['name', NEW_COLUMN],
+    columnsByKey,
+    existingKeys: columns.map((column) => column.key),
+    inputFieldPrefix: 'values',
+  });
+  expect(result.newColumns[0]).toMatchObject({ key: 'linkedin_url', field: 'values.linkedin_url' });
+  // Every value is at a field path: declared columns at theirs, the new column at its field.
+  expect(result.rows).toEqual([{ name: 'Acme', values: { linkedin_url: 'in/acme' } }]);
 });

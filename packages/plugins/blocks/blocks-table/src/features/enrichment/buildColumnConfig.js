@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import getInputField from './getInputField.js';
+
 function buildInputs(inputs) {
   const built = {};
   Object.entries(inputs ?? {}).forEach(([param, input]) => {
@@ -31,9 +33,10 @@ function buildInputs(inputs) {
 
 // The column config the add-column picker submits (onColumnAdd, onColumnUpdate): `{ key, title,
 // type, kind, userDefined: true }` plus the chosen kind's keys (design E2), from the picker's
-// draft. Input columns are editable. An ai column's output type is its column type, and its
+// draft. Input columns are editable, with their field under `inputFieldPrefix` when the table
+// sets one. An ai column's output type is its column type, and its
 // inputs are the columns its prompt references (syncPromptInputs keeps them in step).
-function buildColumnConfig({ draft, key }) {
+function buildColumnConfig({ draft, key, inputFieldPrefix = null }) {
   const column = {
     key,
     title: draft.title.trim(),
@@ -44,6 +47,7 @@ function buildColumnConfig({ draft, key }) {
   switch (draft.kind) {
     case 'input':
       column.editable = true;
+      if (inputFieldPrefix !== null) column.field = getInputField({ key, inputFieldPrefix });
       break;
     case 'formula':
       column.template = draft.template;
@@ -57,8 +61,9 @@ function buildColumnConfig({ draft, key }) {
     case 'ai':
       column.prompt = draft.prompt;
       column.inputs = buildInputs(draft.inputs);
+      // Only tag and tags answers take options (the answers allowed).
       column.output =
-        draft.outputOptions.length > 0
+        ['tag', 'tags'].includes(draft.type) && draft.outputOptions.length > 0
           ? { type: draft.type, options: draft.outputOptions }
           : { type: draft.type };
       column.autoRun = draft.autoRun === true;

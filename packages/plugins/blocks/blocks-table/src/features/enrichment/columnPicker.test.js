@@ -20,6 +20,7 @@ import buildColumnConfig from './buildColumnConfig.js';
 import createDraft from './createDraft.js';
 import draftFromColumn from './draftFromColumn.js';
 import generateColumnKey from './generateColumnKey.js';
+import getPickerKinds from './getPickerKinds.js';
 import syncPromptInputs from './syncPromptInputs.js';
 import validateDraft from './validateDraft.js';
 
@@ -226,4 +227,74 @@ test('draftFromColumn reads a column config back into a draft that rebuilds it',
   const { columnsByKey } = normalizeColumns({ columns: ['domain', raw] });
   const draft = draftFromColumn({ raw, column: columnsByKey.email });
   expect(buildColumnConfig({ draft, key: 'email' })).toEqual(raw);
+});
+
+test('validateDraft refuses templates and prompts that are more than column placeholders', () => {
+  const formula = { ...createDraft({ kind: 'formula' }), title: 'Label' };
+  expect(validateDraft({ draft: { ...formula, template: '{{ name }}!' }, provider: null })).toBe(
+    null
+  );
+  expect(
+    validateDraft({ draft: { ...formula, template: '{% if a %}x{% endif %}' }, provider: null })
+  ).toContain('template tags ({% %})');
+  expect(
+    validateDraft({ draft: { ...formula, template: '{{ name | upper }}' }, provider: null })
+  ).toBe('Only {{ column }} placeholders are supported: "{{ name | upper }}" is an expression.');
+  const ai = { ...createDraft({ kind: 'ai' }), title: 'Pitch' };
+  expect(validateDraft({ draft: { ...ai, prompt: 'Hi {# x #}' }, provider: null })).toContain(
+    'comments ({# #})'
+  );
+});
+
+test('getPickerKinds shows a catalogue ai provider once, as the AI kind', () => {
+  const entries = getPickerKinds({
+    kinds: ['input', 'enrichment', 'ai'],
+    providers: [provider, { id: 'ai', title: 'Claude', description: 'Our model.' }],
+    hasSources: false,
+  });
+  expect(entries.map((entry) => entry.id)).toEqual(['input', 'provider:findEmail', 'ai']);
+  expect(entries[2]).toEqual({ id: 'ai', kind: 'ai', label: 'Claude', description: 'Our model.' });
+});
+
+test('an ai draft keeps answer options only for tag and tags', () => {
+  const draft = {
+    ...createDraft({ kind: 'ai' }),
+    title: 'Tier',
+    prompt: 'Tier of {{ name }}',
+    outputOptions: ['A', 'B'],
+  };
+  expect(buildColumnConfig({ draft, key: 'tier' }).output).toEqual({ type: 'text' });
+  expect(buildColumnConfig({ draft: { ...draft, type: 'tag' }, key: 'tier' }).output).toEqual({
+    type: 'tag',
+    options: ['A', 'B'],
+  });
+});
+
+test('draftFromColumn of an error column takes the kind and type its config asked for', () => {
+  const raw = {
+    key: 'score',
+    title: 'Score',
+    kind: 'ai',
+    userDefined: true,
+    prompt: 'Score {{ name }}',
+    output: { type: 'number' },
+    provider: 'missing',
+  };
+  const { columnsByKey } = normalizeColumns({
+    columns: ['name', raw],
+    providerIds: new Set(['findEmail']),
+  });
+  expect(columnsByKey.score.invalid).toContain('provider "missing"');
+  const draft = draftFromColumn({ raw, column: columnsByKey.score });
+  expect(draft).toMatchObject({ kind: 'ai', type: 'number', prompt: 'Score {{ name }}' });
+});
+
+test('buildColumnConfig gives a new input column its field under inputFieldPrefix', () => {
+  const draft = { ...createDraft({ kind: 'input' }), title: 'Notes' };
+  expect(buildColumnConfig({ draft, key: 'notes', inputFieldPrefix: 'values' })).toMatchObject({
+    key: 'notes',
+    kind: 'input',
+    field: 'values.notes',
+  });
+  expect(buildColumnConfig({ draft, key: 'notes' })).not.toHaveProperty('field');
 });

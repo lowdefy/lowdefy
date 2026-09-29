@@ -23,13 +23,17 @@ const KIND_ENTRIES = {
 
 // The add-column picker's kind list (design E3): input, formula, one entry per provider in the
 // catalogue (enrichment columns), AI and extract, limited to the kinds the table allows. Extract
-// needs an enrichment or ai column to read from. Each entry is `{ id, kind, provider?, label,
+// needs an enrichment or ai column to read from. A catalogue provider with id `ai` is the AI
+// kind's provider (ai columns call `ai` by default), so it replaces the built-in AI entry's
+// title and description instead of showing twice. Each entry is `{ id, kind, provider?, label,
 // description }`.
 function getPickerKinds({ kinds, providers, hasSources }) {
   const entries = [];
+  const aiProvider = providers.find((provider) => provider.id === 'ai');
   kinds.forEach((kind) => {
     if (kind === 'enrichment') {
       providers.forEach((provider) => {
+        if (provider.id === 'ai') return;
         entries.push({
           id: `provider:${provider.id}`,
           kind,
@@ -41,6 +45,15 @@ function getPickerKinds({ kinds, providers, hasSources }) {
       return;
     }
     if (kind === 'extract' && !hasSources) return;
+    if (kind === 'ai' && aiProvider) {
+      entries.push({
+        id: kind,
+        kind,
+        label: aiProvider.title,
+        description: aiProvider.description ?? KIND_ENTRIES.ai.description,
+      });
+      return;
+    }
     entries.push({ id: kind, kind, ...KIND_ENTRIES[kind] });
   });
   return entries;

@@ -500,7 +500,7 @@ export default {
       event: {
         rows: 'The batch of rows, values set at each mapped column `field` and coerced to its type.',
         newColumns:
-          'With the first batch only: the text input columns to create for CSV headers mapped to "New text column" (`{ key, title, type: text, kind: input, editable, userDefined }`); an empty list after.',
+          'With the first batch only: the text input columns to create for CSV headers mapped to "New text column" (`{ key, title, type: text, kind: input, field, editable, userDefined }`, `field` under `inputFieldPrefix`); an empty list after. The rows carry their values at that `field`.',
         batchIndex: 'The index of this batch, from 0.',
         batchCount: 'The number of batches.',
         total: 'The number of rows in the import.',
@@ -1051,6 +1051,11 @@ export default {
         type: 'string',
         default: 'New row',
         description: 'Text of the new-row row.',
+      },
+      inputFieldPrefix: {
+        type: 'string',
+        description:
+          'Where user-defined input columns added in the picker or by a CSV import keep their values: `<inputFieldPrefix>.<key>` (for example `values`, so a column can never name another field of the row). The column is sent with that `field`, and onRowAdd / onImport values sit at it. Without it, the key.',
       },
       importCsv: {
         type: 'boolean',

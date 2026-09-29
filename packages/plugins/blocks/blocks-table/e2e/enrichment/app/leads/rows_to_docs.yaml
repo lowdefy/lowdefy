@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Turns rows from the browser into documents. The Table sends each value at its column's field
-# path (onRowAdd `values`, onImport `rows`), and a CSV column imported as a new column at its
-# key. Only paths of the fields allowlist are kept, so a row can only set the table's input
-# fields, never _enrich or another field of the document.
+# Turns rows from the browser into documents. The Table sends every value at its column's field
+# path (onRowAdd `values`, onImport `rows`), a CSV column imported as a new column included (at
+# values.<key>, the page's inputFieldPrefix). Only paths of the fields allowlist are kept, so a
+# row can only set the table's input fields, never _enrich or another field of the document.
 # Returns { errors, docs, sets }: a document per row to insert, and per row the $set of dotted
 # paths an update writes (so it never replaces a whole `values` object).
 _js:
@@ -31,9 +31,7 @@ _js:
     function collect({ value, prefix, set, index }) {
       Object.entries(value).forEach(([name, item]) => {
         const path = prefix === '' ? name : `${prefix}.${name}`;
-        let target = null;
-        if (fieldPaths.has(path)) target = path;
-        else if (prefix === '' && Object.hasOwn(args.fields, name)) target = args.fields[name].path ?? name;
+        const target = fieldPaths.has(path) ? path : null;
         if (target === null && isPlainObject(item)) {
           collect({ value: item, prefix: path, set, index });
           return;

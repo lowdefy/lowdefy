@@ -119,6 +119,7 @@ function ImportDialog({ api }) {
       mapping,
       columnsByKey: api.config.columnsByKey,
       existingKeys: [...api.config.columnsByKey.keys()],
+      inputFieldPrefix: api.config.enrichment.inputFieldPrefix,
     });
     setProgress({ imported: 0, total: built.rows.length });
     const outcome = await api.actions.importRows({

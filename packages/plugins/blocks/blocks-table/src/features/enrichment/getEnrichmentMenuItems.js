@@ -36,7 +36,31 @@ function runItem({ column, api }) {
   };
 }
 
+// An error column offers what fixes it: Edit column (its config in the picker) and Delete.
+function invalidItems({ column, api }) {
+  const { events } = api;
+  const { key } = column;
+  const items = [];
+  if (events.onColumnUpdate) {
+    items.push({
+      key: 'edit',
+      label: 'Edit column',
+      onClick: () => api.actions.openColumnPicker({ key }),
+    });
+  }
+  if (events.onColumnDelete) {
+    items.push({
+      key: 'delete',
+      label: 'Delete column',
+      danger: true,
+      onClick: () => api.actions.requestDelete({ key }),
+    });
+  }
+  return items.map((item) => ({ ...item, section: 'column' }));
+}
+
 function manageItems({ column, api }) {
+  if (column.invalid !== undefined) return invalidItems({ column, api });
   const { events } = api;
   const { key } = column;
   const items = [];
@@ -75,7 +99,8 @@ function manageItems({ column, api }) {
 // The enrichment items of a column's header menu (section `column`): Run (all, empty cells,
 // errors, stale cells) on enrichment and ai columns when the table has onColumnRun, and for
 // user-defined columns (`userDefined: true`) Rename, Edit, Duplicate, Insert left / right and
-// Delete, each shown when the table has the event it fires.
+// Delete, each shown when the table has the event it fires; an error column (`invalid`) only Edit
+// column and Delete.
 function getEnrichmentMenuItems({ column, api }) {
   const items = [];
   const runnable = column.kind === 'enrichment' || column.kind === 'ai';

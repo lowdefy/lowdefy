@@ -15,20 +15,18 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { nunjucksFunction } from '@lowdefy/nunjucks';
 
-import decodeHtmlEntities from './decodeHtmlEntities.js';
+import renderPlaceholders from './renderPlaceholders.js';
 
-// A formula column's value reader: its nunjucks template, compiled once (the shared template
-// path html cells use), rendered over the row as plain text: the autoescaped output is decoded
-// (decodeHtmlEntities), so the column's type renders, escapes and sorts the text itself.
-// The template sees the row's fields, `row` itself, and the values of the columns it references
+// A formula column's value reader: its template's `{{ column }}` placeholders filled in as plain
+// text (renderPlaceholders), never a template engine: formulas are user content shared between
+// users, and a nunjucks template can run code in every viewer's browser. The column's type
+// renders, escapes and sorts the text itself. The template sees the row's fields, `row` itself, and the values of the columns it references
 // by key whose value is not a top-level row field (`refs`: enrichment, ai, extract and other
 // formula columns). Results are cached per row object: rows keep their identity until their
 // content changes (the table's key diff), so a sort, filter or search over the column renders
 // each row's template once.
 function createFormulaReader({ template, refs }) {
-  const render = nunjucksFunction(template);
   const cache = new WeakMap();
   return function readFormula(row) {
     if (!type.isObject(row)) return undefined;
@@ -37,7 +35,7 @@ function createFormulaReader({ template, refs }) {
     refs.forEach((ref) => {
       context[ref.key] = ref.read(row);
     });
-    const value = decodeHtmlEntities(render(context));
+    const value = renderPlaceholders({ template, context });
     cache.set(row, value);
     return value;
   };

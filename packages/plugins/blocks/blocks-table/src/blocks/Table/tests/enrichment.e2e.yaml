@@ -521,3 +521,46 @@ blocks:
           type: SetState
           params:
             keep_columns: null
+
+  # A user-defined column with an invalid config renders as an error column; the rest of the
+  # table, including an ai column with its own provider, renders as usual.
+  - id: enrich_invalid
+    type: Table
+    properties:
+      providers:
+        - id: findEmail
+          title: Find email
+        - id: claude
+          title: Claude
+      columns:
+        - key: company
+        - key: pitch
+          kind: ai
+          provider: claude
+          prompt: Pitch {{ company }}
+          inputs:
+            company:
+              column: company
+        - key: broken
+          title: Broken
+          kind: enrichment
+          provider: gone
+          userDefined: true
+      data:
+        - _id: i1
+          company: Acme
+          _enrich:
+            pitch:
+              status: ok
+              value: Buy Acme
+    events:
+      onColumnUpdate:
+        - id: invalid_update
+          type: SetState
+          params:
+            ev_invalid.update: true
+      onColumnDelete:
+        - id: invalid_delete
+          type: SetState
+          params:
+            ev_invalid.delete: true

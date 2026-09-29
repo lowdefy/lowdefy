@@ -43,6 +43,7 @@ const TABLE_ONLY_KEYS = {
     addRow: 'adding rows',
     addRowText: 'adding rows',
     importCsv: 'CSV import',
+    inputFieldPrefix: 'adding columns',
   },
   columns: {
     filterable: 'column filters',

@@ -16,6 +16,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { Alert, Button, Drawer, Input, Select, Switch } from 'antd';
+import AI_OUTPUT_TYPES from '@lowdefy/blocks-antd/table/aiOutputTypes.js';
 import CELL_TYPE_FAMILIES from '@lowdefy/blocks-antd/table/cellTypeFamilies.js';
 import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
 
@@ -30,7 +31,9 @@ import validateDraft from './validateDraft.js';
 const TYPE_OPTIONS = Object.keys(CELL_TYPE_FAMILIES)
   .filter((cellType) => CELL_TYPE_FAMILIES[cellType] !== 'action')
   .map((cellType) => ({ value: cellType, label: cellType }));
-const OPTION_TYPES = new Set(['tag', 'tags', 'status']);
+// An ai column answers one of the AI output types; tag and tags take the answers allowed.
+const AI_TYPE_OPTIONS = AI_OUTPUT_TYPES.map((cellType) => ({ value: cellType, label: cellType }));
+const OPTION_TYPES = new Set(['tag', 'tags']);
 
 function Field({ children, label, name }) {
   return (
@@ -191,6 +194,7 @@ function KindFields({ columns, draft, provider, sources, update }) {
 function pickKind({ draft, entry, providersById }) {
   const provider = entry.provider ? providersById.get(entry.provider) : null;
   const next = { ...draft, kind: entry.kind, provider: entry.provider ?? null };
+  if (entry.kind === 'ai' && !AI_OUTPUT_TYPES.includes(draft.type)) next.type = 'text';
   // A provider fills an untouched title, and the type of its first output.
   if (provider && (draft.title === '' || draft.autoTitle === draft.title)) {
     next.title = provider.title;
@@ -239,7 +243,11 @@ function ColumnPicker({ api, picker }) {
           title: draft.title,
           existingKeys: [...api.config.columnsByKey.keys()],
         });
-  const column = buildColumnConfig({ draft, key });
+  const column = buildColumnConfig({
+    draft,
+    key,
+    inputFieldPrefix: picker.mode === 'edit' ? null : settings.inputFieldPrefix,
+  });
   const problem = validateDraft({ draft, provider });
   const saving = picker.status === 'saving';
   const runs = draft.kind === 'enrichment' || draft.kind === 'ai';
@@ -297,7 +305,7 @@ function ColumnPicker({ api, picker }) {
           <Select
             aria-label="Type"
             onChange={(cellType) => update({ type: cellType })}
-            options={TYPE_OPTIONS}
+            options={draft.kind === 'ai' ? AI_TYPE_OPTIONS : TYPE_OPTIONS}
             showSearch
             value={draft.type}
           />

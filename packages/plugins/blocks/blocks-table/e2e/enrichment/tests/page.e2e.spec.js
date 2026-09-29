@@ -251,22 +251,29 @@ test('the picker adds an enrichment column that runs, and Delete removes it', as
   await expect(header(page, 'country')).toHaveCount(0);
 });
 
-test('the picker shows why the server refused a column', async ({ page }) => {
+test('the picker refuses template tags, and shows why the server refused a column', async ({
+  page,
+}) => {
   await open(page);
   await table(page).locator('[data-lf-enrich-add-column]').click();
   await picker(page).locator('[data-lf-picker-kind="ai"]').click();
   await picker(page).getByLabel('Title').fill('Unsafe');
-  // A template tag in a prompt: the browser takes it as text, the server refuses it, since
-  // prompts are filled by substitution and never rendered as templates.
-  await picker(page)
-    .locator('[data-lf-picker-template="prompt"] textarea')
-    .fill('Describe {% for x in range(9) %}{{ x }}{% endfor %}');
+  // A template tag in a prompt: prompts are filled by substitution and never rendered as
+  // templates, so the picker refuses it before the server does.
+  const prompt = picker(page).locator('[data-lf-picker-template="prompt"] textarea');
+  await prompt.fill('Describe {% for x in range(9) %}{{ x }}{% endfor %}');
+  await expect(page.locator('[data-lf-picker-problem]')).toContainText(
+    'template tags ({% %})'
+  );
+  await expect(page.locator('[data-lf-picker-submit]')).toBeDisabled();
+  // A title the server takes as too long: the picker shows the server's reason.
+  await prompt.fill('Describe the company.');
+  await picker(page).getByLabel('Title').fill('U'.repeat(201));
   await page.locator('[data-lf-picker-submit]').click();
   await expect(picker(page).locator('[data-lf-picker-error]')).toContainText(
-    'An AI prompt can only reference columns'
+    'The column title should be text of at most 200 characters.'
   );
   await expect(picker(page)).toBeVisible();
-  await expect(header(page, 'unsafe')).toHaveCount(0);
 });
 
 test('an AI column from the picker answers with one of its options', async ({ page }) => {

@@ -106,7 +106,8 @@ test('a user input column feeds an enrichment column', async ({ request }) => {
   const [ivy] = await rowKeys(request, ['Ivy Lane']);
   const update = await callEndpoint(request, 'leads_update', {
     rowKey: ivy,
-    values: { website: 'tidewater.test' },
+    // Values at the column's field path, as the Table sends them.
+    values: { values: { website: 'tidewater.test' } },
   });
   expect(update.matched).toBe(1);
   await callEndpoint(request, 'enrichment_run', {
@@ -170,12 +171,28 @@ test('invalid columns are refused with the reason', async ({ request }) => {
       'The prompt uses {{ domain }}, which is not an input.',
     ],
     [
-      { key: 'x', kind: 'ai', prompt: '{{ range.constructor }}', inputs: {} },
-      'An AI prompt can only reference columns, as {{ column }}.',
+      { key: 'x', kind: 'ai', prompt: '{{ range.constructor("return 1")() }}', inputs: {} },
+      'Only {{ column }} placeholders are supported: "{{ range.constructor("return 1")() }}" is an expression.',
     ],
     [
-      { key: 'x', kind: 'ai', prompt: 'Pick', output: { type: 'options', options: [] } },
-      'An AI column with output options needs a list of text options.',
+      { key: 'x', kind: 'ai', prompt: 'Hi {% if a %}there{% endif %}', inputs: {} },
+      'Only {{ column }} placeholders are supported: template tags ({% %}) and comments ({# #}) are not.',
+    ],
+    [
+      { key: 'x', kind: 'formula', template: '{{ name | upper }}' },
+      'Only {{ column }} placeholders are supported: "{{ name | upper }}" is an expression.',
+    ],
+    [
+      { key: 'x', kind: 'ai', prompt: 'Pick', output: { type: 'tag', options: [] } },
+      'AI answer options are a list of text options, for a tag or tags answer.',
+    ],
+    [
+      { key: 'x', kind: 'ai', prompt: 'Pick', output: { type: 'email' } },
+      'The AI answer type should be one of text, number, boolean, tag, tags.',
+    ],
+    [
+      { key: 'x', kind: 'ai', prompt: 'Pick', provider: 'openai' },
+      'Provider "openai" is not in the provider catalogue.',
     ],
     [
       { key: 'x', kind: 'extract', source: 'name', path: 'a' },

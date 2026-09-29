@@ -54,7 +54,7 @@ test('normalizeEnrichment takes every kind for addColumn true, or the listed one
   ).toThrow('Table "addColumn.kinds" must list column kinds from');
 });
 
-test('normalizeEnrichment validates providers and the columns that use them', () => {
+test('normalizeEnrichment validates providers', () => {
   const providers = [
     { id: 'findEmail', title: 'Find email', inputs: [{ key: 'domain', required: true }] },
   ];
@@ -69,9 +69,6 @@ test('normalizeEnrichment validates providers and the columns that use them', ()
     outputs: [],
   });
   expect(config.providersById.get('findEmail').title).toBe('Find email');
-  expect(() =>
-    normalizeEnrichment({ properties: { providers: [{ id: 'other' }] }, columns })
-  ).toThrow('Table column "email" uses provider "findEmail", which is not in "providers".');
   expect(() =>
     normalizeEnrichment({ properties: { providers: [{ id: 'a' }, { id: 'a' }] }, columns: [] })
   ).toThrow('Duplicate Table provider id "a".');

@@ -33,10 +33,12 @@ import createSubmitColumn from './createSubmitColumn.js';
 import createSubmitRename from './createSubmitRename.js';
 import EnrichmentCell from './EnrichmentCell.js';
 import getEnrichmentMenuItems from './getEnrichmentMenuItems.js';
+import getInvalidHeaderProps from './getInvalidHeaderProps.js';
 import handleEnrichmentClick from './handleEnrichmentClick.js';
 import handleEnrichmentKeyDown from './handleEnrichmentKeyDown.js';
 import handleEnrichmentPreload from './handleEnrichmentPreload.js';
 import ImportButton from './ImportButton.js';
+import InvalidMark from './InvalidMark.js';
 import RenameInput from './RenameInput.js';
 import RunProgress from './RunProgress.js';
 import RunSelectedButton from './RunSelectedButton.js';
@@ -58,9 +60,13 @@ const enrichmentFeature = {
   name: 'enrichment',
   useFeature: useEnrichment,
   useGridFeature: usePauseWhileScrolling,
-  headerParts: [RunProgress, RenameInput],
+  headerParts: [InvalidMark, RunProgress, RenameInput],
+  headerCellProps: getInvalidHeaderProps,
   headerMenuItems: getEnrichmentMenuItems,
-  cellRenderer: { match: (column) => Boolean(column.stateField), Cell: EnrichmentCell },
+  cellRenderer: {
+    match: (column) => Boolean(column.stateField) || column.invalid !== undefined,
+    Cell: EnrichmentCell,
+  },
   toolbarItems: [ImportButton],
   bulkItems: [RunSelectedButton],
   actions: {

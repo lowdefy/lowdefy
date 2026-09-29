@@ -18,12 +18,13 @@
 // columns are typed by users; the others compute their value: `formula` in the browser from a
 // template, `enrichment` and `ai` on the server per row, `extract` in the browser from another
 // column's raw result. An ai column lists the columns its prompt references in `inputs`: the
-// server renders the prompt from those, it never parses the prompt for them.
+// server renders the prompt from those, it never parses the prompt for them. An ai column's
+// `provider` defaults to the built-in `ai` (the app's enrich_ai endpoint).
 const COLUMN_KINDS = {
   input: [],
   formula: ['template'],
   enrichment: ['provider', 'inputs', 'output', 'autoRun'],
-  ai: ['prompt', 'inputs', 'output', 'autoRun'],
+  ai: ['provider', 'prompt', 'inputs', 'output', 'autoRun'],
   extract: ['source', 'path'],
 };
 

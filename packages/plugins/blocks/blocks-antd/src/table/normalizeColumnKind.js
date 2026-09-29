@@ -16,8 +16,9 @@
 
 import { type } from '@lowdefy/helpers';
 
-import CELL_TYPE_FAMILIES from './cellTypeFamilies.js';
+import AI_OUTPUT_TYPES from './aiOutputTypes.js';
 import COLUMN_KINDS from './columnKinds.js';
+import findTemplateProblem from './findTemplateProblem.js';
 
 const KIND_KEYS = [...new Set(Object.values(COLUMN_KINDS).flat())];
 const COMPUTED_KINDS = new Set(['formula', 'enrichment', 'ai', 'extract']);
@@ -78,8 +79,19 @@ function checkOutputType({ output, key }) {
       `"output" must be { type, options? } for kind "ai". Received ${JSON.stringify(output)}.`
     );
   }
-  if (!type.isUndefined(output.type) && type.isUndefined(CELL_TYPE_FAMILIES[output.type])) {
-    fail(key, `has unknown output type "${output.type}".`);
+  if (!type.isUndefined(output.type) && !AI_OUTPUT_TYPES.includes(output.type)) {
+    fail(
+      key,
+      `has output type "${output.type}". An ai column answers one of: ${AI_OUTPUT_TYPES.join(
+        ', '
+      )}.`
+    );
+  }
+  if (
+    !type.isUndefined(output.options) &&
+    (!type.isArray(output.options) || !['tag', 'tags'].includes(output.type))
+  ) {
+    fail(key, `"output.options" must be a list, for output type "tag" or "tags".`);
   }
   return output;
 }
@@ -91,6 +103,13 @@ function checkString({ column, key, name, required }) {
     fail(key, `requires "${name}" (a string). Received ${JSON.stringify(value)}.`);
   }
   return value;
+}
+
+function checkTemplate({ column, key, name }) {
+  const template = checkString({ column, key, name, required: true });
+  const problem = findTemplateProblem(template);
+  if (problem !== null) fail(key, `"${name}": ${problem}`);
+  return template;
 }
 
 function checkAutoRun({ column, key }) {
@@ -148,7 +167,7 @@ function normalizeColumnKind({ column, key }) {
   };
   switch (kind) {
     case 'formula':
-      return { ...base, template: checkString({ column, key, name: 'template', required: true }) };
+      return { ...base, template: checkTemplate({ column, key, name: 'template' }) };
     case 'enrichment':
       return {
         ...base,
@@ -165,7 +184,8 @@ function normalizeColumnKind({ column, key }) {
         field: `${stateField}.value`,
         type: output?.type,
         options: output?.options,
-        prompt: checkString({ column, key, name: 'prompt', required: true }),
+        provider: checkString({ column, key, name: 'provider', required: false }) ?? 'ai',
+        prompt: checkTemplate({ column, key, name: 'prompt' }),
         inputs: checkInputs({ inputs: column.inputs, key }),
         output,
         autoRun: checkAutoRun({ column, key }),

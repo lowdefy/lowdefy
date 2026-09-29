@@ -351,11 +351,13 @@ test('AI columns return values of their output type', async ({ request }) => {
       kind: 'ai',
       prompt: 'Which segment is {{ industry }}?',
       inputs: { industry: { column: 'company' } },
-      output: { type: 'options', options: ['Software', 'Logistics', 'Retail'] },
+      output: { type: 'tag', options: ['Software', 'Logistics', 'Retail'] },
     },
     {
       key: 'summary',
       kind: 'ai',
+      // An ai column may name its provider: `ai`, the built-in one, here.
+      provider: 'ai',
       prompt: 'Summarise {{ name }}.',
       inputs: { name: { column: 'name' } },
     },

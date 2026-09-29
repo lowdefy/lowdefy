@@ -13,8 +13,8 @@
 # limitations under the License.
 
 # Provider ai: renders the column's prompt with the row's inputs and asks the model for a value
-# of the column's output type: a number for numeric types, a boolean, one of the options (a
-# list of them for tags), or text. The model's answer is
+# of the column's output type (the Table's AI output types): text, a number, a boolean, one of
+# the options (tag) or a list of them (tags). The model's answer is
 # checked against that type (GenerateObject with a JSON schema), so a cell never stores a
 # number column's "about 40" or an option the column does not list.
 id: enrich_ai
@@ -44,7 +44,12 @@ routine:
               - 'null'
             properties:
               type:
-                type: string
+                enum:
+                  - text
+                  - number
+                  - boolean
+                  - tag
+                  - tags
               options:
                 type: array
                 minItems: 1
@@ -82,14 +87,16 @@ routine:
         _js:
           fn: |
             const output = args.output ?? { type: 'text' };
-            const numeric = ['number', 'currency', 'percent', 'progress', 'rating'];
             const options = Array.isArray(output.options) ? output.options : null;
             let value = { type: 'string' };
-            if (options !== null && output.type === 'tags') {
-              value = { type: 'array', items: { type: 'string', enum: options } };
-            } else if (options !== null) {
+            if (output.type === 'tags') {
+              value = {
+                type: 'array',
+                items: options === null ? { type: 'string' } : { type: 'string', enum: options },
+              };
+            } else if (output.type === 'tag' && options !== null) {
               value = { type: 'string', enum: options };
-            } else if (numeric.includes(output.type)) {
+            } else if (output.type === 'number') {
               value = { type: 'number' };
             } else if (output.type === 'boolean') {
               value = { type: 'boolean' };

@@ -50,6 +50,27 @@
     text-overflow: ellipsis;
   }
 
+  /* An error column (a user-defined column whose config is invalid). */
+  .lf-enrich-invalid {
+    overflow: hidden;
+    color: var(--ant-color-error, #ff4d4f);
+    font-size: var(--ant-font-size-sm, 12px);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .lf-enrich-invalid-mark {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    color: var(--ant-color-error, #ff4d4f);
+    cursor: help;
+  }
+
+  [data-lf-header][data-lf-invalid] {
+    box-shadow: inset 0 -2px 0 var(--ant-color-error, #ff4d4f);
+  }
+
   .lf-enrich-cell[data-lf-enrich-status='running'] .lf-enrich-state {
     color: var(--ant-color-primary, #1677ff);
   }

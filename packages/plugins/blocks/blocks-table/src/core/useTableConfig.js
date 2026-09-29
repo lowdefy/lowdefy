@@ -24,6 +24,7 @@ import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
 import createColumnDefs from './createColumnDefs.js';
 import densityHeights from './densityHeights.js';
 import getHeaderLevels from './getHeaderLevels.js';
+import getProviderIds from './getProviderIds.js';
 import normalizeEnrichment from '../features/enrichment/normalizeEnrichment.js';
 import normalizeExpandable from '../features/expandable/normalizeExpandable.js';
 import normalizeServerData from '../features/serverData/normalizeServerData.js';
@@ -85,7 +86,11 @@ function useTableConfig({ properties }) {
   );
 
   const columnModel = useMemo(() => {
-    const normalized = normalizeColumns({ columns: columnsConfig, defaultColumn });
+    const normalized = normalizeColumns({
+      columns: columnsConfig,
+      defaultColumn,
+      providerIds: getProviderIds(providers),
+    });
     // `$user` values resolve from an empty user when the app sets none.
     const configUser = user ?? {};
     const columns = compileColumns({
@@ -106,7 +111,7 @@ function useTableConfig({ properties }) {
       }),
       user: configUser,
     };
-  }, [columnsConfig, defaultColumn, expandable, rowRules, user]);
+  }, [columnsConfig, defaultColumn, expandable, providers, rowRules, user]);
 
   return useMemo(() => {
     const server = normalizeServerData(serverData);
@@ -124,6 +129,7 @@ function useTableConfig({ properties }) {
           addRow: properties.addRow,
           addRowText: properties.addRowText,
           importCsv: properties.importCsv,
+          inputFieldPrefix: properties.inputFieldPrefix,
           providers,
         },
         columns: columnModel.columns,
@@ -166,6 +172,7 @@ function useTableConfig({ properties }) {
     properties.emptyText,
     properties.headerMenu,
     properties.importCsv,
+    properties.inputFieldPrefix,
     properties.height,
     properties.maxHeight,
     properties.pageSize,

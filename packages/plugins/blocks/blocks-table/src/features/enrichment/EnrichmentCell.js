@@ -106,8 +106,19 @@ function renderState({ api, col, original, rowKey, run }) {
 // while it waits for a column it reads), a spinner
 // (running), a red marker with the message on hover (error) or "No result" (empty). A done cell
 // whose inputs changed since it ran (stale: its `inputHash` differs from the row's current
-// inputs) shows dimmed with a rerun button. `data-lf-enrich-status` carries the state.
+// inputs) shows dimmed with a rerun button. `data-lf-enrich-status` carries the state. An error
+// column (`invalid`: a user-defined column whose config is invalid) shows the reason instead.
 function EnrichmentCell({ api, col, original, rowKey }) {
+  const reason = col.column.invalid;
+  if (reason !== undefined) {
+    return (
+      <div className="lf-enrich-cell" data-lf-enrich-invalid="">
+        <span className="lf-enrich-invalid" title={reason}>
+          Invalid column: {reason}
+        </span>
+      </div>
+    );
+  }
   const run = getRunState({ column: col.column, row: original });
   return (
     <div

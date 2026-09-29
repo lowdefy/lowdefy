@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 import AGGREGATE_LABELS from './aggregateLabels.js';
 import CELL_TYPE_FAMILIES from './cellTypeFamilies.js';
 import humanizeKey from './humanizeKey.js';
+import invalidateColumn from './invalidateColumn.js';
 import linkColumnKinds from './linkColumnKinds.js';
 import normalizeColumnKind from './normalizeColumnKind.js';
 import normalizeOptions from './normalizeOptions.js';
@@ -117,7 +118,53 @@ function normalizeLeaf({ column, defaults, path }) {
   };
 }
 
-function walkColumns({ entries, path, groupPrefix, defaults, leaves, columnsByKey, fieldKeys }) {
+// The provider catalogue check (Table passes `providerIds`, the ids of its `providers`): an
+// enrichment column must call a listed provider, and so must an ai column with a provider other
+// than the built-in `ai`.
+function checkProvider({ leaf, providerIds }) {
+  if (type.isUndefined(providerIds) || providerIds.size === 0) return;
+  if (leaf.kind !== 'enrichment' && leaf.kind !== 'ai') return;
+  if (leaf.kind === 'ai' && leaf.provider === 'ai') return;
+  if (!providerIds.has(leaf.provider)) {
+    throw new Error(
+      `Table column "${leaf.key}" uses provider "${leaf.provider}", which is not in "providers".`
+    );
+  }
+}
+
+// A user-defined column (`userDefined: true`) is runtime data a user wrote: a config error makes
+// it an error column (invalidateColumn) instead of throwing, so the table still renders.
+function normalizeUserLeaf({ column, defaults, path, providerIds, index }) {
+  try {
+    const leaf = normalizeLeaf({ column, defaults, path });
+    checkProvider({ leaf, providerIds });
+    return leaf;
+  } catch (error) {
+    const key = type.isString(column.key) ? column.key : `invalid:${index}`;
+    const leaf = normalizeLeaf({
+      column: {
+        key,
+        field: key,
+        title: type.isString(column.title) ? column.title : undefined,
+        width: type.isInt(column.width) ? column.width : undefined,
+      },
+      defaults,
+      path,
+    });
+    return invalidateColumn({ column: leaf, reason: error.message });
+  }
+}
+
+function walkColumns({
+  entries,
+  path,
+  groupPrefix,
+  defaults,
+  leaves,
+  columnsByKey,
+  fieldKeys,
+  providerIds,
+}) {
   return entries.map((entry, index) => {
     const column = type.isString(entry) ? { key: entry } : entry;
     if (!type.isObject(column)) {
@@ -142,17 +189,24 @@ function walkColumns({ entries, path, groupPrefix, defaults, leaves, columnsByKe
           leaves,
           columnsByKey,
           fieldKeys,
+          providerIds,
         }),
       };
     }
-    const leaf = normalizeLeaf({ column, defaults, path });
+    let leaf;
+    if (column.userDefined === true) {
+      leaf = normalizeUserLeaf({ column, defaults, path, providerIds, index });
+    } else {
+      leaf = normalizeLeaf({ column, defaults, path });
+      checkProvider({ leaf, providerIds });
+    }
     if (!type.isUndefined(columnsByKey[leaf.key])) {
       throw new Error(
         `Duplicate table column key "${leaf.key}". Give each column its own "key" when two columns show the same field.`
       );
     }
     columnsByKey[leaf.key] = leaf;
-    if (!type.isUndefined(column.field)) fieldKeys.add(leaf.key);
+    if (!type.isUndefined(column.field) && leaf.invalid === undefined) fieldKeys.add(leaf.key);
     leaves.push(leaf);
     return leaf;
   });
@@ -160,12 +214,15 @@ function walkColumns({ entries, path, groupPrefix, defaults, leaves, columnsByKe
 
 // The column config as the table uses it. Enrichment table kinds (`kind`, Table only) are
 // normalised per leaf (normalizeColumnKind.js), then linked once every key is known
-// (linkColumnKinds.js). Returns the leaf columns in order
+// (linkColumnKinds.js). A user-defined column with a config error becomes an error column
+// (`invalid`, invalidateColumn.js); a declared one throws. `providerIds` (Table: the ids of its
+// `providers`) checks the providers enrichment and ai columns call. Returns the leaf columns in
+// order
 // (`columns`), the same leaves by key (`columnsByKey`), and the header tree
 // (`headerGroups`): the top-level entries, where a group is
 // `{ group: true, key, title, headerTooltip, path, children }` and a leaf is
 // the same object as in `columns`.
-function normalizeColumns({ columns, defaultColumn }) {
+function normalizeColumns({ columns, defaultColumn, providerIds }) {
   if (!type.isNone(columns) && !type.isArray(columns)) {
     throw new Error(`Table columns must be an array. Received ${JSON.stringify(columns)}.`);
   }
@@ -181,6 +238,7 @@ function normalizeColumns({ columns, defaultColumn }) {
     leaves,
     columnsByKey,
     fieldKeys,
+    providerIds,
   });
   linkColumnKinds({ leaves, columnsByKey, fieldKeys });
   return { columns: leaves, columnsByKey, headerGroups };

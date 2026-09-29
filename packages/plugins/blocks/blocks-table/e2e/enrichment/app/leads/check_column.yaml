@@ -18,8 +18,8 @@
 #
 # Users write column configs, so everything a column could make the server do is checked
 # here: its key is a path segment under _enrich, it can only call a listed provider with that
-# provider's inputs, it can only read the table's fields and enrichment columns, and an AI
-# prompt may only reference its own inputs.
+# provider's inputs, it can only read the table's fields and enrichment columns, an AI prompt
+# may only reference its own inputs, and formulas and prompts are {{ column }} placeholders only.
 #
 # Args: column (the column to check), columns (the current merged columns), fields (the
 # fields allowlist), providers (the catalogue), replacing (the key of the column an update
@@ -32,6 +32,19 @@ _js:
     const PLACEHOLDER = /\{\{\s*([A-Za-z0-9_-]+)\s*\}\}/g;
     const kinds = ['input', 'formula', 'enrichment', 'ai', 'extract'];
     const inputTypes = ['text', 'email', 'phone', 'url', 'number', 'currency', 'date', 'boolean'];
+    const aiOutputTypes = ['text', 'number', 'boolean', 'tag', 'tags'];
+    // Formulas and AI prompts only take {{ column }} placeholders, filled in as plain text: a
+    // template engine would run what users typed as code (on the server for a prompt, in every
+    // viewer's browser for a formula). The Table refuses the same.
+    function templateProblem(template) {
+      if (/\{%|\{#/.test(template)) {
+        return 'Only {{ column }} placeholders are supported: template tags ({% %}) and comments ({# #}) are not.';
+      }
+      const bad = [...template.matchAll(/\{\{-?(.*?)-?\}\}/gs)].find(
+        (match) => !/^\s*[A-Za-z_$][\w$-]*(\.[\w$-]+)*\s*$/.test(match[1])
+      );
+      return bad ? `Only {{ column }} placeholders are supported: "${bad[0]}" is an expression.` : null;
+    }
     const isRunnable = (other) => other?.kind === 'enrichment' || other?.kind === 'ai';
 
     if (column === null || typeof column !== 'object' || Array.isArray(column)) {
@@ -101,11 +114,17 @@ _js:
       if (column.type !== undefined && !inputTypes.includes(column.type)) {
         errors.push(`An input column type should be one of ${inputTypes.join(', ')}.`);
       }
+      // What users type is stored under values.<key> (the page's inputFieldPrefix).
+      if (column.field !== undefined && column.field !== `values.${key}`) {
+        errors.push(`An input column stores its values at values.${key}.`);
+      }
       config.field = `values.${key}`;
     }
     if (kind === 'formula') {
       if (typeof column.template !== 'string' || column.template.length > 5000) {
         errors.push('A formula column needs a template of at most 5000 characters.');
+      } else if (templateProblem(column.template) !== null) {
+        errors.push(templateProblem(column.template));
       }
       config.template = column.template;
     }
@@ -139,47 +158,43 @@ _js:
       if (typeof column.prompt !== 'string' || column.prompt.trim() === '' || column.prompt.length > 20000) {
         errors.push('An AI column needs a prompt of at most 20000 characters.');
       } else {
-        if (/\{%|\{#/.test(column.prompt)) {
-          errors.push('An AI prompt can only reference columns, as {{ column }}.');
-        }
+        if (templateProblem(column.prompt) !== null) errors.push(templateProblem(column.prompt));
         [...column.prompt.matchAll(PLACEHOLDER)]
           .map((match) => match[1])
           .filter((param) => !(param in inputs))
           .forEach((param) => errors.push(`The prompt uses {{ ${param} }}, which is not an input.`));
-        const bare = column.prompt.replace(PLACEHOLDER, '');
-        if (/\{\{|\}\}/.test(bare)) {
-          errors.push('An AI prompt can only reference columns, as {{ column }}.');
-        }
       }
-      // The output type is a column type (the Table's picker sends the column's own); text,
-      // numeric, boolean and option types are answered as such (api/providers/enrich_ai.yaml).
+      // The answer's type is one of the Table's AI output types; tag and tags take options, the
+      // answers allowed (api/providers/enrich_ai.yaml asks the model for exactly that).
       const output = column.output ?? { type: column.type ?? 'text' };
-      if (typeof output.type !== 'string' || !/^[a-z]{1,32}$/.test(output.type)) {
-        errors.push('The AI output type should be a column type, such as text, number, boolean or tag.');
+      if (!aiOutputTypes.includes(output.type)) {
+        errors.push(`The AI answer type should be one of ${aiOutputTypes.join(', ')}.`);
       }
       const hasOptions = output.options !== undefined && output.options !== null;
       if (
-        (output.type === 'options' || hasOptions) &&
-        (!Array.isArray(output.options) ||
+        hasOptions &&
+        (!['tag', 'tags'].includes(output.type) ||
+          !Array.isArray(output.options) ||
           output.options.length === 0 ||
           output.options.length > 100 ||
           !output.options.every((option) => typeof option === 'string' && option.length <= 200))
       ) {
-        errors.push('An AI column with output options needs a list of text options.');
+        errors.push('AI answer options are a list of text options, for a tag or tags answer.');
+      }
+      // An ai column calls the built-in ai provider (enrich_ai) unless it names a listed one.
+      const provider = column.provider ?? 'ai';
+      if (provider !== 'ai' && !providers.some((item) => item.id === provider)) {
+        errors.push(`Provider "${provider}" is not in the provider catalogue.`);
       }
       if (readsBack(key, inputs)) errors.push('The column inputs read the column itself.');
-      // No provider: an ai column runs the ai provider (enrich_ai) by default, and the Table
-      // refuses a provider on an ai column.
       Object.assign(config, {
         prompt: column.prompt,
         inputs,
-        // `options` (a list to pick from) is stored as the tag column type the Table shows.
-        output: hasOptions
-          ? { type: output.type === 'options' ? 'tag' : output.type, options: output.options }
-          : { type: output.type },
+        output: hasOptions ? { type: output.type, options: output.options } : { type: output.type },
         field: `_enrich.${key}.value`,
         autoRun: column.autoRun === true,
       });
+      if (provider !== 'ai') config.provider = provider;
     }
     if (kind === 'extract') {
       if (!isRunnable(byKey.get(column.source))) {

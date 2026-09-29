@@ -46,26 +46,29 @@ function normalizeAddColumn(addColumn) {
   return { kinds };
 }
 
-function checkColumnProviders({ columns, providers }) {
-  if (providers.length === 0) return;
-  const ids = new Set(providers.map((provider) => provider.id));
-  columns.forEach((column) => {
-    if (column.kind === 'enrichment' && !ids.has(column.provider)) {
-      throw new Error(
-        `Table column "${column.key}" uses provider "${column.provider}", which is not in "providers".`
-      );
-    }
-  });
-}
-
 // The enrichment table config (design E3, E6): the provider catalogue, the add-column picker's
-// kinds (`addColumn: true | { kinds }`), the add-row row (`addRow`, Table only: TableInput adds
+// kinds (`addColumn: true | { kinds }`), where new input columns keep their values
+// (`inputFieldPrefix`: `<prefix>.<key>`, else the key), the add-row row (`addRow`, Table only: TableInput adds
 // rows to its changeset), CSV import (`importCsv`), the columns with a run state (`runColumns`,
 // enrichment and ai) and the columns whose cells open the details panel (`detailColumns`, plus
-// extract).
+// extract). The columns' providers are checked against the catalogue with the columns
+// (normalizeColumns `providerIds`), so a user column with an unknown one is an error column.
+const FIELD_PATH = /^[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*$/;
+
+function normalizeInputFieldPrefix(prefix) {
+  if (type.isNone(prefix)) return null;
+  if (!type.isString(prefix) || !FIELD_PATH.test(prefix)) {
+    throw new Error(
+      `Table "inputFieldPrefix" must be a dot path of letters, digits, "_" or "-". Received ${JSON.stringify(
+        prefix
+      )}.`
+    );
+  }
+  return prefix;
+}
+
 function normalizeEnrichment({ properties, columns }) {
   const providers = normalizeProviders(properties.providers);
-  checkColumnProviders({ columns, providers });
   return {
     providers,
     providersById: new Map(providers.map((provider) => [provider.id, provider])),
@@ -73,6 +76,7 @@ function normalizeEnrichment({ properties, columns }) {
     addRow: properties.addRow === true,
     addRowText: type.isString(properties.addRowText) ? properties.addRowText : null,
     importCsv: properties.importCsv === true,
+    inputFieldPrefix: normalizeInputFieldPrefix(properties.inputFieldPrefix),
     runColumns: columns.filter((column) => RUN_KINDS.has(column.kind)),
     detailColumns: new Set(
       columns.filter((column) => DETAIL_KINDS.has(column.kind)).map((column) => column.key)

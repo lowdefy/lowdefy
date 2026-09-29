@@ -59,6 +59,18 @@ async function openMenu(page, key, blockId = 'enrich') {
   return menu;
 }
 
+// Opens the header menu's Run submenu (hovered until it shows: it opens on a hover delay) and
+// picks a mode.
+async function runFromMenu(page, menu, mode) {
+  const run = menu.getByRole('menuitem', { name: 'Run', exact: true });
+  const item = page.getByRole('menuitem', { name: mode, exact: true });
+  await expect(async () => {
+    await run.hover();
+    await expect(item).toBeVisible({ timeout: 1000 });
+  }).toPass();
+  await item.click();
+}
+
 async function menuItem(page, key, name, blockId = 'enrich') {
   const menu = await openMenu(page, key, blockId);
   await menu.getByRole('menuitem', { name, exact: true }).click();
@@ -405,8 +417,7 @@ test.describe('Table enrichment', () => {
 
   test('Run in the header menu fires onColumnRun with the mode and the view', async ({ page }) => {
     const menu = await openMenu(page, 'email');
-    await menu.getByRole('menuitem', { name: 'Run', exact: true }).hover();
-    await page.getByRole('menuitem', { name: 'Errors', exact: true }).click();
+    await runFromMenu(page, menu, 'Errors');
     await expectEvent(page, 'onColumnRun', {
       column: {
         key: 'email',
@@ -426,8 +437,7 @@ test.describe('Table enrichment', () => {
     await selectRow(page, 'r2');
     await selectRow(page, 'r3');
     const menu = await openMenu(page, 'summary');
-    await menu.getByRole('menuitem', { name: 'Run', exact: true }).hover();
-    await page.getByRole('menuitem', { name: 'Stale cells', exact: true }).click();
+    await runFromMenu(page, menu, 'Stale cells');
     await expect
       .poll(async () => (await eventOf(page, 'onColumnRun'))?.selection)
       .toEqual(['r2', 'r3']);
@@ -565,8 +575,7 @@ test.describe('Table enrichment', () => {
 
   test('a failed run shows its error under the table', async ({ page }) => {
     const menu = await openMenu(page, 'email', 'enrich_fail');
-    await menu.getByRole('menuitem', { name: 'Run', exact: true }).hover();
-    await page.getByRole('menuitem', { name: 'All rows', exact: true }).click();
+    await runFromMenu(page, menu, 'All rows');
     await expect(getBlock(page, 'enrich_fail').locator('[data-lf-enrich-notice]')).toContainText(
       'Out of credits'
     );
@@ -848,5 +857,31 @@ test.describe('Table optional features', () => {
     await button(page, 'keep_restore_columns').click();
     // Not remounted: the pushed value is still there.
     await expect(email).toHaveText('ada@pushed.test');
+  });
+});
+
+test.describe('Table error columns', () => {
+  test('a bad user-defined column renders as an error column with Edit and Delete', async ({
+    page,
+  }) => {
+    await navigateToTestPage(page, 'table-enrichment');
+    const table = getBlock(page, 'enrich_invalid');
+    const row = table.locator('.lf-table-body [data-row-key="i1"]');
+    await expect(row.locator('[data-col-key="company"]')).toHaveText('Acme');
+    // An ai column may name its provider.
+    await expect(row.locator('[data-col-key="pitch"]')).toHaveText('Buy Acme');
+    await expect(row.locator('[data-col-key="broken"]')).toHaveText(
+      'Invalid column: Table column "broken" uses provider "gone", which is not in "providers".'
+    );
+    const brokenHeader = table.locator('[data-lf-header][data-col-key="broken"]');
+    await expect(brokenHeader).toHaveAttribute('data-lf-invalid', '');
+    await expect(brokenHeader.locator('[data-lf-enrich-invalid-mark]')).toBeVisible();
+    const menu = await openMenu(page, 'broken', 'enrich_invalid');
+    await expect(menu.getByRole('menuitem', { name: 'Edit column', exact: true })).toBeVisible();
+    await expect(menu.getByRole('menuitem', { name: 'Delete column', exact: true })).toBeVisible();
+    await expect(menu.getByRole('menuitem', { name: 'Duplicate', exact: true })).toHaveCount(0);
+    await menu.getByRole('menuitem', { name: 'Edit column', exact: true }).click();
+    // The picker opens on the column's own config, to be fixed.
+    await expect(page.locator('.ant-drawer [aria-label="Title"]')).toHaveValue('Broken');
   });
 });

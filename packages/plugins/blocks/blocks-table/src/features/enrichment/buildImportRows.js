@@ -19,9 +19,10 @@ import { set } from '@lowdefy/helpers';
 import coerceCellValue from '../editing/coerceCellValue.js';
 import createValueSpec from './createValueSpec.js';
 import generateColumnKey from './generateColumnKey.js';
+import getInputField from './getInputField.js';
 import { NEW_COLUMN, SKIP_COLUMN } from './matchCsvHeaders.js';
 
-function createTargets({ headers, mapping, columnsByKey, existingKeys }) {
+function createTargets({ headers, mapping, columnsByKey, existingKeys, inputFieldPrefix }) {
   const keys = [...existingKeys];
   const newColumns = [];
   const targets = headers.map((header, index) => {
@@ -30,16 +31,18 @@ function createTargets({ headers, mapping, columnsByKey, existingKeys }) {
     if (target === NEW_COLUMN) {
       const key = generateColumnKey({ title: header, existingKeys: keys });
       keys.push(key);
+      const field = getInputField({ key, inputFieldPrefix });
       const column = {
         key,
         title: header.trim() === '' ? key : header.trim(),
         type: 'text',
         kind: 'input',
+        field,
         editable: true,
         userDefined: true,
       };
       newColumns.push(column);
-      return { field: key, spec: null };
+      return { field, spec: null };
     }
     const column = columnsByKey.get(target);
     return { field: column.field, spec: createValueSpec(column) };
@@ -50,10 +53,24 @@ function createTargets({ headers, mapping, columnsByKey, existingKeys }) {
 // The rows a CSV import sends (onImport): one object per record with the mapped fields set at
 // each column's `field` path, the text coerced to the column's type (a text that does not fit is
 // kept as it is, so no data is lost), and empty cells left out. Headers mapped to NEW_COLUMN
-// become new text input columns (`newColumns`, keys from their titles) whose values sit at their
-// key. Records with no mapped value are dropped (`skipped` counts them).
-function buildImportRows({ records, headers, mapping, columnsByKey, existingKeys }) {
-  const { targets, newColumns } = createTargets({ headers, mapping, columnsByKey, existingKeys });
+// become new text input columns (`newColumns`, keys from their titles) with their `field`
+// (getInputField: under `inputFieldPrefix`, else the key), where their values sit too, so every
+// value is at a field path. Records with no mapped value are dropped (`skipped` counts them).
+function buildImportRows({
+  records,
+  headers,
+  mapping,
+  columnsByKey,
+  existingKeys,
+  inputFieldPrefix = null,
+}) {
+  const { targets, newColumns } = createTargets({
+    headers,
+    mapping,
+    columnsByKey,
+    existingKeys,
+    inputFieldPrefix,
+  });
   const rows = [];
   let skipped = 0;
   records.forEach((record) => {

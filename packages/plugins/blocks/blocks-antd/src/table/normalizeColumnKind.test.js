@@ -219,11 +219,130 @@ test.each([
     '"autoRun" must be true or false',
   ],
   [{ key: 'a', kind: 'ai', prompt: 'x', output: 'text' }, '"output" must be { type, options? }'],
-  [{ key: 'a', kind: 'ai', prompt: 'x', output: { type: 'blob' } }, 'unknown output type "blob"'],
+  [
+    { key: 'a', kind: 'ai', prompt: 'x', output: { type: 'email' } },
+    'has output type "email". An ai column answers one of: text, number, boolean, tag, tags.',
+  ],
+  [
+    { key: 'a', kind: 'ai', prompt: 'x', output: { type: 'text', options: ['A'] } },
+    '"output.options" must be a list, for output type "tag" or "tags".',
+  ],
+  [
+    { key: 'a', kind: 'ai', prompt: 'Hi {% if x %}{{ x }}{% endif %}' },
+    '"prompt": Only {{ column }} placeholders are supported: template tags',
+  ],
+  [
+    { key: 'a', kind: 'formula', template: '{{ range.constructor("return 1")() }}' },
+    '"template": Only {{ column }} placeholders are supported: "{{ range.constructor("return 1")() }}" is an expression.',
+  ],
+  [{ key: 'a', kind: 'formula', template: '{# note #}{{ x }}' }, 'comments ({# #}) are not.'],
+  [
+    { key: 'a', kind: 'enrichment', provider: 'missing' },
+    'uses provider "missing", which is not in "providers".',
+  ],
   [{ key: 'a', status: 'queued' }, '"status" must be { field: <path> }'],
   [{ key: 'a', userDefined: 'yes' }, '"userDefined" must be true or false'],
 ])('normalizeColumns rejects an invalid kind config %#', (column, message) => {
-  expect(() => normalizeColumns({ columns: [column] })).toThrow(message);
+  expect(() => normalizeColumns({ columns: [column], providerIds: new Set(['p']) })).toThrow(
+    message
+  );
+});
+
+test('normalizeColumns makes a user-defined column with a config error an error column', () => {
+  const { columns, columnsByKey } = normalizeColumns({
+    columns: [
+      { key: 'name' },
+      { key: 'bad', title: 'Bad AI', kind: 'ai', userDefined: true, output: { type: 'blob' } },
+      {
+        key: 'gone',
+        kind: 'enrichment',
+        provider: 'p',
+        userDefined: true,
+        inputs: { d: { column: 'nope' } },
+      },
+      { key: 'x', kind: 'extract', source: 'name', path: 'a', userDefined: true },
+      { key: 'late', kind: 'ai', prompt: '{{ name }}', provider: 'other', userDefined: true },
+    ],
+    providerIds: new Set(['p']),
+  });
+  expect(columns.map((column) => column.key)).toEqual(['name', 'bad', 'gone', 'x', 'late']);
+  expect(columnsByKey.bad).toMatchObject({
+    key: 'bad',
+    title: 'Bad AI',
+    type: 'text',
+    userDefined: true,
+    sortable: false,
+    invalid:
+      'Table column "bad" has output type "blob". An ai column answers one of: text, number, boolean, tag, tags.',
+  });
+  expect(columnsByKey.bad).not.toHaveProperty('kind');
+  expect(columnsByKey.bad).not.toHaveProperty('stateField');
+  expect(columnsByKey.gone.invalid).toBe(
+    'Table column "gone" input "d" names unknown column "nope".'
+  );
+  expect(columnsByKey.gone).not.toHaveProperty('inputSources');
+  expect(columnsByKey.x.invalid).toContain('which is not an enrichment or ai column');
+  expect(columnsByKey.late.invalid).toBe(
+    'Table column "late" uses provider "other", which is not in "providers".'
+  );
+});
+
+test('normalizeColumns takes a provider on an ai column, the built-in ai by default', () => {
+  const { columnsByKey } = normalizeColumns({
+    columns: [
+      { key: 'name' },
+      { key: 'a', kind: 'ai', prompt: '{{ name }}', inputs: { name: { column: 'name' } } },
+      { key: 'b', kind: 'ai', prompt: '{{ name }}', provider: 'claude' },
+      { key: 'c', kind: 'ai', prompt: '{{ name }}', provider: 'ai' },
+    ],
+    providerIds: new Set(['claude']),
+  });
+  expect(columnsByKey.a.provider).toBe('ai');
+  expect(columnsByKey.b.provider).toBe('claude');
+  expect(columnsByKey.c.provider).toBe('ai');
+});
+
+test('normalizeColumns makes user formulas in a cycle error columns', () => {
+  const { columnsByKey } = normalizeColumns({
+    columns: [
+      { key: 'a', kind: 'formula', template: '{{ b }}', userDefined: true },
+      { key: 'b', kind: 'formula', template: '{{ a }}', userDefined: true },
+      { key: 'c', kind: 'formula', template: '{{ a }}!' },
+    ],
+  });
+  expect(columnsByKey.a.invalid).toBe(
+    'Table formula columns "a" -> "b" -> "a" reference each other.'
+  );
+  expect(columnsByKey.b.invalid).toBe(columnsByKey.a.invalid);
+  expect(columnsByKey.c.invalid).toBeUndefined();
+});
+
+test('a formula only fills in placeholders and never runs its template', () => {
+  globalThis.formulaRan = false;
+  expect(() =>
+    normalizeColumns({
+      columns: [
+        {
+          key: 'evil',
+          kind: 'formula',
+          template: '{{ range.constructor("globalThis.formulaRan = true")() }}',
+        },
+      ],
+    })
+  ).toThrow('is an expression');
+  const { columnsByKey } = normalizeColumns({
+    columns: [
+      { key: 'name' },
+      {
+        key: 'label',
+        kind: 'formula',
+        template: '{{ name }} <{{ meta.city }}> {{ tags }} {{ none }}',
+      },
+    ],
+  });
+  const row = { name: '{{ secret }}', meta: { city: 'Oslo' }, tags: ['a', 'b'], secret: 'x' };
+  expect(columnsByKey.label.read(row)).toBe('{{ secret }} <Oslo> a, b ');
+  expect(globalThis.formulaRan).toBe(false);
 });
 
 test('normalizeColumns rejects an enrichment input naming an unknown column', () => {
@@ -253,8 +372,9 @@ test('normalizeColumns rejects formula columns that reference each other', () =>
   ).toThrow('Table formula columns "a" -> "b" -> "a" reference each other.');
 });
 
-test('normalizeColumns rejects a formula template that does not compile', () => {
-  expect(() =>
-    normalizeColumns({ columns: [{ key: 'a', kind: 'formula', template: '{{ a ' }] })
-  ).toThrow();
+test('a formula template with an unclosed placeholder keeps it as text', () => {
+  const { columnsByKey } = normalizeColumns({
+    columns: [{ key: 'name' }, { key: 'a', kind: 'formula', template: '{{ name }} {{ a ' }],
+  });
+  expect(columnsByKey.a.read({ name: 'Ada' })).toBe('Ada {{ a ');
 });

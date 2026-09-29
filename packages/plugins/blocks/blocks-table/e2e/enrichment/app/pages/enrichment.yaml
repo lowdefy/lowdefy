@@ -113,6 +113,9 @@ blocks:
       providers:
         _ref: leads/providers.yaml
       addColumn: true
+      # User-defined input columns keep their values under values.<key> (leads/load_table.yaml
+      # adds them to the fields allowlist there), so a column can never name another field.
+      inputFieldPrefix: values
       addRow: true
       addRowText: New lead
       importCsv: true

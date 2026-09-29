@@ -32,6 +32,7 @@ function createOpenColumnPicker(api) {
     if (type.isString(key)) {
       const column = api.config.columnsByKey.get(key);
       if (!column) return false;
+      const draft = draftFromColumn({ raw: getRawColumn({ api, key }), column });
       setUi({
         api,
         patch: {
@@ -39,8 +40,8 @@ function createOpenColumnPicker(api) {
             mode: 'edit',
             key,
             position: null,
-            kinds: [column.kind ?? 'input'],
-            draft: draftFromColumn({ raw: getRawColumn({ api, key }), column }),
+            kinds: [draft.kind],
+            draft,
             status: 'idle',
             error: null,
           },
