@@ -20,6 +20,7 @@ import { DatePicker, Input, InputNumber, Rate, Select, Switch, Tooltip } from 'a
 import SelectedTag from '../../core/SelectedTag.js';
 import toSelectOptions from '../../core/toSelectOptions.js';
 import toEditorDraft from './toEditorDraft.js';
+import findRow from '../../core/findRow.js';
 
 const POPUP_CLASS = 'lf-table-editor-popup';
 const POPUP_KINDS = new Set(['date', 'datetime', 'select', 'multiSelect']);
@@ -65,7 +66,7 @@ function CellEditor({ api, session }) {
   const { editing } = api;
   const spec = editing.specs.get(session.colKey);
   const kind = getKind(spec);
-  const [row] = useState(() => api.table.getRow(session.rowId, true)?.original);
+  const [row] = useState(() => findRow({ table: api.table, id: session.rowId })?.original);
   const [initial] = useState(() => {
     const saved = editing.layer.getDraft(session.id);
     if (saved.has) return saved.value;

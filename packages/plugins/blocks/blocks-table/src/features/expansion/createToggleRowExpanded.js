@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 import createChildLoads from '../tree/createChildLoads.js';
 import getExpandedIds from './getExpandedIds.js';
 import rowNeedsChildren from '../tree/rowNeedsChildren.js';
+import findRow from '../../core/findRow.js';
 
 const CHILDREN_ERROR = "Couldn't load the rows.";
 
@@ -50,7 +51,7 @@ function createToggleRowExpanded(api) {
   }
 
   return function toggleRowExpanded({ id, expanded }) {
-    const row = api.table.getRow(id, true);
+    const row = findRow({ table: api.table, id });
     if (!row) return false;
     const rowKey = api.config.getKey(row.original);
     const isExpanded = getExpandedIds(api.state.expanded).has(id);

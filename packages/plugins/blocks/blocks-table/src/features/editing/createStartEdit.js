@@ -15,6 +15,7 @@
 */
 
 import isCellEditable from './isCellEditable.js';
+import findRow from '../../core/findRow.js';
 
 const SEEDED_KINDS = new Set(['text', 'number', 'select', 'multiSelect']);
 
@@ -32,7 +33,7 @@ function createStartEdit(api) {
       if (current.rowId === rowId && current.colKey === colKey) return true;
       if (!api.actions.commitEdit({})) return false;
     }
-    const row = api.table.getRow(rowId, true);
+    const row = findRow({ table: api.table, id: rowId });
     const col = api.layout.byKey.get(colKey);
     if (!row || !col || col.special) return false;
     const spec = specs.get(colKey);
