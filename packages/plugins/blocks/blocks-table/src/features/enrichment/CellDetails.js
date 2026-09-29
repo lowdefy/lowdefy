@@ -18,11 +18,11 @@ import React from 'react';
 import { Button, Drawer } from 'antd';
 import htmlToText from '@lowdefy/blocks-antd/table/htmlToText.js';
 import renderCell from '@lowdefy/blocks-antd/table/renderCell.js';
-import resolveEnrichmentInputs from '@lowdefy/blocks-antd/table/resolveEnrichmentInputs.js';
 
 import formatCost from './formatCost.js';
 import formatJsonPreview from './formatJsonPreview.js';
 import formatRunTime from './formatRunTime.js';
+import getInputRows from './getInputRows.js';
 import getRunState from './getRunState.js';
 import JsonTree from './JsonTree.js';
 
@@ -65,15 +65,25 @@ function Timings({ state }) {
   );
 }
 
-function Inputs({ inputs, columnsByKey }) {
-  const entries = Object.entries(inputs);
-  if (entries.length === 0) return <p className="lf-enrich-muted">No inputs.</p>;
+function Inputs({ rows }) {
+  if (rows.length === 0) return <p className="lf-enrich-muted">No inputs.</p>;
   return (
     <dl className="lf-enrich-details-list" data-lf-details-inputs="">
-      {entries.map(([param, value]) => (
-        <React.Fragment key={param}>
-          <dt>{columnsByKey.get(param) ? htmlToText(columnsByKey.get(param).title) : param}</dt>
-          <dd data-lf-details-input={param}>{formatJsonPreview(value)}</dd>
+      {rows.map((input) => (
+        <React.Fragment key={input.param}>
+          <dt data-lf-details-input-label={input.param}>
+            {input.label}
+            <span className="lf-enrich-details-source">
+              {input.literal ? ' =' : ` ← ${input.columnTitle}`}
+            </span>
+          </dt>
+          <dd data-lf-details-input={input.param}>
+            {input.missing ? (
+              <span className="lf-enrich-muted">Missing</span>
+            ) : (
+              formatJsonPreview(input.value)
+            )}
+          </dd>
         </React.Fragment>
       ))}
     </dl>
@@ -120,7 +130,12 @@ function renderBody({ api, column, row, rowId }) {
   const { columnsByKey } = api.config;
   const runColumn = column.kind === 'extract' ? columnsByKey.get(column.source) : column;
   const run = getRunState({ column: runColumn, row });
-  const inputs = resolveEnrichmentInputs({ column: runColumn, row });
+  const inputRows = getInputRows({
+    column: runColumn,
+    row,
+    columnsByKey,
+    provider: api.config.enrichment.providersById.get(runColumn.provider),
+  });
   const rowKey = api.config.getKey(row);
   const raw = run.state?.raw;
   return (
@@ -170,7 +185,7 @@ function renderBody({ api, column, row, rowId }) {
         <Timings state={run.state} />
       </Section>
       <Section name="inputs" title="Inputs">
-        <Inputs columnsByKey={columnsByKey} inputs={inputs} />
+        <Inputs rows={inputRows} />
       </Section>
       <Section name="raw" title="Raw result">
         <RawResult api={api} raw={raw} source={runColumn.key} />

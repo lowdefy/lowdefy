@@ -656,6 +656,10 @@ test.describe('Table enrichment', () => {
     await expect(details(page).locator('[data-lf-details-input="domain"]')).toHaveText(
       '"acme.com"'
     );
+    // The provider's input title, then the column it reads.
+    await expect(details(page).locator('[data-lf-details-input-label="domain"]')).toHaveText(
+      'Domain ← Domain'
+    );
     await expect(details(page).locator('[data-lf-json-node="email"]')).toContainText(
       '"ada@acme.com"'
     );
