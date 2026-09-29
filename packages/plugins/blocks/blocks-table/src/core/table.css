@@ -74,12 +74,15 @@
     position: relative;
   }
 
+  /* The separator is the row's own border, not each cell's, so it runs the full width of the
+     row when the columns are narrower than the table and passes under sticky pinned cells. */
   .lf-table-row {
     display: flex;
     width: var(--lf-total);
     min-width: 100%;
     height: var(--lf-row-h);
     box-sizing: border-box;
+    border-bottom: 1px solid var(--lf-border);
   }
 
   .lf-table-body {
@@ -127,7 +130,6 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    border-bottom: 1px solid var(--lf-border);
     background: inherit;
     outline: none;
   }
@@ -447,9 +449,6 @@
 
   .lf-table-footer .lf-table-row {
     background: var(--lf-header-bg);
-  }
-
-  .lf-table-footer .lf-table-gridcell {
     border-top: 1px solid var(--lf-border);
     border-bottom: 0;
   }

@@ -251,4 +251,29 @@ test.describe('Table visual polish', () => {
     const name = row(page, 'crm', 6).locator('[data-col-key="owner"] .lf-table-person-name');
     await expect(name).toHaveAttribute('title', 'Samuel Adeyemi');
   });
+
+  test('row separators run the full width of a table wider than its columns', async ({ page }) => {
+    const rows = await table(page, 'narrow').evaluate((root) => {
+      const scroller = root.querySelector('.lf-table-scroller');
+      const lastCell = root.querySelector('.lf-table-body [data-row-key] [data-col-key="actions"]');
+      return {
+        viewport: scroller.clientWidth,
+        columnsEnd: lastCell.getBoundingClientRect().right - scroller.getBoundingClientRect().left,
+        rows: Array.from(
+          root.querySelectorAll('.lf-table-header .lf-table-row, .lf-table-body [data-row-key]')
+        ).map((element) => ({
+          width: element.getBoundingClientRect().width,
+          border: getComputedStyle(element).borderBottomWidth,
+          cellBorder: getComputedStyle(element.querySelector('.lf-table-gridcell'))
+            .borderBottomWidth,
+        })),
+      };
+    });
+    expect(rows.columnsEnd).toBeLessThan(rows.viewport / 2);
+    rows.rows.forEach((element) => {
+      expect(Math.abs(element.width - rows.viewport)).toBeLessThan(1);
+      expect(element.border).toBe('1px');
+      expect(element.cellBorder).toBe('0px');
+    });
+  });
 });
