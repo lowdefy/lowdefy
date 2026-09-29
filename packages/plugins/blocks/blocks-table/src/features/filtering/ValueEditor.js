@@ -19,6 +19,9 @@ import { DatePicker, Select, Space, Tag } from 'antd';
 import { get, type } from '@lowdefy/helpers';
 import CELL_TYPE_FAMILIES from '@lowdefy/blocks-antd/table/cellTypeFamilies.js';
 
+import SelectedTag from '../../core/SelectedTag.js';
+import toSelectOptions from '../../core/toSelectOptions.js';
+
 import DraftInput from './DraftInput.js';
 import DraftInputNumber from './DraftInputNumber.js';
 import formatFilterDate from './formatFilterDate.js';
@@ -78,8 +81,24 @@ function RangeDates({ column, value, onChange, size }) {
   );
 }
 
+// Tag, tags and status values show as the cell shows them (a chip or a dot in the option's
+// colour), in the list and as the picked values; other columns list their option labels.
+const CHIP_TYPES = new Set(['tag', 'tags', 'status']);
+
+function getSelectOptions({ column, components }) {
+  if (!column.options) return undefined;
+  if (CHIP_TYPES.has(column.type)) {
+    return toSelectOptions({ components, spec: { column, options: column.options }, row: {} });
+  }
+  return column.options.map((option) => ({
+    value: option.value,
+    label: option.label,
+    text: option.label,
+  }));
+}
+
 // The value input for one condition, by the operator's value shape and the column's type family.
-function ValueEditor({ column, op, value, onChange, user, size = 'small' }) {
+function ValueEditor({ column, components, op, value, onChange, user, size = 'small' }) {
   const shape = getValueShape(op);
   if (shape === 'none') return null;
   if (type.isObject(value) && type.isString(value.$user)) {
@@ -87,8 +106,8 @@ function ValueEditor({ column, op, value, onChange, user, size = 'small' }) {
   }
   const family = CELL_TYPE_FAMILIES[column.type];
   // Columns come normalised by the shared core: options are [{ value, label, ... }].
-  const { options } = column;
-  const selectOptions = options?.map((option) => ({ value: option.value, label: option.label }));
+  const selectOptions = getSelectOptions({ column, components });
+  const chips = selectOptions !== undefined && CHIP_TYPES.has(column.type);
 
   if (shape === 'relative') {
     return <RelativeDateEditor onChange={onChange} size={size} value={value} />;
@@ -106,10 +125,11 @@ function ValueEditor({ column, op, value, onChange, user, size = 'small' }) {
         className="lf-filter-value"
         mode={selectOptions ? 'multiple' : 'tags'}
         onChange={(next) => onChange(next.length ? next : undefined)}
-        optionFilterProp="label"
+        optionFilterProp="text"
         options={selectOptions}
         placeholder="Values"
         size={size}
+        tagRender={chips ? SelectedTag : undefined}
         tokenSeparators={selectOptions ? undefined : [',']}
         value={type.isArray(value) ? value : []}
       />
@@ -121,7 +141,7 @@ function ValueEditor({ column, op, value, onChange, user, size = 'small' }) {
         aria-label="Value"
         className="lf-filter-value"
         onChange={onChange}
-        optionFilterProp="label"
+        optionFilterProp="text"
         options={selectOptions}
         placeholder="Value"
         showSearch

@@ -456,7 +456,7 @@ test.describe('Table visual polish', () => {
   test('the tags editor shows picked values and options as the cell chips', async ({ page }) => {
     await row(page, 'crm', 3).locator('[data-col-key="labels"]').dblclick();
     const editor = page.locator('[data-lf-editor]');
-    await expect(editor.locator('.lf-table-editor-tag .lf-table-tag').first()).toBeVisible();
+    await expect(editor.locator('.lf-table-select-tag .lf-table-tag').first()).toBeVisible();
     const options = page.locator('.lf-table-editor-popup .ant-select-item-option');
     await expect(options.locator('.lf-table-tag')).toHaveCount(4);
   });
@@ -527,6 +527,40 @@ test.describe('Table visual polish', () => {
     };
     expect(colours.hovered[0] - colours.plain[0]).toBeGreaterThanOrEqual(15);
     expect(contrast(colours.link, colours.bar)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  test('filter builder value chips carry their option colours, as the cells do', async ({
+    page,
+  }) => {
+    await table(page, 'crm').locator('[data-lf-toolbar-button="filter"]').click();
+    const builder = page.locator('[data-lf-toolbar-filter] [data-lf-filter-builder]');
+    await expect(builder).toBeVisible();
+    await builder.getByRole('button', { name: '+ Add condition' }).first().click();
+    const leaf = builder.locator('[data-lf-filter-leaf]').last();
+    await leaf.getByLabel('Column').click();
+    await page
+      .locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option')
+      .filter({ hasText: /^Tags$/ })
+      .click();
+    await leaf.getByLabel('Values').click();
+    const options = page.locator(
+      '.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option'
+    );
+    // The list shows each value as its chip.
+    await expect(options.locator('.lf-table-tag')).toHaveCount(4);
+    await options.filter({ hasText: 'Renewal' }).click();
+    const picked = leaf.locator('.lf-table-select-tag .lf-table-tag');
+    await expect(picked).toHaveText(['Renewal']);
+    const cellChip = table(page, 'crm')
+      .locator('.lf-table-body .lf-table-tag')
+      .filter({ hasText: /^Renewal$/ })
+      .first();
+    const colours = (locator) =>
+      locator.evaluate((chip) => {
+        const style = getComputedStyle(chip);
+        return [style.color, style.backgroundColor, style.borderColor];
+      });
+    expect(await colours(picked)).toEqual(await colours(cellChip));
   });
 
   test('TableLight rows next to a Table keep their table layout', async ({ page }) => {
