@@ -17,6 +17,19 @@
 import React from 'react';
 import AGGREGATE_LABELS from '@lowdefy/blocks-antd/table/aggregateLabels.js';
 
+// The full label and value are the title, since a narrow column drops the label first and then
+// ends the value with an ellipsis (table.css).
+function renderSummary({ entry }) {
+  const label = AGGREGATE_LABELS[entry.fn];
+  const text = entry.text === '' ? '—' : entry.text;
+  return (
+    <span className="lf-table-summary" data-aggregate={entry.fn} title={`${label} ${text}`}>
+      <span className="lf-table-summary-label">{label}</span>
+      <span className="lf-table-summary-value">{text}</span>
+    </span>
+  );
+}
+
 function renderCells({ cols, summary }) {
   return cols.map((col) => {
     const entry = col.special ? undefined : summary.get(col.key);
@@ -31,12 +44,7 @@ function renderCells({ cols, summary }) {
         role="gridcell"
         style={col.style}
       >
-        {entry ? (
-          <span className="lf-table-summary" data-aggregate={entry.fn}>
-            <span className="lf-table-summary-label">{AGGREGATE_LABELS[entry.fn]}</span>
-            <span className="lf-table-summary-value">{entry.text === '' ? '—' : entry.text}</span>
-          </span>
-        ) : null}
+        {entry ? renderSummary({ entry }) : null}
       </div>
     );
   });

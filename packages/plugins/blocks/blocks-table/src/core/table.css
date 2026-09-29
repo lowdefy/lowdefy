@@ -443,20 +443,42 @@
     border-bottom: 0;
   }
 
+  /* A summary never clips silently. The value is ordered before the label in a reversed,
+     wrapping row one line high: when both do not fit, the label wraps onto the hidden second
+     line, and a value wider than the cell ends with an ellipsis. The title holds both. */
   .lf-table-summary {
-    display: inline-flex;
+    display: flex;
+    flex: 1 1 auto;
+    flex-flow: row-reverse wrap;
     align-items: baseline;
-    gap: var(--ant-margin-xs, 8px);
+    justify-content: flex-end;
+    column-gap: var(--ant-margin-xs, 8px);
     min-width: 0;
+    max-height: 1lh;
+    overflow: hidden;
     white-space: nowrap;
   }
 
+  .lf-table-gridcell[data-align='end'] > .lf-table-summary {
+    justify-content: flex-start;
+  }
+
+  .lf-table-gridcell[data-align='center'] > .lf-table-summary {
+    justify-content: center;
+  }
+
   .lf-table-summary-label {
+    flex: none;
     color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
     font-size: var(--ant-font-size-sm, 12px);
   }
 
   .lf-table-summary-value {
+    flex: 0 1 auto;
+    order: -1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
   }
