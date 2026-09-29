@@ -31,6 +31,16 @@ function toNumbers(values) {
   return numbers;
 }
 
+// A loop, not Math.min(...numbers): spreading a large column (150k+ values) overflows the call
+// stack.
+function pickNumber({ numbers, max }) {
+  let best = numbers[0];
+  for (let i = 1; i < numbers.length; i++) {
+    if (max ? numbers[i] > best : numbers[i] < best) best = numbers[i];
+  }
+  return best;
+}
+
 function distinctKey(value) {
   return type.isPrimitive(value) ? value : JSON.stringify(value);
 }
@@ -94,7 +104,7 @@ function computeAggregate({ fn, values, column }) {
       if (CELL_TYPE_FAMILIES[column?.type] === 'number') {
         const numbers = toNumbers(list);
         if (numbers.length === 0) return null;
-        return fn === 'min' ? Math.min(...numbers) : Math.max(...numbers);
+        return pickNumber({ numbers, max: fn === 'max' });
       }
       return pickExtreme({ values: list, column: column ?? { type: 'text' }, desc: fn === 'max' });
     }
