@@ -16,6 +16,7 @@
 
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
+import { timeout } from 'hono/timeout';
 import { initAuthConfig } from '@hono/auth-js';
 import { serveStatic } from '@hono/node-server/serve-static';
 
@@ -69,6 +70,10 @@ import usageHandler from './routes/usage.js';
 import websocketHandler from './routes/websocket.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
+
+// Same default as the production server, so a request that would time out in production (a
+// generic 500, and a page that silently drops that request's results) also times out in dev.
+const requestTimeoutMs = lowdefyConfig.requestTimeout ?? 30000;
 
 // Dev Hono app — mounted into Vite via @hono/vite-dev-server (Vite owns HTTP
 // and serves /client/* modules with HMR; everything else lands here).
@@ -135,6 +140,18 @@ function createApp() {
   app.get('/lowdefy-docs/plugin-doc/:package{.+}', docsPluginDocHandler);
   app.get('/lowdefy-docs/content/:slug{.+}', docsContentHandler);
   app.get('/lowdefy-docs/:kind', docsTypesHandler);
+
+  // Only the routes that run app logic: JIT page builds, the docs/MCP routes and the SSE streams
+  // are dev-only and can legitimately run longer than any production request.
+  if (requestTimeoutMs > 0) {
+    [
+      '/api/request/*',
+      '/api/endpoints/*',
+      '/api/cron/*',
+      '/api/cron-forward/*',
+      '/api/detached/*',
+    ].forEach((route) => app.use(route, timeout(requestTimeoutMs)));
+  }
 
   app.use('/api/*', apiContext());
   app.use('/api/auth/*', authMiddleware());
