@@ -1,7 +1,6 @@
 ---
 '@lowdefy/server-dev': minor
 '@lowdefy/build': patch
-'lowdefy': patch
 '@lowdefy/docs': patch
 '@lowdefy/docs-content': patch
 ---
@@ -12,7 +11,7 @@ The dev server builds a page only when it is requested, so agent tools could ans
 
 **Build status (`lowdefy_build_status`, `GET /lowdefy-docs/build-status`)**
 
-- With `wait: true`, build status builds every page your edit touched before it answers, whether or not anything has opened the page since. A new `pages` section lists the pages it built (`checked`), the pages whose last build failed with their errors and source file (`failed`), pages changed on disk that the dev server has not rebuilt (`changedSinceBuild`), and how many pages nothing has built since the dev server started (`unbuilt`).
+- Build status builds every page your edit touched before it answers, whether or not anything has opened the page since. A new `pages` section lists the pages it built (`checked`), the pages whose last build failed with their errors and source file (`failed`), pages changed on disk that the dev server has not rebuilt (`changedSinceBuild`), and how many pages nothing has built since the dev server started (`unbuilt`).
 - Browser and server errors carry the build they happened under (`buildId`). Errors reported before the latest config build or page edit are listed apart under `earlierErrors`, so errors that may already be fixed no longer read as live.
 - A build that fails with an internal error now reports the error's message, stack and the config file being resolved, instead of only "Build failed due to internal error. See above for details."
 
