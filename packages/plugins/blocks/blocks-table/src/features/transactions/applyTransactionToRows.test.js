@@ -61,3 +61,86 @@ test('normalizeTransaction throws for lists that are not lists', () => {
   expect(() => normalizeTransaction(null)).toThrow('requires { add, update, remove }');
   expect(() => normalizeTransaction({ addIndex: 'x' })).toThrow('"addIndex" must be an integer');
 });
+
+test('applyTransactionToRows shallow merge replaces a nested object by default', () => {
+  const rows = [{ id: 1, _enrich: { email: { status: 'ok' }, phone: { status: 'ok' } } }];
+  const result = apply(rows, { update: [{ id: 1, _enrich: { email: { status: 'running' } } }] });
+  expect(result.rows[0]._enrich).toEqual({ email: { status: 'running' } });
+});
+
+test('applyTransactionToRows deep merge keeps the other nested fields of a partial update', () => {
+  const phone = { status: 'ok', value: '555' };
+  const rows = [
+    { id: 1, name: 'a', _enrich: { email: { status: 'queued', raw: { a: 1 } }, phone } },
+    { id: 2, name: 'b' },
+  ];
+  const result = apply(rows, {
+    merge: 'deep',
+    update: [{ id: 1, _enrich: { email: { status: 'ok', value: 'a@x.io', raw: { b: [1] } } } }],
+  });
+  expect(result.rows[0]).toEqual({
+    id: 1,
+    name: 'a',
+    _enrich: {
+      email: { status: 'ok', value: 'a@x.io', raw: { a: 1, b: [1] } },
+      phone: { status: 'ok', value: '555' },
+    },
+  });
+  expect(result.rows[0]._enrich.phone).toBe(phone);
+  expect(result.rows[1]).toBe(rows[1]);
+  expect(rows[0]._enrich.email.status).toBe('queued');
+});
+
+test('applyTransactionToRows deep merge replaces arrays and dates, and creates missing objects', () => {
+  const date = new Date('2026-01-01T00:00:00.000Z');
+  const rows = [{ id: 1, tags: ['a', 'b'] }];
+  const result = apply(rows, {
+    merge: 'deep',
+    update: [{ id: 1, tags: ['c'], _enrich: { email: { finishedAt: date } } }],
+  });
+  expect(result.rows[0]).toEqual({ id: 1, tags: ['c'], _enrich: { email: { finishedAt: date } } });
+  expect(result.rows[0]._enrich.email.finishedAt).toBe(date);
+});
+
+test('applyTransactionToRows shallow merge of a full document drops the cell keys the server removed', () => {
+  // A MongoDB change stream's fullDocument after a rerun found nothing: value, raw and
+  // inputHash were unset, so they are gone from the pushed _enrich.
+  const rows = [
+    {
+      id: 1,
+      name: 'a',
+      _enrich: {
+        company: { status: 'ok', value: 'Software', raw: { employees: 1200 }, inputHash: 'h1' },
+        email: { status: 'ok', value: 'a@x.io' },
+      },
+    },
+  ];
+  const result = apply(rows, {
+    update: [
+      {
+        id: 1,
+        _enrich: { company: { status: 'empty' }, email: { status: 'ok', value: 'a@x.io' } },
+      },
+    ],
+  });
+  expect(result.rows[0]).toEqual({
+    id: 1,
+    name: 'a',
+    _enrich: { company: { status: 'empty' }, email: { status: 'ok', value: 'a@x.io' } },
+  });
+});
+
+test('applyTransactionToRows deep merge never removes a key the patch leaves out', () => {
+  const rows = [{ id: 1, _enrich: { company: { status: 'ok', value: 'Software' } } }];
+  const result = apply(rows, {
+    merge: 'deep',
+    update: [{ id: 1, _enrich: { company: { status: 'empty' } } }],
+  });
+  expect(result.rows[0]._enrich.company).toEqual({ status: 'empty', value: 'Software' });
+});
+
+test('normalizeTransaction rejects an unknown merge', () => {
+  expect(() => normalizeTransaction({ update: [], merge: 'path' })).toThrow(
+    'applyTransaction "merge" must be "shallow" or "deep". Received "path".'
+  );
+});

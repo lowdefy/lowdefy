@@ -654,7 +654,7 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
 | `arrow` | boolean \| object | `false` | Show arrow pointing to trigger. |
 | `arrow.pointAtCenter` | boolean | - |  |
 | `split` | boolean | `false` | Split button mode. Left button fires onClick, right arrow opens dropdown. |
-| `items` | array | - | Menu items. Each with an eventName that triggers a named event. Keyboard shortcuts can be configured via the standard `events..shortcut` schema (preferred) or via the item-level `shortcut` property — both render a badge next to the item label. The event-level shortcut takes precedence when both are set. |
+| `items` | array | - | Menu items. Each with an eventName that triggers a named event. Keyboard shortcuts can be configured via the standard `events.<eventName>.shortcut` schema (preferred) or via the item-level `shortcut` property — both render a badge next to the item label. The event-level shortcut takes precedence when both are set. |
 | `items.$.title` | string | - | Display text. |
 | `items.$.eventName` | string | - | Event name to trigger when clicked. |
 | `items.$.icon` | string \| object | - | Icon name or config. |
@@ -670,7 +670,7 @@ Button that opens a dropdown menu of action items. Each item triggers a named ev
 | `items.$.danger` | boolean | - | Red danger styling. |
 | `items.$.disabled` | boolean | - | Disable this item. |
 | `items.$.type` | string | - | Set to divider for a separator. Enum: `divider`. |
-| `items.$.shortcut` | string | - | Keyboard shortcut. Binds the key and renders the badge. Prefer configuring this via `events..shortcut` to follow the standard Lowdefy event schema — the event-level shortcut takes precedence when both are set. |
+| `items.$.shortcut` | string | - | Keyboard shortcut. Binds the key and renders the badge. Prefer configuring this via `events.<eventName>.shortcut` to follow the standard Lowdefy event schema — the event-level shortcut takes precedence when both are set. |
 | `theme` | object | - | Antd design token overrides. Top-level keys apply to the Dropdown menu. Use the nested "button" key for Button-specific tokens. See [antd design tokens](https://ant.design/components/overview#design-token). See [Ant Design dropdown tokens](https://ant.design/components/dropdown#design-token). |
 | `theme.zIndexPopup` | number | `1050` | Z-index of the dropdown popup. |
 | `theme.controlItemBgHover` | string | - | Background color on menu item hover. |

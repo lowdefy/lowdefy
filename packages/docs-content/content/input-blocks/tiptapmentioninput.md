@@ -446,7 +446,7 @@ A mixed `options` array — people alongside group options carrying `tag.section
 | `mentions.char` | string | `"@"` | Trigger character that opens the mention dropdown. Change to "#" for hashtags, etc. |
 | `mentions.allowSpaces` | boolean | `true` | Allow spaces inside a mention query before it is committed. |
 | `mentions.options` | array | - | Array of mention items. Each item may be a string, or an object with a "label" (matched against user input) and a "value" (stored on the node). |
-| `mentions.getHref` | object | - | Optional _function that receives the selected mention option and returns an href. A non-nullish return renders the mention as an ; a nullish return renders a plain  (use this for options with no link, e.g. group mentions). |
+| `mentions.getHref` | object | - | Optional _function that receives the selected mention option and returns an href. A non-nullish return renders the mention as an &lt;a>; a nullish return renders a plain &lt;span> (use this for options with no link, e.g. group mentions). |
 | `mentions.limit` | integer | `5` | Maximum suggestions shown — per section when options declare sections, otherwise across the flat list. |
 | `mentions.groupMembers` | object | - | Map of group key → array of { name, email } shown in a hover popover on that group's chips (live editor only). |
 | `mentionsRequestId` | string | - | Id of a request used to populate mention options. When set, the block registers a __getTipTapMentions event that calls that request. |

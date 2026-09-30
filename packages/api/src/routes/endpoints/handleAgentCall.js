@@ -38,13 +38,17 @@ async function handleAgentCall(context, routineContext, { step }) {
   const { agentId, prompt } = evaluatedProperties;
   if (!type.isString(agentId)) {
     throw new ConfigError(
-      `CallAgent step "${step.stepId}" properties.agentId must evaluate to a string. Received ${JSON.stringify(agentId)}.`,
+      `CallAgent step "${
+        step.stepId
+      }" properties.agentId must evaluate to a string. Received ${JSON.stringify(agentId)}.`,
       { configKey: step['~k'] }
     );
   }
   if (!type.isString(prompt)) {
     throw new ConfigError(
-      `CallAgent step "${step.stepId}" properties.prompt must evaluate to a string. Received ${JSON.stringify(prompt)}.`,
+      `CallAgent step "${
+        step.stepId
+      }" properties.prompt must evaluate to a string. Received ${JSON.stringify(prompt)}.`,
       { configKey: step['~k'] }
     );
   }

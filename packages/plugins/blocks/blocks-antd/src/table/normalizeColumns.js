@@ -14,12 +14,19 @@
   limitations under the License.
 */
 
+import TAG_TONES from '@lowdefy/block-utils/format/tagTones.js';
 import { type } from '@lowdefy/helpers';
 
 import AGGREGATE_LABELS from './aggregateLabels.js';
 import CELL_TYPE_FAMILIES from './cellTypeFamilies.js';
+import COLUMN_KINDS from './columnKinds.js';
+import fillOptionColors from './fillOptionColors.js';
 import humanizeKey from './humanizeKey.js';
+import invalidateColumn from './invalidateColumn.js';
+import linkColumnKinds from './linkColumnKinds.js';
+import normalizeColumnKind from './normalizeColumnKind.js';
 import normalizeOptions from './normalizeOptions.js';
+import USER_COLUMN_TYPES from './userColumnTypes.js';
 
 const DEFAULT_COLUMN = {
   sortable: true,
@@ -59,7 +66,14 @@ function normalizeLeaf({ column, defaults, path }) {
       `Table column requires a "key" or "field" string. Received ${JSON.stringify(column)}.`
     );
   }
-  const cellType = column.type ?? defaults.type ?? 'text';
+  const {
+    computed,
+    field: kindField,
+    options: kindOptions,
+    type: kindType,
+    ...kind
+  } = normalizeColumnKind({ column, key });
+  const cellType = column.type ?? kindType ?? defaults.type ?? 'text';
   if (type.isUndefined(CELL_TYPE_FAMILIES[cellType])) {
     throw new Error(
       `Table column "${key}" has unknown type "${cellType}". Use one of: ${Object.keys(
@@ -78,7 +92,7 @@ function normalizeLeaf({ column, defaults, path }) {
   const isAction = CELL_TYPE_FAMILIES[cellType] === 'action';
   return {
     key,
-    field: column.field ?? key,
+    field: column.field ?? kindField ?? key,
     title: column.title ?? humanizeKey(key),
     type: cellType,
     cell,
@@ -93,21 +107,145 @@ function normalizeLeaf({ column, defaults, path }) {
     filterable: getFlag({ name: 'filterable', column, defaults, isAction }),
     resizable: getFlag({ name: 'resizable', column, defaults, isAction }),
     groupable: getFlag({ name: 'groupable', column, defaults, isAction }),
-    editable: getFlag({ name: 'editable', column, defaults, isAction }),
+    editable: computed ? false : getFlag({ name: 'editable', column, defaults, isAction }),
     searchable: column.searchable === true,
     ellipsis: getEllipsis(column.ellipsis ?? defaults.ellipsis),
     wrap: (column.wrap ?? defaults.wrap) === true,
     aggregate: column.aggregate,
-    options: normalizeOptions(column.options),
+    options: normalizeOptions(column.options ?? kindOptions),
     tooltip: column.tooltip,
     headerTooltip: column.headerTooltip,
     rules: [...(column.rules ?? []), ...(cell.rules ?? [])],
     validate: column.validate ?? [],
     path,
+    ...kind,
   };
 }
 
-function walkColumns({ entries, path, groupPrefix, defaults, leaves, columnsByKey }) {
+// The provider catalogue check (Table passes `providerIds`, the ids of its `providers`): an
+// enrichment column must call a listed provider, and so must an ai column with a provider other
+// than the built-in `ai`.
+function checkProvider({ leaf, providerIds }) {
+  if (type.isUndefined(providerIds) || providerIds.size === 0) return;
+  if (leaf.kind !== 'enrichment' && leaf.kind !== 'ai') return;
+  if (leaf.kind === 'ai' && leaf.provider === 'ai') return;
+  if (!providerIds.has(leaf.provider)) {
+    throw new Error(
+      `Table column "${leaf.key}" uses provider "${leaf.provider}", which is not in "providers".`
+    );
+  }
+}
+
+// The keys a user-defined column keeps: its identity, layout and feature flags, and its kind's
+// keys. Everything else is dropped, above all `cell` (an html template, rules that style the
+// cell), `rules`, `validate` and template tooltips, which would run nunjucks on what one user
+// wrote in every viewer's browser.
+const USER_COLUMN_KEYS = [
+  'key',
+  'field',
+  'title',
+  'type',
+  'kind',
+  'userDefined',
+  'editable',
+  'status',
+  'options',
+  'headerTooltip',
+  'width',
+  'minWidth',
+  'maxWidth',
+  'flex',
+  'align',
+  'pinned',
+  'hidden',
+  'sortable',
+  'filterable',
+  'resizable',
+  'groupable',
+  'searchable',
+  'ellipsis',
+  'wrap',
+  'aggregate',
+  ...new Set(Object.values(COLUMN_KINDS).flat()),
+];
+
+function pickUserColumn(column) {
+  const picked = {};
+  USER_COLUMN_KEYS.forEach((name) => {
+    if (!type.isUndefined(column[name])) picked[name] = column[name];
+  });
+  // A { field } tooltip reads a row field as plain text; a template tooltip is nunjucks.
+  if (type.isObject(column.tooltip) && type.isString(column.tooltip.field)) {
+    picked.tooltip = { field: column.tooltip.field };
+  }
+  return picked;
+}
+
+// A user-defined column's option colours are tone names (preset colours and antd status names):
+// a free CSS value from one user's config would be painted in every viewer's browser, and a
+// status dot's background could load a URL.
+function checkOptionColors(leaf) {
+  const custom = (leaf.options ?? []).find(
+    (option) => !type.isNone(option.color) && !Object.hasOwn(TAG_TONES, option.color)
+  );
+  if (custom === undefined) return;
+  throw new Error(
+    `User-defined column "${leaf.key}" option "${custom.value}" has colour ${JSON.stringify(
+      custom.color
+    )}. Use a tone name: ${Object.keys(TAG_TONES).join(', ')}.`
+  );
+}
+
+// A user-defined column (`userDefined: true`) is runtime data a user wrote: it keeps only the
+// keys in USER_COLUMN_KEYS and a type in USER_COLUMN_TYPES (with no type it is text, whatever
+// defaultColumn sets), its options without a colour get the picker's tones (fillOptionColors),
+// and a config error makes it an error column (invalidateColumn) instead of throwing, so the
+// table still renders.
+function normalizeUserLeaf({ column, defaults, path, providerIds, index }) {
+  try {
+    const leaf = normalizeLeaf({
+      column: pickUserColumn(column),
+      defaults: { ...defaults, type: undefined },
+      path,
+    });
+    if (!USER_COLUMN_TYPES.includes(leaf.type)) {
+      throw new Error(
+        `User-defined column "${leaf.key}" can not have type "${
+          leaf.type
+        }". Use one of: ${USER_COLUMN_TYPES.join(', ')}.`
+      );
+    }
+    checkOptionColors(leaf);
+    checkProvider({ leaf, providerIds });
+    // Declared columns keep options without a colour neutral: the config author chose that.
+    leaf.options = fillOptionColors(leaf.options);
+    return leaf;
+  } catch (error) {
+    const key = type.isString(column.key) ? column.key : `invalid:${index}`;
+    const leaf = normalizeLeaf({
+      column: {
+        key,
+        field: key,
+        title: type.isString(column.title) ? column.title : undefined,
+        width: type.isInt(column.width) ? column.width : undefined,
+      },
+      defaults,
+      path,
+    });
+    return invalidateColumn({ column: leaf, reason: error.message });
+  }
+}
+
+function walkColumns({
+  entries,
+  path,
+  groupPrefix,
+  defaults,
+  leaves,
+  columnsByKey,
+  fieldKeys,
+  providerIds,
+}) {
   return entries.map((entry, index) => {
     const column = type.isString(entry) ? { key: entry } : entry;
     if (!type.isObject(column)) {
@@ -131,33 +269,48 @@ function walkColumns({ entries, path, groupPrefix, defaults, leaves, columnsByKe
           defaults,
           leaves,
           columnsByKey,
+          fieldKeys,
+          providerIds,
         }),
       };
     }
-    const leaf = normalizeLeaf({ column, defaults, path });
+    let leaf;
+    if (column.userDefined === true) {
+      leaf = normalizeUserLeaf({ column, defaults, path, providerIds, index });
+    } else {
+      leaf = normalizeLeaf({ column, defaults, path });
+      checkProvider({ leaf, providerIds });
+    }
     if (!type.isUndefined(columnsByKey[leaf.key])) {
       throw new Error(
         `Duplicate table column key "${leaf.key}". Give each column its own "key" when two columns show the same field.`
       );
     }
     columnsByKey[leaf.key] = leaf;
+    if (!type.isUndefined(column.field) && leaf.invalid === undefined) fieldKeys.add(leaf.key);
     leaves.push(leaf);
     return leaf;
   });
 }
 
-// The column config as the table uses it. Returns the leaf columns in order
+// The column config as the table uses it. Enrichment table kinds (`kind`, Table only) are
+// normalised per leaf (normalizeColumnKind.js), then linked once every key is known
+// (linkColumnKinds.js). A user-defined column with a config error becomes an error column
+// (`invalid`, invalidateColumn.js); a declared one throws. `providerIds` (Table: the ids of its
+// `providers`) checks the providers enrichment and ai columns call. Returns the leaf columns in
+// order
 // (`columns`), the same leaves by key (`columnsByKey`), and the header tree
 // (`headerGroups`): the top-level entries, where a group is
 // `{ group: true, key, title, headerTooltip, path, children }` and a leaf is
 // the same object as in `columns`.
-function normalizeColumns({ columns, defaultColumn }) {
+function normalizeColumns({ columns, defaultColumn, providerIds }) {
   if (!type.isNone(columns) && !type.isArray(columns)) {
     throw new Error(`Table columns must be an array. Received ${JSON.stringify(columns)}.`);
   }
   const defaults = { ...DEFAULT_COLUMN, ...(defaultColumn ?? {}) };
   const leaves = [];
   const columnsByKey = {};
+  const fieldKeys = new Set();
   const headerGroups = walkColumns({
     entries: columns ?? [],
     path: [],
@@ -165,7 +318,10 @@ function normalizeColumns({ columns, defaultColumn }) {
     defaults,
     leaves,
     columnsByKey,
+    fieldKeys,
+    providerIds,
   });
+  linkColumnKinds({ leaves, columnsByKey, fieldKeys });
   return { columns: leaves, columnsByKey, headerGroups };
 }
 

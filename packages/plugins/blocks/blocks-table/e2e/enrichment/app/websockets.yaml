@@ -1,0 +1,63 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Live cell updates. A change stream on the rows pushes every row whose enrichment cells
+# changed (and every new row) to the page, which merges it into the table: only the changed
+# rows re-render, and nothing polls. The stream runs while at least one page is subscribed,
+# and every subscriber shares it (its properties do not vary per subscriber).
+- id: enrichment
+  type: MongoDBChangeStream
+  connectionId: leads
+  properties:
+    pipeline:
+      - $match:
+          # A multi-tenant app scopes the stream to the subscriber's organization (the
+          # properties are then evaluated per subscriber). A tenant-scoped connection adds
+          # this match itself.
+          # fullDocument.org_id:
+          #   _user: organization.id
+          $or:
+            - operationType: insert
+            # Updates that touch _enrich: a cell queued, claimed or completed. Updated and
+            # removed field names are dotted paths (_enrich.company.status), or _enrich for a
+            # row's first cell. A removal alone (an $unset of a cell's value) is a change too.
+            - operationType: update
+              $expr:
+                $gt:
+                  - $size:
+                      $filter:
+                        input:
+                          $concatArrays:
+                            - $map:
+                                input:
+                                  $objectToArray: $updateDescription.updatedFields
+                                in: $$this.k
+                            - $ifNull:
+                                - $updateDescription.removedFields
+                                - []
+                        cond:
+                          $regexMatch:
+                            input: $$this
+                            regex: ^_enrich(\.|$)
+                  - 0
+      # Only what the table shows: the row key, the input fields and the cells. The stream
+      # never sends other fields of the document to the browser.
+      - $project:
+          operationType: 1
+          fullDocument._id: 1
+          fullDocument.name: 1
+          fullDocument.title: 1
+          fullDocument.domain: 1
+          fullDocument.values: 1
+          fullDocument._enrich: 1

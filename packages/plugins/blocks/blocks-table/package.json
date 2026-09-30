@@ -20,7 +20,7 @@
       "url": "https://github.com/Gervwyk"
     },
     {
-      "name": "Johann Möller",
+      "name": "Johann M\u00f6ller",
       "url": "https://github.com/JohannMoller"
     },
     {
@@ -52,6 +52,7 @@
     "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.snap\"",
     "e2e": "playwright test --config e2e/playwright.config.js",
     "e2e:ui": "playwright test --config e2e/playwright.config.js --ui",
+    "e2e:enrichment": "playwright test --config e2e/enrichment/playwright.config.js",
     "bench": "node bench/run.mjs",
     "prepublishOnly": "pnpm build",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"

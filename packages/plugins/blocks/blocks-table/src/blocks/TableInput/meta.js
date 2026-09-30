@@ -16,15 +16,84 @@
 
 import tableMeta from '../Table/meta.js';
 
-// Table's properties, events and methods apply as they are. The value differs: TableInput's is
-// a changeset over `data`, not the table's UI state (its view and selection stay internal), and
-// edits and moves go into it instead of firing onCellEdit / onRowMove.
+// Table's properties, events and methods apply as they are, but for the enrichment table
+// features. The value differs: TableInput's is a changeset over `data`, not the table's UI
+// state (its view and selection stay internal), and edits and moves go into it instead of
+// firing onCellEdit / onRowMove.
+//
+// Enrichment tables (design E6) run cells on the server over stored rows, and add rows and
+// columns through the app; TableInput edits `data` into a changeset, so it takes none of that:
+// no providers, add-column picker, CSV import, run events or run states, and no enrichment,
+// ai, extract or user-defined columns. Formula columns (the column core computes them) and
+// "+ Add row" (its own, into the changeset) apply. The keys that turn the rest on fail with a
+// message naming Table, as TableLight's Table-only keys do, and stay out of the docs. The
+// message completes "Block "TableInput" property "<key>" ...".
+const TABLE_ONLY_KEYS = {
+  properties: {
+    providers: 'enrichment columns',
+    addColumn: 'adding columns',
+    importCsv: 'CSV import',
+    inputFieldPrefix: 'adding columns',
+  },
+  columns: {
+    provider: 'enrichment columns',
+    inputs: 'enrichment columns',
+    output: 'enrichment columns',
+    autoRun: 'enrichment columns',
+    prompt: 'AI columns',
+    source: 'extract columns',
+    path: 'extract columns',
+    status: 'cell run states',
+    userDefined: 'user-defined columns',
+  },
+};
+const TABLE_INPUT_KINDS = ['input', 'formula'];
+
+function tableOnly(keys) {
+  return Object.fromEntries(
+    Object.keys(keys).map((key) => [
+      `^${key}$`,
+      { not: {}, errorMessage: `is not supported. Use Table for ${keys[key]}` },
+    ])
+  );
+}
+
+function omitKeys(object, keys) {
+  return Object.fromEntries(Object.entries(object).filter(([key]) => !keys.includes(key)));
+}
+
+const tableColumn = tableMeta.properties.properties.columns.items;
+const column = {
+  ...tableColumn,
+  patternProperties: tableOnly(TABLE_ONLY_KEYS.columns),
+  properties: {
+    ...omitKeys(tableColumn.properties, Object.keys(TABLE_ONLY_KEYS.columns)),
+    kind: {
+      type: 'string',
+      enum: TABLE_INPUT_KINDS,
+      description:
+        '`input`: typed by users (the default). `formula`: a `template` over the row, computed in the browser and not editable. The enrichment kinds (`enrichment`, `ai`, `extract`) are Table only.',
+    },
+  },
+};
+
 const {
   onCellEdit, // eslint-disable-line no-unused-vars
   onChange, // eslint-disable-line no-unused-vars
   onRowMove, // eslint-disable-line no-unused-vars
   ...tableEvents
 } = tableMeta.events;
+const ENRICHMENT_EVENTS = [
+  'onColumnAdd',
+  'onColumnUpdate',
+  'onColumnDelete',
+  'onColumnRun',
+  'onRowRun',
+  'onCellRun',
+  'onRowAdd',
+  'onImport',
+];
+const ENRICHMENT_METHODS = ['openColumnPicker', 'openCellDetails', 'openImport'];
 
 // TableInput is an input, not an input-container: it renders no slots (no toolbar, bulk action
 // or empty slot blocks), so it does not take Table's.
@@ -49,17 +118,22 @@ export default {
           'For `paste`: the cells that were not pasted, `[{ rowKey, column, text, reason }]`.',
       },
     },
-    ...tableEvents,
+    ...omitKeys(tableEvents, ENRICHMENT_EVENTS),
   },
   methods: {
-    ...tableMeta.methods,
+    ...omitKeys(tableMeta.methods, ENRICHMENT_METHODS),
     resetChanges:
       'Drop every change and the undo history: the value becomes `{ updated: {}, added: [], removed: [] }` and the table shows `data` as it is. Call it after the changes were saved and `data` refetched.',
   },
   properties: {
     ...tableMeta.properties,
+    patternProperties: tableOnly(TABLE_ONLY_KEYS.properties),
     properties: {
-      ...tableMeta.properties.properties,
+      ...omitKeys(tableMeta.properties.properties, Object.keys(TABLE_ONLY_KEYS.properties)),
+      columns: {
+        ...tableMeta.properties.properties.columns,
+        items: column,
+      },
       data: {
         type: 'array',
         description:

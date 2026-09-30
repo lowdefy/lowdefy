@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { useRef } from 'react';
+
 import createFeatureSet from './createFeatureSet.js';
 import createMethodStubs from './createMethodStubs.js';
 import features from '../features/index.js';
@@ -26,10 +28,17 @@ const sets = new Map();
 // trees, expandable rows, the toolbar, saved views), in registry order. Until the needed chunks
 // have loaded this suspends, so the lazy block's fallback stays up and its methods are registered
 // only once the whole table is there. Sets are shared by signature (the needed optional names);
-// the table remounts when its signature changes (Table.lazy keys TableRoot on it).
+// the table remounts when its signature changes (Table.lazy keys TableRoot on it). A table keeps
+// the optional features it has loaded: config that passes through a smaller state (columns read
+// again by a request are empty while it loads) must not remount the table, which would drop its
+// UI state and the rows applyTransaction pushed. Every feature works without its config.
 function useFeatureSet({ content, input, properties, rowWindowStrategy }) {
+  const kept = useRef(new Set());
   const context = { content, input: input === true, properties, rowWindowStrategy };
-  const needed = features.filter((entry) => entry.optional && entry.needs(context));
+  const needed = features.filter(
+    (entry) => entry.optional && (kept.current.has(entry.name) || entry.needs(context))
+  );
+  needed.forEach((entry) => kept.current.add(entry.name));
   const signature = needed.map((entry) => entry.name).join(',');
   const existing = sets.get(signature);
   if (existing !== undefined) return existing;

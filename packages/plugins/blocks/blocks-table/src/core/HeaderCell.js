@@ -17,12 +17,13 @@
 import React from 'react';
 
 import getHeaderCellProps from './getHeaderCellProps.js';
+import getSpecialCellClass from './getSpecialCellClass.js';
 import HeaderTitle from './HeaderTitle.js';
 
 function HeaderCell({ api, col, focused, state }) {
   const props = {
     'aria-colindex': col.ariaIndex,
-    className: 'lf-table-gridcell',
+    className: col.special ? getSpecialCellClass(col) : 'lf-table-gridcell',
     'data-align': col.column?.align,
     'data-col-index': col.index,
     'data-col-key': col.key,

@@ -18,6 +18,9 @@ import MongoDBAggregation from './MongoDBAggregation/MongoDBAggregation.js';
 import MongoDBBulkWrite from './MongoDBBulkWrite/MongoDBBulkWrite.js';
 import MongoDBDeleteMany from './MongoDBDeleteMany/MongoDBDeleteMany.js';
 import MongoDBDeleteOne from './MongoDBDeleteOne/MongoDBDeleteOne.js';
+import MongoDBEnrichmentClaim from './MongoDBEnrichmentClaim/MongoDBEnrichmentClaim.js';
+import MongoDBEnrichmentComplete from './MongoDBEnrichmentComplete/MongoDBEnrichmentComplete.js';
+import MongoDBEnrichmentEnqueue from './MongoDBEnrichmentEnqueue/MongoDBEnrichmentEnqueue.js';
 import MongoDBFind from './MongoDBFind/MongoDBFind.js';
 import MongoDBFindOne from './MongoDBFindOne/MongoDBFindOne.js';
 import MongoDBInsertConsecutiveId from './MongoDBInsertConsecutiveId/MongoDBInsertConsecutiveId.js';
@@ -51,6 +54,9 @@ export default {
     MongoDBBulkWrite,
     MongoDBDeleteMany,
     MongoDBDeleteOne,
+    MongoDBEnrichmentClaim,
+    MongoDBEnrichmentComplete,
+    MongoDBEnrichmentEnqueue,
     MongoDBFind,
     MongoDBFindOne,
     MongoDBInsertConsecutiveId,

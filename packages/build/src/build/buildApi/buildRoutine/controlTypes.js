@@ -33,7 +33,11 @@ const controlTypes = {
     routine: [':parallel'],
     optional: [],
   },
-  ':parallel_for': { required: [':parallel_for', ':in', ':do'], routine: [':do'], optional: [] },
+  ':parallel_for': {
+    required: [':parallel_for', ':in', ':do'],
+    routine: [':do'],
+    optional: [':concurrency'],
+  },
   ':reject': {
     required: [':reject'],
     routine: [],
@@ -73,10 +77,10 @@ function checkMissingRequiredControls({ controlType, keys, control }, endpointCo
   const { endpointId } = endpointContext;
   const missingControls = controlTypes[controlType].required.filter((item) => !keys.includes(item));
   if (missingControls.length > 0) {
-    throw new ConfigError(
-      `Missing required control type(s) for endpoint ${endpointId}.`,
-      { received: missingControls, configKey: control?.['~k'] }
-    );
+    throw new ConfigError(`Missing required control type(s) for endpoint ${endpointId}.`, {
+      received: missingControls,
+      configKey: control?.['~k'],
+    });
   }
 }
 
@@ -88,10 +92,10 @@ function checkInvalidControls({ controlType, keys, control }, endpointContext) {
   );
 
   if (invalidControls.length > 0) {
-    throw new ConfigError(
-      `Invalid control type(s) for endpoint ${endpointId}.`,
-      { received: invalidControls, configKey: control?.['~k'] }
-    );
+    throw new ConfigError(`Invalid control type(s) for endpoint ${endpointId}.`, {
+      received: invalidControls,
+      configKey: control?.['~k'],
+    });
   }
 }
 
@@ -99,10 +103,10 @@ function handleSwitch(control, endpointContext) {
   const { endpointId } = endpointContext;
   const switchArray = control[':switch'];
   if (!type.isArray(control[':switch'])) {
-    throw new ConfigError(
-      `Type given for :switch control is invalid at endpoint ${endpointId}.`,
-      { received: control[':switch'], configKey: control['~k'] }
-    );
+    throw new ConfigError(`Type given for :switch control is invalid at endpoint ${endpointId}.`, {
+      received: control[':switch'],
+      configKey: control['~k'],
+    });
   }
 
   switchArray.forEach((caseObj) => {
@@ -124,21 +128,33 @@ function handleSwitch(control, endpointContext) {
   });
 }
 
+// A literal :concurrency must be a positive integer; an operator is checked when it evaluates.
+function checkConcurrency(control, endpointContext) {
+  const concurrency = control[':concurrency'];
+  if (type.isUndefined(concurrency) || type.isObject(concurrency)) return;
+  if (!type.isInt(concurrency) || concurrency < 1) {
+    throw new ConfigError(
+      `:concurrency in :parallel_for must be a positive integer at endpoint ${endpointContext.endpointId}.`,
+      { received: concurrency, configKey: control['~k'] }
+    );
+  }
+}
+
 function validateControl(control, endpointContext) {
   const { endpointId } = endpointContext;
   const keys = Object.keys(control);
   const intersection = keys.filter((item) => Object.keys(controlTypes).includes(item));
   if (intersection.length === 0) {
-    throw new ConfigError(
-      `Invalid control type(s) for endpoint ${endpointId}.`,
-      { received: keys, configKey: control['~k'] }
-    );
+    throw new ConfigError(`Invalid control type(s) for endpoint ${endpointId}.`, {
+      received: keys,
+      configKey: control['~k'],
+    });
   }
   if (intersection.length > 1) {
-    throw new ConfigError(
-      `More than one control type found for endpoint ${endpointId}.`,
-      { received: intersection, configKey: control['~k'] }
-    );
+    throw new ConfigError(`More than one control type found for endpoint ${endpointId}.`, {
+      received: intersection,
+      configKey: control['~k'],
+    });
   }
 
   const controlType = intersection[0];
@@ -149,6 +165,7 @@ function validateControl(control, endpointContext) {
 
   checkMissingRequiredControls({ controlType, keys, control }, endpointContext);
   checkInvalidControls({ controlType, keys, control }, endpointContext);
+  if (controlType === ':parallel_for') checkConcurrency(control, endpointContext);
 
   return controlType;
 }

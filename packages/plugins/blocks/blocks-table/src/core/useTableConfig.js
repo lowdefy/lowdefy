@@ -26,6 +26,8 @@ import readTemplateCompiler from '@lowdefy/blocks-antd/table/readTemplateCompile
 import createColumnDefs from './createColumnDefs.js';
 import densityHeights from './densityHeights.js';
 import getHeaderLevels from './getHeaderLevels.js';
+import getProviderIds from './getProviderIds.js';
+import normalizeEnrichment from '../features/enrichment/normalizeEnrichment.js';
 import normalizeExpandable from '../features/expandable/normalizeExpandable.js';
 import normalizeServerData from '../features/serverData/normalizeServerData.js';
 import normalizeTree from '../features/tree/normalizeTree.js';
@@ -78,14 +80,21 @@ function useTableConfig({ properties }) {
   const toolbar = useStableConfig(properties.toolbar);
   const persist = useStableConfig(properties.persist);
   const keyboard = useStableConfig(properties.keyboard);
+  const providers = useStableConfig(properties.providers);
+  const addColumn = useStableConfig(properties.addColumn);
   const getKey = useMemo(
     () => createRowKeyGetter({ rowKey: properties.rowKey }),
     [properties.rowKey]
   );
 
   const normalized = useMemo(
-    () => normalizeColumns({ columns: columnsConfig, defaultColumn }),
-    [columnsConfig, defaultColumn]
+    () =>
+      normalizeColumns({
+        columns: columnsConfig,
+        defaultColumn,
+        providerIds: getProviderIds(providers),
+      }),
+    [columnsConfig, defaultColumn, providers]
   );
   // The template compiler loads only for a config with templates; until it has, the table
   // suspends and the lazy block keeps its skeleton fallback up.
@@ -126,6 +135,17 @@ function useTableConfig({ properties }) {
         : properties.size,
       defaultView: defaultView ?? {},
       emptyText: properties.emptyText ?? 'No rows',
+      enrichment: normalizeEnrichment({
+        properties: {
+          addColumn,
+          addRow: properties.addRow,
+          addRowText: properties.addRowText,
+          importCsv: properties.importCsv,
+          inputFieldPrefix: properties.inputFieldPrefix,
+          providers,
+        },
+        columns: columnModel.columns,
+      }),
       getId: (row) => String(getKey(row)),
       getKey,
       headerMenu: properties.headerMenu !== false,
@@ -152,14 +172,19 @@ function useTableConfig({ properties }) {
       virtual: properties.virtual ?? 'auto',
     };
   }, [
+    addColumn,
     columnModel,
     defaultView,
     getKey,
     properties.bordered,
     keyboard,
     persist,
+    properties.addRow,
+    properties.addRowText,
     properties.emptyText,
     properties.headerMenu,
+    properties.importCsv,
+    properties.inputFieldPrefix,
     properties.height,
     properties.maxHeight,
     properties.pageSize,
@@ -171,6 +196,7 @@ function useTableConfig({ properties }) {
     properties.stickyHeader,
     properties.summary,
     properties.virtual,
+    providers,
     rowLink,
     rowSelection,
     serverData,

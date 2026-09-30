@@ -27,6 +27,7 @@ import headerMenuFeature from './headerMenu/headerMenuFeature.js';
 import keyboardFeature from './keyboard/keyboardFeature.js';
 import lazyCellsFeature from './lazyCells/lazyCellsFeature.js';
 import needsEditing from './editing/needsEditing.js';
+import needsEnrichment from './enrichment/needsEnrichment.js';
 import needsExpandable from './expandable/needsExpandable.js';
 import needsGroupRows from './grouping/needsGroupRows.js';
 import needsServerData from './serverData/needsServerData.js';
@@ -58,14 +59,22 @@ function optional({ name, needs, load, methods = [] }) {
 // come first: the filtered row model feeds sorting, and their header buttons claim clicks and
 // pointer presses before sorting and column reordering see them. Views come before the toolbar,
 // which renders their tabs, and queue's single-key actions run before keyboard navigation sees
-// the key (editing's keys, earlier, win on editable cells). It is also the order of the data
-// pipeline's hooks (TableRoot): `useData` (server rows, tree flattening), `useRows`
-// (transactions, then editing's overlay over them) and `useItems` (server items, client groups,
-// tree rows, expandable detail rows, the page).
+// the key (editing's keys, earlier, win on editable cells). Enrichment comes before sorting: its
+// "+" header, run buttons and detail-cell clicks and keys win over sorting, selection, editing,
+// keyboard navigation and row events; its optimistic new rows (newRows) come after editing, over
+// every other overlay. It is also the order of the data pipeline's hooks (TableRoot): `useData`
+// (server rows, tree flattening), `useRows` (transactions, then editing's overlay over them) and
+// `useItems` (server items, client groups, tree rows, expandable detail rows, the page).
 const features = [
   filteringFeature,
   headerMenuFeature,
   columnManagerFeature,
+  optional({
+    name: 'enrichment',
+    needs: needsEnrichment,
+    load: () => import('./enrichment/enrichmentFeature.js'),
+    methods: ['openCellDetails', 'openColumnPicker', 'openImport'],
+  }),
   sortingFeature,
   sizingFeature,
   orderingFeature,
@@ -77,6 +86,11 @@ const features = [
     name: 'editing',
     needs: needsEditing,
     load: () => import('./editing/editingFeature.js'),
+  }),
+  optional({
+    name: 'newRows',
+    needs: needsEnrichment,
+    load: () => import('./enrichment/newRowsFeature.js'),
   }),
   clipboardFeature,
   optional({

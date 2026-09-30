@@ -73,12 +73,12 @@ const coercers = {
 
 // Every row key reaches MongoDB as a scalar, only ever as a value in an equality match, so a
 // key such as { $ne: null } can never widen a write to other documents.
-function coerceRowKey({ value, rowKeyType, part }) {
+function coerceRowKey({ value, rowKeyType, part, requestType = 'MongoDBTableChanges' }) {
   const { coerce, expected } = coercers[rowKeyType];
   const coerced = coerce(value);
   if (type.isUndefined(coerced)) {
     throw new Error(
-      `MongoDBTableChanges "${part}" has an invalid row key: expected ${expected} (rowKeyType "${rowKeyType}"). Received ${JSON.stringify(
+      `${requestType} "${part}" has an invalid row key: expected ${expected} (rowKeyType "${rowKeyType}"). Received ${JSON.stringify(
         value
       )}.`
     );

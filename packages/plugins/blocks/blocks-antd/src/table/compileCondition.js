@@ -381,7 +381,8 @@ function compileLeaf({ leaf, columnsByKey, column, user, now }) {
     now,
   });
   if (hasKey) {
-    const read = createFieldAccessor(field);
+    // A formula column has no field: its compiled template is its value.
+    const read = target?.read ?? createFieldAccessor(field);
     return (row) => test(read(row));
   }
   return (row, value) => test(value);

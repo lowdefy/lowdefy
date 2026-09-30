@@ -19,7 +19,7 @@
 // through runRoutine and buildEndpointResult.
 
 import { jest } from '@jest/globals';
-import { UserError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError, ServiceError, UserError } from '@lowdefy/errors';
 import { wait } from '@lowdefy/helpers';
 import { operatorsServer } from '@lowdefy/operators-js';
 
@@ -50,8 +50,26 @@ const mockFailHttp = jest.fn(() => {
 const mockFailUser = jest.fn(({ request }) => {
   throw new UserError(request.message);
 });
+const mockFailService = jest.fn(() => {
+  throw new ServiceError('Did not answer.', { service: 'Upstream', code: 'ETIMEDOUT' });
+});
+const mockFailConfig = jest.fn(() => {
+  throw new ConfigError('Request property "collection" is not a collection.');
+});
+const mockFailInternal = jest.fn(() => {
+  throw new LowdefyInternalError('Lost the connection pool.');
+});
 const mockWait = jest.fn(({ request }) => wait(request.ms));
-[mockEcho, mockFail, mockFailHttp, mockFailUser, mockWait].forEach((resolver) => {
+[
+  mockEcho,
+  mockFail,
+  mockFailConfig,
+  mockFailHttp,
+  mockFailInternal,
+  mockFailService,
+  mockFailUser,
+  mockWait,
+].forEach((resolver) => {
   resolver.schema = {};
   resolver.meta = { checkRead: false, checkWrite: false };
 });
@@ -62,7 +80,10 @@ const connections = {
     requests: {
       Echo: mockEcho,
       Fail: mockFail,
+      FailConfig: mockFailConfig,
       FailHttp: mockFailHttp,
+      FailInternal: mockFailInternal,
+      FailService: mockFailService,
       FailUser: mockFailUser,
       Wait: mockWait,
     },
@@ -418,4 +439,112 @@ test(':reject of _error rejects with the generic message for a plugin error', as
     isReject: true,
   });
   expect(JSON.stringify(result)).not.toContain('Try failed.');
+});
+
+test('an error a :catch handles logs at debug, never as an error', async () => {
+  const { context, res } = await run({
+    ':try': step({ stepId: 'lookup', type: 'FailHttp', properties: {} }),
+    ':catch': { ':set_state': { status: 'empty' } },
+  });
+  expect(res.status).toEqual('continue');
+  expect(context.logger.error).not.toHaveBeenCalled();
+  expect(context.logger.warn).not.toHaveBeenCalled();
+  expect(context.logger.debug).toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'debug_routine_caught_error' }),
+    'Http response "404: Not Found". at test/lookup.'
+  );
+});
+
+test.each([
+  ['a RequestError', 'FailHttp', 'RequestError'],
+  ['a ServiceError', 'FailService', 'ServiceError'],
+  ['a UserError', 'FailUser', 'UserError'],
+])('%s a :catch handles is an expected outcome, logged at debug', async (_, type, name) => {
+  const { context, res, routineContext } = await run({
+    ':try': step({ stepId: 'lookup', type, properties: { message: 'No match.' } }),
+    ':catch': { ':set_state': { name: { _error: 'name' } } },
+  });
+  expect(res.status).toEqual('continue');
+  expect(routineContext.state.name).toEqual(name);
+  expect(context.logger.error).not.toHaveBeenCalled();
+  expect(context.logger.warn).not.toHaveBeenCalled();
+  expect(context.logger.debug).toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'debug_routine_caught_error' }),
+    expect.any(String)
+  );
+});
+
+test.each([
+  ['a ConfigError', step({ stepId: 'bad', type: 'FailConfig', properties: {} }), 'ConfigError'],
+  [
+    'a LowdefyInternalError',
+    step({ stepId: 'bug', type: 'FailInternal', properties: {} }),
+    'LowdefyInternalError',
+  ],
+  [
+    'an OperatorError',
+    step({ stepId: 'op', type: 'Echo', properties: { value: { _date: 'not a date' } } }),
+    'OperatorError',
+  ],
+  ['an invalid routine (LowdefyInternalError)', 42, 'LowdefyInternalError'],
+])(
+  '%s a :catch handles still goes through handleError, at error level',
+  async (_, routine, name) => {
+    const { context, res, routineContext } = await run({
+      ':try': routine,
+      ':catch': { ':set_state': { name: { _error: 'name' } } },
+    });
+    // The :catch still runs: the error is handled, and also reported as a fault.
+    expect(res.status).toEqual('continue');
+    expect(routineContext.state.name).toEqual(name);
+    expect(context.logger.error).toHaveBeenCalledTimes(1);
+    expect(context.logger.error.mock.calls[0][0].name).toEqual(name);
+    expect(context.logger.debug).not.toHaveBeenCalledWith(
+      expect.objectContaining({ event: 'debug_routine_caught_error' }),
+      expect.anything()
+    );
+  }
+);
+
+test('a ConfigError in a nested :try with :catch is reported once', async () => {
+  const { context, res } = await run({
+    ':try': {
+      ':try': step({ stepId: 'bad', type: 'FailConfig', properties: {} }),
+      ':catch': { ':throw': { _error: 'message' } },
+    },
+    ':catch': { ':set_state': { failed: true } },
+  });
+  expect(res.status).toEqual('continue');
+  expect(context.logger.error).toHaveBeenCalledTimes(1);
+});
+
+test('an error inside a loop that a :catch around it handles logs at debug', async () => {
+  const { context, res } = await run({
+    ':try': {
+      ':parallel_for': 'item',
+      ':in': [1, 2],
+      ':do': fail('in_loop', 'Loop failed.'),
+    },
+    ':catch': { ':set_state': { failed: true } },
+  });
+  expect(res.status).toEqual('continue');
+  expect(context.logger.error).not.toHaveBeenCalled();
+});
+
+test('an error with no :catch, or thrown in :finally or :catch, still logs as an error', async () => {
+  const noCatch = await run({
+    ':try': fail('try_only', 'No catch.'),
+    ':finally': { ':set_state': { done: true } },
+  });
+  expect(noCatch.res.status).toEqual('error');
+  expect(noCatch.context.logger.error).toHaveBeenCalledTimes(1);
+  const inCatch = await run({
+    ':try': fail('try_fail', 'Try failed.'),
+    ':catch': fail('catch_fail', 'Catch failed.'),
+  });
+  expect(inCatch.res.status).toEqual('error');
+  expect(inCatch.context.logger.error).toHaveBeenCalledTimes(1);
+  expect(inCatch.context.logger.error.mock.calls[0][0].message).toContain('Catch failed.');
+  const uncaught = await run(fail('plain', 'Plain failure.'));
+  expect(uncaught.context.logger.error).toHaveBeenCalledTimes(1);
 });

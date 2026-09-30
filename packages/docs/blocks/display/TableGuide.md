@@ -1229,6 +1229,68 @@ Every column the user can sort or filter must be in `fields`, or the request fai
 
 **Time zones and indexes.** The browser compares date filters by the user's local days, the server by the days of the request's `timezone` (UTC by default): pass the user's time zone, as `deals_page` does. The request sorts before it pages, so an index on the base match, filter and sort fields (for example `{ org_id: 1, updated: -1, _id: 1 }`) serves each block; without one, MongoDB sorts every matching document for every block. Add indexes for the sorts a large table offers.
 
+## Enrichment tables
+
+Enrichment tables compute columns from other columns, per row: an `enrichment` column calls a provider (an API endpoint of the app), an `ai` column runs a prompt, a `formula` column fills a template in the browser, and an `extract` column reads a value out of another column's result. Users add columns and rows at runtime, run a column, a row or a selection, and open a cell to see its raw result. The run queue lives in the rows, in MongoDB: see [MongoDB enrichment run queue](/MongoDB) for the three requests and the worker endpoint.
+
+```yaml
+- id: leads_table
+  type: Table
+  properties:
+    providers: # the catalogue the add-column picker offers; each maps to enrich_<id>
+      _ref: leads/providers.yaml
+    addColumn: true # the "+" header and its picker
+    addRow: true # "+ New row"
+    importCsv: true # the toolbar's Import button: CSV files of at most 50 MB and 100,000 rows
+    inputFieldPrefix: values # user input columns keep their values at values.<key>
+    columns:
+      _request: get_columns # declared and user-defined columns, merged on the server
+    data:
+      _request: leads
+```
+
+The enrichment feature loads in its own chunk, only for tables that use it (an enrichment, ai, extract, `status` or user-defined column, `providers`, `addColumn`, `addRow` or `importCsv`). Formula columns alone do not load it.
+
+**Column kinds.** An `ai` column takes `prompt`, `inputs` (every column the prompt uses), `provider` (default `ai`, the app's `enrich_ai` endpoint) and `output: { type, options? }`: the answer is `text`, `number`, `boolean`, `tag` or `tags`, and `tag` and `tags` take `options`, the answers allowed, each its text or `{ value, color }` (the picker shows the options as chips in one field, each starting on a distinct tone, with a colour button of preset tones and a remove button; a user-defined column's option colours are tone names, never CSS values, since they are painted in every viewer's browser). A user-defined column's options without a colour (plain strings written through an API, or a column saved before options had colours) get the tones the picker would give them, in option order, so they look like a picker-made column; a declared column's options without a colour stay neutral, as the config author wrote them. An `enrichment` column takes a `provider` from `providers`, `inputs` mapped to columns or literal values, and `output`, the path of its value in the provider result. A catalogue provider with id `ai` is the AI kind's provider: the picker shows it once, as the AI entry.
+
+**Inputs read stored values.** An enrichment or ai column's inputs (and an AI prompt's placeholders) read input and data columns (fields the server can read) or other enrichment and ai columns (their result, once done). Formula and extract columns compute in the browser and are never stored, so the server can not send them to a provider: the picker does not offer them, and a column that reads one is refused (a declared column is a config error, a user-defined one an error column). To send a combined value to a provider, map each part as an input; to read a nested result, map the enrichment column itself and pick the path in your provider endpoint. A formula template can read any column.
+
+**Templates are placeholders.** Formula templates and AI prompts only take `{{ column }}` placeholders (a column key or a dot path), filled in as plain text. They are user content shared between users, and a template engine would run them as code, so the Table refuses tags (`{% %}`), comments (`{# #}`) and expressions (`{{ name | upper }}`), and so should the endpoint that saves a column. Fill prompts on the server with plain string replacement, never `_nunjucks`. A placeholder is `{{ key }}` or `{{ key.path }}` (a dot path into that column's or input's value), optionally with whitespace control (`{{- key -}}`); a key starts with a letter, `_` or `$` and may hold `-`, but not end with one. The server that fills prompts must accept exactly the placeholders the Table does, with the same pattern, so no placeholder the Table accepts is left unfilled (the reference app's `check_column` and `enrich_ai` use it).
+
+**User-defined columns.** Columns with `userDefined: true` get Rename, Edit, Duplicate, Insert and Delete in their header menu (each shown when the table has the event it fires). A user-defined column whose config is invalid (an unknown provider or answer type, an input column that was deleted) renders as an error column instead of breaking the table: its cells show "Invalid column: <reason>", its header is marked, and its menu offers Edit column and Delete column. A declared column with an invalid config is a config error.
+
+A user-defined column is one user's content rendered in every viewer's browser, so the Table only takes text-safe config from it: its type must be one of `text`, `email`, `phone`, `url`, `number`, `currency`, `percent`, `progress`, `rating`, `date`, `datetime`, `boolean`, `tag`, `tags`, `status` or `json` (an `html`, `image`, `avatar`, `people`, `link`, `relation` or action type makes it an error column; with no type it is `text`, whatever `defaultColumn` sets), and its `cell`, `rules`, `validate` and template tooltips are ignored (a `{ field }` tooltip is kept). The add-column picker offers only these types. Check stored columns against the same list on the server, as the reference app's column check does.
+
+**CSV import.** The Import button parses the file in the browser and suggests a column for each header: one whose key or title matches it (ignoring case, spaces and punctuation), then a common synonym ("Website" or "URL" for a domain column, "Employer" or "Organisation" for a company, "Role" for a job title, "Full name" for a name, "E-mail" for email), then a close spelling. Suggestions that are not a column's own name are marked until the user picks another column, and headers without a match become new text columns.
+
+**Values at field paths.** `onRowAdd` `values` and `onImport` `rows` carry every value at its column's `field` path. New input columns from the picker or a CSV import carry their `field` too, under `inputFieldPrefix` (`values.notes` with `inputFieldPrefix: values`), so the endpoint that stores them only has to accept the paths of its `fields` allowlist. Build that allowlist on the server, with the user input columns added:
+
+```yaml
+fields:
+  _js:
+    fn: |
+      const fields = { ...args.declared };
+      args.columns
+        .filter((column) => column.userDefined === true && column.kind === 'input')
+        .forEach((column) => {
+          fields[column.key] = { type: column.type ?? 'text', path: `values.${column.key}` };
+        });
+      return fields;
+    args:
+      declared:
+        _ref: leads/fields.yaml
+      columns:
+        _step: load_columns
+```
+
+**Read columns on the server.** Endpoints that enqueue runs or run the worker read the table's columns themselves (declared columns plus the stored user columns), never from the event payload: a browser can send any column config. Check every user column when it is saved (its key, provider, inputs, prompt and template), as the enrichment reference app's column check does.
+
+**Errors users can read.** A cell's `error` is shown to every user of the table: in the cell's tooltip ("Failed after 3 attempts" and the message, shortened) and whole in the details panel. Store messages a user can act on, not the error a connection threw, which names the app's connection and carries the service's response (`company_api: Server returned error 500...`). In the worker's `:catch` and in provider endpoints, map a thrown error to its status (`Provider error (500)`, `Rate limited by the provider (429)`, `The provider did not respond`) and leave the full error to the server log, as the reference app's `run_cell` and `enrich_company_lookup` do.
+
+**Loading.** Wire `loading` to the rows request (`_request_details: leads.0.loading`) and reload columns and rows with `holdValue: true` after a column or row change, so the table keeps its rows and columns on screen while they reload; the first load shows the table's skeleton rows. The picker, details panel and import dialog open at once, with a spinner while their code loads.
+
+**Live results.** Push cell updates to the table with `applyTransaction({ update })` from a websocket (`MongoDBChangeStream` on the rows) that sends each changed row's `fullDocument` (projected to the fields the table shows, `_enrich` whole). The default shallow merge replaces each top-level field, so a cell whose rerun found nothing loses its old `value`, `raw` and `inputHash`, as the server unset them. Keep `merge: 'deep'` for partial patches you build yourself: a deep merge never removes a key, so a formula, an extract column or the stale marker would keep reading what the server removed.
+
 ## Moving from TableLight or AgGrid
 
 - **From TableLight:** change `type: TableLight` to `type: Table`. Every property keeps its meaning; set `pagination: true` if you relied on TableLight's automatic pager.

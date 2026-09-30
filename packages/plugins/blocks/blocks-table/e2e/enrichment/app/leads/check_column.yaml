@@ -1,0 +1,280 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Checks a user-defined column (from the Table's onColumnAdd / onColumnUpdate) against the
+# table and the provider catalogue, and returns { errors, doc }: the problems found, and the
+# column as stored in table_columns ({ key, title, type, kind, config }).
+#
+# Users write column configs, so everything a column could make the server do is checked
+# here: its key is a path segment under _enrich, it can only call a listed provider with that
+# provider's inputs, it can only read the table's fields and enrichment columns, an AI prompt
+# may only reference its own inputs, and formulas and prompts are {{ column }} placeholders only.
+#
+# Args: column (the column to check), columns (the current merged columns), fields (the
+# fields allowlist), providers (the catalogue), replacing (the key of the column an update
+# replaces, or null).
+_js:
+  fn: |
+    const { column, columns, fields, providers, replacing } = args;
+    const errors = [];
+    const KEY = /^[A-Za-z0-9_-]{1,128}$/;
+    // {{ input }} or {{ input.path }}: the Table's placeholder pattern (placeholderPattern.js), which
+    // api/providers/enrich_ai.yaml fills in. A dot path reads into the input's value.
+    const PLACEHOLDER = /\{\{-?\s*([A-Za-z_$](?:[\w$-]*[\w$])?(?:\.[\w$](?:[\w$-]*[\w$])?)*)\s*-?\}\}/g;
+    const kinds = ['input', 'formula', 'enrichment', 'ai', 'extract'];
+    // The types a user column can show, as the Table's column core allows them (its
+    // userColumnTypes): no html, image, avatar or people, which would render markup or load
+    // URLs from other users' data in every viewer's browser.
+    const columnTypes = [
+      'text', 'email', 'phone', 'url', 'number', 'currency', 'percent', 'progress', 'rating',
+      'date', 'datetime', 'boolean', 'tag', 'tags', 'status', 'json',
+    ];
+    const inputTypes = ['text', 'email', 'phone', 'url', 'number', 'currency', 'date', 'boolean'];
+    const aiOutputTypes = ['text', 'number', 'boolean', 'tag', 'tags'];
+    // The tag tones an option colour can name (the Table's tag tones).
+    const tones = [
+      'red', 'volcano', 'orange', 'gold', 'yellow', 'lime', 'green', 'cyan', 'blue', 'geekblue',
+      'purple', 'magenta', 'pink', 'success', 'processing', 'info', 'warning', 'error', 'default',
+    ];
+    // Formulas and AI prompts only take {{ column }} placeholders, filled in as plain text: a
+    // template engine would run what users typed as code (on the server for a prompt, in every
+    // viewer's browser for a formula). The Table refuses the same.
+    function templateProblem(template) {
+      if (/\{%|\{#/.test(template)) {
+        return 'Only {{ column }} placeholders are supported: template tags ({% %}) and comments ({# #}) are not.';
+      }
+      const placeholder = new RegExp(`^${PLACEHOLDER.source}$`);
+      const bad = [...template.matchAll(/\{\{.*?\}\}/gs)].find(
+        (match) => !placeholder.test(match[0])
+      );
+      return bad ? `Only {{ column }} placeholders are supported: "${bad[0]}" is an expression.` : null;
+    }
+    const isRunnable = (other) => other?.kind === 'enrichment' || other?.kind === 'ai';
+
+    if (column === null || typeof column !== 'object' || Array.isArray(column)) {
+      return { errors: ['The column should be an object.'], doc: null };
+    }
+    const { key, kind } = column;
+    const others = columns.filter((other) => other.key !== replacing);
+    const byKey = new Map(others.map((other) => [other.key, other]));
+
+    if (
+      typeof key !== 'string' ||
+      !KEY.test(key) ||
+      ['__proto__', 'constructor', 'prototype'].includes(key)
+    ) {
+      errors.push('The column key should be 1 to 128 letters, digits, "_" or "-".');
+    } else if (byKey.has(key)) {
+      errors.push(`A column with key "${key}" already exists.`);
+    }
+    if (column.title !== undefined && (typeof column.title !== 'string' || column.title.length > 200)) {
+      errors.push('The column title should be text of at most 200 characters.');
+    }
+    if (!kinds.includes(kind)) {
+      errors.push(`The column kind should be one of ${kinds.join(', ')}.`);
+      return { errors, doc: null };
+    }
+
+    // An input reads a field of the allowlist or another enrichment or ai column: the server
+    // can not resolve formula or extract columns, which compute in the browser.
+    function checkInputs(inputs) {
+      if (inputs === undefined || inputs === null) return {};
+      if (typeof inputs !== 'object' || Array.isArray(inputs)) {
+        errors.push('The column inputs should be an object of { column } or { value } inputs.');
+        return {};
+      }
+      Object.entries(inputs).forEach(([param, input]) => {
+        const isValue = input && Object.keys(input).length === 1 && 'value' in input;
+        const isColumn = input && typeof input.column === 'string';
+        if (!KEY.test(param) || (!isValue && !isColumn)) {
+          errors.push(`Input "${param}" should be { column } or { value }.`);
+          return;
+        }
+        const other = byKey.get(input.column);
+        // Formula and extract values are never stored, even when a field shares the key.
+        if (isColumn && (other?.kind === 'formula' || other?.kind === 'extract')) {
+          errors.push(`Input "${param}" reads the ${other.kind} column "${input.column}", which computes in the browser, so the server can not read it.`);
+          return;
+        }
+        if (isColumn && !(input.column in fields) && !isRunnable(other)) {
+          errors.push(`Input "${param}" reads "${input.column}", which is not a column the server can read.`);
+        }
+      });
+      return inputs;
+    }
+
+    // A column that reads itself, directly or through other columns, would run forever.
+    function readsBack(start, inputs) {
+      const seen = new Set();
+      const stack = Object.values(inputs).map((input) => input.column).filter(Boolean);
+      while (stack.length > 0) {
+        const next = stack.pop();
+        if (next === start) return true;
+        if (seen.has(next)) continue;
+        seen.add(next);
+        Object.values(byKey.get(next)?.inputs ?? {}).forEach((input) => {
+          if (input.column) stack.push(input.column);
+        });
+      }
+      return false;
+    }
+
+    if (column.type !== undefined && !columnTypes.includes(column.type)) {
+      errors.push(`The column type should be one of ${columnTypes.join(', ')}.`);
+    }
+    const config = {};
+    if (kind === 'input') {
+      if (column.type !== undefined && !inputTypes.includes(column.type)) {
+        errors.push(`An input column type should be one of ${inputTypes.join(', ')}.`);
+      }
+      // What users type is stored under values.<key> (the page's inputFieldPrefix).
+      if (column.field !== undefined && column.field !== `values.${key}`) {
+        errors.push(`An input column stores its values at values.${key}.`);
+      }
+      config.field = `values.${key}`;
+    }
+    if (kind === 'formula') {
+      if (typeof column.template !== 'string' || column.template.length > 5000) {
+        errors.push('A formula column needs a template of at most 5000 characters.');
+      } else if (templateProblem(column.template) !== null) {
+        errors.push(templateProblem(column.template));
+      }
+      config.template = column.template;
+    }
+    if (kind === 'enrichment') {
+      const provider = providers.find((item) => item.id === column.provider && item.id !== 'ai');
+      if (provider === undefined) {
+        errors.push(`Provider "${column.provider}" is not in the provider catalogue.`);
+      } else {
+        const inputs = checkInputs(column.inputs);
+        const known = provider.inputs.map((input) => input.key);
+        Object.keys(inputs)
+          .filter((param) => !known.includes(param))
+          .forEach((param) => errors.push(`Provider "${provider.id}" has no input "${param}".`));
+        provider.inputs
+          .filter((input) => input.required && !(input.key in inputs))
+          .forEach((input) => errors.push(`Provider "${provider.id}" needs input "${input.key}".`));
+        if (
+          column.output !== undefined &&
+          !provider.outputs.some((output) => output.path === column.output)
+        ) {
+          errors.push(`Provider "${provider.id}" has no output "${column.output}".`);
+        }
+        if (readsBack(key, inputs)) errors.push('The column inputs read the column itself.');
+        Object.assign(config, { provider: provider.id, inputs, output: column.output });
+      }
+      config.field = `_enrich.${key}.value`;
+      config.autoRun = column.autoRun === true;
+    }
+    if (kind === 'ai') {
+      const inputs = checkInputs(column.inputs);
+      if (typeof column.prompt !== 'string' || column.prompt.trim() === '' || column.prompt.length > 20000) {
+        errors.push('An AI column needs a prompt of at most 20000 characters.');
+      } else {
+        if (templateProblem(column.prompt) !== null) errors.push(templateProblem(column.prompt));
+        [...column.prompt.matchAll(PLACEHOLDER)]
+          .map((match) => match[1])
+          .filter((path) => !Object.prototype.hasOwnProperty.call(inputs, path.split('.')[0]))
+          .forEach((path) => {
+            const param = path.split('.')[0];
+            errors.push(
+              param === path
+                ? `The prompt uses {{ ${path} }}, which is not an input.`
+                : `The prompt uses {{ ${path} }}, which reads "${param}", not an input.`
+            );
+          });
+      }
+      // The answer's type is one of the Table's AI output types; tag and tags take options, the
+      // answers allowed (api/providers/enrich_ai.yaml asks the model for exactly that).
+      const output = column.output ?? { type: column.type ?? 'text' };
+      if (!aiOutputTypes.includes(output.type)) {
+        errors.push(`The AI answer type should be one of ${aiOutputTypes.join(', ')}.`);
+      }
+      const hasOptions = output.options !== undefined && output.options !== null;
+      // An option is its text, or { value, color } with a tone name for its colour: the Table
+      // paints option colours in every viewer's browser, so never a free CSS value.
+      const isOption = (option) => {
+        if (typeof option === 'string') return option.length <= 200;
+        if (option === null || typeof option !== 'object' || Array.isArray(option)) return false;
+        const keys = Object.keys(option);
+        return (
+          typeof option.value === 'string' &&
+          option.value.length <= 200 &&
+          keys.every((name) => name === 'value' || name === 'color') &&
+          (option.color === undefined || tones.includes(option.color))
+        );
+      };
+      if (
+        hasOptions &&
+        (!['tag', 'tags'].includes(output.type) ||
+          !Array.isArray(output.options) ||
+          output.options.length === 0 ||
+          output.options.length > 100 ||
+          !output.options.every(isOption))
+      ) {
+        errors.push(
+          'AI answer options are a list of text options or { value, color } with a tone name, for a tag or tags answer.'
+        );
+      }
+      // An ai column calls the built-in ai provider (enrich_ai) unless it names a listed one.
+      const provider = column.provider ?? 'ai';
+      if (provider !== 'ai' && !providers.some((item) => item.id === provider)) {
+        errors.push(`Provider "${provider}" is not in the provider catalogue.`);
+      }
+      if (readsBack(key, inputs)) errors.push('The column inputs read the column itself.');
+      Object.assign(config, {
+        prompt: column.prompt,
+        inputs,
+        output: hasOptions ? { type: output.type, options: output.options } : { type: output.type },
+        field: `_enrich.${key}.value`,
+        autoRun: column.autoRun === true,
+      });
+      if (provider !== 'ai') config.provider = provider;
+    }
+    if (kind === 'extract') {
+      if (!isRunnable(byKey.get(column.source))) {
+        errors.push('An extract column needs the key of an enrichment or ai column as its source.');
+      }
+      if (typeof column.path !== 'string' || !/^[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)*$/.test(column.path)) {
+        errors.push('An extract column needs a dot path into the source result.');
+      }
+      Object.assign(config, {
+        source: column.source,
+        path: column.path,
+        field: `_enrich.${column.source}.raw.${column.path}`,
+      });
+    }
+    return {
+      errors,
+      doc: {
+        key,
+        title: column.title ?? key,
+        type: column.type ?? (kind === 'ai' ? config.output?.type : undefined) ?? 'text',
+        kind,
+        config,
+      },
+    };
+  args:
+    column:
+      _payload: column
+    columns:
+      _state: columnDefs
+    fields:
+      _state: fields
+    providers:
+      _ref: leads/providers.yaml
+    replacing:
+      _if_none:
+        - _state: replacing
+        - null

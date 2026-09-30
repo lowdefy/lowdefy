@@ -1,0 +1,142 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# One claimed cell (`_item: cell`, a MongoDBEnrichmentClaim item): call its provider and
+# complete it. The complete also queues the autoRun columns that read the cell (a pitch waits
+# for the company it mentions), so a later round of this worker, or another worker, runs them.
+# It runs inside the worker's two :parallel_for loops (provider group, then cell), so its step
+# results are `<id>.$.$`.
+- :try:
+    - id: provider
+      type: CallApi
+      properties:
+        endpointId:
+          _string.concat:
+            - enrich_
+            - _item: cell.provider
+        payload:
+          inputs:
+            _item: cell.inputs
+          prompt:
+            _item: cell.prompt
+          output:
+            _item: cell.output
+          # The same on every attempt at this cell within this run, so a provider that bills
+          # per call (treg's Idempotency-Key) replays an answer it already charged for. Not
+          # the claimToken, which is new on every claim.
+          idempotencyKey:
+            _js:
+              fn: |
+                const { cell } = args;
+                // An ObjectId row key reaches the routine as { _oid }.
+                const rowKey = cell.rowKey?._oid ?? String(cell.rowKey);
+                return [cell.runId, cell.columnKey, rowKey, cell.inputHash].join(':');
+              args:
+                cell:
+                  _item: cell
+    # The provider answered: ok, empty (nothing found) or error (a final failure, such as
+    # invalid inputs, with retry: false). The result is written only while this worker still
+    # holds the claim; a late result from a worker whose lease ran out is ignored.
+    - id: complete
+      type: MongoDBEnrichmentComplete
+      connectionId: leads
+      properties:
+        filter: {}
+        columnDefs:
+          _state: columnDefs
+        maxAttempts:
+          _ref:
+            path: leads/queue.yaml
+            key: maxAttempts
+        backoffMs:
+          _ref:
+            path: leads/queue.yaml
+            key: backoffMs
+        results:
+          # The claim's cell, with the provider's answer ({ status, value, raw, cost } or
+          # { status, error, retry }) merged in as it came. `cost` is what the call cost in
+          # micro-USD (a treg provider's X-Treg-Cost-Micro), stored on the cell.
+          - _object.assign:
+              - rowKey:
+                  _item: cell.rowKey
+                columnKey:
+                  _item: cell.columnKey
+                claimToken:
+                  _item: cell.claimToken
+              - _step: provider.$.$
+  :catch:
+    # The provider threw: a transient failure (a timeout, a 5xx, a rate limit). The error is
+    # written with retry, so the cell is queued again, until maxAttempts makes it final. It
+    # waits as long as the service asked (a ServiceError's retryAfter, such as treg's
+    # retry_after on a 429 or 503) or else the backoff (backoffMs, doubled per attempt).
+    #
+    # The stored error is what every user of the table sees on the cell, so it says what
+    # happened in words a user can read ("Provider error (500)"), never the thrown message: that
+    # names the app's connection and carries the service's response. The full error stays in
+    # the server log.
+    - id: complete_error
+      type: MongoDBEnrichmentComplete
+      connectionId: leads
+      properties:
+        filter: {}
+        columnDefs:
+          _state: columnDefs
+        maxAttempts:
+          _ref:
+            path: leads/queue.yaml
+            key: maxAttempts
+        backoffMs:
+          _ref:
+            path: leads/queue.yaml
+            key: backoffMs
+        results:
+          - rowKey:
+              _item: cell.rowKey
+            columnKey:
+              _item: cell.columnKey
+            claimToken:
+              _item: cell.claimToken
+            status: error
+            error:
+              _js:
+                fn: |
+                  const { statusCode, name } = args;
+                  if (statusCode === 429) return 'Rate limited by the provider (429)';
+                  if (Number.isInteger(statusCode)) return `Provider error (${statusCode})`;
+                  if (name === 'ServiceError') return 'The provider did not respond';
+                  return 'The provider call failed';
+                args:
+                  statusCode:
+                    _error: statusCode
+                  name:
+                    _error: name
+            retry: true
+            # retryAfter is seconds (a number, or the Retry-After header as text: seconds or an
+            # HTTP date); null without one.
+            retryAfterMs:
+              _js:
+                fn: |
+                  const { retryAfter } = args;
+                  if (typeof retryAfter === 'number') {
+                    return retryAfter >= 0 ? Math.ceil(retryAfter * 1000) : null;
+                  }
+                  if (typeof retryAfter !== 'string' || retryAfter.trim() === '') return null;
+                  if (/^[0-9]+(\.[0-9]+)?$/.test(retryAfter.trim())) {
+                    return Math.ceil(Number(retryAfter) * 1000);
+                  }
+                  const date = Date.parse(retryAfter);
+                  return Number.isNaN(date) ? null : Math.max(0, date - Date.now());
+                args:
+                  retryAfter:
+                    _error: retryAfter

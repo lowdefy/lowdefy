@@ -29,7 +29,7 @@ function checkConnectionWrite(
       {
         params: {
           connectionId: connectionConfig.connectionId,
-          requestId: requestConfig.requestId,
+          requestId: requestConfig.stepId ?? requestConfig.requestId,
           configKey,
         },
         err,

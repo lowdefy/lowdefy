@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { RequestError, UserError } from '@lowdefy/errors';
+import { RequestError, ServiceError, UserError } from '@lowdefy/errors';
 
 import get from './get.js';
 import projectCaughtError from './projectCaughtError.js';
@@ -69,6 +69,25 @@ test('projectCaughtError keeps name, message, code, statusCode, handled and caus
     expect(Object.hasOwn(result.cause, key)).toBe(false);
   }
   expect(result.stack).toBeUndefined();
+});
+
+test('projectCaughtError keeps the retryAfter of a ServiceError', () => {
+  const result = projectCaughtError(
+    new ServiceError('Rate limited.', { service: 'treg', statusCode: 429, retryAfter: 30 })
+  );
+
+  expect(result).toBeInstanceOf(ServiceError);
+  expect(result.retryAfter).toBe(30);
+  expect(result.statusCode).toBe(429);
+});
+
+test('projectCaughtError omits retryAfter when a ServiceError has none, and on other errors', () => {
+  const service = projectCaughtError(new ServiceError('Down.', { statusCode: 503 }));
+  expect('retryAfter' in service).toBe(false);
+
+  const other = new Error('Rate limited.');
+  other.retryAfter = 30;
+  expect('retryAfter' in projectCaughtError(other)).toBe(false);
 });
 
 test('projectCaughtError omits handled when the caught error does not set it', () => {

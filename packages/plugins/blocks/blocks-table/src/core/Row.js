@@ -46,7 +46,8 @@ function renderLead({ api, item }) {
 // whenever the row model rebuilds. `rowRules` classes and styles come from the row object, so they
 // are worked out here, inside the memo. The row element carries `lf-table-row`, the class the
 // shared cell styles reveal `showOn: hover` buttons from (the row holds its pinned cells too, so
-// CSS hover covers the whole row).
+// CSS hover covers the whole row). Rows added in the browser and still saving (enrichment's
+// optimistic new rows, `api.savingRows`) carry `data-saving`.
 function Row({
   activeCol,
   api,
@@ -91,6 +92,7 @@ function Row({
       data-positioned={positioned ? '' : undefined}
       data-row-index={displayIndex}
       data-row-key={rowId}
+      data-saving={api.savingRows?.has(original) ? '' : undefined}
       role="row"
       style={rowStyle}
     >

@@ -23,7 +23,13 @@ async function controlTry(context, routineContext, { control }) {
     event: 'debug_control_try',
   });
 
-  let res = await runRoutine(context, routineContext, { routine: control[':try'] });
+  // With a :catch, an error in :try is handled here: `caught` makes runRoutine log an expected
+  // error (RequestError, ServiceError, UserError) at debug instead of as an error (nested
+  // controls and endpoint calls inherit it). Config, operator and internal errors are still
+  // reported through handleError. :catch and :finally run outside it, so their own errors are
+  // logged as usual.
+  const tryContext = control[':catch'] ? { ...routineContext, caught: true } : routineContext;
+  let res = await runRoutine(context, tryContext, { routine: control[':try'] });
 
   if (res.status === 'error' && control[':catch']) {
     context.logger.debug({

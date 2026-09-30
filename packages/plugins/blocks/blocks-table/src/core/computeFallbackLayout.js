@@ -26,9 +26,17 @@ function getRegion(pinned) {
 
 // The layout the table will have, from the column config alone (no TanStack): the view's column
 // order, visibility, pins and widths (resolveViewColumns, as the table's initial state resolves
-// them) and the leading columns, through the engine's buildLayout. The lazy block's fallback lays
+// them), the leading columns and the trailing ones (last in the end region), through the
+// engine's buildLayout. The lazy block's fallback lays
 // its header and skeleton rows out with it, so the swap to the table does not move a column.
-function computeFallbackLayout({ columns, defaultView, leadingColumns, value, viewportWidth }) {
+function computeFallbackLayout({
+  columns,
+  defaultView,
+  leadingColumns,
+  trailingColumns = [],
+  value,
+  viewportWidth,
+}) {
   const byKey = new Map(columns.map((column) => [column.key, column]));
   const regions = { start: [], center: [], end: [] };
   const sizing = {};
@@ -58,10 +66,19 @@ function computeFallbackLayout({ columns, defaultView, leadingColumns, value, vi
     })),
     ...regions.start,
   ];
+  const end = [
+    ...regions.end,
+    ...trailingColumns.map((trailing) => ({
+      ...trailing,
+      region: 'end',
+      minWidth: trailing.width,
+      maxWidth: trailing.width,
+    })),
+  ];
   return buildLayout({
     start,
     center: regions.center,
-    end: regions.end,
+    end,
     sizing,
     viewportWidth,
   });

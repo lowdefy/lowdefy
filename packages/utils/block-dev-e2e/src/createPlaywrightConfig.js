@@ -17,28 +17,45 @@
 import path from 'path';
 import { defineConfig, devices } from '@playwright/test';
 
-function createPlaywrightConfig({ packageDir, port: defaultPort = 3001 }) {
+// A package's block e2e suite builds and serves `e2e/app`. A package can also run a second
+// suite against an app of its own (`appDir`, `name`, `testMatch`), with services such as a
+// database or mock APIs started before the app (`services`, Playwright webServer entries) and
+// environment variables for the app server (`env`).
+function createPlaywrightConfig({
+  packageDir,
+  port: defaultPort = 3001,
+  appDir: appDirOption,
+  name,
+  testMatch = ['src/**/tests/*.e2e.spec.js', 'e2e/tests/*.e2e.spec.js'],
+  services = [],
+  env,
+  fullyParallel = true,
+  workers,
+}) {
   // Worktrees share the machine, so a fixed port could reach another checkout's server.
   // LOWDEFY_E2E_PORT moves the run, and an existing server is only reused on request.
   const port = Number(process.env.LOWDEFY_E2E_PORT ?? defaultPort);
   const e2eDir = path.join(packageDir, 'e2e');
-  const appDir = path.join(e2eDir, 'app');
+  const appDir = appDirOption ?? path.join(e2eDir, 'app');
+  const suiteName = name ?? path.basename(packageDir);
 
   // Calculate paths relative to monorepo root
   // packageDir is like: /path/to/lowdefy/packages/plugins/blocks/blocks-basic
   const monorepoRoot = path.resolve(packageDir, '../../../../');
   const cliPath = path.join(monorepoRoot, 'packages/cli/dist/index.js');
   const prepareServerPath = path.join(monorepoRoot, 'scripts/prepare-e2e-server.mjs');
-  // Each package builds into its own untracked copy of the server, so a run leaves the
-  // worktree clean and different packages can run at the same time.
-  const serverDir = path.join(monorepoRoot, '_server/e2e', path.basename(packageDir));
+  // Each suite builds into its own untracked copy of the server, so a run leaves the
+  // worktree clean and different suites can run at the same time.
+  const serverDir = path.join(monorepoRoot, '_server/e2e', suiteName);
+  const reuseExistingServer = process.env.LOWDEFY_E2E_REUSE_SERVER === 'true';
 
   return defineConfig({
     testDir: packageDir,
-    testMatch: ['src/**/tests/*.e2e.spec.js', 'e2e/tests/*.e2e.spec.js'],
-    fullyParallel: true,
+    testMatch,
+    fullyParallel,
+    workers,
     reporter: 'list',
-    outputDir: path.join(e2eDir, 'test-results'),
+    outputDir: path.join(path.dirname(appDir), 'test-results'),
     use: {
       baseURL: `http://localhost:${port}`,
       trace: 'on-first-retry',
@@ -49,16 +66,25 @@ function createPlaywrightConfig({ packageDir, port: defaultPort = 3001 }) {
         use: { ...devices['Desktop Chrome'] },
       },
     ],
-    webServer: {
-      command: [
-        `node ${prepareServerPath} --config-directory ${appDir} --server-directory ${serverDir} --log-level warn`,
-        `node ${cliPath} build --config-directory ${appDir} --server-directory ${serverDir}`,
-        `node ${cliPath} start --config-directory ${appDir} --server-directory ${serverDir} --port ${port} --log-level warn`,
-      ].join(' && '),
-      url: `http://localhost:${port}`,
-      reuseExistingServer: process.env.LOWDEFY_E2E_REUSE_SERVER === 'true',
-      timeout: 180000,
-    },
+    webServer: [
+      ...services.map((service) => ({ reuseExistingServer, ...service })),
+      {
+        command: [
+          `node ${prepareServerPath} --config-directory ${appDir} --server-directory ${serverDir} --log-level warn`,
+          `node ${cliPath} build --config-directory ${appDir} --server-directory ${serverDir}`,
+          `node ${cliPath} start --config-directory ${appDir} --server-directory ${serverDir} --port ${port} --log-level warn`,
+        ].join(' && '),
+        url: `http://localhost:${port}`,
+        reuseExistingServer,
+        timeout: 180000,
+        env: env === undefined ? undefined : { ...process.env, ...env },
+        // Playwright stops the web servers in reverse order, the app first. Killed outright, the
+        // server that `lowdefy start` runs outlives its shell, so it was still connected when the
+        // services (a database) stopped under it. A SIGTERM to the app's process group, waited
+        // for, stops it before the services.
+        ...(services.length > 0 ? { gracefulShutdown: { signal: 'SIGTERM', timeout: 15000 } } : {}),
+      },
+    ],
   });
 }
 

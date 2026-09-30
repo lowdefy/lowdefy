@@ -175,3 +175,49 @@ test('count controls', () => {
     ':set_state': 1,
   });
 });
+
+test('parallel_for accepts :concurrency', () => {
+  const components = {
+    api: [
+      {
+        id: 'api_concurrency',
+        type: 'Api',
+        routine: [
+          {
+            ':parallel_for': 'item',
+            ':in': [1, 2, 3],
+            ':concurrency': 2,
+            ':do': { id: 'step_a', type: 'MongoDBInsertOne', connectionId: 'connection' },
+          },
+          {
+            ':parallel_for': 'item',
+            ':in': [1, 2, 3],
+            ':concurrency': { _payload: 'concurrency' },
+            ':do': { id: 'step_b', type: 'MongoDBInsertOne', connectionId: 'connection' },
+          },
+        ],
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).not.toThrow();
+});
+
+test.each([0, -2, 2.5, 'many', true])('parallel_for throws for :concurrency %p', (concurrency) => {
+  const components = {
+    api: [
+      {
+        id: 'api_bad_concurrency',
+        type: 'Api',
+        routine: {
+          ':parallel_for': 'item',
+          ':in': [1, 2, 3],
+          ':concurrency': concurrency,
+          ':do': { id: 'step_a', type: 'MongoDBInsertOne', connectionId: 'connection' },
+        },
+      },
+    ],
+  };
+  expect(() => buildApi({ components, context })).toThrow(
+    ':concurrency in :parallel_for must be a positive integer at endpoint api_bad_concurrency.'
+  );
+});
