@@ -1,5 +1,71 @@
 # @lowdefy/ai-utils
 
+## 6.0.0
+
+### Minor Changes
+
+- b496a77: feat: AI in API routines — one-shot LLM requests and CallAgent steps
+
+  **One-shot LLM request types (`@lowdefy/connection-anthropic`, `@lowdefy/connection-openai`, `@lowdefy/connection-google`, `@lowdefy/connection-ai-gateway`)**
+
+  All AI provider connections now provide `GenerateText` and `GenerateObject` request types — single model calls usable as API routine steps and page requests. The type names are shared across providers, so switching providers only means changing the `connectionId`.
+
+  - `GenerateText` generates text from a prompt and returns `{ text, reasoningText, finishReason, usage }`.
+  - `GenerateObject` generates structured data matching a JSON Schema and returns `{ object, finishReason, usage }` — ideal for classify, extract, and routing decisions inside routines.
+
+  ```yaml
+  routine:
+    - id: classify
+      type: GenerateObject
+      connectionId: claude
+      properties:
+        model: claude-haiku-4-5
+        prompt:
+          _payload: ticket_text
+        schema:
+          type: object
+          properties:
+            category: { type: string }
+  ```
+
+  **CallAgent routine step (`@lowdefy/api`, `@lowdefy/build`, `@lowdefy/ai-utils`)**
+
+  API endpoint routines can now run an agent to completion with the new `CallAgent` step. The agent runs headlessly — no chat UI, no streaming — looping through its tools until done, and stores `{ text, finishReason, usage, toolCalls, toolResults }` in `_step`.
+
+  ```yaml
+  routine:
+    - id: research
+      type: CallAgent
+      properties:
+        agentId: research_agent
+        prompt: Summarize yesterday's signups and flag anomalies.
+  ```
+
+  - Tools marked `confirm: true` auto-execute in headless runs (the build emits a warning — there is no client to approve them).
+  - Agent server hooks still fire; `onFinish` `dataParts` are ignored since there is no stream.
+  - Agent tool and hook endpoint calls now count toward the endpoint call depth cap of 10, so recursive agent/endpoint configurations terminate with an error.
+  - The build validates that a static `agentId` on a `CallAgent` step references an existing agent.
+
+### Patch Changes
+
+- 11662bc: fix(ai): a failed agent turn no longer poisons the conversation. The chat client pushes the assistant message on the stream's `start` chunk, so a request that failed after that left an assistant message with no parts in the history; every later send then failed UIMessage validation, and the error toast dumped the whole conversation as JSON. AgentChat now drops empty assistant shells on error, the agent handler ignores empty messages and redacts validation errors, and a validation failure is logged like any other stream fault.
+- 8396857: fix(ai-utils): Give the assistant message an id so persisted transcripts render correctly.
+
+  `handleAgentChat` passed no `generateMessageId` to the AI SDK, so the assistant message delivered to
+  the stream-level `onFinish` arrived with an empty id. An `onFinish` hook that saves the conversation
+  therefore stored every assistant message under the same id, and reloading that conversation collapsed
+  the transcript: `AgentChat` keys its bubbles by message id and looks each bubble's parts up by that id,
+  so every assistant bubble rendered the last reply. User messages were unaffected, and a live turn
+  looked correct because the client generates its own id while streaming — the damage only appeared once
+  the conversation was reopened. Both stream paths (with and without `prune`) now pass the SDK's
+  `generateId`.
+
+- Updated dependencies [37c8c14]
+- Updated dependencies [6446ae6]
+- Updated dependencies [c9bea1c]
+  - @lowdefy/errors@6.0.0
+  - @lowdefy/helpers@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes

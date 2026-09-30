@@ -19,6 +19,8 @@ import {
   AuthorizationError,
   ConfigError,
   LowdefyInternalError,
+  lowdefyErrorNames,
+  lowdefyErrorTypes,
   OperatorError,
   ServiceError,
   UserError,
@@ -1229,8 +1231,8 @@ test('serializer.serialize handles error with circular Axios-style response', ()
   expect(() => JSON.stringify(result)).not.toThrow();
 });
 
-// omitErrorProps threading. serializer only passes the callback through to
-// extractErrorProps; it has no opinion on which fields are omitted. These tests
+// projectError threading. serializer only passes the callback through to
+// extractErrorProps; it has no opinion on which fields are emitted. These tests
 // assert the wiring on every entry point that builds a replacer.
 
 function buildErrorWithCause() {
@@ -1243,11 +1245,24 @@ function buildErrorWithCause() {
   return err;
 }
 
-const omitSecretAndStack = () => ['secret', 'stack'];
+function omitting(omit) {
+  return (node) => {
+    const props = { message: node.message, name: node.name, stack: node.stack, cause: node.cause };
+    for (const key of Object.keys(node)) {
+      if (key !== 'cause') props[key] = node[key];
+    }
+    for (const key of omit(node)) {
+      delete props[key];
+    }
+    return props;
+  };
+}
 
-test('serialize threads omitErrorProps to extractErrorProps at the root and in the cause', () => {
+const omitSecretAndStack = omitting(() => ['secret', 'stack']);
+
+test('serialize threads projectError to extractErrorProps at the root and in the cause', () => {
   const result = serializer.serialize(buildErrorWithCause(), {
-    omitErrorProps: omitSecretAndStack,
+    projectError: omitSecretAndStack,
   });
 
   expect(result['~e'].message).toBe('outer');
@@ -1260,7 +1275,7 @@ test('serialize threads omitErrorProps to extractErrorProps at the root and in t
   expect('stack' in result['~e'].cause).toBe(false);
 });
 
-test('serialize without omitErrorProps keeps all extracted error fields', () => {
+test('serialize without projectError keeps all extracted error fields', () => {
   const result = serializer.serialize(buildErrorWithCause());
 
   expect(result['~e'].secret).toBe('outer-secret');
@@ -1269,10 +1284,10 @@ test('serialize without omitErrorProps keeps all extracted error fields', () => 
   expect(result['~e'].cause.stack).toBeDefined();
 });
 
-test('serialize applies omitErrorProps to an error nested inside a non-error payload', () => {
+test('serialize applies projectError to an error nested inside a non-error payload', () => {
   const result = serializer.serialize(
     { a: { b: buildErrorWithCause() } },
-    { omitErrorProps: omitSecretAndStack }
+    { projectError: omitSecretAndStack }
   );
 
   expect(result.a.b['~e'].message).toBe('outer');
@@ -1282,10 +1297,10 @@ test('serialize applies omitErrorProps to an error nested inside a non-error pay
   expect('secret' in result.a.b['~e'].cause).toBe(false);
 });
 
-test('serialize applies omitErrorProps to an error nested inside an array payload', () => {
+test('serialize applies projectError to an error nested inside an array payload', () => {
   const result = serializer.serialize(
     { errors: [buildErrorWithCause()] },
-    { omitErrorProps: omitSecretAndStack }
+    { projectError: omitSecretAndStack }
   );
 
   expect(result.errors[0]['~e'].message).toBe('outer');
@@ -1293,9 +1308,9 @@ test('serialize applies omitErrorProps to an error nested inside an array payloa
   expect('stack' in result.errors[0]['~e']).toBe(false);
 });
 
-test('serializeToString threads omitErrorProps to extractErrorProps', () => {
+test('serializeToString threads projectError to extractErrorProps', () => {
   const string = serializer.serializeToString(buildErrorWithCause(), {
-    omitErrorProps: omitSecretAndStack,
+    projectError: omitSecretAndStack,
   });
   const parsed = JSON.parse(string);
 
@@ -1309,10 +1324,10 @@ test('serializeToString threads omitErrorProps to extractErrorProps', () => {
   expect(string).not.toContain('inner-secret');
 });
 
-test('serializeToString with stable option threads omitErrorProps to extractErrorProps', () => {
+test('serializeToString with stable option threads projectError to extractErrorProps', () => {
   const string = serializer.serializeToString(buildErrorWithCause(), {
     stable: true,
-    omitErrorProps: omitSecretAndStack,
+    projectError: omitSecretAndStack,
   });
   const parsed = JSON.parse(string);
 
@@ -1326,7 +1341,7 @@ test('serializeToString with stable option threads omitErrorProps to extractErro
   expect(string).not.toContain('inner-secret');
 });
 
-test('serializeToString with stable option and no omitErrorProps keeps all extracted error fields', () => {
+test('serializeToString with stable option and no projectError keeps all extracted error fields', () => {
   const string = serializer.serializeToString(buildErrorWithCause(), { stable: true });
   const parsed = JSON.parse(string);
 
@@ -1335,10 +1350,10 @@ test('serializeToString with stable option and no omitErrorProps keeps all extra
   expect(parsed['~e'].cause.secret).toBe('inner-secret');
 });
 
-test('serializeToString applies omitErrorProps to an error nested inside a non-error payload', () => {
+test('serializeToString applies projectError to an error nested inside a non-error payload', () => {
   const string = serializer.serializeToString(
     { a: { b: buildErrorWithCause() } },
-    { omitErrorProps: omitSecretAndStack }
+    { projectError: omitSecretAndStack }
   );
   const parsed = JSON.parse(string);
 
@@ -1347,8 +1362,8 @@ test('serializeToString applies omitErrorProps to an error nested inside a non-e
   expect(string).not.toContain('outer-secret');
 });
 
-test('copy threads omitErrorProps to extractErrorProps and revives the reduced error', () => {
-  const result = serializer.copy(buildErrorWithCause(), { omitErrorProps: omitSecretAndStack });
+test('copy threads projectError to extractErrorProps and revives the reduced error', () => {
+  const result = serializer.copy(buildErrorWithCause(), { projectError: omitSecretAndStack });
 
   expect(result).toBeInstanceOf(Error);
   expect(result.message).toBe('outer');
@@ -1362,7 +1377,7 @@ test('copy threads omitErrorProps to extractErrorProps and revives the reduced e
   expect(result.cause.stack).toBeUndefined();
 });
 
-test('copy without omitErrorProps keeps all extracted error fields', () => {
+test('copy without projectError keeps all extracted error fields', () => {
   const result = serializer.copy(buildErrorWithCause());
 
   expect(result.secret).toBe('outer-secret');
@@ -1370,10 +1385,10 @@ test('copy without omitErrorProps keeps all extracted error fields', () => {
   expect(result.cause.secret).toBe('inner-secret');
 });
 
-test('copy applies omitErrorProps to an error nested inside a non-error payload', () => {
+test('copy applies projectError to an error nested inside a non-error payload', () => {
   const result = serializer.copy(
     { a: { b: buildErrorWithCause() } },
-    { omitErrorProps: omitSecretAndStack }
+    { projectError: omitSecretAndStack }
   );
 
   expect(result.a.b).toBeInstanceOf(Error);
@@ -1382,12 +1397,12 @@ test('copy applies omitErrorProps to an error nested inside a non-error payload'
   expect(result.a.b.stack).toBeUndefined();
 });
 
-test('omitErrorProps callback receives each error node so a per-node decision applies', () => {
+test('projectError callback receives each error node so a per-node decision applies', () => {
   const inner = new TypeError('inner');
   const err = new Error('outer', { cause: inner });
 
   const result = serializer.serialize(err, {
-    omitErrorProps: (node) => (node.name === 'TypeError' ? ['stack'] : []),
+    projectError: omitting((node) => (node.name === 'TypeError' ? ['stack'] : [])),
   });
 
   expect(result['~e'].stack).toBeDefined();
@@ -1395,11 +1410,11 @@ test('omitErrorProps callback receives each error node so a per-node decision ap
   expect(result['~e'].cause.message).toBe('inner');
 });
 
-test('omitErrorProps is applied to typed Lowdefy errors and the class is preserved on revive', () => {
+test('projectError is applied to typed Lowdefy errors and the class is preserved on revive', () => {
   const err = new ConfigError('bad config', { configKey: 'key-1' });
   err.secret = 'shhh';
 
-  const result = serializer.copy(err, { omitErrorProps: omitSecretAndStack });
+  const result = serializer.copy(err, { projectError: omitSecretAndStack });
 
   expect(result).toBeInstanceOf(ConfigError);
   expect(result.message).toBe('bad config');
@@ -1419,4 +1434,13 @@ test('deserialize revives the auth gate errors as their own classes', () => {
   expect(revived.authentication.message).toBe('Sign in.');
   expect(revived.authorization).toBeInstanceOf(AuthorizationError);
   expect(revived.authorization.name).toBe('AuthorizationError');
+});
+
+test('lowdefyErrorTypes revives every Lowdefy error name except the v7-only TwoFactorEnrolmentRequiredError', () => {
+  // v6 has no two-factor enrolment, so the class does not exist here; the name is
+  // listed so errors from a v7 server still classify as Lowdefy errors.
+  const revivedNames = [...lowdefyErrorNames].filter(
+    (name) => name !== 'TwoFactorEnrolmentRequiredError'
+  );
+  expect(Object.keys(lowdefyErrorTypes).sort()).toEqual(revivedNames.sort());
 });

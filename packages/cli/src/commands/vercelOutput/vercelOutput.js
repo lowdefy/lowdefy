@@ -36,7 +36,7 @@ async function readFunctionConfig({ buildDirectory }) {
 
 // The crons array is generated from build/schedules.json (written by @lowdefy/build for endpoints
 // that declare `schedules`). A missing file means no schedules → no crons. Vercel fires crons only
-// on the production deployment, so with config.cron.environments the schedules of every other
+// on the production deployment, so with config.environments the schedules of every other
 // environment are registered here too, as cron-forward jobs the production deployment relays to
 // that environment's own /api/cron route.
 async function readCrons({ buildDirectory }) {

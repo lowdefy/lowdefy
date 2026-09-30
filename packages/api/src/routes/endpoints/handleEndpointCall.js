@@ -20,9 +20,10 @@ import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 import addStepResult from './addStepResult.js';
 import invokeEndpoint from './invokeEndpoint.js';
 import scheduleBackground from './scheduleBackground.js';
+import evaluateRoutineOperators from './evaluateRoutineOperators.js';
 
 async function handleEndpointCall(context, routineContext, { step }) {
-  const { logger, evaluateOperators } = context;
+  const { logger } = context;
 
   logger.debug({
     event: 'debug_start_endpoint_call',
@@ -30,13 +31,9 @@ async function handleEndpointCall(context, routineContext, { step }) {
   });
 
   // Evaluate operators in step.properties (resolves endpointId, payload)
-  const evaluatedProperties = evaluateOperators({
+  const evaluatedProperties = evaluateRoutineOperators(context, routineContext, {
     input: step.properties,
-    items: routineContext.items,
     location: step.stepId,
-    payload: routineContext.payload,
-    state: routineContext.state,
-    steps: routineContext.steps,
   });
 
   // detached: true — fire-and-forget the call back through the deployment's

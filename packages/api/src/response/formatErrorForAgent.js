@@ -13,17 +13,19 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
 import { type } from '@lowdefy/helpers';
 
-// The text an MCP tool caller reads when an endpoint fails. In dev the message
-// carries the resolved config location and any hint, so an agent can go straight
-// to the yaml. configDirectory is what distinguishes a dev server from production
-// today (server-dev sets it, packages/servers/server never does - see
-// normalizeErrorSources), and production keeps the bare message so no server
-// path is ever handed to an MCP client.
+import createWireProjection from './createWireProjection.js';
+
+// The text an MCP tool caller reads when an endpoint fails. A dev MCP client is a
+// coding agent, a dev tool: the message carries the resolved config location and
+// any hint so it can go straight to the yaml. A prod MCP client is an end-user
+// reader and gets the wire message - the author's message or the generic one -
+// so no library text or server path reaches it.
 function formatErrorForAgent(context, error) {
-  if (type.isNone(context.configDirectory)) {
-    return error.message;
+  if (context.mode !== 'dev') {
+    return createWireProjection(context)(error).message;
   }
   let text = error.message;
   if (!type.isNone(error.source)) {

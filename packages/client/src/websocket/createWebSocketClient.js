@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { decodeServerError } from '@lowdefy/engine';
 import { ServiceError } from '@lowdefy/errors';
 
 const ACK_TIMEOUT_MS = 10 * 1000;
@@ -97,7 +98,7 @@ function createWebSocketClient(lowdefy) {
   }
 
   function handleFrame(frame) {
-    const { message, payload, requestId, websocketId } = frame;
+    const { error: errorPayload, message, payload, requestId, websocketId } = frame;
     const subscription = subscriptions.get(websocketId);
     switch (frame.type) {
       case 'message':
@@ -125,7 +126,11 @@ function createWebSocketClient(lowdefy) {
         return;
       }
       case 'error': {
-        const error = new ServiceError(message ?? 'WebSocket error.', { service: 'WebSocket' });
+        // Reply frames carry the error payload; broadcasts and frame-format
+        // errors carry only a message string.
+        const error = errorPayload
+          ? decodeServerError(errorPayload)
+          : new ServiceError(message ?? 'WebSocket error.', { service: 'WebSocket' });
         if (requestId && pendingPublishes.has(requestId)) {
           const pending = pendingPublishes.get(requestId);
           clearTimeout(pending.timer);

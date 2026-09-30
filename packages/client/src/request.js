@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { serializer, translate } from '@lowdefy/helpers';
+import { decodeServerError } from '@lowdefy/engine';
+import { translate } from '@lowdefy/helpers';
 
 async function request({ url, method = 'GET', body }) {
   const res = await fetch(url, {
@@ -27,7 +28,7 @@ async function request({ url, method = 'GET', body }) {
   if (!res.ok) {
     const body = await res.json();
     if (body?.['~e']) {
-      throw serializer.deserialize(body);
+      throw decodeServerError(body);
     }
     throw new Error(body.message || translate({ key: 'client.requestError' }));
   }

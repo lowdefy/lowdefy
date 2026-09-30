@@ -466,6 +466,45 @@ test('endpoint tool fallback error message translates per i18n.active locale', a
   );
 });
 
+// A failed tool's error goes back to the model, whose reply reaches the end user, so the model
+// reads the wire error in both modes. The payload is shaped as the endpoint route's error
+// payload is: the wire error under '~e', and in dev the full error as devError beside it.
+test.each(['dev', 'prod'])(
+  'endpoint tool throws the wire error without devError when the server runs in %s',
+  async (mode) => {
+    const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+    const error = {
+      '~e': { name: 'Error', message: 'Something went wrong.', isLowdefyError: true },
+    };
+    if (mode === 'dev') {
+      error.devError = {
+        '~e': {
+          name: 'Error',
+          message: 'connect ECONNREFUSED postgres://admin:hunter22@10.0.0.5:5432',
+          source: 'api/query.yaml:12',
+        },
+      };
+    }
+    const agent = { tools: [{ endpointId: 'query' }], mcp: [] };
+    const context = {
+      getEndpointConfig: jest.fn().mockResolvedValue({
+        description: 'Query',
+        payloadSchema: { type: 'object' },
+      }),
+      callEndpoint: jest.fn().mockResolvedValue({ success: false, error }),
+      evaluateOperators: jest.fn((x) => x),
+    };
+
+    const { tools } = await buildAgentTools({ agent, context });
+
+    const thrown = await tools.query.execute({}, {}).catch((e) => e);
+    expect(thrown).toBeInstanceOf(Error);
+    expect(thrown.message).toBe('Something went wrong.');
+    expect(thrown.devError).toBeUndefined();
+  }
+);
+
 test('buildAgentTools translates sub-agent depth error per i18n.active locale', async () => {
   const { default: buildAgentTools } = await import('./buildAgentTools.js');
 

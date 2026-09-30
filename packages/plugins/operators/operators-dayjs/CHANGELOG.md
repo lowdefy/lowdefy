@@ -1,5 +1,16 @@
 # @lowdefy/operators-dayjs
 
+## 6.0.0
+
+### Patch Changes
+
+- Updated dependencies [60401aa]
+- Updated dependencies [efd1967]
+- Updated dependencies [6446ae6]
+- Updated dependencies [982a3db]
+  - @lowdefy/operators@6.0.0
+  - @lowdefy/helpers@6.0.0
+
 ## 5.6.0
 
 ### Patch Changes

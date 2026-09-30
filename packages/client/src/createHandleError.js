@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { getDevError } from '@lowdefy/engine';
 import { serializer } from '@lowdefy/helpers';
 
 function createHandleError(lowdefy) {
@@ -21,23 +22,30 @@ function createHandleError(lowdefy) {
   const logger = lowdefy._internal.logger;
 
   function logError(error) {
-    if (error?.name !== 'UserError') {
-      lowdefy._runtimeErrorCallback?.(error);
-    }
+    lowdefy._runtimeErrorCallback?.(error);
     logger.error(error);
   }
 
   return async function handleError(error) {
-    const errorKey = `${error.message}:${error.configKey || ''}`;
+    // The dev tools show the dev server's full error; every decision below stays on
+    // the error config sees. Keying on the shown message means two different dev
+    // failures of one action both display. Every server failure carries its own
+    // requestId, and prod gives them all one generic message, so the requestId in
+    // the key is what lets a later failure - and the ID support asks for - log at
+    // all; one failure reaching here twice still logs once.
+    const devError = getDevError(error);
+    const shown = devError ?? error;
+    const errorKey = `${shown.message}:${error.configKey ?? ''}:${error.requestId ?? ''}`;
     if (loggedErrors.has(errorKey)) {
       return;
     }
     loggedErrors.add(errorKey);
 
-    // UserError is client-only — log to browser console, never send to server.
-    // Matched by name, not instanceof: plugins bundle their own @lowdefy/errors copy.
+    // UserError is client-only — log to browser console, never send to server or
+    // the error bar. Matched by name, not instanceof: plugins bundle their own
+    // @lowdefy/errors copy.
     if (error?.name === 'UserError') {
-      logError(error);
+      logger.error(shown);
       return;
     }
 
@@ -48,7 +56,7 @@ function createHandleError(lowdefy) {
       // but never gets a source (location resolution is skipped for it), so
       // keying on source POSTed it back and had it logged twice.
       if (error.handled) {
-        logError(error);
+        logError(shown);
         return;
       }
       // Client-originated errors — send to server for logging + location resolution
@@ -76,12 +84,12 @@ function createHandleError(lowdefy) {
       } catch {
         // Server logging failed - continue with local console
       }
-      logError(error);
+      logError(shown);
       return;
     }
 
     // Other errors - just log locally
-    logError(error);
+    logError(shown);
   };
 }
 

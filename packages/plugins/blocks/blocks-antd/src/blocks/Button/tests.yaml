@@ -89,6 +89,11 @@
   properties:
     hideTitle: true
     icon: AiOutlineDelete
+- id: 'properties.tooltip: Save'
+  type: Button
+  properties:
+    title: Save
+    tooltip: Save the form
 - id: 'properties.href: www.lowdefy.com'
   type: Button
   properties:

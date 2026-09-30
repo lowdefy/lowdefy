@@ -45,7 +45,35 @@ const endpointConfig = {
   routine: { ':return': { name: 'Ada' } },
 };
 
-function createContext({ session = { user: { id: 'user_1' } }, configs = {} } = {}) {
+// A driver error of the kind the wire policy exists for: its message carries a
+// connection string the end user must never see.
+const foreignError = new Error('connect ECONNREFUSED postgres://admin:hunter22@10.0.0.5:5432');
+
+const mockFailingRequest = jest.fn(() => {
+  throw foreignError;
+});
+mockFailingRequest.schema = {};
+mockFailingRequest.meta = { checkRead: false, checkWrite: false };
+
+const connections = {
+  TestConnection: {
+    schema: {},
+    requests: { FailingRequest: mockFailingRequest },
+  },
+};
+
+const failingEndpointConfig = {
+  ...endpointConfig,
+  routine: {
+    id: 'request:get-customer:lookup',
+    type: 'FailingRequest',
+    stepId: 'lookup',
+    connectionId: 'test',
+    properties: {},
+  },
+};
+
+function createContext({ session = { user: { id: 'user_1' } }, configs = {}, mode = 'prod' } = {}) {
   const operators = {
     _fail: () => {
       throw new Error('Boom.');
@@ -54,10 +82,15 @@ function createContext({ session = { user: { id: 'user_1' } }, configs = {} } = 
   const files = {
     'mcp.json': mcpJson,
     'api/get-customer.json': endpointConfig,
+    'connections/test.json': {
+      id: 'connection:test',
+      type: 'TestConnection',
+      connectionId: 'test',
+    },
     ...configs,
   };
   const readConfigFile = jest.fn((path) => files[path] ?? null);
-  return testContext({ logger, operators, readConfigFile, session });
+  return testContext({ connections, logger, mode, operators, readConfigFile, session });
 }
 
 async function connectClient(server) {
@@ -260,8 +293,73 @@ test('tools/call returns a masked error result for an authenticated caller with 
 
   const result = await client.callTool({ name: 'get-customer', arguments: {} });
   expect(result.isError).toBe(true);
-  // callEndpoint masks protected endpoints as missing for wrong-role callers.
-  expect(result.content[0].text).toBe('API Endpoint "get-customer" does not exist.');
+  // callEndpoint masks protected endpoints as missing for wrong-role callers, and the
+  // wire policy then reduces that to the generic message.
+  expect(result.content[0].text).toBe('Something went wrong.');
+});
+
+test('tools/call returns the generic message in prod when an endpoint step throws a foreign error', async () => {
+  const context = createContext({ configs: { 'api/get-customer.json': failingEndpointConfig } });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'get-customer', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toBe('Something went wrong.');
+});
+
+test('tools/call returns the generic message in prod for an error thrown outside the endpoint result', async () => {
+  const context = createContext();
+  context.readConfigFile.mockImplementation((path) => {
+    if (path === 'mcp.json') return mcpJson;
+    throw new Error('ENOENT: no such file /srv/app/.lowdefy/server/build/api/get-customer.json');
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'get-customer', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toBe('Something went wrong.');
+  expect(logger.error).toHaveBeenCalled();
+});
+
+test('tools/call returns the devError message, config location and hint in dev', async () => {
+  const context = createContext({
+    configs: { 'api/get-customer.json': failingEndpointConfig },
+    mode: 'dev',
+  });
+  // Mirrors the dev server's error sink, which resolves the config location onto the error
+  // before the endpoint result is built.
+  context.handleError = async (error) => {
+    error.source = 'api/get-customer.yaml:12';
+    error.hint = 'Check the connection properties.';
+    error.handled = true;
+  };
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'get-customer', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toContain(
+    'connect ECONNREFUSED postgres://admin:hunter22@10.0.0.5:5432'
+  );
+  expect(result.content[0].text).toMatch(
+    / \(at api\/get-customer\.yaml:12\) Hint: Check the connection properties\.$/
+  );
+});
+
+test('tools/call keeps the raw message in dev for an error thrown outside the endpoint result', async () => {
+  const context = createContext({ mode: 'dev' });
+  context.readConfigFile.mockImplementation((path) => {
+    if (path === 'mcp.json') return mcpJson;
+    throw new Error('ENOENT: no such file api/get-customer.json');
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'get-customer', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toBe('ENOENT: no such file api/get-customer.json');
 });
 
 const failingConfig = {
@@ -281,22 +379,23 @@ const failingMcpJson = {
   endpoints: [...mcpJson.endpoints, 'failing'],
 };
 
-test('tools/call returns the bare message of a failed routine in production', async () => {
+test('tools/call returns the generic message of a failed routine in prod', async () => {
   const context = createContext({
     configs: { 'mcp.json': failingMcpJson, 'api/failing.json': failingConfig },
   });
+  context.configDirectory = '/app';
   const server = await createMcpServer({ context });
   const client = await connectClient(server);
 
   const result = await client.callTool({ name: 'failing', arguments: {} });
   expect(result.isError).toBe(true);
-  expect(result.content[0].text).toContain('Boom.');
-  expect(result.content[0].text).not.toContain('(at ');
+  expect(result.content[0].text).toBe('Something went wrong.');
 });
 
-test('tools/call appends the config source of a failed routine when configDirectory is set', async () => {
+test('tools/call appends the config source of a failed routine in dev', async () => {
   const context = createContext({
     configs: { 'mcp.json': failingMcpJson, 'api/failing.json': failingConfig },
+    mode: 'dev',
   });
   context.configDirectory = '/app';
   // Mirrors createHandleError in server-dev, which resolves the location onto the error.
@@ -315,7 +414,7 @@ test('tools/call appends the config source of a failed routine when configDirect
 });
 
 test('tools/call routes an unexpected failure through handleError and reports its source in dev', async () => {
-  const context = createContext({ session: null });
+  const context = createContext({ session: null, mode: 'dev' });
   const server = await createMcpServer({ context });
   const client = await connectClient(server);
   context.configDirectory = '/app';

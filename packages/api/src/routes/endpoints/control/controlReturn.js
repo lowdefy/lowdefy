@@ -14,16 +14,12 @@
   limitations under the License.
 */
 
+import evaluateRoutineOperators from '../evaluateRoutineOperators.js';
+
 async function controlReturn(context, routineContext, { control }) {
-  const { evaluateOperators } = context;
-  const { items } = routineContext;
-  const response = evaluateOperators({
+  const response = evaluateRoutineOperators(context, routineContext, {
     input: control[':return'],
-    items,
     location: control['~k'] ?? ':return',
-    payload: routineContext.payload,
-    state: routineContext.state,
-    steps: routineContext.steps,
   });
 
   context.logger.debug({

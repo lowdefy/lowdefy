@@ -7,6 +7,7 @@
 If one control in the routine chain defined in the `:try` key fails by throwing an error, the steps in the list following the failed control will not be executed.
 To handle any errors thrown by a routine element, a routine can be provided using `catch` key.
 The routine defined using the `:finally` key will be run regardless of whether or not the routine throws an error.
+Inside the `:catch` routine, the [`_error`](/_error) operator returns the error that was caught, so the routine can branch on its `statusCode` or `code`, or read its `message`. `_error` returns the error of the innermost `:catch` that encloses it, and `null` outside a `:catch`.
 A [`:reject`](/:reject) inside the `:try` routine is __not__ caught. `:reject` is the routine's own reply — it stops the routine, returns a `"reject"` status to the caller, and flows past every enclosing `:catch`. `:finally` still runs. Use [`:throw`](/:throw) for failures a `:catch` should handle.
 
 #### Keys
@@ -16,6 +17,25 @@ A [`:reject`](/:reject) inside the `:try` routine is __not__ caught. `:reject` i
 - `:finally: routine`: The routine to be run regardless of the out come of the initial routine. Runs on success, error and reject.
 
 #### Examples
+
+###### Branch on the caught error
+```yaml
+- :try:
+    - id: get_customer
+      type: AxiosHttp
+      connectionId: crm
+      properties:
+        url: /customers
+        params:
+          id:
+            _payload: id
+  :catch:
+    - :if:
+        _eq: [{ _error: statusCode }, 404]
+      :then:
+        - :reject: Customer not found
+    - :throw: Customer lookup failed
+```
 
 ###### Try external API with fallback
 ```yaml

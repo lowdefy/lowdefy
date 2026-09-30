@@ -1,5 +1,21 @@
 # @lowdefy/errors
 
+## 6.0.0
+
+### Minor Changes
+
+- 37c8c14: feat: `auth.strategies` — apiKey and JWT header authentication for API callers.
+
+  - New `auth.strategies` config block: apiKey (default `X-API-Key` header) and jwt strategies, each granting the caller the strategy's `roles`.
+  - MCP and service clients that cannot hold a session cookie authenticate per request; a matched strategy yields a caller (`apiKey:{strategyId}:{keyId}`) that flows through the existing authorization and `_user` machinery.
+  - Unauthenticated calls to role-gated endpoints now return 401 (`AuthenticationError`) instead of a masked error.
+
+### Patch Changes
+
+- c9bea1c: fix(errors): Resolve config locations through module refs to the defining file.
+
+  Blocks passed into a module via vars resolved their config location to lowdefy.yaml instead of the file where they are written, because a module invocation's ref has no file path of its own. Location resolution now walks the ref chain to the nearest real file, so Option/Alt+click open-in-editor, `/lowdefy-docs/find`, and error messages point at the correct yaml file and line for module content.
+
 ## 5.6.0
 
 ## 5.5.1

@@ -27,8 +27,10 @@ import getOperatorType from './getOperatorType.js';
 import { isReserved, ReservedKeyError } from './ReservedKeyError.js';
 import joinPath from './joinPath.js';
 import LRUCache from './LRUCache.js';
+import mapPlainValues from './mapPlainValues.js';
 import mergeObjects from './mergeObjects.js';
 import omit from './omit.js';
+import projectCaughtError from './projectCaughtError.js';
 import serializer from './serializer.js';
 import set from './set.js';
 import setKey from './setKey.js';
@@ -56,8 +58,10 @@ export {
   isReserved,
   joinPath,
   LRUCache,
+  mapPlainValues,
   mergeObjects,
   omit,
+  projectCaughtError,
   ReservedKeyError,
   serializer,
   set,

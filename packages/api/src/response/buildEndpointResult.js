@@ -20,7 +20,9 @@ import redactResponse from './redactResponse.js';
 // The wire object every endpoint route returns after running its routine. One
 // function rather than a copy of the same return statement per route, so the
 // `response` field cannot end up policed differently from the `error` field beside
-// it - see redactResponse for why the response needs the policy at all.
+// it - see redactResponse for why the response needs the policy at all. `error` is
+// redactErrorResponse's error payload, so in dev it carries `devError`; `response`
+// never does.
 function buildEndpointResult(context, { error, response, status }) {
   const success = !['error', 'reject'].includes(status);
   return {

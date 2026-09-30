@@ -1,7 +1,7 @@
 # :throw
 
 ```
-({:throw: string, :cause: any}): void
+({:throw: string | Error, :cause: any}): void
 ```
 
 The `:throw` control creates a system error that immediately stops routine execution and returns with an "error" status.
@@ -10,12 +10,39 @@ The key difference is that `:throw` can be caught and handled by [`:try`](/:try)
 This makes `:throw` ideal for recoverable system errors where you might want to implement fallback logic.
 Choose `:throw` when a step failed and the routine may recover; choose [`:reject`](/:reject) when the routine decided the request cannot be fulfilled.
 
+`:throw` also takes an Error as its message, such as the error a `:catch` caught: `:throw: { _error: true }`. The error is rethrown as it is, with its own class and cause, and `:cause` is ignored. The client receives it with the message "Something went wrong.", keeping its `code` and `statusCode`, unless it was a `UserError`, whose message is kept. To show the user the caught error's real message, name it: `:throw: { _error: message }`. See [`_error`](/_error).
+
 #### Keys
 
-- `:throw: string`: __Required__ - The error message that will be returned in the response object of the API call result.
+- `:throw: string | Error`: __Required__ - The error message that will be returned in the response object of the API call result, or an Error to rethrow.
 - `:cause: any`: Additional metadata that will be returned with the error message.
 
 #### Examples
+
+###### Rethrow a caught error
+```yaml
+- :try:
+    - id: update_stock
+      type: MongoDBUpdateOne
+      connectionId: inventory
+      properties:
+        filter:
+          sku:
+            _payload: sku
+        update:
+          $inc:
+            quantity:
+              _payload: change
+  :catch:
+    - :log:
+        message: Stock update failed
+        reason:
+          _error: message
+      :level: error
+    - :throw:
+        _error: true
+```
+The `:catch` logs the real message, then rethrows the error. The client receives it with the message "Something went wrong.", with the error's `code` and `statusCode`.
 
 ###### Throw on invalid status
 ```yaml

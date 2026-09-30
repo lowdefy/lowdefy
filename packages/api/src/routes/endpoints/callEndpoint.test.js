@@ -173,7 +173,7 @@ test('callEndpoint strips stack and the internal control config cause from the e
 
   expect(result.status).toBe('error');
   expect(result.success).toBe(false);
-  expect(result.error['~e'].message).toBe('Unexpected control.');
+  expect(result.error['~e'].message).toBe('Something went wrong.');
   expect(result.error['~e'].stack).toBeUndefined();
   expect(result.error['~e'].received).toBeUndefined();
   expect(result.error['~e'].cause).toBeUndefined();

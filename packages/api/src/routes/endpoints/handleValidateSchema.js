@@ -18,6 +18,7 @@ import { validate } from '@lowdefy/ajv';
 import { UserError } from '@lowdefy/errors';
 
 import addStepResult from './addStepResult.js';
+import evaluateRoutineOperators from './evaluateRoutineOperators.js';
 
 function buildErrorMessage(errors, stepId) {
   const first = errors?.[0];
@@ -27,19 +28,16 @@ function buildErrorMessage(errors, stepId) {
 }
 
 async function handleValidateSchema(context, routineContext, { step }) {
-  const { logger, evaluateOperators } = context;
+  const { logger } = context;
 
   logger.debug({
     event: 'debug_start_validate_schema',
     step,
   });
 
-  const evaluatedProperties = evaluateOperators({
+  const evaluatedProperties = evaluateRoutineOperators(context, routineContext, {
     input: step.properties,
-    items: routineContext.items,
     location: step.stepId,
-    payload: routineContext.payload,
-    steps: routineContext.steps,
   });
 
   const { schema, data, throwOnInvalid = true } = evaluatedProperties;
@@ -54,15 +52,16 @@ async function handleValidateSchema(context, routineContext, { step }) {
   if (!valid && throwOnInvalid) {
     // Failed validation of caller-supplied data is an expected user outcome,
     // not a config or system fault.
-    const error = new UserError(buildErrorMessage(result.errors, step.stepId), {
-      cause: result.errors,
-    });
+    // No cause: a UserError's cause crosses the wire as author data, and the ajv errors carry
+    // server schema detail. They stay in the step result and the log.
+    const error = new UserError(buildErrorMessage(result.errors, step.stepId));
     // Log under `err` — see controlThrow: only the `err` key runs the pino error
     // serializer, so `error` would drop the message from the log line.
     logger.warn({
       event: 'warn_validate_schema',
       stepId: step.stepId,
       err: error,
+      errors: result.errors,
     });
     return { status: 'error', error };
   }

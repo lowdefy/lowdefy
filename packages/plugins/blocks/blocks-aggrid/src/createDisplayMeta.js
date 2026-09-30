@@ -480,6 +480,11 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                           default: false,
                           description: "Hide the button's title (icon-only).",
                         },
+                        tooltip: {
+                          type: 'string',
+                          description:
+                            'Hover text for the button. An icon-only button (`hideTitle: true`) shows its `title` as the tooltip when this is not set.',
+                        },
                         disabled: { type: 'boolean', default: false },
                         disabledField: {
                           type: 'string',

@@ -63,6 +63,11 @@ export default {
         description: "Hide the button's title.",
         default: false,
       },
+      tooltip: {
+        type: 'string',
+        description:
+          'Hover text for the button. An icon-only button (`hideTitle: true`) shows its `title` as the tooltip when this is not set.',
+      },
       href: {
         type: 'string',
         description:

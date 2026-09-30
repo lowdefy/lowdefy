@@ -16,18 +16,16 @@
 
 import { type } from '@lowdefy/helpers';
 
-// With config.cron.environments declared the build resolves `schedules` onto every environment
-// (schedules.<name>, defaults inherited), so an environment run reads its own list; without
-// environments the endpoint carries a plain array.
+// With config.environments declared the build resolves `schedules` onto every environment
+// (schedules.<name>, defaults inherited, plus schedules.default), so an environment run reads its
+// own list and a deployment with no current environment reads the default; without environments
+// the endpoint carries a plain array.
 function getEnvironmentSchedules({ endpointConfig, environment }) {
   const schedules = endpointConfig.schedules;
   if (type.isArray(schedules)) {
     return schedules;
   }
-  if (environment === undefined) {
-    return [];
-  }
-  return schedules?.[environment] ?? [];
+  return schedules?.[environment ?? 'default'] ?? [];
 }
 
 export default getEnvironmentSchedules;

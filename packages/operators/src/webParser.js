@@ -24,7 +24,7 @@ class WebParser {
     this.parse = this.parse.bind(this);
   }
 
-  parse({ actions, args, arrayIndices, event, input, location, operatorPrefix = '_' }) {
+  parse({ actions, args, arrayIndices, error, event, input, location, operatorPrefix = '_' }) {
     if (type.isUndefined(input)) {
       return { output: input, errors: [] };
     }
@@ -38,6 +38,12 @@ class WebParser {
       throw new Error('Operator parser location must be a string.');
     }
     const errors = [];
+    // Operators that evaluate nested config (_function) re-enter the parser. Binding the frame here
+    // means they only pass what they change, so no frame field can be dropped on the way in.
+    const parser = {
+      parse: (callOptions) =>
+        this.parse({ actions, arrayIndices, error, event, location, ...callOptions }),
+    };
     const {
       apiResponses,
       basePath,
@@ -73,6 +79,7 @@ class WebParser {
           arrayIndices,
           apiResponses,
           basePath,
+          error,
           event,
           eventLog: this.context.eventLog,
           globals: _internal.globals,
@@ -89,7 +96,7 @@ class WebParser {
           operators: this.operators,
           pageId,
           params,
-          parser: this,
+          parser,
           requests: this.context.requests,
           runtime: 'browser',
           state: this.context.state,
