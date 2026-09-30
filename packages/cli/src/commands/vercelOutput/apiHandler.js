@@ -48,7 +48,7 @@ const app = createApp({ serveStaticAssets: false });
 
 export const config = { runtime: 'nodejs' };
 
-export default async function handler(req, res) {
+async function handleRequest(req, res) {
   const method = req.method || 'GET';
 
   // Buffer the body eagerly — see the note above.
@@ -70,7 +70,9 @@ export default async function handler(req, res) {
   const response = await app.fetch(request);
 
   res.statusCode = response.status;
-  response.headers.forEach((value, key) => res.setHeader(key, value));
+  // Headers yields each Set-Cookie separately (a sign-in sets the session cookie and clears
+  // others), and setHeader would keep only the last one.
+  response.headers.forEach((value, key) => res.appendHeader(key, value));
   if (response.body) {
     const reader = response.body.getReader();
     for (;;) {
@@ -80,6 +82,23 @@ export default async function handler(req, res) {
     }
   }
   res.end();
+}
+
+// A rejected handler promise would stop the process and every other request the function
+// instance is serving. A client that disconnects while its body is read is the common cause,
+// and is not logged.
+export default async function handler(req, res) {
+  try {
+    await handleRequest(req, res);
+  } catch (error) {
+    if (!req.destroyed) console.error(error);
+    if (res.headersSent) {
+      res.destroy();
+      return;
+    }
+    res.statusCode = 500;
+    res.end();
+  }
 }
 `;
 
