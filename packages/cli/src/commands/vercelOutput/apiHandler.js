@@ -18,9 +18,9 @@
 // .vercel/output/functions/api.func/<relServer>/api/index.js, where <relServer> is the server
 // directory's path relative to the trace base (empty for standalone apps). Kept as a string (not a
 // template file) so it ships verbatim — a real source file would be transpiled by the CLI's swc
-// build, stripping these comments. Its `../src/app.js` import and the chdir to `..` resolve to the
-// server directory inside the function, where the assembly places src/, build/, lib/ and the traced
-// dependency closure.
+// build, stripping these comments. Its `../src/initServer.js` import and the chdir to `..` resolve
+// to the server directory inside the function, where the assembly places src/, build/, lib/ and the
+// traced dependency closure.
 const apiHandler = `/*
   Vercel Serverless Function entry for a Lowdefy (Hono) app — generated into the Vercel Build Output
   by lowdefy vercel-output.
@@ -36,6 +36,7 @@ const apiHandler = `/*
 
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import * as Sentry from '@sentry/node';
 
 // The app reads its build artifacts relative to process.cwd(). On Vercel the function's cwd is the
 // lambda root (e.g. /var/task), not this directory, so point the cwd at the server directory (the
@@ -43,43 +44,69 @@ import { fileURLToPath } from 'node:url';
 // a static import is hoisted and would read files at the wrong cwd.
 process.chdir(path.join(path.dirname(fileURLToPath(import.meta.url)), '..'));
 
-const { default: createApp } = await import('../src/app.js');
+// The same startup as the Node entry (src/index.js): the NEXTAUTH_URL alias, Sentry, then the app,
+// and the environment guards before any request is served. A failed guard throws here, so the
+// function fails every request instead of serving with the wrong variables.
+const { default: initServer } = await import('../src/initServer.js');
+const { createApp, sentryEnabled } = await initServer();
 const app = createApp({ serveStaticAssets: false });
 
 export const config = { runtime: 'nodejs' };
 
 export default async function handler(req, res) {
-  const method = req.method || 'GET';
+  try {
+    const method = req.method || 'GET';
 
-  // Buffer the body eagerly — see the note above.
-  let body;
-  if (method !== 'GET' && method !== 'HEAD') {
-    const chunks = [];
-    for await (const chunk of req) chunks.push(chunk);
-    if (chunks.length > 0) body = Buffer.concat(chunks);
-  }
+    // Buffer the body eagerly — see the note above.
+    let body;
+    if (method !== 'GET' && method !== 'HEAD') {
+      const chunks = [];
+      for await (const chunk of req) chunks.push(chunk);
+      if (chunks.length > 0) body = Buffer.concat(chunks);
+    }
 
-  const host = req.headers['x-forwarded-host'] ?? req.headers.host;
-  const protocol = req.headers['x-forwarded-proto'] ?? 'https';
-  const request = new Request(protocol + '://' + host + req.url, {
-    method,
-    headers: req.headers,
-    body,
-  });
+    const host = req.headers['x-forwarded-host'] ?? req.headers.host;
+    const protocol = req.headers['x-forwarded-proto'] ?? 'https';
+    const request = new Request(protocol + '://' + host + req.url, {
+      method,
+      headers: req.headers,
+      body,
+    });
 
-  const response = await app.fetch(request);
+    const response = await app.fetch(request);
 
-  res.statusCode = response.status;
-  response.headers.forEach((value, key) => res.setHeader(key, value));
-  if (response.body) {
-    const reader = response.body.getReader();
-    for (;;) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      res.write(value);
+    res.statusCode = response.status;
+    response.headers.forEach((value, key) => res.setHeader(key, value));
+    if (response.body) {
+      const reader = response.body.getReader();
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        res.write(value);
+      }
+    }
+    res.end();
+  } catch (error) {
+    // Once headers are sent the launcher can no longer answer with a 500, and without this the
+    // client waits on an open response until the function times out.
+    if (res.headersSent) res.destroy();
+    throw error;
+  } finally {
+    // The function can be suspended once the response ends, stranding queued Sentry events. Vercel's
+    // waitUntil keeps it alive until they are sent without delaying the response. Its Node runtime
+    // exposes waitUntil on this global, which is what @vercel/functions reads; Sentry's own
+    // vercelWaitUntil only acts on the Edge runtime. Flushed in finally so a request that throws
+    // (body read, app.fetch, a stream that errors mid-response) still sends the events it captured.
+    if (sentryEnabled) {
+      const flushed = Sentry.flush(2000);
+      const vercelContext = globalThis[Symbol.for('@vercel/request-context')]?.get?.();
+      if (vercelContext?.waitUntil) {
+        vercelContext.waitUntil(flushed);
+      } else {
+        await flushed;
+      }
     }
   }
-  res.end();
 }
 `;
 

@@ -173,7 +173,7 @@ function getAuthConfig({ appMeta, authJson, logger, plugins, secrets }) {
 
 `createLogger.js` adapts Lowdefy's logger to the Auth.js v5 logger contract: `error(error)`, `warn(code)`, `debug(message, metadata)`.
 
-**Environment variables:** `AUTH_SECRET` and `AUTH_URL` are the preferred names. The `NEXTAUTH_*` variables are still honored for compatibility — `getAuthConfig` maps `NEXTAUTH_SECRET` into `secret`, and `src/index.js` aliases `NEXTAUTH_URL` → `AUTH_URL` at startup before any auth config loads.
+**Environment variables:** `AUTH_SECRET` and `AUTH_URL` are the preferred names. The `NEXTAUTH_*` variables are still honored for compatibility — `getAuthConfig` maps `NEXTAUTH_SECRET` into `secret`, and `src/initServer.js` (the shared startup of the Node and Vercel entries) aliases `NEXTAUTH_URL` → `AUTH_URL` at startup before any auth config loads.
 
 ### Provider Creation
 
