@@ -141,6 +141,8 @@ c.set('lowdefyContext', context);
 - Page paths: plain `Internal Server Error` 500.
 - `context.handleError(error)` (structured pino log + Sentry capture) runs for both.
 
+**Sentry capture needs an entry that initialised Sentry.** `captureSentryError` only checks `SENTRY_DSN`, so an entry that skips `initSentryServer()` silently drops every server event. Both production entries call it after the chdir and before importing the app: `src/index.js` (Node and `lowdefy docker-output`) and the Vercel function entry that `lowdefy vercel-output` generates (`packages/cli/src/commands/vercelOutput/apiHandler.js`). The Vercel entry also flushes after each response through Vercel's `waitUntil`, because the function can be suspended once the response ends. `server-dev` and `server-e2e` have no Sentry.
+
 ## Page Rendering
 
 **Files:** `src/html/renderPage.js`, `src/html/template.js`, `src/routes/page.js` (routes `GET /`, `GET /404`, `GET /:rest{.+}`)

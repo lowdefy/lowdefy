@@ -36,6 +36,7 @@ const apiHandler = `/*
 
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import * as Sentry from '@sentry/node';
 
 // The app reads its build artifacts relative to process.cwd(). On Vercel the function's cwd is the
 // lambda root (e.g. /var/task), not this directory, so point the cwd at the server directory (the
@@ -43,8 +44,20 @@ import { fileURLToPath } from 'node:url';
 // a static import is hoisted and would read files at the wrong cwd.
 process.chdir(path.join(path.dirname(fileURLToPath(import.meta.url)), '..'));
 
+// Sentry is initialised through the same initSentryServer as the Node entry (src/index.js), and
+// before the app is imported so its instrumentation observes the module graph. It reads
+// build/logger.json, so it too loads after the chdir. Without SENTRY_DSN, or with
+// logger.sentry.server false, it does nothing.
+const { default: initSentryServer } = await import('../lib/server/sentry/initSentry.js');
+const sentryEnabled = initSentryServer();
+
 const { default: createApp } = await import('../src/app.js');
 const app = createApp({ serveStaticAssets: false });
+
+if (sentryEnabled) {
+  const { default: createLogger } = await import('../lib/server/log/createLogger.js');
+  createLogger({ server: 'lowdefy' }).info('Sentry enabled: server');
+}
 
 export const config = { runtime: 'nodejs' };
 
@@ -80,6 +93,20 @@ export default async function handler(req, res) {
     }
   }
   res.end();
+
+  // The function can be suspended once the response ends, stranding queued Sentry events. Vercel's
+  // waitUntil keeps it alive until they are sent without delaying the response. Its Node runtime
+  // exposes waitUntil on this global, which is what @vercel/functions reads; Sentry's own
+  // vercelWaitUntil only acts on the Edge runtime.
+  if (sentryEnabled) {
+    const flushed = Sentry.flush(2000);
+    const vercelContext = globalThis[Symbol.for('@vercel/request-context')]?.get?.();
+    if (vercelContext?.waitUntil) {
+      vercelContext.waitUntil(flushed);
+    } else {
+      await flushed;
+    }
+  }
 }
 `;
 
