@@ -57,6 +57,7 @@
     "@modelcontextprotocol/sdk": "1.29.0",
     "better-auth": "1.7.0",
     "jose": "^6.2.3",
+    "mongodb-connection-string-url": "^7.0.2",
     "nodemailer": "9.1.1"
   },
   "devDependencies": {

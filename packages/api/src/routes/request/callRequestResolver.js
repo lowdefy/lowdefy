@@ -17,6 +17,7 @@
 import { RequestError, ServiceError, UserError } from '@lowdefy/errors';
 
 import getCurrentEnvironment from '../../context/getCurrentEnvironment.js';
+import createWalledResolver from './createWalledResolver.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
 
 async function callRequestResolver(
@@ -28,6 +29,7 @@ async function callRequestResolver(
     requestConfig,
     requestProperties,
     requestResolver,
+    routineContext,
     tenant,
     tenantGuard,
   }
@@ -86,6 +88,10 @@ async function callRequestResolver(
       // nobody waits on (background runs, agent chat). Connection types hand it to
       // their upstream calls so a closed request stops them.
       signal,
+      // Names a walled MongoDB connection and returns the bound arguments of
+      // getWalledCollection (@lowdefy/connection-mongodb/walled): the only way a
+      // plugin reaches a walled database.
+      walled: createWalledResolver(context, { requestConfig, routineContext }),
       // The tenant verdict ({ field, value } or null/undefined) computed by
       // resolveTenancy - connection types implementing the scoping contract
       // enforce it (stamp writes, merge filters, inject pipeline matches).

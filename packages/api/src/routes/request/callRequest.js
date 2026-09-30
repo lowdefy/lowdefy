@@ -56,18 +56,19 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
     requestConfig,
   });
 
+  // A page request runs outside any routine, so it evaluates against an empty frame.
+  const routineContext = {
+    arrayIndices: [],
+    error: null,
+    items: {},
+    payload: requestPayload,
+    state: {},
+    steps: {},
+  };
   const { connectionProperties, requestProperties } = evaluateOperators(context, {
     connectionConfig,
     requestConfig,
-    // A page request runs outside any routine, so it evaluates against an empty frame.
-    routineContext: {
-      arrayIndices: [],
-      error: null,
-      items: {},
-      payload: requestPayload,
-      state: {},
-      steps: {},
-    },
+    routineContext,
   });
 
   checkConnectionRead(context, {
@@ -95,6 +96,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
     requestConfig,
     requestProperties,
     requestResolver,
+    routineContext,
     tenant,
     tenantGuard,
   });

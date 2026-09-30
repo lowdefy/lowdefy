@@ -77,6 +77,7 @@ async function handleRequest(context, routineContext, { request }) {
     requestConfig,
     requestProperties,
     requestResolver,
+    routineContext,
     tenant,
     tenantGuard,
   });

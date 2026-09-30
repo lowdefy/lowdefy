@@ -123,6 +123,9 @@ importers:
       jose:
         specifier: ^6.2.3
         version: 6.2.3
+      mongodb-connection-string-url:
+        specifier: ^7.0.2
+        version: 7.0.2
       nodemailer:
         specifier: 9.1.1
         version: 9.1.1
@@ -12071,10 +12074,6 @@ packages:
     resolution: {integrity: sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==}
     engines: {node: '>=6'}
 
-  punycode@2.3.0:
-    resolution: {integrity: sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==}
-    engines: {node: '>=6'}
-
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
@@ -23937,8 +23936,6 @@ snapshots:
 
   punycode@2.1.1: {}
 
-  punycode@2.3.0: {}
-
   punycode@2.3.1: {}
 
   pvtsutils@1.3.6:
@@ -25295,7 +25292,7 @@ snapshots:
   tough-cookie@4.1.3:
     dependencies:
       psl: 1.9.0
-      punycode: 2.3.0
+      punycode: 2.3.1
       universalify: 0.2.0
       url-parse: 1.5.10
 
@@ -25303,7 +25300,7 @@ snapshots:
 
   tr46@3.0.0:
     dependencies:
-      punycode: 2.3.0
+      punycode: 2.3.1
 
   tr46@5.1.1:
     dependencies:

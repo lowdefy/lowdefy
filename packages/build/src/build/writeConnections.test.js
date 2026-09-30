@@ -138,3 +138,18 @@ test('writeConnections connections not an array', async () => {
     'Connections is not an array.'
   );
 });
+
+test('writeConnections writes the non-scopable connections index only when there are some', async () => {
+  const unwalledContext = testContext({ writeBuildArtifact: mockWriteBuildArtifact });
+  unwalledContext.typesMap = { connectionMetas: { Smtp: { tenant: false } } };
+  await writeConnections({
+    components: {
+      connections: [{ id: 'connection:mail', connectionId: 'mail', type: 'Smtp' }],
+    },
+    context: unwalledContext,
+  });
+  expect(mockWriteBuildArtifact).toHaveBeenCalledWith(
+    'unwalledConnections.json',
+    '[{"connectionId":"mail","type":"Smtp"}]'
+  );
+});

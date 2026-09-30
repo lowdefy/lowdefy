@@ -38,6 +38,7 @@
     "./auth/adapters": "./dist/auth/adapters.js",
     "./connections": "./dist/connections.js",
     "./types": "./dist/types.js",
+    "./walled": "./dist/walled.js",
     "./websockets": "./dist/websockets.js"
   },
   "files": [
