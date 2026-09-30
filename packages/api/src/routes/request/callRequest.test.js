@@ -396,6 +396,7 @@ test('deserialize inputs', async () => {
     [
       {
         callApi: expect.any(Function),
+        walled: expect.any(Function),
         connection: {
           connectionProperty: 'connectionProperty',
         },

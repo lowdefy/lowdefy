@@ -27,6 +27,7 @@ import collectSharedTargets from './collectSharedTargets.js';
 import collectWalledTargets from './collectWalledTargets.js';
 import markWalledSharedConnections from './markWalledSharedConnections.js';
 import validateSharedChangeLog from './validateSharedChangeLog.js';
+import warnUnwalledSecretReach from './warnUnwalledSecretReach.js';
 
 function validateConnection(connection, context) {
   const configKey = connection?.['~k'];
@@ -233,6 +234,7 @@ function buildConnections({ components, context }) {
   if (tenantPolicy) {
     const walledTargets = collectWalledTargets({ connections: validConnections, context });
     validateSharedChangeLog({ connections: validConnections, context, walledTargets });
+    warnUnwalledSecretReach({ connections: validConnections, context });
     markWalledSharedConnections({ connections: validConnections, context, walledTargets });
     context.walledTargets = walledTargets;
     context.sharedTargets = collectSharedTargets({ connections: validConnections, context });

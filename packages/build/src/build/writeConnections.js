@@ -53,6 +53,19 @@ async function writeConnections({ components, context }) {
       serializer.serializeToString(tenantConnections)
     )
   );
+  // The non-scopable connections (meta.tenant: false): the server start warns when
+  // one of them holds a URI to a walled database (warnUnwalledReach). Only written when there are some.
+  const unwalledConnections = components.connections
+    .filter((connection) => connectionMetas[connection.type]?.tenant === false)
+    .map((connection) => ({ connectionId: connection.connectionId, type: connection.type }));
+  if (unwalledConnections.length > 0) {
+    writePromises.push(
+      context.writeBuildArtifact(
+        'unwalledConnections.json',
+        serializer.serializeToString(unwalledConnections)
+      )
+    );
+  }
   return Promise.all(writePromises);
 }
 

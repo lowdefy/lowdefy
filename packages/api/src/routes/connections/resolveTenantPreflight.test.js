@@ -298,3 +298,67 @@ test('skips a connection whose artifact is missing, with a warning', async () =>
   );
   expect(mockProbe).not.toHaveBeenCalled();
 });
+
+const walledUri = 'mongodb://user:pw@host-a:27017,host-b:27017/app?replicaSet=rs';
+
+function unwalledConfig({ unwalled }) {
+  return readConfigImp({
+    connectionConfigs: {
+      walled: {
+        connectionId: 'walled',
+        type: 'TestTenantConnection',
+        properties: { databaseUri: walledUri, collection: 'rows' },
+      },
+      ...unwalled,
+    },
+  });
+}
+
+function withUnwalled(unwalled) {
+  const read = unwalledConfig({ unwalled });
+  mockReadConfigFile.mockImplementation((path) =>
+    path === 'unwalledConnections.json'
+      ? Object.values(unwalled).map(({ connectionId, type }) => ({ connectionId, type }))
+      : read(path)
+  );
+  mockProbe.mockResolvedValue({ ok: true });
+}
+
+test('warns when an unwalled connection holds a URI to the walled database', async () => {
+  withUnwalled({
+    plugin: {
+      connectionId: 'plugin',
+      type: 'Plugin',
+      properties: {
+        nested: { uri: 'mongodb://other:secret@host-b:27017,host-a:27017/app?authSource=admin' },
+      },
+    },
+  });
+  await resolveTenantPreflight(createTestContext());
+  expect(logger.warn).toHaveBeenCalledTimes(1);
+  expect(logger.warn.mock.calls[0][0]).toBe(
+    'Connection "plugin" (Plugin) holds a URI to the database of walled connection "walled". Unwalled connections must not reach walled data: give the plugin a mongoConnectionId and use the walled MongoDB client (@lowdefy/connection-mongodb/walled). This becomes a build error in the next release.'
+  );
+});
+
+test('does not warn for SMTP, a different database, or a different host', async () => {
+  withUnwalled({
+    mail: {
+      connectionId: 'mail',
+      type: 'Smtp',
+      properties: { host: 'smtp.example.com', user: 'u' },
+    },
+    other_db: {
+      connectionId: 'other_db',
+      type: 'Plugin',
+      properties: { uri: 'mongodb://user:pw@host-a:27017,host-b:27017/elsewhere' },
+    },
+    other_host: {
+      connectionId: 'other_host',
+      type: 'Plugin',
+      properties: { uri: 'mongodb://user:pw@host-z:27017/app' },
+    },
+  });
+  await resolveTenantPreflight(createTestContext());
+  expect(logger.warn).not.toHaveBeenCalled();
+});
