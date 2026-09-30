@@ -18,9 +18,8 @@ import { jest } from '@jest/globals';
 
 import isWebSocketOriginAllowed from './isWebSocketOriginAllowed.js';
 
-function createContext({ config = {}, trustedOrigins } = {}) {
+function createContext({ config = {} } = {}) {
   return {
-    auth: { options: { trustedOrigins } },
     config,
     logger: { warn: jest.fn() },
   };
@@ -30,17 +29,23 @@ function check({ context, headers }) {
   return isWebSocketOriginAllowed({ context, getHeader: (name) => headers[name] });
 }
 
-test.each([
-  [
-    'the environment url',
-    { config: { environment: 'prod', environments: { prod: { url: 'https://app.example.com' } } } },
-  ],
-  ['an auth trusted origin', { trustedOrigins: ['https://app.example.com'] }],
-])('isWebSocketOriginAllowed accepts %s behind a proxy that rewrites Host', (_, options) => {
-  const context = createContext(options);
+test('isWebSocketOriginAllowed accepts the environment url behind a proxy that rewrites Host', () => {
+  const context = createContext({
+    config: { environment: 'prod', environments: { prod: { url: 'https://app.example.com' } } },
+  });
   const headers = { host: 'localhost:3000', origin: 'https://app.example.com' };
   expect(check({ context, headers })).toBe(true);
   expect(context.logger.warn).not.toHaveBeenCalled();
+});
+
+test('isWebSocketOriginAllowed accepts the AUTH_URL origin behind a proxy that rewrites Host', () => {
+  process.env.AUTH_URL = 'https://app.example.com';
+  try {
+    const headers = { host: 'localhost:3000', origin: 'https://app.example.com' };
+    expect(check({ context: createContext(), headers })).toBe(true);
+  } finally {
+    delete process.env.AUTH_URL;
+  }
 });
 
 test('isWebSocketOriginAllowed logs the Origin and Host of a refused upgrade', () => {

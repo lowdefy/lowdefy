@@ -16,25 +16,18 @@
 
 import { type } from '@lowdefy/helpers';
 
-import getCanonicalUrl from './getCanonicalUrl.js';
+import getCurrentEnvironment from './getCurrentEnvironment.js';
 import isSameOriginRequest from './isSameOriginRequest.js';
 
-// The app's public origins: its canonical URL (BETTER_AUTH_URL, else the
-// current environment's url) and the auth trusted origins - deployment config,
-// never read from the request.
+// The app's public origin: its auth URL (AUTH_URL, or NEXTAUTH_URL as Auth.js
+// reads it), else the current environment's url - deployment config, never
+// read from the request.
 function getPublicOrigins({ context }) {
-  const origins = [];
-  const canonicalUrl = getCanonicalUrl({ config: context.config });
-  if (!type.isNone(canonicalUrl)) {
-    origins.push(canonicalUrl);
-  }
-  // Exact strings only - a trustedOrigins function or pattern is not consulted,
-  // as in the MCP route's origin check.
-  const trustedOrigins = context.auth?.options?.trustedOrigins;
-  if (type.isArray(trustedOrigins)) {
-    origins.push(...trustedOrigins.filter((origin) => type.isString(origin)));
-  }
-  return origins;
+  const canonicalUrl =
+    process.env.AUTH_URL ??
+    process.env.NEXTAUTH_URL ??
+    getCurrentEnvironment({ config: context.config })?.url;
+  return type.isNone(canonicalUrl) ? [] : [canonicalUrl];
 }
 
 // Browsers open a websocket to any host a page names, so a websocket upgrade
