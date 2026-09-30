@@ -57,10 +57,20 @@ const mockTestRequestError = jest.fn((request) => {
   throw new Error(request.request.message);
 });
 const mockTestRequestWait = jest.fn((request) => wait(request.request.ms));
+// Waits `ms` and records how many of these requests were in flight at once (inFlight.max).
+const inFlight = { current: 0, max: 0 };
+const mockTestRequestInFlight = jest.fn(async (request) => {
+  inFlight.current += 1;
+  inFlight.max = Math.max(inFlight.max, inFlight.current);
+  await wait(request.request.ms);
+  inFlight.current -= 1;
+  return request.request.response;
+});
 
 mockTestRequest.schema = {};
 mockTestRequestError.schema = {};
 mockTestRequestWait.schema = {};
+mockTestRequestInFlight.schema = {};
 
 mockTestRequest.meta = {
   checkRead: false,
@@ -74,6 +84,10 @@ mockTestRequestWait.meta = {
   checkRead: false,
   checkWrite: false,
 };
+mockTestRequestInFlight.meta = {
+  checkRead: false,
+  checkWrite: false,
+};
 
 const connections = {
   TestConnection: {
@@ -82,6 +96,7 @@ const connections = {
       TestRequest: mockTestRequest,
       TestRequestError: mockTestRequestError,
       TestRequestWait: mockTestRequestWait,
+      TestRequestInFlight: mockTestRequestInFlight,
     },
   },
 };
@@ -111,6 +126,8 @@ function createTextContext({ user = { id: 'id', roles: [] } } = {}) {
   return context;
 }
 async function runTest({ routine, payload = {}, user }) {
+  inFlight.current = 0;
+  inFlight.max = 0;
   const context = createTextContext({ user });
   const routineContext = {
     steps: {},
@@ -125,4 +142,5 @@ async function runTest({ routine, payload = {}, user }) {
   return { res, context, routineContext };
 }
 
+export { inFlight };
 export default runTest;

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import runTest from '../test/runTest.js';
+import runTest, { inFlight } from '../test/runTest.js';
 
 test('parallel_for iterates over array', async () => {
   const routine = {
@@ -242,3 +242,106 @@ test("parallel_for gives every iteration the caller's user and organization unch
   });
   expect(results.map((result) => result.item).sort()).toEqual(['a', 'b', 'c']);
 });
+
+function inFlightStep(ms) {
+  return {
+    id: 'request:test_endpoint:in_flight',
+    type: 'TestRequestInFlight',
+    stepId: 'in_flight',
+    connectionId: 'test',
+    properties: { ms, response: 'ok' },
+  };
+}
+
+test('parallel_for runs every item at once without :concurrency', async () => {
+  const routine = {
+    ':parallel_for': 'item',
+    ':in': [1, 2, 3, 4, 5],
+    ':do': inFlightStep(20),
+  };
+  const { res } = await runTest({ routine });
+  expect(res.status).toEqual('continue');
+  expect(inFlight.max).toEqual(5);
+});
+
+test('parallel_for with :concurrency runs at most that many items at once', async () => {
+  const routine = {
+    ':parallel_for': 'item',
+    ':in': [1, 2, 3, 4, 5, 6, 7],
+    ':concurrency': 2,
+    ':do': inFlightStep(10),
+  };
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toEqual('continue');
+  expect(inFlight.max).toEqual(2);
+  const values = context.logger.debug.mock.calls
+    .filter((call) => call[0].event === 'debug_control_parallel_iteration')
+    .map((call) => call[0].value);
+  expect(values).toEqual([1, 2, 3, 4, 5, 6, 7]);
+});
+
+test('parallel_for evaluates :concurrency operators', async () => {
+  const routine = {
+    ':parallel_for': 'item',
+    ':in': [1, 2, 3, 4],
+    ':concurrency': { _payload: 'concurrency' },
+    ':do': inFlightStep(10),
+  };
+  const { res } = await runTest({ routine, payload: { concurrency: 3 } });
+  expect(res.status).toEqual('continue');
+  expect(inFlight.max).toEqual(3);
+});
+
+test('parallel_for with :concurrency still runs every item after an error and returns it', async () => {
+  const routine = {
+    ':parallel_for': 'item',
+    ':in': [1, 2, 3],
+    ':concurrency': 1,
+    ':do': {
+      ':if': { _eq: [{ _item: 'item' }, 1] },
+      ':then': {
+        id: 'request:test_endpoint:test_request_error',
+        type: 'TestRequestError',
+        stepId: 'test_request_error',
+        connectionId: 'test',
+        properties: { message: 'First item failed.' },
+      },
+      ':else': inFlightStep(1),
+    },
+  };
+  const { res, context } = await runTest({ routine });
+  expect(res.status).toEqual('error');
+  expect(res.error.message).toContain('First item failed.');
+  const values = context.logger.debug.mock.calls
+    .filter((call) => call[0].event === 'debug_control_parallel_iteration')
+    .map((call) => call[0].value);
+  expect(values).toEqual([1, 2, 3]);
+});
+
+test('parallel_for with a :concurrency larger than the array runs every item at once', async () => {
+  const routine = {
+    ':parallel_for': 'item',
+    ':in': [1, 2, 3],
+    ':concurrency': 10,
+    ':do': inFlightStep(10),
+  };
+  const { res } = await runTest({ routine });
+  expect(res.status).toEqual('continue');
+  expect(inFlight.max).toEqual(3);
+});
+
+test.each([0, -1, 1.5, 'two'])(
+  'parallel_for returns an error when :concurrency is %p',
+  async (concurrency) => {
+    const routine = {
+      ':parallel_for': 'item',
+      ':in': [1, 2],
+      ':concurrency': concurrency,
+      ':do': inFlightStep(1),
+    };
+    const { res } = await runTest({ routine });
+    expect(res.status).toEqual('error');
+    expect(res.error.message).toContain(':concurrency must be a positive integer');
+    expect(res.error.received).toEqual(concurrency);
+  }
+);

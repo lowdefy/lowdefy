@@ -1,0 +1,93 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Imports rows: the Table's onImport { rows, newColumns, batchIndex, batchCount, total }, a
+# batch of at most 500 parsed CSV rows, each value at its column's field path. The first batch
+# carries the CSV columns imported as new input columns (`newColumns`), which are added first.
+# The rows' autoRun columns start at once.
+id: leads_import
+type: Api
+payloadSchema:
+  type: object
+  required:
+    - rows
+  additionalProperties: false
+  properties:
+    rows:
+      type: array
+      minItems: 1
+      maxItems: 500
+      items:
+        type: object
+    newColumns:
+      type: array
+      maxItems: 50
+      items:
+        type: object
+    batchIndex:
+      type: integer
+    batchCount:
+      type: integer
+    total:
+      type: integer
+routine:
+  # The new columns go through columns_add, so they are checked like any added column.
+  - :for: column
+    :in:
+      _if_none:
+        - _payload: newColumns
+        - []
+    :do:
+      - id: add_new_column
+        type: CallApi
+        properties:
+          endpointId: columns_add
+          payload:
+            column:
+              _item: column
+            position: null
+  - _ref: leads/load_table.yaml
+  - :set_state:
+      rows:
+        _payload: rows
+  - :set_state:
+      converted:
+        _ref: leads/rows_to_docs.yaml
+      autoRun:
+        _ref: leads/auto_run_columns.yaml
+  - :if:
+      _gt:
+        - _array.length:
+            _state: converted.errors
+        - 0
+    :then:
+      - :reject:
+          _array.join:
+            - _state: converted.errors
+            - ' '
+  - id: insert_leads
+    type: MongoDBInsertMany
+    connectionId: leads
+    properties:
+      docs:
+        _state: converted.docs
+  - _ref:
+      path: api/leads/start_auto_run.yaml
+      vars:
+        selection:
+          _object.values:
+            _step: insert_leads.insertedIds
+  - :return:
+      insertedCount:
+        _step: insert_leads.insertedCount

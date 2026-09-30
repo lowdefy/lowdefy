@@ -363,7 +363,7 @@ See the [MiniSearch API docs](https://lucaong.github.io/minisearch/classes/MiniS
 | `/itemIcon` | The icon in a result item. |
 | `/itemTitle` | The title in a result item. |
 | `/itemDescription` | The description/snippet in a result item. |
-| `/highlight` | Highlighted match text (<mark> elements). |
+| `/highlight` | Highlighted match text (&lt;mark> elements). |
 | `/empty` | The empty state message. |
 | `/loading` | The loading spinner container. |
 

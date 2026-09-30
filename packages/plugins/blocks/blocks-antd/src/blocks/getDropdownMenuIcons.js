@@ -16,11 +16,9 @@
 
 import React from 'react';
 
-// antd's Dropdown only reaches its submenu arrow through the menu prop; the wrapper
-// span keeps antd's arrow classes so its spacing and RTL styles still apply.
-function getDropdownMenuIcons({ blockId, Icon }) {
-  return {
-    expandIcon: (
+function createExpandIcon({ blockId, Icon }) {
+  return function DropdownExpandIcon() {
+    return (
       <span className="ant-dropdown-menu-submenu-arrow">
         <Icon
           blockId={`${blockId}_expandIcon`}
@@ -28,7 +26,29 @@ function getDropdownMenuIcons({ blockId, Icon }) {
           properties={{ name: 'chevron-right', title: '' }}
         />
       </span>
-    ),
+    );
+  };
+}
+
+// One expand icon component per Icon component and block id, so it keeps its identity across
+// renders (antd renders a function expandIcon as a component: a new function would remount it).
+const expandIcons = new WeakMap();
+
+function getExpandIcon({ blockId, Icon }) {
+  if (!expandIcons.has(Icon)) expandIcons.set(Icon, new Map());
+  const byBlockId = expandIcons.get(Icon);
+  if (!byBlockId.has(blockId)) byBlockId.set(blockId, createExpandIcon({ blockId, Icon }));
+  return byBlockId.get(blockId);
+}
+
+// antd's Dropdown only reaches its submenu arrow through the menu prop; the wrapper span keeps
+// antd's arrow classes so its spacing and RTL styles still apply. The arrow is a function: antd's
+// Menu takes a function expandIcon from the page's ConfigProvider (the client's inline-menu
+// chevron, which turns up when open) over any element a Dropdown passes, so only a function here
+// makes a submenu read as a flyout, with a right chevron that does not turn.
+function getDropdownMenuIcons({ blockId, Icon }) {
+  return {
+    expandIcon: getExpandIcon({ blockId, Icon }),
     overflowedIndicator: (
       <Icon blockId={`${blockId}_overflowedIndicator`} properties={{ name: 'more', title: '' }} />
     ),

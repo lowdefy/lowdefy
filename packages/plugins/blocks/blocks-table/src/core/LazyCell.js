@@ -15,8 +15,8 @@
 */
 
 import React, { useRef, useSyncExternalStore } from 'react';
-import { get } from '@lowdefy/helpers';
 import getCellText from '@lowdefy/blocks-antd/table/getCellText.js';
+import readColumnValue from '@lowdefy/blocks-antd/table/readColumnValue.js';
 import renderCell from '@lowdefy/blocks-antd/table/renderCell.js';
 
 import getCellFit from './getCellFit.js';
@@ -28,7 +28,7 @@ function renderPlaceholder({ col, original }) {
   const text =
     column.type === 'buttons'
       ? null
-      : getCellText({ column, value: get(original, column.field), row: original });
+      : getCellText({ column, value: readColumnValue({ column, row: original }), row: original });
   return <div className={column.compiled.className}>{text}</div>;
 }
 

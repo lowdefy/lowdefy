@@ -20,7 +20,7 @@ import { ConfigError } from '@lowdefy/errors';
 import formatValidationError from '../log/formatValidationError.js';
 
 function validateSchemas(
-  { logger },
+  context,
   { connection, connectionProperties, requestConfig, requestResolver, requestProperties }
 ) {
   const configKey = requestConfig['~k'];
@@ -63,10 +63,12 @@ function validateSchemas(
   }
 
   if (messages.length > 0) {
+    // Endpoint steps have a stepId, page requests a requestId.
+    const requestId = requestConfig.stepId ?? requestConfig.requestId;
     const message =
       messages.length === 1
         ? messages[0]
-        : `Request "${requestConfig.requestId}" has schema validation errors:\n${messages
+        : `Request "${requestId}" has schema validation errors:\n${messages
             .map((m) => `  - ${m}`)
             .join('\n')}`;
 

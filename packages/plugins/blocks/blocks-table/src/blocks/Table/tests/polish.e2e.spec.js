@@ -177,6 +177,28 @@ test.describe('Table visual polish', () => {
     expect(edges.win.truncated).toBe(false);
   });
 
+  test('an end-aligned header keeps its sort icon beside its title, not across the cell', async ({
+    page,
+  }) => {
+    const layout = await table(page, 'crm').evaluate((root) => {
+      const header = root.querySelector('[data-lf-header][data-col-key="amount"]');
+      const cellBox = header.getBoundingClientRect();
+      const sortBox = header.querySelector('.lf-table-sort').getBoundingClientRect();
+      const titleBox = header.querySelector('.lf-table-header-title').getBoundingClientRect();
+      return {
+        gap: titleBox.left - sortBox.right,
+        sortFromCellStart: sortBox.left - cellBox.left,
+        titleWidth: titleBox.width,
+        cellWidth: cellBox.width,
+      };
+    });
+    // The icon sits the header gap (4px) before the title, so the room the title does not need
+    // stays on the cell's start side, as it does for the column's end-aligned values.
+    expect(layout.gap).toBeGreaterThanOrEqual(3);
+    expect(layout.gap).toBeLessThanOrEqual(5);
+    expect(layout.sortFromCellStart).toBeGreaterThan(layout.cellWidth - layout.titleWidth - 40);
+  });
+
   test('the header menu button shows over the end of a hovered header', async ({ page }) => {
     const header = table(page, 'crm').locator('[data-lf-header][data-col-key="win"]');
     const trigger = header.locator('[data-lf-header-menu]');

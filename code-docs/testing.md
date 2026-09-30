@@ -169,6 +169,41 @@ CI does not run block e2e on every push. Start the `Block E2E Tests` workflow fr
 Actions tab, or add the `run-block-e2e` label to a pull request; it runs each package's
 suite in its own job.
 
+## Enrichment tables e2e
+
+The enrichment tables reference app (`packages/plugins/blocks/blocks-table/e2e/enrichment/app`,
+design `code-docs/plans/enrichment-tables.md`) has a suite of its own, apart from the block
+suite, since it needs a MongoDB replica set (change streams), mock services and `CRON_SECRET`:
+
+```bash
+LOWDEFY_E2E_PORT=3197 pnpm --filter=@lowdefy/blocks-table e2e:enrichment
+```
+
+The Playwright config (`e2e/enrichment/playwright.config.js`, ports in `settings.js`) starts,
+before the app:
+
+- the mock services (`mocks/mockServices.mjs`) on `LOWDEFY_E2E_MOCK_PORT` (default app port
+  plus one): the company and email APIs the providers call, the Anthropic Messages API and
+  treg (`/treg/call/…`: routed email find with `X-Treg-Cost-Micro`, `Idempotency-Key` replays,
+  a 402, a 503 with `retry_after`, an async task), with a call log, latency settings and fixed
+  answers per domain (404, 500, 400, one 429);
+- a fresh single-node replica set from the shared binaries (`scripts/e2e-mongodb.mjs`) on
+  `LOWDEFY_E2E_MONGODB_PORT` (default 27197), unless `LOWDEFY_SECRET_ENRICHMENT_MONGODB_URI`
+  points at one.
+
+It builds into `_server/e2e/blocks-table-enrichment` and runs the specs one at a time, since
+they share the database. The API specs call endpoints over `/api/endpoints/<id>` and run the
+worker as a cron tick (`/api/cron/enrichment_worker`); the page spec drives the Table. The
+app's `api/test/` endpoints (seed, read cells, set a cell) exist for the specs only: each starts
+with `api/test/e2e_guard.yaml`, which refuses the call unless `LOWDEFY_SECRET_ENRICHMENT_E2E_SECRET`
+(set by the Playwright config) is set and the payload's `e2eSecret` matches it; the specs call
+them through `callTestEndpoint`. They are marked "E2E ONLY, DO NOT COPY".
+
+On teardown Playwright stops the app first, with a SIGTERM it waits for (suites with services),
+then the replica set; mongod runs in a process group of its own, so the script stops it cleanly.
+CI runs the suite in the block e2e workflow (`test-block-e2e.yml`, job `enrichment`, on the
+`run-block-e2e` label), with the mongod binaries cached and downloaded before the run.
+
 ## Before merging
 
 The root `pnpm test` in CI skips the MongoDB and block e2e suites, so a pull request that

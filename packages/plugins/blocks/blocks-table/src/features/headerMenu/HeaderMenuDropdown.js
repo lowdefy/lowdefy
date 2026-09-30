@@ -16,6 +16,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Dropdown } from 'antd';
+import getDropdownMenuIcons from '@lowdefy/blocks-antd/blocks/getDropdownMenuIcons.js';
 
 import collectHeaderMenuItems from './collectHeaderMenuItems.js';
 
@@ -23,7 +24,10 @@ import collectHeaderMenuItems from './collectHeaderMenuItems.js';
 // The first item takes focus when the menu opens (the ARIA menu button pattern), so arrow keys
 // and Enter work however it was opened; choosing an item hands focus back to the header. Escape
 // is taken in the capture phase, ahead of the Dropdown's own handler, so focus goes back to the
-// column's menu button rather than to the (unfocusable) anchor.
+// column's menu button rather than to the (unfocusable) anchor. A submenu (enrichment's Run) opens
+// to the side, so its arrow is the dropdown's right chevron (getDropdownMenuIcons, as the antd
+// dropdown blocks pass it): the page's ConfigProvider gives menus an inline menu's down chevron,
+// which antd would otherwise use here too.
 function HeaderMenuDropdown({ api, col }) {
   const { items, handlers } = collectHeaderMenuItems({
     column: col.column,
@@ -56,6 +60,10 @@ function HeaderMenuDropdown({ api, col }) {
   return (
     <Dropdown
       menu={{
+        ...getDropdownMenuIcons({
+          blockId: `${api.blockId}_header_menu`,
+          Icon: api.components.Icon,
+        }),
         items,
         onClick: ({ key }) => {
           api.actions.closeHeaderMenu({ restoreFocus: true });

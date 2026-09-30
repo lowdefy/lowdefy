@@ -168,7 +168,7 @@ function TableRoot({
   });
   api.dataRows = dataRows;
   const fragments = useFeatureFragments({ api, config, data, state, table });
-  const { leadingColumns, regions } = fragments;
+  const { leadingColumns, regions, trailingColumns } = fragments;
   const summary = useSummary({ api, config, state, table });
 
   // D17: which loading state the table is in, and the skeleton's timing.
@@ -209,6 +209,7 @@ function TableRoot({
       strategy={rowWindowStrategy}
       styles={styles}
       summary={summary}
+      trailingColumns={trailingColumns}
     />
   );
 }

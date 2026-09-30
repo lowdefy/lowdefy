@@ -15,10 +15,11 @@
 */
 
 import React from 'react';
-import { get, type } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
 import getCellRenderer from './getCellRenderer.js';
 import getCellText from './getCellText.js';
+import readColumnValue from './readColumnValue.js';
 import './tableCells.css';
 
 // One cell's content: the type's renderer inside a wrapper that carries the
@@ -30,7 +31,7 @@ import './tableCells.css';
 // content width of a fixed-width single-line cell and the host's chip
 // measurer: `tag` / `tags` cells then show only the chips that fit whole.
 function renderCell({ column, row, rowKey, methods, components, onEvent, fit }) {
-  const value = get(row, column.field);
+  const value = readColumnValue({ column, row });
   const { compiled } = column;
   const ruled = compiled.rules === null ? null : compiled.rules(row, value);
   let title = compiled.tooltip === null ? undefined : compiled.tooltip(row, value);

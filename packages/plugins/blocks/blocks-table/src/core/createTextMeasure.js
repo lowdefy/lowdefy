@@ -34,16 +34,21 @@ function readStyles() {
     '<div class="lf-table-gridcell"><span class="lf-table-chips">' +
     '<span class="lf-table-tag">x</span><span class="lf-table-more">+1</span></span>' +
     '<span class="lf-table-summary"><span class="lf-table-summary-label">x</span>' +
-    '<span class="lf-table-summary-value">x</span></span></div>';
+    '<span class="lf-table-summary-value">x</span></span></div>' +
+    '<div class="lf-table-header"><div class="lf-table-gridcell">' +
+    '<span class="lf-table-header-title">x</span></div></div>';
   document.body.appendChild(probe);
   const cell = getComputedStyle(probe.firstChild);
   const chips = getComputedStyle(probe.querySelector('.lf-table-chips'));
   const tag = getComputedStyle(probe.querySelector('.lf-table-tag'));
   const more = getComputedStyle(probe.querySelector('.lf-table-more'));
   const summary = getComputedStyle(probe.querySelector('.lf-table-summary'));
+  const header = getComputedStyle(probe.querySelector('.lf-table-header .lf-table-gridcell'));
   const styles = {
     cellInset: toPx(cell.paddingLeft) + toPx(cell.paddingRight),
     gap: toPx(chips.columnGap),
+    headerGap: toPx(header.columnGap),
+    headerTitleFont: toFont(getComputedStyle(probe.querySelector('.lf-table-header-title'))),
     iconWidth: toPx(tag.fontSize) + toPx(tag.columnGap),
     moreFont: toFont(more),
     summaryGap: toPx(summary.columnGap),
@@ -61,7 +66,9 @@ function readStyles() {
 }
 
 // Text widths for fitting cells to their column without DOM reads: tag chips and their +N count
-// (the shared TagCell's `fit`) and the summary footer's label and value (SummaryRow). Text
+// (the shared TagCell's `fit`), the summary footer's label and value (SummaryRow), and header
+// titles and small header text (the enrichment progress chip, which collapses to what fits
+// beside its title: `headerTitle`, `headerGap`, `smallText`). Text
 // widths come from a canvas and are cached by text, so a cell costs a few Map reads, and the
 // styles are read once per table on first use. Widths round up by a pixel so a measured item
 // never ends up a fraction wider than its room.
@@ -100,6 +107,19 @@ function createTextMeasure() {
     more(text) {
       if (styles === null) init();
       return Math.ceil(textWidth(styles.moreFont, text)) + 1;
+    },
+    // Small text at normal weight, the +N count's font: counts and notes beside a title.
+    smallText(text) {
+      if (styles === null) init();
+      return Math.ceil(textWidth(styles.moreFont, text)) + 1;
+    },
+    get headerGap() {
+      if (styles === null) init();
+      return styles.headerGap;
+    },
+    headerTitle(text) {
+      if (styles === null) init();
+      return Math.ceil(textWidth(styles.headerTitleFont, text)) + 1;
     },
     get summaryGap() {
       if (styles === null) init();

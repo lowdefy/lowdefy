@@ -16,9 +16,11 @@
 
 import { type } from '@lowdefy/helpers';
 
-// The toolbar loads when it is configured or a toolbar slot has blocks (as useToolbar shows it).
+// The toolbar loads when it is configured, a toolbar slot has blocks or `importCsv` adds its
+// Import button (as useToolbar shows it).
 function needsToolbar({ content, properties }) {
   if (content?.toolbarStart || content?.toolbarEnd) return true;
+  if (properties.importCsv === true) return true;
   return properties.toolbar === true || type.isObject(properties.toolbar);
 }
 

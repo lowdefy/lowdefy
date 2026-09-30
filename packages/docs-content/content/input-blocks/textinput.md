@@ -558,7 +558,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `allowClear` | boolean | `false` | Allow the user to clear their input. |
-| `type` | string | `"text"` | The type of input, (see MDN). Enum: `text`, `number`, `password`, `tel`, `email`, `url`. |
+| `type` | string | `"text"` | The type of input, (see [MDN](https://developer.mozilla.org/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types)). Enum: `text`, `number`, `password`, `tel`, `email`, `url`. |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
 | `bordered` | boolean | `true` | Whether or not the text input has a border style. |
 | `disabled` | boolean | `false` | Disable the block if true. |

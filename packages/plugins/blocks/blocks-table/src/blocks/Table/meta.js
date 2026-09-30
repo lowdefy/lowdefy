@@ -16,6 +16,7 @@
 
 import AGGREGATE_LABELS from '@lowdefy/blocks-antd/table/aggregateLabels.js';
 import CELL_TYPE_FAMILIES from '@lowdefy/blocks-antd/table/cellTypeFamilies.js';
+import COLUMN_KINDS from '@lowdefy/blocks-antd/table/columnKinds.js';
 
 // Every property TableLight accepts is valid here with the same meaning (TableLight is a strict
 // subset of Table, design D16), so changing `type: TableLight` to `type: Table` keeps a block
@@ -198,6 +199,66 @@ const column = {
     default: {
       description: 'TableInput: the value of this column in a row added with "+ Add row".',
     },
+    kind: {
+      type: 'string',
+      enum: Object.keys(COLUMN_KINDS),
+      description:
+        'Enrichment tables: what computes the column. `input`: typed by users. `formula`: a `template` over the row, in the browser. `enrichment`: a `provider` call per row, on the server. `ai`: a `prompt` per row, on the server. `extract`: a `path` into another column\'s raw result, in the browser. Enrichment and ai columns read their value from `_enrich.<key>.value` (unless `field` is set) and their run state from `_enrich.<key>`, and render it: queued, running, the value, an error (message on hover), "No result", or the value dimmed when their inputs changed since they ran (stale).',
+    },
+    userDefined: {
+      type: 'boolean',
+      description:
+        'A column users added at runtime (stored by the app). Its header menu has Rename, Edit, Duplicate, Insert left / right and Delete, which fire onColumnUpdate, onColumnAdd and onColumnDelete. If its config is invalid it renders as an error column ("Invalid column: " and the reason in its cells, Edit column and Delete column in its menu) instead of breaking the table. Its config is other users\' content, so it may only have a text-safe type (text, email, phone, url, number, currency, percent, progress, rating, date, datetime, boolean, tag, tags, status or json; another type makes it an error column, and no type is text whatever `defaultColumn` sets), and its `cell`, `rules`, `validate` and template tooltips are ignored (a `{ field }` tooltip is kept).',
+    },
+    template: {
+      type: 'string',
+      description:
+        "`kind: formula`: the value's template, `{{ column }}` placeholders (a column key or a row field path) filled in as plain text, in the browser (`{{ email }}` is the email column's value, also for enrichment, ai and extract columns). Only placeholders: tags, comments and expressions (`{{ name | upper }}`) are refused, since a template engine would run what users write as code.",
+    },
+    provider: {
+      type: 'string',
+      description:
+        "`kind: enrichment`: the id of the provider (from `providers`) the column calls. `kind: ai`: the AI provider, `ai` (the app's `enrich_ai` endpoint) by default.",
+    },
+    inputs: {
+      type: 'object',
+      description:
+        "`kind: enrichment` or `ai`: the inputs, each `{ column: <column key>, required? }` (that column's value in the row; an enrichment or ai column's only once its cell is done) or `{ value: <literal> }`. An input reads an input or data column (a stored field) or an enrichment or ai column, never a formula or extract column: those compute in the browser, so the server can not read them (the picker does not offer them, a declared column reading one throws and a user-defined one becomes an error column). An ai column lists the columns its prompt references here (the add-column picker keeps them in step). A cell is stale when its resolved inputs differ from the ones it ran with.",
+      docs: { displayType: 'yaml' },
+    },
+    output: {
+      type: ['string', 'object'],
+      description:
+        "`kind: enrichment`: the path of the value in the provider's result (`value` defaults to the whole result). `kind: ai`: `{ type, options? }`, the answer's type (also the column type): `text`, `number`, `boolean`, `tag` or `tags`; `options`, the answers allowed, only for `tag` and `tags`: each its text or `{ value, color }` (the tag's colour; on a user-defined column a tone name such as `blue` or `error`, never a CSS value; the add-column picker gives each option a distinct tone).",
+      docs: { displayType: 'yaml' },
+    },
+    autoRun: {
+      type: 'boolean',
+      description:
+        "`kind: enrichment` or `ai`: run a row's cell by itself when an input column's cell completes (MongoDBEnrichmentComplete queues it).",
+    },
+    prompt: {
+      type: 'string',
+      description:
+        "`kind: ai`: the prompt, with `{{ input }}` placeholders (`{{ company }}`) the server fills in from the column's `inputs` as plain text (list every referenced column there). Only placeholders: tags, comments and expressions are refused. Changing the prompt does not make cells stale; run the column again to use it.",
+    },
+    source: {
+      type: 'string',
+      description: '`kind: extract`: the key of the enrichment or ai column to read from.',
+    },
+    path: {
+      type: 'string',
+      description:
+        "`kind: extract`: the dot path in the source column's raw result (`people.0.email`); empty for the whole result. The column reads `_enrich.<source>.raw.<path>`.",
+    },
+    status: {
+      type: 'object',
+      description:
+        "Show a run state in this column's cells from `{ field }`, a path to an object like `_enrich.<key>` (`status`, `value`, `error`, `inputHash`, ...). Enrichment and ai columns have it by default.",
+      properties: {
+        field: { type: 'string', description: 'The dot path of the run state object.' },
+      },
+    },
     children: {
       type: 'array',
       description:
@@ -229,6 +290,7 @@ export default {
   valueType: 'object',
   icons: [
     'chevron-down',
+    'chevron-right',
     'chevron-up',
     'close',
     'download',
@@ -372,6 +434,79 @@ export default {
           'With a positionField: `{ [rowKey]: position }` of every row whose position changed.',
       },
     },
+    onColumnAdd: {
+      description:
+        'Trigger when a column is added: the add-column picker (`addColumn`), Duplicate or Insert left / right in a user-defined column\'s header menu, or "Add as column" in the cell details panel. The picker stays open, pending, while the event runs, and shows the error when the actions fail. Store the column and add it to `columns`.',
+      event: {
+        column:
+          "The column config, with a generated unique `key`, `userDefined: true` and the kind's keys (`template`; `provider`, `inputs`, `output`, `autoRun`; `prompt`, `output`, `autoRun`; `source`, `path`).",
+        position:
+          'Where it goes: `{ before: key }` or `{ after: key }` (Insert left / right, Duplicate, Add as column), or null for the end.',
+      },
+    },
+    onColumnUpdate: {
+      description:
+        'Trigger when a user-defined column is renamed (inline in its header) or edited (the picker). The rename or picker shows it pending while the event runs and the error when it fails.',
+      event: {
+        column: 'The new column config (same key).',
+        previous: 'The column config before the change.',
+      },
+    },
+    onColumnDelete: {
+      description:
+        'Trigger when a user-defined column is deleted from its header menu, after the confirmation. The dialog stays open, pending, while the event runs.',
+      event: {
+        column: 'The deleted column config.',
+      },
+    },
+    onColumnRun: {
+      description:
+        'Trigger to run an enrichment or ai column: Run in its header menu (all rows, empty cells, errors or stale cells) or "Run selected" in the bulk bar. Enqueue the cells, for example with MongoDBEnrichmentEnqueue; their states then show in the cells.',
+      event: {
+        column: 'The column config.',
+        mode: '`all`, `empty`, `errors` or `stale`.',
+        selection:
+          'The rows to run: the selection value when rows are selected (row keys, or `{ all: true, except, filter, search }`), otherwise `{ all: true, except: [], filter, search }` of the current view.',
+      },
+    },
+    onRowRun: {
+      description:
+        "Trigger when a row's run button is clicked (the trailing column, shown on hover): run every enrichment and ai column of the row.",
+      event: {
+        row: 'The row data.',
+        rowKey: 'The row key.',
+        columns: 'The keys of the enrichment and ai columns.',
+      },
+    },
+    onCellRun: {
+      description:
+        'Trigger when one cell is rerun: Rerun in the cell details panel, or the rerun button of a stale cell.',
+      event: {
+        row: 'The row data.',
+        rowKey: 'The row key.',
+        column: 'The column config of the enrichment or ai column.',
+      },
+    },
+    onRowAdd: {
+      description:
+        'Trigger when a row is added with "+ New row" (`addRow`). The row shows at the end of the table, marked saving, while the event runs; after it the row comes from `data` (add it there, for example by refetching). When the actions fail, the row goes and the editor shows the error with the values kept.',
+      event: {
+        values:
+          'The typed values, set at each column `field` path (`{ name, company: { domain } }`), empty fields left out.',
+      },
+    },
+    onImport: {
+      description:
+        'Trigger for each batch of rows a CSV import sends (`importCsv`), 500 rows at a time, each awaited before the next; a failed batch stops the import and shows its error. Insert the rows, for example with MongoDBInsertMany, and create `newColumns` once.',
+      event: {
+        rows: 'The batch of rows, values set at each mapped column `field` and coerced to its type.',
+        newColumns:
+          'With the first batch only: the text input columns to create for CSV headers mapped to "New text column" (`{ key, title, type: text, kind: input, field, editable, userDefined }`, `field` under `inputFieldPrefix`); an empty list after. The rows carry their values at that `field`.',
+        batchIndex: 'The index of this batch, from 0.',
+        batchCount: 'The number of batches.',
+        total: 'The number of rows in the import.',
+      },
+    },
     onCellLink: {
       description:
         'Triggered when a link, avatar link or relation cell is clicked. The link navigates by itself; this event is for anything else to do.',
@@ -410,7 +545,7 @@ export default {
     refresh:
       'Server mode: clear the block cache and refetch the visible rows (they stay on screen until the new rows land).',
     applyTransaction:
-      'Apply `{ add, update, remove, addIndex }` without replacing `data`: `update` rows are merged into the row with the same key, `remove` takes rows or row keys, `add` rows are appended (or inserted at `addIndex`). Only the touched rows re-render. In client mode the change holds until `data` changes; in server mode updates apply to the loaded rows, and adds or removes also refetch the visible rows. Returns `{ added, updated, removed }`.',
+      "Apply `{ add, update, remove, addIndex, merge }` without replacing `data`: `update` rows are merged into the row with the same key: by default each top-level field they have is replaced, which is right for whole documents such as a change stream's `fullDocument` (a key the server removed goes from the row too); with `merge: deep` nested objects merge too, for partial patches, so a pushed `{ _id, _enrich: { email: {...} } }` keeps the row's other fields and `_enrich` entries, but a deep merge never removes a key. `remove` takes rows or row keys, and `add` rows are appended (or inserted at `addIndex`). Only the touched rows re-render. In client mode the change holds until `data` changes; in server mode updates apply to the loaded rows, and adds or removes also refetch the visible rows. Returns `{ added, updated, removed }`.",
     scrollToRow:
       'Scroll a row into view. Accepts `{ rowKey, align }` with align `auto`, `start` or `center` (default). With pagination, only rows on the current page.',
     clearSelection: 'Clear the row selection.',
@@ -425,6 +560,11 @@ export default {
     clearFilters: 'Remove every filter condition. The search stays; clear it with `setSearch`.',
     setSearch:
       'Set `view.search`: rows match when every word appears in the searched columns. An empty string or null clears it.',
+    openColumnPicker:
+      'Open the add-column picker. Accepts `{ position, kind, provider }` (`position`: `{ before | after: key }`), or `{ key }` to edit that column.',
+    openCellDetails:
+      'Open the details panel of an enrichment, ai or extract cell. Accepts `{ rowKey, key }` (the column key).',
+    openImport: 'Open the CSV import dialog (`importCsv: true`).',
     openColumnManager:
       'Open the column manager: show, hide, reorder and pin columns, or reset them to the default view.',
   },
@@ -860,6 +1000,69 @@ export default {
         type: 'integer',
         default: 50,
         description: 'Rows per page when `pagination` is on (`view.pageSize` overrides it).',
+      },
+      providers: {
+        type: 'array',
+        description:
+          "The enrichment providers columns can call (`kind: enrichment`), the catalogue the add-column picker offers. Each maps, on the server, to the app's `enrich_<id>` endpoint, so a column only calls what the app exposes.",
+        items: {
+          type: 'object',
+          required: ['id'],
+          properties: {
+            id: { type: 'string', description: 'The provider id, the column `provider`.' },
+            title: { type: 'string', description: 'The name in the picker.' },
+            description: { type: 'string', description: 'A line under the name in the picker.' },
+            icon: { description: 'An icon for the provider.' },
+            inputs: {
+              type: 'array',
+              description:
+                'The inputs, `[{ key, title, type, required }]`, mapped to columns or literals in the picker.',
+              items: { type: 'object' },
+            },
+            outputs: {
+              type: 'array',
+              description:
+                'Paths in the result a column can show, `[{ path, title, type }]`; the picker sets the column type from it.',
+              items: { type: 'object' },
+            },
+            cost: { type: 'number', description: 'The cost of one call, for the app to show.' },
+          },
+        },
+        docs: { displayType: 'yaml' },
+      },
+      addColumn: {
+        type: ['boolean', 'object'],
+        description:
+          'Show a "+" at the end of the header that opens the add-column picker (onColumnAdd). `true` offers every kind; `{ kinds: [...] }` only those (`input`, `formula`, `enrichment`, `ai`, `extract`).',
+        properties: {
+          kinds: {
+            type: 'array',
+            items: { type: 'string', enum: Object.keys(COLUMN_KINDS) },
+            description: 'The column kinds the picker offers.',
+          },
+        },
+      },
+      addRow: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Show a "+ New row" row under the table that opens an inline editor for the input columns; Enter adds the row through onRowAdd.',
+      },
+      addRowText: {
+        type: 'string',
+        default: 'New row',
+        description: 'Text of the new-row row.',
+      },
+      inputFieldPrefix: {
+        type: 'string',
+        description:
+          'Where user-defined input columns added in the picker or by a CSV import keep their values: under this path, then the column key (with `values`, a `notes` column stores at `values.notes`, so a column can never name another field of the row). The column is sent with that `field`, and onRowAdd / onImport values sit at it. Without it, at the key.',
+      },
+      importCsv: {
+        type: 'boolean',
+        default: false,
+        description:
+          'Show an Import button in the toolbar: a CSV file (at most 50 MB and 100,000 rows) is parsed in the browser, in slices so the page stays responsive, its headers mapped to input columns (or new text columns), and the rows sent through onImport in batches of 500.',
       },
       summary: {
         type: 'boolean',

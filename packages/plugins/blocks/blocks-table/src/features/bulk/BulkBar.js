@@ -23,9 +23,10 @@ import './bulk.css';
 
 const numberFormat = new Intl.NumberFormat();
 
-// "N selected · Select all M matching · Clear" plus the `bulkActions` slot (Linear, Attio). It
-// sits below the grid, so rows never move under the pointer when it appears. Bulk actions need
-// rows, so the bar waits while the table loads its first rows.
+// "N selected · Select all M matching · Clear", the features' `bulkItems` (enrichment's "Run
+// selected"), plus the `bulkActions` slot (Linear, Attio). It sits below the grid, so rows never
+// move under the pointer when it appears. Bulk actions need rows, so the bar waits while the
+// table loads its first rows.
 function BulkBar({ api, matching, selected, selectionMode }) {
   const { content } = api;
   if (api.loadingState === 'initial') return null;
@@ -54,6 +55,9 @@ function BulkBar({ api, matching, selected, selectionMode }) {
       >
         Clear
       </Button>
+      {api.features.bulkItems.map((Item, index) => (
+        <Item api={api} key={index} />
+      ))}
       {content.bulkActions ? (
         <div className="lf-table-bulk-actions">{renderSlot({ content, slot: 'bulkActions' })}</div>
       ) : null}

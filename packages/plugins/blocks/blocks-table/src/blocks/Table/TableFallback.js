@@ -30,10 +30,13 @@ import getSortHeaderProps from '../../features/sorting/getSortHeaderProps.js';
 import getTableSkeletonCount from '../../core/getTableSkeletonCount.js';
 import HeaderRow from '../../core/HeaderRow.js';
 import needsToolbar from '../../features/toolbar/needsToolbar.js';
+import needsTrailingColumn from '../../features/enrichment/needsTrailingColumn.js';
 import selectColumnWidth from '../../features/selection/selectColumnWidth.js';
 import SkeletonRows from '../../core/SkeletonRows.js';
 import SortIndicator from '../../features/sorting/SortIndicator.js';
 import useStableConfig from '../../core/useStableConfig.js';
+import TRAILING_COLUMN_KEY from '../../features/enrichment/trailingColumnKey.js';
+import TRAILING_COLUMN_WIDTH from '../../features/enrichment/trailingColumnWidth.js';
 import useViewportSize from '../../core/useViewportSize.js';
 
 import '../../core/table.css';
@@ -82,6 +85,19 @@ function getLeadingColumns({ input, properties }) {
   return leading;
 }
 
+// Enrichment's trailing column (the "+" header, the rows' run buttons), empty here.
+function getTrailingColumns({ events, properties }) {
+  if (!needsTrailingColumn({ events, properties })) return [];
+  return [
+    {
+      key: TRAILING_COLUMN_KEY,
+      special: 'enrich',
+      width: TRAILING_COLUMN_WIDTH,
+      Header: EmptyHeader,
+    },
+  ];
+}
+
 function getDensity({ properties, value }) {
   const density = value?.view?.density ?? properties.defaultView?.density ?? properties.size;
   return type.isUndefined(densityHeights[density]) ? 'default' : density;
@@ -98,7 +114,8 @@ function getSorting({ defaultView, value }) {
 // What the lazy Table shows while its code loads (D17): the table itself in its initial loading
 // state, built from the column config: the real header (titles, sort indicators, header groups,
 // the view's column order and widths), type-shaped skeleton rows at the table's density and
-// exactly its height, and room for the toolbar, pager and TableInput's add-row button. It lays
+// exactly its height, and room for the toolbar, pager, the add-row button (TableInput's "+ Add
+// row", Table's "+ New row") and enrichment's trailing column. It lays
 // the columns out with the engine's buildLayout (computeFallbackLayout), renders the engine's
 // skeleton rows and hands its skeleton timing to the table (useSkeletonTiming), so the swap to
 // the table is invisible. When the rows are already there it shows as many skeleton rows as the
@@ -107,6 +124,7 @@ function getSorting({ defaultView, value }) {
 function TableFallback({
   blockId,
   content = {},
+  events,
   input = false,
   loading,
   methods,
@@ -131,6 +149,7 @@ function TableFallback({
     columns: normalized.columns,
     defaultView,
     leadingColumns: getLeadingColumns({ input, properties }),
+    trailingColumns: getTrailingColumns({ events, properties }),
     value,
     viewportWidth: viewport.width,
   });
@@ -231,9 +250,7 @@ function TableFallback({
         </div>
       </div>
       {pagination ? <div className="lf-table-pagination-placeholder" /> : null}
-      {input && properties.addRow === true ? (
-        <div className="lf-table-add-row-placeholder" />
-      ) : null}
+      {properties.addRow === true ? <div className="lf-table-add-row-placeholder" /> : null}
     </div>
   );
 }

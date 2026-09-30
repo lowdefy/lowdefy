@@ -308,6 +308,9 @@ importers:
       '@lowdefy/connection-test':
         specifier: 6.0.0
         version: link:../plugins/connections/connection-test
+      '@lowdefy/connection-treg':
+        specifier: 6.0.0
+        version: link:../plugins/connections/connection-treg
       '@lowdefy/email-templates':
         specifier: 6.0.0
         version: link:../utils/email-templates
@@ -1910,6 +1913,34 @@ importers:
       '@lowdefy/node-utils':
         specifier: 6.0.0
         version: link:../../../utils/node-utils
+
+  packages/plugins/connections/connection-treg:
+    dependencies:
+      '@lowdefy/errors':
+        specifier: 6.0.0
+        version: link:../../../utils/errors
+      '@lowdefy/helpers':
+        specifier: 6.0.0
+        version: link:../../../utils/helpers
+    devDependencies:
+      '@jest/globals':
+        specifier: 28.1.3
+        version: 28.1.3
+      '@lowdefy/ajv':
+        specifier: 6.0.0
+        version: link:../../../utils/ajv
+      '@swc/cli':
+        specifier: 0.8.1
+        version: 0.8.1(@swc/core@1.15.32)
+      '@swc/core':
+        specifier: 1.15.32
+        version: 1.15.32
+      '@swc/jest':
+        specifier: 0.2.39
+        version: 0.2.39(@swc/core@1.15.32)
+      jest:
+        specifier: 28.1.3
+        version: 28.1.3(@types/node@24.13.3)
 
   packages/plugins/icons/icons-react-icons:
     devDependencies:

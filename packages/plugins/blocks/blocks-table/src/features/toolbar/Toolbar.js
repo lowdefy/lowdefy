@@ -34,7 +34,8 @@ import './toolbar.css';
 
 // The table's own chrome above the grid (D7): view tabs, then one row with the `toolbarStart`
 // slot, search, quick filters and the view controls, and at the end the record count, density,
-// columns, export and the `toolbarEnd` slot. antd components: this is chrome, not cells.
+// columns, export, the features' `toolbarItems` (enrichment's CSV import) and the `toolbarEnd`
+// slot. antd components: this is chrome, not cells.
 function Toolbar({ api, searchRef, toolbar }) {
   const { columnsByKey } = api.config;
   const { content } = api;
@@ -73,6 +74,9 @@ function Toolbar({ api, searchRef, toolbar }) {
             </Button>
           ) : null}
           {toolbar.export ? <ExportButton api={api} /> : null}
+          {api.features.toolbarItems.map((Item, index) => (
+            <Item api={api} key={index} />
+          ))}
           {renderSlot({ content, slot: 'toolbarEnd' })}
         </div>
       </div>

@@ -21,23 +21,23 @@ import getKeyId from './getKeyId.js';
 
 const selectAllKeys = ['all', 'except', 'filter', 'search'];
 
-function invalidSelection(selection) {
+function invalidSelection({ selection, requestType }) {
   return new Error(
-    `MongoDBTableChanges "selection" should be an array of row keys or { all: true, except, filter, search }. Received ${JSON.stringify(
+    `${requestType} "selection" should be an array of row keys or { all: true, except, filter, search }. Received ${JSON.stringify(
       selection
     )}.`
   );
 }
 
-function parseKeys({ keys, rowKeyType, maxChanges }) {
-  if (keys.length > maxChanges) {
+function parseKeys({ keys, rowKeyType, maxKeys, maxKeysName, requestType }) {
+  if (keys.length > maxKeys) {
     throw new Error(
-      `MongoDBTableChanges "selection" has ${keys.length} row keys, more than "maxChanges" (${maxChanges}).`
+      `${requestType} "selection" has ${keys.length} row keys, more than "${maxKeysName}" (${maxKeys}).`
     );
   }
   const seen = new Set();
   return keys
-    .map((value) => coerceRowKey({ value, rowKeyType, part: 'selection' }))
+    .map((value) => coerceRowKey({ value, rowKeyType, part: 'selection', requestType }))
     .filter((key) => {
       const keyId = getKeyId(key);
       if (seen.has(keyId)) return false;
@@ -49,12 +49,21 @@ function parseKeys({ keys, rowKeyType, maxChanges }) {
 // The Table's `selected` value: the selected row keys, or, when every row matching the view is
 // selected, { all: true, except, filter, search } (the keys deselected since, and the view's
 // filter and search). Keys are read like changeset keys; the view is compiled by the caller.
-function parseSelection({ selection, rowKeyType, maxChanges }) {
+// MongoDBEnrichmentEnqueue reads the same value, capped by its own limit.
+function parseSelection({
+  selection,
+  rowKeyType,
+  maxKeys,
+  maxKeysName = 'maxChanges',
+  requestType = 'MongoDBTableChanges',
+}) {
   if (type.isArray(selection)) {
     if (selection.length === 0) {
-      throw new Error('MongoDBTableChanges "selection" is empty: there is nothing to write.');
+      throw new Error(`${requestType} "selection" is empty: there is nothing to write.`);
     }
-    return { keys: parseKeys({ keys: selection, rowKeyType, maxChanges }) };
+    return {
+      keys: parseKeys({ keys: selection, rowKeyType, maxKeys, maxKeysName, requestType }),
+    };
   }
   if (
     !type.isObject(selection) ||
@@ -62,11 +71,17 @@ function parseSelection({ selection, rowKeyType, maxChanges }) {
     Object.keys(selection).some((key) => !selectAllKeys.includes(key)) ||
     !(type.isNone(selection.except) || type.isArray(selection.except))
   ) {
-    throw invalidSelection(selection);
+    throw invalidSelection({ selection, requestType });
   }
   return {
     all: true,
-    except: parseKeys({ keys: selection.except ?? [], rowKeyType, maxChanges }),
+    except: parseKeys({
+      keys: selection.except ?? [],
+      rowKeyType,
+      maxKeys,
+      maxKeysName,
+      requestType,
+    }),
     filter: selection.filter ?? null,
     search: selection.search ?? null,
   };
