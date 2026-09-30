@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { ActionError, ConfigError, UserError } from '@lowdefy/errors';
+import { ActionError, ConfigError } from '@lowdefy/errors';
 import { projectCaughtError, type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
 import { isDecodedServerError } from './decodeServerError.js';
@@ -43,8 +43,9 @@ class Actions {
     const handleError = this.context._internal.lowdefy._internal.handleError;
 
     // User-facing errors log to browser console only, never to terminal. This line
-    // bypasses handleError, so it dedups here.
-    if (error instanceof UserError) {
+    // bypasses handleError, so it dedups here. Matched by name, not instanceof:
+    // plugins bundle their own @lowdefy/errors copy.
+    if (error?.name === 'UserError') {
       const errorKey = `${error.message}:${action?.id || ''}`;
       if (this.loggedActionErrors.has(errorKey)) {
         return;
@@ -463,15 +464,23 @@ class Actions {
         progress();
       }
     } catch (err) {
-      const error = err.isLowdefyError
-        ? err
-        : new ActionError(err.message, {
-            cause: err,
-            typeName: action.type,
-            received: parsedAction.params,
-            location: block.blockId,
-            configKey: action['~k'],
-          });
+      let error;
+      if (err.isLowdefyError) {
+        error = err;
+        // Plugins may throw ConfigError or UserError without a location - the interface
+        // layer owns location resolution.
+        if (type.isNone(error.configKey)) {
+          error.configKey = action['~k'];
+        }
+      } else {
+        error = new ActionError(err.message, {
+          cause: err,
+          typeName: action.type,
+          received: parsedAction.params,
+          location: block.blockId,
+          configKey: action['~k'],
+        });
+      }
 
       responses[action.id] = { error, index, type: action.type };
       const { output: parsedMessages, errors: parserErrors } = this.context._internal.parser.parse({

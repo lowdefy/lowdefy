@@ -14,46 +14,56 @@
   limitations under the License.
 */
 
-import { randomUUID } from 'node:crypto';
+import { STATUS_CODES } from 'node:http';
 import { createChannelRegistry, createWebSocketConnection } from '@lowdefy/api';
+import { type } from '@lowdefy/helpers';
 
-import app from '../app.js';
+import createLogger from '../../lib/server/log/createLogger.js';
+
+const logger = createLogger();
 
 // One registry per dev server process, shared by all websocket connections.
 const registry = createChannelRegistry();
 
-// Contexts built by the /api/websocket route (full middleware chain) are
-// handed to the upgrade handler through this exchange, keyed by request id.
-const pendingContexts = new Map();
-
-function setPendingWebSocketContext(rid, context) {
-  pendingContexts.set(rid, context);
-}
-
-function takePendingWebSocketContext(rid) {
-  const context = pendingContexts.get(rid);
-  pendingContexts.delete(rid);
-  return context;
-}
-
-// Called by the Vite plugin on an HTTP upgrade for /api/websocket. Runs the
-// dev Hono app for the upgrade request (auth session + apiContext), then
-// completes the websocket handshake and wires the connection to the registry.
-async function handleWebSocketUpgrade({ request, socket, head, wss }) {
-  const rid = randomUUID();
+// Called by the Vite plugin (see vite.config.js) on an HTTP upgrade for
+// /api/websocket, with the dev Hono app. Runs the app for the upgrade request
+// (auth session + apiContext) and receives the request context through the
+// websocketUpgrade object in the Hono env, then completes the websocket
+// handshake and wires the connection to the registry. The context travels
+// with the request, not through state shared between modules, so the upgrade
+// works however Vite has re-evaluated the app's modules after a rebuild.
+async function handleWebSocketUpgrade({ app, request, socket, head, wss }) {
   const headers = new Headers();
   Object.entries(request.headers).forEach(([key, value]) => {
     if (value) {
       headers.set(key, Array.isArray(value) ? value[0] : value);
     }
   });
-  headers.set('x-lowdefy-websocket-rid', rid);
 
   const url = `http://${request.headers.host ?? 'localhost'}${request.url}`;
-  const response = await app.fetch(new Request(url, { headers }));
-  const context = takePendingWebSocketContext(rid);
+  const websocketUpgrade = { context: null };
+  const response = await app.fetch(new Request(url, { headers }), { websocketUpgrade });
 
-  if (!context || response.status !== 200) {
+  if (response.status !== 200) {
+    const body = await response.text();
+    logger.warn(
+      { event: 'ws_upgrade_refused', status: response.status },
+      `WebSocket upgrade refused: ${request.url} answered ${response.status}. ${body}`
+    );
+    socket.end(
+      `HTTP/1.1 ${response.status} ${STATUS_CODES[response.status]}\r\nConnection: close\r\n\r\n`
+    );
+    return;
+  }
+
+  // A 200 without a context means the request reached another handler than
+  // the websocket route (a route or middleware answered first).
+  const { context } = websocketUpgrade;
+  if (type.isNone(context)) {
+    logger.warn(
+      { event: 'ws_upgrade_refused', status: response.status },
+      `WebSocket upgrade refused: ${request.url} answered ${response.status} without a request context; the websocket route did not run.`
+    );
     socket.end('HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\n');
     return;
   }
@@ -75,4 +85,4 @@ async function handleWebSocketUpgrade({ request, socket, head, wss }) {
   });
 }
 
-export { handleWebSocketUpgrade, setPendingWebSocketContext };
+export { handleWebSocketUpgrade };

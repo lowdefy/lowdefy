@@ -65,10 +65,10 @@ export default {
         description: 'Shape of the avatar.',
       },
       size: {
-        type: ['string', 'object'],
+        type: ['string', 'number', 'object'],
         default: 'default',
-        enum: ['default', 'small', 'large'],
-        description: 'Size of the avatar; default, small, large or responsive.',
+        description:
+          'Size of the avatar: default, small, large, a pixel number, or a responsive object of breakpoint sizes.',
         docs: {
           displayType: 'string',
         },
@@ -108,8 +108,8 @@ export default {
           },
           size: {
             type: ['string', 'number'],
-            enum: ['default', 'small', 'large'],
-            description: 'Default size for all avatars in the group.',
+            description:
+              'Default size for all avatars in the group: default, small, large or a pixel number.',
           },
           avatars: {
             type: 'array',

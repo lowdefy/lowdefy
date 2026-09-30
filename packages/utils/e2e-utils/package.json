@@ -51,6 +51,11 @@
   "peerDependencies": {
     "@playwright/test": "1.59.1"
   },
+  "peerDependenciesMeta": {
+    "@playwright/test": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",

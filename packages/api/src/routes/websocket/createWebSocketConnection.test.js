@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import { AuthorizationError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 const mockPrepareChannel = jest.fn();
@@ -42,7 +43,7 @@ function setup({ mode = 'prod' } = {}) {
     rid: 'r',
     mode,
     i18n: { active: 'en-US', messages: {} },
-    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
+    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() },
     handleError: jest.fn(),
   };
   const connection = createWebSocketConnection(context, { registry, send });
@@ -127,7 +128,12 @@ test('publish frame calls registry.publish and acks with a published frame carry
   const { connection, context, registry, send } = setup();
 
   await connection.handleMessage(
-    JSON.stringify({ type: 'publish', websocketId: 'chat', payload: { text: 'hi' }, requestId: 'req-9' })
+    JSON.stringify({
+      type: 'publish',
+      websocketId: 'chat',
+      payload: { text: 'hi' },
+      requestId: 'req-9',
+    })
   );
 
   expect(registry.publish).toHaveBeenCalledWith(context, {
@@ -164,6 +170,32 @@ test('registry rejection sends an error payload frame with requestId and websock
       },
     },
   ]);
+});
+
+test('an authorization refusal warns and answers the client without reporting an error', async () => {
+  const { connection, context, registry, send } = setup();
+  const error = new AuthorizationError('Websocket "chat" does not exist.');
+  registry.subscribe.mockRejectedValue(error);
+
+  await connection.handleMessage(
+    JSON.stringify({ type: 'subscribe', websocketId: 'chat', requestId: 'req-3' })
+  );
+
+  expect(context.handleError).not.toHaveBeenCalled();
+  expect(context.logger.warn).toHaveBeenCalledWith(
+    { event: 'ws_refused', frameType: 'subscribe' },
+    'Websocket "chat" does not exist.'
+  );
+  const [frame] = sentFrames(send);
+  expect(frame.type).toBe('error');
+  expect(frame.websocketId).toBe('chat');
+  expect(frame.requestId).toBe('req-3');
+  expect(frame.error['~e']).toEqual({
+    name: 'AuthorizationError',
+    message: 'Websocket "chat" does not exist.',
+    requestId: 'r',
+    isLowdefyError: true,
+  });
 });
 
 function setupPublishFailure({ mode }) {

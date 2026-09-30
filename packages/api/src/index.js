@@ -31,6 +31,8 @@ import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import resolveStrategyCaller from './context/resolveStrategyCaller.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
+import isSameOriginRequest from './context/isSameOriginRequest.js';
+import isWebSocketOriginAllowed from './context/isWebSocketOriginAllowed.js';
 import logClientError from './routes/log/logClientError.js';
 import redactErrorResponse from './response/redactErrorResponse.js';
 import redactResponse from './response/redactResponse.js';
@@ -56,6 +58,8 @@ export {
   getHomeAndMenus,
   getPageConfig,
   getRootConfig,
+  isSameOriginRequest,
+  isWebSocketOriginAllowed,
   logClientError,
   redactErrorResponse,
   redactResponse,

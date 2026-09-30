@@ -3,13 +3,13 @@
     {
       "mode": "dev",
       "exactWarnings": [
-        "{{fixturesDir}}/F1-invalid-request-reference/lowdefy.yaml:29\n[ConfigWarning] Request \"nonExistentRequest\" not defined on page \"home\"."
+        "{{fixturesDir}}/F1-invalid-request-reference/lowdefy.yaml:29\n[ConfigWarning \u00b7 fails in prod] Request \"nonExistentRequest\" not defined on page \"home\". Check the requestId for typos, or add a request with id \"nonExistentRequest\" to the \"requests\" on page \"home\"."
       ]
     },
     {
       "mode": "prod",
       "exactErrors": [
-        "{{fixturesDir}}/F1-invalid-request-reference/lowdefy.yaml:29\n[ConfigWarning] Request \"nonExistentRequest\" not defined on page \"home\"."
+        "{{fixturesDir}}/F1-invalid-request-reference/lowdefy.yaml:29\n[ConfigWarning \u00b7 fails in prod] Request \"nonExistentRequest\" not defined on page \"home\". Check the requestId for typos, or add a request with id \"nonExistentRequest\" to the \"requests\" on page \"home\"."
       ],
       "expectThrow": true
     }

@@ -29,7 +29,9 @@ function validateLinkReferences({ linkActionRefs, pageIds, context }) {
     if (!pageIdSet.has(pageId)) {
       context.handleWarning(
         new ConfigWarning(
-          `Page "${pageId}" not found. Link on page "${sourcePageId}" references non-existent page.`,
+          `Page "${pageId}" not found. Link on page "${sourcePageId}" references non-existent page. ` +
+            `Check the pageId for typos, or add a page with id "${pageId}". ` +
+            `To link outside the app, use "url" instead of "pageId".`,
           { configKey: action['~k'], prodError: true, checkSlug: 'link-refs' }
         )
       );

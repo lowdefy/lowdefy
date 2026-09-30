@@ -106,7 +106,7 @@ test('a failed subscribe rejects with the decoded wire error', async () => {
   expect(error.requestId).toBe('rid-1');
 });
 
-test('a broadcast error frame passes its message string to the subscription onError handler', async () => {
+test('a broadcast error frame passes its message to the subscription onError handler as a WebSocket ServiceError', async () => {
   const { client, open, receive } = createTestClient();
   const handlers = {
     onConnected: jest.fn(),
@@ -119,7 +119,7 @@ test('a broadcast error frame passes its message string to the subscription onEr
   receive({ type: 'subscribed', websocketId: 'chat' });
   await promise;
   receive({ type: 'error', websocketId: 'chat', message: 'Something went wrong.' });
-  expect(handlers.onError).toHaveBeenCalledWith('Something went wrong.');
+  expect(handlers.onError).toHaveBeenCalledWith('WebSocket: Something went wrong.');
 });
 
 test('an error frame without an error payload rejects with its message', async () => {

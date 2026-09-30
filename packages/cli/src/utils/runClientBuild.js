@@ -44,7 +44,7 @@ async function runClientBuild({ context, directory }) {
     });
   } catch (error) {
     context.logger.info({ spin: 'fail' }, 'Running client build.');
-    throw new Error('Client build failed.');
+    throw new Error('Client build failed.', { cause: error });
   }
   context.logger.info('Client build successful.');
 }

@@ -38,6 +38,12 @@ The build pipeline tracks the origin of every config value:
 - `~l` (line): Line number in the source file
 - `~r` (ref): Reference ID linking to the source file
 
+#### Keys across dev rebuilds
+
+`~k` values come from the `makeId` counter. The dev server rebuilds config without restarting, and a page loaded, or a request started, before a rebuild still reports errors with the earlier build's keys, while `keyMap.json` already holds the new build. If every build numbered its keys from 1, an old key would name some other node of the new build and the error would point at the wrong config.
+
+So each dev skeleton build (`shallowBuild`) resets `makeId` with a fresh random prefix (`a1b2_1`, `a1b2_2`, ...) and writes `{ prefix, counter }` to `idCounter.json`. JIT page builds continue from it (`makeId.continueFrom`), keeping the prefix and never moving the counter back, so every key in a dev session names one node. A key from an earlier build is simply absent from the live `keyMap.json`, and its location resolves to nothing rather than to the wrong node. The JIT page builder also skips writing `keyMap.json`/`refMap.json` when the live `idCounter.json` prefix is no longer the one its build context was created from, so a page build that outlives a rebuild cannot replace the new maps (`server-dev/lib/server/skipStaleMapWrites.js`). For that check to hold, the manager's `publishBuildDirectory` moves `idCounter.json` into the live build directory before any other file, so the new prefix is live before the new maps are. Production builds (`build()`) keep unprefixed keys: they run once per server start.
+
 ### Location Resolution
 
 Three functions handle different resolution contexts (all in `@lowdefy/errors`):
@@ -68,21 +74,32 @@ const location = resolveConfigLocation({
 
 All error classes in `@lowdefy/errors` with single flat entry point:
 
-| Error Class            | Purpose                        | Thrown By                 | Stack in CLI      |
-| ---------------------- | ------------------------------ | ------------------------- | ----------------- |
-| `LowdefyInternalError` | Internal Lowdefy bugs          | Anywhere inside Lowdefy   | Yes (bugs)        |
-| `ConfigError`          | Config validation errors       | Build validation          | No (use source)   |
-| `ConfigWarning`        | Config inconsistencies         | Build validation          | No (use source)   |
-| `BuildError`           | Summary after errors logged    | `logCollectedErrors`      | No (summary)      |
-| `PluginError`          | Base class (not used directly) | —                         | —                 |
-| `OperatorError`        | Operator failures              | Operator parsers          | No (use received) |
-| `ActionError`          | Action failures                | Action runner (engine)    | No (use received) |
-| `RequestError`         | Request/connection failures    | Request handler (API)     | No (use received) |
-| `BlockError`           | Block rendering failures       | ErrorBoundary (client)    | No (use received) |
-| `ServiceError`         | External service failures      | Plugin interface layer    | No (use service)  |
-| `UserError`            | Expected user interaction      | Actions (Validate, Throw) | No (client-only)  |
+| Error Class            | Purpose                                                   | Thrown By                           | Stack in CLI      |
+| ---------------------- | --------------------------------------------------------- | ----------------------------------- | ----------------- |
+| `LowdefyInternalError` | Internal Lowdefy bugs                                     | Anywhere inside Lowdefy             | Yes (bugs)        |
+| `ConfigError`          | Config validation errors                                  | Build validation                    | No (use source)   |
+| `ConfigWarning`        | Config inconsistencies                                    | Build validation                    | No (use source)   |
+| `BuildError`           | Summary after errors logged                               | `logCollectedErrors`                | No (summary)      |
+| `PluginError`          | Base class (not used directly)                            | —                                   | —                 |
+| `OperatorError`        | Operator failures                                         | Operator parsers                    | No (use received) |
+| `ActionError`          | Action failures                                           | Action runner (engine)              | No (use received) |
+| `RequestError`         | Request/connection failures                               | Request handler (API)               | No (use received) |
+| `BlockError`           | Block rendering failures                                  | ErrorBoundary (client)              | No (use received) |
+| `ServiceError`         | External service failures                                 | Plugin interface layer              | No (use service)  |
+| `AuthenticationError`  | Unauthenticated request (401)                             | API authorization gates             | No (warn line)    |
+| `AuthorizationError`   | Authenticated caller refused by a gate (wrong roles, 403) | Request/endpoint/agent gates        | No (warn line)    |
+| `UserError`            | Expected user-interaction outcome                         | Validate, Throw, `:throw`/`:reject` | No (client-only)  |
 
 **Key markers:** All classes set `isLowdefyError = true` — survives serialization, replaces `instanceof` checks.
+
+### Faults vs. expected outcomes
+
+Every error is one of two things, and the class says which:
+
+- **A fault** — something a developer (config) or Lowdefy (internal) or an operator (service) has to fix. `ConfigError`, `LowdefyInternalError`, `ServiceError` and the `PluginError` subclasses are faults. They are logged at error level, resolved to a config location where one exists, captured to Sentry, and a browser-originated one is POSTed to `/api/client-error` so the server can log it with its source line.
+- **An expected outcome** — the system worked and said no. `UserError` (validation failed, the author's `Throw`, a rejected sign-in), `AuthenticationError` (no credentials, 401), `AuthorizationError` (authenticated but wrong roles, 403 — the gate's message may stay deliberately generic so it does not reveal what exists) are expected. They still surface to the caller — the message displays, `catch:` actions run, the HTTP status is right — but they log as one warn line on the server or to the browser console only, never at error level, never to Sentry, never against a config location.
+
+The test when classifying: _would a developer need to change config to stop this from happening?_ If not, it is not an `ActionError`/`RequestError`/`ConfigError`.
 
 **Key principle:** Plugins throw errors without knowing about config keys. The interface layer catches all errors and adds `configKey` for location resolution.
 
@@ -258,7 +275,7 @@ The rule reads each node's own fields, so the top-level error must carry them fo
 
 **Every error a server sends to a user or app config goes through one projection, `createWireProjection(context)`** (`packages/api/src/response/createWireProjection.js`). Three functions exported from `@lowdefy/api` apply it, one per call shape: `redactErrorResponse(context, error)` for an error alone, `redactResponse(context, response)` for a response value that may contain one, and `buildEndpointResult(context, { error, response, status })` for the endpoint wire object. All three own the serialization as well as the policy, so there is no bare `serializer.serialize(error)` in response position for a caller to forget.
 
-`redactResponse` exists because a response is an error-serialization site whenever it holds an error — `makeReplacer` wraps any `Error` it meets anywhere in a value. That is invisible to a grep for `serialize(error)`, which is why it is a function rather than a rule to remember. It governs the `response` field of `buildEndpointResult` and the request body from `callRequest`.
+`redactResponse` exists because a response is an error-serialization site whenever it holds an error — `makeReplacer` wraps any `Error` it meets anywhere in a value. That is invisible to a grep for `serialize(error)`, which is why it is a function rather than a rule to remember. It governs the `response` field of `buildEndpointResult` and the request body from `callRequest`. It also serializes with `skipMarkers`: a response built from config (a `:return` literal, a `:set_state` value read back) carries that config's hidden `~k`, `~r` and `~l` markers, and the plain `serialize` would write them out as keys and wrap marked arrays as `{ '~arr': [...] }`. A webhook response goes to a third party verbatim and the dev tools return the wire as it is, so the markers stay off the wire.
 
 **Only the author's message crosses.** A library's message embeds whatever the library saw — a URL with credentials, SQL, a hostname — so every error except the pass-through classes becomes:
 

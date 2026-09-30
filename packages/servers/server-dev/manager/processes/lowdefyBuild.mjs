@@ -17,6 +17,7 @@
 import { serializeBuildException, shallowBuild } from '@lowdefy/build/dev';
 import createCustomPluginMessagesMap from '../utils/createCustomPluginMessagesMap.mjs';
 import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs';
+import publishBuildDirectory from '../utils/publishBuildDirectory.mjs';
 import writeBuildStatus from '../utils/writeBuildStatus.mjs';
 
 function formatDuration(ms) {
@@ -25,26 +26,28 @@ function formatDuration(ms) {
 }
 
 function lowdefyBuild({ directories, logger, options }) {
-  return async () => {
+  async function build() {
     logger.info({ spin: 'start' }, 'Building config...');
     const startTime = Date.now();
-    const customTypesMap = await createCustomPluginTypesMap({ directories, logger });
-    const customMessagesMap = await createCustomPluginMessagesMap({ directories, logger });
 
+    // Reading the plugin maps parses lowdefy.yaml and imports each plugin's
+    // types, so a YAML syntax error or a broken plugin fails the build there,
+    // and the build status has to report it like any other build error.
     let result;
     try {
+      const [customTypesMap, customMessagesMap] = await Promise.all([
+        createCustomPluginTypesMap({ directories, logger }),
+        createCustomPluginMessagesMap({ directories, logger }),
+      ]);
       result = await shallowBuild({
         customMessagesMap,
         customTypesMap,
-        directories,
+        directories: { ...directories, build: directories.buildStaging },
         logger,
         refResolver: options.refResolver,
         stage: 'dev',
       });
     } catch (error) {
-      // Write the artifact after the attempt fails - the build may have
-      // cleaned the build directory before failing, so this must not run
-      // before the attempt completes.
       await writeBuildStatus({
         directories,
         status: 'error',
@@ -53,6 +56,11 @@ function lowdefyBuild({ directories, logger, options }) {
       });
       throw error;
     }
+
+    await publishBuildDirectory({
+      buildDirectory: directories.build,
+      stagingDirectory: directories.buildStaging,
+    });
 
     await writeBuildStatus({
       directories,
@@ -65,6 +73,15 @@ function lowdefyBuild({ directories, logger, options }) {
     const duration = Date.now() - startTime;
     logger.info({ spin: 'succeed' }, `Built config in ${formatDuration(duration)}.`);
     return result;
+  }
+
+  // Watchers, restarts and plugin installs each start builds, and every build
+  // writes the same staging directory, so a build waits for the one before it.
+  let previousBuild = Promise.resolve();
+  return () => {
+    const nextBuild = previousBuild.then(build);
+    previousBuild = nextBuild.catch(() => {});
+    return nextBuild;
   };
 }
 

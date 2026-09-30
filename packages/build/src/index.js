@@ -16,9 +16,10 @@
   limitations under the License.
 */
 
-import { BuildError, ConfigError, LowdefyInternalError } from '@lowdefy/errors';
+import { BuildError, ConfigError } from '@lowdefy/errors';
 
 import createContext from './createContext.js';
+import createInternalBuildError from './utils/createInternalBuildError.js';
 import createPluginTypesMap from './utils/createPluginTypesMap.js';
 import logCollectedErrors from './utils/logCollectedErrors.js';
 import makeId from './utils/makeId.js';
@@ -53,6 +54,7 @@ import testSchema from './build/testSchema.js';
 import updateServerPackageJson from './build/full/updateServerPackageJson.js';
 import validateCallAgentSteps from './build/validateCallAgentSteps.js';
 import validateConfig from './build/validateConfig.js';
+import validateDeprecatedStyles from './build/validateDeprecatedStyles.js';
 import validateRenderNotificationSteps from './build/validateRenderNotificationSteps.js';
 import writeAgents from './build/writeAgents.js';
 import writeApp from './build/writeApp.js';
@@ -145,6 +147,7 @@ async function build(options) {
     // validateConfig resolves the current environment, which buildLogger reads for Sentry.
     tryBuildStep(validateConfig, 'validateConfig', { components, context });
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
+    tryBuildStep(validateDeprecatedStyles, 'validateDeprecatedStyles', { components, context });
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
     // addKeys runs again to add keys to any new objects created by earlier build steps
     tryBuildStep(addKeys, 'addKeys', { components, context });
@@ -214,17 +217,7 @@ async function build(options) {
     if (err instanceof BuildError) {
       throw err;
     }
-    // Unexpected internal error - preserve Lowdefy errors as-is, wrap plain errors
-    const lowdefyErr = err.isLowdefyError
-      ? err
-      : new LowdefyInternalError(err.message, { cause: err });
-    if (context) {
-      context.handleError(lowdefyErr);
-    } else {
-      const logger = options.logger ?? console;
-      logger.error(lowdefyErr);
-    }
-    throw new BuildError('Build failed due to internal error. See above for details.');
+    throw createInternalBuildError({ error: err, context, logger: options.logger ?? console });
   }
 }
 

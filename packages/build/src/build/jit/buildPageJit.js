@@ -242,19 +242,6 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // JIT addKeys assigns fresh ~k values that aren't in the skeleton keyMap.
     await writeMaps({ context: buildContext });
 
-    // Initialize action ref collections for buildPage (normally done by buildPages)
-    if (!buildContext.linkActionRefs) {
-      buildContext.linkActionRefs = [];
-    }
-    if (!buildContext.callApiActionRefs) {
-      buildContext.callApiActionRefs = [];
-    }
-    if (!buildContext.websocketActionRefs) {
-      buildContext.websocketActionRefs = [];
-    }
-    if (!buildContext.dynamicBlockRefs) {
-      buildContext.dynamicBlockRefs = [];
-    }
     // buildSubscriptions validates against websocketIds — the dev server
     // restores the set from the websocketIds.json skeleton artifact. Rebuild
     // it from skeleton-built websockets when the context doesn't carry it
@@ -269,6 +256,18 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     const checkDuplicatePageId = createCheckDuplicateId({
       message: 'Duplicate pageId "{{ id }}".',
     });
+    // buildPage collects the page's action references on the context. The dev
+    // context outlives page builds, so each build starts empty lists - else
+    // every build re-checks all pages built before it, and a page that keeps
+    // failing grows them on each request. Held locally, like errors above:
+    // buildPage is synchronous, so no concurrent build swaps them in between.
+    const refs = {
+      linkActionRefs: [],
+      callApiActionRefs: [],
+      websocketActionRefs: [],
+      dynamicBlockRefs: [],
+    };
+    Object.assign(buildContext, refs);
     buildPage({ page: processed, index: 0, context: buildContext, checkDuplicatePageId });
 
     // Validate that all page-level types (blocks, actions, operators) exist
@@ -297,7 +296,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // Validate link, state, payload, and server-state references
     const pageIds = Object.keys(pageRegistry);
     validateLinkReferences({
-      linkActionRefs: buildContext.linkActionRefs,
+      linkActionRefs: refs.linkActionRefs,
       pageIds,
       context: buildContext,
     });
@@ -305,17 +304,17 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       ? buildContext.components.api
       : [];
     validateCallApiRefs({
-      callApiActionRefs: buildContext.callApiActionRefs,
+      callApiActionRefs: refs.callApiActionRefs,
       endpointConfigs,
       context: buildContext,
     });
     validateDynamicBlockRefs({
-      dynamicBlockRefs: buildContext.dynamicBlockRefs,
+      dynamicBlockRefs: refs.dynamicBlockRefs,
       endpointConfigs,
       context: buildContext,
     });
     validateWebsocketRefs({
-      websocketActionRefs: buildContext.websocketActionRefs,
+      websocketActionRefs: refs.websocketActionRefs,
       websocketIds: buildContext.websocketIds,
       context: buildContext,
     });
@@ -367,6 +366,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         message: w.message,
         source: w.source ?? null,
         stack: w.stack ?? null,
+        prodError: w.prodError === true,
       }));
     }
 

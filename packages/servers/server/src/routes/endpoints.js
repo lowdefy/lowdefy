@@ -20,7 +20,9 @@ import getPathSegments from '../lib/getPathSegments.js';
 
 async function endpointsHandler(c) {
   if (c.req.method !== 'POST') {
-    throw new Error('Only POST requests are supported.');
+    // A wrong-method request is client-caused: answer 405 rather than raising a
+    // fault that would be logged at error level and answered with a 500.
+    return c.json({ error: 'Method not allowed.' }, 405);
   }
   const context = c.get('lowdefyContext');
   const endpointId = getPathSegments(c, '/api/endpoints/').join('/');

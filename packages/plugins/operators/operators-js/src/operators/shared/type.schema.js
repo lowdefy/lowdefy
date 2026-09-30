@@ -31,9 +31,11 @@ export default {
           'null',
           'undefined',
           'none',
+          'empty',
           'primitive',
         ],
-        description: 'Type name to test against state value at current location.',
+        description:
+          'Type name to test against state value at current location. The "empty" test is true for null, undefined, \'\' and [], and false for 0, false and {}.',
       },
       {
         type: 'object',
@@ -52,6 +54,7 @@ export default {
               'null',
               'undefined',
               'none',
+              'empty',
               'primitive',
             ],
             description: 'Type name to test.',

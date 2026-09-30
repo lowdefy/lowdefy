@@ -27,8 +27,10 @@ import {
 } from '@lowdefy/build/dev';
 
 import createLogger from './log/createLogger.js';
+import pageBuildRecords from './pageBuildRecords.js';
 import PageCache from './pageCache.mjs';
 import readBuildApiArtifacts from './readBuildApiArtifacts.mjs';
+import skipStaleMapWrites from './skipStaleMapWrites.js';
 
 const jitLogger = createLogger({ name: 'jit-build' });
 
@@ -114,6 +116,7 @@ function getBuildContext(buildDirectory, configDirectory) {
     logger: jitLogger,
     stage: 'dev',
   });
+  pageBuildRecords.trackFileReads({ context: cachedBuildContext, configDirectory });
 
   // Restore refMap, keyMap, jsMap, connectionIds, and websocketIds from skeleton build
   Object.assign(cachedBuildContext.refMap, refMap);
@@ -168,11 +171,15 @@ function getBuildContext(buildDirectory, configDirectory) {
   // Reset on skeleton rebuild (cachedBuildContext = null) — JIT re-discovers as needed.
   cachedBuildContext.dynamicIconData = {};
 
-  // Advance makeId past all skeleton IDs to prevent collisions with JIT builds
+  // Continue the config build's keys, so JIT keys never repeat a key of that build, of
+  // an earlier page build, or of an earlier config build.
   const idCounter = readJsonFile(path.join(buildDirectory, 'idCounter.json'));
-  if (idCounter != null) {
-    makeId.setCounter(idCounter);
-  }
+  makeId.continueFrom(idCounter);
+  skipStaleMapWrites({
+    buildDirectory,
+    context: cachedBuildContext,
+    keyPrefix: idCounter.prefix,
+  });
 
   return cachedBuildContext;
 }
@@ -180,6 +187,7 @@ function getBuildContext(buildDirectory, configDirectory) {
 async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
   checkPageInvalidations(buildDirectory);
   const registry = loadPageRegistry(buildDirectory);
+  const registryMtime = cachedRegistryMtime;
   if (!registry || !registry[pageId]) {
     return false;
   }
@@ -198,10 +206,12 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
   const startTime = Date.now();
   try {
     const context = getBuildContext(buildDirectory, configDirectory);
-    const result = await buildPageJit({
+    const result = await pageBuildRecords.record({
       pageId,
-      pageRegistry: registry,
       context,
+      configDirectory,
+      registryMtime,
+      build: () => buildPageJit({ pageId, pageRegistry: registry, context }),
     });
     if (result && result.installing) {
       jitLogger.info(

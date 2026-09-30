@@ -19,8 +19,8 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprot
 import { AuthenticationError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 
+import formatErrorForAgent from '../../response/formatErrorForAgent.js';
 import callEndpoint from '../endpoints/callEndpoint.js';
-import createWireProjection from '../../response/createWireProjection.js';
 import isUnauthenticatedHuman from '../endpoints/isUnauthenticatedHuman.js';
 
 // LLM-safe tool names use the same rule as buildAgents tool naming.
@@ -99,22 +99,19 @@ async function createMcpServer({ context }) {
         });
         if (!success) {
           const deserialized = serializer.deserialize(error);
-          let text = deserialized?.message ?? 'Endpoint failed.';
-          // The dev MCP route serves a coding agent, which is a dev tool: it gets the real
-          // message and the config location so it can go straight to the YAML. A prod MCP
-          // client is an end-user reader and keeps the wire message.
-          if (context.mode === 'dev' && !type.isNone(error?.devError)) {
-            const devError = serializer.deserialize(error.devError);
-            text = devError.message;
-            if (!type.isNone(devError.source)) {
-              text = `${text} (at ${devError.source})`;
-            }
-            if (!type.isNone(devError.hint)) {
-              text = `${text} Hint: ${devError.hint}`;
-            }
-          }
+          // The wire error is generic for every reader. The dev server also attaches the full
+          // error for dev tools, and the dev MCP client is a coding agent that needs it to find
+          // the failing config.
+          const devError = serializer.deserialize(error?.devError);
           return {
-            content: [{ type: 'text', text }],
+            content: [
+              {
+                type: 'text',
+                text: type.isNone(deserialized)
+                  ? 'Endpoint failed.'
+                  : formatErrorForAgent(context, devError ?? deserialized),
+              },
+            ],
             isError: true,
           };
         }
@@ -133,19 +130,19 @@ async function createMcpServer({ context }) {
         isError: true,
       };
     } catch (error) {
-      // Unauthenticated calls to gated tools are expected probing traffic -
-      // a warn line and the 401-shaped message, not a structured error log.
-      if (error.name === 'AuthenticationError') {
-        context.logger.warn(`Unauthenticated MCP tool call: ${name}`);
+      // Refused calls to gated tools (unauthenticated or wrong roles) and payloads
+      // that miss the payloadSchema (UserError) are expected traffic - a warn line
+      // and the message the model needs to retry, not a structured error log.
+      // Everything else goes through the server's error sink, which resolves
+      // the config source, logs it and collects it for the dev feedback
+      // channel.
+      if (['AuthenticationError', 'AuthorizationError', 'UserError'].includes(error.name)) {
+        context.logger.warn(`Refused MCP tool call: ${name} - ${error.message}`);
       } else {
-        context.logger.error(error);
+        await context.handleError(error);
       }
-      // This error never went through an endpoint result, so it has not been projected yet.
-      // The projection keeps an AuthenticationError's message.
-      const text =
-        context.mode === 'dev' ? error.message : createWireProjection(context)(error).message;
       return {
-        content: [{ type: 'text', text }],
+        content: [{ type: 'text', text: formatErrorForAgent(context, error) }],
         isError: true,
       };
     }

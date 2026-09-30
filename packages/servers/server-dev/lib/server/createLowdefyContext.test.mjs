@@ -36,6 +36,10 @@ jest.unstable_mockModule('./log/createLogger.js', () => ({
   default: jest.fn(() => ({ debug: jest.fn(), info: jest.fn(), warn: jest.fn(), error: jest.fn() })),
 }));
 jest.unstable_mockModule('./fileCache.js', () => ({ default: {} }));
+jest.unstable_mockModule('./auth/getDevSession.js', () => ({
+  default: jest.fn(async () => undefined),
+}));
+jest.unstable_mockModule('./auth/resolveHeadlessUser.js', () => ({ default: jest.fn() }));
 jest.unstable_mockModule('./auth/session.js', () => ({ default: jest.fn(async () => undefined) }));
 jest.unstable_mockModule('./auth/strategies.js', () => ({ default: jest.fn(async () => null) }));
 jest.unstable_mockModule('./log/logRequest.js', () => ({ default: jest.fn() }));

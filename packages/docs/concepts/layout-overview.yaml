@@ -308,7 +308,7 @@ _ref:
             The `layout` object on blocks can be used to control how a block is placed in the layout. The `layout` properties that can be defined are:
 
             - `selfAlign`: _Enum_ - Align block vertically in the area. Options are `top`, `middle`, and `bottom`. Default `top.`
-            - `align`: _Enum_ - Align content area children vertically. Options are `top`, `middle`, and `bottom`. Default `top.` This value flows to the content area as a default.
+            - `align`: _Enum_ - Align content area children vertically. Options are `top`, `middle`, and `bottom`. Default `top.` This value flows to the content area as a default. In Lowdefy v4 `layout.align` aligned the block itself within its parent — that is now `layout.selfAlign`. Setting `layout.align` on a block aligns the block's own content, never the block itself.
             - `flex`: _String_ - Set the [`flex`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex) CSS property. This overwrites the `grow`, `shrink`, and `size` properties.
             - `gap`: _Number_ | _Array_ - Set the gap (space) between blocks in the content area. If an array, the first element is the horizontal gap, and the second is the vertical gap. This value flows to the content area as a default.
             - `grow`: _Number_ - Set the [`flex-grow`](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-grow) CSS property. Default 0.

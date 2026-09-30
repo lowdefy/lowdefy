@@ -1,6 +1,6 @@
 # Modal
 
-Modal dialog overlay for focused content. Add `shortcut: Escape` to the `onClose` event to run custom actions when Escape is pressed. Ant Design&#39;s Modal already closes on Escape by default — the shortcut triggers your custom actions in addition to the built-in close.
+Modal dialog overlay for focused content. Add `shortcut: Escape` to the `onClose` event to run custom actions when Escape is pressed. Ant Design's Modal already closes on Escape by default — the shortcut triggers your custom actions in addition to the built-in close.
 
 This is a basic modal dialog with a title, content area, and default Ok/Cancel buttons.
 

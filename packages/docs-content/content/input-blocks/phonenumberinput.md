@@ -608,6 +608,7 @@ Phone number input with international country code selector.
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
+| `showFlags` | boolean | `true` | Show country flags in the country selector and input. |
 | `allowClear` | boolean | `false` | Allow the user to clear their input. |
 | `allowedRegions` | array | - | List of allowed ISO 3166-1 alpha-2 region codes. If allowedRegions is [] or null, the default list of all regions is used. |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
@@ -635,7 +636,7 @@ Phone number input with international country code selector.
 | `replaceInput.pattern` | string | - | The regular expression pattern to use to sanitize input. |
 | `replaceInput.flags` | string | - | The regex flags to use. The default value is 'gm'. |
 | `replaceInput.replacement` | string | - | The string used to replace the input that matches the pattern. The default value is ''. |
-| `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. |
+| `showArrow` | boolean | `true` | Show the suffix icon at the drop-down position of the selector. antd shows the arrow by default; `false` hides it by clearing the suffix icon. |
 | `size` | string | `"middle"` | Size of the block. Enum: `small`, `middle`, `large`. |
 | `suffix` | string | - | Suffix text for the block, priority over suffixIcon. |
 | `suffixIcon` | string \| object | - | Name of an React-Icon (See all icons) or properties of an Icon block to customize icon to suffix the text input. |

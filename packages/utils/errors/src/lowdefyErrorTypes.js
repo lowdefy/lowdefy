@@ -15,6 +15,8 @@
 */
 
 import ActionError from './ActionError.js';
+import AuthenticationError from './AuthenticationError.js';
+import AuthorizationError from './AuthorizationError.js';
 import BlockError from './BlockError.js';
 import BuildError from './BuildError.js';
 import ConfigError from './ConfigError.js';
@@ -30,6 +32,8 @@ import UserError from './UserError.js';
 // name survived - a serializer round trip, or a caught error being reshaped.
 const lowdefyErrorTypes = {
   ActionError,
+  AuthenticationError,
+  AuthorizationError,
   BlockError,
   BuildError,
   ConfigError,

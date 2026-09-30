@@ -18,13 +18,110 @@
 
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
+import collectExceptions from '../utils/collectExceptions.js';
 import createCheckDuplicateId from '../utils/createCheckDuplicateId.js';
 import validateId from '../utils/validateId.js';
+
+function validateNotification(notification, index, context) {
+  const configKey = notification?.['~k'];
+  if (!type.isObject(notification)) {
+    collectExceptions(
+      context,
+      new ConfigError(`Notification should be an object at notification ${index}.`, {
+        received: notification,
+        configKey,
+      })
+    );
+    return false;
+  }
+  if (type.isUndefined(notification.id)) {
+    collectExceptions(
+      context,
+      new ConfigError(`Notification id missing at notification ${index}.`, { configKey })
+    );
+    return false;
+  }
+  if (!type.isString(notification.id)) {
+    collectExceptions(
+      context,
+      new ConfigError(`Notification id is not a string at notification ${index}.`, {
+        received: notification.id,
+        configKey,
+      })
+    );
+    return false;
+  }
+  if (!type.isString(notification.type)) {
+    collectExceptions(
+      context,
+      new ConfigError(`Notification type is not a string at notification "${notification.id}".`, {
+        received: notification.type,
+        configKey,
+      })
+    );
+    return false;
+  }
+  return true;
+}
+
+function validateProperties(notification, context) {
+  const configKey = notification['~k'];
+  if (type.isNone(notification.properties)) {
+    notification.properties = {};
+  }
+  if (!type.isObject(notification.properties)) {
+    collectExceptions(
+      context,
+      new ConfigError(
+        `Notification properties is not an object at notification "${notification.id}".`,
+        { received: notification.properties, configKey }
+      )
+    );
+    return false;
+  }
+
+  // subject is a framework contract, independent of the template type's own schema —
+  // the render step reads it for the mail header and the returned result.
+  if (!type.isString(notification.properties.subject) || notification.properties.subject === '') {
+    collectExceptions(
+      context,
+      new ConfigError(
+        `Notification "${notification.id}" requires "properties.subject" to be a non-empty string.`,
+        { received: notification.properties.subject, configKey }
+      )
+    );
+    return false;
+  }
+
+  if (!type.isNone(notification.theme) && !type.isObject(notification.theme)) {
+    collectExceptions(
+      context,
+      new ConfigError(`Notification theme is not an object at notification "${notification.id}".`, {
+        received: notification.theme,
+        configKey,
+      })
+    );
+    return false;
+  }
+
+  if (!type.isNone(notification.testData) && !type.isObject(notification.testData)) {
+    collectExceptions(
+      context,
+      new ConfigError(
+        `Notification testData is not an object at notification "${notification.id}".`,
+        { received: notification.testData, configKey }
+      )
+    );
+    return false;
+  }
+  return true;
+}
 
 function buildNotifications({ components, context }) {
   if (components.notifications && !type.isArray(components.notifications)) {
     throw new ConfigError('Notifications is not an array.', {
       received: components.notifications,
+      configKey: components['~k'],
     });
   }
   const notifications = type.isArray(components.notifications) ? components.notifications : [];
@@ -36,62 +133,17 @@ function buildNotifications({ components, context }) {
   });
 
   notifications.forEach((notification, index) => {
+    if (!validateNotification(notification, index, context)) return;
+
     const configKey = notification['~k'];
 
-    if (type.isUndefined(notification.id)) {
-      throw new ConfigError(`Notification id missing at notification ${index}.`, { configKey });
-    }
-    if (!type.isString(notification.id)) {
-      throw new ConfigError(`Notification id is not a string at notification ${index}.`, {
-        received: notification.id,
-        configKey,
-      });
-    }
     validateId({ id: notification.id, field: 'Notification id', configKey });
     checkDuplicateNotificationId({ id: notification.id, configKey });
-
-    if (!type.isString(notification.type)) {
-      throw new ConfigError(
-        `Notification type is not a string at notification "${notification.id}".`,
-        { received: notification.type, configKey }
-      );
-    }
 
     // Track type usage for buildTypes validation
     context.typeCounters.notifications.increment(notification.type, configKey);
 
-    if (type.isNone(notification.properties)) {
-      notification.properties = {};
-    }
-    if (!type.isObject(notification.properties)) {
-      throw new ConfigError(
-        `Notification properties is not an object at notification "${notification.id}".`,
-        { received: notification.properties, configKey }
-      );
-    }
-
-    // subject is a framework contract, independent of the template type's own schema —
-    // the render step reads it for the mail header and the returned result.
-    if (!type.isString(notification.properties.subject) || notification.properties.subject === '') {
-      throw new ConfigError(
-        `Notification "${notification.id}" requires "properties.subject" to be a non-empty string.`,
-        { received: notification.properties.subject, configKey }
-      );
-    }
-
-    if (!type.isNone(notification.theme) && !type.isObject(notification.theme)) {
-      throw new ConfigError(
-        `Notification theme is not an object at notification "${notification.id}".`,
-        { received: notification.theme, configKey }
-      );
-    }
-
-    if (!type.isNone(notification.testData) && !type.isObject(notification.testData)) {
-      throw new ConfigError(
-        `Notification testData is not an object at notification "${notification.id}".`,
-        { received: notification.testData, configKey }
-      );
-    }
+    if (!validateProperties(notification, context)) return;
 
     // Rename id to internal format
     notification.notificationId = notification.id;

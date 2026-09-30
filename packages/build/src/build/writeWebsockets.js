@@ -13,6 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+import { LowdefyInternalError } from '@lowdefy/errors';
 import { type, serializer } from '@lowdefy/helpers';
 
 async function writeWebsocket({ websocket, context }) {
@@ -25,7 +26,7 @@ async function writeWebsocket({ websocket, context }) {
 async function writeWebsockets({ components, context }) {
   if (type.isNone(components.websockets)) return;
   if (!type.isArray(components.websockets)) {
-    throw new Error(`Websockets is not an array.`);
+    throw new LowdefyInternalError('Websockets is not an array.');
   }
   const writePromises = components.websockets.map((websocket) =>
     writeWebsocket({ websocket, context })

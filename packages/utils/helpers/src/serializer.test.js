@@ -15,6 +15,8 @@
 */
 
 import {
+  AuthenticationError,
+  AuthorizationError,
   ConfigError,
   LowdefyInternalError,
   lowdefyErrorNames,
@@ -800,6 +802,22 @@ test('serializeToString with skipMarkers outputs plain array', () => {
   expect(res).toEqual('{"items":[1,2,3]}');
 });
 
+test('serialize with skipMarkers leaves hidden markers out and does not wrap arrays', () => {
+  const lines = [{ sku: 'a' }];
+  Object.defineProperty(lines, '~k', { value: 'k3', enumerable: false });
+  const order = { id: 'o_1', lines, placed: new Date(0) };
+  Object.defineProperty(order, '~k', { value: 'k2', enumerable: false });
+  Object.defineProperty(order, '~r', { value: 'r1', enumerable: false });
+  Object.defineProperty(order, '~l', { value: 4, enumerable: false });
+  const res = serializer.serialize({ order }, { skipMarkers: true });
+  expect(res).toEqual({ order: { id: 'o_1', lines: [{ sku: 'a' }], placed: { '~d': 0 } } });
+});
+
+test('serialize with skipMarkers still wraps errors', () => {
+  const res = serializer.serialize({ err: new Error('boom') }, { skipMarkers: true });
+  expect(res.err['~e'].message).toEqual('boom');
+});
+
 test('serialize and deserialize round-trip preserves ~l on nested arrays', () => {
   const inner = [{ id: 'a' }];
   Object.defineProperty(inner, '~l', {
@@ -1421,14 +1439,24 @@ test('projectError is applied to typed Lowdefy errors and the class is preserved
   expect(result.stack).toBeUndefined();
 });
 
-test('lowdefyErrorTypes revives every Lowdefy error name except the auth refusals', () => {
-  // Auth refusals are answered directly by the server error handlers and never
-  // need their class back after a round trip, so the serializer does not revive them.
-  const notRevived = [
-    'AuthenticationError',
-    'AuthorizationError',
-    'TwoFactorEnrolmentRequiredError',
-  ];
-  const revivedNames = [...lowdefyErrorNames].filter((name) => !notRevived.includes(name));
+test('deserialize revives the auth gate errors as their own classes', () => {
+  const revived = serializer.deserialize(
+    serializer.serialize({
+      authentication: new AuthenticationError('Sign in.'),
+      authorization: new AuthorizationError('Request "x" does not exist.'),
+    })
+  );
+  expect(revived.authentication).toBeInstanceOf(AuthenticationError);
+  expect(revived.authentication.message).toBe('Sign in.');
+  expect(revived.authorization).toBeInstanceOf(AuthorizationError);
+  expect(revived.authorization.name).toBe('AuthorizationError');
+});
+
+test('lowdefyErrorTypes revives every Lowdefy error name except the v7-only TwoFactorEnrolmentRequiredError', () => {
+  // v6 has no two-factor enrolment, so the class does not exist here; the name is
+  // listed so errors from a v7 server still classify as Lowdefy errors.
+  const revivedNames = [...lowdefyErrorNames].filter(
+    (name) => name !== 'TwoFactorEnrolmentRequiredError'
+  );
   expect(Object.keys(lowdefyErrorTypes).sort()).toEqual(revivedNames.sort());
 });

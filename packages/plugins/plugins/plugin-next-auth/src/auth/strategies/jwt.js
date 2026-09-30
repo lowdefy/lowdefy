@@ -15,6 +15,7 @@
 */
 
 import { createRemoteJWKSet, jwtVerify } from 'jose';
+import { ConfigError, ServiceError } from '@lowdefy/errors';
 import { get, type } from '@lowdefy/helpers';
 
 // Prototype-pollution vectors - build rejects reserved claimMapping fields,
@@ -58,7 +59,7 @@ function jwt({ logger, properties, strategyId }) {
   let key;
   if (!type.isNone(secret)) {
     if (!type.isString(secret)) {
-      throw new Error(
+      throw new ConfigError(
         `Auth strategy "${strategyId}" "secret" did not resolve to a string. Check the _secret operator reference and that the secret is set.`
       );
     }
@@ -83,6 +84,14 @@ function jwt({ logger, properties, strategyId }) {
     try {
       ({ payload } = await jwtVerify(token, key, { algorithms, audience, issuer }));
     } catch (error) {
+      // A JWKS fetch failure is the key server being unavailable, not a bad
+      // token - moving on to the next strategy would silently reject every
+      // caller of this one, so it fails the request instead.
+      // A failed JWKS fetch reaches jose as TypeError('fetch failed') with the
+      // network code on its cause, so both levels are classified.
+      if (ServiceError.isServiceError(error) || ServiceError.isServiceError(error.cause)) {
+        throw new ServiceError(undefined, { cause: error.cause ?? error, service: 'JWKS' });
+      }
       // An invalid token is not this strategy's caller - resolution moves on
       // to the next strategy instead of failing the request.
       (requestLogger ?? logger).debug(

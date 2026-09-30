@@ -152,7 +152,7 @@ _ref:
 
                 > **Note:** Mock users only work with the development server (`lowdefy dev`). The production server ignores mock user configuration for security.
 
-                > **Note:** Auth must be configured (at least one provider) for mock users to work, since the mock user is processed through the Auth.js session callback.
+                `auth.dev` needs no auth stack behind it. An `auth` block whose only key is `dev` is not an auth configuration: it demands no provider and no `AUTH_SECRET`, the app builds and runs signed out in production, and in the dev server the browser is the `dev.mockUser` caller. Adding any other `auth` key declares a real auth stack, which is validated as before.
 
       - _ref:
           path: templates/navigation_buttons.yaml

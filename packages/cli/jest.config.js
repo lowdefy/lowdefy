@@ -8,6 +8,8 @@ export default {
   errorOnDeprecated: true,
   testEnvironment: 'node',
   testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/test'],
+  // Only *.test.js files are suites; src/commands/test/test.js is the `lowdefy test` handler.
+  testRegex: '\\.test\\.js$',
   transform: {
     '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../.swcrc.test' }],
   },

@@ -539,3 +539,15 @@ test('Auth plugins are counted', () => {
     process.env.AUTH_SECRET = originalSecret;
   }
 });
+
+test('buildAuth sets configured to false when auth only declares dev config', async () => {
+  const components = {
+    auth: {
+      dev: {
+        mockUser: { id: 'u1', roles: ['admin'] },
+      },
+    },
+  };
+  const res = buildAuth({ components, context });
+  expect(res.auth.configured).toBe(false);
+});

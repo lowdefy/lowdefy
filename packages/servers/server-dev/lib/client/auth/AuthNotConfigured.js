@@ -15,13 +15,22 @@
 */
 /* eslint-disable react/jsx-props-no-spreading */
 
+import { ConfigError } from '@lowdefy/errors';
+
 function authNotConfigured() {
-  throw new Error('Auth not configured.');
+  throw new ConfigError(
+    'Auth is not configured. Add an "auth" section to lowdefy.yaml to use auth actions.'
+  );
 }
 
-function AuthNotConfigured({ authConfig, children }) {
+// A dev mock user reaches the browser through this component: an app whose
+// only auth key is auth.dev has no auth stack, but the dev server still
+// resolves a session for it, so _user reads the same identity in the browser
+// as on the server.
+function AuthNotConfigured({ authConfig, children, session = null }) {
   const auth = {
     authConfig,
+    session,
     getSession: authNotConfigured,
     signIn: authNotConfigured,
     signOut: authNotConfigured,

@@ -127,20 +127,21 @@ const MultipleSelector = ({
               placeholder={
                 loading ? 'Loading...' : get(properties, 'placeholder', { default: 'Select items' })
               }
-              showArrow={get(properties, 'showArrow', { default: true })}
               size={properties.size}
               status={validation.status}
               value={loading ? [] : getSelectedIndex(value, uniqueValueOptions, { properties, multiple: true })}
               suffixIcon={
-                properties.suffixIcon && (
-                  <Icon
-                    blockId={`${blockId}_suffixIcon`}
-                    classNames={{ element: classNames.suffixIcon }}
-                    events={events}
-                    properties={properties.suffixIcon}
-                    styles={{ element: styles.suffixIcon }}
-                  />
-                )
+                get(properties, 'showArrow', { default: true }) === false
+                  ? null
+                  : properties.suffixIcon && (
+                      <Icon
+                        blockId={`${blockId}_suffixIcon`}
+                        classNames={{ element: classNames.suffixIcon }}
+                        events={events}
+                        properties={properties.suffixIcon}
+                        styles={{ element: styles.suffixIcon }}
+                      />
+                    )
               }
               clearIcon={
                 properties.clearIcon && (

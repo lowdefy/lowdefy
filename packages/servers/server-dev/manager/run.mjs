@@ -19,6 +19,7 @@ import { wait } from '@lowdefy/helpers';
 import { findAvailablePort } from '@lowdefy/node-utils';
 import opener from 'opener';
 import getContext from './getContext.mjs';
+import acquireManagerLock from './utils/acquireManagerLock.mjs';
 import startProxy from './processes/startProxy.mjs';
 import startServer from './processes/startServer.mjs';
 import formatNoticeBox from './utils/formatNoticeBox.mjs';
@@ -81,6 +82,19 @@ The run script does the following:
 
 const context = await getContext();
 
+// Refuse to run beside another manager for the same app - two managers race
+// each other's incremental builds and one wedges serving a stale build.
+const managerLock = acquireManagerLock({ directory: context.directories.server });
+if (managerLock.acquired === false) {
+  context.logger.error(
+    `Another lowdefy dev manager (pid ${managerLock.holder.pid}, started ${managerLock.holder.startedAt}) ` +
+      `is already running for this app. Two managers race writing the build directory. ` +
+      `Stop it first, or delete ${managerLock.lockPath} if it is stale.`
+  );
+  process.exit(1);
+}
+process.on('exit', () => managerLock.release());
+
 // Shut the Vite child down on direct signals (process managers, scripts/dev.mjs
 // signal forwarding) — terminal Ctrl+C signals the whole process group, but a
 // targeted SIGTERM would otherwise orphan the child.
@@ -119,7 +133,7 @@ try {
 
   startServer(context);
   await wait(800);
-  const docsUrl = `http://localhost:${context.options.port}/lowdefy-docs`;
+  const docsUrl = `${context.url}/lowdefy-docs`;
   context.logger.info(
     { color: 'blue' },
     formatNoticeBox({
@@ -139,7 +153,7 @@ try {
   );
   if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
     // TODO: Wait 1 sec for a ping and don't open if a ping is seen
-    opener(`http://localhost:${context.options.port}`);
+    opener(context.url);
   }
   await new Promise(() => {});
 } catch (error) {

@@ -14,17 +14,25 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
+import { AuthenticationError, AuthorizationError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 
-function authorizeWebsocket({ authorize, logger }, { websocketConfig }) {
+function authorizeWebsocket({ authorize, logger, user }, { websocketConfig }) {
   if (!authorize(websocketConfig)) {
     logger.debug({
       event: 'debug_websocket_authorize',
       authorized: false,
       auth_config: websocketConfig.auth,
     });
+    // Unauthenticated on a protected websocket - 401 tells the caller to fix
+    // its credentials. Wrong roles stay opaque below.
+    if (type.isNone(user)) {
+      throw new AuthenticationError(
+        `Authentication required for websocket "${websocketConfig.websocketId}".`
+      );
+    }
     // Same message as a missing websocket so channel existence does not leak.
-    throw new ConfigError(`Websocket "${websocketConfig.websocketId}" does not exist.`);
+    throw new AuthorizationError(`Websocket "${websocketConfig.websocketId}" does not exist.`);
   }
 }
 

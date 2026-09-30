@@ -19,6 +19,7 @@ import path from 'node:path';
 import { type } from '@lowdefy/helpers';
 
 import getDocsManifest from './getDocsManifest.js';
+import getHazards from './getHazards.js';
 
 function findDoc({ manifest, slug, kind, typeName }) {
   if (!type.isNone(slug)) {
@@ -57,7 +58,14 @@ function getCoreDoc({ slug, kind, type: typeName }) {
     return null;
   }
   const markdown = fs.readFileSync(path.join(manifest.contentDir, doc.path), 'utf8');
-  return { slug: doc.slug, title: doc.title, section: doc.section, markdown };
+  const result = { slug: doc.slug, title: doc.title, section: doc.section, markdown };
+  // Hazards belong to the type the caller asked about, not to the doc page:
+  // findDoc remaps requests onto their connection's page, and a request
+  // must carry its own hazards rather than inherit the connection's.
+  if (type.isNone(slug) && !type.isNone(typeName)) {
+    result.hazards = getHazards({ kind, type: typeName });
+  }
+  return result;
 }
 
 export default getCoreDoc;

@@ -1,6 +1,6 @@
 # DiffTimeline
 
-`DiffTimeline` renders a diff as a vertical audit trail using Ant Design&#39;s `Timeline` component. Each change becomes a timeline entry with a colour-coded dot (green for added, red for removed, blue for changed) and a breadcrumb-style label that shows the full path to the changed field. Uses the same filtering, labelling, and per-path value formatters as `DiffList`.
+`DiffTimeline` renders a diff as a vertical audit trail using Ant Design's `Timeline` component. Each change becomes a timeline entry with a colour-coded dot (green for added, red for removed, blue for changed) and a breadcrumb-style label that shows the full path to the changed field. Uses the same filtering, labelling, and per-path value formatters as `DiffList`.
 
 ```yaml
 - id: diff_timeline_order

@@ -53,3 +53,15 @@ test('validateConfig config error when basePath does not start with "/".', () =>
   };
   expect(() => validateConfig({ components, context })).toThrow('Base path must start with "/".');
 });
+
+test.each([
+  ['/app/', '/app'],
+  ['/app//', '/app'],
+  ['/app/nested/', '/app/nested'],
+  ['/', ''],
+])('validateConfig removes the trailing slash from basePath %s', (basePath, expected) => {
+  const components = { config: { basePath } };
+  validateConfig({ components, context });
+  expect(components.config.basePath).toEqual(expected);
+});
+

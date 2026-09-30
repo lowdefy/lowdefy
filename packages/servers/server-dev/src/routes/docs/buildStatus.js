@@ -14,10 +14,14 @@
   limitations under the License.
 */
 
+import buildEditedPages from '../../../lib/docs/buildEditedPages.js';
 import getBuildStatus from '../../../lib/docs/getBuildStatus.js';
 
-function docsBuildStatusHandler(c) {
-  return c.json(getBuildStatus());
+// Builds the pages the latest edits touched first, so the answer covers them
+// whether or not anything has requested them since.
+async function docsBuildStatusHandler(c) {
+  const checked = await buildEditedPages();
+  return c.json(getBuildStatus({ checked }));
 }
 
 export default docsBuildStatusHandler;

@@ -15,6 +15,7 @@
 */
 
 import getCollection from '../getCollection.js';
+import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
@@ -31,32 +32,36 @@ async function MongodbDeleteOne({
   const { filter, options } = deserializedRequest;
   const { collection, logCollection } = await getCollection({ connection });
   let response;
-  if (logCollection) {
-    // findOneAndDelete instead of deleteOne to capture the deleted document
-    // for the change log. The response shape matches the deleteOne response.
-    const result = await collection.findOneAndDelete(filter, {
-      ...options,
-      includeResultMetadata: true,
-    });
-    const before = result.value ?? null;
-    response = {
-      acknowledged: true,
-      deletedCount: result.lastErrorObject?.n ?? 0,
-    };
-    await logCollection.insertOne({
-      args: { filter, options },
-      blockId,
-      connectionId,
-      pageId,
-      payload,
-      requestId,
-      before,
-      timestamp: new Date(),
-      type: 'MongoDBDeleteOne',
-      meta: connection.changeLog?.meta,
-    });
-  } else {
-    response = await collection.deleteOne(filter, options);
+  try {
+    if (logCollection) {
+      // findOneAndDelete instead of deleteOne to capture the deleted document
+      // for the change log. The response shape matches the deleteOne response.
+      const result = await collection.findOneAndDelete(filter, {
+        ...options,
+        includeResultMetadata: true,
+      });
+      const before = result.value ?? null;
+      response = {
+        acknowledged: true,
+        deletedCount: result.lastErrorObject?.n ?? 0,
+      };
+      await logCollection.insertOne({
+        args: { filter, options },
+        blockId,
+        connectionId,
+        pageId,
+        payload,
+        requestId,
+        before,
+        timestamp: new Date(),
+        type: 'MongoDBDeleteOne',
+        meta: connection.changeLog?.meta,
+      });
+    } else {
+      response = await collection.deleteOne(filter, options);
+    }
+  } catch (error) {
+    throw mapMongoError(error, { connection, requestType: 'MongoDBDeleteOne' });
   }
   return serialize(response);
 }

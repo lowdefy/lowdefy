@@ -101,8 +101,11 @@ function mockGenerateSteps(result = GENERATE_RESULT) {
   });
 }
 
+const testLogger = { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() };
+
 function createTestContext(overrides = {}) {
   return {
+    logger: testLogger,
     mode: 'generate',
     agentContext: {
       conversationId: null,
@@ -249,7 +252,6 @@ test('handleAgentGenerate awaits onFinish hooks with the finish payload and igno
 test('handleAgentGenerate warns and continues when an onFinish hook fails', async () => {
   const { default: handleAgentGenerate } = await import('./handleAgentGenerate.js');
   mockGenerateSteps();
-  const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
   const callEndpoint = jest.fn().mockRejectedValue(new Error('hook broke'));
   const { result } = await handleAgentGenerate({
@@ -262,8 +264,10 @@ test('handleAgentGenerate warns and continues when an onFinish hook fails', asyn
   });
 
   expect(result.text).toBe('Final answer');
-  expect(warnSpy).toHaveBeenCalledWith('onFinish hook "save-run" failed: hook broke');
-  warnSpy.mockRestore();
+  expect(testLogger.error).toHaveBeenCalledWith(
+    expect.objectContaining({ err: expect.any(Error) }),
+    'onFinish hook "save-run" failed.'
+  );
 });
 
 test('handleAgentGenerate closes MCP clients when generate rejects', async () => {

@@ -29,16 +29,6 @@ function resolveDeprecated(layout, newName, ...oldNames) {
   return undefined;
 }
 
-function resolveLayoutAlign(layout) {
-  if (!type.isNone(layout.align) && type.isNone(layout.selfAlign)) {
-    console.warn(
-      '[Lowdefy] layout.align for self-alignment is deprecated. Use layout.selfAlign instead.'
-    );
-    return undefined;
-  }
-  return layout.align;
-}
-
 function layoutParamsToArea({ areaKey, area = {}, layout = {} }) {
   // Normalize area.gutter → area.gap (deprecated)
   if (!type.isNone(area.gutter) && type.isNone(area.gap)) {
@@ -50,11 +40,9 @@ function layoutParamsToArea({ areaKey, area = {}, layout = {} }) {
     return area;
   }
 
-  const layoutAlign = resolveLayoutAlign(layout);
-
   if (type.isNone(area.gap))
     area.gap = resolveDeprecated(layout, 'gap', 'contentGutter', 'contentGap');
-  if (type.isNone(area.align)) area.align = layoutAlign;
+  if (type.isNone(area.align)) area.align = resolveDeprecated(layout, 'align', 'contentAlign');
   if (type.isNone(area.justify))
     area.justify = resolveDeprecated(layout, 'justify', 'contentJustify');
   if (type.isNone(area.direction))

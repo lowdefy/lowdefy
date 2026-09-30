@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 function checkSecretNodes({ value, declaredSecrets, entryId }) {
@@ -37,7 +37,8 @@ function checkSecretNodes({ value, declaredSecrets, entryId }) {
       throw new ConfigError(
         `Module "${entryId}" references secret "${secretName}" ` +
           `but does not declare it in module.lowdefy.yaml secrets. ` +
-          `Add it to the module's secrets list or remove the reference.`
+          `Add it to the module's secrets list or remove the reference.`,
+        { configKey: value['~k'] }
       );
     }
   }
@@ -59,7 +60,7 @@ function buildModules({ components, context }) {
     const moduleEntry = context.modules[entry.id];
 
     if (!moduleEntry) {
-      throw new ConfigError(
+      throw new LowdefyInternalError(
         `Module entry "${entry.id}" not registered. ` +
           `Check that buildModuleDefs ran successfully.`
       );
@@ -74,7 +75,8 @@ function buildModules({ components, context }) {
       if (!moduleConnIds.has(remapKey)) {
         throw new ConfigError(
           `Module "${entry.id}" connection remapping references "${remapKey}", ` +
-            `but the module has no connection with that id.`
+            `but the module has no connection with that id.`,
+          { configKey: entry['~k'] }
         );
       }
     }

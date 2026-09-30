@@ -36,7 +36,11 @@ function setupTestFixtures() {
 
   write('build/plugins/availableTypes.json', {
     actions: {
-      SetState: { package: '@lowdefy/actions-core', originalTypeName: 'SetState', version: '5.0.0' },
+      SetState: {
+        package: '@lowdefy/actions-core',
+        originalTypeName: 'SetState',
+        version: '5.0.0',
+      },
     },
     agents: {},
     auth: { adapters: {}, callbacks: {}, events: {}, providers: {} },
@@ -58,7 +62,11 @@ function setupTestFixtures() {
       },
       server: {
         _get: { package: '@lowdefy/operators-js', originalTypeName: '_get', version: '5.0.0' },
-        _secret: { package: '@lowdefy/operators-js', originalTypeName: '_secret', version: '5.0.0' },
+        _secret: {
+          package: '@lowdefy/operators-js',
+          originalTypeName: '_secret',
+          version: '5.0.0',
+        },
       },
     },
     requests: {
@@ -105,23 +113,52 @@ function setupTestFixtures() {
     TestBlock: { type: 'object', properties: {} },
   });
   write('build/plugins/blockMetas.json', {
-    Button: { category: 'display' },
-    TestBlock: { category: 'input', valueType: 'string' },
+    Button: { category: 'display', hazards: [] },
+    TestBlock: {
+      category: 'input',
+      valueType: 'string',
+      hazards: [
+        { id: 'test-block-hazard', message: 'TestBlock does something surprising.', see: null },
+        // Same id as a framework hazard — getHazards must de-duplicate, keeping
+        // the plugin's own wording.
+        {
+          id: 'visible-false-prunes-state',
+          message: 'Plugin wording for visible: false.',
+          see: null,
+        },
+      ],
+    },
   });
   write('build/plugins/actionSchemas.json', { SetState: { type: 'object' } });
   write('build/plugins/operatorSchemas.json', { _get: { params: { type: 'object' } } });
+  write('build/plugins/operatorMetas.json', {
+    _get: {
+      hazards: [
+        { id: 'get-fixture-hazard', message: '_get fixture hazard.', see: 'operators/_get' },
+      ],
+    },
+  });
   write('build/plugins/connectionSchemas.json', {
     AxiosHttp: { schema: { type: 'object' }, requests: ['AxiosHttp'] },
   });
   write('build/plugins/requestSchemas.json', {
     AxiosHttp: { schema: { type: 'object' }, meta: { checkRead: false, checkWrite: false } },
     ReadOnlyRequest: { schema: { type: 'object' }, meta: { checkRead: true, checkWrite: false } },
-    WriteRequest: { schema: { type: 'object' }, meta: { checkRead: true, checkWrite: true } },
+    WriteRequest: {
+      schema: { type: 'object' },
+      meta: {
+        checkRead: true,
+        checkWrite: true,
+        hazards: [{ id: 'write-request-hazard', message: 'Writes are final.', see: null }],
+      },
+    },
     // No "meta" at all — some custom plugins don't declare it; treated as unknown.
     UnknownMetaRequest: { schema: { type: 'object' } },
   });
   write('build/customTypesMap.json', {
-    blocks: { TestBlock: { package: 'test-plugin', originalTypeName: 'TestBlock', version: '1.0.0' } },
+    blocks: {
+      TestBlock: { package: 'test-plugin', originalTypeName: 'TestBlock', version: '1.0.0' },
+    },
   });
   write('build/installedPluginPackages.json', [
     '@lowdefy/blocks-antd',
@@ -202,6 +239,20 @@ function setupTestFixtures() {
       '~r': 'ref-other',
       '~l': 4,
     },
+    // Requests over a tenant-walled and a shared connection — findConfig
+    // resolves connectionId from the per-request artifact for hazards.
+    'key-other-req-tenant': {
+      key: 'root.requests[0:req-tenant:WriteRequest]',
+      '~k_parent': 'key-other',
+      '~r': 'ref-other',
+      '~l': 12,
+    },
+    'key-other-req-shared': {
+      key: 'root.requests[1:req-shared:WriteRequest]',
+      '~k_parent': 'key-other',
+      '~r': 'ref-other',
+      '~l': 18,
+    },
     // Skeleton-built page (like the default 404) — content is keyed inside
     // the global config tree with the page segment inline, and chains to the
     // shared config root rather than a page-specific one.
@@ -227,6 +278,9 @@ function setupTestFixtures() {
 
   write('build/pages/home.json', {
     pageId: 'home',
+    // The skeleton build keys the page's auth, chaining to the global root —
+    // a real artifact carries this before any JIT-keyed block.
+    auth: { public: true, '~k': 'key-home-stub' },
     blocks: [
       { id: 'my_button', type: 'Button', '~k': 'key-button' },
       {
@@ -284,6 +338,28 @@ function setupTestFixtures() {
     payload: {},
     properties: {},
   });
+
+  write('build/pages/other/requests/req-tenant.json', {
+    id: 'request:other:req-tenant',
+    requestId: 'req-tenant',
+    pageId: 'other',
+    connectionId: 'tenant_db',
+    type: 'WriteRequest',
+    payload: {},
+    properties: {},
+  });
+  write('build/pages/other/requests/req-shared.json', {
+    id: 'request:other:req-shared',
+    requestId: 'req-shared',
+    pageId: 'other',
+    connectionId: 'shared_db',
+    type: 'WriteRequest',
+    payload: {},
+    properties: {},
+  });
+  // Index of walled connections (packages/build/src/build/full/writeConnections.js)
+  // — shared connections are never listed here.
+  write('build/tenantConnections.json', [{ connectionId: 'tenant_db', type: 'MongoDBCollection' }]);
 
   write('build/connectionIds.json', ['axios']);
   write('build/connections/axios.json', {

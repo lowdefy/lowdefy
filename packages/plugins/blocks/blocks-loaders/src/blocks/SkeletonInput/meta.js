@@ -26,6 +26,11 @@ export default {
     type: 'object',
     additionalProperties: false,
     properties: {
+      label: {
+        type: 'boolean',
+        default: true,
+        description: 'Render the label skeleton. Set to false for an input without a label.',
+      },
       size: {
         type: 'string',
         default: 'medium',

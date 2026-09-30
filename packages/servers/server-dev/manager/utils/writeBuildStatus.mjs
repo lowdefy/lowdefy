@@ -22,7 +22,7 @@ import { writeFileIfChanged } from '@lowdefy/node-utils';
 // process - a separate process from this manager, sharing only the build
 // directory - can serve current build errors/warnings to AI coding agents.
 // writeFileIfChanged creates the build directory if it does not exist, which
-// covers the case where the build attempt cleaned it before failing.
+// covers a first build that fails.
 async function writeBuildStatus({ directories, status, errors, warnings }) {
   const buildStatus = {
     status,

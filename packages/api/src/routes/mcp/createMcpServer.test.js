@@ -74,6 +74,11 @@ const failingEndpointConfig = {
 };
 
 function createContext({ session = { user: { id: 'user_1' } }, configs = {}, mode = 'prod' } = {}) {
+  const operators = {
+    _fail: () => {
+      throw new Error('Boom.');
+    },
+  };
   const files = {
     'mcp.json': mcpJson,
     'api/get-customer.json': endpointConfig,
@@ -85,7 +90,7 @@ function createContext({ session = { user: { id: 'user_1' } }, configs = {}, mod
     ...configs,
   };
   const readConfigFile = jest.fn((path) => files[path] ?? null);
-  return testContext({ connections, logger, mode, readConfigFile, session });
+  return testContext({ connections, logger, mode, operators, readConfigFile, session });
 }
 
 async function connectClient(server) {
@@ -270,7 +275,9 @@ test('tools/call returns a 401-shaped error result for an unauthenticated caller
   const result = await client.callTool({ name: 'get-customer', arguments: {} });
   expect(result.isError).toBe(true);
   expect(result.content[0].text).toBe('Authentication required for API endpoint "get-customer".');
-  expect(logger.warn).toHaveBeenCalledWith('Unauthenticated MCP tool call: get-customer');
+  expect(logger.warn).toHaveBeenCalledWith(
+    'Refused MCP tool call: get-customer - Authentication required for API endpoint "get-customer".'
+  );
   expect(logger.error).not.toHaveBeenCalled();
 });
 
@@ -286,9 +293,9 @@ test('tools/call returns a masked error result for an authenticated caller with 
 
   const result = await client.callTool({ name: 'get-customer', arguments: {} });
   expect(result.isError).toBe(true);
-  // callEndpoint masks protected endpoints as missing for wrong-role callers, and the
-  // wire policy then reduces that to the generic message.
-  expect(result.content[0].text).toBe('Something went wrong.');
+  // callEndpoint masks protected endpoints as missing for wrong-role callers. The mask
+  // is an AuthorizationError, whose message the wire policy keeps.
+  expect(result.content[0].text).toBe('API Endpoint "get-customer" does not exist.');
 });
 
 test('tools/call returns the generic message in prod when an endpoint step throws a foreign error', async () => {
@@ -353,4 +360,78 @@ test('tools/call keeps the raw message in dev for an error thrown outside the en
   const result = await client.callTool({ name: 'get-customer', arguments: {} });
   expect(result.isError).toBe(true);
   expect(result.content[0].text).toBe('ENOENT: no such file api/get-customer.json');
+});
+
+const failingConfig = {
+  endpointId: 'failing',
+  id: 'endpoint:failing',
+  type: 'Api',
+  auth: { public: true },
+  description: 'Always fails.',
+  payloadSchema: { type: 'object' },
+  // An operator failure is a fault, so runRoutine passes the error through
+  // handleError - unlike :throw, which is a UserError.
+  routine: { ':return': { _fail: true } },
+};
+
+const failingMcpJson = {
+  ...mcpJson,
+  endpoints: [...mcpJson.endpoints, 'failing'],
+};
+
+test('tools/call returns the generic message of a failed routine in prod', async () => {
+  const context = createContext({
+    configs: { 'mcp.json': failingMcpJson, 'api/failing.json': failingConfig },
+  });
+  context.configDirectory = '/app';
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'failing', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toBe('Something went wrong.');
+});
+
+test('tools/call appends the config source of a failed routine in dev', async () => {
+  const context = createContext({
+    configs: { 'mcp.json': failingMcpJson, 'api/failing.json': failingConfig },
+    mode: 'dev',
+  });
+  context.configDirectory = '/app';
+  // Mirrors createHandleError in server-dev, which resolves the location onto the error.
+  context.handleError = jest.fn(async (error) => {
+    error.source = '/app/api/failing.yaml:4';
+    error.handled = true;
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'failing', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(context.handleError).toHaveBeenCalledTimes(1);
+  expect(result.content[0].text).toContain('Boom.');
+  expect(result.content[0].text).toMatch(/ \(at api\/failing\.yaml:4\)$/);
+});
+
+test('tools/call routes an unexpected failure through handleError and reports its source in dev', async () => {
+  const context = createContext({ session: null, mode: 'dev' });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+  context.configDirectory = '/app';
+  context.handleError = jest.fn(async (error) => {
+    error.source = 'api/get-customer.yaml:2';
+    error.handled = true;
+  });
+  // The unknown-tool branch reads auth.json to decide whether to answer with
+  // an authentication error, so a read failure there is an unexpected fault.
+  context.readConfigFile = jest.fn(() => {
+    throw new Error('Config read exploded.');
+  });
+
+  const result = await client.callTool({ name: 'no-such-tool', arguments: {} });
+  expect(result.isError).toBe(true);
+  expect(context.handleError).toHaveBeenCalledTimes(1);
+  expect(context.handleError.mock.calls[0][0].message).toEqual('Config read exploded.');
+  expect(result.content[0].text).toEqual('Config read exploded. (at api/get-customer.yaml:2)');
+  expect(logger.warn).not.toHaveBeenCalled();
 });

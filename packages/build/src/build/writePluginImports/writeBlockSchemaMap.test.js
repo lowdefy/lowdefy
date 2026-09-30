@@ -62,9 +62,7 @@ test('writeBlockSchemaMap typesMap schemas take priority over package schemas', 
   };
   const components = {
     imports: {
-      blocks: [
-        { package: '@lowdefy/blocks-basic', typeName: 'Box', originalTypeName: 'Box' },
-      ],
+      blocks: [{ package: '@lowdefy/blocks-basic', typeName: 'Box', originalTypeName: 'Box' }],
     },
   };
   const context = {
@@ -145,4 +143,78 @@ test('writeBlockSchemaMap groups multiple blocks from same package', async () =>
   const written = JSON.parse(mockWriteBuildArtifact.mock.calls[0][1]);
   expect(written.Box).toBeDefined();
   expect(written.Span).toBeDefined();
+});
+
+test('writeBlockSchemaMap carries meta.hazards into blockMetas and defaults to an empty list', async () => {
+  const components = {
+    imports: {
+      blocks: [
+        { package: '@lowdefy/blocks-basic', typeName: 'Html', originalTypeName: 'Html' },
+        { package: '@lowdefy/blocks-basic', typeName: 'Box', originalTypeName: 'Box' },
+      ],
+    },
+  };
+  const context = {
+    typesMap: { schemas: { blocks: {} } },
+    writeBuildArtifact: mockWriteBuildArtifact,
+  };
+  await writeBlockSchemaMap({ components, context });
+  const metasCall = mockWriteBuildArtifact.mock.calls.find(
+    (call) => call[0] === 'plugins/blockMetas.json'
+  );
+  const blockMetas = JSON.parse(metasCall[1]);
+  expect(blockMetas.Html.hazards.map((hazard) => hazard.id)).toEqual(['html-style-stripped']);
+  expect(blockMetas.Html.hazards[0]).toEqual({
+    id: expect.any(String),
+    message: expect.any(String),
+    see: expect.any(String),
+  });
+  expect(blockMetas.Box.hazards).toEqual([]);
+});
+
+test('writeBlockSchemaMap carries hazards from typesMap blockMetas for custom plugins', async () => {
+  const components = {
+    imports: {
+      blocks: [
+        { package: 'custom-plugin', typeName: 'CustomBlock', originalTypeName: 'CustomBlock' },
+      ],
+    },
+  };
+  const hazards = [{ id: 'custom-hazard', message: 'Something surprising.', see: null }];
+  const context = {
+    typesMap: {
+      schemas: { blocks: { CustomBlock: { type: 'object' } } },
+      blockMetas: { CustomBlock: { category: 'display', hazards } },
+    },
+    writeBuildArtifact: mockWriteBuildArtifact,
+  };
+  await writeBlockSchemaMap({ components, context });
+  const metasCall = mockWriteBuildArtifact.mock.calls.find(
+    (call) => call[0] === 'plugins/blockMetas.json'
+  );
+  expect(JSON.parse(metasCall[1]).CustomBlock).toEqual({ category: 'display', hazards });
+});
+
+test('writeBlockSchemaMap reads hazards from the package meta when typesMap blockMetas omit them', async () => {
+  // Core plugin typesMap metas are built by extractBlockTypes, which does not
+  // carry hazards — the plugin's meta module is the source.
+  const components = {
+    imports: {
+      blocks: [{ package: '@lowdefy/blocks-basic', typeName: 'Html', originalTypeName: 'Html' }],
+    },
+  };
+  const context = {
+    typesMap: {
+      schemas: { blocks: {} },
+      blockMetas: { Html: { category: 'display', cssKeys: ['element'] } },
+    },
+    writeBuildArtifact: mockWriteBuildArtifact,
+  };
+  await writeBlockSchemaMap({ components, context });
+  const metasCall = mockWriteBuildArtifact.mock.calls.find(
+    (call) => call[0] === 'plugins/blockMetas.json'
+  );
+  const blockMetas = JSON.parse(metasCall[1]);
+  expect(blockMetas.Html.category).toEqual('display');
+  expect(blockMetas.Html.hazards.map((hazard) => hazard.id)).toEqual(['html-style-stripped']);
 });

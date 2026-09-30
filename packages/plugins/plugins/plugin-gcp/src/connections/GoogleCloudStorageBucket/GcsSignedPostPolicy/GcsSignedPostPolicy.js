@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import getBucket from '../getBucket.js';
@@ -23,7 +24,7 @@ async function GcsSignedPostPolicy({ request, connection }) {
   const { bucket } = connection;
   const { conditions, expires = 3600, fields = {}, key } = request;
   if (type.isObject(fields) === false) {
-    throw new Error(`properties.fields must be an object. Received ${JSON.stringify(fields)}.`);
+    throw new ConfigError('GcsSignedPostPolicy request "fields" must be an object.');
   }
   const options = {
     expires: Date.now() + expires * 1000,

@@ -15,7 +15,6 @@
 */
 
 import { getDevError } from '@lowdefy/engine';
-import { UserError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
 function createHandleError(lowdefy) {
@@ -43,8 +42,9 @@ function createHandleError(lowdefy) {
     loggedErrors.add(errorKey);
 
     // UserError is client-only — log to browser console, never send to server or
-    // the error bar
-    if (error instanceof UserError) {
+    // the error bar. Matched by name, not instanceof: plugins bundle their own
+    // @lowdefy/errors copy.
+    if (error?.name === 'UserError') {
       logger.error(shown);
       return;
     }

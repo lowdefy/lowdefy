@@ -34,23 +34,23 @@ import getMockUser from './getMockUser.js';
 //    (routes/auth.js) — obtains the session from this one function, so the
 //    two can never diverge.
 //
+// A dev user needs no auth stack behind it: an app whose only auth key is
+// auth.dev is not an auth configuration (auth.configured is false), and its
+// mock user is still the caller here and in the browser.
+//
 // Auth.js sessions carry an expires timestamp (the client SessionProvider
 // schedules refetches off it); dev sessions never expire while the server
 // runs, a day keeps polling calm.
 const DEV_SESSION_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
-async function getDevSession(c) {
-  const user = getMockUser() ?? getHeadlessUser(c);
+// An explicit `user` is a per-call caller (createLowdefyContext's `user`
+// option, used by the headless agent tools): it wins over the ambient mock
+// user and headless cookie, and runs through the same session pipeline.
+async function getDevSession(c, { user: injectedUser } = {}) {
+  const user = injectedUser ?? getMockUser() ?? getHeadlessUser(c);
   if (!user) {
     return undefined;
   }
-  // Without auth configured nothing is protected and there is no session
-  // callback pipeline to run — a dev session would not match any prod
-  // behaviour. (A configured mock user already threw in getMockUser.)
-  if (authJson.configured !== true) {
-    return undefined;
-  }
-
   const sessionCallback = createSessionCallback({
     authConfig: authJson,
     plugins: { callbacks },

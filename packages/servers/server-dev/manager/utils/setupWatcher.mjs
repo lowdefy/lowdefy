@@ -16,6 +16,7 @@
 
 import chokidar from 'chokidar';
 import BatchChanges from './BatchChanges.mjs';
+import createDotPathIgnore from './createDotPathIgnore.mjs';
 
 function setupWatcher({
   callback,
@@ -26,15 +27,8 @@ function setupWatcher({
   delay = 500,
 }) {
   return new Promise((resolve) => {
-    // const { watch = [], watchIgnore = [] } = context.options;
-    // const resolvedWatchPaths = watch.map((pathName) => path.resolve(pathName));
-
     const batchChanges = new BatchChanges({ context, fn: callback, delay });
-    const defaultIgnorePaths = watchDotfiles
-      ? []
-      : [
-          /(^|[/\\])\../, // ignore dotfiles
-        ];
+    const defaultIgnorePaths = watchDotfiles ? [] : [createDotPathIgnore({ watchPaths })];
     const configWatcher = chokidar.watch(watchPaths, {
       ignored: [...defaultIgnorePaths, ...ignorePaths],
       persistent: true,
@@ -43,7 +37,7 @@ function setupWatcher({
     configWatcher.on('add', (...args) => batchChanges.newChange(...args));
     configWatcher.on('change', (...args) => batchChanges.newChange(...args));
     configWatcher.on('unlink', (...args) => batchChanges.newChange(...args));
-    configWatcher.on('ready', () => resolve());
+    configWatcher.on('ready', () => resolve(configWatcher));
   });
 }
 
