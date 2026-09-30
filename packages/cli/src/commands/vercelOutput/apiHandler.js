@@ -18,9 +18,9 @@
 // .vercel/output/functions/api.func/<relServer>/api/index.js, where <relServer> is the server
 // directory's path relative to the trace base (empty for standalone apps). Kept as a string (not a
 // template file) so it ships verbatim — a real source file would be transpiled by the CLI's swc
-// build, stripping these comments. Its `../src/app.js` import and the chdir to `..` resolve to the
-// server directory inside the function, where the assembly places src/, build/, lib/ and the traced
-// dependency closure.
+// build, stripping these comments. Its `../src/initServer.js` import and the chdir to `..` resolve
+// to the server directory inside the function, where the assembly places src/, build/, lib/ and the
+// traced dependency closure.
 const apiHandler = `/*
   Vercel Serverless Function entry for a Lowdefy (Hono) app — generated into the Vercel Build Output
   by lowdefy vercel-output.
@@ -44,20 +44,12 @@ import * as Sentry from '@sentry/node';
 // a static import is hoisted and would read files at the wrong cwd.
 process.chdir(path.join(path.dirname(fileURLToPath(import.meta.url)), '..'));
 
-// Sentry is initialised through the same initSentryServer as the Node entry (src/index.js), and
-// before the app is imported so its instrumentation observes the module graph. It reads
-// build/logger.json, so it too loads after the chdir. Without SENTRY_DSN, or with
-// logger.sentry.server false, it does nothing.
-const { default: initSentryServer } = await import('../lib/server/sentry/initSentry.js');
-const sentryEnabled = initSentryServer();
-
-const { default: createApp } = await import('../src/app.js');
+// The same startup as the Node entry (src/index.js): the NEXTAUTH_URL alias, Sentry, then the app,
+// and the environment guards before any request is served. A failed guard throws here, so the
+// function fails every request instead of serving with the wrong variables.
+const { default: initServer } = await import('../src/initServer.js');
+const { createApp, sentryEnabled } = await initServer();
 const app = createApp({ serveStaticAssets: false });
-
-if (sentryEnabled) {
-  const { default: createLogger } = await import('../lib/server/log/createLogger.js');
-  createLogger({ server: 'lowdefy' }).info('Sentry enabled: server');
-}
 
 export const config = { runtime: 'nodejs' };
 

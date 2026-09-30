@@ -63,7 +63,8 @@ lowdefy build
 ```
 server/
 ├── src/                       # Hono server (unbundled Node ESM)
-│   ├── index.js               # Entry: env aliasing, Sentry init, serve(app)
+│   ├── index.js               # Node entry: initServer(), serve(app), graceful shutdown
+│   ├── initServer.js          # Shared startup: NEXTAUTH_URL alias, Sentry, app import, guards
 │   ├── app.js                 # createApp(): routes, middleware, static, onError
 │   ├── middleware/
 │   │   ├── apiContext.js      # Builds the request context (replaces apiWrapper)
@@ -141,7 +142,7 @@ c.set('lowdefyContext', context);
 - Page paths: plain `Internal Server Error` 500.
 - `context.handleError(error)` (structured pino log + Sentry capture) runs for both.
 
-**Sentry capture needs an entry that initialised Sentry.** `captureSentryError` only checks `SENTRY_DSN`, so an entry that skips `initSentryServer()` silently drops every server event. Both production entries call it after the chdir and before importing the app: `src/index.js` (Node and `lowdefy docker-output`) and the Vercel function entry that `lowdefy vercel-output` generates (`packages/cli/src/commands/vercelOutput/apiHandler.js`). The Vercel entry also flushes after each response through Vercel's `waitUntil`, because the function can be suspended once the response ends. `server-dev` and `server-e2e` have no Sentry.
+**Every production entry starts through `initServer`.** `src/initServer.js` runs the startup both production entries need, in order: the `NEXTAUTH_URL` → `AUTH_URL` alias, `initSentryServer()`, the app import (after Sentry, so instrumentation observes the module graph), then `checkEnvironmentGuards` for the current environment, before any request is served. The entries are `src/index.js` (Node and `lowdefy docker-output`) and the Vercel function entry that `lowdefy vercel-output` generates (`packages/cli/src/commands/vercelOutput/apiHandler.js`), which imports it dynamically after its chdir because the build artifacts are read relative to the cwd. A step added to only one entry drifts: `captureSentryError` only checks `SENTRY_DSN`, so an entry that skips Sentry init silently drops every server event. The Vercel entry also flushes Sentry after each response through Vercel's `waitUntil`, because the function can be suspended once the response ends. A failed guard throws out of the Vercel entry's module init, so the function fails every request rather than serving with the wrong variables. `server-dev` and `server-e2e` have no Sentry.
 
 ## Page Rendering
 
@@ -182,7 +183,7 @@ The framework adapters passed to `@lowdefy/client` (`Components.Head`, `Componen
 - When `authJson.configured`, `initAuthConfig` is mounted app-wide; `getAuthConfig` (in `@lowdefy/api`) assembles providers/callbacks/events/adapter from the build plugins and adds the Auth.js v5 needs: `secret: AUTH_SECRET ?? NEXTAUTH_SECRET`, `trustHost: true`, `basePath: '/api/auth'`.
 - `/api/auth/*` delegates to `authHandler()` from `@hono/auth-js`. The corporate-email **HEAD pre-check** branches inside this middleware (Hono routes HEAD requests through GET handlers, so a separate HEAD route would never match).
 - Server-side sessions come from `getAuthUser(c)`; the client uses `SessionProvider`/`useSession` from `@hono/auth-js/react` (`lib/client/auth/AuthConfigured.jsx`), with `authConfigManager.setConfig({ basePath })` when a Lowdefy basePath is set.
-- `src/index.js` aliases `NEXTAUTH_URL` → `AUTH_URL` at startup for v4 compatibility.
+- `src/initServer.js` aliases `NEXTAUTH_URL` → `AUTH_URL` at startup for v4 compatibility, on both the Node and the Vercel entry.
 
 ## Unbundled ESM Constraint
 

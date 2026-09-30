@@ -27,17 +27,13 @@ import apiHandler from './apiHandler.js';
 const stubs = {
   'package.json': JSON.stringify({ type: 'module' }),
   'api/index.js': apiHandler,
-  'src/app.js': `globalThis.calls.push('import app');
-export default function createApp() {
-  return { fetch: async () => new Response('ok') };
-}`,
-  // initSentryServer's own DSN and logger.sentry handling is tested in @lowdefy/server.
-  'lib/server/sentry/initSentry.js': `export default function initSentryServer() {
-  globalThis.calls.push('initSentryServer');
-  return Boolean(process.env.SENTRY_DSN);
-}`,
-  'lib/server/log/createLogger.js': `export default function createLogger() {
-  return { info: (message) => globalThis.calls.push('log: ' + message) };
+  // initServer's own startup steps are tested in @lowdefy/server.
+  'src/initServer.js': `export default async function initServer() {
+  globalThis.calls.push('initServer');
+  return {
+    createApp: () => ({ fetch: async () => new Response('ok') }),
+    sentryEnabled: Boolean(process.env.SENTRY_DSN),
+  };
 }`,
   'node_modules/@sentry/node/package.json': JSON.stringify({
     name: '@sentry/node',
@@ -85,17 +81,15 @@ function runHandler({ env }) {
   return JSON.parse(output.toString());
 }
 
-test('apiHandler initialises Sentry before importing the app and flushes after the response when SENTRY_DSN is set', () => {
+test('apiHandler runs the shared server startup and flushes Sentry through waitUntil after the response when Sentry is enabled', () => {
   expect(runHandler({ env: { SENTRY_DSN: 'https://key@sentry.example.com/1' } })).toEqual([
-    'initSentryServer',
-    'import app',
-    'log: Sentry enabled: server',
+    'initServer',
     'response end',
     'Sentry.flush',
     'waitUntil',
   ]);
 });
 
-test('apiHandler does not enable, log or flush Sentry when SENTRY_DSN is not set', () => {
-  expect(runHandler({ env: {} })).toEqual(['initSentryServer', 'import app', 'response end']);
+test('apiHandler does not flush Sentry when Sentry is not enabled', () => {
+  expect(runHandler({ env: {} })).toEqual(['initServer', 'response end']);
 });
