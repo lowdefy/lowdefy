@@ -219,6 +219,7 @@ test('getOverview includes counts and route guidance', () => {
   expect(overview).toContain('2 block types');
   expect(overview).toContain('/lowdefy-docs/schema/{kind}/{type}');
   expect(overview).toContain('lowdefy_list_types');
+  expect(overview).not.toContain('config.basePath');
 });
 
 test('normalizeTypeKind maps singular and plural, rejects unknown', () => {

@@ -16,6 +16,7 @@
 
 import { spawn } from 'child_process';
 
+import readBasePath from '../utils/readBasePath.mjs';
 import warnAuthUrlPortMismatch from './warnAuthUrlPortMismatch.mjs';
 
 function createStdErrLineHandler({ context }) {
@@ -34,6 +35,12 @@ function createStdErrLineHandler({ context }) {
 function startServer(context) {
   context.shutdownServer();
   warnAuthUrlPortMismatch({ context });
+
+  // The app, its API and the /lowdefy-docs tools all live under basePath, and
+  // a config change that edits basePath restarts the child - so the URL is
+  // read on every start.
+  context.basePath = readBasePath(context);
+  context.url = `http://localhost:${context.options.port}${context.basePath}`;
 
   // The child binds context.internalPort on loopback; the manager's proxy owns
   // the public context.options.port (see startProxy.mjs) so a restart never
