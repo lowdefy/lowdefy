@@ -20,7 +20,10 @@ import authorizeApiEndpoint from './authorizeApiEndpoint.js';
 import getEndpointConfig from './getEndpointConfig.js';
 import runRoutine from './runRoutine.js';
 
-async function invokeEndpoint(context, { endpointId, payload, endpointDepth }) {
+async function invokeEndpoint(
+  context,
+  { endpointId, payload, endpointDepth, literalData = false }
+) {
   if (endpointDepth >= 10) {
     throw new ConfigError(
       'Endpoint call depth exceeded maximum of 10. Check for recursive endpoint calls.'
@@ -38,6 +41,11 @@ async function invokeEndpoint(context, { endpointId, payload, endpointDepth }) {
     items: {},
     state: {},
     endpointDepth: endpointDepth + 1,
+    // Set only for the endpoint a Dynamic block calls: its :return becomes page
+    // config, so data read into it must not carry operators. Nested CallApi
+    // endpoints get a fresh context without it; their result arrives through
+    // _step, which the outer :return checks.
+    literalData,
   };
 
   return runRoutine(context, childRoutineContext, {

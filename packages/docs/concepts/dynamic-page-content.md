@@ -110,6 +110,19 @@ The server strips one leading underscore from `__`-prefixed keys in the returned
 
 > **Never place `_secret` in returned block config.** It evaluates during `:return` and the resulting value ships to the browser.
 
+### Data in the returned config is literal
+
+While a Dynamic block's endpoint evaluates its `:return`, no operator may return a value that contains operators. That covers data read at runtime — step results, the payload, routine state, `:for` items — and values built from data, such as `_json.parse` of a stored string. A record holding `{ _request: ... }` or `{ __state: ... }` fails resolution, and the block renders its fallback. The error names the operator and where in its result the operator was found.
+
+Write client operators in the `:return` config itself. Only operators that pass their own already-checked params through — `_if`, `_switch`, `_if_none`, `_get`, `_args`, `_function`, `_log`, `_array` and `_object` (except `_object.fromEntries` and `_object.defineProperty`) — may return them, so mapping data rows into blocks with `_array.map` and `_function` works as shown above.
+
+These patterns return config through data and fail resolution:
+
+- **Blocks built up in routine state** (`:set_state` in a loop, then `_state` in `:return`). Build the list inside `:return` with `_array.map` or `_array.concat`.
+- **Blocks returned by a nested endpoint** and read with `_step`. Share block config with `_ref` instead.
+- **A `:for` over a literal list of block configs**, read with `_item`. Map the list inside `:return`.
+- **Blocks built by `_js` or `_jsonata`.** Return the data from them and map it into blocks inside `:return`.
+
 ## Using urlQuery in the Routine
 
 The page request's query string is forwarded to the resolver as `urlQuery` in the payload. A page loaded as `/products?category=shoes&sort=price` resolves with `urlQuery: { category: 'shoes', sort: 'price' }`:
@@ -174,4 +187,5 @@ The build bundles declared types into the client. If a routine returns a type th
 - **Nesting is allowed** — resolved content may contain further `Dynamic` blocks, up to 5 levels deep.
 - **Page state resets per visit.** Dynamic pages build a fresh context on every navigation, since the server may resolve different content each time. Keep cross-navigation state in `_global` or `_url_query`.
 - **Endpoint auth always applies.** A public page pointing at a role-protected endpoint renders the fallback for users without the role — useful for role-gated sections.
+- **Data cannot carry operators.** Operators in step results, payload or state returned into `:return` fail resolution. See [Data in the returned config is literal](#data-in-the-returned-config-is-literal).
 - **`blockId` namespace is shared.** Resolved blocks share the page's state namespace, so `_state` binds across static and dynamic blocks. Keep blockIds unique, as on any page.
