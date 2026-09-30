@@ -357,7 +357,6 @@ test(':throw of a caught UserError keeps its message', async () => {
     name: 'UserError',
     message: 'Name taken.',
     isLowdefyError: true,
-    handled: true,
   });
 });
 

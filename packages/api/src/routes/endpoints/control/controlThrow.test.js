@@ -672,8 +672,8 @@ test('throw given an Error rethrows it unchanged without evaluating :cause', asy
   expect(res.error).toBeInstanceOf(RequestError);
   expect(res.error.message).toEqual('Try and fail at test/try_fail.');
   expect(res.error.handled).toBe(true);
-  expect(context.logger.error.mock.calls).toContainEqual([
-    { event: 'error_control_throw', err: res.error },
+  expect(context.logger.warn.mock.calls).toContainEqual([
+    { event: 'warn_control_throw', err: res.error },
   ]);
 });
 

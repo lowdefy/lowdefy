@@ -293,9 +293,9 @@ test('tools/call returns a masked error result for an authenticated caller with 
 
   const result = await client.callTool({ name: 'get-customer', arguments: {} });
   expect(result.isError).toBe(true);
-  // callEndpoint masks protected endpoints as missing for wrong-role callers, and the
-  // wire policy then reduces that to the generic message.
-  expect(result.content[0].text).toBe('Something went wrong.');
+  // callEndpoint masks protected endpoints as missing for wrong-role callers. The mask
+  // is an AuthorizationError, whose message the wire policy keeps.
+  expect(result.content[0].text).toBe('API Endpoint "get-customer" does not exist.');
 });
 
 test('tools/call returns the generic message in prod when an endpoint step throws a foreign error', async () => {

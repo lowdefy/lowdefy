@@ -1216,7 +1216,8 @@
       "hazards": []
     },
     "ClickableHtml": {
-      "category": "display"
+      "category": "display",
+      "hazards": []
     },
     "DangerousHtml": {
       "category": "display",

@@ -2496,7 +2496,12 @@ async function runChat({ properties }) {
       messages: [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] }],
       ...properties,
     },
-    context: { callEndpoint: jest.fn(), getEndpointConfig: jest.fn(), wireErrorMessage },
+    context: {
+      logger: testLogger,
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      wireErrorMessage,
+    },
   });
   const { onError } = mockCreateUIMessageStream.mock.calls.at(-1)[0];
   // The AI SDK hands execute a writer whose onError is the one given to
