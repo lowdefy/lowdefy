@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 import { ConfigError } from '@lowdefy/errors';
+import { serializer } from '@lowdefy/helpers';
 import { operatorsServer } from '@lowdefy/operators-js';
 
 import callEndpoint from './callEndpoint.js';
