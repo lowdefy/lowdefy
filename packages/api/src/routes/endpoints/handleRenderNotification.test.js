@@ -290,6 +290,84 @@ test('RenderNotification normalizes a trailing slash on serverUrl', async () => 
   expect(renderArgs.links.button).toBe('https://myapp.com/home');
 });
 
+test('RenderNotification defaults serverUrl to the current environment url', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig(),
+    config: {
+      basePath: '',
+      environment: 'staging',
+      environments: {
+        prod: { url: 'https://myapp.com' },
+        staging: { url: 'https://staging.myapp.com/' },
+      },
+    },
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact, links: { button: { pageId: 'home' } } } }),
+  });
+
+  expect(res.status).toBe('continue');
+  const renderArgs = mockRenderEmail.mock.calls[0][0];
+  expect(renderArgs.links.button).toBe('https://staging.myapp.com/home');
+});
+
+test('RenderNotification prefers the serverUrl step property over the environment url', async () => {
+  const context = createTestContext({
+    notificationConfig: createNotificationConfig(),
+    config: {
+      basePath: '',
+      environment: 'staging',
+      environments: { staging: { url: 'https://staging.myapp.com' } },
+    },
+  });
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({
+      data: { contact, links: { button: { pageId: 'home' } } },
+      serverUrl: 'https://myapp.com',
+    }),
+  });
+
+  expect(res.status).toBe('continue');
+  const renderArgs = mockRenderEmail.mock.calls[0][0];
+  expect(renderArgs.links.button).toBe('https://myapp.com/home');
+});
+
+test('RenderNotification falls back to the request origin on the dev server', async () => {
+  const context = {
+    ...createTestContext({ notificationConfig: createNotificationConfig() }),
+    dev: true,
+    origin: 'http://localhost:3001',
+  };
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact, links: { button: { pageId: 'home' } } } }),
+  });
+
+  expect(res.status).toBe('continue');
+  const renderArgs = mockRenderEmail.mock.calls[0][0];
+  expect(renderArgs.links.button).toBe('http://localhost:3001/home');
+});
+
+test('RenderNotification never uses the request origin outside the dev server', async () => {
+  const context = {
+    ...createTestContext({ notificationConfig: createNotificationConfig() }),
+    origin: 'https://attacker.example.com',
+  };
+  const routineContext = createRoutineContext();
+
+  const res = await runRoutine(context, routineContext, {
+    routine: createStep({ data: { contact, links: { button: { pageId: 'home' } } } }),
+  });
+
+  expect(res.status).toBe('error');
+  expect(mockRenderEmail).not.toHaveBeenCalled();
+});
+
 test('RenderNotification errors when links are present and no serverUrl is set', async () => {
   const context = createTestContext({ notificationConfig: createNotificationConfig() });
   const routineContext = createRoutineContext();
@@ -299,7 +377,9 @@ test('RenderNotification errors when links are present and no serverUrl is set',
   });
 
   expect(res.status).toBe('error');
-  expect(res.error.message).toContain('Set the serverUrl step property.');
+  expect(res.error.message).toContain(
+    'Set the serverUrl step property, or the url of the current environment in config.environments.'
+  );
   expect(mockRenderEmail).not.toHaveBeenCalled();
 });
 

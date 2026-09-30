@@ -29,6 +29,7 @@ function createEvaluateOperators(context) {
   });
   function evaluateOperators({
     arrayIndices,
+    error,
     input,
     items,
     literalData,
@@ -39,6 +40,7 @@ function createEvaluateOperators(context) {
   }) {
     const { output, errors } = operatorsParser.parse({
       arrayIndices,
+      error,
       input,
       items,
       literalData,

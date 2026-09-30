@@ -17,33 +17,28 @@
 import buildLogger from './buildLogger.js';
 
 test('buildLogger no logger defined', () => {
-  const components = {};
+  const components = { config: {} };
   const result = buildLogger({ components });
-  expect(result).toEqual({
-    logger: {},
-  });
+  expect(result).toEqual({ config: {}, logger: {} });
 });
 
 test('buildLogger empty logger object', () => {
-  const components = { logger: {} };
+  const components = { config: {}, logger: {} };
   const result = buildLogger({ components });
-  expect(result).toEqual({
-    logger: {},
-  });
+  expect(result).toEqual({ config: {}, logger: {} });
 });
 
 test('buildLogger logger null', () => {
-  const components = { logger: null };
+  const components = { config: {}, logger: null };
   const result = buildLogger({ components });
-  expect(result).toEqual({
-    logger: {},
-  });
+  expect(result).toEqual({ config: {}, logger: {} });
 });
 
 test('buildLogger sentry with defaults', () => {
-  const components = { logger: { sentry: {} } };
+  const components = { config: {}, logger: { sentry: {} } };
   const result = buildLogger({ components });
   expect(result).toEqual({
+    config: {},
     logger: {
       sentry: {
         client: true,
@@ -59,9 +54,10 @@ test('buildLogger sentry with defaults', () => {
 });
 
 test('buildLogger sentry with custom tracesSampleRate', () => {
-  const components = { logger: { sentry: { tracesSampleRate: 0.5 } } };
+  const components = { config: {}, logger: { sentry: { tracesSampleRate: 0.5 } } };
   const result = buildLogger({ components });
   expect(result).toEqual({
+    config: {},
     logger: {
       sentry: {
         client: true,
@@ -77,39 +73,40 @@ test('buildLogger sentry with custom tracesSampleRate', () => {
 });
 
 test('buildLogger sentry client disabled', () => {
-  const components = { logger: { sentry: { client: false } } };
+  const components = { config: {}, logger: { sentry: { client: false } } };
   const result = buildLogger({ components });
   expect(result.logger.sentry.client).toBe(false);
   expect(result.logger.sentry.server).toBe(true);
 });
 
 test('buildLogger sentry server disabled', () => {
-  const components = { logger: { sentry: { server: false } } };
+  const components = { config: {}, logger: { sentry: { server: false } } };
   const result = buildLogger({ components });
   expect(result.logger.sentry.server).toBe(false);
   expect(result.logger.sentry.client).toBe(true);
 });
 
 test('buildLogger sentry custom userFields', () => {
-  const components = { logger: { sentry: { userFields: ['id', 'email', 'roles'] } } };
+  const components = { config: {}, logger: { sentry: { userFields: ['id', 'email', 'roles'] } } };
   const result = buildLogger({ components });
   expect(result.logger.sentry.userFields).toEqual(['id', 'email', 'roles']);
 });
 
 test('buildLogger sentry feedback enabled', () => {
-  const components = { logger: { sentry: { feedback: true } } };
+  const components = { config: {}, logger: { sentry: { feedback: true } } };
   const result = buildLogger({ components });
   expect(result.logger.sentry.feedback).toBe(true);
 });
 
 test('buildLogger sentry custom environment', () => {
-  const components = { logger: { sentry: { environment: 'staging' } } };
+  const components = { config: {}, logger: { sentry: { environment: 'staging' } } };
   const result = buildLogger({ components });
   expect(result.logger.sentry.environment).toBe('staging');
 });
 
 test('buildLogger sentry all custom values', () => {
   const components = {
+    config: {},
     logger: {
       sentry: {
         client: false,
@@ -125,6 +122,7 @@ test('buildLogger sentry all custom values', () => {
   };
   const result = buildLogger({ components });
   expect(result).toEqual({
+    config: {},
     logger: {
       sentry: {
         client: false,
@@ -141,7 +139,7 @@ test('buildLogger sentry all custom values', () => {
 });
 
 test('buildLogger returns components object', () => {
-  const components = { pages: [], menus: [] };
+  const components = { config: {}, pages: [], menus: [] };
   const result = buildLogger({ components });
   expect(result.pages).toEqual([]);
   expect(result.menus).toEqual([]);
@@ -149,19 +147,19 @@ test('buildLogger returns components object', () => {
 });
 
 test('buildLogger sentry null does not apply defaults', () => {
-  const components = { logger: { sentry: null } };
+  const components = { config: {}, logger: { sentry: null } };
   const result = buildLogger({ components });
   expect(result.logger.sentry).toBe(null);
 });
 
 test('buildLogger sentry undefined does not apply defaults', () => {
-  const components = { logger: { sentry: undefined } };
+  const components = { config: {}, logger: { sentry: undefined } };
   const result = buildLogger({ components });
   expect(result.logger.sentry).toBeUndefined();
 });
 
 test('buildLogger mutates original components object', () => {
-  const components = { logger: { sentry: {} } };
+  const components = { config: {}, logger: { sentry: {} } };
   const result = buildLogger({ components });
   expect(result).toBe(components);
   expect(result.logger.sentry.client).toBe(true);
@@ -169,6 +167,7 @@ test('buildLogger mutates original components object', () => {
 
 test('buildLogger preserves zero values for sample rates', () => {
   const components = {
+    config: {},
     logger: {
       sentry: {
         tracesSampleRate: 0,
@@ -184,13 +183,14 @@ test('buildLogger preserves zero values for sample rates', () => {
 });
 
 test('buildLogger preserves empty userFields array', () => {
-  const components = { logger: { sentry: { userFields: [] } } };
+  const components = { config: {}, logger: { sentry: { userFields: [] } } };
   const result = buildLogger({ components });
   expect(result.logger.sentry.userFields).toEqual([]);
 });
 
 test('buildLogger preserves false boolean values', () => {
   const components = {
+    config: {},
     logger: {
       sentry: {
         client: false,
@@ -203,4 +203,42 @@ test('buildLogger preserves false boolean values', () => {
   expect(result.logger.sentry.client).toBe(false);
   expect(result.logger.sentry.server).toBe(false);
   expect(result.logger.sentry.feedback).toBe(false);
+});
+
+test('buildLogger creates the Sentry config with the current environment name', () => {
+  const components = { config: { environment: 'staging', environments: { staging: {} } } };
+  const result = buildLogger({ components });
+  expect(result.logger.sentry).toEqual({
+    client: true,
+    server: true,
+    tracesSampleRate: 0.1,
+    replaysSessionSampleRate: 0,
+    replaysOnErrorSampleRate: 0.1,
+    feedback: false,
+    userFields: ['id', '_id'],
+    environment: 'staging',
+  });
+});
+
+test('buildLogger keeps an authored Sentry environment over the current environment', () => {
+  const components = {
+    config: { environment: 'staging', environments: { staging: {} } },
+    logger: { sentry: { environment: 'qa' } },
+  };
+  const result = buildLogger({ components });
+  expect(result.logger.sentry.environment).toBe('qa');
+});
+
+test('buildLogger turns Sentry off on both sides when the current environment switches it off', () => {
+  const components = {
+    config: { environment: 'staging', environments: { staging: { sentry: { enabled: false } } } },
+    logger: { sentry: { tracesSampleRate: 0.5 } },
+  };
+  const result = buildLogger({ components });
+  expect(result.logger.sentry).toMatchObject({
+    client: false,
+    server: false,
+    tracesSampleRate: 0.5,
+    environment: 'staging',
+  });
 });

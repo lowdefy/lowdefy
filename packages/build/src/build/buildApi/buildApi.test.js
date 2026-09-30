@@ -293,14 +293,14 @@ test('api endpoint schedules is not an array throws', () => {
   );
 });
 
-const cronEnvironments = {
-  production: {},
-  staging: { url: 'https://staging.example.com', secret: 'STAGING_CRON_SECRET' },
+const environments = {
+  production: { url: 'https://example.com' },
+  staging: { url: 'https://staging.example.com', cron: { secret: 'STAGING_CRON_SECRET' } },
 };
 
 test('api endpoint schedules keyed by environment resolve every declared environment', () => {
   const components = {
-    config: { cron: { environments: cronEnvironments } },
+    config: { environments },
     api: [
       {
         id: 'override_api',
@@ -330,24 +330,28 @@ test('api endpoint schedules keyed by environment resolve every declared environ
   };
   const res = buildApi({ components, context });
   expect(res.api[0].schedules).toEqual({
+    default: [{ cron: '*/5 * * * *' }],
     production: [{ cron: '*/5 * * * *' }],
     staging: [{ cron: '0 * * * *' }],
   });
   expect(res.api[1].schedules).toEqual({
+    default: [{ cron: '0 2 * * *' }],
     production: [{ cron: '0 2 * * *' }],
     staging: [{ cron: '0 2 * * *' }],
   });
   expect(res.api[2].schedules).toEqual({
+    default: [{ cron: '0 2 * * *' }],
     production: [{ cron: '0 2 * * *' }],
     staging: [],
   });
   expect(res.api[3].schedules).toEqual({
+    default: [],
     production: [],
     staging: [{ cron: '0 2 * * *' }],
   });
 });
 
-test('api endpoint without config.cron keeps its schedules array', () => {
+test('api endpoint without config.environments keeps its schedules array', () => {
   const components = {
     api: [{ id: 'scheduled_api', type: 'Api', routine: [], schedules: [{ cron: '0 2 * * *' }] }],
   };
@@ -355,28 +359,28 @@ test('api endpoint without config.cron keeps its schedules array', () => {
   expect(res.api[0].schedules).toEqual([{ cron: '0 2 * * *' }]);
 });
 
-test('api endpoint schedules keyed by environment throw when config.cron.environments is not defined', () => {
+test('api endpoint schedules keyed by environment throw when config.environments is not defined', () => {
   const components = {
     api: [{ id: 'scheduled_api', type: 'Api', routine: [], schedules: { staging: [] } }],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Endpoint "scheduled_api" keys schedules by environment but lowdefy.config.cron.environments is not defined.'
+    'Endpoint "scheduled_api" keys schedules by environment but config.environments is not defined.'
   );
 });
 
 test('api endpoint schedules throw for an undeclared environment name', () => {
   const components = {
-    config: { cron: { environments: cronEnvironments } },
+    config: { environments },
     api: [{ id: 'scheduled_api', type: 'Api', routine: [], schedules: { stagng: [] } }],
   };
   expect(() => buildApi({ components, context })).toThrow(
-    'Endpoint schedules environment "stagng" at "scheduled_api" is not declared in lowdefy.config.cron.environments. Declared environments: production, staging.'
+    'Endpoint schedules environment "stagng" at "scheduled_api" is not declared in config.environments. Declared environments: production, staging.'
   );
 });
 
 test('api endpoint environment schedules are validated like an array of schedules', () => {
   const components = {
-    config: { cron: { environments: cronEnvironments } },
+    config: { environments },
     api: [
       {
         id: 'scheduled_api',
@@ -393,7 +397,7 @@ test('api endpoint environment schedules are validated like an array of schedule
 
 test('api endpoint schedules throw when an environment entry is not an array', () => {
   const components = {
-    config: { cron: { environments: cronEnvironments } },
+    config: { environments },
     api: [
       {
         id: 'scheduled_api',

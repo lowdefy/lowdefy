@@ -37,10 +37,10 @@ const connections = {
   },
 };
 
-function createContext({ connectionProperties = {} } = {}) {
+function createContext({ connectionProperties = {}, operators = operatorsServer } = {}) {
   const context = testContext({
     connections,
-    operators: operatorsServer,
+    operators,
     readConfigFile: jest.fn(async (path) => {
       if (path === 'connections/echo.json') {
         return {
@@ -59,10 +59,11 @@ function createContext({ connectionProperties = {} } = {}) {
   return context;
 }
 
-function createRoutineContext({ payload = {} } = {}) {
+function createRoutineContext({ error = null, payload = {} } = {}) {
   return {
     arrayIndices: [],
     endpointDepth: 0,
+    error,
     items: {},
     payload,
     state: {},
@@ -214,4 +215,22 @@ test('$ in _step and _state paths resolves to the current :for index', async () 
   expect(routineContext.steps.use[1].request.fetched).toEqual(20);
   expect(routineContext.steps.use[1].request.label).toEqual('second');
   expect(routineContext.steps.use[1].request.viaFunction()).toEqual('second');
+});
+
+test('a request step inside :for receives the routine error', async () => {
+  const context = createContext({
+    operators: { ...operatorsServer, _test_error: ({ error }) => error },
+  });
+  const error = new Error('Caught error.');
+  const routineContext = createRoutineContext({ error });
+  const routine = {
+    ':for': 'value',
+    ':in': [1],
+    ':do': echoStep({ stepId: 'call', properties: { caught: { _test_error: true } } }),
+  };
+
+  const res = await runRoutine(context, routineContext, { routine });
+
+  expect(res.status).toEqual('continue');
+  expect(routineContext.steps.call[0].request.caught).toBe(error);
 });

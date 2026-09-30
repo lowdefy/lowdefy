@@ -18,9 +18,9 @@
 
 import { type } from '@lowdefy/helpers';
 
-import validateCronConfig from './validateCronConfig.js';
+import buildEnvironments from './buildEnvironments.js';
 
-function validateConfig({ components }) {
+function validateConfig({ components, context }) {
   if (type.isNone(components.config)) {
     components.config = {};
   }
@@ -32,7 +32,7 @@ function validateConfig({ components }) {
       throw new Error('Base path must start with "/".');
     }
   }
-  validateCronConfig({ components });
+  buildEnvironments({ components, context });
   return components;
 }
 

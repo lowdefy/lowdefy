@@ -14,12 +14,10 @@
   limitations under the License.
 */
 
-// The declared environment names in config.cron.environments. Build key markers (~k, ~r, ~l) live
-// on the same object as the environments, so they are skipped rather than treated as names.
-const markerKeys = new Set(['~k', '~r', '~l']);
+import { createSecretScrubber, getSecretsFromEnv } from '@lowdefy/node-utils';
 
-function getCronEnvironmentNames(environments) {
-  return Object.keys(environments ?? {}).filter((key) => !markerKeys.has(key));
-}
+// Dev logs stay unscrubbed, but _error reads this off the context like every
+// other server package, so a thrown message behaves identically in every mode.
+const scrubSecrets = createSecretScrubber({ secrets: getSecretsFromEnv() });
 
-export default getCronEnvironmentNames;
+export default scrubSecrets;

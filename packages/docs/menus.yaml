@@ -289,6 +289,11 @@
           pageId: vercel
           properties:
             title: Vercel
+        - id: deployment-environments
+          type: MenuLink
+          pageId: deployment-environments
+          properties:
+            title: Environments
 
     - id: plugins_group
       type: MenuGroup
@@ -1042,6 +1047,9 @@
         - id: _eq
           type: MenuLink
           pageId: _eq
+        - id: _error
+          type: MenuLink
+          pageId: _error
         - id: _event
           type: MenuLink
           pageId: _event

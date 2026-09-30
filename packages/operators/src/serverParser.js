@@ -35,6 +35,7 @@ class ServerParser {
   parse({
     args,
     arrayIndices = [],
+    error,
     input,
     items,
     literalData = false,
@@ -60,6 +61,7 @@ class ServerParser {
       parse: (callOptions) =>
         this.parse({
           arrayIndices,
+          error,
           items,
           literalData,
           location,
@@ -85,6 +87,7 @@ class ServerParser {
           args,
           arrayIndices,
           env: this.env,
+          error,
           i18n: this.i18n,
           items,
           jsMap: this.jsMap,

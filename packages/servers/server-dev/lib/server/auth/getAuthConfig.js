@@ -20,6 +20,7 @@ import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import adapters from '../../../build/plugins/auth/adapters.js';
 import appMeta from '../../build/appMeta.js';
 import authJson from '../../build/auth.js';
+import config from '../../build/config.js';
 import callbacks from '../../../build/plugins/auth/callbacks.js';
 import events from '../../../build/plugins/auth/events.js';
 import providers from '../../../build/plugins/auth/providers.js';
@@ -28,6 +29,7 @@ function getAuthConfig({ logger }) {
   return getApiAuthConfig({
     appMeta,
     authJson,
+    config,
     dev: true,
     logger,
     plugins: { adapters, callbacks, events, providers },

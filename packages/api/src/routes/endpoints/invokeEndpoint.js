@@ -37,6 +37,7 @@ async function invokeEndpoint(
     steps: {},
     payload: payload ?? {},
     arrayIndices: [],
+    error: null,
     items: {},
     state: {},
     endpointDepth: endpointDepth + 1,
