@@ -19,11 +19,13 @@ import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
 import { assertUnscopedDoc, assertUnscopedUpdate } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
+import verifyStoredTenant from '../tenant/verifyStoredTenant.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
 async function MongoDBVersionedUpdateOne({
+  endpointId,
   blockId,
   connection,
   connectionId,
@@ -82,6 +84,16 @@ async function MongoDBVersionedUpdateOne({
     } catch (error) {
       throw mapMongoError(error, { connection, requestType: 'MongoDBVersionedUpdateOne' });
     }
+    await verifyStoredTenant({
+      collection,
+      connectionId,
+      endpointId,
+      ids: insertedDocument.insertedId,
+      requestId,
+      requestType: 'MongoDBVersionedUpdateOne',
+      tenant,
+      tenantGuard,
+    });
   }
 
   let response;
@@ -158,6 +170,16 @@ async function MongoDBVersionedUpdateOne({
       throw new Error('No matching record to update.');
     }
   }
+  await verifyStoredTenant({
+    collection,
+    connectionId,
+    endpointId,
+    ids: response.upsertedId,
+    requestId,
+    requestType: 'MongoDBVersionedUpdateOne',
+    tenant,
+    tenantGuard,
+  });
   return serialize(response);
 }
 

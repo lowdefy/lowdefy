@@ -26,6 +26,7 @@ import OperatorError from './OperatorError.js';
 import PluginError from './PluginError.js';
 import RequestError from './RequestError.js';
 import ServiceError from './ServiceError.js';
+import TenantIntegrityError from './TenantIntegrityError.js';
 import TwoFactorEnrolmentRequiredError from './TwoFactorEnrolmentRequiredError.js';
 import UserError from './UserError.js';
 
@@ -44,6 +45,7 @@ const lowdefyErrorTypes = {
   PluginError,
   RequestError,
   ServiceError,
+  TenantIntegrityError,
   TwoFactorEnrolmentRequiredError,
   UserError,
 };

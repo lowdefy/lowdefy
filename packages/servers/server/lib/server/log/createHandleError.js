@@ -24,6 +24,7 @@ import {
   RequestError,
   loadAndResolveErrorLocation,
   ServiceError,
+  TenantIntegrityError,
 } from '@lowdefy/errors';
 
 import captureSentryError from '../sentry/captureSentryError.js';
@@ -52,6 +53,9 @@ function getEventType(error) {
   }
   if (error instanceof ConfigError) {
     return 'config_error';
+  }
+  if (error instanceof TenantIntegrityError) {
+    return 'tenant_integrity_error';
   }
   if (error instanceof LowdefyInternalError) {
     return 'lowdefy_error';
@@ -107,6 +111,8 @@ function createHandleError({ context }) {
           errorMessage: error.message,
           isServiceError,
           pageId: context.pageId || null,
+          endpointId: error.endpointId ?? context.endpointId ?? null,
+          organization_id: error.organizationId ?? context.user?.organization_id ?? null,
           timestamp: new Date().toISOString(),
           source: error.source || null,
           config: error.config || null,

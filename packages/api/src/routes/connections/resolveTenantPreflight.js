@@ -14,25 +14,25 @@
   limitations under the License.
 */
 
-import { ConfigError, ServiceError } from '@lowdefy/errors';
+import { TenantIntegrityError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 
-// The tenant preflight: under policy: tenant, refuse to serve while any
-// walled collection holds unstamped rows. The wall filters every read on the
-// tenant field, so a deployment that flips to tenant before backfilling gets
-// every walled read silently blank - this converts that into one loud,
-// immediate failure naming the collections to backfill.
+// The tenant preflight: under policy: tenant, find walled collections that
+// hold rows without the tenant field and report them. The wall filters every
+// read on the tenant field, so those rows are invisible - a data fault, not a
+// reason to take the app down. The preflight therefore only reports: one
+// TenantIntegrityError log line per offending target (plus one Sentry capture),
+// and the per-target verdicts stay readable through getTenantIntegrityStatus.
+// It never throws into a request and never blocks one - walled reads already
+// filter by organisation, so the unstamped rows are simply not served.
 //
-// There is no awaited boot hook that gates serving (and a Vercel cold start
-// would turn a boot refusal into an opaque function crash), so the preflight
-// is lazily-run-once and awaited per request in the api-context middleware -
-// the same shape as resolvePinnedOrganization. Memoization is split like
-// ensureOrganization's: a refusal (unstamped rows, a ConfigError) memoizes
-// permanently - the app stays down-but-explaining-itself until the backfill
-// runs and the server restarts - while a probe failure (connectivity,
-// timeout) does not memoize and retries on the next request.
+// It is lazily-run-once per config build artifact, started (not awaited) by the
+// per-request middleware - the same shape as resolvePinnedOrganization.
+// Memoization: a completed check (clean or offending) memoizes for the life of
+// the process; a probe failure (connectivity, timeout) logs a warning and clears
+// the memo so the next request retries.
 //
 // Enumerating the walled set reads the tenantConnections.json build artifact
 // (writeConnections). Each connection's properties evaluate with the same
@@ -47,6 +47,7 @@ import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 // object per process in the servers - rather than a bare module singleton,
 // mirroring how the organization binding keys on the auth instance.
 const preflightByConfig = new WeakMap();
+const statusByConfig = new WeakMap();
 
 async function probeTargets(context, { targets }) {
   return Promise.all(
@@ -126,7 +127,40 @@ function describeTarget(target) {
   return `connections ${connections}`;
 }
 
-async function runPreflight(context) {
+function reportOffender(context, { captureError, target }) {
+  const collection = type.isString(target.properties?.collection)
+    ? target.properties.collection
+    : null;
+  const error = new TenantIntegrityError(
+    `Tenant integrity: ${describeTarget(target)} holds documents without the tenant field "${
+      target.field
+    }". The wall filters every walled read on that field, so these documents are invisible to every organisation. The app keeps serving; backfill or remove the rows.`,
+    {
+      collection,
+      connectionId: target.connectionIds[0],
+      field: target.field,
+    }
+  );
+  context.logger.error(
+    {
+      err: error,
+      event: 'tenant_integrity_error',
+      collection,
+      connectionIds: target.connectionIds,
+      field: target.field,
+    },
+    error.message
+  );
+  if (type.isFunction(captureError)) {
+    try {
+      captureError(error);
+    } catch (captureFailure) {
+      context.logger.warn({ err: captureFailure }, 'Tenant integrity error could not be captured.');
+    }
+  }
+}
+
+async function runPreflight(context, { captureError }) {
   const tenantConnections = await context.readConfigFile('tenantConnections.json');
   if (type.isNone(tenantConnections)) {
     // A build older than the preflight has no index artifact - nothing to
@@ -134,61 +168,62 @@ async function runPreflight(context) {
     context.logger.warn(
       'Tenant preflight skipped - no tenantConnections.json build artifact. Rebuild with a matching lowdefy version to enable the unstamped-rows check.'
     );
-    return;
+    return [];
   }
   const targets = await collectTargets(context, { tenantConnections });
   const results = await probeTargets(context, { targets });
-  const offenders = results.filter((result) => result.ok === false);
-  if (offenders.length > 0) {
-    throw new ConfigError(
-      `Tenant preflight refused to serve the app: ${offenders
-        .map((result) => describeTarget(result.target))
-        .join('; ')} ${
-        offenders.length === 1 ? 'holds' : 'hold'
-      } documents without the tenant field ${offenders
-        .map((result) => `"${result.target.field}"`)
-        .filter((fieldName, index, all) => all.indexOf(fieldName) === index)
-        .join(
-          ', '
-        )}. Under auth.organizations.policy: tenant the wall filters every walled read on the tenant field, so these documents would be silently invisible. Backfill the field on the listed collections, then restart the server.`
-    );
-  }
   const failures = results.filter((result) => result.error);
   if (failures.length > 0) {
-    const { error, target } = failures[0];
-    // A probe that could not reach the datastore is an outage, not a refusal -
-    // typing it keeps it out of the memoized-refusal path below, so the next
-    // request retries.
-    if (ServiceError.isServiceError(error)) {
-      throw new ServiceError(undefined, { cause: error, service: target.connectionIds[0] });
-    }
-    throw error;
+    // A probe that could not reach the datastore is an outage, not a verdict.
+    throw failures[0].error;
   }
-  context.logger.info(
-    `Tenant preflight passed - ${targets.size} walled ${
-      targets.size === 1 ? 'target carries' : 'targets carry'
-    } no unstamped rows.`
-  );
+  const offenders = results.filter((result) => result.ok === false);
+  offenders.forEach((result) => reportOffender(context, { captureError, target: result.target }));
+  if (offenders.length === 0) {
+    context.logger.info(
+      `Tenant preflight passed - ${targets.size} walled ${
+        targets.size === 1 ? 'target carries' : 'targets carry'
+      } no unstamped rows.`
+    );
+  }
+  return results.map((result) => ({
+    collection: result.target.properties?.collection ?? null,
+    connectionIds: result.target.connectionIds,
+    field: result.target.field,
+    ok: result.ok !== false,
+  }));
 }
 
-function resolveTenantPreflight(context) {
+// Resolves once the check has run. The returned promise never rejects, so a
+// request can neither fail on it nor be blocked by a fault in it.
+function resolveTenantPreflight(context, { captureError } = {}) {
   if (context.organization?.policy !== 'tenant') {
     return Promise.resolve();
   }
   if (!preflightByConfig.has(context.config)) {
     preflightByConfig.set(
       context.config,
-      runPreflight(context).catch((error) => {
-        if (!(error instanceof ConfigError)) {
-          // Connectivity-class failure - retry on the next request. A refusal
-          // stays memoized: the data does not fix itself, the backfill does.
+      runPreflight(context, { captureError })
+        .then((status) => {
+          statusByConfig.set(context.config, status);
+        })
+        .catch((error) => {
+          // Connectivity-class failure - retry on the next request.
           preflightByConfig.delete(context.config);
-        }
-        throw error;
-      })
+          context.logger.warn(
+            { err: error },
+            'Tenant preflight could not probe the walled collections - it will retry on the next request.'
+          );
+        })
     );
   }
   return preflightByConfig.get(context.config);
 }
 
+// The per-target verdicts of the completed check, or undefined before it has run.
+function getTenantIntegrityStatus(config) {
+  return statusByConfig.get(config);
+}
+
+export { getTenantIntegrityStatus };
 export default resolveTenantPreflight;

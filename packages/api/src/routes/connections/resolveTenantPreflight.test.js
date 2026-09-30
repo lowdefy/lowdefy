@@ -15,9 +15,9 @@
 */
 
 import { jest } from '@jest/globals';
-import { ConfigError } from '@lowdefy/errors';
+import { TenantIntegrityError } from '@lowdefy/errors';
 
-import resolveTenantPreflight from './resolveTenantPreflight.js';
+import resolveTenantPreflight, { getTenantIntegrityStatus } from './resolveTenantPreflight.js';
 import testContext from '../../test/testContext.js';
 
 const mockReadConfigFile = jest.fn();
@@ -78,6 +78,7 @@ beforeEach(() => {
   mockProbe.mockReset();
   logger.info.mockReset();
   logger.warn.mockReset();
+  logger.error.mockReset();
 });
 
 test('resolves without reading anything under the pinned policy', async () => {
@@ -133,7 +134,7 @@ test('probes caller-less - connection properties never resolve against the reque
   expect(probed.connection.collection).toEqual('user-contacts');
 });
 
-test('refuses with one aggregated error naming every offending target', async () => {
+test('serves and reports: one error log and one capture per offending target, never a throw', async () => {
   mockReadConfigFile.mockImplementation(
     readConfigImp({
       tenantConnections: [
@@ -161,22 +162,26 @@ test('refuses with one aggregated error naming every offending target', async ()
     })
   );
   mockProbe.mockResolvedValue({ ok: false });
+  const captureError = jest.fn();
   const context = createTestContext();
-  let thrown;
-  try {
-    await resolveTenantPreflight(context);
-  } catch (error) {
-    thrown = error;
-  }
-  expect(thrown).toBeInstanceOf(ConfigError);
-  expect(thrown.message).toContain(
-    'collection "user-contacts" (connections "contacts-a", "contacts-b")'
-  );
-  expect(thrown.message).toContain('collection "companies" (connections "companies")');
-  expect(thrown.message).toContain('without the tenant field "organization_id"');
-  expect(thrown.message).toContain('Backfill the field on the listed collections');
+  await expect(resolveTenantPreflight(context, { captureError })).resolves.toBeUndefined();
   // Deduped by evaluated target - two contacts connections share one probe.
   expect(mockProbe).toHaveBeenCalledTimes(2);
+  expect(logger.error).toHaveBeenCalledTimes(2);
+  expect(captureError).toHaveBeenCalledTimes(2);
+  const [fields, message] = logger.error.mock.calls[0];
+  expect(fields.event).toBe('tenant_integrity_error');
+  expect(fields.collection).toBe('user-contacts');
+  expect(fields.connectionIds).toEqual(['contacts-a', 'contacts-b']);
+  expect(fields.field).toBe('organization_id');
+  expect(fields.err).toBeInstanceOf(TenantIntegrityError);
+  expect(message).toContain('collection "user-contacts" (connections "contacts-a", "contacts-b")');
+  expect(captureError.mock.calls[1][0]).toBeInstanceOf(TenantIntegrityError);
+  expect(captureError.mock.calls[1][0].collection).toBe('companies');
+  expect(getTenantIntegrityStatus(context.config)).toEqual([
+    expect.objectContaining({ collection: 'user-contacts', ok: false }),
+    expect.objectContaining({ collection: 'companies', ok: false }),
+  ]);
 });
 
 test('probes a custom tenant field', async () => {
@@ -199,47 +204,33 @@ test('probes a custom tenant field', async () => {
   });
 });
 
-test('a refusal memoizes - the probe does not run again', async () => {
+test('a report memoizes - the probe does not run again and nothing re-logs', async () => {
   mockReadConfigFile.mockImplementation(readConfigImp());
   mockProbe.mockResolvedValue({ ok: false });
   const context = createTestContext();
-  await expect(resolveTenantPreflight(context)).rejects.toThrow(ConfigError);
-  await expect(resolveTenantPreflight(context)).rejects.toThrow(ConfigError);
+  await resolveTenantPreflight(context);
+  await resolveTenantPreflight(context);
   expect(mockProbe).toHaveBeenCalledTimes(1);
+  expect(logger.error).toHaveBeenCalledTimes(1);
 });
 
-test('a probe failure does not memoize - the next request retries', async () => {
+test('a probe failure warns, never throws, and does not memoize - the next request retries', async () => {
   mockReadConfigFile.mockImplementation(readConfigImp());
   mockProbe.mockRejectedValueOnce(new Error('connection refused'));
   mockProbe.mockResolvedValueOnce({ ok: true });
   const context = createTestContext();
-  await expect(resolveTenantPreflight(context)).rejects.toThrow('connection refused');
+  await expect(resolveTenantPreflight(context)).resolves.toBeUndefined();
+  expect(logger.warn).toHaveBeenCalledWith(
+    expect.objectContaining({ err: expect.any(Error) }),
+    expect.stringContaining('will retry on the next request')
+  );
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(getTenantIntegrityStatus(context.config)).toBeUndefined();
   await resolveTenantPreflight(context);
   expect(mockProbe).toHaveBeenCalledTimes(2);
-});
-
-test('a probe failure that is a service outage throws a ServiceError naming the connection', async () => {
-  mockReadConfigFile.mockImplementation(readConfigImp());
-  const cause = new Error('connection refused');
-  mockProbe.mockRejectedValueOnce(cause);
-  const context = createTestContext();
-  let thrown;
-  try {
-    await resolveTenantPreflight(context);
-  } catch (error) {
-    thrown = error;
-  }
-  expect(thrown.name).toBe('ServiceError');
-  expect(thrown.service).toBe('walled');
-  expect(thrown.cause).toBe(cause);
-});
-
-test('a probe failure that is not a service outage is rethrown unwrapped', async () => {
-  mockReadConfigFile.mockImplementation(readConfigImp());
-  const cause = new Error('Probe returned an unexpected shape.');
-  mockProbe.mockRejectedValueOnce(cause);
-  const context = createTestContext();
-  await expect(resolveTenantPreflight(context)).rejects.toBe(cause);
+  expect(getTenantIntegrityStatus(context.config)).toEqual([
+    expect.objectContaining({ collection: 'user-contacts', ok: true }),
+  ]);
 });
 
 test('a success memoizes - later requests do not re-probe', async () => {

@@ -174,10 +174,10 @@ async function createLowdefyContext({ c, user }) {
     // wall fails closed - loudly, as it should).
     context.organization = { policy: authJson.organizations.policy, pinned: null };
   }
-  // Under policy: tenant, refuse to serve while walled collections hold
-  // unstamped rows (lazily-run-once; a refusal memoizes until restart, a
-  // probe failure retries next request). No-op under pinned.
-  await resolveTenantPreflight(context);
+  // Under policy: tenant, report walled collections that hold unstamped rows
+  // (lazily-run-once, logged once per offending collection). It never blocks or
+  // fails a request. No-op under pinned.
+  void resolveTenantPreflight(context);
   logRequest({ context });
   return context;
 }

@@ -52,7 +52,9 @@ import redactErrorResponse from './response/redactErrorResponse.js';
 import redactResponse from './response/redactResponse.js';
 import resolveAuthentication from './context/resolveAuthentication.js';
 import resolvePinnedOrganization from './routes/auth/organizations/resolvePinnedOrganization.js';
-import resolveTenantPreflight from './routes/connections/resolveTenantPreflight.js';
+import resolveTenantPreflight, {
+  getTenantIntegrityStatus,
+} from './routes/connections/resolveTenantPreflight.js';
 import forwardScheduledEndpoint from './routes/endpoints/forwardScheduledEndpoint.js';
 import acceptDetachedEndpoint from './routes/endpoints/acceptDetachedEndpoint.js';
 import runDetachedEndpoint from './routes/endpoints/runDetachedEndpoint.js';
@@ -95,6 +97,7 @@ export {
   redactResponse,
   resolveAuthentication,
   resolvePinnedOrganization,
+  getTenantIntegrityStatus,
   resolveTenantPreflight,
   forwardScheduledEndpoint,
   acceptDetachedEndpoint,

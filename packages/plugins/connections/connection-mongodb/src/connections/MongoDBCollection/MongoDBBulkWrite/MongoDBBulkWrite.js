@@ -17,11 +17,20 @@
 import applyTenantToBulkOperations from '../tenant/applyTenantToBulkOperations.js';
 import { assertUnscopedBulkOperations } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
+import verifyStoredTenant, { idsOfMap } from '../tenant/verifyStoredTenant.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
-async function MongodbBulkWrite({ connection, request, tenant, tenantGuard }) {
+async function MongodbBulkWrite({
+  connection,
+  connectionId,
+  endpointId,
+  request,
+  requestId,
+  tenant,
+  tenantGuard,
+}) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { operations } = deserializedRequest;
@@ -38,6 +47,16 @@ async function MongodbBulkWrite({ connection, request, tenant, tenantGuard }) {
   } catch (error) {
     throw mapMongoError(error, { connection, requestType: 'MongoDBBulkWrite' });
   }
+  await verifyStoredTenant({
+    collection,
+    connectionId,
+    endpointId,
+    ids: [...idsOfMap(response.insertedIds), ...idsOfMap(response.upsertedIds)],
+    requestId,
+    requestType: 'MongoDBBulkWrite',
+    tenant,
+    tenantGuard,
+  });
   return serialize(response);
 }
 

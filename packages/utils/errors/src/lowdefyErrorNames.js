@@ -29,6 +29,7 @@ const lowdefyErrorNames = new Set([
   'PluginError',
   'RequestError',
   'ServiceError',
+  'TenantIntegrityError',
   'TwoFactorEnrolmentRequiredError',
   'UserError',
 ]);

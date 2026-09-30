@@ -22,11 +22,13 @@ import {
   changeLogOrganizationOfFilter,
 } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
+import verifyStoredTenant from '../tenant/verifyStoredTenant.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
 import schema from './schema.js';
 
 async function MongodbUpdateMany({
+  endpointId,
   blockId,
   connection,
   connectionId,
@@ -84,6 +86,16 @@ async function MongodbUpdateMany({
   } catch (error) {
     throw mapMongoError(error, { connection, requestType: 'MongoDBUpdateMany' });
   }
+  await verifyStoredTenant({
+    collection,
+    connectionId,
+    endpointId,
+    ids: response.upsertedId,
+    requestId,
+    requestType: 'MongoDBUpdateMany',
+    tenant,
+    tenantGuard,
+  });
   const { modifiedCount, upsertedId, upsertedCount, matchedCount } = serialize(response);
   return { modifiedCount, upsertedId, upsertedCount, matchedCount };
 }

@@ -45,6 +45,19 @@ function captureSentryError({ error, context, configLocation }) {
     tags.isServiceError = error.isServiceError;
   }
 
+  // Fields a data-integrity fault carries, so it can be filtered and grouped
+  // in Sentry by where it happened.
+  ['collection', 'connectionId', 'organizationId', 'endpointId'].forEach((field) => {
+    if (!type.isNone(error?.[field])) {
+      tags[field] = error[field];
+    }
+  });
+  if (tags.collection || tags.connectionId || tags.organizationId || tags.endpointId) {
+    tags.errorName = error.name;
+  }
+  const fingerprint =
+    error?.name === 'TenantIntegrityError' ? [error.name, error.collection ?? ''] : undefined;
+
   // Add config location context
   if (configLocation) {
     extra.configLocation = configLocation;
@@ -63,6 +76,7 @@ function captureSentryError({ error, context, configLocation }) {
   Sentry.captureException(error, {
     tags,
     extra,
+    ...(fingerprint ? { fingerprint } : {}),
   });
 }
 
