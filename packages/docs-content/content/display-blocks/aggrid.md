@@ -1384,6 +1384,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.buttons.$.danger` | boolean | `false` |  |
 | `columnDefs.$.cell.buttons.$.ghost` | boolean | `false` |  |
 | `columnDefs.$.cell.buttons.$.hideTitle` | boolean | `false` | Hide the button's title (icon-only). |
+| `columnDefs.$.cell.buttons.$.tooltip` | string | - | Hover text for the button. An icon-only button (`hideTitle: true`) shows its `title` as the tooltip when this is not set. |
 | `columnDefs.$.cell.buttons.$.disabled` | boolean | `false` |  |
 | `columnDefs.$.cell.buttons.$.disabledField` | string | - | Row-data path → boolean. |
 | `columnDefs.$.cell.buttons.$.hidden` | boolean | `false` | Hide the button entirely. |

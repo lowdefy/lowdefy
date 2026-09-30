@@ -8,9 +8,9 @@ The `:throw` control creates a system error that immediately stops routine execu
 Unlike [`:reject`](/:reject), which handles expected user errors, `:throw` is designed for unexpected system failures, programming errors, or critical issues that require attention.
 The key difference is that `:throw` can be caught and handled by [`:try`](/:try)/`:catch` blocks, while [`:reject`](/:reject) cannot.
 This makes `:throw` ideal for recoverable system errors where you might want to implement fallback logic.
-Choose `:throw` when a step failed and the routine may recover; choose [`:reject`](/:reject) when the routine decided the request cannot be fulfilled.
 
 `:throw` also takes an Error as its message, such as the error a `:catch` caught: `:throw: { _error: true }`. The error is rethrown as it is, with its own class and cause, and `:cause` is ignored. The client receives it with the message "Something went wrong.", keeping its `code` and `statusCode`, unless it was a `UserError`, whose message is kept. To show the user the caught error's real message, name it: `:throw: { _error: message }`. See [`_error`](/_error).
+Choose `:throw` when a step failed and the routine may recover; choose [`:reject`](/:reject) when the routine decided the request cannot be fulfilled.
 
 #### Keys
 

@@ -1,0 +1,126 @@
+# Auth Configuration
+
+The `auth` section of the Lowdefy configuration is used to configure the user authentication settings.
+
+The `_secret` operator is evaluated over the entire section.
+
+## User Fields
+
+The `auth.userFields` section of the auth config is used to configure which data fields from the provider are mapped to the `user` data object. Auth.js provides three data objects from which data can read, namely `account`, `profile` and `user`. The content of these objects depends on the provider that was used.
+
+See [User Object](/user-object) and the [Auth.js callbacks reference](https://authjs.dev/reference/core#callbacks) for more details.
+
+## Theme
+
+The `auth.theme` section maps to the [Auth.js theme options](https://authjs.dev/reference/core/types#theme).
+
+The options are:
+- `colorScheme: enum`: Sets the color scheme of the Auth.js auth pages. Options are `"auto"`, `"dark"` and `"light"`. The default is `"auto"`.
+- `brandColor: string`: A hex color code of the color to use as accent color on the Auth.js auth pages.
+- `logo: string`: The absolute URL of an image to be used as logo on the auth pages.
+- `buttonText: string`: A hex color code of the color to use for button text.
+
+## Auth Pages
+
+The `auth.authPages` section can be used to override the auth pages provided by Auth.js. The values should link to pages inside the Lowdefy app.
+
+See [here](https://authjs.dev/reference/core#pages) for more details.
+
+The options are:
+- `signIn: string`
+- `signOut: string`
+- `error: string`
+- `verifyRequest: string`: Used for check email message.
+- `newUser: string`: New users will be directed here on first sign in (leave the property out if not of interest)
+
+###### Configure a custom sign-in page
+```yaml
+lowdefy: 6.0.0
+
+auth:
+  authPages:
+    signIn: /login
+```
+
+## Session
+
+The `auth.session` config maps to the [Auth.js session](https://authjs.dev/reference/core#session) config option. It can be used to set the maximum session length using the `auth.session.maxAge` option.
+
+###### Set a maximum session length of twelve hours
+```yaml
+lowdefy: 6.0.0
+
+auth:
+  session:
+    maxAge: 43200 # 12 hours in seconds
+```
+
+## Debug
+
+If the server log level is set to `debug`, the Auth.js debug mode will be enabled. The `auth.debug` property can be set to false to disable authentication debug output.
+
+## Cookies
+
+The  `auth.advanced.cookies` section can be used to overwrite the Auth.js cookie options. This is an advanced option and using it is not recommended as you may break authentication or introduce security flaws into your application. See [here](https://authjs.dev/reference/core#cookies) for more details.
+
+## Mock User for Testing (Dev Server Only)
+
+When developing and testing Lowdefy apps, you can bypass the login flow by configuring a mock user. This is useful for testing authenticated flows without going through OAuth login.
+
+The mock user can be configured in three ways:
+
+### CLI Flag
+
+Pass `--mock-user` to `lowdefy dev` to start the server as a mock user for that run. Supply a JSON user object to set the identity and roles, or use the bare flag for a default user with no roles:
+
+```bash
+lowdefy dev --mock-user '{"sub":"test-user","email":"test@example.com","roles":["admin"]}'
+```
+
+The flag sets `LOWDEFY_DEV_USER` for the dev server process, so it takes precedence over `auth.dev.mockUser` in the config file.
+
+### Environment Variable
+
+Set the `LOWDEFY_DEV_USER` environment variable to a JSON string containing the mock user object:
+
+```bash
+LOWDEFY_DEV_USER='{"sub":"test-user","email":"test@example.com","roles":["admin"]}'
+```
+
+### Config File
+
+Add the `auth.dev.mockUser` section to your `lowdefy.yaml`:
+
+###### Configure a mock user for development
+```yaml
+lowdefy: 6.0.0
+
+auth:
+  providers:
+    - id: google
+      type: GoogleProvider
+      properties:
+        clientId:
+          _secret: GOOGLE_CLIENT_ID
+        clientSecret:
+          _secret: GOOGLE_CLIENT_SECRET
+  dev:
+    mockUser:
+      sub: test-user
+      email: test@example.com
+      name: Test User
+      roles:
+        - admin
+```
+
+When a mock user is configured:
+- The environment variable takes precedence over the config file if both are set
+- A warning is logged at dev server startup: "Mock user active - login bypassed"
+- The mock user goes through the normal session callback, so `userFields` mappings and custom callbacks still apply
+- The `_user` operator returns values from the mock user, on the server and in the browser client — the dev server serves the mock session to both
+- Protected pages are accessible based on the mock user's roles
+- The dev server's headless renderer (used by the AI-agent screenshot and state-inspection tools) renders as the mock user, so it can capture pages with roles the default user lacks
+
+> **Note:** Mock users only work with the development server (`lowdefy dev`). The production server ignores mock user configuration for security.
+
+`auth.dev` needs no auth stack behind it. An `auth` block whose only key is `dev` is not an auth configuration: it demands no provider and no `AUTH_SECRET`, the app builds and runs signed out in production, and in the dev server the browser is the `dev.mockUser` caller. Adding any other `auth` key declares a real auth stack, which is validated as before.
