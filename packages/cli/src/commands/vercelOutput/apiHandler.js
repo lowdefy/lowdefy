@@ -54,49 +54,52 @@ const app = createApp({ serveStaticAssets: false });
 export const config = { runtime: 'nodejs' };
 
 export default async function handler(req, res) {
-  const method = req.method || 'GET';
+  try {
+    const method = req.method || 'GET';
 
-  // Buffer the body eagerly — see the note above.
-  let body;
-  if (method !== 'GET' && method !== 'HEAD') {
-    const chunks = [];
-    for await (const chunk of req) chunks.push(chunk);
-    if (chunks.length > 0) body = Buffer.concat(chunks);
-  }
-
-  const host = req.headers['x-forwarded-host'] ?? req.headers.host;
-  const protocol = req.headers['x-forwarded-proto'] ?? 'https';
-  const request = new Request(protocol + '://' + host + req.url, {
-    method,
-    headers: req.headers,
-    body,
-  });
-
-  const response = await app.fetch(request);
-
-  res.statusCode = response.status;
-  response.headers.forEach((value, key) => res.setHeader(key, value));
-  if (response.body) {
-    const reader = response.body.getReader();
-    for (;;) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      res.write(value);
+    // Buffer the body eagerly — see the note above.
+    let body;
+    if (method !== 'GET' && method !== 'HEAD') {
+      const chunks = [];
+      for await (const chunk of req) chunks.push(chunk);
+      if (chunks.length > 0) body = Buffer.concat(chunks);
     }
-  }
-  res.end();
 
-  // The function can be suspended once the response ends, stranding queued Sentry events. Vercel's
-  // waitUntil keeps it alive until they are sent without delaying the response. Its Node runtime
-  // exposes waitUntil on this global, which is what @vercel/functions reads; Sentry's own
-  // vercelWaitUntil only acts on the Edge runtime.
-  if (sentryEnabled) {
-    const flushed = Sentry.flush(2000);
-    const vercelContext = globalThis[Symbol.for('@vercel/request-context')]?.get?.();
-    if (vercelContext?.waitUntil) {
-      vercelContext.waitUntil(flushed);
-    } else {
-      await flushed;
+    const host = req.headers['x-forwarded-host'] ?? req.headers.host;
+    const protocol = req.headers['x-forwarded-proto'] ?? 'https';
+    const request = new Request(protocol + '://' + host + req.url, {
+      method,
+      headers: req.headers,
+      body,
+    });
+
+    const response = await app.fetch(request);
+
+    res.statusCode = response.status;
+    response.headers.forEach((value, key) => res.setHeader(key, value));
+    if (response.body) {
+      const reader = response.body.getReader();
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        res.write(value);
+      }
+    }
+    res.end();
+  } finally {
+    // The function can be suspended once the response ends, stranding queued Sentry events. Vercel's
+    // waitUntil keeps it alive until they are sent without delaying the response. Its Node runtime
+    // exposes waitUntil on this global, which is what @vercel/functions reads; Sentry's own
+    // vercelWaitUntil only acts on the Edge runtime. Flushed in finally so a request that throws
+    // (body read, app.fetch, a stream that errors mid-response) still sends the events it captured.
+    if (sentryEnabled) {
+      const flushed = Sentry.flush(2000);
+      const vercelContext = globalThis[Symbol.for('@vercel/request-context')]?.get?.();
+      if (vercelContext?.waitUntil) {
+        vercelContext.waitUntil(flushed);
+      } else {
+        await flushed;
+      }
     }
   }
 }

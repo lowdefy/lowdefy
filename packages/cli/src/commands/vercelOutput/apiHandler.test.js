@@ -31,7 +31,12 @@ const stubs = {
   'src/initServer.js': `export default async function initServer() {
   globalThis.calls.push('initServer');
   return {
-    createApp: () => ({ fetch: async () => new Response('ok') }),
+    createApp: () => ({
+      fetch: async () => {
+        if (process.env.APP_THROWS) throw new Error('app failed');
+        return new Response('ok');
+      },
+    }),
     sentryEnabled: Boolean(process.env.SENTRY_DSN),
   };
 }`,
@@ -54,7 +59,11 @@ const res = {
   write: () => {},
   end: () => globalThis.calls.push('response end'),
 };
-await handler({ method: 'GET', url: '/', headers: { host: 'localhost' } }, res);
+try {
+  await handler({ method: 'GET', url: '/', headers: { host: 'localhost' } }, res);
+} catch (error) {
+  globalThis.calls.push('handler threw: ' + error.message);
+}
 process.stdout.write(JSON.stringify(globalThis.calls));`,
 };
 
@@ -92,4 +101,10 @@ test('apiHandler runs the shared server startup and flushes Sentry through waitU
 
 test('apiHandler does not flush Sentry when Sentry is not enabled', () => {
   expect(runHandler({ env: {} })).toEqual(['initServer', 'response end']);
+});
+
+test('apiHandler still flushes Sentry through waitUntil when the request throws', () => {
+  expect(
+    runHandler({ env: { SENTRY_DSN: 'https://key@sentry.example.com/1', APP_THROWS: '1' } })
+  ).toEqual(['initServer', 'Sentry.flush', 'waitUntil', 'handler threw: app failed']);
 });
