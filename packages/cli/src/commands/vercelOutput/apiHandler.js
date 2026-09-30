@@ -86,6 +86,11 @@ export default async function handler(req, res) {
       }
     }
     res.end();
+  } catch (error) {
+    // Once headers are sent the launcher can no longer answer with a 500, and without this the
+    // client waits on an open response until the function times out.
+    if (res.headersSent) res.destroy();
+    throw error;
   } finally {
     // The function can be suspended once the response ends, stranding queued Sentry events. Vercel's
     // waitUntil keeps it alive until they are sent without delaying the response. Its Node runtime

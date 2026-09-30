@@ -34,6 +34,18 @@ const stubs = {
     createApp: () => ({
       fetch: async () => {
         if (process.env.APP_THROWS) throw new Error('app failed');
+        if (process.env.STREAM_THROWS) {
+          let sent = false;
+          return new Response(
+            new ReadableStream({
+              pull(controller) {
+                if (sent) throw new Error('stream failed');
+                sent = true;
+                controller.enqueue(new TextEncoder().encode('partial'));
+              },
+            })
+          );
+        }
         return new Response('ok');
       },
     }),
@@ -55,9 +67,13 @@ globalThis[Symbol.for('@vercel/request-context')] = {
 };
 const { default: handler } = await import('./api/index.js');
 const res = {
+  headersSent: false,
   setHeader: () => {},
-  write: () => {},
+  write: () => {
+    res.headersSent = true;
+  },
   end: () => globalThis.calls.push('response end'),
+  destroy: () => globalThis.calls.push('response destroyed'),
 };
 try {
   await handler({ method: 'GET', url: '/', headers: { host: 'localhost' } }, res);
@@ -107,4 +123,16 @@ test('apiHandler still flushes Sentry through waitUntil when the request throws'
   expect(
     runHandler({ env: { SENTRY_DSN: 'https://key@sentry.example.com/1', APP_THROWS: '1' } })
   ).toEqual(['initServer', 'Sentry.flush', 'waitUntil', 'handler threw: app failed']);
+});
+
+test('apiHandler destroys the response and flushes Sentry when the stream fails after headers are sent', () => {
+  expect(
+    runHandler({ env: { SENTRY_DSN: 'https://key@sentry.example.com/1', STREAM_THROWS: '1' } })
+  ).toEqual([
+    'initServer',
+    'response destroyed',
+    'Sentry.flush',
+    'waitUntil',
+    'handler threw: stream failed',
+  ]);
 });
