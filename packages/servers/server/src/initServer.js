@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import * as Sentry from '@sentry/node';
+
 import checkEnvironmentGuards from '@lowdefy/node-utils/checkEnvironmentGuards.js';
 
 import initSentryServer from '../lib/server/sentry/initSentry.js';
@@ -31,17 +33,27 @@ async function initServer() {
 
   const sentryEnabled = initSentryServer();
 
+  // The build checked the current environment's guards, but an image built once can be started
+  // with different variables, so they are checked again before the server takes any traffic — and
+  // before the app loads, so a misconfigured start fails without importing every plugin under the
+  // wrong variables. The failure is sent to Sentry here because the Vercel launcher catches errors
+  // thrown while it imports the function entry, so no global handler would report it, and the
+  // instance can be torn down before a queued event is sent.
+  const { default: config } = await import('../lib/build/config.js');
+  try {
+    checkEnvironmentGuards({
+      name: config.environment,
+      guards: config.environments?.[config.environment]?.guards,
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+    await Sentry.flush(2000);
+    throw error;
+  }
+
   // Import after Sentry init so instrumentation observes the module graph.
   const { default: createApp } = await import('./app.js');
   const { default: createLogger } = await import('../lib/server/log/createLogger.js');
-  const { default: config } = await import('../lib/build/config.js');
-
-  // The build checked the current environment's guards, but an image built once can be started
-  // with different variables, so they are checked again before the server takes any traffic.
-  checkEnvironmentGuards({
-    name: config.environment,
-    guards: config.environments?.[config.environment]?.guards,
-  });
 
   const logger = createLogger({ server: 'lowdefy' });
   if (sentryEnabled) {

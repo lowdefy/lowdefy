@@ -20,13 +20,18 @@ const calls = [];
 const info = jest.fn();
 const guards = { env: { AUTH_URL: '^https://app\\.example\\.com$' } };
 
-const checkEnvironmentGuards = jest.fn();
+const checkEnvironmentGuards = jest.fn(() => {
+  calls.push('checkEnvironmentGuards');
+});
+const captureException = jest.fn();
+const flush = jest.fn(async () => true);
 const initSentryServer = jest.fn(() => {
   calls.push('initSentryServer');
   return false;
 });
 const createApp = jest.fn();
 
+jest.unstable_mockModule('@sentry/node', () => ({ captureException, flush }));
 jest.unstable_mockModule('@lowdefy/node-utils/checkEnvironmentGuards.js', () => ({
   default: checkEnvironmentGuards,
 }));
@@ -51,9 +56,16 @@ beforeEach(() => {
   delete process.env.NEXTAUTH_URL;
 });
 
-test('initServer initialises Sentry before importing the app', async () => {
+// The app module is imported once and then cached, so find the run that imported it rather than
+// assuming this test runs first.
+test('initServer initialises Sentry and checks the guards before importing the app', async () => {
   const result = await initServer();
-  expect(calls).toEqual(['initSentryServer', 'import app']);
+  const importIndex = calls.indexOf('import app');
+  expect(calls.slice(importIndex - 2, importIndex + 1)).toEqual([
+    'initSentryServer',
+    'checkEnvironmentGuards',
+    'import app',
+  ]);
   expect(result.createApp).toBe(createApp);
 });
 
@@ -80,6 +92,16 @@ test('initServer throws when the current environment guards fail', async () => {
     throw new Error('Environment "prod" guards failed.');
   });
   await expect(initServer()).rejects.toThrow('Environment "prod" guards failed.');
+});
+
+test('initServer sends a guard failure to Sentry and flushes it before throwing', async () => {
+  const error = new Error('Environment "prod" guards failed.');
+  checkEnvironmentGuards.mockImplementationOnce(() => {
+    throw error;
+  });
+  await expect(initServer()).rejects.toBe(error);
+  expect(captureException.mock.calls).toEqual([[error]]);
+  expect(flush).toHaveBeenCalled();
 });
 
 test('initServer logs that Sentry is enabled when Sentry was initialised', async () => {
