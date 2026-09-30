@@ -22,6 +22,9 @@ import MongoDBAggregation from './MongoDBAggregation/MongoDBAggregation.js';
 import MongoDBBulkWrite from './MongoDBBulkWrite/MongoDBBulkWrite.js';
 import MongoDBDeleteMany from './MongoDBDeleteMany/MongoDBDeleteMany.js';
 import MongoDBDeleteOne from './MongoDBDeleteOne/MongoDBDeleteOne.js';
+import MongoDBEnrichmentClaim from './MongoDBEnrichmentClaim/MongoDBEnrichmentClaim.js';
+import MongoDBEnrichmentComplete from './MongoDBEnrichmentComplete/MongoDBEnrichmentComplete.js';
+import MongoDBEnrichmentEnqueue from './MongoDBEnrichmentEnqueue/MongoDBEnrichmentEnqueue.js';
 import MongoDBFind from './MongoDBFind/MongoDBFind.js';
 import MongoDBFindOne from './MongoDBFindOne/MongoDBFindOne.js';
 import MongoDBInsertConsecutiveId from './MongoDBInsertConsecutiveId/MongoDBInsertConsecutiveId.js';
@@ -32,6 +35,7 @@ import MongoDBUpdateMany from './MongoDBUpdateMany/MongoDBUpdateMany.js';
 import MongoDBUpdateOne from './MongoDBUpdateOne/MongoDBUpdateOne.js';
 import MongoDBVersionedUpdateOne from './MongoDBVersionedUpdateOne/MongoDBVersionedUpdateOne.js';
 import findLogCollectionRecordTestMongoDb from '../../../test/findLogCollectionRecordTestMongoDb.js';
+import { columnDefs, fields } from '../../../test/enrichmentTable.js';
 import getTestCollection from '../../../test/getTestCollection.js';
 import populateTestMongoDb from '../../../test/populateTestMongoDb.js';
 
@@ -763,4 +767,200 @@ test('table query under tenantGuard (tenant: none) is unscoped by design and joi
   });
   expect(res.total).toBe(3);
   res.rows.forEach((row) => expect(row.joined).toHaveLength(3));
+});
+
+const orgB = { field: 'organization_id', value: 'org_b' };
+
+// Two orgs share one leads table, plus a row a data fault left without an organization.
+const enrichmentDocs = [
+  { _id: 'a1', organization_id: 'org_a', name: 'Acme', domain: 'acme.test' },
+  { _id: 'a2', organization_id: 'org_a', name: 'Arch', domain: 'arch.test' },
+  { _id: 'b1', organization_id: 'org_b', name: 'Bolt', domain: 'bolt.test' },
+  { _id: 'b2', organization_id: 'org_b', name: 'Bore', domain: 'bore.test' },
+  { _id: 'n1', name: 'Nobody', domain: 'nobody.test' },
+];
+
+function enrichmentCell(docs, _id, columnKey) {
+  return docs.find((doc) => doc._id === _id)._enrich?.[columnKey];
+}
+
+function enrichmentConnection(collection) {
+  return makeConnection(collection, { read: true, write: true });
+}
+
+function enqueueEmail({ collection, ...context }) {
+  return MongoDBEnrichmentEnqueue({
+    request: { fields, columnDefs, columns: ['email'] },
+    connection: enrichmentConnection(collection),
+    ...context,
+  });
+}
+
+function claimEmail({ collection, ...context }) {
+  return MongoDBEnrichmentClaim({
+    request: { fields, columnDefs, columns: ['email'], limit: 10 },
+    connection: enrichmentConnection(collection),
+    ...context,
+  });
+}
+
+function completeClaims({ collection, claims, ...context }) {
+  return MongoDBEnrichmentComplete({
+    request: {
+      columnDefs,
+      results: claims.map(({ rowKey, columnKey, claimToken }) => ({
+        rowKey,
+        columnKey,
+        claimToken,
+        status: 'ok',
+        value: `${rowKey}@found.test`,
+      })),
+    },
+    connection: enrichmentConnection(collection),
+    ...context,
+  });
+}
+
+test('enrichment: enqueue on a tenant connection only queues cells of its org', async () => {
+  const collection = 'tenantIsolationEnrichmentEnqueue';
+  await populateTestMongoDb({ collection, documents: enrichmentDocs });
+  const res = await enqueueEmail({ collection, tenant });
+  expect(res).toMatchObject({ queued: 2, missingInputs: 0 });
+  const docs = await readAll(collection);
+  expect(enrichmentCell(docs, 'a1', 'email').status).toBe('queued');
+  expect(enrichmentCell(docs, 'a2', 'email').status).toBe('queued');
+  ['b1', 'b2', 'n1'].forEach((_id) => {
+    expect(docs.find((doc) => doc._id === _id)._enrich).toBeUndefined();
+  });
+});
+
+test("enrichment: claim on a tenant connection never claims another org's older queued cells", async () => {
+  const collection = 'tenantIsolationEnrichmentClaim';
+  await populateTestMongoDb({ collection, documents: enrichmentDocs });
+  await enqueueEmail({ collection, tenant: orgB });
+  await enqueueEmail({ collection, tenant });
+  const claims = await claimEmail({ collection, tenant });
+  expect(claims.map((claim) => claim.rowKey).sort()).toEqual(['a1', 'a2']);
+  const docs = await readAll(collection);
+  expect(enrichmentCell(docs, 'b1', 'email').status).toBe('queued');
+  expect(enrichmentCell(docs, 'b2', 'email').status).toBe('queued');
+  expect(docs.find((doc) => doc._id === 'n1')._enrich).toBeUndefined();
+});
+
+test("enrichment: complete on a tenant connection ignores another org's claims", async () => {
+  const collection = 'tenantIsolationEnrichmentComplete';
+  await populateTestMongoDb({ collection, documents: enrichmentDocs });
+  await enqueueEmail({ collection, tenant });
+  const claims = await claimEmail({ collection, tenant });
+  const leaked = await completeClaims({ collection, claims, tenant: orgB });
+  expect(leaked).toMatchObject({ applied: 0, ignored: 2 });
+  let docs = await readAll(collection);
+  expect(enrichmentCell(docs, 'a1', 'email').status).toBe('running');
+  expect(enrichmentCell(docs, 'a1', 'email').value).toBeUndefined();
+
+  const applied = await completeClaims({ collection, claims, tenant });
+  expect(applied).toMatchObject({ applied: 2, ignored: 0 });
+  docs = await readAll(collection);
+  expect(enrichmentCell(docs, 'a1', 'email')).toMatchObject({
+    status: 'ok',
+    value: 'a1@found.test',
+  });
+  // The autoRun pitch column downstream of email is queued on this org's rows only.
+  expect(enrichmentCell(docs, 'a1', 'pitch').status).toBe('queued');
+  expect(enrichmentCell(docs, 'a2', 'pitch').status).toBe('queued');
+  ['b1', 'b2', 'n1'].forEach((_id) => {
+    expect(docs.find((doc) => doc._id === _id)._enrich).toBeUndefined();
+  });
+});
+
+test('enrichment: two orgs working one table at once each finish only their own cells', async () => {
+  const collection = 'tenantIsolationEnrichmentTwoOrgs';
+  await populateTestMongoDb({ collection, documents: enrichmentDocs });
+  await Promise.all([
+    enqueueEmail({ collection, tenant }),
+    enqueueEmail({ collection, tenant: orgB }),
+  ]);
+  const [claimsA, claimsB] = await Promise.all([
+    claimEmail({ collection, tenant }),
+    claimEmail({ collection, tenant: orgB }),
+  ]);
+  expect(claimsA.map((claim) => claim.rowKey).sort()).toEqual(['a1', 'a2']);
+  expect(claimsB.map((claim) => claim.rowKey).sort()).toEqual(['b1', 'b2']);
+  claimsA.forEach((claim) => expect(claim.row.organization_id).toBeUndefined());
+  await Promise.all([
+    completeClaims({ collection, claims: claimsA, tenant }),
+    completeClaims({ collection, claims: claimsB, tenant: orgB }),
+  ]);
+  const docs = await readAll(collection);
+  ['a1', 'a2', 'b1', 'b2'].forEach((_id) => {
+    expect(enrichmentCell(docs, _id, 'email')).toMatchObject({
+      status: 'ok',
+      value: `${_id}@found.test`,
+    });
+  });
+  expect(docs.find((doc) => doc._id === 'n1')._enrich).toBeUndefined();
+  docs.forEach((doc) => {
+    expect(doc.organization_id).toEqual(
+      enrichmentDocs.find((row) => row._id === doc._id).organization_id
+    );
+  });
+});
+
+test.each([
+  ['enqueue', MongoDBEnrichmentEnqueue],
+  ['claim', MongoDBEnrichmentClaim],
+  ['complete', MongoDBEnrichmentComplete],
+])('enrichment %s with an authored organization_id filter throws', async (_, requestType) => {
+  const collection = 'tenantIsolationEnrichmentAuthored';
+  await populateTestMongoDb({ collection, documents: enrichmentDocs });
+  await expect(
+    requestType({
+      request: {
+        fields,
+        columnDefs,
+        columns: ['email'],
+        results: [
+          {
+            rowKey: 'b1',
+            columnKey: 'email',
+            claimToken: `${'a'.repeat(24)}:${'0'.repeat(14)}`,
+            status: 'ok',
+            value: 'x',
+          },
+        ],
+        filter: { organization_id: 'org_b' },
+      },
+      connection: enrichmentConnection(collection),
+      tenant,
+    })
+  ).rejects.toThrow('Tenant field "organization_id" can not be set in a filter');
+  const docs = await readAll(collection);
+  docs.forEach((doc) => expect(doc._enrich).toBeUndefined());
+});
+
+test('enrichment under tenantGuard (tenant: none) is scoped by its filter alone', async () => {
+  const collection = 'tenantIsolationEnrichmentGuard';
+  await populateTestMongoDb({ collection, documents: enrichmentDocs });
+  const tenantGuard = { field: 'organization_id' };
+  const scoped = await MongoDBEnrichmentEnqueue({
+    request: { fields, columnDefs, columns: ['email'], filter: { organization_id: 'org_b' } },
+    connection: enrichmentConnection(collection),
+    tenantGuard,
+  });
+  expect(scoped).toMatchObject({ queued: 2 });
+  let docs = await readAll(collection);
+  expect(docs.filter((doc) => doc._enrich).map((doc) => doc._id)).toEqual(['b1', 'b2']);
+
+  const unscoped = await MongoDBEnrichmentEnqueue({
+    request: { fields, columnDefs, columns: ['email'], filter: {}, mode: 'errors' },
+    connection: enrichmentConnection(collection),
+    tenantGuard,
+  });
+  expect(unscoped).toMatchObject({ queued: 0 });
+  docs = await readAll(collection);
+  docs.forEach((doc) => {
+    expect(doc.organization_id).toEqual(
+      enrichmentDocs.find((row) => row._id === doc._id).organization_id
+    );
+  });
 });
