@@ -19,6 +19,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
+import { create } from 'tar';
+
 const mockFetchGitModuleOverSsh = jest.fn();
 jest.unstable_mockModule('./fetchGitModuleOverSsh.js', () => ({
   default: mockFetchGitModuleOverSsh,
@@ -31,22 +33,17 @@ describe('fetchGitHubModule', () => {
   const env = { ...process.env };
   let configDir;
   let context;
+  let repoParent;
   let repoCache;
 
   beforeEach(() => {
     configDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-fetch-test-'));
     context = { directories: { config: configDir } };
-    repoCache = path.join(
-      configDir,
-      '.lowdefy',
-      'modules',
-      'github',
-      'acme',
-      'private-modules',
-      'abc1234'
-    );
+    repoParent = path.join(configDir, '.lowdefy', 'modules', 'github', 'acme', 'private-modules');
+    repoCache = path.join(repoParent, 'abc1234');
     process.env.GITHUB_TOKEN = 'test-token';
     delete process.env.GITHUB_SSH_KEY;
+    mockFetchGitModuleOverSsh.mockReset();
     jest.spyOn(global, 'fetch');
   });
 
@@ -56,25 +53,103 @@ describe('fetchGitHubModule', () => {
     jest.restoreAllMocks();
   });
 
-  function mockApiResponse({ status, statusText }) {
-    global.fetch.mockResolvedValue({ ok: status < 400, status, statusText, body: null });
+  function mockApiResponse({ status, statusText, body = statusText }) {
+    const response = new Response(body, { status, statusText });
+    global.fetch.mockResolvedValue(response);
+    return response;
   }
 
-  test('fetchGitHubModule fetches over SSH when the API returns 404 and GITHUB_SSH_KEY is set', async () => {
-    process.env.GITHUB_SSH_KEY = 'private-key';
-    mockApiResponse({ status: 404, statusText: 'Not Found' });
-    mockFetchGitModuleOverSsh.mockResolvedValue();
+  function mockSshFetchWritesModule() {
+    mockFetchGitModuleOverSsh.mockImplementation(async ({ destDir }) => {
+      fs.writeFileSync(path.join(destDir, 'module.lowdefy.yaml'), 'name: cx\n');
+    });
+  }
+
+  async function createTarball({ files }) {
+    const srcDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-tarball-src-'));
+    try {
+      Object.entries(files).forEach(([name, content]) => {
+        const filePath = path.join(srcDir, 'acme-private-modules-abc1234', name);
+        fs.mkdirSync(path.dirname(filePath), { recursive: true });
+        fs.writeFileSync(filePath, content);
+      });
+      const chunks = [];
+      for await (const chunk of create({ gzip: true, cwd: srcDir }, [
+        'acme-private-modules-abc1234',
+      ])) {
+        chunks.push(chunk);
+      }
+      return Buffer.concat(chunks);
+    } finally {
+      fs.rmSync(srcDir, { recursive: true, force: true });
+    }
+  }
+
+  function partialDirs() {
+    return fs.readdirSync(repoParent).filter((name) => name.includes('.partial-'));
+  }
+
+  test('fetchGitHubModule extracts the API tarball into the cache', async () => {
+    const tarball = await createTarball({ files: { 'module.lowdefy.yaml': 'name: cx\n' } });
+    mockApiResponse({ status: 200, statusText: 'OK', body: tarball });
 
     const result = await fetchGitHubModule(source, context);
 
     expect(result).toEqual({ packageRoot: repoCache });
-    expect(mockFetchGitModuleOverSsh).toHaveBeenCalledWith({
-      remoteUrl: 'git@github.com:acme/private-modules.git',
-      ref: 'abc1234',
-      destDir: repoCache,
-      sshKey: 'private-key',
-    });
+    expect(fs.readFileSync(path.join(repoCache, 'module.lowdefy.yaml'), 'utf8')).toBe('name: cx\n');
+    expect(partialDirs()).toEqual([]);
+    expect(mockFetchGitModuleOverSsh).not.toHaveBeenCalled();
   });
+
+  test('fetchGitHubModule leaves no cache when the API tarball fails to extract', async () => {
+    mockApiResponse({ status: 200, statusText: 'OK', body: Buffer.from('not a tarball') });
+
+    await expect(fetchGitHubModule(source, context)).rejects.toThrow();
+    expect(fs.existsSync(repoCache)).toBe(false);
+    expect(partialDirs()).toEqual([]);
+  });
+
+  test('fetchGitHubModule replaces the cache of a mutable ref', async () => {
+    const branchSource = { ...source, ref: 'main' };
+    const branchCache = path.join(repoParent, 'main');
+    fs.mkdirSync(branchCache, { recursive: true });
+    fs.writeFileSync(path.join(branchCache, 'stale.yaml'), '');
+    const tarball = await createTarball({ files: { 'module.lowdefy.yaml': 'name: cx\n' } });
+    mockApiResponse({ status: 200, statusText: 'OK', body: tarball });
+
+    await fetchGitHubModule(branchSource, context);
+
+    expect(fs.readdirSync(branchCache)).toEqual(['module.lowdefy.yaml']);
+  });
+
+  test.each([
+    [401, 'Unauthorized'],
+    [403, 'Forbidden'],
+    [404, 'Not Found'],
+  ])(
+    'fetchGitHubModule fetches over SSH when the API returns %i and GITHUB_SSH_KEY is set',
+    async (status, statusText) => {
+      process.env.GITHUB_SSH_KEY = 'private-key';
+      const response = mockApiResponse({ status, statusText });
+      const cancel = jest.spyOn(response.body, 'cancel');
+      mockSshFetchWritesModule();
+
+      const result = await fetchGitHubModule(source, context);
+
+      expect(result).toEqual({ packageRoot: repoCache });
+      expect(cancel).toHaveBeenCalled();
+      expect(mockFetchGitModuleOverSsh).toHaveBeenCalledWith({
+        remoteUrl: 'git@github.com:acme/private-modules.git',
+        ref: 'abc1234',
+        destDir: expect.stringContaining(`${repoCache}.partial-`),
+        sshKey: 'private-key',
+      });
+      expect(fs.readFileSync(path.join(repoCache, 'module.lowdefy.yaml'), 'utf8')).toBe(
+        'name: cx\n'
+      );
+      expect(partialDirs()).toEqual([]);
+    }
+  );
 
   test('fetchGitHubModule throws the API error when the API returns 404 and GITHUB_SSH_KEY is not set', async () => {
     mockApiResponse({ status: 404, statusText: 'Not Found' });
@@ -85,7 +160,15 @@ describe('fetchGitHubModule', () => {
     expect(mockFetchGitModuleOverSsh).not.toHaveBeenCalled();
   });
 
-  test('fetchGitHubModule does not fetch over SSH when the API fails with a status other than 404', async () => {
+  test('fetchGitHubModule throws the API error when GITHUB_SSH_KEY is only whitespace', async () => {
+    process.env.GITHUB_SSH_KEY = ' \n ';
+    mockApiResponse({ status: 404, statusText: 'Not Found' });
+
+    await expect(fetchGitHubModule(source, context)).rejects.toThrow('404 Not Found');
+    expect(mockFetchGitModuleOverSsh).not.toHaveBeenCalled();
+  });
+
+  test('fetchGitHubModule does not fetch over SSH when the API fails with a server error', async () => {
     process.env.GITHUB_SSH_KEY = 'private-key';
     mockApiResponse({ status: 500, statusText: 'Internal Server Error' });
 
@@ -93,11 +176,10 @@ describe('fetchGitHubModule', () => {
     expect(mockFetchGitModuleOverSsh).not.toHaveBeenCalled();
   });
 
-  test('fetchGitHubModule reports both failures and removes the partial cache when the SSH fetch fails', async () => {
+  test('fetchGitHubModule reports both failures and leaves no cache when the SSH fetch fails', async () => {
     process.env.GITHUB_SSH_KEY = 'private-key';
     mockApiResponse({ status: 404, statusText: 'Not Found' });
     mockFetchGitModuleOverSsh.mockImplementation(async ({ destDir }) => {
-      fs.mkdirSync(destDir, { recursive: true });
       fs.writeFileSync(path.join(destDir, 'partial.yaml'), '');
       throw new Error('Permission denied (publickey).');
     });
@@ -106,6 +188,7 @@ describe('fetchGitHubModule', () => {
       '404 Not Found. Fetching over SSH with GITHUB_SSH_KEY also failed: Permission denied (publickey).'
     );
     expect(fs.existsSync(repoCache)).toBe(false);
+    expect(partialDirs()).toEqual([]);
   });
 
   test('fetchGitHubModule returns the cache without fetching for an immutable ref', async () => {

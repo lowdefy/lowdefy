@@ -14,14 +14,13 @@
   limitations under the License.
 */
 
-import { execFile, spawn } from 'node:child_process';
+import { execFile } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { pipeline } from 'node:stream/promises';
 import { promisify } from 'node:util';
 
-import { Unpack } from 'tar';
+import extractTarball from './extractTarball.js';
 
 const execFileAsync = promisify(execFile);
 
@@ -33,7 +32,7 @@ const GITHUB_KNOWN_HOSTS = [
   'github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk=',
 ].join('\n');
 
-function shellQuote(value) {
+function shellQuote({ value }) {
   return `'${value.replaceAll("'", "'\\''")}'`;
 }
 
@@ -42,61 +41,70 @@ function createSshCommand({ keyFile, knownHostsFile }) {
   return [
     'ssh',
     '-F none',
-    `-i ${shellQuote(keyFile)}`,
+    `-i ${shellQuote({ value: keyFile })}`,
     '-o IdentitiesOnly=yes',
     '-o BatchMode=yes',
     '-o StrictHostKeyChecking=yes',
-    `-o UserKnownHostsFile=${shellQuote(knownHostsFile)}`,
+    `-o UserKnownHostsFile=${shellQuote({ value: knownHostsFile })}`,
   ].join(' ');
 }
 
-// git archive is what GitHub's tarball endpoint serves, so both fetch routes cache the same files.
-async function archiveFetchHead({ gitDir, destDir }) {
-  const child = spawn('git', ['archive', '--format=tar', 'FETCH_HEAD'], {
-    cwd: gitDir,
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
-  let stderr = '';
-  child.stderr.on('data', (chunk) => {
-    stderr += chunk;
-  });
-  const exited = new Promise((resolve, reject) => {
-    child.on('error', reject);
-    child.on('close', (code) => {
-      if (code === 0) {
-        resolve();
-        return;
-      }
-      reject(new Error(`git archive exited with code ${code}: ${stderr.trim()}`));
-    });
-  });
-  await Promise.all([pipeline(child.stdout, new Unpack({ cwd: destDir })), exited]);
+// Secret stores and env var UIs mangle multi-line values: literal "\n" escapes, CRLF line endings,
+// surrounding whitespace and a dropped final newline, all of which OpenSSH rejects. A PEM key never
+// contains a backslash, so unescaping "\n" is safe.
+function normalizeSshKey({ sshKey }) {
+  return `${sshKey.replaceAll('\\n', '\n').replaceAll('\r\n', '\n').trim()}\n`;
+}
+
+// Runs git isolated from the machine's git setup: GIT_* variables (such as GIT_DIR set by a git
+// hook running the build) and global or system config (such as a url.insteadOf rewrite that would
+// send the fetch over HTTPS and bypass the key) would otherwise apply.
+function createGitEnv({ workDir, keyFile, knownHostsFile }) {
+  const emptyConfigFile = path.join(workDir, 'gitconfig');
+  fs.writeFileSync(emptyConfigFile, '');
+  const env = Object.fromEntries(
+    Object.entries(process.env).filter(([name]) => !name.toUpperCase().startsWith('GIT_'))
+  );
+  return {
+    ...env,
+    GIT_CONFIG_GLOBAL: emptyConfigFile,
+    GIT_CONFIG_NOSYSTEM: '1',
+    GIT_SSH_COMMAND: createSshCommand({ keyFile, knownHostsFile }),
+    GIT_TERMINAL_PROMPT: '0',
+  };
 }
 
 async function fetchGitModuleOverSsh({ remoteUrl, ref, destDir, sshKey }) {
+  if (/^[0-9a-f]{7,39}$/.test(ref)) {
+    throw new Error(
+      `"${ref}" looks like an abbreviated commit SHA, which git cannot fetch. Use a tag, a branch or the full 40-character commit SHA.`
+    );
+  }
   const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-module-'));
   try {
     const keyFile = path.join(workDir, 'id');
     const knownHostsFile = path.join(workDir, 'known_hosts');
     const gitDir = path.join(workDir, 'repo');
+    const archiveFile = path.join(workDir, 'module.tar.gz');
 
-    // OpenSSH refuses a private key without a final newline, which secret stores often drop.
-    fs.writeFileSync(keyFile, sshKey.endsWith('\n') ? sshKey : `${sshKey}\n`, { mode: 0o600 });
+    fs.writeFileSync(keyFile, normalizeSshKey({ sshKey }), { mode: 0o600 });
     fs.writeFileSync(knownHostsFile, `${GITHUB_KNOWN_HOSTS}\n`);
 
-    const env = {
-      ...process.env,
-      GIT_SSH_COMMAND: createSshCommand({ keyFile, knownHostsFile }),
-      GIT_TERMINAL_PROMPT: '0',
-    };
-    await execFileAsync('git', ['init', '--quiet', gitDir]);
-    await execFileAsync('git', ['fetch', '--quiet', '--depth', '1', remoteUrl, ref], {
+    const env = createGitEnv({ workDir, keyFile, knownHostsFile });
+    await execFileAsync('git', ['init', '--quiet', gitDir], { env });
+    // "--" stops a ref starting with "-" from being read as a git option.
+    await execFileAsync('git', ['fetch', '--quiet', '--depth', '1', '--', remoteUrl, ref], {
       cwd: gitDir,
       env,
     });
-
-    fs.mkdirSync(destDir, { recursive: true });
-    await archiveFetchHead({ gitDir, destDir });
+    // git archive is what GitHub's tarball endpoint serves, so both fetch routes cache the same
+    // files. The prefix gives the archive the single top-level directory extractTarball strips.
+    await execFileAsync(
+      'git',
+      ['archive', '--format=tar.gz', '--prefix=module/', `--output=${archiveFile}`, 'FETCH_HEAD'],
+      { cwd: gitDir, env }
+    );
+    await extractTarball({ body: fs.createReadStream(archiveFile), destDir });
   } finally {
     fs.rmSync(workDir, { recursive: true, force: true });
   }

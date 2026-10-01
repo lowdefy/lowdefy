@@ -25,11 +25,13 @@ function parseModuleSource(source) {
     const rest = source.slice(7);
     const atIndex = rest.lastIndexOf('@');
     if (atIndex === -1) {
-      throw new ConfigError(
-        `Module source "${source}" is missing @ref (e.g., @v1.0.0).`
-      );
+      throw new ConfigError(`Module source "${source}" is missing @ref (e.g., @v1.0.0).`);
     }
     const ref = rest.slice(atIndex + 1);
+    // git reads an argument starting with "-" as an option, and no tag, branch or SHA starts with one.
+    if (ref.startsWith('-')) {
+      throw new ConfigError(`Module source "${source}" has an invalid ref "${ref}".`);
+    }
     const fullPath = rest.slice(0, atIndex);
     const segments = fullPath.split('/');
     if (segments.length < 2) {
@@ -41,9 +43,7 @@ function parseModuleSource(source) {
     return { type: 'github', owner, repo, path, ref };
   }
 
-  throw new ConfigError(
-    `Unknown module source type: "${source}". Expected "github:" or "file:".`
-  );
+  throw new ConfigError(`Unknown module source type: "${source}". Expected "github:" or "file:".`);
 }
 
 export default parseModuleSource;

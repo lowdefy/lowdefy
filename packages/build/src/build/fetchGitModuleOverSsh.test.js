@@ -21,17 +21,28 @@ import path from 'node:path';
 
 import fetchGitModuleOverSsh from './fetchGitModuleOverSsh.js';
 
-function git(cwd, args) {
-  return execFileSync('git', args, { cwd, encoding: 'utf8' }).trim();
-}
-
 let tmpDir;
+let gitEnv;
 let remoteDir;
 let remoteUrl;
 let commitSha;
 
+// Builds the test repository without the developer's git config, which may sign commits and tags.
+function git(cwd, args) {
+  return execFileSync('git', args, { cwd, encoding: 'utf8', env: gitEnv }).trim();
+}
+
 beforeAll(() => {
   tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-git-module-test-'));
+  const emptyConfigFile = path.join(tmpDir, 'gitconfig');
+  fs.writeFileSync(emptyConfigFile, '');
+  gitEnv = {
+    ...Object.fromEntries(
+      Object.entries(process.env).filter(([name]) => !name.toUpperCase().startsWith('GIT_'))
+    ),
+    GIT_CONFIG_GLOBAL: emptyConfigFile,
+    GIT_CONFIG_NOSYSTEM: '1',
+  };
   remoteDir = path.join(tmpDir, 'remote');
   fs.mkdirSync(path.join(remoteDir, 'modules', 'cx'), { recursive: true });
   fs.writeFileSync(path.join(remoteDir, 'modules', 'cx', 'module.lowdefy.yaml'), 'name: cx\n');
@@ -62,7 +73,7 @@ test('fetchGitModuleOverSsh extracts a branch into destDir without git metadata'
   expect(fs.readFileSync(path.join(destDir, 'modules', 'cx', 'module.lowdefy.yaml'), 'utf8')).toBe(
     'name: cx\n'
   );
-  expect(fs.existsSync(path.join(destDir, '.git'))).toBe(false);
+  expect(fs.readdirSync(destDir)).toEqual(['modules']);
 });
 
 test('fetchGitModuleOverSsh extracts an annotated tag', async () => {
@@ -89,12 +100,67 @@ test('fetchGitModuleOverSsh throws when the ref does not exist', async () => {
   ).rejects.toThrow('no-such-branch');
 });
 
-test('fetchGitModuleOverSsh connects with only the given key, pinned GitHub host keys and no prompts', async () => {
-  const binDir = path.join(tmpDir, 'bin');
-  const outDir = path.join(tmpDir, 'ssh-out');
+test('fetchGitModuleOverSsh throws a clear error for an abbreviated commit SHA without fetching', async () => {
+  const destDir = destDirFor('short-sha');
+
+  await expect(
+    fetchGitModuleOverSsh({ remoteUrl, ref: commitSha.slice(0, 7), destDir, sshKey: 'unused' })
+  ).rejects.toThrow(
+    `"${commitSha.slice(
+      0,
+      7
+    )}" looks like an abbreviated commit SHA, which git cannot fetch. Use a tag, a branch or the full 40-character commit SHA.`
+  );
+  expect(fs.existsSync(destDir)).toBe(false);
+});
+
+test('fetchGitModuleOverSsh does not read a ref starting with a dash as a git option', async () => {
+  const marker = path.join(tmpDir, 'upload-pack-ran');
+
+  await expect(
+    fetchGitModuleOverSsh({
+      remoteUrl,
+      ref: `--upload-pack=touch ${marker}`,
+      destDir: destDirFor('dash-ref'),
+      sshKey: 'unused',
+    })
+  ).rejects.toThrow();
+  expect(fs.existsSync(marker)).toBe(false);
+});
+
+test('fetchGitModuleOverSsh ignores GIT_* variables and global git config', async () => {
+  const destDir = destDirFor('isolated');
+  const otherRepo = path.join(tmpDir, 'other-repo');
+  git(tmpDir, ['init', '--quiet', otherRepo]);
+  const rewriteConfigFile = path.join(tmpDir, 'rewrite-gitconfig');
+  fs.writeFileSync(
+    rewriteConfigFile,
+    `[url "file://${path.join(tmpDir, 'no-such-remote')}"]\n\tinsteadOf = ${remoteUrl}\n`
+  );
+  const env = process.env;
+  process.env = {
+    ...env,
+    GIT_DIR: path.join(otherRepo, '.git'),
+    GIT_CONFIG_GLOBAL: rewriteConfigFile,
+  };
+
+  try {
+    await fetchGitModuleOverSsh({ remoteUrl, ref: 'main', destDir, sshKey: 'unused' });
+  } finally {
+    process.env = env;
+  }
+
+  expect(fs.existsSync(path.join(destDir, 'modules', 'cx', 'module.lowdefy.yaml'))).toBe(true);
+  expect(fs.existsSync(path.join(otherRepo, '.git', 'FETCH_HEAD'))).toBe(false);
+});
+
+// Runs a fetch against a stand-in for ssh that records what git passes it, then fails the
+// connection. Returns the directory holding the recorded files.
+async function captureSshInvocation({ name, sshKey }) {
+  const binDir = path.join(tmpDir, name, 'bin');
+  const outDir = path.join(tmpDir, name, 'ssh-out');
   fs.mkdirSync(binDir, { recursive: true });
   fs.mkdirSync(outDir, { recursive: true });
-  // Stands in for ssh: records what git passes it, then fails the connection.
   fs.writeFileSync(
     path.join(binDir, 'ssh'),
     `#!/bin/sh
@@ -118,13 +184,21 @@ exit 1
       fetchGitModuleOverSsh({
         remoteUrl: 'git@github.com:acme/private-modules.git',
         ref: 'main',
-        destDir: destDirFor('ssh'),
-        sshKey: '-----BEGIN OPENSSH PRIVATE KEY-----\nkey\n-----END OPENSSH PRIVATE KEY-----',
+        destDir: destDirFor(name),
+        sshKey,
       })
     ).rejects.toThrow();
   } finally {
     process.env.PATH = pathEnv;
   }
+  return outDir;
+}
+
+test('fetchGitModuleOverSsh connects with only the given key, pinned GitHub host keys and no prompts', async () => {
+  const outDir = await captureSshInvocation({
+    name: 'ssh',
+    sshKey: '-----BEGIN OPENSSH PRIVATE KEY-----\nkey\n-----END OPENSSH PRIVATE KEY-----',
+  });
 
   const args = fs.readFileSync(path.join(outDir, 'args'), 'utf8');
   expect(args).toMatch(/^-F none -i \S+ /);
@@ -141,4 +215,28 @@ exit 1
   );
   const keyPath = fs.readFileSync(path.join(outDir, 'key-path'), 'utf8').trim();
   expect(fs.existsSync(keyPath)).toBe(false);
+});
+
+test.each([
+  [
+    'literal \\n escapes',
+    '-----BEGIN OPENSSH PRIVATE KEY-----\\nkey\\n-----END OPENSSH PRIVATE KEY-----',
+  ],
+  [
+    'CRLF line endings',
+    '-----BEGIN OPENSSH PRIVATE KEY-----\r\nkey\r\n-----END OPENSSH PRIVATE KEY-----\r\n',
+  ],
+  [
+    'surrounding whitespace',
+    '  \n-----BEGIN OPENSSH PRIVATE KEY-----\nkey\n-----END OPENSSH PRIVATE KEY-----\n\n ',
+  ],
+])('fetchGitModuleOverSsh writes a key with %s as a well-formed key file', async (name, sshKey) => {
+  const outDir = await captureSshInvocation({
+    name: `key-${name.replaceAll(/\W+/g, '-')}`,
+    sshKey,
+  });
+
+  expect(fs.readFileSync(path.join(outDir, 'key'), 'utf8')).toBe(
+    '-----BEGIN OPENSSH PRIVATE KEY-----\nkey\n-----END OPENSSH PRIVATE KEY-----\n'
+  );
 });
