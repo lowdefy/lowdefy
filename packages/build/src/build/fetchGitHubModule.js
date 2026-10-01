@@ -23,6 +23,9 @@ import { promisify } from 'node:util';
 
 import { Unpack } from 'tar';
 import { ConfigError } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
+
+import fetchGitModuleOverSsh from './fetchGitModuleOverSsh.js';
 
 const execFileAsync = promisify(execFile);
 
@@ -79,10 +82,15 @@ async function fetchGitHubModule(source, context) {
   }
 
   const response = await fetch(url, { headers, redirect: 'follow' });
-  if (!response.ok) {
-    throw new ConfigError(
-      `Failed to fetch module from ${url}: ${response.status} ${response.statusText}`
-    );
+  const apiError = `Failed to fetch module from ${url}: ${response.status} ${response.statusText}`;
+
+  // The API answers 404 for a private repository the caller cannot read. A GITHUB_SSH_KEY (such
+  // as a read-only deploy key) reaches it over git instead. Public repositories stay on the API,
+  // since a deploy key can read only the repository it belongs to.
+  const sshKey = process.env.GITHUB_SSH_KEY;
+  const useSsh = response.status === 404 && !type.isNone(sshKey) && sshKey !== '';
+  if (!response.ok && !useSsh) {
+    throw new ConfigError(apiError);
   }
 
   // Clean existing cache for mutable refs before extracting
@@ -90,9 +98,26 @@ async function fetchGitHubModule(source, context) {
     fs.rmSync(repoCache, { recursive: true, force: true });
   }
 
-  // Extract tarball to cache
-  await extractTarball(response.body, repoCache);
+  if (!useSsh) {
+    await extractTarball(response.body, repoCache);
+    return { packageRoot: repoCache };
+  }
 
+  try {
+    await fetchGitModuleOverSsh({
+      remoteUrl: `git@github.com:${source.owner}/${source.repo}.git`,
+      ref: source.ref,
+      destDir: repoCache,
+      sshKey,
+    });
+  } catch (error) {
+    // A partial extract would otherwise be served as the cache for an immutable ref.
+    fs.rmSync(repoCache, { recursive: true, force: true });
+    throw new ConfigError(
+      `${apiError}. Fetching over SSH with GITHUB_SSH_KEY also failed: ${error.message}`,
+      { cause: error }
+    );
+  }
   return { packageRoot: repoCache };
 }
 

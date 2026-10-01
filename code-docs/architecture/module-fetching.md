@@ -25,7 +25,7 @@ Since GitHub repos are always `owner/repo` (two segments), parsing is unambiguou
 For `github:` sources, the build:
 
 1. Constructs the GitHub tarball URL: `https://api.github.com/repos/{owner}/{repo}/tarball/{ref}`
-2. Downloads the tarball with authentication headers (if available)
+2. Downloads the tarball with authentication headers (if available), or fetches over SSH (see [SSH Fallback](#ssh-fallback))
 3. Extracts to `.lowdefy/modules/github/{owner}/{repo}/{ref}/`
 4. For monorepo modules, resolves the subdirectory within the extracted tree
 
@@ -55,13 +55,26 @@ When multiple module entries reference the same repo and ref (e.g., two modules 
 
 ## Authentication
 
-The build checks for credentials in order:
+The tarball request sends a Bearer token from:
 
-1. `GITHUB_TOKEN` environment variable — used as Bearer token
+1. `GITHUB_TOKEN` environment variable
 2. `gh` CLI token — extracted from `gh auth token` if available
-3. Git credential helpers — standard git credential mechanism
 
-For private repositories, `GITHUB_TOKEN` is the recommended approach. Set it in `.env` for local development.
+## SSH Fallback
+
+**File:** `packages/build/src/build/fetchGitModuleOverSsh.js`
+
+When the tarball request returns 404 and `GITHUB_SSH_KEY` is set, the build fetches the repo with `git` over SSH instead. The API answers 404 for a private repo the caller cannot read, so this covers builds that hold an SSH key (typically a read-only deploy key) and no token. Public repos stay on the API: a deploy key can only read the repo it belongs to, so SSH-first would break public modules in the same app.
+
+The fetch runs in a temporary directory that is removed afterwards:
+
+1. Writes the key (adding the final newline OpenSSH requires) with mode 600, and a `known_hosts` file holding GitHub's published host keys.
+2. Sets `GIT_SSH_COMMAND` to `ssh -F none -i <key> -o IdentitiesOnly=yes -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=<known_hosts>`: only that key is offered, nothing prompts, and the host key is pinned rather than trusted on first use.
+3. `git fetch --depth 1 git@github.com:{owner}/{repo}.git {ref}`, then `git archive FETCH_HEAD` unpacked into the cache directory. GitHub's tarball endpoint is `git archive`, so both routes cache the same files, without `.git`.
+
+`git fetch` cannot resolve an abbreviated SHA, so over SSH `ref` must be a tag, branch or full SHA. If GitHub rotates a host key, `GITHUB_KNOWN_HOSTS` in `fetchGitModuleOverSsh.js` needs updating from `https://api.github.com/meta`.
+
+If the SSH fetch fails, the partial cache directory is removed and the error reports both the API status and the git error.
 
 ## Dev Server Integration
 
@@ -71,7 +84,9 @@ GitHub sources are not watched — they are fetched once per build. To iterate o
 
 ## Key Files
 
-| File                                            | Purpose                                     |
-| ----------------------------------------------- | ------------------------------------------- |
-| `packages/build/src/build/fetchModules.js`      | Orchestrates module fetching                |
-| `packages/build/src/build/parseModuleSource.js` | Parses `github:` and `file:` source strings |
+| File                                                | Purpose                                     |
+| --------------------------------------------------- | ------------------------------------------- |
+| `packages/build/src/build/fetchModules.js`          | Orchestrates module fetching                |
+| `packages/build/src/build/parseModuleSource.js`     | Parses `github:` and `file:` source strings |
+| `packages/build/src/build/fetchGitHubModule.js`     | Tarball fetch, cache, SSH fallback on 404   |
+| `packages/build/src/build/fetchGitModuleOverSsh.js` | git over SSH with `GITHUB_SSH_KEY`          |

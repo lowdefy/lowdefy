@@ -14,7 +14,109 @@
   limitations under the License.
 */
 
-import { isImmutableRef } from './fetchGitHubModule.js';
+import { jest } from '@jest/globals';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
+const mockFetchGitModuleOverSsh = jest.fn();
+jest.unstable_mockModule('./fetchGitModuleOverSsh.js', () => ({
+  default: mockFetchGitModuleOverSsh,
+}));
+
+const { default: fetchGitHubModule, isImmutableRef } = await import('./fetchGitHubModule.js');
+
+describe('fetchGitHubModule', () => {
+  const source = { owner: 'acme', repo: 'private-modules', path: 'modules/cx', ref: 'abc1234' };
+  const env = { ...process.env };
+  let configDir;
+  let context;
+  let repoCache;
+
+  beforeEach(() => {
+    configDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-fetch-test-'));
+    context = { directories: { config: configDir } };
+    repoCache = path.join(
+      configDir,
+      '.lowdefy',
+      'modules',
+      'github',
+      'acme',
+      'private-modules',
+      'abc1234'
+    );
+    process.env.GITHUB_TOKEN = 'test-token';
+    delete process.env.GITHUB_SSH_KEY;
+    jest.spyOn(global, 'fetch');
+  });
+
+  afterEach(() => {
+    process.env = { ...env };
+    fs.rmSync(configDir, { recursive: true, force: true });
+    jest.restoreAllMocks();
+  });
+
+  function mockApiResponse({ status, statusText }) {
+    global.fetch.mockResolvedValue({ ok: status < 400, status, statusText, body: null });
+  }
+
+  test('fetchGitHubModule fetches over SSH when the API returns 404 and GITHUB_SSH_KEY is set', async () => {
+    process.env.GITHUB_SSH_KEY = 'private-key';
+    mockApiResponse({ status: 404, statusText: 'Not Found' });
+    mockFetchGitModuleOverSsh.mockResolvedValue();
+
+    const result = await fetchGitHubModule(source, context);
+
+    expect(result).toEqual({ packageRoot: repoCache });
+    expect(mockFetchGitModuleOverSsh).toHaveBeenCalledWith({
+      remoteUrl: 'git@github.com:acme/private-modules.git',
+      ref: 'abc1234',
+      destDir: repoCache,
+      sshKey: 'private-key',
+    });
+  });
+
+  test('fetchGitHubModule throws the API error when the API returns 404 and GITHUB_SSH_KEY is not set', async () => {
+    mockApiResponse({ status: 404, statusText: 'Not Found' });
+
+    await expect(fetchGitHubModule(source, context)).rejects.toThrow(
+      'Failed to fetch module from https://api.github.com/repos/acme/private-modules/tarball/abc1234: 404 Not Found'
+    );
+    expect(mockFetchGitModuleOverSsh).not.toHaveBeenCalled();
+  });
+
+  test('fetchGitHubModule does not fetch over SSH when the API fails with a status other than 404', async () => {
+    process.env.GITHUB_SSH_KEY = 'private-key';
+    mockApiResponse({ status: 500, statusText: 'Internal Server Error' });
+
+    await expect(fetchGitHubModule(source, context)).rejects.toThrow('500 Internal Server Error');
+    expect(mockFetchGitModuleOverSsh).not.toHaveBeenCalled();
+  });
+
+  test('fetchGitHubModule reports both failures and removes the partial cache when the SSH fetch fails', async () => {
+    process.env.GITHUB_SSH_KEY = 'private-key';
+    mockApiResponse({ status: 404, statusText: 'Not Found' });
+    mockFetchGitModuleOverSsh.mockImplementation(async ({ destDir }) => {
+      fs.mkdirSync(destDir, { recursive: true });
+      fs.writeFileSync(path.join(destDir, 'partial.yaml'), '');
+      throw new Error('Permission denied (publickey).');
+    });
+
+    await expect(fetchGitHubModule(source, context)).rejects.toThrow(
+      '404 Not Found. Fetching over SSH with GITHUB_SSH_KEY also failed: Permission denied (publickey).'
+    );
+    expect(fs.existsSync(repoCache)).toBe(false);
+  });
+
+  test('fetchGitHubModule returns the cache without fetching for an immutable ref', async () => {
+    fs.mkdirSync(repoCache, { recursive: true });
+
+    const result = await fetchGitHubModule(source, context);
+
+    expect(result).toEqual({ packageRoot: repoCache });
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+});
 
 describe('isImmutableRef', () => {
   test('returns true for full commit SHA', () => {

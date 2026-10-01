@@ -231,7 +231,9 @@ _ref:
             GITHUB_TOKEN=ghp_your_token_here
             ```
 
-            The CLI also checks for `gh` CLI credentials and git credential helpers as fallbacks.
+            Without `GITHUB_TOKEN`, the CLI uses the token of the `gh` CLI when one is signed in.
+
+            To read a private repository with an SSH key, such as a read-only deploy key, set `GITHUB_SSH_KEY` to the private key. When the GitHub API cannot find a repository, the build fetches it with `git` over SSH using that key. See [modules](/modules) for details.
 
             In development mode (`lowdefy dev`), local module sources (`file:` paths) are watched for changes and trigger rebuilds automatically.
 
