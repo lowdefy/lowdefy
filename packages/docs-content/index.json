@@ -2968,7 +2968,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "9595ac0dc85a1c47b4c46917122e0f41ffda08685e9726148c42fe69074b8039"
+      "hash": "95101eac5e7757ebaa7cd5d09cd6fe10ce2d2d46750c5adda73cf6bf49cc64b7"
     },
     "concepts/module-authoring": {
       "files": [
@@ -3248,7 +3248,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "cf1d55e4866649d362f32ad35ca1595b9b8c3338cc950b733a15517820d364a9"
+      "hash": "c6dc5bc4af4832c7490f5e6de9b622796f17c294b534fb040d1e2c1acbab4b2d"
     },
     "concepts/lowdefy-api": {
       "files": [
