@@ -293,14 +293,16 @@ _ref:
             Nothing grants organization authority implicitly. On a fresh `policy: pinned` + `signup: invite-only` deployment that is a closed loop: nobody can be invited, because inviting needs `invitation: ['create']` authority that nobody holds, and nobody can sign up, because the admission gate admits only members and pending invitees. Breaking the loop is one document inserted into the `user-invitations` collection, by hand, outside the platform:
 
             ```js
-            { _id: <uuid>, organizationId: 'team', email: 'admin@example.com',
-              role: 'owner', appRoles: [], status: 'pending',
-              inviterId: 'bootstrap', expiresAt: <future date>, createdAt: new Date() }
+            { _id: <uuid>, organization_id: 'team', email: 'admin@example.com',
+              role: 'owner', app_roles: [], status: 'pending',
+              inviter_id: 'bootstrap', expires_at: <future date>, created_at: new Date() }
             ```
 
-            **`organizationId` is the configured slug.** Under `pinned` the organization's id *is* `auth.organizations.org`, so there is no id to look up and the same document works in every environment.
+            **The field names are snake_case.** The adapter stores BetterAuth's camelCase fields (`organizationId`, `appRoles`, `inviterId`, `expiresAt`, `createdAt`) under snake_case names, as for the user and member rows above. A document written with the camelCase names matches no pending invitation for the organization, so the admission gate refuses the sign-up and the bootstrap never starts.
 
-            **The key is `_id`, not `id`.** The adapter maps the logical `id` to the physical `_id` inbound and back outbound, so every invitation the platform writes stores its id at `_id`. A document inserted literally as `{ id: … }` gets a driver-generated `ObjectId` `_id` plus a stray `id` field, after which the accept flow's invitation lookup never finds it — while the admission gate, which queries by email and status, happily admits the person to sign up. The result is a user who can log in, an invitation that cannot be accepted, and no error pointing at either. Use `_id`.
+            **`organization_id` is the configured slug.** Under `pinned` the organization's id *is* `auth.organizations.org`, so there is no id to look up and the same document works in every environment.
+
+            **The key is `_id`, not `id`.** The adapter maps the logical `id` to the physical `_id` inbound and back outbound, so every invitation the platform writes stores its id at `_id`. A document inserted literally as `{ id: … }` gets a driver-generated `ObjectId` `_id` plus a stray `id` field, after which the accept flow's invitation lookup never finds it — while the admission gate, which looks the invitation up by email, organization and status rather than by id, happily admits the person to sign up. The result is a user who can log in, an invitation that cannot be accepted, and no error pointing at either. Use `_id`.
 
             **The role is `owner`, not `admin`, and that is not cosmetic.** With no owner in the organization every membership guard is inert: `removeMember`'s creator protection engages only when the target holds the creator role, and `updateMemberRole`'s last-owner count only when the updater is the creator editing themselves. So a sole `admin` could demote themselves to `member`, or remove the last other `admin`, after which nobody anywhere holds `member: ['update']` or `invitation: ['create']` — and under `signup: invite-only` nobody can sign up to fix it. Seeding `owner` makes all three guards live, and costs nothing reachable: `owner`'s only statement beyond `admin`'s is `organization: ['delete']`, whose endpoint is disabled under `pinned` and has no step.
 
@@ -317,8 +319,6 @@ _ref:
             **Under `signup: open` this route does not grant the role.** The auto-join hooks mint a `role: 'member'` member row before the accept, and accepting an invitation into an organization you already belong to only marks the invitation accepted — it never changes an existing membership. There the single write is the other one: the person signs up normally, and the operator sets `member.role: 'owner'` on the row they already have. That one field is the whole grant — no second write and no denormalized copy to leave stale, because nothing writes `user.role`.
 
             **Bootstrap is per-organization, not per-deployment.** An `admin` of the team organization holds no authority in the customer organization, so that organization's first `admin` needs its own inserted invitation. After the first one, each organization is self-sustaining: its owner can invite and promote from inside the app.
-
-            The field names above are the live camelCase names. If the `snake-case-data-fields` change has landed in your version, they are `organization_id`, `inviter_id`, `expires_at`, `created_at` and `app_roles`.
 
             ## Retired client actions
 

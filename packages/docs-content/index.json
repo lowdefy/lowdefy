@@ -8415,7 +8415,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "c1a88ef436d7be8712d6d5668885a1927c88a88da50820f0c13be023756bcfbb"
+      "hash": "90054db845de875c77022e0bf2c571fc5bf1da02e849a7b58f61d1fab239a84e"
     },
     "migration/v6-to-v7": {
       "files": [
