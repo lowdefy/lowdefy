@@ -253,7 +253,7 @@ A journey file that is not valid YAML, or does not match the journey format (a m
 
 ## Continuous integration
 
-`lowdefy test` needs only Node.js, pnpm and a Chromium the dev server can launch. A GitHub Actions job looks like:
+`lowdefy test` needs only Node.js, pnpm and a Chromium the dev server can launch. The dev server uses Playwright's `chromium-headless-shell`, which it downloads itself the first time a browser tool needs it, and falls back to an installed Google Chrome meanwhile. Set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` to turn the download off. In CI, install the shell up front, together with the system libraries it needs. A GitHub Actions job looks like:
 
 ```yaml
 name: Config tests
@@ -267,7 +267,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: pnpx playwright install --with-deps chromium
+      - run: pnpx playwright install --with-deps chromium-headless-shell
       - run: pnpx lowdefy@5 test
         env:
           LOWDEFY_DISABLE_TELEMETRY: true

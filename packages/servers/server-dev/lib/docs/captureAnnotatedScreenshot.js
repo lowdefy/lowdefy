@@ -19,6 +19,7 @@ import path from 'node:path';
 
 import drawAnnotationsSvg from '../../client/feedback/drawAnnotationsSvg.js';
 import { getBrowser, openPage } from './getBrowser.js';
+import noBrowserError from './noBrowserError.js';
 import withBrowserSlot from './withBrowserSlot.js';
 
 // Renders the page headless at the batch's recorded viewport/scroll, injects
@@ -32,7 +33,7 @@ async function captureInBrowser({ origin, batch, fileName }) {
   try {
     browser = await getBrowser();
   } catch (error) {
-    return { error: `No Chromium available for the annotated screenshot (${error.message}).` };
+    return { error: noBrowserError(error) };
   }
 
   const viewport = batch.viewport ?? {};

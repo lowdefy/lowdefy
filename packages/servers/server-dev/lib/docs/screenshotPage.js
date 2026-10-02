@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import createJourneyActors from './createJourneyActors.js';
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
+import noBrowserError from './noBrowserError.js';
 import { runSteps, MAIN_ACTOR } from './runJourney.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneySteps from './validateJourneySteps.js';
@@ -181,9 +182,7 @@ async function screenshotInBrowser({
   try {
     browser = await getBrowser();
   } catch (error) {
-    return {
-      error: `No Chromium available. Run: npx playwright install chromium (${error.message})`,
-    };
+    return { error: noBrowserError(error) };
   }
 
   const url = buildPageUrl({ origin, pageId, urlQuery });

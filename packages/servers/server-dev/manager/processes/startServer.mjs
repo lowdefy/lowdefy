@@ -15,7 +15,9 @@
 */
 
 import { spawn } from 'child_process';
+import crypto from 'crypto';
 
+import killTaggedBrowser from '../utils/killTaggedBrowser.mjs';
 import readBasePath from '../utils/readBasePath.mjs';
 import resolveDevAuthUrl from '../utils/resolveDevAuthUrl.mjs';
 
@@ -61,6 +63,9 @@ function startServer(context) {
     context.loggedAuthUrl = authUrl;
   }
 
+  // New per child start, so killing one child's browser can match nothing else.
+  const browserTag = crypto.randomUUID();
+
   // The child binds context.internalPort on loopback; the manager's proxy owns
   // the public context.options.port (see startProxy.mjs) so a restart never
   // drops the listener that browsers, SSE reload streams and MCP agents hold.
@@ -85,6 +90,7 @@ function startServer(context) {
         LOWDEFY_SERVER_DEV_MAIL_SINK: context.mailSink ? 'true' : undefined,
         PORT: context.internalPort,
         BETTER_AUTH_URL: authUrl,
+        LOWDEFY_BROWSER_TAG: browserTag,
       },
     }
   );
@@ -102,6 +108,7 @@ function startServer(context) {
   context.logger.debug(`Started dev server with pid ${devServer.pid}.`);
   devServer.on('exit', (code, signal) => {
     context.logger.debug(`devServer exit ${devServer.pid}, signal: ${signal}, code: ${code}`);
+    killTaggedBrowser({ tag: browserTag });
   });
   devServer.on('error', (error) => {
     context.logger.error(error);
