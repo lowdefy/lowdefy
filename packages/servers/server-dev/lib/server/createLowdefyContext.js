@@ -43,6 +43,7 @@ import getStrategies from './auth/getStrategies.js';
 import i18nConfig from '../build/i18n.js';
 import loadDynamicJsMap from './loadDynamicJsMap.js';
 import logRequest from './log/logRequest.js';
+import readMergedMaps from './readMergedMaps.js';
 import scrubSecrets from './scrubSecrets.js';
 import notifications, {
   interpolateProperties,
@@ -106,6 +107,9 @@ async function createLowdefyContext({ c, user }) {
     },
     scrubSecrets,
     secrets,
+    // Error locations resolve through it (handleError, logClientError): JIT
+    // page builds write their keys to jitMaps/, not keyMap.json.
+    readMaps: () => readMergedMaps({ buildDirectory }),
     // Aborts when the client disconnects before the response is sent, or when the
     // request timeout (src/middleware/requestTimeout.js) answers first.
     signal: createRequestSignal({

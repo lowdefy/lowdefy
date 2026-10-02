@@ -45,14 +45,16 @@ import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
 import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import testSchema from '../testSchema.js';
-import writeMaps from '../writeMaps.js';
 import validateIconNames from '../icons/validateIconNames.js';
+import createJitMaps from './createJitMaps.js';
 import detectMissingIcons from './detectMissingIcons.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
 import getJitIconContext from './getJitIconContext.js';
 import updateIconImportsJit from './updateIconImportsJit.js';
 import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
+import scanJitMaps from './scanJitMaps.js';
 import validatePageTypes from './validatePageTypes.js';
+import writeJitMaps from './writeJitMaps.js';
 import writePageJit from './writePageJit.js';
 
 validateOperatorsDynamic({ operators });
@@ -125,6 +127,16 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   const buildWarnings = [];
   buildContext.errors = buildErrors;
   buildContext.warnings = buildWarnings;
+
+  // The dev server names the context's jitMaps files; a context made without
+  // one (a test, or the minimal context above) starts its log here, before
+  // its first page build adds an entry.
+  buildContext.jitMaps ??= createJitMaps({
+    keyMap: buildContext.keyMap,
+    refMap: buildContext.refMap,
+    name: 'jit',
+  });
+  const mapsMark = scanJitMaps({ context: buildContext });
 
   try {
     // Pages without a source file (e.g., default 404) can only be served from
@@ -276,10 +288,6 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
 
     // Apply skeleton-computed auth (buildAuth ran during skeleton build)
     processed.auth = pageEntry.auth;
-
-    // Write keyMap/refMap so the error handler reads JIT entries from disk.
-    // JIT addKeys assigns fresh ~k values that aren't in the skeleton keyMap.
-    await writeMaps({ context: buildContext });
 
     // buildSubscriptions validates against websocketIds — the dev server
     // restores the set from the websocketIds.json skeleton artifact. Rebuild
@@ -443,6 +451,10 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     const lowdefyErr = new LowdefyInternalError(err.message, { cause: err });
     lowdefyErr.buildErrors = err.buildErrors;
     throw lowdefyErr;
+  } finally {
+    // Also when the build failed: an error thrown after addKeys carries a JIT
+    // key, and the error handler resolves it from disk.
+    await writeJitMaps({ context: buildContext, since: mapsMark });
   }
 }
 

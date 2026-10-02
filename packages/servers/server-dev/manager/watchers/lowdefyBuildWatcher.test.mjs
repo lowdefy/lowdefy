@@ -195,3 +195,22 @@ test('a file that appears in refMap.json after the watch started is watched', as
 
   await waitFor(invalidated);
 });
+
+test('a file a JIT page build read outside every watched directory is watched from its jitMaps file', async () => {
+  const header = path.join(repoDir, 'shared', 'header.yaml');
+  write(header, 'id: header\n');
+  watcher = await lowdefyBuildWatcher(context);
+
+  write(
+    path.join(buildDir, 'jitMaps', 'abc123-1-1.json'),
+    JSON.stringify({
+      keyMap: {},
+      refMap: { p_abc123_1: { parent: null, path: path.relative(configDir, header) } },
+    })
+  );
+  // The maps watcher batches its change for half a second before adding.
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+  fs.appendFileSync(header, 'type: Box\n');
+
+  await waitFor(invalidated);
+});

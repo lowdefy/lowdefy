@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { serializer, type } from '@lowdefy/helpers';
@@ -21,15 +22,17 @@ import {
   buildPageJit,
   collectIconNames,
   createContext,
+  createJitMaps,
   generateClientJsModule,
   hydrateDeferredRecords,
-  makeId,
   restoreTenantTargets,
 } from '@lowdefy/build/dev';
 
+import continueJitKeys from './continueJitKeys.js';
 import createLogger from './log/createLogger.js';
 import pageBuildRecords from './pageBuildRecords.js';
 import PageCache from './pageCache.mjs';
+import pruneJitMaps from './pruneJitMaps.js';
 import readBuildApiArtifacts from './readBuildApiArtifacts.mjs';
 import skipStaleMapWrites from './skipStaleMapWrites.js';
 
@@ -44,6 +47,14 @@ let cachedRegistryMtime = null;
 let cachedRegistry = null;
 let cachedBuildContext = null;
 let lastInvalidationMtime = null;
+
+// Names this process's JIT keys and jitMaps files. A restarted child continues
+// the same config build as the one before it, so its keys need their own
+// prefix, or both would hand out the same keys for different nodes.
+const childId = crypto.randomBytes(3).toString('hex');
+// Counts the build contexts this process has created; a context's jitMaps
+// files carry its generation.
+let contextGeneration = 0;
 
 // Frozen snapshot of the icon names in the dev client bundle, from the initial
 // build. Module-level so it persists across context resets: skeleton rebuilds
@@ -180,10 +191,19 @@ export function getBuildContext(buildDirectory, configDirectory) {
   // changed; JIT re-resolves as pages are requested.
   cachedBuildContext.dynamicIconData = {};
 
-  // Continue the config build's keys, so JIT keys never repeat a key of that build, of
-  // an earlier page build, or of an earlier config build.
   const idCounter = readJsonFile(path.join(buildDirectory, 'idCounter.json'));
-  makeId.continueFrom(idCounter);
+  continueJitKeys({ idCounter, childId });
+
+  // The context's page builds write the entries they add to jitMaps/. Only the
+  // previous context's files are kept besides its own: they resolve errors that
+  // pages built just before the edit still report.
+  contextGeneration += 1;
+  cachedBuildContext.jitMaps = createJitMaps({
+    keyMap: cachedBuildContext.keyMap,
+    refMap: cachedBuildContext.refMap,
+    name: `${childId}-${contextGeneration}`,
+  });
+  pruneJitMaps({ buildDirectory, keep: `${childId}-${contextGeneration - 1}-` });
   skipStaleMapWrites({
     buildDirectory,
     context: cachedBuildContext,

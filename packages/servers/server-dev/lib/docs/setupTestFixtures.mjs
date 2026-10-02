@@ -176,7 +176,7 @@ function setupTestFixtures() {
   );
 
   // Feedback-loop fixtures — build status, and a JIT-built page's registry,
-  // keyMap and refMap entries (see packages/build/src/build/addKeys.js for
+  // key map and ref map entries (see packages/build/src/build/addKeys.js for
   // the key path format: `[index:id]` / `[index:id:Type]`).
   write('build/buildStatus.json', {
     status: 'ok',
@@ -192,12 +192,12 @@ function setupTestFixtures() {
     unbuilt: { pageId: 'unbuilt', auth: null, refId: 'ref-unbuilt', refPath: 'pages/unbuilt.yaml' },
   });
 
-  // Mirrors the real dev keyMap shape: the skeleton build keys the whole
-  // config (`root.pages[N:id]` page stubs only), while each JIT page build
-  // runs addKeys on the page object itself — so page CONTENT keys are
-  // `root.blocks[...]` with no page segment, one `root`-keyed subtree per
-  // built page, distinguishable only via the ~k_parent chain. Tree roots
-  // reference a parent id that is never written to keyMap.
+  // Mirrors the real dev key map shape: the skeleton build keys the whole
+  // config (`root.pages[N:id]` page stubs only) in keyMap.json, while each JIT
+  // page build runs addKeys on the page object itself and writes its keys to a
+  // jitMaps/ file — so page CONTENT keys are `root.blocks[...]` with no page
+  // segment, one `root`-keyed subtree per built page, distinguishable only via
+  // the ~k_parent chain. Tree roots reference a parent id that is never written.
   write('build/keyMap.json', {
     'key-root': { key: 'root', '~k_parent': 'key-root-parent' },
     'key-pages': { key: 'root.pages', '~k_parent': 'key-root', '~r': 'ref-home' },
@@ -212,46 +212,6 @@ function setupTestFixtures() {
       '~k_parent': 'key-pages',
       '~r': 'ref-other',
       '~l': 1,
-    },
-    // JIT subtree for page "home".
-    'key-home': { key: 'root', '~k_parent': 'key-home-jit-parent', '~r': 'ref-home', '~l': 1 },
-    'key-button': {
-      key: 'root.blocks[2:my_button:Button]',
-      '~k_parent': 'key-home',
-      '~r': 'ref-home',
-      '~l': 5,
-    },
-    // List item block — config ids inside lists carry the `$` placeholder;
-    // runtime block ids have array indices applied (`my_list.0.item_title`).
-    'key-list-item': {
-      key: 'root.blocks[3:my_list:List].blocks[0:my_list.$.item_title:Title]',
-      '~k_parent': 'key-home',
-      '~r': 'ref-home',
-      '~l': 9,
-    },
-    // JIT subtree for page "other" — holds a block id that also exists on
-    // home, with an IDENTICAL key shape. findConfig must scope pageId scans
-    // via the ~k_parent chain, not the key path.
-    'key-other': { key: 'root', '~k_parent': 'key-other-jit-parent', '~r': 'ref-other', '~l': 1 },
-    'key-other-button': {
-      key: 'root.blocks[0:my_button:Button]',
-      '~k_parent': 'key-other',
-      '~r': 'ref-other',
-      '~l': 4,
-    },
-    // Requests over a tenant-walled and a shared connection — findConfig
-    // resolves connectionId from the per-request artifact for hazards.
-    'key-other-req-tenant': {
-      key: 'root.requests[0:req-tenant:WriteRequest]',
-      '~k_parent': 'key-other',
-      '~r': 'ref-other',
-      '~l': 12,
-    },
-    'key-other-req-shared': {
-      key: 'root.requests[1:req-shared:WriteRequest]',
-      '~k_parent': 'key-other',
-      '~r': 'ref-other',
-      '~l': 18,
     },
     // Skeleton-built page (like the default 404) — content is keyed inside
     // the global config tree with the page segment inline, and chains to the
@@ -268,6 +228,63 @@ function setupTestFixtures() {
       '~r': 'ref-legal',
       '~l': 3,
     },
+  });
+
+  // JIT subtree for page "home".
+  write('build/jitMaps/abc123-1-1.json', {
+    keyMap: {
+      'key-home': { key: 'root', '~k_parent': 'key-home-jit-parent', '~r': 'ref-home', '~l': 1 },
+      'key-button': {
+        key: 'root.blocks[2:my_button:Button]',
+        '~k_parent': 'key-home',
+        '~r': 'ref-home',
+        '~l': 5,
+      },
+      // List item block — config ids inside lists carry the `$` placeholder;
+      // runtime block ids have array indices applied (`my_list.0.item_title`).
+      'key-list-item': {
+        key: 'root.blocks[3:my_list:List].blocks[0:my_list.$.item_title:Title]',
+        '~k_parent': 'key-home',
+        '~r': 'ref-home',
+        '~l': 9,
+      },
+    },
+    refMap: {},
+  });
+
+  // JIT subtree for page "other" — holds a block id that also exists on
+  // home, with an IDENTICAL key shape. findConfig must scope pageId scans
+  // via the ~k_parent chain, not the key path.
+  write('build/jitMaps/abc123-1-2.json', {
+    keyMap: {
+      'key-other': {
+        key: 'root',
+        '~k_parent': 'key-other-jit-parent',
+        '~r': 'ref-other',
+        '~l': 1,
+      },
+      'key-other-button': {
+        key: 'root.blocks[0:my_button:Button]',
+        '~k_parent': 'key-other',
+        '~r': 'ref-other',
+        '~l': 4,
+      },
+      // Requests over a tenant-walled and a shared connection — findConfig
+      // resolves connectionId from the per-request artifact for hazards.
+      'key-other-req-tenant': {
+        key: 'root.requests[0:req-tenant:WriteRequest]',
+        '~k_parent': 'key-other',
+        '~r': 'ref-other',
+        '~l': 12,
+      },
+      'key-other-req-shared': {
+        key: 'root.requests[1:req-shared:WriteRequest]',
+        '~k_parent': 'key-other',
+        '~r': 'ref-other',
+        '~l': 18,
+      },
+    },
+    refMap: {},
   });
 
   write('build/refMap.json', {

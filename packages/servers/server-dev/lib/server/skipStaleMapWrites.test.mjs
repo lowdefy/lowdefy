@@ -67,3 +67,16 @@ test('a page build started before a config rebuild does not replace the new maps
 
   expect(writeBuildArtifact.mock.calls).toEqual([['pages/home.json', '{}']]);
 });
+
+test('a page build started before a config rebuild writes no jitMaps file', async () => {
+  publishBuild('a1b2_');
+  const writeBuildArtifact = jest.fn();
+  const context = { writeBuildArtifact };
+  skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_' });
+
+  await context.writeBuildArtifact('jitMaps/abc123-1-1.json', '{}');
+  publishBuild('c3d4_');
+  await context.writeBuildArtifact('jitMaps/abc123-1-2.json', '{}');
+
+  expect(writeBuildArtifact.mock.calls).toEqual([['jitMaps/abc123-1-1.json', '{}']]);
+});

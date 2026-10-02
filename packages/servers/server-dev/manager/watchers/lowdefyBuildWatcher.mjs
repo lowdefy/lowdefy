@@ -30,7 +30,7 @@ function findLocalModuleRoots(context) {
 }
 
 // Watches the config directory, the --watch directories and local module
-// roots, and every other file the build reads (found in the build's refMap).
+// roots, and every other file the build reads (found in the build's ref maps).
 // A change to a file that shapes the skeleton (lowdefy.yaml, a
 // module.lowdefy.yaml, or a file in skeletonSourceFiles.json) rebuilds the
 // config, as does any change after a failed config build; any other change
@@ -120,27 +120,32 @@ async function lowdefyBuildWatcher(context) {
     watchPaths: watchRoots,
   });
 
-  // The config build and every JIT page build rewrite refMap.json, so the
-  // files they read outside the watched directories are added as they appear.
-  const watchBuildFilesOutsideWatch = () => {
-    configWatcher.add(
-      findBuildFilesOutsideWatch({
-        buildDirectory: context.directories.build,
-        configDirectory,
-        watchRoots,
-      })
-    );
+  // The config build writes refMap.json and each JIT page build writes a new
+  // file to jitMaps/, so the files they read outside the watched directories
+  // are added as they appear. Only the changed maps files are read.
+  const buildDirectory = context.directories.build;
+  const jitMapsDirectory = path.join(buildDirectory, 'jitMaps');
+  const watchBuildFilesOutsideWatch = (mapsFiles) => {
+    configWatcher.add(findBuildFilesOutsideWatch({ mapsFiles, configDirectory, watchRoots }));
   };
-  watchBuildFilesOutsideWatch();
-  const refMapWatcher = await setupWatcher({
-    callback: watchBuildFilesOutsideWatch,
+  watchBuildFilesOutsideWatch([path.join(buildDirectory, 'refMap.json')]);
+  const isMapsFile = (filePath) =>
+    filePath === buildDirectory ||
+    filePath === path.join(buildDirectory, 'refMap.json') ||
+    filePath === jitMapsDirectory ||
+    path.dirname(filePath) === jitMapsDirectory;
+  const mapsWatcher = await setupWatcher({
+    callback: (filePaths) => watchBuildFilesOutsideWatch([...new Set(filePaths.flat())]),
     context,
+    // The build directory is watched rather than jitMaps/ itself, which does
+    // not exist until the first page build; everything else in it is ignored.
+    ignorePaths: [(filePath) => !isMapsFile(filePath)],
     watchDotfiles: true,
-    watchPaths: [path.join(context.directories.build, 'refMap.json')],
+    watchPaths: [buildDirectory],
   });
 
   return {
-    close: () => Promise.all([configWatcher.close(), refMapWatcher.close()]),
+    close: () => Promise.all([configWatcher.close(), mapsWatcher.close()]),
   };
 }
 

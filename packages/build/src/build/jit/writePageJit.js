@@ -15,8 +15,7 @@
 */
 
 import path from 'path';
-import { LowdefyInternalError } from '@lowdefy/errors';
-import { serializer, type } from '@lowdefy/helpers';
+import { serializer } from '@lowdefy/helpers';
 import { writeFileIfChanged } from '@lowdefy/node-utils';
 
 import writeJs from '../buildJs/writeJs.js';
@@ -41,16 +40,6 @@ async function writePageJit({ page, context, tailwindContent }) {
     delete request.connectionId;
     delete request.auth;
   }
-
-  // Write updated keyMap and refMap (JIT build adds new entries)
-  if (!type.isObject(context.keyMap)) {
-    throw new LowdefyInternalError('keyMap is not an object.');
-  }
-  if (!type.isObject(context.refMap)) {
-    throw new LowdefyInternalError('refMap is not an object.');
-  }
-  await context.writeBuildArtifact('keyMap.json', serializer.serializeToString(context.keyMap));
-  await context.writeBuildArtifact('refMap.json', serializer.serializeToString(context.refMap));
 
   // Write updated JS map files (JIT build extracts page-level _js functions)
   await writeJs({ context });

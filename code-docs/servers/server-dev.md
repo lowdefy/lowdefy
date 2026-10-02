@@ -132,7 +132,7 @@ server-dev/
 │   │   ├── createBuildActivity.mjs      # Busy count behind `building` and build-status waits
 │   │   ├── createServerArtifactTracker.mjs  # Files the running server read at start
 │   │   ├── createDotPathIgnore.mjs      # Dotfile ignore relative to the watched root
-│   │   ├── findBuildFilesOutsideWatch.mjs  # refMap files outside the watched directories
+│   │   ├── findBuildFilesOutsideWatch.mjs  # Ref map files outside the watched directories
 │   │   ├── getViteBin.mjs    # Resolves the vite bin path
 │   │   ├── importFresh.mjs   # Import a module in a new worker (plugin type lists)
 │   │   ├── loadSkeletonSourceFiles.mjs  # Read skeletonSourceFiles.json as Set
@@ -141,7 +141,7 @@ server-dev/
 │   │   ├── readPluginDefinitions.mjs    # The plugins lowdefy.yaml lists
 │   │   └── updatePageTailwindCss.mjs    # Refresh Tailwind candidates on page edits
 │   └── watchers/
-│       ├── lowdefyBuildWatcher.mjs   # Config, local modules and refMap files: skeleton vs page
+│       ├── lowdefyBuildWatcher.mjs   # Config, local modules and ref map files: skeleton vs page
 │       ├── envWatcher.mjs
 │       ├── pluginSourceWatcher.mjs   # Local plugin packages → rebuild (+ restart if server-side)
 │       ├── restartRequestWatcher.mjs # build/.restart from the dev tools → rebuild + restart
@@ -263,7 +263,8 @@ Manager Process                    Vite Child Process
 Cross-process communication uses files in the build directory:
 
 - `pageRegistry.json`: Page metadata + raw content for JIT resolution
-- `refMap.json`, `keyMap.json`, `jsMap.json`: Shared build state
+- `refMap.json`, `keyMap.json`, `jsMap.json`: Shared build state (the key and ref maps hold the config build's entries only)
+- `jitMaps/*.json`: Key and ref entries JIT page builds added, one file per page build
 - `skeletonSourceFiles.json`: Set of files that affect skeleton (read by watcher)
 - `invalidatePages`: Timestamp signal file written by watcher for page-only changes
 
@@ -346,7 +347,7 @@ When a page API request arrives (`GET /api/page/*`):
 2. `loadPageRegistry()` reads `pageRegistry.json` (with mtime caching)
 3. `pageCache.isCompiled(pageId)` checks if page was already built
 4. If not compiled, acquires build lock and calls `buildPageJit()`
-5. `getBuildContext()` creates/caches a build context with restored refMap/keyMap/jsMap
+5. `getBuildContext()` creates/caches a build context with restored refMap/keyMap/jsMap (the config build's maps only)
 
 ```javascript
 async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
@@ -374,7 +375,7 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
 }
 ```
 
-`getBuildContext` also restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), API endpoint configs (for JIT `CallAPI` validation), and continues the skeleton build's `~k` keys from `idCounter.json` (`makeId.continueFrom`: same key prefix, counter only moves forward). It also wraps the context's `writeBuildArtifact` with `skipStaleMapWrites`, so a page build that started before a skeleton rebuild does not write its `keyMap.json`/`refMap.json` over the new ones (see [Keys across dev rebuilds](../architecture/error-tracing.md#keys-across-dev-rebuilds)). Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart. The startup bundle holds the always-bundled icon names plus every name the config uses; there is no preset icon list. Icons found later reach the page as `_dynamicIcons` data (see below).
+`getBuildContext` also restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), API endpoint configs (for JIT `CallAPI` validation), and continues the skeleton build's `~k` keys from `idCounter.json` with a prefix unique to the process (`continueJitKeys`: the counter only moves forward). Page builds no longer rewrite `keyMap.json`/`refMap.json`: each writes the entries it added to a new `jitMaps/` file, so the context's maps stay bounded by the pages built since the last edit. A new context (the first, or after a page edit) removes the `jitMaps/` files of every context but the previous one (`pruneJitMaps`). The context's `writeBuildArtifact` is wrapped with `skipStaleMapWrites`, so a page build that started before a skeleton rebuild writes no maps over the new build (see [Keys across dev rebuilds](../architecture/error-tracing.md#keys-across-dev-rebuilds)). Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart. The startup bundle holds the always-bundled icon names plus every name the config uses; there is no preset icon list. Icons found later reach the page as `_dynamicIcons` data (see below).
 
 ### PageCache
 
@@ -579,10 +580,11 @@ Watches every file the build reads, through one chokidar watcher:
 
 - the config directory, the `--watch` paths, and local module roots (`isLocal: true` in
   `buildContext.modules`), which may lie outside the config directory;
-- every other file in the build's `refMap.json` that lies outside those directories, such
-  as a file a local module refs with `../` from beside the module. `refMap.json` is rewritten
-  by the config build and by every JIT page build, so a second watcher on it adds new files
-  as they appear.
+- every other file in the build's ref maps that lies outside those directories, such
+  as a file a local module refs with `../` from beside the module. The config build writes
+  `refMap.json` and each JIT page build writes a new `jitMaps/` file, so a second watcher on
+  the build directory (ignoring everything else in it) reads only the maps files that
+  changed and adds new files as they appear. `refMap.json` is scanned in full once, at start.
 
 Each batch of changes is classified with `skeletonSourceFiles.json` (see the table above):
 a skeleton change runs `lowdefyBuild()`, anything else writes the `invalidatePages` signal

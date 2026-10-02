@@ -677,7 +677,13 @@ test('buildPageJit resolver page traces errors back to resolver when inner _ref 
   }
 });
 
-test('buildPageJit writes keyMap/refMap so error handler resolves correct location', async () => {
+function jitMapsWrites() {
+  return mockWriteBuildArtifact.mock.calls
+    .filter(([filePath]) => filePath.startsWith('jitMaps/'))
+    .map(([filePath, content]) => ({ filePath, ...JSON.parse(content) }));
+}
+
+test("buildPageJit writes a failing build's keys to a jitMaps file so the error handler resolves its location", async () => {
   const context = createTestContext();
   mockFiles([
     {
@@ -714,20 +720,90 @@ blocks:
     message: expect.stringContaining('Action type "UndefinedAction" was used but is not defined'),
   });
 
-  // Verify keyMap.json and refMap.json were written to disk before the error
+  // The config build's maps are never rewritten by a page build.
   const writeArgs = mockWriteBuildArtifact.mock.calls.map((c) => c[0]);
-  expect(writeArgs).toContain('keyMap.json');
-  expect(writeArgs).toContain('refMap.json');
+  expect(writeArgs).not.toContain('keyMap.json');
+  expect(writeArgs).not.toContain('refMap.json');
 
-  // The written keyMap should contain the action's ~k with correct ~l
-  const keyMapCall = mockWriteBuildArtifact.mock.calls.find((c) => c[0] === 'keyMap.json');
-  const keyMap = JSON.parse(keyMapCall[1]);
+  const writes = jitMapsWrites();
+  expect(writes).toHaveLength(1);
+  expect(writes[0].filePath).toBe('jitMaps/jit-1.json');
   // Find the entry for the UndefinedAction (line 9 in the YAML: "type: UndefinedAction")
-  const actionEntry = Object.values(keyMap).find(
+  const actionEntry = Object.values(writes[0].keyMap).find(
     (entry) => entry.key && entry.key.includes('UndefinedAction')
   );
   expect(actionEntry).toBeDefined();
   expect(actionEntry['~l']).toBe(8);
+  expect(writes[0].refMap[actionEntry['~r']].path).toBe('page-with-action.yaml');
+});
+
+test("buildPageJit writes only the entries its build added, not the config build's", async () => {
+  const context = createTestContext();
+  context.keyMap.skeleton_key = { key: 'root', '~r': 'skeleton_ref' };
+  context.refMap.skeleton_ref = { parent: null, path: 'lowdefy.yaml' };
+  mockFiles([{ path: 'home.yaml', content: 'id: home\ntype: PageHeaderMenu' }]);
+  const pageRegistry = new Map([
+    ['home', { pageId: 'home', auth: { public: true }, refId: 'r-home', refPath: 'home.yaml' }],
+  ]);
+
+  await buildPageJit({ pageId: 'home', pageRegistry, context });
+
+  const writes = jitMapsWrites();
+  expect(writes).toHaveLength(1);
+  expect(writes[0].keyMap.skeleton_key).toBeUndefined();
+  expect(writes[0].refMap.skeleton_ref).toBeUndefined();
+  expect(Object.keys(writes[0].keyMap).length).toBeGreaterThan(0);
+  expect(Object.values(writes[0].refMap).map((entry) => entry.path)).toContain('home.yaml');
+});
+
+test('concurrent page builds on one context write every entry, each ref with its path', async () => {
+  const context = createTestContext();
+  mockFiles([
+    { path: 'a.yaml', content: 'id: a\ntype: PageHeaderMenu\nblocks:\n  - _ref: block-a.yaml' },
+    { path: 'b.yaml', content: 'id: b\ntype: PageHeaderMenu\nblocks:\n  - _ref: block-b.yaml' },
+    { path: 'block-a.yaml', content: 'id: block_a\ntype: Button' },
+    { path: 'block-b.yaml', content: 'id: block_b\ntype: Button' },
+  ]);
+  const pageRegistry = new Map([
+    ['a', { pageId: 'a', auth: { public: true }, refId: 'r-a', refPath: 'a.yaml' }],
+    ['b', { pageId: 'b', auth: { public: true }, refId: 'r-b', refPath: 'b.yaml' }],
+  ]);
+
+  await Promise.all([
+    buildPageJit({ pageId: 'a', pageRegistry, context }),
+    buildPageJit({ pageId: 'b', pageRegistry, context }),
+  ]);
+
+  const writes = jitMapsWrites();
+  expect(writes).toHaveLength(2);
+  expect(new Set(writes.map((write) => write.filePath)).size).toBe(2);
+  // Applied in write order, as readers do.
+  const keyMap = Object.assign({}, ...writes.map((write) => write.keyMap));
+  const refMap = Object.assign({}, ...writes.map((write) => write.refMap));
+  expect(Object.keys(keyMap).sort()).toEqual(Object.keys(context.keyMap).sort());
+  expect(Object.keys(refMap).sort()).toEqual(Object.keys(context.refMap).sort());
+  expect(
+    Object.values(refMap)
+      .map((entry) => entry.path)
+      .sort()
+  ).toEqual(['a.yaml', 'b.yaml', 'block-a.yaml', 'block-b.yaml']);
+});
+
+test('JIT refs take counter ids, so two build contexts never reuse a ref id', async () => {
+  mockFiles([
+    { path: 'a.yaml', content: 'id: a\ntype: PageHeaderMenu\nblocks:\n  - _ref: block-a.yaml' },
+    { path: 'block-a.yaml', content: 'id: block_a\ntype: Button' },
+  ]);
+  const pageRegistry = new Map([
+    ['a', { pageId: 'a', auth: { public: true }, refId: 'r-a', refPath: 'a.yaml' }],
+  ]);
+
+  await buildPageJit({ pageId: 'a', pageRegistry, context: createTestContext() });
+  await buildPageJit({ pageId: 'a', pageRegistry, context: createTestContext() });
+
+  const [first, second] = jitMapsWrites();
+  const firstIds = Object.keys(first.refMap);
+  expect(firstIds.some((id) => Object.keys(second.refMap).includes(id))).toBe(false);
 });
 
 test('two JIT builds with object vars produce identical results and do not mutate unresolvedVars', async () => {

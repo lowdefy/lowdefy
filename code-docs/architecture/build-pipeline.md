@@ -542,7 +542,7 @@ When a page is requested, uses the walker to resolve page content:
 9. validatePageTypes() — check block/action/operator types exist
 10. validateLinkReferences(), validateStateReferences(), etc.
 11. jsMapParser() — extract _js functions (client + server)
-12. writePageJit() — write page JSON, request JSONs, updated keyMap/refMap/jsMap, per-page tailwind HTML
+12. writePageJit() — write page JSON, request JSONs, updated jsMap, per-page tailwind HTML; writeJitMaps() (also on failure) writes the keys and refs the build added to a new jitMaps/ file
 ```
 
 ### Supporting Modules

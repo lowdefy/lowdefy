@@ -42,7 +42,15 @@ The build pipeline tracks the origin of every config value:
 
 `~k` values come from the `makeId` counter. The dev server rebuilds config without restarting, and a page loaded, or a request started, before a rebuild still reports errors with the earlier build's keys, while `keyMap.json` already holds the new build. If every build numbered its keys from 1, an old key would name some other node of the new build and the error would point at the wrong config.
 
-So each dev skeleton build (`shallowBuild`) resets `makeId` with a fresh random prefix (`a1b2_1`, `a1b2_2`, ...) and writes `{ prefix, counter }` to `idCounter.json`. JIT page builds continue from it (`makeId.continueFrom`), keeping the prefix and never moving the counter back, so every key in a dev session names one node. A key from an earlier build is simply absent from the live `keyMap.json`, and its location resolves to nothing rather than to the wrong node. The JIT page builder also skips writing `keyMap.json`/`refMap.json` when the live `idCounter.json` prefix is no longer the one its build context was created from, so a page build that outlives a rebuild cannot replace the new maps (`server-dev/lib/server/skipStaleMapWrites.js`). For that check to hold, the manager's `publishBuildDirectory` moves `idCounter.json` into the live build directory before any other file, so the new prefix is live before the new maps are. Production builds (`build()`) keep unprefixed keys: they run once per server start.
+So each dev skeleton build (`shallowBuild`) resets `makeId` with a fresh random prefix (`a1b2_1`, `a1b2_2`, ...) and writes `{ prefix, counter }` to `idCounter.json`. JIT page builds continue from it with a prefix of their own: the config build's prefix plus a random id per dev server process (`a1b2_c3d4e5_1`, see `server-dev/lib/server/continueJitKeys.js`), so a restarted server, which continues the same config build, never hands out a key the previous process used. Within a process the counter only moves forward, so every key in a dev session names one node. A key from an earlier build is simply absent from the live maps, and its location resolves to nothing rather than to the wrong node. Production builds (`build()`) keep unprefixed keys: they run once per server start.
+
+#### JIT keys live in `jitMaps/`
+
+In dev, `keyMap.json` and `refMap.json` hold only what the config build wrote. A JIT page build never rewrites them: it writes the key and ref entries its build context added while the build ran to a new file, `jitMaps/<processId>-<generation>-<write>.json` (`{ keyMap, refMap }`, written by `writeJitMaps` in `@lowdefy/build`). It writes when the build succeeds and when it throws, so an error thrown after `addKeys` resolves from disk. Pages build concurrently on one context, so a file can repeat an entry another build added; that build writes it again when it ends, with its ref paths filled in, and readers apply files in write order. JIT refs take counter ids rather than walker paths, which repeat from page to page, so files of different build contexts never name different refs with one id.
+
+The dev server keeps the `jitMaps/` files of its current and previous build contexts only (`pruneJitMaps`, run when a page edit drops the context), and a config publish removes them all as stale files. A key from an older context may stop resolving; it is then logged without a location. The JIT page builder also skips `jitMaps/` writes (and any `keyMap.json`/`refMap.json` write) when the live `idCounter.json` prefix is no longer the one its build context was created from, so a page build that outlives a rebuild cannot leave files describing the old build (`server-dev/lib/server/skipStaleMapWrites.js`). For that check to hold, the manager's `publishBuildDirectory` moves `idCounter.json` into the live build directory before any other file, so the new prefix is live before the new maps are.
+
+Dev readers resolve a key against the skeleton maps plus every `jitMaps/` file (`server-dev/lib/server/readMergedMaps.js`): server errors through `createHandleError` and client errors through `logClientError`, both via the request context's `readMaps`, and `/lowdefy-docs/find/{id}`. `loadAndResolveErrorLocation` takes `readMaps` as an option and reads `keyMap.json`/`refMap.json` without it, so production and e2e servers are unchanged.
 
 ### Location Resolution
 
@@ -199,7 +207,7 @@ Three-layer safety net: resolve + log → log without resolve → console.error.
 
 **Server handleError** (`packages/servers/*/lib/server/log/createHandleError.js`):
 
-Per-request, async. Reads keyMap/refMap from build artifacts, resolves location, logs with request metadata (user, URL, headers), captures to Sentry. It also sets `error.handled = true` — the signal the browser reads to know this error was already logged server-side. Once `handleError` has run, the error crosses the wire under the wire policy in [Readers and their policies](#readers-and-their-policies).
+Per-request, async. Reads keyMap/refMap from build artifacts (in dev, merged with the JIT page builds' `jitMaps/` files through the context's `readMaps`), resolves location, logs with request metadata (user, URL, headers), captures to Sentry. It also sets `error.handled = true` — the signal the browser reads to know this error was already logged server-side. Once `handleError` has run, the error crosses the wire under the wire policy in [Readers and their policies](#readers-and-their-policies).
 
 **Browser handleError** (`packages/client/src/createHandleError.js`):
 
@@ -709,7 +717,7 @@ In `Actions.js`, `UserError` is detected by `instanceof` and routed to the brows
    - Reads schema from build artifact (e.g., `plugins/blockSchemas.json`)
    - Validates `received` data against the plugin's JSON schema
    - If invalid, formats AJV errors into readable messages and creates a `ConfigError` with the original error as `cause`
-3. Calls `loadAndResolveErrorLocation()` — reads keyMap/refMap from build artifacts
+3. Calls `loadAndResolveErrorLocation()` — reads keyMap/refMap from build artifacts (through `context.readMaps` when the context has one: the dev server's adds `jitMaps/`)
 4. Sets `error.source` and `error.config`
 5. Logs the `ConfigError` (if schema validation failed) or original error via `logger.error()`
 6. Returns `{ source, configError }` to client — client logs the `ConfigError` if present

@@ -709,7 +709,11 @@ async function resolveModuleIdOperator(node, ctx) {
 async function prepareRef(node, ctx) {
   // 1. Create ref definition
   const lineNumber = node['~l'];
-  const refDef = makeRefDefinition(node._ref, ctx.refId, ctx.refMap, lineNumber, ctx.path);
+  // A JIT page build writes its refs to its own jitMaps file, and readers merge
+  // the files of several build contexts. Walker paths repeat from page to page
+  // and context to context, so a JIT ref takes a counter id, which never does.
+  const walkerPath = type.isUndefined(ctx.buildContext.jitMaps) ? ctx.path : null;
+  const refDef = makeRefDefinition(node._ref, ctx.refId, ctx.refMap, lineNumber, walkerPath);
 
   // 2. Store unresolved vars before resolution mutates them, and clone so
   //    resolution operates on a copy (preserving original.vars for resolver refs).

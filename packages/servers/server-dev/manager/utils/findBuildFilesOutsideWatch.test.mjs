@@ -26,6 +26,14 @@ let configDirectory;
 
 function writeRefMap(refMap) {
   fs.writeFileSync(path.join(buildDirectory, 'refMap.json'), JSON.stringify(refMap));
+  return path.join(buildDirectory, 'refMap.json');
+}
+
+function writeJitMaps(name, refMap) {
+  const filePath = path.join(buildDirectory, 'jitMaps', name);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, JSON.stringify({ keyMap: {}, refMap }));
+  return filePath;
 }
 
 beforeEach(() => {
@@ -40,7 +48,7 @@ afterEach(() => {
 });
 
 test('findBuildFilesOutsideWatch returns files the build read outside the watched directories', () => {
-  writeRefMap({
+  const refMapFile = writeRefMap({
     1: { parent: null },
     2: { parent: '1', path: 'pages.yaml' },
     3: { parent: '2', path: '../shared/header.yaml' },
@@ -50,7 +58,7 @@ test('findBuildFilesOutsideWatch returns files the build read outside the watche
   });
 
   const files = findBuildFilesOutsideWatch({
-    buildDirectory,
+    mapsFiles: [refMapFile],
     configDirectory,
     watchRoots: [configDirectory, path.join(root, 'modules', 'layout')],
   });
@@ -62,13 +70,39 @@ test('findBuildFilesOutsideWatch returns files the build read outside the watche
 });
 
 test('findBuildFilesOutsideWatch skips refs without a file path', () => {
-  writeRefMap({
+  const refMapFile = writeRefMap({
     1: { parent: null },
     2: { parent: '1', path: null, original: { resolver: 'resolver.js' } },
   });
 
   const files = findBuildFilesOutsideWatch({
-    buildDirectory,
+    mapsFiles: [refMapFile],
+    configDirectory,
+    watchRoots: [configDirectory],
+  });
+
+  expect(files).toEqual([]);
+});
+
+test("findBuildFilesOutsideWatch reads a JIT page build's refs from its jitMaps file alone", () => {
+  writeRefMap({ 1: { parent: null, path: '../shared/skeleton.yaml' } });
+  const jitMapsFile = writeJitMaps('abc123-1-1.json', {
+    p_abc123_1: { parent: null, path: 'pages/home.yaml' },
+    p_abc123_2: { parent: 'p_abc123_1', path: '../shared/header.yaml' },
+  });
+
+  const files = findBuildFilesOutsideWatch({
+    mapsFiles: [jitMapsFile],
+    configDirectory,
+    watchRoots: [configDirectory],
+  });
+
+  expect(files).toEqual([path.join(root, 'shared', 'header.yaml')]);
+});
+
+test('findBuildFilesOutsideWatch skips a jitMaps file pruned before it was read', () => {
+  const files = findBuildFilesOutsideWatch({
+    mapsFiles: [path.join(buildDirectory, 'jitMaps', 'gone-1-1.json')],
     configDirectory,
     watchRoots: [configDirectory],
   });

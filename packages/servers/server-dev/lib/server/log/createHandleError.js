@@ -48,6 +48,9 @@ function createHandleError({ context }) {
               error,
               readConfigFile: context.readConfigFile,
               configDirectory: context.configDirectory,
+              // The request context's reader adds the JIT page builds' maps
+              // (readMergedMaps); without one, keyMap.json and refMap.json.
+              readMaps: context.readMaps,
             });
 
       // Attach resolved location to error for display layer

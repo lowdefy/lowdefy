@@ -25,6 +25,7 @@ export { default as loadIconSets } from './build/icons/loadIconSets.js';
 export { default as resolveIconName } from './build/icons/resolveIconName.js';
 export { default as shallowBuild } from './build/jit/shallowBuild.js';
 export { default as buildPageJit } from './build/jit/buildPageJit.js';
+export { default as createJitMaps } from './build/jit/createJitMaps.js';
 export { default as createPageRegistry } from './build/jit/createPageRegistry.js';
 export { default as check } from './check.js';
 export { default as createContext } from './createContext.js';

@@ -19,6 +19,10 @@ import path from 'path';
 
 const mapFiles = new Set(['keyMap.json', 'refMap.json']);
 
+function isMapFile(filePath) {
+  return mapFiles.has(filePath) || filePath.startsWith('jitMaps/');
+}
+
 function readLiveKeyPrefix({ buildDirectory }) {
   return JSON.parse(fs.readFileSync(path.join(buildDirectory, 'idCounter.json'), 'utf8')).prefix;
 }
@@ -26,12 +30,13 @@ function readLiveKeyPrefix({ buildDirectory }) {
 // A config rebuild publishes new maps while a page build that started against the
 // previous build may still be running. That build's keyMap and refMap describe the
 // previous build, so writing them would replace the new maps, and errors would resolve
-// against the wrong build until the next rebuild. The build's key prefix names the build
+// against the wrong build until the next rebuild. Its jitMaps/ files would outlive the
+// publish that cleared the old build's. The build's key prefix names the build
 // a context was created from.
 function skipStaleMapWrites({ buildDirectory, context, keyPrefix }) {
   const writeBuildArtifact = context.writeBuildArtifact;
   context.writeBuildArtifact = async (filePath, content) => {
-    if (mapFiles.has(filePath) && readLiveKeyPrefix({ buildDirectory }) !== keyPrefix) {
+    if (isMapFile(filePath) && readLiveKeyPrefix({ buildDirectory }) !== keyPrefix) {
       return;
     }
     await writeBuildArtifact(filePath, content);
