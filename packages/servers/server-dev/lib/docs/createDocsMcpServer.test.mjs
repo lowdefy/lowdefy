@@ -33,7 +33,13 @@ process.chdir(fixtureDir);
 // runJourney needs a browser; mocked so the tool's result shaping (JSON text
 // followed by image blocks) can be asserted without one.
 const mockRunJourney = jest.fn();
-jest.unstable_mockModule('./runJourney.js', () => ({ default: mockRunJourney }));
+jest.unstable_mockModule('./runJourney.js', () => ({
+  default: mockRunJourney,
+  runSteps: jest.fn(),
+  MAIN_ACTOR: 'main',
+}));
+const mockScreenshotPage = jest.fn();
+jest.unstable_mockModule('./screenshotPage.js', () => ({ default: mockScreenshotPage }));
 
 const { default: createDocsMcpServer, subscribeMcpServerToDevEvents } = await import(
   './createDocsMcpServer.js'
@@ -191,6 +197,46 @@ test('MCP lowdefy_screenshot_page advertises width and height up to 4096, and co
   expect(properties.width).toMatchObject({ type: 'integer', exclusiveMinimum: 0, maximum: 4096 });
   expect(properties.height).toMatchObject({ type: 'integer', exclusiveMinimum: 0, maximum: 4096 });
   expect(properties.colorScheme).toMatchObject({ enum: ['light', 'dark'] });
+  await client.close();
+});
+
+test('MCP lowdefy_screenshot_page advertises steps and urlQuery, and passes them on', async () => {
+  mockScreenshotPage.mockResolvedValue({ data: 'AAAA', mimeType: 'image/png' });
+  const client = await connectClient();
+  const { tools } = await client.listTools();
+  const { properties } = tools.find((tool) => tool.name === 'lowdefy_screenshot_page').inputSchema;
+  expect(properties.steps).toMatchObject({ type: 'array' });
+  expect(properties.urlQuery).toBeDefined();
+
+  const result = await client.callTool({
+    name: 'lowdefy_screenshot_page',
+    arguments: { pageId: 'gates', urlQuery: { framework: 'popia' }, steps: [{ open: 'status' }] },
+  });
+  expect(mockScreenshotPage).toHaveBeenCalledWith(
+    expect.objectContaining({
+      pageId: 'gates',
+      urlQuery: { framework: 'popia' },
+      steps: [{ open: 'status' }],
+    })
+  );
+  expect(result.content).toEqual([{ type: 'image', data: 'AAAA', mimeType: 'image/png' }]);
+  await client.close();
+});
+
+test('MCP lowdefy_screenshot_page returns a failed step beside the image', async () => {
+  mockScreenshotPage.mockResolvedValue({
+    data: 'AAAA',
+    mimeType: 'image/png',
+    failure: { index: 0, step: { open: 'x' }, message: 'm' },
+  });
+  const client = await connectClient();
+  const result = await client.callTool({
+    name: 'lowdefy_screenshot_page',
+    arguments: { pageId: 'gates', steps: [{ open: 'x' }] },
+  });
+  expect(result.content).toHaveLength(2);
+  expect(JSON.parse(result.content[0].text).failure.index).toBe(0);
+  expect(result.content[1].type).toBe('image');
   await client.close();
 });
 

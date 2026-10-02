@@ -184,7 +184,7 @@ test('runJourney returns an error naming an unknown step key before opening a br
     steps: [{ click: 'ok' }, { tap: 'ok' }],
   });
   expect(result.error).toEqual(
-    'Step 1: Unknown journey step "tap". Steps are: click, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Step 1: Unknown journey step "tap". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
   );
   expect(mockGetBrowser).not.toHaveBeenCalled();
   expect(mockOpenPage).not.toHaveBeenCalled();

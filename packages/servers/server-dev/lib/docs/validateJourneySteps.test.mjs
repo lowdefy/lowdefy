@@ -20,6 +20,8 @@ test('validateJourneySteps accepts every step of the grammar', () => {
   const result = validateJourneySteps({
     steps: [
       { click: 'submit' },
+      { open: 'status' },
+      { open: { blockId: 'status', nth: 0 } },
       { fill: { blockId: 'name', value: 'Ada' } },
       { fill: { blockId: 'age', value: 0 } },
       { select: { blockId: 'country', value: 'Chile' } },
@@ -91,14 +93,14 @@ test('validateJourneySteps rejects steps that are not an array', () => {
 test('validateJourneySteps names the index and key of an unknown step', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a' }, { hover: 'b' }] });
   expect(result.error).toEqual(
-    'Step 1: Unknown journey step "hover". Steps are: click, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Step 1: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
   );
 });
 
 test('validateJourneySteps rejects a step with more than one key', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a', fill: { blockId: 'b' } }] });
   expect(result.error).toEqual(
-    'Step 0: Unknown journey step "click, fill". Steps are: click, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Step 0: Unknown journey step "click, fill". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
   );
 });
 
@@ -273,4 +275,8 @@ test.each([
   const result = validateJourneySteps({ steps: [step] });
   expect(result.error).toMatch(/^Step 0: /);
   expect(result.error).toMatch(expected);
+});
+
+test('validateJourneySteps rejects an open step with no target', () => {
+  expect(validateJourneySteps({ steps: [{ open: 5 }] }).error).toMatch(/Step "open" requires/);
 });
