@@ -259,13 +259,13 @@ _ref:
                     Disconnected. Ask the user to reconnect in their assistant.
             ```
 
-            [`RevokeMcpGrant`](/auth-steps) reads the calling token's `(client, user, organization)` from the request context, deletes that one consent row, and revokes its refresh tokens. It is **caller-scoped**: it touches only the grant the call arrived on, so another assistant the same person connected, or this assistant's grant in another organization, is untouched. It refuses to run for any caller that did not arrive over MCP — there is no grant behind a browser session for it to revoke.
+            [`RevokeMcpGrant`](/auth-steps) reads the calling token's `(client, user, organization)` from the request context, deletes that one consent row, and deletes its refresh tokens. It is **caller-scoped**: it touches only the grant the call arrived on, so another assistant the same person connected, or this assistant's grant in another organization, is untouched. It refuses to run for any caller that did not arrive over MCP — there is no grant behind a browser session for it to revoke.
 
             Expose it as an `mcp:read` tool. The next tool call the assistant makes gets a `401`, the client re-runs OAuth, and the user lands back on the organization picker.
 
             ## Disconnecting assistants from the app
 
-            The mirror control belongs in your app's UI: a person removing every assistant connected to their active organization. It deletes the caller's consent rows for that organization and revokes the matching refresh tokens — the same two writes `RevokeMcpGrant` makes, scoped to the active organization instead of one client:
+            The mirror control belongs in your app's UI: a person removing every assistant connected to their active organization. It deletes the caller's consent rows and refresh tokens for that organization — what `RevokeMcpGrant` does, scoped to the active organization instead of one client. Delete the refresh tokens rather than marking them revoked: the authorization server treats a revoked refresh token presented again as theft, and the client's next refresh would then delete every token it holds for the user, in every organization:
 
             ```yaml
             id: disconnect-assistants
@@ -276,8 +276,8 @@ _ref:
               additionalProperties: false
               properties: {}
             routine:
-              - id: revoke_refresh_tokens
-                type: MongoDBUpdateMany
+              - id: delete_refresh_tokens
+                type: MongoDBDeleteMany
                 connectionId: oauth-refresh-tokens
                 properties:
                   filter:
@@ -285,11 +285,6 @@ _ref:
                       _user: id
                     reference_id:
                       _user: organization_id
-                    revoked: null
-                  update:
-                    $set:
-                      revoked:
-                        _date: now
               - id: delete_consents
                 type: MongoDBDeleteMany
                 connectionId: oauth-consents

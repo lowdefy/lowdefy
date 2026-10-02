@@ -18,10 +18,10 @@ import { jest } from '@jest/globals';
 
 import RevokeMcpGrant from './RevokeMcpGrant.js';
 
-function createAuth() {
+function createAuth({ refreshTokens = [{ id: 'rt_1' }, { id: 'rt_2' }] } = {}) {
   const adapter = {
     deleteMany: jest.fn(async () => 1),
-    updateMany: jest.fn(async () => 1),
+    findMany: jest.fn(async () => refreshTokens),
   };
   return { auth: { $context: Promise.resolve({ adapter }) }, adapter };
 }
@@ -35,21 +35,36 @@ const mcp = {
   grantedScopes: ['mcp:read'],
 };
 
-test('RevokeMcpGrant deletes the consent and revokes the refresh tokens of the calling grant', async () => {
+const where = [
+  { field: 'clientId', value: 'client_1' },
+  { field: 'userId', value: 'user_1' },
+  { field: 'referenceId', value: 'org_1' },
+];
+
+test('RevokeMcpGrant deletes the consent, then the access and refresh tokens of the calling grant', async () => {
   const { auth, adapter } = createAuth();
   const result = await RevokeMcpGrant({ acting, auth, mcp, properties: {} });
-  const where = [
-    { field: 'clientId', value: 'client_1' },
-    { field: 'userId', value: 'user_1' },
-    { field: 'referenceId', value: 'org_1' },
-  ];
-  expect(adapter.deleteMany).toHaveBeenCalledWith({ model: 'oauthConsent', where });
-  expect(adapter.updateMany).toHaveBeenCalledWith({
-    model: 'oauthRefreshToken',
-    where: [...where, { field: 'revoked', operator: 'eq', value: null }],
-    update: { revoked: expect.any(Date) },
-  });
+  expect(adapter.findMany).toHaveBeenCalledWith({ model: 'oauthRefreshToken', where });
+  expect(adapter.deleteMany.mock.calls).toEqual([
+    [{ model: 'oauthConsent', where }],
+    [
+      {
+        model: 'oauthAccessToken',
+        where: [{ field: 'refreshId', operator: 'in', value: ['rt_1', 'rt_2'] }],
+      },
+    ],
+    [{ model: 'oauthRefreshToken', where }],
+  ]);
   expect(result).toEqual({ clientId: 'client_1', organizationId: 'org_1', userId: 'user_1' });
+});
+
+test('RevokeMcpGrant skips the access-token delete when the grant has no refresh tokens', async () => {
+  const { auth, adapter } = createAuth({ refreshTokens: [] });
+  await RevokeMcpGrant({ acting, auth, mcp, properties: {} });
+  expect(adapter.deleteMany.mock.calls).toEqual([
+    [{ model: 'oauthConsent', where }],
+    [{ model: 'oauthRefreshToken', where }],
+  ]);
 });
 
 test('RevokeMcpGrant refuses a caller that did not arrive over MCP', async () => {
