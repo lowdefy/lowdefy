@@ -390,6 +390,39 @@ test.each([
   expect(hub.list().instances).toEqual([expect.objectContaining({ configDirectory })]);
 });
 
+test('hub reap stops a server stuck starting past the start hold once unused for the idle limit', async () => {
+  await hub.start({ configDirectory });
+  writeActivity({
+    idleMinutes: 16,
+    state: 'starting',
+    startedAt: new Date(Date.now() - 20 * 60 * 1000).toISOString(),
+  });
+  const grandchild = grandchildOf(configDirectory);
+
+  await hub.reap();
+
+  expect(await waitUntil(() => !isAlive(grandchild))).toBe(true);
+  expect(hub.list().instances).toEqual([]);
+});
+
+test.each([
+  ['a request begins', { idleMinutes: 16, activeRequests: 1 }],
+  ['it is used', { idleMinutes: 0 }],
+])('hub reap keeps a server judged idle when %s during the tab poll', async (_, activity) => {
+  await hub.start({ configDirectory });
+  writeActivity({ idleMinutes: 16 });
+  const openTabs = jest.fn(async () => {
+    writeActivity(activity);
+    return 0;
+  });
+  const adopting = createTestHub({ openTabs });
+
+  await adopting.reap();
+
+  expect(openTabs).toHaveBeenCalledTimes(1);
+  expect(adopting.list().instances).toEqual([expect.objectContaining({ configDirectory })]);
+});
+
 test('hub reap keeps an unused server that a browser tab has open', async () => {
   await hub.start({ configDirectory });
   writeActivity({ idleMinutes: 60 });

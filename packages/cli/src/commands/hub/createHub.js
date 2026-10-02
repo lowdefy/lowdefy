@@ -534,15 +534,27 @@ function createHub({
     saveRegistry();
   }
 
+  // A server that has said `starting` for longer than a start may hold its
+  // slot is stalled - its first child never answered (a plugin that fails to
+  // load) and the record stays `starting` with the manager alive - and is
+  // judged on its use like a ready one, or nothing would ever stop it.
+  function isStartingOrBusy(record) {
+    const stalled =
+      record.state === 'starting' && Date.now() - Date.parse(record.startedAt) > startSlotHoldMs;
+    if (record.state !== 'ready' && !stalled) {
+      return true;
+    }
+    return record.building === true || record.activeRequests > 0;
+  }
+
   // Whether nobody has used a server for the idle limit. The dev manager
   // records its own last use (requests through its port, builds) in the
   // instance record; an agent session holding a hub connection does not count,
   // since helper agents share their parent session's one connection and would
   // keep every server they touched alive for the parent's whole session.
-  async function isIdle({ configDirectory, managed, idleLimitMs }) {
-    const record = readDevInstance({ configDirectory });
+  async function isIdle({ record, managed, idleLimitMs, configDirectory }) {
     if (record !== null && !type.isNone(record.lastActivityAt)) {
-      if (record.state !== 'ready' || record.building === true || record.activeRequests > 0) {
+      if (isStartingOrBusy(record)) {
         return false;
       }
       if (Date.now() - Date.parse(record.lastActivityAt) <= idleLimitMs) {
@@ -559,6 +571,25 @@ function createHub({
     }
     // A tab poll that fails counts as no tabs: the record already said idle.
     return record === null || (await openTabs({ url: record.url })) === 0;
+  }
+
+  // Whether a server was used after the reaper judged it idle: the tab poll
+  // and the wait for serialize leave time for a request to begin, and the
+  // manager writes one that starts on an idle record at once. A different pid
+  // is a server started since, not the one judged.
+  function isUsedSince({ configDirectory, seen }) {
+    if (seen === null || type.isNone(seen.lastActivityAt)) {
+      return false;
+    }
+    const current = readDevInstance({ configDirectory });
+    if (current === null) {
+      return false;
+    }
+    return (
+      current.pid !== seen.pid ||
+      current.activeRequests > 0 ||
+      current.lastActivityAt !== seen.lastActivityAt
+    );
   }
 
   // Stops servers nobody uses: the app was removed, or nobody has used it for
@@ -578,15 +609,24 @@ function createHub({
         logger.info(`Stopped ${configDirectory}: the app was removed.`);
         continue;
       }
-      if (!(await isIdle({ configDirectory, managed, idleLimitMs }))) {
+      const record = readDevInstance({ configDirectory });
+      if (!(await isIdle({ record, managed, idleLimitMs, configDirectory }))) {
         continue;
       }
-      await stop({ configDirectory });
-      logger.info(
-        `Stopped ${configDirectory}: idle for over ${
-          idleLimitMs / 60000
-        } minutes (memory pressure ${pressure}).`
-      );
+      const stopped = await serialize(async () => {
+        if (isUsedSince({ configDirectory, seen: record })) {
+          return false;
+        }
+        await stopServer({ configDirectory });
+        return true;
+      });
+      if (stopped) {
+        logger.info(
+          `Stopped ${configDirectory}: idle for over ${
+            idleLimitMs / 60000
+          } minutes (memory pressure ${pressure}).`
+        );
+      }
     }
     forgetRemovedApps();
   }

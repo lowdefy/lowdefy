@@ -30,6 +30,7 @@ import formatInstanceLabel from './formatInstanceLabel.js';
 import lifecycleTools, { DIRECTORY_PROPERTY } from './lifecycleTools.js';
 import resolveApp from './resolveApp.js';
 import runAppTests from './runAppTests.js';
+import touchDevServer from './touchDevServer.js';
 
 // Dev tool calls can drive a browser through a whole journey.
 const TOOL_CALL_TIMEOUT_MS = 10 * 60 * 1000;
@@ -210,6 +211,7 @@ function createShim({ cliVersion, cwd, devTools }) {
     if (result.state !== 'ready') {
       throw new Error(describeNotReady({ label: app.label, status: result }));
     }
+    await touchDevServer({ url: result.url });
     // A note from the hub (a server another hub started, which it cannot
     // restart) says the request was not done, so it stands over the idle rule.
     return { app: app.label, ...result, note: result.note ?? IDLE_STOP_NOTE };

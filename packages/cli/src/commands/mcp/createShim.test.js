@@ -15,6 +15,7 @@
 */
 
 import fs from 'fs';
+import http from 'http';
 import net from 'net';
 import os from 'os';
 import path from 'path';
@@ -115,8 +116,15 @@ test('lowdefy mcp lists the lifecycle tools and every dev tool with a directory 
 });
 
 // Stands in for the per-user hub on its socket: answers each request with what
-// a hub that has started the app would.
+// a hub that has started the app would. The app's dev server is a local
+// server that records the paths asked of it.
 async function listenFakeHub({ configDirectory, start = {} }) {
+  const devRequests = [];
+  const devServer = http.createServer((req, res) => {
+    devRequests.push(req.url);
+    res.end('ok');
+  });
+  await new Promise((resolve) => devServer.listen(0, '127.0.0.1', resolve));
   const { socketPath } = getHubPaths();
   fs.mkdirSync(path.dirname(socketPath), { recursive: true });
   const answers = {
@@ -126,7 +134,7 @@ async function listenFakeHub({ configDirectory, start = {} }) {
       configDirectory,
       owner: 'hub',
       state: 'ready',
-      url: 'http://localhost:4100',
+      url: `http://127.0.0.1:${devServer.address().port}`,
       pid: process.pid,
       managed: true,
       ...start,
@@ -148,10 +156,16 @@ async function listenFakeHub({ configDirectory, start = {} }) {
     socket.on('error', () => {});
   });
   await new Promise((resolve) => server.listen(socketPath, resolve));
-  return server;
+  return {
+    devRequests,
+    close: async () => {
+      await new Promise((resolve) => server.close(resolve));
+      await new Promise((resolve) => devServer.close(resolve));
+    },
+  };
 }
 
-test('lowdefy_dev_start says the hub stops the server once it has been idle', async () => {
+test('lowdefy_dev_start counts as use and says the hub stops the server once it has been idle', async () => {
   const app = makeApp('apps/main');
   const hub = await listenFakeHub({ configDirectory: app });
   try {
@@ -162,12 +176,14 @@ test('lowdefy_dev_start says the hub stops the server once it has been idle', as
     expect(text(result)).toContain(
       'The hub stops this server once nobody has used it for 15 minutes (sooner when the machine is short of memory); the next lowdefy_ call starts it again.'
     );
+    // Asking for the server counts as using it.
+    expect(hub.devRequests).toEqual(['/api/ping']);
   } finally {
     await client.close();
     await shim.close();
     client = undefined;
     shim = undefined;
-    await new Promise((resolve) => hub.close(resolve));
+    await hub.close();
   }
 });
 
@@ -189,7 +205,7 @@ test('lowdefy_dev_start keeps the hub note when another hub owns the server', as
     await shim.close();
     client = undefined;
     shim = undefined;
-    await new Promise((resolve) => hub.close(resolve));
+    await hub.close();
   }
 });
 
