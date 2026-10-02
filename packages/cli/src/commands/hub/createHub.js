@@ -575,9 +575,14 @@ function createHub({
 
   // Whether a server was used after the reaper judged it idle: the tab poll
   // and the wait for serialize leave time for a request to begin, and the
-  // manager writes one that starts on an idle record at once. A different pid
-  // is a server started since, not the one judged.
-  function isUsedSince({ configDirectory, seen }) {
+  // manager writes one that starts on an idle record at once. A different
+  // registry entry or pid is a server started (or stopped) since, not the one
+  // judged; a restart queued ahead of the reap launches one that has not yet
+  // written its record.
+  function isUsedSince({ configDirectory, managed, seen }) {
+    if (registry.instances[configDirectory] !== managed) {
+      return true;
+    }
     if (seen === null || type.isNone(seen.lastActivityAt)) {
       return false;
     }
@@ -614,7 +619,7 @@ function createHub({
         continue;
       }
       const stopped = await serialize(async () => {
-        if (isUsedSince({ configDirectory, seen: record })) {
+        if (isUsedSince({ configDirectory, managed, seen: record })) {
           return false;
         }
         await stopServer({ configDirectory });

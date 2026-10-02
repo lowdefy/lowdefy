@@ -423,6 +423,25 @@ test.each([
   expect(adopting.list().instances).toEqual([expect.objectContaining({ configDirectory })]);
 });
 
+test('hub reap keeps a server restarted during the tab poll', async () => {
+  await hub.start({ configDirectory });
+  writeActivity({ idleMinutes: 16 });
+  let restarting;
+  const adopting = createTestHub({
+    openTabs: async () => {
+      // The restart's stop and launch are queued ahead of the reap's stop, and
+      // the new server has not written its record when the reap's turn comes.
+      restarting = adopting.start({ configDirectory, restart: true });
+      return 0;
+    },
+  });
+
+  await adopting.reap();
+
+  expect((await restarting).state).toBe('ready');
+  expect(adopting.list().instances).toEqual([expect.objectContaining({ configDirectory })]);
+});
+
 test('hub reap keeps an unused server that a browser tab has open', async () => {
   await hub.start({ configDirectory });
   writeActivity({ idleMinutes: 60 });
