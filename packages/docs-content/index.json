@@ -3312,7 +3312,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "d6ba3d919c526848fa25b11e2133c455424e9b14577ebb611a13e698437e991e"
+      "hash": "7d8fe11d011df6499688baf4d7924a5fd6bec8a58813e4412396b665f3823ffe"
     },
     "agents/agents-introduction": {
       "files": [
