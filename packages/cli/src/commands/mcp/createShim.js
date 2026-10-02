@@ -38,7 +38,7 @@ const TOOL_CALL_TIMEOUT_MS = 10 * 60 * 1000;
 // a full process restart when the hub owns the server.
 const HIDDEN_DEV_TOOLS = new Set(['lowdefy_restart']);
 
-const SHIM_INSTRUCTIONS = `This is \`lowdefy mcp\`. It routes every lowdefy_ tool to the dev server of the app you are working in and starts that server when it is not running - never run \`lowdefy dev\` yourself, never choose ports, and never kill processes by port or name; use lowdefy_dev_start (restart: true after local plugin or .env changes) and lowdefy_dev_stop. Pass "directory" when you work in a different git worktree from the session (for example as a subagent) or when the repository holds several apps; it must be in this checkout or one of its git worktrees. Every result starts with the app and checkout it came from.`;
+const SHIM_INSTRUCTIONS = `This is \`lowdefy mcp\`. It routes every lowdefy_ tool to the dev server of the app you are working in and starts that server when it is not running - never run \`lowdefy dev\` yourself, never choose ports, and never kill processes by port or name; use lowdefy_dev_start and lowdefy_dev_stop. Restart (lowdefy_dev_start with restart: true) only when the server seems stuck or build status looks stale, or after secrets a wrapper (for example infisical) injects have changed; .env edits and local plugin code are picked up without one. Pass "directory" when you work in a different git worktree from the session (for example as a subagent) or when the repository holds several apps; it must be in this checkout or one of its git worktrees. Every result starts with the app and checkout it came from.`;
 
 function textResult(value) {
   const text = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
@@ -192,7 +192,7 @@ function createShim({ cliVersion, cwd, devTools }) {
         ...running,
         note: `Restarted in place. This server runs in the user's terminal, so ${
           clean ? 'the build directory was not cleaned and ' : ''
-        }new local plugin code or .env changes need the user to restart it.`,
+        }secrets a wrapper (for example infisical) injects only change when the user restarts it.`,
       };
     }
     await hub.attach(app);

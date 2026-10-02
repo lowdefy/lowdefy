@@ -125,7 +125,7 @@ const devToolDefinitions = {
 
   lowdefy_restart: {
     description:
-      "Restart the dev server process. Use after editing a local plugin's server-side implementation, or when build_status looks stale. The connection drops: call lowdefy_build_status with wait: true, which answers once the restarted server is ready.",
+      'Restart the dev server process. Use when the server seems stuck or build_status looks stale, or after secrets a wrapper (for example infisical) injects have changed; .env edits and local plugin code are picked up without a restart. The connection drops: call lowdefy_build_status with wait: true, which answers once the restarted server is ready.',
     inputSchema: {
       reason: z.string().optional().describe('Why the restart is needed (logged by the manager).'),
     },
@@ -238,7 +238,9 @@ const devToolDefinitions = {
       urlQuery: z
         .record(z.any())
         .optional()
-        .describe('Query params to open the page with, read by _url_query, e.g. {"framework": "popia"}.'),
+        .describe(
+          'Query params to open the page with, read by _url_query, e.g. {"framework": "popia"}.'
+        ),
       steps: z
         .array(z.record(z.any()))
         .optional()
