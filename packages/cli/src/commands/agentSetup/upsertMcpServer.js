@@ -16,10 +16,12 @@
 
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import buildMcpServerEntry from './buildMcpServerEntry.js';
+import checkPinnedMcp from './checkPinnedMcp.js';
 import { LEGACY_MCP_SERVER_NAMES, MCP_SERVER_NAME } from './mcpServerNames.js';
 
 // A .mcp.json left in the app subdirectory by a pre-monorepo-fix run of
@@ -51,9 +53,19 @@ function isPortPinned(entry) {
 async function upsertMcpServer({ context, projectDirectory }) {
   const mcpJsonPath = path.join(projectDirectory, '.mcp.json');
   const existing = await readFile(mcpJsonPath);
-  const { entry, installed } = buildMcpServerEntry({
+  const { entry, installed, version } = buildMcpServerEntry({
     cliVersion: context.cliVersion,
     configDirectory: context.directories.config,
+  });
+  // The entry is committed for teammates, so a pin npm cannot serve is
+  // refused before anything is written. A contributor running their own build
+  // of the CLI overrides the entry for themselves in Claude Code's local
+  // scope, which outranks the project one and is never committed.
+  const cliEntry = fileURLToPath(new URL('../../index.js', import.meta.url));
+  context.logger.info(`Checking that npm can run lowdefy@${version} mcp.`);
+  checkPinnedMcp({
+    version,
+    hint: `'.mcp.json' was not written: it is committed, and an entry npm cannot run leaves every agent session started from it without Lowdefy tools. Install a published lowdefy version in the app and rerun agent-setup. To use your own build of the CLI, override the entry for yourself only:\nclaude mcp add --scope local ${MCP_SERVER_NAME} -- node ${cliEntry} mcp`,
   });
   if (!installed) {
     context.logger.warn(

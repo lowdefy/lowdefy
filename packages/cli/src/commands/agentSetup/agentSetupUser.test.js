@@ -40,19 +40,68 @@ afterEach(() => {
   process.stdout.write.mockRestore();
 });
 
-test('agentSetupUser prefetches the pinned version, drops the old lowdefy-docs registration and registers lowdefy in user scope', async () => {
+const NPX_ARGS = ['--prefer-offline', '--yes', 'lowdefy@7.1.0', 'mcp'];
+const originalPlatform = process.platform;
+
+function setPlatform(platform) {
+  Object.defineProperty(process, 'platform', { value: platform });
+}
+
+afterEach(() => {
+  setPlatform(originalPlatform);
+});
+
+function calls() {
+  return spawnSync.mock.calls.map(([command, args]) => [command, args]);
+}
+
+test('agentSetupUser checks the pinned version, replaces lowdefy, then drops the old lowdefy-docs registration', async () => {
   spawnSync.mockReturnValue({ status: 0, stdout: '', stderr: '' });
   const { default: agentSetupUser } = await import('./agentSetupUser.js');
 
   await agentSetupUser({ cliVersion: '7.1.0' });
 
-  expect(spawnSync.mock.calls.map(([command, args]) => [command, args])).toEqual([
-    ['npx', ['--prefer-offline', '--yes', 'lowdefy@7.1.0', 'mcp', '--help']],
+  expect(calls()).toEqual([
+    ['npx', [...NPX_ARGS, '--help']],
     ['claude', ['mcp', 'remove', '--scope', 'user', 'lowdefy']],
+    ['claude', ['mcp', 'add', '--scope', 'user', 'lowdefy', '--', 'npx', ...NPX_ARGS]],
     ['claude', ['mcp', 'remove', '--scope', 'user', 'lowdefy-docs']],
-    ['claude', ['mcp', 'add-json', '--scope', 'user', 'lowdefy', JSON.stringify(ENTRY)]],
   ]);
+  expect(calls().some(([, args]) => args.includes('add-json'))).toBe(false);
   expect(output).toContain("Registered 'lowdefy' (lowdefy mcp 7.1.0)");
+});
+
+test('agentSetupUser registers cmd /c npx on Windows', async () => {
+  setPlatform('win32');
+  spawnSync.mockReturnValue({ status: 0, stdout: '', stderr: '' });
+  const { default: agentSetupUser } = await import('./agentSetupUser.js');
+
+  await agentSetupUser({ cliVersion: '7.1.0' });
+
+  const add = calls().find(([, args]) => args[1] === 'add');
+  expect(add).toEqual([
+    'claude',
+    ['mcp', 'add', '--scope', 'user', 'lowdefy', '--', 'cmd', '/c', 'npx', ...NPX_ARGS],
+  ]);
+});
+
+test('agentSetupUser keeps the lowdefy-docs registration and prints the command when the add fails', async () => {
+  spawnSync.mockImplementation((command, args) =>
+    args[1] === 'add'
+      ? { status: 1, stdout: '', stderr: 'add failed' }
+      : { status: 0, stdout: '', stderr: '' }
+  );
+  const { default: agentSetupUser } = await import('./agentSetupUser.js');
+
+  await expect(agentSetupUser({ cliVersion: '7.1.0' })).rejects.toThrow(
+    `'claude mcp add' failed:\nadd failed\nRegister the server by hand with:\nclaude mcp add --scope user lowdefy -- npx ${NPX_ARGS.join(
+      ' '
+    )}`
+  );
+  expect(calls()).not.toContainEqual([
+    'claude',
+    ['mcp', 'remove', '--scope', 'user', 'lowdefy-docs'],
+  ]);
 });
 
 test('agentSetupUser fails before registering a version npm cannot run', async () => {

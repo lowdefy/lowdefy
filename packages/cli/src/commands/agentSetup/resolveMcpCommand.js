@@ -25,10 +25,12 @@ function resolveMcpCommand({ cliVersion, configDirectory }) {
     configDirectory,
     root: findGitRoot({ directory: configDirectory }),
   });
-  if (installed?.hasMcp) {
-    return { entry: buildNpxMcpCommand({ version: installed.version }), installed: true };
-  }
-  return { entry: buildNpxMcpCommand({ version: cliVersion }), installed: false };
+  const version = installed?.hasMcp ? installed.version : cliVersion;
+  return {
+    entry: buildNpxMcpCommand({ version }),
+    installed: installed?.hasMcp === true,
+    version,
+  };
 }
 
 export default resolveMcpCommand;

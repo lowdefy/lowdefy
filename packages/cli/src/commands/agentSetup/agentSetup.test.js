@@ -19,7 +19,12 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import agentSetup from './agentSetup.js';
+// The pin check runs npx; no test reaches npm.
+const spawnSync = jest.fn();
+const childProcess = await import('child_process');
+jest.unstable_mockModule('child_process', () => ({ ...childProcess, spawnSync }));
+
+const { default: agentSetup } = await import('./agentSetup.js');
 
 let configDirectory;
 let context;
@@ -29,6 +34,8 @@ beforeEach(() => {
   // A .git directory pins project-root detection to the temp directory, so
   // tests never depend on whether os.tmpdir() has a .git ancestor.
   fs.mkdirSync(path.join(configDirectory, '.git'));
+  spawnSync.mockReset();
+  spawnSync.mockReturnValue({ status: 0, stdout: '', stderr: '' });
   context = {
     cliConfig: {},
     cliVersion: '6.0.0',
@@ -153,6 +160,38 @@ test('agentSetup pins its own version when the app has no lowdefy mcp installed'
   );
 });
 
+test('agentSetup checks that npm can run the pinned lowdefy mcp before writing .mcp.json', async () => {
+  installCli(configDirectory);
+
+  await agentSetup({ context });
+
+  expect(spawnSync.mock.calls.map(([command, args]) => [command, args])).toEqual([
+    ['npx', ['--prefer-offline', '--yes', 'lowdefy@7.1.0', 'mcp', '--help']],
+  ]);
+  expect(JSON.parse(read('.mcp.json')).mcpServers.lowdefy).toEqual(STDIO_ENTRY);
+});
+
+test('agentSetup refuses a pinned version npm cannot run and writes no .mcp.json', async () => {
+  spawnSync.mockReturnValue({ status: 1, stdout: '', stderr: 'npm error 404 lowdefy@6.0.0' });
+
+  await expect(agentSetup({ context })).rejects.toThrow(
+    "Could not run 'lowdefy mcp' from lowdefy@6.0.0 on npm:\nnpm error 404 lowdefy@6.0.0"
+  );
+  await expect(agentSetup({ context })).rejects.toThrow(
+    /claude mcp add --scope local lowdefy -- node \S+index\.js mcp/
+  );
+  expect(fs.existsSync(path.join(configDirectory, '.mcp.json'))).toBe(false);
+});
+
+test('agentSetup leaves an existing .mcp.json as it was when the pinned version is refused', async () => {
+  const existing = JSON.stringify({ mcpServers: { other: { command: 'other-server' } } });
+  fs.writeFileSync(path.join(configDirectory, '.mcp.json'), existing);
+  spawnSync.mockReturnValue({ status: 1, stdout: '', stderr: 'npm error 404' });
+
+  await expect(agentSetup({ context })).rejects.toThrow("'.mcp.json' was not written");
+  expect(read('.mcp.json')).toEqual(existing);
+});
+
 test('agentSetup merges the lowdefy server into an existing .mcp.json', async () => {
   installCli(configDirectory);
   fs.writeFileSync(
@@ -239,7 +278,7 @@ test('agentSetup swaps a lowdefy-docs approval in .claude/settings.json for lowd
   await agentSetup({ context });
 
   const settings = JSON.parse(read(path.join('.claude', 'settings.json')));
-  expect(settings.enabledMcpjsonServers).toEqual(['other-server', 'lowdefy']);
+  expect(settings.enabledMcpjsonServers).toEqual(['lowdefy', 'other-server']);
 });
 
 test('agentSetup renames the MCP server in a skill and AGENTS.md section it wrote, keeping edits', async () => {

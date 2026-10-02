@@ -14,11 +14,18 @@
   limitations under the License.
 */
 
-import resolveMcpCommand from './resolveMcpCommand.js';
+import buildNpxMcpCommand from './buildNpxMcpCommand.js';
 
-function buildMcpServerEntry({ cliVersion, configDirectory }) {
-  const { entry, installed, version } = resolveMcpCommand({ cliVersion, configDirectory });
-  return { entry: { type: 'stdio', ...entry }, installed, version };
+// The user-scope registration is per machine, so it can name the platform's
+// own launcher: Claude Code on native Windows cannot spawn npx (a .cmd file)
+// without a shell. Project entries are shared across systems and stay plain
+// npx.
+function buildUserMcpCommand({ version }) {
+  const { command, args } = buildNpxMcpCommand({ version });
+  if (process.platform === 'win32') {
+    return { command: 'cmd', args: ['/c', command, ...args] };
+  }
+  return { command, args };
 }
 
-export default buildMcpServerEntry;
+export default buildUserMcpCommand;
