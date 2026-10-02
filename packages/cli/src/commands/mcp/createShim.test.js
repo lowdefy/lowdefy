@@ -15,11 +15,17 @@
 */
 
 import fs from 'fs';
+import http from 'http';
 import os from 'os';
 import path from 'path';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
-import { ElicitRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import {
+  ElicitRequestSchema,
+  ToolListChangedNotificationSchema,
+} from '@modelcontextprotocol/sdk/types.js';
 
 import createShim from './createShim.js';
 
@@ -211,10 +217,71 @@ test('lowdefy mcp refuses a directory in another checkout and asks the user when
       `${other} is outside this session's checkout (${root}) and its git worktrees. The user declined to allow it for this session.`
     );
     expect(questions).toEqual([
-      expect.stringContaining(`Allow ${JSON.stringify(other)} for this session?`),
+      expect.stringContaining(`Allow the repository ${JSON.stringify(other)}?`),
     ]);
     expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
   } finally {
     fs.rmSync(other, { recursive: true, force: true });
+  }
+});
+
+// A dev server's MCP endpoint, stateless, offering the tools named.
+async function startFakeDevServer({ toolNames }) {
+  const httpServer = http.createServer(async (req, res) => {
+    const server = new McpServer({ name: 'fake-dev-server', version: '7.1.0' });
+    toolNames.forEach((name) => {
+      server.registerTool(name, { description: `${name}.` }, async () => ({
+        content: [{ type: 'text', text: `${name} answered` }],
+      }));
+    });
+    const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
+    res.on('close', () => {
+      transport.close();
+      server.close();
+    });
+    await server.connect(transport);
+    await transport.handleRequest(req, res);
+  });
+  await new Promise((resolve) => httpServer.listen(0, '127.0.0.1', resolve));
+  return httpServer;
+}
+
+test('lowdefy mcp adds the tools a newer dev server has and tells the client to list again', async () => {
+  const devServer = await startFakeDevServer({
+    toolNames: ['lowdefy_build_status', 'lowdefy_newer_tool'],
+  });
+  try {
+    const app = makeApp('.');
+    fs.mkdirSync(path.join(app, '.lowdefy'));
+    fs.writeFileSync(
+      path.join(app, '.lowdefy', 'instance.json'),
+      JSON.stringify({
+        pid: process.pid,
+        configDirectory: app,
+        owner: 'terminal',
+        state: 'ready',
+        url: `http://127.0.0.1:${devServer.address().port}`,
+      })
+    );
+    await connect({ cwd: root });
+    let listChanged = 0;
+    client.setNotificationHandler(ToolListChangedNotificationSchema, () => {
+      listChanged += 1;
+    });
+
+    const before = (await client.listTools()).tools.map((tool) => tool.name);
+    expect(before).not.toContain('lowdefy_newer_tool');
+    await client.callTool({ name: 'lowdefy_build_status', arguments: {} });
+
+    const { tools } = await client.listTools();
+    const added = tools.find((tool) => tool.name === 'lowdefy_newer_tool');
+    expect(added.inputSchema.properties.directory.type).toEqual('string');
+    expect(listChanged).toEqual(1);
+    const result = await client.callTool({ name: 'lowdefy_newer_tool', arguments: {} });
+    expect(text(result)).toContain('lowdefy_newer_tool answered');
+  } finally {
+    // The shim holds the push stream open until it closes.
+    devServer.closeAllConnections();
+    await new Promise((resolve) => devServer.close(resolve));
   }
 });

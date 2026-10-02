@@ -14,34 +14,12 @@
   limitations under the License.
 */
 
-import fs from 'fs';
 import path from 'path';
 import { type } from '@lowdefy/helpers';
 
 import findDevScripts from '../../utils/findDevScripts.js';
 import getLowdefyYaml from '../../utils/getLowdefyYaml.js';
-
-const LOCKFILES = [
-  ['pnpm-lock.yaml', 'pnpm'],
-  ['yarn.lock', 'yarn'],
-  ['package-lock.json', 'npm'],
-];
-
-// The nearest lockfile names the package manager; in a monorepo it sits at the
-// workspace root, above the app.
-function findPackageManager({ configDirectory }) {
-  for (
-    let directory = configDirectory;
-    directory !== path.dirname(directory);
-    directory = path.dirname(directory)
-  ) {
-    const found = LOCKFILES.find(([lockfile]) => fs.existsSync(path.join(directory, lockfile)));
-    if (found) {
-      return found[1];
-    }
-  }
-  return 'npm';
-}
+import findPackageManager from './findPackageManager.js';
 
 function platformCommand(command) {
   return process.platform === 'win32' ? `${command}.cmd` : command;
@@ -58,7 +36,7 @@ function platformCommand(command) {
 async function resolveDevCommand({ configDirectory }) {
   const { cliConfig } = await getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true });
   const { scripts, matching } = findDevScripts({ configDirectory });
-  const packageManager = findPackageManager({ configDirectory });
+  const { packageManager } = findPackageManager({ configDirectory });
 
   if (!type.isNone(cliConfig.devScript)) {
     if (!type.isString(cliConfig.devScript) || type.isNone(scripts[cliConfig.devScript])) {

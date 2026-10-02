@@ -55,15 +55,10 @@ async function upsertMcpServer({ context, projectDirectory }) {
   const { entry, installed } = buildMcpServerEntry({
     cliVersion: context.cliVersion,
     configDirectory: context.directories.config,
-    projectDirectory,
   });
   if (!installed) {
     context.logger.warn(
-      `This app has no installed lowdefy CLI with 'lowdefy mcp', so '.mcp.json' runs '${
-        entry.command
-      } ${entry.args.join(
-        ' '
-      )}', which downloads on first use. Add lowdefy (this version or newer) to the app's devDependencies and rerun agent-setup for an instant, version-matched MCP server.`
+      `This app has no installed lowdefy CLI with 'lowdefy mcp', so '.mcp.json' pins this CLI's version (${context.cliVersion}). Add lowdefy (this version or newer) to the app's devDependencies and rerun agent-setup to pin the app's own version.`
     );
   }
 

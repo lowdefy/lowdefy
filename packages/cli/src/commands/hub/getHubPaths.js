@@ -45,6 +45,7 @@ function getHubPaths() {
     registryPath: path.join(hubDirectory, 'registry.json'),
     socketPath: getSocketPath({ hubDirectory }),
     startLockPath: path.join(hubDirectory, 'start.lock'),
+    trustedPath: path.join(hubDirectory, 'trusted.json'),
   };
 }
 

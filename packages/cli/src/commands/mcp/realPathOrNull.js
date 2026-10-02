@@ -14,11 +14,14 @@
   limitations under the License.
 */
 
-import resolveMcpCommand from './resolveMcpCommand.js';
+import fs from 'fs';
 
-function buildMcpServerEntry({ cliVersion, configDirectory }) {
-  const { entry, installed } = resolveMcpCommand({ cliVersion, configDirectory });
-  return { entry: { type: 'stdio', ...entry }, installed };
+function realPathOrNull(filePath) {
+  try {
+    return fs.realpathSync.native(filePath);
+  } catch {
+    return null;
+  }
 }
 
-export default buildMcpServerEntry;
+export default realPathOrNull;

@@ -54,17 +54,19 @@ function installCli(directory, { withMcp = true } = {}) {
   fs.mkdirSync(path.join(cliDirectory, 'dist', 'commands', 'mcp'), { recursive: true });
   fs.writeFileSync(
     path.join(cliDirectory, 'package.json'),
-    JSON.stringify({ name: 'lowdefy', bin: './dist/index.js' })
+    JSON.stringify({ name: 'lowdefy', version: '7.1.0', bin: './dist/index.js' })
   );
   if (withMcp) {
     fs.writeFileSync(path.join(cliDirectory, 'dist', 'commands', 'mcp', 'mcp.js'), '');
   }
 }
 
+// Pinned to the app's installed version, run through npx so a checkout
+// without node_modules still starts it.
 const STDIO_ENTRY = {
   type: 'stdio',
-  command: 'node',
-  args: ['node_modules/lowdefy/dist/index.js', 'mcp'],
+  command: 'npx',
+  args: ['--prefer-offline', '--yes', 'lowdefy@7.1.0', 'mcp'],
 };
 
 test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from scratch', async () => {
@@ -135,7 +137,7 @@ test('agentSetup warns and leaves .claude/settings.json unchanged when it is not
   );
 });
 
-test('agentSetup falls back to npx with its own version when the app has no lowdefy mcp installed', async () => {
+test('agentSetup pins its own version when the app has no lowdefy mcp installed', async () => {
   installCli(configDirectory, { withMcp: false });
 
   await agentSetup({ context });
@@ -144,7 +146,7 @@ test('agentSetup falls back to npx with its own version when the app has no lowd
   expect(mcpJson.mcpServers['lowdefy-docs']).toEqual({
     type: 'stdio',
     command: 'npx',
-    args: ['--yes', 'lowdefy@6.0.0', 'mcp'],
+    args: ['--prefer-offline', '--yes', 'lowdefy@6.0.0', 'mcp'],
   });
   expect(context.logger.warn).toHaveBeenCalledWith(
     expect.stringContaining("no installed lowdefy CLI with 'lowdefy mcp'")
@@ -189,6 +191,29 @@ test('agentSetup replaces a port-pinned lowdefy-docs entry and removes other por
     expect.stringContaining("Replaced the port-pinned 'lowdefy-docs' server")
   );
   expect(context.logger.info).toHaveBeenCalledWith(expect.stringContaining('lowdefy-3010'));
+});
+
+test('agentSetup replaces a lowdefy-docs entry that runs the CLI from node_modules', async () => {
+  installCli(configDirectory);
+  fs.writeFileSync(
+    path.join(configDirectory, '.mcp.json'),
+    JSON.stringify({
+      mcpServers: {
+        'lowdefy-docs': {
+          type: 'stdio',
+          command: 'node',
+          args: ['node_modules/lowdefy/dist/index.js', 'mcp'],
+        },
+      },
+    })
+  );
+
+  await agentSetup({ context });
+
+  expect(JSON.parse(read('.mcp.json')).mcpServers['lowdefy-docs']).toEqual(STDIO_ENTRY);
+  expect(context.logger.info).toHaveBeenCalledWith(
+    "Updated the 'lowdefy-docs' MCP server in '.mcp.json'."
+  );
 });
 
 test('agentSetup leaves a matching lowdefy-docs entry in .mcp.json unchanged and notes it', async () => {
@@ -349,11 +374,7 @@ describe('monorepo layout (app in a subdirectory of the git root)', () => {
     await agentSetup({ context });
 
     const mcpJson = JSON.parse(readRoot('.mcp.json'));
-    expect(mcpJson.mcpServers['lowdefy-docs']).toEqual({
-      type: 'stdio',
-      command: 'node',
-      args: ['apps/myapp/node_modules/lowdefy/dist/index.js', 'mcp'],
-    });
+    expect(mcpJson.mcpServers['lowdefy-docs']).toEqual(STDIO_ENTRY);
     expect(readRoot(path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md'))).toContain(
       'lives in `apps/myapp/`'
     );
@@ -370,10 +391,7 @@ describe('monorepo layout (app in a subdirectory of the git root)', () => {
     installCli(projectDirectory);
     await agentSetup({ context });
 
-    expect(JSON.parse(readRoot('.mcp.json')).mcpServers['lowdefy-docs'].args).toEqual([
-      'node_modules/lowdefy/dist/index.js',
-      'mcp',
-    ]);
+    expect(JSON.parse(readRoot('.mcp.json')).mcpServers['lowdefy-docs']).toEqual(STDIO_ENTRY);
   });
 
   test('agentSetup appends the Lowdefy section to an existing root AGENTS.md', async () => {

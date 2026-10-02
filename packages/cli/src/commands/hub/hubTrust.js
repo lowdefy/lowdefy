@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
-import resolveMcpCommand from './resolveMcpCommand.js';
+import findRepository from './findRepository.js';
+import trustRepository from './trustRepository.js';
 
-function buildMcpServerEntry({ cliVersion, configDirectory }) {
-  const { entry, installed } = resolveMcpCommand({ cliVersion, configDirectory });
-  return { entry: { type: 'stdio', ...entry }, installed };
+async function hubTrust({ directory = '.' }) {
+  const repository = findRepository({ directory });
+  trustRepository({ repository });
+  process.stdout.write(
+    `Trusted ${repository}: lowdefy mcp may start and query the dev servers of its apps, in any of its git worktrees, from any agent session.\n`
+  );
 }
 
-export default buildMcpServerEntry;
+export default hubTrust;

@@ -18,7 +18,10 @@ import fs from 'fs';
 import path from 'path';
 
 import findGitRoot from './findGitRoot.js';
+import findMainCheckout from './findMainCheckout.js';
 import listSessionCheckouts from './listSessionCheckouts.js';
+import readTrustedRepositories from '../hub/readTrustedRepositories.js';
+import trustRepository from '../hub/trustRepository.js';
 
 // The user answers in their client; give them time to read the question.
 const ASK_TIMEOUT_MS = 5 * 60 * 1000;
@@ -31,10 +34,12 @@ function isInside({ directory, parent }) {
 // Starting a dev server runs the app's package.json dev script, and the user
 // approved these tools once, for the checkout they opened the session in. So a
 // tool call may act on that checkout and the repository's other git worktrees
-// (where subagents work), and nothing else: an agent must not be able to run
-// the scripts of a repository it just cloned without the user seeing it. A
+// (where subagents work), and on repositories the user trusts for every
+// session (`lowdefy hub trust`), and nothing else: an agent must not be able to
+// run the scripts of a repository it just cloned without the user seeing it. A
 // directory outside is put to the user as an MCP elicitation when the client
-// supports one, and refused otherwise. The answer holds for the session.
+// supports one, and refused otherwise. The answer holds for the session, or
+// for good when the user ticks "always allow".
 function createCheckoutGuard({ cwd, server }) {
   const sessionRoot = findGitRoot({ directory: fs.realpathSync.native(cwd) });
   const answers = new Map();
@@ -49,9 +54,9 @@ function createCheckoutGuard({ cwd, server }) {
     return (await listSessionCheckouts({ sessionRoot })).includes(root);
   }
 
-  async function askUser({ configDirectory, root }) {
+  async function askUser({ configDirectory, repository }) {
     if (!server.getClientCapabilities()?.elicitation?.form) {
-      return 'unsupported';
+      return { action: 'unsupported' };
     }
     try {
       const result = await server.elicitInput(
@@ -62,22 +67,37 @@ function createCheckoutGuard({ cwd, server }) {
             configDirectory
           )}. It is outside this session's checkout (${JSON.stringify(
             sessionRoot
-          )}) and its git worktrees. Allowing it lets the agent start that app's dev server, which runs the dev script in its package.json. Allow ${JSON.stringify(
-            root
-          )} for this session?`,
-          requestedSchema: { type: 'object', properties: {} },
+          )}) and its git worktrees. Allowing it lets the agent start that app's dev server, which runs the dev script in its package.json. Allow the repository ${JSON.stringify(
+            repository
+          )}?`,
+          requestedSchema: {
+            type: 'object',
+            properties: {
+              always: {
+                type: 'boolean',
+                title: 'Always allow this repository',
+                description:
+                  'Allow it, and all of its git worktrees, in every agent session from now on. Undo with `lowdefy hub untrust`.',
+                default: false,
+              },
+            },
+          },
         },
         { timeout: ASK_TIMEOUT_MS }
       );
-      return result.action;
+      return { action: result.action, always: result.content?.always === true };
     } catch {
-      return 'cancel';
+      return { action: 'cancel' };
     }
   }
 
   async function decide(app) {
-    const action = await askUser(app);
+    const repository = findMainCheckout({ root: app.root });
+    const { action, always } = await askUser({ ...app, repository });
     if (action === 'accept') {
+      if (always) {
+        trustRepository({ repository });
+      }
       return { allowed: true };
     }
     // A dismissed question is asked again on the next call; a declined one
@@ -92,6 +112,10 @@ function createCheckoutGuard({ cwd, server }) {
     if (await isSessionCheckout(app)) {
       return;
     }
+    // Read on every call: the user may trust a repository mid-session.
+    if (readTrustedRepositories().includes(findMainCheckout({ root: app.root }))) {
+      return;
+    }
     if (!answers.has(app.root)) {
       answers.set(app.root, decide(app));
     }
@@ -104,7 +128,7 @@ function createCheckoutGuard({ cwd, server }) {
       throw new Error(`${where} The user declined to allow it for this session.`);
     }
     throw new Error(
-      `${where} lowdefy mcp only starts and queries the dev servers of apps in the checkout the agent session was started in, or in a git worktree of that repository. Work in this checkout or one of its worktrees, or ask the user to start an agent session in ${app.root}.`
+      `${where} lowdefy mcp only starts and queries the dev servers of apps in the checkout the agent session was started in, in a git worktree of that repository, or in a repository the user trusts. Work in this checkout or one of its worktrees, or ask the user to run \`lowdefy hub trust ${app.root}\` (it covers every agent session) or to start an agent session in ${app.root}.`
     );
   };
 }

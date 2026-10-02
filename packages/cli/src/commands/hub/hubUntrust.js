@@ -14,11 +14,17 @@
   limitations under the License.
 */
 
-import resolveMcpCommand from './resolveMcpCommand.js';
+import findRepository from './findRepository.js';
+import untrustRepository from './untrustRepository.js';
 
-function buildMcpServerEntry({ cliVersion, configDirectory }) {
-  const { entry, installed } = resolveMcpCommand({ cliVersion, configDirectory });
-  return { entry: { type: 'stdio', ...entry }, installed };
+async function hubUntrust({ directory = '.' }) {
+  const repository = findRepository({ directory });
+  const removed = untrustRepository({ repository });
+  process.stdout.write(
+    removed
+      ? `No longer trusted: ${repository}. Agent sessions started elsewhere ask again before using it.\n`
+      : `${repository} was not trusted.\n`
+  );
 }
 
-export default buildMcpServerEntry;
+export default hubUntrust;

@@ -22,12 +22,15 @@ import { jest } from '@jest/globals';
 
 import createCheckoutGuard from './createCheckoutGuard.js';
 import resolveApp from './resolveApp.js';
+import readTrustedRepositories from '../hub/readTrustedRepositories.js';
+import trustRepository from '../hub/trustRepository.js';
 
 // Each test runs git several times; on a loaded machine that alone can take
 // seconds. Timing is not under test.
 jest.setTimeout(60000);
 
 let base;
+const originalHome = process.env.LOWDEFY_HOME;
 
 function git(args, cwd) {
   execFileSync(
@@ -65,10 +68,12 @@ function makeApp(directory) {
   return directory;
 }
 
-function createServer({ elicitation, answer } = {}) {
+function createServer({ elicitation, answer, always } = {}) {
   return {
     getClientCapabilities: () => (elicitation ? { elicitation: { form: {} } } : {}),
-    elicitInput: jest.fn(async () => ({ action: answer })),
+    elicitInput: jest.fn(async () =>
+      answer === 'accept' ? { action: answer, content: { always } } : { action: answer }
+    ),
   };
 }
 
@@ -78,9 +83,12 @@ function authorize({ guard, cwd, directory }) {
 
 beforeEach(() => {
   base = fs.realpathSync.native(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-checkout-guard-')));
+  // The trust list lives in LOWDEFY_HOME; never read or write the developer's.
+  process.env.LOWDEFY_HOME = path.join(base, 'lowdefy-home');
 });
 
 afterEach(() => {
+  process.env.LOWDEFY_HOME = originalHome;
   fs.rmSync(base, { recursive: true, force: true });
 });
 
@@ -216,7 +224,60 @@ test('the checkout guard asks the user once about another checkout and remembers
 
   expect(server.elicitInput).toHaveBeenCalledTimes(1);
   expect(server.elicitInput.mock.calls[0][0].message).toContain(
-    `runs the dev script in its package.json. Allow ${JSON.stringify(other)} for this session?`
+    `runs the dev script in its package.json. Allow the repository ${JSON.stringify(other)}?`
+  );
+  expect(readTrustedRepositories()).toEqual([]);
+});
+
+test('the checkout guard trusts the repository for every later session when the user always allows it', async () => {
+  const repo = makeRepo('app');
+  const other = makeApp(makeRepo('other'));
+  const otherWorktree = makeApp(
+    addWorktree({ repo: other, relativePath: 'other-wt', branch: 'feature' })
+  );
+  const guard = createCheckoutGuard({
+    cwd: repo,
+    server: createServer({ elicitation: true, answer: 'accept', always: true }),
+  });
+
+  await authorize({ guard, cwd: repo, directory: otherWorktree });
+
+  expect(readTrustedRepositories()).toEqual([other]);
+  const laterSession = createCheckoutGuard({ cwd: repo, server: createServer() });
+  await expect(authorize({ guard: laterSession, cwd: repo, directory: other })).resolves.toBe(
+    undefined
+  );
+  await expect(
+    authorize({ guard: laterSession, cwd: repo, directory: otherWorktree })
+  ).resolves.toBeUndefined();
+});
+
+test('the checkout guard allows a repository the user trusted mid-session without asking', async () => {
+  const repo = makeRepo('app');
+  const other = makeApp(makeRepo('other'));
+  const server = createServer({ elicitation: true, answer: 'cancel' });
+  const guard = createCheckoutGuard({ cwd: repo, server });
+
+  await expect(authorize({ guard, cwd: repo, directory: other })).rejects.toThrow(
+    'lowdefy hub trust'
+  );
+  trustRepository({ repository: other });
+
+  await expect(authorize({ guard, cwd: repo, directory: other })).resolves.toBeUndefined();
+  expect(server.elicitInput).toHaveBeenCalledTimes(1);
+});
+
+test('the checkout guard does not extend a trusted repository to a .git file naming one of its worktrees', async () => {
+  const repo = makeRepo('app');
+  const trusted = makeRepo('trusted');
+  const trustedWorktree = addWorktree({ repo: trusted, relativePath: 'trusted-wt', branch: 'b' });
+  trustRepository({ repository: trusted });
+  const impostor = makeApp(path.join(base, 'impostor'));
+  fs.writeFileSync(path.join(impostor, '.git'), `gitdir: ${readAdminDir(trustedWorktree)}\n`);
+  const guard = createCheckoutGuard({ cwd: repo, server: createServer() });
+
+  await expect(authorize({ guard, cwd: repo, directory: impostor })).rejects.toThrow(
+    'outside this session'
   );
 });
 

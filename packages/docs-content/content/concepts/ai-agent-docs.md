@@ -8,26 +8,39 @@ Everything is served under the `/lowdefy-docs` path of your dev server. It is al
 
 ## Connect your agent: `lowdefy mcp`
 
-Run `lowdefy agent-setup` once in your project. It registers the `lowdefy-docs` MCP server in `.mcp.json`:
+Run `lowdefy agent-setup` once in your project. It registers the `lowdefy-docs` MCP server in `.mcp.json`, pinned to your app's Lowdefy version:
 
 ```json
 {
   "mcpServers": {
     "lowdefy-docs": {
       "type": "stdio",
-      "command": "node",
-      "args": ["apps/main/node_modules/lowdefy/dist/index.js", "mcp"]
+      "command": "npx",
+      "args": ["--prefer-offline", "--yes", "lowdefy@7.1.0", "mcp"]
     }
   }
 }
 ```
 
-Your agent client starts `lowdefy mcp` itself at the start of each session, so the tools are always there — whether or not a dev server is running yet. Nothing in the entry names a port, so the same checked-in file works in every git worktree.
+Your agent client starts `lowdefy mcp` itself at the start of each session, so the tools are always there — whether or not a dev server is running yet. Nothing in the entry names a port or a `node_modules` path, so the same checked-in file works in every git worktree, including a fresh one nobody has installed yet: npx keeps the pinned version in the shared npm cache and starts it offline in under a second after the first download.
+
+### Every project at once: `agent-setup --user`
+
+If you work across several projects, register `lowdefy mcp` once for your user instead:
+
+```bash
+npx lowdefy agent-setup --user
+```
+
+This adds the same `lowdefy-docs` server to Claude Code's user scope (`claude mcp add-json --scope user`), so every session has the Lowdefy tools — in a repository nobody set up, in a directory above several projects, anywhere. It needs no app, and downloads the version into the npm cache up front so the first session does not wait. Without Claude Code on your `PATH` it prints the entry to add to your agent client's user configuration. A project whose `.mcp.json` defines `lowdefy-docs` uses its own entry instead; the two run the same command.
+
+`lowdefy mcp` works with dev servers of other Lowdefy versions: when it connects to a dev server that has tools it does not know, it adds them to the session's tool list and tells the client to list again.
 
 `lowdefy mcp` sends each tool call to the dev server of the app and checkout the agent is working in:
 
 - **It works out the app** from the session's working directory. Every tool also takes an optional `directory` argument — pass it when the repository holds several apps, or when an agent works in a different git worktree from the session (a subagent in its own worktree, for example).
-- **It only acts on the session's checkout and its git worktrees.** Starting a dev server runs the app's `package.json` dev script, so a `directory` outside the checkout the session started in (and outside `git worktree list` of that repository) is refused. When the agent client supports MCP elicitation, `lowdefy mcp` asks you first instead; your answer holds for the session.
+- **It acts on the session's checkout, its git worktrees, and repositories you trust.** Starting a dev server runs the app's `package.json` dev script, so a `directory` outside the checkout the session started in (and outside `git worktree list` of that repository) needs your approval. When the agent client supports MCP elicitation, `lowdefy mcp` asks you; tick **Always allow this repository** to allow it, and all of its worktrees, in every session from then on. Otherwise, or ahead of time, run `lowdefy hub trust <directory>` (see [hub](/cli#hub)). To work on two projects side by side, trust each once and any session can start and query both.
+- **It tells the agent what to install.** A fresh git worktree has no `node_modules`. When the app's `package.json` lists `lowdefy` but nothing is installed, `lowdefy_dev_start` answers with the install command for the repository (for example `pnpm install` at the workspace root) instead of starting a dev script that cannot run; the agent runs it and starts again.
 - **It starts the dev server when needed**, through the [Lowdefy hub](/cli#hub): a small per-user background process that gives each app its own port, runs the app's own dev script (so a secrets-manager wrapper still applies — set `cli.devScript` if several scripts run `lowdefy dev`), and stops servers nobody uses. A dev server you started yourself with `lowdefy dev` is used as it is, and never stopped by an agent.
 - **Every result starts with the app and checkout it came from**, for example `apps/main @ app-wt-invoices · http://localhost:4102`, so an agent never mistakes another worktree's answer for its own.
 
@@ -373,27 +386,27 @@ Journeys are also the file format of `tests/journeys/*.yaml`, which `lowdefy tes
 npx lowdefy agent-setup
 ```
 
-This writes three files into your project (merging safely if they exist): `.mcp.json` registering the `lowdefy-docs` MCP server (`lowdefy mcp`, see [Connect your agent](#connect-your-agent-lowdefy-mcp)), `.claude/skills/lowdefy-config/SKILL.md` teaching Claude Code the workflow, and an `AGENTS.md` section for other coding agents. Add `lowdefy` to your app's `devDependencies` first, so `.mcp.json` runs your app's own version of the CLI; each git worktree then needs its own `pnpm install` (or equivalent) before an agent session starts there.
+This writes three files into your project (merging safely if they exist): `.mcp.json` registering the `lowdefy-docs` MCP server (`lowdefy mcp`, see [Connect your agent](#connect-your-agent-lowdefy-mcp)), `.claude/skills/lowdefy-config/SKILL.md` teaching Claude Code the workflow, and an `AGENTS.md` section for other coding agents. Add `lowdefy` to your app's `devDependencies` first, so `.mcp.json` pins your app's own version of the CLI. Rerun `agent-setup` after upgrading Lowdefy to move the pin.
 
-Projects set up by an earlier version, with an `http://localhost:<port>/lowdefy-docs/mcp` entry, are migrated when you rerun the command: the entry is replaced, per-port entries such as `lowdefy-3010` are removed, and the skill and `AGENTS.md` section it wrote are updated. The server keeps its `lowdefy-docs` name, so tool names and approvals carry over.
+Projects set up by an earlier version, with an `http://localhost:<port>/lowdefy-docs/mcp` entry or one that runs the CLI from `node_modules`, are migrated when you rerun the command: the entry is replaced, per-port entries such as `lowdefy-3010` are removed, and the skill and `AGENTS.md` section it wrote are updated. The server keeps its `lowdefy-docs` name, so tool names and approvals carry over.
 
 ## Using it with Claude Code manually
 
-Commit a `.mcp.json` file at your project root, pointing at your app's installed CLI:
+Commit a `.mcp.json` file at your project root, pinning your app's Lowdefy version:
 
 ```json
 {
   "mcpServers": {
     "lowdefy-docs": {
       "type": "stdio",
-      "command": "node",
-      "args": ["node_modules/lowdefy/dist/index.js", "mcp"]
+      "command": "npx",
+      "args": ["--prefer-offline", "--yes", "lowdefy@7.1.0", "mcp"]
     }
   }
 }
 ```
 
-In a monorepo, use the path to the app's `node_modules`, for example `apps/main/node_modules/lowdefy/dist/index.js`. The MCP server includes instructions that teach the agent the workflow (list types first, then fetch schemas and examples; let `lowdefy mcp` run the dev server), so it works well without any extra prompting.
+Or register it for every project with `claude mcp add-json --scope user lowdefy-docs '<the entry above>'`, which is what `lowdefy agent-setup --user` runs. The MCP server includes instructions that teach the agent the workflow (list types first, then fetch schemas and examples; let `lowdefy mcp` run the dev server), so it works well without any extra prompting.
 
 ## Plain HTTP routes
 

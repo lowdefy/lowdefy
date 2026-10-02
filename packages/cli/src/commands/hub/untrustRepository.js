@@ -14,11 +14,19 @@
   limitations under the License.
 */
 
-import resolveMcpCommand from './resolveMcpCommand.js';
+import readTrustedRepositories from './readTrustedRepositories.js';
+import writeTrustedRepositories from './writeTrustedRepositories.js';
 
-function buildMcpServerEntry({ cliVersion, configDirectory }) {
-  const { entry, installed } = resolveMcpCommand({ cliVersion, configDirectory });
-  return { entry: { type: 'stdio', ...entry }, installed };
+// Returns whether the repository was trusted.
+function untrustRepository({ repository }) {
+  const repositories = readTrustedRepositories();
+  if (!repositories.includes(repository)) {
+    return false;
+  }
+  writeTrustedRepositories({
+    repositories: repositories.filter((trusted) => trusted !== repository),
+  });
+  return true;
 }
 
-export default buildMcpServerEntry;
+export default untrustRepository;

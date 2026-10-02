@@ -1,0 +1,68 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+
+import getHubPaths from './getHubPaths.js';
+import readTrustedRepositories from './readTrustedRepositories.js';
+import trustRepository from './trustRepository.js';
+import untrustRepository from './untrustRepository.js';
+
+let home;
+const originalHome = process.env.LOWDEFY_HOME;
+
+beforeEach(() => {
+  home = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-trust-'));
+  process.env.LOWDEFY_HOME = home;
+});
+
+afterEach(() => {
+  process.env.LOWDEFY_HOME = originalHome;
+  fs.rmSync(home, { recursive: true, force: true });
+});
+
+test('readTrustedRepositories returns an empty list before anything is trusted', () => {
+  expect(readTrustedRepositories()).toEqual([]);
+});
+
+test('trustRepository adds a repository once, readable only by the user', () => {
+  trustRepository({ repository: '/work/b' });
+  trustRepository({ repository: '/work/a' });
+  trustRepository({ repository: '/work/b' });
+
+  expect(readTrustedRepositories()).toEqual(['/work/a', '/work/b']);
+  if (process.platform !== 'win32') {
+    expect(fs.statSync(getHubPaths().trustedPath).mode & 0o777).toEqual(0o600);
+  }
+});
+
+test('untrustRepository removes a trusted repository and reports one that was not trusted', () => {
+  trustRepository({ repository: '/work/a' });
+
+  expect(untrustRepository({ repository: '/work/a' })).toBe(true);
+  expect(untrustRepository({ repository: '/work/a' })).toBe(false);
+  expect(readTrustedRepositories()).toEqual([]);
+});
+
+test('readTrustedRepositories throws on a trust file without a repositories list', () => {
+  const { trustedPath } = getHubPaths();
+  fs.mkdirSync(path.dirname(trustedPath), { recursive: true });
+  fs.writeFileSync(trustedPath, '{"repos": []}');
+
+  expect(() => readTrustedRepositories()).toThrow(`${trustedPath} has no "repositories" list.`);
+});

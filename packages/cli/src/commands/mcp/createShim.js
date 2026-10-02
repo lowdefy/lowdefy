@@ -38,7 +38,7 @@ const TOOL_CALL_TIMEOUT_MS = 10 * 60 * 1000;
 // a full process restart when the hub owns the server.
 const HIDDEN_DEV_TOOLS = new Set(['lowdefy_restart']);
 
-const SHIM_INSTRUCTIONS = `This is \`lowdefy mcp\`. It routes every lowdefy_ tool to the dev server of the app you are working in and starts that server when it is not running - never run \`lowdefy dev\` yourself, never choose ports, and never kill processes by port or name; use lowdefy_dev_start (restart: true after local plugin or .env changes) and lowdefy_dev_stop. Pass "directory" when you work in a different git worktree from the session (for example as a subagent) or when the repository holds several apps; it must be in this checkout or one of its git worktrees. Every result starts with the app and checkout it came from.`;
+const SHIM_INSTRUCTIONS = `This is \`lowdefy mcp\`. It routes every lowdefy_ tool to the dev server of the app you are working in and starts that server when it is not running - never run \`lowdefy dev\` yourself, never choose ports, and never kill processes by port or name; use lowdefy_dev_start (restart: true after local plugin or .env changes) and lowdefy_dev_stop. Pass "directory" when you work in a different git worktree from the session (for example as a subagent), when the repository holds several apps, or when you work on another project; it must be in this checkout, one of its git worktrees, or a repository the user trusts (the user is asked, or runs \`lowdefy hub trust <directory>\`). If lowdefy_dev_start reports that dependencies are not installed, run the install command it names, then call it again. Every result starts with the app and checkout it came from.`;
 
 function textResult(value) {
   const text = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
@@ -73,18 +73,44 @@ function createShim({ cliVersion, cwd, devTools }) {
   const server = new Server(
     { name: 'lowdefy', version: cliVersion },
     {
-      capabilities: { tools: {}, logging: {} },
+      capabilities: { tools: { listChanged: true }, logging: {} },
       instructions: `${SHIM_INSTRUCTIONS}\n\n${devTools.instructions}`,
     }
   );
-  const instances = createInstanceConnections({
-    cliVersion,
-    onNotification: (params) => server.sendLoggingMessage(params).catch(() => {}),
-  });
-
   const forwardedTools = devTools.tools.filter((tool) => !HIDDEN_DEV_TOOLS.has(tool.name));
   const forwardedNames = new Set(forwardedTools.map((tool) => tool.name));
   const tools = [...lifecycleTools, ...forwardedTools.map(withDirectory)];
+
+  // The list a session starts with is this CLI's, which need not be the
+  // version a project pins. Each dev server reports its own tools when the
+  // shim connects; any this CLI does not know are added and the client is told
+  // to list again, so a newer app's tools reach a session started by an older
+  // lowdefy mcp. The list only grows: the session may hold several apps.
+  async function learnTools(client) {
+    let listed;
+    try {
+      listed = await client.listTools();
+    } catch {
+      return;
+    }
+    const added = listed.tools.filter(
+      (tool) => !HIDDEN_DEV_TOOLS.has(tool.name) && !forwardedNames.has(tool.name)
+    );
+    if (added.length === 0) {
+      return;
+    }
+    added.forEach((tool) => {
+      forwardedNames.add(tool.name);
+      tools.push(withDirectory(tool));
+    });
+    await server.sendToolListChanged().catch(() => {});
+  }
+
+  const instances = createInstanceConnections({
+    cliVersion,
+    onNotification: (params) => server.sendLoggingMessage(params).catch(() => {}),
+    onOpen: learnTools,
+  });
 
   const authorizeApp = createCheckoutGuard({ cwd, server });
 
@@ -138,9 +164,8 @@ function createShim({ cliVersion, cwd, devTools }) {
       { type: 'text', text: `${app.label} · ${instance.url}` },
       ...(result.content ?? []),
     ];
-    // The tool list comes from this CLI; the handlers from the dev server,
-    // whose version follows lowdefy.yaml. When they differ, a tool one side
-    // lacks fails - say why.
+    // The handlers come from the dev server, whose version follows the app.
+    // A tool this CLI lists that an older server lacks fails - say why.
     if (result.isError && instance.version && instance.version !== cliVersion) {
       content.push({
         type: 'text',

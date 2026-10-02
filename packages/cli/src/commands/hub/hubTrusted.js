@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
-import resolveMcpCommand from './resolveMcpCommand.js';
+import readTrustedRepositories from './readTrustedRepositories.js';
 
-function buildMcpServerEntry({ cliVersion, configDirectory }) {
-  const { entry, installed } = resolveMcpCommand({ cliVersion, configDirectory });
-  return { entry: { type: 'stdio', ...entry }, installed };
+async function hubTrusted() {
+  const repositories = readTrustedRepositories();
+  if (repositories.length === 0) {
+    process.stdout.write('No repositories are trusted.\n');
+    return;
+  }
+  process.stdout.write(`${repositories.join('\n')}\n`);
 }
 
-export default buildMcpServerEntry;
+export default hubTrusted;
