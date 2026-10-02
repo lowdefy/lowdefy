@@ -15,7 +15,8 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { readDevInstance } from '@lowdefy/node-utils';
+
+import readInstanceRecord from './readInstanceRecord.js';
 
 // Vite can evaluate the app entry more than once (an SSR reload, the
 // websocket upgrade path), and each evaluation calls this.
@@ -32,7 +33,7 @@ globalThis.gc and does nothing.
 function startIdleGc({
   configDirectory,
   gc = globalThis.gc,
-  readInstance = readDevInstance,
+  readInstance = readInstanceRecord,
   now = Date.now,
   pollMs = 5000,
   quietMs = 10000,
