@@ -21,7 +21,10 @@ import { jest } from '@jest/globals';
 
 const { default: pluginSourceWatcher } = await import('./pluginSourceWatcher.mjs');
 
-function waitFor(predicate, timeout = 3000) {
+// File events arrive late on a busy machine; the waits only bound a failure.
+jest.setTimeout(20000);
+
+function waitFor(predicate, timeout = 10000) {
   return new Promise((resolve, reject) => {
     const started = Date.now();
     const tick = () => {
@@ -126,4 +129,90 @@ test('a fix to a plugin whose edit failed the build rebuilds again', async () =>
   await waitFor(() => context.syncServer.mock.calls.length === 2);
 
   expect(context.lowdefyBuild).toHaveBeenCalledTimes(2);
+});
+
+function linkConfigAsPackage(name) {
+  const dir = context.directories.config;
+  fs.mkdirSync(path.join(dir, 'src'), { recursive: true });
+  fs.mkdirSync(path.join(dir, 'dist'), { recursive: true });
+  fs.mkdirSync(path.join(dir, 'public', 'md'), { recursive: true });
+  fs.mkdirSync(path.join(dir, 'pages'), { recursive: true });
+  const linked = path.join(context.directories.server, 'node_modules', name);
+  fs.mkdirSync(path.dirname(linked), { recursive: true });
+  fs.symlinkSync(dir, linked, 'dir');
+  return dir;
+}
+
+// Gives chokidar time to report an event the watcher should ignore, then
+// checks no build ran: a build would have started within the batch delay.
+async function expectNoRebuild() {
+  await new Promise((resolve) => setTimeout(resolve, 1200));
+  expect(context.lowdefyBuild).not.toHaveBeenCalled();
+}
+
+describe('a plugin package that is also the config directory', () => {
+  // Only non-code files are written before the watcher starts: macOS can
+  // report a write made just before the watch began, which for a code file
+  // would rebuild and spoil a test that expects none.
+  beforeEach(() => {
+    const dir = linkConfigAsPackage('@app/docs');
+    fs.writeFileSync(path.join(dir, 'public', 'llms.txt'), 'one');
+    fs.writeFileSync(path.join(dir, 'public', 'search-index.json'), '[]');
+    fs.writeFileSync(path.join(dir, 'public', 'md', 'page.md'), 'one');
+    fs.writeFileSync(path.join(dir, 'pages', 'home.yaml'), 'id: home');
+    fs.writeFileSync(path.join(dir, 'pages', 'home.md'), 'one');
+    writeLowdefyYaml(['@app/docs']);
+  });
+
+  test.each([['public/llms.txt'], ['public/search-index.json'], ['public/md/page.md']])(
+    'writing %s does not rebuild',
+    async (file) => {
+      watcher = await pluginSourceWatcher(context);
+      fs.writeFileSync(path.join(context.directories.config, file), 'two');
+      await expectNoRebuild();
+    }
+  );
+
+  test.each([['pages/home.yaml'], ['pages/home.md']])(
+    'editing %s does not rebuild',
+    async (file) => {
+      watcher = await pluginSourceWatcher(context);
+      fs.writeFileSync(path.join(context.directories.config, file), 'two');
+      await expectNoRebuild();
+    }
+  );
+
+  test('writing into the build directory does not rebuild', async () => {
+    watcher = await pluginSourceWatcher(context);
+    fs.writeFileSync(path.join(context.directories.build, 'keyMap.json'), '{}');
+    await expectNoRebuild();
+  });
+
+  test.each([['src/types.js'], ['dist/types.js']])('editing %s rebuilds', async (file) => {
+    watcher = await pluginSourceWatcher(context);
+    fs.writeFileSync(path.join(context.directories.config, file), 'export default 2;');
+    await waitFor(() => context.reloadClients.mock.calls.length > 0);
+    expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
+  });
+});
+
+test.each([
+  ['a .js file rebuilds', 'src/other.js', true],
+  ['a .json file rebuilds', 'package.json', true],
+  ['a .md file does not rebuild', 'README.md', false],
+  ['a .yaml file does not rebuild', 'src/config.yaml', false],
+  ['a file with no extension does not rebuild', 'LICENSE', false],
+])('in a plugin outside the config directory, %s', async (_, file, rebuilds) => {
+  const dir = addLinkedPackage('@app/plugin');
+  fs.writeFileSync(path.join(dir, file), 'one');
+  writeLowdefyYaml(['@app/plugin']);
+
+  watcher = await pluginSourceWatcher(context);
+  fs.writeFileSync(path.join(dir, file), 'two');
+  if (rebuilds) {
+    await waitFor(() => context.reloadClients.mock.calls.length > 0);
+    expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
+    return;
+  }
+  await expectNoRebuild();
 });
