@@ -22,7 +22,7 @@ import createBuildActivity from './utils/createBuildActivity.mjs';
 import createRequestActivity from './utils/createRequestActivity.mjs';
 import startMailSink from './processes/startMailSink.mjs';
 import startProxy from './processes/startProxy.mjs';
-import startServer from './processes/startServer.mjs';
+import startFirstServer from './processes/startFirstServer.mjs';
 import formatNoticeBox from './utils/formatNoticeBox.mjs';
 import resolvePorts from './utils/resolvePorts.mjs';
 import waitForServer from './utils/waitForServer.mjs';
@@ -145,7 +145,7 @@ try {
   await startProxy(context);
   context.mailSink = await startMailSink(context);
 
-  startServer(context);
+  await startFirstServer(context);
   if (
     await waitForServer({
       basePath: context.basePath,

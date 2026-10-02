@@ -25,6 +25,7 @@ import checkMockUserWarning from './processes/checkMockUserWarning.mjs';
 import initialBuild from './processes/initialBuild.mjs';
 import installPlugins from './processes/installPlugins.mjs';
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
+import optimizeDependencies from './processes/optimizeDependencies.mjs';
 import readDotEnv from './processes/readDotEnv.mjs';
 import reloadClients from './processes/reloadClients.mjs';
 import restartServer from './processes/restartServer.mjs';
@@ -101,6 +102,7 @@ async function getContext() {
     }
   };
 
+  context.optimizeDependencies = optimizeDependencies(context);
   context.readDotEnv = readDotEnv(context);
   context.reloadClients = reloadClients(context);
   context.restartServer = restartServer(context);

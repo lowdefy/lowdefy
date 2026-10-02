@@ -17,9 +17,9 @@
 import { spawn } from 'child_process';
 import crypto from 'crypto';
 
+import createServerEnv from '../utils/createServerEnv.mjs';
 import killTaggedBrowser from '../utils/killTaggedBrowser.mjs';
 import readBasePath from '../utils/readBasePath.mjs';
-import resolveDevAuthUrl from '../utils/resolveDevAuthUrl.mjs';
 
 function createStdErrLineHandler({ context }) {
   const port = context.internalPort;
@@ -49,13 +49,9 @@ function startServer(context) {
   // one of those files changed.
   context.serverArtifacts.record();
 
-  // Read on every start: a .env edit can change BETTER_AUTH_URL, and the
-  // watcher restarts the child with the reloaded value.
+  const env = createServerEnv(context);
   const configuredAuthUrl = process.env.BETTER_AUTH_URL;
-  const authUrl = resolveDevAuthUrl({
-    configured: configuredAuthUrl,
-    port: context.options.port,
-  });
+  const authUrl = env.BETTER_AUTH_URL;
   if (authUrl !== configuredAuthUrl && context.loggedAuthUrl !== authUrl) {
     context.logger.info(
       `BETTER_AUTH_URL ${configuredAuthUrl} names another port; this dev server uses ${authUrl}.`
@@ -82,14 +78,7 @@ function startServer(context) {
     {
       stdio: ['ignore', 'inherit', 'pipe'],
       env: {
-        ...process.env,
-        LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
-        // Set only while the manager's mail sink listens: the child cannot
-        // tell from LOWDEFY_DEV_SMTP_PORT alone, which a later .env edit can
-        // add without a sink (it starts once, with the manager).
-        LOWDEFY_SERVER_DEV_MAIL_SINK: context.mailSink ? 'true' : undefined,
-        PORT: context.internalPort,
-        BETTER_AUTH_URL: authUrl,
+        ...env,
         LOWDEFY_BROWSER_TAG: browserTag,
       },
     }

@@ -31,6 +31,9 @@ function syncServer(context) {
       try {
         await context.installPlugins();
         await context.lowdefyBuild();
+        // The new plugins' dependencies are optimised in a short-lived
+        // process, so the restarted child starts warm (optimizeDependencies.mjs).
+        await context.buildActivity.track(() => context.optimizeDependencies());
       } finally {
         await context.restartServer();
       }

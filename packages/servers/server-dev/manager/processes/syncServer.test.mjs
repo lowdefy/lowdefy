@@ -27,9 +27,16 @@ function createContext(changes) {
     });
   return {
     events,
+    buildActivity: {
+      track: jest.fn(async (task) => {
+        events.push('track');
+        return task();
+      }),
+    },
     installPlugins: record('install'),
     logger: { warn: jest.fn() },
     lowdefyBuild: record('build'),
+    optimizeDependencies: record('optimize'),
     restartServer: record('restart'),
     serverArtifacts: { check: jest.fn(() => changes) },
     shutdownServer: jest.fn(() => events.push('shutdown')),
@@ -41,10 +48,10 @@ test.each([
   ['does nothing when nothing changed', { install: false, restart: false }, {}, []],
   ['restarts when asked to', { install: false, restart: false }, { restart: true }, ['restart']],
   [
-    'installs new plugin packages, rebuilds and restarts',
+    'installs new plugin packages, rebuilds, optimises them as build activity and restarts once',
     { install: true, restart: true },
     {},
-    ['shutdown', 'install', 'build', 'restart'],
+    ['shutdown', 'install', 'build', 'track', 'optimize', 'restart'],
   ],
 ])('syncServer %s', async (_, changes, options, expected) => {
   const context = createContext(changes);
