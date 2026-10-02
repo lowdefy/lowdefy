@@ -138,12 +138,17 @@ async function createSeededAuth() {
       updatedAt: new Date(),
     },
   });
-  await adapter.create({
+  await seedRefreshToken({ adapter, userId: user.id, raw: REFRESH_TOKEN });
+  return { adapter, auth, member, user };
+}
+
+function seedRefreshToken({ adapter, userId, raw }) {
+  return adapter.create({
     model: 'oauthRefreshToken',
     data: {
-      token: createHash('sha256').update(REFRESH_TOKEN).digest('base64url'),
+      token: createHash('sha256').update(raw).digest('base64url'),
       clientId: 'client_1',
-      userId: user.id,
+      userId,
       referenceId: 'default',
       scopes: ['mcp:read', 'offline_access'],
       resources: [RESOURCE],
@@ -151,7 +156,6 @@ async function createSeededAuth() {
       createdAt: new Date(),
     },
   });
-  return { adapter, auth, member };
 }
 
 function refresh({ auth }) {
@@ -177,26 +181,9 @@ test('the refresh grant mints an access token carrying the organization while th
   expect(decodeJwt(accessToken)).toMatchObject({ organization_id: 'default', aud: RESOURCE });
 });
 
-async function seedOtherRefreshToken({ adapter }) {
-  const [{ userId }] = await adapter.findMany({ model: 'oauthRefreshToken' });
-  return adapter.create({
-    model: 'oauthRefreshToken',
-    data: {
-      token: createHash('sha256').update('other-session-refresh-token').digest('base64url'),
-      clientId: 'client_1',
-      userId,
-      referenceId: 'default',
-      scopes: ['mcp:read', 'offline_access'],
-      resources: [RESOURCE],
-      expiresAt: new Date(Date.now() + 3600 * 1000),
-      createdAt: new Date(),
-    },
-  });
-}
-
 test('a rotated refresh token presented again within the reuse interval gets the same tokens and revokes nothing', async () => {
-  const { adapter, auth } = await createSeededAuth();
-  const other = await seedOtherRefreshToken({ adapter });
+  const { adapter, auth, user } = await createSeededAuth();
+  const other = await seedRefreshToken({ adapter, userId: user.id, raw: 'other-session' });
   const first = await refresh({ auth });
   const second = await refresh({ auth });
   expect(first.status).toBe(200);
@@ -213,15 +200,30 @@ test('a rotated refresh token presented again within the reuse interval gets the
 });
 
 test('a rotated refresh token presented again after the reuse interval revokes the family', async () => {
-  const { adapter, auth } = await createSeededAuth();
-  const other = await seedOtherRefreshToken({ adapter });
+  const { adapter, auth, user } = await createSeededAuth();
+  const other = await seedRefreshToken({ adapter, userId: user.id, raw: 'other-session' });
   expect((await refresh({ auth })).status).toBe(200);
-  await adapter.updateMany({
-    model: 'oauthRefreshToken',
-    where: [{ field: 'rotatedAt', operator: 'ne', value: null }],
-    update: { rotationReplayExpiresAt: new Date(Date.now() - 1000) },
+  // Only Date is faked: the handler's own async work runs on real timers.
+  jest.useFakeTimers({
+    now: Date.now() + 121 * 1000,
+    doNotFake: [
+      'nextTick',
+      'setImmediate',
+      'clearImmediate',
+      'setTimeout',
+      'clearTimeout',
+      'setInterval',
+      'clearInterval',
+      'queueMicrotask',
+      'performance',
+    ],
   });
-  const stale = await refresh({ auth });
+  let stale;
+  try {
+    stale = await refresh({ auth });
+  } finally {
+    jest.useRealTimers();
+  }
   expect(stale.status).toBe(400);
   expect(await stale.json()).toMatchObject({ error: 'invalid_grant' });
   expect(
