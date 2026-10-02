@@ -133,7 +133,7 @@ async function lowdefyBuildWatcher(context) {
     filePath === buildDirectory ||
     filePath === path.join(buildDirectory, 'refMap.json') ||
     filePath === jitMapsDirectory ||
-    path.dirname(filePath) === jitMapsDirectory;
+    (path.dirname(filePath) === jitMapsDirectory && filePath.endsWith('.json'));
   const mapsWatcher = await setupWatcher({
     callback: (filePaths) => watchBuildFilesOutsideWatch([...new Set(filePaths.flat())]),
     context,

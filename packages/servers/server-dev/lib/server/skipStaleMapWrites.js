@@ -35,11 +35,11 @@ function readLiveKeyPrefix({ buildDirectory }) {
 // a context was created from.
 function skipStaleMapWrites({ buildDirectory, context, keyPrefix }) {
   const writeBuildArtifact = context.writeBuildArtifact;
-  context.writeBuildArtifact = async (filePath, content) => {
+  context.writeBuildArtifact = async (filePath, content, options) => {
     if (isMapFile(filePath) && readLiveKeyPrefix({ buildDirectory }) !== keyPrefix) {
       return;
     }
-    await writeBuildArtifact(filePath, content);
+    await writeBuildArtifact(filePath, content, options);
   };
 }
 

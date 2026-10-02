@@ -50,7 +50,10 @@ async function writeJitMaps({ context, since }) {
     serializer.serializeToString({
       keyMap: pickEntries({ map: context.keyMap, ids: keyIds }),
       refMap: pickEntries({ map: context.refMap, ids: refIds }),
-    })
+    }),
+    // The dev server's readers list jitMaps/ while other page builds write to
+    // it, so a file must never be seen half-written.
+    { atomic: true }
   );
 }
 

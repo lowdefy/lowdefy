@@ -2,6 +2,7 @@
 '@lowdefy/server-dev': patch
 '@lowdefy/build': patch
 '@lowdefy/errors': patch
+'@lowdefy/node-utils': patch
 '@lowdefy/api': patch
 '@lowdefy/cli': patch
 ---

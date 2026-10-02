@@ -33,6 +33,7 @@ import readDevInstance from './readDevInstance.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
+import writeFileAtomic from './writeFileAtomic.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 
 export {
@@ -56,5 +57,6 @@ export {
   spawnProcess,
   readFile,
   writeFile,
+  writeFileAtomic,
   writeFileIfChanged,
 };

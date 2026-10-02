@@ -65,3 +65,15 @@ test('readMergedMaps adds every jitMaps file, the later write of an entry winnin
   expect(refMap.cfg_abc_r).toEqual({ parent: null, path: 'pages/b.yaml', lineNumber: 1 });
   expect(refMap.cfg_r).toEqual({ parent: null, path: 'lowdefy.yaml' });
 });
+
+test('readMergedMaps skips a jitMaps file still being written under its temporary name', async () => {
+  write('jitMaps/abc-1-1.json', { keyMap: { cfg_abc_1: { key: 'root' } }, refMap: {} });
+  fs.writeFileSync(
+    path.join(buildDirectory, 'jitMaps', '.abc-1-2.json.123.abcd1234.tmp'),
+    '{"keyM'
+  );
+
+  const { keyMap } = await readMergedMaps({ buildDirectory });
+
+  expect(Object.keys(keyMap).sort()).toEqual(['cfg_1', 'cfg_abc_1']);
+});
