@@ -16,9 +16,12 @@
 
 import fs from 'fs';
 import path from 'path';
-import { writeFile } from '@lowdefy/node-utils';
+import { writeFile, writeFileIfChanged } from '@lowdefy/node-utils';
 
+import createNestedWorkspaceYaml from './createNestedWorkspaceYaml.js';
 import findPnpmWorkspaceRoot from './findPnpmWorkspaceRoot.js';
+import linkWorkspacePlugins from './linkWorkspacePlugins.js';
+import readParentWorkspace from './readParentWorkspace.js';
 
 // pnpm no longer reads the "pnpm" field in package.json, and pnpm 11 fails
 // installs with ERR_PNPM_IGNORED_BUILDS unless dependency build scripts are
@@ -44,23 +47,30 @@ async function ensurePnpmWorkspaceYaml({ context, directory }) {
     return;
   }
   const filePath = path.join(directory, 'pnpm-workspace.yaml');
-  // Keep existing files so users can allow builds for their own plugin deps.
-  if (fs.existsSync(filePath)) {
-    return;
-  }
-  // Apps inside a pnpm workspace install the server as part of that workspace —
-  // custom plugins pinned as workspace:* only resolve there, and the root's
-  // overrides, packageExtensions and build allowlists must keep applying.
-  // Writing packages: ['.'] would isolate the server and break all of that,
-  // so build allowlists stay the workspace root's responsibility.
   const workspaceRoot = findPnpmWorkspaceRoot(path.dirname(directory));
-  if (workspaceRoot !== null) {
-    context.logger.debug(
-      `Found pnpm workspace at ${workspaceRoot}; the server installs as part of that workspace.`
-    );
+  if (workspaceRoot === null) {
+    // Keep existing files so users can allow builds for their own plugin deps.
+    if (fs.existsSync(filePath)) {
+      return;
+    }
+    await writeFile(filePath, pnpmWorkspaceYaml);
     return;
   }
-  await writeFile(filePath, pnpmWorkspaceYaml);
+  // Inside a pnpm workspace the server still installs as its own workspace:
+  // the server directory is gitignored, so as a member of the parent it would
+  // make the parent's committed lockfile depend on uncommitted state. The file
+  // is derived from the parent's settings and rewritten on every run, so build
+  // allowlists for plugin dependencies belong in the parent's
+  // pnpm-workspace.yaml.
+  context.logger.debug(
+    `Found pnpm workspace at ${workspaceRoot}; the server installs as its own workspace with its settings.`
+  );
+  const parentWorkspace = await readParentWorkspace({ workspaceRoot });
+  await writeFileIfChanged(
+    filePath,
+    createNestedWorkspaceYaml({ directory, parentWorkspace, workspaceRoot })
+  );
+  await linkWorkspacePlugins({ directory, parentWorkspace, workspaceRoot });
 }
 
 export default ensurePnpmWorkspaceYaml;

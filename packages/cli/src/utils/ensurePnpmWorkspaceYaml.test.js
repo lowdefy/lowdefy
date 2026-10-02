@@ -24,6 +24,15 @@ jest.unstable_mockModule('fs', () => ({
 
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   writeFile: jest.fn(),
+  writeFileIfChanged: jest.fn(),
+}));
+
+jest.unstable_mockModule('./readParentWorkspace.js', () => ({
+  default: jest.fn(),
+}));
+
+jest.unstable_mockModule('./linkWorkspacePlugins.js', () => ({
+  default: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -64,17 +73,64 @@ test('ensurePnpmWorkspaceYaml does not overwrite an existing pnpm-workspace.yaml
   expect(writeFile).not.toHaveBeenCalled();
 });
 
-test('ensurePnpmWorkspaceYaml skips writing when the server directory is inside a pnpm workspace', async () => {
+test('ensurePnpmWorkspaceYaml writes a nested workspace from the parent settings inside a pnpm workspace', async () => {
   const { default: fs } = await import('fs');
-  const { writeFile } = await import('@lowdefy/node-utils');
+  const { writeFile, writeFileIfChanged } = await import('@lowdefy/node-utils');
+  const { default: readParentWorkspace } = await import('./readParentWorkspace.js');
+  const { default: linkWorkspacePlugins } = await import('./linkWorkspacePlugins.js');
   const { default: ensurePnpmWorkspaceYaml } = await import('./ensurePnpmWorkspaceYaml.js');
   fs.existsSync.mockImplementation((filePath) => filePath === '/repo/pnpm-workspace.yaml');
+  const parentWorkspace = {
+    packageManager: 'pnpm@10.29.2',
+    packages: ['plugins/*'],
+    settings: {
+      overrides: { a: '1.0.0' },
+      patchedDependencies: { 'b@1.0.0': 'patches/b@1.0.0.patch' },
+    },
+  };
+  readParentWorkspace.mockResolvedValue(parentWorkspace);
   const context = { lowdefyVersion: '5.5.1', logger: { debug: jest.fn() } };
   await ensurePnpmWorkspaceYaml({ context, directory: '/repo/app/.lowdefy/dev' });
   expect(writeFile).not.toHaveBeenCalled();
-  expect(context.logger.debug).toHaveBeenCalledWith(
-    'Found pnpm workspace at /repo; the server installs as part of that workspace.'
+  expect(readParentWorkspace.mock.calls).toEqual([[{ workspaceRoot: '/repo' }]]);
+  expect(writeFileIfChanged.mock.calls).toEqual([
+    [
+      '/repo/app/.lowdefy/dev/pnpm-workspace.yaml',
+      `packages:
+  - .
+overrides:
+  a: 1.0.0
+patchedDependencies:
+  b@1.0.0: ../../../patches/b@1.0.0.patch
+onlyBuiltDependencies:
+  - better-sqlite3
+  - sharp
+allowBuilds:
+  better-sqlite3: true
+  sharp: true
+allowUnusedPatches: true
+`,
+    ],
+  ]);
+  expect(linkWorkspacePlugins.mock.calls).toEqual([
+    [{ directory: '/repo/app/.lowdefy/dev', parentWorkspace, workspaceRoot: '/repo' }],
+  ]);
+});
+
+test('ensurePnpmWorkspaceYaml rewrites an existing pnpm-workspace.yaml inside a pnpm workspace', async () => {
+  const { default: fs } = await import('fs');
+  const { writeFileIfChanged } = await import('@lowdefy/node-utils');
+  const { default: readParentWorkspace } = await import('./readParentWorkspace.js');
+  const { default: ensurePnpmWorkspaceYaml } = await import('./ensurePnpmWorkspaceYaml.js');
+  fs.existsSync.mockImplementation(
+    (filePath) =>
+      filePath === '/repo/pnpm-workspace.yaml' ||
+      filePath === '/repo/app/.lowdefy/dev/pnpm-workspace.yaml'
   );
+  readParentWorkspace.mockResolvedValue({ packages: [], settings: {} });
+  const context = { lowdefyVersion: '5.5.1', logger: { debug: jest.fn() } };
+  await ensurePnpmWorkspaceYaml({ context, directory: '/repo/app/.lowdefy/dev' });
+  expect(writeFileIfChanged).toHaveBeenCalledTimes(1);
 });
 
 test('ensurePnpmWorkspaceYaml skips writing when running local version', async () => {

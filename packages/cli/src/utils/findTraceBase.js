@@ -17,24 +17,25 @@
 import fs from 'fs';
 import path from 'path';
 
+import findPnpmWorkspaceRoot from './findPnpmWorkspaceRoot.js';
+
 // The base directory for @vercel/nft tracing. nft ignores files above the base, and when the server
-// directory is a pnpm workspace member the real dependency files live in the workspace root's
-// node_modules/.pnpm virtual store (the server's node_modules entries are relative symlinks pointing
-// up and out of the server directory). The base must therefore sit at or above the workspace root.
-// A higher base is always safe — it only lengthens the relative paths inside the function.
+// directory sits inside a pnpm workspace the files of its linked workspace plugins, and of their
+// dependencies in the workspace root's node_modules/.pnpm virtual store, live up and out of the
+// server directory. The base must therefore sit at or above the parent workspace root, even though
+// the server installs as its own nested workspace. A higher base is always safe — it only lengthens
+// the relative paths inside the function.
 function findTraceBase({ serverDirectory }) {
-  let directory = serverDirectory;
-  for (;;) {
-    if (fs.existsSync(path.join(directory, 'pnpm-workspace.yaml'))) {
-      return directory;
-    }
-    const parent = path.dirname(directory);
-    if (parent === directory) break;
-    directory = parent;
+  const parentWorkspaceRoot = findPnpmWorkspaceRoot(path.dirname(serverDirectory));
+  if (parentWorkspaceRoot !== null) {
+    return parentWorkspaceRoot;
+  }
+  if (fs.existsSync(path.join(serverDirectory, 'pnpm-workspace.yaml'))) {
+    return serverDirectory;
   }
   // No workspace root found — fall back to the repository root so workspace-like layouts without
   // pnpm-workspace.yaml still trace, else the server directory itself (standalone install).
-  directory = serverDirectory;
+  let directory = serverDirectory;
   for (;;) {
     if (fs.existsSync(path.join(directory, '.git'))) {
       return directory;

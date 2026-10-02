@@ -36,7 +36,15 @@ async function installIfPackageJsonChanged({ directory, install }) {
   if (packageJsonContent === null) {
     throw new Error(`Could not read package.json in ${directory}.`);
   }
-  const hash = crypto.createHash('sha1').update(packageJsonContent).digest('base64');
+  // A server that installs as its own workspace takes its overrides, patches
+  // and build allowlists from pnpm-workspace.yaml, so a change there also
+  // needs an install.
+  const workspaceYamlContent = await readFile(path.join(directory, 'pnpm-workspace.yaml'));
+  const hash = crypto
+    .createHash('sha1')
+    .update(packageJsonContent)
+    .update(workspaceYamlContent ?? '')
+    .digest('base64');
   // Stored inside node_modules so deleting node_modules also clears the hash,
   // forcing the next run to install.
   const hashPath = path.join(directory, 'node_modules', '.lowdefy-install-hash');
