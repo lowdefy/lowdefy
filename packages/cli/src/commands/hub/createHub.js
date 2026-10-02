@@ -21,7 +21,6 @@ import { type, wait } from '@lowdefy/helpers';
 import { getProcessStartTime, readDevInstance } from '@lowdefy/node-utils';
 
 import allocatePorts from './allocatePorts.js';
-import checkDependenciesInstalled from './checkDependenciesInstalled.js';
 import hasLowdefyYaml from '../../utils/hasLowdefyYaml.js';
 import fetchOpenTabs from './fetchOpenTabs.js';
 import {
@@ -202,7 +201,6 @@ function createHub({
   }
 
   async function launch({ configDirectory, env }) {
-    checkDependenciesInstalled({ configDirectory });
     const devCommand = await resolveDevCommand({ configDirectory });
     const reserved = Object.entries(registry.ports)
       .filter(([directory]) => directory !== configDirectory)

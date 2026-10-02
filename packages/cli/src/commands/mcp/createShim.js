@@ -20,6 +20,7 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprot
 import { readDevInstance } from '@lowdefy/node-utils';
 
 import callWithReconnect from './callWithReconnect.js';
+import checkDependenciesInstalled from './checkDependenciesInstalled.js';
 import createCheckoutGuard from './createCheckoutGuard.js';
 import createHubConnection from './createHubConnection.js';
 import createInstanceConnections from './createInstanceConnections.js';
@@ -130,6 +131,7 @@ function createShim({ cliVersion, cwd, devTools }) {
       }
       return running;
     }
+    checkDependenciesInstalled({ configDirectory: app.configDirectory, root: app.root });
     await hub.attach(app);
     const status = await hub.request('start', {
       configDirectory: app.configDirectory,
@@ -219,6 +221,12 @@ function createShim({ cliVersion, cwd, devTools }) {
           clean ? 'the build directory was not cleaned and ' : ''
         }new local plugin code or .env changes need the user to restart it.`,
       };
+    }
+    // Before the hub is asked for anything, so an uninstalled app gets the
+    // install command rather than a failed start. A running server is used as
+    // it is.
+    if (running?.state !== 'ready') {
+      checkDependenciesInstalled({ configDirectory: app.configDirectory, root: app.root });
     }
     await hub.attach(app);
     const result = await hub.request('start', {

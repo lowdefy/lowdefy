@@ -18,14 +18,12 @@ import fs from 'fs';
 import path from 'path';
 
 // The lowdefy CLI installed for an app, found through node_modules the way
-// Node resolves it (in a monorepo it is often hoisted to the workspace root).
-// Null when the app's dependencies are not installed.
-function findInstalledCli({ configDirectory }) {
-  for (
-    let directory = configDirectory;
-    directory !== path.dirname(directory);
-    directory = path.dirname(directory)
-  ) {
+// Node resolves it (in a monorepo it is often hoisted to the workspace root),
+// but only up to the app's checkout root: a worktree nested in an installed
+// checkout, or a stray ~/node_modules, does not count as installed. Null when
+// the app's dependencies are not installed.
+function findInstalledCli({ configDirectory, root }) {
+  for (let directory = configDirectory; ; directory = path.dirname(directory)) {
     const packageJsonPath = path.join(directory, 'node_modules', 'lowdefy', 'package.json');
     if (fs.existsSync(packageJsonPath)) {
       const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
@@ -36,8 +34,10 @@ function findInstalledCli({ configDirectory }) {
         version: packageJson.version,
       };
     }
+    if (directory === root || directory === path.dirname(directory)) {
+      return null;
+    }
   }
-  return null;
 }
 
 export default findInstalledCli;

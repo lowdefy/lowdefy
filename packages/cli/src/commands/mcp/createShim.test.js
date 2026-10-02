@@ -227,6 +227,27 @@ test('lowdefy mcp refuses a directory in another checkout and asks the user when
   }
 });
 
+test('lowdefy mcp refuses an app whose dependencies are not installed before it asks the hub for anything', async () => {
+  const app = makeApp('.');
+  fs.writeFileSync(
+    path.join(app, 'package.json'),
+    JSON.stringify({ devDependencies: { lowdefy: '7.1.0' } })
+  );
+  fs.writeFileSync(path.join(app, 'pnpm-lock.yaml'), '');
+  await connect({ cwd: root });
+
+  const start = await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
+  expect(start.isError).toBe(true);
+  expect(text(start)).toContain(
+    `Run \`pnpm install\` in ${root}, then start the dev server again.`
+  );
+  const forwarded = await client.callTool({ name: 'lowdefy_build_status', arguments: {} });
+  expect(forwarded.isError).toBe(true);
+  expect(text(forwarded)).toContain('are not installed');
+  // The hub was neither started nor attached to.
+  expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
+});
+
 // A dev server's MCP endpoint, stateless, offering the tools named.
 async function startFakeDevServer({ toolNames }) {
   const httpServer = http.createServer(async (req, res) => {

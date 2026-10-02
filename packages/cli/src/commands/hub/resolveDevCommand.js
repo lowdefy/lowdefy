@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 
 import findDevScripts from '../../utils/findDevScripts.js';
 import getLowdefyYaml from '../../utils/getLowdefyYaml.js';
+import findGitRoot from '../mcp/findGitRoot.js';
 import findPackageManager from './findPackageManager.js';
 
 function platformCommand(command) {
@@ -36,7 +37,10 @@ function platformCommand(command) {
 async function resolveDevCommand({ configDirectory }) {
   const { cliConfig } = await getLowdefyYaml({ configDirectory, requiresLowdefyYaml: true });
   const { scripts, matching } = findDevScripts({ configDirectory });
-  const { packageManager } = findPackageManager({ configDirectory });
+  const { packageManager } = findPackageManager({
+    configDirectory,
+    root: findGitRoot({ directory: configDirectory }),
+  });
 
   if (!type.isNone(cliConfig.devScript)) {
     if (!type.isString(cliConfig.devScript) || type.isNone(scripts[cliConfig.devScript])) {
