@@ -22,6 +22,8 @@ import createLineReader from './createLineReader.js';
 import getHubPaths from './getHubPaths.js';
 import { HUB_IDLE_EXIT_MS } from './hubProtocol.js';
 import listenHubSocket from './listenHubSocket.js';
+import pruneServers from './pruneServers.js';
+import getServerRegistryDirectory from '../../utils/getServerRegistryDirectory.js';
 
 const REAP_INTERVAL_MS = 60 * 1000;
 
@@ -112,6 +114,24 @@ async function hubServe({ cliVersion }) {
   for (const signal of ['SIGINT', 'SIGTERM']) {
     process.on(signal, shutdown);
   }
+
+  // One pass over the server registry: servers whose owner is gone. Exact (registered
+  // records only, never the process-table heuristic), so it runs unattended. The hub's own
+  // servers are never prunable: their lowdefy dev CLI is their owner, and it outlives a
+  // hub restart.
+  pruneServers({
+    directory: getServerRegistryDirectory(),
+    hubRegistryPath: paths.registryPath,
+    kill: true,
+  })
+    .then((pruned) =>
+      pruned.forEach((server) =>
+        logger.info(
+          `Pruned ${server.kind} server pid ${server.pid} (${server.reason}): ${server.result}.`
+        )
+      )
+    )
+    .catch((error) => logger.error(`Pruning orphaned servers failed: ${error.message}`));
 
   setInterval(async () => {
     try {

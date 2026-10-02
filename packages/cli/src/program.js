@@ -23,6 +23,8 @@ import dev from './commands/dev/dev.js';
 import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
 import hubLogs from './commands/hub/hubLogs.js';
+import hubPrune from './commands/hub/hubPrune.js';
+import hubPs from './commands/hub/hubPs.js';
 import hubServe from './commands/hub/hubServe.js';
 import hubStart from './commands/hub/hubStart.js';
 import hubStatus from './commands/hub/hubStatus.js';
@@ -216,6 +218,19 @@ hub
   .option('--lines <lines>', 'How many lines.', '100')
   .option('--grep <text>', 'Only lines containing this text.')
   .action(runHubCommand({ cliVersion, handler: hubLogs }));
+
+hub
+  .command('ps')
+  .description('List the Lowdefy servers running on this machine, with the process that owns each.')
+  .action(runHubCommand({ cliVersion, handler: hubPs }));
+
+hub
+  .command('prune')
+  .description(
+    'Stop Lowdefy servers whose owner is gone. Lists them only, unless --kill is passed.'
+  )
+  .option('--kill', 'Stop the servers instead of listing them.')
+  .action(runHubCommand({ cliVersion, handler: hubPrune }));
 
 hub
   .command('serve', { hidden: true })
