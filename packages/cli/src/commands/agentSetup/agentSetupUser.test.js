@@ -159,6 +159,38 @@ test('agentSetupUser keeps the staging registration when only the final add fail
   expect([...names]).toEqual(['lowdefy-agent-setup']);
 });
 
+test('agentSetupUser rerun after a failed final add replaces the leftover staging registration', async () => {
+  const names = fakeClaude({ registered: ['lowdefy-agent-setup'] });
+  const { default: agentSetupUser } = await import('./agentSetupUser.js');
+
+  await agentSetupUser({ cliVersion: '7.1.0' });
+
+  expect([...names]).toEqual(['lowdefy']);
+  expect(output).toContain("Registered 'lowdefy'");
+  expect(output).not.toContain('Could not remove the staging registration');
+});
+
+test('agentSetupUser warns with the command to run when the staging registration cannot be removed', async () => {
+  const names = fakeClaude({ registered: ['lowdefy'] });
+  const fake = spawnSync.getMockImplementation();
+  let stagingRemoves = 0;
+  spawnSync.mockImplementation((command, args) => {
+    if (args[1] === 'remove' && args[4] === 'lowdefy-agent-setup' && ++stagingRemoves === 2) {
+      return { status: 1, stdout: '', stderr: 'remove failed' };
+    }
+    return fake(command, args);
+  });
+  const { default: agentSetupUser } = await import('./agentSetupUser.js');
+
+  await agentSetupUser({ cliVersion: '7.1.0' });
+
+  expect([...names].sort()).toEqual(['lowdefy', 'lowdefy-agent-setup']);
+  expect(output).toContain(
+    "Could not remove the staging registration 'lowdefy-agent-setup', so sessions list the Lowdefy tools twice. Remove it with:\nclaude mcp remove --scope user lowdefy-agent-setup"
+  );
+  expect(output).toContain("Registered 'lowdefy'");
+});
+
 test('agentSetupUser fails before registering a version npm cannot run', async () => {
   spawnSync.mockReturnValue({ status: 1, stdout: '', stderr: "error: unknown command 'mcp'" });
   const { default: agentSetupUser } = await import('./agentSetupUser.js');

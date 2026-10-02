@@ -124,8 +124,18 @@ async function agentSetupUser({ cliVersion }) {
     });
   }
   // Only once the new registration is in: a registration under another name
-  // would be a second copy of the server.
-  [STAGING_NAME, ...LEGACY_MCP_SERVER_NAMES].forEach((name) => removeUserRegistration({ name }));
+  // would be a second copy of the server. The staging entry was just added, so
+  // a failed remove is real (a legacy name is usually absent, so its result
+  // says nothing); the next run would also remove it.
+  const unstaged = removeUserRegistration({ name: STAGING_NAME });
+  if (unstaged.error || unstaged.status !== 0) {
+    write(
+      `Could not remove the staging registration '${STAGING_NAME}', so sessions list the Lowdefy tools twice. Remove it with:\nclaude ${removeStagingArgs.join(
+        ' '
+      )}`
+    );
+  }
+  LEGACY_MCP_SERVER_NAMES.forEach((name) => removeUserRegistration({ name }));
   write(
     `Registered '${MCP_SERVER_NAME}' (lowdefy mcp ${cliVersion}) for every Claude Code session of this user.`
   );
