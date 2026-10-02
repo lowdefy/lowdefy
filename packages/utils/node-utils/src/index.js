@@ -27,12 +27,16 @@ import getProcessStartTime from './getProcessStartTime.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPidAlive from './isPidAlive.js';
+import isProcessAlive from './isProcessAlive.js';
 import isPortAvailable from './isPortAvailable.js';
 import parseIpRange from './parseIpRange.js';
 import readDevInstance from './readDevInstance.js';
+import readServerRegistry from './readServerRegistry.js';
+import registerServer from './registerServer.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
+import watchOwner from './watchOwner.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 
 export {
@@ -50,11 +54,15 @@ export {
   getSecretsFromEnv,
   installIfPackageJsonChanged,
   isPidAlive,
+  isProcessAlive,
   isPortAvailable,
   parseIpRange,
   readDevInstance,
+  readServerRegistry,
+  registerServer,
   spawnProcess,
   readFile,
   writeFile,
+  watchOwner,
   writeFileIfChanged,
 };
