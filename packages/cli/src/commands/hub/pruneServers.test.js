@@ -24,9 +24,8 @@ let running;
 let records;
 const mockFindLegacyOrphans = jest.fn();
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+  getProcessStartTime: ({ pid }) => running.get(pid) ?? null,
   isPidAlive: (pid) => running.has(pid),
-  isProcessAlive: ({ pid, processStartTime }) =>
-    running.has(pid) && (processStartTime == null || running.get(pid) === processStartTime),
   readServerRegistry: () => records,
 }));
 jest.unstable_mockModule('./findLegacyOrphans.js', () => ({ default: mockFindLegacyOrphans }));
@@ -135,6 +134,21 @@ test('pruneServers skips a server whose pid now names another process', async ()
   expect(signals).toEqual([]);
   expect(candidate.result).toEqual('gone');
   expect(running.has(100)).toBe(true);
+});
+
+test('pruneServers never signals a candidate whose start time cannot be read', async () => {
+  running.set(100, null);
+  running.set(101, 'start-101');
+  records = [
+    { ...record({ pid: 100, prunable: true }), processStartTime: null },
+    { ...record({ pid: 101, prunable: true }), processStartTime: 'start-101' },
+  ];
+  running.set(101, null);
+  const candidates = await pruneServers({ directory, kill: true, graceMs: 50 });
+  expect(signals).toEqual([]);
+  expect(candidates.map((candidate) => candidate.result)).toEqual(['gone', 'gone']);
+  expect(running.has(100)).toBe(true);
+  expect(running.has(101)).toBe(true);
 });
 
 test('pruneServers adds unregistered legacy orphans only when asked, excluding registered pids', async () => {

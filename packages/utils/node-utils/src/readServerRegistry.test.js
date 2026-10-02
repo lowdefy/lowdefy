@@ -140,6 +140,14 @@ test('readServerRegistry uses the pid alone for a record without start times', (
   expect(record.prunable).toBe(false);
 });
 
+test('readServerRegistry never flags a record without a start time as prunable, even with its owner gone', () => {
+  running.set(100, null);
+  writeRecord({ pid: 100, startTime: null, ownerPid: 200, ownerStartTime: null });
+  const [record] = readServerRegistry({ directory });
+  expect(record.ownerAlive).toBe(false);
+  expect(record.prunable).toBe(false);
+});
+
 test('readServerRegistry skips unreadable files, temporary files and records without an owner', () => {
   running.set(100, 'server-start');
   fs.writeFileSync(path.join(directory, 'broken.json'), '{ not json');

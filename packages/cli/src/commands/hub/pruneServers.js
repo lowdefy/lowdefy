@@ -15,8 +15,8 @@
 */
 
 import fs from 'fs';
-import { wait } from '@lowdefy/helpers';
-import { isPidAlive, isProcessAlive, readServerRegistry } from '@lowdefy/node-utils';
+import { type, wait } from '@lowdefy/helpers';
+import { getProcessStartTime, isPidAlive, readServerRegistry } from '@lowdefy/node-utils';
 
 import findLegacyOrphans from './findLegacyOrphans.js';
 import findOrphanedClis from './findOrphanedClis.js';
@@ -24,6 +24,15 @@ import readHubManagedPids from './readHubManagedPids.js';
 
 function describeOwner(owner) {
   return owner.via === 'exit-with-pid' ? `owner pid ${owner.pid}` : `CLI pid ${owner.pid}`;
+}
+
+// Signalled only when ps names the same process now: a pid alone may have been reused, and a
+// start time that cannot be read (no ps, Windows, ps failing) proves nothing.
+function isSameProcess({ pid, processStartTime }) {
+  if (type.isNone(processStartTime) || !isPidAlive(pid)) {
+    return false;
+  }
+  return getProcessStartTime({ pid }) === processStartTime;
 }
 
 function signalPid({ pid, signal }) {
@@ -51,8 +60,7 @@ function removeRecord({ candidate }) {
 
 async function stopCandidates({ candidates, graceMs }) {
   candidates.forEach((candidate) => {
-    // The pid may have been reused since it was listed.
-    if (!isProcessAlive({ pid: candidate.pid, processStartTime: candidate.processStartTime })) {
+    if (!isSameProcess({ pid: candidate.pid, processStartTime: candidate.processStartTime })) {
       candidate.result = 'gone';
       return;
     }
@@ -66,7 +74,7 @@ async function stopCandidates({ candidates, graceMs }) {
     await wait(200);
   }
   signalled.forEach((candidate) => {
-    if (!isProcessAlive({ pid: candidate.pid, processStartTime: candidate.processStartTime })) {
+    if (!isSameProcess({ pid: candidate.pid, processStartTime: candidate.processStartTime })) {
       return;
     }
     signalPid({ pid: candidate.pid, signal: 'SIGKILL' });
@@ -80,8 +88,7 @@ async function stopCandidates({ candidates, graceMs }) {
 // exact, and the only pass that runs unattended (the hub, at start). includeLegacy adds, for
 // a person-run prune, what the process table shows: registered servers whose CLI is alive
 // but orphaned, and unregistered servers. Signalling the server ends its CLI too: the CLI
-// exits when its server does. Without
-// kill it only lists what it would stop.
+// exits when its server does. Without kill it only lists what it would stop.
 async function pruneServers({
   directory,
   hubRegistryPath,
