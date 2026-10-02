@@ -15,6 +15,7 @@
 '@lowdefy/e2e-utils': patch
 '@lowdefy/nunjucks': patch
 '@lowdefy/api': patch
+'@lowdefy/email-templates': patch
 ---
 
 Update dependencies to releases with published security fixes.
@@ -23,9 +24,9 @@ Update dependencies to releases with published security fixes.
 - `ws` 8.21.0 and `webpack` 5.104.1 in the servers; `postcss` 8.5.23 in the dev server.
 - `axios` 1.18.0 in the CLI and AxiosHttp.
 - `dompurify` 3.4.13 in `block-utils`, `blocks-basic` and `blocks-markdown`.
-- `echarts` 6.1.0, `mysql2` 3.23.1, `nodemailer` 9.1.1, `uuid` 13.0.1 and `@auth/mongodb-adapter` 3.11.3 in their plugins.
+- `echarts` 6.1.0, `mysql2` 3.23.1, `nodemailer` 10.0.13, `uuid` 13.0.1 and `@auth/mongodb-adapter` 3.11.3 in their plugins.
 - `tar` 7.5.21 and `picomatch` 4.0.4 in the build, `js-yaml` 4.3.2 in `e2e-utils`, and `@babel/core` 7.29.6 in `block-utils`.
-- `nodemailer` 9.1.1 in `@lowdefy/api` as well. `@auth/mongodb-adapter` 3.11.3 brings its `@auth/core` to 0.41.3.
+- `nodemailer` 10.0.13 in `@lowdefy/api` and the dev server as well, and `markdown-it` 14.3.1 in `email-templates`. `@auth/mongodb-adapter` 3.11.3 brings its `@auth/core` to 0.41.3.
 
 Two of these change output an app can see:
 

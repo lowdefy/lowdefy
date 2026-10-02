@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "6.0.0",
-    "nodemailer": "9.1.1"
+    "nodemailer": "10.0.13"
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
