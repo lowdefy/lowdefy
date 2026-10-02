@@ -49,9 +49,16 @@ async function launchBrowser() {
     try {
       return await chromium.launch({ channel: 'chrome', args });
     } catch {
-      // No Chrome either: this call waits for the shell download.
-      if (type.isNone(install) || !(await install)) {
+      if (type.isNone(install)) {
         throw shellError;
+      }
+      // No Chrome either: this call waits for the shell download, which
+      // gives up after a time limit (installHeadlessShell.js).
+      const { installed, reason } = await install;
+      if (!installed) {
+        throw new Error(
+          `The chromium-headless-shell install failed (${reason}), and system Chrome is not installed.`
+        );
       }
       return await chromium.launch({ args });
     }

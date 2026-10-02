@@ -503,6 +503,8 @@ state loads share one browser per child:
   system Chrome (`channel: 'chrome'`) as the fallback. A missing shell starts
   `playwright-core`'s own installer (`cli.js install chromium-headless-shell`) once per process;
   the call uses Chrome meanwhile, or waits for the install when Chrome is missing too.
+  An install that has not finished within 3 minutes is killed (with the download process it
+  forks) and counts as failed; Playwright 1.59's unzip can stall for good on Node 26.
   `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD` turns the download off.
 - `createBrowserLifecycle` closes the browser 90 s after the last `getBrowser()` call once no
   context is open and no launch is in flight. `openPage` counts contexts through their `close`

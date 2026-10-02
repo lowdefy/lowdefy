@@ -86,20 +86,25 @@ test('launchBrowser waits for the shell install when system Chrome is missing to
   });
   mockInstall.mockImplementation(async () => {
     installed = true;
-    return true;
+    return { installed: true };
   });
 
   expect(await launchBrowser()).toBe(shell);
   expect(mockLaunch).toHaveBeenCalledTimes(3);
 });
 
-test('launchBrowser throws the shell error when both browsers are missing and the install failed', async () => {
+test('launchBrowser says why when both browsers are missing and the install failed or timed out', async () => {
   mockLaunch.mockImplementation(async (options) => {
     throw isChromeLaunch(options) ? chromeMissing : shellMissing;
   });
-  mockInstall.mockResolvedValue(false);
+  mockInstall.mockResolvedValue({
+    installed: false,
+    reason: 'the install did not finish within 3 minutes',
+  });
 
-  await expect(launchBrowser()).rejects.toBe(shellMissing);
+  await expect(launchBrowser()).rejects.toThrow(
+    'The chromium-headless-shell install failed (the install did not finish within 3 minutes), and system Chrome is not installed.'
+  );
 });
 
 test('launchBrowser throws the shell error when both browsers are missing and downloads are off', async () => {

@@ -19,7 +19,7 @@ import { EventEmitter } from 'node:events';
 import { jest } from '@jest/globals';
 
 const mockSpawn = jest.fn();
-jest.unstable_mockModule('child_process', () => ({ spawn: mockSpawn }));
+jest.unstable_mockModule('child_process', () => ({ spawn: mockSpawn, spawnSync: jest.fn() }));
 
 // A file of its own: installHeadlessShell keeps its one install per process
 // in module state.
@@ -37,8 +37,8 @@ test('installHeadlessShell logs a failed install once and does not retry it in t
   // An error event after exit (or before it) must not log twice.
   installer.emit('error', new Error('spawn EPIPE'));
 
-  expect(await install).toBe(false);
-  expect(await installHeadlessShell()).toBe(false);
+  expect(await install).toMatchObject({ installed: false });
+  expect(installHeadlessShell()).toBe(install);
   expect(mockSpawn).toHaveBeenCalledTimes(1);
   expect(warn).toHaveBeenCalledTimes(1);
   expect(warn.mock.calls[0][0]).toContain('Download failed: server returned code 503');

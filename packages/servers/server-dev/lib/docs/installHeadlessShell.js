@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { spawn } from 'child_process';
+import { spawn, spawnSync } from 'child_process';
 import { createRequire } from 'module';
 import path from 'path';
 
@@ -30,6 +30,23 @@ function isDownloadSkipped() {
   return true;
 }
 
+// The download is about 100 MB. Playwright 1.59's installer can stall for
+// good while unzipping on Node 26, so an install that has not finished by
+// then is treated as failed.
+const INSTALL_TIMEOUT_MS = 3 * 60 * 1000;
+
+// The installer forks a download process of its own, which holds the zip
+// open while it hangs, so its children go too. Only processes this server
+// started are signalled.
+function killInstaller(installer) {
+  if (process.platform === 'win32') {
+    spawnSync('taskkill', ['/pid', String(installer.pid), '/T', '/F'], { stdio: 'ignore' });
+    return;
+  }
+  spawnSync('pkill', ['-KILL', '-P', String(installer.pid)], { stdio: 'ignore' });
+  installer.kill('SIGKILL');
+}
+
 function runInstall() {
   // cli.js is not in playwright-core's exports, so it is found next to the
   // package.json, which is. Running the installer of the playwright-core this
@@ -43,15 +60,17 @@ function runInstall() {
   return new Promise((resolve) => {
     let settled = false;
     let stderr = '';
+    let timer = null;
     function settle({ installed, reason }) {
       if (settled) return;
       settled = true;
+      clearTimeout(timer);
       if (!installed) {
         console.warn(
           `Could not install chromium-headless-shell (${reason}). The dev server browser tools use system Chrome when it is installed. Run: npx playwright install chromium-headless-shell`
         );
       }
-      resolve(installed);
+      resolve({ installed, reason });
     }
     // A short-lived process: the download and unzip never touch this
     // server's memory. Playwright's registry lock serialises installs from
@@ -59,6 +78,17 @@ function runInstall() {
     const installer = spawn(process.execPath, [cliPath, 'install', 'chromium-headless-shell'], {
       stdio: ['ignore', 'ignore', 'pipe'],
     });
+    timer = setTimeout(() => {
+      killInstaller(installer);
+      settle({
+        installed: false,
+        reason: `the install did not finish within ${
+          INSTALL_TIMEOUT_MS / 60000
+        } minutes; Playwright's installer can stall while unzipping on Node 26, where installing with Node 22 works`,
+      });
+    }, INSTALL_TIMEOUT_MS);
+    // Never the reason the dev server stays up.
+    timer.unref();
     installer.stderr.on('data', (data) => {
       stderr = `${stderr}${data.toString('utf8')}`.slice(-1000);
     });
@@ -77,8 +107,9 @@ function runInstall() {
 // install is not retried in this process: system Chrome stays the fallback.
 let installPromise = null;
 
-// Resolves true once the shell is installed, false when the install failed,
-// or returns null when downloads are turned off.
+// Resolves { installed: true } once the shell is installed, or
+// { installed: false, reason } when the install failed or timed out. Returns
+// null when downloads are turned off.
 function installHeadlessShell() {
   if (isDownloadSkipped()) {
     return null;

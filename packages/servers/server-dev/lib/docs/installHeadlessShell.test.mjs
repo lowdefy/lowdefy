@@ -19,7 +19,7 @@ import { EventEmitter } from 'node:events';
 import { jest } from '@jest/globals';
 
 const mockSpawn = jest.fn();
-jest.unstable_mockModule('child_process', () => ({ spawn: mockSpawn }));
+jest.unstable_mockModule('child_process', () => ({ spawn: mockSpawn, spawnSync: jest.fn() }));
 
 // installHeadlessShell keeps one install per process in module state, so the
 // tests below run in order against one module: the skipped calls first, then
@@ -59,7 +59,7 @@ test("installHeadlessShell runs playwright-core's own installer once per process
   const second = installHeadlessShell();
   installer.emit('exit', 0);
 
-  expect(await first).toBe(true);
+  expect(await first).toEqual({ installed: true });
   expect(second).toBe(first);
   expect(installHeadlessShell()).toBe(first);
   expect(mockSpawn).toHaveBeenCalledTimes(1);
