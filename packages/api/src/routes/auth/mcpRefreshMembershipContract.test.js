@@ -28,6 +28,9 @@ import getBetterAuthConfig from './getBetterAuthConfig.js';
 // an MCP grant, and the grant must stop minting once the user is no longer a
 // member of the organization it acts in - an MCP client only re-runs sign-in
 // and the organization choice when its refresh fails.
+// A rotated refresh token presented again within the reuse interval (several
+// sessions of one client refreshing at once) replays the rotation's tokens;
+// presented after it, the reuse revokes every token of that client and user.
 
 const ORIGIN = 'https://app.example.com';
 const RESOURCE = `${ORIGIN}/api/mcp`;
@@ -172,6 +175,58 @@ test('the refresh grant mints an access token carrying the organization while th
   expect(response.status).toBe(200);
   const { access_token: accessToken } = await response.json();
   expect(decodeJwt(accessToken)).toMatchObject({ organization_id: 'default', aud: RESOURCE });
+});
+
+async function seedOtherRefreshToken({ adapter }) {
+  const [{ userId }] = await adapter.findMany({ model: 'oauthRefreshToken' });
+  return adapter.create({
+    model: 'oauthRefreshToken',
+    data: {
+      token: createHash('sha256').update('other-session-refresh-token').digest('base64url'),
+      clientId: 'client_1',
+      userId,
+      referenceId: 'default',
+      scopes: ['mcp:read', 'offline_access'],
+      resources: [RESOURCE],
+      expiresAt: new Date(Date.now() + 3600 * 1000),
+      createdAt: new Date(),
+    },
+  });
+}
+
+test('a rotated refresh token presented again within the reuse interval gets the same tokens and revokes nothing', async () => {
+  const { adapter, auth } = await createSeededAuth();
+  const other = await seedOtherRefreshToken({ adapter });
+  const first = await refresh({ auth });
+  const second = await refresh({ auth });
+  expect(first.status).toBe(200);
+  expect(second.status).toBe(200);
+  const firstBody = await first.json();
+  const secondBody = await second.json();
+  expect(secondBody.refresh_token).toBe(firstBody.refresh_token);
+  expect(secondBody.access_token).toBe(firstBody.access_token);
+  const otherAfter = await adapter.findOne({
+    model: 'oauthRefreshToken',
+    where: [{ field: 'id', value: other.id }],
+  });
+  expect(otherAfter.revoked).toBeFalsy();
+});
+
+test('a rotated refresh token presented again after the reuse interval revokes the family', async () => {
+  const { adapter, auth } = await createSeededAuth();
+  const other = await seedOtherRefreshToken({ adapter });
+  expect((await refresh({ auth })).status).toBe(200);
+  await adapter.updateMany({
+    model: 'oauthRefreshToken',
+    where: [{ field: 'rotatedAt', operator: 'ne', value: null }],
+    update: { rotationReplayExpiresAt: new Date(Date.now() - 1000) },
+  });
+  const stale = await refresh({ auth });
+  expect(stale.status).toBe(400);
+  expect(await stale.json()).toMatchObject({ error: 'invalid_grant' });
+  expect(
+    await adapter.findOne({ model: 'oauthRefreshToken', where: [{ field: 'id', value: other.id }] })
+  ).toBeNull();
 });
 
 test('the refresh grant answers invalid_grant once the user is no longer a member of the organization', async () => {

@@ -567,6 +567,12 @@ function getBetterAuthConfig({
         // carries it, so without it every MCP client is signed out the moment
         // its access token lapses (hourly) and has to re-consent.
         scopes: MCP_OAUTH_SCOPES,
+        // An MCP client running several sessions under one sign-in refreshes
+        // the same token from each of them within moments. Within this window
+        // a rotated refresh token presented again gets the stored response of
+        // its rotation instead of being treated as stolen; at 0, the reuse
+        // revokes every token the client holds for the user.
+        refreshTokenReuseInterval: 120,
         // No client_credentials - every access token is user-consented.
         grantTypes: ['authorization_code', 'refresh_token'],
         // Any registered client may request any enabled resource - access is
