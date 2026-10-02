@@ -18,10 +18,16 @@ import startServer from './startServer.mjs';
 
 // The manager's first child start: dependencies are optimised in a
 // short-lived process first, so the child never runs the optimiser itself
-// (see optimizeDependencies.mjs).
+// (see optimizeDependencies.mjs). The watchers start only once the child has
+// started: startServer records the server artifacts, and a watcher batch
+// before that (a late file event from the initial build, an edit) would find
+// every artifact changed and restart a child that does not exist yet, which
+// then optimises itself and is killed when this start goes ahead.
 async function startFirstServer(context) {
   await context.optimizeDependencies();
   startServer(context);
+  // Not awaited: chokidar's ready event is unreliable.
+  context.startWatchers();
 }
 
 export default startFirstServer;

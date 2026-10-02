@@ -32,6 +32,8 @@ jest.unstable_mockModule('../utils/readBasePath.mjs', () => ({ default: () => ''
 
 const { default: optimizeDependencies } = await import('./optimizeDependencies.mjs');
 const { default: startFirstServer } = await import('./startFirstServer.mjs');
+const { default: startServer } = await import('./startServer.mjs');
+const { default: syncServer } = await import('./syncServer.mjs');
 
 function createProcess() {
   return Object.assign(new EventEmitter(), {
@@ -51,6 +53,7 @@ function createContext() {
     options: { port: 3210 },
     serverArtifacts: { record: jest.fn() },
     shutdownServer: jest.fn(),
+    startWatchers: jest.fn(),
   };
   context.optimizeDependencies = optimizeDependencies(context);
   return context;
@@ -130,4 +133,35 @@ test('the optimiser resolves the same environment as the child, apart from the b
   } finally {
     delete process.env.BETTER_AUTH_URL;
   }
+});
+
+test('startFirstServer starts the watchers only after the optimiser exits and the child started', async () => {
+  const context = createContext();
+  // Like createServerArtifactTracker: before startServer records the
+  // artifacts, every one of them reads as changed.
+  let recorded = false;
+  context.serverArtifacts = {
+    record: jest.fn(() => {
+      recorded = true;
+    }),
+    check: jest.fn(() => ({ install: false, restart: !recorded })),
+  };
+  context.restartServer = jest.fn(async () => startServer(context));
+  context.syncServer = syncServer(context);
+  // A watcher whose first batch syncs at once, as a late file event from the
+  // initial build does.
+  context.startWatchers = jest.fn(() => context.syncServer());
+
+  const started = startFirstServer(context);
+  await flush();
+  expect(context.startWatchers).not.toHaveBeenCalled();
+  processes[0].emit('exit', 0);
+  await started;
+  await flush();
+
+  expect(context.startWatchers).toHaveBeenCalledTimes(1);
+  expect(context.restartServer).not.toHaveBeenCalled();
+  // The optimiser and one child.
+  expect(mockSpawn).toHaveBeenCalledTimes(2);
+  expect(mockSpawn.mock.calls[1][1]).toContain('--host');
 });

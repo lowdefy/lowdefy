@@ -129,10 +129,6 @@ for (const signal of ['SIGINT', 'SIGTERM']) {
 try {
   await context.initialBuild();
 
-  // We are not waiting for the startWatchers promise to resolve (all watchers have fired the ready event)
-  // because chokidar sometimes doesn't fire this event, and it seems like there isn't an issue with not waiting.
-  context.startWatchers();
-
   // The manager is the component that binds the port, so it checks here to
   // cover every launch path (CLI, monorepo dev script, direct run.mjs) and any
   // process that grabbed the port during the initial build.
@@ -150,6 +146,7 @@ try {
   await startProxy(context);
   context.mailSink = await startMailSink(context);
 
+  // Optimises dependencies, starts the child, then the file watchers.
   await startFirstServer(context);
   if (
     await waitForServer({

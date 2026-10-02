@@ -198,8 +198,10 @@ for (const signal of ['SIGINT', 'SIGTERM']) {
 }
 
 await context.initialBuild();
-context.startWatchers(); // Not awaited — chokidar's ready event is unreliable
-await startFirstServer(context); // optimizeDependencies, then startServer
+// optimizeDependencies, then startServer, then startWatchers (not awaited -
+// chokidar's ready event is unreliable). The watchers start after the child
+// so no watcher batch can restart a child that has not started yet.
+await startFirstServer(context);
 if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
   opener(`http://localhost:${context.options.port}`);
 }
