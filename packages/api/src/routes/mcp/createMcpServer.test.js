@@ -332,6 +332,34 @@ test('tools/list cleans build-artifact markers from a payloadSchema with arrays'
   expect(JSON.stringify(tool.inputSchema)).not.toContain('~k');
 });
 
+test('tools/list sends configured annotations and omits them when not configured', async () => {
+  const context = createContext({
+    configs: {
+      'mcp.json': {
+        ...mcpJson,
+        endpoints: [
+          {
+            id: 'health',
+            scope: 'mcp:read',
+            annotations: { title: 'Health', readOnlyHint: true, '~k': 'mcp.endpoints.0' },
+          },
+        ],
+      },
+    },
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+  const { tools } = await client.listTools();
+  expect(tools.find((t) => t.name === 'health').annotations).toEqual({
+    title: 'Health',
+    readOnlyHint: true,
+  });
+
+  const plainClient = await connectClient(await createMcpServer({ context: createContext() }));
+  const { tools: plainTools } = await plainClient.listTools();
+  expect(Object.keys(plainTools.find((t) => t.name === 'health'))).not.toContain('annotations');
+});
+
 test('tools/call runs an allowed endpoint routine and returns its response', async () => {
   const context = createContext({
     user: { id: 'user_1', roles: ['support'] },

@@ -41,9 +41,9 @@
     "test:mongodb": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.mongodb.config.js"
   },
   "dependencies": {
-    "@better-auth/cimd": "1.7.0",
-    "@better-auth/oauth-provider": "1.7.0",
-    "@better-auth/passkey": "1.7.0",
+    "@better-auth/cimd": "1.7.7",
+    "@better-auth/oauth-provider": "1.7.7",
+    "@better-auth/passkey": "1.7.7",
     "@lowdefy/ajv": "6.0.0",
     "@lowdefy/build": "6.0.0",
     "@lowdefy/connection-smtp": "6.0.0",
@@ -54,8 +54,8 @@
     "@lowdefy/nunjucks": "6.0.0",
     "@lowdefy/operators": "6.0.0",
     "@lowdefy/operators-js": "6.0.0",
-    "@modelcontextprotocol/sdk": "1.29.0",
-    "better-auth": "1.7.0",
+    "@modelcontextprotocol/sdk": "1.31.0",
+    "better-auth": "1.7.7",
     "jose": "^6.2.3",
     "mongodb-connection-string-url": "^7.0.2",
     "nodemailer": "9.1.1"

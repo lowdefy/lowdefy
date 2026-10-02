@@ -61,7 +61,7 @@ import sanitizeSessionResponse from './sanitizeSessionResponse.js';
 // BetterAuth CORE option, not an org-plugin option): the router's onRequest matches
 // exactly via disabledPaths.includes(normalizedPath), with basePath/`/api/auth`
 // stripped first, so entries must be the exact basePath-stripped `/organization/<segment>`.
-// Verified against the mounted surface of better-auth@1.7.0. Team (`*-team*`) and
+// Verified against the mounted surface of better-auth@1.7.7. Team (`*-team*`) and
 // dynamic-access-control role (`*-role`) endpoints are conditional on
 // teams.enabled / dynamicAccessControl.enabled - neither is set by
 // buildOrganizationPlugin, so they are not mounted and are not listed here.
@@ -97,7 +97,7 @@ const ORG_CLIENT_PATHS_DISABLED_WHEN_PINNED = [
 // Disabling costs the admin steps nothing: getPluginEndpoint reaches
 // plugin.endpoints[key] directly, so their calls never travel through the
 // router that consults disabledPaths.
-// Enumerated from the endpoints better-auth@1.7.0's admin plugin mounts. Every
+// Enumerated from the endpoints better-auth@1.7.7's admin plugin mounts. Every
 // path is listed literally - the router matches exactly (see the note on
 // ORG_CLIENT_PATHS_DISABLED_WHEN_PINNED above), so a prefix or wildcard entry
 // would disable nothing.
@@ -567,6 +567,12 @@ function getBetterAuthConfig({
         // carries it, so without it every MCP client is signed out the moment
         // its access token lapses (hourly) and has to re-consent.
         scopes: MCP_OAUTH_SCOPES,
+        // An MCP client running several sessions under one sign-in refreshes
+        // the same token from each of them within moments. Within this window
+        // a rotated refresh token presented again gets the stored response of
+        // its rotation instead of being treated as stolen; at 0, the reuse
+        // revokes every token the client holds for the user.
+        refreshTokenReuseInterval: 120,
         // No client_credentials - every access token is user-consented.
         grantTypes: ['authorization_code', 'refresh_token'],
         // Any registered client may request any enabled resource - access is

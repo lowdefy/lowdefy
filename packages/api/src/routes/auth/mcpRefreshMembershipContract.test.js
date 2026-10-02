@@ -28,6 +28,9 @@ import getBetterAuthConfig from './getBetterAuthConfig.js';
 // an MCP grant, and the grant must stop minting once the user is no longer a
 // member of the organization it acts in - an MCP client only re-runs sign-in
 // and the organization choice when its refresh fails.
+// A rotated refresh token presented again within the reuse interval (several
+// sessions of one client refreshing at once) replays the rotation's tokens;
+// presented after it, the reuse revokes every token of that client and user.
 
 const ORIGIN = 'https://app.example.com';
 const RESOURCE = `${ORIGIN}/api/mcp`;
@@ -135,12 +138,17 @@ async function createSeededAuth() {
       updatedAt: new Date(),
     },
   });
-  await adapter.create({
+  await seedRefreshToken({ adapter, userId: user.id, raw: REFRESH_TOKEN });
+  return { adapter, auth, member, user };
+}
+
+function seedRefreshToken({ adapter, userId, raw }) {
+  return adapter.create({
     model: 'oauthRefreshToken',
     data: {
-      token: createHash('sha256').update(REFRESH_TOKEN).digest('base64url'),
+      token: createHash('sha256').update(raw).digest('base64url'),
       clientId: 'client_1',
-      userId: user.id,
+      userId,
       referenceId: 'default',
       scopes: ['mcp:read', 'offline_access'],
       resources: [RESOURCE],
@@ -148,7 +156,6 @@ async function createSeededAuth() {
       createdAt: new Date(),
     },
   });
-  return { adapter, auth, member };
 }
 
 function refresh({ auth }) {
@@ -172,6 +179,56 @@ test('the refresh grant mints an access token carrying the organization while th
   expect(response.status).toBe(200);
   const { access_token: accessToken } = await response.json();
   expect(decodeJwt(accessToken)).toMatchObject({ organization_id: 'default', aud: RESOURCE });
+});
+
+test('a rotated refresh token presented again within the reuse interval gets the same tokens and revokes nothing', async () => {
+  const { adapter, auth, user } = await createSeededAuth();
+  const other = await seedRefreshToken({ adapter, userId: user.id, raw: 'other-session' });
+  const first = await refresh({ auth });
+  const second = await refresh({ auth });
+  expect(first.status).toBe(200);
+  expect(second.status).toBe(200);
+  const firstBody = await first.json();
+  const secondBody = await second.json();
+  expect(secondBody.refresh_token).toBe(firstBody.refresh_token);
+  expect(secondBody.access_token).toBe(firstBody.access_token);
+  const otherAfter = await adapter.findOne({
+    model: 'oauthRefreshToken',
+    where: [{ field: 'id', value: other.id }],
+  });
+  expect(otherAfter.revoked).toBeFalsy();
+});
+
+test('a rotated refresh token presented again after the reuse interval revokes the family', async () => {
+  const { adapter, auth, user } = await createSeededAuth();
+  const other = await seedRefreshToken({ adapter, userId: user.id, raw: 'other-session' });
+  expect((await refresh({ auth })).status).toBe(200);
+  // Only Date is faked: the handler's own async work runs on real timers.
+  jest.useFakeTimers({
+    now: Date.now() + 121 * 1000,
+    doNotFake: [
+      'nextTick',
+      'setImmediate',
+      'clearImmediate',
+      'setTimeout',
+      'clearTimeout',
+      'setInterval',
+      'clearInterval',
+      'queueMicrotask',
+      'performance',
+    ],
+  });
+  let stale;
+  try {
+    stale = await refresh({ auth });
+  } finally {
+    jest.useRealTimers();
+  }
+  expect(stale.status).toBe(400);
+  expect(await stale.json()).toMatchObject({ error: 'invalid_grant' });
+  expect(
+    await adapter.findOne({ model: 'oauthRefreshToken', where: [{ field: 'id', value: other.id }] })
+  ).toBeNull();
 });
 
 test('the refresh grant answers invalid_grant once the user is no longer a member of the organization', async () => {

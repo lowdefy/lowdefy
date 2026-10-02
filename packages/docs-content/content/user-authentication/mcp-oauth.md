@@ -55,11 +55,19 @@ mcp:
   endpoints:
     - id: search-customers
       scope: mcp:read
+      annotations:
+        title: Search customers
+        readOnlyHint: true
     - id: create-invoice
       scope: mcp:write
+      annotations:
+        title: Create invoice
+        destructiveHint: false
 ```
 
 `name`, `version`, `title`, `websiteUrl` and `icons` are the server branding a client shows the user in the `initialize` handshake. Each `endpoints` entry needs an `id` and a `scope`.
+
+`annotations` is optional and sent with the tool in `tools/list`. `title` is the name a client shows for the tool. The hints tell a client how the tool behaves, and clients use them to decide whether to ask the user before calling it: `readOnlyHint` (the tool changes nothing), `destructiveHint` (a write may delete or overwrite data), `idempotentHint` (calling it twice with the same input has no further effect) and `openWorldHint` (it reaches systems outside the app). They are hints, not enforcement, and they are not derived from `scope`: an `mcp:read` tool can still write, so only set `readOnlyHint: true` on a tool that really changes nothing.
 
 `instructions` is an optional string sent in the `initialize` result. Clients such as Claude Code place it in the model's system prompt, so use it for a short note on how the tools fit together or when to reach for them. Clients may truncate long instructions, so keep it to a few lines. When it is not set, the server sends no instructions.
 
@@ -235,13 +243,13 @@ routine:
         Disconnected. Ask the user to reconnect in their assistant.
 ```
 
-[`RevokeMcpGrant`](/auth-steps) reads the calling token's `(client, user, organization)` from the request context, deletes that one consent row, and revokes its refresh tokens. It is **caller-scoped**: it touches only the grant the call arrived on, so another assistant the same person connected, or this assistant's grant in another organization, is untouched. It refuses to run for any caller that did not arrive over MCP — there is no grant behind a browser session for it to revoke.
+[`RevokeMcpGrant`](/auth-steps) reads the calling token's `(client, user, organization)` from the request context, deletes that one consent row, and deletes its refresh tokens. It is **caller-scoped**: it touches only the grant the call arrived on, so another assistant the same person connected, or this assistant's grant in another organization, is untouched. It refuses to run for any caller that did not arrive over MCP — there is no grant behind a browser session for it to revoke.
 
 Expose it as an `mcp:read` tool. The next tool call the assistant makes gets a `401`, the client re-runs OAuth, and the user lands back on the organization picker.
 
 ## Disconnecting assistants from the app
 
-The mirror control belongs in your app's UI: a person removing every assistant connected to their active organization. It deletes the caller's consent rows for that organization and revokes the matching refresh tokens — the same two writes `RevokeMcpGrant` makes, scoped to the active organization instead of one client:
+The mirror control belongs in your app's UI: a person removing every assistant connected to their active organization. It deletes the caller's consent rows and refresh tokens for that organization — what `RevokeMcpGrant` does, scoped to the active organization instead of one client. Delete the refresh tokens rather than marking them revoked: the authorization server treats a revoked refresh token presented again as theft, and the client's next refresh would then delete every token it holds for the user, in every organization:
 
 ```yaml
 id: disconnect-assistants
@@ -252,8 +260,8 @@ payloadSchema:
   additionalProperties: false
   properties: {}
 routine:
-  - id: revoke_refresh_tokens
-    type: MongoDBUpdateMany
+  - id: delete_refresh_tokens
+    type: MongoDBDeleteMany
     connectionId: oauth-refresh-tokens
     properties:
       filter:
@@ -261,11 +269,6 @@ routine:
           _user: id
         reference_id:
           _user: organization_id
-        revoked: null
-      update:
-        $set:
-          revoked:
-            _date: now
   - id: delete_consents
     type: MongoDBDeleteMany
     connectionId: oauth-consents

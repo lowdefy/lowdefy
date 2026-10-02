@@ -22,9 +22,15 @@ import { type } from '@lowdefy/helpers';
 // (client, user, organization) - the referenceId the authorization server
 // keyed consent on - and the refresh tokens minted under it. Deleting the
 // consent makes the route refuse the current access token at once (it reads
-// the live grant on every request) and revoking the refresh tokens keeps the
+// the live grant on every request) and deleting the refresh tokens keeps the
 // client from minting another, so its next call is a 401 challenge and it
 // re-runs the authorization - login, the organization choice, consent.
+//
+// The refresh tokens are deleted, not marked revoked: the authorization server
+// treats a revoked refresh token presented again as theft and deletes every
+// token the client holds for the user, in every organization - which the
+// client's next refresh would do. A deleted token is just an unknown one.
+// Their access-token rows go first, as they reference the refresh tokens.
 //
 // Scoped to the caller's own grant for this one client and organization:
 // another assistant the same person connected, or this assistant's grant in
@@ -44,11 +50,14 @@ async function RevokeMcpGrant({ acting, auth, mcp }) {
     { field: 'referenceId', value: organizationId },
   ];
   await adapter.deleteMany({ model: 'oauthConsent', where });
-  await adapter.updateMany({
-    model: 'oauthRefreshToken',
-    where: [...where, { field: 'revoked', operator: 'eq', value: null }],
-    update: { revoked: new Date() },
-  });
+  const refreshTokens = await adapter.findMany({ model: 'oauthRefreshToken', where });
+  if (refreshTokens.length > 0) {
+    await adapter.deleteMany({
+      model: 'oauthAccessToken',
+      where: [{ field: 'refreshId', operator: 'in', value: refreshTokens.map(({ id }) => id) }],
+    });
+  }
+  await adapter.deleteMany({ model: 'oauthRefreshToken', where });
   return { clientId, organizationId, userId };
 }
 

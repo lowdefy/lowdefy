@@ -235,7 +235,44 @@ test('buildMcp throws when an endpoint entry has an unknown property', () => {
     mcp: { endpoints: [{ id: 'get-customer', scope: 'mcp:read', name: 'customer' }] },
   };
   expect(() => buildMcp({ components, context })).toThrow(
-    'MCP endpoint contains an unknown property. The known properties are "id" and "scope".'
+    'MCP endpoint contains an unknown property. The known properties are "id", "scope" and "annotations".'
+  );
+});
+
+test('buildMcp keeps endpoint annotations', () => {
+  const context = testContext();
+  const annotations = { title: 'Get customer', readOnlyHint: true, openWorldHint: false };
+  const components = {
+    api: [publicEndpoint],
+    mcp: { endpoints: [{ id: 'get-customer', scope: 'mcp:read', annotations }] },
+  };
+  const res = buildMcp({ components, context });
+  expect(res.mcp.endpoints).toEqual([{ id: 'get-customer', scope: 'mcp:read', annotations }]);
+});
+
+test('buildMcp throws when an annotation hint is not a boolean', () => {
+  const context = testContext();
+  const components = {
+    api: [publicEndpoint],
+    mcp: {
+      endpoints: [{ id: 'get-customer', scope: 'mcp:read', annotations: { readOnlyHint: 'yes' } }],
+    },
+  };
+  expect(() => buildMcp({ components, context })).toThrow(
+    'MCP endpoint annotation "readOnlyHint" should be a boolean.'
+  );
+});
+
+test('buildMcp throws when annotations has an unknown property', () => {
+  const context = testContext();
+  const components = {
+    api: [publicEndpoint],
+    mcp: {
+      endpoints: [{ id: 'get-customer', scope: 'mcp:read', annotations: { readOnly: true } }],
+    },
+  };
+  expect(() => buildMcp({ components, context })).toThrow(
+    'MCP endpoint "annotations" contains an unknown property. The known properties are "title", "readOnlyHint", "destructiveHint", "idempotentHint" and "openWorldHint".'
   );
 });
 
