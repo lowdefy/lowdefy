@@ -17,6 +17,8 @@
 import http from 'node:http';
 import net from 'node:net';
 
+import { devPassiveHeader } from '@lowdefy/node-utils';
+
 import buildWaitHeader from '../../lib/docs/buildWaitHeader.js';
 import readBuildStatusWait from '../utils/readBuildStatusWait.mjs';
 
@@ -183,11 +185,28 @@ function forwardRequest({ body, context, proxyState }, req, res, deadline = Date
   });
 }
 
+// Activity is use of the server. Not counted: a passive look (the hub's tab
+// poll, an agent's status read), and long-lived streams - an event stream a
+// client opens with a GET (the agent shim's MCP push stream, a tab's reload
+// stream) or a websocket - which live as long as the server and reconnect on
+// their own, so counting them would keep every server they touch alive. An
+// MCP tool call is a POST that may be answered as an event stream; it counts.
+function isActivity(req) {
+  if (req.headers[devPassiveHeader] === '1') {
+    return false;
+  }
+  const accept = req.headers.accept ?? '';
+  return !(req.method === 'GET' && accept.includes('text/event-stream'));
+}
+
 // A build-status wait is held here until the manager has processed the
 // latest edits, restarts included, and only then forwarded: a restart ends
 // the dev server process, and any wait running in it. The header tells the
 // dev server what this wait saw, so it does not wait again.
 async function handleRequest({ context, proxyState }, req, res) {
+  if (isActivity(req)) {
+    context.requestActivity.trackResponse(res);
+  }
   delete req.headers[buildWaitHeader];
   const { wait, body } = await readBuildStatusWait({ basePath: context.basePath, req });
   if (wait) {

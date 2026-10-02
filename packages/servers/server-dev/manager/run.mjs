@@ -19,6 +19,7 @@ import opener from 'opener';
 import getContext from './getContext.mjs';
 import acquireDevInstance from './utils/acquireDevInstance.mjs';
 import createBuildActivity from './utils/createBuildActivity.mjs';
+import createRequestActivity from './utils/createRequestActivity.mjs';
 import startMailSink from './processes/startMailSink.mjs';
 import startProxy from './processes/startProxy.mjs';
 import startServer from './processes/startServer.mjs';
@@ -91,11 +92,23 @@ if (instance.acquired === false) {
 }
 process.on('exit', () => instance.release());
 
+// Requests through the proxy and finished builds are use of the server; the
+// hub stops a server nobody has used for its idle limit (see
+// createRequestActivity).
+context.requestActivity = createRequestActivity({
+  onChange: (fields) => instance.update(fields),
+});
+
 // `building` is true while a change is queued or being processed, restarts
 // included. lowdefy_build_status({ wait: true }) waits on it, so an agent
 // reads the build that includes its last edit instead of the one before.
 context.buildActivity = createBuildActivity({
-  onChange: (building) => instance.update({ building }),
+  onChange: (building) => {
+    instance.update({ building });
+    if (!building) {
+      context.requestActivity.touch();
+    }
+  },
 });
 
 // Shut the Vite child down on direct signals (process managers, scripts/dev.mjs
@@ -140,6 +153,8 @@ try {
       port: context.internalPort,
     })
   ) {
+    // A slow first build must not make a fresh server look idle the moment it is ready.
+    context.requestActivity.touch();
     instance.update({ state: 'ready' });
   } else {
     context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');

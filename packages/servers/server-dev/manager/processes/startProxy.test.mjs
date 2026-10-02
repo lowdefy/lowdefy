@@ -21,6 +21,7 @@ import { jest } from '@jest/globals';
 
 const { default: startProxy } = await import('./startProxy.mjs');
 const { default: createBuildActivity } = await import('../utils/createBuildActivity.mjs');
+const { default: createRequestActivity } = await import('../utils/createRequestActivity.mjs');
 
 function listen(server) {
   return new Promise((resolve) => {
@@ -47,6 +48,7 @@ function getFreePort() {
 
 let child;
 let context;
+let activityRecords;
 
 afterEach(async () => {
   if (context?.proxyServer) await close(context.proxyServer);
@@ -58,10 +60,15 @@ afterEach(async () => {
 async function startChildAndProxy(handler) {
   child = http.createServer(handler);
   const internalPort = await listen(child);
+  activityRecords = [];
   context = {
     internalPort,
     options: { port: await getFreePort() },
     logger: { debug: jest.fn() },
+    requestActivity: createRequestActivity({
+      onChange: (fields) => activityRecords.push(fields),
+      throttleMs: 0,
+    }),
   };
   await startProxy(context);
   return context.options.port;
@@ -318,4 +325,144 @@ test.each([
   }).then((response) => response.json());
 
   expect(call).toEqual({ label: 'child', body: sent, buildWait: null });
+});
+
+function activeRequests() {
+  return activityRecords.at(-1).activeRequests;
+}
+
+async function waitFor(check) {
+  const deadline = Date.now() + 2000;
+  while (!check()) {
+    if (Date.now() > deadline) throw new Error('Condition not met within 2 seconds.');
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
+}
+
+// A child that holds every response open until release() is called.
+function heldHandler({ contentType = 'text/plain' } = {}) {
+  const held = [];
+  function handler(req, res) {
+    res.writeHead(200, { 'content-type': contentType });
+    res.flushHeaders();
+    if (contentType === 'text/event-stream') res.write('event: message\ndata: {}\n\n');
+    held.push(res);
+  }
+  function release() {
+    held.splice(0).forEach((res) => res.end('done'));
+  }
+  return { handler, held, release };
+}
+
+test('startProxy counts a request as activity for as long as it is in flight', async () => {
+  const child$ = heldHandler();
+  const port = await startChildAndProxy(child$.handler);
+  context.basePath = '';
+  expect(activeRequests()).toBe(0);
+
+  const pending = fetch(`http://localhost:${port}/api/request/page/get`).then((response) =>
+    response.text()
+  );
+  await waitFor(() => child$.held.length === 1);
+  expect(activeRequests()).toBe(1);
+
+  child$.release();
+  expect(await pending).toBe('done');
+  await waitFor(() => activeRequests() === 0);
+});
+
+test('startProxy counts an MCP POST answered as an event stream until it ends', async () => {
+  const child$ = heldHandler({ contentType: 'text/event-stream' });
+  const port = await startChildAndProxy(child$.handler);
+  context.basePath = '';
+
+  const pending = fetch(`http://localhost:${port}/lowdefy-docs/mcp`, {
+    method: 'POST',
+    headers: { accept: 'application/json, text/event-stream' },
+    body: mcpCall('lowdefy_screenshot', {}),
+  }).then((response) => response.text());
+  await waitFor(() => child$.held.length === 1);
+  expect(activeRequests()).toBe(1);
+
+  child$.release();
+  await pending;
+  await waitFor(() => activeRequests() === 0);
+});
+
+test.each([
+  ['a GET that opens an event stream', { accept: 'text/event-stream' }],
+  ['a passive request', { 'x-lowdefy-passive': '1' }],
+])('startProxy does not count %s as activity', async (_, headers) => {
+  const child$ = heldHandler({ contentType: 'text/event-stream' });
+  const port = await startChildAndProxy(child$.handler);
+  context.basePath = '';
+  const before = activityRecords.length;
+
+  const clientRequest = http.get(`http://localhost:${port}/lowdefy-docs/mcp`, { headers });
+  await new Promise((resolve) => clientRequest.on('response', resolve));
+  await waitFor(() => child$.held.length === 1);
+  clientRequest.destroy();
+  child$.release();
+  await new Promise((resolve) => setTimeout(resolve, 50));
+
+  expect(activityRecords.length).toBe(before);
+});
+
+test('startProxy ends the activity of a request whose client goes away', async () => {
+  const child$ = heldHandler();
+  const port = await startChildAndProxy(child$.handler);
+  context.basePath = '';
+
+  const clientRequest = http.get(`http://localhost:${port}/slow`);
+  clientRequest.on('error', () => {});
+  await waitFor(() => child$.held.length === 1);
+  expect(activeRequests()).toBe(1);
+
+  clientRequest.destroy();
+  await waitFor(() => activeRequests() === 0);
+  child$.release();
+});
+
+test('startProxy does not count a websocket upgrade as activity', async () => {
+  const port = await startChildAndProxy((req, res) => res.end('ok'));
+  const childSockets = [];
+  child.on('upgrade', (req, socket) => {
+    childSockets.push(socket);
+    socket.write(
+      'HTTP/1.1 101 Switching Protocols\r\nupgrade: websocket\r\nconnection: upgrade\r\n\r\n'
+    );
+  });
+  const before = activityRecords.length;
+
+  const clientRequest = http.get(`http://localhost:${port}/hmr`, {
+    headers: { connection: 'upgrade', upgrade: 'websocket' },
+  });
+  const socket = await new Promise((resolve) =>
+    clientRequest.on('upgrade', (res, upgraded) => resolve(upgraded))
+  );
+
+  expect(activityRecords.length).toBe(before);
+  socket.destroy();
+  childSockets.forEach((childSocket) => childSocket.destroy());
+});
+
+test('startProxy keeps a request held through a child restart counted', async () => {
+  const port = await startChildAndProxy((req, res) => res.end('old'));
+  context.basePath = '';
+  context.devServer = { exitCode: null, signalCode: null };
+  expect(await (await fetch(`http://localhost:${port}/a.js`)).text()).toBe('old');
+  await waitFor(() => activeRequests() === 0);
+
+  await close(child);
+  context.devServer.exitCode = 1;
+  const pending = fetch(`http://localhost:${port}/b.js`).then((response) => response.text());
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  expect(activeRequests()).toBe(1);
+
+  context.devServer = { exitCode: null, signalCode: null };
+  child = http.createServer((req, res) => res.end('new'));
+  await new Promise((resolve) => child.listen(context.internalPort, '127.0.0.1', resolve));
+
+  expect(await pending).toBe('new');
+  await waitFor(() => activeRequests() === 0);
 });

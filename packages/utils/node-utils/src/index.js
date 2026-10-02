@@ -20,6 +20,7 @@ import collectEnvironmentGuards from './collectEnvironmentGuards.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import createClientAddressResolver from './createClientAddressResolver.js';
 import createSecretScrubber from './createSecretScrubber.js';
+import devPassiveHeader from './devPassiveHeader.js';
 import findAvailablePort from './findAvailablePort.js';
 import getDevInstancePath from './getDevInstancePath.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
@@ -42,6 +43,7 @@ export {
   copyFileOrDirectory,
   createClientAddressResolver,
   createSecretScrubber,
+  devPassiveHeader,
   findAvailablePort,
   getDevInstancePath,
   getFileExtension,
