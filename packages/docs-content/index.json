@@ -3248,7 +3248,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "cfe4cf96d30acb810ddb7f671302157c9ed91ec115f3d407bd60b9a7edd3b83a"
+      "hash": "2b611e85f84be4dd90036e83b5b91bdd3459f820da4d6f6556bd6195498792a0"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3312,7 +3312,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "ca0c78074914ac1b92dd859a61db10a92d18357d442ba9247ee18dd59b8e39c9"
+      "hash": "eace8a5340a0f7c9ca8f77b7cfc16691d5b05ba519d2eb0eb7f6b3baa0da6898"
     },
     "agents/agents-introduction": {
       "files": [

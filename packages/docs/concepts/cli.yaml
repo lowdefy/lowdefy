@@ -100,13 +100,13 @@ _ref:
 
             ## agent-setup
 
-            The `agent-setup` command sets up a project for AI coding agents. It writes `.mcp.json` registering the [`lowdefy` MCP server](/ai-agent-docs) — `lowdefy mcp`, run over stdio through npx at the app's installed Lowdefy version — a Claude Code skill at `.claude/skills/lowdefy-config/SKILL.md`, and a `## Lowdefy` section in `AGENTS.md`. Existing files are merged, not overwritten. Entries pointing at a dev server port (`http://localhost:<port>/lowdefy-docs/mcp`) are replaced, a server named `lowdefy-docs` by an earlier `agent-setup` is renamed `lowdefy`, and the skill and section an earlier `agent-setup` wrote are updated. When several `package.json` scripts run `lowdefy dev`, it asks you to set [`cli.devScript`](#configuration).
+            The `agent-setup` command sets up a project for AI coding agents. It writes `.mcp.json` registering the [`lowdefy` MCP server](/ai-agent-docs) — `lowdefy mcp`, run over stdio through npx at the app's installed Lowdefy version — a Claude Code skill at `.claude/skills/lowdefy-config/SKILL.md`, and a `## Lowdefy` section in `AGENTS.md`. Existing files are merged, not overwritten. Entries pointing at a dev server port (`http://localhost:<port>/lowdefy-docs/mcp`) are replaced, a server named `lowdefy-docs` by an earlier `agent-setup` is renamed `lowdefy`, and the skill and section an earlier `agent-setup` wrote are updated. When several `package.json` scripts run `lowdefy dev`, it asks you to set [`cli.devScript`](#configuration). Before writing `.mcp.json` it runs the pinned version's `lowdefy mcp` through npx, and refuses a version npm cannot serve (unpublished, or from before `lowdefy mcp`); the refusal prints the `claude mcp add --scope local` command that runs your own build of the CLI for you only.
 
             - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
             - `--disable-telemetry`: Disable telemetry.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
             - `--project-directory <project-directory>`: Change the directory where agent files are written. The default is the nearest ancestor directory containing `.git`.
-            - `--user`: Instead of setting up this project, register `lowdefy mcp` as `lowdefy` for every Claude Code session of your user (`claude mcp add-json --scope user`, replacing an earlier `lowdefy-docs` registration), pinned to this CLI's version. Needs no app. Without Claude Code on your `PATH`, it prints the entry to add to your agent client.
+            - `--user`: Instead of setting up this project, register `lowdefy mcp` as `lowdefy` for every Claude Code session of your user (`claude mcp add --scope user lowdefy -- npx ...`, or `cmd /c npx ...` on Windows), pinned to this CLI's version, replacing an earlier `lowdefy` or `lowdefy-docs` registration. Needs no app. The version must be published with `lowdefy mcp` (until Lowdefy 7 is released, `npx lowdefy@experimental agent-setup --user`). If the add fails, the existing registration stays and the error prints the commands to run. Without Claude Code on your `PATH`, it prints the entry to add to your agent client.
 
             ## mcp
 
@@ -120,11 +120,11 @@ _ref:
             - `lowdefy hub start [directory] [--restart] [--clean]`: Start (or return) an app's dev server through the hub. `--clean` deletes the build directory first.
             - `lowdefy hub stop [directory] [--all]`: Stop a dev server the hub runs, or all of them.
             - `lowdefy hub logs [directory] [--lines <n>] [--grep <text>]`: Print the recent output of a dev server the hub runs.
-            - `lowdefy hub trust [directory]`: Let `lowdefy mcp` start and query the dev servers of the repository `directory` is in from any agent session, not only sessions started in it. It covers all of the repository's git worktrees.
-            - `lowdefy hub untrust [directory]`: Undo `hub trust`.
-            - `lowdefy hub trusted`: List the trusted repositories.
+            - `lowdefy hub trust [directory]`: Let `lowdefy mcp` start and query the dev servers of the git repository `directory` is in from any agent session, not only sessions started in it. It covers all of the repository's git worktrees. Run it yourself, in an interactive terminal: it refuses without one, so an agent cannot trust a repository. It refuses a directory outside git.
+            - `lowdefy hub untrust [directory]`: Undo `hub trust`. Also removes an entry whose directory is gone, given its old path.
+            - `lowdefy hub trusted`: List the trusted repositories by their git directory (`.../repo/.git`), marking those that are missing.
 
-            When an app's `package.json` lists `lowdefy` but its dependencies are not installed (a fresh git worktree, for example), the hub does not run its dev script; it answers with the install command to run, and where.
+            When a `package.json` in an app's checkout lists `lowdefy` but no `node_modules` up to the checkout root has it (a fresh git worktree, for example), `lowdefy hub start` and `lowdefy mcp` do not run its dev script; they answer with the install command to run, and where. See [AI agent docs](/ai-agent-docs).
 
             The hub keeps its state in `~/.lowdefy/hub` (set `LOWDEFY_HOME` to move it). It starts servers with the script `cli.devScript` names, or the one `package.json` script that runs `lowdefy dev`, so wrappers such as a secrets manager apply to agent-started servers too.
 
