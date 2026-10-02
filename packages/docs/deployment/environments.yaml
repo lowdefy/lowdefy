@@ -101,7 +101,7 @@ _ref:
             - **`email.filter`** is applied to every `SMTPMailSend` and `SendGridMailSend` request whose connection sets no `filter` of its own, or a filter whose fields all resolve to `null` (a `_secret` that is not set on this deployment, say). Put a catch-all `replaceAddress` on every non-production environment and no environment can email real users by accident.
             - A connection's own `filter` wins when it sets at least one field, and **`filter: false`** on a connection turns filtering off entirely, the environment's too — for mail that must reach its real recipient everywhere, such as an invite.
             - **`email.enabled: false`** sends nothing: each message reports `{ messageId: null, to: null, disabled: true }`.
-            - Auth emails (magic links, verification, invitations sent by the auth engine) never go through a mail request, so neither setting affects them — sign-in keeps working in every environment.
+            - Auth emails (magic links, verification, invitations sent by the auth engine) never go through a mail request, so neither setting affects them — sign-in keeps working in every environment. The `auth.email` connection's own `filter` still applies to them, so set one there to catch auth emails outside production.
 
             See the [SMTP](/SMTP) and [SendGridMail](/SendGridMail) connections for the filter fields.
 
