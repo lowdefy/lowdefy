@@ -17,10 +17,7 @@
 import { spawnSync } from 'child_process';
 
 import buildNpxMcpCommand from './buildNpxMcpCommand.js';
-
-// The same name as the project .mcp.json entry, so a project that has one
-// gets one set of tools, not two.
-const SERVER_NAME = 'lowdefy-docs';
+import { LEGACY_MCP_SERVER_NAMES, MCP_SERVER_NAME } from './mcpServerNames.js';
 
 function write(line) {
   process.stdout.write(`${line}\n`);
@@ -62,14 +59,16 @@ async function agentSetupUser({ cliVersion }) {
   prefetch({ entry, version: cliVersion });
 
   // add-json refuses a name that exists; replacing it is the point of a rerun.
-  const removed = run({
-    command: 'claude',
-    args: ['mcp', 'remove', '--scope', 'user', SERVER_NAME],
-  });
-  if (removed.error?.code === 'ENOENT') {
+  // The same name as the project .mcp.json entry, so a project that has one
+  // gets one set of tools, not two. A registration under an old name would be
+  // a second copy, so it goes too.
+  const removals = [MCP_SERVER_NAME, ...LEGACY_MCP_SERVER_NAMES].map((name) =>
+    run({ command: 'claude', args: ['mcp', 'remove', '--scope', 'user', name] })
+  );
+  if (removals[0].error?.code === 'ENOENT') {
     write(
       `Claude Code ('claude') is not on PATH. Add this server to your agent client's user-level MCP configuration:\n${JSON.stringify(
-        { mcpServers: { [SERVER_NAME]: entry } },
+        { mcpServers: { [MCP_SERVER_NAME]: entry } },
         null,
         2
       )}`
@@ -78,7 +77,7 @@ async function agentSetupUser({ cliVersion }) {
   }
   const added = run({
     command: 'claude',
-    args: ['mcp', 'add-json', '--scope', 'user', SERVER_NAME, JSON.stringify(entry)],
+    args: ['mcp', 'add-json', '--scope', 'user', MCP_SERVER_NAME, JSON.stringify(entry)],
   });
   if (added.error || added.status !== 0) {
     throw new Error(
@@ -86,10 +85,10 @@ async function agentSetupUser({ cliVersion }) {
     );
   }
   write(
-    `Registered '${SERVER_NAME}' (lowdefy mcp ${cliVersion}) for every Claude Code session of this user.`
+    `Registered '${MCP_SERVER_NAME}' (lowdefy mcp ${cliVersion}) for every Claude Code session of this user.`
   );
   write(
-    `A project whose .mcp.json defines '${SERVER_NAME}' uses that entry instead - rerun 'lowdefy agent-setup' in it if the entry still names a port or a node_modules path.`
+    `A project whose .mcp.json defines '${MCP_SERVER_NAME}' uses that entry instead - rerun 'lowdefy agent-setup' in it if the entry still names a port or a node_modules path.`
   );
 }
 

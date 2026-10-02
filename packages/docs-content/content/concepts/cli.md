@@ -76,13 +76,13 @@ The preview tooling (`react-email`) is installed just-in-time by this command �
 
 ## agent-setup
 
-The `agent-setup` command sets up a project for AI coding agents. It writes `.mcp.json` registering the [`lowdefy-docs` MCP server](/ai-agent-docs) — `lowdefy mcp`, run over stdio through npx at the app's installed Lowdefy version — a Claude Code skill at `.claude/skills/lowdefy-config/SKILL.md`, and a `## Lowdefy` section in `AGENTS.md`. Existing files are merged, not overwritten. Entries pointing at a dev server port (`http://localhost:<port>/lowdefy-docs/mcp`) are replaced, and the skill and section an earlier `agent-setup` wrote are updated. When several `package.json` scripts run `lowdefy dev`, it asks you to set [`cli.devScript`](#configuration).
+The `agent-setup` command sets up a project for AI coding agents. It writes `.mcp.json` registering the [`lowdefy` MCP server](/ai-agent-docs) — `lowdefy mcp`, run over stdio through npx at the app's installed Lowdefy version — a Claude Code skill at `.claude/skills/lowdefy-config/SKILL.md`, and a `## Lowdefy` section in `AGENTS.md`. Existing files are merged, not overwritten. Entries pointing at a dev server port (`http://localhost:<port>/lowdefy-docs/mcp`) are replaced, a server named `lowdefy-docs` by an earlier `agent-setup` is renamed `lowdefy`, and the skill and section an earlier `agent-setup` wrote are updated. When several `package.json` scripts run `lowdefy dev`, it asks you to set [`cli.devScript`](#configuration).
 
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--disable-telemetry`: Disable telemetry.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 - `--project-directory <project-directory>`: Change the directory where agent files are written. The default is the nearest ancestor directory containing `.git`.
-- `--user`: Instead of setting up this project, register `lowdefy mcp` for every Claude Code session of your user (`claude mcp add-json --scope user`), pinned to this CLI's version. Needs no app. Without Claude Code on your `PATH`, it prints the entry to add to your agent client.
+- `--user`: Instead of setting up this project, register `lowdefy mcp` as `lowdefy` for every Claude Code session of your user (`claude mcp add-json --scope user`, replacing an earlier `lowdefy-docs` registration), pinned to this CLI's version. Needs no app. Without Claude Code on your `PATH`, it prints the entry to add to your agent client.
 
 ## mcp
 

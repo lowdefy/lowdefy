@@ -6,12 +6,12 @@ Everything is served under the `/lowdefy-docs` path of your dev server. It is al
 
 ## Connect your agent: `lowdefy mcp`
 
-Run `lowdefy agent-setup` once in your project. It registers the `lowdefy-docs` MCP server in `.mcp.json`, pinned to your app's Lowdefy version:
+Run `lowdefy agent-setup` once in your project. It registers the `lowdefy` MCP server in `.mcp.json`, pinned to your app's Lowdefy version:
 
 ```json
 {
   "mcpServers": {
-    "lowdefy-docs": {
+    "lowdefy": {
       "type": "stdio",
       "command": "npx",
       "args": ["--prefer-offline", "--yes", "lowdefy@7.1.0", "mcp"]
@@ -30,7 +30,7 @@ If you work across several projects, register `lowdefy mcp` once for your user i
 npx lowdefy agent-setup --user
 ```
 
-This adds the same `lowdefy-docs` server to Claude Code's user scope (`claude mcp add-json --scope user`), so every session has the Lowdefy tools — in a repository nobody set up, in a directory above several projects, anywhere. It needs no app, and downloads the version into the npm cache up front so the first session does not wait. Without Claude Code on your `PATH` it prints the entry to add to your agent client's user configuration. A project whose `.mcp.json` defines `lowdefy-docs` uses its own entry instead; the two run the same command.
+This adds the same `lowdefy` server to Claude Code's user scope (`claude mcp add-json --scope user`), so every session has the Lowdefy tools — in a repository nobody set up, in a directory above several projects, anywhere. It needs no app, and downloads the version into the npm cache up front so the first session does not wait. Without Claude Code on your `PATH` it prints the entry to add to your agent client's user configuration. A project whose `.mcp.json` defines `lowdefy` uses its own entry instead; the two run the same command. Rerunning it also removes a user-scope `lowdefy-docs` registration from earlier versions.
 
 `lowdefy mcp` works with dev servers of other Lowdefy versions: when it connects to a dev server that has tools it does not know, it adds them to the session's tool list and tells the client to list again.
 
@@ -384,9 +384,9 @@ Journeys are also the file format of `tests/journeys/*.yaml`, which `lowdefy tes
 npx lowdefy agent-setup
 ```
 
-This writes three files into your project (merging safely if they exist): `.mcp.json` registering the `lowdefy-docs` MCP server (`lowdefy mcp`, see [Connect your agent](#connect-your-agent-lowdefy-mcp)), `.claude/skills/lowdefy-config/SKILL.md` teaching Claude Code the workflow, and an `AGENTS.md` section for other coding agents. Add `lowdefy` to your app's `devDependencies` first, so `.mcp.json` pins your app's own version of the CLI. Rerun `agent-setup` after upgrading Lowdefy to move the pin.
+This writes three files into your project (merging safely if they exist): `.mcp.json` registering the `lowdefy` MCP server (`lowdefy mcp`, see [Connect your agent](#connect-your-agent-lowdefy-mcp)), `.claude/skills/lowdefy-config/SKILL.md` teaching Claude Code the workflow, and an `AGENTS.md` section for other coding agents. Add `lowdefy` to your app's `devDependencies` first, so `.mcp.json` pins your app's own version of the CLI. Rerun `agent-setup` after upgrading Lowdefy to move the pin.
 
-Projects set up by an earlier version, with an `http://localhost:<port>/lowdefy-docs/mcp` entry or one that runs the CLI from `node_modules`, are migrated when you rerun the command: the entry is replaced, per-port entries such as `lowdefy-3010` are removed, and the skill and `AGENTS.md` section it wrote are updated. The server keeps its `lowdefy-docs` name, so tool names and approvals carry over.
+Projects set up by an earlier version, with an `http://localhost:<port>/lowdefy-docs/mcp` entry or one that runs the CLI from `node_modules`, are migrated when you rerun the command: the entry is replaced, per-port entries such as `lowdefy-3010` are removed, and the skill and `AGENTS.md` section it wrote are updated. The server, formerly `lowdefy-docs`, is renamed `lowdefy`, along with its approval in `.claude/settings.json` and the name in the skill and `AGENTS.md` section; its tools are now named `mcp__lowdefy__*`.
 
 ## Using it with Claude Code manually
 
@@ -395,7 +395,7 @@ Commit a `.mcp.json` file at your project root, pinning your app's Lowdefy versi
 ```json
 {
   "mcpServers": {
-    "lowdefy-docs": {
+    "lowdefy": {
       "type": "stdio",
       "command": "npx",
       "args": ["--prefer-offline", "--yes", "lowdefy@7.1.0", "mcp"]
@@ -404,7 +404,7 @@ Commit a `.mcp.json` file at your project root, pinning your app's Lowdefy versi
 }
 ```
 
-Or register it for every project with `claude mcp add-json --scope user lowdefy-docs '<the entry above>'`, which is what `lowdefy agent-setup --user` runs. The MCP server includes instructions that teach the agent the workflow (list types first, then fetch schemas and examples; let `lowdefy mcp` run the dev server), so it works well without any extra prompting.
+Or register it for every project with `claude mcp add-json --scope user lowdefy '<the entry above>'`, which is what `lowdefy agent-setup --user` runs. The MCP server includes instructions that teach the agent the workflow (list types first, then fetch schemas and examples; let `lowdefy mcp` run the dev server), so it works well without any extra prompting.
 
 ## Plain HTTP routes
 

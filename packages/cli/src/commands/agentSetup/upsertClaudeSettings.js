@@ -18,9 +18,9 @@ import path from 'path';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
-const MCP_SERVER_NAME = 'lowdefy-docs';
+import { LEGACY_MCP_SERVER_NAMES, MCP_SERVER_NAME } from './mcpServerNames.js';
 
-// Pre-approves the lowdefy-docs MCP server for Claude Code so no developer is
+// Pre-approves the lowdefy MCP server for Claude Code so no developer is
 // prompted to trust it. Written to the committed '.claude/settings.json'
 // rather than the gitignored '.claude/settings.local.json' on purpose, so the
 // whole team inherits the approval from version control.
@@ -46,17 +46,21 @@ async function upsertClaudeSettings({ context, projectDirectory }) {
     return;
   }
 
-  const enabled = type.isArray(settings.enabledMcpjsonServers)
+  const current = type.isArray(settings.enabledMcpjsonServers)
     ? settings.enabledMcpjsonServers
     : [];
-  if (enabled.includes(MCP_SERVER_NAME)) {
+  // An approval under an old name approves a server agent-setup has renamed.
+  const enabled = current.filter((name) => !LEGACY_MCP_SERVER_NAMES.includes(name));
+  if (enabled.includes(MCP_SERVER_NAME) && enabled.length === current.length) {
     context.logger.info(
       `'${settingsRelativePath}' already enables the '${MCP_SERVER_NAME}' MCP server - leaving it unchanged.`
     );
     return;
   }
 
-  settings.enabledMcpjsonServers = [...enabled, MCP_SERVER_NAME];
+  settings.enabledMcpjsonServers = enabled.includes(MCP_SERVER_NAME)
+    ? enabled
+    : [...enabled, MCP_SERVER_NAME];
   await writeFile(settingsPath, `${JSON.stringify(settings, null, 2)}\n`);
   context.logger.info(`Enabled the '${MCP_SERVER_NAME}' MCP server in '${settingsRelativePath}'.`);
 }

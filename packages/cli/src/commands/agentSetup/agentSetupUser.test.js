@@ -40,7 +40,7 @@ afterEach(() => {
   process.stdout.write.mockRestore();
 });
 
-test('agentSetupUser prefetches the pinned version and registers it as a user-scope Claude Code server', async () => {
+test('agentSetupUser prefetches the pinned version, drops the old lowdefy-docs registration and registers lowdefy in user scope', async () => {
   spawnSync.mockReturnValue({ status: 0, stdout: '', stderr: '' });
   const { default: agentSetupUser } = await import('./agentSetupUser.js');
 
@@ -48,10 +48,11 @@ test('agentSetupUser prefetches the pinned version and registers it as a user-sc
 
   expect(spawnSync.mock.calls.map(([command, args]) => [command, args])).toEqual([
     ['npx', ['--prefer-offline', '--yes', 'lowdefy@7.1.0', 'mcp', '--help']],
+    ['claude', ['mcp', 'remove', '--scope', 'user', 'lowdefy']],
     ['claude', ['mcp', 'remove', '--scope', 'user', 'lowdefy-docs']],
-    ['claude', ['mcp', 'add-json', '--scope', 'user', 'lowdefy-docs', JSON.stringify(ENTRY)]],
+    ['claude', ['mcp', 'add-json', '--scope', 'user', 'lowdefy', JSON.stringify(ENTRY)]],
   ]);
-  expect(output).toContain("Registered 'lowdefy-docs' (lowdefy mcp 7.1.0)");
+  expect(output).toContain("Registered 'lowdefy' (lowdefy mcp 7.1.0)");
 });
 
 test('agentSetupUser fails before registering a version npm cannot run', async () => {
@@ -75,5 +76,5 @@ test('agentSetupUser prints the server entry when Claude Code is not installed',
   await agentSetupUser({ cliVersion: '7.1.0' });
 
   expect(output).toContain("Claude Code ('claude') is not on PATH.");
-  expect(output).toContain(JSON.stringify({ mcpServers: { 'lowdefy-docs': ENTRY } }, null, 2));
+  expect(output).toContain(JSON.stringify({ mcpServers: { lowdefy: ENTRY } }, null, 2));
 });
