@@ -42,8 +42,10 @@ function isLinkedWorktree({ worktree, commonDir }) {
     return false;
   }
   const adminDir = readGitLink({ filePath: dotGit });
+  // A --separate-git-dir main checkout. A .git file naming another checkout's
+  // own .git directory is not one: git shares that only through worktrees/.
   if (adminDir === commonDir) {
-    return true;
+    return path.basename(commonDir) !== '.git';
   }
   return (
     adminDir !== null &&

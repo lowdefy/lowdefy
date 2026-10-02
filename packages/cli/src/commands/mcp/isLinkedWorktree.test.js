@@ -102,6 +102,15 @@ test('isLinkedWorktree refuses a .git file copied from a worktree to another dir
   expect(isLinkedWorktree({ worktree: copy, commonDir: path.join(repo, '.git') })).toBe(false);
 });
 
+test('isLinkedWorktree refuses a .git file naming the clone .git directory', () => {
+  const repo = makeRepo('app');
+  const impostor = path.join(base, 'impostor');
+  fs.mkdirSync(impostor);
+  fs.writeFileSync(path.join(impostor, '.git'), `gitdir: ${path.join(repo, '.git')}\n`);
+
+  expect(isLinkedWorktree({ worktree: impostor, commonDir: path.join(repo, '.git') })).toBe(false);
+});
+
 test('isLinkedWorktree accepts both checkouts of a --separate-git-dir clone', () => {
   const gitDir = path.join(base, 'git-dirs', 'app');
   fs.mkdirSync(path.dirname(gitDir));

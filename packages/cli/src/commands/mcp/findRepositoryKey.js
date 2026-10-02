@@ -40,12 +40,14 @@ function readCommonDir({ adminDir }) {
 // foo.git with worktrees beside it, a --separate-git-dir directory). Null when
 // root has no .git, or when it is a linked worktree whose admin directory does
 // not link back to it (a pruned worktree's reused path, a copied .git file).
-// Read as files: git is never run in a directory the agent chose.
+// Read as files: git is never run in a directory the agent chose. A .git
+// symlink is not followed: git never checks one out, and following it would
+// let any directory claim a trusted repository's key.
 function findRepositoryKey({ root }) {
   const dotGit = path.join(root, '.git');
   let stat;
   try {
-    stat = fs.statSync(dotGit);
+    stat = fs.lstatSync(dotGit);
   } catch {
     return null;
   }
@@ -61,9 +63,12 @@ function findRepositoryKey({ root }) {
   }
   const commonDir = readCommonDir({ adminDir });
   // No commondir: the .git file names the repository's own git directory, as
-  // a --separate-git-dir clone's main checkout does.
+  // a --separate-git-dir clone's main checkout does. That directory never
+  // links back, so one named .git - another checkout's own, which git only
+  // shares through a worktrees/<name> admin directory - is refused: otherwise
+  // a .git file naming a trusted clone's .git would inherit its trust.
   if (commonDir === undefined) {
-    return adminDir;
+    return path.basename(adminDir) === '.git' ? null : adminDir;
   }
   if (commonDir === null || !isLinkedWorktree({ worktree: root, commonDir })) {
     return null;

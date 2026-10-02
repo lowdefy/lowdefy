@@ -163,3 +163,21 @@ test('findRepositoryKey gives a symlinked path to a repository the same key as i
   expect(findRepositoryKey({ root: repoLink })).toEqual(path.join(repo, '.git'));
   expect(findRepositoryKey({ root: worktreeLink })).toEqual(path.join(repo, '.git'));
 });
+
+test('findRepositoryKey returns null for a .git file naming another clone .git directory', () => {
+  const repo = makeRepo('app');
+  const impostor = path.join(base, 'impostor');
+  fs.mkdirSync(impostor);
+  fs.writeFileSync(path.join(impostor, '.git'), `gitdir: ${path.join(repo, '.git')}\n`);
+
+  expect(findRepositoryKey({ root: impostor })).toBeNull();
+});
+
+test('findRepositoryKey returns null for a .git symlink to another clone .git directory', () => {
+  const repo = makeRepo('app');
+  const impostor = path.join(base, 'impostor');
+  fs.mkdirSync(impostor);
+  fs.symlinkSync(path.join(repo, '.git'), path.join(impostor, '.git'), 'dir');
+
+  expect(findRepositoryKey({ root: impostor })).toBeNull();
+});
