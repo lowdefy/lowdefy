@@ -14,44 +14,109 @@
   limitations under the License.
 */
 
+import fs from 'fs';
 import path from 'path';
 import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 
-// The install settings of the parent workspace that must keep applying to the
-// generated server once it installs as its own workspace.
-const settingKeys = [
+// The settings pnpm 10 reads from the "pnpm" field of the root package.json.
+// pnpm 11 reads none of them, so this list does not grow.
+const manifestSettingKeys = [
   'allowBuilds',
-  'catalog',
-  'catalogs',
+  'allowNonAppliedPatches',
+  'allowUnusedPatches',
+  'allowedDeprecatedVersions',
+  'auditConfig',
+  'configDependencies',
+  'executionEnv',
+  'ignorePatchFailures',
   'ignoredBuiltDependencies',
+  'ignoredOptionalDependencies',
+  'neverBuiltDependencies',
   'onlyBuiltDependencies',
+  'onlyBuiltDependenciesFile',
   'overrides',
   'packageExtensions',
   'patchedDependencies',
   'peerDependencyRules',
+  'requiredScripts',
+  'supportedArchitectures',
+  'updateConfig',
 ];
 
-async function readParentWorkspace({ workspaceRoot }) {
-  const workspaceYaml =
-    YAML.parse(await readFile(path.join(workspaceRoot, 'pnpm-workspace.yaml'))) ?? {};
-  const packageJsonContent = await readFile(path.join(workspaceRoot, 'package.json'));
-  const packageJson = type.isNone(packageJsonContent) ? {} : JSON.parse(packageJsonContent);
+// The pnpmfiles pnpm loads from the workspace root when "pnpmfile" is not set,
+// in the order pnpm 11 tries them (pnpm 10 only loads .pnpmfile.cjs).
+const defaultPnpmfiles = ['.pnpmfile.mjs', '.pnpmfile.cjs'];
 
-  // pnpm 9 and 10 also read these settings from the "pnpm" field of the root
-  // package.json; pnpm-workspace.yaml wins where both set one.
+async function readWorkspaceYaml({ workspaceRoot }) {
+  const filePath = path.join(workspaceRoot, 'pnpm-workspace.yaml');
+  const document = YAML.parseDocument((await readFile(filePath)) ?? '');
+  if (document.errors.length > 0) {
+    throw new Error(`Could not parse ${filePath}: ${document.errors[0].message}`);
+  }
+  return document.toJS() ?? {};
+}
+
+async function readPackageJson({ workspaceRoot }) {
+  const filePath = path.join(workspaceRoot, 'package.json');
+  const content = await readFile(filePath);
+  if (type.isNone(content)) {
+    return {};
+  }
+  try {
+    return JSON.parse(content);
+  } catch (error) {
+    throw new Error(`Could not parse ${filePath}: ${error.message}`);
+  }
+}
+
+function getManifestSettings({ packageJson }) {
   const settings = {};
-  settingKeys.forEach((key) => {
-    const value = workspaceYaml[key] ?? packageJson.pnpm?.[key];
-    if (!type.isNone(value)) {
-      settings[key] = value;
+  manifestSettingKeys.forEach((key) => {
+    if (!type.isNone(packageJson.pnpm?.[key])) {
+      settings[key] = packageJson.pnpm[key];
     }
   });
+  // pnpm 10 also reads Yarn's "resolutions" as overrides.
+  const overrides = { ...packageJson.resolutions, ...packageJson.pnpm?.overrides };
+  if (Object.keys(overrides).length > 0) {
+    settings.overrides = overrides;
+  }
+  return settings;
+}
 
+// Everything the parent workspace's install depends on, so the generated
+// server, which installs as its own workspace, can install the same way.
+// Every setting is carried except "packages": new pnpm settings follow without
+// a change here.
+async function readParentWorkspace({ workspaceRoot }) {
+  const workspaceYaml = await readWorkspaceYaml({ workspaceRoot });
+  const packageJson = await readPackageJson({ workspaceRoot });
+  const { packages, ...workspaceSettings } = workspaceYaml;
+
+  // pnpm-workspace.yaml wins where both set a setting, as in pnpm 10.
+  const settings = { ...getManifestSettings({ packageJson }), ...workspaceSettings };
+  if (type.isNone(settings.pnpmfile)) {
+    const defaultPnpmfile = defaultPnpmfiles.find((fileName) =>
+      fs.existsSync(path.join(workspaceRoot, fileName))
+    );
+    if (!type.isNone(defaultPnpmfile)) {
+      settings.pnpmfile = defaultPnpmfile;
+    }
+  }
+
+  const npmrcPath = path.join(workspaceRoot, '.npmrc');
   return {
+    npmrc: await readFile(npmrcPath),
+    npmrcPath,
     packageManager: packageJson.packageManager,
-    packages: workspaceYaml.packages ?? [],
+    packages: packages ?? [],
+    rootDependencies: {
+      ...packageJson.devDependencies,
+      ...packageJson.dependencies,
+      ...packageJson.optionalDependencies,
+    },
     settings,
   };
 }

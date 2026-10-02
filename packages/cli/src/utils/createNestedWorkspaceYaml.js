@@ -14,29 +14,26 @@
   limitations under the License.
 */
 
-import path from 'path';
 import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
+
+import rebaseWorkspaceSettings from './rebaseWorkspaceSettings.js';
 
 // The server's own dependencies with build scripts, as in the standalone
 // pnpm-workspace.yaml ensurePnpmWorkspaceYaml writes.
 const defaultBuiltDependencies = ['better-sqlite3', 'sharp'];
 
-function rebasePatches({ directory, patchedDependencies, workspaceRoot }) {
-  const rebased = {};
-  Object.entries(patchedDependencies).forEach(([name, patchPath]) => {
-    const relativePath = path.relative(directory, path.resolve(workspaceRoot, patchPath));
-    rebased[name] = relativePath.split(path.sep).join('/');
-  });
-  return rebased;
-}
-
 // The server installs as its own workspace, with a lockfile inside the
 // gitignored server directory, so installing it never rewrites the parent's
-// committed lockfile. The parent's install settings are carried over so the
-// server still gets its overrides, patches and build allowlists.
+// committed lockfile. Every parent setting is carried over, rebased to the
+// server directory, so the server installs as it would inside the parent.
 function createNestedWorkspaceYaml({ directory, parentWorkspace, workspaceRoot }) {
-  const { settings } = parentWorkspace;
+  const settings = rebaseWorkspaceSettings({
+    directory,
+    rootDependencies: parentWorkspace.rootDependencies,
+    settings: parentWorkspace.settings,
+    workspaceRoot,
+  });
   const workspace = {
     packages: ['.'],
     ...settings,
@@ -49,11 +46,6 @@ function createNestedWorkspaceYaml({ directory, parentWorkspace, workspaceRoot }
     },
   };
   if (!type.isNone(settings.patchedDependencies)) {
-    workspace.patchedDependencies = rebasePatches({
-      directory,
-      patchedDependencies: settings.patchedDependencies,
-      workspaceRoot,
-    });
     // The parent's patches are copied whole, and some patch packages only the
     // parent's own projects install.
     workspace.allowUnusedPatches = true;

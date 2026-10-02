@@ -16,8 +16,10 @@
 
 import fs from 'fs';
 import path from 'path';
-import { writeFile, writeFileIfChanged } from '@lowdefy/node-utils';
+import { type } from '@lowdefy/helpers';
+import { readFile, writeFile, writeFileIfChanged } from '@lowdefy/node-utils';
 
+import createNestedNpmrc from './createNestedNpmrc.js';
 import createNestedWorkspaceYaml from './createNestedWorkspaceYaml.js';
 import findPnpmWorkspaceRoot from './findPnpmWorkspaceRoot.js';
 import linkWorkspacePlugins from './linkWorkspacePlugins.js';
@@ -40,6 +42,26 @@ allowBuilds:
   sharp: true
 `;
 
+async function writeNestedNpmrc({ context, directory, parentWorkspace }) {
+  const filePath = path.join(directory, '.npmrc');
+  const serverNpmrc = await readFile(filePath);
+  const { npmrc: parentNpmrc, npmrcPath: parentNpmrcPath } = parentWorkspace;
+  if (type.isNone(parentNpmrc) && type.isNone(serverNpmrc)) {
+    return;
+  }
+  const { content, skippedKeys } = createNestedNpmrc({
+    parentNpmrc,
+    parentNpmrcPath,
+    serverNpmrc,
+  });
+  skippedKeys.forEach((key) => {
+    context.logger.warn(
+      `"${key}" in ${parentNpmrcPath} holds a credential, so it is not copied to the server's .npmrc. Reference an environment variable instead (${key}=\${NPM_TOKEN}), or move the line to your user ~/.npmrc.`
+    );
+  });
+  await writeFileIfChanged(filePath, content);
+}
+
 async function ensurePnpmWorkspaceYaml({ context, directory }) {
   // Local mode runs against the monorepo packages; writing a nested
   // pnpm-workspace.yaml there would corrupt the monorepo workspace.
@@ -59,8 +81,8 @@ async function ensurePnpmWorkspaceYaml({ context, directory }) {
   // Inside a pnpm workspace the server still installs as its own workspace:
   // the server directory is gitignored, so as a member of the parent it would
   // make the parent's committed lockfile depend on uncommitted state. The file
-  // is derived from the parent's settings and rewritten on every run, so build
-  // allowlists for plugin dependencies belong in the parent's
+  // and .npmrc are derived from the parent's and rewritten on every run, so
+  // build allowlists for plugin dependencies belong in the parent's
   // pnpm-workspace.yaml.
   context.logger.debug(
     `Found pnpm workspace at ${workspaceRoot}; the server installs as its own workspace with its settings.`
@@ -70,6 +92,7 @@ async function ensurePnpmWorkspaceYaml({ context, directory }) {
     filePath,
     createNestedWorkspaceYaml({ directory, parentWorkspace, workspaceRoot })
   );
+  await writeNestedNpmrc({ context, directory, parentWorkspace });
   await linkWorkspacePlugins({ directory, parentWorkspace, workspaceRoot });
 }
 

@@ -19,7 +19,7 @@ import createNestedWorkspaceYaml from './createNestedWorkspaceYaml.js';
 test('createNestedWorkspaceYaml writes the default build allowlist when the parent sets nothing', () => {
   const yaml = createNestedWorkspaceYaml({
     directory: '/repo/apps/app/.lowdefy/server',
-    parentWorkspace: { packages: ['apps/*'], settings: {} },
+    parentWorkspace: { packages: ['apps/*'], rootDependencies: {}, settings: {} },
     workspaceRoot: '/repo',
   });
   expect(yaml).toEqual(`packages:
@@ -38,6 +38,7 @@ test('createNestedWorkspaceYaml carries the parent settings and rebases patch pa
     directory: '/repo/apps/app/.lowdefy/server',
     parentWorkspace: {
       packages: ['apps/*'],
+      rootDependencies: {},
       settings: {
         allowBuilds: { esbuild: true, sharp: false },
         catalog: { react: '18.2.0' },
@@ -74,5 +75,38 @@ peerDependencyRules:
   ignoreMissing:
     - b
 allowUnusedPatches: true
+`);
+});
+
+test('createNestedWorkspaceYaml carries settings it does not know and rebases link: overrides', () => {
+  const yaml = createNestedWorkspaceYaml({
+    directory: '/repo/apps/app/.lowdefy/server',
+    parentWorkspace: {
+      packages: ['apps/*'],
+      rootDependencies: { a: '1.2.3' },
+      settings: {
+        minimumReleaseAge: 1440,
+        overrides: { a: '$a', b: 'link:./vendor/b' },
+        supportedArchitectures: { os: ['current', 'linux'] },
+      },
+    },
+    workspaceRoot: '/repo',
+  });
+  expect(yaml).toEqual(`packages:
+  - .
+minimumReleaseAge: 1440
+overrides:
+  a: 1.2.3
+  b: link:../../../../vendor/b
+supportedArchitectures:
+  os:
+    - current
+    - linux
+onlyBuiltDependencies:
+  - better-sqlite3
+  - sharp
+allowBuilds:
+  better-sqlite3: true
+  sharp: true
 `);
 });
