@@ -124,6 +124,17 @@ test('watchOwner catches a reused owner pid on the minute start time check', () 
   expect(onExit).toHaveBeenCalledWith({ reason: 'owner-gone' });
 });
 
+test('watchOwner keeps running when the minute start time check cannot read ps for a live owner', () => {
+  const onExit = jest.fn();
+  watcher = watchOwner({ onExit, env: { LOWDEFY_EXIT_WITH_PID: '4242' }, stdin: createStdin() });
+  mockGetProcessStartTime.mockReturnValue(null);
+  jest.advanceTimersByTime(120000);
+  expect(onExit).not.toHaveBeenCalled();
+  mockIsPidAlive.mockReturnValue(false);
+  jest.advanceTimersByTime(2000);
+  expect(onExit).toHaveBeenCalledWith({ reason: 'owner-gone' });
+});
+
 test('watchOwner reads the owner start time at most once a minute', () => {
   const onExit = jest.fn();
   watcher = watchOwner({ onExit, env: { LOWDEFY_EXIT_WITH_PID: '4242' }, stdin: createStdin() });

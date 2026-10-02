@@ -101,8 +101,10 @@ function watchOwner({ onExit, env = process.env, stdin = process.stdin }) {
       return;
     }
     const startTime = getProcessStartTime({ pid: ownerPid });
-    // A null read here means the owner exited between the two checks.
-    if (startTime !== ownerStartTime) {
+    // A null read is no proof the owner is gone: ps itself can fail (no free
+    // memory or file descriptors). An owner that did exit fails isPidAlive on
+    // the next poll.
+    if (!type.isNone(startTime) && startTime !== ownerStartTime) {
       exit({ reason: 'owner-gone' });
     }
   }, POLL_INTERVAL_MS);
