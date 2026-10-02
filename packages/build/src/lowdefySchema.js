@@ -1821,6 +1821,53 @@ export default {
                   enum: 'MCP endpoint "scope" should be "mcp:read" or "mcp:write".',
                 },
               },
+              // MCP ToolAnnotations - hints clients use to label a tool and
+              // decide whether to ask before calling it. Declared, never
+              // derived from scope: an mcp:read tool may still write.
+              annotations: {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                  '~ignoreBuildChecks': {},
+                  '~r': {},
+                  '~l': {},
+                  title: {
+                    type: 'string',
+                    errorMessage: {
+                      type: 'MCP endpoint annotation "title" should be a string.',
+                    },
+                  },
+                  readOnlyHint: {
+                    type: 'boolean',
+                    errorMessage: {
+                      type: 'MCP endpoint annotation "readOnlyHint" should be a boolean.',
+                    },
+                  },
+                  destructiveHint: {
+                    type: 'boolean',
+                    errorMessage: {
+                      type: 'MCP endpoint annotation "destructiveHint" should be a boolean.',
+                    },
+                  },
+                  idempotentHint: {
+                    type: 'boolean',
+                    errorMessage: {
+                      type: 'MCP endpoint annotation "idempotentHint" should be a boolean.',
+                    },
+                  },
+                  openWorldHint: {
+                    type: 'boolean',
+                    errorMessage: {
+                      type: 'MCP endpoint annotation "openWorldHint" should be a boolean.',
+                    },
+                  },
+                },
+                errorMessage: {
+                  type: 'MCP endpoint "annotations" should be an object.',
+                  additionalProperties:
+                    'MCP endpoint "annotations" contains an unknown property. The known properties are "title", "readOnlyHint", "destructiveHint", "idempotentHint" and "openWorldHint".',
+                },
+              },
             },
             errorMessage: {
               type: 'MCP "endpoints" items should be objects with "id" and "scope" properties.',
@@ -1830,7 +1877,7 @@ export default {
                   'MCP endpoint should have required property "scope". Set "mcp:read" or "mcp:write".',
               },
               additionalProperties:
-                'MCP endpoint contains an unknown property. The known properties are "id" and "scope".',
+                'MCP endpoint contains an unknown property. The known properties are "id", "scope" and "annotations".',
             },
           },
           errorMessage: {

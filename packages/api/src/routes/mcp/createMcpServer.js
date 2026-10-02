@@ -96,16 +96,20 @@ async function createMcpServer({ context }) {
 
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     const tools = [];
-    for (const { id, scope } of mcpConfig.endpoints) {
+    for (const { id, scope, annotations } of mcpConfig.endpoints) {
       const endpointConfig = await readVisibleEndpointConfig({ id, scope });
       if (type.isNone(endpointConfig)) {
         continue;
       }
-      tools.push({
+      const tool = {
         name: toToolName(id),
         description: endpointConfig.description,
         inputSchema: cleanBuildArtifact(endpointConfig.payloadSchema),
-      });
+      };
+      if (!type.isNone(annotations)) {
+        tool.annotations = cleanBuildArtifact(annotations);
+      }
+      tools.push(tool);
     }
     return { tools };
   });

@@ -79,11 +79,19 @@ _ref:
               endpoints:
                 - id: search-customers
                   scope: mcp:read
+                  annotations:
+                    title: Search customers
+                    readOnlyHint: true
                 - id: create-invoice
                   scope: mcp:write
+                  annotations:
+                    title: Create invoice
+                    destructiveHint: false
             ```
 
             `name`, `version`, `title`, `websiteUrl` and `icons` are the server branding a client shows the user in the `initialize` handshake. Each `endpoints` entry needs an `id` and a `scope`.
+
+            `annotations` is optional and sent with the tool in `tools/list`. `title` is the name a client shows for the tool. The hints tell a client how the tool behaves, and clients use them to decide whether to ask the user before calling it: `readOnlyHint` (the tool changes nothing), `destructiveHint` (a write may delete or overwrite data), `idempotentHint` (calling it twice with the same input has no further effect) and `openWorldHint` (it reaches systems outside the app). They are hints, not enforcement, and they are not derived from `scope`: an `mcp:read` tool can still write, so only set `readOnlyHint: true` on a tool that really changes nothing.
 
             `instructions` is an optional string sent in the `initialize` result. Clients such as Claude Code place it in the model's system prompt, so use it for a short note on how the tools fit together or when to reach for them. Clients may truncate long instructions, so keep it to a few lines. When it is not set, the server sends no instructions.
 

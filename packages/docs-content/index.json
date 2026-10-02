@@ -3767,7 +3767,7 @@
         "users/mcp-oauth.yaml",
         "version.yaml"
       ],
-      "hash": "2235f5c992f4299bd2a9f2d08565194aa5bf5504d31b06d41c396954d5cad89b"
+      "hash": "2220e81dd29b20385939bd9a0710a360ed283a77dba319381c26ff7d38e5f94c"
     },
     "user-authentication/user-object": {
       "files": [
