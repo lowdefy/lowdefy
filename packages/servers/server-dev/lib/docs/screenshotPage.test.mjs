@@ -91,3 +91,39 @@ test('screenshotPage rejects a bad urlQuery or malformed steps before launching 
   expect(steps.error).toMatch(/Unknown journey step "hover"/);
   expect(chromium.launch).not.toHaveBeenCalled();
 });
+
+test('screenshotPage opens the page at the urlQuery and captures after the steps ran', async () => {
+  const { chromium } = await import('playwright-core');
+  const calls = [];
+  const page = {
+    goto: jest.fn(async (url) => calls.push(`goto ${url}`)),
+    waitForFunction: jest.fn(async () => {}),
+    waitForTimeout: jest.fn(async () => {}),
+    screenshot: jest.fn(async () => {
+      calls.push('screenshot');
+      return Buffer.from('png');
+    }),
+  };
+  const context = {
+    addCookies: jest.fn(async () => {}),
+    newPage: jest.fn(async () => page),
+    close: jest.fn(async () => {}),
+  };
+  chromium.launch.mockResolvedValue({ isConnected: () => true, newContext: async () => context });
+  try {
+    const result = await screenshotPage({
+      origin: 'http://localhost:3001',
+      pageId: 'gates',
+      urlQuery: { framework: 'popia', filter: { status: 'open' } },
+    });
+    expect(result.mimeType).toEqual('image/png');
+    expect(page.goto).toHaveBeenCalledTimes(1);
+    const url = new URL(page.goto.mock.calls[0][0]);
+    expect(url.pathname).toEqual('/gates');
+    expect(url.search).not.toEqual('');
+    expect(decodeURIComponent(url.search)).toContain('popia');
+    expect(context.close).toHaveBeenCalled();
+  } finally {
+    chromium.launch.mockRejectedValue(new Error("Executable doesn't exist"));
+  }
+});
