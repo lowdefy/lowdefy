@@ -1,5 +1,6 @@
 # 103: Namespace var properties the consumer never set stay absent (not null);
-# a consumer's explicit null stays null.
+# a consumer's explicit null stays null, and a var given through _ref behaves
+# the same as one written inline.
 lowdefy: local
 name: Namespace Unset Properties Test
 
@@ -14,3 +15,8 @@ modules:
     vars:
       sider:
         collapsedWidth: null
+  - id: layout-ref
+    source: 'file:modules/layout'
+    vars:
+      sider:
+        _ref: sider.yaml
