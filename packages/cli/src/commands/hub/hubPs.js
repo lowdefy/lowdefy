@@ -17,6 +17,7 @@
 import { readServerRegistry } from '@lowdefy/node-utils';
 
 import findLegacyOrphans from './findLegacyOrphans.js';
+import findOrphanedClis from './findOrphanedClis.js';
 import getHubPaths from './getHubPaths.js';
 import readHubManagedPids from './readHubManagedPids.js';
 import getServerRegistryDirectory from '../../utils/getServerRegistryDirectory.js';
@@ -36,23 +37,34 @@ function formatAge(startedAt) {
   return `${Math.round(minutes / 1440)}d`;
 }
 
-function formatRecord(record) {
-  const owner = `${record.owner.pid} ${record.ownerAlive ? 'alive' : 'gone'}`;
+function describeOwner({ record, orphaned }) {
+  if (!record.ownerAlive) {
+    return `${record.owner.pid} gone`;
+  }
+  return `${record.owner.pid} ${orphaned ? 'orphaned' : 'alive'}`;
+}
+
+function formatRecord({ record, orphaned }) {
   return [
     String(record.pid).padEnd(7),
     record.kind.padEnd(6),
     String(record.port ?? '-').padEnd(6),
-    owner.padEnd(13),
-    (record.prunable ? 'yes' : 'no').padEnd(9),
+    describeOwner({ record, orphaned }).padEnd(14),
+    (record.prunable || orphaned ? 'yes' : 'no').padEnd(9),
     formatAge(record.startedAt).padEnd(5),
     record.configDirectory ?? record.cwd,
   ].join(' ');
 }
 
 // `lowdefy hub ps` - every Lowdefy server on this machine the registry knows, with its
-// owner, and unregistered servers left behind by older Lowdefy versions.
+// owner (an owner shown as orphaned is a CLI whose spawner was killed), and unregistered
+// servers left behind by older Lowdefy versions.
 async function hubPs() {
   const registered = readServerRegistry({ directory: getServerRegistryDirectory() });
+  const hubPids = readHubManagedPids({ registryPath: getHubPaths().registryPath });
+  const orphanedPids = new Set(
+    findOrphanedClis({ records: registered, hubPids }).map(({ record }) => record.pid)
+  );
   if (registered.length === 0) {
     write('No registered Lowdefy servers are running.');
   } else {
@@ -61,17 +73,19 @@ async function hubPs() {
         'PID'.padEnd(7),
         'KIND'.padEnd(6),
         'PORT'.padEnd(6),
-        'OWNER'.padEnd(13),
+        'OWNER'.padEnd(14),
         'PRUNABLE'.padEnd(9),
         'AGE'.padEnd(5),
         'APP',
       ].join(' ')
     );
-    registered.forEach((record) => write(formatRecord(record)));
+    registered.forEach((record) =>
+      write(formatRecord({ record, orphaned: orphanedPids.has(record.pid) }))
+    );
   }
   const legacy = findLegacyOrphans({
     registeredPids: new Set(registered.map((record) => record.pid)),
-    hubPids: readHubManagedPids({ registryPath: getHubPaths().registryPath }),
+    hubPids,
   });
   if (legacy.length > 0) {
     write('');
@@ -80,7 +94,7 @@ async function hubPs() {
       write(`${String(orphan.pid).padEnd(7)} ${orphan.kind.padEnd(6)} ${orphan.cwd}`)
     );
   }
-  if (registered.some((record) => record.prunable) || legacy.length > 0) {
+  if (registered.some((record) => record.prunable) || orphanedPids.size > 0 || legacy.length > 0) {
     write('');
     write('Run `lowdefy hub prune` to see what it would stop.');
   }

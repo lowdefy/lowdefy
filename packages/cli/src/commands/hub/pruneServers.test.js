@@ -30,6 +30,8 @@ jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   readServerRegistry: () => records,
 }));
 jest.unstable_mockModule('./findLegacyOrphans.js', () => ({ default: mockFindLegacyOrphans }));
+const mockFindOrphanedClis = jest.fn();
+jest.unstable_mockModule('./findOrphanedClis.js', () => ({ default: mockFindOrphanedClis }));
 
 const { default: pruneServers } = await import('./pruneServers.js');
 
@@ -65,6 +67,8 @@ beforeEach(() => {
   signals = [];
   mockFindLegacyOrphans.mockReset();
   mockFindLegacyOrphans.mockReturnValue([]);
+  mockFindOrphanedClis.mockReset();
+  mockFindOrphanedClis.mockReturnValue([]);
   // Processes honour SIGTERM unless marked stubborn; SIGKILL always works.
   process.kill = jest.fn((pid, signal) => {
     signals.push({ pid, signal });
@@ -94,6 +98,7 @@ test('pruneServers lists a registered server whose owner is gone, and signals no
   ]);
   expect(signals).toEqual([]);
   expect(mockFindLegacyOrphans).not.toHaveBeenCalled();
+  expect(mockFindOrphanedClis).not.toHaveBeenCalled();
 });
 
 test('pruneServers with kill SIGTERMs the pid of a server whose owner is gone and removes its record', async () => {
@@ -156,4 +161,29 @@ test('pruneServers adds unregistered legacy orphans only when asked, excluding r
   expect([...registeredPids]).toEqual([100]);
   expect([...hubPids]).toEqual([55]);
   expect(signals).toEqual([]);
+});
+
+test('pruneServers with includeLegacy stops a registered server kept alive only by an orphaned CLI', async () => {
+  running.set(100, 'start-100');
+  const recordPath = writeRecordFile(100);
+  const orphaned = record({ pid: 100, prunable: false, recordPath });
+  records = [orphaned];
+  mockFindOrphanedClis.mockReturnValue([
+    { record: orphaned, cliPid: 900, wrappers: [], reaper: 'pid 1' },
+  ]);
+  const listed = await pruneServers({ directory, includeLegacy: true });
+  expect(listed).toMatchObject([
+    {
+      source: 'orphaned-cli',
+      pid: 100,
+      reason: 'CLI pid 900 is orphaned; only wrappers up to pid 1',
+    },
+  ]);
+  expect(signals).toEqual([]);
+  expect(mockFindOrphanedClis.mock.calls[0][0].records).toEqual([orphaned]);
+
+  const [stopped] = await pruneServers({ directory, includeLegacy: true, kill: true, graceMs: 50 });
+  expect(signals).toEqual([{ pid: 100, signal: 'SIGTERM' }]);
+  expect(stopped.result).toEqual('stopped');
+  expect(fs.existsSync(recordPath)).toBe(false);
 });

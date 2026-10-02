@@ -19,6 +19,7 @@ import { wait } from '@lowdefy/helpers';
 import { isPidAlive, isProcessAlive, readServerRegistry } from '@lowdefy/node-utils';
 
 import findLegacyOrphans from './findLegacyOrphans.js';
+import findOrphanedClis from './findOrphanedClis.js';
 import readHubManagedPids from './readHubManagedPids.js';
 
 function describeOwner(owner) {
@@ -76,8 +77,10 @@ async function stopCandidates({ candidates, graceMs }) {
 
 // Stops Lowdefy servers that provably have no owner. Registered servers (every server the
 // CLI started since servers record themselves) are prunable only when their owner is gone:
-// exact, and the only pass that runs unattended (the hub, at start). includeLegacy adds
-// unregistered servers matched from the process table, for a person-run prune. Without
+// exact, and the only pass that runs unattended (the hub, at start). includeLegacy adds, for
+// a person-run prune, what the process table shows: registered servers whose CLI is alive
+// but orphaned, and unregistered servers. Signalling the server ends its CLI too: the CLI
+// exits when its server does. Without
 // kill it only lists what it would stop.
 async function pruneServers({
   directory,
@@ -101,9 +104,23 @@ async function pruneServers({
       reason: `${describeOwner(record.owner)} is gone`,
     }));
   if (includeLegacy) {
+    const hubPids = readHubManagedPids({ registryPath: hubRegistryPath });
+    findOrphanedClis({ records: registered, hubPids }).forEach(({ record, cliPid, reaper }) => {
+      candidates.push({
+        source: 'orphaned-cli',
+        pid: record.pid,
+        processStartTime: record.processStartTime,
+        kind: record.kind,
+        port: record.port,
+        configDirectory: record.configDirectory,
+        cwd: record.cwd,
+        recordPath: record.recordPath,
+        reason: `CLI pid ${cliPid} is orphaned; only wrappers up to ${reaper}`,
+      });
+    });
     const legacy = findLegacyOrphans({
       registeredPids: new Set(registered.map((record) => record.pid)),
-      hubPids: readHubManagedPids({ registryPath: hubRegistryPath }),
+      hubPids,
     });
     legacy.forEach((orphan) => {
       candidates.push({

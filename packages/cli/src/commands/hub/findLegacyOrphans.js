@@ -14,10 +14,8 @@
   limitations under the License.
 */
 
-import { spawnSync } from 'child_process';
-
-import parseProcessTable from './parseProcessTable.js';
 import readProcessCwds from './readProcessCwds.js';
+import readProcessTable from './readProcessTable.js';
 import selectLegacyOrphans from './selectLegacyOrphans.js';
 
 const SERVER_COMMAND = /(^|\/)node(\.exe)? (src\/index\.js|manager\/run\.mjs)$/;
@@ -29,12 +27,7 @@ function findLegacyOrphans({ registeredPids, hubPids, platform = process.platfor
   if (platform !== 'darwin' && platform !== 'linux') {
     return [];
   }
-  const result = spawnSync('ps', ['-A', '-o', 'pid=,ppid=,lstart=,command='], {
-    encoding: 'utf8',
-    env: { ...process.env, LC_ALL: 'C', TZ: 'UTC' },
-    maxBuffer: 64 * 1024 * 1024,
-  });
-  const processes = parseProcessTable(result.stdout ?? '');
+  const processes = readProcessTable();
   const serverPids = processes
     .filter((entry) => SERVER_COMMAND.test(entry.command))
     .map((entry) => entry.pid);

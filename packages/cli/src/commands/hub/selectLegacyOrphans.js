@@ -14,27 +14,13 @@
   limitations under the License.
 */
 
+import findWrapperChain from './findWrapperChain.js';
+
 // A Lowdefy server process, as `lowdefy start|dev` and the monorepo scripts run it.
 const SERVER_COMMANDS = [
   { kind: 'server', pattern: /^(\S*\/)?node(\.exe)? src\/index\.js$/ },
   { kind: 'dev', pattern: /^(\S*\/)?node(\.exe)? manager\/run\.mjs$/ },
 ];
-
-// The only processes allowed between a leaked server and the reaper. Any other ancestor -
-// a shell, a terminal, an IDE, the hub - means someone may still want the server.
-const WRAPPERS = [
-  // pnpm, its standalone build (@pnpm/exe) and pnpm.cjs run by node
-  /(^|\/)pnpm(\.c?js)?(\s|$)/,
-  /@pnpm\/exe\//,
-  /(^|\/)npm(-cli\.js)? exec(\s|$)/,
-  /(^|\/)npx(-cli\.js)?(\s|$)/,
-  /^(\S*\/)?sh -c(\s|$)/,
-  /(^|\/)infisical run(\s|$)/,
-  // The lowdefy CLI: its bin, an installed dist entry, or the monorepo's packages/cli
-  /(^|\s|\/)(lowdefy|\S*lowdefy\S*\/dist\/index\.js|\S*packages\/cli\/dist\/index\.js) (start|dev|test)(\s|$)/,
-];
-
-const SYSTEMD_USER = /(^|\/)systemd --user(\s|$)/;
 
 function serverKind(command) {
   const match = SERVER_COMMANDS.find(({ pattern }) => pattern.test(command));
@@ -43,40 +29,6 @@ function serverKind(command) {
 
 function hasLowdefyServerCwd(cwd) {
   return /\/\.lowdefy\/(server|dev)$/.test(cwd) || cwd.includes('/_server/');
-}
-
-function isWrapper(command) {
-  return WRAPPERS.some((pattern) => pattern.test(command));
-}
-
-// Walks up from the server's parent. Returns the chain of wrapper commands when every
-// ancestor is a known wrapper up to the reaper (PID 1, or systemd --user on Linux), else null.
-function findWrapperChain({ server, byPid, hubPids, platform }) {
-  const chain = [];
-  let pid = server.ppid;
-  const seen = new Set();
-  while (!seen.has(pid)) {
-    seen.add(pid);
-    if (pid === 1) {
-      return { chain, reaper: 'pid 1' };
-    }
-    if (hubPids.has(pid)) {
-      return null;
-    }
-    const ancestor = byPid.get(pid);
-    if (ancestor === undefined) {
-      return null;
-    }
-    if (platform === 'linux' && SYSTEMD_USER.test(ancestor.command)) {
-      return { chain, reaper: 'systemd --user' };
-    }
-    if (!isWrapper(ancestor.command)) {
-      return null;
-    }
-    chain.push(ancestor.command);
-    pid = ancestor.ppid;
-  }
-  return null;
 }
 
 // Unregistered Lowdefy servers that provably have no owner left: started before servers
@@ -100,7 +52,7 @@ function selectLegacyOrphans({ processes, cwds, registeredPids, hubPids, platfor
     if (cwd === undefined || !hasLowdefyServerCwd(cwd)) {
       return;
     }
-    const wrappers = findWrapperChain({ server, byPid, hubPids, platform });
+    const wrappers = findWrapperChain({ pid: server.ppid, byPid, hubPids, platform });
     if (wrappers === null) {
       return;
     }
