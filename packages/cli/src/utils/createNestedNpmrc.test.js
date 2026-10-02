@@ -128,3 +128,49 @@ strict-peer-dependencies=false
     'proxy',
   ]);
 });
+
+test('createNestedNpmrc does not copy credentials hidden in an environment variable fallback', () => {
+  const { content, skippedKeys } = createNestedNpmrc({
+    parentNpmrc: [
+      '//npm.example.com/:_authToken=${NPM_TOKEN:-npm_secret}',
+      '//other.example.com/:_authToken=${NPM_TOKEN-npm_secret}',
+      'proxy=http://user:${PROXY_PASSWORD:-secret}@proxy.example.com/',
+    ].join('\n'),
+    parentNpmrcPath,
+    serverNpmrc,
+  });
+  expect(content).not.toContain('secret');
+  expect(skippedKeys).toEqual([
+    '//npm.example.com/:_authToken',
+    '//other.example.com/:_authToken',
+    'proxy',
+  ]);
+});
+
+test('createNestedNpmrc does not copy credentials under quoted or differently cased keys', () => {
+  const { content, skippedKeys } = createNestedNpmrc({
+    parentNpmrc: [
+      '"//npm.example.com/:_authToken" = npm_secret',
+      "'_auth'=c2VjcmV0",
+      '//npm.example.com/:_AuthToken=npm_secret',
+    ].join('\n'),
+    parentNpmrcPath,
+    serverNpmrc,
+  });
+  expect(content).not.toContain('secret');
+  expect(skippedKeys).toEqual([
+    '//npm.example.com/:_authToken',
+    '_auth',
+    '//npm.example.com/:_AuthToken',
+  ]);
+});
+
+test('createNestedNpmrc does not copy or report a password written in the key', () => {
+  const { content, skippedKeys } = createNestedNpmrc({
+    parentNpmrc: '//user:secret@npm.example.com/:_authToken=${NPM_TOKEN}',
+    parentNpmrcPath,
+    serverNpmrc,
+  });
+  expect(content).not.toContain('secret');
+  expect(skippedKeys).toEqual(['//***@npm.example.com/:_authToken']);
+});

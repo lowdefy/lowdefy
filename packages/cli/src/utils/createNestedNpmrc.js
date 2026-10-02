@@ -17,27 +17,42 @@
 import { type } from '@lowdefy/helpers';
 
 // Keys whose value is a credential (npm's per-registry auth keys, and "key",
-// a client certificate's private key).
-const credentialKeys = ['_auth', '_authToken', '_password', 'key'];
+// a client certificate's private key), compared in lower case.
+const credentialKeys = ['_auth', '_authtoken', '_password', 'key'];
 
-const environmentReference = /\$\{[^}]*\}/g;
+// pnpm expands ${NAME}, and ${NAME-fallback} or ${NAME:-fallback} to the
+// fallback when NAME is unset, so a reference with a fallback can hold a
+// written-out credential. Only references without one, or with an empty one,
+// count as references.
+const environmentReference = /\$\{[^${}-]+(:?-)?\}/g;
+
+// The password in a URL's user info, like https://user:pass@host/ or the
+// nerf-darted //user:pass@host/.
+const userInfoPassword = /\/\/[^/@\s]*:([^/@\s]*)@/;
 
 function isEnvironmentReferenceOnly(value) {
   return value.replace(environmentReference, '').trim() === '';
 }
 
+function unquote(text) {
+  return text.replace(/^(['"])(.*)\1$/, '$2');
+}
+
 // "//registry.example.com/:_authToken" names the key "_authToken".
 function holdsLiteralCredential({ key, value }) {
-  const keyName = key.slice(key.lastIndexOf(':') + 1);
-  if (credentialKeys.includes(keyName)) {
-    return !isEnvironmentReferenceOnly(value);
+  const keyName = key.slice(key.lastIndexOf(':') + 1).toLowerCase();
+  if (credentialKeys.includes(keyName) && !isEnvironmentReferenceOnly(value)) {
+    return true;
   }
-  // A registry or proxy URL with a password, like https://user:pass@host/.
-  const userInfo = /:\/\/[^/@\s]*:([^/@\s]*)@/.exec(value);
-  if (userInfo !== null) {
-    return !isEnvironmentReferenceOnly(userInfo[1]);
-  }
-  return false;
+  return [key, value].some((text) => {
+    const userInfo = userInfoPassword.exec(text);
+    return userInfo !== null && !isEnvironmentReferenceOnly(userInfo[1]);
+  });
+}
+
+// The skipped key is reported in a warning, so a password in it is hidden.
+function redactUserInfo(key) {
+  return key.replace(/\/\/[^/@\s]*@/, '//***@');
 }
 
 const copyStartPrefix = '# >>> Copied by Lowdefy from ';
@@ -71,13 +86,10 @@ function getParentLines({ parentNpmrc, skippedKeys }) {
       if (separatorIndex === -1) {
         return true;
       }
-      const key = trimmed.slice(0, separatorIndex).trim();
-      const value = trimmed
-        .slice(separatorIndex + 1)
-        .trim()
-        .replace(/^(['"])(.*)\1$/, '$2');
+      const key = unquote(trimmed.slice(0, separatorIndex).trim());
+      const value = unquote(trimmed.slice(separatorIndex + 1).trim());
       if (holdsLiteralCredential({ key, value })) {
-        skippedKeys.push(key);
+        skippedKeys.push(redactUserInfo(key));
         return false;
       }
       return true;
