@@ -19,6 +19,7 @@ import opener from 'opener';
 import getContext from './getContext.mjs';
 import acquireDevInstance from './utils/acquireDevInstance.mjs';
 import createBuildActivity from './utils/createBuildActivity.mjs';
+import createIdleGc from './utils/createIdleGc.mjs';
 import createRequestActivity from './utils/createRequestActivity.mjs';
 import startMailSink from './processes/startMailSink.mjs';
 import startProxy from './processes/startProxy.mjs';
@@ -102,9 +103,13 @@ context.requestActivity = createRequestActivity({
 // `building` is true while a change is queued or being processed, restarts
 // included. lowdefy_build_status({ wait: true }) waits on it, so an agent
 // reads the build that includes its last edit instead of the one before.
+// One full GC shortly after each build, which is when the manager's heap grows.
+const idleGc = createIdleGc();
+
 context.buildActivity = createBuildActivity({
   onChange: (building) => {
     instance.update({ building });
+    idleGc.onBuildingChange(building);
     if (!building) {
       context.requestActivity.touch();
     }

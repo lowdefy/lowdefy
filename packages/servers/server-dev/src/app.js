@@ -77,6 +77,7 @@ import requestHandler from './routes/request.js';
 import requestTimeout from './middleware/requestTimeout.js';
 import rootHandler from './routes/root.js';
 import staleFlag from './middleware/staleFlag.js';
+import startIdleGc from '../lib/server/startIdleGc.js';
 import usageHandler from './routes/usage.js';
 import userHandler from './routes/user.js';
 import websocketHandler from './routes/websocket.js';
@@ -246,5 +247,7 @@ function createApp() {
 
   return app;
 }
+
+startIdleGc({ configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG });
 
 export default createApp();

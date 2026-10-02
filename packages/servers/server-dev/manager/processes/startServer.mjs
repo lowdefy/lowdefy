@@ -68,6 +68,8 @@ function startServer(context) {
   const devServer = spawn(
     'node',
     [
+      // For the child's idle GC (lib/server/startIdleGc.js).
+      '--expose-gc',
       context.bin.vite,
       '--host',
       '127.0.0.1',

@@ -86,7 +86,11 @@ test('startFirstServer runs the optimiser and waits for it to exit before it spa
   await started;
 
   expect(mockSpawn).toHaveBeenCalledTimes(2);
-  expect(mockSpawn.mock.calls[1][1][1]).toBe('--host');
+  expect(mockSpawn.mock.calls[1][1].slice(0, 3)).toEqual([
+    '--expose-gc',
+    '/server/node_modules/vite/bin/vite.js',
+    '--host',
+  ]);
   expect(context.logger.warn).not.toHaveBeenCalled();
 });
 

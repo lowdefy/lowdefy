@@ -121,3 +121,11 @@ test('startServer kills the browser carrying the child tag when the child exits'
   expect(mockSpawn.mock.calls[1][0]).toBe('pkill');
   expect(mockSpawn.mock.calls[1][1]).toEqual(['-f', '--', `--lowdefy-browser-tag=${tag}`]);
 });
+
+test('startServer spawns the child with gc exposed, for its idle GC', () => {
+  startServer(createContext({ mailSink: null }));
+
+  const [command, args] = mockSpawn.mock.calls[0];
+  expect(command).toBe('node');
+  expect(args.slice(0, 2)).toEqual(['--expose-gc', 'vite.js']);
+});
