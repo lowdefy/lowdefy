@@ -190,9 +190,19 @@ The old `signOut`, `verifyRequest`, and `newUser` keys are removed. New optional
 
 Sign-in uses the `Login` action, which dispatches by parameter — `providerId` for OAuth, `magicLink: true`, or `email` + `password`. Email/password sign-up pages use the new `SignUp` action; social and magic-link "sign-up" pages use `Login`, since those methods create the account on first sign-in. Sign-in errors now surface inline (the `Login` action returns `error.code`) rather than as a `?error=` query parameter on the error page.
 
-### 9. Run the user-model data migration
+### 9. Migrate user records to the new model
 
-Roles move off the user record onto organization memberships, and fused user-contact records split into `contact` / `user` / `member` records. If your app is built on the `modules-mongodb` `user_contacts` convention, this migration ships from that module — not from the core upgrade. Apps not using that convention only need the collection renames from step 4.
+Roles move off the user record onto organization memberships, and the fused user-contact record splits into an app-owned `contact` and auth-owned `user` and `member` records. Neither the core upgrade nor any module ships a data migration for this: each app writes its own, once, against its auth database. Apps that never stored roles or app data on the user record only need the collection renames from step 5.
+
+For apps built on the [`modules-mongodb`](https://github.com/lowdefy/modules-mongodb) `user_contacts` convention — one combined record per person, with `is_user`, an `apps.{app_name}` map and `global_attributes` — the mapping is:
+
+- **One `users` row per contact with `is_user: true` in any app.** Keep the contact's `_id` as the user's `_id`, so `_user.id` and every record that stores it stay valid. The adapter stores ids as strings, so a contact keyed by an `ObjectId` needs its hex string here. Fill the user fields `name`, `email`, `email_verified`, `image`, `created_at` and `updated_at` from the contact.
+- **`global_attributes` becomes `users.attributes`.**
+- **One `user-members` row per enabled `apps.{app_name}` entry**, with `user_id` set to the user's `_id`, `organization_id` set to the app's pinned slug (`auth.organizations.org` — under `pinned` the slug is the organization's id), `app_roles` from the entry's `roles`, `attributes` from its `app_attributes`, `role: member` and a `created_at`. A disabled entry gets no row.
+- **The contact is reshaped in place**, without the `apps` map and without the `is_user`, `invite` and `disabled` flags. It stays the app's record of the person.
+- **At least one member per organization holds `role: owner`**, so someone can send invitations. Without one, the organization is the closed loop described under [Bootstrapping the first administrator](#bootstrapping-the-first-administrator).
+
+Write these rows with the stored field names, which are snake_case (`user_id`, `organization_id`, `app_roles`, `created_at`): the adapter maps BetterAuth's camelCase names, such as `appRoles` in the auth steps, to snake_case on the way in. The module side of the upgrade — vars, role catalog and column paths — is covered by the `user-admin` module's migration how-to (`docs/user-admin/how-to/migration.md` in `modules-mongodb`).
 
 ### 10. Sign in again
 
