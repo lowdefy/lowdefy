@@ -36,8 +36,42 @@ function lastLines(text) {
   return (text ?? '').trim().split('\n').slice(-5).join('\n');
 }
 
+// While a rerun swaps the registration, the new entry is also held under this
+// name, so a failed add never leaves the user with no Lowdefy server.
+const STAGING_NAME = `${MCP_SERVER_NAME}-agent-setup`;
+
 function removeUserRegistration({ name }) {
   return run({ args: ['mcp', 'remove', '--scope', 'user', name] });
+}
+
+function addArgsFor({ name, command, args }) {
+  // The server is passed as a command and its arguments, never as JSON:
+  // cmd.exe strips the quotes out of a JSON argument on Windows.
+  return ['mcp', 'add', '--scope', 'user', name, '--', command, ...args];
+}
+
+function addUserRegistration({ name, command, args }) {
+  const added = run({ args: addArgsFor({ name, command, args }) });
+  return { added, failed: Boolean(added.error) || added.status !== 0 };
+}
+
+function addFailure({ added, note, steps }) {
+  const commands = steps.map((stepArgs) => `claude ${stepArgs.join(' ')}`).join('\n');
+  return new Error(
+    `'claude mcp add' failed:\n${lastLines(
+      added.stderr || added.error?.message
+    )}\n${note} Register the server by hand with:\n${commands}`
+  );
+}
+
+// On Windows claude runs through cmd.exe (it is often claude.cmd), which
+// reports a missing command as an ordinary failure, not ENOENT, so it is
+// looked up with where.exe first.
+function isClaudeMissing() {
+  if (process.platform === 'win32') {
+    return spawnSync('where', ['claude'], { encoding: 'utf8', windowsHide: true }).status !== 0;
+  }
+  return run({ args: ['--version'] }).error?.code === 'ENOENT';
 }
 
 // Registers `lowdefy mcp` for every Claude Code session of this user, so a
@@ -53,11 +87,7 @@ async function agentSetupUser({ cliVersion }) {
     hint: "Run agent-setup --user with a published lowdefy CLI that has 'lowdefy mcp', for example 'npx lowdefy@experimental agent-setup --user'.",
   });
 
-  // `claude mcp add` refuses a name that exists; replacing it is the point of
-  // a rerun. The same name as the project .mcp.json entry, so a project that
-  // has one gets one set of tools, not two.
-  const removed = removeUserRegistration({ name: MCP_SERVER_NAME });
-  if (removed.error?.code === 'ENOENT') {
+  if (isClaudeMissing()) {
     write(
       `Claude Code ('claude') is not on PATH. Add this server to your agent client's user-level MCP configuration:\n${JSON.stringify(
         { mcpServers: { [MCP_SERVER_NAME]: { type: 'stdio', command, args } } },
@@ -67,21 +97,35 @@ async function agentSetupUser({ cliVersion }) {
     );
     return;
   }
-  // The server is passed as a command and its arguments, never as JSON:
-  // cmd.exe strips the quotes out of a JSON argument on Windows.
-  const addArgs = ['mcp', 'add', '--scope', 'user', MCP_SERVER_NAME, '--', command, ...args];
-  const added = run({ args: addArgs });
-  if (added.error || added.status !== 0) {
-    throw new Error(
-      `'claude mcp add' failed:\n${lastLines(
-        added.stderr || added.error?.message
-      )}\nRegister the server by hand with:\nclaude ${addArgs.join(' ')}`
-    );
+
+  // `claude mcp add` refuses a name that exists, and replacing it is the point
+  // of a rerun. The new entry goes in under the staging name first: when
+  // claude cannot add it, nothing has been removed yet. The final name is the
+  // project .mcp.json entry's, so a project that has one gets one set of
+  // tools, not two.
+  const finalAddArgs = addArgsFor({ name: MCP_SERVER_NAME, command, args });
+  const removeStagingArgs = ['mcp', 'remove', '--scope', 'user', STAGING_NAME];
+  removeUserRegistration({ name: STAGING_NAME });
+  const staged = addUserRegistration({ name: STAGING_NAME, command, args });
+  if (staged.failed) {
+    throw addFailure({
+      added: staged.added,
+      note: 'Your existing registration is unchanged.',
+      steps: [['mcp', 'remove', '--scope', 'user', MCP_SERVER_NAME], finalAddArgs],
+    });
   }
-  // Only once the new registration is in: a registration under an old name
-  // would be a second copy of the server, but removing it first could leave
-  // the user with none.
-  LEGACY_MCP_SERVER_NAMES.forEach((name) => removeUserRegistration({ name }));
+  removeUserRegistration({ name: MCP_SERVER_NAME });
+  const registered = addUserRegistration({ name: MCP_SERVER_NAME, command, args });
+  if (registered.failed) {
+    throw addFailure({
+      added: registered.added,
+      note: `The server stays registered as '${STAGING_NAME}' meanwhile.`,
+      steps: [finalAddArgs, removeStagingArgs],
+    });
+  }
+  // Only once the new registration is in: a registration under another name
+  // would be a second copy of the server.
+  [STAGING_NAME, ...LEGACY_MCP_SERVER_NAMES].forEach((name) => removeUserRegistration({ name }));
   write(
     `Registered '${MCP_SERVER_NAME}' (lowdefy mcp ${cliVersion}) for every Claude Code session of this user.`
   );

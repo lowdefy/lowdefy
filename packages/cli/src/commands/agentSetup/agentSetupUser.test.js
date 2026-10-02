@@ -55,53 +55,108 @@ function calls() {
   return spawnSync.mock.calls.map(([command, args]) => [command, args]);
 }
 
-test('agentSetupUser checks the pinned version, replaces lowdefy, then drops the old lowdefy-docs registration', async () => {
-  spawnSync.mockReturnValue({ status: 0, stdout: '', stderr: '' });
+// A stand-in for Claude Code's user-scope registrations: add refuses a name
+// that exists, as claude does, and failAdd(name) makes claude fail that add.
+function fakeClaude({ registered = [], failAdd = () => false } = {}) {
+  const names = new Set(registered);
+  spawnSync.mockImplementation((command, args) => {
+    if (command !== 'claude' || args[0] !== 'mcp') {
+      return { status: 0, stdout: '', stderr: '' };
+    }
+    const name = args[4];
+    if (args[1] === 'remove') {
+      return names.delete(name)
+        ? { status: 0, stdout: '', stderr: '' }
+        : { status: 1, stdout: '', stderr: `No user-scoped MCP server named ${name}` };
+    }
+    if (names.has(name) || failAdd(name)) {
+      return { status: 1, stdout: '', stderr: 'add failed' };
+    }
+    names.add(name);
+    return { status: 0, stdout: '', stderr: '' };
+  });
+  return names;
+}
+
+test('agentSetupUser checks the pinned version, stages the new entry, replaces lowdefy, then drops the staging and lowdefy-docs registrations', async () => {
+  const names = fakeClaude({ registered: ['lowdefy-docs'] });
   const { default: agentSetupUser } = await import('./agentSetupUser.js');
 
   await agentSetupUser({ cliVersion: '7.1.0' });
 
   expect(calls()).toEqual([
     ['npx', [...NPX_ARGS, '--help']],
+    ['claude', ['--version']],
+    ['claude', ['mcp', 'remove', '--scope', 'user', 'lowdefy-agent-setup']],
+    ['claude', ['mcp', 'add', '--scope', 'user', 'lowdefy-agent-setup', '--', 'npx', ...NPX_ARGS]],
     ['claude', ['mcp', 'remove', '--scope', 'user', 'lowdefy']],
     ['claude', ['mcp', 'add', '--scope', 'user', 'lowdefy', '--', 'npx', ...NPX_ARGS]],
+    ['claude', ['mcp', 'remove', '--scope', 'user', 'lowdefy-agent-setup']],
     ['claude', ['mcp', 'remove', '--scope', 'user', 'lowdefy-docs']],
   ]);
   expect(calls().some(([, args]) => args.includes('add-json'))).toBe(false);
+  expect([...names]).toEqual(['lowdefy']);
   expect(output).toContain("Registered 'lowdefy' (lowdefy mcp 7.1.0)");
 });
 
-test('agentSetupUser registers cmd /c npx on Windows', async () => {
-  setPlatform('win32');
-  spawnSync.mockReturnValue({ status: 0, stdout: '', stderr: '' });
+test('agentSetupUser replaces an existing lowdefy registration on a rerun', async () => {
+  const names = fakeClaude({ registered: ['lowdefy'] });
   const { default: agentSetupUser } = await import('./agentSetupUser.js');
 
   await agentSetupUser({ cliVersion: '7.1.0' });
 
-  const add = calls().find(([, args]) => args[1] === 'add');
+  expect([...names]).toEqual(['lowdefy']);
+  expect(output).toContain("Registered 'lowdefy'");
+});
+
+test('agentSetupUser registers cmd /c npx on Windows', async () => {
+  setPlatform('win32');
+  fakeClaude();
+  const { default: agentSetupUser } = await import('./agentSetupUser.js');
+
+  await agentSetupUser({ cliVersion: '7.1.0' });
+
+  expect(calls()).toContainEqual(['where', ['claude']]);
+  const add = calls().find(([, args]) => args[1] === 'add' && args[4] === 'lowdefy');
   expect(add).toEqual([
     'claude',
     ['mcp', 'add', '--scope', 'user', 'lowdefy', '--', 'cmd', '/c', 'npx', ...NPX_ARGS],
   ]);
 });
 
-test('agentSetupUser keeps the lowdefy-docs registration and prints the command when the add fails', async () => {
-  spawnSync.mockImplementation((command, args) =>
-    args[1] === 'add'
-      ? { status: 1, stdout: '', stderr: 'add failed' }
-      : { status: 0, stdout: '', stderr: '' }
-  );
+test('agentSetupUser leaves the lowdefy registration in place and prints the commands when a rerun cannot add', async () => {
+  const names = fakeClaude({ registered: ['lowdefy'], failAdd: () => true });
   const { default: agentSetupUser } = await import('./agentSetupUser.js');
 
   await expect(agentSetupUser({ cliVersion: '7.1.0' })).rejects.toThrow(
-    `'claude mcp add' failed:\nadd failed\nRegister the server by hand with:\nclaude mcp add --scope user lowdefy -- npx ${NPX_ARGS.join(
+    `'claude mcp add' failed:\nadd failed\nYour existing registration is unchanged. Register the server by hand with:\nclaude mcp remove --scope user lowdefy\nclaude mcp add --scope user lowdefy -- npx ${NPX_ARGS.join(
       ' '
     )}`
   );
-  expect(calls()).not.toContainEqual([
-    'claude',
-    ['mcp', 'remove', '--scope', 'user', 'lowdefy-docs'],
-  ]);
+  expect([...names]).toEqual(['lowdefy']);
+});
+
+test('agentSetupUser keeps the lowdefy-docs registration when the first migration cannot add', async () => {
+  const names = fakeClaude({ registered: ['lowdefy-docs'], failAdd: () => true });
+  const { default: agentSetupUser } = await import('./agentSetupUser.js');
+
+  await expect(agentSetupUser({ cliVersion: '7.1.0' })).rejects.toThrow("'claude mcp add' failed");
+  expect([...names]).toEqual(['lowdefy-docs']);
+});
+
+test('agentSetupUser keeps the staging registration when only the final add fails', async () => {
+  const names = fakeClaude({
+    registered: ['lowdefy'],
+    failAdd: (name) => name === 'lowdefy',
+  });
+  const { default: agentSetupUser } = await import('./agentSetupUser.js');
+
+  await expect(agentSetupUser({ cliVersion: '7.1.0' })).rejects.toThrow(
+    `The server stays registered as 'lowdefy-agent-setup' meanwhile. Register the server by hand with:\nclaude mcp add --scope user lowdefy -- npx ${NPX_ARGS.join(
+      ' '
+    )}\nclaude mcp remove --scope user lowdefy-agent-setup`
+  );
+  expect([...names]).toEqual(['lowdefy-agent-setup']);
 });
 
 test('agentSetupUser fails before registering a version npm cannot run', async () => {
@@ -126,4 +181,20 @@ test('agentSetupUser prints the server entry when Claude Code is not installed',
 
   expect(output).toContain("Claude Code ('claude') is not on PATH.");
   expect(output).toContain(JSON.stringify({ mcpServers: { lowdefy: ENTRY } }, null, 2));
+  expect(calls().filter(([command]) => command === 'claude')).toEqual([['claude', ['--version']]]);
+});
+
+test('agentSetupUser on Windows prints the server entry when where.exe cannot find claude', async () => {
+  setPlatform('win32');
+  spawnSync.mockImplementation((command) =>
+    command === 'where'
+      ? { status: 1, stdout: '', stderr: 'INFO: Could not find files for the given pattern(s).' }
+      : { status: 0, stdout: '', stderr: '' }
+  );
+  const { default: agentSetupUser } = await import('./agentSetupUser.js');
+
+  await agentSetupUser({ cliVersion: '7.1.0' });
+
+  expect(output).toContain("Claude Code ('claude') is not on PATH.");
+  expect(calls().some(([command]) => command === 'claude')).toBe(false);
 });
