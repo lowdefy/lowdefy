@@ -113,7 +113,7 @@ test('docsJourneyHandler returns 400 naming an unknown step', async () => {
 
   expect(result.status).toBe(400);
   expect(result.data.error).toEqual(
-    'Step 0: Unknown journey step "hover". Steps are: click, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Step 0: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
   );
   expect(mockRunJourney).not.toHaveBeenCalled();
 });

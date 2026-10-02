@@ -229,13 +229,27 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
 
   registerDevTool(
     'lowdefy_screenshot_page',
-    async ({ pageId, fullPage, clip, scrollX, scrollY, user, width, height, colorScheme }) => {
+    async ({
+      pageId,
+      urlQuery,
+      steps,
+      fullPage,
+      clip,
+      scrollX,
+      scrollY,
+      user,
+      width,
+      height,
+      colorScheme,
+    }) => {
       if (!origin) {
         return notFoundResult('Screenshot unavailable: server origin unknown for this transport.');
       }
       const result = await screenshotPage({
         origin,
         pageId,
+        urlQuery,
+        steps,
         fullPage,
         clip,
         scrollX,
@@ -248,7 +262,13 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
       if (result.error) {
         return notFoundResult(result.error);
       }
-      return { content: [{ type: 'image', data: result.data, mimeType: result.mimeType }] };
+      const image = { type: 'image', data: result.data, mimeType: result.mimeType };
+      if (result.failure) {
+        // The capture shows the page where the failing step left it.
+        const text = JSON.stringify({ passed: false, failure: result.failure }, null, 2);
+        return { content: [{ type: 'text', text }, image] };
+      }
+      return { content: [image] };
     }
   );
 

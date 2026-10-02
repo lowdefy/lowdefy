@@ -257,6 +257,62 @@ async function resolveClickLocator({ page, target }) {
   return resolveClickTarget(located);
 }
 
+// The element a person clicks to open an input's popup: the trigger antd draws
+// inside the block. Every popup input - Select, MultipleSelector, AutoComplete,
+// TreeSelector, Cascader (all `.ant-select`), the date and time pickers
+// (`.ant-picker`), a colour picker, a dropdown button - has one.
+const POPUP_TRIGGER = [
+  '.ant-select-selector',
+  '.ant-picker',
+  '.ant-color-picker-trigger',
+  '.ant-dropdown-trigger',
+  '.ant-mentions',
+].join(', ');
+
+// The popups those triggers open. antd mounts them in a portal at the end of
+// <body>, so they are looked for page-wide; the hidden class marks a popup
+// that has closed but is still in the DOM.
+const POPUP = [
+  '.ant-select-dropdown:not(.ant-select-dropdown-hidden)',
+  '.ant-picker-dropdown:not(.ant-picker-dropdown-hidden)',
+  '.ant-cascader-dropdown:not(.ant-select-dropdown-hidden)',
+  '.ant-color-picker-inner',
+  '.ant-dropdown:not(.ant-dropdown-hidden)',
+  '.ant-mentions-dropdown:not(.ant-mentions-dropdown-hidden)',
+].join(', ');
+
+// Opens the popup of the input the target names and waits until it shows, so
+// a screenshot or a `select`-less inspection sees the options. A block with no
+// popup trigger (a button) is clicked as `click` does; a block whose click
+// opens nothing fails the step, since `open` promises a popup.
+async function runOpen({ page, step, timeout }) {
+  const target = normaliseTarget(step.open);
+  await actOnTarget({
+    target,
+    action: async () => {
+      const scope = await resolveTarget({ page, target });
+      const trigger = scope.locator(POPUP_TRIGGER).first();
+      if ((await trigger.count()) > 0) {
+        await trigger.click({ timeout });
+      } else {
+        await (await resolveClickLocator({ page, target })).click({ timeout });
+      }
+    },
+  });
+  const popup = page.locator(POPUP).filter({ visible: true }).first();
+  try {
+    await popup.waitFor({ state: 'visible', timeout });
+  } catch (error) {
+    const description = describeTarget(target);
+    throw new JourneyStepError(`Opening ${description} showed no dropdown or popup.`, {
+      expected: `a popup to open from ${description}`,
+      actual: cleanMessage(error),
+    });
+  }
+  // Popups animate in; a capture mid-animation is faded or offset.
+  await page.waitForTimeout(250);
+}
+
 async function runClick({ page, step, timeout }) {
   const target = normaliseTarget(step.click);
   await actOnTarget({
@@ -668,7 +724,7 @@ async function settlePage({ page, timeout }) {
   await page.waitForFunction(isPageReady, pageId, { timeout }).catch(() => {});
 }
 
-const INTERACTION_STEPS = ['click', 'fill', 'select', 'press', 'back'];
+const INTERACTION_STEPS = ['click', 'open', 'fill', 'select', 'press', 'back'];
 
 const SETTLE_TIMEOUT_MS = 5000;
 
@@ -683,6 +739,9 @@ async function runStep({ journey, step, index, screenshots }) {
   switch (getStepKey(step)) {
     case 'click':
       await runClick({ page, step, timeout });
+      return;
+    case 'open':
+      await runOpen({ page, step, timeout });
       return;
     case 'fill':
       await runFill({ journey, page, step, timeout });
@@ -908,4 +967,5 @@ async function runJourney({
   }
 }
 
+export { runSteps, MAIN_ACTOR };
 export default runJourney;

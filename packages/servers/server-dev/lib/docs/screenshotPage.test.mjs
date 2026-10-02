@@ -73,3 +73,21 @@ test('screenshotPage returns an error for an invalid viewport before launching a
   expect(scheme.error).toEqual('Color scheme must be "light" or "dark". Received "sepia".');
   expect(chromium.launch).not.toHaveBeenCalled();
 });
+
+test('screenshotPage rejects a bad urlQuery or malformed steps before launching a browser', async () => {
+  const { chromium } = await import('playwright-core');
+  chromium.launch.mockClear();
+  const query = await screenshotPage({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    urlQuery: 'framework=popia',
+  });
+  expect(query.error).toMatch(/requires "urlQuery" to be an object/);
+  const steps = await screenshotPage({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    steps: [{ hover: 'x' }],
+  });
+  expect(steps.error).toMatch(/Unknown journey step "hover"/);
+  expect(chromium.launch).not.toHaveBeenCalled();
+});

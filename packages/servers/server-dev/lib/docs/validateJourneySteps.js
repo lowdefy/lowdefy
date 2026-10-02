@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 const STEP_KEYS = [
   'click',
+  'open',
   'fill',
   'select',
   'press',
@@ -351,6 +352,8 @@ function validateStep(step) {
   switch (key) {
     case 'click':
       return validateTarget({ key: 'click', params });
+    case 'open':
+      return validateTarget({ key: 'open', params });
     case 'fill':
       return validateFill(params);
     case 'select':
