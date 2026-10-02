@@ -80,6 +80,24 @@ A low-level MCP `Server` over stdio (`createShim.js`). Nothing else may write to
 - **Logs.** `readLogTail` loads only the last MiB of `dev.log` and returns at most 1000 lines.
 - **Protocol.** `hello` returns `{ protocol, version, pid }`. On a mismatch, the client errors and asks for the old hub to be stopped; servers survive that and the next hub adopts them.
 
+### Servers exit with their owner
+
+Every Lowdefy server process stops when whatever started it stops, however that ends (a normal exit, any signal, SIGKILL). The owner signals are opt-in, set by the spawner, so `node src/index.js` run directly (Docker, Vercel, systemd) behaves as before. `watchOwner` (`@lowdefy/node-utils`) implements both, in the production and e2e servers, the dev manager and the manager's Vite child:
+
+- **`LOWDEFY_EXIT_ON_STDIN_CLOSE=1`.** The spawner holds the process's stdin pipe and never writes to it; the process shuts down when the pipe closes. The CLI (`utils/spawnServer.js`: `lowdefy start|dev|test`) and the monorepo `scripts/start.mjs` and `scripts/dev.mjs` start the server with `node` itself (no `pnpm run start`), hold its stdin and forward SIGINT, SIGTERM and SIGHUP. The dev manager holds its Vite child's stdin the same way. Without the pnpm hop the manager reads its version from its own `package.json` (`readManagerVersion.mjs`).
+- **`LOWDEFY_EXIT_WITH_PID=<pid>`** (`--exit-with-pid` on `lowdefy start|dev`). The process polls `process.kill(pid, 0)` every 2 s, re-reads the owner's start time once a minute, and exits at once if the owner is already gone. An environment variable passes through every wrapper (pnpm, npx, `sh -c`, a secrets manager), where an argument does not. The Playwright configs from `@lowdefy/e2e-utils` and `@lowdefy/block-dev-e2e`, `startServer` from `@lowdefy/e2e-utils/startServer`, and `lowdefy test` set it to their own pid.
+
+### Server registry and prune
+
+Every server and dev manager started through the CLI writes `<LOWDEFY_HOME>/servers/<pid>.json` (`registerServer`) and removes it on exit: `{ pid, processStartTime, kind, cwd, configDirectory, port, owner: { pid, processStartTime, via }, startedAt }`. The owner is the `LOWDEFY_EXIT_WITH_PID` process (`via: exit-with-pid`), else the CLI that spawned it (`via: cli`). The CLI passes the directory as `LOWDEFY_SERVER_REGISTRY_DIR`; a process without it writes nothing. The Vite child does not register.
+
+`readServerRegistry` is the only reader. A record whose pid and start time no longer match a live process is stale: deleted and skipped. A live record is **prunable** only when its owner (pid plus start time) is gone. It is a different file from `.lowdefy/instance.json`: instance.json is the per-app lock and status, the registry is the machine-wide list of processes and owners, and it survives a deleted worktree.
+
+- `lowdefy hub ps` (`hubPs.js`) lists registered servers with owner and prunable flag, and unregistered servers that match the legacy heuristic.
+- `lowdefy hub prune [--kill]` (`hubPrune.js`, `pruneServers.js`) is a dry run unless `--kill`. It re-checks each pid's start time before every signal, sends SIGTERM to the **pid** (never a group: an orphan keeps its dead spawner's group), SIGKILL after 10 s, and removes the record.
+- The legacy heuristic (`findLegacyOrphans.js`, rules in `selectLegacyOrphans.js`) finds servers leaked before servers registered: no record; command `node src/index.js` or `node manager/run.mjs`; cwd ending `/.lowdefy/server` or `/.lowdefy/dev`, or under `/_server/`; every ancestor up to the reaper (PID 1, or `systemd --user` on Linux) a known wrapper (pnpm, `@pnpm/exe`, `npm exec`, npx, `sh -c`, `infisical run`, a lowdefy CLI `start|dev|test`); not under a group leader in the hub's `registry.json`. macOS and Linux only. It cannot tell a dead spawner from `nohup`, so only the person-run commands use it.
+- The hub runs one `pruneServers({ kill: true })` pass over registered records when it starts. Its own servers are never prunable: their `lowdefy dev` CLI is their owner and outlives a hub restart.
+
 ### Cross-site guard
 
 `src/middleware/localDevToolsOnly.js` applies the existing `createSameOriginGuard({ allowNoOrigin: true })` to `/lowdefy-docs*` and `/api/dev-inspect*`, registered before the MCP route.
@@ -91,14 +109,15 @@ A low-level MCP `Server` over stdio (`createShim.js`). Nothing else may write to
 
 ## Files
 
-| Area            | Files                                                                                                                                                                        |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Instance record | `utils/node-utils/src/{getDevInstancePath,readDevInstance,isPidAlive}.js`, `server-dev/manager/utils/{acquireDevInstance,resolvePorts,waitForServer}.mjs`, `manager/run.mjs` |
-| CLI dev         | `cli/src/commands/dev/{checkNoRunningInstance,resolveDevPort,isPortExplicit}.js`                                                                                             |
-| Tool contract   | `server-dev/lib/docs/devToolDefinitions.js` (definitions), `createDocsMcpServer.js` (handlers; `registerDevTool` enforces the pairing), `cli/scripts/generateDevTools.mjs`   |
-| Shim            | `cli/src/commands/mcp/*` (checkout guard: `createCheckoutGuard.js`, `listSessionCheckouts.js`)                                                                               |
-| Hub             | `cli/src/commands/hub/*`, `cli/src/utils/runHubCommand.js`, `cli/src/utils/findDevScripts.js`                                                                                |
-| agent-setup     | `cli/src/commands/agentSetup/{resolveMcpCommand,upsertMcpServer,devServerRules}.js`                                                                                          |
+| Area            | Files                                                                                                                                                                                                                                 |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Instance record | `utils/node-utils/src/{getDevInstancePath,readDevInstance,isPidAlive}.js`, `server-dev/manager/utils/{acquireDevInstance,resolvePorts,waitForServer}.mjs`, `manager/run.mjs`                                                          |
+| CLI dev         | `cli/src/commands/dev/{checkNoRunningInstance,resolveDevPort,isPortExplicit}.js`                                                                                                                                                      |
+| Tool contract   | `server-dev/lib/docs/devToolDefinitions.js` (definitions), `createDocsMcpServer.js` (handlers; `registerDevTool` enforces the pairing), `cli/scripts/generateDevTools.mjs`                                                            |
+| Shim            | `cli/src/commands/mcp/*` (checkout guard: `createCheckoutGuard.js`, `listSessionCheckouts.js`)                                                                                                                                        |
+| Hub             | `cli/src/commands/hub/*`, `cli/src/utils/runHubCommand.js`, `cli/src/utils/findDevScripts.js`                                                                                                                                         |
+| Owner watch     | `utils/node-utils/src/{watchOwner,registerServer,readServerRegistry,isProcessAlive}.js`, `cli/src/utils/{spawnServer,getLowdefyHome,getServerRegistryDirectory}.js`, `scripts/lib/ownedServerEnv.mjs`, `e2e-utils/src/startServer.js` |
+| agent-setup     | `cli/src/commands/agentSetup/{resolveMcpCommand,upsertMcpServer,devServerRules}.js`                                                                                                                                                   |
 
 ## Design
 

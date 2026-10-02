@@ -50,6 +50,7 @@ The `dev` command starts a Lowdefy development server, running locally. It can b
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
 - `--disable-telemetry`: Disable telemetry.
+- `--exit-with-pid <pid>`: Stop the server when the process with this id exits. For test runners and scripts that start the server. The `LOWDEFY_EXIT_WITH_PID` environment variable does the same, and passes through wrappers such as `pnpm exec` or a secrets manager.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 - `--mock-user [user]`: Start the dev server authenticated as a mock user, bypassing the login flow. Pass a JSON user object to set the identity and roles (e.g. `--mock-user '{"sub":"dev","roles":["admin"]}'`), or use the bare flag for a default user with no roles. This is the same mechanism as `auth.dev.mockUser`. Dev server only. See [Auth Configuration](/auth-configuration#mock-user-for-testing-dev-server-only).
 - `--no-open`: Do not open a new tab in the default browser.
@@ -58,6 +59,8 @@ The `dev` command starts a Lowdefy development server, running locally. It can b
 - `--watch <paths...>`: A list of paths to files or directories that should be watched for changes. Globs are supported. Specify each path to watch separated by spaces.
 - `--watch-ignore <patterns...>`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.
 - `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
+
+The server stops when the `lowdefy dev` process stops, however it stops, including when it is killed outright.
 
 One app runs one dev server. The running server records itself in `.lowdefy/instance.json` (its pid, port, URL, state and whether a person or the [Lowdefy hub](#hub) started it), and a second `lowdefy dev` for the same app exits before touching anything, naming the server already running. A record copied from another checkout (for example into a git worktree) is ignored.
 
@@ -95,8 +98,10 @@ The Lowdefy hub is a small per-user background process that runs dev servers for
 - `lowdefy hub start [directory] [--restart] [--clean]`: Start (or return) an app's dev server through the hub. `--clean` deletes the build directory first.
 - `lowdefy hub stop [directory] [--all]`: Stop a dev server the hub runs, or all of them.
 - `lowdefy hub logs [directory] [--lines <n>] [--grep <text>]`: Print the recent output of a dev server the hub runs.
+- `lowdefy hub ps`: List the Lowdefy servers running on this machine (dev and production servers started with the CLI), the process that owns each, and whether that owner is gone.
+- `lowdefy hub prune [--kill]`: Stop Lowdefy servers whose owner is gone, such as a test server whose test run was killed. It only lists them unless `--kill` is passed. It also lists servers left running by an older Lowdefy version with nothing but package-manager wrappers above them. A server with a live owner (a terminal, a script still running, the hub) is never stopped. The hub prunes servers whose owner is gone each time it starts.
 
-The hub keeps its state in `~/.lowdefy/hub` (set `LOWDEFY_HOME` to move it). It starts servers with the script `cli.devScript` names, or the one `package.json` script that runs `lowdefy dev`, so wrappers such as a secrets manager apply to agent-started servers too.
+The hub keeps its state in `~/.lowdefy/hub`, and running servers record themselves in `~/.lowdefy/servers` (set `LOWDEFY_HOME` to move both). It starts servers with the script `cli.devScript` names, or the one `package.json` script that runs `lowdefy dev`, so wrappers such as a secrets manager apply to agent-started servers too.
 
 ## init
 
@@ -177,9 +182,12 @@ The `start` command starts a Lowdefy production server. To start a Lowdefy serve
 
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--disable-telemetry`: Disable telemetry.
+- `--exit-with-pid <pid>`: Stop the server when the process with this id exits. For test runners and scripts that start the server. The `LOWDEFY_EXIT_WITH_PID` environment variable does the same, and passes through wrappers such as `pnpm exec` or a secrets manager.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 - `--port <port>`: Change the port the server is hosted at. The default is `3000`.
 - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
+
+The server stops when the `lowdefy start` process stops, however it stops, including when it is killed outright. A server run directly with `node`, as in a Docker image, is not affected.
 
 
 #### Examples
