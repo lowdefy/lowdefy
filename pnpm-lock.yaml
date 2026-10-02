@@ -127,8 +127,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
       nodemailer:
-        specifier: 9.1.1
-        version: 9.1.1
+        specifier: 10.0.13
+        version: 10.0.13
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
@@ -1857,8 +1857,8 @@ importers:
         specifier: 6.0.0
         version: link:../../../utils/helpers
       nodemailer:
-        specifier: 9.1.1
-        version: 9.1.1
+        specifier: 10.0.13
+        version: 10.0.13
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
@@ -2932,8 +2932,8 @@ importers:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.3)
       nodemailer:
-        specifier: 9.1.1
-        version: 9.1.1
+        specifier: 10.0.13
+        version: 10.0.13
 
   packages/servers/server-e2e:
     dependencies:
@@ -3317,8 +3317,8 @@ importers:
         specifier: 2.0.10
         version: 2.0.10(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       markdown-it:
-        specifier: 14.3.0
-        version: 14.3.0
+        specifier: 14.3.1
+        version: 14.3.1
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3
@@ -10869,8 +10869,8 @@ packages:
     resolution: {integrity: sha512-TchMembfxfNVpHkbtriWltGWc+m3xszaRD0CZup7GFFhzIgQqxIfn3eGj1yZpfuflzPvfkt611B2Q/Bsk1YnGg==}
     hasBin: true
 
-  markdown-it@14.3.0:
-    resolution: {integrity: sha512-RCEsPjR+sr0x+AuYp601tKTkgFG4YEPLCzHST3cQ/fhlJkqAkz1L2/Qbp1j9qw5SBwQHFBoW8+hoN5xssOF0Tw==}
+  markdown-it@14.3.1:
+    resolution: {integrity: sha512-4Ej49aYTDFIQ+uBkfX8GBvJGccoARxxPep+7aWTs55ozbjQJpW9M26Fe53vnGgvLeVzva/amzjQQaQu9w0vMhA==}
     hasBin: true
 
   markdown-table@3.0.3:
@@ -11350,9 +11350,9 @@ packages:
     resolution: {integrity: sha512-He9XskOFms62SyAKkLu8CcGcYHAo+BSHSsORI8s4PJH8qZgZY4L4lDfvyN0twvmbpyG+eGrxpyBlskj9d9rJ8A==}
     engines: {node: '>=20.0.0'}
 
-  nodemailer@9.1.1:
-    resolution: {integrity: sha512-izw9mVKFix6YSnC9eLgV6g1opl9DUlRio9ZNcq+Wu9Ujn2UwF+8Nl0B8nz22kEC+CTZCvinkxwJ0DeFbb6NwcQ==}
-    engines: {node: '>=6.0.0'}
+  nodemailer@10.0.13:
+    resolution: {integrity: sha512-SzG86OlvcW/NNhUFC6uROMwRTL4n7MswfQqC/T8mhkmnY1YVa23zUEMYi4ijSeXSl9GLz9ZeTJDUatEDuY5FeQ==}
+    engines: {node: '>=20.0.0'}
 
   nodemon@3.1.0:
     resolution: {integrity: sha512-xqlktYlDMCepBJd43ZQhjWwMw2obW/JRvkrLxq5RCNcuDDX1DbcPT+qT1IlIIdf+DhnWs90JpTMe+Y5KxOchvA==}
@@ -22397,7 +22397,7 @@ snapshots:
       mdurl: 1.0.1
       uc.micro: 1.0.6
 
-  markdown-it@14.3.0:
+  markdown-it@14.3.1:
     dependencies:
       argparse: 2.0.1
       entities: 4.5.0
@@ -23122,7 +23122,7 @@ snapshots:
 
   nodemailer@10.0.10: {}
 
-  nodemailer@9.1.1: {}
+  nodemailer@10.0.13: {}
 
   nodemon@3.1.0:
     dependencies:
