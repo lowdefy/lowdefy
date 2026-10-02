@@ -19,7 +19,7 @@ import { spawnSync } from 'child_process';
 import parseProcessTable from './parseProcessTable.js';
 
 function readProcessTable() {
-  const result = spawnSync('ps', ['-A', '-o', 'pid=,ppid=,lstart=,command='], {
+  const result = spawnSync('ps', ['-A', '-o', 'pid=,ppid=,pgid=,lstart=,command='], {
     encoding: 'utf8',
     env: { ...process.env, LC_ALL: 'C', TZ: 'UTC' },
     maxBuffer: 64 * 1024 * 1024,

@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-// Parses `ps -A -o pid=,ppid=,lstart=,command=` read with LC_ALL=C and TZ=UTC. lstart is
+// Parses `ps -A -o pid=,ppid=,pgid=,lstart=,command=` read with LC_ALL=C and TZ=UTC. lstart is
 // five fields ("Fri Oct  2 20:55:31 2026"), kept exactly as ps prints it so it compares
 // equal to what getProcessStartTime (and every registry record) holds.
-const LINE = /^\s*(\d+)\s+(\d+)\s+(\w{3}\s+\w{3}\s+\d+\s+\d+:\d+:\d+\s+\d{4})\s+(.*)$/;
+const LINE = /^\s*(\d+)\s+(\d+)\s+(\d+)\s+(\w{3}\s+\w{3}\s+\d+\s+\d+:\d+:\d+\s+\d{4})\s+(.*)$/;
 
 function parseProcessTable(text) {
   const processes = [];
@@ -29,8 +29,9 @@ function parseProcessTable(text) {
     processes.push({
       pid: Number(match[1]),
       ppid: Number(match[2]),
-      processStartTime: match[3],
-      command: match[4].trim(),
+      pgid: Number(match[3]),
+      processStartTime: match[4],
+      command: match[5].trim(),
     });
   });
   return processes;

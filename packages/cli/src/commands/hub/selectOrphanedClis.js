@@ -22,10 +22,11 @@ const LOWDEFY_CLI =
   /(^|\s|\/)(lowdefy|\S*lowdefy\S*\/dist\/index\.js|\S*packages\/cli\/dist\/index\.js) (start|dev|test)(\s|$)/;
 
 // Registered servers whose owner, the CLI that started them, is alive but itself orphaned:
-// its spawner (a pnpm or npx wrapper, a harness) was killed outright, and nothing but
-// wrappers is left between the CLI and the reaper. The CLI holds the server's stdin, so the
-// server never notices. Same rules as for unregistered servers, applied to the CLI, so only
-// a person-run prune uses it. Pure, so it is tested against process table fixtures.
+// its spawner (a pnpm or npx wrapper, a harness) was killed outright, its process group has
+// no leader left, and nothing but wrappers is left between the CLI and the reaper. The CLI
+// holds the server's stdin, so the server never notices. Same wrapper rules as for
+// unregistered servers, applied to the CLI, so only a person-run prune uses it. Pure, so it
+// is tested against process table fixtures.
 function selectOrphanedClis({ processes, records, hubPids, platform }) {
   if (platform !== 'darwin' && platform !== 'linux') {
     return [];
@@ -48,6 +49,12 @@ function selectOrphanedClis({ processes, records, hubPids, platform }) {
       return;
     }
     if (hubPids.has(cli.pid)) {
+      return;
+    }
+    // A killed spawner (a pnpm exec wrapper, a harness) leaves the CLI's process group without
+    // its leader. A launchd or systemd service, or a hub server, keeps a live leader: the
+    // service's or the hub's spawn starts a new group.
+    if (byPid.has(cli.pgid)) {
       return;
     }
     const wrappers = findWrapperChain({ pid: cli.ppid, byPid, hubPids, platform });

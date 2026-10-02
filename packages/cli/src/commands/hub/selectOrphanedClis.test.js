@@ -18,8 +18,9 @@ import selectOrphanedClis from './selectOrphanedClis.js';
 
 const CLI_START = 'Fri Oct  2 21:00:00 2026';
 
-function proc(pid, ppid, command, processStartTime = CLI_START) {
-  return { pid, ppid, processStartTime, command };
+// pgid defaults to a leader that is not in the table: the spawner that was killed.
+function proc(pid, ppid, command, processStartTime = CLI_START, pgid = 50) {
+  return { pid, ppid, pgid, processStartTime, command };
 }
 
 function record({ owner = {}, ownerAlive = true } = {}) {
@@ -64,6 +65,22 @@ test('selectOrphanedClis matches a CLI whose remaining ancestors are only wrappe
     proc(102, 101, 'node src/index.js'),
   ];
   expect(select({ processes })).toMatchObject([{ cliPid: 101, reaper: 'pid 1' }]);
+});
+
+test('selectOrphanedClis skips a CLI whose process group leader is alive, as a service runs it', () => {
+  const asLaunchdService = [
+    proc(1, 0, '/sbin/launchd', CLI_START, 1),
+    proc(101, 1, CLI, CLI_START, 101),
+    proc(102, 101, 'node src/index.js', CLI_START, 101),
+  ];
+  expect(select({ processes: asLaunchdService })).toEqual([]);
+  const underServiceWrapper = [
+    proc(1, 0, '/sbin/launchd', CLI_START, 1),
+    proc(100, 1, '/usr/local/bin/pnpm exec lowdefy start --port 3111', CLI_START, 100),
+    proc(101, 100, CLI, CLI_START, 100),
+    proc(102, 101, 'node src/index.js', CLI_START, 100),
+  ];
+  expect(select({ processes: underServiceWrapper })).toEqual([]);
 });
 
 test('selectOrphanedClis skips a CLI started from a terminal shell', () => {
