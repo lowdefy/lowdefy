@@ -15,7 +15,7 @@
 */
 
 import { createRequire } from 'module';
-import { Command, Option } from 'commander';
+import { Command, InvalidArgumentError, Option } from 'commander';
 
 import agentSetup from './commands/agentSetup/agentSetup.js';
 import build from './commands/build/build.js';
@@ -43,6 +43,14 @@ const require = createRequire(import.meta.url);
 const packageJson = require('../package.json');
 const { description, version: cliVersion } = packageJson;
 
+function parsePid(value) {
+  const pid = Number(value);
+  if (!Number.isInteger(pid) || pid <= 0) {
+    throw new InvalidArgumentError('Expected a process id.');
+  }
+  return pid;
+}
+
 const program = new Command();
 
 program.name('lowdefy').description(description).version(cliVersion, '-v, --version');
@@ -59,6 +67,10 @@ const options = {
   disableTelemetry: new Option('--disable-telemetry', 'Disable telemetry.').env(
     'LOWDEFY_DISABLE_TELEMETRY'
   ),
+  exitWithPid: new Option(
+    '--exit-with-pid <pid>',
+    'Stop the server when the process with this id exits. For test runners and scripts that start the server.'
+  ).argParser(parsePid),
   logLevel: new Option(
     '--log-level <level>',
     'The minimum severity of logs to show in the CLI output.'
@@ -134,6 +146,7 @@ program
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)
+  .addOption(options.exitWithPid)
   .addOption(options.logLevel)
   .addOption(options.mockUser)
   .option('--no-open', 'Do not open a new tab in the default browser.')
@@ -258,6 +271,7 @@ program
   .usage('[options]')
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
+  .addOption(options.exitWithPid)
   .addOption(options.logLevel)
   .addOption(options.port)
   .addOption(options.serverDirectory)

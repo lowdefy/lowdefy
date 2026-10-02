@@ -18,6 +18,8 @@ import crypto from 'crypto';
 import os from 'os';
 import path from 'path';
 
+import getLowdefyHome from '../../utils/getLowdefyHome.js';
+
 // Unix socket paths are limited to about 104 bytes.
 const MAX_SOCKET_PATH = 100;
 
@@ -34,11 +36,8 @@ function getSocketPath({ hubDirectory }) {
   return path.join(os.tmpdir(), `lowdefy-hub-${id}.sock`);
 }
 
-// LOWDEFY_HOME moves all per-user state, so tests and side-by-side hubs never
-// touch the developer's real one.
 function getHubPaths() {
-  const home = process.env.LOWDEFY_HOME ?? path.join(os.homedir(), '.lowdefy');
-  const hubDirectory = path.join(home, 'hub');
+  const hubDirectory = path.join(getLowdefyHome(), 'hub');
   return {
     hubDirectory,
     logPath: path.join(hubDirectory, 'hub.log'),

@@ -44,6 +44,7 @@ import scanPackages from './lib/scanPackages.mjs';
 import rewriteDeps from './lib/rewriteDeps.mjs';
 import addPlugins, { readLowdefyYaml } from './lib/addPlugins.mjs';
 import createWorkspace from './lib/createWorkspace.mjs';
+import ownedServerEnv from './lib/ownedServerEnv.mjs';
 
 const SERVER_DEV_DIR = path.join(REPO_ROOT, 'packages/servers/server-dev');
 
@@ -142,6 +143,7 @@ logger.info({ spin: 'start' }, 'Starting dev server...');
 
 const env = {
   ...process.env,
+  ...ownedServerEnv(),
   LOWDEFY_DIRECTORY_CONFIG: configDirectory,
   LOWDEFY_LOG_LEVEL: logLevel,
   LOWDEFY_SERVER_DEV_OPEN_BROWSER: openBrowser ? 'true' : 'false',
@@ -181,9 +183,12 @@ if (watchIgnorePaths.length > 0) {
   env.LOWDEFY_SERVER_DEV_WATCH_IGNORE = JSON.stringify(watchIgnorePaths);
 }
 
-const child = spawn('node', ['manager/run.mjs'], {
+// node itself, no wrapper between this script and the manager. This script
+// holds the manager's stdin and never writes to it: the pipe closes when this
+// script dies, however it dies, and the manager exits on that.
+const child = spawn(process.execPath, ['manager/run.mjs'], {
   cwd: devDir,
-  stdio: ['ignore', 'pipe', 'pipe'],
+  stdio: ['pipe', 'pipe', 'pipe'],
   env,
 });
 
@@ -207,7 +212,7 @@ child.on('exit', (code) => {
 });
 
 // Forward signals to child
-for (const signal of ['SIGINT', 'SIGTERM']) {
+for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
   process.on(signal, () => {
     child.kill(signal);
   });

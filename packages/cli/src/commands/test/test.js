@@ -20,6 +20,8 @@ import { readDevInstance } from '@lowdefy/node-utils';
 import selectTests from './selectTests.js';
 import startDevServer from './startDevServer.js';
 
+const SIGNAL_EXIT_CODES = { SIGINT: 130, SIGTERM: 143, SIGHUP: 129 };
+
 function trimTrailingSlash(url) {
   return url.replace(/\/+$/, '');
 }
@@ -70,13 +72,21 @@ async function test({ context }) {
 
   const server = await resolveServer({ context });
   let interrupted = false;
-  async function onSigint() {
-    interrupted = true;
-    context.logger.warn('Interrupted. Stopping development server.');
-    await server.stop();
-    process.exit(130);
-  }
-  process.once('SIGINT', onSigint);
+  // The dev server runs in its own process group, out of reach of a signal to
+  // this CLI's group, so every signal that ends the CLI stops it first.
+  const signalHandlers = Object.entries(SIGNAL_EXIT_CODES).map(([signal, exitCode]) => {
+    async function onSignal() {
+      if (interrupted) {
+        return;
+      }
+      interrupted = true;
+      context.logger.warn('Interrupted. Stopping development server.');
+      await server.stop();
+      process.exit(exitCode);
+    }
+    process.once(signal, onSignal);
+    return [signal, onSignal];
+  });
 
   const results = [];
   try {
@@ -91,7 +101,7 @@ async function test({ context }) {
       }
     }
   } finally {
-    process.removeListener('SIGINT', onSigint);
+    signalHandlers.forEach(([signal, onSignal]) => process.removeListener(signal, onSignal));
     if (!interrupted) {
       await server.stop();
     }
