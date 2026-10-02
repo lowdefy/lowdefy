@@ -116,7 +116,7 @@ test('lowdefy mcp lists the lifecycle tools and every dev tool with a directory 
 
 // Stands in for the per-user hub on its socket: answers each request with what
 // a hub that has started the app would.
-async function listenFakeHub({ configDirectory }) {
+async function listenFakeHub({ configDirectory, start = {} }) {
   const { socketPath } = getHubPaths();
   fs.mkdirSync(path.dirname(socketPath), { recursive: true });
   const answers = {
@@ -129,6 +129,7 @@ async function listenFakeHub({ configDirectory }) {
       url: 'http://localhost:4100',
       pid: process.pid,
       managed: true,
+      ...start,
     },
   };
   const server = net.createServer((socket) => {
@@ -161,6 +162,28 @@ test('lowdefy_dev_start says the hub stops the server once it has been idle', as
     expect(text(result)).toContain(
       'The hub stops this server once nobody has used it for 15 minutes (sooner when the machine is short of memory); the next lowdefy_ call starts it again.'
     );
+  } finally {
+    await client.close();
+    await shim.close();
+    client = undefined;
+    shim = undefined;
+    await new Promise((resolve) => hub.close(resolve));
+  }
+});
+
+test('lowdefy_dev_start keeps the hub note when another hub owns the server', async () => {
+  const app = makeApp('apps/main');
+  const note = 'This dev server was started by another hub; it cannot be restarted from here.';
+  const hub = await listenFakeHub({ configDirectory: app, start: { managed: false, note } });
+  try {
+    await connect({ cwd: app });
+    const result = await client.callTool({
+      name: 'lowdefy_dev_start',
+      arguments: { restart: true },
+    });
+    expect(result.isError).toBeFalsy();
+    expect(text(result)).toContain(note);
+    expect(text(result)).not.toContain('The hub stops this server once nobody has used it');
   } finally {
     await client.close();
     await shim.close();

@@ -210,7 +210,9 @@ function createShim({ cliVersion, cwd, devTools }) {
     if (result.state !== 'ready') {
       throw new Error(describeNotReady({ label: app.label, status: result }));
     }
-    return { app: app.label, ...result, note: IDLE_STOP_NOTE };
+    // A note from the hub (a server another hub started, which it cannot
+    // restart) says the request was not done, so it stands over the idle rule.
+    return { app: app.label, ...result, note: result.note ?? IDLE_STOP_NOTE };
   }
 
   async function stop({ directory }) {
