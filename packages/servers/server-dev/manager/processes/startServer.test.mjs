@@ -30,7 +30,7 @@ function createContext({ mailSink }) {
     directories: { config: '/apps/tenant' },
     instance: { update: jest.fn() },
     internalPort: 3211,
-    logger: { debug: jest.fn(), error: jest.fn() },
+    logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
     mailSink,
     options: { port: 3210 },
     serverArtifacts: { record: jest.fn() },
@@ -47,6 +47,7 @@ beforeEach(() => {
 
 afterEach(() => {
   delete process.env.LOWDEFY_DEV_SMTP_PORT;
+  delete process.env.BETTER_AUTH_URL;
 });
 
 test.each([
@@ -59,4 +60,34 @@ test.each([
   const { env } = mockSpawn.mock.calls[0][2];
   expect(env.LOWDEFY_SERVER_DEV_MAIL_SINK).toBe(expected);
   expect(env.LOWDEFY_DEV_SMTP_PORT).toBe('2525');
+});
+
+test('startServer moves a localhost BETTER_AUTH_URL onto the public dev port, and says so once', () => {
+  process.env.BETTER_AUTH_URL = 'http://localhost:3000';
+  const context = createContext({ mailSink: null });
+
+  startServer(context);
+  startServer(context);
+
+  const { env } = mockSpawn.mock.calls[0][2];
+  expect(env.BETTER_AUTH_URL).toBe('http://localhost:3210');
+  expect(mockSpawn.mock.calls[1][2].env.BETTER_AUTH_URL).toBe('http://localhost:3210');
+  expect(context.logger.info).toHaveBeenCalledTimes(1);
+  expect(context.logger.info.mock.calls[0][0]).toContain('http://localhost:3210');
+});
+
+test('startServer passes a non-loopback BETTER_AUTH_URL through', () => {
+  process.env.BETTER_AUTH_URL = 'https://dev.example.ngrok.app';
+  const context = createContext({ mailSink: null });
+
+  startServer(context);
+
+  expect(mockSpawn.mock.calls[0][2].env.BETTER_AUTH_URL).toBe('https://dev.example.ngrok.app');
+  expect(context.logger.info).not.toHaveBeenCalled();
+});
+
+test('startServer leaves BETTER_AUTH_URL unset when none is configured', () => {
+  startServer(createContext({ mailSink: null }));
+
+  expect(mockSpawn.mock.calls[0][2].env.BETTER_AUTH_URL).toBeUndefined();
 });
