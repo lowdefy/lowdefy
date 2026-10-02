@@ -436,6 +436,9 @@ test('hub reap keeps a server restarted during the tab poll', async () => {
     },
   });
 
+  // The restarted server is the adopting hub's, so the clean-up stops it there.
+  hub = adopting;
+
   await adopting.reap();
 
   expect((await restarting).state).toBe('ready');
