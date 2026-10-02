@@ -26,13 +26,21 @@ function describeOwner(owner) {
   return owner.via === 'exit-with-pid' ? `owner pid ${owner.pid}` : `CLI pid ${owner.pid}`;
 }
 
-// Signalled only when ps names the same process now: a pid alone may have been reused, and a
-// start time that cannot be read (no ps, Windows, ps failing) proves nothing.
-function isSameProcess({ pid, processStartTime }) {
-  if (type.isNone(processStartTime) || !isPidAlive(pid)) {
-    return false;
+// Signalled only when ps names the same process now: a pid alone may have been reused. A
+// start time that cannot be read (no ps, Windows, ps failing) proves nothing either way, so
+// such a process is neither signalled nor taken for gone: its record stays.
+function checkProcess({ pid, processStartTime }) {
+  if (!isPidAlive(pid)) {
+    return 'gone';
   }
-  return getProcessStartTime({ pid }) === processStartTime;
+  if (type.isNone(processStartTime)) {
+    return 'unverified';
+  }
+  const startTime = getProcessStartTime({ pid });
+  if (type.isNone(startTime)) {
+    return 'unverified';
+  }
+  return startTime === processStartTime ? 'same' : 'gone';
 }
 
 function signalPid({ pid, signal }) {
@@ -60,8 +68,12 @@ function removeRecord({ candidate }) {
 
 async function stopCandidates({ candidates, graceMs }) {
   candidates.forEach((candidate) => {
-    if (!isSameProcess({ pid: candidate.pid, processStartTime: candidate.processStartTime })) {
-      candidate.result = 'gone';
+    const status = checkProcess({
+      pid: candidate.pid,
+      processStartTime: candidate.processStartTime,
+    });
+    if (status !== 'same') {
+      candidate.result = status;
       return;
     }
     // The pid, never its group: an orphan keeps its dead spawner's group, which can hold
@@ -74,13 +86,22 @@ async function stopCandidates({ candidates, graceMs }) {
     await wait(200);
   }
   signalled.forEach((candidate) => {
-    if (!isSameProcess({ pid: candidate.pid, processStartTime: candidate.processStartTime })) {
+    const status = checkProcess({
+      pid: candidate.pid,
+      processStartTime: candidate.processStartTime,
+    });
+    if (status === 'unverified') {
+      candidate.result = status;
+    }
+    if (status !== 'same') {
       return;
     }
     signalPid({ pid: candidate.pid, signal: 'SIGKILL' });
     candidate.result = 'killed';
   });
-  candidates.forEach((candidate) => removeRecord({ candidate }));
+  candidates
+    .filter((candidate) => candidate.result !== 'unverified')
+    .forEach((candidate) => removeRecord({ candidate }));
 }
 
 // Stops Lowdefy servers that provably have no owner. Registered servers (every server the

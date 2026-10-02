@@ -136,19 +136,39 @@ test('pruneServers skips a server whose pid now names another process', async ()
   expect(running.has(100)).toBe(true);
 });
 
-test('pruneServers never signals a candidate whose start time cannot be read', async () => {
+test('pruneServers never signals or unregisters a candidate whose start time cannot be read', async () => {
   running.set(100, null);
   running.set(101, 'start-101');
+  const recordPath100 = writeRecordFile(100);
+  const recordPath101 = writeRecordFile(101);
   records = [
-    { ...record({ pid: 100, prunable: true }), processStartTime: null },
-    { ...record({ pid: 101, prunable: true }), processStartTime: 'start-101' },
+    { ...record({ pid: 100, prunable: true, recordPath: recordPath100 }), processStartTime: null },
+    {
+      ...record({ pid: 101, prunable: true, recordPath: recordPath101 }),
+      processStartTime: 'start-101',
+    },
   ];
   running.set(101, null);
   const candidates = await pruneServers({ directory, kill: true, graceMs: 50 });
   expect(signals).toEqual([]);
-  expect(candidates.map((candidate) => candidate.result)).toEqual(['gone', 'gone']);
+  expect(candidates.map((candidate) => candidate.result)).toEqual(['unverified', 'unverified']);
   expect(running.has(100)).toBe(true);
   expect(running.has(101)).toBe(true);
+  expect(fs.existsSync(recordPath100)).toBe(true);
+  expect(fs.existsSync(recordPath101)).toBe(true);
+});
+
+test('pruneServers keeps the record of a signalled server whose start time cannot be read before SIGKILL', async () => {
+  running.set(100, 'stubborn');
+  const recordPath = writeRecordFile(100);
+  records = [{ ...record({ pid: 100, prunable: true, recordPath }), processStartTime: 'stubborn' }];
+  const pending = pruneServers({ directory, kill: true, graceMs: 50 });
+  running.set(100, null);
+  const [candidate] = await pending;
+  expect(signals).toEqual([{ pid: 100, signal: 'SIGTERM' }]);
+  expect(candidate.result).toEqual('unverified');
+  expect(running.has(100)).toBe(true);
+  expect(fs.existsSync(recordPath)).toBe(true);
 });
 
 test('pruneServers adds unregistered legacy orphans only when asked, excluding registered pids', async () => {

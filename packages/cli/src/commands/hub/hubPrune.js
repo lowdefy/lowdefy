@@ -26,6 +26,7 @@ const RESULTS = {
   gone: 'already gone, not signalled',
   killed: 'killed',
   stopped: 'stopped',
+  unverified: 'left running: its start time could not be read',
 };
 
 // `lowdefy hub prune [--kill]` - stops Lowdefy servers that provably have no owner. A dry
