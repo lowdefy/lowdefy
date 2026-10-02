@@ -25,12 +25,15 @@ import hasLowdefyYaml from '../../utils/hasLowdefyYaml.js';
 import fetchOpenTabs from './fetchOpenTabs.js';
 import {
   HUB_PROTOCOL,
+  IDLE_LIMIT_MS,
   IDLE_STOP_MS,
   MAX_LOG_LINES,
   PORT_RANGE,
   READY_TIMEOUT_MS,
+  SOFT_CAP_SERVERS,
 } from './hubProtocol.js';
 import readLogTail from './readLogTail.js';
+import readMemoryPressure from './readMemoryPressure.js';
 import resolveDevCommand from './resolveDevCommand.js';
 import stopProcessGroup from './stopProcessGroup.js';
 
@@ -86,6 +89,7 @@ function createHub({
   logger,
   openTabs = fetchOpenTabs,
   portRange = PORT_RANGE,
+  readPressure = readMemoryPressure,
 }) {
   const registry = loadRegistry(paths);
   const exits = new Map();
@@ -298,8 +302,29 @@ function createHub({
     return null;
   }
 
+  function isRunning(configDirectory) {
+    return ['starting', 'ready'].includes(describe(configDirectory).state);
+  }
+
+  // Under memory pressure, stop the servers that are already idle before a
+  // new one adds its memory, instead of up to a reap interval later. Outside
+  // serialize: the pass stops servers through it.
+  async function reapBeforeLaunch({ configDirectory }) {
+    if (readPressure() === 'normal') {
+      return;
+    }
+    if (Object.keys(registry.instances).length < SOFT_CAP_SERVERS) {
+      return;
+    }
+    if (isRunning(configDirectory)) {
+      return;
+    }
+    await reap();
+  }
+
   async function start({ env, restart = false, clean = false, ...params }) {
     const configDirectory = realDirectory(params.configDirectory);
+    await reapBeforeLaunch({ configDirectory });
     const answer = await serialize(() =>
       launchUnlessRunning({ configDirectory, env, restart, clean })
     );
@@ -338,6 +363,9 @@ function createHub({
     };
   }
 
+  // Attachment decides only for a server on an older server-dev, whose
+  // instance record does not say when it was last used (see isIdle). The shim
+  // keeps attaching for those.
   function attach({ connectionId, ...params }) {
     const configDirectory = realDirectory(params.configDirectory);
     if (!attachments.has(connectionId)) {
@@ -402,11 +430,40 @@ function createHub({
     saveRegistry();
   }
 
-  // Stops servers nobody uses: the app was removed, or no agent session
-  // has been attached and no browser tab open for IDLE_STOP_MS.
+  // Whether nobody has used a server for the idle limit. The dev manager
+  // records its own last use (requests through its port, builds) in the
+  // instance record; an agent session holding a hub connection does not count,
+  // since helper agents share their parent session's one connection and would
+  // keep every server they touched alive for the parent's whole session.
+  async function isIdle({ configDirectory, managed, idleLimitMs }) {
+    const record = readDevInstance({ configDirectory });
+    if (record !== null && !type.isNone(record.lastActivityAt)) {
+      if (record.state !== 'ready' || record.building === true || record.activeRequests > 0) {
+        return false;
+      }
+      if (Date.now() - Date.parse(record.lastActivityAt) <= idleLimitMs) {
+        return false;
+      }
+    } else {
+      if (isAttached(configDirectory)) {
+        return false;
+      }
+      const idleSince = lastDetachedAt.get(configDirectory) ?? Date.parse(managed.startedAt);
+      if (Date.now() - idleSince < IDLE_STOP_MS) {
+        return false;
+      }
+    }
+    // A tab poll that fails counts as no tabs: the record already said idle.
+    return record === null || (await openTabs({ url: record.url })) === 0;
+  }
+
+  // Stops servers nobody uses: the app was removed, or nobody has used it for
+  // the idle limit and no browser tab has it open.
   async function reapOnce() {
     forgetDeadServers();
     countAppMisses();
+    const pressure = readPressure();
+    const idleLimitMs = IDLE_LIMIT_MS[pressure];
     for (const [configDirectory, managed] of Object.entries(registry.instances)) {
       if (isAppRemoved(configDirectory)) {
         if (isManagedAlive(managed)) {
@@ -417,19 +474,15 @@ function createHub({
         logger.info(`Stopped ${configDirectory}: the app was removed.`);
         continue;
       }
-      if (isAttached(configDirectory)) {
-        continue;
-      }
-      const idleSince = lastDetachedAt.get(configDirectory) ?? Date.parse(managed.startedAt);
-      if (Date.now() - idleSince < IDLE_STOP_MS) {
-        continue;
-      }
-      const record = readDevInstance({ configDirectory });
-      if (record !== null && (await openTabs({ url: record.url })) > 0) {
+      if (!(await isIdle({ configDirectory, managed, idleLimitMs }))) {
         continue;
       }
       await stop({ configDirectory });
-      logger.info(`Stopped ${configDirectory}: idle.`);
+      logger.info(
+        `Stopped ${configDirectory}: idle for over ${
+          idleLimitMs / 60000
+        } minutes (memory pressure ${pressure}).`
+      );
     }
     forgetRemovedApps();
   }

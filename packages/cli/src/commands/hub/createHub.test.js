@@ -63,14 +63,45 @@ function randomPortRange() {
   return { first, last: first + 40 };
 }
 
-function createTestHub({ openTabs = async () => 0 } = {}) {
+function createTestHub({ openTabs = async () => 0, readPressure = () => 'normal' } = {}) {
   return createHub({
     paths: { registryPath: path.join(home, 'hub', 'registry.json') },
     cliVersion: '6.0.0',
     logger: { info: () => {}, error: () => {} },
     openTabs,
     portRange,
+    readPressure,
   });
+}
+
+let extraApps = [];
+
+// Another app directory with the fake dev server, removed after the test.
+function makeApp() {
+  const directory = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-hub-app-')));
+  fs.writeFileSync(path.join(directory, 'lowdefy.yaml'), 'lowdefy: 6.0.0\n');
+  fs.writeFileSync(path.join(directory, 'fake-dev.cjs'), FAKE_DEV_SERVER);
+  fs.writeFileSync(
+    path.join(directory, 'package.json'),
+    JSON.stringify({ scripts: { dev: 'node fake-dev.cjs # lowdefy dev' } })
+  );
+  extraApps.push(directory);
+  return directory;
+}
+
+// What the dev manager writes as it is used: merged into the instance record.
+function writeActivity({ directory = configDirectory, idleMinutes, ...fields }) {
+  const instancePath = path.join(directory, '.lowdefy', 'instance.json');
+  const record = JSON.parse(fs.readFileSync(instancePath, 'utf8'));
+  const lastActivityAt = new Date(Date.now() - idleMinutes * 60 * 1000).toISOString();
+  fs.writeFileSync(
+    instancePath,
+    JSON.stringify({ ...record, lastActivityAt, activeRequests: 0, building: false, ...fields })
+  );
+}
+
+function grandchildOf(directory) {
+  return Number(fs.readFileSync(path.join(directory, 'grandchild.pid'), 'utf8'));
 }
 
 function isAlive(pid) {
@@ -110,6 +141,11 @@ beforeEach(() => {
 
 afterEach(async () => {
   await hub.stop({ configDirectory }).catch(() => {});
+  for (const directory of extraApps) {
+    await hub.stop({ configDirectory: directory }).catch(() => {});
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+  extraApps = [];
   fs.rmSync(home, { recursive: true, force: true });
   fs.rmSync(configDirectory, { recursive: true, force: true });
 });
@@ -290,3 +326,102 @@ test('overlapping reaps share one pass, so a slow open-tabs check is not repeate
 test.each([[0], [-5], [2.5], ['10'], [null]])('hub logs refuses lines %p', (lines) => {
   expect(() => hub.logs({ configDirectory, lines })).toThrow('"lines" must be a positive integer');
 });
+
+test('hub reap stops a server unused for the idle limit, though an agent session is still attached', async () => {
+  await hub.start({ configDirectory });
+  hub.attach({ connectionId: 1, configDirectory });
+  writeActivity({ idleMinutes: 16 });
+  const grandchild = grandchildOf(configDirectory);
+
+  await hub.reap();
+
+  expect(await waitUntil(() => !isAlive(grandchild))).toBe(true);
+  expect(hub.list().instances).toEqual([]);
+});
+
+test.each([
+  ['a request is in flight', { idleMinutes: 16, activeRequests: 1 }],
+  ['a build is running', { idleMinutes: 16, building: true }],
+  ['it is still starting', { idleMinutes: 16, state: 'starting' }],
+  ['it was used 14 minutes ago', { idleMinutes: 14 }],
+])('hub reap keeps a server when %s', async (_, activity) => {
+  await hub.start({ configDirectory });
+  writeActivity(activity);
+  await hub.reap();
+  expect(hub.list().instances).toEqual([expect.objectContaining({ configDirectory })]);
+});
+
+test('hub reap keeps an unused server that a browser tab has open', async () => {
+  await hub.start({ configDirectory });
+  writeActivity({ idleMinutes: 60 });
+  const openTabs = jest.fn(async () => 1);
+  const adopting = createTestHub({ openTabs });
+  await adopting.reap();
+  expect(openTabs).toHaveBeenCalledTimes(1);
+  expect(adopting.list().instances).toEqual([expect.objectContaining({ configDirectory })]);
+});
+
+test.each([
+  ['warn', 6],
+  ['critical', 3],
+])(
+  'hub reap at %s memory pressure stops a server unused for %i minutes',
+  async (pressure, idleMinutes) => {
+    await hub.start({ configDirectory });
+    writeActivity({ idleMinutes });
+    const keeping = createTestHub();
+    await keeping.reap();
+    expect(keeping.list().instances).toHaveLength(1);
+
+    const pressured = createTestHub({ readPressure: () => pressure });
+    await pressured.reap();
+    expect(pressured.list().instances).toEqual([]);
+  }
+);
+
+test('hub reap keeps the attachment rule for a server whose record has no activity fields', async () => {
+  await hub.start({ configDirectory });
+  hub.attach({ connectionId: 1, configDirectory });
+  // Started long ago, by the registry's account.
+  const registryPath = path.join(home, 'hub', 'registry.json');
+  const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
+  registry.instances[configDirectory].startedAt = new Date(0).toISOString();
+  fs.writeFileSync(registryPath, JSON.stringify(registry));
+  const adopting = createTestHub();
+  adopting.attach({ connectionId: 1, configDirectory });
+
+  await adopting.reap();
+  expect(adopting.list().instances).toHaveLength(1);
+
+  adopting.connectionClosed({ connectionId: 1 });
+  await adopting.reap();
+  expect(adopting.list().instances).toHaveLength(1);
+});
+
+test.each([
+  ['warn', true],
+  ['normal', false],
+])(
+  'a start at %s memory pressure with 4 servers running reaps idle servers first: %p',
+  async (pressure, reaped) => {
+    let currentPressure = 'normal';
+    hub = createTestHub({ readPressure: () => currentPressure });
+    await hub.start({ configDirectory });
+    for (let i = 0; i < 3; i += 1) {
+      await hub.start({ configDirectory: makeApp() });
+    }
+    // Idle past the warn limit but not the normal one.
+    writeActivity({ idleMinutes: 6 });
+    const grandchild = grandchildOf(configDirectory);
+
+    currentPressure = pressure;
+    await hub.start({ configDirectory: makeApp() });
+
+    if (reaped) {
+      expect(await waitUntil(() => !isAlive(grandchild))).toBe(true);
+    } else {
+      expect(isAlive(grandchild)).toBe(true);
+    }
+    expect(hub.list().instances).toHaveLength(reaped ? 4 : 5);
+  }
+);

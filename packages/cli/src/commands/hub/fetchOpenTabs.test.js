@@ -36,3 +36,22 @@ afterAll(async () => {
 test('fetchOpenTabs counts no tabs when the dev server does not answer in time', async () => {
   await expect(fetchOpenTabs({ url, timeoutMs: 100 })).resolves.toEqual(0);
 });
+
+test('fetchOpenTabs marks its poll passive, so it never keeps an idle server alive', async () => {
+  let passive;
+  const answering = http.createServer((req, res) => {
+    passive = req.headers['x-lowdefy-passive'];
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify({ tabs: [{ id: 'a' }, { id: 'b' }] }));
+  });
+  await new Promise((resolve) => answering.listen(0, '127.0.0.1', resolve));
+  try {
+    await expect(
+      fetchOpenTabs({ url: `http://127.0.0.1:${answering.address().port}` })
+    ).resolves.toEqual(2);
+    expect(passive).toEqual('1');
+  } finally {
+    answering.closeAllConnections();
+    await new Promise((resolve) => answering.close(resolve));
+  }
+});

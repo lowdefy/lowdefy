@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { devPassiveHeader } from '@lowdefy/node-utils';
+
 // A dev server that stopped answering must not hold up the reaper.
 const OPEN_TABS_TIMEOUT_MS = 5000;
 
@@ -21,7 +23,9 @@ const OPEN_TABS_TIMEOUT_MS = 5000;
 // alive; a server that cannot say counts as having none.
 async function fetchOpenTabs({ url, timeoutMs = OPEN_TABS_TIMEOUT_MS }) {
   try {
+    // Passive: asking whether a server is in use must not count as using it.
     const response = await fetch(`${url}/api/dev-inspect`, {
+      headers: { [devPassiveHeader]: '1' },
       signal: AbortSignal.timeout(timeoutMs),
     });
     const { tabs } = await response.json();
