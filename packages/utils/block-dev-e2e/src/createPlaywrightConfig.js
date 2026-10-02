@@ -77,7 +77,10 @@ function createPlaywrightConfig({
         url: `http://localhost:${port}`,
         reuseExistingServer,
         timeout: 180000,
-        env: env === undefined ? undefined : { ...process.env, ...env },
+        // The server stops when this runner does, however it ends (Playwright cleans up its
+        // web servers only on a normal exit or SIGINT). Workers evaluate this config too, but
+        // only the runner launches webServer.
+        env: { ...process.env, ...env, LOWDEFY_EXIT_WITH_PID: String(process.pid) },
         // Playwright stops the web servers in reverse order, the app first. Killed outright, the
         // server that `lowdefy start` runs outlives its shell, so it was still connected when the
         // services (a database) stopped under it. A SIGTERM to the app's process group, waited

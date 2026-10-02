@@ -21,11 +21,13 @@ By default, `pnpm e2e` does a full build before running tests. To skip the build
    pnpm e2e:server
    ```
 
-2. **Run tests** in another terminal — Playwright reuses the running server and skips the build. It only reuses this app's e2e server: if another server holds the port (for example `lowdefy dev`), the run stops with an error that names the port:
+2. **Run tests** in another terminal with `LOWDEFY_E2E_REUSE_SERVER=true` — Playwright reuses the running server and skips the build. It only reuses this app's e2e server: if another server holds the port (for example `lowdefy dev`), the run stops with an error that names the port:
 
    ```bash
-   pnpm e2e
+   LOWDEFY_E2E_REUSE_SERVER=true pnpm e2e
    ```
+
+   Without the variable, a server already on the port fails the run, so a server left behind by an earlier run never serves an old build to new tests.
 
 This saves 60-90 seconds per run. Keep the server running while iterating on tests.
 
