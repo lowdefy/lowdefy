@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 import unsettledPageNote from './unsettledPageNote.js';
+import withBrowserSlot from './withBrowserSlot.js';
 
 // Evaluates an operator expression against the live client state of a
 // headless Chromium tab navigated to the page's own route, using the page's
@@ -40,6 +41,13 @@ async function evalOperatorHeadless({ origin, pageId, expression, user, timeout 
     return { error: 'evalOperatorHeadless requires an "expression".' };
   }
 
+  return withBrowserSlot({
+    task: () => evalOperatorInBrowser({ origin, pageId, expression, user, timeout }),
+  });
+}
+
+// The part of evalOperatorHeadless that runs in the browser, inside a browser slot.
+async function evalOperatorInBrowser({ origin, pageId, expression, user, timeout }) {
   let browser;
   try {
     browser = await getBrowser();

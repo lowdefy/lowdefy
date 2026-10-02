@@ -6,6 +6,7 @@ export default {
   coveragePathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/manager/utils/getNextBin.mjs'],
   coverageReporters: [['lcov', { projectRoot: '../../..' }], 'text', 'clover'],
   errorOnDeprecated: true,
+  setupFiles: ['<rootDir>/jest.setup.cjs'],
   testEnvironment: 'node',
   testMatch: ['**/*.test.mjs'],
   transform: {},

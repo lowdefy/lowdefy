@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 import unsettledPageNote from './unsettledPageNote.js';
+import withBrowserSlot from './withBrowserSlot.js';
 
 // Collects a state snapshot from a headless Chromium tab navigated to the
 // page's own route. Mirrors Inspector.jsx's buildSnapshot (the live-tab
@@ -40,6 +41,11 @@ async function inspectStateHeadless({ origin, pageId, user, timeout = 15000 }) {
     };
   }
 
+  return withBrowserSlot({ task: () => inspectStateInBrowser({ origin, pageId, user, timeout }) });
+}
+
+// The part of inspectStateHeadless that runs in the browser, inside a browser slot.
+async function inspectStateInBrowser({ origin, pageId, user, timeout }) {
   let browser;
   try {
     browser = await getBrowser();

@@ -33,6 +33,7 @@ import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneySteps, { getStepKey } from './validateJourneySteps.js';
 import validateJourneyTimeout from './validateJourneyTimeout.js';
 import validateStateSelection from './validateStateSelection.js';
+import withBrowserSlot from './withBrowserSlot.js';
 
 // The actor a journey starts as; `as` steps switch to others by name.
 const MAIN_ACTOR = 'main';
@@ -912,6 +913,38 @@ async function runJourney({
   // Taken before any page opens: mail the journey causes arrives after it.
   const startedAt = Date.now();
 
+  return withBrowserSlot({
+    task: () =>
+      runJourneyInBrowser({
+        origin,
+        pageId,
+        user,
+        urlQuery,
+        width,
+        height,
+        openTimeout,
+        startedAt,
+        stepTimeout,
+        steps,
+        stateSelection,
+      }),
+  });
+}
+
+// The part of runJourney that runs in the browser, inside a browser slot.
+async function runJourneyInBrowser({
+  origin,
+  pageId,
+  user,
+  urlQuery,
+  width,
+  height,
+  openTimeout,
+  startedAt,
+  stepTimeout,
+  steps,
+  stateSelection,
+}) {
   let browser;
   try {
     browser = await getBrowser();

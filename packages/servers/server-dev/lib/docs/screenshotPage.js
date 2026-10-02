@@ -22,6 +22,7 @@ import { runSteps, MAIN_ACTOR } from './runJourney.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneySteps from './validateJourneySteps.js';
 import validateViewport from './validateViewport.js';
+import withBrowserSlot from './withBrowserSlot.js';
 
 // A feedback annotation's elementRect/shapes are captured in the developer's
 // live tab, viewport-relative at whatever scroll position they were at
@@ -138,6 +139,44 @@ async function screenshotPage({
     return { error: viewportError };
   }
 
+  return withBrowserSlot({
+    task: () =>
+      screenshotInBrowser({
+        origin,
+        pageId,
+        urlQuery,
+        user,
+        width,
+        height,
+        colorScheme,
+        timeout,
+        steps,
+        stepTimeout,
+        clip,
+        scrollX,
+        scrollY,
+        fullPage,
+      }),
+  });
+}
+
+// The part of screenshotPage that runs in the browser, inside a browser slot.
+async function screenshotInBrowser({
+  origin,
+  pageId,
+  urlQuery,
+  user,
+  width,
+  height,
+  colorScheme,
+  timeout,
+  steps,
+  stepTimeout,
+  clip,
+  scrollX,
+  scrollY,
+  fullPage,
+}) {
   let browser;
   try {
     browser = await getBrowser();

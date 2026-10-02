@@ -21,6 +21,7 @@ import { getBrowser, openPage } from './getBrowser.js';
 import { loadMocks } from './devMockRegistry.js';
 import { readCheckpoint } from './checkpointStore.js';
 import unsettledPageNote from './unsettledPageNote.js';
+import withBrowserSlot from './withBrowserSlot.js';
 
 const VERIFY_KEY_COUNT = 3;
 const READY_TIMEOUT = 15000;
@@ -93,6 +94,13 @@ async function loadState({ origin, name, mode = 'headless', user }) {
     return { error: `loadState requires an "origin" string. Received ${JSON.stringify(origin)}.` };
   }
 
+  return withBrowserSlot({
+    task: () => loadStateInBrowser({ origin, name, mode, user, pageId, urlQuery, checkpoint }),
+  });
+}
+
+// The part of loadState that runs in the browser, inside a browser slot.
+async function loadStateInBrowser({ origin, name, mode, user, pageId, urlQuery, checkpoint }) {
   let browser;
   try {
     browser = await getBrowser();

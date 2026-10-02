@@ -19,6 +19,7 @@ import path from 'node:path';
 
 import drawAnnotationsSvg from '../../client/feedback/drawAnnotationsSvg.js';
 import { getBrowser, openPage } from './getBrowser.js';
+import withBrowserSlot from './withBrowserSlot.js';
 
 // Renders the page headless at the batch's recorded viewport/scroll, injects
 // the developer's drawn shapes and element outlines as an SVG layer inside
@@ -26,7 +27,7 @@ import { getBrowser, openPage } from './getBrowser.js';
 // .lowdefy/annotations/ (gitignored). The saved path goes into the formatted
 // feedback text so an agent can read the image. Never throws — returns
 // { path } or { error }.
-async function captureAnnotatedScreenshot({ origin, batch, fileName }) {
+async function captureInBrowser({ origin, batch, fileName }) {
   let browser;
   try {
     browser = await getBrowser();
@@ -83,6 +84,11 @@ async function captureAnnotatedScreenshot({ origin, batch, fileName }) {
       await context.close();
     }
   }
+}
+
+// One browser slot for the whole capture.
+async function captureAnnotatedScreenshot({ origin, batch, fileName }) {
+  return withBrowserSlot({ task: () => captureInBrowser({ origin, batch, fileName }) });
 }
 
 export default captureAnnotatedScreenshot;
