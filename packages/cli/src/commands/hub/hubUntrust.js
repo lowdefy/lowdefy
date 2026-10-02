@@ -14,16 +14,39 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+import path from 'path';
+
 import findRepository from './findRepository.js';
 import untrustRepository from './untrustRepository.js';
 
+// The path of a directory that no longer exists, with its nearest existing
+// ancestor resolved as the trust list stores it (/tmp is /private/tmp on
+// macOS).
+function resolveMissingPath({ directory }) {
+  const resolved = path.resolve(directory);
+  let existing = resolved;
+  while (!fs.existsSync(existing) && path.dirname(existing) !== existing) {
+    existing = path.dirname(existing);
+  }
+  return path.join(fs.realpathSync.native(existing), path.relative(existing, resolved));
+}
+
 async function hubUntrust({ directory = '.' }) {
-  const repository = findRepository({ directory });
-  const removed = untrustRepository({ repository });
+  // A deleted repository cannot be keyed: remove the entry it named, its
+  // path or its .git directory.
+  const candidates = fs.existsSync(path.resolve(directory))
+    ? [findRepository({ directory })]
+    : [resolveMissingPath({ directory }), path.join(resolveMissingPath({ directory }), '.git')];
+  const removed = await untrustRepository({ repositories: candidates });
+  if (removed.length === 0) {
+    process.stdout.write(`${candidates.join(' or ')} was not trusted.\n`);
+    return;
+  }
   process.stdout.write(
-    removed
-      ? `No longer trusted: ${repository}. Agent sessions started elsewhere ask again before using it.\n`
-      : `${repository} was not trusted.\n`
+    `No longer trusted: ${removed.join(
+      ', '
+    )}. Agent sessions started elsewhere ask again before using it.\n`
   );
 }
 

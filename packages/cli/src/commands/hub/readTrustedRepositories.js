@@ -19,8 +19,12 @@ import { type } from '@lowdefy/helpers';
 
 import getHubPaths from './getHubPaths.js';
 
-// The repositories (main checkout paths) the user allowed lowdefy mcp to use
-// from any agent session, with `lowdefy hub trust` or "always allow".
+const HOW_TO_FIX =
+  'Fix the JSON or delete the file, then trust repositories again by running `lowdefy hub trust <directory>` in a terminal.';
+
+// The repositories (real paths of their git common directories) the user
+// allowed lowdefy mcp to use from any agent session, with `lowdefy hub trust`
+// or "always allow".
 function readTrustedRepositories() {
   const { trustedPath } = getHubPaths();
   let content;
@@ -32,11 +36,14 @@ function readTrustedRepositories() {
     }
     throw error;
   }
-  const trusted = JSON.parse(content);
-  if (!type.isArray(trusted.repositories)) {
-    throw new Error(
-      `${trustedPath} has no "repositories" list. Fix or delete it, then trust repositories again with \`lowdefy hub trust <directory>\`.`
-    );
+  let trusted;
+  try {
+    trusted = JSON.parse(content);
+  } catch (error) {
+    throw new Error(`${trustedPath} is not valid JSON (${error.message}). ${HOW_TO_FIX}`);
+  }
+  if (!type.isObject(trusted) || !type.isArray(trusted.repositories)) {
+    throw new Error(`${trustedPath} has no "repositories" list. ${HOW_TO_FIX}`);
   }
   return trusted.repositories;
 }

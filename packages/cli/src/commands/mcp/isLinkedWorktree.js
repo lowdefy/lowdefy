@@ -24,8 +24,9 @@ import realPathOrNull from './realPathOrNull.js';
 // keeps listing a worktree whose directory was deleted until it is pruned, so
 // a directory later created at that path - a fresh clone, say - is listed as
 // the repository's worktree. Only a directory whose .git is the repository's
-// own git directory (the main worktree), or a .git file linked both ways with
-// one of its worktrees/<name> admin directories, counts.
+// own git directory (the main worktree; in a --separate-git-dir clone a .git
+// file naming it), or a .git file linked both ways with one of its
+// worktrees/<name> admin directories, counts.
 function isLinkedWorktree({ worktree, commonDir }) {
   const dotGit = path.join(worktree, '.git');
   let stat;
@@ -41,6 +42,9 @@ function isLinkedWorktree({ worktree, commonDir }) {
     return false;
   }
   const adminDir = readGitLink({ filePath: dotGit });
+  if (adminDir === commonDir) {
+    return true;
+  }
   return (
     adminDir !== null &&
     path.dirname(adminDir) === path.join(commonDir, 'worktrees') &&

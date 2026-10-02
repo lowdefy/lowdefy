@@ -18,17 +18,24 @@ import fs from 'fs';
 import path from 'path';
 
 import findGitRoot from '../mcp/findGitRoot.js';
-import findMainCheckout from '../mcp/findMainCheckout.js';
+import findRepositoryKey from '../mcp/findRepositoryKey.js';
 
-// The repository a directory is in, as the trust list names it: the path of
-// its main checkout, whichever of its git worktrees the directory is in.
+// The repository a directory is in, as the trust list names it: the real path
+// of its git common directory, whichever of its git worktrees the directory
+// is in.
 function findRepository({ directory }) {
   const resolved = path.resolve(directory);
   if (!fs.existsSync(resolved)) {
     throw new Error(`Directory ${resolved} does not exist.`);
   }
   const root = findGitRoot({ directory: fs.realpathSync.native(resolved) });
-  return findMainCheckout({ root });
+  const repository = findRepositoryKey({ root });
+  if (repository === null) {
+    throw new Error(
+      `${resolved} is not in a git repository (or is a git worktree whose repository no longer links back to it). Only git repositories can be trusted. An app outside git is allowed for one agent session when the user answers the question lowdefy mcp asks, or when the agent session is started in it.`
+    );
+  }
+  return repository;
 }
 
 export default findRepository;

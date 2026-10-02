@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+
 import readTrustedRepositories from './readTrustedRepositories.js';
 
 async function hubTrusted() {
@@ -22,7 +24,16 @@ async function hubTrusted() {
     process.stdout.write('No repositories are trusted.\n');
     return;
   }
-  process.stdout.write(`${repositories.join('\n')}\n`);
+  const missing = repositories.filter((repository) => !fs.existsSync(repository));
+  const lines = repositories.map((repository) =>
+    missing.includes(repository) ? `${repository} (missing)` : repository
+  );
+  process.stdout.write(`${lines.join('\n')}\n`);
+  if (missing.length > 0) {
+    process.stdout.write(
+      'Entries marked (missing) name a directory that is gone. Remove one with `lowdefy hub untrust <path>`.\n'
+    );
+  }
 }
 
 export default hubTrusted;

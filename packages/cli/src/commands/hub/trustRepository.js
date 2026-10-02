@@ -14,11 +14,20 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+
+import getHubPaths from './getHubPaths.js';
 import readTrustedRepositories from './readTrustedRepositories.js';
+import withStartLock from './withStartLock.js';
 import writeTrustedRepositories from './writeTrustedRepositories.js';
 
-function trustRepository({ repository }) {
-  writeTrustedRepositories({ repositories: [...readTrustedRepositories(), repository] });
+// Read, add and write under a lock, so two sessions trusting at once both land.
+async function trustRepository({ repository }) {
+  const { hubDirectory, trustedLockPath } = getHubPaths();
+  fs.mkdirSync(hubDirectory, { recursive: true, mode: 0o700 });
+  await withStartLock({ lockPath: trustedLockPath }, () => {
+    writeTrustedRepositories({ repositories: [...readTrustedRepositories(), repository] });
+  });
 }
 
 export default trustRepository;

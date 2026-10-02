@@ -217,7 +217,9 @@ test('lowdefy mcp refuses a directory in another checkout and asks the user when
       `${other} is outside this session's checkout (${root}) and its git worktrees. The user declined to allow it for this session.`
     );
     expect(questions).toEqual([
-      expect.stringContaining(`Allow the repository ${JSON.stringify(other)}?`),
+      expect.stringContaining(
+        `Allow the git repository ${JSON.stringify(path.join(other, '.git'))} and its worktrees`
+      ),
     ]);
     expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
   } finally {

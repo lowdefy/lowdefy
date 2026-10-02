@@ -17,11 +17,18 @@
 import findRepository from './findRepository.js';
 import trustRepository from './trustRepository.js';
 
+// Trust comes from a person: an agent's shell tool runs commands without a
+// terminal, so it cannot trust a repository in passing.
 async function hubTrust({ directory = '.' }) {
+  if (process.stdin.isTTY !== true) {
+    throw new Error(
+      '`lowdefy hub trust` only runs in an interactive terminal. Trusting a repository lets agents run its dev scripts from any session, so the user runs it in their own terminal; an agent must not run it.'
+    );
+  }
   const repository = findRepository({ directory });
-  trustRepository({ repository });
+  await trustRepository({ repository });
   process.stdout.write(
-    `Trusted ${repository}: lowdefy mcp may start and query the dev servers of its apps, in any of its git worktrees, from any agent session.\n`
+    `Trusted ${repository}: lowdefy mcp may start and query the dev servers of the apps in this repository, in any of its git worktrees, from any agent session.\n`
   );
 }
 

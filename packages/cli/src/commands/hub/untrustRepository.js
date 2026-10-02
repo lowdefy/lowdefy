@@ -14,19 +14,28 @@
   limitations under the License.
 */
 
+import fs from 'fs';
+
+import getHubPaths from './getHubPaths.js';
 import readTrustedRepositories from './readTrustedRepositories.js';
+import withStartLock from './withStartLock.js';
 import writeTrustedRepositories from './writeTrustedRepositories.js';
 
-// Returns whether the repository was trusted.
-function untrustRepository({ repository }) {
-  const repositories = readTrustedRepositories();
-  if (!repositories.includes(repository)) {
-    return false;
-  }
-  writeTrustedRepositories({
-    repositories: repositories.filter((trusted) => trusted !== repository),
+// Removes every listed entry that is trusted, under the same lock as
+// trustRepository, and returns the ones it removed.
+async function untrustRepository({ repositories }) {
+  const { hubDirectory, trustedLockPath } = getHubPaths();
+  fs.mkdirSync(hubDirectory, { recursive: true, mode: 0o700 });
+  return withStartLock({ lockPath: trustedLockPath }, () => {
+    const trusted = readTrustedRepositories();
+    const removed = trusted.filter((entry) => repositories.includes(entry));
+    if (removed.length > 0) {
+      writeTrustedRepositories({
+        repositories: trusted.filter((entry) => !removed.includes(entry)),
+      });
+    }
+    return removed;
   });
-  return true;
 }
 
 export default untrustRepository;
