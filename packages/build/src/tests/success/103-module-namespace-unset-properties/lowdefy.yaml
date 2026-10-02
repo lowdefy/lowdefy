@@ -1,0 +1,16 @@
+# 103: Namespace var properties the consumer never set stay absent (not null);
+# a consumer's explicit null stays null.
+lowdefy: local
+name: Namespace Unset Properties Test
+
+modules:
+  - id: layout-unset
+    source: 'file:modules/layout'
+    vars:
+      sider:
+        theme: dark
+  - id: layout-explicit-null
+    source: 'file:modules/layout'
+    vars:
+      sider:
+        collapsedWidth: null
