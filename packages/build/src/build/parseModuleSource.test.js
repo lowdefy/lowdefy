@@ -86,6 +86,12 @@ test('parseModuleSource throws for github source missing @ref', () => {
   );
 });
 
+test('parseModuleSource throws for github source with a ref starting with a dash', () => {
+  expect(() => parseModuleSource('github:my-org/repo@--upload-pack=touch /tmp/x')).toThrow(
+    'Module source "github:my-org/repo@--upload-pack=touch /tmp/x" has an invalid ref "--upload-pack=touch /tmp/x".'
+  );
+});
+
 test('parseModuleSource throws for github source missing owner/repo', () => {
   expect(() => parseModuleSource('github:repo-only@v1.0.0')).toThrow(
     'Module source "github:repo-only@v1.0.0" must include owner/repo.'

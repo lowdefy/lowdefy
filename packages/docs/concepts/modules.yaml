@@ -261,7 +261,9 @@ _ref:
             source: "file:../my-module"
             ```
 
-            For private GitHub repositories, set the `GITHUB_TOKEN` environment variable. The CLI also checks `gh` CLI credentials and git credential helpers.
+            For private GitHub repositories, set the `GITHUB_TOKEN` environment variable. Without it, the build uses the token of the `gh` CLI when one is signed in.
+
+            A private repository can also be read with an SSH key, such as a read-only deploy key: set the `GITHUB_SSH_KEY` environment variable to the private key. When the GitHub API cannot find a repository or refuses the token, the build fetches it with `git` over SSH using that key. Public repositories are still downloaded through the API, since a deploy key can only read the repository it belongs to. Over SSH, `ref` must be a tag, a branch or a full 40-character commit SHA, and the build machine needs `git` and `ssh` installed.
 
             ## Plugin Dependency Validation
 
