@@ -29,6 +29,7 @@ import fetchBuildSummary from './fetchBuildSummary.js';
 import findApps from './findApps.js';
 import findGitRoot from './findGitRoot.js';
 import formatInstanceLabel from './formatInstanceLabel.js';
+import isNewerVersion from './isNewerVersion.js';
 import lifecycleTools, { DIRECTORY_PROPERTY } from './lifecycleTools.js';
 import resolveApp from './resolveApp.js';
 import runAppTests from './runAppTests.js';
@@ -96,9 +97,11 @@ function createShim({ cliVersion, cwd, devTools }) {
   // the version a tool's definition came from replaces that definition, so
   // the schema and description follow the newest Lowdefy met. The client is
   // told to list again. The list only grows: the session may hold several
-  // apps. A server whose version is not valid semver changes nothing; dev
-  // servers released before this report 1.0.0, below every release, so they
-  // add tools but never replace one.
+  // apps. A server whose version is not valid semver changes nothing. A
+  // prerelease is not compared with another major (isNewerVersion):
+  // experimental builds are 0.0.0-experimental-*, which semver ranks below
+  // every release, so a shim on one would otherwise lose its definitions to
+  // the first released server it met.
   async function learnTools(client) {
     const serverVersion = semver.valid(client.getServerVersion()?.version);
     if (serverVersion === null) {
@@ -116,7 +119,10 @@ function createShim({ cliVersion, cwd, devTools }) {
         return;
       }
       const known = forwarded.get(tool.name);
-      if (known === undefined || semver.gt(serverVersion, known.version)) {
+      if (
+        known === undefined ||
+        isNewerVersion({ candidate: serverVersion, held: known.version })
+      ) {
         forwarded.set(tool.name, { version: serverVersion, tool: withDirectory(tool) });
         changed = true;
       }
