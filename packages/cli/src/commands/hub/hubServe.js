@@ -127,7 +127,7 @@ async function hubServe({ cliVersion }) {
     .then((pruned) =>
       pruned.forEach((server) =>
         logger.info(
-          `Pruned ${server.kind} server pid ${server.pid} (${server.reason}): ${server.result}.`
+          `Pruned orphaned ${server.kind} pid ${server.pid} (${server.reason}): ${server.result}.`
         )
       )
     )
