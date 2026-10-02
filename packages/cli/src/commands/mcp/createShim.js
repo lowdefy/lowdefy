@@ -38,7 +38,12 @@ const TOOL_CALL_TIMEOUT_MS = 10 * 60 * 1000;
 // a full process restart when the hub owns the server.
 const HIDDEN_DEV_TOOLS = new Set(['lowdefy_restart']);
 
-const SHIM_INSTRUCTIONS = `This is \`lowdefy mcp\`. It routes every lowdefy_ tool to the dev server of the app you are working in and starts that server when it is not running - never run \`lowdefy dev\` yourself, never choose ports, and never kill processes by port or name; use lowdefy_dev_start (restart: true after local plugin or .env changes) and lowdefy_dev_stop. Pass "directory" when you work in a different git worktree from the session (for example as a subagent) or when the repository holds several apps; it must be in this checkout or one of its git worktrees. Every result starts with the app and checkout it came from.`;
+const SHIM_INSTRUCTIONS = `This is \`lowdefy mcp\`. It routes every lowdefy_ tool to the dev server of the app you are working in and starts that server when it is not running - never run \`lowdefy dev\` yourself, never choose ports, and never kill processes by port or name; use lowdefy_dev_start (restart: true after local plugin or .env changes) and lowdefy_dev_stop. Pass "directory" when you work in a different git worktree from the session (for example as a subagent) or when the repository holds several apps; it must be in this checkout or one of its git worktrees. Every result starts with the app and checkout it came from. When you finish work in a git worktree you created for the task, call lowdefy_dev_stop with that "directory" before you report back. Do not stop a server in a checkout you share with another agent. A server left running stops once it has been idle for 15 minutes.`;
+
+// The hub stops servers nobody uses (see the hub's reaper); an agent that
+// knows it can stop its own and need not keep one alive.
+const IDLE_STOP_NOTE =
+  'The hub stops this server once nobody has used it for 15 minutes (sooner when the machine is short of memory); the next lowdefy_ call starts it again.';
 
 function textResult(value) {
   const text = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
@@ -205,7 +210,7 @@ function createShim({ cliVersion, cwd, devTools }) {
     if (result.state !== 'ready') {
       throw new Error(describeNotReady({ label: app.label, status: result }));
     }
-    return { app: app.label, ...result };
+    return { app: app.label, ...result, note: IDLE_STOP_NOTE };
   }
 
   async function stop({ directory }) {

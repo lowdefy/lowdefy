@@ -15,12 +15,15 @@
 */
 
 import fs from 'fs';
+import net from 'net';
 import os from 'os';
 import path from 'path';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { ElicitRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 
+import getHubPaths from '../hub/getHubPaths.js';
+import { HUB_PROTOCOL } from '../hub/hubProtocol.js';
 import createShim from './createShim.js';
 
 const devTools = {
@@ -103,6 +106,68 @@ test('lowdefy mcp lists the lifecycle tools and every dev tool with a directory 
   expect(buildStatus.inputSchema.properties.directory.type).toEqual('string');
   expect(client.getInstructions()).toContain('never run `lowdefy dev` yourself');
   expect(client.getInstructions()).toContain('Dev server instructions.');
+  expect(client.getInstructions()).toContain(
+    'When you finish work in a git worktree you created for the task, call lowdefy_dev_stop with that "directory" before you report back.'
+  );
+  expect(client.getInstructions()).toContain(
+    'A server left running stops once it has been idle for 15 minutes.'
+  );
+});
+
+// Stands in for the per-user hub on its socket: answers each request with what
+// a hub that has started the app would.
+async function listenFakeHub({ configDirectory }) {
+  const { socketPath } = getHubPaths();
+  fs.mkdirSync(path.dirname(socketPath), { recursive: true });
+  const answers = {
+    hello: { protocol: HUB_PROTOCOL, version: '6.0.0', pid: process.pid },
+    attach: { attached: true },
+    start: {
+      configDirectory,
+      owner: 'hub',
+      state: 'ready',
+      url: 'http://localhost:4100',
+      pid: process.pid,
+      managed: true,
+    },
+  };
+  const server = net.createServer((socket) => {
+    socket.setEncoding('utf8');
+    let buffered = '';
+    socket.on('data', (chunk) => {
+      buffered += chunk;
+      let newline = buffered.indexOf('\n');
+      while (newline !== -1) {
+        const { id, method } = JSON.parse(buffered.slice(0, newline));
+        buffered = buffered.slice(newline + 1);
+        socket.write(`${JSON.stringify({ id, result: answers[method] })}\n`);
+        newline = buffered.indexOf('\n');
+      }
+    });
+    socket.on('error', () => {});
+  });
+  await new Promise((resolve) => server.listen(socketPath, resolve));
+  return server;
+}
+
+test('lowdefy_dev_start says the hub stops the server once it has been idle', async () => {
+  const app = makeApp('apps/main');
+  const hub = await listenFakeHub({ configDirectory: app });
+  try {
+    await connect({ cwd: app });
+    const result = await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
+    expect(result.isError).toBeFalsy();
+    expect(text(result)).toContain('"state": "ready"');
+    expect(text(result)).toContain(
+      'The hub stops this server once nobody has used it for 15 minutes (sooner when the machine is short of memory); the next lowdefy_ call starts it again.'
+    );
+  } finally {
+    await client.close();
+    await shim.close();
+    client = undefined;
+    shim = undefined;
+    await new Promise((resolve) => hub.close(resolve));
+  }
 });
 
 test('lowdefy mcp answers a dev tool call in a multi-app checkout with the apps to choose from', async () => {

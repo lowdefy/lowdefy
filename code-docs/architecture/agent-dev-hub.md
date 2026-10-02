@@ -30,6 +30,16 @@ Discovery, for every reader: <app>/.lowdefy/instance.json
 
 The dev manager (`server-dev/manager/utils/acquireDevInstance.mjs`) creates it exclusively (`wx`) at start-up. It holds `pid`, the real `configDirectory`, `owner` (`hub` or `terminal`), `state` (`starting`, then `ready` once the child answers `<basePath>/api/ping`), `port`, `internalPort`, `url`, `version`, `startedAt` and `processStartTime`. `url` is the app's base URL, `http://localhost:<port><basePath>`: the dev server mounts every route under `config.basePath` (the app, `/api/*`, `/lowdefy-docs/*`), so readers append paths to `url` and never rebuild it from `port`. `startServer` rewrites it on every child start, because a config change can edit `basePath`. It is written with mode `0600` and removed on exit.
 
+The manager also records whether the server is in use (`manager/utils/createRequestActivity.mjs`, wired in `run.mjs`):
+
+- `building`: a change is queued or being processed, restarts included (`createBuildActivity`).
+- `activeRequests`: requests through the manager's port proxy (`startProxy.mjs`) in flight, counted from receipt until the response finishes or the client goes away. A request held through a child restart stays counted. App routes, page loads, MCP tool calls and `/lowdefy-docs` REST calls all count.
+- `lastActivityAt`: when a counted request last started or ended, a build settled, or the server became ready.
+
+Not counted: requests with `x-lowdefy-passive: 1` (`devPassiveHeader` in `@lowdefy/node-utils`; the hub's tab poll and the shim's `lowdefy_dev_status` read send it), a GET whose `Accept` asks for `text/event-stream` (the shim's MCP push stream, a tab's reload stream) and websocket upgrades. Those streams live as long as the server and reconnect on their own, so counting them would keep every server they touch alive. An MCP tool call is a POST that may be answered as an event stream; it counts.
+
+Writes are throttled to one per 5 s with a trailing write, so the final count always lands and the record is never more than 5 s behind. A request that starts while the record last said 0 in flight is written at once.
+
 `readDevInstance` (`@lowdefy/node-utils`) returns a record only when its `configDirectory` is this directory **and** its pid is alive and still the process that wrote it: the manager records `processStartTime` (`getProcessStartTime`, `ps -o lstart=`), so a record left by a killed manager never passes for a live one on a reused pid. A start time `ps` cannot read leaves the pid to decide, and each pid's start time is read at most every 5 s. The directory check makes a record copied into another git worktree harmless. The record is keyed on the config directory, not the dev directory, so every launch path (CLI, `--dev-directory`, `scripts/dev.mjs`) shares it.
 
 It replaces the old `.lowdefy/dev/.manager.lock`. It is used in four places:
@@ -53,7 +63,8 @@ A low-level MCP `Server` over stdio (`createShim.js`). Nothing else may write to
 - **Resolution.** `resolveApp.js` takes `directory`, else the session's working directory. It walks up to the checkout root looking for `lowdefy.yaml`, then falls back to the only app under the root, else errors with the list of apps. The app scan (`findApps.js`) skips directories that hold their own `.git` entry, which are nested worktrees.
 - **Checkout guard.** Starting a server runs the app's dev script, and the user approved the tools once, for the checkout they opened the session in. `createCheckoutGuard.js` therefore allows an app only when its checkout root is the session's (the git root of the shim's working directory) or one of that repository's worktrees (`git worktree list`, run in the session checkout on each call, since agents add worktrees mid-session; `listSessionCheckouts.js`). Outside git, the session directory and anything inside it are allowed. A clone inside the session checkout has its own root and is refused. Anything else is put to the user as an MCP form elicitation when the client supports it; an accept or decline holds for the session (a dismissed question is asked again), and a client without elicitation gets a refusal naming the session checkout. `lowdefy_dev_list` is not affected: it lists, and runs nothing.
 - **Forwarding.** A ready instance is used as it is, including a terminal-owned one. Anything else goes to the hub (`start`), which waits for `ready`. Calls go through an SDK `Client` cached per instance (`createInstanceConnections.js`). The instance's push stream is relayed as `notifications/message` with the app label added.
-- **Results.** Every forwarded result starts with `<app> @ <checkout> · <url>`.
+- **Results.** Every forwarded result starts with `<app> @ <checkout> · <url>`. A `lowdefy_dev_start` result also states the idle rule.
+- **Stop rule.** The shim's instructions, and the rules `agent-setup` writes into new AGENTS.md files and skills (`devServerRules.js`), tell an agent to call `lowdefy_dev_stop` with the `directory` of a git worktree it created when it finishes there, never to stop a server in a checkout it shares with another agent, and that a server left running stops once it has been idle for 15 minutes. Existing AGENTS.md sections and skills are not rewritten.
 
 ### The hub
 
@@ -72,13 +83,26 @@ A low-level MCP `Server` over stdio (`createShim.js`). Nothing else may write to
 - **Reaping.** Every minute, the hub stops managed servers in two cases:
 
   - Their app is gone: two reap passes in a row found no `lowdefy.yaml` (a running server recreates `.lowdefy/` after its worktree is deleted, so the directory itself is no signal, and a checkout or rebase can hide the file for one pass). The port pairs of removed apps are released too.
-  - No shim is attached, 30 minutes have passed, and `GET /api/dev-inspect` reports no open tabs.
+  - Nobody has used them for the idle limit: the instance record says `ready`, `building` is false, `activeRequests` is 0, `lastActivityAt` is older than the limit, and `GET /api/dev-inspect` reports no open tabs (a poll that fails counts as none). The limit is 15 minutes, 5 at warn and 2 at critical memory pressure (`IDLE_LIMIT_MS`).
+
+  Whether an agent session is attached does not count. Claude Code subagents share their parent session's one `lowdefy mcp` process, so attachment meant "the parent session is open" and kept a helper's server alive for hours after it finished. A record without `lastActivityAt` comes from an older server-dev; for it the hub keeps the attachment rule: no shim attached, 30 minutes since the last one detached (or since start), no open tabs. The shim keeps calling `attach` for those servers only.
 
   The hub exits after 10 idle minutes with no servers and no clients.
+
+- **Memory pressure.** `readMemoryPressure.js` reads the OS level on each reap pass and each start: on macOS `sysctl -n kern.memorystatus_vm_pressure_level` (1 normal, 2 warn, 4 critical); on Linux `/proc/pressure/memory` (warn when `some avg10 ≥ 10`, critical when `full avg10 ≥ 10`); anywhere else, or when the read fails, normal. Free memory is not a gauge: macOS keeps it near zero by design. Under pressure the idle limit shortens, and a start that would take the hub past 4 running servers (`SOFT_CAP_SERVERS`) first runs a reap pass, outside `serialize`, so idle servers stop before the new one adds its memory. Nothing is ever refused or stopped on a count.
+- **Start slots.** At most 2 servers launch at once across the machine, 1 at critical pressure (`START_SLOTS`, `createStartSlots.js`). Every launch takes one: a first start, `restart: true` and `clean: true`. The slot belongs to the server, held from launch until its record says `ready`, its process group is gone, or 5 minutes pass (`START_SLOT_HOLD_MS`); a timer checks held slots whether or not a caller waits. Apps without a slot queue in order, one place per app directory. `launchUnlessRunning` decides inside `serialize` whether to launch, queue or do nothing, and never waits there, so stops and other starts are never held up by a slot. When a slot frees, the next queued app is launched through `serialize`, unless it was started meanwhile. Stopping a queued app takes it off the queue. A replacement hub counts adopted servers that are still starting as holding slots.
+
+  `start` waits for ready up to 120 s from the request, queue time included. Still queued, it answers `{ state: 'queued', ahead, note }`, the note saying how many starts are ahead and that calling again keeps the place. The shim shows it as a server that is not ready yet. `HUB_PROTOCOL` is unchanged.
 
 - **Timeouts.** The open-tabs check (`fetchOpenTabs`, 5 s), `lowdefy_dev_status`'s build summary (10 s) and the shim's MCP connect to a dev server (15 s) give up on a server that stops answering. A reap pass still running is shared, not started again. A forwarded call is retried once on a new connection only when it never reached the server (an HTTP refusal such as a stale session, or a network error); a timeout or a server error is not retried (`callWithReconnect`).
 - **Logs.** `readLogTail` loads only the last MiB of `dev.log` and returns at most 1000 lines.
 - **Protocol.** `hello` returns `{ protocol, version, pid }`. On a mismatch, the client errors and asks for the old hub to be stopped; servers survive that and the next hub adopts them.
+
+### Browser slots
+
+At most 3 headless browser operations run at once across the machine, however they were called (the shim, direct HTTP MCP, `lowdefy test`, a terminal dev server). Each operation in `server-dev/lib/docs` that opens Chromium (a journey, a screenshot, an annotated screenshot, a state inspection, an operator evaluation, a state load) runs inside `withBrowserSlot.js`. A slot covers the whole operation, every journey actor included: a bound per page would deadlock a journey with more actors than slots. The operation's own timeouts start once the slot is taken; a wait longer than 5 minutes is answered as the operation's error.
+
+Slots are lock files `<LOWDEFY_HOME>/slots/browser/<n>` (`acquireMachineSlot` in `@lowdefy/node-utils`), written aside and linked into place so a reader never sees half a file. Each holds the dev server's pid and process start time, so a slot whose process is gone, or whose pid now belongs to another process, is reclaimed: a killed server never keeps one. `release` removes only a file that still holds its own token. A dev server on an older server-dev takes no slot.
 
 ### Cross-site guard
 
@@ -91,14 +115,15 @@ A low-level MCP `Server` over stdio (`createShim.js`). Nothing else may write to
 
 ## Files
 
-| Area            | Files                                                                                                                                                                        |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Instance record | `utils/node-utils/src/{getDevInstancePath,readDevInstance,isPidAlive}.js`, `server-dev/manager/utils/{acquireDevInstance,resolvePorts,waitForServer}.mjs`, `manager/run.mjs` |
-| CLI dev         | `cli/src/commands/dev/{checkNoRunningInstance,resolveDevPort,isPortExplicit}.js`                                                                                             |
-| Tool contract   | `server-dev/lib/docs/devToolDefinitions.js` (definitions), `createDocsMcpServer.js` (handlers; `registerDevTool` enforces the pairing), `cli/scripts/generateDevTools.mjs`   |
-| Shim            | `cli/src/commands/mcp/*` (checkout guard: `createCheckoutGuard.js`, `listSessionCheckouts.js`)                                                                               |
-| Hub             | `cli/src/commands/hub/*`, `cli/src/utils/runHubCommand.js`, `cli/src/utils/findDevScripts.js`                                                                                |
-| agent-setup     | `cli/src/commands/agentSetup/{resolveMcpCommand,upsertMcpServer,devServerRules}.js`                                                                                          |
+| Area            | Files                                                                                                                                                                                                                                                   |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Instance record | `utils/node-utils/src/{getDevInstancePath,readDevInstance,isPidAlive,devPassiveHeader}.js`, `server-dev/manager/utils/{acquireDevInstance,createRequestActivity,resolvePorts,waitForServer}.mjs`, `manager/processes/startProxy.mjs`, `manager/run.mjs` |
+| Browser slots   | `utils/node-utils/src/{acquireMachineSlot,getLowdefyHome}.js`, `server-dev/lib/docs/withBrowserSlot.js`                                                                                                                                                 |
+| CLI dev         | `cli/src/commands/dev/{checkNoRunningInstance,resolveDevPort,isPortExplicit}.js`                                                                                                                                                                        |
+| Tool contract   | `server-dev/lib/docs/devToolDefinitions.js` (definitions), `createDocsMcpServer.js` (handlers; `registerDevTool` enforces the pairing), `cli/scripts/generateDevTools.mjs`                                                                              |
+| Shim            | `cli/src/commands/mcp/*` (checkout guard: `createCheckoutGuard.js`, `listSessionCheckouts.js`)                                                                                                                                                          |
+| Hub             | `cli/src/commands/hub/*` (idle reaping in `createHub.js`, `readMemoryPressure.js`, `createStartSlots.js`), `cli/src/utils/runHubCommand.js`, `cli/src/utils/findDevScripts.js`                                                                          |
+| agent-setup     | `cli/src/commands/agentSetup/{resolveMcpCommand,upsertMcpServer,devServerRules}.js`                                                                                                                                                                     |
 
 ## Design
 
