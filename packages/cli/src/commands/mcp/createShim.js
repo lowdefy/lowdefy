@@ -15,6 +15,7 @@
 */
 
 import fs from 'fs';
+import semver from 'semver';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { readDevInstance } from '@lowdefy/node-utils';
@@ -38,6 +39,8 @@ const TOOL_CALL_TIMEOUT_MS = 10 * 60 * 1000;
 // Restart is lowdefy_dev_start({ restart: true }): one restart tool, which does
 // a full process restart when the hub owns the server.
 const HIDDEN_DEV_TOOLS = new Set(['lowdefy_restart']);
+
+const LIFECYCLE_TOOL_NAMES = new Set(lifecycleTools.map((tool) => tool.name));
 
 const SHIM_INSTRUCTIONS = `This is \`lowdefy mcp\`. It routes every lowdefy_ tool to the dev server of the app you are working in and starts that server when it is not running - never run \`lowdefy dev\` yourself, never choose ports, and never kill processes by port or name; use lowdefy_dev_start (restart: true after local plugin or .env changes) and lowdefy_dev_stop. Pass "directory" when you work in a different git worktree from the session (for example as a subagent), when the repository holds several apps, or when you work on another project; it must be in this checkout, one of its git worktrees, or a repository the user trusts (the user is asked, or runs \`lowdefy hub trust <directory>\` in their own terminal; never run \`lowdefy hub trust\` yourself). If lowdefy_dev_start reports that dependencies are not installed, run the install command it names, then call it again. Every result starts with the app and checkout it came from.`;
 
@@ -78,33 +81,49 @@ function createShim({ cliVersion, cwd, devTools }) {
       instructions: `${SHIM_INSTRUCTIONS}\n\n${devTools.instructions}`,
     }
   );
-  const forwardedTools = devTools.tools.filter((tool) => !HIDDEN_DEV_TOOLS.has(tool.name));
-  const forwardedNames = new Set(forwardedTools.map((tool) => tool.name));
-  const tools = [...lifecycleTools, ...forwardedTools.map(withDirectory)];
+  // Each forwarded tool's definition, with the Lowdefy version it came from.
+  // Map order is insertion order, and replacing a definition keeps its place.
+  const forwarded = new Map();
+  devTools.tools
+    .filter((tool) => !HIDDEN_DEV_TOOLS.has(tool.name))
+    .forEach((tool) => {
+      forwarded.set(tool.name, { version: cliVersion, tool: withDirectory(tool) });
+    });
 
   // The list a session starts with is this CLI's, which need not be the
-  // version a project pins. Each dev server reports its own tools when the
-  // shim connects; any this CLI does not know are added and the client is told
-  // to list again, so a newer app's tools reach a session started by an older
-  // lowdefy mcp. The list only grows: the session may hold several apps.
+  // version a project pins. Each dev server reports its tools when the shim
+  // connects: tools this CLI does not know are added, and a server newer than
+  // the version a tool's definition came from replaces that definition, so
+  // the schema and description follow the newest Lowdefy met. The client is
+  // told to list again. The list only grows: the session may hold several
+  // apps. A server whose version is not valid semver changes nothing; dev
+  // servers released before this report 1.0.0, below every release, so they
+  // add tools but never replace one.
   async function learnTools(client) {
+    const serverVersion = semver.valid(client.getServerVersion()?.version);
+    if (serverVersion === null) {
+      return;
+    }
     let listed;
     try {
       listed = await client.listTools();
     } catch {
       return;
     }
-    const added = listed.tools.filter(
-      (tool) => !HIDDEN_DEV_TOOLS.has(tool.name) && !forwardedNames.has(tool.name)
-    );
-    if (added.length === 0) {
-      return;
-    }
-    added.forEach((tool) => {
-      forwardedNames.add(tool.name);
-      tools.push(withDirectory(tool));
+    let changed = false;
+    listed.tools.forEach((tool) => {
+      if (HIDDEN_DEV_TOOLS.has(tool.name) || LIFECYCLE_TOOL_NAMES.has(tool.name)) {
+        return;
+      }
+      const known = forwarded.get(tool.name);
+      if (known === undefined || semver.gt(serverVersion, known.version)) {
+        forwarded.set(tool.name, { version: serverVersion, tool: withDirectory(tool) });
+        changed = true;
+      }
     });
-    await server.sendToolListChanged().catch(() => {});
+    if (changed) {
+      await server.sendToolListChanged().catch(() => {});
+    }
   }
 
   const instances = createInstanceConnections({
@@ -197,11 +216,28 @@ function createShim({ cliVersion, cwd, devTools }) {
     return { app: app.label, ...current, build };
   }
 
+  // Connecting makes the server report its tools (learnTools), so the agent
+  // sees a newer app's tools right after starting it, before any forwarded
+  // call. A failure here must not fail the start: the next forwarded call
+  // connects again.
+  async function connectToLearnTools(app) {
+    const instance = readDevInstance({ configDirectory: app.configDirectory });
+    if (instance === null || instance.state !== 'ready') {
+      return;
+    }
+    try {
+      await instances.get({ configDirectory: app.configDirectory, instance, label: app.label });
+    } catch {
+      // Left to the next forwarded call.
+    }
+  }
+
   async function start({ directory, restart = false, clean = false }) {
     const app = await resolve({ directory });
     const running = readDevInstance({ configDirectory: app.configDirectory });
     if (running !== null && running.owner !== 'hub') {
       if (!restart && !clean) {
+        await connectToLearnTools(app);
         return { app: app.label, ...running };
       }
       // Not the hub's to stop: restart it in place through its own dev tools.
@@ -238,6 +274,7 @@ function createShim({ cliVersion, cwd, devTools }) {
     if (result.state !== 'ready') {
       throw new Error(describeNotReady({ label: app.label, status: result }));
     }
+    await connectToLearnTools(app);
     return { app: app.label, ...result };
   }
 
@@ -303,7 +340,9 @@ function createShim({ cliVersion, cwd, devTools }) {
     lowdefy_run_tests: runTests,
   };
 
-  server.setRequestHandler(ListToolsRequestSchema, () => ({ tools }));
+  server.setRequestHandler(ListToolsRequestSchema, () => ({
+    tools: [...lifecycleTools, ...[...forwarded.values()].map(({ tool }) => tool)],
+  }));
 
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name } = request.params;
@@ -312,7 +351,7 @@ function createShim({ cliVersion, cwd, devTools }) {
       if (lifecycleHandlers[name]) {
         return textResult(await lifecycleHandlers[name](args));
       }
-      if (forwardedNames.has(name)) {
+      if (forwarded.has(name)) {
         return await callDevTool({ name, args });
       }
       return errorResult(`Unknown tool "${name}".`);
