@@ -46,6 +46,12 @@ const HUB_IDLE_EXIT_MS = 10 * 60 * 1000;
 
 const READY_TIMEOUT_MS = 120 * 1000;
 
+// At most this many dev servers launch at once across the machine (one at
+// critical memory pressure); the rest queue. A slot is held until the server
+// is ready, gone, or START_SLOT_HOLD_MS has passed.
+const START_SLOTS = 2;
+const START_SLOT_HOLD_MS = 5 * 60 * 1000;
+
 // The most dev server log lines a logs call returns.
 const MAX_LOG_LINES = 1000;
 
@@ -58,4 +64,6 @@ export {
   PORT_RANGE,
   READY_TIMEOUT_MS,
   SOFT_CAP_SERVERS,
+  START_SLOT_HOLD_MS,
+  START_SLOTS,
 };

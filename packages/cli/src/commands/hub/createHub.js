@@ -21,6 +21,7 @@ import { type, wait } from '@lowdefy/helpers';
 import { getProcessStartTime, readDevInstance } from '@lowdefy/node-utils';
 
 import allocatePorts from './allocatePorts.js';
+import createStartSlots from './createStartSlots.js';
 import hasLowdefyYaml from '../../utils/hasLowdefyYaml.js';
 import fetchOpenTabs from './fetchOpenTabs.js';
 import {
@@ -31,6 +32,8 @@ import {
   PORT_RANGE,
   READY_TIMEOUT_MS,
   SOFT_CAP_SERVERS,
+  START_SLOT_HOLD_MS,
+  START_SLOTS,
 } from './hubProtocol.js';
 import readLogTail from './readLogTail.js';
 import readMemoryPressure from './readMemoryPressure.js';
@@ -90,6 +93,8 @@ function createHub({
   openTabs = fetchOpenTabs,
   portRange = PORT_RANGE,
   readPressure = readMemoryPressure,
+  readyTimeoutMs = READY_TIMEOUT_MS,
+  startSlotHoldMs = START_SLOT_HOLD_MS,
 }) {
   const registry = loadRegistry(paths);
   const exits = new Map();
@@ -122,6 +127,23 @@ function createHub({
     saveRegistry();
   }
 
+  // A launched server holds its start slot until it is ready or gone.
+  function isStarting({ configDirectory, pid }) {
+    const managed = registry.instances[configDirectory];
+    if (type.isUndefined(managed) || managed.pid !== pid || !isGroupAlive(pid)) {
+      return false;
+    }
+    return readDevInstance({ configDirectory })?.state !== 'ready';
+  }
+
+  const startSlots = createStartSlots({
+    readPressure,
+    isStarting,
+    onFree: () => launchQueued(),
+    holdMs: startSlotHoldMs,
+    slots: START_SLOTS,
+  });
+
   function describe(configDirectory) {
     const record = readDevInstance({ configDirectory });
     const managed = registry.instances[configDirectory];
@@ -148,6 +170,17 @@ function createHub({
         command: managed.command,
       };
     }
+    if (startSlots.isQueued(configDirectory)) {
+      return {
+        configDirectory,
+        state: 'queued',
+        ahead: startSlots.ahead(configDirectory),
+        managed: false,
+      };
+    }
+    if (startSlots.isLaunching(configDirectory)) {
+      return { configDirectory, owner: 'hub', state: 'starting', managed: true };
+    }
     const exit = exits.get(configDirectory);
     if (!type.isUndefined(exit)) {
       return { configDirectory, state: 'exited', managed: false, exit };
@@ -159,8 +192,7 @@ function createHub({
     return path.join(configDirectory, '.lowdefy', 'dev.log');
   }
 
-  async function waitForReady(configDirectory) {
-    const deadline = Date.now() + READY_TIMEOUT_MS;
+  async function waitForReady({ configDirectory, deadline }) {
     while (Date.now() < deadline) {
       const status = describe(configDirectory);
       if (status.state === 'ready') {
@@ -172,13 +204,27 @@ function createHub({
           logTail: readLogTail({ logPath: logPathFor(configDirectory), lines: 30 }),
         };
       }
+      // Stopped by another caller while this one waited.
+      if (status.state === 'stopped') {
+        return status;
+      }
       await wait(250);
     }
+    const status = describe(configDirectory);
+    if (status.state === 'queued') {
+      const starts = startSlots.held() + status.ahead;
+      return {
+        ...status,
+        note: `Queued behind ${starts} other start${
+          starts === 1 ? '' : 's'
+        } on this machine. Call again to keep waiting; your place is kept.`,
+      };
+    }
     return {
-      ...describe(configDirectory),
+      ...status,
       logTail: readLogTail({ logPath: logPathFor(configDirectory), lines: 10 }),
       note: `Not ready after ${
-        READY_TIMEOUT_MS / 1000
+        readyTimeoutMs / 1000
       }s - it may still be installing or building. Call again to keep waiting.`,
     };
   }
@@ -200,6 +246,7 @@ function createHub({
     }
     delete registry.instances[configDirectory];
     saveRegistry();
+    startSlots.release(configDirectory);
     logger.info(`Stopped ${configDirectory}.`);
     return { stopped: true };
   }
@@ -253,6 +300,7 @@ function createHub({
         delete registry.instances[configDirectory];
         saveRegistry();
       }
+      startSlots.tick();
     });
 
     registry.instances[configDirectory] = {
@@ -263,16 +311,69 @@ function createHub({
     };
     saveRegistry();
     logger.info(`Started ${configDirectory} on port ${ports.port}: ${devCommand.display}`);
+    return child.pid;
+  }
+
+  // Launches with the start slot already taken for this app; the slot passes
+  // to the server, or back if the launch fails.
+  async function launchWithSlot({ configDirectory, env }) {
+    try {
+      const pid = await launch({ configDirectory, env });
+      startSlots.hold({ configDirectory, pid });
+    } catch (error) {
+      startSlots.release(configDirectory);
+      throw error;
+    }
+  }
+
+  // Starts the apps waiting for a slot, as slots free. Each launch runs
+  // through serialize, like any start, and is skipped if the app has been
+  // started meanwhile. A failed launch is reported to whoever waits on it.
+  function launchQueued() {
+    for (;;) {
+      const next = startSlots.takeNext();
+      if (next === null) {
+        return;
+      }
+      serialize(async () => {
+        if (isServerRunning(next.configDirectory)) {
+          startSlots.release(next.configDirectory);
+          return;
+        }
+        await launchWithSlot(next);
+      }).catch((error) => {
+        exits.set(next.configDirectory, { error: error.message, at: new Date().toISOString() });
+        logger.error(`Could not start ${next.configDirectory}: ${error.message}`);
+      });
+    }
+  }
+
+  // Whether a server runs for the app, read from the record and the registry
+  // alone: the slot taken for a queued launch must not read as running.
+  function isServerRunning(configDirectory) {
+    const record = readDevInstance({ configDirectory });
+    if (record !== null) {
+      return ['starting', 'ready'].includes(record.state);
+    }
+    const managed = registry.instances[configDirectory];
+    return !type.isUndefined(managed) && isManagedAlive(managed);
   }
 
   async function stop(params) {
     const configDirectory = realDirectory(params.configDirectory);
+    // A queued app has nothing running yet: taking it off the queue stops it.
+    if (startSlots.dequeue(configDirectory)) {
+      return { stopped: true };
+    }
     return serialize(() => stopServer({ configDirectory }));
   }
 
   // Returns the answer when there is nothing to wait for, else null once the
-  // server is running or launched.
+  // server is running, launched or queued for a start slot.
   async function launchUnlessRunning({ configDirectory, env, restart, clean }) {
+    if (startSlots.isQueued(configDirectory)) {
+      return null;
+    }
     const current = describe(configDirectory);
     const running = ['starting', 'ready'].includes(current.state);
     if (running && current.owner !== 'hub') {
@@ -298,12 +399,12 @@ function createHub({
         force: true,
       });
     }
-    await launch({ configDirectory, env });
+    if (!startSlots.tryTake(configDirectory)) {
+      startSlots.enqueue({ configDirectory, env });
+      return null;
+    }
+    await launchWithSlot({ configDirectory, env });
     return null;
-  }
-
-  function isRunning(configDirectory) {
-    return ['starting', 'ready'].includes(describe(configDirectory).state);
   }
 
   // Under memory pressure, stop the servers that are already idle before a
@@ -316,19 +417,22 @@ function createHub({
     if (Object.keys(registry.instances).length < SOFT_CAP_SERVERS) {
       return;
     }
-    if (isRunning(configDirectory)) {
+    if (isServerRunning(configDirectory)) {
       return;
     }
     await reap();
   }
 
+  // Waits for ready up to readyTimeoutMs from the request, time queued for a
+  // start slot included, and answers once.
   async function start({ env, restart = false, clean = false, ...params }) {
+    const deadline = Date.now() + readyTimeoutMs;
     const configDirectory = realDirectory(params.configDirectory);
     await reapBeforeLaunch({ configDirectory });
     const answer = await serialize(() =>
       launchUnlessRunning({ configDirectory, env, restart, clean })
     );
-    return answer ?? waitForReady(configDirectory);
+    return answer ?? waitForReady({ configDirectory, deadline });
   }
 
   function status({ configDirectory }) {
@@ -509,6 +613,16 @@ function createHub({
   }
 
   forgetDeadServers();
+  // A replacement hub adopts servers still starting with the slots they hold.
+  Object.entries(registry.instances).forEach(([configDirectory, managed]) => {
+    if (readDevInstance({ configDirectory })?.state !== 'ready') {
+      startSlots.hold({
+        configDirectory,
+        pid: managed.pid,
+        takenAt: Date.parse(managed.startedAt),
+      });
+    }
+  });
 
   return {
     attach,
