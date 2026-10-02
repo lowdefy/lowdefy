@@ -75,9 +75,17 @@ function startServer(context) {
       '--strictPort',
     ],
     {
-      stdio: ['ignore', 'inherit', 'pipe'],
+      // The manager holds the child's stdin and never writes to it: the pipe
+      // closes when the manager dies, however it dies (SIGKILL, out of
+      // memory), and the child exits on that (see vite.config.js).
+      stdio: ['pipe', 'inherit', 'pipe'],
       env: {
         ...process.env,
+        LOWDEFY_EXIT_ON_STDIN_CLOSE: '1',
+        // The manager's owner and registry record cover the child: it does
+        // not register, and it lives and dies with the manager.
+        LOWDEFY_EXIT_WITH_PID: undefined,
+        LOWDEFY_SERVER_REGISTRY_DIR: undefined,
         LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
         // Set only while the manager's mail sink listens: the child cannot
         // tell from LOWDEFY_DEV_SMTP_PORT alone, which a later .env edit can

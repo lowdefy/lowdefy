@@ -19,6 +19,8 @@ import * as Sentry from '@sentry/node';
 import { WebSocketServer } from 'ws';
 
 import checkEnvironmentGuards from '@lowdefy/node-utils/checkEnvironmentGuards.js';
+import registerServer from '@lowdefy/node-utils/registerServer.js';
+import watchOwner from '@lowdefy/node-utils/watchOwner.js';
 
 import initSentryServer from '../lib/server/sentry/initSentry.js';
 
@@ -56,6 +58,14 @@ const server = serve({ fetch: app.fetch, port, websocket: { server: wss } }, (in
     { port: info.port, lowdefy_version: appMeta.lowdefyVersion },
     `Lowdefy server listening on http://localhost:${info.port}`
   );
+  // Only when the CLI asks (it sets the registry directory), so a server run
+  // directly - Docker, Vercel, systemd - records nothing.
+  registerServer({
+    kind: 'server',
+    port: info.port,
+    configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG,
+    logger,
+  });
 });
 
 // Container runtimes send SIGTERM and escalate to SIGKILL after a grace period
@@ -83,6 +93,16 @@ function shutdown() {
 
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
+process.on('SIGHUP', shutdown);
+
+// A server started by the CLI, a test runner or a script stops when that
+// owner stops, however it ends. Inert unless the spawner set its variables.
+watchOwner({
+  onExit: ({ reason }) => {
+    logger.info({ reason }, 'The process that started this server is gone. Shutting down.');
+    shutdown();
+  },
+});
 
 // Vercel's Node.js builder consumes the exported server — the same pattern
 // Vercel documents for WebSocket support with Hono on Fluid compute.
