@@ -49,6 +49,7 @@ function createJourneyActors({
   width,
   height,
   timeout,
+  mutantCookie,
 }) {
   const actors = new Map();
   const counters = new Map();
@@ -67,6 +68,7 @@ function createJourneyActors({
         width,
         height,
         clientAddress: nextClientAddress(),
+        mutantCookie,
         onContext: (context) => {
           context.on('request', (request) => counter.record(request));
         },

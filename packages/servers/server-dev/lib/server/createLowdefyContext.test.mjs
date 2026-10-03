@@ -109,6 +109,8 @@ afterAll(() => {
 const { default: createLowdefyContext } = await import('./createLowdefyContext.js');
 const { default: createSystemContext } = await import('./auth/createSystemContext.js');
 const { journeyActorToken } = await import('./auth/journeyActor.js');
+const { createApiContext } = await import('@lowdefy/api');
+const { openMutantRun } = await import('./mutants/mutantRuns.js');
 
 function createHonoContext({
   path: reqPath = '/api/request/foo',
@@ -189,4 +191,40 @@ test('createLowdefyContext forwards the verified loopback journey cookies on loo
 test('createLowdefyContext sets an empty loopback cookie when the request carries no journey cookie', async () => {
   const context = await createLowdefyContext({ c: createHonoContext() });
   expect(context.loopbackHeaders).toEqual({ cookie: '' });
+});
+
+test('createLowdefyContext serves the mutated artifact to a request whose cookie names an open mutant run', async () => {
+  const artifact = { id: 'page:form', blocks: [] };
+  createApiContext.mockImplementationOnce((context) => {
+    context.readConfigFile = async () => artifact;
+  });
+  const opened = openMutantRun({
+    mutant: {
+      buildId: 'b',
+      artifact: 'pages/form.json',
+      key: 'missing',
+      arg: null,
+      operator: 'drop-block',
+    },
+  });
+  const context = await createLowdefyContext({
+    c: createHonoContext({
+      headers: { cookie: `lowdefy_journey_mutant=${journeyActorToken}.${opened.cookiePayload}` },
+    }),
+  });
+  await context.readConfigFile('pages/form.json');
+  expect(opened.run.misses).toEqual([{ reason: 'key not found', path: 'pages/form.json' }]);
+  expect(context.loopbackHeaders.cookie).toEqual(
+    `lowdefy_journey_mutant=${journeyActorToken}.${opened.cookiePayload}`
+  );
+  opened.close();
+});
+
+test('createLowdefyContext leaves readConfigFile alone without a mutant cookie', async () => {
+  const readConfigFile = async () => ({});
+  createApiContext.mockImplementationOnce((context) => {
+    context.readConfigFile = readConfigFile;
+  });
+  const context = await createLowdefyContext({ c: createHonoContext() });
+  expect(context.readConfigFile).toBe(readConfigFile);
 });

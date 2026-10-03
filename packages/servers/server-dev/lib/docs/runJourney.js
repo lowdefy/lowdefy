@@ -881,6 +881,7 @@ async function runJourney({
   stepTimeout = 5000,
   basePath = '',
   readConfigFile = defaultReadConfigFile,
+  mutantCookie,
 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
     return {
@@ -942,6 +943,7 @@ async function runJourney({
     width,
     height,
     timeout: openTimeout,
+    mutantCookie,
   });
   try {
     const main = await actors.switchTo(MAIN_ACTOR);

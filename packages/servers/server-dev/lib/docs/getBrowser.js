@@ -91,6 +91,7 @@ async function openPage({
   height = 800,
   colorScheme = 'light',
   clientAddress,
+  mutantCookie,
   onContext,
   timeout = 15000,
 }) {
@@ -136,6 +137,13 @@ async function openPage({
     if (!type.isUndefined(clientAddress)) {
       await context.addCookies([
         writeJourneyCookie({ name: JOURNEY_COOKIES.actor.name, payload: clientAddress, origin }),
+      ]);
+    }
+    // A harden run's mutant: every request from this context reads the mutated
+    // artifact (see lib/server/mutants), while other contexts do not.
+    if (!type.isUndefined(mutantCookie)) {
+      await context.addCookies([
+        writeJourneyCookie({ name: JOURNEY_COOKIES.mutant.name, payload: mutantCookie, origin }),
       ]);
     }
     const page = await context.newPage();

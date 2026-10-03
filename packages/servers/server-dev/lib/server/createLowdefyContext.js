@@ -35,6 +35,7 @@ import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
 import createHandleError from './log/createHandleError.js';
 import createLogger from './log/createLogger.js';
+import createMutantReadConfigFile from './mutants/createMutantReadConfigFile.js';
 import fileCache from './fileCache.js';
 import getAuth from './auth/getAuth.js';
 import getHeadlessUser from './auth/getHeadlessUser.js';
@@ -44,6 +45,7 @@ import { forwardJourneyCookies } from './journeyCookies.js';
 import i18nConfig from '../build/i18n.js';
 import loadDynamicJsMap from './loadDynamicJsMap.js';
 import logRequest from './log/logRequest.js';
+import { readMutantRun } from './mutants/mutantRuns.js';
 import scrubSecrets from './scrubSecrets.js';
 import notifications, {
   interpolateProperties,
@@ -170,6 +172,16 @@ async function createLowdefyContext({ c, user }) {
     }
   }
   createApiContext(context);
+  // A journey's browser contexts carry a mutant cookie while `lowdefy journeys
+  // harden` runs a mutant through them: their requests, and only theirs, read
+  // the mutated artifact. The developer's own tabs carry none.
+  const mutantRun = readMutantRun(c.req.header('cookie'));
+  if (mutantRun !== null) {
+    context.readConfigFile = createMutantReadConfigFile({
+      readConfigFile: context.readConfigFile,
+      run: mutantRun,
+    });
+  }
   if (!context.auth && authJson.organizations) {
     // Mock and headless callers run no auth engine, so createApiContext
     // retains no organization binding. Derive the policy from the built auth
