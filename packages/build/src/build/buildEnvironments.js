@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import checkEnvironmentGuards from '@lowdefy/node-utils/checkEnvironmentGuards.js';
 
+import getAllEnvironmentGuards from './getAllEnvironmentGuards.js';
 import getEnvironmentNames from '../utils/getEnvironmentNames.js';
 import validateEnvironmentGuards from './validateEnvironmentGuards.js';
 
@@ -237,10 +238,18 @@ function buildEnvironments({ components, context }) {
     }
   }
 
+  // The `lowdefy data pull` build keeps every environment's guards for the pull to check against,
+  // and skips this build's own check: the pull checks exactly the secrets it reads, so an unrelated
+  // guarded variable in the shell does not block it.
+  const allGuards = context.environmentGuards === 'all';
+  if (allGuards) {
+    components.environmentGuards = getAllEnvironmentGuards({ environments });
+  }
+
   // The current environment's guards are checked against this build's variables and kept for the
   // production server, which checks them again at startup; other environments' guards are dropped.
   if (!type.isUndefined(environments)) {
-    if (!type.isUndefined(current)) {
+    if (!type.isUndefined(current) && !allGuards) {
       checkEnvironmentGuards({
         name: current,
         guards: environments[current].guards,
