@@ -235,11 +235,17 @@ test('removing buildStatus.json publishes nothing', async () => {
   await watcherReady();
   // The bus handles a watcher event synchronously, so once the watcher has
   // reported the removal, anything the bus publishes for it has been sent.
-  const removed = new Promise((resolve) =>
+  const removed = new Promise((resolve, reject) => {
+    const timer = setTimeout(
+      () => reject(new Error('The watcher did not report the removal within 60000ms.')),
+      60000
+    );
     watcher.on('unlink', (filePath) => {
-      if (filePath === statusPath) resolve();
-    })
-  );
+      if (filePath !== statusPath) return;
+      clearTimeout(timer);
+      resolve();
+    });
+  });
 
   fs.rmSync(statusPath);
   await removed;
