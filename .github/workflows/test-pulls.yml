@@ -45,5 +45,6 @@ jobs:
       # time reads in any step after it would time out.
       - name: Time zone change test (Windows)
         if: matrix.os == 'windows-latest'
+        timeout-minutes: 20
         run: pnpm --filter=@lowdefy/node-utils test windowsTimeZoneChange --no-coverage
       - uses: codecov/codecov-action@v5

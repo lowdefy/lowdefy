@@ -40,11 +40,21 @@ function powershell(command) {
 // Right after a time zone change WMI answers slowly, past the 15 s the
 // readers allow, for a minute or more; until then they read null, which is
 // "unknown" and safe. What must hold is that a read that completes names the
-// same instant, so this reads with the same command and parser, without the
-// timeout.
-function readWithoutTimeout({ pid }) {
+// same instant, so this reads with the same command and parser and a much
+// longer timeout. jest cannot interrupt a synchronous read, so without one a
+// hung WMI query would hold the job until the CI runner gives up.
+const SLOW_READ_TIMEOUT_MS = 180000;
+
+function readWithSlowTimeout({ pid }) {
   const { command, args, parse } = getProcessStartTimeCommand({ pid });
-  const result = spawnSync(command, args, { encoding: 'utf8', windowsHide: true });
+  const result = spawnSync(command, args, {
+    encoding: 'utf8',
+    windowsHide: true,
+    timeout: SLOW_READ_TIMEOUT_MS,
+  });
+  if (result.error) {
+    throw new Error(`Start time read failed: ${result.error.message}`);
+  }
   if (result.status !== 0) {
     throw new Error(`Start time read failed: ${result.stderr}`);
   }
@@ -72,7 +82,7 @@ onWindows(
       ].filter((zone) => zone !== originalZone);
       for (const zone of zones) {
         powershell(`Set-TimeZone -Id '${zone}'`);
-        expect(readWithoutTimeout({ pid: child.pid })).toEqual(startTime);
+        expect(readWithSlowTimeout({ pid: child.pid })).toEqual(startTime);
         expect([startTime, null]).toContain(getProcessStartTime({ pid: child.pid }));
         expect([startTime, null]).toContain(await readProcessStartTime({ pid: child.pid }));
       }
