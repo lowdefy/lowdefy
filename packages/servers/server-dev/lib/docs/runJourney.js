@@ -15,847 +15,25 @@
 */
 
 import path from 'node:path';
-import { get, type } from '@lowdefy/helpers';
-import {
-  getBlock,
-  getRequestState,
-  getShortcutModifier,
-  getState,
-} from '@lowdefy/e2e-utils/runtime';
+import { type } from '@lowdefy/helpers';
+import { getState } from '@lowdefy/e2e-utils/runtime';
 
 import collectExercised from './collectExercised.js';
-import createJourneyActors from './createJourneyActors.js';
-import createLeftOriginError from './createLeftOriginError.js';
 import describeDataSetResult from './dataSets/describeDataSetResult.js';
 import getDataStore from './dataSets/getDataStore.js';
 import { getBrowser, buildPageUrl } from './getBrowser.js';
-import isPageReady from './isPageReady.js';
-import JourneyStepError from './JourneyStepError.js';
 import openDataSession from './dataSets/openDataSession.js';
-import openJourneyEmail from './openJourneyEmail.js';
+import openJourney from './openJourney.js';
 import readBuildArtifact from './readBuildArtifact.js';
 import readDevAuthMode from './readDevAuthMode.js';
-import readJourneyEmailMatch from './readJourneyEmailMatch.js';
 import resolveJourneyDataSet from './dataSets/resolveJourneyDataSet.js';
+import runJourneySteps from './runJourneySteps.js';
 import selectFinalState from './selectFinalState.js';
 import unsettledPageNote from './unsettledPageNote.js';
-import validateJourneySteps, { getStepKey } from './validateJourneySteps.js';
+import validateJourneyMail from './validateJourneyMail.js';
+import validateJourneySteps from './validateJourneySteps.js';
 import validateJourneyTimeout from './validateJourneyTimeout.js';
 import validateStateSelection from './validateStateSelection.js';
-
-// The actor a journey starts as; `as` steps switch to others by name.
-const MAIN_ACTOR = 'main';
-
-// Structural equality over values that have already been through the JSON
-// round-trip getState performs in the page (no undefined, no Dates, no
-// functions) — so key order is the only thing that must not matter.
-function isDeepEqual(a, b) {
-  if (a === b) {
-    return true;
-  }
-  if (type.isArray(a) && type.isArray(b)) {
-    return a.length === b.length && a.every((item, index) => isDeepEqual(item, b[index]));
-  }
-  if (type.isObject(a) && type.isObject(b)) {
-    const keysA = Object.keys(a);
-    const keysB = Object.keys(b);
-    return keysA.length === keysB.length && keysA.every((key) => isDeepEqual(a[key], b[key]));
-  }
-  return false;
-}
-
-// Playwright colours its call log with ANSI escapes; the result is read by an
-// agent as JSON, where they are noise.
-function cleanMessage(error) {
-  // eslint-disable-next-line no-control-regex
-  return error.message.replace(/\u001b\[[0-9;]*m/g, '');
-}
-
-// Wraps a Playwright interaction so a locator that never became actionable
-// (missing block, hidden, disabled, detached) reads as "expected the block
-// to be actionable, actual: <Playwright's message>" instead of a bare error.
-async function actOnTarget({ target, action }) {
-  try {
-    await action();
-  } catch (error) {
-    const actual = cleanMessage(error);
-    const description = describeTarget(target);
-    throw new JourneyStepError(`${capitalise(description)} was not actionable: ${actual}`, {
-      expected: `${description} to be actionable`,
-      actual,
-    });
-  }
-}
-
-function capitalise(text) {
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
-// The #bl-<id> wrapper spans the full row while the control inside it (an
-// antd button, a link, a checkbox) is usually narrower, so a click at the
-// wrapper's centre can land beside the control. The block's own e2e helpers
-// target the inner control for the same reason; a block with no interactive
-// descendant (a Box with its own onClick) is clicked directly.
-//
-// A radio or checkbox inside a <label> is reached through the label: the label
-// carries the option's text and is what a person clicks, while the input may
-// have no size at all (antd Segmented hides it at zero width and height), so
-// Playwright would never find it visible.
-const RADIO_OPTION = 'label:has(input[type="radio"])';
-const CHECKBOX_OPTION = 'label:has(input[type="checkbox"])';
-
-const INTERACTIVE_CONTROL = [
-  'button',
-  '[role="button"]',
-  'a[href]',
-  RADIO_OPTION,
-  CHECKBOX_OPTION,
-  'input:not([type="hidden"]):not(label input[type="radio"]):not(label input[type="checkbox"])',
-  'textarea',
-  'select',
-  '[role="switch"]',
-  '[role="checkbox"]',
-  '[role="radio"]',
-  '[role="tab"]',
-  '[role="menuitem"]',
-].join(', ');
-
-async function resolveClickTarget(scope) {
-  const control = scope.locator(INTERACTIVE_CONTROL).first();
-  if ((await control.count()) > 0) {
-    return control;
-  }
-  return scope;
-}
-
-// Exact match on a control's or option's text: a regex anchored at both ends,
-// so "Cat" does not pick "Category".
-function exactText(value) {
-  return new RegExp(`^\\s*${value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`);
-}
-
-// A step's target is a blockId string or an object narrowing the search (see
-// validateJourneySteps). The string form is the object form with only blockId.
-function normaliseTarget(target) {
-  if (type.isString(target)) {
-    return { blockId: target };
-  }
-  return target;
-}
-
-// Reads back the way an author thinks of it — `block "grid" row 1 control
-// "Edit"` — for the expected/actual pair of a failed step.
-function describeTarget(target) {
-  const parts = [];
-  if (!type.isUndefined(target.blockId)) {
-    parts.push(`block "${target.blockId}"`);
-  }
-  if (!type.isUndefined(target.row)) {
-    parts.push(`row ${target.row}`);
-  }
-  if (!type.isUndefined(target.column)) {
-    parts.push(`column "${target.column}"`);
-  }
-  if (!type.isUndefined(target.text)) {
-    parts.push(`control "${target.text}"`);
-  }
-  if (!type.isUndefined(target.containing)) {
-    parts.push(`text containing "${target.containing}"`);
-  }
-  if (!type.isUndefined(target.nth)) {
-    parts.push(`nth ${target.nth}`);
-  }
-  return parts.join(' ');
-}
-
-function attributeValue(value) {
-  return `"${String(value).replace(/["\\]/g, '\\$&')}"`;
-}
-
-// The element the target's scope keys name: the block wrapper, narrowed to a
-// grid row (`.ag-row[row-index]`, the row as displayed, which ag-grid renders
-// once per pinned/centre column container) and to a cell (`.ag-cell[col-id]`,
-// the column's field or colId). Undefined for a page-wide `text` target,
-// which has no scope narrower than the page.
-function resolveScope({ page, target }) {
-  if (type.isUndefined(target.blockId)) {
-    return undefined;
-  }
-  let scope = getBlock(page, target.blockId);
-  if (!type.isUndefined(target.row)) {
-    scope = scope.locator(`.ag-row[row-index=${attributeValue(target.row)}]`);
-  }
-  if (!type.isUndefined(target.column)) {
-    scope = scope.locator(`.ag-cell[col-id=${attributeValue(target.column)}]`);
-  }
-  return scope;
-}
-
-// Portal layers, front-most first. A control found by text alone is looked
-// for in the front-most open layer before the page, the way a person reads a
-// screen: an open dropdown menu covers a dialog, a dialog covers the page. A
-// confirm dialog's "Delete" is then found over the grid's "Delete" cell
-// buttons behind its mask, without the author counting buttons.
-const LAYERS = ['[role="menu"]', '[role="dialog"]'];
-
-function controlsWithText({ root, text, nth }) {
-  return root
-    .locator(INTERACTIVE_CONTROL)
-    .filter({ hasText: exactText(text) })
-    .filter({ visible: true })
-    .nth(nth ?? 0);
-}
-
-async function resolvePageWideText({ page, target }) {
-  for (const layer of LAYERS) {
-    const open = page.locator(layer).filter({ visible: true });
-    if ((await open.count()) > 0) {
-      const inLayer = controlsWithText({ root: open.last(), text: target.text });
-      if ((await inLayer.count()) > 0) {
-        return controlsWithText({ root: open.last(), text: target.text, nth: target.nth });
-      }
-    }
-  }
-  return controlsWithText({ root: page, text: target.text, nth: target.nth });
-}
-
-// The element a step acts on or asserts about. With `containing` it is the
-// visible element whose text contains the string, inside the scope or on the
-// page: a list row a person picks by the name or address it shows, which is
-// neither a block nor an interactive control. With `text` it is the visible
-// interactive control with exactly that text (a cell button, a confirm
-// dialog's OK, a menu item) inside the scope, or in the front-most open layer
-// of the page when there is no blockId — portal-rendered controls live
-// outside every block. With `nth` alone it is the nth interactive control in
-// the scope. Otherwise it is the scope itself, and a click resolves its inner
-// control the way a plain blockId click does.
-async function resolveTarget({ page, target }) {
-  const scope = resolveScope({ page, target });
-  if (!type.isUndefined(target.containing)) {
-    return (scope ?? page)
-      .getByText(target.containing)
-      .filter({ visible: true })
-      .nth(target.nth ?? 0);
-  }
-  if (!type.isUndefined(target.text)) {
-    if (type.isUndefined(scope)) {
-      return resolvePageWideText({ page, target });
-    }
-    return controlsWithText({ root: scope, text: target.text, nth: target.nth });
-  }
-  if (!type.isUndefined(target.nth)) {
-    return scope.locator(INTERACTIVE_CONTROL).nth(target.nth);
-  }
-  return scope;
-}
-
-// A target that names a control (`text`, `nth`) or the words shown
-// (`containing`) is clicked as is - a click on a list row's text reaches the
-// row's own click handler, the way a person clicks the row; a target that
-// names a container (block, row, cell) is clicked on the first control inside
-// it, or on itself when it has none.
-async function resolveClickLocator({ page, target }) {
-  const located = await resolveTarget({ page, target });
-  if (
-    !type.isUndefined(target.text) ||
-    !type.isUndefined(target.containing) ||
-    !type.isUndefined(target.nth)
-  ) {
-    return located;
-  }
-  return resolveClickTarget(located);
-}
-
-// The element a person clicks to open an input's popup: the trigger antd draws
-// inside the block. Every popup input - Select, MultipleSelector, AutoComplete,
-// TreeSelector, Cascader (all `.ant-select`), the date and time pickers
-// (`.ant-picker`), a colour picker, a dropdown button - has one.
-const POPUP_TRIGGER = [
-  '.ant-select-selector',
-  '.ant-picker',
-  '.ant-color-picker-trigger',
-  '.ant-dropdown-trigger',
-  '.ant-mentions',
-].join(', ');
-
-// The popups those triggers open. antd mounts them in a portal at the end of
-// <body>, so they are looked for page-wide; the hidden class marks a popup
-// that has closed but is still in the DOM.
-const POPUP = [
-  '.ant-select-dropdown:not(.ant-select-dropdown-hidden)',
-  '.ant-picker-dropdown:not(.ant-picker-dropdown-hidden)',
-  '.ant-cascader-dropdown:not(.ant-select-dropdown-hidden)',
-  '.ant-color-picker-inner',
-  '.ant-dropdown:not(.ant-dropdown-hidden)',
-  '.ant-mentions-dropdown:not(.ant-mentions-dropdown-hidden)',
-].join(', ');
-
-// Opens the popup of the input the target names and waits until it shows, so
-// a screenshot or a `select`-less inspection sees the options. A block with no
-// popup trigger (a button) is clicked as `click` does; a block whose click
-// opens nothing fails the step, since `open` promises a popup.
-async function runOpen({ page, step, timeout }) {
-  const target = normaliseTarget(step.open);
-  await actOnTarget({
-    target,
-    action: async () => {
-      const scope = await resolveTarget({ page, target });
-      const trigger = scope.locator(POPUP_TRIGGER).first();
-      if ((await trigger.count()) > 0) {
-        await trigger.click({ timeout });
-      } else {
-        await (await resolveClickLocator({ page, target })).click({ timeout });
-      }
-    },
-  });
-  const popup = page.locator(POPUP).filter({ visible: true }).first();
-  try {
-    await popup.waitFor({ state: 'visible', timeout });
-  } catch (error) {
-    const description = describeTarget(target);
-    throw new JourneyStepError(`Opening ${description} showed no dropdown or popup.`, {
-      expected: `a popup to open from ${description}`,
-      actual: cleanMessage(error),
-    });
-  }
-  // Popups animate in; a capture mid-animation is faded or offset.
-  await page.waitForTimeout(250);
-}
-
-async function runClick({ page, step, timeout }) {
-  const target = normaliseTarget(step.click);
-  await actOnTarget({
-    target,
-    action: async () => {
-      const locator = await resolveClickLocator({ page, target });
-      await locator.click({ timeout });
-    },
-  });
-}
-
-// A fill types `value`, or text read from an email (`fromEmail`) - the way a
-// person types a one-time code from their inbox into the tab they started in.
-async function runFill({ journey, page, step, timeout }) {
-  const { value: literal, fromEmail, ...target } = step.fill;
-  let value = literal;
-  if (!type.isUndefined(fromEmail)) {
-    value = await readJourneyEmailMatch({
-      page,
-      params: fromEmail,
-      since: journey.startedAt,
-      configDirectory: journey.configDirectory,
-      timeout,
-    });
-  }
-  await actOnTarget({
-    target,
-    action: async () => {
-      const scope = await resolveTarget({ page, target });
-      await scope.locator('input, textarea').first().fill(String(value), { timeout });
-    },
-  });
-}
-
-// The options of a radio group, a button selector or a segmented control are
-// all on the page already: the one labelled `text` is clicked, no dropdown.
-async function selectRadioOption({ options, target, text, timeout }) {
-  const option = options
-    .filter({ hasText: exactText(text) })
-    .filter({ visible: true })
-    .first();
-  try {
-    await option.click({ timeout });
-  } catch (error) {
-    const description = describeTarget(target);
-    throw new JourneyStepError(`No option with text "${text}" in ${description}.`, {
-      expected: `option "${text}" in ${description}`,
-      actual: cleanMessage(error),
-    });
-  }
-}
-
-// A native <select> inside the block is preferred when present (Playwright's
-// selectOption is exact and needs no open dropdown), then radio options
-// labelled in the block. Otherwise the block is clicked to open its dropdown
-// and the option with exactly `value` as text is clicked — Ant Design renders
-// options into a portal, so they are searched page-wide, restricted to visible
-// ones so the hidden accessibility list is never matched.
-async function runSelect({ page, step, timeout }) {
-  const { value, ...target } = step.select;
-  const text = String(value);
-  const scope = await resolveTarget({ page, target });
-  const native = scope.locator('select');
-  if ((await native.count()) > 0) {
-    await actOnTarget({
-      target,
-      action: () => native.first().selectOption({ label: text }, { timeout }),
-    });
-    return;
-  }
-  const radioOptions = scope.locator(RADIO_OPTION);
-  if ((await radioOptions.count()) > 0) {
-    await selectRadioOption({ options: radioOptions, target, text, timeout });
-    return;
-  }
-  await actOnTarget({
-    target,
-    action: async () => {
-      const locator = await resolveClickLocator({ page, target });
-      await locator.click({ timeout });
-    },
-  });
-  const option = page
-    .locator('.ant-select-item-option, [role="option"]')
-    .filter({ hasText: exactText(text) })
-    .filter({ visible: true })
-    .first();
-  try {
-    await option.click({ timeout });
-  } catch (error) {
-    const description = describeTarget(target);
-    throw new JourneyStepError(
-      `No option with text "${text}" appeared in the dropdown of ${description}.`,
-      {
-        expected: `option "${text}" in the dropdown of ${description}`,
-        actual: cleanMessage(error),
-      }
-    );
-  }
-  // The dropdown fades out for a few hundred ms after a pick; a screenshot or
-  // click taken during the fade would still see it covering the rows below.
-  // Tolerant and short: a multi-select dropdown stays open by design.
-  await page
-    .locator('.ant-select-dropdown:not(.ant-select-dropdown-hidden)')
-    .first()
-    .waitFor({ state: 'hidden', timeout: Math.min(timeout, 1000) })
-    .catch(() => {});
-}
-
-// `Mod` in a chord resolves to Meta or Control from the platform the page
-// reports, the way the app's own shortcut handling (tinykeys) does.
-async function runPress({ page, step }) {
-  const modifier = await getShortcutModifier(page);
-  const key = step.press
-    .split('+')
-    .map((part) => (part === 'Mod' ? modifier : part))
-    .join('+');
-  try {
-    await page.keyboard.press(key);
-  } catch (error) {
-    throw new JourneyStepError(`Could not press "${key}": ${cleanMessage(error)}`, {
-      expected: `key "${key}" to be pressed`,
-      actual: cleanMessage(error),
-    });
-  }
-}
-
-// Goes back one entry in the browser history, the way the Back button does.
-// The headless tab opens on about:blank before the journey's page, which the
-// Navigation API leaves out of the app's entries, so an entry index of 0 means
-// the journey has not navigated anywhere it could go back from.
-async function runBack({ page, timeout }) {
-  const index = await page.evaluate(() => window.navigation.currentEntry.index);
-  if (index === 0) {
-    throw new JourneyStepError(
-      'There is no earlier page in this journey to go back to: back needs a page the journey navigated from.',
-      { expected: 'the browser to go back one page', actual: `no earlier page than ${page.url()}` }
-    );
-  }
-  try {
-    await page.goBack({ timeout });
-  } catch (error) {
-    throw new JourneyStepError(`Could not go back: ${cleanMessage(error)}`, {
-      expected: 'the browser to go back one page',
-      actual: cleanMessage(error),
-    });
-  }
-}
-
-// Loads an app page the way a typed URL does. The page shown may not be the
-// one asked for - a protected page redirects a signed-out actor to sign in -
-// so the runner settles whichever page the app mounts (isPageReady with a
-// null pageId, as openPage does) and lets the next step assert where it
-// landed.
-async function runGoto({ page, step, origin, timeout }) {
-  const { pageId, urlQuery } = type.isString(step.goto) ? { pageId: step.goto } : step.goto;
-  const url = buildPageUrl({ origin, pageId, urlQuery });
-  try {
-    await page.goto(url, { waitUntil: 'load', timeout });
-  } catch (error) {
-    throw new JourneyStepError(`Could not open page "${pageId}": ${cleanMessage(error)}`, {
-      expected: `page "${pageId}" to load`,
-      actual: cleanMessage(error),
-    });
-  }
-  await page.waitForFunction(isPageReady, null, { timeout }).catch(() => {});
-}
-
-// Polls a page read until it satisfies `check`, or fails once `timeout` has
-// elapsed. Playwright's own waitForFunction cannot be used here because the
-// reads go through the e2e-utils helpers, which run in Node.
-async function pollUntil({ page, read, check, timeout, expected }) {
-  const deadline = Date.now() + timeout;
-  let value = await read();
-  while (!check(value)) {
-    if (Date.now() >= deadline) {
-      throw new JourneyStepError(`Timed out after ${timeout}ms waiting for ${expected}.`, {
-        expected,
-        actual: value,
-      });
-    }
-    await page.waitForTimeout(50);
-    value = await read();
-  }
-}
-
-async function runWait({ page, step, timeout }) {
-  const wait = step.wait;
-  switch (getStepKey(wait)) {
-    case 'ms':
-      await page.waitForTimeout(wait.ms);
-      return;
-    case 'request':
-      await pollUntil({
-        page,
-        read: () => getRequestState(page, wait.request),
-        check: (request) => !type.isNone(request) && request.loading !== true,
-        timeout,
-        expected: `request "${wait.request}" to have finished loading`,
-      });
-      return;
-    case 'state':
-      await pollUntil({
-        page,
-        read: async () => get((await getState(page)) ?? {}, wait.state),
-        check: (value) => !type.isUndefined(value),
-        timeout,
-        expected: `state "${wait.state}" to be defined`,
-      });
-      return;
-    default:
-      return;
-  }
-}
-
-async function runScreenshot({ page, step, index, screenshots }) {
-  const name = type.isString(step.screenshot) ? step.screenshot : `step-${index}`;
-  const buffer = await page.screenshot({ type: 'png' });
-  screenshots.push({ name, data: buffer.toString('base64'), mimeType: 'image/png' });
-}
-
-// A path that does not exist reads as null: a journey is JSON, where null is
-// the only way to say "absent", and the failure report already shows a
-// missing value as null - so `equals: null` asserts the value is not there.
-// A read while the page navigates fails and is retried.
-async function readStateValue({ page, path }) {
-  try {
-    return { value: get((await getState(page)) ?? {}, path) ?? null };
-  } catch (error) {
-    return { error };
-  }
-}
-
-// Polled like every other expectation: the value a click leads to often
-// lands once the request or endpoint it called has answered, which can be
-// after the page has settled on a busy machine.
-async function expectState({ page, params, timeout }) {
-  const { path, equals } = params;
-  const deadline = Date.now() + timeout;
-  let read = await readStateValue({ page, path });
-  while (
-    (!type.isUndefined(read.error) || !isDeepEqual(read.value, equals)) &&
-    Date.now() < deadline
-  ) {
-    await page.waitForTimeout(50);
-    read = await readStateValue({ page, path });
-  }
-  if (!type.isUndefined(read.error)) {
-    throw read.error;
-  }
-  if (!isDeepEqual(read.value, equals)) {
-    throw new JourneyStepError(
-      `Expected state "${path}" to equal ${JSON.stringify(equals)} but found ${JSON.stringify(
-        read.value
-      )}.`,
-      { expected: equals, actual: read.value }
-    );
-  }
-}
-
-async function expectVisible({ page, params, timeout }) {
-  const target = normaliseTarget(params);
-  const description = describeTarget(target);
-  try {
-    const located = await resolveTarget({ page, target });
-    await located.waitFor({ state: 'visible', timeout });
-  } catch (error) {
-    throw new JourneyStepError(`Expected ${description} to be visible.`, {
-      expected: `${description} to be visible`,
-      actual: cleanMessage(error),
-    });
-  }
-}
-
-// Waits for the target to be in the page, then reads the text of every element
-// it matches. A grid row is rendered once per column container (pinned left,
-// centre, pinned right), so a row target legitimately matches more than one
-// element; joining them reads the whole row.
-async function readTargetText({ page, target, timeout }) {
-  const located = await resolveTarget({ page, target });
-  await located.first().waitFor({ state: 'attached', timeout });
-  const texts = await located.allInnerTexts();
-  return texts.join('\n');
-}
-
-// One read of the target's text: { text } or, when the target is not in the
-// page yet or the page navigated mid-read, { error }.
-async function tryReadTargetText({ page, target, timeout }) {
-  try {
-    return { text: await readTargetText({ page, target, timeout }) };
-  } catch (error) {
-    return { error };
-  }
-}
-
-// Polled rather than read once, like the url and the title: a block often
-// renders its text only once the request it shows has answered (a list hidden
-// until its data arrives reads as ""), and a sign-in or sign-out may still be
-// reloading the page when the step starts.
-async function expectText({ page, params, timeout }) {
-  const { contains, ...target } = params;
-  const description = describeTarget(target);
-  const expected = `${description} text to contain "${contains}"`;
-  const deadline = Date.now() + timeout;
-  let read = await tryReadTargetText({ page, target, timeout });
-  while (read.text?.includes(contains) !== true && Date.now() < deadline) {
-    await page.waitForTimeout(50);
-    read = await tryReadTargetText({
-      page,
-      target,
-      timeout: Math.max(deadline - Date.now(), 1),
-    });
-  }
-  if (!type.isUndefined(read.error)) {
-    throw new JourneyStepError(`Expected ${description} to contain text "${contains}".`, {
-      expected,
-      actual: cleanMessage(read.error),
-    });
-  }
-  if (!read.text.includes(contains)) {
-    throw new JourneyStepError(
-      `Expected ${description} text to contain "${contains}" but found ${JSON.stringify(
-        read.text
-      )}.`,
-      { expected, actual: read.text }
-    );
-  }
-}
-
-// The document title is set by the page after it renders, so it is polled
-// rather than read once.
-async function expectTitle({ page, params, timeout }) {
-  if (!type.isUndefined(params.equals)) {
-    await pollUntil({
-      page,
-      read: () => page.title(),
-      check: (title) => title === params.equals,
-      timeout,
-      expected: `title to equal "${params.equals}"`,
-    });
-    return;
-  }
-  await pollUntil({
-    page,
-    read: () => page.title(),
-    check: (title) => title.includes(params.contains),
-    timeout,
-    expected: `title to contain "${params.contains}"`,
-  });
-}
-
-// Waits for the URL rather than reading it once, because a click that
-// navigates resolves before the new route is committed — page.waitForURL is
-// Playwright's own wait for exactly this.
-async function expectUrl({ page, params, timeout }) {
-  const { contains } = params;
-  try {
-    await page.waitForURL((url) => url.href.includes(contains), { timeout });
-  } catch {
-    throw new JourneyStepError(
-      `Expected url to contain "${contains}" but found ${JSON.stringify(page.url())}.`,
-      { expected: `url to contain "${contains}"`, actual: page.url() }
-    );
-  }
-}
-
-async function runExpect({ page, step, timeout }) {
-  const expectation = step.expect;
-  const key = getStepKey(expectation);
-  const params = expectation[key];
-  switch (key) {
-    case 'state':
-      await expectState({ page, params, timeout });
-      return;
-    case 'visible':
-      await expectVisible({ page, params, timeout });
-      return;
-    case 'text':
-      await expectText({ page, params, timeout });
-      return;
-    case 'url':
-      await expectUrl({ page, params, timeout });
-      return;
-    case 'title':
-      await expectTitle({ page, params, timeout });
-      return;
-    default:
-      return;
-  }
-}
-
-// After an interaction, waits for the page's own load chain — the event the
-// interaction fired, the requests it called — to settle, using the same
-// readiness check openPage uses, so the next step asserts against the
-// outcome rather than racing it. Tolerant: a page that never settles (a
-// hung request) simply moves on and lets the next expect report what it
-// finds. Reads the current pageId from the page because a click may have
-// navigated to another page.
-//
-// Never longer than SETTLE_TIMEOUT_MS, however long the steps may wait: an
-// event that ends in a Wait (a sign-in link's resend cooldown) keeps the page
-// unsettled for as long as it waits, and every step after it waits for what it
-// needs on its own.
-async function settlePage({ page, timeout }) {
-  const pageId = await page.evaluate(() => window.lowdefy?.pageId);
-  if (type.isNone(pageId)) {
-    return;
-  }
-  await page.waitForFunction(isPageReady, pageId, { timeout }).catch(() => {});
-}
-
-const INTERACTION_STEPS = ['click', 'open', 'fill', 'select', 'press', 'back'];
-
-const SETTLE_TIMEOUT_MS = 5000;
-
-function readsMail(step) {
-  const key = getStepKey(step);
-  return key === 'email' || (key === 'fill' && !type.isUndefined(step.fill.fromEmail));
-}
-
-async function runStep({ journey, step, index, screenshots }) {
-  const page = journey.actors.current().page;
-  const timeout = journey.stepTimeout;
-  switch (getStepKey(step)) {
-    case 'click':
-      await runClick({ page, step, timeout });
-      return;
-    case 'open':
-      await runOpen({ page, step, timeout });
-      return;
-    case 'fill':
-      await runFill({ journey, page, step, timeout });
-      return;
-    case 'select':
-      await runSelect({ page, step, timeout });
-      return;
-    case 'press':
-      await runPress({ page, step, timeout });
-      return;
-    case 'back':
-      await runBack({ page, timeout });
-      return;
-    case 'goto':
-      await runGoto({ page, step, origin: journey.origin, timeout: journey.openTimeout });
-      return;
-    case 'email':
-      await openJourneyEmail({
-        page,
-        params: step.email,
-        since: journey.startedAt,
-        configDirectory: journey.configDirectory,
-        timeout,
-      });
-      return;
-    case 'as':
-      await journey.actors.switchTo(step.as);
-      return;
-    case 'wait':
-      await runWait({ page, step, timeout });
-      return;
-    case 'screenshot':
-      await runScreenshot({ page, step, index, screenshots });
-      return;
-    case 'expect':
-      await runExpect({ page, step, timeout });
-      return;
-    default:
-      return;
-  }
-}
-
-function toFailure({ error, index, step }) {
-  if (error instanceof JourneyStepError) {
-    // `actual` is null rather than undefined so the key survives JSON — an
-    // agent reading the failure sees "found nothing", not a missing field.
-    return {
-      index,
-      step,
-      expected: error.expected,
-      actual: type.isUndefined(error.actual) ? null : error.actual,
-      message: error.message,
-    };
-  }
-  return {
-    index,
-    step,
-    expected: `step ${index} (${getStepKey(step)}) to complete`,
-    actual: cleanMessage(error),
-    message: cleanMessage(error),
-  };
-}
-
-// Runs the steps in order, stopping at the first failure. Returns the step
-// log, the failure (if any) and the screenshots taken — never throws for a
-// step that fails, because a failed journey is a result an agent reads, not
-// an error it recovers from.
-async function runSteps({ journey, steps }) {
-  const results = [];
-  const screenshots = [];
-  let failure;
-  for (let index = 0; index < steps.length; index += 1) {
-    const step = steps[index];
-    if (!type.isUndefined(failure)) {
-      results.push({ index, step, status: 'skipped', durationMs: 0 });
-      continue;
-    }
-    const started = Date.now();
-    try {
-      await runStep({ journey, step, index, screenshots });
-      if (INTERACTION_STEPS.includes(getStepKey(step))) {
-        await settlePage({
-          page: journey.actors.current().page,
-          timeout: Math.min(journey.stepTimeout, SETTLE_TIMEOUT_MS),
-        });
-      }
-      results.push({ index, step, status: 'ok', durationMs: Date.now() - started });
-    } catch (error) {
-      failure = toFailure({ error, index, step });
-      results.push({ index, step, status: 'failed', durationMs: Date.now() - started });
-    }
-    // A request this step caused to another host of the dev server was aborted, so whatever the
-    // step saw afterwards is not what the app does: that request is the failure.
-    const departure = journey.actors.leftOrigin();
-    if (!type.isUndefined(departure)) {
-      failure = toFailure({
-        error: createLeftOriginError({ origin: journey.origin, departure }),
-        index,
-        step,
-      });
-      results[results.length - 1].status = 'failed';
-    }
-  }
-  return { results, screenshots, failure };
-}
 
 // The final state is read even after a failure — it is what an agent needs to
 // write the next assertion. A page that has navigated away or crashed may not
@@ -934,19 +112,14 @@ async function runJourney({
   if (!type.isUndefined(timeoutError)) {
     return { error: timeoutError };
   }
-  const openTimeout = Math.max(timeout, stepTimeout);
-  const capturesMail = process.env.LOWDEFY_SERVER_DEV_MAIL_SINK === 'true';
-  if (steps.some(readsMail) && !capturesMail) {
-    return {
-      error:
-        'The journey reads email (an "email" step or a "fill" with "fromEmail"), but this dev server captures no mail. Start (or restart) it with LOWDEFY_DEV_SMTP_PORT set to a free port, and point the app\'s SMTP connection at 127.0.0.1 on that port.',
-    };
+  const mailError = validateJourneyMail({ steps });
+  if (!type.isUndefined(mailError)) {
+    return { error: mailError };
   }
-  const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd();
   const resolved = await resolveJourneyDataSet({
     data,
     user,
-    configDirectory,
+    configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd(),
     buildDirectory: path.join(process.cwd(), 'build'),
     ...readDevAuthMode(),
   });
@@ -954,8 +127,6 @@ async function runJourney({
     return { error: resolved.error, refused: true };
   }
   const { dataSet } = resolved;
-  // Taken before any page opens: mail the journey causes arrives after it.
-  const startedAt = Date.now();
 
   let browser;
   try {
@@ -984,35 +155,28 @@ async function runJourney({
   }
 
   const url = buildPageUrl({ origin, pageId, urlQuery });
-  const actors = createJourneyActors({
-    browser,
-    origin,
-    basePath,
-    pageId,
-    user: resolved.user,
-    urlQuery,
-    width,
-    height,
-    timeout: openTimeout,
-    dataCookie: session?.cookie,
-    mutantCookie,
-    users: dataSet?.users,
-    mainActor: MAIN_ACTOR,
-  });
+  let journey;
   try {
-    const main = await actors.switchTo(MAIN_ACTOR);
-    const journey = {
-      actors,
+    const opened = await openJourney({
+      browser,
       origin,
-      configDirectory,
-      startedAt,
-      openTimeout,
+      basePath,
+      pageId,
+      user: resolved.user,
+      urlQuery,
+      width,
+      height,
+      timeout,
       stepTimeout,
-    };
-    const { results, screenshots, failure } = await runSteps({ journey, steps });
-    const state = await readFinalState({ page: actors.current().page });
+      dataCookie: session?.cookie,
+      mutantCookie,
+      users: dataSet?.users,
+    });
+    journey = opened.journey;
+    const { results, screenshots, failure } = await runJourneySteps({ journey, steps });
+    const state = await readFinalState({ page: journey.actors.current().page });
     const exercised = await collectExercised({
-      snapshots: actors.networkSnapshots(),
+      snapshots: journey.actors.networkSnapshots(),
       readConfigFile,
       requestSchemas: (await readConfigFile('plugins/requestSchemas.json')) ?? {},
     });
@@ -1033,21 +197,27 @@ async function runJourney({
     }
     // openPage already waited for the page's async lifecycle; an unsettled page
     // still runs its steps and reports `ready: false` alongside the result.
-    if (!main.ready) {
-      return { ...result, ready: false, note: unsettledPageNote({ timeout: openTimeout }) };
+    if (!opened.main.ready) {
+      return {
+        ...result,
+        ready: false,
+        note: unsettledPageNote({ timeout: journey.openTimeout }),
+      };
     }
     return result;
   } catch (error) {
     return { error: `Failed to run journey at "${url}": ${error.message}` };
   } finally {
-    await actors.closeAll();
+    if (!type.isUndefined(journey)) {
+      await journey.actors.closeAll();
+    }
     // After the actors: no browser request still carries the data cookie. close() then waits for
-    // the session's background work before it drops the database.
+    // the session's background work before it drops the database. openJourney closed its own
+    // actors when the first page failed to open.
     if (session !== null) {
       await session.close();
     }
   }
 }
 
-export { runSteps, MAIN_ACTOR };
 export default runJourney;
