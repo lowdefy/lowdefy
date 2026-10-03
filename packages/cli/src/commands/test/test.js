@@ -100,6 +100,7 @@ async function test({ context }) {
   const recording = { run: createTraceId(), paths: givenPaths, filter };
   const recorded = isFullSuiteRun({ paths: givenPaths, filter, repetition: 1 });
   const results = [];
+  const seen = new Set();
   try {
     for (const { suite, item } of selected) {
       const result = await runRepeated({
@@ -111,7 +112,7 @@ async function test({ context }) {
         recording,
       });
       results.push(result);
-      const lines = suite.format({ result });
+      const lines = suite.format({ result, seen });
       if (result.passed) {
         lines.forEach((line) => context.logger.info(line));
       } else {

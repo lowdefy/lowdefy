@@ -77,7 +77,9 @@ pnpm test:mongodb
 (`pnpm --filter=@lowdefy/api test:mongodb`, `jest.mongodb.config.js`), which drive engine code
 through a real BetterAuth instance and the MongoDB auth adapter, for example the tenant signup
 mint under concurrent sessions. Name an api test `*.mongodb.test.js` when it needs a real
-server; the plain `pnpm test` run ignores those files. To reproduce a race deterministically,
+server; the plain `pnpm test` run ignores those files. It also runs `@lowdefy/server-dev`'s
+`*.mongodb.test.mjs` suites (`pnpm --filter=@lowdefy/server-dev test:mongodb`), such as the
+journey data set pull, which spawns `lib/data/pullDataSet.mjs` against a memory server. To reproduce a race deterministically,
 pause one session inside the real adapter (wrap `adapter.create` from `auth.$context`) and
 run the other to completion before releasing it.
 

@@ -409,3 +409,29 @@ test('validateJourneySteps rejects a click count outside 1 to 3', () => {
     'Step "open" has unknown key "count"'
   );
 });
+
+test('validateJourneySteps rejects an unknown key on expect.state', () => {
+  expect(
+    validateJourneySteps({
+      steps: [{ expect: { state: { path: 'a', equals: null, form: 'shape' } } }],
+    }).error
+  ).toBe('Step 0: Step "expect.state" has unknown key "form". Keys are: path, equals, from.');
+  expect(
+    validateJourneySteps({
+      steps: [{ expect: { state: { path: 'a', equals: 1, value: 1, eq: 1 } } }],
+    }).error
+  ).toBe(
+    'Step 0: Step "expect.state" has unknown keys "value", "eq". Keys are: path, equals, from.'
+  );
+});
+
+test('validateJourneySteps accepts path, equals and from on expect.state', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { expect: { state: { path: 'a', equals: 1 } } },
+        { expect: { state: { path: 'a', equals: 1, from: 'recorded' } } },
+      ],
+    })
+  ).toEqual({});
+});
