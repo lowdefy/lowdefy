@@ -31,6 +31,7 @@ import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
 import journeysCompile from './commands/journeys/journeysCompile.js';
+import journeysEvidence from './commands/journeys/journeysEvidence.js';
 import journeysPullPosthog from './commands/journeys/pull/journeysPullPosthog.js';
 import mcp from './commands/mcp/mcp.js';
 import start from './commands/start/start.js';
@@ -306,6 +307,35 @@ journeys
   )
   .addOption(new Option('--refetch', 'Pull final days again (days older than yesterday).'))
   .action(runCommand({ cliVersion, handler: journeysPullPosthog }));
+
+const productionWindowOptions = [
+  new Option(
+    '--since <since>',
+    'The production window ending today: a number of days such as 30d (the default), or a start date.'
+  ),
+  new Option('--from <date>', 'The first UTC day of the production window, YYYY-MM-DD.'),
+  new Option('--to <date>', 'The last UTC day of the production window, YYYY-MM-DD.'),
+];
+
+const journeysEvidenceCommand = journeys
+  .command('evidence')
+  .description(
+    "Report how much production use backs each journey in tests/journeys/; --refresh writes it into each journey's evidence key."
+  )
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(new Option('--source <source>', 'Where use is read from: production (the default).'))
+  .addOption(
+    new Option(
+      '--refresh',
+      'Write the evidence key of every journey whose numbers changed, and nothing else in the file.'
+    )
+  );
+productionWindowOptions.forEach((option) => journeysEvidenceCommand.addOption(option));
+journeysEvidenceCommand.action(runCommand({ cliVersion, handler: journeysEvidence }));
 
 program
   .command('init')
