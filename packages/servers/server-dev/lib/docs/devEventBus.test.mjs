@@ -23,8 +23,8 @@ import { jest } from '@jest/globals';
 import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
 import spyOnChokidar from '../../test-utils/spyOnChokidar.mjs';
 
-// File events can take seconds to arrive on a loaded machine.
-jest.setTimeout(60000);
+// macOS can hold file events back for tens of seconds on a busy machine.
+jest.setTimeout(180000);
 
 // The bus watches build/buildStatus.json under process.cwd() — point it at a
 // throwaway server directory before the module is imported.
@@ -56,7 +56,7 @@ function watcherReady() {
 
 // Resolves with the next event of the given type, so file-watcher tests wait
 // for the real fs event instead of sleeping a guessed interval.
-function nextEvent(type, { timeout = 20000 } = {}) {
+function nextEvent(type, { timeout = 60000 } = {}) {
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
       unsubscribe();

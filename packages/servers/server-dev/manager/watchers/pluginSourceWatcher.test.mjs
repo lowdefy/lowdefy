@@ -24,8 +24,8 @@ import waitFor from '../../test-utils/waitFor.mjs';
 
 const { default: pluginSourceWatcher } = await import('./pluginSourceWatcher.mjs');
 
-// File events can take seconds to arrive on a loaded machine.
-jest.setTimeout(60000);
+// macOS can hold file events back for tens of seconds on a busy machine.
+jest.setTimeout(180000);
 
 let root;
 let context;

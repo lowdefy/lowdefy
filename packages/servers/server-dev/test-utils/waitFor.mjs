@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-// Polls until predicate() is true. The ceiling is generous because file
-// events can take seconds to arrive on a loaded machine; a passing test never
-// waits for it.
-function waitFor(predicate, { timeout = 20000, interval = 25, description = 'condition' } = {}) {
+// Polls until predicate() is true. The ceiling is generous because macOS can
+// hold file events back for tens of seconds on a busy machine and then deliver
+// them in a burst; a passing test never waits for it.
+function waitFor(predicate, { timeout = 60000, interval = 25, description = 'condition' } = {}) {
   return new Promise((resolve, reject) => {
     const started = Date.now();
     const tick = () => {

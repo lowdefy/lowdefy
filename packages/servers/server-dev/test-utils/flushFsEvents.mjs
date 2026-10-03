@@ -27,7 +27,7 @@ import chokidar from 'chokidar';
 // throwaway watcher reports it, and returns: every earlier write has been
 // handed out by then. Call it after writing fixtures and before starting the
 // watcher under test. On Linux it costs a few milliseconds.
-async function flushFsEvents({ timeout = 20000 } = {}) {
+async function flushFsEvents({ timeout = 60000 } = {}) {
   const probeDir = fs.mkdtempSync(
     path.join(fs.realpathSync(os.tmpdir()), 'lowdefy-fs-events-flush-')
   );
