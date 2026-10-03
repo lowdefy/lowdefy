@@ -20,8 +20,8 @@ import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 import lowdefyConfig from '../build/config.js';
 import isPageReady from './isPageReady.js';
 import { HEADLESS_USER_COOKIE } from '../server/auth/headlessUser.js';
-import { JOURNEY_ACTOR_COOKIE, journeyActorToken } from '../server/auth/journeyActor.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
+import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js';
 
 // playwright-core does not bundle a browser (unlike @playwright/test) — it
 // only drives one that is already installed. `channel: 'chrome'` picks up a
@@ -129,13 +129,7 @@ async function openPage({
     // 5 per minute per address).
     if (!type.isUndefined(clientAddress)) {
       await context.addCookies([
-        {
-          name: JOURNEY_ACTOR_COOKIE,
-          value: `${journeyActorToken}.${clientAddress}`,
-          url: origin,
-          httpOnly: true,
-          sameSite: 'Lax',
-        },
+        writeJourneyCookie({ name: JOURNEY_COOKIES.actor.name, payload: clientAddress, origin }),
       ]);
     }
     const page = await context.newPage();

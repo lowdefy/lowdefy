@@ -40,6 +40,7 @@ import getAuth from './auth/getAuth.js';
 import getHeadlessUser from './auth/getHeadlessUser.js';
 import getMockUser from './auth/getMockUser.js';
 import getStrategies from './auth/getStrategies.js';
+import { forwardJourneyCookies } from './journeyCookies.js';
 import i18nConfig from '../build/i18n.js';
 import loadDynamicJsMap from './loadDynamicJsMap.js';
 import logRequest from './log/logRequest.js';
@@ -115,6 +116,9 @@ async function createLowdefyContext({ c, user }) {
     steps,
     websockets,
   };
+  // The one writer of loopbackHeaders: a detached CallApi carries these on its
+  // loopback fetch, so the target runs with the journey's data set and mutant.
+  context.loopbackHeaders = { cookie: forwardJourneyCookies(c.req.header('cookie')) };
   context.handleError = createHandleError({ context });
   const mockUser = getMockUser();
   const headlessUser = getHeadlessUser(c);
