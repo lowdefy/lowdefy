@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 import fs from 'fs';
+import { spawn } from 'child_process';
 import os from 'os';
 import path from 'path';
 import { wait } from '@lowdefy/helpers';
@@ -191,6 +192,29 @@ test('a registry entry whose pid now belongs to another process is dropped, neve
   const adopting = createTestHub();
   expect(adopting.list().instances).toEqual([]);
   expect(isAlive(process.pid)).toBe(true);
+});
+
+test('a registry entry written without a start time is adopted by its pid', async () => {
+  const leader = spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], {
+    detached: true,
+    stdio: 'ignore',
+  });
+  try {
+    fs.mkdirSync(path.join(home, 'hub'), { recursive: true });
+    fs.writeFileSync(
+      path.join(home, 'hub', 'registry.json'),
+      JSON.stringify({
+        ports: {},
+        instances: { [configDirectory]: { pid: leader.pid, processStartTime: null } },
+      })
+    );
+    const adopting = createTestHub();
+    expect(adopting.list().instances).toEqual([
+      expect.objectContaining({ configDirectory, managed: true }),
+    ]);
+  } finally {
+    leader.kill('SIGKILL');
+  }
 });
 
 test('concurrent starts for one app launch one dev server and leave none unmanaged', async () => {

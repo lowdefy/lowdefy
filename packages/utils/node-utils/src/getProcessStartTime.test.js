@@ -42,8 +42,8 @@ test('getProcessStartTime reads the same start time whatever time zone and local
   });
   expect(first).not.toEqual('null');
   expect(second).toEqual(first);
-});
+}, 30000);
 
 test('getProcessStartTime returns null for a pid that is not running', () => {
   expect(getProcessStartTime({ pid: 2 ** 22 + 12345 })).toBeNull();
-});
+}, 30000);

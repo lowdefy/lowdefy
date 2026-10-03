@@ -14,19 +14,21 @@
   limitations under the License.
 */
 
-import { spawnSync } from 'child_process';
+import { execFile } from 'child_process';
 
 import getProcessStartTimeCommand from './getProcessStartTimeCommand.js';
 
-// The process's start time as an opaque string, equal across reads and readers
-// for one process. Null when it cannot be read: the process is gone, or ps
-// (PowerShell on Windows) failed. Callers treat null as "unknown", never as
-// proof either way.
-function getProcessStartTime({ pid }) {
+// getProcessStartTime without blocking the event loop, for a check a running
+// server repeats (watchOwner): on Windows each read starts PowerShell. Never
+// rejects; a failed read resolves to null.
+function readProcessStartTime({ pid }) {
   const { command, args, options } = getProcessStartTimeCommand({ pid });
-  const result = spawnSync(command, args, { ...options, encoding: 'utf8' });
-  const startTime = (result.stdout ?? '').trim();
-  return startTime === '' ? null : startTime;
+  return new Promise((resolve) => {
+    execFile(command, args, { ...options, encoding: 'utf8' }, (error, stdout) => {
+      const startTime = (stdout ?? '').trim();
+      resolve(startTime === '' ? null : startTime);
+    });
+  });
 }
 
-export default getProcessStartTime;
+export default readProcessStartTime;

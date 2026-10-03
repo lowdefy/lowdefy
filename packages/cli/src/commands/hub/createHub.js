@@ -45,11 +45,13 @@ function isGroupAlive(pid) {
 
 // The registry outlives processes (and reboots), so an entry counts only while
 // its process group lives and its leader is the same process the hub started.
+// An entry written before Windows had start times has none; there the pid has
+// to do, as it did then.
 function isManagedAlive(managed) {
   if (!isGroupAlive(managed.pid)) {
     return false;
   }
-  if (process.platform === 'win32') {
+  if (type.isNone(managed.processStartTime)) {
     return true;
   }
   return getProcessStartTime({ pid: managed.pid }) === managed.processStartTime;

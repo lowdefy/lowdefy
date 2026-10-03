@@ -32,4 +32,13 @@ jobs:
         run: pnpm -r --filter='!@lowdefy/website' --filter='!@lowdefy/lowdefy' build
         if: matrix.os == 'windows-latest'
       - run: pnpm test
+      # pnpm runs package scripts through cmd.exe on Windows, where the quoted
+      # --filter in the root test script matches no project, so the step above
+      # runs no unit tests there. Run the process identity tests explicitly.
+      - name: Process identity tests (Windows)
+        if: matrix.os == 'windows-latest'
+        run: pnpm --filter=@lowdefy/node-utils test ProcessStartTime watchOwner ServerRegistry registerServer readDevInstance --no-coverage
+      - name: Prune tests (Windows)
+        if: matrix.os == 'windows-latest'
+        run: pnpm --filter=lowdefy test pruneServers createHub --no-coverage
       - uses: codecov/codecov-action@v5

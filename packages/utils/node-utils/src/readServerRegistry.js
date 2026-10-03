@@ -61,8 +61,10 @@ function readServerRegistry({ directory }) {
       pid: record.owner.pid,
       processStartTime: record.owner.processStartTime,
     });
-    // Without a start time (Windows, or no ps) the pid alone cannot prove this
-    // is still the server: a reused pid would be taken for it and signalled.
+    // Without a start time (unreadable when the record was written, or a
+    // Windows record from before Windows had one) the pid alone cannot prove
+    // this is still the server: a reused pid would be taken for it and
+    // signalled.
     const provable = !type.isNone(record.processStartTime);
     records.push({ ...record, recordPath, ownerAlive, prunable: provable && !ownerAlive });
   });

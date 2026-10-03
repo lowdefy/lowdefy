@@ -20,8 +20,9 @@ import getProcessStartTime from './getProcessStartTime.js';
 import isPidAlive from './isPidAlive.js';
 
 // A pid plus its start time names one process; the pid alone can be reused.
-// Without a recorded start time (Windows), or when ps cannot read the current
-// one, the pid decides. Erring towards "alive" keeps a live server, or its
+// Without a recorded start time (a record written before start times were
+// read on its platform), or when the current one cannot be read, the pid
+// decides. Erring towards "alive" keeps a live server, or its
 // owner, from ever being taken for a dead one.
 function isProcessAlive({ pid, processStartTime }) {
   if (!isPidAlive(pid)) {

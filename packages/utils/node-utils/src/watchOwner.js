@@ -18,9 +18,11 @@ import { type } from '@lowdefy/helpers';
 
 import getProcessStartTime from './getProcessStartTime.js';
 import isPidAlive from './isPidAlive.js';
+import readProcessStartTime from './readProcessStartTime.js';
 
 // process.kill(pid, 0) forks nothing, so the owner is checked often. Reading
-// its start time costs a ps process, so a reused pid is caught once a minute.
+// its start time costs a ps process (PowerShell on Windows), so a reused pid
+// is caught once a minute, read without blocking the server.
 const POLL_INTERVAL_MS = 2000;
 const POLLS_PER_START_TIME_CHECK = 30;
 
@@ -82,7 +84,7 @@ function watchOwner({ onExit, env = process.env, stdin = process.stdin }) {
   }
 
   const ownerPid = parseOwnerPid(env.LOWDEFY_EXIT_WITH_PID);
-  // Null on Windows, where the pid alone has to do.
+  // Null when it cannot be read; then the pid alone has to do.
   const ownerStartTime = getProcessStartTime({ pid: ownerPid });
 
   if (!isPidAlive(ownerPid)) {
@@ -91,22 +93,34 @@ function watchOwner({ onExit, env = process.env, stdin = process.stdin }) {
   }
 
   let polls = 0;
+  let checkingStartTime = false;
   interval = setInterval(() => {
     polls += 1;
     if (!isPidAlive(ownerPid)) {
       exit({ reason: 'owner-gone' });
       return;
     }
-    if (type.isNone(ownerStartTime) || polls % POLLS_PER_START_TIME_CHECK !== 0) {
+    if (
+      type.isNone(ownerStartTime) ||
+      checkingStartTime ||
+      polls % POLLS_PER_START_TIME_CHECK !== 0
+    ) {
       return;
     }
-    const startTime = getProcessStartTime({ pid: ownerPid });
-    // A null read is no proof the owner is gone: ps itself can fail (no free
-    // memory or file descriptors). An owner that did exit fails isPidAlive on
-    // the next poll.
-    if (!type.isNone(startTime) && startTime !== ownerStartTime) {
-      exit({ reason: 'owner-gone' });
-    }
+    checkingStartTime = true;
+    readProcessStartTime({ pid: ownerPid }).then((startTime) => {
+      checkingStartTime = false;
+      // Stopped while the read was running.
+      if (interval === null) {
+        return;
+      }
+      // A null read is no proof the owner is gone: ps itself can fail (no free
+      // memory or file descriptors). An owner that did exit fails isPidAlive
+      // on the next poll.
+      if (!type.isNone(startTime) && startTime !== ownerStartTime) {
+        exit({ reason: 'owner-gone' });
+      }
+    });
   }, POLL_INTERVAL_MS);
   interval.unref();
 

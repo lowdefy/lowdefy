@@ -27,7 +27,7 @@ function describeOwner(owner) {
 }
 
 // Signalled only when ps names the same process now: a pid alone may have been reused. A
-// start time that cannot be read (no ps, Windows, ps failing) proves nothing either way, so
+// start time that cannot be read (no ps, PowerShell or ps failing) proves nothing either way, so
 // such a process is neither signalled nor taken for gone: its record stays.
 function checkProcess({ pid, processStartTime }) {
   if (!isPidAlive(pid)) {
