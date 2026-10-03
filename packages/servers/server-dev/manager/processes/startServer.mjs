@@ -85,6 +85,9 @@ function startServer(context) {
         LOWDEFY_SERVER_DEV_MAIL_SINK: context.mailSink ? 'true' : undefined,
         PORT: context.internalPort,
         BETTER_AUTH_URL: authUrl,
+        // Reported as the MCP serverInfo version: lowdefy mcp takes each
+        // tool's definition from the newest Lowdefy version it meets.
+        LOWDEFY_SERVER_DEV_VERSION: context.version,
       },
     }
   );

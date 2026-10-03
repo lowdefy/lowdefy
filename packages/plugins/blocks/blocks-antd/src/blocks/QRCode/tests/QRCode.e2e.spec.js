@@ -84,4 +84,17 @@ test.describe('QRCode Block', () => {
     await expect(cover).toHaveClass(/qr-cover-class/);
     await expect(cover).toHaveCSS('background-color', 'rgb(255, 255, 0)');
   });
+
+  // ============================================
+  // NULL PROPERTIES
+  // ============================================
+
+  test('null properties fall back to antd defaults', async ({ page }) => {
+    const qrcode = getBlock(page, 'qr_null_props').locator('.ant-qrcode');
+    await expect(qrcode).toBeVisible();
+    await expect(qrcode).toHaveCSS('width', '160px');
+    await expect(qrcode).not.toHaveClass(/ant-qrcode-borderless/);
+    await expect(qrcode.locator('canvas')).toBeVisible();
+    await expect(qrcode.locator('.ant-qrcode-cover')).toHaveCount(0);
+  });
 });

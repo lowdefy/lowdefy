@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 
 import Client from '@lowdefy/client';
 import createRouter from '@lowdefy/client/adapters/createRouter.js';
@@ -35,6 +35,12 @@ import types from './types.js';
 // embedded in the HTML; SPA navigations fetch /api/page/* and swap pageConfig.
 function Page({ auth, config, lowdefy }) {
   const [pageConfig, setPageConfig] = useState(config.pageConfig);
+  // The navigation listener is subscribed once, so it reads the shown config
+  // through a ref rather than the state its closure captured.
+  const pageConfigRef = useRef(config.pageConfig);
+  // A re-render with the same config is how the page context picks up a new
+  // URL (getContext updates a memoized context on every render).
+  const [, rerender] = useReducer((count) => count + 1, 0);
 
   const routerRef = useRef(null);
   if (!routerRef.current) {
@@ -55,6 +61,12 @@ function Page({ auth, config, lowdefy }) {
     const unsubscribe = router.subscribe(async ({ pageId }) => {
       const token = ++latestNavRef.current;
       const targetPageId = pageId ?? config.rootConfig.home.pageId;
+      // A static page's config is the same whatever the query, so a Link that
+      // stays on it needs no fetch. Dynamic pages re-resolve per navigation.
+      if (targetPageId === pageConfigRef.current.pageId && pageConfigRef.current.dynamic !== true) {
+        rerender();
+        return;
+      }
       try {
         // Forward the current query string so server-side Dynamic block
         // resolution sees the same urlQuery as an initial HTML load.
@@ -94,6 +106,7 @@ function Page({ auth, config, lowdefy }) {
         // A failed chunk load falls to the catch below: a full page load.
         await loadPageTypes({ pageConfig: nextPageConfig });
         if (token !== latestNavRef.current) return;
+        pageConfigRef.current = nextPageConfig;
         setPageConfig(nextPageConfig);
       } catch (error) {
         // Network failure on SPA navigation — fall back to a full page load.

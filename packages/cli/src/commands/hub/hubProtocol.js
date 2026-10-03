@@ -14,8 +14,11 @@
   limitations under the License.
 */
 
-// Bumped when a hub method changes shape. A client that needs a newer protocol
-// than the running hub speaks asks it to hand over (see connectHub).
+// Bumped when the hub gains methods a client needs. Several lowdefy versions
+// share one hub, so a bump only adds: a hub keeps serving every earlier
+// protocol's methods unchanged, and connectHub accepts a hub at its own
+// protocol or newer. A client that finds an older hub tells the user to stop
+// it, and the next hub adopts its servers.
 const HUB_PROTOCOL = 1;
 
 // Managed dev servers get a public/internal port pair from this range, clear
