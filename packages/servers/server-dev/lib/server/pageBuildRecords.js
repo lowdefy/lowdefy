@@ -46,9 +46,8 @@ function recordRead({ reads, filePath, hash }) {
 // Every config file a page build reads comes through readConfigFile, and all
 // app code it runs through importAppCode. App code can read anything, so a
 // build that ran it is only marked, not traced.
-function trackFileReads({ context, configDirectory }) {
-  const readConfigFile = context.readConfigFile;
-  context.readConfigFile = async (filePath) => {
+function trackReadConfigFile({ readConfigFile, configDirectory }) {
+  return async function trackedReadConfigFile(filePath) {
     const reads = buildReads.getStore();
     const absolutePath = path.resolve(configDirectory, filePath);
     let content;
@@ -61,6 +60,13 @@ function trackFileReads({ context, configDirectory }) {
     if (reads) recordRead({ reads, filePath: absolutePath, hash: hashConfigContent(content) });
     return content;
   };
+}
+
+function trackFileReads({ context, configDirectory }) {
+  context.readConfigFile = trackReadConfigFile({
+    readConfigFile: context.readConfigFile,
+    configDirectory,
+  });
   const importAppCode = context.importAppCode;
   context.importAppCode = (filePath) => {
     const reads = buildReads.getStore();
@@ -88,35 +94,42 @@ function locateErrors({ error, context, configDirectory }) {
   }
 }
 
-// registryMtime identifies the page registry, and so the config build, the
-// page was built against.
-async function record({ pageId, context, configDirectory, registryMtime, build }) {
+// generation names the build context the page was built on, and checkedAt the
+// change event counter when its build started: what it read is current as of
+// that event. registryMtime identifies the page registry, and so the config
+// build, the page was built against.
+async function record({
+  pageId,
+  context,
+  configDirectory,
+  generation,
+  checkedAt,
+  registryMtime,
+  build,
+}) {
   const reads = { files: new Map(), ranAppCode: false };
   const builtAt = Date.now();
+  const describe = (errors) => ({
+    builtAt,
+    checkedAt,
+    errors,
+    files: reads.files,
+    generation,
+    ranAppCode: reads.ranAppCode,
+    registryMtime,
+  });
   let result;
   try {
     result = await buildReads.run(reads, build);
   } catch (error) {
     locateErrors({ error, context, configDirectory });
-    records.set(pageId, {
-      builtAt,
-      files: reads.files,
-      ranAppCode: reads.ranAppCode,
-      registryMtime,
-      errors: mapPageBuildErrors(error),
-    });
+    records.set(pageId, describe(mapPageBuildErrors(error)));
     throw error;
   }
   // A plugin install ends the build before the page is built, so the page's
   // previous record still describes it.
   if (!result?.installing) {
-    records.set(pageId, {
-      builtAt,
-      files: reads.files,
-      ranAppCode: reads.ranAppCode,
-      registryMtime,
-      errors: null,
-    });
+    records.set(pageId, describe(null));
   }
   return result;
 }
@@ -125,4 +138,4 @@ function get(pageId) {
   return records.get(pageId) ?? null;
 }
 
-export default { get, record, trackFileReads };
+export default { get, record, trackFileReads, trackReadConfigFile };

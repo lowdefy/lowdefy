@@ -107,10 +107,12 @@ function listJitMaps(buildDirectory) {
   return fs.existsSync(directory) ? fs.readdirSync(directory).sort() : [];
 }
 
-function invalidatePages(buildDirectory, time) {
-  const filePath = path.join(buildDirectory, 'invalidatePages');
-  fs.writeFileSync(filePath, String(time));
-  fs.utimesSync(filePath, time, time);
+// A config build publish renames a new page registry into place.
+function publishRegistry(buildDirectory) {
+  const registryPath = path.join(buildDirectory, 'pageRegistry.json');
+  const stagedPath = `${registryPath}.staged`;
+  fs.copyFileSync(registryPath, stagedPath);
+  fs.renameSync(stagedPath, registryPath);
 }
 
 test('a JIT page build leaves keyMap.json and refMap.json as the config build wrote them', async () => {
@@ -163,7 +165,7 @@ test('an error a failing JIT page build throws after its keys were added resolve
   fs.rmSync(root, { recursive: true, force: true });
 });
 
-test('after two page edits only the current and previous build contexts keep jitMaps files', async () => {
+test('after two config publishes only the current and previous build contexts keep jitMaps files', async () => {
   const { root, buildDirectory, configDirectory } = createApp({
     pages: {
       a: 'id: a\ntype: Box\n',
@@ -174,9 +176,9 @@ test('after two page edits only the current and previous build contexts keep jit
 
   await buildPageIfNeeded({ pageId: 'a', buildDirectory, configDirectory });
   const [first] = listJitMaps(buildDirectory);
-  invalidatePages(buildDirectory, 1000);
+  publishRegistry(buildDirectory);
   await buildPageIfNeeded({ pageId: 'b', buildDirectory, configDirectory });
-  invalidatePages(buildDirectory, 2000);
+  publishRegistry(buildDirectory);
   await buildPageIfNeeded({ pageId: 'c', buildDirectory, configDirectory });
 
   const files = listJitMaps(buildDirectory);

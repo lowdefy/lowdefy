@@ -32,6 +32,7 @@ export { default as prepareJitContext } from './build/jit/prepareJitContext.js';
 export { default as createPageRegistry } from './build/jit/createPageRegistry.js';
 export { default as check } from './check.js';
 export { default as createContext } from './createContext.js';
+export { default as createReadConfigFile } from './utils/readConfigFile.js';
 export { default as makeId } from './utils/makeId.js';
 export { default as restoreTenantTargets } from './build/restoreTenantTargets.js';
 export { default as serializeBuildException } from './utils/serializeBuildException.js';
