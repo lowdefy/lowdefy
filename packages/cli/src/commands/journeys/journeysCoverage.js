@@ -17,11 +17,11 @@
 import { journeySequence, profileProduction } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
-import computeCoverage from './coverage/computeCoverage.js';
+import computeCoverage from './coverageReport/computeCoverage.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
 import readMutationReport from './readMutationReport.js';
 import readProductionSegments from './readProductionSegments.js';
-import writeCoverageReport from './coverage/writeCoverageReport.js';
+import writeCoverageReport from './coverageReport/writeCoverageReport.js';
 
 const SOURCES = ['production'];
 const MEASURES = ['interaction', 'flow', 'failure', 'frustration', 'role'];

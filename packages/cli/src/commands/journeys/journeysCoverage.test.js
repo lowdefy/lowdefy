@@ -20,7 +20,7 @@ import os from 'os';
 import path from 'path';
 import { validate } from '@lowdefy/ajv';
 
-import coverageReportSchema from './coverage/coverageReportSchema.js';
+import coverageReportSchema from './coverageReport/coverageReportSchema.js';
 import journeysCoverage from './journeysCoverage.js';
 
 let configDirectory;
