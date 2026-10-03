@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
-import path from 'path';
 import { type } from '@lowdefy/helpers';
 
 import rebasePath from './rebasePath.js';
+import resolveVersionReference from './resolveVersionReference.js';
 
 const pathProtocols = ['link:', 'file:'];
 
@@ -63,32 +63,19 @@ function rebaseSpecs({ directory, specs, workspaceRoot }) {
   );
 }
 
-// A "$name" override takes the version of name in the root package.json,
-// which for the server is its own package.json, so it is resolved here
-// against the parent's.
-function resolveVersionReference({ rootDependencies, spec, workspaceRoot }) {
-  if (!type.isString(spec) || !spec.startsWith('$')) {
-    return spec;
-  }
-  const name = spec.slice(1);
-  if (type.isNone(rootDependencies[name])) {
-    throw new Error(
-      `Cannot resolve the override version "${spec}": ${path.join(
-        workspaceRoot,
-        'package.json'
-      )} has no dependency "${name}".`
-    );
-  }
-  return rootDependencies[name];
-}
-
-function rebaseOverrides({ directory, overrides, rootDependencies, workspaceRoot }) {
+function rebaseOverrides({ directory, packages, rootDependencies, settings, workspaceRoot }) {
   return Object.fromEntries(
-    Object.entries(overrides).map(([selector, spec]) => [
+    Object.entries(settings.overrides).map(([selector, spec]) => [
       selector,
       rebaseSpec({
         directory,
-        spec: resolveVersionReference({ rootDependencies, spec, workspaceRoot }),
+        spec: resolveVersionReference({
+          packages,
+          rootDependencies,
+          settings,
+          spec,
+          workspaceRoot,
+        }),
         workspaceRoot,
       }),
     ])
@@ -112,13 +99,20 @@ function rebasePackageExtensions({ directory, packageExtensions, workspaceRoot }
 // Rewrites the parent workspace's settings for a workspace rooted at
 // directory: paths pnpm resolves against the workspace root point at the same
 // files, and references to the root package.json are resolved.
-function rebaseWorkspaceSettings({ directory, rootDependencies, settings, workspaceRoot }) {
+function rebaseWorkspaceSettings({
+  directory,
+  packages,
+  rootDependencies,
+  settings,
+  workspaceRoot,
+}) {
   const rebased = { ...settings };
   if (type.isObject(settings.overrides)) {
     rebased.overrides = rebaseOverrides({
       directory,
-      overrides: settings.overrides,
+      packages,
       rootDependencies,
+      settings,
       workspaceRoot,
     });
   }

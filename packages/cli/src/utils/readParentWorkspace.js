@@ -20,10 +20,12 @@ import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 
+import getPnpmMajorVersion from './getPnpmMajorVersion.js';
 import parseNpmrcLine from './parseNpmrcLine.js';
 
 // The settings pnpm 10 reads from the "pnpm" field of the root package.json.
-// pnpm 11 reads none of them, so this list does not grow.
+// pnpm 11 reads none of them, so this list does not grow, and they are only
+// carried when pnpm 10 or earlier installs the server.
 const manifestSettingKeys = [
   'allowBuilds',
   'allowNonAppliedPatches',
@@ -73,8 +75,9 @@ async function readPackageJson({ workspaceRoot }) {
   }
 }
 
-// pnpm 10 also reads "pnpmfile" from .npmrc. The copied .npmrc carries it
-// to the server, where a pnpmfile in pnpm-workspace.yaml would override it.
+// pnpm 10 also reads "pnpmfile" from .npmrc (pnpm 11 reads only registry and
+// auth settings there). The copied .npmrc carries it to the server, where a
+// pnpmfile in pnpm-workspace.yaml would override it.
 function npmrcSetsPnpmfile({ npmrc }) {
   return (npmrc ?? '').split(/\r?\n/).some((line) => {
     const entry = parseNpmrcLine(line);
@@ -100,17 +103,25 @@ function getManifestSettings({ packageJson }) {
 // Everything the parent workspace's install depends on, so the generated
 // server, which installs as its own workspace, can install the same way.
 // Every setting is carried except "packages": new pnpm settings follow without
-// a change here.
-async function readParentWorkspace({ workspaceRoot }) {
+// a change here. Settings the installing pnpm would ignore in the parent are
+// left out, so the server installs as the parent does.
+async function readParentWorkspace({ directory, pnpmCmd, workspaceRoot }) {
   const workspaceYaml = await readWorkspaceYaml({ workspaceRoot });
   const packageJson = await readPackageJson({ workspaceRoot });
   const { packages, ...workspaceSettings } = workspaceYaml;
   const npmrcPath = path.join(workspaceRoot, '.npmrc');
   const npmrc = await readFile(npmrcPath);
+  const readsPnpm10Settings =
+    getPnpmMajorVersion({ directory, packageManager: packageJson.packageManager, pnpmCmd }) < 11;
 
-  // pnpm-workspace.yaml wins where both set a setting, as in pnpm 10.
-  const settings = { ...getManifestSettings({ packageJson }), ...workspaceSettings };
-  if (type.isNone(settings.pnpmfile) && !npmrcSetsPnpmfile({ npmrc })) {
+  // pnpm 10 installs with the package.json settings over the
+  // pnpm-workspace.yaml settings where both set one.
+  const settings = {
+    ...workspaceSettings,
+    ...(readsPnpm10Settings ? getManifestSettings({ packageJson }) : {}),
+  };
+  const pnpmfileInNpmrc = readsPnpm10Settings && npmrcSetsPnpmfile({ npmrc });
+  if (type.isNone(settings.pnpmfile) && !pnpmfileInNpmrc) {
     const defaultPnpmfile = defaultPnpmfiles.find((fileName) =>
       fs.existsSync(path.join(workspaceRoot, fileName))
     );

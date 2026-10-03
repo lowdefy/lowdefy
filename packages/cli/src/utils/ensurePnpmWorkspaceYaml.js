@@ -89,7 +89,11 @@ async function ensurePnpmWorkspaceYaml({ context, directory }) {
   context.logger.debug(
     `Found pnpm workspace at ${workspaceRoot}; the server installs as its own workspace with its settings.`
   );
-  const parentWorkspace = await readParentWorkspace({ workspaceRoot });
+  const parentWorkspace = await readParentWorkspace({
+    directory,
+    pnpmCmd: context.pnpmCmd,
+    workspaceRoot,
+  });
   await writeFileIfChanged(
     filePath,
     createNestedWorkspaceYaml({ directory, parentWorkspace, workspaceRoot })

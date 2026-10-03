@@ -26,8 +26,17 @@ jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   readFile: jest.fn(),
 }));
 
-beforeEach(() => {
+jest.unstable_mockModule('./getPnpmMajorVersion.js', () => ({
+  default: jest.fn(),
+}));
+
+const directory = '/repo/apps/app/.lowdefy/server';
+const pnpmCmd = 'pnpm';
+
+beforeEach(async () => {
   jest.clearAllMocks();
+  const { default: getPnpmMajorVersion } = await import('./getPnpmMajorVersion.js');
+  getPnpmMajorVersion.mockReturnValue(10);
 });
 
 function mockFiles(readFile, files) {
@@ -58,7 +67,7 @@ nodeLinker: hoisted
       devDependencies: { c: '2.0.0', d: '4.0.0' },
     }),
   });
-  const parentWorkspace = await readParentWorkspace({ workspaceRoot: '/repo' });
+  const parentWorkspace = await readParentWorkspace({ directory, pnpmCmd, workspaceRoot: '/repo' });
   expect(parentWorkspace).toEqual({
     npmrc: null,
     npmrcPath: '/repo/.npmrc',
@@ -75,7 +84,7 @@ nodeLinker: hoisted
   });
 });
 
-test('readParentWorkspace reads the package.json pnpm field and resolutions under pnpm-workspace.yaml', async () => {
+test('readParentWorkspace reads the package.json pnpm field and resolutions over pnpm-workspace.yaml when pnpm 10 installs', async () => {
   const { default: fs } = await import('fs');
   const { readFile } = await import('@lowdefy/node-utils');
   const { default: readParentWorkspace } = await import('./readParentWorkspace.js');
@@ -97,13 +106,35 @@ peerDependencyRules:
       },
     }),
   });
-  const { settings } = await readParentWorkspace({ workspaceRoot: '/repo' });
+  const { settings } = await readParentWorkspace({ directory, pnpmCmd, workspaceRoot: '/repo' });
   expect(settings).toEqual({
     overrides: { a: '2.0.0', e: '5.0.0' },
     patchedDependencies: { 'b@1.0.0': 'patches/b@1.0.0.patch' },
-    peerDependencyRules: { ignoreMissing: ['b'] },
+    peerDependencyRules: { ignoreMissing: ['c'] },
     supportedArchitectures: { cpu: ['x64'] },
   });
+});
+
+test('readParentWorkspace leaves out the package.json pnpm field and resolutions when pnpm 11 installs', async () => {
+  const { default: fs } = await import('fs');
+  const { readFile } = await import('@lowdefy/node-utils');
+  const { default: getPnpmMajorVersion } = await import('./getPnpmMajorVersion.js');
+  const { default: readParentWorkspace } = await import('./readParentWorkspace.js');
+  fs.existsSync.mockReturnValue(false);
+  getPnpmMajorVersion.mockReturnValue(11);
+  mockFiles(readFile, {
+    '/repo/pnpm-workspace.yaml': 'packages:\n  - apps/*\noverrides:\n  b: 2.0.0\n',
+    '/repo/package.json': JSON.stringify({
+      packageManager: 'pnpm@11.15.0',
+      resolutions: { a: '1.0.0' },
+      pnpm: { overrides: { a: '2.0.0' }, patchedDependencies: { 'c@1.0.0': 'c.patch' } },
+    }),
+  });
+  const { settings } = await readParentWorkspace({ directory, pnpmCmd, workspaceRoot: '/repo' });
+  expect(settings).toEqual({ overrides: { b: '2.0.0' } });
+  expect(getPnpmMajorVersion.mock.calls).toEqual([
+    [{ directory, packageManager: 'pnpm@11.15.0', pnpmCmd }],
+  ]);
 });
 
 test('readParentWorkspace reads the parent .npmrc', async () => {
@@ -115,7 +146,7 @@ test('readParentWorkspace reads the parent .npmrc', async () => {
     '/repo/pnpm-workspace.yaml': 'packages:\n  - apps/*\n',
     '/repo/.npmrc': '@scope:registry=https://npm.example.com/\n',
   });
-  const parentWorkspace = await readParentWorkspace({ workspaceRoot: '/repo' });
+  const parentWorkspace = await readParentWorkspace({ directory, pnpmCmd, workspaceRoot: '/repo' });
   expect(parentWorkspace.npmrc).toEqual('@scope:registry=https://npm.example.com/\n');
   expect(parentWorkspace.npmrcPath).toEqual('/repo/.npmrc');
 });
@@ -126,7 +157,7 @@ test('readParentWorkspace sets pnpmfile to the default pnpmfile at the parent ro
   const { default: readParentWorkspace } = await import('./readParentWorkspace.js');
   fs.existsSync.mockImplementation((filePath) => filePath === '/repo/.pnpmfile.cjs');
   mockFiles(readFile, { '/repo/pnpm-workspace.yaml': 'packages:\n  - apps/*\n' });
-  const { settings } = await readParentWorkspace({ workspaceRoot: '/repo' });
+  const { settings } = await readParentWorkspace({ directory, pnpmCmd, workspaceRoot: '/repo' });
   expect(settings).toEqual({ pnpmfile: '.pnpmfile.cjs' });
 });
 
@@ -139,8 +170,23 @@ test('readParentWorkspace does not set the default pnpmfile when the parent .npm
     '/repo/pnpm-workspace.yaml': 'packages:\n  - apps/*\n',
     '/repo/.npmrc': 'pnpmfile = hooks/pnpmfile.cjs\n',
   });
-  const { settings } = await readParentWorkspace({ workspaceRoot: '/repo' });
+  const { settings } = await readParentWorkspace({ directory, pnpmCmd, workspaceRoot: '/repo' });
   expect(settings).toEqual({});
+});
+
+test('readParentWorkspace sets the default pnpmfile when pnpm 11, which ignores pnpmfile in .npmrc, installs', async () => {
+  const { default: fs } = await import('fs');
+  const { readFile } = await import('@lowdefy/node-utils');
+  const { default: getPnpmMajorVersion } = await import('./getPnpmMajorVersion.js');
+  const { default: readParentWorkspace } = await import('./readParentWorkspace.js');
+  fs.existsSync.mockImplementation((filePath) => filePath === '/repo/.pnpmfile.cjs');
+  getPnpmMajorVersion.mockReturnValue(11);
+  mockFiles(readFile, {
+    '/repo/pnpm-workspace.yaml': 'packages:\n  - apps/*\n',
+    '/repo/.npmrc': 'pnpmfile=hooks/pnpmfile.cjs\n',
+  });
+  const { settings } = await readParentWorkspace({ directory, pnpmCmd, workspaceRoot: '/repo' });
+  expect(settings).toEqual({ pnpmfile: '.pnpmfile.cjs' });
 });
 
 test('readParentWorkspace keeps a pnpmfile the parent sets', async () => {
@@ -151,7 +197,7 @@ test('readParentWorkspace keeps a pnpmfile the parent sets', async () => {
   mockFiles(readFile, {
     '/repo/pnpm-workspace.yaml': 'packages:\n  - apps/*\npnpmfile: hooks/pnpmfile.cjs\n',
   });
-  const { settings } = await readParentWorkspace({ workspaceRoot: '/repo' });
+  const { settings } = await readParentWorkspace({ directory, pnpmCmd, workspaceRoot: '/repo' });
   expect(settings).toEqual({ pnpmfile: 'hooks/pnpmfile.cjs' });
 });
 
@@ -161,7 +207,7 @@ test('readParentWorkspace returns empty settings for a workspace with no package
   const { default: readParentWorkspace } = await import('./readParentWorkspace.js');
   fs.existsSync.mockReturnValue(false);
   mockFiles(readFile, { '/repo/pnpm-workspace.yaml': '' });
-  const parentWorkspace = await readParentWorkspace({ workspaceRoot: '/repo' });
+  const parentWorkspace = await readParentWorkspace({ directory, pnpmCmd, workspaceRoot: '/repo' });
   expect(parentWorkspace).toEqual({
     npmrc: null,
     npmrcPath: '/repo/.npmrc',
@@ -178,7 +224,7 @@ test('readParentWorkspace names pnpm-workspace.yaml when it cannot be parsed', a
   const { default: readParentWorkspace } = await import('./readParentWorkspace.js');
   fs.existsSync.mockReturnValue(false);
   mockFiles(readFile, { '/repo/pnpm-workspace.yaml': 'packages: [apps/*\n' });
-  await expect(readParentWorkspace({ workspaceRoot: '/repo' })).rejects.toThrow(
+  await expect(readParentWorkspace({ directory, pnpmCmd, workspaceRoot: '/repo' })).rejects.toThrow(
     /^Could not parse \/repo\/pnpm-workspace\.yaml: /
   );
 });
@@ -192,7 +238,7 @@ test('readParentWorkspace names package.json when it cannot be parsed', async ()
     '/repo/pnpm-workspace.yaml': 'packages:\n  - apps/*\n',
     '/repo/package.json': '{ "name": ',
   });
-  await expect(readParentWorkspace({ workspaceRoot: '/repo' })).rejects.toThrow(
+  await expect(readParentWorkspace({ directory, pnpmCmd, workspaceRoot: '/repo' })).rejects.toThrow(
     /^Could not parse \/repo\/package\.json: /
   );
 });

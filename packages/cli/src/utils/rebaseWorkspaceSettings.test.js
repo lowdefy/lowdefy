@@ -53,6 +53,17 @@ test('rebaseWorkspaceSettings resolves "$name" overrides against the parent root
   expect(settings.overrides).toEqual({ a: '^2.0.0', 'c>b': 'link:../../../../vendor/b' });
 });
 
+test('rebaseWorkspaceSettings rebases a "$name" override that resolves to a catalog link:', () => {
+  const settings = rebaseWorkspaceSettings({
+    directory,
+    rootDependencies: { a: 'catalog:' },
+    settings: { catalog: { a: 'link:vendor/a' }, overrides: { a: '$a' } },
+    workspaceRoot,
+  });
+  expect(settings.overrides).toEqual({ a: 'link:../../../../vendor/a' });
+  expect(settings.catalog).toEqual({ a: 'link:../../../../vendor/a' });
+});
+
 test('rebaseWorkspaceSettings throws when a "$name" override has no root dependency', () => {
   expect(() =>
     rebaseWorkspaceSettings({

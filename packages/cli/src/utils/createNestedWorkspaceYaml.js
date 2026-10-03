@@ -30,6 +30,7 @@ const defaultBuiltDependencies = ['better-sqlite3', 'sharp'];
 function createNestedWorkspaceYaml({ directory, parentWorkspace, workspaceRoot }) {
   const settings = rebaseWorkspaceSettings({
     directory,
+    packages: parentWorkspace.packages,
     rootDependencies: parentWorkspace.rootDependencies,
     settings: parentWorkspace.settings,
     workspaceRoot,
