@@ -142,7 +142,7 @@ Messages name the secret and the environment, never the value.
 
 A data set journey runs on the running dev server, beside your own browser tabs:
 
-1. The dev server starts one in-memory MongoDB replica set the first time a data set journey runs. The first run downloads the MongoDB binary once (`Downloading MongoDB <version> for journey data sets (once).`). Set `MONGOMS_VERSION` to match your cluster's MongoDB version.
+1. The dev server starts one in-memory MongoDB replica set the first time a data set journey runs, on a free port from 49152 up so it never holds a port one of your apps needs. It stops, and its files are removed, when the dev server stops; if it dies, the journey that finds it fails and the next one starts a new store. The first run downloads the MongoDB binary once (`Downloading MongoDB <version> for journey data sets (once).`). Set `MONGOMS_VERSION` to match your cluster's MongoDB version.
 2. Each journey run gets a fresh database on it, loaded with the snapshot, then the fixtures. Runs never see each other's writes, so an agent's journey can run alongside `lowdefy test`.
 3. Every browser the journey opens carries a cookie that only the dev server's own headless browser can produce. Requests with it read the run's database. Your own tabs carry no such cookie and keep using your real database on the same server.
 4. When the journey ends, its browsers close, the dev server waits up to 30 seconds for background work the journey started (detached `CallApi` calls, background endpoint work), and then drops the database.

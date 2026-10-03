@@ -21,6 +21,7 @@ import dataSessionRegistry from './dataSessionRegistry.js';
 import drainSessionWork from './drainSessionWork.js';
 import getDataStore from './getDataStore.js';
 import groupDataSetByCollection from './groupDataSetByCollection.js';
+import isDataStoreGone from './isDataStoreGone.js';
 import loadDataSetCollection from './loadDataSetCollection.js';
 import loadSnapshot from './loadSnapshot.js';
 import sweepOrphanDatabases from './sweepOrphanDatabases.js';
@@ -57,7 +58,8 @@ function createClose({ session, client }) {
 // the payload openPage({ dataCookie }) writes into each actor's lowdefy_journey_data cookie. close()
 // waits for the session's background work (context.waitUntil), then drops the database.
 async function openDataSession({ dataSet }) {
-  const { client, uri } = await getDataStore();
+  const store = await getDataStore();
+  const { client, uri } = store;
   const id = crypto.randomBytes(16).toString('hex');
   const session = {
     id,
@@ -99,6 +101,15 @@ async function openDataSession({ dataSet }) {
     }
   } catch (error) {
     dataSessionRegistry.delete(id);
+    if (isDataStoreGone(error)) {
+      // mongod is gone, and every session on it with it. Stopping the store clears it, so the next
+      // journey starts a fresh one instead of failing until the dev server restarts.
+      await store.stop().catch(() => {});
+      throw new Error(
+        `The journey data store stopped responding (${error.message}). The next journey starts a new one.`,
+        { cause: error }
+      );
+    }
     // Best effort: the load error is the one to report, and the next open's orphan sweep drops a
     // database this could not.
     await client
