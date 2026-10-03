@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 import claimDomEvent from './claimDomEvent.js';
+import createTracePayload from './trace/createTracePayload.js';
+import getTrace from './trace/getTrace.js';
 
 class Events {
   constructor({ arrayIndices, block, context }) {
@@ -31,6 +33,7 @@ class Events {
     this.triggerEvent = this.triggerEvent.bind(this);
     this.registerEvent = this.registerEvent.bind(this);
     this.initEvent = this.initEvent.bind(this);
+    this.getDebounceMs = this.getDebounceMs.bind(this);
 
     this.init();
   }
@@ -45,6 +48,16 @@ class Events {
       history: [],
       loading: false,
     };
+  }
+
+  getDebounceMs(eventDescription) {
+    if (type.isNone(eventDescription.debounce)) {
+      return 0;
+    }
+    if (type.isNone(eventDescription.debounce.ms)) {
+      return this.defaultDebounceMs;
+    }
+    return eventDescription.debounce.ms;
   }
 
   init() {
@@ -93,7 +106,10 @@ class Events {
     // Only render flags changed, which no operator reads.
     this.context._internal.update({ changes: [] });
 
+    const trace = getTrace(this.context._internal.lowdefy);
     const actionHandle = async () => {
+      // Copied only while a subscriber asked for state, so production pays no copy per event.
+      const stateBefore = trace.wantsState() ? serializer.copy(this.context.state) : undefined;
       const res = await this.context._internal.Actions.callActions({
         actions: eventDescription.actions,
         arrayIndices: this.arrayIndices,
@@ -105,6 +121,18 @@ class Events {
       });
       eventDescription.history.unshift(res);
       this.context.eventLog.unshift(res);
+      // Only completed events reach here: bounced events, handledBy returns and events with
+      // no actions never emit, so subscribers need not filter them.
+      trace.emit(
+        createTracePayload({
+          actions: [...eventDescription.actions, ...eventDescription.catchActions],
+          block: this.block,
+          context: this.context,
+          debounceMs: this.getDebounceMs(eventDescription),
+          record: res,
+          stateBefore,
+        })
+      );
       eventDescription.loading = false;
       this.block.update = true;
       this.context._internal.update({ changes: ['eventLog'] });
@@ -115,9 +143,7 @@ class Events {
     if (type.isNone(eventDescription.debounce)) {
       return actionHandle();
     }
-    const delay = !type.isNone(eventDescription.debounce.ms)
-      ? eventDescription.debounce.ms
-      : this.defaultDebounceMs;
+    const delay = this.getDebounceMs(eventDescription);
     // leading edge: bounce
     if (this.timeouts[name] && eventDescription.debounce.immediate === true) {
       result.bounced = true;

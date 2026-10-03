@@ -17,6 +17,7 @@
 import { jest } from '@jest/globals';
 
 import postHogState from './postHogState.js';
+import createFakeTrace from '../test/createFakeTrace.js';
 import resetPostHogState from '../test/resetPostHogState.js';
 
 jest.unstable_mockModule('posthog-js', () => {
@@ -38,7 +39,8 @@ afterEach(() => {
 });
 
 test('PostHogInit warns and turns the other actions into no-ops when posthog-js fails to load', async () => {
-  await expect(PostHogInit({ params: { apiKey: 'phc_key' } })).resolves.toBe(null);
+  const trace = createFakeTrace();
+  await expect(PostHogInit({ trace, params: { apiKey: 'phc_key' } })).resolves.toBe(null);
   expect(postHogState.status).toBe('failed');
   expect(warn).toHaveBeenCalledTimes(1);
   expect(warn.mock.calls[0][0]).toBe(
@@ -46,4 +48,5 @@ test('PostHogInit warns and turns the other actions into no-ops when posthog-js 
   );
   await expect(PostHogCapture({ params: { event: 'report_submitted' } })).resolves.toBe(null);
   expect(warn).toHaveBeenCalledTimes(1);
+  expect(trace.subscribe).not.toHaveBeenCalled();
 });

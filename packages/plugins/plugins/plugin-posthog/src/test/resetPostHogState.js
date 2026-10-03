@@ -23,6 +23,8 @@ function resetPostHogState() {
   postHogState.client = null;
   postHogState.loading = null;
   postHogState.status = 'uninitialized';
+  postHogState.subscription = null;
+  postHogState.trace = null;
   postHogState.warnedUninitialized = false;
 }
 

@@ -22,6 +22,7 @@ import Events from './Events.js';
 import getAppContext from './getAppContext.js';
 import getContext from './getContext.js';
 import getHomePathname from './getHomePathname.js';
+import getTrace from './trace/getTrace.js';
 import Requests from './Requests.js';
 import resolveTarget from './resolveTarget.js';
 import State from './State.js';
@@ -36,6 +37,7 @@ export {
   getAppContext,
   getDevError,
   getHomePathname,
+  getTrace,
   Requests,
   resolveTarget,
   State,
