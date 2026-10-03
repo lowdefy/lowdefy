@@ -70,7 +70,7 @@ async function readDataSet({ configDirectory, buildDirectory, name }) {
     warnings.push(message);
   });
 
-  return { ...dataSet, collections, warnings };
+  return { ...dataSet, configDirectory, collections, warnings };
 }
 
 export default readDataSet;
