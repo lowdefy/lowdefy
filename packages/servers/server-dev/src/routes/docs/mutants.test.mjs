@@ -100,6 +100,18 @@ test('POST /lowdefy-docs/mutants lists the mutants of the posted pages and endpo
   });
 });
 
+test('POST /lowdefy-docs/mutants resolves config paths from the keys a page build wrote to jitMaps', async () => {
+  const page = pageFixture();
+  write('keyMap.json', {});
+  write('jitMaps/1-1-1.json', { keyMap: { ...page.keyMap }, refMap: {} });
+  const { status, data } = await post({ pages: ['tickets'] });
+  expect(status).toBe(200);
+  expect(data.mutants.length).toBeGreaterThan(0);
+  data.mutants.forEach((mutant) => {
+    expect(mutant.config).toEqual(expect.any(String));
+  });
+});
+
 test('POST /lowdefy-docs/mutants keeps only the operators asked for', async () => {
   const { data } = await post({ pages: ['tickets'], operators: ['drop-block'] });
   expect(new Set(data.mutants.map((mutant) => mutant.operator))).toEqual(new Set(['drop-block']));
