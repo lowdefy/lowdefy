@@ -144,3 +144,133 @@ allowBuilds:
   "@sentry/cli": false
 `);
 });
+
+test('createNestedWorkspaceYaml keeps the release-age exclusions pnpm wrote into the server file', () => {
+  // As pnpm 11 leaves the file after installing versions younger than its
+  // default minimumReleaseAge.
+  const serverWorkspaceYaml = `packages:
+  - .
+onlyBuiltDependencies:
+  - better-sqlite3
+  - sharp
+ignoredBuiltDependencies:
+  - "@sentry/cli"
+allowBuilds:
+  better-sqlite3: true
+  sharp: true
+  "@sentry/cli": false
+minimumReleaseAgeExclude:
+  - '@lowdefy/server@7.0.1'
+  - '@lowdefy/api@7.0.1'
+`;
+  const yaml = createNestedWorkspaceYaml({
+    directory: '/repo/apps/app/.lowdefy/server',
+    parentWorkspace: { packages: ['apps/*'], rootDependencies: {}, settings: {} },
+    serverWorkspaceYaml,
+    workspaceRoot: '/repo',
+  });
+  expect(yaml).toEqual(`packages:
+  - .
+onlyBuiltDependencies:
+  - better-sqlite3
+  - sharp
+ignoredBuiltDependencies:
+  - "@sentry/cli"
+allowBuilds:
+  better-sqlite3: true
+  sharp: true
+  "@sentry/cli": false
+minimumReleaseAgeExclude:
+  - "@lowdefy/api@7.0.1"
+  - "@lowdefy/server@7.0.1"
+`);
+});
+
+test('createNestedWorkspaceYaml merges the parent release-age exclusions with the ones pnpm wrote', () => {
+  const yaml = createNestedWorkspaceYaml({
+    directory: '/repo/apps/app/.lowdefy/server',
+    parentWorkspace: {
+      packages: ['apps/*'],
+      rootDependencies: {},
+      settings: {
+        minimumReleaseAge: 1440,
+        minimumReleaseAgeExclude: ['zod', '@lowdefy/api@7.0.1'],
+      },
+    },
+    serverWorkspaceYaml: `minimumReleaseAgeExclude:
+  - zod
+  - '@lowdefy/api@7.0.1'
+  - '@lowdefy/server@7.0.1'
+`,
+    workspaceRoot: '/repo',
+  });
+  expect(yaml).toEqual(`packages:
+  - .
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - "@lowdefy/api@7.0.1"
+  - "@lowdefy/server@7.0.1"
+  - zod
+onlyBuiltDependencies:
+  - better-sqlite3
+  - sharp
+ignoredBuiltDependencies:
+  - "@sentry/cli"
+allowBuilds:
+  better-sqlite3: true
+  sharp: true
+  "@sentry/cli": false
+`);
+});
+
+test('createNestedWorkspaceYaml writes the same file when given its own output, whatever order pnpm keeps', () => {
+  const parentWorkspace = {
+    packages: ['apps/*'],
+    rootDependencies: {},
+    settings: { minimumReleaseAgeExclude: ['zod'] },
+  };
+  const first = createNestedWorkspaceYaml({
+    directory: '/repo/apps/app/.lowdefy/server',
+    parentWorkspace,
+    serverWorkspaceYaml: `minimumReleaseAgeExclude:
+  - zod
+  - '@lowdefy/server@7.0.1'
+  - '@lowdefy/api@7.0.1'
+`,
+    workspaceRoot: '/repo',
+  });
+  const second = createNestedWorkspaceYaml({
+    directory: '/repo/apps/app/.lowdefy/server',
+    parentWorkspace,
+    serverWorkspaceYaml: first,
+    workspaceRoot: '/repo',
+  });
+  expect(second).toEqual(first);
+});
+
+test('createNestedWorkspaceYaml leaves the parent exclusions as they are when the server file has none', () => {
+  const yaml = createNestedWorkspaceYaml({
+    directory: '/repo/apps/app/.lowdefy/server',
+    parentWorkspace: {
+      packages: ['apps/*'],
+      rootDependencies: {},
+      settings: { minimumReleaseAgeExclude: ['zod', 'axios'] },
+    },
+    serverWorkspaceYaml: 'packages:\n  - .\n',
+    workspaceRoot: '/repo',
+  });
+  expect(yaml).toContain(`minimumReleaseAgeExclude:
+  - zod
+  - axios
+`);
+});
+
+test('createNestedWorkspaceYaml replaces a server file that does not parse', () => {
+  const yaml = createNestedWorkspaceYaml({
+    directory: '/repo/apps/app/.lowdefy/server',
+    parentWorkspace: { packages: ['apps/*'], rootDependencies: {}, settings: {} },
+    serverWorkspaceYaml: 'minimumReleaseAgeExclude: [\n',
+    workspaceRoot: '/repo',
+  });
+  expect(yaml).not.toContain('minimumReleaseAgeExclude');
+});

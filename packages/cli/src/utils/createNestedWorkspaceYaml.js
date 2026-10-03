@@ -44,11 +44,41 @@ function getNames({ allowBuilds, allowed }) {
   return Object.keys(allowBuilds).filter((name) => allowBuilds[name] === allowed);
 }
 
+// When only versions younger than its default minimumReleaseAge satisfy a
+// dependency, pnpm 11 installs them and records them in the server's
+// pnpm-workspace.yaml as minimumReleaseAgeExclude. The file is rewritten on
+// every run, so these entries are read back and kept: dropping them makes the
+// next install reject its own lockfile. They go when the server directory is
+// replaced for another Lowdefy version. The CLI owns the file, so one that does
+// not parse is replaced.
+function getServerReleaseAgeExclude({ serverWorkspaceYaml }) {
+  const document = YAML.parseDocument(serverWorkspaceYaml ?? '');
+  if (document.errors.length > 0) {
+    return [];
+  }
+  return document.toJS()?.minimumReleaseAgeExclude ?? [];
+}
+
+// Sorted, so the file only changes when the set of entries does, whatever
+// order pnpm wrote them in, and the install hash cannot loop.
+function mergeReleaseAgeExclude({ serverWorkspaceYaml, settings }) {
+  const serverExclude = getServerReleaseAgeExclude({ serverWorkspaceYaml });
+  if (serverExclude.length === 0) {
+    return settings.minimumReleaseAgeExclude;
+  }
+  return [...new Set([...(settings.minimumReleaseAgeExclude ?? []), ...serverExclude])].sort();
+}
+
 // The server installs as its own workspace, with a lockfile inside the
 // gitignored server directory, so installing it never rewrites the parent's
 // committed lockfile. Every parent setting is carried over, rebased to the
 // server directory, so the server installs as it would inside the parent.
-function createNestedWorkspaceYaml({ directory, parentWorkspace, workspaceRoot }) {
+function createNestedWorkspaceYaml({
+  directory,
+  parentWorkspace,
+  serverWorkspaceYaml,
+  workspaceRoot,
+}) {
   const settings = rebaseWorkspaceSettings({
     directory,
     packages: parentWorkspace.packages,
@@ -74,6 +104,10 @@ function createNestedWorkspaceYaml({ directory, parentWorkspace, workspaceRoot }
     ],
     allowBuilds: { ...defaults, ...settings.allowBuilds },
   };
+  const minimumReleaseAgeExclude = mergeReleaseAgeExclude({ serverWorkspaceYaml, settings });
+  if (!type.isNone(minimumReleaseAgeExclude)) {
+    workspace.minimumReleaseAgeExclude = minimumReleaseAgeExclude;
+  }
   if (workspace.ignoredBuiltDependencies.length === 0) {
     delete workspace.ignoredBuiltDependencies;
   }

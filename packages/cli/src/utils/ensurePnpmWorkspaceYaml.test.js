@@ -163,7 +163,10 @@ test('ensurePnpmWorkspaceYaml copies the parent .npmrc and warns about credentia
   });
   const context = { lowdefyVersion: '5.5.1', logger: { debug: jest.fn(), warn: jest.fn() } };
   await ensurePnpmWorkspaceYaml({ context, directory: '/repo/app/.lowdefy/dev' });
-  expect(readFile.mock.calls).toEqual([['/repo/app/.lowdefy/dev/.npmrc']]);
+  expect(readFile.mock.calls).toEqual([
+    ['/repo/app/.lowdefy/dev/pnpm-workspace.yaml'],
+    ['/repo/app/.lowdefy/dev/.npmrc'],
+  ]);
   expect(writeFileIfChanged.mock.calls[1]).toEqual([
     '/repo/app/.lowdefy/dev/.npmrc',
     `# >>> Copied by Lowdefy from /repo/.npmrc; rewritten on every run.
@@ -179,9 +182,9 @@ strict-peer-dependencies=false
   ]);
 });
 
-test('ensurePnpmWorkspaceYaml rewrites an existing pnpm-workspace.yaml inside a pnpm workspace', async () => {
+test('ensurePnpmWorkspaceYaml rewrites an existing pnpm-workspace.yaml inside a pnpm workspace, keeping the release-age exclusions pnpm wrote', async () => {
   const { default: fs } = await import('fs');
-  const { writeFileIfChanged } = await import('@lowdefy/node-utils');
+  const { readFile, writeFileIfChanged } = await import('@lowdefy/node-utils');
   const { default: readParentWorkspace } = await import('./readParentWorkspace.js');
   const { default: ensurePnpmWorkspaceYaml } = await import('./ensurePnpmWorkspaceYaml.js');
   fs.existsSync.mockImplementation(
@@ -196,9 +199,38 @@ test('ensurePnpmWorkspaceYaml rewrites an existing pnpm-workspace.yaml inside a 
     rootDependencies: {},
     settings: {},
   });
+  readFile.mockImplementation(async (filePath) =>
+    filePath === '/repo/app/.lowdefy/dev/pnpm-workspace.yaml'
+      ? `packages:
+  - .
+overrides:
+  a: 1.0.0
+minimumReleaseAgeExclude:
+  - '@lowdefy/server-dev@7.0.1'
+`
+      : null
+  );
   const context = { lowdefyVersion: '5.5.1', logger: { debug: jest.fn() } };
   await ensurePnpmWorkspaceYaml({ context, directory: '/repo/app/.lowdefy/dev' });
-  expect(writeFileIfChanged).toHaveBeenCalledTimes(1);
+  expect(writeFileIfChanged.mock.calls).toEqual([
+    [
+      '/repo/app/.lowdefy/dev/pnpm-workspace.yaml',
+      `packages:
+  - .
+onlyBuiltDependencies:
+  - better-sqlite3
+  - sharp
+ignoredBuiltDependencies:
+  - "@sentry/cli"
+allowBuilds:
+  better-sqlite3: true
+  sharp: true
+  "@sentry/cli": false
+minimumReleaseAgeExclude:
+  - "@lowdefy/server-dev@7.0.1"
+`,
+    ],
+  ]);
 });
 
 test('ensurePnpmWorkspaceYaml skips writing when running local version', async () => {

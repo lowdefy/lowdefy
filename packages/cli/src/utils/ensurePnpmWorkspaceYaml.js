@@ -95,8 +95,9 @@ async function ensurePnpmWorkspaceYaml({ context, directory }) {
   // Inside a pnpm workspace the server still installs as its own workspace:
   // the server directory is gitignored, so as a member of the parent it would
   // make the parent's committed lockfile depend on uncommitted state. The file
-  // and .npmrc are derived from the parent's and rewritten on every run, so
-  // build allowlists for plugin dependencies belong in the parent's
+  // and .npmrc are derived from the parent's and rewritten on every run
+  // (keeping only the release-age exclusions pnpm itself adds), so build
+  // allowlists for plugin dependencies belong in the parent's
   // pnpm-workspace.yaml.
   context.logger.debug(
     `Found pnpm workspace at ${workspaceRoot}; the server installs as its own workspace with its settings.`
@@ -108,7 +109,12 @@ async function ensurePnpmWorkspaceYaml({ context, directory }) {
   });
   await writeFileIfChanged(
     filePath,
-    createNestedWorkspaceYaml({ directory, parentWorkspace, workspaceRoot })
+    createNestedWorkspaceYaml({
+      directory,
+      parentWorkspace,
+      serverWorkspaceYaml: await readFile(filePath),
+      workspaceRoot,
+    })
   );
   await writeNestedNpmrc({ context, directory, parentWorkspace, workspaceRoot });
   await linkWorkspacePlugins({ directory, parentWorkspace });
