@@ -316,3 +316,13 @@ test('docsJourneyHandler returns 400 for a malformed recording', async () => {
   }
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
+
+test('docsJourneyHandler refuses a journey that declares a data set rather than run it on the real database', async () => {
+  const c = createContext({ pageId: 'form', steps: [{ click: 'submit' }], data: 'staging-sample' });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(400);
+  expect(result.data.error).toMatch('cannot run journeys on data sets yet');
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
