@@ -26,6 +26,7 @@ const MAIN_ACTOR = 'main';
 async function openJourney({
   browser,
   origin,
+  basePath,
   pageId,
   user,
   urlQuery,
@@ -34,6 +35,8 @@ async function openJourney({
   colorScheme,
   timeout,
   stepTimeout,
+  mutantCookie,
+  recording,
 }) {
   const openTimeout = Math.max(timeout, stepTimeout);
   // Taken before any page opens: mail the journey causes arrives after it,
@@ -42,6 +45,7 @@ async function openJourney({
   const actors = createJourneyActors({
     browser,
     origin,
+    basePath,
     pageId,
     user,
     urlQuery,
@@ -49,6 +53,8 @@ async function openJourney({
     height,
     colorScheme,
     timeout: openTimeout,
+    mutantCookie,
+    recording,
   });
   try {
     const main = await actors.switchTo(MAIN_ACTOR);

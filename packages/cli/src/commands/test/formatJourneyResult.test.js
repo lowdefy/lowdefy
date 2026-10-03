@@ -86,6 +86,86 @@ test('formatJourneyResult prints the message when a journey failed without a ste
   ]);
 });
 
+const failure = {
+  index: 4,
+  step: { click: 'close_submit' },
+  expected: 'close_submit to be clickable',
+  actual: 'hidden',
+  message: 'close_submit is hidden',
+};
+
+test('formatJourneyResult prints a replayed PASS with the runs and the mean duration', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'member assigns an open ticket',
+        passed: true,
+        class: 'PASS',
+        repeat: 3,
+        runs: 3,
+        passedRuns: 3,
+        failures: [],
+        stepCount: 5,
+        durationMs: 2100,
+      },
+    })
+  ).toEqual(['PASS   member assigns an open ticket   (5 steps, 3/3, 2.1s each)']);
+});
+
+test('formatJourneyResult prints a FLAKY journey with each failing run', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'owner closes a ticket',
+        filePath: '/app/tests/journeys/close.yaml',
+        passed: false,
+        class: 'FLAKY',
+        repeat: 4,
+        runs: 4,
+        passedRuns: 2,
+        failures: [
+          { run: 2, step: 4, message: 'close_submit is hidden' },
+          { run: 4, step: 1, message: 'list is empty' },
+        ],
+        failure,
+        message: failure.message,
+        stepCount: 5,
+        durationMs: 2000,
+      },
+    })
+  ).toEqual([
+    'FLAKY  owner closes a ticket   (2/4 passed) run 2 failed at step 4 (click "close_submit"): close_submit is hidden',
+    '      file: /app/tests/journeys/close.yaml',
+    '      step 4: { click: close_submit }',
+    '      expected: close_submit to be clickable',
+    '      actual:   hidden',
+    '      close_submit is hidden',
+    '      run 4 failed at step 1: list is empty',
+  ]);
+});
+
+test('formatJourneyResult prints a FAIL of every run as a finding', () => {
+  const lines = formatJourneyResult({
+    result: {
+      name: 'admin bulk-imports contacts',
+      filePath: '/app/tests/journeys/import.yaml',
+      passed: false,
+      class: 'FAIL',
+      repeat: 3,
+      runs: 3,
+      passedRuns: 0,
+      failures: [1, 2, 3].map((run) => ({ run, step: 4, message: failure.message })),
+      failure,
+      message: failure.message,
+      stepCount: 5,
+      durationMs: 1000,
+    },
+  });
+  expect(lines[0]).toEqual(
+    'FAIL   admin bulk-imports contacts   (0/3) step 4 (click "close_submit"): close_submit is hidden — fails every run: a finding, not a test to fix by retrying'
+  );
+});
+
 const evidence = {
   production: {
     sessions: 412,

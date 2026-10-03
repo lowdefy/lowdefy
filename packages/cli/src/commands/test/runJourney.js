@@ -18,6 +18,7 @@ import axios from 'axios';
 import { type } from '@lowdefy/helpers';
 import { findPlaceholderStep } from '@lowdefy/node-utils';
 
+import recordingJourneyName from './recordingJourneyName.js';
 import validateJourney from './validateJourney.js';
 
 function describeHttpError(error) {
@@ -32,12 +33,22 @@ function describeHttpError(error) {
 
 // Runs one discovered journey against the dev server's REST journey route and
 // normalises every outcome — schema failure, transport failure, non-2xx, a
-// failed step — into the same result shape the reporter prints.
-async function runJourney({ item, url }) {
+// failed step — into the same result shape the reporter prints. `recordRun`
+// (a trace id) asks the dev server to record this journey into that test
+// run's trace; an older server ignores the field and records nothing.
+async function runJourney({ context, item, url, recordRun }) {
   const { filePath, journey } = item;
   const name = journey?.name ?? filePath;
   if (!type.isNone(item.error)) {
-    return { name, filePath, passed: false, stepCount: 0, durationMs: 0, message: item.error };
+    return {
+      name,
+      filePath,
+      passed: false,
+      refused: true,
+      stepCount: 0,
+      durationMs: 0,
+      message: item.error,
+    };
   }
   const validation = validateJourney({ journey });
   if (!validation.valid) {
@@ -45,6 +56,7 @@ async function runJourney({ item, url }) {
       name,
       filePath,
       passed: false,
+      refused: true,
       stepCount: 0,
       durationMs: 0,
       message: `Invalid journey file: ${validation.message}`,
@@ -60,18 +72,32 @@ async function runJourney({ item, url }) {
   const start = Date.now();
   let response;
   try {
-    response = await axios.post(`${url}/lowdefy-docs/journey`, {
+    const body = {
       pageId: journey.pageId,
       steps: journey.steps,
       user: journey.user,
       urlQuery: journey.urlQuery,
       timeout: journey.timeout,
-    });
+    };
+    if (!type.isNone(recordRun)) {
+      body.recording = {
+        run: recordRun,
+        journey: recordingJourneyName({
+          configDirectory: context.directories.config,
+          filePath,
+          journey,
+        }),
+      };
+    }
+    response = await axios.post(`${url}/lowdefy-docs/journey`, body);
   } catch (error) {
     return {
       name,
       filePath,
       passed: false,
+      // The route refuses a journey it cannot run (a 400) before any browser
+      // opens; every repeat would be refused the same way.
+      refused: error.response?.status === 400,
       stepCount,
       durationMs: Date.now() - start,
       message: describeHttpError(error),
@@ -83,12 +109,20 @@ async function runJourney({ item, url }) {
     return { name, filePath, passed: false, stepCount, durationMs, message: result.error };
   }
   if (result.passed === true) {
+    const passed = {
+      name,
+      filePath,
+      passed: true,
+      stepCount,
+      durationMs,
+      exercised: result.exercised,
+    };
     // Evidence is read from the file for the PASS line; it is never sent to
     // the dev server.
-    if (type.isNone(journey.evidence)) {
-      return { name, filePath, passed: true, stepCount, durationMs };
+    if (!type.isNone(journey.evidence)) {
+      passed.evidence = journey.evidence;
     }
-    return { name, filePath, passed: true, stepCount, durationMs, evidence: journey.evidence };
+    return passed;
   }
   return {
     name,
@@ -98,6 +132,7 @@ async function runJourney({ item, url }) {
     durationMs,
     failure: result.failure,
     message: result.failure?.message,
+    exercised: result.exercised,
   };
 }
 

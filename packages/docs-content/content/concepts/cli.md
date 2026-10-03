@@ -153,7 +153,7 @@ The `test` command runs the app's config tests — the journeys in `tests/journe
 
 The `journeys compile` command turns recorded interaction traces into candidate journeys. It groups recorded segments that do the same thing step by step and writes one candidate per group to `tests/journeys/_candidates/<source>/`, which `lowdefy test` does not run. See [Candidates from recorded traces](/config-tests#candidates-from-recorded-traces).
 
-- `[traceFiles...]`: The trace files (JSONL) to compile.
+- `[traceFiles...]`: The trace files (JSONL) to compile. Without them, `--source dev` or `--source explorer` reads the recordings in `.lowdefy/traces/<source>/`.
 - `--source <source>`: `production`, `dev` or `explorer`. Required when no trace files are given; with files, compiles only records of this source. `--source production` with no files reads the cache that [`journeys pull posthog`](#journeys-pull-posthog) writes to `.lowdefy/traces/production/`, over the window's whole UTC days.
 - `--since <since>`: Only records at or after this time: a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production traces default to `30d`.
 - `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: Production only. An explicit window of whole UTC days instead of `--since`.
@@ -162,6 +162,18 @@ The `journeys compile` command turns recorded interaction traces into candidate 
 - `--out <directory>`: The candidates directory. The source is appended. The default is `tests/journeys/_candidates`.
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--dev-directory <dev-directory>`: Change the dev directory, where the development server's build is read from. The default is `<config-directory>/.lowdefy/dev`.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+## journeys recordings
+
+The `journeys recordings` command lists the sessions the development server recorded in `.lowdefy/traces/dev/`, newest first: the time span, the builds, the pages visited, how many attempts ended in an error, and how many interactions the newest full test run already drove. See [Dev recordings](/config-tests#dev-recordings). Set `LOWDEFY_DEV_RECORD=false` to turn recording off.
+
+- `--since <since>`: Only sessions at or after this time: a duration back from now (`30m`, `2h`, `7d`) or an ISO date.
+- `--page <pageId>`: Only sessions that visited this page.
+- `--build <id|current>`: Only sessions recorded against this build. `current` is the build the running development server serves.
+- `--json`: Print the sessions as JSON on stdout.
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--disable-telemetry`: Disable telemetry.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 
