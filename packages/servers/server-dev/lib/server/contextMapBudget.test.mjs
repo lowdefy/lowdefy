@@ -67,3 +67,32 @@ test('a build context past its map budget is recreated, and every page rebuilds 
   expect(getBuildContext(buildDirectory, configDirectory)).not.toBe(secondContext);
   fs.rmSync(root, { recursive: true, force: true });
 });
+
+test('a failed page build counts toward the budget', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'ldf-context-budget-'));
+  const buildDirectory = path.join(root, 'server', 'build');
+  const configDirectory = path.join(root, 'config');
+  writeJson(path.join(buildDirectory, 'idCounter.json'), { prefix: 'cfg1_', counter: 10 });
+  writeJson(path.join(buildDirectory, 'installedPluginPackages.json'), ['@lowdefy/blocks-basic']);
+  writeJson(path.join(buildDirectory, 'theme.json'), {});
+  fs.mkdirSync(path.join(configDirectory, 'pages'), { recursive: true });
+  fs.writeFileSync(
+    path.join(configDirectory, 'pages', 'broken.yaml'),
+    'id: broken\ntype: Box\nblocks:\n  - id: typo\n    type: Buton\n'
+  );
+  writeJson(path.join(buildDirectory, 'pageRegistry.json'), {
+    broken: {
+      pageId: 'broken',
+      auth: { public: true },
+      refId: 'ref-broken',
+      refPath: 'pages/broken.yaml',
+    },
+  });
+  const request = (pageId) => buildPageIfNeeded({ pageId, buildDirectory, configDirectory });
+
+  await expect(request('broken')).rejects.toThrow('Buton');
+  const firstContext = getBuildContext(buildDirectory, configDirectory);
+  await expect(request('broken')).rejects.toThrow('Buton');
+  expect(getBuildContext(buildDirectory, configDirectory)).not.toBe(firstContext);
+  fs.rmSync(root, { recursive: true, force: true });
+});

@@ -284,6 +284,13 @@ export async function reviewBuiltPage({ pageId, eventCounter: counter, generatio
   const compiled = pageCache.get(pageId);
   if (record.checkedAt === counter || compiled?.checkedAt === counter) return 'current';
   const check = await checkPageRecord({ record, readConfigFile: keptContext.readConfigFile });
+  const latest = pageBuildRecords.get(pageId);
+  if (latest !== record) {
+    // The page was built again while this check read its previous build's
+    // inputs, so the check says nothing about the new build: it is current
+    // only when it started at or after this check's event.
+    return latest?.generation === generation && latest.checkedAt >= counter ? 'current' : 'edited';
+  }
   if (check !== 'current') return 'edited';
   record.checkedAt = Math.max(record.checkedAt, counter);
   pageCache.markChecked(pageId, { generation, checkedAt: counter });
@@ -294,7 +301,11 @@ export async function reviewBuiltPage({ pageId, eventCounter: counter, generatio
 async function isPageCurrent({ pageId, eventCounter: counter, generation }) {
   const compiled = pageCache.get(pageId);
   if (!compiled || compiled.generation !== generation) return false;
-  return (await reviewBuiltPage({ pageId, eventCounter: counter, generation })) === 'current';
+  if ((await reviewBuiltPage({ pageId, eventCounter: counter, generation })) !== 'current') {
+    return false;
+  }
+  // A rebuild that failed while the page was checked leaves nothing to serve.
+  return pageCache.isCompiled(pageId);
 }
 
 async function buildPage({ pageId, buildDirectory, configDirectory }) {
@@ -309,16 +320,22 @@ async function buildPage({ pageId, buildDirectory, configDirectory }) {
 
   jitLogger.info({ spin: 'start' }, `Building page "${pageId}"...`);
   const startTime = Date.now();
-  const result = await pageBuildRecords.record({
-    pageId,
-    context,
-    configDirectory,
-    generation,
-    checkedAt,
-    build: () => buildPageJit({ pageId, pageRegistry, context }),
-  });
-  if (context === keptContext && countAddedMapEntries(context) > contextMapBudget) {
-    budgetExceeded = true;
+  let result;
+  try {
+    result = await pageBuildRecords.record({
+      pageId,
+      context,
+      configDirectory,
+      generation,
+      checkedAt,
+      build: () => buildPageJit({ pageId, pageRegistry, context }),
+    });
+  } finally {
+    // A failed build adds map entries too, and a page being fixed fails
+    // build after build.
+    if (context === keptContext && countAddedMapEntries(context) > contextMapBudget) {
+      budgetExceeded = true;
+    }
   }
   if (result && result.installing) {
     jitLogger.info(

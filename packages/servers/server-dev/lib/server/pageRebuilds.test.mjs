@@ -26,6 +26,7 @@ import { jest } from '@jest/globals';
 import buildPageIfNeeded, {
   getBuildContext,
   getPageJitEnrichment,
+  reviewBuiltPage,
   syncBuildSignals,
 } from './jitPageBuilder.js';
 
@@ -271,6 +272,53 @@ test('an edit during a running build rebuilds the page on its next request, also
   expect(await app.request('a')).toBe('built');
   expect(await waiter).toBe('built');
   expect(await app.request('a')).toBe('served');
+  app.remove();
+});
+
+test('a check that a rebuild overtook does not mark the rebuilt page current', async () => {
+  const app = createApp(sharedRefPages);
+  const original = 'id: shared\ntype: Box\nproperties:\n  title: Original\n';
+  app.edit('blocks/shared.yaml', original);
+  app.signalChange();
+  await app.request('a');
+  app.edit('blocks/shared.yaml', 'id: shared\ntype: Box\nproperties:\n  title: Interim\n');
+  app.signalChange();
+
+  // While the rebuild of the interim content runs, the file goes back to what
+  // the previous build read, and a build status review checks that build's
+  // record. The rebuild ends before the check's reads do.
+  let releaseReads;
+  const readsHeld = new Promise((resolve) => {
+    releaseReads = resolve;
+  });
+  let review;
+  duringBuildOf({
+    app,
+    pageId: 'a',
+    onWrite: () => {
+      app.edit('blocks/shared.yaml', original);
+      app.signalChange();
+      const signals = syncBuildSignals({
+        buildDirectory: app.buildDirectory,
+        configDirectory: app.configDirectory,
+      });
+      const context = getBuildContext(app.buildDirectory, app.configDirectory);
+      const readConfigFile = context.readConfigFile;
+      context.readConfigFile = async (filePath) => {
+        await readsHeld;
+        return readConfigFile(filePath);
+      };
+      review = reviewBuiltPage({ pageId: 'a', ...signals });
+      context.readConfigFile = readConfigFile;
+    },
+  });
+
+  expect(await app.request('a')).toBe('built');
+  releaseReads();
+  expect(await review).toBe('edited');
+  expect(await app.request('a')).toBe('built');
+  const page = fs.readFileSync(path.join(app.buildDirectory, 'pages', 'a.json'), 'utf8');
+  expect(page).toContain('"title":"Original"');
   app.remove();
 });
 
