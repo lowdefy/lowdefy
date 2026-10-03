@@ -14,17 +14,28 @@
   limitations under the License.
 */
 
-import YAML from 'yaml';
+import { type } from '@lowdefy/helpers';
 
 import buildOriginComment from './buildOriginComment.js';
+import findOriginBlock from './findOriginBlock.js';
 
 // A known candidate is never recompiled in place. A rerun that recognises the
 // sequence hash rewrites the origin block and nothing else, so a name, a filled
-// value or a removed step someone left in the file survives the run.
+// value, a removed step or a comment someone left in the file survives the run.
+// The old block is cut by text rather than through the yaml document because
+// yaml attaches a leading comment to the first key, not the document, as soon
+// as a developer's comment sits straight above it or the blank line after the
+// block is gone; replacing `doc.commentBefore` then stacked a new block on top.
 function updateCandidateOrigin({ contents, origin }) {
-  const doc = YAML.parseDocument(contents);
-  doc.commentBefore = buildOriginComment({ origin });
-  return doc.toString({ lineWidth: 0 });
+  const lines = contents.split('\n');
+  const block = findOriginBlock({ lines });
+  const rest = type.isUndefined(block)
+    ? lines
+    : [...lines.slice(0, block.start), ...lines.slice(block.end)];
+  const originLines = buildOriginComment({ origin })
+    .split('\n')
+    .map((line) => (line === '' ? '' : `#${line}`));
+  return [...originLines, '', ...rest].join('\n');
 }
 
 export default updateCandidateOrigin;
