@@ -18,7 +18,7 @@ import fs from 'fs';
 import path from 'path';
 import { writeFile } from '@lowdefy/node-utils';
 
-import hashSkillBody from './hashSkillBody.js';
+import hashSkill from './hashSkill.js';
 import parseSkillFile from './parseSkillFile.js';
 
 function renderWithHash({ appPath, render, name }) {
@@ -26,12 +26,14 @@ function renderWithHash({ appPath, render, name }) {
   if (frontmatter === null) {
     throw new Error(`Skill "${name}" must render a frontmatter block.`);
   }
-  return `---\n${frontmatter}\nlowdefy-skill-hash: ${hashSkillBody(body)}\n---\n${body}`;
+  const hash = hashSkill({ frontmatter, body });
+  return `---\n${frontmatter}\nlowdefy-skill-hash: ${hash}\n---\n${body}`;
 }
 
 // A generated skill is refreshed on every rerun while nobody has edited it:
-// its body still hashes to the `lowdefy-skill-hash` it was written with.
-// A file whose body was edited, or that carries no hash, is left alone.
+// its frontmatter and body still hash to the `lowdefy-skill-hash` it was
+// written with. A file that was edited, or that carries no hash, is left
+// alone.
 async function writeGeneratedSkill({ context, projectDirectory, appPath, name, render }) {
   const relativePath = path.join('.claude', 'skills', name, 'SKILL.md');
   const skillPath = path.join(projectDirectory, relativePath);
@@ -43,8 +45,8 @@ async function writeGeneratedSkill({ context, projectDirectory, appPath, name, r
     return;
   }
   const existing = fs.readFileSync(skillPath, 'utf8');
-  const { hash, body } = parseSkillFile(existing);
-  if (hash === null || hash !== hashSkillBody(body)) {
+  const { frontmatter, hash, body } = parseSkillFile(existing);
+  if (hash === null || hash !== hashSkill({ frontmatter, body })) {
     context.logger.info(`'${relativePath}' was edited - skipping.`);
     return;
   }

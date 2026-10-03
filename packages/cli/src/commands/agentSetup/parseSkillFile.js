@@ -15,19 +15,20 @@
 */
 
 const FRONTMATTER_PATTERN = /^---\n([\s\S]*?)\n---\n/;
-const HASH_LINE_PATTERN = /^lowdefy-skill-hash:\s*([a-f0-9]{64})\s*$/m;
+const HASH_LINE_PATTERN = /^lowdefy-skill-hash:\s*([a-f0-9]{64})\s*$/;
 
-// Splits a SKILL.md into its frontmatter lines, the stored skill hash and the
-// body below the frontmatter.
+// Splits a SKILL.md into its frontmatter lines without the stored skill hash,
+// that hash, and the body below the frontmatter.
 function parseSkillFile(content) {
   const match = FRONTMATTER_PATTERN.exec(content);
   if (match === null) {
     return { frontmatter: null, hash: null, body: content };
   }
-  const hashMatch = HASH_LINE_PATTERN.exec(match[1]);
+  const lines = match[1].split('\n');
+  const hashLine = lines.find((line) => HASH_LINE_PATTERN.test(line));
   return {
-    frontmatter: match[1],
-    hash: hashMatch === null ? null : hashMatch[1],
+    frontmatter: lines.filter((line) => line !== hashLine).join('\n'),
+    hash: hashLine === undefined ? null : HASH_LINE_PATTERN.exec(hashLine)[1],
     body: content.slice(match[0].length),
   };
 }

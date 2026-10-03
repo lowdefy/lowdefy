@@ -19,7 +19,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import hashSkillBody from './hashSkillBody.js';
+import hashSkill from './hashSkill.js';
 import parseSkillFile from './parseSkillFile.js';
 import upsertAgentsMdSection from './upsertAgentsMdSection.js';
 import writeSkillFiles from './writeSkillFiles.js';
@@ -47,13 +47,13 @@ afterEach(() => {
   fs.rmSync(projectDirectory, { recursive: true, force: true });
 });
 
-test('writeSkillFiles writes a fresh skill with a hash that matches its body', async () => {
+test('writeSkillFiles writes a fresh skill with a hash that matches its frontmatter and body', async () => {
   await writeSkillFiles({ context, projectDirectory, appPath: 'app', skills: [testSkill(1)] });
   const content = fs.readFileSync(skillPath(), 'utf8');
   const { hash, body, frontmatter } = parseSkillFile(content);
-  expect(frontmatter).toContain('name: test-skill');
+  expect(frontmatter).toEqual('name: test-skill\ndescription: A test skill.');
   expect(body).toEqual("\n# Test skill 1\n\nApp at 'app'.\n");
-  expect(hash).toEqual(hashSkillBody(body));
+  expect(hash).toEqual(hashSkill({ frontmatter, body }));
   expect(context.logger.info).toHaveBeenCalledWith(
     `Created '${path.join('.claude', 'skills', 'test-skill', 'SKILL.md')}'.`
   );
@@ -71,6 +71,19 @@ test('writeSkillFiles overwrites an unedited skill when its renderer changed', a
 test('writeSkillFiles leaves an edited skill alone and logs that it was edited', async () => {
   await writeSkillFiles({ context, projectDirectory, appPath: '', skills: [testSkill(1)] });
   const edited = fs.readFileSync(skillPath(), 'utf8').replace('Test skill 1', 'My own skill');
+  fs.writeFileSync(skillPath(), edited);
+  await writeSkillFiles({ context, projectDirectory, appPath: '', skills: [testSkill(2)] });
+  expect(fs.readFileSync(skillPath(), 'utf8')).toEqual(edited);
+  expect(context.logger.info).toHaveBeenCalledWith(
+    `'${path.join('.claude', 'skills', 'test-skill', 'SKILL.md')}' was edited - skipping.`
+  );
+});
+
+test('writeSkillFiles leaves a skill whose frontmatter was edited alone', async () => {
+  await writeSkillFiles({ context, projectDirectory, appPath: '', skills: [testSkill(1)] });
+  const edited = fs
+    .readFileSync(skillPath(), 'utf8')
+    .replace('description: A test skill.', 'description: Use when the team asks for tests.');
   fs.writeFileSync(skillPath(), edited);
   await writeSkillFiles({ context, projectDirectory, appPath: '', skills: [testSkill(2)] });
   expect(fs.readFileSync(skillPath(), 'utf8')).toEqual(edited);
