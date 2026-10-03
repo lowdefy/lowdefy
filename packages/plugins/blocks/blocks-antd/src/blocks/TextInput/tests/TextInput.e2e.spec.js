@@ -243,4 +243,13 @@ test.describe('TextInput antd 6 features', () => {
     await expect(input).toHaveValue('');
     await expect(getBlock(page, 'onclear_display')).toHaveText('Clear fired');
   });
+
+  // ============================================
+  // NULL PROPERTIES
+  // ============================================
+
+  test('null variant falls back to the outlined input', async ({ page }) => {
+    const input = getInput(page, 'textinput_null_variant');
+    await expect(input).toHaveClass(/ant-input-outlined/);
+  });
 });

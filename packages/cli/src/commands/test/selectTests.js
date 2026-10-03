@@ -43,10 +43,11 @@ function matchesFilter({ item, filter }) {
 }
 
 // The tests `lowdefy test` and the lowdefy_run_tests MCP tool run: every
-// suite's items whose name contains filter (case-insensitive).
-function selectTests({ context, filter }) {
+// suite's items (from `paths` when given), whose name contains filter
+// (case-insensitive).
+function selectTests({ context, filter, paths }) {
   return suites
-    .flatMap((suite) => suite.discover({ context }).map((item) => ({ suite, item })))
+    .flatMap((suite) => suite.discover({ context, paths }).map((item) => ({ suite, item })))
     .filter(({ item }) => matchesFilter({ item, filter }));
 }
 

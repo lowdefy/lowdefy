@@ -34,7 +34,14 @@ _ref:
 
             ## Initialise PostHog
 
-            The [`PostHogInit`](/PostHogInit) action loads and configures `posthog-js`. Every other action in this package does nothing until it has run. A user can open the app on any page, so run it from the `onInit` event of every page. Keep the actions in one file and reference it from each page with `_ref`:
+            The [`PostHogInit`](/PostHogInit) action loads and configures `posthog-js`. Every other action in this package does nothing until it has run. Run it from the app's root `events.onInitAsync` in `lowdefy.yaml`: app events run once per app load, on whichever page a user opens first, including public pages outside a layout, and `onInitAsync` does not hold the first render. Keep the actions in one file:
+
+            ```yaml
+            # lowdefy.yaml
+            events:
+              onInitAsync:
+                _ref: shared/posthog_init.yaml
+            ```
 
             ```yaml
             # shared/posthog_init.yaml
@@ -57,28 +64,9 @@ _ref:
                   _user: id
             ```
 
-            ```yaml
-            # pages/reports.yaml
-            id: reports
-            type: PageHeaderMenu
-            events:
-              onInit:
-                _ref: shared/posthog_init.yaml
-            ```
+            A user who signs in later is identified on the reload that follows sign in.
 
-            When a page has `onInit` actions of its own, concatenate the lists at build time:
-
-            ```yaml
-            events:
-              onInit:
-                _build.array.concat:
-                  - _ref: shared/posthog_init.yaml
-                  - - id: get_report
-                      type: Request
-                      params: get_report
-            ```
-
-            `PostHogInit` is idempotent. The first call downloads and initialises `posthog-js`; later calls with the same `apiKey` do nothing, so running it on every page is safe. Calling it with a different `apiKey` throws, because a second PostHog instance would split the session.
+            `PostHogInit` is idempotent. The first call downloads and initialises `posthog-js`; later calls with the same `apiKey` do nothing, so an app that runs it from every page's `onInit` instead still loads PostHog once and captures each failure once. Calling it with a different `apiKey` throws, because a second PostHog instance would split the session.
 
             The PostHog project API key is a public, write only key that is meant to ship in the browser bundle, so [`_build.env`](/_build) is the right operator for it. Never use a personal API key here.
 
@@ -94,6 +82,58 @@ _ref:
             ```
 
             A later `PostHogInit` call with `enabled: true` and an `apiKey` still loads PostHog after a disabled call. The reverse throws: once PostHog is running, use [`PostHogOptOut`](/PostHogOptOut) to stop capturing for a person.
+
+            ## Lowdefy semantics on every event
+
+            Autocapture records the DOM: which element was clicked, and its text. The plugin adds what that element means in the Lowdefy app, so analysis can work in pages, blocks and events instead of CSS selectors:
+
+            - __Autocaptured clicks, rage clicks and dead clicks__ get `lowdefy_page_id`, `lowdefy_block_id` (the block clicked), `lowdefy_block_type` (for example `Button`), `lowdefy_block_ids` (every enclosing block, innermost first, so a click on a title inside a clickable card also names the card), `lowdefy_option: true` when a dropdown option was picked and, inside a grid, `lowdefy_row` (the displayed row index) and `lowdefy_column` (the column id).
+            - __Every other event__, pageviews and [`PostHogCapture`](/PostHogCapture) events included, gets `lowdefy_page_id`, read from the URL it was captured on.
+            - __Super properties__: `lowdefy_build_id` and `lowdefy_app_version` (the app's `version`) on every event, beside `environment`.
+
+            Null, false and empty values are left out. The enrichment adds properties, never events, so it costs nothing in billing, and it has no switch. A block with the `ph-no-capture` class is not autocaptured, so it is never enriched.
+
+            ###### Failed events
+
+            When a block or app event fails, for example a `Validate` that finds invalid fields or a `CallAPI` that times out, the plugin captures one `lowdefy_event_failed` event. It is the one event the plugin adds. It carries ids only, never error messages or values:
+
+            | Property | Value |
+            | --- | --- |
+            | `lowdefy_event_scope` | `page`, or `app` for the app's root events |
+            | `lowdefy_page_id` | the page the event ran on |
+            | `lowdefy_block_id` | the block, or `app` for an app event |
+            | `lowdefy_block_type` | the block type, left out for an app event |
+            | `lowdefy_event_name` | for example `onClick` or `onInit` |
+            | `lowdefy_debounce_ms` | the event's debounce, or `0` |
+            | `lowdefy_action_id` | the id of the action that failed |
+            | `lowdefy_action_type` | for example `Validate` or `CallAPI` |
+            | `lowdefy_error_name` | for example `UserError` or `RequestError` |
+            | `lowdefy_config_key` | the config key of the action, resolvable with `lowdefy_build_id` |
+            | `lowdefy_invalid_blocks` | the blocks a `Validate` found invalid, left out when empty |
+
+            The event is timestamped when the failed event's actions started, so it lines up with the click that caused it. A failure in the app's `onInit`, such as a startup `CallAPI` that times out, is captured too, although `PostHogInit` runs later in `onInitAsync`: Lowdefy holds up to 20 failures until PostHog starts. At most 50 are captured per app load. Set `captureEventFailures: false` on `PostHogInit` to turn it off.
+
+            ###### Querying
+
+            In a PostHog SQL insight, the properties read like any other:
+
+            ```sql
+            select properties.lowdefy_page_id as page, properties.lowdefy_block_id as block, count() as clicks
+            from events
+            where event = '$autocapture' and properties.lowdefy_block_id is not null
+              and timestamp > now() - interval 7 day
+            group by page, block
+            order by clicks desc
+            ```
+
+            ```sql
+            select properties.lowdefy_page_id as page, properties.lowdefy_block_id as block,
+              properties.lowdefy_action_type as action, count() as failures
+            from events
+            where event = 'lowdefy_event_failed' and timestamp > now() - interval 7 day
+            group by page, block, action
+            order by failures desc
+            ```
 
             ## Analytics never breaks the app
 
@@ -121,8 +161,6 @@ _ref:
             id: reports
             type: PageHeaderMenu
             events:
-              onInit:
-                _ref: shared/posthog_init.yaml
               onMountAsync:
                 - id: capture_pageview
                   type: PostHogPageview
@@ -135,7 +173,7 @@ _ref:
 
             ## Identify a person
 
-            [`PostHogIdentify`](/PostHogIdentify) ties the current browser session to a person. Run it once the user is known, usually right after `PostHogInit` in the shared page `onInit` actions, as in the example above, or after a successful login.
+            [`PostHogIdentify`](/PostHogIdentify) ties the current browser session to a person. Run it once the user is known, usually right after `PostHogInit` in the app's `onInitAsync` actions, as in the example above, or after a successful login.
 
             ```yaml
             - id: identify_person
@@ -284,7 +322,7 @@ _ref:
 
             | Action | Params | Response |
             | --- | --- | --- |
-            | [`PostHogInit`](/PostHogInit) | `apiKey`, `apiHost`, `options`, `debug`, `enabled` | `null` |
+            | [`PostHogInit`](/PostHogInit) | `apiKey`, `apiHost`, `options`, `debug`, `enabled`, `captureEventFailures` | `null` |
             | [`PostHogCapture`](/PostHogCapture) | `event`, `properties`, `groups` | `null` |
             | [`PostHogPageview`](/PostHogPageview) | `properties` | `null` |
             | [`PostHogCapturePageLeave`](/PostHogCapturePageLeave) | `properties` | `null` |

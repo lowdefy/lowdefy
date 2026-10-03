@@ -32,7 +32,7 @@ const DividerBlock = ({ blockId, classNames = {}, properties, styles = {}, metho
     style={styles.element}
     styles={{ content: styles.title, rail: styles.rail }}
     orientation={properties.orientation}
-    variant={properties.variant}
+    variant={properties.variant ?? undefined}
   >
     {renderHtml({ html: properties.title, methods })}
   </Divider>

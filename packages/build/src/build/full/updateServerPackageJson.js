@@ -15,7 +15,7 @@
 */
 
 import path from 'path';
-import { readFile, writeFileIfChanged } from '@lowdefy/node-utils';
+import { linkWorkspaceDependencies, readFile, writeFileIfChanged } from '@lowdefy/node-utils';
 
 async function updateServerPackageJson({ components, context }) {
   const filePath = path.join(context.directories.server, 'package.json');
@@ -63,12 +63,19 @@ async function updateServerPackageJson({ components, context }) {
   }
 
   // Sort dependencies
-  packageJson.dependencies = {};
+  const sortedDependencies = {};
   Object.keys(dependencies)
     .sort()
     .forEach((name) => {
-      packageJson.dependencies[name] = dependencies[name];
+      sortedDependencies[name] = dependencies[name];
     });
+  // A generated server installs as its own pnpm workspace, so a plugin added
+  // with a "workspace:" version is linked to its package in the app's
+  // workspace, as the CLI links the plugins it starts with.
+  packageJson.dependencies = await linkWorkspaceDependencies({
+    dependencies: sortedDependencies,
+    directory: context.directories.server,
+  });
 
   const newPackageJsonContent = JSON.stringify(packageJson, null, 2).concat('\n');
 

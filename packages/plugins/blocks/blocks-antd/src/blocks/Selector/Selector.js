@@ -51,7 +51,7 @@ const Selector = ({
   const selectedColor = type.isObject(selectedOption) ? selectedOption.color : undefined;
   const isSolid = properties.variant === 'solid';
   // `solid` is not a valid antd Select input variant — use outlined for the frame.
-  let antdVariant = properties.variant;
+  let antdVariant = properties.variant ?? undefined;
   if (isSolid) antdVariant = 'outlined';
   if (properties.bordered === false) antdVariant = 'borderless';
   let selectTheme;
@@ -126,7 +126,7 @@ const Selector = ({
                 autoFocus={properties.autoFocus}
                 getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
                 disabled={getDisabled({ loading, properties })}
-                listHeight={properties.listHeight}
+                listHeight={properties.listHeight ?? undefined}
                 loading={loading}
                 placeholder={get(properties, 'placeholder', { default: 'Select item' })}
                 placement={properties.placement}

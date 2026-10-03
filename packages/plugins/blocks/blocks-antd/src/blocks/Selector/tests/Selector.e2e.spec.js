@@ -382,4 +382,20 @@ test.describe('Selector Block', () => {
     await expect(getOption(page, 'selector_filter_string', 2)).toBeVisible();
     await expect(getOption(page, 'selector_filter_string', 1)).toBeHidden();
   });
+
+  // ============================================
+  // NULL PROPERTIES
+  // ============================================
+
+  test('null variant and listHeight fall back to antd defaults', async ({ page }) => {
+    const selector = getSelector(page, 'selector_null_props');
+    await expect(selector).toHaveClass(/ant-select-outlined/);
+    await selector.click();
+    await expect(getOption(page, 'selector_null_props', 0)).toBeVisible();
+    await expect(
+      page.locator(
+        '.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-dropdown-list-holder'
+      )
+    ).toHaveCSS('max-height', '256px');
+  });
 });

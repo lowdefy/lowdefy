@@ -334,3 +334,25 @@ blocks:
                   - _state: dm_selected
                   - ','
               - ''
+
+  # ============================================
+  # NULL PROPERTIES
+  # ============================================
+
+  # _state on a missing key gives null, which must fall back to antd's bottomLeft placement.
+  - id: dm_null_props
+    type: DropdownMenu
+    properties:
+      trigger: click
+      placement:
+        _state: dm_null_missing
+      links:
+        - id: dm_null_item
+          type: MenuLink
+          properties:
+            title: Null Placement Item
+    blocks:
+      - id: dm_null_trigger
+        type: Button
+        properties:
+          title: Null Menu

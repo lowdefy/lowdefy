@@ -14,7 +14,9 @@
   limitations under the License.
 */
 
-import { createUrl, parsePageId } from './url.js';
+import { parsePageId } from '@lowdefy/helpers';
+
+import { createUrl } from './url.js';
 
 // History-API router backing the @lowdefy/client router contract:
 // push({ pathname, query }), back(), basePath — plus subscribe() for the
