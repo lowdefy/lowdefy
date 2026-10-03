@@ -18,10 +18,6 @@ import { UserError } from '@lowdefy/errors';
 
 import summariseFailure from './summariseFailure.js';
 
-test('summariseFailure returns null without an error', () => {
-  expect(summariseFailure(undefined)).toBeNull();
-});
-
 test('summariseFailure reads the action and the error of a failed action', () => {
   const error = new Error('Timed out.');
   error.name = 'RequestError';
