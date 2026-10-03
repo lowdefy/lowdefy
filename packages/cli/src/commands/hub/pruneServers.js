@@ -22,6 +22,15 @@ import findLegacyOrphans from './findLegacyOrphans.js';
 import findOrphanedClis from './findOrphanedClis.js';
 import readHubManagedPids from './readHubManagedPids.js';
 
+function describeLegacyOrphan(orphan) {
+  if (orphan.kind === 'vite') {
+    return `its dev manager is gone; parent is ${orphan.reaper}`;
+  }
+  return `unregistered; only ${orphan.wrappers.length === 0 ? 'the reaper' : 'wrappers'} up to ${
+    orphan.reaper
+  }`;
+}
+
 function describeOwner(owner) {
   return owner.via === 'exit-with-pid' ? `owner pid ${owner.pid}` : `CLI pid ${owner.pid}`;
 }
@@ -157,9 +166,7 @@ async function pruneServers({
         processStartTime: orphan.processStartTime,
         kind: orphan.kind,
         cwd: orphan.cwd,
-        reason: `unregistered; only ${
-          orphan.wrappers.length === 0 ? 'the reaper' : 'wrappers'
-        } up to ${orphan.reaper}`,
+        reason: describeLegacyOrphan(orphan),
       });
     });
   }

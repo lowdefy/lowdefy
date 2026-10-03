@@ -19,17 +19,19 @@ import readProcessTable from './readProcessTable.js';
 import selectLegacyOrphans from './selectLegacyOrphans.js';
 
 const SERVER_COMMAND = /(^|\/)node(\.exe)? (src\/index\.js|manager\/run\.mjs)$/;
+const VITE_COMMAND = /(^|\/)node(\.exe)? \S*\/vite\/bin\/vite\.js --host 127\.0\.0\.1 /;
 
-// Lowdefy servers left behind before servers recorded themselves in the registry, found
-// from the process table. Only `lowdefy hub prune`, run by a person and shown first, acts
-// on these: the rules cannot tell a dead spawner from nohup. macOS and Linux only.
+// Lowdefy servers left behind before servers recorded themselves in the registry, and Vite
+// children of dev managers that are gone, found from the process table. Only `lowdefy hub
+// prune`, run by a person and shown first, acts on these: the rules cannot tell a dead
+// spawner from nohup. macOS and Linux only.
 function findLegacyOrphans({ registeredPids, hubPids, platform = process.platform }) {
   if (platform !== 'darwin' && platform !== 'linux') {
     return [];
   }
   const processes = readProcessTable();
   const serverPids = processes
-    .filter((entry) => SERVER_COMMAND.test(entry.command))
+    .filter((entry) => SERVER_COMMAND.test(entry.command) || VITE_COMMAND.test(entry.command))
     .map((entry) => entry.pid);
   const cwds = readProcessCwds({ pids: serverPids, platform });
   return selectLegacyOrphans({ processes, cwds, registeredPids, hubPids, platform });

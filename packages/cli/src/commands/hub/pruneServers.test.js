@@ -221,3 +221,36 @@ test('pruneServers with includeLegacy stops a registered server kept alive only 
   expect(stopped.result).toEqual('stopped');
   expect(fs.existsSync(recordPath)).toBe(false);
 });
+
+test('pruneServers lists an orphaned Vite child, and with kill signals it only while its start time still matches', async () => {
+  const vite = {
+    pid: 103,
+    processStartTime: 'vite-start',
+    kind: 'vite',
+    cwd: '/old/app/.lowdefy/dev',
+    wrappers: [],
+    reaper: 'pid 1',
+  };
+  running.set(103, 'vite-start');
+  mockFindLegacyOrphans.mockReturnValue([vite]);
+  const listed = await pruneServers({ directory, includeLegacy: true });
+  expect(listed).toMatchObject([
+    {
+      source: 'legacy',
+      pid: 103,
+      kind: 'vite',
+      reason: 'its dev manager is gone; parent is pid 1',
+    },
+  ]);
+  expect(signals).toEqual([]);
+
+  running.set(103, 'someone-else');
+  const [skipped] = await pruneServers({ directory, includeLegacy: true, kill: true, graceMs: 50 });
+  expect(signals).toEqual([]);
+  expect(skipped.result).toEqual('gone');
+
+  running.set(103, 'vite-start');
+  const [stopped] = await pruneServers({ directory, includeLegacy: true, kill: true, graceMs: 50 });
+  expect(signals).toEqual([{ pid: 103, signal: 'SIGTERM' }]);
+  expect(stopped.result).toEqual('stopped');
+});

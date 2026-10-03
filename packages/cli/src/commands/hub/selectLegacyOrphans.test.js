@@ -18,8 +18,8 @@ import selectLegacyOrphans from './selectLegacyOrphans.js';
 
 const START = 'Fri Sep 25 10:00:00 2026';
 
-function proc(pid, ppid, command) {
-  return { pid, ppid, processStartTime: START, command };
+function proc(pid, ppid, command, pgid = pid) {
+  return { pid, ppid, pgid, processStartTime: START, command };
 }
 
 // A vitest harness's leaked e2e server: harness gone, wrappers reparented to PID 1.
@@ -143,4 +143,99 @@ test('selectLegacyOrphans matches a Linux chain ending at systemd --user', () =>
 
 test('selectLegacyOrphans finds nothing on Windows', () => {
   expect(select({ platform: 'win32' })).toEqual([]);
+});
+
+const VITE =
+  'node /work/app/node_modules/.pnpm/vite@8.0.16/node_modules/vite/bin/vite.js --host 127.0.0.1 --port 3212 --strictPort';
+
+test('selectLegacyOrphans matches a dev manager Vite child reparented to PID 1', () => {
+  const processes = [proc(1, 0, '/sbin/launchd'), proc(500, 1, VITE, 480)];
+  const cwds = new Map([[500, '/work/app/.lowdefy/dev']]);
+  expect(select({ processes, cwds })).toEqual([
+    {
+      pid: 500,
+      processStartTime: START,
+      kind: 'vite',
+      cwd: '/work/app/.lowdefy/dev',
+      wrappers: [],
+      reaper: 'pid 1',
+    },
+  ]);
+});
+
+test('selectLegacyOrphans matches an orphaned Vite child of a monorepo dev server', () => {
+  const processes = [
+    proc(1, 0, '/sbin/launchd'),
+    proc(
+      501,
+      1,
+      '/opt/node/bin/node /repo/node_modules/.pnpm/vite@8.0.16/node_modules/vite/bin/vite.js --host 127.0.0.1 --port 4001 --strictPort'
+    ),
+  ];
+  const cwds = new Map([[501, '/repo/_server/dev']]);
+  expect(select({ processes, cwds })).toMatchObject([{ pid: 501, kind: 'vite' }]);
+});
+
+test('selectLegacyOrphans skips a Vite child whose dev manager is alive', () => {
+  const processes = [
+    proc(1, 0, '/sbin/launchd'),
+    proc(99, 1, '-zsh'),
+    proc(510, 99, 'node manager/run.mjs'),
+    proc(511, 510, VITE, 510),
+  ];
+  const cwds = new Map([
+    [510, '/work/app/.lowdefy/dev'],
+    [511, '/work/app/.lowdefy/dev'],
+  ]);
+  expect(select({ processes, cwds })).toEqual([]);
+});
+
+test('selectLegacyOrphans skips a Vite child under a wrapper rather than the reaper', () => {
+  const processes = [
+    proc(1, 0, '/sbin/launchd'),
+    proc(520, 1, '/bin/sh -c vite --host 127.0.0.1 --port 3212 --strictPort'),
+    proc(521, 520, VITE),
+  ];
+  const cwds = new Map([[521, '/work/app/.lowdefy/dev']]);
+  expect(select({ processes, cwds })).toEqual([]);
+});
+
+test('selectLegacyOrphans skips a Vite process outside a Lowdefy dev directory', () => {
+  const processes = [proc(1, 0, '/sbin/launchd'), proc(530, 1, VITE)];
+  expect(select({ processes, cwds: new Map([[530, '/work/some-vite-app']]) })).toEqual([]);
+  expect(select({ processes, cwds: new Map([[530, '/work/app/.lowdefy/server']]) })).toEqual([]);
+  expect(select({ processes, cwds: new Map() })).toEqual([]);
+});
+
+test('selectLegacyOrphans skips a Vite process run with other arguments', () => {
+  const cwds = new Map([[540, '/work/app/.lowdefy/dev']]);
+  [
+    'node /work/app/node_modules/vite/bin/vite.js --host 127.0.0.1 --port 3212',
+    'node /work/app/node_modules/vite/bin/vite.js --host 0.0.0.0 --port 3212 --strictPort',
+    'node /work/app/node_modules/vite/bin/vite.js build',
+    'node /work/app/node_modules/vite/bin/vite.js --host 127.0.0.1 --port 3212 --strictPort --open',
+  ].forEach((command) => {
+    const processes = [proc(1, 0, '/sbin/launchd'), proc(540, 1, command)];
+    expect(select({ processes, cwds })).toEqual([]);
+  });
+});
+
+test('selectLegacyOrphans skips an orphaned Vite child in a process group the hub started', () => {
+  const processes = [proc(1, 0, '/sbin/launchd'), proc(550, 1, VITE, 60)];
+  const cwds = new Map([[550, '/work/app/.lowdefy/dev']]);
+  expect(select({ processes, cwds, hub: [60] })).toEqual([]);
+  expect(select({ processes, cwds })).toMatchObject([{ pid: 550 }]);
+});
+
+test('selectLegacyOrphans matches a Vite child reparented to systemd --user on Linux only', () => {
+  const processes = [
+    proc(1, 0, '/sbin/init'),
+    proc(10, 1, '/lib/systemd/systemd --user'),
+    proc(560, 10, VITE),
+  ];
+  const cwds = new Map([[560, '/home/dev/app/.lowdefy/dev']]);
+  expect(select({ processes, cwds, platform: 'linux' })).toMatchObject([
+    { pid: 560, kind: 'vite', reaper: 'systemd --user' },
+  ]);
+  expect(select({ processes, cwds, platform: 'darwin' })).toEqual([]);
 });
