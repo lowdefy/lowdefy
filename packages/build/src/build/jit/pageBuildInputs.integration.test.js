@@ -163,6 +163,21 @@ pages:
       vars:
         title: Resolved
   - _ref: pages/transformed.yaml
+  - _ref:
+      path: pages/page-transformed.yaml
+      transformer: transformers/markPage.js
+  - _ref:
+      path: pages/templated.yaml
+      vars:
+        id: vars-transformed
+        title: Vars title
+      transformer: transformers/markPage.js
+  - _ref:
+      resolver: resolvers/page.js
+      transformer: transformers/markPage.js
+      vars:
+        id: resolver-transformed
+        title: Resolver title
   - _ref: pages/broken.yaml
   - _ref: pages/warns.yaml
 `
@@ -182,7 +197,10 @@ blocks:
   // A _ref with vars, the vars from a file.
   write(
     'pages/templated.yaml',
-    `id: templated
+    `id:
+  _var:
+    key: id
+    default: templated
 type: Box
 properties:
   title:
@@ -205,7 +223,14 @@ properties:
   // guard holds only the build's own reads.
   write(
     'resolvers/page.js',
-    "export default function resolve(refPath, vars) {\n  return { id: 'resolved', type: 'Box', properties: { title: vars.title } };\n}\n"
+    "export default function resolve(refPath, vars) {\n  return { id: vars.id ?? 'resolved', type: 'Box', properties: { title: vars.title } };\n}\n"
+  );
+  // A transformer on a page's own _ref, on a file page, a page with vars and a
+  // resolver page.
+  write('pages/page-transformed.yaml', 'id: page-transformed\ntype: Box\n');
+  write(
+    'transformers/markPage.js',
+    'export default function transform(page, vars) {\n  return { ...page, properties: { ...page.properties, transformed: true, title: vars.title ?? null } };\n}\n'
   );
   write(
     'pages/transformed.yaml',
@@ -342,13 +367,39 @@ async function buildPage({ pageId, context }) {
   return buildPageJit({ pageId, pageRegistry, context });
 }
 
-const inputPages = ['home', 'templated', 'nunjucks', 'resolved', 'transformed', 'inviter/invite'];
+const inputPages = [
+  'home',
+  'templated',
+  'nunjucks',
+  'resolved',
+  'transformed',
+  'page-transformed',
+  'vars-transformed',
+  'resolver-transformed',
+  'inviter/invite',
+];
 
 test('the fixture registers every kind of page the guard covers', () => {
   expect(Object.keys(pageRegistry)).toEqual(expect.arrayContaining(inputPages));
   expect(pageRegistry.resolved.resolverOriginal.resolver).toBe('resolvers/page.js');
   expect(pageRegistry.templated.unresolvedVars).toBeDefined();
   expect(pageRegistry['inviter/invite'].moduleEntryId).toBe('inviter');
+});
+
+test("a transformer on a page's own _ref runs in its JIT page build", async () => {
+  const context = hydrateContext({ buildDir, configDir });
+
+  const pageTransformed = await buildPage({ pageId: 'page-transformed', context });
+  expect(pageTransformed.properties).toEqual({ transformed: true, title: null });
+
+  const varsTransformed = await buildPage({ pageId: 'vars-transformed', context });
+  expect(varsTransformed.properties).toEqual({ transformed: true, title: 'Vars title' });
+
+  const resolverTransformed = await buildPage({ pageId: 'resolver-transformed', context });
+  expect(resolverTransformed.properties).toEqual({ transformed: true, title: 'Resolver title' });
+
+  const untransformed = await buildPage({ pageId: 'templated', context });
+  expect(untransformed.properties).toEqual({ title: 'Templated title' });
 });
 
 test('a page build reads config files only through readConfigFile and importAppCode', async () => {
@@ -387,6 +438,12 @@ test('pages that run app code load it through importAppCode, YAML-only pages do 
   expect(await loadedBy('home')).toEqual(['blocks/banner.js']);
   expect(await loadedBy('resolved')).toEqual(['resolvers/page.js']);
   expect(await loadedBy('transformed')).toEqual(['transformers/addBlock.js']);
+  expect(await loadedBy('page-transformed')).toEqual(['transformers/markPage.js']);
+  expect(await loadedBy('vars-transformed')).toEqual(['transformers/markPage.js']);
+  expect(await loadedBy('resolver-transformed')).toEqual([
+    'resolvers/page.js',
+    'transformers/markPage.js',
+  ]);
   expect(await loadedBy('templated')).toEqual([]);
   expect(await loadedBy('nunjucks')).toEqual([]);
   expect(await loadedBy('inviter/invite')).toEqual([]);

@@ -41,6 +41,7 @@ import jsMapParser from '../buildJs/jsMapParser.js';
 import lowdefySchema from '../../lowdefySchema.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
+import runTransformer from '../buildRefs/runTransformer.js';
 import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
 import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
@@ -184,9 +185,13 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       refDef = makeRefDefinition(resolverDefinition, null, buildContext.refMap);
       buildContext.refMap[refDef.id].path = null;
     } else {
-      const refDefinition = resolvedVars
-        ? { path: pageEntry.refPath, vars: resolvedVars }
-        : pageEntry.refPath;
+      const refDefinition = { path: pageEntry.refPath };
+      if (resolvedVars) {
+        refDefinition.vars = resolvedVars;
+      }
+      if (pageEntry.transformer) {
+        refDefinition.transformer = pageEntry.transformer;
+      }
       refDef = makeRefDefinition(refDefinition, null, buildContext.refMap);
       buildContext.refMap[refDef.id].path = refDef.path;
     }
@@ -230,6 +235,14 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       shouldStop: null,
     });
     let processed = await resolve(pageContent, pageCtx);
+    // The walker runs a ref's transformer after walking its content; the page's
+    // own ref is not walked here, so its transformer runs here.
+    processed = await runTransformer({
+      context: buildContext,
+      input: processed,
+      refDef,
+      referencedFrom: null,
+    });
     processed = precomputeRuntimeOperators({
       context: buildContext,
       input: processed,
