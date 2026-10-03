@@ -18,8 +18,10 @@ import { getPageConfig } from '@lowdefy/api';
 
 import authJson from '../../lib/build/auth.js';
 import buildPageIfNeeded, { getPageJitEnrichment } from '../../lib/server/jitPageBuilder.js';
+import getBuildId from '../../lib/docs/getBuildId.js';
 import getPathSegments from '../lib/getPathSegments.js';
 import lowdefyConfig from '../../lib/build/config.js';
+import servedBuilds from '../../lib/server/recording/servedBuilds.js';
 
 const basePath = lowdefyConfig.basePath ?? '';
 
@@ -30,7 +32,7 @@ const basePath = lowdefyConfig.basePath ?? '';
 //   401 { redirect }  — logged-out navigation to a protected page
 //   403 { redirect }  — authorised but second factor not yet enrolled
 //   404 'Page not found.'
-//   200 pageConfig (+ _warnings, + _jsEntries module text, + _dynamicIcons data)
+//   200 pageConfig (+ _buildId, + _warnings, + _jsEntries module text, + _dynamicIcons data)
 async function jitPageHandler(c) {
   const context = c.get('lowdefyContext');
   const pageId = getPathSegments(c, '/api/page/').join('/');
@@ -111,6 +113,11 @@ async function jitPageHandler(c) {
     return c.text('Page not found.', 404);
   }
   const pageConfig = result.pageConfig;
+  // The build this config was served under. The dev recorder stamps it on each
+  // record, and the recording route trusts only a build it finds in
+  // servedBuilds.
+  pageConfig._buildId = getBuildId();
+  servedBuilds.add(pageConfig._buildId);
   if (buildResult?.warnings?.length > 0) {
     pageConfig._warnings = buildResult.warnings;
   }
