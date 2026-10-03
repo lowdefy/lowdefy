@@ -238,12 +238,14 @@ const devToolDefinitions = {
       urlQuery: z
         .record(z.any())
         .optional()
-        .describe('Query params to open the page with, read by _url_query, e.g. {"framework": "popia"}.'),
+        .describe(
+          'Query params to open the page with, read by _url_query, e.g. {"framework": "popia"}.'
+        ),
       steps: z
         .array(z.record(z.any()))
         .optional()
         .describe(
-          'Interaction steps run in order before the capture, addressed by blockId — the same steps as lowdefy_run_journey: {"open": target} (open an input\'s dropdown/picker popup and wait for it; works for every popup input) | {"click": target} (a button, e.g. to open a modal) | {"fill": {"blockId", "value"}} (type text, e.g. to filter an AutoComplete, then {"open": id}) | {"select": {"blockId", "value"}} | {"press": "Enter"} | {"wait": {"ms": n}}. A target is a blockId string or {"blockId", "text", "nth", ...}; {"text": "OK"} alone reaches modal/menu buttons. If a step fails the screenshot is still returned, showing where it stopped, with the failure alongside.'
+          'Interaction steps run in order before the capture, addressed by blockId — the same steps as lowdefy_run_journey: {"open": target} (open an input\'s dropdown/picker popup and wait for it; works for every popup input) | {"click": target} (a button, e.g. to open a modal) | {"fill": {"blockId", "value"}} (type text, e.g. to filter an AutoComplete, then {"open": id}) | {"select": {"blockId", "value"}} | {"press": "Enter"} | {"wait": {"ms": n}}. A target is a blockId string or {"blockId", "text", "nth", ...}; {"text": "OK"} alone reaches modal/menu buttons. {"screenshot": name?} captures an earlier state too: its image follows the final capture. If a step fails the screenshot is still returned, showing where it stopped, with the failure alongside.'
         ),
       fullPage: z.boolean().optional().describe('Capture the full scrollable page.'),
       clip: z

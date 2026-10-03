@@ -35,8 +35,18 @@ function nextClientAddress() {
 // open while the owner removes them - are signed in at the same time. An
 // actor opens the journey's page, as the journey's user, the first time its
 // name is switched to, and keeps its tab as it left it when the journey
-// switches away and back.
-function createJourneyActors({ browser, origin, pageId, user, urlQuery, width, height, timeout }) {
+// switches away and back. Every actor sees the same viewport and colour scheme.
+function createJourneyActors({
+  browser,
+  origin,
+  pageId,
+  user,
+  urlQuery,
+  width,
+  height,
+  colorScheme,
+  timeout,
+}) {
   const actors = new Map();
   let currentName;
 
@@ -50,6 +60,7 @@ function createJourneyActors({ browser, origin, pageId, user, urlQuery, width, h
         urlQuery,
         width,
         height,
+        colorScheme,
         clientAddress: nextClientAddress(),
         timeout,
       });
