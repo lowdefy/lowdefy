@@ -24,20 +24,29 @@ function failedEvent({ record }) {
 // Where a segment first failed, as the production profile and coverage key
 // failure paths: page, block, event and the invalid blocks a Validate named
 // (sorted). An app event has no page block, so it is keyed `app.<event>`.
-// Undefined for a segment with no failed event.
+// `interaction` says whether an interaction caused it, in which case the
+// segment's journey ends at that interaction's step. Undefined for a segment
+// with no failed event.
 function readFailurePath({ records }) {
   for (const record of records) {
     const event = failedEvent({ record });
     if (type.isUndefined(event)) continue;
     const invalidBlocks = [...(event.invalid_blocks ?? [])].sort();
     if (record.scope === 'app') {
-      return { page: 'app', block_id: null, event: event.name, invalid_blocks: invalidBlocks };
+      return {
+        page: 'app',
+        block_id: null,
+        event: event.name,
+        invalid_blocks: invalidBlocks,
+        interaction: false,
+      };
     }
     return {
       page: record.page_id,
       block_id: event.block_id,
       event: event.name,
       invalid_blocks: invalidBlocks,
+      interaction: record.kind !== 'engine',
     };
   }
   return undefined;

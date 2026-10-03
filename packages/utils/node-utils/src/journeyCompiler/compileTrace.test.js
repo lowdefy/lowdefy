@@ -415,6 +415,7 @@ test('compileTrace gives each segment its entry page, pages, failure path and fr
       block_id: 'save',
       event: 'onClick',
       invalid_blocks: ['due', 'title'],
+      interaction: true,
     },
     frustrations: [{ page: 'tickets', block_id: 'title', text: null, kind: 'rage' }],
   });
@@ -423,6 +424,7 @@ test('compileTrace gives each segment its entry page, pages, failure path and fr
     block_id: null,
     event: 'onInitAsync',
     invalid_blocks: [],
+    interaction: false,
   });
   expect(segments[1].frustrations).toEqual([]);
 });

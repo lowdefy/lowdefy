@@ -31,6 +31,7 @@ import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
 import journeysCompile from './commands/journeys/journeysCompile.js';
+import journeysCoverage from './commands/journeys/journeysCoverage.js';
 import journeysEvidence from './commands/journeys/journeysEvidence.js';
 import journeysPullPosthog from './commands/journeys/pull/journeysPullPosthog.js';
 import mcp from './commands/mcp/mcp.js';
@@ -336,6 +337,21 @@ const journeysEvidenceCommand = journeys
   );
 productionWindowOptions.forEach((option) => journeysEvidenceCommand.addOption(option));
 journeysEvidenceCommand.action(runCommand({ cliVersion, handler: journeysEvidence }));
+
+const journeysCoverageCommand = journeys
+  .command('coverage')
+  .description(
+    'Report which production flows, failures, frustrated clicks and role sets no journey covers, and write .lowdefy/test/coverage.json.'
+  )
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(new Option('--source <source>', 'Where use is read from: production (the default).'))
+  .addOption(new Option('--json', 'Print the coverage report as JSON instead of the summary.'));
+productionWindowOptions.forEach((option) => journeysCoverageCommand.addOption(option));
+journeysCoverageCommand.action(runCommand({ cliVersion, handler: journeysCoverage }));
 
 program
   .command('init')

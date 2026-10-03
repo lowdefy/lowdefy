@@ -1,64 +1,29 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
 import fs from 'fs';
-import path from 'path';
-import { compileTrace } from '@lowdefy/node-utils';
-import { type } from '@lowdefy/helpers';
 
 import computeEvidence from './evidence/computeEvidence.js';
-import discoverJourneys from '../test/discoverJourneys.js';
 import formatEvidence from '../test/formatEvidence.js';
 import formatZeroBacked from './evidence/formatZeroBacked.js';
-import loadBlockMetas from './loadBlockMetas.js';
-import readProductionTrace from './readProductionTrace.js';
-import resolveBuildDirectory from './resolveBuildDirectory.js';
-import validateJourney from '../test/validateJourney.js';
+import readCommittedJourneys from './readCommittedJourneys.js';
+import readProductionSegments from './readProductionSegments.js';
 import writeEvidenceNode from './evidence/writeEvidenceNode.js';
 
 const SOURCES = ['production'];
-
-// The committed journeys evidence is computed for, with each one's place in
-// its file. A file that does not parse, or a journey that does not validate,
-// is reported and left alone.
-function readCommittedJourneys({ context }) {
-  const journeys = [];
-  const skipped = [];
-  const indexByFile = new Map();
-  discoverJourneys({ context }).forEach((item) => {
-    const journeyIndex = indexByFile.get(item.filePath) ?? 0;
-    indexByFile.set(item.filePath, journeyIndex + 1);
-    const file = path.relative(context.directories.config, item.filePath);
-    if (!type.isNone(item.error)) {
-      skipped.push(`${file}: ${item.error}`);
-      return;
-    }
-    const validation = validateJourney({ journey: item.journey });
-    if (!validation.valid) {
-      skipped.push(`${file}: ${validation.message}`);
-      return;
-    }
-    journeys.push({ filePath: item.filePath, file, journeyIndex, journey: item.journey });
-  });
-  return { journeys, skipped };
-}
-
-function readProductionSegments({ context }) {
-  const { options } = context;
-  const { records, window } = readProductionTrace({
-    directories: context.directories,
-    since: options.since,
-    from: options.from,
-    to: options.to,
-  });
-  const { segments } = compileTrace({
-    records,
-    blockMetas: loadBlockMetas({ buildDirectory: resolveBuildDirectory({ context }) }),
-    source: 'production',
-    filters: {
-      since: Date.parse(`${window.from}T00:00:00.000Z`),
-      until: Date.parse(`${window.to}T23:59:59.999Z`),
-    },
-  });
-  return { segments, window };
-}
 
 function summarise({ evidence }) {
   const text = formatEvidence({ evidence });

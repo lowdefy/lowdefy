@@ -88,7 +88,10 @@ function rankFailurePaths({ segments }) {
   return [...groups.entries()]
     .map(([key, members]) => ({
       key,
-      ...members[0].failure_path,
+      page: members[0].failure_path.page,
+      block_id: members[0].failure_path.block_id,
+      event: members[0].failure_path.event,
+      invalid_blocks: members[0].failure_path.invalid_blocks,
       persons: distinctCount(members.flatMap((segment) => segment.persons)),
       sessions: distinctCount(members.map((segment) => segment.session)),
     }))
