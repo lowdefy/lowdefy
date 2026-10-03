@@ -58,6 +58,4 @@ function resolveWindow({ options, source, now }) {
   return { since: type.isNone(since) ? undefined : parseSince({ since, now }), until: undefined };
 }
 
-export { PRODUCTION_DEFAULT_SINCE };
-
 export default resolveWindow;

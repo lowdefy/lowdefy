@@ -88,7 +88,7 @@ function writeTrace(name, records) {
     path.join(configDirectory, name),
     records.map((entry) => JSON.stringify(entry)).join('\n')
   );
-  return name;
+  return path.join(configDirectory, name);
 }
 
 function writeBlockMetas() {
@@ -285,6 +285,17 @@ test('journeys compile takes --build current from the newest build in the record
   expect(mockGet).not.toHaveBeenCalled();
 });
 
+test('journeys compile takes --build current from the records inside the --since window', async () => {
+  const file = writeTrace('trace.jsonl', [
+    ...session({ id: 's-1', start: now - 60000, build: '2026-10-01T08:00:00.000Z' }),
+    ...session({ id: 's-2', start: now - 2 * 3600000, build: '2026-10-02T08:00:00.000Z' }),
+  ]);
+  context.options.build = 'current';
+  context.options.since = '1h';
+  const { segments } = await journeysCompile({ context, params: [[file]] });
+  expect(segments.map((segment) => segment.session)).toEqual(['s-1']);
+});
+
 test('journeys compile keeps only segments visiting the --page given', async () => {
   const file = writeTrace('trace.jsonl', [
     ...session({ id: 's-1', start: now - 60000 }),
@@ -374,6 +385,6 @@ test('journeys compile warns once and still compiles when no block metas are fou
 
 test('journeys compile throws when a trace file does not exist', async () => {
   await expect(journeysCompile({ context, params: [['missing.jsonl']] })).rejects.toThrow(
-    `Trace file not found at ${path.join(configDirectory, 'missing.jsonl')}.`
+    `Trace file not found at ${path.resolve('missing.jsonl')}.`
   );
 });

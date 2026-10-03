@@ -92,6 +92,16 @@ function sourceFromRecords({ records }) {
   return sources[0];
 }
 
+// The records a compile keeps before segmenting: the chosen source, inside the
+// time window. `--build current` with no dev server reads the newest build
+// among these, so a record the compile drops never decides the build.
+function isSelected({ record, source, since, until }) {
+  if (record?.source !== source) return false;
+  const time = Date.parse(record.t);
+  if (!type.isUndefined(since) && !(time >= since)) return false;
+  return type.isUndefined(until) || time <= until;
+}
+
 async function resolveBuild({ context, records, build }) {
   if (build !== 'current') return build;
   const { buildId, from } = await resolveCurrentBuild({ context, records });
@@ -131,18 +141,22 @@ function logResult({ context, candidates, segments, dropped, unparsable, outDire
 // one candidate journey per distinct flow out, under
 // tests/journeys/_candidates/<source>/, which `lowdefy test` does not run.
 async function journeysCompile({ context, params }) {
-  const [traceFiles = []] = params ?? [];
+  const [traceFiles = []] = params;
   const { options } = context;
   checkSourceOption({ source: options.source });
   if (traceFiles.length === 0) {
     refuseWithoutPaths({ context, source: options.source });
   }
 
-  const paths = traceFiles.map((file) => path.resolve(context.directories.config, file));
+  const paths = traceFiles.map((file) => path.resolve(file));
   const { records, unparsable } = readTraceFiles({ paths });
   const source = options.source ?? sourceFromRecords({ records });
   const { since, until } = resolveWindow({ options, source, now: Date.now() });
-  const build = await resolveBuild({ context, records, build: options.build });
+  const build = await resolveBuild({
+    context,
+    records: records.filter((record) => isSelected({ record, source, since, until })),
+    build: options.build,
+  });
 
   const buildDirectory = resolveBuildDirectory({ context });
   if (type.isUndefined(buildDirectory)) {
