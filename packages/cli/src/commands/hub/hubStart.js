@@ -14,8 +14,11 @@
   limitations under the License.
 */
 
+import fs from 'fs';
 import path from 'path';
 
+import checkDependenciesInstalled from '../mcp/checkDependenciesInstalled.js';
+import findGitRoot from '../mcp/findGitRoot.js';
 import connectHub from './connectHub.js';
 
 function write(value) {
@@ -23,9 +26,20 @@ function write(value) {
 }
 
 async function hubStart({ directory = '.', restart = false, clean = false }) {
+  const configDirectory = path.resolve(directory);
+  if (!fs.existsSync(configDirectory)) {
+    throw new Error(`Directory ${configDirectory} does not exist.`);
+  }
+  // The hub does not check installs (it may be an older version than this
+  // CLI), so the terminal command checks before it asks.
+  const realDirectory = fs.realpathSync.native(configDirectory);
+  checkDependenciesInstalled({
+    configDirectory: realDirectory,
+    root: findGitRoot({ directory: realDirectory }),
+  });
   const hub = await connectHub();
   const result = await hub.request('start', {
-    configDirectory: path.resolve(directory),
+    configDirectory,
     env: process.env,
     restart,
     clean,

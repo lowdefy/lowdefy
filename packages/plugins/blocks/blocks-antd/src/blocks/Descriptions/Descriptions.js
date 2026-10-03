@@ -69,7 +69,7 @@ const DescriptionsBlock = ({
     <Descriptions
       id={blockId}
       bordered={properties.bordered}
-      colon={properties.colon}
+      colon={properties.colon ?? undefined}
       column={properties.column}
       extra={content.extra && content.extra()}
       items={items}

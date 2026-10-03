@@ -24,7 +24,13 @@ jest.unstable_mockModule('./useMutateCache.js', () => ({
   getReloadVersion: jest.fn(),
 }));
 
-const { fetchPageConfig } = await import('./usePageConfig.js');
+const { getNavVersion, getReloadVersion } = await import('./useMutateCache.js');
+const { fetchPageConfig, getPageConfigKey, recordDynamicPage } = await import('./usePageConfig.js');
+
+beforeEach(() => {
+  getNavVersion.mockReturnValue(0);
+  getReloadVersion.mockReturnValue(0);
+});
 
 function mockJsonResponse(body) {
   return { status: 200, ok: true, json: async () => body };
@@ -59,4 +65,61 @@ test('fetchPageConfig issues only the page-config request — no /api/js or /api
   expect(data._jsEntries).toBeUndefined();
   expect(global.fetch).toHaveBeenCalledTimes(1);
   expect(global.fetch.mock.calls[0][0]).toBe('http://localhost/api/page/p');
+});
+
+test('getPageConfigKey leaves the query string out of a page not known to be dynamic', () => {
+  const pageUrl = '/api/page/static-page';
+  getNavVersion.mockReturnValue(1);
+  const first = getPageConfigKey({ pageUrl, search: '?file=a' });
+  getNavVersion.mockReturnValue(2);
+  const second = getPageConfigKey({ pageUrl, search: '?file=b' });
+
+  expect(first).toEqual([pageUrl, 0]);
+  expect(second).toEqual(first);
+});
+
+test('getPageConfigKey keeps a static page keyed without the query after its fetch', () => {
+  const pageUrl = '/api/page/static-fetched';
+  recordDynamicPage({ data: { id: 'page:static-fetched' }, pageUrl });
+  getNavVersion.mockReturnValue(3);
+
+  expect(getPageConfigKey({ pageUrl, search: '?q=1' })).toEqual([pageUrl, 0]);
+});
+
+test('getPageConfigKey keeps the static key for the navigation that found a page dynamic', () => {
+  const pageUrl = '/api/page/dynamic-first';
+  getNavVersion.mockReturnValue(4);
+  const beforeFetch = getPageConfigKey({ pageUrl, search: '?q=1' });
+  recordDynamicPage({ data: { dynamic: true }, pageUrl });
+  const afterFetch = getPageConfigKey({ pageUrl, search: '?q=1' });
+
+  expect(afterFetch).toEqual(beforeFetch);
+});
+
+test('getPageConfigKey keys a known dynamic page on the query and navigation version', () => {
+  const pageUrl = '/api/page/dynamic-later';
+  getNavVersion.mockReturnValue(5);
+  recordDynamicPage({ data: { dynamic: true }, pageUrl });
+  getNavVersion.mockReturnValue(6);
+  const sixth = getPageConfigKey({ pageUrl, search: '?q=1' });
+  // A later fetch of the known dynamic page must not move it back to the static key.
+  recordDynamicPage({ data: { dynamic: true }, pageUrl });
+  const sixthAfterFetch = getPageConfigKey({ pageUrl, search: '?q=1' });
+  getNavVersion.mockReturnValue(7);
+  const seventh = getPageConfigKey({ pageUrl, search: '?q=1' });
+
+  expect(sixth).toEqual([pageUrl, 0, '?q=1', 6]);
+  expect(sixthAfterFetch).toEqual(sixth);
+  expect(seventh).toEqual([pageUrl, 0, '?q=1', 7]);
+});
+
+test('getPageConfigKey returns to the static key when a dynamic page is no longer dynamic', () => {
+  const pageUrl = '/api/page/dynamic-removed';
+  getNavVersion.mockReturnValue(8);
+  recordDynamicPage({ data: { dynamic: true }, pageUrl });
+  getReloadVersion.mockReturnValue(1);
+  getNavVersion.mockReturnValue(9);
+  recordDynamicPage({ data: { id: 'page:dynamic-removed' }, pageUrl });
+
+  expect(getPageConfigKey({ pageUrl, search: '?q=1' })).toEqual([pageUrl, 1]);
 });

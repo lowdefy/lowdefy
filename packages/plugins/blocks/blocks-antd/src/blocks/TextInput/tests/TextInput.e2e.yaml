@@ -320,3 +320,15 @@ blocks:
               - true
           then: Clear fired
           else: ''
+
+  # ============================================
+  # NULL PROPERTIES
+  # ============================================
+
+  # _state on a missing key gives null, which must fall back to antd's outlined variant.
+  - id: textinput_null_variant
+    type: TextInput
+    properties:
+      title: Null Variant
+      variant:
+        _state: textinput_null_missing
