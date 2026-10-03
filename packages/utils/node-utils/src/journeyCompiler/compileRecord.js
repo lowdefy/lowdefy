@@ -184,7 +184,6 @@ function compileInteraction({ record, blockMetas }) {
   const { step, comments, flag } = compileInteractionStep({ record, blockMetas });
   result.comments.push(...comments);
   if (!type.isUndefined(flag)) result.flags.push(flag);
-  if (type.isUndefined(step) && record.kind === 'key') return result;
   if (!type.isUndefined(step)) result.steps.push(step);
   compileOutcome({ record, result, asserts: !type.isUndefined(step) });
   return result;
@@ -214,7 +213,5 @@ function compileRecord({ record, blockMetas = {} }) {
       return emptyResult();
   }
 }
-
-export { MANUAL_VALUE_TYPES };
 
 export default compileRecord;

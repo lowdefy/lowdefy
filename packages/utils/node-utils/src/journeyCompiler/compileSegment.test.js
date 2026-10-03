@@ -236,6 +236,29 @@ test('T17 a single printable character with no modifier is dropped', () => {
   );
 });
 
+test('T17 a dropped single-character key still ends the segment when its event failed', () => {
+  const { journey, footer, failure } = compile([
+    entry,
+    traceRecord({ at: 1, block: 'save' }),
+    traceRecord({
+      at: 2,
+      kind: 'key',
+      block: 'search',
+      key: 'a',
+      event: event({
+        name: 'onKeyDown',
+        block_id: 'search',
+        success: false,
+        error: { name: 'ActionError', config_key: 'k-key', action_type: 'SetState' },
+      }),
+    }),
+    traceRecord({ at: 3, block: 'retry' }),
+  ]);
+  expect(journey.steps).toEqual([{ click: 'save' }]);
+  expect(footer).toBe('failed here: ActionError in SetState (k-key)');
+  expect(failure).toBe('tickets.search.onKeyDown');
+});
+
 test('T18 an event that called requests gives a wait for the last request, never wait ms', () => {
   expect(
     steps([

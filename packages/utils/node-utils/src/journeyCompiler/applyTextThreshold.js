@@ -65,6 +65,4 @@ function applyTextThreshold({ records }) {
   });
 }
 
-export { MIN_ORGS, MIN_PERSONS };
-
 export default applyTextThreshold;

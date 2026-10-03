@@ -126,6 +126,4 @@ function compileTrace({ records, blockMetas = {}, existingCandidates = {}, sourc
   return { candidates, segments: segments.map(publicSegment), dropped };
 }
 
-export { SOURCES };
-
 export default compileTrace;

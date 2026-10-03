@@ -36,6 +36,4 @@ function buildOriginComment({ origin }) {
   return commentText({ lines: [...ORIGIN_HEADER, ...body.split('\n')] });
 }
 
-export { ORIGIN_HEADER };
-
 export default buildOriginComment;

@@ -106,6 +106,21 @@ test('segmentSession times a dev click whose url_after still shows the old URL',
   expect(segmentSession({ records: records(16) })).toHaveLength(2);
 });
 
+test('segmentSession cuts at a reload of the same page after a dev click that did not navigate', () => {
+  const segments = segmentSession({
+    records: [
+      pageview({ at: 0, url: '/tickets' }),
+      traceRecord({
+        at: 10,
+        block: 'save',
+        event: { name: 'onClick', block_id: 'save', success: true, url_after: '/tickets' },
+      }),
+      pageview({ at: 70, url: '/tickets' }),
+    ],
+  });
+  expect(kinds(segments)).toEqual([['pageview', 'click'], ['pageview']]);
+});
+
 test('segmentSession treats the pageview after a back as caused', () => {
   const segments = segmentSession({
     records: [

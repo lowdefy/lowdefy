@@ -440,5 +440,5 @@ function validateJourneySteps({ steps }) {
   return {};
 }
 
-export { FROM_VALUES, STEP_KEYS, TARGET_KEYS, getStepKey };
+export { STEP_KEYS, TARGET_KEYS, getStepKey };
 export default validateJourneySteps;

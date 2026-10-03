@@ -50,6 +50,4 @@ function compileStateExpectations({ event }) {
     }));
 }
 
-export { MAX_STATE_EXPECTATIONS };
-
 export default compileStateExpectations;

@@ -17,6 +17,7 @@
 import recordTime from './recordTime.js';
 
 const RUN_WINDOW_MS = 2000;
+const CONTENT_KEYS = ['value', 'redacted', 'event', 'also'];
 
 function runKey({ record }) {
   return `${record.page_id} ${record.target.block_id ?? ''}`;
@@ -31,8 +32,6 @@ function runKey({ record }) {
 // redaction and event of its last: the position is where the user started on
 // the field, and the last record carries the value they left in it and the
 // event that value caused.
-const CONTENT_KEYS = ['value', 'redacted', 'event', 'also'];
-
 function mergeRun({ first, last }) {
   const merged = { ...first };
   CONTENT_KEYS.forEach((key) => {
@@ -45,7 +44,7 @@ function mergeRun({ first, last }) {
   return merged;
 }
 
-function collapseChangeRuns({ records, windowMs = RUN_WINDOW_MS }) {
+function collapseChangeRuns({ records }) {
   const slots = [];
   const openRuns = new Map();
   records.forEach((record) => {
@@ -56,7 +55,7 @@ function collapseChangeRuns({ records, windowMs = RUN_WINDOW_MS }) {
     const key = runKey({ record });
     const time = recordTime({ record });
     const open = openRuns.get(key);
-    if (open !== undefined && time - open.time <= windowMs) {
+    if (open !== undefined && time - open.time <= RUN_WINDOW_MS) {
       open.record = mergeRun({ first: open.record, last: record });
       open.time = time;
       return;
@@ -67,7 +66,5 @@ function collapseChangeRuns({ records, windowMs = RUN_WINDOW_MS }) {
   });
   return slots.map((slot) => slot.record);
 }
-
-export { RUN_WINDOW_MS };
 
 export default collapseChangeRuns;

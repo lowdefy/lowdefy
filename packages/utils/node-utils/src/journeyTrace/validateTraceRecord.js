@@ -202,6 +202,9 @@ function validateEvents({ record, production }) {
   if (!('event' in record) && !production) {
     return `Trace record from a ${record.source} source requires an "event" key: an object, or null when no event ran.`;
   }
+  if (production && record.event === null) {
+    return 'Trace record "event" on a production record should be an object or absent: production sees only failures, so it cannot know that no event ran. Received null.';
+  }
   if (record.kind === 'engine' && !type.isObject(record.event)) {
     return `Trace record of kind "engine" requires an "event" object. Received ${describe(
       record.event

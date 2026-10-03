@@ -23,6 +23,4 @@ function isMountEventName({ eventName }) {
   return MOUNT_EVENT_NAMES.includes(eventName);
 }
 
-export { MOUNT_EVENT_NAMES };
-
 export default isMountEventName;

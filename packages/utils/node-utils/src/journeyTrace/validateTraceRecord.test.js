@@ -273,6 +273,12 @@ test('validateTraceRecord accepts a production record with no event key', () => 
   expect(validateTraceRecord({ record: production })).toEqual({});
 });
 
+test('validateTraceRecord refuses event null on a production record', () => {
+  expect(check({ ...production, event: null })).toBe(
+    'Trace record "event" on a production record should be an object or absent: production sees only failures, so it cannot know that no event ran. Received null.'
+  );
+});
+
 test('validateTraceRecord refuses a value on a production record', () => {
   expect(check({ ...production, kind: 'change', value: 'Grace' })).toBe(
     'Trace record "value" should never appear on a production record. Received "Grace".'

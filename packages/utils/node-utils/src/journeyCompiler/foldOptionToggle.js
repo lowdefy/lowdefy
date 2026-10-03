@@ -56,6 +56,4 @@ function foldOptionToggle({ records }) {
   return records.filter((record, index) => !dropped.has(index));
 }
 
-export { TOGGLE_WINDOW_MS };
-
 export default foldOptionToggle;

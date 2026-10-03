@@ -49,6 +49,4 @@ function segmentSession({ records }) {
   return segments;
 }
 
-export { IDLE_MS };
-
 export default segmentSession;

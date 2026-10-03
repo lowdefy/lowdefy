@@ -66,7 +66,7 @@ function compileSegment({ records, blockMetas = {}, source, name }) {
     const absorbed = record.kind === 'pageview' && lastInteraction === 'back';
     if (record.kind !== 'engine') lastInteraction = record.kind;
     if (absorbed) continue;
-    const result = compileRecord({ record, blockMetas, source });
+    const result = compileRecord({ record, blockMetas });
     result.comments.forEach(addComment);
     result.flags.forEach((flag) => flags.add(flag));
     if (type.isUndefined(failure)) failure = result.failure;

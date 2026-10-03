@@ -56,6 +56,4 @@ function journeySequence({ pageId, steps }) {
   return sequence;
 }
 
-export { INTERACTION_VERBS };
-
 export default journeySequence;

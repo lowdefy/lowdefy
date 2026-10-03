@@ -31,9 +31,7 @@ function canBeCaused({ event }) {
 // it) and the event started no later than its debounce plus the slack after
 // the interaction.
 function couldCause({ event, interaction }) {
-  if (!type.isArray(interaction.blockIds) || !interaction.blockIds.includes(event.blockId)) {
-    return false;
-  }
+  if (!interaction.blockIds.includes(event.blockId)) return false;
   const delay = event.startTimestamp - interaction.t;
   const windowMs = (event.debounceMs ?? 0) + PAIRING_SLACK_MS;
   return delay >= 0 && delay <= windowMs;
@@ -94,7 +92,5 @@ function pairTraceEvents({ interactions, events }) {
 
   return { pairs, unpaired };
 }
-
-export { PAIRING_SLACK_MS };
 
 export default pairTraceEvents;

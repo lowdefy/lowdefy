@@ -58,6 +58,4 @@ function collapseRepeatedClicks({ records }) {
   return kept;
 }
 
-export { REPEAT_WINDOW_MS };
-
 export default collapseRepeatedClicks;
