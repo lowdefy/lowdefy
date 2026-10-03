@@ -205,6 +205,7 @@ function createBuildContext(buildDirectory, configDirectory) {
     buildDirectory,
     context,
     keyPrefix: idCounter.prefix,
+    isKeptContext: () => context === keptContext,
   });
   prepareJitContext(context);
 
@@ -342,7 +343,7 @@ async function buildPage({ pageId, buildDirectory, configDirectory }) {
       `Installing plugin packages for page "${pageId}": ${result.packages.join(', ')}. ` +
         'The page will be available after the server restarts.'
     );
-    return result;
+    return { result, buildContext: context };
   }
   pageCache.markCompiled(pageId, { generation, checkedAt });
   // Touch the candidates file so Vite's CSS pipeline re-runs Tailwind for
@@ -361,20 +362,25 @@ async function buildPage({ pageId, buildDirectory, configDirectory }) {
     { spin: 'succeed', color: 'white' },
     `Built page "${pageId}" in ${formatDuration(Date.now() - startTime)}.`
   );
-  return { built: true, warnings: result?._warnings };
+  return { result: { built: true, warnings: result?._warnings }, buildContext: context };
 }
 
 // Serves a page from its last JIT build while that build is current, else
-// builds it. Returns false for a page not in the registry, true for a page
-// already current, or the build's result.
-async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
+// builds it. Returns { result, buildContext }: result is false for a page not
+// in the registry, true for a page already current, or the build's result;
+// buildContext is the context the page was built on, which holds its _js
+// entries and icons even after a later request discards it.
+export async function buildPageWithContext({ pageId, buildDirectory, configDirectory }) {
   for (;;) {
     const signals = syncBuildSignals({ buildDirectory, configDirectory });
+    // A kept context is always of the current generation, so a page current
+    // in this generation was built on it.
+    const currentContext = keptContext;
     if (!signals.registry || !signals.registry[pageId]) {
-      return false;
+      return { result: false, buildContext: null };
     }
     if (await isPageCurrent({ pageId, ...signals })) {
-      return true;
+      return { result: true, buildContext: currentContext };
     }
     const shouldBuild = await pageCache.acquireBuildLock(pageId);
     if (shouldBuild) {
@@ -388,6 +394,11 @@ async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
     // before an event this request saw, or failed, so the page is looked at
     // again rather than taken as current.
   }
+}
+
+async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
+  const { result } = await buildPageWithContext({ pageId, buildDirectory, configDirectory });
+  return result;
 }
 
 // Collect every client _js hash the page references. jsMapParser reduces a _js
@@ -434,24 +445,37 @@ function scopeDynamicIcons({ pageConfig, scopedJsMap, dynamicIconData }) {
   return Object.keys(found).length > 0 ? found : undefined;
 }
 
-// Scope this page's JIT-discovered enrichment out of the persistent build
-// context so jitPageHandler can fold it into the page-config response the client
-// already awaits — removing the two secondary fetches that stalled first paint.
-// buildContext defaults to the module-private keptContext (re-read on every
-// call, so it tracks recreations); tests pass a stub.
-export function getPageJitEnrichment({ pageConfig, buildContext = keptContext }) {
+// The contexts whose jsMap and icons can hold a served page's entries: the one
+// the page was built on, and the kept one. The page config is read from disk
+// after the build, so a build of the page on a newer context can have written
+// it meanwhile. _js keys are content hashes, so an entry found in either is
+// the page's own.
+function enrichmentContexts(buildContext) {
+  return [buildContext, keptContext].filter(
+    (context, index, contexts) => context && contexts.indexOf(context) === index
+  );
+}
+
+// Scope this page's JIT-discovered enrichment out of the build context it was
+// built on, so jitPageHandler can fold it into the page-config response the
+// client already awaits — removing the two secondary fetches that stalled
+// first paint. A request can discard that context while the page config is
+// read, so it is passed in (from buildPageWithContext) rather than taken from
+// the kept context.
+export function getPageJitEnrichment({ pageConfig, buildContext }) {
+  const contexts = enrichmentContexts(buildContext);
   // No build context (before the first build) means nothing JIT-discovered to
   // fold — the page serves what the static client bundle already carries.
-  if (!buildContext) return {};
+  if (contexts.length === 0) return {};
 
-  const clientJsMap = buildContext.jsMap.client ?? {};
   const hashes = new Set();
   collectJsHashes(pageConfig, hashes);
 
   const scopedJsMap = {};
   for (const hash of hashes) {
-    if (Object.prototype.hasOwnProperty.call(clientJsMap, hash)) {
-      scopedJsMap[hash] = clientJsMap[hash];
+    const context = contexts.find((candidate) => Object.hasOwn(candidate.jsMap.client ?? {}, hash));
+    if (context) {
+      scopedJsMap[hash] = context.jsMap.client[hash];
     }
   }
 
@@ -461,7 +485,10 @@ export function getPageJitEnrichment({ pageConfig, buildContext = keptContext })
   const dynamicIcons = scopeDynamicIcons({
     pageConfig,
     scopedJsMap,
-    dynamicIconData: buildContext.dynamicIconData ?? {},
+    dynamicIconData: Object.assign(
+      {},
+      ...[...contexts].reverse().map((context) => context.dynamicIconData ?? {})
+    ),
   });
 
   return { jsEntries, dynamicIcons };

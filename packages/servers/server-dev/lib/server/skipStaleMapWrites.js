@@ -18,6 +18,10 @@ import fs from 'fs';
 import path from 'path';
 
 const mapFiles = new Set(['keyMap.json', 'refMap.json']);
+const jsMapFiles = new Set([
+  'plugins/operators/clientJsMap.js',
+  'plugins/operators/serverJsMap.js',
+]);
 
 function isMapFile(filePath) {
   return mapFiles.has(filePath) || filePath.startsWith('jitMaps/');
@@ -33,10 +37,22 @@ function readLiveKeyPrefix({ buildDirectory }) {
 // against the wrong build until the next rebuild. Its jitMaps/ files would outlive the
 // publish that cleared the old build's. The build's key prefix names the build
 // a context was created from.
-function skipStaleMapWrites({ buildDirectory, context, keyPrefix }) {
+//
+// The JS map files are written whole from a context's jsMap, so a page build on
+// a context that is no longer the kept one (a config publish, or the map budget,
+// discarded it) would replace the entries pages built on the newer context
+// added. Pages built on the discarded context are rebuilt on their next request
+// or API call, which writes their entries again.
+function skipStaleMapWrites({ buildDirectory, context, keyPrefix, isKeptContext }) {
   const writeBuildArtifact = context.writeBuildArtifact;
   context.writeBuildArtifact = async (filePath, content, options) => {
     if (isMapFile(filePath) && readLiveKeyPrefix({ buildDirectory }) !== keyPrefix) {
+      return;
+    }
+    if (
+      jsMapFiles.has(filePath) &&
+      (!isKeptContext() || readLiveKeyPrefix({ buildDirectory }) !== keyPrefix)
+    ) {
       return;
     }
     await writeBuildArtifact(filePath, content, options);

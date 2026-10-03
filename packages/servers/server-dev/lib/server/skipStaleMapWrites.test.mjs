@@ -43,7 +43,7 @@ test('a page build writes its maps while its config build is the live one', asyn
   publishBuild('a1b2_');
   const writeBuildArtifact = jest.fn();
   const context = { writeBuildArtifact };
-  skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_' });
+  skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_', isKeptContext: () => true });
 
   await context.writeBuildArtifact('keyMap.json', '{}');
   await context.writeBuildArtifact('refMap.json', '{}');
@@ -58,7 +58,7 @@ test('a page build started before a config rebuild does not replace the new maps
   publishBuild('a1b2_');
   const writeBuildArtifact = jest.fn();
   const context = { writeBuildArtifact };
-  skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_' });
+  skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_', isKeptContext: () => true });
 
   publishBuild('c3d4_');
   await context.writeBuildArtifact('keyMap.json', '{}');
@@ -72,11 +72,42 @@ test('a page build started before a config rebuild writes no jitMaps file', asyn
   publishBuild('a1b2_');
   const writeBuildArtifact = jest.fn();
   const context = { writeBuildArtifact };
-  skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_' });
+  skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_', isKeptContext: () => true });
 
   await context.writeBuildArtifact('jitMaps/abc123-1-1.json', '{}');
   publishBuild('c3d4_');
   await context.writeBuildArtifact('jitMaps/abc123-1-2.json', '{}');
 
   expect(writeBuildArtifact.mock.calls).toEqual([['jitMaps/abc123-1-1.json', '{}']]);
+});
+
+test('a page build on a context that is no longer kept does not write the JS maps', async () => {
+  publishBuild('a1b2_');
+  const writeBuildArtifact = jest.fn();
+  const context = { writeBuildArtifact };
+  let kept = true;
+  skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_', isKeptContext: () => kept });
+
+  await context.writeBuildArtifact('plugins/operators/serverJsMap.js', 'a');
+  kept = false;
+  await context.writeBuildArtifact('plugins/operators/serverJsMap.js', 'b');
+  await context.writeBuildArtifact('plugins/operators/clientJsMap.js', 'b');
+  await context.writeBuildArtifact('pages/home.json', '{}');
+
+  expect(writeBuildArtifact.mock.calls).toEqual([
+    ['plugins/operators/serverJsMap.js', 'a'],
+    ['pages/home.json', '{}'],
+  ]);
+});
+
+test('a page build started before a config rebuild does not write the JS maps', async () => {
+  publishBuild('a1b2_');
+  const writeBuildArtifact = jest.fn();
+  const context = { writeBuildArtifact };
+  skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_', isKeptContext: () => true });
+
+  publishBuild('c3d4_');
+  await context.writeBuildArtifact('plugins/operators/serverJsMap.js', 'a');
+
+  expect(writeBuildArtifact.mock.calls).toEqual([]);
 });

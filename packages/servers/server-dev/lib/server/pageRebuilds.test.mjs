@@ -24,6 +24,7 @@ import path from 'path';
 import { jest } from '@jest/globals';
 
 import buildPageIfNeeded, {
+  buildPageWithContext,
   getBuildContext,
   getPageJitEnrichment,
   reviewBuiltPage,
@@ -357,6 +358,73 @@ test('a registry publish during a running build rebuilds the page on the new con
   const pageConfig = JSON.parse(fs.readFileSync(path.join(app.buildDirectory, 'pages', 'js.json')));
   const { jsEntries } = getPageJitEnrichment({ pageConfig });
   expect(jsEntries).toContain('from js');
+  app.remove();
+});
+
+test('a registry publish between a page build and its enrichment still serves the page _js', async () => {
+  const app = createApp({
+    files: {
+      'pages/js.yaml': 'id: js\ntype: Box\nproperties:\n  title:\n    _js: return "from js";\n',
+      'pages/other.yaml': 'id: other\ntype: Box\n',
+    },
+    pages: { js: { refPath: 'pages/js.yaml' }, other: { refPath: 'pages/other.yaml' } },
+  });
+  const request = (pageId) =>
+    buildPageWithContext({
+      pageId,
+      buildDirectory: app.buildDirectory,
+      configDirectory: app.configDirectory,
+    });
+  const built = await request('js');
+  const served = await request('js');
+  expect(built.result.built).toBe(true);
+  expect(served.result).toBe(true);
+  expect(served.buildContext).toBe(built.buildContext);
+  const pageConfig = JSON.parse(fs.readFileSync(path.join(app.buildDirectory, 'pages', 'js.json')));
+
+  // Another request sees a config publish while this one reads the page config.
+  app.publishRegistry();
+  syncBuildSignals({ buildDirectory: app.buildDirectory, configDirectory: app.configDirectory });
+  expect(
+    getPageJitEnrichment({ pageConfig, buildContext: served.buildContext }).jsEntries
+  ).toContain('from js');
+
+  // And builds another page on a new context.
+  await request('other');
+  expect(getBuildContext(app.buildDirectory, app.configDirectory)).not.toBe(served.buildContext);
+  expect(
+    getPageJitEnrichment({ pageConfig, buildContext: served.buildContext }).jsEntries
+  ).toContain('from js');
+  app.remove();
+});
+
+test('a page build on a discarded context does not replace the JS maps of the new context', async () => {
+  const app = createApp({
+    files: {
+      'pages/a.yaml': 'id: a\ntype: Box\nproperties:\n  title:\n    _js: return "from a";\n',
+      'pages/b.yaml': 'id: b\ntype: Box\nproperties:\n  title:\n    _js: return "from b";\n',
+    },
+    pages: { a: { refPath: 'pages/a.yaml' }, b: { refPath: 'pages/b.yaml' } },
+  });
+  const firstContext = app.context();
+  // While a is built, a config publish discards its context and b is built on
+  // the next one.
+  duringBuildOf({
+    app,
+    pageId: 'a',
+    onWrite: async () => {
+      app.publishRegistry();
+      expect(await app.request('b')).toBe('built');
+    },
+  });
+
+  expect(await app.request('a')).toBe('built');
+  expect(getBuildContext(app.buildDirectory, app.configDirectory)).not.toBe(firstContext);
+  const clientJsMap = fs.readFileSync(
+    path.join(app.buildDirectory, 'plugins', 'operators', 'clientJsMap.js'),
+    'utf8'
+  );
+  expect(clientJsMap).toContain('from b');
   app.remove();
 });
 

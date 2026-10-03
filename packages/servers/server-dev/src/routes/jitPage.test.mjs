@@ -25,8 +25,9 @@ jest.unstable_mockModule('@lowdefy/api', () => ({
 // No JIT build work in these tests — the route's build branch is exercised
 // elsewhere; here we only drive the getPageConfig status fork.
 const mockGetPageJitEnrichment = jest.fn(() => ({}));
+const mockBuildContext = { jsMap: { client: {} } };
 jest.unstable_mockModule('../../lib/server/jitPageBuilder.js', () => ({
-  default: jest.fn(async () => undefined),
+  buildPageWithContext: jest.fn(async () => ({ result: true, buildContext: mockBuildContext })),
   getPageJitEnrichment: mockGetPageJitEnrichment,
 }));
 
@@ -103,5 +104,15 @@ test('jitPageHandler folds _jsEntries and _dynamicIcons onto the ok response', a
     id: 'dashboard',
     _jsEntries: 'export default {};',
     _dynamicIcons: { Zap: { node: [['path', { d: 'M0 0' }]] } },
+  });
+});
+
+test('jitPageHandler reads the enrichment from the context the page was built on', async () => {
+  const pageConfig = { id: 'dashboard' };
+  mockGetPageConfig.mockResolvedValue({ status: 'ok', pageConfig });
+  await createApp().request('/api/page/dashboard');
+  expect(mockGetPageJitEnrichment).toHaveBeenLastCalledWith({
+    pageConfig,
+    buildContext: mockBuildContext,
   });
 });
