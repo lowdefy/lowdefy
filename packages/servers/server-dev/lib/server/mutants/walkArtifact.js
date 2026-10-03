@@ -17,10 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import getArtifactKind from './getArtifactKind.js';
-
-function isRoutineStep(node) {
-  return type.isObject(node) && type.isString(node.id) && type.isString(node.type);
-}
+import isRoutineStep from '../isRoutineStep.js';
 
 function rootScope({ artifact, root }) {
   const kind = getArtifactKind(artifact);
@@ -114,7 +111,7 @@ function childScope({ scope, key, child }) {
     case 'routine':
       // An array of routine items: steps, controls, or nested arrays.
       if (isRoutineStep(child)) {
-        return { ...scope, role: 'step', stepId: child.stepId ?? child.id, stepType: child.type };
+        return { ...scope, role: 'step', stepId: child.stepId, stepType: child.type };
       }
       if (type.isArray(child)) {
         return { ...scope, role: 'routine' };

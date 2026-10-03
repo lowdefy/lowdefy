@@ -31,7 +31,7 @@ async function addNestedEndpoints({ endpoints, readConfigFile }) {
   while (queue.length > 0) {
     const caller = queue.shift();
     const artifact = await readConfigFile(`api/${caller}.json`);
-    const callApiSteps = readRoutineSteps({ routine: artifact?.routine }).filter(
+    const callApiSteps = readRoutineSteps({ routine: artifact.routine }).filter(
       (step) => step.type === 'CallApi'
     );
     callApiSteps.forEach((step) => {

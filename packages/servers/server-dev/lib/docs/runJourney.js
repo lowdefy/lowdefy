@@ -1013,7 +1013,7 @@ async function runJourney({
       snapshots: actors.networkSnapshots(),
       observed: actors.observed(),
       readConfigFile,
-      requestSchemas: (await readConfigFile('plugins/requestSchemas.json')) ?? {},
+      requestSchemas: await readConfigFile('plugins/requestSchemas.json'),
     });
     const result = {
       pageId,
