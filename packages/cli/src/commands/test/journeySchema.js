@@ -42,10 +42,19 @@ const journeySchema = {
       type: 'string',
       errorMessage: { type: 'Journey "pageId" should be a string.' },
     },
-    user: {
-      anyOf: [{ type: 'object' }, { const: 'none' }],
+    // Must match the data set name pattern in @lowdefy/node-utils.
+    data: {
+      type: 'string',
+      pattern: '^[a-z0-9][a-z0-9_-]{0,63}$',
+      description:
+        "The data set (tests/data/<name>.yaml) the journey runs on, in a fresh database of its own. Every value the journey types, selects, clicks by text or asserts comes from the data set's fixtures or users, or is UI text, never from its snapshot.",
       errorMessage:
-        'Journey "user" should be an inline user object, e.g. {roles: [admin]}, or "none" to sign in through the app.',
+        'Journey "data" should be a data set name (tests/data/<name>.yaml): lowercase letters, digits, "-" and "_".',
+    },
+    user: {
+      anyOf: [{ type: 'object' }, { const: 'none' }, { type: 'string' }],
+      errorMessage:
+        'Journey "user" should be an inline user object, e.g. {roles: [admin]}, "none" to sign in through the app, or the name of a user in the journey\'s data set.',
     },
     urlQuery: {
       type: 'object',

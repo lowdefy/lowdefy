@@ -17,6 +17,8 @@
 import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
 
+import formatJourneyDataSet from './formatJourneyDataSet.js';
+
 function toCompactYaml(value) {
   if (type.isUndefined(value)) {
     return 'undefined';
@@ -28,13 +30,21 @@ function toCompactYaml(value) {
   return document.toString({ lineWidth: 0 }).trim();
 }
 
-// Returns the lines to print for one journey result: a single PASS line, or a FAIL
-// line followed by an indented explanation of what went wrong.
-function formatJourneyResult({ result }) {
+// Returns the lines to print for one journey result: a PASS line, or a FAIL line followed by an
+// indented explanation of what went wrong. A data set and its warnings are printed once per run:
+// `seen` is shared across the run's results.
+function formatJourneyResult({ result, seen = new Set() }) {
   if (result.passed) {
-    return [`PASS  ${result.name}  (${result.stepCount} steps, ${result.durationMs}ms)`];
+    return [
+      `PASS  ${result.name}  (${result.stepCount} steps, ${result.durationMs}ms)`,
+      ...formatJourneyDataSet({ result, seen }),
+    ];
   }
-  const lines = [`FAIL  ${result.name}`, `      file: ${result.filePath}`];
+  const lines = [
+    `FAIL  ${result.name}`,
+    ...formatJourneyDataSet({ result, seen }),
+    `      file: ${result.filePath}`,
+  ];
   const failure = result.failure;
   if (type.isObject(failure)) {
     lines.push(`      step ${failure.index}: ${toCompactYaml(failure.step)}`);

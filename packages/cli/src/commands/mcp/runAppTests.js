@@ -36,12 +36,13 @@ async function runAppTests({ configDirectory, url, filter }) {
     };
   }
   const results = [];
+  const seen = new Set();
   for (const { suite, item } of selected) {
     const result = await suite.run({ context, item, url });
     results.push({
       ...result,
       filePath: path.relative(configDirectory, result.filePath),
-      report: suite.format({ result }).join('\n'),
+      report: suite.format({ result, seen }).join('\n'),
     });
   }
   const passed = results.filter((result) => result.passed).length;

@@ -55,6 +55,7 @@ async function runJourney({ item, url }) {
   try {
     response = await axios.post(`${url}/lowdefy-docs/journey`, {
       pageId: journey.pageId,
+      data: journey.data,
       steps: journey.steps,
       user: journey.user,
       urlQuery: journey.urlQuery,
@@ -75,8 +76,10 @@ async function runJourney({ item, url }) {
   if (!type.isNone(result.error)) {
     return { name, filePath, passed: false, stepCount, durationMs, message: result.error };
   }
+  // The data set the server loaded and its warnings (snapshot age, colliding connections).
+  const dataSet = { data: result.data, warnings: result.warnings };
   if (result.passed === true) {
-    return { name, filePath, passed: true, stepCount, durationMs };
+    return { name, filePath, passed: true, stepCount, durationMs, ...dataSet };
   }
   return {
     name,
@@ -84,6 +87,7 @@ async function runJourney({ item, url }) {
     passed: false,
     stepCount,
     durationMs,
+    ...dataSet,
     failure: result.failure,
     message: result.failure?.message,
   };

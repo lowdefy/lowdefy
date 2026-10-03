@@ -79,11 +79,12 @@ async function test({ context }) {
   process.once('SIGINT', onSigint);
 
   const results = [];
+  const seen = new Set();
   try {
     for (const { suite, item } of selected) {
       const result = await suite.run({ context, item, url: server.url });
       results.push(result);
-      const lines = suite.format({ result });
+      const lines = suite.format({ result, seen });
       if (result.passed) {
         lines.forEach((line) => context.logger.info(line));
       } else {

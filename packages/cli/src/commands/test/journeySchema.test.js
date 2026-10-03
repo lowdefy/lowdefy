@@ -89,11 +89,11 @@ test.each([0, 60001, 2.5, '5000'])('journeySchema rejects a timeout of %j', (tim
   );
 });
 
-test.each(['admin', ['admin'], true])('journeySchema rejects user %j', (user) => {
+test.each([['admin'], true, 3])('journeySchema rejects user %j', (user) => {
   const result = validateJourney({ journey: { ...minimalJourney, user } });
   expect(result.valid).toBe(false);
   expect(result.message).toContain(
-    'Journey "user" should be an inline user object, e.g. {roles: [admin]}, or "none" to sign in through the app.'
+    'Journey "user" should be an inline user object, e.g. {roles: [admin]}, "none" to sign in through the app, or the name of a user in the journey\'s data set.'
   );
 });
 
@@ -138,4 +138,16 @@ test('journeySchema rejects a non-object journey', () => {
   const result = validateJourney({ journey: 'not a journey' });
   expect(result.valid).toBe(false);
   expect(result.message).toContain('Journey should be an object.');
+});
+
+test('journeySchema accepts data and a data set user name', () => {
+  expect(
+    validateJourney({ journey: { ...minimalJourney, data: 'staging-sample', user: 'member' } })
+  ).toEqual({ valid: true });
+});
+
+test.each(['../x', 'Staging', '-x', ''])('journeySchema refuses data %j', (data) => {
+  const result = validateJourney({ journey: { ...minimalJourney, data } });
+  expect(result.valid).toBe(false);
+  expect(result.message).toMatch('Journey "data" should be a data set name');
 });
