@@ -31,6 +31,7 @@ async function globalSetup() {
   process.env.LOWDEFY_JOURNEY_FIXTURE_URL = fixture.url;
   process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY = fixture.configDirectory;
   process.env.LOWDEFY_JOURNEY_FIXTURE_DATABASE_URI = fixture.uri;
+  process.env.LOWDEFY_JOURNEY_FIXTURE_LOG = fixture.logPath;
 }
 
 export default globalSetup;

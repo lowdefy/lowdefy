@@ -25,6 +25,7 @@ import { fileURLToPath } from 'node:url';
 
 const fixtureUrl = process.env.LOWDEFY_JOURNEY_FIXTURE_URL;
 const configDirectory = process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY;
+const serverLog = process.env.LOWDEFY_JOURNEY_FIXTURE_LOG;
 const fixtureTest = fixtureUrl === undefined ? test.skip : test;
 const CLI = fileURLToPath(new URL('../../dist/index.js', import.meta.url));
 
@@ -116,9 +117,28 @@ fixtureTest(
   }
 );
 
+function countSaveCalls() {
+  return fs.readFileSync(serverLog, 'utf8').split('requestId: save_item').length - 1;
+}
+
+// Resolves once the dev server has logged `more` save calls after `from`. The
+// harden run's first save is its baseline's; the second is a mutant pair's, so
+// by then the mutants are listed and pairs are running, on a fast machine or a
+// slow one.
+async function waitForSaveCalls({ from, more }) {
+  const deadline = Date.now() + 120000;
+  while (countSaveCalls() < from + more) {
+    if (Date.now() > deadline) {
+      throw new Error(`The harden run did not reach its mutant pairs. See ${serverLog}.`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 200));
+  }
+}
+
 fixtureTest('harden carries its verdicts over a page edit mid-run and finishes', async () => {
   const pagePath = path.join(configDirectory, 'pages', 'second.yaml');
   const original = fs.readFileSync(pagePath, 'utf8');
+  const savesBefore = countSaveCalls();
   const running = runCli([
     'journeys',
     'harden',
@@ -135,8 +155,8 @@ fixtureTest('harden carries its verdicts over a page edit mid-run and finishes',
     'error',
   ]);
   try {
-    // After the baseline and a few pairs, the developer edits a page.
-    await new Promise((resolve) => setTimeout(resolve, 20000));
+    // Once mutant pairs are running, the developer edits a page.
+    await waitForSaveCalls({ from: savesBefore, more: 2 });
     fs.writeFileSync(pagePath, original.replace('content: Second page', 'content: Second page.'));
     const { code, stdout } = await running;
     expect(code).toBe(0);
