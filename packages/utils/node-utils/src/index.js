@@ -57,6 +57,7 @@ import writeFile from './writeFile.js';
 import watchOwner from './watchOwner.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 import compileTrace from './journeyCompiler/compileTrace.js';
+import collectKnownText from './journeyText/collectKnownText.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
 import failurePathKey from './journeyEvidence/failurePathKey.js';
 import isBackedBy from './journeyEvidence/isBackedBy.js';
@@ -78,6 +79,7 @@ export {
   checkEnvironmentGuards,
   cleanDirectory,
   collectEnvironmentGuards,
+  collectKnownText,
   compareProcessStartTimes,
   compileTrace,
   copyFileOrDirectory,

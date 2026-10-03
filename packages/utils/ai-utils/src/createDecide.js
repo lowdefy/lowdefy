@@ -17,9 +17,8 @@
 import { type } from '@lowdefy/helpers';
 
 import buildCallLimits from './buildCallLimits.js';
+import decide from './decide.js';
 import decideSchema from './DecideSchema.js';
-import decideWithEvaluation from './decideWithEvaluation.js';
-import decideWithStructuredOutput from './decideWithStructuredOutput.js';
 
 // Builds the Decide request resolver for an AI connection: typed questions
 // about a state in, typed answers with a confidence out
@@ -36,14 +35,16 @@ function createDecide({ createProvider, backends = ['structured-output'] }) {
     const options = buildCallLimits({ connection, request, signal });
     if (!type.isNone(request.maxRetries)) options.maxRetries = request.maxRetries;
     if (!type.isNone(request.providerOptions)) options.providerOptions = request.providerOptions;
-    const { answers, usage } =
-      backend === 'evaluation'
-        ? await decideWithEvaluation({
-            model: provider.evaluationModel(request.model),
-            request,
-            options,
-          })
-        : await decideWithStructuredOutput({ model: provider(request.model), request, options });
+    const { answers, usage } = await decide({
+      model:
+        backend === 'evaluation'
+          ? provider.evaluationModel(request.model)
+          : provider(request.model),
+      backend,
+      state: request.state,
+      questions: request.questions,
+      options,
+    });
     return { ...answers, usage };
   }
 

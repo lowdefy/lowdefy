@@ -46,6 +46,7 @@ import i18nConfig from '../build/i18n.js';
 import loadDynamicJsMap from './loadDynamicJsMap.js';
 import logRequest from './log/logRequest.js';
 import { readMutantRun } from './mutants/mutantRuns.js';
+import readRecordingCookie from './recording/readRecordingCookie.js';
 import scrubSecrets from './scrubSecrets.js';
 import notifications, {
   interpolateProperties,
@@ -123,6 +124,9 @@ async function createLowdefyContext({ c, user }) {
   // With no journey cookie to forward it carries no Cookie header at all.
   const journeyCookies = forwardJourneyCookies(c.req.header('cookie'));
   context.loopbackHeaders = journeyCookies === '' ? {} : { cookie: journeyCookies };
+  // Which browser context sent the request: errors it causes are stamped with
+  // it, so an explorer walk claims only its own (see createHandleError).
+  context.recording = readRecordingCookie(c.req.header('cookie'));
   context.handleError = createHandleError({ context });
   const mockUser = getMockUser();
   const headlessUser = getHeadlessUser(c);
