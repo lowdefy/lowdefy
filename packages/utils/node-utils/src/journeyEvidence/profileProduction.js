@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import failurePathKey from './failurePathKey.js';
+
 const TOP_FLOWS_PER_PAGE = 20;
 
 function round2(value) {
@@ -73,17 +75,11 @@ function rankFlows({ segments }) {
   );
 }
 
-function failureKey({ path }) {
-  const event =
-    path.page === 'app' ? `app.${path.event}` : `${path.page}.${path.block_id}.${path.event}`;
-  return path.invalid_blocks.length === 0 ? event : `${event} [${path.invalid_blocks.join(', ')}]`;
-}
-
 function rankFailurePaths({ segments }) {
   const failing = segments.filter((segment) => !type.isUndefined(segment.failure_path));
   const groups = groupBy({
     items: failing,
-    keyOf: (segment) => failureKey({ path: segment.failure_path }),
+    keyOf: (segment) => failurePathKey({ path: segment.failure_path }),
   });
   return [...groups.entries()]
     .map(([key, members]) => ({

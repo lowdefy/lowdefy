@@ -40,8 +40,20 @@ const measureSchema = {
         properties: { key: { type: 'string' }, count: { type: 'integer', minimum: 0 } },
       },
     },
-    mode: { enum: ['reached', 'asserted'] },
+    mode: { enum: ['reached', 'measured'] },
     note: { type: 'string' },
+    run: { type: 'string' },
+    measured: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['covered', 'total', 'share', 'run'],
+      properties: {
+        covered: { type: 'integer', minimum: 0 },
+        total: { type: 'integer', minimum: 0 },
+        share: { type: 'number', minimum: 0, maximum: 1 },
+        run: { type: 'string' },
+      },
+    },
   },
 };
 

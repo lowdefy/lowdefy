@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 
 import computeCoverage from './coverageReport/computeCoverage.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
+import readMeasuredRun from './readMeasuredRun.js';
 import readMutationReport from './readMutationReport.js';
 import readProductionSegments from './readProductionSegments.js';
 import writeCoverageReport from './coverageReport/writeCoverageReport.js';
@@ -45,6 +46,14 @@ function logSummary({ logger, measures, mutation, reportPath }) {
     const entry = measures[name];
     const mode = type.isString(entry.mode) ? `, ${entry.mode}` : '';
     logger.info(`${name.padEnd(12)} ${entry.covered}/${entry.total} (${entry.share}${mode})`);
+    if (!type.isUndefined(entry.measured)) {
+      const { measured } = entry;
+      logger.info(
+        `${''.padEnd(12)} ${measured.covered}/${measured.total} (${
+          measured.share
+        }, measured in run ${measured.run})`
+      );
+    }
     entry.uncovered.slice(0, TOP_UNCOVERED).forEach((item) => {
       logger.info(`  ${String(item.count).padStart(5)}  ${describeItem({ name, item })}`);
     });
@@ -80,7 +89,12 @@ async function journeysCoverage({ context }) {
   }));
   const { segments, window } = readProductionSegments({ context });
   const profile = profileProduction({ segments });
-  const measures = computeCoverage({ journeys, segments, profile });
+  const measures = computeCoverage({
+    journeys,
+    segments,
+    profile,
+    measuredRun: readMeasuredRun({ context }),
+  });
   const mutation = scoreMutation({
     report: readMutationReport({ directories: context.directories }),
   });

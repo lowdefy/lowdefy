@@ -38,8 +38,10 @@ import writeFile from './writeFile.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 import compileTrace from './journeyCompiler/compileTrace.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
+import failurePathKey from './journeyEvidence/failurePathKey.js';
 import isBackedBy from './journeyEvidence/isBackedBy.js';
 import journeySequence from './journeyCompiler/journeySequence.js';
+import listFailurePaths from './journeyCompiler/listFailurePaths.js';
 import parseTraceLines from './journeyCompiler/parseTraceLines.js';
 import profileProduction from './journeyEvidence/profileProduction.js';
 import stepIdentity from './journeyCompiler/stepIdentity.js';
@@ -58,6 +60,7 @@ export {
   copyFileOrDirectory,
   createClientAddressResolver,
   createSecretScrubber,
+  failurePathKey,
   findAvailablePort,
   findPlaceholderStep,
   getDevInstancePath,
@@ -70,6 +73,7 @@ export {
   isPidAlive,
   isPortAvailable,
   journeySequence,
+  listFailurePaths,
   listRecordingFiles,
   parseIpRange,
   parseTraceLines,

@@ -54,6 +54,7 @@ beforeEach(() => {
     directories: {
       config: configDirectory,
       journeys: path.join(configDirectory, 'tests', 'journeys'),
+      test: path.join(configDirectory, '.lowdefy', 'test'),
       traces: path.join(configDirectory, '.lowdefy', 'traces'),
     },
     options: { port: 3000 },
@@ -377,6 +378,14 @@ test('a full-suite run records every journey into one run on its first repetitio
       `${recordings[0].run}.jsonl`
     )}.`
   );
+  const testRun = JSON.parse(
+    fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'run.json'), 'utf8')
+  );
+  expect(testRun.run).toBe(recordings[0].run);
+  expect(Object.keys(testRun.journeys)).toEqual([
+    'tests/journeys/a.yaml#first journey',
+    'tests/journeys/b.yaml#second journey',
+  ]);
 });
 
 test('a --filter run and a run of named paths record nothing', async () => {

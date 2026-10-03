@@ -27,6 +27,7 @@ import selectTests from './selectTests.js';
 import startDevServer from './startDevServer.js';
 import summariseResults from './summariseResults.js';
 import writeExercised from './writeExercised.js';
+import writeTestRun from './writeTestRun.js';
 
 function trimTrailingSlash(url) {
   return url.replace(/\/+$/, '');
@@ -139,6 +140,7 @@ async function test({ context }) {
       results,
       buildId: await fetchBuildId({ url: server.url }),
     });
+    writeTestRun({ directories: context.directories, results });
   } finally {
     process.removeListener('SIGINT', onSigint);
     if (!interrupted) {

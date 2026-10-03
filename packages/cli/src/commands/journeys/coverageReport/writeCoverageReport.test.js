@@ -83,3 +83,42 @@ test('coverageReportSchema refuses a report with an unknown top-level key', () =
   });
   expect(() => validate({ schema: coverageReportSchema, data: { ...report, extra: 1 } })).toThrow();
 });
+
+const RUN = '20261003T090000Z-aaaaaa';
+
+test('coverageReportSchema accepts the measured interaction share and measured failure coverage', () => {
+  const { report } = writeCoverageReport({
+    directories: { test: test_directory },
+    generated: 'x',
+    ...input,
+    measures: {
+      ...input.measures,
+      interaction: { ...measure, measured: { covered: 1, total: 2, share: 0.5, run: RUN } },
+      failure: { mode: 'measured', note: 'measured', run: RUN, ...measure },
+    },
+  });
+  expect(validate({ schema: coverageReportSchema, data: report })).toEqual({ valid: true });
+});
+
+test('coverageReportSchema refuses a failure mode other than reached or measured', () => {
+  const { report } = writeCoverageReport({
+    directories: { test: test_directory },
+    generated: 'x',
+    ...input,
+    measures: { ...input.measures, failure: { mode: 'asserted', note: 'x', ...measure } },
+  });
+  expect(() => validate({ schema: coverageReportSchema, data: report })).toThrow();
+});
+
+test('coverageReportSchema refuses a measured interaction share without its run', () => {
+  const { report } = writeCoverageReport({
+    directories: { test: test_directory },
+    generated: 'x',
+    ...input,
+    measures: {
+      ...input.measures,
+      interaction: { ...measure, measured: { covered: 1, total: 2, share: 0.5 } },
+    },
+  });
+  expect(() => validate({ schema: coverageReportSchema, data: report })).toThrow();
+});

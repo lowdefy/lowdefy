@@ -24,6 +24,7 @@ import runRepeated from '../test/runRepeated.js';
 import selectTests from '../test/selectTests.js';
 import summariseResults from '../test/summariseResults.js';
 import writeExercised from '../test/writeExercised.js';
+import writeTestRun from '../test/writeTestRun.js';
 import fetchBuildId from '../test/fetchBuildId.js';
 
 function noTestsSummary({ filter, paths }) {
@@ -73,10 +74,11 @@ async function runAppTests({ configDirectory, url, filter, paths, repeat: repeat
     results,
     buildId: await fetchBuildId({ url }),
   });
+  writeTestRun({ directories: context.directories, results });
   return {
     summary: summariseResults({ results }).text,
     results: runs.map(({ suite, result }) => {
-      const { journey, newestPassed, ...rest } = result;
+      const { journey, newestPassed, recorded, ...rest } = result;
       return {
         ...rest,
         filePath: path.relative(configDirectory, result.filePath),
