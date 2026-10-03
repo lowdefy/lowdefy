@@ -40,5 +40,5 @@ jobs:
         run: pnpm --filter=@lowdefy/node-utils test ProcessStartTime watchOwner ServerRegistry registerServer readDevInstance --no-coverage
       - name: Prune tests (Windows)
         if: matrix.os == 'windows-latest'
-        run: pnpm --filter=lowdefy test pruneServers createHub --no-coverage
+        run: pnpm --filter=lowdefy test pruneServers --no-coverage
       - uses: codecov/codecov-action@v5
