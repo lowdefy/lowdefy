@@ -15,16 +15,25 @@
 */
 
 import { spawnSync } from 'child_process';
+import { getProcessStartTime } from '@lowdefy/node-utils';
 
 import parseProcessTable from './parseProcessTable.js';
 
-function readProcessTable() {
+function readProcessTable({ platform = process.platform } = {}) {
   const result = spawnSync('ps', ['-A', '-o', 'pid=,ppid=,pgid=,lstart=,command='], {
     encoding: 'utf8',
     env: { ...process.env, LC_ALL: 'C', TZ: 'UTC' },
     maxBuffer: 64 * 1024 * 1024,
   });
-  return parseProcessTable(result.stdout ?? '');
+  const processes = parseProcessTable(result.stdout ?? '');
+  if (platform !== 'linux') {
+    return processes;
+  }
+  // Linux lstart moves with the wall clock; records hold the start time read from /proc.
+  return processes.map((entry) => ({
+    ...entry,
+    processStartTime: getProcessStartTime({ pid: entry.pid, platform }),
+  }));
 }
 
 export default readProcessTable;

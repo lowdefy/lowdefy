@@ -29,6 +29,7 @@ import getSecretsFromEnv from './getSecretsFromEnv.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPidAlive from './isPidAlive.js';
 import isProcessAlive from './isProcessAlive.js';
+import isProcessStartTime from './isProcessStartTime.js';
 import isPortAvailable from './isPortAvailable.js';
 import parseIpRange from './parseIpRange.js';
 import parsePsStartTime from './parsePsStartTime.js';
@@ -60,6 +61,7 @@ export {
   installIfPackageJsonChanged,
   isPidAlive,
   isProcessAlive,
+  isProcessStartTime,
   isPortAvailable,
   parseIpRange,
   parsePsStartTime,

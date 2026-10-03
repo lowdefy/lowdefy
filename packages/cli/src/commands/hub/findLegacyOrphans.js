@@ -29,7 +29,7 @@ function findLegacyOrphans({ registeredPids, hubPids, platform = process.platfor
   if (platform !== 'darwin' && platform !== 'linux') {
     return [];
   }
-  const processes = readProcessTable();
+  const processes = readProcessTable({ platform });
   const serverPids = processes
     .filter((entry) => SERVER_COMMAND.test(entry.command) || VITE_COMMAND.test(entry.command))
     .map((entry) => entry.pid);

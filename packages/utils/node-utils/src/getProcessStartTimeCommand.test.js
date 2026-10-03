@@ -18,14 +18,15 @@ import getProcessStartTimeCommand from './getProcessStartTimeCommand.js';
 import parsePsStartTime from './parsePsStartTime.js';
 import parseWmiStartTime from './parseWmiStartTime.js';
 
-test('getProcessStartTimeCommand reads lstart from ps in the C locale and UTC on macOS and Linux', () => {
-  ['darwin', 'linux'].forEach((platform) => {
-    const { command, args, options, parse } = getProcessStartTimeCommand({ pid: 4242, platform });
-    expect(command).toEqual('ps');
-    expect(args).toEqual(['-o', 'lstart=', '-p', '4242']);
-    expect(options.env).toMatchObject({ LC_ALL: 'C', TZ: 'UTC' });
-    expect(parse).toBe(parsePsStartTime);
+test('getProcessStartTimeCommand reads lstart from ps in the C locale and UTC on macOS', () => {
+  const { command, args, options, parse } = getProcessStartTimeCommand({
+    pid: 4242,
+    platform: 'darwin',
   });
+  expect(command).toEqual('ps');
+  expect(args).toEqual(['-o', 'lstart=', '-p', '4242']);
+  expect(options.env).toMatchObject({ LC_ALL: 'C', TZ: 'UTC' });
+  expect(parse).toBe(parsePsStartTime);
 });
 
 test('getProcessStartTimeCommand reads the raw WMI creation time, with its UTC offset, on Windows', () => {

@@ -18,7 +18,8 @@ import { parsePsStartTime } from '@lowdefy/node-utils';
 
 // Parses `ps -A -o pid=,ppid=,pgid=,lstart=,command=` read with LC_ALL=C and TZ=UTC. lstart is
 // five fields ("Fri Oct  2 20:55:31 2026"), read as epoch milliseconds the way
-// getProcessStartTime reads it, so it compares equal to what every registry record holds.
+// getProcessStartTime reads it on macOS, so it compares equal to what registry records hold
+// there. On Linux readProcessTable replaces it with the start time read from /proc.
 const LINE = /^\s*(\d+)\s+(\d+)\s+(\d+)\s+(\w{3}\s+\w{3}\s+\d+\s+\d+:\d+:\d+\s+\d{4})\s+(.*)$/;
 
 function parseProcessTable(text) {

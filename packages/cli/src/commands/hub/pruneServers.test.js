@@ -22,6 +22,7 @@ import path from 'path';
 const { default: compareProcessStartTimes } = await import(
   '@lowdefy/node-utils/compareProcessStartTimes.js'
 );
+const { default: isProcessStartTime } = await import('@lowdefy/node-utils/isProcessStartTime.js');
 
 // pid -> start time (epoch milliseconds) of the processes "running" in each test.
 let running;
@@ -30,6 +31,7 @@ const mockFindLegacyOrphans = jest.fn();
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   compareProcessStartTimes,
   isPidAlive: (pid) => running.has(pid),
+  isProcessStartTime,
   readProcessStartTime: async ({ pid }) => running.get(pid) ?? null,
   readServerRegistry: async () => records,
 }));
@@ -285,4 +287,22 @@ test('pruneServers lists an orphaned Vite child, and with kill signals it only w
   const [stopped] = await pruneServers({ directory, includeLegacy: true, kill: true, graceMs: 50 });
   expect(signals).toEqual([{ pid: 103, signal: 'SIGTERM' }]);
   expect(stopped.result).toEqual('stopped');
+});
+
+test('pruneServers with kill stops a server identified by its Linux boot id and ticks', async () => {
+  const linuxStart = 'linux:3f2b8c1e-5d4a-4f6b-9c7d-0e1f2a3b4c5d:987654';
+  running.set(100, linuxStart);
+  records = [{ ...record({ pid: 100, prunable: true }), processStartTime: linuxStart }];
+  const [candidate] = await pruneServers({ directory, kill: true, graceMs: 50 });
+  expect(signals).toEqual([{ pid: 100, signal: 'SIGTERM' }]);
+  expect(candidate.result).toEqual('stopped');
+});
+
+test('pruneServers with kill never signals a server whose record holds epoch milliseconds where Linux now reads ticks', async () => {
+  running.set(100, 'linux:3f2b8c1e-5d4a-4f6b-9c7d-0e1f2a3b4c5d:987654');
+  records = [record({ pid: 100, prunable: true })];
+  const [candidate] = await pruneServers({ directory, kill: true, graceMs: 50 });
+  expect(signals).toEqual([]);
+  expect(candidate.result).toEqual('unverified');
+  expect(running.has(100)).toBe(true);
 });

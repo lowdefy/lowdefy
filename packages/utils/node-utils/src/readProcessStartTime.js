@@ -18,12 +18,17 @@ import { execFile } from 'child_process';
 import { type } from '@lowdefy/helpers';
 
 import getProcessStartTimeCommand from './getProcessStartTimeCommand.js';
+import readLinuxProcessStartTime from './readLinuxProcessStartTime.js';
 
 // getProcessStartTime without blocking the event loop, for a check a running
 // server repeats (watchOwner) and for the hub: on Windows each read starts
 // PowerShell. Never rejects; a failed read resolves to null.
-function readProcessStartTime({ pid }) {
-  const { command, args, options, parse } = getProcessStartTimeCommand({ pid });
+function readProcessStartTime({ pid, platform = process.platform }) {
+  // Two small reads from /proc, no child process.
+  if (platform === 'linux') {
+    return Promise.resolve(readLinuxProcessStartTime({ pid }));
+  }
+  const { command, args, options, parse } = getProcessStartTimeCommand({ pid, platform });
   return new Promise((resolve) => {
     execFile(command, args, { ...options, encoding: 'utf8' }, (error, stdout) => {
       // A read that timed out or failed may have printed part of a start

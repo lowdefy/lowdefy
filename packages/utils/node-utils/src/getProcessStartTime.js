@@ -18,13 +18,18 @@ import { spawnSync } from 'child_process';
 import { type } from '@lowdefy/helpers';
 
 import getProcessStartTimeCommand from './getProcessStartTimeCommand.js';
+import readLinuxProcessStartTime from './readLinuxProcessStartTime.js';
 
-// The process's start time in epoch milliseconds, equal across reads and
-// readers for one process whatever their time zone. Null when it cannot be
-// read: the process is gone, or ps (PowerShell on Windows) failed. Callers
-// treat null as "unknown", never as proof either way.
-function getProcessStartTime({ pid }) {
-  const { command, args, options, parse } = getProcessStartTimeCommand({ pid });
+// The process's start time, equal across reads and readers for one process
+// whatever their time zone or wall clock: epoch milliseconds on macOS and
+// Windows, boot id and ticks since boot on Linux (readLinuxProcessStartTime).
+// Null when it cannot be read: the process is gone, or ps (PowerShell on
+// Windows) failed. Callers treat null as "unknown", never as proof either way.
+function getProcessStartTime({ pid, platform = process.platform }) {
+  if (platform === 'linux') {
+    return readLinuxProcessStartTime({ pid });
+  }
+  const { command, args, options, parse } = getProcessStartTimeCommand({ pid, platform });
   const result = spawnSync(command, args, { ...options, encoding: 'utf8' });
   // A read that timed out or failed may have printed part of a start time,
   // which would compare unequal and be taken for another process.

@@ -20,6 +20,7 @@ import { spawn } from 'child_process';
 import os from 'os';
 import path from 'path';
 import { wait } from '@lowdefy/helpers';
+import { getProcessStartTime } from '@lowdefy/node-utils';
 
 import createHub from './createHub.js';
 
@@ -178,6 +179,16 @@ test('a new hub adopts running servers from the registry and can stop them', asy
   expect(await adopting.stop({ configDirectory })).toEqual({ stopped: true });
 });
 
+// A start time in the form this platform reads, but not the one the pid's process has: on
+// Linux, the same ticks in another boot.
+function otherStartTime(pid) {
+  const startTime = getProcessStartTime({ pid });
+  if (typeof startTime === 'string') {
+    return startTime.replace(/^linux:[^:]+:/, 'linux:00000000-0000-0000-0000-000000000000:');
+  }
+  return 0;
+}
+
 test('a registry entry whose pid now belongs to another process is dropped, never signalled', async () => {
   fs.mkdirSync(path.join(home, 'hub'), { recursive: true });
   fs.writeFileSync(
@@ -185,7 +196,7 @@ test('a registry entry whose pid now belongs to another process is dropped, neve
     JSON.stringify({
       ports: {},
       instances: {
-        [configDirectory]: { pid: process.pid, processStartTime: 0 },
+        [configDirectory]: { pid: process.pid, processStartTime: otherStartTime(process.pid) },
       },
     })
   );

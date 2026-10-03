@@ -23,14 +23,18 @@ import parseWmiStartTime from './parseWmiStartTime.js';
 // the pid in a record can belong to something else entirely. The pid plus its
 // start time does.
 //
-// Start times are compared as epoch milliseconds, never as local time: hubs,
+// Start times are compared as absolute instants, never as local time: hubs,
 // shims and CLIs run with the time zone and locale of whichever session
 // started them, and a time zone or daylight saving change must not turn one
 // process into another - a hub would drop, orphaning, every server it should
 // adopt.
 //
-// macOS and Linux: ps prints lstart in the caller's time zone and locale, so
-// both are pinned (C, UTC) and the text is read as UTC.
+// This is the command for macOS and Windows. Linux reads /proc instead
+// (readLinuxProcessStartTime): its ps derives lstart from the wall clock.
+//
+// macOS: ps prints lstart in the caller's time zone and locale, so both are
+// pinned (C, UTC) and the text is read as UTC. The kernel keeps the start as
+// an absolute time, so a clock step does not move it.
 //
 // Windows has no ps. WMI's creation time comes as its raw CIM_DATETIME, which
 // carries its own UTC offset (Get-WmiObject; Get-CimInstance would hand back a

@@ -14,12 +14,11 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
 import compareProcessStartTimes from './compareProcessStartTimes.js';
 import createStartTimeCache from './createStartTimeCache.js';
 import getProcessStartTime from './getProcessStartTime.js';
 import isPidAlive from './isPidAlive.js';
+import isProcessStartTime from './isProcessStartTime.js';
 import readDevInstanceRecord from './readDevInstanceRecord.js';
 
 const readStartTime = createStartTimeCache({ read: getProcessStartTime });
@@ -34,7 +33,7 @@ function isRecordProcess(record) {
   if (!isPidAlive(record.pid)) {
     return false;
   }
-  if (!type.isInt(record.processStartTime)) {
+  if (!isProcessStartTime(record.processStartTime)) {
     return true;
   }
   const startTime = readStartTime({ pid: record.pid });

@@ -19,6 +19,7 @@ import path from 'path';
 import { type } from '@lowdefy/helpers';
 
 import isProcessAlive from './isProcessAlive.js';
+import isProcessStartTime from './isProcessStartTime.js';
 
 function listRecordFiles({ directory }) {
   try {
@@ -62,11 +63,10 @@ async function readServerRegistry({ directory }) {
       pid: record.owner.pid,
       processStartTime: record.owner.processStartTime,
     });
-    // Without a start time in epoch milliseconds (unreadable when the record
-    // was written, or one an older Lowdefy wrote as local time) the pid alone
-    // cannot prove this is still the server: a reused pid would be taken for
-    // it and signalled.
-    const provable = type.isInt(record.processStartTime);
+    // Without a start time (unreadable when the record was written, or one an
+    // older Lowdefy wrote in another format) the pid alone cannot prove this
+    // is still the server: a reused pid would be taken for it and signalled.
+    const provable = isProcessStartTime(record.processStartTime);
     records.push({ ...record, recordPath, ownerAlive, prunable: provable && !ownerAlive });
   }
   return records;

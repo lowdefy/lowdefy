@@ -20,6 +20,7 @@ import { spawn } from 'child_process';
 import { type, wait } from '@lowdefy/helpers';
 import {
   compareProcessStartTimes,
+  isProcessStartTime,
   readDevInstanceAsync,
   readProcessStartTime,
 } from '@lowdefy/node-utils';
@@ -57,7 +58,7 @@ async function isManagedAlive(managed) {
   if (!isGroupAlive(managed.pid)) {
     return false;
   }
-  if (!type.isInt(managed.processStartTime)) {
+  if (!isProcessStartTime(managed.processStartTime)) {
     return true;
   }
   const startTime = await readProcessStartTime({ pid: managed.pid });

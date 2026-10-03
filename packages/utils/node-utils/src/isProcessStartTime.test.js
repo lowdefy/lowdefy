@@ -16,18 +16,21 @@
 
 import isProcessStartTime from './isProcessStartTime.js';
 
-// Anything that is not a start time - null from a read that failed, or a format an older
-// Lowdefy recorded (local time, or epoch milliseconds read from the Linux wall clock) -
-// cannot be compared, so it proves nothing either way: 'unknown', never 'different'.
-function compareProcessStartTimes({ recorded, current }) {
-  if (
-    !isProcessStartTime(recorded) ||
-    !isProcessStartTime(current) ||
-    typeof recorded !== typeof current
-  ) {
-    return 'unknown';
-  }
-  return recorded === current ? 'same' : 'different';
-}
+test('isProcessStartTime accepts epoch milliseconds and the Linux boot id with ticks', () => {
+  expect(isProcessStartTime(1790000000000)).toBe(true);
+  expect(isProcessStartTime('linux:3f2b8c1e-5d4a-4f6b-9c7d-0e1f2a3b4c5d:987654')).toBe(true);
+});
 
-export default compareProcessStartTimes;
+test('isProcessStartTime rejects a failed read and the formats older versions wrote', () => {
+  [
+    null,
+    undefined,
+    1790000000000.5,
+    'Fri Oct  2 20:55:31 2026',
+    '2026-10-02T20:55:31.0000000Z',
+    'linux:3f2b8c1e-5d4a-4f6b-9c7d-0e1f2a3b4c5d:',
+    { bootId: 'x', ticks: 1 },
+  ].forEach((value) => {
+    expect(isProcessStartTime(value)).toBe(false);
+  });
+});

@@ -14,21 +14,15 @@
   limitations under the License.
 */
 
-import readProcessTable from './readProcessTable.js';
-import selectOrphanedClis from './selectOrphanedClis.js';
+import { type } from '@lowdefy/helpers';
 
-// Registered servers kept alive only by an orphaned CLI (see selectOrphanedClis).
-// macOS and Linux only.
-function findOrphanedClis({ records, hubPids, platform = process.platform }) {
-  if (platform !== 'darwin' && platform !== 'linux') {
-    return [];
-  }
-  return selectOrphanedClis({
-    processes: readProcessTable({ platform }),
-    records,
-    hubPids,
-    platform,
-  });
+const LINUX_START_TIME = /^linux:[0-9a-f-]+:\d+$/;
+
+// A start time a reader can compare: epoch milliseconds (macOS, Windows), or the boot id and
+// clock ticks since boot that readLinuxProcessStartTime reads on Linux. Anything else - null
+// from a failed read, or a format an older Lowdefy wrote - is not one.
+function isProcessStartTime(value) {
+  return type.isInt(value) || (type.isString(value) && LINUX_START_TIME.test(value));
 }
 
-export default findOrphanedClis;
+export default isProcessStartTime;

@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
 import compareProcessStartTimes from './compareProcessStartTimes.js';
 import isPidAlive from './isPidAlive.js';
+import isProcessStartTime from './isProcessStartTime.js';
 import readProcessStartTime from './readProcessStartTime.js';
 
 // A pid plus its start time names one process; the pid alone can be reused.
@@ -31,7 +30,7 @@ async function isProcessAlive({ pid, processStartTime }) {
     return false;
   }
   // Nothing to compare, so no need to read.
-  if (!type.isInt(processStartTime)) {
+  if (!isProcessStartTime(processStartTime)) {
     return true;
   }
   const startTime = await readProcessStartTime({ pid });

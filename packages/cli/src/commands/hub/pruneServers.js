@@ -15,10 +15,11 @@
 */
 
 import fs from 'fs';
-import { type, wait } from '@lowdefy/helpers';
+import { wait } from '@lowdefy/helpers';
 import {
   compareProcessStartTimes,
   isPidAlive,
+  isProcessStartTime,
   readProcessStartTime,
   readServerRegistry,
 } from '@lowdefy/node-utils';
@@ -48,7 +49,7 @@ async function checkProcess({ pid, processStartTime }) {
   if (!isPidAlive(pid)) {
     return 'gone';
   }
-  if (!type.isInt(processStartTime)) {
+  if (!isProcessStartTime(processStartTime)) {
     return 'unverified';
   }
   const startTime = await readProcessStartTime({ pid });

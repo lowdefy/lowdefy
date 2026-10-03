@@ -26,6 +26,9 @@ jest.unstable_mockModule('./getProcessStartTimeCommand.js', () => ({
 const { default: getProcessStartTime } = await import('./getProcessStartTime.js');
 const { default: readProcessStartTime } = await import('./readProcessStartTime.js');
 
+// Linux reads /proc instead of running a command, so the command is run as on macOS.
+const platform = 'darwin';
+
 // A reader that prints part of a start time and then fails or hangs: a slow
 // PowerShell killed by the timeout, or ps exiting with an error.
 function partialRead({ script, timeout }) {
@@ -41,26 +44,26 @@ test('getProcessStartTime returns null, not the partial output, when the read ti
   mockGetProcessStartTimeCommand.mockReturnValue(
     partialRead({ script: 'setTimeout(() => {}, 10000);', timeout: 1000 })
   );
-  expect(getProcessStartTime({ pid: 4242 })).toBeNull();
+  expect(getProcessStartTime({ pid: 4242, platform })).toBeNull();
 }, 30000);
 
 test('getProcessStartTime returns null, not the partial output, when the read fails', () => {
   mockGetProcessStartTimeCommand.mockReturnValue(
     partialRead({ script: 'process.exitCode = 1;', timeout: 15000 })
   );
-  expect(getProcessStartTime({ pid: 4242 })).toBeNull();
+  expect(getProcessStartTime({ pid: 4242, platform })).toBeNull();
 }, 30000);
 
 test('readProcessStartTime resolves to null, not the partial output, when the read times out', async () => {
   mockGetProcessStartTimeCommand.mockReturnValue(
     partialRead({ script: 'setTimeout(() => {}, 10000);', timeout: 1000 })
   );
-  expect(await readProcessStartTime({ pid: 4242 })).toBeNull();
+  expect(await readProcessStartTime({ pid: 4242, platform })).toBeNull();
 }, 30000);
 
 test('readProcessStartTime resolves to null, not the partial output, when the read fails', async () => {
   mockGetProcessStartTimeCommand.mockReturnValue(
     partialRead({ script: 'process.exitCode = 1;', timeout: 15000 })
   );
-  expect(await readProcessStartTime({ pid: 4242 })).toBeNull();
+  expect(await readProcessStartTime({ pid: 4242, platform })).toBeNull();
 }, 30000);
