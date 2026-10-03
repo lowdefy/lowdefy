@@ -15,11 +15,13 @@
 */
 
 import fs from 'fs';
+import semver from 'semver';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { readDevInstance } from '@lowdefy/node-utils';
 
 import callWithReconnect from './callWithReconnect.js';
+import checkDependenciesInstalled from './checkDependenciesInstalled.js';
 import createCheckoutGuard from './createCheckoutGuard.js';
 import createHubConnection from './createHubConnection.js';
 import createInstanceConnections from './createInstanceConnections.js';
@@ -27,6 +29,7 @@ import fetchBuildSummary from './fetchBuildSummary.js';
 import findApps from './findApps.js';
 import findGitRoot from './findGitRoot.js';
 import formatInstanceLabel from './formatInstanceLabel.js';
+import isNewerVersion from './isNewerVersion.js';
 import lifecycleTools, { DIRECTORY_PROPERTY } from './lifecycleTools.js';
 import resolveApp from './resolveApp.js';
 import runAppTests from './runAppTests.js';
@@ -38,7 +41,9 @@ const TOOL_CALL_TIMEOUT_MS = 10 * 60 * 1000;
 // a full process restart when the hub owns the server.
 const HIDDEN_DEV_TOOLS = new Set(['lowdefy_restart']);
 
-const SHIM_INSTRUCTIONS = `This is \`lowdefy mcp\`. It routes every lowdefy_ tool to the dev server of the app you are working in and starts that server when it is not running - never run \`lowdefy dev\` yourself, never choose ports, and never kill processes by port or name; use lowdefy_dev_start (restart: true after local plugin or .env changes) and lowdefy_dev_stop. Pass "directory" when you work in a different git worktree from the session (for example as a subagent) or when the repository holds several apps; it must be in this checkout or one of its git worktrees. Every result starts with the app and checkout it came from.`;
+const LIFECYCLE_TOOL_NAMES = new Set(lifecycleTools.map((tool) => tool.name));
+
+const SHIM_INSTRUCTIONS = `This is \`lowdefy mcp\`. It routes every lowdefy_ tool to the dev server of the app you are working in and starts that server when it is not running - never run \`lowdefy dev\` yourself, never choose ports, and never kill processes by port or name; use lowdefy_dev_start (restart: true after local plugin or .env changes) and lowdefy_dev_stop. Pass "directory" when you work in a different git worktree from the session (for example as a subagent), when the repository holds several apps, or when you work on another project; it must be in this checkout, one of its git worktrees, or a repository the user trusts (the user is asked, or runs \`lowdefy hub trust <directory>\` in their own terminal; never run \`lowdefy hub trust\` yourself). If lowdefy_dev_start reports that dependencies are not installed, run the install command it names, then call it again. Every result starts with the app and checkout it came from.`;
 
 function textResult(value) {
   const text = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
@@ -73,18 +78,65 @@ function createShim({ cliVersion, cwd, devTools }) {
   const server = new Server(
     { name: 'lowdefy', version: cliVersion },
     {
-      capabilities: { tools: {}, logging: {} },
+      capabilities: { tools: { listChanged: true }, logging: {} },
       instructions: `${SHIM_INSTRUCTIONS}\n\n${devTools.instructions}`,
     }
   );
+  // Each forwarded tool's definition, with the Lowdefy version it came from.
+  // Map order is insertion order, and replacing a definition keeps its place.
+  const forwarded = new Map();
+  devTools.tools
+    .filter((tool) => !HIDDEN_DEV_TOOLS.has(tool.name))
+    .forEach((tool) => {
+      forwarded.set(tool.name, { version: cliVersion, tool: withDirectory(tool) });
+    });
+
+  // The list a session starts with is this CLI's, which need not be the
+  // version a project pins. Each dev server reports its tools when the shim
+  // connects: tools this CLI does not know are added, and a server newer than
+  // the version a tool's definition came from replaces that definition, so
+  // the schema and description follow the newest Lowdefy met. The client is
+  // told to list again. The list only grows: the session may hold several
+  // apps. A server whose version is not valid semver changes nothing. A
+  // prerelease is not compared with another major (isNewerVersion):
+  // experimental builds are 0.0.0-experimental-*, which semver ranks below
+  // every release, so a shim on one would otherwise lose its definitions to
+  // the first released server it met.
+  async function learnTools(client) {
+    const serverVersion = semver.valid(client.getServerVersion()?.version);
+    if (serverVersion === null) {
+      return;
+    }
+    let listed;
+    try {
+      listed = await client.listTools();
+    } catch {
+      return;
+    }
+    let changed = false;
+    listed.tools.forEach((tool) => {
+      if (HIDDEN_DEV_TOOLS.has(tool.name) || LIFECYCLE_TOOL_NAMES.has(tool.name)) {
+        return;
+      }
+      const known = forwarded.get(tool.name);
+      if (
+        known === undefined ||
+        isNewerVersion({ candidate: serverVersion, held: known.version })
+      ) {
+        forwarded.set(tool.name, { version: serverVersion, tool: withDirectory(tool) });
+        changed = true;
+      }
+    });
+    if (changed) {
+      await server.sendToolListChanged().catch(() => {});
+    }
+  }
+
   const instances = createInstanceConnections({
     cliVersion,
     onNotification: (params) => server.sendLoggingMessage(params).catch(() => {}),
+    onOpen: learnTools,
   });
-
-  const forwardedTools = devTools.tools.filter((tool) => !HIDDEN_DEV_TOOLS.has(tool.name));
-  const forwardedNames = new Set(forwardedTools.map((tool) => tool.name));
-  const tools = [...lifecycleTools, ...forwardedTools.map(withDirectory)];
 
   const authorizeApp = createCheckoutGuard({ cwd, server });
 
@@ -104,6 +156,7 @@ function createShim({ cliVersion, cwd, devTools }) {
       }
       return running;
     }
+    checkDependenciesInstalled({ configDirectory: app.configDirectory, root: app.root });
     await hub.attach(app);
     const status = await hub.request('start', {
       configDirectory: app.configDirectory,
@@ -138,9 +191,8 @@ function createShim({ cliVersion, cwd, devTools }) {
       { type: 'text', text: `${app.label} · ${instance.url}` },
       ...(result.content ?? []),
     ];
-    // The tool list comes from this CLI; the handlers from the dev server,
-    // whose version follows lowdefy.yaml. When they differ, a tool one side
-    // lacks fails - say why.
+    // The handlers come from the dev server, whose version follows the app.
+    // A tool this CLI lists that an older server lacks fails - say why.
     if (result.isError && instance.version && instance.version !== cliVersion) {
       content.push({
         type: 'text',
@@ -170,11 +222,28 @@ function createShim({ cliVersion, cwd, devTools }) {
     return { app: app.label, ...current, build };
   }
 
+  // Connecting makes the server report its tools (learnTools), so the agent
+  // sees a newer app's tools right after starting it, before any forwarded
+  // call. A failure here must not fail the start: the next forwarded call
+  // connects again.
+  async function connectToLearnTools(app) {
+    const instance = readDevInstance({ configDirectory: app.configDirectory });
+    if (instance === null || instance.state !== 'ready') {
+      return;
+    }
+    try {
+      await instances.get({ configDirectory: app.configDirectory, instance, label: app.label });
+    } catch {
+      // Left to the next forwarded call.
+    }
+  }
+
   async function start({ directory, restart = false, clean = false }) {
     const app = await resolve({ directory });
     const running = readDevInstance({ configDirectory: app.configDirectory });
     if (running !== null && running.owner !== 'hub') {
       if (!restart && !clean) {
+        await connectToLearnTools(app);
         return { app: app.label, ...running };
       }
       // Not the hub's to stop: restart it in place through its own dev tools.
@@ -195,6 +264,12 @@ function createShim({ cliVersion, cwd, devTools }) {
         }new local plugin code or .env changes need the user to restart it.`,
       };
     }
+    // Before the hub is asked for anything, so an uninstalled app gets the
+    // install command rather than a failed start. A running server is used as
+    // it is.
+    if (running?.state !== 'ready') {
+      checkDependenciesInstalled({ configDirectory: app.configDirectory, root: app.root });
+    }
     await hub.attach(app);
     const result = await hub.request('start', {
       configDirectory: app.configDirectory,
@@ -205,6 +280,7 @@ function createShim({ cliVersion, cwd, devTools }) {
     if (result.state !== 'ready') {
       throw new Error(describeNotReady({ label: app.label, status: result }));
     }
+    await connectToLearnTools(app);
     return { app: app.label, ...result };
   }
 
@@ -270,7 +346,9 @@ function createShim({ cliVersion, cwd, devTools }) {
     lowdefy_run_tests: runTests,
   };
 
-  server.setRequestHandler(ListToolsRequestSchema, () => ({ tools }));
+  server.setRequestHandler(ListToolsRequestSchema, () => ({
+    tools: [...lifecycleTools, ...[...forwarded.values()].map(({ tool }) => tool)],
+  }));
 
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name } = request.params;
@@ -279,7 +357,7 @@ function createShim({ cliVersion, cwd, devTools }) {
       if (lifecycleHandlers[name]) {
         return textResult(await lifecycleHandlers[name](args));
       }
-      if (forwardedNames.has(name)) {
+      if (forwarded.has(name)) {
         return await callDevTool({ name, args });
       }
       return errorResult(`Unknown tool "${name}".`);

@@ -5,8 +5,11 @@ description: Use when writing or editing Lowdefy YAML config — pages, blocks, 
 
 # Writing Lowdefy config
 
-The dev server serves docs for everything installed in this project at
-`http://localhost:3000/lowdefy-docs` (also as MCP tools via the `lowdefy-docs` server).
+The `lowdefy` MCP server (`lowdefy mcp`, set up with `npx lowdefy agent-setup`) gives you docs for
+everything installed in this project as tools, read from the app's dev server. It starts that dev
+server when needed: never run `lowdefy dev` yourself or choose a port. Pass `directory` on each
+`lowdefy_` call when you work in another git worktree or project than the session's. Without the MCP
+server, the same docs are HTTP routes under `/lowdefy-docs` on whichever port the dev server runs.
 
 Never guess type names or properties. Before writing config:
 

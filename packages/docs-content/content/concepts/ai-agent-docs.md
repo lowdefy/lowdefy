@@ -8,26 +8,52 @@ Everything is served under the `/lowdefy-docs` path of your dev server. It is al
 
 ## Connect your agent: `lowdefy mcp`
 
-Run `lowdefy agent-setup` once in your project. It registers the `lowdefy-docs` MCP server in `.mcp.json`:
+Run `lowdefy agent-setup` once in your project. It registers the `lowdefy` MCP server in `.mcp.json`, pinned to your app's Lowdefy version:
 
 ```json
 {
   "mcpServers": {
-    "lowdefy-docs": {
+    "lowdefy": {
       "type": "stdio",
-      "command": "node",
-      "args": ["apps/main/node_modules/lowdefy/dist/index.js", "mcp"]
+      "command": "npx",
+      "args": ["--prefer-offline", "--yes", "lowdefy@7.1.0", "mcp"]
     }
   }
 }
 ```
 
-Your agent client starts `lowdefy mcp` itself at the start of each session, so the tools are always there — whether or not a dev server is running yet. Nothing in the entry names a port, so the same checked-in file works in every git worktree.
+Your agent client starts `lowdefy mcp` itself at the start of each session, so the tools are always there — whether or not a dev server is running yet. Nothing in the entry names a port or a `node_modules` path, so the same checked-in file works in every git worktree, including a fresh one nobody has installed yet: npx keeps the pinned version in the shared npm cache and starts it offline in under a second after the first download.
+
+Before it writes the entry, `agent-setup` runs the pinned version's `lowdefy mcp` through npx. A version npm cannot serve — one that is not published, or one from before `lowdefy mcp` — is refused and `.mcp.json` is left as it was, because the file is committed and an entry that fails would leave every teammate's session without tools. To run your own build of the CLI instead, override the entry for yourself only with Claude Code's local scope, which wins over the project and user entries and is never committed: `claude mcp add --scope local lowdefy -- node <path to lowdefy>/dist/index.js mcp`. The refusal prints this command.
+
+On native Windows, Claude Code cannot start the plain `npx` command a project entry uses. Add a local-scope entry that runs it through `cmd /c` (`claude mcp add --scope local lowdefy -- cmd /c npx --prefer-offline --yes lowdefy@<version> mcp`), use `agent-setup --user` (below), or work in WSL.
+
+### Every project at once: `agent-setup --user`
+
+If you work across several projects, register `lowdefy mcp` once for your user instead:
+
+```bash
+npx lowdefy agent-setup --user
+```
+
+This adds the same `lowdefy` server to Claude Code's user scope (`claude mcp add --scope user lowdefy -- npx --prefer-offline --yes lowdefy@<version> mcp`), pinned to the version of the CLI you run it with, so every session has the Lowdefy tools — in a repository nobody set up, in a directory above several projects, anywhere. It needs no app. It runs that version's `lowdefy mcp` through npx first, which downloads it into the npm cache so the first session does not wait, and refuses a version npm cannot serve. The version must be a published one that has `lowdefy mcp`; until Lowdefy 7 is released, run `npx lowdefy@experimental agent-setup --user`.
+
+- On Windows it registers `cmd /c npx ...`, since Claude Code cannot start `npx` there without a shell.
+- Without Claude Code on your `PATH` it prints the entry to add to your agent client's user configuration.
+- Rerun it to move to another version. It replaces the `lowdefy` registration, and an old `lowdefy-docs` one. If Claude Code fails to add the new entry, your existing registration stays in place and the error prints the commands to finish by hand.
+- A project whose `.mcp.json` defines `lowdefy` uses its own entry instead, so a session never has two sets of Lowdefy tools.
+
+### Projects on different Lowdefy versions
+
+One session can work with dev servers of several Lowdefy versions, through a `lowdefy mcp` pinned to yet another. When `lowdefy mcp` connects to a dev server, it reads that server's tools: tools it does not know are added to the session's tool list, and a tool both have takes its description and input schema from whichever of the two Lowdefy versions is newer. So each tool follows the newest Lowdefy version the session has met, and the client is told to list the tools again. Tools are never removed during a session, since the session may still use the older app. A tool an older dev server lacks fails on that server with a note naming both versions.
+
+Versions are compared only when both are releases, or both have the same major version. An experimental build (`0.0.0-experimental-...`) is not compared with a release of another major, so neither replaces the other's tools.
 
 `lowdefy mcp` sends each tool call to the dev server of the app and checkout the agent is working in:
 
 - **It works out the app** from the session's working directory. Every tool also takes an optional `directory` argument — pass it when the repository holds several apps, or when an agent works in a different git worktree from the session (a subagent in its own worktree, for example).
-- **It only acts on the session's checkout and its git worktrees.** Starting a dev server runs the app's `package.json` dev script, so a `directory` outside the checkout the session started in (and outside `git worktree list` of that repository) is refused. When the agent client supports MCP elicitation, `lowdefy mcp` asks you first instead; your answer holds for the session.
+- **It acts on the session's checkout, its git worktrees, and repositories you trust.** Starting a dev server runs the app's `package.json` dev script, so an app outside the checkout the session started in (and outside `git worktree list` of that repository) needs your approval — an agent must not run the scripts of a repository it just cloned without you seeing it. See [Working across projects](#working-across-projects).
+- **It tells the agent what to install.** A fresh git worktree has no `node_modules`. When a `package.json` in the app's checkout lists `lowdefy` (in the app directory, or at a monorepo's root) but no `node_modules` from the app up to the checkout root has it, `lowdefy_dev_start` answers with the install command and where to run it, instead of starting a dev script that would fail in a log the agent does not read; the agent runs it and starts again. The command follows the repository: the `packageManager` field in `package.json` first, then the nearest lockfile (`pnpm-lock.yaml`, `yarn.lock`, `bun.lock`, `package-lock.json`, ...), for example `pnpm install` at the workspace root, else `npm install` in the app directory. It looks no higher than the checkout root, so a worktree created inside an installed checkout still counts as not installed. A Yarn Plug'n'Play install, and an app whose dev script brings its own Lowdefy (no `package.json` lists `lowdefy`), are left to run.
 - **It starts the dev server when needed**, through the [Lowdefy hub](/cli#hub): a small per-user background process that gives each app its own port, runs the app's own dev script (so a secrets-manager wrapper still applies — set `cli.devScript` if several scripts run `lowdefy dev`), and stops servers nobody uses. A dev server you started yourself with `lowdefy dev` is used as it is, and never stopped by an agent.
 - **Every result starts with the app and checkout it came from**, for example `apps/main @ app-wt-invoices · http://localhost:4102`, so an agent never mistakes another worktree's answer for its own.
 
@@ -46,40 +72,51 @@ The dev server itself also serves the MCP endpoint over streamable HTTP at `/low
 
 The `/lowdefy-docs` tools accept requests from agents and tools on your machine and from the dev app's own pages; a request a browser makes on behalf of another website is refused.
 
+## Working across projects
+
+A session can start and query the dev servers of several projects side by side — say, an app and the shared plugin repository it uses. Pass each call the `directory` of the app it is for. Without anything set up, `lowdefy mcp` allows apps in the session's own checkout and its git worktrees; for any other app it asks you first.
+
+- **When the client can ask** (MCP elicitation), `lowdefy mcp` asks whether to allow that app's git repository. Allowing it holds for the rest of the session, for every worktree of that repository. Tick **Always allow this repository** to trust it in every session from then on. Declining also holds for the session, so an agent cannot keep asking.
+- **Ahead of time, or when the client cannot ask**, run `lowdefy hub trust <directory>` yourself, in your own terminal. It refuses to run without an interactive terminal, so an agent cannot trust a repository in passing; the refusal an agent gets tells it to ask you. To work on two projects side by side, trust each once, and any session can start and query both.
+- **Trust is per git repository**, and covers all of its worktrees, wherever they are. `lowdefy hub trusted` lists each trusted repository by its git directory (for example `/home/me/code/crm/.git`, or `crm.git` for a bare repository) and marks entries whose directory is gone (`(missing)`); `lowdefy hub untrust <path>` removes one, including a missing one by its old path. The list lives in `~/.lowdefy/hub/trusted.json`, readable only by you.
+- **An app outside git cannot be trusted.** It is allowed for a session started in it or in a directory inside it, or for one session when you answer the question. A session started in a directory above several projects does not get all of them.
+
+This is a consent check on the tools, not a sandbox: an agent that can run shell commands can run any script without `lowdefy mcp`.
+
 ## The tools
 
 The dev server provides these tools:
 
-| Tool                             | Purpose                                                                                                                                                                                                                |
-| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `lowdefy_overview`               | Start here — what is installed, counts per kind, and how to use the rest                                                                                                                                               |
-| `lowdefy_list_types`             | List ALL available types of a kind (blocks, operators, actions, connections, requests)                                                                                                                                 |
-| `lowdefy_list_plugins`           | Installed plugin packages, including local plugins, and the types each provides                                                                                                                                        |
-| `lowdefy_get_schema`             | JSON Schema for a specific type — all properties and events                                                                                                                                                            |
-| `lowdefy_get_examples`           | Real YAML usage examples for a block type                                                                                                                                                                              |
-| `lowdefy_get_doc`                | A Lowdefy docs page as markdown, by slug or by type name                                                                                                                                                               |
-| `lowdefy_search_docs`            | Keyword search over the Lowdefy docs                                                                                                                                                                                   |
-| `lowdefy_search_icons`           | Search icon names: semantic names first, then Lucide names, then the names of installed icon sets (qualified). Never invent an icon name                                                                               |
-| `lowdefy_get_plugin_doc`         | Markdown (READMEs, guides) shipped inside an installed plugin package                                                                                                                                                  |
-| `lowdefy_build_status`           | Current build errors and warnings (with source file locations) plus recent browser runtime errors — call after every edit                                                                                              |
-| `lowdefy_check`                  | Validate the whole app as `lowdefy build` would, without building — every page, and the prod-only checks dev shows as warnings come back as errors. Call before calling a change done                                  |
-| `lowdefy_get_page_config`        | The fully built config for a page, or its structured build errors                                                                                                                                                      |
-| `lowdefy_screenshot_page`        | PNG screenshot of a rendered page (headless Chromium) for visual verification; `width`, `height` and `colorScheme: "dark"` check a phone layout or dark mode; `urlQuery` opens it at a query string; `steps` (`{"open": "blockId"}`, `click`, `fill`, `select`, `wait`, …) run first so the capture shows an open dropdown, calendar or modal                                                           |
-| `lowdefy_run_journey`            | Drive a page headless through declarative steps (`click`, `fill`, `goto`, `email`, `as`, `expect`, …) and assert state, visibility, text, url, title or email — verify behaviour, not just layout                      |
-| `lowdefy_find_config`            | Which yaml file (and line) defines a given page, block, or request id                                                                                                                                                  |
-| `lowdefy_scaffold_page`          | Create a new page yaml file with a canonical minimal structure                                                                                                                                                         |
-| `lowdefy_app_map`                | The whole-app graph: every page, menu, connection, endpoint, and agent in one call                                                                                                                                     |
-| `lowdefy_inspect_state`          | The LIVE state, request results, and event log of a running page — reads your open browser tab, or runs the page headless                                                                                              |
-| `lowdefy_eval_operator`          | Evaluate any operator expression against live page state — a REPL for config                                                                                                                                           |
-| `lowdefy_run_request`            | Execute a request with a test payload, as a given `user`, to verify data shape (read-only unless opted in)                                                                                                             |
-| `lowdefy_run_endpoint`           | Execute an Api endpoint routine with a test payload, as a given `user` or as a system context (`system: true`), to see what it returns, rejects or throws (needs `allowWriteRequests`; a `:reject` comes back as data) |
-| `lowdefy_snapshot_state`         | Capture live page state + request responses into a committable checkpoint folder                                                                                                                                       |
-| `lowdefy_load_state`             | Restore a state checkpoint — headless, or a `?_checkpoint=` URL for manual testing                                                                                                                                     |
-| `lowdefy_list_state_checkpoints` | List saved state checkpoints                                                                                                                                                                                           |
-| `lowdefy_checkpoint_to_mocks`    | Convert a state checkpoint into e2e `mocks.yaml` fixtures                                                                                                                                                              |
-| `lowdefy_restart`                | Restart the dev server process — after editing a local plugin's server-side code, or when `build_status` looks stale. Then call `lowdefy_build_status` with `wait: true`, which answers once the server is back        |
-| `lowdefy_checkpoint`             | Snapshot all config files before risky changes                                                                                                                                                                         |
-| `lowdefy_revert_checkpoint`      | Restore config files from a checkpoint                                                                                                                                                                                 |
+| Tool                             | Purpose                                                                                                                                                                                                                                                                                                                                       |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `lowdefy_overview`               | Start here — what is installed, counts per kind, and how to use the rest                                                                                                                                                                                                                                                                      |
+| `lowdefy_list_types`             | List ALL available types of a kind (blocks, operators, actions, connections, requests)                                                                                                                                                                                                                                                        |
+| `lowdefy_list_plugins`           | Installed plugin packages, including local plugins, and the types each provides                                                                                                                                                                                                                                                               |
+| `lowdefy_get_schema`             | JSON Schema for a specific type — all properties and events                                                                                                                                                                                                                                                                                   |
+| `lowdefy_get_examples`           | Real YAML usage examples for a block type                                                                                                                                                                                                                                                                                                     |
+| `lowdefy_get_doc`                | A Lowdefy docs page as markdown, by slug or by type name                                                                                                                                                                                                                                                                                      |
+| `lowdefy_search_docs`            | Keyword search over the Lowdefy docs                                                                                                                                                                                                                                                                                                          |
+| `lowdefy_search_icons`           | Search icon names: semantic names first, then Lucide names, then the names of installed icon sets (qualified). Never invent an icon name                                                                                                                                                                                                      |
+| `lowdefy_get_plugin_doc`         | Markdown (READMEs, guides) shipped inside an installed plugin package                                                                                                                                                                                                                                                                         |
+| `lowdefy_build_status`           | Current build errors and warnings (with source file locations) plus recent browser runtime errors — call after every edit                                                                                                                                                                                                                     |
+| `lowdefy_check`                  | Validate the whole app as `lowdefy build` would, without building — every page, and the prod-only checks dev shows as warnings come back as errors. Call before calling a change done                                                                                                                                                         |
+| `lowdefy_get_page_config`        | The fully built config for a page, or its structured build errors                                                                                                                                                                                                                                                                             |
+| `lowdefy_screenshot_page`        | PNG screenshot of a rendered page (headless Chromium) for visual verification; `width`, `height` and `colorScheme: "dark"` check a phone layout or dark mode; `urlQuery` opens it at a query string; `steps` (`{"open": "blockId"}`, `click`, `fill`, `select`, `wait`, …) run first so the capture shows an open dropdown, calendar or modal |
+| `lowdefy_run_journey`            | Drive a page headless through declarative steps (`click`, `fill`, `goto`, `email`, `as`, `expect`, …) and assert state, visibility, text, url, title or email — verify behaviour, not just layout                                                                                                                                             |
+| `lowdefy_find_config`            | Which yaml file (and line) defines a given page, block, or request id                                                                                                                                                                                                                                                                         |
+| `lowdefy_scaffold_page`          | Create a new page yaml file with a canonical minimal structure                                                                                                                                                                                                                                                                                |
+| `lowdefy_app_map`                | The whole-app graph: every page, menu, connection, endpoint, and agent in one call                                                                                                                                                                                                                                                            |
+| `lowdefy_inspect_state`          | The LIVE state, request results, and event log of a running page — reads your open browser tab, or runs the page headless                                                                                                                                                                                                                     |
+| `lowdefy_eval_operator`          | Evaluate any operator expression against live page state — a REPL for config                                                                                                                                                                                                                                                                  |
+| `lowdefy_run_request`            | Execute a request with a test payload, as a given `user`, to verify data shape (read-only unless opted in)                                                                                                                                                                                                                                    |
+| `lowdefy_run_endpoint`           | Execute an Api endpoint routine with a test payload, as a given `user` or as a system context (`system: true`), to see what it returns, rejects or throws (needs `allowWriteRequests`; a `:reject` comes back as data)                                                                                                                        |
+| `lowdefy_snapshot_state`         | Capture live page state + request responses into a committable checkpoint folder                                                                                                                                                                                                                                                              |
+| `lowdefy_load_state`             | Restore a state checkpoint — headless, or a `?_checkpoint=` URL for manual testing                                                                                                                                                                                                                                                            |
+| `lowdefy_list_state_checkpoints` | List saved state checkpoints                                                                                                                                                                                                                                                                                                                  |
+| `lowdefy_checkpoint_to_mocks`    | Convert a state checkpoint into e2e `mocks.yaml` fixtures                                                                                                                                                                                                                                                                                     |
+| `lowdefy_restart`                | Restart the dev server process — after editing a local plugin's server-side code, or when `build_status` looks stale. Then call `lowdefy_build_status` with `wait: true`, which answers once the server is back                                                                                                                               |
+| `lowdefy_checkpoint`             | Snapshot all config files before risky changes                                                                                                                                                                                                                                                                                                |
+| `lowdefy_revert_checkpoint`      | Restore config files from a checkpoint                                                                                                                                                                                                                                                                                                        |
 
 ## Hazards — what the schema cannot tell you
 
@@ -373,27 +410,27 @@ Journeys are also the file format of `tests/journeys/*.yaml`, which `lowdefy tes
 npx lowdefy agent-setup
 ```
 
-This writes three files into your project (merging safely if they exist): `.mcp.json` registering the `lowdefy-docs` MCP server (`lowdefy mcp`, see [Connect your agent](#connect-your-agent-lowdefy-mcp)), `.claude/skills/lowdefy-config/SKILL.md` teaching Claude Code the workflow, and an `AGENTS.md` section for other coding agents. Add `lowdefy` to your app's `devDependencies` first, so `.mcp.json` runs your app's own version of the CLI; each git worktree then needs its own `pnpm install` (or equivalent) before an agent session starts there.
+This writes three files into your project (merging safely if they exist): `.mcp.json` registering the `lowdefy` MCP server (`lowdefy mcp`, see [Connect your agent](#connect-your-agent-lowdefy-mcp)), `.claude/skills/lowdefy-config/SKILL.md` teaching Claude Code the workflow, and an `AGENTS.md` section for other coding agents. Add `lowdefy` to your app's `devDependencies` first, so `.mcp.json` pins your app's own version of the CLI. Rerun `agent-setup` after upgrading Lowdefy to move the pin.
 
-Projects set up by an earlier version, with an `http://localhost:<port>/lowdefy-docs/mcp` entry, are migrated when you rerun the command: the entry is replaced, per-port entries such as `lowdefy-3010` are removed, and the skill and `AGENTS.md` section it wrote are updated. The server keeps its `lowdefy-docs` name, so tool names and approvals carry over.
+Projects set up by an earlier version, with an `http://localhost:<port>/lowdefy-docs/mcp` entry or one that runs the CLI from `node_modules`, are migrated when you rerun the command: the entry is replaced, per-port entries such as `lowdefy-3010` are removed, and the skill and `AGENTS.md` section it wrote are updated. The server, formerly `lowdefy-docs`, is renamed `lowdefy`, along with its approval in `.claude/settings.json` and the name in the skill and `AGENTS.md` section; its tools are now named `mcp__lowdefy__*`.
 
 ## Using it with Claude Code manually
 
-Commit a `.mcp.json` file at your project root, pointing at your app's installed CLI:
+Commit a `.mcp.json` file at your project root, pinning your app's Lowdefy version:
 
 ```json
 {
   "mcpServers": {
-    "lowdefy-docs": {
+    "lowdefy": {
       "type": "stdio",
-      "command": "node",
-      "args": ["node_modules/lowdefy/dist/index.js", "mcp"]
+      "command": "npx",
+      "args": ["--prefer-offline", "--yes", "lowdefy@7.1.0", "mcp"]
     }
   }
 }
 ```
 
-In a monorepo, use the path to the app's `node_modules`, for example `apps/main/node_modules/lowdefy/dist/index.js`. The MCP server includes instructions that teach the agent the workflow (list types first, then fetch schemas and examples; let `lowdefy mcp` run the dev server), so it works well without any extra prompting.
+Or register it for every project with `claude mcp add --scope user lowdefy -- npx --prefer-offline --yes lowdefy@7.1.0 mcp` (on Windows, `-- cmd /c npx ...`), which is what `lowdefy agent-setup --user` runs. The MCP server includes instructions that teach the agent the workflow (list types first, then fetch schemas and examples; let `lowdefy mcp` run the dev server), so it works well without any extra prompting.
 
 ## Plain HTTP routes
 
