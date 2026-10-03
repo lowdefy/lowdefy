@@ -117,7 +117,7 @@ async function ensurePnpmWorkspaceYaml({ context, directory }) {
     })
   );
   await writeNestedNpmrc({ context, directory, parentWorkspace, workspaceRoot });
-  await linkWorkspacePlugins({ directory, parentWorkspace });
+  await linkWorkspacePlugins({ directory, parentWorkspace, workspaceRoot });
 }
 
 export default ensurePnpmWorkspaceYaml;

@@ -20,7 +20,7 @@ import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
 
 import findPnpmWorkspaceRoot from './findPnpmWorkspaceRoot.js';
-import findWorkspacePackages from './findWorkspacePackages.js';
+import linkDependenciesToWorkspace from './linkDependenciesToWorkspace.js';
 import readFile from './readFile.js';
 
 async function readWorkspacePackages({ workspaceRoot }) {
@@ -54,22 +54,12 @@ async function linkWorkspaceDependencies({ dependencies, directory }) {
       `Plugin "${name}" has version "${dependencies[name]}", but ${directory} is not inside a pnpm workspace.`
     );
   }
-  const packageDirectories = findWorkspacePackages({
+  return linkDependenciesToWorkspace({
+    dependencies,
+    directory,
     packages: await readWorkspacePackages({ workspaceRoot }),
     workspaceRoot,
   });
-  const linked = { ...dependencies };
-  workspaceDependencies.forEach((name) => {
-    const packageDirectory = packageDirectories.get(name);
-    if (!packageDirectory) {
-      throw new Error(
-        `Plugin "${name}" has version "${dependencies[name]}", but no package named "${name}" was found in the pnpm workspace at ${workspaceRoot}.`
-      );
-    }
-    const relativePath = path.relative(directory, packageDirectory).split(path.sep).join('/');
-    linked[name] = `link:${relativePath}`;
-  });
-  return linked;
 }
 
 export default linkWorkspaceDependencies;

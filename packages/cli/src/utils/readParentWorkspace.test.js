@@ -69,6 +69,7 @@ nodeLinker: hoisted
   });
   const parentWorkspace = await readParentWorkspace({ directory, pnpmCmd, workspaceRoot: '/repo' });
   expect(parentWorkspace).toEqual({
+    devEnginesPackageManager: undefined,
     npmrc: null,
     npmrcPath: '/repo/.npmrc',
     packageManager: 'pnpm@10.29.2',
@@ -133,8 +134,36 @@ test('readParentWorkspace leaves out the package.json pnpm field and resolutions
   const { settings } = await readParentWorkspace({ directory, pnpmCmd, workspaceRoot: '/repo' });
   expect(settings).toEqual({ overrides: { b: '2.0.0' } });
   expect(getPnpmMajorVersion.mock.calls).toEqual([
-    [{ directory, packageManager: 'pnpm@11.15.0', pnpmCmd }],
+    [
+      {
+        directory,
+        packageJson: {
+          packageManager: 'pnpm@11.15.0',
+          resolutions: { a: '1.0.0' },
+          pnpm: { overrides: { a: '2.0.0' }, patchedDependencies: { 'c@1.0.0': 'c.patch' } },
+        },
+        pnpmCmd,
+      },
+    ],
   ]);
+});
+
+test('readParentWorkspace returns the parent devEngines.packageManager pin', async () => {
+  const { default: fs } = await import('fs');
+  const { readFile } = await import('@lowdefy/node-utils');
+  const { default: readParentWorkspace } = await import('./readParentWorkspace.js');
+  fs.existsSync.mockReturnValue(false);
+  const devEngines = {
+    packageManager: { name: 'pnpm', version: '^11.0.0', onFail: 'download' },
+    runtime: { name: 'node', version: '^24.0.0' },
+  };
+  mockFiles(readFile, {
+    '/repo/pnpm-workspace.yaml': 'packages:\n  - apps/*\n',
+    '/repo/package.json': JSON.stringify({ devEngines }),
+  });
+  const parentWorkspace = await readParentWorkspace({ directory, pnpmCmd, workspaceRoot: '/repo' });
+  expect(parentWorkspace.devEnginesPackageManager).toEqual(devEngines.packageManager);
+  expect(parentWorkspace.packageManager).toBeUndefined();
 });
 
 test('readParentWorkspace reads the parent .npmrc', async () => {
@@ -209,6 +238,7 @@ test('readParentWorkspace returns empty settings for a workspace with no package
   mockFiles(readFile, { '/repo/pnpm-workspace.yaml': '' });
   const parentWorkspace = await readParentWorkspace({ directory, pnpmCmd, workspaceRoot: '/repo' });
   expect(parentWorkspace).toEqual({
+    devEnginesPackageManager: undefined,
     npmrc: null,
     npmrcPath: '/repo/.npmrc',
     packageManager: undefined,

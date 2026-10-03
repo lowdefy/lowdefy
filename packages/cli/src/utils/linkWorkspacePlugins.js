@@ -15,24 +15,43 @@
 */
 
 import path from 'path';
-import { linkWorkspaceDependencies, readFile, writeFileIfChanged } from '@lowdefy/node-utils';
+import { type } from '@lowdefy/helpers';
+import { linkDependenciesToWorkspace, readFile, writeFileIfChanged } from '@lowdefy/node-utils';
+
+function namesPnpm({ devEnginesPackageManager }) {
+  return [devEnginesPackageManager ?? []]
+    .flat()
+    .some((packageManager) => packageManager?.name === 'pnpm');
+}
 
 // The server installs as its own workspace, so its "workspace:" plugins
 // become link: paths to their packages in the parent workspace; the dev
 // server's builds link plugins added later the same way. The parent's pinned
 // pnpm is carried over too, since pnpm and corepack read it from the root of
-// the workspace they install.
-async function linkWorkspacePlugins({ directory, parentWorkspace }) {
+// the workspace they install. The server's package.json has no pin of its
+// own, so a pin the parent no longer sets is removed: lowdefy dev keeps the
+// server's package.json between runs.
+async function linkWorkspacePlugins({ directory, parentWorkspace, workspaceRoot }) {
   const packageJsonPath = path.join(directory, 'package.json');
   const packageJson = JSON.parse(await readFile(packageJsonPath));
+  const { devEnginesPackageManager, packageManager, packages } = parentWorkspace;
 
-  packageJson.dependencies = await linkWorkspaceDependencies({
+  packageJson.dependencies = linkDependenciesToWorkspace({
     dependencies: packageJson.dependencies,
     directory,
+    packages,
+    workspaceRoot,
   });
 
-  if (parentWorkspace.packageManager?.startsWith('pnpm@')) {
-    packageJson.packageManager = parentWorkspace.packageManager;
+  if (type.isString(packageManager) && packageManager.startsWith('pnpm@')) {
+    packageJson.packageManager = packageManager;
+  } else {
+    delete packageJson.packageManager;
+  }
+  if (namesPnpm({ devEnginesPackageManager })) {
+    packageJson.devEngines = { packageManager: devEnginesPackageManager };
+  } else {
+    delete packageJson.devEngines;
   }
 
   await writeFileIfChanged(packageJsonPath, JSON.stringify(packageJson, null, 2).concat('\n'));

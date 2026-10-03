@@ -30,6 +30,7 @@ import getSecretsFromEnv from './getSecretsFromEnv.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPidAlive from './isPidAlive.js';
 import isPortAvailable from './isPortAvailable.js';
+import linkDependenciesToWorkspace from './linkDependenciesToWorkspace.js';
 import linkWorkspaceDependencies from './linkWorkspaceDependencies.js';
 import parseIpRange from './parseIpRange.js';
 import readDevInstance from './readDevInstance.js';
@@ -56,6 +57,7 @@ export {
   installIfPackageJsonChanged,
   isPidAlive,
   isPortAvailable,
+  linkDependenciesToWorkspace,
   linkWorkspaceDependencies,
   parseIpRange,
   readDevInstance,

@@ -24,20 +24,88 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-test('getPnpmMajorVersion reads the major version of a pinned pnpm', async () => {
+test('getPnpmMajorVersion reads the major version of a pnpm pinned in packageManager', async () => {
   const { execSync } = await import('child_process');
   const { default: getPnpmMajorVersion } = await import('./getPnpmMajorVersion.js');
   expect(
-    getPnpmMajorVersion({ directory: '/dir', packageManager: 'pnpm@11.15.0', pnpmCmd: 'pnpm' })
+    getPnpmMajorVersion({
+      directory: '/dir',
+      packageJson: { packageManager: 'pnpm@11.15.0' },
+      pnpmCmd: 'pnpm',
+    })
   ).toBe(11);
   expect(
     getPnpmMajorVersion({
       directory: '/dir',
-      packageManager: 'pnpm@10.29.2+sha512.abc123',
+      packageJson: { packageManager: 'pnpm@10.29.2+sha512.abc123' },
       pnpmCmd: 'pnpm',
     })
   ).toBe(10);
   expect(execSync).not.toHaveBeenCalled();
+});
+
+test('getPnpmMajorVersion reads the major version of a pnpm pinned in devEngines.packageManager', async () => {
+  const { execSync } = await import('child_process');
+  const { default: getPnpmMajorVersion } = await import('./getPnpmMajorVersion.js');
+  function getMajor(packageManager) {
+    return getPnpmMajorVersion({
+      directory: '/dir',
+      packageJson: { devEngines: { packageManager } },
+      pnpmCmd: 'pnpm',
+    });
+  }
+  expect(getMajor({ name: 'pnpm', version: '10.29.2', onFail: 'download' })).toBe(10);
+  expect(getMajor({ name: 'pnpm', version: '^10.6.0' })).toBe(10);
+  expect(getMajor({ name: 'pnpm', version: '11.x' })).toBe(11);
+  expect(getMajor({ name: 'pnpm', version: '>=11.0.0-rc.0 <12' })).toBe(11);
+  expect(
+    getMajor([
+      { name: 'npm', version: '^10.0.0' },
+      { name: 'pnpm', version: '~11.15.0' },
+    ])
+  ).toBe(11);
+  expect(execSync).not.toHaveBeenCalled();
+});
+
+test('getPnpmMajorVersion reads devEngines.packageManager over packageManager, as pnpm does', async () => {
+  const { default: getPnpmMajorVersion } = await import('./getPnpmMajorVersion.js');
+  expect(
+    getPnpmMajorVersion({
+      directory: '/dir',
+      packageJson: {
+        devEngines: { packageManager: { name: 'pnpm', version: '^11.0.0' } },
+        packageManager: 'pnpm@10.29.2',
+      },
+      pnpmCmd: 'pnpm',
+    })
+  ).toBe(11);
+});
+
+test('getPnpmMajorVersion asks pnpm when the devEngines.packageManager range spans majors', async () => {
+  const { execSync } = await import('child_process');
+  const { default: getPnpmMajorVersion } = await import('./getPnpmMajorVersion.js');
+  execSync.mockReturnValue('11.15.0\n');
+  expect(
+    getPnpmMajorVersion({
+      directory: '/dir',
+      packageJson: {
+        devEngines: { packageManager: { name: 'pnpm', version: '>=10' } },
+        packageManager: 'pnpm@10.29.2',
+      },
+      pnpmCmd: 'pnpm',
+    })
+  ).toBe(11);
+  expect(
+    getPnpmMajorVersion({
+      directory: '/dir',
+      packageJson: { devEngines: { packageManager: { name: 'pnpm' } } },
+      pnpmCmd: 'pnpm',
+    })
+  ).toBe(11);
+  expect(execSync.mock.calls).toEqual([
+    ['pnpm --version', { cwd: '/dir', encoding: 'utf8' }],
+    ['pnpm --version', { cwd: '/dir', encoding: 'utf8' }],
+  ]);
 });
 
 test('getPnpmMajorVersion asks the pnpm the CLI runs when no pnpm is pinned', async () => {
@@ -45,11 +113,20 @@ test('getPnpmMajorVersion asks the pnpm the CLI runs when no pnpm is pinned', as
   const { default: getPnpmMajorVersion } = await import('./getPnpmMajorVersion.js');
   execSync.mockReturnValue('11.15.0\n');
   expect(
-    getPnpmMajorVersion({ directory: '/dir', packageManager: 'yarn@4.0.0', pnpmCmd: 'pnpm' })
+    getPnpmMajorVersion({
+      directory: '/dir',
+      packageJson: { packageManager: 'yarn@4.0.0' },
+      pnpmCmd: 'pnpm',
+    })
   ).toBe(11);
-  expect(getPnpmMajorVersion({ directory: '/dir', pnpmCmd: 'pnpm' })).toBe(11);
-  expect(execSync.mock.calls).toEqual([
-    ['pnpm --version', { cwd: '/dir', encoding: 'utf8' }],
-    ['pnpm --version', { cwd: '/dir', encoding: 'utf8' }],
-  ]);
+  expect(
+    getPnpmMajorVersion({
+      directory: '/dir',
+      packageJson: { devEngines: { packageManager: { name: 'yarn', version: '^4.0.0' } } },
+      pnpmCmd: 'pnpm',
+    })
+  ).toBe(11);
+  expect(getPnpmMajorVersion({ directory: '/dir', packageJson: {}, pnpmCmd: 'pnpm' })).toBe(11);
+  expect(execSync).toHaveBeenCalledTimes(3);
+  expect(execSync.mock.calls[0]).toEqual(['pnpm --version', { cwd: '/dir', encoding: 'utf8' }]);
 });

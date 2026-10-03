@@ -111,8 +111,7 @@ async function readParentWorkspace({ directory, pnpmCmd, workspaceRoot }) {
   const { packages, ...workspaceSettings } = workspaceYaml;
   const npmrcPath = path.join(workspaceRoot, '.npmrc');
   const npmrc = await readFile(npmrcPath);
-  const readsPnpm10Settings =
-    getPnpmMajorVersion({ directory, packageManager: packageJson.packageManager, pnpmCmd }) < 11;
+  const readsPnpm10Settings = getPnpmMajorVersion({ directory, packageJson, pnpmCmd }) < 11;
 
   // pnpm 10 installs with the package.json settings over the
   // pnpm-workspace.yaml settings where both set one.
@@ -131,6 +130,7 @@ async function readParentWorkspace({ directory, pnpmCmd, workspaceRoot }) {
   }
 
   return {
+    devEnginesPackageManager: packageJson.devEngines?.packageManager,
     npmrc,
     npmrcPath,
     packageManager: packageJson.packageManager,

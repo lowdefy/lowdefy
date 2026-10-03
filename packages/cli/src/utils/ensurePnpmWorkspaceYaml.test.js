@@ -143,7 +143,7 @@ allowUnusedPatches: true
   ]);
   expect(writeFileIfChanged).toHaveBeenCalledTimes(1);
   expect(linkWorkspacePlugins.mock.calls).toEqual([
-    [{ directory: '/repo/app/.lowdefy/dev', parentWorkspace }],
+    [{ directory: '/repo/app/.lowdefy/dev', parentWorkspace, workspaceRoot: '/repo' }],
   ]);
 });
 
