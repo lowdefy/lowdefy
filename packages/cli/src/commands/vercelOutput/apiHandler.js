@@ -18,10 +18,10 @@
 // .vercel/output/functions/api.func/<relServer>/api/index.js, where <relServer> is the server
 // directory's path relative to the trace base (empty for standalone apps). Kept as a string (not a
 // template file) so it ships verbatim — a real source file would be transpiled by the CLI's swc
-// build, stripping these comments. Its `../src/app.js` import and the chdir to `..` resolve to the
-// server directory inside the function, where the assembly places src/, build/, lib/ and the traced
-// dependency closure. Its `ws` and `@hono/node-server` imports resolve because the traced
-// src/index.js imports both.
+// build, stripping these comments. Its `../src/initServer.js` import and the chdir to `..` resolve
+// to the server directory inside the function, where the assembly places src/, build/, lib/ and the
+// traced dependency closure. Its `ws`, `@hono/node-server` and `@sentry/node` imports resolve
+// because the traced src/index.js imports all three.
 const apiHandler = `/*
   Vercel Serverless Function entry for a Lowdefy (Hono) app — generated into the Vercel Build Output
   by lowdefy vercel-output.
@@ -48,6 +48,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { createAdaptorServer } from '@hono/node-server';
+import * as Sentry from '@sentry/node';
 import { WebSocketServer } from 'ws';
 
 // The app reads its build artifacts relative to process.cwd(). On Vercel the function's cwd is the
@@ -56,7 +57,11 @@ import { WebSocketServer } from 'ws';
 // a static import is hoisted and would read files at the wrong cwd.
 process.chdir(path.join(path.dirname(fileURLToPath(import.meta.url)), '..'));
 
-const { default: createApp } = await import('../src/app.js');
+// The same startup as the Node entry (src/index.js): Sentry, then the environment guards before the
+// app loads. A failed guard throws here, so the function fails every request instead of serving
+// with the wrong variables.
+const { default: initServer } = await import('../src/initServer.js');
+const { createApp, sentryEnabled } = await initServer();
 // Vercel's edge sets x-real-ip to the client address on every request, replacing any value the
 // client sent, so the app takes the address from it instead of the connection (which is Vercel's
 // own proxy).
@@ -113,19 +118,37 @@ async function handleRequest(req, res) {
   res.end();
 }
 
+// The function can be suspended once the response ends, stranding queued Sentry events. Vercel's
+// waitUntil keeps it alive until they are sent without delaying the response. Its Node runtime
+// exposes waitUntil on this global, which is what @vercel/functions reads; Sentry's own
+// vercelWaitUntil only acts on the Edge runtime.
+function flushSentry() {
+  if (!sentryEnabled) return;
+  const flushed = Sentry.flush(2000);
+  const vercelContext = globalThis[Symbol.for('@vercel/request-context')]?.get?.();
+  if (vercelContext?.waitUntil) {
+    vercelContext.waitUntil(flushed);
+    return;
+  }
+  return flushed;
+}
+
 // The HTTP server does not handle a request listener's rejected promise, so it would stop the
 // process and every other request the function instance is serving. A client that disconnects
-// while its body is read is the common cause, and is not logged.
+// while its body is read is the common cause, and is not logged. Sentry is flushed once the
+// request settles either way, so a request that fails still sends the events it captured.
 function requestListener(req, res) {
-  handleRequest(req, res).catch((error) => {
-    if (!req.destroyed) console.error(error);
-    if (res.headersSent) {
-      res.destroy();
-      return;
-    }
-    res.statusCode = 500;
-    res.end();
-  });
+  handleRequest(req, res)
+    .catch((error) => {
+      if (!req.destroyed) console.error(error);
+      if (res.headersSent) {
+        res.destroy();
+        return;
+      }
+      res.statusCode = 500;
+      res.end();
+    })
+    .finally(flushSentry);
 }
 
 // 256 KiB max frame, matching the Node server (src/index.js) and Vercel's documented default for
