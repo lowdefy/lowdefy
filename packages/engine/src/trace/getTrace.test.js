@@ -59,13 +59,108 @@ test('trace unsubscribe stops a listener', () => {
   expect(listener).not.toHaveBeenCalled();
 });
 
-test('trace hasSubscribers is true only while a listener is subscribed', () => {
+test('trace wantsPayload is true for any event only while a listener is subscribed', () => {
   const trace = getTrace({});
-  expect(trace.hasSubscribers()).toBe(false);
+  trace.subscribe(() => {}, { replay: true });
   const unsubscribe = trace.subscribe(() => {});
-  expect(trace.hasSubscribers()).toBe(true);
+  expect(trace.wantsPayload({ success: true })).toBe(true);
+  expect(trace.wantsPayload({ success: false })).toBe(true);
   unsubscribe();
-  expect(trace.hasSubscribers()).toBe(false);
+  expect(trace.wantsPayload({ success: true })).toBe(true);
+});
+
+test('trace wantsPayload with no subscribers is false for a success and true for a failure while holding', () => {
+  const trace = getTrace({});
+  expect(trace.wantsPayload({ success: true })).toBe(false);
+  expect(trace.wantsPayload({ success: false })).toBe(true);
+});
+
+test('trace wantsPayload is false for a failure once the held failures are full', () => {
+  const trace = getTrace({});
+  for (let i = 0; i < 20; i += 1) {
+    trace.emit({ index: i, success: false });
+  }
+  expect(trace.wantsPayload({ success: false })).toBe(false);
+});
+
+test('trace wantsPayload is false for a failure with no subscribers after the replay subscriber left', () => {
+  const trace = getTrace({});
+  const unsubscribe = trace.subscribe(() => {}, { replay: true });
+  unsubscribe();
+  expect(trace.wantsPayload({ success: false })).toBe(false);
+});
+
+test('trace replay subscriber receives held failures in emit order before subscribe returns', () => {
+  const trace = getTrace({});
+  trace.emit({ blockId: 'a', success: false, stateBefore: { a: 1 } });
+  trace.emit({ blockId: 'b', success: true });
+  trace.emit({ blockId: 'c', success: false });
+  const received = [];
+  const unsubscribe = trace.subscribe((payload) => received.push(payload), { replay: true });
+  expect(received).toEqual([
+    { blockId: 'a', success: false, stateBefore: undefined },
+    { blockId: 'c', success: false, stateBefore: undefined },
+  ]);
+  expect(typeof unsubscribe).toBe('function');
+});
+
+test('trace second replay subscriber receives no held failures and later failures go live', () => {
+  const trace = getTrace({});
+  trace.emit({ blockId: 'a', success: false });
+  const first = [];
+  const second = [];
+  trace.subscribe((payload) => first.push(payload.blockId), { replay: true });
+  trace.subscribe((payload) => second.push(payload.blockId), { replay: true });
+  expect(second).toEqual([]);
+  trace.emit({ blockId: 'b', success: false });
+  expect(first).toEqual(['a', 'b']);
+  expect(second).toEqual(['b']);
+  const late = [];
+  trace.subscribe((payload) => late.push(payload.blockId), { replay: true });
+  expect(late).toEqual([]);
+});
+
+test('trace non-replay subscriber neither receives held failures nor ends the holding', () => {
+  const trace = getTrace({});
+  trace.emit({ blockId: 'a', success: false });
+  const recorder = [];
+  trace.subscribe((payload) => recorder.push(payload.blockId), { state: true });
+  expect(recorder).toEqual([]);
+  trace.emit({ blockId: 'b', success: false });
+  expect(recorder).toEqual(['b']);
+  const replayed = [];
+  trace.subscribe((payload) => replayed.push(payload.blockId), { replay: true });
+  expect(replayed).toEqual(['a', 'b']);
+});
+
+test('trace holds at most 20 failures and drops the 21st', () => {
+  const trace = getTrace({});
+  for (let i = 0; i < 21; i += 1) {
+    trace.emit({ index: i, success: false });
+  }
+  const received = [];
+  trace.subscribe((payload) => received.push(payload.index), { replay: true });
+  expect(received).toEqual([...Array(20).keys()]);
+});
+
+test('trace throwing replay listener is warned once and does not stop subscribe', () => {
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  try {
+    const trace = getTrace({});
+    trace.emit({ success: false });
+    trace.emit({ success: false });
+    const listener = jest.fn(() => {
+      throw new Error('listener failed');
+    });
+    const unsubscribe = trace.subscribe(listener, { replay: true });
+    expect(listener).toHaveBeenCalledTimes(2);
+    expect(typeof unsubscribe).toBe('function');
+    trace.emit({ success: false });
+    expect(listener).toHaveBeenCalledTimes(3);
+    expect(warn).toHaveBeenCalledTimes(1);
+  } finally {
+    warn.mockRestore();
+  }
 });
 
 test('trace wantsState is true only while a state subscriber is subscribed', () => {
@@ -122,6 +217,7 @@ test('trace actionView has subscribe and the describe functions and no engine-on
   expect(trace.actionView.pageIdOf).toBe(trace.pageIdOf);
   expect(trace.actionView.emit).toBeUndefined();
   expect(trace.actionView.wantsState).toBeUndefined();
+  expect(trace.actionView.wantsPayload).toBeUndefined();
   expect(trace.actionView.hasSubscribers).toBeUndefined();
   expect(trace.actionView).toBe(trace.actionView);
 });

@@ -21,7 +21,7 @@ The docs recommend `PostHogInit` (and `PostHogIdentify`) in the root `events.onI
 
 ## lowdefy_event_failed
 
-After PostHog is `enabled` and unless `captureEventFailures` is `false` (default `true`, one constant in `PostHogInit.js`), `subscribeEventFailures` subscribes one listener to `trace`. Per payload with `success: false` it captures `lowdefy_event_failed` with `buildFailureProperties(payload)` and `{ timestamp: payload.record.startTimestamp }`, at most 50 per subscription (one app load). The same registry is a no-op; a different one replaces the subscription.
+After PostHog is `enabled` and unless `captureEventFailures` is `false` (default `true`, one constant in `PostHogInit.js`), `subscribeEventFailures` subscribes one listener to `trace`. Per payload with `success: false` it captures `lowdefy_event_failed` with `buildFailureProperties(payload)` and `{ timestamp: payload.record.startTimestamp }`, at most 50 per subscription (one app load). It subscribes with `{ replay: true }`, so the failures the registry held before anyone asked for replay (app `onInit`, which `getAppContext` finishes before `onInitAsync` starts, and the first page's `onInit` while posthog-js loads) arrive synchronously inside `trace.subscribe`, before its return value is stored; the listener therefore reads only `subscription.count` and `postHogState.client`, both set before the call. Replayed failures keep their own `startTimestamp` and count against the cap. The same registry is a no-op; a different one replaces the subscription.
 
 ## Property contract
 

@@ -23,7 +23,10 @@ const FAILURES_PER_APP_LOAD = 50;
 // Captures one lowdefy_event_failed per failed block or app event, timestamped when the event's
 // actions started, so it pairs with the click that caused it by the same rule as in dev. The
 // subscription is kept per trace registry, which lives for the whole app load: PostHogInit can
-// run from every page's events and still leaves one listener and one count.
+// run from every page's events and still leaves one listener and one count. It subscribes with
+// replay, so failures from before PostHog started (app onInit, the first page's onInit) are
+// captured too, with their own start times. The registry replays them inside subscribe, before
+// it returns, so the listener reads only what is set before the call.
 function subscribeEventFailures({ trace }) {
   const current = postHogState.subscription;
   if (current !== null && current.trace === trace) {
@@ -33,15 +36,18 @@ function subscribeEventFailures({ trace }) {
     current.unsubscribe();
   }
   const subscription = { count: 0, trace, unsubscribe: null };
-  subscription.unsubscribe = trace.subscribe((payload) => {
-    if (payload.success || subscription.count >= FAILURES_PER_APP_LOAD) {
-      return;
-    }
-    subscription.count += 1;
-    postHogState.client.capture('lowdefy_event_failed', buildFailureProperties(payload), {
-      timestamp: payload.record.startTimestamp,
-    });
-  });
+  subscription.unsubscribe = trace.subscribe(
+    (payload) => {
+      if (payload.success || subscription.count >= FAILURES_PER_APP_LOAD) {
+        return;
+      }
+      subscription.count += 1;
+      postHogState.client.capture('lowdefy_event_failed', buildFailureProperties(payload), {
+        timestamp: payload.record.startTimestamp,
+      });
+    },
+    { replay: true }
+  );
   postHogState.subscription = subscription;
 }
 
