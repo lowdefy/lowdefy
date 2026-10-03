@@ -16,8 +16,15 @@
 
 import { type } from '@lowdefy/helpers';
 
+import collectVisibleBlockIds from '../client/collectVisibleBlockIds.js';
+import createJourneyObservations from './createJourneyObservations.js';
 import createNetworkCounter from './createNetworkCounter.js';
 import { openPage } from './getBrowser.js';
+
+// The binding client/JourneyObserver.jsx looks for. A binding exists in every
+// document of the context it is exposed on, across full page loads, and in no
+// developer tab, so only a journey's own pages report what they ran.
+const OBSERVE_BINDING = '__lowdefyJourneyObserve';
 
 let actorCount = 0;
 
@@ -41,7 +48,9 @@ function nextClientAddress() {
 // switches away and back. Every actor sees the same viewport and colour
 // scheme. Each actor's context feeds its own network counter from before its
 // first navigation, so what the journey touched is measured per actor and
-// merged at the end.
+// merged at the end. Each actor's pages also report, through the observe
+// binding, the events that completed and the blocks that were ever visible,
+// into one set of observations for the whole journey.
 function createJourneyActors({
   browser,
   origin,
@@ -58,6 +67,7 @@ function createJourneyActors({
 }) {
   const actors = new Map();
   const counters = new Map();
+  const observations = createJourneyObservations();
   let currentName;
 
   async function switchTo(name) {
@@ -78,8 +88,11 @@ function createJourneyActors({
         recording: type.isUndefined(recording)
           ? undefined
           : { source: recording.source, run: { ...recording.run, actor: name } },
-        onContext: (context) => {
+        onContext: async (context) => {
           context.on('request', (request) => counter.record(request));
+          await context.exposeBinding(OBSERVE_BINDING, (source, message) =>
+            observations.receive(message)
+          );
         },
         timeout,
       });
@@ -101,6 +114,24 @@ function createJourneyActors({
     return [...counters.values()].map((counter) => counter.snapshot());
   }
 
+  // The runner's own look at the current page once a step has settled, beside
+  // the observer's samples on every DOM change. A page that is navigating or
+  // has crashed has nothing to report.
+  async function sampleRendered() {
+    const { page } = current();
+    try {
+      const pageId = await page.evaluate(() => window.lowdefy?.pageId);
+      const blockIds = await page.evaluate(collectVisibleBlockIds);
+      observations.receive({ kind: 'rendered', pageId, blockIds });
+    } catch {
+      // Nothing to sample.
+    }
+  }
+
+  function observed() {
+    return observations.snapshot();
+  }
+
   // Closing a context does not reliably fire pagehide, so each actor's dev
   // recorder is flushed first, or the journey's last steps would be lost.
   async function flushRecordings({ capMs = 2000 } = {}) {
@@ -118,7 +149,16 @@ function createJourneyActors({
     await Promise.all([...actors.values()].map(({ context }) => context.close().catch(() => {})));
   }
 
-  return { switchTo, current, countCalls, networkSnapshots, flushRecordings, closeAll };
+  return {
+    switchTo,
+    current,
+    countCalls,
+    networkSnapshots,
+    sampleRendered,
+    observed,
+    flushRecordings,
+    closeAll,
+  };
 }
 
 export default createJourneyActors;

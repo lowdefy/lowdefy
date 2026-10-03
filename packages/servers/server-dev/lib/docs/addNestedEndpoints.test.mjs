@@ -138,7 +138,7 @@ test('addWriteFlags marks a caller that writes only through a nested endpoint as
   ]);
 });
 
-test('collectExercised merges actors, adds nested endpoints and writes, and leaves events and rendered empty', async () => {
+test('collectExercised merges actors, adds nested endpoints and writes, and passes the observed events and blocks through', async () => {
   const exercised = await collectExercised({
     snapshots: [
       {
@@ -148,6 +148,18 @@ test('collectExercised merges actors, adds nested endpoints and writes, and leav
         endpoints: [{ endpointId: 'notify', calls: 1 }],
       },
     ],
+    observed: {
+      events: [
+        {
+          scope: 'page',
+          pageId: 'tickets',
+          blockId: 'save',
+          eventName: 'onClick',
+          actionIds: ['a'],
+        },
+      ],
+      rendered: { tickets: ['save'] },
+    },
     readConfigFile,
     requestSchemas: artifacts['plugins/requestSchemas.json'],
   });
@@ -161,7 +173,9 @@ test('collectExercised merges actors, adds nested endpoints and writes, and leav
       { endpointId: 'archive', via: 'notify', calls: null, write: false },
     ],
     unfollowed: 1,
-    events: [],
-    rendered: {},
+    events: [
+      { scope: 'page', pageId: 'tickets', blockId: 'save', eventName: 'onClick', actionIds: ['a'] },
+    ],
+    rendered: { tickets: ['save'] },
   });
 });

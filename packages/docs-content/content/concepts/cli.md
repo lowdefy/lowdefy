@@ -143,10 +143,13 @@ The `test` command runs the app's config tests — the journeys in `tests/journe
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
 - `--disable-telemetry`: Disable telemetry.
+- `[paths...]`: Journey files or directories to run instead of `tests/journeys/*.yaml`, anywhere under the config directory, candidates in `tests/journeys/_candidates/` included.
 - `--filter <name>`: Only run journeys whose `name` contains this string (case-insensitive). Exits with code `1` if no journey matches.
+- `--lint`: Check the journeys for the lint rules (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L6 final assertion) and run nothing. Exits with code `1` on any lint error. See [Lint](/config-tests#lint).
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 - `--port <port>`: The port to start the development server on. If it is in use, the next free port is used. The default is `3000`.
 - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+- `--repeat <n>`: Run each journey `n` times (1 to 10) and classify it `PASS`, `FLAKY` or `FAIL`. Exits with code `1` on any `FLAKY` or `FAIL`. See [Replaying candidates](/config-tests#replaying-candidates).
 - `--url <url>`: Run the journeys against an already running development server (for example `--url http://localhost:3000` while `lowdefy dev` is running) instead of starting one.
 
 ## journeys compile
@@ -164,6 +167,32 @@ The `journeys compile` command turns recorded interaction traces into candidate 
 - `--dev-directory <dev-directory>`: Change the dev directory, where the development server's build is read from. The default is `<config-directory>/.lowdefy/dev`.
 - `--disable-telemetry`: Disable telemetry.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+## journeys harden
+
+The `journeys harden` command measures whether journeys fail when the feature they walk breaks. It runs each journey once, lists the config mutants on what the runs exercised, runs each mutant against the journeys that reached it, only in their own browsers, and reports every mutant no journey noticed with its source line, and a score per journey, in `.lowdefy/test/mutation.json`. It exits with code `0` even with survivors. See [Mutants](/config-tests#mutants-lowdefy-journeys-harden).
+
+- `[paths...]`: Journey files or directories to harden instead of `tests/journeys/*.yaml`.
+- `--filter <name>`: Only journeys whose `name` contains this string.
+- `--page <pageId...>`: Only mutants on these pages, and endpoint mutants a journey touching them called.
+- `--operators <list>`: Only these operators, comma separated: `drop-action`, `skip-validate`, `flip-visible`, `swap-if`, `drop-payload`, `retarget-link`, `drop-block`, `drop-step`.
+- `--max <n>`: Run at most `n` mutants. The default is `200`; `0` means no cap.
+- `--seed <n>`: The sample's seed; another seed draws another sample. The default is `0`.
+- `--workers <n>`: Journey runs at once, 1 to 16. The default is `4`.
+- `--mutant <id>`: Run only this mutant against the journeys on its path, without replacing the report.
+- `--list`: Print the sampled mutants and a time estimate, and run nothing.
+- `--json`: Print the report as JSON.
+- `--url <url>`, `--port <port>`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
+
+## journeys variants
+
+The `journeys variants` command writes edge-case candidates of one journey — bad input (`negative`), a reload mid-flow (`interrupt`) and a double click (`double-submit`) — to `tests/journeys/_candidates/variants/`, and replays each three times. See [Variants](/config-tests#variants-lowdefy-journeys-variants).
+
+- `<file>`: The journey file to vary.
+- `--name <journey>`: The journey to vary, when the file holds several.
+- `--kinds <list>`: Only these kinds, comma separated. The kinds for roles, another organisation, empty and large data need data sets and are skipped.
+- `--no-run`: Write the variants without replaying them.
+- `--url <url>`, `--port <port>`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
 
 ## journeys recordings
 

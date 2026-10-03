@@ -1,0 +1,225 @@
+id: home
+type: Box
+requests:
+  - id: save_item
+    type: MongoDBInsertOne
+    connectionId: fixture_db
+    payload:
+      name:
+        _state: name_input
+    properties:
+      doc:
+        kind: item
+        page: home
+        name:
+          _payload: name
+events:
+  # Fired by the page, not by a person.
+  onMount:
+    - id: set_rows
+      type: SetState
+      params:
+        rows:
+          - label: First row
+          - label: Second row
+blocks:
+  - id: home_title
+    type: Title
+    properties:
+      content: Journey fixture
+      level: 2
+  - id: name_input
+    type: TextInput
+    required: true
+    properties:
+      title: Name
+  - id: save_button
+    type: Button
+    properties:
+      title: Save
+    events:
+      onClick:
+        - id: save
+          type: Request
+          params: save_item
+        - id: set_saved
+          type: SetState
+          params:
+            saved: true
+  # Shown only once save_item answered, so dropping the save action hides it.
+  - id: save_success
+    type: Alert
+    visible:
+      _ne:
+        - _request: save_item
+        - null
+    properties:
+      type: success
+      message: Item saved
+  # Shown after a save, and no journey asserts it: a drop-block mutant on it
+  # survives.
+  - id: unasserted_alert
+    type: Alert
+    visible:
+      _eq:
+        - _state: saved
+        - true
+    properties:
+      message: Nobody asserts this message
+  - id: notify_button
+    type: Button
+    properties:
+      title: Notify
+    events:
+      onClick:
+        - id: notify
+          type: CallAPI
+          params:
+            endpointId: notify
+        - id: set_notified
+          type: SetState
+          params:
+            notified: true
+  - id: notified_text
+    type: Paragraph
+    visible:
+      _eq:
+        - _state: notified
+        - true
+    properties:
+      content: Notified
+  - id: link_button
+    type: Button
+    properties:
+      title: Go to second
+    events:
+      onClick:
+        - id: to_second
+          type: Link
+          params: second
+  # A Link by url is a full page load, which replaces window.lowdefy.
+  - id: url_link_button
+    type: Button
+    properties:
+      title: Load second by url
+    events:
+      onClick:
+        - id: to_second_by_url
+          type: Link
+          params:
+            url: /second?via=url
+  # Trailing-edge debounce longer than any journey: a change never completes
+  # its event while the journey runs, and a second change bounces the first.
+  - id: debounce_input
+    type: TextInput
+    properties:
+      title: Debounced
+    events:
+      onChange:
+        debounce:
+          ms: 60000
+        try:
+          - id: set_debounced
+            type: SetState
+            params:
+              debounced: true
+  # One chain shows the alert and clears it again within one step.
+  - id: flash_button
+    type: Button
+    properties:
+      title: Flash
+    events:
+      onClick:
+        - id: show_flash
+          type: SetState
+          params:
+            flash: true
+        - id: hold_flash
+          type: Wait
+          params:
+            ms: 300
+        - id: hide_flash
+          type: SetState
+          params:
+            flash: false
+  - id: flash_alert
+    type: Alert
+    visible:
+      _eq:
+        - _state: flash
+        - true
+    properties:
+      message: Flash message
+  - id: count_button
+    type: Button
+    properties:
+      title: Count
+    events:
+      onClick:
+        - id: add_click
+          type: SetState
+          params:
+            clicks:
+              _sum:
+                - _if_none:
+                    - _state: clicks
+                    - 0
+                - 1
+  - id: open_modal_button
+    type: Button
+    properties:
+      title: Open modal
+    events:
+      onClick:
+        - id: open_modal
+          type: CallMethod
+          params:
+            blockId: confirm_modal
+            method: setOpen
+            args:
+              - open: true
+  - id: confirm_modal
+    type: Modal
+    properties:
+      title: Confirm
+      footer: false
+    blocks:
+      - id: modal_text
+        type: Paragraph
+        properties:
+          content: Modal content
+      - id: close_modal_button
+        type: Button
+        properties:
+          title: Close modal
+        events:
+          onClick:
+            - id: close_modal
+              type: CallMethod
+              params:
+                blockId: confirm_modal
+                method: setOpen
+                args:
+                  - open: false
+  # Mounted with the page but never opened.
+  - id: forced_modal
+    type: Modal
+    properties:
+      title: Never opened
+      forceRender: true
+      footer: false
+    blocks:
+      - id: forced_text
+        type: Paragraph
+        properties:
+          content: Forced content
+  - id: hidden_text
+    type: Paragraph
+    visible: false
+    properties:
+      content: Never visible
+  - id: rows
+    type: List
+    blocks:
+      - id: rows.$.label
+        type: TextInput
