@@ -154,6 +154,11 @@ test('fetchGitModuleOverSsh ignores GIT_* variables and global git config', asyn
   expect(fs.existsSync(path.join(otherRepo, '.git', 'FETCH_HEAD'))).toBe(false);
 });
 
+// The stand-in is a sh script found first on PATH. Git for Windows runs
+// GIT_SSH_COMMAND through its own shell, which finds its own ssh.exe instead, so
+// these run off Windows only until the stand-in is passed to git directly.
+const onPosix = process.platform === 'win32' ? test.skip : test;
+
 // Runs a fetch against a stand-in for ssh that records what git passes it, then fails the
 // connection. Returns the directory holding the recorded files.
 async function captureSshInvocation({ name, sshKey }) {
@@ -194,30 +199,33 @@ exit 1
   return outDir;
 }
 
-test('fetchGitModuleOverSsh connects with only the given key, pinned GitHub host keys and no prompts', async () => {
-  const outDir = await captureSshInvocation({
-    name: 'ssh',
-    sshKey: '-----BEGIN OPENSSH PRIVATE KEY-----\nkey\n-----END OPENSSH PRIVATE KEY-----',
-  });
+onPosix(
+  'fetchGitModuleOverSsh connects with only the given key, pinned GitHub host keys and no prompts',
+  async () => {
+    const outDir = await captureSshInvocation({
+      name: 'ssh',
+      sshKey: '-----BEGIN OPENSSH PRIVATE KEY-----\nkey\n-----END OPENSSH PRIVATE KEY-----',
+    });
 
-  const args = fs.readFileSync(path.join(outDir, 'args'), 'utf8');
-  expect(args).toMatch(/^-F none -i \S+ /);
-  expect(args).toContain('-o IdentitiesOnly=yes');
-  expect(args).toContain('-o BatchMode=yes');
-  expect(args).toContain('-o StrictHostKeyChecking=yes');
-  expect(args).toContain('git@github.com');
-  expect(fs.readFileSync(path.join(outDir, 'key'), 'utf8')).toBe(
-    '-----BEGIN OPENSSH PRIVATE KEY-----\nkey\n-----END OPENSSH PRIVATE KEY-----\n'
-  );
-  expect(fs.readFileSync(path.join(outDir, 'key-mode'), 'utf8')).toMatch(/^-rw-------/);
-  expect(fs.readFileSync(path.join(outDir, 'known_hosts'), 'utf8')).toContain(
-    'github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl'
-  );
-  const keyPath = fs.readFileSync(path.join(outDir, 'key-path'), 'utf8').trim();
-  expect(fs.existsSync(keyPath)).toBe(false);
-});
+    const args = fs.readFileSync(path.join(outDir, 'args'), 'utf8');
+    expect(args).toMatch(/^-F none -i \S+ /);
+    expect(args).toContain('-o IdentitiesOnly=yes');
+    expect(args).toContain('-o BatchMode=yes');
+    expect(args).toContain('-o StrictHostKeyChecking=yes');
+    expect(args).toContain('git@github.com');
+    expect(fs.readFileSync(path.join(outDir, 'key'), 'utf8')).toBe(
+      '-----BEGIN OPENSSH PRIVATE KEY-----\nkey\n-----END OPENSSH PRIVATE KEY-----\n'
+    );
+    expect(fs.readFileSync(path.join(outDir, 'key-mode'), 'utf8')).toMatch(/^-rw-------/);
+    expect(fs.readFileSync(path.join(outDir, 'known_hosts'), 'utf8')).toContain(
+      'github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl'
+    );
+    const keyPath = fs.readFileSync(path.join(outDir, 'key-path'), 'utf8').trim();
+    expect(fs.existsSync(keyPath)).toBe(false);
+  }
+);
 
-test.each([
+onPosix.each([
   [
     'literal \\n escapes',
     '-----BEGIN OPENSSH PRIVATE KEY-----\\nkey\\n-----END OPENSSH PRIVATE KEY-----',

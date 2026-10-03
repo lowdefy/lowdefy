@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import { jest } from '@jest/globals';
 
 const mockReadFile = jest.fn();
@@ -46,11 +48,9 @@ test('updateServerPackageJsonJit adds missing packages to package.json', async (
     missingPackages,
   });
 
-  expect(mockReadFile).toHaveBeenCalledWith('/test/server/package.json');
-  expect(mockWriteFile).toHaveBeenCalledWith(
-    '/test/server/package.json',
-    expect.any(String)
-  );
+  const packageJsonPath = path.join('/test/server', 'package.json');
+  expect(mockReadFile).toHaveBeenCalledWith(packageJsonPath);
+  expect(mockWriteFile).toHaveBeenCalledWith(packageJsonPath, expect.any(String));
 
   const written = JSON.parse(mockWriteFile.mock.calls[0][1]);
   expect(written.dependencies['@lowdefy/plugin-aws']).toBe('1.0.0');
