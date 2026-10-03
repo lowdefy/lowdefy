@@ -31,6 +31,7 @@ import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
 import journeysCompile from './commands/journeys/journeysCompile.js';
+import journeysPullPosthog from './commands/journeys/pull/journeysPullPosthog.js';
 import mcp from './commands/mcp/mcp.js';
 import start from './commands/start/start.js';
 import test from './commands/test/test.js';
@@ -212,7 +213,9 @@ hub
 
 const journeys = program
   .command('journeys')
-  .description('Turn recorded interaction traces into candidate journeys.');
+  .description(
+    'Turn recorded interaction traces into candidate journeys, and report how real use backs them.'
+  );
 
 journeys
   .command('compile')
@@ -257,6 +260,52 @@ journeys
     )
   )
   .action(runCommand({ cliVersion, handler: journeysCompile }));
+
+journeys
+  .command('pull')
+  .description(
+    'Pull production analytics into .lowdefy/traces/production/, one UTC day per file. The adapter is posthog.'
+  )
+  .usage('<adapter> [options]')
+  .argument('<adapter>', 'Where production analytics are read from: posthog.')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--since <since>',
+      'The days to pull, ending today: a number of days such as 30d (the default), or a start date.'
+    )
+  )
+  .addOption(new Option('--from <date>', 'The first UTC day to pull, YYYY-MM-DD.'))
+  .addOption(new Option('--to <date>', 'The last UTC day to pull, YYYY-MM-DD.'))
+  .addOption(
+    new Option(
+      '--environment <name>',
+      'Only events whose environment super property is this, for a project shared by several environments.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--include-test-accounts',
+      "Include events the project's test-account filter leaves out."
+    )
+  )
+  .addOption(
+    new Option('--org-property <name>', 'The person property holding the org id. Default: org_id.')
+  )
+  .addOption(
+    new Option('--roles-property <name>', 'The person property holding the roles. Default: roles.')
+  )
+  .addOption(new Option('--page-size <rows>', 'Rows per query, at most 50000. Default: 10000.'))
+  .addOption(
+    new Option(
+      '--max-rows <rows>',
+      'Stop before a pull would read more rows than this. Default: 500000.'
+    )
+  )
+  .addOption(new Option('--refetch', 'Pull final days again (days older than yesterday).'))
+  .action(runCommand({ cliVersion, handler: journeysPullPosthog }));
 
 program
   .command('init')

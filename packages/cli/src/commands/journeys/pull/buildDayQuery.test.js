@@ -51,7 +51,7 @@ describe('buildDayQuery', () => {
 
   test('buildDayQuery adds the environment clause only with an environment', () => {
     expect(buildDayQuery({ day: '2026-10-01', pageSize: 10 }).query).not.toContain(
-      'properties.environment'
+      'properties.environment ='
     );
     expect(buildDayQuery({ day: '2026-10-01', pageSize: 10, environment: 'prod' }).query).toContain(
       'properties.environment = {environment}'

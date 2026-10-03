@@ -16,9 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import checkPropertyName from './checkPropertyName.js';
 import dayBounds from './dayBounds.js';
-
-const PROPERTY_NAME = /^[A-Za-z_][A-Za-z0-9_$]*$/;
 
 const EVENTS = [
   '$pageview',
@@ -47,18 +46,6 @@ const LOWDEFY_PROPERTIES = [
   'lowdefy_config_key',
   'lowdefy_invalid_blocks',
 ];
-
-// Person property names go into the query text (HogQL placeholders hold
-// values, not names), so only plain identifiers are accepted.
-function checkPropertyName({ flag, name }) {
-  if (!type.isString(name) || !PROPERTY_NAME.test(name)) {
-    throw new Error(
-      `${flag} should be a person property name of letters, digits, _ and $, starting with a letter or _. Received ${JSON.stringify(
-        name
-      )}.`
-    );
-  }
-}
 
 // One page of one UTC day's events, keyset-paged on (timestamp, uuid): OFFSET
 // answers 400 for personal keys, and the uuid tie-break keeps two events in
@@ -90,6 +77,7 @@ function buildDayQuery({
     'properties.$current_url AS current_url',
     'properties.$event_type AS event_type',
     'properties.$el_text AS el_text',
+    'properties.environment AS environment',
     ...LOWDEFY_PROPERTIES.map((name) => `properties.${name} AS ${name}`),
   ];
   if (includeChain) columns.push('elements_chain');
