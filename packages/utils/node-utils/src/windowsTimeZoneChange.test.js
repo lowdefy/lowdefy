@@ -16,8 +16,6 @@
 
 import { spawn, spawnSync } from 'child_process';
 
-import { wait } from '@lowdefy/helpers';
-
 import getProcessStartTime from './getProcessStartTime.js';
 import getProcessStartTimeCommand from './getProcessStartTimeCommand.js';
 import readProcessStartTime from './readProcessStartTime.js';
@@ -39,25 +37,18 @@ function powershell(command) {
   return result.stdout.trim();
 }
 
-// Right after a time zone change WMI can fail a read for a moment. A failed
-// read is "unknown" and safe; what must hold is that a read that succeeds
-// names the same instant.
-async function readOnceAvailable({ pid }) {
-  const deadline = Date.now() + 60000;
-  while (Date.now() < deadline) {
-    const startTime = getProcessStartTime({ pid });
-    if (startTime !== null) {
-      return startTime;
-    }
-    await wait(1000);
+// Right after a time zone change WMI answers slowly, past the 15 s the
+// readers allow, for a minute or more; until then they read null, which is
+// "unknown" and safe. What must hold is that a read that completes names the
+// same instant, so this reads with the same command and parser, without the
+// timeout.
+function readWithoutTimeout({ pid }) {
+  const { command, args, parse } = getProcessStartTimeCommand({ pid });
+  const result = spawnSync(command, args, { encoding: 'utf8', windowsHide: true });
+  if (result.status !== 0) {
+    throw new Error(`Start time read failed: ${result.stderr}`);
   }
-  const { command, args } = getProcessStartTimeCommand({ pid });
-  const raw = spawnSync(command, args, { encoding: 'utf8', windowsHide: true });
-  throw new Error(
-    `No start time read in 60 s. status ${raw.status}, stdout ${JSON.stringify(
-      raw.stdout
-    )}, stderr ${JSON.stringify(raw.stderr)}`
-  );
+  return parse(result.stdout);
 }
 
 onWindows(
@@ -81,9 +72,9 @@ onWindows(
       ].filter((zone) => zone !== originalZone);
       for (const zone of zones) {
         powershell(`Set-TimeZone -Id '${zone}'`);
-        expect(await readOnceAvailable({ pid: child.pid })).toEqual(startTime);
-        const asyncRead = await readProcessStartTime({ pid: child.pid });
-        expect([startTime, null]).toContain(asyncRead);
+        expect(readWithoutTimeout({ pid: child.pid })).toEqual(startTime);
+        expect([startTime, null]).toContain(getProcessStartTime({ pid: child.pid }));
+        expect([startTime, null]).toContain(await readProcessStartTime({ pid: child.pid }));
       }
     } finally {
       powershell(`Set-TimeZone -Id '${originalZone}'`);
