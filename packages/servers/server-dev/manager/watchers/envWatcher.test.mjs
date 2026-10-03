@@ -19,27 +19,23 @@ import os from 'os';
 import path from 'path';
 import { jest } from '@jest/globals';
 
+import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
+import waitFor from '../../test-utils/waitFor.mjs';
+
 const { default: envWatcher } = await import('./envWatcher.mjs');
 
-function waitFor(predicate, timeout = 3000) {
-  return new Promise((resolve, reject) => {
-    const started = Date.now();
-    const tick = () => {
-      if (predicate()) return resolve();
-      if (Date.now() - started > timeout) return reject(new Error('Timed out waiting.'));
-      setTimeout(tick, 25);
-    };
-    tick();
-  });
-}
+// File events can take seconds to arrive on a loaded machine.
+jest.setTimeout(60000);
 
 let configDir;
 let context;
 let watcher;
 
-beforeEach(() => {
+beforeEach(async () => {
   configDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-env-watcher-test-'));
   fs.writeFileSync(path.join(configDir, '.env'), 'LOWDEFY_SECRET_A=one\n');
+  // Otherwise the fixture write can reach the watcher as a second edit.
+  await flushFsEvents();
   context = {
     directories: { config: configDir },
     logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
@@ -73,7 +69,9 @@ test.each([
     watcher = await envWatcher(context);
 
     fs.writeFileSync(path.join(configDir, '.env'), 'LOWDEFY_SECRET_A=two\n');
-    await waitFor(() => context.syncServer.mock.calls.length > 0);
+    await waitFor(() => context.syncServer.mock.calls.length > 0, {
+      description: 'the server sync',
+    });
 
     expect(context.readDotEnv).toHaveBeenCalledTimes(1);
     expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
@@ -81,7 +79,9 @@ test.each([
       context.lowdefyBuild.mock.invocationCallOrder[0]
     );
     expect(context.syncServer).toHaveBeenCalledWith({ restart: true });
-    await waitFor(() => context.buildActivity.setBusy.mock.calls.length === 2);
+    await waitFor(() => context.buildActivity.setBusy.mock.calls.length === 2, {
+      description: 'the watcher to report it is idle',
+    });
     expect(context.buildActivity.setBusy.mock.calls).toEqual([[true], [false]]);
   }
 );

@@ -20,15 +20,24 @@ import path from 'path';
 
 import { jest } from '@jest/globals';
 
+import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
+import spyOnChokidar from '../../test-utils/spyOnChokidar.mjs';
+
+// File events can take seconds to arrive on a loaded machine.
+jest.setTimeout(60000);
+
 // The bus watches build/buildStatus.json under process.cwd() — point it at a
 // throwaway server directory before the module is imported.
 const originalCwd = process.cwd();
-const fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-dev-event-bus-test-'));
+const fixtureDir = fs.realpathSync(
+  fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-dev-event-bus-test-'))
+);
 fs.mkdirSync(path.join(fixtureDir, 'build'));
 process.chdir(fixtureDir);
 
 const statusPath = path.join(fixtureDir, 'build', 'buildStatus.json');
 
+const watchers = spyOnChokidar();
 const { bootedAt, publish, subscribe } = await import('./devEventBus.js');
 
 const unsubscribers = [];
@@ -39,9 +48,15 @@ function listen(send) {
   return unsubscribe;
 }
 
+// The bus starts its watcher with the first subscriber, so a test waits for
+// that watcher to be ready before it writes the file.
+function watcherReady() {
+  return watchers.at(-1).ready;
+}
+
 // Resolves with the next event of the given type, so file-watcher tests wait
 // for the real fs event instead of sleeping a guessed interval.
-function nextEvent(type, { timeout = 4000 } = {}) {
+function nextEvent(type, { timeout = 20000 } = {}) {
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
       unsubscribe();
@@ -56,22 +71,34 @@ function nextEvent(type, { timeout = 4000 } = {}) {
   });
 }
 
+async function writeUntilSeen({ pending, content }) {
+  fs.writeFileSync(statusPath, content);
+  const retry = setInterval(() => fs.writeFileSync(statusPath, content), 1000);
+  try {
+    return await pending;
+  } finally {
+    clearInterval(retry);
+  }
+}
+
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 // fsevents can report a write made just before the watcher attached, so a
-// file that must already exist when a test subscribes is written well ahead.
+// file that must already exist when a test subscribes is flushed through
+// before the test subscribes.
 async function writeExistingStatus(status) {
   fs.writeFileSync(statusPath, JSON.stringify(status));
-  await sleep(400);
+  await flushFsEvents();
 }
 
 afterEach(async () => {
   unsubscribers.splice(0).forEach((unsubscribe) => unsubscribe());
+  await Promise.all(watchers.map(({ watcher }) => watcher.close()));
   if (fs.existsSync(statusPath)) fs.rmSync(statusPath);
-  // Let the closed watcher flush any pending fs events before the next test.
-  await sleep(100);
+  // The removal must not reach the next test's watcher.
+  await flushFsEvents();
 });
 
 afterAll(() => {
@@ -148,19 +175,19 @@ test('a subscriber whose send rejects is removed after the rejection settles', a
 
 test('a buildStatus.json write publishes a build event carrying the stale flag when the build failed', async () => {
   const pending = nextEvent('build');
-  // Give the watcher a moment to attach before the first write.
-  await sleep(200);
-  fs.writeFileSync(
-    statusPath,
-    JSON.stringify({
+  await watcherReady();
+  // buildStatus.json does not exist yet, so the watcher watches its directory
+  // for it, and that watch can start a moment after ready. The same write is
+  // repeated until one is seen.
+  const event = await writeUntilSeen({
+    pending,
+    content: JSON.stringify({
       status: 'error',
       timestamp: '2026-02-03T04:05:06.000Z',
       errors: [{ message: 'Block type "Buton" not found.' }],
       warnings: [],
-    })
-  );
-
-  const event = await pending;
+    }),
+  });
   expect(event).toMatchObject({
     type: 'build',
     status: 'error',
@@ -177,7 +204,7 @@ test('a buildStatus.json write publishes a build event carrying the stale flag w
 test('a successful buildStatus.json write publishes a build event that is not stale', async () => {
   await writeExistingStatus({ status: 'error', errors: [{}], warnings: [] });
   const pending = nextEvent('build');
-  await sleep(200);
+  await watcherReady();
   fs.writeFileSync(
     statusPath,
     JSON.stringify({
@@ -204,10 +231,18 @@ test('removing buildStatus.json publishes nothing', async () => {
   await writeExistingStatus({ status: 'ok', errors: [], warnings: [] });
   const send = jest.fn();
   listen(send);
-  await sleep(200);
+  const { watcher } = watchers.at(-1);
+  await watcherReady();
+  // The bus handles a watcher event synchronously, so once the watcher has
+  // reported the removal, anything the bus publishes for it has been sent.
+  const removed = new Promise((resolve) =>
+    watcher.on('unlink', (filePath) => {
+      if (filePath === statusPath) resolve();
+    })
+  );
 
   fs.rmSync(statusPath);
-  await sleep(500);
+  await removed;
 
   expect(send).not.toHaveBeenCalled();
 });
@@ -215,11 +250,14 @@ test('removing buildStatus.json publishes nothing', async () => {
 test('the watcher closes when the last subscriber leaves so a later write publishes nothing', async () => {
   const send = jest.fn();
   const unsubscribe = listen(send);
-  await sleep(200);
+  const { watcher } = watchers.at(-1);
+  await watcherReady();
   unsubscribe();
+  expect(watcher.closed).toBe(true);
 
   fs.writeFileSync(statusPath, JSON.stringify({ status: 'ok', errors: [], warnings: [] }));
-  await sleep(500);
+  // Every write so far has been handed out by the OS once this returns.
+  await flushFsEvents();
 
   expect(send).not.toHaveBeenCalled();
 });

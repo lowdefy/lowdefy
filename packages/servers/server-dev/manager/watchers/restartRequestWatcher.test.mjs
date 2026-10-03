@@ -19,27 +19,22 @@ import os from 'os';
 import path from 'path';
 import { jest } from '@jest/globals';
 
+import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
+import waitFor from '../../test-utils/waitFor.mjs';
+
 const { default: restartRequestWatcher } = await import('./restartRequestWatcher.mjs');
 
-function waitFor(predicate, timeout = 3000) {
-  return new Promise((resolve, reject) => {
-    const started = Date.now();
-    const tick = () => {
-      if (predicate()) return resolve();
-      if (Date.now() - started > timeout) return reject(new Error('Timed out waiting.'));
-      setTimeout(tick, 25);
-    };
-    tick();
-  });
-}
+// File events can take seconds to arrive on a loaded machine.
+jest.setTimeout(60000);
 
 let fixtureDir;
 let context;
 let watcher;
 
-beforeEach(() => {
+beforeEach(async () => {
   fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-restart-watcher-test-'));
   fs.mkdirSync(path.join(fixtureDir, 'build'), { recursive: true });
+  await flushFsEvents();
   context = {
     directories: { build: path.join(fixtureDir, 'build') },
     logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
@@ -65,16 +60,26 @@ test('writing build/.restart restarts the server once and removes the sentinel',
     sentinelPath,
     JSON.stringify({ requestedAt: new Date().toISOString(), reason: 'Edited a request plugin' })
   );
-  await waitFor(() => context.syncServer.mock.calls.length > 0);
-  // Give the batch window a chance to fire a second time if it were going to.
-  await new Promise((resolve) => setTimeout(resolve, 300));
-
-  expect(context.syncServer).toHaveBeenCalledTimes(1);
+  await waitFor(() => context.syncServer.mock.calls.length > 0, {
+    description: 'the server restart',
+  });
   expect(fs.existsSync(sentinelPath)).toBe(false);
-  expect(context.logger.info).toHaveBeenCalledWith(
-    { spin: 'start' },
-    'Restart requested by the dev tools: Edited a request plugin.'
-  );
+
+  // Removing the sentinel is itself a file event. A second request, seen
+  // after it, fences it: any restart the removal caused lands before the
+  // second request's.
+  fs.writeFileSync(sentinelPath, JSON.stringify({ reason: 'Fence' }));
+  await waitFor(() => context.syncServer.mock.calls.length > 1, {
+    description: 'the second restart',
+  });
+
+  expect(context.syncServer).toHaveBeenCalledTimes(2);
+  expect(
+    context.logger.info.mock.calls.filter(([, message]) => message.startsWith('Restart requested'))
+  ).toEqual([
+    [{ spin: 'start' }, 'Restart requested by the dev tools: Edited a request plugin.'],
+    [{ spin: 'start' }, 'Restart requested by the dev tools: Fence.'],
+  ]);
 });
 
 test('a restart request rebuilds the config before restarting the server', async () => {
@@ -82,7 +87,9 @@ test('a restart request rebuilds the config before restarting the server', async
   const sentinelPath = path.join(fixtureDir, 'build', '.restart');
 
   fs.writeFileSync(sentinelPath, JSON.stringify({ reason: 'Added a block type' }));
-  await waitFor(() => context.syncServer.mock.calls.length > 0);
+  await waitFor(() => context.syncServer.mock.calls.length > 0, {
+    description: 'the server restart',
+  });
 
   expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
   expect(context.lowdefyBuild.mock.invocationCallOrder[0]).toBeLessThan(
@@ -96,7 +103,9 @@ test('a restart request restarts the server when the config build fails', async 
   const sentinelPath = path.join(fixtureDir, 'build', '.restart');
 
   fs.writeFileSync(sentinelPath, JSON.stringify({ reason: 'Added a block type' }));
-  await waitFor(() => context.syncServer.mock.calls.length > 0);
+  await waitFor(() => context.syncServer.mock.calls.length > 0, {
+    description: 'the server restart',
+  });
 
   expect(context.syncServer).toHaveBeenCalledTimes(1);
 });

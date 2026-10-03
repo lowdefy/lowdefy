@@ -19,19 +19,15 @@ import os from 'os';
 import path from 'path';
 import { jest } from '@jest/globals';
 
+import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
+import spyOnChokidar from '../../test-utils/spyOnChokidar.mjs';
+import waitFor from '../../test-utils/waitFor.mjs';
+
+const watchers = spyOnChokidar();
 const { default: lowdefyBuildWatcher } = await import('./lowdefyBuildWatcher.mjs');
 
-function waitFor(predicate, timeout = 5000) {
-  return new Promise((resolve, reject) => {
-    const started = Date.now();
-    const tick = () => {
-      if (predicate()) return resolve();
-      if (Date.now() - started > timeout) return reject(new Error('Timed out waiting.'));
-      setTimeout(tick, 25);
-    };
-    tick();
-  });
-}
+// File events can take seconds to arrive on a loaded machine.
+jest.setTimeout(60000);
 
 function write(filePath, content) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
@@ -49,9 +45,38 @@ function invalidated() {
   return fs.existsSync(path.join(buildDir, 'invalidatePages'));
 }
 
+// Starts the watcher under test and returns the chokidar watcher it watches
+// the app with, the first one it creates.
+async function startWatcher() {
+  const first = watchers.length;
+  watcher = await lowdefyBuildWatcher(context);
+  return watchers[first].watcher;
+}
+
+function isWatched({ configWatcher, filePath }) {
+  const names = configWatcher.getWatched()[path.dirname(filePath)] ?? [];
+  return names.includes(path.basename(filePath));
+}
+
+// A file added to a running watcher is listed as watched a moment before its
+// event stream starts, so an edit made in that gap goes unseen. The file is
+// edited again every two seconds - well past the watcher's batch delay, so an
+// edit that was seen is processed before the next - until pages are
+// invalidated. Only a watched file can invalidate them.
+async function editUntilInvalidated(filePath) {
+  await waitFor(
+    () => {
+      if (invalidated()) return true;
+      fs.appendFileSync(filePath, 'type: Box\n');
+      return false;
+    },
+    { interval: 2000, description: `an edit to ${path.basename(filePath)} to invalidate pages` }
+  );
+}
+
 // The app lives in a git worktree under a dot-folder, like the worktrees
 // Claude Code creates under .claude/worktrees/.
-beforeEach(() => {
+beforeEach(async () => {
   const tmpDir = fs.realpathSync(os.tmpdir());
   repoDir = fs.mkdtempSync(path.join(tmpDir, 'lowdefy-build-watcher-test-'));
   const worktreeDir = path.join(repoDir, '.claude', 'worktrees', 'feature');
@@ -79,6 +104,9 @@ beforeEach(() => {
       5: { parent: '4', path: path.join(worktreeDir, 'modules', 'shared', 'title-block.yaml') },
     })
   );
+  // Otherwise the fixture writes can reach the watcher as edits: a
+  // lowdefy.yaml "edit" turns every page edit into a config rebuild.
+  await flushFsEvents();
 
   context = {
     buildContext: {
@@ -111,20 +139,24 @@ afterEach(async () => {
 });
 
 test('a page file edit in an app under a dot-folder invalidates pages', async () => {
-  watcher = await lowdefyBuildWatcher(context);
+  await startWatcher();
   fs.appendFileSync(path.join(configDir, 'pages', 'home.yaml'), 'layout: {}\n');
 
-  await waitFor(invalidated);
-  await waitFor(() => context.reloadClients.mock.calls.length > 0);
+  await waitFor(invalidated, { description: 'pages to be invalidated' });
+  await waitFor(() => context.reloadClients.mock.calls.length > 0, {
+    description: 'clients to reload',
+  });
   expect(context.lowdefyBuild).not.toHaveBeenCalled();
   expect(context.syncServer).not.toHaveBeenCalled();
 });
 
 test('adding a page to the pages list rebuilds the config', async () => {
-  watcher = await lowdefyBuildWatcher(context);
+  await startWatcher();
   fs.appendFileSync(path.join(configDir, 'pages.yaml'), '- _ref: pages/about.yaml\n');
 
-  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1);
+  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1, {
+    description: 'a config build',
+  });
   expect(invalidated()).toBe(false);
 });
 
@@ -136,62 +168,83 @@ test('a config rebuild stays busy until the server has caught up with the build'
         finishSync = resolve;
       })
   );
-  watcher = await lowdefyBuildWatcher(context);
+  await startWatcher();
   fs.appendFileSync(path.join(configDir, 'pages.yaml'), '- _ref: pages/about.yaml\n');
 
-  await waitFor(() => context.syncServer.mock.calls.length === 1);
+  await waitFor(() => context.syncServer.mock.calls.length === 1, {
+    description: 'the server sync',
+  });
   expect(context.buildActivity.setBusy.mock.calls).toEqual([[true]]);
   finishSync();
-  await waitFor(() => context.buildActivity.setBusy.mock.calls.length === 2);
+  await waitFor(() => context.buildActivity.setBusy.mock.calls.length === 2, {
+    description: 'the watcher to report it is idle',
+  });
   expect(context.buildActivity.setBusy.mock.calls).toEqual([[true], [false]]);
 });
 
 test('a lowdefy.yaml edit that breaks its YAML syntax still rebuilds the config', async () => {
-  watcher = await lowdefyBuildWatcher(context);
+  await startWatcher();
   write(path.join(configDir, 'lowdefy.yaml'), 'lowdefy: local\npages:\n  - id: a\n   - id: b\n');
 
-  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1);
+  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1, {
+    description: 'a config build',
+  });
   expect(context.logger.error).not.toHaveBeenCalled();
 });
 
 test('after a failed config build, an edit to a file not in skeletonSourceFiles rebuilds the config', async () => {
   context.lastBuildFailed = true;
-  watcher = await lowdefyBuildWatcher(context);
+  await startWatcher();
   write(path.join(localModuleRoot, 'api', 'check-name.yaml'), 'id: check-name\n');
 
-  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1);
+  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1, {
+    description: 'a config build',
+  });
   expect(invalidated()).toBe(false);
 });
 
 test('a skeleton file in a local module outside the config directory rebuilds the config', async () => {
-  watcher = await lowdefyBuildWatcher(context);
+  await startWatcher();
   fs.appendFileSync(path.join(localModuleRoot, 'menus.yaml'), '- id: other\n');
 
-  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1);
+  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1, {
+    description: 'a config build',
+  });
 });
 
 test('a file the build read outside every watched directory invalidates pages when edited', async () => {
-  watcher = await lowdefyBuildWatcher(context);
-  fs.appendFileSync(
-    path.join(repoDir, '.claude', 'worktrees', 'feature', 'modules', 'shared', 'title-block.yaml'),
-    'type: Box\n'
+  const titleBlock = path.join(
+    repoDir,
+    '.claude',
+    'worktrees',
+    'feature',
+    'modules',
+    'shared',
+    'title-block.yaml'
   );
+  const configWatcher = await startWatcher();
 
-  await waitFor(invalidated);
+  await waitFor(() => isWatched({ configWatcher, filePath: titleBlock }), {
+    description: 'title-block.yaml to be watched',
+  });
+  await editUntilInvalidated(titleBlock);
   expect(context.lowdefyBuild).not.toHaveBeenCalled();
 });
 
 test('a file that appears in refMap.json after the watch started is watched', async () => {
   const footer = path.join(repoDir, 'shared', 'footer.yaml');
   write(footer, 'id: footer\n');
-  watcher = await lowdefyBuildWatcher(context);
+  await flushFsEvents();
+  const configWatcher = await startWatcher();
+  expect(isWatched({ configWatcher, filePath: footer })).toBe(false);
 
   const refMap = JSON.parse(fs.readFileSync(path.join(buildDir, 'refMap.json'), 'utf8'));
   refMap[6] = { parent: '3', path: path.relative(configDir, footer) };
   fs.writeFileSync(path.join(buildDir, 'refMap.json'), JSON.stringify(refMap));
-  // The refMap watcher batches its change for half a second before adding.
-  await new Promise((resolve) => setTimeout(resolve, 1500));
-  fs.appendFileSync(footer, 'type: Box\n');
 
-  await waitFor(invalidated);
+  // The refMap watcher batches its change before adding the file.
+  await waitFor(() => isWatched({ configWatcher, filePath: footer }), {
+    description: 'footer.yaml to be watched',
+  });
+  await editUntilInvalidated(footer);
 });
