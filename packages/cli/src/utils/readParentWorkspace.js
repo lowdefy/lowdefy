@@ -20,6 +20,8 @@ import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
 import { readFile } from '@lowdefy/node-utils';
 
+import parseNpmrcLine from './parseNpmrcLine.js';
+
 // The settings pnpm 10 reads from the "pnpm" field of the root package.json.
 // pnpm 11 reads none of them, so this list does not grow.
 const manifestSettingKeys = [
@@ -71,6 +73,15 @@ async function readPackageJson({ workspaceRoot }) {
   }
 }
 
+// pnpm 10 also reads "pnpmfile" from .npmrc. The copied .npmrc carries it
+// to the server, where a pnpmfile in pnpm-workspace.yaml would override it.
+function npmrcSetsPnpmfile({ npmrc }) {
+  return (npmrc ?? '').split(/\r?\n/).some((line) => {
+    const entry = parseNpmrcLine(line);
+    return entry !== null && entry.key.toLowerCase() === 'pnpmfile';
+  });
+}
+
 function getManifestSettings({ packageJson }) {
   const settings = {};
   manifestSettingKeys.forEach((key) => {
@@ -94,10 +105,12 @@ async function readParentWorkspace({ workspaceRoot }) {
   const workspaceYaml = await readWorkspaceYaml({ workspaceRoot });
   const packageJson = await readPackageJson({ workspaceRoot });
   const { packages, ...workspaceSettings } = workspaceYaml;
+  const npmrcPath = path.join(workspaceRoot, '.npmrc');
+  const npmrc = await readFile(npmrcPath);
 
   // pnpm-workspace.yaml wins where both set a setting, as in pnpm 10.
   const settings = { ...getManifestSettings({ packageJson }), ...workspaceSettings };
-  if (type.isNone(settings.pnpmfile)) {
+  if (type.isNone(settings.pnpmfile) && !npmrcSetsPnpmfile({ npmrc })) {
     const defaultPnpmfile = defaultPnpmfiles.find((fileName) =>
       fs.existsSync(path.join(workspaceRoot, fileName))
     );
@@ -106,9 +119,8 @@ async function readParentWorkspace({ workspaceRoot }) {
     }
   }
 
-  const npmrcPath = path.join(workspaceRoot, '.npmrc');
   return {
-    npmrc: await readFile(npmrcPath),
+    npmrc,
     npmrcPath,
     packageManager: packageJson.packageManager,
     packages: packages ?? [],

@@ -130,6 +130,19 @@ test('readParentWorkspace sets pnpmfile to the default pnpmfile at the parent ro
   expect(settings).toEqual({ pnpmfile: '.pnpmfile.cjs' });
 });
 
+test('readParentWorkspace does not set the default pnpmfile when the parent .npmrc sets pnpmfile', async () => {
+  const { default: fs } = await import('fs');
+  const { readFile } = await import('@lowdefy/node-utils');
+  const { default: readParentWorkspace } = await import('./readParentWorkspace.js');
+  fs.existsSync.mockImplementation((filePath) => filePath === '/repo/.pnpmfile.cjs');
+  mockFiles(readFile, {
+    '/repo/pnpm-workspace.yaml': 'packages:\n  - apps/*\n',
+    '/repo/.npmrc': 'pnpmfile = hooks/pnpmfile.cjs\n',
+  });
+  const { settings } = await readParentWorkspace({ workspaceRoot: '/repo' });
+  expect(settings).toEqual({});
+});
+
 test('readParentWorkspace keeps a pnpmfile the parent sets', async () => {
   const { default: fs } = await import('fs');
   const { readFile } = await import('@lowdefy/node-utils');

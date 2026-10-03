@@ -174,3 +174,58 @@ test('createNestedNpmrc does not copy or report a password written in the key', 
   expect(content).not.toContain('secret');
   expect(skippedKeys).toEqual(['//***@npm.example.com/:_authToken']);
 });
+
+test('createNestedNpmrc rebases relative paths to point at the same files from the server', () => {
+  const { content } = createNestedNpmrc({
+    directory: '/repo/apps/app/.lowdefy/server',
+    parentNpmrc: [
+      'store-dir=.pnpm-store',
+      'cache-dir = "cache/pnpm"',
+      'pnpmfile=hooks/pnpmfile.cjs',
+      'global-pnpmfile=hooks/global.cjs',
+      'cafile=certs/ca.pem',
+      '//npm.example.com/:certfile=certs/client.crt',
+      '//npm.example.com/:keyfile=certs/client.key',
+      '//npm.example.com/:CAfile=certs/ca.pem',
+      'virtual-store-dir=node_modules/.pnpm',
+    ].join('\n'),
+    parentNpmrcPath,
+    serverNpmrc: null,
+    workspaceRoot: '/repo',
+  });
+  expect(content).toEqual(`# >>> Copied by Lowdefy from /repo/.npmrc; rewritten on every run.
+store-dir=../../../../.pnpm-store
+cache-dir=../../../../cache/pnpm
+pnpmfile=../../../../hooks/pnpmfile.cjs
+global-pnpmfile=../../../../hooks/global.cjs
+cafile=../../../../certs/ca.pem
+//npm.example.com/:certfile=../../../../certs/client.crt
+//npm.example.com/:keyfile=../../../../certs/client.key
+//npm.example.com/:CAfile=../../../../certs/ca.pem
+virtual-store-dir=node_modules/.pnpm
+# <<< End of the lines copied by Lowdefy.
+`);
+});
+
+test('createNestedNpmrc keeps absolute, home directory and environment variable paths', () => {
+  const lines = [
+    'store-dir=/var/cache/pnpm-store',
+    'cache-dir=~/.cache/pnpm',
+    '//npm.example.com/:certfile=${CERT_DIR}/client.crt',
+  ];
+  const { content } = createNestedNpmrc({
+    directory: '/repo/apps/app/.lowdefy/server',
+    parentNpmrc: lines.join('\n'),
+    parentNpmrcPath,
+    serverNpmrc: null,
+    workspaceRoot: '/repo',
+  });
+  expect(content).toEqual(
+    [
+      '# >>> Copied by Lowdefy from /repo/.npmrc; rewritten on every run.',
+      ...lines,
+      '# <<< End of the lines copied by Lowdefy.',
+      '',
+    ].join('\n')
+  );
+});

@@ -16,6 +16,9 @@
 
 import { type } from '@lowdefy/helpers';
 
+import parseNpmrcLine from './parseNpmrcLine.js';
+import rebasePath from './rebasePath.js';
+
 // Keys whose value is a credential (npm's per-registry auth keys, and "key",
 // a client certificate's private key), compared in lower case.
 const credentialKeys = ['_auth', '_authtoken', '_password', 'key'];
@@ -30,12 +33,26 @@ const environmentReference = /\$\{[^${}-]+(:?-)?\}/g;
 // nerf-darted //user:pass@host/.
 const userInfoPassword = /\/\/[^/@\s]*:([^/@\s]*)@/;
 
+// Keys holding a path, compared in lower case without dashes. pnpm resolves
+// them against the .npmrc's directory, the workspace root or the directory it
+// runs in, which for the server are all its own directory.
+const pathKeys = [
+  'cachedir',
+  'cafile',
+  'globalbindir',
+  'globaldir',
+  'globalpnpmfile',
+  'onlybuiltdependenciesfile',
+  'pnpmfile',
+  'statedir',
+  'storedir',
+];
+
+// Per-registry keys holding a path, like "//registry.example.com/:certfile".
+const registryPathKeys = ['cafile', 'certfile', 'keyfile'];
+
 function isEnvironmentReferenceOnly(value) {
   return value.replace(environmentReference, '').trim() === '';
-}
-
-function unquote(text) {
-  return text.replace(/^(['"])(.*)\1$/, '$2');
 }
 
 // "//registry.example.com/:_authToken" names the key "_authToken".
@@ -73,37 +90,53 @@ function getServerLines({ serverNpmrc }) {
   return [...lines.slice(0, startIndex), ...lines.slice(endIndex + 1)];
 }
 
-function getParentLines({ parentNpmrc, skippedKeys }) {
-  return parentNpmrc
-    .split(/\r?\n/)
-    .filter((line) => line.trim() !== '')
-    .filter((line) => {
-      const trimmed = line.trim();
-      if (trimmed.startsWith('#') || trimmed.startsWith(';')) {
-        return true;
-      }
-      const separatorIndex = trimmed.indexOf('=');
-      if (separatorIndex === -1) {
-        return true;
-      }
-      const key = unquote(trimmed.slice(0, separatorIndex).trim());
-      const value = unquote(trimmed.slice(separatorIndex + 1).trim());
-      if (holdsLiteralCredential({ key, value })) {
-        skippedKeys.push(redactUserInfo(key));
-        return false;
-      }
-      return true;
-    });
+function holdsPath(key) {
+  if (key.startsWith('//')) {
+    return registryPathKeys.includes(key.slice(key.lastIndexOf(':') + 1).toLowerCase());
+  }
+  return pathKeys.includes(key.toLowerCase().replaceAll('-', ''));
+}
+
+function getParentLines({ directory, parentNpmrc, skippedKeys, workspaceRoot }) {
+  const lines = [];
+  parentNpmrc.split(/\r?\n/).forEach((line) => {
+    if (line.trim() === '') {
+      return;
+    }
+    const entry = parseNpmrcLine(line);
+    if (entry === null) {
+      lines.push(line);
+      return;
+    }
+    const { key, value } = entry;
+    if (holdsLiteralCredential({ key, value })) {
+      skippedKeys.push(redactUserInfo(key));
+      return;
+    }
+    if (holdsPath(key)) {
+      lines.push(`${key}=${rebasePath({ directory, filePath: value, workspaceRoot })}`);
+      return;
+    }
+    lines.push(line);
+  });
+  return lines;
 }
 
 // pnpm reads .npmrc from the project and from the workspace root, which for
 // the server are both its own directory, so the parent's .npmrc (scoped
 // registries, auth, and in pnpm 10 other settings) is copied into the
 // server's, ahead of the server's own lines, which win as they did over the
-// parent's. A credential written out in the parent's file is not copied, so
-// the secret does not spread to a generated file; credentials that reference
-// an environment variable stay references.
-function createNestedNpmrc({ parentNpmrc, parentNpmrcPath, serverNpmrc }) {
+// parent's. Relative paths are rebased to point at the same files. A
+// credential written out in the parent's file is not copied, so the secret
+// does not spread to a generated file; credentials that reference an
+// environment variable stay references.
+function createNestedNpmrc({
+  directory,
+  parentNpmrc,
+  parentNpmrcPath,
+  serverNpmrc,
+  workspaceRoot,
+}) {
   const skippedKeys = [];
   const serverLines = getServerLines({ serverNpmrc });
   if (type.isNone(parentNpmrc)) {
@@ -111,7 +144,7 @@ function createNestedNpmrc({ parentNpmrc, parentNpmrcPath, serverNpmrc }) {
   }
   const content = [
     `${copyStartPrefix}${parentNpmrcPath}; rewritten on every run.`,
-    ...getParentLines({ parentNpmrc, skippedKeys }),
+    ...getParentLines({ directory, parentNpmrc, skippedKeys, workspaceRoot }),
     copyEnd,
     ...serverLines,
   ].join('\n');

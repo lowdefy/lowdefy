@@ -112,6 +112,37 @@ test('rebaseWorkspaceSettings rebases patch, pnpmfile and onlyBuiltDependenciesF
   });
 });
 
+test('rebaseWorkspaceSettings rebases store, cache, state and global directories', () => {
+  const settings = rebaseWorkspaceSettings({
+    directory,
+    rootDependencies: {},
+    settings: {
+      cacheDir: '.cache/pnpm',
+      globalBinDir: '/usr/local/bin',
+      globalDir: 'global',
+      globalPnpmfile: 'hooks/global.cjs',
+      stateDir: '~/.local/state/pnpm',
+      storeDir: '.pnpm-store',
+    },
+    workspaceRoot,
+  });
+  expect(settings).toEqual({
+    cacheDir: '../../../../.cache/pnpm',
+    globalBinDir: '/usr/local/bin',
+    globalDir: '../../../../global',
+    globalPnpmfile: '../../../../hooks/global.cjs',
+    stateDir: '~/.local/state/pnpm',
+    storeDir: '../../../../.pnpm-store',
+  });
+});
+
+test('rebaseWorkspaceSettings keeps per-project module directories', () => {
+  const input = { modulesDir: 'node_modules', virtualStoreDir: 'node_modules/.pnpm' };
+  expect(
+    rebaseWorkspaceSettings({ directory, rootDependencies: {}, settings: input, workspaceRoot })
+  ).toEqual(input);
+});
+
 test('rebaseWorkspaceSettings rebases a list of pnpmfiles', () => {
   const settings = rebaseWorkspaceSettings({
     directory,

@@ -17,6 +17,8 @@
 import path from 'path';
 import { type } from '@lowdefy/helpers';
 
+import rebasePath from './rebasePath.js';
+
 const pathProtocols = ['link:', 'file:'];
 
 const packageExtensionDependencyFields = [
@@ -25,12 +27,18 @@ const packageExtensionDependencyFields = [
   'peerDependencies',
 ];
 
-function rebasePath({ directory, filePath, workspaceRoot }) {
-  if (path.isAbsolute(filePath)) {
-    return filePath;
-  }
-  return path.relative(directory, path.resolve(workspaceRoot, filePath)).split(path.sep).join('/');
-}
+// Settings holding one path, which pnpm resolves against the workspace root or
+// the directory it runs in, both the server directory for the server.
+// virtualStoreDir and modulesDir are not here: they belong to each project.
+const pathSettings = [
+  'cacheDir',
+  'globalBinDir',
+  'globalDir',
+  'globalPnpmfile',
+  'onlyBuiltDependenciesFile',
+  'stateDir',
+  'storeDir',
+];
 
 // link: and file: specs are relative to the workspace root, which for the
 // server is its own directory.
@@ -148,13 +156,11 @@ function rebaseWorkspaceSettings({ directory, rootDependencies, settings, worksp
       rebasePath({ directory, filePath, workspaceRoot })
     );
   }
-  if (type.isString(settings.onlyBuiltDependenciesFile)) {
-    rebased.onlyBuiltDependenciesFile = rebasePath({
-      directory,
-      filePath: settings.onlyBuiltDependenciesFile,
-      workspaceRoot,
-    });
-  }
+  pathSettings.forEach((key) => {
+    if (type.isString(settings[key])) {
+      rebased[key] = rebasePath({ directory, filePath: settings[key], workspaceRoot });
+    }
+  });
   return rebased;
 }
 

@@ -42,7 +42,7 @@ allowBuilds:
   sharp: true
 `;
 
-async function writeNestedNpmrc({ context, directory, parentWorkspace }) {
+async function writeNestedNpmrc({ context, directory, parentWorkspace, workspaceRoot }) {
   const filePath = path.join(directory, '.npmrc');
   const serverNpmrc = await readFile(filePath);
   const { npmrc: parentNpmrc, npmrcPath: parentNpmrcPath } = parentWorkspace;
@@ -50,9 +50,11 @@ async function writeNestedNpmrc({ context, directory, parentWorkspace }) {
     return;
   }
   const { content, skippedKeys } = createNestedNpmrc({
+    directory,
     parentNpmrc,
     parentNpmrcPath,
     serverNpmrc,
+    workspaceRoot,
   });
   skippedKeys.forEach((key) => {
     context.logger.warn(
@@ -92,7 +94,7 @@ async function ensurePnpmWorkspaceYaml({ context, directory }) {
     filePath,
     createNestedWorkspaceYaml({ directory, parentWorkspace, workspaceRoot })
   );
-  await writeNestedNpmrc({ context, directory, parentWorkspace });
+  await writeNestedNpmrc({ context, directory, parentWorkspace, workspaceRoot });
   await linkWorkspacePlugins({ directory, parentWorkspace, workspaceRoot });
 }
 
