@@ -40,6 +40,7 @@ import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
+import collectKnownText from './journeyText/collectKnownText.js';
 import compileTrace from './journeyCompiler/compileTrace.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
 import isBackedBy from './journeyEvidence/isBackedBy.js';
@@ -58,6 +59,7 @@ export {
   checkEnvironmentGuards,
   cleanDirectory,
   collectEnvironmentGuards,
+  collectKnownText,
   compileTrace,
   copyFileOrDirectory,
   createClientAddressResolver,
