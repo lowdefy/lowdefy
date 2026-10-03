@@ -159,6 +159,18 @@ The `journeys compile` command turns recorded interaction traces into candidate 
 - `--disable-telemetry`: Disable telemetry.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 
+## journeys recordings
+
+The `journeys recordings` command lists the sessions the development server recorded in `.lowdefy/traces/dev/`, newest first: the time span, the builds, the pages visited, how many attempts ended in an error, and how many interactions the newest full test run already drove. See [Dev recordings](/config-tests#dev-recordings). Set `LOWDEFY_DEV_RECORD=false` to turn recording off.
+
+- `--since <since>`: Only sessions at or after this time: a duration back from now (`30m`, `2h`, `7d`) or an ISO date.
+- `--page <pageId>`: Only sessions that visited this page.
+- `--build <id|current>`: Only sessions recorded against this build. `current` is the build the running development server serves.
+- `--json`: Print the sessions as JSON on stdout.
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
 ## upgrade
 
 The `upgrade` command upgrades a Lowdefy app to a newer version by walking you through migration prompts that handle breaking changes.
