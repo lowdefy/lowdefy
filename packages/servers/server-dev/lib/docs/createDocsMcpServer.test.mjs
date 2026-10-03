@@ -83,13 +83,19 @@ async function connectClient() {
 }
 
 async function connectPair() {
-  const server = createDocsMcpServer({ origin: 'http://localhost:3000' });
+  const server = createDocsMcpServer({ origin: 'http://localhost:3000', version: '7.2.0' });
   const client = new Client({ name: 'test-client', version: '1.0.0' });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   await server.connect(serverTransport);
   await client.connect(clientTransport);
   return { client, server };
 }
+
+test('MCP server reports the Lowdefy version it is given as its server version', async () => {
+  const client = await connectClient();
+  expect(client.getServerVersion()).toEqual({ name: 'lowdefy', version: '7.2.0' });
+  await client.close();
+});
 
 test('MCP server declares the logging capability and teaches the push channel', async () => {
   const client = await connectClient();
