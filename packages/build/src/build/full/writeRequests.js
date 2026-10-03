@@ -16,6 +16,8 @@
 import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import removeRequestServerKeys from '../../utils/removeRequestServerKeys.js';
+
 async function writeRequestsOnPage({ page, context }) {
   const requests = page.requests ?? [];
 
@@ -32,10 +34,7 @@ async function writeRequestsOnPage({ page, context }) {
         `pages/${page.pageId}/requests/${request.requestId}.json`,
         serializer.serializeToString(request ?? {})
       );
-      delete request.properties;
-      delete request.type;
-      delete request.connectionId;
-      delete request.auth;
+      removeRequestServerKeys({ request });
     })
   );
 }
