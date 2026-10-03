@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { spawnSync } from 'child_process';
+import { spawn, spawnSync } from 'child_process';
 
 import getProcessStartTime from './getProcessStartTime.js';
 
@@ -34,23 +34,40 @@ function readInProcess({ pid, env }) {
   return result.stdout.trim();
 }
 
-// getProcessStartTime reads `ps`, which Windows lacks, so it returns null there
-// until start times have a Windows source.
-const onPosix = process.platform === 'win32' ? test.skip : test;
+test('getProcessStartTime reads the same start time whatever time zone and locale its reader runs with', () => {
+  const first = readInProcess({ pid: process.pid, env: { TZ: 'UTC', LC_ALL: 'C' } });
+  const second = readInProcess({
+    pid: process.pid,
+    env: { TZ: 'Pacific/Auckland', LC_ALL: 'de_DE.UTF-8', LANG: 'de_DE.UTF-8' },
+  });
+  expect(first).not.toEqual('null');
+  expect(second).toEqual(first);
+}, 30000);
 
-onPosix(
-  'getProcessStartTime reads the same start time whatever time zone and locale its reader runs with',
+const notOnLinux = process.platform === 'linux' ? test.skip : test;
+
+// Linux reads ticks since boot from /proc instead (readLinuxProcessStartTime.test.js).
+notOnLinux(
+  'getProcessStartTime reads the start time as epoch milliseconds in UTC',
   () => {
-    const first = readInProcess({ pid: process.pid, env: { TZ: 'UTC', LC_ALL: 'C' } });
-    const second = readInProcess({
-      pid: process.pid,
-      env: { TZ: 'Pacific/Auckland', LC_ALL: 'de_DE.UTF-8', LANG: 'de_DE.UTF-8' },
+    const spawnedAt = Date.now();
+    const child = spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], {
+      stdio: 'ignore',
     });
-    expect(first).not.toEqual('null');
-    expect(second).toEqual(first);
-  }
+    try {
+      // A reader far from UTC: a start time read as its local time would be hours off.
+      const startTime = Number(readInProcess({ pid: child.pid, env: { TZ: 'Pacific/Auckland' } }));
+      expect(Number.isInteger(startTime)).toBe(true);
+      // ps prints whole seconds.
+      expect(Math.abs(startTime - spawnedAt)).toBeLessThan(60000);
+      expect(getProcessStartTime({ pid: child.pid })).toEqual(startTime);
+    } finally {
+      child.kill();
+    }
+  },
+  30000
 );
 
 test('getProcessStartTime returns null for a pid that is not running', () => {
   expect(getProcessStartTime({ pid: 2 ** 22 + 12345 })).toBeNull();
-});
+}, 30000);

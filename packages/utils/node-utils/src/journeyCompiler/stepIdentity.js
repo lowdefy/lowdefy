@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import { getStepKey } from '../journeyGrammar/validateJourneySteps.js';
-import normaliseBlockId from './normaliseBlockId.js';
+import normaliseBlockId from '../journeyGrammar/normaliseBlockId.js';
 
 function readTarget(params) {
   if (type.isString(params)) return { blockId: params };
@@ -43,9 +43,7 @@ function stepIdentity({ step }) {
     return JSON.stringify([verb]);
   }
   const target = readTarget(params);
-  const blockId = type.isString(target.blockId)
-    ? normaliseBlockId({ blockId: target.blockId })
-    : null;
+  const blockId = type.isString(target.blockId) ? normaliseBlockId(target.blockId) : null;
   const column = type.isString(target.column) ? target.column : null;
   const text = verb === 'click' && type.isString(target.text) ? target.text : null;
   return JSON.stringify([verb, blockId, column, text]);

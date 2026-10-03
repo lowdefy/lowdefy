@@ -52,14 +52,13 @@ function toEvaluateOptions({ abortSignal, maxOutputTokens, timeout, ...options }
 
 // The evaluation backend: an evaluation model answers every question in one
 // pass, with a probability for each option (ai experimental_evaluate).
-async function decideWithEvaluation({ model, request, options }) {
-  const questions = Object.fromEntries(
-    Object.entries(request.questions).map(([id, question]) => [id, toEvaluationQuestion(question)])
-  );
+async function decideWithEvaluation({ model, state, questions, options }) {
   const result = await evaluate({
     model,
-    state: request.state,
-    questions,
+    state,
+    questions: Object.fromEntries(
+      Object.entries(questions).map(([id, question]) => [id, toEvaluationQuestion(question)])
+    ),
     ...toEvaluateOptions(options),
   });
   // TypeSafe reports a calibrated confidence per question alongside the
@@ -68,14 +67,14 @@ async function decideWithEvaluation({ model, request, options }) {
     (metadata) => metadata && typeof metadata.confidence === 'object'
   )?.confidence;
   const answers = {};
-  for (const [id, question] of Object.entries(request.questions)) {
+  for (const [id, question] of Object.entries(questions)) {
     answers[id] = fromEvaluationAnswer({
       question,
       answer: result.answers?.[id],
       providerConfidence: confidence?.[id],
     });
   }
-  return { answers, usage: result.usage };
+  return { answers, usage: result.usage, providerMetadata: result.providerMetadata };
 }
 
 export default decideWithEvaluation;

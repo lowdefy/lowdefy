@@ -152,6 +152,7 @@ test('handleError pushes an error with a configKey into the server error store w
     endpointId: 'get-customer',
     requestId: null,
     pageId: '_mcp',
+    recording: null,
   });
   // Pushed before the log so a throwing logger cannot lose the entry.
   expect(serverErrorStore.push.mock.invocationCallOrder[0]).toBeLessThan(
@@ -195,4 +196,25 @@ test('handleError still logs when the server error store throws', async () => {
   expect(error.handled).toBe(true);
   expect(console.error).toHaveBeenCalledWith(error);
   expect(console.error).toHaveBeenCalledWith('An error occurred while logging the error.');
+});
+
+test('handleError stamps a stored error with the recording of the context that caused it', async () => {
+  const context = testContext();
+  context.recording = {
+    source: 'explorer',
+    run: { id: '20261003T151200Z-p0d4rm', by: 'explorer', journey: 'walk-2', actor: 'main' },
+  };
+  await createHandleError({ context })(new ConfigError('Bad config.', { configKey: 'key_1' }));
+  expect(serverErrorStore.push.mock.calls[0][0].recording).toEqual({
+    source: 'explorer',
+    run: '20261003T151200Z-p0d4rm',
+    journey: 'walk-2',
+  });
+});
+
+test('handleError stamps a developer request error with a null recording', async () => {
+  const context = testContext();
+  context.recording = null;
+  await createHandleError({ context })(new ConfigError('Bad config.', { configKey: 'key_1' }));
+  expect(serverErrorStore.push.mock.calls[0][0].recording).toBeNull();
 });

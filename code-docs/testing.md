@@ -127,6 +127,29 @@ and use `node packages/cli/dist/index.js test --config-directory apps/auth-refer
 --url http://localhost:<port> --filter <name>`; a journey that signs up needs an empty
 database, since signing up an existing address sends no email.
 
+## Journey fixture app
+
+`apps/journey-fixture` is a small app the journey runner's real-Chromium tests drive through
+this checkout's dev server: the exercised path (pages, request counts, nested `CallApi`
+endpoints), config mutants reaching the page, request, endpoint and detached routes, and
+what later journey features assert. Run it after `pnpm build`:
+
+```bash
+pnpm --filter=@lowdefy/server-dev test:fixture   # the runner, the observer, the grammar, mutants
+pnpm --filter=lowdefy test:fixture                # `lowdefy journeys harden` from the built CLI
+```
+
+Each jest global setup (`test/journeyFixture/globalSetup.mjs` in either package) calls
+`scripts/lib/startJourneyFixture.mjs`, which starts a memory replica set for the app's
+`fixture_db` connection and `scripts/dev.mjs --skip-build --dev-directory
+_server/dev-journey-fixture` with `CRON_SECRET` set, on three free ports from 3300
+(`LOWDEFY_JOURNEY_FIXTURE_PORT` moves them), then runs one journey on every page so Vite's
+first compile and each page's first build happen before any test. It never touches `_server/dev`, so it runs beside
+`pnpm app:dev`; the two packages' suites share `_server/dev-journey-fixture`, so do not run them
+at once in one worktree. With no Chromium every test skips.
+The dev server log is `apps/journey-fixture/.lowdefy/fixture-dev-server.log`. CI does not
+run it; run it when changing the journey runner, journey cookies or mutants.
+
 ## Ports
 
 Port 3000 is the default for a developer's own dev server; tests and agents never bind it.
@@ -144,6 +167,14 @@ Port 3000 is the default for a developer's own dev server; tests and agents neve
   run the same package from two worktrees at once. An already running server is reused only
   when `LOWDEFY_E2E_REUSE_SERVER=true`, so a run never tests another checkout's server by
   accident.
+- Servers exit with their owner. `lowdefy start|dev|test`, `scripts/start.mjs` and
+  `scripts/dev.mjs` hold their server's stdin, so a killed CLI or script takes its server
+  with it. Playwright configs from `@lowdefy/e2e-utils` and `@lowdefy/block-dev-e2e` set
+  `LOWDEFY_EXIT_WITH_PID` to the runner's pid, so a killed or timed-out run leaves nothing
+  behind either. A harness that starts a server any other way uses `startServer` from
+  `@lowdefy/e2e-utils/startServer`, or passes `--exit-with-pid <its pid>` to `lowdefy start`.
+  `@lowdefy/e2e-utils` configs also reuse a running server only with
+  `LOWDEFY_E2E_REUSE_SERVER=true`, and take `LOWDEFY_E2E_PORT`.
 
 ## Block e2e server
 

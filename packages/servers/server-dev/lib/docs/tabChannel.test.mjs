@@ -128,3 +128,40 @@ test('resolveTabRequest returns false when called again for an already-settled r
   await promise;
   expect(resolveTabRequest({ requestId, result: 'second' })).toBe(false);
 });
+
+test('requestFromTab skips an automated walk tab for the developer tab on the same page', async () => {
+  const developerSend = jest.fn();
+  const walkSend = jest.fn();
+  registerTab({ id: 'developer', pageId: 'tickets', send: developerSend });
+  registerTab({
+    id: 'walk',
+    pageId: 'tickets',
+    send: walkSend,
+    source: 'explorer',
+    automated: true,
+  });
+  const promise = requestFromTab({ pageId: 'tickets', event: 'inspect-request', timeout: 50 });
+  expect(developerSend).toHaveBeenCalledTimes(1);
+  expect(walkSend).not.toHaveBeenCalled();
+  const [, { requestId }] = developerSend.mock.calls[0];
+  resolveTabRequest({ requestId, result: { state: {} } });
+  await expect(promise).resolves.toEqual({ state: {} });
+  expect(listTabs().map(({ id, source, automated }) => ({ id, source, automated }))).toEqual([
+    { id: 'developer', source: 'dev', automated: false },
+    { id: 'walk', source: 'explorer', automated: true },
+  ]);
+});
+
+test('requestFromTab finds no tab when only an automated tab is on the page', async () => {
+  registerTab({
+    id: 'walk',
+    pageId: 'tickets',
+    send: jest.fn(),
+    source: 'explorer',
+    automated: true,
+  });
+  await expect(requestFromTab({ pageId: 'tickets', event: 'inspect-request' })).resolves.toEqual({
+    error:
+      'No browser tab connected on page "tickets". Ask the developer to open the page, or use source: "headless".',
+  });
+});

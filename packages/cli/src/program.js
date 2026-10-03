@@ -15,7 +15,7 @@
 */
 
 import { createRequire } from 'module';
-import { Command, Option } from 'commander';
+import { Command, InvalidArgumentError, Option } from 'commander';
 
 import agentSetup from './commands/agentSetup/agentSetup.js';
 import agentSetupUser from './commands/agentSetup/agentSetupUser.js';
@@ -26,6 +26,8 @@ import dev from './commands/dev/dev.js';
 import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
 import hubLogs from './commands/hub/hubLogs.js';
+import hubPrune from './commands/hub/hubPrune.js';
+import hubPs from './commands/hub/hubPs.js';
 import hubServe from './commands/hub/hubServe.js';
 import hubStart from './commands/hub/hubStart.js';
 import hubStatus from './commands/hub/hubStatus.js';
@@ -37,6 +39,8 @@ import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
 import journeysCompile from './commands/journeys/journeysCompile.js';
+import journeysHarden from './commands/journeys/harden/journeysHarden.js';
+import journeysVariants from './commands/journeys/variants/journeysVariants.js';
 import journeysRecordings from './commands/journeys/journeysRecordings.js';
 import journeysCoverage from './commands/journeys/journeysCoverage.js';
 import journeysEvidence from './commands/journeys/journeysEvidence.js';
@@ -54,6 +58,14 @@ const require = createRequire(import.meta.url);
 const packageJson = require('../package.json');
 const { description, version: cliVersion } = packageJson;
 
+function parsePid(value) {
+  const pid = Number(value);
+  if (!Number.isInteger(pid) || pid <= 0) {
+    throw new InvalidArgumentError('Expected a process id.');
+  }
+  return pid;
+}
+
 const program = new Command();
 
 program.name('lowdefy').description(description).version(cliVersion, '-v, --version');
@@ -70,6 +82,10 @@ const options = {
   disableTelemetry: new Option('--disable-telemetry', 'Disable telemetry.').env(
     'LOWDEFY_DISABLE_TELEMETRY'
   ),
+  exitWithPid: new Option(
+    '--exit-with-pid <pid>',
+    'Stop the server when the process with this id exits. For test runners and scripts that start the server.'
+  ).argParser(parsePid),
   logLevel: new Option(
     '--log-level <level>',
     'The minimum severity of logs to show in the CLI output.'
@@ -187,6 +203,7 @@ program
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)
+  .addOption(options.exitWithPid)
   .addOption(options.logLevel)
   .addOption(options.mockUser)
   .option('--no-open', 'Do not open a new tab in the default browser.')
@@ -258,6 +275,19 @@ hub
   .action(runHubCommand({ cliVersion, handler: hubLogs }));
 
 hub
+  .command('ps')
+  .description('List the Lowdefy servers running on this machine, with the process that owns each.')
+  .action(runHubCommand({ cliVersion, handler: hubPs }));
+
+hub
+  .command('prune')
+  .description(
+    'Stop Lowdefy servers whose owner is gone. Lists them only, unless --kill is passed.'
+  )
+  .option('--kill', 'Stop the servers instead of listing them.')
+  .action(runHubCommand({ cliVersion, handler: hubPrune }));
+
+hub
   .command('trust')
   .description(
     "Let lowdefy mcp start and query this repository's dev servers from any agent session, not only sessions started in it. Covers all of its git worktrees."
@@ -290,7 +320,7 @@ hub
 const journeys = program
   .command('journeys')
   .description(
-    'Turn recorded interaction traces into candidate journeys, and report how real use backs them.'
+    'Compile candidate journeys from recorded traces, report how real use backs them, harden journeys and write their variants.'
   );
 
 journeys
@@ -336,6 +366,86 @@ journeys
     )
   )
   .action(runCommand({ cliVersion, handler: journeysCompile }));
+
+journeys
+  .command('harden')
+  .description(
+    "Break the config on purpose, one change at a time and only in the journeys' own browsers, and report each change no journey noticed."
+  )
+  .usage('[options] [paths...]')
+  .argument(
+    '[paths...]',
+    'Journey files or directories to harden instead of tests/journeys/*.yaml.'
+  )
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(new Option('--filter <name>', 'Only journeys whose name contains this string.'))
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--page <pageId...>',
+      'Only mutants on these pages, and endpoint mutants a journey touching them called.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--operators <operators>',
+      'Only these operators, comma separated: drop-action, skip-validate, flip-visible, swap-if, drop-payload, retarget-link, drop-block, drop-step.'
+    )
+  )
+  .addOption(new Option('--max <n>', 'Run at most n mutants (0: no cap). Default 200.'))
+  .addOption(
+    new Option('--seed <n>', 'The sample seed: another seed draws another sample. Default 0.')
+  )
+  .addOption(new Option('--workers <n>', 'Journey runs at once (1 to 16). Default 4.'))
+  .addOption(new Option('--mutant <id>', 'Run only this mutant, against the journeys on its path.'))
+  .addOption(new Option('--list', 'List the sampled mutants and the time estimate, run nothing.'))
+  .addOption(new Option('--json', 'Print the report as JSON.'))
+  .addOption(options.port)
+  .addOption(options.refResolver)
+  .addOption(
+    new Option(
+      '--url <url>',
+      'Run against an already running dev server instead of starting one, e.g. http://localhost:3000.'
+    )
+  )
+  .action((paths, commandOptions, command) =>
+    runCommand({ cliVersion, handler: journeysHarden })({ ...commandOptions, paths }, command)
+  );
+
+journeys
+  .command('variants')
+  .description(
+    'Write edge-case candidates of a journey (bad input, a reload mid-flow, a double click) to tests/journeys/_candidates/variants/ and replay each three times.'
+  )
+  .usage('[options] <file>')
+  .argument('<file>', 'The journey file to vary.')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(new Option('--name <journey>', 'The journey to vary, when the file holds several.'))
+  .addOption(
+    new Option(
+      '--kinds <kinds>',
+      'Only these kinds, comma separated: role, tenant, empty, volume, negative, interrupt, double-submit. The data-set kinds need data sets.'
+    )
+  )
+  .addOption(new Option('--empty-data <name>', 'The data set an empty variant runs on.'))
+  .addOption(new Option('--volume-data <name>', 'The data set a volume variant runs on.'))
+  .addOption(new Option('--no-run', 'Write the variants without replaying them.'))
+  .addOption(options.logLevel)
+  .addOption(options.port)
+  .addOption(options.refResolver)
+  .addOption(
+    new Option(
+      '--url <url>',
+      'Run against an already running dev server instead of starting one, e.g. http://localhost:3000.'
+    )
+  )
+  .action((file, commandOptions, command) =>
+    runCommand({ cliVersion, handler: journeysVariants })({ ...commandOptions, file }, command)
+  );
 
 journeys
   .command('recordings')
@@ -501,6 +611,7 @@ program
   .usage('[options]')
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
+  .addOption(options.exitWithPid)
   .addOption(options.logLevel)
   .addOption(options.port)
   .addOption(options.serverDirectory)
@@ -527,6 +638,12 @@ program
     new Option(
       '--journeys-directory <journeys-directory>',
       'Change the directory journeys are read from. Default is "<config-directory>/tests/journeys". Fails when the directory holds no journeys.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--lint',
+      'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L6 final assertion) and run nothing.'
     )
   )
   .addOption(options.logLevel)

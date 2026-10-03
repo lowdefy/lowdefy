@@ -16,42 +16,20 @@
 
 import path from 'path';
 import { createTraceId, traceIdDate, type } from '@lowdefy/helpers';
-import { readDevInstance } from '@lowdefy/node-utils';
 
 import fetchBuildId from './fetchBuildId.js';
 import isFullSuiteRun from './isFullSuiteRun.js';
+import lintJourneys from './lint/lintJourneys.js';
 import parseRepeat from './parseRepeat.js';
 import resolveJourneyPaths from './resolveJourneyPaths.js';
+import resolveServer from './resolveServer.js';
 import runRepeated from './runRepeated.js';
 import selectTests from './selectTests.js';
-import startDevServer from './startDevServer.js';
 import summariseResults from './summariseResults.js';
 import writeExercised from './writeExercised.js';
 import writeTestRun from './writeTestRun.js';
 
-function trimTrailingSlash(url) {
-  return url.replace(/\/+$/, '');
-}
-
-async function resolveServer({ context }) {
-  if (type.isString(context.options.url) && context.options.url !== '') {
-    context.logger.info(`Running tests against ${context.options.url}.`);
-    return { url: trimTrailingSlash(context.options.url), stop: async () => {} };
-  }
-  // A dev server already running for this app owns .lowdefy/dev; starting a
-  // second one there would be refused, so test against the running one.
-  const running = readDevInstance({ configDirectory: context.directories.config });
-  if (running !== null && running.state === 'ready') {
-    context.logger.info(`Running tests against the running dev server at ${running.url}.`);
-    return { url: running.url, stop: async () => {} };
-  }
-  try {
-    return await startDevServer({ context });
-  } catch (error) {
-    (error.serverOutput ?? []).forEach((line) => context.logger.error(line));
-    throw error;
-  }
-}
+const SIGNAL_EXIT_CODES = { SIGINT: 130, SIGTERM: 143, SIGHUP: 129 };
 
 function refuse({ context, message }) {
   context.logger.error(message);
@@ -102,15 +80,31 @@ async function test({ context }) {
     return;
   }
 
+  if (context.options.lint === true) {
+    if (lintJourneys({ context, items: selected.map(({ item }) => item) }).failed) {
+      process.exitCode = 1;
+    }
+    context.sendTelemetry();
+    return;
+  }
+
   const server = await resolveServer({ context });
   let interrupted = false;
-  async function onSigint() {
-    interrupted = true;
-    context.logger.warn('Interrupted. Stopping development server.');
-    await server.stop();
-    process.exit(130);
-  }
-  process.once('SIGINT', onSigint);
+  // The dev server runs in its own process group, out of reach of a signal to
+  // this CLI's group, so every signal that ends the CLI stops it first.
+  const signalHandlers = Object.entries(SIGNAL_EXIT_CODES).map(([signal, exitCode]) => {
+    async function onSignal() {
+      if (interrupted) {
+        return;
+      }
+      interrupted = true;
+      context.logger.warn('Interrupted. Stopping development server.');
+      await server.stop();
+      process.exit(exitCode);
+    }
+    process.once(signal, onSignal);
+    return [signal, onSignal];
+  });
 
   // One run id per invocation names this run's trace file; only a full-suite
   // run records (see runRepeated).
@@ -143,7 +137,7 @@ async function test({ context }) {
     });
     writeTestRun({ directories: context.directories, results });
   } finally {
-    process.removeListener('SIGINT', onSigint);
+    signalHandlers.forEach(([signal, onSignal]) => process.removeListener(signal, onSignal));
     if (!interrupted) {
       await server.stop();
     }

@@ -22,18 +22,34 @@ import { defineConfig, devices } from '@playwright/test';
 // Checks each reused or started server is this app's e2e build (see core/verifyServer.js).
 const globalSetup = fileURLToPath(new URL('./globalSetup.js', import.meta.url));
 
+// A server left running on the port (by a run that was killed, or another checkout) serves
+// the build it loaded, so it is reused only on request.
+function shouldReuseServer() {
+  return process.env.LOWDEFY_E2E_REUSE_SERVER === 'true';
+}
+
+// The server stops when this process does, however it ends: Playwright cleans up its web
+// servers only on a normal exit or SIGINT, so a killed or timed-out run would otherwise leave
+// the server behind. Playwright evaluates this config again in every worker, but only the
+// runner launches webServer, so the runner's pid is the one the server watches.
+function webServerEnv() {
+  return { ...process.env, LOWDEFY_EXIT_WITH_PID: String(process.pid) };
+}
+
 function createConfig({
   appDir = './',
   buildDir = '.lowdefy/server/build',
   commandPrefix = '',
   mocksFile = 'e2e/mocks.yaml',
-  port = 3000,
+  port: defaultPort = 3000,
   testDir = 'e2e',
   testMatch = '**/*.spec.js',
   timeout = 180000, // 3 minutes for cold production builds
   screenshot = 'only-on-failure', // 'off', 'on', or 'only-on-failure'
   outputDir = 'test-results',
 } = {}) {
+  // LOWDEFY_E2E_PORT moves a run, so two git worktrees can run the same suite at once.
+  const port = Number(process.env.LOWDEFY_E2E_PORT ?? defaultPort);
   // Resolve absolute paths for all directories
   const absoluteAppDir = path.resolve(appDir);
   // Use the local binary when available — npx may resolve the latest stable from npm
@@ -78,12 +94,12 @@ function createConfig({
     webServer: {
       // Build with e2e server and start
       command: `${cliCommand} build --server e2e && ${cliCommand} start --port ${port} --log-level warn`,
-      // A server already on the port is reused only if globalSetup finds it serves this
-      // app's e2e build.
+      // A reused server must still pass globalSetup's check that it serves this app's e2e build.
       port,
-      reuseExistingServer: true,
+      reuseExistingServer: shouldReuseServer(),
       timeout,
       cwd: absoluteAppDir,
+      env: webServerEnv(),
       // Stage="e2e" in Page.js exposes window.lowdefy for state testing
     },
   });
@@ -131,9 +147,10 @@ function createMultiAppConfig({
     return {
       command: `${appCliCommand} build --server e2e && ${appCliCommand} start --port ${app.port} --log-level warn`,
       port: app.port,
-      reuseExistingServer: true,
+      reuseExistingServer: shouldReuseServer(),
       timeout,
       cwd: app.appDir,
+      env: webServerEnv(),
     };
   });
 

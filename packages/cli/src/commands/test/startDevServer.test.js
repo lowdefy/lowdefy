@@ -116,11 +116,14 @@ test('startDevServer prepares .lowdefy/dev, spawns the server headless and resol
   expect(mockInstallServer).toHaveBeenCalled();
 
   const spawnArgs = mockSpawnProcess.mock.calls[0][0];
-  expect(spawnArgs.command).toEqual('pnpm');
-  expect(spawnArgs.args).toEqual(['run', 'start']);
+  expect(spawnArgs.command).toEqual(process.execPath);
+  expect(spawnArgs.args).toEqual(['manager/run.mjs']);
   expect(spawnArgs.returnProcess).toBe(true);
   expect(spawnArgs.processOptions.cwd).toEqual('/app/.lowdefy/dev');
   expect(spawnArgs.processOptions.detached).toBe(!isWindows);
+  expect(spawnArgs.processOptions.stdio).toEqual(['pipe', 'pipe', 'pipe']);
+  expect(spawnArgs.processOptions.env.LOWDEFY_EXIT_WITH_PID).toEqual(String(process.pid));
+  expect(spawnArgs.processOptions.env.LOWDEFY_EXIT_ON_STDIN_CLOSE).toEqual('1');
   expect(spawnArgs.processOptions.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER).toBe(false);
   expect(spawnArgs.processOptions.env.PORT).toEqual(3228);
   expect(spawnArgs.processOptions.env.LOWDEFY_DIRECTORY_CONFIG).toEqual('/app');

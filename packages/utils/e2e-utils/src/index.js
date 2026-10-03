@@ -70,3 +70,7 @@ export { createBlockHelper, createHelperRegistry, createBlockMethodProxy, create
 // Mocking utilities
 import { createMockManager, loadStaticMocks } from './mocking/index.js';
 export { createMockManager, loadStaticMocks };
+
+// Server lifecycle for harnesses outside Playwright (vitest/Jest globalSetup, rig scripts)
+import startServer from './startServer.js';
+export { startServer };

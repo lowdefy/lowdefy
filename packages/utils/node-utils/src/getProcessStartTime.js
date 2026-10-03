@@ -15,26 +15,28 @@
 */
 
 import { spawnSync } from 'child_process';
+import { type } from '@lowdefy/helpers';
 
-// A pid alone does not identify a process: after a reboot, or enough churn,
-// the pid in the hub's registry can belong to something else entirely. The pid
-// plus its start time does. Windows has no ps; there the hub relies on the pid.
-//
-// ps prints lstart in the caller's time zone and locale. Hubs, shims and CLIs
-// run with the environment of whichever session started them, so without
-// pinning both, a reader in another session would read another string for
-// the same process - and a hub would drop, orphaning, every server it should
-// adopt.
-function getProcessStartTime({ pid }) {
-  if (process.platform === 'win32') {
+import getProcessStartTimeCommand from './getProcessStartTimeCommand.js';
+import readLinuxProcessStartTime from './readLinuxProcessStartTime.js';
+
+// The process's start time, equal across reads and readers for one process
+// whatever their time zone or wall clock: epoch milliseconds on macOS and
+// Windows, boot id and ticks since boot on Linux (readLinuxProcessStartTime).
+// Null when it cannot be read: the process is gone, or ps (PowerShell on
+// Windows) failed. Callers treat null as "unknown", never as proof either way.
+function getProcessStartTime({ pid, platform = process.platform }) {
+  if (platform === 'linux') {
+    return readLinuxProcessStartTime({ pid });
+  }
+  const { command, args, options, parse } = getProcessStartTimeCommand({ pid, platform });
+  const result = spawnSync(command, args, { ...options, encoding: 'utf8' });
+  // A read that timed out or failed may have printed part of a start time,
+  // which would compare unequal and be taken for another process.
+  if (!type.isNone(result.error) || result.status !== 0) {
     return null;
   }
-  const result = spawnSync('ps', ['-o', 'lstart=', '-p', String(pid)], {
-    encoding: 'utf8',
-    env: { ...process.env, LC_ALL: 'C', TZ: 'UTC' },
-  });
-  const startTime = (result.stdout ?? '').trim();
-  return startTime === '' ? null : startTime;
+  return parse(result.stdout ?? '');
 }
 
 export default getProcessStartTime;

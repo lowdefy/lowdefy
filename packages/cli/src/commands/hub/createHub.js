@@ -18,7 +18,12 @@ import fs from 'fs';
 import path from 'path';
 import { spawn } from 'child_process';
 import { type, wait } from '@lowdefy/helpers';
-import { getProcessStartTime, readDevInstance } from '@lowdefy/node-utils';
+import {
+  compareProcessStartTimes,
+  isProcessStartTime,
+  readDevInstanceAsync,
+  readProcessStartTime,
+} from '@lowdefy/node-utils';
 
 import allocatePorts from './allocatePorts.js';
 import hasLowdefyYaml from '../../utils/hasLowdefyYaml.js';
@@ -45,14 +50,22 @@ function isGroupAlive(pid) {
 
 // The registry outlives processes (and reboots), so an entry counts only while
 // its process group lives and its leader is the same process the hub started.
-function isManagedAlive(managed) {
+// An entry with no start time to compare (written before Windows had start
+// times, or by an older hub as local time), or a start time that cannot be
+// read now, leaves the pid to decide. The read never blocks: on Windows it
+// starts PowerShell, and the hub must keep answering its sessions meanwhile.
+async function isManagedAlive(managed) {
   if (!isGroupAlive(managed.pid)) {
     return false;
   }
-  if (process.platform === 'win32') {
+  if (!isProcessStartTime(managed.processStartTime)) {
     return true;
   }
-  return getProcessStartTime({ pid: managed.pid }) === managed.processStartTime;
+  const startTime = await readProcessStartTime({ pid: managed.pid });
+  return (
+    compareProcessStartTimes({ recorded: managed.processStartTime, current: startTime }) !==
+    'different'
+  );
 }
 
 function loadRegistry({ registryPath }) {
@@ -109,17 +122,18 @@ function createHub({
     fs.writeFileSync(paths.registryPath, `${JSON.stringify(registry, null, 2)}\n`);
   }
 
-  function forgetDeadServers() {
-    Object.entries(registry.instances).forEach(([configDirectory, managed]) => {
-      if (!isManagedAlive(managed)) {
+  async function forgetDeadServers() {
+    for (const [configDirectory, managed] of Object.entries(registry.instances)) {
+      // A launch while the start time was read may have replaced the entry.
+      if (!(await isManagedAlive(managed)) && registry.instances[configDirectory] === managed) {
         delete registry.instances[configDirectory];
       }
-    });
+    }
     saveRegistry();
   }
 
-  function describe(configDirectory) {
-    const record = readDevInstance({ configDirectory });
+  async function describe(configDirectory) {
+    const record = await readDevInstanceAsync({ configDirectory });
     const managed = registry.instances[configDirectory];
     if (record !== null) {
       return {
@@ -133,7 +147,7 @@ function createHub({
         command: managed?.command,
       };
     }
-    if (!type.isUndefined(managed) && isManagedAlive(managed)) {
+    if (!type.isUndefined(managed) && (await isManagedAlive(managed))) {
       return {
         configDirectory,
         owner: 'hub',
@@ -158,7 +172,7 @@ function createHub({
   async function waitForReady(configDirectory) {
     const deadline = Date.now() + READY_TIMEOUT_MS;
     while (Date.now() < deadline) {
-      const status = describe(configDirectory);
+      const status = await describe(configDirectory);
       if (status.state === 'ready') {
         return status;
       }
@@ -171,7 +185,7 @@ function createHub({
       await wait(250);
     }
     return {
-      ...describe(configDirectory),
+      ...(await describe(configDirectory)),
       logTail: readLogTail({ logPath: logPathFor(configDirectory), lines: 10 }),
       note: `Not ready after ${
         READY_TIMEOUT_MS / 1000
@@ -182,7 +196,7 @@ function createHub({
   async function stopServer({ configDirectory }) {
     const managed = registry.instances[configDirectory];
     if (type.isUndefined(managed)) {
-      const record = readDevInstance({ configDirectory });
+      const record = await readDevInstanceAsync({ configDirectory });
       if (record !== null) {
         return {
           stopped: false,
@@ -191,7 +205,7 @@ function createHub({
       }
       return { stopped: false, reason: 'No dev server is running for this app.' };
     }
-    if (isManagedAlive(managed)) {
+    if (await isManagedAlive(managed)) {
       await stopProcessGroup({ pid: managed.pid });
     }
     delete registry.instances[configDirectory];
@@ -251,9 +265,14 @@ function createHub({
       }
     });
 
+    const processStartTime = await readProcessStartTime({ pid: child.pid });
+    if (exits.has(configDirectory)) {
+      // It exited while its start time was read: there is nothing to record.
+      return;
+    }
     registry.instances[configDirectory] = {
       pid: child.pid,
-      processStartTime: getProcessStartTime({ pid: child.pid }),
+      processStartTime,
       command: devCommand.display,
       startedAt: new Date().toISOString(),
     };
@@ -269,7 +288,7 @@ function createHub({
   // Returns the answer when there is nothing to wait for, else null once the
   // server is running or launched.
   async function launchUnlessRunning({ configDirectory, env, restart, clean }) {
-    const current = describe(configDirectory);
+    const current = await describe(configDirectory);
     const running = ['starting', 'ready'].includes(current.state);
     if (running && current.owner !== 'hub') {
       // A terminal server stays the user's. The caller restarts it in place
@@ -306,11 +325,11 @@ function createHub({
     return answer ?? waitForReady(configDirectory);
   }
 
-  function status({ configDirectory }) {
+  async function status({ configDirectory }) {
     return describe(realDirectory(configDirectory));
   }
 
-  function logs({ lines = 100, grep, ...params }) {
+  async function logs({ lines = 100, grep, ...params }) {
     if (!type.isInt(lines) || lines < 1) {
       throw new Error(
         `"lines" must be a positive integer (at most ${MAX_LOG_LINES} are returned). Received ${JSON.stringify(
@@ -319,7 +338,7 @@ function createHub({
       );
     }
     const configDirectory = realDirectory(params.configDirectory);
-    const record = readDevInstance({ configDirectory });
+    const record = await readDevInstanceAsync({ configDirectory });
     if (record !== null && record.owner !== 'hub') {
       return {
         lines: [],
@@ -329,11 +348,11 @@ function createHub({
     return { lines: readLogTail({ logPath: logPathFor(configDirectory), lines, grep }) };
   }
 
-  function list() {
-    forgetDeadServers();
+  async function list() {
+    await forgetDeadServers();
     return {
-      instances: Object.keys(registry.instances).map((configDirectory) =>
-        describe(configDirectory)
+      instances: await Promise.all(
+        Object.keys(registry.instances).map((configDirectory) => describe(configDirectory))
       ),
     };
   }
@@ -405,11 +424,11 @@ function createHub({
   // Stops servers nobody uses: the app was removed, or no agent session
   // has been attached and no browser tab open for IDLE_STOP_MS.
   async function reapOnce() {
-    forgetDeadServers();
+    await forgetDeadServers();
     countAppMisses();
     for (const [configDirectory, managed] of Object.entries(registry.instances)) {
       if (isAppRemoved(configDirectory)) {
-        if (isManagedAlive(managed)) {
+        if (await isManagedAlive(managed)) {
           await stopProcessGroup({ pid: managed.pid });
         }
         delete registry.instances[configDirectory];
@@ -424,7 +443,7 @@ function createHub({
       if (Date.now() - idleSince < IDLE_STOP_MS) {
         continue;
       }
-      const record = readDevInstance({ configDirectory });
+      const record = await readDevInstanceAsync({ configDirectory });
       if (record !== null && (await openTabs({ url: record.url })) > 0) {
         continue;
       }
@@ -455,7 +474,11 @@ function createHub({
     return { protocol: HUB_PROTOCOL, version: cliVersion, pid: process.pid };
   }
 
-  forgetDeadServers();
+  // Queued like a start or stop, so neither acts on the registry before the
+  // dead entries it was loaded with are gone.
+  serialize(forgetDeadServers).catch((error) =>
+    logger.error(`Forgetting dead servers failed: ${error.message}`)
+  );
 
   return {
     attach,

@@ -16,9 +16,11 @@
 
 import { jest } from '@jest/globals';
 import fs from 'fs';
+import { spawn } from 'child_process';
 import os from 'os';
 import path from 'path';
 import { wait } from '@lowdefy/helpers';
+import { getProcessStartTime } from '@lowdefy/node-utils';
 
 import createHub from './createHub.js';
 
@@ -125,9 +127,6 @@ const isWindows = process.platform === 'win32';
 // On Windows the detached dev script's output does not reach .lowdefy/dev.log,
 // so the hub has no log tail to report. Tracked as its own fix.
 const withHubDevLog = isWindows ? test.skip : test;
-// getProcessStartTime reads `ps`, which Windows lacks, so the hub knows a
-// process by its pid alone there until start times have a Windows source.
-const withProcessStartTimes = isWindows ? test.skip : test;
 // Windows refuses to delete a directory a live process runs in, so a worktree
 // cannot be removed under a running server there.
 const onPosix = isWindows ? test.skip : test;
@@ -143,7 +142,7 @@ withHubDevLog('hub start runs the dev script with the requester env', async () =
     configDirectory,
     env: { ...process.env, FROM_REQUESTER: 'requester-env' },
   });
-  expect(hub.logs({ configDirectory }).lines.join('\n')).toContain('requester-env');
+  expect((await hub.logs({ configDirectory })).lines.join('\n')).toContain('requester-env');
 });
 
 test('hub start returns the running server instead of starting a second one', async () => {
@@ -196,30 +195,63 @@ withHubDevLog(
 test('a new hub adopts running servers from the registry and can stop them', async () => {
   await hub.start({ configDirectory });
   const adopting = createTestHub();
-  expect(adopting.list().instances).toEqual([
+  expect((await adopting.list()).instances).toEqual([
     expect.objectContaining({ configDirectory, state: 'ready', managed: true }),
   ]);
   expect(await adopting.stop({ configDirectory })).toEqual({ stopped: true });
 });
 
-withProcessStartTimes(
-  'a registry entry whose pid now belongs to another process is dropped, never signalled',
-  async () => {
+// A start time in the form this platform reads, but not the one the pid's process has: on
+// Linux, the same ticks in another boot.
+function otherStartTime(pid) {
+  const startTime = getProcessStartTime({ pid });
+  if (typeof startTime === 'string') {
+    return startTime.replace(/^linux:[^:]+:/, 'linux:00000000-0000-0000-0000-000000000000:');
+  }
+  return 0;
+}
+
+test('a registry entry whose pid now belongs to another process is dropped, never signalled', async () => {
+  fs.mkdirSync(path.join(home, 'hub'), { recursive: true });
+  fs.writeFileSync(
+    path.join(home, 'hub', 'registry.json'),
+    JSON.stringify({
+      ports: {},
+      instances: {
+        [configDirectory]: { pid: process.pid, processStartTime: otherStartTime(process.pid) },
+      },
+    })
+  );
+  const adopting = createTestHub();
+  expect((await adopting.list()).instances).toEqual([]);
+  expect(isAlive(process.pid)).toBe(true);
+});
+
+test.each([
+  ['without a start time', null],
+  ['with a start time an older hub wrote as local time', 'Thu Jan  1 00:00:00 1970'],
+])('a registry entry written %s is adopted by its pid', async (_, processStartTime) => {
+  const leader = spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], {
+    detached: true,
+    stdio: 'ignore',
+  });
+  try {
     fs.mkdirSync(path.join(home, 'hub'), { recursive: true });
     fs.writeFileSync(
       path.join(home, 'hub', 'registry.json'),
       JSON.stringify({
         ports: {},
-        instances: {
-          [configDirectory]: { pid: process.pid, processStartTime: 'Thu Jan  1 00:00:00 1970' },
-        },
+        instances: { [configDirectory]: { pid: leader.pid, processStartTime } },
       })
     );
     const adopting = createTestHub();
-    expect(adopting.list().instances).toEqual([]);
-    expect(isAlive(process.pid)).toBe(true);
+    expect((await adopting.list()).instances).toEqual([
+      expect.objectContaining({ configDirectory, managed: true }),
+    ]);
+  } finally {
+    leader.kill('SIGKILL');
   }
-);
+});
 
 test('concurrent starts for one app launch one dev server and leave none unmanaged', async () => {
   fs.writeFileSync(
@@ -279,7 +311,7 @@ onPosix(
     expect(isAlive(grandchild)).toBe(true);
     await hub.reap();
     expect(await waitUntil(() => !isAlive(grandchild))).toBe(true);
-    expect(hub.list().instances).toEqual([]);
+    expect((await hub.list()).instances).toEqual([]);
   }
 );
 
@@ -291,7 +323,7 @@ test('hub reap keeps a server whose lowdefy.yaml was missing for one pass only',
   fs.renameSync(`${lowdefyYaml}.moved`, lowdefyYaml);
   await hub.reap();
   await hub.reap();
-  expect(hub.list().instances).toEqual([expect.objectContaining({ state: 'ready' })]);
+  expect((await hub.list()).instances).toEqual([expect.objectContaining({ state: 'ready' })]);
 });
 
 test('hub reap releases the ports of an app that was removed after it stopped', async () => {
@@ -320,6 +352,8 @@ test('overlapping reaps share one pass, so a slow open-tabs check is not repeate
   expect(openTabs).toHaveBeenCalledTimes(1);
 });
 
-test.each([[0], [-5], [2.5], ['10'], [null]])('hub logs refuses lines %p', (lines) => {
-  expect(() => hub.logs({ configDirectory, lines })).toThrow('"lines" must be a positive integer');
+test.each([[0], [-5], [2.5], ['10'], [null]])('hub logs refuses lines %p', async (lines) => {
+  await expect(hub.logs({ configDirectory, lines })).rejects.toThrow(
+    '"lines" must be a positive integer'
+  );
 });

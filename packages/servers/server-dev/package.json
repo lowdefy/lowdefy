@@ -42,6 +42,7 @@
     "prepublishOnly": "pnpm build",
     "start": "node manager/run.mjs",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:fixture": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.fixture.config.mjs",
     "test:mongodb": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.mongodb.config.mjs"
   },
   "dependencies": {

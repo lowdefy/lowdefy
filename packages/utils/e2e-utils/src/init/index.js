@@ -165,7 +165,9 @@ async function init() {
     console.log('     pnpm e2e            # Run all tests');
     console.log('     pnpm e2e:headed     # Run with visible browser');
     console.log('     pnpm e2e:ui         # Playwright UI mode');
-    console.log('     pnpm e2e:server     # Start server for reuse');
+    console.log(
+      '     pnpm e2e:server     # Start server for reuse (LOWDEFY_E2E_REUSE_SERVER=true pnpm e2e)'
+    );
   } else {
     for (const app of selectedApps) {
       console.log(`     cd ${app.path} && pnpm e2e`);

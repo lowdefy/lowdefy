@@ -50,6 +50,7 @@ The `dev` command starts a Lowdefy development server, running locally. It can b
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
 - `--disable-telemetry`: Disable telemetry.
+- `--exit-with-pid <pid>`: Stop the server when the process with this id exits. For test runners and scripts that start the server. The `LOWDEFY_EXIT_WITH_PID` environment variable does the same, and passes through wrappers such as `pnpm exec` or a secrets manager.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 - `--mock-user [user]`: Start the dev server authenticated as a mock user, bypassing the login flow. Pass a JSON user object to set the identity and roles (e.g. `--mock-user '{"sub":"dev","roles":["admin"]}'`), or use the bare flag for a default user with no roles. This is the same mechanism as `auth.dev.mockUser`. Dev server only. See [Auth Configuration](/auth-configuration#mock-user-for-testing-dev-server-only).
 - `--no-open`: Do not open a new tab in the default browser.
@@ -58,6 +59,8 @@ The `dev` command starts a Lowdefy development server, running locally. It can b
 - `--watch <paths...>`: A list of paths to files or directories that should be watched for changes. Globs are supported. Specify each path to watch separated by spaces.
 - `--watch-ignore <patterns...>`: A list of paths to files or directories that should be ignored by the file watcher. Globs are supported. Specify each path to watch separated by spaces.
 - `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
+
+The server stops when the `lowdefy dev` process stops, however it stops, including when it is killed outright.
 
 One app runs one dev server. The running server records itself in `.lowdefy/instance.json` (its pid, port, URL, state and whether a person or the [Lowdefy hub](#hub) started it), and a second `lowdefy dev` for the same app exits before touching anything, naming the server already running. A record copied from another checkout (for example into a git worktree) is ignored.
 
@@ -96,13 +99,15 @@ The Lowdefy hub is a small per-user background process that runs dev servers for
 - `lowdefy hub start [directory] [--restart] [--clean]`: Start (or return) an app's dev server through the hub. `--clean` deletes the build directory first.
 - `lowdefy hub stop [directory] [--all]`: Stop a dev server the hub runs, or all of them.
 - `lowdefy hub logs [directory] [--lines <n>] [--grep <text>]`: Print the recent output of a dev server the hub runs.
+- `lowdefy hub ps`: List the Lowdefy servers running on this machine (dev and production servers started with the CLI), the process that owns each, and whether that owner is gone.
+- `lowdefy hub prune [--kill]`: Stop Lowdefy servers whose owner is gone, such as a test server whose test run was killed. It only lists them unless `--kill` is passed. It also lists servers whose `lowdefy` CLI was left running after whatever started it was killed (for example a `pnpm exec` wrapper killed outright), and servers left running by an older Lowdefy version, in both cases only when nothing but package-manager wrappers is left above them, as well as a dev server's Vite process left running after an older dev server was killed. A server with a live owner (a terminal, a script still running, the hub) is never stopped. The hub prunes servers whose owner is gone each time it starts.
 - `lowdefy hub trust [directory]`: Let `lowdefy mcp` start and query the dev servers of the git repository `directory` is in from any agent session, not only sessions started in it. It covers all of the repository's git worktrees. Run it yourself, in an interactive terminal: it refuses without one, so an agent cannot trust a repository. It refuses a directory outside git.
 - `lowdefy hub untrust [directory]`: Undo `hub trust`. Also removes an entry whose directory is gone, given its old path.
 - `lowdefy hub trusted`: List the trusted repositories by their git directory (`.../repo/.git`), marking those that are missing.
 
 When a `package.json` in an app's checkout lists `lowdefy` but no `node_modules` up to the checkout root has it (a fresh git worktree, for example), `lowdefy hub start` and `lowdefy mcp` do not run its dev script; they answer with the install command to run, and where. See [AI agent docs](/ai-agent-docs).
 
-The hub keeps its state in `~/.lowdefy/hub` (set `LOWDEFY_HOME` to move it). It starts servers with the script `cli.devScript` names, or the one `package.json` script that runs `lowdefy dev`, so wrappers such as a secrets manager apply to agent-started servers too.
+The hub keeps its state in `~/.lowdefy/hub`, and running servers record themselves in `~/.lowdefy/servers` (set `LOWDEFY_HOME` to move both). It starts servers with the script `cli.devScript` names, or the one `package.json` script that runs `lowdefy dev`, so wrappers such as a secrets manager apply to agent-started servers too.
 
 ## init
 
@@ -143,10 +148,13 @@ The `test` command runs the app's config tests — the journeys in `tests/journe
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
 - `--disable-telemetry`: Disable telemetry.
+- `[paths...]`: Journey files or directories to run instead of `tests/journeys/*.yaml`, anywhere under the config directory, candidates in `tests/journeys/_candidates/` included.
 - `--filter <name>`: Only run journeys whose `name` contains this string (case-insensitive). Exits with code `1` if no journey matches.
+- `--lint`: Check the journeys for the lint rules (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L6 final assertion) and run nothing. Exits with code `1` on any lint error. See [Lint](/config-tests#lint).
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 - `--port <port>`: The port to start the development server on. If it is in use, the next free port is used. The default is `3000`.
 - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+- `--repeat <n>`: Run each journey `n` times (1 to 10) and classify it `PASS`, `FLAKY` or `FAIL`. Exits with code `1` on any `FLAKY` or `FAIL`. See [Replaying candidates](/config-tests#replaying-candidates).
 - `--url <url>`: Run the journeys against an already running development server (for example `--url http://localhost:3000` while `lowdefy dev` is running) instead of starting one.
 
 ## journeys compile
@@ -164,6 +172,32 @@ The `journeys compile` command turns recorded interaction traces into candidate 
 - `--dev-directory <dev-directory>`: Change the dev directory, where the development server's build is read from. The default is `<config-directory>/.lowdefy/dev`.
 - `--disable-telemetry`: Disable telemetry.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+## journeys harden
+
+The `journeys harden` command measures whether journeys fail when the feature they walk breaks. It runs each journey once, lists the config mutants on what the runs exercised, runs each mutant against the journeys that reached it, only in their own browsers, and reports every mutant no journey noticed with its source line, and a score per journey, in `.lowdefy/test/mutation.json`. It exits with code `0` even with survivors. See [Mutants](/config-tests#mutants-lowdefy-journeys-harden).
+
+- `[paths...]`: Journey files or directories to harden instead of `tests/journeys/*.yaml`.
+- `--filter <name>`: Only journeys whose `name` contains this string.
+- `--page <pageId...>`: Only mutants on these pages, and endpoint mutants a journey touching them called.
+- `--operators <list>`: Only these operators, comma separated: `drop-action`, `skip-validate`, `flip-visible`, `swap-if`, `drop-payload`, `retarget-link`, `drop-block`, `drop-step`.
+- `--max <n>`: Run at most `n` mutants. The default is `200`; `0` means no cap.
+- `--seed <n>`: The sample's seed; another seed draws another sample. The default is `0`.
+- `--workers <n>`: Journey runs at once, 1 to 16. The default is `4`.
+- `--mutant <id>`: Run only this mutant against the journeys on its path, without replacing the report.
+- `--list`: Print the sampled mutants and a time estimate, and run nothing.
+- `--json`: Print the report as JSON.
+- `--url <url>`, `--port <port>`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
+
+## journeys variants
+
+The `journeys variants` command writes edge-case candidates of one journey — bad input (`negative`), a reload mid-flow (`interrupt`) and a double click (`double-submit`) — to `tests/journeys/_candidates/variants/`, and replays each three times. See [Variants](/config-tests#variants-lowdefy-journeys-variants).
+
+- `<file>`: The journey file to vary.
+- `--name <journey>`: The journey to vary, when the file holds several.
+- `--kinds <list>`: Only these kinds, comma separated. The kinds for roles, another organisation, empty and large data need data sets and are skipped.
+- `--no-run`: Write the variants without replaying them.
+- `--url <url>`, `--port <port>`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
 
 ## journeys recordings
 
@@ -258,9 +292,12 @@ The `start` command starts a Lowdefy production server. To start a Lowdefy serve
 
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--disable-telemetry`: Disable telemetry.
+- `--exit-with-pid <pid>`: Stop the server when the process with this id exits. For test runners and scripts that start the server. The `LOWDEFY_EXIT_WITH_PID` environment variable does the same, and passes through wrappers such as `pnpm exec` or a secrets manager.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 - `--port <port>`: Change the port the server is hosted at. The default is `3000`.
 - `--server-directory <server-directory>`: Change the server directory, the directory in which the production server is placed. The default is `<config-directory>/.lowdefy/server`.
+
+The server stops when the `lowdefy start` process stops, however it stops, including when it is killed outright. A server run directly with `node`, as in a Docker image, is not affected.
 
 
 #### Examples
