@@ -24,8 +24,7 @@ import requestMutants from './requestMutants.js';
 import resolveJourneyPaths from '../../test/resolveJourneyPaths.js';
 import resolveServer from '../../test/resolveServer.js';
 import runBaseline from './runBaseline.js';
-import runMutantPair from './runMutantPair.js';
-import runMutantWorkers from './runMutantWorkers.js';
+import runWithCarryOver from './runWithCarryOver.js';
 import sampleMutants from './sampleMutants.js';
 import scopeMutants from './scopeMutants.js';
 import scoreMutants from './scoreMutants.js';
@@ -59,13 +58,6 @@ function selectJourneys({ context }) {
     return { error: 'No journeys to harden. Add journeys to tests/journeys/*.yaml.' };
   }
   return { items };
-}
-
-function toPairs({ mutants, baselines }) {
-  const byKey = new Map(baselines.map((baseline) => [baseline.key, baseline]));
-  return mutants.flatMap((mutant) =>
-    mutant.journeys.map((key) => ({ mutant, baseline: byKey.get(key) }))
-  );
 }
 
 function listedOperators({ options, listing }) {
@@ -124,26 +116,19 @@ async function hardenOnServer({ context, options, items, url }) {
     }).forEach((line) => context.logger.info(line));
     return 0;
   }
-  const run = await runMutantWorkers({
-    pairs: toPairs({ mutants, baselines }),
-    workers: options.workers,
-    runPair: (pair) => runMutantPair({ pair, url, buildId: listing.buildId }),
-    onVerdict: (verdict) =>
-      context.logger.debug(`${verdict.verdict} ${verdict.mutantId} ${verdict.journey}`),
+  const run = await runWithCarryOver({ context, options, items, url, baselines, listing, mutants });
+  const exitCode = run.stopped ? 1 : 0;
+  const score = scoreMutants({
+    mutants: run.mutants,
+    verdicts: run.verdicts,
+    baselines: run.baselines,
+    changed: run.changed,
   });
-  let exitCode = 0;
-  if (run.buildChanged) {
-    context.logger.error(
-      'The config changed during the run. Rerun `lowdefy journeys harden` when it settles.'
-    );
-    exitCode = 1;
-  }
-  const score = scoreMutants({ mutants, verdicts: run.verdicts, baselines });
   const report = buildMutationReport({
     score,
-    baselines,
-    buildId: listing.buildId,
-    rebuilds: 0,
+    baselines: run.baselines,
+    buildId: run.buildId,
+    rebuilds: run.rebuilds,
     sampled,
     operators: listedOperators({ options, listing }),
     now: new Date(),
@@ -159,10 +144,10 @@ async function hardenOnServer({ context, options, items, url }) {
   }
   formatHardenReport({
     score,
-    baselines,
+    baselines: run.baselines,
     sampled,
     notExercised: scoped.notExercised,
-    rebuilds: 0,
+    rebuilds: run.rebuilds,
     durationMs: Date.now() - started,
   }).forEach((line) => context.logger.info(line));
   return exitCode;

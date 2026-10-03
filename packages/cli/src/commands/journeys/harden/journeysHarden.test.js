@@ -35,7 +35,8 @@ let configDirectory;
 let context;
 let logs;
 let journeyRuns;
-let buildIds;
+let currentBuildId;
+let onMutantRun;
 const originalExitCode = process.exitCode;
 
 function exercisedFor(pageId) {
@@ -66,7 +67,7 @@ function mutant({ id, operator, anchor }) {
 
 const listing = {
   buildId: 'build-1',
-  artifacts: {},
+  artifacts: { 'pages/orders.json': 'o', 'pages/refunds.json': 'r', 'events.json': 'e' },
   mutants: [
     mutant({
       id: 'kill',
@@ -102,6 +103,19 @@ const listing = {
   ],
 };
 
+// The listing of one build: a build after the first changes the refunds page
+// only, and keys every mutant afresh.
+function listingFor(buildId) {
+  if (buildId === 'build-1') {
+    return listing;
+  }
+  return {
+    buildId,
+    artifacts: { ...listing.artifacts, 'pages/refunds.json': buildId },
+    mutants: listing.mutants.map((mutant) => ({ ...mutant, key: `${mutant.key}-${buildId}` })),
+  };
+}
+
 function writeJourney(fileName, journey) {
   const filePath = path.join(configDirectory, 'tests', 'journeys', fileName);
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
@@ -119,7 +133,8 @@ beforeEach(() => {
   configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-harden-'));
   logs = { info: [], warn: [], error: [] };
   journeyRuns = [];
-  buildIds = [];
+  currentBuildId = 'build-1';
+  onMutantRun = () => {};
   context = {
     directories: {
       config: configDirectory,
@@ -144,13 +159,18 @@ beforeEach(() => {
     pageId: 'refunds',
     steps: [{ click: 'save' }, { expect: { visible: 'alert' } }],
   });
-  mockGet.mockImplementation(async () => ({ data: { buildId: buildIds.shift() ?? 'build-1' } }));
+  mockGet.mockImplementation(async () => ({
+    data: { buildId: currentBuildId, build: { status: 'ok' } },
+  }));
   mockPost.mockImplementation(async (target, body) => {
     if (target === `${url}/lowdefy-docs/mutants`) {
-      return { data: listing };
+      return { data: listingFor(currentBuildId) };
     }
     journeyRuns.push({ pageId: body.pageId, mutant: body.mutant?.key ?? null });
-    if (body.mutant?.key === 'key-kill') {
+    if (body.mutant) {
+      onMutantRun(body);
+    }
+    if (body.mutant?.key.startsWith('key-kill')) {
       return {
         data: {
           passed: false,
@@ -309,4 +329,54 @@ test('journeysHarden says the dev server needs a newer Lowdefy when it has no mu
   await expect(harden()).rejects.toThrow(
     'The dev server has no mutants route (POST /lowdefy-docs/mutants): it needs a newer Lowdefy.'
   );
+});
+
+test('journeysHarden carries verdicts over a config change mid-run and finishes', async () => {
+  let mutantRunCount = 0;
+  onMutantRun = () => {
+    mutantRunCount += 1;
+    // The developer saves a page while the third pair runs.
+    if (mutantRunCount === 3) {
+      currentBuildId = 'build-2';
+    }
+  };
+  await harden({ workers: '1' });
+  expect(process.exitCode).toBeUndefined();
+  const report = readReport();
+  expect(report.rebuilds).toBe(1);
+  expect(report.buildId).toBe('build-2');
+  // The two orders verdicts before the change stand: orders read no changed
+  // artifact. The run in flight is discarded and run again on the new keys.
+  const mutantRuns = journeyRuns.filter((run) => run.mutant !== null);
+  expect(mutantRuns.map(({ pageId, mutant }) => `${pageId} ${mutant}`)).toEqual([
+    'orders key-kill',
+    'orders key-alert',
+    'orders key-app',
+    'orders key-app-build-2',
+    'refunds key-app-build-2',
+    'refunds key-refund-build-2',
+  ]);
+  expect(report.mutants.map(({ id, status }) => [id, status])).toEqual([
+    ['kill', 'killed'],
+    ['alert', 'survived'],
+    ['app', 'survived'],
+    ['refund', 'survived'],
+  ]);
+  expect(logs.info.at(-1)).toContain('· 1 rebuild ·');
+});
+
+test('journeysHarden stops at the third config change, writes what it kept and exits 1', async () => {
+  let build = 1;
+  onMutantRun = () => {
+    build += 1;
+    currentBuildId = `build-${build}`;
+  };
+  await harden({ workers: '1' });
+  expect(process.exitCode).toBe(1);
+  expect(logs.error).toContain(
+    'The config changed three times during the run. Rerun `lowdefy journeys harden` when it settles.'
+  );
+  const report = readReport();
+  expect(report.rebuilds).toBe(3);
+  expect(report.mutants.every(({ status }) => status === 'not run')).toBe(true);
 });

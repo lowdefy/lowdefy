@@ -115,3 +115,39 @@ fixtureTest(
     expect(hashJourneyFiles()).toEqual(before);
   }
 );
+
+fixtureTest('harden carries its verdicts over a page edit mid-run and finishes', async () => {
+  const pagePath = path.join(configDirectory, 'pages', 'second.yaml');
+  const original = fs.readFileSync(pagePath, 'utf8');
+  const running = runCli([
+    'journeys',
+    'harden',
+    '--config-directory',
+    configDirectory,
+    '--url',
+    fixtureUrl,
+    '--operators',
+    'drop-block',
+    '--workers',
+    '1',
+    '--json',
+    '--log-level',
+    'error',
+  ]);
+  try {
+    // After the baseline and a few pairs, the developer edits a page.
+    await new Promise((resolve) => setTimeout(resolve, 20000));
+    fs.writeFileSync(pagePath, original.replace('content: Second page', 'content: Second page.'));
+    const { code, stdout } = await running;
+    expect(code).toBe(0);
+    const report = JSON.parse(stdout);
+    expect(report.rebuilds).toBe(1);
+    // The journey never reads the edited page, so every verdict stands or
+    // reran: none is lost.
+    expect(report.mutants.every(({ status }) => ['killed', 'survived'].includes(status))).toBe(
+      true
+    );
+  } finally {
+    fs.writeFileSync(pagePath, original);
+  }
+});
