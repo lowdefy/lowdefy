@@ -33,6 +33,11 @@ The Lowdefy engine provides a context object to the action with the following pa
   - `translate: function`: Look up a translation key (`(key, values?) => string`) — same lookup chain as the [`_t`](/_t) operator. See [i18n](/i18n) for the plugin-author contract.
   - `validate: function`: Call the Validate action.
 - `params: any`: The `params` defined by the user in the Lowdefy configuration. Operators are evaluated before the params are passed to the action. No validation is performed on this object.
+- `trace: object`: Observe completed block and app events, for example to send them to an analytics tool.
+  - `subscribe: function`: `subscribe(listener, { state, replay }) => unsubscribe`. The listener is called once for every block or app event that ran its actions, after the event finished, with `{ scope, pageId, blockId, blockType, eventName, success, failure, debounceMs, actions, record, context }`. `scope` is `page` or `app`. `failure` is `null` for a successful event, else `{ actionId, actionType, configKey, errorName, invalidBlocks }`: ids only, never an error message or a value. An event with no actions, a bounced debounced event and an event an inner block already handled are not reported. Pass `{ state: true }` to also receive `stateBefore`, a copy of the page state before the actions ran. Pass `{ replay: true }` to also receive the failed events (`success: false`) that happened before anyone asked for replay, such as a failing app `onInit`: they are passed to the listener in order before `subscribe` returns. Lowdefy holds at most 20 of them, without `stateBefore`, and only the first subscriber that passes `replay` receives them. A listener that throws is logged once and never stops the event or the other listeners.
+  - `describeElement: function`: `describeElement(element)` returns the journey target a DOM element describes as: `{ page_id, block_id, block_type, row, column, text, nth, option, block_ids }`.
+  - `describeChain: function`: `describeChain(elementsChain)` returns the same target from a PostHog `$elements_chain` string, with `nth` always `null`.
+  - `pageIdOf: function`: `pageIdOf(url)` returns the page id a URL shows, or the configured home page at the app root.
 
 #### Examples
 

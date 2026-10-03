@@ -158,7 +158,7 @@ const DrawerBlock = ({
       open={openState}
       {...sizeProps}
       zIndex={properties.zIndex}
-      placement={properties.placement}
+      placement={properties.placement ?? undefined}
       keyboard={properties.keyboard}
       onClose={
         onClose ||

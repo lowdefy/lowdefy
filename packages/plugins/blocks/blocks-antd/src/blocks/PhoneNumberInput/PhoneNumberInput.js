@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Input, Select, Space } from 'antd';
 import regions from './regions.js';
 
@@ -55,6 +55,7 @@ function AddOnSelect({
   defaultValue,
   loading,
   methods,
+  popupContainerId,
   properties,
   status,
   styles,
@@ -64,7 +65,8 @@ function AddOnSelect({
   return (
     <Select
       id={`${blockId}_select_input`}
-      variant={properties.bordered === false ? 'borderless' : properties.variant}
+      getPopupContainer={() => document.getElementById(popupContainerId)}
+      variant={properties.bordered === false ? 'borderless' : properties.variant ?? undefined}
       style={{ minWidth: 100, ...styles.select }}
       defaultValue={defaultValue}
       disabled={getDisabled({ loading, properties })}
@@ -143,6 +145,8 @@ const PhoneNumberInput = ({
   validation,
   value,
 }) => {
+  const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
+  const popupContainerId = `${blockId}_${elementId}_popup`;
   const allowedRegions = getAllowedRegions({ allowedRegions: properties.allowedRegions, regions });
 
   const uniqueValueOptions = getUniqueValues(
@@ -184,115 +188,123 @@ const PhoneNumberInput = ({
       validation={validation}
       content={{
         content: () => {
+          // The country dropdown renders inside the block, like Selector's, so an option click
+          // has the block's wrapper on its path.
           return (
-            <Space.Compact
-              block
-              className={`ldf-phone-number-input${
-                classNames.element ? ` ${classNames.element}` : ''
-              }`}
-              style={styles.element}
-            >
-              <AddOnSelect
-                blockId={blockId}
-                classNames={classNames}
-                components={{ Icon }}
-                defaultValue={defaultValue}
-                loading={loading}
-                methods={methods}
-                properties={properties}
-                status={validation.status}
-                styles={styles}
-                uniqueValueOptions={uniqueValueOptions}
-                value={value}
-              />
-              <Input
-                id={`${blockId}_input`}
-                allowClear={
-                  properties.allowClear && {
-                    clearIcon: (
-                      <Icon
-                        blockId={`${blockId}_clearIcon`}
-                        properties={{ name: 'clear', title: '' }}
-                      />
-                    ),
-                  }
-                }
-                autoFocus={properties.autoFocus}
-                variant={properties.bordered === false ? 'borderless' : properties.variant}
-                disabled={getDisabled({ loading, properties })}
-                maxLength={properties.maxLength}
-                placeholder={properties.placeholder}
-                size={properties.size}
-                status={validation.status}
-                value={value?.input}
-                onChange={(event) => {
-                  let input = event.target.value;
-
-                  if (properties.replaceInput) {
-                    const regex = new RegExp(
-                      properties.replaceInput.pattern,
-                      properties.replaceInput.flags ?? 'gm'
-                    );
-                    input = input.replace(regex, properties.replaceInput.replacement ?? '');
-                  }
-
-                  const region = value?.region ?? {};
-                  const phone_number = formatPhoneNumber(region?.dial_code, input);
-
-                  methods.setValue({
-                    input,
-                    region,
-                    phone_number,
-                  });
-
-                  methods.triggerEvent({ name: 'onInputChange' });
-                  methods.triggerEvent({
-                    name: 'onChange',
-                    event: { value: { input, region, phone_number } },
-                  });
-                }}
-                onPressEnter={() => {
-                  methods.triggerEvent({ name: 'onPressEnter' });
-                }}
-                onClear={() => {
-                  methods.triggerEvent({ name: 'onClear' });
-                }}
-                onBlur={() => {
-                  methods.triggerEvent({ name: 'onBlur' });
-                }}
-                onFocus={() => {
-                  methods.triggerEvent({ name: 'onFocus' });
-                }}
-                prefix={
-                  properties.prefix ||
-                  (properties.prefixIcon && (
-                    <Icon
-                      blockId={`${blockId}_prefixIcon`}
-                      classNames={{ element: classNames.prefixIcon }}
-                      events={events}
-                      properties={properties.prefixIcon}
-                      styles={{ element: styles.prefixIcon }}
-                    />
-                  ))
-                }
-                suffix={
-                  (properties.suffix || properties.suffixIcon) && (
-                    <>
-                      {properties.suffix && properties.suffix}
-                      {properties.suffixIcon && (
+            <div style={{ width: '100%' }}>
+              <div id={popupContainerId} />
+              <Space.Compact
+                block
+                className={`ldf-phone-number-input${
+                  classNames.element ? ` ${classNames.element}` : ''
+                }`}
+                style={styles.element}
+              >
+                <AddOnSelect
+                  blockId={blockId}
+                  classNames={classNames}
+                  components={{ Icon }}
+                  defaultValue={defaultValue}
+                  loading={loading}
+                  methods={methods}
+                  popupContainerId={popupContainerId}
+                  properties={properties}
+                  status={validation.status}
+                  styles={styles}
+                  uniqueValueOptions={uniqueValueOptions}
+                  value={value}
+                />
+                <Input
+                  id={`${blockId}_input`}
+                  allowClear={
+                    properties.allowClear && {
+                      clearIcon: (
                         <Icon
-                          blockId={`${blockId}_suffixIcon`}
-                          classNames={{ element: classNames.suffixIcon }}
-                          events={events}
-                          properties={properties.suffixIcon}
-                          styles={{ element: styles.suffixIcon }}
+                          blockId={`${blockId}_clearIcon`}
+                          properties={{ name: 'clear', title: '' }}
                         />
-                      )}
-                    </>
-                  )
-                }
-              />
-            </Space.Compact>
+                      ),
+                    }
+                  }
+                  autoFocus={properties.autoFocus}
+                  variant={
+                    properties.bordered === false ? 'borderless' : properties.variant ?? undefined
+                  }
+                  disabled={getDisabled({ loading, properties })}
+                  maxLength={properties.maxLength}
+                  placeholder={properties.placeholder}
+                  size={properties.size}
+                  status={validation.status}
+                  value={value?.input}
+                  onChange={(event) => {
+                    let input = event.target.value;
+
+                    if (properties.replaceInput) {
+                      const regex = new RegExp(
+                        properties.replaceInput.pattern,
+                        properties.replaceInput.flags ?? 'gm'
+                      );
+                      input = input.replace(regex, properties.replaceInput.replacement ?? '');
+                    }
+
+                    const region = value?.region ?? {};
+                    const phone_number = formatPhoneNumber(region?.dial_code, input);
+
+                    methods.setValue({
+                      input,
+                      region,
+                      phone_number,
+                    });
+
+                    methods.triggerEvent({ name: 'onInputChange' });
+                    methods.triggerEvent({
+                      name: 'onChange',
+                      event: { value: { input, region, phone_number } },
+                    });
+                  }}
+                  onPressEnter={() => {
+                    methods.triggerEvent({ name: 'onPressEnter' });
+                  }}
+                  onClear={() => {
+                    methods.triggerEvent({ name: 'onClear' });
+                  }}
+                  onBlur={() => {
+                    methods.triggerEvent({ name: 'onBlur' });
+                  }}
+                  onFocus={() => {
+                    methods.triggerEvent({ name: 'onFocus' });
+                  }}
+                  prefix={
+                    properties.prefix ||
+                    (properties.prefixIcon && (
+                      <Icon
+                        blockId={`${blockId}_prefixIcon`}
+                        classNames={{ element: classNames.prefixIcon }}
+                        events={events}
+                        properties={properties.prefixIcon}
+                        styles={{ element: styles.prefixIcon }}
+                      />
+                    ))
+                  }
+                  suffix={
+                    (properties.suffix || properties.suffixIcon) && (
+                      <>
+                        {properties.suffix && properties.suffix}
+                        {properties.suffixIcon && (
+                          <Icon
+                            blockId={`${blockId}_suffixIcon`}
+                            classNames={{ element: classNames.suffixIcon }}
+                            events={events}
+                            properties={properties.suffixIcon}
+                            styles={{ element: styles.suffixIcon }}
+                          />
+                        )}
+                      </>
+                    )
+                  }
+                />
+              </Space.Compact>
+            </div>
           );
         },
       }}

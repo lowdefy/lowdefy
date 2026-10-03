@@ -16,7 +16,7 @@
 
 import fs from 'fs';
 import net from 'net';
-import { wait } from '@lowdefy/helpers';
+import { type, wait } from '@lowdefy/helpers';
 
 import createHubClient from './createHubClient.js';
 import getHubPaths from './getHubPaths.js';
@@ -89,7 +89,9 @@ async function connectHub({ autoStart = true } = {}) {
     return null;
   }
   const { protocol, pid, version } = await client.request('hello');
-  if (protocol !== HUB_PROTOCOL) {
+  // A hub keeps serving every earlier protocol's methods, so a newer hub
+  // serves this CLI; only an older one lacks what it needs.
+  if (!type.isInt(protocol) || protocol < HUB_PROTOCOL) {
     client.close();
     throw new Error(
       `The running Lowdefy hub (pid ${pid}, lowdefy ${version}) speaks hub protocol ${protocol}; this CLI needs ${HUB_PROTOCOL}. Stop it (kill ${pid}) - the servers it runs keep running and the next hub adopts them.`

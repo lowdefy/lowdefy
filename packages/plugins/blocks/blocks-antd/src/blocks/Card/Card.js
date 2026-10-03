@@ -36,7 +36,7 @@ const CardBlock = ({
   <Card
     id={blockId}
     title={content.title ? content.title() : renderHtml({ html: properties.title, methods })}
-    variant={properties.bordered === false ? 'borderless' : properties.variant}
+    variant={properties.bordered === false ? 'borderless' : properties.variant ?? undefined}
     actions={content.actions && [content.actions()]}
     cover={content.cover && content.cover()}
     extra={content.extra && content.extra()}

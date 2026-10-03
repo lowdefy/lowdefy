@@ -62,11 +62,11 @@ const SliderBlock = ({
             included={properties.included}
             keyboard={properties.keyboard}
             marks={properties.marks}
-            max={properties.max}
-            min={properties.min}
+            max={properties.max ?? undefined}
+            min={properties.min ?? undefined}
             range={properties.range}
             reverse={properties.reverse}
-            step={properties.step}
+            step={properties.step ?? undefined}
             style={styles.element}
             styles={{
               handle: styles.handle,

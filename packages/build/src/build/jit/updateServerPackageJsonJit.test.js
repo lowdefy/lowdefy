@@ -21,7 +21,10 @@ import { jest } from '@jest/globals';
 const mockReadFile = jest.fn();
 const mockWriteFile = jest.fn();
 
+const mockLinkWorkspaceDependencies = jest.fn(async ({ dependencies }) => dependencies);
+
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+  linkWorkspaceDependencies: mockLinkWorkspaceDependencies,
   readFile: mockReadFile,
   writeFile: mockWriteFile,
 }));
@@ -132,4 +135,32 @@ test('updateServerPackageJsonJit writes file with trailing newline', async () =>
 
   const writtenContent = mockWriteFile.mock.calls[0][1];
   expect(writtenContent.endsWith('\n')).toBe(true);
+});
+
+test('updateServerPackageJsonJit writes workspace plugins as linked by linkWorkspaceDependencies', async () => {
+  const { default: updateServerPackageJsonJit } = await import('./updateServerPackageJsonJit.js');
+
+  mockReadFile.mockResolvedValue(
+    JSON.stringify({ name: '@lowdefy/server-dev', dependencies: { react: '18.2.0' } })
+  );
+  mockWriteFile.mockResolvedValue();
+  mockLinkWorkspaceDependencies.mockResolvedValueOnce({
+    'plugin-hello': 'link:../../../../plugins/plugin-hello',
+    react: '18.2.0',
+  });
+
+  await updateServerPackageJsonJit({
+    directories: { server: '/repo/apps/app/.lowdefy/dev' },
+    missingPackages: new Map([['plugin-hello', { version: 'workspace:*', types: ['_hello'] }]]),
+  });
+
+  expect(mockLinkWorkspaceDependencies).toHaveBeenLastCalledWith({
+    dependencies: { 'plugin-hello': 'workspace:*', react: '18.2.0' },
+    directory: '/repo/apps/app/.lowdefy/dev',
+  });
+  const written = JSON.parse(mockWriteFile.mock.calls.at(-1)[1]);
+  expect(written.dependencies).toEqual({
+    'plugin-hello': 'link:../../../../plugins/plugin-hello',
+    react: '18.2.0',
+  });
 });

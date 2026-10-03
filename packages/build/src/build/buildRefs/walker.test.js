@@ -897,6 +897,77 @@ describe('_module.var lazy resolution', () => {
     expect(result).toEqual({ show_header: true });
   });
 
+  test('namespace var leaves out properties the consumer never set and that have no default', async () => {
+    const entry = createModuleEntry(
+      { sider: { theme: 'dark' } },
+      {
+        sider: {
+          type: 'object',
+          properties: {
+            width: { type: 'number', default: 232 },
+            collapsedWidth: { type: 'number' },
+            theme: { type: 'string' },
+          },
+        },
+      }
+    );
+    const ctx = createWalkContext({ moduleEntry: entry });
+    const result = await resolve({ '_module.var': 'sider' }, ctx);
+    expect(result).toEqual({ width: 232, theme: 'dark' });
+    expect(Object.hasOwn(result, 'collapsedWidth')).toBe(false);
+  });
+
+  test('namespace var keeps a property the consumer explicitly set to null', async () => {
+    const entry = createModuleEntry(
+      { sider: { collapsedWidth: null } },
+      {
+        sider: {
+          type: 'object',
+          properties: {
+            width: { type: 'number', default: 232 },
+            collapsedWidth: { type: 'number' },
+          },
+        },
+      }
+    );
+    const ctx = createWalkContext({ moduleEntry: entry });
+    const result = await resolve({ '_module.var': 'sider' }, ctx);
+    expect(result).toEqual({ width: 232, collapsedWidth: null });
+  });
+
+  test('namespace var leaves out unset properties of a nested namespace', async () => {
+    const entry = createModuleEntry(
+      {},
+      {
+        theme: {
+          type: 'object',
+          properties: {
+            colors: {
+              type: 'object',
+              properties: {
+                primary: { type: 'string', default: '#1890ff' },
+                background: { type: 'string' },
+              },
+            },
+          },
+        },
+      }
+    );
+    const ctx = createWalkContext({ moduleEntry: entry });
+    const result = await resolve({ '_module.var': 'theme' }, ctx);
+    expect(result).toEqual({ colors: { primary: '#1890ff' } });
+  });
+
+  test('_module.var of an unset namespace property with no default returns null', async () => {
+    const entry = createModuleEntry(
+      {},
+      { sider: { type: 'object', properties: { collapsedWidth: { type: 'number' } } } }
+    );
+    const ctx = createWalkContext({ moduleEntry: entry });
+    const result = await resolve({ '_module.var': 'sider.collapsedWidth' }, ctx);
+    expect(result).toBeNull();
+  });
+
   test('errors on _module.var in module scope without an entry (module-static positions)', async () => {
     const buildContext = createBuildContext();
     const ctx = new WalkContext({

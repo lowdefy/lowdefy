@@ -13,14 +13,14 @@
 
 import useSWR from 'swr';
 
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 import { getNavVersion, getReloadVersion } from './useMutateCache.js';
 
-// URLs whose config is server-resolved per request — learned from the fetched
-// config's dynamic flag, so the first visit caches like a static page and
-// every later navigation refetches.
-const dynamicUrls = new Set();
+// Page config URLs (without the query string) of pages whose config is
+// server-resolved per request, mapped to the navigation version of the fetch
+// that found them dynamic. Learned from the fetched config's dynamic flag.
+const dynamicPages = new Map();
 
 function parseJsModule(text) {
   const fn = new Function('exports', text.replace('export default', 'exports.default ='));
@@ -87,27 +87,51 @@ export async function fetchPageConfig(url) {
   // _dynamicIcons is already plain data — leave it for Page to inject.
   if (data._jsEntries) data._jsEntries = parseJsModule(data._jsEntries);
 
-  if (data?.dynamic === true) {
-    dynamicUrls.add(url);
-  }
-
   return data;
 }
 
+export function recordDynamicPage({ data, pageUrl }) {
+  if (data?.dynamic !== true) {
+    dynamicPages.delete(pageUrl);
+    return;
+  }
+  // Keep the first navigation version: later fetches of a known dynamic page
+  // must not move it, or their key would fall back to the static key.
+  if (!dynamicPages.has(pageUrl)) {
+    dynamicPages.set(pageUrl, getNavVersion());
+  }
+}
+
+// The query string only changes the config of a dynamic page (server-side
+// Dynamic block resolution reads urlQuery), so a static page keys on its URL
+// alone and a Link that only changes the query reuses the cached config instead
+// of suspending behind the Building page fallback. A dynamic page keys on the
+// query and the navigation version, so it re-resolves on every navigation.
+// reloadVersion orphans every cached entry after a config reload. The fetch
+// that first finds a page dynamic was made under the static key, so for the
+// rest of that navigation the page keeps the static key and uses that result
+// rather than fetching it again.
+export function getPageConfigKey({ pageUrl, search }) {
+  const foundAtNavVersion = dynamicPages.get(pageUrl);
+  const navVersion = getNavVersion();
+  if (type.isUndefined(foundAtNavVersion) || foundAtNavVersion === navVersion) {
+    return [pageUrl, getReloadVersion()];
+  }
+  return [pageUrl, getReloadVersion(), search, navVersion];
+}
+
 function usePageConfig(pageId, basePath) {
-  // Forward the current query string so server-side Dynamic block resolution
-  // sees the same urlQuery as an initial HTML load. Including it in the SWR
-  // key also caches dynamic pages per query string.
-  const url = `${basePath}/api/page/${pageId}${window.location.search}`;
-  // Include reloadVersion in the SWR key so that after a config reload,
-  // previously cached page data is not reused. Dynamic pages also key on the
-  // navigation version — server-resolved content must re-resolve on every
-  // navigation, never serve from the SWR cache. The fetcher receives
-  // [url, ...versions] but only uses url — the versions just bust the cache.
-  const navVersion = dynamicUrls.has(url) ? getNavVersion() : 0;
+  const pageUrl = `${basePath}/api/page/${pageId}`;
+  const search = window.location.search;
+  // The fetch always forwards the current query string, so server-side Dynamic
+  // block resolution sees the same urlQuery as an initial HTML load.
   const { data } = useSWR(
-    [url, getReloadVersion(), navVersion],
-    ([fetchUrl]) => fetchPageConfig(fetchUrl),
+    getPageConfigKey({ pageUrl, search }),
+    async () => {
+      const pageConfig = await fetchPageConfig(`${pageUrl}${search}`);
+      recordDynamicPage({ data: pageConfig, pageUrl });
+      return pageConfig;
+    },
     {
       suspense: true,
     }

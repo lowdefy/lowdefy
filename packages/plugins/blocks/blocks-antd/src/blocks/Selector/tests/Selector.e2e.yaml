@@ -560,3 +560,20 @@ blocks:
           filterString: Germany Deutschland
         - label: <i>France</i>
           value: fr
+
+  # ============================================
+  # NULL PROPERTIES
+  # ============================================
+
+  # _state on a missing key gives null, which must fall back to antd's defaults.
+  - id: selector_null_props
+    type: Selector
+    properties:
+      variant:
+        _state: selector_null_missing
+      listHeight:
+        _state: selector_null_missing
+      options:
+        - Option 1
+        - Option 2
+        - Option 3

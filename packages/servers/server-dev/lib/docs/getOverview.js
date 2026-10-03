@@ -122,6 +122,7 @@ function getOverview() {
     '| `GET /lowdefy-docs/page-config/{pageId}` | Fully built page config, or its build errors |',
     '| `GET /lowdefy-docs/screenshot/{pageId}` | PNG screenshot of the rendered page |',
     '| `POST /lowdefy-docs/journey` | Drive a page headless through declarative steps (click, fill, select, press, back, goto, email, as, wait, screenshot, expect) and assert state, visibility, text, url or title; screenshots returned as base64 |',
+    '| `POST /lowdefy-docs/mutants` | Config mutants on what journeys exercised `{pages, requests, endpoints, appEvents, operators}`: each with a stable `id`, its anchor and source line (for `lowdefy journeys harden`) |',
     '| `GET /lowdefy-docs/find/{id}?pageId=` | Locate where a page/block/request id is defined |',
     '| `GET /lowdefy-docs/inspect-state/{pageId}?source=` | Live state/requests/eventLog of a running page (tab or headless) |',
     '| `POST /lowdefy-docs/eval-operator` | Evaluate an operator expression against live page state |',

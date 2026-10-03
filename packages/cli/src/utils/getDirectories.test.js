@@ -37,6 +37,7 @@ test('default directories', () => {
     emails: path.join(configDirectory, '.lowdefy', 'emails'),
     journeys: path.join(configDirectory, 'tests', 'journeys'),
     server: path.join(configDirectory, '.lowdefy', 'server'),
+    traces: path.join(configDirectory, '.lowdefy', 'traces'),
   });
 });
 
@@ -55,6 +56,7 @@ test('specify serverDirectory in options', () => {
     emails: path.join(configDirectory, '.lowdefy', 'emails'),
     journeys: path.join(configDirectory, 'tests', 'journeys'),
     server: path.resolve('/test/server'),
+    traces: path.join(configDirectory, '.lowdefy', 'traces'),
   });
 });
 
@@ -73,6 +75,7 @@ test('specify devDirectory in options', () => {
     emails: path.join(configDirectory, '.lowdefy', 'emails'),
     journeys: path.join(configDirectory, 'tests', 'journeys'),
     server: path.join(configDirectory, '.lowdefy', 'server'),
+    traces: path.join(configDirectory, '.lowdefy', 'traces'),
   });
 });
 

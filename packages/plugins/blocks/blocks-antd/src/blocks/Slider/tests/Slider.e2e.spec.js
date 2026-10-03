@@ -213,4 +213,15 @@ test.describe('Slider antd 6 features', () => {
     await expect(slider.locator('.ant-slider-track')).toHaveClass(/slider-custom-track/);
     await expect(slider.locator('.ant-slider-handle')).toHaveClass(/slider-custom-handle/);
   });
+
+  // ============================================
+  // NULL PROPERTIES
+  // ============================================
+
+  test('null min, max and step fall back to the 0-100 range', async ({ page }) => {
+    const handle = getHandle(page, 'slider_null_props');
+    await expect(handle).toHaveAttribute('aria-valuemax', '100');
+    await expect(handle).toHaveAttribute('aria-valuenow', '30');
+    await expect(handle).toHaveAttribute('style', /left: 30%/);
+  });
 });
