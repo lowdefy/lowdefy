@@ -73,7 +73,8 @@ test('registerServer writes a record naming the parent CLI as owner', () => {
     processStartTime: `start-of-${process.pid}`,
     kind: 'server',
     cwd: process.cwd(),
-    configDirectory: '/apps/one',
+    // Resolved, so a drive letter on Windows.
+    configDirectory: path.resolve('/apps/one'),
     port: 3112,
     owner: { pid: process.ppid, processStartTime: `start-of-${process.ppid}`, via: 'cli' },
     startedAt: expect.any(String),
