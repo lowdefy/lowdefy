@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { spawn } from 'child_process';
 import fs from 'fs';
 import http from 'http';
 import net from 'net';
@@ -115,6 +116,106 @@ test('lowdefy mcp lists the lifecycle tools and every dev tool with a directory 
   expect(buildStatus.inputSchema.properties.directory.type).toEqual('string');
   expect(client.getInstructions()).toContain('never run `lowdefy dev` yourself');
   expect(client.getInstructions()).toContain('Dev server instructions.');
+  expect(client.getInstructions()).toContain(
+    'When you finish work in a git worktree you created for the task, call lowdefy_dev_stop with that "directory" before you report back.'
+  );
+  expect(client.getInstructions()).toContain(
+    'A server left running stops once it has been idle for 15 minutes.'
+  );
+});
+
+// Stands in for the per-user hub on its socket: answers each request with what
+// a hub that has started the app would. The app's dev server is a local
+// server that records the paths asked of it.
+async function listenFakeHub({ configDirectory, start = {} }) {
+  const devRequests = [];
+  const devServer = http.createServer((req, res) => {
+    devRequests.push(req.url);
+    res.end('ok');
+  });
+  await new Promise((resolve) => devServer.listen(0, '127.0.0.1', resolve));
+  const { socketPath } = getHubPaths();
+  fs.mkdirSync(path.dirname(socketPath), { recursive: true });
+  const answers = {
+    hello: { protocol: HUB_PROTOCOL, version: '6.0.0', pid: process.pid },
+    attach: { attached: true },
+    start: {
+      configDirectory,
+      owner: 'hub',
+      state: 'ready',
+      url: `http://127.0.0.1:${devServer.address().port}`,
+      pid: process.pid,
+      managed: true,
+      ...start,
+    },
+  };
+  const server = net.createServer((socket) => {
+    socket.setEncoding('utf8');
+    let buffered = '';
+    socket.on('data', (chunk) => {
+      buffered += chunk;
+      let newline = buffered.indexOf('\n');
+      while (newline !== -1) {
+        const { id, method } = JSON.parse(buffered.slice(0, newline));
+        buffered = buffered.slice(newline + 1);
+        socket.write(`${JSON.stringify({ id, result: answers[method] })}\n`);
+        newline = buffered.indexOf('\n');
+      }
+    });
+    socket.on('error', () => {});
+  });
+  await new Promise((resolve) => server.listen(socketPath, resolve));
+  return {
+    devRequests,
+    close: async () => {
+      await new Promise((resolve) => server.close(resolve));
+      await new Promise((resolve) => devServer.close(resolve));
+    },
+  };
+}
+
+test('lowdefy_dev_start counts as use and says the hub stops the server once it has been idle', async () => {
+  const app = makeApp('apps/main');
+  const hub = await listenFakeHub({ configDirectory: app });
+  try {
+    await connect({ cwd: app });
+    const result = await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
+    expect(result.isError).toBeFalsy();
+    expect(text(result)).toContain('"state": "ready"');
+    expect(text(result)).toContain(
+      'The hub stops this server once nobody has used it for 15 minutes (sooner when the machine is short of memory); the next lowdefy_ call starts it again.'
+    );
+    // Asking for the server counts as using it.
+    expect(hub.devRequests).toEqual(['/api/ping']);
+  } finally {
+    await client.close();
+    await shim.close();
+    client = undefined;
+    shim = undefined;
+    await hub.close();
+  }
+});
+
+test('lowdefy_dev_start keeps the hub note when another hub owns the server', async () => {
+  const app = makeApp('apps/main');
+  const note = 'This dev server was started by another hub; it cannot be restarted from here.';
+  const hub = await listenFakeHub({ configDirectory: app, start: { managed: false, note } });
+  try {
+    await connect({ cwd: app });
+    const result = await client.callTool({
+      name: 'lowdefy_dev_start',
+      arguments: { restart: true },
+    });
+    expect(result.isError).toBeFalsy();
+    expect(text(result)).toContain(note);
+    expect(text(result)).not.toContain('The hub stops this server once nobody has used it');
+  } finally {
+    await client.close();
+    await shim.close();
+    client = undefined;
+    shim = undefined;
+    await hub.close();
+  }
 });
 
 test('lowdefy mcp answers a dev tool call in a multi-app checkout with the apps to choose from', async () => {
@@ -230,6 +331,95 @@ test('lowdefy mcp refuses a directory in another checkout and asks the user when
     expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
   } finally {
     fs.rmSync(other, { recursive: true, force: true });
+  }
+});
+
+// A dev server in its own process that speaks just enough MCP to be connected
+// to and list its tools, answers a tool call as an event stream that never
+// ends, and says so on stdout.
+const HANGING_DEV_SERVER = `
+const http = require('http');
+const server = http.createServer((req, res) => {
+  if (req.method !== 'POST') {
+    res.writeHead(405).end();
+    return;
+  }
+  let body = '';
+  req.on('data', (chunk) => (body += chunk));
+  req.on('end', () => {
+    const message = JSON.parse(body);
+    if (message.id === undefined) {
+      res.writeHead(202).end();
+      return;
+    }
+    if (message.method === 'initialize') {
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({
+        jsonrpc: '2.0',
+        id: message.id,
+        result: {
+          protocolVersion: message.params.protocolVersion,
+          capabilities: { tools: {} },
+          serverInfo: { name: 'dev', version: '6.0.0' },
+        },
+      }));
+      return;
+    }
+    if (message.method === 'tools/list') {
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ jsonrpc: '2.0', id: message.id, result: { tools: [] } }));
+      return;
+    }
+    res.writeHead(200, { 'content-type': 'text/event-stream' });
+    res.flushHeaders();
+    process.stdout.write('called\\n');
+  });
+});
+server.listen(0, '127.0.0.1', () => process.stdout.write(server.address().port + '\\n'));
+`;
+
+test('a dev tool call fails within seconds, saying the server stopped, when its dev server dies mid-call', async () => {
+  const app = makeApp('.');
+  const devServer = spawn(process.execPath, ['-e', HANGING_DEV_SERVER]);
+  try {
+    const lines = [];
+    const nextLine = () =>
+      new Promise((resolve) => {
+        if (lines.length > 0) {
+          resolve(lines.shift());
+          return;
+        }
+        devServer.stdout.once('data', () => resolve(nextLine()));
+      });
+    devServer.stdout.setEncoding('utf8');
+    devServer.stdout.on('data', (chunk) => lines.push(...chunk.split('\n').filter(Boolean)));
+    const port = await nextLine();
+    fs.mkdirSync(path.join(app, '.lowdefy'));
+    fs.writeFileSync(
+      path.join(app, '.lowdefy', 'instance.json'),
+      JSON.stringify({
+        pid: devServer.pid,
+        configDirectory: app,
+        owner: 'terminal',
+        state: 'ready',
+        url: `http://127.0.0.1:${port}`,
+      })
+    );
+    await connect({ cwd: root });
+    const pending = client.callTool({ name: 'lowdefy_build_status', arguments: {} });
+    expect(await nextLine()).toEqual('called');
+    const killedAt = Date.now();
+    devServer.kill('SIGKILL');
+    const result = await pending;
+    expect(Date.now() - killedAt).toBeLessThan(10000);
+    expect(result.isError).toBe(true);
+    expect(text(result)).toEqual(
+      `${path.basename(
+        root
+      )}: the dev server stopped or dropped the connection before lowdefy_build_status answered, so the call may have run in part. Call lowdefy_dev_status, then lowdefy_dev_start if it is not ready, and try again.`
+    );
+  } finally {
+    devServer.kill('SIGKILL');
   }
 });
 

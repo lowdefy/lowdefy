@@ -23,6 +23,7 @@ import collectExercised from './collectExercised.js';
 import describeDataSetResult from './dataSets/describeDataSetResult.js';
 import getDataStore from './dataSets/getDataStore.js';
 import { getBrowser, buildPageUrl } from './getBrowser.js';
+import noBrowserError from './noBrowserError.js';
 import openDataSession from './dataSets/openDataSession.js';
 import openJourney from './openJourney.js';
 import readBuildArtifact from './readBuildArtifact.js';
@@ -34,6 +35,7 @@ import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneyMail from './validateJourneyMail.js';
 import validateJourneyTimeout from './validateJourneyTimeout.js';
 import validateStateSelection from './validateStateSelection.js';
+import withBrowserSlot from './withBrowserSlot.js';
 
 // The final state is read even after a failure — it is what an agent needs to
 // write the next assertion. A page that has navigated away or crashed may not
@@ -133,13 +135,51 @@ async function runJourney({
   }
   const { dataSet } = resolved;
 
+  return withBrowserSlot({
+    task: () =>
+      runJourneyInBrowser({
+        origin,
+        basePath,
+        pageId,
+        user: resolved.user,
+        dataSet,
+        urlQuery,
+        width,
+        height,
+        timeout,
+        stepTimeout,
+        mutantCookie,
+        recording,
+        steps,
+        stateSelection,
+        readConfigFile,
+      }),
+  });
+}
+
+// The part of runJourney that runs in the browser, inside a browser slot.
+async function runJourneyInBrowser({
+  origin,
+  basePath,
+  pageId,
+  user,
+  dataSet,
+  urlQuery,
+  width,
+  height,
+  timeout,
+  stepTimeout,
+  mutantCookie,
+  recording,
+  steps,
+  stateSelection,
+  readConfigFile,
+}) {
   let browser;
   try {
     browser = await getBrowser();
   } catch (error) {
-    return {
-      error: `No Chromium available. Run: npx playwright install chromium (${error.message})`,
-    };
+    return { error: noBrowserError(error) };
   }
 
   let session = null;
@@ -167,7 +207,7 @@ async function runJourney({
       origin,
       basePath,
       pageId,
-      user: resolved.user,
+      user,
       urlQuery,
       width,
       height,

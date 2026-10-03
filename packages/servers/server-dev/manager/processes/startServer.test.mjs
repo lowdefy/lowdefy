@@ -93,6 +93,44 @@ test('startServer leaves BETTER_AUTH_URL unset when none is configured', () => {
   expect(mockSpawn.mock.calls[0][2].env.BETTER_AUTH_URL).toBeUndefined();
 });
 
+test('startServer gives every child start its own browser tag', () => {
+  const context = createContext({ mailSink: null });
+
+  startServer(context);
+  startServer(context);
+
+  const first = mockSpawn.mock.calls[0][2].env.LOWDEFY_BROWSER_TAG;
+  const second = mockSpawn.mock.calls[1][2].env.LOWDEFY_BROWSER_TAG;
+  expect(first).toMatch(/^[0-9a-f-]{36}$/);
+  expect(second).toMatch(/^[0-9a-f-]{36}$/);
+  expect(second).not.toBe(first);
+});
+
+test('startServer kills the browser carrying the child tag when the child exits', () => {
+  const context = createContext({ mailSink: null });
+  startServer(context);
+  const tag = mockSpawn.mock.calls[0][2].env.LOWDEFY_BROWSER_TAG;
+  expect(mockSpawn).toHaveBeenCalledTimes(1);
+
+  context.devServer.emit('exit', null, 'SIGKILL');
+
+  if (process.platform === 'win32') {
+    expect(mockSpawn).toHaveBeenCalledTimes(1);
+    return;
+  }
+  expect(mockSpawn).toHaveBeenCalledTimes(2);
+  expect(mockSpawn.mock.calls[1][0]).toBe('pkill');
+  expect(mockSpawn.mock.calls[1][1]).toEqual(['-f', '--', `--lowdefy-browser-tag=${tag}`]);
+});
+
+test('startServer spawns the child with gc exposed, for its idle GC', () => {
+  startServer(createContext({ mailSink: null }));
+
+  const [command, args] = mockSpawn.mock.calls[0];
+  expect(command).toBe('node');
+  expect(args.slice(0, 2)).toEqual(['--expose-gc', 'vite.js']);
+});
+
 test('startServer holds the child stdin and tells it to exit when the pipe closes', () => {
   process.env.LOWDEFY_EXIT_WITH_PID = '4242';
   process.env.LOWDEFY_SERVER_REGISTRY_DIR = '/home/dev/.lowdefy/servers';
