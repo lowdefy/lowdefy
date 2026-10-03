@@ -14,15 +14,14 @@
   limitations under the License.
 */
 
-// A block inside a List renders with its item index in its id (`rows.0.label`),
-// while config names it with `$` (`rows.$.label`); the exercised path uses
-// the config form so it lines up with mutant anchors, and lints compare a
-// journey's targets the same way.
+const LIST_INDEX_PATTERN = /\.\d+(?=\.|$)/g;
+
+// A block inside a List renders once per item, with the item's index in its
+// id (`rows.0.label`), while config names it with `$` (`rows.$.label`). The
+// compiler's step identity, the exercised path and the lints all compare ids
+// in the config form, so they line up with each other and with mutant anchors.
 function normaliseBlockId(blockId) {
-  return blockId
-    .split('.')
-    .map((segment) => (/^\d+$/.test(segment) ? '$' : segment))
-    .join('.');
+  return blockId.replace(LIST_INDEX_PATTERN, '.$');
 }
 
 export default normaliseBlockId;

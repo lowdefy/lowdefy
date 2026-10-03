@@ -15,24 +15,8 @@
 */
 
 import journeySequence from './journeySequence.js';
-import normaliseBlockId from './normaliseBlockId.js';
 import pageIdFromPath from './pageIdFromPath.js';
 import stepIdentity from './stepIdentity.js';
-
-test('normaliseBlockId replaces nested list indices with $', () => {
-  expect(normaliseBlockId({ blockId: 'groups.2.rows.0.review_button' })).toBe(
-    'groups.$.rows.$.review_button'
-  );
-});
-
-test('normaliseBlockId replaces a single list index with $', () => {
-  expect(normaliseBlockId({ blockId: 'rows.12.name' })).toBe('rows.$.name');
-});
-
-test('normaliseBlockId leaves a block id without indices untouched', () => {
-  expect(normaliseBlockId({ blockId: 'tickets_grid' })).toBe('tickets_grid');
-  expect(normaliseBlockId({ blockId: 'step2.name' })).toBe('step2.name');
-});
 
 test('stepIdentity gives clicks on the same control in different rows one identity', () => {
   const row3 = stepIdentity({ step: { click: { blockId: 'grid', row: 3, text: 'Assign' } } });

@@ -21,6 +21,7 @@ test.each([
   ['rows.0.label', 'rows.$.label'],
   ['orders.12.lines.3.qty', 'orders.$.lines.$.qty'],
   ['step2.title', 'step2.title'],
+  ['2024.title', '2024.title'],
 ])('normaliseBlockId(%j) is %j', (blockId, expected) => {
   expect(normaliseBlockId(blockId)).toBe(expected);
 });
