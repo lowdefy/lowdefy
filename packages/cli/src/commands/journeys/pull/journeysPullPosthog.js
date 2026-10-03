@@ -21,6 +21,7 @@ import { type } from '@lowdefy/helpers';
 import buildDayRecords from './buildDayRecords.js';
 import checkPropertyName from './checkPropertyName.js';
 import createPostHogQueryClient from './createPostHogQueryClient.js';
+import listWindowDays from '../listWindowDays.js';
 import parseTraceWindow from '../parseTraceWindow.js';
 import pruneDayFiles from './pruneDayFiles.js';
 import pullDay from './pullDay.js';
@@ -41,18 +42,6 @@ function readCount({ flag, value, fallback }) {
     throw new Error(`${flag} should be a whole number above 0. Received ${JSON.stringify(value)}.`);
   }
   return count;
-}
-
-function daysOf({ from, to }) {
-  const days = [];
-  for (
-    let time = Date.parse(`${from}T00:00:00Z`);
-    time <= Date.parse(`${to}T00:00:00Z`);
-    time += DAY_MS
-  ) {
-    days.push(new Date(time).toISOString().slice(0, 10));
-  }
-  return days;
 }
 
 function readManifest({ directories, day }) {
@@ -153,7 +142,7 @@ async function journeysPullPosthog({ context, params }) {
   const totals = { rows: 0, records: 0, dropped: 0, bytesRead: 0, days: 0 };
 
   try {
-    for (const day of daysOf(window)) {
+    for (const day of listWindowDays(window)) {
       const manifest = readManifest({ directories, day });
       const plan = planDay({ day, today, manifest, saltId, refetch: options.refetch === true });
       if (plan.action === 'skip') {
