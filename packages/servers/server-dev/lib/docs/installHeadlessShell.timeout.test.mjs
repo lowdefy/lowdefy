@@ -47,12 +47,17 @@ test('installHeadlessShell kills an install that has not finished within 3 minut
     const result = await install;
     expect(result.installed).toBe(false);
     expect(result.reason).toContain('did not finish within 3 minutes');
-    expect(installer.kill).toHaveBeenCalledWith('SIGKILL');
-    if (process.platform !== 'win32') {
+    if (process.platform === 'win32') {
+      // taskkill /T stops the installer and its download process together.
+      expect(mockSpawnSync).toHaveBeenCalledWith('taskkill', ['/pid', '4242', '/T', '/F'], {
+        stdio: 'ignore',
+      });
+    } else {
       // The installer's own download process goes too.
       expect(mockSpawnSync).toHaveBeenCalledWith('pkill', ['-KILL', '-P', '4242'], {
         stdio: 'ignore',
       });
+      expect(installer.kill).toHaveBeenCalledWith('SIGKILL');
     }
     expect(warn).toHaveBeenCalledTimes(1);
     // The exit that follows the kill does not log again, and nothing retries.

@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-// eslint-disable-next-line no-unused-vars
 import { jest } from '@jest/globals';
 
 const mockOraClear = jest.fn();
@@ -63,6 +62,10 @@ Date = jest.fn(() => ({
 }));
 
 Date.now = () => {};
+
+// The first test pays the cold import of the logger's module graph (jest.resetModules), which
+// can pass Jest's 5 s default on a loaded Windows runner.
+jest.setTimeout(20000);
 
 // Save original CI value so tests are deterministic regardless of environment
 const originalCI = process.env.CI;
