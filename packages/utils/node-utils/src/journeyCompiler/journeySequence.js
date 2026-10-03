@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import { parsePageId, type } from '@lowdefy/helpers';
 
 import { getStepKey } from '../journeyGrammar/validateJourneySteps.js';
-import pageIdFromPath from './pageIdFromPath.js';
 import stepIdentity from './stepIdentity.js';
 
 const INTERACTION_VERBS = ['click', 'select', 'fill', 'press', 'back', 'open'];
@@ -31,8 +30,14 @@ function pageNamedBy({ step }) {
     if (type.isString(params)) return params;
     return type.isString(params?.pageId) ? params.pageId : null;
   }
-  if (verb === 'expect' && type.isString(params?.url?.contains)) {
-    return pageIdFromPath({ path: params.url.contains }) ?? null;
+  // Only a contains that starts with a slash is an app path; anything else is a
+  // fragment of a URL (a query, part of a path) and names no page.
+  if (
+    verb === 'expect' &&
+    type.isString(params?.url?.contains) &&
+    params.url.contains.startsWith('/')
+  ) {
+    return parsePageId(params.url.contains) ?? null;
   }
   return null;
 }

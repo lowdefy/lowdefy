@@ -70,6 +70,10 @@ function createRecorder({ basePath, lowdefy, recording, window, getTrace }) {
     redactor: createPasswordRedactor(),
   });
   let pageId = null;
+  // A pageview waits here until Page.jsx renders the page's config, because
+  // only then is the build the page runs on known: the pageview fires on the
+  // route change, while the config fetch is still suspended.
+  let pendingPageview = null;
 
   function currentUrl() {
     return `${window.location.pathname}${window.location.search}`;
@@ -120,7 +124,17 @@ function createRecorder({ basePath, lowdefy, recording, window, getTrace }) {
     }
   }
 
+  function recordPendingPageview({ build }) {
+    if (pendingPageview === null) return;
+    const { t, pageId: viewedPageId, url } = pendingPageview;
+    pendingPageview = null;
+    buffer.addInteraction({ t, kind: 'pageview', pageId: viewedPageId, url, build });
+  }
+
+  // The tab is going away, so a page that never rendered keeps build null and
+  // the route stamps its current build, as for any record that names none.
   const onPageHide = safely(() => {
+    recordPendingPageview({ build: null });
     flush();
   });
 
@@ -132,14 +146,32 @@ function createRecorder({ basePath, lowdefy, recording, window, getTrace }) {
   window.addEventListener('pagehide', onPageHide);
   window.__lowdefyRecorder = { flush };
 
+  // The time and url are the navigation's; the build waits for pageRendered.
+  // A page left before its config rendered is recorded with build null.
   function pageview(nextPageId) {
     try {
+      recordPendingPageview({ build: null });
       pageId = nextPageId;
-      buffer.addInteraction({ kind: 'pageview', pageId, url: currentUrl() });
+      pendingPageview = { t: Date.now(), pageId, url: currentUrl() };
     } catch {
       // Recording is best effort.
     }
   }
+
+  // Called by Page.jsx (lowdefy._devPageRendered) once it has rendered a page
+  // config, with the build that config was served under. Its effect runs after
+  // the Recorder's pageview effect for the same route change, since the
+  // Recorder renders before the Suspense boundary Page sits under. Renders
+  // after a config reload find no pending pageview and change nothing.
+  function pageRendered({ pageId: renderedPageId, buildId }) {
+    try {
+      if (pendingPageview === null || pendingPageview.pageId !== renderedPageId) return;
+      recordPendingPageview({ build: buildId ?? null });
+    } catch {
+      // Recording is best effort.
+    }
+  }
+  lowdefy._devPageRendered = pageRendered;
 
   // Listens on the tab's one shared dev stream (DevStreamContext), never a
   // stream of its own. A config reload flushes so the attempt before it is
@@ -154,6 +186,7 @@ function createRecorder({ basePath, lowdefy, recording, window, getTrace }) {
   }
 
   function stop() {
+    recordPendingPageview({ build: null });
     flush();
     unsubscribe();
     document.removeEventListener('click', onClick, true);
@@ -164,9 +197,12 @@ function createRecorder({ basePath, lowdefy, recording, window, getTrace }) {
     if (window.__lowdefyRecorder?.flush === flush) {
       delete window.__lowdefyRecorder;
     }
+    if (lowdefy._devPageRendered === pageRendered) {
+      delete lowdefy._devPageRendered;
+    }
   }
 
-  return { attachStream, flush, pageview, stop };
+  return { attachStream, flush, pageRendered, pageview, stop };
 }
 
 export default createRecorder;
