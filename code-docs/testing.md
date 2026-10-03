@@ -119,9 +119,8 @@ An app outside the monorepo runs its own auth journeys against a checkout the sa
 Keeping such journeys in their own directory (not `tests/journeys/`) keeps them out of the
 app's everyday `lowdefy test`, which may run against a shared database.
 
-CI does not run it; run it when changing auth, tenancy, the
-journey runner or the dev server. It uses `_server/dev`, so run one at a time per
-worktree. To iterate on one journey, keep a dev server running with the same environment
+CI does not run it; run it when changing auth, tenancy, the journey runner or the dev
+server. It uses `_server/dev`, so run one at a time per worktree. To iterate on one journey, keep a dev server running with the same environment
 and use `node packages/cli/dist/index.js test --config-directory apps/auth-reference-tenant
 --url http://localhost:<port> --filter <name>`; a journey that signs up needs an empty
 database, since signing up an existing address sends no email.
