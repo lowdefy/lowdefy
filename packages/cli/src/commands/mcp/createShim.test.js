@@ -71,7 +71,10 @@ function text(result) {
 }
 
 beforeEach(() => {
-  root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-shim-')));
+  // The native realpath, as the shim resolves apps and the dev manager records
+  // them: on Windows os.tmpdir() can be an 8.3 short path (RUNNER~1) that only
+  // the native call expands, and a record naming the short path is not found.
+  root = fs.realpathSync.native(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-shim-')));
   fs.mkdirSync(path.join(root, '.git'));
   // No hub runs here, and none may be started by the tests.
   home = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-shim-home-'));
@@ -111,8 +114,8 @@ test('lowdefy mcp answers a dev tool call in a multi-app checkout with the apps 
   await connect({ cwd: root });
   const result = await client.callTool({ name: 'lowdefy_build_status', arguments: {} });
   expect(result.isError).toBe(true);
-  expect(text(result)).toContain('apps/main');
-  expect(text(result)).toContain('apps/second');
+  expect(text(result)).toContain(path.join('apps', 'main'));
+  expect(text(result)).toContain(path.join('apps', 'second'));
 });
 
 test('lowdefy_dev_status reports a terminal dev server from its instance record without starting a hub', async () => {
@@ -190,7 +193,9 @@ test('lowdefy_dev_list lists every app of a multi-app checkout without starting 
 
 test('lowdefy mcp refuses a directory in another checkout and asks the user when the client can', async () => {
   makeApp('.');
-  const other = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-shim-other-')));
+  const other = fs.realpathSync.native(
+    fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-shim-other-'))
+  );
   fs.mkdirSync(path.join(other, '.git'));
   fs.writeFileSync(path.join(other, 'lowdefy.yaml'), 'lowdefy: 6.0.0\n');
   const questions = [];

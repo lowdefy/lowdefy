@@ -21,6 +21,7 @@ import net from 'net';
 import os from 'os';
 import path from 'path';
 import { createRequire } from 'module';
+import { pathToFileURL } from 'url';
 
 import apiHandler from './apiHandler.js';
 
@@ -137,15 +138,27 @@ beforeAll(async () => {
     'junction'
   );
 
+  // import() takes a URL: a Windows path (C:\...) would read as a URL scheme.
   child = spawn(
     process.execPath,
-    ['--input-type=module', '-e', runner, path.join(serverDirectory, 'api', 'index.js')],
+    [
+      '--input-type=module',
+      '-e',
+      runner,
+      pathToFileURL(path.join(serverDirectory, 'api', 'index.js')).href,
+    ],
     { stdio: ['ignore', 'pipe', 'pipe'] }
   );
+  let stderr = '';
+  child.stderr.on('data', (data) => {
+    stderr += data;
+  });
   exited = new Promise((resolve) => child.once('exit', resolve));
   const port = await new Promise((resolve, reject) => {
     child.stdout.once('data', (data) => resolve(Number(String(data).trim())));
-    child.once('exit', (code) => reject(new Error(`The function entry exited with ${code}.`)));
+    child.once('close', (code) =>
+      reject(new Error(`The function entry exited with ${code}.\n${stderr}`))
+    );
   });
   baseUrl = `http://127.0.0.1:${port}`;
 });

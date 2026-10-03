@@ -65,6 +65,10 @@ afterEach(async () => {
   fs.rmSync(home, { recursive: true, force: true });
 });
 
+// Socket ownership is a uid check. Windows has no uids, and its named pipe
+// takes the user's default access instead.
+const onPosix = process.platform === 'win32' ? test.skip : test;
+
 test('connectHub connects to a hub socket of its own user', async () => {
   const { hubDirectory, socketPath } = getHubPaths();
   fs.mkdirSync(hubDirectory, { recursive: true });
@@ -74,7 +78,7 @@ test('connectHub connects to a hub socket of its own user', async () => {
   client.close();
 });
 
-test('connectHub refuses a hub socket that belongs to another user', async () => {
+onPosix('connectHub refuses a hub socket that belongs to another user', async () => {
   const { hubDirectory, socketPath } = getHubPaths();
   fs.mkdirSync(hubDirectory, { recursive: true });
   await listenAsHub(socketPath);

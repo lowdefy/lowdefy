@@ -15,6 +15,7 @@
 */
 
 import { jest } from '@jest/globals';
+import path from 'path';
 
 jest.unstable_mockModule('fs', () => ({
   default: {
@@ -39,7 +40,7 @@ test('ensurePnpmWorkspaceYaml writes pnpm-workspace.yaml when it does not exist'
   await ensurePnpmWorkspaceYaml({ context, directory: '/dir' });
   expect(writeFile.mock.calls).toEqual([
     [
-      '/dir/pnpm-workspace.yaml',
+      path.join('/dir', 'pnpm-workspace.yaml'),
       `packages:
   - '.'
 onlyBuiltDependencies:
@@ -60,7 +61,7 @@ test('ensurePnpmWorkspaceYaml does not overwrite an existing pnpm-workspace.yaml
   fs.existsSync.mockReturnValue(true);
   const context = { lowdefyVersion: '5.5.1' };
   await ensurePnpmWorkspaceYaml({ context, directory: '/dir' });
-  expect(fs.existsSync.mock.calls).toEqual([['/dir/pnpm-workspace.yaml']]);
+  expect(fs.existsSync.mock.calls).toEqual([[path.join('/dir', 'pnpm-workspace.yaml')]]);
   expect(writeFile).not.toHaveBeenCalled();
 });
 
@@ -68,12 +69,18 @@ test('ensurePnpmWorkspaceYaml skips writing when the server directory is inside 
   const { default: fs } = await import('fs');
   const { writeFile } = await import('@lowdefy/node-utils');
   const { default: ensurePnpmWorkspaceYaml } = await import('./ensurePnpmWorkspaceYaml.js');
-  fs.existsSync.mockImplementation((filePath) => filePath === '/repo/pnpm-workspace.yaml');
+  const workspaceRoot = path.join('/repo');
+  fs.existsSync.mockImplementation(
+    (filePath) => filePath === path.join(workspaceRoot, 'pnpm-workspace.yaml')
+  );
   const context = { lowdefyVersion: '5.5.1', logger: { debug: jest.fn() } };
-  await ensurePnpmWorkspaceYaml({ context, directory: '/repo/app/.lowdefy/dev' });
+  await ensurePnpmWorkspaceYaml({
+    context,
+    directory: path.join(workspaceRoot, 'app', '.lowdefy', 'dev'),
+  });
   expect(writeFile).not.toHaveBeenCalled();
   expect(context.logger.debug).toHaveBeenCalledWith(
-    'Found pnpm workspace at /repo; the server installs as part of that workspace.'
+    `Found pnpm workspace at ${workspaceRoot}; the server installs as part of that workspace.`
   );
 });
 

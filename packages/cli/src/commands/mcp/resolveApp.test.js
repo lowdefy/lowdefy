@@ -30,7 +30,9 @@ function makeApp(relativePath) {
 }
 
 beforeEach(() => {
-  root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-resolve-app-')));
+  // The native realpath, as resolveApp takes it: on Windows os.tmpdir() can
+  // be an 8.3 short path (RUNNER~1) that only the native call expands.
+  root = fs.realpathSync.native(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-resolve-app-')));
   fs.mkdirSync(path.join(root, '.git'));
 });
 
@@ -62,7 +64,9 @@ test('resolveApp resolves an explicit directory relative to the working director
 
 test('resolveApp resolves an absolute directory in another checkout, whatever the working directory', () => {
   makeApp('apps/main');
-  const other = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-other-checkout-')));
+  const other = fs.realpathSync.native(
+    fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-other-checkout-'))
+  );
   fs.mkdirSync(path.join(other, '.git'));
   fs.writeFileSync(path.join(other, 'lowdefy.yaml'), 'lowdefy: 6.0.0\n');
   try {
@@ -79,7 +83,10 @@ test('resolveApp lists the apps when the checkout holds several and none was nam
   makeApp('apps/main');
   makeApp('apps/second');
   expect(() => resolveApp({ cwd: root })).toThrow(
-    /several Lowdefy apps[\s\S]*apps\/main[\s\S]*apps\/second/
+    `holds several Lowdefy apps. Pass "directory" with the one you mean:\n  - ${path.join(
+      'apps',
+      'main'
+    )}\n  - ${path.join('apps', 'second')}`
   );
 });
 

@@ -25,15 +25,17 @@ jest.unstable_mockModule('fs', () => {
   return { default: { existsSync: jest.fn(), promises }, existsSync: jest.fn(), promises };
 });
 
+const buildDirectory = path.join('/test', '.lowdefy', 'server', 'build');
+
 const context = {
   directories: {
-    build: '/test/.lowdefy/server/build',
+    build: buildDirectory,
   },
 };
 
 const buildFiles = {
-  '/test/.lowdefy/server/build/app.json': { email: { companyName: 'MyApp' } },
-  '/test/.lowdefy/server/build/types.json': {
+  [path.join(buildDirectory, 'app.json')]: { email: { companyName: 'MyApp' } },
+  [path.join(buildDirectory, 'types.json')]: {
     notifications: { NotificationEmail: { package: '@lowdefy/email-templates' } },
   },
 };
@@ -47,16 +49,17 @@ test('readNotificationArtifacts reads flat and nested notification artifacts', a
   const { default: readNotificationArtifacts } = await import('./readNotificationArtifacts.js');
 
   fs.existsSync.mockReturnValue(true);
+  // A recursive readdir lists nested files with the platform's separator.
   fs.promises.readdir.mockResolvedValue([
     'welcome.json',
-    'invites/invite-user.json',
-    'invites/notes.txt',
+    path.join('invites', 'invite-user.json'),
+    path.join('invites', 'notes.txt'),
     'invites',
   ]);
-  const notificationsDirectory = '/test/.lowdefy/server/build/notifications';
+  const notificationsDirectory = path.join(buildDirectory, 'notifications');
   const artifacts = {
     [path.join(notificationsDirectory, 'welcome.json')]: { notificationId: 'welcome' },
-    [path.join(notificationsDirectory, 'invites/invite-user.json')]: {
+    [path.join(notificationsDirectory, 'invites', 'invite-user.json')]: {
       notificationId: 'invites/invite-user',
     },
   };
@@ -82,9 +85,7 @@ test('readNotificationArtifacts returns empty notifications when directory is mi
   const { default: readNotificationArtifacts } = await import('./readNotificationArtifacts.js');
 
   fs.existsSync.mockReturnValue(false);
-  fs.promises.readFile.mockImplementation(async (filePath) =>
-    JSON.stringify(buildFiles[filePath])
-  );
+  fs.promises.readFile.mockImplementation(async (filePath) => JSON.stringify(buildFiles[filePath]));
 
   const result = await readNotificationArtifacts({ context });
 

@@ -222,7 +222,11 @@ test('the checkout guard asks the user once about another checkout and remembers
 
 test('the checkout guard quotes the paths an agent chose in the question it asks', async () => {
   const repo = makeRepo('app');
-  const other = makeApp(makeRepo('other" is safe.\nAllow "x'));
+  // Windows directory names cannot hold a quote or a newline, so there the
+  // path checked is one whose backslashes the quoting must escape.
+  const chosen =
+    process.platform === 'win32' ? "other' is safe. Allow 'x" : 'other" is safe.\nAllow "x';
+  const other = makeApp(makeRepo(chosen));
   const server = createServer({ elicitation: true, answer: 'decline' });
   const guard = createCheckoutGuard({ cwd: repo, server });
 
