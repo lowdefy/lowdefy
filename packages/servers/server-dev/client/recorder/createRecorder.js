@@ -66,6 +66,7 @@ function createRecorder({ basePath, lowdefy, recording, window, getTrace }) {
     onRecord: (record) => batcher.add(record),
     getSession: () => session.getId(),
     getRoles: () => lowdefy.user?.roles ?? [],
+    getBuild: () => lowdefy._devBuildId ?? null,
     redactor: createPasswordRedactor(),
   });
   let pageId = null;
@@ -141,8 +142,8 @@ function createRecorder({ basePath, lowdefy, recording, window, getTrace }) {
   }
 
   // Listens on the tab's one shared dev stream (DevStreamContext), never a
-  // stream of its own. A config reload flushes first, so records are not
-  // stamped with the next build.
+  // stream of its own. A config reload flushes so the attempt before it is
+  // sent promptly; each record already carries the build it was made under.
   function attachStream(source) {
     if (source === null || source === undefined) return () => {};
     const onReload = safely(() => {

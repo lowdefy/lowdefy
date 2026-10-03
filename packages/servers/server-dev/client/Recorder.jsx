@@ -26,8 +26,9 @@ import DevStreamContext from './DevStreamContext.js';
 //
 // It opens no connection of its own: a second long-lived stream per tab once
 // exhausted the browser's HTTP/1.1 connection pool (see DevStreamContext.js).
-// It listens for `reload` on the tab's one shared stream, and flushes there
-// so records are not stamped with the next build.
+// It listens for `reload` on the tab's one shared stream and flushes there,
+// only to send promptly: each record carries the build of the page config it
+// was made on (lowdefy._devBuildId, set by Page.jsx).
 function Recorder({ basePath, lowdefy, pageId, recording }) {
   const { source } = useContext(DevStreamContext);
   const recorderRef = useRef(null);

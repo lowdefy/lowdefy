@@ -37,7 +37,9 @@ function hasTargetIdentity(target) {
 }
 
 // Turns DOM interactions and engine trace payloads into finished v1 trace
-// records, paired in the tab with the shared pairing rule.
+// records, paired in the tab with the shared pairing rule. Each record carries
+// the build getBuild() named when its interaction was captured or its event
+// arrived, never when its hold closes: a hold can outlast a config reload.
 //
 // - addInteraction({ t, kind, element, target, pageId, value, key, url }):
 //   pageview and back are recorded at once; click, change and key wait until
@@ -53,6 +55,7 @@ function createPairingBuffer({
   now = Date.now,
   getSession,
   getRoles = () => [],
+  getBuild = () => null,
   redactor,
 }) {
   let open = [];
@@ -104,10 +107,11 @@ function createPairingBuffer({
 
   function addInteraction({ t, kind, element, target, pageId, value, key, url }) {
     const time = t ?? now();
+    const build = getBuild();
     if (!PAIRED_KINDS.includes(kind)) {
       emit(
         buildInteractionRecord({
-          interaction: { t: time, kind, pageId, url, target: null },
+          interaction: { t: time, kind, pageId, url, target: null, build },
           session: getSession(),
           roles: getRoles(),
         })
@@ -129,6 +133,7 @@ function createPairingBuffer({
       key,
       target: kind === 'key' && !hasTargetIdentity(target) ? null : target,
       blockIds: target?.block_ids ?? [],
+      build,
       events: [],
       closesAt: time + HOLD_MS,
     });
@@ -144,6 +149,7 @@ function createPairingBuffer({
       debounceMs: payload.debounceMs ?? 0,
       scope: payload.scope,
       pageId: payload.pageId,
+      build: getBuild(),
       traceEvent: buildTraceEvent({ payload, urlAfter }),
     };
     const { pairs } = pairTraceEvents({ interactions: open, events: [engineEvent] });

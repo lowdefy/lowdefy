@@ -25,8 +25,11 @@ import createPasswordRedactor from './createPasswordRedactor.js';
 
 const START = Date.parse('2026-10-03T14:00:00.000Z');
 const SESSION = '20261003T140000Z-k3x9qa';
+const BUILD_A = '2026-10-03T13:58:00.000Z';
+const BUILD_B = '2026-10-03T14:00:05.000Z';
 let records;
 let buffer;
+let build;
 
 // A stand-in for the engine's describeElement: block ids from the bl-
 // wrappers, innermost first, and the element's text.
@@ -109,8 +112,10 @@ beforeEach(() => {
     onRecord: (record) => records.push(record),
     getSession: () => SESSION,
     getRoles: () => ['support'],
+    getBuild: () => build,
     redactor: createPasswordRedactor(),
   });
+  build = BUILD_A;
   document.body.innerHTML = `
     <div id="bl-card"><div id="bl-save"><button id="save-button">Save</button></div></div>
     <div id="bl-table"><div id="row">Row 1</div></div>
@@ -330,6 +335,35 @@ test('pageview and back are recorded at once and flushAll ends every hold', () =
   expect(records[0]).toMatchObject({ url: '/tickets?id=1', target: null, event: null });
 });
 
+test('an interaction whose hold closes after the build changed keeps the build it was captured under', () => {
+  interact({ element: el('save-button'), at: 0 });
+  event({ blockId: 'save', at: 10, arrive: 20 });
+  build = BUILD_B;
+  event({ blockId: 'save', eventName: 'onSecond', at: 30, arrive: 40 });
+  closeAll();
+  expect(records).toHaveLength(1);
+  expect(records[0]).toMatchObject({ kind: 'click', build: BUILD_A });
+});
+
+test('an interaction flushed after the build changed keeps the build it was captured under', () => {
+  interact({ element: el('save-button'), at: 0 });
+  build = BUILD_B;
+  buffer.flushAll();
+  expect(records[0]).toMatchObject({ kind: 'click', build: BUILD_A });
+});
+
+test('pageview, back and engine records carry the build named when they were captured', () => {
+  buffer.addInteraction({ t: START, kind: 'pageview', pageId: 'tickets', url: '/tickets' });
+  event({ blockId: 'root', eventName: 'onInit', scope: 'app', at: 5, arrive: 10 });
+  build = BUILD_B;
+  buffer.addInteraction({ t: START + 20, kind: 'back', pageId: 'tickets' });
+  expect(records.map((record) => [record.kind, record.build])).toEqual([
+    ['pageview', BUILD_A],
+    ['engine', BUILD_A],
+    ['back', BUILD_B],
+  ]);
+});
+
 test('every record the buffer builds passes validateTraceRecord once the route stamps its source', () => {
   buffer.addInteraction({ t: START, kind: 'pageview', pageId: 'tickets', url: '/tickets' });
   interact({ element: el('search_input'), kind: 'change', at: 10, value: 'a' });
@@ -363,6 +397,8 @@ test('every record the buffer builds passes validateTraceRecord once the route s
     'pageview',
   ]);
   records.forEach((record) => {
+    expect(record.build).toBe(BUILD_A);
+    expect(validateTraceRecord({ record: { ...record, source: 'dev' } })).toEqual({});
     expect(validateTraceRecord({ record: { ...record, source: 'dev', build: null } })).toEqual({});
   });
 });

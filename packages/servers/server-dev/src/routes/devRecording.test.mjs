@@ -26,6 +26,7 @@ jest.unstable_mockModule('../../lib/docs/getBuildId.js', () => ({
 }));
 
 const { default: devRecordingHandler } = await import('./devRecording.js');
+const { default: servedBuilds } = await import('../../lib/server/recording/servedBuilds.js');
 const { default: localDevToolsOnly } = await import('../middleware/localDevToolsOnly.js');
 const { JOURNEY_COOKIES, writeJourneyCookie } = await import('../../lib/server/journeyCookies.js');
 const { default: recordingCookiePayload } = await import(
@@ -204,4 +205,33 @@ test('POST /api/dev-recording records a forged recording cookie as dev', async (
   expect(res.status).toBe(204);
   const [line] = readLines('dev', '2026-10-03', `${SESSION}.jsonl`);
   expect(line.source).toBe('dev');
+});
+
+test('POST /api/dev-recording keeps a build the process served a page config under', async () => {
+  servedBuilds.add('2026-10-03T13:58:00.000Z');
+  const res = await post({
+    body: { session: SESSION, records: [record({ build: '2026-10-03T13:58:00.000Z' })] },
+  });
+  expect(res.status).toBe(204);
+  const [line] = readLines('dev', '2026-10-03', `${SESSION}.jsonl`);
+  expect(line.build).toBe('2026-10-03T13:58:00.000Z');
+});
+
+test('POST /api/dev-recording replaces a missing, unknown or non-string build with the build served now', async () => {
+  servedBuilds.add('2026-10-03T13:58:00.000Z');
+  const res = await post({
+    body: {
+      session: SESSION,
+      records: [
+        record(),
+        record({ build: null }),
+        record({ build: '2026-10-03T09:00:00.000Z' }),
+        record({ build: 42 }),
+        record({ build: { id: '2026-10-03T13:58:00.000Z' } }),
+      ],
+    },
+  });
+  expect(res.status).toBe(204);
+  const lines = readLines('dev', '2026-10-03', `${SESSION}.jsonl`);
+  expect(lines.map((line) => line.build)).toEqual(Array(5).fill('2026-10-03T14:02:00.000Z'));
 });

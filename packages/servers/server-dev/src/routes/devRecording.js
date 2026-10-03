@@ -19,6 +19,7 @@ import { isTraceId, omit, type } from '@lowdefy/helpers';
 import appendRecords from '../../lib/server/recording/appendRecords.js';
 import getBuildId from '../../lib/docs/getBuildId.js';
 import readRecordingCookie from '../../lib/server/recording/readRecordingCookie.js';
+import servedBuilds from '../../lib/server/recording/servedBuilds.js';
 import { getConfigDirectory } from '../../lib/docs/checkpointPaths.js';
 
 const MAX_RECORDS = 500;
@@ -56,11 +57,15 @@ function isValidBody(body) {
   );
 }
 
-// The cookie decides source and run, never the page: a headless journey or
-// explorer run is marked by the dev server's own browser, and everything else
-// records as dev.
-function stampRecord({ record, build, cookie }) {
+// The page names the build of the config it rendered when each interaction
+// happened (jitPage.js serves it as `_buildId`). It is kept when this process
+// served it, else (missing, unknown, from before a restart) replaced with the
+// build served now. The cookie decides source and run, never the page: a
+// headless journey or explorer run is marked by the dev server's own browser,
+// and everything else records as dev.
+function stampRecord({ record, currentBuild, cookie }) {
   const rest = omit({ ...record }, ['source', 'run']);
+  const build = servedBuilds.has(record.build) ? record.build : currentBuild;
   if (cookie === null) {
     return { ...rest, build, source: 'dev' };
   }
@@ -68,9 +73,9 @@ function stampRecord({ record, build, cookie }) {
 }
 
 // POST /api/dev-recording: the dev recorder (client/Recorder.jsx) posts
-// batches of interaction records here. Each is stamped with the build being
-// served and appended to the trace file of its tab session (dev) or run
-// (journey, explorer).
+// batches of interaction records here. Each keeps the build its page ran on
+// (or the build served now) and is appended to the trace file of its tab
+// session (dev) or run (journey, explorer).
 async function devRecordingHandler(c) {
   if (!isSameOrigin(c)) {
     return c.json({ error: 'Forbidden' }, 403);
@@ -94,8 +99,8 @@ async function devRecordingHandler(c) {
   if (body.records.length === 0) {
     return c.body(null, 204);
   }
-  const build = getBuildId();
-  const records = body.records.map((record) => stampRecord({ record, build, cookie }));
+  const currentBuild = getBuildId();
+  const records = body.records.map((record) => stampRecord({ record, currentBuild, cookie }));
   appendRecords({
     configDirectory: getConfigDirectory(),
     source: cookie === null ? 'dev' : cookie.source,

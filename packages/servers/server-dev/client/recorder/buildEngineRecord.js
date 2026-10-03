@@ -30,6 +30,7 @@ function buildEngineRecord({ engineEvent, session, roles }) {
     org: null,
     target: null,
     event: engineEvent.traceEvent,
+    build: engineEvent.build ?? null,
   };
 }
 
