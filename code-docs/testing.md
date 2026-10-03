@@ -147,8 +147,9 @@ _server/dev-journey-fixture` with `CRON_SECRET` set, on three free ports from 33
 first compile and each page's first build happen before any test. It never touches `_server/dev`, so it runs beside
 `pnpm app:dev`; the two packages' suites share `_server/dev-journey-fixture`, so do not run them
 at once in one worktree. With no Chromium every test skips.
-The dev server log is `apps/journey-fixture/.lowdefy/fixture-dev-server.log`. CI does not
-run it; run it when changing the journey runner, journey cookies or mutants.
+The dev server log is `apps/journey-fixture/.lowdefy/fixture-dev-server.log`. The fast CI path
+does not run it; the complete path does, before every release (see [CI](#ci)). Run it when
+changing the journey runner, journey cookies or mutants.
 
 ## Ports
 

@@ -46,6 +46,14 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm test
+      # Last: it changes the machine's time zone, and WMI answers slowly for minutes after
+      # that, so start time reads in any step after it would time out.
+      - name: Time zone change test (Windows)
+        if: matrix.os == 'windows-latest'
+        timeout-minutes: 20
+        run: pnpm --filter=@lowdefy/node-utils test windowsTimeZoneChange --no-coverage
+        env:
+          LOWDEFY_TEST_WINDOWS_TIME_ZONE: 'true'
       # One upload of the full suite's coverage. The fast path tests only affected
       # packages, so its coverage would read as drops everywhere else.
       - uses: codecov/codecov-action@v5
@@ -73,35 +81,21 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - name: Find the fixture suites
-        id: suites
-        run: |
-          if node -e "process.exit(require('./packages/servers/server-dev/package.json').scripts['test:fixture'] ? 0 : 1)"; then
-            echo "present=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "::warning::This ref has no test:fixture suites yet, so the journey fixture job has nothing to run."
-            echo "present=false" >> "$GITHUB_OUTPUT"
-          fi
-      - if: steps.suites.outputs.present == 'true'
-        run: pnpm --filter=@lowdefy/server-dev exec playwright-core install --with-deps chromium
-      - if: steps.suites.outputs.present == 'true'
-        uses: actions/cache@v4
+      - run: pnpm --filter=@lowdefy/server-dev exec playwright-core install --with-deps chromium
+      - uses: actions/cache@v4
         with:
           path: /home/runner/.cache/mongodb-binaries
           key: mongodb-binaries-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: mongodb-binaries-${{ runner.os }}-
-      - if: steps.suites.outputs.present == 'true'
-        run: node --input-type=module -e "import { MongoBinary } from 'mongodb-memory-server'; console.log(await MongoBinary.getPath());"
+      - run: node --input-type=module -e "import { MongoBinary } from 'mongodb-memory-server'; console.log(await MongoBinary.getPath());"
       # Both suites serve apps/journey-fixture from the same server copy, so they run one
       # after the other. With no Chromium every fixture test skips, so each run must show
       # passed tests, not just a zero exit code.
       - name: Server-dev fixture suite
-        if: steps.suites.outputs.present == 'true'
         run: |
           pnpm --filter=@lowdefy/server-dev test:fixture --json --outputFile="$RUNNER_TEMP/fixture-server-dev.json"
           node scripts/ci-check-jest-ran.mjs "$RUNNER_TEMP/fixture-server-dev.json"
       - name: CLI fixture suite
-        if: steps.suites.outputs.present == 'true'
         run: |
           pnpm --filter=lowdefy test:fixture --json --outputFile="$RUNNER_TEMP/fixture-cli.json"
           node scripts/ci-check-jest-ran.mjs "$RUNNER_TEMP/fixture-cli.json"

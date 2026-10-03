@@ -22,8 +22,12 @@ import readProcessStartTime from './readProcessStartTime.js';
 
 // Changes the machine's time zone, so it runs only on Windows CI, where the
 // time zone is the system's and not a per-process TZ variable, in a step of
-// its own: start time reads in other tests would fail while it runs.
-const onWindows = process.platform === 'win32' ? test : test.skip;
+// its own that sets LOWDEFY_TEST_WINDOWS_TIME_ZONE: start time reads in other
+// tests would fail while it runs, so `pnpm test` skips it.
+const onWindows =
+  process.platform === 'win32' && process.env.LOWDEFY_TEST_WINDOWS_TIME_ZONE === 'true'
+    ? test
+    : test.skip;
 
 function powershell(command) {
   const result = spawnSync(
