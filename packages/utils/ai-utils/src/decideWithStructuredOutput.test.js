@@ -49,7 +49,7 @@ test('decideWithStructuredOutput sends the answer schema and reads back the answ
     down: { answer: false, confidence: 0.75 },
     urgency: { level: 'high', confidence: 0.6 },
   });
-  const { answers } = await decideWithStructuredOutput({ model, request, options: {} });
+  const { answers } = await decideWithStructuredOutput({ model, ...request, options: {} });
   const { responseFormat } = model.doGenerateCalls[0];
   expect(responseFormat.schema.properties.team.properties.choice.enum).toEqual(['billing', 'tech']);
   expect(answers).toEqual({
@@ -65,7 +65,7 @@ test('decideWithStructuredOutput reads an answer outside the options, levels or 
     down: { answer: 'maybe', confidence: 0.5 },
     urgency: { level: 'critical', confidence: 0.7 },
   });
-  const { answers } = await decideWithStructuredOutput({ model, request, options: {} });
+  const { answers } = await decideWithStructuredOutput({ model, ...request, options: {} });
   // The model's confidence goes with its answer, so a confidence gate holds these back.
   expect(answers).toEqual({
     team: { choice: null, confidence: null, probabilities: null },
