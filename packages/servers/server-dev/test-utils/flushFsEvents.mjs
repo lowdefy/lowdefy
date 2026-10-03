@@ -38,7 +38,11 @@ async function flushFsEvents({ timeout = 20000 } = {}) {
     await new Promise((resolve, reject) => {
       const timer = setTimeout(
         () =>
-          reject(new Error(`flushFsEvents: the probe write was not reported within ${timeout}ms.`)),
+          reject(
+            new Error(
+              `flushFsEvents: the OS did not report a file write within ${timeout}ms. File events are stalled on this machine, so no file watcher test can pass until they recover.`
+            )
+          ),
         timeout
       );
       watcher.on('all', (_, filePath) => {
