@@ -27,11 +27,13 @@ import getLocaleGroupSeparator from './getLocaleGroupSeparator.js';
 import getOperatorType from './getOperatorType.js';
 import { isReserved, ReservedKeyError } from './ReservedKeyError.js';
 import joinPath from './joinPath.js';
+import journeyTargetSelectors from './journeyTargetSelectors.js';
 import LRUCache from './LRUCache.js';
 import mapPlainValues from './mapPlainValues.js';
 import mergeObjects from './mergeObjects.js';
 import normalizeCaller from './normalizeCaller.js';
 import omit from './omit.js';
+import parsePageId from './parsePageId.js';
 import projectCaughtError from './projectCaughtError.js';
 import serializer from './serializer.js';
 import set from './set.js';
@@ -39,6 +41,7 @@ import setKey from './setKey.js';
 import splitPath from './splitPath.js';
 import stableStringify from './stableStringify.js';
 import swap from './swap.js';
+import targetFromElementsChain from './targetFromElementsChain.js';
 import translate from './translate.js';
 import type from './type.js';
 import unset from './unset.js';
@@ -60,11 +63,13 @@ export {
   getOperatorType,
   isReserved,
   joinPath,
+  journeyTargetSelectors,
   LRUCache,
   mapPlainValues,
   mergeObjects,
   normalizeCaller,
   omit,
+  parsePageId,
   projectCaughtError,
   ReservedKeyError,
   serializer,
@@ -73,6 +78,7 @@ export {
   splitPath,
   stableStringify,
   swap,
+  targetFromElementsChain,
   translate,
   type,
   unset,
