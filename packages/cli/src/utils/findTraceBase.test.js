@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import path from 'path';
 import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('fs', () => ({
@@ -21,6 +22,26 @@ jest.unstable_mockModule('fs', () => ({
     existsSync: jest.fn(),
   },
 }));
+
+jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+  findPnpmWorkspaceRoot: jest.fn(),
+}));
+
+beforeEach(async () => {
+  const { default: fs } = await import('fs');
+  const { findPnpmWorkspaceRoot } = await import('@lowdefy/node-utils');
+  // Walks up like the real function, over the mocked fs.
+  findPnpmWorkspaceRoot.mockImplementation((startDir) => {
+    let dir = startDir;
+    while (dir !== path.dirname(dir)) {
+      if (fs.existsSync(path.join(dir, 'pnpm-workspace.yaml'))) {
+        return dir;
+      }
+      dir = path.dirname(dir);
+    }
+    return null;
+  });
+});
 
 test('findTraceBase returns the parent workspace root when the server is its own nested workspace', async () => {
   const { default: fs } = await import('fs');

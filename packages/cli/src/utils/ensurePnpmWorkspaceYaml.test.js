@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import path from 'path';
 import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('fs', () => ({
@@ -23,6 +24,8 @@ jest.unstable_mockModule('fs', () => ({
 }));
 
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+  findPnpmWorkspaceRoot: jest.fn(),
+  findWorkspacePackages: jest.fn(),
   readFile: jest.fn(),
   writeFile: jest.fn(),
   writeFileIfChanged: jest.fn(),
@@ -38,8 +41,20 @@ jest.unstable_mockModule('./linkWorkspacePlugins.js', () => ({
 
 beforeEach(async () => {
   jest.clearAllMocks();
-  const { readFile } = await import('@lowdefy/node-utils');
+  const { default: fs } = await import('fs');
+  const { findPnpmWorkspaceRoot, readFile } = await import('@lowdefy/node-utils');
   readFile.mockResolvedValue(null);
+  // Walks up like the real function, over the mocked fs.
+  findPnpmWorkspaceRoot.mockImplementation((startDir) => {
+    let dir = startDir;
+    while (dir !== path.dirname(dir)) {
+      if (fs.existsSync(path.join(dir, 'pnpm-workspace.yaml'))) {
+        return dir;
+      }
+      dir = path.dirname(dir);
+    }
+    return null;
+  });
 });
 
 test('ensurePnpmWorkspaceYaml writes pnpm-workspace.yaml when it does not exist', async () => {
@@ -128,7 +143,7 @@ allowUnusedPatches: true
   ]);
   expect(writeFileIfChanged).toHaveBeenCalledTimes(1);
   expect(linkWorkspacePlugins.mock.calls).toEqual([
-    [{ directory: '/repo/app/.lowdefy/dev', parentWorkspace, workspaceRoot: '/repo' }],
+    [{ directory: '/repo/app/.lowdefy/dev', parentWorkspace }],
   ]);
 });
 

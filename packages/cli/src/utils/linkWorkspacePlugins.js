@@ -15,38 +15,21 @@
 */
 
 import path from 'path';
-import { readFile, writeFileIfChanged } from '@lowdefy/node-utils';
+import { linkWorkspaceDependencies, readFile, writeFileIfChanged } from '@lowdefy/node-utils';
 
-import findWorkspacePackages from './findWorkspacePackages.js';
-
-// A server that installs as its own workspace cannot resolve "workspace:"
-// versions, which name packages of the parent workspace. Each one becomes a
-// link: to that package's directory, which the dev server's builds keep.
-// The parent's pinned pnpm is carried over too, since pnpm and corepack read
-// it from the root of the workspace they install.
-async function linkWorkspacePlugins({ directory, parentWorkspace, workspaceRoot }) {
+// The server installs as its own workspace, so its "workspace:" plugins
+// become link: paths to their packages in the parent workspace; the dev
+// server's builds link plugins added later the same way. The parent's pinned
+// pnpm is carried over too, since pnpm and corepack read it from the root of
+// the workspace they install.
+async function linkWorkspacePlugins({ directory, parentWorkspace }) {
   const packageJsonPath = path.join(directory, 'package.json');
   const packageJson = JSON.parse(await readFile(packageJsonPath));
 
-  const workspaceDependencies = Object.keys(packageJson.dependencies).filter((name) =>
-    packageJson.dependencies[name].startsWith('workspace:')
-  );
-  if (workspaceDependencies.length > 0) {
-    const packageDirectories = findWorkspacePackages({
-      packages: parentWorkspace.packages,
-      workspaceRoot,
-    });
-    workspaceDependencies.forEach((name) => {
-      const packageDirectory = packageDirectories.get(name);
-      if (!packageDirectory) {
-        throw new Error(
-          `Plugin "${name}" has version "${packageJson.dependencies[name]}", but no package named "${name}" was found in the pnpm workspace at ${workspaceRoot}.`
-        );
-      }
-      const relativePath = path.relative(directory, packageDirectory).split(path.sep).join('/');
-      packageJson.dependencies[name] = `link:${relativePath}`;
-    });
-  }
+  packageJson.dependencies = await linkWorkspaceDependencies({
+    dependencies: packageJson.dependencies,
+    directory,
+  });
 
   if (parentWorkspace.packageManager?.startsWith('pnpm@')) {
     packageJson.packageManager = parentWorkspace.packageManager;

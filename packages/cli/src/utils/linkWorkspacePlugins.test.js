@@ -17,36 +17,35 @@
 import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+  linkWorkspaceDependencies: jest.fn(),
   readFile: jest.fn(),
   writeFileIfChanged: jest.fn(),
 }));
 
-jest.unstable_mockModule('./findWorkspacePackages.js', () => ({
-  default: jest.fn(),
-}));
-
 const directory = '/repo/apps/app/.lowdefy/server';
 
-function mockPackageJson(readFile, packageJson) {
-  readFile.mockResolvedValue(JSON.stringify(packageJson));
-}
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
-test('linkWorkspacePlugins rewrites workspace plugin versions to link paths', async () => {
-  const { readFile, writeFileIfChanged } = await import('@lowdefy/node-utils');
-  const { default: findWorkspacePackages } = await import('./findWorkspacePackages.js');
+test('linkWorkspacePlugins writes the linked plugin versions to the server package.json', async () => {
+  const { linkWorkspaceDependencies, readFile, writeFileIfChanged } = await import(
+    '@lowdefy/node-utils'
+  );
   const { default: linkWorkspacePlugins } = await import('./linkWorkspacePlugins.js');
-  mockPackageJson(readFile, {
-    name: '@lowdefy/server',
-    dependencies: { '@scope/plugin-a': 'workspace:*', react: '18.2.0' },
+  readFile.mockResolvedValue(
+    JSON.stringify({
+      name: '@lowdefy/server',
+      dependencies: { '@scope/plugin-a': 'workspace:*', react: '18.2.0' },
+    })
+  );
+  linkWorkspaceDependencies.mockResolvedValue({
+    '@scope/plugin-a': 'link:../../../../plugins/plugin-a',
+    react: '18.2.0',
   });
-  findWorkspacePackages.mockReturnValue(new Map([['@scope/plugin-a', '/repo/plugins/plugin-a']]));
-  await linkWorkspacePlugins({
-    directory,
-    parentWorkspace: { packages: ['plugins/*'], settings: {} },
-    workspaceRoot: '/repo',
-  });
-  expect(findWorkspacePackages.mock.calls).toEqual([
-    [{ packages: ['plugins/*'], workspaceRoot: '/repo' }],
+  await linkWorkspacePlugins({ directory, parentWorkspace: { packages: ['plugins/*'] } });
+  expect(linkWorkspaceDependencies.mock.calls).toEqual([
+    [{ dependencies: { '@scope/plugin-a': 'workspace:*', react: '18.2.0' }, directory }],
   ]);
   expect(writeFileIfChanged.mock.calls).toEqual([
     [
@@ -63,17 +62,19 @@ test('linkWorkspacePlugins rewrites workspace plugin versions to link paths', as
   ]);
 });
 
-test('linkWorkspacePlugins carries the parent pnpm version and skips the package search without workspace plugins', async () => {
-  const { readFile, writeFileIfChanged } = await import('@lowdefy/node-utils');
-  const { default: findWorkspacePackages } = await import('./findWorkspacePackages.js');
+test('linkWorkspacePlugins carries the parent pinned pnpm version', async () => {
+  const { linkWorkspaceDependencies, readFile, writeFileIfChanged } = await import(
+    '@lowdefy/node-utils'
+  );
   const { default: linkWorkspacePlugins } = await import('./linkWorkspacePlugins.js');
-  mockPackageJson(readFile, { name: '@lowdefy/server', dependencies: { react: '18.2.0' } });
+  readFile.mockResolvedValue(
+    JSON.stringify({ name: '@lowdefy/server', dependencies: { react: '18.2.0' } })
+  );
+  linkWorkspaceDependencies.mockImplementation(async ({ dependencies }) => dependencies);
   await linkWorkspacePlugins({
     directory,
-    parentWorkspace: { packageManager: 'pnpm@10.29.2', packages: [], settings: {} },
-    workspaceRoot: '/repo',
+    parentWorkspace: { packageManager: 'pnpm@10.29.2', packages: [] },
   });
-  expect(findWorkspacePackages).not.toHaveBeenCalled();
   expect(JSON.parse(writeFileIfChanged.mock.calls[0][1])).toEqual({
     name: '@lowdefy/server',
     dependencies: { react: '18.2.0' },
@@ -81,23 +82,19 @@ test('linkWorkspacePlugins carries the parent pnpm version and skips the package
   });
 });
 
-test('linkWorkspacePlugins throws when a workspace plugin is not in the parent workspace', async () => {
-  const { readFile, writeFileIfChanged } = await import('@lowdefy/node-utils');
-  const { default: findWorkspacePackages } = await import('./findWorkspacePackages.js');
-  const { default: linkWorkspacePlugins } = await import('./linkWorkspacePlugins.js');
-  mockPackageJson(readFile, {
-    name: '@lowdefy/server',
-    dependencies: { '@scope/missing': 'workspace:*' },
-  });
-  findWorkspacePackages.mockReturnValue(new Map());
-  await expect(
-    linkWorkspacePlugins({
-      directory,
-      parentWorkspace: { packages: ['plugins/*'], settings: {} },
-      workspaceRoot: '/repo',
-    })
-  ).rejects.toThrow(
-    'Plugin "@scope/missing" has version "workspace:*", but no package named "@scope/missing" was found in the pnpm workspace at /repo.'
+test('linkWorkspacePlugins does not carry a packageManager that is not pnpm', async () => {
+  const { linkWorkspaceDependencies, readFile, writeFileIfChanged } = await import(
+    '@lowdefy/node-utils'
   );
-  expect(writeFileIfChanged).not.toHaveBeenCalled();
+  const { default: linkWorkspacePlugins } = await import('./linkWorkspacePlugins.js');
+  readFile.mockResolvedValue(JSON.stringify({ name: '@lowdefy/server', dependencies: {} }));
+  linkWorkspaceDependencies.mockImplementation(async ({ dependencies }) => dependencies);
+  await linkWorkspacePlugins({
+    directory,
+    parentWorkspace: { packageManager: 'yarn@4.0.0', packages: [] },
+  });
+  expect(JSON.parse(writeFileIfChanged.mock.calls[0][1])).toEqual({
+    name: '@lowdefy/server',
+    dependencies: {},
+  });
 });

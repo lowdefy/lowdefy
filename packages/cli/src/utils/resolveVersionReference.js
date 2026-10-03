@@ -16,8 +16,7 @@
 
 import path from 'path';
 import { type } from '@lowdefy/helpers';
-
-import findWorkspacePackages from './findWorkspacePackages.js';
+import { findWorkspacePackages } from '@lowdefy/node-utils';
 
 function findCatalog({ catalogName, settings }) {
   if (catalogName === 'default') {

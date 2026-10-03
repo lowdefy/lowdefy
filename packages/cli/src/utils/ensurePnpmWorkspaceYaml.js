@@ -17,11 +17,15 @@
 import fs from 'fs';
 import path from 'path';
 import { type } from '@lowdefy/helpers';
-import { readFile, writeFile, writeFileIfChanged } from '@lowdefy/node-utils';
+import {
+  findPnpmWorkspaceRoot,
+  readFile,
+  writeFile,
+  writeFileIfChanged,
+} from '@lowdefy/node-utils';
 
 import createNestedNpmrc from './createNestedNpmrc.js';
 import createNestedWorkspaceYaml from './createNestedWorkspaceYaml.js';
-import findPnpmWorkspaceRoot from './findPnpmWorkspaceRoot.js';
 import linkWorkspacePlugins from './linkWorkspacePlugins.js';
 import readParentWorkspace from './readParentWorkspace.js';
 
@@ -107,7 +111,7 @@ async function ensurePnpmWorkspaceYaml({ context, directory }) {
     createNestedWorkspaceYaml({ directory, parentWorkspace, workspaceRoot })
   );
   await writeNestedNpmrc({ context, directory, parentWorkspace, workspaceRoot });
-  await linkWorkspacePlugins({ directory, parentWorkspace, workspaceRoot });
+  await linkWorkspacePlugins({ directory, parentWorkspace });
 }
 
 export default ensurePnpmWorkspaceYaml;

@@ -16,8 +16,8 @@
 
 import { jest } from '@jest/globals';
 
-jest.unstable_mockModule('./findWorkspacePackages.js', () => ({
-  default: jest.fn(),
+jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+  findWorkspacePackages: jest.fn(),
 }));
 
 const workspaceRoot = '/repo';
@@ -54,7 +54,7 @@ test('resolveVersionReference resolves "$name" to the parent root dependency ver
 });
 
 test('resolveVersionReference resolves a "workspace:" root dependency to a link: to the workspace package', async () => {
-  const { default: findWorkspacePackages } = await import('./findWorkspacePackages.js');
+  const { findWorkspacePackages } = await import('@lowdefy/node-utils');
   const { default: resolveVersionReference } = await import('./resolveVersionReference.js');
   findWorkspacePackages.mockReturnValue(new Map([['@scope/a', '/repo/plugins/a']]));
   expect(
@@ -70,7 +70,7 @@ test('resolveVersionReference resolves a "workspace:" root dependency to a link:
 });
 
 test('resolveVersionReference throws when a "workspace:" root dependency is not a workspace package', async () => {
-  const { default: findWorkspacePackages } = await import('./findWorkspacePackages.js');
+  const { findWorkspacePackages } = await import('@lowdefy/node-utils');
   const { default: resolveVersionReference } = await import('./resolveVersionReference.js');
   findWorkspacePackages.mockReturnValue(new Map());
   expect(() =>

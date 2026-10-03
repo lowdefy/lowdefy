@@ -16,8 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
-
-import findPnpmWorkspaceRoot from './findPnpmWorkspaceRoot.js';
+import { findPnpmWorkspaceRoot } from '@lowdefy/node-utils';
 
 // The base directory for @vercel/nft tracing. nft ignores files above the base, and when the server
 // directory sits inside a pnpm workspace the files of its linked workspace plugins, and of their
