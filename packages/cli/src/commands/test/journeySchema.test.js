@@ -107,6 +107,19 @@ test('journeySchema accepts a journey with an open step the runner accepts', () 
   expect(validateJourney({ journey })).toEqual({ valid: true });
 });
 
+test('validateJourney accepts expect.hidden, expect.calls and click.count', () => {
+  const journey = {
+    ...minimalJourney,
+    steps: [
+      { click: { blockId: 'submit', count: 2 } },
+      { expect: { hidden: 'error_alert' } },
+      { expect: { calls: { request: 'save', pageId: 'form', count: 1 } } },
+      { expect: { calls: { endpoint: 'notify', count: 0 } } },
+    ],
+  };
+  expect(validateJourney({ journey })).toEqual({ valid: true });
+});
+
 test('validateJourney reports a malformed step with the grammar error naming the step', () => {
   const journey = { ...minimalJourney, steps: [{ click: 'a' }, { fill: { blockId: 'title' } }] };
   expect(validateJourney({ journey })).toEqual({

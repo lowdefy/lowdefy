@@ -30,7 +30,7 @@ const STEP_KEYS = [
   'screenshot',
   'expect',
 ];
-const EXPECT_KEYS = ['state', 'visible', 'text', 'url', 'title'];
+const EXPECT_KEYS = ['state', 'visible', 'hidden', 'text', 'url', 'title', 'calls'];
 const WAIT_KEYS = ['ms', 'request', 'state'];
 // `from` marks where a fill, select or expect.state value came from:
 // `recorded` was observed in a trace and runs normally; `shape` is a
@@ -155,6 +155,67 @@ function validateTarget({ key, params }) {
     )}.`;
   }
   return validateTargetObject({ key, params });
+}
+
+// click takes a target and an optional `count` of 1 to 3: that many clicks in
+// quick succession, as a person's double click, before the runner settles.
+function validateClick(params) {
+  if (type.isString(params)) {
+    return undefined;
+  }
+  if (!type.isObject(params)) {
+    return validateTarget({ key: 'click', params });
+  }
+  if (
+    !type.isUndefined(params.count) &&
+    !(type.isInt(params.count) && params.count >= 1 && params.count <= 3)
+  ) {
+    return `Step "click" requires "count" to be 1, 2 or 3. Received ${describe(params.count)}.`;
+  }
+  return validateTargetObject({ key: 'click', params, extraKeys: ['count'] });
+}
+
+// expect.calls counts the calls the current actor has made to one request
+// (scoped to a page, which defaults to the page the actor is on) or one
+// endpoint since the journey started.
+function validateCalls(value) {
+  if (!type.isObject(value)) {
+    return `Step "expect.calls" requires { request, pageId?, count } or { endpoint, count }. Received ${describe(
+      value
+    )}.`;
+  }
+  const isRequest = !type.isUndefined(value.request);
+  const isEndpoint = !type.isUndefined(value.endpoint);
+  if (isRequest === isEndpoint) {
+    return `Step "expect.calls" requires exactly one of "request" or "endpoint". Received ${describe(
+      value
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'expect.calls',
+    params: value,
+    allowed: isRequest ? ['request', 'pageId', 'count'] : ['endpoint', 'count'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  const idKey = isRequest ? 'request' : 'endpoint';
+  if (!type.isString(value[idKey]) || value[idKey] === '') {
+    return `Step "expect.calls" requires "${idKey}" to be a non-empty string. Received ${describe(
+      value[idKey]
+    )}.`;
+  }
+  if (!type.isUndefined(value.pageId) && (!type.isString(value.pageId) || value.pageId === '')) {
+    return `Step "expect.calls" requires "pageId" to be a non-empty string. Received ${describe(
+      value.pageId
+    )}.`;
+  }
+  if (!isIndex(value.count)) {
+    return `Step "expect.calls" requires "count" to be a whole number of calls, 0 or more. Received ${describe(
+      value.count
+    )}.`;
+  }
+  return undefined;
 }
 
 function validateFrom({ key, from }) {
@@ -318,7 +379,7 @@ function validateEmail(params) {
 
 function validateExpect(params) {
   if (!type.isObject(params)) {
-    return `Step "expect" requires one of { state }, { visible }, { text }, { url }, { title }. Received ${describe(
+    return `Step "expect" requires one of { state }, { visible }, { hidden }, { text }, { url }, { title }, { calls }. Received ${describe(
       params
     )}.`;
   }
@@ -337,6 +398,10 @@ function validateExpect(params) {
       return validateFrom({ key: 'expect.state', from: value.from });
     case 'visible':
       return validateTarget({ key: 'expect.visible', params: value });
+    case 'hidden':
+      return validateTarget({ key: 'expect.hidden', params: value });
+    case 'calls':
+      return validateCalls(value);
     case 'text':
       if (!type.isObject(value) || !type.isString(value.contains)) {
         return `Step "expect.text" requires { blockId, contains }. Received ${describe(value)}.`;
@@ -380,7 +445,7 @@ function validateStep(step) {
   const params = step[key];
   switch (key) {
     case 'click':
-      return validateTarget({ key: 'click', params });
+      return validateClick(params);
     case 'open':
       return validateTarget({ key: 'open', params });
     case 'fill':
