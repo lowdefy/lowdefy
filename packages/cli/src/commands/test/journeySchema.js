@@ -40,6 +40,29 @@ const journeySchema = {
       type: 'object',
       errorMessage: { type: 'Journey "urlQuery" should be an object.' },
     },
+    // Written by `lowdefy journeys variants` on the edge-case candidates it
+    // generates: the journey it varies, the kind of edge case and its detail.
+    variant: {
+      type: 'object',
+      required: ['of', 'kind', 'detail'],
+      additionalProperties: false,
+      properties: {
+        of: { type: 'string', errorMessage: { type: 'Journey "variant.of" should be a string.' } },
+        kind: {
+          type: 'string',
+          errorMessage: { type: 'Journey "variant.kind" should be a string.' },
+        },
+        detail: {
+          type: 'string',
+          errorMessage: { type: 'Journey "variant.detail" should be a string.' },
+        },
+      },
+      errorMessage: {
+        type: 'Journey "variant" should be an object { of, kind, detail }.',
+        required: 'Journey "variant" should have "of", "kind" and "detail".',
+        additionalProperties: 'Journey "variant" should only have "of", "kind" and "detail".',
+      },
+    },
     // Must match MAX_JOURNEY_TIMEOUT in @lowdefy/server-dev.
     timeout: {
       type: 'integer',

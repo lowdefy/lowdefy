@@ -32,6 +32,7 @@ import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
 import journeysCompile from './commands/journeys/journeysCompile.js';
 import journeysHarden from './commands/journeys/harden/journeysHarden.js';
+import journeysVariants from './commands/journeys/variants/journeysVariants.js';
 import mcp from './commands/mcp/mcp.js';
 import start from './commands/start/start.js';
 import test from './commands/test/test.js';
@@ -213,7 +214,9 @@ hub
 
 const journeys = program
   .command('journeys')
-  .description('Compile candidate journeys from recorded traces, and harden journeys.');
+  .description(
+    'Compile candidate journeys from recorded traces, harden journeys and write their variants.'
+  );
 
 journeys
   .command('compile')
@@ -304,6 +307,39 @@ journeys
   )
   .action((paths, commandOptions, command) =>
     runCommand({ cliVersion, handler: journeysHarden })({ ...commandOptions, paths }, command)
+  );
+
+journeys
+  .command('variants')
+  .description(
+    'Write edge-case candidates of a journey (bad input, a reload mid-flow, a double click) to tests/journeys/_candidates/variants/ and replay each three times.'
+  )
+  .usage('[options] <file>')
+  .argument('<file>', 'The journey file to vary.')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(new Option('--name <journey>', 'The journey to vary, when the file holds several.'))
+  .addOption(
+    new Option(
+      '--kinds <kinds>',
+      'Only these kinds, comma separated: role, tenant, empty, volume, negative, interrupt, double-submit. The data-set kinds need data sets.'
+    )
+  )
+  .addOption(new Option('--empty-data <name>', 'The data set an empty variant runs on.'))
+  .addOption(new Option('--volume-data <name>', 'The data set a volume variant runs on.'))
+  .addOption(new Option('--no-run', 'Write the variants without replaying them.'))
+  .addOption(options.logLevel)
+  .addOption(options.port)
+  .addOption(options.refResolver)
+  .addOption(
+    new Option(
+      '--url <url>',
+      'Run against an already running dev server instead of starting one, e.g. http://localhost:3000.'
+    )
+  )
+  .action((file, commandOptions, command) =>
+    runCommand({ cliVersion, handler: journeysVariants })({ ...commandOptions, file }, command)
   );
 
 program

@@ -120,6 +120,26 @@ test('validateJourney accepts expect.hidden, expect.calls and click.count', () =
   expect(validateJourney({ journey })).toEqual({ valid: true });
 });
 
+test('journeySchema accepts a variant key and rejects unknown keys inside it', () => {
+  const variant = {
+    of: 'submits the form',
+    kind: 'double-submit',
+    detail: 'double click "submit"',
+  };
+  expect(validateJourney({ journey: { ...minimalJourney, variant } })).toEqual({ valid: true });
+  const extra = validateJourney({
+    journey: { ...minimalJourney, variant: { ...variant, seed: 1 } },
+  });
+  expect(extra.valid).toBe(false);
+  expect(extra.message).toContain('Journey "variant" should only have "of", "kind" and "detail".');
+  const missing = validateJourney({ journey: { ...minimalJourney, variant: { of: 'x' } } });
+  expect(missing.message).toContain('Journey "variant" should have "of", "kind" and "detail".');
+  const wrongType = validateJourney({
+    journey: { ...minimalJourney, variant: { ...variant, kind: 3 } },
+  });
+  expect(wrongType.message).toContain('Journey "variant.kind" should be a string.');
+});
+
 test('validateJourney reports a malformed step with the grammar error naming the step', () => {
   const journey = { ...minimalJourney, steps: [{ click: 'a' }, { fill: { blockId: 'title' } }] };
   expect(validateJourney({ journey })).toEqual({
