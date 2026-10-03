@@ -36,8 +36,10 @@ import writeFile from './writeFile.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 import compileTrace from './journeyCompiler/compileTrace.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
+import isBackedBy from './journeyEvidence/isBackedBy.js';
 import journeySequence from './journeyCompiler/journeySequence.js';
 import parseTraceLines from './journeyCompiler/parseTraceLines.js';
+import profileProduction from './journeyEvidence/profileProduction.js';
 import stepIdentity from './journeyCompiler/stepIdentity.js';
 import validateJourneySteps, {
   getStepKey,
@@ -62,11 +64,13 @@ export {
   getProcessStartTime,
   getSecretsFromEnv,
   installIfPackageJsonChanged,
+  isBackedBy,
   isPidAlive,
   isPortAvailable,
   journeySequence,
   parseIpRange,
   parseTraceLines,
+  profileProduction,
   readDevInstance,
   spawnProcess,
   stepIdentity,

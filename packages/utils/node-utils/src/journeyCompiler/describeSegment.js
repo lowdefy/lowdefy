@@ -19,6 +19,19 @@ import { type } from '@lowdefy/helpers';
 import compileSegment from './compileSegment.js';
 import hashSequence from './hashSequence.js';
 import journeySequence from './journeySequence.js';
+import readFailurePath from './readFailurePath.js';
+
+// The rage and dead clicks of a segment, for the production profile.
+function readFrustrations({ records }) {
+  return records
+    .filter((record) => !type.isNone(record.frustration))
+    .map((record) => ({
+      page: record.page_id,
+      block_id: record.target?.block_id ?? null,
+      text: record.target?.text ?? null,
+      kind: record.frustration,
+    }));
+}
 
 function distinctStrings(values) {
   return [...new Set(values.filter(type.isString))].sort();
@@ -43,6 +56,9 @@ function describeSegment({ records, blockMetas, source }) {
     orgs: distinctStrings(records.map((record) => record.org)),
     roles,
     failure: compiled.failure,
+    failure_path: readFailurePath({ records }),
+    frustrations: readFrustrations({ records }),
+    page_id: journey.pageId,
     session: records[0].session,
     first_seen: records[0].t,
     last_seen: records[records.length - 1].t,

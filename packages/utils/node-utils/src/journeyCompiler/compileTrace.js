@@ -70,6 +70,11 @@ function publicSegment(segment) {
     session,
     first_seen: segment.first_seen,
     last_seen: segment.last_seen,
+    // Read by the production profile and coverage.
+    page_id: segment.page_id,
+    pages: segment.pages,
+    failure_path: segment.failure_path,
+    frustrations: segment.frustrations,
   };
 }
 
