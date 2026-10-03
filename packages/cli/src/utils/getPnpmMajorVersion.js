@@ -58,13 +58,16 @@ function getPinnedMajor({ packageJson }) {
 
 // The major version of the pnpm that installs the server: the pnpm the
 // parent's package.json pins, which pnpm and corepack switch to, or else the
-// pnpm the CLI runs.
-function getPnpmMajorVersion({ directory, packageJson, pnpmCmd }) {
+// pnpm the parent workspace root runs. pnpm --version follows the pin in its
+// directory, and the server's package.json still holds the pin of the last
+// run until linkWorkspacePlugins copies the parent's, so pnpm is asked at the
+// parent root.
+function getPnpmMajorVersion({ packageJson, pnpmCmd, workspaceRoot }) {
   const pinnedMajor = getPinnedMajor({ packageJson });
   if (pinnedMajor !== null) {
     return pinnedMajor;
   }
-  const version = execSync(`${pnpmCmd} --version`, { cwd: directory, encoding: 'utf8' });
+  const version = execSync(`${pnpmCmd} --version`, { cwd: workspaceRoot, encoding: 'utf8' });
   return semver.major(semver.coerce(version));
 }
 

@@ -105,13 +105,13 @@ function getManifestSettings({ packageJson }) {
 // Every setting is carried except "packages": new pnpm settings follow without
 // a change here. Settings the installing pnpm would ignore in the parent are
 // left out, so the server installs as the parent does.
-async function readParentWorkspace({ directory, pnpmCmd, workspaceRoot }) {
+async function readParentWorkspace({ pnpmCmd, workspaceRoot }) {
   const workspaceYaml = await readWorkspaceYaml({ workspaceRoot });
   const packageJson = await readPackageJson({ workspaceRoot });
   const { packages, ...workspaceSettings } = workspaceYaml;
   const npmrcPath = path.join(workspaceRoot, '.npmrc');
   const npmrc = await readFile(npmrcPath);
-  const readsPnpm10Settings = getPnpmMajorVersion({ directory, packageJson, pnpmCmd }) < 11;
+  const readsPnpm10Settings = getPnpmMajorVersion({ packageJson, pnpmCmd, workspaceRoot }) < 11;
 
   // pnpm 10 installs with the package.json settings over the
   // pnpm-workspace.yaml settings where both set one.

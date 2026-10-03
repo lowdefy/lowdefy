@@ -103,7 +103,6 @@ async function ensurePnpmWorkspaceYaml({ context, directory }) {
     `Found pnpm workspace at ${workspaceRoot}; the server installs as its own workspace with its settings.`
   );
   const parentWorkspace = await readParentWorkspace({
-    directory,
     pnpmCmd: context.pnpmCmd,
     workspaceRoot,
   });

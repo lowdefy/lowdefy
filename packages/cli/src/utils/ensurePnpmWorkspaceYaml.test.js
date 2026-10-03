@@ -116,9 +116,7 @@ test('ensurePnpmWorkspaceYaml writes a nested workspace from the parent settings
   const context = { lowdefyVersion: '5.5.1', logger: { debug: jest.fn() }, pnpmCmd: 'pnpm' };
   await ensurePnpmWorkspaceYaml({ context, directory: '/repo/app/.lowdefy/dev' });
   expect(writeFile).not.toHaveBeenCalled();
-  expect(readParentWorkspace.mock.calls).toEqual([
-    [{ directory: '/repo/app/.lowdefy/dev', pnpmCmd: 'pnpm', workspaceRoot: '/repo' }],
-  ]);
+  expect(readParentWorkspace.mock.calls).toEqual([[{ pnpmCmd: 'pnpm', workspaceRoot: '/repo' }]]);
   expect(writeFileIfChanged.mock.calls).toEqual([
     [
       '/repo/app/.lowdefy/dev/pnpm-workspace.yaml',

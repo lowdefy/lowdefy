@@ -29,14 +29,14 @@ test('getPnpmMajorVersion reads the major version of a pnpm pinned in packageMan
   const { default: getPnpmMajorVersion } = await import('./getPnpmMajorVersion.js');
   expect(
     getPnpmMajorVersion({
-      directory: '/dir',
+      workspaceRoot: '/repo',
       packageJson: { packageManager: 'pnpm@11.15.0' },
       pnpmCmd: 'pnpm',
     })
   ).toBe(11);
   expect(
     getPnpmMajorVersion({
-      directory: '/dir',
+      workspaceRoot: '/repo',
       packageJson: { packageManager: 'pnpm@10.29.2+sha512.abc123' },
       pnpmCmd: 'pnpm',
     })
@@ -49,7 +49,7 @@ test('getPnpmMajorVersion reads the major version of a pnpm pinned in devEngines
   const { default: getPnpmMajorVersion } = await import('./getPnpmMajorVersion.js');
   function getMajor(packageManager) {
     return getPnpmMajorVersion({
-      directory: '/dir',
+      workspaceRoot: '/repo',
       packageJson: { devEngines: { packageManager } },
       pnpmCmd: 'pnpm',
     });
@@ -71,7 +71,7 @@ test('getPnpmMajorVersion reads devEngines.packageManager over packageManager, a
   const { default: getPnpmMajorVersion } = await import('./getPnpmMajorVersion.js');
   expect(
     getPnpmMajorVersion({
-      directory: '/dir',
+      workspaceRoot: '/repo',
       packageJson: {
         devEngines: { packageManager: { name: 'pnpm', version: '^11.0.0' } },
         packageManager: 'pnpm@10.29.2',
@@ -87,7 +87,7 @@ test('getPnpmMajorVersion asks pnpm when the devEngines.packageManager range spa
   execSync.mockReturnValue('11.15.0\n');
   expect(
     getPnpmMajorVersion({
-      directory: '/dir',
+      workspaceRoot: '/repo',
       packageJson: {
         devEngines: { packageManager: { name: 'pnpm', version: '>=10' } },
         packageManager: 'pnpm@10.29.2',
@@ -97,36 +97,38 @@ test('getPnpmMajorVersion asks pnpm when the devEngines.packageManager range spa
   ).toBe(11);
   expect(
     getPnpmMajorVersion({
-      directory: '/dir',
+      workspaceRoot: '/repo',
       packageJson: { devEngines: { packageManager: { name: 'pnpm' } } },
       pnpmCmd: 'pnpm',
     })
   ).toBe(11);
   expect(execSync.mock.calls).toEqual([
-    ['pnpm --version', { cwd: '/dir', encoding: 'utf8' }],
-    ['pnpm --version', { cwd: '/dir', encoding: 'utf8' }],
+    ['pnpm --version', { cwd: '/repo', encoding: 'utf8' }],
+    ['pnpm --version', { cwd: '/repo', encoding: 'utf8' }],
   ]);
 });
 
-test('getPnpmMajorVersion asks the pnpm the CLI runs when no pnpm is pinned', async () => {
+test('getPnpmMajorVersion asks pnpm at the parent workspace root when no pnpm is pinned', async () => {
   const { execSync } = await import('child_process');
   const { default: getPnpmMajorVersion } = await import('./getPnpmMajorVersion.js');
   execSync.mockReturnValue('11.15.0\n');
   expect(
     getPnpmMajorVersion({
-      directory: '/dir',
+      workspaceRoot: '/repo',
       packageJson: { packageManager: 'yarn@4.0.0' },
       pnpmCmd: 'pnpm',
     })
   ).toBe(11);
   expect(
     getPnpmMajorVersion({
-      directory: '/dir',
+      workspaceRoot: '/repo',
       packageJson: { devEngines: { packageManager: { name: 'yarn', version: '^4.0.0' } } },
       pnpmCmd: 'pnpm',
     })
   ).toBe(11);
-  expect(getPnpmMajorVersion({ directory: '/dir', packageJson: {}, pnpmCmd: 'pnpm' })).toBe(11);
+  expect(getPnpmMajorVersion({ workspaceRoot: '/repo', packageJson: {}, pnpmCmd: 'pnpm' })).toBe(
+    11
+  );
   expect(execSync).toHaveBeenCalledTimes(3);
-  expect(execSync.mock.calls[0]).toEqual(['pnpm --version', { cwd: '/dir', encoding: 'utf8' }]);
+  expect(execSync.mock.calls[0]).toEqual(['pnpm --version', { cwd: '/repo', encoding: 'utf8' }]);
 });
