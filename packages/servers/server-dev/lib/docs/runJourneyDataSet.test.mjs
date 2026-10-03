@@ -94,6 +94,7 @@ beforeEach(() => {
     },
     page: createPage(),
     ready: true,
+    leftOrigin: [],
   }));
 });
 
@@ -155,6 +156,7 @@ test('runJourney closes the data session after every actor, even when a step thr
       },
       page: createPage(),
       ready: true,
+      leftOrigin: [],
     }))
     .mockImplementationOnce(async () => {
       throw new Error('browser crashed');
@@ -200,4 +202,40 @@ test('runJourney opens no data session for a journey without data', async () => 
   expect(mockOpenDataSession).not.toHaveBeenCalled();
   expect(mockOpenPage.mock.calls[0][0].dataCookie).toBeUndefined();
   expect(result.data).toBeUndefined();
+});
+
+test('runJourney fails the step that sent a data set journey to another host of the dev server', async () => {
+  const leftOrigin = [];
+  mockOpenPage
+    .mockImplementationOnce(async () => ({
+      context: { close: jest.fn(async () => {}) },
+      page: createPage(),
+      ready: true,
+      leftOrigin: [],
+    }))
+    .mockImplementationOnce(async () => {
+      leftOrigin.push('http://127.0.0.1:3227/api/page/tickets');
+      return {
+        context: { close: jest.fn(async () => {}) },
+        page: createPage(),
+        ready: true,
+        leftOrigin,
+      };
+    });
+  const result = await runJourney({
+    origin,
+    pageId: 'tickets',
+    steps: [{ as: 'outsider' }, { as: 'main' }],
+    data: 'staging-sample',
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure).toEqual({
+    index: 0,
+    step: { as: 'outsider' },
+    expected: `every request to stay on ${origin}`,
+    actual: 'http://127.0.0.1:3227/api/page/tickets',
+    message: `Journey left its origin ${origin} for http://127.0.0.1:3227/api/page/tickets; a data set journey must stay on one host of the dev server.`,
+  });
+  expect(result.steps.map((step) => step.status)).toEqual(['failed', 'skipped']);
+  expect(close).toHaveBeenCalledTimes(1);
 });

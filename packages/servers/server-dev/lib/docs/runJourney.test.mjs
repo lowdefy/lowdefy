@@ -149,7 +149,7 @@ function advanceClockOnEveryRead() {
 
 function openWith(page, { ready = true } = {}) {
   const context = { close: jest.fn(async () => {}) };
-  mockOpenPage.mockResolvedValue({ context, page, ready, url: page.url() });
+  mockOpenPage.mockResolvedValue({ context, page, ready, url: page.url(), leftOrigin: [] });
   return context;
 }
 
@@ -1326,8 +1326,13 @@ test('runJourney opens each actor the first time an as step names it and returns
   const mainContext = { close: jest.fn(async () => {}) };
   const inviteeContext = { close: jest.fn(async () => {}) };
   mockOpenPage
-    .mockResolvedValueOnce({ context: mainContext, page: mainPage, ready: true })
-    .mockResolvedValueOnce({ context: inviteeContext, page: inviteePage, ready: true });
+    .mockResolvedValueOnce({ context: mainContext, page: mainPage, ready: true, leftOrigin: [] })
+    .mockResolvedValueOnce({
+      context: inviteeContext,
+      page: inviteePage,
+      ready: true,
+      leftOrigin: [],
+    });
 
   const result = await runJourney({
     origin,
@@ -1364,7 +1369,12 @@ test('runJourney opens each actor the first time an as step names it and returns
 test('runJourney fails an as step whose actor cannot open and still closes every actor', async () => {
   const mainContext = { close: jest.fn(async () => {}) };
   mockOpenPage
-    .mockResolvedValueOnce({ context: mainContext, page: createPage(), ready: true })
+    .mockResolvedValueOnce({
+      context: mainContext,
+      page: createPage(),
+      ready: true,
+      leftOrigin: [],
+    })
     .mockRejectedValueOnce(new Error('net::ERR_CONNECTION_REFUSED'));
 
   const result = await runJourney({
@@ -1549,7 +1559,7 @@ function openActorsWithNetwork(actors) {
       await onContext(context);
       listeners.push(listener);
       opening.forEach((request) => listener(createFakeRequest(request)));
-      return { context, page, ready: true, url: page.url() };
+      return { context, page, ready: true, url: page.url(), leftOrigin: [] };
     });
   });
   return listeners;

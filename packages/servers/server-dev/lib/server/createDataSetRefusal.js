@@ -14,14 +14,13 @@
   limitations under the License.
 */
 
-import schema from './schema.js';
-import SendGridMailSend from './SendGridMailSend/SendGridMailSend.js';
+import { ConfigError } from '@lowdefy/errors';
 
-export default {
-  schema,
-  // An outside service, not app data: a journey on a data set keeps its real target.
-  meta: { dataSet: 'external' },
-  requests: {
-    SendGridMailSend,
-  },
-};
+function createDataSetRefusal({ artifact, session, reason }) {
+  return new ConfigError(
+    `Connection "${artifact.connectionId}" (type ${artifact.type}) cannot run under data set "${session.name}": ${reason}.`,
+    { configKey: artifact['~k'] }
+  );
+}
+
+export default createDataSetRefusal;

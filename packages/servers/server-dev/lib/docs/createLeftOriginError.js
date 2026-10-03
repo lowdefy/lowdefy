@@ -14,14 +14,13 @@
   limitations under the License.
 */
 
-import schema from './schema.js';
-import SendGridMailSend from './SendGridMailSend/SendGridMailSend.js';
+import JourneyStepError from './JourneyStepError.js';
 
-export default {
-  schema,
-  // An outside service, not app data: a journey on a data set keeps its real target.
-  meta: { dataSet: 'external' },
-  requests: {
-    SendGridMailSend,
-  },
-};
+function createLeftOriginError({ origin, departure }) {
+  return new JourneyStepError(
+    `Journey left its origin ${origin} for ${departure}; a data set journey must stay on one host of the dev server.`,
+    { expected: `every request to stay on ${origin}`, actual: departure }
+  );
+}
+
+export default createLeftOriginError;

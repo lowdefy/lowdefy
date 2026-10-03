@@ -147,14 +147,36 @@ A data set journey runs on the running dev server, beside your own browser tabs:
 3. Every browser the journey opens carries a cookie that only the dev server's own headless browser can produce. Requests with it read the run's database. Your own tabs carry no such cookie and keep using your real database on the same server.
 4. When the journey ends, its browsers close, the dev server waits up to 30 seconds for background work the journey started (detached `CallApi` calls, background endpoint work), and then drops the database.
 
-**What is redirected:** every connection whose `properties` carry a `databaseUri`, whatever its type and whether or not the data set lists it: requests, endpoint routines, background and detached endpoint calls, and websocket change stream sources. A plugin connection type that opens its own MongoDB client from `databaseUri` is redirected the same way, but it must honour `databaseName`, as `MongoDBCollection` does. One that ignores it reads the store's default database: never your real one, but not the run's either. It must also key any client it keeps between requests by the URI it is given, never by connection id alone: a client cached by connection id keeps the database it first opened, which can be your real one.
+**What is redirected:** every connection read under a data set journey goes through one check, for requests, endpoint routines, background and detached endpoint calls, websocket change stream sources, and module connections alike. The check reads the connection type's `meta.dataSet` declaration:
+
+- `redirect`: the run's database URI and name are merged over the connection's `properties`, whether or not the data set lists the connection. Core `MongoDBCollection` declares it.
+- `external`: the type reaches an outside service, not your app's data, and keeps its real target. Core `AxiosHttp`, `SendGridMail`, `SMTP`, `Stripe`, `AIGateway`, `Anthropic`, `OpenAI`, `Google`, `Mcp` and `TregConnection` declare it.
+- No declaration: the journey fails with `Connection "<id>" (type <type>) cannot run under data set "<name>": its type does not say how to redirect it.` Core `Knex`, `Redis`, `Elasticsearch`, `GoogleSheet`, `TestConnection`, `AwsS3Bucket`, `AzureBlobContainer` and `GoogleCloudStorageBucket` refuse, and so does any plugin type that has not declared.
+
+A `redirect` connection whose whole `properties` is an operator (a top-level key starting with `_`, such as `_if` or `_ref` evaluated at runtime) also refuses, because the check cannot see what it evaluates to. Operators inside the properties are fine: `databaseUri: { _secret: MONGODB_URI }` is replaced by the run's URI before any operator runs.
+
+The browsers a data set journey opens stay on one host of the dev server. A request to the dev server's port on another host (`127.0.0.1` when the journey opened `localhost`, `[::1]`, a LAN address) would carry no data set cookie, so it is stopped in the browser and the step fails with `Journey left its origin <origin> for <url>; a data set journey must stay on one host of the dev server.` Requests to other ports and other sites are untouched.
 
 **What is not redirected:**
 
-- Connections that are not MongoDB (HTTP APIs, SMTP, AI gateways) keep their real targets.
-- Code that reads a database URI from anywhere but its connection's `properties`, such as a secret or environment variable read directly.
+- Connection types declared `external` (HTTP APIs, email, payments, AI providers, MCP) keep their real targets.
+- Code that reads a database URI from anywhere but its connection's `properties`, such as a secret or environment variable read directly. A plugin type that declares `redirect` and does this breaks its declaration.
 - The auth engine. Data set journeys never reach it: their requests carry injected users, and `/api/auth/*` answers 404 for them.
 - Atlas Search (`$search`, `$vectorSearch`): pages whose requests use it fail on the in-memory database, which has no search engine.
+
+### Plugin connection types
+
+A plugin connection type runs under a data set journey only when it declares `meta.dataSet` on its connection export:
+
+```js
+export default {
+  schema,
+  meta: { dataSet: 'redirect' },
+  requests: { MyStoreFind, MyStoreInsert },
+};
+```
+
+Declare `redirect` only when the type takes its database from `properties.databaseUri` and `properties.databaseName` and nothing else. It must honour `databaseName`, as `MongoDBCollection` does, and key any client it keeps between requests by the URI it is given, never by connection id alone: a client cached by connection id keeps the database it first opened, which can be your real one. Declare `external` only for a type that reaches an outside service and holds none of your app's data. Leave it undeclared for any other data store: data set journeys that use it are refused rather than run against your real data.
 
 ## Auth journeys stay on their harness
 

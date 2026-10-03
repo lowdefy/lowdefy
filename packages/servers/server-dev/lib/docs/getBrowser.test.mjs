@@ -49,6 +49,7 @@ function createBrowser() {
     addCookies,
     close: jest.fn().mockResolvedValue(undefined),
     newPage: jest.fn().mockResolvedValue(page),
+    route: jest.fn().mockResolvedValue(undefined),
   };
   return {
     browser: { newContext: jest.fn().mockResolvedValue(context) },
@@ -336,4 +337,58 @@ test('openPage sets no data cookie without a dataCookie', async () => {
   await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home', user: 'none' });
   const names = addCookies.mock.calls.map(([[cookie]]) => cookie.name);
   expect(names).not.toContain('lowdefy_journey_data');
+});
+
+test('openPage aborts and records a data set journey request to the dev server port on another host', async () => {
+  const { browser, context, page } = createBrowser();
+  context.route.mockImplementation(async () => {
+    expect(page.goto).not.toHaveBeenCalled();
+  });
+  const opened = await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'tickets',
+    dataCookie: 'session1',
+  });
+  expect(context.route).toHaveBeenCalledTimes(1);
+  const [[matches, handle]] = context.route.mock.calls;
+  for (const url of [
+    'http://127.0.0.1:3001/api/page/tickets',
+    'http://[::1]:3001/tickets',
+    'http://192.168.1.20:3001/tickets',
+    'https://127.0.0.1:3001/tickets',
+  ]) {
+    expect([url, matches(new URL(url))]).toEqual([url, true]);
+  }
+  for (const url of [
+    'http://localhost:3001/api/page/tickets',
+    'http://127.0.0.1:9000/assets/app.js',
+    'https://example.com/logo.png',
+    'http://127.0.0.1/tickets',
+  ]) {
+    expect([url, matches(new URL(url))]).toEqual([url, false]);
+  }
+  const route = {
+    request: () => ({ url: () => 'http://127.0.0.1:3001/api/page/tickets' }),
+    abort: jest.fn(async () => {}),
+  };
+  await handle(route);
+  expect(route.abort).toHaveBeenCalledTimes(1);
+  expect(opened.leftOrigin).toEqual(['http://127.0.0.1:3001/api/page/tickets']);
+});
+
+test('openPage matches the default port of an origin that names none', async () => {
+  const { browser, context } = createBrowser();
+  await openPage({ browser, origin: 'http://localhost', pageId: 'home', dataCookie: 'session1' });
+  const [[matches]] = context.route.mock.calls;
+  expect(matches(new URL('http://127.0.0.1/home'))).toBe(true);
+  expect(matches(new URL('http://127.0.0.1:80/home'))).toBe(true);
+  expect(matches(new URL('http://127.0.0.1:3001/home'))).toBe(false);
+});
+
+test('openPage routes nothing and records no departures without a dataCookie', async () => {
+  const { browser, context } = createBrowser();
+  const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+  expect(context.route).not.toHaveBeenCalled();
+  expect(opened.leftOrigin).toEqual([]);
 });

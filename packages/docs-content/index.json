@@ -3599,7 +3599,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "13d267e3d1458c3702b8efe20570291d106a84ce0b07a5f30a2af62c894cc850"
+      "hash": "08ec53968743e177ce2c2c3759bc06ce6e2d0179b12d73dff39fa46c58dc318f"
     },
     "plugins/plugins-operators": {
       "files": [
@@ -3901,7 +3901,7 @@
         "testing/journey-data-sets.yaml",
         "version.yaml"
       ],
-      "hash": "41f4bdec2399259c9f5ca2799f3377fce869a7e946ae906744f7c871379b0a02"
+      "hash": "3a3c7e4a8bcf8642d2000e7db3b498cb33548920d2605e7a272420ed446562bd"
     },
     "testing/e2e-introduction": {
       "files": [

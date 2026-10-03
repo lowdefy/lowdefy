@@ -28,6 +28,8 @@ function create({ connection }) {
 
 const AIGateway = {
   schema,
+  // An outside service, not app data: a journey on a data set keeps its real target.
+  meta: { dataSet: 'external' },
   create,
   requests: {
     // Evaluation models (TypeSafe's Jev) answer by default; any language model

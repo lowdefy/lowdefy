@@ -25,6 +25,7 @@ import {
 
 import collectExercised from './collectExercised.js';
 import createJourneyActors from './createJourneyActors.js';
+import createLeftOriginError from './createLeftOriginError.js';
 import describeDataSetResult from './dataSets/describeDataSetResult.js';
 import getDataStore from './dataSets/getDataStore.js';
 import { getBrowser, buildPageUrl } from './getBrowser.js';
@@ -840,6 +841,17 @@ async function runSteps({ journey, steps }) {
     } catch (error) {
       failure = toFailure({ error, index, step });
       results.push({ index, step, status: 'failed', durationMs: Date.now() - started });
+    }
+    // A request this step caused to another host of the dev server was aborted, so whatever the
+    // step saw afterwards is not what the app does: that request is the failure.
+    const departure = journey.actors.leftOrigin();
+    if (!type.isUndefined(departure)) {
+      failure = toFailure({
+        error: createLeftOriginError({ origin: journey.origin, departure }),
+        index,
+        step,
+      });
+      results[results.length - 1].status = 'failed';
     }
   }
   return { results, screenshots, failure };

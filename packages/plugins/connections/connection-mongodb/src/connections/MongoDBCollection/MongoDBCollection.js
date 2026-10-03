@@ -44,6 +44,9 @@ export default {
   // check reads connectionMetas in types.js.
   meta: {
     tenant: true,
+    // Under a data set journey the dev server merges the session's databaseUri and databaseName
+    // over the connection's properties: getCollection reads both, and getClient keys clients by URI.
+    dataSet: 'redirect',
   },
   // The tenant-preflight capability: the server probes every walled
   // collection for unstamped rows before serving under policy: tenant

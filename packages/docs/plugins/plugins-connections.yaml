@@ -91,6 +91,22 @@ _ref:
             export default FetchOrderWithUser;
             ```
 
+            #### Journey data sets
+
+            A connection type declares how it behaves when a journey runs on a [data set](/journey-data-sets) with `meta.dataSet` on its connection export. The dev server reads it before any request on the connection runs:
+
+            - `'redirect'`: the dev server merges the run's `databaseUri` and `databaseName` over the connection properties. Declare it only when the type takes its database from those two properties and nothing else, honours `databaseName`, and keys any client it caches between requests by the URI it is given, never by connection id alone.
+            - `'external'`: the type reaches an outside service (an HTTP API, email, an AI provider) and holds none of the app's data. It keeps its real target.
+            - No declaration: requests on the connection are refused under a data set. Leave a data store the dev server cannot redirect undeclared.
+
+            ```js
+            export default {
+              schema,
+              meta: { dataSet: 'external' },
+              requests: { AxiosHttp },
+            };
+            ```
+
             #### Schema Validation
 
             A [JSON Schema](https://json-schema.org/) schema can be used to validate the connection and request properties before they are passed to the request function. The [ajv-errors](https://ajv.js.org/packages/ajv-errors.html) package is used to provide useful error messages if the schema validation fails. Attached the json-schema to the request function with property `schema`, to validate request input before the request function is called.

@@ -94,9 +94,14 @@ fixtures.forEach(({ absolutePath, content }) => {
 
 // A checkout that has built an app already holds real artifacts here, which import plugins this
 // package does not depend on, so the stubs are also mocked over whatever is on disk.
+// The connection plugin map carries each type's meta.dataSet, which the data session gate reads.
+const connectionPlugins = {
+  MongoDBCollection: { meta: { tenant: true, dataSet: 'redirect' } },
+  Knex: {},
+};
 fixtures.forEach(({ absolutePath }) => {
   jest.unstable_mockModule(absolutePath, () => ({
-    default: {},
+    default: absolutePath.endsWith(`${path.sep}connections.js`) ? connectionPlugins : {},
     interpolateProperties: () => {},
     renderEmail: () => {},
   }));
@@ -289,6 +294,25 @@ describe('data sessions', () => {
     await work;
     await Promise.resolve();
     expect(session.work.size).toBe(0);
+  });
+
+  test('a data-session request refuses a connection whose type declares no dataSet, naming it', async () => {
+    registerSession();
+    createApiContext.mockImplementationOnce((context) => {
+      context.readConfigFile = async () => ({
+        connectionId: 'warehouse',
+        type: 'Knex',
+        properties: { client: 'pg', connection: 'postgres://real/' },
+      });
+    });
+    const context = await createLowdefyContext({
+      c: createHonoContext({
+        headers: { cookie: `lowdefy_journey_data=${journeyActorToken}.session1` },
+      }),
+    });
+    await expect(context.readConfigFile('connections/warehouse.json')).rejects.toThrow(
+      'Connection "warehouse" (type Knex) cannot run under data set "staging-sample": its type does not say how to redirect it.'
+    );
   });
 
   test('a data cookie and a mutant cookie are both forwarded on loopbackHeaders', async () => {

@@ -101,6 +101,17 @@ function createJourneyActors({
     return counters.get(currentName).countCalls(query);
   }
 
+  // The first URL any actor's context tried to reach on another host of the dev server, which a
+  // data set journey must never do (see guardJourneyOrigin).
+  function leftOrigin() {
+    for (const opened of actors.values()) {
+      if (opened.leftOrigin.length > 0) {
+        return opened.leftOrigin[0];
+      }
+    }
+    return undefined;
+  }
+
   function networkSnapshots() {
     return [...counters.values()].map((counter) => counter.snapshot());
   }
@@ -109,7 +120,7 @@ function createJourneyActors({
     await Promise.all([...actors.values()].map(({ context }) => context.close().catch(() => {})));
   }
 
-  return { switchTo, current, countCalls, networkSnapshots, closeAll };
+  return { switchTo, current, countCalls, leftOrigin, networkSnapshots, closeAll };
 }
 
 export default createJourneyActors;

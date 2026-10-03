@@ -200,7 +200,7 @@ async function createLowdefyContext({ c, user }) {
     });
   }
   if (!type.isNone(dataSession)) {
-    applyDataSetRedirect({ context, session: dataSession });
+    applyDataSetRedirect({ context, session: dataSession, connections });
     context.dataSet = dataSession.name;
     context.waitUntil = trackSessionWork({ session: dataSession });
   }
