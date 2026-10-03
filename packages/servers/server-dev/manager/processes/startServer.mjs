@@ -50,11 +50,11 @@ function startServer(context) {
   // Read on every start: a .env edit can change BETTER_AUTH_URL, and the
   // watcher restarts the child with the reloaded value.
   const configuredAuthUrl = process.env.BETTER_AUTH_URL;
-  const authUrl = resolveDevAuthUrl({
+  const { authUrl, rewritten } = resolveDevAuthUrl({
     configured: configuredAuthUrl,
     port: context.options.port,
   });
-  if (authUrl !== configuredAuthUrl && context.loggedAuthUrl !== authUrl) {
+  if (rewritten && context.loggedAuthUrl !== authUrl) {
     context.logger.info(
       `BETTER_AUTH_URL ${configuredAuthUrl} names another port; this dev server uses ${authUrl}.`
     );

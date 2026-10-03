@@ -201,7 +201,7 @@ test('MCP lowdefy_screenshot_page advertises width and height up to 4096, and co
 });
 
 test('MCP lowdefy_screenshot_page advertises steps and urlQuery, and passes them on', async () => {
-  mockScreenshotPage.mockResolvedValue({ data: 'AAAA', mimeType: 'image/png' });
+  mockScreenshotPage.mockResolvedValue({ data: 'AAAA', mimeType: 'image/png', screenshots: [] });
   const client = await connectClient();
   const { tools } = await client.listTools();
   const { properties } = tools.find((tool) => tool.name === 'lowdefy_screenshot_page').inputSchema;
@@ -227,6 +227,7 @@ test('MCP lowdefy_screenshot_page returns a failed step beside the image', async
   mockScreenshotPage.mockResolvedValue({
     data: 'AAAA',
     mimeType: 'image/png',
+    screenshots: [],
     failure: { index: 0, step: { open: 'x' }, message: 'm' },
   });
   const client = await connectClient();
@@ -237,6 +238,28 @@ test('MCP lowdefy_screenshot_page returns a failed step beside the image', async
   expect(result.content).toHaveLength(2);
   expect(JSON.parse(result.content[0].text).failure.index).toBe(0);
   expect(result.content[1].type).toBe('image');
+  await client.close();
+});
+
+test('MCP lowdefy_screenshot_page returns screenshot step captures after the final capture', async () => {
+  mockScreenshotPage.mockResolvedValue({
+    data: 'AAAA',
+    mimeType: 'image/png',
+    screenshots: [{ name: 'before', data: 'BBBB', mimeType: 'image/png' }],
+  });
+  const client = await connectClient();
+  const result = await client.callTool({
+    name: 'lowdefy_screenshot_page',
+    arguments: { pageId: 'gates', steps: [{ screenshot: 'before' }, { open: 'status' }] },
+  });
+  expect(JSON.parse(result.content[0].text)).toEqual({
+    passed: true,
+    screenshots: [{ name: 'before' }],
+  });
+  expect(result.content.slice(1)).toEqual([
+    { type: 'image', data: 'AAAA', mimeType: 'image/png' },
+    { type: 'image', data: 'BBBB', mimeType: 'image/png' },
+  ]);
   await client.close();
 });
 
