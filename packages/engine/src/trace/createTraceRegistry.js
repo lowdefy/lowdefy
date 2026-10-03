@@ -19,8 +19,8 @@ import createDescribeElement from './createDescribeElement.js';
 import createFindBlockType from './createFindBlockType.js';
 import createPageIdOf from './createPageIdOf.js';
 
-// One observation point for completed block and app events. emit and wantsState are the
-// engine's; actionView is the read side every action function receives as `trace`.
+// One observation point for completed block and app events. emit, hasSubscribers and wantsState
+// are the engine's; actionView is the read side every action function receives as `trace`.
 function createTraceRegistry({ lowdefy }) {
   const subscribers = [];
   const warnedListeners = new Set();
@@ -34,6 +34,10 @@ function createTraceRegistry({ lowdefy }) {
         subscribers.splice(index, 1);
       }
     };
+  }
+
+  function hasSubscribers() {
+    return subscribers.length > 0;
   }
 
   function wantsState() {
@@ -67,6 +71,7 @@ function createTraceRegistry({ lowdefy }) {
     describeChain,
     describeElement,
     emit,
+    hasSubscribers,
     pageIdOf,
     subscribe,
     wantsState,

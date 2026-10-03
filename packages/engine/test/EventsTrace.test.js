@@ -193,6 +193,19 @@ test('stateBefore is the state before the chain ran, only for a state subscriber
   expect(stateless[0].stateBefore).toBeUndefined();
 });
 
+test('an event builds no trace payload while nobody subscribes', async () => {
+  const context = await testContext({
+    lowdefy: createLowdefy(),
+    pageConfig: buttonPage([setState('set', { clicked: true })]),
+  });
+  const trace = getTrace(context._internal.lowdefy);
+  const emit = jest.spyOn(trace, 'emit');
+  const res = await context._internal.RootSlots.map.button.triggerEvent({ name: 'onClick' });
+  expect(res.success).toBe(true);
+  expect(context.eventLog[0]).toBe(res);
+  expect(emit).not.toHaveBeenCalled();
+});
+
 function countStateCopies({ copy, context }) {
   return copy.mock.calls.filter(([value]) => value === context.state).length;
 }
