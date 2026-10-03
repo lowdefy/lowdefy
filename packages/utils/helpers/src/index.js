@@ -25,6 +25,7 @@ import getLocaleDateFormat from './getLocaleDateFormat.js';
 import getLocaleDecimalSeparator from './getLocaleDecimalSeparator.js';
 import getLocaleGroupSeparator from './getLocaleGroupSeparator.js';
 import getOperatorType from './getOperatorType.js';
+import isMountEventName from './isMountEventName.js';
 import { isReserved, ReservedKeyError } from './ReservedKeyError.js';
 import joinPath from './joinPath.js';
 import LRUCache from './LRUCache.js';
@@ -32,6 +33,7 @@ import mapPlainValues from './mapPlainValues.js';
 import mergeObjects from './mergeObjects.js';
 import normalizeCaller from './normalizeCaller.js';
 import omit from './omit.js';
+import pairTraceEvents from './pairTraceEvents.js';
 import projectCaughtError from './projectCaughtError.js';
 import serializer from './serializer.js';
 import set from './set.js';
@@ -58,6 +60,7 @@ export {
   getLocaleDecimalSeparator,
   getLocaleGroupSeparator,
   getOperatorType,
+  isMountEventName,
   isReserved,
   joinPath,
   LRUCache,
@@ -65,6 +68,7 @@ export {
   mergeObjects,
   normalizeCaller,
   omit,
+  pairTraceEvents,
   projectCaughtError,
   ReservedKeyError,
   serializer,
