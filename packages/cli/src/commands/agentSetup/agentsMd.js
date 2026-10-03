@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
+import agentsMdSkills from './agentsMdSkills.js';
 import devServerRules from './devServerRules.js';
 
-function agentsMd({ devCommand, appPath }) {
+function agentsMd({ devCommand, appPath, skills }) {
   const appDescription =
     appPath === ''
       ? 'This project is a [Lowdefy](https://lowdefy.com) app'
@@ -79,7 +80,8 @@ draw on, and comment on the running app; the annotation helper copies an agent-r
 block to their clipboard, which they paste into the agent session. Pasted blocks start with
 "Feedback:" and include the config file and line each annotation refers to — treat them as
 precise UI feedback.
-`;
+
+${agentsMdSkills({ skills })}`;
 }
 
 export default agentsMd;

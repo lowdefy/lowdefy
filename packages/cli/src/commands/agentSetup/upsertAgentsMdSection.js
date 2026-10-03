@@ -19,6 +19,7 @@ import { readFile, writeFile } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import agentsMd from './agentsMd.js';
+import agentsMdSkills, { SKILLS_END_MARKER, SKILLS_START_MARKER } from './agentsMdSkills.js';
 
 const lowdefyHeadingPattern = /^##\s+Lowdefy\b/m;
 
@@ -36,12 +37,30 @@ function findLowdefySection(content) {
   return { start, end, text: content.slice(start, end) };
 }
 
+// Refreshes the managed skills list in a Lowdefy section agent-setup did not
+// rewrite: the list between the markers is replaced, or appended to the end
+// of the section when the section has none. The rest of the section is left
+// as it is.
+function upsertSkillsList({ content, section, skills }) {
+  const block = agentsMdSkills({ skills });
+  const startIndex = content.indexOf(SKILLS_START_MARKER);
+  const endIndex = content.indexOf(SKILLS_END_MARKER);
+  if (startIndex !== -1 && endIndex > startIndex) {
+    let afterEnd = endIndex + SKILLS_END_MARKER.length;
+    if (content[afterEnd] === '\n') afterEnd += 1;
+    return `${content.slice(0, startIndex)}${block}${content.slice(afterEnd)}`;
+  }
+  const before = content.slice(0, section.end).replace(/\s+$/, '');
+  const after = content.slice(section.end);
+  return `${before}\n\n${block}${after === '' ? '' : `\n${after}`}`;
+}
+
 // Appends a "## Lowdefy" section to the project's existing agent instructions
 // file instead of creating a competing one: an existing AGENTS.md wins, then
 // an existing CLAUDE.md, and only when neither exists is an AGENTS.md
 // created. Never overwrites — the file may already document the rest of the
 // project.
-async function upsertAgentsMdSection({ context, projectDirectory, appPath, devCommand }) {
+async function upsertAgentsMdSection({ context, projectDirectory, appPath, devCommand, skills }) {
   const candidates = ['AGENTS.md', 'CLAUDE.md'].map((fileName) => ({
     fileName,
     filePath: path.join(projectDirectory, fileName),
@@ -54,13 +73,23 @@ async function upsertAgentsMdSection({ context, projectDirectory, appPath, devCo
     }
   }
 
-  const section = agentsMd({ devCommand, appPath });
+  const section = agentsMd({ devCommand, appPath, skills });
 
   const withSection = existingFiles.find((file) => lowdefyHeadingPattern.test(file.content));
   if (withSection) {
     const current = findLowdefySection(withSection.content);
     if (!current.text.includes(PORT_PINNED_SECTION_MARKER)) {
-      context.logger.info(`'${withSection.fileName}' already has a 'Lowdefy' section - skipping.`);
+      const updated = upsertSkillsList({ content: withSection.content, section: current, skills });
+      if (updated === withSection.content) {
+        context.logger.info(
+          `'${withSection.fileName}' already has a 'Lowdefy' section - skipping.`
+        );
+        return;
+      }
+      await writeFile(withSection.filePath, updated);
+      context.logger.info(
+        `Updated the agent skills list in the 'Lowdefy' section of '${withSection.fileName}'.`
+      );
       return;
     }
     const after = withSection.content.slice(current.end);

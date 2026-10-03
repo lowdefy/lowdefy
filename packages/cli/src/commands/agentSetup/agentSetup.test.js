@@ -298,18 +298,41 @@ test('agentSetup does not warn about several dev scripts when cli.devScript name
   expect(context.logger.warn).not.toHaveBeenCalledWith(expect.stringContaining('cli.devScript'));
 });
 
-test('agentSetup skips AGENTS.md when a Lowdefy section already exists', async () => {
+test('agentSetup keeps a person-written Lowdefy section and appends the skills list to it', async () => {
   fs.writeFileSync(
     path.join(configDirectory, 'AGENTS.md'),
-    '# My Project\n\n## Lowdefy\n\nCustom lowdefy notes.\n'
+    '# My Project\n\n## Lowdefy\n\nCustom lowdefy notes.\n\n## Other\n\nMore.\n'
   );
 
   await agentSetup({ context });
 
-  expect(read('AGENTS.md')).toEqual('# My Project\n\n## Lowdefy\n\nCustom lowdefy notes.\n');
+  const agentsMd = read('AGENTS.md');
+  expect(agentsMd.startsWith('# My Project\n\n## Lowdefy\n\nCustom lowdefy notes.\n\n')).toBe(true);
+  expect(agentsMd).toContain('<!-- lowdefy-skills:start -->');
+  expect(agentsMd).toContain('- `lowdefy-config`:');
+  expect(agentsMd.endsWith('<!-- lowdefy-skills:end -->\n\n## Other\n\nMore.\n')).toBe(true);
+});
+
+test('agentSetup skips AGENTS.md when its Lowdefy section and skills list are current', async () => {
+  await agentSetup({ context });
+  const first = read('AGENTS.md');
+  context.logger.info.mockClear();
+
+  await agentSetup({ context });
+
+  expect(read('AGENTS.md')).toEqual(first);
   expect(context.logger.info).toHaveBeenCalledWith(
     expect.stringContaining("already has a 'Lowdefy' section")
   );
+});
+
+test('agentSetup writes one AGENTS.md line per skill in the list', async () => {
+  const { default: skills } = await import('./skills/index.js');
+  await agentSetup({ context });
+  const agentsMd = read('AGENTS.md');
+  skills.forEach((skill) => {
+    expect(agentsMd.split(`- ${skill.agentsMdLine}`)).toHaveLength(2);
+  });
 });
 
 test('agentSetup prefers a package.json dev script that runs lowdefy dev', async () => {
@@ -401,15 +424,18 @@ describe('monorepo layout (app in a subdirectory of the git root)', () => {
     );
   });
 
-  test('agentSetup skips the instructions file when CLAUDE.md already has a Lowdefy section', async () => {
+  test('agentSetup keeps the Lowdefy section in CLAUDE.md, adding only the skills list', async () => {
     fs.writeFileSync(path.join(projectDirectory, 'CLAUDE.md'), '## Lowdefy\n\nCustom notes.\n');
 
     await agentSetup({ context });
 
-    expect(readRoot('CLAUDE.md')).toEqual('## Lowdefy\n\nCustom notes.\n');
+    const claudeMd = readRoot('CLAUDE.md');
+    expect(
+      claudeMd.startsWith('## Lowdefy\n\nCustom notes.\n\n<!-- lowdefy-skills:start -->')
+    ).toBe(true);
     expect(fs.existsSync(path.join(projectDirectory, 'AGENTS.md'))).toBe(false);
     expect(context.logger.info).toHaveBeenCalledWith(
-      expect.stringContaining("'CLAUDE.md' already has a 'Lowdefy' section")
+      "Updated the agent skills list in the 'Lowdefy' section of 'CLAUDE.md'."
     );
   });
 
