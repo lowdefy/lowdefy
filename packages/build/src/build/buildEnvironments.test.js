@@ -229,6 +229,32 @@ test('buildEnvironments throws when a feature switch is not a boolean', () => {
   );
 });
 
+test('buildEnvironments fails when dataPull is not a boolean', () => {
+  const { context } = makeContext();
+  const components = {
+    config: { environments: { staging: { '~k': 'k-staging', dataPull: 'yes' } } },
+  };
+  let error;
+  try {
+    buildEnvironments({ components, context });
+  } catch (e) {
+    error = e;
+  }
+  expect(error.message).toEqual('App "config.environments.staging.dataPull" should be a boolean.');
+  expect(error.received).toEqual('yes');
+  expect(error.configKey).toEqual('k-staging');
+});
+
+test('buildEnvironments accepts dataPull: true and keeps it out of config.json', () => {
+  process.env.LOWDEFY_ENVIRONMENT = 'staging';
+  const { context } = makeContext();
+  const components = {
+    config: { environments: { prod: {}, staging: { dataPull: true }, local: { dataPull: false } } },
+  };
+  buildEnvironments({ components, context });
+  expect(components.config.environments).toEqual({ prod: {}, staging: {}, local: {} });
+});
+
 describe('guards', () => {
   const guarded = {
     prod: {
@@ -341,21 +367,24 @@ describe('guards', () => {
       config: {
         environments: {
           ...structuredClone(guarded),
-          local: { guards: { secrets: { '~k': 'k1', MONGODB_URI: 'localhost' } } },
+          staging: { url: 'https://staging.example.com', dataPull: true },
+          local: { guards: { secrets: { '~k': 'k1', MONGODB_URI: 'localhost' } }, dataPull: false },
         },
       },
     };
     buildEnvironments({ components, context });
     expect(components.environmentGuards).toEqual({
       prod: {
+        dataPull: false,
         secrets: { MONGODB_URI: 'acme-prod\\.a1b2c\\.mongodb\\.net' },
         env: { BETTER_AUTH_URL: '^https://app\\.example\\.com$' },
       },
-      staging: { secrets: {}, env: {} },
-      local: { secrets: { MONGODB_URI: 'localhost' }, env: {} },
+      staging: { dataPull: true, secrets: {}, env: {} },
+      local: { dataPull: false, secrets: { MONGODB_URI: 'localhost' }, env: {} },
     });
-    // Other environments' guards still leave config.json.
+    // Other environments' guards, and every dataPull, still leave config.json.
     expect(components.config.environments.prod.guards).toBeUndefined();
+    expect(components.config.environments.staging.dataPull).toBeUndefined();
   });
 
   test("buildEnvironments with environmentGuards 'all' skips the current environment's guard check", () => {

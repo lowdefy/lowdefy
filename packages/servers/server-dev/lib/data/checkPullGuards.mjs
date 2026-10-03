@@ -16,10 +16,13 @@
 
 import { type } from '@lowdefy/helpers';
 
-// A pull proves which database it reads through the environment's own guards.secrets pins: the
-// secret's value must match the `from` environment's pin and no other environment's distinct pin.
-// So production cannot be pulled by mistake, and no idea of which environment is production is
-// needed. Messages name the secret and the environment, never the value.
+// A pull reads only from an environment that opts in with `dataPull: true`. Environments carry no
+// production flag, and the secret pins below only prove the database is `from`'s, so a data set
+// naming production, run with production's secrets, would pass them: the opt-in fails closed
+// instead, and is checked before any secret is read. The pull then proves which database it reads
+// through the environment's own guards.secrets pins: the secret's value must match the `from`
+// environment's pin and no other environment's distinct pin. Messages name the secret and the
+// environment, never the value.
 function checkPullGuards({ connections, dataSetName, from, environmentGuards, env }) {
   const declared = Object.keys(environmentGuards);
   if (!declared.includes(from)) {
@@ -27,6 +30,11 @@ function checkPullGuards({ connections, dataSetName, from, environmentGuards, en
       `Data set "${dataSetName}" pulls from environment "${from}", which config.environments does not declare.${
         declared.length === 0 ? '' : ` Declared: ${declared.join(', ')}.`
       }`
+    );
+  }
+  if (environmentGuards[from].dataPull !== true) {
+    throw new Error(
+      `Data set "${dataSetName}" pulls from environment "${from}", which does not allow data pulls. Set config.environments.${from}.dataPull: true only on a pre-production environment; production must never set it.`
     );
   }
   const secretNames = [...new Set(connections.map((connection) => connection.secretName))];
