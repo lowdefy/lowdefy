@@ -19,9 +19,14 @@ import fs from 'fs';
 import path from 'path';
 import { wait } from '@lowdefy/helpers';
 
+import createStartTimeCache from './createStartTimeCache.js';
 import getLowdefyHome from './getLowdefyHome.js';
 import getProcessStartTime from './getProcessStartTime.js';
 import isPidAlive from './isPidAlive.js';
+
+// A waiting caller checks every held slot each interval, and a start time costs a ps process
+// (PowerShell on Windows, a second or more), so each pid's is read once a few seconds.
+const readStartTime = createStartTimeCache({ read: getProcessStartTime });
 
 function readHolder(slotPath) {
   try {
@@ -62,7 +67,7 @@ function isStale(slotPath) {
   if (holder.processStartTime === null) {
     return false;
   }
-  const startTime = getProcessStartTime({ pid: holder.pid });
+  const startTime = readStartTime({ pid: holder.pid });
   return startTime !== null && startTime !== holder.processStartTime;
 }
 
