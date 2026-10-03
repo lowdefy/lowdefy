@@ -14,19 +14,17 @@
   limitations under the License.
 */
 
-// TODO: Better name needed here maybe?
-function logRequest({ context }) {
-  const user = context.user ?? {};
-  context.logger.debug({
-    user: {
-      id: user.id,
-      roles: user.roles,
-    },
-    url: context.req.url,
-    method: context.req.method,
-    resolvedUrl: context.nextContext?.resolvedUrl,
-    dataSet: context.dataSet,
-  });
+// The context.waitUntil of a data-session request: background work (scheduleBackground, the detached
+// dispatch and the detached run) is added to the session's work set, so closing the session waits
+// for it before it drops the database.
+function trackSessionWork({ session }) {
+  return function waitUntil(promise) {
+    session.work.add(promise);
+    const remove = () => {
+      session.work.delete(promise);
+    };
+    promise.then(remove, remove);
+  };
 }
 
-export default logRequest;
+export default trackSessionWork;

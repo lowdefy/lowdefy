@@ -228,3 +228,136 @@ test('createLowdefyContext leaves readConfigFile alone without a mutant cookie',
   const context = await createLowdefyContext({ c: createHonoContext() });
   expect(context.readConfigFile).toBe(readConfigFile);
 });
+
+const { default: dataSessionRegistry } = await import('../docs/dataSets/dataSessionRegistry.js');
+const { default: getAuth } = await import('./auth/getAuth.js');
+const { default: getHeadlessUser } = await import('./auth/getHeadlessUser.js');
+const { resolveAuthentication, resolveTenantPreflight } = await import('@lowdefy/api');
+
+describe('data sessions', () => {
+  const realArtifact = {
+    type: 'MongoDBCollection',
+    properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'tickets' },
+  };
+
+  function registerSession(state = 'open') {
+    const session = {
+      id: 'session1',
+      name: 'staging-sample',
+      state,
+      databaseUri: 'mongodb://memory/',
+      databaseName: 'ld_aaaaaaaaaaaa',
+      work: new Set(),
+    };
+    dataSessionRegistry.set(session.id, session);
+    return session;
+  }
+
+  function mockReadConfigFile() {
+    const readConfigFile = jest.fn(async () => realArtifact);
+    createApiContext.mockImplementationOnce((context) => {
+      context.readConfigFile = readConfigFile;
+    });
+    return readConfigFile;
+  }
+
+  afterEach(() => {
+    dataSessionRegistry.clear();
+  });
+
+  test('a verified data cookie redirects connections, tracks background work, forwards the cookie and skips the tenant preflight', async () => {
+    const session = registerSession();
+    mockReadConfigFile();
+    getHeadlessUser.mockReturnValueOnce({ id: 'u_1', roles: ['admin'] });
+    const cookie = `lowdefy_journey_data=${journeyActorToken}.session1`;
+    const context = await createLowdefyContext({ c: createHonoContext({ headers: { cookie } }) });
+    expect((await context.readConfigFile('connections/tickets.json')).properties).toEqual({
+      databaseUri: 'mongodb://memory/',
+      databaseName: 'ld_aaaaaaaaaaaa',
+      collection: 'tickets',
+    });
+    expect(context.dataSet).toEqual('staging-sample');
+    expect(context.loopbackHeaders).toEqual({ cookie });
+    expect(resolveTenantPreflight).not.toHaveBeenCalled();
+    let release;
+    const work = new Promise((resolve) => {
+      release = resolve;
+    });
+    context.waitUntil(work);
+    expect(session.work.has(work)).toBe(true);
+    release();
+    await work;
+    await Promise.resolve();
+    expect(session.work.size).toBe(0);
+  });
+
+  test('a data cookie and a mutant cookie are both forwarded on loopbackHeaders', async () => {
+    registerSession();
+    const opened = openMutantRun({
+      mutant: {
+        buildId: 'b',
+        artifact: 'pages/form.json',
+        key: 'k',
+        arg: null,
+        operator: 'drop-block',
+      },
+    });
+    const data = `lowdefy_journey_data=${journeyActorToken}.session1`;
+    const mutant = `lowdefy_journey_mutant=${journeyActorToken}.${opened.cookiePayload}`;
+    const context = await createLowdefyContext({
+      c: createHonoContext({ headers: { cookie: `${mutant}; ${data}` } }),
+    });
+    expect(context.loopbackHeaders).toEqual({ cookie: `${data}; ${mutant}` });
+    opened.close();
+  });
+
+  test('a wrong token or no data cookie gets no redirect, no waitUntil and no data set', async () => {
+    registerSession();
+    for (const headers of [{ cookie: 'lowdefy_journey_data=forged.session1' }, {}]) {
+      const readConfigFile = mockReadConfigFile();
+      const context = await createLowdefyContext({ c: createHonoContext({ headers }) });
+      expect(context.readConfigFile).toBe(readConfigFile);
+      expect(context.waitUntil).toBeUndefined();
+      expect(context.dataSet).toBeUndefined();
+      expect(context.loopbackHeaders).toEqual({ cookie: '' });
+    }
+    expect(resolveTenantPreflight).toHaveBeenCalledTimes(2);
+  });
+
+  test('a verified data cookie for a closed or unknown session is answered 410 and reads no database', async () => {
+    const session = registerSession();
+    dataSessionRegistry.delete(session.id);
+    for (const id of ['session1', 'never-opened']) {
+      const readConfigFile = mockReadConfigFile();
+      const error = await createLowdefyContext({
+        c: createHonoContext({
+          headers: { cookie: `lowdefy_journey_data=${journeyActorToken}.${id}` },
+        }),
+      }).catch((caught) => caught);
+      expect(error.status).toBe(410);
+      const response = error.getResponse();
+      expect(response.status).toBe(410);
+      expect(await response.json()).toEqual({
+        name: 'DataSessionEnded',
+        message: `Data session ${id} has ended; this request outlived its journey.`,
+      });
+      expect(readConfigFile).not.toHaveBeenCalled();
+      createApiContext.mockReset();
+    }
+    expect(getAuth).not.toHaveBeenCalled();
+  });
+
+  test('a data-session request with no headless cookie gets no auth engine and no user', async () => {
+    registerSession();
+    const context = await createLowdefyContext({
+      c: createHonoContext({
+        path: '/api/detached/nightly',
+        headers: { cookie: `lowdefy_journey_data=${journeyActorToken}.session1` },
+      }),
+    });
+    expect(context.auth).toBeNull();
+    expect(context.user).toBeNull();
+    expect(getAuth).not.toHaveBeenCalled();
+    expect(resolveAuthentication).not.toHaveBeenCalled();
+  });
+});
