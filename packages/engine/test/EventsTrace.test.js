@@ -279,7 +279,7 @@ test('a throwing listener does not stop the next listener or the event', async (
   }
 });
 
-test('action functions receive trace with subscribe and without emit or wantsState', async () => {
+test('action functions receive trace with subscribe and the describe functions, without emit', async () => {
   let received;
   const context = await testContext({
     lowdefy: {
@@ -296,6 +296,9 @@ test('action functions receive trace with subscribe and without emit or wantsSta
   });
   await context._internal.RootSlots.map.button.triggerEvent({ name: 'onClick' });
   expect(typeof received.subscribe).toBe('function');
+  expect(typeof received.describeElement).toBe('function');
+  expect(typeof received.describeChain).toBe('function');
+  expect(typeof received.pageIdOf).toBe('function');
   expect(received.emit).toBeUndefined();
   expect(received.wantsState).toBeUndefined();
   expect(received).toBe(getTrace(context._internal.lowdefy).actionView);

@@ -16,6 +16,7 @@
 
 import journeyTargetSelectors from './journeyTargetSelectors.js';
 import parseElementsChain from './parseElementsChain.js';
+import parseRowIndex from './parseRowIndex.js';
 import type from './type.js';
 
 const { blockWrapperPrefix, cellAttribute, interactiveRoles, rowAttribute } =
@@ -27,14 +28,6 @@ function blockIdOf(entry) {
     return null;
   }
   return id.slice(blockWrapperPrefix.length);
-}
-
-// ag-grid's pinned rows (`t-0`, `b-0`) are not zero-based integers, so they give no row.
-function rowOf(value) {
-  if (!type.isString(value) || !/^\d+$/.test(value)) {
-    return null;
-  }
-  return Number(value);
 }
 
 function normaliseText(value) {
@@ -71,19 +64,19 @@ function isInteractive(entry, position, scope) {
   return ['button', 'textarea', 'select', 'label'].includes(tag);
 }
 
-// The control's own text, else (a label whose text sits in a child) the first text between the
-// clicked element and the control. posthog-js records the clicked element's direct text and the
-// text of buttons, links and other form elements.
+// The text of the control the click reached (an interactive control or a dropdown option): its
+// own text, else (a label or option whose text sits in a child) the first text between the
+// clicked element and it. posthog-js records the clicked element's direct text and the text of
+// buttons, links and other form elements. A click that reached no control has no text, as in
+// describeElement: its block alone targets it.
 function textOf(scope) {
-  const controlIndex = scope.findIndex((entry, position) => isInteractive(entry, position, scope));
+  const controlIndex = scope.findIndex(
+    (entry, position) => isInteractive(entry, position, scope) || isOption(entry)
+  );
   if (controlIndex === -1) {
-    return normaliseText(scope[0]?.attributes.text);
+    return null;
   }
-  const controlText = normaliseText(scope[controlIndex].attributes.text);
-  if (controlText !== null) {
-    return controlText;
-  }
-  for (const entry of scope.slice(0, controlIndex)) {
+  for (const entry of [scope[controlIndex], ...scope.slice(0, controlIndex)]) {
     const text = normaliseText(entry.attributes.text);
     if (text !== null) {
       return text;
@@ -106,7 +99,7 @@ function targetFromElementsChain(chain) {
   const cellEntry = inner.find((entry) => `attr__${cellAttribute}` in entry.attributes);
   return {
     block_id: blockIds[0] ?? null,
-    row: rowEntry ? rowOf(rowEntry.attributes[`attr__${rowAttribute}`]) : null,
+    row: rowEntry ? parseRowIndex(rowEntry.attributes[`attr__${rowAttribute}`]) : null,
     column: cellEntry ? cellEntry.attributes[`attr__${cellAttribute}`] : null,
     text: textOf(scope),
     option: inner.some(isOption),

@@ -85,7 +85,11 @@ test('targetFromElementsChain reads a button inside a block', () => {
 
 test('targetFromElementsChain gives nested wrappers innermost first', () => {
   const value = chain(entry('h4', { text: 'Title' }), wrapper('title'), wrapper('card'));
-  expect(targetFromElementsChain(value).block_ids).toEqual(['title', 'card']);
+  expect(targetFromElementsChain(value)).toEqual({
+    ...EMPTY,
+    block_id: 'title',
+    block_ids: ['title', 'card'],
+  });
 });
 
 test('targetFromElementsChain returns null ids for a chain with no block wrapper', () => {
@@ -199,8 +203,13 @@ test('targetFromElementsChain prefers the control text over the clicked child te
   expect(targetFromElementsChain(value).text).toBe('Save draft');
 });
 
-test('targetFromElementsChain reads the clicked element text when there is no control', () => {
-  const value = chain(entry('div', { text: 'Open  order\n12' }), wrapper('card'));
+test('targetFromElementsChain gives no text when the click reached no control', () => {
+  const value = chain(entry('div', { text: 'Open order' }), wrapper('card'));
+  expect(targetFromElementsChain(value).text).toBeNull();
+});
+
+test('targetFromElementsChain collapses whitespace in the control text', () => {
+  const value = chain(entry('button', { text: '  Open  order\n12 ' }), wrapper('card'));
   expect(targetFromElementsChain(value).text).toBe('Open order 12');
 });
 

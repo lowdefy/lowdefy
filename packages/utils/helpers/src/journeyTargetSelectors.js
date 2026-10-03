@@ -20,11 +20,40 @@
 // A radio or checkbox inside a <label> is reached through the label: the label carries the
 // option's text and is what a person clicks, while the input may have no size at all (antd
 // Segmented hides it at zero width and height).
-const radioOption = 'label:has(input[type="radio"])';
-const checkboxOption = 'label:has(input[type="checkbox"])';
+const radioOptionRule = { selector: 'label', has: 'input[type="radio"]' };
+const checkboxOptionRule = { selector: 'label', has: 'input[type="checkbox"]' };
+
+function selectorOf({ selector, has, not = [] }) {
+  const hasPart = has ? `:has(${has})` : '';
+  return `${selector}${hasPart}${not.map((item) => `:not(${item})`).join('')}`;
+}
+
+const radioOption = selectorOf(radioOptionRule);
+const checkboxOption = selectorOf(checkboxOptionRule);
 
 // ARIA roles that make an element an interactive control.
 const interactiveRoles = ['button', 'switch', 'checkbox', 'radio', 'tab', 'menuitem'];
+
+// The controls a click target resolves to. Each rule is a simple selector, a descendant it must
+// have and selectors it must not match, so the rules serve both as one selector string
+// (Playwright, browsers) and as a matcher (isInteractiveControl) for DOMs whose selector engine
+// gets :has() and complex :not() wrong, such as jsdom.
+const interactiveControlRules = [
+  { selector: 'button' },
+  { selector: '[role="button"]' },
+  { selector: 'a[href]' },
+  radioOptionRule,
+  checkboxOptionRule,
+  {
+    selector: 'input:not([type="hidden"])',
+    not: ['label input[type="radio"]', 'label input[type="checkbox"]'],
+  },
+  { selector: 'textarea' },
+  { selector: 'select' },
+  ...interactiveRoles
+    .filter((role) => role !== 'button')
+    .map((role) => ({ selector: `[role="${role}"]` })),
+];
 
 const journeyTargetSelectors = {
   // Every block renders a wrapper with id `bl-<blockId>`.
@@ -34,17 +63,8 @@ const journeyTargetSelectors = {
   checkboxOption,
   // The options of a dropdown, the elements a `select` step clicks.
   dropdownOption: '.ant-select-item-option, [role="option"]',
-  interactiveControl: [
-    'button',
-    '[role="button"]',
-    'a[href]',
-    radioOption,
-    checkboxOption,
-    'input:not([type="hidden"]):not(label input[type="radio"]):not(label input[type="checkbox"])',
-    'textarea',
-    'select',
-    ...interactiveRoles.filter((role) => role !== 'button').map((role) => `[role="${role}"]`),
-  ].join(', '),
+  interactiveControl: interactiveControlRules.map(selectorOf).join(', '),
+  interactiveControlRules,
   interactiveRoles,
   // Portal layers, front-most first: an open dropdown menu covers a dialog, a dialog covers the
   // page.

@@ -99,9 +99,18 @@ test('trace emit warns once for a throwing listener and runs the others', () => 
   }
 });
 
-test('trace actionView has subscribe and no engine-only members', () => {
+test('trace actionView has subscribe and the describe functions and no engine-only members', () => {
   const trace = getTrace({});
+  expect(Object.keys(trace.actionView).sort()).toEqual([
+    'describeChain',
+    'describeElement',
+    'pageIdOf',
+    'subscribe',
+  ]);
   expect(trace.actionView.subscribe).toBe(trace.subscribe);
+  expect(trace.actionView.describeElement).toBe(trace.describeElement);
+  expect(trace.actionView.describeChain).toBe(trace.describeChain);
+  expect(trace.actionView.pageIdOf).toBe(trace.pageIdOf);
   expect(trace.actionView.emit).toBeUndefined();
   expect(trace.actionView.wantsState).toBeUndefined();
   expect(trace.actionView).toBe(trace.actionView);

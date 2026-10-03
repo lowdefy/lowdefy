@@ -14,17 +14,18 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
-import createTraceRegistry from './createTraceRegistry.js';
-
-// The registry lives on lowdefy itself, not lowdefy._internal: a dev config reload replaces
-// _internal wholesale, and the dev recorder subscribes before the client initialises lowdefy.
-function getTrace(lowdefy) {
-  if (type.isNone(lowdefy._trace)) {
-    lowdefy._trace = createTraceRegistry({ lowdefy });
+// Whether an element is visible in Playwright's sense: rendered with a non-empty box and not
+// hidden by `visibility`. jsdom has no layout, so visibility is assumed there, as
+// resolveTargetInDocument assumes it.
+function isElementVisible(element) {
+  if (typeof element.checkVisibility !== 'function') {
+    return true;
   }
-  return lowdefy._trace;
+  if (!element.checkVisibility({ visibilityProperty: true })) {
+    return false;
+  }
+  const { height, width } = element.getBoundingClientRect();
+  return width > 0 && height > 0;
 }
 
-export default getTrace;
+export default isElementVisible;

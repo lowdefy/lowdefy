@@ -14,17 +14,18 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import parseRowIndex from './parseRowIndex.js';
 
-import createTraceRegistry from './createTraceRegistry.js';
+test('parseRowIndex reads a zero-based row index', () => {
+  expect(parseRowIndex('0')).toBe(0);
+  expect(parseRowIndex('12')).toBe(12);
+});
 
-// The registry lives on lowdefy itself, not lowdefy._internal: a dev config reload replaces
-// _internal wholesale, and the dev recorder subscribes before the client initialises lowdefy.
-function getTrace(lowdefy) {
-  if (type.isNone(lowdefy._trace)) {
-    lowdefy._trace = createTraceRegistry({ lowdefy });
-  }
-  return lowdefy._trace;
-}
-
-export default getTrace;
+test('parseRowIndex gives null for pinned rows and other values', () => {
+  expect(parseRowIndex('t-0')).toBeNull();
+  expect(parseRowIndex('b-1')).toBeNull();
+  expect(parseRowIndex('')).toBeNull();
+  expect(parseRowIndex(null)).toBeNull();
+  expect(parseRowIndex(undefined)).toBeNull();
+  expect(parseRowIndex('1.5')).toBeNull();
+});

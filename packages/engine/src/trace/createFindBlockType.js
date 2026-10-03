@@ -16,15 +16,20 @@
 
 import { type } from '@lowdefy/helpers';
 
-import createTraceRegistry from './createTraceRegistry.js';
-
-// The registry lives on lowdefy itself, not lowdefy._internal: a dev config reload replaces
-// _internal wholesale, and the dev recorder subscribes before the client initialises lowdefy.
-function getTrace(lowdefy) {
-  if (type.isNone(lowdefy._trace)) {
-    lowdefy._trace = createTraceRegistry({ lowdefy });
-  }
-  return lowdefy._trace;
+// The type of a block on a page: from the context of that page, else from the app context.
+function createFindBlockType({ lowdefy }) {
+  return function findBlockType({ blockId, pageId }) {
+    if (type.isNull(blockId)) {
+      return null;
+    }
+    const pageContext = Object.values(lowdefy.contexts ?? {}).find(
+      (context) => context.pageId === pageId
+    );
+    const block =
+      pageContext?._internal.RootSlots.map[blockId] ??
+      lowdefy.appContext?._internal.RootSlots.map[blockId];
+    return block?.type ?? null;
+  };
 }
 
-export default getTrace;
+export default createFindBlockType;

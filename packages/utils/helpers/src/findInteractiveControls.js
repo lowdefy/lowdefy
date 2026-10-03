@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import isInteractiveControl from './isInteractiveControl.js';
+import journeyTargetSelectors from './journeyTargetSelectors.js';
 
-import createTraceRegistry from './createTraceRegistry.js';
+const candidates = journeyTargetSelectors.interactiveControlRules
+  .map(({ selector }) => selector)
+  .join(', ');
 
-// The registry lives on lowdefy itself, not lowdefy._internal: a dev config reload replaces
-// _internal wholesale, and the dev recorder subscribes before the client initialises lowdefy.
-function getTrace(lowdefy) {
-  if (type.isNone(lowdefy._trace)) {
-    lowdefy._trace = createTraceRegistry({ lowdefy });
-  }
-  return lowdefy._trace;
+// The interactive controls inside root, in document order, as
+// root.querySelectorAll(journeyTargetSelectors.interactiveControl) finds them.
+function findInteractiveControls(root) {
+  return [...root.querySelectorAll(candidates)].filter(isInteractiveControl);
 }
 
-export default getTrace;
+export default findInteractiveControls;

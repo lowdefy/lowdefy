@@ -14,17 +14,15 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import type from './type.js';
 
-import createTraceRegistry from './createTraceRegistry.js';
-
-// The registry lives on lowdefy itself, not lowdefy._internal: a dev config reload replaces
-// _internal wholesale, and the dev recorder subscribes before the client initialises lowdefy.
-function getTrace(lowdefy) {
-  if (type.isNone(lowdefy._trace)) {
-    lowdefy._trace = createTraceRegistry({ lowdefy });
+// An ag-grid `row-index` as a journey target row. Pinned rows (`t-0`, `b-0`) are not zero-based
+// integers, so they give null.
+function parseRowIndex(value) {
+  if (!type.isString(value) || !/^\d+$/.test(value)) {
+    return null;
   }
-  return lowdefy._trace;
+  return Number(value);
 }
 
-export default getTrace;
+export default parseRowIndex;

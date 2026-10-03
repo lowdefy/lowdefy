@@ -14,17 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import resolveTargetInDocument from './resolveTargetInDocument.js';
+import targetFixtures from './targetFixtures.js';
 
-import createTraceRegistry from './createTraceRegistry.js';
-
-// The registry lives on lowdefy itself, not lowdefy._internal: a dev config reload replaces
-// _internal wholesale, and the dev recorder subscribes before the client initialises lowdefy.
-function getTrace(lowdefy) {
-  if (type.isNone(lowdefy._trace)) {
-    lowdefy._trace = createTraceRegistry({ lowdefy });
-  }
-  return lowdefy._trace;
-}
-
-export default getTrace;
+export { resolveTargetInDocument, targetFixtures };

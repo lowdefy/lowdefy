@@ -14,9 +14,14 @@
   limitations under the License.
 */
 
+import createDescribeChain from './createDescribeChain.js';
+import createDescribeElement from './createDescribeElement.js';
+import createFindBlockType from './createFindBlockType.js';
+import createPageIdOf from './createPageIdOf.js';
+
 // One observation point for completed block and app events. emit and wantsState are the
 // engine's; actionView is the read side every action function receives as `trace`.
-function createTraceRegistry() {
+function createTraceRegistry({ lowdefy }) {
   const subscribers = [];
   const warnedListeners = new Set();
 
@@ -53,9 +58,20 @@ function createTraceRegistry() {
     });
   }
 
-  const registry = { emit, subscribe, wantsState };
-  registry.actionView = { subscribe };
-  return registry;
+  const findBlockType = createFindBlockType({ lowdefy });
+  const pageIdOf = createPageIdOf({ lowdefy });
+  const describeElement = createDescribeElement({ findBlockType, pageIdOf });
+  const describeChain = createDescribeChain({ findBlockType, pageIdOf });
+
+  return {
+    describeChain,
+    describeElement,
+    emit,
+    pageIdOf,
+    subscribe,
+    wantsState,
+    actionView: { describeChain, describeElement, pageIdOf, subscribe },
+  };
 }
 
 export default createTraceRegistry;
