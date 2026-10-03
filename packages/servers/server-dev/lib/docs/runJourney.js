@@ -819,6 +819,7 @@ async function runSteps({ journey, steps }) {
           timeout: Math.min(journey.stepTimeout, SETTLE_TIMEOUT_MS),
         });
       }
+      await journey.actors.sampleRendered();
       results.push({ index, step, status: 'ok', durationMs: Date.now() - started });
     } catch (error) {
       failure = toFailure({ error, index, step });
@@ -952,6 +953,7 @@ async function runJourney({
     const state = await readFinalState({ page: actors.current().page });
     const exercised = await collectExercised({
       snapshots: actors.networkSnapshots(),
+      observed: actors.observed(),
       readConfigFile,
       requestSchemas: (await readConfigFile('plugins/requestSchemas.json')) ?? {},
     });

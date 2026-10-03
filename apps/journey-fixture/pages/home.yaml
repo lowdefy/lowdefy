@@ -108,14 +108,14 @@ blocks:
           type: Link
           params:
             url: /second?via=url
-  # Trailing-edge debounce longer than any journey: a click never completes
-  # its event while the journey runs, and a second click bounces the first.
-  - id: debounce_button
-    type: Button
+  # Trailing-edge debounce longer than any journey: a change never completes
+  # its event while the journey runs, and a second change bounces the first.
+  - id: debounce_input
+    type: TextInput
     properties:
       title: Debounced
     events:
-      onClick:
+      onChange:
         debounce:
           ms: 60000
         try:

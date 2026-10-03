@@ -71,6 +71,7 @@
     "@lowdefy/connection-mongodb": "6.0.0",
     "@lowdefy/docs-content": "6.0.0",
     "@lowdefy/e2e-utils": "6.0.0",
+    "@lowdefy/engine": "6.0.0",
     "@lowdefy/errors": "6.0.0",
     "@lowdefy/helpers": "6.0.0",
     "@lowdefy/layout": "6.0.0",

@@ -1556,6 +1556,7 @@ function openActorsWithNetwork(actors) {
       let listener;
       const context = {
         close: jest.fn(async () => {}),
+        exposeBinding: jest.fn(async () => {}),
         on: jest.fn((event, callback) => {
           if (event === 'request') listener = callback;
         }),
@@ -1638,4 +1639,58 @@ test('runJourney reports the exercised network path merged across actors, with n
     events: [],
     rendered: {},
   });
+});
+
+test('runJourney reports the events and blocks its pages observed, deduplicated with list indices as $', async () => {
+  const page = createPage();
+  let observe;
+  mockOpenPage.mockImplementationOnce(async ({ onContext }) => {
+    const context = {
+      close: jest.fn(async () => {}),
+      exposeBinding: jest.fn(async (name, callback) => {
+        expect(name).toBe('__lowdefyJourneyObserve');
+        observe = callback;
+      }),
+      on: jest.fn(),
+    };
+    await onContext(context);
+    return { context, page, ready: true, url: page.url() };
+  });
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.click = jest.fn(async () => {
+      const event = {
+        kind: 'event',
+        scope: 'page',
+        pageId: 'form',
+        blockId: 'rows.1.label',
+        eventName: 'onChange',
+        actionIds: ['set_label'],
+      };
+      observe({}, event);
+      observe({}, { ...event, blockId: 'rows.0.label' });
+      observe({}, { kind: 'rendered', pageId: 'form', blockIds: ['rows.0.label', 'save'] });
+      // Page JavaScript can send anything: malformed messages are dropped.
+      observe({}, { kind: 'event', scope: 'page', pageId: 'form' });
+      observe({}, 'nonsense');
+    });
+    return locator;
+  });
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'save' }],
+    readConfigFile: async (name) => (name === 'plugins/requestSchemas.json' ? {} : null),
+  });
+  expect(result.passed).toBe(true);
+  expect(result.exercised.events).toEqual([
+    {
+      scope: 'page',
+      pageId: 'form',
+      blockId: 'rows.$.label',
+      eventName: 'onChange',
+      actionIds: ['set_label'],
+    },
+  ]);
+  expect(result.exercised.rendered).toEqual({ form: ['rows.$.label', 'save'] });
 });

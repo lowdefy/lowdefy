@@ -23,6 +23,7 @@ import BuildingPage from '../lib/client/BuildingPage.jsx';
 import RestartingPage from '../lib/client/RestartingPage.jsx';
 import FeedbackMount from './feedback/FeedbackMount.jsx';
 import Inspector from './Inspector.jsx';
+import JourneyObserver from './JourneyObserver.jsx';
 import OpenInEditorListener from './openInEditor/OpenInEditorListener.jsx';
 import Reload from './Reload.jsx';
 import Page from './Page.jsx';
@@ -79,6 +80,7 @@ function Routing({ auth, lowdefy, router }) {
           <>
             {/* Inside Reload so it can share Reload's event stream (DevStreamContext). */}
             <Inspector basePath={router.basePath} lowdefy={lowdefy} pageId={pageId} />
+            <JourneyObserver lowdefy={lowdefy} />
             {/* Rendered here, not in Page — Page sits below the Suspense boundary
                 and cannot render anything while its config fetch is suspended, so
                 a restarting server would present as "Building page..." forever. */}
