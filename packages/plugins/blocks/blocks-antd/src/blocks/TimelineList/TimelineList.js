@@ -89,12 +89,12 @@ const TimelineList = ({
       classNames={{ itemTitle: classNames.label }}
       items={items}
       mode={placements[properties.mode] ?? properties.mode}
-      orientation={properties.orientation}
+      orientation={properties.orientation ?? undefined}
       reverse={properties.reverse}
       style={{ padding: '5px 0px 0px 5px', ...styles.element }}
       styles={{ itemTitle: styles.label }}
       titleSpan={properties.titleSpan}
-      variant={properties.variant}
+      variant={properties.variant ?? undefined}
     />
   );
 };

@@ -33,6 +33,7 @@ events:
         slider_complete: 50
         slider_no_keyboard: 50
         slider_semantic: 40
+        slider_null_props: 30
 
 blocks:
   # ============================================
@@ -280,3 +281,19 @@ blocks:
         backgroundColor: 'rgb(255, 0, 0)'
     properties:
       title: Semantic Styles
+
+  # ============================================
+  # NULL PROPERTIES
+  # ============================================
+
+  # _state on a missing key gives null, which must fall back to antd's 0-100 range and step 1.
+  - id: slider_null_props
+    type: Slider
+    properties:
+      title: Null Range
+      min:
+        _state: slider_null_missing
+      max:
+        _state: slider_null_missing
+      step:
+        _state: slider_null_missing

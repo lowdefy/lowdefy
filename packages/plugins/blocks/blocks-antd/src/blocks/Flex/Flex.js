@@ -37,7 +37,7 @@ const FlexBlock = ({ blockId, classNames = {}, content, properties, styles = {} 
     align={properties.align}
     gap={gapMap[properties.gap] ?? properties.gap}
     flex={properties.flex}
-    component={properties.component}
+    component={properties.component ?? undefined}
   >
     {content.content && content.content()}
   </Flex>

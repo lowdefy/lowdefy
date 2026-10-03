@@ -94,8 +94,8 @@ const AlertBlock = ({
           renderHtml({ html: properties.message, methods })
         )
       }
-      type={properties.type}
-      variant={properties.variant}
+      type={properties.type ?? undefined}
+      variant={properties.variant ?? undefined}
       {...additionalProps}
     />
   );

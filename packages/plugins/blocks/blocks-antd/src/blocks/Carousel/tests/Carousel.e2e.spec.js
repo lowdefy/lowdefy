@@ -191,4 +191,18 @@ test.describe('Carousel Block', () => {
     await page.mouse.up();
     await expect(getBlock(page, 'swipe_display')).toHaveText('Swiped left');
   });
+
+  // ============================================
+  // NULL PROPERTIES
+  // ============================================
+
+  test('null properties fall back to react-slick defaults', async ({ page }) => {
+    const carousel = getCarousel(page, 'carousel_null_props');
+    const dotItems = getDots(carousel).locator('li');
+    await expect(dotItems).toHaveCount(2);
+    await expect(carousel.locator('.slick-current')).toContainText('Null Slide 1');
+    await dotItems.nth(1).click();
+    await expect(dotItems.nth(1)).toHaveClass(/slick-active/);
+    await expect(carousel.locator('.slick-current')).toContainText('Null Slide 2');
+  });
 });

@@ -826,7 +826,7 @@ ls -la node_modules/.pnpm/@lowdefy+blocks-antd*/node_modules/antd
 
 **Risk:** Custom plugins with different antd version specs can introduce duplicates. The production build has no `pnpm.overrides` safety net.
 
-**Workspace edge case:** If the external repo's `pnpm-workspace.yaml` includes `.lowdefy/*` as a workspace member (e.g., `app/.lowdefy/*`), pnpm resolves the server's dependencies from the workspace root's `.pnpm` store instead of a local one. This is usually fine but can cause version conflicts with other workspace packages.
+**Workspace edge case:** An app inside an external pnpm workspace still installs its server as its own nested workspace: the CLI (`ensurePnpmWorkspaceYaml`) writes a `pnpm-workspace.yaml` into the server directory carrying the parent's overrides, patches and build allowlists, and rewrites `workspace:` plugins to `link:` paths. The server's antd resolution is therefore independent of other workspace packages, but a linked plugin resolves its own dependencies from its package directory in the parent workspace, so a plugin with a different antd spec can still introduce a duplicate.
 
 ### 3. CSS Layer Order
 

@@ -1,0 +1,18 @@
+name: Layout
+
+vars:
+  sider:
+    type: object
+    properties:
+      width:
+        type: number
+        default: 232
+      collapsedWidth:
+        type: number
+      breakpoint:
+        type: string
+      theme:
+        type: string
+
+pages:
+  - _ref: pages/main.yaml

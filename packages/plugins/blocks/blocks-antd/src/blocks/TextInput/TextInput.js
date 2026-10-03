@@ -64,7 +64,9 @@ const TextInput = ({
                 }
               }
               autoFocus={properties.autoFocus}
-              variant={properties.bordered === false ? 'borderless' : properties.variant}
+              variant={
+                properties.bordered === false ? 'borderless' : properties.variant ?? undefined
+              }
               className={classNames.element}
               style={styles.element}
               disabled={getDisabled({ loading, properties })}
