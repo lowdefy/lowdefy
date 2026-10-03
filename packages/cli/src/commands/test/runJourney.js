@@ -35,8 +35,9 @@ function describeHttpError(error) {
 // normalises every outcome — schema failure, transport failure, non-2xx, a
 // failed step — into the same result shape the reporter prints. `recordRun`
 // (a trace id) asks the dev server to record this journey into that test
-// run's trace; an older server ignores the field and records nothing.
-async function runJourney({ context, item, url, recordRun }) {
+// run's trace; an older server ignores the field and records nothing. A harden
+// run passes the config `mutant` to apply to this run's browsers.
+async function runJourney({ context, item, url, recordRun, mutant }) {
   const { filePath, journey } = item;
   const name = journey?.name ?? filePath;
   if (!type.isNone(item.error)) {
@@ -74,10 +75,12 @@ async function runJourney({ context, item, url, recordRun }) {
   try {
     const body = {
       pageId: journey.pageId,
+      data: journey.data,
       steps: journey.steps,
       user: journey.user,
       urlQuery: journey.urlQuery,
       timeout: journey.timeout,
+      mutant,
     };
     if (!type.isNone(recordRun)) {
       body.recording = {
@@ -98,6 +101,8 @@ async function runJourney({ context, item, url, recordRun }) {
       // The route refuses a journey it cannot run (a 400) before any browser
       // opens; every repeat would be refused the same way.
       refused: error.response?.status === 400,
+      // The mutant was listed against another build.
+      stale: error.response?.data?.stale === true,
       stepCount,
       durationMs: Date.now() - start,
       message: describeHttpError(error),
@@ -108,8 +113,25 @@ async function runJourney({ context, item, url, recordRun }) {
   if (!type.isNone(result.error)) {
     return { name, filePath, passed: false, stepCount, durationMs, message: result.error };
   }
+  // The data set the server loaded and its warnings (snapshot age, colliding connections).
+  const dataSet = { data: result.data, warnings: result.warnings };
   if (result.passed === true) {
-    return { name, filePath, passed: true, stepCount, durationMs, exercised: result.exercised };
+    const passed = {
+      name,
+      filePath,
+      passed: true,
+      stepCount,
+      durationMs,
+      ...dataSet,
+      exercised: result.exercised,
+      mutant: result.mutant,
+    };
+    // Evidence is read from the file for the PASS line; it is never sent to
+    // the dev server.
+    if (!type.isNone(journey.evidence)) {
+      passed.evidence = journey.evidence;
+    }
+    return passed;
   }
   return {
     name,
@@ -117,9 +139,11 @@ async function runJourney({ context, item, url, recordRun }) {
     passed: false,
     stepCount,
     durationMs,
+    ...dataSet,
     failure: result.failure,
     message: result.failure?.message,
     exercised: result.exercised,
+    mutant: result.mutant,
   };
 }
 

@@ -169,3 +169,39 @@ test('runJourney reports a file that failed to parse using its file path as the 
     message: 'Invalid YAML: boom',
   });
 });
+
+test('runJourney puts the journey evidence on a pass and never sends it to the dev server', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  mockPost.mockResolvedValue({ data: { pageId: 'form', passed: true, steps: [{}, {}] } });
+  const evidence = { mutation: { killed: 1, total: 2 }, refreshed: '2026-10-03' };
+  const result = await runJourney({ item: { ...item, journey: { ...journey, evidence } }, url });
+  expect(result.evidence).toEqual(evidence);
+  const [, body] = mockPost.mock.calls[mockPost.mock.calls.length - 1];
+  expect(body).not.toHaveProperty('evidence');
+});
+
+test('runJourney leaves evidence off a pass for a journey without it', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  mockPost.mockResolvedValue({ data: { pageId: 'form', passed: true, steps: [{}, {}] } });
+  const result = await runJourney({ item, url });
+  expect(result).not.toHaveProperty('evidence');
+});
+
+test('runJourney posts data and passes the data set and warnings through', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const data = { name: 'staging-sample', loadMs: 800, snapshot: null };
+  mockPost.mockResolvedValue({
+    data: { pageId: 'form', passed: true, steps: [{}], data, warnings: ['w'] },
+  });
+  const dataJourney = { ...journey, data: 'staging-sample', user: 'member' };
+  const result = await runJourney({ item: { ...item, journey: dataJourney }, url });
+  expect(mockPost.mock.calls.at(-1)[1]).toEqual({
+    pageId: 'form',
+    data: 'staging-sample',
+    steps: journey.steps,
+    user: 'member',
+    urlQuery: { tab: 'new' },
+    timeout: 20000,
+  });
+  expect(result).toMatchObject({ passed: true, data, warnings: ['w'] });
+});

@@ -46,6 +46,14 @@ const Page = ({
     }
   }, [pageConfig?._warnings, lowdefy]);
 
+  // Tells the recorder which build this page's config was served under, so the
+  // pageview it holds for this route change carries it (recorder/createRecorder.js).
+  useEffect(() => {
+    if (pageConfig) {
+      lowdefy._devPageRendered?.({ pageId, buildId: pageConfig._buildId ?? null });
+    }
+  }, [pageConfig, pageId, lowdefy]);
+
   // Full load to the sign-in page so it can return here after sign-in — an
   // effect, not a fetcher side effect, so the redirect re-fires if the same
   // cached result renders again.

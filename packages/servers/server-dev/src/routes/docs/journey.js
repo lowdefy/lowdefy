@@ -62,6 +62,18 @@ async function docsJourneyHandler(c) {
   if (timeoutError) {
     return c.json({ error: timeoutError }, 400);
   }
+  // A data-set journey must run on a database of its own. Until this server opens data sessions it
+  // refuses one, rather than run it against the app's real database.
+  if (!type.isNone(body.data)) {
+    return c.json(
+      {
+        error: `This dev server cannot run journeys on data sets yet, so the journey on data set ${JSON.stringify(
+          body.data
+        )} was not run. Remove "data" to run it against the app's own database.`,
+      },
+      400
+    );
+  }
   // `none` is the journey's own third value: no injected caller, so the app's
   // auth decides who the journey is. Every other value is a headless caller.
   const { user, error: userError } =

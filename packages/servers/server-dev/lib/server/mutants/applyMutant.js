@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import findNodeByKey from './findNodeByKey.js';
 import operators from './operators/index.js';
 
@@ -21,7 +23,7 @@ import operators from './operators/index.js';
 // whether it applied, and why not when it did not, changing nothing then.
 function applyMutant({ root, mutant: { operator, key, arg } }) {
   const definition = operators[operator];
-  if (definition === undefined) {
+  if (type.isUndefined(definition)) {
     return { applied: false, reason: `unknown operator "${operator}"` };
   }
   const found = findNodeByKey({ root, key });
