@@ -16,7 +16,8 @@
 
 import selectOrphanedClis from './selectOrphanedClis.js';
 
-const CLI_START = 'Fri Oct  2 21:00:00 2026';
+// Epoch milliseconds.
+const CLI_START = 1790000000000;
 
 // pgid defaults to a leader that is not in the table: the spawner that was killed.
 function proc(pid, ppid, command, processStartTime = CLI_START, pgid = 50) {
@@ -26,7 +27,7 @@ function proc(pid, ppid, command, processStartTime = CLI_START, pgid = 50) {
 function record({ owner = {}, ownerAlive = true } = {}) {
   return {
     pid: 102,
-    processStartTime: 'server-start',
+    processStartTime: 1789999990000,
     kind: 'server',
     owner: { pid: 101, processStartTime: CLI_START, via: 'cli', ...owner },
     ownerAlive,
@@ -122,8 +123,14 @@ test('selectOrphanedClis skips records whose owner is gone, named by pid, or not
 });
 
 test('selectOrphanedClis skips an owner pid now held by another process', () => {
-  const reused = [proc(1, 0, '/sbin/launchd'), proc(101, 1, CLI, 'Sat Oct  3 08:00:00 2026')];
+  const reused = [proc(1, 0, '/sbin/launchd'), proc(101, 1, CLI, CLI_START + 60000)];
   expect(select({ processes: reused })).toEqual([]);
+});
+
+test('selectOrphanedClis skips an owner whose start time an older Lowdefy recorded as local time', () => {
+  expect(
+    select({ records: [record({ owner: { processStartTime: 'Fri Oct  2 21:00:00 2026' } })] })
+  ).toEqual([]);
 });
 
 test('selectOrphanedClis finds nothing on Windows', () => {

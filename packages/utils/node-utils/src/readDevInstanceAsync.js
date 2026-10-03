@@ -18,41 +18,34 @@ import { type } from '@lowdefy/helpers';
 
 import compareProcessStartTimes from './compareProcessStartTimes.js';
 import createStartTimeCache from './createStartTimeCache.js';
-import getProcessStartTime from './getProcessStartTime.js';
 import isPidAlive from './isPidAlive.js';
 import readDevInstanceRecord from './readDevInstanceRecord.js';
+import readProcessStartTime from './readProcessStartTime.js';
 
-const readStartTime = createStartTimeCache({ read: getProcessStartTime });
+const readStartTime = createStartTimeCache({ read: readProcessStartTime });
 
-// A pid alone does not name a process: after a crash (kill -9 skips the
-// manager's cleanup) or a reboot, the record's pid can belong to something
-// else. The manager records its start time too. A record from a manager that
-// predates it or wrote it in another format, or a start time ps could not
-// read, leaves the pid to decide - never "not running", which would let a
-// second dev server start beside it.
-function isRecordProcess(record) {
+async function isRecordProcess(record) {
   if (!isPidAlive(record.pid)) {
     return false;
   }
   if (!type.isInt(record.processStartTime)) {
     return true;
   }
-  const startTime = readStartTime({ pid: record.pid });
+  const startTime = await readStartTime({ pid: record.pid });
   return (
     compareProcessStartTimes({ recorded: record.processStartTime, current: startTime }) !==
     'different'
   );
 }
 
-// The app's live dev instance, or null. Blocks while it reads a start time;
-// a long-running process that must stay responsive (the hub) uses
-// readDevInstanceAsync.
-function readDevInstance({ configDirectory }) {
+// readDevInstance without blocking the event loop, for the hub: on Windows a
+// start time read starts PowerShell, which can take seconds.
+async function readDevInstanceAsync({ configDirectory }) {
   const record = readDevInstanceRecord({ configDirectory });
-  if (record === null || !isRecordProcess(record)) {
+  if (record === null || !(await isRecordProcess(record))) {
     return null;
   }
   return record;
 }
 
-export default readDevInstance;
+export default readDevInstanceAsync;

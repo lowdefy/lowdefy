@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { spawnSync } from 'child_process';
+import { spawn, spawnSync } from 'child_process';
 
 import getProcessStartTime from './getProcessStartTime.js';
 
@@ -42,6 +42,23 @@ test('getProcessStartTime reads the same start time whatever time zone and local
   });
   expect(first).not.toEqual('null');
   expect(second).toEqual(first);
+}, 30000);
+
+test('getProcessStartTime reads the start time as epoch milliseconds in UTC', () => {
+  const spawnedAt = Date.now();
+  const child = spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], {
+    stdio: 'ignore',
+  });
+  try {
+    // A reader far from UTC: a start time read as its local time would be hours off.
+    const startTime = Number(readInProcess({ pid: child.pid, env: { TZ: 'Pacific/Auckland' } }));
+    expect(Number.isInteger(startTime)).toBe(true);
+    // ps prints whole seconds.
+    expect(Math.abs(startTime - spawnedAt)).toBeLessThan(60000);
+    expect(getProcessStartTime({ pid: child.pid })).toEqual(startTime);
+  } finally {
+    child.kill();
+  }
 }, 30000);
 
 test('getProcessStartTime returns null for a pid that is not running', () => {

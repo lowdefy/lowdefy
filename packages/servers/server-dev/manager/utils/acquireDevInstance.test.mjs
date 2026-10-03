@@ -109,11 +109,11 @@ test('acquireDevInstance takes over a record left on a pid another process now h
   fs.mkdirSync(path.dirname(instancePath()), { recursive: true });
   fs.writeFileSync(
     instancePath(),
-    JSON.stringify({ pid: 1, processStartTime: 'Thu Jan  1 00:00:00 1970', configDirectory })
+    JSON.stringify({ pid: 1, processStartTime: 0, configDirectory })
   );
   const instance = acquireDevInstance({ configDirectory, owner: 'terminal', version: '6.0.0' });
   expect(instance.acquired).toBe(true);
-  expect(readRecord().processStartTime).toEqual(expect.any(String));
+  expect(Number.isInteger(readRecord().processStartTime)).toBe(true);
 });
 
 // Case variants name one directory only where the file system ignores case.

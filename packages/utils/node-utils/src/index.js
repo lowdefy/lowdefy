@@ -17,6 +17,7 @@
 import checkEnvironmentGuards from './checkEnvironmentGuards.js';
 import cleanDirectory from './cleanDirectory.js';
 import collectEnvironmentGuards from './collectEnvironmentGuards.js';
+import compareProcessStartTimes from './compareProcessStartTimes.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import createClientAddressResolver from './createClientAddressResolver.js';
 import createSecretScrubber from './createSecretScrubber.js';
@@ -30,7 +31,10 @@ import isPidAlive from './isPidAlive.js';
 import isProcessAlive from './isProcessAlive.js';
 import isPortAvailable from './isPortAvailable.js';
 import parseIpRange from './parseIpRange.js';
+import parsePsStartTime from './parsePsStartTime.js';
 import readDevInstance from './readDevInstance.js';
+import readDevInstanceAsync from './readDevInstanceAsync.js';
+import readProcessStartTime from './readProcessStartTime.js';
 import readServerRegistry from './readServerRegistry.js';
 import registerServer from './registerServer.js';
 import spawnProcess from './spawnProcess.js';
@@ -43,6 +47,7 @@ export {
   checkEnvironmentGuards,
   cleanDirectory,
   collectEnvironmentGuards,
+  compareProcessStartTimes,
   copyFileOrDirectory,
   createClientAddressResolver,
   createSecretScrubber,
@@ -57,7 +62,10 @@ export {
   isProcessAlive,
   isPortAvailable,
   parseIpRange,
+  parsePsStartTime,
   readDevInstance,
+  readDevInstanceAsync,
+  readProcessStartTime,
   readServerRegistry,
   registerServer,
   spawnProcess,

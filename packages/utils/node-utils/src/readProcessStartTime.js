@@ -20,10 +20,10 @@ import { type } from '@lowdefy/helpers';
 import getProcessStartTimeCommand from './getProcessStartTimeCommand.js';
 
 // getProcessStartTime without blocking the event loop, for a check a running
-// server repeats (watchOwner): on Windows each read starts PowerShell. Never
-// rejects; a failed read resolves to null.
+// server repeats (watchOwner) and for the hub: on Windows each read starts
+// PowerShell. Never rejects; a failed read resolves to null.
 function readProcessStartTime({ pid }) {
-  const { command, args, options } = getProcessStartTimeCommand({ pid });
+  const { command, args, options, parse } = getProcessStartTimeCommand({ pid });
   return new Promise((resolve) => {
     execFile(command, args, { ...options, encoding: 'utf8' }, (error, stdout) => {
       // A read that timed out or failed may have printed part of a start
@@ -32,8 +32,7 @@ function readProcessStartTime({ pid }) {
         resolve(null);
         return;
       }
-      const startTime = (stdout ?? '').trim();
-      resolve(startTime === '' ? null : startTime);
+      resolve(parse(stdout ?? ''));
     });
   });
 }

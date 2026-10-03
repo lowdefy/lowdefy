@@ -32,7 +32,8 @@ jest.unstable_mockModule('./isPidAlive.js', () => ({
 
 const { default: watchOwner } = await import('./watchOwner.js');
 
-const START_TIME = 'Fri Oct  2 08:00:00 2026';
+// Epoch milliseconds.
+const START_TIME = 1790000000000;
 
 // Lets the minute check's start time read resolve.
 async function flushReads() {
@@ -130,7 +131,7 @@ test('watchOwner calls onExit within one poll of the owner dying', () => {
 test('watchOwner catches a reused owner pid on the minute start time check', async () => {
   const onExit = jest.fn();
   watcher = watchOwner({ onExit, env: { LOWDEFY_EXIT_WITH_PID: '4242' }, stdin: createStdin() });
-  mockReadProcessStartTime.mockResolvedValue('Fri Oct  2 09:30:00 2026');
+  mockReadProcessStartTime.mockResolvedValue(START_TIME + 5400000);
   jest.advanceTimersByTime(58000);
   await flushReads();
   expect(onExit).not.toHaveBeenCalled();

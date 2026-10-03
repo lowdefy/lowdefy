@@ -60,7 +60,7 @@ function formatRecord({ record, orphaned }) {
 // owner (an owner shown as orphaned is a CLI whose spawner was killed), and unregistered
 // servers left behind by older Lowdefy versions.
 async function hubPs() {
-  const registered = readServerRegistry({ directory: getServerRegistryDirectory() });
+  const registered = await readServerRegistry({ directory: getServerRegistryDirectory() });
   const hubPids = readHubManagedPids({ registryPath: getHubPaths().registryPath });
   const orphanedPids = new Set(
     findOrphanedClis({ records: registered, hubPids }).map(({ record }) => record.pid)

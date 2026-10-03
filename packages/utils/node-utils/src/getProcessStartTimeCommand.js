@@ -16,19 +16,25 @@
 
 import { type } from '@lowdefy/helpers';
 
+import parsePsStartTime from './parsePsStartTime.js';
+import parseWmiStartTime from './parseWmiStartTime.js';
+
 // A pid alone does not identify a process: after a reboot, or enough churn,
 // the pid in a record can belong to something else entirely. The pid plus its
 // start time does.
 //
-// macOS and Linux: ps prints lstart in the caller's time zone and locale.
-// Hubs, shims and CLIs run with the environment of whichever session started
-// them, so without pinning both, a reader in another session would read
-// another string for the same process - and a hub would drop, orphaning, every
-// server it should adopt.
+// Start times are compared as epoch milliseconds, never as local time: hubs,
+// shims and CLIs run with the time zone and locale of whichever session
+// started them, and a time zone or daylight saving change must not turn one
+// process into another - a hub would drop, orphaning, every server it should
+// adopt.
 //
-// Windows has no ps. The process creation time comes from WMI, converted to
-// UTC and printed in the round-trip format, so every reader prints the same
-// string whatever its time zone or culture. PowerShell takes a few hundred
+// macOS and Linux: ps prints lstart in the caller's time zone and locale, so
+// both are pinned (C, UTC) and the text is read as UTC.
+//
+// Windows has no ps. WMI's creation time comes as its raw CIM_DATETIME, which
+// carries its own UTC offset (Get-WmiObject; Get-CimInstance would hand back a
+// DateTime already moved into the local zone). PowerShell takes a few hundred
 // milliseconds to start, so callers that poll read it rarely or off the event
 // loop (readProcessStartTime).
 function getProcessStartTimeCommand({ pid, platform = process.platform }) {
@@ -44,15 +50,17 @@ function getProcessStartTimeCommand({ pid, platform = process.platform }) {
         '-NoProfile',
         '-NonInteractive',
         '-Command',
-        `$p = Get-CimInstance -ClassName Win32_Process -Filter 'ProcessId = ${pid}'; if ($p) { $p.CreationDate.ToUniversalTime().ToString('o') }`,
+        `$p = Get-WmiObject -Class Win32_Process -Filter 'ProcessId = ${pid}'; if ($p) { $p.CreationDate }`,
       ],
       options: { windowsHide: true, timeout: 15000 },
+      parse: parseWmiStartTime,
     };
   }
   return {
     command: 'ps',
     args: ['-o', 'lstart=', '-p', String(pid)],
     options: { env: { ...process.env, LC_ALL: 'C', TZ: 'UTC' } },
+    parse: parsePsStartTime,
   };
 }
 

@@ -15,6 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { compareProcessStartTimes } from '@lowdefy/node-utils';
 
 import findWrapperChain from './findWrapperChain.js';
 
@@ -41,10 +42,15 @@ function selectOrphanedClis({ processes, records, hubPids, platform }) {
     if (cli === undefined || !LOWDEFY_CLI.test(cli.command)) {
       return;
     }
-    // A pid whose start time differs is another process, not this server's CLI.
+    // A pid whose start time differs is another process, not this server's CLI. A recorded
+    // start time that cannot be compared (an older format) proves nothing, so it is skipped
+    // too; only a record with no start time at all leaves the pid to decide.
     if (
       !type.isNone(record.owner.processStartTime) &&
-      cli.processStartTime !== record.owner.processStartTime
+      compareProcessStartTimes({
+        recorded: record.owner.processStartTime,
+        current: cli.processStartTime,
+      }) !== 'same'
     ) {
       return;
     }

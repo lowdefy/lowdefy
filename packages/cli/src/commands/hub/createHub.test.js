@@ -122,7 +122,7 @@ test('hub start runs the dev script as its own process group, with a hub port an
   });
   expect(status).toMatchObject({ configDirectory, owner: 'hub', state: 'ready', managed: true });
   expect(Number(new URL(status.url).port)).toBeGreaterThanOrEqual(portRange.first);
-  expect(hub.logs({ configDirectory }).lines.join('\n')).toContain('requester-env');
+  expect((await hub.logs({ configDirectory })).lines.join('\n')).toContain('requester-env');
 });
 
 test('hub start returns the running server instead of starting a second one', async () => {
@@ -172,7 +172,7 @@ test('hub start reports the log tail when the dev script exits before it is read
 test('a new hub adopts running servers from the registry and can stop them', async () => {
   await hub.start({ configDirectory });
   const adopting = createTestHub();
-  expect(adopting.list().instances).toEqual([
+  expect((await adopting.list()).instances).toEqual([
     expect.objectContaining({ configDirectory, state: 'ready', managed: true }),
   ]);
   expect(await adopting.stop({ configDirectory })).toEqual({ stopped: true });
@@ -185,16 +185,19 @@ test('a registry entry whose pid now belongs to another process is dropped, neve
     JSON.stringify({
       ports: {},
       instances: {
-        [configDirectory]: { pid: process.pid, processStartTime: 'Thu Jan  1 00:00:00 1970' },
+        [configDirectory]: { pid: process.pid, processStartTime: 0 },
       },
     })
   );
   const adopting = createTestHub();
-  expect(adopting.list().instances).toEqual([]);
+  expect((await adopting.list()).instances).toEqual([]);
   expect(isAlive(process.pid)).toBe(true);
 });
 
-test('a registry entry written without a start time is adopted by its pid', async () => {
+test.each([
+  ['without a start time', null],
+  ['with a start time an older hub wrote as local time', 'Thu Jan  1 00:00:00 1970'],
+])('a registry entry written %s is adopted by its pid', async (_, processStartTime) => {
   const leader = spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], {
     detached: true,
     stdio: 'ignore',
@@ -205,11 +208,11 @@ test('a registry entry written without a start time is adopted by its pid', asyn
       path.join(home, 'hub', 'registry.json'),
       JSON.stringify({
         ports: {},
-        instances: { [configDirectory]: { pid: leader.pid, processStartTime: null } },
+        instances: { [configDirectory]: { pid: leader.pid, processStartTime } },
       })
     );
     const adopting = createTestHub();
-    expect(adopting.list().instances).toEqual([
+    expect((await adopting.list()).instances).toEqual([
       expect.objectContaining({ configDirectory, managed: true }),
     ]);
   } finally {
@@ -271,7 +274,7 @@ test('hub reap stops a server whose worktree was removed on the second pass that
   expect(isAlive(grandchild)).toBe(true);
   await hub.reap();
   expect(await waitUntil(() => !isAlive(grandchild))).toBe(true);
-  expect(hub.list().instances).toEqual([]);
+  expect((await hub.list()).instances).toEqual([]);
 });
 
 test('hub reap keeps a server whose lowdefy.yaml was missing for one pass only', async () => {
@@ -282,7 +285,7 @@ test('hub reap keeps a server whose lowdefy.yaml was missing for one pass only',
   fs.renameSync(`${lowdefyYaml}.moved`, lowdefyYaml);
   await hub.reap();
   await hub.reap();
-  expect(hub.list().instances).toEqual([expect.objectContaining({ state: 'ready' })]);
+  expect((await hub.list()).instances).toEqual([expect.objectContaining({ state: 'ready' })]);
 });
 
 test('hub reap releases the ports of an app that was removed after it stopped', async () => {
@@ -311,6 +314,8 @@ test('overlapping reaps share one pass, so a slow open-tabs check is not repeate
   expect(openTabs).toHaveBeenCalledTimes(1);
 });
 
-test.each([[0], [-5], [2.5], ['10'], [null]])('hub logs refuses lines %p', (lines) => {
-  expect(() => hub.logs({ configDirectory, lines })).toThrow('"lines" must be a positive integer');
+test.each([[0], [-5], [2.5], ['10'], [null]])('hub logs refuses lines %p', async (lines) => {
+  await expect(hub.logs({ configDirectory, lines })).rejects.toThrow(
+    '"lines" must be a positive integer'
+  );
 });

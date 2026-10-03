@@ -21,14 +21,19 @@ import { jest } from '@jest/globals';
 
 // pid -> start time of the processes "running" in each test.
 let running;
-jest.unstable_mockModule('./getProcessStartTime.js', () => ({
-  default: ({ pid }) => running.get(pid) ?? null,
+jest.unstable_mockModule('./readProcessStartTime.js', () => ({
+  default: async ({ pid }) => running.get(pid) ?? null,
 }));
 jest.unstable_mockModule('./isPidAlive.js', () => ({
   default: (pid) => running.has(pid),
 }));
 
 const { default: readServerRegistry } = await import('./readServerRegistry.js');
+
+// Start times in epoch milliseconds.
+const SERVER_START = 1790000000000;
+const OWNER_START = 1790000001000;
+const OTHER_START = 1790000002000;
 
 let directory;
 
@@ -56,20 +61,20 @@ function writeRecord({ pid, startTime, ownerPid, ownerStartTime }) {
   return record;
 }
 
-test('readServerRegistry returns an empty list when the directory does not exist', () => {
-  expect(readServerRegistry({ directory: path.join(directory, 'missing') })).toEqual([]);
+test('readServerRegistry returns an empty list when the directory does not exist', async () => {
+  expect(await readServerRegistry({ directory: path.join(directory, 'missing') })).toEqual([]);
 });
 
-test('readServerRegistry flags a live record with a live owner as not prunable', () => {
-  running.set(100, 'server-start');
-  running.set(200, 'owner-start');
+test('readServerRegistry flags a live record with a live owner as not prunable', async () => {
+  running.set(100, SERVER_START);
+  running.set(200, OWNER_START);
   const record = writeRecord({
     pid: 100,
-    startTime: 'server-start',
+    startTime: SERVER_START,
     ownerPid: 200,
-    ownerStartTime: 'owner-start',
+    ownerStartTime: OWNER_START,
   });
-  expect(readServerRegistry({ directory })).toEqual([
+  expect(await readServerRegistry({ directory })).toEqual([
     {
       ...record,
       recordPath: path.join(directory, '100.json'),
@@ -79,83 +84,120 @@ test('readServerRegistry flags a live record with a live owner as not prunable',
   ]);
 });
 
-test('readServerRegistry flags a live record whose owner is gone as prunable', () => {
-  running.set(100, 'server-start');
+test('readServerRegistry flags a live record whose owner is gone as prunable', async () => {
+  running.set(100, SERVER_START);
   writeRecord({
     pid: 100,
-    startTime: 'server-start',
+    startTime: SERVER_START,
     ownerPid: 200,
-    ownerStartTime: 'owner-start',
+    ownerStartTime: OWNER_START,
   });
-  const [record] = readServerRegistry({ directory });
+  const [record] = await readServerRegistry({ directory });
   expect(record.ownerAlive).toBe(false);
   expect(record.prunable).toBe(true);
 });
 
-test('readServerRegistry takes an owner pid reused by another process as gone', () => {
-  running.set(100, 'server-start');
-  running.set(200, 'someone-else-start');
+test('readServerRegistry takes an owner pid reused by another process as gone', async () => {
+  running.set(100, SERVER_START);
+  running.set(200, OTHER_START);
   writeRecord({
     pid: 100,
-    startTime: 'server-start',
+    startTime: SERVER_START,
     ownerPid: 200,
-    ownerStartTime: 'owner-start',
+    ownerStartTime: OWNER_START,
   });
-  const [record] = readServerRegistry({ directory });
+  const [record] = await readServerRegistry({ directory });
   expect(record.ownerAlive).toBe(false);
   expect(record.prunable).toBe(true);
 });
 
-test('readServerRegistry deletes and skips a record whose process is gone', () => {
-  running.set(200, 'owner-start');
+test('readServerRegistry deletes and skips a record whose process is gone', async () => {
+  running.set(200, OWNER_START);
   writeRecord({
     pid: 100,
-    startTime: 'server-start',
+    startTime: SERVER_START,
     ownerPid: 200,
-    ownerStartTime: 'owner-start',
+    ownerStartTime: OWNER_START,
   });
-  expect(readServerRegistry({ directory })).toEqual([]);
+  expect(await readServerRegistry({ directory })).toEqual([]);
   expect(fs.readdirSync(directory)).toEqual([]);
 });
 
-test('readServerRegistry deletes and skips a record whose pid was reused', () => {
-  running.set(100, 'later-start');
-  running.set(200, 'owner-start');
+test('readServerRegistry deletes and skips a record whose pid was reused', async () => {
+  running.set(100, OTHER_START);
+  running.set(200, OWNER_START);
   writeRecord({
     pid: 100,
-    startTime: 'server-start',
+    startTime: SERVER_START,
     ownerPid: 200,
-    ownerStartTime: 'owner-start',
+    ownerStartTime: OWNER_START,
   });
-  expect(readServerRegistry({ directory })).toEqual([]);
+  expect(await readServerRegistry({ directory })).toEqual([]);
   expect(fs.readdirSync(directory)).toEqual([]);
 });
 
-test('readServerRegistry uses the pid alone for a record without start times', () => {
+test('readServerRegistry uses the pid alone for a record without start times', async () => {
   running.set(100, null);
   running.set(200, null);
   writeRecord({ pid: 100, startTime: null, ownerPid: 200, ownerStartTime: null });
-  const [record] = readServerRegistry({ directory });
+  const [record] = await readServerRegistry({ directory });
   expect(record.ownerAlive).toBe(true);
   expect(record.prunable).toBe(false);
 });
 
-test('readServerRegistry never flags a record without a start time as prunable, even with its owner gone', () => {
+test('readServerRegistry never flags a record without a start time as prunable, even with its owner gone', async () => {
   running.set(100, null);
   writeRecord({ pid: 100, startTime: null, ownerPid: 200, ownerStartTime: null });
-  const [record] = readServerRegistry({ directory });
+  const [record] = await readServerRegistry({ directory });
   expect(record.ownerAlive).toBe(false);
   expect(record.prunable).toBe(false);
 });
 
-test('readServerRegistry skips unreadable files, temporary files and records without an owner', () => {
-  running.set(100, 'server-start');
+test('readServerRegistry skips unreadable files, temporary files and records without an owner', async () => {
+  running.set(100, SERVER_START);
   fs.writeFileSync(path.join(directory, 'broken.json'), '{ not json');
   fs.writeFileSync(path.join(directory, '300.json.tmp'), '{}');
   fs.writeFileSync(
     path.join(directory, '100.json'),
-    JSON.stringify({ pid: 100, processStartTime: 'server-start' })
+    JSON.stringify({ pid: 100, processStartTime: SERVER_START })
   );
-  expect(readServerRegistry({ directory })).toEqual([]);
+  expect(await readServerRegistry({ directory })).toEqual([]);
   expect(fs.readdirSync(directory).sort()).toEqual(['100.json', '300.json.tmp', 'broken.json']);
+});
+
+test('readServerRegistry treats a start time recorded as local time by an older Lowdefy as unknown', async () => {
+  running.set(100, SERVER_START);
+  running.set(200, OWNER_START);
+  writeRecord({
+    pid: 100,
+    startTime: 'Fri Oct  2 20:55:31 2026',
+    ownerPid: 200,
+    ownerStartTime: 'Fri Oct  2 20:55:27 2026',
+  });
+  const [record] = await readServerRegistry({ directory });
+  expect(record.ownerAlive).toBe(true);
+  expect(record.prunable).toBe(false);
+  expect(fs.readdirSync(directory)).toEqual(['100.json']);
+});
+
+test('readServerRegistry never flags a record with a local-time start time as prunable, even with its owner gone', async () => {
+  running.set(100, SERVER_START);
+  writeRecord({
+    pid: 100,
+    startTime: 'Fri Oct  2 20:55:31 2026',
+    ownerPid: 200,
+    ownerStartTime: OWNER_START,
+  });
+  const [record] = await readServerRegistry({ directory });
+  expect(record.ownerAlive).toBe(false);
+  expect(record.prunable).toBe(false);
+});
+
+test('readServerRegistry keeps a record whose start time cannot be read now', async () => {
+  running.set(100, null);
+  running.set(200, null);
+  writeRecord({ pid: 100, startTime: SERVER_START, ownerPid: 200, ownerStartTime: OWNER_START });
+  const [record] = await readServerRegistry({ directory });
+  expect(record.ownerAlive).toBe(true);
+  expect(record.prunable).toBe(false);
 });

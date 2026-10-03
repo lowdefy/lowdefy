@@ -15,22 +15,30 @@
 */
 
 import getProcessStartTimeCommand from './getProcessStartTimeCommand.js';
+import parsePsStartTime from './parsePsStartTime.js';
+import parseWmiStartTime from './parseWmiStartTime.js';
 
 test('getProcessStartTimeCommand reads lstart from ps in the C locale and UTC on macOS and Linux', () => {
   ['darwin', 'linux'].forEach((platform) => {
-    const { command, args, options } = getProcessStartTimeCommand({ pid: 4242, platform });
+    const { command, args, options, parse } = getProcessStartTimeCommand({ pid: 4242, platform });
     expect(command).toEqual('ps');
     expect(args).toEqual(['-o', 'lstart=', '-p', '4242']);
     expect(options.env).toMatchObject({ LC_ALL: 'C', TZ: 'UTC' });
+    expect(parse).toBe(parsePsStartTime);
   });
 });
 
-test('getProcessStartTimeCommand reads the WMI creation time in UTC round-trip format on Windows', () => {
-  const { command, args, options } = getProcessStartTimeCommand({ pid: 4242, platform: 'win32' });
+test('getProcessStartTimeCommand reads the raw WMI creation time, with its UTC offset, on Windows', () => {
+  const { command, args, options, parse } = getProcessStartTimeCommand({
+    pid: 4242,
+    platform: 'win32',
+  });
   expect(command).toEqual('powershell.exe');
   expect(args.slice(0, 4)).toEqual(['-NoLogo', '-NoProfile', '-NonInteractive', '-Command']);
-  expect(args[4]).toContain("Get-CimInstance -ClassName Win32_Process -Filter 'ProcessId = 4242'");
-  expect(args[4]).toContain(".CreationDate.ToUniversalTime().ToString('o')");
+  expect(args[4]).toContain("Get-WmiObject -Class Win32_Process -Filter 'ProcessId = 4242'");
+  expect(args[4]).toContain('$p.CreationDate');
+  expect(args[4]).not.toContain('ToUniversalTime');
+  expect(parse).toBe(parseWmiStartTime);
   expect(options).toMatchObject({ windowsHide: true });
   expect(options.timeout).toBeGreaterThan(0);
 });

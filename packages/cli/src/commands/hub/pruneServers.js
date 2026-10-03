@@ -16,7 +16,12 @@
 
 import fs from 'fs';
 import { type, wait } from '@lowdefy/helpers';
-import { getProcessStartTime, isPidAlive, readServerRegistry } from '@lowdefy/node-utils';
+import {
+  compareProcessStartTimes,
+  isPidAlive,
+  readProcessStartTime,
+  readServerRegistry,
+} from '@lowdefy/node-utils';
 
 import findLegacyOrphans from './findLegacyOrphans.js';
 import findOrphanedClis from './findOrphanedClis.js';
@@ -36,20 +41,22 @@ function describeOwner(owner) {
 }
 
 // Signalled only when ps names the same process now: a pid alone may have been reused. A
-// start time that cannot be read (no ps, PowerShell or ps failing) proves nothing either way, so
-// such a process is neither signalled nor taken for gone: its record stays.
-function checkProcess({ pid, processStartTime }) {
+// start time that cannot be read (no ps, PowerShell or ps failing) or compared (a record in an
+// older format) proves nothing either way, so such a process is neither signalled nor taken for
+// gone: its record stays. Read without blocking: the hub runs this pass unattended.
+async function checkProcess({ pid, processStartTime }) {
   if (!isPidAlive(pid)) {
     return 'gone';
   }
-  if (type.isNone(processStartTime)) {
+  if (!type.isInt(processStartTime)) {
     return 'unverified';
   }
-  const startTime = getProcessStartTime({ pid });
-  if (type.isNone(startTime)) {
+  const startTime = await readProcessStartTime({ pid });
+  const comparison = compareProcessStartTimes({ recorded: processStartTime, current: startTime });
+  if (comparison === 'unknown') {
     return 'unverified';
   }
-  return startTime === processStartTime ? 'same' : 'gone';
+  return comparison === 'same' ? 'same' : 'gone';
 }
 
 function signalPid({ pid, signal }) {
@@ -76,26 +83,26 @@ function removeRecord({ candidate }) {
 }
 
 async function stopCandidates({ candidates, graceMs }) {
-  candidates.forEach((candidate) => {
-    const status = checkProcess({
+  for (const candidate of candidates) {
+    const status = await checkProcess({
       pid: candidate.pid,
       processStartTime: candidate.processStartTime,
     });
     if (status !== 'same') {
       candidate.result = status;
-      return;
+      continue;
     }
     // The pid, never its group: an orphan keeps its dead spawner's group, which can hold
     // unrelated survivors.
     candidate.result = signalPid({ pid: candidate.pid, signal: 'SIGTERM' }) ? 'stopped' : 'gone';
-  });
+  }
   const signalled = candidates.filter((candidate) => candidate.result === 'stopped');
   const deadline = Date.now() + graceMs;
   while (signalled.some((candidate) => isPidAlive(candidate.pid)) && Date.now() < deadline) {
     await wait(200);
   }
-  signalled.forEach((candidate) => {
-    const status = checkProcess({
+  for (const candidate of signalled) {
+    const status = await checkProcess({
       pid: candidate.pid,
       processStartTime: candidate.processStartTime,
     });
@@ -103,11 +110,11 @@ async function stopCandidates({ candidates, graceMs }) {
       candidate.result = status;
     }
     if (status !== 'same') {
-      return;
+      continue;
     }
     signalPid({ pid: candidate.pid, signal: 'SIGKILL' });
     candidate.result = 'killed';
-  });
+  }
   candidates
     .filter((candidate) => candidate.result !== 'unverified')
     .forEach((candidate) => removeRecord({ candidate }));
@@ -126,7 +133,7 @@ async function pruneServers({
   kill = false,
   graceMs = 10000,
 }) {
-  const registered = readServerRegistry({ directory });
+  const registered = await readServerRegistry({ directory });
   const candidates = registered
     .filter((record) => record.prunable)
     .map((record) => ({

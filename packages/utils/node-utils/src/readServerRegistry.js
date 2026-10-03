@@ -43,31 +43,32 @@ function readRecord({ recordPath }) {
 // The one reader of the server registry that registerServer writes. A record
 // whose process is gone is stale: it is deleted and skipped. A live record is
 // prunable only when its owner is gone; a live owner means the server is
-// wanted, whatever else is true of it (nohup, a service, a hub restart).
-function readServerRegistry({ directory }) {
+// wanted, whatever else is true of it (nohup, a service, a hub restart). Start
+// times are read without blocking, since the hub reads the registry.
+async function readServerRegistry({ directory }) {
   const records = [];
-  listRecordFiles({ directory }).forEach((name) => {
+  for (const name of listRecordFiles({ directory })) {
     const recordPath = path.join(directory, name);
     const record = readRecord({ recordPath });
     // Every record names an owner; one that does not is no proof of anything.
     if (!type.isObject(record) || !type.isInt(record.pid) || !type.isInt(record.owner?.pid)) {
-      return;
+      continue;
     }
-    if (!isProcessAlive({ pid: record.pid, processStartTime: record.processStartTime })) {
+    if (!(await isProcessAlive({ pid: record.pid, processStartTime: record.processStartTime }))) {
       fs.rmSync(recordPath, { force: true });
-      return;
+      continue;
     }
-    const ownerAlive = isProcessAlive({
+    const ownerAlive = await isProcessAlive({
       pid: record.owner.pid,
       processStartTime: record.owner.processStartTime,
     });
-    // Without a start time (unreadable when the record was written, or a
-    // Windows record from before Windows had one) the pid alone cannot prove
-    // this is still the server: a reused pid would be taken for it and
-    // signalled.
-    const provable = !type.isNone(record.processStartTime);
+    // Without a start time in epoch milliseconds (unreadable when the record
+    // was written, or one an older Lowdefy wrote as local time) the pid alone
+    // cannot prove this is still the server: a reused pid would be taken for
+    // it and signalled.
+    const provable = type.isInt(record.processStartTime);
     records.push({ ...record, recordPath, ownerAlive, prunable: provable && !ownerAlive });
-  });
+  }
   return records;
 }
 

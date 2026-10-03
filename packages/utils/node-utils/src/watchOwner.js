@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import compareProcessStartTimes from './compareProcessStartTimes.js';
 import getProcessStartTime from './getProcessStartTime.js';
 import isPidAlive from './isPidAlive.js';
 import readProcessStartTime from './readProcessStartTime.js';
@@ -117,7 +118,9 @@ function watchOwner({ onExit, env = process.env, stdin = process.stdin }) {
       // A null read is no proof the owner is gone: ps itself can fail (no free
       // memory or file descriptors). An owner that did exit fails isPidAlive
       // on the next poll.
-      if (!type.isNone(startTime) && startTime !== ownerStartTime) {
+      if (
+        compareProcessStartTimes({ recorded: ownerStartTime, current: startTime }) === 'different'
+      ) {
         exit({ reason: 'owner-gone' });
       }
     });

@@ -16,23 +16,28 @@
 
 import { type } from '@lowdefy/helpers';
 
-import getProcessStartTime from './getProcessStartTime.js';
+import compareProcessStartTimes from './compareProcessStartTimes.js';
 import isPidAlive from './isPidAlive.js';
+import readProcessStartTime from './readProcessStartTime.js';
 
 // A pid plus its start time names one process; the pid alone can be reused.
-// Without a recorded start time (a record written before start times were
-// read on its platform), or when the current one cannot be read, the pid
-// decides. Erring towards "alive" keeps a live server, or its
-// owner, from ever being taken for a dead one.
-function isProcessAlive({ pid, processStartTime }) {
+// Without a start time to compare (none recorded, one an older Lowdefy wrote
+// in another format, or the current one cannot be read), the pid decides.
+// Erring towards "alive" keeps a live server, or its owner, from ever being
+// taken for a dead one. Reads without blocking: the hub calls it, and on
+// Windows each read starts PowerShell.
+async function isProcessAlive({ pid, processStartTime }) {
   if (!isPidAlive(pid)) {
     return false;
   }
-  if (type.isNone(processStartTime)) {
+  // Nothing to compare, so no need to read.
+  if (!type.isInt(processStartTime)) {
     return true;
   }
-  const startTime = getProcessStartTime({ pid });
-  return type.isNone(startTime) || startTime === processStartTime;
+  const startTime = await readProcessStartTime({ pid });
+  return (
+    compareProcessStartTimes({ recorded: processStartTime, current: startTime }) !== 'different'
+  );
 }
 
 export default isProcessAlive;

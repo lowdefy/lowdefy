@@ -16,6 +16,8 @@
 
 import { jest } from '@jest/globals';
 
+import parsePsStartTime from './parsePsStartTime.js';
+
 const mockGetProcessStartTimeCommand = jest.fn();
 jest.unstable_mockModule('./getProcessStartTimeCommand.js', () => ({
   default: mockGetProcessStartTimeCommand,
@@ -29,8 +31,9 @@ const { default: readProcessStartTime } = await import('./readProcessStartTime.j
 function partialRead({ script, timeout }) {
   return {
     command: process.execPath,
-    args: ['-e', `process.stdout.write('2026-10-03T07:2'); ${script}`],
+    args: ['-e', `process.stdout.write('Sat Oct  3 07:2'); ${script}`],
     options: { timeout },
+    parse: parsePsStartTime,
   };
 }
 
