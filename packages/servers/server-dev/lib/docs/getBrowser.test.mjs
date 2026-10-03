@@ -303,3 +303,37 @@ test('openPage opens the page at the urlQuery it was given', async () => {
   expect(opened.url).toEqual('http://localhost:3001/detail?id=1');
   expect(page.goto.mock.calls[0][0]).toEqual('http://localhost:3001/detail?id=1');
 });
+
+test('openPage sets the data cookie with the actor cookie attributes before the first navigation', async () => {
+  const { journeyActorToken } = await import('../server/auth/journeyActor.js');
+  const { browser, addCookies, page } = createBrowser();
+  addCookies.mockImplementation(async () => {
+    expect(page.goto).not.toHaveBeenCalled();
+  });
+
+  await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'tickets',
+    clientAddress: '203.0.113.7',
+    dataCookie: 'session1',
+  });
+
+  const cookies = addCookies.mock.calls.map(([[cookie]]) => cookie);
+  const actor = cookies.find((cookie) => cookie.name === 'lowdefy_journey_actor');
+  const data = cookies.find((cookie) => cookie.name === 'lowdefy_journey_data');
+  expect(data).toEqual({
+    name: 'lowdefy_journey_data',
+    value: `${journeyActorToken}.session1`,
+    url: 'http://localhost:3001',
+    httpOnly: actor.httpOnly,
+    sameSite: actor.sameSite,
+  });
+});
+
+test('openPage sets no data cookie without a dataCookie', async () => {
+  const { browser, addCookies } = createBrowser();
+  await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home', user: 'none' });
+  const names = addCookies.mock.calls.map(([[cookie]]) => cookie.name);
+  expect(names).not.toContain('lowdefy_journey_data');
+});

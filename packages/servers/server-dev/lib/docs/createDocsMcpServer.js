@@ -274,7 +274,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
 
   registerDevTool(
     'lowdefy_run_journey',
-    async ({ pageId, steps, user, urlQuery, state, timeout }) => {
+    async ({ pageId, steps, user, urlQuery, state, timeout, data }) => {
       if (!origin) {
         return notFoundResult('Journey unavailable: server origin unknown for this transport.');
       }
@@ -286,6 +286,7 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
         urlQuery,
         state,
         stepTimeout: timeout,
+        data,
       });
       if (result.error) {
         return notFoundResult(result.error);

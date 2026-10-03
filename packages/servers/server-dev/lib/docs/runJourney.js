@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import path from 'node:path';
 import { get, type } from '@lowdefy/helpers';
 import {
   getBlock,
@@ -24,12 +25,17 @@ import {
 
 import collectExercised from './collectExercised.js';
 import createJourneyActors from './createJourneyActors.js';
+import describeDataSetResult from './dataSets/describeDataSetResult.js';
+import getDataStore from './dataSets/getDataStore.js';
 import { getBrowser, buildPageUrl } from './getBrowser.js';
 import isPageReady from './isPageReady.js';
 import JourneyStepError from './JourneyStepError.js';
+import openDataSession from './dataSets/openDataSession.js';
 import openJourneyEmail from './openJourneyEmail.js';
 import readBuildArtifact from './readBuildArtifact.js';
+import readDevAuthMode from './readDevAuthMode.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
+import resolveJourneyDataSet from './dataSets/resolveJourneyDataSet.js';
 import selectFinalState from './selectFinalState.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneySteps, { getStepKey } from './validateJourneySteps.js';
@@ -867,7 +873,10 @@ function defaultReadConfigFile(name) {
 // the exception: it stays capped (see settlePage), since it never fails a
 // step. `state` picks what the result carries of the final page state (see
 // selectFinalState). `user: 'none'` injects no caller, so the app's own auth
-// decides who each actor is.
+// decides who each actor is. `data` names a data set: the journey runs on a
+// fresh database of its own, loaded with it, and a string `user` (or an `as`
+// name) names one of its users. Its problems come back as { error, refused }
+// before any browser opens.
 async function runJourney({
   origin,
   pageId,
@@ -882,6 +891,7 @@ async function runJourney({
   basePath = '',
   readConfigFile = defaultReadConfigFile,
   mutantCookie,
+  data,
 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
     return {
@@ -920,6 +930,18 @@ async function runJourney({
         'The journey reads email (an "email" step or a "fill" with "fromEmail"), but this dev server captures no mail. Start (or restart) it with LOWDEFY_DEV_SMTP_PORT set to a free port, and point the app\'s SMTP connection at 127.0.0.1 on that port.',
     };
   }
+  const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd();
+  const resolved = await resolveJourneyDataSet({
+    data,
+    user,
+    configDirectory,
+    buildDirectory: path.join(process.cwd(), 'build'),
+    ...readDevAuthMode(),
+  });
+  if (!type.isUndefined(resolved.error)) {
+    return { error: resolved.error, refused: true };
+  }
+  const { dataSet } = resolved;
   // Taken before any page opens: mail the journey causes arrives after it.
   const startedAt = Date.now();
 
@@ -932,25 +954,45 @@ async function runJourney({
     };
   }
 
+  let session = null;
+  let loadMs;
+  if (!type.isUndefined(dataSet)) {
+    try {
+      await getDataStore();
+    } catch (error) {
+      return { error: `Could not start the journey data store: ${error.message}` };
+    }
+    const loadStart = Date.now();
+    try {
+      session = await openDataSession({ dataSet });
+    } catch (error) {
+      return { error: error.message, refused: true };
+    }
+    loadMs = Date.now() - loadStart;
+  }
+
   const url = buildPageUrl({ origin, pageId, urlQuery });
   const actors = createJourneyActors({
     browser,
     origin,
     basePath,
     pageId,
-    user,
+    user: resolved.user,
     urlQuery,
     width,
     height,
     timeout: openTimeout,
+    dataCookie: session?.cookie,
     mutantCookie,
+    users: dataSet?.users,
+    mainActor: MAIN_ACTOR,
   });
   try {
     const main = await actors.switchTo(MAIN_ACTOR);
     const journey = {
       actors,
       origin,
-      configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd(),
+      configDirectory,
       startedAt,
       openTimeout,
       stepTimeout,
@@ -973,6 +1015,10 @@ async function runJourney({
     if (!type.isUndefined(failure)) {
       result.failure = failure;
     }
+    if (!type.isUndefined(dataSet)) {
+      result.data = describeDataSetResult({ dataSet, loadMs });
+      result.warnings = dataSet.warnings;
+    }
     // openPage already waited for the page's async lifecycle; an unsettled page
     // still runs its steps and reports `ready: false` alongside the result.
     if (!main.ready) {
@@ -983,6 +1029,11 @@ async function runJourney({
     return { error: `Failed to run journey at "${url}": ${error.message}` };
   } finally {
     await actors.closeAll();
+    // After the actors: no browser request still carries the data cookie. close() then waits for
+    // the session's background work before it drops the database.
+    if (session !== null) {
+      await session.close();
+    }
   }
 }
 

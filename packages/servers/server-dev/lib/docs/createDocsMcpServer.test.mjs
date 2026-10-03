@@ -425,6 +425,38 @@ test('MCP tools/call lowdefy_run_journey returns the JSON result followed by one
   await client.close();
 });
 
+test('MCP tools/call lowdefy_run_journey passes data and a data set user name through', async () => {
+  mockRunJourney.mockResolvedValue({
+    pageId: 'tickets',
+    passed: true,
+    steps: [],
+    screenshots: [],
+    data: { name: 'staging-sample', loadMs: 12, snapshot: null },
+    warnings: [],
+  });
+  const client = await connectClient();
+
+  const result = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { pageId: 'tickets', steps: [], data: 'staging-sample', user: 'member' },
+  });
+
+  expect(mockRunJourney).toHaveBeenCalledWith(
+    expect.objectContaining({ pageId: 'tickets', data: 'staging-sample', user: 'member' })
+  );
+  expect(JSON.parse(result.content[0].text).data.name).toEqual('staging-sample');
+  await client.close();
+});
+
+test('MCP lowdefy_run_journey advertises data and the name form of user', async () => {
+  const client = await connectClient();
+  const { tools } = await client.listTools();
+  const { properties } = tools.find((tool) => tool.name === 'lowdefy_run_journey').inputSchema;
+  expect(properties.data.type).toEqual('string');
+  expect(properties.user.description).toMatch('the name of a user in the journey');
+  await client.close();
+});
+
 test('MCP tools/call lowdefy_run_journey reports a runner error as a tool error', async () => {
   mockRunJourney.mockResolvedValue({ error: 'Step 0: Unknown journey step "hover".' });
   const client = await connectClient();

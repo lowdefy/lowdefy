@@ -91,6 +91,7 @@ async function openPage({
   height = 800,
   colorScheme = 'light',
   clientAddress,
+  dataCookie,
   mutantCookie,
   onContext,
   timeout = 15000,
@@ -137,6 +138,15 @@ async function openPage({
     if (!type.isUndefined(clientAddress)) {
       await context.addCookies([
         writeJourneyCookie({ name: JOURNEY_COOKIES.actor.name, payload: clientAddress, origin }),
+      ]);
+    }
+    // A journey on a data set: every request from this context reads the data
+    // session's database (see lib/server/applyDataSetRedirect.js), while the
+    // developer's own tabs keep the app's real one. Set before the first
+    // navigation, so no request from this context ever goes without it.
+    if (!type.isUndefined(dataCookie)) {
+      await context.addCookies([
+        writeJourneyCookie({ name: JOURNEY_COOKIES.data.name, payload: dataCookie, origin }),
       ]);
     }
     // A harden run's mutant: every request from this context reads the mutated

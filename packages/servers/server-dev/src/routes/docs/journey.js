@@ -27,7 +27,7 @@ import validateMutantParam from '../../../lib/server/mutants/validateMutantParam
 import validateStateSelection from '../../../lib/docs/validateStateSelection.js';
 
 // A failed journey is a 200 with passed: false — it is the result the caller
-// asked for. Malformed input (pageId, steps, user) is a 400 before any browser
+// asked for. Malformed input (pageId, steps, user, data) is a 400 before any browser
 // opens; only a render that could not run at all is a 502, so it is not
 // mistaken for a journey that failed on an assertion.
 async function docsJourneyHandler(c) {
@@ -61,22 +61,22 @@ async function docsJourneyHandler(c) {
   if (timeoutError) {
     return c.json({ error: timeoutError }, 400);
   }
-  // A data-set journey must run on a database of its own. Until this server opens data sessions it
-  // refuses one, rather than run it against the app's real database.
-  if (!type.isNone(body.data)) {
+  if (!type.isNone(body.data) && !type.isString(body.data)) {
     return c.json(
       {
-        error: `This dev server cannot run journeys on data sets yet, so the journey on data set ${JSON.stringify(
+        error: `The "data" param must be a data set name string. Received ${JSON.stringify(
           body.data
-        )} was not run. Remove "data" to run it against the app's own database.`,
+        )}.`,
       },
       400
     );
   }
-  // `none` is the journey's own third value: no injected caller, so the app's
-  // auth decides who the journey is. Every other value is a headless caller.
-  const { user, error: userError } =
-    body.user === 'none' ? { user: 'none' } : parseUserParam({ value: body.user });
+  // A string is a journey's own: `none` injects no caller, so the app's auth
+  // decides who the journey is, and any other string names a user of the
+  // journey's data set (runJourney looks it up). An object is a headless caller.
+  const { user, error: userError } = type.isString(body.user)
+    ? { user: body.user }
+    : parseUserParam({ value: body.user });
   if (userError) {
     return c.json({ error: userError }, 400);
   }
@@ -126,11 +126,17 @@ async function docsJourneyHandler(c) {
       stepTimeout: timeout,
       basePath: lowdefyConfig.basePath ?? '',
       mutantCookie: mutantRun?.cookiePayload,
+      data: body.data,
     });
   } finally {
     // runJourney has closed every actor by now, so no request still carries
     // the run's cookie.
     mutantRun?.close();
+  }
+  // A journey refused before any browser opened (its data set, or who it acts
+  // as on one) is the caller's to fix: a 400, like the checks above.
+  if (result.refused === true) {
+    return c.json({ error: result.error }, 400);
   }
   if (result.error) {
     return c.json({ error: result.error }, 502);

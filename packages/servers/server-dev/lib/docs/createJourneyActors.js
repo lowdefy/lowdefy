@@ -34,8 +34,8 @@ function nextClientAddress() {
 // The people a journey acts as, each in its own browser context with its own
 // cookie jar, so an owner and an invitee - or a member whose session stays
 // open while the owner removes them - are signed in at the same time. An
-// actor opens the journey's page, as the journey's user, the first time its
-// name is switched to, and keeps its tab as it left it when the journey
+// actor opens the journey's page, as the journey's user (or as the data set
+// user of that name), the first time its name is switched to, and keeps its tab as it left it when the journey
 // switches away and back. Each actor's context feeds its own network counter
 // from before its first navigation, so what the journey touched is measured
 // per actor and merged at the end.
@@ -49,11 +49,23 @@ function createJourneyActors({
   width,
   height,
   timeout,
+  dataCookie,
   mutantCookie,
+  users = {},
+  mainActor,
 }) {
   const actors = new Map();
   const counters = new Map();
   let currentName;
+
+  // An actor named after a data set user opens as that user; the journey's
+  // first actor, and any other name, opens as the journey's user.
+  function userFor(name) {
+    if (name !== mainActor && Object.prototype.hasOwnProperty.call(users, name)) {
+      return users[name];
+    }
+    return user;
+  }
 
   async function switchTo(name) {
     if (!actors.has(name)) {
@@ -63,11 +75,12 @@ function createJourneyActors({
         browser,
         origin,
         pageId,
-        user,
+        user: userFor(name),
         urlQuery,
         width,
         height,
         clientAddress: nextClientAddress(),
+        dataCookie,
         mutantCookie,
         onContext: (context) => {
           context.on('request', (request) => counter.record(request));

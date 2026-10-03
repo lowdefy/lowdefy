@@ -158,12 +158,12 @@ test('docsJourneyHandler returns 400 when the state option is malformed', async 
 });
 
 test('docsJourneyHandler returns 400 when user is malformed', async () => {
-  const c = createContext({ pageId: 'form', steps: [], user: 'admin' });
+  const c = createContext({ pageId: 'form', steps: [], user: 5 });
 
   const result = await docsJourneyHandler(c);
 
   expect(result.status).toBe(400);
-  expect(result.data.error).toMatch(/must be JSON/);
+  expect(result.data.error).toMatch(/must be an object/);
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
 
@@ -204,13 +204,49 @@ test('docsJourneyHandler returns 502 when the journey could not run', async () =
   expect(result.data.error).toEqual('No Chromium available.');
 });
 
-test('docsJourneyHandler refuses a journey that declares a data set rather than run it on the real database', async () => {
-  const c = createContext({ pageId: 'form', steps: [{ click: 'submit' }], data: 'staging-sample' });
+test('docsJourneyHandler passes data and a user name through to the runner', async () => {
+  const c = createContext({
+    pageId: 'form',
+    steps: [{ click: 'submit' }],
+    data: 'staging-sample',
+    user: 'member',
+  });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(200);
+  expect(mockRunJourney).toHaveBeenCalledWith(
+    expect.objectContaining({ data: 'staging-sample', user: 'member' })
+  );
+});
+
+test('docsJourneyHandler answers 400 when the runner refuses the journey before a browser opens', async () => {
+  mockRunJourney.mockResolvedValue({
+    error: 'Data set "staging-sample" declares no user "outsider". Declared: owner.',
+    refused: true,
+  });
+  const c = createContext({
+    pageId: 'form',
+    steps: [{ click: 'submit' }],
+    data: 'staging-sample',
+    user: 'outsider',
+  });
 
   const result = await docsJourneyHandler(c);
 
   expect(result.status).toBe(400);
-  expect(result.data.error).toMatch('cannot run journeys on data sets yet');
+  expect(result.data).toEqual({
+    error: 'Data set "staging-sample" declares no user "outsider". Declared: owner.',
+  });
+});
+
+test('docsJourneyHandler refuses a data param that is not a string with 400', async () => {
+  const c = createContext({ pageId: 'form', steps: [{ click: 'submit' }], data: { name: 'x' } });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(400);
+  expect(result.data.error).toMatch('The "data" param must be a data set name string.');
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
 
