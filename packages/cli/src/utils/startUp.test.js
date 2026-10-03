@@ -236,3 +236,23 @@ test('startUp, requiresLowdefyYaml false with command "init"', async () => {
   expect(validateVersion).toHaveBeenCalledTimes(1);
   expect(logger.info.mock.calls).toEqual([["Running 'lowdefy init'."]]);
 });
+
+test('startUp names a subcommand with its group', async () => {
+  const startUp = (await import('./startUp.js')).default;
+  const context = { cliVersion: 'cliVersion' };
+  const program = { name: () => 'lowdefy' };
+  const data = { name: () => 'data', parent: program };
+  await startUp({ context, options: {}, command: { name: () => 'list', parent: data } });
+  expect(context.command).toEqual('data list');
+  expect(context.logger.info.mock.calls).toEqual([
+    ["Running 'lowdefy data list'. Lowdefy app version lowdefyVersion."],
+  ]);
+});
+
+test('startUp names a top-level command on its own', async () => {
+  const startUp = (await import('./startUp.js')).default;
+  const context = { cliVersion: 'cliVersion' };
+  const program = { name: () => 'lowdefy' };
+  await startUp({ context, options: {}, command: { name: () => 'build', parent: program } });
+  expect(context.command).toEqual('build');
+});
