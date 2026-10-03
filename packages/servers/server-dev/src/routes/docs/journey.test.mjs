@@ -193,3 +193,13 @@ test('docsJourneyHandler returns 502 when the journey could not run', async () =
   expect(result.status).toBe(502);
   expect(result.data.error).toEqual('No Chromium available.');
 });
+
+test('docsJourneyHandler refuses a journey that declares a data set rather than run it on the real database', async () => {
+  const c = createContext({ pageId: 'form', steps: [{ click: 'submit' }], data: 'staging-sample' });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(400);
+  expect(result.data.error).toMatch('cannot run journeys on data sets yet');
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
