@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import lowdefyConfig from '../../../lib/build/config.js';
 import parseUserParam from './parseUserParam.js';
 import runJourney from '../../../lib/docs/runJourney.js';
 import validateJourneySteps from '../../../lib/docs/validateJourneySteps.js';
@@ -77,6 +78,7 @@ async function docsJourneyHandler(c) {
     urlQuery,
     state,
     stepTimeout: timeout,
+    basePath: lowdefyConfig.basePath ?? '',
   });
   if (result.error) {
     return c.json({ error: result.error }, 502);
