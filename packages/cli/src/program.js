@@ -19,6 +19,8 @@ import { Command, Option } from 'commander';
 
 import agentSetup from './commands/agentSetup/agentSetup.js';
 import build from './commands/build/build.js';
+import dataList from './commands/data/list.js';
+import dataPull from './commands/data/pull.js';
 import dev from './commands/dev/dev.js';
 import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
@@ -126,6 +128,38 @@ program
   )
   .addOption(options.serverDirectory)
   .action(runCommand({ cliVersion, handler: build }));
+
+const data = program
+  .command('data')
+  .description('Manage journey data sets (tests/data/<name>.yaml).');
+
+data
+  .command('pull')
+  .description(
+    "Copy a snapshot of a data set's listed connections from a pre-production environment into .lowdefy/data/<name>, guarded by that environment's guards.secrets pins. Run it with the environment's secrets, e.g. infisical run --env=staging -- lowdefy data pull staging-sample."
+  )
+  .argument('<name>', 'The data set name (tests/data/<name>.yaml).')
+  .usage('<name> [options]')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(options.refResolver)
+  .action((name, commandOptions, command) =>
+    runCommand({
+      cliVersion,
+      handler: ({ context }) => dataPull({ context, name }),
+    })(commandOptions, command)
+  );
+
+data
+  .command('list')
+  .description('List the data sets in tests/data and the age of each pulled snapshot.')
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .action(runCommand({ cliVersion, handler: dataList }));
 
 program
   .command('dev')
