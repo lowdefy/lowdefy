@@ -2946,6 +2946,9 @@ importers:
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.3)
+      jest-environment-jsdom:
+        specifier: 28.1.3
+        version: 28.1.3
       nodemailer:
         specifier: 10.0.13
         version: 10.0.13
