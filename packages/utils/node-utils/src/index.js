@@ -35,6 +35,8 @@ import readFile from './readFile.js';
 import writeFile from './writeFile.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
+import journeySequence from './journeyCompiler/journeySequence.js';
+import stepIdentity from './journeyCompiler/stepIdentity.js';
 import validateJourneySteps, {
   getStepKey,
   STEP_KEYS,
@@ -59,9 +61,11 @@ export {
   installIfPackageJsonChanged,
   isPidAlive,
   isPortAvailable,
+  journeySequence,
   parseIpRange,
   readDevInstance,
   spawnProcess,
+  stepIdentity,
   readFile,
   writeFile,
   writeFileIfChanged,
