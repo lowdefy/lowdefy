@@ -15,6 +15,7 @@
 */
 
 import startServer from './startServer.mjs';
+import waitForServer from '../utils/waitForServer.mjs';
 
 // The manager's first child start: dependencies are optimised in a
 // short-lived process first, so the child never runs the optimiser itself
@@ -27,11 +28,21 @@ import startServer from './startServer.mjs';
 // spawns: a build during the optimise that adds a plugin package to
 // package.json must still read as an install for the queued sync. An
 // artifact that changed in that window costs one extra restart at most.
+//
+// The wait for the child to answer is part of the start, as it is in
+// restartServer: a queued sync that restarted the child before it answered
+// would end the wait on the killed child, and the manager would never record
+// the server as ready. Resolves with whether the child answered.
 function startFirstServer(context) {
   return context.syncServer.startFirst(async () => {
     context.serverArtifacts.record();
     await context.optimizeDependencies();
     startServer(context);
+    return waitForServer({
+      basePath: context.basePath,
+      child: context.devServer,
+      port: context.internalPort,
+    });
   });
 }
 

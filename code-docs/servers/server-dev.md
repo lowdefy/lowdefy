@@ -200,9 +200,12 @@ for (const signal of ['SIGINT', 'SIGTERM']) {
 await context.initialBuild();
 context.startWatchers(); // Not awaited — chokidar's ready event is unreliable
 // At the head of syncServer's queue: record the server artifacts,
-// optimizeDependencies, then startServer. A watcher batch during the optimise
-// builds at once and its syncServer call waits for this start.
-await startFirstServer(context);
+// optimizeDependencies, startServer, then wait for the child to answer. A
+// watcher batch during the optimise builds at once and its syncServer call
+// waits for this start, so it cannot restart the child before it is ready.
+if (await startFirstServer(context)) {
+  instance.update({ state: 'ready' });
+}
 if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
   opener(`http://localhost:${context.options.port}`);
 }
@@ -619,7 +622,8 @@ install); `syncServer` compares:
 
 Calls run one at a time, so a second caller finds the first's work done. The first child start
 heads the queue (`syncServer.startFirst`): the watchers start right after the initial build, and a
-sync they ask for before the first child exists waits for it. Only the config build
+sync they ask for before the first child answers waits for it (a restart before then would end
+the wait on the killed child, and the instance record would never read `ready`). Only the config build
 writes the tracked `build/` files, so they are checked after each build rather than watched.
 The server's `package.json` is also written by a page build in the child that finds a plugin
 package missing, which `serverPackageWatcher` picks up.

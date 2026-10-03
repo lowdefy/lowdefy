@@ -29,6 +29,8 @@ jest.unstable_mockModule('child_process', () => ({
   fork,
 }));
 jest.unstable_mockModule('../utils/readBasePath.mjs', () => ({ default: () => '' }));
+const mockWaitForServer = jest.fn(async () => true);
+jest.unstable_mockModule('../utils/waitForServer.mjs', () => ({ default: mockWaitForServer }));
 
 const { default: optimizeDependencies } = await import('./optimizeDependencies.mjs');
 const { default: startFirstServer } = await import('./startFirstServer.mjs');
@@ -83,6 +85,8 @@ let processes;
 
 beforeEach(() => {
   processes = [];
+  mockWaitForServer.mockReset();
+  mockWaitForServer.mockImplementation(async () => true);
   mockSpawn.mockImplementation(() => {
     const child = createProcess();
     processes.push(child);
@@ -241,4 +245,40 @@ test('a plugin package added during the optimise is installed by the queued sync
   // installed: the baseline is the one from before the optimise.
   expect(mockSpawn).toHaveBeenCalledTimes(1);
   expect(events).toEqual(['first optimise', 'install', 'build', 'optimise', 'restart']);
+});
+
+test('startFirstServer resolves once the first child answers, before a queued sync restarts it', async () => {
+  const context = createContext();
+  const files = { 'build/config.json': 'a', 'package.json': 'a' };
+  context.serverArtifacts = createTracker(files);
+  context.restartServer = jest.fn(async () => {
+    context.serverArtifacts.record();
+    startServer(context);
+  });
+  let answer;
+  mockWaitForServer.mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        answer = resolve;
+      })
+  );
+
+  const started = startFirstServer(context);
+  await flush();
+  // A config edit built during the optimise: its sync restarts the child.
+  files['build/config.json'] = 'b';
+  const sync = context.syncServer();
+  processes[0].emit('exit', 0);
+  await flush();
+
+  // The first child is waited on, and nothing restarts it before it answers,
+  // or the manager would never record the server as ready.
+  expect(mockWaitForServer).toHaveBeenCalledTimes(1);
+  expect(mockWaitForServer.mock.calls[0][0].child).toBe(processes[1]);
+  expect(context.restartServer).not.toHaveBeenCalled();
+
+  answer(true);
+  expect(await started).toBe(true);
+  await sync;
+  expect(context.restartServer).toHaveBeenCalledTimes(1);
 });

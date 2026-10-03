@@ -26,7 +26,6 @@ import startProxy from './processes/startProxy.mjs';
 import startFirstServer from './processes/startFirstServer.mjs';
 import formatNoticeBox from './utils/formatNoticeBox.mjs';
 import resolvePorts from './utils/resolvePorts.mjs';
-import waitForServer from './utils/waitForServer.mjs';
 
 /*
 The run script does the following:
@@ -151,15 +150,8 @@ try {
   await startProxy(context);
   context.mailSink = await startMailSink(context);
 
-  // Optimises dependencies, then starts the child.
-  await startFirstServer(context);
-  if (
-    await waitForServer({
-      basePath: context.basePath,
-      child: context.devServer,
-      port: context.internalPort,
-    })
-  ) {
+  // Optimises dependencies, starts the child and waits for it to answer.
+  if (await startFirstServer(context)) {
     // A slow first build must not make a fresh server look idle the moment it is ready.
     context.requestActivity.touch();
     instance.update({ state: 'ready' });
