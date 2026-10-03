@@ -39,7 +39,8 @@ async function listFiles(directory) {
 // drops its built pages, when the registry changes, so the registry must
 // arrive after every other new file and after the old build's pages are gone.
 // It is moved even when its bytes are unchanged: the JIT page builder learns
-// of a config build only from its mtime.
+// of a config build only from its identity (inode and mtime), which a rename
+// always changes.
 // The live directory itself is never replaced, so file watchers on it keep
 // working.
 const pageRegistryFile = 'pageRegistry.json';

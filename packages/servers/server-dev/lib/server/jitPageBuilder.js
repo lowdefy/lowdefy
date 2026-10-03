@@ -244,8 +244,8 @@ function startChangeEvent(configDirectory) {
 // Reads what the manager and the config build changed since the last call, and
 // acts on it: a new build/invalidatePages value is a change event; a newly
 // published page registry, or a context past its budget, discards the build
-// context, so the next page build makes a new one. Both a page request and the build status review call it first, so
-// each sees an edit the other has not.
+// context, so the next page build makes a new one. Both a page request and the
+// build status review call it first, so each sees an edit the other has not.
 export function syncBuildSignals({ buildDirectory, configDirectory }) {
   const changeSignal = readChangeSignal(buildDirectory);
   if (changeSignal !== lastChangeSignal) {
