@@ -27,6 +27,7 @@ import runRepeated from './runRepeated.js';
 import selectTests from './selectTests.js';
 import summariseResults from './summariseResults.js';
 import writeExercised from './writeExercised.js';
+import writeTestRun from './writeTestRun.js';
 
 function refuse({ context, message }) {
   context.logger.error(message);
@@ -124,6 +125,7 @@ async function test({ context }) {
       results,
       buildId: await fetchBuildId({ url: server.url }),
     });
+    writeTestRun({ directories: context.directories, results });
   } finally {
     process.removeListener('SIGINT', onSigint);
     if (!interrupted) {

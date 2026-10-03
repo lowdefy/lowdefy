@@ -135,6 +135,14 @@ _ref:
             order by failures desc
             ```
 
+            ###### Journeys from production
+
+            `lowdefy journeys pull posthog` reads these events back to your machine over PostHog's query API, so [journeys can be mined from production](/config-tests#production-journeys): compiled into candidate tests, checked for how much real use backs each journey, and compared with what users do that no journey covers. It needs `POSTHOG_PROJECT_ID`, `POSTHOG_API_HOST` and your own personal API key with the Query Read scope in `POSTHOG_PERSONAL_API_KEY`; see the [CLI reference](/cli#journeys-pull-posthog).
+
+            What reaches your disk: no typed values (PostHog never captured them), person and organisation ids hashed with a salt that stays on your machine, URL query parameter names without their values, and the clicked element's text, in `.lowdefy/traces/production/`, which is not committed. The element chain is read in memory and never written. Events from before the Lowdefy properties above were added still count: the pull reads the block ids from the element chain instead.
+
+            Every event the plugin enriches names its page in `lowdefy_page_id`, so the pull never guesses it. A failed app event names the page the app loaded on, including a configured home page served at the app root (`/`). Events from before the Lowdefy properties were added carry no page id, so the pull reads the page from the URL path. That reading assumes the app is served at the root and that `/` only redirects: older events from an app with a `basePath`, or from a home page served at `/`, are dropped.
+
             ## Analytics never breaks the app
 
             Every action in this package, except `PostHogInit`, does nothing and returns `null` when PostHog is disabled or `posthog-js` could not be downloaded. A disabled environment or a flaky network can never throw from an analytics action and can never stop an event chain. [`PostHogFeatureFlag`](/PostHogFeatureFlag) returns its configured `default` instead of `null`, so flag driven config keeps working with PostHog switched off, and [`PostHogReloadFeatureFlags`](/PostHogReloadFeatureFlags) returns `{ flags: [], variants: {} }`.

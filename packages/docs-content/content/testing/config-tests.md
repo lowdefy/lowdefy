@@ -251,6 +251,8 @@ FAIL  guest sees the empty state
 
 A failing journey stops at its first failing step and prints the step's index, the step itself, and the `expected` and `actual` values. Steps after the failure are not run.
 
+A journey with an [`evidence`](#evidence) key prints it after its `PASS` line: `PASS  member creates a control  (5 steps, 1840ms)  412 sessions · 9 orgs · 11/12 mutants`. The organisations part is left out when the app sends none, the mutants part when there is no mutation report, and a journey nothing backs shows `0 sessions in window`. `FAIL` lines carry no evidence.
+
 ### Options
 
 - `[paths...]`: Journey files or directories to run instead of `tests/journeys/*.yaml`, anywhere under the config directory, including the candidates in `tests/journeys/_candidates/`. `lowdefy test tests/journeys/_candidates/dev` runs every dev candidate. `--filter` applies on top.
@@ -317,7 +319,7 @@ To promote a candidate, move it into `tests/journeys/`, give it a name, fill eve
 ### Options
 
 - `[traceFiles...]`: The trace files to compile, wherever they are. Without them, `dev` and `explorer` recordings are read from `.lowdefy/traces/<source>/`.
-- `--source <production|dev|explorer>`: Compile only records of this source. Required when no trace files are given; with files, the source comes from the records. Journey runs (`journey` traces) are coverage, not candidates, and are refused.
+- `--source <production|dev|explorer>`: Compile only records of this source. Required when no trace files are given; with files, the source comes from the records. `--source production` with no files reads the cache [`lowdefy journeys pull posthog`](#production-journeys) writes, and fails naming the pull to run when a day of the window is missing. Journey runs (`journey` traces) are coverage, not candidates, and are refused.
 - `--since <since>`: Only records at or after this time, as a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production traces default to the last 30 days.
 - `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: Production only. An explicit window of whole UTC days instead of `--since`.
 - `--build <id|current>`: Only segments whose records all ran on this build. `current` is the build the running development server for the app serves, which changes with every config edit; with no server running, the newest build in the records is used and the command says so.
@@ -452,6 +454,68 @@ A variant that passes is a candidate to keep; one that fails is a finding, a bug
 - `--json`: Print the sessions as JSON, for agents.
 
 `lowdefy agent-setup` installs a `journeys-from-dev` skill that uses these commands: it compiles the session you pick with `lowdefy journeys compile --source dev`, runs each candidate three times with `lowdefy test --repeat 3`, and leaves the candidates that pass for you to keep.
+
+## Production journeys
+
+Journeys can be mined from what your users do in production. Apps that send analytics with the [PostHog plugin](/PostHog) can pull them to your machine, compile candidates from them, and see which journeys real use backs and what it does that no journey covers.
+
+```
+pnpx lowdefy@5 journeys pull posthog --since 30d
+pnpx lowdefy@5 journeys compile --source production --since 30d
+pnpx lowdefy@5 journeys coverage --source production
+pnpx lowdefy@5 journeys evidence --refresh
+```
+
+[`journeys pull posthog`](/cli#journeys-pull-posthog) needs `POSTHOG_PROJECT_ID`, `POSTHOG_API_HOST` and your own `POSTHOG_PERSONAL_API_KEY` with the Query Read scope. It writes one file per UTC day to `.lowdefy/traces/production/`. What it keeps:
+
+- No value a user typed. PostHog never captures one, so a production candidate's `fill` steps carry `from: shape` placeholders for you to fill from your test data.
+- Person and organisation ids hashed with a salt that never leaves your machine, so counts of people and organisations are the same on every machine while no raw id is stored.
+- Page URLs with query parameter names only (`/tickets?id=&tab=`), never their values.
+- The text of the clicked element, as PostHog already holds it. It stays in `.lowdefy/`, which is not committed, and the compiler keeps a text target only when enough different people clicked it.
+
+### Evidence
+
+A committed journey can carry how much production use backs it:
+
+```yaml
+- name: member assigns an open ticket to a teammate
+  pageId: tickets
+  evidence:
+    production:
+      sessions: 412 # sessions that did what this journey does
+      persons: 37
+      orgs: 9 # 0 when the app sends no organisation
+      share: 0.31 # of the sessions entering on pageId
+      failures: 14 # backing sessions that hit a failed event
+      window: 2026-09-03/2026-10-02
+    dev: { recordings: 2 } # dev sessions of the last 7 days that did it
+    mutation: { killed: 11, total: 12, unique: 2 }
+    refreshed: 2026-10-03
+  steps:
+    - click: assign
+```
+
+A session backs a journey when it does the journey's interactions in the same order, other clicks in between allowed, starting on the journey's page. Only [`lowdefy journeys evidence --refresh`](/cli#journeys-evidence) writes the key, and it changes nothing else in the file: comments, key order and quoting stay as they are. `lowdefy test` reads it to print the PASS line and validates it strictly, so a typo in a hand edit fails before the browser opens. `dev.recordings` counts the [dev recordings](#dev-recordings) of the last 7 days that back the journey, by the same rule. `dev`, `explorer` and `mutation` subkeys whose source is not on your machine keep their committed values; `mutation` is filled from a hardening run's report in `.lowdefy/test/mutation.json` when there is one.
+
+No command removes a journey for lack of production use. A 30-day window cannot see quarterly or yearly work, and a journey that is the only one to catch a mutant matters whatever its traffic. `journeys evidence` lists the journeys nothing backs, beside their mutation numbers, and leaves the decision to you.
+
+### Coverage
+
+[`lowdefy journeys coverage --source production`](/cli#journeys-coverage) reports five measures, each as covered out of total with the uncovered items ranked by use:
+
+| Measure     | Counts                                                            | Covered when                                                          |
+| ----------- | ----------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Interaction | each interaction in production sessions, by how often it happened | a journey does the same interaction on the same page                  |
+| Flow        | production sessions                                               | a journey is backed by the session                                    |
+| Failure     | distinct failed events (page, block, event, invalid fields)       | a passing journey produced the same failed event (see below)          |
+| Frustration | rage- and dead-clicked blocks                                     | a journey clicks the block and asserts with an `expect` right after   |
+| Role        | (page, role set) pairs seen in production                         | a journey visiting the page runs as a user with exactly that role set |
+
+Coverage also reads the newest full test run that the development server recorded (a plain `lowdefy test`, or `lowdefy_run_tests` with no paths or filter). The interaction measure then adds a measured share beside the static one: the production interactions that run actually drove. Failure coverage becomes measured: a failure counts as covered when a journey that passed in that run produced the same failed event, because a journey that reaches a failure and still passes asserts it. The test runner keeps which journeys passed in `.lowdefy/test/run.json`. Without a recorded run, failure coverage is reported as reached: a journey does the interaction that failed, which does not show it checks the outcome.
+
+It writes the measures, a production profile (the top flows per entry page, failure paths, frustrated blocks, role sets per page and entry pages) and each journey's interactions to `.lowdefy/test/coverage.json`, which is rewritten on every run and not committed. With a mutation report, the suite's mutation score is added as a sixth number.
+
+`lowdefy agent-setup` installs a `journeys-from-production` skill that runs this loop with you: it pulls, compiles and reads the coverage report, then takes uncovered failures first and flows next, one at a time. For each it shows you the flow and waits, fills typed values from your data set's fixtures, runs the candidate three times with `lowdefy test --repeat 3`, and moves it into `tests/journeys/` when all three pass. It finishes with `lowdefy journeys evidence --refresh` and commits nothing. It never deletes a journey or suggests deleting one.
 
 ## Continuous integration
 

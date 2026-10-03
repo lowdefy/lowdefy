@@ -116,7 +116,7 @@ async function runJourney({ context, item, url, recordRun, mutant }) {
   // The data set the server loaded and its warnings (snapshot age, colliding connections).
   const dataSet = { data: result.data, warnings: result.warnings };
   if (result.passed === true) {
-    return {
+    const passed = {
       name,
       filePath,
       passed: true,
@@ -126,6 +126,12 @@ async function runJourney({ context, item, url, recordRun, mutant }) {
       exercised: result.exercised,
       mutant: result.mutant,
     };
+    // Evidence is read from the file for the PASS line; it is never sent to
+    // the dev server.
+    if (!type.isNone(journey.evidence)) {
+      passed.evidence = journey.evidence;
+    }
+    return passed;
   }
   return {
     name,

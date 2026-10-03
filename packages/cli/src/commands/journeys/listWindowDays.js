@@ -14,15 +14,19 @@
   limitations under the License.
 */
 
-// The page an app path names: `/orders` is the page `orders`. Paths without a
-// leading slash are fragments of a URL (a query, part of a path) and name no
-// page. Kept local until the client's parsePageId moves into @lowdefy/helpers,
-// then this should use it.
-function pageIdFromPath({ path }) {
-  if (!path.startsWith('/')) return undefined;
-  const pathname = new URL(path, 'http://lowdefy.invalid').pathname;
-  const pageId = pathname.replace(/^\//, '').replace(/\/$/, '');
-  return pageId === '' ? undefined : pageId;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+// Every UTC day of a window, both ends included, as `YYYY-MM-DD`.
+function listWindowDays({ from, to }) {
+  const days = [];
+  for (
+    let time = Date.parse(`${from}T00:00:00Z`);
+    time <= Date.parse(`${to}T00:00:00Z`);
+    time += DAY_MS
+  ) {
+    days.push(new Date(time).toISOString().slice(0, 10));
+  }
+  return days;
 }
 
-export default pageIdFromPath;
+export default listWindowDays;
