@@ -49,15 +49,20 @@ jobs:
           node-version: 24
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - name: Find the package directory
+        id: package
+        run: echo "directory=$(pnpm --filter='${{ matrix.package }}' exec pwd)" >> "$GITHUB_OUTPUT"
       - run: pnpm build
       - run: pnpm --filter=${{ matrix.package }} exec playwright install --with-deps chromium
       # Each package builds its app into its own untracked copy of the server, _server/e2e/<package>.
       - run: pnpm --filter=${{ matrix.package }} e2e
+      # The package's own results only: a packages/** glob walks every node_modules and
+      # takes longer than the suites.
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: block-e2e-results-${{ strategy.job-index }}
-          path: packages/**/e2e/test-results/
+          path: ${{ steps.package.outputs.directory }}/e2e/test-results/
           retention-days: 7
 
   enrichment:
