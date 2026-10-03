@@ -149,6 +149,22 @@ The `test` command runs the app's config tests — the journeys in `tests/journe
 - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
 - `--url <url>`: Run the journeys against an already running development server (for example `--url http://localhost:3000` while `lowdefy dev` is running) instead of starting one.
 
+## journeys compile
+
+The `journeys compile` command turns recorded interaction traces into candidate journeys. It groups recorded segments that do the same thing step by step and writes one candidate per group to `tests/journeys/_candidates/<source>/`, which `lowdefy test` does not run. See [Candidates from recorded traces](/config-tests#candidates-from-recorded-traces).
+
+- `[traceFiles...]`: The trace files (JSONL) to compile.
+- `--source <source>`: `production`, `dev` or `explorer`. Required when no trace files are given; with files, compiles only records of this source.
+- `--since <since>`: Only records at or after this time: a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production traces default to `30d`.
+- `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: Production only. An explicit window of whole UTC days instead of `--since`.
+- `--build <id|current>`: Only segments whose records all ran on this build. `current` is the build the running development server serves.
+- `--page <pageId>`: Only segments that visit this page.
+- `--out <directory>`: The candidates directory. The source is appended. The default is `tests/journeys/_candidates`.
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--dev-directory <dev-directory>`: Change the dev directory, where the development server's build is read from. The default is `<config-directory>/.lowdefy/dev`.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
 ## upgrade
 
 The `upgrade` command upgrades a Lowdefy app to a newer version by walking you through migration prompts that handle breaking changes.

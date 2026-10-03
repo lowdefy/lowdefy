@@ -15,8 +15,9 @@
 */
 
 import { validate } from '@lowdefy/ajv';
+import { STEP_KEYS } from '@lowdefy/node-utils';
 
-import journeySchema, { JOURNEY_STEP_KEYS } from './journeySchema.js';
+import journeySchema from './journeySchema.js';
 import validateJourney from './validateJourney.js';
 
 const minimalJourney = {
@@ -25,20 +26,8 @@ const minimalJourney = {
   steps: [{ click: 'submit' }],
 };
 
-test('journeySchema exports the step key list shared with the runner', () => {
-  expect(JOURNEY_STEP_KEYS).toEqual([
-    'click',
-    'fill',
-    'select',
-    'press',
-    'back',
-    'goto',
-    'email',
-    'as',
-    'wait',
-    'screenshot',
-    'expect',
-  ]);
+test('journeySchema takes its step key enum from the shared journey grammar', () => {
+  expect(journeySchema.properties.steps.items.propertyNames.enum).toEqual(STEP_KEYS);
 });
 
 test('journeySchema accepts a minimal valid journey', () => {
@@ -109,8 +98,21 @@ test('journeySchema rejects an unknown step key', () => {
   const result = validateJourney({ journey });
   expect(result.valid).toBe(false);
   expect(result.message).toContain(
-    'Unknown journey step key. Steps are: click, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Unknown journey step key. Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
   );
+});
+
+test('journeySchema accepts a journey with an open step the runner accepts', () => {
+  const journey = { ...minimalJourney, steps: [{ open: 'status' }, { click: { text: 'Done' } }] };
+  expect(validateJourney({ journey })).toEqual({ valid: true });
+});
+
+test('validateJourney reports a malformed step with the grammar error naming the step', () => {
+  const journey = { ...minimalJourney, steps: [{ click: 'a' }, { fill: { blockId: 'title' } }] };
+  expect(validateJourney({ journey })).toEqual({
+    valid: false,
+    message: 'Step 1: Step "fill" requires a "value". Received {"blockId":"title"}.',
+  });
 });
 
 test('journeySchema rejects a journey without steps', () => {

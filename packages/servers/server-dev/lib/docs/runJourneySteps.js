@@ -21,13 +21,13 @@ import {
   getShortcutModifier,
   getState,
 } from '@lowdefy/e2e-utils/runtime';
+import { getStepKey } from '@lowdefy/node-utils';
 
 import { buildPageUrl } from './getBrowser.js';
 import isPageReady from './isPageReady.js';
 import JourneyStepError from './JourneyStepError.js';
 import openJourneyEmail from './openJourneyEmail.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
-import { getStepKey } from './validateJourneySteps.js';
 
 // Structural equality over values that have already been through the JSON
 // round-trip getState performs in the page (no undefined, no Dates, no

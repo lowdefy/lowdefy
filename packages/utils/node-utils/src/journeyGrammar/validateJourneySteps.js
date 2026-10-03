@@ -32,6 +32,11 @@ const STEP_KEYS = [
 ];
 const EXPECT_KEYS = ['state', 'visible', 'text', 'url', 'title'];
 const WAIT_KEYS = ['ms', 'request', 'state'];
+// `from` marks where a fill, select or expect.state value came from:
+// `recorded` was observed in a trace and runs normally; `shape` is a
+// placeholder (value: null) the trace could not hold, which the runner refuses
+// until someone fills it in.
+const FROM_VALUES = ['recorded', 'shape'];
 
 function describe(value) {
   return JSON.stringify(value);
@@ -152,8 +157,18 @@ function validateTarget({ key, params }) {
   return validateTargetObject({ key, params });
 }
 
+function validateFrom({ key, from }) {
+  if (type.isUndefined(from) || FROM_VALUES.includes(from)) {
+    return undefined;
+  }
+  return `Step "${key}" requires "from" to be one of ${FROM_VALUES.map((v) => `"${v}"`).join(
+    ', '
+  )}. Received ${describe(from)}.`;
+}
+
 // fill and select take the target keys beside `value`; the block is required
-// because a value is typed into a block's input, never a page-wide control.
+// because a value is typed into a block's input, never a page-wide control. A
+// null value is only a placeholder, so it needs `from: shape` to say so.
 function validateBlockValue({ key, params }) {
   if (!type.isObject(params)) {
     return `Step "${key}" requires { blockId, value }. Received ${describe(params)}.`;
@@ -161,7 +176,21 @@ function validateBlockValue({ key, params }) {
   if (type.isUndefined(params.value)) {
     return `Step "${key}" requires a "value". Received ${describe(params)}.`;
   }
-  return validateTargetObject({ key, params, extraKeys: ['value'], requireBlockId: true });
+  const fromError = validateFrom({ key, from: params.from });
+  if (!type.isUndefined(fromError)) {
+    return fromError;
+  }
+  if (params.value === null && params.from !== 'shape') {
+    return `Step "${key}" requires a non-null "value"; a placeholder value: null is marked from: shape. Received ${describe(
+      params
+    )}.`;
+  }
+  return validateTargetObject({
+    key,
+    params,
+    extraKeys: ['value', 'from'],
+    requireBlockId: true,
+  });
 }
 
 function validateWait(params) {
@@ -305,7 +334,7 @@ function validateExpect(params) {
       if (!type.isObject(value) || !type.isString(value.path) || !('equals' in value)) {
         return `Step "expect.state" requires { path, equals }. Received ${describe(value)}.`;
       }
-      return undefined;
+      return validateFrom({ key: 'expect.state', from: value.from });
     case 'visible':
       return validateTarget({ key: 'expect.visible', params: value });
     case 'text':
