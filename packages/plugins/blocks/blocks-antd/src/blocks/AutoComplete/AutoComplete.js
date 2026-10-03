@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { AutoComplete } from 'antd';
 import { type } from '@lowdefy/helpers';
 
@@ -36,6 +36,7 @@ const AutoCompleteInput = ({
   validation,
   value,
 }) => {
+  const [elementId] = useState((0 | (Math.random() * 9e2)) + 1e2);
   return (
     <Label
       blockId={blockId}
@@ -49,84 +50,92 @@ const AutoCompleteInput = ({
       styles={styles}
       content={{
         content: () => (
-          <AutoComplete
-            id={`${blockId}_input`}
-            autoFocus={properties.autoFocus}
-            backfill={properties.backfill}
-            variant={properties.bordered === false ? 'borderless' : properties.variant ?? undefined}
-            className={classNames.element}
-            classNames={{ content: classNames.selector, popup: { root: classNames.popup } }}
-            style={{ width: '100%', ...styles.element }}
-            styles={{ content: styles.selector, popup: { root: styles.popup } }}
-            defaultOpen={properties.defaultOpen}
-            disabled={getDisabled({ loading, properties })}
-            placeholder={properties.placeholder ?? 'Type or select item'}
-            allowClear={
-              properties.allowClear !== false && {
-                clearIcon: (
-                  <components.Icon
-                    blockId={`${blockId}_clearIcon`}
-                    properties={{ name: 'clear', title: '' }}
-                  />
-                ),
+          // The dropdown renders inside the block, like Selector's, so an option click has the
+          // block's wrapper on its path.
+          <div style={{ width: '100%' }}>
+            <div id={`${blockId}_${elementId}_popup`} />
+            <AutoComplete
+              id={`${blockId}_input`}
+              autoFocus={properties.autoFocus}
+              getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
+              backfill={properties.backfill}
+              variant={
+                properties.bordered === false ? 'borderless' : properties.variant ?? undefined
               }
-            }
-            listHeight={properties.listHeight ?? undefined}
-            placement={properties.placement}
-            popupMatchSelectWidth={properties.popupMatchSelectWidth}
-            // antd 6 names the default size `medium`; `default` is not an antd size.
-            size={properties.size === 'default' ? 'medium' : properties.size}
-            status={validation.status}
-            options={(properties.options ?? []).map((opt, i) => ({
-              className: classNames.options,
-              id: `${blockId}_${i}`,
-              key: i,
-              label: `${opt}`,
-              style: styles.options,
-              value: `${opt}`,
-            }))}
-            prefix={
-              properties.prefix ??
-              (properties.prefixIcon && (
-                <components.Icon
-                  blockId={`${blockId}_prefixIcon`}
-                  classNames={{ element: classNames.prefixIcon }}
-                  events={events}
-                  properties={properties.prefixIcon}
-                  styles={{ element: styles.prefixIcon }}
-                />
-              ))
-            }
-            showSearch={{
-              filterOption: (input, option) =>
-                `${option.value}`.toLowerCase().indexOf(input.toLowerCase()) >= 0,
-              onSearch: (newVal) => {
-                methods.triggerEvent({ name: 'onSearch', event: { value: newVal } });
-              },
-            }}
-            onChange={(newVal) => {
-              methods.setValue(newVal);
-              methods.triggerEvent({ name: 'onChange', event: { value: newVal } });
-            }}
-            onFocus={() => {
-              methods.triggerEvent({ name: 'onFocus' });
-            }}
-            onBlur={() => {
-              methods.triggerEvent({ name: 'onBlur' });
-            }}
-            onClear={() => {
-              methods.triggerEvent({ name: 'onClear' });
-            }}
-            onOpenChange={(open) => {
-              methods.triggerEvent({ name: 'onOpenChange', event: { open } });
-            }}
-            onSelect={(newVal) => {
-              methods.triggerEvent({ name: 'onSelect', event: { value: newVal } });
-            }}
-            value={type.isNone(value) ? undefined : `${value}`}
-            // antd lets even an undefined `virtual` prop override the ConfigProvider `virtual`.
-            {...(type.isNone(properties.virtual) ? {} : { virtual: properties.virtual })}
-          />
+              className={classNames.element}
+              classNames={{ content: classNames.selector, popup: { root: classNames.popup } }}
+              style={{ width: '100%', ...styles.element }}
+              styles={{ content: styles.selector, popup: { root: styles.popup } }}
+              defaultOpen={properties.defaultOpen}
+              disabled={getDisabled({ loading, properties })}
+              placeholder={properties.placeholder ?? 'Type or select item'}
+              allowClear={
+                properties.allowClear !== false && {
+                  clearIcon: (
+                    <components.Icon
+                      blockId={`${blockId}_clearIcon`}
+                      properties={{ name: 'clear', title: '' }}
+                    />
+                  ),
+                }
+              }
+              listHeight={properties.listHeight ?? undefined}
+              placement={properties.placement}
+              popupMatchSelectWidth={properties.popupMatchSelectWidth}
+              // antd 6 names the default size `medium`; `default` is not an antd size.
+              size={properties.size === 'default' ? 'medium' : properties.size}
+              status={validation.status}
+              options={(properties.options ?? []).map((opt, i) => ({
+                className: classNames.options,
+                id: `${blockId}_${i}`,
+                key: i,
+                label: `${opt}`,
+                style: styles.options,
+                value: `${opt}`,
+              }))}
+              prefix={
+                properties.prefix ??
+                (properties.prefixIcon && (
+                  <components.Icon
+                    blockId={`${blockId}_prefixIcon`}
+                    classNames={{ element: classNames.prefixIcon }}
+                    events={events}
+                    properties={properties.prefixIcon}
+                    styles={{ element: styles.prefixIcon }}
+                  />
+                ))
+              }
+              showSearch={{
+                filterOption: (input, option) =>
+                  `${option.value}`.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+                onSearch: (newVal) => {
+                  methods.triggerEvent({ name: 'onSearch', event: { value: newVal } });
+                },
+              }}
+              onChange={(newVal) => {
+                methods.setValue(newVal);
+                methods.triggerEvent({ name: 'onChange', event: { value: newVal } });
+              }}
+              onFocus={() => {
+                methods.triggerEvent({ name: 'onFocus' });
+              }}
+              onBlur={() => {
+                methods.triggerEvent({ name: 'onBlur' });
+              }}
+              onClear={() => {
+                methods.triggerEvent({ name: 'onClear' });
+              }}
+              onOpenChange={(open) => {
+                methods.triggerEvent({ name: 'onOpenChange', event: { open } });
+              }}
+              onSelect={(newVal) => {
+                methods.triggerEvent({ name: 'onSelect', event: { value: newVal } });
+              }}
+              value={type.isNone(value) ? undefined : `${value}`}
+              // antd lets even an undefined `virtual` prop override the ConfigProvider `virtual`.
+              {...(type.isNone(properties.virtual) ? {} : { virtual: properties.virtual })}
+            />
+          </div>
         ),
       }}
     />

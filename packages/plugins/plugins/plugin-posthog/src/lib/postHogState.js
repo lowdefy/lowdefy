@@ -24,11 +24,16 @@
 // - loading: PostHogInit is downloading posthog-js. Actions wait for it.
 // - failed: posthog-js could not be downloaded. Actions do nothing, silently.
 // - enabled: client is the initialised posthog-js instance.
+//
+// trace is the engine's trace registry, set by every PostHogInit; the before_send hook reads it.
+// subscription is the lowdefy_event_failed listener: { trace, unsubscribe, count }.
 const postHogState = {
   apiKey: null,
   client: null,
   loading: null,
   status: 'uninitialized',
+  subscription: null,
+  trace: null,
   warnedUninitialized: false,
 };
 

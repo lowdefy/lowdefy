@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { get, type } from '@lowdefy/helpers';
+import { get, journeyTargetSelectors, type } from '@lowdefy/helpers';
 import {
   getBlock,
   getRequestState,
@@ -83,25 +83,16 @@ function capitalise(text) {
 // A radio or checkbox inside a <label> is reached through the label: the label
 // carries the option's text and is what a person clicks, while the input may
 // have no size at all (antd Segmented hides it at zero width and height), so
-// Playwright would never find it visible.
-const RADIO_OPTION = 'label:has(input[type="radio"])';
-const CHECKBOX_OPTION = 'label:has(input[type="checkbox"])';
-
-const INTERACTIVE_CONTROL = [
-  'button',
-  '[role="button"]',
-  'a[href]',
-  RADIO_OPTION,
-  CHECKBOX_OPTION,
-  'input:not([type="hidden"]):not(label input[type="radio"]):not(label input[type="checkbox"])',
-  'textarea',
-  'select',
-  '[role="switch"]',
-  '[role="checkbox"]',
-  '[role="radio"]',
-  '[role="tab"]',
-  '[role="menuitem"]',
-].join(', ');
+// Playwright would never find it visible. The selectors live in
+// @lowdefy/helpers, where the engine's describe functions read them too.
+const {
+  cellAttribute: CELL_ATTRIBUTE,
+  dropdownOption: DROPDOWN_OPTION,
+  interactiveControl: INTERACTIVE_CONTROL,
+  layers: LAYERS,
+  radioOption: RADIO_OPTION,
+  rowAttribute: ROW_ATTRIBUTE,
+} = journeyTargetSelectors;
 
 async function resolveClickTarget(scope) {
   const control = scope.locator(INTERACTIVE_CONTROL).first();
@@ -166,20 +157,13 @@ function resolveScope({ page, target }) {
   }
   let scope = getBlock(page, target.blockId);
   if (!type.isUndefined(target.row)) {
-    scope = scope.locator(`.ag-row[row-index=${attributeValue(target.row)}]`);
+    scope = scope.locator(`.ag-row[${ROW_ATTRIBUTE}=${attributeValue(target.row)}]`);
   }
   if (!type.isUndefined(target.column)) {
-    scope = scope.locator(`.ag-cell[col-id=${attributeValue(target.column)}]`);
+    scope = scope.locator(`.ag-cell[${CELL_ATTRIBUTE}=${attributeValue(target.column)}]`);
   }
   return scope;
 }
-
-// Portal layers, front-most first. A control found by text alone is looked
-// for in the front-most open layer before the page, the way a person reads a
-// screen: an open dropdown menu covers a dialog, a dialog covers the page. A
-// confirm dialog's "Delete" is then found over the grid's "Delete" cell
-// buttons behind its mask, without the author counting buttons.
-const LAYERS = ['[role="menu"]', '[role="dialog"]'];
 
 function controlsWithText({ root, text, nth }) {
   return root
@@ -189,6 +173,11 @@ function controlsWithText({ root, text, nth }) {
     .nth(nth ?? 0);
 }
 
+// LAYERS are the portal layers, front-most first. A control found by text alone is looked
+// for in the front-most open layer before the page, the way a person reads a
+// screen: an open dropdown menu covers a dialog, a dialog covers the page. A
+// confirm dialog's "Delete" is then found over the grid's "Delete" cell
+// buttons behind its mask, without the author counting buttons.
 async function resolvePageWideText({ page, target }) {
   for (const layer of LAYERS) {
     const open = page.locator(layer).filter({ visible: true });
@@ -424,7 +413,7 @@ async function runSelect({ page, step, timeout }) {
     },
   });
   const option = page
-    .locator('.ant-select-item-option, [role="option"]')
+    .locator(DROPDOWN_OPTION)
     .filter({ hasText: exactText(text) })
     .filter({ visible: true })
     .first();
