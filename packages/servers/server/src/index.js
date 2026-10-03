@@ -18,32 +18,13 @@ import { serve } from '@hono/node-server';
 import * as Sentry from '@sentry/node';
 import { WebSocketServer } from 'ws';
 
-import checkEnvironmentGuards from '@lowdefy/node-utils/checkEnvironmentGuards.js';
+import initServer from './initServer.js';
 
-import initSentryServer from '../lib/server/sentry/initSentry.js';
-
-const sentryEnabled = initSentryServer();
-
-// Import after Sentry init so instrumentation observes the module graph.
-const { default: createApp } = await import('./app.js');
-const { default: createLogger } = await import('../lib/server/log/createLogger.js');
+const { createApp, logger } = await initServer();
 const { default: appMeta } = await import('../lib/build/appMeta.js');
-const { default: config } = await import('../lib/build/config.js');
-
-// The build checked the current environment's guards, but an image built once can be started with
-// different variables, so they are checked again before the server takes any traffic.
-checkEnvironmentGuards({
-  name: config.environment,
-  guards: config.environments?.[config.environment]?.guards,
-});
 
 const app = createApp();
-const logger = createLogger({ server: 'lowdefy' });
 const port = Number(process.env.PORT ?? 3000);
-
-if (sentryEnabled) {
-  logger.info('Sentry enabled: server');
-}
 
 // Handles /api/websocket upgrades via serve({ websocket }). 256 KiB max frame,
 // aligned with Vercel's documented default for WebSocket functions.

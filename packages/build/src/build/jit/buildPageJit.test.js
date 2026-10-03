@@ -112,6 +112,74 @@ type: PageHeaderMenu
   expect(result.type).toBe('PageHeaderMenu');
 });
 
+test('buildPageJit writes the page without request internals, which stay in the request artifact', async () => {
+  const context = createTestContext();
+  context.connectionIds = new Set(['mongo']);
+  mockFiles([
+    {
+      path: 'home.yaml',
+      content: `
+id: home
+type: PageHeaderMenu
+requests:
+  - id: get_items
+    type: MongoDBFind
+    connectionId: mongo
+    payload:
+      search:
+        _state: search
+    properties:
+      query:
+        name:
+          _payload: search
+`,
+    },
+  ]);
+
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'ref-home',
+        refPath: 'home.yaml',
+        unresolvedVars: null,
+      },
+    ],
+  ]);
+
+  await buildPageJit({ pageId: 'home', pageRegistry, context });
+
+  function readArtifact(filePath) {
+    const call = mockWriteBuildArtifact.mock.calls.find(([written]) => written === filePath);
+    expect(call).toBeDefined();
+    return JSON.parse(call[1]);
+  }
+
+  const page = readArtifact('pages/home.json');
+  expect(page.requests).toHaveLength(1);
+  const pageRequest = page.requests[0];
+  expect(pageRequest).toMatchObject({
+    id: 'request:home:get_items',
+    requestId: 'get_items',
+    pageId: 'home',
+    payload: { search: { _state: 'search' } },
+  });
+  expect(pageRequest).not.toHaveProperty('properties');
+  expect(pageRequest).not.toHaveProperty('type');
+  expect(pageRequest).not.toHaveProperty('connectionId');
+  expect(pageRequest).not.toHaveProperty('auth');
+
+  const requestArtifact = readArtifact('pages/home/requests/get_items.json');
+  expect(requestArtifact).toMatchObject({
+    type: 'MongoDBFind',
+    connectionId: 'mongo',
+    auth: { public: true },
+    properties: { query: { name: { _payload: 'search' } } },
+  });
+});
+
 test('buildPageJit writes tailwind candidate file with classes from _js source, not the extracted hash', async () => {
   const context = createTestContext();
   mockFiles([

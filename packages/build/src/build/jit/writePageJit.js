@@ -18,28 +18,26 @@ import path from 'path';
 import { serializer } from '@lowdefy/helpers';
 import { writeFileIfChanged } from '@lowdefy/node-utils';
 
+import removeRequestServerKeys from '../../utils/removeRequestServerKeys.js';
 import writeJs from '../buildJs/writeJs.js';
 
 async function writePageJit({ page, context, tailwindContent }) {
-  // Write page JSON
-  await context.writeBuildArtifact(
-    `pages/${page.pageId}.json`,
-    serializer.serializeToString(page ?? {})
-  );
-
-  // Write page request JSONs
+  // Requests are written and stripped of their server-only keys before the
+  // page is written, as the full build does (writeRequests runs before
+  // writePages), so the page artifact sent to the client never carries them.
   const requests = page.requests ?? [];
   for (const request of requests) {
     await context.writeBuildArtifact(
       `pages/${page.pageId}/requests/${request.requestId}.json`,
       serializer.serializeToString(request ?? {})
     );
-    // Clean up request after writing (same as writeRequests)
-    delete request.properties;
-    delete request.type;
-    delete request.connectionId;
-    delete request.auth;
+    removeRequestServerKeys({ request });
   }
+
+  await context.writeBuildArtifact(
+    `pages/${page.pageId}.json`,
+    serializer.serializeToString(page ?? {})
+  );
 
   // Write updated JS map files (JIT build extracts page-level _js functions)
   await writeJs({ context });

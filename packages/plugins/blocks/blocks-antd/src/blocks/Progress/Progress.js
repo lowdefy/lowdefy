@@ -34,7 +34,7 @@ function getProgressSize({ properties }) {
     }
     return properties.size;
   }
-  return properties.size ?? properties.width;
+  return properties.size ?? properties.width ?? undefined;
 }
 
 const ProgressBlock = ({ blockId, classNames = {}, properties, styles = {} }) => {
@@ -58,14 +58,14 @@ const ProgressBlock = ({ blockId, classNames = {}, properties, styles = {} }) =>
       gapPlacement={properties.gapPlacement ?? gapPlacements[properties.gapPosition]}
       id={blockId}
       percent={properties.percent}
-      percentPosition={properties.percentPosition}
+      percentPosition={properties.percentPosition ?? undefined}
       railColor={properties.trailColor}
-      showInfo={properties.showInfo}
+      showInfo={properties.showInfo ?? undefined}
       size={getProgressSize({ properties })}
       status={properties.status}
       steps={properties.steps}
       strokeColor={properties.strokeColor}
-      strokeLinecap={properties.strokeLinecap}
+      strokeLinecap={properties.strokeLinecap ?? undefined}
       style={styles.element}
       styles={{
         indicator: styles.indicator,
@@ -73,7 +73,7 @@ const ProgressBlock = ({ blockId, classNames = {}, properties, styles = {} }) =>
         track: styles.track,
       }}
       success={properties.success}
-      type={properties.type}
+      type={progressType}
       {...additionalProps}
     />
   );

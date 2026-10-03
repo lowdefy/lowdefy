@@ -22,7 +22,7 @@ import copyTracedFiles from '../../utils/copyTracedFiles.js';
 import findTraceBase from '../../utils/findTraceBase.js';
 
 // The boot script chdirs into the server directory inside the output (it is nested when the app
-// is a pnpm workspace member) so the server's cwd-relative reads of build/ and dist/client work,
+// sits inside a pnpm workspace) so the server's cwd-relative reads of build/ and dist/client work,
 // then imports the entrypoint. .mjs so it runs as ESM regardless of a package.json at its root.
 function startScript({ relServer }) {
   const relServerPosix = relServer === '' ? '.' : relServer.split(path.sep).join('/');
@@ -66,8 +66,8 @@ async function dockerOutput({ context }) {
   }
 
   // Paths are preserved relative to the trace base (the pnpm workspace root when the server
-  // directory is a workspace member), so the server's relative node_modules symlinks still
-  // resolve inside the output. The server lands at <relServer>/ inside the output directory.
+  // directory sits inside a pnpm workspace), so the server's relative node_modules symlinks
+  // still resolve inside the output. The server lands at <relServer>/ inside the output directory.
   const base = findTraceBase({ serverDirectory });
   const relServer = path.relative(base, serverDirectory);
   const outputServerDirectory = path.join(outputDirectory, relServer);

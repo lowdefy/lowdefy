@@ -50,3 +50,11 @@ test('a watched path that only shares a prefix with the file does not hold it', 
   const isDotPath = createDotPathIgnore({ watchPaths: ['/home/dev/app'] });
   expect(isDotPath('/home/dev/app-other/.cache/file.yaml')).toBe(false);
 });
+
+test('dev recordings under .lowdefy/traces are ignored by the config watcher', () => {
+  const configDirectory = '/home/dev/app';
+  const isDotPath = createDotPathIgnore({ watchPaths: [configDirectory] });
+  expect(
+    isDotPath(`${configDirectory}/.lowdefy/traces/dev/2026-10-03/20261003T140311Z-k3x9qa.jsonl`)
+  ).toBe(true);
+});

@@ -101,7 +101,7 @@ function DropdownMenuBlock({
         selectedKeys: properties.selectedKeys,
       }}
       trigger={[properties.trigger ?? 'hover']}
-      placement={properties.placement}
+      placement={properties.placement ?? undefined}
       arrow={properties.arrow}
       disabled={properties.disabled}
       destroyOnHidden={properties.destroyOnClose}

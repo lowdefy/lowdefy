@@ -905,7 +905,7 @@ Fixed bottom bar that displays build errors and warnings in the browser. Build w
 
 **File:** `lib/client/utils/usePageConfig.js`
 
-Uses SWR with a versioned key to support cache busting on hot reload. `fetchPageConfig` fetches `/api/page/:pageId` (which runs the JIT build), returns the `buildError` / `installing` / auth-redirect shapes as they are, compiles `_jsEntries` module text into functions, and leaves `_dynamicIcons` as data for `Page.jsx`. The SWR key is `[url, reloadVersion, navVersion]`: `reloadVersion` changes on hot reload and orphans old cache entries, and `navVersion` makes server-resolved (dynamic) pages refetch on every navigation.
+Uses SWR with a versioned key to support cache busting on hot reload. `fetchPageConfig` fetches `/api/page/:pageId` (which runs the JIT build), returns the `buildError` / `installing` / auth-redirect shapes as they are, compiles `_jsEntries` module text into functions, and leaves `_dynamicIcons` as data for `Page.jsx`. The fetch always forwards the current query string. The SWR key comes from `getPageConfigKey`: a static page keys on `[pageUrl, reloadVersion]`, without the query string, so a Link that only changes the query reuses the cached config and never suspends behind the Building page fallback. A page learned to be dynamic (from the fetched config's `dynamic` flag, recorded by `recordDynamicPage`) keys on `[pageUrl, reloadVersion, search, navVersion]`, so it re-resolves on every navigation. The navigation whose fetch first finds a page dynamic keeps the static key, so that fetch is not repeated. `reloadVersion` changes on hot reload and orphans old cache entries.
 
 **File:** `lib/client/utils/useMutateCache.js`
 

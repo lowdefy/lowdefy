@@ -19,22 +19,13 @@ import os from 'os';
 import path from 'path';
 import { jest } from '@jest/globals';
 
+import flushFsEvents from '../../test-utils/flushFsEvents.mjs';
+import waitFor from '../../test-utils/waitFor.mjs';
+
 const { default: pluginSourceWatcher } = await import('./pluginSourceWatcher.mjs');
 
-// File events arrive late on a busy machine; the waits only bound a failure.
-jest.setTimeout(20000);
-
-function waitFor(predicate, timeout = 10000) {
-  return new Promise((resolve, reject) => {
-    const started = Date.now();
-    const tick = () => {
-      if (predicate()) return resolve();
-      if (Date.now() - started > timeout) return reject(new Error('Timed out waiting.'));
-      setTimeout(tick, 25);
-    };
-    tick();
-  });
-}
+// macOS can hold file events back for tens of seconds on a busy machine.
+jest.setTimeout(180000);
 
 let root;
 let context;
@@ -54,6 +45,13 @@ function writeLowdefyYaml(pluginNames) {
       .map((name) => `  - name: '${name}'\n    version: 'workspace:*'\n`)
       .join('')}`
   );
+}
+
+// Otherwise the fixture writes can reach the watcher as edits and rebuild
+// before the edit under test.
+async function startWatcher() {
+  await flushFsEvents();
+  watcher = await pluginSourceWatcher(context);
 }
 
 function addLinkedPackage(name) {
@@ -107,9 +105,11 @@ test.each([
   writeLowdefyYaml(['@app/plugin']);
   writeCustomTypesMap({ [kind]: { Type: { package: '@app/plugin', version: '1.0.0' } } });
 
-  watcher = await pluginSourceWatcher(context);
+  await startWatcher();
   fs.writeFileSync(path.join(dir, file), 'export default 2;');
-  await waitFor(() => context.reloadClients.mock.calls.length > 0);
+  await waitFor(() => context.reloadClients.mock.calls.length > 0, {
+    description: 'clients to reload',
+  });
 
   expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
   expect(context.syncServer).toHaveBeenCalledWith({ restart });
@@ -122,11 +122,15 @@ test('a fix to a plugin whose edit failed the build rebuilds again', async () =>
   writeLowdefyYaml(['@app/plugin']);
   context.lowdefyBuild.mockRejectedValueOnce(new Error('Failed to import plugin "@app/plugin".'));
 
-  watcher = await pluginSourceWatcher(context);
+  await startWatcher();
   fs.writeFileSync(path.join(dir, 'src', 'types.js'), 'export default {;');
-  await waitFor(() => context.syncServer.mock.calls.length === 1);
+  await waitFor(() => context.syncServer.mock.calls.length === 1, {
+    description: 'the failed build to sync the server',
+  });
   fs.writeFileSync(path.join(dir, 'src', 'types.js'), 'export default { blocks: [] };');
-  await waitFor(() => context.syncServer.mock.calls.length === 2);
+  await waitFor(() => context.syncServer.mock.calls.length === 2, {
+    description: 'the fixed build to sync the server',
+  });
 
   expect(context.lowdefyBuild).toHaveBeenCalledTimes(2);
 });
@@ -167,7 +171,7 @@ describe('a plugin package that is also the config directory', () => {
   test.each([['public/llms.txt'], ['public/search-index.json'], ['public/md/page.md']])(
     'writing %s does not rebuild',
     async (file) => {
-      watcher = await pluginSourceWatcher(context);
+      await startWatcher();
       fs.writeFileSync(path.join(context.directories.config, file), 'two');
       await expectNoRebuild();
     }
@@ -176,20 +180,20 @@ describe('a plugin package that is also the config directory', () => {
   test.each([['pages/home.yaml'], ['pages/home.md']])(
     'editing %s does not rebuild',
     async (file) => {
-      watcher = await pluginSourceWatcher(context);
+      await startWatcher();
       fs.writeFileSync(path.join(context.directories.config, file), 'two');
       await expectNoRebuild();
     }
   );
 
   test('writing into the build directory does not rebuild', async () => {
-    watcher = await pluginSourceWatcher(context);
+    await startWatcher();
     fs.writeFileSync(path.join(context.directories.build, 'keyMap.json'), '{}');
     await expectNoRebuild();
   });
 
   test.each([['src/types.js'], ['dist/types.js']])('editing %s rebuilds', async (file) => {
-    watcher = await pluginSourceWatcher(context);
+    await startWatcher();
     fs.writeFileSync(path.join(context.directories.config, file), 'export default 2;');
     await waitFor(() => context.reloadClients.mock.calls.length > 0);
     expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
@@ -207,7 +211,7 @@ test.each([
   fs.writeFileSync(path.join(dir, file), 'one');
   writeLowdefyYaml(['@app/plugin']);
 
-  watcher = await pluginSourceWatcher(context);
+  await startWatcher();
   fs.writeFileSync(path.join(dir, file), 'two');
   if (rebuilds) {
     await waitFor(() => context.reloadClients.mock.calls.length > 0);

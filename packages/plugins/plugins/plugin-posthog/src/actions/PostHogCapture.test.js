@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 
+import createFakeTrace from '../test/createFakeTrace.js';
 import resetPostHogState from '../test/resetPostHogState.js';
 
 const mockPostHog = {
@@ -40,7 +41,7 @@ afterEach(() => {
 });
 
 async function init(params = { apiKey: 'phc_key' }) {
-  await PostHogInit({ params });
+  await PostHogInit({ trace: createFakeTrace(), params });
 }
 
 test('PostHogCapture captures an event with properties', async () => {

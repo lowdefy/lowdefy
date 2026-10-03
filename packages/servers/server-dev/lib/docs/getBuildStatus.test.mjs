@@ -64,3 +64,10 @@ test('getBuildStatus passes the pages build status just built to the page status
   expect(status.pages).toEqual({ unbuilt: 0 });
   expect(status.build.status).toBe('ok');
 });
+
+test('getBuildStatus names the build being served as a top-level buildId', async () => {
+  mockClientErrors.mockReturnValue([]);
+  mockServerErrors.mockReturnValue([]);
+
+  expect((await getBuildStatus()).buildId).toBe('build-2');
+});

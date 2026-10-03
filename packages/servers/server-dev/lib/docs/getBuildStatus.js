@@ -36,7 +36,8 @@ function splitByBuild({ entries, buildId }) {
 // errors (request, endpoint, MCP and agent tool failures) collected by
 // createHandleError. Lets an agent check "did my last edit work?" without
 // tailing terminal logs. Errors reported under an earlier build are listed
-// apart under earlierErrors.
+// apart under earlierErrors. `buildId` names the build being served now, which
+// `--build current` on the journey commands reads.
 async function getBuildStatus({ checked } = {}) {
   const build = readBuildArtifact({ name: 'buildStatus.json' }) ?? {
     status: 'unknown',
@@ -48,6 +49,7 @@ async function getBuildStatus({ checked } = {}) {
   const clientErrors = splitByBuild({ entries: clientErrorStore.list(), buildId });
   const serverErrors = splitByBuild({ entries: serverErrorStore.list(), buildId });
   const status = {
+    buildId,
     build,
     pages: await getPageBuildStatus({ checked }),
     clientErrors: clientErrors.current,

@@ -78,7 +78,7 @@ const MultipleSelector = ({
   // `outlined` → outlined colored tags; `solid` (or default) → filled colored tags.
   const isOutline = properties.variant === 'outlined';
   // `solid` is not a valid antd Select input variant — use outlined for the frame.
-  let antdVariant = properties.variant;
+  let antdVariant = properties.variant ?? undefined;
   if (properties.variant === 'solid') antdVariant = 'outlined';
   if (properties.bordered === false) antdVariant = 'borderless';
   // antd only shows its loading indicator when no suffixIcon is passed, so swap ours for a spinner.
@@ -139,7 +139,7 @@ const MultipleSelector = ({
               styles={{ content: styles.selector, popup: { root: styles.popup } }}
               disabled={getDisabled({ loading, properties })}
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
-              listHeight={properties.listHeight}
+              listHeight={properties.listHeight ?? undefined}
               loading={loading}
               mode="multiple"
               tagRender={

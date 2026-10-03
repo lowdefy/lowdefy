@@ -19,6 +19,7 @@ import { serializer } from '@lowdefy/helpers';
 import buildPage from '../buildPages/buildPage.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import removeRequestServerKeys from '../../utils/removeRequestServerKeys.js';
 import createPageRegistry from './createPageRegistry.js';
 import validatePageReferences from '../buildPages/validatePageReferences.js';
 import validateIconNames from '../icons/validateIconNames.js';
@@ -86,13 +87,20 @@ function buildShallowPages({ components, context }) {
       delete page[key];
     }
 
+    // Requests are serialized and stripped of their server-only keys before
+    // the page is serialized, as the full build does (writeRequests runs
+    // before writePages), so the page artifact sent to the client never
+    // carries them.
+    const requests = builtPage.requests.map((request) => {
+      const requestJson = serializer.serializeToString(request);
+      removeRequestServerKeys({ request });
+      return { requestId: request.requestId, requestJson };
+    });
+
     return {
       pageId: builtPage.pageId,
       pageJson: serializer.serializeToString(builtPage),
-      requests: (builtPage.requests ?? []).map((req) => ({
-        requestId: req.requestId,
-        requestJson: serializer.serializeToString(req),
-      })),
+      requests,
     };
   });
 

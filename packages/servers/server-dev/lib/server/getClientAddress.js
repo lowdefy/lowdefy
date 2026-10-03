@@ -14,40 +14,21 @@
   limitations under the License.
 */
 
-import crypto from 'node:crypto';
 import net from 'node:net';
 import { type } from '@lowdefy/helpers';
 import { createClientAddressResolver } from '@lowdefy/node-utils';
 
 import lowdefyConfig from '../build/config.js';
-import { JOURNEY_ACTOR_COOKIE, journeyActorToken } from './auth/journeyActor.js';
+import { JOURNEY_COOKIES, readJourneyCookie } from './journeyCookies.js';
 
 const resolveClientAddress = createClientAddressResolver({
   trustedProxies: lowdefyConfig.trustedProxies,
 });
 
-const tokenBuffer = Buffer.from(journeyActorToken);
-
-// The cookie value is "<token>.<address>"; see journeyActor.js.
+// The actor cookie's payload is the address; see journeyActor.js.
 function readJourneyActorAddress(cookieHeader) {
-  const match = (cookieHeader ?? '').match(
-    new RegExp(`(?:^|;\\s*)${JOURNEY_ACTOR_COOKIE}=([^;]+)`)
-  );
-  if (match === null) {
-    return null;
-  }
-  const value = match[1];
-  const separator = value.indexOf('.');
-  if (separator === -1) {
-    return null;
-  }
-  const token = Buffer.from(value.slice(0, separator));
-  const address = value.slice(separator + 1);
-  if (
-    token.length !== tokenBuffer.length ||
-    !crypto.timingSafeEqual(token, tokenBuffer) ||
-    net.isIP(address) === 0
-  ) {
+  const address = readJourneyCookie({ cookieHeader, name: JOURNEY_COOKIES.actor.name });
+  if (address === null || net.isIP(address) === 0) {
     return null;
   }
   return address;

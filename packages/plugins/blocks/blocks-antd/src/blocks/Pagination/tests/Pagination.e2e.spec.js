@@ -159,6 +159,28 @@ test.describe('Pagination Block', () => {
     await expect(getPageItems(pagination)).toHaveCount(4);
   });
 
+  test('wraps a narrow row and keeps the total on one line', async ({ page }) => {
+    const pagination = getPagination(page, 'pagination_narrow');
+    const total = pagination.locator('.ant-pagination-total-text');
+    await expect(total).toHaveText('1-10 of 646 items');
+    await expect(pagination.locator('.ant-pagination-options-size-changer')).toBeVisible();
+
+    const row = await pagination.boundingBox();
+    expect(row.width).toBe(480);
+    const item = await getPageItems(pagination).first().boundingBox();
+    const totalBox = await total.boundingBox();
+    // One line of text is no taller than a page item.
+    expect(totalBox.height).toBeLessThanOrEqual(item.height);
+
+    const tops = new Set();
+    for (const li of await pagination.locator(':scope > li').all()) {
+      const box = await li.boundingBox();
+      expect(box.x + box.width).toBeLessThanOrEqual(row.x + row.width);
+      tops.add(Math.round(box.y));
+    }
+    expect(tops.size).toBeGreaterThan(1);
+  });
+
   test('onChange event skip counts the items before the page', async ({ page }) => {
     const pagination = getPagination(page, 'pagination_skip');
     await getPageItems(pagination).filter({ hasText: '3' }).click();

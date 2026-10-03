@@ -17,19 +17,26 @@
 import { type } from '@lowdefy/helpers';
 
 import initPostHog from '../lib/initPostHog.js';
+import postHogState from '../lib/postHogState.js';
+import subscribeEventFailures from '../lib/subscribeEventFailures.js';
 
 const defaultApiHost = 'https://us.i.posthog.com';
+// Whether lowdefy_event_failed is captured when captureEventFailures is not set.
+const defaultCaptureEventFailures = true;
 
 // Initialise posthog-js. Every other action in this package does nothing until
-// it has run, so run it from the onInit event of every page, shared with _ref.
-// Calling it again with the same apiKey does nothing, which is what makes that
-// safe. The deployment environment (config.environments / LOWDEFY_ENVIRONMENT)
-// is registered as the `environment` super property, so every event carries it.
-async function PostHogInit({ params, lowdefyApp }) {
+// it has run, so run it from the app's events.onInitAsync, which runs once per
+// app load. Calling it again with the same apiKey does nothing, so a per-page
+// placement is safe too. The deployment environment (config.environments /
+// LOWDEFY_ENVIRONMENT), build id and app version are registered as super
+// properties, so every event carries them. Events are enriched with Lowdefy
+// semantics, and failed block and app events are captured as
+// lowdefy_event_failed unless captureEventFailures is false.
+async function PostHogInit({ params, lowdefyApp, trace }) {
   if (!type.isObject(params)) {
     throw new Error(`PostHogInit params must be an object. Received ${JSON.stringify(params)}.`);
   }
-  const { apiKey, apiHost, debug, enabled, options } = params;
+  const { apiKey, apiHost, captureEventFailures, debug, enabled, options } = params;
 
   if (!type.isNone(enabled) && !type.isBoolean(enabled)) {
     throw new Error(
@@ -48,6 +55,13 @@ async function PostHogInit({ params, lowdefyApp }) {
   }
   if (!type.isNone(debug) && !type.isBoolean(debug)) {
     throw new Error(`PostHogInit "debug" must be a boolean. Received ${JSON.stringify(debug)}.`);
+  }
+  if (!type.isNone(captureEventFailures) && !type.isBoolean(captureEventFailures)) {
+    throw new Error(
+      `PostHogInit "captureEventFailures" must be a boolean. Received ${JSON.stringify(
+        captureEventFailures
+      )}.`
+    );
   }
 
   // A disabled deployment never talks to PostHog, so it does not need a key.
@@ -69,15 +83,31 @@ async function PostHogInit({ params, lowdefyApp }) {
     config.debug = debug;
   }
 
-  const superProperties = type.isNone(lowdefyApp?.environment)
-    ? {}
-    : { environment: lowdefyApp.environment };
+  const superProperties = {};
+  if (!type.isNone(lowdefyApp?.environment)) {
+    superProperties.environment = lowdefyApp.environment;
+  }
+  // A config key (~k) is a per-build id, so the build id is what maps one back to its source.
+  if (!type.isNone(lowdefyApp?.buildId)) {
+    superProperties.lowdefy_build_id = lowdefyApp.buildId;
+  }
+  if (!type.isNone(lowdefyApp?.version)) {
+    superProperties.lowdefy_app_version = lowdefyApp.version;
+  }
+  // Read by the before_send hook, which posthog-js calls for every event.
+  postHogState.trace = trace;
   await initPostHog({
     apiKey: apiKey ?? null,
     config,
     enabled: environmentOff ? false : enabled,
     superProperties,
   });
+  if (
+    postHogState.status === 'enabled' &&
+    (captureEventFailures ?? defaultCaptureEventFailures) === true
+  ) {
+    subscribeEventFailures({ trace });
+  }
   return null;
 }
 
