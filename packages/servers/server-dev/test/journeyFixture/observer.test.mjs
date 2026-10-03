@@ -32,14 +32,16 @@ fixtureTest(
     const result = await postJourney({
       pageId: 'home',
       steps: [
-        // Trailing-edge debounce of a minute: the second change bounces the
-        // first, and neither completes while the journey runs.
-        { fill: { blockId: 'debounce_input', value: 'first' } },
-        { fill: { blockId: 'debounce_input', value: 'second' } },
         { fill: { blockId: 'name_input', value: 'Observed item' } },
         { click: 'save_button' },
         { wait: { request: 'save_item' } },
         { expect: { visible: 'save_success' } },
+        // Trailing-edge debounce of a minute: the second change bounces the
+        // first, and neither completes while the journey runs. Last, since a
+        // pending debounce keeps the page from settling after each step.
+        { fill: { blockId: 'debounce_input', value: 'first' } },
+        { fill: { blockId: 'debounce_input', value: 'second' } },
+        { expect: { visible: 'home_title' } },
       ],
     });
     expect(result.failure).toBeUndefined();
