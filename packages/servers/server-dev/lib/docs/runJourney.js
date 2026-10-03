@@ -82,6 +82,7 @@ async function runJourney({
   readConfigFile = defaultReadConfigFile,
   mutantCookie,
   data,
+  recording,
 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
     return {
@@ -175,6 +176,7 @@ async function runJourney({
       dataCookie: session?.cookie,
       mutantCookie,
       users: dataSet?.users,
+      recording,
     });
     journey = opened.journey;
     const { results, screenshots, failure } = await runJourneySteps({ journey, steps });
@@ -213,6 +215,9 @@ async function runJourney({
     return { error: `Failed to run journey at "${url}": ${error.message}` };
   } finally {
     if (!type.isUndefined(journey)) {
+      if (!type.isUndefined(recording)) {
+        await journey.actors.flushRecordings();
+      }
       await journey.actors.closeAll();
     }
     // After the actors: no browser request still carries the data cookie. close() then waits for

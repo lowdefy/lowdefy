@@ -3254,7 +3254,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "2abd4bb4ae106e61869ca8f6bc2fb55f9e5b485af71b78d6419bf4c7562a3f13"
+      "hash": "fdf96578492a0e9ac088dce24a3a81dc21f983329d84c453ff45a64dfdbc7716"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3318,7 +3318,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "eace8a5340a0f7c9ca8f77b7cfc16691d5b05ba519d2eb0eb7f6b3baa0da6898"
+      "hash": "23264cf349b5c371f8765cd0a20a9e3ab71fb61566e76ade488cf3112b1583b0"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3886,7 +3886,7 @@
         "testing/config-tests.yaml",
         "version.yaml"
       ],
-      "hash": "3b04937639e1149b39f46663eafeabedb206448064f80d1994323c6592fb18fb"
+      "hash": "5a4320e78c902421571fd7cf0425eaf31a106a6c453be2f015ac36fb9e23afaf"
     },
     "testing/journey-data-sets": {
       "files": [

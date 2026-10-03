@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import createNetworkCounter from './createNetworkCounter.js';
 import { openPage } from './getBrowser.js';
 
@@ -55,6 +57,7 @@ function createJourneyActors({
   mutantCookie,
   users = {},
   mainActor,
+  recording,
 }) {
   const actors = new Map();
   const counters = new Map();
@@ -85,6 +88,9 @@ function createJourneyActors({
         clientAddress: nextClientAddress(),
         dataCookie,
         mutantCookie,
+        recording: type.isUndefined(recording)
+          ? undefined
+          : { source: recording.source, run: { ...recording.run, actor: name } },
         onContext: (context) => {
           context.on('request', (request) => counter.record(request));
         },
@@ -119,11 +125,24 @@ function createJourneyActors({
     return [...counters.values()].map((counter) => counter.snapshot());
   }
 
+  // Closing a context does not reliably fire pagehide, so each actor's dev
+  // recorder is flushed first, or the journey's last steps would be lost.
+  async function flushRecordings({ capMs = 2000 } = {}) {
+    await Promise.all(
+      [...actors.values()].map(({ page }) =>
+        Promise.race([
+          page.evaluate(() => window.__lowdefyRecorder?.flush()).catch(() => {}),
+          new Promise((resolve) => setTimeout(resolve, capMs)),
+        ])
+      )
+    );
+  }
+
   async function closeAll() {
     await Promise.all([...actors.values()].map(({ context }) => context.close().catch(() => {})));
   }
 
-  return { switchTo, current, countCalls, leftOrigin, networkSnapshots, closeAll };
+  return { switchTo, current, countCalls, leftOrigin, networkSnapshots, flushRecordings, closeAll };
 }
 
 export default createJourneyActors;

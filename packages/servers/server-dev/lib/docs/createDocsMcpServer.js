@@ -15,7 +15,7 @@
 */
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { type } from '@lowdefy/helpers';
+import { createTraceId, type } from '@lowdefy/helpers';
 
 import checkpointToMocks from './checkpointToMocks.js';
 import createConfigCheckpoint from './createConfigCheckpoint.js';
@@ -298,6 +298,8 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
         state,
         stepTimeout: timeout,
         data,
+        // Each call is its own journey run, recorded apart from the suite's.
+        recording: { source: 'journey', run: { id: createTraceId(), by: 'agent', journey: null } },
       });
       if (result.error) {
         return notFoundResult(result.error);

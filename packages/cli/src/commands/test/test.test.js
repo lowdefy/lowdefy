@@ -54,6 +54,7 @@ beforeEach(() => {
     directories: {
       config: configDirectory,
       journeys: path.join(configDirectory, 'tests', 'journeys'),
+      traces: path.join(configDirectory, '.lowdefy', 'traces'),
     },
     options: { port: 3000 },
     logger: {
@@ -341,4 +342,53 @@ test("test writes each journey's newest exercised path to .lowdefy/test/exercise
       },
     },
   });
+});
+
+test('a full-suite run records every journey into one run on its first repetition only', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'second journey' }));
+  context.options.repeat = '2';
+  await test({ context });
+  const bodies = mockPost.mock.calls.map(([, body]) => body);
+  expect(bodies).toHaveLength(4);
+  const recordings = bodies.map((body) => body.recording);
+  expect(recordings[0]).toEqual({
+    run: expect.stringMatching(/^\d{8}T\d{6}Z-[a-z0-9]{6}$/),
+    journey: 'tests/journeys/a.yaml#first journey',
+  });
+  expect(recordings[1]).toBeUndefined();
+  expect(recordings[2]).toEqual({
+    run: recordings[0].run,
+    journey: 'tests/journeys/b.yaml#second journey',
+  });
+  expect(recordings[3]).toBeUndefined();
+  const date = `${recordings[0].run.slice(0, 4)}-${recordings[0].run.slice(
+    4,
+    6
+  )}-${recordings[0].run.slice(6, 8)}`;
+  expect(logs.info).toContain(
+    `Recorded this run to ${path.join(
+      configDirectory,
+      '.lowdefy',
+      'traces',
+      'journey',
+      date,
+      `${recordings[0].run}.jsonl`
+    )}.`
+  );
+});
+
+test('a --filter run and a run of named paths record nothing', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  context.options.filter = 'first';
+  await test({ context });
+  delete context.options.filter;
+  context.options.paths = [path.join(configDirectory, 'tests', 'journeys', 'a.yaml')];
+  await test({ context });
+  const bodies = mockPost.mock.calls.map(([, body]) => body);
+  expect(bodies).toHaveLength(2);
+  bodies.forEach((body) => expect(body).not.toHaveProperty('recording'));
+  expect(logs.info.some((line) => line.startsWith('Recorded this run'))).toBe(false);
 });

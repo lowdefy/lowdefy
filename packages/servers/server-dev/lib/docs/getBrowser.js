@@ -23,6 +23,7 @@ import isPageReady from './isPageReady.js';
 import { HEADLESS_USER_COOKIE } from '../server/auth/headlessUser.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
 import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js';
+import recordingCookiePayload from '../server/recording/recordingCookiePayload.js';
 
 // playwright-core does not bundle a browser (unlike @playwright/test) — it
 // only drives one that is already installed. `channel: 'chrome'` picks up a
@@ -94,6 +95,7 @@ async function openPage({
   clientAddress,
   dataCookie,
   mutantCookie,
+  recording,
   onContext,
   timeout = 15000,
 }) {
@@ -165,6 +167,17 @@ async function openPage({
         writeJourneyCookie({ name: JOURNEY_COOKIES.mutant.name, payload: mutantCookie, origin }),
       ]);
     }
+    // Every headless context is marked for the dev recorder: 'off' unless the
+    // caller records a journey or explorer run, so screenshots and inspection
+    // never record, and a run's records are labelled by the server, not the
+    // page. See lib/server/recording.
+    await context.addCookies([
+      writeJourneyCookie({
+        name: JOURNEY_COOKIES.recording.name,
+        payload: recordingCookiePayload({ recording }),
+        origin,
+      }),
+    ]);
     const page = await context.newPage();
     // 'load', not 'networkidle': every dev page holds the /api/reload event
     // stream open, so the network never goes idle and a networkidle wait

@@ -442,6 +442,10 @@ test('MCP tools/call lowdefy_run_journey returns the JSON result followed by one
     user: { roles: ['admin'] },
     urlQuery: { id: '1' },
     state: ['saved'],
+    recording: {
+      source: 'journey',
+      run: { id: expect.stringMatching(/^\d{8}T\d{6}Z-[a-z0-9]{6}$/), by: 'agent', journey: null },
+    },
   });
   expect(result.content).toHaveLength(3);
   const summary = JSON.parse(result.content[0].text);

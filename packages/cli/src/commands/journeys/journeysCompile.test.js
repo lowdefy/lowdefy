@@ -323,15 +323,77 @@ test('journeys compile refuses trace files whose records are all journey runs', 
   );
 });
 
-test('journeys compile without trace files says recordings are not readable yet', async () => {
+function writeRecording({ source, id, records }) {
+  const date = `${id.slice(0, 4)}-${id.slice(4, 6)}-${id.slice(6, 8)}`;
+  const directory = path.join(configDirectory, '.lowdefy', 'traces', source, date);
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(
+    path.join(directory, `${id}.jsonl`),
+    records.map((entry) => JSON.stringify(entry)).join('\n')
+  );
+}
+
+function traceId(time, suffix) {
+  const iso = new Date(time).toISOString();
+  return `${iso.slice(0, 10).replace(/-/g, '')}T${iso.slice(11, 19).replace(/:/g, '')}Z-${suffix}`;
+}
+
+test('journeys compile --source dev reads the dev recordings and writes dev candidates', async () => {
+  writeBlockMetas();
+  const start = now - 60 * 60 * 1000;
+  writeRecording({
+    source: 'dev',
+    id: traceId(start, 'aaaaaa'),
+    records: session({ id: traceId(start, 'aaaaaa'), start }),
+  });
   context.options.source = 'dev';
+  const { candidates: compiled } = await journeysCompile({ context, params: [[]] });
+  expect(compiled).toHaveLength(1);
+  expect(candidates('dev')).toEqual([compiled[0].fileName]);
+});
+
+test('journeys compile --source explorer reads the explorer recordings', async () => {
+  const start = now - 60 * 60 * 1000;
+  writeRecording({
+    source: 'explorer',
+    id: traceId(start, 'eeeeee'),
+    records: session({ id: 'walk-1', start, source: 'explorer' }),
+  });
+  context.options.source = 'explorer';
+  await journeysCompile({ context, params: [[]] });
+  expect(candidates('explorer')).toHaveLength(1);
+});
+
+test('journeys compile --source dev --since skips recordings older than the window', async () => {
+  const old = now - 10 * 24 * 60 * 60 * 1000;
+  writeRecording({
+    source: 'dev',
+    id: traceId(old, 'oldold'),
+    records: session({ id: 'old-session', start: old }),
+  });
+  context.options.source = 'dev';
+  context.options.since = '2d';
+  const { segments } = await journeysCompile({ context, params: [[]] });
+  expect(segments).toEqual([]);
+  expect(candidates('dev')).toEqual([]);
+});
+
+test('journeys compile reads the files given even when recordings exist', async () => {
+  const start = now - 60 * 60 * 1000;
+  writeRecording({
+    source: 'dev',
+    id: traceId(start, 'aaaaaa'),
+    records: session({ id: 'recorded', start, value: 'boots' }),
+  });
+  const file = writeTrace('trace.jsonl', session({ id: 'from-file', start }));
+  context.options.source = 'dev';
+  const { segments } = await journeysCompile({ context, params: [[file]] });
+  expect(segments.map((segment) => segment.session)).toEqual(['from-file']);
+});
+
+test('journeys compile without trace files needs a source, and refuses production', async () => {
   await expect(journeysCompile({ context, params: [[]] })).rejects.toThrow(
-    `Reading dev recordings from ${path.join(
-      configDirectory,
-      '.lowdefy',
-      'traces',
-      'dev'
-    )} is not available yet: pass the trace files to compile.`
+    'lowdefy journeys compile needs trace files, or --source to choose recorded traces.'
   );
   context.options.source = 'production';
   await expect(journeysCompile({ context, params: [[]] })).rejects.toThrow(
