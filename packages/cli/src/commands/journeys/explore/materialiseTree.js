@@ -14,21 +14,25 @@
   limitations under the License.
 */
 
-import { execFile } from 'child_process';
 import fs from 'fs';
 import path from 'path';
-import { promisify } from 'util';
 
 import runGit from './runGit.js';
 
-const execFileAsync = promisify(execFile);
-
-// The base commit's whole repository, extracted with `git archive` into
+// The base commit's whole repository, checked out into
 // <exploreDirectory>/trees/<sha>/ and kept as a cache. The whole repository,
 // not only the app, because _refs and local modules can reach outside the
-// app directory. Archiving registers no worktree, so `git worktree list` is
-// untouched. Returns the base config directory: the same path relative to
-// the git root as the head's.
+// app directory. Returns the base config directory: the same path relative
+// to the git root as the head's.
+//
+// The tree is read into a temporary index and checked out from there, not
+// extracted with `git archive` or `git worktree add`. `git archive` applies
+// .gitattributes export rules (export-ignore paths go missing, export-subst
+// files are rewritten) and skips checkout filters such as LFS smudge, so its
+// output can differ from the commit. `git worktree add` registers a worktree
+// that `git worktree list` (and the hub's checkout guard) would then see. A
+// temporary-index checkout writes exactly the commit's tree, runs the
+// repository's checkout filters and registers nothing.
 async function materialiseTree({ root, sha, configDirectory, exploreDirectory }) {
   const treesDirectory = path.join(exploreDirectory, 'trees');
   const treeDirectory = path.join(treesDirectory, sha);
@@ -43,15 +47,21 @@ async function materialiseTree({ root, sha, configDirectory, exploreDirectory })
   // Extracted beside the cache and renamed into place, so an interrupted
   // extract never reads as a cached tree.
   const partialDirectory = `${treeDirectory}.partial-${process.pid}`;
-  const archivePath = `${partialDirectory}.tar`;
+  const indexPath = path.resolve(`${partialDirectory}.index`);
+  const env = { GIT_INDEX_FILE: indexPath };
   await fs.promises.rm(partialDirectory, { recursive: true, force: true });
   await fs.promises.mkdir(partialDirectory, { recursive: true });
   try {
-    await runGit({ args: ['archive', '--format=tar', '-o', archivePath, sha], cwd: root });
-    await execFileAsync('tar', ['-xf', archivePath, '-C', partialDirectory]);
+    await runGit({ args: ['read-tree', sha], cwd: root, env });
+    // The trailing separator makes the prefix a directory, not a file name prefix.
+    await runGit({
+      args: ['checkout-index', '-a', `--prefix=${path.resolve(partialDirectory)}${path.sep}`],
+      cwd: root,
+      env,
+    });
     await fs.promises.rename(partialDirectory, treeDirectory);
   } finally {
-    await fs.promises.rm(archivePath, { force: true });
+    await fs.promises.rm(indexPath, { force: true });
     await fs.promises.rm(partialDirectory, { recursive: true, force: true });
   }
   return { ...result, cached: false };

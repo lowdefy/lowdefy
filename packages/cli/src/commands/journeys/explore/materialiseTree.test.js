@@ -119,3 +119,40 @@ test('materialiseTree reuses a tree it extracted before', async () => {
   expect(second.configDirectory).toEqual(first.treeDirectory);
   expect(fs.readFileSync(path.join(second.treeDirectory, 'marker'), 'utf8')).toEqual('kept');
 });
+
+test('materialiseTree checks out the exact commit tree with its filters and registers no worktree', async () => {
+  git(['config', 'filter.upper.smudge', 'tr a-z A-Z'], repo);
+  git(['config', 'filter.upper.clean', 'cat'], repo);
+  commitFile({
+    repo,
+    file: '.gitattributes',
+    content: 'tests/** export-ignore\n*.up filter=upper\n',
+    message: 'Attributes',
+  });
+  commitFile({ repo, file: 'x.up', content: 'smudged on checkout\n', message: 'Filtered' });
+  const base = commitFile({
+    repo,
+    file: 'tests/journey.yaml',
+    content: 'base journey\n',
+    message: 'Ignored by archive',
+  });
+  commitFile({ repo, file: 'tests/journey.yaml', content: 'head journey\n', message: 'Change' });
+  const worktreesBefore = git(['worktree', 'list', '--porcelain'], repo);
+  const exploreDirectory = path.join(repo, '.lowdefy', 'explore');
+
+  const tree = await materialiseTree({
+    root: repo,
+    sha: base,
+    configDirectory: repo,
+    exploreDirectory,
+  });
+
+  expect(fs.readFileSync(path.join(tree.treeDirectory, 'tests', 'journey.yaml'), 'utf8')).toEqual(
+    'base journey\n'
+  );
+  expect(fs.readFileSync(path.join(tree.treeDirectory, 'x.up'), 'utf8')).toEqual(
+    'SMUDGED ON CHECKOUT\n'
+  );
+  expect(git(['worktree', 'list', '--porcelain'], repo)).toEqual(worktreesBefore);
+  expect(fs.readdirSync(path.join(exploreDirectory, 'trees'))).toEqual([base]);
+});

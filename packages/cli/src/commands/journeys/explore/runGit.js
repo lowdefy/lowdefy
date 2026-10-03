@@ -19,11 +19,15 @@ import { promisify } from 'util';
 
 const execFileAsync = promisify(execFile);
 
-// Runs git in cwd and returns its stdout without the trailing newline. A
-// failing command throws with git's own message.
-async function runGit({ args, cwd }) {
+// Runs git in cwd and returns its stdout without the trailing newline. env
+// is merged over process.env. A failing command throws with git's own message.
+async function runGit({ args, cwd, env }) {
   try {
-    const { stdout } = await execFileAsync('git', args, { cwd, maxBuffer: 64 * 1024 * 1024 });
+    const { stdout } = await execFileAsync('git', args, {
+      cwd,
+      env: { ...process.env, ...env },
+      maxBuffer: 64 * 1024 * 1024,
+    });
     return stdout.replace(/\n$/, '');
   } catch (error) {
     const message = (error.stderr ?? '').trim() || error.message;
