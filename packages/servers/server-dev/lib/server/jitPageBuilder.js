@@ -51,7 +51,6 @@ const pageCache = new PageCache();
 let keptContext = null;
 let registry = null;
 let registryIdentity = null;
-let registryMtime = null;
 let lastChangeSignal = null;
 // Counts the change events (page file edits) this process has seen. A compiled
 // page whose checkedAt is behind it has its inputs checked before it is served.
@@ -62,9 +61,11 @@ let budgetExceeded = false;
 // the same config build as the one before it, so its keys need their own
 // prefix, or both would hand out the same keys for different nodes.
 const childId = crypto.randomBytes(3).toString('hex');
-// Counts the build contexts this process has created. A page built on an
-// earlier context is rebuilt, and a context's jitMaps files carry it.
-let contextGeneration = 0;
+// The generation of the current build context, or of the next one when none is
+// made yet. A page built on an earlier generation is rebuilt, and a context's
+// jitMaps files carry it.
+let contextGeneration = 1;
+let previousContextGeneration = 0;
 
 // Frozen snapshot of the icon names in the dev client bundle, from the initial
 // build. Module-level so it persists across context resets: skeleton rebuilds
@@ -193,22 +194,29 @@ function createBuildContext(buildDirectory, configDirectory) {
   // The context's page builds write the entries they add to jitMaps/. Only the
   // previous context's files are kept besides its own: they resolve errors that
   // pages built just before the recreation still report.
-  contextGeneration += 1;
   context.jitMaps = createJitMaps({
     keyMap: context.keyMap,
     refMap: context.refMap,
     name: `${childId}-${contextGeneration}`,
   });
-  pruneJitMaps({ buildDirectory, keep: `${childId}-${contextGeneration - 1}-` });
+  pruneJitMaps({ buildDirectory, keep: `${childId}-${previousContextGeneration}-` });
+  previousContextGeneration = contextGeneration;
   skipStaleMapWrites({
     buildDirectory,
     context,
     keyPrefix: idCounter.prefix,
   });
   prepareJitContext(context);
-  budgetExceeded = false;
 
   return context;
+}
+
+// The next page build makes a new context, of a new generation. Pages built on
+// this one are rebuilt.
+function discardBuildContext() {
+  keptContext = null;
+  contextGeneration += 1;
+  budgetExceeded = false;
 }
 
 // The build context JIT page builds share. It outlives page edits and is
@@ -235,8 +243,8 @@ function startChangeEvent(configDirectory) {
 
 // Reads what the manager and the config build changed since the last call, and
 // acts on it: a new build/invalidatePages value is a change event; a newly
-// published page registry, or a context past its budget, recreates the build
-// context. Both a page request and the build status review call it first, so
+// published page registry, or a context past its budget, discards the build
+// context, so the next page build makes a new one. Both a page request and the build status review call it first, so
 // each sees an edit the other has not.
 export function syncBuildSignals({ buildDirectory, configDirectory }) {
   const changeSignal = readChangeSignal(buildDirectory);
@@ -250,13 +258,11 @@ export function syncBuildSignals({ buildDirectory, configDirectory }) {
   }
   if (identity !== registryIdentity) {
     registryIdentity = identity;
-    registryMtime = fs.statSync(path.join(buildDirectory, 'pageRegistry.json')).mtimeMs;
     registry = readJsonFile(path.join(buildDirectory, 'pageRegistry.json'));
-    keptContext = createBuildContext(buildDirectory, configDirectory);
+    discardBuildContext();
   } else if (budgetExceeded) {
-    keptContext = createBuildContext(buildDirectory, configDirectory);
+    discardBuildContext();
   }
-  getBuildContext(buildDirectory, configDirectory);
   return { registry, eventCounter, generation: contextGeneration };
 }
 
@@ -264,20 +270,31 @@ function countAddedMapEntries(context) {
   return context.jitMaps.keys.added.length + context.jitMaps.refs.added.length;
 }
 
-// Whether a compiled page can be served as it is. A page built on an earlier
-// context is not: its content, _js and icons belong to a context that is gone.
-// A page checked up to the current event is. Otherwise its last build's inputs
-// are checked, and a match moves its checkedAt to the event the check started at.
+// Whether a page's last build still describes it: 'current' or 'edited'. A
+// page built on an earlier context is edited: its content, _js and icons
+// belong to a context that is gone. A page checked up to the current change
+// event is current. Otherwise its last build's inputs are checked
+// (checkPageRecord), and a match moves its checkedAt to the event the check
+// started at, so the next request or review does not check it again. A page
+// request and the build status review both decide with this, so a build
+// status wait builds exactly the pages the next requests would.
+export async function reviewBuiltPage({ pageId, eventCounter: counter, generation }) {
+  const record = pageBuildRecords.get(pageId);
+  if (!record || record.generation !== generation) return 'edited';
+  const compiled = pageCache.get(pageId);
+  if (record.checkedAt === counter || compiled?.checkedAt === counter) return 'current';
+  const check = await checkPageRecord({ record, readConfigFile: keptContext.readConfigFile });
+  if (check !== 'current') return 'edited';
+  record.checkedAt = Math.max(record.checkedAt, counter);
+  pageCache.markChecked(pageId, { generation, checkedAt: counter });
+  return 'current';
+}
+
+// Whether a compiled page can be served as it is.
 async function isPageCurrent({ pageId, eventCounter: counter, generation }) {
   const compiled = pageCache.get(pageId);
   if (!compiled || compiled.generation !== generation) return false;
-  if (compiled.checkedAt === counter) return true;
-  const record = pageBuildRecords.get(pageId);
-  if (!record || record.generation !== generation) return false;
-  const check = await checkPageRecord({ record, readConfigFile: keptContext.readConfigFile });
-  if (check !== 'current') return false;
-  pageCache.markChecked(pageId, { generation, checkedAt: counter });
-  return true;
+  return (await reviewBuiltPage({ pageId, eventCounter: counter, generation })) === 'current';
 }
 
 async function buildPage({ pageId, buildDirectory, configDirectory }) {
@@ -298,7 +315,6 @@ async function buildPage({ pageId, buildDirectory, configDirectory }) {
     configDirectory,
     generation,
     checkedAt,
-    registryMtime,
     build: () => buildPageJit({ pageId, pageRegistry, context }),
   });
   if (context === keptContext && countAddedMapEntries(context) > contextMapBudget) {

@@ -18,47 +18,29 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import pageBuildRecords from '../server/pageBuildRecords.js';
+import { reviewBuiltPage } from '../server/jitPageBuilder.js';
 
-// A file's modified time, or null when it is gone. Each call returns a reader
-// that stats a file once, so pages that share files cost one stat per file.
-function createModifiedAt() {
-  const modifiedTimes = new Map();
-  return function modifiedAt(filePath) {
-    if (!modifiedTimes.has(filePath)) {
-      let mtime = null;
-      try {
-        mtime = fs.statSync(filePath).mtimeMs;
-      } catch {
-        mtime = null;
-      }
-      modifiedTimes.set(filePath, mtime);
-    }
-    return modifiedTimes.get(filePath);
-  };
+async function readModifiedAt(filePath) {
+  try {
+    return (await fs.promises.stat(filePath)).mtimeMs;
+  } catch {
+    return null;
+  }
 }
 
-// A built page is edited when a file its last JIT build read has changed or
-// gone since that build, or when a config build has replaced the page registry
-// it was built against: the page builds against that build's connections,
-// endpoints and plugin types, so an error it failed with may be fixed, or a new
-// one caused, without any of its own files changing. A page not built since the
-// server started is edited when its own page file changed after the start.
+// A page built since the server started is edited when its next request would
+// rebuild it (see reviewBuiltPage): it was built on an earlier build context
+// (a config build was published since), or a change event since its build
+// touched it, which for a page whose build ran app code is any change event.
+// A page not built since the server started is edited when its own page file
+// changed after the start. signals is what syncBuildSignals returned.
 // Returns 'edited', 'unbuilt' (never built and not edited) or 'current'.
-function reviewPage({ pageId, entry, modifiedAt, configDirectory }) {
-  const record = pageBuildRecords.get(pageId);
-  if (record) {
-    const registryMtime = modifiedAt(path.join(process.cwd(), 'build', 'pageRegistry.json'));
-    if (record.registryMtime !== registryMtime) {
-      return 'edited';
-    }
-    const changed = [...record.files.keys()].some((filePath) => {
-      const mtime = modifiedAt(filePath);
-      return mtime === null || mtime > record.builtAt;
-    });
-    return changed ? 'edited' : 'current';
+async function reviewPage({ pageId, entry, configDirectory, signals }) {
+  if (pageBuildRecords.get(pageId)) {
+    return reviewBuiltPage({ pageId, ...signals });
   }
   const pageFileModifiedAt = entry?.refPath
-    ? modifiedAt(path.resolve(configDirectory, entry.refPath))
+    ? await readModifiedAt(path.resolve(configDirectory, entry.refPath))
     : null;
   if (pageFileModifiedAt !== null && pageFileModifiedAt > performance.timeOrigin) {
     return 'edited';
@@ -66,5 +48,4 @@ function reviewPage({ pageId, entry, modifiedAt, configDirectory }) {
   return 'unbuilt';
 }
 
-export { createModifiedAt };
 export default reviewPage;

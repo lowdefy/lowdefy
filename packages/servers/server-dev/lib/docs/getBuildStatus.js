@@ -37,7 +37,7 @@ function splitByBuild({ entries, buildId }) {
 // createHandleError. Lets an agent check "did my last edit work?" without
 // tailing terminal logs. Errors reported under an earlier build are listed
 // apart under earlierErrors.
-function getBuildStatus({ checked } = {}) {
+async function getBuildStatus({ checked } = {}) {
   const build = readBuildArtifact({ name: 'buildStatus.json' }) ?? {
     status: 'unknown',
     message:
@@ -49,7 +49,7 @@ function getBuildStatus({ checked } = {}) {
   const serverErrors = splitByBuild({ entries: serverErrorStore.list(), buildId });
   const status = {
     build,
-    pages: getPageBuildStatus({ checked }),
+    pages: await getPageBuildStatus({ checked }),
     clientErrors: clientErrors.current,
     serverErrors: serverErrors.current,
   };
