@@ -59,6 +59,15 @@ test('trace unsubscribe stops a listener', () => {
   expect(listener).not.toHaveBeenCalled();
 });
 
+test('trace hasSubscribers is true only while a listener is subscribed', () => {
+  const trace = getTrace({});
+  expect(trace.hasSubscribers()).toBe(false);
+  const unsubscribe = trace.subscribe(() => {});
+  expect(trace.hasSubscribers()).toBe(true);
+  unsubscribe();
+  expect(trace.hasSubscribers()).toBe(false);
+});
+
 test('trace wantsState is true only while a state subscriber is subscribed', () => {
   const trace = getTrace({});
   expect(trace.wantsState()).toBe(false);
@@ -113,5 +122,6 @@ test('trace actionView has subscribe and the describe functions and no engine-on
   expect(trace.actionView.pageIdOf).toBe(trace.pageIdOf);
   expect(trace.actionView.emit).toBeUndefined();
   expect(trace.actionView.wantsState).toBeUndefined();
+  expect(trace.actionView.hasSubscribers).toBeUndefined();
   expect(trace.actionView).toBe(trace.actionView);
 });

@@ -272,6 +272,12 @@ Journeys can be compiled from real use. A recorded trace is a JSONL file of inte
 pnpx lowdefy@5 journeys compile .lowdefy/traces/dev/2026-10-03/*.jsonl
 ```
 
+Without trace files, `--source dev` or `--source explorer` reads every recording under `.lowdefy/traces/<source>/` (narrowed by `--since`):
+
+```
+pnpx lowdefy@5 journeys compile --source dev --since 2h
+```
+
 It cuts each browser tab's recording into segments (a fresh page load starts one), groups segments that do the same thing step by step, and writes one candidate per group to `tests/journeys/_candidates/<source>/<pageId>-<hash>.yaml`, ranked by how often the flow happened and how often it failed. `lowdefy test` does not read `_candidates/`, so candidates never run until you move them.
 
 ```yaml
@@ -301,7 +307,7 @@ To promote a candidate, move it into `tests/journeys/`, give it a name, fill eve
 
 ### Options
 
-- `[traceFiles...]`: The trace files to compile, wherever they are.
+- `[traceFiles...]`: The trace files to compile, wherever they are. Without them, `dev` and `explorer` recordings are read from `.lowdefy/traces/<source>/`.
 - `--source <production|dev|explorer>`: Compile only records of this source. Required when no trace files are given; with files, the source comes from the records. `--source production` with no files reads the cache [`lowdefy journeys pull posthog`](#production-journeys) writes, and fails naming the pull to run when a day of the window is missing. Journey runs (`journey` traces) are coverage, not candidates, and are refused.
 - `--since <since>`: Only records at or after this time, as a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production traces default to the last 30 days.
 - `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: Production only. An explicit window of whole UTC days instead of `--since`.
@@ -368,6 +374,31 @@ No command removes a journey for lack of production use. A 30-day window cannot 
 | Role        | (page, role set) pairs seen in production                         | a journey visiting the page runs as a user with exactly that role set |
 
 It writes the measures, a production profile (the top flows per entry page, failure paths, frustrated blocks, role sets per page and entry pages) and each journey's interactions to `.lowdefy/test/coverage.json`, which is rewritten on every run and not committed. With a mutation report, the suite's mutation score is added as a sixth number.
+
+## Dev recordings
+
+`lowdefy dev` records how you use your app in the browser, so an agent can turn what you just tried into journeys. Recording is on by default and stays on your machine:
+
+- Every tab you open on the development server records its clicks, typed values, key presses and page views, joined to the events they ran and the state those events wrote, to `.lowdefy/traces/dev/<date>/<session>.jsonl` in your config directory. `.lowdefy/` is not committed.
+- Values you type are kept, so a recording can include data your app shows you. Password fields are never recorded: their values, and the state they write, are replaced with `null`.
+- Recordings are kept for 7 days or 200 MB, whichever comes first. The development server deletes older ones at start and then every hour.
+- Set `LOWDEFY_DEV_RECORD=false` in your shell or in the app's `.env` to turn recording off. Old recordings are still pruned.
+
+`lowdefy test` records too, as `journey` traces under `.lowdefy/traces/journey/`, but only when it runs the whole suite once: no journey paths, no `--filter`, and only the first of `--repeat` runs. Those traces show what the suite actually drives. Screenshots, state inspection and other agent tools never record.
+
+`lowdefy journeys recordings` lists what was recorded, newest first: when each session ran, against which build, the pages it visited, how many attempts ended in an error, and how many of its interactions the newest test run already drove.
+
+```
+14:03–14:21   build 14:02   tickets → ticket → tickets   3 attempts, 1 failed (Validate on assign_submit: assignee)   4/11 interactions already covered by tests
+13:40–13:44   build 13:31   settings   1 attempt   0/3 interactions already covered by tests
+```
+
+- `--since <since>`: Only sessions at or after this time, as a duration back from now (`30m`, `2h`, `7d`) or an ISO date.
+- `--page <pageId>`: Only sessions that visited this page.
+- `--build <id|current>`: Only sessions recorded against this build. `current` is the build the running development server serves.
+- `--json`: Print the sessions as JSON, for agents.
+
+`lowdefy agent-setup` installs a `journeys-from-dev` skill that uses these commands: it compiles the session you pick with `lowdefy journeys compile --source dev`, runs each candidate three times with `lowdefy test --repeat 3`, and leaves the candidates that pass for you to keep.
 
 ## Continuous integration
 

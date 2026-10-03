@@ -14,6 +14,9 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
+import createNetworkCounter from './createNetworkCounter.js';
 import { openPage } from './getBrowser.js';
 
 let actorCount = 0;
@@ -35,13 +38,30 @@ function nextClientAddress() {
 // open while the owner removes them - are signed in at the same time. An
 // actor opens the journey's page, as the journey's user, the first time its
 // name is switched to, and keeps its tab as it left it when the journey
-// switches away and back.
-function createJourneyActors({ browser, origin, pageId, user, urlQuery, width, height, timeout }) {
+// switches away and back. Each actor's context feeds its own network counter
+// from before its first navigation, so what the journey touched is measured
+// per actor and merged at the end.
+function createJourneyActors({
+  browser,
+  origin,
+  basePath,
+  pageId,
+  user,
+  urlQuery,
+  width,
+  height,
+  timeout,
+  mutantCookie,
+  recording,
+}) {
   const actors = new Map();
+  const counters = new Map();
   let currentName;
 
   async function switchTo(name) {
     if (!actors.has(name)) {
+      const counter = createNetworkCounter({ origin, basePath });
+      counters.set(name, counter);
       const opened = await openPage({
         browser,
         origin,
@@ -51,6 +71,13 @@ function createJourneyActors({ browser, origin, pageId, user, urlQuery, width, h
         width,
         height,
         clientAddress: nextClientAddress(),
+        mutantCookie,
+        recording: type.isUndefined(recording)
+          ? undefined
+          : { source: recording.source, run: { ...recording.run, actor: name } },
+        onContext: (context) => {
+          context.on('request', (request) => counter.record(request));
+        },
         timeout,
       });
       actors.set(name, opened);
@@ -63,11 +90,32 @@ function createJourneyActors({ browser, origin, pageId, user, urlQuery, width, h
     return actors.get(currentName);
   }
 
+  function countCalls(query) {
+    return counters.get(currentName).countCalls(query);
+  }
+
+  function networkSnapshots() {
+    return [...counters.values()].map((counter) => counter.snapshot());
+  }
+
+  // Closing a context does not reliably fire pagehide, so each actor's dev
+  // recorder is flushed first, or the journey's last steps would be lost.
+  async function flushRecordings({ capMs = 2000 } = {}) {
+    await Promise.all(
+      [...actors.values()].map(({ page }) =>
+        Promise.race([
+          page.evaluate(() => window.__lowdefyRecorder?.flush()).catch(() => {}),
+          new Promise((resolve) => setTimeout(resolve, capMs)),
+        ])
+      )
+    );
+  }
+
   async function closeAll() {
     await Promise.all([...actors.values()].map(({ context }) => context.close().catch(() => {})));
   }
 
-  return { switchTo, current, closeAll };
+  return { switchTo, current, countCalls, networkSnapshots, flushRecordings, closeAll };
 }
 
 export default createJourneyActors;

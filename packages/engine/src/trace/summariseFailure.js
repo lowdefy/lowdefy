@@ -14,16 +14,10 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
 // The value-free summary of a failed event, from the { error, action, index } wrapper
 // callActions records (or { error } for a control-flow parser error, which has no action).
 // Consumers never learn the wrapper shape.
-function summariseFailure(wrapper) {
-  if (type.isNone(wrapper)) {
-    return null;
-  }
-  const { error, action } = wrapper;
+function summariseFailure({ error, action }) {
   return {
     actionId: action?.id ?? null,
     actionType: action?.type ?? null,

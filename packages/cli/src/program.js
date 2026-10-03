@@ -33,6 +33,7 @@ import initVercel from './commands/init-vercel/initVercel.js';
 import journeysCompile from './commands/journeys/journeysCompile.js';
 import journeysCoverage from './commands/journeys/journeysCoverage.js';
 import journeysEvidence from './commands/journeys/journeysEvidence.js';
+import journeysRecordings from './commands/journeys/journeysRecordings.js';
 import journeysPullPosthog from './commands/journeys/pull/journeysPullPosthog.js';
 import mcp from './commands/mcp/mcp.js';
 import start from './commands/start/start.js';
@@ -353,6 +354,31 @@ const journeysCoverageCommand = journeys
 productionWindowOptions.forEach((option) => journeysCoverageCommand.addOption(option));
 journeysCoverageCommand.action(runCommand({ cliVersion, handler: journeysCoverage }));
 
+journeys
+  .command('recordings')
+  .description(
+    'List the dev sessions the dev server recorded, with what the newest test run already covers.'
+  )
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--since <since>',
+      'Sessions at or after this time: a duration back from now (30m, 2h, 7d) or an ISO date.'
+    )
+  )
+  .addOption(new Option('--page <pageId>', 'Only sessions that visited this page.'))
+  .addOption(
+    new Option(
+      '--build <build>',
+      'Only sessions recorded against this build; "current" is the build the running dev server serves.'
+    )
+  )
+  .addOption(new Option('--json', 'Print the sessions as JSON on stdout.'))
+  .action(runCommand({ cliVersion, handler: journeysRecordings }));
+
 program
   .command('init')
   .description('Initialize a Lowdefy project.')
@@ -410,7 +436,11 @@ program
 program
   .command('test')
   .description("Run the app's config tests (tests/journeys/*.yaml).")
-  .usage('[options]')
+  .usage('[options] [paths...]')
+  .argument(
+    '[paths...]',
+    'Journey files or directories to run instead of tests/journeys/*.yaml, anywhere under the config directory (tests/journeys/_candidates included).'
+  )
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)
@@ -431,11 +461,19 @@ program
   .addOption(options.refResolver)
   .addOption(
     new Option(
+      '--repeat <n>',
+      'Run each journey n times (1 to 10) and classify it PASS, FLAKY or FAIL. Default 1.'
+    )
+  )
+  .addOption(
+    new Option(
       '--url <url>',
       'Run tests against an already running dev server instead of starting one, e.g. http://localhost:3000.'
     )
   )
-  .action(runCommand({ cliVersion, handler: test }));
+  .action((paths, commandOptions, command) =>
+    runCommand({ cliVersion, handler: test })({ ...commandOptions, paths }, command)
+  );
 
 program
   .command('upgrade')

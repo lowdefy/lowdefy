@@ -18,6 +18,7 @@ import applyArrayIndices from './applyArrayIndices.js';
 import builtinMessages from './builtinMessages.js';
 import cachedPromises from './cachedPromises.js';
 import cleanBuildArtifact from './cleanBuildArtifact.js';
+import createTraceId from './createTraceId.js';
 import extractErrorProps from './extractErrorProps.js';
 import findInteractiveControls from './findInteractiveControls.js';
 import get from './get.js';
@@ -28,6 +29,7 @@ import getLocaleGroupSeparator from './getLocaleGroupSeparator.js';
 import getOperatorType from './getOperatorType.js';
 import isInteractiveControl from './isInteractiveControl.js';
 import isMountEventName from './isMountEventName.js';
+import isTraceId from './isTraceId.js';
 import { isReserved, ReservedKeyError } from './ReservedKeyError.js';
 import joinPath from './joinPath.js';
 import journeyTargetSelectors from './journeyTargetSelectors.js';
@@ -46,6 +48,7 @@ import setKey from './setKey.js';
 import splitPath from './splitPath.js';
 import stableStringify from './stableStringify.js';
 import swap from './swap.js';
+import traceIdDate from './traceIdDate.js';
 import targetFromElementsChain from './targetFromElementsChain.js';
 import translate from './translate.js';
 import type from './type.js';
@@ -59,6 +62,7 @@ export {
   builtinMessages,
   cachedPromises,
   cleanBuildArtifact,
+  createTraceId,
   extractErrorProps,
   findInteractiveControls,
   get,
@@ -69,6 +73,7 @@ export {
   getOperatorType,
   isInteractiveControl,
   isMountEventName,
+  isTraceId,
   isReserved,
   joinPath,
   journeyTargetSelectors,
@@ -88,6 +93,7 @@ export {
   splitPath,
   stableStringify,
   swap,
+  traceIdDate,
   targetFromElementsChain,
   translate,
   type,

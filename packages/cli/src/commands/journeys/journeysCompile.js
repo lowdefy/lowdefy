@@ -16,7 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { compileTrace } from '@lowdefy/node-utils';
+import { compileTrace, readRecordings } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import loadBlockMetas from './loadBlockMetas.js';
@@ -54,28 +54,21 @@ function checkSourceOption({ source }) {
   }
 }
 
-// Production is read from the pulled cache; until the readers for the dev and
-// explorer directories are wired in, those traces are compiled from the files
-// named on the command line.
-function refuseWithoutPaths({ context, source }) {
+// The records to compile and their window: the files given; for
+// `--source production` with no files, the pulled cache over whole UTC days;
+// for any other source with no files, the recordings the dev server wrote,
+// through readRecordings, so the compile never knows the layout.
+function readRecords({ context, traceFiles, source, now }) {
+  const { options } = context;
+  if (traceFiles.length > 0) {
+    return readTraceFiles({ paths: traceFiles.map((file) => path.resolve(file)) });
+  }
   if (type.isNone(source)) {
     throw new Error(
       'lowdefy journeys compile needs trace files, or --source to choose recorded traces.'
     );
   }
-  throw new Error(
-    `Reading ${source} recordings from ${path.join(
-      context.directories.traces,
-      source
-    )} is not available yet: pass the trace files to compile.`
-  );
-}
-
-// The records to compile and their window: the files given, or for
-// `--source production` with no files, the pulled cache over whole UTC days.
-function readRecords({ context, traceFiles, source }) {
-  const { options } = context;
-  if (traceFiles.length === 0 && source === 'production') {
+  if (source === 'production') {
     const { records, unparsable, window } = readProductionTrace({
       directories: context.directories,
       since: options.since,
@@ -89,13 +82,13 @@ function readRecords({ context, traceFiles, source }) {
       until: Date.parse(`${window.to}T23:59:59.999Z`),
     };
   }
-  if (traceFiles.length === 0) {
-    refuseWithoutPaths({ context, source });
-  }
-  const { records, unparsable } = readTraceFiles({
-    paths: traceFiles.map((file) => path.resolve(file)),
+  const { since } = resolveWindow({ options, source, now });
+  const records = readRecordings({
+    configDirectory: context.directories.config,
+    source,
+    since: type.isUndefined(since) ? undefined : new Date(since),
   });
-  return { records, unparsable };
+  return { records, unparsable: 0 };
 }
 
 function sourceFromRecords({ records }) {
@@ -168,11 +161,12 @@ async function journeysCompile({ context, params }) {
   const [traceFiles = []] = params;
   const { options } = context;
   checkSourceOption({ source: options.source });
-  const read = readRecords({ context, traceFiles, source: options.source });
+  const now = Date.now();
+  const read = readRecords({ context, traceFiles, source: options.source, now });
   const { records, unparsable } = read;
   const source = options.source ?? sourceFromRecords({ records });
   const { since, until } = type.isUndefined(read.since)
-    ? resolveWindow({ options, source, now: Date.now() })
+    ? resolveWindow({ options, source, now })
     : read;
   const build = await resolveBuild({
     context,
