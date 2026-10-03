@@ -352,6 +352,46 @@ test('PostHogInit captures at most 50 failures per app load', async () => {
   expect(mockPostHog.capture).toHaveBeenCalledTimes(50);
 });
 
+test("PostHogInit captures a failure emitted before it subscribed, at that failure's start time", async () => {
+  const trace = createFakeTrace();
+  trace.emit(
+    failedPayload({
+      scope: 'app',
+      blockId: 'app',
+      blockType: null,
+      eventName: 'onInit',
+      record: { startTimestamp: new Date('2026-10-03T09:59:00.000Z') },
+    })
+  );
+  trace.emit(failedPayload({ success: true, failure: null }));
+  await PostHogInit({ trace, params: { apiKey: 'phc_key' } });
+  expect(trace.subscribe).toHaveBeenCalledWith(expect.any(Function), { replay: true });
+  expect(mockPostHog.capture).toHaveBeenCalledTimes(1);
+  const [[name, properties, options]] = mockPostHog.capture.mock.calls;
+  expect(name).toBe('lowdefy_event_failed');
+  expect(properties).toMatchObject({
+    lowdefy_event_scope: 'app',
+    lowdefy_block_id: 'app',
+    lowdefy_event_name: 'onInit',
+  });
+  expect(options).toEqual({ timestamp: new Date('2026-10-03T09:59:00.000Z') });
+  expect(postHogState.subscription.trace).toBe(trace);
+  expect(typeof postHogState.subscription.unsubscribe).toBe('function');
+  expect(postHogState.subscription.count).toBe(1);
+});
+
+test('PostHogInit counts replayed failures toward the 50 per app load', async () => {
+  const trace = createFakeTrace();
+  for (let failure = 0; failure < 10; failure += 1) {
+    trace.emit(failedPayload());
+  }
+  await PostHogInit({ trace, params: { apiKey: 'phc_key' } });
+  for (let failure = 0; failure < 41; failure += 1) {
+    trace.emit(failedPayload());
+  }
+  expect(mockPostHog.capture).toHaveBeenCalledTimes(50);
+});
+
 test('PostHogInit with a different registry replaces the failure listener', async () => {
   const first = createFakeTrace();
   const second = createFakeTrace();

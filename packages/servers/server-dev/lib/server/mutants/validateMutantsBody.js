@@ -22,6 +22,16 @@ function isStringArray(value) {
   return type.isArray(value) && value.every((item) => type.isString(item));
 }
 
+// Ids name build artifacts (`pages/<id>.json`), so one that climbs out of
+// the build directory is refused, as readConfigFile refuses it.
+function isId(value) {
+  return type.isString(value) && !value.includes('..');
+}
+
+function isIdArray(value) {
+  return type.isArray(value) && value.every((item) => isId(item));
+}
+
 // The body of POST /lowdefy-docs/mutants: what a set of journey runs
 // exercised. Returns { body } with defaults, or { error } naming the field.
 function validateMutantsBody(body) {
@@ -29,14 +39,13 @@ function validateMutantsBody(body) {
     return { error: `The body must be a JSON object. Received ${JSON.stringify(body)}.` };
   }
   const { pages = [], requests = [], endpoints = [], appEvents = false } = body;
-  if (!isStringArray(pages)) {
+  if (!isIdArray(pages)) {
     return { error: `"pages" must be an array of page ids. Received ${JSON.stringify(pages)}.` };
   }
   if (
     !type.isArray(requests) ||
     !requests.every(
-      (request) =>
-        type.isObject(request) && type.isString(request.pageId) && type.isString(request.requestId)
+      (request) => type.isObject(request) && isId(request.pageId) && isId(request.requestId)
     )
   ) {
     return {
@@ -45,7 +54,7 @@ function validateMutantsBody(body) {
       )}.`,
     };
   }
-  if (!isStringArray(endpoints)) {
+  if (!isIdArray(endpoints)) {
     return {
       error: `"endpoints" must be an array of endpoint ids. Received ${JSON.stringify(endpoints)}.`,
     };

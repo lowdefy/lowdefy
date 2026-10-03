@@ -184,7 +184,26 @@ test.describe('PostHog events carry Lowdefy semantics', () => {
     expect(events.filter((event) => event.event === 'lowdefy_event_failed')).toHaveLength(1);
   });
 
-  test('a failing app event sends lowdefy_event_failed with scope app', async ({ page }) => {
+  test('a failing app onInit, before PostHog starts, sends lowdefy_event_failed', async ({
+    page,
+  }) => {
+    const events = await recordPostHog(page);
+    await page.goto('/home?failAppInit=1');
+    const failure = await waitFor(events, (event) => event.event === 'lowdefy_event_failed');
+    expect(failure.properties).toMatchObject({
+      lowdefy_event_scope: 'app',
+      lowdefy_page_id: 'home',
+      lowdefy_block_id: 'app',
+      lowdefy_event_name: 'onInit',
+      lowdefy_action_id: 'app_init_check',
+      lowdefy_action_type: 'Throw',
+    });
+    expect(failure.properties.lowdefy_block_type).toBeUndefined();
+    await page.waitForTimeout(500);
+    expect(events.filter((event) => event.event === 'lowdefy_event_failed')).toHaveLength(1);
+  });
+
+  test('a failing app onInitAsync sends lowdefy_event_failed with scope app', async ({ page }) => {
     const events = await recordPostHog(page);
     await page.goto('/home?failApp=1');
     const failure = await waitFor(events, (event) => event.event === 'lowdefy_event_failed');

@@ -18,6 +18,7 @@ import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
 
 import formatEvidence from './formatEvidence.js';
+import formatJourneyDataSet from './formatJourneyDataSet.js';
 
 function toCompactYaml(value) {
   if (type.isUndefined(value)) {
@@ -68,30 +69,30 @@ function failureLines({ failure, message }) {
   return lines;
 }
 
-// A PASS line ends with the journey's evidence; a FAIL line carries none,
-// because the failure is the message.
 function withEvidence({ line, evidence }) {
   const formatted = formatEvidence({ evidence });
   return formatted === '' ? line : `${line}  ${formatted}`;
 }
 
-function formatSingle({ result }) {
+function formatSingle({ result, seen }) {
   if (result.passed) {
     return [
       withEvidence({
         line: `PASS  ${result.name}  (${result.stepCount} steps, ${result.durationMs}ms)`,
         evidence: result.evidence,
       }),
+      ...formatJourneyDataSet({ result, seen }),
     ];
   }
   return [
     `FAIL  ${result.name}`,
+    ...formatJourneyDataSet({ result, seen }),
     `      file: ${result.filePath}`,
     ...failureLines({ failure: result.failure, message: result.message }),
   ];
 }
 
-function formatRepeated({ result }) {
+function formatRepeated({ result, seen }) {
   const seconds = (result.durationMs / 1000).toFixed(1);
   if (result.class === 'PASS') {
     return [
@@ -99,6 +100,7 @@ function formatRepeated({ result }) {
         line: `PASS   ${result.name}   (${result.stepCount} steps, ${result.passedRuns}/${result.runs}, ${seconds}s each)`,
         evidence: result.evidence,
       }),
+      ...formatJourneyDataSet({ result, seen }),
     ];
   }
   const [first, ...others] = result.failures;
@@ -107,6 +109,7 @@ function formatRepeated({ result }) {
       `FLAKY  ${result.name}   (${result.passedRuns}/${result.runs} passed) run ${
         first.run
       } failed at ${failureDetail(result)}`,
+      ...formatJourneyDataSet({ result, seen }),
       `      file: ${result.filePath}`,
       ...failureLines({ failure: result.failure, message: result.message }),
       ...others.map(
@@ -118,6 +121,7 @@ function formatRepeated({ result }) {
     `FAIL   ${result.name}   (0/${result.runs}) ${failureDetail(
       result
     )} — fails every run: a finding, not a test to fix by retrying`,
+    ...formatJourneyDataSet({ result, seen }),
     `      file: ${result.filePath}`,
     ...failureLines({ failure: result.failure, message: result.message }),
   ];
@@ -126,12 +130,13 @@ function formatRepeated({ result }) {
 // Returns the lines to print for one journey result. Run once, a single PASS
 // line, or a FAIL line followed by an indented explanation of what went
 // wrong. Replayed (--repeat above 1), the class - PASS, FLAKY or FAIL - with
-// the runs that passed, and each failing run's step.
-function formatJourneyResult({ result }) {
+// the runs that passed, and each failing run's step. A data set and its
+// warnings are printed once per run: `seen` is shared across the run's results.
+function formatJourneyResult({ result, seen = new Set() }) {
   if ((result.repeat ?? 1) === 1 || result.refused === true) {
-    return formatSingle({ result });
+    return formatSingle({ result, seen });
   }
-  return formatRepeated({ result });
+  return formatRepeated({ result, seen });
 }
 
 export default formatJourneyResult;

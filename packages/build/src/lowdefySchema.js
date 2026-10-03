@@ -3504,6 +3504,14 @@ export default {
                   type: 'App "config.environments.<name>.posthog" should be an object.',
                 },
               },
+              dataPull: {
+                type: 'boolean',
+                description:
+                  "Allow `lowdefy data pull` to copy a snapshot from this environment's database. Set it only on pre-production environments; production must never set it. Defaults to false.",
+                errorMessage: {
+                  type: 'App "config.environments.<name>.dataPull" should be a boolean.',
+                },
+              },
               guards: {
                 type: 'object',
                 additionalProperties: false,

@@ -35,6 +35,7 @@ function createContext({ mailSink }) {
     options: { port: 3210 },
     serverArtifacts: { record: jest.fn() },
     shutdownServer: jest.fn(),
+    version: '7.2.0',
   };
 }
 
@@ -90,4 +91,10 @@ test('startServer leaves BETTER_AUTH_URL unset when none is configured', () => {
   startServer(createContext({ mailSink: null }));
 
   expect(mockSpawn.mock.calls[0][2].env.BETTER_AUTH_URL).toBeUndefined();
+});
+
+test('startServer tells the child the Lowdefy version it reports to MCP clients', () => {
+  startServer(createContext({ mailSink: null }));
+
+  expect(mockSpawn.mock.calls[0][2].env.LOWDEFY_SERVER_DEV_VERSION).toBe('7.2.0');
 });

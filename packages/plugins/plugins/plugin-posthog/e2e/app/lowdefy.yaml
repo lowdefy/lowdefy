@@ -23,6 +23,17 @@ config:
 # PostHog starts once per app load from the app's onInitAsync. The spec routes every request to
 # <origin>/ingest and records the events posthog-js sends.
 events:
+  # A failing app onInit: ?failAppInit=1 makes it throw. It fails before PostHogInit runs in
+  # onInitAsync, so the spec can see that early failures are held for PostHog.
+  onInit:
+    - id: app_init_check
+      type: Throw
+      params:
+        throw:
+          _ne:
+            - _url_query: failAppInit
+            - null
+        message: App init check failed.
   onInitAsync:
     - id: posthog_init
       type: PostHogInit

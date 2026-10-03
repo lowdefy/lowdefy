@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 
 import agentsMd from './agentsMd.js';
 import agentsMdSkills, { SKILLS_END_MARKER, SKILLS_START_MARKER } from './agentsMdSkills.js';
+import replaceLegacyServerName from './replaceLegacyServerName.js';
 
 const lowdefyHeadingPattern = /^##\s+Lowdefy\b/m;
 
@@ -79,7 +80,12 @@ async function upsertAgentsMdSection({ context, projectDirectory, appPath, devCo
   if (withSection) {
     const current = findLowdefySection(withSection.content);
     if (!current.text.includes(PORT_PINNED_SECTION_MARKER)) {
-      const updated = upsertSkillsList({ content: withSection.content, section: current, skills });
+      const renamed = replaceLegacyServerName(withSection.content);
+      const updated = upsertSkillsList({
+        content: renamed,
+        section: findLowdefySection(renamed),
+        skills,
+      });
       if (updated === withSection.content) {
         context.logger.info(
           `'${withSection.fileName}' already has a 'Lowdefy' section - skipping.`
@@ -87,9 +93,16 @@ async function upsertAgentsMdSection({ context, projectDirectory, appPath, devCo
         return;
       }
       await writeFile(withSection.filePath, updated);
-      context.logger.info(
-        `Updated the agent skills list in the 'Lowdefy' section of '${withSection.fileName}'.`
-      );
+      if (renamed !== withSection.content) {
+        context.logger.info(
+          `Renamed the MCP server in the 'Lowdefy' section of '${withSection.fileName}'.`
+        );
+      }
+      if (updated !== renamed) {
+        context.logger.info(
+          `Updated the agent skills list in the 'Lowdefy' section of '${withSection.fileName}'.`
+        );
+      }
       return;
     }
     const after = withSection.content.slice(current.end);

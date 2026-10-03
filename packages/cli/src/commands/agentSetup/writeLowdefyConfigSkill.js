@@ -18,6 +18,8 @@ import fs from 'fs';
 import path from 'path';
 import { writeFile } from '@lowdefy/node-utils';
 
+import replaceLegacyServerName from './replaceLegacyServerName.js';
+
 const skillRelativePath = path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md');
 
 // The skill agent-setup wrote before `lowdefy mcp`, which pointed agents at a
@@ -30,7 +32,14 @@ const PORT_PINNED_SKILL_MARKER =
 async function writeLowdefyConfigSkill({ context, projectDirectory, appPath, render }) {
   const skillPath = path.join(projectDirectory, skillRelativePath);
   if (fs.existsSync(skillPath)) {
-    if (!fs.readFileSync(skillPath, 'utf8').includes(PORT_PINNED_SKILL_MARKER)) {
+    const existing = fs.readFileSync(skillPath, 'utf8');
+    if (!existing.includes(PORT_PINNED_SKILL_MARKER)) {
+      const renamed = replaceLegacyServerName(existing);
+      if (renamed !== existing) {
+        await writeFile(skillPath, renamed);
+        context.logger.info(`Renamed the MCP server in '${skillRelativePath}'.`);
+        return;
+      }
       context.logger.info(`'${skillRelativePath}' already exists - skipping.`);
       return;
     }

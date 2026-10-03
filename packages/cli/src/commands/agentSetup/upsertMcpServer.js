@@ -16,10 +16,13 @@
 
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { readFile, writeFile } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import buildMcpServerEntry from './buildMcpServerEntry.js';
+import checkPinnedMcp from './checkPinnedMcp.js';
+import { LEGACY_MCP_SERVER_NAMES, MCP_SERVER_NAME } from './mcpServerNames.js';
 
 // A .mcp.json left in the app subdirectory by a pre-monorepo-fix run of
 // agent-setup is never discovered by agents launched from the project root.
@@ -30,12 +33,10 @@ function warnStaleConfigDirMcpJson({ context, projectDirectory }) {
   }
   if (fs.existsSync(path.join(configDirectory, '.mcp.json'))) {
     context.logger.warn(
-      `Found a '.mcp.json' in '${configDirectory}' - agents launched from the project root will not discover it. If it only contains the 'lowdefy-docs' server, it can be removed.`
+      `Found a '.mcp.json' in '${configDirectory}' - agents launched from the project root will not discover it. If it only contains the '${MCP_SERVER_NAME}' or 'lowdefy-docs' server, it can be removed.`
     );
   }
 }
-
-const SERVER_NAME = 'lowdefy-docs';
 
 // Entries written by earlier agent-setup runs, or by hand per port
 // (lowdefy-3010, ...): each pins one dev server on one port.
@@ -45,30 +46,35 @@ function isPortPinned(entry) {
   return type.isString(entry?.url) && PORT_PINNED_URL.test(entry.url);
 }
 
-// Points the "lowdefy-docs" server at `lowdefy mcp` over stdio and removes
-// port-pinned Lowdefy entries, which the stdio server replaces for every app
-// and worktree. The key stays "lowdefy-docs" so tool names and the approvals
-// clients store against them survive. Other servers are left alone.
+// Points the "lowdefy" server at `lowdefy mcp` over stdio, renames the server
+// earlier runs wrote as "lowdefy-docs", and removes port-pinned Lowdefy
+// entries, which the stdio server replaces for every app and worktree. Other
+// servers are left alone.
 async function upsertMcpServer({ context, projectDirectory }) {
   const mcpJsonPath = path.join(projectDirectory, '.mcp.json');
   const existing = await readFile(mcpJsonPath);
-  const { entry, installed } = buildMcpServerEntry({
+  const { entry, installed, version } = buildMcpServerEntry({
     cliVersion: context.cliVersion,
     configDirectory: context.directories.config,
-    projectDirectory,
+  });
+  // The entry is committed for teammates, so a pin npm cannot serve is
+  // refused before anything is written. A contributor running their own build
+  // of the CLI overrides the entry for themselves in Claude Code's local
+  // scope, which outranks the project one and is never committed.
+  const cliEntry = fileURLToPath(new URL('../../index.js', import.meta.url));
+  context.logger.info(`Checking that npm can run lowdefy@${version} mcp.`);
+  checkPinnedMcp({
+    version,
+    hint: `'.mcp.json' was not written: it is committed, and an entry npm cannot run leaves every agent session started from it without Lowdefy tools. Install a published lowdefy version in the app and rerun agent-setup. To use your own build of the CLI, override the entry for yourself only:\nclaude mcp add --scope local ${MCP_SERVER_NAME} -- node ${cliEntry} mcp`,
   });
   if (!installed) {
     context.logger.warn(
-      `This app has no installed lowdefy CLI with 'lowdefy mcp', so '.mcp.json' runs '${
-        entry.command
-      } ${entry.args.join(
-        ' '
-      )}', which downloads on first use. Add lowdefy (this version or newer) to the app's devDependencies and rerun agent-setup for an instant, version-matched MCP server.`
+      `This app has no installed lowdefy CLI with 'lowdefy mcp', so '.mcp.json' pins this CLI's version (${context.cliVersion}). Add lowdefy (this version or newer) to the app's devDependencies and rerun agent-setup to pin the app's own version.`
     );
   }
 
   if (type.isNone(existing)) {
-    const mcpJson = { mcpServers: { [SERVER_NAME]: entry } };
+    const mcpJson = { mcpServers: { [MCP_SERVER_NAME]: entry } };
     await writeFile(mcpJsonPath, `${JSON.stringify(mcpJson, null, 2)}\n`);
     context.logger.info("Created '.mcp.json'.");
     warnStaleConfigDirMcpJson({ context, projectDirectory });
@@ -80,36 +86,48 @@ async function upsertMcpServer({ context, projectDirectory }) {
     mcpJson = JSON.parse(existing);
   } catch {
     context.logger.warn(
-      `Could not parse existing '.mcp.json' as JSON - leaving it unchanged. Add the '${SERVER_NAME}' MCP server manually:\n` +
-        JSON.stringify({ mcpServers: { [SERVER_NAME]: entry } }, null, 2)
+      `Could not parse existing '.mcp.json' as JSON - leaving it unchanged. Add the '${MCP_SERVER_NAME}' MCP server manually:\n` +
+        JSON.stringify({ mcpServers: { [MCP_SERVER_NAME]: entry } }, null, 2)
     );
     return;
   }
 
   mcpJson.mcpServers = mcpJson.mcpServers ?? {};
+  const renamed = LEGACY_MCP_SERVER_NAMES.filter((name) => !type.isNone(mcpJson.mcpServers[name]));
+  renamed.forEach((name) => delete mcpJson.mcpServers[name]);
   const removed = Object.keys(mcpJson.mcpServers).filter(
-    (name) => name !== SERVER_NAME && isPortPinned(mcpJson.mcpServers[name])
+    (name) => name !== MCP_SERVER_NAME && isPortPinned(mcpJson.mcpServers[name])
   );
   removed.forEach((name) => delete mcpJson.mcpServers[name]);
 
-  const current = mcpJson.mcpServers[SERVER_NAME];
-  if (JSON.stringify(current) === JSON.stringify(entry) && removed.length === 0) {
+  const current = mcpJson.mcpServers[MCP_SERVER_NAME];
+  if (
+    JSON.stringify(current) === JSON.stringify(entry) &&
+    removed.length === 0 &&
+    renamed.length === 0
+  ) {
     context.logger.info(
-      `'.mcp.json' already runs 'lowdefy mcp' as '${SERVER_NAME}' - leaving it unchanged.`
+      `'.mcp.json' already runs 'lowdefy mcp' as '${MCP_SERVER_NAME}' - leaving it unchanged.`
     );
     return;
   }
 
-  mcpJson.mcpServers[SERVER_NAME] = entry;
+  mcpJson.mcpServers[MCP_SERVER_NAME] = entry;
   await writeFile(mcpJsonPath, `${JSON.stringify(mcpJson, null, 2)}\n`);
-  if (type.isNone(current)) {
-    context.logger.info(`Added the '${SERVER_NAME}' MCP server to '.mcp.json'.`);
+  if (renamed.length > 0) {
+    context.logger.info(
+      `Renamed the '${renamed.join(
+        "', '"
+      )}' MCP server in '.mcp.json' to '${MCP_SERVER_NAME}', running 'lowdefy mcp'. Its tools are now named mcp__${MCP_SERVER_NAME}__*.`
+    );
+  } else if (type.isNone(current)) {
+    context.logger.info(`Added the '${MCP_SERVER_NAME}' MCP server to '.mcp.json'.`);
   } else if (isPortPinned(current)) {
     context.logger.info(
-      `Replaced the port-pinned '${SERVER_NAME}' server (${current.url}) in '.mcp.json' with 'lowdefy mcp', which finds each worktree's dev server itself.`
+      `Replaced the port-pinned '${MCP_SERVER_NAME}' server (${current.url}) in '.mcp.json' with 'lowdefy mcp', which finds each worktree's dev server itself.`
     );
   } else {
-    context.logger.info(`Updated the '${SERVER_NAME}' MCP server in '.mcp.json'.`);
+    context.logger.info(`Updated the '${MCP_SERVER_NAME}' MCP server in '.mcp.json'.`);
   }
   if (removed.length > 0) {
     context.logger.info(

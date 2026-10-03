@@ -50,8 +50,8 @@ function FloatButtonBlock({
     id: blockId,
     className: classNames.element,
     style: styles.element,
-    type: properties.type,
-    shape: properties.shape,
+    type: properties.type ?? undefined,
+    shape: properties.shape ?? undefined,
     content: properties.description,
     tooltip: properties.tooltip,
     disabled: properties.disabled,
@@ -73,16 +73,16 @@ function FloatButtonBlock({
     return (
       <FloatButton.BackTop
         {...buttonProps}
-        duration={properties.duration}
+        duration={properties.duration ?? undefined}
         showProgress={properties.showProgress}
-        visibilityHeight={properties.visibilityHeight}
+        visibilityHeight={properties.visibilityHeight ?? undefined}
       />
     );
   }
   return (
     <FloatButton
       {...buttonProps}
-      htmlType={properties.htmlType}
+      htmlType={properties.htmlType ?? undefined}
       href={properties.href}
       target={properties.target}
     />

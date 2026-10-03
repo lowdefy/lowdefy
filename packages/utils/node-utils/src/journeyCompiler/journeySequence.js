@@ -19,14 +19,16 @@ import { parsePageId, type } from '@lowdefy/helpers';
 import { getStepKey } from '../journeyGrammar/validateJourneySteps.js';
 import stepIdentity from './stepIdentity.js';
 
-const INTERACTION_VERBS = ['click', 'select', 'fill', 'press', 'back'];
+const INTERACTION_VERBS = ['click', 'select', 'fill', 'press', 'back', 'open'];
 
-function nextPage({ step, page }) {
+// The page a goto, or an expect.url whose path names a page, moves the journey
+// to; null for every other step.
+function pageNamedBy({ step }) {
   const verb = getStepKey(step);
   const params = step[verb];
   if (verb === 'goto') {
     if (type.isString(params)) return params;
-    return type.isString(params?.pageId) ? params.pageId : page;
+    return type.isString(params?.pageId) ? params.pageId : null;
   }
   // Only a contains that starts with a slash is an app path; anything else is a
   // fragment of a URL (a query, part of a path) and names no page.
@@ -35,9 +37,9 @@ function nextPage({ step, page }) {
     type.isString(params?.url?.contains) &&
     params.url.contains.startsWith('/')
   ) {
-    return parsePageId(params.url.contains) ?? page;
+    return parsePageId(params.url.contains) ?? null;
   }
-  return page;
+  return null;
 }
 
 // What a journey does, step by step: one { page, identity } per interaction,
@@ -47,16 +49,35 @@ function nextPage({ step, page }) {
 // so a production segment (no expectations) and a dev segment of the same flow
 // read the same sequence. Clustering hashes it, and coverage matches journeys
 // to recorded segments with it.
+//
+// Two hand-written verbs the compiler never emits: an `open` reads as a click
+// on its target (stepIdentity), and is not folded into a select with the
+// option click after it. An `email` leaves the app for the message, so the
+// steps after it act on the email, which no recording sees: they add nothing
+// until a goto or expect.url names a page again, and with no such step the
+// journey is read no further. A fill with fromEmail types into the app, so it
+// reads as any fill.
 function journeySequence({ pageId, steps }) {
   const sequence = [];
   let page = pageId;
+  let inEmail = false;
   steps.forEach((step) => {
     const verb = getStepKey(step);
-    if (INTERACTION_VERBS.includes(verb)) {
-      sequence.push({ page, identity: stepIdentity({ step }) });
+    if (verb === 'email') {
+      inEmail = true;
       return;
     }
-    page = nextPage({ step, page });
+    if (INTERACTION_VERBS.includes(verb)) {
+      if (!inEmail) {
+        sequence.push({ page, identity: stepIdentity({ step }) });
+      }
+      return;
+    }
+    const namedPage = pageNamedBy({ step });
+    if (!type.isNull(namedPage)) {
+      page = namedPage;
+      inEmail = false;
+    }
   });
   return sequence;
 }

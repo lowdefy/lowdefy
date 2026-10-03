@@ -246,3 +246,19 @@ blocks:
         backgroundColor: 'rgb(0, 0, 255)'
     properties:
       percent: 30
+
+  # ============================================
+  # NULL PROPERTIES
+  # ============================================
+
+  # _state on a missing key gives null, which must fall back to antd's defaults.
+  - id: progress_null_props
+    type: Progress
+    properties:
+      percent: 40
+      type:
+        _state: progress_null_missing
+      percentPosition:
+        _state: progress_null_missing
+      showInfo:
+        _state: progress_null_missing

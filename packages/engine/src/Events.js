@@ -123,8 +123,9 @@ class Events {
       this.context.eventLog.unshift(res);
       // Only completed events reach here: bounced events, handledBy returns and events with
       // no actions never emit, so subscribers need not filter them. An app with no analytics
-      // and no dev recorder has no subscribers, so it builds no payload per event.
-      if (trace.hasSubscribers()) {
+      // and no dev recorder has no subscribers, so it builds no payload for a successful event;
+      // a failure is built only while the registry still holds early failures for PostHog.
+      if (trace.wantsPayload({ success: res.success })) {
         trace.emit(
           createTracePayload({
             actions: [...eventDescription.actions, ...eventDescription.catchActions],

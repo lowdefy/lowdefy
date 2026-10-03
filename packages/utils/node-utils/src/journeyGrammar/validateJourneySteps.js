@@ -316,6 +316,24 @@ function validateEmail(params) {
   return undefined;
 }
 
+// expect.state checks its own keys because a mistyped `from` (`form: shape`)
+// would otherwise pass silently, and the runner would never refuse the
+// placeholder it was meant to mark.
+function validateExpectState(value) {
+  if (!type.isObject(value) || !type.isString(value.path) || !('equals' in value)) {
+    return `Step "expect.state" requires { path, equals }. Received ${describe(value)}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'expect.state',
+    params: value,
+    allowed: ['path', 'equals', 'from'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  return validateFrom({ key: 'expect.state', from: value.from });
+}
+
 function validateExpect(params) {
   if (!type.isObject(params)) {
     return `Step "expect" requires one of { state }, { visible }, { text }, { url }, { title }. Received ${describe(
@@ -331,10 +349,7 @@ function validateExpect(params) {
   const value = params[key];
   switch (key) {
     case 'state':
-      if (!type.isObject(value) || !type.isString(value.path) || !('equals' in value)) {
-        return `Step "expect.state" requires { path, equals }. Received ${describe(value)}.`;
-      }
-      return validateFrom({ key: 'expect.state', from: value.from });
+      return validateExpectState(value);
     case 'visible':
       return validateTarget({ key: 'expect.visible', params: value });
     case 'text':

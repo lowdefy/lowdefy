@@ -320,6 +320,31 @@ To promote a candidate, move it into `tests/journeys/`, give it a name, fill eve
 
 The compiler reads block types from the development server's build (or a production build) to tell date and object inputs apart. Without a build it still compiles and warns once.
 
+## Dev recordings
+
+`lowdefy dev` records how you use your app in the browser, so an agent can turn what you just tried into journeys. Recording is on by default and stays on your machine:
+
+- Every tab you open on the development server records its clicks, typed values, key presses and page views, joined to the events they ran and the state those events wrote, to `.lowdefy/traces/dev/<date>/<session>.jsonl` in your config directory. `.lowdefy/` is not committed.
+- Values you type are kept, so a recording can include data your app shows you. Password fields are never recorded: their values, and the state they write, are replaced with `null`.
+- Recordings are kept for 7 days or 200 MB, whichever comes first. The development server deletes older ones at start and then every hour.
+- Set `LOWDEFY_DEV_RECORD=false` in your shell or in the app's `.env` to turn recording off. Old recordings are still pruned.
+
+`lowdefy test` records too, as `journey` traces under `.lowdefy/traces/journey/`, but only when it runs the whole suite once: no journey paths, no `--filter`, and only the first of `--repeat` runs. Those traces show what the suite actually drives. Screenshots, state inspection and other agent tools never record.
+
+`lowdefy journeys recordings` lists what was recorded, newest first: when each session ran, against which build, the pages it visited, how many attempts ended in an error, and how many of its interactions the newest test run already drove.
+
+```
+14:03–14:21   build 14:02   tickets → ticket → tickets   3 attempts, 1 failed (Validate on assign_submit: assignee)   4/11 interactions already covered by tests
+13:40–13:44   build 13:31   settings   1 attempt   0/3 interactions already covered by tests
+```
+
+- `--since <since>`: Only sessions at or after this time, as a duration back from now (`30m`, `2h`, `7d`) or an ISO date.
+- `--page <pageId>`: Only sessions that visited this page.
+- `--build <id|current>`: Only sessions recorded against this build. `current` is the build the running development server serves.
+- `--json`: Print the sessions as JSON, for agents.
+
+`lowdefy agent-setup` installs a `journeys-from-dev` skill that uses these commands: it compiles the session you pick with `lowdefy journeys compile --source dev`, runs each candidate three times with `lowdefy test --repeat 3`, and leaves the candidates that pass for you to keep.
+
 ## Production journeys
 
 Journeys can be mined from what your users do in production. Apps that send analytics with the [PostHog plugin](/PostHog) can pull them to your machine, compile candidates from them, and see which journeys real use backs and what it does that no journey covers.
@@ -353,14 +378,13 @@ A committed journey can carry how much production use backs it:
       share: 0.31 # of the sessions entering on pageId
       failures: 14 # backing sessions that hit a failed event
       window: 2026-09-03/2026-10-02
-    dev: { recordings: 2 } # dev sessions of the last 7 days that did it
     mutation: { killed: 11, total: 12, unique: 2 }
     refreshed: 2026-10-03
   steps:
     - click: assign
 ```
 
-A session backs a journey when it does the journey's interactions in the same order, other clicks in between allowed, starting on the journey's page. Only [`lowdefy journeys evidence --refresh`](/cli#journeys-evidence) writes the key, and it changes nothing else in the file: comments, key order and quoting stay as they are. `lowdefy test` reads it to print the PASS line and validates it strictly, so a typo in a hand edit fails before the browser opens. `dev.recordings` counts the [dev recordings](#dev-recordings) of the last 7 days that back the journey, by the same rule. `dev`, `explorer` and `mutation` subkeys whose source is not on your machine keep their committed values; `mutation` is filled from a hardening run's report in `.lowdefy/test/mutation.json` when there is one.
+A session backs a journey when it does the journey's interactions in the same order, other clicks in between allowed, starting on the journey's page. Only [`lowdefy journeys evidence --refresh`](/cli#journeys-evidence) writes the key, and it changes nothing else in the file: comments, key order and quoting stay as they are. `lowdefy test` reads it to print the PASS line and validates it strictly, so a typo in a hand edit fails before the browser opens. `dev`, `explorer` and `mutation` subkeys whose source is not on your machine keep their committed values; `mutation` is filled from a hardening run's report in `.lowdefy/test/mutation.json` when there is one.
 
 No command removes a journey for lack of production use. A 30-day window cannot see quarterly or yearly work, and a journey that is the only one to catch a mutant matters whatever its traffic. `journeys evidence` lists the journeys nothing backs, beside their mutation numbers, and leaves the decision to you.
 
@@ -372,40 +396,11 @@ No command removes a journey for lack of production use. A 30-day window cannot 
 | ----------- | ----------------------------------------------------------------- | --------------------------------------------------------------------- |
 | Interaction | each interaction in production sessions, by how often it happened | a journey does the same interaction on the same page                  |
 | Flow        | production sessions                                               | a journey is backed by the session                                    |
-| Failure     | distinct failed events (page, block, event, invalid fields)       | a passing journey produced the same failed event (see below)          |
+| Failure     | distinct failed events (page, block, event, invalid fields)       | a journey reaches the interaction that failed                         |
 | Frustration | rage- and dead-clicked blocks                                     | a journey clicks the block and asserts with an `expect` right after   |
 | Role        | (page, role set) pairs seen in production                         | a journey visiting the page runs as a user with exactly that role set |
 
-Coverage also reads the newest full test run that the development server recorded (a plain `lowdefy test`, or `lowdefy_run_tests` with no paths or filter). The interaction measure then adds a measured share beside the static one: the production interactions that run actually drove. Failure coverage becomes measured: a failure counts as covered when a journey that passed in that run produced the same failed event, because a journey that reaches a failure and still passes asserts it. The test runner keeps which journeys passed in `.lowdefy/test/run.json`. Without a recorded run, failure coverage is reported as reached: a journey does the interaction that failed, which does not show it checks the outcome.
-
 It writes the measures, a production profile (the top flows per entry page, failure paths, frustrated blocks, role sets per page and entry pages) and each journey's interactions to `.lowdefy/test/coverage.json`, which is rewritten on every run and not committed. With a mutation report, the suite's mutation score is added as a sixth number.
-
-`lowdefy agent-setup` installs a `journeys-from-production` skill that runs this loop with you: it pulls, compiles and reads the coverage report, then takes uncovered failures first and flows next, one at a time. For each it shows you the flow and waits, fills typed values from your data set's fixtures, runs the candidate three times with `lowdefy test --repeat 3`, and moves it into `tests/journeys/` when all three pass. It finishes with `lowdefy journeys evidence --refresh` and commits nothing. It never deletes a journey or suggests deleting one.
-
-## Dev recordings
-
-`lowdefy dev` records how you use your app in the browser, so an agent can turn what you just tried into journeys. Recording is on by default and stays on your machine:
-
-- Every tab you open on the development server records its clicks, typed values, key presses and page views, joined to the events they ran and the state those events wrote, to `.lowdefy/traces/dev/<date>/<session>.jsonl` in your config directory. `.lowdefy/` is not committed.
-- Values you type are kept, so a recording can include data your app shows you. Password fields are never recorded: their values, and the state they write, are replaced with `null`.
-- Recordings are kept for 7 days or 200 MB, whichever comes first. The development server deletes older ones at start and then every hour.
-- Set `LOWDEFY_DEV_RECORD=false` in your shell or in the app's `.env` to turn recording off. Old recordings are still pruned.
-
-`lowdefy test` records too, as `journey` traces under `.lowdefy/traces/journey/`, but only when it runs the whole suite once: no journey paths, no `--filter`, and only the first of `--repeat` runs. Those traces show what the suite actually drives. Screenshots, state inspection and other agent tools never record.
-
-`lowdefy journeys recordings` lists what was recorded, newest first: when each session ran, against which build, the pages it visited, how many attempts ended in an error, and how many of its interactions the newest test run already drove.
-
-```
-14:03–14:21   build 14:02   tickets → ticket → tickets   3 attempts, 1 failed (Validate on assign_submit: assignee)   4/11 interactions already covered by tests
-13:40–13:44   build 13:31   settings   1 attempt   0/3 interactions already covered by tests
-```
-
-- `--since <since>`: Only sessions at or after this time, as a duration back from now (`30m`, `2h`, `7d`) or an ISO date.
-- `--page <pageId>`: Only sessions that visited this page.
-- `--build <id|current>`: Only sessions recorded against this build. `current` is the build the running development server serves.
-- `--json`: Print the sessions as JSON, for agents.
-
-`lowdefy agent-setup` installs a `journeys-from-dev` skill that uses these commands: it compiles the session you pick with `lowdefy journeys compile --source dev`, runs each candidate three times with `lowdefy test --repeat 3`, and leaves the candidates that pass for you to keep.
 
 ## Continuous integration
 

@@ -141,6 +141,39 @@ test('compileTrace keeps edits to a known candidate and rewrites only its origin
   expect(parseCandidateOrigin({ contents: updated.contents }).sequence_hash).toBe('ae8a08a2');
 });
 
+function countOriginBlocks({ contents }) {
+  return contents.split('\n').filter((line) => line === '# origin:').length;
+}
+
+test('compileTrace rerun keeps one origin block when a developer comment sits above name', () => {
+  const [candidate] = compile().candidates;
+  const edited = candidate.contents.replace(
+    '\nname: orders recorded ae8a08a2',
+    '\n# Submit fails when the search box is empty.\nname: orders recorded ae8a08a2'
+  );
+  const once = compile({ existingCandidates: { [candidate.fileName]: edited } });
+  const twice = compile({ existingCandidates: candidatesByName(once) });
+  const updated = twice.candidates.find((entry) => entry.fileName === candidate.fileName);
+  expect(countOriginBlocks({ contents: updated.contents })).toBe(1);
+  expect(updated.contents).toContain(
+    '\n# Submit fails when the search box is empty.\nname: orders recorded ae8a08a2'
+  );
+  expect(parseCandidateOrigin({ contents: updated.contents })).toEqual(updated.origin);
+});
+
+test('compileTrace rerun keeps one origin block when the blank line after it is removed', () => {
+  const [candidate] = compile().candidates;
+  const edited = candidate.contents.replace(
+    '\n\nname: orders recorded ae8a08a2',
+    '\nname: orders recorded ae8a08a2'
+  );
+  const once = compile({ existingCandidates: { [candidate.fileName]: edited } });
+  const twice = compile({ existingCandidates: candidatesByName(once) });
+  const updated = twice.candidates.find((entry) => entry.fileName === candidate.fileName);
+  expect(countOriginBlocks({ contents: updated.contents })).toBe(1);
+  expect(updated.contents).toEqual(candidate.contents);
+});
+
 test('compileTrace widens the origin window and merges sample sessions with what the candidate recorded', () => {
   const [candidate] = compile().candidates;
   const earlier = candidate.contents

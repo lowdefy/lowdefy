@@ -132,6 +132,84 @@ test('journeySequence reads a production-style and a dev-style segment of one fl
   expect(dev).toEqual(production);
 });
 
+test('journeySequence reads open: x the same as click: x', () => {
+  expect(journeySequence({ pageId: 'tickets', steps: [{ open: 'actions_menu' }] })).toEqual(
+    journeySequence({ pageId: 'tickets', steps: [{ click: 'actions_menu' }] })
+  );
+});
+
+test('journeySequence reads an open with a target as the click identity of that target', () => {
+  expect(
+    journeySequence({ pageId: 'tickets', steps: [{ open: { blockId: 'x', text: 'More' } }] })
+  ).toEqual([
+    {
+      page: 'tickets',
+      identity: stepIdentity({ step: { click: { blockId: 'x', text: 'More' } } }),
+    },
+  ]);
+});
+
+test('journeySequence does not fold an open and the option click after it into a select', () => {
+  expect(
+    journeySequence({
+      pageId: 'tickets',
+      steps: [{ open: 'owner' }, { click: { text: 'Ada' } }],
+    }).map((entry) => JSON.parse(entry.identity)[0])
+  ).toEqual(['click', 'click']);
+});
+
+test('journeySequence skips the steps on an email and moves to the page the link opened', () => {
+  expect(
+    journeySequence({
+      pageId: 'home',
+      steps: [
+        { goto: 'a' },
+        { fill: { blockId: 'f', value: 'x' } },
+        { click: 'submit' },
+        { email: { to: 'ada@example.com', subject: 'Verify your email' } },
+        { click: { text: 'Verify' } },
+        { expect: { url: { contains: '/welcome' } } },
+        { click: 'start' },
+      ],
+    })
+  ).toEqual([
+    { page: 'a', identity: '["fill","f",null,null]' },
+    { page: 'a', identity: '["click","submit",null,null]' },
+    { page: 'welcome', identity: '["click","start",null,null]' },
+  ]);
+});
+
+test('journeySequence reads no further after an email with no later page move', () => {
+  expect(
+    journeySequence({
+      pageId: 'signup',
+      steps: [
+        { click: 'submit' },
+        { email: { to: 'ada@example.com' } },
+        { click: { text: 'Verify' } },
+        { expect: { text: 'Welcome' } },
+        { click: 'start' },
+      ],
+    })
+  ).toEqual([{ page: 'signup', identity: '["click","submit",null,null]' }]);
+});
+
+test('journeySequence reads a fill with fromEmail as a fill', () => {
+  expect(
+    journeySequence({
+      pageId: 'verify',
+      steps: [
+        {
+          fill: {
+            blockId: 'code',
+            fromEmail: { to: 'ada@example.com', match: '\\b\\d{6}\\b' },
+          },
+        },
+      ],
+    })
+  ).toEqual([{ page: 'verify', identity: '["fill","code",null,null]' }]);
+});
+
 test('journeySequence moves the page only at an expect.url contains that is an app path', () => {
   const sequence = journeySequence({
     pageId: 'orders',

@@ -86,45 +86,74 @@ test('formatJourneyResult prints the message when a journey failed without a ste
   ]);
 });
 
-const evidence = {
-  production: {
-    sessions: 412,
-    persons: 37,
-    orgs: 9,
-    share: 0.31,
-    failures: 14,
-    window: '2026-09-03/2026-10-02',
-  },
-  mutation: { killed: 11, total: 12 },
-};
+test('formatJourneyResult prints the data set line once across several journeys on one data set', () => {
+  const seen = new Set();
+  const data = {
+    name: 'staging-sample',
+    loadMs: 900,
+    snapshot: { pulledAt: '2026-09-30T00:00:00.000Z', ageDays: 3, documents: 41212 },
+  };
+  const first = formatJourneyResult({
+    result: { name: 'a', passed: true, stepCount: 1, durationMs: 10, data },
+    seen,
+  });
+  const second = formatJourneyResult({
+    result: { name: 'b', passed: true, stepCount: 1, durationMs: 10, data },
+    seen,
+  });
+  expect(first).toEqual([
+    'PASS  a  (1 steps, 10ms)',
+    '      data staging-sample: snapshot 3 days old, 41,212 documents',
+  ]);
+  expect(second).toEqual(['PASS  b  (1 steps, 10ms)']);
+});
 
-test('formatJourneyResult appends evidence to the PASS line', () => {
-  expect(
-    formatJourneyResult({
-      result: {
-        name: 'member assigns an open ticket to a teammate',
-        passed: true,
-        stepCount: 5,
-        durationMs: 2100,
-        evidence,
-      },
-    })
-  ).toEqual([
-    'PASS  member assigns an open ticket to a teammate  (5 steps, 2100ms)  412 sessions · 9 orgs · 11/12 mutants',
+test('formatJourneyResult prints fixtures only for a data set with no snapshot', () => {
+  const lines = formatJourneyResult({
+    result: {
+      name: 'a',
+      filePath: 'f.yaml',
+      passed: false,
+      message: 'boom',
+      data: { name: 'empty-org', loadMs: 20, snapshot: null },
+    },
+    seen: new Set(),
+  });
+  expect(lines).toEqual([
+    'FAIL  a',
+    '      data empty-org: fixtures only',
+    '      file: f.yaml',
+    '      boom',
   ]);
 });
 
-test('formatJourneyResult puts no evidence on a FAIL line', () => {
+test('formatJourneyResult warns past 14 days with the pull command', () => {
   const lines = formatJourneyResult({
     result: {
-      name: 'broken',
-      filePath: '/app/tests/journeys/broken.yaml',
-      passed: false,
-      message: 'refund is hidden',
-      evidence,
+      name: 'a',
+      passed: true,
+      stepCount: 2,
+      durationMs: 5,
+      data: { name: 'staging-sample', snapshot: { ageDays: 15, documents: 1200 } },
     },
   });
-  expect(lines.join('\n')).not.toContain('sessions');
+  expect(lines).toEqual([
+    'PASS  a  (2 steps, 5ms)',
+    '      warning: data staging-sample: snapshot 15 days old, 1,200 documents. Run: lowdefy data pull staging-sample',
+  ]);
+});
+
+test('formatJourneyResult prints each result warning once per run', () => {
+  const seen = new Set();
+  const warnings = [
+    'Connections "a" and "b" both name collection "events" in different databases.',
+  ];
+  const result = { name: 'a', passed: true, stepCount: 1, durationMs: 1, warnings };
+  expect(formatJourneyResult({ result, seen })).toEqual([
+    'PASS  a  (1 steps, 1ms)',
+    '      warning: Connections "a" and "b" both name collection "events" in different databases.',
+  ]);
+  expect(formatJourneyResult({ result, seen })).toEqual(['PASS  a  (1 steps, 1ms)']);
 });
 
 const failure = {
@@ -205,4 +234,45 @@ test('formatJourneyResult prints a FAIL of every run as a finding', () => {
   expect(lines[0]).toEqual(
     'FAIL   admin bulk-imports contacts   (0/3) step 4 (click "close_submit"): close_submit is hidden — fails every run: a finding, not a test to fix by retrying'
   );
+});
+
+const evidence = {
+  production: {
+    sessions: 412,
+    persons: 37,
+    orgs: 9,
+    share: 0.31,
+    failures: 14,
+    window: '2026-09-03/2026-10-02',
+  },
+  mutation: { killed: 11, total: 12 },
+};
+
+test('formatJourneyResult appends evidence to the PASS line', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'member assigns an open ticket to a teammate',
+        passed: true,
+        stepCount: 5,
+        durationMs: 2100,
+        evidence,
+      },
+    })
+  ).toEqual([
+    'PASS  member assigns an open ticket to a teammate  (5 steps, 2100ms)  412 sessions · 9 orgs · 11/12 mutants',
+  ]);
+});
+
+test('formatJourneyResult puts no evidence on a FAIL line', () => {
+  const lines = formatJourneyResult({
+    result: {
+      name: 'broken',
+      filePath: '/app/tests/journeys/broken.yaml',
+      passed: false,
+      message: 'refund is hidden',
+      evidence,
+    },
+  });
+  expect(lines.join('\n')).not.toContain('sessions');
 });

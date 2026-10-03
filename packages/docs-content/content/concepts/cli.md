@@ -76,16 +76,17 @@ The preview tooling (`react-email`) is installed just-in-time by this command �
 
 ## agent-setup
 
-The `agent-setup` command sets up a project for AI coding agents. It writes `.mcp.json` registering the [`lowdefy-docs` MCP server](/ai-agent-docs) — `lowdefy mcp`, run over stdio from the app's installed CLI — a Claude Code skill at `.claude/skills/lowdefy-config/SKILL.md`, and a `## Lowdefy` section in `AGENTS.md`. Existing files are merged, not overwritten. Entries pointing at a dev server port (`http://localhost:<port>/lowdefy-docs/mcp`) are replaced, and the skill and section an earlier `agent-setup` wrote are updated. When several `package.json` scripts run `lowdefy dev`, it asks you to set [`cli.devScript`](#configuration).
+The `agent-setup` command sets up a project for AI coding agents. It writes `.mcp.json` registering the [`lowdefy` MCP server](/ai-agent-docs) — `lowdefy mcp`, run over stdio through npx at the app's installed Lowdefy version — a Claude Code skill at `.claude/skills/lowdefy-config/SKILL.md`, and a `## Lowdefy` section in `AGENTS.md`. Existing files are merged, not overwritten. Entries pointing at a dev server port (`http://localhost:<port>/lowdefy-docs/mcp`) are replaced, a server named `lowdefy-docs` by an earlier `agent-setup` is renamed `lowdefy`, and the skill and section an earlier `agent-setup` wrote are updated. When several `package.json` scripts run `lowdefy dev`, it asks you to set [`cli.devScript`](#configuration). Before writing `.mcp.json` it runs the pinned version's `lowdefy mcp` through npx, and refuses a version npm cannot serve (unpublished, or from before `lowdefy mcp`); the refusal prints the `claude mcp add --scope local` command that runs your own build of the CLI for you only.
 
 - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
 - `--disable-telemetry`: Disable telemetry.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 - `--project-directory <project-directory>`: Change the directory where agent files are written. The default is the nearest ancestor directory containing `.git`.
+- `--user`: Instead of setting up this project, register `lowdefy mcp` as `lowdefy` for every Claude Code session of your user (`claude mcp add --scope user lowdefy -- npx ...`, or `cmd /c npx ...` on Windows), pinned to this CLI's version, replacing an earlier `lowdefy` or `lowdefy-docs` registration. Needs no app. The version must be published with `lowdefy mcp` (until Lowdefy 7 is released, `npx lowdefy@experimental agent-setup --user`). If the add fails, the existing registration stays and the error prints the commands to run. Without Claude Code on your `PATH`, it prints the entry to add to your agent client.
 
 ## mcp
 
-The `mcp` command runs the Lowdefy MCP server for coding agents over stdio. Agent clients start it themselves from `.mcp.json` (see `agent-setup`), one per session — you do not run it by hand. It routes every tool call to the dev server of the app and git checkout the agent is working in, and starts that server through the [hub](#hub) when it is not running. See [AI agent docs](/ai-agent-docs).
+The `mcp` command runs the Lowdefy MCP server for coding agents over stdio. Agent clients start it themselves from `.mcp.json` or their user configuration (see `agent-setup`), one per session — you do not run it by hand. It routes every tool call to the dev server of the app and git checkout the agent is working in, and starts that server through the [hub](#hub) when it is not running. See [AI agent docs](/ai-agent-docs).
 
 ## hub
 
@@ -95,6 +96,11 @@ The Lowdefy hub is a small per-user background process that runs dev servers for
 - `lowdefy hub start [directory] [--restart] [--clean]`: Start (or return) an app's dev server through the hub. `--clean` deletes the build directory first.
 - `lowdefy hub stop [directory] [--all]`: Stop a dev server the hub runs, or all of them.
 - `lowdefy hub logs [directory] [--lines <n>] [--grep <text>]`: Print the recent output of a dev server the hub runs.
+- `lowdefy hub trust [directory]`: Let `lowdefy mcp` start and query the dev servers of the git repository `directory` is in from any agent session, not only sessions started in it. It covers all of the repository's git worktrees. Run it yourself, in an interactive terminal: it refuses without one, so an agent cannot trust a repository. It refuses a directory outside git.
+- `lowdefy hub untrust [directory]`: Undo `hub trust`. Also removes an entry whose directory is gone, given its old path.
+- `lowdefy hub trusted`: List the trusted repositories by their git directory (`.../repo/.git`), marking those that are missing.
+
+When a `package.json` in an app's checkout lists `lowdefy` but no `node_modules` up to the checkout root has it (a fresh git worktree, for example), `lowdefy hub start` and `lowdefy mcp` do not run its dev script; they answer with the install command to run, and where. See [AI agent docs](/ai-agent-docs).
 
 The hub keeps its state in `~/.lowdefy/hub` (set `LOWDEFY_HOME` to move it). It starts servers with the script `cli.devScript` names, or the one `package.json` script that runs `lowdefy dev`, so wrappers such as a secrets manager apply to agent-started servers too.
 
@@ -159,6 +165,18 @@ The `journeys compile` command turns recorded interaction traces into candidate 
 - `--disable-telemetry`: Disable telemetry.
 - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 
+## journeys recordings
+
+The `journeys recordings` command lists the sessions the development server recorded in `.lowdefy/traces/dev/`, newest first: the time span, the builds, the pages visited, how many attempts ended in an error, and how many interactions the newest full test run already drove. See [Dev recordings](/config-tests#dev-recordings). Set `LOWDEFY_DEV_RECORD=false` to turn recording off.
+
+- `--since <since>`: Only sessions at or after this time: a duration back from now (`30m`, `2h`, `7d`) or an ISO date.
+- `--page <pageId>`: Only sessions that visited this page.
+- `--build <id|current>`: Only sessions recorded against this build. `current` is the build the running development server serves.
+- `--json`: Print the sessions as JSON on stdout.
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
 ## journeys pull posthog
 
 The `journeys pull posthog` command reads the app's production analytics from its PostHog project, one UTC day at a time, and writes them as interaction traces to `.lowdefy/traces/production/<YYYY-MM-DD>.jsonl`, with a `<YYYY-MM-DD>.manifest.json` beside each day. `journeys compile`, `journeys evidence` and `journeys coverage` read that cache with `--source production`. See [Production journeys](/config-tests#production-journeys).
@@ -188,7 +206,7 @@ When PostHog rate limits the pull for longer than a minute, or the project's hou
 
 ## journeys evidence
 
-The `journeys evidence` command works out how much production use backs each journey in `tests/journeys/`: the sessions that did what the journey does, the people and organisations behind them, its share of the sessions entering on its page, and how many of them failed. It also counts the dev recordings of the last 7 days that back each journey. See [Evidence](/config-tests#evidence).
+The `journeys evidence` command works out how much production use backs each journey in `tests/journeys/`: the sessions that did what the journey does, the people and organisations behind them, its share of the sessions entering on its page, and how many of them failed. See [Evidence](/config-tests#evidence).
 
 Without `--refresh` it prints what would change and writes nothing. With `--refresh` it rewrites the `evidence` key of each journey whose numbers changed, and nothing else in the file. It is the only command that writes `evidence`. Afterwards it lists the journeys no production session backs, beside their mutation numbers. It never removes a journey.
 
@@ -199,24 +217,12 @@ Without `--refresh` it prints what would change and writes nothing. With `--refr
 
 ## journeys coverage
 
-The `journeys coverage` command reports what real use no journey in `tests/journeys/` covers yet, five ways, each with its uncovered items ranked by use, and writes the report with the production profile to `.lowdefy/test/coverage.json`. When the development server recorded a full test run, the interaction measure adds the share that run drove, and failure coverage counts only failures a passing journey produced. See [Coverage](/config-tests#coverage).
+The `journeys coverage` command reports what real use no journey in `tests/journeys/` covers yet, five ways, each with its uncovered items ranked by use, and writes the report with the production profile to `.lowdefy/test/coverage.json`. See [Coverage](/config-tests#coverage).
 
 - `--json`: Print the report as JSON instead of the summary.
 - `--source <source>`: Where use is read from. Only `production` for now, the default.
 - `--since <since>`, `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: The production window, as for [`journeys pull posthog`](#journeys-pull-posthog).
 - `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys compile`](#journeys-compile).
-
-## journeys recordings
-
-The `journeys recordings` command lists the sessions the development server recorded in `.lowdefy/traces/dev/`, newest first: the time span, the builds, the pages visited, how many attempts ended in an error, and how many interactions the newest full test run already drove. See [Dev recordings](/config-tests#dev-recordings). Set `LOWDEFY_DEV_RECORD=false` to turn recording off.
-
-- `--since <since>`: Only sessions at or after this time: a duration back from now (`30m`, `2h`, `7d`) or an ISO date.
-- `--page <pageId>`: Only sessions that visited this page.
-- `--build <id|current>`: Only sessions recorded against this build. `current` is the build the running development server serves.
-- `--json`: Print the sessions as JSON on stdout.
-- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
-- `--disable-telemetry`: Disable telemetry.
-- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
 
 ## upgrade
 

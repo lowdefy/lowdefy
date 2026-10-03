@@ -34,6 +34,10 @@ async function docsMutantsHandler(c) {
     return c.json({ error: parsed.error }, 400);
   }
   const { body } = parsed;
+  // Read before the pages build: an edit that lands while they build then
+  // gives the answer an older build id than the keys it lists, so the journey
+  // route refuses its mutants as stale instead of running them.
+  const buildId = getBuildId();
   const buildDirectory = path.join(process.cwd(), 'build');
   const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
   const pageIds = [...new Set([...body.pages, ...body.requests.map((request) => request.pageId)])];
@@ -56,7 +60,7 @@ async function docsMutantsHandler(c) {
     keyMap: readBuildArtifact({ name: 'keyMap.json' }) ?? {},
     refMap: readBuildArtifact({ name: 'refMap.json' }) ?? {},
   });
-  return c.json({ buildId: getBuildId(), ...result });
+  return c.json({ buildId, ...result });
 }
 
 export default docsMutantsHandler;

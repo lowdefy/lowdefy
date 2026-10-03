@@ -109,7 +109,13 @@ test('screenshotPage opens the page at the urlQuery and captures after the steps
     newPage: jest.fn(async () => page),
     close: jest.fn(async () => {}),
   };
-  chromium.launch.mockResolvedValue({ isConnected: () => true, newContext: async () => context });
+  // getBrowser caches the browser while it reports connected; disconnecting
+  // it after the test makes the next test's launch take effect.
+  let connected = true;
+  chromium.launch.mockResolvedValue({
+    isConnected: () => connected,
+    newContext: async () => context,
+  });
   try {
     const result = await screenshotPage({
       origin: 'http://localhost:3001',
@@ -124,6 +130,60 @@ test('screenshotPage opens the page at the urlQuery and captures after the steps
     expect(decodeURIComponent(url.search)).toContain('popia');
     expect(context.close).toHaveBeenCalled();
   } finally {
+    connected = false;
+    chromium.launch.mockRejectedValue(new Error("Executable doesn't exist"));
+  }
+});
+
+test('screenshotPage refuses steps that read email when the dev server captures no mail', async () => {
+  const { chromium } = await import('playwright-core');
+  chromium.launch.mockClear();
+  const result = await screenshotPage({
+    origin: 'http://localhost:3001',
+    pageId: 'home',
+    steps: [{ email: { to: 'a@example.com' } }],
+  });
+  expect(result.error).toMatch(/captures no mail/);
+  expect(chromium.launch).not.toHaveBeenCalled();
+});
+
+test('screenshotPage keeps the colour scheme and returns screenshot step captures when steps run', async () => {
+  const { chromium } = await import('playwright-core');
+  let captures = 0;
+  const page = {
+    goto: jest.fn(async () => {}),
+    waitForFunction: jest.fn(async () => {}),
+    waitForTimeout: jest.fn(async () => {}),
+    screenshot: jest.fn(async () => {
+      captures += 1;
+      return Buffer.from(`png-${captures}`);
+    }),
+  };
+  const context = {
+    addCookies: jest.fn(async () => {}),
+    // A journey's network counter listens for the context's requests.
+    on: jest.fn(),
+    newPage: jest.fn(async () => page),
+    close: jest.fn(async () => {}),
+  };
+  const newContext = jest.fn(async () => context);
+  let connected = true;
+  chromium.launch.mockResolvedValue({ isConnected: () => connected, newContext });
+  try {
+    const result = await screenshotPage({
+      origin: 'http://localhost:3001',
+      pageId: 'home',
+      colorScheme: 'dark',
+      steps: [{ screenshot: 'before' }],
+    });
+    expect(newContext).toHaveBeenCalledWith(expect.objectContaining({ colorScheme: 'dark' }));
+    expect(result.screenshots).toEqual([
+      { name: 'before', data: Buffer.from('png-1').toString('base64'), mimeType: 'image/png' },
+    ]);
+    expect(result.data).toEqual(Buffer.from('png-2').toString('base64'));
+    expect(context.close).toHaveBeenCalled();
+  } finally {
+    connected = false;
     chromium.launch.mockRejectedValue(new Error("Executable doesn't exist"));
   }
 });

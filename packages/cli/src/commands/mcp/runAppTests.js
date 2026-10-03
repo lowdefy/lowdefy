@@ -75,6 +75,7 @@ async function runAppTests({ configDirectory, url, filter, paths, repeat: repeat
     buildId: await fetchBuildId({ url }),
   });
   writeTestRun({ directories: context.directories, results });
+  const seen = new Set();
   return {
     summary: summariseResults({ results }).text,
     results: runs.map(({ suite, result }) => {
@@ -82,7 +83,7 @@ async function runAppTests({ configDirectory, url, filter, paths, repeat: repeat
       return {
         ...rest,
         filePath: path.relative(configDirectory, result.filePath),
-        report: suite.format({ result }).join('\n'),
+        report: suite.format({ result, seen }).join('\n'),
       };
     }),
   };

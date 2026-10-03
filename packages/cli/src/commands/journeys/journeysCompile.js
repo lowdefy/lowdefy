@@ -54,9 +54,9 @@ function checkSourceOption({ source }) {
   }
 }
 
-// The records to compile and their window: the files given; for
-// `--source production` with no files, the pulled cache over whole UTC days;
-// for any other source with no files, the recordings the dev server wrote,
+// The records to compile and their window. Trace files are read as given.
+// Without them, `--source production` reads the pulled cache over whole UTC
+// days, and dev and explorer read the recordings the dev server wrote,
 // through readRecordings, so the compile never knows the layout.
 function readRecords({ context, traceFiles, source, now }) {
   const { options } = context;

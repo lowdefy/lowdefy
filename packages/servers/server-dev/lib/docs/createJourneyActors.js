@@ -38,9 +38,10 @@ function nextClientAddress() {
 // open while the owner removes them - are signed in at the same time. An
 // actor opens the journey's page, as the journey's user, the first time its
 // name is switched to, and keeps its tab as it left it when the journey
-// switches away and back. Each actor's context feeds its own network counter
-// from before its first navigation, so what the journey touched is measured
-// per actor and merged at the end.
+// switches away and back. Every actor sees the same viewport and colour
+// scheme. Each actor's context feeds its own network counter from before its
+// first navigation, so what the journey touched is measured per actor and
+// merged at the end.
 function createJourneyActors({
   browser,
   origin,
@@ -50,6 +51,7 @@ function createJourneyActors({
   urlQuery,
   width,
   height,
+  colorScheme,
   timeout,
   mutantCookie,
   recording,
@@ -70,6 +72,7 @@ function createJourneyActors({
         urlQuery,
         width,
         height,
+        colorScheme,
         clientAddress: nextClientAddress(),
         mutantCookie,
         recording: type.isUndefined(recording)

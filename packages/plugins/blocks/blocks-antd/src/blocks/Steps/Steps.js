@@ -93,16 +93,16 @@ function StepsBlock({
       }}
       current={current}
       initial={properties.initial}
-      status={properties.status}
+      status={properties.status ?? undefined}
       size={size}
       type={stepsType}
       orientation={properties.orientation}
       titlePlacement={properties.titlePlacement}
-      percent={properties.percent}
+      percent={properties.percent ?? undefined}
       maxCount={properties.maxCount}
       iconRender={iconRender}
       responsive={properties.responsive}
-      variant={properties.variant}
+      variant={properties.variant ?? undefined}
       onChange={
         events.onChange
           ? (value) => {
