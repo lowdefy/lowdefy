@@ -71,6 +71,7 @@ test('startUp, options empty', async () => {
       dev: path.resolve(process.cwd(), './.lowdefy/dev'),
       emails: path.resolve(process.cwd(), './.lowdefy/emails'),
       journeys: path.resolve(process.cwd(), './tests/journeys'),
+      test: path.resolve(process.cwd(), './.lowdefy/test'),
       traces: path.resolve(process.cwd(), './.lowdefy/traces'),
       server: path.resolve(process.cwd(), './.lowdefy/server'),
     },
@@ -107,6 +108,7 @@ test('startUp, options undefined', async () => {
       dev: path.resolve(process.cwd(), './.lowdefy/dev'),
       emails: path.resolve(process.cwd(), './.lowdefy/emails'),
       journeys: path.resolve(process.cwd(), './tests/journeys'),
+      test: path.resolve(process.cwd(), './.lowdefy/test'),
       traces: path.resolve(process.cwd(), './.lowdefy/traces'),
       server: path.resolve(process.cwd(), './.lowdefy/server'),
     },
@@ -142,6 +144,7 @@ test('startUp, options configDirectory', async () => {
       dev: path.resolve(process.cwd(), './configDirectory/.lowdefy/dev'),
       emails: path.resolve(process.cwd(), './configDirectory/.lowdefy/emails'),
       journeys: path.resolve(process.cwd(), './configDirectory/tests/journeys'),
+      test: path.resolve(process.cwd(), './configDirectory/.lowdefy/test'),
       traces: path.resolve(process.cwd(), './configDirectory/.lowdefy/traces'),
       server: path.resolve(process.cwd(), './configDirectory/.lowdefy/server'),
     },
@@ -180,6 +183,7 @@ test('startUp, no lowdefyVersion returned', async () => {
       dev: path.resolve(process.cwd(), './.lowdefy/dev'),
       emails: path.resolve(process.cwd(), './.lowdefy/emails'),
       journeys: path.resolve(process.cwd(), './tests/journeys'),
+      test: path.resolve(process.cwd(), './.lowdefy/test'),
       traces: path.resolve(process.cwd(), './.lowdefy/traces'),
       server: path.resolve(process.cwd(), './.lowdefy/server'),
     },
@@ -222,6 +226,7 @@ test('startUp, requiresLowdefyYaml false with command "init"', async () => {
       dev: path.resolve(process.cwd(), './.lowdefy/dev'),
       emails: path.resolve(process.cwd(), './.lowdefy/emails'),
       journeys: path.resolve(process.cwd(), './tests/journeys'),
+      test: path.resolve(process.cwd(), './.lowdefy/test'),
       traces: path.resolve(process.cwd(), './.lowdefy/traces'),
       server: path.resolve(process.cwd(), './.lowdefy/server'),
     },
@@ -235,4 +240,24 @@ test('startUp, requiresLowdefyYaml false with command "init"', async () => {
   });
   expect(validateVersion).toHaveBeenCalledTimes(1);
   expect(logger.info.mock.calls).toEqual([["Running 'lowdefy init'."]]);
+});
+
+test('startUp names a subcommand with its group', async () => {
+  const startUp = (await import('./startUp.js')).default;
+  const context = { cliVersion: 'cliVersion' };
+  const program = { name: () => 'lowdefy' };
+  const data = { name: () => 'data', parent: program };
+  await startUp({ context, options: {}, command: { name: () => 'list', parent: data } });
+  expect(context.command).toEqual('data list');
+  expect(context.logger.info.mock.calls).toEqual([
+    ["Running 'lowdefy data list'. Lowdefy app version lowdefyVersion."],
+  ]);
+});
+
+test('startUp names a top-level command on its own', async () => {
+  const startUp = (await import('./startUp.js')).default;
+  const context = { cliVersion: 'cliVersion' };
+  const program = { name: () => 'lowdefy' };
+  await startUp({ context, options: {}, command: { name: () => 'build', parent: program } });
+  expect(context.command).toEqual('build');
 });

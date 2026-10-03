@@ -20,6 +20,21 @@ import chokidar from 'chokidar';
 import { streamSSE } from 'hono/streaming';
 
 import { registerTab, unregisterTab } from '../../lib/docs/tabChannel.js';
+import readRecordingCookie from '../../lib/server/recording/readRecordingCookie.js';
+
+// A verified recording cookie means the dev server's own headless browser
+// opened the tab: an explorer walk or journey run ({ source }), or a headless
+// tool ('off'). A developer's tab carries none.
+function tabOrigin(cookieHeader) {
+  const recording = readRecordingCookie(cookieHeader);
+  if (recording === null) {
+    return { source: 'dev', automated: false };
+  }
+  if (recording === 'off') {
+    return { source: 'headless', automated: true };
+  }
+  return { source: recording.source, automated: true };
+}
 
 // SSE endpoint — notifies the client when build/reload is written so it can
 // mutate the SWR cache and refetch config. Also doubles as the transport for
@@ -46,6 +61,7 @@ async function reloadHandler(c) {
     registerTab({
       id: tabId,
       send: (event, data) => stream.writeSSE({ event, data: JSON.stringify(data) }),
+      ...tabOrigin(c.req.header('cookie')),
     });
 
     let open = true;

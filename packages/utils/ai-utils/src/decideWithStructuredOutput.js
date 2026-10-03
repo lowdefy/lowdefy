@@ -69,22 +69,21 @@ function describeQuestion(id, question) {
 // The structured-output backend: a language model returns every answer as one
 // schema-checked object — the stand-in wherever no evaluation model is
 // available, on any AI connection.
-async function decideWithStructuredOutput({ model, request, options }) {
-  const entries = Object.entries(request.questions);
+async function decideWithStructuredOutput({ model, state, questions, options }) {
+  const entries = Object.entries(questions);
   const schema = {
     type: 'object',
     properties: Object.fromEntries(entries.map(([id, question]) => [id, answerSchema(question)])),
     required: entries.map(([id]) => id),
     additionalProperties: false,
   };
-  const state =
-    typeof request.state === 'string' ? request.state : JSON.stringify(request.state, null, 2);
+  const stateText = typeof state === 'string' ? state : JSON.stringify(state, null, 2);
   const result = await generateText({
     model,
     instructions: INSTRUCTIONS,
     prompt: [
       '## STATE',
-      state,
+      stateText,
       '',
       '## QUESTIONS',
       ...entries.map(([id, question]) => describeQuestion(id, question)),
@@ -96,7 +95,7 @@ async function decideWithStructuredOutput({ model, request, options }) {
   for (const [id, question] of entries) {
     answers[id] = fromStructuredAnswer({ question, answer: result.output?.[id] });
   }
-  return { answers, usage: result.usage };
+  return { answers, usage: result.usage, providerMetadata: result.providerMetadata };
 }
 
 export default decideWithStructuredOutput;

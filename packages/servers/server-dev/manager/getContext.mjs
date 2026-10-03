@@ -25,6 +25,7 @@ import checkMockUserWarning from './processes/checkMockUserWarning.mjs';
 import initialBuild from './processes/initialBuild.mjs';
 import installPlugins from './processes/installPlugins.mjs';
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
+import optimizeDependencies from './processes/optimizeDependencies.mjs';
 import readDotEnv from './processes/readDotEnv.mjs';
 import reloadClients from './processes/reloadClients.mjs';
 import restartServer from './processes/restartServer.mjs';
@@ -34,6 +35,7 @@ import syncServer from './processes/syncServer.mjs';
 
 import createServerArtifactTracker from './utils/createServerArtifactTracker.mjs';
 import getViteBin from './utils/getViteBin.mjs';
+import readManagerVersion from './utils/readManagerVersion.mjs';
 
 const argv = yargs(hideBin(process.argv)).array('watch').array('watchIgnore').argv;
 
@@ -71,7 +73,7 @@ async function getContext() {
           ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH_IGNORE)
           : [],
     },
-    version: env.npm_package_version,
+    version: readManagerVersion(),
 
     // JIT build state
     pageRegistry: null,
@@ -101,6 +103,7 @@ async function getContext() {
     }
   };
 
+  context.optimizeDependencies = optimizeDependencies(context);
   context.readDotEnv = readDotEnv(context);
   context.reloadClients = reloadClients(context);
   context.restartServer = restartServer(context);

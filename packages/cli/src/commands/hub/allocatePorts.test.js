@@ -14,20 +14,24 @@
   limitations under the License.
 */
 
-import net from 'net';
+import { jest } from '@jest/globals';
 
-import allocatePorts from './allocatePorts.js';
+// The port probe is stubbed: real sockets made these tests flaky on CI, where
+// other test processes can hold any port in the OS ephemeral range.
+const busy = new Set();
 
-// Clear of the hub's real 4100-4999, which hubs in other worktrees use.
-const first = 20000 + 2 * Math.floor(Math.random() * 15000);
+jest.unstable_mockModule('@lowdefy/node-utils', () => ({
+  isPortAvailable: async ({ port }) => !busy.has(port),
+}));
+
+const { default: allocatePorts } = await import('./allocatePorts.js');
+
+const first = 4100;
 const range = { first, last: first + 20 };
 
-function listen(port) {
-  return new Promise((resolve) => {
-    const server = net.createServer();
-    server.listen(port, '127.0.0.1', () => resolve(server));
-  });
-}
+beforeEach(() => {
+  busy.clear();
+});
 
 test('allocatePorts keeps the previous pair when both ports are free', async () => {
   const previous = { port: first + 4, internalPort: first + 5 };
@@ -35,25 +39,39 @@ test('allocatePorts keeps the previous pair when both ports are free', async () 
 });
 
 test('allocatePorts moves when the previous pair is taken', async () => {
-  const server = await listen(first + 2);
-  try {
-    const pair = await allocatePorts({
-      previous: { port: first + 2, internalPort: first + 3 },
-      reserved: [],
-      range,
-    });
-    expect(pair.port).not.toEqual(first + 2);
-    expect(pair.internalPort).toEqual(pair.port + 1);
-  } finally {
-    server.close();
-  }
+  busy.add(first + 2);
+  const pair = await allocatePorts({
+    previous: { port: first + 2, internalPort: first + 3 },
+    reserved: [],
+    range,
+  });
+  expect(pair).toEqual({ port: first, internalPort: first + 1 });
+});
+
+test('allocatePorts moves when only the internal port of the previous pair is taken', async () => {
+  busy.add(first + 3);
+  const pair = await allocatePorts({
+    previous: { port: first + 2, internalPort: first + 3 },
+    reserved: [],
+    range,
+  });
+  expect(pair).toEqual({ port: first, internalPort: first + 1 });
+});
+
+test('allocatePorts skips pairs held by other processes', async () => {
+  busy.add(first);
+  busy.add(first + 3);
+  expect(await allocatePorts({ reserved: [], range })).toEqual({
+    port: first + 4,
+    internalPort: first + 5,
+  });
 });
 
 test('allocatePorts never hands out a pair another app has reserved', async () => {
   const firstPair = await allocatePorts({ reserved: [], range });
   const second = await allocatePorts({ reserved: [firstPair], range });
-  expect(second.port).not.toEqual(firstPair.port);
-  expect(second.port).toBeGreaterThanOrEqual(range.first);
+  expect(firstPair).toEqual({ port: first, internalPort: first + 1 });
+  expect(second).toEqual({ port: first + 2, internalPort: first + 3 });
 });
 
 test('allocatePorts fails with the way out when the range is used up', async () => {

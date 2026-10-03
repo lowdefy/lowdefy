@@ -18,11 +18,13 @@ import { type } from '@lowdefy/helpers';
 import { validateJourneySteps } from '@lowdefy/node-utils';
 
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
+import noBrowserError from './noBrowserError.js';
 import openJourney from './openJourney.js';
 import runJourneySteps from './runJourneySteps.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneyMail from './validateJourneyMail.js';
 import validateViewport from './validateViewport.js';
+import withBrowserSlot from './withBrowserSlot.js';
 
 // A feedback annotation's elementRect/shapes are captured in the developer's
 // live tab, viewport-relative at whatever scroll position they were at
@@ -137,13 +139,49 @@ async function screenshotPage({
     return { error: mailError };
   }
 
+  return withBrowserSlot({
+    task: () =>
+      screenshotInBrowser({
+        origin,
+        pageId,
+        urlQuery,
+        user,
+        width,
+        height,
+        colorScheme,
+        timeout,
+        steps,
+        stepTimeout,
+        clip,
+        scrollX,
+        scrollY,
+        fullPage,
+      }),
+  });
+}
+
+// The part of screenshotPage that runs in the browser, inside a browser slot.
+async function screenshotInBrowser({
+  origin,
+  pageId,
+  urlQuery,
+  user,
+  width,
+  height,
+  colorScheme,
+  timeout,
+  steps,
+  stepTimeout,
+  clip,
+  scrollX,
+  scrollY,
+  fullPage,
+}) {
   let browser;
   try {
     browser = await getBrowser();
   } catch (error) {
-    return {
-      error: `No Chromium available. Run: npx playwright install chromium (${error.message})`,
-    };
+    return { error: noBrowserError(error) };
   }
 
   const url = buildPageUrl({ origin, pageId, urlQuery });

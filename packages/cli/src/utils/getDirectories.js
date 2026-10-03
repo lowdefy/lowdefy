@@ -32,6 +32,7 @@ function getDirectories({ configDirectory, options }) {
     journeys: options.journeysDirectory
       ? path.resolve(options.journeysDirectory)
       : path.join(configDirectory, 'tests', 'journeys'),
+    test: path.join(dotLowdefy, 'test'),
     traces: path.join(dotLowdefy, 'traces'),
   };
 }

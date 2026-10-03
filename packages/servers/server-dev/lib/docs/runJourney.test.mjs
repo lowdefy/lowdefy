@@ -14,7 +14,12 @@
   limitations under the License.
 */
 
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
 import { jest } from '@jest/globals';
+import { acquireMachineSlot } from '@lowdefy/node-utils';
 
 // getBrowser.js is mocked so no Chromium is needed; the fake page below stands
 // in for Playwright's Page. Its `evaluate` runs the callback in this process
@@ -755,6 +760,24 @@ test('runJourney settles a page for at most 5 seconds after an interaction, what
   expect(page.waitForFunction.mock.calls.at(-1)[2]).toEqual({ timeout: 5000 });
 });
 
+test('runJourney fails expect.calls with no pageId when no Lowdefy page is showing', async () => {
+  const page = createPage({ window: { navigation: { currentEntry: { index: 0 } } } });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { calls: { request: 'save', count: 0 } } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 0,
+    expected: 'a Lowdefy page to count request "save" on',
+    actual: null,
+  });
+});
+
 test('runJourney fills a numeric value as a string', async () => {
   const page = createPage();
   openWith(page);
@@ -1484,6 +1507,41 @@ test('runJourney opens each actor the first time an as step names it and returns
   expect(inviteeContext.close).toHaveBeenCalledTimes(1);
 });
 
+test('runJourney with four actors takes one machine browser slot for the whole journey', async () => {
+  const sharedHome = process.env.LOWDEFY_HOME;
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-journey-slot-'));
+  process.env.LOWDEFY_HOME = home;
+  const slots = path.join(home, 'slots', 'browser');
+  // Two of the three slots are held elsewhere on the machine: one is left.
+  const others = [await acquireMachineSlot({ name: 'browser', limit: 3 })];
+  others.push(await acquireMachineSlot({ name: 'browser', limit: 3 }));
+  const heldDuringJourney = [];
+  const pages = [createPage(), createPage(), createPage(), createPage()];
+  pages.forEach((page) => {
+    mockOpenPage.mockImplementationOnce(async () => {
+      heldDuringJourney.push(fs.readdirSync(slots).length);
+      return { context: { close: jest.fn(async () => {}) }, page, ready: true };
+    });
+  });
+  try {
+    const result = await runJourney({
+      origin,
+      pageId: 'signup',
+      user: 'none',
+      steps: [{ as: 'a' }, { as: 'b' }, { as: 'c' }, { as: 'main' }],
+    });
+
+    expect(result.passed).toBe(true);
+    expect(mockOpenPage).toHaveBeenCalledTimes(4);
+    expect(heldDuringJourney).toEqual([3, 3, 3, 3]);
+    expect(fs.readdirSync(slots)).toHaveLength(2);
+  } finally {
+    others.forEach((slot) => slot.release());
+    process.env.LOWDEFY_HOME = sharedHome;
+    fs.rmSync(home, { recursive: true, force: true });
+  }
+});
+
 test('runJourney fails an as step whose actor cannot open and still closes every actor', async () => {
   const mainContext = { close: jest.fn(async () => {}) };
   mockOpenPage
@@ -1665,6 +1723,7 @@ function openActorsWithNetwork(actors) {
       let listener;
       const context = {
         close: jest.fn(async () => {}),
+        exposeBinding: jest.fn(async () => {}),
         on: jest.fn((event, callback) => {
           if (event === 'request') listener = callback;
         }),
@@ -1747,4 +1806,58 @@ test('runJourney reports the exercised network path merged across actors, with n
     events: [],
     rendered: {},
   });
+});
+
+test('runJourney reports the events and blocks its pages observed, deduplicated with list indices as $', async () => {
+  const page = createPage();
+  let observe;
+  mockOpenPage.mockImplementationOnce(async ({ onContext }) => {
+    const context = {
+      close: jest.fn(async () => {}),
+      exposeBinding: jest.fn(async (name, callback) => {
+        expect(name).toBe('__lowdefyJourneyObserve');
+        observe = callback;
+      }),
+      on: jest.fn(),
+    };
+    await onContext(context);
+    return { context, page, ready: true, url: page.url() };
+  });
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.click = jest.fn(async () => {
+      const event = {
+        kind: 'event',
+        scope: 'page',
+        pageId: 'form',
+        blockId: 'rows.1.label',
+        eventName: 'onChange',
+        actionIds: ['set_label'],
+      };
+      observe({}, event);
+      observe({}, { ...event, blockId: 'rows.0.label' });
+      observe({}, { kind: 'rendered', pageId: 'form', blockIds: ['rows.0.label', 'save'] });
+      // Page JavaScript can send anything: malformed messages are dropped.
+      observe({}, { kind: 'event', scope: 'page', pageId: 'form' });
+      observe({}, 'nonsense');
+    });
+    return locator;
+  });
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'save' }],
+    readConfigFile: async (name) => (name === 'plugins/requestSchemas.json' ? {} : null),
+  });
+  expect(result.passed).toBe(true);
+  expect(result.exercised.events).toEqual([
+    {
+      scope: 'page',
+      pageId: 'form',
+      blockId: 'rows.$.label',
+      eventName: 'onChange',
+      actionIds: ['set_label'],
+    },
+  ]);
+  expect(result.exercised.rendered).toEqual({ form: ['rows.$.label', 'save'] });
 });

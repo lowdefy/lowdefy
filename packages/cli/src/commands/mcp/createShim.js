@@ -17,8 +17,13 @@
 import fs from 'fs';
 import semver from 'semver';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
-import { readDevInstance } from '@lowdefy/node-utils';
+import {
+  CallToolRequestSchema,
+  ErrorCode,
+  ListToolsRequestSchema,
+  McpError,
+} from '@modelcontextprotocol/sdk/types.js';
+import { readDevInstanceAsync } from '@lowdefy/node-utils';
 
 import callWithReconnect from './callWithReconnect.js';
 import checkDependenciesInstalled from './checkDependenciesInstalled.js';
@@ -33,6 +38,7 @@ import isNewerVersion from './isNewerVersion.js';
 import lifecycleTools, { DIRECTORY_PROPERTY } from './lifecycleTools.js';
 import resolveApp from './resolveApp.js';
 import runAppTests from './runAppTests.js';
+import touchDevServer from './touchDevServer.js';
 
 // Dev tool calls can drive a browser through a whole journey.
 const TOOL_CALL_TIMEOUT_MS = 10 * 60 * 1000;
@@ -43,7 +49,12 @@ const HIDDEN_DEV_TOOLS = new Set(['lowdefy_restart']);
 
 const LIFECYCLE_TOOL_NAMES = new Set(lifecycleTools.map((tool) => tool.name));
 
-const SHIM_INSTRUCTIONS = `This is \`lowdefy mcp\`. It routes every lowdefy_ tool to the dev server of the app you are working in and starts that server when it is not running - never run \`lowdefy dev\` yourself, never choose ports, and never kill processes by port or name; use lowdefy_dev_start and lowdefy_dev_stop. Restart (lowdefy_dev_start with restart: true) only when the server seems stuck or build status looks stale, or after secrets a wrapper (for example infisical) injects have changed; .env edits and local plugin code are picked up without one. Pass "directory" when you work in a different git worktree from the session (for example as a subagent), when the repository holds several apps, or when you work on another project; it must be in this checkout, one of its git worktrees, or a repository the user trusts (the user is asked, or runs \`lowdefy hub trust <directory>\` in their own terminal; never run \`lowdefy hub trust\` yourself). If lowdefy_dev_start reports that dependencies are not installed, run the install command it names, then call it again. Every result starts with the app and checkout it came from.`;
+const SHIM_INSTRUCTIONS = `This is \`lowdefy mcp\`. It routes every lowdefy_ tool to the dev server of the app you are working in and starts that server when it is not running - never run \`lowdefy dev\` yourself, never choose ports, and never kill processes by port or name; use lowdefy_dev_start and lowdefy_dev_stop. Restart (lowdefy_dev_start with restart: true) only when the server seems stuck or build status looks stale, or after secrets a wrapper (for example infisical) injects have changed; .env edits and local plugin code are picked up without one. Pass "directory" when you work in a different git worktree from the session (for example as a subagent), when the repository holds several apps, or when you work on another project; it must be in this checkout, one of its git worktrees, or a repository the user trusts (the user is asked, or runs \`lowdefy hub trust <directory>\` in their own terminal; never run \`lowdefy hub trust\` yourself). If lowdefy_dev_start reports that dependencies are not installed, run the install command it names, then call it again. Every result starts with the app and checkout it came from. When you finish work in a git worktree you created for the task, call lowdefy_dev_stop with that "directory" before you report back. Do not stop a server in a checkout you share with another agent. A server left running stops once it has been idle for 15 minutes.`;
+
+// The hub stops servers nobody uses (see the hub's reaper); an agent that
+// knows it can stop its own and need not keep one alive.
+const IDLE_STOP_NOTE =
+  'The hub stops this server once nobody has used it for 15 minutes (sooner when the machine is short of memory); the next lowdefy_ call starts it again.';
 
 function textResult(value) {
   const text = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
@@ -149,7 +160,7 @@ function createShim({ cliVersion, cwd, devTools }) {
   // A running server is used as it is - the user's terminal server included.
   // Anything else goes to the hub, which starts it and waits for ready.
   async function ensureRunning(app) {
-    const running = readDevInstance({ configDirectory: app.configDirectory });
+    const running = await readDevInstanceAsync({ configDirectory: app.configDirectory });
     if (running !== null && running.state === 'ready') {
       if (running.owner === 'hub' || hub.isConnected()) {
         await hub.attach(app);
@@ -165,7 +176,7 @@ function createShim({ cliVersion, cwd, devTools }) {
     if (status.state !== 'ready') {
       throw new Error(describeNotReady({ label: app.label, status }));
     }
-    return readDevInstance({ configDirectory: app.configDirectory });
+    return readDevInstanceAsync({ configDirectory: app.configDirectory });
   }
 
   async function callDevTool({ name, args }) {
@@ -183,10 +194,23 @@ function createShim({ cliVersion, cwd, devTools }) {
         resetTimeoutOnProgress: true,
       });
     };
-    const result = await callWithReconnect({
-      call,
-      reconnect: () => instances.drop({ configDirectory: app.configDirectory }),
-    });
+    let result;
+    try {
+      result = await callWithReconnect({
+        call,
+        reconnect: () => instances.drop({ configDirectory: app.configDirectory }),
+      });
+    } catch (error) {
+      // The connection ended before the answer (see fetchDevServer). Not
+      // retried here: the dev server may have run part of the call.
+      if (!(error instanceof McpError) || error.code !== ErrorCode.ConnectionClosed) {
+        throw error;
+      }
+      await instances.drop({ configDirectory: app.configDirectory });
+      throw new Error(
+        `${app.label}: the dev server stopped or dropped the connection before ${name} answered, so the call may have run in part. Call lowdefy_dev_status, then lowdefy_dev_start if it is not ready, and try again.`
+      );
+    }
     const content = [
       { type: 'text', text: `${app.label} · ${instance.url}` },
       ...(result.content ?? []),
@@ -209,7 +233,7 @@ function createShim({ cliVersion, cwd, devTools }) {
       { configDirectory: app.configDirectory },
       { autoStart: false }
     );
-    const record = readDevInstance({ configDirectory: app.configDirectory });
+    const record = await readDevInstanceAsync({ configDirectory: app.configDirectory });
     const current = hubStatus ?? {
       configDirectory: app.configDirectory,
       owner: record?.owner,
@@ -227,7 +251,7 @@ function createShim({ cliVersion, cwd, devTools }) {
   // call. A failure here must not fail the start: the next forwarded call
   // connects again.
   async function connectToLearnTools(app) {
-    const instance = readDevInstance({ configDirectory: app.configDirectory });
+    const instance = await readDevInstanceAsync({ configDirectory: app.configDirectory });
     if (instance === null || instance.state !== 'ready') {
       return;
     }
@@ -240,7 +264,7 @@ function createShim({ cliVersion, cwd, devTools }) {
 
   async function start({ directory, restart = false, clean = false }) {
     const app = await resolve({ directory });
-    const running = readDevInstance({ configDirectory: app.configDirectory });
+    const running = await readDevInstanceAsync({ configDirectory: app.configDirectory });
     if (running !== null && running.owner !== 'hub') {
       if (!restart && !clean) {
         await connectToLearnTools(app);
@@ -280,13 +304,16 @@ function createShim({ cliVersion, cwd, devTools }) {
     if (result.state !== 'ready') {
       throw new Error(describeNotReady({ label: app.label, status: result }));
     }
+    await touchDevServer({ url: result.url });
     await connectToLearnTools(app);
-    return { app: app.label, ...result };
+    // A note from the hub (a server another hub started, which it cannot
+    // restart) says the request was not done, so it stands over the idle rule.
+    return { app: app.label, ...result, note: result.note ?? IDLE_STOP_NOTE };
   }
 
   async function stop({ directory }) {
     const app = await resolve({ directory });
-    const running = readDevInstance({ configDirectory: app.configDirectory });
+    const running = await readDevInstanceAsync({ configDirectory: app.configDirectory });
     if (running !== null && running.owner !== 'hub') {
       return {
         app: app.label,
@@ -322,16 +349,18 @@ function createShim({ cliVersion, cwd, devTools }) {
   // fails with "several apps" - the case this tool is for.
   async function list() {
     const root = findGitRoot({ directory: fs.realpathSync.native(cwd) });
-    const apps = findApps({ root }).map((configDirectory) => {
-      const record = readDevInstance({ configDirectory });
-      return {
-        app: formatInstanceLabel({ configDirectory, root }),
-        configDirectory,
-        owner: record?.owner,
-        state: record?.state ?? 'stopped',
-        url: record?.url,
-      };
-    });
+    const apps = await Promise.all(
+      findApps({ root }).map(async (configDirectory) => {
+        const record = await readDevInstanceAsync({ configDirectory });
+        return {
+          app: formatInstanceLabel({ configDirectory, root }),
+          configDirectory,
+          owner: record?.owner,
+          state: record?.state ?? 'stopped',
+          url: record?.url,
+        };
+      })
+    );
     const managed = await hub.request('list', {}, { autoStart: false });
     const elsewhere = (managed?.instances ?? []).filter(
       (instance) => !apps.some((app) => app.configDirectory === instance.configDirectory)

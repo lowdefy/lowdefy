@@ -20,9 +20,9 @@ import mergeNetworkSnapshots from './mergeNetworkSnapshots.js';
 
 // What one journey run touched, across all of its actors: the network path
 // its browsers measured, the endpoints their routines reached through CallApi,
-// and which requests and endpoints write. `events` and `rendered` come from
-// the page-side observer.
-async function collectExercised({ snapshots, readConfigFile, requestSchemas }) {
+// which requests and endpoints write, and what its pages observed: the events
+// that completed and the blocks that were ever visible.
+async function collectExercised({ snapshots, observed, readConfigFile, requestSchemas }) {
   const network = mergeNetworkSnapshots({ snapshots });
   const { endpoints, unfollowed } = await addNestedEndpoints({
     endpoints: network.endpoints,
@@ -40,8 +40,8 @@ async function collectExercised({ snapshots, readConfigFile, requestSchemas }) {
     requests: withWrites.requests,
     endpoints: withWrites.endpoints,
     unfollowed,
-    events: [],
-    rendered: {},
+    events: observed.events,
+    rendered: observed.rendered,
   };
 }
 

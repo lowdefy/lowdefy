@@ -34,6 +34,9 @@ function devServerRules({ appPath }) {
 - Working in a different git worktree from the session (for example as a subagent)? Pass your working
   directory as \`directory\` on every \`lowdefy_\` call.${appNote}
 - After every config edit, call \`lowdefy_build_status\` with \`wait: true\` and fix what it reports.
+- When you finish work in a git worktree you created for the task, call \`lowdefy_dev_stop\` with that
+  \`directory\` before you report back. Do not stop a server in a checkout you share with another agent. A server
+  left running stops once it has been idle for 15 minutes.
 - Every result starts with the app and checkout it came from. Check it.`;
 }
 

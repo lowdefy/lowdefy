@@ -16,7 +16,7 @@
 
 import startServer from './startServer.mjs';
 import waitForChildExit from '../utils/waitForChildExit.mjs';
-import waitForServer from '../utils/waitForServer.mjs';
+import waitForDevServer from './waitForDevServer.mjs';
 
 // Resolves once the new server answers, and counts as build activity until
 // then, so lowdefy_build_status({ wait: true }) waits through a restart
@@ -40,12 +40,11 @@ function restartServer(context) {
           `The old dev server (pid ${stoppedChild.pid}) did not exit after SIGKILL; starting the new one anyway.`
         );
       }
+      // What this server reads at start, so a later build restarts it only
+      // when one of those files changed.
+      context.serverArtifacts.record();
       startServer(context);
-      const ready = await waitForServer({
-        basePath: context.basePath,
-        child: context.devServer,
-        port: context.internalPort,
-      });
+      const ready = await waitForDevServer(context);
       if (ready) {
         context.logger.info({ spin: 'succeed' }, 'Restarted server.');
         return;

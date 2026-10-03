@@ -16,9 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-function isStep(node) {
-  return type.isObject(node) && type.isString(node.type) && type.isString(node.stepId);
-}
+import isRoutineStep from '../server/isRoutineStep.js';
 
 // Every step of an endpoint routine, at any depth: steps sit in arrays, and
 // control objects (`:if`, `:try`, `:parallel`, ...) hold more arrays of steps
@@ -30,7 +28,7 @@ function readRoutineSteps({ routine }) {
       node.forEach(walk);
       return;
     }
-    if (isStep(node)) {
+    if (isRoutineStep(node)) {
       steps.push(node);
       return;
     }
@@ -40,7 +38,7 @@ function readRoutineSteps({ routine }) {
         .forEach((key) => walk(node[key]));
     }
   }
-  walk(routine ?? []);
+  walk(routine);
   return steps;
 }
 

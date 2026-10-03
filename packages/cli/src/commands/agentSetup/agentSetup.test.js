@@ -87,12 +87,15 @@ test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from sc
   expect(skillMd).toContain('name: lowdefy-config');
   expect(skillMd).toContain('Never run `lowdefy dev` yourself');
   expect(skillMd).toContain('Never guess type names or properties.');
+  expect(skillMd).toContain('When you finish work in a git worktree you created for the task');
+  expect(skillMd).toContain('stops once it has been idle for 15 minutes');
   expect(skillMd).not.toContain('localhost:');
 
   const agentsMd = read('AGENTS.md');
   expect(agentsMd).toContain('## Lowdefy');
   expect(agentsMd).toContain('npx lowdefy dev');
   expect(agentsMd).toContain('lowdefy_dev_start');
+  expect(agentsMd).toContain('When you finish work in a git worktree you created for the task');
   expect(agentsMd).not.toContain('localhost:');
 
   const settings = JSON.parse(read(path.join('.claude', 'settings.json')));
@@ -591,6 +594,15 @@ describe('monorepo layout (app in a subdirectory of the git root)', () => {
     );
     expect(fs.existsSync(path.join(configDirectory, '.mcp.json'))).toBe(true);
   });
+});
+
+test('agentSetup writes the journeys-from-production skill and lists it in AGENTS.md', async () => {
+  const skillPath = path.join('.claude', 'skills', 'journeys-from-production', 'SKILL.md');
+  await agentSetup({ context });
+  const written = read(skillPath);
+  expect(written).toContain('name: journeys-from-production');
+  expect(written).toMatch(/lowdefy-skill-hash: [a-f0-9]{64}/);
+  expect(read('AGENTS.md')).toContain('`journeys-from-production`');
 });
 
 test('agentSetup writes the journeys-from-dev skill, refreshes it unedited and skips it edited', async () => {

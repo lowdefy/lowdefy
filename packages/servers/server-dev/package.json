@@ -41,7 +41,9 @@
     "build": "cp package.json package.original.json || copy package.json package.original.json",
     "prepublishOnly": "pnpm build",
     "start": "node manager/run.mjs",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:fixture": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.fixture.config.mjs",
+    "test:mongodb": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.mongodb.config.mjs"
   },
   "dependencies": {
     "@ant-design/cssinjs": "2.1.2",
@@ -97,6 +99,7 @@
     "dotenv": "16.3.1",
     "hono": "4.13.5",
     "html-to-image": "1.11.13",
+    "mongodb": "7.2.0",
     "opener": "1.5.2",
     "pino": "10.3.1",
     "playwright-core": "1.59.1",
@@ -116,6 +119,7 @@
   },
   "devDependencies": {
     "@jest/globals": "28.1.3",
+    "@shelf/jest-mongodb": "4.3.2",
     "jest": "28.1.3",
     "jest-environment-jsdom": "28.1.3",
     "nodemailer": "10.0.13"

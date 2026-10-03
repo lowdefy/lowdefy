@@ -20,11 +20,23 @@ import { validateJourneySteps } from '@lowdefy/node-utils';
 
 import journeySchema from './journeySchema.js';
 
+// ajv cannot compare two fields, so the one cross-field rule of the evidence
+// key is checked here.
+function checkMutationCounts({ evidence }) {
+  const mutation = evidence?.mutation;
+  if (type.isNone(mutation) || mutation.killed <= mutation.total) return undefined;
+  return `Journey "evidence.mutation.killed" (${mutation.killed}) should not be more than "evidence.mutation.total" (${mutation.total}).`;
+}
+
 function validateJourney({ journey }) {
   try {
     validate({ schema: journeySchema, data: journey });
   } catch (error) {
     return { valid: false, message: error.message };
+  }
+  const mutationError = checkMutationCounts({ evidence: journey.evidence });
+  if (!type.isUndefined(mutationError)) {
+    return { valid: false, message: mutationError };
   }
   // The ajv shape check above names the file's broken key; the grammar names
   // the broken step, before a dev server is started for it.

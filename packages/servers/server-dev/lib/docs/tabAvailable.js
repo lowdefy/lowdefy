@@ -20,9 +20,10 @@ import { listTabs } from './tabChannel.js';
 
 // Shared by inspectState.js and evalOperator.js to decide, when no explicit
 // `source` is requested, whether a live browser tab exists to prefer over a
-// fresh headless one.
+// fresh headless one. A tab the dev server's own headless browser opened is
+// not one to prefer (findTab never picks it).
 function tabAvailable({ pageId }) {
-  return listTabs().some((tab) => type.isNone(pageId) || tab.pageId === pageId);
+  return listTabs().some((tab) => !tab.automated && (type.isNone(pageId) || tab.pageId === pageId));
 }
 
 export default tabAvailable;

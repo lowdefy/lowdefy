@@ -46,6 +46,8 @@ async function createContext({ devServer = null } = {}) {
     buildActivity: { track: (fn) => fn() },
     devServer,
     logger: { debug: jest.fn(), info: jest.fn(), warn: jest.fn() },
+    markServerReady: jest.fn(),
+    serverArtifacts: { record: jest.fn() },
   };
   context.shutdownServer = shutdownServer(context);
   return context;

@@ -18,19 +18,31 @@ import fs from 'fs';
 import path from 'path';
 import { spawn } from 'child_process';
 import { type, wait } from '@lowdefy/helpers';
-import { getProcessStartTime, readDevInstance } from '@lowdefy/node-utils';
+import {
+  compareProcessStartTimes,
+  isProcessStartTime,
+  readDevInstance,
+  readDevInstanceAsync,
+  readProcessStartTime,
+} from '@lowdefy/node-utils';
 
 import allocatePorts from './allocatePorts.js';
+import createStartSlots from './createStartSlots.js';
 import hasLowdefyYaml from '../../utils/hasLowdefyYaml.js';
 import fetchOpenTabs from './fetchOpenTabs.js';
 import {
   HUB_PROTOCOL,
+  IDLE_LIMIT_MS,
   IDLE_STOP_MS,
   MAX_LOG_LINES,
   PORT_RANGE,
   READY_TIMEOUT_MS,
+  SOFT_CAP_SERVERS,
+  START_SLOT_HOLD_MS,
+  START_SLOTS,
 } from './hubProtocol.js';
 import readLogTail from './readLogTail.js';
+import readMemoryPressure from './readMemoryPressure.js';
 import resolveDevCommand from './resolveDevCommand.js';
 import stopProcessGroup from './stopProcessGroup.js';
 
@@ -45,14 +57,22 @@ function isGroupAlive(pid) {
 
 // The registry outlives processes (and reboots), so an entry counts only while
 // its process group lives and its leader is the same process the hub started.
-function isManagedAlive(managed) {
+// An entry with no start time to compare (written before Windows had start
+// times, or by an older hub as local time), or a start time that cannot be
+// read now, leaves the pid to decide. The read never blocks: on Windows it
+// starts PowerShell, and the hub must keep answering its sessions meanwhile.
+async function isManagedAlive(managed) {
   if (!isGroupAlive(managed.pid)) {
     return false;
   }
-  if (process.platform === 'win32') {
+  if (!isProcessStartTime(managed.processStartTime)) {
     return true;
   }
-  return getProcessStartTime({ pid: managed.pid }) === managed.processStartTime;
+  const startTime = await readProcessStartTime({ pid: managed.pid });
+  return (
+    compareProcessStartTimes({ recorded: managed.processStartTime, current: startTime }) !==
+    'different'
+  );
 }
 
 function loadRegistry({ registryPath }) {
@@ -86,6 +106,9 @@ function createHub({
   logger,
   openTabs = fetchOpenTabs,
   portRange = PORT_RANGE,
+  readPressure = readMemoryPressure,
+  readyTimeoutMs = READY_TIMEOUT_MS,
+  startSlotHoldMs = START_SLOT_HOLD_MS,
 }) {
   const registry = loadRegistry(paths);
   const exits = new Map();
@@ -109,17 +132,36 @@ function createHub({
     fs.writeFileSync(paths.registryPath, `${JSON.stringify(registry, null, 2)}\n`);
   }
 
-  function forgetDeadServers() {
-    Object.entries(registry.instances).forEach(([configDirectory, managed]) => {
-      if (!isManagedAlive(managed)) {
+  async function forgetDeadServers() {
+    for (const [configDirectory, managed] of Object.entries(registry.instances)) {
+      // A launch while the start time was read may have replaced the entry.
+      if (!(await isManagedAlive(managed)) && registry.instances[configDirectory] === managed) {
         delete registry.instances[configDirectory];
       }
-    });
+    }
     saveRegistry();
   }
 
-  function describe(configDirectory) {
-    const record = readDevInstance({ configDirectory });
+  // A launched server holds its start slot until it is ready or gone. The
+  // slots ask synchronously, so this reads the record without waiting.
+  function isStarting({ configDirectory, pid }) {
+    const managed = registry.instances[configDirectory];
+    if (type.isUndefined(managed) || managed.pid !== pid || !isGroupAlive(pid)) {
+      return false;
+    }
+    return readDevInstance({ configDirectory })?.state !== 'ready';
+  }
+
+  const startSlots = createStartSlots({
+    readPressure,
+    isStarting,
+    onFree: () => launchQueued(),
+    holdMs: startSlotHoldMs,
+    slots: START_SLOTS,
+  });
+
+  async function describe(configDirectory) {
+    const record = await readDevInstanceAsync({ configDirectory });
     const managed = registry.instances[configDirectory];
     if (record !== null) {
       return {
@@ -133,7 +175,7 @@ function createHub({
         command: managed?.command,
       };
     }
-    if (!type.isUndefined(managed) && isManagedAlive(managed)) {
+    if (!type.isUndefined(managed) && (await isManagedAlive(managed))) {
       return {
         configDirectory,
         owner: 'hub',
@@ -143,6 +185,17 @@ function createHub({
         managed: true,
         command: managed.command,
       };
+    }
+    if (startSlots.isQueued(configDirectory)) {
+      return {
+        configDirectory,
+        state: 'queued',
+        ahead: startSlots.ahead(configDirectory),
+        managed: false,
+      };
+    }
+    if (startSlots.isLaunching(configDirectory)) {
+      return { configDirectory, owner: 'hub', state: 'starting', managed: true };
     }
     const exit = exits.get(configDirectory);
     if (!type.isUndefined(exit)) {
@@ -155,10 +208,9 @@ function createHub({
     return path.join(configDirectory, '.lowdefy', 'dev.log');
   }
 
-  async function waitForReady(configDirectory) {
-    const deadline = Date.now() + READY_TIMEOUT_MS;
+  async function waitForReady({ configDirectory, deadline }) {
     while (Date.now() < deadline) {
-      const status = describe(configDirectory);
+      const status = await describe(configDirectory);
       if (status.state === 'ready') {
         return status;
       }
@@ -168,13 +220,27 @@ function createHub({
           logTail: readLogTail({ logPath: logPathFor(configDirectory), lines: 30 }),
         };
       }
+      // Stopped by another caller while this one waited.
+      if (status.state === 'stopped') {
+        return status;
+      }
       await wait(250);
     }
+    const status = await describe(configDirectory);
+    if (status.state === 'queued') {
+      const starts = startSlots.held() + status.ahead;
+      return {
+        ...status,
+        note: `Queued behind ${starts} other start${
+          starts === 1 ? '' : 's'
+        } on this machine. Call again to keep waiting; your place is kept.`,
+      };
+    }
     return {
-      ...describe(configDirectory),
+      ...status,
       logTail: readLogTail({ logPath: logPathFor(configDirectory), lines: 10 }),
       note: `Not ready after ${
-        READY_TIMEOUT_MS / 1000
+        readyTimeoutMs / 1000
       }s - it may still be installing or building. Call again to keep waiting.`,
     };
   }
@@ -182,7 +248,7 @@ function createHub({
   async function stopServer({ configDirectory }) {
     const managed = registry.instances[configDirectory];
     if (type.isUndefined(managed)) {
-      const record = readDevInstance({ configDirectory });
+      const record = await readDevInstanceAsync({ configDirectory });
       if (record !== null) {
         return {
           stopped: false,
@@ -191,11 +257,12 @@ function createHub({
       }
       return { stopped: false, reason: 'No dev server is running for this app.' };
     }
-    if (isManagedAlive(managed)) {
+    if (await isManagedAlive(managed)) {
       await stopProcessGroup({ pid: managed.pid });
     }
     delete registry.instances[configDirectory];
     saveRegistry();
+    startSlots.release(configDirectory);
     logger.info(`Stopped ${configDirectory}.`);
     return { stopped: true };
   }
@@ -249,27 +316,86 @@ function createHub({
         delete registry.instances[configDirectory];
         saveRegistry();
       }
+      startSlots.tick();
     });
 
+    const processStartTime = await readProcessStartTime({ pid: child.pid });
+    if (exits.has(configDirectory)) {
+      // It exited while its start time was read: there is nothing to record.
+      return;
+    }
     registry.instances[configDirectory] = {
       pid: child.pid,
-      processStartTime: getProcessStartTime({ pid: child.pid }),
+      processStartTime,
       command: devCommand.display,
       startedAt: new Date().toISOString(),
     };
     saveRegistry();
     logger.info(`Started ${configDirectory} on port ${ports.port}: ${devCommand.display}`);
+    return child.pid;
+  }
+
+  // Launches with the start slot already taken for this app; the slot passes
+  // to the server, or back if the launch fails.
+  async function launchWithSlot({ configDirectory, env }) {
+    try {
+      const pid = await launch({ configDirectory, env });
+      startSlots.hold({ configDirectory, pid });
+    } catch (error) {
+      startSlots.release(configDirectory);
+      throw error;
+    }
+  }
+
+  // Starts the apps waiting for a slot, as slots free. Each launch runs
+  // through serialize, like any start, and is skipped if the app has been
+  // started meanwhile. A failed launch is reported to whoever waits on it.
+  function launchQueued() {
+    for (;;) {
+      const next = startSlots.takeNext();
+      if (next === null) {
+        return;
+      }
+      serialize(async () => {
+        if (await isServerRunning(next.configDirectory)) {
+          startSlots.release(next.configDirectory);
+          return;
+        }
+        await launchWithSlot(next);
+      }).catch((error) => {
+        exits.set(next.configDirectory, { error: error.message, at: new Date().toISOString() });
+        logger.error(`Could not start ${next.configDirectory}: ${error.message}`);
+      });
+    }
+  }
+
+  // Whether a server runs for the app, read from the record and the registry
+  // alone: the slot taken for a queued launch must not read as running.
+  async function isServerRunning(configDirectory) {
+    const record = await readDevInstanceAsync({ configDirectory });
+    if (record !== null) {
+      return ['starting', 'ready'].includes(record.state);
+    }
+    const managed = registry.instances[configDirectory];
+    return !type.isUndefined(managed) && (await isManagedAlive(managed));
   }
 
   async function stop(params) {
     const configDirectory = realDirectory(params.configDirectory);
+    // A queued app has nothing running yet: taking it off the queue stops it.
+    if (startSlots.dequeue(configDirectory)) {
+      return { stopped: true };
+    }
     return serialize(() => stopServer({ configDirectory }));
   }
 
   // Returns the answer when there is nothing to wait for, else null once the
-  // server is running or launched.
+  // server is running, launched or queued for a start slot.
   async function launchUnlessRunning({ configDirectory, env, restart, clean }) {
-    const current = describe(configDirectory);
+    if (startSlots.isQueued(configDirectory)) {
+      return null;
+    }
+    const current = await describe(configDirectory);
     const running = ['starting', 'ready'].includes(current.state);
     if (running && current.owner !== 'hub') {
       // A terminal server stays the user's. The caller restarts it in place
@@ -294,23 +420,47 @@ function createHub({
         force: true,
       });
     }
-    await launch({ configDirectory, env });
+    if (!startSlots.tryTake(configDirectory)) {
+      startSlots.enqueue({ configDirectory, env });
+      return null;
+    }
+    await launchWithSlot({ configDirectory, env });
     return null;
   }
 
+  // Under memory pressure, stop the servers that are already idle before a
+  // new one adds its memory, instead of up to a reap interval later. Outside
+  // serialize: the pass stops servers through it.
+  async function reapBeforeLaunch({ configDirectory }) {
+    if (readPressure() === 'normal') {
+      return;
+    }
+    if (Object.keys(registry.instances).length < SOFT_CAP_SERVERS) {
+      return;
+    }
+    if (await isServerRunning(configDirectory)) {
+      return;
+    }
+    await reap();
+  }
+
+  // Waits for ready up to readyTimeoutMs from the request, time queued for a
+  // start slot included, and answers once.
   async function start({ env, restart = false, clean = false, ...params }) {
+    const deadline = Date.now() + readyTimeoutMs;
     const configDirectory = realDirectory(params.configDirectory);
+    await reapBeforeLaunch({ configDirectory });
     const answer = await serialize(() =>
       launchUnlessRunning({ configDirectory, env, restart, clean })
     );
-    return answer ?? waitForReady(configDirectory);
+    return answer ?? waitForReady({ configDirectory, deadline });
   }
 
-  function status({ configDirectory }) {
+  async function status({ configDirectory }) {
     return describe(realDirectory(configDirectory));
   }
 
-  function logs({ lines = 100, grep, ...params }) {
+  async function logs({ lines = 100, grep, ...params }) {
     if (!type.isInt(lines) || lines < 1) {
       throw new Error(
         `"lines" must be a positive integer (at most ${MAX_LOG_LINES} are returned). Received ${JSON.stringify(
@@ -319,7 +469,7 @@ function createHub({
       );
     }
     const configDirectory = realDirectory(params.configDirectory);
-    const record = readDevInstance({ configDirectory });
+    const record = await readDevInstanceAsync({ configDirectory });
     if (record !== null && record.owner !== 'hub') {
       return {
         lines: [],
@@ -329,15 +479,18 @@ function createHub({
     return { lines: readLogTail({ logPath: logPathFor(configDirectory), lines, grep }) };
   }
 
-  function list() {
-    forgetDeadServers();
+  async function list() {
+    await forgetDeadServers();
     return {
-      instances: Object.keys(registry.instances).map((configDirectory) =>
-        describe(configDirectory)
+      instances: await Promise.all(
+        Object.keys(registry.instances).map((configDirectory) => describe(configDirectory))
       ),
     };
   }
 
+  // Attachment decides only for a server on an older server-dev, whose
+  // instance record does not say when it was last used (see isIdle). The shim
+  // keeps attaching for those.
   function attach({ connectionId, ...params }) {
     const configDirectory = realDirectory(params.configDirectory);
     if (!attachments.has(connectionId)) {
@@ -402,14 +555,79 @@ function createHub({
     saveRegistry();
   }
 
-  // Stops servers nobody uses: the app was removed, or no agent session
-  // has been attached and no browser tab open for IDLE_STOP_MS.
+  // A server that has said `starting` for longer than a start may hold its
+  // slot is stalled - its first child never answered (a plugin that fails to
+  // load) and the record stays `starting` with the manager alive - and is
+  // judged on its use like a ready one, or nothing would ever stop it.
+  function isStartingOrBusy(record) {
+    const stalled =
+      record.state === 'starting' && Date.now() - Date.parse(record.startedAt) > startSlotHoldMs;
+    if (record.state !== 'ready' && !stalled) {
+      return true;
+    }
+    return record.building === true || record.activeRequests > 0;
+  }
+
+  // Whether nobody has used a server for the idle limit. The dev manager
+  // records its own last use (requests through its port, builds) in the
+  // instance record; an agent session holding a hub connection does not count,
+  // since helper agents share their parent session's one connection and would
+  // keep every server they touched alive for the parent's whole session.
+  async function isIdle({ record, managed, idleLimitMs, configDirectory }) {
+    if (record !== null && !type.isNone(record.lastActivityAt)) {
+      if (isStartingOrBusy(record)) {
+        return false;
+      }
+      if (Date.now() - Date.parse(record.lastActivityAt) <= idleLimitMs) {
+        return false;
+      }
+    } else {
+      if (isAttached(configDirectory)) {
+        return false;
+      }
+      const idleSince = lastDetachedAt.get(configDirectory) ?? Date.parse(managed.startedAt);
+      if (Date.now() - idleSince < IDLE_STOP_MS) {
+        return false;
+      }
+    }
+    // A tab poll that fails counts as no tabs: the record already said idle.
+    return record === null || (await openTabs({ url: record.url })) === 0;
+  }
+
+  // Whether a server was used after the reaper judged it idle: the tab poll
+  // and the wait for serialize leave time for a request to begin, and the
+  // manager writes one that starts on an idle record at once. A different
+  // registry entry or pid is a server started (or stopped) since, not the one
+  // judged; a restart queued ahead of the reap launches one that has not yet
+  // written its record.
+  async function isUsedSince({ configDirectory, managed, seen }) {
+    if (registry.instances[configDirectory] !== managed) {
+      return true;
+    }
+    if (seen === null || type.isNone(seen.lastActivityAt)) {
+      return false;
+    }
+    const current = await readDevInstanceAsync({ configDirectory });
+    if (current === null) {
+      return false;
+    }
+    return (
+      current.pid !== seen.pid ||
+      current.activeRequests > 0 ||
+      current.lastActivityAt !== seen.lastActivityAt
+    );
+  }
+
+  // Stops servers nobody uses: the app was removed, or nobody has used it for
+  // the idle limit and no browser tab has it open.
   async function reapOnce() {
-    forgetDeadServers();
+    await forgetDeadServers();
     countAppMisses();
+    const pressure = readPressure();
+    const idleLimitMs = IDLE_LIMIT_MS[pressure];
     for (const [configDirectory, managed] of Object.entries(registry.instances)) {
       if (isAppRemoved(configDirectory)) {
-        if (isManagedAlive(managed)) {
+        if (await isManagedAlive(managed)) {
           await stopProcessGroup({ pid: managed.pid });
         }
         delete registry.instances[configDirectory];
@@ -417,19 +635,24 @@ function createHub({
         logger.info(`Stopped ${configDirectory}: the app was removed.`);
         continue;
       }
-      if (isAttached(configDirectory)) {
+      const record = await readDevInstanceAsync({ configDirectory });
+      if (!(await isIdle({ record, managed, idleLimitMs, configDirectory }))) {
         continue;
       }
-      const idleSince = lastDetachedAt.get(configDirectory) ?? Date.parse(managed.startedAt);
-      if (Date.now() - idleSince < IDLE_STOP_MS) {
-        continue;
+      const stopped = await serialize(async () => {
+        if (await isUsedSince({ configDirectory, managed, seen: record })) {
+          return false;
+        }
+        await stopServer({ configDirectory });
+        return true;
+      });
+      if (stopped) {
+        logger.info(
+          `Stopped ${configDirectory}: idle for over ${
+            idleLimitMs / 60000
+          } minutes (memory pressure ${pressure}).`
+        );
       }
-      const record = readDevInstance({ configDirectory });
-      if (record !== null && (await openTabs({ url: record.url })) > 0) {
-        continue;
-      }
-      await stop({ configDirectory });
-      logger.info(`Stopped ${configDirectory}: idle.`);
     }
     forgetRemovedApps();
   }
@@ -455,7 +678,22 @@ function createHub({
     return { protocol: HUB_PROTOCOL, version: cliVersion, pid: process.pid };
   }
 
-  forgetDeadServers();
+  // Queued like a start or stop, so neither acts on the registry before the
+  // dead entries it was loaded with are gone. A replacement hub then adopts
+  // servers still starting with the slots they hold.
+  serialize(async () => {
+    await forgetDeadServers();
+    for (const [configDirectory, managed] of Object.entries(registry.instances)) {
+      const record = await readDevInstanceAsync({ configDirectory });
+      if (record?.state !== 'ready') {
+        startSlots.hold({
+          configDirectory,
+          pid: managed.pid,
+          takenAt: Date.parse(managed.startedAt),
+        });
+      }
+    }
+  }).catch((error) => logger.error(`Forgetting dead servers failed: ${error.message}`));
 
   return {
     attach,

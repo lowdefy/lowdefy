@@ -21,9 +21,10 @@ function hasExited(child) {
 }
 
 // The child answers <basePath>/api/ping once Vite and the Hono app are both up, so this
-// is the moment the server is really usable - the instance record flips to
-// "ready" here, which is what the hub and the MCP shim wait on. A child that
-// exits (a plugin that fails to load) will never answer, so the wait ends.
+// is the moment the server is really usable - waitForDevServer flips the
+// instance record to "ready" then, which is what the hub and the MCP shim
+// wait on. A child that exits (a plugin that fails to load) will never
+// answer, so the wait ends.
 async function waitForServer({ port, basePath, child, timeoutMs = 120000, intervalMs = 250 }) {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline && !hasExited(child)) {

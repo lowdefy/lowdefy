@@ -14,14 +14,20 @@
   limitations under the License.
 */
 
-const LIST_INDEX_PATTERN = /\.\d+(?=\.|$)/g;
+import doubleSubmit from './doubleSubmit.js';
+import interrupt from './interrupt.js';
+import negative from './negative.js';
 
-// A block inside a List renders once per item, with the item's index in its
-// id: `groups.2.rows.0.review_button`. Which item was used is data; which
-// control was used is the action. Replacing every index with `$` gives the id
-// as the config writes it (`groups.$.rows.$.review_button`).
-function normaliseBlockId({ blockId }) {
-  return blockId.replace(LIST_INDEX_PATTERN, '.$');
-}
+// The variant kinds, in the order they are written. The data-set kinds
+// (role, tenant, empty, volume) have no generator until journeys gain data
+// sets, and are listed as skipped.
+const KINDS = ['role', 'tenant', 'empty', 'volume', 'negative', 'interrupt', 'double-submit'];
 
-export default normaliseBlockId;
+const generators = {
+  negative,
+  interrupt,
+  'double-submit': doubleSubmit,
+};
+
+export { KINDS };
+export default generators;
