@@ -140,6 +140,7 @@ function pageHtml() {
 <div id="bl-watch"><button onclick="watch()">Watch</button></div>
 <div id="bl-archive"><button onclick="callEndpoint('archive/archive_ticket', { id: 'arch-1' }, 'archived')">Archive</button></div>
 <div id="bl-create_later_auth"><button onclick="callEndpoint('create_ticket_later_auth', {}, 'dispatchedAuth')">Later with auth</button></div>
+<div id="bl-leave"><button onclick="location.href = 'http://localhost:' + location.port + '/tickets'">Leave</button></div>
 <div id="bl-auth_probe"><button onclick="probeAuth()">Auth</button></div>
 <div id="bl-create_watched"><button onclick="callEndpoint('create_ticket', { id: 'watched-1', title: 'Seen' }, 'createdWatched')">Create watched</button></div>
 <script>
@@ -203,8 +204,16 @@ function watch() {
 </script></body></html>`;
 }
 
+// The Host header of every request the server answers, so a test can tell that a request to the
+// server's other host never arrived.
+const seenHosts = [];
+
 function createApp() {
   const app = new Hono();
+  app.use('*', async (c, next) => {
+    seenHosts.push(c.req.header('host'));
+    await next();
+  });
   app.post('/lowdefy-docs/journey', docsJourneyHandler);
   app.use('/api/*', apiContext());
   // As src/app.js mounts them: the get-session stub answers for injected callers, and every other
@@ -549,6 +558,30 @@ chromiumTest(
     expect(before).toBeDefined();
     expect(before.db).toMatch(/^ld_[0-9a-f]{12}$/);
     expect(storeEvents.some((event) => event.id === 'later-auth-after')).toBe(false);
+  }
+);
+
+chromiumTest(
+  "a data set journey that navigates to the dev server's other host fails, and the server never sees it",
+  async () => {
+    const port = new URL(origin).port;
+    // The other host reaches this server: without a journey's browser in the way, it answers.
+    const reachable = await fetch(`http://localhost:${port}/tickets`);
+    expect(reachable.status).toBe(200);
+    seenHosts.length = 0;
+    const { result } = await runJourney({
+      data: 'shop',
+      user: 'owner',
+      steps: [{ click: 'leave' }, { click: 'list' }],
+    });
+    expect(result.passed).toBe(false);
+    expect(result.failure.index).toBe(0);
+    expect(result.failure.message).toEqual(
+      `Journey left its origin ${origin} for http://localhost:${port}/tickets; a data set journey must stay on one host of the dev server.`
+    );
+    expect(result.steps.map((step) => step.status)).toEqual(['failed', 'skipped']);
+    expect(seenHosts.length).toBeGreaterThan(0);
+    expect(seenHosts.filter((host) => host.startsWith('localhost'))).toEqual([]);
   }
 );
 
