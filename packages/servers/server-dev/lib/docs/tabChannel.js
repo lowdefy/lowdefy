@@ -29,14 +29,18 @@ import { type } from '@lowdefy/helpers';
 const tabs = new Map();
 const pendingRequests = new Map();
 
-function registerTab({ id, pageId, send }) {
+// A tab the dev server's own headless browser opened (an explorer walk, a
+// journey run, a headless tool) is automated: it is listed, so the hub keeps
+// the server alive while it runs, but findTab never picks it for an agent's
+// or developer's live-tab request.
+function registerTab({ id, pageId, send, source = 'dev', automated = false }) {
   if (type.isNone(id) || !type.isString(id)) {
     throw new Error(`registerTab requires an "id" string. Received ${JSON.stringify(id)}.`);
   }
   if (!type.isFunction(send)) {
     throw new Error('registerTab requires a "send" function.');
   }
-  tabs.set(id, { id, pageId: pageId ?? null, send, connectedAt: new Date() });
+  tabs.set(id, { id, pageId: pageId ?? null, send, source, automated, connectedAt: new Date() });
 }
 
 function updateTabPage({ id, pageId }) {
@@ -54,19 +58,21 @@ function unregisterTab({ id }) {
 }
 
 function listTabs() {
-  return Array.from(tabs.values()).map(({ id, pageId, connectedAt }) => ({
+  return Array.from(tabs.values()).map(({ id, pageId, source, automated, connectedAt }) => ({
     id,
     pageId,
+    source,
+    automated,
     connectedAt,
   }));
 }
 
 // Most recently connected tab wins — Map preserves insertion order, and
 // re-registering a tab id (reconnect) deletes then re-sets it, so the last
-// entry is always the most recent connection.
+// entry is always the most recent connection. Automated tabs are skipped.
 function findTab({ pageId }) {
   const candidates = Array.from(tabs.values()).filter(
-    (tab) => type.isNone(pageId) || tab.pageId === pageId
+    (tab) => !tab.automated && (type.isNone(pageId) || tab.pageId === pageId)
   );
   if (candidates.length === 0) {
     return undefined;
