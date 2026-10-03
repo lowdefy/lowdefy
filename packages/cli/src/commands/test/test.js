@@ -17,8 +17,14 @@
 import { type } from '@lowdefy/helpers';
 import { readDevInstance } from '@lowdefy/node-utils';
 
+import fetchBuildId from './fetchBuildId.js';
+import parseRepeat from './parseRepeat.js';
+import resolveJourneyPaths from './resolveJourneyPaths.js';
+import runRepeated from './runRepeated.js';
 import selectTests from './selectTests.js';
 import startDevServer from './startDevServer.js';
+import summariseResults from './summariseResults.js';
+import writeExercised from './writeExercised.js';
 
 function trimTrailingSlash(url) {
   return url.replace(/\/+$/, '');
@@ -44,23 +50,48 @@ async function resolveServer({ context }) {
   }
 }
 
+function refuse({ context, message }) {
+  context.logger.error(message);
+  context.sendTelemetry();
+  process.exitCode = 1;
+}
+
 async function test({ context }) {
   const filter = context.options.filter;
-  const selected = selectTests({ context, filter });
+  const { repeat, error: repeatError } = parseRepeat(context.options.repeat);
+  if (repeatError) {
+    refuse({ context, message: repeatError });
+    return;
+  }
+  const givenPaths = context.options.paths ?? [];
+  let paths;
+  if (givenPaths.length > 0) {
+    const resolved = resolveJourneyPaths({
+      paths: givenPaths,
+      base: process.cwd(),
+      configDirectory: context.directories.config,
+    });
+    if (resolved.error) {
+      refuse({ context, message: resolved.error });
+      return;
+    }
+    paths = resolved.files;
+  }
+  const selected = selectTests({ context, filter, paths });
 
   if (selected.length === 0) {
     if (!type.isNone(filter)) {
-      context.logger.error(`No tests matched --filter "${filter}".`);
-      context.sendTelemetry();
-      process.exitCode = 1;
+      refuse({ context, message: `No tests matched --filter "${filter}".` });
+      return;
+    }
+    if (!type.isUndefined(paths)) {
+      refuse({ context, message: `No journeys found in ${givenPaths.join(', ')}.` });
       return;
     }
     // A directory named on the command line is a run that expects journeys;
     // finding none there is a mistyped path, not an app without tests yet.
     if (!type.isNone(context.options.journeysDirectory)) {
-      context.logger.error(`No journeys found in ${context.directories.journeys}.`);
-      context.sendTelemetry();
-      process.exitCode = 1;
+      refuse({ context, message: `No journeys found in ${context.directories.journeys}.` });
       return;
     }
     context.logger.warn('No tests found. Add journeys to tests/journeys/*.yaml.');
@@ -82,7 +113,7 @@ async function test({ context }) {
   const seen = new Set();
   try {
     for (const { suite, item } of selected) {
-      const result = await suite.run({ context, item, url: server.url });
+      const result = await runRepeated({ suite, context, item, url: server.url, repeat });
       results.push(result);
       const lines = suite.format({ result, seen });
       if (result.passed) {
@@ -91,6 +122,11 @@ async function test({ context }) {
         lines.forEach((line) => context.logger.error(line));
       }
     }
+    writeExercised({
+      directories: context.directories,
+      results,
+      buildId: await fetchBuildId({ url: server.url }),
+    });
   } finally {
     process.removeListener('SIGINT', onSigint);
     if (!interrupted) {
@@ -98,14 +134,12 @@ async function test({ context }) {
     }
   }
 
-  const passed = results.filter((result) => result.passed).length;
-  const failed = results.length - passed;
-  const summary = `${passed} passed, ${failed} failed of ${results.length} journeys`;
-  if (failed > 0) {
-    context.logger.error(summary);
+  const summary = summariseResults({ results });
+  if (summary.failed > 0) {
+    context.logger.error(summary.text);
     process.exitCode = 1;
   } else {
-    context.logger.info(summary);
+    context.logger.info(summary.text);
   }
   context.sendTelemetry();
 }

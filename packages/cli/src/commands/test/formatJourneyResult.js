@@ -30,22 +30,27 @@ function toCompactYaml(value) {
   return document.toString({ lineWidth: 0 }).trim();
 }
 
-// Returns the lines to print for one journey result: a PASS line, or a FAIL line followed by an
-// indented explanation of what went wrong. A data set and its warnings are printed once per run:
-// `seen` is shared across the run's results.
-function formatJourneyResult({ result, seen = new Set() }) {
-  if (result.passed) {
-    return [
-      `PASS  ${result.name}  (${result.stepCount} steps, ${result.durationMs}ms)`,
-      ...formatJourneyDataSet({ result, seen }),
-    ];
+function describeStep(step) {
+  if (!type.isObject(step)) {
+    return toCompactYaml(step);
   }
-  const lines = [
-    `FAIL  ${result.name}`,
-    ...formatJourneyDataSet({ result, seen }),
-    `      file: ${result.filePath}`,
-  ];
-  const failure = result.failure;
+  const [key] = Object.keys(step);
+  const value = step[key];
+  if (type.isString(value)) {
+    return `${key} "${value}"`;
+  }
+  return `${key} ${toCompactYaml(value)}`;
+}
+
+function failureDetail({ failure, message }) {
+  if (type.isObject(failure)) {
+    return `step ${failure.index} (${describeStep(failure.step)}): ${failure.message ?? ''}`;
+  }
+  return message ?? '';
+}
+
+function failureLines({ failure, message }) {
+  const lines = [];
   if (type.isObject(failure)) {
     lines.push(`      step ${failure.index}: ${toCompactYaml(failure.step)}`);
     if (!type.isUndefined(failure.expected) || !type.isUndefined(failure.actual)) {
@@ -57,10 +62,69 @@ function formatJourneyResult({ result, seen = new Set() }) {
     }
     return lines;
   }
-  if (type.isString(result.message) && result.message !== '') {
-    lines.push(`      ${result.message}`);
+  if (type.isString(message) && message !== '') {
+    lines.push(`      ${message}`);
   }
   return lines;
+}
+
+function formatSingle({ result, seen }) {
+  if (result.passed) {
+    return [
+      `PASS  ${result.name}  (${result.stepCount} steps, ${result.durationMs}ms)`,
+      ...formatJourneyDataSet({ result, seen }),
+    ];
+  }
+  return [
+    `FAIL  ${result.name}`,
+    ...formatJourneyDataSet({ result, seen }),
+    `      file: ${result.filePath}`,
+    ...failureLines({ failure: result.failure, message: result.message }),
+  ];
+}
+
+function formatRepeated({ result, seen }) {
+  const seconds = (result.durationMs / 1000).toFixed(1);
+  if (result.class === 'PASS') {
+    return [
+      `PASS   ${result.name}   (${result.stepCount} steps, ${result.passedRuns}/${result.runs}, ${seconds}s each)`,
+      ...formatJourneyDataSet({ result, seen }),
+    ];
+  }
+  const [first, ...others] = result.failures;
+  if (result.class === 'FLAKY') {
+    return [
+      `FLAKY  ${result.name}   (${result.passedRuns}/${result.runs} passed) run ${
+        first.run
+      } failed at ${failureDetail(result)}`,
+      ...formatJourneyDataSet({ result, seen }),
+      `      file: ${result.filePath}`,
+      ...failureLines({ failure: result.failure, message: result.message }),
+      ...others.map(
+        (failure) => `      run ${failure.run} failed at step ${failure.step}: ${failure.message}`
+      ),
+    ];
+  }
+  return [
+    `FAIL   ${result.name}   (0/${result.runs}) ${failureDetail(
+      result
+    )} — fails every run: a finding, not a test to fix by retrying`,
+    ...formatJourneyDataSet({ result, seen }),
+    `      file: ${result.filePath}`,
+    ...failureLines({ failure: result.failure, message: result.message }),
+  ];
+}
+
+// Returns the lines to print for one journey result. Run once, a single PASS
+// line, or a FAIL line followed by an indented explanation of what went
+// wrong. Replayed (--repeat above 1), the class - PASS, FLAKY or FAIL - with
+// the runs that passed, and each failing run's step. A data set and its
+// warnings are printed once per run: `seen` is shared across the run's results.
+function formatJourneyResult({ result, seen = new Set() }) {
+  if ((result.repeat ?? 1) === 1 || result.refused === true) {
+    return formatSingle({ result, seen });
+  }
+  return formatRepeated({ result, seen });
 }
 
 export default formatJourneyResult;

@@ -16,10 +16,14 @@
 
 import { type } from '@lowdefy/helpers';
 
+import getBuildId from '../../../lib/docs/getBuildId.js';
+import lowdefyConfig from '../../../lib/build/config.js';
+import { openMutantRun } from '../../../lib/server/mutants/mutantRuns.js';
 import parseUserParam from './parseUserParam.js';
 import runJourney from '../../../lib/docs/runJourney.js';
 import validateJourneySteps from '../../../lib/docs/validateJourneySteps.js';
 import validateJourneyTimeout from '../../../lib/docs/validateJourneyTimeout.js';
+import validateMutantParam from '../../../lib/server/mutants/validateMutantParam.js';
 import validateStateSelection from '../../../lib/docs/validateStateSelection.js';
 
 // A failed journey is a 200 with passed: false — it is the result the caller
@@ -76,22 +80,64 @@ async function docsJourneyHandler(c) {
   if (userError) {
     return c.json({ error: userError }, 400);
   }
+  if (!type.isNone(body.mutant)) {
+    const mutantError = validateMutantParam(body.mutant);
+    if (mutantError) {
+      return c.json({ error: mutantError }, 400);
+    }
+    // A mutant's key names a node only within the build it was listed
+    // against; against any other build it would mutate the wrong node.
+    if (body.mutant.buildId !== getBuildId()) {
+      return c.json(
+        {
+          error:
+            'The mutant was listed against another build. List the mutants again (POST /lowdefy-docs/mutants) and run the new one.',
+          stale: true,
+        },
+        409
+      );
+    }
+  }
   // Derived from the incoming request rather than a config value — this is
   // the origin an agent can actually reach the dev server on (host/port it
   // just connected to), regardless of how the server is bound.
   const origin = new URL(c.req.url).origin;
 
-  const result = await runJourney({
-    origin,
-    pageId,
-    steps,
-    user,
-    urlQuery,
-    state,
-    stepTimeout: timeout,
-  });
+  const mutantRun = type.isNone(body.mutant)
+    ? null
+    : openMutantRun({
+        mutant: {
+          buildId: body.mutant.buildId,
+          artifact: body.mutant.artifact,
+          key: body.mutant.key,
+          arg: body.mutant.arg ?? null,
+          operator: body.mutant.operator,
+        },
+      });
+  let result;
+  try {
+    result = await runJourney({
+      origin,
+      pageId,
+      steps,
+      user,
+      urlQuery,
+      state,
+      stepTimeout: timeout,
+      basePath: lowdefyConfig.basePath ?? '',
+      mutantCookie: mutantRun?.cookiePayload,
+    });
+  } finally {
+    // runJourney has closed every actor by now, so no request still carries
+    // the run's cookie.
+    mutantRun?.close();
+  }
   if (result.error) {
     return c.json({ error: result.error }, 502);
+  }
+  if (mutantRun !== null) {
+    const { id, applied, misses } = mutantRun.run;
+    return c.json({ ...result, mutant: { id, applied, misses } });
   }
   return c.json(result);
 }

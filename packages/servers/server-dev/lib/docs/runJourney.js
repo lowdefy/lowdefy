@@ -22,11 +22,13 @@ import {
   getState,
 } from '@lowdefy/e2e-utils/runtime';
 
+import collectExercised from './collectExercised.js';
 import createJourneyActors from './createJourneyActors.js';
 import { getBrowser, buildPageUrl } from './getBrowser.js';
 import isPageReady from './isPageReady.js';
 import JourneyStepError from './JourneyStepError.js';
 import openJourneyEmail from './openJourneyEmail.js';
+import readBuildArtifact from './readBuildArtifact.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
 import selectFinalState from './selectFinalState.js';
 import unsettledPageNote from './unsettledPageNote.js';
@@ -848,6 +850,12 @@ async function readFinalState({ page }) {
   }
 }
 
+// The built artifacts a journey's exercised path is read from. The pages it
+// visited were built by the visit, so their request artifacts are on disk.
+function defaultReadConfigFile(name) {
+  return readBuildArtifact({ name, deserialize: true });
+}
+
 // runJourney drives a page of the running dev server through a declarative
 // list of steps — click, fill, select, press, back, goto, email, as, wait,
 // screenshot, expect — so an agent can verify behaviour (a form submits, a
@@ -871,6 +879,9 @@ async function runJourney({
   height = 800,
   timeout = 15000,
   stepTimeout = 5000,
+  basePath = '',
+  readConfigFile = defaultReadConfigFile,
+  mutantCookie,
 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
     return {
@@ -925,12 +936,14 @@ async function runJourney({
   const actors = createJourneyActors({
     browser,
     origin,
+    basePath,
     pageId,
     user,
     urlQuery,
     width,
     height,
     timeout: openTimeout,
+    mutantCookie,
   });
   try {
     const main = await actors.switchTo(MAIN_ACTOR);
@@ -944,12 +957,18 @@ async function runJourney({
     };
     const { results, screenshots, failure } = await runSteps({ journey, steps });
     const state = await readFinalState({ page: actors.current().page });
+    const exercised = await collectExercised({
+      snapshots: actors.networkSnapshots(),
+      readConfigFile,
+      requestSchemas: (await readConfigFile('plugins/requestSchemas.json')) ?? {},
+    });
     const result = {
       pageId,
       passed: type.isUndefined(failure),
       steps: results,
       screenshots,
       ...selectFinalState({ state, selection: stateSelection }),
+      exercised,
     };
     if (!type.isUndefined(failure)) {
       result.failure = failure;

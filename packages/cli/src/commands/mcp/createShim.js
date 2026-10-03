@@ -229,13 +229,15 @@ function createShim({ cliVersion, cwd, devTools }) {
     return { app: app.label, ...result };
   }
 
-  async function runTests({ directory, filter }) {
+  async function runTests({ directory, filter, paths, repeat }) {
     const app = await resolve({ directory });
     const instance = await ensureRunning(app);
     const result = await runAppTests({
       configDirectory: app.configDirectory,
       url: instance.url,
       filter,
+      paths,
+      repeat,
     });
     return { app: app.label, url: instance.url, ...result };
   }

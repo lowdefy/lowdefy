@@ -300,7 +300,11 @@ program
 program
   .command('test')
   .description("Run the app's config tests (tests/journeys/*.yaml).")
-  .usage('[options]')
+  .usage('[options] [paths...]')
+  .argument(
+    '[paths...]',
+    'Journey files or directories to run instead of tests/journeys/*.yaml, anywhere under the config directory (tests/journeys/_candidates included).'
+  )
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)
@@ -321,11 +325,19 @@ program
   .addOption(options.refResolver)
   .addOption(
     new Option(
+      '--repeat <n>',
+      'Run each journey n times (1 to 10) and classify it PASS, FLAKY or FAIL. Default 1.'
+    )
+  )
+  .addOption(
+    new Option(
       '--url <url>',
       'Run tests against an already running dev server instead of starting one, e.g. http://localhost:3000.'
     )
   )
-  .action(runCommand({ cliVersion, handler: test }));
+  .action((paths, commandOptions, command) =>
+    runCommand({ cliVersion, handler: test })({ ...commandOptions, paths }, command)
+  );
 
 program
   .command('upgrade')
