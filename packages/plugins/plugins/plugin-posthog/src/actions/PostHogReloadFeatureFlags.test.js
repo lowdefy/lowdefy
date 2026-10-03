@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 
+import createFakeTrace from '../test/createFakeTrace.js';
 import resetPostHogState from '../test/resetPostHogState.js';
 
 const mockUnsubscribe = jest.fn();
@@ -48,7 +49,7 @@ afterEach(() => {
 });
 
 async function init(params = { apiKey: 'phc_key' }) {
-  await PostHogInit({ params });
+  await PostHogInit({ trace: createFakeTrace(), params });
 }
 
 async function flushPromises() {
