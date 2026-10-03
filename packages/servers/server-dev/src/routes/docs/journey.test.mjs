@@ -21,6 +21,9 @@ const mockRunJourney = jest.fn();
 jest.unstable_mockModule('../../../lib/docs/runJourney.js', () => ({
   default: mockRunJourney,
 }));
+jest.unstable_mockModule('../../../lib/build/config.js', () => ({
+  default: { basePath: '/app' },
+}));
 
 const { default: docsJourneyHandler } = await import('./journey.js');
 
@@ -62,6 +65,7 @@ test('docsJourneyHandler runs the journey against the request origin and returns
     user: { roles: ['admin'] },
     urlQuery: { id: '1' },
     stepTimeout: undefined,
+    basePath: '/app',
   });
   expect(result.status).toBe(200);
   expect(result.data.passed).toBe(true);
