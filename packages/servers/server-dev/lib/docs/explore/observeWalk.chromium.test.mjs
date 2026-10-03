@@ -46,14 +46,12 @@ function bundleTrace() {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-explore-trace-'));
   const entry = path.join(directory, 'entry.js');
   const outFile = path.join(directory, 'trace.js');
+  // Forward slashes, JSON-quoted: a Windows path in a quoted specifier reads its backslashes as
+  // escapes.
+  const getTracePath = path.join(engine, 'dist', 'trace', 'getTrace.js').split(path.sep).join('/');
   fs.writeFileSync(
     entry,
-    `import getTrace from '${path.join(
-      engine,
-      'dist',
-      'trace',
-      'getTrace.js'
-    )}';\nwindow.__lowdefyGetTrace = getTrace;\n`
+    `import getTrace from ${JSON.stringify(getTracePath)};\nwindow.__lowdefyGetTrace = getTrace;\n`
   );
   const script = `
     import fs from 'node:fs';

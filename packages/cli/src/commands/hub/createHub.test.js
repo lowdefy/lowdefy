@@ -238,8 +238,9 @@ test('hub stop stops the whole process group, grandchildren included', async () 
 test('hub restart keeps the port the app had', async () => {
   const first = await hub.start({ configDirectory });
   const restarted = await hub.start({ configDirectory, restart: true });
+  // The whole answer, so a restart that did not come up shows its state and log tail.
+  expect(restarted).toMatchObject({ state: 'ready', url: first.url });
   expect(restarted.pid).not.toEqual(first.pid);
-  expect(restarted.url).toEqual(first.url);
 });
 
 test('hub refuses to stop a dev server it did not start', async () => {
