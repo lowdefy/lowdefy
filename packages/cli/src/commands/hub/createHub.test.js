@@ -115,8 +115,10 @@ beforeEach(() => {
 
 afterEach(async () => {
   await hub.stop({ configDirectory }).catch(() => {});
-  fs.rmSync(home, { recursive: true, force: true });
-  fs.rmSync(configDirectory, { recursive: true, force: true });
+  // Windows keeps a killed process's handle on its working directory for a
+  // moment; rmSync retries EPERM and EBUSY.
+  fs.rmSync(home, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+  fs.rmSync(configDirectory, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
 });
 
 const isWindows = process.platform === 'win32';
