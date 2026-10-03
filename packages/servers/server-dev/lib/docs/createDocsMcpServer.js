@@ -77,9 +77,9 @@ function notFoundResult(message) {
   return { content: [{ type: 'text', text: message }], isError: true };
 }
 
-function createDocsMcpServer({ origin, honoContext } = {}) {
+function createDocsMcpServer({ origin, honoContext, version } = {}) {
   const server = new McpServer(
-    { name: 'lowdefy-docs', version: '1.0.0' },
+    { name: 'lowdefy', version },
     { capabilities: { logging: {} }, instructions: INSTRUCTIONS }
   );
 
@@ -263,12 +263,23 @@ function createDocsMcpServer({ origin, honoContext } = {}) {
         return notFoundResult(result.error);
       }
       const image = { type: 'image', data: result.data, mimeType: result.mimeType };
-      if (result.failure) {
-        // The capture shows the page where the failing step left it.
-        const text = JSON.stringify({ passed: false, failure: result.failure }, null, 2);
-        return { content: [{ type: 'text', text }, image] };
+      if (!result.failure && result.screenshots.length === 0) {
+        return { content: [image] };
       }
-      return { content: [image] };
+      // The final capture shows the page where the steps (or the failing step)
+      // left it; the images of `screenshot` steps follow it in step order, named
+      // in the JSON.
+      const summary = { passed: !result.failure, failure: result.failure };
+      if (result.screenshots.length > 0) {
+        summary.screenshots = result.screenshots.map(({ name }) => ({ name }));
+      }
+      return {
+        content: [
+          { type: 'text', text: JSON.stringify(summary, null, 2) },
+          image,
+          ...result.screenshots.map(({ data, mimeType }) => ({ type: 'image', data, mimeType })),
+        ],
+      };
     }
   );
 

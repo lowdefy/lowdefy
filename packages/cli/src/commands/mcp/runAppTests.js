@@ -73,7 +73,6 @@ async function runAppTests({ configDirectory, url, filter, paths, repeat: repeat
     results,
     buildId: await fetchBuildId({ url }),
   });
-  // A data set and its warnings are reported once per call.
   const seen = new Set();
   return {
     summary: summariseResults({ results }).text,

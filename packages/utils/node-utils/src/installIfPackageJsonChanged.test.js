@@ -58,6 +58,32 @@ test('installIfPackageJsonChanged installs again when package.json changes', asy
   expect(install).toHaveBeenCalledTimes(2);
 });
 
+test('installIfPackageJsonChanged installs again when pnpm-workspace.yaml changes', async () => {
+  fs.writeFileSync(path.join(baseDir, 'package.json'), '{"dependencies":{}}');
+  const install = jest.fn();
+  await installIfPackageJsonChanged({ directory: baseDir, install });
+  fs.writeFileSync(path.join(baseDir, 'pnpm-workspace.yaml'), 'overrides:\n  a: 1.0.0\n');
+  const installed = await installIfPackageJsonChanged({ directory: baseDir, install });
+  expect(installed).toBe(true);
+  expect(install).toHaveBeenCalledTimes(2);
+  const skipped = await installIfPackageJsonChanged({ directory: baseDir, install });
+  expect(skipped).toBe(false);
+  expect(install).toHaveBeenCalledTimes(2);
+});
+
+test('installIfPackageJsonChanged installs again when .npmrc changes', async () => {
+  fs.writeFileSync(path.join(baseDir, 'package.json'), '{"dependencies":{}}');
+  const install = jest.fn();
+  await installIfPackageJsonChanged({ directory: baseDir, install });
+  fs.writeFileSync(path.join(baseDir, '.npmrc'), '@scope:registry=https://npm.example.com/\n');
+  const installed = await installIfPackageJsonChanged({ directory: baseDir, install });
+  expect(installed).toBe(true);
+  expect(install).toHaveBeenCalledTimes(2);
+  const skipped = await installIfPackageJsonChanged({ directory: baseDir, install });
+  expect(skipped).toBe(false);
+  expect(install).toHaveBeenCalledTimes(2);
+});
+
 test('installIfPackageJsonChanged installs when node_modules was deleted', async () => {
   fs.writeFileSync(path.join(baseDir, 'package.json'), '{"dependencies":{}}');
   const install = jest.fn();

@@ -90,3 +90,21 @@ blocks:
     properties:
       status: loading
       value: 'cover'
+
+  # ============================================
+  # NULL PROPERTIES
+  # ============================================
+
+  # _state on a missing key gives null, which must fall back to antd's defaults.
+  - id: qr_null_props
+    type: QRCode
+    properties:
+      value: 'null-props'
+      errorLevel:
+        _state: qr_null_missing
+      size:
+        _state: qr_null_missing
+      status:
+        _state: qr_null_missing
+      bordered:
+        _state: qr_null_missing

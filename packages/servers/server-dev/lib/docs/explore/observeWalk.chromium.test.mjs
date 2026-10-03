@@ -33,7 +33,7 @@ jest.unstable_mockModule('../../build/config.js', () => ({ default: {} }));
 jest.setTimeout(60000);
 
 const { getBrowser } = await import('../getBrowser.js');
-const { runSteps } = await import('../runJourney.js');
+const { default: runSteps } = await import('../runJourneySteps.js');
 const { default: observeWalk } = await import('./observeWalk.js');
 
 const serverDevDirectory = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');

@@ -22,6 +22,8 @@ import createClientAddressResolver from './createClientAddressResolver.js';
 import createSecretScrubber from './createSecretScrubber.js';
 import dataSetNamePattern from './dataSetNamePattern.js';
 import findAvailablePort from './findAvailablePort.js';
+import findPnpmWorkspaceRoot from './findPnpmWorkspaceRoot.js';
+import findWorkspacePackages from './findWorkspacePackages.js';
 import getDevInstancePath from './getDevInstancePath.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 import getProcessStartTime from './getProcessStartTime.js';
@@ -30,6 +32,8 @@ import hashDataSetSpec from './hashDataSetSpec.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPidAlive from './isPidAlive.js';
 import isPortAvailable from './isPortAvailable.js';
+import linkDependenciesToWorkspace from './linkDependenciesToWorkspace.js';
+import linkWorkspaceDependencies from './linkWorkspaceDependencies.js';
 import listDataSets from './listDataSets.js';
 import parseDataSet from './parseDataSet.js';
 import parseIpRange from './parseIpRange.js';
@@ -40,8 +44,8 @@ import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
-import collectKnownText from './journeyText/collectKnownText.js';
 import compileTrace from './journeyCompiler/compileTrace.js';
+import collectKnownText from './journeyText/collectKnownText.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
 import isBackedBy from './journeyEvidence/isBackedBy.js';
 import journeySequence from './journeyCompiler/journeySequence.js';
@@ -67,6 +71,8 @@ export {
   dataSetNamePattern,
   findAvailablePort,
   findPlaceholderStep,
+  findPnpmWorkspaceRoot,
+  findWorkspacePackages,
   getDevInstancePath,
   getFileExtension,
   getFileSubExtension,
@@ -78,9 +84,11 @@ export {
   isPidAlive,
   isPortAvailable,
   journeySequence,
-  listRecordingFiles,
+  linkDependenciesToWorkspace,
+  linkWorkspaceDependencies,
   listDataSets,
   parseDataSet,
+  listRecordingFiles,
   parseIpRange,
   parseTraceLines,
   profileProduction,

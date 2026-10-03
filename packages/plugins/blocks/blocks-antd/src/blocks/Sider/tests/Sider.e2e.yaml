@@ -15,6 +15,13 @@
 id: sider
 type: Box
 
+events:
+  onInit:
+    - id: set_sider_null_value
+      type: SetState
+      params:
+        sider_null_value: null
+
 blocks:
   # ============================================
   # BASIC RENDERING
@@ -222,3 +229,74 @@ blocks:
           - _if_none:
               - _state: sider_broken
               - unset
+
+  # ============================================
+  # NULL PROPERTIES (as an unset module var property gives them)
+  # ============================================
+
+  - id: sider_null_widths
+    type: Layout
+    slots:
+      content:
+        blocks:
+          - id: sider_null_widths_sider
+            type: Sider
+            properties:
+              width: 232
+              initialCollapsed: false
+              collapsedWidth:
+                _state: sider_null_value
+              breakpoint:
+                _state: sider_null_value
+            slots:
+              content:
+                blocks:
+                  - id: sider_null_widths_content
+                    type: Span
+                    properties:
+                      content: Null widths sider
+
+  - id: sider_null_widths_toggle
+    type: Button
+    properties:
+      title: Toggle null widths sider
+    events:
+      onClick:
+        - id: toggle_sider_null_widths
+          type: CallMethod
+          params:
+            blockId: sider_null_widths_sider
+            method: toggleOpen
+
+  - id: sider_null_widths_collapsed
+    type: Layout
+    slots:
+      content:
+        blocks:
+          - id: sider_null_widths_collapsed_sider
+            type: Sider
+            properties:
+              initialCollapsed: true
+              collapsedWidth:
+                _state: sider_null_value
+              width:
+                _state: sider_null_value
+            slots:
+              content:
+                blocks:
+                  - id: sider_null_widths_collapsed_content
+                    type: Span
+                    properties:
+                      content: Collapsed null widths
+
+  - id: sider_null_widths_collapsed_toggle
+    type: Button
+    properties:
+      title: Toggle collapsed null widths sider
+    events:
+      onClick:
+        - id: toggle_sider_null_widths_collapsed
+          type: CallMethod
+          params:
+            blockId: sider_null_widths_collapsed_sider
+            method: toggleOpen

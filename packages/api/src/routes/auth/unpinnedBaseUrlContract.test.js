@@ -15,6 +15,10 @@
 */
 
 import { jest } from '@jest/globals';
+// BetterAuth loads @opentelemetry/api lazily on its first request. Through
+// jest's ESM loader that costs most of a second (seconds with every worker
+// busy) inside the first test; importing it here loads it before any test runs.
+import '@opentelemetry/api';
 import { betterAuth } from 'better-auth';
 import { memoryAdapter } from 'better-auth/adapters/memory';
 
@@ -42,6 +46,16 @@ afterEach(() => {
     process.env.BETTER_AUTH_URL = originalBetterAuthUrl;
   }
 });
+
+// BetterAuth runs a full scrypt hash on every sign-in for an unknown user, to
+// keep its timing the same as a wrong password. That hash is CPU-bound and, with
+// every jest worker busy, stretches each sign-in to most of a second - enough
+// to push these tests past the default timeout. The contract here does not
+// depend on how passwords hash, so the instance hashes them cheaply instead.
+const cheapPasswordHasher = {
+  hash: async (password) => password,
+  verify: async ({ hash, password }) => hash === password,
+};
 
 function createLogger() {
   return {
@@ -96,6 +110,7 @@ function createAuth() {
   return betterAuth({
     ...options,
     database: memoryAdapter({ [options.user.modelName]: [] }),
+    emailAndPassword: { ...options.emailAndPassword, password: cheapPasswordHasher },
     advanced: { ...options.advanced, disableOriginCheck: false },
   });
 }

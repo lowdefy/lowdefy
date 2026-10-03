@@ -55,7 +55,7 @@ const NumberInput = ({
             autoComplete="off"
             autoFocus={properties.autoFocus}
             changeOnWheel={properties.changeOnWheel}
-            variant={properties.bordered === false ? 'borderless' : properties.variant}
+            variant={properties.bordered === false ? 'borderless' : properties.variant ?? undefined}
             className={classNames.element}
             style={{ width: '100%', ...styles.element }}
             controls={
@@ -82,10 +82,10 @@ const NumberInput = ({
             keyboard={properties.keyboard}
             max={properties.max}
             min={properties.min}
-            mode={properties.mode}
+            mode={properties.mode ?? undefined}
             parser={properties.parser}
             placeholder={properties.placeholder}
-            precision={properties.precision}
+            precision={properties.precision ?? undefined}
             prefix={
               properties.prefix ||
               (properties.prefixIcon && (
@@ -100,7 +100,7 @@ const NumberInput = ({
             }
             size={properties.size}
             status={validation.status}
-            step={properties.step}
+            step={properties.step ?? undefined}
             suffix={
               (properties.suffix || properties.suffixIcon) && (
                 <>

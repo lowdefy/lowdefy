@@ -204,3 +204,19 @@ blocks:
           - _if_none:
               - _state: pagination_event_skip
               - ''
+
+  # ============================================
+  # NARROW ROW
+  # ============================================
+
+  - id: pagination_narrow_container
+    type: Box
+    style:
+      .element:
+        width: 480px
+    blocks:
+      - id: pagination_narrow
+        type: Pagination
+        properties:
+          total: 646
+          showTotal: true

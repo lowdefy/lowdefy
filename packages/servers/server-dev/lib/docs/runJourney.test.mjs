@@ -90,9 +90,14 @@ function createLocator({ selector, page }) {
     count: jest.fn(async () => 0),
     selectOption: jest.fn(),
     waitFor: jest.fn(async () => {
+      page.waits.push(selector);
       if (page.hiddenBlocks.some((id) => selector === `#bl-${id}`)) {
         throw new Error(`locator.waitFor: Timeout 5000ms exceeded.`);
       }
+    }),
+    evaluateAll: jest.fn(async (fn, arg) => {
+      page.evaluatedAll.push(selector);
+      return fn(page.elementsFor(selector), arg);
     }),
     allInnerTexts: jest.fn(async () => [page.texts[selector] ?? '']),
   };
@@ -107,6 +112,9 @@ function createPage({ window = createLowdefyWindow(), url = 'http://localhost:32
     presses: [],
     missingBlocks: [],
     hiddenBlocks: [],
+    waits: [],
+    evaluatedAll: [],
+    elementsFor: () => [],
     texts: {},
     screenshotCount: 0,
     evaluate: jest.fn(async (fn, arg) => fn(arg)),
@@ -928,6 +936,107 @@ test('runJourney selects a dropdown option by exact visible text', async () => {
   expect(filters[0].hasText.test('Chile')).toBe(true);
   expect(filters[0].hasText.test('Chile (CL)')).toBe(false);
   expect(filters[1]).toEqual({ visible: true });
+});
+
+const POPUPS = [
+  '.ant-select-dropdown:not(.ant-select-dropdown-hidden)',
+  '.ant-picker-dropdown:not(.ant-picker-dropdown-hidden)',
+  '.ant-cascader-dropdown:not(.ant-select-dropdown-hidden)',
+  '.ant-color-picker-inner',
+  '.ant-dropdown:not(.ant-dropdown-hidden)',
+  '.ant-mentions-dropdown:not(.ant-mentions-dropdown-hidden)',
+];
+
+const SHOWING_BEFORE = 'data-lowdefy-journey-showing-before';
+
+// A stand-in for a popup element: enough DOM for the open step's marking.
+function createPopup({ visible }) {
+  const attributes = new Set();
+  return {
+    attributes,
+    checkVisibility: () => visible,
+    setAttribute: (name) => attributes.add(name),
+    removeAttribute: (name) => attributes.delete(name),
+  };
+}
+
+test('runJourney opens a select by clicking its antd 6 content box', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      if (selector === '#bl-status' && child.startsWith('.ant-select-content')) {
+        inner.count.mockResolvedValue(1);
+      }
+      return inner;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ open: 'status' }] });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([
+    '#bl-status .ant-select-content, .ant-picker, .ant-color-picker-trigger, .ant-dropdown-trigger, .ant-mentions',
+  ]);
+});
+
+test('runJourney open waits for a popup its own click opened, not one already showing', async () => {
+  const page = createPage();
+  openWith(page);
+  const fading = createPopup({ visible: true });
+  const closed = createPopup({ visible: false });
+  page.elementsFor = (selector) => {
+    if (selector === POPUPS.join(', ')) {
+      return [fading, closed];
+    }
+    if (selector === `[${SHOWING_BEFORE}]`) {
+      return [fading, closed].filter((popup) => popup.attributes.has(SHOWING_BEFORE));
+    }
+    return [];
+  };
+  const markedWhenClicked = [];
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.click.mockImplementation(async () => {
+      markedWhenClicked.push(fading.attributes.has(SHOWING_BEFORE));
+      page.clicks.push(selector);
+    });
+    return locator;
+  });
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ open: 'notes' }] });
+
+  expect(result.passed).toBe(true);
+  expect(markedWhenClicked).toEqual([true]);
+  expect(closed.attributes.has(SHOWING_BEFORE)).toBe(false);
+  expect(page.waits).toContain(
+    POPUPS.map((selector) => `${selector}:not([${SHOWING_BEFORE}])`).join(', ')
+  );
+  // Unmarked once the step is done, so a later open of that input finds it.
+  expect(fading.attributes.has(SHOWING_BEFORE)).toBe(false);
+});
+
+test('runJourney fails an open step whose click opens no popup and still unmarks the popups', async () => {
+  const page = createPage();
+  openWith(page);
+  const showing = createPopup({ visible: true });
+  page.elementsFor = () => [showing];
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    if (selector.includes(`:not([${SHOWING_BEFORE}])`)) {
+      locator.waitFor.mockRejectedValue(new Error('locator.waitFor: Timeout 5000ms exceeded.'));
+    }
+    return locator;
+  });
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ open: 'notes' }] });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.message).toEqual('Opening block "notes" showed no dropdown or popup.');
+  expect(showing.attributes.has(SHOWING_BEFORE)).toBe(false);
 });
 
 test('runJourney selects a radio, button or segmented option in the block by its exact label', async () => {
