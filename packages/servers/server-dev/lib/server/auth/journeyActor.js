@@ -16,9 +16,9 @@
 
 import crypto from 'node:crypto';
 
-// Shared between the headless renderer (getBrowser.js, which sets the cookie on
-// a journey actor's browser context) and the dev client address resolver
-// (getClientAddress.js, which reads it), like headlessUser.js.
+// Signs every journey cookie (journeyCookies.js): the headless renderer
+// (getBrowser.js) writes them on a journey actor's browser context, and the dev
+// server reads them back (getClientAddress.js for the actor address).
 //
 // Auth rate limits count attempts per client address, and every actor of every
 // journey reaches the dev server from the same machine, so each actor is given
@@ -28,10 +28,8 @@ import crypto from 'node:crypto';
 // reads it. The token is kept on globalThis because the renderer and the
 // resolver may load as separate module instances in one process (Vite's SSR
 // module graph and Node's).
-const JOURNEY_ACTOR_COOKIE = 'lowdefy_journey_actor';
-
 const TOKEN_KEY = Symbol.for('lowdefy.devServer.journeyActorToken');
 globalThis[TOKEN_KEY] ??= crypto.randomBytes(32).toString('hex');
 const journeyActorToken = globalThis[TOKEN_KEY];
 
-export { JOURNEY_ACTOR_COOKIE, journeyActorToken };
+export { journeyActorToken };

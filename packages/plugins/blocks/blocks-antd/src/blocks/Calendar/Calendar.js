@@ -97,7 +97,7 @@ const CalendarBlock = ({
           itemContent: styles.itemContent,
         }}
         fullscreen={properties.fullscreen !== false}
-        mode={properties.mode}
+        mode={properties.mode ?? undefined}
         showWeek={properties.showWeek}
         disabledDate={disabledDate(properties.disabledDates ?? {})}
         validRange={

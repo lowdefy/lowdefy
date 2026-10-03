@@ -95,6 +95,13 @@ test.describe('PhoneNumberInput Block', () => {
     await expect(options).toHaveCount(3);
   });
 
+  test('renders the country dropdown inside the block wrapper', async ({ page }) => {
+    await getCodeSelector(page, 'phone_allowed_regions').click();
+    const options = getBlock(page, 'phone_allowed_regions').locator('.ant-select-item-option');
+    await expect(options.first()).toBeVisible();
+    await expect(options).toHaveCount(3);
+  });
+
   test('hides flags when showFlags is false', async ({ page }) => {
     const selector = getCodeSelector(page, 'phone_no_flags');
     const selected = selector.locator('.ant-select-content');

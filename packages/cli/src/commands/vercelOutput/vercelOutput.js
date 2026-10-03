@@ -92,8 +92,8 @@ async function vercelOutput({ context }) {
   }
 
   // The function preserves paths relative to the trace base (the pnpm workspace root when the
-  // server directory is a workspace member), so the server's relative node_modules symlinks still
-  // resolve inside the function. The server lands at <relServer>/ inside api.func.
+  // server directory sits inside a pnpm workspace), so the server's relative node_modules
+  // symlinks still resolve inside the function. The server lands at <relServer>/ inside api.func.
   const base = findTraceBase({ serverDirectory });
   const relServer = path.relative(base, serverDirectory);
   const functionServerDirectory = path.join(functionDirectory, relServer);

@@ -28,17 +28,17 @@ const QRCodeBlock = ({ blockId, classNames = {}, methods, properties, styles = {
     style={styles.element}
     styles={{ cover: styles.cover }}
     value={properties.value ?? ''}
-    size={properties.size}
+    size={properties.size ?? undefined}
     color={properties.color}
-    bgColor={properties.bgColor}
-    errorLevel={properties.errorLevel}
+    bgColor={properties.bgColor ?? undefined}
+    errorLevel={properties.errorLevel ?? undefined}
     icon={properties.icon}
     iconSize={properties.iconSize}
     marginSize={properties.marginSize}
     minVersion={properties.minVersion}
-    type={properties.type}
-    bordered={properties.bordered}
-    status={properties.status}
+    type={properties.type ?? undefined}
+    bordered={properties.bordered ?? undefined}
+    status={properties.status ?? undefined}
     onRefresh={() => methods.triggerEvent({ name: 'onRefresh' })}
   />
 );

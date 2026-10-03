@@ -68,6 +68,7 @@ test('runCommand calls startUp', async () => {
         "context": Object {
           "cliVersion": "cliVersion",
         },
+        "params": Array [],
       },
     ]
   `);
@@ -89,6 +90,14 @@ test('runCommand calls startUp', async () => {
       ],
     ]
   `);
+});
+
+test('runCommand passes positional arguments to the handler as params', async () => {
+  const { default: runCommand } = await import('./runCommand.js');
+  const handler = jest.fn(({ params }) => params);
+  const wrapped = runCommand({ cliVersion, handler });
+  const res = await wrapped(['a.jsonl', 'b.jsonl'], options, command);
+  expect(res).toEqual([['a.jsonl', 'b.jsonl']]);
 });
 
 test('Catch error synchronous function', async () => {

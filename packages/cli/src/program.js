@@ -18,6 +18,7 @@ import { createRequire } from 'module';
 import { Command, InvalidArgumentError, Option } from 'commander';
 
 import agentSetup from './commands/agentSetup/agentSetup.js';
+import agentSetupUser from './commands/agentSetup/agentSetupUser.js';
 import build from './commands/build/build.js';
 import dev from './commands/dev/dev.js';
 import dockerOutput from './commands/dockerOutput/dockerOutput.js';
@@ -29,9 +30,14 @@ import hubServe from './commands/hub/hubServe.js';
 import hubStart from './commands/hub/hubStart.js';
 import hubStatus from './commands/hub/hubStatus.js';
 import hubStop from './commands/hub/hubStop.js';
+import hubTrust from './commands/hub/hubTrust.js';
+import hubTrusted from './commands/hub/hubTrusted.js';
+import hubUntrust from './commands/hub/hubUntrust.js';
 import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
+import journeysCompile from './commands/journeys/journeysCompile.js';
+import journeysRecordings from './commands/journeys/journeysRecordings.js';
 import mcp from './commands/mcp/mcp.js';
 import start from './commands/start/start.js';
 import test from './commands/test/test.js';
@@ -120,7 +126,17 @@ program
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
   .addOption(options.projectDirectory)
-  .action(runCommand({ cliVersion, handler: agentSetup }));
+  .option(
+    '--user',
+    'Register lowdefy mcp for every Claude Code session of this user instead of setting up this project. Needs no app.'
+  )
+  .action(function runAgentSetup(options, command) {
+    // --user works outside any app, so it skips runCommand's app start-up.
+    if (options.user) {
+      return runHubCommand({ cliVersion, handler: agentSetupUser })(command);
+    }
+    return runCommand({ cliVersion, handler: agentSetup })(options, command);
+  });
 
 program
   .command('build')
@@ -233,9 +249,107 @@ hub
   .action(runHubCommand({ cliVersion, handler: hubPrune }));
 
 hub
+  .command('trust')
+  .description(
+    "Let lowdefy mcp start and query this repository's dev servers from any agent session, not only sessions started in it. Covers all of its git worktrees."
+  )
+  .argument(
+    '[directory]',
+    'A directory in the repository. Default is the current working directory.'
+  )
+  .action(runHubCommand({ cliVersion, handler: hubTrust }));
+
+hub
+  .command('untrust')
+  .description('Remove a repository from the list hub trust adds to.')
+  .argument(
+    '[directory]',
+    'A directory in the repository. Default is the current working directory.'
+  )
+  .action(runHubCommand({ cliVersion, handler: hubUntrust }));
+
+hub
+  .command('trusted')
+  .description('List the repositories any agent session may use.')
+  .action(runHubCommand({ cliVersion, handler: hubTrusted }));
+
+hub
   .command('serve', { hidden: true })
   .description('Run the hub in the foreground. Started automatically when needed.')
   .action(runHubCommand({ cliVersion, handler: hubServe }));
+
+const journeys = program
+  .command('journeys')
+  .description('Turn recorded interaction traces into candidate journeys.');
+
+journeys
+  .command('compile')
+  .description(
+    'Compile recorded traces into candidate journeys under tests/journeys/_candidates/<source>/.'
+  )
+  .usage('[options] [traceFiles...]')
+  .argument('[traceFiles...]', 'Trace files (JSONL) to compile, wherever they are.')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--source <source>',
+      'The trace source: production, dev or explorer. Required unless trace files are given; with files, compiles only records of this source.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--since <since>',
+      'Records at or after this time: a duration back from now (30m, 2h, 7d) or an ISO date. Production default: 30d.'
+    )
+  )
+  .addOption(
+    new Option('--from <date>', 'Production only: the first UTC day of the window, YYYY-MM-DD.')
+  )
+  .addOption(
+    new Option('--to <date>', 'Production only: the last UTC day of the window, YYYY-MM-DD.')
+  )
+  .addOption(
+    new Option(
+      '--build <build>',
+      'Only segments whose records all ran on this build; "current" is the build the running dev server serves.'
+    )
+  )
+  .addOption(new Option('--page <pageId>', 'Only segments that visit this page.'))
+  .addOption(
+    new Option(
+      '--out <directory>',
+      'The candidates directory; the source is appended. Default is "tests/journeys/_candidates".'
+    )
+  )
+  .action(runCommand({ cliVersion, handler: journeysCompile }));
+
+journeys
+  .command('recordings')
+  .description(
+    'List the dev sessions the dev server recorded, with what the newest test run already covers.'
+  )
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--since <since>',
+      'Sessions at or after this time: a duration back from now (30m, 2h, 7d) or an ISO date.'
+    )
+  )
+  .addOption(new Option('--page <pageId>', 'Only sessions that visited this page.'))
+  .addOption(
+    new Option(
+      '--build <build>',
+      'Only sessions recorded against this build; "current" is the build the running dev server serves.'
+    )
+  )
+  .addOption(new Option('--json', 'Print the sessions as JSON on stdout.'))
+  .action(runCommand({ cliVersion, handler: journeysRecordings }));
 
 program
   .command('init')
@@ -295,7 +409,11 @@ program
 program
   .command('test')
   .description("Run the app's config tests (tests/journeys/*.yaml).")
-  .usage('[options]')
+  .usage('[options] [paths...]')
+  .argument(
+    '[paths...]',
+    'Journey files or directories to run instead of tests/journeys/*.yaml, anywhere under the config directory (tests/journeys/_candidates included).'
+  )
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)
@@ -316,11 +434,19 @@ program
   .addOption(options.refResolver)
   .addOption(
     new Option(
+      '--repeat <n>',
+      'Run each journey n times (1 to 10) and classify it PASS, FLAKY or FAIL. Default 1.'
+    )
+  )
+  .addOption(
+    new Option(
       '--url <url>',
       'Run tests against an already running dev server instead of starting one, e.g. http://localhost:3000.'
     )
   )
-  .action(runCommand({ cliVersion, handler: test }));
+  .action((paths, commandOptions, command) =>
+    runCommand({ cliVersion, handler: test })({ ...commandOptions, paths }, command)
+  );
 
 program
   .command('upgrade')

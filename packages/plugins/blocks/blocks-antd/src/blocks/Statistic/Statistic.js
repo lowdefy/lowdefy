@@ -43,7 +43,7 @@ const StatisticBlock = ({
       title: classNames.title,
       value: classNames.value,
     },
-    groupSeparator: properties.groupSeparator,
+    groupSeparator: properties.groupSeparator ?? undefined,
     id: blockId,
     loading: properties.loading,
     precision: properties.precision,

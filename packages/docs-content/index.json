@@ -2983,7 +2983,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "095fc23b0d0a86b1b98242bc556766c32f4c2014e5e5f649b99becd38b71af76"
+      "hash": "1e20e3da3744b84f7a86bf9b58315ac6f237942de5898593fcd6f228515ecc8f"
     },
     "concepts/page-and-app-state": {
       "files": [
@@ -3248,7 +3248,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "0258d9576235c6428c8baf4a43260c0738a916b59c8223f6e8ff7eaed3ba895c"
+      "hash": "1b0507db860ec9af8576c5d75cc317f27b85369db6700f356c14040f4ae0de4a"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3312,7 +3312,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "7d8fe11d011df6499688baf4d7924a5fd6bec8a58813e4412396b665f3823ffe"
+      "hash": "23264cf349b5c371f8765cd0a20a9e3ab71fb61566e76ade488cf3112b1583b0"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3578,7 +3578,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "d07bab5d0128ed3adef1796fe0cf24f1a267c5ee0ab8b324df45a8f89e529b1f"
+      "hash": "4b803573c9ad5fc09dd6bf830ca42d0af85d59082cf199d94f5b4088ba8ee12a"
     },
     "plugins/plugins-connections": {
       "files": [
@@ -3636,7 +3636,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "63249b7447045e85466a9111d54e53918a4bf90e4feb23a16177a225288557be"
+      "hash": "59693efb411265085b52bb0453261bf06ce47e92d484a03d2a6d6d0d0dfefacd"
     },
     "user-authentication/users-introduction": {
       "files": [
@@ -3767,7 +3767,7 @@
         "users/mcp-oauth.yaml",
         "version.yaml"
       ],
-      "hash": "2220e81dd29b20385939bd9a0710a360ed283a77dba319381c26ff7d38e5f94c"
+      "hash": "4c5f0a40dae53cca8faf56c0ae59c5fda3551acc03c565a66bb796e3f30953da"
     },
     "user-authentication/user-object": {
       "files": [
@@ -3880,7 +3880,7 @@
         "testing/config-tests.yaml",
         "version.yaml"
       ],
-      "hash": "5603674d73ea45d19b043f4a30bf6a14d1bdadd00bb07772e0a4c6b7b11beecf"
+      "hash": "ae7a5d8538a6cb1ec0b7729c81bb1a12460807c2ab9ead33d6b7be96f6c85283"
     },
     "testing/e2e-introduction": {
       "files": [
@@ -6795,7 +6795,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "f21e48ecb91a5f061658fe34e796400dc667bf71db5e6fbe877a3f67aaf9f21b"
+      "hash": "9e397756f95630d823370cf078ecefa4aae6df8cb44a9e54ba1b819a926c7e77"
     },
     "actions/posthogoptin": {
       "files": [
@@ -7740,7 +7740,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "e6d42fee0c559f412a79890383cfc44ee57fc2c14a24e1c5ebcd86cbb5fc0c7a"
+      "hash": "be94a568e4e5fb0859fa92b39cbd1443610970ba2f8409fd451961397e41d735"
     },
     "operators/_dayjs": {
       "files": [

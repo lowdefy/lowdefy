@@ -31,7 +31,7 @@ let server;
 let sockets;
 
 // A stand-in hub on the socket path, answering hello.
-async function listenAsHub(socketPath) {
+async function listenAsHub(socketPath, { protocol = HUB_PROTOCOL } = {}) {
   server = net.createServer((socket) => {
     sockets.push(socket);
     socket.setEncoding('utf8');
@@ -39,7 +39,9 @@ async function listenAsHub(socketPath) {
       'data',
       createLineReader({
         onMessage: ({ id }) =>
-          socket.write(`${JSON.stringify({ id, result: { protocol: HUB_PROTOCOL, pid: 1 } })}\n`),
+          socket.write(
+            `${JSON.stringify({ id, result: { protocol, pid: 1, version: '9.0.0' } })}\n`
+          ),
       })
     );
   });
@@ -80,4 +82,22 @@ test('connectHub refuses a hub socket that belongs to another user', async () =>
   await listenAsHub(socketPath);
   jest.spyOn(process, 'getuid').mockReturnValue(process.getuid() + 1);
   await expect(connectHub({ autoStart: false })).rejects.toThrow('belongs to another user');
+});
+
+test('connectHub accepts a hub that speaks a newer protocol', async () => {
+  const { hubDirectory, socketPath } = getHubPaths();
+  fs.mkdirSync(hubDirectory, { recursive: true });
+  await listenAsHub(socketPath, { protocol: HUB_PROTOCOL + 1 });
+  const client = await connectHub({ autoStart: false });
+  expect(client).not.toBeNull();
+  client.close();
+});
+
+test('connectHub refuses a hub that speaks an older protocol, naming both', async () => {
+  const { hubDirectory, socketPath } = getHubPaths();
+  fs.mkdirSync(hubDirectory, { recursive: true });
+  await listenAsHub(socketPath, { protocol: HUB_PROTOCOL - 1 });
+  await expect(connectHub({ autoStart: false })).rejects.toThrow(
+    `speaks hub protocol ${HUB_PROTOCOL - 1}; this CLI needs ${HUB_PROTOCOL}.`
+  );
 });

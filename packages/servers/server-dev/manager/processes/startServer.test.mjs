@@ -35,6 +35,7 @@ function createContext({ mailSink }) {
     options: { port: 3210 },
     serverArtifacts: { record: jest.fn() },
     shutdownServer: jest.fn(),
+    version: '7.2.0',
   };
 }
 
@@ -107,4 +108,10 @@ test('startServer holds the child stdin and tells it to exit when the pipe close
   expect(env.LOWDEFY_EXIT_ON_STDIN_CLOSE).toBe('1');
   expect(env.LOWDEFY_EXIT_WITH_PID).toBeUndefined();
   expect(env.LOWDEFY_SERVER_REGISTRY_DIR).toBeUndefined();
+});
+
+test('startServer tells the child the Lowdefy version it reports to MCP clients', () => {
+  startServer(createContext({ mailSink: null }));
+
+  expect(mockSpawn.mock.calls[0][2].env.LOWDEFY_SERVER_DEV_VERSION).toBe('7.2.0');
 });

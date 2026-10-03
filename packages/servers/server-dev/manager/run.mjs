@@ -23,6 +23,7 @@ import createBuildActivity from './utils/createBuildActivity.mjs';
 import startMailSink from './processes/startMailSink.mjs';
 import startProxy from './processes/startProxy.mjs';
 import startServer from './processes/startServer.mjs';
+import startRecordingPruner from './utils/startRecordingPruner.mjs';
 import formatNoticeBox from './utils/formatNoticeBox.mjs';
 import resolvePorts from './utils/resolvePorts.mjs';
 import waitForServer from './utils/waitForServer.mjs';
@@ -91,6 +92,7 @@ if (instance.acquired === false) {
   process.exit(1);
 }
 process.on('exit', () => instance.release());
+startRecordingPruner({ configDirectory: context.directories.config, logger: context.logger });
 
 // `building` is true while a change is queued or being processed, restarts
 // included. lowdefy_build_status({ wait: true }) waits on it, so an agent

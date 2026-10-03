@@ -363,14 +363,19 @@ async function deepForcePlaceholders(value, ctx) {
 }
 
 // Build a merged object for namespace vars (vars with `properties`). Each
-// declared property resolves through resolveEffectiveVar — consumer values
-// take precedence per-leaf; missing leaves fall back to defaults.
+// declared property resolves through resolveVarValue — consumer values take
+// precedence per-leaf; missing leaves fall back to defaults. A property with
+// neither stays absent rather than null: blocks forward these objects as
+// props, and libraries apply their own defaults only to undefined.
 async function resolveNamespaceVar(prefix, varDef, moduleEntry, ctx) {
   const result = {};
 
   for (const propName of Object.keys(varDef.properties)) {
     const fullKey = `${prefix}.${propName}`;
-    result[propName] = await resolveEffectiveVar(fullKey, moduleEntry, ctx);
+    const value = await resolveVarValue(fullKey, moduleEntry, ctx);
+    if (!type.isUndefined(value)) {
+      result[propName] = value;
+    }
   }
 
   return result;
@@ -405,8 +410,17 @@ async function readConsumerValue(moduleEntry, key, ctx) {
   return undefined;
 }
 
-// Core lazy var resolution with caching on the module entry.
+// The value a _module.var read returns: an unset var with no default reads as
+// null, like _var.
 async function resolveEffectiveVar(key, moduleEntry, ctx) {
+  const value = await resolveVarValue(key, moduleEntry, ctx);
+  return type.isUndefined(value) ? null : value;
+}
+
+// Core lazy var resolution with caching on the module entry. Returns undefined
+// for a var the consumer never set and the manifest gives no default, so a
+// namespace object can leave it out; a consumer's explicit null stays null.
+async function resolveVarValue(key, moduleEntry, ctx) {
   if (Object.hasOwn(moduleEntry.resolvedVarCache, key)) {
     return moduleEntry.resolvedVarCache[key];
   }
@@ -430,7 +444,7 @@ async function resolveEffectiveVar(key, moduleEntry, ctx) {
     result =
       defaultRecordId !== undefined ? await resolveDeferred(ctx, defaultRecordId) : varDef.default;
   } else {
-    result = null;
+    result = consumerValue;
   }
 
   moduleEntry.resolvedVarCache[key] = result;

@@ -155,7 +155,14 @@ function App({ config, router }) {
                 >
                   <Auth user={config?.user}>
                     {(auth) => {
-                      return <Routing auth={auth} lowdefy={lowdefyRef.current} router={router} />;
+                      return (
+                        <Routing
+                          auth={auth}
+                          lowdefy={lowdefyRef.current}
+                          recording={config?.recording}
+                          router={router}
+                        />
+                      );
                     }}
                   </Auth>
                 </Suspense>

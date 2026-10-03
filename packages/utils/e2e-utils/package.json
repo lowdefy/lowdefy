@@ -32,7 +32,8 @@
     "./config": "./dist/config.js",
     "./fixtures": "./dist/fixtures/index.js",
     "./runtime": "./dist/runtime.js",
-    "./startServer": "./dist/startServer.js"
+    "./startServer": "./dist/startServer.js",
+    "./targets": "./dist/targets/index.js"
   },
   "files": [
     "dist/*"
