@@ -15,6 +15,7 @@ import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('@lowdefy/node-utils', () => {
   return {
+    writeFileAtomic: jest.fn(),
     writeFileIfChanged: jest.fn(),
   };
 });
@@ -31,4 +32,17 @@ test('writeBuildArtifact writes content through writeFileIfChanged at the build 
   expect(nodeUtils.writeFileIfChanged.mock.calls).toEqual([
     ['/build/artifact.txt', 'Test artifact content'],
   ]);
+});
+
+test('writeBuildArtifact writes through writeFileAtomic when atomic is set', async () => {
+  const nodeUtils = await import('@lowdefy/node-utils');
+  nodeUtils.writeFileAtomic.mockImplementation(() => Promise.resolve());
+  nodeUtils.writeFileIfChanged.mockClear();
+  const createWriteBuildArtifact = (await import('./writeBuildArtifact.js')).default;
+
+  const writeBuildArtifact = createWriteBuildArtifact({ directories });
+
+  await writeBuildArtifact('jitMaps/a-1-1.json', '{}', { atomic: true });
+  expect(nodeUtils.writeFileAtomic.mock.calls).toEqual([['/build/jitMaps/a-1-1.json', '{}']]);
+  expect(nodeUtils.writeFileIfChanged).not.toHaveBeenCalled();
 });

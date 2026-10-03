@@ -21,19 +21,34 @@ test('isCompiled returns false for uncompiled page', () => {
   expect(cache.isCompiled('home')).toBe(false);
 });
 
-test('isCompiled returns true after markCompiled', () => {
+test('isCompiled returns true after markCompiled, and get returns its state', () => {
   const cache = new PageCache();
-  cache.markCompiled('home');
+  cache.markCompiled('home', { generation: 1, checkedAt: 3 });
   expect(cache.isCompiled('home')).toBe(true);
+  expect(cache.get('home')).toEqual({ generation: 1, checkedAt: 3 });
 });
 
-test('invalidateAll clears all compiled pages', () => {
+test('get returns null for a page that is not compiled', () => {
   const cache = new PageCache();
-  cache.markCompiled('home');
-  cache.markCompiled('dashboard');
-  cache.invalidateAll();
+  expect(cache.get('home')).toBeNull();
+});
+
+test('markChecked moves checkedAt forward on the same generation only', () => {
+  const cache = new PageCache();
+  cache.markCompiled('home', { generation: 2, checkedAt: 3 });
+  cache.markChecked('home', { generation: 2, checkedAt: 5 });
+  expect(cache.get('home')).toEqual({ generation: 2, checkedAt: 5 });
+  cache.markChecked('home', { generation: 2, checkedAt: 4 });
+  expect(cache.get('home')).toEqual({ generation: 2, checkedAt: 5 });
+  cache.markChecked('home', { generation: 1, checkedAt: 9 });
+  expect(cache.get('home')).toEqual({ generation: 2, checkedAt: 5 });
+});
+
+test('remove drops a compiled page', () => {
+  const cache = new PageCache();
+  cache.markCompiled('home', { generation: 1, checkedAt: 0 });
+  cache.remove('home');
   expect(cache.isCompiled('home')).toBe(false);
-  expect(cache.isCompiled('dashboard')).toBe(false);
 });
 
 test('acquireBuildLock returns true for first request', async () => {

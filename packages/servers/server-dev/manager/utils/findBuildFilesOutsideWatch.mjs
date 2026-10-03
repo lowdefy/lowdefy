@@ -22,18 +22,36 @@ function isInside({ directory, filePath }) {
   return filePath === directory || filePath.startsWith(`${directory}${path.sep}`);
 }
 
-// Every file the build reads is recorded in the build's refMap: app refs by
-// their path relative to the config directory, module refs by absolute path.
-// Returns the files that lie outside every watched directory, such as a file
-// a local module refs with ../ from beside the module.
-function findBuildFilesOutsideWatch({ buildDirectory, configDirectory, watchRoots }) {
-  const refMap = JSON.parse(fs.readFileSync(path.join(buildDirectory, 'refMap.json'), 'utf8'));
+// refMap.json holds the config build's refs; a jitMaps/ file holds the refs a
+// JIT page build added, under refMap. A jitMaps file can be pruned before its
+// change is handled, and then has nothing to add.
+function readRefMap(mapsFile) {
+  if (path.basename(mapsFile) === 'refMap.json') {
+    return JSON.parse(fs.readFileSync(mapsFile, 'utf8'));
+  }
+  try {
+    return JSON.parse(fs.readFileSync(mapsFile, 'utf8')).refMap ?? {};
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      return {};
+    }
+    throw error;
+  }
+}
+
+// Every file a build reads is recorded in a ref map: app refs by their path
+// relative to the config directory, module refs by absolute path. Returns the
+// files the given maps files record that lie outside every watched directory,
+// such as a file a local module refs with ../ from beside the module.
+function findBuildFilesOutsideWatch({ mapsFiles, configDirectory, watchRoots }) {
   const files = new Set();
-  for (const entry of Object.values(refMap)) {
-    if (!type.isString(entry.path)) continue;
-    const filePath = path.resolve(configDirectory, entry.path);
-    if (watchRoots.some((directory) => isInside({ directory, filePath }))) continue;
-    files.add(filePath);
+  for (const mapsFile of mapsFiles) {
+    for (const entry of Object.values(readRefMap(mapsFile))) {
+      if (!type.isString(entry.path)) continue;
+      const filePath = path.resolve(configDirectory, entry.path);
+      if (watchRoots.some((directory) => isInside({ directory, filePath }))) continue;
+      files.add(filePath);
+    }
   }
   return [...files];
 }

@@ -193,3 +193,19 @@ test('loadAndResolveErrorLocation falls back to filePath when configKey not in k
     source: '/app/components/page.yaml:5',
   });
 });
+
+// --- readMaps ---
+
+test('loadAndResolveErrorLocation resolves through readMaps when one is passed', async () => {
+  const readConfigFile = createReadConfigFile({});
+  const result = await loadAndResolveErrorLocation({
+    error: { configKey: 'jit_1' },
+    readConfigFile,
+    configDirectory: '/app',
+    readMaps: async () => ({
+      keyMap: { jit_1: { key: 'root.blocks[0:button]', '~r': 'jit_ref', '~l': 3 } },
+      refMap: { jit_ref: { path: 'pages/about.yaml' } },
+    }),
+  });
+  expect(result).toEqual({ source: '/app/pages/about.yaml:3', config: 'root.blocks[0:button]' });
+});

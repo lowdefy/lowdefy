@@ -27,8 +27,10 @@ function devServerRules({ appPath }) {
 \`lowdefy_\` tool to the dev server of the app and git checkout you are working in, and starts that server when needed.
 
 - Never run \`lowdefy dev\` yourself, never choose a port, and never kill processes by port or name. Use
-  \`lowdefy_dev_start\` (\`restart: true\` after changing local plugin code or \`.env\`), \`lowdefy_dev_stop\`,
-  \`lowdefy_dev_status\` and \`lowdefy_dev_logs\`.
+  \`lowdefy_dev_start\`, \`lowdefy_dev_stop\`, \`lowdefy_dev_status\` and \`lowdefy_dev_logs\`.
+- Restart (\`lowdefy_dev_start\` with \`restart: true\`) only when the server seems stuck or build status looks
+  stale, or after secrets a wrapper (for example infisical) injects have changed. \`.env\` edits and local
+  plugin code are picked up without a restart.
 - Working in a different git worktree from the session (for example as a subagent)? Pass your working
   directory as \`directory\` on every \`lowdefy_\` call.${appNote}
 - After every config edit, call \`lowdefy_build_status\` with \`wait: true\` and fix what it reports.

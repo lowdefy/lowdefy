@@ -136,7 +136,7 @@ server-dev/
 │   │   ├── killTaggedBrowser.mjs        # pkill the browser carrying a child's tag
 │   │   ├── createServerArtifactTracker.mjs  # Files the running server read at start
 │   │   ├── createDotPathIgnore.mjs      # Dotfile ignore relative to the watched root
-│   │   ├── findBuildFilesOutsideWatch.mjs  # refMap files outside the watched directories
+│   │   ├── findBuildFilesOutsideWatch.mjs  # Ref map files outside the watched directories
 │   │   ├── getViteBin.mjs    # Resolves the vite bin path
 │   │   ├── importFresh.mjs   # Import a module in a new worker (plugin type lists)
 │   │   ├── loadSkeletonSourceFiles.mjs  # Read skeletonSourceFiles.json as Set
@@ -145,7 +145,7 @@ server-dev/
 │   │   ├── readPluginDefinitions.mjs    # The plugins lowdefy.yaml lists
 │   │   └── updatePageTailwindCss.mjs    # Refresh Tailwind candidates on page edits
 │   └── watchers/
-│       ├── lowdefyBuildWatcher.mjs   # Config, local modules and refMap files: skeleton vs page
+│       ├── lowdefyBuildWatcher.mjs   # Config, local modules and ref map files: skeleton vs page
 │       ├── envWatcher.mjs
 │       ├── pluginSourceWatcher.mjs   # Local plugin packages → rebuild (+ restart if server-side)
 │       ├── restartRequestWatcher.mjs # build/.restart from the dev tools → rebuild + restart
@@ -262,21 +262,23 @@ Manager Process                    Vite Child Process
 ┌────────────────────┐            ┌─────────────────────────┐
 │ pageRegistry       │            │ jitPageBuilder.js        │
 │ buildContext       │            │   pageCache (PageCache)  │
-│                    │            │   cachedRegistry         │
-│ Watcher → build    │            │   cachedBuildContext     │
+│                    │            │   registry               │
+│ Watcher → build    │            │   keptContext            │
 │                    │            │   route → buildPageJit   │
 └────────────────────┘            └─────────────────────────┘
          │                                  ↑
-         │  invalidatePages (signal file)   │
-         └──── (file on disk) ─────────────→┘
+         │  invalidatePages (change signal) │
+         │  pageRegistry.json (publish)     │
+         └──── (files on disk) ────────────→┘
 ```
 
 Cross-process communication uses files in the build directory:
 
 - `pageRegistry.json`: Page metadata + raw content for JIT resolution
-- `refMap.json`, `keyMap.json`, `jsMap.json`: Shared build state
+- `refMap.json`, `keyMap.json`, `jsMap.json`: Shared build state (the key and ref maps hold the config build's entries only)
+- `jitMaps/*.json`: Key and ref entries JIT page builds added, one file per page build
 - `skeletonSourceFiles.json`: Set of files that affect skeleton (read by watcher)
-- `invalidatePages`: Timestamp signal file written by watcher for page-only changes
+- `invalidatePages`: Change signal the watcher writes after every batch of watched changes (a timestamp, strictly increasing; read by value)
 
 ### Skeleton Build Flow
 
@@ -313,9 +315,9 @@ missing (`API Endpoint "x" does not exist.`), and Vite's SSR graph can fail to r
 relative paths written into artifacts are the same), and `publishBuildDirectory` renames each
 staged file over its live counterpart, then removes live files the new build did not write,
 then moves `pageRegistry.json` last. A rename replaces a file in one step, so every artifact
-is always present, old or new. The JIT page builder rebuilds its cached build context and
-drops its built pages when the registry's mtime changes, so the registry landing last means
-that context is read from the complete new build. The
+is always present, old or new. The JIT page builder discards its build context, and so every
+built page, when the registry's identity (inode and mtime) changes, so the registry landing
+last means the next context is read from the complete new build. The
 live `build/` directory is never replaced, so the file watchers on it keep working. A failed
 build leaves the live build untouched. Vite does not watch `build-staging/`.
 
@@ -351,57 +353,74 @@ older, successful build (see the build watcher below).
 
 **File:** `lib/server/jitPageBuilder.js`
 
-When a page API request arrives (`GET /api/page/*`):
+The child keeps one JIT build context and the pages built on it across page edits, and
+rebuilds a page only when its next request needs it. When a page API request arrives
+(`GET /api/page/*`), `buildPageIfNeeded`:
 
-1. `checkPageInvalidations()` reads the `invalidatePages` signal file (with mtime caching)
-2. `loadPageRegistry()` reads `pageRegistry.json` (with mtime caching)
-3. `pageCache.isCompiled(pageId)` checks if page was already built
-4. If not compiled, acquires build lock and calls `buildPageJit()`
-5. `getBuildContext()` creates/caches a build context with restored refMap/keyMap/jsMap
+1. Calls `syncBuildSignals()`, which reads two signals by value:
+   - `build/invalidatePages`: a value different from the last one seen is a **change event**.
+     The event counter goes up, the kept context's read cache is replaced with a fresh one
+     (wrapped in read tracking again), and `seenSourceLines` is cleared so warnings log again.
+     Builds already running keep the cache they started with.
+   - `build/pageRegistry.json`'s identity, `ino` plus `mtimeNs` from
+     `fs.statSync(..., { bigint: true })`. Every publish renames a new file into place, so
+     every publish has a new identity, even two in one clock tick. A new identity loads the
+     registry and discards the context: the generation goes up and the next page build makes a
+     new context. A context whose maps passed the budget (below) is discarded the same way.
+2. Serves the page when it is current (`reviewBuiltPage`):
+   - compiled on an earlier **generation**: rebuilt without a check. Its content, `_js` and
+     icon enrichment belong to a context that is gone;
+   - `checkedAt` (the event counter when its build started) equals the counter: current;
+   - otherwise `checkPageRecord` decides: a build that ran app code is `changed`; else every
+     file the build read is re-read through the kept read cache and its sha256 compared.
+     All match: `checkedAt` moves to the counter value the check started at. A mismatch, or a
+     read that throws (EACCES, EBUSY on Windows mid-save), rebuilds the page; the rebuild
+     reads through the same cache and reports the error as a build error.
+3. Otherwise takes the page's build lock and builds it on the kept context (`buildPageJit`,
+   which runs on a per-build copy, see [the JIT build context](../architecture/build-pipeline.md#the-jit-build-context)).
+   The compiled entry is dropped when the build starts and set (`generation`, `checkedAt`)
+   when it succeeds. A request that waited on another request's lock goes back to step 1
+   instead of assuming the page is current: that build may have started before an edit, or
+   failed.
 
-```javascript
-async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
-  checkPageInvalidations(buildDirectory);
-  const registry = loadPageRegistry(buildDirectory);
-  if (!registry?.[pageId]) return false;
+A page whose build was running when a change event arrived keeps its start counter, so its
+next request checks it. A build still running when the context is discarded finishes on the
+old context and carries the old generation, so its next request rebuilds it.
 
-  if (pageCache.isCompiled(pageId)) return true;
+`pageBuildRecords` (`lib/server/pageBuildRecords.js`) holds each page's last build record:
+`{ builtAt, checkedAt, generation, files: Map<absolutePath, sha256>, ranAppCode, errors }`.
+Reads are attributed to the build running them through `AsyncLocalStorage`. A file that does
+not exist is recorded as `missing`; a file read twice with different content, or whose read
+threw, as a value that never matches. `context.importAppCode` (the one entry point for
+resolvers, transformers, `.js` refs, module resolvers and the global ref resolver) marks the
+build `ranAppCode`: app code can read anything, so such a page rebuilds after every change
+event.
 
-  const shouldBuild = await pageCache.acquireBuildLock(pageId);
-  if (!shouldBuild) return true; // Another request completed it
+**Budget.** Every page build adds entries to the context's `keyMap` and `refMap`, released
+only with the context. When the entries added since the context was made (counted from
+`context.jitMaps`) pass `contextMapBudget` (`lib/server/contextMapBudget.js`, 48,000: about
+90 docs-app page builds at about 530 entries and 400-750 KB of retained heap each), the next
+`syncBuildSignals` discards the context and every page rebuilds, as after a config publish.
 
-  try {
-    const context = getBuildContext(buildDirectory, configDirectory);
-    const result = await buildPageJit({ pageId, pageRegistry: registry, context });
-    if (result?.installing) return result; // { installing: true, packages }
-    pageCache.markCompiled(pageId);
-    // Touch tailwind-candidates.css so Vite's CSS pipeline re-runs Tailwind
-    // for classes the JIT build discovered — globals.css imports it.
-    fs.writeFileSync(path.join(buildDirectory, 'tailwind-candidates.css'), ...);
-    return { built: true, warnings: result?._warnings };
-  } finally {
-    pageCache.releaseBuildLock(pageId);
-  }
-}
-```
-
-`getBuildContext` also restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), API endpoint configs (for JIT `CallAPI` validation), and continues the skeleton build's `~k` keys from `idCounter.json` (`makeId.continueFrom`: same key prefix, counter only moves forward). It also wraps the context's `writeBuildArtifact` with `skipStaleMapWrites`, so a page build that started before a skeleton rebuild does not write its `keyMap.json`/`refMap.json` over the new ones (see [Keys across dev rebuilds](../architecture/error-tracing.md#keys-across-dev-rebuilds)). Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart. The startup bundle holds the always-bundled icon names plus every name the config uses; there is no preset icon list. Icons found later reach the page as `_dynamicIcons` data (see below).
+`getBuildContext` restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), API endpoint configs (for JIT `CallAPI` validation), and continues the skeleton build's `~k` keys from `idCounter.json` with a prefix unique to the process (`continueJitKeys`: the counter only moves forward). It then calls `prepareJitContext`, which fills the fields build code otherwise fills on first use (auth projection, the icon set load, `jitMaps`, deferred records, unresolved ref vars, `websocketIds`), so no page build reloads them on its copy. Page builds do not rewrite `keyMap.json`/`refMap.json`: each writes the entries it added to a new `jitMaps/` file. A new context removes the `jitMaps/` files of every context but the previous one (`pruneJitMaps`). The context's `writeBuildArtifact` is wrapped with `skipStaleMapWrites`, so a page build that started before a skeleton rebuild writes no maps over the new build (see [Keys across dev rebuilds](../architecture/error-tracing.md#keys-across-dev-rebuilds)). Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart. The startup bundle holds the always-bundled icon names plus every name the config uses; there is no preset icon list. Icons found later reach the page as `_dynamicIcons` data (see below).
 
 ### PageCache
 
 **File:** `lib/server/pageCache.mjs`
 
-Tracks which pages have been JIT-compiled and provides concurrency control:
+Tracks which pages are compiled, with the state the check needs, and provides concurrency
+control:
 
-| Method                     | Purpose                                     |
-| -------------------------- | ------------------------------------------- |
-| `isCompiled(pageId)`       | Check if page has been built                |
-| `markCompiled(pageId)`     | Mark page as built                          |
-| `acquireBuildLock(pageId)` | Prevent concurrent builds of same page      |
-| `releaseBuildLock(pageId)` | Release build lock                          |
-| `invalidateAll()`          | Clear all compiled pages (skeleton rebuild) |
+| Method                                            | Purpose                                                   |
+| ------------------------------------------------- | --------------------------------------------------------- |
+| `get(pageId)`                                     | `{ generation, checkedAt }` of a compiled page, or `null` |
+| `markCompiled(pageId, { generation, checkedAt })` | Mark a page built                                         |
+| `markChecked(pageId, { generation, checkedAt })`  | Move `checkedAt` forward after a check found no change    |
+| `remove(pageId)`                                  | Drop a page whose build is starting                       |
+| `acquireBuildLock(pageId)`                        | Prevent concurrent builds of the same page                |
+| `releaseBuildLock(pageId)`                        | Release the build lock                                    |
 
-A single instance lives in the server process (`jitPageBuilder.js`). The manager process holds no PageCache — it invalidates the server's cache through the `invalidatePages` signal file and `pageRegistry.json` mtime changes.
+A single instance lives in the server process (`jitPageBuilder.js`). The manager process holds no PageCache — it signals the server through `invalidatePages` and the registry publish.
 
 ### Skeleton vs Page Change Classification
 
@@ -415,7 +434,13 @@ When a file changes, the watcher classifies it using the `skeletonSourceFiles.js
 | A `module.lowdefy.yaml` changed   | Full skeleton rebuild                                            |
 | File in `skeletonSourceFiles`     | Full skeleton rebuild                                            |
 | The last config build failed      | Full skeleton rebuild                                            |
-| File not in `skeletonSourceFiles` | Page-only change: write `invalidatePages` signal, reload clients |
+| File not in `skeletonSourceFiles` | Page-only change: refresh Tailwind candidates                    |
+
+After every batch, whichever branch ran (and whether the config build succeeded or failed),
+the watcher writes the `invalidatePages` change signal (`createChangeSignal`: the value is
+`max(Date.now(), last + 1)`) and reloads the clients. A failed config build publishes nothing,
+so without the signal a page edit made while the config build fails would never reach the
+page.
 
 A failed build publishes nothing, so `skeletonSourceFiles.json` is still the last successful
 build's list and misses any file only the failed build read (a new endpoint file whose error
@@ -433,18 +458,34 @@ The set also includes the files that hold a pages list (`pages: { _ref: pages.ya
 
 The set contains relative paths for main config refs and absolute paths for module refs, so the watcher checks each changed file in both forms.
 
-### Cross-Process Cache Invalidation
+### Cross-Process Change Signals
 
-The manager and server run in separate processes with a single `PageCache` instance in the server. When a file change only affects pages (not skeleton):
+The manager and server run in separate processes with a single `PageCache` instance in the
+server. After every batch of watched changes:
 
-1. Manager writes `invalidatePages` signal file (timestamp)
-2. Manager runs `updatePageTailwindCss` to refresh Tailwind candidates for the changed page YAML
-3. Manager calls `reloadClients()` (SSE event)
-4. On next page request, server's `checkPageInvalidations()` detects the signal file (mtime-based)
-5. Server's `pageCache.invalidateAll()` clears all compiled pages
-6. Server's `cachedBuildContext` is set to `null` to refresh maps
+1. The manager runs the config build if the batch touched the skeleton (publishing a new
+   `pageRegistry.json` when it succeeds), or refreshes Tailwind candidates otherwise
+2. The manager writes the `invalidatePages` change signal
+3. The manager calls `reloadClients()` (SSE event)
+4. On the next page request or build status review, the server's `syncBuildSignals()` sees the
+   new signal value (a change event) and any new registry identity (a new context generation)
+5. Each page is then checked on its own request (see the JIT page build flow): only pages whose
+   recorded files changed, that ran app code, or that were built on an earlier generation
+   rebuild. No list of changed files crosses from the manager: the server finds out what
+   changed by checking content.
 
-For skeleton changes, `lowdefyBuild()` triggers a full rebuild; the server detects the new `pageRegistry.json` mtime on next request and invalidates everything.
+### Build Status
+
+`lowdefy_build_status` and `GET /lowdefy-docs/build-status` report the page builds through
+`reviewPageBuilds` (`lib/docs/`), which calls `syncBuildSignals` once and then `reviewPage`
+for each registered page. A page with a build record is `edited` exactly when its next request
+would rebuild it (`reviewBuiltPage`, the same function the request uses; a match moves
+`checkedAt`, so the following request does not check again); a page never built is `edited`
+when its page file changed after the server started, else `unbuilt`. So build status sees an
+edit no page request has seen yet, and with `wait: true` (`buildEditedPages`, four at a time)
+builds exactly the pages the next requests would rebuild. A page built with app code counts as
+edited after any change event. The review is async, and so are `getPageBuildStatus`,
+`getBuildStatus` and their callers.
 
 ## Server Process and Logging
 
@@ -637,14 +678,15 @@ Watches every file the build reads, through one chokidar watcher:
 
 - the config directory, the `--watch` paths, and local module roots (`isLocal: true` in
   `buildContext.modules`), which may lie outside the config directory;
-- every other file in the build's `refMap.json` that lies outside those directories, such
-  as a file a local module refs with `../` from beside the module. `refMap.json` is rewritten
-  by the config build and by every JIT page build, so a second watcher on it adds new files
-  as they appear.
+- every other file in the build's ref maps that lies outside those directories, such
+  as a file a local module refs with `../` from beside the module. The config build writes
+  `refMap.json` and each JIT page build writes a new `jitMaps/` file, so a second watcher on
+  the build directory (ignoring everything else in it) reads only the maps files that
+  changed and adds new files as they appear. `refMap.json` is scanned in full once, at start.
 
 Each batch of changes is classified with `skeletonSourceFiles.json` (see the table above):
-a skeleton change runs `lowdefyBuild()`, anything else writes the `invalidatePages` signal
-and refreshes Tailwind candidates. Either way the clients reload.
+a skeleton change runs `lowdefyBuild()`, anything else refreshes Tailwind candidates. Either
+way the `invalidatePages` signal is written and the clients reload.
 
 Dotfiles and dot-folders are ignored relative to the watched directory a file is under
 (`createDotPathIgnore`), not by the absolute path, so an app that lives inside a dot-folder

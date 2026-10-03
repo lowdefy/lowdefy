@@ -14,32 +14,42 @@
   limitations under the License.
 */
 
+import path from 'node:path';
+
 import pageBuildRecords from '../server/pageBuildRecords.js';
-import readBuildArtifact from './readBuildArtifact.js';
-import reviewPage, { createModifiedAt } from './reviewPage.js';
+import { syncBuildSignals } from '../server/jitPageBuilder.js';
+import reviewPage from './reviewPage.js';
 
 // Sorts the registered pages by what the dev server knows about them (see
 // reviewPage): edited, unbuilt, and failed, the pages whose last build failed,
-// with its errors. Each distinct file is stat'ed once per call.
-function reviewPageBuilds() {
-  const registry = readBuildArtifact({ name: 'pageRegistry.json' }) ?? {};
+// with its errors. The build signals are read first, so an edit no page
+// request has seen yet is reviewed too; pages that share a file read it once,
+// through the build context's read cache.
+async function reviewPageBuilds() {
+  const buildDirectory = path.join(process.cwd(), 'build');
   const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
-  const modifiedAt = createModifiedAt();
+  const signals = syncBuildSignals({ buildDirectory, configDirectory });
+  const registry = signals.registry ?? {};
+  const pageIds = Object.keys(registry);
+  const reviews = await Promise.all(
+    pageIds.map((pageId) =>
+      reviewPage({ pageId, entry: registry[pageId], configDirectory, signals })
+    )
+  );
   const edited = [];
   const unbuilt = [];
   const failed = [];
-  for (const [pageId, entry] of Object.entries(registry)) {
+  pageIds.forEach((pageId, index) => {
     const errors = pageBuildRecords.get(pageId)?.errors;
     if (errors) {
       failed.push({ pageId, errors });
     }
-    const review = reviewPage({ pageId, entry, modifiedAt, configDirectory });
-    if (review === 'edited') {
+    if (reviews[index] === 'edited') {
       edited.push(pageId);
-    } else if (review === 'unbuilt') {
+    } else if (reviews[index] === 'unbuilt') {
       unbuilt.push(pageId);
     }
-  }
+  });
   return { edited, unbuilt, failed };
 }
 

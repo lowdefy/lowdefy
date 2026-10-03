@@ -24,7 +24,7 @@ const lifecycleTools = [
   {
     name: 'lowdefy_dev_start',
     description:
-      "Start this app's dev server, or return it if it is already running, and wait until it is ready. Every other lowdefy_ tool starts the server on its own, so call this directly to restart it: restart: true after changing local plugin code or .env, or when the server seems stuck; clean: true also deletes the build directory first. Never run `lowdefy dev` yourself, and never pick a port.",
+      "Start this app's dev server, or return it if it is already running, and wait until it is ready. Every other lowdefy_ tool starts the server on its own, so call this directly to restart it: restart: true when the server seems stuck or build status looks stale, or after secrets a wrapper (for example infisical) injects have changed - .env edits and local plugin code are picked up without a restart; clean: true also deletes the build directory first. Never run `lowdefy dev` yourself, and never pick a port.",
     inputSchema: {
       type: 'object',
       properties: {

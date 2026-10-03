@@ -17,6 +17,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 
+import filesHaveSameBytes from './filesHaveSameBytes.mjs';
+
 async function listFiles(directory) {
   const entries = await fs.readdir(directory, { recursive: true, withFileTypes: true });
   return entries
@@ -29,10 +31,16 @@ async function listFiles(directory) {
 // artifacts are missing, so the build is written to a staging directory and
 // moved over the live one file by file. A rename replaces a file in one step,
 // so a reader always finds each artifact, from the old build or the new one.
-// Live files the new build did not write are removed next. The page registry
+// A staged file whose bytes equal the live one is left in staging, so the
+// live file keeps its mtime and Vite, which watches the build directory, does
+// not re-process every client artifact after each config build. Live files
+// the new build did not write are removed next. The page registry
 // is moved last: the JIT page builder rebuilds its cached build context, and
 // drops its built pages, when the registry changes, so the registry must
 // arrive after every other new file and after the old build's pages are gone.
+// It is moved even when its bytes are unchanged: the JIT page builder learns
+// of a config build only from its identity (inode and mtime), which a rename
+// always changes.
 // The live directory itself is never replaced, so file watchers on it keep
 // working.
 const pageRegistryFile = 'pageRegistry.json';
@@ -41,6 +49,8 @@ const pageRegistryFile = 'pageRegistry.json';
 // only while the live idCounter.json still names the config build it started from
 // (skipStaleMapWrites), so the new idCounter.json must be live before the new maps
 // arrive, or a page build of the old config could write its maps over them.
+// It is moved even when its bytes are unchanged, so the order holds for every
+// build.
 const idCounterFile = 'idCounter.json';
 
 // Files the manager and the dev tools write into the build directory to
@@ -87,8 +97,17 @@ async function publishBuildDirectory({ buildDirectory, stagingDirectory }) {
   const otherFiles = stagedFiles.filter(
     (file) => file !== idCounterFile && file !== pageRegistryFile
   );
-  for (const file of [...firstFiles, ...otherFiles]) {
+  for (const file of firstFiles) {
     await moveFile({ buildDirectory, stagingDirectory, file });
+  }
+  for (const file of otherFiles) {
+    const unchanged = await filesHaveSameBytes({
+      a: path.join(stagingDirectory, file),
+      b: path.join(buildDirectory, file),
+    });
+    if (!unchanged) {
+      await moveFile({ buildDirectory, stagingDirectory, file });
+    }
   }
 
   const staged = new Set(stagedFiles);
