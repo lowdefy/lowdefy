@@ -213,6 +213,7 @@ const targetFixtures = [
     name: 'AutoComplete option inside its popup container',
     html: selectorOptions({ blockId: 'fruit', options: ['Apple', 'Banana'] }),
     element: '#bl-fruit [title="Apple"]',
+    clicked: '#bl-fruit [title="Apple"] .ant-select-item-option-content',
     target: target({ block_id: 'fruit', text: 'Apple', option: true }),
     blockIds: ['fruit'],
     resolvable: false,
