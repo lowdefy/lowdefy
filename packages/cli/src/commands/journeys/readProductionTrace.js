@@ -18,21 +18,8 @@ import fs from 'fs';
 import path from 'path';
 import { parseTraceLines } from '@lowdefy/node-utils';
 
+import listWindowDays from './listWindowDays.js';
 import parseTraceWindow from './parseTraceWindow.js';
-
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-function daysOf({ from, to }) {
-  const days = [];
-  for (
-    let time = Date.parse(`${from}T00:00:00Z`);
-    time <= Date.parse(`${to}T00:00:00Z`);
-    time += DAY_MS
-  ) {
-    days.push(new Date(time).toISOString().slice(0, 10));
-  }
-  return days;
-}
 
 // The production records of a window, read from the per-day cache that
 // `lowdefy journeys pull posthog` writes: days in order, records in file
@@ -42,7 +29,7 @@ function daysOf({ from, to }) {
 function readProductionTrace({ directories, since, from, to, now = Date.now() }) {
   const window = parseTraceWindow({ since, from, to, now });
   const directory = path.join(directories.traces, 'production');
-  const days = daysOf(window);
+  const days = listWindowDays(window);
   const missing = days.filter(
     (day) => !fs.existsSync(path.join(directory, `${day}.manifest.json`))
   );

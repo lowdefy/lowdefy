@@ -29,11 +29,26 @@ function columnOf({ text, offset }) {
 
 // `evidence:` and its map as block YAML, its first line unindented and the
 // rest indented to the journey's key column, so it can be spliced in where a
-// key starts.
-function renderEvidence({ evidence, column }) {
+// key starts. Lines end the way the file's lines do.
+function renderEvidence({ evidence, column, eol }) {
   const lines = YAML.stringify({ evidence }, { lineWidth: 0 }).trimEnd().split('\n');
   const indent = ' '.repeat(column);
-  return lines.map((line, index) => (index === 0 ? line : `${indent}${line}`)).join('\n');
+  return lines.map((line, index) => (index === 0 ? line : `${indent}${line}`)).join(eol);
+}
+
+// Splicing block YAML assumes a block-style journey; a flow-style one
+// (`{ name: …, steps: […] }`) would come out broken. So the result is read
+// back, and anything but the intended evidence leaves the file alone.
+function checkWritten({ text, journeyIndex, evidence }) {
+  const document = YAML.parseDocument(text);
+  const node = document.errors.length === 0 ? journeyNode({ document, journeyIndex }) : undefined;
+  const written = YAML.isMap(node) ? node.get('evidence', true)?.toJSON() : undefined;
+  if (JSON.stringify(written) !== JSON.stringify(evidence)) {
+    throw new Error(
+      'The evidence could not be written into this journey; write its evidence key in block style.'
+    );
+  }
+  return text;
 }
 
 // Writes a journey's evidence node into the file's text and touches nothing
@@ -51,13 +66,20 @@ function writeEvidenceNode({ text, journeyIndex, evidence }) {
   if (!YAML.isMap(node)) {
     throw new Error(`The journey file has no journey at index ${journeyIndex}.`);
   }
+  const eol = text.includes('\r\n') ? '\r\n' : '\n';
   const existing = node.items.find((pair) => pair.key?.value === 'evidence');
   if (!type.isUndefined(existing)) {
     const start = existing.key.range[0];
     const end = existing.value.range[1];
-    const block = renderEvidence({ evidence, column: columnOf({ text, offset: start }) });
-    const newline = text.slice(start, end).endsWith('\n') ? '\n' : '';
-    return `${text.slice(0, start)}${block}${newline}${text.slice(end)}`;
+    const block = renderEvidence({ evidence, column: columnOf({ text, offset: start }), eol });
+    const replaced = text.slice(start, end);
+    let newline = '';
+    if (replaced.endsWith('\n')) newline = replaced.endsWith('\r\n') ? '\r\n' : '\n';
+    return checkWritten({
+      text: `${text.slice(0, start)}${block}${newline}${text.slice(end)}`,
+      journeyIndex,
+      evidence,
+    });
   }
   const steps = node.items.find((pair) => pair.key?.value === 'steps');
   if (type.isUndefined(steps)) {
@@ -65,8 +87,12 @@ function writeEvidenceNode({ text, journeyIndex, evidence }) {
   }
   const offset = steps.key.range[0];
   const column = columnOf({ text, offset });
-  const block = renderEvidence({ evidence, column });
-  return `${text.slice(0, offset)}${block}\n${' '.repeat(column)}${text.slice(offset)}`;
+  const block = renderEvidence({ evidence, column, eol });
+  return checkWritten({
+    text: `${text.slice(0, offset)}${block}${eol}${' '.repeat(column)}${text.slice(offset)}`,
+    journeyIndex,
+    evidence,
+  });
 }
 
 export default writeEvidenceNode;

@@ -14,3 +14,19 @@
   limitations under the License.
 */
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+// Every UTC day of a window, both ends included, as `YYYY-MM-DD`.
+function listWindowDays({ from, to }) {
+  const days = [];
+  for (
+    let time = Date.parse(`${from}T00:00:00Z`);
+    time <= Date.parse(`${to}T00:00:00Z`);
+    time += DAY_MS
+  ) {
+    days.push(new Date(time).toISOString().slice(0, 10));
+  }
+  return days;
+}
+
+export default listWindowDays;

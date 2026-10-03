@@ -132,3 +132,23 @@ test('writeEvidenceNode throws for a file that does not parse', () => {
     writeEvidenceNode({ text: 'name: [unclosed\nsteps:', journeyIndex: 0, evidence })
   ).toThrow('The journey file does not parse');
 });
+
+test('writeEvidenceNode refuses a flow-style journey it cannot write in block style', () => {
+  expect(() =>
+    writeEvidenceNode({ text: '{ name: a, pageId: p, steps: [] }\n', journeyIndex: 0, evidence })
+  ).toThrow('The evidence could not be written into this journey');
+});
+
+test('writeEvidenceNode keeps CRLF line endings in a CRLF file', () => {
+  const crlf = 'name: a\r\npageId: p\r\nsteps:\r\n  - click: open\r\n';
+  const text = writeEvidenceNode({ text: crlf, journeyIndex: 0, evidence });
+  expect(text.replace(/\r\n/g, '')).not.toContain('\n');
+  expect(YAML.parse(text).evidence).toEqual(evidence);
+  const replaced = writeEvidenceNode({
+    text,
+    journeyIndex: 0,
+    evidence: { ...evidence, refreshed: '2026-10-04' },
+  });
+  expect(replaced.replace(/\r\n/g, '')).not.toContain('\n');
+  expect(YAML.parse(replaced).evidence.refreshed).toBe('2026-10-04');
+});

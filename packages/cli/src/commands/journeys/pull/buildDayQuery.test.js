@@ -38,7 +38,7 @@ describe('buildDayQuery', () => {
       expect(query).not.toContain(value);
     });
     expect(query).toContain('{after_uuid}');
-    expect(query).toContain('ORDER BY timestamp, uuid');
+    expect(query).toContain('ORDER BY timestamp, toString(uuid)');
     expect(query).toContain('LIMIT {page_size}');
     expect(query).toContain('{filters}');
   });
