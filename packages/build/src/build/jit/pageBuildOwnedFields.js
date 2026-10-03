@@ -26,6 +26,8 @@ const pageBuildOwnedFields = [
   'websocketActionRefs',
   'dynamicBlockRefs',
   'orgClientActionRefs',
+  'modules',
+  'deferred',
   'handleError',
   'handleWarning',
 ];

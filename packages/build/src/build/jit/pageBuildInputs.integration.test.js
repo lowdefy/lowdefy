@@ -118,6 +118,7 @@ const { default: pageBuildOwnedFields } = await import('./pageBuildOwnedFields.j
 const { default: prepareJitContext } = await import('./prepareJitContext.js');
 const { default: createContext } = await import('../../createContext.js');
 const { default: makeId } = await import('../../utils/makeId.js');
+const { hydrateDeferredRecords } = await import('../buildRefs/deferredRegistry.js');
 const { snapshotTypesMap } = await import('../../test-utils/runBuildForSnapshots.js');
 
 const installedPluginPackages = new Set(['@lowdefy/blocks-basic', '@lowdefy/actions-core']);
@@ -178,6 +179,8 @@ pages:
       vars:
         id: resolver-transformed
         title: Resolver title
+  - _ref: pages/card-one.yaml
+  - _ref: pages/card-two.yaml
   - _ref: pages/broken.yaml
   - _ref: pages/warns.yaml
 `
@@ -272,8 +275,26 @@ blocks:
     'modules/inviter/module.lowdefy.yaml',
     `name: Inviter
 
+exports:
+  components:
+    - id: card
+
+vars:
+  greeting:
+    default:
+      _ref: defaults/greeting.yaml
+  signature:
+    default:
+      _ref: defaults/signature.yaml
+
+components:
+  - id: card
+    component:
+      _ref: components/card.yaml
+
 pages:
   - _ref: pages/invite.yaml
+  - _ref: pages/welcome.yaml
 `
   );
   write(
@@ -282,8 +303,54 @@ pages:
 type: Box
 blocks:
   - _ref: blocks/form.yaml
+  - id: greeting
+    type: Box
+    properties:
+      title:
+        _module.var: greeting
 `
   );
+  // Module pages that use a var whose default refs a file. The skeleton build
+  // resolves module pages with their manifest, so the value is cached in
+  // modules.json and the file is a skeleton source.
+  write(
+    'modules/inviter/pages/welcome.yaml',
+    `id: welcome
+type: Box
+blocks:
+  - id: greeting
+    type: Box
+    properties:
+      title:
+        _module.var: greeting
+`
+  );
+  write('modules/inviter/defaults/greeting.yaml', 'text: Hello\n');
+  // App pages that use a module component with a var whose default refs a
+  // file. Page content is not built by the skeleton build, so each page build
+  // resolves the var.
+  write(
+    'modules/inviter/components/card.yaml',
+    `id: card
+type: Box
+properties:
+  title:
+    _module.var: signature
+`
+  );
+  write('modules/inviter/defaults/signature.yaml', 'text: Regards\n');
+  for (const pageId of ['card-one', 'card-two']) {
+    write(
+      `pages/${pageId}.yaml`,
+      `id: ${pageId}
+type: Box
+blocks:
+  - _ref:
+      module: inviter
+      component: card
+`
+    );
+  }
   write('modules/inviter/blocks/form.yaml', 'id: form\ntype: Box\n');
 }
 
@@ -316,6 +383,7 @@ function hydrateContext({ buildDir, configDir }) {
   context.jsMap.client = jsMap.client ?? {};
   context.jsMap.server = jsMap.server ?? {};
   Object.assign(context.modules, readArtifact(buildDir, 'modules.json') ?? {});
+  hydrateDeferredRecords(context, readArtifact(buildDir, 'deferredRecords.json'));
   context.installedPluginPackages = installedPluginPackages;
   context.components = { api: [] };
   context.bundledIcons = new Set(readArtifact(buildDir, 'iconImports.json') ?? []);
@@ -363,6 +431,17 @@ afterEach(() => {
   pageBuildContexts.length = 0;
 });
 
+function findBlock(block, blockId) {
+  if (block.blockId === blockId) return block;
+  for (const area of Object.values(block.slots ?? {})) {
+    for (const child of area.blocks ?? []) {
+      const found = findBlock(child, blockId);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
 async function buildPage({ pageId, context }) {
   return buildPageJit({ pageId, pageRegistry, context });
 }
@@ -376,7 +455,10 @@ const inputPages = [
   'page-transformed',
   'vars-transformed',
   'resolver-transformed',
+  'card-one',
+  'card-two',
   'inviter/invite',
+  'inviter/welcome',
 ];
 
 test('the fixture registers every kind of page the guard covers', () => {
@@ -400,6 +482,44 @@ test("a transformer on a page's own _ref runs in its JIT page build", async () =
 
   const untransformed = await buildPage({ pageId: 'templated', context });
   expect(untransformed.properties).toEqual({ title: 'Templated title' });
+});
+
+test('a module var default file the skeleton build resolved is a skeleton source', () => {
+  const skeletonSourceFiles = readArtifact(buildDir, 'skeletonSourceFiles.json');
+  const modules = readArtifact(buildDir, 'modules.json');
+  expect(modules.inviter.resolvedVarCache.greeting).toEqual({ text: 'Hello' });
+  expect(skeletonSourceFiles).toContain(
+    path.join(configDir, 'modules', 'inviter', 'defaults', 'greeting.yaml')
+  );
+  expect(skeletonSourceFiles).not.toContain(
+    path.join(configDir, 'modules', 'inviter', 'pages', 'welcome.yaml')
+  );
+});
+
+test('every page build that resolves a module var reads the file its default refs', async () => {
+  const context = hydrateContext({ buildDir, configDir });
+  const signatureFile = path.join(configDir, 'modules', 'inviter', 'defaults', 'signature.yaml');
+  const read = [];
+  const readConfigFile = context.readConfigFile;
+  context.readConfigFile = (filePath) => {
+    read.push(path.resolve(configDir, filePath));
+    return readConfigFile(filePath);
+  };
+
+  const buildCard = async (pageId) => {
+    read.length = 0;
+    const page = await buildPage({ pageId, context });
+    return { reads: [...read], title: findBlock(page, 'card').properties.title };
+  };
+
+  for (const build of [
+    await buildCard('card-one'),
+    await buildCard('card-two'),
+    await buildCard('card-one'),
+  ]) {
+    expect(build.reads).toContain(signatureFile);
+    expect(build.title).toEqual({ text: 'Regards' });
+  }
 });
 
 test('a page build reads config files only through readConfigFile and importAppCode', async () => {
