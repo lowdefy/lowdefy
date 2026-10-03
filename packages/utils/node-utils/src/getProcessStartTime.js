@@ -15,6 +15,7 @@
 */
 
 import { spawnSync } from 'child_process';
+import { type } from '@lowdefy/helpers';
 
 import getProcessStartTimeCommand from './getProcessStartTimeCommand.js';
 
@@ -25,6 +26,11 @@ import getProcessStartTimeCommand from './getProcessStartTimeCommand.js';
 function getProcessStartTime({ pid }) {
   const { command, args, options } = getProcessStartTimeCommand({ pid });
   const result = spawnSync(command, args, { ...options, encoding: 'utf8' });
+  // A read that timed out or failed may have printed part of a start time,
+  // which would compare unequal and be taken for another process.
+  if (!type.isNone(result.error) || result.status !== 0) {
+    return null;
+  }
   const startTime = (result.stdout ?? '').trim();
   return startTime === '' ? null : startTime;
 }

@@ -15,6 +15,7 @@
 */
 
 import { execFile } from 'child_process';
+import { type } from '@lowdefy/helpers';
 
 import getProcessStartTimeCommand from './getProcessStartTimeCommand.js';
 
@@ -25,6 +26,12 @@ function readProcessStartTime({ pid }) {
   const { command, args, options } = getProcessStartTimeCommand({ pid });
   return new Promise((resolve) => {
     execFile(command, args, { ...options, encoding: 'utf8' }, (error, stdout) => {
+      // A read that timed out or failed may have printed part of a start
+      // time, which would compare unequal and be taken for another process.
+      if (!type.isNone(error)) {
+        resolve(null);
+        return;
+      }
       const startTime = (stdout ?? '').trim();
       resolve(startTime === '' ? null : startTime);
     });
