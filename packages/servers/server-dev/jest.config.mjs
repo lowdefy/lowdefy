@@ -8,5 +8,8 @@ export default {
   errorOnDeprecated: true,
   testEnvironment: 'node',
   testMatch: ['**/*.test.mjs'],
+  // *.mongodb.test.mjs suites need a MongoDB server - pnpm test:mongodb runs them
+  // (jest.mongodb.config.mjs).
+  testPathIgnorePatterns: ['/node_modules/', '\\.mongodb\\.test\\.mjs$'],
   transform: {},
 };

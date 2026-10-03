@@ -19,6 +19,7 @@ import { parseDataSet } from '@lowdefy/node-utils';
 
 import findCollectionCollisions from './findCollectionCollisions.js';
 import readConnectionArtifacts from './readConnectionArtifacts.js';
+import resolveDataSetCollection from './resolveDataSetCollection.js';
 
 function getKeyedConnectionIds({ dataSet }) {
   const ids = new Set([...Object.keys(dataSet.fixtures), ...Object.keys(dataSet.indexes)]);
@@ -26,30 +27,6 @@ function getKeyedConnectionIds({ dataSet }) {
     ids.add(type.isString(connection) ? connection : connection.id);
   });
   return [...ids];
-}
-
-function resolveCollection({ dataSet, connectionId, artifact }) {
-  const where = `Data set "${dataSet.name}" connection "${connectionId}"`;
-  if (type.isNone(artifact)) {
-    throw new Error(`${where} is not a connection in this app.`);
-  }
-  if (artifact.type !== 'MongoDBCollection') {
-    throw new Error(
-      `${where} is a ${artifact.type} connection; data sets load MongoDBCollection connections only.`
-    );
-  }
-  const { collection, databaseName } = artifact.properties ?? {};
-  if (!type.isString(collection)) {
-    throw new Error(
-      `${where} has a computed "collection"; a data set can only load a connection whose collection is a literal string.`
-    );
-  }
-  if (!type.isUndefined(databaseName) && !type.isString(databaseName)) {
-    throw new Error(
-      `${where} has a computed "databaseName"; a data set can only load a connection whose databaseName is a literal string or not set.`
-    );
-  }
-  return collection;
 }
 
 // The data set checks only the dev build can make, on top of parseDataSet's: every connection the
@@ -77,11 +54,11 @@ async function readDataSet({ configDirectory, buildDirectory, name }) {
   const keyedIds = getKeyedConnectionIds({ dataSet });
   const collections = {};
   keyedIds.forEach((connectionId) => {
-    collections[connectionId] = resolveCollection({
-      dataSet,
+    collections[connectionId] = resolveDataSetCollection({
+      dataSetName: name,
       connectionId,
       artifact: artifacts[connectionId],
-    });
+    }).collection;
   });
 
   findCollectionCollisions({ artifacts }).forEach(({ collection, connectionIds }) => {

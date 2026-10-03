@@ -28,7 +28,7 @@
     "prettier": "prettier --config .prettierrc --write **/*.js",
     "test": "pnpm test:dependencies && pnpm -r --filter='!@lowdefy/connection-mongodb' test",
     "test:dependencies": "node --test scripts/lib/findUndeclaredImports.test.mjs && node scripts/check-dependencies.mjs",
-    "test:mongodb": "pnpm --filter=@lowdefy/connection-mongodb test && pnpm --filter=@lowdefy/api test:mongodb",
+    "test:mongodb": "pnpm --filter=@lowdefy/connection-mongodb test && pnpm --filter=@lowdefy/api test:mongodb && pnpm --filter=@lowdefy/server-dev test:mongodb",
     "test:journeys:auth": "node scripts/test-journeys-auth.mjs",
     "test:build:u": "UPDATE_SNAPSHOTS=true pnpm --filter=@lowdefy/build test",
     "e2e": "pnpm -r --workspace-concurrency=1 e2e",
