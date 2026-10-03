@@ -6795,7 +6795,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "741e895b5bf8c117f2a5f1402f75bf3ae9b0c104e405b6382d49da0b84995dff"
+      "hash": "3eabbb1d6961457b513fc565b12d592a996858ad4f30c1b877deffa2a78a9814"
     },
     "actions/posthogoptin": {
       "files": [
