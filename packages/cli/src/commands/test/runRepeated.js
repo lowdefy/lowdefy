@@ -27,6 +27,7 @@ import isFullSuiteRun from './isFullSuiteRun.js';
 // records, so the newest test run always stands for what the suite drives.
 async function runRepeated({ suite, context, item, url, repeat, recording }) {
   const runs = [];
+  let recorded;
   for (let repetition = 1; repetition <= repeat; repetition += 1) {
     const recordRun =
       recording !== undefined &&
@@ -35,6 +36,10 @@ async function runRepeated({ suite, context, item, url, repeat, recording }) {
         : undefined;
     const run = await suite.run({ context, item, url, recordRun });
     runs.push(run);
+    // Measured coverage counts only a journey whose recorded run passed.
+    if (recordRun !== undefined) {
+      recorded = { run: recordRun, passed: run.passed };
+    }
     if (run.refused === true) {
       break;
     }
@@ -54,6 +59,7 @@ async function runRepeated({ suite, context, item, url, repeat, recording }) {
     passedRuns: classified.passed,
     failures: classified.failures,
     durationMs: Math.round(runs.reduce((sum, run) => sum + run.durationMs, 0) / runs.length),
+    ...(recorded === undefined ? {} : { recorded }),
   };
 }
 

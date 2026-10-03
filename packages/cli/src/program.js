@@ -20,6 +20,8 @@ import { Command, Option } from 'commander';
 import agentSetup from './commands/agentSetup/agentSetup.js';
 import agentSetupUser from './commands/agentSetup/agentSetupUser.js';
 import build from './commands/build/build.js';
+import dataList from './commands/data/list.js';
+import dataPull from './commands/data/pull.js';
 import dev from './commands/dev/dev.js';
 import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
@@ -36,6 +38,9 @@ import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
 import journeysCompile from './commands/journeys/journeysCompile.js';
 import journeysRecordings from './commands/journeys/journeysRecordings.js';
+import journeysCoverage from './commands/journeys/journeysCoverage.js';
+import journeysEvidence from './commands/journeys/journeysEvidence.js';
+import journeysPullPosthog from './commands/journeys/pull/journeysPullPosthog.js';
 import mcp from './commands/mcp/mcp.js';
 import start from './commands/start/start.js';
 import test from './commands/test/test.js';
@@ -142,6 +147,38 @@ program
   )
   .addOption(options.serverDirectory)
   .action(runCommand({ cliVersion, handler: build }));
+
+const data = program
+  .command('data')
+  .description('Manage journey data sets (tests/data/<name>.yaml).');
+
+data
+  .command('pull')
+  .description(
+    "Copy a snapshot of a data set's listed connections from a pre-production environment into .lowdefy/data/<name>, guarded by that environment's guards.secrets pins. Run it with the environment's secrets, e.g. infisical run --env=staging -- lowdefy data pull staging-sample."
+  )
+  .argument('<name>', 'The data set name (tests/data/<name>.yaml).')
+  .usage('<name> [options]')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(options.refResolver)
+  .action((name, commandOptions, command) =>
+    runCommand({
+      cliVersion,
+      handler: ({ context }) => dataPull({ context, name }),
+    })(commandOptions, command)
+  );
+
+data
+  .command('list')
+  .description('List the data sets in tests/data and the age of each pulled snapshot.')
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .action(runCommand({ cliVersion, handler: dataList }));
 
 program
   .command('dev')
@@ -252,7 +289,9 @@ hub
 
 const journeys = program
   .command('journeys')
-  .description('Turn recorded interaction traces into candidate journeys.');
+  .description(
+    'Turn recorded interaction traces into candidate journeys, and report how real use backs them.'
+  );
 
 journeys
   .command('compile')
@@ -322,6 +361,96 @@ journeys
   )
   .addOption(new Option('--json', 'Print the sessions as JSON on stdout.'))
   .action(runCommand({ cliVersion, handler: journeysRecordings }));
+
+journeys
+  .command('pull')
+  .description(
+    'Pull production analytics into .lowdefy/traces/production/, one UTC day per file. The adapter is posthog.'
+  )
+  .usage('<adapter> [options]')
+  .argument('<adapter>', 'Where production analytics are read from: posthog.')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--since <since>',
+      'The days to pull, ending today: a number of days such as 30d (the default), or a start date.'
+    )
+  )
+  .addOption(new Option('--from <date>', 'The first UTC day to pull, YYYY-MM-DD.'))
+  .addOption(new Option('--to <date>', 'The last UTC day to pull, YYYY-MM-DD.'))
+  .addOption(
+    new Option(
+      '--environment <name>',
+      'Only events whose environment super property is this, for a project shared by several environments.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--include-test-accounts',
+      "Include events the project's test-account filter leaves out."
+    )
+  )
+  .addOption(
+    new Option('--org-property <name>', 'The person property holding the org id. Default: org_id.')
+  )
+  .addOption(
+    new Option('--roles-property <name>', 'The person property holding the roles. Default: roles.')
+  )
+  .addOption(new Option('--page-size <rows>', 'Rows per query, at most 50000. Default: 10000.'))
+  .addOption(
+    new Option(
+      '--max-rows <rows>',
+      'Stop before a pull would read more rows than this. Default: 500000.'
+    )
+  )
+  .addOption(new Option('--refetch', 'Pull final days again (days older than yesterday).'))
+  .action(runCommand({ cliVersion, handler: journeysPullPosthog }));
+
+const productionWindowOptions = [
+  new Option(
+    '--since <since>',
+    'The production window ending today: a number of days such as 30d (the default), or a start date.'
+  ),
+  new Option('--from <date>', 'The first UTC day of the production window, YYYY-MM-DD.'),
+  new Option('--to <date>', 'The last UTC day of the production window, YYYY-MM-DD.'),
+];
+
+const journeysEvidenceCommand = journeys
+  .command('evidence')
+  .description(
+    "Report how much production use backs each journey in tests/journeys/; --refresh writes it into each journey's evidence key."
+  )
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(new Option('--source <source>', 'Where use is read from: production (the default).'))
+  .addOption(
+    new Option(
+      '--refresh',
+      'Write the evidence key of every journey whose numbers changed, and nothing else in the file.'
+    )
+  );
+productionWindowOptions.forEach((option) => journeysEvidenceCommand.addOption(option));
+journeysEvidenceCommand.action(runCommand({ cliVersion, handler: journeysEvidence }));
+
+const journeysCoverageCommand = journeys
+  .command('coverage')
+  .description(
+    'Report which production flows, failures, frustrated clicks and role sets no journey covers, and write .lowdefy/test/coverage.json.'
+  )
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(new Option('--source <source>', 'Where use is read from: production (the default).'))
+  .addOption(new Option('--json', 'Print the coverage report as JSON instead of the summary.'));
+productionWindowOptions.forEach((option) => journeysCoverageCommand.addOption(option));
+journeysCoverageCommand.action(runCommand({ cliVersion, handler: journeysCoverage }));
 
 program
   .command('init')

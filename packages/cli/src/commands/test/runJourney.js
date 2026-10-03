@@ -74,6 +74,7 @@ async function runJourney({ context, item, url, recordRun }) {
   try {
     const body = {
       pageId: journey.pageId,
+      data: journey.data,
       steps: journey.steps,
       user: journey.user,
       urlQuery: journey.urlQuery,
@@ -108,8 +109,24 @@ async function runJourney({ context, item, url, recordRun }) {
   if (!type.isNone(result.error)) {
     return { name, filePath, passed: false, stepCount, durationMs, message: result.error };
   }
+  // The data set the server loaded and its warnings (snapshot age, colliding connections).
+  const dataSet = { data: result.data, warnings: result.warnings };
   if (result.passed === true) {
-    return { name, filePath, passed: true, stepCount, durationMs, exercised: result.exercised };
+    const passed = {
+      name,
+      filePath,
+      passed: true,
+      stepCount,
+      durationMs,
+      ...dataSet,
+      exercised: result.exercised,
+    };
+    // Evidence is read from the file for the PASS line; it is never sent to
+    // the dev server.
+    if (!type.isNone(journey.evidence)) {
+      passed.evidence = journey.evidence;
+    }
+    return passed;
   }
   return {
     name,
@@ -117,6 +134,7 @@ async function runJourney({ context, item, url, recordRun }) {
     passed: false,
     stepCount,
     durationMs,
+    ...dataSet,
     failure: result.failure,
     message: result.failure?.message,
     exercised: result.exercised,

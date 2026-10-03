@@ -27,6 +27,7 @@ import selectTests from './selectTests.js';
 import startDevServer from './startDevServer.js';
 import summariseResults from './summariseResults.js';
 import writeExercised from './writeExercised.js';
+import writeTestRun from './writeTestRun.js';
 
 function trimTrailingSlash(url) {
   return url.replace(/\/+$/, '');
@@ -116,6 +117,7 @@ async function test({ context }) {
   const recording = { run: createTraceId(), paths: givenPaths, filter };
   const recorded = isFullSuiteRun({ paths: givenPaths, filter, repetition: 1 });
   const results = [];
+  const seen = new Set();
   try {
     for (const { suite, item } of selected) {
       const result = await runRepeated({
@@ -127,7 +129,7 @@ async function test({ context }) {
         recording,
       });
       results.push(result);
-      const lines = suite.format({ result });
+      const lines = suite.format({ result, seen });
       if (result.passed) {
         lines.forEach((line) => context.logger.info(line));
       } else {
@@ -139,6 +141,7 @@ async function test({ context }) {
       results,
       buildId: await fetchBuildId({ url: server.url }),
     });
+    writeTestRun({ directories: context.directories, results });
   } finally {
     process.removeListener('SIGINT', onSigint);
     if (!interrupted) {

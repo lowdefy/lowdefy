@@ -15,6 +15,7 @@
 */
 
 import journeysFromDev from './journeysFromDev.js';
+import journeysFromProduction from './journeysFromProduction.js';
 import skillMd from '../skillMd.js';
 
 // The skills agent-setup installs. A skill is added by adding an entry here,
@@ -31,6 +32,12 @@ const skills = [
     render: journeysFromDev,
     agentsMdLine:
       '`journeys-from-dev`: turning what the developer tried in the dev server into proven journeys.',
+  },
+  {
+    name: 'journeys-from-production',
+    render: journeysFromProduction,
+    agentsMdLine:
+      '`journeys-from-production`: turning what real users do in production into proven journeys, uncovered failures and flows first.',
   },
 ];
 

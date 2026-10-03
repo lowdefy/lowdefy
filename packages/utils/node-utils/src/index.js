@@ -20,6 +20,7 @@ import collectEnvironmentGuards from './collectEnvironmentGuards.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import createClientAddressResolver from './createClientAddressResolver.js';
 import createSecretScrubber from './createSecretScrubber.js';
+import dataSetNamePattern from './dataSetNamePattern.js';
 import findAvailablePort from './findAvailablePort.js';
 import findPnpmWorkspaceRoot from './findPnpmWorkspaceRoot.js';
 import findWorkspacePackages from './findWorkspacePackages.js';
@@ -27,11 +28,14 @@ import getDevInstancePath from './getDevInstancePath.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 import getProcessStartTime from './getProcessStartTime.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
+import hashDataSetSpec from './hashDataSetSpec.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPidAlive from './isPidAlive.js';
 import isPortAvailable from './isPortAvailable.js';
 import linkDependenciesToWorkspace from './linkDependenciesToWorkspace.js';
 import linkWorkspaceDependencies from './linkWorkspaceDependencies.js';
+import listDataSets from './listDataSets.js';
+import parseDataSet from './parseDataSet.js';
 import parseIpRange from './parseIpRange.js';
 import readDevInstance from './readDevInstance.js';
 import listRecordingFiles, { RECORDING_SOURCES } from './recordings/listRecordingFiles.js';
@@ -42,8 +46,12 @@ import writeFile from './writeFile.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 import compileTrace from './journeyCompiler/compileTrace.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
+import failurePathKey from './journeyEvidence/failurePathKey.js';
+import isBackedBy from './journeyEvidence/isBackedBy.js';
 import journeySequence from './journeyCompiler/journeySequence.js';
+import listFailurePaths from './journeyCompiler/listFailurePaths.js';
 import parseTraceLines from './journeyCompiler/parseTraceLines.js';
+import profileProduction from './journeyEvidence/profileProduction.js';
 import stepIdentity from './journeyCompiler/stepIdentity.js';
 import validateJourneySteps, {
   getStepKey,
@@ -60,6 +68,8 @@ export {
   copyFileOrDirectory,
   createClientAddressResolver,
   createSecretScrubber,
+  dataSetNamePattern,
+  failurePathKey,
   findAvailablePort,
   findPlaceholderStep,
   findPnpmWorkspaceRoot,
@@ -69,15 +79,21 @@ export {
   getFileSubExtension,
   getProcessStartTime,
   getSecretsFromEnv,
+  hashDataSetSpec,
   installIfPackageJsonChanged,
+  isBackedBy,
   isPidAlive,
   isPortAvailable,
   journeySequence,
   linkDependenciesToWorkspace,
   linkWorkspaceDependencies,
+  listDataSets,
+  parseDataSet,
+  listFailurePaths,
   listRecordingFiles,
   parseIpRange,
   parseTraceLines,
+  profileProduction,
   readDevInstance,
   readRecordings,
   RECORDING_SOURCES,
