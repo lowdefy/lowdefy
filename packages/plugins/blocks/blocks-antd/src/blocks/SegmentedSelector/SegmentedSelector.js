@@ -90,10 +90,12 @@ const SegmentedSelector = ({
             disabled={disabled}
             vertical={properties.vertical}
             shape={properties.shape}
+            // An undefined value leaves antd's Segmented uncontrolled, and it then selects its
+            // first option; null keeps it controlled with nothing selected.
             value={
               type.isNone(value)
-                ? undefined
-                : getSelectedIndex(value, uniqueValueOptions, { properties })
+                ? null
+                : getSelectedIndex(value, uniqueValueOptions, { properties }) ?? null
             }
             onChange={(index) => {
               const val = type.isPrimitive(uniqueValueOptions[index])

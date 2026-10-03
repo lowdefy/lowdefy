@@ -19,6 +19,7 @@ import { readFile, writeFile } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import agentsMd from './agentsMd.js';
+import replaceLegacyServerName from './replaceLegacyServerName.js';
 
 const lowdefyHeadingPattern = /^##\s+Lowdefy\b/m;
 
@@ -60,6 +61,14 @@ async function upsertAgentsMdSection({ context, projectDirectory, appPath, devCo
   if (withSection) {
     const current = findLowdefySection(withSection.content);
     if (!current.text.includes(PORT_PINNED_SECTION_MARKER)) {
+      const renamed = replaceLegacyServerName(withSection.content);
+      if (renamed !== withSection.content) {
+        await writeFile(withSection.filePath, renamed);
+        context.logger.info(
+          `Renamed the MCP server in the 'Lowdefy' section of '${withSection.fileName}'.`
+        );
+        return;
+      }
       context.logger.info(`'${withSection.fileName}' already has a 'Lowdefy' section - skipping.`);
       return;
     }
