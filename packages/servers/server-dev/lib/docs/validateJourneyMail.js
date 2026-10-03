@@ -15,8 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-
-import { getStepKey } from './validateJourneySteps.js';
+import { getStepKey } from '@lowdefy/node-utils';
 
 function readsMail(step) {
   const key = getStepKey(step);

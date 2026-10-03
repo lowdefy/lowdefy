@@ -16,6 +16,7 @@
 
 import axios from 'axios';
 import { type } from '@lowdefy/helpers';
+import { findPlaceholderStep } from '@lowdefy/node-utils';
 
 import validateJourney from './validateJourney.js';
 
@@ -50,6 +51,12 @@ async function runJourney({ item, url }) {
     };
   }
   const stepCount = journey.steps.length;
+  // The dev server refuses a placeholder too; checking here reports it without
+  // the round trip.
+  const { error: placeholderError } = findPlaceholderStep({ steps: journey.steps });
+  if (!type.isUndefined(placeholderError)) {
+    return { name, filePath, passed: false, stepCount, durationMs: 0, message: placeholderError };
+  }
   const start = Date.now();
   let response;
   try {

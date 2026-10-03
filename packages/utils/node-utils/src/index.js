@@ -38,15 +38,28 @@ import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
+import compileTrace from './journeyCompiler/compileTrace.js';
+import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
+import journeySequence from './journeyCompiler/journeySequence.js';
+import parseTraceLines from './journeyCompiler/parseTraceLines.js';
+import stepIdentity from './journeyCompiler/stepIdentity.js';
+import validateJourneySteps, {
+  getStepKey,
+  STEP_KEYS,
+  TARGET_KEYS,
+} from './journeyGrammar/validateJourneySteps.js';
+import validateTraceRecord from './journeyTrace/validateTraceRecord.js';
 
 export {
   checkEnvironmentGuards,
   cleanDirectory,
   collectEnvironmentGuards,
+  compileTrace,
   copyFileOrDirectory,
   createClientAddressResolver,
   createSecretScrubber,
   findAvailablePort,
+  findPlaceholderStep,
   findPnpmWorkspaceRoot,
   findWorkspacePackages,
   getDevInstancePath,
@@ -57,12 +70,20 @@ export {
   installIfPackageJsonChanged,
   isPidAlive,
   isPortAvailable,
+  journeySequence,
   linkDependenciesToWorkspace,
   linkWorkspaceDependencies,
   parseIpRange,
+  parseTraceLines,
   readDevInstance,
   spawnProcess,
+  stepIdentity,
   readFile,
   writeFile,
   writeFileIfChanged,
+  getStepKey,
+  STEP_KEYS,
+  TARGET_KEYS,
+  validateJourneySteps,
+  validateTraceRecord,
 };
