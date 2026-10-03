@@ -300,7 +300,7 @@ To promote a candidate, move it into `tests/journeys/`, give it a name, fill eve
 ### Options
 
 - `[traceFiles...]`: The trace files to compile, wherever they are.
-- `--source <production|dev|explorer>`: Compile only records of this source. Required when no trace files are given; with files, the source comes from the records. Journey runs (`journey` traces) are coverage, not candidates, and are refused.
+- `--source <production|dev|explorer>`: Compile only records of this source. Required when no trace files are given; with files, the source comes from the records. `--source production` with no files reads the cache [`lowdefy journeys pull posthog`](#production-journeys) writes, and fails naming the pull to run when a day of the window is missing. Journey runs (`journey` traces) are coverage, not candidates, and are refused.
 - `--since <since>`: Only records at or after this time, as a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production traces default to the last 30 days.
 - `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: Production only. An explicit window of whole UTC days instead of `--since`.
 - `--build <id|current>`: Only segments whose records all ran on this build. `current` is the build the running development server for the app serves, which changes with every config edit; with no server running, the newest build in the records is used and the command says so.
