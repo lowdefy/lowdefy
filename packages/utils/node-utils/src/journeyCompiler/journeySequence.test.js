@@ -16,7 +16,6 @@
 
 import journeySequence from './journeySequence.js';
 import normaliseBlockId from './normaliseBlockId.js';
-import pageIdFromPath from './pageIdFromPath.js';
 import stepIdentity from './stepIdentity.js';
 
 test('normaliseBlockId replaces nested list indices with $', () => {
@@ -211,11 +210,17 @@ test('journeySequence reads a fill with fromEmail as a fill', () => {
   ).toEqual([{ page: 'verify', identity: '["fill","code",null,null]' }]);
 });
 
-test('pageIdFromPath maps an app path to its page id under the /<pageId> URL scheme', () => {
-  expect(pageIdFromPath({ path: '/orders' })).toBe('orders');
-  expect(pageIdFromPath({ path: '/orders?tab=items' })).toBe('orders');
-  expect(pageIdFromPath({ path: '/orders/' })).toBe('orders');
-  expect(pageIdFromPath({ path: '/' })).toBeUndefined();
-  // A fragment of a URL names no page, so the journey stays where it was.
-  expect(pageIdFromPath({ path: 'tab=items' })).toBeUndefined();
+test('journeySequence moves the page only at an expect.url contains that is an app path', () => {
+  const sequence = journeySequence({
+    pageId: 'orders',
+    steps: [
+      { expect: { url: { contains: 'tab=items' } } },
+      { click: 'a' },
+      { expect: { url: { contains: '/' } } },
+      { click: 'b' },
+      { expect: { url: { contains: '/settings/?tab=items' } } },
+      { click: 'c' },
+    ],
+  });
+  expect(sequence.map((entry) => entry.page)).toEqual(['orders', 'orders', 'settings']);
 });
