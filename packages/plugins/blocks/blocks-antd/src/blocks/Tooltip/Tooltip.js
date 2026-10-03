@@ -36,7 +36,7 @@ const TooltipBlock = ({ blockId, classNames = {}, content, properties, methods, 
     destroyOnHidden={properties.destroyOnHidden ?? properties.destroyTooltipOnHide}
     mouseEnterDelay={properties.mouseEnterDelay}
     mouseLeaveDelay={properties.mouseLeaveDelay}
-    placement={properties.placement}
+    placement={properties.placement ?? undefined}
     trigger={properties.trigger ?? 'hover'}
     zIndex={properties.zIndex}
     onOpenChange={(open) => methods.triggerEvent({ name: 'onOpenChange', event: { open } })}

@@ -56,7 +56,7 @@ _ref:
 
           Defaults are declared in `module.lowdefy.yaml` and resolve on read. Defaults are expressions — they can be literals, `_ref`s, `_module.var` references to other vars, or any `_build.*` tree. See [Writing Modules → Dynamic Defaults](/module-authoring#dynamic-defaults) for patterns.
 
-          Vars with `properties` merge at the property level — only consumer-provided keys override the declared defaults, and missing properties resolve their own defaults independently.
+          Vars with `properties` merge at the property level — only consumer-provided keys override the declared defaults, and missing properties resolve their own defaults independently. A declared property with no consumer value and no default is left out of the object rather than set to `null`, so a block that receives the object applies its own default for that property. A property with no default that the consumer sets to `null` stays `null`.
 
         arguments: |
           ###### string

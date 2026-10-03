@@ -62,7 +62,7 @@ const TreeMultipleSelector = ({
     ? selectedIndices.map((index) => ({ value: index }))
     : selectedIndices;
 
-  let antdVariant = properties.variant;
+  let antdVariant = properties.variant ?? undefined;
   if (properties.bordered === false) antdVariant = 'borderless';
   // antd only shows its loading indicator when no suffixIcon is passed, so swap ours for a spinner.
   const suffixIcon = loading ? (
@@ -111,9 +111,9 @@ const TreeMultipleSelector = ({
               // antd 6 names the default size `medium`; `default` is not an antd size.
               size={properties.size === 'default' ? 'medium' : properties.size}
               autoFocus={properties.autoFocus}
-              listHeight={properties.listHeight}
+              listHeight={properties.listHeight ?? undefined}
               loading={loading}
-              maxCount={properties.maxCount}
+              maxCount={properties.maxCount ?? undefined}
               maxTagCount={properties.maxTagCount}
               placement={properties.placement}
               popupMatchSelectWidth={properties.popupMatchSelectWidth}

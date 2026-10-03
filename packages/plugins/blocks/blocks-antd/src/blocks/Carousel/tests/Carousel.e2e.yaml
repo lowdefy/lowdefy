@@ -316,3 +316,31 @@ blocks:
               - left
           then: Swiped left
           else: ''
+
+  # ============================================
+  # NULL PROPERTIES
+  # ============================================
+
+  # _state on a missing key gives null, which must fall back to react-slick's defaults.
+  - id: carousel_null_props
+    type: Carousel
+    properties:
+      slidesToShow:
+        _state: carousel_null_missing
+      slidesToScroll:
+        _state: carousel_null_missing
+      speed:
+        _state: carousel_null_missing
+    slots:
+      slide1:
+        blocks:
+          - id: carousel_null_props_slide1
+            type: Span
+            properties:
+              content: Null Slide 1
+      slide2:
+        blocks:
+          - id: carousel_null_props_slide2
+            type: Span
+            properties:
+              content: Null Slide 2
