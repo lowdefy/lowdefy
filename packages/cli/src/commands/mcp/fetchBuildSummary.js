@@ -14,13 +14,17 @@
   limitations under the License.
 */
 
+import { devPassiveHeader } from '@lowdefy/node-utils';
+
 // Status must answer even when the dev server has stopped responding.
 const BUILD_SUMMARY_TIMEOUT_MS = 10000;
 
 // The counts lowdefy_dev_status reports, or null when the server cannot say.
 async function fetchBuildSummary({ url, timeoutMs = BUILD_SUMMARY_TIMEOUT_MS }) {
   try {
+    // Passive: an agent polling lowdefy_dev_status must not keep an idle server alive.
     const response = await fetch(`${url}/lowdefy-docs/build-status`, {
+      headers: { [devPassiveHeader]: '1' },
       signal: AbortSignal.timeout(timeoutMs),
     });
     const { build, pages, clientErrors = [], serverErrors = [] } = await response.json();

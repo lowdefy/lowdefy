@@ -14,53 +14,24 @@
   limitations under the License.
 */
 
-import { chromium } from 'playwright-core';
 import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 import lowdefyConfig from '../build/config.js';
+import createBrowserLifecycle from './createBrowserLifecycle.js';
 import isPageReady from './isPageReady.js';
+import launchBrowser from './launchBrowser.js';
 import { HEADLESS_USER_COOKIE } from '../server/auth/headlessUser.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
 import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js';
 import recordingCookiePayload from '../server/recording/recordingCookiePayload.js';
 
-// playwright-core does not bundle a browser (unlike @playwright/test) — it
-// only drives one that is already installed. `channel: 'chrome'` picks up a
-// system Chrome install first since that's more likely to already be
-// present than a Playwright-managed Chromium in a dev environment.
-async function launchBrowser() {
-  try {
-    return await chromium.launch({ channel: 'chrome' });
-  } catch {
-    return await chromium.launch();
-  }
-}
-
-// Module-level singleton — a browser process is expensive to start, so it is
-// launched once and reused across every headless caller (screenshots, state
-// inspection, operator evaluation). Cached as a promise so concurrent calls
-// awaiting startup share the same launch instead of racing.
-let browserPromise = null;
-
-async function getBrowser() {
-  if (type.isNone(browserPromise)) {
-    // Clear the cache on failure so the next call retries the launch
-    // instead of replaying a cached rejection forever.
-    browserPromise = launchBrowser().catch((error) => {
-      browserPromise = null;
-      throw error;
-    });
-  }
-  let browser = await browserPromise;
-  if (!browser.isConnected()) {
-    browserPromise = launchBrowser().catch((error) => {
-      browserPromise = null;
-      throw error;
-    });
-    browser = await browserPromise;
-  }
-  return browser;
-}
+// Module-level singleton, shared by every headless caller (screenshots,
+// journeys, state inspection, operator evaluation, state loads) and closed
+// after 90 s unused. See createBrowserLifecycle.js.
+const { getBrowser, trackContext } = createBrowserLifecycle({
+  launch: launchBrowser,
+  idleTimeout: 90_000,
+});
 
 // `origin` should already include any configured basePath prefix that the
 // caller can't derive itself (e.g. from a request URL) — here it's read from
@@ -106,6 +77,7 @@ async function openPage({
   // colorScheme is what the page's `prefers-color-scheme` media query reports,
   // so an app following the system theme renders light or dark accordingly.
   const context = await browser.newContext({ viewport: { width, height }, colorScheme });
+  trackContext(context);
   // From here a failure must close the context before rethrowing: callers only
   // learn about the context from the return value, so an error thrown mid-open
   // (a navigation that times out, a crashed page) would otherwise

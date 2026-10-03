@@ -20,6 +20,7 @@ import { findPlaceholderStep, validateJourneySteps } from '@lowdefy/node-utils';
 
 import collectExercised from './collectExercised.js';
 import { getBrowser, buildPageUrl } from './getBrowser.js';
+import noBrowserError from './noBrowserError.js';
 import openJourney from './openJourney.js';
 import readBuildArtifact from './readBuildArtifact.js';
 import runJourneySteps from './runJourneySteps.js';
@@ -28,6 +29,7 @@ import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneyMail from './validateJourneyMail.js';
 import validateJourneyTimeout from './validateJourneyTimeout.js';
 import validateStateSelection from './validateStateSelection.js';
+import withBrowserSlot from './withBrowserSlot.js';
 
 // The final state is read even after a failure — it is what an agent needs to
 // write the next assertion. A page that has navigated away or crashed may not
@@ -112,13 +114,49 @@ async function runJourney({
     return { error: mailError };
   }
 
+  return withBrowserSlot({
+    task: () =>
+      runJourneyInBrowser({
+        origin,
+        basePath,
+        pageId,
+        user,
+        urlQuery,
+        width,
+        height,
+        timeout,
+        stepTimeout,
+        mutantCookie,
+        recording,
+        steps,
+        stateSelection,
+        readConfigFile,
+      }),
+  });
+}
+
+// The part of runJourney that runs in the browser, inside a browser slot.
+async function runJourneyInBrowser({
+  origin,
+  basePath,
+  pageId,
+  user,
+  urlQuery,
+  width,
+  height,
+  timeout,
+  stepTimeout,
+  mutantCookie,
+  recording,
+  steps,
+  stateSelection,
+  readConfigFile,
+}) {
   let browser;
   try {
     browser = await getBrowser();
   } catch (error) {
-    return {
-      error: `No Chromium available. Run: npx playwright install chromium (${error.message})`,
-    };
+    return { error: noBrowserError(error) };
   }
 
   const url = buildPageUrl({ origin, pageId, urlQuery });

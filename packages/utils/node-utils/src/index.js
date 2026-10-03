@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import acquireMachineSlot from './acquireMachineSlot.js';
 import checkEnvironmentGuards from './checkEnvironmentGuards.js';
 import cleanDirectory from './cleanDirectory.js';
 import collectEnvironmentGuards from './collectEnvironmentGuards.js';
@@ -21,12 +22,14 @@ import compareProcessStartTimes from './compareProcessStartTimes.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import createClientAddressResolver from './createClientAddressResolver.js';
 import createSecretScrubber from './createSecretScrubber.js';
+import devPassiveHeader from './devPassiveHeader.js';
 import dataSetNamePattern from './dataSetNamePattern.js';
 import findAvailablePort from './findAvailablePort.js';
 import findPnpmWorkspaceRoot from './findPnpmWorkspaceRoot.js';
 import findWorkspacePackages from './findWorkspacePackages.js';
 import getDevInstancePath from './getDevInstancePath.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
+import getLowdefyHome from './getLowdefyHome.js';
 import getProcessStartTime from './getProcessStartTime.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
 import hashDataSetSpec from './hashDataSetSpec.js';
@@ -72,6 +75,7 @@ import validateJourneySteps, {
 import validateTraceRecord from './journeyTrace/validateTraceRecord.js';
 
 export {
+  acquireMachineSlot,
   checkEnvironmentGuards,
   cleanDirectory,
   collectEnvironmentGuards,
@@ -81,6 +85,7 @@ export {
   copyFileOrDirectory,
   createClientAddressResolver,
   createSecretScrubber,
+  devPassiveHeader,
   dataSetNamePattern,
   failurePathKey,
   findAvailablePort,
@@ -90,6 +95,7 @@ export {
   getDevInstancePath,
   getFileExtension,
   getFileSubExtension,
+  getLowdefyHome,
   getProcessStartTime,
   getSecretsFromEnv,
   hashDataSetSpec,
