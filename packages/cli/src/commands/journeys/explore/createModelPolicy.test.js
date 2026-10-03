@@ -175,6 +175,23 @@ test('an answer outside the options falls back to the seeded choice and says so;
   expect(result.cost.usd).toBeCloseTo(3200 / 1e6 + (30 * 4) / 1e6, 10);
 });
 
+test('a call that reports neither cost nor tokens is charged the per-question floor, estimated', async () => {
+  const policy = await createModelPolicy({
+    backend: 'evaluation',
+    modelId: 'jev',
+    apiKey: 'k',
+    seeded: createSeededPolicy(),
+  });
+  mockDecide.mockResolvedValue({
+    answers: { next: { choice: 'o1', confidence: 0.8 }, relevance: { level: 'near the change' } },
+  });
+  const result = await policy.choose(step({ candidates: three }));
+  expect(result.usage).toEqual({ inputTokens: 0, outputTokens: 0 });
+  expect(result.cost.estimated).toBe(true);
+  expect(result.cost.usd).toBeGreaterThan(0);
+  expect(result.cost.usd).toBeGreaterThanOrEqual((2 * 4000) / 1e6 + (2 * 50 * 4) / 1e6);
+});
+
 test('failed calls fall back to the seeded choice, and three in a row throw the Gateway error', async () => {
   const policy = await createModelPolicy({
     backend: 'structured-output',

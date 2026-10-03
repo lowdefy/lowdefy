@@ -86,7 +86,12 @@ async function createModelPolicy({ backend, modelId, apiKey, seeded }) {
     }
     failedCalls = 0;
     answeredOnce = true;
-    const { inputTokens, outputTokens, usd, estimated } = readCallCost(result);
+    const { inputTokens, outputTokens, usd, estimated } = readCallCost({
+      usage: result.usage,
+      providerMetadata: result.providerMetadata,
+      state,
+      questions,
+    });
     const answer = {
       asked: true,
       relevance: result.answers.relevance?.level ?? null,

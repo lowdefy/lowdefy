@@ -20,28 +20,52 @@ import { type } from '@lowdefy/helpers';
 // cheap models the explorer targets, so the spending cap always holds.
 const ESTIMATED_INPUT_USD_PER_TOKEN = 1 / 1_000_000;
 const ESTIMATED_OUTPUT_USD_PER_TOKEN = 4 / 1_000_000;
+// Tokens charged per question when the backend reports no token counts
+// either: a question is about 3-4k input tokens and a few dozen output.
+// Without this floor an uncounted call costs nothing and --max-cost never
+// trips.
+const FLOOR_INPUT_TOKENS_PER_QUESTION = 4000;
+const FLOOR_OUTPUT_TOKENS_PER_QUESTION = 50;
+const CHARACTERS_PER_TOKEN = 4;
 
-function tokens(value) {
+function reportedTokens(value) {
   if (type.isNumber(value)) return value;
   if (type.isNumber(value?.total)) return value.total;
-  return 0;
+  return null;
+}
+
+function floorInputTokens({ state, questions }) {
+  const promptTokens = Math.ceil(
+    JSON.stringify({ state, questions }).length / CHARACTERS_PER_TOKEN
+  );
+  return Math.max(promptTokens, Object.keys(questions).length * FLOOR_INPUT_TOKENS_PER_QUESTION);
 }
 
 // One model call's tokens and cost: the cost the AI Gateway reports in
 // providerMetadata.gateway.cost, else an estimate from the tokens at a
-// conservative fixed rate, flagged estimated.
-function readCallCost({ usage, providerMetadata }) {
-  const inputTokens = tokens(usage?.inputTokens);
-  const outputTokens = tokens(usage?.outputTokens);
-  const reported = Number.parseFloat(providerMetadata?.gateway?.cost);
-  if (Number.isFinite(reported)) {
-    return { inputTokens, outputTokens, usd: reported, estimated: false };
+// conservative fixed rate, flagged estimated. A token count the backend does
+// not report is estimated from the prompt (state and questions) at four
+// characters a token, and never below the per-question floor. The returned
+// token counts are only what the backend reported.
+function readCallCost({ usage, providerMetadata, state, questions }) {
+  const inputTokens = reportedTokens(usage?.inputTokens);
+  const outputTokens = reportedTokens(usage?.outputTokens);
+  const reported = {
+    inputTokens: inputTokens ?? 0,
+    outputTokens: outputTokens ?? 0,
+  };
+  const reportedCost = Number.parseFloat(providerMetadata?.gateway?.cost);
+  if (Number.isFinite(reportedCost)) {
+    return { ...reported, usd: reportedCost, estimated: false };
   }
+  const chargedInputTokens = inputTokens ?? floorInputTokens({ state, questions });
+  const chargedOutputTokens =
+    outputTokens ?? Object.keys(questions).length * FLOOR_OUTPUT_TOKENS_PER_QUESTION;
   return {
-    inputTokens,
-    outputTokens,
+    ...reported,
     usd:
-      inputTokens * ESTIMATED_INPUT_USD_PER_TOKEN + outputTokens * ESTIMATED_OUTPUT_USD_PER_TOKEN,
+      chargedInputTokens * ESTIMATED_INPUT_USD_PER_TOKEN +
+      chargedOutputTokens * ESTIMATED_OUTPUT_USD_PER_TOKEN,
     estimated: true,
   };
 }
