@@ -20,6 +20,7 @@ import createDocsMcpServer, {
   subscribeMcpServerToDevEvents,
 } from '../../../lib/docs/createDocsMcpServer.js';
 import { bootedAt } from '../../../lib/docs/devEventBus.js';
+import keepEventStreamAlive from '../../../lib/docs/keepEventStreamAlive.js';
 
 // Stateless per-request server: docs tools read build artifacts fresh on
 // every call, so there is no session state worth keeping between requests.
@@ -32,7 +33,7 @@ async function mcpHandler(c) {
   const transport = new StreamableHTTPTransport();
   await server.connect(transport);
   if (c.req.method !== 'GET') {
-    return transport.handleRequest(c);
+    return keepEventStreamAlive({ response: await transport.handleRequest(c) });
   }
 
   // Three unsubscribe paths: an explicit close, a dropped connection, and (via
