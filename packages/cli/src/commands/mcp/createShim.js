@@ -49,7 +49,7 @@ const HIDDEN_DEV_TOOLS = new Set(['lowdefy_restart']);
 
 const LIFECYCLE_TOOL_NAMES = new Set(lifecycleTools.map((tool) => tool.name));
 
-const SHIM_INSTRUCTIONS = `This is \`lowdefy mcp\`. It routes every lowdefy_ tool to the dev server of the app you are working in and starts that server when it is not running - never run \`lowdefy dev\` yourself, never choose ports, and never kill processes by port or name; use lowdefy_dev_start (restart: true after local plugin or .env changes) and lowdefy_dev_stop. Pass "directory" when you work in a different git worktree from the session (for example as a subagent), when the repository holds several apps, or when you work on another project; it must be in this checkout, one of its git worktrees, or a repository the user trusts (the user is asked, or runs \`lowdefy hub trust <directory>\` in their own terminal; never run \`lowdefy hub trust\` yourself). If lowdefy_dev_start reports that dependencies are not installed, run the install command it names, then call it again. Every result starts with the app and checkout it came from. When you finish work in a git worktree you created for the task, call lowdefy_dev_stop with that "directory" before you report back. Do not stop a server in a checkout you share with another agent. A server left running stops once it has been idle for 15 minutes.`;
+const SHIM_INSTRUCTIONS = `This is \`lowdefy mcp\`. It routes every lowdefy_ tool to the dev server of the app you are working in and starts that server when it is not running - never run \`lowdefy dev\` yourself, never choose ports, and never kill processes by port or name; use lowdefy_dev_start and lowdefy_dev_stop. Restart (lowdefy_dev_start with restart: true) only when the server seems stuck or build status looks stale, or after secrets a wrapper (for example infisical) injects have changed; .env edits and local plugin code are picked up without one. Pass "directory" when you work in a different git worktree from the session (for example as a subagent), when the repository holds several apps, or when you work on another project; it must be in this checkout, one of its git worktrees, or a repository the user trusts (the user is asked, or runs \`lowdefy hub trust <directory>\` in their own terminal; never run \`lowdefy hub trust\` yourself). If lowdefy_dev_start reports that dependencies are not installed, run the install command it names, then call it again. Every result starts with the app and checkout it came from. When you finish work in a git worktree you created for the task, call lowdefy_dev_stop with that "directory" before you report back. Do not stop a server in a checkout you share with another agent. A server left running stops once it has been idle for 15 minutes.`;
 
 // The hub stops servers nobody uses (see the hub's reaper); an agent that
 // knows it can stop its own and need not keep one alive.
@@ -285,7 +285,7 @@ function createShim({ cliVersion, cwd, devTools }) {
         ...running,
         note: `Restarted in place. This server runs in the user's terminal, so ${
           clean ? 'the build directory was not cleaned and ' : ''
-        }new local plugin code or .env changes need the user to restart it.`,
+        }secrets a wrapper (for example infisical) injects only change when the user restarts it.`,
       };
     }
     // Before the hub is asked for anything, so an uninstalled app gets the

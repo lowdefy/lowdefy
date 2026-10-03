@@ -48,6 +48,14 @@ jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
 const mockBuildPageIfNeeded = jest.fn(async () => true);
 jest.unstable_mockModule('../server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
+  reviewBuiltPage: async () => 'current',
+  syncBuildSignals: () => ({
+    registry: JSON.parse(
+      fs.readFileSync(path.join(fixtureDir, 'build', 'pageRegistry.json'), 'utf8')
+    ),
+    eventCounter: 0,
+    generation: 1,
+  }),
 }));
 
 const { default: listTypes } = await import('./listTypes.js');
@@ -238,9 +246,9 @@ test('clientErrorStore caps at 50 entries, evicting the oldest first', () => {
   expect(entries[49].index).toEqual(59);
 });
 
-test('getBuildStatus returns the build artifact plus reported client and server errors', () => {
+test('getBuildStatus returns the build artifact plus reported client and server errors', async () => {
   serverErrorStore.push({ name: 'RequestError', message: 'Bad filter.', source: 'pages/a.yaml:3' });
-  const result = getBuildStatus();
+  const result = await getBuildStatus();
   expect(result.build.status).toEqual('ok');
   expect(result.clientErrors.length).toEqual(50);
   expect(result.serverErrors).toEqual([
@@ -255,9 +263,9 @@ test('getBuildStatus returns the build artifact plus reported client and server 
   expect(result.pages.unbuilt).toEqual(expect.any(Number));
 });
 
-test('getBuildStatus reports unknown status when buildStatus.json is missing', () => {
+test('getBuildStatus reports unknown status when buildStatus.json is missing', async () => {
   fs.rmSync(path.join(fixtureDir, 'build', 'buildStatus.json'));
-  const result = getBuildStatus();
+  const result = await getBuildStatus();
   expect(result.build.status).toEqual('unknown');
   expect(result.build.message).toContain('No build status yet');
 });

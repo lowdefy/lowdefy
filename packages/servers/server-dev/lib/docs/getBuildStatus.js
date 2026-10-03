@@ -38,7 +38,7 @@ function splitByBuild({ entries, buildId }) {
 // tailing terminal logs. Errors reported under an earlier build are listed
 // apart under earlierErrors. `buildId` names the build being served now, which
 // `--build current` on the journey commands reads.
-function getBuildStatus({ checked } = {}) {
+async function getBuildStatus({ checked } = {}) {
   const build = readBuildArtifact({ name: 'buildStatus.json' }) ?? {
     status: 'unknown',
     message:
@@ -51,7 +51,7 @@ function getBuildStatus({ checked } = {}) {
   const status = {
     buildId,
     build,
-    pages: getPageBuildStatus({ checked }),
+    pages: await getPageBuildStatus({ checked }),
     clientErrors: clientErrors.current,
     serverErrors: serverErrors.current,
   };

@@ -26,10 +26,10 @@ import waitForBuild from './waitForBuild.js';
 async function getBuildStatusAfterEdits({ proxyWait } = {}) {
   const waited = proxyWait ?? (await waitForBuild());
   if (!waited.settled) {
-    return { ...waited, ...getBuildStatus() };
+    return { ...waited, ...(await getBuildStatus()) };
   }
   const checked = await buildEditedPages();
-  return { ...waited, ...getBuildStatus({ checked }) };
+  return { ...waited, ...(await getBuildStatus({ checked })) };
 }
 
 export default getBuildStatusAfterEdits;

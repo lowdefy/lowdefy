@@ -210,7 +210,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       });
       return textResult(await getBuildStatusAfterEdits({ proxyWait }));
     }
-    return textResult(getBuildStatus());
+    return textResult(await getBuildStatus());
   });
 
   registerDevTool('lowdefy_get_page_config', async ({ pageId }) => {

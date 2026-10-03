@@ -17,9 +17,14 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import { jest } from '@jest/globals';
+import { ConfigError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
-import { getBuildContext } from './jitPageBuilder.js';
+import buildPageIfNeeded, { getBuildContext } from './jitPageBuilder.js';
+import createHandleError from './log/createHandleError.js';
+import pageBuildRecords from './pageBuildRecords.js';
+import readMergedMaps from './readMergedMaps.js';
 
 // The dev page build context restores the tenant facts the skeleton build
 // wrote, so page requests get the same tenant pipeline checks as a full build.
@@ -53,4 +58,161 @@ test('getBuildContext restores the scoped connections, walled collections and sh
     field: 'organization_id',
   });
   expect(context.sharedTargets.get('orders_all')).toEqual(shared);
+});
+
+// A JIT page build loads the build package's plugins on first use.
+jest.setTimeout(30000);
+
+function writeJson(filePath, data) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, JSON.stringify(data));
+}
+
+// A config build's output, as far as a JIT page build reads it.
+function createApp({ pages }) {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'ldf-jit-maps-'));
+  const buildDirectory = path.join(root, 'server', 'build');
+  const configDirectory = path.join(root, 'config');
+  writeJson(path.join(buildDirectory, 'idCounter.json'), { prefix: 'cfg1_', counter: 10 });
+  writeJson(path.join(buildDirectory, 'keyMap.json'), {
+    cfg1_1: { key: 'root', '~r': 'cfg1_r' },
+  });
+  writeJson(path.join(buildDirectory, 'refMap.json'), {
+    cfg1_r: { parent: null, path: 'lowdefy.yaml' },
+  });
+  writeJson(path.join(buildDirectory, 'installedPluginPackages.json'), [
+    '@lowdefy/actions-core',
+    '@lowdefy/blocks-antd',
+    '@lowdefy/blocks-basic',
+    '@lowdefy/operators-js',
+  ]);
+  writeJson(path.join(buildDirectory, 'theme.json'), {});
+  const registry = {};
+  for (const [pageId, content] of Object.entries(pages)) {
+    fs.mkdirSync(path.join(configDirectory, 'pages'), { recursive: true });
+    fs.writeFileSync(path.join(configDirectory, 'pages', `${pageId}.yaml`), content);
+    registry[pageId] = {
+      pageId,
+      auth: { public: true },
+      refId: `ref-${pageId}`,
+      refPath: `pages/${pageId}.yaml`,
+    };
+  }
+  writeJson(path.join(buildDirectory, 'pageRegistry.json'), registry);
+  return { root, buildDirectory, configDirectory };
+}
+
+function listJitMaps(buildDirectory) {
+  const directory = path.join(buildDirectory, 'jitMaps');
+  return fs.existsSync(directory) ? fs.readdirSync(directory).sort() : [];
+}
+
+// A config build publish renames a new page registry into place.
+function publishRegistry(buildDirectory) {
+  const registryPath = path.join(buildDirectory, 'pageRegistry.json');
+  const stagedPath = `${registryPath}.staged`;
+  fs.copyFileSync(registryPath, stagedPath);
+  fs.renameSync(stagedPath, registryPath);
+}
+
+test('a JIT page build leaves keyMap.json and refMap.json as the config build wrote them', async () => {
+  const { root, buildDirectory, configDirectory } = createApp({
+    pages: { home: 'id: home\ntype: Box\nblocks:\n  - id: title\n    type: Box\n' },
+  });
+  const keyMapBefore = fs.readFileSync(path.join(buildDirectory, 'keyMap.json'), 'utf8');
+  const refMapBefore = fs.readFileSync(path.join(buildDirectory, 'refMap.json'), 'utf8');
+
+  await buildPageIfNeeded({ pageId: 'home', buildDirectory, configDirectory });
+
+  expect(fs.readFileSync(path.join(buildDirectory, 'keyMap.json'), 'utf8')).toBe(keyMapBefore);
+  expect(fs.readFileSync(path.join(buildDirectory, 'refMap.json'), 'utf8')).toBe(refMapBefore);
+  const files = listJitMaps(buildDirectory);
+  expect(files).toHaveLength(1);
+  expect(files[0]).toMatch(/^[0-9a-f]{6}-\d+-1\.json$/);
+  const { keyMap } = await readMergedMaps({ buildDirectory });
+  const titleKey = Object.keys(keyMap).find((key) => keyMap[key].key?.includes('title'));
+  // Config build prefix, then this process's id: <cfg prefix><child id>_<counter>.
+  expect(titleKey).toMatch(/^cfg1_[0-9a-f]{6}_[0-9a-z]+$/);
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+test('an error a failing JIT page build throws after its keys were added resolves to its source line', async () => {
+  const { root, buildDirectory, configDirectory } = createApp({
+    pages: {
+      broken:
+        'id: broken\ntype: Box\nblocks:\n  - id: button\n    type: Button\n    events:\n' +
+        '      onClick:\n        - id: act\n          type: UndefinedAction\n',
+    },
+  });
+
+  const error = await buildPageIfNeeded({
+    pageId: 'broken',
+    buildDirectory,
+    configDirectory,
+  }).catch((caught) => caught);
+  const buildError = (error.buildErrors ?? [error]).find((item) => item.configKey);
+  const context = {
+    configDirectory,
+    logger: { error: jest.fn() },
+    readConfigFile: jest.fn(),
+    readMaps: () => readMergedMaps({ buildDirectory }),
+  };
+  // A fresh copy, as the request that logs it would see it.
+  const logged = new ConfigError(buildError.message, { configKey: buildError.configKey });
+  await createHandleError({ context })(logged);
+
+  expect(logged.source).toBe(`${path.join(configDirectory, 'pages', 'broken.yaml')}:8`);
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+test('after two config publishes only the current and previous build contexts keep jitMaps files', async () => {
+  const { root, buildDirectory, configDirectory } = createApp({
+    pages: {
+      a: 'id: a\ntype: Box\n',
+      b: 'id: b\ntype: Box\n',
+      c: 'id: c\ntype: Box\n',
+    },
+  });
+
+  await buildPageIfNeeded({ pageId: 'a', buildDirectory, configDirectory });
+  const [first] = listJitMaps(buildDirectory);
+  publishRegistry(buildDirectory);
+  await buildPageIfNeeded({ pageId: 'b', buildDirectory, configDirectory });
+  publishRegistry(buildDirectory);
+  await buildPageIfNeeded({ pageId: 'c', buildDirectory, configDirectory });
+
+  const files = listJitMaps(buildDirectory);
+  expect(files).toHaveLength(2);
+  expect(files).not.toContain(first);
+  const generations = files.map((file) => Number(file.split('-')[1]));
+  expect(generations[1] - generations[0]).toBe(1);
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+test('a page build that loads app code is recorded as having run it, a YAML-only one is not', async () => {
+  const { root, buildDirectory, configDirectory } = createApp({
+    pages: {
+      plain: 'id: plain\ntype: Box\nblocks:\n  - _ref: blocks/shared.yaml\n',
+      coded: 'id: coded\ntype: Box\nblocks:\n  - _ref: blocks/banner.js\n',
+    },
+  });
+  fs.writeFileSync(path.join(configDirectory, 'package.json'), '{"type":"module"}');
+  fs.mkdirSync(path.join(configDirectory, 'blocks'));
+  fs.writeFileSync(path.join(configDirectory, 'blocks', 'shared.yaml'), 'id: shared\ntype: Box\n');
+  fs.writeFileSync(
+    path.join(configDirectory, 'blocks', 'banner.js'),
+    "export default { id: 'banner', type: 'Box' };\n"
+  );
+
+  await buildPageIfNeeded({ pageId: 'plain', buildDirectory, configDirectory });
+  await buildPageIfNeeded({ pageId: 'coded', buildDirectory, configDirectory });
+
+  const plain = pageBuildRecords.get('plain');
+  expect(plain.ranAppCode).toBe(false);
+  expect([...plain.files.keys()]).toEqual([
+    path.join(configDirectory, 'pages', 'plain.yaml'),
+    path.join(configDirectory, 'blocks', 'shared.yaml'),
+  ]);
+  expect(pageBuildRecords.get('coded').ranAppCode).toBe(true);
+  fs.rmSync(root, { recursive: true, force: true });
 });

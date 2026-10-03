@@ -16,6 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import createPluginSourceIgnore from './createPluginSourceIgnore.mjs';
 import listServerSidePackages from './listServerSidePackages.mjs';
 import readPluginDefinitions from '../utils/readPluginDefinitions.mjs';
 import selectLocalPluginPackages from './selectLocalPluginPackages.mjs';
@@ -32,8 +33,11 @@ function isInside({ filePath, dir }) {
 // clears a build a broken plugin failed. The server process caches the
 // modules of server-side types (requests, connections, operators, ...), so a
 // change to a plugin that has them also restarts the server; client code
-// is Vite's to hot-replace. The package is watched whole: a plugin may be
-// imported from its sources or from a build output its own watcher writes.
+// is Vite's to hot-replace. Only code files anywhere in the package are
+// watched: a plugin may be imported from its sources or from a build output
+// its own watcher writes, but non-code files (public/, YAML, Markdown) are
+// never plugin code, and a package that is also the config directory writes
+// some of them on every build (see createPluginSourceIgnore).
 async function pluginSourceWatcher(context) {
   const plugins = await readPluginDefinitions({ directories: context.directories });
   const packages = selectLocalPluginPackages({
@@ -67,7 +71,7 @@ async function pluginSourceWatcher(context) {
     callback,
     context,
     onBusy: context.buildActivity.setBusy,
-    ignorePaths: ['**/node_modules/**'],
+    ignorePaths: [createPluginSourceIgnore({ directories: context.directories })],
     watchPaths: packages.map(({ dir }) => dir),
   });
 }

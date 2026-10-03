@@ -28,7 +28,7 @@ const CONCURRENT_BUILDS = 4;
 // nobody has opened since the edit. A failed build is recorded by the page
 // builder and reported from there.
 async function buildEditedPages() {
-  const { edited } = reviewPageBuilds();
+  const { edited } = await reviewPageBuilds();
   const buildDirectory = path.join(process.cwd(), 'build');
   const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
   const queue = [...edited];

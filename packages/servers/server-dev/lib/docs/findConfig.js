@@ -19,6 +19,7 @@ import { ConfigError, resolveConfigLocation } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import buildPageIfNeeded from '../server/jitPageBuilder.js';
+import readMergedMaps from '../server/readMergedMaps.js';
 import getHazards from './getHazards.js';
 import readBuildArtifact from './readBuildArtifact.js';
 
@@ -213,9 +214,10 @@ function scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory, pageScope,
 }
 
 // Locates a block/request/connection/etc by id, or a page by pageId. Block
-// content only exists in keyMap once its page has been JIT-built (see
-// lib/server/jitPageBuilder.js), so pass `pageId` to force-build and scan a
-// specific page. Never throws on not-found — agents should be able to treat
+// content is only in the key maps once its page has been JIT-built (see
+// lib/server/jitPageBuilder.js), and the dev server keeps the jitMaps/ files of
+// its current and previous build contexts only, so pass `pageId` to force-build
+// and scan a specific page. Never throws on not-found — agents should be able to treat
 // "no matches" as a normal result and try another id or pageId.
 async function findConfig({ id, pageId }) {
   if (type.isNone(id) || !type.isString(id)) {
@@ -227,6 +229,7 @@ async function findConfig({ id, pageId }) {
 
   const pageRegistry = readBuildArtifact({ name: 'pageRegistry.json' }) ?? {};
   const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
+  const buildDirectory = path.join(process.cwd(), 'build');
 
   // A page's root block renders with blockId === pageId, so open-in-editor
   // and feedback enrichment hit this branch for it — they read
@@ -255,7 +258,6 @@ async function findConfig({ id, pageId }) {
       };
     }
 
-    const buildDirectory = path.join(process.cwd(), 'build');
     try {
       await buildPageIfNeeded({ pageId, buildDirectory, configDirectory });
     } catch (error) {
@@ -265,8 +267,7 @@ async function findConfig({ id, pageId }) {
       };
     }
 
-    const keyMap = readBuildArtifact({ name: 'keyMap.json' }) ?? {};
-    const refMap = readBuildArtifact({ name: 'refMap.json' }) ?? {};
+    const { keyMap, refMap } = await readMergedMaps({ buildDirectory });
     const matches = scanKeyMapWithDeIndex({
       id,
       keyMap,
@@ -285,8 +286,7 @@ async function findConfig({ id, pageId }) {
         };
   }
 
-  const keyMap = readBuildArtifact({ name: 'keyMap.json' }) ?? {};
-  const refMap = readBuildArtifact({ name: 'refMap.json' }) ?? {};
+  const { keyMap, refMap } = await readMergedMaps({ buildDirectory });
   const matches = scanKeyMapWithDeIndex({
     id,
     keyMap,
@@ -297,8 +297,9 @@ async function findConfig({ id, pageId }) {
   return {
     matches,
     note:
-      'Scanned without a pageId — content on pages that have not been JIT-built yet is not ' +
-      'in keyMap and was not covered. Pass ?pageId= to force-build and scan a specific page.',
+      'Scanned without a pageId — only pages built since the last two page edits are ' +
+      'covered; content on other pages was not scanned. Pass ?pageId= to force-build and ' +
+      'scan a specific page.',
   };
 }
 
