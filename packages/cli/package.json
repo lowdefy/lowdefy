@@ -36,7 +36,8 @@
     "clean": "rm -rf dist && rm -rf .lowdefy",
     "start": "node ./dist/index.js",
     "prepublishOnly": "pnpm build",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:fixture": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.fixture.config.js"
   },
   "dependencies": {
     "@ai-sdk/gateway": "4.0.94",

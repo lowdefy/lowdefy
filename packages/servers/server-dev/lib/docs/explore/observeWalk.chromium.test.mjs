@@ -362,7 +362,10 @@ chromiumTest(
     expect(clicks.length).toBeGreaterThan(5);
     for (const candidate of clicks) {
       const clicked = await withPage(async (page) => {
-        const journey = { actors: { current: () => ({ page }) }, stepTimeout: 2000 };
+        const journey = {
+          actors: { current: () => ({ page }), sampleRendered: async () => {} },
+          stepTimeout: 2000,
+        };
         const { failure } = await runSteps({ journey, steps: [{ click: candidate.target }] });
         expect(failure).toBeUndefined();
         return page.evaluate(() => [...new Set(window.__clicked)]);
@@ -376,7 +379,10 @@ chromiumTest(
   'the shape ignores values and the action taken, and changes when a modal opens',
   async () => {
     await withPage(async (page) => {
-      const journey = { actors: { current: () => ({ page }) }, stepTimeout: 2000 };
+      const journey = {
+        actors: { current: () => ({ page }), sampleRendered: async () => {} },
+        stepTimeout: 2000,
+      };
       const before = await observeWalk({ page, walk: snapshotWalk });
       await runSteps({ journey, steps: [{ click: { blockId: 'increment', text: 'Increment' } }] });
       const afterClick = await observeWalk({ page, walk: snapshotWalk });

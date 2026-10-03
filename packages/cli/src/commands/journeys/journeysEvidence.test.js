@@ -260,3 +260,66 @@ test('journeys evidence without a mutation report adds no mutation key', async (
   await journeysEvidence({ context });
   expect(YAML.parse(fs.readFileSync(savesPath, 'utf8')).evidence).not.toHaveProperty('mutation');
 });
+
+// A dev session as the dev server records it: every interaction carries the
+// event it ran, and no person or org.
+function writeDevRecording({ id, start, blocks }) {
+  const records = visit({ session: id, start, blocks }).map(
+    ({ person, org, roles, ...rest }, index) => ({
+      ...rest,
+      source: 'dev',
+      ...(index === 0
+        ? {}
+        : { event: { name: 'onClick', block_id: blocks[index - 1], success: true } }),
+    })
+  );
+  const date = new Date(start).toISOString().slice(0, 10);
+  const directory = path.join(configDirectory, '.lowdefy', 'traces', 'dev', date);
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(
+    path.join(directory, `${id}.jsonl`),
+    records.map((entry) => JSON.stringify(entry)).join('\n')
+  );
+}
+
+test('journeys evidence --refresh counts the dev recordings of the last 7 days that back each journey', async () => {
+  const savesPath = writeJourney('saves.yaml', SAVES);
+  writeDevRecording({
+    id: '20261003T080000Z-dev001',
+    start: Date.parse('2026-10-03T08:00:00Z'),
+    blocks: ['edit', 'title', 'save'],
+  });
+  writeDevRecording({
+    id: '20261001T080000Z-dev002',
+    start: Date.parse('2026-10-01T08:00:00Z'),
+    blocks: ['edit', 'save'],
+  });
+  writeDevRecording({
+    id: '20261002T080000Z-dev003',
+    start: Date.parse('2026-10-02T08:00:00Z'),
+    blocks: ['close'],
+  });
+  // Older than the 7-day window.
+  writeDevRecording({
+    id: '20260920T080000Z-dev004',
+    start: Date.parse('2026-09-20T08:00:00Z'),
+    blocks: ['edit', 'save'],
+  });
+  context.options.refresh = true;
+  await journeysEvidence({ context });
+  const journey = YAML.parse(fs.readFileSync(savesPath, 'utf8'));
+  expect(journey.evidence.dev).toEqual({ recordings: 2 });
+  expect(validateJourney({ journey })).toEqual({ valid: true });
+  expect(logged.some((line) => line.includes('2 dev recordings'))).toBe(true);
+});
+
+test('journeys evidence keeps the committed dev.recordings when this machine has no dev recordings', async () => {
+  const savesPath = writeJourney(
+    'saves.yaml',
+    SAVES.replace('steps:', 'evidence:\n  dev: { recordings: 5 }\n  refreshed: 2026-09-01\nsteps:')
+  );
+  context.options.refresh = true;
+  await journeysEvidence({ context });
+  const journey = YAML.parse(fs.readFileSync(savesPath, 'utf8'));
+  expect(journey.evidence.dev).toEqual({ recordings: 5 });
+});

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { validateTraceRecord } from '@lowdefy/node-utils';
+import { compileTrace, profileProduction, validateTraceRecord } from '@lowdefy/node-utils';
 
 import buildDayRecords from './buildDayRecords.js';
 import { chains, ORG_ID, PERSON_ID, row, SESSION_ID } from './tests/postHogRows.js';
@@ -219,13 +219,51 @@ test('buildDayRecords keeps an app failure as an engine record with scope app', 
   const { records } = buildDayRecords({
     rows: [
       click({ uuid: 'c1', ms: 0 }),
-      failure({ uuid: 'f1', ms: 10, scope: 'app', blockId: 'root', eventName: 'onInitAsync' }),
+      failure({ uuid: 'f1', ms: 10, scope: 'app', blockId: 'app', eventName: 'onInitAsync' }),
     ],
     salt,
   });
   expect(records[1]).toMatchObject({ kind: 'engine', scope: 'app' });
   expect(records[1].event.name).toBe('onInitAsync');
   expect(validateTraceRecord({ record: records[1] })).toEqual({});
+});
+
+// An app that serves its home page at `/` renders it there with no redirect,
+// so the app events run with `$pathname: /`. The plugin names the page the app
+// loaded on in lowdefy_page_id, and `app` as the block, so the failure keeps
+// its page and is not dropped with the root pageview's missing name.
+test('buildDayRecords keeps an app failure captured at the root path and profiles it as app.<event>', () => {
+  const { records, dropped } = buildDayRecords({
+    rows: [
+      row({
+        uuid: 'p1',
+        timestamp: at(0),
+        event: '$pageview',
+        pathname: '/',
+        lowdefy_page_id: 'tickets',
+      }),
+      failure({
+        uuid: 'f1',
+        ms: 5,
+        pathname: '/',
+        scope: 'app',
+        blockId: 'app',
+        eventName: 'onInitAsync',
+        lowdefy_action_type: 'CallAPI',
+        lowdefy_error_name: 'RequestError',
+      }),
+      click({ uuid: 'c1', ms: 2000, pathname: '/', lowdefy_page_id: 'tickets' }),
+    ],
+    salt,
+  });
+  expect(dropped).toEqual({});
+  expect(records.map((record) => record.kind)).toEqual(['pageview', 'engine', 'click']);
+  expect(records[1]).toMatchObject({ kind: 'engine', scope: 'app', page_id: 'tickets', url: '/' });
+  records.forEach((record) => expect(validateTraceRecord({ record })).toEqual({}));
+
+  const { segments } = compileTrace({ records, blockMetas: {}, source: 'production' });
+  const { failurePaths } = profileProduction({ segments });
+  expect(failurePaths.map((path) => path.key)).toEqual(['app.onInitAsync']);
 });
 
 test('buildDayRecords does not pair across tabs', () => {

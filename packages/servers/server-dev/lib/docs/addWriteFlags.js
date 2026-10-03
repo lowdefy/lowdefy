@@ -31,7 +31,7 @@ async function addWriteFlags({ requests, endpoints, readConfigFile, requestSchem
   async function readEndpoint(endpointId) {
     if (!routines.has(endpointId)) {
       const artifact = await readConfigFile(`api/${endpointId}.json`);
-      const steps = readRoutineSteps({ routine: artifact?.routine });
+      const steps = readRoutineSteps({ routine: artifact.routine });
       routines.set(endpointId, {
         writes: steps.some((step) => isWriteType(step.type)),
         targets: steps

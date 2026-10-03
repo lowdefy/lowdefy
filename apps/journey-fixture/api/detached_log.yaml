@@ -1,0 +1,13 @@
+# Reached only through notify's detached CallApi, so the browser never sees
+# it: a mutant here applies only when the loopback call carries the cookie.
+id: detached_log
+type: Api
+routine:
+  - id: insert_detached
+    type: MongoDBInsertOne
+    connectionId: fixture_db
+    properties:
+      doc:
+        kind: detached
+  - ':return':
+      logged: true

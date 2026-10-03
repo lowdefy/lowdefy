@@ -22,6 +22,7 @@
     pnpm dev                                                    # app/ with defaults
     pnpm dev --config-directory /path/to/app --log-level debug  # external app
     pnpm dev --no-open --port 3001                              # custom port, no browser
+    pnpm dev --dev-directory _server/dev-fixture                # a second copy beside _server/dev
 
   LOWDEFY_DEV_PORT (set by the Lowdefy hub) outranks --port and binds strictly.
 
@@ -57,6 +58,7 @@ const {
 } = parse({
   open: { type: 'boolean', default: false },
   port: { type: 'string', default: '3000' },
+  'dev-directory': { type: 'string', default: '_server/dev' },
   watch: { type: 'string', multiple: true, default: [] },
   'watch-ignore': { type: 'string', multiple: true, default: [] },
 });
@@ -71,7 +73,9 @@ const port = hubAllocated ? hubPort : args['port'];
 const watchPaths = args['watch'];
 const watchIgnorePaths = args['watch-ignore'];
 
-const devDir = path.join(REPO_ROOT, '_server/dev');
+// A test harness serving its own fixture app passes another directory, so it
+// never replaces the copy a developer's `pnpm app:dev` is running from.
+const devDir = path.resolve(REPO_ROOT, args['dev-directory']);
 
 console.log('Lowdefy dev');
 console.log(`  Config directory: ${configDirectory}`);

@@ -3248,7 +3248,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "135dcf3af2776937d6031c15040ddcf02562bf785d3be045994653ac8af6b2d3"
+      "hash": "d6f325028f3eaec8e773d7ced571305eca53988aa04db5b7b63d9feb2dab3323"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3312,7 +3312,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "23264cf349b5c371f8765cd0a20a9e3ab71fb61566e76ade488cf3112b1583b0"
+      "hash": "bce156ce36e18878294c6a8bf995c24fde4315aae95d7b90ffb60bcc47bce95b"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3533,7 +3533,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "8946983378310f2e49a332e6b00eb716dafcc15ec735853b3b52f6b682653cc7"
+      "hash": "2a266228bb1ae6f8217749207bc613e14ae702fda873cde4c56ce05f96c6b8f7"
     },
     "plugins/plugins-introduction": {
       "files": [
@@ -3636,7 +3636,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "ddb786277ca1a99ac6a2987a5129f830ac4ab4e03ef6948c6d5bc4273269636d"
+      "hash": "1c6351c3dade0fc90cc4d2e880e682a9007738de92f6ff36b3be7e401885c79f"
     },
     "user-authentication/users-introduction": {
       "files": [
@@ -3880,7 +3880,7 @@
         "testing/config-tests.yaml",
         "version.yaml"
       ],
-      "hash": "41ebd5c6dd613e6f5f895aa6a9bb084be7b2aca01b7f5d1e03b7d3b96909800d"
+      "hash": "3c8ee36373d74a9dfdfda4341fdaea766fd06f35881e4651908a9f904e2c068b"
     },
     "testing/e2e-introduction": {
       "files": [
@@ -6422,7 +6422,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "63bc829ee3e9198c11bdae3ee9f78dd511845d25f2962bf82522a15d412b4904"
+      "hash": "aaff1205100e4fb3cef7d0f4795ff1c32d4bb41440f923cc5d0ebf304dfa29d7"
     },
     "connections/sqlite": {
       "files": [
@@ -8415,7 +8415,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "5ca9957c737e75709570d35a4dbb9aedd6563f2d381e9364d0761e9a49bc4fd8"
+      "hash": "90054db845de875c77022e0bf2c571fc5bf1da02e849a7b58f61d1fab239a84e"
     },
     "migration/v6-to-v7": {
       "files": [

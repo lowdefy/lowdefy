@@ -165,3 +165,25 @@ test('computeEvidence writes mutation for journeys the report names and keeps th
   expect(other.after.mutation).toEqual({ killed: 1, total: 3 });
   expect(other.changed).toBe(false);
 });
+
+test('computeEvidence counts the dev segments that back a journey as dev.recordings', () => {
+  const devSegments = [
+    segment({ session: 'd1', steps: ['edit', 'title', 'save'] }),
+    segment({ session: 'd2', steps: ['save', 'edit'] }),
+    segment({ session: 'd3', steps: ['edit', 'save'] }),
+  ];
+  const result = compute(
+    { ...journey, evidence: { dev: { recordings: 7 }, refreshed: '2026-09-01' } },
+    { production: { segments, window }, dev: { segments: devSegments } }
+  );
+  expect(result.after.dev).toEqual({ recordings: 2 });
+  expect(result.after.refreshed).toBe(today);
+});
+
+test('computeEvidence writes dev.recordings 0 when dev recordings exist but none back the journey', () => {
+  const result = compute(journey, {
+    production: { segments, window },
+    dev: { segments: [segment({ session: 'd1', steps: ['close'] })] },
+  });
+  expect(result.after.dev).toEqual({ recordings: 0 });
+});

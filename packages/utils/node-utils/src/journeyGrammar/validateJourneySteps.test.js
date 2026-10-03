@@ -172,11 +172,11 @@ test.each([
   [{ screenshot: 3 }, /Step "screenshot" takes an optional name string. Received 3/],
   [
     { expect: 'visible' },
-    /Step "expect" requires one of \{ state \}, \{ visible \}, \{ text \}, \{ url \}, \{ title \}/,
+    /Step "expect" requires one of \{ state \}, \{ visible \}, \{ hidden \}, \{ text \}, \{ url \}, \{ title \}, \{ calls \}/,
   ],
   [
     { expect: { count: 1 } },
-    /Step "expect" requires exactly one of "state", "visible", "text", "url", "title"/,
+    /Step "expect" requires exactly one of "state", "visible", "hidden", "text", "url", "title", "calls"/,
   ],
   [{ expect: { state: { path: 'a' } } }, /Step "expect.state" requires \{ path, equals \}/],
   [{ expect: { state: 'a' } }, /Step "expect.state" requires \{ path, equals \}/],
@@ -300,7 +300,7 @@ test('validateJourneySteps rejects from on click, press and wait', () => {
   expect(
     validateJourneySteps({ steps: [{ click: { blockId: 'a', from: 'recorded' } }] }).error
   ).toBe(
-    'Step 0: Step "click" has unknown key "from". Keys are: blockId, text, containing, row, column, nth.'
+    'Step 0: Step "click" has unknown key "from". Keys are: blockId, text, containing, row, column, nth, count.'
   );
   expect(
     validateJourneySteps({ steps: [{ press: { key: 'Enter', from: 'recorded' } }] }).error
@@ -342,6 +342,71 @@ test('validateJourneySteps keeps the equals requirement on expect.state with fro
     validateJourneySteps({ steps: [{ expect: { state: { path: 'a', from: 'shape' } } }] }).error
   ).toBe(
     'Step 0: Step "expect.state" requires { path, equals }. Received {"path":"a","from":"shape"}.'
+  );
+});
+
+test('validateJourneySteps accepts expect.hidden, expect.calls and click.count', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { expect: { hidden: 'error_alert' } },
+        { expect: { hidden: { blockId: 'tickets', containing: 'Other org ticket' } } },
+        { expect: { calls: { request: 'save', pageId: 'tickets', count: 1 } } },
+        { expect: { calls: { request: 'save', count: 0 } } },
+        { expect: { calls: { endpoint: 'notify', count: 2 } } },
+        { click: { blockId: 'submit', count: 2 } },
+        { click: { text: 'Save', count: 1 } },
+        { click: { blockId: 'submit', count: 3 } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects malformed expect.hidden', () => {
+  expect(validateJourneySteps({ steps: [{ expect: { hidden: 3 } }] }).error).toContain(
+    'Step 0: Step "expect.hidden" requires a blockId string or a target object'
+  );
+  expect(validateJourneySteps({ steps: [{ expect: { hidden: { colum: 'a' } } }] }).error).toContain(
+    'Step "expect.hidden" has unknown key "colum"'
+  );
+});
+
+test('validateJourneySteps rejects malformed expect.calls', () => {
+  function error(calls) {
+    return validateJourneySteps({ steps: [{ expect: { calls } }] }).error;
+  }
+  expect(error({ request: 'save', endpoint: 'notify', count: 1 })).toBe(
+    'Step 0: Step "expect.calls" requires exactly one of "request" or "endpoint". Received {"request":"save","endpoint":"notify","count":1}.'
+  );
+  expect(error({ count: 1 })).toContain('requires exactly one of "request" or "endpoint"');
+  expect(error({ endpoint: 'notify', pageId: 'tickets', count: 1 })).toBe(
+    'Step 0: Step "expect.calls" has unknown key "pageId". Keys are: endpoint, count.'
+  );
+  expect(error({ request: 'save', count: -1 })).toBe(
+    'Step 0: Step "expect.calls" requires "count" to be a whole number of calls, 0 or more. Received -1.'
+  );
+  expect(error({ request: 'save', count: 1.5 })).toContain('requires "count" to be a whole number');
+  expect(error({ request: 'save' })).toContain('requires "count" to be a whole number');
+  expect(error({ request: '', count: 1 })).toContain('requires "request" to be a non-empty string');
+  expect(error({ request: 'save', pageId: 4, count: 1 })).toContain(
+    'requires "pageId" to be a non-empty string'
+  );
+  expect(error('save')).toContain('Step "expect.calls" requires { request, pageId?, count }');
+});
+
+test('validateJourneySteps rejects a click count outside 1 to 3', () => {
+  expect(validateJourneySteps({ steps: [{ click: { blockId: 'a', count: 0 } }] }).error).toBe(
+    'Step 0: Step "click" requires "count" to be 1, 2 or 3. Received 0.'
+  );
+  expect(validateJourneySteps({ steps: [{ click: { blockId: 'a', count: 4 } }] }).error).toBe(
+    'Step 0: Step "click" requires "count" to be 1, 2 or 3. Received 4.'
+  );
+  expect(validateJourneySteps({ steps: [{ click: { blockId: 'a', count: '2' } }] }).error).toBe(
+    'Step 0: Step "click" requires "count" to be 1, 2 or 3. Received "2".'
+  );
+  // count belongs to click alone.
+  expect(validateJourneySteps({ steps: [{ open: { blockId: 'a', count: 2 } }] }).error).toContain(
+    'Step "open" has unknown key "count"'
   );
 });
 

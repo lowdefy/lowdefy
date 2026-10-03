@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import matchJourneyRoute from './matchJourneyRoute.js';
 
 function requestKey({ pageId, requestId }) {
@@ -66,7 +68,7 @@ function createNetworkCounter({ origin, basePath }) {
   }
 
   function countCalls({ request, pageId, endpoint }) {
-    if (endpoint !== undefined) {
+    if (!type.isUndefined(endpoint)) {
       return endpoints.get(endpoint) ?? 0;
     }
     return requests.get(requestKey({ pageId, requestId: request }))?.calls ?? 0;

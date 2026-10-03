@@ -27,15 +27,19 @@ function distinctCount(values) {
   return new Set(values.filter((value) => !type.isNone(value))).size;
 }
 
-function productionEvidence({ journey, segments, window }) {
+function backingSegments({ journey, segments }) {
   const sequence = journeySequence({ pageId: journey.pageId, steps: journey.steps });
-  const backing = segments.filter((segment) =>
+  return segments.filter((segment) =>
     isBackedBy({
       journeySequence: sequence,
       segmentSequence: segment.sequence,
       pageId: journey.pageId,
     })
   );
+}
+
+function productionEvidence({ journey, segments, window }) {
+  const backing = backingSegments({ journey, segments });
   const entering = segments.filter((segment) => segment.page_id === journey.pageId);
   const backingEntering = backing.filter((segment) => segment.page_id === journey.pageId);
   return {
@@ -59,14 +63,21 @@ function isEqual(a, b) {
 // some subkey changed, so a no-op refresh changes no file.
 //
 // - journeys: [{ filePath, journeyIndex, journey }]
-// - sources: { production?: { segments, window }, mutation?: readMutationReport's result }
-//   A mutation report sets `mutation` for the journeys it names only.
+// - sources: { production?: { segments, window }, dev?: { segments },
+//   mutation?: readMutationReport's result }
+//   `dev.recordings` counts the dev segments that back the journey. A
+//   mutation report sets `mutation` for the journeys it names only.
 function computeEvidence({ journeys, sources, today }) {
   return journeys.map(({ filePath, file, journeyIndex, journey }) => {
     const before = journey.evidence;
     const computed = {};
     if (!type.isNone(sources.production)) {
       computed.production = productionEvidence({ journey, ...sources.production });
+    }
+    if (!type.isNone(sources.dev)) {
+      computed.dev = {
+        recordings: backingSegments({ journey, segments: sources.dev.segments }).length,
+      };
     }
     const mutation = sources.mutation?.byJourney.get(`${file}#${journey.name}`);
     if (!type.isUndefined(mutation)) {

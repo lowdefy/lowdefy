@@ -126,6 +126,29 @@ and use `node packages/cli/dist/index.js test --config-directory apps/auth-refer
 --url http://localhost:<port> --filter <name>`; a journey that signs up needs an empty
 database, since signing up an existing address sends no email.
 
+## Journey fixture app
+
+`apps/journey-fixture` is a small app the journey runner's real-Chromium tests drive through
+this checkout's dev server: the exercised path (pages, request counts, nested `CallApi`
+endpoints), config mutants reaching the page, request, endpoint and detached routes, and
+what later journey features assert. Run it after `pnpm build`:
+
+```bash
+pnpm --filter=@lowdefy/server-dev test:fixture   # the runner, the observer, the grammar, mutants
+pnpm --filter=lowdefy test:fixture                # `lowdefy journeys harden` from the built CLI
+```
+
+Each jest global setup (`test/journeyFixture/globalSetup.mjs` in either package) calls
+`scripts/lib/startJourneyFixture.mjs`, which starts a memory replica set for the app's
+`fixture_db` connection and `scripts/dev.mjs --skip-build --dev-directory
+_server/dev-journey-fixture` with `CRON_SECRET` set, on three free ports from 3300
+(`LOWDEFY_JOURNEY_FIXTURE_PORT` moves them), then runs one journey on every page so Vite's
+first compile and each page's first build happen before any test. It never touches `_server/dev`, so it runs beside
+`pnpm app:dev`; the two packages' suites share `_server/dev-journey-fixture`, so do not run them
+at once in one worktree. With no Chromium every test skips.
+The dev server log is `apps/journey-fixture/.lowdefy/fixture-dev-server.log`. CI does not
+run it; run it when changing the journey runner, journey cookies or mutants.
+
 ## Ports
 
 Port 3000 is the default for a developer's own dev server; tests and agents never bind it.

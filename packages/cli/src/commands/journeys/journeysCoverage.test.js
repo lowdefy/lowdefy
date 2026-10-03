@@ -194,3 +194,110 @@ test('journeys coverage adds the mutation score when a report exists, and none w
   expect(validate({ schema: coverageReportSchema, data: withMutation })).toEqual({ valid: true });
   expect(logged.some((line) => line.startsWith('mutation     2/3 (0.67)'))).toBe(true);
 });
+
+const RUN = '20261003T110000Z-run001';
+const SAVES_KEY = 'tests/journeys/saves.yaml#member saves a ticket';
+
+const SAVE_FAILED = {
+  name: 'onClick',
+  block_id: 'save',
+  success: false,
+  error: { name: 'UserError', action_type: 'Validate', config_key: 'k-1', action_id: 'validate' },
+  invalid_blocks: [],
+};
+
+// A journey run as the dev server records a full-suite `lowdefy test` run.
+function writeJourneyRun({ blocks, failOn }) {
+  const start = Date.parse('2026-10-03T11:00:00Z');
+  const run = { id: RUN, by: 'test', journey: SAVES_KEY, actor: 'main' };
+  const records = [
+    { ...record({ session: 'j1', t: start, kind: 'pageview' }), source: 'journey', run },
+    ...blocks.map((block, index) => {
+      const entry = {
+        ...record({ session: 'j1', t: start + (index + 1) * 1000, block }),
+        source: 'journey',
+        run,
+        event: { name: 'onClick', block_id: block, success: true },
+      };
+      if (block === failOn) entry.event = SAVE_FAILED;
+      return entry;
+    }),
+  ].map(({ person, org, roles, ...rest }) => rest);
+  const directory = path.join(configDirectory, '.lowdefy', 'traces', 'journey', '2026-10-03');
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(
+    path.join(directory, `${RUN}.jsonl`),
+    records.map((entry) => JSON.stringify(entry)).join('\n')
+  );
+}
+
+function writeTestRunResults({ run = RUN, passed }) {
+  fs.mkdirSync(context.directories.test, { recursive: true });
+  fs.writeFileSync(
+    path.join(context.directories.test, 'run.json'),
+    JSON.stringify({ version: 1, run, journeys: { [SAVES_KEY]: { passed } } })
+  );
+}
+
+function addProductionSaveFailure() {
+  writeDay('2026-10-03', [
+    record({ session: 's3', t: Date.parse('2026-10-03T08:00:00Z'), kind: 'pageview' }),
+    { ...record({ session: 's3', t: Date.parse('2026-10-03T08:00:01Z'), block: 'edit' }) },
+    {
+      ...record({ session: 's3', t: Date.parse('2026-10-03T08:00:02Z'), block: 'save' }),
+      event: SAVE_FAILED,
+    },
+  ]);
+}
+
+test('journeys coverage reports the measured interaction share from the newest test run', async () => {
+  writeJourneyRun({ blocks: ['edit'] });
+  const report = await journeysCoverage({ context });
+  expect(validate({ schema: coverageReportSchema, data: report })).toEqual({ valid: true });
+  // Static: edit and save of the 3 entries. Measured: the run drove edit only.
+  expect(report.measures.interaction).toMatchObject({ covered: 2, total: 3 });
+  expect(report.measures.interaction.measured).toEqual({
+    covered: 1,
+    total: 3,
+    share: 0.33,
+    run: RUN,
+  });
+  expect(logged.some((line) => line.includes(`measured in run ${RUN}`))).toBe(true);
+});
+
+test('journeys coverage counts a failure a passing journey produced as measured', async () => {
+  addProductionSaveFailure();
+  writeJourneyRun({ blocks: ['edit', 'save'], failOn: 'save' });
+  writeTestRunResults({ passed: true });
+  const report = await journeysCoverage({ context });
+  expect(validate({ schema: coverageReportSchema, data: report })).toEqual({ valid: true });
+  expect(report.measures.failure).toMatchObject({
+    mode: 'measured',
+    run: RUN,
+    covered: 1,
+    total: 1,
+  });
+});
+
+test('journeys coverage does not count a failure produced by a journey that failed', async () => {
+  addProductionSaveFailure();
+  writeJourneyRun({ blocks: ['edit', 'save'], failOn: 'save' });
+  writeTestRunResults({ passed: false });
+  const { failure } = (await journeysCoverage({ context })).measures;
+  expect(failure).toMatchObject({ mode: 'measured', covered: 0, total: 1 });
+});
+
+test('journeys coverage stays reached when run.json belongs to another run', async () => {
+  addProductionSaveFailure();
+  writeJourneyRun({ blocks: ['edit', 'save'], failOn: 'save' });
+  writeTestRunResults({ run: '20261002T110000Z-run000', passed: true });
+  const { failure } = (await journeysCoverage({ context })).measures;
+  expect(failure.mode).toBe('reached');
+  expect(failure).not.toHaveProperty('run');
+});
+
+test('journeys coverage without journey runs reports no measured share and reached failures', async () => {
+  const report = await journeysCoverage({ context });
+  expect(report.measures.interaction).not.toHaveProperty('measured');
+  expect(report.measures.failure.mode).toBe('reached');
+});

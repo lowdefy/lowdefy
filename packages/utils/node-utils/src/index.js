@@ -47,8 +47,11 @@ import writeFileIfChanged from './writeFileIfChanged.js';
 import compileTrace from './journeyCompiler/compileTrace.js';
 import collectKnownText from './journeyText/collectKnownText.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
+import failurePathKey from './journeyEvidence/failurePathKey.js';
 import isBackedBy from './journeyEvidence/isBackedBy.js';
+import normaliseBlockId from './journeyGrammar/normaliseBlockId.js';
 import journeySequence from './journeyCompiler/journeySequence.js';
+import listFailurePaths from './journeyCompiler/listFailurePaths.js';
 import parseTraceLines from './journeyCompiler/parseTraceLines.js';
 import profileProduction from './journeyEvidence/profileProduction.js';
 import stepIdentity from './journeyCompiler/stepIdentity.js';
@@ -69,6 +72,7 @@ export {
   createClientAddressResolver,
   createSecretScrubber,
   dataSetNamePattern,
+  failurePathKey,
   findAvailablePort,
   findPlaceholderStep,
   findPnpmWorkspaceRoot,
@@ -88,7 +92,9 @@ export {
   linkWorkspaceDependencies,
   listDataSets,
   parseDataSet,
+  listFailurePaths,
   listRecordingFiles,
+  normaliseBlockId,
   parseIpRange,
   parseTraceLines,
   profileProduction,
