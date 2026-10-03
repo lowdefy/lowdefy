@@ -4,7 +4,7 @@
 '@lowdefy/errors': patch
 '@lowdefy/node-utils': patch
 '@lowdefy/api': patch
-'@lowdefy/cli': patch
+'lowdefy': patch
 ---
 
 fix(server-dev): Cheaper rebuilds and restarts in the dev server
