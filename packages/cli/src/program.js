@@ -35,6 +35,7 @@ import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
 import journeysCompile from './commands/journeys/journeysCompile.js';
+import journeysRecordings from './commands/journeys/journeysRecordings.js';
 import mcp from './commands/mcp/mcp.js';
 import start from './commands/start/start.js';
 import test from './commands/test/test.js';
@@ -296,6 +297,31 @@ journeys
     )
   )
   .action(runCommand({ cliVersion, handler: journeysCompile }));
+
+journeys
+  .command('recordings')
+  .description(
+    'List the dev sessions the dev server recorded, with what the newest test run already covers.'
+  )
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--since <since>',
+      'Sessions at or after this time: a duration back from now (30m, 2h, 7d) or an ISO date.'
+    )
+  )
+  .addOption(new Option('--page <pageId>', 'Only sessions that visited this page.'))
+  .addOption(
+    new Option(
+      '--build <build>',
+      'Only sessions recorded against this build; "current" is the build the running dev server serves.'
+    )
+  )
+  .addOption(new Option('--json', 'Print the sessions as JSON on stdout.'))
+  .action(runCommand({ cliVersion, handler: journeysRecordings }));
 
 program
   .command('init')

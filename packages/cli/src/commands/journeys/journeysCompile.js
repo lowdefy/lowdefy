@@ -16,7 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { compileTrace } from '@lowdefy/node-utils';
+import { compileTrace, readRecordings } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import loadBlockMetas from './loadBlockMetas.js';
@@ -53,9 +53,10 @@ function checkSourceOption({ source }) {
   }
 }
 
-// Until the readers for the trace directory are wired in, traces are compiled
-// from the files named on the command line.
-function refuseWithoutPaths({ context, source }) {
+// Without trace files, records come from the recordings the dev server wrote,
+// through readRecordings, so the compile never knows the layout. Production
+// traces are compiled from files until the production reader is wired in.
+function checkRecordedSource({ source }) {
   if (type.isNone(source)) {
     throw new Error(
       'lowdefy journeys compile needs trace files, or --source to choose recorded traces.'
@@ -66,12 +67,20 @@ function refuseWithoutPaths({ context, source }) {
       'Production traces are compiled from files for now: pass the trace files to compile.'
     );
   }
-  throw new Error(
-    `Reading ${source} recordings from ${path.join(
-      context.directories.traces,
-      source
-    )} is not available yet: pass the trace files to compile.`
-  );
+}
+
+function readTraces({ context, traceFiles, source, now }) {
+  if (traceFiles.length > 0) {
+    return readTraceFiles({ paths: traceFiles.map((file) => path.resolve(file)) });
+  }
+  checkRecordedSource({ source });
+  const { since } = resolveWindow({ options: context.options, source, now });
+  const records = readRecordings({
+    configDirectory: context.directories.config,
+    source,
+    since: type.isUndefined(since) ? undefined : new Date(since),
+  });
+  return { records, unparsable: 0 };
 }
 
 function sourceFromRecords({ records }) {
@@ -144,14 +153,10 @@ async function journeysCompile({ context, params }) {
   const [traceFiles = []] = params;
   const { options } = context;
   checkSourceOption({ source: options.source });
-  if (traceFiles.length === 0) {
-    refuseWithoutPaths({ context, source: options.source });
-  }
-
-  const paths = traceFiles.map((file) => path.resolve(file));
-  const { records, unparsable } = readTraceFiles({ paths });
+  const now = Date.now();
+  const { records, unparsable } = readTraces({ context, traceFiles, source: options.source, now });
   const source = options.source ?? sourceFromRecords({ records });
-  const { since, until } = resolveWindow({ options, source, now: Date.now() });
+  const { since, until } = resolveWindow({ options, source, now });
   const build = await resolveBuild({
     context,
     records: records.filter((record) => isSelected({ record, source, since, until })),

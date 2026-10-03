@@ -34,6 +34,8 @@ import linkDependenciesToWorkspace from './linkDependenciesToWorkspace.js';
 import linkWorkspaceDependencies from './linkWorkspaceDependencies.js';
 import parseIpRange from './parseIpRange.js';
 import readDevInstance from './readDevInstance.js';
+import listRecordingFiles, { RECORDING_SOURCES } from './recordings/listRecordingFiles.js';
+import readRecordings from './recordings/readRecordings.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
@@ -73,9 +75,12 @@ export {
   journeySequence,
   linkDependenciesToWorkspace,
   linkWorkspaceDependencies,
+  listRecordingFiles,
   parseIpRange,
   parseTraceLines,
   readDevInstance,
+  readRecordings,
+  RECORDING_SOURCES,
   spawnProcess,
   stepIdentity,
   readFile,

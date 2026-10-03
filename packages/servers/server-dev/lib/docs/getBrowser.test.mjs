@@ -33,6 +33,7 @@ process.chdir(fixtureDir);
 const { openPage, buildPageUrl } = await import('./getBrowser.js');
 const { default: isPageReady } = await import('./isPageReady.js');
 const { default: getClientAddress } = await import('../server/getClientAddress.js');
+const { default: readRecordingCookie } = await import('../server/recording/readRecordingCookie.js');
 
 afterAll(() => {
   process.chdir(originalCwd);
@@ -114,8 +115,43 @@ test('openPage injects no user for user none, so the app resolves its own sessio
     user: 'none',
   });
 
-  expect(addCookies).not.toHaveBeenCalled();
+  const names = addCookies.mock.calls.map(([[cookie]]) => cookie.name);
+  expect(names).toEqual(['lowdefy_recording']);
   expect(opened.ready).toBe(true);
+});
+
+function findCookie(addCookies, name) {
+  return addCookies.mock.calls.map(([[cookie]]) => cookie).find((cookie) => cookie.name === name);
+}
+
+test('openPage marks a context with no recording as off, so screenshots and inspection never record', async () => {
+  const { browser, addCookies } = createBrowser();
+
+  await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+
+  const cookie = findCookie(addCookies, 'lowdefy_recording');
+  expect(cookie).toMatchObject({ url: 'http://localhost:3001', httpOnly: true, sameSite: 'Lax' });
+  expect(readRecordingCookie(`lowdefy_recording=${cookie.value}`)).toBe('off');
+});
+
+test('openPage marks a recording context with a cookie readRecordingCookie verifies', async () => {
+  const { browser, addCookies, page } = createBrowser();
+  const recording = {
+    source: 'journey',
+    run: {
+      id: '20261003T151200Z-p0d4rm',
+      by: 'test',
+      journey: 'tests/journeys/tickets.yaml#Assign a ticket',
+      actor: 'main',
+    },
+  };
+
+  await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home', recording });
+
+  const cookie = findCookie(addCookies, 'lowdefy_recording');
+  expect(readRecordingCookie(`lowdefy_recording=${cookie.value}`)).toEqual(recording);
+  const recordingCall = addCookies.mock.invocationCallOrder[addCookies.mock.calls.length - 1];
+  expect(recordingCall).toBeLessThan(page.goto.mock.invocationCallOrder[0]);
 });
 
 test('openPage gives the context the client address it is given, which the dev server resolves', async () => {
