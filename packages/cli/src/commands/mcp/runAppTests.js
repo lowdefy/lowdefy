@@ -17,37 +17,69 @@
 import path from 'path';
 
 import getDirectories from '../../utils/getDirectories.js';
+import parseRepeat from '../test/parseRepeat.js';
+import resolveJourneyPaths from '../test/resolveJourneyPaths.js';
+import runRepeated from '../test/runRepeated.js';
 import selectTests from '../test/selectTests.js';
+import summariseResults from '../test/summariseResults.js';
+import writeExercised from '../test/writeExercised.js';
+import fetchBuildId from '../test/fetchBuildId.js';
 
-// Runs the app's tests (tests/journeys/*.yaml) against its running dev server
-// - the same selection and runner as `lowdefy test` - and returns the
+function noTestsSummary({ filter, paths }) {
+  if (filter) {
+    return `No tests matched filter "${filter}".`;
+  }
+  if (paths) {
+    return `No journeys found in ${paths.join(', ')}.`;
+  }
+  return 'No tests found. Add journeys to tests/journeys/*.yaml.';
+}
+
+// Runs the app's tests (tests/journeys/*.yaml, or the journey files `paths`
+// names relative to the app directory) against its running dev server - the
+// same selection, replay and runner as `lowdefy test` - and returns the
 // results as data: a failing journey is an answer, not a tool error. Always
 // the default directory: journeys an app keeps elsewhere (--journeys-directory)
 // may need a server set up for them, which the running dev server is not.
-async function runAppTests({ configDirectory, url, filter }) {
+async function runAppTests({ configDirectory, url, filter, paths, repeat: repeatValue }) {
   const context = { directories: getDirectories({ configDirectory, options: {} }) };
-  const selected = selectTests({ context, filter });
+  const { repeat, error: repeatError } = parseRepeat(repeatValue);
+  if (repeatError) {
+    return { summary: repeatError, results: [] };
+  }
+  let files;
+  if (Array.isArray(paths) && paths.length > 0) {
+    const resolved = resolveJourneyPaths({ paths, base: configDirectory, configDirectory });
+    if (resolved.error) {
+      return { summary: resolved.error, results: [] };
+    }
+    files = resolved.files;
+  }
+  const selected = selectTests({ context, filter, paths: files });
   if (selected.length === 0) {
-    return {
-      summary: filter
-        ? `No tests matched filter "${filter}".`
-        : 'No tests found. Add journeys to tests/journeys/*.yaml.',
-      results: [],
-    };
+    return { summary: noTestsSummary({ filter, paths: files && paths }), results: [] };
   }
-  const results = [];
+  const runs = [];
   for (const { suite, item } of selected) {
-    const result = await suite.run({ context, item, url });
-    results.push({
-      ...result,
-      filePath: path.relative(configDirectory, result.filePath),
-      report: suite.format({ result }).join('\n'),
-    });
+    const result = await runRepeated({ suite, context, item, url, repeat });
+    runs.push({ suite, result });
   }
-  const passed = results.filter((result) => result.passed).length;
-  return {
-    summary: `${passed} passed, ${results.length - passed} failed of ${results.length} journeys`,
+  const results = runs.map(({ result }) => result);
+  writeExercised({
+    directories: context.directories,
     results,
+    buildId: await fetchBuildId({ url }),
+  });
+  return {
+    summary: summariseResults({ results }).text,
+    results: runs.map(({ suite, result }) => {
+      const { journey, newestPassed, ...rest } = result;
+      return {
+        ...rest,
+        filePath: path.relative(configDirectory, result.filePath),
+        report: suite.format({ result }).join('\n'),
+      };
+    }),
   };
 }
 

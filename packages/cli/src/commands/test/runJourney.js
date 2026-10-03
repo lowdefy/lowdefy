@@ -36,7 +36,15 @@ async function runJourney({ item, url }) {
   const { filePath, journey } = item;
   const name = journey?.name ?? filePath;
   if (!type.isNone(item.error)) {
-    return { name, filePath, passed: false, stepCount: 0, durationMs: 0, message: item.error };
+    return {
+      name,
+      filePath,
+      passed: false,
+      refused: true,
+      stepCount: 0,
+      durationMs: 0,
+      message: item.error,
+    };
   }
   const validation = validateJourney({ journey });
   if (!validation.valid) {
@@ -44,6 +52,7 @@ async function runJourney({ item, url }) {
       name,
       filePath,
       passed: false,
+      refused: true,
       stepCount: 0,
       durationMs: 0,
       message: `Invalid journey file: ${validation.message}`,
@@ -65,6 +74,9 @@ async function runJourney({ item, url }) {
       name,
       filePath,
       passed: false,
+      // The route refuses a journey it cannot run (a 400) before any browser
+      // opens; every repeat would be refused the same way.
+      refused: error.response?.status === 400,
       stepCount,
       durationMs: Date.now() - start,
       message: describeHttpError(error),
@@ -76,7 +88,7 @@ async function runJourney({ item, url }) {
     return { name, filePath, passed: false, stepCount, durationMs, message: result.error };
   }
   if (result.passed === true) {
-    return { name, filePath, passed: true, stepCount, durationMs };
+    return { name, filePath, passed: true, stepCount, durationMs, exercised: result.exercised };
   }
   return {
     name,
@@ -86,6 +98,7 @@ async function runJourney({ item, url }) {
     durationMs,
     failure: result.failure,
     message: result.failure?.message,
+    exercised: result.exercised,
   };
 }
 

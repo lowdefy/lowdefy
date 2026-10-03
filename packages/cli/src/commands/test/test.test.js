@@ -20,8 +20,9 @@ import os from 'os';
 import path from 'path';
 
 const mockPost = jest.fn();
+const mockGet = jest.fn();
 jest.unstable_mockModule('axios', () => ({
-  default: { post: mockPost },
+  default: { post: mockPost, get: mockGet },
 }));
 
 const mockStop = jest.fn();
@@ -36,9 +37,9 @@ let logs;
 const originalExitCode = process.exitCode;
 
 function writeJourneyFile(fileName, content) {
-  const directory = path.join(configDirectory, 'tests', 'journeys');
-  fs.mkdirSync(directory, { recursive: true });
-  fs.writeFileSync(path.join(directory, fileName), content);
+  const filePath = path.join(configDirectory, 'tests', 'journeys', fileName);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, content);
 }
 
 function journeyYaml({ name, steps = '  - click: submit\n' }) {
@@ -66,6 +67,7 @@ beforeEach(() => {
   mockStop.mockResolvedValue();
   mockStartDevServer.mockResolvedValue({ url: 'http://localhost:3228', stop: mockStop });
   mockPost.mockResolvedValue({ data: { passed: true, steps: [] } });
+  mockGet.mockResolvedValue({ data: { buildId: 'build-1' } });
 });
 
 afterEach(() => {
@@ -220,4 +222,123 @@ test('test logs the captured server output and rethrows when the dev server fail
   );
   expect(logs.error).toEqual(['line one', 'line two']);
   expect(mockPost).not.toHaveBeenCalled();
+});
+
+const stepFailure = {
+  index: 0,
+  step: { click: 'submit' },
+  expected: 'submit to be clickable',
+  actual: 'hidden',
+  message: 'submit is hidden',
+};
+
+test('test --repeat 3 classifies a journey that passes every run as PASS', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'steady journey' }));
+  context.options.repeat = '3';
+  await test({ context });
+  expect(mockPost).toHaveBeenCalledTimes(3);
+  expect(
+    logs.info.some((line) =>
+      /^PASS {3}steady journey {3}\(1 steps, 3\/3, [\d.]+s each\)$/.test(line)
+    )
+  ).toBe(true);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test --repeat 3 classifies a journey that passes some runs as FLAKY and exits 1', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'shaky journey' }));
+  context.options.repeat = '3';
+  mockPost
+    .mockResolvedValueOnce({ data: { passed: true } })
+    .mockResolvedValueOnce({ data: { passed: false, failure: stepFailure } })
+    .mockResolvedValueOnce({ data: { passed: true } });
+  await test({ context });
+  expect(logs.error[0]).toEqual(
+    'FLAKY  shaky journey   (2/3 passed) run 2 failed at step 0 (click "submit"): submit is hidden'
+  );
+  expect(logs.error[logs.error.length - 1]).toEqual('0 passed, 1 flaky, 0 failed of 1 journeys');
+  expect(process.exitCode).toEqual(1);
+});
+
+test('test --repeat 3 classifies a journey that fails every run as FAIL with the finding line', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'broken journey' }));
+  context.options.repeat = '3';
+  mockPost.mockResolvedValue({ data: { passed: false, failure: stepFailure } });
+  await test({ context });
+  expect(mockPost).toHaveBeenCalledTimes(3);
+  expect(logs.error[0]).toEqual(
+    'FAIL   broken journey   (0/3) step 0 (click "submit"): submit is hidden — fails every run: a finding, not a test to fix by retrying'
+  );
+  expect(process.exitCode).toEqual(1);
+});
+
+test('test --repeat runs a refused journey once and does not repeat it', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', 'name: no steps here\npageId: form\n');
+  context.options.repeat = '3';
+  await test({ context });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(logs.error[0]).toEqual('FAIL  no steps here');
+  expect(process.exitCode).toEqual(1);
+});
+
+test.each([['0'], ['11'], ['2.5'], ['many']])('test refuses --repeat %s', async (value) => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  context.options.repeat = value;
+  await test({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(logs.error).toEqual([
+    `--repeat must be an integer from 1 to 10. Received ${JSON.stringify(value)}.`,
+  ]);
+  expect(process.exitCode).toEqual(1);
+});
+
+test('test runs journeys from a path under tests/journeys/_candidates, with --filter on top', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'committed journey' }));
+  writeJourneyFile(path.join('_candidates', 'mined', 'b.yaml'), journeyYaml({ name: 'mined one' }));
+  writeJourneyFile(path.join('_candidates', 'mined', 'c.yaml'), journeyYaml({ name: 'mined two' }));
+  context.options.paths = [path.join(configDirectory, 'tests', 'journeys', '_candidates')];
+  context.options.filter = 'two';
+  await test({ context });
+  expect(mockPost).toHaveBeenCalledTimes(1);
+  expect(logs.info.some((line) => line.startsWith('PASS  mined two'))).toBe(true);
+});
+
+test('test refuses a path outside the config directory', async () => {
+  const { default: test } = await import('./test.js');
+  const outside = path.join(os.tmpdir(), 'outside.yaml');
+  context.options.paths = [outside];
+  await test({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(logs.error).toEqual([
+    `Journey path "${outside}" is outside the config directory ${configDirectory}.`,
+  ]);
+  expect(process.exitCode).toEqual(1);
+});
+
+test("test writes each journey's newest exercised path to .lowdefy/test/exercised.json", async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  const exercised = { pages: ['form'], appEvents: true, requests: [], endpoints: [] };
+  mockPost.mockResolvedValue({ data: { passed: true, exercised } });
+  await test({ context });
+  const written = JSON.parse(
+    fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'exercised.json'), 'utf8')
+  );
+  expect(written).toEqual({
+    version: 1,
+    buildId: 'build-1',
+    journeys: {
+      [`${path.join('tests', 'journeys', 'a.yaml')}#first journey`]: {
+        hash: expect.stringMatching(/^[0-9a-f]{40}$/),
+        passed: true,
+        exercised,
+      },
+    },
+  });
 });
