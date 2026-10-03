@@ -14,11 +14,21 @@
   limitations under the License.
 */
 
-import { getStepKey, isBackedBy, journeySequence, stepIdentity } from '@lowdefy/node-utils';
+import {
+  failurePathKey,
+  getStepKey,
+  isBackedBy,
+  journeySequence,
+  stepIdentity,
+} from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 const REACHED_NOTE =
   'Reached, not asserted: a journey reaches the failing interaction. Asserted failure coverage needs journey recordings.';
+const REACHED_WITHOUT_RESULTS_NOTE =
+  'Reached, not asserted: the newest test run has no pass results on this machine (.lowdefy/test/run.json). Run the full suite with lowdefy test to measure it.';
+const MEASURED_NOTE =
+  'Measured: a journey that passed in the newest test run produced the failed event, so it asserts it.';
 
 function compareText(a, b) {
   if (a < b) return -1;
@@ -30,11 +40,15 @@ function entryKey({ page, identity }) {
   return `${page} ${identity}`;
 }
 
+function shareOf({ covered, total }) {
+  return total === 0 ? 0 : Math.round((covered / total) * 100) / 100;
+}
+
 function measure({ covered, total, uncovered }) {
   return {
     covered,
     total,
-    share: total === 0 ? 0 : Math.round((covered / total) * 100) / 100,
+    share: shareOf({ covered, total }),
     uncovered: uncovered.sort((a, b) => b.count - a.count || compareText(a.key, b.key)),
   };
 }
@@ -45,7 +59,16 @@ function normaliseBlockId({ blockId }) {
   return JSON.parse(stepIdentity({ step: { click: { blockId } } }))[1];
 }
 
-function measureInteraction({ segments, journeyKeys }) {
+// The production entries the newest test run actually drove, weighted by
+// occurrence like the static share.
+function measuredInteraction({ entries, total, measuredRun }) {
+  const covered = entries
+    .filter((entry) => measuredRun.keys.has(entry.key))
+    .reduce((sum, entry) => sum + entry.count, 0);
+  return { covered, total, share: shareOf({ covered, total }), run: measuredRun.run };
+}
+
+function measureInteraction({ segments, journeyKeys, measuredRun }) {
   const counts = new Map();
   segments.forEach((segment) => {
     segment.sequence.forEach((entry) => {
@@ -60,11 +83,13 @@ function measureInteraction({ segments, journeyKeys }) {
   const covered = entries
     .filter((entry) => journeyKeys.has(entry.key))
     .reduce((sum, entry) => sum + entry.count, 0);
-  return measure({
+  const result = measure({
     covered,
     total,
     uncovered: entries.filter((entry) => !journeyKeys.has(entry.key)),
   });
+  if (measuredRun === null) return result;
+  return { ...result, measured: measuredInteraction({ entries, total, measuredRun }) };
 }
 
 function measureFlow({ segments, journeys }) {
@@ -120,19 +145,47 @@ function isFailureReached({ path, segments, journeys, journeyKeys }) {
   );
 }
 
-function measureFailure({ profile, segments, journeys, journeyKeys }) {
+// List indices are normalised, so a failure on row 2 in production and on row
+// 0 in a journey run is the same path.
+function measuredFailureKey({ path }) {
+  const blockId = type.isNone(path.block_id) ? null : normaliseBlockId({ blockId: path.block_id });
+  return failurePathKey({ path: { ...path, block_id: blockId } });
+}
+
+// Without pass results for the newest test run, coverage can only say a
+// journey reaches a failure. With them, a failure path is covered when a
+// journey that passed produced that same failed event: it reached it and
+// still passed, so it asserts it.
+function measureFailure({ profile, segments, journeys, journeyKeys, measuredRun }) {
+  const passingFailurePaths = measuredRun?.passingFailurePaths ?? null;
+  const asserted =
+    passingFailurePaths === null
+      ? null
+      : new Set(passingFailurePaths.map((path) => measuredFailureKey({ path })));
+  const isCovered = (path) =>
+    asserted === null
+      ? isFailureReached({ path, segments, journeys, journeyKeys })
+      : asserted.has(measuredFailureKey({ path }));
   const uncovered = [];
   let covered = 0;
   profile.failurePaths.forEach((path) => {
-    if (isFailureReached({ path, segments, journeys, journeyKeys })) {
+    if (isCovered(path)) {
       covered += 1;
       return;
     }
     uncovered.push({ ...path, count: path.persons });
   });
+  if (asserted !== null) {
+    return {
+      mode: 'measured',
+      note: MEASURED_NOTE,
+      run: measuredRun.run,
+      ...measure({ covered, total: profile.failurePaths.length, uncovered }),
+    };
+  }
   return {
     mode: 'reached',
-    note: REACHED_NOTE,
+    note: measuredRun === null ? REACHED_NOTE : REACHED_WITHOUT_RESULTS_NOTE,
     ...measure({ covered, total: profile.failurePaths.length, uncovered }),
   };
 }
@@ -215,12 +268,14 @@ function measureRole({ profile, journeys }) {
 // Which real use no committed journey covers yet, measured five ways over the
 // production window, each with its uncovered list ranked by use (count, then
 // key). `journeys` are [{ file, name, pageId, sequence, journey }].
-function computeCoverage({ journeys, segments, profile }) {
+// `measuredRun` is readMeasuredRun's result, null without a test run: it adds
+// the measured interaction share and makes failure coverage measured.
+function computeCoverage({ journeys, segments, profile, measuredRun = null }) {
   const journeyKeys = new Set(journeys.flatMap((journey) => journey.sequence.map(entryKey)));
   return {
-    interaction: measureInteraction({ segments, journeyKeys }),
+    interaction: measureInteraction({ segments, journeyKeys, measuredRun }),
     flow: measureFlow({ segments, journeys }),
-    failure: measureFailure({ profile, segments, journeys, journeyKeys }),
+    failure: measureFailure({ profile, segments, journeys, journeyKeys, measuredRun }),
     frustration: measureFrustration({ profile, journeys }),
     role: measureRole({ profile, journeys }),
   };

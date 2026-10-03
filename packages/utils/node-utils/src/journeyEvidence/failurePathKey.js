@@ -14,12 +14,13 @@
   limitations under the License.
 */
 
-import listFailurePaths from './listFailurePaths.js';
-
-// Where a segment first failed (see listFailurePaths). Undefined for a
-// segment with no failed event.
-function readFailurePath({ records }) {
-  return listFailurePaths({ records })[0];
+// The key a failure path is ranked and covered by: `<page>.<block>.<event>`,
+// `app.<event>` for an app event, with the invalid blocks a Validate named
+// in brackets.
+function failurePathKey({ path }) {
+  const event =
+    path.page === 'app' ? `app.${path.event}` : `${path.page}.${path.block_id}.${path.event}`;
+  return path.invalid_blocks.length === 0 ? event : `${event} [${path.invalid_blocks.join(', ')}]`;
 }
 
-export default readFailurePath;
+export default failurePathKey;

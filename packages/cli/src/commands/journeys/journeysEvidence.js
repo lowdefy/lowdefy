@@ -15,20 +15,28 @@
 */
 
 import fs from 'fs';
+import { type } from '@lowdefy/helpers';
 
 import computeEvidence from './evidence/computeEvidence.js';
 import formatEvidence from '../test/formatEvidence.js';
 import formatZeroBacked from './evidence/formatZeroBacked.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
+import readDevSegments from './readDevSegments.js';
 import readMutationReport from './readMutationReport.js';
 import readProductionSegments from './readProductionSegments.js';
 import writeEvidenceNode from './evidence/writeEvidenceNode.js';
 
 const SOURCES = ['production'];
 
+// The PASS line's evidence, plus the dev recordings, which the PASS line
+// leaves out but a refresh can change.
 function summarise({ evidence }) {
-  const text = formatEvidence({ evidence });
-  return text === '' ? 'no evidence' : text;
+  const parts = [formatEvidence({ evidence })].filter((part) => part !== '');
+  const recordings = evidence?.dev?.recordings;
+  if (!type.isUndefined(recordings)) {
+    parts.push(`${recordings} dev recordings`);
+  }
+  return parts.length === 0 ? 'no evidence' : parts.join(' · ');
 }
 
 // Writes every changed journey of each file in turn. A file whose evidence
@@ -77,10 +85,15 @@ async function journeysEvidence({ context }) {
   const { journeys, skipped } = readCommittedJourneys({ context });
   skipped.forEach((line) => logger.warn(`Skipped ${line}`));
   const production = readProductionSegments({ context });
+  const now = Date.now();
   const results = computeEvidence({
     journeys,
-    sources: { production, mutation: readMutationReport({ directories: context.directories }) },
-    today: new Date(Date.now()).toISOString().slice(0, 10),
+    sources: {
+      production,
+      dev: readDevSegments({ context, now }),
+      mutation: readMutationReport({ directories: context.directories }),
+    },
+    today: new Date(now).toISOString().slice(0, 10),
   });
 
   const changed = results.filter((result) => result.changed);

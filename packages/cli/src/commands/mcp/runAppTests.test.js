@@ -199,6 +199,15 @@ test('runAppTests records a full-suite run and leaves a paths or filter run unre
     null,
     null,
   ]);
+  // Only the recorded run writes run.json; the partial runs after it leave it.
+  const testRun = JSON.parse(
+    fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'run.json'), 'utf8')
+  );
+  expect(testRun).toEqual({
+    version: 1,
+    run: bodies[0].recording.run,
+    journeys: { 'tests/journeys/orders.yaml#orders list': { passed: true } },
+  });
 });
 
 test('runAppTests returns journey evidence and the PASS line that shows it', async () => {
