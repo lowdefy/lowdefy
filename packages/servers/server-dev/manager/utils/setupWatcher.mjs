@@ -15,7 +15,6 @@
 */
 
 import path from 'path';
-// CI scratch: one-package change.
 
 import chokidar from 'chokidar';
 import BatchChanges from './BatchChanges.mjs';
