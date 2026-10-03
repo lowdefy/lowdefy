@@ -1,0 +1,35 @@
+id: second
+type: Box
+requests:
+  # The same request id as home's: call counts are told apart by page.
+  - id: save_item
+    type: MongoDBInsertOne
+    connectionId: fixture_db
+    properties:
+      doc:
+        kind: item
+        page: second
+blocks:
+  - id: second_title
+    type: Title
+    properties:
+      content: Second page
+      level: 2
+  - id: second_save_button
+    type: Button
+    properties:
+      title: Save on second
+    events:
+      onClick:
+        - id: save_second
+          type: Request
+          params: save_item
+  - id: home_link
+    type: Button
+    properties:
+      title: Back home
+    events:
+      onClick:
+        - id: to_home
+          type: Link
+          params: home

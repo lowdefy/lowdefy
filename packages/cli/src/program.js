@@ -37,7 +37,12 @@ import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
 import journeysCompile from './commands/journeys/journeysCompile.js';
+import journeysHarden from './commands/journeys/harden/journeysHarden.js';
+import journeysVariants from './commands/journeys/variants/journeysVariants.js';
 import journeysRecordings from './commands/journeys/journeysRecordings.js';
+import journeysCoverage from './commands/journeys/journeysCoverage.js';
+import journeysEvidence from './commands/journeys/journeysEvidence.js';
+import journeysPullPosthog from './commands/journeys/pull/journeysPullPosthog.js';
 import mcp from './commands/mcp/mcp.js';
 import start from './commands/start/start.js';
 import test from './commands/test/test.js';
@@ -286,7 +291,9 @@ hub
 
 const journeys = program
   .command('journeys')
-  .description('Turn recorded interaction traces into candidate journeys.');
+  .description(
+    'Compile candidate journeys from recorded traces, report how real use backs them, harden journeys and write their variants.'
+  );
 
 journeys
   .command('compile')
@@ -333,6 +340,86 @@ journeys
   .action(runCommand({ cliVersion, handler: journeysCompile }));
 
 journeys
+  .command('harden')
+  .description(
+    "Break the config on purpose, one change at a time and only in the journeys' own browsers, and report each change no journey noticed."
+  )
+  .usage('[options] [paths...]')
+  .argument(
+    '[paths...]',
+    'Journey files or directories to harden instead of tests/journeys/*.yaml.'
+  )
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(new Option('--filter <name>', 'Only journeys whose name contains this string.'))
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--page <pageId...>',
+      'Only mutants on these pages, and endpoint mutants a journey touching them called.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--operators <operators>',
+      'Only these operators, comma separated: drop-action, skip-validate, flip-visible, swap-if, drop-payload, retarget-link, drop-block, drop-step.'
+    )
+  )
+  .addOption(new Option('--max <n>', 'Run at most n mutants (0: no cap). Default 200.'))
+  .addOption(
+    new Option('--seed <n>', 'The sample seed: another seed draws another sample. Default 0.')
+  )
+  .addOption(new Option('--workers <n>', 'Journey runs at once (1 to 16). Default 4.'))
+  .addOption(new Option('--mutant <id>', 'Run only this mutant, against the journeys on its path.'))
+  .addOption(new Option('--list', 'List the sampled mutants and the time estimate, run nothing.'))
+  .addOption(new Option('--json', 'Print the report as JSON.'))
+  .addOption(options.port)
+  .addOption(options.refResolver)
+  .addOption(
+    new Option(
+      '--url <url>',
+      'Run against an already running dev server instead of starting one, e.g. http://localhost:3000.'
+    )
+  )
+  .action((paths, commandOptions, command) =>
+    runCommand({ cliVersion, handler: journeysHarden })({ ...commandOptions, paths }, command)
+  );
+
+journeys
+  .command('variants')
+  .description(
+    'Write edge-case candidates of a journey (bad input, a reload mid-flow, a double click) to tests/journeys/_candidates/variants/ and replay each three times.'
+  )
+  .usage('[options] <file>')
+  .argument('<file>', 'The journey file to vary.')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(new Option('--name <journey>', 'The journey to vary, when the file holds several.'))
+  .addOption(
+    new Option(
+      '--kinds <kinds>',
+      'Only these kinds, comma separated: role, tenant, empty, volume, negative, interrupt, double-submit. The data-set kinds need data sets.'
+    )
+  )
+  .addOption(new Option('--empty-data <name>', 'The data set an empty variant runs on.'))
+  .addOption(new Option('--volume-data <name>', 'The data set a volume variant runs on.'))
+  .addOption(new Option('--no-run', 'Write the variants without replaying them.'))
+  .addOption(options.logLevel)
+  .addOption(options.port)
+  .addOption(options.refResolver)
+  .addOption(
+    new Option(
+      '--url <url>',
+      'Run against an already running dev server instead of starting one, e.g. http://localhost:3000.'
+    )
+  )
+  .action((file, commandOptions, command) =>
+    runCommand({ cliVersion, handler: journeysVariants })({ ...commandOptions, file }, command)
+  );
+
+journeys
   .command('recordings')
   .description(
     'List the dev sessions the dev server recorded, with what the newest test run already covers.'
@@ -356,6 +443,96 @@ journeys
   )
   .addOption(new Option('--json', 'Print the sessions as JSON on stdout.'))
   .action(runCommand({ cliVersion, handler: journeysRecordings }));
+
+journeys
+  .command('pull')
+  .description(
+    'Pull production analytics into .lowdefy/traces/production/, one UTC day per file. The adapter is posthog.'
+  )
+  .usage('<adapter> [options]')
+  .argument('<adapter>', 'Where production analytics are read from: posthog.')
+  .addOption(options.configDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--since <since>',
+      'The days to pull, ending today: a number of days such as 30d (the default), or a start date.'
+    )
+  )
+  .addOption(new Option('--from <date>', 'The first UTC day to pull, YYYY-MM-DD.'))
+  .addOption(new Option('--to <date>', 'The last UTC day to pull, YYYY-MM-DD.'))
+  .addOption(
+    new Option(
+      '--environment <name>',
+      'Only events whose environment super property is this, for a project shared by several environments.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--include-test-accounts',
+      "Include events the project's test-account filter leaves out."
+    )
+  )
+  .addOption(
+    new Option('--org-property <name>', 'The person property holding the org id. Default: org_id.')
+  )
+  .addOption(
+    new Option('--roles-property <name>', 'The person property holding the roles. Default: roles.')
+  )
+  .addOption(new Option('--page-size <rows>', 'Rows per query, at most 50000. Default: 10000.'))
+  .addOption(
+    new Option(
+      '--max-rows <rows>',
+      'Stop before a pull would read more rows than this. Default: 500000.'
+    )
+  )
+  .addOption(new Option('--refetch', 'Pull final days again (days older than yesterday).'))
+  .action(runCommand({ cliVersion, handler: journeysPullPosthog }));
+
+const productionWindowOptions = [
+  new Option(
+    '--since <since>',
+    'The production window ending today: a number of days such as 30d (the default), or a start date.'
+  ),
+  new Option('--from <date>', 'The first UTC day of the production window, YYYY-MM-DD.'),
+  new Option('--to <date>', 'The last UTC day of the production window, YYYY-MM-DD.'),
+];
+
+const journeysEvidenceCommand = journeys
+  .command('evidence')
+  .description(
+    "Report how much production use backs each journey in tests/journeys/; --refresh writes it into each journey's evidence key."
+  )
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(new Option('--source <source>', 'Where use is read from: production (the default).'))
+  .addOption(
+    new Option(
+      '--refresh',
+      'Write the evidence key of every journey whose numbers changed, and nothing else in the file.'
+    )
+  );
+productionWindowOptions.forEach((option) => journeysEvidenceCommand.addOption(option));
+journeysEvidenceCommand.action(runCommand({ cliVersion, handler: journeysEvidence }));
+
+const journeysCoverageCommand = journeys
+  .command('coverage')
+  .description(
+    'Report which production flows, failures, frustrated clicks and role sets no journey covers, and write .lowdefy/test/coverage.json.'
+  )
+  .usage('[options]')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(new Option('--source <source>', 'Where use is read from: production (the default).'))
+  .addOption(new Option('--json', 'Print the coverage report as JSON instead of the summary.'));
+productionWindowOptions.forEach((option) => journeysCoverageCommand.addOption(option));
+journeysCoverageCommand.action(runCommand({ cliVersion, handler: journeysCoverage }));
 
 program
   .command('init')
@@ -432,6 +609,12 @@ program
     new Option(
       '--journeys-directory <journeys-directory>',
       'Change the directory journeys are read from. Default is "<config-directory>/tests/journeys". Fails when the directory holds no journeys.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--lint',
+      'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L6 final assertion) and run nothing.'
     )
   )
   .addOption(options.logLevel)

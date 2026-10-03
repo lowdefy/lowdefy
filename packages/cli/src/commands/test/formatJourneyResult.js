@@ -17,6 +17,7 @@
 import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
 
+import formatEvidence from './formatEvidence.js';
 import formatJourneyDataSet from './formatJourneyDataSet.js';
 
 function toCompactYaml(value) {
@@ -68,10 +69,18 @@ function failureLines({ failure, message }) {
   return lines;
 }
 
+function withEvidence({ line, evidence }) {
+  const formatted = formatEvidence({ evidence });
+  return formatted === '' ? line : `${line}  ${formatted}`;
+}
+
 function formatSingle({ result, seen }) {
   if (result.passed) {
     return [
-      `PASS  ${result.name}  (${result.stepCount} steps, ${result.durationMs}ms)`,
+      withEvidence({
+        line: `PASS  ${result.name}  (${result.stepCount} steps, ${result.durationMs}ms)`,
+        evidence: result.evidence,
+      }),
       ...formatJourneyDataSet({ result, seen }),
     ];
   }
@@ -87,7 +96,10 @@ function formatRepeated({ result, seen }) {
   const seconds = (result.durationMs / 1000).toFixed(1);
   if (result.class === 'PASS') {
     return [
-      `PASS   ${result.name}   (${result.stepCount} steps, ${result.passedRuns}/${result.runs}, ${seconds}s each)`,
+      withEvidence({
+        line: `PASS   ${result.name}   (${result.stepCount} steps, ${result.passedRuns}/${result.runs}, ${seconds}s each)`,
+        evidence: result.evidence,
+      }),
       ...formatJourneyDataSet({ result, seen }),
     ];
   }

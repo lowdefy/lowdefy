@@ -23,6 +23,7 @@ import BuildingPage from '../lib/client/BuildingPage.jsx';
 import RestartingPage from '../lib/client/RestartingPage.jsx';
 import FeedbackMount from './feedback/FeedbackMount.jsx';
 import Inspector from './Inspector.jsx';
+import JourneyObserver from './JourneyObserver.jsx';
 import OpenInEditorListener from './openInEditor/OpenInEditorListener.jsx';
 import Recorder from './Recorder.jsx';
 import Reload from './Reload.jsx';
@@ -80,6 +81,7 @@ function Routing({ auth, lowdefy, recording, router }) {
           <>
             {/* Inside Reload so it can share Reload's event stream (DevStreamContext). */}
             <Inspector basePath={router.basePath} lowdefy={lowdefy} pageId={pageId} />
+            <JourneyObserver lowdefy={lowdefy} />
             <Recorder
               basePath={router.basePath}
               lowdefy={lowdefy}

@@ -54,6 +54,7 @@ beforeEach(() => {
     directories: {
       config: configDirectory,
       journeys: path.join(configDirectory, 'tests', 'journeys'),
+      test: path.join(configDirectory, '.lowdefy', 'test'),
       traces: path.join(configDirectory, '.lowdefy', 'traces'),
     },
     options: { port: 3000 },
@@ -344,6 +345,38 @@ test("test writes each journey's newest exercised path to .lowdefy/test/exercise
   });
 });
 
+test('test --lint lints without a server, exits 1 on an error and 0 on warnings only', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile(
+    'a.yaml',
+    journeyYaml({
+      name: 'waits a fixed time',
+      steps: '  - wait: { ms: 100 }\n  - expect: { visible: done }\n',
+    })
+  );
+  context.options = { lint: true };
+  await test({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(process.exitCode).toBe(1);
+  expect(logs.error).toContain(
+    'L3  waits a fixed time  step 0 (wait: { ms }) waits a fixed time: wait for a request or a state, or expect the outcome, instead.'
+  );
+  expect(logs.warn).toContain(
+    'L4  waits a fixed time  not checked for writes: run lowdefy test once so lint can see what it calls.'
+  );
+
+  process.exitCode = undefined;
+  logs = { info: [], warn: [], error: [] };
+  writeJourneyFile(
+    'a.yaml',
+    journeyYaml({ name: 'asserts', steps: '  - click: save\n  - expect: { visible: done }\n' })
+  );
+  await test({ context });
+  expect(process.exitCode).toBeUndefined();
+  expect(logs.info).toContain('Linted 1 journeys: 0 errors, 1 warnings.');
+});
+
 test('a full-suite run records every journey into one run on its first repetition only', async () => {
   const { default: test } = await import('./test.js');
   writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
@@ -377,6 +410,14 @@ test('a full-suite run records every journey into one run on its first repetitio
       `${recordings[0].run}.jsonl`
     )}.`
   );
+  const testRun = JSON.parse(
+    fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'run.json'), 'utf8')
+  );
+  expect(testRun.run).toBe(recordings[0].run);
+  expect(Object.keys(testRun.journeys)).toEqual([
+    'tests/journeys/a.yaml#first journey',
+    'tests/journeys/b.yaml#second journey',
+  ]);
 });
 
 test('a --filter run and a run of named paths record nothing', async () => {

@@ -193,9 +193,9 @@ test('createLowdefyContext forwards the verified loopback journey cookies on loo
   });
 });
 
-test('createLowdefyContext sets an empty loopback cookie when the request carries no journey cookie', async () => {
+test('createLowdefyContext forwards no Cookie header when the request carries no journey cookie', async () => {
   const context = await createLowdefyContext({ c: createHonoContext() });
-  expect(context.loopbackHeaders).toEqual({ cookie: '' });
+  expect(context.loopbackHeaders).toEqual({});
 });
 
 test('createLowdefyContext serves the mutated artifact to a request whose cookie names an open mutant run', async () => {
@@ -343,7 +343,7 @@ describe('data sessions', () => {
       expect(context.readConfigFile).toBe(readConfigFile);
       expect(context.waitUntil).toBeUndefined();
       expect(context.dataSet).toBeUndefined();
-      expect(context.loopbackHeaders).toEqual({ cookie: '' });
+      expect(context.loopbackHeaders).toEqual({});
     }
     expect(resolveTenantPreflight).toHaveBeenCalledTimes(2);
   });

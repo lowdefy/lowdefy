@@ -185,10 +185,13 @@ _ref:
             - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
             - `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
             - `--disable-telemetry`: Disable telemetry.
+            - `[paths...]`: Journey files or directories to run instead of `tests/journeys/*.yaml`, anywhere under the config directory, candidates in `tests/journeys/_candidates/` included.
             - `--filter <name>`: Only run journeys whose `name` contains this string (case-insensitive). Exits with code `1` if no journey matches.
+            - `--lint`: Check the journeys for the lint rules (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L6 final assertion) and run nothing. Exits with code `1` on any lint error. See [Lint](/config-tests#lint).
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
             - `--port <port>`: The port to start the development server on. If it is in use, the next free port is used. The default is `3000`.
             - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+            - `--repeat <n>`: Run each journey `n` times (1 to 10) and classify it `PASS`, `FLAKY` or `FAIL`. Exits with code `1` on any `FLAKY` or `FAIL`. See [Replaying candidates](/config-tests#replaying-candidates).
             - `--url <url>`: Run the journeys against an already running development server (for example `--url http://localhost:3000` while `lowdefy dev` is running) instead of starting one.
 
             ## journeys compile
@@ -196,7 +199,7 @@ _ref:
             The `journeys compile` command turns recorded interaction traces into candidate journeys. It groups recorded segments that do the same thing step by step and writes one candidate per group to `tests/journeys/_candidates/<source>/`, which `lowdefy test` does not run. See [Candidates from recorded traces](/config-tests#candidates-from-recorded-traces).
 
             - `[traceFiles...]`: The trace files (JSONL) to compile. Without them, `--source dev` or `--source explorer` reads the recordings in `.lowdefy/traces/<source>/`.
-            - `--source <source>`: `production`, `dev` or `explorer`. Required when no trace files are given; with files, compiles only records of this source.
+            - `--source <source>`: `production`, `dev` or `explorer`. Required when no trace files are given; with files, compiles only records of this source. `--source production` with no files reads the cache that [`journeys pull posthog`](#journeys-pull-posthog) writes to `.lowdefy/traces/production/`, over the window's whole UTC days.
             - `--since <since>`: Only records at or after this time: a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production traces default to `30d`.
             - `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: Production only. An explicit window of whole UTC days instead of `--since`.
             - `--build <id|current>`: Only segments whose records all ran on this build. `current` is the build the running development server serves.
@@ -206,6 +209,32 @@ _ref:
             - `--dev-directory <dev-directory>`: Change the dev directory, where the development server's build is read from. The default is `<config-directory>/.lowdefy/dev`.
             - `--disable-telemetry`: Disable telemetry.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+            ## journeys harden
+
+            The `journeys harden` command measures whether journeys fail when the feature they walk breaks. It runs each journey once, lists the config mutants on what the runs exercised, runs each mutant against the journeys that reached it, only in their own browsers, and reports every mutant no journey noticed with its source line, and a score per journey, in `.lowdefy/test/mutation.json`. It exits with code `0` even with survivors. See [Mutants](/config-tests#mutants-lowdefy-journeys-harden).
+
+            - `[paths...]`: Journey files or directories to harden instead of `tests/journeys/*.yaml`.
+            - `--filter <name>`: Only journeys whose `name` contains this string.
+            - `--page <pageId...>`: Only mutants on these pages, and endpoint mutants a journey touching them called.
+            - `--operators <list>`: Only these operators, comma separated: `drop-action`, `skip-validate`, `flip-visible`, `swap-if`, `drop-payload`, `retarget-link`, `drop-block`, `drop-step`.
+            - `--max <n>`: Run at most `n` mutants. The default is `200`; `0` means no cap.
+            - `--seed <n>`: The sample's seed; another seed draws another sample. The default is `0`.
+            - `--workers <n>`: Journey runs at once, 1 to 16. The default is `4`.
+            - `--mutant <id>`: Run only this mutant against the journeys on its path, without replacing the report.
+            - `--list`: Print the sampled mutants and a time estimate, and run nothing.
+            - `--json`: Print the report as JSON.
+            - `--url <url>`, `--port <port>`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
+
+            ## journeys variants
+
+            The `journeys variants` command writes edge-case candidates of one journey — bad input (`negative`), a reload mid-flow (`interrupt`) and a double click (`double-submit`) — to `tests/journeys/_candidates/variants/`, and replays each three times. See [Variants](/config-tests#variants-lowdefy-journeys-variants).
+
+            - `<file>`: The journey file to vary.
+            - `--name <journey>`: The journey to vary, when the file holds several.
+            - `--kinds <list>`: Only these kinds, comma separated. The kinds for roles, another organisation, empty and large data need data sets and are skipped.
+            - `--no-run`: Write the variants without replaying them.
+            - `--url <url>`, `--port <port>`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
 
             ## journeys recordings
 
@@ -218,6 +247,53 @@ _ref:
             - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
             - `--disable-telemetry`: Disable telemetry.
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+            ## journeys pull posthog
+
+            The `journeys pull posthog` command reads the app's production analytics from its PostHog project, one UTC day at a time, and writes them as interaction traces to `.lowdefy/traces/production/<YYYY-MM-DD>.jsonl`, with a `<YYYY-MM-DD>.manifest.json` beside each day. `journeys compile`, `journeys evidence` and `journeys coverage` read that cache with `--source production`. See [Production journeys](/config-tests#production-journeys).
+
+            It reads three environment variables (the app's `.env` file is loaded first):
+
+            - `POSTHOG_PROJECT_ID`: The PostHog project the app sends its analytics to.
+            - `POSTHOG_API_HOST`: The project's API host, an `https://` URL such as `https://eu.posthog.com`. There is no default, because the wrong region answers as if the key were wrong.
+            - `POSTHOG_PERSONAL_API_KEY`: Your own PostHog personal API key, scoped to the project with the **Query Read** scope. Export it in your shell or put it in the app's `.env`; never commit it. It is sent only to `POSTHOG_API_HOST` and never logged or written to a manifest.
+
+            A day older than yesterday is final: it is pulled once and skipped afterwards. Today and yesterday are pulled again on every run, because PostHog accepts late events. Day files older than 400 days are removed at the start of each pull. Person and organisation ids are hashed with a random salt kept in `.lowdefy/traces/production/salt`, which never leaves your machine.
+
+            - `--since <since>`: The days to pull, ending today: a number of days such as `30d`, or a start date. The default is `30d`.
+            - `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: An explicit window of whole UTC days instead of `--since`. Pass both.
+            - `--environment <name>`: Only events whose `environment` super property is this, for a project that receives several environments. By default nothing is filtered.
+            - `--include-test-accounts`: Include the events the project's test-account filter leaves out.
+            - `--org-property <name>`: The person property holding the organisation id. The default is `org_id`.
+            - `--roles-property <name>`: The person property holding the roles. The default is `roles`.
+            - `--page-size <rows>`: Rows read per query, at most `50000`. The default is `10000`.
+            - `--max-rows <rows>`: Stop before the pull would read more rows than this, and say to shorten `--since`. The default is `500000`.
+            - `--refetch`: Pull final days again.
+            - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+            - `--disable-telemetry`: Disable telemetry.
+            - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+            When PostHog rate limits the pull for longer than a minute, or the project's hourly query budget for personal keys runs out, the pull stops, keeps the days it has written, and says when to run it again. The next run picks up where it stopped.
+
+            ## journeys evidence
+
+            The `journeys evidence` command works out how much production use backs each journey in `tests/journeys/`: the sessions that did what the journey does, the people and organisations behind them, its share of the sessions entering on its page, and how many of them failed. It also counts the dev recordings of the last 7 days that back each journey. See [Evidence](/config-tests#evidence).
+
+            Without `--refresh` it prints what would change and writes nothing. With `--refresh` it rewrites the `evidence` key of each journey whose numbers changed, and nothing else in the file. It is the only command that writes `evidence`. Afterwards it lists the journeys no production session backs, beside their mutation numbers. It never removes a journey.
+
+            - `--refresh`: Write the changed `evidence` keys.
+            - `--source <source>`: Where use is read from. Only `production` for now, the default.
+            - `--since <since>`, `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: The production window, as for [`journeys pull posthog`](#journeys-pull-posthog). A day of the window missing from the cache is an error naming the pull to run.
+            - `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys compile`](#journeys-compile).
+
+            ## journeys coverage
+
+            The `journeys coverage` command reports what real use no journey in `tests/journeys/` covers yet, five ways, each with its uncovered items ranked by use, and writes the report with the production profile to `.lowdefy/test/coverage.json`. When the development server recorded a full test run, the interaction measure adds the share that run drove, and failure coverage counts only failures a passing journey produced. See [Coverage](/config-tests#coverage).
+
+            - `--json`: Print the report as JSON instead of the summary.
+            - `--source <source>`: Where use is read from. Only `production` for now, the default.
+            - `--since <since>`, `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: The production window, as for [`journeys pull posthog`](#journeys-pull-posthog).
+            - `--config-directory`, `--dev-directory`, `--disable-telemetry`, `--log-level`: As for [`journeys compile`](#journeys-compile).
 
             ## upgrade
 

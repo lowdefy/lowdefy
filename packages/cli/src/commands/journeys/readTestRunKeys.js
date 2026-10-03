@@ -14,30 +14,24 @@
   limitations under the License.
 */
 
-import { compileTrace, listRecordingFiles, readRecordings } from '@lowdefy/node-utils';
+import { compileTrace } from '@lowdefy/node-utils';
+
+import readNewestTestRun from './readNewestTestRun.js';
 
 function sequenceKey({ page, identity }) {
   return `${page} ${identity}`;
 }
 
-// The interactions the newest test run drove, as sequence keys: the newest
-// `journey` run recorded by `lowdefy test` or lowdefy_run_tests (`run.by:
-// test`, always a full-suite run). A newer lowdefy_run_journey experiment
-// (`run.by: agent`) never stands in for the suite. No such run: testRun null.
+// The interactions the newest test run drove, as sequence keys. No test run:
+// testRun null.
 function readTestRunKeys({ configDirectory }) {
-  const files = listRecordingFiles({ configDirectory, source: 'journey' }).reverse();
-  for (const file of files) {
-    const records = readRecordings({ configDirectory, source: 'journey', run: file.id });
-    if (records.some((record) => record?.run?.by === 'test')) {
-      const { segments } = compileTrace({
-        records: records.filter((record) => record?.run?.by === 'test'),
-        source: 'journey',
-      });
-      const keys = new Set(segments.flatMap((segment) => segment.sequence.map(sequenceKey)));
-      return { testRun: { id: file.id }, keys };
-    }
+  const newest = readNewestTestRun({ configDirectory });
+  if (newest === null) {
+    return { testRun: null, keys: new Set() };
   }
-  return { testRun: null, keys: new Set() };
+  const { segments } = compileTrace({ records: newest.records, source: 'journey' });
+  const keys = new Set(segments.flatMap((segment) => segment.sequence.map(sequenceKey)));
+  return { testRun: { id: newest.id }, keys };
 }
 
 export { sequenceKey };

@@ -107,6 +107,39 @@ test('journeySchema accepts a journey with an open step the runner accepts', () 
   expect(validateJourney({ journey })).toEqual({ valid: true });
 });
 
+test('validateJourney accepts expect.hidden, expect.calls and click.count', () => {
+  const journey = {
+    ...minimalJourney,
+    steps: [
+      { click: { blockId: 'submit', count: 2 } },
+      { expect: { hidden: 'error_alert' } },
+      { expect: { calls: { request: 'save', pageId: 'form', count: 1 } } },
+      { expect: { calls: { endpoint: 'notify', count: 0 } } },
+    ],
+  };
+  expect(validateJourney({ journey })).toEqual({ valid: true });
+});
+
+test('journeySchema accepts a variant key and rejects unknown keys inside it', () => {
+  const variant = {
+    of: 'submits the form',
+    kind: 'double-submit',
+    detail: 'double click "submit"',
+  };
+  expect(validateJourney({ journey: { ...minimalJourney, variant } })).toEqual({ valid: true });
+  const extra = validateJourney({
+    journey: { ...minimalJourney, variant: { ...variant, seed: 1 } },
+  });
+  expect(extra.valid).toBe(false);
+  expect(extra.message).toContain('Journey "variant" should only have "of", "kind" and "detail".');
+  const missing = validateJourney({ journey: { ...minimalJourney, variant: { of: 'x' } } });
+  expect(missing.message).toContain('Journey "variant" should have "of", "kind" and "detail".');
+  const wrongType = validateJourney({
+    journey: { ...minimalJourney, variant: { ...variant, kind: 3 } },
+  });
+  expect(wrongType.message).toContain('Journey "variant.kind" should be a string.');
+});
+
 test('validateJourney reports a malformed step with the grammar error naming the step', () => {
   const journey = { ...minimalJourney, steps: [{ click: 'a' }, { fill: { blockId: 'title' } }] };
   expect(validateJourney({ journey })).toEqual({
@@ -140,6 +173,98 @@ test('journeySchema rejects a non-object journey', () => {
   const result = validateJourney({ journey: 'not a journey' });
   expect(result.valid).toBe(false);
   expect(result.message).toContain('Journey should be an object.');
+});
+
+const fullEvidence = {
+  production: {
+    sessions: 412,
+    persons: 37,
+    orgs: 9,
+    share: 0.31,
+    failures: 14,
+    window: '2026-09-03/2026-10-02',
+  },
+  dev: { recordings: 2 },
+  explorer: { prs: [2531] },
+  mutation: { killed: 11, total: 12, unique: 2 },
+  refreshed: '2026-10-03',
+};
+
+test('journeySchema accepts a full evidence key', () => {
+  expect(validateJourney({ journey: { ...minimalJourney, evidence: fullEvidence } })).toEqual({
+    valid: true,
+  });
+});
+
+test('journeySchema accepts evidence.mutation without unique', () => {
+  const evidence = { ...fullEvidence, mutation: { killed: 3, total: 3 } };
+  expect(validateJourney({ journey: { ...minimalJourney, evidence } })).toEqual({ valid: true });
+});
+
+test.each([
+  ['evidence', { ...fullEvidence, extra: 1 }, 'Journey "evidence" has an unknown key'],
+  [
+    'evidence.production',
+    { ...fullEvidence, production: { ...fullEvidence.production, users: 3 } },
+    'Journey "evidence.production" has an unknown key',
+  ],
+  [
+    'evidence.dev',
+    { ...fullEvidence, dev: { recordings: 2, runs: 1 } },
+    'Journey "evidence.dev" has an unknown key',
+  ],
+  [
+    'evidence.explorer',
+    { ...fullEvidence, explorer: { prs: [1], walks: 2 } },
+    'Journey "evidence.explorer" has an unknown key',
+  ],
+  [
+    'evidence.mutation',
+    { ...fullEvidence, mutation: { killed: 1, total: 2, survived: 1 } },
+    'Journey "evidence.mutation" has an unknown key',
+  ],
+])('journeySchema refuses an unknown key in %s', (_, evidence, message) => {
+  const result = validateJourney({ journey: { ...minimalJourney, evidence } });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain(message);
+});
+
+test('journeySchema refuses evidence.production without a window', () => {
+  const { window, ...production } = fullEvidence.production;
+  const result = validateJourney({
+    journey: { ...minimalJourney, evidence: { ...fullEvidence, production } },
+  });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain('Journey "evidence.production" should have');
+});
+
+test('journeySchema refuses an evidence share above 1', () => {
+  const evidence = { ...fullEvidence, production: { ...fullEvidence.production, share: 1.2 } };
+  const result = validateJourney({ journey: { ...minimalJourney, evidence } });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain(
+    'Journey "evidence.production.share" should be a number from 0 to 1.'
+  );
+});
+
+test.each(['2026-09-03', '2026-09-03..2026-10-02'])(
+  'journeySchema refuses the evidence window %j',
+  (window) => {
+    const evidence = { ...fullEvidence, production: { ...fullEvidence.production, window } };
+    const result = validateJourney({ journey: { ...minimalJourney, evidence } });
+    expect(result.valid).toBe(false);
+    expect(result.message).toContain('evidence.production.window');
+  }
+);
+
+test('validateJourney refuses more mutants killed than total, naming both numbers', () => {
+  const evidence = { ...fullEvidence, mutation: { killed: 13, total: 12 } };
+  const result = validateJourney({ journey: { ...minimalJourney, evidence } });
+  expect(result).toEqual({
+    valid: false,
+    message:
+      'Journey "evidence.mutation.killed" (13) should not be more than "evidence.mutation.total" (12).',
+  });
 });
 
 test('journeySchema accepts data and a data set user name', () => {

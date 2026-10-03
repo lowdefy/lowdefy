@@ -331,13 +331,16 @@ async function runOpen({ page, step, timeout }) {
   await page.waitForTimeout(250);
 }
 
+// `count` clicks in quick succession through one Playwright click, as a
+// person's double click: the runner's settle comes after all of them, so a
+// double click is never turned into a second submit after the first settled.
 async function runClick({ page, step, timeout }) {
-  const target = normaliseTarget(step.click);
+  const { count = 1, ...target } = normaliseTarget(step.click);
   await actOnTarget({
     target,
     action: async () => {
       const locator = await resolveClickLocator({ page, target });
-      await locator.click({ timeout });
+      await locator.click({ timeout, clickCount: count });
     },
   });
 }
@@ -605,6 +608,64 @@ async function expectVisible({ page, params, timeout }) {
   }
 }
 
+// Passes once no element the target names is visible: nothing matches, or
+// every match is hidden. Resolves at once when nothing matches yet, so a
+// journey pairs it with something that must be present first.
+async function expectHidden({ page, params, timeout }) {
+  const target = normaliseTarget(params);
+  const description = describeTarget(target);
+  try {
+    const located = await resolveTarget({ page, target });
+    await located.filter({ visible: true }).first().waitFor({ state: 'hidden', timeout });
+  } catch (error) {
+    throw new JourneyStepError(`Expected ${description} to be hidden.`, {
+      expected: `${description} to be hidden`,
+      actual: cleanMessage(error),
+    });
+  }
+}
+
+function plural({ count, word }) {
+  return `${count} ${word}${count === 1 ? '' : 's'}`;
+}
+
+// Counts the calls the current actor's browser made to one request or
+// endpoint since the journey started, from the network counter, which keeps
+// its counts across full page loads. Compared once, after the page settles,
+// without polling: "not called" can only be judged once the moment has passed.
+// A request with no pageId is counted on the page the actor is on; when no
+// Lowdefy page is showing (it crashed or left the app) the step fails, since a
+// count of 0 against no page would pass without proving anything.
+async function expectCalls({ journey, page, params }) {
+  await settlePage({ page, timeout: Math.min(journey.stepTimeout, SETTLE_TIMEOUT_MS) });
+  let query;
+  let description;
+  if (type.isUndefined(params.endpoint)) {
+    const pageId = params.pageId ?? (await page.evaluate(() => window.lowdefy?.pageId));
+    if (type.isNone(pageId)) {
+      throw new JourneyStepError(
+        `Expected request "${params.request}" to be counted on the current page, but no Lowdefy page is showing.`,
+        { expected: `a Lowdefy page to count request "${params.request}" on`, actual: null }
+      );
+    }
+    query = { request: params.request, pageId };
+    description = `request "${params.request}" on page "${pageId}"`;
+  } else {
+    query = { endpoint: params.endpoint };
+    description = `endpoint "${params.endpoint}"`;
+  }
+  const actual = journey.actors.countCalls(query);
+  if (actual !== params.count) {
+    throw new JourneyStepError(
+      `Expected ${description} to have been called ${plural({
+        count: params.count,
+        word: 'time',
+      })} but it was called ${plural({ count: actual, word: 'time' })}.`,
+      { expected: params.count, actual }
+    );
+  }
+}
+
 // Waits for the target to be in the page, then reads the text of every element
 // it matches. A grid row is rendered once per column container (pinned left,
 // centre, pinned right), so a row target legitimately matches more than one
@@ -697,7 +758,7 @@ async function expectUrl({ page, params, timeout }) {
   }
 }
 
-async function runExpect({ page, step, timeout }) {
+async function runExpect({ journey, page, step, timeout }) {
   const expectation = step.expect;
   const key = getStepKey(expectation);
   const params = expectation[key];
@@ -707,6 +768,12 @@ async function runExpect({ page, step, timeout }) {
       return;
     case 'visible':
       await expectVisible({ page, params, timeout });
+      return;
+    case 'hidden':
+      await expectHidden({ page, params, timeout });
+      return;
+    case 'calls':
+      await expectCalls({ journey, page, params });
       return;
     case 'text':
       await expectText({ page, params, timeout });
@@ -790,7 +857,7 @@ async function runStep({ journey, step, index, screenshots }) {
       await runScreenshot({ page, step, index, screenshots });
       return;
     case 'expect':
-      await runExpect({ page, step, timeout });
+      await runExpect({ journey, page, step, timeout });
       return;
     default:
       return;
@@ -841,6 +908,7 @@ async function runJourneySteps({ journey, steps }) {
           timeout: Math.min(journey.stepTimeout, SETTLE_TIMEOUT_MS),
         });
       }
+      await journey.actors.sampleRendered();
       results.push({ index, step, status: 'ok', durationMs: Date.now() - started });
     } catch (error) {
       failure = toFailure({ error, index, step });

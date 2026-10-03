@@ -14,15 +14,20 @@
   limitations under the License.
 */
 
-// The page an app path names: `/orders` is the page `orders`. Paths without a
-// leading slash are fragments of a URL (a query, part of a path) and name no
-// page. Kept local until the client's parsePageId moves into @lowdefy/helpers,
-// then this should use it.
-function pageIdFromPath({ path }) {
-  if (!path.startsWith('/')) return undefined;
-  const pathname = new URL(path, 'http://lowdefy.invalid').pathname;
-  const pageId = pathname.replace(/^\//, '').replace(/\/$/, '');
-  return pageId === '' ? undefined : pageId;
-}
+import doubleSubmit from './doubleSubmit.js';
+import interrupt from './interrupt.js';
+import negative from './negative.js';
 
-export default pageIdFromPath;
+// The variant kinds, in the order they are written. The data-set kinds
+// (role, tenant, empty, volume) have no generator until journeys gain data
+// sets, and are listed as skipped.
+const KINDS = ['role', 'tenant', 'empty', 'volume', 'negative', 'interrupt', 'double-submit'];
+
+const generators = {
+  negative,
+  interrupt,
+  'double-submit': doubleSubmit,
+};
+
+export { KINDS };
+export default generators;
