@@ -33,14 +33,35 @@ function slowAnswer({ delayMs }) {
 }
 
 test('keepEventStreamAlive sends comments while a tool call is silent, then the answer', async () => {
+  // The tool call answers only once the client has read two comments, so the
+  // test does not depend on how promptly timers fire.
+  let answerNow;
+  const body = new ReadableStream({
+    start(controller) {
+      answerNow = () => {
+        controller.enqueue(encoder.encode(answer));
+        controller.close();
+      };
+    },
+  });
   const response = keepEventStreamAlive({
-    response: slowAnswer({ delayMs: 120 }),
-    intervalMs: 30,
+    response: new Response(body, { headers: { 'content-type': 'text/event-stream' } }),
+    intervalMs: 10,
   });
   expect(response.headers.get('content-type')).toEqual('text/event-stream');
-  const text = await response.text();
-  expect(text.startsWith(': keep-alive\n\n: keep-alive\n\n')).toBe(true);
-  expect(text.endsWith(answer)).toBe(true);
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  const read = async () => decoder.decode((await reader.read()).value);
+  expect(await read()).toEqual(': keep-alive\n\n');
+  expect(await read()).toEqual(': keep-alive\n\n');
+  answerNow();
+  let rest = '';
+  let chunk = await reader.read();
+  while (!chunk.done) {
+    rest += decoder.decode(chunk.value);
+    chunk = await reader.read();
+  }
+  expect(rest.endsWith(answer)).toBe(true);
 });
 
 test('keepEventStreamAlive stops its comments when the stream ends', async () => {
