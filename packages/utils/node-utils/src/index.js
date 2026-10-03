@@ -20,14 +20,18 @@ import collectEnvironmentGuards from './collectEnvironmentGuards.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import createClientAddressResolver from './createClientAddressResolver.js';
 import createSecretScrubber from './createSecretScrubber.js';
+import dataSetNamePattern from './dataSetNamePattern.js';
 import findAvailablePort from './findAvailablePort.js';
 import getDevInstancePath from './getDevInstancePath.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 import getProcessStartTime from './getProcessStartTime.js';
 import getSecretsFromEnv from './getSecretsFromEnv.js';
+import hashDataSetSpec from './hashDataSetSpec.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPidAlive from './isPidAlive.js';
 import isPortAvailable from './isPortAvailable.js';
+import listDataSets from './listDataSets.js';
+import parseDataSet from './parseDataSet.js';
 import parseIpRange from './parseIpRange.js';
 import readDevInstance from './readDevInstance.js';
 import spawnProcess from './spawnProcess.js';
@@ -42,15 +46,19 @@ export {
   copyFileOrDirectory,
   createClientAddressResolver,
   createSecretScrubber,
+  dataSetNamePattern,
   findAvailablePort,
   getDevInstancePath,
   getFileExtension,
   getFileSubExtension,
   getProcessStartTime,
   getSecretsFromEnv,
+  hashDataSetSpec,
   installIfPackageJsonChanged,
   isPidAlive,
   isPortAvailable,
+  listDataSets,
+  parseDataSet,
   parseIpRange,
   readDevInstance,
   spawnProcess,
