@@ -129,6 +129,11 @@ for (const signal of ['SIGINT', 'SIGTERM']) {
 try {
   await context.initialBuild();
 
+  // Not awaited: chokidar's ready event is unreliable. Started now so an edit
+  // made during the rest of the start-up is seen; a batch that syncs before
+  // the first child start waits for it (see syncServer).
+  context.startWatchers();
+
   // The manager is the component that binds the port, so it checks here to
   // cover every launch path (CLI, monorepo dev script, direct run.mjs) and any
   // process that grabbed the port during the initial build.
@@ -146,7 +151,7 @@ try {
   await startProxy(context);
   context.mailSink = await startMailSink(context);
 
-  // Optimises dependencies, starts the child, then the file watchers.
+  // Optimises dependencies, then starts the child.
   await startFirstServer(context);
   if (
     await waitForServer({

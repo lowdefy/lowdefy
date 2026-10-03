@@ -43,6 +43,13 @@ function createContext(changes) {
   };
 }
 
+// A queue whose first child start has run, as it has once run.mjs reaches startFirstServer.
+function createStartedSync(context) {
+  const sync = syncServer(context);
+  sync.startFirst(async () => {});
+  return sync;
+}
+
 test.each([
   ['restarts when a server artifact changed', { install: false, restart: true }, {}, ['restart']],
   ['does nothing when nothing changed', { install: false, restart: false }, {}, []],
@@ -56,7 +63,7 @@ test.each([
 ])('syncServer %s', async (_, changes, options, expected) => {
   const context = createContext(changes);
 
-  await syncServer(context)(options);
+  await createStartedSync(context)(options);
 
   expect(context.events).toEqual(expected);
 });
@@ -65,7 +72,7 @@ test('syncServer restarts the server after an install even when the rebuild fail
   const context = createContext({ install: true, restart: true });
   context.lowdefyBuild.mockRejectedValueOnce(new Error('Build failed'));
 
-  await expect(syncServer(context)()).rejects.toThrow('Build failed');
+  await expect(createStartedSync(context)()).rejects.toThrow('Build failed');
   expect(context.events).toEqual(['shutdown', 'install', 'restart']);
 });
 
@@ -79,7 +86,7 @@ test('syncServer runs one sync at a time', async () => {
         finishFirst = resolve;
       })
   );
-  const sync = syncServer(context);
+  const sync = createStartedSync(context);
   const first = sync();
   const second = sync();
   await new Promise((resolve) => setTimeout(resolve, 10));
@@ -88,4 +95,47 @@ test('syncServer runs one sync at a time', async () => {
   await Promise.all([first, second]);
 
   expect(context.serverArtifacts.check).toHaveBeenCalledTimes(2);
+});
+
+test('syncServer holds syncs until the first child start has run, then runs them after it', async () => {
+  const context = createContext({ install: false, restart: false });
+  const sync = syncServer(context);
+
+  let synced = false;
+  const queued = sync().then(() => {
+    synced = true;
+  });
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  expect(synced).toBe(false);
+  expect(context.serverArtifacts.check).not.toHaveBeenCalled();
+
+  let finishStart;
+  const started = sync.startFirst(
+    () =>
+      new Promise((resolve) => {
+        context.events.push('first start');
+        finishStart = resolve;
+      })
+  );
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  expect(context.events).toEqual(['first start']);
+  expect(synced).toBe(false);
+
+  finishStart();
+  await Promise.all([started, queued]);
+  expect(synced).toBe(true);
+  expect(context.serverArtifacts.check).toHaveBeenCalledTimes(1);
+});
+
+test('syncServer still runs queued syncs when the first child start fails', async () => {
+  const context = createContext({ install: false, restart: true });
+  const sync = syncServer(context);
+
+  const queued = sync();
+  await expect(
+    sync.startFirst(async () => Promise.reject(new Error('spawn failed')))
+  ).rejects.toThrow('spawn failed');
+  await queued;
+
+  expect(context.events).toEqual(['restart']);
 });

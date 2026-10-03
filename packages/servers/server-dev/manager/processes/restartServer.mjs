@@ -25,6 +25,9 @@ function restartServer(context) {
     context.buildActivity.track(async () => {
       context.shutdownServer();
       context.logger.info({ spin: 'start' }, 'Restarting server...');
+      // What this server reads at start, so a later build restarts it only
+      // when one of those files changed.
+      context.serverArtifacts.record();
       startServer(context);
       const ready = await waitForServer({
         basePath: context.basePath,

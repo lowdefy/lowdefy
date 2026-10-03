@@ -198,9 +198,10 @@ for (const signal of ['SIGINT', 'SIGTERM']) {
 }
 
 await context.initialBuild();
-// optimizeDependencies, then startServer, then startWatchers (not awaited -
-// chokidar's ready event is unreliable). The watchers start after the child
-// so no watcher batch can restart a child that has not started yet.
+context.startWatchers(); // Not awaited — chokidar's ready event is unreliable
+// At the head of syncServer's queue: record the server artifacts,
+// optimizeDependencies, then startServer. A watcher batch during the optimise
+// builds at once and its syncServer call waits for this start.
 await startFirstServer(context);
 if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
   opener(`http://localhost:${context.options.port}`);
@@ -601,7 +602,9 @@ port) still waits on `building` itself.
 `build/auth.json`, `build/config.json`, `build/plugins/auth/adapters.js`,
 `build/plugins/auth/providers.js`, `build/plugins/connections.js`,
 `build/plugins/operators/server.js`, and the server's `package.json`), with `~k` keys stripped
-from JSON. `startServer` records them; `syncServer` compares:
+from JSON. `restartServer` records them before each restart, and `startFirstServer` before the
+first start's optimise (so a build during the optimise that adds a plugin package still reads as an
+install); `syncServer` compares:
 
 - **`package.json` changed** → shut down, `installPlugins`, `lowdefyBuild` (so the plugin imports
   include the new packages), `optimizeDependencies` (as build activity), then restart, even when
@@ -610,7 +613,9 @@ from JSON. `startServer` records them; `syncServer` compares:
   request, a server-side plugin edit) → restart.
 - **Nothing changed** → nothing; Vite hot-replaces client artifacts.
 
-Calls run one at a time, so a second caller finds the first's work done. Only the config build
+Calls run one at a time, so a second caller finds the first's work done. The first child start
+heads the queue (`syncServer.startFirst`): the watchers start right after the initial build, and a
+sync they ask for before the first child exists waits for it. Only the config build
 writes the tracked `build/` files, so they are checked after each build rather than watched.
 The server's `package.json` is also written by a page build in the child that finds a plugin
 package missing, which `serverPackageWatcher` picks up.

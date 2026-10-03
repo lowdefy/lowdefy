@@ -45,9 +45,6 @@ function startServer(context) {
   context.basePath = readBasePath(context);
   context.url = `http://localhost:${context.options.port}${context.basePath}`;
   context.instance.update({ url: context.url });
-  // What this server reads at start, so a later build restarts it only when
-  // one of those files changed.
-  context.serverArtifacts.record();
 
   const env = createServerEnv(context);
   const configuredAuthUrl = process.env.BETTER_AUTH_URL;

@@ -21,7 +21,8 @@
 // changed, or when the caller needs a new process anyway (.env, local plugin
 // code). Every watcher calls it after its build, so the restart a build
 // needs is part of that watcher's batch and a build-status wait covers it.
-// Calls run one at a time: the second finds the first's work done.
+// Calls run one at a time, after the first child start (startFirst): the
+// second finds the first's work done.
 function syncServer(context) {
   async function sync({ restart = false } = {}) {
     const changes = context.serverArtifacts.check();
@@ -44,12 +45,25 @@ function syncServer(context) {
     }
   }
 
-  let previous = Promise.resolve();
-  return (options) => {
+  // The first child start heads the queue. The watchers start right after the
+  // initial build, so a batch can sync before the first child exists; it
+  // waits here instead of comparing against artifacts no child has read.
+  let runFirstStart;
+  const firstStart = new Promise((resolve) => {
+    runFirstStart = resolve;
+  }).then((start) => start());
+  let previous = firstStart.catch(() => {});
+
+  function queueSync(options) {
     const next = previous.then(() => sync(options));
     previous = next.catch(() => {});
     return next;
+  }
+  queueSync.startFirst = (start) => {
+    runFirstStart(start);
+    return firstStart;
   };
+  return queueSync;
 }
 
 export default syncServer;

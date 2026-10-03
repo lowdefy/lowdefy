@@ -53,10 +53,26 @@ function createContext() {
     options: { port: 3210 },
     serverArtifacts: { record: jest.fn() },
     shutdownServer: jest.fn(),
-    startWatchers: jest.fn(),
   };
   context.optimizeDependencies = optimizeDependencies(context);
+  context.syncServer = syncServer(context);
   return context;
+}
+
+// Like createServerArtifactTracker over a set of file contents. Its baseline
+// is taken when the context is made, before the initial build, so before the
+// first record every artifact reads as changed.
+function createTracker(files) {
+  let started = {};
+  return {
+    record: jest.fn(() => {
+      started = { ...files };
+    }),
+    check: jest.fn(() => {
+      const changed = Object.keys(files).filter((file) => files[file] !== started[file]);
+      return { install: changed.includes('package.json'), restart: changed.length > 0 };
+    }),
+  };
 }
 
 async function flush() {
@@ -135,33 +151,94 @@ test('the optimiser resolves the same environment as the child, apart from the b
   }
 });
 
-test('startFirstServer starts the watchers only after the optimiser exits and the child started', async () => {
+test('a watcher sync during the optimise waits for the first start and restarts nothing', async () => {
   const context = createContext();
-  // Like createServerArtifactTracker: before startServer records the
-  // artifacts, every one of them reads as changed.
-  let recorded = false;
-  context.serverArtifacts = {
-    record: jest.fn(() => {
-      recorded = true;
-    }),
-    check: jest.fn(() => ({ install: false, restart: !recorded })),
-  };
+  context.serverArtifacts = createTracker({ 'build/config.json': 'a', 'package.json': 'a' });
   context.restartServer = jest.fn(async () => startServer(context));
-  context.syncServer = syncServer(context);
-  // A watcher whose first batch syncs at once, as a late file event from the
-  // initial build does.
-  context.startWatchers = jest.fn(() => context.syncServer());
 
   const started = startFirstServer(context);
   await flush();
-  expect(context.startWatchers).not.toHaveBeenCalled();
-  processes[0].emit('exit', 0);
-  await started;
+  // A late file event from the initial build: its batch syncs during the optimise.
+  let synced = false;
+  const sync = context.syncServer().then(() => {
+    synced = true;
+  });
   await flush();
+  expect(synced).toBe(false);
 
-  expect(context.startWatchers).toHaveBeenCalledTimes(1);
+  processes[0].emit('exit', 0);
+  await Promise.all([started, sync]);
+
+  expect(synced).toBe(true);
   expect(context.restartServer).not.toHaveBeenCalled();
   // The optimiser and one child.
   expect(mockSpawn).toHaveBeenCalledTimes(2);
   expect(mockSpawn.mock.calls[1][1]).toContain('--host');
+});
+
+test('a config edit during the optimise is rebuilt at once, and its sync resolves after the first start', async () => {
+  const context = createContext();
+  const files = { 'build/config.json': 'a', 'package.json': 'a' };
+  context.serverArtifacts = createTracker(files);
+  context.lowdefyBuild = jest.fn(async () => {
+    files['build/config.json'] = 'b';
+  });
+  context.restartServer = jest.fn(async () => {
+    context.serverArtifacts.record();
+    startServer(context);
+  });
+
+  const started = startFirstServer(context);
+  await flush();
+  // The lowdefyBuildWatcher batch for the edit.
+  let childrenAtSync;
+  const batch = (async () => {
+    await context.lowdefyBuild();
+    await context.syncServer();
+    childrenAtSync = mockSpawn.mock.calls.length;
+  })();
+  await flush();
+  expect(context.lowdefyBuild).toHaveBeenCalledTimes(1);
+  expect(childrenAtSync).toBeUndefined();
+
+  processes[0].emit('exit', 0);
+  await Promise.all([started, batch]);
+
+  // The child may have read the edited config at spawn; one restart covers the window.
+  expect(context.restartServer).toHaveBeenCalledTimes(1);
+  expect(childrenAtSync).toBe(3);
+});
+
+test('a plugin package added during the optimise is installed by the queued sync', async () => {
+  const context = createContext();
+  const files = { 'build/config.json': 'a', 'package.json': 'a' };
+  context.serverArtifacts = createTracker(files);
+  const events = [];
+  context.buildActivity = { track: (task) => task() };
+  context.installPlugins = jest.fn(async () => events.push('install'));
+  context.lowdefyBuild = jest.fn(async () => events.push('build'));
+  context.restartServer = jest.fn(async () => events.push('restart'));
+  let finishOptimise;
+  context.optimizeDependencies = jest.fn(async () => events.push('optimise'));
+  context.optimizeDependencies.mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        events.push('first optimise');
+        finishOptimise = resolve;
+      })
+  );
+  context.syncServer = syncServer(context);
+
+  const started = startFirstServer(context);
+  await flush();
+  // A config build during the optimise adds a plugin package to package.json.
+  files['package.json'] = 'b';
+  const sync = context.syncServer();
+  finishOptimise();
+  await Promise.all([started, sync]);
+
+  // The first child spawns with the new package.json, but it was never
+  // installed: the baseline is the one from before the optimise.
+  expect(mockSpawn).toHaveBeenCalledTimes(1);
+  expect(events).toEqual(['first optimise', 'install', 'build', 'optimise', 'restart']);
 });
