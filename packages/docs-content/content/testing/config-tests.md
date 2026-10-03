@@ -79,6 +79,7 @@ Blocks are addressed by their `blockId`. A step that does not complete within th
 | Step                                      | Meaning                                                                                                                                                     |
 | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `click: target`                           | Click the block, or the control a [target](#targets) narrows to.                                                                                            |
+| `click: { ...target, count: 2 }`          | Click 2 (or 3) times in quick succession, as a person's double click, before the runner waits for the page to settle. `count` defaults to 1.                |
 | `fill: { blockId, value }`                | Type `value` into the input inside the block (or the grid cell a target names).                                                                             |
 | `fill: { blockId, fromEmail }`            | Type text read from an [email](#emails) instead of a fixed value, such as a one-time sign-in code. The actor stays on the page.                             |
 | `select: { blockId, value }`              | Open the selector block (or grid cell) and choose the option whose text is `value`. A radio, button or segmented selector's option is clicked by its label. |
@@ -93,9 +94,14 @@ Blocks are addressed by their `blockId`. A step that does not complete within th
 | `screenshot: name`                        | Capture a screenshot. Screenshots are returned to agents using the MCP tool; the CLI runner ignores them.                                                   |
 | `expect: { state: { path, equals } }`     | The page state at `path` deep-equals `equals`. A path that does not exist reads as `null`, so `equals: null` also passes for a misspelt path.               |
 | `expect: { visible: target }`             | The block, or the control a target narrows to, is visible.                                                                                                  |
+| `expect: { hidden: target }`              | Nothing the target names is visible: no element matches, or every match is hidden. Passes at once when nothing matches yet, so pair it with a presence.     |
+| `expect: { calls: { request, count } }`   | This person's browser called the request `count` times since the journey started, counted once the page settles. `pageId` names the request's page.         |
+| `expect: { calls: { endpoint, count } }`  | The same for an endpoint called with `CallAPI`. Counts survive full page loads, so `count: 0` after a reload checks a write was never sent.                 |
 | `expect: { text: { blockId, contains } }` | The block's rendered text (or a grid row's or cell's) contains the string.                                                                                  |
 | `expect: { url: { contains } }`           | The browser URL contains the string.                                                                                                                        |
 | `expect: { title: { equals } }`           | The document title (the browser tab's text) is exactly the string; `{ contains }` checks part of it.                                                        |
+
+`expect.calls` takes `{ request: requestId, pageId, count }`: request ids are scoped to a page, and two pages often share one such as `save`, so `pageId` names the page; it defaults to the page the person is on when the step runs. It compares once, without waiting for the count to change, because "not called" can only be judged after the moment has passed.
 
 ### Recorded values: `from`
 
@@ -247,7 +253,10 @@ A failing journey stops at its first failing step and prints the step's index, t
 
 ### Options
 
+- `[paths...]`: Journey files or directories to run instead of `tests/journeys/*.yaml`, anywhere under the config directory, including the candidates in `tests/journeys/_candidates/`. `lowdefy test tests/journeys/_candidates/dev` runs every dev candidate. `--filter` applies on top.
 - `--filter <name>`: Only run journeys whose `name` contains the string (case-insensitive). `lowdefy test --filter control` runs every journey with "control" in its name.
+- `--repeat <n>`: Run each journey `n` times in a row (1 to 10) and classify it, as described in [Replaying candidates](#replaying-candidates).
+- `--lint`: Check the journeys for the [lint rules](#lint) and run nothing.
 - `--journeys-directory <path>`: Read journeys from this directory instead of `tests/journeys/`, for journeys that need a server set up for them, such as [auth journeys](#the-database). A relative path is resolved from the current directory. The run fails when the directory holds no journeys.
 - `--url <url>`: Run against a development server that is already running instead of starting one, for example `lowdefy test --url http://localhost:3000` while `lowdefy dev` is open in another terminal. This is the fastest way to iterate on a journey.
 - `--port <port>`: The port to start the development server on. If it is in use the next free port is taken. The default is `3000`.
@@ -255,10 +264,10 @@ A failing journey stops at its first failing step and prints the step's index, t
 
 ### Exit codes
 
-| Exit code | Meaning                                                                                                                                           |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                                                                   |
-| `1`       | At least one journey failed, a journey file was invalid, an explicit `--filter` matched no journey, or a `--journeys-directory` held no journeys. |
+| Exit code | Meaning                                                                                                                                                                                                                                    |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                                                                                                                                                            |
+| `1`       | At least one journey failed, a journey file was invalid, an explicit `--filter` matched no journey, or a `--journeys-directory` held no journeys. With `--repeat`, a journey was `FLAKY` or `FAIL`; with `--lint`, a lint error was found. |
 
 A journey file that is not valid YAML, or does not match the journey format (a missing `name`, a step with two keys, an unknown step key, a step the grammar refuses, named by its index) is reported as a failed journey with the validation message and the file path. It never aborts the run, so one broken file cannot hide the results of the others.
 
@@ -311,6 +320,107 @@ To promote a candidate, move it into `tests/journeys/`, give it a name, fill eve
 - `--config-directory`, `--dev-directory`, `--log-level`, `--disable-telemetry`: As for [`lowdefy dev`](/cli#dev).
 
 The compiler reads block types from the development server's build (or a production build) to tell date and object inputs apart. Without a build it still compiles and warns once.
+
+## Hardening journeys
+
+A journey that passes does not prove much on its own: it may never check what its clicks did, it may pass only some of the time, and the edge cases around it are rarely written. These commands prove a journey is worth keeping.
+
+### Replaying candidates
+
+`lowdefy test --repeat 3 <paths>` runs each journey three times and classifies it:
+
+```
+PASS   member assigns an open ticket   (5 steps, 3/3, 2.1s each)
+FLAKY  owner closes a ticket           (2/3 passed) run 2 failed at step 4 (click "close_submit"): ...
+FAIL   admin bulk-imports contacts     (0/3) step 2 (click "import"): ... — fails every run: a finding, not a test to fix by retrying
+```
+
+A candidate, from any source, moves into `tests/journeys/` only after `--repeat 3` gives `PASS`. A `FLAKY` journey has a cause to fix, usually a missing `wait: { request }`, data that differs between runs, or a target that matches two elements; never add `wait: { ms }`. A `FAIL` is a finding: it breaks every time, so either the app has a bug or its behaviour changed.
+
+Each run records what the journey exercised (the pages, requests, endpoints, events and blocks it touched) in `.lowdefy/test/exercised.json`, which the lints, `journeys harden` and `journeys variants` read. Only a run of the whole suite, once, records as the suite's journey run.
+
+### Lint
+
+`lowdefy test --lint [paths...]` checks journeys without running them, so it needs no server. It prints one line per problem and exits `1` on any error:
+
+```
+L2  member assigns an open ticket  step 3 (click "assign_submit") is not followed by an expect or wait: { request } before step 4.
+```
+
+An **assertion step** is any `expect`, or a `wait: { request }`.
+
+| Rule | Checks                                                                                                                                                                                                                                                                                                                    | Severity |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| L1   | No placeholders: no `from: shape`, and no `fill` or `select` with `value: null`.                                                                                                                                                                                                                                          | error    |
+| L2   | A `click`, `open` or `press` whose target ran a Lowdefy event (in the journey's newest measured run), and every `goto` and `back`, is followed by an assertion step before the next action or input. A click that ran no event (a tab header) is exempt, as are `fill` and `select`. Unmeasured, every action is checked. | error    |
+| L3   | No `wait: { ms }`.                                                                                                                                                                                                                                                                                                        | error    |
+| L4   | A journey whose newest run called a request or endpoint that writes declares `data:`. Unmeasured, it is a warning to run the journey once.                                                                                                                                                                                | error    |
+| L6   | The last step is an assertion step.                                                                                                                                                                                                                                                                                       | error    |
+
+L5 (named data set users) and L7 (no values from a pulled snapshot) need data sets and are not checked yet. A candidate compiled by `lowdefy journeys compile`, with event-less clicks and a final `wait: { request }`, lints clean.
+
+### Mutants: `lowdefy journeys harden`
+
+`lowdefy journeys harden` measures whether your journeys fail when the feature they walk breaks. It breaks the config on purpose, one small change at a time and only in the journeys' own browsers, while you keep working in the same development server: your own tabs keep seeing the unchanged app.
+
+1. Each selected journey runs once, unchanged. One that fails is left out, with a note to replay it.
+2. The development server lists the mutants on what those runs exercised: a dropped action, a skipped validation, a flipped `visible` or `disabled`, swapped `_if` branches, a dropped payload key, a `Link` sent to `404`, a dropped block, a dropped endpoint step. A layout or template copied into several pages is mutated once.
+3. Each mutant runs against every journey whose path reached it: a journey that fails **kills** it; one that passes lets it **survive**.
+
+```
+page tickets:
+SURVIVED  drop-action   pages/tickets.yaml:88   drop-action SetState "set_status" (2 of 3) from assign_submit.onClick
+          ran: member assigns an open ticket (passed)
+SURVIVED  drop-block    pages/tickets.yaml:141  drop-block Alert "assign_success" from tickets
+          ran: member assigns an open ticket (passed)
+SCORE     12/14 killed, 3 unique  member assigns an open ticket  (tests/journeys/tickets.yaml)
+42 mutants run · 38 killed · 4 survived · 0 unapplied · 0 errors · sampled 42 of 42 (seed 0) · 19 not exercised · 0 rebuilds · 3m 10s
+```
+
+A survivor is a change no journey noticed, with the source line it changed: add the assertion that would catch it (`expect.text` of the message, `expect.state`, `expect.visible`, `expect.hidden` or `expect.calls`) after the step that exercises it, and confirm with `lowdefy journeys harden --mutant <id>`. A mutant listed as **unapplied** never reached the journey's browser: that is a defect in harden, not a gap in the journey. Mutants no journey exercised are counted, not run.
+
+The report is written to `.lowdefy/test/mutation.json`: each mutant with the journeys that ran it, the suite's score, and each journey's `killed` out of `total` and its `unique` kills (mutants no other journey kills). Survivors are findings, so the exit code is `0`; it is `1` only when the run could not finish. Editing the config during a run is fine: harden re-lists the mutants, keeps the verdicts no changed file touched and runs the rest again. The third change in one run stops it. harden never writes or deletes a journey.
+
+- `[paths...]`, `--filter <name>`: The journeys to harden, as for `lowdefy test`.
+- `--page <pageId...>`: Only mutants on these pages, and the endpoint mutants a journey touching them called.
+- `--operators <list>`: Only these operators, comma separated: `drop-action`, `skip-validate`, `flip-visible`, `swap-if`, `drop-payload`, `retarget-link`, `drop-block`, `drop-step`.
+- `--max <n>`: Run at most `n` mutants, sampled the same way on every machine. The default is 200; `0` runs every mutant.
+- `--seed <n>`: The sample's seed. Another seed draws another sample, so repeated runs can cover the rest. The default is `0`, recorded in the report.
+- `--workers <n>`: How many journey runs at once, 1 to 16. The default is `4`. A journey never runs beside itself, and one that reads email runs alone.
+- `--list`: Print the sampled mutants per operator and page and a time estimate, and run nothing.
+- `--mutant <id>`: Run only this mutant, against the journeys on its path. The report file is left as it is.
+- `--json`: Print the report as JSON.
+- `--url`, `--port`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `lowdefy test`.
+
+### Variants: `lowdefy journeys variants`
+
+`lowdefy journeys variants <file>` writes edge-case candidates of a journey to `tests/journeys/_candidates/variants/<file>-<kind>.yaml` and replays each three times. The same journey always gives the same files.
+
+| Kind            | The variant                                                                                                                                                                       | Passes when                           |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| `negative`      | For each `fill` before the submit click on a block with `required` or a `validate` rule: the field left empty (or a placeholder to fill, for a `validate` rule), then the submit. | The message shows and nothing is sent |
+| `interrupt`     | A full reload of the start page just before the submit click, then the flow again.                                                                                                | The flow writes exactly once          |
+| `double-submit` | The submit click as a double click (`count: 2`).                                                                                                                                  | The write happens once                |
+
+The **submit click** is the last `click` followed by a `wait: { request }` for a request that writes. Each variant is named `<journey> — <kind>: <detail>` and carries a `variant` key naming the journey it came from:
+
+```yaml
+name: 'member assigns an open ticket — double-submit: double click "assign_submit"'
+pageId: tickets
+variant:
+  of: member assigns an open ticket
+  kind: double-submit
+  detail: double click "assign_submit"
+steps:
+  # ...
+```
+
+A variant that passes is a candidate to keep; one that fails is a finding, a bug or a behaviour to assert as expected; a flaky one has a cause to fix. Variants for other roles, another organisation, empty and large data need data sets and are listed as skipped.
+
+- `--name <journey>`: The journey to vary, when the file holds several.
+- `--kinds <list>`: Only these kinds, comma separated.
+- `--no-run`: Write the variants without replaying them.
+- `--url`, `--port`, `--config-directory`, `--dev-directory`, `--log-level`, `--disable-telemetry`: As for `lowdefy test`.
 
 ## Continuous integration
 
