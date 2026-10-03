@@ -47,10 +47,10 @@ function createRegistry() {
   };
 }
 
-function start(recording = { enabled: true }) {
+function start(recording = { enabled: true }, lowdefy = { user: { roles: ['admin'] } }) {
   return createRecorder({
     basePath: '/base',
-    lowdefy: { user: { roles: ['admin'] } },
+    lowdefy,
     recording,
     window,
     getTrace: () => registry,
@@ -122,6 +122,53 @@ test("createRecorder flushes on the shared stream's reload event and detaches cl
   source.dispatchEvent(new Event('reload'));
   expect(fetch).toHaveBeenCalledTimes(1);
   expect(recorder.attachStream(null)).toEqual(expect.any(Function));
+});
+
+test('an interaction whose hold closes after a config reload keeps the build it was captured under', async () => {
+  const lowdefy = { user: { roles: ['admin'] }, _devBuildId: '2026-10-03T14:02:00.000Z' };
+  recorder = start({ enabled: true }, lowdefy);
+  const source = new EventTarget();
+  recorder.attachStream(source);
+  recorder.pageview('tickets');
+  document.getElementById('save').click();
+  lowdefy._devBuildId = '2026-10-03T14:05:00.000Z';
+  source.dispatchEvent(new Event('reload'));
+  await Promise.resolve();
+  const [body] = sentBodies();
+  expect(body.records.map((record) => [record.kind, record.build])).toEqual([
+    ['pageview', '2026-10-03T14:02:00.000Z'],
+    ['click', '2026-10-03T14:02:00.000Z'],
+  ]);
+});
+
+test('an engine record keeps the build its trace payload arrived under', async () => {
+  const lowdefy = { user: { roles: ['admin'] }, _devBuildId: '2026-10-03T14:02:00.000Z' };
+  recorder = start({ enabled: true }, lowdefy);
+  registry.listeners[0].listener({
+    scope: 'page',
+    pageId: 'tickets',
+    blockId: 'tickets',
+    blockType: 'Box',
+    eventName: 'onMount',
+    success: true,
+    failure: null,
+    debounceMs: 0,
+    actions: [],
+    record: { startTimestamp: new Date(), responses: {} },
+    context: { state: {}, requests: {} },
+    stateBefore: {},
+  });
+  lowdefy._devBuildId = '2026-10-03T14:05:00.000Z';
+  await window.__lowdefyRecorder.flush();
+  const [record] = sentBodies()[0].records;
+  expect(record).toMatchObject({ kind: 'engine', build: '2026-10-03T14:02:00.000Z' });
+});
+
+test('a record made before any page config named its build carries build null', async () => {
+  recorder = start();
+  document.getElementById('save').click();
+  await window.__lowdefyRecorder.flush();
+  expect(sentBodies()[0].records[0].build).toBe(null);
 });
 
 test('flush resolves only after the POST settles', async () => {

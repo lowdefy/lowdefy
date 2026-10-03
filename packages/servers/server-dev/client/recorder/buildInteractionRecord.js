@@ -26,8 +26,8 @@ function recordTarget(target) {
 
 // A DOM interaction as a v1 trace record. `paired` are the trace events the
 // pairing rule gave it, innermost first: the first is `event`, the rest go to
-// `also`. `build`, `source` and `run` are stamped by the dev server, never the
-// page.
+// `also`. `build` is the build of the page config the interaction happened
+// on; `source` and `run` are stamped by the dev server, never the page.
 function buildInteractionRecord({ interaction, paired = [], session, roles }) {
   const record = {
     v: 1,
@@ -41,6 +41,7 @@ function buildInteractionRecord({ interaction, paired = [], session, roles }) {
     org: null,
     target: recordTarget(interaction.target),
     event: paired[0] ?? null,
+    build: interaction.build ?? null,
   };
   if (paired.length > 1) {
     record.also = paired.slice(1);
