@@ -35,9 +35,9 @@ const PopoverBlock = ({ blockId, classNames = {}, content, methods, properties, 
       mouseEnterDelay={properties.mouseEnterDelay}
       mouseLeaveDelay={properties.mouseLeaveDelay}
       open={properties.open}
-      placement={properties.placement}
+      placement={properties.placement ?? undefined}
       title={renderHtml({ html: properties.title, methods })}
-      trigger={properties.trigger}
+      trigger={properties.trigger ?? undefined}
       zIndex={properties.zIndex}
       className={classNames.element}
       // antd 6 renamed the Popover inner element from `inner` to `container`.

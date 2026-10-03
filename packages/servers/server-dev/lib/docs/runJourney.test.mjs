@@ -95,9 +95,14 @@ function createLocator({ selector, page }) {
     count: jest.fn(async () => 0),
     selectOption: jest.fn(),
     waitFor: jest.fn(async () => {
+      page.waits.push(selector);
       if (page.hiddenBlocks.some((id) => selector === `#bl-${id}`)) {
         throw new Error(`locator.waitFor: Timeout 5000ms exceeded.`);
       }
+    }),
+    evaluateAll: jest.fn(async (fn, arg) => {
+      page.evaluatedAll.push(selector);
+      return fn(page.elementsFor(selector), arg);
     }),
     allInnerTexts: jest.fn(async () => [page.texts[selector] ?? '']),
   };
@@ -112,6 +117,9 @@ function createPage({ window = createLowdefyWindow(), url = 'http://localhost:32
     presses: [],
     missingBlocks: [],
     hiddenBlocks: [],
+    waits: [],
+    evaluatedAll: [],
+    elementsFor: () => [],
     texts: {},
     screenshotCount: 0,
     evaluate: jest.fn(async (fn, arg) => fn(arg)),
@@ -195,6 +203,20 @@ test('runJourney returns an error naming an unknown step key before opening a br
   expect(mockOpenPage).not.toHaveBeenCalled();
 });
 
+test('runJourney refuses a placeholder value (from: shape) before opening a browser', async () => {
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'new' }, { fill: { blockId: 'title', value: null, from: 'shape' } }],
+  });
+  expect(result).toEqual({
+    error:
+      'Step 1: fill on "title" has a placeholder value (from: shape). Fill it from the data set or the journey\'s user, then remove from.',
+  });
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+  expect(mockOpenPage).not.toHaveBeenCalled();
+});
+
 test('runJourney returns an actionable error when no browser is available', async () => {
   mockGetBrowser.mockRejectedValue(new Error("Executable doesn't exist"));
   const result = await runJourney({ origin, pageId: 'form', steps: [] });
@@ -222,6 +244,7 @@ test('runJourney passes user, urlQuery and viewport through to openPage', async 
     width: 800,
     height: 600,
     clientAddress: expect.stringMatching(/^203\.0\.113\.\d+$/),
+    onContext: expect.any(Function),
     timeout: 15000,
   });
 });
@@ -245,9 +268,9 @@ test('runJourney fills, clicks and asserts state, returning passed with the fina
     origin,
     pageId: 'form',
     steps: [
-      { fill: { blockId: 'name', value: 'Ada' } },
+      { fill: { blockId: 'name', value: 'Ada', from: 'recorded' } },
       { click: 'submit' },
-      { expect: { state: { path: 'saved', equals: true } } },
+      { expect: { state: { path: 'saved', equals: true, from: 'recorded' } } },
     ],
   });
 
@@ -920,6 +943,107 @@ test('runJourney selects a dropdown option by exact visible text', async () => {
   expect(filters[1]).toEqual({ visible: true });
 });
 
+const POPUPS = [
+  '.ant-select-dropdown:not(.ant-select-dropdown-hidden)',
+  '.ant-picker-dropdown:not(.ant-picker-dropdown-hidden)',
+  '.ant-cascader-dropdown:not(.ant-select-dropdown-hidden)',
+  '.ant-color-picker-inner',
+  '.ant-dropdown:not(.ant-dropdown-hidden)',
+  '.ant-mentions-dropdown:not(.ant-mentions-dropdown-hidden)',
+];
+
+const SHOWING_BEFORE = 'data-lowdefy-journey-showing-before';
+
+// A stand-in for a popup element: enough DOM for the open step's marking.
+function createPopup({ visible }) {
+  const attributes = new Set();
+  return {
+    attributes,
+    checkVisibility: () => visible,
+    setAttribute: (name) => attributes.add(name),
+    removeAttribute: (name) => attributes.delete(name),
+  };
+}
+
+test('runJourney opens a select by clicking its antd 6 content box', async () => {
+  const page = createPage();
+  openWith(page);
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.locator.mockImplementation((child) => {
+      const inner = createLocator({ selector: `${selector} ${child}`, page });
+      if (selector === '#bl-status' && child.startsWith('.ant-select-content')) {
+        inner.count.mockResolvedValue(1);
+      }
+      return inner;
+    });
+    return locator;
+  });
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ open: 'status' }] });
+
+  expect(result.passed).toBe(true);
+  expect(page.clicks).toEqual([
+    '#bl-status .ant-select-content, .ant-picker, .ant-color-picker-trigger, .ant-dropdown-trigger, .ant-mentions',
+  ]);
+});
+
+test('runJourney open waits for a popup its own click opened, not one already showing', async () => {
+  const page = createPage();
+  openWith(page);
+  const fading = createPopup({ visible: true });
+  const closed = createPopup({ visible: false });
+  page.elementsFor = (selector) => {
+    if (selector === POPUPS.join(', ')) {
+      return [fading, closed];
+    }
+    if (selector === `[${SHOWING_BEFORE}]`) {
+      return [fading, closed].filter((popup) => popup.attributes.has(SHOWING_BEFORE));
+    }
+    return [];
+  };
+  const markedWhenClicked = [];
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    locator.click.mockImplementation(async () => {
+      markedWhenClicked.push(fading.attributes.has(SHOWING_BEFORE));
+      page.clicks.push(selector);
+    });
+    return locator;
+  });
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ open: 'notes' }] });
+
+  expect(result.passed).toBe(true);
+  expect(markedWhenClicked).toEqual([true]);
+  expect(closed.attributes.has(SHOWING_BEFORE)).toBe(false);
+  expect(page.waits).toContain(
+    POPUPS.map((selector) => `${selector}:not([${SHOWING_BEFORE}])`).join(', ')
+  );
+  // Unmarked once the step is done, so a later open of that input finds it.
+  expect(fading.attributes.has(SHOWING_BEFORE)).toBe(false);
+});
+
+test('runJourney fails an open step whose click opens no popup and still unmarks the popups', async () => {
+  const page = createPage();
+  openWith(page);
+  const showing = createPopup({ visible: true });
+  page.elementsFor = () => [showing];
+  page.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page });
+    if (selector.includes(`:not([${SHOWING_BEFORE}])`)) {
+      locator.waitFor.mockRejectedValue(new Error('locator.waitFor: Timeout 5000ms exceeded.'));
+    }
+    return locator;
+  });
+
+  const result = await runJourney({ origin, pageId: 'form', steps: [{ open: 'notes' }] });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure.message).toEqual('Opening block "notes" showed no dropdown or popup.');
+  expect(showing.attributes.has(SHOWING_BEFORE)).toBe(false);
+});
+
 test('runJourney selects a radio, button or segmented option in the block by its exact label', async () => {
   const page = createPage();
   openWith(page);
@@ -1353,7 +1477,11 @@ test('runJourney opens each actor the first time an as step names it and returns
   expect(inviteePage.clicks).toEqual(['#bl-accept', '#bl-dashboard']);
   expect(mockOpenPage).toHaveBeenCalledTimes(2);
   const [mainOpen, inviteeOpen] = mockOpenPage.mock.calls.map(([args]) => args);
-  expect(inviteeOpen).toEqual({ ...mainOpen, clientAddress: inviteeOpen.clientAddress });
+  expect(inviteeOpen).toEqual({
+    ...mainOpen,
+    clientAddress: inviteeOpen.clientAddress,
+    onContext: inviteeOpen.onContext,
+  });
   expect(inviteeOpen).toMatchObject({ pageId: 'signup', user: 'none' });
   // Two people, two clients: rate limits count each actor's attempts apart.
   expect(inviteeOpen.clientAddress).not.toEqual(mainOpen.clientAddress);
@@ -1562,3 +1690,101 @@ test.each([
     expect(page.clicks).toEqual([selector]);
   }
 );
+
+function createFakeRequest({ url, method = 'GET' }) {
+  return { url: () => url, method: () => method };
+}
+
+// openPage hands the journey its browser context through onContext before the
+// first navigation; the fake context keeps the request listener so the test
+// can play the requests a real context would emit.
+function openActorsWithNetwork(actors) {
+  const listeners = [];
+  actors.forEach(({ page, opening }) => {
+    mockOpenPage.mockImplementationOnce(async ({ onContext }) => {
+      let listener;
+      const context = {
+        close: jest.fn(async () => {}),
+        on: jest.fn((event, callback) => {
+          if (event === 'request') listener = callback;
+        }),
+      };
+      await onContext(context);
+      listeners.push(listener);
+      opening.forEach((request) => listener(createFakeRequest(request)));
+      return { context, page, ready: true, url: page.url() };
+    });
+  });
+  return listeners;
+}
+
+test('runJourney reports the exercised network path merged across actors, with nested endpoints and writes', async () => {
+  const mainPage = createPage();
+  const memberPage = createPage();
+  const listeners = openActorsWithNetwork([
+    {
+      page: mainPage,
+      opening: [{ url: `${origin}/api/root` }, { url: `${origin}/api/page/tickets` }],
+    },
+    {
+      page: memberPage,
+      opening: [
+        { url: `${origin}/api/page/ticket` },
+        { url: `${origin}/api/request/tickets/assign`, method: 'POST' },
+        // Another origin, and a route the counter does not track.
+        { url: 'http://elsewhere.test/api/page/other' },
+        { url: `${origin}/api/reload` },
+      ],
+    },
+  ]);
+  const artifacts = {
+    'plugins/requestSchemas.json': {
+      MongoDBFind: { meta: { checkWrite: false } },
+      MongoDBInsertOne: { meta: { checkWrite: true } },
+    },
+    'pages/tickets/requests/get_tickets.json': { type: 'MongoDBFind' },
+    'pages/tickets/requests/assign.json': { type: 'MongoDBInsertOne' },
+    'api/notify.json': {
+      routine: [
+        {
+          id: 'endpoint:notify:log',
+          stepId: 'log',
+          type: 'CallApi',
+          properties: { endpointId: 'log' },
+        },
+      ],
+    },
+    'api/log.json': {
+      routine: [{ id: 'endpoint:log:insert', stepId: 'insert', type: 'MongoDBInsertOne' }],
+    },
+  };
+  mainPage.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page: mainPage });
+    locator.click = jest.fn(async () => {
+      listeners[0](
+        createFakeRequest({ url: `${origin}/api/request/tickets/assign`, method: 'POST' })
+      );
+      listeners[0](createFakeRequest({ url: `${origin}/api/endpoints/notify`, method: 'POST' }));
+    });
+    return locator;
+  });
+  const result = await runJourney({
+    origin,
+    pageId: 'tickets',
+    steps: [{ click: 'assign' }, { as: 'member' }],
+    readConfigFile: async (name) => artifacts[name] ?? null,
+  });
+  expect(result.passed).toBe(true);
+  expect(result.exercised).toEqual({
+    pages: ['ticket', 'tickets'],
+    appEvents: true,
+    requests: [{ pageId: 'tickets', requestId: 'assign', calls: 2, write: true }],
+    endpoints: [
+      { endpointId: 'notify', calls: 1, write: true },
+      { endpointId: 'log', via: 'notify', calls: null, write: true },
+    ],
+    unfollowed: 0,
+    events: [],
+    rendered: {},
+  });
+});

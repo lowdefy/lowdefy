@@ -29,6 +29,7 @@ import cronForwardHandler from './routes/cronForward.js';
 import cronHandler from './routes/cron.js';
 import detachedHandler from './routes/detached.js';
 import devInspectHandler from './routes/devInspect.js';
+import devRecordingHandler from './routes/devRecording.js';
 import devToolsHandler from './routes/devTools.js';
 import feedbackHandler from './routes/feedback.js';
 import docsAppMapHandler from './routes/docs/appMap.js';
@@ -44,6 +45,7 @@ import docsFindHandler from './routes/docs/find.js';
 import docsIndexHandler from './routes/docs/index.js';
 import docsInspectStateHandler from './routes/docs/inspectState.js';
 import docsJourneyHandler from './routes/docs/journey.js';
+import docsMutantsHandler from './routes/docs/mutants.js';
 import docsLoadStateHandler from './routes/docs/loadState.js';
 import docsMcpHandler from './routes/docs/mcp.js';
 import docsPageConfigHandler from './routes/docs/pageConfig.js';
@@ -154,6 +156,7 @@ function createApp() {
   app.get('/lowdefy-docs/find/:id', docsFindHandler);
   app.get('/lowdefy-docs/screenshot/:pageId', docsScreenshotHandler);
   app.post('/lowdefy-docs/journey', docsJourneyHandler);
+  app.post('/lowdefy-docs/mutants', docsMutantsHandler);
   app.get('/lowdefy-docs/inspect-state/:pageId', docsInspectStateHandler);
   app.post('/lowdefy-docs/eval-operator', docsEvalOperatorHandler);
   app.post('/lowdefy-docs/run-request', docsRunRequestHandler);
@@ -175,6 +178,11 @@ function createApp() {
   app.use('/api/dev-inspect/*', localDevToolsOnly());
   app.all('/api/dev-inspect', devInspectHandler);
   app.all('/api/dev-inspect/*', devInspectHandler);
+  // The dev recorder (client/Recorder.jsx) posts interaction records here.
+  // It needs no Lowdefy context, and registering it before apiContext keeps
+  // it out of the request timeout list.
+  app.use('/api/dev-recording', localDevToolsOnly());
+  app.post('/api/dev-recording', bodyLimit({ maxSize: 1024 * 1024 }), devRecordingHandler);
   app.get('/lowdefy-docs/plugins', docsPluginsHandler);
   app.get('/lowdefy-docs/schema/:kind/:type', docsSchemaHandler);
   app.get('/lowdefy-docs/examples/:type', docsExamplesHandler);

@@ -32,7 +32,7 @@ function createServerEnv(context) {
     BETTER_AUTH_URL: resolveDevAuthUrl({
       configured: process.env.BETTER_AUTH_URL,
       port: context.options.port,
-    }),
+    }).authUrl,
   };
 }
 

@@ -15,13 +15,14 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { validateJourneySteps } from '@lowdefy/node-utils';
 
-import createJourneyActors from './createJourneyActors.js';
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 import noBrowserError from './noBrowserError.js';
-import { runSteps, MAIN_ACTOR } from './runJourney.js';
+import openJourney from './openJourney.js';
+import runJourneySteps from './runJourneySteps.js';
 import unsettledPageNote from './unsettledPageNote.js';
-import validateJourneySteps from './validateJourneySteps.js';
+import validateJourneyMail from './validateJourneyMail.js';
 import validateViewport from './validateViewport.js';
 import withBrowserSlot from './withBrowserSlot.js';
 
@@ -61,43 +62,37 @@ async function resolveClip({ page, clip, scrollX, scrollY }) {
 // Opens the page and, when `steps` are given, runs them before the capture —
 // the same step engine lowdefy_run_journey uses, so an agent can capture an
 // open dropdown, a picker's calendar or a modal. Returns the page, a cleanup
-// function and any step failure; the capture happens on whatever state the
-// steps left (also after a failed step, which is what the agent needs to see).
+// function, the page-open timeout, any captures `screenshot` steps took and any
+// step failure; the capture happens on whatever state the steps left (also
+// after a failed step, which is what the agent needs to see).
 async function openAndRunSteps({ browser, steps, stepTimeout, ...pageOptions }) {
   if (steps.length === 0) {
     const opened = await openPage({ browser, ...pageOptions });
-    return { opened, close: () => opened.context.close() };
-  }
-  const { origin } = pageOptions;
-  const actors = createJourneyActors({ browser, ...pageOptions });
-  try {
-    const opened = await actors.switchTo(MAIN_ACTOR);
-    const journey = {
-      actors,
-      origin,
-      configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd(),
-      startedAt: Date.now(),
-      openTimeout: Math.max(pageOptions.timeout, stepTimeout),
-      stepTimeout,
-    };
-    const { failure } = await runSteps({ journey, steps });
     return {
-      opened: { ...actors.current(), ready: opened.ready },
-      close: actors.closeAll,
-      failure,
+      opened,
+      close: () => opened.context.close(),
+      openTimeout: pageOptions.timeout,
+      screenshots: [],
     };
-  } catch (error) {
-    await actors.closeAll();
-    throw error;
   }
+  const { journey, main } = await openJourney({ browser, ...pageOptions, stepTimeout });
+  const { screenshots, failure } = await runJourneySteps({ journey, steps });
+  return {
+    opened: { ...journey.actors.current(), ready: main.ready },
+    close: journey.actors.closeAll,
+    openTimeout: journey.openTimeout,
+    screenshots,
+    failure,
+  };
 }
 
 // screenshotPage lets an agent visually verify a page rendered by the
 // running dev server, at a given viewport size and colour scheme. `urlQuery`
 // opens the page at a query string, and `steps` (see validateJourneySteps)
 // drive it first — open a dropdown, click a button — so the capture shows
-// that state. Popups antd renders in a portal at the end of <body> are part
-// of the document, so a fullPage or clip capture includes them.
+// that state; captures `screenshot` steps take come back as `screenshots`.
+// Popups antd renders in a portal at the end of <body> are part of the
+// document, so a fullPage or clip capture includes them.
 async function screenshotPage({
   origin,
   pageId,
@@ -138,6 +133,10 @@ async function screenshotPage({
   const viewportError = validateViewport({ width, height, colorScheme });
   if (!type.isUndefined(viewportError)) {
     return { error: viewportError };
+  }
+  const mailError = validateJourneyMail({ steps });
+  if (!type.isUndefined(mailError)) {
+    return { error: mailError };
   }
 
   return withBrowserSlot({
@@ -202,7 +201,7 @@ async function screenshotInBrowser({
       steps,
       stepTimeout,
     });
-    const { opened, failure } = run;
+    const { opened, openTimeout, screenshots, failure } = run;
     close = run.close;
     // Let post-load rendering (fonts, transitions, client-side state) settle.
     await opened.page.waitForTimeout(300);
@@ -210,12 +209,12 @@ async function screenshotInBrowser({
     const docClip = await resolveClip({ page: opened.page, clip, scrollX, scrollY });
     const screenshotOptions = docClip ? { type: 'png', clip: docClip } : { type: 'png', fullPage };
     const buffer = await opened.page.screenshot(screenshotOptions);
-    const result = { data: buffer.toString('base64'), mimeType: 'image/png' };
+    const result = { data: buffer.toString('base64'), mimeType: 'image/png', screenshots };
     if (!type.isUndefined(failure)) {
       result.failure = failure;
     }
     if (!opened.ready) {
-      return { ...result, ready: false, note: unsettledPageNote({ timeout }) };
+      return { ...result, ready: false, note: unsettledPageNote({ timeout: openTimeout }) };
     }
     return result;
   } catch (error) {

@@ -24,6 +24,7 @@ import createRequestActivity from './utils/createRequestActivity.mjs';
 import startMailSink from './processes/startMailSink.mjs';
 import startProxy from './processes/startProxy.mjs';
 import startFirstServer from './processes/startFirstServer.mjs';
+import startRecordingPruner from './utils/startRecordingPruner.mjs';
 import formatNoticeBox from './utils/formatNoticeBox.mjs';
 import resolvePorts from './utils/resolvePorts.mjs';
 
@@ -91,6 +92,7 @@ if (instance.acquired === false) {
   process.exit(1);
 }
 process.on('exit', () => instance.release());
+startRecordingPruner({ configDirectory: context.directories.config, logger: context.logger });
 
 // Requests through the proxy and finished builds are use of the server; the
 // hub stops a server nobody has used for its idle limit (see

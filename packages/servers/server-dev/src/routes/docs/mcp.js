@@ -29,7 +29,11 @@ import keepEventStreamAlive from '../../../lib/docs/keepEventStreamAlive.js';
 // client notifications go, so only that request subscribes to dev events. The
 // POST path stays stateless — no sessionIdGenerator, no session registry.
 async function mcpHandler(c) {
-  const server = createDocsMcpServer({ origin: new URL(c.req.url).origin, honoContext: c });
+  const server = createDocsMcpServer({
+    origin: new URL(c.req.url).origin,
+    honoContext: c,
+    version: process.env.LOWDEFY_SERVER_DEV_VERSION,
+  });
   const transport = new StreamableHTTPTransport();
   await server.connect(transport);
   if (c.req.method !== 'GET') {

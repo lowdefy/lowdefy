@@ -31,6 +31,7 @@ const CONNECT_TIMEOUT_MS = 15000;
 function createInstanceConnections({
   cliVersion,
   onNotification,
+  onOpen,
   connectTimeoutMs = CONNECT_TIMEOUT_MS,
 }) {
   const connections = new Map();
@@ -49,6 +50,7 @@ function createInstanceConnections({
       }),
       { timeout: connectTimeoutMs }
     );
+    await onOpen?.(client);
     return client;
   }
 

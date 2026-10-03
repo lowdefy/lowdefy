@@ -21,8 +21,9 @@ import createBrowserLifecycle from './createBrowserLifecycle.js';
 import isPageReady from './isPageReady.js';
 import launchBrowser from './launchBrowser.js';
 import { HEADLESS_USER_COOKIE } from '../server/auth/headlessUser.js';
-import { JOURNEY_ACTOR_COOKIE, journeyActorToken } from '../server/auth/journeyActor.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
+import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js';
+import recordingCookiePayload from '../server/recording/recordingCookiePayload.js';
 
 // Module-level singleton, shared by every headless caller (screenshots,
 // journeys, state inspection, operator evaluation, state loads) and closed
@@ -62,6 +63,9 @@ async function openPage({
   height = 800,
   colorScheme = 'light',
   clientAddress,
+  mutantCookie,
+  recording,
+  onContext,
   timeout = 15000,
 }) {
   const url = buildPageUrl({ origin, pageId, urlQuery });
@@ -79,6 +83,11 @@ async function openPage({
   // (a navigation that times out, a crashed page) would otherwise
   // leak a browser context — and its renderer process — on every failed call.
   try {
+    // A caller that watches the context (a journey's network counter) hooks in
+    // here, before the first request leaves.
+    if (!type.isUndefined(onContext)) {
+      await onContext(context);
+    }
     // Inject an authenticated user so auth-protected pages don't 404 for the
     // cookieless headless context. Mirrors the e2e user-cookie pattern; scoped to
     // `origin` so it rides along on the same-origin /api/* fetches.
@@ -101,15 +110,27 @@ async function openPage({
     // 5 per minute per address).
     if (!type.isUndefined(clientAddress)) {
       await context.addCookies([
-        {
-          name: JOURNEY_ACTOR_COOKIE,
-          value: `${journeyActorToken}.${clientAddress}`,
-          url: origin,
-          httpOnly: true,
-          sameSite: 'Lax',
-        },
+        writeJourneyCookie({ name: JOURNEY_COOKIES.actor.name, payload: clientAddress, origin }),
       ]);
     }
+    // A harden run's mutant: every request from this context reads the mutated
+    // artifact (see lib/server/mutants), while other contexts do not.
+    if (!type.isUndefined(mutantCookie)) {
+      await context.addCookies([
+        writeJourneyCookie({ name: JOURNEY_COOKIES.mutant.name, payload: mutantCookie, origin }),
+      ]);
+    }
+    // Every headless context is marked for the dev recorder: 'off' unless the
+    // caller records a journey or explorer run, so screenshots and inspection
+    // never record, and a run's records are labelled by the server, not the
+    // page. See lib/server/recording.
+    await context.addCookies([
+      writeJourneyCookie({
+        name: JOURNEY_COOKIES.recording.name,
+        payload: recordingCookiePayload({ recording }),
+        origin,
+      }),
+    ]);
     const page = await context.newPage();
     // 'load', not 'networkidle': every dev page holds the /api/reload event
     // stream open, so the network never goes idle and a networkidle wait

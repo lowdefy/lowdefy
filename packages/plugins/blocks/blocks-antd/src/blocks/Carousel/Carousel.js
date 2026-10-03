@@ -16,6 +16,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Carousel } from 'antd';
+import { type } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import withTheme from '../withTheme.js';
 
@@ -34,6 +35,11 @@ const dotPlacements = { left: 'start', right: 'end', top: 'top', bottom: 'bottom
 const CarouselBlock = ({ blockId, classNames = {}, content, properties, methods, styles = {} }) => {
   // slides is Lowdefy config, not a react-slick setting, so it is not passed to antd.
   const { dotPosition, slides: slidesConfig, ...carouselProperties } = properties;
+  // react-slick spreads its defaults under the settings it gets, so a null setting (an operator on
+  // a missing key) replaces the default, and a null slidesToScroll hangs the page.
+  const settings = Object.fromEntries(
+    Object.entries(carouselProperties).filter(([, value]) => !type.isNone(value))
+  );
   const slides = getSlides({ content, slides: slidesConfig });
 
   const carousel = useRef();
@@ -57,8 +63,8 @@ const CarouselBlock = ({ blockId, classNames = {}, content, properties, methods,
 
   return (
     <Carousel
-      {...carouselProperties}
-      dotPlacement={carouselProperties.dotPlacement ?? dotPlacements[dotPosition]}
+      {...settings}
+      dotPlacement={settings.dotPlacement ?? dotPlacements[dotPosition]}
       id={blockId}
       afterChange={(current) => {
         methods.triggerEvent({

@@ -59,6 +59,10 @@ async function handleEndpointCall(context, routineContext, { step }) {
       fetch(`${context.origin}/api/detached/${targetEndpointId}`, {
         method: 'POST',
         headers: {
+          // The dev server's journey cookies (data set, mutant) ride the hop
+          // so the target runs in the same journey run; the production server
+          // sets none. Spread first so content-type and authorization win.
+          ...(context.loopbackHeaders ?? {}),
           'content-type': 'application/json',
           authorization: `Bearer ${process.env.CRON_SECRET}`,
         },

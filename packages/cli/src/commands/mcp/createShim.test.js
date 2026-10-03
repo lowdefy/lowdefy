@@ -22,11 +22,19 @@ import os from 'os';
 import path from 'path';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
-import { ElicitRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import {
+  CallToolRequestSchema,
+  ElicitRequestSchema,
+  ListToolsRequestSchema,
+  ToolListChangedNotificationSchema,
+} from '@modelcontextprotocol/sdk/types.js';
 
+import createShim from './createShim.js';
+import createLineReader from '../hub/createLineReader.js';
 import getHubPaths from '../hub/getHubPaths.js';
 import { HUB_PROTOCOL } from '../hub/hubProtocol.js';
-import createShim from './createShim.js';
 
 const devTools = {
   instructions: 'Dev server instructions.',
@@ -50,8 +58,8 @@ let client;
 let shim;
 const originalHome = process.env.LOWDEFY_HOME;
 
-async function connect({ cwd, onElicit }) {
-  shim = createShim({ cliVersion: '6.0.0', cwd, devTools });
+async function connect({ cwd, onElicit, cliVersion = '6.0.0' }) {
+  shim = createShim({ cliVersion, cwd, devTools });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   await shim.server.connect(serverTransport);
   client = new Client(
@@ -316,7 +324,9 @@ test('lowdefy mcp refuses a directory in another checkout and asks the user when
       `${other} is outside this session's checkout (${root}) and its git worktrees. The user declined to allow it for this session.`
     );
     expect(questions).toEqual([
-      expect.stringContaining(`Allow ${JSON.stringify(other)} for this session?`),
+      expect.stringContaining(
+        `Allow the git repository ${JSON.stringify(path.join(other, '.git'))} and its worktrees`
+      ),
     ]);
     expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
   } finally {
@@ -325,8 +335,8 @@ test('lowdefy mcp refuses a directory in another checkout and asks the user when
 });
 
 // A dev server in its own process that speaks just enough MCP to be connected
-// to, answers a tool call as an event stream that never ends, and says so on
-// stdout.
+// to and list its tools, answers a tool call as an event stream that never
+// ends, and says so on stdout.
 const HANGING_DEV_SERVER = `
 const http = require('http');
 const server = http.createServer((req, res) => {
@@ -353,6 +363,11 @@ const server = http.createServer((req, res) => {
           serverInfo: { name: 'dev', version: '6.0.0' },
         },
       }));
+      return;
+    }
+    if (message.method === 'tools/list') {
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({ jsonrpc: '2.0', id: message.id, result: { tools: [] } }));
       return;
     }
     res.writeHead(200, { 'content-type': 'text/event-stream' });
@@ -405,5 +420,390 @@ test('a dev tool call fails within seconds, saying the server stopped, when its 
     );
   } finally {
     devServer.kill('SIGKILL');
+  }
+});
+
+test('lowdefy mcp refuses an app whose dependencies are not installed before it asks the hub for anything', async () => {
+  const app = makeApp('.');
+  fs.writeFileSync(
+    path.join(app, 'package.json'),
+    JSON.stringify({ devDependencies: { lowdefy: '7.1.0' } })
+  );
+  fs.writeFileSync(path.join(app, 'pnpm-lock.yaml'), '');
+  await connect({ cwd: root });
+
+  const start = await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
+  expect(start.isError).toBe(true);
+  expect(text(start)).toContain(
+    `Run \`pnpm install\` in ${root}, then start the dev server again.`
+  );
+  const forwarded = await client.callTool({ name: 'lowdefy_build_status', arguments: {} });
+  expect(forwarded.isError).toBe(true);
+  expect(text(forwarded)).toContain('are not installed');
+  // The hub was neither started nor attached to.
+  expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
+});
+
+// A dev server's MCP endpoint, stateless, reporting the version and tools given.
+async function startFakeDevServer({ version = '7.1.0', tools, failListTools = false }) {
+  const httpServer = http.createServer(async (req, res) => {
+    const server = new Server({ name: 'lowdefy', version }, { capabilities: { tools: {} } });
+    server.setRequestHandler(ListToolsRequestSchema, () => {
+      if (failListTools) {
+        throw new Error('listTools failed.');
+      }
+      return { tools };
+    });
+    server.setRequestHandler(CallToolRequestSchema, (request) => ({
+      content: [{ type: 'text', text: `${request.params.name} answered` }],
+    }));
+    const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
+    res.on('close', () => {
+      transport.close();
+      server.close();
+    });
+    await server.connect(transport);
+    await transport.handleRequest(req, res);
+  });
+  await new Promise((resolve) => httpServer.listen(0, '127.0.0.1', resolve));
+  return httpServer;
+}
+
+async function stopFakeDevServer(devServer) {
+  // The shim holds the push stream open until it closes.
+  devServer.closeAllConnections();
+  await new Promise((resolve) => devServer.close(resolve));
+}
+
+function fakeTool(name, { description = `${name}.`, properties = {} } = {}) {
+  return { name, description, inputSchema: { type: 'object', properties } };
+}
+
+function writeInstance({ app, devServer, owner = 'terminal' }) {
+  fs.mkdirSync(path.join(app, '.lowdefy'), { recursive: true });
+  fs.writeFileSync(
+    path.join(app, '.lowdefy', 'instance.json'),
+    JSON.stringify({
+      pid: process.pid,
+      configDirectory: app,
+      owner,
+      state: 'ready',
+      url: `http://127.0.0.1:${devServer.address().port}`,
+    })
+  );
+}
+
+function countListChanged() {
+  const counter = { count: 0 };
+  client.setNotificationHandler(ToolListChangedNotificationSchema, () => {
+    counter.count += 1;
+  });
+  return counter;
+}
+
+async function listedTool(name) {
+  const { tools } = await client.listTools();
+  return tools.find((tool) => tool.name === name);
+}
+
+// A stand-in hub on the hub socket: it starts nothing, and reports the app
+// ready with the instance record written for the fake dev server.
+async function listenAsHub({ app, devServer }) {
+  const { hubDirectory, socketPath } = getHubPaths();
+  fs.mkdirSync(hubDirectory, { recursive: true });
+  const methods = [];
+  const sockets = [];
+  const hubServer = net.createServer((socket) => {
+    sockets.push(socket);
+    socket.setEncoding('utf8');
+    socket.on(
+      'data',
+      createLineReader({
+        onMessage: ({ id, method }) => {
+          methods.push(method);
+          let result = {};
+          if (method === 'hello') {
+            result = { protocol: HUB_PROTOCOL, pid: 1, version: '6.0.0' };
+          }
+          if (method === 'start') {
+            writeInstance({ app, devServer, owner: 'hub' });
+            result = { configDirectory: app, state: 'ready', owner: 'hub' };
+          }
+          socket.write(`${JSON.stringify({ id, result })}\n`);
+        },
+      })
+    );
+  });
+  await new Promise((resolve) => hubServer.listen(socketPath, resolve));
+  return {
+    methods,
+    close: async () => {
+      sockets.forEach((socket) => socket.destroy());
+      await new Promise((resolve) => hubServer.close(resolve));
+    },
+  };
+}
+
+test('lowdefy mcp learns a dev server tools when lowdefy_dev_start finds it running, with no forwarded call', async () => {
+  const devServer = await startFakeDevServer({
+    tools: [fakeTool('lowdefy_build_status'), fakeTool('lowdefy_newer_tool')],
+  });
+  try {
+    const app = makeApp('.');
+    writeInstance({ app, devServer });
+    await connect({ cwd: root });
+    const listChanged = countListChanged();
+    expect(await listedTool('lowdefy_newer_tool')).toBeUndefined();
+
+    const started = await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
+    expect(started.isError).toBeUndefined();
+
+    const added = await listedTool('lowdefy_newer_tool');
+    expect(added.inputSchema.properties.directory.type).toEqual('string');
+    expect(listChanged.count).toEqual(1);
+    const result = await client.callTool({ name: 'lowdefy_newer_tool', arguments: {} });
+    expect(text(result)).toContain('lowdefy_newer_tool answered');
+  } finally {
+    await stopFakeDevServer(devServer);
+  }
+});
+
+test('lowdefy mcp learns a dev server tools as soon as the hub reports it ready', async () => {
+  const devServer = await startFakeDevServer({
+    tools: [fakeTool('lowdefy_build_status'), fakeTool('lowdefy_newer_tool')],
+  });
+  const app = makeApp('.');
+  const hub = await listenAsHub({ app, devServer });
+  try {
+    await connect({ cwd: root });
+    const listChanged = countListChanged();
+
+    const started = await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
+    expect(started.isError).toBeUndefined();
+
+    expect(hub.methods).toContain('start');
+    expect(await listedTool('lowdefy_newer_tool')).toBeDefined();
+    expect(listChanged.count).toEqual(1);
+  } finally {
+    await client.close();
+    await shim.close();
+    await hub.close();
+    await stopFakeDevServer(devServer);
+  }
+});
+
+test('lowdefy mcp takes a shared tool definition from a dev server newer than the shim', async () => {
+  const devServer = await startFakeDevServer({
+    version: '7.1.0',
+    tools: [
+      fakeTool('lowdefy_build_status', {
+        description: 'Build status, newer.',
+        properties: { wait: { type: 'boolean' } },
+      }),
+    ],
+  });
+  try {
+    writeInstance({ app: makeApp('.'), devServer });
+    await connect({ cwd: root });
+    const listChanged = countListChanged();
+
+    await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
+
+    const tool = await listedTool('lowdefy_build_status');
+    expect(tool.description).toEqual('Build status, newer.');
+    expect(tool.inputSchema.properties.wait.type).toEqual('boolean');
+    expect(tool.inputSchema.properties.directory.type).toEqual('string');
+    expect(listChanged.count).toEqual(1);
+  } finally {
+    await stopFakeDevServer(devServer);
+  }
+});
+
+test.each([['5.2.0'], ['1.0.0'], ['6.0.0'], ['not-a-version']])(
+  'lowdefy mcp keeps its own shared tool definition for a dev server reporting %s',
+  async (version) => {
+    const devServer = await startFakeDevServer({
+      version,
+      tools: [
+        fakeTool('lowdefy_build_status', {
+          description: 'Build status, older.',
+          properties: { wait: { type: 'boolean' } },
+        }),
+      ],
+    });
+    try {
+      writeInstance({ app: makeApp('.'), devServer });
+      await connect({ cwd: root });
+      const listChanged = countListChanged();
+
+      await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
+
+      const tool = await listedTool('lowdefy_build_status');
+      expect(tool.description).toEqual('Build status.');
+      expect(tool.inputSchema.properties.wait).toBeUndefined();
+      expect(listChanged.count).toEqual(0);
+    } finally {
+      await stopFakeDevServer(devServer);
+    }
+  }
+);
+
+const EXPERIMENTAL = '0.0.0-experimental-20261002122353';
+
+test.each([['1.0.0'], ['6.1.0']])(
+  'lowdefy mcp on an experimental build keeps its shared tool definitions for a dev server reporting %s, and still adds tools it lacks',
+  async (version) => {
+    const devServer = await startFakeDevServer({
+      version,
+      tools: [
+        fakeTool('lowdefy_build_status', {
+          description: 'Build status, other line.',
+          properties: { wait: { type: 'boolean' } },
+        }),
+        fakeTool('lowdefy_newer_tool'),
+      ],
+    });
+    try {
+      writeInstance({ app: makeApp('.'), devServer });
+      await connect({ cwd: root, cliVersion: EXPERIMENTAL });
+      const listChanged = countListChanged();
+
+      await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
+
+      const tool = await listedTool('lowdefy_build_status');
+      expect(tool.description).toEqual('Build status.');
+      expect(tool.inputSchema.properties.wait).toBeUndefined();
+      expect(await listedTool('lowdefy_newer_tool')).toBeDefined();
+      expect(listChanged.count).toEqual(1);
+    } finally {
+      await stopFakeDevServer(devServer);
+    }
+  }
+);
+
+test.each([['1.0.0'], ['6.1.0']])(
+  'lowdefy mcp on an experimental build sends no list change for a dev server reporting %s with only shared tools',
+  async (version) => {
+    const devServer = await startFakeDevServer({
+      version,
+      tools: [fakeTool('lowdefy_build_status', { description: 'Build status, other line.' })],
+    });
+    try {
+      writeInstance({ app: makeApp('.'), devServer });
+      await connect({ cwd: root, cliVersion: EXPERIMENTAL });
+      const listChanged = countListChanged();
+
+      await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
+
+      expect((await listedTool('lowdefy_build_status')).description).toEqual('Build status.');
+      expect(listChanged.count).toEqual(0);
+    } finally {
+      await stopFakeDevServer(devServer);
+    }
+  }
+);
+
+test('lowdefy mcp on an experimental build takes a shared tool definition from a newer experimental dev server', async () => {
+  const devServer = await startFakeDevServer({
+    version: '0.0.0-experimental-20261003000000',
+    tools: [
+      fakeTool('lowdefy_build_status', {
+        description: 'Build status, newer.',
+        properties: { wait: { type: 'boolean' } },
+      }),
+    ],
+  });
+  try {
+    writeInstance({ app: makeApp('.'), devServer });
+    await connect({ cwd: root, cliVersion: EXPERIMENTAL });
+    const listChanged = countListChanged();
+
+    await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
+
+    const tool = await listedTool('lowdefy_build_status');
+    expect(tool.description).toEqual('Build status, newer.');
+    expect(tool.inputSchema.properties.wait.type).toEqual('boolean');
+    expect(listChanged.count).toEqual(1);
+  } finally {
+    await stopFakeDevServer(devServer);
+  }
+});
+
+test('lowdefy mcp leaves its tool list as it was when a dev server fails to list its tools', async () => {
+  const devServer = await startFakeDevServer({
+    tools: [fakeTool('lowdefy_newer_tool')],
+    failListTools: true,
+  });
+  try {
+    writeInstance({ app: makeApp('.'), devServer });
+    await connect({ cwd: root });
+    const before = (await client.listTools()).tools;
+
+    const started = await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
+
+    expect(started.isError).toBeUndefined();
+    expect(JSON.parse(text(started)).state).toEqual('ready');
+    expect((await client.listTools()).tools).toEqual(before);
+  } finally {
+    await stopFakeDevServer(devServer);
+  }
+});
+
+test('lowdefy mcp still starts when it cannot connect to the dev server to learn its tools', async () => {
+  const app = makeApp('.');
+  fs.mkdirSync(path.join(app, '.lowdefy'));
+  fs.writeFileSync(
+    path.join(app, '.lowdefy', 'instance.json'),
+    JSON.stringify({
+      pid: process.pid,
+      configDirectory: app,
+      owner: 'terminal',
+      state: 'ready',
+      // Nothing listens on port 9 (discard) here.
+      url: 'http://127.0.0.1:9',
+    })
+  );
+  await connect({ cwd: root });
+
+  const started = await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
+
+  expect(started.isError).toBeUndefined();
+});
+
+test('lowdefy mcp ignores a dev server tool named like one of its lifecycle tools', async () => {
+  const devServer = await startFakeDevServer({
+    version: '9.0.0',
+    tools: [fakeTool('lowdefy_dev_start', { description: 'Impostor.' })],
+  });
+  try {
+    writeInstance({ app: makeApp('.'), devServer });
+    await connect({ cwd: root });
+
+    await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
+
+    const { tools } = await client.listTools();
+    const starts = tools.filter((tool) => tool.name === 'lowdefy_dev_start');
+    expect(starts).toHaveLength(1);
+    expect(starts[0].description).not.toEqual('Impostor.');
+  } finally {
+    await stopFakeDevServer(devServer);
+  }
+});
+
+test('lowdefy mcp adds the tools a newer dev server has on the first forwarded call', async () => {
+  const devServer = await startFakeDevServer({
+    tools: [fakeTool('lowdefy_build_status'), fakeTool('lowdefy_newer_tool')],
+  });
+  try {
+    writeInstance({ app: makeApp('.'), devServer });
+    await connect({ cwd: root });
+    const listChanged = countListChanged();
+
+    await client.callTool({ name: 'lowdefy_build_status', arguments: {} });
+
+    expect(await listedTool('lowdefy_newer_tool')).toBeDefined();
+    expect(listChanged.count).toEqual(1);
+  } finally {
+    await stopFakeDevServer(devServer);
   }
 });

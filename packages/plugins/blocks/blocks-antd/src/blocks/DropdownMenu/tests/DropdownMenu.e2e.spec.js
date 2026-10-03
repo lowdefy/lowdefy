@@ -179,4 +179,11 @@ test.describe('DropdownMenu css keys, placement and selection', () => {
     await page.locator('.ant-dropdown-menu-item').filter({ hasText: 'Second Choice' }).click();
     await expect(getBlock(page, 'dm_selectable_display')).toHaveText('selected:dm_sel_second');
   });
+
+  test('null placement falls back to the antd default', async ({ page }) => {
+    await getBlock(page, 'dm_null_trigger').locator('.ant-btn').click();
+    const dropdown = page.locator('.ant-dropdown').filter({ hasText: 'Null Placement Item' });
+    await expect(dropdown).toBeVisible();
+    await expect(dropdown).toHaveClass(/ant-dropdown-placement-bottomLeft/);
+  });
 });

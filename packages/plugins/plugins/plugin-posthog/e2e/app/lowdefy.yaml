@@ -1,0 +1,138 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+lowdefy: local
+name: plugin-posthog E2E Tests
+
+# PostHog starts once per app load from the app's onInitAsync. The spec routes every request to
+# <origin>/ingest and records the events posthog-js sends.
+events:
+  # A failing app onInit: ?failAppInit=1 makes it throw. It fails before PostHogInit runs in
+  # onInitAsync, so the spec can see that early failures are held for PostHog.
+  onInit:
+    - id: app_init_check
+      type: Throw
+      params:
+        throw:
+          _ne:
+            - _url_query: failAppInit
+            - null
+        message: App init check failed.
+  onInitAsync:
+    - id: posthog_init
+      type: PostHogInit
+      params:
+        apiKey: phc_e2e_test_key
+        apiHost:
+          _string.concat:
+            - _location: origin
+            - /ingest
+        options:
+          advanced_disable_feature_flags: true
+          capture_dead_clicks: false
+          capture_pageview: history_change
+          disable_compression: true
+          disable_session_recording: true
+          disable_surveys: true
+          # Headless Chromium reports itself in its user agent; posthog-js drops bot traffic.
+          opt_out_useragent_filter: true
+          persistence: memory
+          request_batching: false
+    # A failing app event: ?failApp=1 makes it throw, so the spec can see an app event failure.
+    - id: app_check
+      type: Throw
+      params:
+        throw:
+          _ne:
+            - _url_query: failApp
+            - null
+        message: App check failed.
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: save_button
+        type: Button
+        properties:
+          title: Save
+        events:
+          onClick:
+            - id: mark_saved
+              type: SetState
+              params:
+                saved: true
+      - id: go_button
+        type: Button
+        properties:
+          title: Go to second
+        events:
+          onClick:
+            - id: go_second
+              type: Link
+              params:
+                pageId: second
+      - id: country
+        type: Selector
+        properties:
+          title: Country
+          options:
+            - Germany
+            - France
+            - Kenya
+      - id: name
+        type: TextInput
+        required: true
+        properties:
+          title: Name
+      - id: submit_button
+        type: Button
+        properties:
+          title: Submit
+        events:
+          onClick:
+            - id: check_form
+              type: Validate
+      - id: tasks
+        type: AgGridLowdefy
+        properties:
+          columnDefs:
+            - headerName: Task
+              field: task
+            - headerName: Actions
+              field: actions
+              cell:
+                type: buttons
+                buttons:
+                  - eventName: onEditClick
+                    title: Edit
+          rowData:
+            - task: Write report
+              actions: a
+            - task: Send invoice
+              actions: b
+        events:
+          onEditClick:
+            - id: mark_edited
+              type: SetState
+              params:
+                edited:
+                  _event: row.task
+  - id: second
+    type: Box
+    blocks:
+      - id: second_title
+        type: Title
+        properties:
+          content: Second page

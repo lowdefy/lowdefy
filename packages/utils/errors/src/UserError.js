@@ -15,11 +15,14 @@
 */
 
 class UserError extends Error {
-  constructor(message, { blockId, cause, isReject = false, metaData, pageId } = {}) {
+  constructor(message, { blockId, cause, invalidBlocks, isReject = false, metaData, pageId } = {}) {
     super(message, { cause });
     this.name = 'UserError';
     this.isLowdefyError = true;
     this.blockId = blockId;
+    // The ids of the blocks a Validate action found invalid. Analytics reads them; catch
+    // actions do not (projectCaughtError leaves them out).
+    this.invalidBlocks = invalidBlocks;
     this.isReject = isReject;
     this.metaData = metaData;
     this.pageId = pageId;

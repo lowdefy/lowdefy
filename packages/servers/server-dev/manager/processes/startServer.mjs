@@ -20,6 +20,7 @@ import crypto from 'crypto';
 import createServerEnv from '../utils/createServerEnv.mjs';
 import killTaggedBrowser from '../utils/killTaggedBrowser.mjs';
 import readBasePath from '../utils/readBasePath.mjs';
+import resolveDevAuthUrl from '../utils/resolveDevAuthUrl.mjs';
 
 function createStdErrLineHandler({ context }) {
   const port = context.internalPort;
@@ -48,8 +49,11 @@ function startServer(context) {
 
   const env = createServerEnv(context);
   const configuredAuthUrl = process.env.BETTER_AUTH_URL;
-  const authUrl = env.BETTER_AUTH_URL;
-  if (authUrl !== configuredAuthUrl && context.loggedAuthUrl !== authUrl) {
+  const { authUrl, rewritten } = resolveDevAuthUrl({
+    configured: configuredAuthUrl,
+    port: context.options.port,
+  });
+  if (rewritten && context.loggedAuthUrl !== authUrl) {
     context.logger.info(
       `BETTER_AUTH_URL ${configuredAuthUrl} names another port; this dev server uses ${authUrl}.`
     );
@@ -79,6 +83,9 @@ function startServer(context) {
       env: {
         ...env,
         LOWDEFY_BROWSER_TAG: browserTag,
+        // Reported as the MCP serverInfo version: lowdefy mcp takes each
+        // tool's definition from the newest Lowdefy version it meets.
+        LOWDEFY_SERVER_DEV_VERSION: context.version,
       },
     }
   );

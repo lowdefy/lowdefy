@@ -35,6 +35,7 @@ function createContext({ mailSink }) {
     options: { port: 3210 },
     serverArtifacts: { record: jest.fn() },
     shutdownServer: jest.fn(),
+    version: '7.2.0',
   };
 }
 
@@ -128,4 +129,10 @@ test('startServer spawns the child with gc exposed, for its idle GC', () => {
   const [command, args] = mockSpawn.mock.calls[0];
   expect(command).toBe('node');
   expect(args.slice(0, 2)).toEqual(['--expose-gc', 'vite.js']);
+});
+
+test('startServer tells the child the Lowdefy version it reports to MCP clients', () => {
+  startServer(createContext({ mailSink: null }));
+
+  expect(mockSpawn.mock.calls[0][2].env.LOWDEFY_SERVER_DEV_VERSION).toBe('7.2.0');
 });

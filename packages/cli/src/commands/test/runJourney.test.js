@@ -113,6 +113,49 @@ test('runJourney reports an invalid journey without calling the server', async (
   });
 });
 
+test('runJourney reports a malformed step as an invalid journey file without calling the server', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const result = await runJourney({
+    item: {
+      filePath: '/app/tests/journeys/bad-step.yaml',
+      journey: { name: 'bad step', pageId: 'p', steps: [{ fill: { blockId: 'title' } }] },
+    },
+    url,
+  });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(result).toMatchObject({
+    name: 'bad step',
+    filePath: '/app/tests/journeys/bad-step.yaml',
+    passed: false,
+    stepCount: 0,
+    message:
+      'Invalid journey file: Step 0: Step "fill" requires a "value". Received {"blockId":"title"}.',
+  });
+});
+
+test('runJourney reports a journey holding a placeholder value as failed without calling the server', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const result = await runJourney({
+    item: {
+      filePath: '/app/tests/journeys/_candidates/dev/orders-1a2b3c4d.yaml',
+      journey: {
+        name: 'orders recorded 1a2b3c4d',
+        pageId: 'orders',
+        steps: [{ fill: { blockId: 'password', value: null, from: 'shape' } }],
+      },
+    },
+    url,
+  });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(result).toMatchObject({
+    name: 'orders recorded 1a2b3c4d',
+    passed: false,
+    stepCount: 1,
+    message:
+      'Step 0: fill on "password" has a placeholder value (from: shape). Fill it from the data set or the journey\'s user, then remove from.',
+  });
+});
+
 test('runJourney reports a file that failed to parse using its file path as the name', async () => {
   const { default: runJourney } = await import('./runJourney.js');
   const result = await runJourney({

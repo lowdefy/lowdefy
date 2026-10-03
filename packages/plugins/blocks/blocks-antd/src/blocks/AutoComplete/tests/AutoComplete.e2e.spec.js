@@ -184,6 +184,13 @@ test.describe('AutoComplete Block', () => {
     await expect(getOption(page, 'ac_interaction', 0)).toHaveText('Apple');
   });
 
+  test('renders the dropdown inside the block wrapper', async ({ page }) => {
+    await getInput(page, 'ac_interaction').click();
+    const option = getBlock(page, 'ac_interaction').locator('.ant-select-item-option').first();
+    await expect(option).toBeVisible();
+    await expect(option).toHaveText('Apple');
+  });
+
   test('filters options when typing', async ({ page }) => {
     const input = getInput(page, 'ac_interaction');
     await input.click();
