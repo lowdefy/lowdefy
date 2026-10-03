@@ -76,9 +76,11 @@ const SiderBlock = ({
       id={blockId}
       className={classNames.element ? `${classNames.element} hide-on-print` : 'hide-on-print'}
       classNames={{ body: classNames.body }}
-      breakpoint={properties.breakpoint}
+      // antd only applies its defaults to undefined props; a null (an unset module var
+      // property, say) would be written into the width styles as "null".
+      breakpoint={properties.breakpoint ?? undefined}
       collapsed={!openState}
-      collapsedWidth={properties.collapsedWidth}
+      collapsedWidth={properties.collapsedWidth ?? undefined}
       collapsible={properties.collapsible}
       reverseArrow={properties.reverseArrow}
       theme={properties.theme ?? (getDarkMode() ? 'dark' : 'light')}
@@ -101,7 +103,7 @@ const SiderBlock = ({
           }}
         />
       }
-      width={properties.width}
+      width={properties.width ?? undefined}
       onBreakpoint={(broken) => methods.triggerEvent({ name: 'onBreakpoint', event: { broken } })}
       onCollapse={(collapsed, collapseType) => {
         // Only the trigger toggles the sider here. A responsive collapse would override the

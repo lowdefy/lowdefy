@@ -15,6 +15,13 @@
 id: segmented_selector
 type: Box
 
+events:
+  onInit:
+    - id: set_seg_unmatched
+      type: SetState
+      params:
+        seg_unmatched: saved_view
+
 blocks:
   # ============================================
   # BASIC RENDERING
@@ -146,3 +153,35 @@ blocks:
       options:
         - A
         - B
+
+  # ============================================
+  # VALUE MATCHING NO OPTION
+  # ============================================
+
+  - id: seg_unmatched
+    type: SegmentedSelector
+    properties:
+      label:
+        disabled: true
+      options:
+        - label: All
+          value: all
+        - label: Open
+          value: open
+    events:
+      onChange:
+        - id: set_seg_unmatched_result
+          type: SetState
+          params:
+            seg_unmatched_result:
+              _event: value
+
+  - id: seg_unmatched_display
+    type: Paragraph
+    properties:
+      content:
+        _string.concat:
+          - 'changed:'
+          - _if_none:
+              - _state: seg_unmatched_result
+              - none

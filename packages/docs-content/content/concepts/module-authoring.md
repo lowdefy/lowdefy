@@ -143,7 +143,7 @@ The `vars` section declares what configuration the module accepts. Each variable
 - `description` — Documentation for the variable's purpose.
 - `properties` — For `object` vars, declares nested keys with their own type, default, required, and description. Consumer values are merged at the property level — only overridden keys change.
 
-Defaults are expressions. They can be literals, or operator trees — `_ref`, `_module.var`, `_build.*`, or any combination. The build resolves a default lazily, only when `_module.var` reads the var and the consumer did not provide a value. Vars with `properties` merge at the property level: the consumer overrides only the keys they provide, and the rest resolve their own defaults independently.
+Defaults are expressions. They can be literals, or operator trees — `_ref`, `_module.var`, `_build.*`, or any combination. The build resolves a default lazily, only when `_module.var` reads the var and the consumer did not provide a value. Vars with `properties` merge at the property level: the consumer overrides only the keys they provide, and the rest resolve their own defaults independently. A property with no consumer value and no default is left out of the object, not set to `null`.
 
 Unused vars are never read, so their defaults never resolve and their declared `type` is never checked.
 
