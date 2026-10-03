@@ -116,6 +116,12 @@ test.each([
   [{ endpoints: [1] }, '"endpoints" must be an array of endpoint ids'],
   [{ appEvents: 'yes' }, '"appEvents" must be a boolean'],
   [{ operators: ['drop-everything'] }, '"operators" must be an array of operator names'],
+  [{ pages: ['../../secrets'] }, '"pages" must be an array of page ids'],
+  [
+    { requests: [{ pageId: 'tickets', requestId: '../x' }] },
+    '"requests" must be an array of { pageId, requestId }',
+  ],
+  [{ endpoints: ['../notify'] }, '"endpoints" must be an array of endpoint ids'],
 ])(
   'POST /lowdefy-docs/mutants answers a bad body %j with a 400 naming the field',
   async (body, message) => {
@@ -133,4 +139,16 @@ test('POST /lowdefy-docs/mutants answers a page that fails to build with a 422 a
   expect(data.buildErrors).toEqual([
     { type: 'Error', message: 'Block type "Buton" not found.', source: null },
   ]);
+});
+
+test('POST /lowdefy-docs/mutants answers with the build id read before the pages built', async () => {
+  // An edit lands while the page builds: its keys may be the new build's, so
+  // the answer must carry the older id and the journey route refuse it as stale.
+  mockBuildPageIfNeeded.mockImplementation(async () => {
+    write('buildStatus.json', { status: 'ok', timestamp: '2026-10-03T09:00:00.000Z' });
+    return true;
+  });
+  const { status, data } = await post({ pages: ['tickets'] });
+  expect(status).toBe(200);
+  expect(data.buildId).toEqual('2026-10-03T08:00:00.000Z');
 });
