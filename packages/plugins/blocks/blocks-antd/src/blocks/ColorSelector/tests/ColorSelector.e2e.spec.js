@@ -41,10 +41,12 @@ test.describe('ColorSelector Block', () => {
     const trigger = block.locator('.ant-color-picker-trigger');
     await trigger.click();
 
-    // Click inside the saturation area to change the color
-    const panel = page.locator('.ant-color-picker-panel');
-    await expect(panel).toBeVisible();
-    await panel.locator('.ant-color-picker-saturation').click();
+    // Click inside the saturation area to change the color. The picker ignores a press while its
+    // popup is still zooming open (its handle measures unevenly scaled), so wait for the motion to end.
+    const popup = page.locator('.ant-color-picker');
+    await expect(popup).toBeVisible();
+    await expect(popup).not.toHaveClass(/ant-zoom-big-(appear|enter)/);
+    await popup.locator('.ant-color-picker-saturation').click();
 
     const display = getBlock(page, 'cs_change_display');
     await expect(display).toHaveText('Changed!');
