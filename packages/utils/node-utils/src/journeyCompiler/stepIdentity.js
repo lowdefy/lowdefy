@@ -29,10 +29,13 @@ function readTarget(params) {
 // indices normalised), the grid column, and for a click the control's text,
 // since "Assign" and "Delete" in the same grid row are different actions. The
 // row, `nth` and every typed or picked value are left out. A press has no
-// target, so its chord is what tells Enter from Escape.
+// target, so its chord is what tells Enter from Escape. A hand-written `open`
+// clicks its target's trigger, which is what a recording holds for it, so it
+// reads as a click on that target.
 function stepIdentity({ step }) {
-  const verb = getStepKey(step);
-  const params = step[verb];
+  const stepKey = getStepKey(step);
+  const params = step[stepKey];
+  const verb = stepKey === 'open' ? 'click' : stepKey;
   if (verb === 'press') {
     return JSON.stringify([verb, params]);
   }
