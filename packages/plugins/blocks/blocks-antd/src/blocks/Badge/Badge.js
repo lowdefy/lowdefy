@@ -35,7 +35,7 @@ const BadgeBlock = ({
       <Badge.Ribbon
         classNames={{ root: classNames.element, indicator: classNames.indicator }}
         color={properties.ribbon.color}
-        placement={properties.ribbon.placement}
+        placement={properties.ribbon.placement ?? undefined}
         styles={{ root: styles.element, indicator: styles.indicator }}
         text={properties.ribbon.text}
       >

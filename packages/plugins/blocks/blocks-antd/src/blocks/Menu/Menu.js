@@ -142,7 +142,7 @@ function MenuComp({
       overflowedIndicator={
         <Icon blockId={`${blockId}_overflowedIndicator`} properties={{ name: 'more', title: '' }} />
       }
-      mode={properties.mode}
+      mode={properties.mode ?? undefined}
       selectable={true}
       theme={theme}
       defaultOpenKeys={

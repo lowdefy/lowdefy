@@ -57,7 +57,7 @@ const ColorSelectorInput = ({
             style={styles.element}
             styles={{ popup: { root: styles.popup } }}
             value={toPickerColor(value)}
-            format={properties.format}
+            format={properties.format ?? undefined}
             showText={properties.showText}
             size={properties.size}
             disabled={getDisabled({ loading, properties })}
@@ -67,9 +67,9 @@ const ColorSelectorInput = ({
             disabledFormat={properties.disabledFormat}
             mode={properties.mode}
             open={properties.open}
-            placement={properties.placement}
+            placement={properties.placement ?? undefined}
             presets={properties.presets}
-            trigger={properties.trigger}
+            trigger={properties.trigger ?? undefined}
             onChange={(color) => {
               const colorValue = getColorValue(color);
               methods.setValue(colorValue);
