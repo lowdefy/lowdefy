@@ -18,8 +18,8 @@
 // wrapper (`#bl-<blockId>`) is shown and the block's own markup inside it has
 // a size. A Modal or Drawer renders nothing there but an empty anchor: its
 // content sits in a portal, in its slot wrappers (`#ar-<blockId>-<slot>`),
-// which antd hides with display: none once closed, so it counts while one of
-// those is shown. Run in the page, by the journey observer on every DOM change
+// which antd hides with display: none once closed, so a shown wrapper with
+// nothing sized inside counts while one of its own slot wrappers is shown. Run in the page, by the journey observer on every DOM change
 // and by the runner's page.evaluate at each settle, so it reads nothing from
 // its closure.
 function collectVisibleBlockIds() {
@@ -30,18 +30,22 @@ function collectVisibleBlockIds() {
     const { width, height } = element.getBoundingClientRect();
     return width > 0 && height > 0;
   }
-  const ids = new Set();
+  const ids = [];
   document.querySelectorAll('[id^="bl-"]').forEach((wrapper) => {
-    if (isShown(wrapper) && [...wrapper.children].some(hasSize)) {
-      ids.add(wrapper.id.slice(3));
+    if (!isShown(wrapper)) {
+      return;
+    }
+    const blockId = wrapper.id.slice(3);
+    if ([...wrapper.children].some(hasSize)) {
+      ids.push(blockId);
+      return;
+    }
+    const areas = document.querySelectorAll(`[id^="ar-${CSS.escape(blockId)}-"]`);
+    if ([...areas].some((area) => isShown(area) && hasSize(area))) {
+      ids.push(blockId);
     }
   });
-  document.querySelectorAll('[id^="ar-"]').forEach((area) => {
-    if (isShown(area) && hasSize(area)) {
-      ids.add(area.id.slice(3, area.id.lastIndexOf('-')));
-    }
-  });
-  return [...ids];
+  return ids;
 }
 
 export default collectVisibleBlockIds;

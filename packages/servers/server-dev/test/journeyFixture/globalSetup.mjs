@@ -32,9 +32,8 @@ async function canLaunchChromium() {
 }
 
 // Vite compiles the client on its first page load, which can outlast a
-// journey's page-open timeout; the first journey of the run takes that hit
-// here, so no test does.
-async function warmUp({ url }) {
+// journey's page-open timeout; the warm-up takes that hit, so no test does.
+async function warmUpPage({ url, pageId, blockId }) {
   let lastError;
   for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
@@ -42,9 +41,9 @@ async function warmUp({ url }) {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
-          pageId: 'home',
+          pageId,
           user: 'none',
-          steps: [{ expect: { visible: 'home_title' } }],
+          steps: [{ expect: { visible: blockId } }],
         }),
       });
       const result = await response.json();
@@ -57,6 +56,13 @@ async function warmUp({ url }) {
     }
   }
   throw lastError;
+}
+
+// Every page is built on its first visit, and a page that builds mid-journey
+// can reset the page a step just acted on; the warm-up builds them all.
+async function warmUp({ url }) {
+  await warmUpPage({ url, pageId: 'home', blockId: 'home_title' });
+  await warmUpPage({ url, pageId: 'second', blockId: 'second_title' });
 }
 
 // Starts apps/journey-fixture once for every fixture test file, and hands its

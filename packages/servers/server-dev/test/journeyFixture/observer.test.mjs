@@ -93,6 +93,8 @@ fixtureTest(
     expect(rendered).toEqual(
       expect.arrayContaining(['flash_alert', 'confirm_modal', 'modal_text', 'rows.$.label'])
     );
+    // Only block ids: a List item's slot wrappers are not blocks.
+    expect(rendered.filter((blockId) => blockId.startsWith('rows-'))).toEqual([]);
     // Mounted with forceRender, never opened.
     expect(rendered).not.toContain('forced_modal');
     expect(rendered).not.toContain('forced_text');
