@@ -24,6 +24,7 @@ import RestartingPage from '../lib/client/RestartingPage.jsx';
 import FeedbackMount from './feedback/FeedbackMount.jsx';
 import Inspector from './Inspector.jsx';
 import OpenInEditorListener from './openInEditor/OpenInEditorListener.jsx';
+import Recorder from './Recorder.jsx';
 import Reload from './Reload.jsx';
 import Page from './Page.jsx';
 import setPageId from '../lib/client/setPageId.js';
@@ -39,7 +40,7 @@ import staticJsMap from '../build/plugins/operators/clientJsMap.js';
 
 // Replaces lib/client/App.js — page resolution driven by the custom router
 // instead of next/router, everything else preserved.
-function Routing({ auth, lowdefy, router }) {
+function Routing({ auth, lowdefy, recording, router }) {
   const { data: rootConfig } = useRootConfig(router.basePath);
   const [location, setLocation] = useState(() => router.getLocation());
 
@@ -79,6 +80,12 @@ function Routing({ auth, lowdefy, router }) {
           <>
             {/* Inside Reload so it can share Reload's event stream (DevStreamContext). */}
             <Inspector basePath={router.basePath} lowdefy={lowdefy} pageId={pageId} />
+            <Recorder
+              basePath={router.basePath}
+              lowdefy={lowdefy}
+              pageId={pageId}
+              recording={recording}
+            />
             {/* Rendered here, not in Page — Page sits below the Suspense boundary
                 and cannot render anything while its config fetch is suspended, so
                 a restarting server would present as "Building page..." forever. */}
