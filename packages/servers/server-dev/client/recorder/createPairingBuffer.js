@@ -117,8 +117,8 @@ function createPairingBuffer({
     // A click or change the runner could not target (no block, no text) can
     // be neither replayed nor paired.
     if (kind !== 'key' && !hasTargetIdentity(target)) return;
-    if (redactor !== undefined && kind === 'change' && redactor.isPassword(element)) {
-      redactor.remember(target.block_id);
+    if (redactor !== undefined && !type.isNone(element) && redactor.isPassword(element)) {
+      redactor.remember(target?.block_id);
     }
     open.push({
       id: `i${nextId++}`,

@@ -26,10 +26,18 @@ function isPasswordInput(element) {
   );
 }
 
+// A write holds a password block's value when its path is the block's id, or
+// an ancestor of it: arrays are diffed as leaves, so a password block inside a
+// List is written as the whole list array.
+function holdsPassword(path, passwordBlocks) {
+  if (passwordBlocks.has(path)) return true;
+  return [...passwordBlocks].some((blockId) => blockId.startsWith(`${path}.`));
+}
+
 function redactWrites(event, passwordBlocks) {
   if (event === null || event === undefined) return;
   (event.state_writes ?? []).forEach((write) => {
-    if (passwordBlocks.has(write.path)) {
+    if (holdsPassword(write.path, passwordBlocks)) {
       write.value = null;
       write.redacted = true;
     }
@@ -40,7 +48,9 @@ function redactWrites(event, passwordBlocks) {
 // interaction's element, or its block's `<blockId>_input` element, is an
 // `<input type="password">`. It is remembered for the rest of the tab session,
 // so its value is redacted from every later change and from every state write
-// to its path, a later SetState echo included.
+// to its path, a later SetState echo included. It is remembered from any
+// interaction with the block, a click included: the visibility toggle turns
+// the input into `type="text"`, and a click on it comes before the typing.
 function createPasswordRedactor() {
   const passwordBlocks = new Set();
 

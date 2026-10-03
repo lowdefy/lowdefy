@@ -117,6 +117,8 @@ beforeEach(() => {
     <div id="bl-search"><input id="search_input" /></div>
     <div id="bl-status"><div class="popup"><div id="option-open" role="option">Open</div></div></div>
     <div id="bl-password"><input id="password_input" type="password" /></div>
+    <div id="bl-reveal"><input id="reveal_input" type="password" /><span id="reveal-eye">eye</span></div>
+    <div id="bl-users"><div id="bl-users.0.pw"><input id="users.0.pw_input" type="password" /></div></div>
     <div id="bl-outer"><div id="bl-inner"><button id="inner-button">Go</button></div></div>
     <div id="blank"></div>
   `;
@@ -278,6 +280,42 @@ test('a password value and its state writes are redacted, including a later SetS
   const echo = records.find((record) => record.kind === 'engine');
   expect(echo.event.state_writes).toEqual([
     { path: 'password', type: 'string', value: null, redacted: true },
+  ]);
+  expect(JSON.stringify(records)).not.toContain('hunter');
+});
+
+test('a password revealed with the visibility toggle before typing is still redacted', () => {
+  interact({ element: el('reveal-eye'), at: 0 });
+  el('reveal_input').type = 'text';
+  interact({ element: el('reveal_input'), kind: 'change', at: 100, value: 'hunter2' });
+  event({
+    blockId: 'reveal',
+    eventName: 'onChange',
+    at: 105,
+    arrive: 110,
+    state: { reveal: 'hunter2' },
+  });
+  closeAll();
+  const change = records.find((record) => record.kind === 'change');
+  expect(change).toMatchObject({ value: null, redacted: true });
+  expect(JSON.stringify(records)).not.toContain('hunter');
+});
+
+test('a password block inside a list is redacted from the list array write', () => {
+  interact({ element: el('users.0.pw_input'), kind: 'change', at: 0, value: 'hunter2' });
+  event({
+    blockId: 'users.0.pw',
+    eventName: 'onChange',
+    at: 5,
+    arrive: 10,
+    stateBefore: { users: [{}] },
+    state: { users: [{ pw: 'hunter2' }] },
+  });
+  closeAll();
+  const change = records.find((record) => record.kind === 'change');
+  expect(change).toMatchObject({ value: null, redacted: true });
+  expect(change.event.state_writes).toEqual([
+    { path: 'users', type: 'array', value: null, redacted: true },
   ]);
   expect(JSON.stringify(records)).not.toContain('hunter');
 });
