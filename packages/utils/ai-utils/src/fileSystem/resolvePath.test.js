@@ -17,7 +17,7 @@
 import path from 'path';
 import resolvePath from './resolvePath.js';
 
-const basePath = '/test/knowledge-base';
+const basePath = path.resolve('/test/knowledge-base');
 
 test('resolvePath resolves a simple relative path', () => {
   expect(resolvePath(basePath, 'file.md')).toBe(path.join(basePath, 'file.md'));
