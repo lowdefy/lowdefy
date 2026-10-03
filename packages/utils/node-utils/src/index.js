@@ -21,6 +21,8 @@ import copyFileOrDirectory from './copyFileOrDirectory.js';
 import createClientAddressResolver from './createClientAddressResolver.js';
 import createSecretScrubber from './createSecretScrubber.js';
 import findAvailablePort from './findAvailablePort.js';
+import findPnpmWorkspaceRoot from './findPnpmWorkspaceRoot.js';
+import findWorkspacePackages from './findWorkspacePackages.js';
 import getDevInstancePath from './getDevInstancePath.js';
 import getFileExtension, { getFileSubExtension } from './getFileExtension.js';
 import getProcessStartTime from './getProcessStartTime.js';
@@ -28,6 +30,8 @@ import getSecretsFromEnv from './getSecretsFromEnv.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPidAlive from './isPidAlive.js';
 import isPortAvailable from './isPortAvailable.js';
+import linkDependenciesToWorkspace from './linkDependenciesToWorkspace.js';
+import linkWorkspaceDependencies from './linkWorkspaceDependencies.js';
 import parseIpRange from './parseIpRange.js';
 import readDevInstance from './readDevInstance.js';
 import listRecordingFiles, { RECORDING_SOURCES } from './recordings/listRecordingFiles.js';
@@ -58,6 +62,8 @@ export {
   createSecretScrubber,
   findAvailablePort,
   findPlaceholderStep,
+  findPnpmWorkspaceRoot,
+  findWorkspacePackages,
   getDevInstancePath,
   getFileExtension,
   getFileSubExtension,
@@ -67,6 +73,8 @@ export {
   isPidAlive,
   isPortAvailable,
   journeySequence,
+  linkDependenciesToWorkspace,
+  linkWorkspaceDependencies,
   listRecordingFiles,
   parseIpRange,
   parseTraceLines,

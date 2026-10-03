@@ -18,6 +18,7 @@ import { createRequire } from 'module';
 import { Command, Option } from 'commander';
 
 import agentSetup from './commands/agentSetup/agentSetup.js';
+import agentSetupUser from './commands/agentSetup/agentSetupUser.js';
 import build from './commands/build/build.js';
 import dev from './commands/dev/dev.js';
 import dockerOutput from './commands/dockerOutput/dockerOutput.js';
@@ -27,6 +28,9 @@ import hubServe from './commands/hub/hubServe.js';
 import hubStart from './commands/hub/hubStart.js';
 import hubStatus from './commands/hub/hubStatus.js';
 import hubStop from './commands/hub/hubStop.js';
+import hubTrust from './commands/hub/hubTrust.js';
+import hubTrusted from './commands/hub/hubTrusted.js';
+import hubUntrust from './commands/hub/hubUntrust.js';
 import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
@@ -108,7 +112,17 @@ program
   .addOption(options.disableTelemetry)
   .addOption(options.logLevel)
   .addOption(options.projectDirectory)
-  .action(runCommand({ cliVersion, handler: agentSetup }));
+  .option(
+    '--user',
+    'Register lowdefy mcp for every Claude Code session of this user instead of setting up this project. Needs no app.'
+  )
+  .action(function runAgentSetup(options, command) {
+    // --user works outside any app, so it skips runCommand's app start-up.
+    if (options.user) {
+      return runHubCommand({ cliVersion, handler: agentSetupUser })(command);
+    }
+    return runCommand({ cliVersion, handler: agentSetup })(options, command);
+  });
 
 program
   .command('build')
@@ -205,6 +219,31 @@ hub
   .option('--lines <lines>', 'How many lines.', '100')
   .option('--grep <text>', 'Only lines containing this text.')
   .action(runHubCommand({ cliVersion, handler: hubLogs }));
+
+hub
+  .command('trust')
+  .description(
+    "Let lowdefy mcp start and query this repository's dev servers from any agent session, not only sessions started in it. Covers all of its git worktrees."
+  )
+  .argument(
+    '[directory]',
+    'A directory in the repository. Default is the current working directory.'
+  )
+  .action(runHubCommand({ cliVersion, handler: hubTrust }));
+
+hub
+  .command('untrust')
+  .description('Remove a repository from the list hub trust adds to.')
+  .argument(
+    '[directory]',
+    'A directory in the repository. Default is the current working directory.'
+  )
+  .action(runHubCommand({ cliVersion, handler: hubUntrust }));
+
+hub
+  .command('trusted')
+  .description('List the repositories any agent session may use.')
+  .action(runHubCommand({ cliVersion, handler: hubTrusted }));
 
 hub
   .command('serve', { hidden: true })
