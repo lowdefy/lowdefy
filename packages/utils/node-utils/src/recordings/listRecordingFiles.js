@@ -34,9 +34,11 @@ function listDirectory(directory) {
 
 // The recording files of one source under
 // `<config>/.lowdefy/traces/<source>/<yyyy-mm-dd>/<id>.jsonl`, oldest date
-// first and by id within a date (ids start with their UTC time). Date
-// directories before `since` (a Date) are skipped; files and directories that
-// do not match the layout are ignored.
+// first and by id within a date (ids start with their UTC time). With `since`
+// (a Date), a file in a date directory before it is kept only if it was
+// written to since: a session stays in the directory of the day it started,
+// so one that crossed midnight UTC has later records there. Files and
+// directories that do not match the layout are ignored.
 function listRecordingFiles({ configDirectory, source, since, run }) {
   if (!RECORDING_SOURCES.includes(source)) {
     throw new Error(
@@ -56,7 +58,6 @@ function listRecordingFiles({ configDirectory, source, since, run }) {
   const files = [];
   listDirectory(sourceDirectory)
     .filter((entry) => entry.isDirectory() && DATE_DIRECTORY_PATTERN.test(entry.name))
-    .filter((entry) => sinceDate === null || entry.name >= sinceDate)
     .map((entry) => entry.name)
     .sort()
     .forEach((date) => {
@@ -69,7 +70,9 @@ function listRecordingFiles({ configDirectory, source, since, run }) {
         .sort()
         .forEach((id) => {
           const filePath = path.join(dateDirectory, `${id}.jsonl`);
-          files.push({ id, date, path: filePath, mtimeMs: fs.statSync(filePath).mtimeMs });
+          const { mtimeMs } = fs.statSync(filePath);
+          if (sinceDate !== null && date < sinceDate && mtimeMs < since.getTime()) return;
+          files.push({ id, date, path: filePath, mtimeMs });
         });
     });
   return files;

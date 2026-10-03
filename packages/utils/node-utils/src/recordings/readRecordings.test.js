@@ -82,13 +82,15 @@ test('readRecordings throws on a malformed middle line, naming the file and line
   );
 });
 
-test('readRecordings skips date directories before since', () => {
-  writeTrace({
+test('readRecordings skips files in date directories before since', () => {
+  const oldFile = writeTrace({
     source: 'dev',
     date: '2026-09-30',
     id: '20260930T100000Z-old000',
     lines: ['{"n":1}'],
   });
+  const written = new Date('2026-09-30T10:30:00Z');
+  fs.utimesSync(oldFile, written, written);
   writeTrace({
     source: 'dev',
     date: '2026-10-03',
@@ -98,6 +100,20 @@ test('readRecordings skips date directories before since', () => {
   expect(
     readRecordings({ configDirectory, source: 'dev', since: new Date('2026-10-01T12:00:00Z') })
   ).toEqual([{ n: 2 }]);
+});
+
+test('readRecordings keeps a session from before since that was written to since', () => {
+  const crossing = writeTrace({
+    source: 'dev',
+    date: '2026-10-02',
+    id: '20261002T235000Z-cross0',
+    lines: ['{"n":1}', '{"n":2}'],
+  });
+  const written = new Date('2026-10-03T00:20:00Z');
+  fs.utimesSync(crossing, written, written);
+  expect(
+    readRecordings({ configDirectory, source: 'dev', since: new Date('2026-10-03T00:00:00Z') })
+  ).toEqual([{ n: 1 }, { n: 2 }]);
 });
 
 test('readRecordings reads only the run file when run is given', () => {
