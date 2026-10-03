@@ -1,40 +1,13 @@
-name: Tests
+name: Fast Tests
 
 # The fast path: one ubuntu / Node 24 job that builds every package from the turbo cache
-# and tests only the packages a change affects. The full OS and Node matrix and the slow
-# suites run before a release, in test-complete.yml. See code-docs/testing.md.
+# and tests only the packages a change affects. ci.yml runs it on pull requests with the
+# `ci` label and from the Actions tab. See code-docs/testing.md.
 on:
-  pull_request:
-    branches-ignore:
-      - main
-    # Keep in step with docsOnly in scripts/lib/classifyChangedFiles.mjs. Markdown inside
-    # packages is not ignored: the docs-content staleness test reads it.
-    paths-ignore:
-      - '*.md'
-      - '**/CHANGELOG.md'
-      - '**/README.md'
-      - 'code-docs/**'
-      - '.changeset/**'
-      - '.claude/**'
-  push:
-    branches:
-      - develop
-      - 'v[0-9]*'
-    paths-ignore:
-      - '*.md'
-      - '**/CHANGELOG.md'
-      - '**/README.md'
-      - 'code-docs/**'
-      - '.changeset/**'
-      - '.claude/**'
-  merge_group:
+  workflow_call:
 
 permissions:
   contents: read
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
 
 env:
   TURBO_TELEMETRY_DISABLED: 1
@@ -57,14 +30,14 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       # A pull request checks out its merge commit, whose first parent is the base it
-      # merges into. A push compares with the commit the branch pointed at before it.
+      # merges into. A run from the Actions tab has no base, so it tests every package.
       - name: Scope
         id: scope
         run: |
           node --test scripts/lib/classifyChangedFiles.test.mjs
           node scripts/ci-scope.mjs --base "$BASE"
         env:
-          BASE: ${{ github.event_name == 'pull_request' && 'HEAD^1' || github.event.merge_group.base_sha || github.event.before }}
+          BASE: ${{ github.event_name == 'pull_request' && 'HEAD^1' || '' }}
       - uses: actions/cache@v4
         with:
           path: .turbo/cache

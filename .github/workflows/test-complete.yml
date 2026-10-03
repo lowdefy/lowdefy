@@ -2,28 +2,14 @@ name: Complete Tests
 
 # The complete path, run before a release: the unit tests on ubuntu and windows with
 # Node 24 and 26, the MongoDB suites, the journey fixture suites and every block e2e
-# suite. Release (release.yaml) calls it on every push to main and publishes only when
-# it passes; it also runs on pull requests into main and by hand from the Actions tab
-# (`gh workflow run test-complete.yml --ref <branch>`). See code-docs/testing.md.
+# suite. Release (release.yaml) runs it on every push to main and versions or publishes
+# only when it passes. ci.yml runs it on pull requests into main, on pull requests with
+# the `ci-full` label and from the Actions tab. See code-docs/testing.md.
 on:
-  # TEMPORARY: proves the complete path on this branch; removed before review.
-  push:
-    branches:
-      - ci/v7-fast-ci
-  workflow_dispatch:
   workflow_call:
-  pull_request:
-    branches:
-      - main
 
 permissions:
   contents: read
-
-# A new push to a pull request into main cancels its stale run. Every other run (a release,
-# a run by hand) has a group of its own.
-concurrency:
-  group: complete-tests-${{ github.event.pull_request.number || github.run_id }}
-  cancel-in-progress: true
 
 jobs:
   unit:
@@ -45,7 +31,10 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - run: pnpm test
+      # `pnpm test` without stopping at the first failing package, so one run lists every
+      # failure before a release.
+      - run: pnpm test:dependencies
+      - run: pnpm -r --no-bail --filter=!@lowdefy/connection-mongodb test
       # Last: it changes the machine's time zone, and WMI answers slowly for minutes after
       # that, so start time reads in any step after it would time out.
       - name: Time zone change test (Windows)

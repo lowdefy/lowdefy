@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-// Files no test reads. Keep in step with `paths-ignore` in .github/workflows/test-fast.yml.
+// Files no test reads: a change to them alone never widens the fast path to every package.
 const docsOnlyPrefixes = ['code-docs/', '.changeset/', '.claude/'];
 const docsOnlyBasenames = ['CHANGELOG.md', 'README.md'];
 
