@@ -362,6 +362,7 @@ See `code-docs/architecture/error-tracing.md` for the complete error system.
 - Test files: `{name}.test.js` co-located with source
 - **Do not create tests for blocks** (currently disabled)
 - **NEVER run `pnpm jest` or `npx jest` directly** — always use `pnpm test`
+- **CI does not test pull requests by default** — run the tests your change needs before you push (`code-docs/testing.md`, "Before pushing") and list them in the PR body. The `ci` label runs the fast affected-only job on a PR, `ci-full` the complete matrix with the MongoDB, journey fixture and block e2e suites; pushes to `main` always run the complete path.
 
 ### Running Tests
 
