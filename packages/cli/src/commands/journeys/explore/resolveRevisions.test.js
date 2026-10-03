@@ -164,3 +164,35 @@ test('resolveRevisions needs exactly one of --pr and --against', async () => {
     'Pass one of --pr <number> or --against <ref>.'
   );
 });
+
+test('resolveRevisions --pr refuses anything but a pull request number', async () => {
+  await expect(resolveRevisions({ pr: '--repo=acme/other', cwd: repo })).rejects.toThrow(
+    '--pr should be a pull request number. Received "--repo=acme/other".'
+  );
+  await expect(resolveRevisions({ pr: 'feature', cwd: repo })).rejects.toThrow(
+    '--pr should be a pull request number. Received "feature".'
+  );
+  expect(mockReadPullRequest).not.toHaveBeenCalled();
+});
+
+test('resolveRevisions --pr accepts the number as the string a command line passes', async () => {
+  mockReadPullRequest.mockResolvedValue({
+    number: 2531,
+    title: 'Tickets page',
+    body: '',
+    url: 'https://github.com/acme/app/pull/2531',
+    baseRefName: 'main',
+    baseRefOid: baseSha,
+    headRefName: 'feature',
+    headRefOid: headSha,
+  });
+  const revisions = await resolveRevisions({ pr: '2531', cwd: repo });
+  expect(mockReadPullRequest).toHaveBeenCalledWith({ number: 2531, cwd: repo });
+  expect(revisions.base).toEqual(baseSha);
+});
+
+test('resolveRevisions --against reads a ref that starts with a dash as a ref, not a git option', async () => {
+  await expect(resolveRevisions({ against: '--all', cwd: repo })).rejects.toThrow(
+    'git merge-base --end-of-options --all HEAD failed'
+  );
+});

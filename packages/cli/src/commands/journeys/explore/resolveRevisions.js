@@ -36,7 +36,7 @@ async function fromPullRequest({ number, cwd, head }) {
     );
   }
   if (!(await hasCommit({ sha: pullRequest.baseRefOid, cwd }))) {
-    await runGit({ args: ['fetch', 'origin', pullRequest.baseRefName], cwd });
+    await runGit({ args: ['fetch', '--end-of-options', 'origin', pullRequest.baseRefName], cwd });
   }
   const base = await runGit({
     args: ['merge-base', pullRequest.baseRefOid, pullRequest.headRefOid],
@@ -50,7 +50,9 @@ async function fromPullRequest({ number, cwd, head }) {
 }
 
 async function fromRef({ against, cwd }) {
-  const base = await runGit({ args: ['merge-base', against, 'HEAD'], cwd });
+  // --end-of-options: a ref that starts with a dash is read as a ref, never
+  // as a git option.
+  const base = await runGit({ args: ['merge-base', '--end-of-options', against, 'HEAD'], cwd });
   const messages = await runGit({ args: ['log', '--format=%s%n%n%b', `${base}..HEAD`], cwd });
   return { base, pr: null, context: { title: null, body: messages.trim() } };
 }
@@ -64,12 +66,16 @@ async function resolveRevisions({ pr, against, cwd }) {
   if (type.isNone(pr) === type.isNone(against)) {
     throw new Error('Pass one of --pr <number> or --against <ref>.');
   }
+  // gh pr view also takes a branch, a URL or its own flags; only a number is a PR here.
+  if (!type.isNone(pr) && !/^[1-9][0-9]*$/.test(String(pr))) {
+    throw new Error(`--pr should be a pull request number. Received ${JSON.stringify(pr)}.`);
+  }
   const root = await runGit({ args: ['rev-parse', '--show-toplevel'], cwd });
   const head = await runGit({ args: ['rev-parse', 'HEAD'], cwd });
   const status = await runGit({ args: ['status', '--porcelain'], cwd: root });
   const resolved = type.isNone(pr)
     ? await fromRef({ against, cwd })
-    : await fromPullRequest({ number: pr, cwd, head });
+    : await fromPullRequest({ number: Number(pr), cwd, head });
   return { root, head, dirty: status !== '', ...resolved };
 }
 
