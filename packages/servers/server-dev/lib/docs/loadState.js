@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import lowdefyConfig from '../build/config.js';
 import { getBrowser, openPage } from './getBrowser.js';
+import noBrowserError from './noBrowserError.js';
 import { loadMocks } from './devMockRegistry.js';
 import { readCheckpoint } from './checkpointStore.js';
 import unsettledPageNote from './unsettledPageNote.js';
@@ -105,9 +106,7 @@ async function loadStateInBrowser({ origin, name, mode, user, pageId, urlQuery, 
   try {
     browser = await getBrowser();
   } catch (error) {
-    return {
-      error: `No Chromium available. Run: npx playwright install chromium (${error.message})`,
-    };
+    return { error: noBrowserError(error) };
   }
 
   let context;

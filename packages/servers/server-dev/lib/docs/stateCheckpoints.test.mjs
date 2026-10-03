@@ -39,6 +39,8 @@ process.env.LOWDEFY_DIRECTORY_CONFIG = fixtureDir;
 jest.unstable_mockModule('playwright-core', () => ({
   chromium: { launch: jest.fn().mockRejectedValue(new Error("Executable doesn't exist")) },
 }));
+// A missing shell would otherwise start a real download.
+jest.unstable_mockModule('./installHeadlessShell.js', () => ({ default: () => null }));
 
 const mockInspectState = jest.fn();
 jest.unstable_mockModule('./inspectState.js', () => ({

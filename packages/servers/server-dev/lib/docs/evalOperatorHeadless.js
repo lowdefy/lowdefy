@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
+import noBrowserError from './noBrowserError.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import withBrowserSlot from './withBrowserSlot.js';
 
@@ -52,9 +53,7 @@ async function evalOperatorInBrowser({ origin, pageId, expression, user, timeout
   try {
     browser = await getBrowser();
   } catch (error) {
-    return {
-      error: `No Chromium available. Run: npx playwright install chromium (${error.message})`,
-    };
+    return { error: noBrowserError(error) };
   }
 
   const url = buildPageUrl({ origin, pageId });

@@ -26,6 +26,8 @@ import { jest } from '@jest/globals';
 jest.unstable_mockModule('playwright-core', () => ({
   chromium: { launch: jest.fn().mockRejectedValue(new Error("Executable doesn't exist")) },
 }));
+// A missing shell would otherwise start a real download.
+jest.unstable_mockModule('./installHeadlessShell.js', () => ({ default: () => null }));
 
 // lib/build/config.js reads build/config.json from process.cwd() at import
 // time — chdir into a fixture that has one before getBrowser.js (which
@@ -68,5 +70,7 @@ test('evalOperatorHeadless returns an actionable error when no browser is availa
     pageId: 'home',
     expression: { _state: 'x' },
   });
-  expect(result.error).toMatch(/No Chromium available. Run: npx playwright install chromium/);
+  expect(result.error).toMatch(
+    /No Chromium available. Run: npx playwright install chromium-headless-shell/
+  );
 });

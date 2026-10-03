@@ -121,7 +121,9 @@ server-dev/
 │   │   ├── lowdefyBuild.mjs  # shallowBuild into build-staging, publish, one build at a time
 │   │   ├── installPlugins.mjs
 │   │   ├── checkMockUserWarning.mjs
-│   │   ├── startServer.mjs   # Spawns the Vite child process
+│   │   ├── startServer.mjs   # Spawns the Vite child process (tags its browser, reaps it on exit)
+│   │   ├── startFirstServer.mjs  # Pre-optimise dependencies, then the first startServer
+│   │   ├── optimizeDependencies.mjs  # `vite optimize` in a short-lived process
 │   │   ├── restartServer.mjs # Restart and wait until the new child answers
 │   │   ├── syncServer.mjs    # After a build: install new plugins, restart when needed
 │   │   ├── startProxy.mjs    # Public port; holds requests across restarts and build-status waits
@@ -130,6 +132,8 @@ server-dev/
 │   │   └── reloadClients.mjs
 │   ├── utils/
 │   │   ├── createBuildActivity.mjs      # Busy count behind `building` and build-status waits
+│   │   ├── createServerEnv.mjs          # Vite child environment, shared with the optimiser
+│   │   ├── killTaggedBrowser.mjs        # pkill the browser carrying a child's tag
 │   │   ├── createServerArtifactTracker.mjs  # Files the running server read at start
 │   │   ├── createDotPathIgnore.mjs      # Dotfile ignore relative to the watched root
 │   │   ├── findBuildFilesOutsideWatch.mjs  # refMap files outside the watched directories
@@ -175,7 +179,7 @@ Because `@hono/vite-dev-server` SSR-loads the server module graph through Vite, 
 
 ## Manager System
 
-The manager records itself in `<config>/.lowdefy/instance.json` (pid, owner, state, ports, url) — created exclusively at start-up so a second manager for the same app refuses, flipped to `state: ready` once the child answers `/api/ping`, removed on exit. Explicit ports are strict (`LOWDEFY_SERVER_DEV_STRICT_PORT`, `LOWDEFY_SERVER_DEV_INTERNAL_PORT`); a hub-owned manager (`LOWDEFY_DEV_OWNER=hub`) never opens a browser. `/lowdefy-docs*` and `/api/dev-inspect*` refuse cross-site browser requests (`src/middleware/localDevToolsOnly.js`). See `code-docs/architecture/agent-dev-hub.md`.
+The manager records itself in `<config>/.lowdefy/instance.json` (pid, owner, state, ports, url) — created exclusively at start-up so a second manager for the same app refuses, flipped to `state: ready` the first time a child answers `/api/ping`, removed on exit. `waitForDevServer` (used by the first start and every restart) marks it: a child that answers after the 2-minute wait still marks it, and so does a restart after a first child that exited at start; a child that never answers never does. Explicit ports are strict (`LOWDEFY_SERVER_DEV_STRICT_PORT`, `LOWDEFY_SERVER_DEV_INTERNAL_PORT`); a hub-owned manager (`LOWDEFY_DEV_OWNER=hub`) never opens a browser. `/lowdefy-docs*` and `/api/dev-inspect*` refuse cross-site browser requests (`src/middleware/localDevToolsOnly.js`). See `code-docs/architecture/agent-dev-hub.md`.
 
 ### Entry Point
 
@@ -195,7 +199,14 @@ for (const signal of ['SIGINT', 'SIGTERM']) {
 
 await context.initialBuild();
 context.startWatchers(); // Not awaited — chokidar's ready event is unreliable
-startServer(context);
+// At the head of syncServer's queue: record the server artifacts,
+// optimizeDependencies, startServer, then wait for the child to answer. A
+// watcher batch during the optimise builds at once and its syncServer call
+// waits for this start, so it cannot restart the child before it is ready.
+// waitForDevServer calls context.markServerReady when a child answers.
+if (!(await startFirstServer(context))) {
+  context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');
+}
 if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
   opener(`http://localhost:${context.options.port}`);
 }
@@ -476,6 +487,47 @@ Both emit pino JSON with optional `color`/`spin`/`succeed` fields to stdout. The
 
 See [@lowdefy/logger](../utils/logger.md) for details.
 
+## Memory: Dependency Optimiser and Agent Browser
+
+A dev server lives for hours, so what it holds after start-up matters when several run at once.
+
+**Dependency optimiser.** Vite 8's optimiser runs on rolldown, whose native allocator keeps
+500–600 MB after optimising (VM tag 100 in `vmmap`, shown as `IOAccelerator`), and only ending the
+process frees it. `optimizeDependencies` runs `vite optimize` in a short-lived process, with the
+child's cwd and the environment from `createServerEnv` (so it resolves the same config hash),
+before the first child start (`startFirstServer`) and before the restart after a plugin install
+(`syncServer`). The child then starts against a warm `node_modules/.vite/deps` cache and never
+optimises itself. A failure only warns: the child then optimises itself, as it used to. A
+re-optimisation the child triggers mid-session keeps its memory until the next restart.
+
+**Agent browser** (`lib/docs/getBrowser.js`, `createBrowserLifecycle.js`, `launchBrowser.js`,
+`installHeadlessShell.js`). Screenshots, journeys, headless inspection, operator evaluation and
+state loads share one browser per child:
+
+- `launchBrowser` imports `playwright-core` lazily and launches `chromium-headless-shell` first,
+  system Chrome (`channel: 'chrome'`) as the fallback. A missing shell starts
+  `playwright-core`'s own installer (`cli.js install chromium-headless-shell`) once per process;
+  the call uses Chrome meanwhile, or waits for the install when Chrome is missing too.
+  An install that has not finished within 3 minutes is killed (with the download process it
+  forks) and counts as failed; Playwright 1.59's unzip can stall for good on Node 26.
+  A shell that fails to launch is also treated as missing when its directory has no
+  `INSTALLATION_COMPLETE` marker (`isHeadlessShellIncomplete.js`, through Playwright's own
+  registry): a killed install can leave the executable without it, and the installer repairs
+  such a directory.
+  `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD` turns the download off.
+- `createBrowserLifecycle` closes the browser 90 s after the last `getBrowser()` call once no
+  context is open and no launch is in flight. `openPage` counts contexts through their `close`
+  event. The `getBrowser()` re-arm covers a caller between `getBrowser()` and its first
+  `newContext`.
+- `startServer` passes a random `LOWDEFY_BROWSER_TAG` per child start, which the launch adds as
+  `--lowdefy-browser-tag=<tag>`. On child exit the manager runs `pkill -f` on that tag
+  (`killTaggedBrowser`), because system Chrome runs in its own process group and outlives a
+  SIGKILLed child. The headless shell exits with its parent anyway.
+
+**Connection schemas.** The skeleton build's `writeConnectionSchemaMap` (`@lowdefy/build`) reads
+connection and request schemas in a worker thread (`collectConnectionSchemas`), cached per package
+name, version and directory, so database drivers never load into the manager.
+
 ## Build Processes
 
 ### Initial Build
@@ -558,15 +610,21 @@ port) still waits on `building` itself.
 `build/auth.json`, `build/config.json`, `build/plugins/auth/adapters.js`,
 `build/plugins/auth/providers.js`, `build/plugins/connections.js`,
 `build/plugins/operators/server.js`, and the server's `package.json`), with `~k` keys stripped
-from JSON. `startServer` records them; `syncServer` compares:
+from JSON. `restartServer` records them before each restart, and `startFirstServer` before the
+first start's optimise (so a build during the optimise that adds a plugin package still reads as an
+install); `syncServer` compares:
 
 - **`package.json` changed** → shut down, `installPlugins`, `lowdefyBuild` (so the plugin imports
-  include the new packages), then restart, even when the build fails.
+  include the new packages), `optimizeDependencies` (as build activity), then restart, even when
+  the build fails.
 - **Another tracked file changed, or the caller asks** (`{ restart: true }`: `.env`, a restart
   request, a server-side plugin edit) → restart.
 - **Nothing changed** → nothing; Vite hot-replaces client artifacts.
 
-Calls run one at a time, so a second caller finds the first's work done. Only the config build
+Calls run one at a time, so a second caller finds the first's work done. The first child start
+heads the queue (`syncServer.startFirst`): the watchers start right after the initial build, and a
+sync they ask for before the first child answers waits for it (a restart before then would end
+the wait on the killed child, and the instance record would never read `ready`). Only the config build
 writes the tracked `build/` files, so they are checked after each build rather than watched.
 The server's `package.json` is also written by a page build in the child that finds a plugin
 package missing, which `serverPackageWatcher` picks up.
@@ -953,32 +1011,33 @@ export default defineConfig(({ mode }) => ({
 
 ## Key Files
 
-| File                                        | Purpose                                            |
-| ------------------------------------------- | -------------------------------------------------- |
-| `manager/run.mjs`                           | Entry point (signal handling, orchestration)       |
-| `manager/getContext.mjs`                    | Context factory with JIT build state               |
-| `manager/processes/startServer.mjs`         | Spawns the Vite child process                      |
-| `manager/processes/lowdefyBuild.mjs`        | `shallowBuild` into build-staging, then publish    |
-| `manager/utils/publishBuildDirectory.mjs`   | Move the staged build over the live one            |
-| `manager/utils/loadSkeletonSourceFiles.mjs` | Load skeleton source file set from build artifact  |
-| `manager/utils/updatePageTailwindCss.mjs`   | Refresh Tailwind candidates on page edits          |
-| `manager/watchers/lowdefyBuildWatcher.mjs`  | Skeleton vs page change classification             |
-| `manager/processes/syncServer.mjs`          | After a build: install new plugins, restart        |
-| `manager/watchers/serverPackageWatcher.mjs` | Page build added a plugin package → syncServer     |
-| `lib/server/jitPageBuilder.js`              | JIT page build on API request                      |
-| `lib/server/pageCache.mjs`                  | PageCache class (compiled tracking, locks)         |
-| `src/app.js`                                | Hono app assembly (routes, middleware, static)     |
-| `src/routes/jitPage.js`                     | Page route (triggers JIT build, frozen contract)   |
-| `src/routes/reload.js`                      | SSE endpoint                                       |
-| `src/middleware/apiContext.js`              | Request context + dynamic serverJsMap loading      |
-| `src/html/renderDevPage.js`                 | Config-free HTML shell                             |
-| `client/main.jsx`                           | Client entry (CSS order, HMR-stable root)          |
-| `client/Routing.jsx`                        | Page resolution from the custom router             |
-| `client/Page.jsx`                           | Page renderer (merges \_jsEntries, \_dynamicIcons) |
-| `client/Reload.jsx`                         | SSE hot reload listener                            |
-| `lib/client/utils/usePageConfig.js`         | SWR hook with versioned cache keys                 |
-| `lib/client/utils/useMutateCache.js`        | `reloadVersion` counter for cache busting          |
-| `vite.config.js`                            | Vite dev server + Hono mounting                    |
+| File                                         | Purpose                                            |
+| -------------------------------------------- | -------------------------------------------------- |
+| `manager/run.mjs`                            | Entry point (signal handling, orchestration)       |
+| `manager/getContext.mjs`                     | Context factory with JIT build state               |
+| `manager/processes/startServer.mjs`          | Spawns the Vite child process                      |
+| `manager/processes/optimizeDependencies.mjs` | Pre-optimise dependencies in a short-lived process |
+| `manager/processes/lowdefyBuild.mjs`         | `shallowBuild` into build-staging, then publish    |
+| `manager/utils/publishBuildDirectory.mjs`    | Move the staged build over the live one            |
+| `manager/utils/loadSkeletonSourceFiles.mjs`  | Load skeleton source file set from build artifact  |
+| `manager/utils/updatePageTailwindCss.mjs`    | Refresh Tailwind candidates on page edits          |
+| `manager/watchers/lowdefyBuildWatcher.mjs`   | Skeleton vs page change classification             |
+| `manager/processes/syncServer.mjs`           | After a build: install new plugins, restart        |
+| `manager/watchers/serverPackageWatcher.mjs`  | Page build added a plugin package → syncServer     |
+| `lib/server/jitPageBuilder.js`               | JIT page build on API request                      |
+| `lib/server/pageCache.mjs`                   | PageCache class (compiled tracking, locks)         |
+| `src/app.js`                                 | Hono app assembly (routes, middleware, static)     |
+| `src/routes/jitPage.js`                      | Page route (triggers JIT build, frozen contract)   |
+| `src/routes/reload.js`                       | SSE endpoint                                       |
+| `src/middleware/apiContext.js`               | Request context + dynamic serverJsMap loading      |
+| `src/html/renderDevPage.js`                  | Config-free HTML shell                             |
+| `client/main.jsx`                            | Client entry (CSS order, HMR-stable root)          |
+| `client/Routing.jsx`                         | Page resolution from the custom router             |
+| `client/Page.jsx`                            | Page renderer (merges \_jsEntries, \_dynamicIcons) |
+| `client/Reload.jsx`                          | SSE hot reload listener                            |
+| `lib/client/utils/usePageConfig.js`          | SWR hook with versioned cache keys                 |
+| `lib/client/utils/useMutateCache.js`         | `reloadVersion` counter for cache busting          |
+| `vite.config.js`                             | Vite dev server + Hono mounting                    |
 
 ## Reload Types
 
@@ -1081,14 +1140,16 @@ If a user configures a plugin package that isn't installed in the dev server:
 
 ## Environment Variables
 
-| Variable                          | Purpose                                    |
-| --------------------------------- | ------------------------------------------ |
-| `LOWDEFY_SERVER_DEV_OPEN_BROWSER` | Open browser on start when set to `'true'` |
-| `LOWDEFY_DIRECTORY_CONFIG`        | Config directory path                      |
-| `PORT` (or `--port`)              | Server port (default: 3000)                |
-| `LOWDEFY_LOG_LEVEL`               | Log level (default: info)                  |
-| `LOWDEFY_BUILD_REF_RESOLVER`      | Custom ref resolver                        |
-| `LOWDEFY_DEV_USER`                | Mock user JSON for testing                 |
-| `LOWDEFY_DEV_SMTP_PORT`           | Capture app mail over SMTP (journeys)      |
-| `LOWDEFY_SERVER_DEV_WATCH`        | Extra watch paths (JSON array)             |
-| `LOWDEFY_SERVER_DEV_WATCH_IGNORE` | Watch ignore paths (JSON array)            |
+| Variable                           | Purpose                                                    |
+| ---------------------------------- | ---------------------------------------------------------- |
+| `LOWDEFY_SERVER_DEV_OPEN_BROWSER`  | Open browser on start when set to `'true'`                 |
+| `LOWDEFY_DIRECTORY_CONFIG`         | Config directory path                                      |
+| `PORT` (or `--port`)               | Server port (default: 3000)                                |
+| `LOWDEFY_LOG_LEVEL`                | Log level (default: info)                                  |
+| `LOWDEFY_BUILD_REF_RESOLVER`       | Custom ref resolver                                        |
+| `LOWDEFY_DEV_USER`                 | Mock user JSON for testing                                 |
+| `LOWDEFY_DEV_SMTP_PORT`            | Capture app mail over SMTP (journeys)                      |
+| `LOWDEFY_SERVER_DEV_WATCH`         | Extra watch paths (JSON array)                             |
+| `LOWDEFY_SERVER_DEV_WATCH_IGNORE`  | Watch ignore paths (JSON array)                            |
+| `LOWDEFY_BROWSER_TAG`              | Set by the manager per child start; tags the agent browser |
+| `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD` | Turns off the headless shell download on first use         |

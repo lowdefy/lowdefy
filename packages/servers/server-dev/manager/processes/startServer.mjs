@@ -15,9 +15,11 @@
 */
 
 import { spawn } from 'child_process';
+import crypto from 'crypto';
 
+import createServerEnv from '../utils/createServerEnv.mjs';
+import killTaggedBrowser from '../utils/killTaggedBrowser.mjs';
 import readBasePath from '../utils/readBasePath.mjs';
-import resolveDevAuthUrl from '../utils/resolveDevAuthUrl.mjs';
 
 function createStdErrLineHandler({ context }) {
   const port = context.internalPort;
@@ -43,17 +45,10 @@ function startServer(context) {
   context.basePath = readBasePath(context);
   context.url = `http://localhost:${context.options.port}${context.basePath}`;
   context.instance.update({ url: context.url });
-  // What this server reads at start, so a later build restarts it only when
-  // one of those files changed.
-  context.serverArtifacts.record();
 
-  // Read on every start: a .env edit can change BETTER_AUTH_URL, and the
-  // watcher restarts the child with the reloaded value.
+  const env = createServerEnv(context);
   const configuredAuthUrl = process.env.BETTER_AUTH_URL;
-  const authUrl = resolveDevAuthUrl({
-    configured: configuredAuthUrl,
-    port: context.options.port,
-  });
+  const authUrl = env.BETTER_AUTH_URL;
   if (authUrl !== configuredAuthUrl && context.loggedAuthUrl !== authUrl) {
     context.logger.info(
       `BETTER_AUTH_URL ${configuredAuthUrl} names another port; this dev server uses ${authUrl}.`
@@ -61,12 +56,17 @@ function startServer(context) {
     context.loggedAuthUrl = authUrl;
   }
 
+  // New per child start, so killing one child's browser can match nothing else.
+  const browserTag = crypto.randomUUID();
+
   // The child binds context.internalPort on loopback; the manager's proxy owns
   // the public context.options.port (see startProxy.mjs) so a restart never
   // drops the listener that browsers, SSE reload streams and MCP agents hold.
   const devServer = spawn(
     'node',
     [
+      // For the child's idle GC (lib/server/startIdleGc.js).
+      '--expose-gc',
       context.bin.vite,
       '--host',
       '127.0.0.1',
@@ -77,14 +77,8 @@ function startServer(context) {
     {
       stdio: ['ignore', 'inherit', 'pipe'],
       env: {
-        ...process.env,
-        LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
-        // Set only while the manager's mail sink listens: the child cannot
-        // tell from LOWDEFY_DEV_SMTP_PORT alone, which a later .env edit can
-        // add without a sink (it starts once, with the manager).
-        LOWDEFY_SERVER_DEV_MAIL_SINK: context.mailSink ? 'true' : undefined,
-        PORT: context.internalPort,
-        BETTER_AUTH_URL: authUrl,
+        ...env,
+        LOWDEFY_BROWSER_TAG: browserTag,
       },
     }
   );
@@ -102,6 +96,7 @@ function startServer(context) {
   context.logger.debug(`Started dev server with pid ${devServer.pid}.`);
   devServer.on('exit', (code, signal) => {
     context.logger.debug(`devServer exit ${devServer.pid}, signal: ${signal}, code: ${code}`);
+    killTaggedBrowser({ tag: browserTag });
   });
   devServer.on('error', (error) => {
     context.logger.error(error);

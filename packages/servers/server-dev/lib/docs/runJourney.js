@@ -24,6 +24,7 @@ import {
 
 import createJourneyActors from './createJourneyActors.js';
 import { getBrowser, buildPageUrl } from './getBrowser.js';
+import noBrowserError from './noBrowserError.js';
 import isPageReady from './isPageReady.js';
 import JourneyStepError from './JourneyStepError.js';
 import openJourneyEmail from './openJourneyEmail.js';
@@ -949,9 +950,7 @@ async function runJourneyInBrowser({
   try {
     browser = await getBrowser();
   } catch (error) {
-    return {
-      error: `No Chromium available. Run: npx playwright install chromium (${error.message})`,
-    };
+    return { error: noBrowserError(error) };
   }
 
   const url = buildPageUrl({ origin, pageId, urlQuery });
