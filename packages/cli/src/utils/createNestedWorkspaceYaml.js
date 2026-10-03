@@ -59,12 +59,13 @@ function getServerReleaseAgeExclude({ serverWorkspaceYaml }) {
   return document.toJS()?.minimumReleaseAgeExclude ?? [];
 }
 
-// Sorted, so the file only changes when the set of entries does, whatever
-// order pnpm wrote them in, and the install hash cannot loop.
+// Always sorted, the parent's entries too, so the file only changes when the
+// set of entries does, whatever order the parent or pnpm wrote them in, and
+// the install hash cannot loop or force a second install.
 function mergeReleaseAgeExclude({ serverWorkspaceYaml, settings }) {
   const serverExclude = getServerReleaseAgeExclude({ serverWorkspaceYaml });
-  if (serverExclude.length === 0) {
-    return settings.minimumReleaseAgeExclude;
+  if (type.isNone(settings.minimumReleaseAgeExclude) && serverExclude.length === 0) {
+    return undefined;
   }
   return [...new Set([...(settings.minimumReleaseAgeExclude ?? []), ...serverExclude])].sort();
 }

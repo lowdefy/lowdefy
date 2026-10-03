@@ -248,7 +248,7 @@ test('createNestedWorkspaceYaml writes the same file when given its own output, 
   expect(second).toEqual(first);
 });
 
-test('createNestedWorkspaceYaml leaves the parent exclusions as they are when the server file has none', () => {
+test('createNestedWorkspaceYaml sorts the parent exclusions when the server file has none', () => {
   const yaml = createNestedWorkspaceYaml({
     directory: '/repo/apps/app/.lowdefy/server',
     parentWorkspace: {
@@ -260,9 +260,30 @@ test('createNestedWorkspaceYaml leaves the parent exclusions as they are when th
     workspaceRoot: '/repo',
   });
   expect(yaml).toContain(`minimumReleaseAgeExclude:
-  - zod
   - axios
+  - zod
 `);
+});
+
+test('createNestedWorkspaceYaml writes the same file on the next run when the parent exclusions are unsorted', () => {
+  const parentWorkspace = {
+    packages: ['apps/*'],
+    rootDependencies: {},
+    settings: { minimumReleaseAgeExclude: ['zod', 'axios'] },
+  };
+  const first = createNestedWorkspaceYaml({
+    directory: '/repo/apps/app/.lowdefy/server',
+    parentWorkspace,
+    serverWorkspaceYaml: null,
+    workspaceRoot: '/repo',
+  });
+  const second = createNestedWorkspaceYaml({
+    directory: '/repo/apps/app/.lowdefy/server',
+    parentWorkspace,
+    serverWorkspaceYaml: first,
+    workspaceRoot: '/repo',
+  });
+  expect(second).toEqual(first);
 });
 
 test('createNestedWorkspaceYaml replaces a server file that does not parse', () => {
