@@ -23,6 +23,7 @@ import { serializer } from '@lowdefy/helpers';
 
 import buildPageIfNeeded, { getBuildContext } from './jitPageBuilder.js';
 import createHandleError from './log/createHandleError.js';
+import pageBuildRecords from './pageBuildRecords.js';
 import readMergedMaps from './readMergedMaps.js';
 
 // The dev page build context restores the tenant facts the skeleton build
@@ -106,10 +107,12 @@ function listJitMaps(buildDirectory) {
   return fs.existsSync(directory) ? fs.readdirSync(directory).sort() : [];
 }
 
-function invalidatePages(buildDirectory, time) {
-  const filePath = path.join(buildDirectory, 'invalidatePages');
-  fs.writeFileSync(filePath, String(time));
-  fs.utimesSync(filePath, time, time);
+// A config build publish renames a new page registry into place.
+function publishRegistry(buildDirectory) {
+  const registryPath = path.join(buildDirectory, 'pageRegistry.json');
+  const stagedPath = `${registryPath}.staged`;
+  fs.copyFileSync(registryPath, stagedPath);
+  fs.renameSync(stagedPath, registryPath);
 }
 
 test('a JIT page build leaves keyMap.json and refMap.json as the config build wrote them', async () => {
@@ -162,7 +165,7 @@ test('an error a failing JIT page build throws after its keys were added resolve
   fs.rmSync(root, { recursive: true, force: true });
 });
 
-test('after two page edits only the current and previous build contexts keep jitMaps files', async () => {
+test('after two config publishes only the current and previous build contexts keep jitMaps files', async () => {
   const { root, buildDirectory, configDirectory } = createApp({
     pages: {
       a: 'id: a\ntype: Box\n',
@@ -173,9 +176,9 @@ test('after two page edits only the current and previous build contexts keep jit
 
   await buildPageIfNeeded({ pageId: 'a', buildDirectory, configDirectory });
   const [first] = listJitMaps(buildDirectory);
-  invalidatePages(buildDirectory, 1000);
+  publishRegistry(buildDirectory);
   await buildPageIfNeeded({ pageId: 'b', buildDirectory, configDirectory });
-  invalidatePages(buildDirectory, 2000);
+  publishRegistry(buildDirectory);
   await buildPageIfNeeded({ pageId: 'c', buildDirectory, configDirectory });
 
   const files = listJitMaps(buildDirectory);
@@ -183,5 +186,33 @@ test('after two page edits only the current and previous build contexts keep jit
   expect(files).not.toContain(first);
   const generations = files.map((file) => Number(file.split('-')[1]));
   expect(generations[1] - generations[0]).toBe(1);
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+test('a page build that loads app code is recorded as having run it, a YAML-only one is not', async () => {
+  const { root, buildDirectory, configDirectory } = createApp({
+    pages: {
+      plain: 'id: plain\ntype: Box\nblocks:\n  - _ref: blocks/shared.yaml\n',
+      coded: 'id: coded\ntype: Box\nblocks:\n  - _ref: blocks/banner.js\n',
+    },
+  });
+  fs.writeFileSync(path.join(configDirectory, 'package.json'), '{"type":"module"}');
+  fs.mkdirSync(path.join(configDirectory, 'blocks'));
+  fs.writeFileSync(path.join(configDirectory, 'blocks', 'shared.yaml'), 'id: shared\ntype: Box\n');
+  fs.writeFileSync(
+    path.join(configDirectory, 'blocks', 'banner.js'),
+    "export default { id: 'banner', type: 'Box' };\n"
+  );
+
+  await buildPageIfNeeded({ pageId: 'plain', buildDirectory, configDirectory });
+  await buildPageIfNeeded({ pageId: 'coded', buildDirectory, configDirectory });
+
+  const plain = pageBuildRecords.get('plain');
+  expect(plain.ranAppCode).toBe(false);
+  expect([...plain.files.keys()]).toEqual([
+    path.join(configDirectory, 'pages', 'plain.yaml'),
+    path.join(configDirectory, 'blocks', 'shared.yaml'),
+  ]);
+  expect(pageBuildRecords.get('coded').ranAppCode).toBe(true);
   fs.rmSync(root, { recursive: true, force: true });
 });

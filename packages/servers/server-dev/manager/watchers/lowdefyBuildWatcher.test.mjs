@@ -125,7 +125,7 @@ test('adding a page to the pages list rebuilds the config', async () => {
   fs.appendFileSync(path.join(configDir, 'pages.yaml'), '- _ref: pages/about.yaml\n');
 
   await waitFor(() => context.lowdefyBuild.mock.calls.length === 1);
-  expect(invalidated()).toBe(false);
+  await waitFor(invalidated);
 });
 
 test('a config rebuild stays busy until the server has caught up with the build', async () => {
@@ -160,7 +160,7 @@ test('after a failed config build, an edit to a file not in skeletonSourceFiles 
   write(path.join(localModuleRoot, 'api', 'check-name.yaml'), 'id: check-name\n');
 
   await waitFor(() => context.lowdefyBuild.mock.calls.length === 1);
-  expect(invalidated()).toBe(false);
+  await waitFor(invalidated);
 });
 
 test('a skeleton file in a local module outside the config directory rebuilds the config', async () => {

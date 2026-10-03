@@ -755,10 +755,14 @@ async function prepareRef(node, ctx) {
   // 4. Module path resolution: resolve relative paths from the module root
   rebaseModuleRefPaths({ refDef, moduleRoot: ctx.moduleRoot });
 
-  // 5. Update refMap with resolved path; store original for resolver refs
+  // 5. Update refMap with resolved path; store original for resolver refs, and
+  //    the transformer, which a JIT page build runs again on a page's own ref.
   ctx.refMap[refDef.id].path = refDef.path;
   if (!refDef.path) {
     ctx.refMap[refDef.id].original = refDef.original;
+  }
+  if (!type.isNone(refDef.transformer)) {
+    ctx.refMap[refDef.id].transformer = refDef.transformer;
   }
 
   // 6. Path escape constraint: module refs cannot escape the package root

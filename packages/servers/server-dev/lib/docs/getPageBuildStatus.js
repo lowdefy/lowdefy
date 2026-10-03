@@ -21,8 +21,8 @@ import reviewPageBuilds from './reviewPageBuilds.js';
 // this reports the pages whose latest build failed, the pages changed since
 // they were built, and how many pages nothing has built yet. checked is the
 // list of pages build status just built (wait: true).
-function getPageBuildStatus({ checked } = {}) {
-  const { edited, unbuilt, failed } = reviewPageBuilds();
+async function getPageBuildStatus({ checked } = {}) {
+  const { edited, unbuilt, failed } = await reviewPageBuilds();
   const status = {};
   if (checked) {
     status.checked = checked;

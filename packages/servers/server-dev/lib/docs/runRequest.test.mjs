@@ -38,13 +38,18 @@ jest.unstable_mockModule('../server/createLowdefyContext.js', () => ({
   default: mockCreateLowdefyContext,
 }));
 const mockBuildPageIfNeeded = jest.fn();
+const mockSyncBuildSignals = jest.fn(() => ({
+  registry: { home: { pageId: 'home', refPath: 'pages/home.yaml' } },
+  eventCounter: 0,
+  generation: 1,
+}));
 jest.unstable_mockModule('../server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
+  syncBuildSignals: mockSyncBuildSignals,
 }));
 const mockReviewPage = jest.fn();
 jest.unstable_mockModule('./reviewPage.js', () => ({
   default: mockReviewPage,
-  createModifiedAt: () => () => null,
 }));
 
 const { ConfigError } = await import('@lowdefy/errors');
@@ -67,7 +72,7 @@ beforeEach(() => {
   mockCreateLowdefyContext.mockResolvedValue({ logger: { info: mockLoggerInfo } });
   mockCallRequest.mockResolvedValue({ id: 'requests', response: [{ _id: 1 }] });
   mockBuildPageIfNeeded.mockResolvedValue(true);
-  mockReviewPage.mockReturnValue('current');
+  mockReviewPage.mockResolvedValue('current');
 });
 
 test('runRequest passes a user object to createLowdefyContext', async () => {
@@ -141,7 +146,7 @@ test('runRequest refuses a write request for an impersonated caller too', async 
 });
 
 test('runRequest notes stale config when the page changed but the dev server has not rebuilt it', async () => {
-  mockReviewPage.mockReturnValue('edited');
+  mockReviewPage.mockResolvedValue('edited');
 
   const result = await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });
 
@@ -163,7 +168,7 @@ test('runRequest throws a ConfigError when saveResponse is not a boolean', async
 });
 
 test('runRequest notes stale config on a request that fails', async () => {
-  mockReviewPage.mockReturnValue('edited');
+  mockReviewPage.mockResolvedValue('edited');
   mockCallRequest.mockRejectedValue(new Error('connect ECONNREFUSED'));
 
   const result = await runRequest({ pageId: 'home', requestId: 'get_rows', honoContext });

@@ -13,14 +13,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { ConfigError } from '@lowdefy/errors';
 
-async function getUserJavascriptFunction({ context, filePath }) {
-  try {
-    return await context.importAppCode(filePath);
-  } catch (error) {
-    throw new ConfigError(`Error importing ${filePath}.`, { cause: error, filePath });
-  }
+import crypto from 'node:crypto';
+
+// The hash a page build record keeps for a config file's content, as
+// readConfigFile returned it: 'missing' for a file that does not exist.
+function hashConfigContent(content) {
+  if (content === null) return 'missing';
+  return crypto.createHash('sha256').update(content).digest('hex');
 }
 
-export default getUserJavascriptFunction;
+export default hashConfigContent;

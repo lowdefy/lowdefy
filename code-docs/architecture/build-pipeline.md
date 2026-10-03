@@ -545,6 +545,45 @@ When a page is requested, uses the walker to resolve page content:
 12. writePageJit() — write page JSON, request JSONs, updated jsMap, per-page tailwind HTML; writeJitMaps() (also on failure) writes the keys and refs the build added to a new jitMaps/ file
 ```
 
+### The JIT build context
+
+The dev server keeps one build context (the **kept context**) across page builds and page
+edits; it is recreated only when a config build is published or its maps pass a budget (see
+[server-dev JIT page build flow](../servers/server-dev.md#jit-page-build-flow)). Pages build
+concurrently on it, so `buildPageJit` never runs a step on the kept context itself:
+
+- **`prepareJitContext(keptContext)`** (`jit/prepareJitContext.js`) fills, once, every field
+  build code would otherwise fill on first use: `authConfigProjection` (read from its
+  artifact), `iconContextPromise` (the icon set load starts with the context), `jitMaps`,
+  `deferred`, `unresolvedRefVars`, `dynamicIconData`, and `websocketIds` (filled in place).
+  The dev server calls it when it makes the context; `buildPageJit` calls it too, so a caller
+  that passes a bare context stays correct (it only fills what is missing).
+- **`createPageBuildContext(keptContext)`** (`jit/createPageBuildContext.js`) returns the
+  context one page build runs on: a shallow copy of the kept context, so `keyMap`, `refMap`,
+  `jsMap`, `dynamicIconData`, `modules`, `deferred`, `unresolvedRefVars`, `jitMaps`,
+  `seenSourceLines`, `readConfigFile`, `importAppCode`, `writeBuildArtifact`, `websocketIds`
+  and the tenant targets are shared by reference, with the fields in `pageBuildOwnedFields`
+  fresh: `errors`, `warnings`, `typeCounters`, `pageTypeCounters`, the five action-reference
+  lists, and `handleError`/`handleWarning` made over the copy. So a page with an unknown block
+  type no longer fails every page built after it (`validatePageTypes` and
+  `detectMissingPluginPackages` read the build's own counters), and concurrent builds keep
+  their own error lists.
+- A build's own warning list is not deduplicated against other pages; only the terminal log
+  is (`createHandleWarning` lists each warning once per handler, and logs it once per
+  `seenSourceLines`, which the dev server clears on every change event).
+
+`pageBuildInputs.integration.test.js` holds both rules: a guard test runs JIT builds of a
+fixture app (file refs, refs with vars, a `.njk` ref, a module page, a resolver, a
+transformer, a `.js` ref) with `fs` reads observed and fails on a config read that bypasses
+`context.readConfigFile` and `context.importAppCode`; a field test fails when a page build
+leaves an own field outside `pageBuildOwnedFields` on its context. The dev server's content
+check is only sound while every page input passes those two channels.
+
+`context.importAppCode(filePath)` (`utils/createImportAppCode.js`, set by `createContext`) is
+the single place a build loads app code: ref resolvers, transformers, `_ref` to a `.js` file,
+module resolvers and the global ref resolver all go through `getUserJavascriptFunction`, which
+calls it.
+
 ### Supporting Modules
 
 | Module | File | Purpose |
@@ -567,8 +606,12 @@ export { default as buildModuleDefs } from './build/buildModuleDefs.js';
 export { default as buildModules } from './build/buildModules.js';
 export { default as shallowBuild } from './build/jit/shallowBuild.js';
 export { default as buildPageJit } from './build/jit/buildPageJit.js';
+export { default as createPageBuildContext } from './build/jit/createPageBuildContext.js';
+export { default as pageBuildOwnedFields } from './build/jit/pageBuildOwnedFields.js';
+export { default as prepareJitContext } from './build/jit/prepareJitContext.js';
 export { default as createPageRegistry } from './build/jit/createPageRegistry.js';
 export { default as createContext } from './createContext.js';
+export { default as createReadConfigFile } from './utils/readConfigFile.js';
 export { default as makeId } from './utils/makeId.js';
 ```
 
@@ -584,7 +627,7 @@ In dev mode, the build directory contains additional JIT artifacts:
 │   ├── pageRegistry.json      # Page metadata + source refs for JIT
 │   ├── jsMap.json             # JS hash maps (restored by JIT build context)
 │   ├── skeletonSourceFiles.json # Source files that affect skeleton (for watcher)
-│   ├── invalidatePages        # Timestamp file — triggers JIT cache invalidation
+│   ├── invalidatePages        # Change signal (timestamp, read by value) — JIT pages are checked
 │   ├── globals.css            # Generated CSS with @source, @theme, layer order
 │   ├── layer-order.css        # Standalone @layer order statement (first CSS import)
 │   ├── tailwind-candidates.css # Trigger file — rewritten to invalidate Vite's CSS module

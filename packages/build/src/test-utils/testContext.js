@@ -15,6 +15,7 @@
 */
 
 import createCounter from '../utils/createCounter.js';
+import createImportAppCode from '../utils/createImportAppCode.js';
 
 function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logger = {} } = {}) {
   const defaultLogger = {
@@ -65,6 +66,8 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     sharedTargets: new Map(),
     websocketIds: new Set(),
   };
+
+  context.importAppCode = createImportAppCode({ directories: context.directories });
 
   context.logger = {
     ...defaultLogger,

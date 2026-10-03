@@ -33,7 +33,7 @@ beforeEach(() => {
 });
 
 test('buildEditedPages builds every edited page and returns their ids', async () => {
-  mockReviewPageBuilds.mockReturnValue({ edited: ['a', 'b'], unbuilt: ['c'], failed: [] });
+  mockReviewPageBuilds.mockResolvedValue({ edited: ['a', 'b'], unbuilt: ['c'], failed: [] });
   mockBuildPageIfNeeded.mockRejectedValueOnce(new Error('Page "a" build failed.'));
   mockBuildPageIfNeeded.mockResolvedValueOnce(true);
 
@@ -45,7 +45,7 @@ test('buildEditedPages builds every edited page and returns their ids', async ()
 
 test('buildEditedPages builds at most a few pages at once', async () => {
   const pageIds = Array.from({ length: 10 }, (_, index) => `page-${index}`);
-  mockReviewPageBuilds.mockReturnValue({ edited: pageIds, unbuilt: [], failed: [] });
+  mockReviewPageBuilds.mockResolvedValue({ edited: pageIds, unbuilt: [], failed: [] });
   let running = 0;
   let mostRunning = 0;
   mockBuildPageIfNeeded.mockImplementation(async () => {
@@ -64,19 +64,19 @@ test('buildEditedPages builds at most a few pages at once', async () => {
 });
 
 test('buildEditedPages builds nothing when no page was edited', async () => {
-  mockReviewPageBuilds.mockReturnValue({ edited: [], unbuilt: ['a'], failed: [] });
+  mockReviewPageBuilds.mockResolvedValue({ edited: [], unbuilt: ['a'], failed: [] });
 
   expect(await buildEditedPages()).toEqual([]);
   expect(mockBuildPageIfNeeded).not.toHaveBeenCalled();
 });
 
-test('getPageBuildStatus reports failed and unbuilt pages', () => {
+test('getPageBuildStatus reports failed and unbuilt pages', async () => {
   const failed = [
     { pageId: 'a', errors: [{ type: 'ConfigError', message: 'Bad.', source: null }] },
   ];
-  mockReviewPageBuilds.mockReturnValue({ edited: [], unbuilt: ['c', 'd'], failed });
+  mockReviewPageBuilds.mockResolvedValue({ edited: [], unbuilt: ['c', 'd'], failed });
 
-  expect(getPageBuildStatus()).toEqual({
+  expect(await getPageBuildStatus()).toEqual({
     failed,
     unbuilt: 2,
     unbuiltNote:
@@ -84,20 +84,20 @@ test('getPageBuildStatus reports failed and unbuilt pages', () => {
   });
 });
 
-test('getPageBuildStatus leaves out empty lists and notes', () => {
-  mockReviewPageBuilds.mockReturnValue({ edited: [], unbuilt: [], failed: [] });
+test('getPageBuildStatus leaves out empty lists and notes', async () => {
+  mockReviewPageBuilds.mockResolvedValue({ edited: [], unbuilt: [], failed: [] });
 
-  expect(getPageBuildStatus({ checked: [] })).toEqual({ checked: [], unbuilt: 0 });
+  expect(await getPageBuildStatus({ checked: [] })).toEqual({ checked: [], unbuilt: 0 });
 });
 
-test('getPageBuildStatus says an edited page is not rebuilt yet, or not seen after a wait', () => {
-  mockReviewPageBuilds.mockReturnValue({ edited: ['a'], unbuilt: [], failed: [] });
+test('getPageBuildStatus says an edited page is not rebuilt yet, or not seen after a wait', async () => {
+  mockReviewPageBuilds.mockResolvedValue({ edited: ['a'], unbuilt: [], failed: [] });
 
-  const before = getPageBuildStatus();
+  const before = await getPageBuildStatus();
   expect(before.changedSinceBuild).toEqual(['a']);
   expect(before.changedSinceBuildNote).toContain('Call with wait: true');
 
-  const after = getPageBuildStatus({ checked: ['a'] });
+  const after = await getPageBuildStatus({ checked: ['a'] });
   expect(after.checked).toEqual(['a']);
   expect(after.changedSinceBuildNote).toContain('has not rebuilt them');
 });

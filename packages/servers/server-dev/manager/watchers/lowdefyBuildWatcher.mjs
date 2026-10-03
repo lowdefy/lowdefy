@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import fs from 'fs';
 import path from 'path';
 import { type } from '@lowdefy/helpers';
+import createChangeSignal from '../utils/createChangeSignal.mjs';
 import findBuildFilesOutsideWatch from '../utils/findBuildFilesOutsideWatch.mjs';
 import getLowdefyVersion from '../utils/getLowdefyVersion.mjs';
 import loadSkeletonSourceFiles from '../utils/loadSkeletonSourceFiles.mjs';
@@ -33,10 +33,12 @@ function findLocalModuleRoots(context) {
 // roots, and every other file the build reads (found in the build's ref maps).
 // A change to a file that shapes the skeleton (lowdefy.yaml, a
 // module.lowdefy.yaml, or a file in skeletonSourceFiles.json) rebuilds the
-// config, as does any change after a failed config build; any other change
-// invalidates the JIT-built pages.
+// config, as does any change after a failed config build. After every batch,
+// the dev server is told files changed (build/invalidatePages), and checks the
+// JIT-built pages against what they read.
 async function lowdefyBuildWatcher(context) {
   const configDirectory = context.directories.config;
+  const writeChangeSignal = createChangeSignal({ buildDirectory: context.directories.build });
   const fixRelativePathConfigDir = (item) =>
     path.isAbsolute(item) ? item : path.resolve(configDirectory, item);
 
@@ -92,14 +94,15 @@ async function lowdefyBuildWatcher(context) {
         // the build needs (a new connection type, a new plugin package).
         await context.syncServer();
       } else {
-        const invalidatePath = path.join(context.directories.build, 'invalidatePages');
-        fs.writeFileSync(invalidatePath, String(Date.now()));
         await updatePageTailwindCss({ changedFiles: relativeChangedFiles, context });
-        context.logger.info('Page files changed, invalidated all pages.');
+        context.logger.info('Page files changed.');
       }
     } catch (error) {
       context.logger.error(error);
     } finally {
+      // Also after a config build, failed or not: a failed build publishes
+      // nothing, and the edit must still reach the pages it touched.
+      writeChangeSignal();
       await context.reloadClients();
     }
   };

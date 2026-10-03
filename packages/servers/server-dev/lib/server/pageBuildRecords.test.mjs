@@ -14,15 +14,24 @@
   limitations under the License.
 */
 
+import crypto from 'node:crypto';
 import { wait } from '@lowdefy/helpers';
 
 import pageBuildRecords from './pageBuildRecords.js';
 
-function createTrackedContext() {
+function sha256(content) {
+  return crypto.createHash('sha256').update(content).digest('hex');
+}
+
+function createTrackedContext({ files } = {}) {
   const context = {
     keyMap: {},
     refMap: {},
-    readConfigFile: async (filePath) => `content of ${filePath}`,
+    readConfigFile: async (filePath) => {
+      if (files) return files[filePath] ?? null;
+      return `content of ${filePath}`;
+    },
+    importAppCode: async () => () => ({}),
   };
   pageBuildRecords.trackFileReads({ context, configDirectory: '/app' });
   return context;
@@ -43,7 +52,7 @@ test('record keeps the files a page build read and when it started', async () =>
 
   expect(result).toEqual({ built: true });
   const record = pageBuildRecords.get('home');
-  expect([...record.files]).toEqual([
+  expect([...record.files.keys()]).toEqual([
     '/app/pages/home.yaml',
     '/modules/shared/requests/get_rows.yaml',
   ]);
@@ -72,8 +81,11 @@ test('record attributes each file read to the page build that made it', async ()
     }),
   ]);
 
-  expect([...pageBuildRecords.get('a').files]).toEqual(['/app/pages/a.yaml']);
-  expect([...pageBuildRecords.get('b').files]).toEqual(['/app/pages/b.yaml', '/app/shared.yaml']);
+  expect([...pageBuildRecords.get('a').files.keys()]).toEqual(['/app/pages/a.yaml']);
+  expect([...pageBuildRecords.get('b').files.keys()]).toEqual([
+    '/app/pages/b.yaml',
+    '/app/shared.yaml',
+  ]);
 });
 
 test('record keeps the errors of a failed build and rethrows', async () => {
@@ -100,7 +112,7 @@ test('record keeps the errors of a failed build and rethrows', async () => {
   ).rejects.toBe(error);
 
   const record = pageBuildRecords.get('broken');
-  expect([...record.files]).toEqual(['/app/pages/broken.yaml']);
+  expect([...record.files.keys()]).toEqual(['/app/pages/broken.yaml']);
   expect(record.errors).toEqual([
     {
       type: 'ConfigError',
@@ -154,4 +166,88 @@ test('record leaves the previous record when the build stops for a plugin instal
 
 test('get returns null for a page that was never built', () => {
   expect(pageBuildRecords.get('never')).toBeNull();
+});
+
+test('record keeps a hash of the content each read returned, and missing for an absent file', async () => {
+  const context = createTrackedContext({ files: { 'pages/home.yaml': 'id: home' } });
+
+  await pageBuildRecords.record({
+    pageId: 'hashed',
+    build: async () => {
+      await context.readConfigFile('pages/home.yaml');
+      await context.readConfigFile('pages/gone.yaml');
+    },
+  });
+
+  const record = pageBuildRecords.get('hashed');
+  expect(record.files.get('/app/pages/home.yaml')).toBe(sha256('id: home'));
+  expect(record.files.get('/app/pages/gone.yaml')).toBe('missing');
+});
+
+test('record keeps a never-matching hash for a file read twice with different content', async () => {
+  const files = { 'shared.yaml': 'first' };
+  const context = createTrackedContext({ files });
+
+  await pageBuildRecords.record({
+    pageId: 'conflict',
+    build: async () => {
+      await context.readConfigFile('shared.yaml');
+      files['shared.yaml'] = 'second';
+      await context.readConfigFile('shared.yaml');
+    },
+  });
+
+  const hash = pageBuildRecords.get('conflict').files.get('/app/shared.yaml');
+  expect(hash).not.toBe(sha256('first'));
+  expect(hash).not.toBe(sha256('second'));
+});
+
+test('record keeps a never-matching hash for a file whose read threw', async () => {
+  const error = new Error('EACCES');
+  const context = {
+    keyMap: {},
+    refMap: {},
+    readConfigFile: async () => {
+      throw error;
+    },
+    importAppCode: async () => () => ({}),
+  };
+  pageBuildRecords.trackFileReads({ context, configDirectory: '/app' });
+
+  await expect(
+    pageBuildRecords.record({
+      pageId: 'unreadable',
+      context,
+      configDirectory: '/app',
+      build: async () => {
+        await context.readConfigFile('locked.yaml');
+      },
+    })
+  ).rejects.toBe(error);
+
+  expect(pageBuildRecords.get('unreadable').files.get('/app/locked.yaml')).toBe('conflict');
+});
+
+test('record marks a build that loaded app code, and only that build', async () => {
+  const context = createTrackedContext();
+
+  await Promise.all([
+    pageBuildRecords.record({
+      pageId: 'resolved',
+      build: async () => {
+        await wait(5);
+        await context.importAppCode('resolvers/pages.js');
+      },
+    }),
+    pageBuildRecords.record({
+      pageId: 'plain',
+      build: async () => {
+        await context.readConfigFile('pages/plain.yaml');
+        await wait(10);
+      },
+    }),
+  ]);
+
+  expect(pageBuildRecords.get('resolved').ranAppCode).toBe(true);
+  expect(pageBuildRecords.get('plain').ranAppCode).toBe(false);
 });

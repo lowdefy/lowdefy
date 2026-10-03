@@ -25,7 +25,7 @@ async function docsBuildStatusHandler(c) {
     const proxyWait = readProxyBuildWait({ getHeader: (name) => c.req.header(name) });
     return c.json(await getBuildStatusAfterEdits({ proxyWait }));
   }
-  return c.json(getBuildStatus());
+  return c.json(await getBuildStatus());
 }
 
 export default docsBuildStatusHandler;

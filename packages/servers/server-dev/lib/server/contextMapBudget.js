@@ -13,14 +13,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { ConfigError } from '@lowdefy/errors';
 
-async function getUserJavascriptFunction({ context, filePath }) {
-  try {
-    return await context.importAppCode(filePath);
-  } catch (error) {
-    throw new ConfigError(`Error importing ${filePath}.`, { cause: error, filePath });
-  }
-}
+// Key and ref map entries the dev server's kept JIT build context may add
+// before it is recreated. Every page build adds entries to both maps and they
+// are released only with the context, so this bounds one dev server's memory.
+// Measured on the docs app: about 530 entries and 400-750 KB of retained heap
+// per page build, so this is about 90 page builds and 35-65 MB.
+const contextMapBudget = 48000;
 
-export default getUserJavascriptFunction;
+export default contextMapBudget;

@@ -23,11 +23,15 @@ import {
   collectIconNames,
   createContext,
   createJitMaps,
+  createReadConfigFile,
   generateClientJsModule,
   hydrateDeferredRecords,
+  prepareJitContext,
   restoreTenantTargets,
 } from '@lowdefy/build/dev';
 
+import checkPageRecord from './checkPageRecord.js';
+import contextMapBudget from './contextMapBudget.js';
 import continueJitKeys from './continueJitKeys.js';
 import createLogger from './log/createLogger.js';
 import pageBuildRecords from './pageBuildRecords.js';
@@ -42,19 +46,26 @@ function formatDuration(ms) {
   if (ms < 1000) return `${ms}ms`;
   return `${(ms / 1000).toFixed(2)}s`;
 }
+
 const pageCache = new PageCache();
-let cachedRegistryMtime = null;
-let cachedRegistry = null;
-let cachedBuildContext = null;
-let lastInvalidationMtime = null;
+let keptContext = null;
+let registry = null;
+let registryIdentity = null;
+let lastChangeSignal = null;
+// Counts the change events (page file edits) this process has seen. A compiled
+// page whose checkedAt is behind it has its inputs checked before it is served.
+let eventCounter = 0;
+let budgetExceeded = false;
 
 // Names this process's JIT keys and jitMaps files. A restarted child continues
 // the same config build as the one before it, so its keys need their own
 // prefix, or both would hand out the same keys for different nodes.
 const childId = crypto.randomBytes(3).toString('hex');
-// Counts the build contexts this process has created; a context's jitMaps
-// files carry its generation.
-let contextGeneration = 0;
+// The generation of the current build context, or of the next one when none is
+// made yet. A page built on an earlier generation is rebuilt, and a context's
+// jitMaps files carry it.
+let contextGeneration = 1;
+let previousContextGeneration = 0;
 
 // Frozen snapshot of the icon names in the dev client bundle, from the initial
 // build. Module-level so it persists across context resets: skeleton rebuilds
@@ -71,43 +82,29 @@ function readJsonFile(filePath) {
   }
 }
 
-function checkPageInvalidations(buildDirectory) {
-  const invalidatePath = path.join(buildDirectory, 'invalidatePages');
+// The value the manager writes to build/invalidatePages after every batch of
+// watched changes, or null before the first.
+function readChangeSignal(buildDirectory) {
   try {
-    const stat = fs.statSync(invalidatePath);
-    if (lastInvalidationMtime && stat.mtimeMs === lastInvalidationMtime) {
-      return;
-    }
-    lastInvalidationMtime = stat.mtimeMs;
-    pageCache.invalidateAll();
-    cachedBuildContext = null;
-  } catch {
-    // File doesn't exist yet — nothing to invalidate
-  }
-}
-
-function loadPageRegistry(buildDirectory) {
-  const registryPath = path.join(buildDirectory, 'pageRegistry.json');
-  try {
-    const stat = fs.statSync(registryPath);
-    // Only reload if file has changed
-    if (cachedRegistryMtime && stat.mtimeMs === cachedRegistryMtime) {
-      return cachedRegistry;
-    }
-    cachedRegistryMtime = stat.mtimeMs;
-    cachedRegistry = readJsonFile(registryPath);
-    // Invalidate all pages when registry changes (skeleton rebuild happened)
-    pageCache.invalidateAll();
-    cachedBuildContext = null;
-    return cachedRegistry;
+    return fs.readFileSync(path.join(buildDirectory, 'invalidatePages'), 'utf8');
   } catch {
     return null;
   }
 }
 
-export function getBuildContext(buildDirectory, configDirectory) {
-  if (cachedBuildContext) return cachedBuildContext;
+// Every config build publish renames a new pageRegistry.json into place, so
+// its inode and mtime identify the published build, even two publishes in one
+// clock tick.
+function readRegistryIdentity(buildDirectory) {
+  try {
+    const stat = fs.statSync(path.join(buildDirectory, 'pageRegistry.json'), { bigint: true });
+    return `${stat.ino}:${stat.mtimeNs}`;
+  } catch {
+    return null;
+  }
+}
 
+function createBuildContext(buildDirectory, configDirectory) {
   const refMap = readJsonFile(path.join(buildDirectory, 'refMap.json')) ?? {};
   const keyMap = readJsonFile(path.join(buildDirectory, 'keyMap.json')) ?? {};
   const jsMap = readJsonFile(path.join(buildDirectory, 'jsMap.json')) ?? { client: {}, server: {} };
@@ -117,7 +114,7 @@ export function getBuildContext(buildDirectory, configDirectory) {
   const customTypesMap = readJsonFile(path.join(buildDirectory, 'customTypesMap.json')) ?? {};
   const customMessagesMap = readJsonFile(path.join(buildDirectory, 'customMessagesMap.json')) ?? {};
 
-  cachedBuildContext = createContext({
+  const context = createContext({
     customMessagesMap,
     customTypesMap,
     directories: {
@@ -128,41 +125,41 @@ export function getBuildContext(buildDirectory, configDirectory) {
     logger: jitLogger,
     stage: 'dev',
   });
-  pageBuildRecords.trackFileReads({ context: cachedBuildContext, configDirectory });
+  pageBuildRecords.trackFileReads({ context, configDirectory });
 
   // Restore refMap, keyMap, jsMap, connectionIds, and websocketIds from skeleton build
-  Object.assign(cachedBuildContext.refMap, refMap);
-  Object.assign(cachedBuildContext.keyMap, keyMap);
-  cachedBuildContext.jsMap.client = jsMap.client ?? {};
-  cachedBuildContext.jsMap.server = jsMap.server ?? {};
+  Object.assign(context.refMap, refMap);
+  Object.assign(context.keyMap, keyMap);
+  context.jsMap.client = jsMap.client ?? {};
+  context.jsMap.server = jsMap.server ?? {};
   for (const id of connectionIds) {
-    cachedBuildContext.connectionIds.add(id);
+    context.connectionIds.add(id);
   }
   for (const id of websocketIds) {
-    cachedBuildContext.websocketIds.add(id);
+    context.websocketIds.add(id);
   }
   // The scoped connections, walled collections and shared connections, so a
   // page's requests get the same tenant pipeline checks as in a full build.
   const tenantTargets = readJsonFile(path.join(buildDirectory, 'tenantTargets.json'));
   if (tenantTargets) {
-    restoreTenantTargets({ context: cachedBuildContext, tenantTargets });
+    restoreTenantTargets({ context, tenantTargets });
   }
   // Pages that host a policy-bound Dynamic block count the policy's types
   // and validate its pages and endpoints.
   Object.assign(
-    cachedBuildContext.dynamicPolicies,
+    context.dynamicPolicies,
     readJsonFile(path.join(buildDirectory, 'dynamicPolicies.json')) ?? {}
   );
 
   // Load installed packages snapshot from skeleton build for missing-package detection
   const installedPluginPackages =
     readJsonFile(path.join(buildDirectory, 'installedPluginPackages.json')) ?? [];
-  cachedBuildContext.installedPluginPackages = new Set(installedPluginPackages);
+  context.installedPluginPackages = new Set(installedPluginPackages);
 
   // Restore module entries from skeleton build for JIT module page builds
   const modules = readJsonFile(path.join(buildDirectory, 'modules.json'));
   if (modules) {
-    Object.assign(cachedBuildContext.modules, modules);
+    Object.assign(context.modules, modules);
   }
 
   // Hydrate the deferred-record registry — module component bodies referenced
@@ -170,106 +167,238 @@ export function getBuildContext(buildDirectory, configDirectory) {
   // the marker-restoring reviver, so record-body ~r/~l markers survive.
   const deferredRecords = readJsonFile(path.join(buildDirectory, 'deferredRecords.json'));
   if (deferredRecords) {
-    hydrateDeferredRecords(cachedBuildContext, deferredRecords);
+    hydrateDeferredRecords(context, deferredRecords);
   }
 
   // Restore app metadata so JIT page builds resolve _app / _build.app against
   // the same metadata the skeleton build computed.
-  cachedBuildContext.appMeta = readJsonFile(path.join(buildDirectory, 'appMeta.json')) ?? null;
+  context.appMeta = readJsonFile(path.join(buildDirectory, 'appMeta.json')) ?? null;
 
   // Restore api endpoint configs so JIT CallAPI validation (validateCallApiRefs in
   // buildPageJit) can resolve endpointIds. Without this the dev context has no
   // components.api and every CallAPI action is flagged as a non-existent endpoint.
-  cachedBuildContext.components = { api: readBuildApiArtifacts(buildDirectory) };
+  context.components = { api: readBuildApiArtifacts(buildDirectory) };
 
   if (!bundledIcons) {
     bundledIcons = new Set(readJsonFile(path.join(buildDirectory, 'iconImports.json')) ?? []);
   }
-  cachedBuildContext.bundledIcons = bundledIcons;
-  // IconData delivered to pages as _dynamicIcons. Reset on skeleton rebuild
-  // (cachedBuildContext = null), since theme.icons or icon set plugins may have
-  // changed; JIT re-resolves as pages are requested.
-  cachedBuildContext.dynamicIconData = {};
+  context.bundledIcons = bundledIcons;
+  // IconData delivered to pages as _dynamicIcons. Starts empty with each
+  // context, since theme.icons or icon set plugins may have changed; JIT
+  // re-resolves as pages are requested.
+  context.dynamicIconData = {};
 
   const idCounter = readJsonFile(path.join(buildDirectory, 'idCounter.json'));
   continueJitKeys({ idCounter, childId });
 
   // The context's page builds write the entries they add to jitMaps/. Only the
   // previous context's files are kept besides its own: they resolve errors that
-  // pages built just before the edit still report.
-  contextGeneration += 1;
-  cachedBuildContext.jitMaps = createJitMaps({
-    keyMap: cachedBuildContext.keyMap,
-    refMap: cachedBuildContext.refMap,
+  // pages built just before the recreation still report.
+  context.jitMaps = createJitMaps({
+    keyMap: context.keyMap,
+    refMap: context.refMap,
     name: `${childId}-${contextGeneration}`,
   });
-  pruneJitMaps({ buildDirectory, keep: `${childId}-${contextGeneration - 1}-` });
+  pruneJitMaps({ buildDirectory, keep: `${childId}-${previousContextGeneration}-` });
+  previousContextGeneration = contextGeneration;
   skipStaleMapWrites({
     buildDirectory,
-    context: cachedBuildContext,
+    context,
     keyPrefix: idCounter.prefix,
+    isKeptContext: () => context === keptContext,
   });
+  prepareJitContext(context);
 
-  return cachedBuildContext;
+  return context;
 }
 
-async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
-  checkPageInvalidations(buildDirectory);
-  const registry = loadPageRegistry(buildDirectory);
-  const registryMtime = cachedRegistryMtime;
-  if (!registry || !registry[pageId]) {
+// The next page build makes a new context, of a new generation. Pages built on
+// this one are rebuilt.
+function discardBuildContext() {
+  keptContext = null;
+  contextGeneration += 1;
+  budgetExceeded = false;
+}
+
+// The build context JIT page builds share. It outlives page edits and is
+// recreated (a new generation) only when a config build is published or its
+// maps pass contextMapBudget.
+export function getBuildContext(buildDirectory, configDirectory) {
+  keptContext ??= createBuildContext(buildDirectory, configDirectory);
+  return keptContext;
+}
+
+// A change event: the files pages read may have changed. Reads from here on go
+// through a fresh read cache, so a check or build sees what is on disk now;
+// builds already running keep the cache they started with, and what they read
+// is checked on the page's next request. Warnings are logged again.
+function startChangeEvent(configDirectory) {
+  eventCounter += 1;
+  if (!keptContext) return;
+  keptContext.readConfigFile = pageBuildRecords.trackReadConfigFile({
+    readConfigFile: createReadConfigFile({ directories: keptContext.directories }),
+    configDirectory,
+  });
+  keptContext.seenSourceLines.clear();
+}
+
+// Reads what the manager and the config build changed since the last call, and
+// acts on it: a new build/invalidatePages value is a change event; a newly
+// published page registry, or a context past its budget, discards the build
+// context, so the next page build makes a new one. Both a page request and the
+// build status review call it first, so each sees an edit the other has not.
+export function syncBuildSignals({ buildDirectory, configDirectory }) {
+  const changeSignal = readChangeSignal(buildDirectory);
+  if (changeSignal !== lastChangeSignal) {
+    lastChangeSignal = changeSignal;
+    startChangeEvent(configDirectory);
+  }
+  const identity = readRegistryIdentity(buildDirectory);
+  if (identity === null) {
+    return { registry: null, eventCounter, generation: contextGeneration };
+  }
+  if (identity !== registryIdentity) {
+    registryIdentity = identity;
+    registry = readJsonFile(path.join(buildDirectory, 'pageRegistry.json'));
+    discardBuildContext();
+  } else if (budgetExceeded) {
+    discardBuildContext();
+  }
+  return { registry, eventCounter, generation: contextGeneration };
+}
+
+function countAddedMapEntries(context) {
+  return context.jitMaps.keys.added.length + context.jitMaps.refs.added.length;
+}
+
+// Whether a page's last build still describes it: 'current' or 'edited'. A
+// page built on an earlier context is edited: its content, _js and icons
+// belong to a context that is gone. A page checked up to the current change
+// event is current. Otherwise its last build's inputs are checked
+// (checkPageRecord), and a match moves its checkedAt to the event the check
+// started at, so the next request or review does not check it again. A page
+// request and the build status review both decide with this, so a build
+// status wait builds exactly the pages the next requests would.
+export async function reviewBuiltPage({ pageId, eventCounter: counter, generation }) {
+  const record = pageBuildRecords.get(pageId);
+  if (!record || record.generation !== generation) return 'edited';
+  const compiled = pageCache.get(pageId);
+  if (record.checkedAt === counter || compiled?.checkedAt === counter) return 'current';
+  const check = await checkPageRecord({ record, readConfigFile: keptContext.readConfigFile });
+  const latest = pageBuildRecords.get(pageId);
+  if (latest !== record) {
+    // The page was built again while this check read its previous build's
+    // inputs, so the check says nothing about the new build: it is current
+    // only when it started at or after this check's event.
+    return latest?.generation === generation && latest.checkedAt >= counter ? 'current' : 'edited';
+  }
+  if (check !== 'current') return 'edited';
+  record.checkedAt = Math.max(record.checkedAt, counter);
+  pageCache.markChecked(pageId, { generation, checkedAt: counter });
+  return 'current';
+}
+
+// Whether a compiled page can be served as it is.
+async function isPageCurrent({ pageId, eventCounter: counter, generation }) {
+  const compiled = pageCache.get(pageId);
+  if (!compiled || compiled.generation !== generation) return false;
+  if ((await reviewBuiltPage({ pageId, eventCounter: counter, generation })) !== 'current') {
     return false;
   }
+  // A rebuild that failed while the page was checked leaves nothing to serve.
+  return pageCache.isCompiled(pageId);
+}
 
-  if (pageCache.isCompiled(pageId)) {
-    return true;
-  }
-
-  const shouldBuild = await pageCache.acquireBuildLock(pageId);
-  if (!shouldBuild) {
-    // Another request completed the build
-    return true;
-  }
+async function buildPage({ pageId, buildDirectory, configDirectory }) {
+  // Read together, before the build starts: a change event or recreation
+  // during the build leaves the page behind, so its next request checks or
+  // rebuilds it.
+  const context = getBuildContext(buildDirectory, configDirectory);
+  const generation = contextGeneration;
+  const checkedAt = eventCounter;
+  const pageRegistry = registry;
+  pageCache.remove(pageId);
 
   jitLogger.info({ spin: 'start' }, `Building page "${pageId}"...`);
   const startTime = Date.now();
+  let result;
   try {
-    const context = getBuildContext(buildDirectory, configDirectory);
-    const result = await pageBuildRecords.record({
+    result = await pageBuildRecords.record({
       pageId,
       context,
       configDirectory,
-      registryMtime,
-      build: () => buildPageJit({ pageId, pageRegistry: registry, context }),
+      generation,
+      checkedAt,
+      build: () => buildPageJit({ pageId, pageRegistry, context }),
     });
-    if (result && result.installing) {
-      jitLogger.info(
-        `Installing plugin packages for page "${pageId}": ${result.packages.join(', ')}. ` +
-          'The page will be available after the server restarts.'
-      );
-      return result;
-    }
-    pageCache.markCompiled(pageId);
-    // Touch the candidates file so Vite's CSS pipeline re-runs Tailwind for
-    // classes the JIT build discovered — globals.css imports it. This import
-    // is the ONLY recompile trigger: the tailwind .html scan inputs are
-    // excluded from Vite's watcher (their .html change events would force
-    // full browser reloads). Only touched when the build actually changed
-    // tailwind content, so unchanged rebuilds cause no CSS recompile.
-    if (result?._tailwindChanged) {
-      fs.writeFileSync(
-        path.join(buildDirectory, 'tailwind-candidates.css'),
-        `/* Generated by Lowdefy build — rewritten on page changes to trigger CSS recompilation */\n/* ${Date.now()} */\n`
-      );
-    }
-    jitLogger.info(
-      { spin: 'succeed', color: 'white' },
-      `Built page "${pageId}" in ${formatDuration(Date.now() - startTime)}.`
-    );
-    return { built: true, warnings: result?._warnings };
   } finally {
-    pageCache.releaseBuildLock(pageId);
+    // A failed build adds map entries too, and a page being fixed fails
+    // build after build.
+    if (context === keptContext && countAddedMapEntries(context) > contextMapBudget) {
+      budgetExceeded = true;
+    }
   }
+  if (result && result.installing) {
+    jitLogger.info(
+      `Installing plugin packages for page "${pageId}": ${result.packages.join(', ')}. ` +
+        'The page will be available after the server restarts.'
+    );
+    return { result, buildContext: context };
+  }
+  pageCache.markCompiled(pageId, { generation, checkedAt });
+  // Touch the candidates file so Vite's CSS pipeline re-runs Tailwind for
+  // classes the JIT build discovered — globals.css imports it. This import
+  // is the ONLY recompile trigger: the tailwind .html scan inputs are
+  // excluded from Vite's watcher (their .html change events would force
+  // full browser reloads). Only touched when the build actually changed
+  // tailwind content, so unchanged rebuilds cause no CSS recompile.
+  if (result?._tailwindChanged) {
+    fs.writeFileSync(
+      path.join(buildDirectory, 'tailwind-candidates.css'),
+      `/* Generated by Lowdefy build — rewritten on page changes to trigger CSS recompilation */\n/* ${Date.now()} */\n`
+    );
+  }
+  jitLogger.info(
+    { spin: 'succeed', color: 'white' },
+    `Built page "${pageId}" in ${formatDuration(Date.now() - startTime)}.`
+  );
+  return { result: { built: true, warnings: result?._warnings }, buildContext: context };
+}
+
+// Serves a page from its last JIT build while that build is current, else
+// builds it. Returns { result, buildContext }: result is false for a page not
+// in the registry, true for a page already current, or the build's result;
+// buildContext is the context the page was built on, which holds its _js
+// entries and icons even after a later request discards it.
+export async function buildPageWithContext({ pageId, buildDirectory, configDirectory }) {
+  for (;;) {
+    const signals = syncBuildSignals({ buildDirectory, configDirectory });
+    // A kept context is always of the current generation, so a page current
+    // in this generation was built on it.
+    const currentContext = keptContext;
+    if (!signals.registry || !signals.registry[pageId]) {
+      return { result: false, buildContext: null };
+    }
+    if (await isPageCurrent({ pageId, ...signals })) {
+      return { result: true, buildContext: currentContext };
+    }
+    const shouldBuild = await pageCache.acquireBuildLock(pageId);
+    if (shouldBuild) {
+      try {
+        return await buildPage({ pageId, buildDirectory, configDirectory });
+      } finally {
+        pageCache.releaseBuildLock(pageId);
+      }
+    }
+    // Another request built the page meanwhile. Its build may have started
+    // before an event this request saw, or failed, so the page is looked at
+    // again rather than taken as current.
+  }
+}
+
+async function buildPageIfNeeded({ pageId, buildDirectory, configDirectory }) {
+  const { result } = await buildPageWithContext({ pageId, buildDirectory, configDirectory });
+  return result;
 }
 
 // Collect every client _js hash the page references. jsMapParser reduces a _js
@@ -316,25 +445,37 @@ function scopeDynamicIcons({ pageConfig, scopedJsMap, dynamicIconData }) {
   return Object.keys(found).length > 0 ? found : undefined;
 }
 
-// Scope this page's JIT-discovered enrichment out of the persistent build
-// context so jitPageHandler can fold it into the page-config response the client
-// already awaits — removing the two secondary fetches that stalled first paint.
-// buildContext defaults to the module-private cachedBuildContext (re-read on
-// every call, so it tracks invalidation resets); tests pass a stub.
-export function getPageJitEnrichment({ pageConfig, buildContext = cachedBuildContext }) {
-  // No build context (before the first build, or after an invalidation reset)
-  // means nothing JIT-discovered to fold — the page serves what the static
-  // client bundle already carries.
-  if (!buildContext) return {};
+// The contexts whose jsMap and icons can hold a served page's entries: the one
+// the page was built on, and the kept one. The page config is read from disk
+// after the build, so a build of the page on a newer context can have written
+// it meanwhile. _js keys are content hashes, so an entry found in either is
+// the page's own.
+function enrichmentContexts(buildContext) {
+  return [buildContext, keptContext].filter(
+    (context, index, contexts) => context && contexts.indexOf(context) === index
+  );
+}
 
-  const clientJsMap = buildContext.jsMap.client ?? {};
+// Scope this page's JIT-discovered enrichment out of the build context it was
+// built on, so jitPageHandler can fold it into the page-config response the
+// client already awaits — removing the two secondary fetches that stalled
+// first paint. A request can discard that context while the page config is
+// read, so it is passed in (from buildPageWithContext) rather than taken from
+// the kept context.
+export function getPageJitEnrichment({ pageConfig, buildContext }) {
+  const contexts = enrichmentContexts(buildContext);
+  // No build context (before the first build) means nothing JIT-discovered to
+  // fold — the page serves what the static client bundle already carries.
+  if (contexts.length === 0) return {};
+
   const hashes = new Set();
   collectJsHashes(pageConfig, hashes);
 
   const scopedJsMap = {};
   for (const hash of hashes) {
-    if (Object.prototype.hasOwnProperty.call(clientJsMap, hash)) {
-      scopedJsMap[hash] = clientJsMap[hash];
+    const context = contexts.find((candidate) => Object.hasOwn(candidate.jsMap.client ?? {}, hash));
+    if (context) {
+      scopedJsMap[hash] = context.jsMap.client[hash];
     }
   }
 
@@ -344,7 +485,10 @@ export function getPageJitEnrichment({ pageConfig, buildContext = cachedBuildCon
   const dynamicIcons = scopeDynamicIcons({
     pageConfig,
     scopedJsMap,
-    dynamicIconData: buildContext.dynamicIconData ?? {},
+    dynamicIconData: Object.assign(
+      {},
+      ...[...contexts].reverse().map((context) => context.dynamicIconData ?? {})
+    ),
   });
 
   return { jsEntries, dynamicIcons };

@@ -41,15 +41,17 @@ import jsMapParser from '../buildJs/jsMapParser.js';
 import lowdefySchema from '../../lowdefySchema.js';
 import makeRefDefinition from '../buildRefs/makeRefDefinition.js';
 import rebaseModuleRefPaths from '../buildRefs/rebaseModuleRefPaths.js';
+import runTransformer from '../buildRefs/runTransformer.js';
 import { resolve, WalkContext, tagRefDeep } from '../buildRefs/walker.js';
 import cloneWithMarkers from '../buildRefs/cloneWithMarkers.js';
 import validateOperatorsDynamic from '../validateOperatorsDynamic.js';
 import testSchema from '../testSchema.js';
 import validateIconNames from '../icons/validateIconNames.js';
-import createJitMaps from './createJitMaps.js';
+import createPageBuildContext from './createPageBuildContext.js';
 import detectMissingIcons from './detectMissingIcons.js';
 import detectMissingPluginPackages from './detectMissingPluginPackages.js';
 import getJitIconContext from './getJitIconContext.js';
+import prepareJitContext from './prepareJitContext.js';
 import updateIconImportsJit from './updateIconImportsJit.js';
 import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
 import scanJitMaps from './scanJitMaps.js';
@@ -86,31 +88,16 @@ async function updateDynamicIcons({ page, context, validate }) {
 }
 
 async function buildPageJit({ pageId, pageRegistry, context, directories, logger }) {
-  // Use provided context or create a minimal one for JIT builds
-  const buildContext =
+  // The dev server passes the context it keeps across page builds; without one,
+  // a minimal context is made for this build.
+  const keptContext =
     context ??
     createContext({
       directories,
       logger: logger ?? console,
       stage: 'dev',
     });
-
-  // Restore the skeleton-computed auth config projection so _build.authConfig
-  // resolves in JIT page builds identically to a full build. The dev server's
-  // JIT context is rebuilt from build artifacts in a separate process, so the
-  // projection is read from the artifact shallowBuild writes.
-  if (
-    type.isUndefined(buildContext.authConfigProjection) &&
-    type.isString(buildContext.directories?.build)
-  ) {
-    const projectionPath = path.join(buildContext.directories.build, 'authConfigProjection.json');
-    try {
-      const content = await fs.promises.readFile(projectionPath, 'utf8');
-      buildContext.authConfigProjection = JSON.parse(content);
-    } catch (err) {
-      if (err.code !== 'ENOENT') throw err;
-    }
-  }
+  prepareJitContext(keptContext);
 
   const pageEntry = type.isFunction(pageRegistry.get)
     ? pageRegistry.get(pageId)
@@ -120,22 +107,12 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     return null;
   }
 
-  // Reset errors and warnings for this build. Keep local references so that
-  // concurrent JIT builds (different pages sharing buildContext) cannot corrupt
-  // our lists by reassigning during an await.
-  const buildErrors = [];
-  const buildWarnings = [];
-  buildContext.errors = buildErrors;
-  buildContext.warnings = buildWarnings;
-
-  // The dev server names the context's jitMaps files; a context made without
-  // one (a test, or the minimal context above) starts its log here, before
-  // its first page build adds an entry.
-  buildContext.jitMaps ??= createJitMaps({
-    keyMap: buildContext.keyMap,
-    refMap: buildContext.refMap,
-    name: 'jit',
-  });
+  // Every step runs on this build's own context, so concurrent builds on the
+  // kept context keep their errors, warnings, type counts and action
+  // references apart.
+  const buildContext = createPageBuildContext(keptContext);
+  const buildErrors = buildContext.errors;
+  const buildWarnings = buildContext.warnings;
   const mapsMark = scanJitMaps({ context: buildContext });
 
   try {
@@ -208,9 +185,13 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       refDef = makeRefDefinition(resolverDefinition, null, buildContext.refMap);
       buildContext.refMap[refDef.id].path = null;
     } else {
-      const refDefinition = resolvedVars
-        ? { path: pageEntry.refPath, vars: resolvedVars }
-        : pageEntry.refPath;
+      const refDefinition = { path: pageEntry.refPath };
+      if (resolvedVars) {
+        refDefinition.vars = resolvedVars;
+      }
+      if (pageEntry.transformer) {
+        refDefinition.transformer = pageEntry.transformer;
+      }
       refDef = makeRefDefinition(refDefinition, null, buildContext.refMap);
       buildContext.refMap[refDef.id].path = refDef.path;
     }
@@ -254,6 +235,14 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       shouldStop: null,
     });
     let processed = await resolve(pageContent, pageCtx);
+    // The walker runs a ref's transformer after walking its content; the page's
+    // own ref is not walked here, so its transformer runs here.
+    processed = await runTransformer({
+      context: buildContext,
+      input: processed,
+      refDef,
+      referencedFrom: null,
+    });
     processed = precomputeRuntimeOperators({
       context: buildContext,
       input: processed,
@@ -289,33 +278,11 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // Apply skeleton-computed auth (buildAuth ran during skeleton build)
     processed.auth = pageEntry.auth;
 
-    // buildSubscriptions validates against websocketIds — the dev server
-    // restores the set from the websocketIds.json skeleton artifact. Rebuild
-    // it from skeleton-built websockets when the context doesn't carry it
-    // (createContext initializes an empty set, so check size, not presence).
-    if (!buildContext.websocketIds?.size) {
-      buildContext.websocketIds = new Set(
-        (buildContext.components?.websockets ?? []).map((websocket) => websocket.websocketId)
-      );
-    }
-
     // Build the page (validation, block processing)
     const checkDuplicatePageId = createCheckDuplicateId({
       message: 'Duplicate pageId "{{ id }}".',
     });
-    // buildPage collects the page's action references on the context. The dev
-    // context outlives page builds, so each build starts empty lists - else
-    // every build re-checks all pages built before it, and a page that keeps
-    // failing grows them on each request. Held locally, like errors above:
-    // buildPage is synchronous, so no concurrent build swaps them in between.
-    const refs = {
-      linkActionRefs: [],
-      callApiActionRefs: [],
-      websocketActionRefs: [],
-      dynamicBlockRefs: [],
-      orgClientActionRefs: [],
-    };
-    Object.assign(buildContext, refs);
+    // buildPage collects the page's action references on this build's context.
     buildPage({ page: processed, index: 0, context: buildContext, checkDuplicatePageId });
 
     // Validate that all page-level types (blocks, actions, operators) exist
@@ -344,7 +311,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // Validate link, state, payload, and server-state references
     const pageIds = Object.keys(pageRegistry);
     validateLinkReferences({
-      linkActionRefs: refs.linkActionRefs,
+      linkActionRefs: buildContext.linkActionRefs,
       pageIds,
       context: buildContext,
     });
@@ -352,7 +319,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       ? buildContext.components.api
       : [];
     validateCallApiRefs({
-      callApiActionRefs: refs.callApiActionRefs,
+      callApiActionRefs: buildContext.callApiActionRefs,
       endpointConfigs,
       context: buildContext,
     });
@@ -360,7 +327,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     // "pinned" organizations policy. The dev JIT context is rebuilt from disk
     // and carries no components.auth, so the policy is read from the auth.json
     // artifact - only when a ref exists, to avoid a disk read on every build.
-    if (refs.orgClientActionRefs.length > 0) {
+    if (buildContext.orgClientActionRefs.length > 0) {
       let policy = buildContext.components?.auth?.organizations?.policy;
       if (type.isUndefined(policy) && type.isString(buildContext.directories?.build)) {
         const authPath = path.join(buildContext.directories.build, 'auth.json');
@@ -372,18 +339,18 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
         }
       }
       validateOrgClientActionRefs({
-        orgClientActionRefs: refs.orgClientActionRefs,
+        orgClientActionRefs: buildContext.orgClientActionRefs,
         policy: policy ?? 'pinned',
         context: buildContext,
       });
     }
     validateDynamicBlockRefs({
-      dynamicBlockRefs: refs.dynamicBlockRefs,
+      dynamicBlockRefs: buildContext.dynamicBlockRefs,
       endpointConfigs,
       context: buildContext,
     });
     validateWebsocketRefs({
-      websocketActionRefs: refs.websocketActionRefs,
+      websocketActionRefs: buildContext.websocketActionRefs,
       websocketIds: buildContext.websocketIds,
       context: buildContext,
     });

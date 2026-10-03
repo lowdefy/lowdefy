@@ -374,3 +374,59 @@ test('collects the file that holds a module pages list', () => {
   const result = collectSkeletonSourceFiles({ components, context });
   expect(result).toEqual(new Set(['/app/modules/mod/pages.yaml']));
 });
+
+test('collects the file a module var default refs when the value is copied into a page', () => {
+  // vars.greeting.default: { _ref: defaults/greeting.yaml } resolves to an
+  // object, cached in modules.json and copied into the page that uses it, so
+  // its marker is under pages too.
+  const greeting = setRefMarker({ text: 'Hello' }, 'ref-greeting');
+  const page = setRefMarker({ id: 'mod/one', properties: { greeting } }, 'pages.0');
+  const components = { pages: [page] };
+  const context = {
+    modules: {
+      mod: { refDef: { id: 'ref-manifest' }, resolvedVarCache: { greeting } },
+    },
+    refMap: {
+      'ref-manifest': { parent: null },
+      'pages.0': { parent: 'ref-manifest', path: '/app/modules/mod/pages/one.yaml' },
+      'ref-greeting': { parent: 'ref-manifest', path: '/app/modules/mod/defaults/greeting.yaml' },
+    },
+  };
+  const result = collectSkeletonSourceFiles({ components, context });
+  expect(result).toEqual(new Set(['/app/modules/mod/defaults/greeting.yaml']));
+});
+
+test('collects the file a module namespace var default refs', () => {
+  const title = setRefMarker({ text: 'Title' }, 'ref-title');
+  const components = { pages: [] };
+  const context = {
+    modules: {
+      mod: { refDef: { id: 'ref-manifest' }, resolvedVarCache: { 'labels.title': title } },
+    },
+    refMap: {
+      'ref-manifest': { parent: null },
+      'ref-title': { parent: 'ref-manifest', path: '/app/modules/mod/defaults/title.yaml' },
+    },
+  };
+  const result = collectSkeletonSourceFiles({ components, context });
+  expect(result).toEqual(new Set(['/app/modules/mod/defaults/title.yaml']));
+});
+
+test('collects the file a module var default refs when it resolves to a scalar', () => {
+  // A scalar carries no marker; the ref's parent is the module manifest's ref.
+  const page = setRefMarker({ id: 'mod/one', properties: { greeting: 'Hello' } }, 'pages.0');
+  const components = { pages: [page] };
+  const context = {
+    modules: {
+      mod: { refDef: { id: 'ref-manifest' }, resolvedVarCache: { greeting: 'Hello' } },
+    },
+    refMap: {
+      'ref-manifest': { parent: null },
+      'pages.0': { parent: 'ref-manifest', path: '/app/modules/mod/pages/one.yaml' },
+      'ref-greeting': { parent: 'ref-manifest', path: '/app/modules/mod/defaults/greeting.txt' },
+      'ref-page-scalar': { parent: 'pages.0', path: '/app/modules/mod/pages/title.md' },
+    },
+  };
+  const result = collectSkeletonSourceFiles({ components, context });
+  expect(result).toEqual(new Set(['/app/modules/mod/defaults/greeting.txt']));
+});

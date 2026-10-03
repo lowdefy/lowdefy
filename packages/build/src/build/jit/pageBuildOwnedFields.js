@@ -13,14 +13,23 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { ConfigError } from '@lowdefy/errors';
 
-async function getUserJavascriptFunction({ context, filePath }) {
-  try {
-    return await context.importAppCode(filePath);
-  } catch (error) {
-    throw new ConfigError(`Error importing ${filePath}.`, { cause: error, filePath });
-  }
-}
+// The context fields one JIT page build owns. Every other field of a page
+// build's context is the kept context's own value, shared by reference.
+const pageBuildOwnedFields = [
+  'errors',
+  'warnings',
+  'typeCounters',
+  'pageTypeCounters',
+  'linkActionRefs',
+  'callApiActionRefs',
+  'websocketActionRefs',
+  'dynamicBlockRefs',
+  'orgClientActionRefs',
+  'modules',
+  'deferred',
+  'handleError',
+  'handleWarning',
+];
 
-export default getUserJavascriptFunction;
+export default pageBuildOwnedFields;

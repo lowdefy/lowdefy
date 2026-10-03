@@ -17,7 +17,7 @@
 import { getPageConfig } from '@lowdefy/api';
 
 import authJson from '../../lib/build/auth.js';
-import buildPageIfNeeded, { getPageJitEnrichment } from '../../lib/server/jitPageBuilder.js';
+import { buildPageWithContext, getPageJitEnrichment } from '../../lib/server/jitPageBuilder.js';
 import getPathSegments from '../lib/getPathSegments.js';
 import lowdefyConfig from '../../lib/build/config.js';
 
@@ -36,12 +36,13 @@ async function jitPageHandler(c) {
   const pageId = getPathSegments(c, '/api/page/').join('/');
 
   let buildResult;
+  let buildContext;
   try {
-    buildResult = await buildPageIfNeeded({
+    ({ result: buildResult, buildContext } = await buildPageWithContext({
       pageId,
       buildDirectory: context.buildDirectory,
       configDirectory: context.configDirectory,
-    });
+    }));
   } catch (error) {
     const rawErrors = error.buildErrors ?? [error];
     const errors = [];
@@ -117,7 +118,9 @@ async function jitPageHandler(c) {
   // Fold this page's JIT-discovered _js entries and dynamic icons into the
   // response the client already awaits, so first paint has everything it needs
   // without the two secondary fetches that stalled in Vite's transform window.
-  const { jsEntries, dynamicIcons } = getPageJitEnrichment({ pageConfig });
+  // Read from the context the page was built on: another request can discard
+  // it while getPageConfig runs.
+  const { jsEntries, dynamicIcons } = getPageJitEnrichment({ pageConfig, buildContext });
   if (jsEntries) pageConfig._jsEntries = jsEntries;
   if (dynamicIcons) pageConfig._dynamicIcons = dynamicIcons;
   return c.json(pageConfig);

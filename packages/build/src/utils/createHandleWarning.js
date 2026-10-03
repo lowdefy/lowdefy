@@ -19,6 +19,10 @@ import { resolveErrorLocation, shouldSuppressBuildCheck } from '@lowdefy/errors'
 import collectExceptions from './collectExceptions.js';
 
 function createHandleWarning({ context }) {
+  // The warnings this handler listed. A dev page build gets its own handler and
+  // list, while seenSourceLines is shared by every page build on the context:
+  // each page lists its own warnings, and the terminal shows each one once.
+  const listedKeys = new Set();
   return function handleWarning(warning) {
     if (shouldSuppressBuildCheck(warning, context.keyMap)) {
       return;
@@ -40,12 +44,16 @@ function createHandleWarning({ context }) {
     }
 
     const dedupKey = warning.source ?? warning.message;
-    if (context.seenSourceLines?.has(dedupKey)) return;
-    context.seenSourceLines?.add(dedupKey);
+    if (context.seenSourceLines) {
+      if (listedKeys.has(dedupKey)) return;
+      listedKeys.add(dedupKey);
+    }
 
     if (context.warnings) {
       context.warnings.push(warning);
     }
+    if (context.seenSourceLines?.has(dedupKey)) return;
+    context.seenSourceLines?.add(dedupKey);
     context.logger.warn(warning);
   };
 }
