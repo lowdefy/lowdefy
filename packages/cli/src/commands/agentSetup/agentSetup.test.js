@@ -484,3 +484,24 @@ describe('monorepo layout (app in a subdirectory of the git root)', () => {
     expect(fs.existsSync(path.join(configDirectory, '.mcp.json'))).toBe(true);
   });
 });
+
+test('agentSetup writes the journeys-from-dev skill, refreshes it unedited and skips it edited', async () => {
+  const skillPath = path.join('.claude', 'skills', 'journeys-from-dev', 'SKILL.md');
+  await agentSetup({ context });
+  const written = read(skillPath);
+  expect(written).toContain('name: journeys-from-dev');
+  expect(written).toMatch(/lowdefy-skill-hash: [a-f0-9]{64}/);
+
+  fs.writeFileSync(
+    path.join(configDirectory, skillPath),
+    written.replace(/^lowdefy-skill-hash: .*$/m, `lowdefy-skill-hash: ${'0'.repeat(64)}`)
+  );
+  await agentSetup({ context });
+  expect(read(skillPath)).toContain(`lowdefy-skill-hash: ${'0'.repeat(64)}`);
+
+  fs.writeFileSync(path.join(configDirectory, skillPath), written);
+  context.logger.info.mockClear();
+  await agentSetup({ context });
+  expect(read(skillPath)).toEqual(written);
+  expect(context.logger.info).toHaveBeenCalledWith(`'${skillPath}' is up to date.`);
+});

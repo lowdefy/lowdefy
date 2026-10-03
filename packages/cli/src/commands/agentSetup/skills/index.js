@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import journeysFromDev from './journeysFromDev.js';
 import skillMd from '../skillMd.js';
 
 // The skills agent-setup installs. A skill is added by adding an entry here,
@@ -24,6 +25,12 @@ const skills = [
     render: skillMd,
     agentsMdLine:
       '`lowdefy-config`: writing or editing Lowdefy config with exact types, schemas and examples from the dev server.',
+  },
+  {
+    name: 'journeys-from-dev',
+    render: journeysFromDev,
+    agentsMdLine:
+      '`journeys-from-dev`: turning what the developer tried in the dev server into proven journeys.',
   },
 ];
 
