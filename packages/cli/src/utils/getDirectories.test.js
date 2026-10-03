@@ -29,6 +29,7 @@ test('default directories', () => {
     emails: '/test/config/.lowdefy/emails',
     journeys: '/test/config/tests/journeys',
     server: '/test/config/.lowdefy/server',
+    traces: '/test/config/.lowdefy/traces',
   });
 });
 
@@ -47,6 +48,7 @@ test('specify serverDirectory in options', () => {
     emails: '/test/config/.lowdefy/emails',
     journeys: '/test/config/tests/journeys',
     server: '/test/server',
+    traces: '/test/config/.lowdefy/traces',
   });
 });
 
@@ -65,6 +67,7 @@ test('specify devDirectory in options', () => {
     emails: '/test/config/.lowdefy/emails',
     journeys: '/test/config/tests/journeys',
     server: '/test/config/.lowdefy/server',
+    traces: '/test/config/.lowdefy/traces',
   });
 });
 

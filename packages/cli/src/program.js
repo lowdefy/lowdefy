@@ -30,6 +30,7 @@ import hubStop from './commands/hub/hubStop.js';
 import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
+import journeysCompile from './commands/journeys/journeysCompile.js';
 import mcp from './commands/mcp/mcp.js';
 import start from './commands/start/start.js';
 import test from './commands/test/test.js';
@@ -208,6 +209,54 @@ hub
   .command('serve', { hidden: true })
   .description('Run the hub in the foreground. Started automatically when needed.')
   .action(runHubCommand({ cliVersion, handler: hubServe }));
+
+const journeys = program
+  .command('journeys')
+  .description('Turn recorded interaction traces into candidate journeys.');
+
+journeys
+  .command('compile')
+  .description(
+    'Compile recorded traces into candidate journeys under tests/journeys/_candidates/<source>/.'
+  )
+  .usage('[options] [traceFiles...]')
+  .argument('[traceFiles...]', 'Trace files (JSONL) to compile, wherever they are.')
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--source <source>',
+      'The trace source: production, dev or explorer. Required unless trace files are given; with files, compiles only records of this source.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--since <since>',
+      'Records at or after this time: a duration back from now (30m, 2h, 7d) or an ISO date. Production default: 30d.'
+    )
+  )
+  .addOption(
+    new Option('--from <date>', 'Production only: the first UTC day of the window, YYYY-MM-DD.')
+  )
+  .addOption(
+    new Option('--to <date>', 'Production only: the last UTC day of the window, YYYY-MM-DD.')
+  )
+  .addOption(
+    new Option(
+      '--build <build>',
+      'Only segments whose records all ran on this build; "current" is the build the running dev server serves.'
+    )
+  )
+  .addOption(new Option('--page <pageId>', 'Only segments that visit this page.'))
+  .addOption(
+    new Option(
+      '--out <directory>',
+      'The candidates directory; the source is appended. Default is "tests/journeys/_candidates".'
+    )
+  )
+  .action(runCommand({ cliVersion, handler: journeysCompile }));
 
 program
   .command('init')

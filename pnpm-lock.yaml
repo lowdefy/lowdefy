@@ -3472,6 +3472,9 @@ importers:
       fs-extra:
         specifier: 11.3.4
         version: 11.3.4
+      yaml:
+        specifier: 2.9.0
+        version: 2.9.0
     devDependencies:
       '@jest/globals':
         specifier: 28.1.3

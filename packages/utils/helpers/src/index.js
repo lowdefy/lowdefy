@@ -27,6 +27,7 @@ import getLocaleDecimalSeparator from './getLocaleDecimalSeparator.js';
 import getLocaleGroupSeparator from './getLocaleGroupSeparator.js';
 import getOperatorType from './getOperatorType.js';
 import isInteractiveControl from './isInteractiveControl.js';
+import isMountEventName from './isMountEventName.js';
 import { isReserved, ReservedKeyError } from './ReservedKeyError.js';
 import joinPath from './joinPath.js';
 import journeyTargetSelectors from './journeyTargetSelectors.js';
@@ -35,6 +36,7 @@ import mapPlainValues from './mapPlainValues.js';
 import mergeObjects from './mergeObjects.js';
 import normalizeCaller from './normalizeCaller.js';
 import omit from './omit.js';
+import pairTraceEvents from './pairTraceEvents.js';
 import parsePageId from './parsePageId.js';
 import parseRowIndex from './parseRowIndex.js';
 import projectCaughtError from './projectCaughtError.js';
@@ -66,6 +68,7 @@ export {
   getLocaleGroupSeparator,
   getOperatorType,
   isInteractiveControl,
+  isMountEventName,
   isReserved,
   joinPath,
   journeyTargetSelectors,
@@ -74,6 +77,7 @@ export {
   mergeObjects,
   normalizeCaller,
   omit,
+  pairTraceEvents,
   parsePageId,
   parseRowIndex,
   projectCaughtError,

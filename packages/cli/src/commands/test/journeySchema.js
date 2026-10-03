@@ -14,22 +14,11 @@
   limitations under the License.
 */
 
-// Kept in one place: the schema below and the runner's error messages both use it.
-// Must match the step grammar of POST /lowdefy-docs/journey in @lowdefy/server-dev.
-export const JOURNEY_STEP_KEYS = [
-  'click',
-  'fill',
-  'select',
-  'press',
-  'back',
-  'goto',
-  'email',
-  'as',
-  'wait',
-  'screenshot',
-  'expect',
-];
+import { STEP_KEYS } from '@lowdefy/node-utils';
 
+// The step grammar itself lives in @lowdefy/node-utils, shared with the dev
+// server's journey runner; this schema checks the file's shape and the step
+// names, and validateJourney runs the grammar over the steps.
 const journeySchema = {
   type: 'object',
   required: ['name', 'pageId', 'steps'],
@@ -66,12 +55,12 @@ const journeySchema = {
         type: 'object',
         minProperties: 1,
         maxProperties: 1,
-        propertyNames: { enum: JOURNEY_STEP_KEYS },
+        propertyNames: { enum: STEP_KEYS },
         errorMessage: {
           type: 'Journey step should be an object with exactly one key.',
           minProperties: 'Journey step should have exactly one key.',
           maxProperties: 'Journey step should have exactly one key.',
-          propertyNames: `Unknown journey step key. Steps are: ${JOURNEY_STEP_KEYS.join(', ')}.`,
+          propertyNames: `Unknown journey step key. Steps are: ${STEP_KEYS.join(', ')}.`,
         },
       },
       errorMessage: {
