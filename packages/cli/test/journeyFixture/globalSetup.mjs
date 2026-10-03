@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import startJourneyFixture from '../../../../../scripts/lib/startJourneyFixture.mjs';
+import startJourneyFixture from '../../../../scripts/lib/startJourneyFixture.mjs';
 
 // Starts apps/journey-fixture once for every fixture test file, and hands its
 // url to the test workers through the environment they inherit. With no

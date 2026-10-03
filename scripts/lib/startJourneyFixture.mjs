@@ -24,6 +24,10 @@
     _server/dev-journey-fixture, so a developer's `pnpm app:dev` copy in
     _server/dev is left alone.
   - CRON_SECRET, so detached CallApi steps dispatch.
+  - A warm-up journey on every page: Vite compiles the client on its first
+    page load and each page builds on its first visit, either of which can
+    outlast or reset a test's journey. When the dev server can launch no
+    Chromium, the server is stopped and { skipped } says why.
 
   Three free ports from `port` (default 3300): the app, the dev server's
   internal port and MongoDB. Never 3000. The dev server log is written to
@@ -115,6 +119,39 @@ async function stopDevServer({ child }) {
   await exited;
 }
 
+async function postWarmUpJourney({ url, pageId, blockId }) {
+  const response = await fetch(`${url}/lowdefy-docs/journey`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ pageId, user: 'none', steps: [{ expect: { visible: blockId } }] }),
+  });
+  return response.json();
+}
+
+// Returns null when every page warmed up, or the reason the journeys cannot
+// run at all (no Chromium).
+async function warmUp({ url }) {
+  const pages = [
+    { pageId: 'home', blockId: 'home_title' },
+    { pageId: 'second', blockId: 'second_title' },
+  ];
+  for (const page of pages) {
+    let result;
+    for (let attempt = 0; attempt < 3 && result?.passed !== true; attempt += 1) {
+      result = await postWarmUpJourney({ url, ...page });
+      if (typeof result.error === 'string' && result.error.startsWith('No Chromium available')) {
+        return result.error;
+      }
+    }
+    if (result.passed !== true) {
+      throw new Error(
+        `The fixture page "${page.pageId}" did not warm up: ${JSON.stringify(result)}`
+      );
+    }
+  }
+  return null;
+}
+
 async function startJourneyFixture({ port = 3300 } = {}) {
   const ports = await findPorts({ start: port });
   const url = `http://localhost:${ports.app}`;
@@ -129,11 +166,17 @@ async function startJourneyFixture({ port = 3300 } = {}) {
     await stopDevServer({ child });
     await replSet.stop();
   }
+  let skipped;
   try {
     await waitForServer({ child, url });
+    skipped = await warmUp({ url });
   } catch (error) {
     await stop();
     throw error;
+  }
+  if (skipped !== null) {
+    await stop();
+    return { skipped };
   }
   return { url, uri, configDirectory: CONFIG_DIRECTORY, logPath: LOG_PATH, stop };
 }

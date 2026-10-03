@@ -15,40 +15,15 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { readDevInstance } from '@lowdefy/node-utils';
 
 import fetchBuildId from './fetchBuildId.js';
 import parseRepeat from './parseRepeat.js';
 import resolveJourneyPaths from './resolveJourneyPaths.js';
+import resolveServer from './resolveServer.js';
 import runRepeated from './runRepeated.js';
 import selectTests from './selectTests.js';
-import startDevServer from './startDevServer.js';
 import summariseResults from './summariseResults.js';
 import writeExercised from './writeExercised.js';
-
-function trimTrailingSlash(url) {
-  return url.replace(/\/+$/, '');
-}
-
-async function resolveServer({ context }) {
-  if (type.isString(context.options.url) && context.options.url !== '') {
-    context.logger.info(`Running tests against ${context.options.url}.`);
-    return { url: trimTrailingSlash(context.options.url), stop: async () => {} };
-  }
-  // A dev server already running for this app owns .lowdefy/dev; starting a
-  // second one there would be refused, so test against the running one.
-  const running = readDevInstance({ configDirectory: context.directories.config });
-  if (running !== null && running.state === 'ready') {
-    context.logger.info(`Running tests against the running dev server at ${running.url}.`);
-    return { url: running.url, stop: async () => {} };
-  }
-  try {
-    return await startDevServer({ context });
-  } catch (error) {
-    (error.serverOutput ?? []).forEach((line) => context.logger.error(line));
-    throw error;
-  }
-}
 
 function refuse({ context, message }) {
   context.logger.error(message);

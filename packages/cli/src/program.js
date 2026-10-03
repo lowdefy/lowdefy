@@ -31,6 +31,7 @@ import init from './commands/init/init.js';
 import initDocker from './commands/init-docker/initDocker.js';
 import initVercel from './commands/init-vercel/initVercel.js';
 import journeysCompile from './commands/journeys/journeysCompile.js';
+import journeysHarden from './commands/journeys/harden/journeysHarden.js';
 import mcp from './commands/mcp/mcp.js';
 import start from './commands/start/start.js';
 import test from './commands/test/test.js';
@@ -212,7 +213,7 @@ hub
 
 const journeys = program
   .command('journeys')
-  .description('Turn recorded interaction traces into candidate journeys.');
+  .description('Compile candidate journeys from recorded traces, and harden journeys.');
 
 journeys
   .command('compile')
@@ -257,6 +258,53 @@ journeys
     )
   )
   .action(runCommand({ cliVersion, handler: journeysCompile }));
+
+journeys
+  .command('harden')
+  .description(
+    "Break the config on purpose, one change at a time and only in the journeys' own browsers, and report each change no journey noticed."
+  )
+  .usage('[options] [paths...]')
+  .argument(
+    '[paths...]',
+    'Journey files or directories to harden instead of tests/journeys/*.yaml.'
+  )
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(new Option('--filter <name>', 'Only journeys whose name contains this string.'))
+  .addOption(options.logLevel)
+  .addOption(
+    new Option(
+      '--page <pageId...>',
+      'Only mutants on these pages, and endpoint mutants a journey touching them called.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--operators <operators>',
+      'Only these operators, comma separated: drop-action, skip-validate, flip-visible, swap-if, drop-payload, retarget-link, drop-block, drop-step.'
+    )
+  )
+  .addOption(new Option('--max <n>', 'Run at most n mutants (0: no cap). Default 200.'))
+  .addOption(
+    new Option('--seed <n>', 'The sample seed: another seed draws another sample. Default 0.')
+  )
+  .addOption(new Option('--workers <n>', 'Journey runs at once (1 to 16). Default 4.'))
+  .addOption(new Option('--mutant <id>', 'Run only this mutant, against the journeys on its path.'))
+  .addOption(new Option('--list', 'List the sampled mutants and the time estimate, run nothing.'))
+  .addOption(new Option('--json', 'Print the report as JSON.'))
+  .addOption(options.port)
+  .addOption(options.refResolver)
+  .addOption(
+    new Option(
+      '--url <url>',
+      'Run against an already running dev server instead of starting one, e.g. http://localhost:3000.'
+    )
+  )
+  .action((paths, commandOptions, command) =>
+    runCommand({ cliVersion, handler: journeysHarden })({ ...commandOptions, paths }, command)
+  );
 
 program
   .command('init')

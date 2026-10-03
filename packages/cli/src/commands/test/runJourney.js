@@ -32,8 +32,9 @@ function describeHttpError(error) {
 
 // Runs one discovered journey against the dev server's REST journey route and
 // normalises every outcome — schema failure, transport failure, non-2xx, a
-// failed step — into the same result shape the reporter prints.
-async function runJourney({ item, url }) {
+// failed step — into the same result shape the reporter prints. A harden run
+// passes the config `mutant` to apply to this run's browsers.
+async function runJourney({ item, url, mutant }) {
   const { filePath, journey } = item;
   const name = journey?.name ?? filePath;
   if (!type.isNone(item.error)) {
@@ -75,6 +76,7 @@ async function runJourney({ item, url }) {
       user: journey.user,
       urlQuery: journey.urlQuery,
       timeout: journey.timeout,
+      mutant,
     });
   } catch (error) {
     return {
@@ -84,6 +86,8 @@ async function runJourney({ item, url }) {
       // The route refuses a journey it cannot run (a 400) before any browser
       // opens; every repeat would be refused the same way.
       refused: error.response?.status === 400,
+      // The mutant was listed against another build.
+      stale: error.response?.data?.stale === true,
       stepCount,
       durationMs: Date.now() - start,
       message: describeHttpError(error),
@@ -95,7 +99,15 @@ async function runJourney({ item, url }) {
     return { name, filePath, passed: false, stepCount, durationMs, message: result.error };
   }
   if (result.passed === true) {
-    return { name, filePath, passed: true, stepCount, durationMs, exercised: result.exercised };
+    return {
+      name,
+      filePath,
+      passed: true,
+      stepCount,
+      durationMs,
+      exercised: result.exercised,
+      mutant: result.mutant,
+    };
   }
   return {
     name,
@@ -106,6 +118,7 @@ async function runJourney({ item, url }) {
     failure: result.failure,
     message: result.failure?.message,
     exercised: result.exercised,
+    mutant: result.mutant,
   };
 }
 
