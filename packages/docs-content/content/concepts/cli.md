@@ -43,6 +43,24 @@ The `build` command runs a Lowdefy build. This builds a production Lowdefy app i
 - `--skip-codemod-check`: Suppress warnings about pending codemod upgrades.
 
 
+## data list
+
+The `data list` command prints each [journey data set](/journey-data-sets) in `tests/data/`: fixtures only, or the snapshot's source environment, when it was pulled, its age and document count, and whether the data set's `snapshot` block has changed since the pull.
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+
+## data pull
+
+The `data pull <name>` command copies a scoped, capped snapshot of the connections a [journey data set](/journey-data-sets) lists, from a pre-production database into `.lowdefy/data/<name>/`, for journeys to run on. Run it with the source environment's secrets, for example `infisical run --env=staging -- lowdefy data pull staging-sample`. It reads only from an environment that sets `dataPull: true`, and is guarded by that environment's `guards.secrets` pins. A failed pull leaves the previous snapshot in place.
+
+- `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
+- `--dev-directory <dev-directory>`: Change the dev directory. The pull runs from the development server's installation. The default is `<config-directory>/.lowdefy/dev`.
+- `--disable-telemetry`: Disable telemetry.
+- `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
+- `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
+
 ## dev
 
 The `dev` command starts a Lowdefy development server, running locally. It can be accessed in a browser at [http://localhost:3000](http://localhost:3000). The CLI watches the file system, and rebuilds the app and reloads served pages every time a change is made to any of the files in the project directory. The `dev` command should not be used to serve a production app, the `build` and `start` commands should be used instead.

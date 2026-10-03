@@ -464,6 +464,12 @@
       "path": "content/testing/config-tests.md"
     },
     {
+      "slug": "testing/journey-data-sets",
+      "title": "Journey Data Sets",
+      "section": "Testing",
+      "path": "content/testing/journey-data-sets.md"
+    },
+    {
       "slug": "testing/e2e-introduction",
       "title": "E2E Testing",
       "section": "Testing",
@@ -3248,7 +3254,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "c6dc5bc4af4832c7490f5e6de9b622796f17c294b534fb040d1e2c1acbab4b2d"
+      "hash": "4020871f4ed41c70647d5725fcf46520815d3bb52f376d606da7c380e8340ef4"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3880,7 +3886,22 @@
         "testing/config-tests.yaml",
         "version.yaml"
       ],
-      "hash": "5603674d73ea45d19b043f4a30bf6a14d1bdadd00bb07772e0a4c6b7b11beecf"
+      "hash": "85011689b6f0b1dcd9d72400b3a91b8c26b65012591c066bebfa6af5985f55b6"
+    },
+    "testing/journey-data-sets": {
+      "files": [
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/validate_email.yaml",
+        "testing/journey-data-sets.md",
+        "testing/journey-data-sets.yaml",
+        "version.yaml"
+      ],
+      "hash": "7b4a64ce6524abfd950fb7096583fa1615cb48605622eb1f755288bed258f13d"
     },
     "testing/e2e-introduction": {
       "files": [
