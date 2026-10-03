@@ -193,17 +193,20 @@ test('stateBefore is the state before the chain ran, only for a state subscriber
   expect(stateless[0].stateBefore).toBeUndefined();
 });
 
-test('an event builds no trace payload while nobody subscribes', async () => {
+test('a failed event with nobody subscribed is held for the first replay subscriber', async () => {
   const context = await testContext({
     lowdefy: createLowdefy(),
-    pageConfig: buttonPage([setState('set', { clicked: true })]),
+    pageConfig: buttonPage([{ id: 'load', type: 'CallAPI', params: { endpointId: 'x' } }]),
   });
   const trace = getTrace(context._internal.lowdefy);
-  const emit = jest.spyOn(trace, 'emit');
   const res = await context._internal.RootSlots.map.button.triggerEvent({ name: 'onClick' });
-  expect(res.success).toBe(true);
-  expect(context.eventLog[0]).toBe(res);
-  expect(emit).not.toHaveBeenCalled();
+  expect(res.success).toBe(false);
+  const replayed = [];
+  trace.subscribe((payload) => replayed.push(payload), { replay: true });
+  expect(replayed).toHaveLength(1);
+  expect(replayed[0]).toMatchObject({ blockId: 'button', eventName: 'onClick', success: false });
+  expect(replayed[0].record).toBe(res);
+  expect(replayed[0].failure).toMatchObject({ actionId: 'load', actionType: 'CallAPI' });
 });
 
 function countStateCopies({ copy, context }) {
@@ -359,4 +362,49 @@ test('an app onInit failure emits scope app with the page the app loaded on', as
     success: false,
   });
   expect(payloads[0].failure).toMatchObject({ actionId: 'settings', actionType: 'CallAPI' });
+});
+
+test('an app onInit failure is replayed to a replay subscriber that subscribes after it', async () => {
+  const lowdefy = {
+    apiResponses: {},
+    appContext: null,
+    contexts: {},
+    home: {},
+    inputs: {},
+    lowdefyGlobal: {},
+    menus: [],
+    pageId: 'orders',
+    urlQuery: {},
+    user: {},
+    _internal: {
+      actions: { CallAPI: failingCallAPI },
+      blockComponents: { Box: {} },
+      blockMetas: { Box: { category: 'container' } },
+      displayMessage: () => () => {},
+      handleError: () => {},
+      logger: { error: () => {}, warn: () => {}, log: () => {}, debug: () => {} },
+      operators: testOperators,
+      translate: (key, values) => translate({ key, values }),
+    },
+  };
+  const recorder = [];
+  getTrace(lowdefy).subscribe((payload) => recorder.push(payload), { state: true });
+  const appContext = getAppContext({
+    events: {
+      onInit: { try: [{ id: 'settings', type: 'CallAPI', params: {} }], catch: [] },
+    },
+    lowdefy,
+  });
+  await appContext._internal.runOnInit(() => {});
+  const replayed = [];
+  getTrace(lowdefy).subscribe((payload) => replayed.push(payload), { replay: true });
+  expect(recorder).toHaveLength(1);
+  expect(replayed).toHaveLength(1);
+  expect(replayed[0]).toMatchObject({
+    scope: 'app',
+    blockId: 'app',
+    eventName: 'onInit',
+    success: false,
+    stateBefore: undefined,
+  });
 });
