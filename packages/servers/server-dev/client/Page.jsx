@@ -86,6 +86,11 @@ const Page = ({
     Object.assign(types.icons, pageConfig._dynamicIcons);
   }
 
+  // The build this config was served under, for the recorder to stamp on each
+  // interaction. Set during render, like the icons above, so it is in place
+  // before any interaction on this config.
+  lowdefy._devBuildId = pageConfig._buildId ?? null;
+
   return (
     <Client
       auth={auth}

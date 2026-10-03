@@ -21,6 +21,7 @@ import { type } from '@lowdefy/helpers';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 import getDisabled from '../../getDisabled.js';
 import withTheme from '../withTheme.js';
+import './style.css';
 
 const createChangeHandler =
   ({ eventName, methods, setState }) =>
@@ -120,7 +121,7 @@ const PaginationBlock = ({
     <Pagination
       id={blockId}
       align={properties.align}
-      className={classNames.element}
+      className={classNames.element ? `lf-pagination ${classNames.element}` : 'lf-pagination'}
       classNames={{ item: classNames.item }}
       disabled={getDisabled({ loading, properties })}
       hideOnSinglePage={properties.hideOnSinglePage}

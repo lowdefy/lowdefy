@@ -18,6 +18,7 @@ import axios from 'axios';
 import { type } from '@lowdefy/helpers';
 import { findPlaceholderStep } from '@lowdefy/node-utils';
 
+import recordingJourneyName from './recordingJourneyName.js';
 import validateJourney from './validateJourney.js';
 
 function describeHttpError(error) {
@@ -32,9 +33,11 @@ function describeHttpError(error) {
 
 // Runs one discovered journey against the dev server's REST journey route and
 // normalises every outcome — schema failure, transport failure, non-2xx, a
-// failed step — into the same result shape the reporter prints. A harden run
-// passes the config `mutant` to apply to this run's browsers.
-async function runJourney({ item, url, mutant }) {
+// failed step — into the same result shape the reporter prints. `recordRun`
+// (a trace id) asks the dev server to record this journey into that test
+// run's trace; an older server ignores the field and records nothing. A harden
+// run passes the config `mutant` to apply to this run's browsers.
+async function runJourney({ context, item, url, recordRun, mutant }) {
   const { filePath, journey } = item;
   const name = journey?.name ?? filePath;
   if (!type.isNone(item.error)) {
@@ -70,14 +73,25 @@ async function runJourney({ item, url, mutant }) {
   const start = Date.now();
   let response;
   try {
-    response = await axios.post(`${url}/lowdefy-docs/journey`, {
+    const body = {
       pageId: journey.pageId,
       steps: journey.steps,
       user: journey.user,
       urlQuery: journey.urlQuery,
       timeout: journey.timeout,
       mutant,
-    });
+    };
+    if (!type.isNone(recordRun)) {
+      body.recording = {
+        run: recordRun,
+        journey: recordingJourneyName({
+          configDirectory: context.directories.config,
+          filePath,
+          journey,
+        }),
+      };
+    }
+    response = await axios.post(`${url}/lowdefy-docs/journey`, body);
   } catch (error) {
     return {
       name,

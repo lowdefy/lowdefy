@@ -18,7 +18,7 @@ import fs from 'fs';
 import path from 'path';
 import { writeFile } from '@lowdefy/node-utils';
 
-import skillMd from './skillMd.js';
+import replaceLegacyServerName from './replaceLegacyServerName.js';
 
 const skillRelativePath = path.join('.claude', 'skills', 'lowdefy-config', 'SKILL.md');
 
@@ -27,20 +27,29 @@ const skillRelativePath = path.join('.claude', 'skills', 'lowdefy-config', 'SKIL
 const PORT_PINNED_SKILL_MARKER =
   'The dev server serves docs for everything installed in this project at';
 
-async function writeSkillFile({ context, projectDirectory, appPath }) {
+// lowdefy-config predates generated-skill hashes: an existing file is left
+// alone unless it is the port-pinned version agent-setup wrote earlier.
+async function writeLowdefyConfigSkill({ context, projectDirectory, appPath, render }) {
   const skillPath = path.join(projectDirectory, skillRelativePath);
   if (fs.existsSync(skillPath)) {
-    if (!fs.readFileSync(skillPath, 'utf8').includes(PORT_PINNED_SKILL_MARKER)) {
+    const existing = fs.readFileSync(skillPath, 'utf8');
+    if (!existing.includes(PORT_PINNED_SKILL_MARKER)) {
+      const renamed = replaceLegacyServerName(existing);
+      if (renamed !== existing) {
+        await writeFile(skillPath, renamed);
+        context.logger.info(`Renamed the MCP server in '${skillRelativePath}'.`);
+        return;
+      }
       context.logger.info(`'${skillRelativePath}' already exists - skipping.`);
       return;
     }
-    await writeFile(skillPath, skillMd({ appPath }));
+    await writeFile(skillPath, render({ appPath }));
     context.logger.info(`Updated '${skillRelativePath}' for 'lowdefy mcp'.`);
     return;
   }
 
-  await writeFile(skillPath, skillMd({ appPath }));
+  await writeFile(skillPath, render({ appPath }));
   context.logger.info(`Created '${skillRelativePath}'.`);
 }
 
-export default writeSkillFile;
+export default writeLowdefyConfigSkill;

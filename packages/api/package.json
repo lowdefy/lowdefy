@@ -63,6 +63,7 @@
   "devDependencies": {
     "@jest/globals": "28.1.3",
     "@lowdefy/connection-mongodb": "6.0.0",
+    "@opentelemetry/api": "1.9.1",
     "@shelf/jest-mongodb": "4.3.2",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.32",

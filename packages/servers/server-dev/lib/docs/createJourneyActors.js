@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import collectVisibleBlockIds from '../client/collectVisibleBlockIds.js';
 import createJourneyObservations from './createJourneyObservations.js';
 import createNetworkCounter from './createNetworkCounter.js';
@@ -43,11 +45,12 @@ function nextClientAddress() {
 // open while the owner removes them - are signed in at the same time. An
 // actor opens the journey's page, as the journey's user, the first time its
 // name is switched to, and keeps its tab as it left it when the journey
-// switches away and back. Each actor's context feeds its own network counter
-// from before its first navigation, so what the journey touched is measured
-// per actor and merged at the end. Each actor's pages also report, through
-// the observe binding, the events that completed and the blocks that were
-// ever visible, into one set of observations for the whole journey.
+// switches away and back. Every actor sees the same viewport and colour
+// scheme. Each actor's context feeds its own network counter from before its
+// first navigation, so what the journey touched is measured per actor and
+// merged at the end. Each actor's pages also report, through the observe
+// binding, the events that completed and the blocks that were ever visible,
+// into one set of observations for the whole journey.
 function createJourneyActors({
   browser,
   origin,
@@ -57,8 +60,10 @@ function createJourneyActors({
   urlQuery,
   width,
   height,
+  colorScheme,
   timeout,
   mutantCookie,
+  recording,
 }) {
   const actors = new Map();
   const counters = new Map();
@@ -77,8 +82,12 @@ function createJourneyActors({
         urlQuery,
         width,
         height,
+        colorScheme,
         clientAddress: nextClientAddress(),
         mutantCookie,
+        recording: type.isUndefined(recording)
+          ? undefined
+          : { source: recording.source, run: { ...recording.run, actor: name } },
         onContext: async (context) => {
           context.on('request', (request) => counter.record(request));
           await context.exposeBinding(OBSERVE_BINDING, (source, message) =>
@@ -123,6 +132,19 @@ function createJourneyActors({
     return observations.snapshot();
   }
 
+  // Closing a context does not reliably fire pagehide, so each actor's dev
+  // recorder is flushed first, or the journey's last steps would be lost.
+  async function flushRecordings({ capMs = 2000 } = {}) {
+    await Promise.all(
+      [...actors.values()].map(({ page }) =>
+        Promise.race([
+          page.evaluate(() => window.__lowdefyRecorder?.flush()).catch(() => {}),
+          new Promise((resolve) => setTimeout(resolve, capMs)),
+        ])
+      )
+    );
+  }
+
   async function closeAll() {
     await Promise.all([...actors.values()].map(({ context }) => context.close().catch(() => {})));
   }
@@ -134,6 +156,7 @@ function createJourneyActors({
     networkSnapshots,
     sampleRendered,
     observed,
+    flushRecordings,
     closeAll,
   };
 }

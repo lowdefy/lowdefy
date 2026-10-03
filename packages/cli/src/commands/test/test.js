@@ -14,9 +14,11 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import path from 'path';
+import { createTraceId, traceIdDate, type } from '@lowdefy/helpers';
 
 import fetchBuildId from './fetchBuildId.js';
+import isFullSuiteRun from './isFullSuiteRun.js';
 import lintJourneys from './lint/lintJourneys.js';
 import parseRepeat from './parseRepeat.js';
 import resolveJourneyPaths from './resolveJourneyPaths.js';
@@ -93,10 +95,21 @@ async function test({ context }) {
   }
   process.once('SIGINT', onSigint);
 
+  // One run id per invocation names this run's trace file; only a full-suite
+  // run records (see runRepeated).
+  const recording = { run: createTraceId(), paths: givenPaths, filter };
+  const recorded = isFullSuiteRun({ paths: givenPaths, filter, repetition: 1 });
   const results = [];
   try {
     for (const { suite, item } of selected) {
-      const result = await runRepeated({ suite, context, item, url: server.url, repeat });
+      const result = await runRepeated({
+        suite,
+        context,
+        item,
+        url: server.url,
+        repeat,
+        recording,
+      });
       results.push(result);
       const lines = suite.format({ result });
       if (result.passed) {
@@ -117,6 +130,16 @@ async function test({ context }) {
     }
   }
 
+  if (recorded) {
+    context.logger.info(
+      `Recorded this run to ${path.join(
+        context.directories.traces,
+        'journey',
+        traceIdDate(recording.run),
+        `${recording.run}.jsonl`
+      )}.`
+    );
+  }
   const summary = summariseResults({ results });
   if (summary.failed > 0) {
     context.logger.error(summary.text);
