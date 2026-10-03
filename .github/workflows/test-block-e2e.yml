@@ -1,9 +1,16 @@
 name: Block E2E Tests
 
-# Runs only on request: start it from the Actions tab, or add the
-# `run-block-e2e` label to a pull request. Pull requests that change blocks,
-# block-utils or the engine should run it before merge.
+# Runs before every release as part of the complete path (test-complete.yml), and on
+# request: start it from the Actions tab, or add the `run-block-e2e` label to a pull
+# request. Pull requests that change blocks, block-utils or the engine should run it
+# before merge.
 on:
+  workflow_call:
+    inputs:
+      complete:
+        description: Called from the complete path, so run without the label.
+        type: boolean
+        default: false
   workflow_dispatch:
   pull_request:
     types: [labeled]
@@ -14,7 +21,7 @@ permissions:
 jobs:
   e2e:
     name: E2E ${{ matrix.package }}
-    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-block-e2e'
+    if: inputs.complete || github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-block-e2e'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -42,20 +49,25 @@ jobs:
           node-version: 24
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - name: Find the package directory
+        id: package
+        run: echo "directory=$(pnpm --filter='${{ matrix.package }}' exec pwd)" >> "$GITHUB_OUTPUT"
       - run: pnpm build
       - run: pnpm --filter=${{ matrix.package }} exec playwright install --with-deps chromium
       # Each package builds its app into its own untracked copy of the server, _server/e2e/<package>.
       - run: pnpm --filter=${{ matrix.package }} e2e
+      # The package's own results only: a packages/** glob walks every node_modules and
+      # takes longer than the suites.
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: block-e2e-results-${{ strategy.job-index }}
-          path: packages/**/e2e/test-results/
+          path: ${{ steps.package.outputs.directory }}/e2e/test-results/
           retention-days: 7
 
   enrichment:
     name: E2E @lowdefy/blocks-table enrichment
-    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-block-e2e'
+    if: inputs.complete || github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-block-e2e'
     runs-on: ubuntu-latest
     env:
       # Where mongodb-memory-server keeps the mongod binaries (cached below).

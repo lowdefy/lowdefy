@@ -50,6 +50,9 @@ function commitFile({ repo, file, content, message }) {
 function createRepository() {
   const repo = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-explore-git-'));
   git(['init', '-q', '-b', 'main'], repo);
+  // Git for Windows checks text files out with CRLF by default (core.autocrlf); the tree must
+  // come out byte for byte as committed.
+  git(['config', 'core.autocrlf', 'false'], repo);
   return repo;
 }
 

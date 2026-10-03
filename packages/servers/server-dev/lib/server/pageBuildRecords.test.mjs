@@ -15,6 +15,8 @@
 */
 
 import crypto from 'node:crypto';
+import path from 'path';
+
 import { wait } from '@lowdefy/helpers';
 
 import pageBuildRecords from './pageBuildRecords.js';
@@ -53,8 +55,8 @@ test('record keeps the files a page build read and when it started', async () =>
   expect(result).toEqual({ built: true });
   const record = pageBuildRecords.get('home');
   expect([...record.files.keys()]).toEqual([
-    '/app/pages/home.yaml',
-    '/modules/shared/requests/get_rows.yaml',
+    path.resolve('/app/pages/home.yaml'),
+    path.resolve('/modules/shared/requests/get_rows.yaml'),
   ]);
   expect(record.builtAt).toBeGreaterThanOrEqual(before);
   expect(record.errors).toBeNull();
@@ -81,10 +83,10 @@ test('record attributes each file read to the page build that made it', async ()
     }),
   ]);
 
-  expect([...pageBuildRecords.get('a').files.keys()]).toEqual(['/app/pages/a.yaml']);
+  expect([...pageBuildRecords.get('a').files.keys()]).toEqual([path.resolve('/app/pages/a.yaml')]);
   expect([...pageBuildRecords.get('b').files.keys()]).toEqual([
-    '/app/pages/b.yaml',
-    '/app/shared.yaml',
+    path.resolve('/app/pages/b.yaml'),
+    path.resolve('/app/shared.yaml'),
   ]);
 });
 
@@ -112,7 +114,7 @@ test('record keeps the errors of a failed build and rethrows', async () => {
   ).rejects.toBe(error);
 
   const record = pageBuildRecords.get('broken');
-  expect([...record.files.keys()]).toEqual(['/app/pages/broken.yaml']);
+  expect([...record.files.keys()]).toEqual([path.resolve('/app/pages/broken.yaml')]);
   expect(record.errors).toEqual([
     {
       type: 'ConfigError',
@@ -146,7 +148,7 @@ test('record locates a failed build error that has no source yet', async () => {
     {
       type: 'ConfigError',
       message: 'Block type "Buton" was used but is not defined.',
-      source: '/app/pages/unlocated.yaml:4',
+      source: `${path.resolve('/app/pages/unlocated.yaml')}:4`,
     },
   ]);
 });

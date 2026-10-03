@@ -82,10 +82,12 @@ beforeAll(async () => {
   origin = `http://127.0.0.1:${server.address().port}`;
 });
 
+// Closing Chromium on Windows can take longer than Jest's 5 s hook default.
 afterAll(async () => {
   await browser?.close();
+  server.closeAllConnections();
   await new Promise((resolve) => server.close(resolve));
-});
+}, 30000);
 
 chromiumTest(
   'journey actors count pages, request calls, endpoints and app events across a full page load',

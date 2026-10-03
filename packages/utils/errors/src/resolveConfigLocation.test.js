@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import resolveConfigLocation from './resolveConfigLocation.js';
 
 const keyMap = {
@@ -85,7 +87,7 @@ test('resolveConfigLocation resolves full location with absolute path', () => {
   });
 
   expect(result).toEqual({
-    source: '/Users/dev/myapp/pages/home.yaml:5',
+    source: `${path.resolve('/Users/dev/myapp/pages/home.yaml')}:5`,
     config: 'root.pages[0:home].blocks[0:header]',
   });
 });
@@ -99,7 +101,7 @@ test('resolveConfigLocation handles different file paths', () => {
   });
 
   expect(result).toEqual({
-    source: '/app/connections/mongodb.yaml:42',
+    source: `${path.resolve('/app/connections/mongodb.yaml')}:42`,
     config: 'root.connections[0:mongodb]',
   });
 });
@@ -126,7 +128,7 @@ test('resolveConfigLocation without line number', () => {
   });
 
   expect(result).toEqual({
-    source: '/app/pages/home.yaml',
+    source: path.resolve('/app/pages/home.yaml'),
     config: 'root.global',
   });
 });
@@ -140,7 +142,7 @@ test('resolveConfigLocation resolves module var content to the invoking file', (
   });
 
   expect(result).toEqual({
-    source: '/app/pages/home.yaml:178',
+    source: `${path.resolve('/app/pages/home.yaml')}:178`,
     config: 'root.blocks[0:page-content:Box].blocks[1:score_tag:Tag]',
   });
 });
@@ -154,7 +156,7 @@ test('resolveConfigLocation falls back to lowdefy.yaml on a cyclic pathless ref 
   });
 
   expect(result).toEqual({
-    source: '/app/lowdefy.yaml:3',
+    source: `${path.resolve('/app/lowdefy.yaml')}:3`,
     config: 'root.blocks[0:thing]',
   });
 });
@@ -168,7 +170,7 @@ test('resolveConfigLocation defaults to lowdefy.yaml when ref not found', () => 
   });
 
   expect(result).toEqual({
-    source: '/app/lowdefy.yaml:10',
+    source: `${path.resolve('/app/lowdefy.yaml')}:10`,
     config: 'root.something',
   });
 });

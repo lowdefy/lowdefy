@@ -34,7 +34,7 @@ function saveAnnotatedScreenshot({ dataUrl, fileName }) {
     const dir = path.join(configDirectory, '.lowdefy', 'annotations');
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, fileName), buffer);
-    return { path: path.join('.lowdefy', 'annotations', fileName) };
+    return { path: path.posix.join('.lowdefy', 'annotations', fileName) };
   } catch (error) {
     return { error: `Failed to save annotated screenshot: ${error.message}` };
   }

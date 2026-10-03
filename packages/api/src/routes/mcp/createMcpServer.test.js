@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import { jest } from '@jest/globals';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
@@ -518,7 +520,7 @@ test('tools/call appends the config source of a failed routine in dev', async ()
   context.configDirectory = '/app';
   // Mirrors createHandleError in server-dev, which resolves the location onto the error.
   context.handleError = jest.fn(async (error) => {
-    error.source = '/app/api/failing.yaml:4';
+    error.source = `${path.resolve('/app/api/failing.yaml')}:4`;
     error.handled = true;
   });
   const server = await createMcpServer({ context });
@@ -528,7 +530,7 @@ test('tools/call appends the config source of a failed routine in dev', async ()
   expect(result.isError).toBe(true);
   expect(context.handleError).toHaveBeenCalledTimes(1);
   expect(result.content[0].text).toContain('Boom.');
-  expect(result.content[0].text).toMatch(/ \(at api\/failing\.yaml:4\)$/);
+  expect(result.content[0].text).toContain(` (at ${path.join('api', 'failing.yaml')}:4)`);
 });
 
 test('tools/call routes an unexpected failure through handleError and reports its source in dev', async () => {

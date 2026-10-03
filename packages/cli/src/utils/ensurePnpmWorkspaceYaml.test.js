@@ -39,6 +39,14 @@ jest.unstable_mockModule('./linkWorkspacePlugins.js', () => ({
   default: jest.fn(),
 }));
 
+// The fixtures name files with POSIX paths; ensurePnpmWorkspaceYaml joins them
+// with the platform separator.
+function toPosix(filePath) {
+  return filePath.split(path.sep).join('/');
+}
+
+const devDirectory = '/repo/app/.lowdefy/dev';
+
 beforeEach(async () => {
   jest.clearAllMocks();
   const { default: fs } = await import('fs');
@@ -66,7 +74,7 @@ test('ensurePnpmWorkspaceYaml writes pnpm-workspace.yaml when it does not exist'
   await ensurePnpmWorkspaceYaml({ context, directory: '/dir' });
   expect(writeFile.mock.calls).toEqual([
     [
-      '/dir/pnpm-workspace.yaml',
+      path.join('/dir', 'pnpm-workspace.yaml'),
       `packages:
   - '.'
 onlyBuiltDependencies:
@@ -90,7 +98,7 @@ test('ensurePnpmWorkspaceYaml does not overwrite an existing pnpm-workspace.yaml
   fs.existsSync.mockReturnValue(true);
   const context = { lowdefyVersion: '5.5.1' };
   await ensurePnpmWorkspaceYaml({ context, directory: '/dir' });
-  expect(fs.existsSync.mock.calls).toEqual([['/dir/pnpm-workspace.yaml']]);
+  expect(fs.existsSync.mock.calls).toEqual([[path.join('/dir', 'pnpm-workspace.yaml')]]);
   expect(writeFile).not.toHaveBeenCalled();
 });
 
@@ -100,7 +108,7 @@ test('ensurePnpmWorkspaceYaml writes a nested workspace from the parent settings
   const { default: readParentWorkspace } = await import('./readParentWorkspace.js');
   const { default: linkWorkspacePlugins } = await import('./linkWorkspacePlugins.js');
   const { default: ensurePnpmWorkspaceYaml } = await import('./ensurePnpmWorkspaceYaml.js');
-  fs.existsSync.mockImplementation((filePath) => filePath === '/repo/pnpm-workspace.yaml');
+  fs.existsSync.mockImplementation((filePath) => toPosix(filePath) === '/repo/pnpm-workspace.yaml');
   const parentWorkspace = {
     npmrc: null,
     npmrcPath: '/repo/.npmrc',
@@ -119,7 +127,7 @@ test('ensurePnpmWorkspaceYaml writes a nested workspace from the parent settings
   expect(readParentWorkspace.mock.calls).toEqual([[{ pnpmCmd: 'pnpm', workspaceRoot: '/repo' }]]);
   expect(writeFileIfChanged.mock.calls).toEqual([
     [
-      '/repo/app/.lowdefy/dev/pnpm-workspace.yaml',
+      path.join(devDirectory, 'pnpm-workspace.yaml'),
       `packages:
   - .
 overrides:
@@ -150,7 +158,7 @@ test('ensurePnpmWorkspaceYaml copies the parent .npmrc and warns about credentia
   const { readFile, writeFileIfChanged } = await import('@lowdefy/node-utils');
   const { default: readParentWorkspace } = await import('./readParentWorkspace.js');
   const { default: ensurePnpmWorkspaceYaml } = await import('./ensurePnpmWorkspaceYaml.js');
-  fs.existsSync.mockImplementation((filePath) => filePath === '/repo/pnpm-workspace.yaml');
+  fs.existsSync.mockImplementation((filePath) => toPosix(filePath) === '/repo/pnpm-workspace.yaml');
   readFile.mockResolvedValue('strict-peer-dependencies=false\n');
   readParentWorkspace.mockResolvedValue({
     npmrc: '@scope:registry=https://npm.example.com/\n//npm.example.com/:_authToken=npm_secret\n',
@@ -162,11 +170,11 @@ test('ensurePnpmWorkspaceYaml copies the parent .npmrc and warns about credentia
   const context = { lowdefyVersion: '5.5.1', logger: { debug: jest.fn(), warn: jest.fn() } };
   await ensurePnpmWorkspaceYaml({ context, directory: '/repo/app/.lowdefy/dev' });
   expect(readFile.mock.calls).toEqual([
-    ['/repo/app/.lowdefy/dev/pnpm-workspace.yaml'],
-    ['/repo/app/.lowdefy/dev/.npmrc'],
+    [path.join(devDirectory, 'pnpm-workspace.yaml')],
+    [path.join(devDirectory, '.npmrc')],
   ]);
   expect(writeFileIfChanged.mock.calls[1]).toEqual([
-    '/repo/app/.lowdefy/dev/.npmrc',
+    path.join(devDirectory, '.npmrc'),
     `# >>> Copied by Lowdefy from /repo/.npmrc; rewritten on every run.
 @scope:registry=https://npm.example.com/
 # <<< End of the lines copied by Lowdefy.
@@ -187,8 +195,8 @@ test('ensurePnpmWorkspaceYaml rewrites an existing pnpm-workspace.yaml inside a 
   const { default: ensurePnpmWorkspaceYaml } = await import('./ensurePnpmWorkspaceYaml.js');
   fs.existsSync.mockImplementation(
     (filePath) =>
-      filePath === '/repo/pnpm-workspace.yaml' ||
-      filePath === '/repo/app/.lowdefy/dev/pnpm-workspace.yaml'
+      toPosix(filePath) === '/repo/pnpm-workspace.yaml' ||
+      toPosix(filePath) === '/repo/app/.lowdefy/dev/pnpm-workspace.yaml'
   );
   readParentWorkspace.mockResolvedValue({
     npmrc: null,
@@ -198,7 +206,7 @@ test('ensurePnpmWorkspaceYaml rewrites an existing pnpm-workspace.yaml inside a 
     settings: {},
   });
   readFile.mockImplementation(async (filePath) =>
-    filePath === '/repo/app/.lowdefy/dev/pnpm-workspace.yaml'
+    toPosix(filePath) === '/repo/app/.lowdefy/dev/pnpm-workspace.yaml'
       ? `packages:
   - .
 overrides:
@@ -212,7 +220,7 @@ minimumReleaseAgeExclude:
   await ensurePnpmWorkspaceYaml({ context, directory: '/repo/app/.lowdefy/dev' });
   expect(writeFileIfChanged.mock.calls).toEqual([
     [
-      '/repo/app/.lowdefy/dev/pnpm-workspace.yaml',
+      path.join(devDirectory, 'pnpm-workspace.yaml'),
       `packages:
   - .
 onlyBuiltDependencies:

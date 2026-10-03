@@ -143,7 +143,7 @@ test('agentSetup warns and leaves .claude/settings.json unchanged when it is not
 
   expect(read(path.join('.claude', 'settings.json'))).toEqual('{ not json');
   expect(context.logger.warn).toHaveBeenCalledWith(
-    expect.stringContaining("Could not parse existing '.claude/settings.json'")
+    expect.stringContaining(`Could not parse existing '${path.join('.claude', 'settings.json')}'`)
   );
 });
 

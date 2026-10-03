@@ -94,7 +94,7 @@ test('runAppTests runs every journey against the dev server and reports each as 
   expect(results[0]).toMatchObject({
     name: 'orders list',
     passed: true,
-    filePath: 'tests/journeys/orders.yaml',
+    filePath: path.join('tests', 'journeys', 'orders.yaml'),
   });
   expect(results[1]).toMatchObject({ name: 'refund button', passed: false });
   expect(results[1].report).toContain('refund is hidden');

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import loadAndResolveErrorLocation from './loadAndResolveErrorLocation.js';
 
 const keyMap = {
@@ -82,7 +84,7 @@ test('loadAndResolveErrorLocation resolves location from keyMap and refMap', asy
     configDirectory: '/app',
   });
   expect(result).toEqual({
-    source: '/app/pages/home.yaml:5',
+    source: `${path.resolve('/app/pages/home.yaml')}:5`,
     config: 'root.pages[0:home].blocks[0:header]',
   });
 });
@@ -136,7 +138,7 @@ test('loadAndResolveErrorLocation resolves filePath with lineNumber when no conf
     configDirectory: '/app',
   });
   expect(result).toEqual({
-    source: '/app/components/page.yaml.njk:27',
+    source: `${path.resolve('/app/components/page.yaml.njk')}:27`,
   });
 });
 
@@ -151,7 +153,7 @@ test('loadAndResolveErrorLocation resolves filePath without lineNumber', async (
     configDirectory: '/app',
   });
   expect(result).toEqual({
-    source: '/app/components/page.yaml',
+    source: path.resolve('/app/components/page.yaml'),
   });
 });
 
@@ -170,7 +172,7 @@ test('loadAndResolveErrorLocation falls back to filePath when configKey lookup f
     configDirectory: '/app',
   });
   expect(result).toEqual({
-    source: '/app/components/page.yaml.njk:10',
+    source: `${path.resolve('/app/components/page.yaml.njk')}:10`,
   });
 });
 
@@ -190,7 +192,7 @@ test('loadAndResolveErrorLocation falls back to filePath when configKey not in k
     configDirectory: '/app',
   });
   expect(result).toEqual({
-    source: '/app/components/page.yaml:5',
+    source: `${path.resolve('/app/components/page.yaml')}:5`,
   });
 });
 

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import { jest } from '@jest/globals';
 import { LowdefyInternalError } from '@lowdefy/errors';
 
@@ -124,8 +126,8 @@ test('copyAgentFileSystems copies each basePath from config to server directory'
     context,
   });
   expect(mockCopyFileOrDirectory).toHaveBeenCalledWith(
-    '/app/content',
-    '/app/.lowdefy/server/content'
+    path.resolve('/app/content'),
+    path.resolve('/app/.lowdefy/server/content')
   );
 });
 
@@ -144,8 +146,8 @@ test('copyAgentFileSystems copies a basePath without re-checking that it exists'
     JSON.stringify(['./missing'])
   );
   expect(mockCopyFileOrDirectory).toHaveBeenCalledWith(
-    '/app/missing',
-    '/app/.lowdefy/server/missing'
+    path.resolve('/app/missing'),
+    path.resolve('/app/.lowdefy/server/missing')
   );
 });
 

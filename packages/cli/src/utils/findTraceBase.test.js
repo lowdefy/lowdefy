@@ -27,6 +27,12 @@ jest.unstable_mockModule('@lowdefy/node-utils', () => ({
   findPnpmWorkspaceRoot: jest.fn(),
 }));
 
+// The fixtures name files with POSIX paths; findTraceBase joins them with the
+// platform separator.
+function toPosix(filePath) {
+  return filePath.split(path.sep).join('/');
+}
+
 beforeEach(async () => {
   const { default: fs } = await import('fs');
   const { findPnpmWorkspaceRoot } = await import('@lowdefy/node-utils');
@@ -48,7 +54,7 @@ test('findTraceBase returns the parent workspace root when the server is its own
   const { default: findTraceBase } = await import('./findTraceBase.js');
   fs.existsSync.mockImplementation((filePath) =>
     ['/repo/pnpm-workspace.yaml', '/repo/apps/app/.lowdefy/server/pnpm-workspace.yaml'].includes(
-      filePath
+      toPosix(filePath)
     )
   );
   expect(findTraceBase({ serverDirectory: '/repo/apps/app/.lowdefy/server' })).toEqual('/repo');
@@ -58,7 +64,7 @@ test('findTraceBase returns the server directory for a standalone server workspa
   const { default: fs } = await import('fs');
   const { default: findTraceBase } = await import('./findTraceBase.js');
   fs.existsSync.mockImplementation(
-    (filePath) => filePath === '/repo/app/.lowdefy/server/pnpm-workspace.yaml'
+    (filePath) => toPosix(filePath) === '/repo/app/.lowdefy/server/pnpm-workspace.yaml'
   );
   expect(findTraceBase({ serverDirectory: '/repo/app/.lowdefy/server' })).toEqual(
     '/repo/app/.lowdefy/server'
@@ -68,6 +74,6 @@ test('findTraceBase returns the server directory for a standalone server workspa
 test('findTraceBase falls back to the repository root without any pnpm workspace', async () => {
   const { default: fs } = await import('fs');
   const { default: findTraceBase } = await import('./findTraceBase.js');
-  fs.existsSync.mockImplementation((filePath) => filePath === '/repo/.git');
+  fs.existsSync.mockImplementation((filePath) => toPosix(filePath) === '/repo/.git');
   expect(findTraceBase({ serverDirectory: '/repo/app/.lowdefy/server' })).toEqual('/repo');
 });

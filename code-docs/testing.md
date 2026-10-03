@@ -90,9 +90,9 @@ Chromium). To reproduce a race deterministically,
 pause one session inside the real adapter (wrap `adapter.create` from `auth.$context`) and
 run the other to completion before releasing it.
 
-CI does not run it on every push. Start the `MongoDB Tests` workflow from the Actions tab,
-or add the `run-mongodb-tests` label to a pull request. Each jest run starts its own
-`mongod` on a free port, so worktrees can run it at the same time.
+CI runs it on the complete path, before every release (see [CI](#ci)), and on a pull
+request with the `run-mongodb-tests` label. Each jest run
+starts its own `mongod` on a free port, so worktrees can run it at the same time.
 
 ## Auth journeys
 
@@ -126,9 +126,8 @@ An app outside the monorepo runs its own auth journeys against a checkout the sa
 Keeping such journeys in their own directory (not `tests/journeys/`) keeps them out of the
 app's everyday `lowdefy test`, which may run against a shared database.
 
-Like the MongoDB suite, CI does not run it; run it when changing auth, tenancy, the
-journey runner or the dev server. It uses `_server/dev`, so run one at a time per
-worktree. To iterate on one journey, keep a dev server running with the same environment
+CI does not run it; run it when changing auth, tenancy, the journey runner or the dev
+server. It uses `_server/dev`, so run one at a time per worktree. To iterate on one journey, keep a dev server running with the same environment
 and use `node packages/cli/dist/index.js test --config-directory apps/auth-reference-tenant
 --url http://localhost:<port> --filter <name>`; a journey that signs up needs an empty
 database, since signing up an existing address sends no email.
@@ -153,8 +152,9 @@ _server/dev-journey-fixture` with `CRON_SECRET` set, on three free ports from 33
 first compile and each page's first build happen before any test. It never touches `_server/dev`, so it runs beside
 `pnpm app:dev`; the two packages' suites share `_server/dev-journey-fixture`, so do not run them
 at once in one worktree. With no Chromium every test skips.
-The dev server log is `apps/journey-fixture/.lowdefy/fixture-dev-server.log`. CI does not
-run it; run it when changing the journey runner, journey cookies or mutants.
+The dev server log is `apps/journey-fixture/.lowdefy/fixture-dev-server.log`. CI runs it on
+the complete path, before every release (see [CI](#ci)). Run it when
+changing the journey runner, journey cookies or mutants.
 
 ## Ports
 
@@ -205,9 +205,8 @@ when the copy's `package.json` changes, so a repeat run spends its time on the b
 Delete `_server/e2e/<package>` to force a fresh install. `packages/cli/dist` and the linked
 packages' `dist` must be built first (`pnpm build`).
 
-CI does not run block e2e on every push. Start the `Block E2E Tests` workflow from the
-Actions tab, or add the `run-block-e2e` label to a pull request; it runs each package's
-suite in its own job.
+CI runs block e2e on the complete path, before every release (see [CI](#ci)), and on a pull
+request with the `run-block-e2e` label; it runs each package's suite in its own job.
 
 ## Enrichment tables e2e
 
@@ -242,17 +241,74 @@ them through `callTestEndpoint`. They are marked "E2E ONLY, DO NOT COPY".
 On teardown Playwright stops the app first, with a SIGTERM it waits for (suites with services),
 then the replica set; mongod runs in a process group of its own, so the script stops it cleanly.
 CI runs the suite in the block e2e workflow (`test-block-e2e.yml`, job `enrichment`, on the
-`run-block-e2e` label), with the mongod binaries cached and downloaded before the run.
+`run-block-e2e` label and on the complete path), with the mongod binaries cached and
+downloaded before the run.
 
-## Before merging
+## CI
 
-The root `pnpm test` in CI skips the MongoDB and block e2e suites, so a pull request that
-touches them runs them on request (the pull request template lists both):
+CI does not test pull requests or working-branch pushes by default. Whoever changes the code
+(an agent or a developer) runs the tests the change needs before pushing and lists them in the
+pull request (see [Before pushing](#before-pushing)). Tests run in CI on demand and before every
+release, all routed from `.github/workflows/ci.yml` and `release.yaml`:
 
-| Change touches                               | Run                                                  |
-| -------------------------------------------- | ---------------------------------------------------- |
-| `connection-mongodb`, tenancy, auth adapters | `pnpm test:mongodb` or the `run-mongodb-tests` label |
-| blocks, `block-utils`, the engine            | `pnpm e2e` or the `run-block-e2e` label              |
+| When                                                  | Runs                                                        |
+| ----------------------------------------------------- | ----------------------------------------------------------- |
+| `ci` label on a pull request, and every push after    | fast path                                                   |
+| `ci-full` label on a pull request (re-add to re-run)  | complete path, once                                         |
+| a pull request into `main`, on every push             | complete path                                               |
+| a push to `main`: `release.yaml`, before it publishes | complete path                                               |
+| Actions tab, `CI`, "Run workflow" (`full` unticked)   | fast path on every package                                  |
+| Actions tab, `CI`, "Run workflow" (`full` ticked)     | complete path                                               |
+| `run-mongodb-tests` / `run-block-e2e` label           | that suite alone (`test-mongodb.yml`, `test-block-e2e.yml`) |
+
+The labels are a click in the pull request's sidebar. GitHub offers "Run workflow" only for a
+workflow on the default branch (`main`); `gh workflow run ci.yml --ref <branch> -f full=true`
+runs it on any branch once `ci.yml` is there.
+
+**Fast path** (`.github/workflows/test-fast.yml`): one job on ubuntu with Node 24.
+
+1. `scripts/ci-scope.mjs` diffs the pull request against its base branch (the first parent
+   of its merge commit). A changed file outside `packages/` (the lockfile, the root
+   `package.json`, `turbo.json`, `pnpm-workspace.yaml`, `.github/`, `scripts/`, shared swc or
+   eslint config, `apps/`) tests every package; otherwise only the packages turbo's
+   `...[<base>]` filter picks, the changed packages and their dependents. Files under
+   `code-docs/`, `.changeset/`, `.claude/`, root markdown and `CHANGELOG.md` or `README.md`
+   files never widen the scope. `@lowdefy/docs` always runs, since its docs-content staleness
+   test hashes files from packages it does not depend on. A run from the Actions tab has no
+   base and tests every package.
+2. `turbo run build` builds every package except the website, restoring unchanged ones from
+   the turbo cache (`.turbo/cache`, kept between runs of the pull request with
+   `actions/cache`).
+3. The dependency check (`pnpm test:dependencies`) always runs.
+4. `turbo run test` runs the tests of the scoped packages (never `connection-mongodb`).
+5. `@lowdefy/website` builds only when the change touches it or tests every package.
+
+A new push to a pull request cancels its run in progress.
+
+**Complete path** (`.github/workflows/test-complete.yml`): the unit tests (`pnpm build`, the
+dependency check and every package's tests, not stopping at the first failing package) on
+ubuntu and windows with Node 24 and 26, then the Windows time zone test in its own step;
+`pnpm test:mongodb` (`test-mongodb.yml`); the journey fixture suites (`test:fixture` in
+`@lowdefy/server-dev` and `lowdefy`, which must pass tests, not skip them for want of
+Chromium); and every block e2e suite (`test-block-e2e.yml`). `release.yaml` runs it on every
+push to `main` and opens the version pull request or publishes only when it passes, so a
+release cannot skip it. Before cutting a release, add `ci-full` to the pull request into
+`main`, or run it from the Actions tab. Codecov gets its ubuntu / Node 24 coverage only.
+
+## Before pushing
+
+CI does not run on its own, so run what the change needs before you push, and list the
+commands in the pull request body:
+
+| Change touches                                 | Run                                                                                                                             |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| any package                                    | `pnpm build` (more than one package), then each changed package's tests and its dependents' (`pnpm --filter=...<package> test`) |
+| several packages, root config, the lockfile    | `pnpm test` (the dependency check and every package)                                                                            |
+| `connection-mongodb`, tenancy, auth adapters   | `pnpm test:mongodb`                                                                                                             |
+| the journey runner, journey cookies or mutants | both `test:fixture` suites                                                                                                      |
+| blocks, `block-utils`, the engine              | that package's `e2e` (`pnpm --filter=<package> e2e`)                                                                            |
+
+The developer may add the `ci` or `ci-full` label to run them again in CI.
 
 ## Dev server and hub
 

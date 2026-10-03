@@ -14,73 +14,81 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import getDirectories from './getDirectories.js';
+
+// getDirectories receives the config directory already resolved (startUp), and
+// resolves or joins every other directory, so the expected values are built
+// with path too: drive letter and separators on Windows, the same strings on
+// POSIX.
+const configDirectory = path.resolve('/test/config');
 
 test('default directories', () => {
   const directories = getDirectories({
-    configDirectory: '/test/config',
+    configDirectory,
     options: {},
   });
 
   expect(directories).toEqual({
-    build: '/test/config/.lowdefy/server/build',
-    config: '/test/config',
-    dev: '/test/config/.lowdefy/dev',
-    emails: '/test/config/.lowdefy/emails',
-    journeys: '/test/config/tests/journeys',
-    server: '/test/config/.lowdefy/server',
-    test: '/test/config/.lowdefy/test',
-    traces: '/test/config/.lowdefy/traces',
+    build: path.join(configDirectory, '.lowdefy', 'server', 'build'),
+    config: configDirectory,
+    dev: path.join(configDirectory, '.lowdefy', 'dev'),
+    emails: path.join(configDirectory, '.lowdefy', 'emails'),
+    journeys: path.join(configDirectory, 'tests', 'journeys'),
+    server: path.join(configDirectory, '.lowdefy', 'server'),
+    test: path.join(configDirectory, '.lowdefy', 'test'),
+    traces: path.join(configDirectory, '.lowdefy', 'traces'),
   });
 });
 
 test('specify serverDirectory in options', () => {
   const directories = getDirectories({
-    configDirectory: '/test/config',
+    configDirectory,
     options: {
       serverDirectory: '/test/server',
     },
   });
 
   expect(directories).toEqual({
-    build: '/test/server/build',
-    config: '/test/config',
-    dev: '/test/config/.lowdefy/dev',
-    emails: '/test/config/.lowdefy/emails',
-    journeys: '/test/config/tests/journeys',
-    server: '/test/server',
-    test: '/test/config/.lowdefy/test',
-    traces: '/test/config/.lowdefy/traces',
+    build: path.resolve('/test/server/build'),
+    config: configDirectory,
+    dev: path.join(configDirectory, '.lowdefy', 'dev'),
+    emails: path.join(configDirectory, '.lowdefy', 'emails'),
+    journeys: path.join(configDirectory, 'tests', 'journeys'),
+    server: path.resolve('/test/server'),
+    test: path.join(configDirectory, '.lowdefy', 'test'),
+    traces: path.join(configDirectory, '.lowdefy', 'traces'),
   });
 });
 
 test('specify devDirectory in options', () => {
   const directories = getDirectories({
-    configDirectory: '/test/config',
+    configDirectory,
     options: {
       devDirectory: '/test/dev',
     },
   });
 
   expect(directories).toEqual({
-    build: '/test/config/.lowdefy/server/build',
-    config: '/test/config',
-    dev: '/test/dev',
-    emails: '/test/config/.lowdefy/emails',
-    journeys: '/test/config/tests/journeys',
-    server: '/test/config/.lowdefy/server',
-    test: '/test/config/.lowdefy/test',
-    traces: '/test/config/.lowdefy/traces',
+    build: path.join(configDirectory, '.lowdefy', 'server', 'build'),
+    config: configDirectory,
+    dev: path.resolve('/test/dev'),
+    emails: path.join(configDirectory, '.lowdefy', 'emails'),
+    journeys: path.join(configDirectory, 'tests', 'journeys'),
+    server: path.join(configDirectory, '.lowdefy', 'server'),
+    test: path.join(configDirectory, '.lowdefy', 'test'),
+    traces: path.join(configDirectory, '.lowdefy', 'traces'),
   });
 });
 
 test('specify journeysDirectory in options', () => {
   const directories = getDirectories({
-    configDirectory: '/test/config',
+    configDirectory,
     options: {
       journeysDirectory: '/test/config/tests/auth-journeys',
     },
   });
 
-  expect(directories.journeys).toEqual('/test/config/tests/auth-journeys');
+  expect(directories.journeys).toEqual(path.resolve('/test/config/tests/auth-journeys'));
 });

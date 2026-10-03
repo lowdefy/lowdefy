@@ -147,7 +147,7 @@ test('parseDataSet refuses a name with both a .yaml and a .yml file', async () =
 test('parseDataSet refuses an unknown top-level key', async () => {
   writeDataSet('alpha.yaml', 'users: {}\nseed: {}\n');
   await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
-    'Data set tests/data/alpha.yaml: unknown key "seed".'
+    `Data set ${path.join('tests', 'data', 'alpha.yaml')}: unknown key "seed".`
   );
 });
 
@@ -271,7 +271,7 @@ test('parseDataSet keeps listIndexes options such as text index weights', async 
 test('parseDataSet refuses invalid YAML naming the file', async () => {
   writeDataSet('alpha.yaml', 'users: [\n');
   await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
-    'Data set tests/data/alpha.yaml: could not parse YAML.'
+    `Data set ${path.join('tests', 'data', 'alpha.yaml')}: could not parse YAML.`
   );
 });
 

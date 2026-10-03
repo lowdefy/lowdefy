@@ -1,8 +1,15 @@
 name: MongoDB Tests
 
-# Runs only on request: start it from the Actions tab, or add the
-# `run-mongodb-tests` label to a pull request.
+# Runs before every release as part of the complete path (test-complete.yml), and on
+# request: start it from the Actions tab, or add the `run-mongodb-tests` label to a pull
+# request.
 on:
+  workflow_call:
+    inputs:
+      complete:
+        description: Called from the complete path, so run without the label.
+        type: boolean
+        default: false
   workflow_dispatch:
   pull_request:
     types: [labeled]
@@ -13,7 +20,7 @@ permissions:
 jobs:
   test:
     name: MongoDB connection tests
-    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-mongodb-tests'
+    if: inputs.complete || github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-mongodb-tests'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5

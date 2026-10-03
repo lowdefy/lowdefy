@@ -31,7 +31,11 @@ function writeInstance({ building }) {
 }
 
 beforeEach(() => {
-  configDirectory = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'wait-for-build-')));
+  // The path as the manager records it (realpathSync.native), which on Windows
+  // also expands 8.3 short names such as RUNNER~1 in the temp directory.
+  configDirectory = fs.realpathSync.native(
+    fs.mkdtempSync(path.join(os.tmpdir(), 'wait-for-build-'))
+  );
   fs.mkdirSync(path.join(configDirectory, '.lowdefy'));
   process.env.LOWDEFY_DIRECTORY_CONFIG = configDirectory;
 });

@@ -167,9 +167,15 @@ test('journeysVariants does not replay a variant with a placeholder to fill', as
   });
   await variants({ kinds: 'negative' });
   expect(mockPost).toHaveBeenCalledTimes(1);
-  expect(logs.warn[0]).toMatch(
-    /^NOT RUN  tests\/journeys\/_candidates\/variants\/tickets-negative\.yaml: /
+  const relative = path.join(
+    'tests',
+    'journeys',
+    '_candidates',
+    'variants',
+    'tickets-negative.yaml'
   );
+  const prefix = `NOT RUN  ${relative}: `;
+  expect(logs.warn[0].slice(0, prefix.length)).toEqual(prefix);
 });
 
 test('journeysVariants refuses unknown kinds and a file of several journeys without --name', async () => {

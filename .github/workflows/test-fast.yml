@@ -1,0 +1,65 @@
+name: Fast Tests
+
+# The fast path: one ubuntu / Node 24 job that builds every package from the turbo cache
+# and tests only the packages a change affects. ci.yml runs it on pull requests with the
+# `ci` label and from the Actions tab. See code-docs/testing.md.
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+env:
+  TURBO_TELEMETRY_DISABLED: 1
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      # Full history without file contents: turbo's affected filter and the scope check
+      # diff against the base commit, which a shallow clone does not have.
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          filter: blob:none
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      # A pull request checks out its merge commit, whose first parent is the base it
+      # merges into. A run from the Actions tab has no base, so it tests every package.
+      - name: Scope
+        id: scope
+        run: |
+          node --test scripts/lib/classifyChangedFiles.test.mjs
+          node scripts/ci-scope.mjs --base "$BASE"
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && 'HEAD^1' || '' }}
+      - uses: actions/cache@v4
+        with:
+          path: .turbo/cache
+          key: turbo-${{ runner.os }}-node24-${{ hashFiles('pnpm-lock.yaml', 'turbo.json') }}-${{ github.sha }}
+          # Turbo hashes each task's inputs, so an entry from an older lockfile is only a
+          # miss for the packages it no longer matches.
+          restore-keys: |
+            turbo-${{ runner.os }}-node24-${{ hashFiles('pnpm-lock.yaml', 'turbo.json') }}-
+            turbo-${{ runner.os }}-node24-
+      # Every package builds (most restore from the cache), so the affected tests always
+      # import current dist output from the packages they depend on.
+      - name: Build
+        run: pnpm exec turbo run build --filter='!@lowdefy/website' --cache-dir=.turbo/cache --summarize
+      - name: Prune turbo cache
+        run: node scripts/ci-prune-turbo-cache.mjs
+      - name: Build website
+        if: steps.scope.outputs.website == 'true'
+        run: pnpm --filter=@lowdefy/website build
+      - name: Dependency check
+        run: pnpm test:dependencies
+      - name: Test (${{ steps.scope.outputs.scope }})
+        run: >-
+          pnpm exec turbo run test --only --continue --concurrency=4
+          ${{ steps.scope.outputs.filter }}
+          --filter='!@lowdefy/connection-mongodb' --filter='!@lowdefy/website'

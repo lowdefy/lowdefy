@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import { jest } from '@jest/globals';
 import { ConfigError } from '@lowdefy/errors';
 
@@ -53,7 +55,7 @@ test('handleError resolves location from configKey before logging', () => {
 
   handleError(new ConfigError('Invalid type', { configKey: 'abc123' }));
 
-  expect(lines[0].err.source).toBe('/app/pages/home.yaml:10');
+  expect(lines[0].err.source).toBe(`${path.resolve('/app', 'pages/home.yaml')}:10`);
 });
 
 test('handleError resolves location from filePath and lineNumber', () => {
@@ -73,7 +75,7 @@ test('handleError resolves location from filePath and lineNumber', () => {
     })
   );
 
-  expect(lines[0].err.source).toBe('/app/pages/home.yaml:6');
+  expect(lines[0].err.source).toBe(`${path.resolve('/app', 'pages/home.yaml')}:6`);
 });
 
 test('handleError still logs when resolveErrorLocation throws', () => {

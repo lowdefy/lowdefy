@@ -40,16 +40,34 @@ jest.unstable_mockModule('../../utils/ensurePnpmWorkspaceYaml.js', () => ({
 jest.unstable_mockModule('../../utils/installServer.js', () => ({ default: mockInstallServer }));
 
 const CHILD_PID = 4242;
+const isWindows = process.platform === 'win32';
 const realProcessKill = process.kill;
 let killedGroups;
+
+function exitOnSignal(child, signal) {
+  child.signalCode = signal;
+  setImmediate(() => child.emit('exit', null, signal));
+}
 
 function createChild() {
   const child = new EventEmitter();
   child.pid = CHILD_PID;
   child.exitCode = null;
   child.signalCode = null;
-  child.kill = jest.fn();
+  child.kill = jest.fn((signal) => exitOnSignal(child, signal));
   return child;
+}
+
+// Windows has no process groups: there the server is not detached and stop()
+// signals the child itself. Elsewhere stop() signals the child's group.
+function expectStoppedOnce() {
+  if (isWindows) {
+    expect(child.kill.mock.calls).toEqual([['SIGTERM']]);
+    expect(killedGroups).toEqual([]);
+    return;
+  }
+  expect(killedGroups).toEqual([{ pid: -CHILD_PID, signal: 'SIGTERM' }]);
+  expect(child.kill).not.toHaveBeenCalled();
 }
 
 let context;
@@ -68,8 +86,7 @@ beforeEach(() => {
   // sending a real signal.
   process.kill = jest.fn((pid, signal) => {
     killedGroups.push({ pid, signal });
-    child.signalCode = signal;
-    setImmediate(() => child.emit('exit', null, signal));
+    exitOnSignal(child, signal);
   });
   mockFindAvailablePort.mockResolvedValue(3228);
   mockSpawnProcess.mockReturnValue(child);
@@ -103,7 +120,7 @@ test('startDevServer prepares .lowdefy/dev, spawns the server headless and resol
   expect(spawnArgs.args).toEqual(['manager/run.mjs']);
   expect(spawnArgs.returnProcess).toBe(true);
   expect(spawnArgs.processOptions.cwd).toEqual('/app/.lowdefy/dev');
-  expect(spawnArgs.processOptions.detached).toBe(true);
+  expect(spawnArgs.processOptions.detached).toBe(!isWindows);
   expect(spawnArgs.processOptions.stdio).toEqual(['pipe', 'pipe', 'pipe']);
   expect(spawnArgs.processOptions.env.LOWDEFY_EXIT_WITH_PID).toEqual(String(process.pid));
   expect(spawnArgs.processOptions.env.LOWDEFY_EXIT_ON_STDIN_CLOSE).toEqual('1');
@@ -117,7 +134,7 @@ test('startDevServer prepares .lowdefy/dev, spawns the server headless and resol
   expect(server.port).toEqual(3228);
 
   await server.stop();
-  expect(killedGroups).toEqual([{ pid: -CHILD_PID, signal: 'SIGTERM' }]);
+  expectStoppedOnce();
 });
 
 test('startDevServer resolves with the basePath url the dev server records', async () => {
@@ -154,7 +171,7 @@ test('startDevServer throws with the last captured output lines when the server 
   expect(error.serverOutput).toHaveLength(40);
   expect(error.serverOutput[0]).toEqual('line 5');
   expect(error.serverOutput[39]).toEqual('line 44');
-  expect(killedGroups).toEqual([{ pid: -CHILD_PID, signal: 'SIGTERM' }]);
+  expectStoppedOnce();
 });
 
 test('startDevServer throws when the server process exits before it is ready', async () => {

@@ -292,7 +292,7 @@ test('findConfig resolves a known pageId to its source file', async () => {
   // A page's root block renders with blockId === pageId — open-in-editor and
   // feedback enrichment read matches[0].location.source from this result.
   expect(result.matches.length).toEqual(1);
-  expect(result.matches[0].location.source).toContain('pages/home.yaml');
+  expect(result.matches[0].location.source).toContain(path.join('pages', 'home.yaml'));
 });
 
 test('findConfig returns hazards per match for the matched node type', async () => {
@@ -330,7 +330,7 @@ test('findConfig scans keyMap for a matching id when no pageId is given', async 
   const result = await findConfig({ id: 'my_button' });
   expect(result.matches.length).toEqual(2);
   expect(result.matches[0].keyPath).toEqual('root.blocks[2:my_button:Button]');
-  expect(result.matches[0].location.source).toContain('pages/home.yaml:5');
+  expect(result.matches[0].location.source).toContain(`${path.join('pages', 'home.yaml')}:5`);
   expect(result.matches[1].keyPath).toEqual('root.blocks[0:my_button:Button]');
   expect(result.note).toContain('Pass ?pageId=');
 });
@@ -342,14 +342,14 @@ test('findConfig with pageId only returns matches on that page', async () => {
   const result = await findConfig({ id: 'my_button', pageId: 'other' });
   expect(result.matches.length).toEqual(1);
   expect(result.matches[0].keyPath).toEqual('root.blocks[0:my_button:Button]');
-  expect(result.matches[0].location.source).toContain('pages/other.yaml:4');
+  expect(result.matches[0].location.source).toContain(`${path.join('pages', 'other.yaml')}:4`);
 });
 
 test('findConfig with pageId resolves the same id to each page respectively', async () => {
   const result = await findConfig({ id: 'my_button', pageId: 'home' });
   expect(result.matches.length).toEqual(1);
   expect(result.matches[0].keyPath).toEqual('root.blocks[2:my_button:Button]');
-  expect(result.matches[0].location.source).toContain('pages/home.yaml:5');
+  expect(result.matches[0].location.source).toContain(`${path.join('pages', 'home.yaml')}:5`);
 });
 
 test('findConfig scopes skeleton-built pages via the page key segment', async () => {
@@ -358,7 +358,7 @@ test('findConfig scopes skeleton-built pages via the page key segment', async ()
   const result = await findConfig({ id: 'legal_button', pageId: 'legal' });
   expect(result.matches.length).toEqual(1);
   expect(result.matches[0].keyPath).toEqual('root.pages[2:legal].blocks[0:legal_button:Button]');
-  expect(result.matches[0].location.source).toContain('pages/legal.yaml:3');
+  expect(result.matches[0].location.source).toContain(`${path.join('pages', 'legal.yaml')}:3`);
 });
 
 test('findConfig with a skeleton-built pageId does not leak other pages ids', async () => {
@@ -380,7 +380,7 @@ test('findConfig resolves a runtime list item id to its $ placeholder config id'
   const result = await findConfig({ id: 'my_list.0.item_title' });
   expect(result.matches.length).toEqual(1);
   expect(result.matches[0].keyPath).toContain('[0:my_list.$.item_title:Title]');
-  expect(result.matches[0].location.source).toContain('pages/home.yaml:9');
+  expect(result.matches[0].location.source).toContain(`${path.join('pages', 'home.yaml')}:9`);
 });
 
 test('findConfig resolves a runtime list item id within a pageId scope', async () => {

@@ -348,7 +348,7 @@ test('MCP tools/call lowdefy_find_config locates a block by id', async () => {
   expect(parsed.kind).toEqual('page');
   expect(parsed.pageId).toEqual('home');
   expect(parsed.file).toEqual('pages/home.yaml');
-  expect(parsed.matches[0].location.source).toContain('pages/home.yaml');
+  expect(parsed.matches[0].location.source).toContain(path.join('pages', 'home.yaml'));
   await client.close();
 });
 

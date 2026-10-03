@@ -16,6 +16,7 @@
 
 import { EventEmitter } from 'events';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { jest } from '@jest/globals';
 
@@ -33,12 +34,30 @@ const realFetch = global.fetch;
 let signals;
 let children;
 
+const isWindows = process.platform === 'win32';
+
+function receiveSignal({ pid, signal }) {
+  signals.push({ pid, signal });
+  const child = children.find((c) => c.pid === Math.abs(pid));
+  if (child && (child.exitOnSignal || signal === 'SIGKILL')) {
+    child.signalCode = signal;
+    setImmediate(() => child.emit('exit', null, signal));
+  }
+}
+
+// On POSIX stop() signals the server's process group (a negative pid); Windows has no process
+// groups, so it signals the child itself.
+function signalledPid(child) {
+  return isWindows ? child.pid : -child.pid;
+}
+
 function createChild({ exitOnSignal = true, exitCode } = {}) {
   const child = new EventEmitter();
   child.pid = 5000 + children.length;
   child.exitCode = null;
   child.signalCode = null;
   child.exitOnSignal = exitOnSignal;
+  child.kill = jest.fn((signal) => receiveSignal({ pid: child.pid, signal }));
   if (exitCode !== undefined) {
     setImmediate(() => {
       child.exitCode = exitCode;
@@ -55,14 +74,7 @@ beforeEach(() => {
   mockSpawn.mockReset();
   mockIsPortAvailable.mockReset();
   mockIsPortAvailable.mockResolvedValue(true);
-  process.kill = jest.fn((pid, signal) => {
-    signals.push({ pid, signal });
-    const child = children.find((c) => c.pid === Math.abs(pid));
-    if (child && (child.exitOnSignal || signal === 'SIGKILL')) {
-      child.signalCode = signal;
-      setImmediate(() => child.emit('exit', null, signal));
-    }
-  });
+  process.kill = jest.fn((pid, signal) => receiveSignal({ pid, signal }));
   global.fetch = jest.fn().mockResolvedValue({ status: 200 });
 });
 
@@ -98,7 +110,7 @@ test('startServer builds, starts the server in its own group owned by this proce
 
   const [buildCommand, buildArgs, buildOptions] = mockSpawn.mock.calls[0];
   expect([path.basename(buildCommand), ...buildArgs]).toEqual([
-    'npx',
+    isWindows ? 'npx.cmd' : 'npx',
     'lowdefy',
     'build',
     '--server',
@@ -116,21 +128,20 @@ test('startServer builds, starts the server in its own group owned by this proce
   expect(server.port).toEqual(3191);
 
   await server.stop();
-  expect(signals).toEqual([{ pid: -children[1].pid, signal: 'SIGTERM' }]);
+  expect(signals).toEqual([{ pid: signalledPid(children[1]), signal: 'SIGTERM' }]);
   await server.stop();
   expect(signals).toHaveLength(1);
 });
 
 test('startServer uses the app local lowdefy binary when installed', async () => {
-  const appDir = fs.mkdtempSync(path.join(fs.realpathSync('/tmp'), 'lowdefy-start-'));
+  const appDir = fs.mkdtempSync(path.join(fs.realpathSync.native(os.tmpdir()), 'lowdefy-start-'));
+  const binName = isWindows ? 'lowdefy.cmd' : 'lowdefy';
   fs.mkdirSync(path.join(appDir, 'node_modules', '.bin'), { recursive: true });
-  fs.writeFileSync(path.join(appDir, 'node_modules', '.bin', 'lowdefy'), '');
+  fs.writeFileSync(path.join(appDir, 'node_modules', '.bin', binName), '');
   mockSpawn.mockImplementationOnce(() => createChild());
   try {
     const server = await startServer({ appDir, port: 3191, build: false });
-    expect(mockSpawn.mock.calls[0][0]).toEqual(
-      path.join(appDir, 'node_modules', '.bin', 'lowdefy')
-    );
+    expect(mockSpawn.mock.calls[0][0]).toEqual(path.join(appDir, 'node_modules', '.bin', binName));
     expect(mockSpawn.mock.calls[0][1][0]).toEqual('start');
     await server.stop();
   } finally {
@@ -160,7 +171,7 @@ test('startServer stops the server group when it is not ready in time', async ()
   await expect(
     startServer({ appDir: '/apps/shop', port: 3191, build: false, timeoutMs: 10 })
   ).rejects.toThrow('The server on port 3191 was not ready within 10ms.');
-  expect(signals).toEqual([{ pid: -children[0].pid, signal: 'SIGTERM' }]);
+  expect(signals).toEqual([{ pid: signalledPid(children[0]), signal: 'SIGTERM' }]);
 });
 
 test('startServer stop escalates to SIGKILL when the server ignores SIGTERM', async () => {
@@ -173,7 +184,7 @@ test('startServer stop escalates to SIGKILL when the server ignores SIGTERM', as
   });
   await server.stop();
   expect(signals).toEqual([
-    { pid: -children[0].pid, signal: 'SIGTERM' },
-    { pid: -children[0].pid, signal: 'SIGKILL' },
+    { pid: signalledPid(children[0]), signal: 'SIGTERM' },
+    { pid: signalledPid(children[0]), signal: 'SIGKILL' },
   ]);
 });

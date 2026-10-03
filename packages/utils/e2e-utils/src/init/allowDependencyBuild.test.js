@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import path from 'path';
 import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('fs', () => ({
@@ -36,7 +37,7 @@ test('allowDependencyBuild creates pnpm-workspace.yaml in the app directory when
   allowDependencyBuild({ cwd: '/repo', appPath: 'app', dependency: 'mongodb-memory-server' });
   expect(fs.writeFileSync.mock.calls).toEqual([
     [
-      '/repo/app/pnpm-workspace.yaml',
+      path.join('/repo', 'app', 'pnpm-workspace.yaml'),
       `packages:
   - .
 onlyBuiltDependencies:
@@ -51,7 +52,9 @@ allowBuilds:
 test('allowDependencyBuild adds the dependency to the workspace root pnpm-workspace.yaml', async () => {
   const { default: fs } = await import('fs');
   const { default: allowDependencyBuild } = await import('./allowDependencyBuild.js');
-  fs.existsSync.mockImplementation((filePath) => filePath === '/repo/pnpm-workspace.yaml');
+  fs.existsSync.mockImplementation(
+    (filePath) => filePath === path.join('/repo', 'pnpm-workspace.yaml')
+  );
   fs.readFileSync.mockReturnValue(`packages:
   - app
 onlyBuiltDependencies:
@@ -60,7 +63,7 @@ onlyBuiltDependencies:
   allowDependencyBuild({ cwd: '/repo', appPath: 'app', dependency: 'mongodb-memory-server' });
   expect(fs.writeFileSync.mock.calls).toEqual([
     [
-      '/repo/pnpm-workspace.yaml',
+      path.join('/repo', 'pnpm-workspace.yaml'),
       `packages:
   - app
 onlyBuiltDependencies:
@@ -76,7 +79,9 @@ allowBuilds:
 test('allowDependencyBuild does not write when the dependency is already covered by both keys', async () => {
   const { default: fs } = await import('fs');
   const { default: allowDependencyBuild } = await import('./allowDependencyBuild.js');
-  fs.existsSync.mockImplementation((filePath) => filePath === '/repo/pnpm-workspace.yaml');
+  fs.existsSync.mockImplementation(
+    (filePath) => filePath === path.join('/repo', 'pnpm-workspace.yaml')
+  );
   fs.readFileSync.mockReturnValue(`packages:
   - app
 onlyBuiltDependencies:
