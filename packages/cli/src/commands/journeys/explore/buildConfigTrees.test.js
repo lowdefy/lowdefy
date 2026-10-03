@@ -26,9 +26,10 @@ import buildConfigTrees from './buildConfigTrees.js';
 const FAKE_BUILDER = `
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 const { values } = parseArgs({ options: { config: { type: 'string' }, out: { type: 'string' } } });
-const devDirectory = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', '..', '..');
+const devDirectory = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 fs.appendFileSync(path.join(devDirectory, 'calls.log'), JSON.stringify(values) + '\\n');
 const config = fs.readFileSync(path.join(values.config, 'lowdefy.yaml'), 'utf8');
 fs.mkdirSync(path.join(values.out, 'build'), { recursive: true });

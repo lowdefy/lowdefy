@@ -98,7 +98,9 @@ test('resolveRevisions --against uses the merge base and the commit messages sin
   expect(revisions.context.body).toContain('A page to list tickets.');
   expect(revisions.context.body).toContain('Unrelated');
   expect(revisions.context.body).not.toContain('Main moves on');
-  expect(fs.realpathSync(revisions.root)).toEqual(fs.realpathSync(repo));
+  // The native realpath: on Windows os.tmpdir() can be an 8.3 short path (RUNNER~1) that only
+  // the native call expands, while git reports the long path.
+  expect(fs.realpathSync.native(revisions.root)).toEqual(fs.realpathSync.native(repo));
 });
 
 test('resolveRevisions marks a working tree with uncommitted changes as dirty', async () => {

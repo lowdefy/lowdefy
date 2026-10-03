@@ -112,6 +112,9 @@ function createHub({
 }) {
   const registry = loadRegistry(paths);
   const exits = new Map();
+  // The child of each app's latest launch, so a replaced server's exit is not taken for its
+  // replacement's.
+  const launchedChildren = new Map();
   const attachments = new Map();
   const lastDetachedAt = new Map();
   let queue = Promise.resolve();
@@ -302,12 +305,19 @@ function createHub({
       windowsHide: true,
     });
     fs.closeSync(logFd);
+    launchedChildren.set(configDirectory, child);
     exits.delete(configDirectory);
     child.on('error', (error) => {
-      exits.set(configDirectory, { error: error.message, at: new Date().toISOString() });
+      if (launchedChildren.get(configDirectory) === child) {
+        exits.set(configDirectory, { error: error.message, at: new Date().toISOString() });
+      }
     });
     child.on('exit', (code, signal) => {
-      exits.set(configDirectory, { code, signal, at: new Date().toISOString() });
+      // On a restart the old server's exit can arrive after its replacement launched (on Windows
+      // taskkill returns before the exit event): it says nothing about the replacement.
+      if (launchedChildren.get(configDirectory) === child) {
+        exits.set(configDirectory, { code, signal, at: new Date().toISOString() });
+      }
       // The leader's life is the server's. A manager killed outright (out of
       // memory, kill -9) takes the leader down but leaves Vite running in the
       // group, holding the app's internal port with nothing left to stop it.
