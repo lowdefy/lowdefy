@@ -17,7 +17,7 @@ export default {
       coverageReporters: [['lcov', { projectRoot: '../../../..' }], 'text', 'clover'],
       errorOnDeprecated: true,
       testEnvironment: 'node',
-      testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/index.js'],
+      testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/e2e/', '<rootDir>/src/index.js'],
       transform: {
         '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../../.swcrc.test' }],
       },
@@ -39,7 +39,7 @@ export default {
       coverageReporters: [['lcov', { projectRoot: '../../../..' }], 'text', 'clover'],
       errorOnDeprecated: true,
       testEnvironment: 'jsdom',
-      testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/src/index.js'],
+      testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/e2e/', '<rootDir>/src/index.js'],
       transform: {
         '^.+\\.(t|j)sx?$': ['@swc/jest', { configFile: '../../../../.swcrc.test' }],
       },
