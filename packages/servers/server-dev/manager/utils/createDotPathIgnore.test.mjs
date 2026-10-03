@@ -55,9 +55,11 @@ test('a watched path that only shares a prefix with the file does not hold it', 
 });
 
 test('dev recordings under .lowdefy/traces are ignored by the config watcher', () => {
-  const configDirectory = '/home/dev/app';
+  const configDirectory = path.join('/home/dev/app');
   const isDotPath = createDotPathIgnore({ watchPaths: [configDirectory] });
   expect(
-    isDotPath(`${configDirectory}/.lowdefy/traces/dev/2026-10-03/20261003T140311Z-k3x9qa.jsonl`)
+    isDotPath(
+      path.join(configDirectory, '.lowdefy/traces/dev/2026-10-03/20261003T140311Z-k3x9qa.jsonl')
+    )
   ).toBe(true);
 });
