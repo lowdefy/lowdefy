@@ -1,0 +1,29 @@
+name: journey-fixture
+lowdefy: local
+
+# The app the journey runner's real-Chromium tests drive
+# (packages/servers/server-dev/test/journeyFixture, started by
+# scripts/lib/startJourneyFixture.mjs): every page, request, endpoint and block here exists for a test that
+# asserts what a journey exercised, or what a config mutant does to it.
+# Change one only together with the test that reads it.
+
+config:
+  homePageId: home
+
+connections:
+  - id: fixture_db
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: FIXTURE_DATABASE_URI
+      collection: items
+      write: true
+
+api:
+  - _ref: api/notify.yaml
+  - _ref: api/log_activity.yaml
+  - _ref: api/detached_log.yaml
+
+pages:
+  - _ref: pages/home.yaml
+  - _ref: pages/second.yaml

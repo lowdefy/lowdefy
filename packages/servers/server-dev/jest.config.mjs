@@ -8,5 +8,7 @@ export default {
   errorOnDeprecated: true,
   testEnvironment: 'node',
   testMatch: ['**/*.test.mjs'],
+  // Served from a running fixture app: jest.fixture.config.mjs.
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/test/journeyFixture/'],
   transform: {},
 };
