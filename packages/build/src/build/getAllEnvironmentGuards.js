@@ -20,13 +20,15 @@ function withoutMarkers(map) {
   return Object.fromEntries(Object.entries(map ?? {}).filter(([key]) => !key.startsWith('~')));
 }
 
-// Every declared environment's guards, one key per environment, with `secrets` and `env` always
-// present, so a reader tells an undeclared environment (no key) from one that pins nothing.
+// Every declared environment's guards and pull opt-in, one key per environment, with `dataPull`,
+// `secrets` and `env` always present, so a reader tells an undeclared environment (no key) from one
+// that pins nothing, and an environment that never set dataPull is refused like one that set false.
 function getAllEnvironmentGuards({ environments }) {
   return Object.fromEntries(
     getEnvironmentNames(environments).map((name) => [
       name,
       {
+        dataPull: environments[name]?.dataPull === true,
         secrets: withoutMarkers(environments[name]?.guards?.secrets),
         env: withoutMarkers(environments[name]?.guards?.env),
       },

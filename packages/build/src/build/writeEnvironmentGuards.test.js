@@ -23,7 +23,10 @@ test("writeEnvironmentGuards writes environmentGuards.json with environmentGuard
   const writeBuildArtifact = jest.fn();
   const context = testContext({ writeBuildArtifact });
   context.environmentGuards = 'all';
-  const environmentGuards = { staging: { secrets: { MONGODB_URI: 'staging' }, env: {} } };
+  const environmentGuards = {
+    staging: { dataPull: true, secrets: { MONGODB_URI: 'staging' }, env: {} },
+    prod: { dataPull: false, secrets: { MONGODB_URI: 'prod' }, env: {} },
+  };
   await writeEnvironmentGuards({ components: { environmentGuards }, context });
   expect(writeBuildArtifact).toHaveBeenCalledTimes(1);
   const [name, content] = writeBuildArtifact.mock.calls[0];

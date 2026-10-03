@@ -20,9 +20,17 @@ const stagingUri = 'mongodb+srv://user:hunter2@acme-staging.a1b2c.mongodb.net/ap
 const prodUri = 'mongodb+srv://user:hunter2@acme-prod.z9y8x.mongodb.net/app';
 
 const environmentGuards = {
-  staging: { secrets: { MONGODB_URI: 'acme-staging\\.a1b2c\\.mongodb\\.net' }, env: {} },
-  prod: { secrets: { MONGODB_URI: 'acme-prod\\.z9y8x\\.mongodb\\.net' }, env: {} },
-  local: { secrets: {}, env: {} },
+  staging: {
+    dataPull: true,
+    secrets: { MONGODB_URI: 'acme-staging\\.a1b2c\\.mongodb\\.net' },
+    env: {},
+  },
+  prod: {
+    dataPull: false,
+    secrets: { MONGODB_URI: 'acme-prod\\.z9y8x\\.mongodb\\.net' },
+    env: {},
+  },
+  local: { dataPull: true, secrets: {}, env: {} },
 };
 const connections = [{ connectionId: 'tickets', secretName: 'MONGODB_URI' }];
 
@@ -53,6 +61,28 @@ test('checkPullGuards passes a value matching the from guard and no other enviro
   expect(check({ env: { LOWDEFY_SECRET_MONGODB_URI: stagingUri } })).not.toThrow();
 });
 
+test('checkPullGuards refuses a from without dataPull: true even when the secret matches its pin', () => {
+  expectRefusal(
+    check({ from: 'prod', env: { LOWDEFY_SECRET_MONGODB_URI: prodUri } }),
+    'Data set "staging-sample" pulls from environment "prod", which does not allow data pulls. Set config.environments.prod.dataPull: true only on a pre-production environment; production must never set it.'
+  );
+});
+
+test('checkPullGuards refuses a from without dataPull before reading any secret', () => {
+  expectRefusal(check({ from: 'prod', env: {} }), 'which does not allow data pulls.');
+});
+
+test('checkPullGuards refuses a from whose guards entry has no dataPull', () => {
+  const guards = {
+    ...environmentGuards,
+    staging: { secrets: environmentGuards.staging.secrets, env: {} },
+  };
+  expectRefusal(
+    check({ guards, env: { LOWDEFY_SECRET_MONGODB_URI: stagingUri } }),
+    'pulls from environment "staging", which does not allow data pulls.'
+  );
+});
+
 test('checkPullGuards refuses when from has no guard for the secret', () => {
   expectRefusal(
     check({ from: 'local', env: { LOWDEFY_SECRET_MONGODB_URI: stagingUri } }),
@@ -77,7 +107,7 @@ test('checkPullGuards refuses an unset secret', () => {
 test("checkPullGuards refuses a value matching another environment's distinct pattern", () => {
   const guards = {
     ...environmentGuards,
-    staging: { secrets: { MONGODB_URI: 'mongodb\\.net' }, env: {} },
+    staging: { dataPull: true, secrets: { MONGODB_URI: 'mongodb\\.net' }, env: {} },
   };
   expectRefusal(
     check({ guards, env: { LOWDEFY_SECRET_MONGODB_URI: prodUri } }),
@@ -102,7 +132,11 @@ test('checkPullGuards refuses any from when no environments are declared', () =>
 test('checkPullGuards is not blocked by an environment with an identical pattern or no pin', () => {
   const guards = {
     ...environmentGuards,
-    preview: { secrets: { MONGODB_URI: 'acme-staging\\.a1b2c\\.mongodb\\.net' }, env: {} },
+    preview: {
+      dataPull: false,
+      secrets: { MONGODB_URI: 'acme-staging\\.a1b2c\\.mongodb\\.net' },
+      env: {},
+    },
   };
   expect(check({ guards, env: { LOWDEFY_SECRET_MONGODB_URI: stagingUri } })).not.toThrow();
 });

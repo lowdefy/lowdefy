@@ -97,7 +97,13 @@ function validateEnvironment({ name, environment, configKey }) {
     });
   }
   const key = environment['~k'] ?? configKey;
-  const { url, cron, email, posthog, sentry } = environment;
+  const { url, cron, dataPull, email, posthog, sentry } = environment;
+  if (!type.isUndefined(dataPull) && !type.isBoolean(dataPull)) {
+    throw new ConfigError(`App "config.environments.${name}.dataPull" should be a boolean.`, {
+      received: dataPull,
+      configKey: key,
+    });
+  }
   if (!type.isUndefined(url) && (!type.isString(url) || !isAbsoluteHttpUrl(url))) {
     throw new ConfigError(
       `App "config.environments.${name}.url" should be an absolute http(s) URL, e.g. "https://staging.example.com".`,
@@ -248,6 +254,7 @@ function buildEnvironments({ components, context }) {
 
   // The current environment's guards are checked against this build's variables and kept for the
   // production server, which checks them again at startup; other environments' guards are dropped.
+  // dataPull is read only by the pull, from environmentGuards.json, so no server needs it.
   if (!type.isUndefined(environments)) {
     if (!type.isUndefined(current) && !allGuards) {
       checkEnvironmentGuards({
@@ -256,11 +263,12 @@ function buildEnvironments({ components, context }) {
         configKey: environments[current]['~k'] ?? configKey,
       });
     }
-    getEnvironmentNames(environments)
-      .filter((name) => name !== current)
-      .forEach((name) => {
+    getEnvironmentNames(environments).forEach((name) => {
+      delete environments[name].dataPull;
+      if (name !== current) {
         delete environments[name].guards;
-      });
+      }
+    });
   }
 
   if (type.isUndefined(current)) {

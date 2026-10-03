@@ -39,6 +39,11 @@ config:
   environment: prod
   environments:
     staging:
+      dataPull: true
+      guards:
+        secrets:
+          MONGODB_URI: '127\\.0\\.0\\.1'
+    preview:
       guards:
         secrets:
           MONGODB_URI: '127\\.0\\.0\\.1'
@@ -290,6 +295,25 @@ test('pullDataSet refuses an undeclared from', async () => {
   expect(code).toEqual(1);
   expect(output).toMatch('qa');
   expect(fs.existsSync(path.join(configDirectory, '.lowdefy', 'data', 'qa-sample'))).toBe(false);
+});
+
+test('pullDataSet refuses an environment without dataPull: true, leaving the previous snapshot in place', async () => {
+  writeDataSet('staging-sample', snapshotYaml);
+  expect((await pull('staging-sample')).code).toEqual(0);
+  const before = readManifest('staging-sample');
+
+  // preview pins the same database as staging, so every secret check would pass: only the
+  // missing opt-in refuses it.
+  writeDataSet('staging-sample', snapshotYaml.replace('from: staging', 'from: preview'));
+  const { code, output } = await pull('staging-sample');
+  expect(code).toEqual(1);
+  expect(output).toMatch(
+    'pulls from environment \\"preview\\", which does not allow data pulls. Set config.environments.preview.dataPull: true only on a pre-production environment'
+  );
+  expect(readManifest('staging-sample')).toEqual(before);
+  expect(fs.existsSync(path.join(configDirectory, '.lowdefy', 'data', 'staging-sample.tmp'))).toBe(
+    false
+  );
 });
 
 test('pullDataSet refuses a data set with no snapshot block', async () => {
