@@ -38,7 +38,7 @@ _ref:
 
             This will:
             - Look for your Lowdefy app in the current directory
-            - Build and start the app's e2e server on port 3000, or reuse it if it is already running there
+            - Build and start the app's e2e server on port 3000, and stop it when the run ends
             - Run tests from the `e2e/` directory matching `**/*.spec.js`
             - Take screenshots only on failure
 
@@ -68,7 +68,23 @@ _ref:
 
             ## Reusing a running server
 
-            Playwright reuses a server that is already listening on the configured port, so starting it once with `pnpm e2e:server` in another terminal skips the build on later runs. Before any test runs, the config asks that server which build it serves. Any other server on the port, such as `lowdefy dev`, a production build, or the e2e server of another app or git worktree, stops the run with an error that names the port, instead of the tests running against it. Stop that server, or give each app or worktree its own `port`.
+            By default a server already listening on the configured port fails the run, so a server left behind by an earlier run never serves an old build to new tests. To skip the build while you iterate, start the server once with `pnpm e2e:server` in another terminal and run the tests with `LOWDEFY_E2E_REUSE_SERVER=true pnpm e2e`. Before any test runs, the config asks a reused server which build it serves. Any other server on the port, such as `lowdefy dev`, a production build, or the e2e server of another app or git worktree, stops the run with an error that names the port, instead of the tests running against it. Stop that server, or give each app or worktree its own `port`, or set `LOWDEFY_E2E_PORT` to move one run.
+
+            The server Playwright starts stops when the Playwright run stops, however the run ends (including a killed or timed-out run).
+
+            ## Starting a server outside Playwright
+
+            Other test runners (a vitest or Jest `globalSetup`) and scripts can start the app's e2e server with `startServer`. The server stops when the process that started it exits, however it exits.
+
+            ```javascript
+            import startServer from '@lowdefy/e2e-utils/startServer';
+
+            const server = await startServer({ appDir: './', port: 3191 });
+            // ... run tests against server.url
+            await server.stop();
+            ```
+
+            `startServer` runs `lowdefy build --server e2e` first unless `build: false` is passed, fails at once if the port is already in use, and takes extra environment variables for the server as `env`. A harness that starts `lowdefy start` itself should pass its own process id as `--exit-with-pid` (or set `LOWDEFY_EXIT_WITH_PID`), so the server never outlives it.
 
             ## Multi-app configuration
 
@@ -112,6 +128,13 @@ _ref:
             Keep `globalSetup` from the base configuration (spreading `base` does), since it runs the server check. To add your own global setup, pass both: `globalSetup: [base.globalSetup, './global-setup.js']`.
 
             ## Environment variables
+
+            These variables change a run:
+
+            | Variable | Purpose |
+            |----------|---------|
+            | `LOWDEFY_E2E_PORT` | Run on this port instead of the configured `port` (one app per config) |
+            | `LOWDEFY_E2E_REUSE_SERVER` | Set to `true` to reuse a server already running on the port |
 
             The configuration sets these environment variables automatically:
 

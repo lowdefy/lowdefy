@@ -3306,6 +3306,9 @@ importers:
       '@lowdefy/helpers':
         specifier: 6.0.0
         version: link:../helpers
+      '@lowdefy/node-utils':
+        specifier: 6.0.0
+        version: link:../node-utils
       '@playwright/test':
         specifier: 1.59.1
         version: 1.59.1

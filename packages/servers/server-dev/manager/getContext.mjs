@@ -34,6 +34,7 @@ import syncServer from './processes/syncServer.mjs';
 
 import createServerArtifactTracker from './utils/createServerArtifactTracker.mjs';
 import getViteBin from './utils/getViteBin.mjs';
+import readManagerVersion from './utils/readManagerVersion.mjs';
 
 const argv = yargs(hideBin(process.argv)).array('watch').array('watchIgnore').argv;
 
@@ -71,7 +72,7 @@ async function getContext() {
           ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH_IGNORE)
           : [],
     },
-    version: env.npm_package_version,
+    version: readManagerVersion(),
 
     // JIT build state
     pageRegistry: null,

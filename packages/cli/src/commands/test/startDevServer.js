@@ -14,12 +14,13 @@
   limitations under the License.
 */
 
-import { findAvailablePort, readDevInstance, spawnProcess } from '@lowdefy/node-utils';
+import { findAvailablePort, readDevInstance } from '@lowdefy/node-utils';
 
 import addCustomPluginsAsDeps from '../../utils/addCustomPluginsAsDeps.js';
 import ensurePnpmWorkspaceYaml from '../../utils/ensurePnpmWorkspaceYaml.js';
 import getServer from '../../utils/getServer.js';
 import installServer from '../../utils/installServer.js';
+import spawnServer from '../../utils/spawnServer.js';
 
 const CAPTURED_LINES = 40;
 
@@ -56,27 +57,24 @@ async function startDevServer({ context, pollIntervalMs = 250, bootTimeoutMs = 1
   }
 
   context.logger.info(`Starting development server on port ${port}.`);
-  const child = spawnProcess({
-    args: ['run', 'start'],
-    command: context.pnpmCmd,
+  const child = spawnServer({
+    directory,
+    entry: 'manager/run.mjs',
     returnProcess: true,
     stdOutLineHandler: captureLine,
-    processOptions: {
-      cwd: directory,
-      // `pnpm run start` is a chain of processes (pnpm launcher -> pnpm -> manager -> vite).
-      // A SIGTERM to the launcher alone orphans the rest, so the child gets its own process
-      // group and stop() signals the whole group.
-      detached: process.platform !== 'win32',
-      // https://nodejs.org/en/blog/vulnerability/april-2024-security-releases-2#command-injection-via-args-parameter-of-child_processspawn-without-shell-option-enabled-on-windows-cve-2024-27980---high
-      shell: process.platform === 'win32',
-      env: {
-        ...process.env,
-        LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
-        LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
-        LOWDEFY_LOG_LEVEL: context.options.logLevel,
-        LOWDEFY_SERVER_DEV_OPEN_BROWSER: false,
-        PORT: port,
-      },
+    // The server is a chain (manager -> vite), so it gets its own process group
+    // and stop() signals the whole group.
+    detached: process.platform !== 'win32',
+    env: {
+      ...process.env,
+      LOWDEFY_BUILD_REF_RESOLVER: context.options.refResolver,
+      LOWDEFY_DIRECTORY_CONFIG: context.directories.config,
+      // A detached group is out of reach of signals to this CLI's group, so the
+      // server watches this process: a killed `lowdefy test` leaves nothing.
+      LOWDEFY_EXIT_WITH_PID: String(process.pid),
+      LOWDEFY_LOG_LEVEL: context.options.logLevel,
+      LOWDEFY_SERVER_DEV_OPEN_BROWSER: false,
+      PORT: port,
     },
   });
 

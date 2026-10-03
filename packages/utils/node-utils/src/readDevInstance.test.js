@@ -27,7 +27,8 @@ jest.unstable_mockModule('./getProcessStartTime.js', () => ({
 const { default: getDevInstancePath } = await import('./getDevInstancePath.js');
 const { default: readDevInstance } = await import('./readDevInstance.js');
 
-const START_TIME = 'Sun Sep 27 08:00:00 2026';
+// Epoch milliseconds.
+const START_TIME = 1790000000000;
 let configDirectory;
 let now = Date.now();
 
@@ -90,11 +91,17 @@ test('readDevInstance returns null for an unreadable record', () => {
 
 test.each([
   ['is the process that wrote it', START_TIME, true],
-  ['now belongs to another process', 'Thu Jan  1 00:00:00 1970', false],
+  ['now belongs to another process', 0, false],
 ])('readDevInstance with a live pid that %s', (_, processStartTime, live) => {
   writeRecord({ pid: process.pid, processStartTime: START_TIME, configDirectory });
   mockGetProcessStartTime.mockReturnValue(processStartTime);
   expect(readDevInstance({ configDirectory }) !== null).toBe(live);
+});
+
+test('readDevInstance trusts a live pid when the record holds a start time an older manager wrote as local time', () => {
+  writeRecord({ pid: process.pid, processStartTime: 'Sun Sep 27 08:00:00 2026', configDirectory });
+  expect(readDevInstance({ configDirectory })).toMatchObject({ pid: process.pid });
+  expect(mockGetProcessStartTime).not.toHaveBeenCalled();
 });
 
 test('readDevInstance trusts a live pid when its start time cannot be read', () => {

@@ -15,7 +15,7 @@
 */
 
 import { createRequire } from 'module';
-import { Command, Option } from 'commander';
+import { Command, InvalidArgumentError, Option } from 'commander';
 
 import agentSetup from './commands/agentSetup/agentSetup.js';
 import agentSetupUser from './commands/agentSetup/agentSetupUser.js';
@@ -26,6 +26,8 @@ import dev from './commands/dev/dev.js';
 import dockerOutput from './commands/dockerOutput/dockerOutput.js';
 import emails from './commands/emails/emails.js';
 import hubLogs from './commands/hub/hubLogs.js';
+import hubPrune from './commands/hub/hubPrune.js';
+import hubPs from './commands/hub/hubPs.js';
 import hubServe from './commands/hub/hubServe.js';
 import hubStart from './commands/hub/hubStart.js';
 import hubStatus from './commands/hub/hubStatus.js';
@@ -56,6 +58,14 @@ const require = createRequire(import.meta.url);
 const packageJson = require('../package.json');
 const { description, version: cliVersion } = packageJson;
 
+function parsePid(value) {
+  const pid = Number(value);
+  if (!Number.isInteger(pid) || pid <= 0) {
+    throw new InvalidArgumentError('Expected a process id.');
+  }
+  return pid;
+}
+
 const program = new Command();
 
 program.name('lowdefy').description(description).version(cliVersion, '-v, --version');
@@ -72,6 +82,10 @@ const options = {
   disableTelemetry: new Option('--disable-telemetry', 'Disable telemetry.').env(
     'LOWDEFY_DISABLE_TELEMETRY'
   ),
+  exitWithPid: new Option(
+    '--exit-with-pid <pid>',
+    'Stop the server when the process with this id exits. For test runners and scripts that start the server.'
+  ).argParser(parsePid),
   logLevel: new Option(
     '--log-level <level>',
     'The minimum severity of logs to show in the CLI output.'
@@ -189,6 +203,7 @@ program
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)
+  .addOption(options.exitWithPid)
   .addOption(options.logLevel)
   .addOption(options.mockUser)
   .option('--no-open', 'Do not open a new tab in the default browser.')
@@ -258,6 +273,19 @@ hub
   .option('--lines <lines>', 'How many lines.', '100')
   .option('--grep <text>', 'Only lines containing this text.')
   .action(runHubCommand({ cliVersion, handler: hubLogs }));
+
+hub
+  .command('ps')
+  .description('List the Lowdefy servers running on this machine, with the process that owns each.')
+  .action(runHubCommand({ cliVersion, handler: hubPs }));
+
+hub
+  .command('prune')
+  .description(
+    'Stop Lowdefy servers whose owner is gone. Lists them only, unless --kill is passed.'
+  )
+  .option('--kill', 'Stop the servers instead of listing them.')
+  .action(runHubCommand({ cliVersion, handler: hubPrune }));
 
 hub
   .command('trust')
@@ -583,6 +611,7 @@ program
   .usage('[options]')
   .addOption(options.configDirectory)
   .addOption(options.disableTelemetry)
+  .addOption(options.exitWithPid)
   .addOption(options.logLevel)
   .addOption(options.port)
   .addOption(options.serverDirectory)
