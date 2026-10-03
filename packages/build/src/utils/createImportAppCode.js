@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import crypto from 'crypto';
+import fs from 'fs';
 import path from 'path';
 import { pathToFileURL } from 'url';
 
@@ -22,10 +24,18 @@ import { pathToFileURL } from 'url';
 // tell which page builds ran code it cannot see into.
 function createImportAppCode({ directories }) {
   return async function importAppCode(filePath) {
-    const fileUrl = pathToFileURL(path.resolve(directories.config, filePath));
-    // Bust Node.js module cache so edits to resolver/transformer JS files are
-    // picked up during dev rebuilds. Each import gets a unique URL.
-    fileUrl.searchParams.set('t', Date.now());
+    const absolutePath = path.resolve(directories.config, filePath);
+    const fileUrl = pathToFileURL(absolutePath);
+    // A dev server rebuilds with the same process, so an edited file needs a new
+    // module URL. The URL is keyed on the file's content: an unchanged file
+    // reuses its loaded module, and the key is not Vite's `t=<timestamp>` HMR
+    // query, which Vite's SSR module runner strips when it loads the build
+    // package from source (a linked workspace) and then serves its cached module.
+    const content = await fs.promises.readFile(absolutePath);
+    fileUrl.searchParams.set(
+      'lowdefy-app-code',
+      crypto.createHash('sha1').update(content).digest('hex')
+    );
     // webpackIgnore and @vite-ignore keep bundlers from rewriting this dynamic
     // import of a file:// URL into a bundled require of user code.
     const module = await import(/* webpackIgnore: true */ /* @vite-ignore */ fileUrl.href);

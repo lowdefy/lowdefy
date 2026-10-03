@@ -11,3 +11,4 @@ fix(server-dev): The dev server rebuilds only the pages an edit changed
 - **One page's unknown block type no longer breaks other pages.** A page with a misspelt block, action or operator type made every page built after it fail with its error until the next edit.
 - **Edits made while the config build fails reach the page.** A page edit made while `lowdefy.yaml` failed to build was not picked up; the page now shows it.
 - A page that is rebuilt lists its warnings again, and warnings are logged again after an edit.
+- **App code is loaded again only when it changes.** The build loaded a resolver, transformer or `.js` ref as a new module on every page build, and each copy stayed in memory. It now loads a file again only when its content changed. When `@lowdefy/build` is linked from a local checkout, an edited resolver or transformer was never loaded again, so pages kept its old output until a restart; they now show the edit.
