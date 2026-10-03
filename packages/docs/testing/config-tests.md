@@ -270,6 +270,12 @@ Journeys can be compiled from real use. A recorded trace is a JSONL file of inte
 pnpx lowdefy@5 journeys compile .lowdefy/traces/dev/2026-10-03/*.jsonl
 ```
 
+Without trace files, `--source dev` or `--source explorer` reads every recording under `.lowdefy/traces/<source>/` (narrowed by `--since`):
+
+```
+pnpx lowdefy@5 journeys compile --source dev --since 2h
+```
+
 It cuts each browser tab's recording into segments (a fresh page load starts one), groups segments that do the same thing step by step, and writes one candidate per group to `tests/journeys/_candidates/<source>/<pageId>-<hash>.yaml`, ranked by how often the flow happened and how often it failed. `lowdefy test` does not read `_candidates/`, so candidates never run until you move them.
 
 ```yaml
@@ -299,7 +305,7 @@ To promote a candidate, move it into `tests/journeys/`, give it a name, fill eve
 
 ### Options
 
-- `[traceFiles...]`: The trace files to compile, wherever they are.
+- `[traceFiles...]`: The trace files to compile, wherever they are. Without them, `dev` and `explorer` recordings are read from `.lowdefy/traces/<source>/`.
 - `--source <production|dev|explorer>`: Compile only records of this source. Required when no trace files are given; with files, the source comes from the records. Journey runs (`journey` traces) are coverage, not candidates, and are refused.
 - `--since <since>`: Only records at or after this time, as a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production traces default to the last 30 days.
 - `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: Production only. An explicit window of whole UTC days instead of `--since`.

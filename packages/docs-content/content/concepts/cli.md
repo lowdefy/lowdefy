@@ -147,7 +147,7 @@ The `test` command runs the app's config tests — the journeys in `tests/journe
 
 The `journeys compile` command turns recorded interaction traces into candidate journeys. It groups recorded segments that do the same thing step by step and writes one candidate per group to `tests/journeys/_candidates/<source>/`, which `lowdefy test` does not run. See [Candidates from recorded traces](/config-tests#candidates-from-recorded-traces).
 
-- `[traceFiles...]`: The trace files (JSONL) to compile.
+- `[traceFiles...]`: The trace files (JSONL) to compile. Without them, `--source dev` or `--source explorer` reads the recordings in `.lowdefy/traces/<source>/`.
 - `--source <source>`: `production`, `dev` or `explorer`. Required when no trace files are given; with files, compiles only records of this source.
 - `--since <since>`: Only records at or after this time: a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production traces default to `30d`.
 - `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: Production only. An explicit window of whole UTC days instead of `--since`.
