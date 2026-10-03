@@ -97,8 +97,10 @@ afterEach(async () => {
   await client?.close();
   await shim?.close();
   process.env.LOWDEFY_HOME = originalHome;
-  fs.rmSync(root, { recursive: true, force: true });
-  fs.rmSync(home, { recursive: true, force: true });
+  // Windows can hold a just-closed child's handle on the directory for a
+  // moment; rmSync retries EPERM and EBUSY.
+  fs.rmSync(root, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+  fs.rmSync(home, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
 });
 
 test('lowdefy mcp lists the lifecycle tools and every dev tool with a directory argument, but one restart tool', async () => {
