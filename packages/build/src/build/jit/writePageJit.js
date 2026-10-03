@@ -19,6 +19,7 @@ import { LowdefyInternalError } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
 import { writeFileIfChanged } from '@lowdefy/node-utils';
 
+import removeRequestServerKeys from '../../utils/removeRequestServerKeys.js';
 import writeJs from '../buildJs/writeJs.js';
 
 async function writePageJit({ page, context, tailwindContent }) {
@@ -31,10 +32,7 @@ async function writePageJit({ page, context, tailwindContent }) {
       `pages/${page.pageId}/requests/${request.requestId}.json`,
       serializer.serializeToString(request ?? {})
     );
-    delete request.properties;
-    delete request.type;
-    delete request.connectionId;
-    delete request.auth;
+    removeRequestServerKeys({ request });
   }
 
   await context.writeBuildArtifact(

@@ -19,6 +19,7 @@ import { serializer } from '@lowdefy/helpers';
 import buildPage from '../buildPages/buildPage.js';
 import jsMapParser from '../buildJs/jsMapParser.js';
 import createCheckDuplicateId from '../../utils/createCheckDuplicateId.js';
+import removeRequestServerKeys from '../../utils/removeRequestServerKeys.js';
 import createPageRegistry from './createPageRegistry.js';
 import validatePageReferences from '../buildPages/validatePageReferences.js';
 import validateIconNames from '../icons/validateIconNames.js';
@@ -92,10 +93,7 @@ function buildShallowPages({ components, context }) {
     // carries them.
     const requests = builtPage.requests.map((request) => {
       const requestJson = serializer.serializeToString(request);
-      delete request.properties;
-      delete request.type;
-      delete request.connectionId;
-      delete request.auth;
+      removeRequestServerKeys({ request });
       return { requestId: request.requestId, requestJson };
     });
 
