@@ -15,6 +15,7 @@
 */
 
 import { publish } from './devEventBus.js';
+import { recordError } from './explore/walkSessions.js';
 import getBuildId from './getBuildId.js';
 
 // Module-level ring buffer of recent server-side errors (request, endpoint, MCP
@@ -27,8 +28,16 @@ const MAX_ENTRIES = 50;
 const entries = [];
 
 // Each entry is stamped with the build it happened under (see getBuildId).
+// An entry an explorer walk caused goes to that walk's own buffer only: kept
+// out of this ring and the event bus, it never reaches build-status or an
+// agent's event stream, and a run that trips many errors cannot evict the
+// developer's own.
 function push(entry) {
   const stamped = { ...entry, buildId: getBuildId() };
+  if (stamped.recording?.source === 'explorer') {
+    recordError(stamped);
+    return;
+  }
   entries.push(stamped);
   if (entries.length > MAX_ENTRIES) {
     entries.shift();

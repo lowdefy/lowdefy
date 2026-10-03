@@ -15,27 +15,30 @@
 */
 
 import { wait } from '@lowdefy/helpers';
-import { readDevInstance } from '@lowdefy/node-utils';
+import { readDevInstanceAsync } from '@lowdefy/node-utils';
 
 // An edit reaches the manager's file watcher a moment after it is saved, and
 // the watcher debounces before building, so an agent that asks for build
 // status straight after an edit would read the build before it. The manager
 // sets `building` in the instance record from the first change of a batch
 // until the batch is processed; this waits for that to clear. The grace
-// window covers an edit the watcher has not seen yet.
+// window covers an edit the watcher has not seen yet. Reads without blocking:
+// it polls inside the dev server, and on Windows a start time read starts
+// PowerShell.
 async function waitForBuild({ graceMs = 1000, timeoutMs = 60000, intervalMs = 100 } = {}) {
   const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG;
-  const isBuilding = () => readDevInstance({ configDirectory })?.building === true;
+  const isBuilding = async () =>
+    (await readDevInstanceAsync({ configDirectory }))?.building === true;
   const start = Date.now();
   let sawBuild = false;
   while (Date.now() - start < graceMs) {
-    if (isBuilding()) {
+    if (await isBuilding()) {
       sawBuild = true;
       break;
     }
     await wait(intervalMs);
   }
-  while (isBuilding()) {
+  while (await isBuilding()) {
     if (Date.now() - start > timeoutMs) {
       return { settled: false, waitedMs: Date.now() - start };
     }

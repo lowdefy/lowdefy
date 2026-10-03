@@ -389,6 +389,12 @@ importers:
 
   packages/cli:
     dependencies:
+      '@ai-sdk/gateway':
+        specifier: 4.0.94
+        version: 4.0.94(zod@3.25.76)
+      '@lowdefy/ai-utils':
+        specifier: 6.0.0
+        version: link:../utils/ai-utils
       '@lowdefy/ajv':
         specifier: 6.0.0
         version: link:../utils/ajv
@@ -3309,6 +3315,9 @@ importers:
       '@lowdefy/helpers':
         specifier: 6.0.0
         version: link:../helpers
+      '@lowdefy/node-utils':
+        specifier: 6.0.0
+        version: link:../node-utils
       '@playwright/test':
         specifier: 1.59.1
         version: 1.59.1
@@ -13816,6 +13825,13 @@ snapshots:
       '@ai-sdk/provider-utils': 5.0.49(zod@4.6.5)
       zod: 4.6.5
 
+  '@ai-sdk/gateway@4.0.94(zod@3.25.76)':
+    dependencies:
+      '@ai-sdk/provider': 4.0.18
+      '@ai-sdk/provider-utils': 5.0.49(zod@3.25.76)
+      '@vercel/oidc': 3.2.0
+      zod: 3.25.76
+
   '@ai-sdk/gateway@4.0.94(zod@4.6.5)':
     dependencies:
       '@ai-sdk/provider': 4.0.18
@@ -13842,6 +13858,15 @@ snapshots:
       '@ai-sdk/provider': 4.0.18
       '@ai-sdk/provider-utils': 5.0.49(zod@4.6.5)
       zod: 4.6.5
+
+  '@ai-sdk/provider-utils@5.0.49(zod@3.25.76)':
+    dependencies:
+      '@ai-sdk/provider': 4.0.18
+      '@standard-schema/spec': 1.1.0
+      '@workflow/serde': 4.1.0
+      eventsource-parser: 3.0.8
+      undici: 7.30.0
+      zod: 3.25.76
 
   '@ai-sdk/provider-utils@5.0.49(zod@4.6.5)':
     dependencies:

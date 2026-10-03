@@ -19,7 +19,7 @@ import os from 'os';
 import path from 'path';
 import { spawnSync } from 'child_process';
 
-import { readDevInstance } from '@lowdefy/node-utils';
+import { getProcessStartTime, isProcessStartTime, readDevInstance } from '@lowdefy/node-utils';
 
 import acquireDevInstance from './acquireDevInstance.mjs';
 
@@ -104,16 +104,26 @@ test('acquireDevInstance release leaves a record taken over by a newer manager',
   expect(fs.existsSync(instancePath())).toBe(true);
 });
 
+// A start time in the form this platform reads, but not the one the pid's process has: on
+// Linux, the same ticks in another boot.
+function otherStartTime(pid) {
+  const startTime = getProcessStartTime({ pid });
+  if (typeof startTime === 'string') {
+    return startTime.replace(/^linux:[^:]+:/, 'linux:00000000-0000-0000-0000-000000000000:');
+  }
+  return 0;
+}
+
 test('acquireDevInstance takes over a record left on a pid another process now has', () => {
   // pid 1 is alive, but it is not the manager that wrote this record.
   fs.mkdirSync(path.dirname(instancePath()), { recursive: true });
   fs.writeFileSync(
     instancePath(),
-    JSON.stringify({ pid: 1, processStartTime: 'Thu Jan  1 00:00:00 1970', configDirectory })
+    JSON.stringify({ pid: 1, processStartTime: otherStartTime(1), configDirectory })
   );
   const instance = acquireDevInstance({ configDirectory, owner: 'terminal', version: '6.0.0' });
   expect(instance.acquired).toBe(true);
-  expect(readRecord().processStartTime).toEqual(expect.any(String));
+  expect(isProcessStartTime(readRecord().processStartTime)).toBe(true);
 });
 
 // Case variants name one directory only where the file system ignores case.

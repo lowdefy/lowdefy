@@ -173,6 +173,14 @@ Port 3000 is the default for a developer's own dev server; tests and agents neve
   run the same package from two worktrees at once. An already running server is reused only
   when `LOWDEFY_E2E_REUSE_SERVER=true`, so a run never tests another checkout's server by
   accident.
+- Servers exit with their owner. `lowdefy start|dev|test`, `scripts/start.mjs` and
+  `scripts/dev.mjs` hold their server's stdin, so a killed CLI or script takes its server
+  with it. Playwright configs from `@lowdefy/e2e-utils` and `@lowdefy/block-dev-e2e` set
+  `LOWDEFY_EXIT_WITH_PID` to the runner's pid, so a killed or timed-out run leaves nothing
+  behind either. A harness that starts a server any other way uses `startServer` from
+  `@lowdefy/e2e-utils/startServer`, or passes `--exit-with-pid <its pid>` to `lowdefy start`.
+  `@lowdefy/e2e-utils` configs also reuse a running server only with
+  `LOWDEFY_E2E_REUSE_SERVER=true`, and take `LOWDEFY_E2E_PORT`.
 
 ## Block e2e server
 

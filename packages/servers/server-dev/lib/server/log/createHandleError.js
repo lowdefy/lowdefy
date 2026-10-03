@@ -16,6 +16,7 @@
 
 import { LowdefyInternalError, loadAndResolveErrorLocation } from '@lowdefy/errors';
 
+import errorRecordingStamp from '../recording/errorRecordingStamp.js';
 import serverErrorStore from '../../docs/serverErrorStore.js';
 
 // A UserError is an expected outcome of user interaction (a rejected payload,
@@ -67,6 +68,7 @@ function createHandleError({ context }) {
           endpointId: context.endpointId ?? null,
           requestId: context.requestId ?? null,
           pageId: context.pageId ?? null,
+          recording: errorRecordingStamp(context.recording),
         });
       }
 

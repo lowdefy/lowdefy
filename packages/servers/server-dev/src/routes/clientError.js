@@ -17,6 +17,7 @@
 import { logClientError, parseRequestBody } from '@lowdefy/api';
 
 import clientErrorStore from '../../lib/docs/clientErrorStore.js';
+import errorRecordingStamp from '../../lib/server/recording/errorRecordingStamp.js';
 import createSameOriginGuard from '../middleware/createSameOriginGuard.js';
 
 const guardSameOrigin = createSameOriginGuard();
@@ -47,6 +48,7 @@ async function clientErrorHandler(c) {
     message: error?.message ?? null,
     source: response.source ?? null,
     config: response.config ?? null,
+    recording: errorRecordingStamp(context.recording),
   });
 
   return c.json(response);

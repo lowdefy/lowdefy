@@ -28,6 +28,8 @@ import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
+import ownedServerEnv from './lib/ownedServerEnv.mjs';
+
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
 const prodDir = path.join(REPO_ROOT, '_server/prod');
 
@@ -56,11 +58,15 @@ if (!fs.existsSync(path.join(prodDir, 'dist/client'))) {
 
 console.log(`Starting production server on port ${port}...`);
 
-const child = spawn('pnpm', ['run', 'start'], {
+// node itself, no pnpm between this script and the server. This script holds
+// the server's stdin and never writes to it: the pipe closes when this script
+// dies, however it dies, and the server exits on that.
+const child = spawn(process.execPath, ['src/index.js'], {
   cwd: prodDir,
-  stdio: 'inherit',
+  stdio: ['pipe', 'inherit', 'inherit'],
   env: {
     ...process.env,
+    ...ownedServerEnv(),
     PORT: port,
     LOWDEFY_LOG_LEVEL: logLevel,
   },
@@ -71,7 +77,7 @@ child.on('exit', (code) => {
 });
 
 // Forward signals to child
-for (const signal of ['SIGINT', 'SIGTERM']) {
+for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
   process.on(signal, () => {
     child.kill(signal);
   });
