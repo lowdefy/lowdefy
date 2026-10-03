@@ -26,10 +26,12 @@ import { MongoClient } from 'mongodb';
 
 // Data set journeys end to end: a real Chromium drives journeys through the dev server's own
 // journey route, API context, endpoint, detached and websocket handlers and the MongoDB connection
-// plugin, over a build of the fixture app in test/app. Its connection reads the MONGODB_URI secret,
-// pointed at the jest-mongodb memory server (MONGO_URL), which stands in for the developer's real
-// database. Journeys on the "shop" data set must reach the data store's session database for every
-// request, detached call and change stream, and never the stand-in. The page each actor opens is a
+// plugin, over a build of the fixture app in test/app. Its connections, its module's connection and
+// its auth adapter read the MONGODB_URI secret, pointed at a database of its own on the jest-mongodb
+// memory server (MONGO_URL), which stands in for the developer's real database. Journeys on the
+// "shop" data set must reach the data store's session database for every request, module
+// connection, detached call and change stream, must never reach the auth engine, and must leave the
+// stand-in exactly as they found it. The page each actor opens is a
 // small HTML stand-in for a Lowdefy page (window.lowdefy state, blocks as #bl-<id>), so no client
 // bundle is built. Skipped when no Chromium can be launched.
 
@@ -41,12 +43,18 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 const serverDevDirectory = path.resolve(dirname, '../../..');
 const appDirectory = path.join(dirname, 'test', 'app');
 const originalCwd = process.cwd();
-const standInUri = process.env.MONGO_URL;
+// Other mongodb suites share the memory server and run alongside this one, so the stand-in is a
+// database of its own, which the suite can snapshot without seeing their writes.
+const standInDatabase = 'data_set_journeys';
+const standInUrl = new URL(process.env.MONGO_URL);
+standInUrl.pathname = `/${standInDatabase}`;
+const standInUri = standInUrl.toString();
 
 process.env.LOWDEFY_SECRET_MONGODB_URI = standInUri;
 process.env.LOWDEFY_DIRECTORY_CONFIG = appDirectory;
 process.env.LOWDEFY_LOG_LEVEL = 'error';
 process.env.CRON_SECRET = 'data-set-journeys-cron-secret';
+process.env.LOWDEFY_SECRET_BETTER_AUTH_SECRET = 'data-set-journeys-auth-secret-0123456789abcdef';
 
 // createLowdefyContext imports the app's plugin maps from server-dev/build/plugins, which only a
 // built server directory has: they are materialised for the import (like
@@ -74,9 +82,13 @@ pluginFiles.forEach((filePath) => {
 });
 const { MongoDBCollection } = await import('@lowdefy/connection-mongodb/connections');
 const { MongoDBChangeStream } = await import('@lowdefy/connection-mongodb/websockets');
+const { MongoDBAuthAdapter } = await import('@lowdefy/connection-mongodb/auth/adapters');
+const { ListMembers } = await import('@lowdefy/plugin-better-auth/steps');
 const serverOperators = await import('@lowdefy/operators-js/operators/server');
 const pluginModules = {
+  [path.join('auth', 'adapters.js')]: { default: { MongoDBAuthAdapter } },
   'connections.js': { default: { MongoDBCollection } },
+  'steps.js': { default: { ListMembers } },
   'websockets.js': { default: { MongoDBChangeStream } },
   [path.join('operators', 'server.js')]: { default: { ...serverOperators } },
   'notifications.js': { default: {}, interpolateProperties: () => {}, renderEmail: () => {} },
@@ -100,6 +112,7 @@ const { Hono } = await import('hono');
 const { serve } = await import('@hono/node-server');
 const { WebSocketServer } = await import('ws');
 const { default: apiContext } = await import('../../../src/middleware/apiContext.js');
+const { default: authMiddleware } = await import('../../../src/routes/auth.js');
 const { default: createErrorHandler } = await import('../../../src/middleware/errorHandler.js');
 const { default: detachedHandler } = await import('../../../src/routes/detached.js');
 const { default: docsJourneyHandler } = await import('../../../src/routes/docs/journey.js');
@@ -125,6 +138,9 @@ function pageHtml() {
 <div id="bl-create_later"><button onclick="callEndpoint('create_ticket_later', { id: 'later-1' }, 'dispatched')">Later</button></div>
 <div id="bl-list"><button onclick="callEndpoint('list_tickets', {}, 'listed')">List</button></div>
 <div id="bl-watch"><button onclick="watch()">Watch</button></div>
+<div id="bl-archive"><button onclick="callEndpoint('archive/archive_ticket', { id: 'arch-1' }, 'archived')">Archive</button></div>
+<div id="bl-create_later_auth"><button onclick="callEndpoint('create_ticket_later_auth', {}, 'dispatchedAuth')">Later with auth</button></div>
+<div id="bl-auth_probe"><button onclick="probeAuth()">Auth</button></div>
 <div id="bl-create_watched"><button onclick="callEndpoint('create_ticket', { id: 'watched-1', title: 'Seen' }, 'createdWatched')">Create watched</button></div>
 <script>
 window.lowdefy = {
@@ -152,6 +168,26 @@ async function callEndpoint(endpointId, payload, key) {
     ids: Array.isArray(body.response) ? body.response.map((document) => document._id) : null,
   };
 }
+async function probeAuth() {
+  const signUp = await fetch('/api/auth/sign-up/email', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ email: 'journey@example.com', password: 'journey-password', name: 'Journey' }),
+  });
+  const signIn = await fetch('/api/auth/sign-in/email', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ email: 'developer@example.com', password: 'developer-password' }),
+  });
+  const session = await fetch('/api/auth/get-session');
+  const sessionBody = await session.json();
+  state.auth = {
+    signUp: signUp.status,
+    signIn: signIn.status,
+    session: session.status,
+    sessionUser: sessionBody.user ? sessionBody.user.id : null,
+  };
+}
 function watch() {
   const socket = new WebSocket('ws://' + location.host + '/api/websocket');
   socket.onopen = () => {
@@ -171,6 +207,14 @@ function createApp() {
   const app = new Hono();
   app.post('/lowdefy-docs/journey', docsJourneyHandler);
   app.use('/api/*', apiContext());
+  // As src/app.js mounts them: the get-session stub answers for injected callers, and every other
+  // auth route reaches the auth engine, or a 404 under a data session.
+  app.get('/api/auth/get-session', async (c, next) => {
+    const context = c.get('lowdefyContext');
+    if (context.user) return c.json({ session: { id: 'dev' }, user: context.user });
+    return next();
+  });
+  app.use('/api/auth/*', authMiddleware({ logger: { warn: () => {}, error: console.error } }));
   app.all('/api/endpoints/*', endpointsHandler);
   app.post('/api/detached/*', detachedHandler);
   app.get('/api/websocket', websocketHandler);
@@ -194,15 +238,48 @@ let standIn;
 let store;
 let storeEvents;
 let storeWatch;
+let standInBefore;
+
+// Every collection of the stand-in database (app data and the auth engine's user-* collections),
+// with every document in it.
+async function snapshotStandIn() {
+  const db = standIn.db(standInDatabase);
+  const collections = await db.listCollections({}, { nameOnly: true }).toArray();
+  const snapshot = {};
+  for (const { name } of collections.sort((a, b) => a.name.localeCompare(b.name))) {
+    snapshot[name] = await db.collection(name).find({}).sort({ _id: 1 }).toArray();
+  }
+  return snapshot;
+}
+
+async function standInSessionDatabases() {
+  const { databases } = await standIn.db('admin').admin().listDatabases({ nameOnly: true });
+  return databases.map((database) => database.name).filter((name) => name.startsWith('ld_'));
+}
+
+// The developer's own tab, with no journey cookie: it reaches the auth engine, which writes to the
+// stand-in.
+async function signUpWithoutCookies() {
+  const response = await fetch(`${origin}/api/auth/sign-up/email`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', origin },
+    body: JSON.stringify({
+      email: 'developer@example.com',
+      password: 'developer-password',
+      name: 'Developer',
+    }),
+  });
+  return response.status;
+}
 
 beforeAll(async () => {
   standIn = new MongoClient(standInUri);
   await standIn.connect();
-  await standIn.db().collection('tickets').deleteMany({});
+  await standIn.db(standInDatabase).dropDatabase();
   await standIn
-    .db()
+    .db(standInDatabase)
     .collection('tickets')
-    .insertOne({ _id: 'real-1', organizationId: 'org_a', title: 'The developer’s own' });
+    .insertOne({ _id: 'real-1', organization_id: 'org_a', title: 'The developer’s own' });
 
   store = await getDataStore();
   // Every write on the data store, in order, so a test can tell which session database a detached
@@ -213,6 +290,7 @@ beforeAll(async () => {
     storeEvents.push({
       operationType: change.operationType,
       db: change.ns?.db,
+      coll: change.ns?.coll,
       id: change.documentKey?._id,
     });
   });
@@ -229,6 +307,14 @@ beforeAll(async () => {
     else server.once('listening', resolve);
   });
   origin = `http://127.0.0.1:${server.address().port}`;
+
+  // The auth engine is live for the developer's tab: its sign-up writes a user, a session and the
+  // organization the tenant policy mints. The snapshot is taken after it, so every auth collection
+  // on the stand-in already holds documents a journey could add to.
+  expect(await signUpWithoutCookies()).toBe(200);
+  standInBefore = await snapshotStandIn();
+  expect(standInBefore.users).toHaveLength(1);
+  expect(standInBefore['user-sessions']).toHaveLength(1);
 });
 
 afterAll(async () => {
@@ -238,6 +324,7 @@ afterAll(async () => {
   await new Promise((resolve) => (server ? server.close(resolve) : resolve()));
   await closeClients();
   await store?.stop();
+  await standIn?.db(standInDatabase).dropDatabase();
   await standIn?.close();
   process.chdir(originalCwd);
   fs.rmSync(serverDirectory, { recursive: true, force: true });
@@ -254,7 +341,12 @@ async function runJourney(body) {
 }
 
 async function standInIds() {
-  const documents = await standIn.db().collection('tickets').find({}).sort({ _id: 1 }).toArray();
+  const documents = await standIn
+    .db(standInDatabase)
+    .collection('tickets')
+    .find({})
+    .sort({ _id: 1 })
+    .toArray();
   return documents.map((document) => document._id);
 }
 
@@ -381,11 +473,88 @@ chromiumTest(
     });
     // Written to the stand-in while the journey watches: its stream must not deliver it.
     await new Promise((resolve) => setTimeout(resolve, 3000));
-    await standIn.db().collection('tickets').insertOne({ _id: 'real-2', organizationId: 'org_a' });
+    await standIn
+      .db(standInDatabase)
+      .collection('tickets')
+      .insertOne({ _id: 'real-2', organization_id: 'org_a' });
     const { result } = await journey;
     expect(result.passed).toBe(true);
     expect(result.state.changes).toEqual(['watched-1']);
-    await standIn.db().collection('tickets').deleteOne({ _id: 'real-2' });
+    await standIn.db(standInDatabase).collection('tickets').deleteOne({ _id: 'real-2' });
     expect(await standInIds()).toEqual(['real-1']);
   }
 );
+
+chromiumTest(
+  'a journey that writes through a module connection writes to its session database',
+  async () => {
+    storeEvents.length = 0;
+    const { result } = await runJourney({
+      data: 'shop',
+      user: 'owner',
+      steps: [
+        { click: 'archive' },
+        { expect: { state: { path: 'archived.success', equals: true } } },
+      ],
+    });
+    expect(result.passed).toBe(true);
+    const insert = storeEvents.find(
+      (event) => event.operationType === 'insert' && event.id === 'arch-1'
+    );
+    expect(insert).toBeDefined();
+    expect(insert.db).toMatch(/^ld_[0-9a-f]{12}$/);
+    expect(insert.coll).toEqual('archived');
+  }
+);
+
+chromiumTest(
+  "a data set journey's browser gets 404 from the auth routes and the get-session stub answers for its user",
+  async () => {
+    const { result } = await runJourney({
+      data: 'shop',
+      user: 'owner',
+      steps: [
+        { click: 'auth_probe' },
+        { expect: { state: { path: 'auth.session', equals: 200 } } },
+      ],
+    });
+    expect(result.passed).toBe(true);
+    expect(result.state.auth).toEqual({
+      signUp: 404,
+      signIn: 404,
+      session: 200,
+      sessionUser: 'u_1',
+    });
+  }
+);
+
+chromiumTest(
+  'a detached run that reaches an auth step under a data session fails at that step',
+  async () => {
+    storeEvents.length = 0;
+    const { result } = await runJourney({
+      data: 'shop',
+      user: 'owner',
+      steps: [
+        { click: 'create_later_auth' },
+        { expect: { state: { path: 'dispatchedAuth.success', equals: true } } },
+      ],
+    });
+    expect(result.passed).toBe(true);
+    // The session waited for the detached run before it closed: the step before the auth step
+    // wrote to the session database, and the step after it never ran.
+    const before = storeEvents.find(
+      (event) => event.operationType === 'insert' && event.id === 'later-auth-before'
+    );
+    expect(before).toBeDefined();
+    expect(before.db).toMatch(/^ld_[0-9a-f]{12}$/);
+    expect(storeEvents.some((event) => event.id === 'later-auth-after')).toBe(false);
+  }
+);
+
+// Last, after every journey above: the stand-in, auth collections included, is exactly as the
+// snapshot found it, and no session database ever landed on it.
+chromiumTest('the data set journeys left the stand-in database unchanged', async () => {
+  expect(await snapshotStandIn()).toEqual(standInBefore);
+  expect(await standInSessionDatabases()).toEqual([]);
+});

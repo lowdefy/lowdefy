@@ -83,8 +83,10 @@ journey data set pull, which spawns `lib/data/pullDataSet.mjs` against a memory 
 journey data sessions (`lib/docs/dataSets/openDataSession.mongodb.test.mjs`, which start the dev
 server's own data store), the data store's port, stop and replacement after its mongod dies
 (`getDataStore.mongodb.test.mjs`, which kills that mongod), and the data set journeys end to end
-(`dataSetJourneys.chromium.mongodb.test.mjs`: real Chromium over a build of a fixture app, with the
-jest-mongodb server standing in for the developer's database; skipped without a Chromium). To reproduce a race deterministically,
+(`dataSetJourneys.chromium.mongodb.test.mjs`: real Chromium over a build of a fixture app with
+tenant auth and a local module, with a database on the jest-mongodb server standing in for the
+developer's, auth collections included, snapshotted before and compared after; skipped without a
+Chromium). To reproduce a race deterministically,
 pause one session inside the real adapter (wrap `adapter.create` from `auth.$context`) and
 run the other to completion before releasing it.
 
