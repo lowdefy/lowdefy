@@ -49,7 +49,9 @@ const LOWDEFY_PROPERTIES = [
 
 // One page of one UTC day's events, keyset-paged on (timestamp, uuid): OFFSET
 // answers 400 for personal keys, and the uuid tie-break keeps two events in
-// the same millisecond from straddling a page boundary. Every value travels
+// the same millisecond from straddling a page boundary. The tie-break orders
+// by the uuid's text, as the keyset clause compares it: ClickHouse's UUID
+// order need not be its text order, and a mismatch skips rows. Every value travels
 // in `values`; the chain column is selected only when some interaction on the
 // day lacks Lowdefy's own block properties.
 function buildDayQuery({
@@ -105,7 +107,7 @@ function buildDayQuery({
     `  ${columns.join(',\n  ')}`,
     'FROM events',
     `WHERE ${where.join('\n  AND ')}`,
-    'ORDER BY timestamp, uuid',
+    'ORDER BY timestamp, toString(uuid)',
     'LIMIT {page_size}',
   ].join('\n');
   return { query, values };
