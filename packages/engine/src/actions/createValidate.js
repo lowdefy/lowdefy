@@ -27,7 +27,8 @@ function createValidate({ arrayIndices, context }) {
       throw new UserError(
         context._internal.lowdefy._internal.translate('engine.validation.summary', {
           count: validationErrors.length,
-        })
+        }),
+        { invalidBlocks: validationErrors.map(({ blockId }) => blockId) }
       );
     }
   };

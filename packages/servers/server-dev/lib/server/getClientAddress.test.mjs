@@ -20,7 +20,8 @@ import { jest } from '@jest/globals';
 jest.unstable_mockModule('../build/config.js', () => ({ default: {} }));
 
 const { default: getClientAddress } = await import('./getClientAddress.js');
-const { JOURNEY_ACTOR_COOKIE, journeyActorToken } = await import('./auth/journeyActor.js');
+const { journeyActorToken } = await import('./auth/journeyActor.js');
+const { JOURNEY_COOKIES } = await import('./journeyCookies.js');
 
 async function resolve(headers) {
   const app = new Hono();
@@ -45,7 +46,9 @@ test.each([
     '127.0.0.1',
   ],
 ])('the dev getClientAddress resolves %s', async (_, value, expected) => {
-  expect(await resolve({ cookie: `session=abc; ${JOURNEY_ACTOR_COOKIE}=${value}` })).toBe(expected);
+  expect(await resolve({ cookie: `session=abc; ${JOURNEY_COOKIES.actor.name}=${value}` })).toBe(
+    expected
+  );
 });
 
 test('the dev getClientAddress ignores X-Forwarded-For without trusted proxies', async () => {

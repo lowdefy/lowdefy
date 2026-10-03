@@ -228,6 +228,64 @@ test('detached: true dispatches to /api/detached with CRON_SECRET and continues'
   delete process.env.CRON_SECRET;
 });
 
+function detachedParentReadConfigFile(path) {
+  if (path === 'api/parent_ep.json') {
+    return {
+      endpointId: 'parent_ep',
+      type: 'Api',
+      auth: { public: true },
+      routine: [
+        {
+          id: 'endpoint:parent_ep:spawn',
+          stepId: 'spawn',
+          type: 'CallApi',
+          properties: { endpointId: 'child_ep', detached: true },
+        },
+      ],
+    };
+  }
+  return null;
+}
+
+async function dispatchDetached({ loopbackHeaders }) {
+  process.env.CRON_SECRET = 'shhh';
+  const fetchMock = jest.fn(async () => ({ status: 200 }));
+  global.fetch = fetchMock;
+  const context = testContext({ logger, readConfigFile: jest.fn(detachedParentReadConfigFile) });
+  context.origin = 'https://app.test';
+  if (loopbackHeaders !== undefined) {
+    context.loopbackHeaders = loopbackHeaders;
+  }
+  await callEndpoint(context, { blockId: 'b', endpointId: 'parent_ep', pageId: 'p', payload: {} });
+  await flush();
+  delete process.env.CRON_SECRET;
+  return fetchMock.mock.calls[0][1].headers;
+}
+
+test('detached: true sends the cookie from context.loopbackHeaders on the loopback call', async () => {
+  const headers = await dispatchDetached({
+    loopbackHeaders: { cookie: 'lowdefy_journey_mutant=token.run1' },
+  });
+  expect(headers).toEqual({
+    cookie: 'lowdefy_journey_mutant=token.run1',
+    'content-type': 'application/json',
+    authorization: 'Bearer shhh',
+  });
+});
+
+test('detached: true keeps authorization from CRON_SECRET over loopbackHeaders', async () => {
+  const headers = await dispatchDetached({
+    loopbackHeaders: { authorization: 'Bearer forged', 'content-type': 'text/plain' },
+  });
+  expect(headers.authorization).toEqual('Bearer shhh');
+  expect(headers['content-type']).toEqual('application/json');
+});
+
+test('detached: true without loopbackHeaders sends the same headers as before', async () => {
+  const headers = await dispatchDetached({ loopbackHeaders: undefined });
+  expect(headers).toEqual({ 'content-type': 'application/json', authorization: 'Bearer shhh' });
+});
+
 test('detached: true without CRON_SECRET throws a ConfigError', async () => {
   delete process.env.CRON_SECRET;
   const mockReadConfigFile = jest.fn((path) => {

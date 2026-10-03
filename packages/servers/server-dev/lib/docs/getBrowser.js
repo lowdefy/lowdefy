@@ -20,8 +20,8 @@ import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 import lowdefyConfig from '../build/config.js';
 import isPageReady from './isPageReady.js';
 import { HEADLESS_USER_COOKIE } from '../server/auth/headlessUser.js';
-import { JOURNEY_ACTOR_COOKIE, journeyActorToken } from '../server/auth/journeyActor.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
+import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js';
 
 // playwright-core does not bundle a browser (unlike @playwright/test) — it
 // only drives one that is already installed. `channel: 'chrome'` picks up a
@@ -91,6 +91,8 @@ async function openPage({
   height = 800,
   colorScheme = 'light',
   clientAddress,
+  mutantCookie,
+  onContext,
   timeout = 15000,
 }) {
   const url = buildPageUrl({ origin, pageId, urlQuery });
@@ -107,6 +109,11 @@ async function openPage({
   // (a navigation that times out, a crashed page) would otherwise
   // leak a browser context — and its renderer process — on every failed call.
   try {
+    // A caller that watches the context (a journey's network counter) hooks in
+    // here, before the first request leaves.
+    if (!type.isUndefined(onContext)) {
+      await onContext(context);
+    }
     // Inject an authenticated user so auth-protected pages don't 404 for the
     // cookieless headless context. Mirrors the e2e user-cookie pattern; scoped to
     // `origin` so it rides along on the same-origin /api/* fetches.
@@ -129,13 +136,14 @@ async function openPage({
     // 5 per minute per address).
     if (!type.isUndefined(clientAddress)) {
       await context.addCookies([
-        {
-          name: JOURNEY_ACTOR_COOKIE,
-          value: `${journeyActorToken}.${clientAddress}`,
-          url: origin,
-          httpOnly: true,
-          sameSite: 'Lax',
-        },
+        writeJourneyCookie({ name: JOURNEY_COOKIES.actor.name, payload: clientAddress, origin }),
+      ]);
+    }
+    // A harden run's mutant: every request from this context reads the mutated
+    // artifact (see lib/server/mutants), while other contexts do not.
+    if (!type.isUndefined(mutantCookie)) {
+      await context.addCookies([
+        writeJourneyCookie({ name: JOURNEY_COOKIES.mutant.name, payload: mutantCookie, origin }),
       ]);
     }
     const page = await context.newPage();

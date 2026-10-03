@@ -16,14 +16,16 @@
 
 import { type } from '@lowdefy/helpers';
 import { getState } from '@lowdefy/e2e-utils/runtime';
+import { findPlaceholderStep, validateJourneySteps } from '@lowdefy/node-utils';
 
+import collectExercised from './collectExercised.js';
 import { getBrowser, buildPageUrl } from './getBrowser.js';
 import openJourney from './openJourney.js';
+import readBuildArtifact from './readBuildArtifact.js';
 import runJourneySteps from './runJourneySteps.js';
 import selectFinalState from './selectFinalState.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneyMail from './validateJourneyMail.js';
-import validateJourneySteps from './validateJourneySteps.js';
 import validateJourneyTimeout from './validateJourneyTimeout.js';
 import validateStateSelection from './validateStateSelection.js';
 
@@ -36,6 +38,12 @@ async function readFinalState({ page }) {
   } catch (error) {
     return { error: `Could not read final state: ${error.message}` };
   }
+}
+
+// The built artifacts a journey's exercised path is read from. The pages it
+// visited were built by the visit, so their request artifacts are on disk.
+function defaultReadConfigFile(name) {
+  return readBuildArtifact({ name, deserialize: true });
 }
 
 // runJourney drives a page of the running dev server through a declarative
@@ -61,6 +69,9 @@ async function runJourney({
   height = 800,
   timeout = 15000,
   stepTimeout = 5000,
+  basePath = '',
+  readConfigFile = defaultReadConfigFile,
+  mutantCookie,
 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
     return {
@@ -82,6 +93,10 @@ async function runJourney({
   const { error: stepsError } = validateJourneySteps({ steps });
   if (!type.isUndefined(stepsError)) {
     return { error: stepsError };
+  }
+  const { error: placeholderError } = findPlaceholderStep({ steps });
+  if (!type.isUndefined(placeholderError)) {
+    return { error: placeholderError };
   }
   const stateSelectionError = validateStateSelection({ state: stateSelection });
   if (!type.isUndefined(stateSelectionError)) {
@@ -111,6 +126,7 @@ async function runJourney({
     const opened = await openJourney({
       browser,
       origin,
+      basePath,
       pageId,
       user,
       urlQuery,
@@ -118,16 +134,23 @@ async function runJourney({
       height,
       timeout,
       stepTimeout,
+      mutantCookie,
     });
     journey = opened.journey;
     const { results, screenshots, failure } = await runJourneySteps({ journey, steps });
     const state = await readFinalState({ page: journey.actors.current().page });
+    const exercised = await collectExercised({
+      snapshots: journey.actors.networkSnapshots(),
+      readConfigFile,
+      requestSchemas: (await readConfigFile('plugins/requestSchemas.json')) ?? {},
+    });
     const result = {
       pageId,
       passed: type.isUndefined(failure),
       steps: results,
       screenshots,
       ...selectFinalState({ state, selection: stateSelection }),
+      exercised,
     };
     if (!type.isUndefined(failure)) {
       result.failure = failure;

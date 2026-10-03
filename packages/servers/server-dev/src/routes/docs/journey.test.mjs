@@ -21,6 +21,15 @@ const mockRunJourney = jest.fn();
 jest.unstable_mockModule('../../../lib/docs/runJourney.js', () => ({
   default: mockRunJourney,
 }));
+jest.unstable_mockModule('../../../lib/build/config.js', () => ({
+  default: { basePath: '/app' },
+}));
+const mockGetBuildId = jest.fn(() => 'build-1');
+jest.unstable_mockModule('../../../lib/docs/getBuildId.js', () => ({
+  default: mockGetBuildId,
+}));
+const { readMutantRun } = await import('../../../lib/server/mutants/mutantRuns.js');
+const { journeyActorToken } = await import('../../../lib/server/auth/journeyActor.js');
 
 const { default: docsJourneyHandler } = await import('./journey.js');
 
@@ -62,6 +71,7 @@ test('docsJourneyHandler runs the journey against the request origin and returns
     user: { roles: ['admin'] },
     urlQuery: { id: '1' },
     stepTimeout: undefined,
+    basePath: '/app',
   });
   expect(result.status).toBe(200);
   expect(result.data.passed).toBe(true);
@@ -202,4 +212,85 @@ test('docsJourneyHandler refuses a journey that declares a data set rather than 
   expect(result.status).toBe(400);
   expect(result.data.error).toMatch('cannot run journeys on data sets yet');
   expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
+const mutant = {
+  buildId: 'build-1',
+  artifact: 'pages/form.json',
+  key: 'k1_5',
+  arg: null,
+  operator: 'drop-block',
+};
+
+test('docsJourneyHandler opens a mutant run, passes its cookie to every actor and closes it after', async () => {
+  let runDuringJourney;
+  mockRunJourney.mockImplementation(async ({ mutantCookie }) => {
+    runDuringJourney = readMutantRun(`lowdefy_journey_mutant=${journeyActorToken}.${mutantCookie}`);
+    runDuringJourney.applied = 2;
+    return { pageId: 'form', passed: true, steps: [], screenshots: [], state: {} };
+  });
+  const c = createContext({ pageId: 'form', steps: [{ click: 'submit' }], mutant });
+  const result = await docsJourneyHandler(c);
+  expect(result.status).toBe(200);
+  expect(runDuringJourney.mutant).toEqual(mutant);
+  expect(result.data.mutant).toEqual({ id: runDuringJourney.id, applied: 2, misses: [] });
+  expect(
+    readMutantRun(`lowdefy_journey_mutant=${journeyActorToken}.${runDuringJourney.id}`)
+  ).toBeNull();
+});
+
+test('docsJourneyHandler closes the mutant run when the journey throws', async () => {
+  let cookie;
+  mockRunJourney.mockImplementation(async ({ mutantCookie }) => {
+    cookie = mutantCookie;
+    throw new Error('browser crashed');
+  });
+  const c = createContext({ pageId: 'form', steps: [{ click: 'submit' }], mutant });
+  await expect(docsJourneyHandler(c)).rejects.toThrow('browser crashed');
+  expect(readMutantRun(`lowdefy_journey_mutant=${journeyActorToken}.${cookie}`)).toBeNull();
+});
+
+test('docsJourneyHandler refuses a mutant listed against another build with 409 and stale', async () => {
+  mockGetBuildId.mockReturnValueOnce('build-2');
+  const c = createContext({ pageId: 'form', steps: [{ click: 'submit' }], mutant });
+  const result = await docsJourneyHandler(c);
+  expect(result.status).toBe(409);
+  expect(result.data.stale).toBe(true);
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
+test.each([['../x.json'], ['connections/a.json'], ['pages/../secrets.json'], [5]])(
+  'docsJourneyHandler refuses a mutant artifact %j with 400',
+  async (artifact) => {
+    const c = createContext({
+      pageId: 'form',
+      steps: [{ click: 'submit' }],
+      mutant: { ...mutant, artifact },
+    });
+    const result = await docsJourneyHandler(c);
+    expect(result.status).toBe(400);
+    expect(result.data.error).toContain('"mutant.artifact"');
+    expect(mockRunJourney).not.toHaveBeenCalled();
+  }
+);
+
+test.each([
+  [{ operator: 'drop-everything' }, '"mutant.operator"'],
+  [{ key: 5 }, '"mutant.key"'],
+])('docsJourneyHandler refuses a bad mutant %j with 400', async (override, field) => {
+  const c = createContext({
+    pageId: 'form',
+    steps: [{ click: 'submit' }],
+    mutant: { ...mutant, ...override },
+  });
+  const result = await docsJourneyHandler(c);
+  expect(result.status).toBe(400);
+  expect(result.data.error).toContain(field);
+});
+
+test('docsJourneyHandler passes no mutant cookie and returns no mutant without a mutant', async () => {
+  const c = createContext({ pageId: 'form', steps: [{ click: 'submit' }] });
+  const result = await docsJourneyHandler(c);
+  expect(mockRunJourney.mock.calls[0][0].mutantCookie).toBeUndefined();
+  expect(result.data.mutant).toBeUndefined();
 });

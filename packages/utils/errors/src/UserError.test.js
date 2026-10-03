@@ -83,3 +83,13 @@ test('UserError with all options', () => {
   expect(error.pageId).toBe('page_a');
   expect(error.cause).toBe(inner);
 });
+
+test('UserError keeps invalidBlocks from options', () => {
+  const error = new UserError('msg', { invalidBlocks: ['name', 'email'] });
+  expect(error.invalidBlocks).toEqual(['name', 'email']);
+});
+
+test('UserError without invalidBlocks leaves invalidBlocks undefined', () => {
+  const error = new UserError('msg');
+  expect(error.invalidBlocks).toBeUndefined();
+});

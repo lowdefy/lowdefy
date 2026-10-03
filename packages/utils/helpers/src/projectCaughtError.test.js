@@ -130,6 +130,15 @@ test('projectCaughtError keeps the plain-object cause and metaData of a UserErro
   expect('blockId' in result).toBe(false);
 });
 
+test('projectCaughtError leaves out the invalidBlocks of a UserError', () => {
+  const error = new UserError('2 fields are invalid.', { invalidBlocks: ['name', 'email'] });
+
+  const result = projectCaughtError(error);
+
+  expect(error.invalidBlocks).toEqual(['name', 'email']);
+  expect('invalidBlocks' in result).toBe(false);
+});
+
 test('projectCaughtError drops a non-Error cause of a class other than UserError', () => {
   const error = new RequestError('Request failed.', { cause: { body: SECRET } });
 

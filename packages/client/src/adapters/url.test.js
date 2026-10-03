@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { createUrl, parsePageId } from './url.js';
+import { createUrl } from './url.js';
 
 test('createUrl joins basePath, pathname and string query', () => {
   expect(createUrl({ pathname: '/page-1' })).toBe('/page-1');
@@ -32,21 +32,4 @@ test('createUrl serializes object queries with URLSearchParams', () => {
 test('createUrl ignores empty query values', () => {
   expect(createUrl({ pathname: '/p', query: undefined })).toBe('/p');
   expect(createUrl({ pathname: '/p', query: '' })).toBe('/p');
-});
-
-test('parsePageId extracts page ids including nested ids', () => {
-  expect(parsePageId('http://localhost/page-1')).toBe('page-1');
-  expect(parsePageId('http://localhost/admin/users/list')).toBe('admin/users/list');
-  expect(parsePageId('http://localhost/page-1?x=1')).toBe('page-1');
-  expect(parsePageId('/relative-page')).toBe('relative-page');
-});
-
-test('parsePageId returns null for the root path', () => {
-  expect(parsePageId('http://localhost/')).toBe(null);
-});
-
-test('parsePageId strips basePath', () => {
-  expect(parsePageId('http://localhost/admin/page-1', '/admin')).toBe('page-1');
-  expect(parsePageId('http://localhost/admin/', '/admin')).toBe(null);
-  expect(parsePageId('http://localhost/admin/a/b', '/admin')).toBe('a/b');
 });

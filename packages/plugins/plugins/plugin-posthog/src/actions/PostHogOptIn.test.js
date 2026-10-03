@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 
+import createFakeTrace from '../test/createFakeTrace.js';
 import resetPostHogState from '../test/resetPostHogState.js';
 
 const mockPostHog = {
@@ -39,7 +40,7 @@ afterEach(() => {
 });
 
 test('PostHogOptIn opts the person into capturing', async () => {
-  await PostHogInit({ params: { apiKey: 'phc_key' } });
+  await PostHogInit({ trace: createFakeTrace(), params: { apiKey: 'phc_key' } });
   await expect(PostHogOptIn({ params: {} })).resolves.toBe(null);
   expect(mockPostHog.opt_in_capturing).toHaveBeenCalledTimes(1);
 });
@@ -50,7 +51,7 @@ test('PostHogOptIn does nothing before PostHogInit has run', async () => {
 });
 
 test('PostHogOptIn does nothing when PostHog is disabled', async () => {
-  await PostHogInit({ params: { enabled: false } });
+  await PostHogInit({ trace: createFakeTrace(), params: { enabled: false } });
   await expect(PostHogOptIn({ params: {} })).resolves.toBe(null);
   expect(mockPostHog.opt_in_capturing).not.toHaveBeenCalled();
 });

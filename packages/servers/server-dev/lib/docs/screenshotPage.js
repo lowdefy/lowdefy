@@ -15,13 +15,13 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { validateJourneySteps } from '@lowdefy/node-utils';
 
 import { getBrowser, openPage, buildPageUrl } from './getBrowser.js';
 import openJourney from './openJourney.js';
 import runJourneySteps from './runJourneySteps.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneyMail from './validateJourneyMail.js';
-import validateJourneySteps from './validateJourneySteps.js';
 import validateViewport from './validateViewport.js';
 
 // A feedback annotation's elementRect/shapes are captured in the developer's

@@ -198,6 +198,20 @@ test('runJourney returns an error naming an unknown step key before opening a br
   expect(mockOpenPage).not.toHaveBeenCalled();
 });
 
+test('runJourney refuses a placeholder value (from: shape) before opening a browser', async () => {
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'new' }, { fill: { blockId: 'title', value: null, from: 'shape' } }],
+  });
+  expect(result).toEqual({
+    error:
+      'Step 1: fill on "title" has a placeholder value (from: shape). Fill it from the data set or the journey\'s user, then remove from.',
+  });
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+  expect(mockOpenPage).not.toHaveBeenCalled();
+});
+
 test('runJourney returns an actionable error when no browser is available', async () => {
   mockGetBrowser.mockRejectedValue(new Error("Executable doesn't exist"));
   const result = await runJourney({ origin, pageId: 'form', steps: [] });
@@ -225,6 +239,7 @@ test('runJourney passes user, urlQuery and viewport through to openPage', async 
     width: 800,
     height: 600,
     clientAddress: expect.stringMatching(/^203\.0\.113\.\d+$/),
+    onContext: expect.any(Function),
     timeout: 15000,
   });
 });
@@ -248,9 +263,9 @@ test('runJourney fills, clicks and asserts state, returning passed with the fina
     origin,
     pageId: 'form',
     steps: [
-      { fill: { blockId: 'name', value: 'Ada' } },
+      { fill: { blockId: 'name', value: 'Ada', from: 'recorded' } },
       { click: 'submit' },
-      { expect: { state: { path: 'saved', equals: true } } },
+      { expect: { state: { path: 'saved', equals: true, from: 'recorded' } } },
     ],
   });
 
@@ -1457,7 +1472,11 @@ test('runJourney opens each actor the first time an as step names it and returns
   expect(inviteePage.clicks).toEqual(['#bl-accept', '#bl-dashboard']);
   expect(mockOpenPage).toHaveBeenCalledTimes(2);
   const [mainOpen, inviteeOpen] = mockOpenPage.mock.calls.map(([args]) => args);
-  expect(inviteeOpen).toEqual({ ...mainOpen, clientAddress: inviteeOpen.clientAddress });
+  expect(inviteeOpen).toEqual({
+    ...mainOpen,
+    clientAddress: inviteeOpen.clientAddress,
+    onContext: inviteeOpen.onContext,
+  });
   expect(inviteeOpen).toMatchObject({ pageId: 'signup', user: 'none' });
   // Two people, two clients: rate limits count each actor's attempts apart.
   expect(inviteeOpen.clientAddress).not.toEqual(mainOpen.clientAddress);
@@ -1631,3 +1650,101 @@ test.each([
     expect(page.clicks).toEqual([selector]);
   }
 );
+
+function createFakeRequest({ url, method = 'GET' }) {
+  return { url: () => url, method: () => method };
+}
+
+// openPage hands the journey its browser context through onContext before the
+// first navigation; the fake context keeps the request listener so the test
+// can play the requests a real context would emit.
+function openActorsWithNetwork(actors) {
+  const listeners = [];
+  actors.forEach(({ page, opening }) => {
+    mockOpenPage.mockImplementationOnce(async ({ onContext }) => {
+      let listener;
+      const context = {
+        close: jest.fn(async () => {}),
+        on: jest.fn((event, callback) => {
+          if (event === 'request') listener = callback;
+        }),
+      };
+      await onContext(context);
+      listeners.push(listener);
+      opening.forEach((request) => listener(createFakeRequest(request)));
+      return { context, page, ready: true, url: page.url() };
+    });
+  });
+  return listeners;
+}
+
+test('runJourney reports the exercised network path merged across actors, with nested endpoints and writes', async () => {
+  const mainPage = createPage();
+  const memberPage = createPage();
+  const listeners = openActorsWithNetwork([
+    {
+      page: mainPage,
+      opening: [{ url: `${origin}/api/root` }, { url: `${origin}/api/page/tickets` }],
+    },
+    {
+      page: memberPage,
+      opening: [
+        { url: `${origin}/api/page/ticket` },
+        { url: `${origin}/api/request/tickets/assign`, method: 'POST' },
+        // Another origin, and a route the counter does not track.
+        { url: 'http://elsewhere.test/api/page/other' },
+        { url: `${origin}/api/reload` },
+      ],
+    },
+  ]);
+  const artifacts = {
+    'plugins/requestSchemas.json': {
+      MongoDBFind: { meta: { checkWrite: false } },
+      MongoDBInsertOne: { meta: { checkWrite: true } },
+    },
+    'pages/tickets/requests/get_tickets.json': { type: 'MongoDBFind' },
+    'pages/tickets/requests/assign.json': { type: 'MongoDBInsertOne' },
+    'api/notify.json': {
+      routine: [
+        {
+          id: 'endpoint:notify:log',
+          stepId: 'log',
+          type: 'CallApi',
+          properties: { endpointId: 'log' },
+        },
+      ],
+    },
+    'api/log.json': {
+      routine: [{ id: 'endpoint:log:insert', stepId: 'insert', type: 'MongoDBInsertOne' }],
+    },
+  };
+  mainPage.locator.mockImplementation((selector) => {
+    const locator = createLocator({ selector, page: mainPage });
+    locator.click = jest.fn(async () => {
+      listeners[0](
+        createFakeRequest({ url: `${origin}/api/request/tickets/assign`, method: 'POST' })
+      );
+      listeners[0](createFakeRequest({ url: `${origin}/api/endpoints/notify`, method: 'POST' }));
+    });
+    return locator;
+  });
+  const result = await runJourney({
+    origin,
+    pageId: 'tickets',
+    steps: [{ click: 'assign' }, { as: 'member' }],
+    readConfigFile: async (name) => artifacts[name] ?? null,
+  });
+  expect(result.passed).toBe(true);
+  expect(result.exercised).toEqual({
+    pages: ['ticket', 'tickets'],
+    appEvents: true,
+    requests: [{ pageId: 'tickets', requestId: 'assign', calls: 2, write: true }],
+    endpoints: [
+      { endpointId: 'notify', calls: 1, write: true },
+      { endpointId: 'log', via: 'notify', calls: null, write: true },
+    ],
+    unfollowed: 0,
+    events: [],
+    rendered: {},
+  });
+});
