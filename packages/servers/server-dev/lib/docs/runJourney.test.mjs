@@ -747,6 +747,24 @@ test('runJourney settles a page for at most 5 seconds after an interaction, what
   expect(page.waitForFunction.mock.calls.at(-1)[2]).toEqual({ timeout: 5000 });
 });
 
+test('runJourney fails expect.calls with no pageId when no Lowdefy page is showing', async () => {
+  const page = createPage({ window: { navigation: { currentEntry: { index: 0 } } } });
+  openWith(page);
+
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ expect: { calls: { request: 'save', count: 0 } } }],
+  });
+
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 0,
+    expected: 'a Lowdefy page to count request "save" on',
+    actual: null,
+  });
+});
+
 test('runJourney fills a numeric value as a string', async () => {
   const page = createPage();
   openWith(page);

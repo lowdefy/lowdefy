@@ -606,12 +606,21 @@ function plural({ count, word }) {
 // endpoint since the journey started, from the network counter, which keeps
 // its counts across full page loads. Compared once, after the page settles,
 // without polling: "not called" can only be judged once the moment has passed.
+// A request with no pageId is counted on the page the actor is on; when no
+// Lowdefy page is showing (it crashed or left the app) the step fails, since a
+// count of 0 against no page would pass without proving anything.
 async function expectCalls({ journey, page, params }) {
   await settlePage({ page, timeout: Math.min(journey.stepTimeout, SETTLE_TIMEOUT_MS) });
   let query;
   let description;
   if (type.isUndefined(params.endpoint)) {
     const pageId = params.pageId ?? (await page.evaluate(() => window.lowdefy?.pageId));
+    if (type.isNone(pageId)) {
+      throw new JourneyStepError(
+        `Expected request "${params.request}" to be counted on the current page, but no Lowdefy page is showing.`,
+        { expected: `a Lowdefy page to count request "${params.request}" on`, actual: null }
+      );
+    }
     query = { request: params.request, pageId };
     description = `request "${params.request}" on page "${pageId}"`;
   } else {
