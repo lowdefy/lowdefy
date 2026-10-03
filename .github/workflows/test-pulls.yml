@@ -38,10 +38,12 @@ jobs:
       - name: Process identity tests (Windows)
         if: matrix.os == 'windows-latest'
         run: pnpm --filter=@lowdefy/node-utils test StartTime watchOwner ServerRegistry registerServer DevInstance --no-coverage
-      - name: Time zone change test (Windows)
-        if: matrix.os == 'windows-latest'
-        run: pnpm --filter=@lowdefy/node-utils test windowsTimeZoneChange --no-coverage
       - name: Prune tests (Windows)
         if: matrix.os == 'windows-latest'
         run: pnpm --filter=lowdefy test pruneServers --no-coverage
+      # Last: WMI answers slowly for minutes after a time zone change, so start
+      # time reads in any step after it would time out.
+      - name: Time zone change test (Windows)
+        if: matrix.os == 'windows-latest'
+        run: pnpm --filter=@lowdefy/node-utils test windowsTimeZoneChange --no-coverage
       - uses: codecov/codecov-action@v5
