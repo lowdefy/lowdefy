@@ -19,10 +19,17 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import devServer from '@hono/vite-dev-server';
 import { WebSocketServer } from 'ws';
+import watchOwner from '@lowdefy/node-utils/watchOwner.js';
 
 import createDevServerExclude from './lib/vite/createDevServerExclude.js';
 
 const devServerEntry = './src/app.js';
+
+// The dev manager spawns this Vite process with a stdin pipe it holds and
+// LOWDEFY_EXIT_ON_STDIN_CLOSE set, so a manager killed outright (SIGKILL, out
+// of memory) does not leave Vite holding the internal port. process.exit runs
+// Playwright's exit handler, which closes any browser this process launched.
+watchOwner({ onExit: () => process.exit(0) });
 
 // basePath from the Lowdefy build — assets and routes are served under it.
 let basePath = '';

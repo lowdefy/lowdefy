@@ -17,6 +17,7 @@
 import checkEnvironmentGuards from './checkEnvironmentGuards.js';
 import cleanDirectory from './cleanDirectory.js';
 import collectEnvironmentGuards from './collectEnvironmentGuards.js';
+import compareProcessStartTimes from './compareProcessStartTimes.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import createClientAddressResolver from './createClientAddressResolver.js';
 import createSecretScrubber from './createSecretScrubber.js';
@@ -31,18 +32,26 @@ import getSecretsFromEnv from './getSecretsFromEnv.js';
 import hashDataSetSpec from './hashDataSetSpec.js';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 import isPidAlive from './isPidAlive.js';
+import isProcessAlive from './isProcessAlive.js';
+import isProcessStartTime from './isProcessStartTime.js';
 import isPortAvailable from './isPortAvailable.js';
 import linkDependenciesToWorkspace from './linkDependenciesToWorkspace.js';
 import linkWorkspaceDependencies from './linkWorkspaceDependencies.js';
 import listDataSets from './listDataSets.js';
 import parseDataSet from './parseDataSet.js';
 import parseIpRange from './parseIpRange.js';
+import parsePsStartTime from './parsePsStartTime.js';
 import readDevInstance from './readDevInstance.js';
+import readDevInstanceAsync from './readDevInstanceAsync.js';
+import readProcessStartTime from './readProcessStartTime.js';
+import readServerRegistry from './readServerRegistry.js';
+import registerServer from './registerServer.js';
 import listRecordingFiles, { RECORDING_SOURCES } from './recordings/listRecordingFiles.js';
 import readRecordings from './recordings/readRecordings.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
+import watchOwner from './watchOwner.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 import compileTrace from './journeyCompiler/compileTrace.js';
 import collectKnownText from './journeyText/collectKnownText.js';
@@ -67,6 +76,7 @@ export {
   cleanDirectory,
   collectEnvironmentGuards,
   collectKnownText,
+  compareProcessStartTimes,
   compileTrace,
   copyFileOrDirectory,
   createClientAddressResolver,
@@ -86,6 +96,8 @@ export {
   installIfPackageJsonChanged,
   isBackedBy,
   isPidAlive,
+  isProcessAlive,
+  isProcessStartTime,
   isPortAvailable,
   journeySequence,
   linkDependenciesToWorkspace,
@@ -96,15 +108,21 @@ export {
   listRecordingFiles,
   normaliseBlockId,
   parseIpRange,
+  parsePsStartTime,
   parseTraceLines,
   profileProduction,
   readDevInstance,
+  readDevInstanceAsync,
+  readProcessStartTime,
+  readServerRegistry,
+  registerServer,
   readRecordings,
   RECORDING_SOURCES,
   spawnProcess,
   stepIdentity,
   readFile,
   writeFile,
+  watchOwner,
   writeFileIfChanged,
   getStepKey,
   STEP_KEYS,
