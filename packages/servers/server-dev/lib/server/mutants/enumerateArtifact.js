@@ -19,9 +19,9 @@ import { type } from '@lowdefy/helpers';
 import walkArtifact from './walkArtifact.js';
 
 // Every mutant the given operators can make in one deserialised artifact, as
-// { operator, key, arg, anchor, describe }. A target without a ~k (an object
-// the build made rather than read from config) cannot be addressed and is
-// left out.
+// { operator, key, arg, anchor, describe, node }, node being the target. A
+// target without a ~k (an object the build made rather than read from config)
+// cannot be addressed and is left out.
 function enumerateArtifact({ artifact, root, operators }) {
   const applicable = operators.filter((operator) =>
     operator.artifacts.some((pattern) => pattern.test(artifact))
@@ -38,7 +38,9 @@ function enumerateArtifact({ artifact, root, operators }) {
         operator
           .enumerate(visit)
           .filter((target) => type.isString(target.key))
-          .forEach((target) => mutants.push({ operator: operator.name, ...target }));
+          .forEach((target) =>
+            mutants.push({ operator: operator.name, ...target, node: visit.node })
+          );
       });
     },
   });
