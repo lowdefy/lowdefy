@@ -83,9 +83,10 @@ journey data set pull, which spawns `lib/data/pullDataSet.mjs` against a memory 
 pause one session inside the real adapter (wrap `adapter.create` from `auth.$context`) and
 run the other to completion before releasing it.
 
-CI does not run it on every push. Start the `MongoDB Tests` workflow from the Actions tab,
-or add the `run-mongodb-tests` label to a pull request. Each jest run starts its own
-`mongod` on a free port, so worktrees can run it at the same time.
+The fast CI path does not run it; the complete path runs it before every release (see
+[CI](#ci)). Start the `MongoDB Tests` workflow from the Actions tab, or add the
+`run-mongodb-tests` label to a pull request, to run it on a pull request. Each jest run
+starts its own `mongod` on a free port, so worktrees can run it at the same time.
 
 ## Auth journeys
 
@@ -167,9 +168,9 @@ when the copy's `package.json` changes, so a repeat run spends its time on the b
 Delete `_server/e2e/<package>` to force a fresh install. `packages/cli/dist` and the linked
 packages' `dist` must be built first (`pnpm build`).
 
-CI does not run block e2e on every push. Start the `Block E2E Tests` workflow from the
-Actions tab, or add the `run-block-e2e` label to a pull request; it runs each package's
-suite in its own job.
+The fast CI path does not run block e2e; the complete path runs it before every release
+(see [CI](#ci)). Start the `Block E2E Tests` workflow from the Actions tab, or add the
+`run-block-e2e` label to a pull request; it runs each package's suite in its own job.
 
 ## Enrichment tables e2e
 
@@ -204,12 +205,54 @@ them through `callTestEndpoint`. They are marked "E2E ONLY, DO NOT COPY".
 On teardown Playwright stops the app first, with a SIGTERM it waits for (suites with services),
 then the replica set; mongod runs in a process group of its own, so the script stops it cleanly.
 CI runs the suite in the block e2e workflow (`test-block-e2e.yml`, job `enrichment`, on the
-`run-block-e2e` label), with the mongod binaries cached and downloaded before the run.
+`run-block-e2e` label and on the complete path), with the mongod binaries cached and
+downloaded before the run.
+
+## CI
+
+CI has two paths.
+
+**Fast path** (`.github/workflows/test-fast.yml`, check `Tests / Test`): every pull request
+(except into `main`) and every push to `develop` and the `v*` branches. One job on
+ubuntu with Node 24:
+
+1. `scripts/ci-scope.mjs` diffs the change against its base: a pull request's base branch
+   (the first parent of its merge commit), or the commit a pushed branch pointed at before.
+   A changed file outside `packages/` (the lockfile, the root `package.json`, `turbo.json`,
+   `pnpm-workspace.yaml`, `.github/`, `scripts/`, shared swc or eslint config, `apps/`)
+   tests every package; otherwise only the packages turbo's `...[<base>]` filter picks,
+   the changed packages and their dependents. `@lowdefy/docs` always runs, since its
+   docs-content staleness test hashes files from packages it does not depend on.
+2. `turbo run build` builds every package except the website, restoring unchanged ones from
+   the turbo cache (`.turbo/cache`, kept between runs with `actions/cache`).
+3. The dependency check (`pnpm test:dependencies`) always runs.
+4. `turbo run test` runs the tests of the scoped packages (never `connection-mongodb`).
+5. `@lowdefy/website` builds only when the change touches it or tests every package.
+
+Changes that only touch `code-docs/`, `.changeset/`, `.claude/`, root markdown,
+`CHANGELOG.md` or `README.md` files skip the workflow (`paths-ignore`). Markdown inside
+packages still runs it: the docs-content staleness test reads some of it. A new push to a
+pull request or branch cancels its run in progress.
+
+**Complete path** (`.github/workflows/test-complete.yml`): the unit tests (`pnpm build`,
+`pnpm test`) on ubuntu and windows with Node 24 and 26, `pnpm test:mongodb`
+(`test-mongodb.yml`), the journey fixture suites (`test:fixture` in `@lowdefy/server-dev` and
+`lowdefy`, which must pass tests, not skip them for want of Chromium) and every block e2e
+suite (`test-block-e2e.yml`). It runs:
+
+- on every push to `main`: `release.yaml` calls it, and opens the version pull request or
+  publishes only when it passes, so a release cannot skip it;
+- on every pull request into `main`;
+- by hand before cutting a release: the `Complete Tests` workflow in the Actions tab, or
+  `gh workflow run test-complete.yml --ref <branch>`. GitHub only offers a manual run for a
+  workflow that is on the default branch (`main`).
+
+Codecov gets the complete path's ubuntu / Node 24 coverage only.
 
 ## Before merging
 
-The root `pnpm test` in CI skips the MongoDB and block e2e suites, so a pull request that
-touches them runs them on request (the pull request template lists both):
+The fast path skips the MongoDB, journey fixture and block e2e suites, so a pull request
+that touches them runs them on request (the pull request template lists both):
 
 | Change touches                               | Run                                                  |
 | -------------------------------------------- | ---------------------------------------------------- |
