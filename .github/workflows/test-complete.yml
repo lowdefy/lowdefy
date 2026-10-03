@@ -6,6 +6,10 @@ name: Complete Tests
 # it passes; it also runs on pull requests into main and by hand from the Actions tab
 # (`gh workflow run test-complete.yml --ref <branch>`). See code-docs/testing.md.
 on:
+  # TEMPORARY: proves the complete path on this branch; removed before review.
+  push:
+    branches:
+      - ci/v7-fast-ci
   workflow_dispatch:
   workflow_call:
   pull_request:
