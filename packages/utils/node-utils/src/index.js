@@ -34,6 +34,7 @@ import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
+import validateTraceRecord from './journeyTrace/validateTraceRecord.js';
 
 export {
   checkEnvironmentGuards,
@@ -57,4 +58,5 @@ export {
   readFile,
   writeFile,
   writeFileIfChanged,
+  validateTraceRecord,
 };
