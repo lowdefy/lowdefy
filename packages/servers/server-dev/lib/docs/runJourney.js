@@ -21,7 +21,7 @@ import {
   getShortcutModifier,
   getState,
 } from '@lowdefy/e2e-utils/runtime';
-import { getStepKey, validateJourneySteps } from '@lowdefy/node-utils';
+import { findPlaceholderStep, getStepKey, validateJourneySteps } from '@lowdefy/node-utils';
 
 import createJourneyActors from './createJourneyActors.js';
 import { getBrowser, buildPageUrl } from './getBrowser.js';
@@ -892,6 +892,10 @@ async function runJourney({
   const { error: stepsError } = validateJourneySteps({ steps });
   if (!type.isUndefined(stepsError)) {
     return { error: stepsError };
+  }
+  const { error: placeholderError } = findPlaceholderStep({ steps });
+  if (!type.isUndefined(placeholderError)) {
+    return { error: placeholderError };
   }
   const stateSelectionError = validateStateSelection({ state: stateSelection });
   if (!type.isUndefined(stateSelectionError)) {

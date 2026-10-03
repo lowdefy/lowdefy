@@ -34,6 +34,7 @@ import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
+import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
 import validateJourneySteps, {
   getStepKey,
   STEP_KEYS,
@@ -49,6 +50,7 @@ export {
   createClientAddressResolver,
   createSecretScrubber,
   findAvailablePort,
+  findPlaceholderStep,
   getDevInstancePath,
   getFileExtension,
   getFileSubExtension,
