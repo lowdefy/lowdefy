@@ -14,14 +14,19 @@
   limitations under the License.
 */
 
-// A block inside a List renders with its item index in its id (`rows.0.label`),
-// while config names it with `$` (`rows.$.label`); the exercised path uses
-// the config form so it lines up with mutant anchors and lints.
-function normaliseBlockId(blockId) {
-  return blockId
-    .split('.')
-    .map((segment) => (/^\d+$/.test(segment) ? '$' : segment))
-    .join('.');
+import { getStepKey } from '@lowdefy/node-utils';
+
+// L3: no fixed waits. A wait of n ms is either too short on a slow machine
+// or too long everywhere else.
+function L3({ journey }) {
+  return journey.steps
+    .map((step, index) => ({ step, index }))
+    .filter(({ step }) => getStepKey(step) === 'wait' && getStepKey(step.wait) === 'ms')
+    .map(({ index }) => ({
+      severity: 'error',
+      stepIndex: index,
+      message: `step ${index} (wait: { ms }) waits a fixed time: wait for a request or a state, or expect the outcome, instead.`,
+    }));
 }
 
-export default normaliseBlockId;
+export default L3;

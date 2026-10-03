@@ -15,8 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-
-import normaliseBlockId from './normaliseBlockId.js';
+import { normaliseBlockId } from '@lowdefy/node-utils';
 
 // What a journey's pages reported from inside: the Lowdefy events that
 // completed (the engine's trace hook) and the blocks that were ever visible.

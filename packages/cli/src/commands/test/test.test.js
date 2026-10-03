@@ -342,3 +342,35 @@ test("test writes each journey's newest exercised path to .lowdefy/test/exercise
     },
   });
 });
+
+test('test --lint lints without a server, exits 1 on an error and 0 on warnings only', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile(
+    'a.yaml',
+    journeyYaml({
+      name: 'waits a fixed time',
+      steps: '  - wait: { ms: 100 }\n  - expect: { visible: done }\n',
+    })
+  );
+  context.options = { lint: true };
+  await test({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(process.exitCode).toBe(1);
+  expect(logs.error).toContain(
+    'L3  waits a fixed time  step 0 (wait: { ms }) waits a fixed time: wait for a request or a state, or expect the outcome, instead.'
+  );
+  expect(logs.warn).toContain(
+    'L4  waits a fixed time  not checked for writes: run lowdefy test once so lint can see what it calls.'
+  );
+
+  process.exitCode = undefined;
+  logs = { info: [], warn: [], error: [] };
+  writeJourneyFile(
+    'a.yaml',
+    journeyYaml({ name: 'asserts', steps: '  - click: save\n  - expect: { visible: done }\n' })
+  );
+  await test({ context });
+  expect(process.exitCode).toBeUndefined();
+  expect(logs.info).toContain('Linted 1 journeys: 0 errors, 1 warnings.');
+});

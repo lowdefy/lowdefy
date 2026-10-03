@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import fetchBuildId from './fetchBuildId.js';
+import lintJourneys from './lint/lintJourneys.js';
 import parseRepeat from './parseRepeat.js';
 import resolveJourneyPaths from './resolveJourneyPaths.js';
 import resolveServer from './resolveServer.js';
@@ -70,6 +71,14 @@ async function test({ context }) {
       return;
     }
     context.logger.warn('No tests found. Add journeys to tests/journeys/*.yaml.');
+    context.sendTelemetry();
+    return;
+  }
+
+  if (context.options.lint === true) {
+    if (lintJourneys({ context, items: selected.map(({ item }) => item) }).failed) {
+      process.exitCode = 1;
+    }
     context.sendTelemetry();
     return;
   }

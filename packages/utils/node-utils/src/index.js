@@ -36,6 +36,7 @@ import writeFile from './writeFile.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
 import compileTrace from './journeyCompiler/compileTrace.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
+import normaliseBlockId from './journeyGrammar/normaliseBlockId.js';
 import journeySequence from './journeyCompiler/journeySequence.js';
 import parseTraceLines from './journeyCompiler/parseTraceLines.js';
 import stepIdentity from './journeyCompiler/stepIdentity.js';
@@ -65,6 +66,7 @@ export {
   isPidAlive,
   isPortAvailable,
   journeySequence,
+  normaliseBlockId,
   parseIpRange,
   parseTraceLines,
   readDevInstance,

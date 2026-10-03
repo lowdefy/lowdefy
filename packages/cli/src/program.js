@@ -383,6 +383,12 @@ program
       'Change the directory journeys are read from. Default is "<config-directory>/tests/journeys". Fails when the directory holds no journeys.'
     )
   )
+  .addOption(
+    new Option(
+      '--lint',
+      'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L6 final assertion) and run nothing.'
+    )
+  )
   .addOption(options.logLevel)
   .addOption(options.port)
   .addOption(options.refResolver)
