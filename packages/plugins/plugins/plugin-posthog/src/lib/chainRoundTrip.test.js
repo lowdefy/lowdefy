@@ -17,7 +17,6 @@
   limitations under the License.
 */
 
-import { getTrace } from '@lowdefy/engine';
 import { targetFixtures } from '@lowdefy/e2e-utils/targets';
 import { targetFromElementsChain } from '@lowdefy/helpers';
 import { autocapturePropertiesForElement } from 'posthog-js/lib/src/autocapture.js';
@@ -31,8 +30,18 @@ function chainOf(element) {
   }).props.$elements_chain;
 }
 
-function withoutBrowserFields({ nth, page_id, block_type, ...target }) {
-  return target;
+// The fixture's canonical target without nth, which the chain cannot carry. The engine's tests
+// check describeElement against the same fixtures, so the chain parser and describeElement agree.
+// (The engine is not a dependency here: it would close a package cycle through @lowdefy/build.)
+function chainTarget({ target, blockIds }) {
+  return {
+    block_id: target.block_id,
+    row: target.row,
+    column: target.column,
+    text: target.text,
+    option: target.option,
+    block_ids: blockIds,
+  };
 }
 
 afterEach(() => {
@@ -40,13 +49,12 @@ afterEach(() => {
 });
 
 test.each(targetFixtures.map((fixture) => [fixture.name, fixture]))(
-  'the posthog-js chain of a click parses to the described target: %s',
+  'the posthog-js chain of a click parses to the fixture target: %s',
   (name, fixture) => {
-    const { describeElement } = getTrace({ basePath: '', contexts: {}, home: {} });
     document.body.innerHTML = fixture.html;
     const clicked = document.querySelector(fixture.clicked ?? fixture.element);
     const chain = chainOf(clicked);
     expect(typeof chain).toBe('string');
-    expect(targetFromElementsChain(chain)).toEqual(withoutBrowserFields(describeElement(clicked)));
+    expect(targetFromElementsChain(chain)).toEqual(chainTarget(fixture));
   }
 );
