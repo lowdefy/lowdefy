@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import path from 'path';
 import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
@@ -71,7 +72,7 @@ test('linkWorkspacePlugins links plugins to the parent packages it was given', a
   ]);
   expect(writeFileIfChanged.mock.calls).toEqual([
     [
-      '/repo/apps/app/.lowdefy/server/package.json',
+      path.join(directory, 'package.json'),
       `{
   "name": "@lowdefy/server",
   "dependencies": {

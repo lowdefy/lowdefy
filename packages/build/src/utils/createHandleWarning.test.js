@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import { ConfigWarning } from '@lowdefy/errors';
 
 import createHandleWarning from './createHandleWarning.js';
@@ -60,7 +62,7 @@ test('handleWarning resolves location from configKey', () => {
 
   handleWarning(new ConfigWarning('Bad block', { configKey: 'abc123' }));
 
-  expect(lines[0].err.source).toBe('/app/pages/home.yaml:42');
+  expect(lines[0].err.source).toBe(`${path.resolve('/app', 'pages/home.yaml')}:42`);
 });
 
 test('handleWarning sets received on warning', () => {

@@ -21,6 +21,7 @@ import { ConfigError, ConfigWarning } from '@lowdefy/errors';
 import { evaluateOperators } from '@lowdefy/operators';
 import makeRefDefinition from './makeRefDefinition.js';
 import rebaseModuleRefPaths from './rebaseModuleRefPaths.js';
+import isPathInsideRoot from './isPathInsideRoot.js';
 import getRefContent from './getRefContent.js';
 import getModuleRefContent from './getModuleRefContent.js';
 import runTransformer from './runTransformer.js';
@@ -775,11 +776,7 @@ async function prepareRef(node, ctx) {
   if (ctx.packageRoot) {
     for (const field of ['path', 'resolver', 'transformer']) {
       const value = refDef[field];
-      if (
-        type.isString(value) &&
-        !value.startsWith(ctx.packageRoot + '/') &&
-        value !== ctx.packageRoot
-      ) {
+      if (type.isString(value) && !isPathInsideRoot({ root: ctx.packageRoot, target: value })) {
         throw new ConfigError(`Module ref ${field} "${value}" escapes the package root.`, {
           filePath: ctx.currentFile,
           lineNumber: ctx.currentFile ? lineNumber : null,

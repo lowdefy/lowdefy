@@ -116,8 +116,10 @@ const testTypesMap = {
 // Mirrors the CLI logger's name segment (errorToDisplayString) so fixtures assert
 // what a developer actually reads in the terminal. `received` is left off - the
 // logged line carries the message, not the operator payload.
+// `source` is a native file path. Fixtures write paths with '/', so the source
+// is shown with '/' separators on every platform (a no-op on POSIX).
 function formatLine(line) {
-  const source = line.err?.source ?? null;
+  const source = line.err?.source?.split(path.sep).join('/') ?? null;
   const name = line.err?.name ?? null;
   const message = name
     ? errorToDisplayString({ name, message: line.msg, prodError: line.err?.prodError })

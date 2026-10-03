@@ -41,7 +41,12 @@ function readRecord() {
   return JSON.parse(fs.readFileSync(instancePath(), 'utf8'));
 }
 
-test('acquireDevInstance writes a starting record for this process, readable only by the owner', () => {
+// Windows has no owner-only file mode bits, and getProcessStartTime reads `ps`,
+// which Windows lacks, so it returns null there until start times have a Windows
+// source.
+const onPosix = process.platform === 'win32' ? test.skip : test;
+
+test('acquireDevInstance writes a starting record for this process', () => {
   const instance = acquireDevInstance({ configDirectory, owner: 'terminal', version: '6.0.0' });
   expect(instance.acquired).toBe(true);
   expect(readRecord()).toMatchObject({
@@ -51,6 +56,10 @@ test('acquireDevInstance writes a starting record for this process, readable onl
     state: 'starting',
     version: '6.0.0',
   });
+});
+
+onPosix('acquireDevInstance writes the record readable only by the owner', () => {
+  acquireDevInstance({ configDirectory, owner: 'terminal', version: '6.0.0' });
   expect(fs.statSync(instancePath()).mode & 0o777).toBe(0o600);
 });
 
@@ -73,16 +82,18 @@ test('acquireDevInstance release removes the record', () => {
 });
 
 test('acquireDevInstance refuses when a live process holds this app', () => {
-  // pid 1 (init/launchd) is always alive and never this process.
+  // The parent process is alive for the whole test and is never this process,
+  // on every platform (Windows has no pid 1).
+  const livePid = process.ppid;
   fs.mkdirSync(path.dirname(instancePath()), { recursive: true });
-  fs.writeFileSync(instancePath(), JSON.stringify({ pid: 1, configDirectory, port: 3000 }));
+  fs.writeFileSync(instancePath(), JSON.stringify({ pid: livePid, configDirectory, port: 3000 }));
   const instance = acquireDevInstance({ configDirectory, owner: 'terminal', version: '6.0.0' });
   expect(instance.acquired).toBe(false);
-  expect(instance.holder).toEqual({ pid: 1, configDirectory, port: 3000 });
+  expect(instance.holder).toEqual({ pid: livePid, configDirectory, port: 3000 });
 });
 
 test('acquireDevInstance takes over a record whose process has exited', () => {
-  const dead = spawnSync('true').pid;
+  const dead = spawnSync(process.execPath, ['-e', '']).pid;
   fs.mkdirSync(path.dirname(instancePath()), { recursive: true });
   fs.writeFileSync(instancePath(), JSON.stringify({ pid: dead, configDirectory }));
   const instance = acquireDevInstance({ configDirectory, owner: 'terminal', version: '6.0.0' });
@@ -104,7 +115,7 @@ test('acquireDevInstance release leaves a record taken over by a newer manager',
   expect(fs.existsSync(instancePath())).toBe(true);
 });
 
-test('acquireDevInstance takes over a record left on a pid another process now has', () => {
+onPosix('acquireDevInstance takes over a record left on a pid another process now has', () => {
   // pid 1 is alive, but it is not the manager that wrote this record.
   fs.mkdirSync(path.dirname(instancePath()), { recursive: true });
   fs.writeFileSync(

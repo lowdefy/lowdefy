@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import path from 'path';
 import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('@lowdefy/node-utils', () => ({
@@ -82,7 +83,10 @@ test('resolveVersionReference throws when a "workspace:" root dependency is not 
       workspaceRoot,
     })
   ).toThrow(
-    'Cannot resolve the override version "$a": /repo/package.json has "a": "workspace:^1.0.0", but no package named "a" was found in the pnpm workspace at /repo.'
+    `Cannot resolve the override version "$a": ${path.join(
+      '/repo',
+      'package.json'
+    )} has "a": "workspace:^1.0.0", but no package named "a" was found in the pnpm workspace at /repo.`
   );
 });
 
@@ -124,7 +128,13 @@ test('resolveVersionReference throws when the catalog has no entry for the depen
       workspaceRoot,
     })
   ).toThrow(
-    'Cannot resolve the override version "$a": /repo/package.json has "a": "catalog:legacy", but the "legacy" catalog in /repo/pnpm-workspace.yaml has no entry for "a".'
+    `Cannot resolve the override version "$a": ${path.join(
+      '/repo',
+      'package.json'
+    )} has "a": "catalog:legacy", but the "legacy" catalog in ${path.join(
+      '/repo',
+      'pnpm-workspace.yaml'
+    )} has no entry for "a".`
   );
 });
 
@@ -138,5 +148,10 @@ test('resolveVersionReference throws when the parent root package.json has no su
       spec: '$a',
       workspaceRoot,
     })
-  ).toThrow('Cannot resolve the override version "$a": /repo/package.json has no dependency "a".');
+  ).toThrow(
+    `Cannot resolve the override version "$a": ${path.join(
+      '/repo',
+      'package.json'
+    )} has no dependency "a".`
+  );
 });

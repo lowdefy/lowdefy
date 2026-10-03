@@ -24,6 +24,8 @@ import { createRunBuild } from './test-utils/runBuild.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const fixturesDir = path.join(__dirname, 'tests/errors');
+// runBuild reports error sources with '/' separators; expand {{fixturesDir}} to match.
+const fixturesDirPosix = fixturesDir.split(path.sep).join('/');
 
 // Mock writeBuildArtifact to avoid file writes
 jest.unstable_mockModule('./utils/writeBuildArtifact.js', () => ({
@@ -98,7 +100,10 @@ describe('Build Error Tests', () => {
         if (testCase.errorContains) {
           for (const expectedText of testCase.errorContains) {
             // Replace {{fixturesDir}} with actual path
-            const normalizedExpected = expectedText.replace(/\{\{fixturesDir\}\}/g, fixturesDir);
+            const normalizedExpected = expectedText.replace(
+              /\{\{fixturesDir\}\}/g,
+              fixturesDirPosix
+            );
             const found = result.errors.some((err) => err.includes(normalizedExpected));
             expect(found).toBe(true);
           }
@@ -115,7 +120,10 @@ describe('Build Error Tests', () => {
         // Check warning messages contain expected text
         if (testCase.warningContains) {
           for (const expectedText of testCase.warningContains) {
-            const normalizedExpected = expectedText.replace(/\{\{fixturesDir\}\}/g, fixturesDir);
+            const normalizedExpected = expectedText.replace(
+              /\{\{fixturesDir\}\}/g,
+              fixturesDirPosix
+            );
             const found = result.warnings.some((warn) => warn.includes(normalizedExpected));
             expect(found).toBe(true);
           }
@@ -124,7 +132,10 @@ describe('Build Error Tests', () => {
         // Check exact warning format (for testing 2-line format)
         if (testCase.exactWarnings) {
           for (const exactWarning of testCase.exactWarnings) {
-            const normalizedExpected = exactWarning.replace(/\{\{fixturesDir\}\}/g, fixturesDir);
+            const normalizedExpected = exactWarning.replace(
+              /\{\{fixturesDir\}\}/g,
+              fixturesDirPosix
+            );
             const found = result.warnings.some((warn) => warn === normalizedExpected);
             expect(found).toBe(true);
           }
@@ -133,7 +144,7 @@ describe('Build Error Tests', () => {
         // Check exact error format (for testing 2-line format)
         if (testCase.exactErrors) {
           for (const exactError of testCase.exactErrors) {
-            const normalizedExpected = exactError.replace(/\{\{fixturesDir\}\}/g, fixturesDir);
+            const normalizedExpected = exactError.replace(/\{\{fixturesDir\}\}/g, fixturesDirPosix);
             const found = result.errors.some((err) => err === normalizedExpected);
             expect(found).toBe(true);
           }

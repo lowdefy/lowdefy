@@ -1107,7 +1107,7 @@ describe('module path resolution stores absolute path in refMap', () => {
     const moduleRoot = '/modules/dashboard';
 
     mockReadConfigFile.mockImplementation((filePath) => {
-      if (filePath === '/modules/dashboard/pages/overview.yaml') {
+      if (filePath === path.resolve('/modules/dashboard/pages/overview.yaml')) {
         return { id: 'overview', type: 'Box' };
       }
       return null;
@@ -1134,7 +1134,7 @@ describe('module path resolution stores absolute path in refMap', () => {
 
     // Find the refMap entry for the resolved _ref
     const refEntry = Object.values(buildContext.refMap).find(
-      (entry) => entry.path === '/modules/dashboard/pages/overview.yaml'
+      (entry) => entry.path === path.resolve('/modules/dashboard/pages/overview.yaml')
     );
     expect(refEntry).toBeDefined();
   });
@@ -1144,7 +1144,7 @@ describe('module path resolution stores absolute path in refMap', () => {
     buildContext.modules = {};
 
     mockReadConfigFile.mockImplementation((filePath) => {
-      if (filePath === '/modules/dashboard/shared/stat-card.yaml') {
+      if (filePath === path.resolve('/modules/dashboard/shared/stat-card.yaml')) {
         return { id: 'stat', type: 'Box' };
       }
       return null;
@@ -1174,7 +1174,7 @@ describe('module path resolution stores absolute path in refMap', () => {
     // Should resolve from moduleRoot: /modules/dashboard/shared/stat-card.yaml
     // NOT from currentFile dir: /modules/dashboard/pages/shared/stat-card.yaml
     const refEntry = Object.values(buildContext.refMap).find(
-      (entry) => entry.path === '/modules/dashboard/shared/stat-card.yaml'
+      (entry) => entry.path === path.resolve('/modules/dashboard/shared/stat-card.yaml')
     );
     expect(refEntry).toBeDefined();
   });
@@ -1184,7 +1184,7 @@ describe('module path resolution stores absolute path in refMap', () => {
     buildContext.modules = {};
 
     mockReadConfigFile.mockImplementation((filePath) => {
-      if (filePath === '/modules/app/components/button.yaml') {
+      if (filePath === path.resolve('/modules/app/components/button.yaml')) {
         return { id: 'btn', type: 'Button' };
       }
       return null;
@@ -1210,7 +1210,7 @@ describe('module path resolution stores absolute path in refMap', () => {
     await resolve(node, ctx);
 
     const refEntry = Object.values(buildContext.refMap).find(
-      (entry) => entry.path === '/modules/app/components/button.yaml'
+      (entry) => entry.path === path.resolve('/modules/app/components/button.yaml')
     );
     expect(refEntry).toBeDefined();
   });
@@ -1663,7 +1663,7 @@ describe('module ref JS path resolution (resolver / transformer / .js content)',
 
     const node = { _ref: '../escape.yaml' };
     await expect(resolve(node, ctx)).rejects.toThrow(
-      'Module ref path "/modules/escape.yaml" escapes the package root.'
+      `Module ref path "${path.resolve('/modules/escape.yaml')}" escapes the package root.`
     );
   });
 });

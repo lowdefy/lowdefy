@@ -47,6 +47,12 @@ function setPlatform(platform) {
   Object.defineProperty(process, 'platform', { value: platform });
 }
 
+// Every test runs as POSIX unless it sets Windows itself: the registered command
+// and the Claude Code check differ by platform.
+beforeEach(() => {
+  setPlatform('linux');
+});
+
 afterEach(() => {
   setPlatform(originalPlatform);
 });

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import rebaseWorkspaceSettings from './rebaseWorkspaceSettings.js';
 
 const directory = '/repo/apps/app/.lowdefy/server';
@@ -72,7 +74,12 @@ test('rebaseWorkspaceSettings throws when a "$name" override has no root depende
       settings: { overrides: { a: '$a' } },
       workspaceRoot,
     })
-  ).toThrow('Cannot resolve the override version "$a": /repo/package.json has no dependency "a".');
+  ).toThrow(
+    `Cannot resolve the override version "$a": ${path.join(
+      '/repo',
+      'package.json'
+    )} has no dependency "a".`
+  );
 });
 
 test('rebaseWorkspaceSettings rebases catalogs and package extensions', () => {

@@ -1,3 +1,7 @@
+// The date tests expect UTC. Set here rather than in the test script so it also applies under
+// Windows' cmd.exe; jest workers inherit it.
+process.env.TZ = 'UTC';
+
 export default {
   projects: [
     {

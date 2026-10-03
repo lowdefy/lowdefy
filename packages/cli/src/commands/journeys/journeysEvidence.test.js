@@ -157,7 +157,11 @@ test('journeys evidence without --refresh prints what would change and writes no
     window: '2026-10-02/2026-10-03',
   });
   expect(logged).toContain(
-    'tests/journeys/saves.yaml#member saves a ticket: no evidence -> 2 sessions · 2 orgs'
+    `${path.join(
+      'tests',
+      'journeys',
+      'saves.yaml'
+    )}#member saves a ticket: no evidence -> 2 sessions · 2 orgs`
   );
   expect(logged.some((line) => line.includes('Run with --refresh'))).toBe(true);
 });
@@ -211,7 +215,9 @@ test('journeys evidence reports a file that does not parse and leaves it alone',
   await journeysEvidence({ context });
   expect(fs.readFileSync(brokenPath, 'utf8')).toBe('name: [unclosed\n');
   expect(
-    logged.some((line) => line.startsWith('Skipped tests/journeys/broken.yaml: Invalid YAML'))
+    logged.some((line) =>
+      line.startsWith(`Skipped ${path.join('tests', 'journeys', 'broken.yaml')}: Invalid YAML`)
+    )
   ).toBe(true);
 });
 

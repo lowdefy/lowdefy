@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import { jest } from '@jest/globals';
 
 import testContext from '../test-utils/testContext.js';
@@ -39,9 +41,12 @@ function createTestContext(overrides = {}) {
   return context;
 }
 
+// Fixture paths are written POSIX-style; the build joins module paths with the
+// platform separator. Resolve both sides like readConfigFile does so the lookup
+// matches on every platform.
 const readConfigFileMockImplementation = (files) => {
   return (filePath) => {
-    const file = files.find((f) => f.path === filePath);
+    const file = files.find((f) => path.resolve(f.path) === path.resolve(filePath));
     if (!file) return null;
     return file.content;
   };
@@ -271,9 +276,7 @@ pages:
   await expect(resolveFullManifest({ entryId: 'my-mod', context })).rejects.toThrow(
     'var "total" is typed "number" but received a runtime operator "_sum"'
   );
-  await expect(resolveFullManifest({ entryId: 'my-mod', context })).rejects.toThrow(
-    '"_build.sum"'
-  );
+  await expect(resolveFullManifest({ entryId: 'my-mod', context })).rejects.toThrow('"_build.sum"');
 });
 
 test('validateVarTypes throws when a typed var is given a dynamic runtime operator', async () => {
@@ -920,9 +923,7 @@ describe('operator-generated components sections', () => {
   // Components are record-ified by the exportables pass (Phase C.5), which
   // runs after the header parse — drive both, as buildModuleDefs does.
   const resolveLocal = async (context, manifestContent) => {
-    const files = [
-      { path: '/modules/team-users/module.lowdefy.yaml', content: manifestContent },
-    ];
+    const files = [{ path: '/modules/team-users/module.lowdefy.yaml', content: manifestContent }];
     mockReadConfigFile.mockImplementation(readConfigFileMockImplementation(files));
     await resolveLocalManifest({
       entry: { id: 'team-users', source: 'file:../modules/team-users', vars: {} },
@@ -1052,6 +1053,6 @@ components:
     const record = getRecord(context, 'team-users:components.0.component');
     expect(record.body).toEqual({ type: 'Box' });
     // The record env names the ref'd file the body came from.
-    expect(record.env.file).toBe('/modules/team-users/components.yaml');
+    expect(record.env.file).toBe(path.resolve('/modules/team-users/components.yaml'));
   });
 });

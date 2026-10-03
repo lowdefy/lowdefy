@@ -36,7 +36,11 @@ afterEach(async () => {
   fs.rmSync(directory, { recursive: true, force: true });
 });
 
-test('listenHubSocket creates the socket for its user only, whatever the umask', async () => {
+// A Unix socket file with mode bits. On Windows the hub listens on a named pipe,
+// which has neither.
+const onPosix = process.platform === 'win32' ? test.skip : test;
+
+onPosix('listenHubSocket creates the socket for its user only, whatever the umask', async () => {
   const socketPath = path.join(directory, 'hub.sock');
   let modeWhenListening;
   server = net.createServer();

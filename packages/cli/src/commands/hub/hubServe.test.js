@@ -106,26 +106,34 @@ function exited(hub) {
   return new Promise((resolve) => hub.once('exit', resolve));
 }
 
-test('hubs started together against a stale socket leave exactly one hub, the one the socket reaches', async () => {
-  const env = { ...process.env, LOWDEFY_HOME: home };
-  process.env.LOWDEFY_HOME = home;
-  const { hubDirectory, socketPath } = getHubPaths();
-  fs.mkdirSync(hubDirectory, { recursive: true });
-  leaveStaleSocket(socketPath);
-  expect(fs.existsSync(socketPath)).toBe(true);
+// A named pipe is not a file and goes with its owner, so Windows never has a
+// stale hub socket to take over.
+const onPosix = process.platform === 'win32' ? test.skip : test;
 
-  hubs = Array.from({ length: 8 }).map(() =>
-    spawn(process.execPath, [cliEntry, 'hub', 'serve'], {
-      env,
-      stdio: ['ignore', 'pipe', 'ignore'],
-    })
-  );
-  const decisions = await Promise.all(hubs.map(decision));
+onPosix(
+  'hubs started together against a stale socket leave exactly one hub, the one the socket reaches',
+  async () => {
+    const env = { ...process.env, LOWDEFY_HOME: home };
+    process.env.LOWDEFY_HOME = home;
+    const { hubDirectory, socketPath } = getHubPaths();
+    fs.mkdirSync(hubDirectory, { recursive: true });
+    leaveStaleSocket(socketPath);
+    expect(fs.existsSync(socketPath)).toBe(true);
 
-  expect(decisions.filter((outcome) => outcome === 'listening')).toHaveLength(1);
-  expect(decisions.filter((outcome) => outcome === 'left')).toHaveLength(7);
-  const listening = hubs[decisions.indexOf('listening')];
-  await Promise.all(hubs.filter((hub) => hub !== listening).map(exited));
-  expect(hubs.filter((hub) => isAlive(hub.pid)).map((hub) => hub.pid)).toEqual([listening.pid]);
-  expect(await helloPid(socketPath)).toEqual(listening.pid);
-}, 120000);
+    hubs = Array.from({ length: 8 }).map(() =>
+      spawn(process.execPath, [cliEntry, 'hub', 'serve'], {
+        env,
+        stdio: ['ignore', 'pipe', 'ignore'],
+      })
+    );
+    const decisions = await Promise.all(hubs.map(decision));
+
+    expect(decisions.filter((outcome) => outcome === 'listening')).toHaveLength(1);
+    expect(decisions.filter((outcome) => outcome === 'left')).toHaveLength(7);
+    const listening = hubs[decisions.indexOf('listening')];
+    await Promise.all(hubs.filter((hub) => hub !== listening).map(exited));
+    expect(hubs.filter((hub) => isAlive(hub.pid)).map((hub) => hub.pid)).toEqual([listening.pid]);
+    expect(await helloPid(socketPath)).toEqual(listening.pid);
+  },
+  120000
+);

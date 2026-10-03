@@ -11,6 +11,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('@lowdefy/node-utils', () => {
@@ -29,6 +31,6 @@ test('writeBuildArtifact writes content through writeFileIfChanged at the build 
 
   await writeBuildArtifact('artifact.txt', 'Test artifact content');
   expect(nodeUtils.writeFileIfChanged.mock.calls).toEqual([
-    ['/build/artifact.txt', 'Test artifact content'],
+    [path.join('/build', 'artifact.txt'), 'Test artifact content'],
   ]);
 });

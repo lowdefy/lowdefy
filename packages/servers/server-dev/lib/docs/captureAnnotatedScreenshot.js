@@ -75,7 +75,7 @@ async function captureAnnotatedScreenshot({ origin, batch, fileName }) {
       fileName ?? `${batch.pageId}-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
     fs.writeFileSync(path.join(dir, name), buffer);
 
-    return { path: path.join('.lowdefy', 'annotations', name) };
+    return { path: path.posix.join('.lowdefy', 'annotations', name) };
   } catch (error) {
     return { error: `Failed to capture annotated screenshot: ${error.message}` };
   } finally {

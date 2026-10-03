@@ -105,7 +105,9 @@ test('upsertClaudeSettings leaves an unparsable settings.local.json unchanged wi
     fs.readFileSync(path.join(projectDirectory, '.claude', 'settings.local.json'), 'utf8')
   ).toEqual('{ nope');
   expect(context.logger.warn).toHaveBeenCalledWith(
-    expect.stringContaining("Could not parse existing '.claude/settings.local.json'")
+    expect.stringContaining(
+      `Could not parse existing '${path.join('.claude', 'settings.local.json')}'`
+    )
   );
 });
 

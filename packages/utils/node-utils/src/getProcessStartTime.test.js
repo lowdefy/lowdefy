@@ -34,15 +34,22 @@ function readInProcess({ pid, env }) {
   return result.stdout.trim();
 }
 
-test('getProcessStartTime reads the same start time whatever time zone and locale its reader runs with', () => {
-  const first = readInProcess({ pid: process.pid, env: { TZ: 'UTC', LC_ALL: 'C' } });
-  const second = readInProcess({
-    pid: process.pid,
-    env: { TZ: 'Pacific/Auckland', LC_ALL: 'de_DE.UTF-8', LANG: 'de_DE.UTF-8' },
-  });
-  expect(first).not.toEqual('null');
-  expect(second).toEqual(first);
-});
+// getProcessStartTime reads `ps`, which Windows lacks, so it returns null there
+// until start times have a Windows source.
+const onPosix = process.platform === 'win32' ? test.skip : test;
+
+onPosix(
+  'getProcessStartTime reads the same start time whatever time zone and locale its reader runs with',
+  () => {
+    const first = readInProcess({ pid: process.pid, env: { TZ: 'UTC', LC_ALL: 'C' } });
+    const second = readInProcess({
+      pid: process.pid,
+      env: { TZ: 'Pacific/Auckland', LC_ALL: 'de_DE.UTF-8', LANG: 'de_DE.UTF-8' },
+    });
+    expect(first).not.toEqual('null');
+    expect(second).toEqual(first);
+  }
+);
 
 test('getProcessStartTime returns null for a pid that is not running', () => {
   expect(getProcessStartTime({ pid: 2 ** 22 + 12345 })).toBeNull();

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+
 import { jest } from '@jest/globals';
 
 jest.unstable_mockModule('@lowdefy/node-utils', () => {
@@ -34,6 +36,6 @@ test('cleanBuildDirectory calls cleanDirectory for build and lowdefy-build/tailw
   await cleanBuildDirectory.default({ context });
   expect(nodeUtils.cleanDirectory.mock.calls).toEqual([
     ['buildDirectory'],
-    ['/app/server/lowdefy-build/tailwind'],
+    [path.join('/app/server', 'lowdefy-build', 'tailwind')],
   ]);
 });
