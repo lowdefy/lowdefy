@@ -64,7 +64,7 @@ function AddOnSelect({
   return (
     <Select
       id={`${blockId}_select_input`}
-      variant={properties.bordered === false ? 'borderless' : properties.variant}
+      variant={properties.bordered === false ? 'borderless' : properties.variant ?? undefined}
       style={{ minWidth: 100, ...styles.select }}
       defaultValue={defaultValue}
       disabled={getDisabled({ loading, properties })}
@@ -218,7 +218,9 @@ const PhoneNumberInput = ({
                   }
                 }
                 autoFocus={properties.autoFocus}
-                variant={properties.bordered === false ? 'borderless' : properties.variant}
+                variant={
+                  properties.bordered === false ? 'borderless' : properties.variant ?? undefined
+                }
                 disabled={getDisabled({ loading, properties })}
                 maxLength={properties.maxLength}
                 placeholder={properties.placeholder}

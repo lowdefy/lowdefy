@@ -53,7 +53,7 @@ const AutoCompleteInput = ({
             id={`${blockId}_input`}
             autoFocus={properties.autoFocus}
             backfill={properties.backfill}
-            variant={properties.bordered === false ? 'borderless' : properties.variant}
+            variant={properties.bordered === false ? 'borderless' : properties.variant ?? undefined}
             className={classNames.element}
             classNames={{ content: classNames.selector, popup: { root: classNames.popup } }}
             style={{ width: '100%', ...styles.element }}
@@ -71,7 +71,7 @@ const AutoCompleteInput = ({
                 ),
               }
             }
-            listHeight={properties.listHeight}
+            listHeight={properties.listHeight ?? undefined}
             placement={properties.placement}
             popupMatchSelectWidth={properties.popupMatchSelectWidth}
             // antd 6 names the default size `medium`; `default` is not an antd size.
