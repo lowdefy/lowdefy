@@ -30,9 +30,11 @@ import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
 import appMeta from '../build/appMeta.js';
+import applyDataSetRedirect from './applyDataSetRedirect.js';
 import authJson from '../build/auth.js';
 import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
+import createDataSessionEndedError from './createDataSessionEndedError.js';
 import createHandleError from './log/createHandleError.js';
 import createLogger from './log/createLogger.js';
 import createMutantReadConfigFile from './mutants/createMutantReadConfigFile.js';
@@ -46,6 +48,7 @@ import i18nConfig from '../build/i18n.js';
 import loadDynamicJsMap from './loadDynamicJsMap.js';
 import logRequest from './log/logRequest.js';
 import { readMutantRun } from './mutants/mutantRuns.js';
+import readDataSession from '../docs/dataSets/readDataSession.js';
 import readMergedMaps from './readMergedMaps.js';
 import readRecordingCookie from './recording/readRecordingCookie.js';
 import scrubSecrets from './scrubSecrets.js';
@@ -56,6 +59,7 @@ import notifications, {
 import operators from '../../build/plugins/operators/server.js';
 import resolveHeadlessUser from './auth/resolveHeadlessUser.js';
 import steps from '../../build/plugins/steps.js';
+import trackSessionWork from './trackSessionWork.js';
 import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getSecretsFromEnv();
@@ -76,6 +80,12 @@ function isMcpPath(path) {
 // outside a browser, e.g. run_request), resolved the same way the headless
 // renderer's cookie user is.
 async function createLowdefyContext({ c, user }) {
+  // A journey on a data set: this request, and only this one, reads the session's database. Read
+  // before anything else, so a request that outlived its session never reaches either database.
+  const dataSession = readDataSession(c.req.header('cookie'));
+  if (!type.isNone(dataSession?.ended)) {
+    throw createDataSessionEndedError({ id: dataSession.ended });
+  }
   const buildDirectory = path.join(process.cwd(), 'build');
   const jsMap = loadDynamicJsMap(buildDirectory);
 
@@ -157,6 +167,13 @@ async function createLowdefyContext({ c, user }) {
     // auth engine below, so it is unaffected.
     context.auth = null;
     context.user = normalizeInjectedCaller(headlessUser);
+  } else if (!type.isNone(dataSession)) {
+    // A data-session request never builds the auth engine: it is bound to the real auth database.
+    // This is the detached hop (data cookie, no headless cookie); runDetachedEndpoint sets
+    // context.user from the principal the dispatcher carried. Auth steps fail, as for any injected
+    // caller.
+    context.auth = null;
+    context.user = null;
   } else {
     // Hoisted once per request - resolveAuthentication also needs it, and
     // getBetterAuth memoizes the instance, but this keeps the auth engine
@@ -192,6 +209,11 @@ async function createLowdefyContext({ c, user }) {
       run: mutantRun,
     });
   }
+  if (!type.isNone(dataSession)) {
+    applyDataSetRedirect({ context, session: dataSession, connections });
+    context.dataSet = dataSession.name;
+    context.waitUntil = trackSessionWork({ session: dataSession });
+  }
   if (!context.auth && authJson.organizations) {
     // Mock and headless callers run no auth engine, so createApiContext
     // retains no organization binding. Derive the policy from the built auth
@@ -202,8 +224,11 @@ async function createLowdefyContext({ c, user }) {
   }
   // Under policy: tenant, report walled collections that hold unstamped rows
   // (lazily-run-once, logged once per offending collection). It never blocks or
-  // fails a request. No-op under pinned.
-  void resolveTenantPreflight(context);
+  // fails a request. No-op under pinned. Skipped under a data session: the report runs once per
+  // process, so it would describe the data set's database and never the developer's.
+  if (type.isNone(dataSession)) {
+    void resolveTenantPreflight(context);
+  }
   logRequest({ context });
   return context;
 }

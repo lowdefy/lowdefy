@@ -1,0 +1,152 @@
+# The app the data set journey end-to-end test (dataSetJourneys.chromium.mongodb.test.mjs) builds and
+# serves. Its connections read the MONGODB_URI secret, which the test points at a stand-in for the
+# developer's real database; a journey on the "shop" data set must never touch it.
+# Auth is configured, with its adapter on the same stand-in, so the suite can prove that no journey
+# request reaches the auth engine or writes an auth collection there.
+lowdefy: local
+name: Data set journeys
+
+auth:
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties:
+      uri:
+        _secret: MONGODB_URI
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  emailAndPassword:
+    enabled: true
+  organizations:
+    policy: tenant
+
+# Under policy: tenant a MongoDBCollection connection is walled by default: every read is filtered
+# and every write stamped with the caller's organization_id.
+connections:
+  - id: tickets
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: tickets
+      write: true
+
+# A module connection is written under its module's folder (connections/archive/archive_db.json),
+# which the data set redirect must reach too.
+modules:
+  - id: archive
+    source: 'file:modules/archive'
+
+api:
+  - id: create_ticket
+    type: Api
+    routine:
+      - id: insert
+        type: MongoDBInsertOne
+        connectionId: tickets
+        properties:
+          doc:
+            _id:
+              _payload: id
+            title:
+              _payload: title
+      - :return:
+          inserted:
+            _payload: id
+  - id: list_tickets
+    type: Api
+    routine:
+      - id: find
+        type: MongoDBFind
+        connectionId: tickets
+        properties:
+          query: {}
+          options:
+            sort:
+              _id: 1
+      - :return:
+          _step: find
+  # The developer's own cookieless tab: no caller, so the read opts out of the wall.
+  - id: list_all_tickets
+    type: Api
+    routine:
+      - id: find
+        type: MongoDBFind
+        connectionId: tickets
+        tenant: none
+        properties:
+          query: {}
+          options:
+            sort:
+              _id: 1
+      - :return:
+          _step: find
+  - id: create_ticket_later
+    type: Api
+    routine:
+      - id: dispatch
+        type: CallApi
+        properties:
+          endpointId: insert_detached
+          detached: true
+          payload:
+            id:
+              _payload: id
+      - :return:
+          dispatched: true
+  - id: insert_detached
+    type: Api
+    routine:
+      - id: insert
+        type: MongoDBInsertOne
+        connectionId: tickets
+        properties:
+          doc:
+            _id:
+              _payload: id
+            detached: true
+
+  # A detached run whose routine reaches an auth step: under a data session it has no auth engine,
+  # so the step fails and the insert after it never runs.
+  - id: create_ticket_later_auth
+    type: Api
+    routine:
+      - id: dispatch
+        type: CallApi
+        properties:
+          endpointId: insert_detached_auth
+          detached: true
+          payload: {}
+      - :return:
+          dispatched: true
+  - id: insert_detached_auth
+    type: Api
+    routine:
+      - id: before
+        type: MongoDBInsertOne
+        connectionId: tickets
+        properties:
+          doc:
+            _id: later-auth-before
+      - id: members
+        type: ListMembers
+        properties: {}
+      - id: after
+        type: MongoDBInsertOne
+        connectionId: tickets
+        properties:
+          doc:
+            _id: later-auth-after
+
+websockets:
+  - id: ticket_changes
+    type: MongoDBChangeStream
+    connectionId: tickets
+    properties:
+      pipeline:
+        - $match:
+            operationType: insert
+
+pages:
+  - id: tickets
+    type: Box

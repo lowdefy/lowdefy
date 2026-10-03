@@ -51,6 +51,19 @@ test('getClient returns different clients for different options', async () => {
   expect(client1).not.toBe(client2);
 });
 
+// Under a journey data set one connection id is given the session's URI on journey requests and the
+// real URI on the developer's own, so the cache must never hand one the other's client.
+test('getClient returns different clients for two URIs given the same options', async () => {
+  const sessionUri = new URL(databaseUri);
+  sessionUri.searchParams.set('appName', 'data-session');
+  const realClient = await getClient({ databaseUri, options: { maxPoolSize: 5 } });
+  const sessionClient = await getClient({
+    databaseUri: sessionUri.toString(),
+    options: { maxPoolSize: 5 },
+  });
+  expect(sessionClient).not.toBe(realClient);
+});
+
 test('getClient evicts failed connects so the next call retries', async () => {
   const unreachable = {
     databaseUri: 'mongodb://localhost:1',

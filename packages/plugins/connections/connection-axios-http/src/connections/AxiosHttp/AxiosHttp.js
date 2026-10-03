@@ -19,6 +19,8 @@ import schema from './schema.js';
 
 export default {
   schema,
+  // An outside service, not app data: a journey on a data set keeps its real target.
+  meta: { dataSet: 'external' },
   requests: {
     AxiosHttp,
   },

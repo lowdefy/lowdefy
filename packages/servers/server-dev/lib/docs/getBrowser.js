@@ -18,6 +18,7 @@ import { type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 import lowdefyConfig from '../build/config.js';
 import createBrowserLifecycle from './createBrowserLifecycle.js';
+import guardJourneyOrigin from './guardJourneyOrigin.js';
 import isPageReady from './isPageReady.js';
 import launchBrowser from './launchBrowser.js';
 import { HEADLESS_USER_COOKIE } from '../server/auth/headlessUser.js';
@@ -63,6 +64,7 @@ async function openPage({
   height = 800,
   colorScheme = 'light',
   clientAddress,
+  dataCookie,
   mutantCookie,
   recording,
   onContext,
@@ -78,6 +80,9 @@ async function openPage({
   // so an app following the system theme renders light or dark accordingly.
   const context = await browser.newContext({ viewport: { width, height }, colorScheme });
   trackContext(context);
+  // The URLs a data set journey's context tried to reach on another host of the dev server. Each
+  // was aborted; the journey runner fails the step that caused it.
+  const leftOrigin = [];
   // From here a failure must close the context before rethrowing: callers only
   // learn about the context from the return value, so an error thrown mid-open
   // (a navigation that times out, a crashed page) would otherwise
@@ -112,6 +117,20 @@ async function openPage({
       await context.addCookies([
         writeJourneyCookie({ name: JOURNEY_COOKIES.actor.name, payload: clientAddress, origin }),
       ]);
+    }
+    // A journey on a data set: every request from this context reads the data
+    // session's database (see lib/server/applyDataSetRedirect.js), while the
+    // developer's own tabs keep the app's real one. Set before the first
+    // navigation, so no request from this context ever goes without it.
+    if (!type.isUndefined(dataCookie)) {
+      await context.addCookies([
+        writeJourneyCookie({ name: JOURNEY_COOKIES.data.name, payload: dataCookie, origin }),
+      ]);
+      await guardJourneyOrigin({
+        context,
+        origin,
+        onLeave: (departure) => leftOrigin.push(departure),
+      });
     }
     // A harden run's mutant: every request from this context reads the mutated
     // artifact (see lib/server/mutants), while other contexts do not.
@@ -160,7 +179,7 @@ async function openPage({
         { timeout }
       )
       .catch(() => {});
-    return { context, page, ready, url };
+    return { context, page, ready, url, leftOrigin };
   } catch (error) {
     await context.close().catch(() => {});
     throw error;

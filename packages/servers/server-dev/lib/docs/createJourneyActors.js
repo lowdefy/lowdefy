@@ -43,12 +43,12 @@ function nextClientAddress() {
 // The people a journey acts as, each in its own browser context with its own
 // cookie jar, so an owner and an invitee - or a member whose session stays
 // open while the owner removes them - are signed in at the same time. An
-// actor opens the journey's page, as the journey's user, the first time its
-// name is switched to, and keeps its tab as it left it when the journey
-// switches away and back. Every actor sees the same viewport and colour
-// scheme. Each actor's context feeds its own network counter from before its
-// first navigation, so what the journey touched is measured per actor and
-// merged at the end. Each actor's pages also report, through the observe
+// actor opens the journey's page, as the journey's user (or as the data set
+// user of that name), the first time its name is switched to, and keeps its
+// tab as it left it when the journey switches away and back. Every actor sees
+// the same viewport and colour scheme. Each actor's context feeds its own
+// network counter from before its first navigation, so what the journey
+// touched is measured per actor and merged at the end. Each actor's pages also report, through the observe
 // binding, the events that completed and the blocks that were ever visible,
 // into one set of observations for the whole journey.
 function createJourneyActors({
@@ -62,13 +62,25 @@ function createJourneyActors({
   height,
   colorScheme,
   timeout,
+  dataCookie,
   mutantCookie,
+  users = {},
+  mainActor,
   recording,
 }) {
   const actors = new Map();
   const counters = new Map();
   const observations = createJourneyObservations();
   let currentName;
+
+  // An actor named after a data set user opens as that user; the journey's
+  // first actor, and any other name, opens as the journey's user.
+  function userFor(name) {
+    if (name !== mainActor && Object.prototype.hasOwnProperty.call(users, name)) {
+      return users[name];
+    }
+    return user;
+  }
 
   async function switchTo(name) {
     if (!actors.has(name)) {
@@ -78,12 +90,13 @@ function createJourneyActors({
         browser,
         origin,
         pageId,
-        user,
+        user: userFor(name),
         urlQuery,
         width,
         height,
         colorScheme,
         clientAddress: nextClientAddress(),
+        dataCookie,
         mutantCookie,
         recording: type.isUndefined(recording)
           ? undefined
@@ -108,6 +121,17 @@ function createJourneyActors({
 
   function countCalls(query) {
     return counters.get(currentName).countCalls(query);
+  }
+
+  // The first URL any actor's context tried to reach on another host of the dev server, which a
+  // data set journey must never do (see guardJourneyOrigin).
+  function leftOrigin() {
+    for (const opened of actors.values()) {
+      if (opened.leftOrigin.length > 0) {
+        return opened.leftOrigin[0];
+      }
+    }
+    return undefined;
   }
 
   function networkSnapshots() {
@@ -153,6 +177,7 @@ function createJourneyActors({
     switchTo,
     current,
     countCalls,
+    leftOrigin,
     networkSnapshots,
     sampleRendered,
     observed,

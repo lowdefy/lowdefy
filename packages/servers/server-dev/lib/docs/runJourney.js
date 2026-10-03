@@ -14,15 +14,21 @@
   limitations under the License.
 */
 
+import path from 'node:path';
 import { type } from '@lowdefy/helpers';
 import { getState } from '@lowdefy/e2e-utils/runtime';
 import { findPlaceholderStep, validateJourneySteps } from '@lowdefy/node-utils';
 
 import collectExercised from './collectExercised.js';
+import describeDataSetResult from './dataSets/describeDataSetResult.js';
+import getDataStore from './dataSets/getDataStore.js';
 import { getBrowser, buildPageUrl } from './getBrowser.js';
 import noBrowserError from './noBrowserError.js';
+import openDataSession from './dataSets/openDataSession.js';
 import openJourney from './openJourney.js';
 import readBuildArtifact from './readBuildArtifact.js';
+import readDevAuthMode from './readDevAuthMode.js';
+import resolveJourneyDataSet from './dataSets/resolveJourneyDataSet.js';
 import runJourneySteps from './runJourneySteps.js';
 import selectFinalState from './selectFinalState.js';
 import unsettledPageNote from './unsettledPageNote.js';
@@ -59,7 +65,10 @@ function defaultReadConfigFile(name) {
 // the exception: it stays capped (see settlePage), since it never fails a
 // step. `state` picks what the result carries of the final page state (see
 // selectFinalState). `user: 'none'` injects no caller, so the app's own auth
-// decides who each actor is.
+// decides who each actor is. `data` names a data set: the journey runs on a
+// fresh database of its own, loaded with it, and a string `user` (or an `as`
+// name) names one of its users. Its problems come back as { error, refused }
+// before any browser opens.
 async function runJourney({
   origin,
   pageId,
@@ -74,6 +83,7 @@ async function runJourney({
   basePath = '',
   readConfigFile = defaultReadConfigFile,
   mutantCookie,
+  data,
   recording,
 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
@@ -113,6 +123,17 @@ async function runJourney({
   if (!type.isUndefined(mailError)) {
     return { error: mailError };
   }
+  const resolved = await resolveJourneyDataSet({
+    data,
+    user,
+    configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd(),
+    buildDirectory: path.join(process.cwd(), 'build'),
+    ...readDevAuthMode(),
+  });
+  if (!type.isUndefined(resolved.error)) {
+    return { error: resolved.error, refused: true };
+  }
+  const { dataSet } = resolved;
 
   return withBrowserSlot({
     task: () =>
@@ -120,7 +141,8 @@ async function runJourney({
         origin,
         basePath,
         pageId,
-        user,
+        user: resolved.user,
+        dataSet,
         urlQuery,
         width,
         height,
@@ -141,6 +163,7 @@ async function runJourneyInBrowser({
   basePath,
   pageId,
   user,
+  dataSet,
   urlQuery,
   width,
   height,
@@ -159,6 +182,23 @@ async function runJourneyInBrowser({
     return { error: noBrowserError(error) };
   }
 
+  let session = null;
+  let loadMs;
+  if (!type.isUndefined(dataSet)) {
+    try {
+      await getDataStore();
+    } catch (error) {
+      return { error: `Could not start the journey data store: ${error.message}` };
+    }
+    const loadStart = Date.now();
+    try {
+      session = await openDataSession({ dataSet });
+    } catch (error) {
+      return { error: error.message, refused: true };
+    }
+    loadMs = Date.now() - loadStart;
+  }
+
   const url = buildPageUrl({ origin, pageId, urlQuery });
   let journey;
   try {
@@ -173,7 +213,9 @@ async function runJourneyInBrowser({
       height,
       timeout,
       stepTimeout,
+      dataCookie: session?.cookie,
       mutantCookie,
+      users: dataSet?.users,
       recording,
     });
     journey = opened.journey;
@@ -196,6 +238,10 @@ async function runJourneyInBrowser({
     if (!type.isUndefined(failure)) {
       result.failure = failure;
     }
+    if (!type.isUndefined(dataSet)) {
+      result.data = describeDataSetResult({ dataSet, loadMs });
+      result.warnings = dataSet.warnings;
+    }
     // openPage already waited for the page's async lifecycle; an unsettled page
     // still runs its steps and reports `ready: false` alongside the result.
     if (!opened.main.ready) {
@@ -214,6 +260,12 @@ async function runJourneyInBrowser({
         await journey.actors.flushRecordings();
       }
       await journey.actors.closeAll();
+    }
+    // After the actors: no browser request still carries the data cookie. close() then waits for
+    // the session's background work before it drops the database. openJourney closed its own
+    // actors when the first page failed to open.
+    if (session !== null) {
+      await session.close();
     }
   }
 }

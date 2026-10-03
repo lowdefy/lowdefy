@@ -15,6 +15,7 @@
 */
 
 import { handleAuthRequest } from '@lowdefy/api';
+import { type } from '@lowdefy/helpers';
 
 import authJson from '../../lib/build/auth.js';
 import getAuth from '../../lib/server/auth/getAuth.js';
@@ -36,6 +37,12 @@ function authMiddleware({ logger }) {
       // Mock user active - no auth engine runs; the get-session stub in
       // app.js is the only auth endpoint.
       return c.json({ message: 'Auth engine disabled while dev.mockUser is active' }, 404);
+    }
+    if (!type.isNone(c.get('lowdefyContext')?.dataSet)) {
+      // A journey on a data set: the auth engine is bound to the app's real auth database, so its
+      // browser contexts never reach it. Data set users are injected callers; the get-session stub
+      // in app.js answers for them.
+      return c.json({ message: 'Auth engine disabled for journeys on a data set' }, 404);
     }
     if (c.req.method === 'HEAD') {
       return c.body(null, 200);
