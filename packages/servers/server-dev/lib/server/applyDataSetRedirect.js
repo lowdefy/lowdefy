@@ -16,7 +16,9 @@
 
 import { mergeObjects, type } from '@lowdefy/helpers';
 
-const connectionPathPattern = /^connections\/[^/]+\.json$/;
+// Module connections are written under their module's folder (connections/<module>/<id>.json), so
+// the pattern matches every depth.
+const connectionPathPattern = /^connections\/.+\.json$/;
 
 // Points every connection that carries a databaseUri at the data session's database, for this
 // request only: whatever its type (a plugin connection that opens its own MongoClient from

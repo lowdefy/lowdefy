@@ -27,6 +27,11 @@ const artifacts = {
     type: 'FolderRuntime',
     properties: { databaseUri: { _secret: 'MONGODB_URI' }, databaseName: 'app' },
   },
+  'connections/contacts/contacts.json': {
+    id: 'connection:contacts/contacts',
+    type: 'MongoDBCollection',
+    properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'contacts' },
+  },
   'connections/api.json': {
     id: 'connection:api',
     type: 'AxiosHttp',
@@ -58,6 +63,17 @@ test('applyDataSetRedirect points a MongoDBCollection connection at the session 
       collection: 'tickets',
       write: true,
     },
+  });
+});
+
+test('applyDataSetRedirect points a module connection, written under its module folder, at the session database', async () => {
+  const context = createContext();
+  applyDataSetRedirect({ context, session });
+  const artifact = await context.readConfigFile('connections/contacts/contacts.json');
+  expect(artifact.properties).toEqual({
+    databaseUri: session.databaseUri,
+    databaseName: session.databaseName,
+    collection: 'contacts',
   });
 });
 
