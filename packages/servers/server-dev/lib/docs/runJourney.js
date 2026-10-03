@@ -181,8 +181,9 @@ async function runJourneyInBrowser({
     const state = await readFinalState({ page: journey.actors.current().page });
     const exercised = await collectExercised({
       snapshots: journey.actors.networkSnapshots(),
+      observed: journey.actors.observed(),
       readConfigFile,
-      requestSchemas: (await readConfigFile('plugins/requestSchemas.json')) ?? {},
+      requestSchemas: await readConfigFile('plugins/requestSchemas.json'),
     });
     const result = {
       pageId,

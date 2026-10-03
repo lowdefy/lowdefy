@@ -79,10 +79,18 @@ function startServer(context) {
       '--strictPort',
     ],
     {
-      stdio: ['ignore', 'inherit', 'pipe'],
+      // The manager holds the child's stdin and never writes to it: the pipe
+      // closes when the manager dies, however it dies (SIGKILL, out of
+      // memory), and the child exits on that (see vite.config.js).
+      stdio: ['pipe', 'inherit', 'pipe'],
       env: {
         ...env,
         LOWDEFY_BROWSER_TAG: browserTag,
+        LOWDEFY_EXIT_ON_STDIN_CLOSE: '1',
+        // The manager's owner and registry record cover the child: it does
+        // not register, and it lives and dies with the manager.
+        LOWDEFY_EXIT_WITH_PID: undefined,
+        LOWDEFY_SERVER_REGISTRY_DIR: undefined,
         // Reported as the MCP serverInfo version: lowdefy mcp takes each
         // tool's definition from the newest Lowdefy version it meets.
         LOWDEFY_SERVER_DEV_VERSION: context.version,

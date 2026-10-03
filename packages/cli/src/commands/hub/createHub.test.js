@@ -16,9 +16,11 @@
 
 import { jest } from '@jest/globals';
 import fs from 'fs';
+import { spawn } from 'child_process';
 import os from 'os';
 import path from 'path';
 import { wait } from '@lowdefy/helpers';
+import { getProcessStartTime } from '@lowdefy/node-utils';
 
 import createHub from './createHub.js';
 
@@ -153,7 +155,7 @@ function isAlive(pid) {
 // them: poll for the outcome instead of sleeping a fixed time.
 async function waitUntil(predicate, timeoutMs = 20000) {
   const deadline = Date.now() + timeoutMs;
-  while (!predicate()) {
+  while (!(await predicate())) {
     if (Date.now() > deadline) {
       return false;
     }
@@ -196,7 +198,7 @@ test('hub start runs the dev script as its own process group, with a hub port an
   });
   expect(status).toMatchObject({ configDirectory, owner: 'hub', state: 'ready', managed: true });
   expect(Number(new URL(status.url).port)).toBeGreaterThanOrEqual(portRange.first);
-  expect(hub.logs({ configDirectory }).lines.join('\n')).toContain('requester-env');
+  expect((await hub.logs({ configDirectory })).lines.join('\n')).toContain('requester-env');
 });
 
 test('hub start returns the running server instead of starting a second one', async () => {
@@ -246,11 +248,21 @@ test('hub start reports the log tail when the dev script exits before it is read
 test('a new hub adopts running servers from the registry and can stop them', async () => {
   await hub.start({ configDirectory });
   const adopting = createTestHub();
-  expect(adopting.list().instances).toEqual([
+  expect((await adopting.list()).instances).toEqual([
     expect.objectContaining({ configDirectory, state: 'ready', managed: true }),
   ]);
   expect(await adopting.stop({ configDirectory })).toEqual({ stopped: true });
 });
+
+// A start time in the form this platform reads, but not the one the pid's process has: on
+// Linux, the same ticks in another boot.
+function otherStartTime(pid) {
+  const startTime = getProcessStartTime({ pid });
+  if (typeof startTime === 'string') {
+    return startTime.replace(/^linux:[^:]+:/, 'linux:00000000-0000-0000-0000-000000000000:');
+  }
+  return 0;
+}
 
 test('a registry entry whose pid now belongs to another process is dropped, never signalled', async () => {
   fs.mkdirSync(path.join(home, 'hub'), { recursive: true });
@@ -259,13 +271,39 @@ test('a registry entry whose pid now belongs to another process is dropped, neve
     JSON.stringify({
       ports: {},
       instances: {
-        [configDirectory]: { pid: process.pid, processStartTime: 'Thu Jan  1 00:00:00 1970' },
+        [configDirectory]: { pid: process.pid, processStartTime: otherStartTime(process.pid) },
       },
     })
   );
   const adopting = createTestHub();
-  expect(adopting.list().instances).toEqual([]);
+  expect((await adopting.list()).instances).toEqual([]);
   expect(isAlive(process.pid)).toBe(true);
+});
+
+test.each([
+  ['without a start time', null],
+  ['with a start time an older hub wrote as local time', 'Thu Jan  1 00:00:00 1970'],
+])('a registry entry written %s is adopted by its pid', async (_, processStartTime) => {
+  const leader = spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], {
+    detached: true,
+    stdio: 'ignore',
+  });
+  try {
+    fs.mkdirSync(path.join(home, 'hub'), { recursive: true });
+    fs.writeFileSync(
+      path.join(home, 'hub', 'registry.json'),
+      JSON.stringify({
+        ports: {},
+        instances: { [configDirectory]: { pid: leader.pid, processStartTime } },
+      })
+    );
+    const adopting = createTestHub();
+    expect((await adopting.list()).instances).toEqual([
+      expect.objectContaining({ configDirectory, managed: true }),
+    ]);
+  } finally {
+    leader.kill('SIGKILL');
+  }
 });
 
 test('concurrent starts for one app launch one dev server and leave none unmanaged', async () => {
@@ -322,7 +360,7 @@ test('hub reap stops a server whose worktree was removed on the second pass that
   expect(isAlive(grandchild)).toBe(true);
   await hub.reap();
   expect(await waitUntil(() => !isAlive(grandchild))).toBe(true);
-  expect(hub.list().instances).toEqual([]);
+  expect((await hub.list()).instances).toEqual([]);
 });
 
 test('hub reap keeps a server whose lowdefy.yaml was missing for one pass only', async () => {
@@ -333,7 +371,7 @@ test('hub reap keeps a server whose lowdefy.yaml was missing for one pass only',
   fs.renameSync(`${lowdefyYaml}.moved`, lowdefyYaml);
   await hub.reap();
   await hub.reap();
-  expect(hub.list().instances).toEqual([expect.objectContaining({ state: 'ready' })]);
+  expect((await hub.list()).instances).toEqual([expect.objectContaining({ state: 'ready' })]);
 });
 
 test('hub reap releases the ports of an app that was removed after it stopped', async () => {
@@ -362,8 +400,10 @@ test('overlapping reaps share one pass, so a slow open-tabs check is not repeate
   expect(openTabs).toHaveBeenCalledTimes(1);
 });
 
-test.each([[0], [-5], [2.5], ['10'], [null]])('hub logs refuses lines %p', (lines) => {
-  expect(() => hub.logs({ configDirectory, lines })).toThrow('"lines" must be a positive integer');
+test.each([[0], [-5], [2.5], ['10'], [null]])('hub logs refuses lines %p', async (lines) => {
+  await expect(hub.logs({ configDirectory, lines })).rejects.toThrow(
+    '"lines" must be a positive integer'
+  );
 });
 
 test('hub reap stops a server unused for the idle limit, though an agent session is still attached', async () => {
@@ -375,7 +415,7 @@ test('hub reap stops a server unused for the idle limit, though an agent session
   await hub.reap();
 
   expect(await waitUntil(() => !isAlive(grandchild))).toBe(true);
-  expect(hub.list().instances).toEqual([]);
+  expect((await hub.list()).instances).toEqual([]);
 });
 
 test.each([
@@ -387,7 +427,7 @@ test.each([
   await hub.start({ configDirectory });
   writeActivity(activity);
   await hub.reap();
-  expect(hub.list().instances).toEqual([expect.objectContaining({ configDirectory })]);
+  expect((await hub.list()).instances).toEqual([expect.objectContaining({ configDirectory })]);
 });
 
 test('hub reap stops a server stuck starting past the start hold once unused for the idle limit', async () => {
@@ -402,7 +442,7 @@ test('hub reap stops a server stuck starting past the start hold once unused for
   await hub.reap();
 
   expect(await waitUntil(() => !isAlive(grandchild))).toBe(true);
-  expect(hub.list().instances).toEqual([]);
+  expect((await hub.list()).instances).toEqual([]);
 });
 
 test.each([
@@ -420,7 +460,7 @@ test.each([
   await adopting.reap();
 
   expect(openTabs).toHaveBeenCalledTimes(1);
-  expect(adopting.list().instances).toEqual([expect.objectContaining({ configDirectory })]);
+  expect((await adopting.list()).instances).toEqual([expect.objectContaining({ configDirectory })]);
 });
 
 test('hub reap keeps a server restarted during the tab poll', async () => {
@@ -442,7 +482,7 @@ test('hub reap keeps a server restarted during the tab poll', async () => {
   await adopting.reap();
 
   expect((await restarting).state).toBe('ready');
-  expect(adopting.list().instances).toEqual([expect.objectContaining({ configDirectory })]);
+  expect((await adopting.list()).instances).toEqual([expect.objectContaining({ configDirectory })]);
 });
 
 test('hub reap keeps an unused server that a browser tab has open', async () => {
@@ -452,7 +492,7 @@ test('hub reap keeps an unused server that a browser tab has open', async () => 
   const adopting = createTestHub({ openTabs });
   await adopting.reap();
   expect(openTabs).toHaveBeenCalledTimes(1);
-  expect(adopting.list().instances).toEqual([expect.objectContaining({ configDirectory })]);
+  expect((await adopting.list()).instances).toEqual([expect.objectContaining({ configDirectory })]);
 });
 
 test.each([
@@ -465,11 +505,11 @@ test.each([
     writeActivity({ idleMinutes });
     const keeping = createTestHub();
     await keeping.reap();
-    expect(keeping.list().instances).toHaveLength(1);
+    expect((await keeping.list()).instances).toHaveLength(1);
 
     const pressured = createTestHub({ readPressure: () => pressure });
     await pressured.reap();
-    expect(pressured.list().instances).toEqual([]);
+    expect((await pressured.list()).instances).toEqual([]);
   }
 );
 
@@ -485,11 +525,11 @@ test('hub reap keeps the attachment rule for a server whose record has no activi
   adopting.attach({ connectionId: 1, configDirectory });
 
   await adopting.reap();
-  expect(adopting.list().instances).toHaveLength(1);
+  expect((await adopting.list()).instances).toHaveLength(1);
 
   adopting.connectionClosed({ connectionId: 1 });
   await adopting.reap();
-  expect(adopting.list().instances).toHaveLength(1);
+  expect((await adopting.list()).instances).toHaveLength(1);
 });
 
 test.each([
@@ -516,7 +556,7 @@ test.each([
     } else {
       expect(isAlive(grandchild)).toBe(true);
     }
-    expect(hub.list().instances).toHaveLength(reaped ? 4 : 5);
+    expect((await hub.list()).instances).toHaveLength(reaped ? 4 : 5);
   }
 );
 
@@ -540,15 +580,17 @@ test('hub launches two apps at once and queues the rest in order until a slot fr
   const [a, b, c, d] = [makeSlowApp(), makeSlowApp(), makeSlowApp(), makeSlowApp()];
   const starts = [a, b, c, d].map((directory) => hub.start({ configDirectory: directory }));
   expect(await waitUntil(() => launchCount(a) === 1 && launchCount(b) === 1)).toBe(true);
-  expect(await waitUntil(() => hub.status({ configDirectory: d }).state === 'queued')).toBe(true);
+  expect(
+    await waitUntil(async () => (await hub.status({ configDirectory: d })).state === 'queued')
+  ).toBe(true);
 
-  expect(hub.status({ configDirectory: c })).toMatchObject({ state: 'queued', ahead: 0 });
-  expect(hub.status({ configDirectory: d })).toMatchObject({ state: 'queued', ahead: 1 });
+  expect(await hub.status({ configDirectory: c })).toMatchObject({ state: 'queued', ahead: 0 });
+  expect(await hub.status({ configDirectory: d })).toMatchObject({ state: 'queued', ahead: 1 });
   expect(launchCount(c)).toBe(0);
 
   markReady(a);
   expect(await waitUntil(() => launchCount(c) === 1)).toBe(true);
-  expect(hub.status({ configDirectory: d })).toMatchObject({ state: 'queued', ahead: 0 });
+  expect(await hub.status({ configDirectory: d })).toMatchObject({ state: 'queued', ahead: 0 });
 
   [b, c, d].forEach(markReady);
   const statuses = await Promise.all(starts);
@@ -559,7 +601,9 @@ test('hub launches two apps at once and queues the rest in order until a slot fr
 test('a start slot frees when its server exits before it is ready', async () => {
   const [a, b, c] = [makeSlowApp(), makeSlowApp(), makeSlowApp()];
   [a, b, c].forEach((directory) => hub.start({ configDirectory: directory }));
-  expect(await waitUntil(() => hub.status({ configDirectory: c }).state === 'queued')).toBe(true);
+  expect(
+    await waitUntil(async () => (await hub.status({ configDirectory: c })).state === 'queued')
+  ).toBe(true);
 
   fs.writeFileSync(path.join(a, 'die'), '');
   expect(await waitUntil(() => launchCount(c) === 1)).toBe(true);
@@ -569,22 +613,26 @@ test('a start slot frees once a server has held it for the hold limit', async ()
   hub = createTestHub({ startSlotHoldMs: 500 });
   const [a, b, c] = [makeSlowApp(), makeSlowApp(), makeSlowApp()];
   [a, b, c].forEach((directory) => hub.start({ configDirectory: directory }));
-  expect(await waitUntil(() => hub.status({ configDirectory: c }).state === 'queued')).toBe(true);
+  expect(
+    await waitUntil(async () => (await hub.status({ configDirectory: c })).state === 'queued')
+  ).toBe(true);
 
   expect(await waitUntil(() => launchCount(c) === 1)).toBe(true);
-  expect(hub.status({ configDirectory: a }).state).toBe('starting');
+  expect((await hub.status({ configDirectory: a })).state).toBe('starting');
 });
 
 test('stopping another app is not held up by starts waiting for a slot', async () => {
   await hub.start({ configDirectory });
   const [a, b, c] = [makeSlowApp(), makeSlowApp(), makeSlowApp()];
   [a, b, c].forEach((directory) => hub.start({ configDirectory: directory }));
-  expect(await waitUntil(() => hub.status({ configDirectory: c }).state === 'queued')).toBe(true);
+  expect(
+    await waitUntil(async () => (await hub.status({ configDirectory: c })).state === 'queued')
+  ).toBe(true);
 
   const stopped = Date.now();
   expect(await hub.stop({ configDirectory })).toEqual({ stopped: true });
   expect(Date.now() - stopped).toBeLessThan(5000);
-  expect(hub.status({ configDirectory: c }).state).toBe('queued');
+  expect((await hub.status({ configDirectory: c })).state).toBe('queued');
 });
 
 test('two starts for one queued app share its place and launch it once', async () => {
@@ -594,8 +642,10 @@ test('two starts for one queued app share its place and launch it once', async (
   const firstC = hub.start({ configDirectory: c });
   hub.start({ configDirectory: d });
   const secondC = hub.start({ configDirectory: c });
-  expect(await waitUntil(() => hub.status({ configDirectory: d }).state === 'queued')).toBe(true);
-  expect(hub.status({ configDirectory: d })).toMatchObject({ ahead: 1 });
+  expect(
+    await waitUntil(async () => (await hub.status({ configDirectory: d })).state === 'queued')
+  ).toBe(true);
+  expect(await hub.status({ configDirectory: d })).toMatchObject({ ahead: 1 });
 
   [a, b, c].forEach(markReady);
   expect((await firstC).state).toBe('ready');
@@ -607,12 +657,14 @@ test('stopping a queued app takes it off the queue and it never launches', async
   const [a, b, c] = [makeSlowApp(), makeSlowApp(), makeSlowApp()];
   [a, b].forEach((directory) => hub.start({ configDirectory: directory }));
   const queuedStart = hub.start({ configDirectory: c });
-  expect(await waitUntil(() => hub.status({ configDirectory: c }).state === 'queued')).toBe(true);
+  expect(
+    await waitUntil(async () => (await hub.status({ configDirectory: c })).state === 'queued')
+  ).toBe(true);
 
   expect(await hub.stop({ configDirectory: c })).toEqual({ stopped: true });
   expect((await queuedStart).state).toBe('stopped');
   [a, b].forEach(markReady);
-  await waitUntil(() => hub.status({ configDirectory: b }).state === 'ready');
+  await waitUntil(async () => (await hub.status({ configDirectory: b })).state === 'ready');
   await wait(1500);
   expect(launchCount(c)).toBe(0);
 });
@@ -621,7 +673,9 @@ test('at critical memory pressure one server launches at a time', async () => {
   hub = createTestHub({ readPressure: () => 'critical' });
   const [a, b] = [makeSlowApp(), makeSlowApp()];
   [a, b].forEach((directory) => hub.start({ configDirectory: directory }));
-  expect(await waitUntil(() => hub.status({ configDirectory: b }).state === 'queued')).toBe(true);
+  expect(
+    await waitUntil(async () => (await hub.status({ configDirectory: b })).state === 'queued')
+  ).toBe(true);
   expect(launchCount(b)).toBe(0);
 
   markReady(a);
@@ -635,7 +689,9 @@ test('a restart takes a start slot like a first start', async () => {
   expect(await waitUntil(() => launchCount(a) === 1 && launchCount(b) === 1)).toBe(true);
 
   const restart = hub.start({ configDirectory, restart: true });
-  expect(await waitUntil(() => hub.status({ configDirectory }).state === 'queued')).toBe(true);
+  expect(
+    await waitUntil(async () => (await hub.status({ configDirectory })).state === 'queued')
+  ).toBe(true);
   markReady(a);
   expect((await restart).state).toBe('ready');
 });
@@ -655,7 +711,7 @@ test('a start still queued at its deadline answers queued, and calling again kee
   expect(first.note).toContain('your place is kept');
 
   expect(await hub.start({ configDirectory: c })).toMatchObject({ state: 'queued', ahead: 0 });
-  expect(hub.status({ configDirectory: d })).toMatchObject({ state: 'queued', ahead: 1 });
+  expect(await hub.status({ configDirectory: d })).toMatchObject({ state: 'queued', ahead: 1 });
 });
 
 test('a new hub counts an adopted server that is still starting as holding a start slot', async () => {
@@ -667,9 +723,11 @@ test('a new hub counts an adopted server that is still starting as holding a sta
   try {
     adopting.start({ configDirectory: b });
     adopting.start({ configDirectory: c });
-    expect(await waitUntil(() => adopting.status({ configDirectory: c }).state === 'queued')).toBe(
-      true
-    );
+    expect(
+      await waitUntil(
+        async () => (await adopting.status({ configDirectory: c })).state === 'queued'
+      )
+    ).toBe(true);
     expect(await waitUntil(() => launchCount(b) === 1)).toBe(true);
     expect(launchCount(c)).toBe(0);
   } finally {

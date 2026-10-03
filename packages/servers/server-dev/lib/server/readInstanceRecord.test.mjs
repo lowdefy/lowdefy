@@ -25,6 +25,7 @@ jest.unstable_mockModule('child_process', () => ({
   spawnSync: mockGetProcessStartTime,
   execSync: mockGetProcessStartTime,
   execFileSync: mockGetProcessStartTime,
+  execFile: mockGetProcessStartTime,
   spawn: mockGetProcessStartTime,
 }));
 

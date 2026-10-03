@@ -16,6 +16,7 @@
 */
 
 import opener from 'opener';
+import { registerServer, watchOwner } from '@lowdefy/node-utils';
 import getContext from './getContext.mjs';
 import acquireDevInstance from './utils/acquireDevInstance.mjs';
 import createBuildActivity from './utils/createBuildActivity.mjs';
@@ -117,15 +118,35 @@ context.buildActivity = createBuildActivity({
   },
 });
 
+// Machine-wide record of this manager and its owner, for `lowdefy hub ps|prune`.
+// Written only when the CLI sets the registry directory.
+const registration = registerServer({
+  kind: 'dev',
+  port: context.options.port,
+  configDirectory: context.directories.config,
+  logger: context.logger,
+});
+
+function shutdown() {
+  context.shutdownServer();
+  process.exit(0);
+}
+
 // Shut the Vite child down on direct signals (process managers, scripts/dev.mjs
 // signal forwarding) — terminal Ctrl+C signals the whole process group, but a
 // targeted SIGTERM would otherwise orphan the child.
-for (const signal of ['SIGINT', 'SIGTERM']) {
-  process.on(signal, () => {
-    context.shutdownServer();
-    process.exit(0);
-  });
+for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
+  process.on(signal, shutdown);
 }
+
+// A manager started by the CLI, a test runner or a script stops when that
+// owner stops, however it ends. Inert unless the spawner set its variables.
+watchOwner({
+  onExit: ({ reason }) => {
+    context.logger.info(`The process that started this dev server is gone (${reason}).`);
+    shutdown();
+  },
+});
 
 try {
   await context.initialBuild();
@@ -142,6 +163,7 @@ try {
   context.options.port = port;
   context.internalPort = internalPort;
   instance.update({ port, internalPort });
+  registration?.update({ port });
   context.instance = instance;
 
   // Called by waitForDevServer whenever a child answers: the first start's,

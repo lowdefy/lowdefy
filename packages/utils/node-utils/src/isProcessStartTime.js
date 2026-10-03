@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-// The page an app path names: `/orders` is the page `orders`. Paths without a
-// leading slash are fragments of a URL (a query, part of a path) and name no
-// page. Kept local until the client's parsePageId moves into @lowdefy/helpers,
-// then this should use it.
-function pageIdFromPath({ path }) {
-  if (!path.startsWith('/')) return undefined;
-  const pathname = new URL(path, 'http://lowdefy.invalid').pathname;
-  const pageId = pathname.replace(/^\//, '').replace(/\/$/, '');
-  return pageId === '' ? undefined : pageId;
+import { type } from '@lowdefy/helpers';
+
+const LINUX_START_TIME = /^linux:[0-9a-f-]+:\d+$/;
+
+// A start time a reader can compare: epoch milliseconds (macOS, Windows), or the boot id and
+// clock ticks since boot that readLinuxProcessStartTime reads on Linux. Anything else - null
+// from a failed read, or a format an older Lowdefy wrote - is not one.
+function isProcessStartTime(value) {
+  return type.isInt(value) || (type.isString(value) && LINUX_START_TIME.test(value));
 }
 
-export default pageIdFromPath;
+export default isProcessStartTime;

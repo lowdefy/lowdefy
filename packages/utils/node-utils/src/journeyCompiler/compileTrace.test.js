@@ -141,6 +141,39 @@ test('compileTrace keeps edits to a known candidate and rewrites only its origin
   expect(parseCandidateOrigin({ contents: updated.contents }).sequence_hash).toBe('ae8a08a2');
 });
 
+function countOriginBlocks({ contents }) {
+  return contents.split('\n').filter((line) => line === '# origin:').length;
+}
+
+test('compileTrace rerun keeps one origin block when a developer comment sits above name', () => {
+  const [candidate] = compile().candidates;
+  const edited = candidate.contents.replace(
+    '\nname: orders recorded ae8a08a2',
+    '\n# Submit fails when the search box is empty.\nname: orders recorded ae8a08a2'
+  );
+  const once = compile({ existingCandidates: { [candidate.fileName]: edited } });
+  const twice = compile({ existingCandidates: candidatesByName(once) });
+  const updated = twice.candidates.find((entry) => entry.fileName === candidate.fileName);
+  expect(countOriginBlocks({ contents: updated.contents })).toBe(1);
+  expect(updated.contents).toContain(
+    '\n# Submit fails when the search box is empty.\nname: orders recorded ae8a08a2'
+  );
+  expect(parseCandidateOrigin({ contents: updated.contents })).toEqual(updated.origin);
+});
+
+test('compileTrace rerun keeps one origin block when the blank line after it is removed', () => {
+  const [candidate] = compile().candidates;
+  const edited = candidate.contents.replace(
+    '\n\nname: orders recorded ae8a08a2',
+    '\nname: orders recorded ae8a08a2'
+  );
+  const once = compile({ existingCandidates: { [candidate.fileName]: edited } });
+  const twice = compile({ existingCandidates: candidatesByName(once) });
+  const updated = twice.candidates.find((entry) => entry.fileName === candidate.fileName);
+  expect(countOriginBlocks({ contents: updated.contents })).toBe(1);
+  expect(updated.contents).toEqual(candidate.contents);
+});
+
 test('compileTrace widens the origin window and merges sample sessions with what the candidate recorded', () => {
   const [candidate] = compile().candidates;
   const earlier = candidate.contents
@@ -364,4 +397,67 @@ test('compileTrace throws for an unknown source', () => {
   expect(() => compile({ source: 'replay' })).toThrow(
     'Journey compiler requires "source" to be one of production, dev, explorer, journey. Received "replay".'
   );
+});
+
+test('compileTrace gives each segment its entry page, pages, failure path and frustrations', () => {
+  const records = [
+    traceRecord({ at: 0, session: 'p-1', kind: 'pageview', url: '/tickets', source: 'production' }),
+    traceRecord({
+      at: 1,
+      session: 'p-1',
+      block: 'title',
+      source: 'production',
+      frustration: 'rage',
+    }),
+    traceRecord({
+      at: 2,
+      session: 'p-1',
+      block: 'save',
+      source: 'production',
+      event: {
+        name: 'onClick',
+        block_id: 'save',
+        success: false,
+        error: { name: 'UserError', action_type: 'Validate' },
+        invalid_blocks: ['title', 'due'],
+      },
+    }),
+    traceRecord({
+      at: 10,
+      session: 'p-2',
+      kind: 'pageview',
+      url: '/tickets',
+      source: 'production',
+    }),
+    traceRecord({ at: 11, session: 'p-2', block: 'save', source: 'production' }),
+    traceRecord({
+      at: 12,
+      session: 'p-2',
+      kind: 'engine',
+      scope: 'app',
+      source: 'production',
+      event: { name: 'onInitAsync', block_id: 'root', success: false, error: { name: 'Error' } },
+    }),
+  ];
+  const { segments } = compileTrace({ records, source: 'production' });
+  expect(segments[0]).toMatchObject({
+    page_id: 'tickets',
+    pages: ['tickets'],
+    failure_path: {
+      page: 'tickets',
+      block_id: 'save',
+      event: 'onClick',
+      invalid_blocks: ['due', 'title'],
+      interaction: true,
+    },
+    frustrations: [{ page: 'tickets', block_id: 'title', text: null, kind: 'rage' }],
+  });
+  expect(segments[1].failure_path).toEqual({
+    page: 'app',
+    block_id: null,
+    event: 'onInitAsync',
+    invalid_blocks: [],
+    interaction: false,
+  });
+  expect(segments[1].frustrations).toEqual([]);
 });

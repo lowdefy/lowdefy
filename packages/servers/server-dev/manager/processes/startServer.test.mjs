@@ -131,6 +131,23 @@ test('startServer spawns the child with gc exposed, for its idle GC', () => {
   expect(args.slice(0, 2)).toEqual(['--expose-gc', 'vite.js']);
 });
 
+test('startServer holds the child stdin and tells it to exit when the pipe closes', () => {
+  process.env.LOWDEFY_EXIT_WITH_PID = '4242';
+  process.env.LOWDEFY_SERVER_REGISTRY_DIR = '/home/dev/.lowdefy/servers';
+  try {
+    startServer(createContext({ mailSink: null }));
+  } finally {
+    delete process.env.LOWDEFY_EXIT_WITH_PID;
+    delete process.env.LOWDEFY_SERVER_REGISTRY_DIR;
+  }
+
+  const { env, stdio } = mockSpawn.mock.calls[0][2];
+  expect(stdio[0]).toBe('pipe');
+  expect(env.LOWDEFY_EXIT_ON_STDIN_CLOSE).toBe('1');
+  expect(env.LOWDEFY_EXIT_WITH_PID).toBeUndefined();
+  expect(env.LOWDEFY_SERVER_REGISTRY_DIR).toBeUndefined();
+});
+
 test('startServer tells the child the Lowdefy version it reports to MCP clients', () => {
   startServer(createContext({ mailSink: null }));
 

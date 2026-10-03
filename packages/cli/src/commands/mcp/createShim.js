@@ -23,7 +23,7 @@ import {
   ListToolsRequestSchema,
   McpError,
 } from '@modelcontextprotocol/sdk/types.js';
-import { readDevInstance } from '@lowdefy/node-utils';
+import { readDevInstanceAsync } from '@lowdefy/node-utils';
 
 import callWithReconnect from './callWithReconnect.js';
 import checkDependenciesInstalled from './checkDependenciesInstalled.js';
@@ -160,7 +160,7 @@ function createShim({ cliVersion, cwd, devTools }) {
   // A running server is used as it is - the user's terminal server included.
   // Anything else goes to the hub, which starts it and waits for ready.
   async function ensureRunning(app) {
-    const running = readDevInstance({ configDirectory: app.configDirectory });
+    const running = await readDevInstanceAsync({ configDirectory: app.configDirectory });
     if (running !== null && running.state === 'ready') {
       if (running.owner === 'hub' || hub.isConnected()) {
         await hub.attach(app);
@@ -176,7 +176,7 @@ function createShim({ cliVersion, cwd, devTools }) {
     if (status.state !== 'ready') {
       throw new Error(describeNotReady({ label: app.label, status }));
     }
-    return readDevInstance({ configDirectory: app.configDirectory });
+    return readDevInstanceAsync({ configDirectory: app.configDirectory });
   }
 
   async function callDevTool({ name, args }) {
@@ -233,7 +233,7 @@ function createShim({ cliVersion, cwd, devTools }) {
       { configDirectory: app.configDirectory },
       { autoStart: false }
     );
-    const record = readDevInstance({ configDirectory: app.configDirectory });
+    const record = await readDevInstanceAsync({ configDirectory: app.configDirectory });
     const current = hubStatus ?? {
       configDirectory: app.configDirectory,
       owner: record?.owner,
@@ -251,7 +251,7 @@ function createShim({ cliVersion, cwd, devTools }) {
   // call. A failure here must not fail the start: the next forwarded call
   // connects again.
   async function connectToLearnTools(app) {
-    const instance = readDevInstance({ configDirectory: app.configDirectory });
+    const instance = await readDevInstanceAsync({ configDirectory: app.configDirectory });
     if (instance === null || instance.state !== 'ready') {
       return;
     }
@@ -264,7 +264,7 @@ function createShim({ cliVersion, cwd, devTools }) {
 
   async function start({ directory, restart = false, clean = false }) {
     const app = await resolve({ directory });
-    const running = readDevInstance({ configDirectory: app.configDirectory });
+    const running = await readDevInstanceAsync({ configDirectory: app.configDirectory });
     if (running !== null && running.owner !== 'hub') {
       if (!restart && !clean) {
         await connectToLearnTools(app);
@@ -313,7 +313,7 @@ function createShim({ cliVersion, cwd, devTools }) {
 
   async function stop({ directory }) {
     const app = await resolve({ directory });
-    const running = readDevInstance({ configDirectory: app.configDirectory });
+    const running = await readDevInstanceAsync({ configDirectory: app.configDirectory });
     if (running !== null && running.owner !== 'hub') {
       return {
         app: app.label,
@@ -349,16 +349,18 @@ function createShim({ cliVersion, cwd, devTools }) {
   // fails with "several apps" - the case this tool is for.
   async function list() {
     const root = findGitRoot({ directory: fs.realpathSync.native(cwd) });
-    const apps = findApps({ root }).map((configDirectory) => {
-      const record = readDevInstance({ configDirectory });
-      return {
-        app: formatInstanceLabel({ configDirectory, root }),
-        configDirectory,
-        owner: record?.owner,
-        state: record?.state ?? 'stopped',
-        url: record?.url,
-      };
-    });
+    const apps = await Promise.all(
+      findApps({ root }).map(async (configDirectory) => {
+        const record = await readDevInstanceAsync({ configDirectory });
+        return {
+          app: formatInstanceLabel({ configDirectory, root }),
+          configDirectory,
+          owner: record?.owner,
+          state: record?.state ?? 'stopped',
+          url: record?.url,
+        };
+      })
+    );
     const managed = await hub.request('list', {}, { autoStart: false });
     const elsewhere = (managed?.instances ?? []).filter(
       (instance) => !apps.some((app) => app.configDirectory === instance.configDirectory)

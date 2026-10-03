@@ -48,6 +48,7 @@ Every setting is optional, and every feature is **on by default**: only an expli
 | `sentry.enabled` | `true` | `false`: Sentry off, server and client. |
 | `posthog.enabled` | `true` | `false`: PostHog off — `PostHogInit` behaves as `enabled: false`. |
 | `guards.secrets`, `guards.env` | none | Regular expressions the named secrets and environment variables must match, or the build fails. |
+| `dataPull` | `false` | `true`: `lowdefy data pull` may copy a snapshot from this environment's database. Set it only on pre-production environments. |
 
 ## URL
 
@@ -77,7 +78,7 @@ Endpoint `schedules` can be keyed by environment name, with a `default` for the 
 - **`email.filter`** is applied to every `SMTPMailSend` and `SendGridMailSend` request whose connection sets no `filter` of its own, or a filter whose fields all resolve to `null` (a `_secret` that is not set on this deployment, say). Put a catch-all `replaceAddress` on every non-production environment and no environment can email real users by accident.
 - A connection's own `filter` wins when it sets at least one field, and **`filter: false`** on a connection turns filtering off entirely, the environment's too — for mail that must reach its real recipient everywhere, such as an invite.
 - **`email.enabled: false`** sends nothing: each message reports `{ messageId: null, to: null, disabled: true }`.
-- Auth emails (magic links, verification, invitations sent by the auth engine) never go through a mail request, so neither setting affects them — sign-in keeps working in every environment.
+- Auth emails (magic links, verification, invitations sent by the auth engine) never go through a mail request, so neither setting affects them — sign-in keeps working in every environment. The `auth.email` connection's own `filter` still applies to them, so set one there to catch auth emails outside production.
 
 See the [SMTP](/SMTP) and [SendGridMail](/SendGridMail) connections for the filter fields.
 
@@ -107,6 +108,28 @@ config:
 - Only the current environment's guards are checked. Every environment's patterns are validated, so a broken pattern fails the build that introduces it. `secrets` and `env` are the only guard kinds; any other key (a `secret:` typo, say) fails the build.
 - A failure names the variable and never prints its value.
 - Guards need the real values at build time and at startup. On Vercel, Environment Variables are available to both; a container build that only injects secrets when the container starts sees them as unset and fails.
+
+## Data pulls
+
+`lowdefy data pull` copies a scoped, capped snapshot of a pre-production database to your machine for journeys to run on. It reads only from an environment that sets `dataPull: true`, and refuses every other environment before it reads any secret:
+
+```yaml
+config:
+  environments:
+    staging:
+      dataPull: true
+      guards:
+        secrets:
+          MONGODB_URI: 'acme-staging\.a1b2c\.mongodb\.net'
+    prod:
+      guards:
+        secrets:
+          MONGODB_URI: 'acme-prod\.a1b2c\.mongodb\.net'
+```
+
+- Set `dataPull: true` only on pre-production environments. Production must never set it: nothing else marks an environment as production, so the opt-in is what keeps production rows off developer machines.
+- The pull then proves which database it reads with the environment's own `guards.secrets`: each secret it reads must match the source environment's pin, and no other environment's distinct pin. A source environment needs a guard for every secret the pull reads.
+- `dataPull` must be a boolean, or the build fails. It is read only by the pull and never reaches the build output.
 
 ## What reaches the browser
 

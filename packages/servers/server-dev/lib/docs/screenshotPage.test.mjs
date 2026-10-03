@@ -168,6 +168,8 @@ test('screenshotPage keeps the colour scheme and returns screenshot step capture
     addCookies: jest.fn(async () => {}),
     // A journey's network counter listens for the context's requests.
     on: jest.fn(),
+    // Its pages report what they ran through the journey observer binding.
+    exposeBinding: jest.fn(async () => {}),
     newPage: jest.fn(async () => page),
     close: jest.fn(async () => {}),
   };

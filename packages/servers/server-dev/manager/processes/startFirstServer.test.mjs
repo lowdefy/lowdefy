@@ -134,7 +134,7 @@ test('startFirstServer still starts the child when the optimiser fails, and warn
   expect(context.logger.warn.mock.calls[0][0]).toContain('boom');
 });
 
-test('the optimiser resolves the same environment as the child, apart from the browser tag', async () => {
+test('the optimiser resolves the same environment as the child, apart from the browser tag and stdin owner watch', async () => {
   process.env.BETTER_AUTH_URL = 'http://localhost:3000';
   try {
     const context = createContext();
@@ -146,8 +146,12 @@ test('the optimiser resolves the same environment as the child, apart from the b
     await started;
 
     const optimiserEnv = mockSpawn.mock.calls[0][2].env;
-    const { LOWDEFY_BROWSER_TAG, ...childEnv } = mockSpawn.mock.calls[1][2].env;
+    // The child alone has its stdin held by the manager, so only it exits when
+    // that pipe closes.
+    const { LOWDEFY_BROWSER_TAG, LOWDEFY_EXIT_ON_STDIN_CLOSE, ...childEnv } =
+      mockSpawn.mock.calls[1][2].env;
     expect(LOWDEFY_BROWSER_TAG).toBeDefined();
+    expect(LOWDEFY_EXIT_ON_STDIN_CLOSE).toBe('1');
     expect(optimiserEnv).toEqual(childEnv);
     expect(optimiserEnv.BETTER_AUTH_URL).toBe('http://localhost:3210');
     expect(optimiserEnv.LOWDEFY_SERVER_DEV_MAIL_SINK).toBe('true');
