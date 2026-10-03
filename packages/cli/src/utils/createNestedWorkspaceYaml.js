@@ -20,8 +20,29 @@ import { type } from '@lowdefy/helpers';
 import rebaseWorkspaceSettings from './rebaseWorkspaceSettings.js';
 
 // The server's own dependencies with build scripts, as in the standalone
-// pnpm-workspace.yaml ensurePnpmWorkspaceYaml writes.
-const defaultBuiltDependencies = ['better-sqlite3', 'sharp'];
+// pnpm-workspace.yaml ensurePnpmWorkspaceYaml writes: true runs the script,
+// false skips it.
+const defaultAllowBuilds = {
+  'better-sqlite3': true,
+  sharp: true,
+  '@sentry/cli': false,
+};
+
+// A dependency the parent allows or ignores keeps the parent's choice.
+function getDefaultAllowBuilds({ settings }) {
+  return Object.fromEntries(
+    Object.entries(defaultAllowBuilds).filter(
+      ([name]) =>
+        type.isUndefined(settings.allowBuilds?.[name]) &&
+        !(settings.onlyBuiltDependencies ?? []).includes(name) &&
+        !(settings.ignoredBuiltDependencies ?? []).includes(name)
+    )
+  );
+}
+
+function getNames({ allowBuilds, allowed }) {
+  return Object.keys(allowBuilds).filter((name) => allowBuilds[name] === allowed);
+}
 
 // The server installs as its own workspace, with a lockfile inside the
 // gitignored server directory, so installing it never rewrites the parent's
@@ -35,17 +56,27 @@ function createNestedWorkspaceYaml({ directory, parentWorkspace, workspaceRoot }
     settings: parentWorkspace.settings,
     workspaceRoot,
   });
+  const defaults = getDefaultAllowBuilds({ settings });
   const workspace = {
     packages: ['.'],
     ...settings,
     onlyBuiltDependencies: [
-      ...new Set([...defaultBuiltDependencies, ...(settings.onlyBuiltDependencies ?? [])]),
+      ...new Set([
+        ...getNames({ allowBuilds: defaults, allowed: true }),
+        ...(settings.onlyBuiltDependencies ?? []),
+      ]),
     ],
-    allowBuilds: {
-      ...Object.fromEntries(defaultBuiltDependencies.map((name) => [name, true])),
-      ...settings.allowBuilds,
-    },
+    ignoredBuiltDependencies: [
+      ...new Set([
+        ...getNames({ allowBuilds: defaults, allowed: false }),
+        ...(settings.ignoredBuiltDependencies ?? []),
+      ]),
+    ],
+    allowBuilds: { ...defaults, ...settings.allowBuilds },
   };
+  if (workspace.ignoredBuiltDependencies.length === 0) {
+    delete workspace.ignoredBuiltDependencies;
+  }
   if (!type.isNone(settings.patchedDependencies)) {
     // The parent's patches are copied whole, and some patch packages only the
     // parent's own projects install.

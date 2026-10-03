@@ -30,16 +30,24 @@ import readParentWorkspace from './readParentWorkspace.js';
 // allowed in pnpm-workspace.yaml. The key differs by version:
 // - packages is required by pnpm 9 and 10.0, and stops pnpm from treating the
 //   server as part of a parent workspace.
-// - onlyBuiltDependencies is read by early pnpm 10 versions.
+// - onlyBuiltDependencies and ignoredBuiltDependencies are read by early
+//   pnpm 10 versions.
 // - allowBuilds is read by pnpm >=10.29 and pnpm 11.
+// @sentry/cli (through @sentry/vite-plugin) gets its binary from a platform
+// optional dependency; its postinstall only downloads the binary when that
+// dependency is missing, so it is skipped. Ignoring it, not leaving it out,
+// keeps pnpm 11 from failing and pnpm 10 from warning.
 const pnpmWorkspaceYaml = `packages:
   - '.'
 onlyBuiltDependencies:
   - better-sqlite3
   - sharp
+ignoredBuiltDependencies:
+  - '@sentry/cli'
 allowBuilds:
   better-sqlite3: true
   sharp: true
+  '@sentry/cli': false
 `;
 
 async function writeNestedNpmrc({ context, directory, parentWorkspace, workspaceRoot }) {

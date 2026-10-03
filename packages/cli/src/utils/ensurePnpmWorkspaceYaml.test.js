@@ -57,9 +57,12 @@ test('ensurePnpmWorkspaceYaml writes pnpm-workspace.yaml when it does not exist'
 onlyBuiltDependencies:
   - better-sqlite3
   - sharp
+ignoredBuiltDependencies:
+  - '@sentry/cli'
 allowBuilds:
   better-sqlite3: true
   sharp: true
+  '@sentry/cli': false
 `,
     ],
   ]);
@@ -113,9 +116,12 @@ patchedDependencies:
 onlyBuiltDependencies:
   - better-sqlite3
   - sharp
+ignoredBuiltDependencies:
+  - "@sentry/cli"
 allowBuilds:
   better-sqlite3: true
   sharp: true
+  "@sentry/cli": false
 allowUnusedPatches: true
 `,
     ],

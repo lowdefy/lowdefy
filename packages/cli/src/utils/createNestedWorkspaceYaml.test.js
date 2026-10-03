@@ -27,9 +27,12 @@ test('createNestedWorkspaceYaml writes the default build allowlist when the pare
 onlyBuiltDependencies:
   - better-sqlite3
   - sharp
+ignoredBuiltDependencies:
+  - "@sentry/cli"
 allowBuilds:
   better-sqlite3: true
   sharp: true
+  "@sentry/cli": false
 `);
 });
 
@@ -55,14 +58,15 @@ test('createNestedWorkspaceYaml carries the parent settings and rebases patch pa
   - .
 allowBuilds:
   better-sqlite3: true
-  sharp: false
+  "@sentry/cli": false
   esbuild: true
+  sharp: false
 catalog:
   react: 18.2.0
 onlyBuiltDependencies:
   - better-sqlite3
-  - sharp
   - esbuild
+  - sharp
 overrides:
   is-number: 7.0.0
 packageExtensions:
@@ -74,7 +78,34 @@ patchedDependencies:
 peerDependencyRules:
   ignoreMissing:
     - b
+ignoredBuiltDependencies:
+  - "@sentry/cli"
 allowUnusedPatches: true
+`);
+});
+
+test('createNestedWorkspaceYaml keeps the parent choice for a dependency with a default', () => {
+  const yaml = createNestedWorkspaceYaml({
+    directory: '/repo/apps/app/.lowdefy/server',
+    parentWorkspace: {
+      packages: ['apps/*'],
+      rootDependencies: {},
+      settings: {
+        ignoredBuiltDependencies: ['sharp'],
+        onlyBuiltDependencies: ['@sentry/cli'],
+      },
+    },
+    workspaceRoot: '/repo',
+  });
+  expect(yaml).toEqual(`packages:
+  - .
+ignoredBuiltDependencies:
+  - sharp
+onlyBuiltDependencies:
+  - better-sqlite3
+  - "@sentry/cli"
+allowBuilds:
+  better-sqlite3: true
 `);
 });
 
@@ -105,8 +136,11 @@ supportedArchitectures:
 onlyBuiltDependencies:
   - better-sqlite3
   - sharp
+ignoredBuiltDependencies:
+  - "@sentry/cli"
 allowBuilds:
   better-sqlite3: true
   sharp: true
+  "@sentry/cli": false
 `);
 });
