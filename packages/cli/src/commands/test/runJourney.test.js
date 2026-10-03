@@ -169,3 +169,20 @@ test('runJourney reports a file that failed to parse using its file path as the 
     message: 'Invalid YAML: boom',
   });
 });
+
+test('runJourney puts the journey evidence on a pass and never sends it to the dev server', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  mockPost.mockResolvedValue({ data: { pageId: 'form', passed: true, steps: [{}, {}] } });
+  const evidence = { mutation: { killed: 1, total: 2 }, refreshed: '2026-10-03' };
+  const result = await runJourney({ item: { ...item, journey: { ...journey, evidence } }, url });
+  expect(result.evidence).toEqual(evidence);
+  const [, body] = mockPost.mock.calls[mockPost.mock.calls.length - 1];
+  expect(Object.keys(body).sort()).toEqual(['pageId', 'steps', 'timeout', 'urlQuery', 'user']);
+});
+
+test('runJourney leaves evidence off a pass for a journey without it', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  mockPost.mockResolvedValue({ data: { pageId: 'form', passed: true, steps: [{}, {}] } });
+  const result = await runJourney({ item, url });
+  expect(result).not.toHaveProperty('evidence');
+});

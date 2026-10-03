@@ -72,7 +72,11 @@ function writeJourney(fileName, journey) {
 }
 
 test('runAppTests runs every journey against the dev server and reports each as data', async () => {
-  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ wait: { ms: 1 } }] });
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    steps: [{ wait: { ms: 1 } }],
+  });
   writeJourney('refunds.yaml', {
     name: 'refund button',
     pageId: 'refunds',
@@ -92,8 +96,16 @@ test('runAppTests runs every journey against the dev server and reports each as 
 });
 
 test('runAppTests runs only the journeys matching the filter', async () => {
-  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ wait: { ms: 1 } }] });
-  writeJourney('refunds.yaml', { name: 'refund button', pageId: 'refunds', steps: [{ wait: { ms: 1 } }] });
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    steps: [{ wait: { ms: 1 } }],
+  });
+  writeJourney('refunds.yaml', {
+    name: 'refund button',
+    pageId: 'refunds',
+    steps: [{ wait: { ms: 1 } }],
+  });
 
   const { summary } = await runAppTests({ configDirectory, url, filter: 'ORDERS' });
 
@@ -101,8 +113,36 @@ test('runAppTests runs only the journeys matching the filter', async () => {
 });
 
 test('runAppTests says when no journey matches the filter', async () => {
-  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ wait: { ms: 1 } }] });
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    steps: [{ wait: { ms: 1 } }],
+  });
   expect((await runAppTests({ configDirectory, url, filter: 'nope' })).summary).toEqual(
     'No tests matched filter "nope".'
   );
+});
+
+test('runAppTests returns journey evidence and the PASS line that shows it', async () => {
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    evidence: {
+      production: {
+        sessions: 412,
+        persons: 37,
+        orgs: 9,
+        share: 0.31,
+        failures: 14,
+        window: '2026-09-03/2026-10-02',
+      },
+      refreshed: '2026-10-03',
+    },
+    steps: [{ wait: { ms: 1 } }],
+  });
+
+  const { results } = await runAppTests({ configDirectory, url });
+
+  expect(results[0].evidence.production.sessions).toBe(412);
+  expect(results[0].report).toContain('412 sessions · 9 orgs');
 });

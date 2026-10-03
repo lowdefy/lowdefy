@@ -17,6 +17,8 @@
 import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
 
+import formatEvidence from './formatEvidence.js';
+
 function toCompactYaml(value) {
   if (type.isUndefined(value)) {
     return 'undefined';
@@ -32,7 +34,9 @@ function toCompactYaml(value) {
 // line followed by an indented explanation of what went wrong.
 function formatJourneyResult({ result }) {
   if (result.passed) {
-    return [`PASS  ${result.name}  (${result.stepCount} steps, ${result.durationMs}ms)`];
+    const line = `PASS  ${result.name}  (${result.stepCount} steps, ${result.durationMs}ms)`;
+    const evidence = formatEvidence({ evidence: result.evidence });
+    return [evidence === '' ? line : `${line}  ${evidence}`];
   }
   const lines = [`FAIL  ${result.name}`, `      file: ${result.filePath}`];
   const failure = result.failure;

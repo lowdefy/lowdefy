@@ -85,3 +85,44 @@ test('formatJourneyResult prints the message when a journey failed without a ste
     '      Invalid journey file: Journey should have required property "steps".',
   ]);
 });
+
+const evidence = {
+  production: {
+    sessions: 412,
+    persons: 37,
+    orgs: 9,
+    share: 0.31,
+    failures: 14,
+    window: '2026-09-03/2026-10-02',
+  },
+  mutation: { killed: 11, total: 12 },
+};
+
+test('formatJourneyResult appends evidence to the PASS line', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'member assigns an open ticket to a teammate',
+        passed: true,
+        stepCount: 5,
+        durationMs: 2100,
+        evidence,
+      },
+    })
+  ).toEqual([
+    'PASS  member assigns an open ticket to a teammate  (5 steps, 2100ms)  412 sessions · 9 orgs · 11/12 mutants',
+  ]);
+});
+
+test('formatJourneyResult puts no evidence on a FAIL line', () => {
+  const lines = formatJourneyResult({
+    result: {
+      name: 'broken',
+      filePath: '/app/tests/journeys/broken.yaml',
+      passed: false,
+      message: 'refund is hidden',
+      evidence,
+    },
+  });
+  expect(lines.join('\n')).not.toContain('sessions');
+});
