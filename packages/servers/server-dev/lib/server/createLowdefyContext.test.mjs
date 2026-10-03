@@ -108,13 +108,20 @@ afterAll(() => {
 
 const { default: createLowdefyContext } = await import('./createLowdefyContext.js');
 const { default: createSystemContext } = await import('./auth/createSystemContext.js');
+const { journeyActorToken } = await import('./auth/journeyActor.js');
+const { createApiContext } = await import('@lowdefy/api');
+const { openMutantRun } = await import('./mutants/mutantRuns.js');
 
-function createHonoContext({ path: reqPath = '/api/request/foo', requestTimeoutSignal } = {}) {
+function createHonoContext({
+  path: reqPath = '/api/request/foo',
+  requestTimeoutSignal,
+  headers = {},
+} = {}) {
   const variables = { requestTimeoutSignal };
   return {
     get: (key) => variables[key],
     req: {
-      header: (name) => (name ? undefined : {}),
+      header: (name) => (name ? headers[name] : headers),
       path: reqPath,
       method: 'POST',
       raw: { headers: new Headers(), signal: new AbortController().signal },
@@ -166,4 +173,58 @@ test('the auth-hook system context is built with mode dev and a scrubSecrets tha
   const context = createSystemContext({ auth: null });
   expect(context.mode).toEqual('dev');
   expect(context.scrubSecrets(`token ${secret} end`)).toEqual('token [REDACTED] end');
+});
+
+test('createLowdefyContext forwards the verified loopback journey cookies on loopbackHeaders', async () => {
+  const context = await createLowdefyContext({
+    c: createHonoContext({
+      headers: {
+        cookie: `session=abc; lowdefy_journey_actor=${journeyActorToken}.203.0.113.7; lowdefy_journey_mutant=${journeyActorToken}.run1`,
+      },
+    }),
+  });
+  expect(context.loopbackHeaders).toEqual({
+    cookie: `lowdefy_journey_mutant=${journeyActorToken}.run1`,
+  });
+});
+
+test('createLowdefyContext sets an empty loopback cookie when the request carries no journey cookie', async () => {
+  const context = await createLowdefyContext({ c: createHonoContext() });
+  expect(context.loopbackHeaders).toEqual({ cookie: '' });
+});
+
+test('createLowdefyContext serves the mutated artifact to a request whose cookie names an open mutant run', async () => {
+  const artifact = { id: 'page:form', blocks: [] };
+  createApiContext.mockImplementationOnce((context) => {
+    context.readConfigFile = async () => artifact;
+  });
+  const opened = openMutantRun({
+    mutant: {
+      buildId: 'b',
+      artifact: 'pages/form.json',
+      key: 'missing',
+      arg: null,
+      operator: 'drop-block',
+    },
+  });
+  const context = await createLowdefyContext({
+    c: createHonoContext({
+      headers: { cookie: `lowdefy_journey_mutant=${journeyActorToken}.${opened.cookiePayload}` },
+    }),
+  });
+  await context.readConfigFile('pages/form.json');
+  expect(opened.run.misses).toEqual([{ reason: 'key not found', path: 'pages/form.json' }]);
+  expect(context.loopbackHeaders.cookie).toEqual(
+    `lowdefy_journey_mutant=${journeyActorToken}.${opened.cookiePayload}`
+  );
+  opened.close();
+});
+
+test('createLowdefyContext leaves readConfigFile alone without a mutant cookie', async () => {
+  const readConfigFile = async () => ({});
+  createApiContext.mockImplementationOnce((context) => {
+    context.readConfigFile = readConfigFile;
+  });
+  const context = await createLowdefyContext({ c: createHonoContext() });
+  expect(context.readConfigFile).toBe(readConfigFile);
 });

@@ -82,6 +82,19 @@ const lifecycleTools = [
           type: 'string',
           description: 'Only run journeys whose name contains this text (case-insensitive).',
         },
+        paths: {
+          type: 'array',
+          items: { type: 'string' },
+          description:
+            'Journey files or directories to run instead of tests/journeys/*.yaml, relative to the app directory and inside it (tests/journeys/_candidates/... included).',
+        },
+        repeat: {
+          type: 'integer',
+          minimum: 1,
+          maximum: 10,
+          description:
+            'Run each journey this many times and classify it PASS, FLAKY or FAIL (each result carries `class`). A candidate is committed only after repeat: 3 gives PASS. Default 1.',
+        },
       },
     },
   },

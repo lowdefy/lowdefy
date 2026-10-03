@@ -36,7 +36,12 @@ function readJourneyFile({ filePath }) {
   return [{ filePath, journey: parsed }];
 }
 
-function discoverJourneys({ context }) {
+// With `paths` (journey files already resolved by resolveJourneyPaths), the
+// named files are read; otherwise every file directly in tests/journeys.
+function discoverJourneys({ context, paths }) {
+  if (!type.isUndefined(paths)) {
+    return paths.flatMap((filePath) => readJourneyFile({ filePath }));
+  }
   const directory = context.directories.journeys;
   if (!fs.existsSync(directory)) {
     return [];
