@@ -33,6 +33,7 @@ const mockWaitForServer = jest.fn(async () => true);
 jest.unstable_mockModule('../utils/waitForServer.mjs', () => ({ default: mockWaitForServer }));
 
 const { default: optimizeDependencies } = await import('./optimizeDependencies.mjs');
+const { default: restartServer } = await import('./restartServer.mjs');
 const { default: startFirstServer } = await import('./startFirstServer.mjs');
 const { default: startServer } = await import('./startServer.mjs');
 const { default: syncServer } = await import('./syncServer.mjs');
@@ -52,6 +53,7 @@ function createContext() {
     internalPort: 3211,
     logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn(), warn: jest.fn() },
     mailSink: null,
+    markServerReady: jest.fn(),
     options: { port: 3210 },
     serverArtifacts: { record: jest.fn() },
     shutdownServer: jest.fn(),
@@ -281,4 +283,40 @@ test('startFirstServer resolves once the first child answers, before a queued sy
   expect(await started).toBe(true);
   await sync;
   expect(context.restartServer).toHaveBeenCalledTimes(1);
+});
+
+test('startFirstServer marks the server ready when the first child answers', async () => {
+  const context = createContext();
+
+  const started = startFirstServer(context);
+  await flush();
+  processes[0].emit('exit', 0);
+
+  expect(await started).toBe(true);
+  expect(context.markServerReady).toHaveBeenCalledTimes(1);
+});
+
+test('a restart marks the server ready when the first child exited without answering', async () => {
+  const context = createContext();
+  context.buildActivity = { track: (task) => task() };
+  context.restartServer = restartServer(context);
+  context.serverArtifacts = createTracker({ 'build/config.json': 'a', 'package.json': 'a' });
+  // The first child exits at start (a plugin that fails to load): neither
+  // its wait nor the later one sees an answer. The restarted child answers.
+  mockWaitForServer.mockImplementationOnce(async () => false);
+  mockWaitForServer.mockImplementationOnce(async () => false);
+
+  const started = startFirstServer(context);
+  await flush();
+  processes[0].emit('exit', 0);
+  expect(await started).toBe(false);
+  await flush();
+  expect(context.markServerReady).not.toHaveBeenCalled();
+
+  // The fix to the plugin is a server-side plugin edit, which restarts.
+  await context.syncServer({ restart: true });
+
+  expect(mockSpawn).toHaveBeenCalledTimes(3);
+  expect(mockWaitForServer.mock.calls[2][0].child).toBe(processes[2]);
+  expect(context.markServerReady).toHaveBeenCalledTimes(1);
 });

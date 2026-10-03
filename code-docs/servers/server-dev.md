@@ -179,7 +179,7 @@ Because `@hono/vite-dev-server` SSR-loads the server module graph through Vite, 
 
 ## Manager System
 
-The manager records itself in `<config>/.lowdefy/instance.json` (pid, owner, state, ports, url) — created exclusively at start-up so a second manager for the same app refuses, flipped to `state: ready` once the child answers `/api/ping`, removed on exit. Explicit ports are strict (`LOWDEFY_SERVER_DEV_STRICT_PORT`, `LOWDEFY_SERVER_DEV_INTERNAL_PORT`); a hub-owned manager (`LOWDEFY_DEV_OWNER=hub`) never opens a browser. `/lowdefy-docs*` and `/api/dev-inspect*` refuse cross-site browser requests (`src/middleware/localDevToolsOnly.js`). See `code-docs/architecture/agent-dev-hub.md`.
+The manager records itself in `<config>/.lowdefy/instance.json` (pid, owner, state, ports, url) — created exclusively at start-up so a second manager for the same app refuses, flipped to `state: ready` the first time a child answers `/api/ping`, removed on exit. `waitForDevServer` (used by the first start and every restart) marks it: a child that answers after the 2-minute wait still marks it, and so does a restart after a first child that exited at start; a child that never answers never does. Explicit ports are strict (`LOWDEFY_SERVER_DEV_STRICT_PORT`, `LOWDEFY_SERVER_DEV_INTERNAL_PORT`); a hub-owned manager (`LOWDEFY_DEV_OWNER=hub`) never opens a browser. `/lowdefy-docs*` and `/api/dev-inspect*` refuse cross-site browser requests (`src/middleware/localDevToolsOnly.js`). See `code-docs/architecture/agent-dev-hub.md`.
 
 ### Entry Point
 
@@ -203,8 +203,9 @@ context.startWatchers(); // Not awaited — chokidar's ready event is unreliable
 // optimizeDependencies, startServer, then wait for the child to answer. A
 // watcher batch during the optimise builds at once and its syncServer call
 // waits for this start, so it cannot restart the child before it is ready.
-if (await startFirstServer(context)) {
-  instance.update({ state: 'ready' });
+// waitForDevServer calls context.markServerReady when a child answers.
+if (!(await startFirstServer(context))) {
+  context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');
 }
 if (process.env.LOWDEFY_SERVER_DEV_OPEN_BROWSER === 'true') {
   opener(`http://localhost:${context.options.port}`);

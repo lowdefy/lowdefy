@@ -142,6 +142,20 @@ try {
   instance.update({ port, internalPort });
   context.instance = instance;
 
+  // Called by waitForDevServer whenever a child answers: the first start's,
+  // one that answers after its wait, or a restart's after a first child that
+  // exited. The hub and the MCP shim wait on ready.
+  let ready = false;
+  context.markServerReady = () => {
+    if (ready) {
+      return;
+    }
+    ready = true;
+    // A slow first build must not make a fresh server look idle the moment it is ready.
+    context.requestActivity.touch();
+    instance.update({ state: 'ready' });
+  };
+
   // The manager holds the public port for the whole session and proxies to the
   // Vite child on an internal loopback port — restarting the child (js module
   // or .env change) then never drops the listener, so long-lived clients (MCP
@@ -151,11 +165,7 @@ try {
   context.mailSink = await startMailSink(context);
 
   // Optimises dependencies, starts the child and waits for it to answer.
-  if (await startFirstServer(context)) {
-    // A slow first build must not make a fresh server look idle the moment it is ready.
-    context.requestActivity.touch();
-    instance.update({ state: 'ready' });
-  } else {
+  if (!(await startFirstServer(context))) {
     context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');
   }
   const docsUrl = `${context.url}/lowdefy-docs`;
