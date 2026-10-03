@@ -16,7 +16,12 @@
 
 import fs from 'fs';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ErrorCode,
+  ListToolsRequestSchema,
+  McpError,
+} from '@modelcontextprotocol/sdk/types.js';
 import { readDevInstance } from '@lowdefy/node-utils';
 
 import callWithReconnect from './callWithReconnect.js';
@@ -136,10 +141,23 @@ function createShim({ cliVersion, cwd, devTools }) {
         resetTimeoutOnProgress: true,
       });
     };
-    const result = await callWithReconnect({
-      call,
-      reconnect: () => instances.drop({ configDirectory: app.configDirectory }),
-    });
+    let result;
+    try {
+      result = await callWithReconnect({
+        call,
+        reconnect: () => instances.drop({ configDirectory: app.configDirectory }),
+      });
+    } catch (error) {
+      // The connection ended before the answer (see fetchDevServer). Not
+      // retried here: the dev server may have run part of the call.
+      if (!(error instanceof McpError) || error.code !== ErrorCode.ConnectionClosed) {
+        throw error;
+      }
+      await instances.drop({ configDirectory: app.configDirectory });
+      throw new Error(
+        `${app.label}: the dev server stopped or dropped the connection before ${name} answered, so the call may have run in part. Call lowdefy_dev_status, then lowdefy_dev_start if it is not ready, and try again.`
+      );
+    }
     const content = [
       { type: 'text', text: `${app.label} · ${instance.url}` },
       ...(result.content ?? []),

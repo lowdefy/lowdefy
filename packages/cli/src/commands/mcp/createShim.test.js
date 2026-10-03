@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { spawn } from 'child_process';
 import fs from 'fs';
 import http from 'http';
 import net from 'net';
@@ -320,5 +321,89 @@ test('lowdefy mcp refuses a directory in another checkout and asks the user when
     expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
   } finally {
     fs.rmSync(other, { recursive: true, force: true });
+  }
+});
+
+// A dev server in its own process that speaks just enough MCP to be connected
+// to, answers a tool call as an event stream that never ends, and says so on
+// stdout.
+const HANGING_DEV_SERVER = `
+const http = require('http');
+const server = http.createServer((req, res) => {
+  if (req.method !== 'POST') {
+    res.writeHead(405).end();
+    return;
+  }
+  let body = '';
+  req.on('data', (chunk) => (body += chunk));
+  req.on('end', () => {
+    const message = JSON.parse(body);
+    if (message.id === undefined) {
+      res.writeHead(202).end();
+      return;
+    }
+    if (message.method === 'initialize') {
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(JSON.stringify({
+        jsonrpc: '2.0',
+        id: message.id,
+        result: {
+          protocolVersion: message.params.protocolVersion,
+          capabilities: { tools: {} },
+          serverInfo: { name: 'dev', version: '6.0.0' },
+        },
+      }));
+      return;
+    }
+    res.writeHead(200, { 'content-type': 'text/event-stream' });
+    res.flushHeaders();
+    process.stdout.write('called\\n');
+  });
+});
+server.listen(0, '127.0.0.1', () => process.stdout.write(server.address().port + '\\n'));
+`;
+
+test('a dev tool call fails within seconds, saying the server stopped, when its dev server dies mid-call', async () => {
+  const app = makeApp('.');
+  const devServer = spawn(process.execPath, ['-e', HANGING_DEV_SERVER]);
+  try {
+    const lines = [];
+    const nextLine = () =>
+      new Promise((resolve) => {
+        if (lines.length > 0) {
+          resolve(lines.shift());
+          return;
+        }
+        devServer.stdout.once('data', () => resolve(nextLine()));
+      });
+    devServer.stdout.setEncoding('utf8');
+    devServer.stdout.on('data', (chunk) => lines.push(...chunk.split('\n').filter(Boolean)));
+    const port = await nextLine();
+    fs.mkdirSync(path.join(app, '.lowdefy'));
+    fs.writeFileSync(
+      path.join(app, '.lowdefy', 'instance.json'),
+      JSON.stringify({
+        pid: devServer.pid,
+        configDirectory: app,
+        owner: 'terminal',
+        state: 'ready',
+        url: `http://127.0.0.1:${port}`,
+      })
+    );
+    await connect({ cwd: root });
+    const pending = client.callTool({ name: 'lowdefy_build_status', arguments: {} });
+    expect(await nextLine()).toEqual('called');
+    const killedAt = Date.now();
+    devServer.kill('SIGKILL');
+    const result = await pending;
+    expect(Date.now() - killedAt).toBeLessThan(10000);
+    expect(result.isError).toBe(true);
+    expect(text(result)).toEqual(
+      `${path.basename(
+        root
+      )}: the dev server stopped or dropped the connection before lowdefy_build_status answered, so the call may have run in part. Call lowdefy_dev_status, then lowdefy_dev_start if it is not ready, and try again.`
+    );
+  } finally {
+    devServer.kill('SIGKILL');
   }
 });
