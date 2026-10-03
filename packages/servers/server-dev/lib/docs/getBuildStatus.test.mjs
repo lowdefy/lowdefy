@@ -29,14 +29,14 @@ jest.unstable_mockModule('./readBuildArtifact.js', () => ({
 
 const { default: getBuildStatus } = await import('./getBuildStatus.js');
 
-test('getBuildStatus lists errors from earlier builds apart from the current ones', () => {
+test('getBuildStatus lists errors from earlier builds apart from the current ones', async () => {
   mockClientErrors.mockReturnValue([
     { message: 'old render error', buildId: 'build-1' },
     { message: 'live render error', buildId: 'build-2' },
   ]);
   mockServerErrors.mockReturnValue([{ message: 'old request error', buildId: 'build-1' }]);
 
-  const status = getBuildStatus();
+  const status = await getBuildStatus();
 
   expect(status.clientErrors).toEqual([{ message: 'live render error', buildId: 'build-2' }]);
   expect(status.serverErrors).toEqual([]);
@@ -47,27 +47,27 @@ test('getBuildStatus lists errors from earlier builds apart from the current one
   });
 });
 
-test('getBuildStatus leaves out earlierErrors when every error is current', () => {
+test('getBuildStatus leaves out earlierErrors when every error is current', async () => {
   mockClientErrors.mockReturnValue([{ message: 'live', buildId: 'build-2' }]);
   mockServerErrors.mockReturnValue([]);
 
-  expect(getBuildStatus().earlierErrors).toBeUndefined();
+  expect((await getBuildStatus()).earlierErrors).toBeUndefined();
 });
 
-test('getBuildStatus passes the pages build status just built to the page status', () => {
+test('getBuildStatus passes the pages build status just built to the page status', async () => {
   mockClientErrors.mockReturnValue([]);
   mockServerErrors.mockReturnValue([]);
 
-  const status = getBuildStatus({ checked: ['home'] });
+  const status = await getBuildStatus({ checked: ['home'] });
 
   expect(mockGetPageBuildStatus).toHaveBeenCalledWith({ checked: ['home'] });
   expect(status.pages).toEqual({ unbuilt: 0 });
   expect(status.build.status).toBe('ok');
 });
 
-test('getBuildStatus names the build being served as a top-level buildId', () => {
+test('getBuildStatus names the build being served as a top-level buildId', async () => {
   mockClientErrors.mockReturnValue([]);
   mockServerErrors.mockReturnValue([]);
 
-  expect(getBuildStatus().buildId).toBe('build-2');
+  expect((await getBuildStatus()).buildId).toBe('build-2');
 });

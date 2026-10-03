@@ -157,7 +157,7 @@ test('adding a page to the pages list rebuilds the config', async () => {
   await waitFor(() => context.lowdefyBuild.mock.calls.length === 1, {
     description: 'a config build',
   });
-  expect(invalidated()).toBe(false);
+  await waitFor(invalidated, { description: 'the pages to be invalidated' });
 });
 
 test('a config rebuild stays busy until the server has caught up with the build', async () => {
@@ -200,7 +200,7 @@ test('after a failed config build, an edit to a file not in skeletonSourceFiles 
   await waitFor(() => context.lowdefyBuild.mock.calls.length === 1, {
     description: 'a config build',
   });
-  expect(invalidated()).toBe(false);
+  await waitFor(invalidated, { description: 'the pages to be invalidated' });
 });
 
 test('a skeleton file in a local module outside the config directory rebuilds the config', async () => {
@@ -247,4 +247,23 @@ test('a file that appears in refMap.json after the watch started is watched', as
     description: 'footer.yaml to be watched',
   });
   await editUntilInvalidated(footer);
+});
+
+test('a file a JIT page build read outside every watched directory is watched from its jitMaps file', async () => {
+  const header = path.join(repoDir, 'shared', 'header.yaml');
+  write(header, 'id: header\n');
+  watcher = await lowdefyBuildWatcher(context);
+
+  write(
+    path.join(buildDir, 'jitMaps', 'abc123-1-1.json'),
+    JSON.stringify({
+      keyMap: {},
+      refMap: { p_abc123_1: { parent: null, path: path.relative(configDir, header) } },
+    })
+  );
+  // The maps watcher batches its change for half a second before adding.
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+  fs.appendFileSync(header, 'type: Box\n');
+
+  await waitFor(invalidated);
 });

@@ -20,13 +20,14 @@ import { registerServer, watchOwner } from '@lowdefy/node-utils';
 import getContext from './getContext.mjs';
 import acquireDevInstance from './utils/acquireDevInstance.mjs';
 import createBuildActivity from './utils/createBuildActivity.mjs';
+import createIdleGc from './utils/createIdleGc.mjs';
+import createRequestActivity from './utils/createRequestActivity.mjs';
 import startMailSink from './processes/startMailSink.mjs';
 import startProxy from './processes/startProxy.mjs';
-import startServer from './processes/startServer.mjs';
+import startFirstServer from './processes/startFirstServer.mjs';
 import startRecordingPruner from './utils/startRecordingPruner.mjs';
 import formatNoticeBox from './utils/formatNoticeBox.mjs';
 import resolvePorts from './utils/resolvePorts.mjs';
-import waitForServer from './utils/waitForServer.mjs';
 
 /*
 The run script does the following:
@@ -94,11 +95,27 @@ if (instance.acquired === false) {
 process.on('exit', () => instance.release());
 startRecordingPruner({ configDirectory: context.directories.config, logger: context.logger });
 
+// Requests through the proxy and finished builds are use of the server; the
+// hub stops a server nobody has used for its idle limit (see
+// createRequestActivity).
+context.requestActivity = createRequestActivity({
+  onChange: (fields) => instance.update(fields),
+});
+
 // `building` is true while a change is queued or being processed, restarts
 // included. lowdefy_build_status({ wait: true }) waits on it, so an agent
 // reads the build that includes its last edit instead of the one before.
+// One full GC shortly after each build, which is when the manager's heap grows.
+const idleGc = createIdleGc();
+
 context.buildActivity = createBuildActivity({
-  onChange: (building) => instance.update({ building }),
+  onChange: (building) => {
+    instance.update({ building });
+    idleGc.onBuildingChange(building);
+    if (!building) {
+      context.requestActivity.touch();
+    }
+  },
 });
 
 // Machine-wide record of this manager and its owner, for `lowdefy hub ps|prune`.
@@ -134,8 +151,9 @@ watchOwner({
 try {
   await context.initialBuild();
 
-  // We are not waiting for the startWatchers promise to resolve (all watchers have fired the ready event)
-  // because chokidar sometimes doesn't fire this event, and it seems like there isn't an issue with not waiting.
+  // Not awaited: chokidar's ready event is unreliable. Started now so an edit
+  // made during the rest of the start-up is seen; a batch that syncs before
+  // the first child start waits for it (see syncServer).
   context.startWatchers();
 
   // The manager is the component that binds the port, so it checks here to
@@ -148,6 +166,20 @@ try {
   registration?.update({ port });
   context.instance = instance;
 
+  // Called by waitForDevServer whenever a child answers: the first start's,
+  // one that answers after its wait, or a restart's after a first child that
+  // exited. The hub and the MCP shim wait on ready.
+  let ready = false;
+  context.markServerReady = () => {
+    if (ready) {
+      return;
+    }
+    ready = true;
+    // A slow first build must not make a fresh server look idle the moment it is ready.
+    context.requestActivity.touch();
+    instance.update({ state: 'ready' });
+  };
+
   // The manager holds the public port for the whole session and proxies to the
   // Vite child on an internal loopback port — restarting the child (js module
   // or .env change) then never drops the listener, so long-lived clients (MCP
@@ -156,16 +188,8 @@ try {
   await startProxy(context);
   context.mailSink = await startMailSink(context);
 
-  startServer(context);
-  if (
-    await waitForServer({
-      basePath: context.basePath,
-      child: context.devServer,
-      port: context.internalPort,
-    })
-  ) {
-    instance.update({ state: 'ready' });
-  } else {
+  // Optimises dependencies, starts the child and waits for it to answer.
+  if (!(await startFirstServer(context))) {
     context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');
   }
   const docsUrl = `${context.url}/lowdefy-docs`;

@@ -42,7 +42,7 @@ test.each([
   ['server', serverErrorStore, 'serverErrors', 'server_error'],
 ])(
   'a %s error a walk caused reaches only its walk; a developer error in the same window reaches the store, build-status and the event bus',
-  (_, store, statusKey, eventType) => {
+  async (_, store, statusKey, eventType) => {
     store.push({
       timestamp: '2026-10-03T15:12:01.000Z',
       message: 'walk',
@@ -59,7 +59,9 @@ test.each([
       },
     ]);
     expect(store.list().map((entry) => entry.message)).toEqual(['developer']);
-    expect(getBuildStatus()[statusKey].map((entry) => entry.message)).toEqual(['developer']);
+    expect((await getBuildStatus())[statusKey].map((entry) => entry.message)).toEqual([
+      'developer',
+    ]);
     expect(mockPublish.mock.calls.map(([event]) => [event.type, event.message])).toEqual([
       [eventType, 'developer'],
     ]);

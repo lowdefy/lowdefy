@@ -28,6 +28,8 @@ function create({ connection }) {
 
 const Anthropic = {
   schema,
+  // An outside service, not app data: a journey on a data set keeps its real target.
+  meta: { dataSet: 'external' },
   create,
   requests: {
     Decide: createDecide({ createProvider }),

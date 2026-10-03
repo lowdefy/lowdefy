@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
+import { EventEmitter } from 'node:events';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { Hono } from 'hono';
 import { jest } from '@jest/globals';
+
+const mockLaunch = jest.fn();
+jest.unstable_mockModule('playwright-core', () => ({ chromium: { launch: mockLaunch } }));
 
 // openPage takes its browser as a parameter, so a fake one covers the cookie
 // injection without a real Chromium. lib/build/config.js reads build/config.json
@@ -30,7 +34,7 @@ fs.mkdirSync(path.join(fixtureDir, 'build'), { recursive: true });
 fs.writeFileSync(path.join(fixtureDir, 'build', 'config.json'), JSON.stringify({ basePath: '' }));
 process.chdir(fixtureDir);
 
-const { openPage, buildPageUrl } = await import('./getBrowser.js');
+const { getBrowser, openPage, buildPageUrl } = await import('./getBrowser.js');
 const { default: isPageReady } = await import('./isPageReady.js');
 const { default: getClientAddress } = await import('../server/getClientAddress.js');
 const { default: readRecordingCookie } = await import('../server/recording/readRecordingCookie.js');
@@ -40,17 +44,33 @@ afterAll(() => {
   fs.rmSync(fixtureDir, { recursive: true, force: true });
 });
 
+// Every caller closes the contexts openPage gives it; the tests do too, so the
+// module's open-context count starts each test at 0.
+const openedContexts = [];
+
+afterEach(async () => {
+  await Promise.all(openedContexts.splice(0).map((context) => context.close()));
+});
+
 function createBrowser() {
   const addCookies = jest.fn();
   const page = {
     goto: jest.fn().mockResolvedValue(undefined),
     waitForFunction: jest.fn().mockResolvedValue(undefined),
   };
-  const context = {
+  // Like Playwright's, the context emits close once, when it first closes.
+  const context = Object.assign(new EventEmitter(), {
     addCookies,
-    close: jest.fn().mockResolvedValue(undefined),
     newPage: jest.fn().mockResolvedValue(page),
-  };
+    route: jest.fn().mockResolvedValue(undefined),
+  });
+  let closed = false;
+  context.close = jest.fn(async () => {
+    if (closed) return;
+    closed = true;
+    context.emit('close');
+  });
+  openedContexts.push(context);
   return {
     browser: { newContext: jest.fn().mockResolvedValue(context) },
     addCookies,
@@ -338,4 +358,116 @@ test('openPage opens the page at the urlQuery it was given', async () => {
 
   expect(opened.url).toEqual('http://localhost:3001/detail?id=1');
   expect(page.goto.mock.calls[0][0]).toEqual('http://localhost:3001/detail?id=1');
+});
+
+test('openPage sets the data cookie with the actor cookie attributes before the first navigation', async () => {
+  const { journeyActorToken } = await import('../server/auth/journeyActor.js');
+  const { browser, addCookies, page } = createBrowser();
+  addCookies.mockImplementation(async () => {
+    expect(page.goto).not.toHaveBeenCalled();
+  });
+
+  await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'tickets',
+    clientAddress: '203.0.113.7',
+    dataCookie: 'session1',
+  });
+
+  const cookies = addCookies.mock.calls.map(([[cookie]]) => cookie);
+  const actor = cookies.find((cookie) => cookie.name === 'lowdefy_journey_actor');
+  const data = cookies.find((cookie) => cookie.name === 'lowdefy_journey_data');
+  expect(data).toEqual({
+    name: 'lowdefy_journey_data',
+    value: `${journeyActorToken}.session1`,
+    url: 'http://localhost:3001',
+    httpOnly: actor.httpOnly,
+    sameSite: actor.sameSite,
+  });
+});
+
+test('openPage sets no data cookie without a dataCookie', async () => {
+  const { browser, addCookies } = createBrowser();
+  await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home', user: 'none' });
+  const names = addCookies.mock.calls.map(([[cookie]]) => cookie.name);
+  expect(names).not.toContain('lowdefy_journey_data');
+});
+
+test('openPage aborts and records a data set journey request to the dev server port on another host', async () => {
+  const { browser, context, page } = createBrowser();
+  context.route.mockImplementation(async () => {
+    expect(page.goto).not.toHaveBeenCalled();
+  });
+  const opened = await openPage({
+    browser,
+    origin: 'http://localhost:3001',
+    pageId: 'tickets',
+    dataCookie: 'session1',
+  });
+  expect(context.route).toHaveBeenCalledTimes(1);
+  const [[matches, handle]] = context.route.mock.calls;
+  for (const url of [
+    'http://127.0.0.1:3001/api/page/tickets',
+    'http://[::1]:3001/tickets',
+    'http://192.168.1.20:3001/tickets',
+    'https://127.0.0.1:3001/tickets',
+  ]) {
+    expect([url, matches(new URL(url))]).toEqual([url, true]);
+  }
+  for (const url of [
+    'http://localhost:3001/api/page/tickets',
+    'http://127.0.0.1:9000/assets/app.js',
+    'https://example.com/logo.png',
+    'http://127.0.0.1/tickets',
+  ]) {
+    expect([url, matches(new URL(url))]).toEqual([url, false]);
+  }
+  const route = {
+    request: () => ({ url: () => 'http://127.0.0.1:3001/api/page/tickets' }),
+    abort: jest.fn(async () => {}),
+  };
+  await handle(route);
+  expect(route.abort).toHaveBeenCalledTimes(1);
+  expect(opened.leftOrigin).toEqual(['http://127.0.0.1:3001/api/page/tickets']);
+});
+
+test('openPage matches the default port of an origin that names none', async () => {
+  const { browser, context } = createBrowser();
+  await openPage({ browser, origin: 'http://localhost', pageId: 'home', dataCookie: 'session1' });
+  const [[matches]] = context.route.mock.calls;
+  expect(matches(new URL('http://127.0.0.1/home'))).toBe(true);
+  expect(matches(new URL('http://127.0.0.1:80/home'))).toBe(true);
+  expect(matches(new URL('http://127.0.0.1:3001/home'))).toBe(false);
+});
+
+test('openPage routes nothing and records no departures without a dataCookie', async () => {
+  const { browser, context } = createBrowser();
+  const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+  expect(context.route).not.toHaveBeenCalled();
+  expect(opened.leftOrigin).toEqual([]);
+});
+
+test('a failed openPage closes its context, so the idle browser still closes', async () => {
+  jest.useFakeTimers({ doNotFake: ['performance'] });
+  try {
+    const { browser, page } = createBrowser();
+    browser.isConnected = () => true;
+    browser.close = jest.fn(async () => {});
+    mockLaunch.mockResolvedValue(browser);
+    page.goto.mockRejectedValue(new Error('net::ERR_CONNECTION_REFUSED'));
+
+    const launched = await getBrowser();
+    await expect(
+      openPage({ browser: launched, origin: 'http://localhost:3001', pageId: 'home' })
+    ).rejects.toThrow('net::ERR_CONNECTION_REFUSED');
+    jest.advanceTimersByTime(90_000);
+    for (let i = 0; i < 5; i += 1) {
+      await Promise.resolve();
+    }
+
+    expect(browser.close).toHaveBeenCalledTimes(1);
+  } finally {
+    jest.useRealTimers();
+  }
 });

@@ -57,14 +57,14 @@ Versions are compared only when both are releases, or both have the same major v
 
 Agents manage the dev server with these tools, and never run `lowdefy dev`, choose ports, or kill processes themselves:
 
-| Tool                 | Purpose                                                                                                                                                                                 |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `lowdefy_dev_start`  | Start the app's dev server (or return the running one) and wait until it is ready. `restart: true` after local plugin or `.env` changes; `clean: true` also deletes the build directory |
-| `lowdefy_dev_stop`   | Stop the app's dev server if the hub started it                                                                                                                                         |
-| `lowdefy_dev_status` | Owner, state, URL and build status, without starting anything                                                                                                                           |
-| `lowdefy_dev_logs`   | Recent output of a hub-started dev server, optionally filtered                                                                                                                          |
-| `lowdefy_run_tests`  | Run the app's journeys (`tests/journeys/*.yaml`, as `lowdefy test` does) against its dev server and return each result as data                                                          |
-| `lowdefy_dev_list`   | Dev servers across the checkout's apps and other checkouts                                                                                                                              |
+| Tool                 | Purpose                                                                                                                                                                                                                                                          |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `lowdefy_dev_start`  | Start the app's dev server (or return the running one) and wait until it is ready. `restart: true` when it seems stuck, or after secrets a wrapper injects have changed (`.env` and local plugin code need none); `clean: true` also deletes the build directory |
+| `lowdefy_dev_stop`   | Stop the app's dev server if the hub started it                                                                                                                                                                                                                  |
+| `lowdefy_dev_status` | Owner, state, URL and build status, without starting anything                                                                                                                                                                                                    |
+| `lowdefy_dev_logs`   | Recent output of a hub-started dev server, optionally filtered                                                                                                                                                                                                   |
+| `lowdefy_run_tests`  | Run the app's journeys (`tests/journeys/*.yaml`, as `lowdefy test` does) against its dev server and return each result as data                                                                                                                                   |
+| `lowdefy_dev_list`   | Dev servers across the checkout's apps and other checkouts                                                                                                                                                                                                       |
 
 The dev server itself also serves the MCP endpoint over streamable HTTP at `/lowdefy-docs/mcp`, for clients that connect by URL. Through `lowdefy mcp`, restart is `lowdefy_dev_start` with `restart: true` rather than `lowdefy_restart`.
 

@@ -15,7 +15,8 @@
 */
 
 import startServer from './startServer.mjs';
-import waitForServer from '../utils/waitForServer.mjs';
+import waitForChildExit from '../utils/waitForChildExit.mjs';
+import waitForDevServer from './waitForDevServer.mjs';
 
 // Resolves once the new server answers, and counts as build activity until
 // then, so lowdefy_build_status({ wait: true }) waits through a restart
@@ -25,12 +26,25 @@ function restartServer(context) {
     context.buildActivity.track(async () => {
       context.shutdownServer();
       context.logger.info({ spin: 'start' }, 'Restarting server...');
+      // The new child binds the internal port with --strictPort, so it fails
+      // with "Port in use" if the old child is still exiting. A caller that
+      // shut the server down earlier (syncServer's install path) is covered
+      // too: the stopped child is kept until a restart has waited for it.
+      const stoppedChild = context.stoppedDevServer;
+      const exited = await waitForChildExit({ child: stoppedChild });
+      if (context.stoppedDevServer === stoppedChild) {
+        context.stoppedDevServer = null;
+      }
+      if (!exited) {
+        context.logger.warn(
+          `The old dev server (pid ${stoppedChild.pid}) did not exit after SIGKILL; starting the new one anyway.`
+        );
+      }
+      // What this server reads at start, so a later build restarts it only
+      // when one of those files changed.
+      context.serverArtifacts.record();
       startServer(context);
-      const ready = await waitForServer({
-        basePath: context.basePath,
-        child: context.devServer,
-        port: context.internalPort,
-      });
+      const ready = await waitForDevServer(context);
       if (ready) {
         context.logger.info({ spin: 'succeed' }, 'Restarted server.');
         return;

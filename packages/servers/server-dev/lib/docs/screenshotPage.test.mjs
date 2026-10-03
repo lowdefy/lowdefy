@@ -26,6 +26,8 @@ import { jest } from '@jest/globals';
 jest.unstable_mockModule('playwright-core', () => ({
   chromium: { launch: jest.fn().mockRejectedValue(new Error("Executable doesn't exist")) },
 }));
+// A missing shell would otherwise start a real download.
+jest.unstable_mockModule('./installHeadlessShell.js', () => ({ default: () => null }));
 
 // lib/build/config.js reads build/config.json from process.cwd() at import
 // time — chdir into a fixture that has one before screenshotPage.js (which
@@ -55,7 +57,9 @@ test('screenshotPage returns an error when pageId is missing', async () => {
 
 test('screenshotPage returns an actionable error when no browser is available', async () => {
   const result = await screenshotPage({ origin: 'http://localhost:3001', pageId: 'home' });
-  expect(result.error).toMatch(/No Chromium available. Run: npx playwright install chromium/);
+  expect(result.error).toMatch(
+    /No Chromium available. Run: npx playwright install chromium-headless-shell/
+  );
 });
 
 test('screenshotPage returns an error for an invalid viewport before launching a browser', async () => {
@@ -108,6 +112,7 @@ test('screenshotPage opens the page at the urlQuery and captures after the steps
     addCookies: jest.fn(async () => {}),
     newPage: jest.fn(async () => page),
     close: jest.fn(async () => {}),
+    on: jest.fn(),
   };
   // getBrowser caches the browser while it reports connected; disconnecting
   // it after the test makes the next test's launch take effect.

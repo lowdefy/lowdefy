@@ -18,6 +18,14 @@ import path from 'path';
 
 import resolveConfigLocation from './resolveConfigLocation.js';
 
+async function readBuildMaps({ readConfigFile }) {
+  const [keyMap, refMap] = await Promise.all([
+    readConfigFile('keyMap.json'),
+    readConfigFile('refMap.json'),
+  ]);
+  return { keyMap, refMap };
+}
+
 /**
  * Resolves error config location at runtime by reading keyMap and refMap files.
  * Used by server-side error logging to trace errors back to source files.
@@ -30,18 +38,23 @@ import resolveConfigLocation from './resolveConfigLocation.js';
  * @param {Object} params.error - Error object with optional configKey/filePath properties
  * @param {Function} params.readConfigFile - Async function to read config files
  * @param {string} params.configDirectory - Absolute path to config directory
+ * @param {Function} [params.readMaps] - Async function returning { keyMap, refMap }. The dev
+ *   server passes one that adds its JIT page builds' maps; by default keyMap.json and
+ *   refMap.json are read through readConfigFile.
  * @returns {Promise<Object|null>} Location object with source and config, or null
  */
-async function loadAndResolveErrorLocation({ error, readConfigFile, configDirectory }) {
+async function loadAndResolveErrorLocation({
+  error,
+  readConfigFile,
+  configDirectory,
+  readMaps = () => readBuildMaps({ readConfigFile }),
+}) {
   if (!error) return null;
 
   // Path 1: configKey → keyMap/refMap lookup
   if (error.configKey) {
     try {
-      const [keyMap, refMap] = await Promise.all([
-        readConfigFile('keyMap.json'),
-        readConfigFile('refMap.json'),
-      ]);
+      const { keyMap, refMap } = await readMaps();
       const location = resolveConfigLocation({
         configKey: error.configKey,
         keyMap,

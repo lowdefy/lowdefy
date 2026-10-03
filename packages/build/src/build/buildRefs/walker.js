@@ -724,7 +724,11 @@ async function resolveModuleIdOperator(node, ctx) {
 async function prepareRef(node, ctx) {
   // 1. Create ref definition
   const lineNumber = node['~l'];
-  const refDef = makeRefDefinition(node._ref, ctx.refId, ctx.refMap, lineNumber, ctx.path);
+  // A JIT page build writes its refs to its own jitMaps file, and readers merge
+  // the files of several build contexts. Walker paths repeat from page to page
+  // and context to context, so a JIT ref takes a counter id, which never does.
+  const walkerPath = type.isUndefined(ctx.buildContext.jitMaps) ? ctx.path : null;
+  const refDef = makeRefDefinition(node._ref, ctx.refId, ctx.refMap, lineNumber, walkerPath);
 
   // 2. Store unresolved vars before resolution mutates them, and clone so
   //    resolution operates on a copy (preserving original.vars for resolver refs).
@@ -766,10 +770,14 @@ async function prepareRef(node, ctx) {
   // 4. Module path resolution: resolve relative paths from the module root
   rebaseModuleRefPaths({ refDef, moduleRoot: ctx.moduleRoot });
 
-  // 5. Update refMap with resolved path; store original for resolver refs
+  // 5. Update refMap with resolved path; store original for resolver refs, and
+  //    the transformer, which a JIT page build runs again on a page's own ref.
   ctx.refMap[refDef.id].path = refDef.path;
   if (!refDef.path) {
     ctx.refMap[refDef.id].original = refDef.original;
+  }
+  if (!type.isNone(refDef.transformer)) {
+    ctx.refMap[refDef.id].transformer = refDef.transformer;
   }
 
   // 6. Path escape constraint: module refs cannot escape the package root

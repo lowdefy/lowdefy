@@ -28,6 +28,9 @@ function shutdownServer(context) {
         child.exitCode !== null || child.signalCode !== null
           ? Promise.resolve()
           : new Promise((resolve) => child.once('exit', resolve));
+      // Kept so a restart can wait for this child to free the internal port,
+      // and SIGKILL it if it does not.
+      context.stoppedDevServer = child;
       if (!context.devServer.killed) {
         context.logger.info({ spin: 'start' }, 'Shutting down server...');
         context.devServer.kill();

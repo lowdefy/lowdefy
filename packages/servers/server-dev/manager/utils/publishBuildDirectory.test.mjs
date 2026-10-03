@@ -199,3 +199,58 @@ test('publishBuildDirectory fails with the rename error when a file stays locked
   );
   expect(rename).toHaveBeenCalledTimes(11);
 });
+
+function setMtime(file, seconds) {
+  fs.utimesSync(path.join(buildDirectory, file), seconds, seconds);
+}
+
+function mtime(file) {
+  return fs.statSync(path.join(buildDirectory, file)).mtimeMs;
+}
+
+test('publishBuildDirectory leaves an unchanged artifact in place and replaces a changed one', async () => {
+  write(buildDirectory, 'app.json', 'same');
+  write(buildDirectory, 'client/page.json', 'old');
+  write(buildDirectory, 'client/sized.json', 'aaa');
+  setMtime('app.json', 1000);
+  setMtime('client/page.json', 1000);
+  setMtime('client/sized.json', 1000);
+  write(stagingDirectory, 'app.json', 'same');
+  write(stagingDirectory, 'client/page.json', 'new');
+  write(stagingDirectory, 'client/sized.json', 'bbb');
+
+  await publishBuildDirectory({ buildDirectory, stagingDirectory });
+
+  expect(mtime('app.json')).toBe(1000 * 1000);
+  expect(read('client/page.json')).toBe('new');
+  expect(mtime('client/page.json')).not.toBe(1000 * 1000);
+  expect(read('client/sized.json')).toBe('bbb');
+  expect(fs.existsSync(stagingDirectory)).toBe(false);
+});
+
+test('publishBuildDirectory moves a byte-identical page registry and id counter anyway', async () => {
+  write(buildDirectory, 'pageRegistry.json', 'new');
+  write(buildDirectory, 'idCounter.json', '{"prefix":"a1b2"}');
+  setMtime('pageRegistry.json', 1000);
+  setMtime('idCounter.json', 1000);
+  write(stagingDirectory, 'idCounter.json', '{"prefix":"a1b2"}');
+
+  await publishBuildDirectory({ buildDirectory, stagingDirectory });
+
+  expect(mtime('pageRegistry.json')).not.toBe(1000 * 1000);
+  expect(mtime('idCounter.json')).not.toBe(1000 * 1000);
+});
+
+test('publishBuildDirectory removes stale files and keeps control files when artifacts are unchanged', async () => {
+  write(buildDirectory, 'app.json', 'same');
+  write(buildDirectory, 'jitMaps/abc-1-1.json', '{}');
+  write(buildDirectory, 'buildStatus.json', '{"status":"ok"}');
+  write(stagingDirectory, 'app.json', 'same');
+
+  await publishBuildDirectory({ buildDirectory, stagingDirectory });
+
+  expect(read('app.json')).toBe('same');
+  expect(fs.existsSync(path.join(buildDirectory, 'jitMaps/abc-1-1.json'))).toBe(false);
+  expect(read('buildStatus.json')).toBe('{"status":"ok"}');
+  expect(fs.existsSync(stagingDirectory)).toBe(false);
+});

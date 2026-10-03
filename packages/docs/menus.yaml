@@ -444,6 +444,11 @@
           pageId: config-tests
           properties:
             title: Config Tests
+        - id: journey-data-sets
+          type: MenuLink
+          pageId: journey-data-sets
+          properties:
+            title: Journey Data Sets
         - id: e2e-introduction
           type: MenuLink
           pageId: e2e-introduction

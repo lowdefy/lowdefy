@@ -54,3 +54,21 @@ test('publishBuildDirectory moves idCounter.json before the key and ref maps', a
   expect(moved.at(-1)).toBe('pageRegistry.json');
   expect(moved.slice(1, -1).sort()).toEqual(['app.json', 'keyMap.json', 'refMap.json']);
 });
+
+test('publishBuildDirectory moves a byte-identical idCounter.json first and pageRegistry.json last', async () => {
+  moved.length = 0;
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-publish-order-'));
+  const buildDirectory = path.join(root, 'build');
+  const stagingDirectory = path.join(root, 'build-staging');
+  fs.mkdirSync(stagingDirectory, { recursive: true });
+  fs.mkdirSync(buildDirectory, { recursive: true });
+  ['app.json', 'idCounter.json', 'keyMap.json', 'pageRegistry.json'].forEach((file) => {
+    fs.writeFileSync(path.join(stagingDirectory, file), '{}');
+    fs.writeFileSync(path.join(buildDirectory, file), '{}');
+  });
+
+  await publishBuildDirectory({ buildDirectory, stagingDirectory });
+  fs.rmSync(root, { recursive: true, force: true });
+
+  expect(moved).toEqual(['idCounter.json', 'pageRegistry.json']);
+});

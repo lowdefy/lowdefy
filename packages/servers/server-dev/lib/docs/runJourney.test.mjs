@@ -14,7 +14,12 @@
   limitations under the License.
 */
 
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
 import { jest } from '@jest/globals';
+import { acquireMachineSlot } from '@lowdefy/node-utils';
 
 // getBrowser.js is mocked so no Chromium is needed; the fake page below stands
 // in for Playwright's Page. Its `evaluate` runs the callback in this process
@@ -157,7 +162,7 @@ function advanceClockOnEveryRead() {
 
 function openWith(page, { ready = true } = {}) {
   const context = { close: jest.fn(async () => {}) };
-  mockOpenPage.mockResolvedValue({ context, page, ready, url: page.url() });
+  mockOpenPage.mockResolvedValue({ context, page, ready, url: page.url(), leftOrigin: [] });
   return context;
 }
 
@@ -1467,8 +1472,13 @@ test('runJourney opens each actor the first time an as step names it and returns
   const mainContext = { close: jest.fn(async () => {}) };
   const inviteeContext = { close: jest.fn(async () => {}) };
   mockOpenPage
-    .mockResolvedValueOnce({ context: mainContext, page: mainPage, ready: true })
-    .mockResolvedValueOnce({ context: inviteeContext, page: inviteePage, ready: true });
+    .mockResolvedValueOnce({ context: mainContext, page: mainPage, ready: true, leftOrigin: [] })
+    .mockResolvedValueOnce({
+      context: inviteeContext,
+      page: inviteePage,
+      ready: true,
+      leftOrigin: [],
+    });
 
   const result = await runJourney({
     origin,
@@ -1502,10 +1512,50 @@ test('runJourney opens each actor the first time an as step names it and returns
   expect(inviteeContext.close).toHaveBeenCalledTimes(1);
 });
 
+test('runJourney with four actors takes one machine browser slot for the whole journey', async () => {
+  const sharedHome = process.env.LOWDEFY_HOME;
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-journey-slot-'));
+  process.env.LOWDEFY_HOME = home;
+  const slots = path.join(home, 'slots', 'browser');
+  // Two of the three slots are held elsewhere on the machine: one is left.
+  const others = [await acquireMachineSlot({ name: 'browser', limit: 3 })];
+  others.push(await acquireMachineSlot({ name: 'browser', limit: 3 }));
+  const heldDuringJourney = [];
+  const pages = [createPage(), createPage(), createPage(), createPage()];
+  pages.forEach((page) => {
+    mockOpenPage.mockImplementationOnce(async () => {
+      heldDuringJourney.push(fs.readdirSync(slots).length);
+      return { context: { close: jest.fn(async () => {}) }, page, ready: true, leftOrigin: [] };
+    });
+  });
+  try {
+    const result = await runJourney({
+      origin,
+      pageId: 'signup',
+      user: 'none',
+      steps: [{ as: 'a' }, { as: 'b' }, { as: 'c' }, { as: 'main' }],
+    });
+
+    expect(result.passed).toBe(true);
+    expect(mockOpenPage).toHaveBeenCalledTimes(4);
+    expect(heldDuringJourney).toEqual([3, 3, 3, 3]);
+    expect(fs.readdirSync(slots)).toHaveLength(2);
+  } finally {
+    others.forEach((slot) => slot.release());
+    process.env.LOWDEFY_HOME = sharedHome;
+    fs.rmSync(home, { recursive: true, force: true });
+  }
+});
+
 test('runJourney fails an as step whose actor cannot open and still closes every actor', async () => {
   const mainContext = { close: jest.fn(async () => {}) };
   mockOpenPage
-    .mockResolvedValueOnce({ context: mainContext, page: createPage(), ready: true })
+    .mockResolvedValueOnce({
+      context: mainContext,
+      page: createPage(),
+      ready: true,
+      leftOrigin: [],
+    })
     .mockRejectedValueOnce(new Error('net::ERR_CONNECTION_REFUSED'));
 
   const result = await runJourney({
@@ -1691,7 +1741,7 @@ function openActorsWithNetwork(actors) {
       await onContext(context);
       listeners.push(listener);
       opening.forEach((request) => listener(createFakeRequest(request)));
-      return { context, page, ready: true, url: page.url() };
+      return { context, page, ready: true, url: page.url(), leftOrigin: [] };
     });
   });
   return listeners;
@@ -1781,7 +1831,7 @@ test('runJourney reports the events and blocks its pages observed, deduplicated 
       on: jest.fn(),
     };
     await onContext(context);
-    return { context, page, ready: true, url: page.url() };
+    return { context, page, ready: true, url: page.url(), leftOrigin: [] };
   });
   page.locator.mockImplementation((selector) => {
     const locator = createLocator({ selector, page });

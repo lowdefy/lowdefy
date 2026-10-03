@@ -210,7 +210,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       });
       return textResult(await getBuildStatusAfterEdits({ proxyWait }));
     }
-    return textResult(getBuildStatus());
+    return textResult(await getBuildStatus());
   });
 
   registerDevTool('lowdefy_get_page_config', async ({ pageId }) => {
@@ -285,7 +285,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
 
   registerDevTool(
     'lowdefy_run_journey',
-    async ({ pageId, steps, user, urlQuery, state, timeout }) => {
+    async ({ pageId, steps, user, urlQuery, state, timeout, data }) => {
       if (!origin) {
         return notFoundResult('Journey unavailable: server origin unknown for this transport.');
       }
@@ -297,6 +297,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
         urlQuery,
         state,
         stepTimeout: timeout,
+        data,
         // Each call is its own journey run, recorded apart from the suite's.
         recording: { source: 'journey', run: { id: createTraceId(), by: 'agent', journey: null } },
       });

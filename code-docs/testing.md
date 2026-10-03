@@ -79,7 +79,14 @@ through a real BetterAuth instance and the MongoDB auth adapter, for example the
 mint under concurrent sessions. Name an api test `*.mongodb.test.js` when it needs a real
 server; the plain `pnpm test` run ignores those files. It also runs `@lowdefy/server-dev`'s
 `*.mongodb.test.mjs` suites (`pnpm --filter=@lowdefy/server-dev test:mongodb`), such as the
-journey data set pull, which spawns `lib/data/pullDataSet.mjs` against a memory server. To reproduce a race deterministically,
+journey data set pull, which spawns `lib/data/pullDataSet.mjs` against a memory server, the
+journey data sessions (`lib/docs/dataSets/openDataSession.mongodb.test.mjs`, which start the dev
+server's own data store), the data store's port, stop and replacement after its mongod dies
+(`getDataStore.mongodb.test.mjs`, which kills that mongod), and the data set journeys end to end
+(`dataSetJourneys.chromium.mongodb.test.mjs`: real Chromium over a build of a fixture app with
+tenant auth and a local module, with a database on the jest-mongodb server standing in for the
+developer's, auth collections included, snapshotted before and compared after; skipped without a
+Chromium). To reproduce a race deterministically,
 pause one session inside the real adapter (wrap `adapter.create` from `auth.$context`) and
 run the other to completion before releasing it.
 

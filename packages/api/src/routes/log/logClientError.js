@@ -98,10 +98,13 @@ async function logClientError(context, serializedError) {
     }
   }
 
+  // The dev server's context reads its JIT page builds' maps as well; other
+  // servers have none and read keyMap.json and refMap.json.
   const location = await loadAndResolveErrorLocation({
     error,
     readConfigFile: context.readConfigFile,
     configDirectory: context.configDirectory,
+    readMaps: context.readMaps,
   });
 
   if (location) {

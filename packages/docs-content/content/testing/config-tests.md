@@ -43,15 +43,16 @@ Files run in file-name order, and journeys run one at a time — each journey op
     - expect: { visible: empty_state }
 ```
 
-| Field      | Required | Description                                                                                                                                    |
-| ---------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`     | Yes      | A short description. `--filter` matches against it, and it is printed in the results.                                                          |
-| `pageId`   | Yes      | The page to open.                                                                                                                              |
-| `user`     | No       | The user to act as, as an inline user object such as `{ sub: u1, roles: [admin] }`. Leave it out to run as the default roleless headless user. |
-| `urlQuery` | No       | An object appended to the page URL as a query string, for pages that read `_url_query`.                                                        |
-| `steps`    | Yes      | At least one step. Each step is an object with exactly one key from the step grammar below.                                                    |
+| Field      | Required | Description                                                                                                                                                                                                                         |
+| ---------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`     | Yes      | A short description. `--filter` matches against it, and it is printed in the results.                                                                                                                                               |
+| `pageId`   | Yes      | The page to open.                                                                                                                                                                                                                   |
+| `user`     | No       | The user to act as, as an inline user object such as `{ sub: u1, roles: [admin] }`. Leave it out to run as the default roleless headless user. On a journey with `data`, the name of one of the data set's users, such as `member`. |
+| `data`     | No       | A [data set](/journey-data-sets) name. The journey runs against a fresh in-memory MongoDB database of its own, loaded with the data set, so it may write freely.                                                                    |
+| `urlQuery` | No       | An object appended to the page URL as a query string, for pages that read `_url_query`.                                                                                                                                             |
+| `steps`    | Yes      | At least one step. Each step is an object with exactly one key from the step grammar below.                                                                                                                                         |
 
-`user: none` injects no user at all, so the journey signs in through the app's own auth — see [Testing sign-up and sign-in](#testing-sign-up-and-sign-in).
+`user: none` injects no user at all, so the journey signs in through the app's own auth — see [Testing sign-up and sign-in](#testing-sign-up-and-sign-in). It is refused on a data set journey while auth is configured.
 
 `timeout` sets how long each step may wait, in milliseconds (a whole number from 1 to 60000, default 5000). Raise it on a slow machine or CI runner rather than adding `wait: { ms }` steps.
 
@@ -215,11 +216,13 @@ A one-time code is typed, not clicked. `fill` with `fromEmail: { to, subject, ma
 
 ### Several people
 
-`as: invitee` switches the journey to another person with their own browser and cookies: an owner and the person they invite, or a member whose session stays open while the owner removes them. The journey starts as `main`. The first `as` for a name opens the journey's page in a new browser, as the journey's `user`; switching back returns to that person's tab as they left it.
+`as: invitee` switches the journey to another person with their own browser and cookies: an owner and the person they invite, or a member whose session stays open while the owner removes them. The journey starts as `main`. The first `as` for a name opens the journey's page in a new browser, as the journey's `user`, or as the data set user of that name on a journey with `data` (see [Journey data sets](/journey-data-sets)); switching back returns to that person's tab as they left it.
 
 Each person also sends requests from their own client address, so auth rate limits (a few sign-in attempts per address every few seconds) count each person's attempts apart, as they would for people on different devices, instead of one budget for the whole run.
 
 ### The database
+
+Journeys that act as injected users and need data of their own belong on a [data set](/journey-data-sets): each run gets a fresh in-memory database, and your own database is never touched. Sign-up and sign-in journeys go through the app's real auth, which a data set does not redirect, so they need a test database of their own:
 
 Journeys perform real sign-ups, so they need a database that starts empty and is never a real one. Run them against a fresh test database each time: a sign-up journey run a second time finds its address already registered, and no verification email is sent. Give each journey its own addresses, so journeys in one run do not collide.
 
@@ -519,7 +522,7 @@ It writes the measures, a production profile (the top flows per entry page, fail
 
 ## Continuous integration
 
-`lowdefy test` needs only Node.js, pnpm and a Chromium the dev server can launch. A GitHub Actions job looks like:
+`lowdefy test` needs only Node.js, pnpm and a Chromium the dev server can launch. The dev server uses Playwright's `chromium-headless-shell`, which it downloads itself the first time a browser tool needs it, and falls back to an installed Google Chrome meanwhile. Set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` to turn the download off. In CI, install the shell up front, together with the system libraries it needs. A GitHub Actions job looks like:
 
 ```yaml
 name: Config tests
@@ -533,7 +536,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: pnpx playwright install --with-deps chromium
+      - run: pnpx playwright install --with-deps chromium-headless-shell
       - run: pnpx lowdefy@5 test
         env:
           LOWDEFY_DISABLE_TELEMETRY: true

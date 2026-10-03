@@ -363,7 +363,11 @@ chromiumTest(
     for (const candidate of clicks) {
       const clicked = await withPage(async (page) => {
         const journey = {
-          actors: { current: () => ({ page }), sampleRendered: async () => {} },
+          actors: {
+            current: () => ({ page }),
+            sampleRendered: async () => {},
+            leftOrigin: () => undefined,
+          },
           stepTimeout: 2000,
         };
         const { failure } = await runSteps({ journey, steps: [{ click: candidate.target }] });
@@ -380,7 +384,11 @@ chromiumTest(
   async () => {
     await withPage(async (page) => {
       const journey = {
-        actors: { current: () => ({ page }), sampleRendered: async () => {} },
+        actors: {
+          current: () => ({ page }),
+          sampleRendered: async () => {},
+          leftOrigin: () => undefined,
+        },
         stepTimeout: 2000,
       };
       const before = await observeWalk({ page, walk: snapshotWalk });

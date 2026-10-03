@@ -25,6 +25,7 @@ function logRequest({ context }) {
     url: context.req.url,
     method: context.req.method,
     resolvedUrl: context.nextContext?.resolvedUrl,
+    dataSet: context.dataSet,
   });
 }
 

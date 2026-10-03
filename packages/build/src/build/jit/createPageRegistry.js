@@ -42,14 +42,18 @@ function findPageSourceRef(refId, refMap, unresolvedRefVars) {
       // so JIT can re-run the resolver (instead of falling through to the
       // template file below it, which would discard the resolver's vars).
       firstChildOfRoot = entry.path
-        ? { path: entry.path, unresolvedVars: unresolvedRefVars[current] ?? null }
+        ? {
+            path: entry.path,
+            unresolvedVars: unresolvedRefVars[current] ?? null,
+            transformer: entry.transformer ?? null,
+          }
         : { path: null, original: refMap[current].original };
     }
 
     // First ref without vars = self-contained page file
     if (!hasVars) {
       if (!type.isNone(entry.parent)) {
-        return { path: entry.path, unresolvedVars: null };
+        return { path: entry.path, unresolvedVars: null, transformer: entry.transformer ?? null };
       }
       // Reached root — use first child of root
       return firstChildOfRoot;
@@ -98,6 +102,8 @@ function createPageRegistry({ components, context }) {
       refPath: sourceRef?.path ?? null,
       unresolvedVars: sourceRef?.unresolvedVars ?? null,
       resolverOriginal: sourceRef?.original ?? null,
+      // A resolver page's transformer is in resolverOriginal.
+      transformer: sourceRef?.transformer ?? null,
       moduleEntryId: getModuleEntryId(page.id, context),
     });
   });

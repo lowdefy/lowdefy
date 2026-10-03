@@ -35,7 +35,9 @@ async function openJourney({
   colorScheme,
   timeout,
   stepTimeout,
+  dataCookie,
   mutantCookie,
+  users,
   recording,
 }) {
   const openTimeout = Math.max(timeout, stepTimeout);
@@ -53,7 +55,10 @@ async function openJourney({
     height,
     colorScheme,
     timeout: openTimeout,
+    dataCookie,
     mutantCookie,
+    users,
+    mainActor: MAIN_ACTOR,
     recording,
   });
   try {

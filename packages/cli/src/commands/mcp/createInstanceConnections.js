@@ -18,6 +18,8 @@ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import { LoggingMessageNotificationSchema } from '@modelcontextprotocol/sdk/types.js';
 
+import fetchDevServer from './fetchDevServer.js';
+
 // An MCP client per running dev server, kept while that server process lives.
 // Opening it also opens the server's push stream (build results, restarts,
 // browser and server errors), which is relayed to the agent labelled with the
@@ -43,7 +45,9 @@ function createInstanceConnections({
     // over a dropped push channel.
     client.onerror = () => {};
     await client.connect(
-      new StreamableHTTPClientTransport(new URL(`${instance.url}/lowdefy-docs/mcp`)),
+      new StreamableHTTPClientTransport(new URL(`${instance.url}/lowdefy-docs/mcp`), {
+        fetch: fetchDevServer,
+      }),
       { timeout: connectTimeoutMs }
     );
     await onOpen?.(client);

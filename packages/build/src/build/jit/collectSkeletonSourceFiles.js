@@ -84,6 +84,14 @@ function collectSkeletonSourceFiles({ components, context }) {
     walkRefIds(moduleEntry.consumerVars, refIds);
   }
 
+  // Var values the skeleton build resolved are cached in modules.json, so page
+  // builds read the cached value and never the files a var default refs.
+  // Those files are skeleton sources. A var value copied into a page carries
+  // its ~r marker there too, which would otherwise make it a page ref below.
+  for (const moduleEntry of Object.values(context.modules ?? {})) {
+    walkRefIds(moduleEntry.resolvedVarCache, refIds);
+  }
+
   // A file that holds a pages list decides which pages exist, so it shapes the
   // page registry: adding a page to it needs a skeleton rebuild. The page
   // files it references stay page content.
@@ -98,6 +106,15 @@ function collectSkeletonSourceFiles({ components, context }) {
   // would be missed by the descendant scan. Add the root ref id explicitly.
   if (context.rootRefDef?.id != null) {
     refIds.add(context.rootRefDef.id);
+  }
+
+  // The same holds for each module manifest: a var default that refs a file
+  // resolving to a scalar has no marker in the var cache, and its ref's parent
+  // is the manifest's ref.
+  for (const moduleEntry of Object.values(context.modules ?? {})) {
+    if (moduleEntry.refDef?.id != null) {
+      refIds.add(moduleEntry.refDef.id);
+    }
   }
 
   // Page refs are stop boundaries for the descendant scan: with the root id

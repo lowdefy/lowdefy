@@ -23,6 +23,7 @@ import {
 } from '@lowdefy/e2e-utils/runtime';
 import { getStepKey } from '@lowdefy/node-utils';
 
+import createLeftOriginError from './createLeftOriginError.js';
 import { buildPageUrl } from './getBrowser.js';
 import isPageReady from './isPageReady.js';
 import JourneyStepError from './JourneyStepError.js';
@@ -912,6 +913,17 @@ async function runJourneySteps({ journey, steps }) {
     } catch (error) {
       failure = toFailure({ error, index, step });
       results.push({ index, step, status: 'failed', durationMs: Date.now() - started });
+    }
+    // A request this step caused to another host of the dev server was aborted, so whatever the
+    // step saw afterwards is not what the app does: that request is the failure.
+    const departure = journey.actors.leftOrigin();
+    if (!type.isUndefined(departure)) {
+      failure = toFailure({
+        error: createLeftOriginError({ origin: journey.origin, departure }),
+        index,
+        step,
+      });
+      results[results.length - 1].status = 'failed';
     }
   }
   return { results, screenshots, failure };

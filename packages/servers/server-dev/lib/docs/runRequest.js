@@ -20,12 +20,12 @@ import { callRequest } from '@lowdefy/api';
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
-import buildPageIfNeeded from '../server/jitPageBuilder.js';
+import buildPageIfNeeded, { syncBuildSignals } from '../server/jitPageBuilder.js';
 import fitResponse from './fitResponse.js';
 import isWriteRequestsAllowed from './isWriteRequestsAllowed.js';
 import mapPageBuildErrors from './mapPageBuildErrors.js';
 import readBuildArtifact from './readBuildArtifact.js';
-import reviewPage, { createModifiedAt } from './reviewPage.js';
+import reviewPage from './reviewPage.js';
 
 function getRequestType({ pageId, requestId }) {
   // The request's `type` is stripped from build/pages/<pageId>.json by the
@@ -85,12 +85,9 @@ async function runRequest({
   // route runs (a no-op while the page is current) so the request that runs is
   // the one in the config now.
   const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd();
+  const buildDirectory = path.join(process.cwd(), 'build');
   try {
-    await buildPageIfNeeded({
-      pageId,
-      buildDirectory: path.join(process.cwd(), 'build'),
-      configDirectory,
-    });
+    await buildPageIfNeeded({ pageId, buildDirectory, configDirectory });
   } catch (error) {
     return {
       refused: true,
@@ -155,11 +152,12 @@ async function runRequest({
       },
     };
   }
-  const review = reviewPage({
+  const signals = syncBuildSignals({ buildDirectory, configDirectory });
+  const review = await reviewPage({
     pageId,
-    entry: readBuildArtifact({ name: 'pageRegistry.json' })?.[pageId],
-    modifiedAt: createModifiedAt(),
+    entry: signals.registry?.[pageId],
     configDirectory,
+    signals,
   });
   if (review === 'edited') {
     ran.staleConfig = `Page "${pageId}" changed on disk after its last build, but the dev server has not rebuilt it yet, so this ran the previous config. Call lowdefy_build_status with wait: true, then run the request again.`;

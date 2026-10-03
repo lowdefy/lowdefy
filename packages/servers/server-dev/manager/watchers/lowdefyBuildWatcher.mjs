@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import fs from 'fs';
 import path from 'path';
 import { type } from '@lowdefy/helpers';
+import createChangeSignal from '../utils/createChangeSignal.mjs';
 import findBuildFilesOutsideWatch from '../utils/findBuildFilesOutsideWatch.mjs';
 import getLowdefyVersion from '../utils/getLowdefyVersion.mjs';
 import loadSkeletonSourceFiles from '../utils/loadSkeletonSourceFiles.mjs';
@@ -30,13 +30,15 @@ function findLocalModuleRoots(context) {
 }
 
 // Watches the config directory, the --watch directories and local module
-// roots, and every other file the build reads (found in the build's refMap).
+// roots, and every other file the build reads (found in the build's ref maps).
 // A change to a file that shapes the skeleton (lowdefy.yaml, a
 // module.lowdefy.yaml, or a file in skeletonSourceFiles.json) rebuilds the
-// config, as does any change after a failed config build; any other change
-// invalidates the JIT-built pages.
+// config, as does any change after a failed config build. After every batch,
+// the dev server is told files changed (build/invalidatePages), and checks the
+// JIT-built pages against what they read.
 async function lowdefyBuildWatcher(context) {
   const configDirectory = context.directories.config;
+  const writeChangeSignal = createChangeSignal({ buildDirectory: context.directories.build });
   const fixRelativePathConfigDir = (item) =>
     path.isAbsolute(item) ? item : path.resolve(configDirectory, item);
 
@@ -92,14 +94,15 @@ async function lowdefyBuildWatcher(context) {
         // the build needs (a new connection type, a new plugin package).
         await context.syncServer();
       } else {
-        const invalidatePath = path.join(context.directories.build, 'invalidatePages');
-        fs.writeFileSync(invalidatePath, String(Date.now()));
         await updatePageTailwindCss({ changedFiles: relativeChangedFiles, context });
-        context.logger.info('Page files changed, invalidated all pages.');
+        context.logger.info('Page files changed.');
       }
     } catch (error) {
       context.logger.error(error);
     } finally {
+      // Also after a config build, failed or not: a failed build publishes
+      // nothing, and the edit must still reach the pages it touched.
+      writeChangeSignal();
       await context.reloadClients();
     }
   };
@@ -120,27 +123,32 @@ async function lowdefyBuildWatcher(context) {
     watchPaths: watchRoots,
   });
 
-  // The config build and every JIT page build rewrite refMap.json, so the
-  // files they read outside the watched directories are added as they appear.
-  const watchBuildFilesOutsideWatch = () => {
-    configWatcher.add(
-      findBuildFilesOutsideWatch({
-        buildDirectory: context.directories.build,
-        configDirectory,
-        watchRoots,
-      })
-    );
+  // The config build writes refMap.json and each JIT page build writes a new
+  // file to jitMaps/, so the files they read outside the watched directories
+  // are added as they appear. Only the changed maps files are read.
+  const buildDirectory = context.directories.build;
+  const jitMapsDirectory = path.join(buildDirectory, 'jitMaps');
+  const watchBuildFilesOutsideWatch = (mapsFiles) => {
+    configWatcher.add(findBuildFilesOutsideWatch({ mapsFiles, configDirectory, watchRoots }));
   };
-  watchBuildFilesOutsideWatch();
-  const refMapWatcher = await setupWatcher({
-    callback: watchBuildFilesOutsideWatch,
+  watchBuildFilesOutsideWatch([path.join(buildDirectory, 'refMap.json')]);
+  const isMapsFile = (filePath) =>
+    filePath === buildDirectory ||
+    filePath === path.join(buildDirectory, 'refMap.json') ||
+    filePath === jitMapsDirectory ||
+    (path.dirname(filePath) === jitMapsDirectory && filePath.endsWith('.json'));
+  const mapsWatcher = await setupWatcher({
+    callback: (filePaths) => watchBuildFilesOutsideWatch([...new Set(filePaths.flat())]),
     context,
+    // The build directory is watched rather than jitMaps/ itself, which does
+    // not exist until the first page build; everything else in it is ignored.
+    ignorePaths: [(filePath) => !isMapsFile(filePath)],
     watchDotfiles: true,
-    watchPaths: [path.join(context.directories.build, 'refMap.json')],
+    watchPaths: [buildDirectory],
   });
 
   return {
-    close: () => Promise.all([configWatcher.close(), refMapWatcher.close()]),
+    close: () => Promise.all([configWatcher.close(), mapsWatcher.close()]),
   };
 }
 
