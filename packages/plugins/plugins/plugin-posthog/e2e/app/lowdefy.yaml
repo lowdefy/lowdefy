@@ -15,6 +15,11 @@
 lowdefy: local
 name: plugin-posthog E2E Tests
 
+# A configured home page is served at the app root itself, with no redirect, so the spec can see
+# what an app event that fails at `/` sends.
+config:
+  homePageId: home
+
 # PostHog starts once per app load from the app's onInitAsync. The spec routes every request to
 # <origin>/ingest and records the events posthog-js sends.
 events:

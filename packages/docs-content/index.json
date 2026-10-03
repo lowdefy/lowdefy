@@ -3636,7 +3636,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "92483c8c8f0ac8ab65e5e72beced2b4244c2ff7940484d3d1eed65f6e9a99ceb"
+      "hash": "6e00a783897c643ad4a342ff54515373f581fb2e0f7bd09e071e56a92c0102ec"
     },
     "user-authentication/users-introduction": {
       "files": [

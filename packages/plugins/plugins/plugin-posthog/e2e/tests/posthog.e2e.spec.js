@@ -198,4 +198,17 @@ test.describe('PostHog events carry Lowdefy semantics', () => {
     });
     expect(failure.properties.lowdefy_block_type).toBeUndefined();
   });
+
+  test('a failing app event at the app root names the home page it loaded on', async ({ page }) => {
+    const events = await recordPostHog(page);
+    await page.goto('/?failApp=1');
+    const failure = await waitFor(events, (event) => event.event === 'lowdefy_event_failed');
+    expect(failure.properties.$pathname).toBe('/');
+    expect(failure.properties).toMatchObject({
+      lowdefy_event_scope: 'app',
+      lowdefy_page_id: 'home',
+      lowdefy_block_id: 'app',
+      lowdefy_event_name: 'onInitAsync',
+    });
+  });
 });
