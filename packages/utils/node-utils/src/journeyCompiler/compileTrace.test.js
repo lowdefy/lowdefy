@@ -365,3 +365,66 @@ test('compileTrace throws for an unknown source', () => {
     'Journey compiler requires "source" to be one of production, dev, explorer, journey. Received "replay".'
   );
 });
+
+test('compileTrace gives each segment its entry page, pages, failure path and frustrations', () => {
+  const records = [
+    traceRecord({ at: 0, session: 'p-1', kind: 'pageview', url: '/tickets', source: 'production' }),
+    traceRecord({
+      at: 1,
+      session: 'p-1',
+      block: 'title',
+      source: 'production',
+      frustration: 'rage',
+    }),
+    traceRecord({
+      at: 2,
+      session: 'p-1',
+      block: 'save',
+      source: 'production',
+      event: {
+        name: 'onClick',
+        block_id: 'save',
+        success: false,
+        error: { name: 'UserError', action_type: 'Validate' },
+        invalid_blocks: ['title', 'due'],
+      },
+    }),
+    traceRecord({
+      at: 10,
+      session: 'p-2',
+      kind: 'pageview',
+      url: '/tickets',
+      source: 'production',
+    }),
+    traceRecord({ at: 11, session: 'p-2', block: 'save', source: 'production' }),
+    traceRecord({
+      at: 12,
+      session: 'p-2',
+      kind: 'engine',
+      scope: 'app',
+      source: 'production',
+      event: { name: 'onInitAsync', block_id: 'root', success: false, error: { name: 'Error' } },
+    }),
+  ];
+  const { segments } = compileTrace({ records, source: 'production' });
+  expect(segments[0]).toMatchObject({
+    page_id: 'tickets',
+    pages: ['tickets'],
+    failure_path: {
+      page: 'tickets',
+      block_id: 'save',
+      event: 'onClick',
+      invalid_blocks: ['due', 'title'],
+      interaction: true,
+    },
+    frustrations: [{ page: 'tickets', block_id: 'title', text: null, kind: 'rage' }],
+  });
+  expect(segments[1].failure_path).toEqual({
+    page: 'app',
+    block_id: null,
+    event: 'onInitAsync',
+    invalid_blocks: [],
+    interaction: false,
+  });
+  expect(segments[1].frustrations).toEqual([]);
+});

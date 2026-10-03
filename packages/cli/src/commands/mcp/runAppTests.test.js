@@ -200,3 +200,27 @@ test('runAppTests records a full-suite run and leaves a paths or filter run unre
     null,
   ]);
 });
+
+test('runAppTests returns journey evidence and the PASS line that shows it', async () => {
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    evidence: {
+      production: {
+        sessions: 412,
+        persons: 37,
+        orgs: 9,
+        share: 0.31,
+        failures: 14,
+        window: '2026-09-03/2026-10-02',
+      },
+      refreshed: '2026-10-03',
+    },
+    steps: [{ wait: { ms: 1 } }],
+  });
+
+  const { results } = await runAppTests({ configDirectory, url });
+
+  expect(results[0].evidence.production.sessions).toBe(412);
+  expect(results[0].report).toContain('412 sessions · 9 orgs');
+});

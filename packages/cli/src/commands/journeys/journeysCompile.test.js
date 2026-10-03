@@ -391,13 +391,49 @@ test('journeys compile reads the files given even when recordings exist', async 
   expect(segments.map((segment) => segment.session)).toEqual(['from-file']);
 });
 
-test('journeys compile without trace files needs a source, and refuses production', async () => {
+test('journeys compile without trace files needs a source', async () => {
   await expect(journeysCompile({ context, params: [[]] })).rejects.toThrow(
     'lowdefy journeys compile needs trace files, or --source to choose recorded traces.'
   );
+});
+
+function writeProductionDay(day, records) {
+  const directory = path.join(configDirectory, '.lowdefy', 'traces', 'production');
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(
+    path.join(directory, `${day}.jsonl`),
+    records.map((entry) => JSON.stringify(entry)).join('\n')
+  );
+  fs.writeFileSync(path.join(directory, `${day}.manifest.json`), JSON.stringify({ day }));
+}
+
+function utcDay(time) {
+  return new Date(time).toISOString().slice(0, 10);
+}
+
+test('journeys compile --source production with no files compiles the pulled cache', async () => {
+  const today = Date.parse(`${utcDay(now)}T10:00:00.000Z`);
+  writeProductionDay(
+    utcDay(today - 2 * DAY),
+    session({ id: 'a', start: today - 2 * DAY, source: 'production' })
+  );
+  writeProductionDay(
+    utcDay(today - DAY),
+    session({ id: 'b', start: today - DAY, source: 'production' })
+  );
+  writeProductionDay(utcDay(today), []);
   context.options.source = 'production';
+  context.options.since = '3d';
+  const { segments } = await journeysCompile({ context, params: [[]] });
+  expect(segments).toHaveLength(2);
+  expect(candidates('production')).toHaveLength(1);
+});
+
+test('journeys compile --source production names the pull for a day missing from the cache', async () => {
+  context.options.source = 'production';
+  context.options.since = '2d';
   await expect(journeysCompile({ context, params: [[]] })).rejects.toThrow(
-    'Production traces are compiled from files for now: pass the trace files to compile.'
+    'lowdefy journeys pull posthog --from'
   );
 });
 

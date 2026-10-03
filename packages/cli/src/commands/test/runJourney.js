@@ -109,7 +109,20 @@ async function runJourney({ context, item, url, recordRun }) {
     return { name, filePath, passed: false, stepCount, durationMs, message: result.error };
   }
   if (result.passed === true) {
-    return { name, filePath, passed: true, stepCount, durationMs, exercised: result.exercised };
+    const passed = {
+      name,
+      filePath,
+      passed: true,
+      stepCount,
+      durationMs,
+      exercised: result.exercised,
+    };
+    // Evidence is read from the file for the PASS line; it is never sent to
+    // the dev server.
+    if (!type.isNone(journey.evidence)) {
+      passed.evidence = journey.evidence;
+    }
+    return passed;
   }
   return {
     name,

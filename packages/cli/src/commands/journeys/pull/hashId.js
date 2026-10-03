@@ -14,15 +14,17 @@
   limitations under the License.
 */
 
-// The page an app path names: `/orders` is the page `orders`. Paths without a
-// leading slash are fragments of a URL (a query, part of a path) and name no
-// page. Kept local until the client's parsePageId moves into @lowdefy/helpers,
-// then this should use it.
-function pageIdFromPath({ path }) {
-  if (!path.startsWith('/')) return undefined;
-  const pathname = new URL(path, 'http://lowdefy.invalid').pathname;
-  const pageId = pathname.replace(/^\//, '').replace(/\/$/, '');
-  return pageId === '' ? undefined : pageId;
+import crypto from 'crypto';
+import { type } from '@lowdefy/helpers';
+
+// A person or org id as `p_`/`o_` plus the first 16 hex characters of its
+// HMAC-SHA256 under the machine's salt. The same machine always gives the same
+// hash, and every count the loop reports is a distinct count, which no salt
+// changes.
+function hashId({ salt, id, prefix }) {
+  if (type.isNone(id) || id === '') return null;
+  const digest = crypto.createHmac('sha256', salt).update(String(id)).digest('hex');
+  return `${prefix}${digest.slice(0, 16)}`;
 }
 
-export default pageIdFromPath;
+export default hashId;
