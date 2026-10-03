@@ -113,6 +113,26 @@ test('runJourney reports an invalid journey without calling the server', async (
   });
 });
 
+test('runJourney reports a malformed step as an invalid journey file without calling the server', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const result = await runJourney({
+    item: {
+      filePath: '/app/tests/journeys/bad-step.yaml',
+      journey: { name: 'bad step', pageId: 'p', steps: [{ fill: { blockId: 'title' } }] },
+    },
+    url,
+  });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(result).toMatchObject({
+    name: 'bad step',
+    filePath: '/app/tests/journeys/bad-step.yaml',
+    passed: false,
+    stepCount: 0,
+    message:
+      'Invalid journey file: Step 0: Step "fill" requires a "value". Received {"blockId":"title"}.',
+  });
+});
+
 test('runJourney reports a file that failed to parse using its file path as the name', async () => {
   const { default: runJourney } = await import('./runJourney.js');
   const result = await runJourney({

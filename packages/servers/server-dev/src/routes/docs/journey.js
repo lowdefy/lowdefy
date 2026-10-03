@@ -15,10 +15,10 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { validateJourneySteps } from '@lowdefy/node-utils';
 
 import parseUserParam from './parseUserParam.js';
 import runJourney from '../../../lib/docs/runJourney.js';
-import validateJourneySteps from '../../../lib/docs/validateJourneySteps.js';
 import validateJourneyTimeout from '../../../lib/docs/validateJourneyTimeout.js';
 import validateStateSelection from '../../../lib/docs/validateStateSelection.js';
 

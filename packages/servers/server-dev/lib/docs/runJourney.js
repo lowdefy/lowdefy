@@ -21,6 +21,7 @@ import {
   getShortcutModifier,
   getState,
 } from '@lowdefy/e2e-utils/runtime';
+import { getStepKey, validateJourneySteps } from '@lowdefy/node-utils';
 
 import createJourneyActors from './createJourneyActors.js';
 import { getBrowser, buildPageUrl } from './getBrowser.js';
@@ -30,7 +31,6 @@ import openJourneyEmail from './openJourneyEmail.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
 import selectFinalState from './selectFinalState.js';
 import unsettledPageNote from './unsettledPageNote.js';
-import validateJourneySteps, { getStepKey } from './validateJourneySteps.js';
 import validateJourneyTimeout from './validateJourneyTimeout.js';
 import validateStateSelection from './validateStateSelection.js';
 

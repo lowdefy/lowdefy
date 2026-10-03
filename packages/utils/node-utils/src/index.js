@@ -34,6 +34,11 @@ import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
 import writeFileIfChanged from './writeFileIfChanged.js';
+import validateJourneySteps, {
+  getStepKey,
+  STEP_KEYS,
+  TARGET_KEYS,
+} from './journeyGrammar/validateJourneySteps.js';
 import validateTraceRecord from './journeyTrace/validateTraceRecord.js';
 
 export {
@@ -58,5 +63,9 @@ export {
   readFile,
   writeFile,
   writeFileIfChanged,
+  getStepKey,
+  STEP_KEYS,
+  TARGET_KEYS,
+  validateJourneySteps,
   validateTraceRecord,
 };
