@@ -65,6 +65,7 @@ function snapshotListeners() {
   return {
     SIGTERM: process.listeners('SIGTERM'),
     SIGINT: process.listeners('SIGINT'),
+    SIGHUP: process.listeners('SIGHUP'),
     exit: process.listeners('exit'),
   };
 }
@@ -118,13 +119,28 @@ test('a SIGTERM stops the store with cleanup, then raises the signal again', asy
   await getDataStore();
   const [onSigterm] = addedListeners('SIGTERM', before.SIGTERM);
   expect(addedListeners('SIGINT', before.SIGINT)).toHaveLength(1);
+  expect(addedListeners('SIGHUP', before.SIGHUP)).toHaveLength(1);
   await onSigterm('SIGTERM');
   expect(replSet.stop).toHaveBeenCalledWith({ doCleanup: true });
   expect(kill).toHaveBeenCalledWith(process.pid, 'SIGTERM');
   expect(globalThis[Symbol.for('lowdefy.devServer.dataStore')]).toBeUndefined();
   expect(addedListeners('SIGTERM', before.SIGTERM)).toEqual([]);
   expect(addedListeners('SIGINT', before.SIGINT)).toEqual([]);
+  expect(addedListeners('SIGHUP', before.SIGHUP)).toEqual([]);
   expect(addedListeners('exit', before.exit)).toEqual([]);
+});
+
+test('a SIGHUP from a closed terminal stops the store with cleanup, then raises the signal again', async () => {
+  const replSet = createReplSet();
+  create.mockResolvedValue(replSet);
+  const kill = jest.spyOn(process, 'kill').mockImplementation(() => true);
+  const before = snapshotListeners();
+  await getDataStore();
+  const [onSighup] = addedListeners('SIGHUP', before.SIGHUP);
+  await onSighup('SIGHUP');
+  expect(replSet.stop).toHaveBeenCalledWith({ doCleanup: true });
+  expect(kill).toHaveBeenCalledWith(process.pid, 'SIGHUP');
+  expect(addedListeners('SIGHUP', before.SIGHUP)).toEqual([]);
 });
 
 test('the exit hook kills mongod and removes its temporary directory when no stop finished', async () => {

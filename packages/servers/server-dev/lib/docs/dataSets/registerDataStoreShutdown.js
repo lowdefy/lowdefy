@@ -16,12 +16,15 @@
 
 import removeDataStoreFiles from './removeDataStoreFiles.js';
 
+const SHUTDOWN_SIGNALS = ['SIGTERM', 'SIGINT', 'SIGHUP'];
+
 // A store is stopped, with its temporary database directory removed, when the dev server process
-// shuts down. The manager stops the process with SIGTERM and a terminal Ctrl+C sends SIGINT; on
-// either the store stops first and the signal is raised again, so the process ends as it would
-// have. Vite's own SIGTERM handler can exit before that stop finishes, so the exit hook kills
-// mongod and removes its directory synchronously. mongodb-memory-server's killer process still
-// stops mongod after a crash, which runs neither.
+// shuts down. The manager stops the process with SIGTERM, a terminal Ctrl+C sends SIGINT and closing
+// the terminal sends SIGHUP, whose default action ends the process without an exit event; on each
+// the store stops first and the signal is raised again, so the process ends as it would have.
+// Vite's own SIGTERM handler can exit before that stop finishes, so the exit hook kills mongod and
+// removes its directory synchronously. mongodb-memory-server's killer process still stops mongod
+// after a crash, which runs neither.
 function registerDataStoreShutdown({ replSet, stop }) {
   async function onSignal(signal) {
     try {
@@ -33,12 +36,10 @@ function registerDataStoreShutdown({ replSet, stop }) {
   function onExit() {
     removeDataStoreFiles({ replSet });
   }
-  process.once('SIGTERM', onSignal);
-  process.once('SIGINT', onSignal);
+  SHUTDOWN_SIGNALS.forEach((signal) => process.once(signal, onSignal));
   process.once('exit', onExit);
   return function unregisterDataStoreShutdown() {
-    process.off('SIGTERM', onSignal);
-    process.off('SIGINT', onSignal);
+    SHUTDOWN_SIGNALS.forEach((signal) => process.off(signal, onSignal));
     process.off('exit', onExit);
   };
 }
