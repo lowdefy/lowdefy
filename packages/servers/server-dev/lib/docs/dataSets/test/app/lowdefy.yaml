@@ -1,0 +1,98 @@
+# The app the data set journey end-to-end test (dataSetJourneys.chromium.mongodb.test.mjs) builds and
+# serves. Its connections read the MONGODB_URI secret, which the test points at a stand-in for the
+# developer's real database; a journey on the "shop" data set must never touch it.
+lowdefy: local
+name: Data set journeys
+
+connections:
+  - id: tickets
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: tickets
+      write: true
+
+api:
+  - id: create_ticket
+    type: Api
+    routine:
+      - id: insert
+        type: MongoDBInsertOne
+        connectionId: tickets
+        properties:
+          doc:
+            _id:
+              _payload: id
+            organizationId:
+              _user: organization_id
+            title:
+              _payload: title
+      - :return:
+          inserted:
+            _payload: id
+  - id: list_tickets
+    type: Api
+    routine:
+      - id: find
+        type: MongoDBFind
+        connectionId: tickets
+        properties:
+          query:
+            organizationId:
+              _user: organization_id
+          options:
+            sort:
+              _id: 1
+      - :return:
+          _step: find
+  - id: list_all_tickets
+    type: Api
+    routine:
+      - id: find
+        type: MongoDBFind
+        connectionId: tickets
+        properties:
+          query: {}
+          options:
+            sort:
+              _id: 1
+      - :return:
+          _step: find
+  - id: create_ticket_later
+    type: Api
+    routine:
+      - id: dispatch
+        type: CallApi
+        properties:
+          endpointId: insert_detached
+          detached: true
+          payload:
+            id:
+              _payload: id
+      - :return:
+          dispatched: true
+  - id: insert_detached
+    type: Api
+    routine:
+      - id: insert
+        type: MongoDBInsertOne
+        connectionId: tickets
+        properties:
+          doc:
+            _id:
+              _payload: id
+            detached: true
+
+websockets:
+  - id: ticket_changes
+    type: MongoDBChangeStream
+    connectionId: tickets
+    properties:
+      pipeline:
+        - $match:
+            operationType: insert
+
+pages:
+  - id: tickets
+    type: Box

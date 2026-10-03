@@ -1,0 +1,8 @@
+fixtures:
+  tickets:
+    - { _id: t-a1, organizationId: org_a, title: First }
+    - { _id: t-a2, organizationId: org_a, title: Second }
+    - { _id: t-b1, organizationId: org_b, title: Other org }
+users:
+  owner: { id: u_1, roles: [admin], organizationId: org_a }
+  outsider: { id: u_9, roles: [admin], organizationId: org_b }
