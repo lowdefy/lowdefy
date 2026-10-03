@@ -41,8 +41,10 @@ function writeDataSet(name, content) {
 }
 
 function writeConnection(connectionId, artifact) {
+  const filePath = path.join(buildDirectory, 'connections', `${connectionId}.json`);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(
-    path.join(buildDirectory, 'connections', `${connectionId}.json`),
+    filePath,
     JSON.stringify({ connectionId, '~k': `k_${connectionId}`, ...artifact })
   );
 }
@@ -84,6 +86,22 @@ users:
   });
   expect(dataSet.warnings).toEqual([]);
   expect(dataSet.users).toEqual({ owner: { id: 'u_1' } });
+});
+
+test('readDataSet reads module connections, which the build writes under their module folder', async () => {
+  writeConnection('contacts/contacts', mongo({ collection: 'contacts' }));
+  writeConnection('crm-contacts', mongo({ collection: 'contacts', databaseName: 'crm' }));
+  writeDataSet('alpha', 'fixtures:\n  contacts/contacts: [{ _id: c1 }]\n');
+  await expect(readDataSet({ configDirectory, buildDirectory, name: 'alpha' })).rejects.toThrow(
+    'Data set "alpha": Connections "contacts/contacts" and "crm-contacts" both name collection "contacts" in different databases'
+  );
+});
+
+test('readDataSet maps a module connection to its collection', async () => {
+  writeConnection('contacts/contacts', mongo({ collection: 'contacts' }));
+  writeDataSet('alpha', 'fixtures:\n  contacts/contacts: [{ _id: c1 }]\n');
+  const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'alpha' });
+  expect(dataSet.collections).toEqual({ 'contacts/contacts': 'contacts' });
 });
 
 test('readDataSet refuses a fixture keyed by a non-MongoDB connection', async () => {

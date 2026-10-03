@@ -19,11 +19,13 @@ import path from 'node:path';
 
 // Every built connection artifact, keyed by connection id. The build always writes the
 // connections directory when the app declares connections; an app with none has no directory.
+// Module connections are written under their module's folder (connections/<module>/<id>.json),
+// so the directory is read recursively and each artifact keyed by its own connectionId.
 async function readConnectionArtifacts({ buildDirectory }) {
   const directory = path.join(buildDirectory, 'connections');
   let fileNames;
   try {
-    fileNames = await fs.promises.readdir(directory);
+    fileNames = await fs.promises.readdir(directory, { recursive: true });
   } catch (error) {
     if (error.code === 'ENOENT') return {};
     throw error;
@@ -34,7 +36,8 @@ async function readConnectionArtifacts({ buildDirectory }) {
       .filter((fileName) => fileName.endsWith('.json'))
       .map(async (fileName) => {
         const content = await fs.promises.readFile(path.join(directory, fileName), 'utf8');
-        artifacts[path.basename(fileName, '.json')] = JSON.parse(content);
+        const artifact = JSON.parse(content);
+        artifacts[artifact.connectionId] = artifact;
       })
   );
   return artifacts;
