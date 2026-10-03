@@ -1050,7 +1050,8 @@ function callApiPageRegistry() {
 test('buildPageJit does not warn for a CallAPI action when the endpoint exists in components.api', async () => {
   const context = createTestContextWithApi([{ endpointId: 'my_endpoint', type: 'Api' }]);
   const warnings = [];
-  context.handleWarning = (warning) => warnings.push(warning);
+  // Each page build has its own warning handler, which logs to the context's logger.
+  context.logger.warn = (warning) => warnings.push(warning);
 
   mockFiles([{ path: 'home.yaml', content: callApiPageYaml }]);
 
@@ -1067,7 +1068,8 @@ test('buildPageJit does not warn for a CallAPI action when the endpoint exists i
 test('buildPageJit warns for a CallAPI action when the endpoint is missing from components.api', async () => {
   const context = createTestContextWithApi([]);
   const warnings = [];
-  context.handleWarning = (warning) => warnings.push(warning);
+  // Each page build has its own warning handler, which logs to the context's logger.
+  context.logger.warn = (warning) => warnings.push(warning);
 
   mockFiles([{ path: 'home.yaml', content: callApiPageYaml }]);
 
@@ -1103,7 +1105,8 @@ test('buildPageJit attaches prodError to _warnings entries for prod-gated warnin
 test('buildPageJit warns on an unknown block key, as the full build does, and not on the attached auth', async () => {
   const context = createTestContext();
   const warnings = [];
-  context.handleWarning = (warning) => warnings.push(warning);
+  // Each page build has its own warning handler, which logs to the context's logger.
+  context.logger.warn = (warning) => warnings.push(warning);
   mockFiles([
     {
       path: 'home.yaml',
@@ -1135,7 +1138,8 @@ blocks:
 test('buildPageJit honours ~ignoreBuildChecks schema on a block with an unknown key', async () => {
   const context = createTestContext();
   const warnings = [];
-  context.handleWarning = (warning) => warnings.push(warning);
+  // Each page build has its own warning handler, which logs to the context's logger.
+  context.logger.warn = (warning) => warnings.push(warning);
   mockFiles([
     {
       path: 'home.yaml',
@@ -1243,15 +1247,14 @@ test('buildPageJit collects the unavailable-projection error when no projection 
   const context = createTestContext();
   mockFiles([{ path: 'home.yaml', content: authConfigPageYaml }]);
 
-  await expect(
-    buildPageJit({
-      pageId: 'home',
-      pageRegistry: authConfigPageRegistry(),
-      context,
-    })
-  ).rejects.toThrow('build failed with');
+  const error = await buildPageJit({
+    pageId: 'home',
+    pageRegistry: authConfigPageRegistry(),
+    context,
+  }).catch((caught) => caught);
+  expect(error.message).toMatch('build failed with');
   expect(
-    context.errors.some((e) => e.message.includes('_build.authConfig is not available here.'))
+    error.buildErrors.some((e) => e.message.includes('_build.authConfig is not available here.'))
   ).toBe(true);
 });
 

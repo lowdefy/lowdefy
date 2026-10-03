@@ -51,7 +51,7 @@ function reviewPage({ pageId, entry, modifiedAt, configDirectory }) {
     if (record.registryMtime !== registryMtime) {
       return 'edited';
     }
-    const changed = [...record.files].some((filePath) => {
+    const changed = [...record.files.keys()].some((filePath) => {
       const mtime = modifiedAt(filePath);
       return mtime === null || mtime > record.builtAt;
     });

@@ -17,9 +17,10 @@
 import { mergeObjects } from '@lowdefy/helpers';
 
 import createBuildHandleError from './utils/createBuildHandleError.js';
-import createCounter from './utils/createCounter.js';
 import createHandleWarning from './utils/createHandleWarning.js';
+import createImportAppCode from './utils/createImportAppCode.js';
 import createReadConfigFile from './utils/readConfigFile.js';
+import createTypeCounters from './utils/createTypeCounters.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
 import defaultMessagesMap from './defaultMessagesMap.js';
 import defaultPackages from './defaultPackages.js';
@@ -46,6 +47,7 @@ function createContext({
     errors: [],
     jsMap: {},
     warnings: [],
+    importAppCode: createImportAppCode({ directories }),
     keyMap: {},
     logger,
     // Null prototype prevents pollution via attacker-controlled entry.id.
@@ -58,26 +60,7 @@ function createContext({
     stage,
     validateOnly,
     pageTypeCounters: new Map(),
-    typeCounters: {
-      actions: createCounter(),
-      agents: createCounter(),
-      auth: {
-        adapters: createCounter(),
-        providers: createCounter(),
-        strategies: createCounter(),
-      },
-      blocks: createCounter(),
-      connections: createCounter(),
-      notifications: createCounter(),
-      requests: createCounter(),
-      steps: createCounter(),
-      websockets: createCounter(),
-      controls: createCounter(),
-      operators: {
-        client: createCounter('client'),
-        server: createCounter('server'),
-      },
-    },
+    typeCounters: createTypeCounters(),
     typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
     messagesMap: mergeObjects([defaultMessagesMap, customMessagesMap]),
   };

@@ -354,7 +354,12 @@ test('JIT builds sharing one dev context collect and check only the built page r
     []
   );
   await buildPageJit({ pageId: 'missing', pageRegistry, context });
-  await buildPageJit({ pageId: 'missing', pageRegistry, context });
-  expect(context.callApiActionRefs).toHaveLength(1);
-  expect(context.linkActionRefs).toEqual([]);
+  // A page built again lists its warning again: the terminal dedupe is shared
+  // by the context's page builds, each build's own warning list is not.
+  expect(
+    endpointWarnings(await buildPageJit({ pageId: 'missing', pageRegistry, context }))
+  ).toHaveLength(1);
+  // Action references live on each build's own context, never the kept one.
+  expect(Object.hasOwn(context, 'callApiActionRefs')).toBe(false);
+  expect(Object.hasOwn(context, 'linkActionRefs')).toBe(false);
 });

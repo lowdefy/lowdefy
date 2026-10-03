@@ -25,6 +25,7 @@ import {
   createJitMaps,
   generateClientJsModule,
   hydrateDeferredRecords,
+  prepareJitContext,
   restoreTenantTargets,
 } from '@lowdefy/build/dev';
 
@@ -209,6 +210,7 @@ export function getBuildContext(buildDirectory, configDirectory) {
     context: cachedBuildContext,
     keyPrefix: idCounter.prefix,
   });
+  prepareJitContext(cachedBuildContext);
 
   return cachedBuildContext;
 }

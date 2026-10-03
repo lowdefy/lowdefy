@@ -20,20 +20,52 @@ import path from 'node:path';
 import { resolveErrorLocation } from '@lowdefy/errors';
 
 import mapPageBuildErrors from '../docs/mapPageBuildErrors.js';
+import hashConfigContent from './hashConfigContent.js';
 
 // What each page's latest JIT build read and how it ended, kept for the life of
-// the server process. The dev tools use it to tell which built pages an edit
+// the server process. The dev server uses it to tell which built pages an edit
 // touched and which pages currently fail to build, without the page being
 // requested. Pages build concurrently on one shared build context, so the files
 // a build reads are attributed through async context rather than the context.
-const fileReads = new AsyncLocalStorage();
+const buildReads = new AsyncLocalStorage();
 const records = new Map();
 
+// Recorded for a file a build read twice with different content, or could not
+// read: no content on disk matches it, so the page is always rebuilt.
+const NEVER_MATCHES = 'conflict';
+
+function recordRead({ reads, filePath, hash }) {
+  const previous = reads.files.get(filePath);
+  if (previous !== undefined && previous !== hash) {
+    reads.files.set(filePath, NEVER_MATCHES);
+    return;
+  }
+  reads.files.set(filePath, hash);
+}
+
+// Every config file a page build reads comes through readConfigFile, and all
+// app code it runs through importAppCode. App code can read anything, so a
+// build that ran it is only marked, not traced.
 function trackFileReads({ context, configDirectory }) {
   const readConfigFile = context.readConfigFile;
-  context.readConfigFile = (filePath) => {
-    fileReads.getStore()?.add(path.resolve(configDirectory, filePath));
-    return readConfigFile(filePath);
+  context.readConfigFile = async (filePath) => {
+    const reads = buildReads.getStore();
+    const absolutePath = path.resolve(configDirectory, filePath);
+    let content;
+    try {
+      content = await readConfigFile(filePath);
+    } catch (error) {
+      if (reads) recordRead({ reads, filePath: absolutePath, hash: NEVER_MATCHES });
+      throw error;
+    }
+    if (reads) recordRead({ reads, filePath: absolutePath, hash: hashConfigContent(content) });
+    return content;
+  };
+  const importAppCode = context.importAppCode;
+  context.importAppCode = (filePath) => {
+    const reads = buildReads.getStore();
+    if (reads) reads.ranAppCode = true;
+    return importAppCode(filePath);
   };
 }
 
@@ -59,20 +91,32 @@ function locateErrors({ error, context, configDirectory }) {
 // registryMtime identifies the page registry, and so the config build, the
 // page was built against.
 async function record({ pageId, context, configDirectory, registryMtime, build }) {
-  const files = new Set();
+  const reads = { files: new Map(), ranAppCode: false };
   const builtAt = Date.now();
   let result;
   try {
-    result = await fileReads.run(files, build);
+    result = await buildReads.run(reads, build);
   } catch (error) {
     locateErrors({ error, context, configDirectory });
-    records.set(pageId, { builtAt, files, registryMtime, errors: mapPageBuildErrors(error) });
+    records.set(pageId, {
+      builtAt,
+      files: reads.files,
+      ranAppCode: reads.ranAppCode,
+      registryMtime,
+      errors: mapPageBuildErrors(error),
+    });
     throw error;
   }
   // A plugin install ends the build before the page is built, so the page's
   // previous record still describes it.
   if (!result?.installing) {
-    records.set(pageId, { builtAt, files, registryMtime, errors: null });
+    records.set(pageId, {
+      builtAt,
+      files: reads.files,
+      ranAppCode: reads.ranAppCode,
+      registryMtime,
+      errors: null,
+    });
   }
   return result;
 }
