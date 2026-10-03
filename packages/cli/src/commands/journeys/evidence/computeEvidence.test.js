@@ -144,3 +144,24 @@ test('computeEvidence keeps everything committed when no source is present', () 
   expect(result.changed).toBe(false);
   expect(result.after).toEqual(committed);
 });
+
+test('computeEvidence writes mutation for journeys the report names and keeps the rest', () => {
+  const report = {
+    byJourney: new Map([
+      ['tests/journeys/t.yaml#saves a ticket', { killed: 11, total: 12, unique: 2 }],
+    ]),
+    score: { killed: 11, total: 12 },
+  };
+  const named = compute(journey, { production: { segments, window }, mutation: report });
+  expect(named.after.mutation).toEqual({ killed: 11, total: 12, unique: 2 });
+  const other = compute(
+    {
+      ...journey,
+      name: 'other',
+      evidence: { mutation: { killed: 1, total: 3 }, refreshed: '2026-09-01' },
+    },
+    { mutation: report }
+  );
+  expect(other.after.mutation).toEqual({ killed: 1, total: 3 });
+  expect(other.changed).toBe(false);
+});

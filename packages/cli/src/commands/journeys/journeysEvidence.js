@@ -20,6 +20,7 @@ import computeEvidence from './evidence/computeEvidence.js';
 import formatEvidence from '../test/formatEvidence.js';
 import formatZeroBacked from './evidence/formatZeroBacked.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
+import readMutationReport from './readMutationReport.js';
 import readProductionSegments from './readProductionSegments.js';
 import writeEvidenceNode from './evidence/writeEvidenceNode.js';
 
@@ -78,7 +79,7 @@ async function journeysEvidence({ context }) {
   const production = readProductionSegments({ context });
   const results = computeEvidence({
     journeys,
-    sources: { production },
+    sources: { production, mutation: readMutationReport({ directories: context.directories }) },
     today: new Date(Date.now()).toISOString().slice(0, 10),
   });
 

@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 
 import computeCoverage from './coverage/computeCoverage.js';
 import readCommittedJourneys from './readCommittedJourneys.js';
+import readMutationReport from './readMutationReport.js';
 import readProductionSegments from './readProductionSegments.js';
 import writeCoverageReport from './coverage/writeCoverageReport.js';
 
@@ -32,7 +33,14 @@ function describeItem({ name, item }) {
   return item.key;
 }
 
-function logSummary({ logger, measures, reportPath }) {
+// The suite's mutation score, the sixth number, independent of production.
+function scoreMutation({ report }) {
+  if (type.isNone(report)) return undefined;
+  const { killed, total } = report.score;
+  return { killed, total, share: total === 0 ? 0 : Math.round((killed / total) * 100) / 100 };
+}
+
+function logSummary({ logger, measures, mutation, reportPath }) {
   MEASURES.forEach((name) => {
     const entry = measures[name];
     const mode = type.isString(entry.mode) ? `, ${entry.mode}` : '';
@@ -41,6 +49,11 @@ function logSummary({ logger, measures, reportPath }) {
       logger.info(`  ${String(item.count).padStart(5)}  ${describeItem({ name, item })}`);
     });
   });
+  if (!type.isUndefined(mutation)) {
+    logger.info(
+      `${'mutation'.padEnd(12)} ${mutation.killed}/${mutation.total} (${mutation.share})`
+    );
+  }
   logger.info(measures.failure.note);
   logger.info(`Wrote ${reportPath}.`);
 }
@@ -68,19 +81,23 @@ async function journeysCoverage({ context }) {
   const { segments, window } = readProductionSegments({ context });
   const profile = profileProduction({ segments });
   const measures = computeCoverage({ journeys, segments, profile });
+  const mutation = scoreMutation({
+    report: readMutationReport({ directories: context.directories }),
+  });
   const { report, reportPath } = writeCoverageReport({
     directories: context.directories,
     window,
     measures,
     profile,
     journeys,
+    mutation,
     generated: new Date(Date.now()).toISOString(),
   });
   if (options.json === true) {
     // The report is the command's output with --json, for scripts and agents.
     process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
   } else {
-    logSummary({ logger, measures, reportPath });
+    logSummary({ logger, measures, mutation, reportPath });
   }
   await context.sendTelemetry();
   return report;

@@ -112,6 +112,7 @@ beforeEach(() => {
       config: configDirectory,
       dev: path.join(configDirectory, '.lowdefy', 'dev'),
       journeys: path.join(configDirectory, 'tests', 'journeys'),
+      test: path.join(configDirectory, '.lowdefy', 'test'),
       traces: path.join(configDirectory, '.lowdefy', 'traces'),
     },
     logger: { info: log, warn: log },
@@ -225,4 +226,37 @@ test('journeys evidence names the pull for a day missing from the window', async
 test('journeys evidence refuses a source other than production', async () => {
   context.options.source = 'dev';
   await expect(journeysEvidence({ context })).rejects.toThrow('--source should be production');
+});
+
+test('journeys evidence --refresh fills mutation from the report and the schema accepts it', async () => {
+  const savesPath = writeJourney('saves.yaml', SAVES);
+  fs.mkdirSync(path.join(configDirectory, '.lowdefy', 'test'), { recursive: true });
+  fs.writeFileSync(
+    path.join(configDirectory, '.lowdefy', 'test', 'mutation.json'),
+    JSON.stringify({
+      killed: 3,
+      total: 4,
+      journeys: [
+        {
+          file: path.join('tests', 'journeys', 'saves.yaml'),
+          name: 'member saves a ticket',
+          killed: 3,
+          total: 4,
+          unique: 1,
+        },
+      ],
+    })
+  );
+  context.options.refresh = true;
+  await journeysEvidence({ context });
+  const journey = YAML.parse(fs.readFileSync(savesPath, 'utf8'));
+  expect(journey.evidence.mutation).toEqual({ killed: 3, total: 4, unique: 1 });
+  expect(validateJourney({ journey })).toEqual({ valid: true });
+});
+
+test('journeys evidence without a mutation report adds no mutation key', async () => {
+  const savesPath = writeJourney('saves.yaml', SAVES);
+  context.options.refresh = true;
+  await journeysEvidence({ context });
+  expect(YAML.parse(fs.readFileSync(savesPath, 'utf8')).evidence).not.toHaveProperty('mutation');
 });

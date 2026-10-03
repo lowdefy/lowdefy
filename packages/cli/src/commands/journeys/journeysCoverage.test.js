@@ -181,3 +181,16 @@ test('journeys coverage names the pull for a missing day', async () => {
     'lowdefy journeys pull posthog --from 2026-09-30'
   );
 });
+
+test('journeys coverage adds the mutation score when a report exists, and none without', async () => {
+  const report = await journeysCoverage({ context });
+  expect(report).not.toHaveProperty('mutation');
+  fs.writeFileSync(
+    path.join(configDirectory, '.lowdefy', 'test', 'mutation.json'),
+    JSON.stringify({ killed: 2, total: 3, journeys: [] })
+  );
+  const withMutation = await journeysCoverage({ context });
+  expect(withMutation.mutation).toEqual({ killed: 2, total: 3, share: 0.67 });
+  expect(validate({ schema: coverageReportSchema, data: withMutation })).toEqual({ valid: true });
+  expect(logged.some((line) => line.startsWith('mutation     2/3 (0.67)'))).toBe(true);
+});

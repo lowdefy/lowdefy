@@ -59,13 +59,18 @@ function isEqual(a, b) {
 // some subkey changed, so a no-op refresh changes no file.
 //
 // - journeys: [{ filePath, journeyIndex, journey }]
-// - sources: { production?: { segments, window }, mutation?: Map<'<file>#<name>', {...}> }
+// - sources: { production?: { segments, window }, mutation?: readMutationReport's result }
+//   A mutation report sets `mutation` for the journeys it names only.
 function computeEvidence({ journeys, sources, today }) {
   return journeys.map(({ filePath, file, journeyIndex, journey }) => {
     const before = journey.evidence;
     const computed = {};
     if (!type.isNone(sources.production)) {
       computed.production = productionEvidence({ journey, ...sources.production });
+    }
+    const mutation = sources.mutation?.byJourney.get(`${file}#${journey.name}`);
+    if (!type.isUndefined(mutation)) {
+      computed.mutation = mutation;
     }
     const after = {};
     SUBKEYS.forEach((key) => {
