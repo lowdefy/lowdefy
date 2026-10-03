@@ -24,7 +24,8 @@ import getDevCommand from './getDevCommand.js';
 import upsertAgentsMdSection from './upsertAgentsMdSection.js';
 import upsertClaudeSettings from './upsertClaudeSettings.js';
 import upsertMcpServer from './upsertMcpServer.js';
-import writeSkillFile from './writeSkillFile.js';
+import skills from './skills/index.js';
+import writeSkillFiles from './writeSkillFiles.js';
 
 // Resolves where agent files should be written (the project root an agent is
 // launched from, not the app config directory) and the app's path relative
@@ -79,8 +80,14 @@ async function agentSetup({ context }) {
 
   await upsertMcpServer({ context, projectDirectory });
   await upsertClaudeSettings({ context, projectDirectory });
-  await writeSkillFile({ context, projectDirectory, appPath });
-  await upsertAgentsMdSection({ context, projectDirectory, appPath, devCommand: runCommand });
+  await writeSkillFiles({ context, projectDirectory, appPath, skills });
+  await upsertAgentsMdSection({
+    context,
+    projectDirectory,
+    appPath,
+    devCommand: runCommand,
+    skills,
+  });
   warnAmbiguousDevScript({ context });
 
   await context.sendTelemetry();

@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import isRecordingEnabled from '../../lib/server/recording/isRecordingEnabled.js';
 import safeScriptJson from '../lib/safeScriptJson.js';
 
 // Dev HTML shell — config-free: the client fetches root config and page
@@ -42,6 +43,7 @@ function renderDevPage(c, { basePath = '' }) {
   const user = c.get('lowdefyContext')?.user ?? null;
   const themeConfig = readBuildJson('theme');
   const appJson = readBuildJson('app');
+  const recording = { enabled: isRecordingEnabled(c.req.header('cookie')) };
 
   const VALID_COLOR_MODES = ['system', 'light', 'dark'];
   const configColorMode = VALID_COLOR_MODES.includes(themeConfig.darkMode)
@@ -77,7 +79,11 @@ window.__vite_plugin_react_preamble_installed__ = true;
   </head>
   <body>
     <div id="root"></div>
-    <script id="__LOWDEFY_CONFIG__" type="application/json">${safeScriptJson({ basePath, user })}</script>
+    <script id="__LOWDEFY_CONFIG__" type="application/json">${safeScriptJson({
+      basePath,
+      user,
+      recording,
+    })}</script>
     ${appJson.html?.appendBody ?? ''}
     <script type="module" src="${basePath}/client/main.jsx"></script>
   </body>

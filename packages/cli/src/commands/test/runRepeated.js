@@ -15,15 +15,25 @@
 */
 
 import classifyRuns from './classifyRuns.js';
+import isFullSuiteRun from './isFullSuiteRun.js';
 
 // Runs one test item `repeat` times in a row and returns one result: the
 // newest run's result with the class, the pass count and every run. A test the
 // runner refused outright (an invalid file) fails once and is not repeated -
 // it would fail the same way every time.
-async function runRepeated({ suite, context, item, url, repeat }) {
+//
+// `recording` ({ run, paths, filter }) asks the dev server to record the run
+// as the suite's journey run. Only a full-suite run's first repetition
+// records, so the newest test run always stands for what the suite drives.
+async function runRepeated({ suite, context, item, url, repeat, recording }) {
   const runs = [];
   for (let repetition = 1; repetition <= repeat; repetition += 1) {
-    const run = await suite.run({ context, item, url });
+    const recordRun =
+      recording !== undefined &&
+      isFullSuiteRun({ paths: recording.paths, filter: recording.filter, repetition })
+        ? recording.run
+        : undefined;
+    const run = await suite.run({ context, item, url, recordRun });
     runs.push(run);
     if (run.refused === true) {
       break;

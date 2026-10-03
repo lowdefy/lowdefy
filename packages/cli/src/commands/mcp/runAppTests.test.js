@@ -77,7 +77,11 @@ function writeJourney(fileName, journey) {
 }
 
 test('runAppTests runs every journey against the dev server and reports each as data', async () => {
-  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ wait: { ms: 1 } }] });
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    steps: [{ wait: { ms: 1 } }],
+  });
   writeJourney('refunds.yaml', {
     name: 'refund button',
     pageId: 'refunds',
@@ -97,8 +101,16 @@ test('runAppTests runs every journey against the dev server and reports each as 
 });
 
 test('runAppTests runs only the journeys matching the filter', async () => {
-  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ wait: { ms: 1 } }] });
-  writeJourney('refunds.yaml', { name: 'refund button', pageId: 'refunds', steps: [{ wait: { ms: 1 } }] });
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    steps: [{ wait: { ms: 1 } }],
+  });
+  writeJourney('refunds.yaml', {
+    name: 'refund button',
+    pageId: 'refunds',
+    steps: [{ wait: { ms: 1 } }],
+  });
 
   const { summary } = await runAppTests({ configDirectory, url, filter: 'ORDERS' });
 
@@ -106,18 +118,26 @@ test('runAppTests runs only the journeys matching the filter', async () => {
 });
 
 test('runAppTests says when no journey matches the filter', async () => {
-  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ wait: { ms: 1 } }] });
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    steps: [{ wait: { ms: 1 } }],
+  });
   expect((await runAppTests({ configDirectory, url, filter: 'nope' })).summary).toEqual(
     'No tests matched filter "nope".'
   );
 });
 
 test('runAppTests honours paths and repeat and returns the class of each journey', async () => {
-  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ wait: 1 }] });
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    steps: [{ wait: { ms: 1 } }],
+  });
   fs.mkdirSync(path.join(configDirectory, 'tests', 'journeys', '_candidates'));
   fs.writeFileSync(
     path.join(configDirectory, 'tests', 'journeys', '_candidates', 'refunds.yaml'),
-    JSON.stringify({ name: 'refund button', pageId: 'refunds', steps: [{ wait: 1 }] })
+    JSON.stringify({ name: 'refund button', pageId: 'refunds', steps: [{ wait: { ms: 1 } }] })
   );
   const { summary, results } = await runAppTests({
     configDirectory,
@@ -145,4 +165,38 @@ test('runAppTests refuses a path outside the app directory and a repeat out of r
     summary: '--repeat must be an integer from 1 to 10. Received 20.',
     results: [],
   });
+});
+
+test('runAppTests records a full-suite run and leaves a paths or filter run unrecorded', async () => {
+  const bodies = [];
+  server.removeAllListeners('request');
+  server.on('request', (req, res) => {
+    let body = '';
+    req.on('data', (chunk) => {
+      body += chunk;
+    });
+    req.on('end', () => {
+      res.setHeader('Content-Type', 'application/json');
+      if (req.url === '/lowdefy-docs/build-status') {
+        res.end(JSON.stringify({ buildId: 'build-1' }));
+        return;
+      }
+      bodies.push(JSON.parse(body));
+      res.end(JSON.stringify({ passed: true }));
+    });
+  });
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    steps: [{ wait: { ms: 1 } }],
+  });
+  await runAppTests({ configDirectory, url, repeat: 2 });
+  await runAppTests({ configDirectory, url, filter: 'orders' });
+  await runAppTests({ configDirectory, url, paths: ['tests/journeys/orders.yaml'] });
+  expect(bodies.map((body) => body.recording?.journey ?? null)).toEqual([
+    'tests/journeys/orders.yaml#orders list',
+    null,
+    null,
+    null,
+  ]);
 });

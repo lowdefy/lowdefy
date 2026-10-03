@@ -2816,6 +2816,9 @@ importers:
       '@lowdefy/e2e-utils':
         specifier: 6.0.0
         version: link:../../utils/e2e-utils
+      '@lowdefy/engine':
+        specifier: 6.0.0
+        version: link:../../engine
       '@lowdefy/errors':
         specifier: 6.0.0
         version: link:../../utils/errors
@@ -2949,6 +2952,9 @@ importers:
       jest:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.3)
+      jest-environment-jsdom:
+        specifier: 28.1.3
+        version: 28.1.3
       nodemailer:
         specifier: 10.0.13
         version: 10.0.13
