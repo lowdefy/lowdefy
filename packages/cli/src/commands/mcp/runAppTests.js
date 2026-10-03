@@ -15,6 +15,7 @@
 */
 
 import path from 'path';
+import { createTraceId } from '@lowdefy/helpers';
 
 import getDirectories from '../../utils/getDirectories.js';
 import parseRepeat from '../test/parseRepeat.js';
@@ -59,9 +60,11 @@ async function runAppTests({ configDirectory, url, filter, paths, repeat: repeat
   if (selected.length === 0) {
     return { summary: noTestsSummary({ filter, paths: files && paths }), results: [] };
   }
+  // One run id per tool call; only a full-suite run records (see runRepeated).
+  const recording = { run: createTraceId(), paths: files, filter };
   const runs = [];
   for (const { suite, item } of selected) {
-    const result = await runRepeated({ suite, context, item, url, repeat });
+    const result = await runRepeated({ suite, context, item, url, repeat, recording });
     runs.push({ suite, result });
   }
   const results = runs.map(({ result }) => result);

@@ -166,3 +166,37 @@ test('runAppTests refuses a path outside the app directory and a repeat out of r
     results: [],
   });
 });
+
+test('runAppTests records a full-suite run and leaves a paths or filter run unrecorded', async () => {
+  const bodies = [];
+  server.removeAllListeners('request');
+  server.on('request', (req, res) => {
+    let body = '';
+    req.on('data', (chunk) => {
+      body += chunk;
+    });
+    req.on('end', () => {
+      res.setHeader('Content-Type', 'application/json');
+      if (req.url === '/lowdefy-docs/build-status') {
+        res.end(JSON.stringify({ buildId: 'build-1' }));
+        return;
+      }
+      bodies.push(JSON.parse(body));
+      res.end(JSON.stringify({ passed: true }));
+    });
+  });
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    steps: [{ wait: { ms: 1 } }],
+  });
+  await runAppTests({ configDirectory, url, repeat: 2 });
+  await runAppTests({ configDirectory, url, filter: 'orders' });
+  await runAppTests({ configDirectory, url, paths: ['tests/journeys/orders.yaml'] });
+  expect(bodies.map((body) => body.recording?.journey ?? null)).toEqual([
+    'tests/journeys/orders.yaml#orders list',
+    null,
+    null,
+    null,
+  ]);
+});

@@ -72,6 +72,7 @@ async function runJourney({
   basePath = '',
   readConfigFile = defaultReadConfigFile,
   mutantCookie,
+  recording,
 }) {
   if (type.isNone(origin) || !type.isString(origin)) {
     return {
@@ -135,6 +136,7 @@ async function runJourney({
       timeout,
       stepTimeout,
       mutantCookie,
+      recording,
     });
     journey = opened.journey;
     const { results, screenshots, failure } = await runJourneySteps({ journey, steps });
@@ -169,6 +171,9 @@ async function runJourney({
     return { error: `Failed to run journey at "${url}": ${error.message}` };
   } finally {
     if (!type.isUndefined(journey)) {
+      if (!type.isUndefined(recording)) {
+        await journey.actors.flushRecordings();
+      }
       await journey.actors.closeAll();
     }
   }

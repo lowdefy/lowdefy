@@ -29,6 +29,7 @@ import cronForwardHandler from './routes/cronForward.js';
 import cronHandler from './routes/cron.js';
 import detachedHandler from './routes/detached.js';
 import devInspectHandler from './routes/devInspect.js';
+import devRecordingHandler from './routes/devRecording.js';
 import devToolsHandler from './routes/devTools.js';
 import feedbackHandler from './routes/feedback.js';
 import docsAppMapHandler from './routes/docs/appMap.js';
@@ -176,6 +177,11 @@ function createApp() {
   app.use('/api/dev-inspect/*', localDevToolsOnly());
   app.all('/api/dev-inspect', devInspectHandler);
   app.all('/api/dev-inspect/*', devInspectHandler);
+  // The dev recorder (client/Recorder.jsx) posts interaction records here.
+  // It needs no Lowdefy context, and registering it before apiContext keeps
+  // it out of the request timeout list.
+  app.use('/api/dev-recording', localDevToolsOnly());
+  app.post('/api/dev-recording', bodyLimit({ maxSize: 1024 * 1024 }), devRecordingHandler);
   app.get('/lowdefy-docs/plugins', docsPluginsHandler);
   app.get('/lowdefy-docs/schema/:kind/:type', docsSchemaHandler);
   app.get('/lowdefy-docs/examples/:type', docsExamplesHandler);

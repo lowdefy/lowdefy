@@ -24,6 +24,7 @@ import parseUserParam from './parseUserParam.js';
 import runJourney from '../../../lib/docs/runJourney.js';
 import validateJourneyTimeout from '../../../lib/docs/validateJourneyTimeout.js';
 import validateMutantParam from '../../../lib/server/mutants/validateMutantParam.js';
+import validateRecordingParam from '../../../lib/docs/validateRecordingParam.js';
 import validateStateSelection from '../../../lib/docs/validateStateSelection.js';
 
 // A failed journey is a 200 with passed: false — it is the result the caller
@@ -80,6 +81,10 @@ async function docsJourneyHandler(c) {
   if (userError) {
     return c.json({ error: userError }, 400);
   }
+  const recordingError = validateRecordingParam(body.recording);
+  if (recordingError) {
+    return c.json({ error: recordingError }, 400);
+  }
   if (!type.isNone(body.mutant)) {
     const mutantError = validateMutantParam(body.mutant);
     if (mutantError) {
@@ -126,6 +131,13 @@ async function docsJourneyHandler(c) {
       stepTimeout: timeout,
       basePath: lowdefyConfig.basePath ?? '',
       mutantCookie: mutantRun?.cookiePayload,
+      // Journeys posted here come from `lowdefy test` and lowdefy_run_tests.
+      recording: type.isNone(body.recording)
+        ? undefined
+        : {
+            source: 'journey',
+            run: { id: body.recording.run, by: 'test', journey: body.recording.journey ?? null },
+          },
     });
   } finally {
     // runJourney has closed every actor by now, so no request still carries

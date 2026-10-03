@@ -38,6 +38,8 @@ import listDataSets from './listDataSets.js';
 import parseDataSet from './parseDataSet.js';
 import parseIpRange from './parseIpRange.js';
 import readDevInstance from './readDevInstance.js';
+import listRecordingFiles, { RECORDING_SOURCES } from './recordings/listRecordingFiles.js';
+import readRecordings from './recordings/readRecordings.js';
 import spawnProcess from './spawnProcess.js';
 import readFile from './readFile.js';
 import writeFile from './writeFile.js';
@@ -81,9 +83,12 @@ export {
   linkWorkspaceDependencies,
   listDataSets,
   parseDataSet,
+  listRecordingFiles,
   parseIpRange,
   parseTraceLines,
   readDevInstance,
+  readRecordings,
+  RECORDING_SOURCES,
   spawnProcess,
   stepIdentity,
   readFile,

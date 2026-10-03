@@ -294,3 +294,35 @@ test('docsJourneyHandler passes no mutant cookie and returns no mutant without a
   expect(mockRunJourney.mock.calls[0][0].mutantCookie).toBeUndefined();
   expect(result.data.mutant).toBeUndefined();
 });
+
+test('docsJourneyHandler passes a recording through as a test run of source journey', async () => {
+  const c = createContext({
+    pageId: 'form',
+    steps: [{ click: 'submit' }],
+    recording: { run: '20261003T151200Z-p0d4rm', journey: 'tests/journeys/a.yaml#Assign' },
+  });
+  await docsJourneyHandler(c);
+  expect(mockRunJourney).toHaveBeenCalledWith(
+    expect.objectContaining({
+      recording: {
+        source: 'journey',
+        run: { id: '20261003T151200Z-p0d4rm', by: 'test', journey: 'tests/journeys/a.yaml#Assign' },
+      },
+    })
+  );
+});
+
+test('docsJourneyHandler returns 400 for a malformed recording', async () => {
+  for (const recording of [
+    { run: '../x' },
+    { run: '' },
+    'run',
+    { run: '20261003T151200Z-p0d4rm', journey: 7 },
+  ]) {
+    const result = await docsJourneyHandler(
+      createContext({ pageId: 'form', steps: [{ click: 'submit' }], recording })
+    );
+    expect(result.status).toBe(400);
+  }
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});

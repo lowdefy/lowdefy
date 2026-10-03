@@ -31,7 +31,15 @@ function pageHtml(script) {
   return `<!doctype html><html><head><title>loading</title></head><body><script>${script}</script></body></html>`;
 }
 
+const recorderPosts = [];
+
 const pages = {
+  '/recorded': pageHtml(`
+    window.__lowdefyRecorder = {
+      flush: () => fetch('/api/dev-recording', { method: 'POST', body: JSON.stringify({ actor: document.cookie }) }),
+    };
+    document.title = 'recorded-ready';
+  `),
   '/first': pageHtml(`
     fetch('/api/root')
       .then(() => fetch('/api/page/first'))
@@ -58,6 +66,9 @@ const chromiumTest = browser === null ? test.skip : test;
 
 beforeAll(async () => {
   server = http.createServer((req, res) => {
+    if (req.url === '/api/dev-recording') {
+      recorderPosts.push({ cookie: req.headers.cookie ?? '' });
+    }
     const html = pages[req.url];
     if (html !== undefined) {
       res.writeHead(200, { 'content-type': 'text/html' });
@@ -131,6 +142,66 @@ chromiumTest(
       expect(actors.countCalls({ request: 'save', pageId: 'first' })).toEqual(2);
       await actors.switchTo('main');
       expect(actors.countCalls({ request: 'save', pageId: 'first' })).toEqual(1);
+    } finally {
+      await actors.closeAll();
+    }
+  },
+  30000
+);
+
+chromiumTest(
+  'recording actors carry a recording cookie with their actor name and flush before closing',
+  async () => {
+    const { default: readRecordingCookie } = await import(
+      '../server/recording/readRecordingCookie.js'
+    );
+    const actors = createJourneyActors({
+      browser,
+      origin,
+      basePath: '',
+      pageId: 'recorded',
+      user: 'none',
+      timeout: 500,
+      recording: {
+        source: 'journey',
+        run: { id: '20261003T151200Z-p0d4rm', by: 'test', journey: 'tests/journeys/a.yaml' },
+      },
+    });
+    try {
+      const { page } = await actors.switchTo('main');
+      await page.waitForFunction(() => document.title === 'recorded-ready');
+      await actors.switchTo('invitee');
+      await actors.flushRecordings();
+    } finally {
+      await actors.closeAll();
+    }
+    expect(recorderPosts).toHaveLength(2);
+    const runs = recorderPosts
+      .map(({ cookie }) => readRecordingCookie(cookie))
+      .map((recording) => recording.run.actor)
+      .sort();
+    expect(runs).toEqual(['invitee', 'main']);
+  },
+  30000
+);
+
+chromiumTest(
+  'a non-recording actor is marked off and a page with no recorder flushes without error',
+  async () => {
+    const actors = createJourneyActors({
+      browser,
+      origin,
+      basePath: '',
+      pageId: 'second',
+      user: 'none',
+      timeout: 500,
+    });
+    try {
+      const { context } = await actors.switchTo('main');
+      const cookies = await context.cookies();
+      const recording = cookies.find((cookie) => cookie.name === 'lowdefy_recording');
+      expect(recording.value.endsWith('.off')).toBe(true);
+      await expect(actors.flushRecordings()).resolves.toBeUndefined();
     } finally {
       await actors.closeAll();
     }
