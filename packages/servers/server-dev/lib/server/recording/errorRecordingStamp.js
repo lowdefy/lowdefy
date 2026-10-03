@@ -16,14 +16,19 @@
 
 import { type } from '@lowdefy/helpers';
 
-import { listTabs } from './tabChannel.js';
-
-// Shared by inspectState.js and evalOperator.js to decide, when no explicit
-// `source` is requested, whether a live browser tab exists to prefer over a
-// fresh headless one. A tab the dev server's own headless browser opened is
-// not one to prefer (findTab never picks it).
-function tabAvailable({ pageId }) {
-  return listTabs().some((tab) => !tab.automated && (type.isNone(pageId) || tab.pageId === pageId));
+// The recording identity an error entry carries: { source, run, journey } for
+// a request or page in a headless journey or explorer run (run and journey
+// are the cookie's run.id and run.journey), or null for a developer's own tab
+// and for headless tool contexts, whose cookie is 'off'.
+function errorRecordingStamp(recording) {
+  if (!type.isObject(recording)) {
+    return null;
+  }
+  return {
+    source: recording.source,
+    run: recording.run.id,
+    journey: recording.run.journey,
+  };
 }
 
-export default tabAvailable;
+export default errorRecordingStamp;
