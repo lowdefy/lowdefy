@@ -130,13 +130,17 @@ const withProcessStartTimes = isWindows ? test.skip : test;
 // cannot be removed under a running server there.
 const onPosix = isWindows ? test.skip : test;
 
-test('hub start runs the dev script as its own process group, with a hub port and the requester env, and waits for ready', async () => {
-  const status = await hub.start({
+test('hub start runs the dev script as its own process group, with a hub port, and waits for ready', async () => {
+  const status = await hub.start({ configDirectory });
+  expect(status).toMatchObject({ configDirectory, owner: 'hub', state: 'ready', managed: true });
+  expect(Number(new URL(status.url).port)).toBeGreaterThanOrEqual(portRange.first);
+});
+
+withHubDevLog('hub start runs the dev script with the requester env', async () => {
+  await hub.start({
     configDirectory,
     env: { ...process.env, FROM_REQUESTER: 'requester-env' },
   });
-  expect(status).toMatchObject({ configDirectory, owner: 'hub', state: 'ready', managed: true });
-  expect(Number(new URL(status.url).port)).toBeGreaterThanOrEqual(portRange.first);
   expect(hub.logs({ configDirectory }).lines.join('\n')).toContain('requester-env');
 });
 
