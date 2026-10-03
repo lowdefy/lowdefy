@@ -485,6 +485,15 @@ describe('monorepo layout (app in a subdirectory of the git root)', () => {
   });
 });
 
+test('agentSetup writes the journeys-from-production skill and lists it in AGENTS.md', async () => {
+  const skillPath = path.join('.claude', 'skills', 'journeys-from-production', 'SKILL.md');
+  await agentSetup({ context });
+  const written = read(skillPath);
+  expect(written).toContain('name: journeys-from-production');
+  expect(written).toMatch(/lowdefy-skill-hash: [a-f0-9]{64}/);
+  expect(read('AGENTS.md')).toContain('`journeys-from-production`');
+});
+
 test('agentSetup writes the journeys-from-dev skill, refreshes it unedited and skips it edited', async () => {
   const skillPath = path.join('.claude', 'skills', 'journeys-from-dev', 'SKILL.md');
   await agentSetup({ context });

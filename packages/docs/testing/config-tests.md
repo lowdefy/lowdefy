@@ -378,6 +378,8 @@ Coverage also reads the newest full test run that the development server recorde
 
 It writes the measures, a production profile (the top flows per entry page, failure paths, frustrated blocks, role sets per page and entry pages) and each journey's interactions to `.lowdefy/test/coverage.json`, which is rewritten on every run and not committed. With a mutation report, the suite's mutation score is added as a sixth number.
 
+`lowdefy agent-setup` installs a `journeys-from-production` skill that runs this loop with you: it pulls, compiles and reads the coverage report, then takes uncovered failures first and flows next, one at a time. For each it shows you the flow and waits, fills typed values from your data set's fixtures, runs the candidate three times with `lowdefy test --repeat 3`, and moves it into `tests/journeys/` when all three pass. It finishes with `lowdefy journeys evidence --refresh` and commits nothing. It never deletes a journey or suggests deleting one.
+
 ## Dev recordings
 
 `lowdefy dev` records how you use your app in the browser, so an agent can turn what you just tried into journeys. Recording is on by default and stays on your machine:
