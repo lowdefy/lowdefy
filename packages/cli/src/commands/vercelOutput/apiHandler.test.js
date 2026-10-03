@@ -27,7 +27,10 @@ import apiHandler from './apiHandler.js';
 // Runs the generated function entry in its own process against a small Hono
 // app, the way Vercel runs it: the entry's default export is a Node HTTP
 // server. hono, @hono/node-server and ws resolve from the dev server package,
-// which installs the same versions as the production server.
+// which installs the same versions as the production server. initServer's own
+// startup steps are tested in @lowdefy/server, so it is a stub here, with
+// Sentry enabled, and a stub @sentry/node and Vercel request context count the
+// flushes handed to waitUntil.
 const require = createRequire(import.meta.url);
 const serverDevDirectory = path.dirname(require.resolve('@lowdefy/server-dev/package.json'));
 const WebSocketClient = createRequire(path.join(serverDevDirectory, 'package.json'))('ws');
@@ -54,6 +57,19 @@ export default function createApp(options) {
     }))
   );
   app.get('/state', (c) => c.json(state));
+  app.get('/sentry', (c) => c.json(globalThis.sentry));
+  app.get('/broken-stream', () => {
+    let sent = false;
+    return new Response(
+      new ReadableStream({
+        pull(controller) {
+          if (sent) throw new Error('stream failed');
+          sent = true;
+          controller.enqueue(new TextEncoder().encode('partial'));
+        },
+      })
+    );
+  });
   app.get('/stream', () =>
     new Response(
       tickingStream({
@@ -114,7 +130,29 @@ function tickingStream({ chunks, onDone, onCancel }) {
 }
 `;
 
+const initServer = `
+export default async function initServer() {
+  const { default: createApp } = await import('./app.js');
+  return { createApp, sentryEnabled: true };
+}
+`;
+
+const sentry = `
+export function flush() {
+  globalThis.sentry.flushes += 1;
+  return Promise.resolve(true);
+}
+`;
+
 const runner = `
+globalThis.sentry = { flushes: 0, waitUntil: 0 };
+globalThis[Symbol.for('@vercel/request-context')] = {
+  get: () => ({
+    waitUntil: () => {
+      globalThis.sentry.waitUntil += 1;
+    },
+  }),
+};
 const { default: server } = await import(process.argv[1]);
 server.listen(0, '127.0.0.1', () => console.log(server.address().port));
 `;
@@ -130,12 +168,24 @@ beforeAll(async () => {
   fs.mkdirSync(path.join(serverDirectory, 'api'));
   fs.writeFileSync(path.join(serverDirectory, 'package.json'), '{"type":"module"}');
   fs.writeFileSync(path.join(serverDirectory, 'src', 'app.js'), app);
+  fs.writeFileSync(path.join(serverDirectory, 'src', 'initServer.js'), initServer);
   fs.writeFileSync(path.join(serverDirectory, 'api', 'index.js'), apiHandler);
-  fs.symlinkSync(
-    path.join(serverDevDirectory, 'node_modules'),
-    path.join(serverDirectory, 'node_modules'),
-    'junction'
+  ['hono', '@hono/node-server', 'ws'].forEach((name) => {
+    const linkPath = path.join(serverDirectory, 'node_modules', name);
+    fs.mkdirSync(path.dirname(linkPath), { recursive: true });
+    fs.symlinkSync(
+      fs.realpathSync(path.join(serverDevDirectory, 'node_modules', name)),
+      linkPath,
+      'junction'
+    );
+  });
+  const sentryDirectory = path.join(serverDirectory, 'node_modules', '@sentry', 'node');
+  fs.mkdirSync(sentryDirectory, { recursive: true });
+  fs.writeFileSync(
+    path.join(sentryDirectory, 'package.json'),
+    '{"name":"@sentry/node","type":"module","main":"index.js"}'
   );
+  fs.writeFileSync(path.join(sentryDirectory, 'index.js'), sentry);
 
   child = spawn(
     process.execPath,
@@ -275,4 +325,28 @@ test('the function entry gives an upgrade request the forwarded protocol and hos
   socket.close();
 
   expect(origin).toBe('https://app.example.com');
+});
+
+async function readSentry() {
+  return (await fetch(`${baseUrl}/sentry`)).json();
+}
+
+test('the function entry flushes Sentry through waitUntil after each request', async () => {
+  const before = await readSentry();
+  await (await fetch(`${baseUrl}/echo`, { method: 'POST', body: '{}' })).text();
+
+  // The /sentry read itself is flushed after its response, so it adds one more.
+  expect(await waitFor(async () => (await readSentry()).flushes >= before.flushes + 2)).toBe(true);
+  const after = await readSentry();
+  expect(after.waitUntil - before.waitUntil).toBe(after.flushes - before.flushes);
+});
+
+test('the function entry flushes Sentry when a response fails after its headers are sent', async () => {
+  const before = await readSentry();
+  await fetch(`${baseUrl}/broken-stream`)
+    .then((response) => response.text())
+    .catch(() => {});
+
+  expect(await waitFor(async () => (await readSentry()).flushes >= before.flushes + 2)).toBe(true);
+  expect(child.exitCode).toBe(null);
 });
