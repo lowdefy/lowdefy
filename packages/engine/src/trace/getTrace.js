@@ -14,19 +14,17 @@
   limitations under the License.
 */
 
-class UserError extends Error {
-  constructor(message, { blockId, cause, invalidBlocks, isReject = false, metaData, pageId } = {}) {
-    super(message, { cause });
-    this.name = 'UserError';
-    this.isLowdefyError = true;
-    this.blockId = blockId;
-    // The ids of the blocks a Validate action found invalid. Analytics reads them; catch
-    // actions do not (projectCaughtError leaves them out).
-    this.invalidBlocks = invalidBlocks;
-    this.isReject = isReject;
-    this.metaData = metaData;
-    this.pageId = pageId;
+import { type } from '@lowdefy/helpers';
+
+import createTraceRegistry from './createTraceRegistry.js';
+
+// The registry lives on lowdefy itself, not lowdefy._internal: a dev config reload replaces
+// _internal wholesale, and the dev recorder subscribes before the client initialises lowdefy.
+function getTrace(lowdefy) {
+  if (type.isNone(lowdefy._trace)) {
+    lowdefy._trace = createTraceRegistry();
   }
+  return lowdefy._trace;
 }
 
-export default UserError;
+export default getTrace;
