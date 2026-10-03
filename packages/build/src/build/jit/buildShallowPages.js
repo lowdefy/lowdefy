@@ -86,13 +86,23 @@ function buildShallowPages({ components, context }) {
       delete page[key];
     }
 
+    // Requests are serialized and stripped of their server-only keys before
+    // the page is serialized, as the full build does (writeRequests runs
+    // before writePages), so the page artifact sent to the client never
+    // carries them.
+    const requests = builtPage.requests.map((request) => {
+      const requestJson = serializer.serializeToString(request);
+      delete request.properties;
+      delete request.type;
+      delete request.connectionId;
+      delete request.auth;
+      return { requestId: request.requestId, requestJson };
+    });
+
     return {
       pageId: builtPage.pageId,
       pageJson: serializer.serializeToString(builtPage),
-      requests: (builtPage.requests ?? []).map((req) => ({
-        requestId: req.requestId,
-        requestJson: serializer.serializeToString(req),
-      })),
+      requests,
     };
   });
 
