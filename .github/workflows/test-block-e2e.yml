@@ -1,9 +1,16 @@
 name: Block E2E Tests
 
-# Runs only on request: start it from the Actions tab, or add the
-# `run-block-e2e` label to a pull request. Pull requests that change blocks,
-# block-utils or the engine should run it before merge.
+# Runs before every release as part of the complete path (test-complete.yml), and on
+# request: start it from the Actions tab, or add the `run-block-e2e` label to a pull
+# request. Pull requests that change blocks, block-utils or the engine should run it
+# before merge.
 on:
+  workflow_call:
+    inputs:
+      complete:
+        description: Called from the complete path, so run without the label.
+        type: boolean
+        default: false
   workflow_dispatch:
   pull_request:
     types: [labeled]
@@ -14,7 +21,7 @@ permissions:
 jobs:
   e2e:
     name: E2E ${{ matrix.package }}
-    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-block-e2e'
+    if: inputs.complete || github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-block-e2e'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -55,7 +62,7 @@ jobs:
 
   enrichment:
     name: E2E @lowdefy/blocks-table enrichment
-    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-block-e2e'
+    if: inputs.complete || github.event_name == 'workflow_dispatch' || github.event.label.name == 'run-block-e2e'
     runs-on: ubuntu-latest
     env:
       # Where mongodb-memory-server keeps the mongod binaries (cached below).
