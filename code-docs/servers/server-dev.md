@@ -506,6 +506,10 @@ state loads share one browser per child:
   the call uses Chrome meanwhile, or waits for the install when Chrome is missing too.
   An install that has not finished within 3 minutes is killed (with the download process it
   forks) and counts as failed; Playwright 1.59's unzip can stall for good on Node 26.
+  A shell that fails to launch is also treated as missing when its directory has no
+  `INSTALLATION_COMPLETE` marker (`isHeadlessShellIncomplete.js`, through Playwright's own
+  registry): a killed install can leave the executable without it, and the installer repairs
+  such a directory.
   `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD` turns the download off.
 - `createBrowserLifecycle` closes the browser 90 s after the last `getBrowser()` call once no
   context is open and no launch is in flight. `openPage` counts contexts through their `close`

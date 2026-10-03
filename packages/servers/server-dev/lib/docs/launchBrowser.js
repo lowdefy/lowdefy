@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import installHeadlessShell from './installHeadlessShell.js';
+import isHeadlessShellIncomplete from './isHeadlessShellIncomplete.js';
 
 // The manager tags every browser this child launches, so it can kill one
 // left behind when the child is killed outright (system Chrome runs in its
@@ -34,6 +35,17 @@ function isExecutableMissing(error) {
   return type.isString(error?.message) && error.message.includes("Executable doesn't exist");
 }
 
+// A shell whose install was cut short (a timed-out install this server
+// killed, a dev server killed mid-download) has its executable but no
+// completion marker, and fails to launch with some other error. It is as
+// missing as one never installed, and the installer repairs it.
+async function isShellMissing(error) {
+  if (isExecutableMissing(error)) {
+    return true;
+  }
+  return isHeadlessShellIncomplete();
+}
+
 // Playwright's chromium-headless-shell first: a fifth of system Chrome's
 // memory per page, a launch under a second, and it exits with its parent.
 // System Chrome is the fallback while the shell is missing. playwright-core
@@ -45,7 +57,7 @@ async function launchBrowser() {
   try {
     return await chromium.launch({ args });
   } catch (shellError) {
-    const install = isExecutableMissing(shellError) ? installHeadlessShell() : null;
+    const install = (await isShellMissing(shellError)) ? installHeadlessShell() : null;
     try {
       return await chromium.launch({ channel: 'chrome', args });
     } catch {

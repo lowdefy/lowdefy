@@ -18,8 +18,10 @@ import { jest } from '@jest/globals';
 
 const mockLaunch = jest.fn();
 const mockInstall = jest.fn();
+const mockIsIncomplete = jest.fn(async () => false);
 jest.unstable_mockModule('playwright-core', () => ({ chromium: { launch: mockLaunch } }));
 jest.unstable_mockModule('./installHeadlessShell.js', () => ({ default: mockInstall }));
+jest.unstable_mockModule('./isHeadlessShellIncomplete.js', () => ({ default: mockIsIncomplete }));
 
 const { default: launchBrowser } = await import('./launchBrowser.js');
 
@@ -34,6 +36,7 @@ function isChromeLaunch(options) {
 
 afterEach(() => {
   delete process.env.LOWDEFY_BROWSER_TAG;
+  mockIsIncomplete.mockResolvedValue(false);
 });
 
 test('launchBrowser launches the headless shell and never system Chrome when the shell is installed', async () => {
@@ -126,4 +129,44 @@ test('launchBrowser falls back to system Chrome without installing when the shel
 
   expect(await launchBrowser()).toBe(chrome);
   expect(mockInstall).not.toHaveBeenCalled();
+});
+
+// A killed install can leave the executable in place without Playwright's
+// INSTALLATION_COMPLETE marker; the shell then fails to launch with an error
+// that does not say the executable is missing.
+const partialShellLaunchError = new Error(
+  'browserType.launch: Browser closed.\n==================== Browser output: ====================\n<launching> /cache/chromium_headless_shell-1217/chrome-headless-shell'
+);
+
+test('launchBrowser installs the shell when the executable exists but its install never completed', async () => {
+  const shell = { name: 'shell' };
+  let installed = false;
+  mockLaunch.mockImplementation(async (options) => {
+    if (isChromeLaunch(options)) throw chromeMissing;
+    if (!installed) throw partialShellLaunchError;
+    return shell;
+  });
+  mockIsIncomplete.mockResolvedValue(true);
+  mockInstall.mockImplementation(async () => {
+    installed = true;
+    return { installed: true };
+  });
+
+  expect(await launchBrowser()).toBe(shell);
+  expect(mockInstall).toHaveBeenCalledTimes(1);
+});
+
+test('launchBrowser says why when an incomplete shell cannot be reinstalled and system Chrome is missing', async () => {
+  mockLaunch.mockImplementation(async (options) => {
+    throw isChromeLaunch(options) ? chromeMissing : partialShellLaunchError;
+  });
+  mockIsIncomplete.mockResolvedValue(true);
+  mockInstall.mockResolvedValue({
+    installed: false,
+    reason: 'the install did not finish within 3 minutes',
+  });
+
+  await expect(launchBrowser()).rejects.toThrow(
+    'The chromium-headless-shell install failed (the install did not finish within 3 minutes), and system Chrome is not installed.'
+  );
 });
