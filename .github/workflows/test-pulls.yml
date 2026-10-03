@@ -38,6 +38,9 @@ jobs:
       - name: Process identity tests (Windows)
         if: matrix.os == 'windows-latest'
         run: pnpm --filter=@lowdefy/node-utils test StartTime watchOwner ServerRegistry registerServer DevInstance --no-coverage
+      - name: Time zone change test (Windows)
+        if: matrix.os == 'windows-latest'
+        run: pnpm --filter=@lowdefy/node-utils test windowsTimeZoneChange --no-coverage
       - name: Prune tests (Windows)
         if: matrix.os == 'windows-latest'
         run: pnpm --filter=lowdefy test pruneServers --no-coverage

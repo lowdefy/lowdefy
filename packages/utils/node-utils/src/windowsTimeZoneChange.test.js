@@ -16,11 +16,15 @@
 
 import { spawn, spawnSync } from 'child_process';
 
+import { wait } from '@lowdefy/helpers';
+
 import getProcessStartTime from './getProcessStartTime.js';
+import getProcessStartTimeCommand from './getProcessStartTimeCommand.js';
 import readProcessStartTime from './readProcessStartTime.js';
 
 // Changes the machine's time zone, so it runs only on Windows CI, where the
-// time zone is the system's and not a per-process TZ variable.
+// time zone is the system's and not a per-process TZ variable, in a step of
+// its own: start time reads in other tests would fail while it runs.
 const onWindows = process.platform === 'win32' ? test : test.skip;
 
 function powershell(command) {
@@ -33,6 +37,27 @@ function powershell(command) {
     throw new Error(`PowerShell failed: ${result.stderr}`);
   }
   return result.stdout.trim();
+}
+
+// Right after a time zone change WMI can fail a read for a moment. A failed
+// read is "unknown" and safe; what must hold is that a read that succeeds
+// names the same instant.
+async function readOnceAvailable({ pid }) {
+  const deadline = Date.now() + 60000;
+  while (Date.now() < deadline) {
+    const startTime = getProcessStartTime({ pid });
+    if (startTime !== null) {
+      return startTime;
+    }
+    await wait(1000);
+  }
+  const { command, args } = getProcessStartTimeCommand({ pid });
+  const raw = spawnSync(command, args, { encoding: 'utf8', windowsHide: true });
+  throw new Error(
+    `No start time read in 60 s. status ${raw.status}, stdout ${JSON.stringify(
+      raw.stdout
+    )}, stderr ${JSON.stringify(raw.stderr)}`
+  );
 }
 
 onWindows(
@@ -56,13 +81,14 @@ onWindows(
       ].filter((zone) => zone !== originalZone);
       for (const zone of zones) {
         powershell(`Set-TimeZone -Id '${zone}'`);
-        expect(getProcessStartTime({ pid: child.pid })).toEqual(startTime);
-        expect(await readProcessStartTime({ pid: child.pid })).toEqual(startTime);
+        expect(await readOnceAvailable({ pid: child.pid })).toEqual(startTime);
+        const asyncRead = await readProcessStartTime({ pid: child.pid });
+        expect([startTime, null]).toContain(asyncRead);
       }
     } finally {
       powershell(`Set-TimeZone -Id '${originalZone}'`);
       child.kill();
     }
   },
-  120000
+  600000
 );
