@@ -19,6 +19,7 @@ import { projectCaughtError, type } from '@lowdefy/helpers';
 import getActionMethods from './actions/getActionMethods.js';
 import { isDecodedServerError } from './decodeServerError.js';
 import { isStopChain } from './stopChain.js';
+import getTrace from './trace/getTrace.js';
 import trackActionMethods from './tracking/trackActionMethods.js';
 
 const CONTROL_KEYS = [':if', ':switch', ':return'];
@@ -465,6 +466,7 @@ class Actions {
           }),
         }),
         params: parsedAction.params,
+        trace: getTrace(this.context._internal.lowdefy).actionView,
       });
       if (progress) {
         progress();

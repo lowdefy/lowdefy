@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import enrichEvent from './enrichEvent.js';
 import postHogState from './postHogState.js';
 
 // posthog-js is imported here, and only here, so an app that runs with
@@ -30,7 +31,8 @@ async function loadPostHog({ apiKey, config, superProperties = {} }) {
     console.warn('PostHogInit could not load posthog-js. PostHog actions will do nothing.', error);
     return;
   }
-  posthog.init(apiKey, config);
+  // YAML options cannot carry a function, so the plugin owns before_send.
+  posthog.init(apiKey, { ...config, before_send: enrichEvent });
   if (Object.keys(superProperties).length > 0) {
     posthog.register(superProperties);
   }

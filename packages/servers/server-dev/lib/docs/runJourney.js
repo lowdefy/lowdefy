@@ -17,6 +17,7 @@
 import path from 'node:path';
 import { type } from '@lowdefy/helpers';
 import { getState } from '@lowdefy/e2e-utils/runtime';
+import { findPlaceholderStep, validateJourneySteps } from '@lowdefy/node-utils';
 
 import collectExercised from './collectExercised.js';
 import describeDataSetResult from './dataSets/describeDataSetResult.js';
@@ -31,7 +32,6 @@ import runJourneySteps from './runJourneySteps.js';
 import selectFinalState from './selectFinalState.js';
 import unsettledPageNote from './unsettledPageNote.js';
 import validateJourneyMail from './validateJourneyMail.js';
-import validateJourneySteps from './validateJourneySteps.js';
 import validateJourneyTimeout from './validateJourneyTimeout.js';
 import validateStateSelection from './validateStateSelection.js';
 
@@ -103,6 +103,10 @@ async function runJourney({
   const { error: stepsError } = validateJourneySteps({ steps });
   if (!type.isUndefined(stepsError)) {
     return { error: stepsError };
+  }
+  const { error: placeholderError } = findPlaceholderStep({ steps });
+  if (!type.isUndefined(placeholderError)) {
+    return { error: placeholderError };
   }
   const stateSelectionError = validateStateSelection({ state: stateSelection });
   if (!type.isUndefined(stateSelectionError)) {

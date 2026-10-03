@@ -280,3 +280,67 @@ test.each([
 test('validateJourneySteps rejects an open step with no target', () => {
   expect(validateJourneySteps({ steps: [{ open: 5 }] }).error).toMatch(/Step "open" requires/);
 });
+
+test('validateJourneySteps accepts from recorded and from shape on fill, select and expect.state', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { fill: { blockId: 'title', value: 'Ada', from: 'recorded' } },
+        { fill: { blockId: 'title', value: null, from: 'shape' } },
+        { select: { blockId: 'owner', value: 'Grace', from: 'recorded' } },
+        { select: { blockId: 'owner', value: null, from: 'shape' } },
+        { expect: { state: { path: 'title', equals: 'Ada', from: 'recorded' } } },
+        { expect: { state: { path: 'title', equals: null, from: 'shape' } } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects from on click, press and wait', () => {
+  expect(
+    validateJourneySteps({ steps: [{ click: { blockId: 'a', from: 'recorded' } }] }).error
+  ).toBe(
+    'Step 0: Step "click" has unknown key "from". Keys are: blockId, text, containing, row, column, nth.'
+  );
+  expect(
+    validateJourneySteps({ steps: [{ press: { key: 'Enter', from: 'recorded' } }] }).error
+  ).toBe(
+    'Step 0: Step "press" requires a key string such as "Enter" or "Mod+k". Received {"key":"Enter","from":"recorded"}.'
+  );
+  expect(
+    validateJourneySteps({ steps: [{ wait: { request: 'r', from: 'recorded' } }] }).error
+  ).toBe(
+    'Step 0: Step "wait" requires exactly one of "ms", "request", "state". Received {"request":"r","from":"recorded"}.'
+  );
+});
+
+test('validateJourneySteps rejects a from value other than recorded or shape', () => {
+  expect(
+    validateJourneySteps({ steps: [{ fill: { blockId: 'a', value: 'x', from: 'guess' } }] }).error
+  ).toBe('Step 0: Step "fill" requires "from" to be one of "recorded", "shape". Received "guess".');
+  expect(
+    validateJourneySteps({
+      steps: [{ expect: { state: { path: 'a', equals: 1, from: 'guess' } } }],
+    }).error
+  ).toBe(
+    'Step 0: Step "expect.state" requires "from" to be one of "recorded", "shape". Received "guess".'
+  );
+});
+
+test('validateJourneySteps rejects a null fill or select value without from shape', () => {
+  expect(validateJourneySteps({ steps: [{ fill: { blockId: 'a', value: null } }] }).error).toBe(
+    'Step 0: Step "fill" requires a non-null "value"; a placeholder value: null is marked from: shape. Received {"blockId":"a","value":null}.'
+  );
+  expect(
+    validateJourneySteps({ steps: [{ select: { blockId: 'a', value: null, from: 'recorded' } }] })
+      .error
+  ).toContain('Step 0: Step "select" requires a non-null "value"');
+});
+
+test('validateJourneySteps keeps the equals requirement on expect.state with from shape', () => {
+  expect(
+    validateJourneySteps({ steps: [{ expect: { state: { path: 'a', from: 'shape' } } }] }).error
+  ).toBe(
+    'Step 0: Step "expect.state" requires { path, equals }. Received {"path":"a","from":"shape"}.'
+  );
+});

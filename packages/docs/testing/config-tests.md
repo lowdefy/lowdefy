@@ -96,6 +96,15 @@ Blocks are addressed by their `blockId`. A step that does not complete within th
 | `expect: { url: { contains } }`           | The browser URL contains the string.                                                                                                                        |
 | `expect: { title: { equals } }`           | The document title (the browser tab's text) is exactly the string; `{ contains }` checks part of it.                                                        |
 
+### Recorded values: `from`
+
+`fill`, `select` and `expect.state` take an optional `from`, written by [`lowdefy journeys compile`](#candidates-from-recorded-traces) on the values it took from a recording:
+
+- `from: recorded` marks a value observed in a trace. The step runs as usual; the marker tells you the value is whatever that recording happened to use, so review it.
+- `from: shape` marks a placeholder, `value: null`, for a value the trace could not hold: a value typed in production, or a password the dev recorder did not keep. The runner refuses a journey that holds one before it opens a browser, naming the step. Fill the value from your test data or the journey's user, then remove `from`.
+
+A `fill` or `select` with `value: null` and no `from: shape` is a grammar error.
+
 The full grammar, including the failure shape the route returns, is documented with the [journey tool](/ai-agent-docs). The CLI and the MCP tool share one implementation, so a journey an agent verifies interactively can be committed as-is.
 
 ### Targets
@@ -252,7 +261,57 @@ A failing journey stops at its first failing step and prints the step's index, t
 | `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                                                                   |
 | `1`       | At least one journey failed, a journey file was invalid, an explicit `--filter` matched no journey, or a `--journeys-directory` held no journeys. |
 
-A journey file that is not valid YAML, or does not match the journey format (a missing `name`, a step with two keys, an unknown step key) is reported as a failed journey with the validation message and the file path. It never aborts the run, so one broken file cannot hide the results of the others.
+A journey file that is not valid YAML, or does not match the journey format (a missing `name`, a step with two keys, an unknown step key, a step the grammar refuses, named by its index) is reported as a failed journey with the validation message and the file path. It never aborts the run, so one broken file cannot hide the results of the others.
+
+## Candidates from recorded traces
+
+Journeys can be compiled from real use. A recorded trace is a JSONL file of interactions (what was clicked, typed or pressed, on which block) joined to what the app did in response. Recorded traces live under `.lowdefy/traces/<source>/` in your config directory, one directory per source: `dev` for your own clicks in the development server, `explorer` for automated walks, and `production` for analytics from your users. `.lowdefy/` is not committed.
+
+`lowdefy journeys compile` turns a pile of traces into candidate journeys:
+
+```
+pnpx lowdefy@5 journeys compile .lowdefy/traces/dev/2026-10-03/*.jsonl
+```
+
+It cuts each browser tab's recording into segments (a fresh page load starts one), groups segments that do the same thing step by step, and writes one candidate per group to `tests/journeys/_candidates/<source>/<pageId>-<hash>.yaml`, ranked by how often the flow happened and how often it failed. `lowdefy test` does not read `_candidates/`, so candidates never run until you move them.
+
+```yaml
+# Recorded candidate, compiled by `lowdefy journeys compile`.
+# ...
+# origin:
+#   source: dev
+#   sequence_hash: 1a2b3c4d
+#   sessions: 3
+#   failures: 1
+#   failure: tickets.save.onClick
+#   ...
+name: tickets recorded 1a2b3c4d
+pageId: tickets
+steps:
+  - fill: { blockId: title, value: Printer jam, from: recorded }
+  - select: { blockId: priority, value: High }
+  # failed here: RequestError in Request (pages.tickets.blocks.4.events.onClick.0)
+  - click: save
+```
+
+Every click, fill, pick and key press becomes a step, whether or not it ran an event. An event adds what to check: a `wait` for the last request it called and, for dev and explorer traces, `expect.state` for the state it wrote. A failing event ends the candidate at its step, so the candidate is a failing test until the bug is fixed. Date and object inputs, which no journey step drives, become a comment asking you to write that step by hand.
+
+Values typed in production are never recorded, so production candidates carry `from: shape` placeholders, and a button or row label from production is kept only when at least 5 different people (in at least 2 organisations, when the traces hold several) clicked it.
+
+To promote a candidate, move it into `tests/journeys/`, give it a name, fill every `from: shape` placeholder and review the `from: recorded` values. Compiling again updates only the origin comment of a candidate that already exists, so your edits survive.
+
+### Options
+
+- `[traceFiles...]`: The trace files to compile, wherever they are.
+- `--source <production|dev|explorer>`: Compile only records of this source. Required when no trace files are given; with files, the source comes from the records. Journey runs (`journey` traces) are coverage, not candidates, and are refused.
+- `--since <since>`: Only records at or after this time, as a duration back from now (`30m`, `2h`, `7d`) or an ISO date. Production traces default to the last 30 days.
+- `--from <YYYY-MM-DD>`, `--to <YYYY-MM-DD>`: Production only. An explicit window of whole UTC days instead of `--since`.
+- `--build <id|current>`: Only segments whose records all ran on this build. `current` is the build the running development server for the app serves, which changes with every config edit; with no server running, the newest build in the records is used and the command says so.
+- `--page <pageId>`: Only segments that visit this page.
+- `--out <directory>`: Write candidates here instead of `tests/journeys/_candidates`. The source is appended.
+- `--config-directory`, `--dev-directory`, `--log-level`, `--disable-telemetry`: As for [`lowdefy dev`](/cli#dev).
+
+The compiler reads block types from the development server's build (or a production build) to tell date and object inputs apart. Without a build it still compiles and warns once.
 
 ## Continuous integration
 

@@ -77,9 +77,9 @@ function notFoundResult(message) {
   return { content: [{ type: 'text', text: message }], isError: true };
 }
 
-function createDocsMcpServer({ origin, honoContext } = {}) {
+function createDocsMcpServer({ origin, honoContext, version } = {}) {
   const server = new McpServer(
-    { name: 'lowdefy-docs', version: '1.0.0' },
+    { name: 'lowdefy', version },
     { capabilities: { logging: {} }, instructions: INSTRUCTIONS }
   );
 

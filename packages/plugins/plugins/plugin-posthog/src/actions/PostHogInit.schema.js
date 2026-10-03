@@ -39,6 +39,11 @@ export default {
         type: 'boolean',
         description: 'Log everything PostHog does to the browser console.',
       },
+      captureEventFailures: {
+        type: 'boolean',
+        description:
+          'Capture a lowdefy_event_failed event, with config ids only, when a block or app event fails. At most 50 per app load. Defaults to true.',
+      },
       enabled: {
         type: 'boolean',
         description:

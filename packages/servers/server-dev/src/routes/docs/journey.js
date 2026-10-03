@@ -15,13 +15,13 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { validateJourneySteps } from '@lowdefy/node-utils';
 
 import getBuildId from '../../../lib/docs/getBuildId.js';
 import lowdefyConfig from '../../../lib/build/config.js';
 import { openMutantRun } from '../../../lib/server/mutants/mutantRuns.js';
 import parseUserParam from './parseUserParam.js';
 import runJourney from '../../../lib/docs/runJourney.js';
-import validateJourneySteps from '../../../lib/docs/validateJourneySteps.js';
 import validateJourneyTimeout from '../../../lib/docs/validateJourneyTimeout.js';
 import validateMutantParam from '../../../lib/server/mutants/validateMutantParam.js';
 import validateStateSelection from '../../../lib/docs/validateStateSelection.js';

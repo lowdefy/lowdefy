@@ -198,6 +198,20 @@ test('runJourney returns an error naming an unknown step key before opening a br
   expect(mockOpenPage).not.toHaveBeenCalled();
 });
 
+test('runJourney refuses a placeholder value (from: shape) before opening a browser', async () => {
+  const result = await runJourney({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'new' }, { fill: { blockId: 'title', value: null, from: 'shape' } }],
+  });
+  expect(result).toEqual({
+    error:
+      'Step 1: fill on "title" has a placeholder value (from: shape). Fill it from the data set or the journey\'s user, then remove from.',
+  });
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+  expect(mockOpenPage).not.toHaveBeenCalled();
+});
+
 test('runJourney returns an actionable error when no browser is available', async () => {
   mockGetBrowser.mockRejectedValue(new Error("Executable doesn't exist"));
   const result = await runJourney({ origin, pageId: 'form', steps: [] });
@@ -249,9 +263,9 @@ test('runJourney fills, clicks and asserts state, returning passed with the fina
     origin,
     pageId: 'form',
     steps: [
-      { fill: { blockId: 'name', value: 'Ada' } },
+      { fill: { blockId: 'name', value: 'Ada', from: 'recorded' } },
       { click: 'submit' },
-      { expect: { state: { path: 'saved', equals: true } } },
+      { expect: { state: { path: 'saved', equals: true, from: 'recorded' } } },
     ],
   });
 

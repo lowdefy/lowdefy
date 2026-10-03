@@ -87,6 +87,24 @@ test.describe('Sider Block', () => {
     await expect(sider).not.toHaveClass(/ant-layout-sider-collapsed/);
   });
 
+  test('collapses to the default 80px when collapsedWidth is null', async ({ page }) => {
+    const sider = getSider(page, 'sider_null_widths_sider');
+    await expect(sider).toHaveCSS('width', '232px');
+    await getBlock(page, 'sider_null_widths_toggle').locator('button').click();
+    await expect(sider).toHaveClass(/ant-layout-sider-collapsed/);
+    await expect(sider).toHaveCSS('width', '80px');
+    await expect(sider).toHaveCSS('flex-basis', '80px');
+  });
+
+  test('renders collapsed at 80px when collapsedWidth and width are null', async ({ page }) => {
+    const sider = getSider(page, 'sider_null_widths_collapsed_sider');
+    await expect(sider).toHaveClass(/ant-layout-sider-collapsed/);
+    await expect(sider).toHaveCSS('width', '80px');
+    await getBlock(page, 'sider_null_widths_collapsed_toggle').locator('button').click();
+    // antd's default expanded width.
+    await expect(sider).toHaveCSS('width', '200px');
+  });
+
   test('applies the body class and style', async ({ page }) => {
     const sider = getSider(page, 'sider_body_sider');
     const body = sider.locator('.ant-layout-sider-children.sider-custom-body');

@@ -77,7 +77,7 @@ function writeJourney(fileName, journey) {
 }
 
 test('runAppTests runs every journey against the dev server and reports each as data', async () => {
-  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ wait: 1 }] });
+  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ wait: { ms: 1 } }] });
   writeJourney('refunds.yaml', {
     name: 'refund button',
     pageId: 'refunds',
@@ -97,8 +97,8 @@ test('runAppTests runs every journey against the dev server and reports each as 
 });
 
 test('runAppTests runs only the journeys matching the filter', async () => {
-  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ wait: 1 }] });
-  writeJourney('refunds.yaml', { name: 'refund button', pageId: 'refunds', steps: [{ wait: 1 }] });
+  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ wait: { ms: 1 } }] });
+  writeJourney('refunds.yaml', { name: 'refund button', pageId: 'refunds', steps: [{ wait: { ms: 1 } }] });
 
   const { summary } = await runAppTests({ configDirectory, url, filter: 'ORDERS' });
 
@@ -106,7 +106,7 @@ test('runAppTests runs only the journeys matching the filter', async () => {
 });
 
 test('runAppTests says when no journey matches the filter', async () => {
-  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ wait: 1 }] });
+  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ wait: { ms: 1 } }] });
   expect((await runAppTests({ configDirectory, url, filter: 'nope' })).summary).toEqual(
     'No tests matched filter "nope".'
   );

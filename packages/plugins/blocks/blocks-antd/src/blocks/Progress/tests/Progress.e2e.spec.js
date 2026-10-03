@@ -257,4 +257,15 @@ test.describe('Progress Block', () => {
       'rgb(0, 0, 255)'
     );
   });
+
+  // ============================================
+  // NULL PROPERTIES
+  // ============================================
+
+  test('null properties fall back to antd defaults', async ({ page }) => {
+    const progress = getBlock(page, 'progress_null_props').locator('.ant-progress');
+    await expect(progress).toHaveClass(/ant-progress-line/);
+    await expect(progress).toHaveClass(/ant-progress-show-info/);
+    await expect(progress).toContainText('40%');
+  });
 });

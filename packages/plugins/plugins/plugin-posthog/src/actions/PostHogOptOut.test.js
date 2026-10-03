@@ -16,6 +16,7 @@
 
 import { jest } from '@jest/globals';
 
+import createFakeTrace from '../test/createFakeTrace.js';
 import resetPostHogState from '../test/resetPostHogState.js';
 
 const mockPostHog = {
@@ -39,7 +40,7 @@ afterEach(() => {
 });
 
 test('PostHogOptOut opts the person out of capturing', async () => {
-  await PostHogInit({ params: { apiKey: 'phc_key' } });
+  await PostHogInit({ trace: createFakeTrace(), params: { apiKey: 'phc_key' } });
   await expect(PostHogOptOut({ params: {} })).resolves.toBe(null);
   expect(mockPostHog.opt_out_capturing).toHaveBeenCalledTimes(1);
 });

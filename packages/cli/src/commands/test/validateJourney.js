@@ -15,6 +15,8 @@
 */
 
 import { validate } from '@lowdefy/ajv';
+import { type } from '@lowdefy/helpers';
+import { validateJourneySteps } from '@lowdefy/node-utils';
 
 import journeySchema from './journeySchema.js';
 
@@ -23,6 +25,12 @@ function validateJourney({ journey }) {
     validate({ schema: journeySchema, data: journey });
   } catch (error) {
     return { valid: false, message: error.message };
+  }
+  // The ajv shape check above names the file's broken key; the grammar names
+  // the broken step, before a dev server is started for it.
+  const { error } = validateJourneySteps({ steps: journey.steps });
+  if (!type.isUndefined(error)) {
+    return { valid: false, message: error };
   }
   return { valid: true };
 }
