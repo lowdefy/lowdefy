@@ -47,6 +47,27 @@ function walkUser(user) {
   return type.isNone(user) ? undefined : user;
 }
 
+// A 409 when the run's walk is already open or the dev server holds its
+// limit of open walks, else null.
+function refuseOpen({ run, walkName }) {
+  const open = listWalks();
+  if (open.some((walk) => walk.run === run && walk.journey === walkName)) {
+    return {
+      status: 409,
+      body: { error: `Walk "${walkName}" of run ${run} is already open.` },
+    };
+  }
+  if (open.length >= MAX_OPEN_WALKS) {
+    return {
+      status: 409,
+      body: {
+        error: `${MAX_OPEN_WALKS} walks are already open on this dev server. Close one first.`,
+      },
+    };
+  }
+  return null;
+}
+
 // POST /lowdefy-docs/explore/walks: opens an explorer walk, a journey's
 // actors on a fresh data session, recorded as source explorer under the
 // run's id with the walk's name as run.journey (record: false records
@@ -68,20 +89,9 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
   const { pageId, urlQuery, user, data, liveData, run, walk: walkName, record } = body;
   const roles = body.roles ?? [];
   const allowExternal = body.allowExternal ?? [];
-  const open = listWalks();
-  if (open.some((walk) => walk.run === run && walk.journey === walkName)) {
-    return {
-      status: 409,
-      body: { error: `Walk "${walkName}" of run ${run} is already open.` },
-    };
-  }
-  if (open.length >= MAX_OPEN_WALKS) {
-    return {
-      status: 409,
-      body: {
-        error: `${MAX_OPEN_WALKS} walks are already open on this dev server. Close one first.`,
-      },
-    };
+  const refusedEarly = refuseOpen({ run, walkName });
+  if (refusedEarly !== null) {
+    return refusedEarly;
   }
   const buildDirectory = path.join(process.cwd(), 'build');
   const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd();
@@ -112,6 +122,13 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
     slot = await acquireBrowserSlot();
   } catch (error) {
     return { status: 503, body: { error: error.message } };
+  }
+  // Checked again with nothing awaited before registering: another open may
+  // have registered while this one read the build or waited for a slot.
+  const refused = refuseOpen({ run, walkName });
+  if (refused !== null) {
+    slot.release();
+    return refused;
   }
 
   const walk = registerWalk({
