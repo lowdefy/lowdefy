@@ -3276,7 +3276,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "d9cdb0e59e4374fad3053fb4537d3d61e02a0d254c99fbb474861eab6654ebc0"
+      "hash": "21209b9b22dd322b562c882905a7d42a3f83b49158f6010c37d42d24f7953fb9"
     },
     "concepts/notifications": {
       "files": [
@@ -3751,7 +3751,7 @@
         "users/organizations.yaml",
         "version.yaml"
       ],
-      "hash": "147bf3fb2f89d217f6291085ab0784d3e89d730c812d0c160ae81066e89941aa"
+      "hash": "cb4398ed118b141c2f32fc36fdec0c3c77b9f210ff495d21b0b13979e70352ab"
     },
     "user-authentication/auth-steps": {
       "files": [
@@ -3809,7 +3809,7 @@
         "users/auth-configuration.yaml",
         "version.yaml"
       ],
-      "hash": "dd713266552cf5e56d9541e5fc3150dda534da420c0b0763694c3df02f51ec24"
+      "hash": "5a59b626f45778d3d8f853194a7620027e1f266ea3beef34872f06d585b22c60"
     },
     "provider-reference/auth-js-providers": {
       "files": [

@@ -501,6 +501,92 @@ test('CallApi step with connectionId throws', () => {
   );
 });
 
+function buildCallApiStep(properties) {
+  const context = testContext({ logger });
+  const components = {
+    api: [
+      {
+        id: 'sync',
+        type: 'Api',
+        routine: [{ id: 'call_other', type: 'CallApi', properties }],
+      },
+    ],
+  };
+  return () => buildApi({ components, context });
+}
+
+test('CallApi step with a literal organization and caller builds', () => {
+  expect(
+    buildCallApiStep({
+      endpointId: 'process',
+      organization: 'org-1',
+      caller: { id: 'github', name: 'GitHub' },
+    })
+  ).not.toThrow();
+});
+
+test('CallApi step with organization and caller from operators builds', () => {
+  expect(
+    buildCallApiStep({
+      endpointId: 'process',
+      organization: { _step: 'installation.organization_id' },
+      caller: { id: { _payload: 'id' }, name: 'GitHub' },
+    })
+  ).not.toThrow();
+  expect(
+    buildCallApiStep({
+      endpointId: 'process',
+      organization: { _payload: 'org' },
+      caller: { _payload: 'caller' },
+    })
+  ).not.toThrow();
+});
+
+test('CallApi step with a caller and no organization throws', () => {
+  expect(
+    buildCallApiStep({ endpointId: 'process', caller: { id: 'github', name: 'GitHub' } })
+  ).toThrow(
+    'Endpoint step "call_other" at endpoint "sync" properties.caller requires properties.organization.'
+  );
+});
+
+test('CallApi step with an organization that is not a string throws', () => {
+  expect(buildCallApiStep({ endpointId: 'process', organization: '' })).toThrow(
+    'Endpoint step "call_other" at endpoint "sync" properties.organization should be a non-empty organization id string.'
+  );
+  expect(buildCallApiStep({ endpointId: 'process', organization: 42 })).toThrow(
+    'properties.organization should be a non-empty organization id string.'
+  );
+  expect(buildCallApiStep({ endpointId: 'process', organization: { id: 'org-1' } })).toThrow(
+    'properties.organization should be a non-empty organization id string.'
+  );
+});
+
+test('CallApi step with a caller missing id or name, or with other keys, throws', () => {
+  const message =
+    'Endpoint step "call_other" at endpoint "sync" properties.caller should be an object with non-empty string "id" and "name"';
+  expect(
+    buildCallApiStep({ endpointId: 'process', organization: 'org-1', caller: { id: 'github' } })
+  ).toThrow(message);
+  expect(
+    buildCallApiStep({
+      endpointId: 'process',
+      organization: 'org-1',
+      caller: { id: 'github', name: '' },
+    })
+  ).toThrow(message);
+  expect(
+    buildCallApiStep({
+      endpointId: 'process',
+      organization: 'org-1',
+      caller: { id: 'github', name: 'GitHub', roles: ['admin'] },
+    })
+  ).toThrow(message);
+  expect(
+    buildCallApiStep({ endpointId: 'process', organization: 'org-1', caller: 'github' })
+  ).toThrow(message);
+});
+
 test('CallApi step is not counted in typeCounters.requests', () => {
   const context = testContext({ logger });
   const components = {

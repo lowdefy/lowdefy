@@ -214,6 +214,24 @@ routine:
 
 Every replacement carries the `organization_id` the group produced, so the bulk write passes the check, and each organization reads its own totals through the scoped `monthly_totals` connection.
 
+### Background work in one organization
+
+A scheduled run, an auth hook or a verified webhook has no caller, so it has no organization, and a walled request in it fails closed. To do one organization's work from such a run, call the endpoint that does it with a `CallApi` step that names the `organization`, and optionally a stand-in `caller`:
+
+```yaml
+- id: sweep
+  type: CallApi
+  properties:
+    endpointId: send_reminders
+    organization:
+      _item: organization_id
+    caller:
+      id: reminders
+      name: Reminders
+```
+
+The called endpoint runs bound to that organization: its walled requests are filtered and stamped with it, with the wall on, and `_user` is `{ id, name, organization_id, system: true }` (or null without `caller`), so routines that stamp writes with the caller run unchanged. This replaces `tenant: none` writes in caller-less runs. Only a trusted system run may bind; a signed-in caller can not name another organization. See [Running in One Organization](/lowdefy-api#running-in-one-organization).
+
 ### Why the wall lives on the connection
 
 Putting scope on the connection, and only exceptions at the point of use, means the default is safe: a developer who forgets to think about tenancy gets a scoped read and a stamped write, not a leak. The dangerous states — sharing across organizations, opting a request out, authoring a raw clause — are the ones that have to be typed out, reviewed in a diff, and (for `authored`) audited at runtime. This inverts the usual footgun where the safe path is the verbose one.

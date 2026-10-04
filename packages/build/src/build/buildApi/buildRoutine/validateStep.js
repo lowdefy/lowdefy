@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
+import validateCallBinding from './validateCallBinding.js';
 import validateId from '../../../utils/validateId.js';
 import validateSharedPipelineWrite from '../../validateSharedPipelineWrite.js';
 import validateTenantPipelineEntry from '../../validateTenantPipelineEntry.js';
@@ -70,6 +71,7 @@ function validateStep(
         { configKey }
       );
     }
+    validateCallBinding({ step, endpointId, configKey });
     return;
   }
 
