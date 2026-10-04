@@ -56,6 +56,49 @@ function measureSummary(locator) {
   });
 }
 
+// The room a summary value needs alone and beside the short label Σ, as SummaryRow measures it
+// (canvas text widths in the rendered fonts, rounded up a pixel), plus the cell's padding: the
+// widths depend on the fonts the machine has, so a test that needs a value to just fit alone
+// sizes the column from these rather than from a fixed width.
+function measureSummaryRoom(locator) {
+  return locator.evaluate((cell) => {
+    const summary = cell.querySelector('.lf-table-summary');
+    const value = summary.querySelector('.lf-table-summary-value');
+    const probe = document.createElement('span');
+    probe.className = 'lf-table-summary-label';
+    probe.textContent = 'Σ';
+    summary.prepend(probe);
+    const context = document.createElement('canvas').getContext('2d');
+    const textWidth = (element) => {
+      const style = getComputedStyle(element);
+      context.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+      return Math.ceil(context.measureText(element.textContent).width) + 1;
+    };
+    const cellStyle = getComputedStyle(cell);
+    const room = {
+      inset: parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight),
+      value: textWidth(value),
+      withShortLabel:
+        textWidth(value) + parseFloat(getComputedStyle(summary).columnGap) + textWidth(probe),
+    };
+    probe.remove();
+    return room;
+  });
+}
+
+async function dragBy(page, locator, dx) {
+  await locator.scrollIntoViewIfNeeded();
+  const box = await locator.boundingBox();
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  for (let i = 1; i <= 10; i++) {
+    await page.mouse.move(x + (dx * i) / 10, y);
+  }
+  await page.mouse.up();
+}
+
 test.describe('Table visual polish', () => {
   test.beforeEach(async ({ page }) => {
     await openTablePage(page, 'polish');
@@ -80,7 +123,19 @@ test.describe('Table visual polish', () => {
   });
 
   test('summary drops the label rather than cut a value that fits alone', async ({ page }) => {
-    const summary = await measureSummary(summaryCell(page, 'crm', 'amount'));
+    const cell = summaryCell(page, 'crm', 'amount');
+    const header = table(page, 'crm').locator('[data-lf-header][data-col-key="amount"]');
+    // Size the column halfway between the value alone and the value beside Σ.
+    const room = await measureSummaryRoom(cell);
+    const width = Math.round(room.inset + (room.value + room.withShortLabel) / 2);
+    const before = await header.boundingBox();
+    await dragBy(
+      page,
+      table(page, 'crm').locator('[data-lf-resize][data-col-key="amount"]'),
+      width - before.width
+    );
+    await expect.poll(async () => Math.round((await header.boundingBox()).width)).toBe(width);
+    const summary = await measureSummary(cell);
     expect(summary.label).toBe(null);
     expect(isInsideBox(summary.value, summary.summary)).toBe(true);
     expect(summary.valueTruncated).toBe(false);
