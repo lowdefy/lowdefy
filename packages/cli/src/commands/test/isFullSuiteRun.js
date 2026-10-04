@@ -14,15 +14,16 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import asList from './asList.js';
 
 // Only a run of the whole suite, once, records as the suite's journey run: a
-// replay of one candidate or a filtered run must never become what the suite
-// is read to drive.
-function isFullSuiteRun({ paths, filter, repetition }) {
-  const noPaths = type.isNone(paths) || paths.length === 0;
-  const noFilter = type.isNone(filter) || filter === '';
-  return noPaths && noFilter && repetition === 1;
+// replay of one candidate, a filtered or a tagged run must never become what
+// the suite is read to drive. `filter` is one string or a list.
+function isFullSuiteRun({ paths, filter, tags, repetition }) {
+  const noPaths = asList(paths).length === 0;
+  const noFilter = asList(filter).every((value) => value === '');
+  const noTags = asList(tags).length === 0;
+  return noPaths && noFilter && noTags && repetition === 1;
 }
 
 export default isFullSuiteRun;

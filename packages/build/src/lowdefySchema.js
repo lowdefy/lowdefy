@@ -1745,6 +1745,14 @@ export default {
             type: 'MCP "instructions" should be a string.',
           },
         },
+        // An api endpoint run after every tool call that reached its endpoint,
+        // with the call and its outcome as payload. It cannot change the reply.
+        afterToolCall: {
+          type: 'string',
+          errorMessage: {
+            type: 'MCP "afterToolCall" should be a string.',
+          },
+        },
         icons: {
           type: 'array',
           items: {
@@ -1888,7 +1896,7 @@ export default {
       errorMessage: {
         type: 'App "mcp" should be an object.',
         additionalProperties:
-          'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons", "instructions" and "endpoints".',
+          'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons", "instructions", "endpoints" and "afterToolCall".',
       },
     },
     block: {
@@ -2290,7 +2298,7 @@ export default {
             },
           ],
           description:
-            'Make this endpoint a third-party webhook receiver (SNS, Event Grid, Stripe, ...). It stays on the standard POST /api/endpoints/<endpointId> route but takes the request RAW: the routine receives { body, query, headers } as payload (no { payload } envelope) and its return value is sent back verbatim as the response body — webhook handshakes require exact response shapes. The transport is public, so the run starts untrusted; set webhook to { verify: <request plugin> } to earn trust (a system context) when the verifier passes the provider signature/secret check before the routine runs. A bare `true` runs untrusted throughout, so any nested protected CallApi fails closed.',
+            'Make this endpoint a third-party webhook receiver (SNS, Event Grid, Stripe, ...). It stays on the standard POST /api/endpoints/<endpointId> route but takes the request RAW: the routine receives { body, query, headers } as payload (no { payload } envelope) and its return value is sent back verbatim as the response body — webhook handshakes require exact response shapes. The transport is public, so the run starts untrusted; set webhook to { verify: <request plugin> } to earn trust (a system context) when the verifier passes the provider signature/secret check before the routine runs. The verifier receives { body, rawBody, query, headers }, where rawBody is the request body exactly as received, for checking a signature over the bytes the sender posted. A bare `true` runs untrusted throughout, so any nested protected CallApi fails closed.',
           errorMessage: {
             _: 'Api endpoint "webhook" should be a boolean or an object with a "verify" request plugin.',
           },

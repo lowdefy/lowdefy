@@ -16,7 +16,7 @@
 
 import { validate } from '@lowdefy/ajv';
 import { type } from '@lowdefy/helpers';
-import { validateJourneySteps } from '@lowdefy/node-utils';
+import { validateJourneySteps, validateJourneyTags } from '@lowdefy/node-utils';
 
 import journeySchema from './journeySchema.js';
 
@@ -37,6 +37,12 @@ function validateJourney({ journey }) {
   const mutationError = checkMutationCounts({ evidence: journey.evidence });
   if (!type.isUndefined(mutationError)) {
     return { valid: false, message: mutationError };
+  }
+  if (!type.isUndefined(journey.tags)) {
+    const { error: tagsError } = validateJourneyTags({ tags: journey.tags });
+    if (!type.isUndefined(tagsError)) {
+      return { valid: false, message: `Journey "tags": ${tagsError}` };
+    }
   }
   // The ajv shape check above names the file's broken key; the grammar names
   // the broken step, before a dev server is started for it.

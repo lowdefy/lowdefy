@@ -133,6 +133,7 @@ test('the model policy asks the Gateway model and takes the option it names, wit
     optionId: 'o1',
     asked: true,
     fallback: null,
+    modelId: 'google/gemini-2.5-flash-lite',
     relevance: 'near the change',
     confidence: 0.8,
     usage: { inputTokens: 3200, outputTokens: 30 },
@@ -227,24 +228,99 @@ test('a success resets the failed-call count', async () => {
   expect(mockDecide).toHaveBeenCalledTimes(4);
 });
 
-test('jev uses the evaluation model, and a refused model stops with the waitlist message', async () => {
-  const policy = await createModelPolicy({
+function jevPolicy(onSwitch = () => {}) {
+  return createModelPolicy({
     backend: 'evaluation',
     modelId: 'typesafe-ai/jev',
+    fallbackModelId: 'google/gemini-2.5-flash-lite',
     apiKey: 'k',
     seeded: createSeededPolicy(),
+    onSwitch,
   });
+}
+
+const refused = Object.assign(new Error('Model not found'), {
+  name: 'GatewayModelNotFoundError',
+  statusCode: 404,
+});
+
+test('jev uses the evaluation model, with the structured-output model standing by', async () => {
+  const policy = await jevPolicy();
   expect(mockEvaluationModel).toHaveBeenCalledWith('typesafe-ai/jev');
+  expect(mockLanguageModel).toHaveBeenCalledWith('google/gemini-2.5-flash-lite');
   expect(policy.name).toEqual('jev');
-  mockDecide.mockRejectedValue(
-    Object.assign(new Error('Model not found'), {
-      name: 'GatewayModelNotFoundError',
-      statusCode: 404,
-    })
-  );
-  await expect(policy.choose(step({ candidates: three }))).rejects.toThrow(
-    'typesafe-ai/jev is not available on this key (it is waitlisted); rerun with --policy model'
-  );
+  expect(policy.fallbackModelId).toEqual('google/gemini-2.5-flash-lite');
+  mockDecide.mockResolvedValue(answers({ choice: 'o2' }));
+  const answer = await policy.choose(step({ candidates: three }));
+  expect(answer).toMatchObject({ optionId: 'o2', fallback: null, modelId: 'typesafe-ai/jev' });
+  expect(mockDecide.mock.calls[0][0]).toMatchObject({
+    backend: 'evaluation',
+    model: { kind: 'evaluation', modelId: 'typesafe-ai/jev' },
+  });
+  expect(policy.switched()).toBe(null);
+});
+
+test('jev refused at any call switches to the fallback for the rest of the run, and says so', async () => {
+  const onSwitch = jest.fn();
+  const policy = await jevPolicy(onSwitch);
+  mockDecide
+    .mockResolvedValueOnce(answers({ choice: 'o0' }))
+    .mockRejectedValueOnce(refused)
+    .mockResolvedValue(answers({ choice: 'o1' }));
+  await policy.choose(step({ candidates: three }));
+  const switchedAnswer = await policy.choose(step({ candidates: three }));
+  expect(switchedAnswer).toMatchObject({
+    optionId: 'o1',
+    fallback: 'model',
+    modelId: 'google/gemini-2.5-flash-lite',
+  });
+  const later = await policy.choose(step({ candidates: three }));
+  expect(later).toMatchObject({ fallback: null, modelId: 'google/gemini-2.5-flash-lite' });
+  expect(mockDecide.mock.calls.map(([call]) => call.backend)).toEqual([
+    'evaluation',
+    'evaluation',
+    'structured-output',
+    'structured-output',
+  ]);
+  expect(onSwitch).toHaveBeenCalledTimes(1);
+  expect(policy.switched()).toMatchObject({
+    from: 'typesafe-ai/jev',
+    to: 'google/gemini-2.5-flash-lite',
+    reason: 'refused',
+  });
+});
+
+test('a request jev rejects as over its limits switches to the fallback', async () => {
+  const policy = await jevPolicy();
+  mockDecide
+    .mockRejectedValueOnce(
+      Object.assign(new Error('Input exceeds the maximum context of 32768 tokens'), {
+        statusCode: 400,
+      })
+    )
+    .mockResolvedValue(answers({ choice: 'o0' }));
+  const answer = await policy.choose(step({ candidates: three }));
+  expect(answer).toMatchObject({ fallback: 'model', optionId: 'o0' });
+  expect(policy.switched().reason).toEqual('over-limit');
+});
+
+test('when both models fail, the step falls back to the seeded choice and three failures stop the run', async () => {
+  const policy = await jevPolicy();
+  const down = Object.assign(new Error('Gateway is down'), { name: 'GatewayInternalServerError' });
+  mockDecide.mockRejectedValueOnce(refused).mockRejectedValue(down);
+  expect((await policy.choose(step({ candidates: three }))).fallback).toEqual('failed');
+  expect((await policy.choose(step({ candidates: three }))).fallback).toEqual('failed');
+  await expect(policy.choose(step({ candidates: three }))).rejects.toThrow('Gateway is down');
+  expect(policy.switched().to).toEqual('google/gemini-2.5-flash-lite');
+});
+
+test('an ordinary failed jev call does not switch models', async () => {
+  const policy = await jevPolicy();
+  mockDecide
+    .mockRejectedValueOnce(Object.assign(new Error('Timeout'), { statusCode: 504 }))
+    .mockResolvedValue(answers({ choice: 'o0' }));
+  expect((await policy.choose(step({ candidates: three }))).fallback).toEqual('failed');
+  expect(policy.switched()).toBe(null);
 });
 
 test('no snapshot text reaches the model; config, menu, message, fixture and typed text do', async () => {

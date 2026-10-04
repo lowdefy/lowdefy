@@ -44,6 +44,17 @@ test('readRecordingCookie reads off and a run payload', () => {
   expect(readRecordingCookie(cookieFor(recordingCookiePayload({ recording })))).toEqual(recording);
 });
 
+test('readRecordingCookie keeps record: false on a run that records nothing, and isRecordingEnabled is false for it', () => {
+  const recording = {
+    source: 'explorer',
+    run: { id: '20261003T160000Z-77abcd', by: 'explorer', journey: 'walk-1-confirm', actor: 'main' },
+    record: false,
+  };
+  const cookie = cookieFor(recordingCookiePayload({ recording }));
+  expect(readRecordingCookie(cookie)).toEqual(recording);
+  expect(isRecordingEnabled(cookie)).toBe(false);
+});
+
 test('readRecordingCookie treats a verified payload with a bad source or run id as absent', () => {
   const badSource = recordingCookiePayload({
     recording: { source: 'production', run: { id: '20261003T160000Z-77abcd' } },

@@ -140,6 +140,28 @@ test('journeySchema accepts a variant key and rejects unknown keys inside it', (
   expect(wrongType.message).toContain('Journey "variant.kind" should be a string.');
 });
 
+test('validateJourney accepts tags and refuses a tag outside the grammar pattern', () => {
+  expect(validateJourney({ journey: { ...minimalJourney, tags: ['smoke', 'review'] } })).toEqual({
+    valid: true,
+  });
+  expect(validateJourney({ journey: { ...minimalJourney, tags: ['Smoke'] } })).toEqual({
+    valid: false,
+    message:
+      'Journey "tags": Tag "Smoke" should be lowercase letters, digits, "-" and "_", start with a letter or digit, and be at most 64 characters.',
+  });
+});
+
+test('journeySchema refuses tags that are not a list of distinct strings', () => {
+  const message = 'Journey "tags" should be a list of distinct tag strings, e.g. [smoke, review].';
+  expect(validateJourney({ journey: { ...minimalJourney, tags: 'smoke' } }).message).toContain(
+    message
+  );
+  expect(validateJourney({ journey: { ...minimalJourney, tags: [1] } }).message).toContain(message);
+  expect(
+    validateJourney({ journey: { ...minimalJourney, tags: ['smoke', 'smoke'] } }).message
+  ).toContain(message);
+});
+
 test('validateJourney reports a malformed step with the grammar error naming the step', () => {
   const journey = { ...minimalJourney, steps: [{ click: 'a' }, { fill: { blockId: 'title' } }] };
   expect(validateJourney({ journey })).toEqual({

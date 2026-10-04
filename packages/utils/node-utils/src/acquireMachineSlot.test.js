@@ -20,7 +20,13 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import acquireMachineSlot from './acquireMachineSlot.js';
+// A start time read is a PowerShell process on Windows, slow enough cold to outrun a test's
+// timeout. These tests are about the slots, so this process's start time is a fixed value.
+jest.unstable_mockModule('./getProcessStartTime.js', () => ({
+  default: jest.fn(() => 'Mon Jan  5 09:00:00 2026'),
+}));
+
+const { default: acquireMachineSlot } = await import('./acquireMachineSlot.js');
 
 const originalHome = process.env.LOWDEFY_HOME;
 let home;

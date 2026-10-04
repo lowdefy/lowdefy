@@ -182,8 +182,8 @@ test('record keeps a hash of the content each read returned, and missing for an 
   });
 
   const record = pageBuildRecords.get('hashed');
-  expect(record.files.get('/app/pages/home.yaml')).toBe(sha256('id: home'));
-  expect(record.files.get('/app/pages/gone.yaml')).toBe('missing');
+  expect(record.files.get(path.resolve('/app/pages/home.yaml'))).toBe(sha256('id: home'));
+  expect(record.files.get(path.resolve('/app/pages/gone.yaml'))).toBe('missing');
 });
 
 test('record keeps a never-matching hash for a file read twice with different content', async () => {
@@ -199,7 +199,8 @@ test('record keeps a never-matching hash for a file read twice with different co
     },
   });
 
-  const hash = pageBuildRecords.get('conflict').files.get('/app/shared.yaml');
+  const hash = pageBuildRecords.get('conflict').files.get(path.resolve('/app/shared.yaml'));
+  expect(typeof hash).toBe('string');
   expect(hash).not.toBe(sha256('first'));
   expect(hash).not.toBe(sha256('second'));
 });
@@ -227,7 +228,9 @@ test('record keeps a never-matching hash for a file whose read threw', async () 
     })
   ).rejects.toBe(error);
 
-  expect(pageBuildRecords.get('unreadable').files.get('/app/locked.yaml')).toBe('conflict');
+  expect(pageBuildRecords.get('unreadable').files.get(path.resolve('/app/locked.yaml'))).toBe(
+    'conflict'
+  );
 });
 
 test('record marks a build that loaded app code, and only that build', async () => {

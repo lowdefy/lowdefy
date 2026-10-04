@@ -54,7 +54,8 @@ function listWalks() {
   return [...walks.values()];
 }
 
-// An error entry stamped with an explorer recording goes to the buffer of the
+// An error entry stamped with an explorer recording (tagged with the store it
+// came to, client or server) goes to the buffer of the
 // open walk whose run and walk id it carries, and nowhere else. An entry for a
 // walk that has closed is dropped. Returns whether a walk took it.
 function recordError(entry) {

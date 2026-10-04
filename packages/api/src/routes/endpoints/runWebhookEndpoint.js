@@ -22,6 +22,7 @@ import buildEndpointResult from '../../response/buildEndpointResult.js';
 import createAuthorizeOutcome from '../../context/createAuthorizeOutcome.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import getEndpointConfig from './getEndpointConfig.js';
+import parseWebhookBody from './parseWebhookBody.js';
 import runRoutine from './runRoutine.js';
 import runWebhookVerify from './runWebhookVerify.js';
 
@@ -40,7 +41,11 @@ import runWebhookVerify from './runWebhookVerify.js';
 // BEFORE the routine body - so verification can never be forgotten, mis-ordered,
 // or placed after a privileged CallApi. A webhook with no declared verifier
 // runs untrusted throughout, so any nested protected CallApi fails closed.
-async function runWebhookEndpoint(context, { endpointId, body, query, headers }) {
+//
+// rawBody is the request body exactly as received. Only the verifier sees it
+// (a sender's signature is computed over those bytes, which re-serialising the
+// parsed body does not reproduce); the routine gets the parsed body.
+async function runWebhookEndpoint(context, { endpointId, rawBody, query, headers }) {
   const { logger } = context;
 
   context.endpointId = endpointId;
@@ -67,9 +72,16 @@ async function runWebhookEndpoint(context, { endpointId, body, query, headers })
   // runs before any routine step. On success the runner (not routine or
   // resolver code) sets context.system, matching the state createSystemContext
   // produces for cron. On failure the routine never runs.
+  const body = parseWebhookBody({ rawBody });
   const verify = type.isObject(endpointConfig.webhook) ? endpointConfig.webhook.verify : undefined;
   if (!type.isNone(verify)) {
-    const verified = await runWebhookVerify(context, { verify, body, query, headers });
+    const verified = await runWebhookVerify(context, {
+      verify,
+      body,
+      rawBody,
+      query,
+      headers,
+    });
     if (!verified) {
       logger.warn({ event: 'webhook_verify_failed', endpointId });
       return {
@@ -84,7 +96,7 @@ async function runWebhookEndpoint(context, { endpointId, body, query, headers })
 
   const routineContext = {
     steps: {},
-    payload: { body: body ?? null, query: query ?? {}, headers: headers ?? {} },
+    payload: { body, query: query ?? {}, headers: headers ?? {} },
     arrayIndices: [],
     error: null,
     items: {},

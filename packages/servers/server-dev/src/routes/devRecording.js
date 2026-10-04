@@ -84,7 +84,7 @@ async function devRecordingHandler(c) {
     return c.body(null, 204);
   }
   const cookie = readRecordingCookie(c.req.header('cookie'));
-  if (cookie === 'off') {
+  if (cookie === 'off' || cookie?.record === false) {
     return c.body(null, 204);
   }
   const body = await readBody(c);

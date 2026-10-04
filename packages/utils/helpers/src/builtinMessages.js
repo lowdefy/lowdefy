@@ -41,6 +41,7 @@ const builtinMessages = {
   'agent.runtime.messagesMustBeArray': 'messages must be an array',
   'agent.runtime.urlQueryMustBeObject': 'urlQuery must be an object',
   'agent.runtime.sharedStateMustBeObject': 'sharedState must be an object',
+  'agent.runtime.sharedStateReadOnlyMustBeBoolean': 'sharedStateReadOnly must be a boolean',
   'agent.runtime.agentNotFound': 'Agent "{agentId}" does not exist.',
   'agent.runtime.agentTypeNotFound': 'Agent type "{type}" can not be found.',
   'agent.runtime.toolExecutionFailed': 'Endpoint execution failed',

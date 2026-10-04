@@ -26,17 +26,19 @@ import { isSameOriginRequest, parseRequestBody } from '@lowdefy/api';
 // fixture directory.
 process.chdir(fileURLToPath(new URL('../..', import.meta.url)));
 
+const mockGetEndpointConfig = jest.fn().mockRejectedValue(new Error('not found'));
+const mockRunWebhookEndpoint = jest.fn();
 jest.unstable_mockModule('@lowdefy/api', () => ({
   acceptDetachedEndpoint: jest.fn(),
   callAgent: jest.fn(),
   callEndpoint: jest.fn(),
   callRequest: jest.fn(),
-  getEndpointConfig: jest.fn().mockRejectedValue(new Error('not found')),
+  getEndpointConfig: mockGetEndpointConfig,
   logClientError: jest.fn(),
   isSameOriginRequest,
   parseRequestBody,
   redactErrorResponse: jest.fn(),
-  runWebhookEndpoint: jest.fn(),
+  runWebhookEndpoint: mockRunWebhookEndpoint,
 }));
 jest.unstable_mockModule('../../lib/server/jitPageBuilder.js', () => ({ default: jest.fn() }));
 jest.unstable_mockModule('../../lib/docs/devMockRegistry.js', () => ({
@@ -119,5 +121,23 @@ test('POST /api/endpoints with a null body answers 400', async () => {
   expect(await res.json()).toEqual({
     name: 'UserError',
     message: 'Request body must be a JSON object.',
+  });
+});
+
+test('POST /api/endpoints to a webhook endpoint passes the body text exactly as sent as rawBody', async () => {
+  mockGetEndpointConfig.mockResolvedValueOnce({ webhook: { verify: {} } });
+  mockRunWebhookEndpoint.mockResolvedValue({ success: true, response: { ok: true } });
+  const body = '{ "zeta": 1,  "alpha": "caf\\u00e9", "beta": "café" }';
+  const res = await createApp().request('/api/endpoints/signed_hook?t=1', {
+    method: 'POST',
+    body,
+    headers: { 'x-hub-signature-256': 'sha256=abc' },
+  });
+  expect(res.status).toBe(200);
+  expect(mockRunWebhookEndpoint).toHaveBeenCalledWith(expect.anything(), {
+    endpointId: 'signed_hook',
+    rawBody: body,
+    query: { t: '1' },
+    headers: expect.objectContaining({ 'x-hub-signature-256': 'sha256=abc' }),
   });
 });

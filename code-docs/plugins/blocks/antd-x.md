@@ -77,7 +77,7 @@ Standalone conversation list sidebar, decoupled from AgentChat.
 
 When `properties.sharedState` is a non-empty object, two things happen:
 
-1. The transport sends the object on every turn and the server injects it into the agent's `<context>` block and builds an `update-page-state` tool describing its top-level keys.
+1. The transport sends the object on every turn and the server injects it into the agent's `<context>` block and builds an `update-page-state` tool describing its top-level keys. With `properties.sharedStateReadOnly: true` the transport also sends `sharedStateReadOnly: true` and the server builds no tool.
 2. The block registers an internal `__updatePageState` event wired to `SetState` with `params: { _event: true }` at mount:
 
    ```js

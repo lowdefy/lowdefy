@@ -269,6 +269,69 @@ routine:
 A `webhook: true` endpoint is publicly reachable by design — never declare it on an endpoint that does not authenticate its caller inside the routine.
 :::
 
+### Verifying the sender
+
+Set `webhook` to `{ verify: <request> }` to check the sender before the routine runs. The verifier is a request (`connectionId`, `type`, `properties`) run against the incoming request. When it returns `true` or `{ verified: true }`, the routine runs as a trusted system context, so it can `CallApi` protected endpoints. When it returns anything else or throws, the endpoint answers `401` and the routine never runs. A verifier whose own service can not be reached (it throws a `ServiceError`) fails the request with an error instead, so an outage is never reported as a forged webhook. A `webhook: true` endpoint with no verifier runs untrusted throughout.
+
+The verifier's `_payload` is `{ body, rawBody, query, headers }`:
+
+- `body`: the parsed body, as the routine sees it.
+- `rawBody`: the request body exactly as received, as a string. Senders such as GitHub (`X-Hub-Signature-256`), Stripe (`Stripe-Signature`) and Slack (`X-Slack-Signature`) sign the exact bytes they post, and serialising the parsed `body` again does not reproduce them (key order, whitespace and unicode escapes differ), so a signature check must use `rawBody`. A body that is not JSON arrives as `rawBody` too, so the verifier can refuse it.
+- `query` and `headers`: the URL query parameters and the request headers (lower-case names).
+
+`rawBody` is given only to the verifier. The routine's payload stays `{ body, query, headers }`.
+
+A signature check is usually a small request in a project plugin. This one checks GitHub's `X-Hub-Signature-256`, an HMAC-SHA256 of the body with the webhook secret:
+
+```js
+import crypto from 'crypto';
+
+function GitHubSignature({ request }) {
+  const expected = `sha256=${crypto
+    .createHmac('sha256', request.secret)
+    .update(request.rawBody, 'utf8')
+    .digest('hex')}`;
+  const received = request.signature ?? '';
+  if (expected.length !== received.length) {
+    return false;
+  }
+  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(received));
+}
+
+GitHubSignature.schema = {};
+GitHubSignature.meta = { checkRead: false, checkWrite: false };
+
+export default GitHubSignature;
+```
+
+```yaml
+id: github-webhook
+type: Api
+webhook:
+  verify:
+    connectionId: github_signature
+    type: GitHubSignature
+    properties:
+      rawBody:
+        _payload: rawBody
+      signature:
+        _payload: headers.x-hub-signature-256
+      secret:
+        _secret: GITHUB_WEBHOOK_SECRET
+routine:
+  - id: save_event
+    type: MongoDBInsertOne
+    connectionId: github_events
+    properties:
+      doc:
+        event:
+          _payload: headers.x-github-event
+        body:
+          _payload: body
+  - :return:
+      received: true
+```
+
 Endpoints without the flag are completely unaffected — the standard CallAPI envelope, auth config, and response shape apply exactly as before.
 
 ## Routines

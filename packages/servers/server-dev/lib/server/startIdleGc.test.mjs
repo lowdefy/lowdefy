@@ -111,11 +111,21 @@ test('startIdleGc does nothing when the instance record has no activity', () => 
 });
 
 test('startIdleGc does nothing when the child was started without gc exposed', () => {
+  // The gc default is globalThis.gc, which every later test file in a jest worker has once
+  // createIdleGc.test.mjs has set --expose-gc in it.
+  const exposedGc = globalThis.gc;
+  delete globalThis.gc;
   gc = undefined;
-  start();
+  try {
+    start();
 
-  expect(globalThis[STARTED]).toBeUndefined();
-  expect(jest.getTimerCount()).toBe(0);
+    expect(globalThis[STARTED]).toBeUndefined();
+    expect(jest.getTimerCount()).toBe(0);
+  } finally {
+    if (exposedGc !== undefined) {
+      globalThis.gc = exposedGc;
+    }
+  }
 });
 
 test('startIdleGc starts one interval however often the app entry is evaluated', () => {

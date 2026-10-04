@@ -231,16 +231,16 @@ properties:
 
 - The block mirrors the evaluated object into `sharedStateRef` and reads it inside the transport's `body()` at send time, so the agent sees the freshest value without re-creating the transport on every state change.
 - Empty objects are coerced to `null`. The server only injects the tool when `sharedState` is a non-empty object.
-- The transport POSTs `{ messages, urlQuery, sharedState }` to `/api/agent/{pageId}/{agentId}`.
+- The transport POSTs `{ messages, urlQuery, sharedState }` to `/api/agent/{pageId}/{agentId}`, plus `sharedStateReadOnly: true` when the block sets `sharedStateReadOnly` (read from `sharedStateReadOnlyRef` at send time, like `sharedState`).
 
 ### Server: Tool Injection
 
-`callAgent` extracts `sharedState` from the request body, defaults to `{}`, and puts it on `context.agentContext.sharedState`. `handleAgentChat` then:
+`callAgent` extracts `sharedState` from the request body, defaults to `{}`, and puts it on `context.agentContext.sharedState`, with `sharedStateReadOnly` (default `false`) beside it. `createToolLoopAgent` then:
 
 1. Calls `buildUpdatePageStateTool({ sharedState })`. If `sharedState` is not an object, it returns `null`. Otherwise, it returns an AI SDK `tool()` whose:
    - **description** enumerates each top-level key with its JS `typeof` (or `null` / `array`), so the model knows exactly which fields it can write.
    - **inputSchema** is `{ updates: { type: object, additionalProperties: true } }`.
-2. If a tool was returned, merges it into `tools` under the name `update-page-state`.
+2. If a tool was returned, merges it into `tools` under the name `update-page-state`. Steps 1 and 2 are skipped when `agentContext.sharedStateReadOnly` is true, so a read-only chat sends its context with no write tool.
 3. When `pageContext: true`, appends `sharedState: {JSON}` to the `<context>` block prepended to the system instructions.
 
 ### Client-Side Allowlist and Write Path

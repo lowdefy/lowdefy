@@ -117,7 +117,8 @@ function writeVariantFiles({ directories, filePath, journey, variants, kinds }) 
     ...sourceSegments({ directories, filePath })
   );
   const slug = slugJourneyName(journey.name);
-  const source = path.relative(directories.config, filePath);
+  // Forward slashes, so a file generated on Windows matches one generated anywhere else.
+  const source = path.relative(directories.config, filePath).split(path.sep).join('/');
   fs.mkdirSync(directory, { recursive: true });
   const counts = new Map();
   variants.forEach(({ kind }) => counts.set(kind, (counts.get(kind) ?? 0) + 1));

@@ -6,7 +6,7 @@ Journeys need no JavaScript, no Playwright setup and no separate test build. The
 
 ## Layout
 
-Journeys live in `tests/journeys/` inside your config directory, one `.yaml` file per journey or a top-level list of journeys per file:
+Journeys live in `tests/journeys/` inside your config directory, one `.yaml` file per journey or a top-level list of journeys per file. Group them in sub-folders as the suite grows; `lowdefy test` reads every sub-folder except those whose name starts with `_`, such as `_candidates/`, which hold journeys that are not part of the suite yet:
 
 ```
 my-app/
@@ -15,10 +15,14 @@ my-app/
 └── tests/
     └── journeys/
         ├── controls.yaml
-        └── sign-up.yaml
+        ├── sign-up.yaml
+        ├── review/
+        │   ├── approve.yaml
+        │   └── reject.yaml
+        └── _candidates/
 ```
 
-Files run in file-name order, and journeys run one at a time — each journey opens its own browser context, but they all share your app's database, so parallel journeys would interfere with one another.
+Files run in path order, and journeys run one at a time — each journey opens its own browser context, but they all share your app's database, so parallel journeys would interfere with one another.
 
 ## A journey
 
@@ -48,6 +52,7 @@ Files run in file-name order, and journeys run one at a time — each journey op
 | `user`     | No       | The user to act as, as an inline user object such as `{ sub: u1, roles: [admin] }`. Leave it out to run as the default roleless headless user. On a journey with `data`, the name of one of the data set's users, such as `member`. |
 | `data`     | No       | A [data set](/journey-data-sets) name. The journey runs against a fresh in-memory MongoDB database of its own, loaded with the data set, so it may write freely.                                                                    |
 | `urlQuery` | No       | An object appended to the page URL as a query string, for pages that read `_url_query`.                                                                                                                                             |
+| `tags`     | No       | A list of tags naming the sections of the suite the journey belongs to, such as `[smoke, review]`. `lowdefy test --tag smoke` runs the journeys tagged `smoke`. Tags are lowercase letters, digits, `-` and `_`.                    |
 | `steps`    | Yes      | At least one step. Each step is an object with exactly one key from the step grammar below.                                                                                                                                         |
 
 `user: none` injects no user at all, so the journey signs in through the app's own auth — see [Testing sign-up and sign-in](#testing-sign-up-and-sign-in). It is refused on a data set journey while auth is configured.
@@ -240,6 +245,18 @@ pnpx lowdefy@5 test
 
 With no options, `lowdefy test` prepares `.lowdefy/dev` exactly as `lowdefy dev` does, starts the development server on a free port without opening a browser, runs every journey, prints the results and stops the server.
 
+To verify the change in hand, run all journeys, a folder or glob of them, or a tagged section:
+
+```
+lowdefy test                                   # every journey in tests/journeys/, sub-folders included, "_" folders left out
+lowdefy test tests/journeys/review             # a folder, with its sub-folders
+lowdefy test 'tests/journeys/**/review-*.yaml' # a glob, quoted so the CLI expands it
+lowdefy test --tag smoke --tag review          # the journeys tagged smoke or review
+lowdefy test --filter approve                  # the journeys whose name contains "approve"
+```
+
+Paths, tags and filters combine: `lowdefy test tests/journeys/review --tag smoke` runs the smoke journeys in the review folder. Put the selections you use often in `package.json` scripts, such as `"test:smoke": "lowdefy test --tag smoke"`. The `lowdefy_run_tests` agent tool takes the same selections as `paths`, `tags` and `filter`.
+
 ```
 PASS  member creates a control  (5 steps, 1840ms)
 FAIL  guest sees the empty state
@@ -256,8 +273,9 @@ A journey with an [`evidence`](#evidence) key prints it after its `PASS` line: `
 
 ### Options
 
-- `[paths...]`: Journey files or directories to run instead of `tests/journeys/*.yaml`, anywhere under the config directory, including the candidates in `tests/journeys/_candidates/`. `lowdefy test tests/journeys/_candidates/dev` runs every dev candidate. `--filter` applies on top.
-- `--filter <name>`: Only run journeys whose `name` contains the string (case-insensitive). `lowdefy test --filter control` runs every journey with "control" in its name.
+- `[paths...]`: Journey files, directories or globs to run instead of the whole suite, anywhere under the config directory, including the candidates in `tests/journeys/_candidates/`. A directory is read with all its sub-folders: `lowdefy test tests/journeys/_candidates/dev` runs every dev candidate. A path containing `*`, `?` or `[` (including `**`) is a glob the CLI expands itself, so quote it: `lowdefy test 'tests/journeys/review/*.yaml'`. A glob that matches nothing is refused, like a path that does not exist. `--tag` and `--filter` apply on top.
+- `--tag <tag>`: Only run journeys whose `tags` include the tag. Repeat it to run the journeys carrying any of the tags: `lowdefy test --tag smoke --tag review`.
+- `--filter <name>`: Only run journeys whose `name` contains the string (case-insensitive). `lowdefy test --filter control` runs every journey with "control" in its name. Repeat it to run the journeys matching any of the strings.
 - `--repeat <n>`: Run each journey `n` times in a row (1 to 10) and classify it, as described in [Replaying candidates](#replaying-candidates).
 - `--lint`: Check the journeys for the [lint rules](#lint) and run nothing.
 - `--journeys-directory <path>`: Read journeys from this directory instead of `tests/journeys/`, for journeys that need a server set up for them, such as [auth journeys](#the-database). A relative path is resolved from the current directory. The run fails when the directory holds no journeys.
@@ -267,10 +285,10 @@ A journey with an [`evidence`](#evidence) key prints it after its `PASS` line: `
 
 ### Exit codes
 
-| Exit code | Meaning                                                                                                                                                                                                                                    |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                                                                                                                                                            |
-| `1`       | At least one journey failed, a journey file was invalid, an explicit `--filter` matched no journey, or a `--journeys-directory` held no journeys. With `--repeat`, a journey was `FLAKY` or `FAIL`; with `--lint`, a lint error was found. |
+| Exit code | Meaning                                                                                                                                                                                                                                                 |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                                                                                                                                                                         |
+| `1`       | At least one journey failed, a journey file was invalid, a path, glob, `--tag` or `--filter` matched no journey, or a `--journeys-directory` held no journeys. With `--repeat`, a journey was `FLAKY` or `FAIL`; with `--lint`, a lint error was found. |
 
 A journey file that is not valid YAML, or does not match the journey format (a missing `name`, a step with two keys, an unknown step key, a step the grammar refuses, named by its index) is reported as a failed journey with the validation message and the file path. It never aborts the run, so one broken file cannot hide the results of the others.
 
@@ -392,7 +410,7 @@ A survivor is a change no journey noticed, with the source line it changed: add 
 
 The report is written to `.lowdefy/test/mutation.json`: each mutant with the journeys that ran it, the suite's score, and each journey's `killed` out of `total` and its `unique` kills (mutants no other journey kills). Survivors are findings, so the exit code is `0`; it is `1` only when the run could not finish. Editing the config during a run is fine: harden re-lists the mutants, keeps the verdicts no changed file touched and runs the rest again. The third change in one run stops it. harden never writes or deletes a journey.
 
-- `[paths...]`, `--filter <name>`: The journeys to harden, as for `lowdefy test`.
+- `[paths...]`, `--filter <name>`: The journeys to harden, as for `lowdefy test` (one `--filter`, and no `--tag`).
 - `--page <pageId...>`: Only mutants on these pages, and the endpoint mutants a journey touching them called.
 - `--operators <list>`: Only these operators, comma separated: `drop-action`, `skip-validate`, `flip-visible`, `swap-if`, `drop-payload`, `retarget-link`, `drop-block`, `drop-step`.
 - `--max <n>`: Run at most `n` mutants, sampled the same way on every machine. The default is 200; `0` runs every mutant.
@@ -452,7 +470,7 @@ Each file starts with a header line naming the journey file it came from and hol
 - Recordings are kept for 7 days or 200 MB, whichever comes first. The development server deletes older ones at start and then every hour.
 - Set `LOWDEFY_DEV_RECORD=false` in your shell or in the app's `.env` to turn recording off. Old recordings are still pruned.
 
-`lowdefy test` records too, as `journey` traces under `.lowdefy/traces/journey/`, but only when it runs the whole suite once: no journey paths, no `--filter`, and only the first of `--repeat` runs. Those traces show what the suite actually drives. Screenshots, state inspection and other agent tools never record.
+`lowdefy test` records too, as `journey` traces under `.lowdefy/traces/journey/`, but only when it runs the whole suite once: no journey paths, no `--tag`, no `--filter`, and only the first of `--repeat` runs. Those traces show what the suite actually drives. Screenshots, state inspection and other agent tools never record.
 
 `lowdefy journeys recordings` lists what was recorded, newest first: when each session ran, against which build, the pages it visited, how many attempts ended in an error, and how many of its interactions the newest test run already drove.
 
@@ -524,7 +542,7 @@ No command removes a journey for lack of production use. A 30-day window cannot 
 | Frustration | rage- and dead-clicked blocks                                     | a journey clicks the block and asserts with an `expect` right after   |
 | Role        | (page, role set) pairs seen in production                         | a journey visiting the page runs as a user with exactly that role set |
 
-Coverage also reads the newest full test run that the development server recorded (a plain `lowdefy test`, or `lowdefy_run_tests` with no paths or filter). The interaction measure then adds a measured share beside the static one: the production interactions that run actually drove. Failure coverage becomes measured: a failure counts as covered when a journey that passed in that run produced the same failed event, because a journey that reaches a failure and still passes asserts it. The test runner keeps which journeys passed in `.lowdefy/test/run.json`. Without a recorded run, failure coverage is reported as reached: a journey does the interaction that failed, which does not show it checks the outcome.
+Coverage also reads the newest full test run that the development server recorded (a plain `lowdefy test`, or `lowdefy_run_tests` with no paths, tags or filter). The interaction measure then adds a measured share beside the static one: the production interactions that run actually drove. Failure coverage becomes measured: a failure counts as covered when a journey that passed in that run produced the same failed event, because a journey that reaches a failure and still passes asserts it. The test runner keeps which journeys passed in `.lowdefy/test/run.json`. Without a recorded run, failure coverage is reported as reached: a journey does the interaction that failed, which does not show it checks the outcome.
 
 It writes the measures, a production profile (the top flows per entry page, failure paths, frustrated blocks, role sets per page and entry pages) and each journey's interactions to `.lowdefy/test/coverage.json`, which is rewritten on every run and not committed. With a mutation report, the suite's mutation score is added as a sixth number.
 

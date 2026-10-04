@@ -28,7 +28,9 @@ function isPortFree(port) {
     const server = net.createServer();
     server.unref();
     server.once('error', (error) => {
-      if (error.code === 'EADDRINUSE') {
+      // Windows refuses a port inside a range it reserves (Hyper-V, WinNAT) with EACCES, and those
+      // ranges sit inside the dynamic range, so such a port is taken like one in use.
+      if (error.code === 'EADDRINUSE' || error.code === 'EACCES') {
         resolve(false);
         return;
       }
