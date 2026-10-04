@@ -625,3 +625,23 @@ test('agentSetup writes the journeys-from-dev skill, refreshes it unedited and s
   expect(read(skillPath)).toEqual(written);
   expect(context.logger.info).toHaveBeenCalledWith(`'${skillPath}' is up to date.`);
 });
+
+test('agentSetup writes the journeys-harden skill, skips it edited and keeps it current unedited', async () => {
+  const skillPath = path.join('.claude', 'skills', 'journeys-harden', 'SKILL.md');
+  await agentSetup({ context });
+  const written = read(skillPath);
+  expect(written).toContain('name: journeys-harden');
+  expect(written).toMatch(/lowdefy-skill-hash: [a-f0-9]{64}/);
+  expect(read('AGENTS.md')).toContain('`journeys-harden`');
+
+  const edited = `${written}\nA note the developer added.\n`;
+  fs.writeFileSync(path.join(configDirectory, skillPath), edited);
+  await agentSetup({ context });
+  expect(read(skillPath)).toEqual(edited);
+
+  fs.writeFileSync(path.join(configDirectory, skillPath), written);
+  context.logger.info.mockClear();
+  await agentSetup({ context });
+  expect(read(skillPath)).toEqual(written);
+  expect(context.logger.info).toHaveBeenCalledWith(`'${skillPath}' is up to date.`);
+});

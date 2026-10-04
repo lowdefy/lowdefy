@@ -439,6 +439,10 @@ Each file starts with a header line holding a hash of what was generated. A reru
 - `--no-run`: Write the variants without replaying them.
 - `--url`, `--port`, `--config-directory`, `--dev-directory`, `--log-level`, `--disable-telemetry`: As for `lowdefy test`.
 
+### The `journeys-harden` skill
+
+`lowdefy agent-setup` installs a `journeys-harden` skill that runs this section with you. It replays the journeys and candidates three times, lints them, sizes a `journeys harden` run with `--list` and asks before it starts, then takes each surviving mutant to you one at a time with the assertion that would catch it, confirming each with `--mutant <id>` and `lowdefy test --repeat 3`. It writes variants for the journeys you pick, refreshes `journeys evidence`, and reports snapshot ages, journeys with no production backing (with their mutation kills), duplicate journeys and pages no journey reaches. It never deletes a journey or suggests deleting one, writes no step except an assertion you approved, and commits nothing.
+
 ## Dev recordings
 
 `lowdefy dev` records how you use your app in the browser, so an agent can turn what you just tried into journeys. Recording is on by default and stays on your machine:

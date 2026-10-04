@@ -16,6 +16,7 @@
 
 import journeysFromDev from './journeysFromDev.js';
 import journeysFromProduction from './journeysFromProduction.js';
+import journeysHarden from './journeysHarden.js';
 import skillMd from '../skillMd.js';
 
 // The skills agent-setup installs. A skill is added by adding an entry here,
@@ -38,6 +39,12 @@ const skills = [
     render: journeysFromProduction,
     agentsMdLine:
       '`journeys-from-production`: turning what real users do in production into proven journeys, uncovered failures and flows first.',
+  },
+  {
+    name: 'journeys-harden',
+    render: journeysHarden,
+    agentsMdLine:
+      '`journeys-harden`: proving journeys catch a broken feature: replay, lint, config mutants and edge-case variants, never deleting a journey.',
   },
 ];
 
