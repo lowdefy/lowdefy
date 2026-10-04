@@ -461,3 +461,36 @@ test('compileTrace gives each segment its entry page, pages, failure path and fr
   });
   expect(segments[1].frustrations).toEqual([]);
 });
+
+test('compileTrace prepareCandidate can drop a candidate, drop steps and add to the origin', () => {
+  const seen = [];
+  const { candidates } = compileTrace({
+    records: traceRecords,
+    blockMetas,
+    source: 'dev',
+    prepareCandidate: ({ journey, origin, comments, sessions }) => {
+      seen.push(sessions);
+      if (journey.steps.some((step) => step.click === 'submit') && origin.failures > 0) return null;
+      return {
+        journey: { ...journey, steps: journey.steps.filter((step) => !step.expect?.state) },
+        comments,
+        origin: {
+          ...origin,
+          explorer: { run: '20261004T120000Z-ab12cd', pr: null, walks: ['walk-1'] },
+        },
+      };
+    },
+  });
+  expect(seen.every((sessions) => Array.isArray(sessions) && sessions.length > 0)).toBe(true);
+  expect(candidates.map((candidate) => candidate.fileName)).toEqual(['orders-5e5c5766.yaml']);
+  const [candidate] = candidates;
+  expect(candidate.journey.steps.some((step) => step.expect?.state)).toBe(false);
+  expect(parseCandidateOrigin({ contents: candidate.contents }).explorer).toEqual({
+    run: '20261004T120000Z-ab12cd',
+    pr: null,
+    walks: ['walk-1'],
+  });
+  expect(
+    validateJourneySteps({ steps: YAML.parse(candidate.contents).steps }).error
+  ).toBeUndefined();
+});

@@ -17,19 +17,24 @@
 import { type } from '@lowdefy/helpers';
 
 const POLICIES = ['model', 'jev', 'seeded'];
-// The default model and spend cap (a cheap structured-output Gateway model,
-// $1.00 a run). --model / LOWDEFY_EXPLORER_MODEL and --max-cost change them.
+// The structured-output model (--policy model, and Jev's fallback) and the
+// spend cap ($1.00 a run). --model / LOWDEFY_EXPLORER_MODEL and --max-cost
+// change them.
 const DEFAULT_MODEL_ID = 'google/gemini-2.5-flash-lite';
 const JEV_MODEL_ID = 'typesafe-ai/jev';
 const DEFAULT_MAX_COST_USD = 1;
 
-// Which policy a run uses: --policy, else model when AI_GATEWAY_API_KEY is
-// set (read after startUp loaded the app's .env), else seeded. model asks a
-// Gateway language model through structured output; jev asks the waitlisted
-// evaluation model and is opt-in only.
+// Which policy a run uses: --policy, else jev when AI_GATEWAY_API_KEY is set
+// (read after startUp loaded the app's .env), else seeded. jev asks the
+// Gateway's evaluation model, built for one typed choice over many options,
+// and falls back, visibly, to the structured-output model (--model, else
+// LOWDEFY_EXPLORER_MODEL, else the default) when the Gateway refuses it or a
+// request is over its limits. model asks that structured-output model only;
+// it is the choice for an app that needs zero data retention, which Jev's
+// only endpoint does not offer.
 function resolvePolicy({ options = {}, env = process.env }) {
   const apiKey = env.AI_GATEWAY_API_KEY;
-  const policy = options.policy ?? (type.isNone(apiKey) || apiKey === '' ? 'seeded' : 'model');
+  const policy = options.policy ?? (type.isNone(apiKey) || apiKey === '' ? 'seeded' : 'jev');
   if (!POLICIES.includes(policy)) {
     throw new Error(`--policy should be one of ${POLICIES.join(', ')}. Received "${policy}".`);
   }
@@ -47,16 +52,18 @@ function resolvePolicy({ options = {}, env = process.env }) {
       `--policy ${policy} needs AI_GATEWAY_API_KEY in the shell or the app's .env. Without a key, the seeded policy runs.`
     );
   }
+  const structuredModelId = options.model ?? env.LOWDEFY_EXPLORER_MODEL ?? DEFAULT_MODEL_ID;
   if (policy === 'jev') {
-    return { policy, backend: 'evaluation', modelId: JEV_MODEL_ID, apiKey, maxCost };
+    return {
+      policy,
+      backend: 'evaluation',
+      modelId: JEV_MODEL_ID,
+      fallbackModelId: structuredModelId,
+      apiKey,
+      maxCost,
+    };
   }
-  return {
-    policy,
-    backend: 'structured-output',
-    modelId: options.model ?? env.LOWDEFY_EXPLORER_MODEL ?? DEFAULT_MODEL_ID,
-    apiKey,
-    maxCost,
-  };
+  return { policy, backend: 'structured-output', modelId: structuredModelId, apiKey, maxCost };
 }
 
 export default resolvePolicy;
