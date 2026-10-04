@@ -111,3 +111,24 @@ test('normalizeInjectedCaller preserves an optional email', () => {
     attributes: {},
   });
 });
+
+test('normalizeInjectedCaller refuses a caller carrying system, so it never reaches _user', () => {
+  expect(() => normalizeInjectedCaller({ id: 'x', name: 'X', system: true })).toThrow(
+    'An injected caller (dev mock user, headless or e2e user) can not carry "system". Only the stand-in caller a CallApi "caller" names carries _user.system.'
+  );
+});
+
+test('normalizeInjectedCaller refuses system whatever its value or key casing', () => {
+  expect(() => normalizeInjectedCaller({ id: 'x', system: false })).toThrow(
+    'can not carry "system"'
+  );
+  expect(() => normalizeInjectedCaller({ id: 'x', System: true })).toThrow(
+    'can not carry "system"'
+  );
+});
+
+test('normalizeInjectedCaller keeps a system key inside attributes', () => {
+  expect(normalizeInjectedCaller({ id: 'x', attributes: { system: true } }).attributes).toEqual({
+    system: true,
+  });
+});

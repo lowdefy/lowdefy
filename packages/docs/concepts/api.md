@@ -470,7 +470,7 @@ Under the `tenant` organizations policy every walled request needs a caller orga
 ```
 
 - The target runs as a system run bound to that organization. Every walled request inside it, and inside endpoints it calls in turn, is filtered and stamped with the organization, as for a signed-in member.
-- `_user` inside the target is the stand-in caller when `caller` is named: `{ id, name, organization_id, system: true }`, with the bound organization and no roles. `system: true` is how config tells it from a signed-in member. Change logs whose `meta` reads `_user` record it as the user. Without `caller`, `_user` is null.
+- `_user` inside the target is the stand-in caller when `caller` is named: `{ id, name, organization_id, system: true }`, with the bound organization and no roles. `system: true` is how config tells it from a signed-in member; no other caller carries it (a JWT strategy can not map a claim to `system`, and a dev mock user can not set it). Change logs whose `meta` reads `_user` record it as the user. Without `caller`, `_user` is null.
 - `organization` and `caller` are accepted only in a trusted system run: a scheduled run, an auth hook, a webhook whose `verify` request passed (see [Webhook Endpoints](#webhook-endpoints)), or a detached run dispatched from one. The same step in a signed-in caller's routine, a strategy (API key) caller's, or a webhook with no passing verifier is refused, because the bound run is trusted as the system.
 - A run that is already bound may restate its organization (and caller), but not name another.
 - A `caller` without `organization`, or a static value of the wrong shape, is a build error.

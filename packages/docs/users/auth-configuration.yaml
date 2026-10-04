@@ -219,7 +219,7 @@ _ref:
                               _secret: SERVICE_API_KEY
                 ```
 
-                A strategy caller carries the configured `roles` and `attributes` and its `auth_method` is the strategy type. A `jwt` strategy needs exactly one of `properties.secret` or `properties.jwksUri`, and a non-empty `algorithms` allowlist (which blocks `alg: none` downgrades).
+                A strategy caller carries the configured `roles` and `attributes` and its `auth_method` is the strategy type. A `jwt` strategy needs exactly one of `properties.secret` or `properties.jwksUri`, and a non-empty `algorithms` allowlist (which blocks `alg: none` downgrades). Its `properties.claimMapping` copies token claims onto the caller: `id` (default `sub`), `roles`, `attributes.<name>` into `_user.attributes`, and any other name onto `_user` itself. `system` is reserved, since `_user.system` marks the stand-in caller a [`CallApi` `caller`](/lowdefy-api#running-in-one-organization) names, and the build refuses a mapping for it.
 
                 ## Captcha
 
@@ -284,6 +284,7 @@ _ref:
                 - The environment variable takes precedence over the config file if both are set
                 - A warning is logged at dev server startup: "Mock user active - login bypassed"
                 - The mock user is injected as a pre-resolved caller — its `roles` are authoritative
+                - It can not carry `system`, which is reserved for the stand-in caller a bound `CallApi` names; the dev server refuses a mock user that sets it
                 - The `_user` operator returns values from the mock user, on the server and in the browser client — the dev server serves the mock session to both
                 - Protected pages are accessible based on the mock user's roles
                 - The dev server's headless renderer (used by the AI-agent screenshot and state-inspection tools) renders as the mock user, so it can capture pages with roles the default user lacks

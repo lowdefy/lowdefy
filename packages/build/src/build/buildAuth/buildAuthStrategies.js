@@ -68,6 +68,14 @@ function validateJwtStrategy({ strategy, configKey }) {
   // and surfaces as an unlocated 500 on every authenticated request, so the gate goes here where the
   // config location is available.
   Object.keys(properties.claimMapping ?? {}).forEach((field) => {
+    // _user.system marks the stand-in caller a bound CallApi names (applySystemTrust); apps branch
+    // on it, so no token claim may set it.
+    if (field === 'system') {
+      throw new ConfigError(
+        `Auth strategy "${strategy.id}" claimMapping field "system" is reserved. Only the stand-in caller a CallApi "caller" names carries _user.system.`,
+        { configKey }
+      );
+    }
     const reservedSegment = splitPath(field).find(isReserved);
     if (!type.isNone(reservedSegment)) {
       throw new ConfigError(

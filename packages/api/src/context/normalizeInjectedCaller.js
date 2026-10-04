@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { normalizeCaller, type } from '@lowdefy/helpers';
 
 // The single writer of the pre-resolved-caller shape. A dev mock user, the dev
@@ -37,9 +38,18 @@ import { normalizeCaller, type } from '@lowdefy/helpers';
 // that snake to themselves, so an authored key and its normalized name are the
 // same key. The org floor reads the normalized object, where either authored
 // spelling has already collapsed onto one name.
+//
+// system is refused: _user.system marks the stand-in caller a bound CallApi
+// names (applySystemTrust), and apps branch on it.
 function normalizeInjectedCaller(user) {
+  const snakeCased = normalizeCaller(user);
+  if (Object.hasOwn(snakeCased, 'system')) {
+    throw new ConfigError(
+      'An injected caller (dev mock user, headless or e2e user) can not carry "system". Only the stand-in caller a CallApi "caller" names carries _user.system.'
+    );
+  }
   const normalized = {
-    ...normalizeCaller(user),
+    ...snakeCased,
     roles: user.roles ?? [],
     attributes: user.attributes ?? {},
   };

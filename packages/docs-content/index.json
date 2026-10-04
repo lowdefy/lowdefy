@@ -3270,7 +3270,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "756da831b7253805015d13d5bad8e8db828b33bf107c33d02bc08e4eb6033d88"
+      "hash": "5d959d3b7a8c43a05fefe38be7ca449590f4c8ce0ee3839ba6135247dc656e48"
     },
     "concepts/notifications": {
       "files": [
@@ -3803,7 +3803,7 @@
         "users/auth-configuration.yaml",
         "version.yaml"
       ],
-      "hash": "dd713266552cf5e56d9541e5fc3150dda534da420c0b0763694c3df02f51ec24"
+      "hash": "5a59b626f45778d3d8f853194a7620027e1f266ea3beef34872f06d585b22c60"
     },
     "provider-reference/auth-js-providers": {
       "files": [
