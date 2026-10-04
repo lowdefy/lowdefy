@@ -136,6 +136,27 @@ function generate({ context, kinds, journey, exercised, inputs }) {
   return variants;
 }
 
+function reportFile({ context, file }) {
+  const relative = path.relative(context.directories.config, file.path);
+  switch (file.status) {
+    case 'kept':
+      context.logger.warn(
+        `KEPT     ${relative}: edited since it was generated; delete it to regenerate`
+      );
+      return;
+    case 'removed':
+      context.logger.info(`REMOVED  ${relative}: no longer generated`);
+      return;
+    case 'stale':
+      context.logger.warn(
+        `KEPT     ${relative}: no longer generated, but edited since; delete it if it is not needed`
+      );
+      return;
+    default:
+      context.logger.info(`WROTE    ${relative}`);
+  }
+}
+
 async function replay({ context, written, url }) {
   const suite = { run: runJourney };
   for (const file of written) {
@@ -198,17 +219,17 @@ async function journeysVariants({ context }) {
       exercised: measured.exercised,
       inputs: { ...inputs, ...dataSets },
     });
-    const written = writeVariantFiles({
+    const files = writeVariantFiles({
       directories: context.directories,
       filePath: item.filePath,
       journey: item.journey,
       variants,
+      kinds,
     });
-    written.forEach((file) =>
-      context.logger.info(`WROTE    ${path.relative(context.directories.config, file.path)}`)
-    );
+    files.forEach((file) => reportFile({ context, file }));
     if (context.options.run !== false) {
-      await replay({ context, written, url: server.url });
+      const candidates = files.filter(({ status }) => status === 'written' || status === 'kept');
+      await replay({ context, written: candidates, url: server.url });
     }
   } finally {
     await server.stop();

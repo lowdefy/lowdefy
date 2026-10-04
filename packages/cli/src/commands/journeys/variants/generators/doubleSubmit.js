@@ -23,10 +23,10 @@ import writeCall from '../writeCall.js';
 // Double submit: the same steps with the submit click a real double click
 // (click.count: 2), then the write sent once, after the original
 // expectations.
-function doubleSubmit({ journey, exercised }) {
-  const submit = findSubmitClick({ journey, exercised });
-  if (type.isNull(submit)) {
-    return { skipped: 'no submit click: no click followed by a wait for a write request' };
+function doubleSubmit({ journey, exercised, pageConfigs }) {
+  const submit = findSubmitClick({ journey, exercised, pageConfigs });
+  if (!type.isUndefined(submit.skipped)) {
+    return { skipped: submit.skipped };
   }
   const click = journey.steps[submit.index].click;
   const doubled = type.isString(click) ? { blockId: click, count: 2 } : { ...click, count: 2 };
