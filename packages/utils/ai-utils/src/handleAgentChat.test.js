@@ -1968,6 +1968,37 @@ test('does not merge update-page-state tool when sharedState is absent', async (
   expect(lastAgentConfig.tools['update-page-state']).toBeUndefined();
 });
 
+test('does not merge update-page-state tool when sharedStateReadOnly is true', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockBuildUpdatePageStateTool.mockReset();
+  mockBuildUpdatePageStateTool.mockReturnValue({ __sentinel: 'update-page-state-tool' });
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: jest.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o', pageContext: true } },
+      messages: [],
+    },
+    context: {
+      callEndpoint: jest.fn(),
+      getEndpointConfig: jest.fn(),
+      agentContext: {
+        pageId: 'p1',
+        userId: 'u1',
+        sharedState: { space: 'PEL' },
+        sharedStateReadOnly: true,
+      },
+    },
+  });
+
+  expect(mockBuildUpdatePageStateTool).not.toHaveBeenCalled();
+  expect(lastAgentConfig.tools['update-page-state']).toBeUndefined();
+  expect(lastAgentConfig.instructions).toContain('sharedState: {"space":"PEL"}');
+});
+
 test('onFinish hook payload includes steps with toolCalls and toolResults', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);

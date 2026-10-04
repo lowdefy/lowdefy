@@ -50,6 +50,7 @@ function AgentChat({
     agentId,
     urlQuery,
     sharedState,
+    sharedStateReadOnly,
     welcome,
     messageDisplay,
     sender,
@@ -74,6 +75,8 @@ function AgentChat({
   const sharedStateRef = useRef(null);
   sharedStateRef.current =
     type.isObject(sharedState) && Object.keys(sharedState).length > 0 ? sharedState : null;
+  const sharedStateReadOnlyRef = useRef(false);
+  sharedStateReadOnlyRef.current = sharedStateReadOnly === true;
   const attachmentsConfig = sender?.attachments;
   const uploadPolicyRequestId =
     attachmentsConfig?.uploadPolicyRequestId ?? attachmentsConfig?.s3PostPolicyRequestId;
@@ -106,6 +109,7 @@ function AgentChat({
         conversationId: effectiveConversationId,
         urlQuery,
         sharedStateRef,
+        sharedStateReadOnlyRef,
       }),
     [pageId, agentId, effectiveConversationId, urlQueryKey]
   );
