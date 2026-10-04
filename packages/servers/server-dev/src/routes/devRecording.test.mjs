@@ -159,6 +159,22 @@ test('POST /api/dev-recording writes nothing when the recording cookie is off', 
   expect(tracesExist()).toBe(false);
 });
 
+test('POST /api/dev-recording writes nothing for an explorer run that records nothing', async () => {
+  const payload = recordingCookiePayload({
+    recording: {
+      source: 'explorer',
+      run: { id: '20261003T160000Z-77abcd', by: 'explorer', journey: 'walk-1-confirm' },
+      record: false,
+    },
+  });
+  const res = await post({
+    body: { session: SESSION, records: [record()] },
+    headers: { cookie: cookieFor(payload) },
+  });
+  expect(res.status).toBe(204);
+  expect(tracesExist()).toBe(false);
+});
+
 test('POST /api/dev-recording appends lines to the dev session file, stamped with build and source', async () => {
   await post({ body: { session: SESSION, records: [record(), record({ kind: 'change' })] } });
   const res = await post({

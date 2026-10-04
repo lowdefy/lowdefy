@@ -31,6 +31,8 @@ function parsePayload(payload) {
 // What the recording cookie on a request says: 'off' (a headless tool context
 // that must not record), { source, run } (a headless journey or explorer run),
 // or null (no verified cookie - a developer's own tab, which records as dev).
+// A run that records nothing (an explorer confirmation replay) also carries
+// record: false: its errors are attributed to it, but the recorder stays off.
 // Only the dev server's own headless browser can write a verified cookie, so a
 // page can never relabel what it records.
 function readRecordingCookie(cookieHeader) {
@@ -50,7 +52,7 @@ function readRecordingCookie(cookieHeader) {
   ) {
     return null;
   }
-  return {
+  const recording = {
     source: parsed.source,
     run: {
       id: parsed.run.id,
@@ -59,6 +61,10 @@ function readRecordingCookie(cookieHeader) {
       actor: parsed.run.actor ?? null,
     },
   };
+  if (parsed.record === false) {
+    recording.record = false;
+  }
+  return recording;
 }
 
 export default readRecordingCookie;

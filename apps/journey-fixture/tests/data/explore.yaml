@@ -1,0 +1,8 @@
+# The data set the explorer's walk tests open walks on
+# (packages/servers/server-dev/test/journeyFixture/exploreWalks.test.mjs and
+# the cli explore fixture test). Change it only together with them.
+fixtures:
+  fixture_db:
+    - { _id: item-1, kind: item, page: home, name: Fixture item }
+users:
+  member: { id: u_member, roles: [member] }

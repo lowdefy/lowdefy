@@ -14,18 +14,19 @@
   limitations under the License.
 */
 
-import readRecordingCookie from './readRecordingCookie.js';
+import closeWalkSession from './closeWalkSession.js';
+import { getWalk } from './walkSessions.js';
 
-// Whether a page should mount the recorder: not when the developer turned
-// recording off (LOWDEFY_DEV_RECORD=false, in the shell or .env), and not in a
-// headless context marked off or a run that records nothing, so those never
-// even subscribe.
-function isRecordingEnabled(cookieHeader) {
-  if (process.env.LOWDEFY_DEV_RECORD === 'false') {
-    return false;
+// DELETE /lowdefy-docs/explore/walks/:id: closes an open walk (see
+// closeWalkSession). Returns { status, body }: 200 with { closed: true }, or
+// 404 for a walk that is not open.
+async function closeWalk({ walkId }) {
+  const walk = getWalk(walkId);
+  if (walk === null) {
+    return { status: 404, body: { error: `No open walk "${walkId}".` } };
   }
-  const recording = readRecordingCookie(cookieHeader);
-  return recording !== 'off' && recording?.record !== false;
+  await closeWalkSession(walk);
+  return { status: 200, body: { closed: true } };
 }
 
-export default isRecordingEnabled;
+export default closeWalk;

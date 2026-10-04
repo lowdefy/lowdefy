@@ -67,6 +67,7 @@ function createJourneyActors({
   users = {},
   mainActor,
   recording,
+  onContext,
 }) {
   const actors = new Map();
   const counters = new Map();
@@ -100,12 +101,17 @@ function createJourneyActors({
         mutantCookie,
         recording: type.isUndefined(recording)
           ? undefined
-          : { source: recording.source, run: { ...recording.run, actor: name } },
+          : { ...recording, run: { ...recording.run, actor: name } },
         onContext: async (context) => {
           context.on('request', (request) => counter.record(request));
           await context.exposeBinding(OBSERVE_BINDING, (source, message) =>
             observations.receive(message)
           );
+          // A caller that watches each actor's context (an explorer walk's
+          // error and network buffers) hooks in before its first request.
+          if (!type.isUndefined(onContext)) {
+            onContext({ context, name });
+          }
         },
         timeout,
       });

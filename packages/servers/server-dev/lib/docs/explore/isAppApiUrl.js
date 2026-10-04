@@ -14,18 +14,20 @@
   limitations under the License.
 */
 
-import readRecordingCookie from './readRecordingCookie.js';
+const APP_API_PREFIXES = ['/api/request/', '/api/endpoints/'];
 
-// Whether a page should mount the recorder: not when the developer turned
-// recording off (LOWDEFY_DEV_RECORD=false, in the shell or .env), and not in a
-// headless context marked off or a run that records nothing, so those never
-// even subscribe.
-function isRecordingEnabled(cookieHeader) {
-  if (process.env.LOWDEFY_DEV_RECORD === 'false') {
+// Whether a URL is one of the app's request or endpoint API routes on this
+// dev server: what a walk step counts as the app doing work, and where a 5xx
+// is a failed request.
+function isAppApiUrl({ url, origin, basePath = '' }) {
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
     return false;
   }
-  const recording = readRecordingCookie(cookieHeader);
-  return recording !== 'off' && recording?.record !== false;
+  if (parsed.origin !== origin) return false;
+  return APP_API_PREFIXES.some((prefix) => parsed.pathname.startsWith(`${basePath}${prefix}`));
 }
 
-export default isRecordingEnabled;
+export default isAppApiUrl;

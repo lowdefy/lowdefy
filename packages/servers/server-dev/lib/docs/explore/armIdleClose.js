@@ -14,18 +14,19 @@
   limitations under the License.
 */
 
-import readRecordingCookie from './readRecordingCookie.js';
+import closeWalkSession from './closeWalkSession.js';
 
-// Whether a page should mount the recorder: not when the developer turned
-// recording off (LOWDEFY_DEV_RECORD=false, in the shell or .env), and not in a
-// headless context marked off or a run that records nothing, so those never
-// even subscribe.
-function isRecordingEnabled(cookieHeader) {
-  if (process.env.LOWDEFY_DEV_RECORD === 'false') {
-    return false;
-  }
-  const recording = readRecordingCookie(cookieHeader);
-  return recording !== 'off' && recording?.record !== false;
+const WALK_IDLE_MS = 120000;
+
+// (Re)starts the walk's idle timer: a walk nobody steps or closes for
+// idleMs (120 s by default) closes itself, so a crashed explorer leaves no
+// browser context, data session or browser slot behind.
+function armIdleClose({ walk, idleMs = WALK_IDLE_MS }) {
+  clearTimeout(walk.idleTimer);
+  walk.idleTimer = setTimeout(() => {
+    closeWalkSession(walk).catch(() => {});
+  }, idleMs);
+  walk.idleTimer.unref?.();
 }
 
-export default isRecordingEnabled;
+export default armIdleClose;

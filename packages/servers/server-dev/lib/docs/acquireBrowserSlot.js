@@ -14,18 +14,17 @@
   limitations under the License.
 */
 
-import readRecordingCookie from './readRecordingCookie.js';
+import { acquireMachineSlot } from '@lowdefy/node-utils';
 
-// Whether a page should mount the recorder: not when the developer turned
-// recording off (LOWDEFY_DEV_RECORD=false, in the shell or .env), and not in a
-// headless context marked off or a run that records nothing, so those never
-// even subscribe.
-function isRecordingEnabled(cookieHeader) {
-  if (process.env.LOWDEFY_DEV_RECORD === 'false') {
-    return false;
-  }
-  const recording = readRecordingCookie(cookieHeader);
-  return recording !== 'off' && recording?.record !== false;
+const BROWSER_SLOTS = 3;
+const BROWSER_SLOT_WAIT_MS = 5 * 60 * 1000;
+
+// Takes one of the machine's browser slots, so at most three browser
+// operations run at once across every dev server on the machine. The caller
+// releases it (slot.release()) when its operation ends. Throws when the wait
+// outlasts BROWSER_SLOT_WAIT_MS.
+function acquireBrowserSlot({ acquire = acquireMachineSlot } = {}) {
+  return acquire({ name: 'browser', limit: BROWSER_SLOTS, waitMs: BROWSER_SLOT_WAIT_MS });
 }
 
-export default isRecordingEnabled;
+export default acquireBrowserSlot;
