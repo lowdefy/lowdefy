@@ -16,7 +16,7 @@
   limitations under the License.
 */
 
-import { isReserved, splitPath, type } from '@lowdefy/helpers';
+import { isReserved, normalizeCaller, splitPath, type } from '@lowdefy/helpers';
 import { ConfigError } from '@lowdefy/errors';
 
 const strategyTypes = ['apiKey', 'jwt'];
@@ -69,10 +69,11 @@ function validateJwtStrategy({ strategy, configKey }) {
   // config location is available.
   Object.keys(properties.claimMapping ?? {}).forEach((field) => {
     // _user.system marks the stand-in caller a bound CallApi names (applySystemTrust); apps branch
-    // on it, so no token claim may set it.
-    if (field === 'system') {
+    // on it, so no token claim may set it. The strategy caller's keys are snake_cased
+    // (normalizeCaller), so "System" or "_system" would land on _user.system too.
+    if (Object.hasOwn(normalizeCaller({ [field]: true }), 'system')) {
       throw new ConfigError(
-        `Auth strategy "${strategy.id}" claimMapping field "system" is reserved. Only the stand-in caller a CallApi "caller" names carries _user.system.`,
+        `Auth strategy "${strategy.id}" claimMapping field "${field}" sets _user.system, which is reserved. Only the stand-in caller a CallApi "caller" names carries _user.system.`,
         { configKey }
       );
     }

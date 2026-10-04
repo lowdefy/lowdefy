@@ -331,10 +331,34 @@ test('buildAuthStrategies throws when a jwt claimMapping field is "system", the 
     error = e;
   }
   expect(error.message).toBe(
-    'Auth strategy "service-jwt" claimMapping field "system" is reserved. Only the stand-in caller a CallApi "caller" names carries _user.system.'
+    'Auth strategy "service-jwt" claimMapping field "system" sets _user.system, which is reserved. Only the stand-in caller a CallApi "caller" names carries _user.system.'
   );
   expect(error.configKey).toBe('strategy-key');
 });
+
+test.each(['System', 'SYSTEM', '_system'])(
+  'buildAuthStrategies throws when a jwt claimMapping field "%s" snake_cases to "system"',
+  (field) => {
+    const components = {
+      auth: {
+        strategies: [
+          {
+            id: 'service-jwt',
+            type: 'jwt',
+            properties: {
+              secret: { _secret: 'JWT_SIGNING_SECRET' },
+              algorithms: ['HS256'],
+              claimMapping: { [field]: 'is_service_account' },
+            },
+          },
+        ],
+      },
+    };
+    expect(() => buildAuthStrategies({ components })).toThrow(
+      `Auth strategy "service-jwt" claimMapping field "${field}" sets _user.system, which is reserved.`
+    );
+  }
+);
 
 test('buildAuthStrategies builds a jwt claimMapping field of "attributes.system"', () => {
   const components = {
