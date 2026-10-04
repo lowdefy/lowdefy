@@ -17,23 +17,8 @@
 import { type } from '@lowdefy/helpers';
 
 import buildDecisionState from './buildDecisionState.js';
+import buildOpenBody from './buildOpenBody.js';
 import chooseOption from './chooseOption.js';
-
-function openBody({ target, run, walkId, options }) {
-  const body = {
-    pageId: target.pageId,
-    run,
-    walk: walkId,
-    record: true,
-    roles: target.roles,
-    roleMatrixListed: target.matrixListed,
-  };
-  if (!type.isNone(target.user)) body.user = target.user;
-  if (!type.isNone(options.data)) body.data = options.data;
-  if (options.liveData) body.liveData = true;
-  if (options.allowExternal.length > 0) body.allowExternal = options.allowExternal;
-  return body;
-}
 
 // A redirect at open that is not a role-refused finding: the head config
 // refusing the role. Access changed in this PR when the page's auth changed
@@ -83,7 +68,7 @@ async function runWalk({
     closeMs: null,
   };
   const openStart = now();
-  const opened = await client.open(openBody({ target, run, walkId, options }));
+  const opened = await client.open(buildOpenBody({ target, run, walkId, options, record: true }));
   if (opened.status === 400) {
     throw new Error(`The dev server refused the walk on "${target.pageId}": ${opened.body.error}`);
   }

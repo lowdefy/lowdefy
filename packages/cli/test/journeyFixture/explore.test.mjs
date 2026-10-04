@@ -73,6 +73,15 @@ function makeRepository() {
   fs.writeFileSync(pagePath, headPage);
   git(['add', '.']);
   git(['commit', '-q', '-m', 'Add the note form and assignment']);
+  // The walks run on the fixture's dev server, which records into the
+  // fixture app's traces: the copy reads them from there.
+  fs.mkdirSync(path.join(fixtureDirectory, '.lowdefy', 'traces'), { recursive: true });
+  fs.mkdirSync(path.join(appDirectory, '.lowdefy'), { recursive: true });
+  fs.symlinkSync(
+    path.join(fixtureDirectory, '.lowdefy', 'traces'),
+    path.join(appDirectory, '.lowdefy', 'traces'),
+    'dir'
+  );
 }
 
 function runCli(args) {
@@ -137,8 +146,10 @@ function exploreArgs(extra = []) {
     fixtureUrl,
     '--walks',
     '3',
+    // Short walks, so a walk that does not reach the failing button within
+    // its steps becomes a coverage candidate.
     '--steps',
-    '6',
+    '3',
     '--budget',
     '4m',
     '--log-level',
@@ -168,22 +179,93 @@ fixtureTest(
   }
 );
 
+// What a seeded walk did, without what differs between runs (ids, times,
+// durations, screenshot paths).
+function walkShape(walk) {
+  return {
+    walk: walk.walk,
+    pageId: walk.pageId,
+    user: walk.user,
+    stopReason: walk.stopReason,
+    steps: walk.steps.map((step) => ({
+      step: step.step,
+      options: step.options,
+      answer: step.answer.optionId,
+      findings: step.findings.map((finding) => finding.key),
+    })),
+  };
+}
+
+function readCandidates(directory) {
+  if (!fs.existsSync(directory)) return [];
+  return fs
+    .readdirSync(directory)
+    .filter((name) => name.endsWith('.yaml'))
+    .map((name) => path.join(directory, name));
+}
+
 fixtureTest(
-  'explore walks the changed page breadth-first on the data set and logs every walk',
+  'explore confirms the failing click, writes a finding candidate that reaches it and a coverage candidate that passes three runs, and seeded runs repeat',
   async () => {
-    const { code, stderr } = await runCli(exploreArgs());
-    expect(stderr).toBe('');
-    expect(code).toBe(0);
-    const walks = readWalks(readRunDirectory());
+    const first = await runCli(exploreArgs(['--json']));
+    expect(first.stderr).toBe('');
+    expect(first.code).toBe(0);
+    const report = JSON.parse(first.stdout);
+    const runDirectory = readRunDirectory();
+    expect(path.basename(runDirectory)).toBe(report.run);
+    const walks = readWalks(runDirectory);
     expect(walks.length).toBeGreaterThanOrEqual(3);
     walks.forEach((walk) => {
       expect(walk.pageId).toBe('explore_pr');
       expect(walk.user).toBe('member');
     });
-    const findings = walks.flatMap((walk) => walk.findings);
-    expect(findings.some((finding) => finding.kind === 'action-error')).toBe(true);
-    expect(walks.some((walk) => walk.steps.some((step) => step.step.fill !== undefined))).toBe(
-      true
+
+    const findings = JSON.parse(fs.readFileSync(path.join(runDirectory, 'findings.json'), 'utf8'));
+    const actionErrors = findings.filter((finding) => finding.kind === 'action-error');
+    expect(actionErrors).toHaveLength(1);
+    expect(actionErrors[0].status).toBe('confirmed');
+    expect(actionErrors[0].source).toMatch(/\.yaml:\d+$/);
+    expect(report.findings.confirmed).toBeGreaterThanOrEqual(1);
+    expect(report.ran.confirmations).toBeGreaterThanOrEqual(1);
+
+    const candidatesDirectory = path.join(
+      appDirectory,
+      'tests',
+      'journeys',
+      '_candidates',
+      'explorer'
     );
+    const findingCandidates = readCandidates(path.join(candidatesDirectory, 'findings'));
+    expect(findingCandidates.length).toBeGreaterThanOrEqual(1);
+    const findingContents = fs.readFileSync(findingCandidates[0], 'utf8');
+    expect(findingContents).toContain('assign_submit');
+    expect(findingContents).toMatch(/explorer:\n#\s+run: /);
+    expect(findingContents).toMatch(/kind: action-error/);
+
+    const coverageCandidates = readCandidates(candidatesDirectory);
+    expect(coverageCandidates.length).toBeGreaterThanOrEqual(1);
+    const results = [];
+    for (const candidate of coverageCandidates) {
+      results.push(
+        await runCli([
+          'test',
+          candidate,
+          '--repeat',
+          '3',
+          '--config-directory',
+          appDirectory,
+          '--url',
+          fixtureUrl,
+          '--log-level',
+          'error',
+        ])
+      );
+    }
+    expect(results.some((result) => result.code === 0)).toBe(true);
+
+    const second = await runCli(exploreArgs(['--json']));
+    expect(second.code).toBe(0);
+    const again = readWalks(readRunDirectory());
+    expect(again.map(walkShape)).toEqual(walks.map(walkShape));
   }
 );

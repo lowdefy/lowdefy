@@ -23,12 +23,14 @@ import appendWalkLog from './appendWalkLog.js';
 import buildConfigTrees from './buildConfigTrees.js';
 import checkLiveDataRule from './checkLiveDataRule.js';
 import checkWriteOptIn from './checkWriteOptIn.js';
+import createConfirmations from './createConfirmations.js';
 import createCostTracker from './createCostTracker.js';
 import createModelPolicy from './createModelPolicy.js';
 import createSeededPolicy from './createSeededPolicy.js';
 import createWalkClient from './createWalkClient.js';
 import describeEmptyScope from './describeEmptyScope.js';
 import diffBuilds from './diffBuilds.js';
+import finishRun from './finishRun.js';
 import formatScopeLines from './formatScopeLines.js';
 import formatWalkPlan from './formatWalkPlan.js';
 import listLiveDataConnections from './listLiveDataConnections.js';
@@ -189,11 +191,6 @@ async function walkRun({
     return null;
   }
   context.logger.info(
-    `Policy    ${policy.name}${policy.modelId ? ` ${policy.modelId}` : ''}   data ${
-      dataName ?? 'none'
-    }`
-  );
-  context.logger.info(
     `Plan      ${formatWalkPlan({
       targets,
       walks: options.walks,
@@ -203,13 +200,23 @@ async function walkRun({
     })}`
   );
   const scopePages = new Map(scope.pages.map((page) => [page.pageId, page]));
+  const walkOptions = {
+    steps: options.steps,
+    data: dataName,
+    liveData: options.liveData,
+    allowExternal: options.allowExternal,
+  };
+  const confirmations = createConfirmations({ client, run, options: walkOptions, shouldStop });
+  const targetsByWalk = new Map();
   const walkStarted = Date.now();
   const result = await scheduleWalks({
     targets,
     walks: options.walks,
     shouldStop,
     buildChanged: async () => (await client.buildId()) !== startBuildId,
+    afterWalk: (log) => confirmations.afterWalk({ log, target: targetsByWalk.get(log.walk) }),
     runOne: async ({ target, walkId, walkIndex, progress }) => {
+      targetsByWalk.set(walkId, target);
       const log = await runWalk({
         client,
         run,
@@ -217,12 +224,7 @@ async function walkRun({
         walkIndex,
         target,
         scopePage: scopePages.get(target.pageId),
-        options: {
-          steps: options.steps,
-          data: dataName,
-          liveData: options.liveData,
-          allowExternal: options.allowExternal,
-        },
+        options: walkOptions,
         policy,
         progress,
         decisionContext: revisions.context,
@@ -245,12 +247,15 @@ async function walkRun({
     costs: costs.totals(),
     walkMs: Date.now() - walkStarted,
     logs: result.logs,
+    confirmations: confirmations.list(),
+    findingsByWalk: confirmations.findingsByWalk,
     notRun: [...notRun, ...result.notRun],
     stopped: result.stopped,
   };
 }
 
 async function exploreOnServer({ context, options, policyConfig, revisions, server }) {
+  const startedAt = new Date().toISOString();
   const exploreDirectory = path.join(context.directories.config, '.lowdefy', 'explore');
   const run = createTraceId();
   const runDirectory = path.join(exploreDirectory, run);
@@ -284,7 +289,18 @@ async function exploreOnServer({ context, options, policyConfig, revisions, serv
   } else if (walked.stopped?.message) {
     context.logger.warn(walked.stopped.message);
   }
-  return { run, runDirectory, scope: scoped.scope, walked };
+  const report = await finishRun({
+    context,
+    options,
+    run,
+    runDirectory,
+    revisions,
+    scope: scoped.scope,
+    walked,
+    buildDirectory: scoped.builds.headBuild,
+    startedAt,
+  });
+  return { run, runDirectory, scope: scoped.scope, walked, report };
 }
 
 // lowdefy journeys explore (--pr <n> | --against <ref>): finds the pages a
