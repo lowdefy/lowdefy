@@ -23,7 +23,7 @@ const mockOpenDataSession = jest.fn();
 const mockIsWriteRequestsAllowed = jest.fn();
 const mockReadConnectionArtifacts = jest.fn();
 const mockObserveWalkPage = jest.fn();
-const mockRunJourneySteps = jest.fn();
+const mockRunObservedStep = jest.fn();
 
 jest.unstable_mockModule('../getBrowser.js', () => ({ getBrowser: mockGetBrowser }));
 jest.unstable_mockModule('../acquireBrowserSlot.js', () => ({
@@ -50,7 +50,11 @@ jest.unstable_mockModule('../dataSets/resolveJourneyDataSet.js', () => ({
       : { dataSet: { name: data, users: { member: { id: 'u_1' } }, fixtures: {} }, user },
 }));
 jest.unstable_mockModule('./observeWalkPage.js', () => ({ default: mockObserveWalkPage }));
-jest.unstable_mockModule('../runJourneySteps.js', () => ({ default: mockRunJourneySteps }));
+jest.unstable_mockModule('./runObservedStep.js', () => ({ default: mockRunObservedStep }));
+jest.unstable_mockModule('./saveWalkScreenshot.js', () => ({
+  default: async ({ walk, index }) =>
+    `.lowdefy/explore/${walk.run}/screenshots/${walk.journey}-${index}.png`,
+}));
 
 const { default: openWalk } = await import('./openWalk.js');
 const { default: stepWalk } = await import('./stepWalk.js');
@@ -80,6 +84,22 @@ let actors;
 let session;
 let slot;
 
+function quietWindow(overrides = {}) {
+  return {
+    since: 0,
+    until: 1,
+    urlBefore: 'http://localhost:3111/home',
+    urlAfter: 'http://localhost:3111/home',
+    emits: [{ blockId: 'save_button', eventName: 'onClick', success: true, failure: null }],
+    mutationCount: 2,
+    pageErrors: [],
+    requests: [],
+    responses: [],
+    errors: [],
+    ...overrides,
+  };
+}
+
 function openBody(overrides = {}) {
   return {
     pageId: 'home',
@@ -107,9 +127,9 @@ beforeEach(() => {
   mockIsWriteRequestsAllowed.mockResolvedValue(false);
   mockReadConnectionArtifacts.mockResolvedValue({ fixture_db: { type: 'MongoDBCollection' } });
   mockObserveWalkPage.mockResolvedValue(observation);
-  mockRunJourneySteps.mockResolvedValue({
-    results: [{ index: 0, status: 'ok', durationMs: 12 }],
-    screenshots: [],
+  mockRunObservedStep.mockResolvedValue({
+    result: { index: 0, status: 'ok', durationMs: 12 },
+    window: quietWindow(),
   });
 });
 
@@ -223,7 +243,10 @@ test('stepWalk runs an offered step through the runner and returns the result an
     findings: [],
     observation: next,
   });
-  expect(mockRunJourneySteps).toHaveBeenCalledWith({ journey: { actors }, steps: [step] });
+  expect(mockRunObservedStep).toHaveBeenCalledWith({
+    walk: expect.objectContaining({ walkId: opened.walkId }),
+    step,
+  });
   expect(getWalk(opened.walkId).typed).toEqual(['Explorer name 0']);
 });
 
@@ -235,7 +258,7 @@ test('stepWalk refuses a step that matches no offered candidate, as one sent wit
   });
   expect(status).toBe(400);
   expect(body.error).toMatch(/matches no control the walk offered/);
-  expect(mockRunJourneySteps).not.toHaveBeenCalled();
+  expect(mockRunObservedStep).not.toHaveBeenCalled();
   const malformed = await stepWalk({ walkId: opened.walkId, body: { step: { goto: 'x' } } });
   expect(malformed.status).toBe(400);
 });
@@ -243,15 +266,53 @@ test('stepWalk refuses a step that matches no offered candidate, as one sent wit
 test('stepWalk reports a failed step with its failure', async () => {
   const { body: opened } = await openWalk({ body: openBody(), origin });
   const failure = { index: 0, message: 'Timeout waiting for save_button' };
-  mockRunJourneySteps.mockResolvedValue({
-    results: [{ index: 0, status: 'failed', durationMs: 5000 }],
+  mockRunObservedStep.mockResolvedValue({
+    result: { index: 0, status: 'failed', durationMs: 5000 },
     failure,
+    window: quietWindow({ emits: [], mutationCount: 0 }),
   });
   const { body } = await stepWalk({
     walkId: opened.walkId,
     body: { step: { click: { text: 'Save', blockId: 'save_button' } } },
   });
   expect(body.result).toEqual({ status: 'failed', durationMs: 5000, failure });
+});
+
+test('stepWalk returns the findings of the step window with the step index, and a screenshot on an error finding', async () => {
+  const { body: opened } = await openWalk({ body: openBody(), origin });
+  mockRunObservedStep.mockResolvedValueOnce({
+    result: { index: 0, status: 'ok', durationMs: 20 },
+    window: quietWindow({ emits: [], mutationCount: 0 }),
+  });
+  const dead = await stepWalk({
+    walkId: opened.walkId,
+    body: { step: { click: { blockId: 'save_button', text: 'Save' } } },
+  });
+  expect(dead.body.findings).toEqual([
+    expect.objectContaining({ kind: 'dead-click', severity: 'warning', pageId: 'home', step: 0 }),
+  ]);
+  expect(dead.body.screenshot).toBeUndefined();
+
+  mockRunObservedStep.mockResolvedValueOnce({
+    result: { index: 0, status: 'ok', durationMs: 20 },
+    window: quietWindow({
+      errors: [{ store: 'server', message: 'Boom', source: 'pages/home.yaml:12' }],
+    }),
+  });
+  const failed = await stepWalk({
+    walkId: opened.walkId,
+    body: { step: { click: { blockId: 'save_button', text: 'Save' } } },
+  });
+  expect(failed.body.findings).toEqual([
+    expect.objectContaining({
+      kind: 'server-error',
+      severity: 'error',
+      source: 'pages/home.yaml:12',
+      step: 1,
+      key: 'server-error|home|pages/home.yaml:12',
+    }),
+  ]);
+  expect(failed.body.screenshot).toBe(`.lowdefy/explore/${run}/screenshots/walk-1-1.png`);
 });
 
 test('closeWalk flushes the recorder, closes the actors and the data session and frees the slot; a step after it gets 404', async () => {
@@ -295,9 +356,9 @@ test('a walk idle past its idle time closes itself', async () => {
 
 test('a step keeps a walk from idling out while it runs, and restarts its idle time', async () => {
   const { body: opened } = await openWalk({ body: openBody(), origin, idleMs: 60 });
-  mockRunJourneySteps.mockImplementation(async () => {
+  mockRunObservedStep.mockImplementation(async () => {
     await new Promise((resolve) => setTimeout(resolve, 100));
-    return { results: [{ index: 0, status: 'ok', durationMs: 100 }] };
+    return { result: { index: 0, status: 'ok', durationMs: 100 }, window: quietWindow() };
   });
   const { status } = await stepWalk({
     walkId: opened.walkId,

@@ -17,11 +17,30 @@
 import { type } from '@lowdefy/helpers';
 
 import armIdleClose from './armIdleClose.js';
+import evaluateInvariants from './evaluateInvariants.js';
 import { getWalk } from './walkSessions.js';
 import matchOfferedStep from './matchOfferedStep.js';
 import observeWalkPage from './observeWalkPage.js';
-import runJourneySteps from '../runJourneySteps.js';
+import resolveConfigKeySource from './resolveConfigKeySource.js';
+import runObservedStep from './runObservedStep.js';
+import saveWalkScreenshot from './saveWalkScreenshot.js';
+import usesSearchStage from './usesSearchStage.js';
 import validateWalkStep from './validateWalkStep.js';
+
+async function evaluateStep({ walk, step, result, window, pageId }) {
+  const { buildDirectory, configDirectory } = walk;
+  return evaluateInvariants({
+    step,
+    result,
+    window,
+    pageId,
+    basePath: walk.basePath,
+    configDirectory,
+    usesSearchStage: (entry) => usesSearchStage({ buildDirectory, entry }),
+    resolveSource: (configKey) =>
+      resolveConfigKeySource({ buildDirectory, configDirectory, configKey }),
+  });
+}
 
 function notFound(walkId) {
   return {
@@ -34,10 +53,12 @@ function notFound(walkId) {
 
 // POST /lowdefy-docs/explore/walks/:id/steps: runs one grammar interaction
 // the walk's latest observation offered, through the journey runner's own
-// loop (settle included), then observes again. A step that matches no
-// offered candidate is refused, whoever sends it. Returns { status, body }:
-// 200 with { result: { status, durationMs, failure? }, findings,
-// observation }, 400 for a step that is malformed or not offered, 404 for a
+// loop (settle included), decides findings with the fixed invariants over
+// the step's window, then observes again. A step that matches no offered
+// candidate is refused, whoever sends it. When an error finding fires, the
+// page is saved as a screenshot. Returns { status, body }: 200 with
+// { result: { status, durationMs, failure? }, findings, observation,
+// screenshot? }, 400 for a step that is malformed or not offered, 404 for a
 // walk that is not open, 409 while another step of the walk is running.
 async function stepWalk({ walkId, body, idleMs }) {
   const walk = getWalk(walkId);
@@ -65,10 +86,24 @@ async function stepWalk({ walkId, body, idleMs }) {
   walk.busy = true;
   clearTimeout(walk.idleTimer);
   try {
-    const { results, failure } = await runJourneySteps({ journey: walk.runner, steps: [step] });
-    const [stepResult] = results;
+    const index = walk.stepCount;
+    walk.stepCount += 1;
+    const pageId = walk.observation.pageId;
+    const { result: stepResult, failure, window } = await runObservedStep({ walk, step });
     if (!type.isUndefined(step.fill)) {
       walk.typed.push(String(step.fill.value));
+    }
+    const findings = (await evaluateStep({ walk, step, result: stepResult, window, pageId })).map(
+      (finding) => ({ ...finding, step: index })
+    );
+    const body = {};
+    if (findings.some((finding) => finding.severity === 'error')) {
+      const screenshot = await saveWalkScreenshot({
+        walk,
+        index,
+        configDirectory: walk.configDirectory,
+      });
+      if (screenshot !== null) body.screenshot = screenshot;
     }
     walk.observation = await observeWalkPage({ walk });
     const result = { status: stepResult.status, durationMs: stepResult.durationMs };
@@ -77,7 +112,7 @@ async function stepWalk({ walkId, body, idleMs }) {
     }
     return {
       status: 200,
-      body: { result, findings: [], observation: walk.observation },
+      body: { result, findings, observation: walk.observation, ...body },
     };
   } finally {
     walk.busy = false;

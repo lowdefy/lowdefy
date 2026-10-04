@@ -22,6 +22,7 @@ import acquireBrowserSlot from '../acquireBrowserSlot.js';
 import armIdleClose from './armIdleClose.js';
 import checkWalkWriteRules from './checkWalkWriteRules.js';
 import closeWalkSession from './closeWalkSession.js';
+import evaluateAccess from './evaluateAccess.js';
 import getDataStore from '../dataSets/getDataStore.js';
 import { getBrowser } from '../getBrowser.js';
 import noBrowserError from '../noBrowserError.js';
@@ -51,8 +52,11 @@ function walkUser(user) {
 // run's id with the walk's name as run.journey (record: false records
 // nothing, but its errors still reach the walk). The walk is registered
 // before its page opens, so errors the first page load causes reach it. It
-// holds a browser slot until it closes. Returns { status, body }: 200 with
-// { walkId, observation }, 400 for a bad body or a refused data rule, 409
+// holds a browser slot until it closes. roles (the walking user's role set)
+// and roleMatrixListed (production use shows that role set on the page)
+// decide whether a redirect at open is a role-refused finding. Returns
+// { status, body }: 200 with { walkId, observation, admitted, findings },
+// 400 for a bad body or a refused data rule, 409
 // when two walks are open (or this run's walk already is), 502 when no
 // browser can launch.
 async function openWalk({ body, origin, basePath = '', idleMs }) {
@@ -61,6 +65,7 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
     return { status: 400, body: { error: bodyError } };
   }
   const { pageId, urlQuery, user, data, liveData, run, walk: walkName, record } = body;
+  const roles = body.roles ?? [];
   const allowExternal = body.allowExternal ?? [];
   const open = listWalks();
   if (open.some((walk) => walk.run === run && walk.journey === walkName)) {
@@ -118,16 +123,18 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
     dataSet,
     snapshot: !type.isNone(dataSet?.snapshot),
     buildDirectory,
+    configDirectory,
     origin,
     basePath,
     slot,
     session: null,
     runner: null,
-    events: { pageErrors: [], requests: [], responses: [] },
+    events: { pageErrors: [], requests: [], responses: [], pendingClientErrors: new Set() },
     typed: [],
     visitedPages: new Set(),
     exclusions: new Map(),
     observation: null,
+    stepCount: 0,
     busy: false,
     idleTimer: null,
     closing: null,
@@ -169,8 +176,23 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
       body: { error: `Could not open a walk on page "${pageId}": ${error.message}` },
     };
   }
+  const access = evaluateAccess({
+    buildDirectory,
+    pageId,
+    observation: walk.observation,
+    roles,
+    roleMatrixListed: body.roleMatrixListed,
+  });
   armIdleClose({ walk, idleMs });
-  return { status: 200, body: { walkId: walk.walkId, observation: walk.observation } };
+  return {
+    status: 200,
+    body: {
+      walkId: walk.walkId,
+      observation: walk.observation,
+      admitted: access.admitted,
+      findings: access.finding === null ? [] : [access.finding],
+    },
+  };
 }
 
 export default openWalk;

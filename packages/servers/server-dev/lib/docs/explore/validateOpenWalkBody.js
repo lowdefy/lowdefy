@@ -18,7 +18,7 @@ import { isTraceId, type } from '@lowdefy/helpers';
 
 // The open route's JSON body, checked before anything opens:
 // { pageId, urlQuery?, user?, data?, liveData?, allowExternal?, run, walk,
-// record }. run is the explorer run's trace id and walk the walk's name in
+// record, roles?, roleMatrixListed? }. run is the explorer run's trace id and walk the walk's name in
 // it (the recording cookie's run.id and run.journey). Returns an error
 // message, or undefined when the body is valid.
 function validateOpenWalkBody(body) {
@@ -26,6 +26,7 @@ function validateOpenWalkBody(body) {
     return `The walk route expects a JSON object body. Received ${JSON.stringify(body)}.`;
   }
   const { pageId, urlQuery, user, data, liveData, allowExternal, run, walk, record } = body;
+  const { roles, roleMatrixListed } = body;
   if (!type.isString(pageId) || pageId === '') {
     return `The walk's "pageId" must be a page id string. Received ${JSON.stringify(pageId)}.`;
   }
@@ -62,6 +63,17 @@ function validateOpenWalkBody(body) {
   ) {
     return `The walk's "allowExternal" must be an array of connection ids. Received ${JSON.stringify(
       allowExternal
+    )}.`;
+  }
+  if (
+    !type.isNone(roles) &&
+    (!type.isArray(roles) || !roles.every((role) => type.isString(role)))
+  ) {
+    return `The walk's "roles" must be an array of role names. Received ${JSON.stringify(roles)}.`;
+  }
+  if (!type.isNone(roleMatrixListed) && !type.isBoolean(roleMatrixListed)) {
+    return `The walk's "roleMatrixListed" must be true or false. Received ${JSON.stringify(
+      roleMatrixListed
     )}.`;
   }
   return undefined;

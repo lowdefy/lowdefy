@@ -23,7 +23,10 @@ api:
   - _ref: api/notify.yaml
   - _ref: api/log_activity.yaml
   - _ref: api/detached_log.yaml
+  - _ref: api/explode.yaml
 
 pages:
   - _ref: pages/home.yaml
   - _ref: pages/second.yaml
+  - _ref: pages/explore.yaml
+  - _ref: pages/explore_guarded.yaml

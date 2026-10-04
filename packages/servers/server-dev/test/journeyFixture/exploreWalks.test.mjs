@@ -16,7 +16,7 @@
 
 import { readRecordings } from '@lowdefy/node-utils';
 
-import { fixtureTest, fixtureUrl, postJson } from './fixtureClient.mjs';
+import { fixtureTest, fixtureUrl, launchChromium, postJson } from './fixtureClient.mjs';
 
 // The explorer's walk session routes over the fixture app, in a real
 // Chromium: a walk opens on a fresh data session, runs only offered steps,
@@ -152,3 +152,137 @@ fixtureTest('a walk with record false leaves no recording', async () => {
   expect((await closeWalk({ walkId })).status).toBe(200);
   expect(readRecordings({ configDirectory, source: 'explorer', run })).toEqual([]);
 });
+
+async function openExploreWalk({ walk, record = true, pageId = 'explore', ...rest }) {
+  const opened = await openWalk({
+    pageId,
+    user: 'member',
+    data: 'explore',
+    run: newRunId(),
+    walk,
+    record,
+    ...rest,
+  });
+  if (opened.status !== 200) {
+    throw new Error(`The walk did not open: ${JSON.stringify(opened.body)}`);
+  }
+  return opened.body;
+}
+
+async function clickOnce({ blockId, walk, record }) {
+  const { walkId, observation } = await openExploreWalk({ walk, record });
+  try {
+    const candidate = findCandidate({ observation, kind: 'click', blockId });
+    const stepped = await stepWalk({ walkId, step: { click: candidate.target } });
+    expect(stepped.status).toBe(200);
+    return stepped.body;
+  } finally {
+    await closeWalk({ walkId });
+  }
+}
+
+function kinds(findings) {
+  return findings.map((finding) => finding.kind);
+}
+
+fixtureTest(
+  'an antd Button with no actions and no effect is a dead click, despite its click wave',
+  async () => {
+    const { findings } = await clickOnce({ blockId: 'dead_button', walk: 'dead' });
+    expect(findings).toEqual([
+      expect.objectContaining({ kind: 'dead-click', severity: 'warning', pageId: 'explore' }),
+    ]);
+  }
+);
+
+fixtureTest('a block property whose _js throws gives a client-error', async () => {
+  const body = await clickOnce({ blockId: 'boom_button', walk: 'boom' });
+  expect(kinds(body.findings)).toContain('client-error');
+  expect(body.screenshot).toMatch(/^\.lowdefy\/explore\/.+\/screenshots\/boom-0\.png$/);
+});
+
+fixtureTest(
+  'a request whose connection throws gives a server-error with its source line',
+  async () => {
+    const { findings } = await clickOnce({ blockId: 'broken_request_button', walk: 'broken' });
+    const serverError = findings.find((finding) => finding.kind === 'server-error');
+    expect(serverError).toEqual(
+      expect.objectContaining({
+        severity: 'error',
+        source: expect.stringMatching(/explore\.yaml:\d+$/),
+      })
+    );
+  }
+);
+
+fixtureTest('a request with a $search stage gives environment, not server-error', async () => {
+  const { findings } = await clickOnce({ blockId: 'search_button', walk: 'search' });
+  expect(kinds(findings)).toContain('environment');
+  expect(kinds(findings)).not.toContain('server-error');
+});
+
+fixtureTest('a CallAPI that throws gives an action-error', async () => {
+  const { findings } = await clickOnce({ blockId: 'explode_button', walk: 'explode' });
+  expect(kinds(findings)).toContain('action-error');
+});
+
+fixtureTest('a failed Validate is not a finding', async () => {
+  const { findings } = await clickOnce({ blockId: 'validate_button', walk: 'validate' });
+  expect(findings).toEqual([]);
+});
+
+fixtureTest('a walk with record false still claims the errors it causes', async () => {
+  const { findings } = await clickOnce({
+    blockId: 'broken_request_button',
+    walk: 'broken-confirm',
+    record: false,
+  });
+  expect(kinds(findings)).toContain('server-error');
+});
+
+fixtureTest(
+  'a page whose auth admits the role but whose onInit redirects it gives role-refused when production shows the role there',
+  async () => {
+    const listed = await openExploreWalk({
+      walk: 'guarded',
+      pageId: 'explore_guarded',
+      roles: ['member'],
+      roleMatrixListed: true,
+    });
+    await closeWalk({ walkId: listed.walkId });
+    expect(listed.observation.redirected).toBe(true);
+    expect(listed.admitted).toBe(true);
+    expect(kinds(listed.findings)).toEqual(['role-refused']);
+
+    const unlisted = await openExploreWalk({
+      walk: 'guarded-unlisted',
+      pageId: 'explore_guarded',
+      roles: ['member'],
+      roleMatrixListed: false,
+    });
+    await closeWalk({ walkId: unlisted.walkId });
+    expect(unlisted.findings).toEqual([]);
+  }
+);
+
+fixtureTest(
+  'an error raised in a second, cookieless context during a walk step is not attributed to the walk',
+  async () => {
+    const { walkId, observation } = await openExploreWalk({ walk: 'beside' });
+    const browser = await launchChromium();
+    try {
+      const page = await browser.newPage();
+      await page.goto(`${fixtureUrl}/explore`);
+      await page.getByRole('button', { name: 'Broken request' }).waitFor();
+      const dead = findCandidate({ observation, kind: 'click', blockId: 'dead_button' });
+      const [stepped] = await Promise.all([
+        stepWalk({ walkId, step: { click: dead.target } }),
+        page.getByRole('button', { name: 'Broken request' }).click(),
+      ]);
+      expect(kinds(stepped.body.findings)).toEqual(['dead-click']);
+    } finally {
+      await browser.close();
+      await closeWalk({ walkId });
+    }
+  }
+);

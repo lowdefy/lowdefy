@@ -36,6 +36,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
 
   context.blockId = blockId;
   context.pageId = pageId;
+  context.requestId = requestId;
   const requestPayload = serializer.deserialize(payload);
   context.payload = requestPayload;
   context.evaluateOperators = createEvaluateOperators(context);

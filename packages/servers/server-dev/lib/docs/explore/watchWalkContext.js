@@ -20,8 +20,23 @@ import isAppApiUrl from './isAppApiUrl.js';
 // invariants read over a step's window: uncaught page errors, and the
 // requests to and responses from the app's request and endpoint API routes.
 // Hooked in before the context's first request, so the first page load is
-// watched too.
+// watched too. Client error reports still in flight are counted, so a step's
+// window waits for them before it closes.
 function watchWalkContext({ context, events, origin, basePath }) {
+  const clientErrorPath = `${basePath}/api/client-error`;
+  function isClientErrorPost(request) {
+    try {
+      const url = new URL(request.url());
+      return url.origin === origin && url.pathname === clientErrorPath;
+    } catch {
+      return false;
+    }
+  }
+  function settleClientErrorPost(request) {
+    if (isClientErrorPost(request)) events.pendingClientErrors.delete(request);
+  }
+  context.on('requestfinished', settleClientErrorPost);
+  context.on('requestfailed', settleClientErrorPost);
   context.on('weberror', (webError) => {
     const error = webError.error();
     events.pageErrors.push({
@@ -32,6 +47,7 @@ function watchWalkContext({ context, events, origin, basePath }) {
     });
   });
   context.on('request', (request) => {
+    if (isClientErrorPost(request)) events.pendingClientErrors.add(request);
     if (!isAppApiUrl({ url: request.url(), origin, basePath })) return;
     events.requests.push({ time: Date.now(), url: request.url(), method: request.method() });
   });
