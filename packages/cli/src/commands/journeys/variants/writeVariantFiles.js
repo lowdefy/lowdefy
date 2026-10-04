@@ -20,7 +20,8 @@ import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
 
 import buildVariantJourney from './buildVariantJourney.js';
-import writeVariantHeader, { readVariantHeader } from './writeVariantHeader.js';
+import readVariantOwnership from './readVariantOwnership.js';
+import writeVariantHeader from './writeVariantHeader.js';
 
 function renderVariant({ journey, variant, source }) {
   const document = new YAML.Document(buildVariantJourney({ journey, variant }), {
@@ -45,13 +46,33 @@ function escapeRegExp(text) {
   return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+// The journey file's path relative to tests/journeys/ (or to the config
+// directory, for a file outside it) without its extension, as segments, so
+// two files with one stem in different folders never share a folder.
+function sourceSegments({ directories, filePath }) {
+  const fromJourneys = path.relative(directories.journeys, filePath);
+  const inJourneys = !fromJourneys.startsWith('..') && !path.isAbsolute(fromJourneys);
+  const relative = inJourneys ? fromJourneys : path.relative(directories.config, filePath);
+  const parsed = path.parse(relative);
+  return [...parsed.dir.split(path.sep).filter((segment) => segment !== ''), parsed.name];
+}
+
+// Lower case, each run of other characters one `-`, so the journeys of one
+// file never share a file.
+function slugJourneyName(name) {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 // Variant files of this journey and these kinds from an earlier run that
 // this run did not write: removed when left as generated, else reported.
-// A file another journey's run wrote (another source file, or another
-// journey of this file) is left alone.
-function sweepStale({ directory, stem, source, journey, kinds, written }) {
+// A file this run does not own (another source file, or another journey
+// whose name gives the same slug) is left alone.
+function sweepStale({ directory, slug, source, journey, kinds, written }) {
   const pattern = new RegExp(
-    `^${escapeRegExp(stem)}-(${kinds.map(escapeRegExp).join('|')})(-\\d+)?\\.yaml$`
+    `^${escapeRegExp(slug)}-(${kinds.map(escapeRegExp).join('|')})(-\\d+)?\\.yaml$`
   );
   const results = [];
   fs.readdirSync(directory)
@@ -61,30 +82,41 @@ function sweepStale({ directory, stem, source, journey, kinds, written }) {
       const variantPath = path.join(directory, name);
       if (written.has(variantPath)) return;
       const text = fs.readFileSync(variantPath, 'utf8');
-      const header = readVariantHeader(text);
-      if (type.isNull(header) || header.source !== source) return;
-      if (header.edited) {
-        results.push({ path: variantPath, kind: pattern.exec(name)[1], status: 'stale' });
+      const ownership = readVariantOwnership({ text, source, journey });
+      if (!ownership.owned) return;
+      const kind = pattern.exec(name)[1];
+      if (ownership.edited) {
+        results.push({ path: variantPath, kind, status: 'stale' });
         return;
       }
-      if (YAML.parse(text)?.variant?.of !== journey.name) return;
       fs.rmSync(variantPath);
-      results.push({ path: variantPath, kind: pattern.exec(name)[1], status: 'removed' });
+      results.push({ path: variantPath, kind, status: 'removed' });
     });
   return results;
 }
 
-// Writes each variant to tests/journeys/_candidates/variants/
-// <stem>-<kind>[-<n>].yaml, n counting variants of one kind when there are
-// several. The same inputs give byte-identical files. A file someone edited
-// since it was generated (a filled-in placeholder, a fix after a flaky
-// replay) is kept, not overwritten. Earlier files of the run's kinds that
-// this run no longer writes are removed when unedited. Returns each file as
-// { path, kind, placeholder, status }, status one of written, kept (edited,
-// left as it is), removed and stale (no longer generated, but edited).
+// Writes each variant to tests/journeys/_candidates/variants/<source>/
+// <journey>-<kind>[-<n>].yaml: <source> the journey file's path without its
+// extension, <journey> a slug of the journey's name, n counting variants of
+// one kind when there are several. The same inputs give byte-identical
+// files. A file belongs to the source its header names and the journey its
+// variant.of names. Only an unedited file this run owns is overwritten: one
+// someone edited since it was generated (a filled-in placeholder, a fix
+// after a flaky replay) is kept, and one another source or journey owns (two
+// names that give one slug) is left alone and reported. Earlier files of the
+// run's kinds that this run owns and no longer writes are removed when
+// unedited. Returns each file as { path, kind, placeholder, status }, status
+// one of written, kept (edited, left as it is), conflict (owned by another
+// source or journey, with owner { source, name }), removed and stale (no
+// longer generated, but edited).
 function writeVariantFiles({ directories, filePath, journey, variants, kinds }) {
-  const directory = path.join(directories.journeys, '_candidates', 'variants');
-  const stem = path.basename(filePath, path.extname(filePath));
+  const directory = path.join(
+    directories.journeys,
+    '_candidates',
+    'variants',
+    ...sourceSegments({ directories, filePath })
+  );
+  const slug = slugJourneyName(journey.name);
   const source = path.relative(directories.config, filePath);
   fs.mkdirSync(directory, { recursive: true });
   const counts = new Map();
@@ -94,16 +126,27 @@ function writeVariantFiles({ directories, filePath, journey, variants, kinds }) 
     const n = (seen.get(variant.kind) ?? 0) + 1;
     seen.set(variant.kind, n);
     const suffix = counts.get(variant.kind) > 1 ? `-${n}` : '';
-    const variantPath = path.join(directory, `${stem}-${variant.kind}${suffix}.yaml`);
-    const text = renderVariant({ journey, variant, source });
+    const variantPath = path.join(directory, `${slug}-${variant.kind}${suffix}.yaml`);
     if (fs.existsSync(variantPath)) {
-      const existing = fs.readFileSync(variantPath, 'utf8');
-      const header = readVariantHeader(existing);
-      if (existing !== text && (type.isNull(header) || header.edited)) {
+      const ownership = readVariantOwnership({
+        text: fs.readFileSync(variantPath, 'utf8'),
+        source,
+        journey,
+      });
+      if (!ownership.owned) {
+        return {
+          path: variantPath,
+          kind: variant.kind,
+          placeholder: false,
+          status: 'conflict',
+          owner: { source: ownership.source, name: ownership.name },
+        };
+      }
+      if (ownership.edited) {
         return { path: variantPath, kind: variant.kind, placeholder: false, status: 'kept' };
       }
     }
-    fs.writeFileSync(variantPath, text);
+    fs.writeFileSync(variantPath, renderVariant({ journey, variant, source }));
     return {
       path: variantPath,
       kind: variant.kind,
@@ -113,7 +156,7 @@ function writeVariantFiles({ directories, filePath, journey, variants, kinds }) 
   });
   const stale = sweepStale({
     directory,
-    stem,
+    slug,
     source,
     journey,
     kinds,

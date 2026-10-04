@@ -407,7 +407,7 @@ The report is written to `.lowdefy/test/mutation.json`: each mutant with the jou
 
 ### Variants: `lowdefy journeys variants`
 
-`lowdefy journeys variants <file>` writes edge-case candidates of a journey to `tests/journeys/_candidates/variants/<file>-<kind>.yaml` and replays each three times. The same journey always gives the same files.
+`lowdefy journeys variants <file>` writes edge-case candidates of a journey to `tests/journeys/_candidates/variants/<source>/<journey>-<kind>.yaml` and replays each three times. `<source>` is the journey file's path under `tests/journeys/` (or under the config directory, for a file outside it) without its extension, so two files with one name in different folders never share a folder. `<journey>` is the journey's name in lower case with each run of other characters replaced by `-`, so the journeys of one file never share a file. A kind with several variants numbers them: `<journey>-negative-1.yaml`, `<journey>-negative-2.yaml`. The same journey always gives the same files.
 
 | Kind            | The variant                                                                                                                                                                                                                                                                        | Passes when                                                                                                      |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -432,7 +432,7 @@ steps:
   # ...
 ```
 
-Each file starts with a header line holding a hash of what was generated. A rerun rewrites a file left as generated, keeps one you edited (a filled-in placeholder, a fix after a flaky replay) and says so, and removes an unedited file the journey no longer gives. A variant that passes is a candidate to keep; one that fails is a finding, a bug or a behaviour to assert as expected; a flaky one has a cause to fix. The `role` and `tenant` kinds read the journey's data set file; a variant whose input is missing (no user with a role set, no fixture for the other organization, no `--empty-data`) is listed as skipped with what to add.
+Each file starts with a header line naming the journey file it came from and holding a hash of what was generated. A file belongs to that journey file and the journey its `variant.of` names. A rerun rewrites a file it owns that is left as generated, keeps one you edited (a filled-in placeholder, a fix after a flaky replay) and says so, and removes an unedited file it owns that the journey no longer gives. A file another journey owns (two journey names that give one slug) is left alone and reported as `CONFLICT`: rename one of the journeys. A variant that passes is a candidate to keep; one that fails is a finding, a bug or a behaviour to assert as expected; a flaky one has a cause to fix. The `role` and `tenant` kinds read the journey's data set file; a variant whose input is missing (no user with a role set, no fixture for the other organization, no `--empty-data`) is listed as skipped with what to add.
 
 - `--name <journey>`: The journey to vary, when the file holds several.
 - `--kinds <list>`: Only these kinds, comma separated.

@@ -144,6 +144,17 @@ function reportFile({ context, file }) {
         `KEPT     ${relative}: edited since it was generated; delete it to regenerate`
       );
       return;
+    case 'conflict':
+      if (type.isNull(file.owner.source)) {
+        context.logger.warn(
+          `CONFLICT ${relative}: holds a file with no generated header; move it or rename the journey`
+        );
+        return;
+      }
+      context.logger.warn(
+        `CONFLICT ${relative}: holds a variant of "${file.owner.name}" from ${file.owner.source}; rename one of the journeys`
+      );
+      return;
     case 'removed':
       context.logger.info(`REMOVED  ${relative}: no longer generated`);
       return;
@@ -180,7 +191,7 @@ async function replay({ context, written, url }) {
 // lowdefy journeys variants <file>: writes edge-case candidates of one
 // journey (other roles, another organization, empty and large data, bad
 // input, a reload mid-flow, a double click) deterministically to
-// tests/journeys/_candidates/variants/, and replays each three times unless
+// tests/journeys/_candidates/variants/<source>/, and replays each three times unless
 // --no-run. It never changes the original journey.
 async function journeysVariants({ context }) {
   const { kinds, error: kindsError } = parseKinds(context.options.kinds);

@@ -90,7 +90,7 @@ report, never an assertion to add.
 Run \`${cd}lowdefy journeys variants <file>\` for the journeys the developer picks; offer the most
 production-backed ones first. It writes edge-case candidates (other roles, another organization,
 empty and large data, bad input, a reload mid-flow, a double click) to
-\`tests/journeys/_candidates/variants/\` and replays each three times. Present failures one at a
+\`tests/journeys/_candidates/variants/<source>/\` and replays each three times. Present failures one at a
 time: is it a bug, or behaviour to assert as expected? A FLAKY variant gets its cause fixed. A
 variant with a \`from: shape\` placeholder needs the value its comment asks for before it runs.
 

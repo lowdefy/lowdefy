@@ -233,7 +233,7 @@ _ref:
 
             ## journeys variants
 
-            The `journeys variants` command writes edge-case candidates of one journey — other roles (`role`), another organization (`tenant`), empty and large data (`empty`, `volume`), bad input (`negative`), a reload mid-flow (`interrupt`) and a double click (`double-submit`) — to `tests/journeys/_candidates/variants/`, and replays each three times. See [Variants](/config-tests#variants-lowdefy-journeys-variants).
+            The `journeys variants` command writes edge-case candidates of one journey — other roles (`role`), another organization (`tenant`), empty and large data (`empty`, `volume`), bad input (`negative`), a reload mid-flow (`interrupt`) and a double click (`double-submit`) — to `tests/journeys/_candidates/variants/<source>/<journey>-<kind>.yaml`, and replays each three times. See [Variants](/config-tests#variants-lowdefy-journeys-variants).
 
             - `<file>`: The journey file to vary.
             - `--name <journey>`: The journey to vary, when the file holds several.

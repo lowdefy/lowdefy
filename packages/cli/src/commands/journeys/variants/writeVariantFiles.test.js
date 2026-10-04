@@ -77,22 +77,24 @@ afterEach(() => {
   fs.rmSync(directory, { recursive: true, force: true });
 });
 
-function writeAll() {
-  const variants = ['negative', 'interrupt', 'double-submit'].flatMap((kind) =>
+const KINDS = ['negative', 'interrupt', 'double-submit'];
+
+function writeAll({ forJourney = journey, file = 'assign.yaml', kinds = KINDS } = {}) {
+  const variants = kinds.flatMap((kind) =>
     generators[kind].flatMap((generator) =>
-      generator({ journey, exercised, pageConfigs, i18n: {} })
+      generator({ journey: forJourney, exercised, pageConfigs, i18n: {} })
     )
   );
   const directories = { config: directory, journeys: path.join(directory, 'tests', 'journeys') };
   return writeVariantFiles({
     directories,
-    filePath: path.join(directories.journeys, 'assign.yaml'),
-    journey,
+    filePath: path.join(directories.journeys, file),
+    journey: forJourney,
     variants,
-    kinds: ['negative', 'interrupt', 'double-submit'],
-  }).map((file) => ({
-    ...file,
-    content: fs.existsSync(file.path) ? fs.readFileSync(file.path, 'utf8') : null,
+    kinds,
+  }).map((variantFile) => ({
+    ...variantFile,
+    content: fs.existsSync(variantFile.path) ? fs.readFileSync(variantFile.path, 'utf8') : null,
   }));
 }
 
@@ -107,12 +109,12 @@ function body(content) {
 
 test('writeVariantFiles writes each kind byte for byte, numbering several of one kind', () => {
   const written = writeAll();
-  const variantsDirectory = path.join('tests', 'journeys', '_candidates', 'variants');
+  const variantsDirectory = path.join('tests', 'journeys', '_candidates', 'variants', 'assign');
   expect(written.map((file) => path.relative(directory, file.path))).toEqual([
-    path.join(variantsDirectory, 'assign-negative-1.yaml'),
-    path.join(variantsDirectory, 'assign-negative-2.yaml'),
-    path.join(variantsDirectory, 'assign-interrupt.yaml'),
-    path.join(variantsDirectory, 'assign-double-submit.yaml'),
+    path.join(variantsDirectory, 'member-assigns-an-open-ticket-negative-1.yaml'),
+    path.join(variantsDirectory, 'member-assigns-an-open-ticket-negative-2.yaml'),
+    path.join(variantsDirectory, 'member-assigns-an-open-ticket-interrupt.yaml'),
+    path.join(variantsDirectory, 'member-assigns-an-open-ticket-double-submit.yaml'),
   ]);
   expect(written.map(({ kind, placeholder, status }) => [kind, placeholder, status])).toEqual([
     ['negative', false, 'written'],
@@ -203,18 +205,18 @@ test('writeVariantFiles writes the same bytes on a second run', () => {
   expect(writeAll().map(({ content }) => content)).toEqual(first);
 });
 
-function variantPath(name) {
-  return path.join(directory, 'tests', 'journeys', '_candidates', 'variants', name);
+function variantPath(name, source = 'assign') {
+  return path.join(directory, 'tests', 'journeys', '_candidates', 'variants', source, name);
 }
 
 test('writeVariantFiles keeps a filled-in placeholder on a rerun and rewrites unedited files', () => {
   writeAll();
-  const placeholder = variantPath('assign-negative-2.yaml');
+  const placeholder = variantPath('member-assigns-an-open-ticket-negative-2.yaml');
   const filled = fs
     .readFileSync(placeholder, 'utf8')
     .replace('{ blockId: code, value: null, from: shape }', '{ blockId: code, value: ab }');
   fs.writeFileSync(placeholder, filled);
-  const interruptPath = variantPath('assign-interrupt.yaml');
+  const interruptPath = variantPath('member-assigns-an-open-ticket-interrupt.yaml');
   const generatedInterrupt = fs.readFileSync(interruptPath, 'utf8');
   const second = writeAll();
   expect(fs.readFileSync(placeholder, 'utf8')).toBe(filled);
@@ -223,31 +225,137 @@ test('writeVariantFiles keeps a filled-in placeholder on a rerun and rewrites un
   expect(fs.readFileSync(interruptPath, 'utf8')).toBe(generatedInterrupt);
 });
 
-test('writeVariantFiles keeps a file with no generated header', () => {
+test('writeVariantFiles leaves a file with no generated header alone as a conflict', () => {
   writeAll();
   const handWritten = 'name: by hand\npageId: tickets\nsteps:\n  - expect: { visible: a }\n';
-  fs.writeFileSync(variantPath('assign-interrupt.yaml'), handWritten);
-  expect(writeAll()[2].status).toBe('kept');
-  expect(fs.readFileSync(variantPath('assign-interrupt.yaml'), 'utf8')).toBe(handWritten);
+  fs.writeFileSync(variantPath('member-assigns-an-open-ticket-interrupt.yaml'), handWritten);
+  const rerun = writeAll()[2];
+  expect(rerun.status).toBe('conflict');
+  expect(rerun.owner).toEqual({ source: null, name: null });
+  expect(fs.readFileSync(variantPath('member-assigns-an-open-ticket-interrupt.yaml'), 'utf8')).toBe(
+    handWritten
+  );
 });
 
 test('writeVariantFiles removes an unedited file this run no longer writes and reports an edited one', () => {
   writeAll();
-  fs.copyFileSync(variantPath('assign-negative-1.yaml'), variantPath('assign-negative-3.yaml'));
+  fs.copyFileSync(
+    variantPath('member-assigns-an-open-ticket-negative-1.yaml'),
+    variantPath('member-assigns-an-open-ticket-negative-3.yaml')
+  );
   fs.writeFileSync(
-    variantPath('assign-negative-4.yaml'),
-    `${fs.readFileSync(variantPath('assign-negative-1.yaml'), 'utf8')}  - expect: { visible: x }\n`
+    variantPath('member-assigns-an-open-ticket-negative-4.yaml'),
+    `${fs.readFileSync(
+      variantPath('member-assigns-an-open-ticket-negative-1.yaml'),
+      'utf8'
+    )}  - expect: { visible: x }\n`
   );
   const other = fs
-    .readFileSync(variantPath('assign-negative-1.yaml'), 'utf8')
+    .readFileSync(variantPath('member-assigns-an-open-ticket-negative-1.yaml'), 'utf8')
     .replace('assign.yaml', 'assign-other.yaml');
-  fs.writeFileSync(variantPath('assign-negative-5.yaml'), other);
+  fs.writeFileSync(variantPath('member-assigns-an-open-ticket-negative-5.yaml'), other);
   const files = writeAll();
   expect(files.slice(4).map((file) => [path.basename(file.path), file.status])).toEqual([
-    ['assign-negative-3.yaml', 'removed'],
-    ['assign-negative-4.yaml', 'stale'],
+    ['member-assigns-an-open-ticket-negative-3.yaml', 'removed'],
+    ['member-assigns-an-open-ticket-negative-4.yaml', 'stale'],
   ]);
-  expect(fs.existsSync(variantPath('assign-negative-3.yaml'))).toBe(false);
-  expect(fs.existsSync(variantPath('assign-negative-4.yaml'))).toBe(true);
-  expect(fs.existsSync(variantPath('assign-negative-5.yaml'))).toBe(true);
+  expect(fs.existsSync(variantPath('member-assigns-an-open-ticket-negative-3.yaml'))).toBe(false);
+  expect(fs.existsSync(variantPath('member-assigns-an-open-ticket-negative-4.yaml'))).toBe(true);
+  expect(fs.existsSync(variantPath('member-assigns-an-open-ticket-negative-5.yaml'))).toBe(true);
+});
+
+function readTree(root) {
+  if (!fs.existsSync(root)) return {};
+  return Object.fromEntries(
+    fs
+      .readdirSync(root, { recursive: true })
+      .filter((name) => name.endsWith('.yaml'))
+      .sort()
+      .map((name) => [name, fs.readFileSync(path.join(root, name), 'utf8')])
+  );
+}
+
+const assignsAnother = { ...journey, name: 'member assigns another ticket' };
+
+test('writeVariantFiles writes two journeys of one file to separate files, and a rerun of one leaves the other byte-identical', () => {
+  writeAll({ kinds: ['double-submit'] });
+  const first = fs.readFileSync(
+    variantPath('member-assigns-an-open-ticket-double-submit.yaml'),
+    'utf8'
+  );
+  const second = writeAll({ forJourney: assignsAnother, kinds: ['double-submit'] });
+  expect(second.map((file) => [path.basename(file.path), file.status])).toEqual([
+    ['member-assigns-another-ticket-double-submit.yaml', 'written'],
+  ]);
+  expect(second[0].content).toContain('  of: member assigns another ticket\n');
+  writeAll({ forJourney: assignsAnother, kinds: ['double-submit'] });
+  expect(
+    fs.readFileSync(variantPath('member-assigns-an-open-ticket-double-submit.yaml'), 'utf8')
+  ).toBe(first);
+});
+
+test('writeVariantFiles writes same-stem files in different folders to separate folders, and a rerun of one never touches the other', () => {
+  writeAll({ file: path.join('a', 'tickets.yaml') });
+  const bFiles = writeAll({ file: path.join('b', 'tickets.yaml') });
+  expect(bFiles.map((file) => path.relative(directory, path.dirname(file.path)))).toEqual(
+    Array(4).fill(path.join('tests', 'journeys', '_candidates', 'variants', 'b', 'tickets'))
+  );
+  const bDirectory = path.join(directory, 'tests', 'journeys', '_candidates', 'variants', 'b');
+  const bBefore = readTree(bDirectory);
+  // A rerun for a/tickets.yaml with fewer kinds sweeps only its own folder.
+  const aFiles = writeAll({ file: path.join('a', 'tickets.yaml'), kinds: ['negative'] });
+  expect(aFiles.map(({ status }) => status)).toEqual(['written', 'written']);
+  expect(readTree(bDirectory)).toEqual(bBefore);
+});
+
+test('writeVariantFiles places a journey file outside tests/journeys by its path from the config directory', () => {
+  const files = writeAll({ file: path.join('..', 'other', 'tickets.yaml'), kinds: ['interrupt'] });
+  expect(path.relative(directory, files[0].path)).toBe(
+    path.join(
+      'tests',
+      'journeys',
+      '_candidates',
+      'variants',
+      'tests',
+      'other',
+      'tickets',
+      'member-assigns-an-open-ticket-interrupt.yaml'
+    )
+  );
+  expect(files[0].content).toMatch(
+    /^# Generated by lowdefy journeys variants from tests\/other\/tickets\.yaml /
+  );
+});
+
+test('writeVariantFiles reports a conflict for a journey whose name slugs alike and leaves the first file unchanged', () => {
+  writeAll({ kinds: ['double-submit'] });
+  const firstPath = variantPath('member-assigns-an-open-ticket-double-submit.yaml');
+  const first = fs.readFileSync(firstPath, 'utf8');
+  const lookalike = { ...journey, name: 'Member assigns an open ticket!' };
+  const files = writeAll({ forJourney: lookalike, kinds: ['double-submit'] });
+  expect(files.map(({ status, owner }) => [status, owner])).toEqual([
+    ['conflict', { source: path.join('tests', 'journeys', 'assign.yaml'), name: journey.name }],
+  ]);
+  expect(fs.readFileSync(firstPath, 'utf8')).toBe(first);
+  // The first journey's own rerun still owns and rewrites its file.
+  expect(writeAll({ kinds: ['double-submit'] })[0].status).toBe('written');
+});
+
+test("writeVariantFiles does not sweep another journey's unedited file that shares its slug", () => {
+  writeAll();
+  // An unedited file of the first journey that a run of the look-alike does not write.
+  fs.copyFileSync(
+    variantPath('member-assigns-an-open-ticket-negative-1.yaml'),
+    variantPath('member-assigns-an-open-ticket-negative-3.yaml')
+  );
+  const lookalike = { ...journey, name: 'Member assigns an open ticket!' };
+  const files = writeAll({ forJourney: lookalike, kinds: ['negative'] });
+  expect(files.map(({ status }) => status)).toEqual(['conflict', 'conflict']);
+  expect(fs.existsSync(variantPath('member-assigns-an-open-ticket-negative-3.yaml'))).toBe(true);
+  // The first journey's own run sweeps it.
+  expect(writeAll({ kinds: ['negative'] }).map(({ status }) => status)).toEqual([
+    'written',
+    'written',
+    'removed',
+  ]);
 });
