@@ -1,6 +1,7 @@
 ---
 '@lowdefy/api': minor
 '@lowdefy/build': patch
+'@lowdefy/docs-content': patch
 '@lowdefy/server': minor
 '@lowdefy/server-dev': minor
 ---
