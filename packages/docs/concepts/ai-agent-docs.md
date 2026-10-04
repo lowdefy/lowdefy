@@ -63,7 +63,7 @@ Agents manage the dev server with these tools, and never run `lowdefy dev`, choo
 | `lowdefy_dev_stop`   | Stop the app's dev server if the hub started it                                                                                                                                                                                                                  |
 | `lowdefy_dev_status` | Owner, state, URL and build status, without starting anything                                                                                                                                                                                                    |
 | `lowdefy_dev_logs`   | Recent output of a hub-started dev server, optionally filtered                                                                                                                                                                                                   |
-| `lowdefy_run_tests`  | Run the app's journeys (`tests/journeys/*.yaml`, as `lowdefy test` does) against its dev server and return each result as data                                                                                                                                   |
+| `lowdefy_run_tests`  | Run the app's journeys against its dev server, as `lowdefy test` does: all of them, a folder or glob (`paths`), or a tagged section (`tags`), narrowed by name with `filter`. Returns each result as data                                                        |
 | `lowdefy_dev_list`   | Dev servers across the checkout's apps and other checkouts                                                                                                                                                                                                       |
 
 The dev server itself also serves the MCP endpoint over streamable HTTP at `/lowdefy-docs/mcp`, for clients that connect by URL. Through `lowdefy mcp`, restart is `lowdefy_dev_start` with `restart: true` rather than `lowdefy_restart`.
@@ -403,7 +403,7 @@ Malformed steps are answered before a browser opens — an unknown key returns `
 
 To test auth itself — sign-up, email verification, sign-in, invitations, organization switching — pass `"user": "none"`: no caller is injected, the journey starts signed out, and the app's own sessions carry through its steps. [Config Tests](/config-tests#testing-sign-up-and-sign-in) covers the mail sink and the database these journeys need.
 
-Journeys are also the file format of `tests/journeys/*.yaml`, which `lowdefy test` runs through this same route — write the journey the agent used to verify a change, and it becomes the regression test for it.
+Journeys are also the file format of `tests/journeys/`, which `lowdefy test` runs through this same route — write the journey the agent used to verify a change, and it becomes the regression test for it.
 
 ## Setting up a project — one command
 

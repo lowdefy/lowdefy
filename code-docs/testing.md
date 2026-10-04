@@ -141,7 +141,7 @@ what later journey features assert. Run it after `pnpm build`:
 
 ```bash
 pnpm --filter=@lowdefy/server-dev test:fixture   # the runner, the observer, the grammar, mutants
-pnpm --filter=lowdefy test:fixture                # `lowdefy journeys harden` from the built CLI
+pnpm --filter=lowdefy test:fixture                # `lowdefy journeys harden` and `lowdefy test` selections from the built CLI
 ```
 
 Each jest global setup (`test/journeyFixture/globalSetup.mjs` in either package) calls
