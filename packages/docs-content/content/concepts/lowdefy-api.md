@@ -273,7 +273,7 @@ A `webhook: true` endpoint is publicly reachable by design — never declare it 
 
 ### Verifying the sender
 
-Set `webhook` to `{ verify: <request> }` to check the sender before the routine runs. The verifier is a request (`connectionId`, `type`, `properties`) run against the incoming request. When it returns `true` or `{ verified: true }`, the routine runs as a trusted system context, so it can `CallApi` protected endpoints. When it returns anything else or throws, the endpoint answers `401` and the routine never runs. A `webhook: true` endpoint with no verifier runs untrusted throughout.
+Set `webhook` to `{ verify: <request> }` to check the sender before the routine runs. The verifier is a request (`connectionId`, `type`, `properties`) run against the incoming request. When it returns `true` or `{ verified: true }`, the routine runs as a trusted system context, so it can `CallApi` protected endpoints. When it returns anything else or throws, the endpoint answers `401` and the routine never runs. A verifier whose own service can not be reached (it throws a `ServiceError`) fails the request with an error instead, so an outage is never reported as a forged webhook. A `webhook: true` endpoint with no verifier runs untrusted throughout.
 
 The verifier's `_payload` is `{ body, rawBody, query, headers }`:
 
