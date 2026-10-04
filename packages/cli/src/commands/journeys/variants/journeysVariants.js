@@ -23,6 +23,7 @@ import fetchVariantInputs from './fetchVariantInputs.js';
 import formatJourneyResult from '../../test/formatJourneyResult.js';
 import generators, { KINDS } from './generators/index.js';
 import readExercised from '../../test/readExercised.js';
+import readVariantDataSets from './readVariantDataSets.js';
 import resolveJourneyPaths from '../../test/resolveJourneyPaths.js';
 import resolveServer from '../../test/resolveServer.js';
 import runJourney from '../../test/runJourney.js';
@@ -115,22 +116,56 @@ async function readOrMeasure({ context, item, url }) {
   return { exercised: result.exercised };
 }
 
+// Runs each kind's generators. A generator returns its variants, or
+// { skipped } with a note, or { variants, skipped: [notes] } when it wrote
+// some and skipped others.
 function generate({ context, kinds, journey, exercised, inputs }) {
   const variants = [];
   kinds.forEach((kind) => {
-    const generator = generators[kind];
-    if (type.isUndefined(generator)) {
-      context.logger.info(`SKIPPED  ${kind}: needs data sets`);
-      return;
-    }
-    const generated = generator({ journey, exercised, ...inputs });
-    if (!type.isArray(generated)) {
-      context.logger.info(`SKIPPED  ${kind}: ${generated.skipped}`);
-      return;
-    }
-    variants.push(...generated);
+    generators[kind].forEach((generator) => {
+      const generated = generator({ journey, exercised, ...inputs });
+      if (type.isArray(generated)) {
+        variants.push(...generated);
+        return;
+      }
+      variants.push(...(generated.variants ?? []));
+      const notes = type.isArray(generated.skipped) ? generated.skipped : [generated.skipped];
+      notes.forEach((note) => context.logger.info(`SKIPPED  ${kind}: ${note}`));
+    });
   });
   return variants;
+}
+
+function reportFile({ context, file }) {
+  const relative = path.relative(context.directories.config, file.path);
+  switch (file.status) {
+    case 'kept':
+      context.logger.warn(
+        `KEPT     ${relative}: edited since it was generated; delete it to regenerate`
+      );
+      return;
+    case 'conflict':
+      if (type.isNull(file.owner.source)) {
+        context.logger.warn(
+          `CONFLICT ${relative}: holds a file with no generated header; move it or rename the journey`
+        );
+        return;
+      }
+      context.logger.warn(
+        `CONFLICT ${relative}: holds a variant of "${file.owner.name}" from ${file.owner.source}; rename one of the journeys`
+      );
+      return;
+    case 'removed':
+      context.logger.info(`REMOVED  ${relative}: no longer generated`);
+      return;
+    case 'stale':
+      context.logger.warn(
+        `KEPT     ${relative}: no longer generated, but edited since; delete it if it is not needed`
+      );
+      return;
+    default:
+      context.logger.info(`WROTE    ${relative}`);
+  }
 }
 
 async function replay({ context, written, url }) {
@@ -154,8 +189,9 @@ async function replay({ context, written, url }) {
 }
 
 // lowdefy journeys variants <file>: writes edge-case candidates of one
-// journey (bad input, a reload mid-flow, a double click) deterministically to
-// tests/journeys/_candidates/variants/, and replays each three times unless
+// journey (other roles, another organization, empty and large data, bad
+// input, a reload mid-flow, a double click) deterministically to
+// tests/journeys/_candidates/variants/<source>/, and replays each three times unless
 // --no-run. It never changes the original journey.
 async function journeysVariants({ context }) {
   const { kinds, error: kindsError } = parseKinds(context.options.kinds);
@@ -166,6 +202,13 @@ async function journeysVariants({ context }) {
   const { item, error } = selectJourney({ context });
   if (error) {
     refuse({ context, message: error });
+    return;
+  }
+  let dataSets;
+  try {
+    dataSets = await readVariantDataSets({ context, journey: item.journey });
+  } catch (dataSetError) {
+    refuse({ context, message: dataSetError.message });
     return;
   }
   const server = await resolveServer({ context });
@@ -185,19 +228,19 @@ async function journeysVariants({ context }) {
       kinds,
       journey: item.journey,
       exercised: measured.exercised,
-      inputs,
+      inputs: { ...inputs, ...dataSets },
     });
-    const written = writeVariantFiles({
+    const files = writeVariantFiles({
       directories: context.directories,
       filePath: item.filePath,
       journey: item.journey,
       variants,
+      kinds,
     });
-    written.forEach((file) =>
-      context.logger.info(`WROTE    ${path.relative(context.directories.config, file.path)}`)
-    );
+    files.forEach((file) => reportFile({ context, file }));
     if (context.options.run !== false) {
-      await replay({ context, written, url: server.url });
+      const candidates = files.filter(({ status }) => status === 'written' || status === 'kept');
+      await replay({ context, written: candidates, url: server.url });
     }
   } finally {
     await server.stop();

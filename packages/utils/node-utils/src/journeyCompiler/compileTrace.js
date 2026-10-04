@@ -88,7 +88,22 @@ function publicSegment(segment) {
 // gets a new file. `filters` ({ since, until, build, page }) is how the CLI's
 // flags reach the compile: since/until bound the window the text threshold
 // counts over, build and page select segments.
-function compileTrace({ records, blockMetas = {}, existingCandidates = {}, source, filters = {} }) {
+//
+// `prepareCandidate({ journey, origin, comments, sessions })`, when given,
+// sees each candidate before it is rendered, with the sessions its cluster
+// came from, and returns { journey, origin, comments } to render, or null to
+// leave the candidate out. The explorer uses it to keep only candidates that
+// touch what a pull request changed, to drop expectations that hold snapshot
+// values, and to add its run to the origin. It may drop steps; it never
+// writes one.
+function compileTrace({
+  records,
+  blockMetas = {},
+  existingCandidates = {},
+  source,
+  filters = {},
+  prepareCandidate,
+}) {
   if (!SOURCES.includes(source)) {
     throw new Error(
       `Journey compiler requires "source" to be one of ${SOURCES.join(
@@ -102,31 +117,40 @@ function compileTrace({ records, blockMetas = {}, existingCandidates = {}, sourc
     .filter((segment) => !type.isUndefined(segment) && keepSegment({ segment, filters }));
   const clusters = clusterSegments({ segments });
 
-  const candidates = clusters.map((cluster) => {
-    const { compiled } = cluster.representative;
-    const fileName = candidateFileName({ hash: cluster.hash, pageId: compiled.journey.pageId });
-    const existing = existingCandidates[fileName];
-    const origin = mergeOrigin({
-      existing: parseCandidateOrigin({ contents: existing }),
-      origin: buildOrigin({ cluster, source }),
-    });
-    const known = !type.isUndefined(existing);
-    return {
-      fileName,
-      contents: known
-        ? updateCandidateOrigin({ contents: existing, origin })
-        : renderCandidate({
-            comments: compiled.comments,
-            footer: compiled.footer,
-            journey: compiled.journey,
-            origin,
-          }),
-      hash: cluster.hash,
-      journey: compiled.journey,
-      origin,
-      status: known ? 'updated' : 'created',
-    };
-  });
+  const candidates = clusters
+    .map((cluster) => {
+      const { compiled } = cluster.representative;
+      const fileName = candidateFileName({ hash: cluster.hash, pageId: compiled.journey.pageId });
+      const existing = existingCandidates[fileName];
+      let candidate = {
+        journey: compiled.journey,
+        comments: compiled.comments,
+        origin: mergeOrigin({
+          existing: parseCandidateOrigin({ contents: existing }),
+          origin: buildOrigin({ cluster, source }),
+        }),
+      };
+      if (!type.isUndefined(prepareCandidate)) {
+        candidate = prepareCandidate({
+          ...candidate,
+          sessions: [...new Set(cluster.segments.map((segment) => segment.session))].sort(),
+        });
+        if (candidate === null) return null;
+      }
+      const { journey, comments, origin } = candidate;
+      const known = !type.isUndefined(existing);
+      return {
+        fileName,
+        contents: known
+          ? updateCandidateOrigin({ contents: existing, origin })
+          : renderCandidate({ comments, footer: compiled.footer, journey, origin }),
+        hash: cluster.hash,
+        journey,
+        origin,
+        status: known ? 'updated' : 'created',
+      };
+    })
+    .filter((candidate) => candidate !== null);
 
   return { candidates, segments: segments.map(publicSegment), dropped };
 }

@@ -80,16 +80,6 @@ test.describe('AutoComplete Block', () => {
     await expect(wrapper).toHaveClass(/ant-select-borderless/);
   });
 
-  test('shows dropdown when defaultOpen is true', async ({ page }) => {
-    // The ac_default_open block should have its dropdown visible
-    // First focus the input to ensure the dropdown is triggered
-    const input = getInput(page, 'ac_default_open');
-    await input.click();
-    // Dropdown should be visible
-    const dropdown = page.locator('.ant-select-dropdown:visible');
-    await expect(dropdown.first()).toBeVisible();
-  });
-
   test('renders with title', async ({ page }) => {
     const block = getBlock(page, 'ac_with_title');
     const label = block.locator('.ant-form-item-label');
@@ -414,5 +404,14 @@ test.describe('AutoComplete antd 6 features', () => {
     const options = page.locator('.ant-select-dropdown:visible .ant-select-item-option');
     await expect(options).toHaveCount(12);
     await expect(options.last()).toHaveAttribute('role', 'option');
+  });
+});
+
+test.describe('AutoComplete defaultOpen', () => {
+  test('shows the dropdown on load when defaultOpen is true', async ({ page }) => {
+    await navigateToTestPage(page, 'auto_complete_default_open');
+    const dropdown = getBlock(page, 'ac_default_open').locator('.ant-select-dropdown');
+    await expect(dropdown).toBeVisible();
+    await expect(getOption(page, 'ac_default_open', 0)).toHaveText('A');
   });
 });

@@ -449,6 +449,11 @@
           pageId: journey-data-sets
           properties:
             title: Journey Data Sets
+        - id: explore-pull-request
+          type: MenuLink
+          pageId: explore-pull-request
+          properties:
+            title: Exploring a Pull Request
         - id: e2e-introduction
           type: MenuLink
           pageId: e2e-introduction

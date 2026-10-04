@@ -470,6 +470,12 @@
       "path": "content/testing/journey-data-sets.md"
     },
     {
+      "slug": "testing/explore-pull-request",
+      "title": "Exploring a Pull Request",
+      "section": "Testing",
+      "path": "content/testing/explore-pull-request.md"
+    },
+    {
       "slug": "testing/e2e-introduction",
       "title": "E2E Testing",
       "section": "Testing",
@@ -3254,7 +3260,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "8b665c08ae086d20a71b5efd08c8c7dc6361a0fd4493542b7c4a853991e555b2"
+      "hash": "269a5048b3f00954e89c15e11fe855c629a69bd45ae28198f458823fadc87c00"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3270,7 +3276,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "5d959d3b7a8c43a05fefe38be7ca449590f4c8ce0ee3839ba6135247dc656e48"
+      "hash": "21209b9b22dd322b562c882905a7d42a3f83b49158f6010c37d42d24f7953fb9"
     },
     "concepts/notifications": {
       "files": [
@@ -3318,7 +3324,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "a64b489c9c75994ea58b812fb550dcf2a58607b07626269e63327f21ac9d3dc6"
+      "hash": "a12c94fbb3fd6c2f9c5aa63dad84f3219a514f47b2d29a0d96512cb7cc5bb291"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3423,7 +3429,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "bf6f2876a2b0110d8d2952bf4d1e0d81dd0ff022e32bafe3377519d0a94d88cb"
+      "hash": "62a18ae50f4fae87a071b21fdc32393d33f2710b89c852461310982550d5735e"
     },
     "agents/agentconversations": {
       "files": [
@@ -3773,7 +3779,7 @@
         "users/mcp-oauth.yaml",
         "version.yaml"
       ],
-      "hash": "4c5f0a40dae53cca8faf56c0ae59c5fda3551acc03c565a66bb796e3f30953da"
+      "hash": "e591379f6c4f934ca05c6e5a8bddabc43fe69602a0964097287647e2dd225555"
     },
     "user-authentication/user-object": {
       "files": [
@@ -3886,7 +3892,7 @@
         "testing/config-tests.yaml",
         "version.yaml"
       ],
-      "hash": "eee670e5c603cc8e59a2443621739ce28cce69e4b3ca8f2cefe4712cde6cf72a"
+      "hash": "078e5a18975f2295d836a988a7b43a484ecf62e53af246fa61b10bdd7f25ff07"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -3902,6 +3908,21 @@
         "version.yaml"
       ],
       "hash": "7ca281622351b481a3c7bf7f56dae303f4adeb6d009332dca3f303ebb4f35082"
+    },
+    "testing/explore-pull-request": {
+      "files": [
+        "requests/discord_message.yaml.njk",
+        "requests/insert_feedback.yaml",
+        "requests/insert_newsletter.yaml",
+        "templates/footer.yaml.njk",
+        "templates/general.yaml.njk",
+        "templates/header.yaml",
+        "templates/validate_email.yaml",
+        "testing/explore-pull-request.md",
+        "testing/explore-pull-request.yaml",
+        "version.yaml"
+      ],
+      "hash": "bab7fee77701309ec3a9180872179803c311da49d7179d1cd698421d403dd648"
     },
     "testing/e2e-introduction": {
       "files": [

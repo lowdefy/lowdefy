@@ -16,8 +16,7 @@
 
 import { acquireMachineSlot } from '@lowdefy/node-utils';
 
-const BROWSER_SLOTS = 3;
-const BROWSER_SLOT_WAIT_MS = 5 * 60 * 1000;
+import acquireBrowserSlot from './acquireBrowserSlot.js';
 
 /*
 Runs one browser operation (a journey, a screenshot, a state inspection, an
@@ -26,13 +25,13 @@ at most three run at once across every dev server on the machine, however
 the call came in. A slot covers the whole operation, every page and actor of
 a journey included: a bound per page would deadlock a journey with more
 actors than slots. The operation's own timeouts start once the slot is
-taken. A wait that outlasts BROWSER_SLOT_WAIT_MS is answered as the
+taken. A wait that outlasts the slot wait (see acquireBrowserSlot) is answered as the
 operation's error, like every other failure of these tools.
 */
 async function withBrowserSlot({ task, acquire = acquireMachineSlot }) {
   let slot;
   try {
-    slot = await acquire({ name: 'browser', limit: BROWSER_SLOTS, waitMs: BROWSER_SLOT_WAIT_MS });
+    slot = await acquireBrowserSlot({ acquire });
   } catch (error) {
     return { error: error.message };
   }

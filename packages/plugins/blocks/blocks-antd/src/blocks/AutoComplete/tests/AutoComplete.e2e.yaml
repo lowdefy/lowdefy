@@ -106,15 +106,6 @@ blocks:
         - B
         - C
 
-  - id: ac_default_open
-    type: AutoComplete
-    properties:
-      defaultOpen: true
-      options:
-        - A
-        - B
-        - C
-
   - id: ac_backfill
     type: AutoComplete
     properties:

@@ -14,8 +14,7 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
+import asList from './asList.js';
 import discoverJourneys from './discoverJourneys.js';
 import formatJourneyResult from './formatJourneyResult.js';
 import runJourney from './runJourney.js';
@@ -35,20 +34,33 @@ function getItemName(item) {
   return item.journey?.name ?? item.filePath;
 }
 
-function matchesFilter({ item, filter }) {
-  if (type.isNone(filter)) {
+function matchesFilters({ item, filters }) {
+  if (filters.length === 0) {
     return true;
   }
-  return getItemName(item).toLowerCase().includes(filter.toLowerCase());
+  const name = getItemName(item).toLowerCase();
+  return filters.some((filter) => name.includes(filter.toLowerCase()));
+}
+
+function matchesTags({ item, tags }) {
+  if (tags.length === 0) {
+    return true;
+  }
+  const itemTags = asList(item.journey?.tags);
+  return tags.some((tag) => itemTags.includes(tag));
 }
 
 // The tests `lowdefy test` and the lowdefy_run_tests MCP tool run: every
-// suite's items (from `paths` when given), whose name contains filter
-// (case-insensitive).
-function selectTests({ context, filter, paths }) {
+// suite's items (from `paths` when given) whose name contains any of the
+// filters (case-insensitive) and that carry any of the tags. `filter` is one
+// string or a list; paths, filters and tags combine with AND.
+function selectTests({ context, filter, tags, paths }) {
+  const filters = asList(filter);
+  const tagList = asList(tags);
   return suites
     .flatMap((suite) => suite.discover({ context, paths }).map((item) => ({ suite, item })))
-    .filter(({ item }) => matchesFilter({ item, filter }));
+    .filter(({ item }) => matchesFilters({ item, filters }))
+    .filter(({ item }) => matchesTags({ item, tags: tagList }));
 }
 
 export default selectTests;

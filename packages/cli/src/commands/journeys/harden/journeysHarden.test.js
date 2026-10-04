@@ -380,3 +380,30 @@ test('journeysHarden stops at the third config change, writes what it kept and e
   expect(report.rebuilds).toBe(3);
   expect(report.mutants.every(({ status }) => status === 'not run')).toBe(true);
 });
+
+test('journeysHarden sends a data-set journey its data set and user on the baseline and every mutant run, and records none', async () => {
+  writeJourney('orders.yaml', {
+    name: 'orders',
+    pageId: 'orders',
+    data: 'shop',
+    user: 'owner',
+    steps: [{ click: 'save' }, { expect: { visible: 'alert' } }],
+  });
+  const bodies = [];
+  onMutantRun = (body) => bodies.push(body);
+  await harden({ page: ['orders'] });
+  expect(process.exitCode).toBeUndefined();
+  const ordersPosts = mockPost.mock.calls
+    .filter(
+      ([target, body]) => target === `${url}/lowdefy-docs/journey` && body.pageId === 'orders'
+    )
+    .map(([, body]) => body);
+  expect(ordersPosts.length).toBeGreaterThan(1);
+  ordersPosts.forEach((body) => {
+    expect(body.data).toBe('shop');
+    expect(body.user).toBe('owner');
+    expect(body.recording).toBeUndefined();
+  });
+  expect(bodies.length).toBeGreaterThan(0);
+  bodies.forEach((body) => expect(body.data).toBe('shop'));
+});

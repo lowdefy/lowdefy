@@ -55,7 +55,7 @@ function selectJourneys({ context }) {
     ({ item }) => item
   );
   if (items.length === 0) {
-    return { error: 'No journeys to harden. Add journeys to tests/journeys/*.yaml.' };
+    return { error: 'No journeys to harden. Add journeys to tests/journeys/.' };
   }
   return { items };
 }

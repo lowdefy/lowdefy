@@ -34,7 +34,7 @@ const entries = [];
 function push(entry) {
   const stamped = { ...entry, buildId: getBuildId() };
   if (stamped.recording?.source === 'explorer') {
-    recordError(stamped);
+    recordError({ ...stamped, store: 'client' });
     return;
   }
   entries.push(stamped);

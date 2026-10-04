@@ -47,19 +47,10 @@ async function endpointsHandler(c) {
     /* unknown endpoint — the standard path below reports it exactly as before */
   }
   if (endpointConfig?.webhook) {
-    // SNS posts JSON as text/plain — parse regardless of content-type; an
-    // unparseable body arrives as the raw string.
-    const raw = await c.req.text();
-    let body = raw;
-    try {
-      body = JSON.parse(raw);
-    } catch {
-      /* non-JSON body — raw string passthrough */
-    }
     context.logger.info({ event: 'call_webhook_endpoint', endpointId });
     const result = await runWebhookEndpoint(context, {
       endpointId,
-      body,
+      rawBody: await c.req.text(),
       query: c.req.query(),
       headers: c.req.header(),
     });

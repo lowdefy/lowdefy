@@ -18,18 +18,31 @@ import L1 from './L1.js';
 import L2 from './L2.js';
 import L3 from './L3.js';
 import L4 from './L4.js';
+import L5 from './L5.js';
 import L6 from './L6.js';
+import L7 from './L7.js';
 
-// The lints that need no data set. L5 and L7 (data sets) join this registry
-// when journeys gain data sets.
-const RULES = { L1, L2, L3, L4, L6 };
+const RULES = { L1, L2, L3, L4, L5, L6, L7 };
 
 // Every problem one journey has, as { rule, severity, stepIndex?, message }.
 // `exercisedEntry` is the journey's newest measured run (readExercised), or
-// null when it has none.
-function lintJourney({ journey, exercisedEntry, rules = RULES }) {
+// null when it has none. `dataSet` is its data set (parseDataSet), or null.
+// L7 alone reads the rest: the dev build directory its pages were built into,
+// the strings of the data set's pulled snapshot (null when not pulled), and
+// the pages that could not be built.
+function lintJourney({
+  journey,
+  exercisedEntry,
+  dataSet = null,
+  buildDirectory = null,
+  snapshotStrings = null,
+  pageErrors = {},
+  rules = RULES,
+}) {
   return Object.entries(rules).flatMap(([rule, check]) =>
-    check({ journey, exercisedEntry }).map((problem) => ({ rule, ...problem }))
+    check({ journey, exercisedEntry, dataSet, buildDirectory, snapshotStrings, pageErrors }).map(
+      (problem) => ({ rule, ...problem })
+    )
   );
 }
 

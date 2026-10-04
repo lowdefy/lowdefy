@@ -49,9 +49,9 @@ function breakFill({ block, blockId, i18n }) {
 // the submit click, then the rule's message shows and the write is never
 // sent.
 function negative({ journey, exercised, pageConfigs, i18n }) {
-  const submit = findSubmitClick({ journey, exercised });
-  if (type.isNull(submit)) {
-    return { skipped: 'no submit click: no click followed by a wait for a write request' };
+  const submit = findSubmitClick({ journey, exercised, pageConfigs });
+  if (!type.isUndefined(submit.skipped)) {
+    return { skipped: submit.skipped };
   }
   const variants = [];
   journey.steps.slice(0, submit.index).forEach((step, index) => {

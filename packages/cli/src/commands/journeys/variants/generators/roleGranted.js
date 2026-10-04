@@ -1,0 +1,75 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { type } from '@lowdefy/helpers';
+
+import journeyUser from '../journeyUser.js';
+import roleKey from '../roleKey.js';
+
+function formatRoles(roles) {
+  return `[${roles.join(', ')}]`;
+}
+
+// Role, granted: for each role set other than the journey user's (the page's
+// role matrix from production use, else each data set user's role set), the
+// same steps as a data set user with exactly that set. A set no user has is
+// listed for the developer to add. When the start page has auth.roles, a set
+// holding none of them is left to the refused variant.
+function roleGranted({ journey, dataSet, roleMatrix, pageConfigs }) {
+  if (type.isNone(dataSet)) {
+    return { skipped: 'the journey declares no data: set' };
+  }
+  const current = roleKey(journeyUser({ journey, dataSet }).user?.roles);
+  const pageRoles = pageConfigs[0]?.auth?.roles;
+  const source = type.isNone(roleMatrix)
+    ? Object.values(dataSet.users).map((user) => user.roles)
+    : roleMatrix;
+  const roleSets = new Map();
+  source.forEach((roles) => {
+    const key = roleKey(roles);
+    const set = JSON.parse(key);
+    if (key === current) return;
+    if (type.isArray(pageRoles) && !set.some((role) => pageRoles.includes(role))) return;
+    roleSets.set(key, set);
+  });
+  if (roleSets.size === 0) {
+    return {
+      skipped: `no role set other than the journey user's ${
+        type.isNone(roleMatrix) ? 'among the data set users' : "in the page's role matrix"
+      }`,
+    };
+  }
+  const userNames = Object.keys(dataSet.users).sort();
+  const variants = [];
+  const skipped = [];
+  [...roleSets.keys()].sort().forEach((key) => {
+    const roles = roleSets.get(key);
+    const name = userNames.find((userName) => roleKey(dataSet.users[userName].roles) === key);
+    if (type.isUndefined(name)) {
+      skipped.push(`add a user with roles ${formatRoles(roles)} to the data set`);
+      return;
+    }
+    variants.push({
+      kind: 'role',
+      detail: `granted to ${name} ${formatRoles(roles)}`,
+      overrides: { user: name },
+      steps: journey.steps,
+    });
+  });
+  return { variants, skipped };
+}
+
+export default roleGranted;

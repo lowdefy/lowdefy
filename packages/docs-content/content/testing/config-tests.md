@@ -8,7 +8,7 @@ Journeys need no JavaScript, no Playwright setup and no separate test build. The
 
 ## Layout
 
-Journeys live in `tests/journeys/` inside your config directory, one `.yaml` file per journey or a top-level list of journeys per file:
+Journeys live in `tests/journeys/` inside your config directory, one `.yaml` file per journey or a top-level list of journeys per file. Group them in sub-folders as the suite grows; `lowdefy test` reads every sub-folder except those whose name starts with `_`, such as `_candidates/`, which hold journeys that are not part of the suite yet:
 
 ```
 my-app/
@@ -17,10 +17,14 @@ my-app/
 └── tests/
     └── journeys/
         ├── controls.yaml
-        └── sign-up.yaml
+        ├── sign-up.yaml
+        ├── review/
+        │   ├── approve.yaml
+        │   └── reject.yaml
+        └── _candidates/
 ```
 
-Files run in file-name order, and journeys run one at a time — each journey opens its own browser context, but they all share your app's database, so parallel journeys would interfere with one another.
+Files run in path order, and journeys run one at a time — each journey opens its own browser context, but they all share your app's database, so parallel journeys would interfere with one another.
 
 ## A journey
 
@@ -50,6 +54,7 @@ Files run in file-name order, and journeys run one at a time — each journey op
 | `user`     | No       | The user to act as, as an inline user object such as `{ sub: u1, roles: [admin] }`. Leave it out to run as the default roleless headless user. On a journey with `data`, the name of one of the data set's users, such as `member`. |
 | `data`     | No       | A [data set](/journey-data-sets) name. The journey runs against a fresh in-memory MongoDB database of its own, loaded with the data set, so it may write freely.                                                                    |
 | `urlQuery` | No       | An object appended to the page URL as a query string, for pages that read `_url_query`.                                                                                                                                             |
+| `tags`     | No       | A list of tags naming the sections of the suite the journey belongs to, such as `[smoke, review]`. `lowdefy test --tag smoke` runs the journeys tagged `smoke`. Tags are lowercase letters, digits, `-` and `_`.                    |
 | `steps`    | Yes      | At least one step. Each step is an object with exactly one key from the step grammar below.                                                                                                                                         |
 
 `user: none` injects no user at all, so the journey signs in through the app's own auth — see [Testing sign-up and sign-in](#testing-sign-up-and-sign-in). It is refused on a data set journey while auth is configured.
@@ -242,6 +247,18 @@ pnpx lowdefy@5 test
 
 With no options, `lowdefy test` prepares `.lowdefy/dev` exactly as `lowdefy dev` does, starts the development server on a free port without opening a browser, runs every journey, prints the results and stops the server.
 
+To verify the change in hand, run all journeys, a folder or glob of them, or a tagged section:
+
+```
+lowdefy test                                   # every journey in tests/journeys/, sub-folders included, "_" folders left out
+lowdefy test tests/journeys/review             # a folder, with its sub-folders
+lowdefy test 'tests/journeys/**/review-*.yaml' # a glob, quoted so the CLI expands it
+lowdefy test --tag smoke --tag review          # the journeys tagged smoke or review
+lowdefy test --filter approve                  # the journeys whose name contains "approve"
+```
+
+Paths, tags and filters combine: `lowdefy test tests/journeys/review --tag smoke` runs the smoke journeys in the review folder. Put the selections you use often in `package.json` scripts, such as `"test:smoke": "lowdefy test --tag smoke"`. The `lowdefy_run_tests` agent tool takes the same selections as `paths`, `tags` and `filter`.
+
 ```
 PASS  member creates a control  (5 steps, 1840ms)
 FAIL  guest sees the empty state
@@ -258,8 +275,9 @@ A journey with an [`evidence`](#evidence) key prints it after its `PASS` line: `
 
 ### Options
 
-- `[paths...]`: Journey files or directories to run instead of `tests/journeys/*.yaml`, anywhere under the config directory, including the candidates in `tests/journeys/_candidates/`. `lowdefy test tests/journeys/_candidates/dev` runs every dev candidate. `--filter` applies on top.
-- `--filter <name>`: Only run journeys whose `name` contains the string (case-insensitive). `lowdefy test --filter control` runs every journey with "control" in its name.
+- `[paths...]`: Journey files, directories or globs to run instead of the whole suite, anywhere under the config directory, including the candidates in `tests/journeys/_candidates/`. A directory is read with all its sub-folders: `lowdefy test tests/journeys/_candidates/dev` runs every dev candidate. A path containing `*`, `?` or `[` (including `**`) is a glob the CLI expands itself, so quote it: `lowdefy test 'tests/journeys/review/*.yaml'`. A glob that matches nothing is refused, like a path that does not exist. `--tag` and `--filter` apply on top.
+- `--tag <tag>`: Only run journeys whose `tags` include the tag. Repeat it to run the journeys carrying any of the tags: `lowdefy test --tag smoke --tag review`.
+- `--filter <name>`: Only run journeys whose `name` contains the string (case-insensitive). `lowdefy test --filter control` runs every journey with "control" in its name. Repeat it to run the journeys matching any of the strings.
 - `--repeat <n>`: Run each journey `n` times in a row (1 to 10) and classify it, as described in [Replaying candidates](#replaying-candidates).
 - `--lint`: Check the journeys for the [lint rules](#lint) and run nothing.
 - `--journeys-directory <path>`: Read journeys from this directory instead of `tests/journeys/`, for journeys that need a server set up for them, such as [auth journeys](#the-database). A relative path is resolved from the current directory. The run fails when the directory holds no journeys.
@@ -269,10 +287,10 @@ A journey with an [`evidence`](#evidence) key prints it after its `PASS` line: `
 
 ### Exit codes
 
-| Exit code | Meaning                                                                                                                                                                                                                                    |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                                                                                                                                                            |
-| `1`       | At least one journey failed, a journey file was invalid, an explicit `--filter` matched no journey, or a `--journeys-directory` held no journeys. With `--repeat`, a journey was `FLAKY` or `FAIL`; with `--lint`, a lint error was found. |
+| Exit code | Meaning                                                                                                                                                                                                                                                 |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                                                                                                                                                                         |
+| `1`       | At least one journey failed, a journey file was invalid, a path, glob, `--tag` or `--filter` matched no journey, or a `--journeys-directory` held no journeys. With `--repeat`, a journey was `FLAKY` or `FAIL`; with `--lint`, a lint error was found. |
 
 A journey file that is not valid YAML, or does not match the journey format (a missing `name`, a step with two keys, an unknown step key, a step the grammar refuses, named by its index) is reported as a failed journey with the validation message and the file path. It never aborts the run, so one broken file cannot hide the results of the others.
 
@@ -352,7 +370,7 @@ Each run records what the journey exercised (the pages, requests, endpoints, eve
 
 ### Lint
 
-`lowdefy test --lint [paths...]` checks journeys without running them, so it needs no server. It prints one line per problem and exits `1` on any error:
+`lowdefy test --lint [paths...]` checks journeys without running them. It reads data sets from their files, so it needs a server only for L7: when a journey runs on a data set with a `snapshot`, the development server (the running one, or a fresh headless one) builds the pages L7 reads. It prints one line per problem and exits `1` on any error:
 
 ```
 L2  member assigns an open ticket  step 3 (click "assign_submit") is not followed by an expect or wait: { request } before step 4.
@@ -360,15 +378,17 @@ L2  member assigns an open ticket  step 3 (click "assign_submit") is not followe
 
 An **assertion step** is any `expect`, or a `wait: { request }`.
 
-| Rule | Checks                                                                                                                                                                                                                                                                                                                    | Severity |
-| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| L1   | No placeholders: no `from: shape`, and no `fill` or `select` with `value: null`.                                                                                                                                                                                                                                          | error    |
-| L2   | A `click`, `open` or `press` whose target ran a Lowdefy event (in the journey's newest measured run), and every `goto` and `back`, is followed by an assertion step before the next action or input. A click that ran no event (a tab header) is exempt, as are `fill` and `select`. Unmeasured, every action is checked. | error    |
-| L3   | No `wait: { ms }`.                                                                                                                                                                                                                                                                                                        | error    |
-| L4   | A journey whose newest run called a request or endpoint that writes declares `data:`. Unmeasured, it is a warning to run the journey once.                                                                                                                                                                                | error    |
-| L6   | The last step is an assertion step.                                                                                                                                                                                                                                                                                       | error    |
+| Rule | Checks                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Severity |
+| ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| L1   | No placeholders: no `from: shape`, and no `fill` or `select` with `value: null`.                                                                                                                                                                                                                                                                                                                                                                                                                                           | error    |
+| L2   | A `click`, `open` or `press` whose target ran a Lowdefy event (in the journey's newest measured run), and every `goto` and `back`, is followed by an assertion step before the next action or input. A click that ran no event (a tab header) is exempt, as are `fill` and `select`. Unmeasured, every action is checked.                                                                                                                                                                                                  | error    |
+| L3   | No `wait: { ms }`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | error    |
+| L4   | A journey whose newest run called a request or endpoint that writes declares `data:`. Unmeasured, it is a warning to run the journey once.                                                                                                                                                                                                                                                                                                                                                                                 | error    |
+| L5   | `user` names a user from the journey's data set, or is `none`. An inline user object, or no `user`, is a warning until the journey moves onto a data set.                                                                                                                                                                                                                                                                                                                                                                  | warning  |
+| L6   | The last step is an assertion step.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | error    |
+| L7   | On a data set with a `snapshot`, no value comes from the snapshot. Every `select` value, target `text` or `containing`, `expect.text` `contains`, `expect.title`, string in `expect.state` `equals`, `urlQuery` value, query value or bare id in `expect.url` `contains` (a leading `/page` path is free), and `to` and `subject` of an `email` step or a `fill` `fromEmail` must be text from the visited pages' config, the menus or the default locale's messages, a fixture or user value, or a value an earlier `fill` typed. A `fill` value found only in the pulled snapshot fails (skipped when it is not pulled here), and so does a grid `row` without `containing`. | error    |
 
-L5 (named data set users) and L7 (no values from a pulled snapshot) need data sets and are not checked yet. A candidate compiled by `lowdefy journeys compile`, with event-less clicks and a final `wait: { request }`, lints clean.
+A snapshot is pulled per developer, at different times, from a database others keep editing, so a journey that selects or asserts a snapshot value passes on one machine and fails on another; L7 keeps those values out. Journeys on fixtures-only data sets skip L7. A candidate compiled by `lowdefy journeys compile`, with event-less clicks and a final `wait: { request }`, lints without errors.
 
 ### Mutants: `lowdefy journeys harden`
 
@@ -392,7 +412,7 @@ A survivor is a change no journey noticed, with the source line it changed: add 
 
 The report is written to `.lowdefy/test/mutation.json`: each mutant with the journeys that ran it, the suite's score, and each journey's `killed` out of `total` and its `unique` kills (mutants no other journey kills). Survivors are findings, so the exit code is `0`; it is `1` only when the run could not finish. Editing the config during a run is fine: harden re-lists the mutants, keeps the verdicts no changed file touched and runs the rest again. The third change in one run stops it. harden never writes or deletes a journey.
 
-- `[paths...]`, `--filter <name>`: The journeys to harden, as for `lowdefy test`.
+- `[paths...]`, `--filter <name>`: The journeys to harden, as for `lowdefy test` (one `--filter`, and no `--tag`).
 - `--page <pageId...>`: Only mutants on these pages, and the endpoint mutants a journey touching them called.
 - `--operators <list>`: Only these operators, comma separated: `drop-action`, `skip-validate`, `flip-visible`, `swap-if`, `drop-payload`, `retarget-link`, `drop-block`, `drop-step`.
 - `--max <n>`: Run at most `n` mutants, sampled the same way on every machine. The default is 200; `0` runs every mutant.
@@ -405,13 +425,17 @@ The report is written to `.lowdefy/test/mutation.json`: each mutant with the jou
 
 ### Variants: `lowdefy journeys variants`
 
-`lowdefy journeys variants <file>` writes edge-case candidates of a journey to `tests/journeys/_candidates/variants/<file>-<kind>.yaml` and replays each three times. The same journey always gives the same files.
+`lowdefy journeys variants <file>` writes edge-case candidates of a journey to `tests/journeys/_candidates/variants/<source>/<journey>-<kind>.yaml` and replays each three times. `<source>` is the journey file's path under `tests/journeys/` (or under the config directory, for a file outside it) without its extension, so two files with one name in different folders never share a folder. `<journey>` is the journey's name in lower case with each run of other characters replaced by `-`, so the journeys of one file never share a file. A kind with several variants numbers them: `<journey>-negative-1.yaml`, `<journey>-negative-2.yaml`. The same journey always gives the same files.
 
-| Kind            | The variant                                                                                                                                                                       | Passes when                           |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
-| `negative`      | For each `fill` before the submit click on a block with `required` or a `validate` rule: the field left empty (or a placeholder to fill, for a `validate` rule), then the submit. | The message shows and nothing is sent |
-| `interrupt`     | A full reload of the start page just before the submit click, then the flow again.                                                                                                | The flow writes exactly once          |
-| `double-submit` | The submit click as a double click (`count: 2`).                                                                                                                                  | The write happens once                |
+| Kind            | The variant                                                                                                                                                                                                                                                                        | Passes when                                                                                                      |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `role`          | Granted: for each other role set (the page's role matrix from `journeys coverage`, else each data set user's role set), the same steps as a data set user with exactly that set. Refused: when the page has `auth.roles` and a data set user holds none, that user opens the page. | Granted: that role can do the flow. Refused: the user lands on `/404` and does not see the journey's first block |
+| `tenant`        | A user of another organization (with the same roles when one exists) walks to the first step that uses a fixture value, waits for their own organization's row there, then checks each of this organization's fixture values is hidden.                                            | The other organization sees its own rows and none of this one's                                                  |
+| `empty`         | The journey's user, by name, on the `--empty-data` data set, up to the first step that uses data, then that step's block is visible.                                                                                                                                               | The page renders its empty state                                                                                 |
+| `volume`        | The same steps, as the journey's user by name, on the `--volume-data` data set.                                                                                                                                                                                                    | The flow completes within its timeouts                                                                           |
+| `negative`      | For each `fill` before the submit click on a block with `required` or a `validate` rule: the field left empty (or a placeholder to fill, for a `validate` rule), then the submit.                                                                                                  | The message shows and nothing is sent                                                                            |
+| `interrupt`     | A full reload of the start page just before the submit click, then the flow again.                                                                                                                                                                                                 | The flow writes exactly once                                                                                     |
+| `double-submit` | The submit click as a double click (`count: 2`).                                                                                                                                                                                                                                   | The write happens once                                                                                           |
 
 The **submit click** is the last `click` followed by a `wait: { request }` for a request that writes. Each variant is named `<journey> — <kind>: <detail>` and carries a `variant` key naming the journey it came from:
 
@@ -426,12 +450,18 @@ steps:
   # ...
 ```
 
-A variant that passes is a candidate to keep; one that fails is a finding, a bug or a behaviour to assert as expected; a flaky one has a cause to fix. Variants for other roles, another organisation, empty and large data need data sets and are listed as skipped.
+Each file starts with a header line naming the journey file it came from and holding a hash of what was generated. A file belongs to that journey file and the journey its `variant.of` names. A rerun rewrites a file it owns that is left as generated, keeps one you edited (a filled-in placeholder, a fix after a flaky replay) and says so, and removes an unedited file it owns that the journey no longer gives. A file another journey owns (two journey names that give one slug) is left alone and reported as `CONFLICT`: rename one of the journeys. A variant that passes is a candidate to keep; one that fails is a finding, a bug or a behaviour to assert as expected; a flaky one has a cause to fix. The `role` and `tenant` kinds read the journey's data set file; a variant whose input is missing (no user with a role set, no fixture for the other organization, no `--empty-data`) is listed as skipped with what to add.
 
 - `--name <journey>`: The journey to vary, when the file holds several.
 - `--kinds <list>`: Only these kinds, comma separated.
+- `--empty-data <name>`: The data set the `empty` variant runs on. It needs a user with the journey user's name.
+- `--volume-data <name>`: The data set the `volume` variant runs on. It needs a user with the journey user's name.
 - `--no-run`: Write the variants without replaying them.
 - `--url`, `--port`, `--config-directory`, `--dev-directory`, `--log-level`, `--disable-telemetry`: As for `lowdefy test`.
+
+### The `journeys-harden` skill
+
+`lowdefy agent-setup` installs a `journeys-harden` skill that runs this section with you. It replays the journeys and candidates three times, lints them, sizes a `journeys harden` run with `--list` and asks before it starts, then takes each surviving mutant to you one at a time with the assertion that would catch it, confirming each with `--mutant <id>` and `lowdefy test --repeat 3`. It writes variants for the journeys you pick, refreshes `journeys evidence`, and reports snapshot ages, journeys with no production backing (with their mutation kills), duplicate journeys and pages no journey reaches. It never deletes a journey or suggests deleting one, writes no step except an assertion you approved, and commits nothing.
 
 ## Dev recordings
 
@@ -442,7 +472,7 @@ A variant that passes is a candidate to keep; one that fails is a finding, a bug
 - Recordings are kept for 7 days or 200 MB, whichever comes first. The development server deletes older ones at start and then every hour.
 - Set `LOWDEFY_DEV_RECORD=false` in your shell or in the app's `.env` to turn recording off. Old recordings are still pruned.
 
-`lowdefy test` records too, as `journey` traces under `.lowdefy/traces/journey/`, but only when it runs the whole suite once: no journey paths, no `--filter`, and only the first of `--repeat` runs. Those traces show what the suite actually drives. Screenshots, state inspection and other agent tools never record.
+`lowdefy test` records too, as `journey` traces under `.lowdefy/traces/journey/`, but only when it runs the whole suite once: no journey paths, no `--tag`, no `--filter`, and only the first of `--repeat` runs. Those traces show what the suite actually drives. Screenshots, state inspection and other agent tools never record.
 
 `lowdefy journeys recordings` lists what was recorded, newest first: when each session ran, against which build, the pages it visited, how many attempts ended in an error, and how many of its interactions the newest test run already drove.
 
@@ -514,7 +544,7 @@ No command removes a journey for lack of production use. A 30-day window cannot 
 | Frustration | rage- and dead-clicked blocks                                     | a journey clicks the block and asserts with an `expect` right after   |
 | Role        | (page, role set) pairs seen in production                         | a journey visiting the page runs as a user with exactly that role set |
 
-Coverage also reads the newest full test run that the development server recorded (a plain `lowdefy test`, or `lowdefy_run_tests` with no paths or filter). The interaction measure then adds a measured share beside the static one: the production interactions that run actually drove. Failure coverage becomes measured: a failure counts as covered when a journey that passed in that run produced the same failed event, because a journey that reaches a failure and still passes asserts it. The test runner keeps which journeys passed in `.lowdefy/test/run.json`. Without a recorded run, failure coverage is reported as reached: a journey does the interaction that failed, which does not show it checks the outcome.
+Coverage also reads the newest full test run that the development server recorded (a plain `lowdefy test`, or `lowdefy_run_tests` with no paths, tags or filter). The interaction measure then adds a measured share beside the static one: the production interactions that run actually drove. Failure coverage becomes measured: a failure counts as covered when a journey that passed in that run produced the same failed event, because a journey that reaches a failure and still passes asserts it. The test runner keeps which journeys passed in `.lowdefy/test/run.json`. Without a recorded run, failure coverage is reported as reached: a journey does the interaction that failed, which does not show it checks the outcome.
 
 It writes the measures, a production profile (the top flows per entry page, failure paths, frustrated blocks, role sets per page and entry pages) and each journey's interactions to `.lowdefy/test/coverage.json`, which is rewritten on every run and not committed. With a mutation report, the suite's mutation score is added as a sixth number.
 

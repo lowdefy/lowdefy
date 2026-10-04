@@ -26,7 +26,7 @@ import operatorScope from './operatorScope.js';
 import resolveTenancy from '../request/resolveTenancy.js';
 
 // Runs the endpoint's declared `webhook.verify` request plugin as a gate,
-// against the RAW request (body, query, headers), before the routine body
+// against the RAW request (body, rawBody, query, headers), before the routine body
 // (Decision 3). The verifier is a request plugin - the same class of code as a
 // connection request - resolved and invoked through the request-plugin
 // machinery, never as a routine step. It reads the request and reports a
@@ -39,8 +39,8 @@ import resolveTenancy from '../request/resolveTenancy.js';
 // Config-resolution errors (missing connection / unknown request type) throw:
 // a misconfigured verifier breaks loudly in development rather than silently
 // trusting or silently failing.
-async function runWebhookVerify(context, { verify, body, query, headers }) {
-  const payload = { body: body ?? null, query: query ?? {}, headers: headers ?? {} };
+async function runWebhookVerify(context, { verify, body, rawBody, query, headers }) {
+  const payload = { body, rawBody, query: query ?? {}, headers: headers ?? {} };
 
   const connectionConfig = await getConnectionConfig(context, {
     connectionId: verify.connectionId,

@@ -209,5 +209,8 @@ test('loadAndResolveErrorLocation resolves through readMaps when one is passed',
       refMap: { jit_ref: { path: 'pages/about.yaml' } },
     }),
   });
-  expect(result).toEqual({ source: '/app/pages/about.yaml:3', config: 'root.blocks[0:button]' });
+  expect(result).toEqual({
+    source: `${path.resolve('/app/pages/about.yaml')}:3`,
+    config: 'root.blocks[0:button]',
+  });
 });

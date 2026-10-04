@@ -337,3 +337,22 @@ blocks:
           parts:
             - type: text
               text: Loaded answer.
+
+  # Both post to the agent route, which the spec intercepts to read the request body.
+  - id: chat_shared_read_only
+    type: AgentChat
+    properties:
+      agentId: test_agent
+      height: 200
+      conversationId: shared-read-only
+      sharedStateReadOnly: true
+      sharedState:
+        space: PEL
+  - id: chat_shared_writable
+    type: AgentChat
+    properties:
+      agentId: test_agent
+      height: 200
+      conversationId: shared-writable
+      sharedState:
+        space: PEL

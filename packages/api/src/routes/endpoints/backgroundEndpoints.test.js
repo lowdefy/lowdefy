@@ -377,7 +377,7 @@ test('webhook endpoints: gated on webhook: true, payload is { body, query, heade
   const context = testContext({ logger, operators, readConfigFile: mockReadConfigFile });
   const result = await runWebhookEndpoint(context, {
     endpointId: 'hook_ep',
-    body: { hello: 1 },
+    rawBody: '{"hello":1}',
     query: { t: 'tok' },
     headers: {},
   });
@@ -386,7 +386,7 @@ test('webhook endpoints: gated on webhook: true, payload is { body, query, heade
 
   const context2 = testContext({ logger, readConfigFile: mockReadConfigFile });
   await expect(
-    runWebhookEndpoint(context2, { endpointId: 'plain_ep', body: {}, query: {}, headers: {} })
+    runWebhookEndpoint(context2, { endpointId: 'plain_ep', rawBody: '{}', query: {}, headers: {} })
   ).rejects.toThrow('does not exist');
 });
 
@@ -418,7 +418,7 @@ test('webhook endpoint response is the :return value exactly, without build mark
   });
   const result = await runWebhookEndpoint(context, {
     endpointId: 'handshake_ep',
-    body: { code: 'c-1' },
+    rawBody: '{"code":"c-1"}',
     query: {},
     headers: {},
   });
@@ -443,7 +443,7 @@ test('webhook endpoint response sends a date as an ISO string, not the serialize
   });
   const result = await runWebhookEndpoint(context, {
     endpointId: 'dated_ep',
-    body: {},
+    rawBody: '{}',
     query: {},
     headers: {},
   });
@@ -594,7 +594,7 @@ test('webhook with no verifier fails a nested protected Api CallApi (untrusted t
   const context = testContext({ logger, operators: operatorsServer, readConfigFile });
   const result = await runWebhookEndpoint(context, {
     endpointId: 'parent_hook',
-    body: {},
+    rawBody: '{}',
     query: {},
     headers: {},
   });
@@ -628,7 +628,7 @@ test('webhook with no verifier fails a nested protected InternalApi CallApi (unt
   const context = testContext({ logger, operators: operatorsServer, readConfigFile });
   const result = await runWebhookEndpoint(context, {
     endpointId: 'parent_hook',
-    body: {},
+    rawBody: '{}',
     query: {},
     headers: {},
   });
@@ -657,7 +657,7 @@ test('webhook whose verify gate fails returns unauthorized and never runs the ro
   });
   const result = await runWebhookEndpoint(context, {
     endpointId: 'parent_hook',
-    body: {},
+    rawBody: '{}',
     query: { token: 'bad' },
     headers: {},
   });
@@ -691,7 +691,7 @@ test('webhook whose verifier is unreachable errors instead of reporting a failed
   try {
     await runWebhookEndpoint(context, {
       endpointId: 'parent_hook',
-      body: {},
+      rawBody: '{}',
       query: { token: 'good' },
       headers: {},
     });
@@ -720,12 +720,98 @@ test('webhook whose verify gate passes blanket-passes a nested protected CallApi
   });
   const result = await runWebhookEndpoint(context, {
     endpointId: 'parent_hook',
-    body: {},
+    rawBody: '{}',
     query: { token: 'good' },
     headers: {},
   });
   expect(result.success).toBe(true);
   expect(result.response).toEqual({ child: 'child_ran' });
+});
+
+// A verifier that records what it was given, standing in for a signature check
+// over the exact bytes the sender posted.
+const recordingVerify = jest.fn(({ request }) => request.rawBody === request.expected);
+const recordingVerifierConnections = {
+  StubVerifyConnection: {
+    schema: true,
+    requests: { RecordingVerify: recordingVerify },
+  },
+};
+
+function createRawBodyReadConfigFile({ expected }) {
+  return createWebhookReadConfigFile({
+    parent: {
+      endpointId: 'signed_hook',
+      type: 'Api',
+      auth: { public: true },
+      webhook: {
+        verify: {
+          connectionId: 'verifier',
+          type: 'RecordingVerify',
+          properties: {
+            rawBody: { _payload: 'rawBody' },
+            body: { _payload: 'body' },
+            expected,
+          },
+        },
+      },
+      routine: {
+        ':return': {
+          body: { _payload: 'body' },
+          rawBody: { _payload: 'rawBody' },
+        },
+      },
+    },
+  });
+}
+
+test('webhook verifier reads rawBody as the exact bytes posted, which re-serialising the parsed body does not reproduce', async () => {
+  const rawBody = '{ "zeta": 1,  "alpha": "caf\\u00e9", "beta": "café" }';
+  expect(JSON.stringify(JSON.parse(rawBody))).not.toBe(rawBody);
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: recordingVerifierConnections,
+    readConfigFile: createRawBodyReadConfigFile({ expected: rawBody }),
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'signed_hook',
+    rawBody,
+    query: {},
+    headers: {},
+  });
+  expect(recordingVerify.mock.calls[0][0].request.rawBody).toBe(rawBody);
+  expect(recordingVerify.mock.calls[0][0].request.body).toEqual({
+    zeta: 1,
+    alpha: 'café',
+    beta: 'café',
+  });
+  expect(result.success).toBe(true);
+  // rawBody reaches only the verifier: the routine's payload has no such key.
+  expect(result.response).toEqual({
+    body: { zeta: 1, alpha: 'café', beta: 'café' },
+    rawBody: null,
+  });
+});
+
+test('webhook verifier gets a body that is not JSON as rawBody and can refuse it with unauthorized', async () => {
+  const rawBody = 'token=abc&text=hello%20world';
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    connections: recordingVerifierConnections,
+    readConfigFile: createRawBodyReadConfigFile({ expected: 'something else' }),
+  });
+  const result = await runWebhookEndpoint(context, {
+    endpointId: 'signed_hook',
+    rawBody,
+    query: {},
+    headers: {},
+  });
+  expect(recordingVerify.mock.calls[0][0].request.rawBody).toBe(rawBody);
+  expect(recordingVerify.mock.calls[0][0].request.body).toBe(rawBody);
+  expect(result.status).toBe('unauthorized');
+  expect(result.success).toBe(false);
 });
 
 // A verifier connection whose type implements the tenant scoping contract -
@@ -758,7 +844,7 @@ test('webhook verifier on a walled connection fails closed to unauthorized, neve
   });
   const result = await runWebhookEndpoint(context, {
     endpointId: 'parent_hook',
-    body: {},
+    rawBody: '{}',
     query: { token: 'good' },
     headers: {},
   });
@@ -789,7 +875,7 @@ test('webhook verifier on a walled connection with tenant none opts out, carries
   });
   const result = await runWebhookEndpoint(context, {
     endpointId: 'parent_hook',
-    body: {},
+    rawBody: '{}',
     query: { token: 'good' },
     headers: {},
   });

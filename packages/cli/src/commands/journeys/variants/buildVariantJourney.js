@@ -16,13 +16,15 @@
 
 import { type } from '@lowdefy/helpers';
 
-// A variant as a journey of its own: the original's settings, named
+// A variant as a journey of its own: the original's settings, with the
+// user or data set the variant runs as instead (`overrides`), named
 // `<original> — <kind>: <detail>`, with `variant` naming where it came from.
 function buildVariantJourney({ journey, variant }) {
   const result = { name: `${journey.name} — ${variant.kind}: ${variant.detail}` };
+  const settings = { ...journey, ...variant.overrides };
   ['pageId', 'user', 'urlQuery', 'timeout', 'data'].forEach((key) => {
-    if (!type.isUndefined(journey[key])) {
-      result[key] = journey[key];
+    if (!type.isUndefined(settings[key])) {
+      result[key] = settings[key];
     }
   });
   result.variant = { of: journey.name, kind: variant.kind, detail: variant.detail };

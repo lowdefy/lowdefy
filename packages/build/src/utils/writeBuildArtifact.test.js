@@ -45,6 +45,8 @@ test('writeBuildArtifact writes through writeFileAtomic when atomic is set', asy
   const writeBuildArtifact = createWriteBuildArtifact({ directories });
 
   await writeBuildArtifact('jitMaps/a-1-1.json', '{}', { atomic: true });
-  expect(nodeUtils.writeFileAtomic.mock.calls).toEqual([['/build/jitMaps/a-1-1.json', '{}']]);
+  expect(nodeUtils.writeFileAtomic.mock.calls).toEqual([
+    [path.join('/build', 'jitMaps', 'a-1-1.json'), '{}'],
+  ]);
   expect(nodeUtils.writeFileIfChanged).not.toHaveBeenCalled();
 });

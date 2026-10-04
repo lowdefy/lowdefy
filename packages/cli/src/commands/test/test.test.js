@@ -53,6 +53,7 @@ beforeEach(() => {
   context = {
     directories: {
       config: configDirectory,
+      dev: path.join(configDirectory, '.lowdefy', 'dev'),
       journeys: path.join(configDirectory, 'tests', 'journeys'),
       test: path.join(configDirectory, '.lowdefy', 'test'),
       traces: path.join(configDirectory, '.lowdefy', 'traces'),
@@ -82,7 +83,7 @@ test('test exits 0 with a note when no journeys exist and does not boot a server
   await test({ context });
   expect(mockStartDevServer).not.toHaveBeenCalled();
   expect(mockPost).not.toHaveBeenCalled();
-  expect(logs.warn).toEqual(['No tests found. Add journeys to tests/journeys/*.yaml.']);
+  expect(logs.warn).toEqual(['No tests found. Add journeys to tests/journeys/.']);
   expect(process.exitCode).toBeUndefined();
   expect(context.sendTelemetry).toHaveBeenCalled();
 });
@@ -374,7 +375,87 @@ test('test --lint lints without a server, exits 1 on an error and 0 on warnings 
   );
   await test({ context });
   expect(process.exitCode).toBeUndefined();
-  expect(logs.info).toContain('Linted 1 journeys: 0 errors, 1 warnings.');
+  expect(logs.info).toContain('Linted 1 journeys: 0 errors, 2 warnings.');
+  expect(logs.warn).toContain(
+    'L5  asserts  has no user: name a user from its data set, or write user: none for signed out.'
+  );
+});
+
+function writeConfigFile(relativePath, content) {
+  const filePath = path.join(configDirectory, relativePath);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, content);
+}
+
+test('test --lint reads data set users without a server when no data set has a snapshot', async () => {
+  const { default: test } = await import('./test.js');
+  writeConfigFile('tests/data/tickets.yaml', 'users:\n  member:\n    roles: [member]\n');
+  writeJourneyFile(
+    'a.yaml',
+    'name: names a stranger\npageId: form\ndata: tickets\nuser: stranger\nsteps:\n  - expect: { visible: done }\n'
+  );
+  context.options = { lint: true };
+  await test({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(logs.warn).toContain(
+    'L5  names a stranger  names user "stranger", which data set "tickets" does not have. Its users: member.'
+  );
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test --lint builds the pages of snapshot journeys through a dev server, then lints L7 from the build', async () => {
+  const { default: test } = await import('./test.js');
+  writeConfigFile(
+    'tests/data/staging.yaml',
+    'snapshot:\n  from: staging\n  connections: [tickets]\nfixtures:\n  tickets:\n    - title: Fixture printer\nusers:\n  member:\n    roles: [member]\n'
+  );
+  writeConfigFile(
+    '.lowdefy/data/staging/manifest.json',
+    JSON.stringify({ pulledAt: '2026-10-01T00:00:00.000Z', collections: { tickets: {} } })
+  );
+  writeConfigFile(
+    '.lowdefy/data/staging/tickets.jsonl',
+    `${JSON.stringify({ title: 'Staging customer' })}\n`
+  );
+  const build = path.join(configDirectory, '.lowdefy', 'dev', 'build');
+  writeConfigFile(
+    '.lowdefy/dev/build/pages/form.json',
+    JSON.stringify({ id: 'form', properties: { title: 'Form' } })
+  );
+  writeConfigFile('.lowdefy/dev/build/menus.json', '[]');
+  writeConfigFile(
+    '.lowdefy/dev/build/i18n.json',
+    JSON.stringify({ defaultLocale: 'en', messages: { en: {} } })
+  );
+  writeJourneyFile(
+    'a.yaml',
+    [
+      'name: finds a staging ticket',
+      'pageId: form',
+      'data: staging',
+      'user: member',
+      'steps:',
+      '  - fill: { blockId: search, value: Staging customer }',
+      '  - expect: { text: { blockId: grid, contains: Fixture printer } }',
+      '  - expect: { text: { blockId: grid, contains: Acme Staging Ltd } }',
+      '',
+    ].join('\n')
+  );
+  mockGet.mockResolvedValue({ data: { id: 'form' } });
+  context.options = { lint: true };
+  await test({ context });
+  expect(fs.existsSync(build)).toBe(true);
+  expect(mockStartDevServer).toHaveBeenCalledWith({ context });
+  expect(mockGet).toHaveBeenCalledWith('http://localhost:3228/lowdefy-docs/page-config/form', {
+    timeout: 60000,
+  });
+  expect(mockStop).toHaveBeenCalledTimes(1);
+  expect(logs.error).toEqual([
+    'L7  finds a staging ticket  step 0 (fill "search") types "Staging customer", which only the pulled snapshot of data set "staging" holds: type a fixture value or new text.',
+    'L7  finds a staging ticket  step 2 (expect: { text }) contains "Acme Staging Ltd" is not part of the app\'s text, a fixture or user of data set "staging", or an earlier fill: on a snapshot data set it may exist in only one pull. Use a fixture value.',
+    'Linted 1 journeys: 2 errors, 1 warnings.',
+  ]);
+  expect(process.exitCode).toBe(1);
 });
 
 test('a full-suite run records every journey into one run on its first repetition only', async () => {
@@ -432,4 +513,131 @@ test('a --filter run and a run of named paths record nothing', async () => {
   expect(bodies).toHaveLength(2);
   bodies.forEach((body) => expect(body).not.toHaveProperty('recording'));
   expect(logs.info.some((line) => line.startsWith('Recorded this run'))).toBe(false);
+});
+
+function taggedJourneyYaml({ name, tags }) {
+  return `name: ${name}\npageId: form\ntags: [${tags.join(', ')}]\nsteps:\n  - click: submit\n`;
+}
+
+test('test with no paths runs journeys in sub-folders and none under a "_" folder', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'top journey' }));
+  writeJourneyFile(path.join('review', 'b.yaml'), journeyYaml({ name: 'review journey' }));
+  writeJourneyFile(path.join('review', 'deep', 'c.yaml'), journeyYaml({ name: 'deep journey' }));
+  writeJourneyFile(path.join('_candidates', 'dev', 'd.yaml'), journeyYaml({ name: 'candidate' }));
+  writeJourneyFile(path.join('review', '_drafts', 'e.yaml'), journeyYaml({ name: 'draft' }));
+  await test({ context });
+  expect(
+    logs.info.filter((line) => line.startsWith('PASS')).map((line) => line.split('  ')[1])
+  ).toEqual(['top journey', 'review journey', 'deep journey']);
+  expect(logs.info.some((line) => line.startsWith('Recorded this run'))).toBe(true);
+});
+
+test('test runs the same journeys for a folder and a quoted ** glob of it', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'top journey' }));
+  writeJourneyFile(path.join('review', 'b.yaml'), journeyYaml({ name: 'review journey' }));
+  writeJourneyFile(path.join('review', 'deep', 'c.yaml'), journeyYaml({ name: 'deep journey' }));
+  const cwd = jest.spyOn(process, 'cwd').mockReturnValue(configDirectory);
+  try {
+    context.options.paths = ['tests/journeys/review'];
+    await test({ context });
+    const fromFolder = mockPost.mock.calls.length;
+    context.options.paths = ['tests/journeys/review/**'];
+    await test({ context });
+    expect(fromFolder).toBe(2);
+    expect(mockPost.mock.calls.length).toBe(4);
+    const passed = logs.info
+      .filter((line) => line.startsWith('PASS'))
+      .map((line) => line.split('  ')[1]);
+    expect(passed).toEqual(['review journey', 'deep journey', 'review journey', 'deep journey']);
+  } finally {
+    cwd.mockRestore();
+  }
+});
+
+test('test refuses a glob that matches nothing before booting a server', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'top journey' }));
+  const cwd = jest.spyOn(process, 'cwd').mockReturnValue(configDirectory);
+  try {
+    context.options.paths = ['tests/journeys/review/*.yaml'];
+    await test({ context });
+  } finally {
+    cwd.mockRestore();
+  }
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(logs.error).toEqual(['Journey path "tests/journeys/review/*.yaml" matches no files.']);
+  expect(process.exitCode).toEqual(1);
+});
+
+test('test --tag runs the journeys carrying any of the tags, and records nothing', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', taggedJourneyYaml({ name: 'smoke journey', tags: ['smoke'] }));
+  writeJourneyFile('b.yaml', taggedJourneyYaml({ name: 'review journey', tags: ['review'] }));
+  writeJourneyFile('c.yaml', journeyYaml({ name: 'untagged journey' }));
+  context.options.tag = ['smoke', 'review'];
+  await test({ context });
+  expect(mockPost).toHaveBeenCalledTimes(2);
+  expect(logs.info).toContain('2 passed, 0 failed of 2 journeys');
+  mockPost.mock.calls.forEach(([, body]) => expect(body).not.toHaveProperty('recording'));
+});
+
+test('test combines paths, --tag and repeated --filter with AND, each filter an OR', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile(
+    path.join('review', 'a.yaml'),
+    taggedJourneyYaml({ name: 'approves an order', tags: ['smoke'] })
+  );
+  writeJourneyFile(
+    path.join('review', 'b.yaml'),
+    taggedJourneyYaml({ name: 'rejects an order', tags: ['smoke'] })
+  );
+  writeJourneyFile(
+    path.join('review', 'c.yaml'),
+    taggedJourneyYaml({ name: 'edits an order', tags: ['slow'] })
+  );
+  writeJourneyFile('d.yaml', taggedJourneyYaml({ name: 'approves a refund', tags: ['smoke'] }));
+  context.options.paths = [path.join(configDirectory, 'tests', 'journeys', 'review')];
+  context.options.tag = ['smoke'];
+  context.options.filter = ['APPROVES', 'edits'];
+  await test({ context });
+  expect(mockPost).toHaveBeenCalledTimes(1);
+  expect(logs.info.some((line) => line.startsWith('PASS  approves an order'))).toBe(true);
+});
+
+test('test names the paths, tags and filters when nothing matched', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile(path.join('review', 'a.yaml'), journeyYaml({ name: 'first journey' }));
+  const review = path.join(configDirectory, 'tests', 'journeys', 'review');
+  context.options.paths = [review];
+  context.options.tag = ['smoke', 'nightly'];
+  context.options.filter = ['first'];
+  await test({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(logs.error).toEqual([
+    `No tests matched --tag "smoke" or "nightly" and --filter "first" in ${review}.`,
+  ]);
+  expect(process.exitCode).toEqual(1);
+});
+
+test('test refuses a --tag outside the tag grammar before booting a server', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  context.options.tag = ['Smoke'];
+  await test({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(logs.error).toEqual([
+    'Tag "Smoke" should be lowercase letters, digits, "-" and "_", start with a letter or digit, and be at most 64 characters.',
+  ]);
+  expect(process.exitCode).toEqual(1);
+});
+
+test('test fails a journey whose tags break the grammar without posting it', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', taggedJourneyYaml({ name: 'bad tags', tags: ['Smoke'] }));
+  await test({ context });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(logs.error.join('\n')).toContain('Journey "tags": Tag "Smoke" should be');
+  expect(process.exitCode).toEqual(1);
 });

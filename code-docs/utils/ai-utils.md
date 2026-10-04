@@ -48,7 +48,7 @@ The main entry point called by all agent resolvers (ClaudeAgent, OpenAIAgent, Ge
     messages            // UIMessage[] from client
   },
   context: {
-    agentContext,        // { pageId, userId, conversationId, urlQuery, sharedState }
+    agentContext,        // { pageId, userId, conversationId, urlQuery, sharedState, sharedStateReadOnly }
     callEndpoint,        // Execute API endpoint as tool
     evaluateOperators,
     getEndpointConfig,
@@ -139,8 +139,8 @@ Exports `RESERVED_PLATFORM_TOOL_NAMES` and a guard used by `buildAgentTools` to 
 Agents can read and write a slice of page state declared by the AgentChat block:
 
 - The block exposes a `sharedState` object (formerly `pageState`) — operator-evaluated each render and shipped with each chat request.
-- `callAgent` forwards `sharedState` into the runtime's `agentContext.sharedState`.
-- `handleAgentChat` builds the `update-page-state` tool for that snapshot and includes the state as a `pageContext`-style block in instructions so the agent sees current values.
+- `callAgent` forwards `sharedState` into the runtime's `agentContext.sharedState`, and the block's `sharedStateReadOnly` into `agentContext.sharedStateReadOnly`.
+- `createToolLoopAgent` builds the `update-page-state` tool for that snapshot (skipped when `sharedStateReadOnly` is true) and includes the state as a `pageContext`-style block in instructions so the agent sees current values.
 - When the agent calls `update-page-state`, the streamed result is delivered back to the AgentChat block, which writes the patch to page state via the `update-page-state` event (allowlisted to the originally-declared keys).
 
 Sharp edges:

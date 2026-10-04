@@ -20,6 +20,7 @@ import { cleanBuildArtifact, serializer, type } from '@lowdefy/helpers';
 
 import formatErrorForAgent from '../../response/formatErrorForAgent.js';
 import callEndpoint from '../endpoints/callEndpoint.js';
+import runAfterToolCall from './runAfterToolCall.js';
 
 // LLM-safe tool names use the same rule as buildAgents tool naming.
 function toToolName(id) {
@@ -140,19 +141,24 @@ async function createMcpServer({ context }) {
       if (type.isNone(endpointConfig)) {
         return unknownTool;
       }
+      const payload = args ?? {};
       const { error, response, success } = await callEndpoint(context, {
         blockId: '_mcp',
         endpointId: endpoint.id,
         pageId: '_mcp',
-        payload: args ?? {},
+        payload,
       });
-      if (!success) {
+      const deserializedResponse = success ? serializer.deserialize(response) : null;
+      let reply;
+      if (success) {
+        reply = { content: [{ type: 'text', text: JSON.stringify(deserializedResponse) }] };
+      } else {
         const deserialized = serializer.deserialize(error);
         // The wire error is generic for every reader. The dev server also attaches the full
         // error for dev tools, and the dev MCP client is a coding agent that needs it to find
         // the failing config.
         const devError = serializer.deserialize(error?.devError);
-        return {
+        reply = {
           content: [
             {
               type: 'text',
@@ -164,9 +170,22 @@ async function createMcpServer({ context }) {
           isError: true,
         };
       }
-      return {
-        content: [{ type: 'text', text: JSON.stringify(serializer.deserialize(response)) }],
-      };
+      // Only a call that reached its endpoint's routine runs the hook: the
+      // early returns above and the refusals caught below never do.
+      if (!type.isNone(mcpConfig.afterToolCall)) {
+        await runAfterToolCall(context, {
+          hookId: mcpConfig.afterToolCall,
+          payload: {
+            tool: name,
+            endpoint_id: endpoint.id,
+            scope: endpoint.scope,
+            payload,
+            success,
+            response: deserializedResponse,
+          },
+        });
+      }
+      return reply;
     } catch (error) {
       // Refused calls to gated tools and payloads that miss the payloadSchema
       // (UserError) are expected traffic - a warn line and the message the

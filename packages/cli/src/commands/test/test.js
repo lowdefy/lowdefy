@@ -18,9 +18,11 @@ import path from 'path';
 import { createTraceId, traceIdDate, type } from '@lowdefy/helpers';
 
 import fetchBuildId from './fetchBuildId.js';
+import formatNoTestsMatched from './formatNoTestsMatched.js';
 import isFullSuiteRun from './isFullSuiteRun.js';
 import lintJourneys from './lint/lintJourneys.js';
 import parseRepeat from './parseRepeat.js';
+import parseTestSelection from './parseTestSelection.js';
 import resolveJourneyPaths from './resolveJourneyPaths.js';
 import resolveServer from './resolveServer.js';
 import runRepeated from './runRepeated.js';
@@ -38,10 +40,18 @@ function refuse({ context, message }) {
 }
 
 async function test({ context }) {
-  const filter = context.options.filter;
   const { repeat, error: repeatError } = parseRepeat(context.options.repeat);
   if (repeatError) {
     refuse({ context, message: repeatError });
+    return;
+  }
+  const {
+    filters,
+    tags,
+    error: selectionError,
+  } = parseTestSelection({ filter: context.options.filter, tags: context.options.tag });
+  if (selectionError) {
+    refuse({ context, message: selectionError });
     return;
   }
   const givenPaths = context.options.paths ?? [];
@@ -58,15 +68,12 @@ async function test({ context }) {
     }
     paths = resolved.files;
   }
-  const selected = selectTests({ context, filter, paths });
+  const selected = selectTests({ context, filter: filters, tags, paths });
 
   if (selected.length === 0) {
-    if (!type.isNone(filter)) {
-      refuse({ context, message: `No tests matched --filter "${filter}".` });
-      return;
-    }
-    if (!type.isUndefined(paths)) {
-      refuse({ context, message: `No journeys found in ${givenPaths.join(', ')}.` });
+    const noMatch = formatNoTestsMatched({ paths: givenPaths, filters, tags, flagPrefix: '--' });
+    if (!type.isUndefined(noMatch)) {
+      refuse({ context, message: noMatch });
       return;
     }
     // A directory named on the command line is a run that expects journeys;
@@ -75,13 +82,14 @@ async function test({ context }) {
       refuse({ context, message: `No journeys found in ${context.directories.journeys}.` });
       return;
     }
-    context.logger.warn('No tests found. Add journeys to tests/journeys/*.yaml.');
+    context.logger.warn('No tests found. Add journeys to tests/journeys/.');
     context.sendTelemetry();
     return;
   }
 
   if (context.options.lint === true) {
-    if (lintJourneys({ context, items: selected.map(({ item }) => item) }).failed) {
+    const linted = await lintJourneys({ context, items: selected.map(({ item }) => item) });
+    if (linted.failed) {
       process.exitCode = 1;
     }
     context.sendTelemetry();
@@ -108,8 +116,8 @@ async function test({ context }) {
 
   // One run id per invocation names this run's trace file; only a full-suite
   // run records (see runRepeated).
-  const recording = { run: createTraceId(), paths: givenPaths, filter };
-  const recorded = isFullSuiteRun({ paths: givenPaths, filter, repetition: 1 });
+  const recording = { run: createTraceId(), paths: givenPaths, filter: filters, tags };
+  const recorded = isFullSuiteRun({ paths: givenPaths, filter: filters, tags, repetition: 1 });
   const results = [];
   const seen = new Set();
   try {

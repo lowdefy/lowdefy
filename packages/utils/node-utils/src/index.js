@@ -73,6 +73,7 @@ import validateJourneySteps, {
   STEP_KEYS,
   TARGET_KEYS,
 } from './journeyGrammar/validateJourneySteps.js';
+import validateJourneyTags, { JOURNEY_TAG_PATTERN } from './journeyGrammar/validateJourneyTags.js';
 import validateTraceRecord from './journeyTrace/validateTraceRecord.js';
 
 export {
@@ -137,4 +138,6 @@ export {
   TARGET_KEYS,
   validateJourneySteps,
   validateTraceRecord,
+  JOURNEY_TAG_PATTERN,
+  validateJourneyTags,
 };

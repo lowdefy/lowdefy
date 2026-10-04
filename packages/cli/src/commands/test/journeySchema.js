@@ -154,6 +154,17 @@ const journeySchema = {
       type: 'object',
       errorMessage: { type: 'Journey "urlQuery" should be an object.' },
     },
+    // The sections of the suite the journey belongs to, for `lowdefy test
+    // --tag`. validateJourney checks each tag against the grammar's pattern.
+    tags: {
+      type: 'array',
+      items: { type: 'string' },
+      uniqueItems: true,
+      description:
+        'Sections of the suite the journey belongs to, such as smoke or review. `lowdefy test --tag <tag>` runs the journeys carrying any of the given tags.',
+      errorMessage:
+        'Journey "tags" should be a list of distinct tag strings, e.g. [smoke, review].',
+    },
     // Written by `lowdefy journeys variants` on the edge-case candidates it
     // generates: the journey it varies, the kind of edge case and its detail.
     variant: {

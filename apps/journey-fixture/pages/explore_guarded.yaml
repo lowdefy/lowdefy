@@ -1,0 +1,15 @@
+# Public, but its onInit sends everyone home: a walk whose role production
+# use shows here is refused (role-refused in exploreWalks.test.mjs).
+id: explore_guarded
+type: Box
+events:
+  onInit:
+    - id: send_home
+      type: Link
+      params: home
+blocks:
+  - id: guarded_title
+    type: Title
+    properties:
+      content: Guarded
+      level: 2

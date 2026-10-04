@@ -461,26 +461,33 @@ test('two registry publishes with the same modified time both recreate the conte
   app.remove();
 });
 
-test('a recorded file whose read throws during the check rebuilds the page, and the build reports it', async () => {
-  const app = createApp(sharedRefPages);
-  await app.request('a');
-  await app.request('c');
-  const sharedPath = path.join(app.configDirectory, 'blocks', 'shared.yaml');
-  fs.chmodSync(sharedPath, 0o000);
-  app.signalChange();
+// chmod 000 is how the test makes a read throw, and Windows has no such permission: chmod only
+// sets the read-only attribute and the file stays readable.
+const posixTest = process.platform === 'win32' ? test.skip : test;
 
-  try {
-    expect(await app.request('c')).toBe('served');
-    const error = await app.request('a').catch((caught) => caught);
-    expect(error.outcome).toBe('failed');
-    expect(error.message).toMatch('EACCES');
-  } finally {
-    fs.chmodSync(sharedPath, 0o644);
+posixTest(
+  'a recorded file whose read throws during the check rebuilds the page, and the build reports it',
+  async () => {
+    const app = createApp(sharedRefPages);
+    await app.request('a');
+    await app.request('c');
+    const sharedPath = path.join(app.configDirectory, 'blocks', 'shared.yaml');
+    fs.chmodSync(sharedPath, 0o000);
+    app.signalChange();
+
+    try {
+      expect(await app.request('c')).toBe('served');
+      const error = await app.request('a').catch((caught) => caught);
+      expect(error.outcome).toBe('failed');
+      expect(error.message).toMatch('EACCES');
+    } finally {
+      fs.chmodSync(sharedPath, 0o644);
+    }
+    app.signalChange();
+    expect(await app.request('a')).toBe('built');
+    app.remove();
   }
-  app.signalChange();
-  expect(await app.request('a')).toBe('built');
-  app.remove();
-});
+);
 
 test('warnings are logged to the terminal again after an edit', async () => {
   const app = createApp({
