@@ -71,6 +71,7 @@ The `AgentChat` block renders a streaming AI chat interface. It connects to a [L
 | `feedbackValues` | object | | Ratings already recorded for messages in this conversation, keyed by message id, each `like` or `dislike`. The block does not persist a rating, so without this a reload or a conversation switch shows every message unrated even where your app stored it. A rating clicked this visit takes precedence, so the thumb still responds immediately and a rating the user has just withdrawn is not re-lit by a stale value. |
 | `urlQuery` | object | | Query parameters sent with each request. Available server-side via `_payload`. |
 | `sharedState` | object | | Two-way bridge between page state and the agent. See [Shared State](#shared-state). |
+| `sharedStateReadOnly` | boolean | `false` | Send `sharedState` as read-only context: the agent gets no `update-page-state` tool. See [Read-only shared state](#read-only-shared-state). |
 | `height` | string | `'calc(100dvh - 170px)'` | CSS height of the chat container. Only applies when `display` is `'inline'`. |
 | `maxWidth` | number | `800` | Maximum width in pixels. |
 | `display` | string | `'inline'` | `'inline'` renders directly on the page. `'drawer'` renders in a slide-out drawer. |
@@ -318,6 +319,24 @@ When the agent calls `update-page-state`, the block routes the write through a s
 ```
 
 With the curated form above, the agent can read `legal_name` and `registration_number`, and calling `update-page-state` with either key writes straight back into the page state — no custom endpoint or `onToolResult` handler required.
+
+#### Read-only shared state
+
+Set `sharedStateReadOnly: true` to give the agent page context it cannot change. The block still sends `sharedState` with each request (available server-side via `_payload`, and in the agent's context block when the agent has [`pageContext: true`](/agent-properties)), but the server does not register the `update-page-state` tool, so the model is never offered a page-state write. Use it when the values are there to inform the agent (the current time, the record the user is looking at) and some of them are also bound to inputs the agent should not overwrite.
+
+###### Send context without the write tool:
+```yaml
+- id: chat
+  type: AgentChat
+  properties:
+    agentId: assistant
+    sharedStateReadOnly: true
+    sharedState:
+      now:
+        _date: now
+      space:
+        _state: space
+```
 
 ## Events
 

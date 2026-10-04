@@ -35,7 +35,9 @@ async function agentHandler(c) {
   const pageId = segments.slice(0, -1).join('/');
   context.logger.info({ event: 'call_agent', agentId, pageId });
   const { conversationId } = c.req.query();
-  const { messages, urlQuery, sharedState } = parseRequestBody({ text: await c.req.text() });
+  const { messages, urlQuery, sharedState, sharedStateReadOnly } = parseRequestBody({
+    text: await c.req.text(),
+  });
   if (!Array.isArray(messages)) {
     return c.json({ error: t('agent.runtime.messagesMustBeArray') }, 400);
   }
@@ -45,12 +47,16 @@ async function agentHandler(c) {
   if (sharedState != null && !type.isObject(sharedState)) {
     return c.json({ error: t('agent.runtime.sharedStateMustBeObject') }, 400);
   }
+  if (sharedStateReadOnly != null && !type.isBoolean(sharedStateReadOnly)) {
+    return c.json({ error: t('agent.runtime.sharedStateReadOnlyMustBeBoolean') }, 400);
+  }
   const { response: webResponse } = await callAgent(context, {
     agentId,
     pageId,
     messages,
     conversationId: conversationId ?? undefined,
     sharedState: sharedState ?? undefined,
+    sharedStateReadOnly: sharedStateReadOnly ?? undefined,
     urlQuery: urlQuery ?? undefined,
   });
 

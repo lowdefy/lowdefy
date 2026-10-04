@@ -191,8 +191,13 @@
       "description": "URL query parameters to send with each agent request. Available server-side in onFinish hook payload and via _payload operator in agent properties."
     },
     "sharedState": {
-      "description": "When set to a non-empty object, the object is sent to the agent each turn as read context and the agent can write to any top-level key via the update-page-state tool. Typically set to `{ _state: true }` to expose the whole page state, or a curated shape like `{ legal: _state.legal_name }`.",
+      "description": "When set to a non-empty object, the object is sent to the agent each turn as read context and the agent can write to any top-level key via the update-page-state tool (unless `sharedStateReadOnly` is true). Typically set to `{ _state: true }` to expose the whole page state, or a curated shape like `{ legal: _state.legal_name }`.",
       "type": "object"
+    },
+    "sharedStateReadOnly": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true, `sharedState` is sent to the agent as read-only context: the update-page-state tool is not offered, so the agent cannot write page state."
     },
     "sender": {
       "type": "object",

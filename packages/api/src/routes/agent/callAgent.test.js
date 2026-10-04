@@ -635,6 +635,59 @@ test('callAgent passes agentContext with conversationId, pageId, urlQuery, userI
     conversationId: 'conv_123',
     pageId: 'principle-view',
     sharedState: {},
+    sharedStateReadOnly: false,
+    urlQuery: { principle_id: 'P3' },
+    userId: 'user_abc',
+  });
+});
+
+test('callAgent passes sharedState and sharedStateReadOnly to agentContext', async () => {
+  const mockResolver = jest.fn().mockResolvedValue({ response: {} });
+  const mockCreate = jest.fn().mockReturnValue({ provider: 'mock-provider' });
+
+  const agentConfig = {
+    auth: { public: true },
+    agentId: 'my-agent',
+    id: 'agent:my-agent',
+    type: 'ClaudeAgent',
+    connectionId: 'my-anthropic',
+    tools: [],
+    properties: { model: 'claude-3-5-sonnet' },
+  };
+  const connectionConfig = {
+    connectionId: 'my-anthropic',
+    id: 'connection:my-anthropic',
+    type: 'Anthropic',
+    properties: {},
+  };
+
+  const readConfigFile = createMockReadConfigFile({ agentConfig, connectionConfig });
+  const context = testContext({
+    logger,
+    readConfigFile,
+    connections: {
+      Anthropic: { create: mockCreate, requests: {} },
+    },
+    user: { sub: 'user_abc', id: 'user_id_fallback' },
+  });
+  context.agents = { ClaudeAgent: { resolver: mockResolver, schema: {} } };
+
+  await callAgent(context, {
+    agentId: 'my-agent',
+    pageId: 'principle-view',
+    messages: [],
+    conversationId: 'conv_123',
+    urlQuery: { principle_id: 'P3' },
+    sharedState: { space: 'PEL' },
+    sharedStateReadOnly: true,
+  });
+
+  const resolverContext = mockResolver.mock.calls[0][0].context;
+  expect(resolverContext.agentContext).toEqual({
+    conversationId: 'conv_123',
+    pageId: 'principle-view',
+    sharedState: { space: 'PEL' },
+    sharedStateReadOnly: true,
     urlQuery: { principle_id: 'P3' },
     userId: 'user_abc',
   });
@@ -920,6 +973,7 @@ test('callAgent provides agentContext as payload for operator evaluation', async
     conversationId: 'conv_abc',
     pageId: 'principle-view',
     sharedState: {},
+    sharedStateReadOnly: false,
     urlQuery: { principle_id: 'P3' },
     userId: 'user_xyz',
   });

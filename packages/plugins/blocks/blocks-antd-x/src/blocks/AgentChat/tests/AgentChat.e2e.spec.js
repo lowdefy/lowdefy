@@ -276,3 +276,33 @@ test.describe('AgentChat loading', () => {
     await expect(chat.locator('textarea')).toBeEnabled();
   });
 });
+
+test.describe('AgentChat shared state', () => {
+  async function sendAndReadBody(page, blockId) {
+    await page.route('**/api/agent/**', (route) => route.abort());
+    const requestPromise = page.waitForRequest(
+      (request) => request.url().includes('/api/agent/') && request.method() === 'POST'
+    );
+    const input = getBlock(page, blockId).locator('textarea');
+    await input.fill('hello');
+    await input.press('Enter');
+    const request = await requestPromise;
+    return request.postDataJSON();
+  }
+
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'agent-chat');
+  });
+
+  test('sharedStateReadOnly sends the shared state marked read-only', async ({ page }) => {
+    const body = await sendAndReadBody(page, 'chat_shared_read_only');
+    expect(body.sharedState).toEqual({ space: 'PEL' });
+    expect(body.sharedStateReadOnly).toBe(true);
+  });
+
+  test('shared state is writable by default', async ({ page }) => {
+    const body = await sendAndReadBody(page, 'chat_shared_writable');
+    expect(body.sharedState).toEqual({ space: 'PEL' });
+    expect(body.sharedStateReadOnly).toBeUndefined();
+  });
+});

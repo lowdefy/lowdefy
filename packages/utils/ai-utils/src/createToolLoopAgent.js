@@ -73,10 +73,12 @@ function createHookCallbacks({ callEndpoint, hooks, locale, logger }) {
 async function createToolLoopAgent({ connection, agent, context, autoApprove = false }) {
   const { tools, mcpClients, toolApproval } = await buildAgentTools({ agent, context, autoApprove });
 
-  const sharedState = context.agentContext?.sharedState;
-  const updatePageStateTool = buildUpdatePageStateTool({ sharedState });
-  if (updatePageStateTool) {
-    tools['update-page-state'] = updatePageStateTool;
+  const { sharedState, sharedStateReadOnly } = context.agentContext ?? {};
+  if (!sharedStateReadOnly) {
+    const updatePageStateTool = buildUpdatePageStateTool({ sharedState });
+    if (updatePageStateTool) {
+      tools['update-page-state'] = updatePageStateTool;
+    }
   }
 
   const model = connection.provider(agent.properties.model);
