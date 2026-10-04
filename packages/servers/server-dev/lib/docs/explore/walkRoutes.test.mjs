@@ -171,6 +171,15 @@ test('openWalk answers 409 for a third concurrent walk and for a walk of the run
   expect(third.body.error).toMatch(/2 walks are already open/);
 });
 
+test("openWalk lets only two of three walks opened at once register, and frees the refused one's browser slot", async () => {
+  const results = await Promise.all(
+    ['walk-1', 'walk-2', 'walk-3'].map((walk) => openWalk({ body: openBody({ walk }), origin }))
+  );
+  expect(results.map((result) => result.status).sort()).toEqual([200, 200, 409]);
+  expect(listWalks()).toHaveLength(2);
+  expect(slot.release).toHaveBeenCalledTimes(1);
+});
+
 test('openWalk refuses a walk without data on an app with a MongoDBCollection connection unless live data is allowed', async () => {
   const refused = await openWalk({ body: openBody({ data: undefined, user: undefined }), origin });
   expect(refused.status).toBe(400);

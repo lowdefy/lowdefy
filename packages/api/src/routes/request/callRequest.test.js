@@ -182,6 +182,21 @@ test('call request, public auth', async () => {
   });
 });
 
+test('callRequest sets context requestId, so an error the request raises names it', async () => {
+  mockReadConfigFile.mockImplementation(defaultReadConfigImp());
+  mockTestRequest.mockImplementation(defaultResolverImp);
+  const requestContext = testContext({
+    connections,
+    readConfigFile: mockReadConfigFile,
+    operators,
+    secrets,
+  });
+  await callRequest(requestContext, { ...defaultParams, blockId: 'blockId' });
+  expect(requestContext.requestId).toEqual('requestId');
+  expect(requestContext.pageId).toEqual('pageId');
+  expect(requestContext.blockId).toEqual('blockId');
+});
+
 test('call request, protected auth with user', async () => {
   mockReadConfigFile.mockImplementation(
     defaultReadConfigImp({
