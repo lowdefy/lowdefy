@@ -18,9 +18,11 @@ import { serializer } from '@lowdefy/helpers';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 
 import addStepResult from './addStepResult.js';
-import invokeEndpoint from './invokeEndpoint.js';
-import scheduleBackground from './scheduleBackground.js';
+import createBoundSystemContext from '../../context/createBoundSystemContext.js';
 import evaluateRoutineOperators from './evaluateRoutineOperators.js';
+import invokeEndpoint from './invokeEndpoint.js';
+import resolveCallBinding from './resolveCallBinding.js';
+import scheduleBackground from './scheduleBackground.js';
 
 async function handleEndpointCall(context, routineContext, { step }) {
   const { logger } = context;
@@ -35,6 +37,17 @@ async function handleEndpointCall(context, routineContext, { step }) {
     input: step.properties,
     location: step.stepId,
   });
+
+  // organization (and caller) bind the target to one organization as a system
+  // run: the tenant wall filters and stamps with it, and `_user` is the named
+  // stand-in caller, or null.
+  const binding = resolveCallBinding(context, {
+    caller: evaluatedProperties.caller,
+    configKey: step['~k'],
+    organization: evaluatedProperties.organization,
+    stepId: step.stepId,
+  });
+  const callContext = binding === null ? context : createBoundSystemContext(context, binding);
 
   // detached: true — fire-and-forget the call back through the deployment's
   // /api/detached route, so the target runs in its OWN function invocation
@@ -78,8 +91,9 @@ async function handleEndpointCall(context, routineContext, { step }) {
         body: JSON.stringify({
           payload: serializer.serialize(evaluatedProperties.payload ?? {}),
           principal: {
-            user: serializer.serialize(context.user ?? null),
-            system: context.system === true,
+            user: serializer.serialize(callContext.user ?? null),
+            system: callContext.system === true,
+            organizationId: callContext.boundOrganizationId ?? null,
             agent: routineContext.agent ?? null,
           },
         }),
@@ -98,7 +112,7 @@ async function handleEndpointCall(context, routineContext, { step }) {
     return { status: 'continue' };
   }
 
-  const result = await invokeEndpoint(context, {
+  const result = await invokeEndpoint(callContext, {
     agent: routineContext.agent,
     endpointId: evaluatedProperties.endpointId,
     payload: evaluatedProperties.payload,

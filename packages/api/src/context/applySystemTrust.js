@@ -16,20 +16,30 @@
 
 import createAuthorizeOutcome from './createAuthorizeOutcome.js';
 
-// The single writer of the trusted, caller-less system-context invariants
-// (Decision 1). It sets all three together on an existing context so no caller
-// can set one without the others:
-//   - user: null      — caller-less (detectable via type.isNone)
-//   - system: true     — the run-level trust marker every authorization layer reads
-//   - authorizeOutcome — derived from createAuthorizeOutcome so it reads context.system
+// The single writer of the trusted system-context invariants (Decision 1). It
+// sets them together on an existing context so no caller can set one without
+// the others:
+//   - system: true             — the run-level trust marker every authorization layer reads
+//   - boundOrganizationId      — the organization the run is bound to (CallApi
+//                                `organization`), or null. The tenant wall filters
+//                                and stamps with it (resolveTenancy).
+//   - user                     — null (caller-less), or the named stand-in caller
+//                                (CallApi `caller`): { id, name, organization_id,
+//                                system: true }, with no roles and no attributes
+//   - authorizeOutcome         — derived from createAuthorizeOutcome so it reads context.system
 // createSystemContext builds a FRESH context for the off-request hook path;
 // this applies the same state to a request context a runner already holds
 // (cron at construction, webhook once its verify gate passes, a detached run
-// whose dispatcher was itself a system context). One greppable place means a
-// future runner cannot reintroduce the silent-no-op bug by forgetting a line.
-function applySystemTrust(context) {
-  context.user = null;
+// whose dispatcher was itself a system context, a CallApi bound to an
+// organization). One greppable place means a future runner cannot reintroduce
+// the silent-no-op bug by forgetting a line.
+function applySystemTrust(context, { organizationId = null, caller = null } = {}) {
   context.system = true;
+  context.boundOrganizationId = organizationId;
+  context.user =
+    caller === null
+      ? null
+      : { id: caller.id, name: caller.name, organization_id: organizationId, system: true };
   context.authorizeOutcome = createAuthorizeOutcome(context);
   return context;
 }

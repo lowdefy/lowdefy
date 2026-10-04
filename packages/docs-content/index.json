@@ -3270,7 +3270,7 @@
         "templates/validate_email.yaml",
         "version.yaml"
       ],
-      "hash": "9180ca1b15cc8c7a9cbd0de3188a891378dc0b8e9518de95793af409e88f64c4"
+      "hash": "756da831b7253805015d13d5bad8e8db828b33bf107c33d02bc08e4eb6033d88"
     },
     "concepts/notifications": {
       "files": [
@@ -3745,7 +3745,7 @@
         "users/organizations.yaml",
         "version.yaml"
       ],
-      "hash": "147bf3fb2f89d217f6291085ab0784d3e89d730c812d0c160ae81066e89941aa"
+      "hash": "cb4398ed118b141c2f32fc36fdec0c3c77b9f210ff495d21b0b13979e70352ab"
     },
     "user-authentication/auth-steps": {
       "files": [

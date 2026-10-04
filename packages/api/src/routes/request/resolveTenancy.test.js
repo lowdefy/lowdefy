@@ -620,3 +620,30 @@ test.each([
     })
   ).toEqual({ tenant: null, tenantGuard: null });
 });
+
+test('a system run bound to an organization is scoped to that organization', () => {
+  const { tenant } = resolveTenancy(
+    { ...tenantPolicy, system: true, boundOrganizationId: 'org-2', user: null },
+    {
+      connection: tenantConnection,
+      connectionConfig: defaultConnectionConfig,
+      requestConfig: defaultRequestConfig,
+    }
+  );
+  expect(tenant).toEqual({ field: 'organization_id', value: 'org-2' });
+});
+
+test('an unbound system run fails closed and names CallApi organization as the way in', () => {
+  expect(() =>
+    resolveTenancy(
+      { ...tenantPolicy, system: true, boundOrganizationId: null, user: null },
+      {
+        connection: tenantConnection,
+        connectionConfig: defaultConnectionConfig,
+        requestConfig: defaultRequestConfig,
+      }
+    )
+  ).toThrow(
+    'To run this request in one organization from a system run, call its endpoint with a CallApi step that names the "organization".'
+  );
+});

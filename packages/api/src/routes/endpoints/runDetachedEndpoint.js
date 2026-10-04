@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 import applySystemTrust from '../../context/applySystemTrust.js';
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
@@ -51,8 +51,13 @@ async function runDetachedEndpoint(context, { endpointId, payload, principal }) 
   // fire-and-forget - no re-resolution.
   if (principal?.system === true) {
     // The dispatcher was a trusted system context (cron, hook, or a verified
-    // webhook) - the detached run inherits it and blanket-passes.
-    applySystemTrust(context);
+    // webhook) - the detached run inherits it and blanket-passes, bound to the
+    // same organization and stand-in caller when it was bound to one.
+    const user = serializer.deserialize(principal.user ?? null);
+    applySystemTrust(context, {
+      organizationId: principal.organizationId,
+      caller: type.isNone(user) ? null : { id: user.id, name: user.name },
+    });
   } else {
     // The dispatcher was a real user (or a strategy caller) - carry that
     // identity. This is NOT a system context (context.system stays unset), so

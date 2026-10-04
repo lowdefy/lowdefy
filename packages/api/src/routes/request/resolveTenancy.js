@@ -67,9 +67,11 @@ import { type } from '@lowdefy/helpers';
 //   own tenant clause (stages the wall can not scope mechanically) instead
 //   of injecting one. Aggregation-only; other operations refuse the marker.
 // - Otherwise the caller must carry an organization (context.user.organization_id,
-//   the active org in string form). System context (hook routines, scheduled
-//   jobs) and strategy callers have none, so they fail here by design - the
-//   wall never degrades to unscoped access.
+//   the active org in string form). A system run (hook routines, scheduled
+//   jobs, verified webhooks) has one only when a CallApi bound it to one
+//   (context.boundOrganizationId); unbound system runs and strategy callers
+//   have none, so they fail here by design - the wall never degrades to
+//   unscoped access.
 const unscoped = { tenant: null, tenantGuard: null };
 
 // The scoping contract is enforced by the connection package itself (the
@@ -154,11 +156,14 @@ function resolveTenancy(context, { connection, connectionConfig, requestConfig }
   if (requestConfig.tenant === 'none') {
     return { tenant: null, tenantGuard: { field, stampChangeLog: true } };
   }
-  const value = context.user?.organization_id;
+  // A system run's organization is the one a CallApi bound it to; it has no
+  // other. Every other run's is the caller's.
+  const value =
+    context.system === true ? context.boundOrganizationId : context.user?.organization_id;
   if (!type.isString(value) || value === '') {
     const location = requestConfig.stepId ?? requestConfig.requestId ?? requestConfig.websocketId;
     throw new AuthenticationError(
-      `Request "${location}" reads tenant connection "${connectionConfig.connectionId}" but no caller organization resolved. System-context and strategy callers carry no organization - the wall fails closed for them. To run this request outside the wall, declare tenant: none on it and author the organization value explicitly.`
+      `Request "${location}" reads tenant connection "${connectionConfig.connectionId}" but no caller organization resolved. System-context and strategy callers carry no organization - the wall fails closed for them. To run this request in one organization from a system run, call its endpoint with a CallApi step that names the "organization". To run it outside the wall, declare tenant: none on it and author the organization value explicitly.`
     );
   }
   if (requestConfig.tenant === 'authored') {

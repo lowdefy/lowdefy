@@ -400,6 +400,8 @@ A `CallApi` step has:
 - `properties.endpointId: string`: **Required** - The id of the target endpoint. **Operators are evaluated**.
 - `properties.payload: object`: Optional payload to pass to the target endpoint. **Operators are evaluated**.
 - `properties.detached: boolean`: Optional - Fire-and-forget: dispatch the call and continue immediately, running the target in a separate server invocation. See [Detached Endpoint Calls](#detached-endpoint-calls).
+- `properties.organization: string`: Optional - Run the target bound to this organization id, so the [tenant wall](/organizations#the-tenant-wall) filters and stamps its requests with it. Accepted only in a trusted system run. See [Running in One Organization](#running-in-one-organization). **Operators are evaluated**.
+- `properties.caller: { id: string, name: string }`: Optional, only with `organization` - A named stand-in caller the target sees as `_user`. **Operators are evaluated**.
 
 The called endpoint runs in an isolated context — it has its own `_step` results and `_payload`. Its internal step results do not appear in the calling endpoint's `_step` namespace. Only the value returned by the called endpoint's `:return` is stored as the step result.
 
@@ -450,6 +452,34 @@ Endpoint calls can be nested up to 10 levels deep. Exceeding this limit throws a
 
 Connection plugin resolvers can also invoke endpoints from inside their JS code using the `callApi` function on the resolver argument bag. The semantics — depth cap, isolated routine context, caller's user identity, `InternalApi` reachable — match the `CallApi` step. See [Connection and Request Plugins](/plugins-connections) for the resolver-side API.
 
+### Running in One Organization
+
+Under the `tenant` organizations policy every walled request needs a caller organization. A scheduled run, an auth hook or a verified webhook has no caller, so a walled request in it fails closed. To do work for one organization from such a run, call the endpoint that does it with `organization`:
+
+```yaml
+- id: process_installation
+  type: CallApi
+  properties:
+    endpointId: process_github_event
+    organization:
+      _step: installation.organization_id
+    caller:
+      id: github
+      name: GitHub
+    payload:
+      event:
+        _payload: body
+```
+
+- The target runs as a system run bound to that organization. Every walled request inside it, and inside endpoints it calls in turn, is filtered and stamped with the organization, as for a signed-in member.
+- `_user` inside the target is the stand-in caller when `caller` is named: `{ id, name, organization_id, system: true }`, with the bound organization and no roles. `system: true` is how config tells it from a signed-in member. Change logs whose `meta` reads `_user` record it as the user. Without `caller`, `_user` is null.
+- `organization` and `caller` are accepted only in a trusted system run: a scheduled run, an auth hook, a webhook whose `verify` request passed (see [Webhook Endpoints](#webhook-endpoints)), or a detached run dispatched from one. The same step in a signed-in caller's routine, a strategy (API key) caller's, or a webhook with no passing verifier is refused, because the bound run is trusted as the system.
+- A run that is already bound may restate its organization (and caller), but not name another.
+- A `caller` without `organization`, or a static value of the wrong shape, is a build error.
+- `detached: true` carries the binding: the detached run is bound to the same organization and caller.
+
+Read the organization id from a row the routine already trusts (an installation record found by the verified webhook's payload, a schedule's list of organizations), never straight from an unverified request.
+
 ### Detached Endpoint Calls
 
 A `CallApi` step with `detached: true` does not wait for — or ever see — the target's result. The step dispatches the call and immediately continues, storing `{ detached: true, endpointId }` as its step result. The target runs as a new HTTP request to the deployment itself, which matters on serverless hosts: it executes in its **own** function invocation with a fresh `maxDuration` budget, so chained detached calls can process work that outlives any single invocation, without needing a queue.
@@ -467,7 +497,7 @@ A `CallApi` step with `detached: true` does not wait for — or ever see — the
 
 Detached calls differ from normal `CallApi` steps in important ways:
 
-- **Same identity**: the target runs as whoever dispatched it — the user who called the parent endpoint, or a system context when the parent was a scheduled run, hook or verified webhook. The target and its nested calls are authorized against that identity exactly as a synchronous `CallApi` would be, so a detached call reaches nothing the caller could not call directly. `InternalApi` endpoints are callable.
+- **Same identity**: the target runs as whoever dispatched it — the user who called the parent endpoint, or a system context when the parent was a scheduled run, hook or verified webhook (bound to the same organization and stand-in caller when the call names [`organization`](#running-in-one-organization)). The target and its nested calls are authorized against that identity exactly as a synchronous `CallApi` would be, so a detached call reaches nothing the caller could not call directly. `InternalApi` endpoints are callable.
 - **At-most-once, no retry**: if the dispatch or the target fails, nothing retries it. Design targets to be idempotent. The target's outcome exists only in the server logs and whatever its routine writes.
 - **Accepted, then run**: the `/api/detached` route answers `202` as soon as the `CRON_SECRET` check passes, and runs the target after the response under the platform's `waitUntil` (bounded by the target's own `maxDuration`). The dispatching invocation's request settles at once instead of staying in flight (and holding its instance's memory) while the target runs, so a chain of detached calls is a chain of separate invocations, not nested in-flight requests. The outcome is logged as `detached_run_done` (with the routine's status) or `detached_run_failed`, which includes a target whose `auth` refuses the caller.
 - **Requires `CRON_SECRET`**: the dispatch authenticates against the deployment's own `/api/detached` route with the `CRON_SECRET` environment variable (the same secret that secures cron, fail closed). The step fails with a config error if it is not set.
