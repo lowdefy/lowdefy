@@ -42,6 +42,14 @@ function formatExploreReport({ report, findings }) {
       report.policy.modelId ? ` ${report.policy.modelId}` : ''
     }   data ${report.data ?? 'none'}`
   );
+  const { switched } = report.policy;
+  if (switched !== null) {
+    lines.push(
+      `Fallback  ${switched.from} → ${switched.to} for the rest of the run (${
+        switched.reason === 'refused' ? 'the Gateway refused it' : 'a request was over its limits'
+      })`
+    );
+  }
   lines.push(
     `Ran       ${ran.pages} pages, ${ran.targets} (page, role) targets; ${ran.walks} walks, ${
       ran.confirmations

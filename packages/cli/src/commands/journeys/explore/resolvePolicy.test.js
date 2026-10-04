@@ -31,11 +31,22 @@ test('readCallCost reads the Gateway cost when reported and estimates it otherwi
   expect(estimated.usd).toBeCloseTo(0.002 + 0.0002, 10);
 });
 
-test('resolvePolicy uses the model policy with the default model when a key is set, and seeded without one', () => {
+test('readCallCost estimates Jev at its published price when the Gateway reports no cost', () => {
+  const jev = readCallCost({
+    usage: { inputTokens: 4000, outputTokens: 20 },
+    providerMetadata: {},
+    modelId: 'typesafe-ai/jev',
+  });
+  expect(jev.estimated).toBe(true);
+  expect(jev.usd).toBeCloseTo(4000 * 0.042e-6, 12);
+});
+
+test('resolvePolicy uses jev, with the structured-output model as its fallback, when a key is set, and seeded without one', () => {
   expect(resolvePolicy({ options: {}, env: { AI_GATEWAY_API_KEY: 'k' } })).toEqual({
-    policy: 'model',
-    backend: 'structured-output',
-    modelId: 'google/gemini-2.5-flash-lite',
+    policy: 'jev',
+    backend: 'evaluation',
+    modelId: 'typesafe-ai/jev',
+    fallbackModelId: 'google/gemini-2.5-flash-lite',
     apiKey: 'k',
     maxCost: 1,
   });
@@ -48,16 +59,32 @@ test('resolvePolicy uses the model policy with the default model when a key is s
   });
 });
 
+test('resolvePolicy --policy model forces the structured-output model', () => {
+  expect(resolvePolicy({ options: { policy: 'model' }, env: { AI_GATEWAY_API_KEY: 'k' } })).toEqual(
+    {
+      policy: 'model',
+      backend: 'structured-output',
+      modelId: 'google/gemini-2.5-flash-lite',
+      apiKey: 'k',
+      maxCost: 1,
+    }
+  );
+});
+
 test('resolvePolicy takes --model, then LOWDEFY_EXPLORER_MODEL, and --max-cost', () => {
   const env = { AI_GATEWAY_API_KEY: 'k', LOWDEFY_EXPLORER_MODEL: 'openai/gpt-5-nano' };
-  expect(resolvePolicy({ options: {}, env }).modelId).toEqual('openai/gpt-5-nano');
-  expect(resolvePolicy({ options: { model: 'x/y', maxCost: '0.25' }, env })).toMatchObject({
-    modelId: 'x/y',
-    maxCost: 0.25,
+  expect(resolvePolicy({ options: { policy: 'model' }, env }).modelId).toEqual('openai/gpt-5-nano');
+  expect(
+    resolvePolicy({ options: { policy: 'model', model: 'x/y', maxCost: '0.25' }, env })
+  ).toMatchObject({ modelId: 'x/y', maxCost: 0.25 });
+  // With the jev default, the same flags name its fallback.
+  expect(resolvePolicy({ options: { model: 'x/y' }, env })).toMatchObject({
+    modelId: 'typesafe-ai/jev',
+    fallbackModelId: 'x/y',
   });
 });
 
-test('resolvePolicy makes jev opt-in on the evaluation backend', () => {
+test('resolvePolicy --policy jev uses the evaluation backend', () => {
   expect(
     resolvePolicy({ options: { policy: 'jev' }, env: { AI_GATEWAY_API_KEY: 'k' } })
   ).toMatchObject({

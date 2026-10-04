@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import readCallCost from './readCallCost.js';
 
 const NEXT_QUESTION =
@@ -33,6 +35,16 @@ function isRefusedModel(error) {
   );
 }
 
+// A request the model rejects as too big (Jev takes 32k tokens of state and
+// question), which no retry of the same request fixes.
+function isOverLimit(error) {
+  if (error?.statusCode === 413) return true;
+  return (
+    error?.statusCode === 400 &&
+    /context|token|too (long|large)|exceed|limit/i.test(String(error?.message ?? ''))
+  );
+}
+
 // The model-guided policy: one decide() call per step, choosing the next
 // option, and on every step but a walk's first scoring how closely the last
 // step exercised the change. The model only chooses among generated options;
@@ -40,21 +52,64 @@ function isRefusedModel(error) {
 // asking; none ends the walk (optionId null). An answer outside the options,
 // or a call that failed after the backend's retries, falls back to the seeded
 // choice and says so; three failed calls in a row throw the Gateway's error.
-// An evaluation model the Gateway refuses on the first call throws the
-// waitlist message: there is no silent switch between policies.
+//
+// With the evaluation backend (Jev), a structured-output model
+// (fallbackModelId) stands by. When the Gateway refuses Jev, at any call, or
+// Jev rejects a request as over its limits, the policy switches to it for the
+// rest of the run and asks it the same question. The switch is never silent:
+// that answer carries fallback 'model', onSwitch is told both model ids and
+// the reason, and switched() reports it.
 //
 // The Gateway client and ai-utils load here, so no other command pays for
 // them. The base URL is the Gateway's default: AI_GATEWAY_BASE_URL is never
 // read.
-async function createModelPolicy({ backend, modelId, apiKey, seeded }) {
+async function createModelPolicy({
+  backend,
+  modelId,
+  fallbackModelId,
+  apiKey,
+  seeded,
+  onSwitch = () => {},
+}) {
   const [{ decide }, { createGateway }] = await Promise.all([
     import('@lowdefy/ai-utils'),
     import('@ai-sdk/gateway'),
   ]);
   const gateway = createGateway({ apiKey });
-  const model = backend === 'evaluation' ? gateway.evaluationModel(modelId) : gateway(modelId);
+  let current = {
+    backend,
+    modelId,
+    model: backend === 'evaluation' ? gateway.evaluationModel(modelId) : gateway(modelId),
+  };
+  const fallback =
+    backend === 'evaluation' && !type.isNone(fallbackModelId)
+      ? { backend: 'structured-output', modelId: fallbackModelId, model: gateway(fallbackModelId) }
+      : null;
+  let switched = null;
   let failedCalls = 0;
-  let answeredOnce = false;
+
+  async function ask({ state, questions }) {
+    try {
+      return { result: await callDecide({ state, questions }), fellBack: false };
+    } catch (error) {
+      const reason = (isRefusedModel(error) && 'refused') || (isOverLimit(error) && 'over-limit');
+      if (switched !== null || fallback === null || !reason) throw error;
+      switched = { from: current.modelId, to: fallback.modelId, reason, message: error.message };
+      current = fallback;
+      onSwitch(switched);
+      return { result: await callDecide({ state, questions }), fellBack: true };
+    }
+  }
+
+  function callDecide({ state, questions }) {
+    return decide({
+      model: current.model,
+      backend: current.backend,
+      state,
+      questions,
+      options: { maxRetries: 2 },
+    });
+  }
 
   async function choose(step) {
     const { state, options, firstStep } = step;
@@ -64,15 +119,10 @@ async function createModelPolicy({ backend, modelId, apiKey, seeded }) {
     const questions = { next: { choice: NEXT_QUESTION, options } };
     if (!firstStep) questions.relevance = RELEVANCE_QUESTION;
     let result;
+    let fellBack;
     try {
-      result = await decide({ model, backend, state, questions, options: { maxRetries: 2 } });
+      ({ result, fellBack } = await ask({ state, questions }));
     } catch (error) {
-      if (backend === 'evaluation' && !answeredOnce && isRefusedModel(error)) {
-        throw new Error(
-          `${modelId} is not available on this key (it is waitlisted); rerun with --policy model`,
-          { cause: error }
-        );
-      }
       failedCalls += 1;
       if (failedCalls >= MAX_FAILED_CALLS) {
         throw error;
@@ -85,12 +135,12 @@ async function createModelPolicy({ backend, modelId, apiKey, seeded }) {
       };
     }
     failedCalls = 0;
-    answeredOnce = true;
     const { inputTokens, outputTokens, usd, estimated } = readCallCost({
       usage: result.usage,
       providerMetadata: result.providerMetadata,
       state,
       questions,
+      modelId: current.modelId,
     });
     const answer = {
       asked: true,
@@ -99,18 +149,21 @@ async function createModelPolicy({ backend, modelId, apiKey, seeded }) {
       usage: { inputTokens, outputTokens },
       cost: { usd, estimated },
     };
+    answer.modelId = current.modelId;
     const choice = result.answers.next?.choice;
     if (!optionIds.includes(choice)) {
       return { ...answer, optionId: seeded.choose(step), fallback: 'unanswered' };
     }
-    return { ...answer, optionId: choice, fallback: null };
+    return { ...answer, optionId: choice, fallback: fellBack ? 'model' : null };
   }
 
   return {
     name: backend === 'evaluation' ? 'jev' : 'model',
     backend,
     modelId,
+    fallbackModelId: fallback?.modelId ?? null,
     lowestRelevance: RELEVANCE_QUESTION.levels[0],
+    switched: () => switched,
     choose,
   };
 }

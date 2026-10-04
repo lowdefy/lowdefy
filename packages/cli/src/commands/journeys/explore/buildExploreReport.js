@@ -51,7 +51,13 @@ function buildExploreReport({
     dirty: revisions.dirty,
     startedAt,
     finishedAt,
-    policy: { name: policy.name, backend: policy.backend ?? null, modelId: policy.modelId ?? null },
+    policy: {
+      name: policy.name,
+      backend: policy.backend ?? null,
+      modelId: policy.modelId ?? null,
+      fallbackModelId: policy.fallbackModelId ?? null,
+      switched: policy.switched?.() ?? null,
+    },
     data: walked.dataName,
     scope: {
       pages: scope.pages.map((page) => page.pageId),

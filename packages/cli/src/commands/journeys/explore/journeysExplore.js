@@ -131,14 +131,23 @@ function resolveTargets({ scope, coverage, dataSet, options }) {
   return { targets: orderTargets({ scopePages: scope.pages, targets }), notRun };
 }
 
-async function createPolicy({ policyConfig, seed }) {
+async function createPolicy({ context, policyConfig, seed }) {
   const seeded = createSeededPolicy({ seed });
   if (policyConfig.policy === 'seeded') return seeded;
   return createModelPolicy({
     backend: policyConfig.backend,
     modelId: policyConfig.modelId,
+    fallbackModelId: policyConfig.fallbackModelId,
     apiKey: policyConfig.apiKey,
     seeded,
+    onSwitch: ({ from, to, reason }) =>
+      context.logger.warn(
+        `${from} ${
+          reason === 'refused'
+            ? 'is not available on this key'
+            : 'rejected a request as over its limits'
+        }; switched to ${to} for the rest of the run.`
+      ),
   });
 }
 
@@ -175,7 +184,7 @@ async function walkRun({
   if (!type.isUndefined(liveRule.warning)) context.logger.warn(liveRule.warning);
   const coverage = readCoverage({ directories: context.directories });
   const { targets, notRun } = resolveTargets({ scope, coverage, dataSet, options });
-  const policy = await createPolicy({ policyConfig, seed: options.seed });
+  const policy = await createPolicy({ context, policyConfig, seed: options.seed });
   const costs = createCostTracker({
     maxCost: policyConfig.maxCost,
     onFirstEstimate: () =>

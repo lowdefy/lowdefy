@@ -193,6 +193,7 @@ async function runWalk({
           confidence: answer.confidence ?? null,
           relevance: answer.relevance ?? null,
           fallback: answer.fallback ?? null,
+          modelId: answer.modelId ?? null,
           usage: answer.usage ?? null,
           cost: answer.cost ?? null,
         },
