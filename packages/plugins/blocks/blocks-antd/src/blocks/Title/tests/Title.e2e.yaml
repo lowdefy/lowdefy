@@ -206,11 +206,13 @@ blocks:
       actions:
         placement: start
 
+  # Wide enough that the row keeps the first words beside "...Show more" in any font: at 300px a
+  # 38px heading kept only "Thi" with wider fonts.
   - id: title_ellipsis_collapsible
     type: Title
     style:
       .element:
-        width: 300
+        width: 640
     properties:
       content: This is a long piece of text that is truncated to a single row until the reader expands it, and it keeps going so that it is always longer than the box it sits in.
       ellipsis:

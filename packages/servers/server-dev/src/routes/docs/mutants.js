@@ -55,7 +55,7 @@ async function docsMutantsHandler(c) {
       );
     }
   }
-  // A page's own keys are in the jitMaps/ files its JIT build wrote, not in keyMap.json.
+  // Page builds write their keys to jitMaps/, not keyMap.json.
   const { keyMap, refMap } = await readMergedMaps({ buildDirectory });
   const result = await listMutants({
     ...body,

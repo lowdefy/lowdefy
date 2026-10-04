@@ -417,11 +417,13 @@ test.describe('TableLight Block', () => {
     await expect(getRows(page, 'tl_loading_rows')).toHaveText(['A-1']);
     const bar = table.locator('.lf-table-light-bar');
     await expect(bar).toBeVisible();
-    const barTop = (await bar.boundingBox()).y;
-    const headerBottom = await table
-      .locator('thead')
-      .evaluate((element) => element.getBoundingClientRect().bottom);
-    expect(Math.abs(barTop + 2 - headerBottom)).toBeLessThan(1);
+    // Both edges from one layout: read apart, the page can shift between the two reads.
+    const offset = await table.evaluate((element) => {
+      const barTop = element.querySelector('.lf-table-light-bar').getBoundingClientRect().top;
+      const headerBottom = element.querySelector('thead').getBoundingClientRect().bottom;
+      return barTop + 2 - headerBottom;
+    });
+    expect(Math.abs(offset)).toBeLessThan(1);
     await expect(table.locator('.ant-spin-spinning')).toHaveCount(0);
   });
 

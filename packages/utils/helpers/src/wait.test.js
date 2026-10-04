@@ -14,20 +14,27 @@
   limitations under the License.
 */
 
+import { jest } from '@jest/globals';
+
 import wait from './wait.js';
 
-test('wait set ms before continuing', async () => {
-  let flag = false;
+beforeEach(() => {
+  jest.useFakeTimers({ doNotFake: ['performance'] });
+});
 
-  const waitAndSetFlag = async () => {
-    await wait(10);
+afterEach(() => {
+  jest.useRealTimers();
+});
+
+test('wait resolves only once the set ms have passed', async () => {
+  let flag = false;
+  wait(10).then(() => {
     flag = true;
-  };
+  });
+  jest.advanceTimersByTime(9);
+  await Promise.resolve();
   expect(flag).toBe(false);
-  waitAndSetFlag();
-  expect(flag).toBe(false);
-  await wait(5);
-  expect(flag).toBe(false);
-  await wait(6);
+  jest.advanceTimersByTime(1);
+  await Promise.resolve();
   expect(flag).toBe(true);
 });
