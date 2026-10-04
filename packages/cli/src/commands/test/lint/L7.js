@@ -49,6 +49,18 @@ function targetValues(target) {
   return values;
 }
 
+// A dev candidate's expect.url carries the recorded path and query, such as
+// /ticket?id=<snapshot id>. The path names a page; the query values are data,
+// checked exactly as a urlQuery is.
+function urlContainsQueryValues(contains) {
+  const queryStart = contains.indexOf('?');
+  if (queryStart === -1) return [];
+  const query = new URLSearchParams(contains.slice(queryStart + 1));
+  return [...query.entries()]
+    .filter(([, value]) => value !== '')
+    .map(([key, value]) => ({ label: `url contains query ${key}`, value, exact: true }));
+}
+
 function expectValues(expectation) {
   const key = getStepKey(expectation);
   const value = expectation[key];
@@ -62,6 +74,8 @@ function expectValues(expectation) {
       return type.isString(value.equals)
         ? [{ label: 'title equals', value: value.equals, exact: true }]
         : [{ label: 'title contains', value: value.contains, exact: false }];
+    case 'url':
+      return urlContainsQueryValues(value.contains);
     case 'state':
       // A placeholder is L1's to refuse; booleans, numbers and null are not
       // text and pass.

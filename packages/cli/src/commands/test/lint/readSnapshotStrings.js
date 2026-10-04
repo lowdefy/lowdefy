@@ -19,8 +19,9 @@ import path from 'path';
 import { type } from '@lowdefy/helpers';
 
 // Adds the string leaves of one canonical EJSON document. A key starting with
-// `$` wraps a typed value (`$oid`, `$date`, `$numberInt`), never text someone
-// would type, so its value is left out.
+// `$` wraps a typed value (`$date`, `$numberInt`), never text someone would
+// type, so its value is left out. `$oid` is the exception: a staging
+// document's id is the value a search box or ?id= query would carry.
 function collectStrings({ value, strings }) {
   if (type.isString(value)) {
     const text = value.trim();
@@ -33,6 +34,10 @@ function collectStrings({ value, strings }) {
   }
   if (type.isObject(value)) {
     Object.entries(value).forEach(([key, item]) => {
+      if (key === '$oid') {
+        collectStrings({ value: item, strings });
+        return;
+      }
       if (key.startsWith('$')) return;
       collectStrings({ value: item, strings });
     });

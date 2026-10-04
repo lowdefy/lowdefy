@@ -30,7 +30,7 @@ afterEach(() => {
   fs.rmSync(configDirectory, { recursive: true, force: true });
 });
 
-test('readSnapshotStrings reads the string leaves of each listed collection and skips EJSON type values', () => {
+test('readSnapshotStrings reads the string leaves of each listed collection and ObjectId hex, and skips other EJSON type values', () => {
   const directory = path.join(configDirectory, '.lowdefy', 'data', 'staging');
   fs.mkdirSync(directory, { recursive: true });
   fs.writeFileSync(
@@ -53,5 +53,11 @@ test('readSnapshotStrings reads the string leaves of each listed collection and 
     name: 'staging',
     manifest: { pulledAt: '2026-10-01T00:00:00.000Z', collections: { tickets: { documents: 2 } } },
   });
-  expect([...strings].sort()).toEqual(['Floor 3', 'Second', 'Staging printer', 'urgent']);
+  expect([...strings].sort()).toEqual([
+    '65f0c0ffee0000000000abcd',
+    'Floor 3',
+    'Second',
+    'Staging printer',
+    'urgent',
+  ]);
 });

@@ -200,6 +200,17 @@ test('L7 refuses a snapshot id in the journey urlQuery and a goto urlQuery, and 
   ]);
 });
 
+test('L7 refuses a snapshot id in a recorded expect.url query and passes a path or fixture value', () => {
+  const problems = lint([
+    { expect: { url: { contains: '/ticket?id=65f0c0ffee0000000000abcd&tab=Open' } } },
+    { expect: { url: { contains: '/404' } } },
+    { expect: { url: { contains: '/tickets?title=Fixture%20printer' } } },
+  ]);
+  expect(problems.map(({ stepIndex, message }) => [stepIndex, message.split(' is ')[0]])).toEqual([
+    [0, 'step 0 (expect: { url }) url contains query id "65f0c0ffee0000000000abcd"'],
+  ]);
+});
+
 test('L7 refuses a typed value only the pulled snapshot holds', () => {
   const problems = lint([
     { fill: { blockId: 'search', value: 'Staging customer' } },
