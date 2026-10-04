@@ -1,0 +1,91 @@
+# Each control trips one of the explorer's walk invariants
+# (packages/servers/server-dev/test/journeyFixture/exploreWalks.test.mjs).
+id: explore
+type: Box
+requests:
+  # The memory store and the fixture database both refuse an unknown stage.
+  - id: broken_aggregate
+    type: MongoDBAggregation
+    connectionId: fixture_db
+    properties:
+      pipeline:
+        - $explorerFixtureBogusStage: {}
+  # Atlas Search, which no data set's memory store can run.
+  - id: search_items
+    type: MongoDBAggregation
+    connectionId: fixture_db
+    properties:
+      pipeline:
+        - $search:
+            index: default
+            text:
+              query: fixture
+              path: name
+blocks:
+  - id: explore_title
+    type: Title
+    properties:
+      content: Explore fixture
+      level: 2
+  # No events and no effect: a dead click.
+  - id: dead_button
+    type: Button
+    properties:
+      title: Do nothing
+  - id: boom_button
+    type: Button
+    properties:
+      title: Boom
+    events:
+      onClick:
+        - id: set_boom
+          type: SetState
+          params:
+            boom: true
+  # Its content throws once boom is set: a client error.
+  - id: boom_text
+    type: Paragraph
+    properties:
+      content:
+        _js: "if (state('boom') === true) { throw new Error('Explorer fixture boom'); } return 'Calm';"
+  - id: broken_request_button
+    type: Button
+    properties:
+      title: Broken request
+    events:
+      onClick:
+        - id: run_broken
+          type: Request
+          params: broken_aggregate
+  - id: search_button
+    type: Button
+    properties:
+      title: Search
+    events:
+      onClick:
+        - id: run_search
+          type: Request
+          params: search_items
+  - id: explode_button
+    type: Button
+    properties:
+      title: Explode
+    events:
+      onClick:
+        - id: call_explode
+          type: CallAPI
+          params:
+            endpointId: explode
+  - id: required_input
+    type: TextInput
+    required: true
+    properties:
+      title: Required
+  - id: validate_button
+    type: Button
+    properties:
+      title: Check
+    events:
+      onClick:
+        - id: check_required
+          type: Validate

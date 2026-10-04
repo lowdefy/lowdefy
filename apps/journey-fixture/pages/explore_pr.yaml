@@ -1,0 +1,60 @@
+# The page the explore end-to-end test's head commit adds
+# (packages/cli/test/journeyFixture/explore.test.mjs): a button whose CallAPI
+# fails, and a note form whose save works. The test's base commit has the
+# title only.
+id: explore_pr
+type: Box
+requests:
+  - id: save_note
+    type: MongoDBInsertOne
+    connectionId: fixture_db
+    payload:
+      note:
+        _state: note_input
+    properties:
+      doc:
+        kind: note
+        note:
+          _payload: note
+blocks:
+  - id: explore_pr_title
+    type: Title
+    properties:
+      content: Notes
+      level: 2
+  - id: assign_submit
+    type: Button
+    properties:
+      title: Assign
+    events:
+      onClick:
+        - id: call_assign
+          type: CallAPI
+          params:
+            endpointId: explode
+  - id: note_input
+    type: TextInput
+    properties:
+      title: Note
+  - id: save_note_button
+    type: Button
+    properties:
+      title: Save note
+    events:
+      onClick:
+        - id: save_note
+          type: Request
+          params: save_note
+        - id: set_note_saved
+          type: SetState
+          params:
+            note_saved: true
+  - id: note_saved_alert
+    type: Alert
+    visible:
+      _eq:
+        - _state: note_saved
+        - true
+    properties:
+      type: success
+      message: Note saved

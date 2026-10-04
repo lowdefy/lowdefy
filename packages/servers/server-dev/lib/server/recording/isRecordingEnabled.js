@@ -18,12 +18,14 @@ import readRecordingCookie from './readRecordingCookie.js';
 
 // Whether a page should mount the recorder: not when the developer turned
 // recording off (LOWDEFY_DEV_RECORD=false, in the shell or .env), and not in a
-// headless context marked off, so those never even subscribe.
+// headless context marked off or a run that records nothing, so those never
+// even subscribe.
 function isRecordingEnabled(cookieHeader) {
   if (process.env.LOWDEFY_DEV_RECORD === 'false') {
     return false;
   }
-  return readRecordingCookie(cookieHeader) !== 'off';
+  const recording = readRecordingCookie(cookieHeader);
+  return recording !== 'off' && recording?.record !== false;
 }
 
 export default isRecordingEnabled;
