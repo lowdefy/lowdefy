@@ -19,6 +19,7 @@ import path from 'path';
 import { jest } from '@jest/globals';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
+import { operatorsServer } from '@lowdefy/operators-js';
 
 import createMcpServer, { scopeCovers } from './createMcpServer.js';
 import testContext from '../../test/testContext.js';
@@ -88,10 +89,22 @@ const mockFailingRequest = jest.fn(() => {
 mockFailingRequest.schema = {};
 mockFailingRequest.meta = { checkRead: false, checkWrite: false };
 
+// The afterToolCall hook's routine records the payload it was called with. The
+// delay makes a hook that is not awaited visible: its call would land after
+// the tool reply.
+const hookCalls = [];
+const mockRecordRequest = jest.fn(async ({ request }) => {
+  await new Promise((resolve) => setTimeout(resolve, 20));
+  hookCalls.push(request.call);
+  return null;
+});
+mockRecordRequest.schema = {};
+mockRecordRequest.meta = { checkRead: false, checkWrite: false };
+
 const connections = {
   TestConnection: {
     schema: {},
-    requests: { FailingRequest: mockFailingRequest },
+    requests: { FailingRequest: mockFailingRequest, RecordRequest: mockRecordRequest },
   },
 };
 
@@ -114,6 +127,7 @@ function createContext({
   user = null,
 } = {}) {
   const operators = {
+    ...operatorsServer,
     _fail: () => {
       throw new Error('Boom.');
     },
@@ -161,6 +175,7 @@ async function listToolNames(context) {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  hookCalls.length = 0;
 });
 
 test('createMcpServer advertises configured branding in serverInfo, stripping build markers', async () => {
@@ -637,5 +652,160 @@ test('tools/call answers a payload that violates the payloadSchema with isError 
   expect(logger.error).not.toHaveBeenCalled();
   expect(logger.warn).toHaveBeenCalledWith(
     'Refused MCP tool call: get-customer - Payload for endpoint "get-customer" does not match its payloadSchema at /customerId: must be string.'
+  );
+});
+
+const recordToolCallConfig = {
+  endpointId: 'record-tool-call',
+  id: 'endpoint:record-tool-call',
+  type: 'InternalApi',
+  auth: { public: true },
+  routine: {
+    id: 'request:record-tool-call:record',
+    type: 'RecordRequest',
+    stepId: 'record',
+    connectionId: 'test',
+    properties: { call: { _payload: true } },
+  },
+};
+
+function createHookContext({ hookConfig = recordToolCallConfig, ...options } = {}) {
+  return createContext({
+    ...options,
+    configs: {
+      'mcp.json': { ...failingMcpJson, afterToolCall: 'record-tool-call' },
+      'api/failing.json': failingConfig,
+      'api/record-tool-call.json': hookConfig,
+      ...options.configs,
+    },
+  });
+}
+
+test('tools/call runs the afterToolCall hook with the call and its response before returning', async () => {
+  const context = createHookContext({
+    user: { id: 'user_1', roles: ['support'] },
+    mcpAuth: memberMcpAuth(['mcp:read']),
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({
+    name: 'get-customer',
+    arguments: { customerId: 'c_1' },
+  });
+  expect(result.isError).toBeFalsy();
+  expect(JSON.parse(result.content[0].text)).toEqual({ name: 'Ada' });
+  expect(hookCalls).toEqual([
+    {
+      tool: 'get-customer',
+      endpoint_id: 'get-customer',
+      scope: 'mcp:read',
+      payload: { customerId: 'c_1' },
+      success: true,
+      response: { name: 'Ada' },
+    },
+  ]);
+  expect(logger.warn).not.toHaveBeenCalled();
+});
+
+test('tools/call runs the afterToolCall hook with a null response when the endpoint fails', async () => {
+  const context = createHookContext();
+  context.configDirectory = '/app';
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'failing', arguments: { attempt: 1 } });
+  expect(result.isError).toBe(true);
+  expect(result.content[0].text).toBe('Something went wrong.');
+  expect(hookCalls).toEqual([
+    {
+      tool: 'failing',
+      endpoint_id: 'failing',
+      scope: 'mcp:read',
+      payload: { attempt: 1 },
+      success: false,
+      response: null,
+    },
+  ]);
+});
+
+test('tools/call does not run the afterToolCall hook for an unknown tool', async () => {
+  const context = createHookContext();
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'nope', arguments: {} });
+  expect(result.content).toEqual([{ type: 'text', text: 'Unknown tool "nope".' }]);
+  expect(mockRecordRequest).not.toHaveBeenCalled();
+});
+
+test('tools/call does not run the afterToolCall hook for a scope shortfall', async () => {
+  const context = createHookContext({
+    user: { id: 'user_1', roles: ['support'] },
+    mcpAuth: memberMcpAuth(['mcp:read']),
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'update-customer', arguments: {} });
+  expect(result.content).toEqual([{ type: 'text', text: 'Unknown tool "update-customer".' }]);
+  expect(mockRecordRequest).not.toHaveBeenCalled();
+});
+
+test('tools/call does not run the afterToolCall hook for a payload the payloadSchema rejects', async () => {
+  const context = createHookContext({
+    user: { id: 'user_1', roles: ['support'] },
+    mcpAuth: memberMcpAuth(['mcp:read']),
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'get-customer', arguments: { customerId: 42 } });
+  expect(result.isError).toBe(true);
+  expect(mockRecordRequest).not.toHaveBeenCalled();
+});
+
+test('tools/call keeps the reply and warns when the afterToolCall hook routine fails', async () => {
+  mockRecordRequest.mockImplementationOnce(async () => {
+    throw new Error('Record store is down.');
+  });
+  const context = createHookContext();
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'health', arguments: {} });
+  expect(result.isError).toBeFalsy();
+  expect(JSON.parse(result.content[0].text)).toEqual({ ok: true });
+  expect(logger.warn).toHaveBeenCalledWith(
+    expect.objectContaining({
+      event: 'warn_mcp_after_tool_call',
+      hook: 'record-tool-call',
+      tool: 'health',
+      status: 'error',
+    }),
+    expect.stringContaining('MCP afterToolCall hook "record-tool-call" failed after tool "health"')
+  );
+});
+
+test('tools/call keeps the reply and warns when the afterToolCall hook throws', async () => {
+  // A protected hook refuses the anonymous caller of a public tool: invokeEndpoint
+  // throws before any routine runs.
+  const context = createHookContext({
+    hookConfig: { ...recordToolCallConfig, auth: { public: false } },
+  });
+  const server = await createMcpServer({ context });
+  const client = await connectClient(server);
+
+  const result = await client.callTool({ name: 'health', arguments: {} });
+  expect(result.isError).toBeFalsy();
+  expect(JSON.parse(result.content[0].text)).toEqual({ ok: true });
+  expect(mockRecordRequest).not.toHaveBeenCalled();
+  expect(logger.warn).toHaveBeenCalledWith(
+    expect.objectContaining({
+      event: 'warn_mcp_after_tool_call',
+      hook: 'record-tool-call',
+      tool: 'health',
+    }),
+    'MCP afterToolCall hook "record-tool-call" failed after tool "health": Authentication required for API endpoint "record-tool-call".'
   );
 });

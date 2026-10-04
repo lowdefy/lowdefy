@@ -166,6 +166,23 @@ function buildMcp({ components, context }) {
 
   mcp.hasPublicTool = hasPublicTool;
 
+  // The hook runs server-side only, so unlike a tool it may be an
+  // InternalApi endpoint and needs no description or payloadSchema.
+  if (!type.isNone(mcp.afterToolCall)) {
+    const hookEndpoint = (components.api ?? []).find(
+      (e) => e.id === mcp.afterToolCall || e.endpointId === mcp.afterToolCall
+    );
+    if (type.isNone(hookEndpoint)) {
+      collectExceptions(
+        context,
+        new ConfigError(
+          `MCP "afterToolCall" endpoint "${mcp.afterToolCall}" does not reference a defined api endpoint.`,
+          { configKey }
+        )
+      );
+    }
+  }
+
   return components;
 }
 

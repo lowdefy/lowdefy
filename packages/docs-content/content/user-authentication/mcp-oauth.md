@@ -79,6 +79,36 @@ Three rules the build enforces on every tool:
 - **Every tool needs a `description` and a `payloadSchema`.** The description is what the assistant reads to decide when to call the tool; the `payloadSchema` becomes the tool's input schema. A tool with neither is not a usable tool, so the build refuses it.
 - **The `mcp.agents` key is gone.** MCP agent tools are not supported; remove it if you are upgrading.
 
+## Running an endpoint after every tool call
+
+`afterToolCall` names an API endpoint the server runs after each tool call, once the reply to the client is built. Use it to see what agents do with your tools: which tools they call, with what arguments, and what came back, refusals included.
+
+```yaml
+mcp:
+  afterToolCall: record-tool-call
+  endpoints:
+    - id: search-customers
+      scope: mcp:read
+```
+
+The endpoint is called with this payload:
+
+| Field | Value |
+| ----- | ----- |
+| `tool` | The tool name the client called. |
+| `endpoint_id` | The `id` of the tool's `mcp.endpoints` entry. |
+| `scope` | The `scope` of that entry. |
+| `payload` | The arguments the tool was called with. |
+| `success` | `true` when the tool's endpoint succeeded, `false` when its routine errored or rejected. |
+| `response` | The tool endpoint's response, or `null` when `success` is `false`. |
+
+- **It cannot change the reply.** A hook endpoint that throws, is refused, or ends in an error or reject is logged as a warning naming the hook and the tool, and the client gets its reply as if there were no hook.
+- **It runs as the tool's caller.** The hook sees the same user, so `_user` is the person the agent acts for, and the hook endpoint's auth is checked against that caller like a `CallApi` step. Give it auth every tool caller passes, or calls by the others are logged as refused.
+- **It runs only for a call that reached its tool's endpoint.** An unknown or hidden tool, a role or scope shortfall and a payload the tool's `payloadSchema` rejects never reach the endpoint's routine, so they never run the hook.
+- **The reply waits for it.** The hook finishes before the request does, so it is not cut short on serverless platforms that stop work once the response is sent. Keep it quick.
+
+The hook is normally an `InternalApi` endpoint and is not listed in `mcp.endpoints`, so it is never offered as a tool. The build checks that the endpoint it names exists.
+
 ## A tool is gated twice
 
 When a call arrives at `/api/mcp`, a tool is listed and callable only when **both** hold:

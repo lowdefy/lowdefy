@@ -317,6 +317,62 @@ test('buildMcp throws when an endpoint has no payloadSchema', () => {
   );
 });
 
+test('buildMcp keeps an afterToolCall that names an InternalApi endpoint', () => {
+  const context = testContext();
+  const components = {
+    api: [
+      publicEndpoint,
+      { id: 'endpoint:record-tool-call', endpointId: 'record-tool-call', type: 'InternalApi' },
+    ],
+    mcp: {
+      afterToolCall: 'record-tool-call',
+      endpoints: [{ id: 'get-customer', scope: 'mcp:read' }],
+    },
+  };
+  const res = buildMcp({ components, context });
+  expect(res.mcp.afterToolCall).toEqual('record-tool-call');
+  expect(res.mcp.configured).toBe(true);
+});
+
+test('buildMcp throws when afterToolCall does not reference a defined api endpoint', () => {
+  const context = testContext();
+  const components = {
+    api: [publicEndpoint],
+    mcp: {
+      afterToolCall: 'record-tool-call',
+      endpoints: [{ id: 'get-customer', scope: 'mcp:read' }],
+    },
+  };
+  expect(() => buildMcp({ components, context })).toThrow(
+    'MCP "afterToolCall" endpoint "record-tool-call" does not reference a defined api endpoint.'
+  );
+});
+
+test('buildMcp throws when afterToolCall is not a string', () => {
+  const context = testContext();
+  const components = {
+    api: [publicEndpoint],
+    mcp: {
+      afterToolCall: { id: 'record-tool-call' },
+      endpoints: [{ id: 'get-customer', scope: 'mcp:read' }],
+    },
+  };
+  expect(() => buildMcp({ components, context })).toThrow(
+    'MCP "afterToolCall" should be a string.'
+  );
+});
+
+test('buildMcp names afterToolCall among the known properties of the mcp block', () => {
+  const context = testContext();
+  const components = {
+    api: [publicEndpoint],
+    mcp: { afterCall: 'record-tool-call', endpoints: [{ id: 'get-customer', scope: 'mcp:read' }] },
+  };
+  expect(() => buildMcp({ components, context })).toThrow(
+    'App "mcp" contains an unknown property. The known properties are "name", "version", "title", "websiteUrl", "icons", "instructions", "endpoints" and "afterToolCall".'
+  );
+});
+
 test('buildMcp throws when mcp.agents is present', () => {
   const context = testContext();
   const components = { mcp: { agents: ['some-agent'] } };
