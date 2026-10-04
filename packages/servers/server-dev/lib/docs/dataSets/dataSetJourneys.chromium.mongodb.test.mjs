@@ -129,6 +129,8 @@ const { closeClients } = await import(
   )
 );
 const { default: getDataStore } = await import('./getDataStore.js');
+const { default: getBuildId } = await import('../getBuildId.js');
+const { serializer } = await import('@lowdefy/helpers');
 
 // A stand-in for a Lowdefy page: buttons call the fixture app's endpoints and keep the answer in
 // page state, which journey expect steps read; "watch" subscribes to the change stream source.
@@ -142,6 +144,8 @@ function pageHtml() {
 <div id="bl-create_later_auth"><button onclick="callEndpoint('create_ticket_later_auth', {}, 'dispatchedAuth')">Later with auth</button></div>
 <div id="bl-leave"><button onclick="location.href = 'http://localhost:' + location.port + '/tickets'">Leave</button></div>
 <div id="bl-auth_probe"><button onclick="probeAuth()">Auth</button></div>
+<div id="bl-create_later_logged"><button onclick="callEndpoint('create_ticket_later_logged', { id: 'later-logged' }, 'dispatchedLogged')">Later, logged</button></div>
+<div id="bl-create_logged"><button onclick="callEndpoint('create_ticket_logged', { id: 'new-logged' }, 'createdLogged')">Create, logged</button></div>
 <div id="bl-create_watched"><button onclick="callEndpoint('create_ticket', { id: 'watched-1', title: 'Seen' }, 'createdWatched')">Create watched</button></div>
 <script>
 window.lowdefy = {
@@ -582,6 +586,80 @@ chromiumTest(
     expect(result.steps.map((step) => step.status)).toEqual(['failed', 'skipped']);
     expect(seenHosts.length).toBeGreaterThan(0);
     expect(seenHosts.filter((host) => host.startsWith('localhost'))).toEqual([]);
+  }
+);
+
+// A drop-step mutant on an endpoint's "log" step, as `lowdefy journeys harden` sends it: the step's
+// ~k in the build the server is serving.
+function dropLogMutant(endpointId) {
+  const endpoint = serializer.deserializeFromString(
+    fs.readFileSync(path.join(serverDirectory, 'build', 'api', `${endpointId}.json`), 'utf8')
+  );
+  const log = endpoint.routine.find((step) => step.stepId === 'log');
+  return {
+    buildId: getBuildId(),
+    artifact: `api/${endpointId}.json`,
+    key: log['~k'],
+    arg: null,
+    operator: 'drop-step',
+  };
+}
+
+chromiumTest(
+  'a mutant on an endpoint reached only through a detached CallApi applies, and the detached target writes to the session database',
+  async () => {
+    storeEvents.length = 0;
+    const { status, result } = await runJourney({
+      data: 'shop',
+      user: 'owner',
+      mutant: dropLogMutant('insert_detached_logged'),
+      steps: [
+        { click: 'create_later_logged' },
+        { expect: { state: { path: 'dispatchedLogged.success', equals: true } } },
+      ],
+    });
+    expect(status).toBe(200);
+    expect(result.passed).toBe(true);
+    // The detached request carried the mutant cookie: its read of the endpoint dropped "log".
+    expect(result.mutant.applied).toBeGreaterThanOrEqual(1);
+    expect(result.mutant.misses).toEqual([]);
+    // And the data cookie: its insert reached the session's database, not the stand-in.
+    const insert = storeEvents.find(
+      (event) => event.operationType === 'insert' && event.id === 'later-logged'
+    );
+    expect(insert).toBeDefined();
+    expect(insert.db).toMatch(/^ld_[0-9a-f]{12}$/);
+    expect(storeEvents.some((event) => event.id === 'log-detached')).toBe(false);
+    expect(await standInIds()).toEqual(['real-1']);
+  }
+);
+
+chromiumTest(
+  'two mutant runs of a data-set journey at once, as two harden workers run them, never see each other’s writes',
+  async () => {
+    const mutant = dropLogMutant('create_ticket_logged');
+    const journey = {
+      data: 'shop',
+      user: 'owner',
+      mutant,
+      steps: [
+        { click: 'create_logged' },
+        { expect: { state: { path: 'createdLogged.success', equals: true } } },
+        { wait: { ms: 1000 } },
+        { click: 'list' },
+        { expect: { state: { path: 'listed.ids', equals: ['new-logged', 't-a1', 't-a2'] } } },
+      ],
+    };
+    const runs = await Promise.all([runJourney(journey), runJourney(journey)]);
+    runs.forEach(({ status, result }) => {
+      expect(status).toBe(200);
+      // Each inserted new-logged into a database of its own: in a shared one the second insert of
+      // that _id would fail, and each list would show both runs' rows.
+      expect(result.passed).toBe(true);
+      expect(result.mutant.applied).toBeGreaterThanOrEqual(1);
+    });
+    expect(runs[0].result.mutant.id).not.toEqual(runs[1].result.mutant.id);
+    expect(await standInIds()).toEqual(['real-1']);
   }
 );
 

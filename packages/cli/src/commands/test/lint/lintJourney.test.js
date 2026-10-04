@@ -207,7 +207,7 @@ test('L6 refuses a journey that does not end on an assertion, and accepts expect
   });
 });
 
-test('a compiled candidate, with event-less clicks and a final wait for a request, lints clean', () => {
+test('a compiled candidate, with event-less clicks and a final wait for a request, lints without errors', () => {
   const problems = lintJourney({
     journey: journey([
       { click: 'tab_header' },
@@ -217,5 +217,5 @@ test('a compiled candidate, with event-less clicks and a final wait for a reques
     ]),
     exercisedEntry: entry({ events: [event('assign_submit')] }),
   });
-  expect(problems).toEqual([]);
+  expect(problems.filter(({ severity }) => severity === 'error')).toEqual([]);
 });

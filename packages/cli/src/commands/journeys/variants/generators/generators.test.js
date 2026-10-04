@@ -18,8 +18,12 @@ import doubleSubmit from './doubleSubmit.js';
 import interrupt from './interrupt.js';
 import negative from './negative.js';
 
-function exercised({ requests = [], endpoints = [] } = {}) {
-  return { pages: ['tickets'], appEvents: true, requests, endpoints, events: [], rendered: {} };
+function exercised({ requests = [], endpoints = [], events = [] } = {}) {
+  return { pages: ['tickets'], appEvents: true, requests, endpoints, events, rendered: {} };
+}
+
+function clickEvent(pageId, blockId) {
+  return { scope: 'page', pageId, blockId, eventName: 'onClick', actionIds: [] };
 }
 
 const writes = exercised({
@@ -93,6 +97,7 @@ test('negative takes the block required message, else the app default-locale fie
 test('interrupt is skipped when the submit click is not on the start page', () => {
   const elsewhere = exercised({
     requests: [{ pageId: 'ticket', requestId: 'save', calls: 1, write: true }],
+    events: [clickEvent('ticket', 'save')],
   });
   expect(interrupt({ journey, exercised: elsewhere })).toEqual({
     skipped: 'the submit click is not on the start page',
@@ -115,9 +120,77 @@ test('a write through an endpoint is counted with expect.calls on the endpoint',
       { endpointId: 'log', via: 'save-ticket', calls: null, write: true },
     ],
   });
-  const [variant] = doubleSubmit({ journey, exercised: viaEndpoint });
+  const withCallApi = [
+    {
+      blockId: 'tickets',
+      type: 'Box',
+      slots: {
+        content: {
+          blocks: [
+            {
+              blockId: 'save',
+              type: 'Button',
+              events: {
+                onClick: {
+                  try: [{ id: 'call', type: 'CallAPI', params: { endpointId: 'save-ticket' } }],
+                },
+              },
+            },
+          ],
+        },
+      },
+    },
+  ];
+  const [variant] = doubleSubmit({ journey, exercised: viaEndpoint, pageConfigs: withCallApi });
   expect(variant.steps.at(-1)).toEqual({
     expect: { calls: { endpoint: 'save-ticket', count: 1 } },
   });
   expect(variant.steps[1]).toEqual({ click: { blockId: 'save', count: 2 } });
+});
+
+test('the submit write is the request of the page the click is on when two pages share its id', () => {
+  const twoPages = {
+    ...journey,
+    steps: [
+      { click: 'save' },
+      { wait: { request: 'save' } },
+      { goto: 'ticket' },
+      { fill: { blockId: 'title', value: 'Printer jam' } },
+      { click: 'save_ticket' },
+      { wait: { request: 'save' } },
+      { expect: { visible: 'saved' } },
+    ],
+  };
+  const sharedId = exercised({
+    requests: [
+      { pageId: 'tickets', requestId: 'save', calls: 1, write: true },
+      { pageId: 'ticket', requestId: 'save', calls: 1, write: true },
+    ],
+  });
+  const [variant] = doubleSubmit({ journey: twoPages, exercised: sharedId, pageConfigs });
+  expect(variant.steps[4]).toEqual({ click: { blockId: 'save_ticket', count: 2 } });
+  expect(variant.steps.at(-1)).toEqual({
+    expect: { calls: { request: 'save', pageId: 'ticket', count: 1 } },
+  });
+  const byEvent = exercised({
+    requests: sharedId.requests,
+    events: [clickEvent('tickets', 'save'), clickEvent('ticket', 'save_ticket')],
+  });
+  expect(interrupt({ journey: twoPages, exercised: byEvent, pageConfigs })).toEqual({
+    skipped: 'the submit click is not on the start page',
+  });
+});
+
+test('a write through an endpoint no CallAPI of the click names skips the kinds with a note', () => {
+  const viaEndpoint = exercised({
+    requests: [{ pageId: 'tickets', requestId: 'save', calls: 1, write: false }],
+    endpoints: [{ endpointId: 'audit', calls: 1, write: true }],
+  });
+  const note = {
+    skipped:
+      'the click on "save" waits for "save", which does not write on page "tickets", and which endpoint it wrote through cannot be told',
+  };
+  [negative, interrupt, doubleSubmit].forEach((generate) => {
+    expect(generate({ journey, exercised: viaEndpoint, pageConfigs, i18n: {} })).toEqual(note);
+  });
 });

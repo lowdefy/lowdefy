@@ -53,6 +53,7 @@ beforeEach(() => {
   context = {
     directories: {
       config: configDirectory,
+      dev: path.join(configDirectory, '.lowdefy', 'dev'),
       journeys: path.join(configDirectory, 'tests', 'journeys'),
       test: path.join(configDirectory, '.lowdefy', 'test'),
       traces: path.join(configDirectory, '.lowdefy', 'traces'),
@@ -374,7 +375,87 @@ test('test --lint lints without a server, exits 1 on an error and 0 on warnings 
   );
   await test({ context });
   expect(process.exitCode).toBeUndefined();
-  expect(logs.info).toContain('Linted 1 journeys: 0 errors, 1 warnings.');
+  expect(logs.info).toContain('Linted 1 journeys: 0 errors, 2 warnings.');
+  expect(logs.warn).toContain(
+    'L5  asserts  has no user: name a user from its data set, or write user: none for signed out.'
+  );
+});
+
+function writeConfigFile(relativePath, content) {
+  const filePath = path.join(configDirectory, relativePath);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, content);
+}
+
+test('test --lint reads data set users without a server when no data set has a snapshot', async () => {
+  const { default: test } = await import('./test.js');
+  writeConfigFile('tests/data/tickets.yaml', 'users:\n  member:\n    roles: [member]\n');
+  writeJourneyFile(
+    'a.yaml',
+    'name: names a stranger\npageId: form\ndata: tickets\nuser: stranger\nsteps:\n  - expect: { visible: done }\n'
+  );
+  context.options = { lint: true };
+  await test({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(logs.warn).toContain(
+    'L5  names a stranger  names user "stranger", which data set "tickets" does not have. Its users: member.'
+  );
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test --lint builds the pages of snapshot journeys through a dev server, then lints L7 from the build', async () => {
+  const { default: test } = await import('./test.js');
+  writeConfigFile(
+    'tests/data/staging.yaml',
+    'snapshot:\n  from: staging\n  connections: [tickets]\nfixtures:\n  tickets:\n    - title: Fixture printer\nusers:\n  member:\n    roles: [member]\n'
+  );
+  writeConfigFile(
+    '.lowdefy/data/staging/manifest.json',
+    JSON.stringify({ pulledAt: '2026-10-01T00:00:00.000Z', collections: { tickets: {} } })
+  );
+  writeConfigFile(
+    '.lowdefy/data/staging/tickets.jsonl',
+    `${JSON.stringify({ title: 'Staging customer' })}\n`
+  );
+  const build = path.join(configDirectory, '.lowdefy', 'dev', 'build');
+  writeConfigFile(
+    '.lowdefy/dev/build/pages/form.json',
+    JSON.stringify({ id: 'form', properties: { title: 'Form' } })
+  );
+  writeConfigFile('.lowdefy/dev/build/menus.json', '[]');
+  writeConfigFile(
+    '.lowdefy/dev/build/i18n.json',
+    JSON.stringify({ defaultLocale: 'en', messages: { en: {} } })
+  );
+  writeJourneyFile(
+    'a.yaml',
+    [
+      'name: finds a staging ticket',
+      'pageId: form',
+      'data: staging',
+      'user: member',
+      'steps:',
+      '  - fill: { blockId: search, value: Staging customer }',
+      '  - expect: { text: { blockId: grid, contains: Fixture printer } }',
+      '  - expect: { text: { blockId: grid, contains: Acme Staging Ltd } }',
+      '',
+    ].join('\n')
+  );
+  mockGet.mockResolvedValue({ data: { id: 'form' } });
+  context.options = { lint: true };
+  await test({ context });
+  expect(fs.existsSync(build)).toBe(true);
+  expect(mockStartDevServer).toHaveBeenCalledWith({ context });
+  expect(mockGet).toHaveBeenCalledWith('http://localhost:3228/lowdefy-docs/page-config/form', {
+    timeout: 60000,
+  });
+  expect(mockStop).toHaveBeenCalledTimes(1);
+  expect(logs.error).toEqual([
+    'L7  finds a staging ticket  step 0 (fill "search") types "Staging customer", which only the pulled snapshot of data set "staging" holds: type a fixture value or new text.',
+    'L7  finds a staging ticket  step 2 (expect: { text }) contains "Acme Staging Ltd" is not part of the app\'s text, a fixture or user of data set "staging", or an earlier fill: on a snapshot data set it may exist in only one pull. Use a fixture value.',
+    'Linted 1 journeys: 2 errors, 1 warnings.',
+  ]);
+  expect(process.exitCode).toBe(1);
 });
 
 test('a full-suite run records every journey into one run on its first repetition only', async () => {

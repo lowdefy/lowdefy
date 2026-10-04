@@ -67,8 +67,12 @@ function journeysPath(...parts) {
   return path.join(configDirectory, 'tests', 'journeys', ...parts);
 }
 
+function variantsPath(...parts) {
+  return journeysPath('_candidates', 'variants', 'tickets', ...parts);
+}
+
 function listVariants() {
-  const directory = journeysPath('_candidates', 'variants');
+  const directory = variantsPath();
   return fs.existsSync(directory) ? fs.readdirSync(directory).sort() : [];
 }
 
@@ -79,7 +83,11 @@ beforeEach(() => {
   fs.writeFileSync(journeysPath('tickets.yaml'), JSON.stringify(journey));
   logs = { info: [], warn: [], error: [] };
   context = {
-    directories: { config: configDirectory, journeys: journeysPath() },
+    directories: {
+      config: configDirectory,
+      journeys: journeysPath(),
+      test: path.join(configDirectory, '.lowdefy', 'test'),
+    },
     options: {},
     logger: {
       info: (line) => logs.info.push(line),
@@ -113,13 +121,17 @@ test('journeysVariants --no-run measures the journey once, writes the variants a
   expect(process.exitCode).toBeUndefined();
   expect(mockPost).toHaveBeenCalledTimes(1);
   expect(listVariants()).toEqual([
-    'tickets-double-submit.yaml',
-    'tickets-interrupt.yaml',
-    'tickets-negative.yaml',
+    'saves-a-ticket-double-submit.yaml',
+    'saves-a-ticket-interrupt.yaml',
+    'saves-a-ticket-negative.yaml',
   ]);
-  ['role', 'tenant', 'empty', 'volume'].forEach((kind) =>
-    expect(logs.info).toContain(`SKIPPED  ${kind}: needs data sets`)
-  );
+  expect(logs.info.filter((line) => line.startsWith('SKIPPED'))).toEqual([
+    'SKIPPED  role: the journey declares no data: set',
+    'SKIPPED  role: the journey declares no data: set',
+    'SKIPPED  tenant: the journey declares no data: set',
+    'SKIPPED  empty: pass --empty-data <data set> to write it',
+    'SKIPPED  volume: pass --volume-data <data set> to write it',
+  ]);
   // The baseline is recorded, so the next run reads it instead of measuring.
   expect(fs.existsSync(path.join(configDirectory, '.lowdefy', 'test', 'exercised.json'))).toBe(
     true
@@ -128,17 +140,11 @@ test('journeysVariants --no-run measures the journey once, writes the variants a
 
 test('journeysVariants writes byte-identical files on a second run, from the recorded path', async () => {
   await variants({ run: false });
-  const first = listVariants().map((name) =>
-    fs.readFileSync(journeysPath('_candidates', 'variants', name), 'utf8')
-  );
+  const first = listVariants().map((name) => fs.readFileSync(variantsPath(name), 'utf8'));
   mockPost.mockClear();
   await variants({ run: false });
   expect(mockPost).not.toHaveBeenCalled();
-  expect(
-    listVariants().map((name) =>
-      fs.readFileSync(journeysPath('_candidates', 'variants', name), 'utf8')
-    )
-  ).toEqual(first);
+  expect(listVariants().map((name) => fs.readFileSync(variantsPath(name), 'utf8'))).toEqual(first);
 });
 
 test('journeysVariants replays each variant three times and classifies it', async () => {
@@ -172,7 +178,8 @@ test('journeysVariants does not replay a variant with a placeholder to fill', as
     'journeys',
     '_candidates',
     'variants',
-    'tickets-negative.yaml'
+    'tickets',
+    'saves-a-ticket-negative.yaml'
   );
   const prefix = `NOT RUN  ${relative}: `;
   expect(logs.warn[0].slice(0, prefix.length)).toEqual(prefix);
@@ -193,4 +200,165 @@ test('journeysVariants refuses unknown kinds and a file of several journeys with
   expect(process.exitCode).toBe(1);
   expect(logs.error.at(-1)).toContain('pick one with --name');
   expect(mockStartDevServer).not.toHaveBeenCalled();
+});
+
+function writeDataSet(name, content) {
+  const filePath = path.join(configDirectory, 'tests', 'data', `${name}.yaml`);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, content);
+}
+
+const dataSetJourney = {
+  name: 'member opens a ticket',
+  pageId: 'tickets',
+  data: 'tickets',
+  user: 'member',
+  steps: [
+    { click: { blockId: 'tickets_grid', containing: 'Printer jam' } },
+    { expect: { text: { blockId: 'title', contains: 'Printer jam' } } },
+  ],
+};
+
+test('journeysVariants writes the data-set kinds from data set files, byte for byte', async () => {
+  writeDataSet(
+    'tickets',
+    [
+      'fixtures:',
+      '  tickets:',
+      '    - { _id: t1, organizationId: org_a, title: Printer jam }',
+      '    - { _id: t2, organizationId: org_b, title: Leaking tap }',
+      'users:',
+      '  member: { id: u_1, roles: [member], organizationId: org_a }',
+      '  admin: { id: u_2, roles: [admin], organizationId: org_a }',
+      '  outsider: { id: u_9, roles: [member], organizationId: org_b }',
+      '  guest: { id: u_3, roles: [], organizationId: org_a }',
+      '',
+    ].join('\n')
+  );
+  writeDataSet(
+    'empty-org',
+    'users:\n  member: { id: u_1, roles: [member], organizationId: org_a }\n'
+  );
+  writeDataSet('big-org', 'users:\n  someone: { id: u_5, roles: [member] }\n');
+  fs.writeFileSync(journeysPath('tickets.yaml'), JSON.stringify(dataSetJourney));
+  mockGet.mockImplementation(async (target) => {
+    if (target.endsWith('/page-config/tickets')) {
+      return { data: { ...pageConfig, auth: { public: false, roles: ['member', 'admin'] } } };
+    }
+    if (target.endsWith('/api/root')) return { data: { i18n: {} } };
+    return { data: { buildId: 'build-1' } };
+  });
+  await variants({
+    run: false,
+    kinds: 'role,tenant,empty,volume',
+    emptyData: 'empty-org',
+    volumeData: 'big-org',
+  });
+  expect(process.exitCode).toBeUndefined();
+  expect(listVariants()).toEqual([
+    'member-opens-a-ticket-empty.yaml',
+    'member-opens-a-ticket-role-1.yaml',
+    'member-opens-a-ticket-role-2.yaml',
+    'member-opens-a-ticket-tenant.yaml',
+  ]);
+  expect(logs.info).toContain('SKIPPED  volume: data set "big-org" has no user "member"');
+  // The generated text below the header line, whose hash lets a rerun keep an edited file.
+  const read = (name) =>
+    fs
+      .readFileSync(variantsPath(name), 'utf8')
+      .replace(
+        /^# Generated by lowdefy journeys variants from tests\/journeys\/tickets\.yaml \([0-9a-f]{12}\)\. A rerun keeps this file once it is edited\.\n\n/,
+        ''
+      );
+  expect(read('member-opens-a-ticket-tenant.yaml')).toEqual(
+    [
+      'name: "member opens a ticket — tenant: as outsider of org_b"',
+      'pageId: tickets',
+      'user: outsider',
+      'data: tickets',
+      'variant:',
+      '  of: member opens a ticket',
+      '  kind: tenant',
+      '  detail: as outsider of org_b',
+      'steps:',
+      '  - expect: { visible: { blockId: tickets_grid, containing: Leaking tap } }',
+      '  - expect: { hidden: { blockId: tickets_grid, containing: Printer jam } }',
+      '',
+    ].join('\n')
+  );
+  expect(read('member-opens-a-ticket-role-2.yaml')).toEqual(
+    [
+      'name: "member opens a ticket — role: refused to guest"',
+      'pageId: tickets',
+      'user: guest',
+      'data: tickets',
+      'variant:',
+      '  of: member opens a ticket',
+      '  kind: role',
+      '  detail: refused to guest',
+      'steps:',
+      '  - expect: { url: { contains: /404 } }',
+      '  - expect: { hidden: tickets_grid }',
+      '',
+    ].join('\n')
+  );
+  expect(read('member-opens-a-ticket-role-1.yaml')).toContain('user: admin\n');
+  expect(read('member-opens-a-ticket-role-1.yaml')).toContain('detail: granted to admin [admin]\n');
+  expect(read('member-opens-a-ticket-empty.yaml')).toContain('data: empty-org\n');
+  expect(read('member-opens-a-ticket-empty.yaml')).toContain(
+    '  - expect: { visible: tickets_grid }\n'
+  );
+});
+
+test('journeysVariants refuses an unreadable data set before it starts a server', async () => {
+  fs.writeFileSync(journeysPath('tickets.yaml'), JSON.stringify(dataSetJourney));
+  await variants({ run: false, url: undefined });
+  expect(process.exitCode).toBe(1);
+  expect(logs.error[0]).toMatch(/^Data set "tickets" not found in tests\/data/);
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(mockGet).not.toHaveBeenCalled();
+});
+
+test('journeysVariants keeps an edited variant on a rerun and says so', async () => {
+  await variants({ run: false, kinds: 'double-submit' });
+  const variantFile = variantsPath('saves-a-ticket-double-submit.yaml');
+  const edited = `${fs.readFileSync(variantFile, 'utf8')}  - expect: { visible: done }\n`;
+  fs.writeFileSync(variantFile, edited);
+  await variants({ run: false, kinds: 'double-submit' });
+  expect(fs.readFileSync(variantFile, 'utf8')).toBe(edited);
+  expect(logs.warn).toContain(
+    `KEPT     ${path.join(
+      'tests',
+      'journeys',
+      '_candidates',
+      'variants',
+      'tickets',
+      'saves-a-ticket-double-submit.yaml'
+    )}: edited since it was generated; delete it to regenerate`
+  );
+});
+
+test('journeysVariants reports a conflict for a journey whose name slugs like another journey of the file', async () => {
+  const lookalike = { ...journey, name: 'Saves a ticket!' };
+  fs.writeFileSync(journeysPath('tickets.yaml'), JSON.stringify([journey, lookalike]));
+  await variants({ run: false, kinds: 'double-submit', name: 'saves a ticket' });
+  const variantFile = variantsPath('saves-a-ticket-double-submit.yaml');
+  const first = fs.readFileSync(variantFile, 'utf8');
+  await variants({ run: false, kinds: 'double-submit', name: 'Saves a ticket!' });
+  expect(process.exitCode).toBeUndefined();
+  expect(fs.readFileSync(variantFile, 'utf8')).toBe(first);
+  expect(logs.warn).toContain(
+    `CONFLICT ${path.join(
+      'tests',
+      'journeys',
+      '_candidates',
+      'variants',
+      'tickets',
+      'saves-a-ticket-double-submit.yaml'
+    )}: holds a variant of "saves a ticket" from ${path.join(
+      'tests',
+      'journeys',
+      'tickets.yaml'
+    )}; rename one of the journeys`
+  );
 });

@@ -23,16 +23,16 @@ import writeCall from '../writeCall.js';
 
 const INTERACTION_STEPS = ['click', 'open', 'press', 'back', 'goto', 'fill', 'select'];
 
-// Interrupt: when the submit click is on the start page (its write request
-// is that page's), the steps before it, a full load of the start page (page
-// state reset, app events run again), the start page's steps again from its
-// first interaction to the end, and the write sent exactly once.
-function interrupt({ journey, exercised }) {
-  const submit = findSubmitClick({ journey, exercised });
-  if (type.isNull(submit)) {
-    return { skipped: 'no submit click: no click followed by a wait for a write request' };
+// Interrupt: when the submit click is on the start page, the steps before
+// it, a full load of the start page (page state reset, app events run
+// again), the start page's steps again from its first interaction to the
+// end, and the write sent exactly once.
+function interrupt({ journey, exercised, pageConfigs }) {
+  const submit = findSubmitClick({ journey, exercised, pageConfigs });
+  if (!type.isUndefined(submit.skipped)) {
+    return { skipped: submit.skipped };
   }
-  if (submit.write.pageId !== journey.pageId) {
+  if (submit.pageId !== journey.pageId) {
     return { skipped: 'the submit click is not on the start page' };
   }
   const first = journey.steps.findIndex((step) => INTERACTION_STEPS.includes(getStepKey(step)));

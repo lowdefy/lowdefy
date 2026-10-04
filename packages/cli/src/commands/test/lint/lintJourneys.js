@@ -16,41 +16,110 @@
 
 import path from 'path';
 import { type } from '@lowdefy/helpers';
+import { parseDataSet } from '@lowdefy/node-utils';
 
+import buildL7Pages from './buildL7Pages.js';
+import getL7PageIds from './getL7PageIds.js';
 import lintJourney from './lintJourney.js';
 import readExercised from '../readExercised.js';
+import readSnapshotStrings from './readSnapshotStrings.js';
 import validateJourney from '../validateJourney.js';
 
-// `lowdefy test --lint`: lints the selected journeys and runs nothing, so it
-// needs no server and opens no browser. Prints one line per problem and
-// returns whether any was an error.
-function lintJourneys({ context, items }) {
+// Each data set the journeys name, read once: { dataSet, snapshotStrings } or
+// { error } when its file cannot be read.
+async function readDataSets({ context, journeys }) {
+  const dataSets = new Map();
+  for (const journey of journeys) {
+    const name = journey.data;
+    if (type.isNone(name) || dataSets.has(name)) continue;
+    try {
+      const dataSet = await parseDataSet({ configDirectory: context.directories.config, name });
+      const snapshotStrings =
+        type.isNone(dataSet.snapshotSpec) || type.isNone(dataSet.snapshot)
+          ? null
+          : readSnapshotStrings({
+              configDirectory: context.directories.config,
+              name,
+              manifest: dataSet.snapshot,
+            });
+      dataSets.set(name, { dataSet, snapshotStrings });
+    } catch (error) {
+      dataSets.set(name, { error: error.message });
+    }
+  }
+  return dataSets;
+}
+
+// `lowdefy test --lint`: lints the selected journeys and runs nothing. Data
+// sets are read from their files, so only L7 needs a dev server, and only
+// when some journey runs on a data set with a snapshot: the dev build is
+// just-in-time, so its pages are built before their config is read. Prints
+// one line per problem and returns whether any was an error.
+async function lintJourneys({ context, items }) {
   let errors = 0;
   let warnings = 0;
+  function report({ severity, line }) {
+    if (severity === 'error') {
+      errors += 1;
+      context.logger.error(line);
+    } else if (severity === 'warning') {
+      warnings += 1;
+      context.logger.warn(line);
+    } else {
+      context.logger.info(line);
+    }
+  }
+
+  const valid = [];
   items.forEach((item) => {
     const name = item.journey?.name ?? item.filePath;
     const validation = type.isNone(item.error)
       ? validateJourney({ journey: item.journey })
       : { valid: false, message: item.error };
     if (!validation.valid) {
-      errors += 1;
-      context.logger.error(`--  ${name}  invalid journey file: ${validation.message}`);
+      report({
+        severity: 'error',
+        line: `--  ${name}  invalid journey file: ${validation.message}`,
+      });
       return;
     }
-    const exercisedEntry = readExercised({
-      directories: context.directories,
-      file: path.relative(context.directories.config, item.filePath),
+    valid.push({
       journey: item.journey,
+      exercisedEntry: readExercised({
+        directories: context.directories,
+        file: path.relative(context.directories.config, item.filePath),
+        journey: item.journey,
+      }),
     });
-    lintJourney({ journey: item.journey, exercisedEntry }).forEach((problem) => {
-      const line = `${problem.rule}  ${name}  ${problem.message}`;
-      if (problem.severity === 'error') {
-        errors += 1;
-        context.logger.error(line);
-      } else {
-        warnings += 1;
-        context.logger.warn(line);
-      }
+  });
+
+  const dataSets = await readDataSets({ context, journeys: valid.map(({ journey }) => journey) });
+  const l7PageIds = new Set();
+  valid.forEach(({ journey, exercisedEntry }) => {
+    if (type.isNone(dataSets.get(journey.data)?.dataSet?.snapshotSpec)) return;
+    getL7PageIds({ journey, exercisedEntry }).forEach((pageId) => l7PageIds.add(pageId));
+  });
+  const pageErrors =
+    l7PageIds.size === 0 ? {} : await buildL7Pages({ context, pageIds: [...l7PageIds] });
+  const buildDirectory = path.join(context.directories.dev, 'build');
+
+  valid.forEach(({ journey, exercisedEntry }) => {
+    const read = dataSets.get(journey.data) ?? {};
+    if (!type.isNone(read.error)) {
+      report({ severity: 'error', line: `--  ${journey.name}  data set: ${read.error}` });
+    }
+    lintJourney({
+      journey,
+      exercisedEntry,
+      dataSet: read.dataSet ?? null,
+      buildDirectory,
+      snapshotStrings: read.snapshotStrings ?? null,
+      pageErrors,
+    }).forEach((problem) => {
+      report({
+        severity: problem.severity,
+        line: `${problem.rule}  ${journey.name}  ${problem.message}`,
+      });
     });
   });
   const summary = `Linted ${items.length} journeys: ${errors} errors, ${warnings} warnings.`;

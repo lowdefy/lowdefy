@@ -423,7 +423,7 @@ journeys
 journeys
   .command('variants')
   .description(
-    'Write edge-case candidates of a journey (bad input, a reload mid-flow, a double click) to tests/journeys/_candidates/variants/ and replay each three times.'
+    'Write edge-case candidates of a journey (other roles, another organization, empty and large data, bad input, a reload mid-flow, a double click) to tests/journeys/_candidates/variants/ and replay each three times.'
   )
   .usage('[options] <file>')
   .argument('<file>', 'The journey file to vary.')
@@ -434,7 +434,7 @@ journeys
   .addOption(
     new Option(
       '--kinds <kinds>',
-      'Only these kinds, comma separated: role, tenant, empty, volume, negative, interrupt, double-submit. The data-set kinds need data sets.'
+      'Only these kinds, comma separated: role, tenant, empty, volume, negative, interrupt, double-submit.'
     )
   )
   .addOption(new Option('--empty-data <name>', 'The data set an empty variant runs on.'))
@@ -726,7 +726,7 @@ program
   .addOption(
     new Option(
       '--lint',
-      'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L6 final assertion) and run nothing.'
+      'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion, L7 no snapshot values) and run nothing.'
     )
   )
   .addOption(options.logLevel)

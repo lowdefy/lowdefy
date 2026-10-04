@@ -193,7 +193,7 @@ _ref:
             - `[paths...]`: Journey files, directories (read with their sub-folders) or quoted globs such as `'tests/journeys/review/**'` to run instead of the whole suite, anywhere under the config directory, candidates in `tests/journeys/_candidates/` included. A glob that matches nothing exits with code `1`.
             - `--tag <tag>`: Only run journeys whose `tags` include this tag. Repeat it to run the journeys carrying any of the tags. Exits with code `1` if no journey matches.
             - `--filter <name>`: Only run journeys whose `name` contains this string (case-insensitive). Repeat it to run the journeys matching any of the strings. Exits with code `1` if no journey matches.
-            - `--lint`: Check the journeys for the lint rules (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L6 final assertion) and run nothing. Exits with code `1` on any lint error. See [Lint](/config-tests#lint).
+            - `--lint`: Check the journeys for the lint rules (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion, L7 no snapshot values) and run nothing. Exits with code `1` on any lint error. See [Lint](/config-tests#lint).
             - `--log-level <level>`: The minimum severity of logs to show in the CLI output. Options are `debug`, `info`, `warn` or `error`. The default is `info`.
             - `--port <port>`: The port to start the development server on. If it is in use, the next free port is used. The default is `3000`.
             - `--ref-resolver <ref-resolver-function-path>`: Path to a JavaScript file containing a `_ref` resolver function to be used as the app default `_ref` resolver.
@@ -234,11 +234,13 @@ _ref:
 
             ## journeys variants
 
-            The `journeys variants` command writes edge-case candidates of one journey — bad input (`negative`), a reload mid-flow (`interrupt`) and a double click (`double-submit`) — to `tests/journeys/_candidates/variants/`, and replays each three times. See [Variants](/config-tests#variants-lowdefy-journeys-variants).
+            The `journeys variants` command writes edge-case candidates of one journey — other roles (`role`), another organization (`tenant`), empty and large data (`empty`, `volume`), bad input (`negative`), a reload mid-flow (`interrupt`) and a double click (`double-submit`) — to `tests/journeys/_candidates/variants/<source>/<journey>-<kind>.yaml`, and replays each three times. See [Variants](/config-tests#variants-lowdefy-journeys-variants).
 
             - `<file>`: The journey file to vary.
             - `--name <journey>`: The journey to vary, when the file holds several.
-            - `--kinds <list>`: Only these kinds, comma separated. The kinds for roles, another organisation, empty and large data need data sets and are skipped.
+            - `--kinds <list>`: Only these kinds, comma separated. The `role` and `tenant` kinds read the users and fixtures of the journey's data set.
+            - `--empty-data <name>`: The data set the `empty` variant runs on: one with no rows, and a user with the journey user's name.
+            - `--volume-data <name>`: The data set the `volume` variant runs on: one with many rows, and a user with the journey user's name.
             - `--no-run`: Write the variants without replaying them.
             - `--url <url>`, `--port <port>`, `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for `test`.
 
