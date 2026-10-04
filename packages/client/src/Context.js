@@ -67,6 +67,7 @@ const Context = ({ appContext, children, config, jsMap, lowdefy, resetContext })
       triggerEventAsync={() => {
         context._internal.runOnInitAsync(progress);
       }}
+      waitForMount={true}
     >
       {(loadingOnInit) => {
         if (loadingOnInit) return '';
