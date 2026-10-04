@@ -21,6 +21,7 @@ import getBuildId from '../../../lib/docs/getBuildId.js';
 import listMutants from '../../../lib/server/mutants/listMutants.js';
 import mapPageBuildErrors from '../../../lib/docs/mapPageBuildErrors.js';
 import readBuildArtifact from '../../../lib/docs/readBuildArtifact.js';
+import readMergedMaps from '../../../lib/server/readMergedMaps.js';
 import validateMutantsBody from '../../../lib/server/mutants/validateMutantsBody.js';
 
 // Lists every config mutant on the artifacts a set of journey runs exercised
@@ -54,11 +55,13 @@ async function docsMutantsHandler(c) {
       );
     }
   }
+  // A page's own keys are in the jitMaps/ files its JIT build wrote, not in keyMap.json.
+  const { keyMap, refMap } = await readMergedMaps({ buildDirectory });
   const result = await listMutants({
     ...body,
     readConfigFile: async (name) => readBuildArtifact({ name, deserialize: true }),
-    keyMap: readBuildArtifact({ name: 'keyMap.json' }) ?? {},
-    refMap: readBuildArtifact({ name: 'refMap.json' }) ?? {},
+    keyMap,
+    refMap,
   });
   return c.json({ buildId, ...result });
 }
