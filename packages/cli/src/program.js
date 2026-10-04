@@ -44,6 +44,7 @@ import journeysVariants from './commands/journeys/variants/journeysVariants.js';
 import journeysRecordings from './commands/journeys/journeysRecordings.js';
 import journeysCoverage from './commands/journeys/journeysCoverage.js';
 import journeysEvidence from './commands/journeys/journeysEvidence.js';
+import journeysExplore from './commands/journeys/explore/journeysExplore.js';
 import journeysPullPosthog from './commands/journeys/pull/journeysPullPosthog.js';
 import mcp from './commands/mcp/mcp.js';
 import start from './commands/start/start.js';
@@ -517,6 +518,75 @@ journeys
   )
   .addOption(new Option('--refetch', 'Pull final days again (days older than yesterday).'))
   .action(runCommand({ cliVersion, handler: journeysPullPosthog }));
+
+journeys
+  .command('explore')
+  .description(
+    'Walk the pages a pull request changed as each role on a journey data set, report what broke, and write candidate journeys to tests/journeys/_candidates/explorer/.'
+  )
+  .usage('(--pr <n> | --against <ref>) [options]')
+  .addOption(
+    new Option('--pr <n>', 'The pull request to explore; this checkout must be at its head.')
+  )
+  .addOption(
+    new Option(
+      '--against <ref>',
+      'Explore the changes since the merge base with this branch or commit.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--data <name>',
+      'The data set walks run on. Default tests/data/default.yaml, else the only data set.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--live-data',
+      'Run without a data set, writing to what the connections point at. Needs cli.agentTools.allowWriteRequests.'
+    )
+  )
+  .addOption(new Option('--page <pageId...>', 'Also walk these pages.'))
+  .addOption(new Option('--role <name...>', 'Walk only as these data set users.'))
+  .addOption(new Option('--walks <n>', 'Walks per (page, role). Default 5.'))
+  .addOption(new Option('--steps <n>', 'Interactions per walk. Default 15.'))
+  .addOption(new Option('--budget <duration>', 'Wall-clock budget for the walks. Default 20m.'))
+  .addOption(
+    new Option('--policy <policy>', 'What chooses each step: model, jev or seeded.').choices([
+      'model',
+      'jev',
+      'seeded',
+    ])
+  )
+  .addOption(new Option('--model <id>', 'The AI Gateway model for --policy model.'))
+  .addOption(
+    new Option(
+      '--max-cost <usd>',
+      'Stop once the reported (or estimated) model cost passes this. Default 1.00.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--allow-external <id...>',
+      'Let walks click controls that reach these non-MongoDB connections. Needs cli.agentTools.allowWriteRequests.'
+    )
+  )
+  .addOption(new Option('--seed <n>', 'Seed for the seeded policy and tie-breaks. Default 0.'))
+  .addOption(new Option('--scope-only', 'Build, diff and print the scope; run no walks.'))
+  .addOption(new Option('--json', 'Print report.json instead of the summary.'))
+  .addOption(options.configDirectory)
+  .addOption(options.devDirectory)
+  .addOption(options.disableTelemetry)
+  .addOption(options.logLevel)
+  .addOption(options.port)
+  .addOption(options.refResolver)
+  .addOption(
+    new Option(
+      '--url <url>',
+      "Walk against an already running dev server instead of the app's own, e.g. http://localhost:3111."
+    )
+  )
+  .action(runCommand({ cliVersion, handler: journeysExplore }));
 
 const productionWindowOptions = [
   new Option(

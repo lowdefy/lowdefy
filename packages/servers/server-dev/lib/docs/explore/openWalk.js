@@ -55,7 +55,8 @@ function walkUser(user) {
 // holds a browser slot until it closes. roles (the walking user's role set)
 // and roleMatrixListed (production use shows that role set on the page)
 // decide whether a redirect at open is a role-refused finding. Returns
-// { status, body }: 200 with { walkId, observation, admitted, findings },
+// { status, body }: 200 with { walkId, observation, admitted, findings,
+// timings: { dataMs, pageMs } },
 // 400 for a bad body or a refused data rule, 409
 // when two walks are open (or this run's walk already is), 502 when no
 // browser can launch.
@@ -140,11 +141,15 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
     closing: null,
     openedAt: Date.now(),
   });
+  const timings = { dataMs: 0, pageMs: 0 };
   try {
+    const dataStart = Date.now();
     if (dataSet !== null) {
       await getDataStore();
       walk.session = await openDataSession({ dataSet });
     }
+    timings.dataMs = Date.now() - dataStart;
+    const pageStart = Date.now();
     const recording = {
       source: 'explorer',
       run: { id: run, by: 'explorer', journey: walkName },
@@ -169,6 +174,7 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
     });
     walk.runner = journey;
     walk.observation = await observeWalkPage({ walk, open: true });
+    timings.pageMs = Date.now() - pageStart;
   } catch (error) {
     await closeWalkSession(walk).catch(() => {});
     return {
@@ -191,6 +197,7 @@ async function openWalk({ body, origin, basePath = '', idleMs }) {
       observation: walk.observation,
       admitted: access.admitted,
       findings: access.finding === null ? [] : [access.finding],
+      timings,
     },
   };
 }

@@ -106,7 +106,13 @@ async function createModelPolicy({ backend, modelId, apiKey, seeded }) {
     return { ...answer, optionId: choice, fallback: null };
   }
 
-  return { name: backend === 'evaluation' ? 'jev' : 'model', backend, modelId, choose };
+  return {
+    name: backend === 'evaluation' ? 'jev' : 'model',
+    backend,
+    modelId,
+    lowestRelevance: RELEVANCE_QUESTION.levels[0],
+    choose,
+  };
 }
 
 export default createModelPolicy;
