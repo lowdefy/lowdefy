@@ -15,13 +15,10 @@
 */
 
 import fs from 'fs';
-import path from 'path';
 import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
 
-function isJourneyFile(fileName) {
-  return fileName.endsWith('.yaml') || fileName.endsWith('.yml');
-}
+import listJourneyFiles from './listJourneyFiles.js';
 
 function readJourneyFile({ filePath }) {
   let parsed;
@@ -37,7 +34,8 @@ function readJourneyFile({ filePath }) {
 }
 
 // With `paths` (journey files already resolved by resolveJourneyPaths), the
-// named files are read; otherwise every file directly in tests/journeys.
+// named files are read; otherwise every file under tests/journeys, sub-folders
+// included, except those in a folder whose name starts with "_".
 function discoverJourneys({ context, paths }) {
   if (!type.isUndefined(paths)) {
     return paths.flatMap((filePath) => readJourneyFile({ filePath }));
@@ -46,12 +44,8 @@ function discoverJourneys({ context, paths }) {
   if (!fs.existsSync(directory)) {
     return [];
   }
-  const fileNames = fs
-    .readdirSync(directory)
-    .filter(isJourneyFile)
-    .sort((a, b) => a.localeCompare(b));
-  return fileNames.flatMap((fileName) =>
-    readJourneyFile({ filePath: path.join(directory, fileName) })
+  return listJourneyFiles({ directory, skipUnderscored: true }).flatMap((filePath) =>
+    readJourneyFile({ filePath })
   );
 }
 

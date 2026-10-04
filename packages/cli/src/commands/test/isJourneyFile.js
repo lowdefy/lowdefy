@@ -14,16 +14,8 @@
   limitations under the License.
 */
 
-import asList from './asList.js';
-
-// Only a run of the whole suite, once, records as the suite's journey run: a
-// replay of one candidate, a filtered or a tagged run must never become what
-// the suite is read to drive. `filter` is one string or a list.
-function isFullSuiteRun({ paths, filter, tags, repetition }) {
-  const noPaths = asList(paths).length === 0;
-  const noFilter = asList(filter).every((value) => value === '');
-  const noTags = asList(tags).length === 0;
-  return noPaths && noFilter && noTags && repetition === 1;
+function isJourneyFile(fileName) {
+  return fileName.endsWith('.yaml') || fileName.endsWith('.yml');
 }
 
-export default isFullSuiteRun;
+export default isJourneyFile;

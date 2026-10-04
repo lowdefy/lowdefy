@@ -274,8 +274,33 @@ test('lowdefy_run_tests reports that there are no tests without starting anythin
   const result = JSON.parse(
     text(await client.callTool({ name: 'lowdefy_run_tests', arguments: {} }))
   );
-  expect(result.summary).toEqual('No tests found. Add journeys to tests/journeys/*.yaml.');
+  expect(result.summary).toEqual('No tests found. Add journeys to tests/journeys/.');
   expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
+});
+
+test('lowdefy_run_tests passes tags and a list of filters through to the selection', async () => {
+  const app = makeApp('.');
+  fs.mkdirSync(path.join(app, '.lowdefy'));
+  fs.writeFileSync(
+    path.join(app, '.lowdefy', 'instance.json'),
+    JSON.stringify({
+      pid: process.pid,
+      configDirectory: app,
+      owner: 'terminal',
+      state: 'ready',
+      url: 'http://localhost:3999',
+    })
+  );
+  await connect({ cwd: root });
+  const result = JSON.parse(
+    text(
+      await client.callTool({
+        name: 'lowdefy_run_tests',
+        arguments: { tags: ['smoke'], filter: ['orders', 'refunds'] },
+      })
+    )
+  );
+  expect(result.summary).toEqual('No tests matched tag "smoke" and filter "orders" or "refunds".');
 });
 
 test('lowdefy_dev_stop refuses a dev server the user runs in a terminal', async () => {

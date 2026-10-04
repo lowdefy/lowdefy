@@ -38,10 +38,10 @@ afterEach(() => {
 });
 
 function writeJourneyFile(fileName, content) {
-  const directory = path.join(configDirectory, 'tests', 'journeys');
-  fs.mkdirSync(directory, { recursive: true });
-  fs.writeFileSync(path.join(directory, fileName), content);
-  return path.join(directory, fileName);
+  const filePath = path.join(configDirectory, 'tests', 'journeys', fileName);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, content);
+  return filePath;
 }
 
 test('discoverJourneys returns an empty array when tests/journeys does not exist', () => {
@@ -121,5 +121,18 @@ test('discoverJourneys reads the journeys directory and not tests/journeys when 
       filePath: path.join(directory, 'sign-up.yaml'),
       journey: { name: 'sign up', pageId: 'p', steps: [{ click: 'x' }] },
     },
+  ]);
+});
+
+test('discoverJourneys reads sub-folders of tests/journeys and skips every folder starting with "_"', () => {
+  writeJourneyFile('top.yaml', 'name: top\npageId: p\nsteps: [{ click: x }]\n');
+  writeJourneyFile('review/approve.yaml', 'name: approve\npageId: p\nsteps: [{ click: x }]\n');
+  writeJourneyFile('review/deep/reject.yml', 'name: reject\npageId: p\nsteps: [{ click: x }]\n');
+  writeJourneyFile('_candidates/dev/mined.yaml', 'name: mined\npageId: p\nsteps: [{ click: x }]\n');
+  writeJourneyFile('review/_drafts/draft.yaml', 'name: draft\npageId: p\nsteps: [{ click: x }]\n');
+  expect(discoverJourneys({ context }).map((item) => item.journey.name)).toEqual([
+    'approve',
+    'reject',
+    'top',
   ]);
 });

@@ -72,7 +72,7 @@ on its own.
 
 Run \`${cd}lowdefy test --repeat 3 tests/journeys/_candidates/dev/<file>.yaml\`. It runs a journey
 from any path and records nothing. (\`lowdefy test --filter\` cannot reach a candidate: discovery
-reads \`tests/journeys/*.yaml\` without descending.)
+skips every folder whose name starts with \`_\`.)
 
 - **PASS** (three passes): move the file from \`tests/journeys/_candidates/dev/\` to
   \`tests/journeys/\`.

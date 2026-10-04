@@ -67,6 +67,11 @@ function parsePid(value) {
   return pid;
 }
 
+// A repeatable option: each use adds its value to the list.
+function collectValues(value, previous) {
+  return [...(previous ?? []), value];
+}
+
 const program = new Command();
 
 program.name('lowdefy').description(description).version(cliVersion, '-v, --version');
@@ -376,7 +381,7 @@ journeys
   .usage('[options] [paths...]')
   .argument(
     '[paths...]',
-    'Journey files or directories to harden instead of tests/journeys/*.yaml.'
+    'Journey files, directories or quoted globs to harden instead of the whole suite, anywhere under the config directory.'
   )
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)
@@ -689,11 +694,13 @@ program
 
 program
   .command('test')
-  .description("Run the app's config tests (tests/journeys/*.yaml).")
+  .description(
+    'Run the app\'s config tests: every journey under tests/journeys/, sub-folders included, except folders starting with "_".'
+  )
   .usage('[options] [paths...]')
   .argument(
     '[paths...]',
-    'Journey files or directories to run instead of tests/journeys/*.yaml, anywhere under the config directory (tests/journeys/_candidates included).'
+    'Journey files, directories or quoted globs (e.g. "tests/journeys/review/**") to run instead of the whole suite, anywhere under the config directory (tests/journeys/_candidates included).'
   )
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)
@@ -701,8 +708,14 @@ program
   .addOption(
     new Option(
       '--filter <name>',
-      'Only run tests whose name contains this string (case-insensitive).'
-    )
+      'Only run tests whose name contains this string (case-insensitive). Repeat it to run tests matching any of the strings.'
+    ).argParser(collectValues)
+  )
+  .addOption(
+    new Option(
+      '--tag <tag>',
+      'Only run journeys whose tags include this tag. Repeat it to run journeys carrying any of the tags.'
+    ).argParser(collectValues)
   )
   .addOption(
     new Option(

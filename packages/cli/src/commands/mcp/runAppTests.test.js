@@ -233,3 +233,96 @@ test('runAppTests returns journey evidence and the PASS line that shows it', asy
   expect(results[0].evidence.production.sessions).toBe(412);
   expect(results[0].report).toContain('412 sessions · 9 orgs');
 });
+
+function writeNestedJourney(relativePath, journey) {
+  const filePath = path.join(configDirectory, 'tests', 'journeys', relativePath);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, JSON.stringify(journey));
+}
+
+test('runAppTests runs sub-folders in a full run, and a folder and its globs alike', async () => {
+  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ click: 'a' }] });
+  writeNestedJourney('review/approve.yaml', {
+    name: 'approves an order',
+    pageId: 'orders',
+    steps: [{ click: 'a' }],
+  });
+  writeNestedJourney('_candidates/refunds.yaml', {
+    name: 'refund button',
+    pageId: 'refunds',
+    steps: [{ click: 'a' }],
+  });
+  const all = await runAppTests({ configDirectory, url });
+  expect(all.results.map((result) => result.name)).toEqual(['orders list', 'approves an order']);
+  const names = async (paths) =>
+    (await runAppTests({ configDirectory, url, paths })).results.map((result) => result.name);
+  expect(await names(['tests/journeys/review'])).toEqual(['approves an order']);
+  expect(await names(['tests/journeys/review/**'])).toEqual(['approves an order']);
+  expect(await names(['tests/journeys/review/*.yaml'])).toEqual(['approves an order']);
+  expect(await runAppTests({ configDirectory, url, paths: ['tests/journeys/x/*.yaml'] })).toEqual({
+    summary: 'Journey path "tests/journeys/x/*.yaml" matches no files.',
+    results: [],
+  });
+});
+
+test('runAppTests selects by tags and by a list of filters, and names them when nothing matched', async () => {
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    tags: ['smoke'],
+    steps: [{ click: 'a' }],
+  });
+  writeJourney('totals.yaml', {
+    name: 'order totals',
+    pageId: 'orders',
+    tags: ['nightly'],
+    steps: [{ click: 'a' }],
+  });
+  writeJourney('refunds.yaml', {
+    name: 'refund button',
+    pageId: 'refunds',
+    steps: [{ click: 'a' }],
+  });
+  const names = async (args) =>
+    (await runAppTests({ configDirectory, url, ...args })).results.map((result) => result.name);
+  expect(await names({ tags: ['smoke', 'nightly'] })).toEqual(['orders list', 'order totals']);
+  expect(await names({ filter: ['totals', 'REFUND'] })).toEqual(['refund button', 'order totals']);
+  expect(await names({ tags: ['nightly'], filter: 'orders' })).toEqual([]);
+  expect(
+    (await runAppTests({ configDirectory, url, tags: ['nightly'], filter: 'list' })).summary
+  ).toEqual('No tests matched tag "nightly" and filter "list".');
+  expect(await runAppTests({ configDirectory, url, tags: ['Smoke'] })).toEqual({
+    summary:
+      'Tag "Smoke" should be lowercase letters, digits, "-" and "_", start with a letter or digit, and be at most 64 characters.',
+    results: [],
+  });
+});
+
+test('runAppTests leaves a tagged run unrecorded', async () => {
+  const bodies = [];
+  server.removeAllListeners('request');
+  server.on('request', (req, res) => {
+    let body = '';
+    req.on('data', (chunk) => {
+      body += chunk;
+    });
+    req.on('end', () => {
+      res.setHeader('Content-Type', 'application/json');
+      if (req.url === '/lowdefy-docs/build-status') {
+        res.end(JSON.stringify({ buildId: 'build-1' }));
+        return;
+      }
+      bodies.push(JSON.parse(body));
+      res.end(JSON.stringify({ passed: true }));
+    });
+  });
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    tags: ['smoke'],
+    steps: [{ click: 'a' }],
+  });
+  await runAppTests({ configDirectory, url, tags: ['smoke'] });
+  expect(bodies).toHaveLength(1);
+  expect(bodies[0]).not.toHaveProperty('recording');
+});
