@@ -83,6 +83,7 @@ const Block = ({ block, Blocks, context, lowdefy, parentLoading }) => {
             type: 'done',
           });
         }}
+        waitForMount={Object.hasOwn(block.Events.events, 'onMount')}
       >
         {(eventLoading) => (
           <CategorySwitch
