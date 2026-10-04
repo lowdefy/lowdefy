@@ -49,16 +49,39 @@ function targetValues(target) {
   return values;
 }
 
-// A dev candidate's expect.url carries the recorded path and query, such as
-// /ticket?id=<snapshot id>. The path names a page; the query values are data,
-// checked exactly as a urlQuery is.
-function urlContainsQueryValues(contains) {
+// expect.url.contains is split at its first `?`. A part before it that
+// starts with `/` names a page and is free: a Lowdefy URL carries data only
+// in its query (this is what lets the Role refused variant assert /404).
+// Everything else is query text, such as a dev candidate's recorded
+// ?id=<snapshot id>: each key=value value is checked exactly, as a urlQuery
+// is, and a bare token with no `=` (an id written alone) as a substring.
+function urlContainsValues(contains) {
   const queryStart = contains.indexOf('?');
-  if (queryStart === -1) return [];
-  const query = new URLSearchParams(contains.slice(queryStart + 1));
-  return [...query.entries()]
-    .filter(([, value]) => value !== '')
-    .map(([key, value]) => ({ label: `url contains query ${key}`, value, exact: true }));
+  const beforeQuery = queryStart === -1 ? contains : contains.slice(0, queryStart);
+  const query = queryStart === -1 ? '' : contains.slice(queryStart + 1);
+  const queryText = beforeQuery.startsWith('/') ? [query] : [beforeQuery, query];
+  return queryText
+    .flatMap((text) => text.split('&'))
+    .filter((part) => part !== '')
+    .flatMap((part) => {
+      const [[key, value]] = [...new URLSearchParams(part)];
+      if (!part.includes('=')) {
+        return [{ label: 'url contains', value: key, exact: false }];
+      }
+      if (value === '') return [];
+      return [{ label: `url contains query ${key}`, value, exact: true }];
+    });
+}
+
+// An email's address is matched exactly and its subject, as the runner
+// matches it, as a substring. A fromEmail `match` is a regular expression,
+// not a value.
+function emailValues({ params, prefix }) {
+  const values = [{ label: `${prefix}to`, value: params.to, exact: true }];
+  if (type.isString(params.subject)) {
+    values.push({ label: `${prefix}subject`, value: params.subject, exact: false });
+  }
+  return values;
 }
 
 function expectValues(expectation) {
@@ -75,7 +98,7 @@ function expectValues(expectation) {
         ? [{ label: 'title equals', value: value.equals, exact: true }]
         : [{ label: 'title contains', value: value.contains, exact: false }];
     case 'url':
-      return urlContainsQueryValues(value.contains);
+      return urlContainsValues(value.contains);
     case 'state':
       // A placeholder is L1's to refuse; booleans, numbers and null are not
       // text and pass.
@@ -99,7 +122,13 @@ function stepValues(step) {
     if (key === 'select' && type.isString(params.value)) {
       values.push({ label: 'value', value: params.value, exact: true });
     }
+    if (key === 'fill' && type.isObject(params.fromEmail)) {
+      values.push(...emailValues({ params: params.fromEmail, prefix: 'fromEmail ' }));
+    }
     return values;
+  }
+  if (key === 'email') {
+    return emailValues({ params, prefix: '' });
   }
   if (key === 'expect') {
     return expectValues(params);

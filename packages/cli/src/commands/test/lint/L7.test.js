@@ -58,9 +58,16 @@ function dataSet(extra = {}) {
     snapshotSpec: { from: 'staging', connections: ['tickets'] },
     snapshot: { pulledAt: '2026-10-01T00:00:00.000Z', collections: {} },
     fixtures: {
-      tickets: [{ title: 'Fixture printer', org: 'acme', locations: [{ path: '/KLT' }] }],
+      tickets: [
+        {
+          _id: 'fixture-ticket-1',
+          title: 'Fixture printer',
+          org: 'acme',
+          locations: [{ path: '/KLT' }],
+        },
+      ],
     },
-    users: { member: { roles: ['member'], name: 'Mia Member' } },
+    users: { member: { roles: ['member'], name: 'Mia Member', email: 'mia@example.com' } },
     ...extra,
   };
 }
@@ -209,6 +216,78 @@ test('L7 refuses a snapshot id in a recorded expect.url query and passes a path 
   expect(problems.map(({ stepIndex, message }) => [stepIndex, message.split(' is ')[0]])).toEqual([
     [0, 'step 0 (expect: { url }) url contains query id "65f0c0ffee0000000000abcd"'],
   ]);
+});
+
+test('L7 checks expect.url.contains: a bare snapshot id and a query id fail, page paths and a fixture id pass', () => {
+  const problems = lint([
+    { expect: { url: { contains: '65f0c0ffee0000000000abcd' } } },
+    { expect: { url: { contains: '?id=65f0c0ffee0000000000abcd' } } },
+    { expect: { url: { contains: '/404' } } },
+    { expect: { url: { contains: '/tickets' } } },
+    { expect: { url: { contains: '/ticket?id=fixture-ticket-1' } } },
+    { expect: { url: { contains: 'fixture-ticket' } } },
+    { expect: { url: { contains: '/ticket?65f0c0ffee0000000000beef' } } },
+  ]);
+  expect(problems.map(({ stepIndex, message }) => [stepIndex, message.split(' is ')[0]])).toEqual([
+    [0, 'step 0 (expect: { url }) url contains "65f0c0ffee0000000000abcd"'],
+    [1, 'step 1 (expect: { url }) url contains query id "65f0c0ffee0000000000abcd"'],
+    [6, 'step 6 (expect: { url }) url contains "65f0c0ffee0000000000beef"'],
+  ]);
+  expect(problems[0].message).toMatch(/ is not part of the app's text/);
+  expect(problems[1].message).toMatch(/ is not the app's text/);
+});
+
+test('L7 refuses a snapshot-only address in an email step and a fill.fromEmail', () => {
+  const problems = lint([
+    { email: { to: 'staging.user@example.com' } },
+    {
+      fill: {
+        blockId: 'code',
+        fromEmail: { to: 'staging.user@example.com', match: '\\b\\d{6}\\b' },
+      },
+    },
+  ]);
+  expect(problems.map(({ stepIndex, message }) => [stepIndex, message.split(' is ')[0]])).toEqual([
+    [0, 'step 0 (email) to "staging.user@example.com"'],
+    [1, 'step 1 (fill "code") fromEmail to "staging.user@example.com"'],
+  ]);
+});
+
+test('L7 passes an email address of a fixture user or one an earlier fill typed', () => {
+  expect(
+    lint([
+      { email: { to: 'mia@example.com' } },
+      { fill: { blockId: 'code', fromEmail: { to: 'mia@example.com', match: '\\d+' } } },
+      { fill: { blockId: 'email', value: 'new.user@example.com' } },
+      { click: 'invite' },
+      { email: { to: 'new.user@example.com' } },
+      { fill: { blockId: 'code', fromEmail: { to: 'new.user@example.com', match: '\\d+' } } },
+    ])
+  ).toEqual([]);
+});
+
+test('L7 checks an email subject as a substring: snapshot-only fails, built config text passes', () => {
+  const problems = lint([
+    { email: { to: 'mia@example.com', subject: 'Staging customer' } },
+    { email: { to: 'mia@example.com', subject: 'No tickets' } },
+    {
+      fill: {
+        blockId: 'code',
+        fromEmail: { to: 'mia@example.com', subject: 'Staging customer', match: '\\d+' },
+      },
+    },
+    {
+      fill: {
+        blockId: 'code',
+        fromEmail: { to: 'mia@example.com', subject: 'Tickets', match: '\\d+' },
+      },
+    },
+  ]);
+  expect(problems.map(({ stepIndex, message }) => [stepIndex, message.split(' is ')[0]])).toEqual([
+    [0, 'step 0 (email) subject "Staging customer"'],
+    [2, 'step 2 (fill "code") fromEmail subject "Staging customer"'],
+  ]);
+  expect(problems[0].message).toMatch(/ is not part of the app's text/);
 });
 
 test('L7 refuses a typed value only the pulled snapshot holds', () => {
