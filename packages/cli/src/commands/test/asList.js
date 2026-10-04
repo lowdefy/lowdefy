@@ -14,16 +14,18 @@
   limitations under the License.
 */
 
-import asList from './asList.js';
+import { type } from '@lowdefy/helpers';
 
-// Only a run of the whole suite, once, records as the suite's journey run: a
-// replay of one candidate, a filtered or a tagged run must never become what
-// the suite is read to drive. `filter` is one string or a list.
-function isFullSuiteRun({ paths, filter, tags, repetition }) {
-  const noPaths = asList(paths).length === 0;
-  const noFilter = asList(filter).every((value) => value === '');
-  const noTags = asList(tags).length === 0;
-  return noPaths && noFilter && noTags && repetition === 1;
+// A selection option arrives as one value (a string from the MCP tool or
+// `journeys harden --filter`) or as a list (a repeated `lowdefy test` flag).
+function asList(value) {
+  if (type.isNone(value)) {
+    return [];
+  }
+  if (type.isArray(value)) {
+    return value;
+  }
+  return [value];
 }
 
-export default isFullSuiteRun;
+export default asList;

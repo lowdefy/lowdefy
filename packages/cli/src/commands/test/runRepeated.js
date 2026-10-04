@@ -22,7 +22,7 @@ import isFullSuiteRun from './isFullSuiteRun.js';
 // runner refused outright (an invalid file) fails once and is not repeated -
 // it would fail the same way every time.
 //
-// `recording` ({ run, paths, filter }) asks the dev server to record the run
+// `recording` ({ run, paths, filter, tags }) asks the dev server to record the run
 // as the suite's journey run. Only a full-suite run's first repetition
 // records, so the newest test run always stands for what the suite drives.
 async function runRepeated({ suite, context, item, url, repeat, recording }) {
@@ -31,7 +31,12 @@ async function runRepeated({ suite, context, item, url, repeat, recording }) {
   for (let repetition = 1; repetition <= repeat; repetition += 1) {
     const recordRun =
       recording !== undefined &&
-      isFullSuiteRun({ paths: recording.paths, filter: recording.filter, repetition })
+      isFullSuiteRun({
+        paths: recording.paths,
+        filter: recording.filter,
+        tags: recording.tags,
+        repetition,
+      })
         ? recording.run
         : undefined;
     const run = await suite.run({ context, item, url, recordRun });

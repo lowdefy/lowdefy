@@ -73,20 +73,27 @@ const lifecycleTools = [
   {
     name: 'lowdefy_run_tests',
     description:
-      "Run this app's tests (tests/journeys/*.yaml, as `lowdefy test` does) against its dev server, starting it if needed. Returns a summary and one result per journey: passed, or the failing step with expected and actual. Run it before saying a change is done, and add a journey (the steps you verified with lowdefy_run_journey) for behaviour you fixed.",
+      'Run this app\'s tests (as `lowdefy test` does) against its dev server, starting it if needed. Choose all, a folder or glob, or a tag: no arguments runs every journey under tests/journeys/, sub-folders included, except folders starting with "_" (such as _candidates); `paths` runs journey files, folders or globs (`tests/journeys/review/**`); `tags` runs the journeys carrying any of the tags. `filter` narrows by name; paths, tags and filter combine. Returns a summary and one result per journey: passed, or the failing step with expected and actual. Run it before saying a change is done, and add a journey (the steps you verified with lowdefy_run_journey) for behaviour you fixed.',
     inputSchema: {
       type: 'object',
       properties: {
         directory: DIRECTORY_PROPERTY,
         filter: {
-          type: 'string',
-          description: 'Only run journeys whose name contains this text (case-insensitive).',
+          anyOf: [{ type: 'string' }, { type: 'array', items: { type: 'string' } }],
+          description:
+            'Only run journeys whose name contains this text, or any of these texts (case-insensitive).',
+        },
+        tags: {
+          type: 'array',
+          items: { type: 'string' },
+          description:
+            'Only run journeys whose `tags` include any of these, e.g. ["smoke"]. Tags are lowercase letters, digits, "-" and "_".',
         },
         paths: {
           type: 'array',
           items: { type: 'string' },
           description:
-            'Journey files or directories to run instead of tests/journeys/*.yaml, relative to the app directory and inside it (tests/journeys/_candidates/... included).',
+            'Journey files, folders (read with their sub-folders) or globs (*, ?, [...], **) to run instead of the whole suite, relative to the app directory and inside it (tests/journeys/_candidates/... included), e.g. ["tests/journeys/review/*.yaml"]. A glob that matches nothing is refused.',
         },
         repeat: {
           type: 'integer',

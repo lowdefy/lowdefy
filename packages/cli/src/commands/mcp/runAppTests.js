@@ -18,7 +18,9 @@ import path from 'path';
 import { createTraceId } from '@lowdefy/helpers';
 
 import getDirectories from '../../utils/getDirectories.js';
+import formatNoTestsMatched from '../test/formatNoTestsMatched.js';
 import parseRepeat from '../test/parseRepeat.js';
+import parseTestSelection from '../test/parseTestSelection.js';
 import resolveJourneyPaths from '../test/resolveJourneyPaths.js';
 import runRepeated from '../test/runRepeated.js';
 import selectTests from '../test/selectTests.js';
@@ -27,27 +29,22 @@ import writeExercised from '../test/writeExercised.js';
 import writeTestRun from '../test/writeTestRun.js';
 import fetchBuildId from '../test/fetchBuildId.js';
 
-function noTestsSummary({ filter, paths }) {
-  if (filter) {
-    return `No tests matched filter "${filter}".`;
-  }
-  if (paths) {
-    return `No journeys found in ${paths.join(', ')}.`;
-  }
-  return 'No tests found. Add journeys to tests/journeys/*.yaml.';
-}
-
-// Runs the app's tests (tests/journeys/*.yaml, or the journey files `paths`
-// names relative to the app directory) against its running dev server - the
+// Runs the app's tests (every journey under tests/journeys outside "_"
+// folders, or the journey files and globs `paths` names relative to the app
+// directory, narrowed by `filter` and `tags`) against its running dev server - the
 // same selection, replay and runner as `lowdefy test` - and returns the
 // results as data: a failing journey is an answer, not a tool error. Always
 // the default directory: journeys an app keeps elsewhere (--journeys-directory)
 // may need a server set up for them, which the running dev server is not.
-async function runAppTests({ configDirectory, url, filter, paths, repeat: repeatValue }) {
+async function runAppTests({ configDirectory, url, filter, tags, paths, repeat: repeatValue }) {
   const context = { directories: getDirectories({ configDirectory, options: {} }) };
   const { repeat, error: repeatError } = parseRepeat(repeatValue);
   if (repeatError) {
     return { summary: repeatError, results: [] };
+  }
+  const selection = parseTestSelection({ filter, tags });
+  if (selection.error) {
+    return { summary: selection.error, results: [] };
   }
   let files;
   if (Array.isArray(paths) && paths.length > 0) {
@@ -57,12 +54,31 @@ async function runAppTests({ configDirectory, url, filter, paths, repeat: repeat
     }
     files = resolved.files;
   }
-  const selected = selectTests({ context, filter, paths: files });
+  const selected = selectTests({
+    context,
+    filter: selection.filters,
+    tags: selection.tags,
+    paths: files,
+  });
   if (selected.length === 0) {
-    return { summary: noTestsSummary({ filter, paths: files && paths }), results: [] };
+    const noMatch = formatNoTestsMatched({
+      paths: files === undefined ? [] : paths,
+      filters: selection.filters,
+      tags: selection.tags,
+      flagPrefix: '',
+    });
+    return {
+      summary: noMatch ?? 'No tests found. Add journeys to tests/journeys/*.yaml.',
+      results: [],
+    };
   }
   // One run id per tool call; only a full-suite run records (see runRepeated).
-  const recording = { run: createTraceId(), paths: files, filter };
+  const recording = {
+    run: createTraceId(),
+    paths: files,
+    filter: selection.filters,
+    tags: selection.tags,
+  };
   const runs = [];
   for (const { suite, item } of selected) {
     const result = await runRepeated({ suite, context, item, url, repeat, recording });
