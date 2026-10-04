@@ -106,6 +106,57 @@ api:
               _payload: id
             detached: true
 
+  # Run under a config mutant (`lowdefy journeys harden`) that drops their "log" step: a detached
+  # target and a direct endpoint, each writing a ticket and then a log entry.
+  - id: create_ticket_later_logged
+    type: Api
+    routine:
+      - id: dispatch
+        type: CallApi
+        properties:
+          endpointId: insert_detached_logged
+          detached: true
+          payload:
+            id:
+              _payload: id
+      - :return:
+          dispatched: true
+  - id: insert_detached_logged
+    type: Api
+    routine:
+      - id: insert
+        type: MongoDBInsertOne
+        connectionId: tickets
+        properties:
+          doc:
+            _id:
+              _payload: id
+            detached: true
+      - id: log
+        type: MongoDBInsertOne
+        connectionId: tickets
+        properties:
+          doc:
+            _id: log-detached
+  - id: create_ticket_logged
+    type: Api
+    routine:
+      - id: insert
+        type: MongoDBInsertOne
+        connectionId: tickets
+        properties:
+          doc:
+            _id:
+              _payload: id
+      - id: log
+        type: MongoDBInsertOne
+        connectionId: tickets
+        properties:
+          doc:
+            _id: log-direct
+      - :return:
+          inserted: true
+
   # A detached run whose routine reaches an auth step: under a data session it has no auth engine,
   # so the step fails and the insert after it never runs.
   - id: create_ticket_later_auth
