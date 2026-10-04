@@ -82,7 +82,7 @@ test('test exits 0 with a note when no journeys exist and does not boot a server
   await test({ context });
   expect(mockStartDevServer).not.toHaveBeenCalled();
   expect(mockPost).not.toHaveBeenCalled();
-  expect(logs.warn).toEqual(['No tests found. Add journeys to tests/journeys/*.yaml.']);
+  expect(logs.warn).toEqual(['No tests found. Add journeys to tests/journeys/.']);
   expect(process.exitCode).toBeUndefined();
   expect(context.sendTelemetry).toHaveBeenCalled();
 });

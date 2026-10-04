@@ -274,7 +274,7 @@ test('lowdefy_run_tests reports that there are no tests without starting anythin
   const result = JSON.parse(
     text(await client.callTool({ name: 'lowdefy_run_tests', arguments: {} }))
   );
-  expect(result.summary).toEqual('No tests found. Add journeys to tests/journeys/*.yaml.');
+  expect(result.summary).toEqual('No tests found. Add journeys to tests/journeys/.');
   expect(fs.existsSync(path.join(home, 'hub'))).toBe(false);
 });
 

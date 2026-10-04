@@ -380,7 +380,7 @@ journeys
   .usage('[options] [paths...]')
   .argument(
     '[paths...]',
-    'Journey files or directories to harden instead of tests/journeys/*.yaml.'
+    'Journey files, directories or quoted globs to harden instead of the whole suite, anywhere under the config directory.'
   )
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)

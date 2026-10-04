@@ -82,7 +82,7 @@ async function test({ context }) {
       refuse({ context, message: `No journeys found in ${context.directories.journeys}.` });
       return;
     }
-    context.logger.warn('No tests found. Add journeys to tests/journeys/*.yaml.');
+    context.logger.warn('No tests found. Add journeys to tests/journeys/.');
     context.sendTelemetry();
     return;
   }

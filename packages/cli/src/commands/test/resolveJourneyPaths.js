@@ -18,7 +18,8 @@ import fs from 'fs';
 import path from 'path';
 import { type } from '@lowdefy/helpers';
 
-import listJourneyFiles, { isJourneyFile } from './listJourneyFiles.js';
+import isJourneyFile from './isJourneyFile.js';
+import listJourneyFiles from './listJourneyFiles.js';
 
 const GLOB_CHARACTERS = /[*?[]/;
 

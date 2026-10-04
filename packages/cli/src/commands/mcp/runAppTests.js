@@ -68,7 +68,7 @@ async function runAppTests({ configDirectory, url, filter, tags, paths, repeat: 
       flagPrefix: '',
     });
     return {
-      summary: noMatch ?? 'No tests found. Add journeys to tests/journeys/*.yaml.',
+      summary: noMatch ?? 'No tests found. Add journeys to tests/journeys/.',
       results: [],
     };
   }

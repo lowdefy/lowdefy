@@ -17,9 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 
-function isJourneyFile(fileName) {
-  return fileName.endsWith('.yaml') || fileName.endsWith('.yml');
-}
+import isJourneyFile from './isJourneyFile.js';
 
 // Every journey file under `directory`, in sub-folders too, sorted by path.
 // `skipUnderscored` leaves out each folder below `directory` whose name starts
@@ -41,5 +39,4 @@ function listJourneyFiles({ directory, skipUnderscored = false }) {
     .sort((a, b) => a.localeCompare(b));
 }
 
-export { isJourneyFile };
 export default listJourneyFiles;

@@ -16,10 +16,12 @@
 
 import { type } from '@lowdefy/helpers';
 
-// A tag names a section of a suite (`lowdefy test --tag smoke`). It follows
-// the data set name pattern, so a tag reads the same in a journey file, on the
+import dataSetNamePattern from '../dataSetNamePattern.js';
+
+// A tag names a section of a suite (`lowdefy test --tag smoke`). It is the
+// data set name pattern, so a tag reads the same in a journey file, on the
 // command line and in an MCP call.
-const JOURNEY_TAG_PATTERN = /^[a-z0-9][a-z0-9_-]{0,63}$/;
+const JOURNEY_TAG_PATTERN = dataSetNamePattern;
 
 // Validates a list of journey tags, from a journey's `tags` key or from the
 // tags a run selects. Returns { error } naming the first bad tag, or {}.
