@@ -1,6 +1,7 @@
 ---
 '@lowdefy/api': minor
 '@lowdefy/build': minor
+'@lowdefy/docs-content': patch
 ---
 
 feat(api): The app's MCP server can run an endpoint after every tool call
