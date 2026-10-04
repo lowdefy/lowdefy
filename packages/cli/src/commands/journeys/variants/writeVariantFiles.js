@@ -47,7 +47,8 @@ function renderVariant({ journey, variant, source }) {
 function writeVariantFiles({ directories, filePath, journey, variants }) {
   const directory = path.join(directories.journeys, '_candidates', 'variants');
   const stem = path.basename(filePath, path.extname(filePath));
-  const source = path.relative(directories.config, filePath);
+  // Forward slashes, so a file generated on Windows matches one generated anywhere else.
+  const source = path.relative(directories.config, filePath).split(path.sep).join('/');
   fs.mkdirSync(directory, { recursive: true });
   const counts = new Map();
   variants.forEach(({ kind }) => counts.set(kind, (counts.get(kind) ?? 0) + 1));

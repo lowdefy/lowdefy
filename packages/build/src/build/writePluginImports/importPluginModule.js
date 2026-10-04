@@ -16,6 +16,7 @@
 
 import { createRequire } from 'node:module';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 // Every subpath this function imports (`./schemas`, `./connections`, ...) is
 // optional, so any failure to RESOLVE the specifier is the expected miss it
@@ -58,7 +59,9 @@ async function importPluginModule({ context, specifier }) {
   }
   try {
     const require = createRequire(path.join(serverDir, 'package.json'));
-    return await import(/* webpackIgnore: true */ /* @vite-ignore */ require.resolve(specifier));
+    // A file URL: import() reads a Windows absolute path's drive letter as a URL scheme.
+    const moduleUrl = pathToFileURL(require.resolve(specifier)).href;
+    return await import(/* webpackIgnore: true */ /* @vite-ignore */ moduleUrl);
   } catch (error) {
     if (!isResolutionError(error)) throw error;
     return undefined;

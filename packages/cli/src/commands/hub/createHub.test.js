@@ -65,7 +65,7 @@ function writeRecord(state) {
   fs.mkdirSync('.lowdefy', { recursive: true });
   fs.writeFileSync(path.join('.lowdefy', 'instance.json'), JSON.stringify({
     pid: process.pid,
-    configDirectory: fs.realpathSync('.'),
+    configDirectory: fs.realpathSync.native('.'),
     owner: process.env.LOWDEFY_DEV_OWNER,
     state,
     port,
@@ -116,7 +116,9 @@ let extraApps = [];
 
 // Another app directory with the fake dev server, removed after the test.
 function makeApp({ script = FAKE_DEV_SERVER } = {}) {
-  const directory = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-hub-app-')));
+  const directory = fs.realpathSync.native(
+    fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-hub-app-'))
+  );
   fs.writeFileSync(path.join(directory, 'lowdefy.yaml'), 'lowdefy: 6.0.0\n');
   fs.writeFileSync(path.join(directory, 'fake-dev.cjs'), script);
   fs.writeFileSync(
@@ -638,7 +640,9 @@ test('a start slot frees when its server exits before it is ready', async () => 
 });
 
 test('a start slot frees once a server has held it for the hold limit', async () => {
-  hub = createTestHub({ startSlotHoldMs: 500 });
+  // Long enough that the hold outlasts launching b and queueing c. On Windows each launch reads
+  // its start time through PowerShell, seconds, so a short hold frees a's slot before c asks.
+  hub = createTestHub({ startSlotHoldMs: isWindows ? 10000 : 500 });
   const [a, b, c] = [makeSlowApp(), makeSlowApp(), makeSlowApp()];
   [a, b, c].forEach((directory) => hub.start({ configDirectory: directory }));
   expect(

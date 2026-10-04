@@ -17,11 +17,26 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import { wait } from '@lowdefy/helpers';
+import { type, wait } from '@lowdefy/helpers';
 
+import createStartTimeCache from './createStartTimeCache.js';
 import getLowdefyHome from './getLowdefyHome.js';
 import getProcessStartTime from './getProcessStartTime.js';
 import isPidAlive from './isPidAlive.js';
+
+// A waiting caller checks every held slot each interval, and a start time costs a ps process
+// (PowerShell on Windows, a second or more), so each pid's is read once a few seconds.
+const readStartTime = createStartTimeCache({ read: getProcessStartTime });
+
+// This process's start time never changes, so it is read once, not once a call: a dev server
+// takes a slot for every browser operation.
+let ownStartTime;
+function readOwnStartTime() {
+  if (type.isUndefined(ownStartTime)) {
+    ownStartTime = getProcessStartTime({ pid: process.pid });
+  }
+  return ownStartTime;
+}
 
 function readHolder(slotPath) {
   try {
@@ -62,7 +77,8 @@ function isStale(slotPath) {
   if (holder.processStartTime === null) {
     return false;
   }
-  const startTime = getProcessStartTime({ pid: holder.pid });
+  const startTime =
+    holder.pid === process.pid ? readOwnStartTime() : readStartTime({ pid: holder.pid });
   return startTime !== null && startTime !== holder.processStartTime;
 }
 
@@ -90,7 +106,7 @@ async function acquireMachineSlot({ name, limit, waitMs = 5 * 60 * 1000, interva
   fs.mkdirSync(directory, { recursive: true });
   const holder = {
     pid: process.pid,
-    processStartTime: getProcessStartTime({ pid: process.pid }),
+    processStartTime: readOwnStartTime(),
     token: crypto.randomUUID(),
     acquiredAt: new Date().toISOString(),
   };
